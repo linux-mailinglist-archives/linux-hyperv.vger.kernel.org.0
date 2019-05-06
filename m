@@ -2,84 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5797143C4
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 May 2019 05:31:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71D2E148A8
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 May 2019 13:02:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbfEFDbN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 5 May 2019 23:31:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbfEFDbM (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 5 May 2019 23:31:12 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1725861AbfEFLC2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 6 May 2019 07:02:28 -0400
+Received: from rp02.intra2net.com ([62.75.181.28]:45890 "EHLO
+        rp02.intra2net.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfEFLC1 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 6 May 2019 07:02:27 -0400
+X-Greylist: delayed 402 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 07:02:27 EDT
+Received: from mail.m.i2n (unknown [172.17.128.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by rp02.intra2net.com (Postfix) with ESMTPS id D88851000C2;
+        Mon,  6 May 2019 12:55:43 +0200 (CEST)
+Received: from localhost (mail.m.i2n [127.0.0.1])
+        by localhost (Postfix) with ESMTP id B70C07CE;
+        Mon,  6 May 2019 12:55:43 +0200 (CEST)
+X-Virus-Scanned: by Intra2net Mail Security (AVE=8.3.54.20,VDF=8.15.29.48)
+X-Spam-Status: 
+X-Spam-Level: 0
+Received: from rocinante.m.i2n (rocinante.m.i2n [172.16.1.86])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3EBA205F4;
-        Mon,  6 May 2019 03:31:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557113471;
-        bh=M9uXTWCd59i3yL6Lq9BMIF3NB6ZynI9y1lfWYrkc0Po=;
-        h=From:Date:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:From;
-        b=JFm/4GN5qJ//IwxVQwrSW4GpzikcmvWf1kHLPKjVxc9IF7GBd8BIMSmR7PjhngIQQ
-         Vyp3JOLnsH0xy8ejoOiPYitbqBaAMWRFuaL5jXSy8IjIqS8GCVmn3bOHRfJU7OL4vJ
-         6kXEjlieB3L3g2fkaw1jRhu9dNh1Fx0h4OTSNI14=
-From:   Sasha Levin <sashal@kernel.org>
-Date:   Sun, 05 May 2019 23:31:04 -0400
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@microsoft.com
+        (Authenticated sender: smtp-auth-user)
+        by mail.m.i2n (Postfix) with ESMTPSA id 6AC887C6;
+        Mon,  6 May 2019 12:55:42 +0200 (CEST)
+From:   Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+To:     Dexuan Cui <decui@microsoft.com>
 Cc:     linux-hyperv@vger.kernel.org
-Cc:     kys@microsoft.com
-Cc:     haiyangz@microsoft.com
-Cc:     sthemmin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Hyper-V commits for 5.2
-Message-Id: <20190506033111.A3EBA205F4@mail.kernel.org>
+Subject: Re: Hyperv netvsc - regression for 32-PAE kernel
+Date:   Mon, 06 May 2019 12:55:42 +0200
+Message-ID: <5083893.yzDQlZqgr7@rocinante.m.i2n>
+In-Reply-To: <PU1P153MB01698936BF3332FCBF64D65DBF350@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <6166175.oDc9uM0lzg@rocinante.m.i2n> <DM5PR2101MB091875296619F1518C109E71D7340@DM5PR2101MB0918.namprd21.prod.outlook.com> <PU1P153MB01698936BF3332FCBF64D65DBF350@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+Hi Dexuan.
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+> Can you please try the below one-line patch?
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+Nice, easy one liner and it works well for me.
 
-are available in the Git repository at:
+I hope this patch will be applied.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
+Thank you!
 
-for you to fetch changes up to a3fb7bf369efa296c1fc68aead1b6fb3c735573b:
+Julie R.
 
-  drivers: input: serio: Add a module desription to the hyperv_keyboard driver (2019-04-23 15:41:40 -0400)
 
-- ----------------------------------------------------------------
-Adding module description to various hyper-v modules
 
-- ----------------------------------------------------------------
-Joseph Salisbury (3):
-      drivers: hid: Add a module description line to the hid_hyperv driver
-      drivers: hv: Add a module description line to the hv_vmbus driver
-      drivers: input: serio: Add a module desription to the hyperv_keyboard driver
 
- drivers/hid/hid-hyperv.c              | 2 ++
- drivers/hv/vmbus_drv.c                | 1 +
- drivers/input/serio/hyperv-keyboard.c | 2 ++
- 3 files changed, 5 insertions(+)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE4n5dijQDou9mhzu83qZv95d3LNwFAlzPqkQACgkQ3qZv95d3
-LNwABg//b9MataFZTizTER4WnV5+PWOeK+gEh5nlpM63vgzkx9G3WYT7XydhdoT4
-vaw77zNEMHChyxIEn6s4BLpOk8nAP3L8VyvgxUDSemmjV9/FCDz4D98IoFMeWuWO
-97HER2DUC9r/RejYz7qb2lGMesIkAFZkYAFdcg8coswP1WWS5dM0CnyTFb7wjvFu
-MVRHCH3W6i55sZVid2YE2qm2gmza8wIJYkggoTUwKeRcOWyz1s9VNknpTi/8BaeK
-0dsnrvfw7jdYL89QKkU4J4n8EycyNopibK2d35kj/6KiMrUs91YXTlncdS68WZ+t
-8OhLs7Vk4XV5yxT+LApX0teON7NI5irVzrLNBPkNUcBRwRWD0oJhHCfy4p5ulEQ2
-yKWEHJ4noZNGeJvrjEuhEn+mGKxjk8zvxY39qXUddWT2MXyjVyUtyxykDlYFLd+H
-b3a3qDIrR/QM5jTmA/xoxjwFoqJnjcMakdz2kZAVqeNVHEi20lQrZJFa1RBw4dD/
-hw1SOZUI6thDn4QCTPVJiva4w+zEqCocm1+qwoFevMig0LSH7+IymBde5S7heha6
-Hj0BTKKsQndhD/utA8HWpBebfmZSqA0vK8SSfIcPLlAxU9QVeiYU/0qgLEpqFN5/
-LCmbe0THf4RdryqJWjZbLe8qRzrhNEetSQibEPY+QuiiOeZJBjw=
-=vWC7
------END PGP SIGNATURE-----
