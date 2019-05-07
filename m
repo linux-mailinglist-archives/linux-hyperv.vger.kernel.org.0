@@ -2,122 +2,119 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D68EB150C8
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 May 2019 17:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43ACF15E7D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 May 2019 09:47:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfEFP6r (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 May 2019 11:58:47 -0400
-Received: from mail-eopbgr1310117.outbound.protection.outlook.com ([40.107.131.117]:53664
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        id S1726922AbfEGHrA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 May 2019 03:47:00 -0400
+Received: from mail-eopbgr790111.outbound.protection.outlook.com ([40.107.79.111]:11392
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726413AbfEFP6r (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 May 2019 11:58:47 -0400
+        id S1726249AbfEGHq7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 7 May 2019 03:46:59 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=g79QLBHbiATiwiPBWCx60OeiFcilG3pmT8G0/DYMwf3UKJaHsgWPH06gmQI8FhGAZnBc6EdLqMUAE0wOBz81Wtl4AoFGLQt7DTd9htJuAI8iGhVE3Z17yzm1IRfx4OZu2ZX2kUui6AByMr68eIwVzFo/9OUmkvIqLd7IxII8cxs=
+ b=K2ZaIQ+jPnzdTaE9+0QDAe4pZohcCkvsA5mgNjvhmg6yEqz5cfubb7ZIFwfBj7CkDKxqrMm8T9ehhGJtnREttfxxc0sjIqu+ubmJBfyITvQc8gEOm/BgZ+8mU1XRgkZZl34BmCaP+hZKdnQnj/T9nPVtjsVIs+0/cPJH8mMUlnU=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=testarcselector01;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uNXz04Z7C+5W3TJtwrxrwqE607ze5QMOc5LQK7Sww2I=;
- b=ODHu3he2kEnXX3CPuyrlQqTa4Tkl+HRh3Nk7aL+KhF0Hvn6iidw7hrAgXEILqOSsvsQ4zjBkuKONj74/Lj69/kEyKibSX6uTVymo/FzUnzl7O/FyAcCwi29qzdjZ3c1krOENDNX19Q2iFi3YixpvZibwbjTmq7wt1hwoYhHTLfc=
+ bh=gvC19Yf40mYc0pYEteOzJeS21p6geKK+URR5jdlV0Ic=;
+ b=VrcYiDd/4NeLdX2IL9zdmiHHklrRnnTqF5SNDd8bD8OOL2BO7B3HwqdOU3qOvnVYCpvfnzUt3p8ulRVIcZ5zexCJt2GP3nlkHmRu0/UM0bh+MrGOLVJafvyVuGaEfbCRpeMnqxH3hcO0OXuPwjL7gISfDbuJq5PxaR05z6jPxfE=
 ARC-Authentication-Results: i=1; test.office365.com
  1;spf=none;dmarc=none;dkim=none;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uNXz04Z7C+5W3TJtwrxrwqE607ze5QMOc5LQK7Sww2I=;
- b=IcUTrE7YrjrQyh3YcUxp6lkXuweu8Bbu1PHa2MwX98NIy1BTLKu1/clUSFUXL23sFqh71t/VXJK1lV6kvMeQFPIUZCXGYlOXAh/qJr/IEgsy2A1RmHFVxnr0HpH1+8iQJzy2/qU6ymMfJGYUhwqe0VPv1z52cW7qHoNYQMBUbqM=
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM (10.170.173.13) by
- KU1P153MB0165.APCP153.PROD.OUTLOOK.COM (10.170.173.12) with Microsoft SMTP
+ bh=gvC19Yf40mYc0pYEteOzJeS21p6geKK+URR5jdlV0Ic=;
+ b=VNFb513o7IVVO7jDPPHVdKbvYTjTMXKzUd3qFpJreGz8DoN452UaHk2sLz6k08PmhVrkH01FdQNJgSpThUYLTfQlOh9RAef4A92lD+/+vVCkeQHDxGuFjMh97g+F3tvy1PGjtpPPcLCdxz9z/b5IUIQj7noI4BODLv6Oo4+T1P4=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.4; Mon, 6 May 2019 15:58:39 +0000
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::6c7b:a3:ef4d:9b]) by KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::6c7b:a3:ef4d:9b%6]) with mapi id 15.20.1900.002; Mon, 6 May 2019
- 15:58:39 +0000
+ 15.20.1900.4; Tue, 7 May 2019 07:46:56 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::453:8268:2686:4cf]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::453:8268:2686:4cf%8]) with mapi id 15.20.1900.002; Tue, 7 May 2019
+ 07:46:56 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: Hyperv netvsc - regression for 32-PAE kernel
-Thread-Topic: Hyperv netvsc - regression for 32-PAE kernel
-Thread-Index: AQHVAeqHjkTZJm8GekSKWOjutArYtKZd8KoAgABTs4A=
-Date:   Mon, 6 May 2019 15:58:39 +0000
-Message-ID: <KU1P153MB0166488D1E03E925C8F022A4BF300@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-References: <6166175.oDc9uM0lzg@rocinante.m.i2n>
- <DM5PR2101MB091875296619F1518C109E71D7340@DM5PR2101MB0918.namprd21.prod.outlook.com>
- <PU1P153MB01698936BF3332FCBF64D65DBF350@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <5083893.yzDQlZqgr7@rocinante.m.i2n>
-In-Reply-To: <5083893.yzDQlZqgr7@rocinante.m.i2n>
+To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "juliana.rodrigueiro@intra2net.com" 
+        <juliana.rodrigueiro@intra2net.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [PATCH] Drivers: hv: vmbus: Fix virt_to_hvpfn() for X86_PAE
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Fix virt_to_hvpfn() for X86_PAE
+Thread-Index: AQHVBKkKTisq9OloE02W7qrjLXJSBQ==
+Date:   Tue, 7 May 2019 07:46:55 +0000
+Message-ID: <1557215147-89776-1-git-send-email-decui@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-06T15:58:40.6761077Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bd67efc3-65a5-447f-9d27-d9845490d00f;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-clientproxiedby: MWHPR2201CA0038.namprd22.prod.outlook.com
+ (2603:10b6:301:16::12) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:9532:78f0:9f27:a980]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 712fc096-9d90-41f0-f173-08d6d23bb4d6
+x-ms-office365-filtering-correlation-id: a664109b-49a5-41d0-4e66-08d6d2c02cda
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:KU1P153MB0165;
-x-ms-traffictypediagnostic: KU1P153MB0165:
-x-microsoft-antispam-prvs: <KU1P153MB0165F95CEA0E512BA674C55BBF300@KU1P153MB0165.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0029F17A3F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(346002)(366004)(396003)(136003)(189003)(199004)(6246003)(4326008)(476003)(11346002)(8676002)(6116002)(86362001)(53936002)(66476007)(10290500003)(52536014)(8936002)(71190400001)(107886003)(66946007)(256004)(73956011)(66446008)(64756008)(71200400001)(66556008)(76116006)(22452003)(8990500004)(81166006)(81156014)(86612001)(486006)(10090500001)(446003)(305945005)(7736002)(478600001)(4744005)(54906003)(5660300002)(46003)(76176011)(316002)(68736007)(7696005)(53546011)(74316002)(33656002)(186003)(25786009)(9686003)(6916009)(14454004)(99286004)(6506007)(2906002)(55016002)(6436002)(102836004)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:KU1P153MB0165;H:KU1P153MB0166.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB0942;
+x-ms-traffictypediagnostic: SN6PR2101MB0942:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SN6PR2101MB094278C89534CE50B17A0B5BBF310@SN6PR2101MB0942.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0030839EEE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(366004)(376002)(39860400002)(189003)(199004)(68736007)(7416002)(53936002)(10290500003)(10090500001)(6436002)(6486002)(476003)(71200400001)(2501003)(86362001)(66446008)(64756008)(86612001)(66476007)(66556008)(73956011)(66946007)(1511001)(66066001)(3846002)(6116002)(305945005)(71190400001)(4744005)(6512007)(25786009)(4720700003)(36756003)(6506007)(386003)(54906003)(2906002)(186003)(99286004)(478600001)(256004)(5660300002)(14444005)(2616005)(4326008)(52116002)(102836004)(81156014)(8936002)(7736002)(316002)(81166006)(110136005)(50226002)(8676002)(486006)(26005)(14454004)(22452003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0942;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FXyj++7xoWyUw07TXGj8KC5MGR01fmafRAK0MpCqzN0bNR+lT3wsss2UZyUarfO1MULqiffLmSaa7KyggfL6JJzSRV6w0sDcroU7cdNPgPKxXq+SqhqkfdSLtu0OHZDuWUhO4abw3j+4F3HbnAnj8fuCCzahQpeQdLlDbXfPf3nu2gPySptIeCAIXiCTnkujbZApy8Q0tz/mECTRv5foGVI/HiG1NYRUXgTmRTxX4jZL2L4YcBwKlac0rmX+9OEtKGDXWiFH01fyWsRWcMQjPQ1iXYOicy2s9B/O20TG0et87CNbejfykYjX2GJzJ0sAjq0L2Xiv+kbuuZzJeiF1hhOx/1tqNFSqaiK7OdoboNb8KrhBSnXCEYLuurQbkH5P1jS1HvW8iGz9xXxwyqb4URIjBw/9n38AFRMvsJYbv4E=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: mN1U5dTKpJoC4gWAVZJstFwDud/bS6FJp8Ysvr2q6dhztk7F+mHSMruVCfukPWAgvlj6G/4U9nRFIzO0w8yhMTyPdMa2x0FvxrFcfBsZwfxa0INnNY5fSfOXUkaj7zo4kzAQwe1zrffI++bqJay753a3MGqsAEKElK7ng3DoF+zKkKIJIIyxnA/gMp96XMg7LcSTGGDu1oADmeszS1+wpbTy3QBqZafedsFAAyL5+0aRamh7yRzds7IxrJbM1lf2nYrAts2LYXQXhZ6uDicQzI+oyYKEwAdUN8CpFjQ4gpWLVsKdl2iSoriT+6C9d5cNX6YZfuGhhrmzQHyphG435QpIW92tX6Ue473f6JmYUQqbrLTARzCNtwKOlD155tfn21+2cvMZPT0AkzHnZj5u2T4f0MH2qNEOrsZ1yr36+vk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 712fc096-9d90-41f0-f173-08d6d23bb4d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 15:58:39.2705
+X-MS-Exchange-CrossTenant-Network-Message-Id: a664109b-49a5-41d0-4e66-08d6d2c02cda
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 07:46:55.8980
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0165
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0942
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-> Sent: Monday, May 6, 2019 3:56 AM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org
-> Subject: Re: Hyperv netvsc - regression for 32-PAE kernel
->=20
-> Hi Dexuan.
->=20
-> > Can you please try the below one-line patch?
->=20
-> Nice, easy one liner and it works well for me.
->=20
-> I hope this patch will be applied.
->=20
-> Thank you!
->=20
-> Julie R.
-
-Hi Julie,
-
-Thanks for testing the patch!
-
-I'm going to formally send the patch to the list.
-
-Can I add a "Reported-and-tested-by" tag for you?
-
-Thanks,
--- Dexuan
+SW4gdGhlIGNhc2Ugb2YgWDg2X1BBRSwgdW5zaWduZWQgbG9uZyBpcyB1MzIsIGJ1dCB0aGUgcGh5
+c2ljYWwgYWRkcmVzcyB0eXBlDQpzaG91bGQgYmUgdTY0LiBEdWUgdG8gdGhlIGJ1ZyBoZXJlLCB0
+aGUgbmV0dnNjIGRyaXZlciBjYW4gbm90IGxvYWQNCnN1Y2Nlc3NmdWxseSwgYW5kIHNvbWV0aW1l
+cyB0aGUgVk0gY2FuIHBhbmljIGR1ZSB0byBtZW1vcnkgY29ycnVwdGlvbiAodGhlDQpoeXBlcnZp
+c29yIHdyaXRlcyBkYXRhIHRvIHRoZSB3cm9uZyBsb2NhdGlvbikuDQoNCkZpeGVzOiA2YmEzNDE3
+MWJjYmQgKCJEcml2ZXJzOiBodjogdm1idXM6IFJlbW92ZSB1c2Ugb2Ygc2xvd192aXJ0X3RvX3Bo
+eXMoKSIpDQpDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KQ2M6IE1pY2hhZWwgS2VsbGV5IDxt
+aWtlbGxleUBtaWNyb3NvZnQuY29tPg0KUmVwb3J0ZWQtYW5kLXRlc3RlZC1ieTogSnVsaWFuYSBS
+b2RyaWd1ZWlybyA8anVsaWFuYS5yb2RyaWd1ZWlyb0BpbnRyYTJuZXQuY29tPg0KU2lnbmVkLW9m
+Zi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4NCi0tLQ0KIGRyaXZlcnMvaHYv
+Y2hhbm5lbC5jIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
+dGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9odi9jaGFubmVsLmMgYi9kcml2ZXJzL2h2
+L2NoYW5uZWwuYw0KaW5kZXggMjMzODFjNDFkMDg3Li5hYWFlZTVmOTMxOTMgMTAwNjQ0DQotLS0g
+YS9kcml2ZXJzL2h2L2NoYW5uZWwuYw0KKysrIGIvZHJpdmVycy9odi9jaGFubmVsLmMNCkBAIC0z
+OCw3ICszOCw3IEBADQogDQogc3RhdGljIHVuc2lnbmVkIGxvbmcgdmlydF90b19odnBmbih2b2lk
+ICphZGRyKQ0KIHsNCi0JdW5zaWduZWQgbG9uZyBwYWRkcjsNCisJcGh5c19hZGRyX3QgcGFkZHI7
+DQogDQogCWlmIChpc192bWFsbG9jX2FkZHIoYWRkcikpDQogCQlwYWRkciA9IHBhZ2VfdG9fcGh5
+cyh2bWFsbG9jX3RvX3BhZ2UoYWRkcikpICsNCi0tIA0KMi4xNy4xDQoNCg==
