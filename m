@@ -2,119 +2,180 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B85D5163FE
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 May 2019 14:51:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3402C171DF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 May 2019 08:46:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfEGMv4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 May 2019 08:51:56 -0400
-Received: from mail-eopbgr780114.outbound.protection.outlook.com ([40.107.78.114]:48320
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726348AbfEGMvz (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 May 2019 08:51:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=E+hA16GAMRZHIHZAs4CR/MpAVOXzHu/EmLXlhi/ZbQPJAz/TI1cFlkxrEtq6w4LRB6VJHds8DlzkR2ACgbdRHSLGPpZ1ytJc6RcCXjkwJa54VOWsUKLDg0jR/6XsY5+5HjTBR1lNxLnlYn5sLLIl8ppbeSNYVpw5zsK0vZd2A/Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k0Ky181NJatpNjnAsO3YPhF0oKBEzAmcIwNcbi6h5yY=;
- b=CVawSngQnpKP9858lGqPvgCpRaelaXy2NtVUVYCOgaBs1owCKvrvL9RESmU7xltnnuRIY5sG+p2/quLYonzzWNJe9EpQeWqxcSVB4gwaLL3xOS11uVFA3o8AMjAa4JgkEZBpPSnTD3VVYAN93U81/hAVNwe+7MotlW96GDBmzRM=
-ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
- action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k0Ky181NJatpNjnAsO3YPhF0oKBEzAmcIwNcbi6h5yY=;
- b=J4MSG3Ty3FYAGby5SNsEF0eAVXGWZOOOvQetMdJBR47DDt58DIlDnGcI6VAZdqxxqR8kzDaXyHcfE6a9wISKOwtXcx0PEqu9Uw4IAAfPpq+tG6wWn25Fwkm47epb7NUPWjofp61aIgb4KkvxGNFnt1WE+TmYf+AOn2Lnrk8NZBM=
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
- DM5PR2101MB0902.namprd21.prod.outlook.com (52.132.132.159) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.2; Tue, 7 May 2019 12:51:52 +0000
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::25b3:455b:5e85:3c60]) by DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::25b3:455b:5e85:3c60%3]) with mapi id 15.20.1900.002; Tue, 7 May 2019
- 12:51:52 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
-        "juliana.rodrigueiro@intra2net.com" 
-        <juliana.rodrigueiro@intra2net.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] Drivers: hv: vmbus: Fix virt_to_hvpfn() for X86_PAE
-Thread-Topic: [PATCH] Drivers: hv: vmbus: Fix virt_to_hvpfn() for X86_PAE
-Thread-Index: AQHVBKkKTisq9OloE02W7qrjLXJSBaZfnaGA
-Date:   Tue, 7 May 2019 12:51:51 +0000
-Message-ID: <DM5PR2101MB09188A7DB0777CD50333F94ED7310@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <1557215147-89776-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1557215147-89776-1-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-07T12:51:49.1646513Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=98dfddef-5679-453b-aaa2-4ac33bc314a9;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 038d20fb-c55e-4c35-44c5-08d6d2eac710
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB0902;
-x-ms-traffictypediagnostic: DM5PR2101MB0902:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR2101MB0902F772A4FB05CCF3A0844CD7310@DM5PR2101MB0902.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
-x-forefront-prvs: 0030839EEE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(396003)(346002)(39860400002)(199004)(189003)(4744005)(10090500001)(71200400001)(71190400001)(86362001)(86612001)(7696005)(256004)(33656002)(186003)(14454004)(81156014)(81166006)(8936002)(22452003)(1511001)(5660300002)(99286004)(54906003)(110136005)(66066001)(316002)(8990500004)(8676002)(2201001)(76176011)(53936002)(9686003)(55016002)(6116002)(7416002)(229853002)(74316002)(68736007)(3846002)(102836004)(7736002)(6246003)(6436002)(2501003)(305945005)(4326008)(2906002)(446003)(6506007)(478600001)(10290500003)(486006)(476003)(52536014)(11346002)(26005)(25786009)(66446008)(73956011)(76116006)(66476007)(66556008)(66946007)(64756008)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0902;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: b10gQ6SjZVqoPEjp5oLD2AbPp/q6XqYXeFaPDuA6O92UH03zjJh6oYy3OT8xkCHo73+GSWYhoVvh5vnJXlgB60uHFQyfQZJGHbGOF6ziYMagdlyxC3iDop91gzGqPzrzlBXkhaZWCtzjckD/+E6nwc2eWuANlnsVg+kkrKPJZbGo/fDDE6FG/jU+8jSu904TtlR+ogtnruzOALlgghJff4m8zuv2cNvktGRNbBmUXko7m/VdKXg3cipuX0xxqWrvPfxZahk9Li4FFv60Ly7qYwRVT/Q7NMsTIaH7NqFJnBnT0Ygq+J0MfFWLC9VO1ZZZwFsPL3pAIkIr9RByD9qyasBluycADonSmrdu2mN2IHpJD+M3vGest/amGj4d0XUJPICCqM7LkiJKy5hS7hg04ccVFFgW+ANMXJa0xjAArkg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725910AbfEHGqF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 8 May 2019 02:46:05 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35956 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfEHGqF (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 8 May 2019 02:46:05 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d21so1952199plr.3;
+        Tue, 07 May 2019 23:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4DUh9Xcm/+kqmJjlUuDP+kgdaf/m7nKRE3FjK2Rv110=;
+        b=Hy8NDYrsqnZwnd9CfIDCFYNKEpEd9gKQcdtQmPWmnREKmprUM7peDj4+UQLeVIKKFe
+         7Qw7mz2heQhEniNotufd5mzaYUDHnbRh4a53Di4iSNe5lccr7796R7fonx6WTJPlsHu+
+         L7iOHauF+jbf9T/vSrsWWKg/n02K+4Dq2atIvFXPws68f2R8kPSLPkEaKCWE7xVzVeur
+         LRyWIiB5jCj8GhbkKO8+pIqLbXu1NUHPUan7wvyEZEv2qeUYTNTYZUnsh16cf3fr3Dr0
+         zGAuqE1kjMNpBUvDOwzg+N/5xEfU1JZD57cTn7kpirnWZaHbRCf6/lyi1cghgzqrwmG/
+         n4cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4DUh9Xcm/+kqmJjlUuDP+kgdaf/m7nKRE3FjK2Rv110=;
+        b=ZPsqFi+hOTN8OEXudWBsuwwqZfznC4FOMa3pTNBOXi6TZk/1HTS23Mz2sRTgOfT/g/
+         N/tPSeuYC+CPmgVhXfVHijrBHzB4qml8MyMAPEpyw/JMIbWrVJFGfj1At6vX5155/cEy
+         vWIATgRddjCJxTRiFMcfhbCBcKR+s8tYL7tNFrM7ptpDf2QdQKFUClj18foT49dj8gTs
+         IOYJ2/q6ljfeSIXZjUV+8i1QTh62X0oct80OIPGkFrqiFxEh4NJas57BnEAfwSM09XuB
+         yhSrw/EFHm5LEHl5GCOSIZ8EM2SHNe9BYXc/4OMCkweqPbRQLriwl8FxjZVsaN4Wiw+Z
+         x/BQ==
+X-Gm-Message-State: APjAAAWlamPYaBGaTF+C1xVGqlu8v2Au+AtBCBJS0m7TEQmOOT8NXwPx
+        lFddp2j0bIh/JlVeteAOl9433dDu3zE8ZA==
+X-Google-Smtp-Source: APXvYqzNYhgPTvQOvaTTd6e7w+Nt3e97ZY7V+6OX4zzbAoi+KgoQYyvevP7E2LfOEEsKyIt+ShlZkg==
+X-Received: by 2002:a17:902:b581:: with SMTP id a1mr10275191pls.206.1557297964208;
+        Tue, 07 May 2019 23:46:04 -0700 (PDT)
+Received: from maya190131 ([52.229.39.81])
+        by smtp.gmail.com with ESMTPSA id c137sm26005567pfb.154.2019.05.07.23.46.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 May 2019 23:46:03 -0700 (PDT)
+Date:   Wed, 8 May 2019 06:46:02 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] x86: hv: hv_init.c: Replace alloc_page() with
+ kmem_cache_alloc()
+Message-ID: <20190508064559.GA54416@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net>
+References: <cover.1554426039.git.m.maya.nakamura@gmail.com>
+ <bdbacc872e369762a877af4415ad1b07054826db.1554426040.git.m.maya.nakamura@gmail.com>
+ <87wok8it8p.fsf@vitty.brq.redhat.com>
+ <20190412072401.GA69620@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net>
+ <87mukvfynk.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 038d20fb-c55e-4c35-44c5-08d6d2eac710
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2019 12:51:51.0333
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0902
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87mukvfynk.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RnJvbTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4gU2VudDogVHVlc2RheSwgTWF5
-IDcsIDIwMTkgMTI6NDcgQU0NCj4gDQo+IEluIHRoZSBjYXNlIG9mIFg4Nl9QQUUsIHVuc2lnbmVk
-IGxvbmcgaXMgdTMyLCBidXQgdGhlIHBoeXNpY2FsIGFkZHJlc3MgdHlwZQ0KPiBzaG91bGQgYmUg
-dTY0LiBEdWUgdG8gdGhlIGJ1ZyBoZXJlLCB0aGUgbmV0dnNjIGRyaXZlciBjYW4gbm90IGxvYWQN
-Cj4gc3VjY2Vzc2Z1bGx5LCBhbmQgc29tZXRpbWVzIHRoZSBWTSBjYW4gcGFuaWMgZHVlIHRvIG1l
-bW9yeSBjb3JydXB0aW9uICh0aGUNCj4gaHlwZXJ2aXNvciB3cml0ZXMgZGF0YSB0byB0aGUgd3Jv
-bmcgbG9jYXRpb24pLg0KPiANCj4gRml4ZXM6IDZiYTM0MTcxYmNiZCAoIkRyaXZlcnM6IGh2OiB2
-bWJ1czogUmVtb3ZlIHVzZSBvZiBzbG93X3ZpcnRfdG9fcGh5cygpIikNCj4gQ2M6IHN0YWJsZUB2
-Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQu
-Y29tPg0KPiBSZXBvcnRlZC1hbmQtdGVzdGVkLWJ5OiBKdWxpYW5hIFJvZHJpZ3VlaXJvIDxqdWxp
-YW5hLnJvZHJpZ3VlaXJvQGludHJhMm5ldC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IERleHVhbiBD
-dWkgPGRlY3VpQG1pY3Jvc29mdC5jb20+DQoNClJldmlld2VkLWJ5OiAgTWljaGFlbCBLZWxsZXkg
-PG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQo=
+On Fri, Apr 12, 2019 at 09:52:47AM +0200, Vitaly Kuznetsov wrote:
+> Maya Nakamura <m.maya.nakamura@gmail.com> writes:
+> 
+> > On Fri, Apr 05, 2019 at 01:31:02PM +0200, Vitaly Kuznetsov wrote:
+> >> Maya Nakamura <m.maya.nakamura@gmail.com> writes:
+> >> 
+> >> > @@ -98,18 +99,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
+> >> >  u32 hv_max_vp_index;
+> >> >  EXPORT_SYMBOL_GPL(hv_max_vp_index);
+> >> >  
+> >> > +struct kmem_cache *cachep;
+> >> > +EXPORT_SYMBOL_GPL(cachep);
+> >> > +
+> >> >  static int hv_cpu_init(unsigned int cpu)
+> >> >  {
+> >> >  	u64 msr_vp_index;
+> >> >  	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+> >> >  	void **input_arg;
+> >> > -	struct page *pg;
+> >> >  
+> >> >  	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+> >> > -	pg = alloc_page(GFP_KERNEL);
+> >> > -	if (unlikely(!pg))
+> >> > +	*input_arg = kmem_cache_alloc(cachep, GFP_KERNEL);
+> >> 
+> >> I'm not sure use of kmem_cache is justified here: pages we allocate are
+> >> not cache-line and all these allocations are supposed to persist for the
+> >> lifetime of the guest. In case you think that even on x86 it will be
+> >> possible to see PAGE_SIZE != HV_HYP_PAGE_SIZE you can use alloc_pages()
+> >> instead.
+> >> 
+> > Thank you for your feedback, Vitaly!
+> >
+> > Will you please tell me how cache-line relates to kmem_cache?
+> >
+> > I understand that alloc_pages() would work when PAGE_SIZE <=
+> > HV_HYP_PAGE_SIZE, but I think that it would not work if PAGE_SIZE >
+> > HV_HYP_PAGE_SIZE.
+> 
+> Sorry, my bad: I meant to say "not cache-like" (these allocations are
+> not 'cache') but the typo made it completely incomprehensible. 
+ 
+No worries! Thank you for sharing your thoughts with me, Vitaly.
+
+Do you know of any alternatives to kmem_cache that can allocate memory
+in a specified size (different than a guest page size) with alignment?
+Memory allocated by alloc_page() is aligned but limited to the guest
+page size, and kmalloc() can allocate a particular size but it seems
+that it does not guarantee alignment. I am asking this while considering
+the changes for architecture independent code.
+
+> >> Also, in case the idea is to generalize stuff, what will happen if
+> >> PAGE_SIZE > HV_HYP_PAGE_SIZE? Who will guarantee proper alignment?
+> >> 
+> >> I think we can leave hypercall arguments, vp_assist and similar pages
+> >> alone for now: the code is not going to be shared among architectures
+> >> anyways.
+> >> 
+> > About the alignment, kmem_cache_create() aligns memory with its third
+> > parameter, offset.
+> 
+> Yes, I know, I was trying to think about a (hypothetical) situation when
+> page sizes differ: what would be the memory alignment requirements from
+> the hypervisor for e.g. hypercall arguments? In case it's always
+> HV_HYP_PAGE_SIZE we're good but could it be PAGE_SIZE (for e.g. TLB
+> flush hypercall)? I don't know. For x86 this discussion probably makes
+> no sense. I'm, however, struggling to understand what benefit we will
+> get from the change. Maybe just leave it as-is for now and fix
+> arch-independent code only? And later, if we decide to generalize this
+> code, make another approach? (Not insisting, just a suggestion)
+
+Thank you for the suggestion, Vitaly!
+
+The introduction of HV_HYP_PAGE_SIZE is weighing the assumption of the
+future page size—it can be bigger based on the general trend, not
+smaller, which is a reasonable assumption, I think.
+
+> >> > @@ -338,7 +349,10 @@ void __init hyperv_init(void)
+> >> >  	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
+> >> >  	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
+> >> >  
+> >> > -	hv_hypercall_pg  = __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RX);
+> >> > +	hv_hypercall_pg = kmem_cache_alloc(cachep, GFP_KERNEL);
+> >> > +	if (hv_hypercall_pg)
+> >> > +		set_memory_x((unsigned long)hv_hypercall_pg, 1);
+> >> 
+> >> _RX is not writeable, right?
+> >> 
+> > Yes, you are correct. I should use set_memory_ro() in addition to
+> > set_memory_x().
+> >
+> >> > @@ -416,6 +431,7 @@ void hyperv_cleanup(void)
+> >> >  	 * let hypercall operations fail safely rather than
+> >> >  	 * panic the kernel for using invalid hypercall page
+> >> >  	 */
+> >> > +	kmem_cache_free(cachep, hv_hypercall_pg);
+> >> 
+> >> Please don't do that: hyperv_cleanup() is called on kexec/kdump and
+> >> we're trying to do the bare minimum to allow next kernel to boot. Doing
+> >> excessive work here will likely lead to consequent problems (we're
+> >> already crashing the case it's kdump!).
+> >> 
+> > Thank you for the explanation! I will remove that.
+> >
+> 
+> -- 
+> Vitaly
