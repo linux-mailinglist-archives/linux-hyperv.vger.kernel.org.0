@@ -2,280 +2,134 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D3331E66B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 May 2019 02:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3B091FE86
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 May 2019 06:34:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfEOA4J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 14 May 2019 20:56:09 -0400
-Received: from mail-eopbgr680101.outbound.protection.outlook.com ([40.107.68.101]:2023
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        id S1726252AbfEPEeb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 May 2019 00:34:31 -0400
+Received: from mail-eopbgr1310105.outbound.protection.outlook.com ([40.107.131.105]:33523
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfEOA4J (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 14 May 2019 20:56:09 -0400
+        id S1726223AbfEPEea (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 16 May 2019 00:34:30 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=oigbJS5dK74b905sNEydOXIN6tydKwbQDM2tyvsjzANd+SqC+RRy/ZoyaI2kNVu5EQFFBvUQyVzqlHeX49kGS74Kw+jVRSRkMqBALsLmKiOMzm3EZVGaG8L/fYHNQHLjSry46Ve9Hp21U4R+NmtAIL0o4sRJ8HZ4kpK3NDuYAJ0=
+ b=P4PjJApANutG2feoU2XfuE62+oi9LiaMnBNhrtcvXb6yoTY/QK54o/qR1oyDh37JoSeC3/FBRffOxRrnCMBVUs1orzW55SCZgYpfcmYAMOIS2iWVI8z0nAwqxVVyCLBxuhFSySCIvyVTwNJl7oERNDca3Fqml1Qxc4Q4APxc1Dw=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=testarcselector01;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bkdc3/5BuBGXEIH/Fh/sVpiIPNxeNgPy74/riz32xzc=;
- b=OV/7lCVUBV0SuEfW0NVWuZD/hvltmWhihk7QfuF9p6fLKqmedxcMvw3wZluPoiT1s59BxqatF+Yh+9YiLzgUocohLJJAozWZsb9qV1xIi6FZpb7GQnzmcMSF/32ZwSX60Jlg6h+INuaYeC9YD8ZG4AF2SXapJiFxhFcThOH9pkI=
+ bh=gekgEer85PRnACe5n2c19L+ylZ38usHU2iUz6thQoWo=;
+ b=GJbPsxDnZ7aGq99I6/jYupVC2JJqB8biP7L30D1QpLNd/hUG8DJqWOSB/m8BtntzAoy+/nl0HLQvjFqGMHNoqProXyql3NvtMyQwVp8cAr+SK9OdYnRFnB/+8UhKWZzG2ODkXKm8kai6gVSF2rHkB8zO1pzK8EHpIJ2Njz3oUOQ=
 ARC-Authentication-Results: i=1; test.office365.com
  1;spf=none;dmarc=none;dkim=none;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bkdc3/5BuBGXEIH/Fh/sVpiIPNxeNgPy74/riz32xzc=;
- b=IYo5F4rbvs6NtIrkoFMLQswIoCtx1TXOeOaGQ9Fn3AlzPYdudFvxGC8A9c8KiblXz4VLo1WXkU454gqy8p9UInAmL5sqXe6clnx/ZrtWltUeZfvAghJzoGMICsweXTm04uolyNtZUKavdBwosA48JFwE7xcreW49jYlMDAcxj2Q=
-Received: from BN6PR21MB0465.namprd21.prod.outlook.com (2603:10b6:404:b2::15)
- by BN6PR21MB0179.namprd21.prod.outlook.com (2603:10b6:404:94::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.4; Wed, 15 May
- 2019 00:56:05 +0000
-Received: from BN6PR21MB0465.namprd21.prod.outlook.com
- ([fe80::6cf3:89fb:af21:b168]) by BN6PR21MB0465.namprd21.prod.outlook.com
- ([fe80::6cf3:89fb:af21:b168%12]) with mapi id 15.20.1922.002; Wed, 15 May
- 2019 00:56:05 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
+ bh=gekgEer85PRnACe5n2c19L+ylZ38usHU2iUz6thQoWo=;
+ b=MeZbAWvq4D5uWCE8Qt7AiqspVr2kqNdpzWYNh2qs0EHneXp/kJv0RZAA1S24TXcHeQSrsXzBcUIx7cINT+HeCkHZ0euUVvgNDNfllxPtuDooZsI0WrcVEUIDbp4txdSSsZ1b70p4jwoJthEnF02eyIhQzO9rfbwZHf0ooP5QfWQ=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0121.APCP153.PROD.OUTLOOK.COM (10.170.188.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.4; Thu, 16 May 2019 04:34:22 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::dc7e:e62f:efc9:8564]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::dc7e:e62f:efc9:8564%4]) with mapi id 15.20.1922.002; Thu, 16 May 2019
+ 04:34:22 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>
 CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] hv_sock: Add support for delayed close
+Subject: RE: [PATCH v2] hv_sock: Add support for delayed close
 Thread-Topic: [PATCH v2] hv_sock: Add support for delayed close
-Thread-Index: AdUKtaBXG33lHE0AQU2ynJ9GbZ74Uw==
-Date:   Wed, 15 May 2019 00:56:05 +0000
-Message-ID: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
+Thread-Index: AdUKtaBXG33lHE0AQU2ynJ9GbZ74UwA3pTOg
+Date:   Thu, 16 May 2019 04:34:21 +0000
+Message-ID: <PU1P153MB01698261307593C5D58AAF4FBF0A0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
+In-Reply-To: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-16T04:34:19.9899242Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a52563af-82a7-4a5f-aed5-227da8f0af23;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sunilmut@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:7:f8d4:c8e7:5ebf:2c16]
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:3901:5c9:f1fc:42c6]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 96ff9b84-c6ac-46dd-4022-08d6d8d01c3f
+x-ms-office365-filtering-correlation-id: 878d9d75-e326-4f7e-110d-08d6d9b7c4bb
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BN6PR21MB0179;
-x-ms-traffictypediagnostic: BN6PR21MB0179:
-x-microsoft-antispam-prvs: <BN6PR21MB01793379E5425F94C748387FC0090@BN6PR21MB0179.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(366004)(376002)(396003)(39860400002)(199004)(189003)(476003)(76116006)(86612001)(99286004)(86362001)(73956011)(46003)(55016002)(7696005)(9686003)(8936002)(2906002)(8676002)(81166006)(6436002)(186003)(66446008)(81156014)(14444005)(1511001)(66946007)(66476007)(66556008)(64756008)(256004)(52396003)(102836004)(316002)(6506007)(486006)(6116002)(7736002)(54906003)(25786009)(478600001)(4326008)(68736007)(53936002)(10090500001)(71200400001)(71190400001)(22452003)(110136005)(52536014)(33656002)(14454004)(305945005)(6636002)(74316002)(10290500003)(5660300002)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR21MB0179;H:BN6PR21MB0465.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0121;
+x-ms-traffictypediagnostic: PU1P153MB0121:
+x-microsoft-antispam-prvs: <PU1P153MB012108AC43BD1EE0AA06E135BF0A0@PU1P153MB0121.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(136003)(346002)(396003)(39860400002)(189003)(199004)(54906003)(99286004)(476003)(110136005)(8676002)(7696005)(486006)(81156014)(8936002)(81166006)(76176011)(74316002)(55016002)(9686003)(10090500001)(305945005)(7736002)(14444005)(46003)(11346002)(256004)(229853002)(10290500003)(76116006)(446003)(8990500004)(5660300002)(53936002)(6246003)(25786009)(102836004)(186003)(6436002)(2906002)(52536014)(68736007)(73956011)(14454004)(66946007)(66476007)(33656002)(316002)(86612001)(6116002)(66556008)(64756008)(66446008)(71200400001)(71190400001)(4326008)(1511001)(6636002)(478600001)(6506007)(86362001)(22452003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0121;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iMQye8ecMFwkXmGJoaKXfahKuEUVQgAeu4N0GVn5XeC23Q2zOiCFv1wP4DkrCDyYF3YE0QySQpvh4s6eJJA3twrvxwwWXCEb+ePlSOnXX+QLAJIyUGmo3ks53cqIHR6rgNWAWrioxsSdHaR/RaMY3ql/yRnvXDvwEI7Vvsmau6BNs4FBRW/7mAQjJW32tutVt64+dBcuoQVUcZ+5eAxjWfWCYfi1SY70JK59kFTZN8IrM7uwCoQwosHRxt37SE+eO8uKRfRfe5E0FN2NKtqxMzstta4Ov4fv9COnsXgLFkxABde+EMEdMtAKZxRQaMkuKL+cd3x+HVwQYw67lIyUmN/hydrIWQhAvLXNiIqvBTz6WY9gjoWP3nEo3znzl/zIz8G8oDtlfA5mtCBqoM5gIVwskVPnFyAdmBhNdLh/YPU=
+x-microsoft-antispam-message-info: oqhACWNFxxZiYIW+nA8wLXX/zMq5cn/e1ZhI9G19K4BjR01siMhknvAYgxNNmI2Loc5KZpJhw0RxVNFrXrvAoTQ+k57ir3hOwTljPSD53fakYe5+MXfBt6T2e1HqVr6yI4+rlH+uUmjEc5uiZKHD4197ZY9ELMu8XJP8J1bam7OJ0d7OW94we7GQfJlcZo7PJdDesOcUi5w6ezXQeObx6TST5vFT9vIPyVxqL59E3L6QgJ9ltlum3bZTyoAVfI0Frf9PtAn0KkXJOQCAquEk3nWy6o1Kpab61lEln6jqhwLrXHLi6ZvYHibAem30+vKsamrIBH5T235IoKb4u4XzYYCpJFjwijzj6dPki5v3fzU4Rvevvo3Y6YPFiR748jwtGaBICdkNKAmcDP7/YBfyDbsrV0t9NH2NlfCKIlXw3HQ=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96ff9b84-c6ac-46dd-4022-08d6d8d01c3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 00:56:05.5466
+X-MS-Exchange-CrossTenant-Network-Message-Id: 878d9d75-e326-4f7e-110d-08d6d9b7c4bb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 04:34:21.8222
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0179
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0121
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Currently, hvsock does not implement any delayed or background close
-logic. Whenever the hvsock socket is closed, a FIN is sent to the peer, and
-the last reference to the socket is dropped, which leads to a call to
-.destruct where the socket can hang indefinitely waiting for the peer to
-close it's side. The can cause the user application to hang in the close()
-call.
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Sent: Tuesday, May 14, 2019 5:56 PM
+> ...
+> +static bool hvs_close_lock_held(struct vsock_sock *vsk)
+>  {
+> ...
+> +	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
 
-This change implements proper STREAM(TCP) closing handshake mechanism by
-sending the FIN to the peer and the waiting for the peer's FIN to arrive
-for a given timeout. On timeout, it will try to terminate the connection
-(i.e. a RST). This is in-line with other socket providers such as virtio.
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
-This change does not address the hang in the vmbus_hvsock_device_unregister
-where it waits indefinitely for the host to rescind the channel. That
-should be taken up as a separate fix.
+The patch looks good to me. Thank you, Sunil!
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
----
-Changes since v1:
-- Updated the title and description to better reflect the change. The title
-was previously called 'hv_sock: Fix data loss upon socket close'
-- Removed the sk_state_change call to keep the fix focused.
-- Removed 'inline' keyword from the .c file and letting compiler do it.
+Next, we're going to remove the "channel->rescind" check in=20
+vmbus_hvsock_device_unregister() -- when doing that, IMO we need to
+fix a potential race revealed by the schedule_delayed_work() in this
+patch:
 
- net/vmw_vsock/hyperv_transport.c | 108 ++++++++++++++++++++++++++++-------=
-----
- 1 file changed, 77 insertions(+), 31 deletions(-)
+When hvs_close_timeout() finishes, the "sk" struct has been freed, but
+vmbus_onoffer_rescind() -> channel->chn_rescind_callback(), i.e.=20
+hvs_close_connection(), may be still running and referencing the "chan"
+and "sk" structs (), which should no longer be referenced when=20
+hvs_close_timeout() finishes, i.e. "get_per_channel_state(chan)" is no
+longer safe. The problem is: currently there is no sync mechanism
+between vmbus_onoffer_rescind() and hvs_close_timeout().
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index a827547..982a8dc 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -35,6 +35,9 @@
- /* The MTU is 16KB per the host side's design */
- #define HVS_MTU_SIZE		(1024 * 16)
-=20
-+/* How long to wait for graceful shutdown of a connection */
-+#define HVS_CLOSE_TIMEOUT (8 * HZ)
-+
- struct vmpipe_proto_header {
- 	u32 pkt_type;
- 	u32 data_size;
-@@ -305,19 +308,32 @@ static void hvs_channel_cb(void *ctx)
- 		sk->sk_write_space(sk);
- }
-=20
--static void hvs_close_connection(struct vmbus_channel *chan)
-+static void hvs_do_close_lock_held(struct vsock_sock *vsk,
-+				   bool cancel_timeout)
- {
--	struct sock *sk =3D get_per_channel_state(chan);
--	struct vsock_sock *vsk =3D vsock_sk(sk);
--
--	lock_sock(sk);
-+	struct sock *sk =3D sk_vsock(vsk);
-=20
--	sk->sk_state =3D TCP_CLOSE;
- 	sock_set_flag(sk, SOCK_DONE);
--	vsk->peer_shutdown |=3D SEND_SHUTDOWN | RCV_SHUTDOWN;
--
-+	vsk->peer_shutdown =3D SHUTDOWN_MASK;
-+	if (vsock_stream_has_data(vsk) <=3D 0)
-+		sk->sk_state =3D TCP_CLOSING;
- 	sk->sk_state_change(sk);
-+	if (vsk->close_work_scheduled &&
-+	    (!cancel_timeout || cancel_delayed_work(&vsk->close_work))) {
-+		vsk->close_work_scheduled =3D false;
-+		vsock_remove_sock(vsk);
-=20
-+		/* Release the reference taken while scheduling the timeout */
-+		sock_put(sk);
-+	}
-+}
-+
-+static void hvs_close_connection(struct vmbus_channel *chan)
-+{
-+	struct sock *sk =3D get_per_channel_state(chan);
-+
-+	lock_sock(sk);
-+	hvs_do_close_lock_held(vsock_sk(sk), true);
- 	release_sock(sk);
- }
-=20
-@@ -452,50 +468,80 @@ static int hvs_connect(struct vsock_sock *vsk)
- 	return vmbus_send_tl_connect_request(&h->vm_srv_id, &h->host_srv_id);
- }
-=20
-+static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
-+{
-+	struct vmpipe_proto_header hdr;
-+
-+	if (hvs->fin_sent || !hvs->chan)
-+		return;
-+
-+	/* It can't fail: see hvs_channel_writable_bytes(). */
-+	(void)hvs_send_data(hvs->chan, (struct hvs_send_buf *)&hdr, 0);
-+	hvs->fin_sent =3D true;
-+}
-+
- static int hvs_shutdown(struct vsock_sock *vsk, int mode)
- {
- 	struct sock *sk =3D sk_vsock(vsk);
--	struct vmpipe_proto_header hdr;
--	struct hvs_send_buf *send_buf;
--	struct hvsock *hvs;
-=20
- 	if (!(mode & SEND_SHUTDOWN))
- 		return 0;
-=20
- 	lock_sock(sk);
-+	hvs_shutdown_lock_held(vsk->trans, mode);
-+	release_sock(sk);
-+	return 0;
-+}
-=20
--	hvs =3D vsk->trans;
--	if (hvs->fin_sent)
--		goto out;
--
--	send_buf =3D (struct hvs_send_buf *)&hdr;
-+static void hvs_close_timeout(struct work_struct *work)
-+{
-+	struct vsock_sock *vsk =3D
-+		container_of(work, struct vsock_sock, close_work.work);
-+	struct sock *sk =3D sk_vsock(vsk);
-=20
--	/* It can't fail: see hvs_channel_writable_bytes(). */
--	(void)hvs_send_data(hvs->chan, send_buf, 0);
-+	sock_hold(sk);
-+	lock_sock(sk);
-+	if (!sock_flag(sk, SOCK_DONE))
-+		hvs_do_close_lock_held(vsk, false);
-=20
--	hvs->fin_sent =3D true;
--out:
-+	vsk->close_work_scheduled =3D false;
- 	release_sock(sk);
--	return 0;
-+	sock_put(sk);
- }
-=20
--static void hvs_release(struct vsock_sock *vsk)
-+/* Returns true, if it is safe to remove socket; false otherwise */
-+static bool hvs_close_lock_held(struct vsock_sock *vsk)
- {
- 	struct sock *sk =3D sk_vsock(vsk);
--	struct hvsock *hvs =3D vsk->trans;
--	struct vmbus_channel *chan;
-=20
--	lock_sock(sk);
-+	if (!(sk->sk_state =3D=3D TCP_ESTABLISHED ||
-+	      sk->sk_state =3D=3D TCP_CLOSING))
-+		return true;
-=20
--	sk->sk_state =3D TCP_CLOSING;
--	vsock_remove_sock(vsk);
-+	if ((sk->sk_shutdown & SHUTDOWN_MASK) !=3D SHUTDOWN_MASK)
-+		hvs_shutdown_lock_held(vsk->trans, SHUTDOWN_MASK);
-=20
--	release_sock(sk);
-+	if (sock_flag(sk, SOCK_DONE))
-+		return true;
-=20
--	chan =3D hvs->chan;
--	if (chan)
--		hvs_shutdown(vsk, RCV_SHUTDOWN | SEND_SHUTDOWN);
-+	/* This reference will be dropped by the delayed close routine */
-+	sock_hold(sk);
-+	INIT_DELAYED_WORK(&vsk->close_work, hvs_close_timeout);
-+	vsk->close_work_scheduled =3D true;
-+	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
-+	return false;
-+}
-=20
-+static void hvs_release(struct vsock_sock *vsk)
-+{
-+	struct sock *sk =3D sk_vsock(vsk);
-+	bool remove_sock;
-+
-+	lock_sock(sk);
-+	remove_sock =3D hvs_close_lock_held(vsk);
-+	release_sock(sk);
-+	if (remove_sock)
-+		vsock_remove_sock(vsk);
- }
-=20
- static void hvs_destruct(struct vsock_sock *vsk)
---=20
-2.7.4
+The race is a real issue only after we remove the "channel->rescind"
+in vmbus_hvsock_device_unregister().
+
+I guess we need to introduce a new single-threaded workqueue in the
+vmbus driver, and offload both vmbus_onoffer_rescind() and=20
+hvs_close_timeout() onto the new workqueue.
+
+Thanks,
+-- Dexuan
 
