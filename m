@@ -2,59 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99FDB25C02
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 May 2019 05:14:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7E3325D71
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 May 2019 07:14:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbfEVDOY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 21 May 2019 23:14:24 -0400
-Received: from mail-eopbgr1310090.outbound.protection.outlook.com ([40.107.131.90]:9964
+        id S1726278AbfEVFOt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 May 2019 01:14:49 -0400
+Received: from mail-eopbgr1310099.outbound.protection.outlook.com ([40.107.131.99]:42551
         "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727930AbfEVDOY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 21 May 2019 23:14:24 -0400
+        id S1725808AbfEVFOs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 22 May 2019 01:14:48 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=b8xz1sSW894/X93HrONUhDQ0m5F2OWJjhQgjKV6NtEys7+LH9GzIPcTYh69E9rNNpYjFYXgy0q2GVavIAP+/1fIJrpbYVQlp5eOmjkcaDZkxPEWeLODmlgor+usFb4/W8X1tzn+S3Xo86IdpchmD70w+Tc9lOxRQcfoCYR7MNAI=
+ b=VQZDCwOhSUHVrQ2Z995q6pDwWa/qSKFq+qKRVzYH5Ow21XQ6tbje9/hXdBPB1tFGPE+k5NFjPiySntUjBA8x8+1ymJ9uFSXNFA62yXCFxgsrZNfeZADFeVc2WgwJrVlmlxZBPUmI0FCVEQur4f8hOh2kiPWcDmP6vJ57fGfXG2k=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=testarcselector01;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+nVHBDJ0o6EZ3T33XVej5ur+t3VJTljWJYfKN1Q19Do=;
- b=mOo6IpW+GP4+mLSAJtNq1hjBXtbTfMjZW9vJp5ncAYhihOmvfzAYjlfGoHHvOqyNF+BHJEW+27OTT57JboAiFmtyLLd8c2XaXKAKEYTeBCP+lj08qu4pabouvWefEy0928q1IYumEuxrFFlHX/dZs61qfNacsEUvZTGqeXNq9Yg=
+ bh=Y19JCdPuf9uVF9qJHJG3kC9ZS6Ar0waTtB8sdWI1csw=;
+ b=QnYv8oW6274aAPdBFji5KdBsklmMtTfe0MpS/SIBMahUU1dt6PhKTgKzl893Zdopl7Lg/3045hsf4dnmSElPoORd1j7URmSzRgH7cNYgBB4JOeo1hftc7ewPYhub/68xQX1sHvPxGwpp+IsBsq6vZm8VBTpMt5JOzxw/b99q5Cw=
 ARC-Authentication-Results: i=1; test.office365.com
  1;spf=none;dmarc=none;dkim=none;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+nVHBDJ0o6EZ3T33XVej5ur+t3VJTljWJYfKN1Q19Do=;
- b=lYiLT9caHTD7OeHYXcdBo7Cnm1/00fHr2j8zvA/3Sq8cNDN5vXw/0PI7uix7Kf/iviDskFny4I424a9tPk9VmRbgj2lncwJApn0iYt/uz8fzmqUo3iscthaoErkFd8/6Ojfh7AXWa9iYf5LiSIPz6JohW60mz8WmHULJ8l/tp2g=
+ bh=Y19JCdPuf9uVF9qJHJG3kC9ZS6Ar0waTtB8sdWI1csw=;
+ b=Qm3+equ60hMaeSqBxOxkJrEPVFK28Mkkqay+Oo04cBrbQDDFd8b3trFaz1uZfGLdHiav6/7QbgfLkBaizgtYUBrWMAfQ7sVFAIpjKoSRTn+pq8UIOTNzRQ+hbI2RzOJevuuTUvQy0jonbOE7ZXcVVeV5H/mRpZ+QnUXIM3+IHaA=
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0154.APCP153.PROD.OUTLOOK.COM (10.170.189.10) with Microsoft SMTP
+ PU1P153MB0121.APCP153.PROD.OUTLOOK.COM (10.170.188.14) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.6; Wed, 22 May 2019 03:14:15 +0000
+ 15.20.1943.3; Wed, 22 May 2019 05:14:40 +0000
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::d896:4219:e493:b04%3]) with mapi id 15.20.1943.007; Wed, 22 May 2019
- 03:14:15 +0000
+ 05:14:40 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
+To:     Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         "sashal@kernel.org" <sashal@kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+CC:     KY Srinivasan <kys@microsoft.com>,
         "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: RE: [PATCH] PCI: hv: Detect and fix Hyper-V PCI domain number
  collision
 Thread-Topic: [PATCH] PCI: hv: Detect and fix Hyper-V PCI domain number
  collision
-Thread-Index: AQHVDpIz+mZnowKmCU+oYiS1gYdC2KZ2e2rg
-Date:   Wed, 22 May 2019 03:14:15 +0000
-Message-ID: <PU1P153MB01690809D82F85EDE4BC5B9CBF000@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1558304821-36038-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1558304821-36038-1-git-send-email-haiyangz@microsoft.com>
+Thread-Index: AQHVDpIz+mZnowKmCU+oYiS1gYdC2KZ2e2rggAAYLv+AAAJVYA==
+Date:   Wed, 22 May 2019 05:14:39 +0000
+Message-ID: <PU1P153MB0169CF7AC335C98C971582BCBF000@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1558304821-36038-1-git-send-email-haiyangz@microsoft.com>,<PU1P153MB01690809D82F85EDE4BC5B9CBF000@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <BYAPR21MB131778CC3A356745BC74EE3DCC000@BYAPR21MB1317.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB131778CC3A356745BC74EE3DCC000@BYAPR21MB1317.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -62,56 +62,65 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-22T03:14:11.1596449Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-22T05:14:36.4421488Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a6b47c18-aa53-4132-83f2-a2329c8dbc98;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2e158bc6-a282-488b-bb04-130ffa25db8c;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
 x-originating-ip: [2601:600:a280:1760:e0e1:6836:3789:8439]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d1790d6e-42c3-422f-e8b8-08d6de63922d
+x-ms-office365-filtering-correlation-id: 0c8f5c1d-1736-4cdf-b2d5-08d6de74645f
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0154;
-x-ms-traffictypediagnostic: PU1P153MB0154:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0121;
+x-ms-traffictypediagnostic: PU1P153MB0121:
+x-ms-exchange-purlcount: 1
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB01546DB3AEB45D15DEEFE278BF000@PU1P153MB0154.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-microsoft-antispam-prvs: <PU1P153MB0121FB91C542045AD87D2BB2BF000@PU1P153MB0121.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 0045236D47
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(136003)(346002)(366004)(376002)(199004)(189003)(478600001)(74316002)(33656002)(10090500001)(22452003)(7696005)(76176011)(316002)(86612001)(102836004)(2501003)(6506007)(99286004)(2201001)(14454004)(86362001)(8990500004)(54906003)(110136005)(10290500003)(1511001)(6436002)(81166006)(76116006)(8676002)(7736002)(81156014)(305945005)(256004)(14444005)(6116002)(9686003)(55016002)(53936002)(25786009)(6246003)(4326008)(2906002)(8936002)(73956011)(66946007)(66446008)(229853002)(66476007)(66556008)(64756008)(71200400001)(71190400001)(11346002)(446003)(486006)(46003)(68736007)(476003)(5660300002)(52536014)(4744005)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0154;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(346002)(366004)(376002)(396003)(54534003)(199004)(189003)(40224003)(2501003)(68736007)(66446008)(73956011)(66476007)(66556008)(64756008)(66946007)(33656002)(229853002)(6436002)(4744005)(14454004)(966005)(10290500003)(8990500004)(316002)(74316002)(25786009)(76116006)(22452003)(52536014)(6506007)(102836004)(7696005)(9686003)(76176011)(86612001)(486006)(446003)(11346002)(476003)(86362001)(2201001)(110136005)(54906003)(55016002)(46003)(186003)(10090500001)(6306002)(256004)(71190400001)(71200400001)(99286004)(1511001)(2906002)(5660300002)(478600001)(6246003)(8676002)(8936002)(305945005)(7736002)(53936002)(4326008)(14444005)(81156014)(81166006)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0121;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: b0f2EjPMgBrX6bjtaCft6VXEb/pjUOsYHnOD7WkVT0qeWgrYE4G+Nq6IcUWTFHoP1uw+q/Uzaeg+I2S0MW0pBtwsRUldzBXZ4b1TrO3WHjcf+7fFa8ZEUmdvCxzC1lslOpfXKUSJz6ZfRSnT2aDRhv9UfHsyB1Z5LcAPEvE3vjGnLMzbWDJUN+dkxd//NpR2Doe/0R/w9o4rSrFbJ8m+fZOxHk05akjLSvkYbXIKXcd0cxynU3aGkGz3Mh+Ukf0LZeel0h5tAWoHrhxo3SlCIMRjZDwewt6I5rwP9e4jDLp7Yk93Ol+rmz4UrVV4DeAf8rTq6lHEUOvx9mgck3zWzBpRDqlUIHX22/93c5IM/AcvRDt5DQQTFh+KN/+UryuU6cZ3zxJX10H1Dd935zIYJJn7bHEW6ALJKplajum47aM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: 9YhFQ0Sv/zaOWNnZbtmiW50mUb5R00zc98Hc49NrzPejINxxtd7HGO3c/q1QN+dVod5fvsWK63UBLIfbZz/FHra42+1xeGNvjhIaehnGbMQ1JLHjL4p3nS1aRkv6i3/DVsO0BUokdpB3M62hyvR/gdnU9nAejQnVfIgtrBtUSNsLQBC9/0CevLBgLFELdEK0AFGAlCKimgUub5ABeN5EYMylXSoJ0IrflP6PKl1XGOMJ+1NnVXBz9SpqSoZJjIa4lYjTdj12wLnl4qd4rbnuXoCh31Kq5TjtoD5aoMReV5gfNLOb4dPaNDjCdtg8qrG7AS0TUCtZ+mfz5J8Lp0WMmvHJQJb4HKFPU4zXYROCdl5D8LZbwC+LibrPPKFJm9QFD2LBPRzdXyBHdE6Y7R5Il1nSODgwdYzdZXeCesC/SJ0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1790d6e-42c3-422f-e8b8-08d6de63922d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 03:14:15.1086
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c8f5c1d-1736-4cdf-b2d5-08d6de74645f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 05:14:39.7431
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
 X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0154
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0121
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-PiBGcm9tOiBsaW51eC1oeXBlcnYtb3duZXJAdmdlci5rZXJuZWwub3JnDQo+IFNlbnQ6IFN1bmRh
-eSwgTWF5IDE5LCAyMDE5IDM6MjkgUE0NCj4gDQo+IER1ZSB0byBBenVyZSBob3N0IGFnZW50IHNl
-dHRpbmdzLCB0aGUgZGV2aWNlIGluc3RhbmNlIElEJ3MgYnl0ZXMgOCBhbmQgOQ0KPiBhcmUgbm8g
-bG9uZ2VyIHVuaXF1ZS4gVGhpcyBjYXVzZXMgc29tZSBvZiB0aGUgUENJIGRldmljZXMgbm90IHNo
-b3dpbmcgdXANCj4gaW4gVk1zIHdpdGggbXVsdGlwbGUgcGFzc3Rocm91Z2ggZGV2aWNlcywgc3Vj
-aCBhcyBHUFVzLiBTbywgYXMgcmVjb21tZW5kZWQNCj4gYnkgQXp1cmUgaG9zdCB0ZWFtLCB3ZSBu
-b3cgdXNlIHRoZSBieXRlcyA0IGFuZCA1IHdoaWNoIHVzdWFsbHkgcHJvdmlkZQ0KPiB1bmlxdWUg
-bnVtYmVycy4NCj4gDQo+IEluIHRoZSByYXJlIGNhc2VzIG9mIGNvbGxpc2lvbiwgd2Ugd2lsbCBk
-ZXRlY3QgYW5kIGZpbmQgYW5vdGhlciBudW1iZXINCj4gdGhhdCBpcyBub3QgaW4gdXNlLg0KPiBU
-aGFua3MgdG8gTWljaGFlbCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+IGZvciBwcm9w
-b3NpbmcgdGhpcyBpZGVhLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSGFpeWFuZyBaaGFuZyA8aGFp
-eWFuZ3pAbWljcm9zb2Z0LmNvbT4NCg0KVGhlIHBhdGNoIGxvb2tzIGdvb2QgdG8gbWUuDQoNClJl
-dmlld2VkLWJ5OiBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNyb3NvZnQuY29tPg0KDQo=
+> From: Stephen Hemminger <sthemmin@microsoft.com>=20
+> Sent: Tuesday, May 21, 2019 9:40 PM
+>
+> Thanks for working this out with the host team.
+> Now if we could just get some persistent slot information it would make u=
+dev in systemd happy.
+
+The slot info comes from the serial number "hpdev->desc.ser", which may not=
+ guarantee
+uniqueness: "...Hyper-V doesn't provide unique serial numbers": see the cha=
+ngelog of the below
+commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3D29927dfb7f69bcf2ae7fd1cda10997e646a5189c
+
+And we can pass through multiple devices to a VM in any order (i.e. hot add=
+/remove), so IMO
+the "slot" info is not unique and persistent.
+
+Thanks,
+-- Dexuan
