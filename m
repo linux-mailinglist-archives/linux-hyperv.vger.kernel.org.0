@@ -2,516 +2,140 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 059402E14F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 May 2019 17:41:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 545842E99A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 May 2019 02:05:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbfE2Pk7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 May 2019 11:40:59 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34622 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfE2Pk7 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 May 2019 11:40:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f8so2159629wrt.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 29 May 2019 08:40:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=OI3Jy/JrWiMzHeNTOD5NNihuGI91P2IEqFwXVIq1WNY=;
-        b=UdgfJoyWQG9D/nB7YBszocuaElICS41iJxApNfpAHGPlnruDqWUoryGZurQXb8UBPx
-         iNurlUXWkIZWkgnA6kIF03mamtDFqpgxjlWT4Sg81pf8cRxA3QLsnLyPaeQa18VgJMQD
-         Zbx6T0bYCDAXovc3ntNDEaSJLC5F2M3o6oE5uuNJ2P3g7SUCNdwqcS+Ahlzi5OIvyNQY
-         A5ELk1xDf4+MuD6xFmSmw0zEaAyYNpSIlEWVzqKwQrhGIjkwEL+7HIcKtR0d1Vhgkb3W
-         v1zf4FRkbMuXgZZK4sCZnfxxrAZavqPEQQrsz052n0Lkk6vAwn/SWE57O+wIGnmTKBNc
-         Q8QQ==
-X-Gm-Message-State: APjAAAVGXdcpP8UoGUr9brS4W6LGACJyRalq08xmAjY4ZcIMDEs7WTD4
-        u95kSMrkbw0wpKJIpIdVLWWvtA==
-X-Google-Smtp-Source: APXvYqxaQxnsVNEKgj8MQ464Hm1KuMOdf7uPK43mmqaBRnRgbux0C+DSc1ZX2T2bTs8jkMUSOKKfvw==
-X-Received: by 2002:a5d:444c:: with SMTP id x12mr12559927wrr.234.1559144456936;
-        Wed, 29 May 2019 08:40:56 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z65sm9507093wme.37.2019.05.29.08.40.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 29 May 2019 08:40:56 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "olaf\@aepfle.de" <olaf@aepfle.de>,
-        "apw\@canonical.com" <apw@canonical.com>,
-        "jasowang\@redhat.com" <jasowang@redhat.com>,
-        "marcelo.cerri\@canonical.com" <marcelo.cerri@canonical.com>,
+        id S1726699AbfE3AFa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 May 2019 20:05:30 -0400
+Received: from mail-eopbgr810128.outbound.protection.outlook.com ([40.107.81.128]:28768
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726693AbfE3AFa (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 29 May 2019 20:05:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=nCmieT1j29s7eQqdSou2FSo6qkqTLcQy1O/2MiR9QwpOisWbvs1IdoLSWKnGRx1p8jBpX8Vvyq7JlZ8TqqmqzBdvwP6pt0yE+EKKcWwwKEEcUWDtEjPPYdthx/NLTFRaWGyLGxcDiaBTRaAQtvdd6YxreXjcqo24P07EQHpmc9c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D77KhL2ThG/098EUK04aIGGQ3VCLkmVhzMfsbYPzKF4=;
+ b=tqBC/XUOub1Am901EawfkkGFoomZ/tHEqBvsxpRtO8ASGxiOUtOWhcGbjsKoREtS3I15dYn1WcSe5NDKZtKbOdcsq5sOI3V/HNTDzXak+nl3utyov3FHF7cnB34FUJ+tb9c47yPtHhVB6hJ4zHoKNPcjdD+7IgDvyL+VDYKCPkE=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D77KhL2ThG/098EUK04aIGGQ3VCLkmVhzMfsbYPzKF4=;
+ b=EeT8qX2j2zU7HHuM5Yp2LiMpN6GBe/0OO5zxYNn5XKD3bTjFOooT02HLxCb+vvngkj20OBT1eNwCH8GyAOGW3TjQN3fmMdV97RNDeLkXqMO2WVOf580wQ1gNbOtcl4JIrwqZrr6A2TeewF9sM+tso2Y/HM4D+dA0LFOpQXqTmpQ=
+Received: from BYAPR21MB1221.namprd21.prod.outlook.com (2603:10b6:a03:107::12)
+ by BYAPR21MB1320.namprd21.prod.outlook.com (2603:10b6:a03:115::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.3; Thu, 30 May
+ 2019 00:05:26 +0000
+Received: from BYAPR21MB1221.namprd21.prod.outlook.com
+ ([fe80::d005:4de8:ffbf:ba6b]) by BYAPR21MB1221.namprd21.prod.outlook.com
+ ([fe80::d005:4de8:ffbf:ba6b%7]) with mapi id 15.20.1943.015; Thu, 30 May 2019
+ 00:05:25 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Break out ISA independent parts of mshyperv.h
-In-Reply-To: <1559101942-4232-1-git-send-email-mikelley@microsoft.com>
+Subject: RE: [PATCH 1/1] Drivers: hv: vmbus: Break out ISA independent parts
+ of mshyperv.h
+Thread-Topic: [PATCH 1/1] Drivers: hv: vmbus: Break out ISA independent parts
+ of mshyperv.h
+Thread-Index: AQHVFdIRA7mIiwIVVUaFxjQSrR2UTaaCPiqAgACK/FA=
+Date:   Thu, 30 May 2019 00:05:25 +0000
+Message-ID: <BYAPR21MB1221CD9AAEF9BCC6A5AF0C7AD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
 References: <1559101942-4232-1-git-send-email-mikelley@microsoft.com>
-Date:   Wed, 29 May 2019 17:40:55 +0200
-Message-ID: <875zptmfp4.fsf@vitty.brq.redhat.com>
+ <875zptmfp4.fsf@vitty.brq.redhat.com>
+In-Reply-To: <875zptmfp4.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-30T00:05:23.1347754Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b7d8a73e-8c49-45d0-a683-aac6ecefe01c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 36b5764b-7fef-497f-cff5-08d6e4928490
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR21MB1320;
+x-ms-traffictypediagnostic: BYAPR21MB1320:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR21MB1320740C29CC51BBD22A56E3D7180@BYAPR21MB1320.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(396003)(39860400002)(376002)(136003)(189003)(199004)(229853002)(8990500004)(7736002)(256004)(25786009)(74316002)(10090500001)(54906003)(33656002)(6116002)(14454004)(5660300002)(316002)(476003)(10290500003)(446003)(107886003)(6246003)(11346002)(22452003)(68736007)(8936002)(66066001)(53936002)(26005)(186003)(486006)(2906002)(71200400001)(71190400001)(3846002)(66556008)(66446008)(305945005)(76176011)(81166006)(4744005)(4326008)(73956011)(8676002)(81156014)(66476007)(86362001)(6436002)(64756008)(66946007)(99286004)(9686003)(6916009)(478600001)(55016002)(52536014)(102836004)(7696005)(76116006)(52396003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1320;H:BYAPR21MB1221.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z+wWC1qwlVMQO60kpvfTOQnX5OoEgVeYouafg/qaXSFFrudRn5yF3/ygxjb7v9HoyatZbhkEGUgUvM4wZMsFiVoYZHh7TaVDcNMy31mIqTNZMyztbZbhaLDTnu/rLxrY+ZVZgJzlg+VOHWeNlxklO6F9dB3MBqvbByY8D38woAFGWsopFWNvIP5NajJ8nZ2y0cuzVIbP3BHovGsT59YWWZViwCe5Vb4J6NXrR0BmH3XfwqxwByFccIsgJLwl2jdVmY39VSy0bDjNg5LY0U9E4Esict5cgc7ntkLd6XvTgRwhkiM6DL1eBNiBFml5LqpadLgSSxh2uWOUCy+xYQ5ECyllNjLEVngUMwlLkT/qlJG2Xsxm8yYyNd8vDqHb0czikd3cNU7DkZaYOP+BkTal67z4kKZ3kuRqLIkxJfgtZl8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36b5764b-7fef-497f-cff5-08d6e4928490
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 00:05:25.7936
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1320
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
+From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Wednesday, May 29, 2019 =
+8:41 AM
+> >  void __init hyperv_init(void);
+>=20
+> I would actually expect to see hyperv_init() on all architectures so it
+> can probably go to 'generic' too.
+>=20
 
-> Break out parts of mshyperv.h that are ISA independent into a
-> separate file in include/asm-generic. This move facilitates
-> ARM64 code reusing these definitions and avoids code
-> duplication. No functionality or behavior is changed.
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  MAINTAINERS                     |   1 +
->  arch/x86/include/asm/mshyperv.h | 147 +-------------------------------
->  include/asm-generic/mshyperv.h  | 182 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 187 insertions(+), 143 deletions(-)
->  create mode 100644 include/asm-generic/mshyperv.h
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cf2a5b7..521192d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7308,6 +7308,7 @@ F:	net/vmw_vsock/hyperv_transport.c
->  F:	include/clocksource/hyperv_timer.h
->  F:	include/linux/hyperv.h
->  F:	include/uapi/linux/hyperv.h
-> +F:	include/asm-generic/mshyperv.h
->  F:	tools/hv/
->  F:	Documentation/ABI/stable/sysfs-bus-vmbus
->  
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index f4fa8a9..2a793bf 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -3,84 +3,15 @@
->  #define _ASM_X86_MSHYPER_H
->  
->  #include <linux/types.h>
-> -#include <linux/atomic.h>
->  #include <linux/nmi.h>
->  #include <asm/io.h>
->  #include <asm/hyperv-tlfs.h>
->  #include <asm/nospec-branch.h>
->  
-> -#define VP_INVAL	U32_MAX
-> -
-> -struct ms_hyperv_info {
-> -	u32 features;
-> -	u32 misc_features;
-> -	u32 hints;
-> -	u32 nested_features;
-> -	u32 max_vp_index;
-> -	u32 max_lp_index;
-> -};
-> -
-> -extern struct ms_hyperv_info ms_hyperv;
-> -
-> -
->  typedef int (*hyperv_fill_flush_list_func)(
->  		struct hv_guest_mapping_flush_list *flush,
->  		void *data);
->  
-> -/*
-> - * Generate the guest ID.
-> - */
-> -
-> -static inline  __u64 generate_guest_id(__u64 d_info1, __u64 kernel_version,
-> -				       __u64 d_info2)
-> -{
-> -	__u64 guest_id = 0;
-> -
-> -	guest_id = (((__u64)HV_LINUX_VENDOR_ID) << 48);
-> -	guest_id |= (d_info1 << 48);
-> -	guest_id |= (kernel_version << 16);
-> -	guest_id |= d_info2;
-> -
-> -	return guest_id;
-> -}
-> -
-> -
-> -/* Free the message slot and signal end-of-message if required */
-> -static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
-> -{
-> -	/*
-> -	 * On crash we're reading some other CPU's message page and we need
-> -	 * to be careful: this other CPU may already had cleared the header
-> -	 * and the host may already had delivered some other message there.
-> -	 * In case we blindly write msg->header.message_type we're going
-> -	 * to lose it. We can still lose a message of the same type but
-> -	 * we count on the fact that there can only be one
-> -	 * CHANNELMSG_UNLOAD_RESPONSE and we don't care about other messages
-> -	 * on crash.
-> -	 */
-> -	if (cmpxchg(&msg->header.message_type, old_msg_type,
-> -		    HVMSG_NONE) != old_msg_type)
-> -		return;
-> -
-> -	/*
-> -	 * Make sure the write to MessageType (ie set to
-> -	 * HVMSG_NONE) happens before we read the
-> -	 * MessagePending and EOMing. Otherwise, the EOMing
-> -	 * will not deliver any more messages since there is
-> -	 * no empty slot
-> -	 */
-> -	mb();
-> -
-> -	if (msg->header.message_flags.msg_pending) {
-> -		/*
-> -		 * This will cause message queue rescan to
-> -		 * possibly deliver another msg from the
-> -		 * hypervisor
-> -		 */
-> -		wrmsrl(HV_X64_MSR_EOM, 0);
-> -	}
-> -}
-> -
->  #define hv_init_timer(timer, tick) \
->  	wrmsrl(HV_X64_MSR_STIMER0_COUNT + (2*timer), tick)
->  #define hv_init_timer_config(timer, val) \
-> @@ -97,6 +28,8 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
->  
->  #define hv_get_vp_index(index) rdmsrl(HV_X64_MSR_VP_INDEX, index)
->  
-> +#define hv_signal_eom() wrmsrl(HV_X64_MSR_EOM, 0)
-> +
->  #define hv_get_synint_state(int_num, val) \
->  	rdmsrl(HV_X64_MSR_SINT0 + int_num, val)
->  #define hv_set_synint_state(int_num, val) \
-> @@ -122,13 +55,6 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
->  #define trace_hyperv_callback_vector hyperv_callback_vector
->  #endif
->  void hyperv_vector_handler(struct pt_regs *regs);
-> -void hv_setup_vmbus_irq(void (*handler)(void));
-> -void hv_remove_vmbus_irq(void);
-> -
-> -void hv_setup_kexec_handler(void (*handler)(void));
-> -void hv_remove_kexec_handler(void);
-> -void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
-> -void hv_remove_crash_handler(void);
->  
->  /*
->   * Routines for stimer0 Direct Mode handling.
-> @@ -136,8 +62,6 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
->   */
->  void hv_stimer0_vector_handler(struct pt_regs *regs);
->  void hv_stimer0_callback_vector(void);
-> -int hv_setup_stimer0_irq(int *irq, int *vector, void (*handler)(void));
-> -void hv_remove_stimer0_irq(int irq);
->  
->  static inline void hv_enable_stimer0_percpu_irq(int irq) {}
->  static inline void hv_disable_stimer0_percpu_irq(int irq) {}
-> @@ -282,14 +206,6 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
->  	return status;
->  }
->  
-> -/*
-> - * Hypervisor's notion of virtual processor ID is different from
-> - * Linux' notion of CPU ID. This information can only be retrieved
-> - * in the context of the calling CPU. Setup a map for easy access
-> - * to this information.
-> - */
-> -extern u32 *hv_vp_index;
-> -extern u32 hv_max_vp_index;
->  extern struct hv_vp_assist_page **hv_vp_assist_page;
->  
->  static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
-> @@ -300,63 +216,8 @@ static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
->  	return hv_vp_assist_page[cpu];
->  }
->  
-> -/**
-> - * hv_cpu_number_to_vp_number() - Map CPU to VP.
-> - * @cpu_number: CPU number in Linux terms
-> - *
-> - * This function returns the mapping between the Linux processor
-> - * number and the hypervisor's virtual processor number, useful
-> - * in making hypercalls and such that talk about specific
-> - * processors.
-> - *
-> - * Return: Virtual processor number in Hyper-V terms
-> - */
-> -static inline int hv_cpu_number_to_vp_number(int cpu_number)
-> -{
-> -	return hv_vp_index[cpu_number];
-> -}
-> -
-> -static inline int cpumask_to_vpset(struct hv_vpset *vpset,
-> -				    const struct cpumask *cpus)
-> -{
-> -	int cpu, vcpu, vcpu_bank, vcpu_offset, nr_bank = 1;
-> -
-> -	/* valid_bank_mask can represent up to 64 banks */
-> -	if (hv_max_vp_index / 64 >= 64)
-> -		return 0;
-> -
-> -	/*
-> -	 * Clear all banks up to the maximum possible bank as hv_tlb_flush_ex
-> -	 * structs are not cleared between calls, we risk flushing unneeded
-> -	 * vCPUs otherwise.
-> -	 */
-> -	for (vcpu_bank = 0; vcpu_bank <= hv_max_vp_index / 64; vcpu_bank++)
-> -		vpset->bank_contents[vcpu_bank] = 0;
-> -
-> -	/*
-> -	 * Some banks may end up being empty but this is acceptable.
-> -	 */
-> -	for_each_cpu(cpu, cpus) {
-> -		vcpu = hv_cpu_number_to_vp_number(cpu);
-> -		if (vcpu == VP_INVAL)
-> -			return -1;
-> -		vcpu_bank = vcpu / 64;
-> -		vcpu_offset = vcpu % 64;
-> -		__set_bit(vcpu_offset, (unsigned long *)
-> -			  &vpset->bank_contents[vcpu_bank]);
-> -		if (vcpu_bank >= nr_bank)
-> -			nr_bank = vcpu_bank + 1;
-> -	}
-> -	vpset->valid_bank_mask = GENMASK_ULL(nr_bank - 1, 0);
-> -	return nr_bank;
-> -}
-> -
->  void __init hyperv_init(void);
+Actually not.  The declaration is not needed on all architectures.   On ARM=
+64,
+hyperv_init() and ms_hyperv_init_platform() are folded into one routine, an=
+d
+it's not externally referenced.  So the declaration isn't needed.  The hype=
+rvisor
+initialization approach is fairly different on ARM64.
 
-I would actually expect to see hyperv_init() on all architectures so it
-can probably go to 'generic' too.
+[....]
+>=20
+> This seems a little bit too much, in particular, I think we don't need
+>=20
+>  #include <linux/interrupt.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqdesc.h>
+>=20
+> we'll need 'struct pt_regs' definition but I'd suggest we use
+>=20
+>  #include <linux/ptrace.h>
+>=20
+> or even
+>=20
+>  #include <asm/ptrace.h>
+>=20
 
->  void hyperv_setup_mmu_ops(void);
-> -void hyperv_report_panic(struct pt_regs *regs, long err);
-> -void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
-> -bool hv_is_hyperv_initialized(void);
-> -void hyperv_cleanup(void);
->  
->  void hyperv_reenlightenment_intr(struct pt_regs *regs);
->  void set_hv_tscchange_cb(void (*cb)(void));
-> @@ -379,8 +240,6 @@ static inline void hv_apic_init(void) {}
->  
->  #else /* CONFIG_HYPERV */
->  static inline void hyperv_init(void) {}
-> -static inline bool hv_is_hyperv_initialized(void) { return false; }
-> -static inline void hyperv_cleanup(void) {}
->  static inline void hyperv_setup_mmu_ops(void) {}
->  static inline void set_hv_tscchange_cb(void (*cb)(void)) {}
->  static inline void clear_hv_tscchange_cb(void) {}
-> @@ -397,4 +256,6 @@ static inline int hyperv_flush_guest_mapping_range(u64 as,
->  }
->  #endif /* CONFIG_HYPERV */
->  
-> +#include <asm-generic/mshyperv.h>
-> +
->  #endif
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> new file mode 100644
-> index 0000000..d4eaa07
-> --- /dev/null
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -0,0 +1,182 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * Linux-specific definitions for managing interactions with Microsoft's
-> + * Hyper-V hypervisor. The definitions in this file are architecture
-> + * independent. See arch/<arch>/include/asm/mshyperv.h for definitions
-> + * that are specific to architecture <arch>.
-> + *
-> + * Definitions that are specified in the Hyper-V Top Level Functional
-> + * Spec (TLFS) should not go in this file, but should instead go in
-> + * hyperv-tlfs.h.
-> + *
-> + * Copyright (C) 2019, Microsoft, Inc.
-> + *
-> + * Author : Michael Kelley <mikelley@microsoft.com>
-> + */
-> +
-> +#ifndef _ASM_GENERIC_MSHYPERV_H
-> +#define _ASM_GENERIC_MSHYPERV_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/atomic.h>
-> +#include <linux/bitops.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/clocksource.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdesc.h>
-> +#include <asm/hyperv-tlfs.h>
+Agreed.  I'll spin a v2 with this cleaned up.
 
-This seems a little bit too much, in particular, I think we don't need
-
- #include <linux/interrupt.h>
- #include <linux/clocksource.h>
- #include <linux/irq.h>
- #include <linux/irqdesc.h>
-
-we'll need 'struct pt_regs' definition but I'd suggest we use 
-
- #include <linux/ptrace.h>
-
-or even
-
- #include <asm/ptrace.h>
-
-> +
-> +struct ms_hyperv_info {
-> +	u32 features;
-> +	u32 misc_features;
-> +	u32 hints;
-> +	u32 nested_features;
-> +	u32 max_vp_index;
-> +	u32 max_lp_index;
-> +};
-> +extern struct ms_hyperv_info ms_hyperv;
-> +
-> +extern u64 hv_do_hypercall(u64 control, void *inputaddr, void *outputaddr);
-> +extern u64 hv_do_fast_hypercall8(u16 control, u64 input8);
-> +
-> +
-> +/* Generate the guest OS identifier as described in the Hyper-V TLFS */
-> +static inline  __u64 generate_guest_id(__u64 d_info1, __u64 kernel_version,
-> +				       __u64 d_info2)
-> +{
-> +	__u64 guest_id = 0;
-> +
-> +	guest_id = (((__u64)HV_LINUX_VENDOR_ID) << 48);
-> +	guest_id |= (d_info1 << 48);
-> +	guest_id |= (kernel_version << 16);
-> +	guest_id |= d_info2;
-> +
-> +	return guest_id;
-> +}
-> +
-> +
-> +/* Free the message slot and signal end-of-message if required */
-> +static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
-> +{
-> +	/*
-> +	 * On crash we're reading some other CPU's message page and we need
-> +	 * to be careful: this other CPU may already had cleared the header
-> +	 * and the host may already had delivered some other message there.
-> +	 * In case we blindly write msg->header.message_type we're going
-> +	 * to lose it. We can still lose a message of the same type but
-> +	 * we count on the fact that there can only be one
-> +	 * CHANNELMSG_UNLOAD_RESPONSE and we don't care about other messages
-> +	 * on crash.
-> +	 */
-> +	if (cmpxchg(&msg->header.message_type, old_msg_type,
-> +		    HVMSG_NONE) != old_msg_type)
-> +		return;
-> +
-> +	/*
-> +	 * The cmxchg() above does an implicit memory barrier to
-> +	 * ensure the write to MessageType (ie set to
-> +	 * HVMSG_NONE) happens before we read the
-> +	 * MessagePending and EOMing. Otherwise, the EOMing
-> +	 * will not deliver any more messages since there is
-> +	 * no empty slot
-> +	 */
-> +	if (msg->header.message_flags.msg_pending) {
-> +		/*
-> +		 * This will cause message queue rescan to
-> +		 * possibly deliver another msg from the
-> +		 * hypervisor
-> +		 */
-> +		hv_signal_eom();
-> +	}
-> +}
-> +
-> +void hv_setup_vmbus_irq(void (*handler)(void));
-> +void hv_remove_vmbus_irq(void);
-> +void hv_enable_vmbus_irq(void);
-> +void hv_disable_vmbus_irq(void);
-> +
-> +void hv_setup_kexec_handler(void (*handler)(void));
-> +void hv_remove_kexec_handler(void);
-> +void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
-> +void hv_remove_crash_handler(void);
-> +
-> +#if IS_ENABLED(CONFIG_HYPERV)
-> +/*
-> + * Hypervisor's notion of virtual processor ID is different from
-> + * Linux' notion of CPU ID. This information can only be retrieved
-> + * in the context of the calling CPU. Setup a map for easy access
-> + * to this information.
-> + */
-> +extern u32 *hv_vp_index;
-> +extern u32 hv_max_vp_index;
-> +
-> +/* Sentinel value for an uninitialized entry in hv_vp_index array */
-> +#define VP_INVAL	U32_MAX
-> +
-> +/**
-> + * hv_cpu_number_to_vp_number() - Map CPU to VP.
-> + * @cpu_number: CPU number in Linux terms
-> + *
-> + * This function returns the mapping between the Linux processor
-> + * number and the hypervisor's virtual processor number, useful
-> + * in making hypercalls and such that talk about specific
-> + * processors.
-> + *
-> + * Return: Virtual processor number in Hyper-V terms
-> + */
-> +static inline int hv_cpu_number_to_vp_number(int cpu_number)
-> +{
-> +	return hv_vp_index[cpu_number];
-> +}
-> +
-> +static inline int cpumask_to_vpset(struct hv_vpset *vpset,
-> +				    const struct cpumask *cpus)
-> +{
-> +	int cpu, vcpu, vcpu_bank, vcpu_offset, nr_bank = 1;
-> +
-> +	/* valid_bank_mask can represent up to 64 banks */
-> +	if (hv_max_vp_index / 64 >= 64)
-> +		return 0;
-> +
-> +	/*
-> +	 * Clear all banks up to the maximum possible bank as hv_tlb_flush_ex
-> +	 * structs are not cleared between calls, we risk flushing unneeded
-> +	 * vCPUs otherwise.
-> +	 */
-> +	for (vcpu_bank = 0; vcpu_bank <= hv_max_vp_index / 64; vcpu_bank++)
-> +		vpset->bank_contents[vcpu_bank] = 0;
-> +
-> +	/*
-> +	 * Some banks may end up being empty but this is acceptable.
-> +	 */
-> +	for_each_cpu(cpu, cpus) {
-> +		vcpu = hv_cpu_number_to_vp_number(cpu);
-> +		if (vcpu == VP_INVAL)
-> +			return -1;
-> +		vcpu_bank = vcpu / 64;
-> +		vcpu_offset = vcpu % 64;
-> +		__set_bit(vcpu_offset, (unsigned long *)
-> +			  &vpset->bank_contents[vcpu_bank]);
-> +		if (vcpu_bank >= nr_bank)
-> +			nr_bank = vcpu_bank + 1;
-> +	}
-> +	vpset->valid_bank_mask = GENMASK_ULL(nr_bank - 1, 0);
-> +	return nr_bank;
-> +}
-> +
-> +void hyperv_report_panic(struct pt_regs *regs, long err);
-> +void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
-> +bool hv_is_hyperv_initialized(void);
-> +void hyperv_cleanup(void);
-> +#else /* CONFIG_HYPERV */
-> +static inline bool hv_is_hyperv_initialized(void) { return false; }
-> +static inline void hyperv_cleanup(void) {}
-> +#endif /* CONFIG_HYPERV */
-> +
-> +#if IS_ENABLED(CONFIG_HYPERV)
-> +extern int hv_setup_stimer0_irq(int *irq, int *vector, void (*handler)(void));
-> +extern void hv_remove_stimer0_irq(int irq);
-> +#endif
-> +
-> +#endif
-
-With the nitpicks above,
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
+Michael
