@@ -2,345 +2,775 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3AFA2E9A4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 May 2019 02:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 585652F98E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 May 2019 11:37:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfE3AOF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 May 2019 20:14:05 -0400
-Received: from mail-eopbgr790093.outbound.protection.outlook.com ([40.107.79.93]:51456
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726408AbfE3AOF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 May 2019 20:14:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=s1VXQ5lQVv/Dm37w8hVqZPhgZzYl/VGoWQChGXT+CwnzaClWCKcQQwXsf1SiFv84aPc+YpzHaHfUHvx/SfEfHYfAvaNFyUdwg4NnZJZjhA+g35msQj9AKrDlxXt6IZTMr3yK3lq5x/cXIg05hoUJFJ36bKnHmRESwPfYgGwdANA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3LPYl+nBgPbJQ1lxANbd7fwukkG6tSUgEBvMfCXMdlk=;
- b=AIJ/llhsOaIyvZuIiiqy8XFeF97sDKEYJ6n4LoSitR1Akc7NFmNtu7qeygrgFsH1CKbzGdllMFvhcmPvvpl9ogMHH/IrDqU9NKeIGbGm0e8ELQZQZcR7iHKNmsDR/pEhltYJuZEul0yVuTeAeamtFkp5wklKlVnhF4E7PEUreng=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3LPYl+nBgPbJQ1lxANbd7fwukkG6tSUgEBvMfCXMdlk=;
- b=Qiv7gsHshK75fYEorhpE34sALyP2nq4SEdUAuRPReGf+97Bg/cxHXi0AGZXwJdpKwzOw/2gCp1bfXLTy/YTIAsmlv1fcUlnuVPmmhBPpgJUb1oo8KPzajFv0T9/+UQKRaTc2ljJLqNt+7RsyqMrDCT/OXrQ8SHT9uAqH0MSAh3w=
-Received: from DM6PR21MB1340.namprd21.prod.outlook.com (2603:10b6:5:175::19)
- by DM6PR21MB1276.namprd21.prod.outlook.com (2603:10b6:5:16c::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.2; Thu, 30 May
- 2019 00:14:00 +0000
-Received: from DM6PR21MB1340.namprd21.prod.outlook.com
- ([fe80::5057:9e3c:bcc5:9470]) by DM6PR21MB1340.namprd21.prod.outlook.com
- ([fe80::5057:9e3c:bcc5:9470%3]) with mapi id 15.20.1965.003; Thu, 30 May 2019
- 00:14:00 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        id S1727001AbfE3JhQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 30 May 2019 05:37:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50344 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfE3JhQ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 30 May 2019 05:37:16 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f204so3518633wme.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 30 May 2019 02:37:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ShwOJ60aRZAjC2iH5L7KlF/UIaNmpEDMLO46DG/ENXU=;
+        b=HI54Rw+cEf9FSSt7I9k5CL+MsvNII86dHzvJPz3MIL7Z5lHQM8Hs/NaQMgleuuT4qa
+         i9ryYwV63uL2lJgFRChYxq2/bWwOh62COSAjZJE4A+fpGHcmtBNAUHIgVkktRDX+m4G7
+         i6ng7Ebn1DekMLwV9vBrWfCv0o8P4VszLIWZ8nv7Y5Ocrv8FKnGkAIaDHIeDXyd4oRsU
+         soUeKkPgbOfiGSDtCuXIwwuKKQHp0cZU8igT7y01wVafQVVCh/MZhITnjj3y/Zdyz1g/
+         o+ozqiJYDDfeJKQQBe2ILTb+qyp5D1RuaHbrRWApUi5Nbp8e+BdwfytKkWv/xVdx119R
+         v1EA==
+X-Gm-Message-State: APjAAAXE4sy35SlHQ6EpgKhA0NGQG3uoFjxL1JKNchJjcnYSMPPTDg5v
+        r3pbiwBLtC6JVH+tK2KiDg7Izw==
+X-Google-Smtp-Source: APXvYqyJT5BQUJnkMj7gYs0OS/1B1z2wO9NPorW/umLNElUumMxIOTbaUgMD4s/RsWHzenS5ubXDRQ==
+X-Received: by 2002:a7b:c057:: with SMTP id u23mr1685130wmc.29.1559209032212;
+        Thu, 30 May 2019 02:37:12 -0700 (PDT)
+Received: from vitty.brq.redhat.com (cst-prg-69-174.cust.vodafone.cz. [46.135.69.174])
+        by smtp.gmail.com with ESMTPSA id f65sm2374755wmg.45.2019.05.30.02.37.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 30 May 2019 02:37:11 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "catalin.marinas\@arm.com" <catalin.marinas@arm.com>,
+        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
+        "will.deacon\@arm.com" <will.deacon@arm.com>,
+        "marc.zyngier\@arm.com" <marc.zyngier@arm.com>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf\@aepfle.de" <olaf@aepfle.de>,
+        "apw\@canonical.com" <apw@canonical.com>,
+        "jasowang\@redhat.com" <jasowang@redhat.com>,
+        "marcelo.cerri\@canonical.com" <marcelo.cerri@canonical.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>
-CC:     Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH v2 1/1] Drivers: hv: vmbus: Break out ISA independent parts of
- mshyperv.h
-Thread-Topic: [PATCH v2 1/1] Drivers: hv: vmbus: Break out ISA independent
- parts of mshyperv.h
-Thread-Index: AQHVFnyUh+n4wZPddke2XdnJLrea+Q==
-Date:   Thu, 30 May 2019 00:14:00 +0000
-Message-ID: <1559175219-17823-1-git-send-email-mikelley@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CY4PR04CA0041.namprd04.prod.outlook.com
- (2603:10b6:903:c6::27) To DM6PR21MB1340.namprd21.prod.outlook.com
- (2603:10b6:5:175::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [131.107.147.136]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9c935b84-6dc7-4672-0c58-08d6e493b709
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1276;
-x-ms-traffictypediagnostic: DM6PR21MB1276:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB12764B0A0586E9B44BF2F1D5D7180@DM6PR21MB1276.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(136003)(366004)(396003)(376002)(199004)(189003)(81156014)(53936002)(14454004)(2906002)(14444005)(256004)(10290500003)(6436002)(2501003)(4326008)(8936002)(478600001)(8676002)(30864003)(52396003)(7736002)(316002)(6486002)(2616005)(486006)(305945005)(71190400001)(36756003)(25786009)(107886003)(52116002)(71200400001)(6506007)(66446008)(66066001)(99286004)(50226002)(64756008)(66556008)(66476007)(6512007)(26005)(73956011)(102836004)(1511001)(81166006)(22452003)(476003)(6636002)(5660300002)(3846002)(10090500001)(68736007)(86362001)(6116002)(2201001)(66946007)(4720700003)(110136005)(186003)(386003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1276;H:DM6PR21MB1340.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yOcQDRAVRduCtr2nLdJrGbeFbavJUflB8/h5hkcIlA+rZcSuQGyhlNms95t7NhDUCGxeJ468D/otsiDjyzAbRS7EpMjlrw0kZiRyIqwdTK7eZRTRtTuCD//cGPMLoxUn6y2Geh6acXXSCRDA9hgf2CKOpD5MgcM3rFfG0V9kaeDqCa3IGSQP1mJAiBbZWjYJBaoqB5UFlNHrz3PK7TMORctdqwt28awoTQ/xvCIMZQE1TLduBnmuCWmaAarMlXsLO1W5J38aX1nTs5yblbBgpwcMTgNBERKV4lwns4gOdcbdvJ7yXZWOsikvhbMfp0xbs64Wat6zBrf63r1pqZFpuSU2KBZa0knUxFv5QdUK33k1biQaaovQsNLqtIdDRKimjWZQcurpv3v2uZb2XwjVP8Amag7sR9j0UaWaqlhrnWA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Subject: Re: [PATCH v3 1/2] Drivers: hv: Create Hyper-V clocksource driver from existing clockevents code
+In-Reply-To: <1558969089-13204-2-git-send-email-mikelley@microsoft.com>
+References: <1558969089-13204-1-git-send-email-mikelley@microsoft.com> <1558969089-13204-2-git-send-email-mikelley@microsoft.com>
+Date:   Thu, 30 May 2019 11:37:10 +0200
+Message-ID: <87tvdcl1vd.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c935b84-6dc7-4672-0c58-08d6e493b709
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 00:14:00.7226
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lkmlmhk@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1276
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-QnJlYWsgb3V0IHBhcnRzIG9mIG1zaHlwZXJ2LmggdGhhdCBhcmUgSVNBIGluZGVwZW5kZW50IGlu
-dG8gYQ0Kc2VwYXJhdGUgZmlsZSBpbiBpbmNsdWRlL2FzbS1nZW5lcmljLiBUaGlzIG1vdmUgZmFj
-aWxpdGF0ZXMNCkFSTTY0IGNvZGUgcmV1c2luZyB0aGVzZSBkZWZpbml0aW9ucyBhbmQgYXZvaWRz
-IGNvZGUNCmR1cGxpY2F0aW9uLiBObyBmdW5jdGlvbmFsaXR5IG9yIGJlaGF2aW9yIGlzIGNoYW5n
-ZWQuDQoNClNpZ25lZC1vZmYtYnk6IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQu
-Y29tPg0KUmV2aWV3ZWQtYnk6IFZpdGFseSBLdXpuZXRzb3YgPHZrdXpuZXRzQHJlZGhhdC5jb20+
-DQotLS0NCkNoYW5nZXMgaW4gdjI6DQoqIFJlbW92ZWQgdW5uZWVkZWQgI2luY2x1ZGVzIGluIGFz
-bS1nZW5lcmljL21zaHlwZXJ2Lmg7DQphZGRlZCB0d28gI2luY2x1ZGVzIHRoYXQgYXJlIG5lZWRl
-ZC4gW1ZpdGFseSBLdXpuZXRzb3ZdDQoNCi0tLQ0KDQogTUFJTlRBSU5FUlMgICAgICAgICAgICAg
-ICAgICAgICB8ICAgMSArDQogYXJjaC94ODYvaW5jbHVkZS9hc20vbXNoeXBlcnYuaCB8IDE0NyAr
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIGluY2x1ZGUvYXNtLWdlbmVyaWMvbXNo
-eXBlcnYuaCAgfCAxODAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0K
-IDMgZmlsZXMgY2hhbmdlZCwgMTg1IGluc2VydGlvbnMoKyksIDE0MyBkZWxldGlvbnMoLSkNCiBj
-cmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9hc20tZ2VuZXJpYy9tc2h5cGVydi5oDQoNCmRpZmYg
-LS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTDQppbmRleCBjZjJhNWI3Li41MjExOTJk
-IDEwMDY0NA0KLS0tIGEvTUFJTlRBSU5FUlMNCisrKyBiL01BSU5UQUlORVJTDQpAQCAtNzMwOCw2
-ICs3MzA4LDcgQEAgRjoJbmV0L3Ztd192c29jay9oeXBlcnZfdHJhbnNwb3J0LmMNCiBGOglpbmNs
-dWRlL2Nsb2Nrc291cmNlL2h5cGVydl90aW1lci5oDQogRjoJaW5jbHVkZS9saW51eC9oeXBlcnYu
-aA0KIEY6CWluY2x1ZGUvdWFwaS9saW51eC9oeXBlcnYuaA0KK0Y6CWluY2x1ZGUvYXNtLWdlbmVy
-aWMvbXNoeXBlcnYuaA0KIEY6CXRvb2xzL2h2Lw0KIEY6CURvY3VtZW50YXRpb24vQUJJL3N0YWJs
-ZS9zeXNmcy1idXMtdm1idXMNCiANCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9t
-c2h5cGVydi5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vbXNoeXBlcnYuaA0KaW5kZXggZjRmYThh
-OS4uMmE3OTNiZiAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL21zaHlwZXJ2LmgN
-CisrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL21zaHlwZXJ2LmgNCkBAIC0zLDg0ICszLDE1IEBA
-DQogI2RlZmluZSBfQVNNX1g4Nl9NU0hZUEVSX0gNCiANCiAjaW5jbHVkZSA8bGludXgvdHlwZXMu
-aD4NCi0jaW5jbHVkZSA8bGludXgvYXRvbWljLmg+DQogI2luY2x1ZGUgPGxpbnV4L25taS5oPg0K
-ICNpbmNsdWRlIDxhc20vaW8uaD4NCiAjaW5jbHVkZSA8YXNtL2h5cGVydi10bGZzLmg+DQogI2lu
-Y2x1ZGUgPGFzbS9ub3NwZWMtYnJhbmNoLmg+DQogDQotI2RlZmluZSBWUF9JTlZBTAlVMzJfTUFY
-DQotDQotc3RydWN0IG1zX2h5cGVydl9pbmZvIHsNCi0JdTMyIGZlYXR1cmVzOw0KLQl1MzIgbWlz
-Y19mZWF0dXJlczsNCi0JdTMyIGhpbnRzOw0KLQl1MzIgbmVzdGVkX2ZlYXR1cmVzOw0KLQl1MzIg
-bWF4X3ZwX2luZGV4Ow0KLQl1MzIgbWF4X2xwX2luZGV4Ow0KLX07DQotDQotZXh0ZXJuIHN0cnVj
-dCBtc19oeXBlcnZfaW5mbyBtc19oeXBlcnY7DQotDQotDQogdHlwZWRlZiBpbnQgKCpoeXBlcnZf
-ZmlsbF9mbHVzaF9saXN0X2Z1bmMpKA0KIAkJc3RydWN0IGh2X2d1ZXN0X21hcHBpbmdfZmx1c2hf
-bGlzdCAqZmx1c2gsDQogCQl2b2lkICpkYXRhKTsNCiANCi0vKg0KLSAqIEdlbmVyYXRlIHRoZSBn
-dWVzdCBJRC4NCi0gKi8NCi0NCi1zdGF0aWMgaW5saW5lICBfX3U2NCBnZW5lcmF0ZV9ndWVzdF9p
-ZChfX3U2NCBkX2luZm8xLCBfX3U2NCBrZXJuZWxfdmVyc2lvbiwNCi0JCQkJICAgICAgIF9fdTY0
-IGRfaW5mbzIpDQotew0KLQlfX3U2NCBndWVzdF9pZCA9IDA7DQotDQotCWd1ZXN0X2lkID0gKCgo
-X191NjQpSFZfTElOVVhfVkVORE9SX0lEKSA8PCA0OCk7DQotCWd1ZXN0X2lkIHw9IChkX2luZm8x
-IDw8IDQ4KTsNCi0JZ3Vlc3RfaWQgfD0gKGtlcm5lbF92ZXJzaW9uIDw8IDE2KTsNCi0JZ3Vlc3Rf
-aWQgfD0gZF9pbmZvMjsNCi0NCi0JcmV0dXJuIGd1ZXN0X2lkOw0KLX0NCi0NCi0NCi0vKiBGcmVl
-IHRoZSBtZXNzYWdlIHNsb3QgYW5kIHNpZ25hbCBlbmQtb2YtbWVzc2FnZSBpZiByZXF1aXJlZCAq
-Lw0KLXN0YXRpYyBpbmxpbmUgdm9pZCB2bWJ1c19zaWduYWxfZW9tKHN0cnVjdCBodl9tZXNzYWdl
-ICptc2csIHUzMiBvbGRfbXNnX3R5cGUpDQotew0KLQkvKg0KLQkgKiBPbiBjcmFzaCB3ZSdyZSBy
-ZWFkaW5nIHNvbWUgb3RoZXIgQ1BVJ3MgbWVzc2FnZSBwYWdlIGFuZCB3ZSBuZWVkDQotCSAqIHRv
-IGJlIGNhcmVmdWw6IHRoaXMgb3RoZXIgQ1BVIG1heSBhbHJlYWR5IGhhZCBjbGVhcmVkIHRoZSBo
-ZWFkZXINCi0JICogYW5kIHRoZSBob3N0IG1heSBhbHJlYWR5IGhhZCBkZWxpdmVyZWQgc29tZSBv
-dGhlciBtZXNzYWdlIHRoZXJlLg0KLQkgKiBJbiBjYXNlIHdlIGJsaW5kbHkgd3JpdGUgbXNnLT5o
-ZWFkZXIubWVzc2FnZV90eXBlIHdlJ3JlIGdvaW5nDQotCSAqIHRvIGxvc2UgaXQuIFdlIGNhbiBz
-dGlsbCBsb3NlIGEgbWVzc2FnZSBvZiB0aGUgc2FtZSB0eXBlIGJ1dA0KLQkgKiB3ZSBjb3VudCBv
-biB0aGUgZmFjdCB0aGF0IHRoZXJlIGNhbiBvbmx5IGJlIG9uZQ0KLQkgKiBDSEFOTkVMTVNHX1VO
-TE9BRF9SRVNQT05TRSBhbmQgd2UgZG9uJ3QgY2FyZSBhYm91dCBvdGhlciBtZXNzYWdlcw0KLQkg
-KiBvbiBjcmFzaC4NCi0JICovDQotCWlmIChjbXB4Y2hnKCZtc2ctPmhlYWRlci5tZXNzYWdlX3R5
-cGUsIG9sZF9tc2dfdHlwZSwNCi0JCSAgICBIVk1TR19OT05FKSAhPSBvbGRfbXNnX3R5cGUpDQot
-CQlyZXR1cm47DQotDQotCS8qDQotCSAqIE1ha2Ugc3VyZSB0aGUgd3JpdGUgdG8gTWVzc2FnZVR5
-cGUgKGllIHNldCB0bw0KLQkgKiBIVk1TR19OT05FKSBoYXBwZW5zIGJlZm9yZSB3ZSByZWFkIHRo
-ZQ0KLQkgKiBNZXNzYWdlUGVuZGluZyBhbmQgRU9NaW5nLiBPdGhlcndpc2UsIHRoZSBFT01pbmcN
-Ci0JICogd2lsbCBub3QgZGVsaXZlciBhbnkgbW9yZSBtZXNzYWdlcyBzaW5jZSB0aGVyZSBpcw0K
-LQkgKiBubyBlbXB0eSBzbG90DQotCSAqLw0KLQltYigpOw0KLQ0KLQlpZiAobXNnLT5oZWFkZXIu
-bWVzc2FnZV9mbGFncy5tc2dfcGVuZGluZykgew0KLQkJLyoNCi0JCSAqIFRoaXMgd2lsbCBjYXVz
-ZSBtZXNzYWdlIHF1ZXVlIHJlc2NhbiB0bw0KLQkJICogcG9zc2libHkgZGVsaXZlciBhbm90aGVy
-IG1zZyBmcm9tIHRoZQ0KLQkJICogaHlwZXJ2aXNvcg0KLQkJICovDQotCQl3cm1zcmwoSFZfWDY0
-X01TUl9FT00sIDApOw0KLQl9DQotfQ0KLQ0KICNkZWZpbmUgaHZfaW5pdF90aW1lcih0aW1lciwg
-dGljaykgXA0KIAl3cm1zcmwoSFZfWDY0X01TUl9TVElNRVIwX0NPVU5UICsgKDIqdGltZXIpLCB0
-aWNrKQ0KICNkZWZpbmUgaHZfaW5pdF90aW1lcl9jb25maWcodGltZXIsIHZhbCkgXA0KQEAgLTk3
-LDYgKzI4LDggQEAgc3RhdGljIGlubGluZSB2b2lkIHZtYnVzX3NpZ25hbF9lb20oc3RydWN0IGh2
-X21lc3NhZ2UgKm1zZywgdTMyIG9sZF9tc2dfdHlwZSkNCiANCiAjZGVmaW5lIGh2X2dldF92cF9p
-bmRleChpbmRleCkgcmRtc3JsKEhWX1g2NF9NU1JfVlBfSU5ERVgsIGluZGV4KQ0KIA0KKyNkZWZp
-bmUgaHZfc2lnbmFsX2VvbSgpIHdybXNybChIVl9YNjRfTVNSX0VPTSwgMCkNCisNCiAjZGVmaW5l
-IGh2X2dldF9zeW5pbnRfc3RhdGUoaW50X251bSwgdmFsKSBcDQogCXJkbXNybChIVl9YNjRfTVNS
-X1NJTlQwICsgaW50X251bSwgdmFsKQ0KICNkZWZpbmUgaHZfc2V0X3N5bmludF9zdGF0ZShpbnRf
-bnVtLCB2YWwpIFwNCkBAIC0xMjIsMTMgKzU1LDYgQEAgc3RhdGljIGlubGluZSB2b2lkIHZtYnVz
-X3NpZ25hbF9lb20oc3RydWN0IGh2X21lc3NhZ2UgKm1zZywgdTMyIG9sZF9tc2dfdHlwZSkNCiAj
-ZGVmaW5lIHRyYWNlX2h5cGVydl9jYWxsYmFja192ZWN0b3IgaHlwZXJ2X2NhbGxiYWNrX3ZlY3Rv
-cg0KICNlbmRpZg0KIHZvaWQgaHlwZXJ2X3ZlY3Rvcl9oYW5kbGVyKHN0cnVjdCBwdF9yZWdzICpy
-ZWdzKTsNCi12b2lkIGh2X3NldHVwX3ZtYnVzX2lycSh2b2lkICgqaGFuZGxlcikodm9pZCkpOw0K
-LXZvaWQgaHZfcmVtb3ZlX3ZtYnVzX2lycSh2b2lkKTsNCi0NCi12b2lkIGh2X3NldHVwX2tleGVj
-X2hhbmRsZXIodm9pZCAoKmhhbmRsZXIpKHZvaWQpKTsNCi12b2lkIGh2X3JlbW92ZV9rZXhlY19o
-YW5kbGVyKHZvaWQpOw0KLXZvaWQgaHZfc2V0dXBfY3Jhc2hfaGFuZGxlcih2b2lkICgqaGFuZGxl
-cikoc3RydWN0IHB0X3JlZ3MgKnJlZ3MpKTsNCi12b2lkIGh2X3JlbW92ZV9jcmFzaF9oYW5kbGVy
-KHZvaWQpOw0KIA0KIC8qDQogICogUm91dGluZXMgZm9yIHN0aW1lcjAgRGlyZWN0IE1vZGUgaGFu
-ZGxpbmcuDQpAQCAtMTM2LDggKzYyLDYgQEAgc3RhdGljIGlubGluZSB2b2lkIHZtYnVzX3NpZ25h
-bF9lb20oc3RydWN0IGh2X21lc3NhZ2UgKm1zZywgdTMyIG9sZF9tc2dfdHlwZSkNCiAgKi8NCiB2
-b2lkIGh2X3N0aW1lcjBfdmVjdG9yX2hhbmRsZXIoc3RydWN0IHB0X3JlZ3MgKnJlZ3MpOw0KIHZv
-aWQgaHZfc3RpbWVyMF9jYWxsYmFja192ZWN0b3Iodm9pZCk7DQotaW50IGh2X3NldHVwX3N0aW1l
-cjBfaXJxKGludCAqaXJxLCBpbnQgKnZlY3Rvciwgdm9pZCAoKmhhbmRsZXIpKHZvaWQpKTsNCi12
-b2lkIGh2X3JlbW92ZV9zdGltZXIwX2lycShpbnQgaXJxKTsNCiANCiBzdGF0aWMgaW5saW5lIHZv
-aWQgaHZfZW5hYmxlX3N0aW1lcjBfcGVyY3B1X2lycShpbnQgaXJxKSB7fQ0KIHN0YXRpYyBpbmxp
-bmUgdm9pZCBodl9kaXNhYmxlX3N0aW1lcjBfcGVyY3B1X2lycShpbnQgaXJxKSB7fQ0KQEAgLTI4
-MiwxNCArMjA2LDYgQEAgc3RhdGljIGlubGluZSB1NjQgaHZfZG9fcmVwX2h5cGVyY2FsbCh1MTYg
-Y29kZSwgdTE2IHJlcF9jb3VudCwgdTE2IHZhcmhlYWRfc2l6ZSwNCiAJcmV0dXJuIHN0YXR1czsN
-CiB9DQogDQotLyoNCi0gKiBIeXBlcnZpc29yJ3Mgbm90aW9uIG9mIHZpcnR1YWwgcHJvY2Vzc29y
-IElEIGlzIGRpZmZlcmVudCBmcm9tDQotICogTGludXgnIG5vdGlvbiBvZiBDUFUgSUQuIFRoaXMg
-aW5mb3JtYXRpb24gY2FuIG9ubHkgYmUgcmV0cmlldmVkDQotICogaW4gdGhlIGNvbnRleHQgb2Yg
-dGhlIGNhbGxpbmcgQ1BVLiBTZXR1cCBhIG1hcCBmb3IgZWFzeSBhY2Nlc3MNCi0gKiB0byB0aGlz
-IGluZm9ybWF0aW9uLg0KLSAqLw0KLWV4dGVybiB1MzIgKmh2X3ZwX2luZGV4Ow0KLWV4dGVybiB1
-MzIgaHZfbWF4X3ZwX2luZGV4Ow0KIGV4dGVybiBzdHJ1Y3QgaHZfdnBfYXNzaXN0X3BhZ2UgKipo
-dl92cF9hc3Npc3RfcGFnZTsNCiANCiBzdGF0aWMgaW5saW5lIHN0cnVjdCBodl92cF9hc3Npc3Rf
-cGFnZSAqaHZfZ2V0X3ZwX2Fzc2lzdF9wYWdlKHVuc2lnbmVkIGludCBjcHUpDQpAQCAtMzAwLDYz
-ICsyMTYsOCBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBodl92cF9hc3Npc3RfcGFnZSAqaHZfZ2V0
-X3ZwX2Fzc2lzdF9wYWdlKHVuc2lnbmVkIGludCBjcHUpDQogCXJldHVybiBodl92cF9hc3Npc3Rf
-cGFnZVtjcHVdOw0KIH0NCiANCi0vKioNCi0gKiBodl9jcHVfbnVtYmVyX3RvX3ZwX251bWJlcigp
-IC0gTWFwIENQVSB0byBWUC4NCi0gKiBAY3B1X251bWJlcjogQ1BVIG51bWJlciBpbiBMaW51eCB0
-ZXJtcw0KLSAqDQotICogVGhpcyBmdW5jdGlvbiByZXR1cm5zIHRoZSBtYXBwaW5nIGJldHdlZW4g
-dGhlIExpbnV4IHByb2Nlc3Nvcg0KLSAqIG51bWJlciBhbmQgdGhlIGh5cGVydmlzb3IncyB2aXJ0
-dWFsIHByb2Nlc3NvciBudW1iZXIsIHVzZWZ1bA0KLSAqIGluIG1ha2luZyBoeXBlcmNhbGxzIGFu
-ZCBzdWNoIHRoYXQgdGFsayBhYm91dCBzcGVjaWZpYw0KLSAqIHByb2Nlc3NvcnMuDQotICoNCi0g
-KiBSZXR1cm46IFZpcnR1YWwgcHJvY2Vzc29yIG51bWJlciBpbiBIeXBlci1WIHRlcm1zDQotICov
-DQotc3RhdGljIGlubGluZSBpbnQgaHZfY3B1X251bWJlcl90b192cF9udW1iZXIoaW50IGNwdV9u
-dW1iZXIpDQotew0KLQlyZXR1cm4gaHZfdnBfaW5kZXhbY3B1X251bWJlcl07DQotfQ0KLQ0KLXN0
-YXRpYyBpbmxpbmUgaW50IGNwdW1hc2tfdG9fdnBzZXQoc3RydWN0IGh2X3Zwc2V0ICp2cHNldCwN
-Ci0JCQkJICAgIGNvbnN0IHN0cnVjdCBjcHVtYXNrICpjcHVzKQ0KLXsNCi0JaW50IGNwdSwgdmNw
-dSwgdmNwdV9iYW5rLCB2Y3B1X29mZnNldCwgbnJfYmFuayA9IDE7DQotDQotCS8qIHZhbGlkX2Jh
-bmtfbWFzayBjYW4gcmVwcmVzZW50IHVwIHRvIDY0IGJhbmtzICovDQotCWlmIChodl9tYXhfdnBf
-aW5kZXggLyA2NCA+PSA2NCkNCi0JCXJldHVybiAwOw0KLQ0KLQkvKg0KLQkgKiBDbGVhciBhbGwg
-YmFua3MgdXAgdG8gdGhlIG1heGltdW0gcG9zc2libGUgYmFuayBhcyBodl90bGJfZmx1c2hfZXgN
-Ci0JICogc3RydWN0cyBhcmUgbm90IGNsZWFyZWQgYmV0d2VlbiBjYWxscywgd2UgcmlzayBmbHVz
-aGluZyB1bm5lZWRlZA0KLQkgKiB2Q1BVcyBvdGhlcndpc2UuDQotCSAqLw0KLQlmb3IgKHZjcHVf
-YmFuayA9IDA7IHZjcHVfYmFuayA8PSBodl9tYXhfdnBfaW5kZXggLyA2NDsgdmNwdV9iYW5rKysp
-DQotCQl2cHNldC0+YmFua19jb250ZW50c1t2Y3B1X2JhbmtdID0gMDsNCi0NCi0JLyoNCi0JICog
-U29tZSBiYW5rcyBtYXkgZW5kIHVwIGJlaW5nIGVtcHR5IGJ1dCB0aGlzIGlzIGFjY2VwdGFibGUu
-DQotCSAqLw0KLQlmb3JfZWFjaF9jcHUoY3B1LCBjcHVzKSB7DQotCQl2Y3B1ID0gaHZfY3B1X251
-bWJlcl90b192cF9udW1iZXIoY3B1KTsNCi0JCWlmICh2Y3B1ID09IFZQX0lOVkFMKQ0KLQkJCXJl
-dHVybiAtMTsNCi0JCXZjcHVfYmFuayA9IHZjcHUgLyA2NDsNCi0JCXZjcHVfb2Zmc2V0ID0gdmNw
-dSAlIDY0Ow0KLQkJX19zZXRfYml0KHZjcHVfb2Zmc2V0LCAodW5zaWduZWQgbG9uZyAqKQ0KLQkJ
-CSAgJnZwc2V0LT5iYW5rX2NvbnRlbnRzW3ZjcHVfYmFua10pOw0KLQkJaWYgKHZjcHVfYmFuayA+
-PSBucl9iYW5rKQ0KLQkJCW5yX2JhbmsgPSB2Y3B1X2JhbmsgKyAxOw0KLQl9DQotCXZwc2V0LT52
-YWxpZF9iYW5rX21hc2sgPSBHRU5NQVNLX1VMTChucl9iYW5rIC0gMSwgMCk7DQotCXJldHVybiBu
-cl9iYW5rOw0KLX0NCi0NCiB2b2lkIF9faW5pdCBoeXBlcnZfaW5pdCh2b2lkKTsNCiB2b2lkIGh5
-cGVydl9zZXR1cF9tbXVfb3BzKHZvaWQpOw0KLXZvaWQgaHlwZXJ2X3JlcG9ydF9wYW5pYyhzdHJ1
-Y3QgcHRfcmVncyAqcmVncywgbG9uZyBlcnIpOw0KLXZvaWQgaHlwZXJ2X3JlcG9ydF9wYW5pY19t
-c2cocGh5c19hZGRyX3QgcGEsIHNpemVfdCBzaXplKTsNCi1ib29sIGh2X2lzX2h5cGVydl9pbml0
-aWFsaXplZCh2b2lkKTsNCi12b2lkIGh5cGVydl9jbGVhbnVwKHZvaWQpOw0KIA0KIHZvaWQgaHlw
-ZXJ2X3JlZW5saWdodGVubWVudF9pbnRyKHN0cnVjdCBwdF9yZWdzICpyZWdzKTsNCiB2b2lkIHNl
-dF9odl90c2NjaGFuZ2VfY2Iodm9pZCAoKmNiKSh2b2lkKSk7DQpAQCAtMzc5LDggKzI0MCw2IEBA
-IHN0YXRpYyBpbmxpbmUgdm9pZCBodl9hcGljX2luaXQodm9pZCkge30NCiANCiAjZWxzZSAvKiBD
-T05GSUdfSFlQRVJWICovDQogc3RhdGljIGlubGluZSB2b2lkIGh5cGVydl9pbml0KHZvaWQpIHt9
-DQotc3RhdGljIGlubGluZSBib29sIGh2X2lzX2h5cGVydl9pbml0aWFsaXplZCh2b2lkKSB7IHJl
-dHVybiBmYWxzZTsgfQ0KLXN0YXRpYyBpbmxpbmUgdm9pZCBoeXBlcnZfY2xlYW51cCh2b2lkKSB7
-fQ0KIHN0YXRpYyBpbmxpbmUgdm9pZCBoeXBlcnZfc2V0dXBfbW11X29wcyh2b2lkKSB7fQ0KIHN0
-YXRpYyBpbmxpbmUgdm9pZCBzZXRfaHZfdHNjY2hhbmdlX2NiKHZvaWQgKCpjYikodm9pZCkpIHt9
-DQogc3RhdGljIGlubGluZSB2b2lkIGNsZWFyX2h2X3RzY2NoYW5nZV9jYih2b2lkKSB7fQ0KQEAg
-LTM5Nyw0ICsyNTYsNiBAQCBzdGF0aWMgaW5saW5lIGludCBoeXBlcnZfZmx1c2hfZ3Vlc3RfbWFw
-cGluZ19yYW5nZSh1NjQgYXMsDQogfQ0KICNlbmRpZiAvKiBDT05GSUdfSFlQRVJWICovDQogDQor
-I2luY2x1ZGUgPGFzbS1nZW5lcmljL21zaHlwZXJ2Lmg+DQorDQogI2VuZGlmDQpkaWZmIC0tZ2l0
-IGEvaW5jbHVkZS9hc20tZ2VuZXJpYy9tc2h5cGVydi5oIGIvaW5jbHVkZS9hc20tZ2VuZXJpYy9t
-c2h5cGVydi5oDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAwMC4uMGJlY2I3ZA0K
-LS0tIC9kZXYvbnVsbA0KKysrIGIvaW5jbHVkZS9hc20tZ2VuZXJpYy9tc2h5cGVydi5oDQpAQCAt
-MCwwICsxLDE4MCBAQA0KKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQor
-DQorLyoNCisgKiBMaW51eC1zcGVjaWZpYyBkZWZpbml0aW9ucyBmb3IgbWFuYWdpbmcgaW50ZXJh
-Y3Rpb25zIHdpdGggTWljcm9zb2Z0J3MNCisgKiBIeXBlci1WIGh5cGVydmlzb3IuIFRoZSBkZWZp
-bml0aW9ucyBpbiB0aGlzIGZpbGUgYXJlIGFyY2hpdGVjdHVyZQ0KKyAqIGluZGVwZW5kZW50LiBT
-ZWUgYXJjaC88YXJjaD4vaW5jbHVkZS9hc20vbXNoeXBlcnYuaCBmb3IgZGVmaW5pdGlvbnMNCisg
-KiB0aGF0IGFyZSBzcGVjaWZpYyB0byBhcmNoaXRlY3R1cmUgPGFyY2g+Lg0KKyAqDQorICogRGVm
-aW5pdGlvbnMgdGhhdCBhcmUgc3BlY2lmaWVkIGluIHRoZSBIeXBlci1WIFRvcCBMZXZlbCBGdW5j
-dGlvbmFsDQorICogU3BlYyAoVExGUykgc2hvdWxkIG5vdCBnbyBpbiB0aGlzIGZpbGUsIGJ1dCBz
-aG91bGQgaW5zdGVhZCBnbyBpbg0KKyAqIGh5cGVydi10bGZzLmguDQorICoNCisgKiBDb3B5cmln
-aHQgKEMpIDIwMTksIE1pY3Jvc29mdCwgSW5jLg0KKyAqDQorICogQXV0aG9yIDogTWljaGFlbCBL
-ZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQorICovDQorDQorI2lmbmRlZiBfQVNNX0dF
-TkVSSUNfTVNIWVBFUlZfSA0KKyNkZWZpbmUgX0FTTV9HRU5FUklDX01TSFlQRVJWX0gNCisNCisj
-aW5jbHVkZSA8bGludXgvdHlwZXMuaD4NCisjaW5jbHVkZSA8bGludXgvYXRvbWljLmg+DQorI2lu
-Y2x1ZGUgPGxpbnV4L2JpdG9wcy5oPg0KKyNpbmNsdWRlIDxsaW51eC9jcHVtYXNrLmg+DQorI2lu
-Y2x1ZGUgPGFzbS9wdHJhY2UuaD4NCisjaW5jbHVkZSA8YXNtL2h5cGVydi10bGZzLmg+DQorDQor
-c3RydWN0IG1zX2h5cGVydl9pbmZvIHsNCisJdTMyIGZlYXR1cmVzOw0KKwl1MzIgbWlzY19mZWF0
-dXJlczsNCisJdTMyIGhpbnRzOw0KKwl1MzIgbmVzdGVkX2ZlYXR1cmVzOw0KKwl1MzIgbWF4X3Zw
-X2luZGV4Ow0KKwl1MzIgbWF4X2xwX2luZGV4Ow0KK307DQorZXh0ZXJuIHN0cnVjdCBtc19oeXBl
-cnZfaW5mbyBtc19oeXBlcnY7DQorDQorZXh0ZXJuIHU2NCBodl9kb19oeXBlcmNhbGwodTY0IGNv
-bnRyb2wsIHZvaWQgKmlucHV0YWRkciwgdm9pZCAqb3V0cHV0YWRkcik7DQorZXh0ZXJuIHU2NCBo
-dl9kb19mYXN0X2h5cGVyY2FsbDgodTE2IGNvbnRyb2wsIHU2NCBpbnB1dDgpOw0KKw0KKw0KKy8q
-IEdlbmVyYXRlIHRoZSBndWVzdCBPUyBpZGVudGlmaWVyIGFzIGRlc2NyaWJlZCBpbiB0aGUgSHlw
-ZXItViBUTEZTICovDQorc3RhdGljIGlubGluZSAgX191NjQgZ2VuZXJhdGVfZ3Vlc3RfaWQoX191
-NjQgZF9pbmZvMSwgX191NjQga2VybmVsX3ZlcnNpb24sDQorCQkJCSAgICAgICBfX3U2NCBkX2lu
-Zm8yKQ0KK3sNCisJX191NjQgZ3Vlc3RfaWQgPSAwOw0KKw0KKwlndWVzdF9pZCA9ICgoKF9fdTY0
-KUhWX0xJTlVYX1ZFTkRPUl9JRCkgPDwgNDgpOw0KKwlndWVzdF9pZCB8PSAoZF9pbmZvMSA8PCA0
-OCk7DQorCWd1ZXN0X2lkIHw9IChrZXJuZWxfdmVyc2lvbiA8PCAxNik7DQorCWd1ZXN0X2lkIHw9
-IGRfaW5mbzI7DQorDQorCXJldHVybiBndWVzdF9pZDsNCit9DQorDQorDQorLyogRnJlZSB0aGUg
-bWVzc2FnZSBzbG90IGFuZCBzaWduYWwgZW5kLW9mLW1lc3NhZ2UgaWYgcmVxdWlyZWQgKi8NCitz
-dGF0aWMgaW5saW5lIHZvaWQgdm1idXNfc2lnbmFsX2VvbShzdHJ1Y3QgaHZfbWVzc2FnZSAqbXNn
-LCB1MzIgb2xkX21zZ190eXBlKQ0KK3sNCisJLyoNCisJICogT24gY3Jhc2ggd2UncmUgcmVhZGlu
-ZyBzb21lIG90aGVyIENQVSdzIG1lc3NhZ2UgcGFnZSBhbmQgd2UgbmVlZA0KKwkgKiB0byBiZSBj
-YXJlZnVsOiB0aGlzIG90aGVyIENQVSBtYXkgYWxyZWFkeSBoYWQgY2xlYXJlZCB0aGUgaGVhZGVy
-DQorCSAqIGFuZCB0aGUgaG9zdCBtYXkgYWxyZWFkeSBoYWQgZGVsaXZlcmVkIHNvbWUgb3RoZXIg
-bWVzc2FnZSB0aGVyZS4NCisJICogSW4gY2FzZSB3ZSBibGluZGx5IHdyaXRlIG1zZy0+aGVhZGVy
-Lm1lc3NhZ2VfdHlwZSB3ZSdyZSBnb2luZw0KKwkgKiB0byBsb3NlIGl0LiBXZSBjYW4gc3RpbGwg
-bG9zZSBhIG1lc3NhZ2Ugb2YgdGhlIHNhbWUgdHlwZSBidXQNCisJICogd2UgY291bnQgb24gdGhl
-IGZhY3QgdGhhdCB0aGVyZSBjYW4gb25seSBiZSBvbmUNCisJICogQ0hBTk5FTE1TR19VTkxPQURf
-UkVTUE9OU0UgYW5kIHdlIGRvbid0IGNhcmUgYWJvdXQgb3RoZXIgbWVzc2FnZXMNCisJICogb24g
-Y3Jhc2guDQorCSAqLw0KKwlpZiAoY21weGNoZygmbXNnLT5oZWFkZXIubWVzc2FnZV90eXBlLCBv
-bGRfbXNnX3R5cGUsDQorCQkgICAgSFZNU0dfTk9ORSkgIT0gb2xkX21zZ190eXBlKQ0KKwkJcmV0
-dXJuOw0KKw0KKwkvKg0KKwkgKiBUaGUgY214Y2hnKCkgYWJvdmUgZG9lcyBhbiBpbXBsaWNpdCBt
-ZW1vcnkgYmFycmllciB0bw0KKwkgKiBlbnN1cmUgdGhlIHdyaXRlIHRvIE1lc3NhZ2VUeXBlIChp
-ZSBzZXQgdG8NCisJICogSFZNU0dfTk9ORSkgaGFwcGVucyBiZWZvcmUgd2UgcmVhZCB0aGUNCisJ
-ICogTWVzc2FnZVBlbmRpbmcgYW5kIEVPTWluZy4gT3RoZXJ3aXNlLCB0aGUgRU9NaW5nDQorCSAq
-IHdpbGwgbm90IGRlbGl2ZXIgYW55IG1vcmUgbWVzc2FnZXMgc2luY2UgdGhlcmUgaXMNCisJICog
-bm8gZW1wdHkgc2xvdA0KKwkgKi8NCisJaWYgKG1zZy0+aGVhZGVyLm1lc3NhZ2VfZmxhZ3MubXNn
-X3BlbmRpbmcpIHsNCisJCS8qDQorCQkgKiBUaGlzIHdpbGwgY2F1c2UgbWVzc2FnZSBxdWV1ZSBy
-ZXNjYW4gdG8NCisJCSAqIHBvc3NpYmx5IGRlbGl2ZXIgYW5vdGhlciBtc2cgZnJvbSB0aGUNCisJ
-CSAqIGh5cGVydmlzb3INCisJCSAqLw0KKwkJaHZfc2lnbmFsX2VvbSgpOw0KKwl9DQorfQ0KKw0K
-K3ZvaWQgaHZfc2V0dXBfdm1idXNfaXJxKHZvaWQgKCpoYW5kbGVyKSh2b2lkKSk7DQordm9pZCBo
-dl9yZW1vdmVfdm1idXNfaXJxKHZvaWQpOw0KK3ZvaWQgaHZfZW5hYmxlX3ZtYnVzX2lycSh2b2lk
-KTsNCit2b2lkIGh2X2Rpc2FibGVfdm1idXNfaXJxKHZvaWQpOw0KKw0KK3ZvaWQgaHZfc2V0dXBf
-a2V4ZWNfaGFuZGxlcih2b2lkICgqaGFuZGxlcikodm9pZCkpOw0KK3ZvaWQgaHZfcmVtb3ZlX2tl
-eGVjX2hhbmRsZXIodm9pZCk7DQordm9pZCBodl9zZXR1cF9jcmFzaF9oYW5kbGVyKHZvaWQgKCpo
-YW5kbGVyKShzdHJ1Y3QgcHRfcmVncyAqcmVncykpOw0KK3ZvaWQgaHZfcmVtb3ZlX2NyYXNoX2hh
-bmRsZXIodm9pZCk7DQorDQorI2lmIElTX0VOQUJMRUQoQ09ORklHX0hZUEVSVikNCisvKg0KKyAq
-IEh5cGVydmlzb3IncyBub3Rpb24gb2YgdmlydHVhbCBwcm9jZXNzb3IgSUQgaXMgZGlmZmVyZW50
-IGZyb20NCisgKiBMaW51eCcgbm90aW9uIG9mIENQVSBJRC4gVGhpcyBpbmZvcm1hdGlvbiBjYW4g
-b25seSBiZSByZXRyaWV2ZWQNCisgKiBpbiB0aGUgY29udGV4dCBvZiB0aGUgY2FsbGluZyBDUFUu
-IFNldHVwIGEgbWFwIGZvciBlYXN5IGFjY2Vzcw0KKyAqIHRvIHRoaXMgaW5mb3JtYXRpb24uDQor
-ICovDQorZXh0ZXJuIHUzMiAqaHZfdnBfaW5kZXg7DQorZXh0ZXJuIHUzMiBodl9tYXhfdnBfaW5k
-ZXg7DQorDQorLyogU2VudGluZWwgdmFsdWUgZm9yIGFuIHVuaW5pdGlhbGl6ZWQgZW50cnkgaW4g
-aHZfdnBfaW5kZXggYXJyYXkgKi8NCisjZGVmaW5lIFZQX0lOVkFMCVUzMl9NQVgNCisNCisvKioN
-CisgKiBodl9jcHVfbnVtYmVyX3RvX3ZwX251bWJlcigpIC0gTWFwIENQVSB0byBWUC4NCisgKiBA
-Y3B1X251bWJlcjogQ1BVIG51bWJlciBpbiBMaW51eCB0ZXJtcw0KKyAqDQorICogVGhpcyBmdW5j
-dGlvbiByZXR1cm5zIHRoZSBtYXBwaW5nIGJldHdlZW4gdGhlIExpbnV4IHByb2Nlc3Nvcg0KKyAq
-IG51bWJlciBhbmQgdGhlIGh5cGVydmlzb3IncyB2aXJ0dWFsIHByb2Nlc3NvciBudW1iZXIsIHVz
-ZWZ1bA0KKyAqIGluIG1ha2luZyBoeXBlcmNhbGxzIGFuZCBzdWNoIHRoYXQgdGFsayBhYm91dCBz
-cGVjaWZpYw0KKyAqIHByb2Nlc3NvcnMuDQorICoNCisgKiBSZXR1cm46IFZpcnR1YWwgcHJvY2Vz
-c29yIG51bWJlciBpbiBIeXBlci1WIHRlcm1zDQorICovDQorc3RhdGljIGlubGluZSBpbnQgaHZf
-Y3B1X251bWJlcl90b192cF9udW1iZXIoaW50IGNwdV9udW1iZXIpDQorew0KKwlyZXR1cm4gaHZf
-dnBfaW5kZXhbY3B1X251bWJlcl07DQorfQ0KKw0KK3N0YXRpYyBpbmxpbmUgaW50IGNwdW1hc2tf
-dG9fdnBzZXQoc3RydWN0IGh2X3Zwc2V0ICp2cHNldCwNCisJCQkJICAgIGNvbnN0IHN0cnVjdCBj
-cHVtYXNrICpjcHVzKQ0KK3sNCisJaW50IGNwdSwgdmNwdSwgdmNwdV9iYW5rLCB2Y3B1X29mZnNl
-dCwgbnJfYmFuayA9IDE7DQorDQorCS8qIHZhbGlkX2JhbmtfbWFzayBjYW4gcmVwcmVzZW50IHVw
-IHRvIDY0IGJhbmtzICovDQorCWlmIChodl9tYXhfdnBfaW5kZXggLyA2NCA+PSA2NCkNCisJCXJl
-dHVybiAwOw0KKw0KKwkvKg0KKwkgKiBDbGVhciBhbGwgYmFua3MgdXAgdG8gdGhlIG1heGltdW0g
-cG9zc2libGUgYmFuayBhcyBodl90bGJfZmx1c2hfZXgNCisJICogc3RydWN0cyBhcmUgbm90IGNs
-ZWFyZWQgYmV0d2VlbiBjYWxscywgd2UgcmlzayBmbHVzaGluZyB1bm5lZWRlZA0KKwkgKiB2Q1BV
-cyBvdGhlcndpc2UuDQorCSAqLw0KKwlmb3IgKHZjcHVfYmFuayA9IDA7IHZjcHVfYmFuayA8PSBo
-dl9tYXhfdnBfaW5kZXggLyA2NDsgdmNwdV9iYW5rKyspDQorCQl2cHNldC0+YmFua19jb250ZW50
-c1t2Y3B1X2JhbmtdID0gMDsNCisNCisJLyoNCisJICogU29tZSBiYW5rcyBtYXkgZW5kIHVwIGJl
-aW5nIGVtcHR5IGJ1dCB0aGlzIGlzIGFjY2VwdGFibGUuDQorCSAqLw0KKwlmb3JfZWFjaF9jcHUo
-Y3B1LCBjcHVzKSB7DQorCQl2Y3B1ID0gaHZfY3B1X251bWJlcl90b192cF9udW1iZXIoY3B1KTsN
-CisJCWlmICh2Y3B1ID09IFZQX0lOVkFMKQ0KKwkJCXJldHVybiAtMTsNCisJCXZjcHVfYmFuayA9
-IHZjcHUgLyA2NDsNCisJCXZjcHVfb2Zmc2V0ID0gdmNwdSAlIDY0Ow0KKwkJX19zZXRfYml0KHZj
-cHVfb2Zmc2V0LCAodW5zaWduZWQgbG9uZyAqKQ0KKwkJCSAgJnZwc2V0LT5iYW5rX2NvbnRlbnRz
-W3ZjcHVfYmFua10pOw0KKwkJaWYgKHZjcHVfYmFuayA+PSBucl9iYW5rKQ0KKwkJCW5yX2Jhbmsg
-PSB2Y3B1X2JhbmsgKyAxOw0KKwl9DQorCXZwc2V0LT52YWxpZF9iYW5rX21hc2sgPSBHRU5NQVNL
-X1VMTChucl9iYW5rIC0gMSwgMCk7DQorCXJldHVybiBucl9iYW5rOw0KK30NCisNCit2b2lkIGh5
-cGVydl9yZXBvcnRfcGFuaWMoc3RydWN0IHB0X3JlZ3MgKnJlZ3MsIGxvbmcgZXJyKTsNCit2b2lk
-IGh5cGVydl9yZXBvcnRfcGFuaWNfbXNnKHBoeXNfYWRkcl90IHBhLCBzaXplX3Qgc2l6ZSk7DQor
-Ym9vbCBodl9pc19oeXBlcnZfaW5pdGlhbGl6ZWQodm9pZCk7DQordm9pZCBoeXBlcnZfY2xlYW51
-cCh2b2lkKTsNCisjZWxzZSAvKiBDT05GSUdfSFlQRVJWICovDQorc3RhdGljIGlubGluZSBib29s
-IGh2X2lzX2h5cGVydl9pbml0aWFsaXplZCh2b2lkKSB7IHJldHVybiBmYWxzZTsgfQ0KK3N0YXRp
-YyBpbmxpbmUgdm9pZCBoeXBlcnZfY2xlYW51cCh2b2lkKSB7fQ0KKyNlbmRpZiAvKiBDT05GSUdf
-SFlQRVJWICovDQorDQorI2lmIElTX0VOQUJMRUQoQ09ORklHX0hZUEVSVikNCitleHRlcm4gaW50
-IGh2X3NldHVwX3N0aW1lcjBfaXJxKGludCAqaXJxLCBpbnQgKnZlY3Rvciwgdm9pZCAoKmhhbmRs
-ZXIpKHZvaWQpKTsNCitleHRlcm4gdm9pZCBodl9yZW1vdmVfc3RpbWVyMF9pcnEoaW50IGlycSk7
-DQorI2VuZGlmDQorDQorI2VuZGlmDQotLSANCjEuOC4zLjENCg0K
+Michael Kelley <mikelley@microsoft.com> writes:
+
+> Clockevents code for Hyper-V synthetic timers is currently mixed
+> in with other Hyper-V code. Move the code to a Hyper-V specific
+> driver in the "clocksource" directory. Update the VMbus driver
+> to call initialization and cleanup routines since the Hyper-V
+> synthetic timers are not independently enumerated in ACPI.
+>
+> No behavior is changed and no new functionality is added.
+>
+> Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  MAINTAINERS                        |   2 +
+>  arch/x86/include/asm/hyperv-tlfs.h |   6 ++
+>  arch/x86/kernel/cpu/mshyperv.c     |   2 +
+>  drivers/clocksource/Makefile       |   1 +
+>  drivers/clocksource/hyperv_timer.c | 191 +++++++++++++++++++++++++++++++++++++
+>  drivers/hv/Kconfig                 |   3 +
+>  drivers/hv/hv.c                    | 156 +-----------------------------
+>  drivers/hv/hyperv_vmbus.h          |   3 -
+>  drivers/hv/vmbus_drv.c             |  42 ++++----
+>  include/clocksource/hyperv_timer.h |  27 ++++++
+>  10 files changed, 258 insertions(+), 175 deletions(-)
+>  create mode 100644 drivers/clocksource/hyperv_timer.c
+>  create mode 100644 include/clocksource/hyperv_timer.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 992f1dd..cf2a5b7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7294,6 +7294,7 @@ F:	arch/x86/include/asm/trace/hyperv.h
+>  F:	arch/x86/include/asm/hyperv-tlfs.h
+>  F:	arch/x86/kernel/cpu/mshyperv.c
+>  F:	arch/x86/hyperv
+> +F:	drivers/clocksource/hyperv_timer.c
+>  F:	drivers/hid/hid-hyperv.c
+>  F:	drivers/hv/
+>  F:	drivers/input/serio/hyperv-keyboard.c
+> @@ -7304,6 +7305,7 @@ F:	drivers/uio/uio_hv_generic.c
+>  F:	drivers/video/fbdev/hyperv_fb.c
+>  F:	drivers/iommu/hyperv_iommu.c
+>  F:	net/vmw_vsock/hyperv_transport.c
+> +F:	include/clocksource/hyperv_timer.h
+>  F:	include/linux/hyperv.h
+>  F:	include/uapi/linux/hyperv.h
+>  F:	tools/hv/
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index cdf44aa..af78cd7 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -401,6 +401,12 @@ enum HV_GENERIC_SET_FORMAT {
+>  #define HV_STATUS_INVALID_CONNECTION_ID		18
+>  #define HV_STATUS_INSUFFICIENT_BUFFERS		19
+>  
+> +/*
+> + * The Hyper-V TimeRefCount register and the TSC
+> + * page provide a guest VM clock with 100ns tick rate
+> + */
+> +#define HV_CLOCK_HZ (NSEC_PER_SEC/100)
+> +
+>  typedef struct _HV_REFERENCE_TSC_PAGE {
+>  	__u32 tsc_sequence;
+>  	__u32 res1;
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index faae611..b18ede4 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/kexec.h>
+>  #include <linux/i8253.h>
+> +#include <linux/random.h>
+>  #include <asm/processor.h>
+>  #include <asm/hypervisor.h>
+>  #include <asm/hyperv-tlfs.h>
+> @@ -84,6 +85,7 @@ __visible void __irq_entry hv_stimer0_vector_handler(struct pt_regs *regs)
+>  	inc_irq_stat(hyperv_stimer0_count);
+>  	if (hv_stimer0_handler)
+>  		hv_stimer0_handler();
+> +	add_interrupt_randomness(HYPERV_STIMER0_VECTOR, 0);
+>  	ack_APIC_irq();
+>  
+>  	exiting_irq();
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 236858f..2b65c5f 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -84,3 +84,4 @@ obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+>  obj-$(CONFIG_RISCV_TIMER)		+= timer-riscv.o
+>  obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
+>  obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
+> +obj-$(CONFIG_HYPERV_TIMER)		+= hyperv_timer.o
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> new file mode 100644
+> index 0000000..30615f3
+> --- /dev/null
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -0,0 +1,191 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Clocksource driver for the synthetic counter and timers
+> + * provided by the Hyper-V hypervisor to guest VMs, as described
+> + * in the Hyper-V Top Level Functional Spec (TLFS). This driver
+> + * is instruction set architecture independent.
+> + *
+> + * Copyright (C) 2019, Microsoft, Inc.
+> + *
+> + * Author:  Michael Kelley <mikelley@microsoft.com>
+> + */
+> +
+> +#include <linux/percpu.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/mm.h>
+> +#include <clocksource/hyperv_timer.h>
+> +#include <asm/hyperv-tlfs.h>
+> +#include <asm/mshyperv.h>
+> +
+> +static struct clock_event_device __percpu *hv_clock_event;
+> +
+> +/*
+> + * If false, we're using the old mechanism for stimer0 interrupts
+> + * where it sends a VMbus message when it expires. The old
+> + * mechanism is used when running on older versions of Hyper-V
+> + * that don't support Direct Mode. While Hyper-V provides
+> + * four stimer's per CPU, Linux uses only stimer0.
+> + */
+> +static bool direct_mode_enabled;
+> +
+> +static int stimer0_irq;
+> +static int stimer0_vector;
+> +static int stimer0_message_sint;
+> +
+> +/*
+> + * ISR for when stimer0 is operating in Direct Mode.  Direct Mode
+> + * does not use VMbus or any VMbus messages, so process here and not
+> + * in the VMbus driver code.
+> + */
+> +void hv_stimer0_isr(void)
+> +{
+> +	struct clock_event_device *ce;
+> +
+> +	ce = this_cpu_ptr(hv_clock_event);
+> +	ce->event_handler(ce);
+> +}
+> +EXPORT_SYMBOL_GPL(hv_stimer0_isr);
+> +
+> +static int hv_ce_set_next_event(unsigned long delta,
+> +				struct clock_event_device *evt)
+> +{
+> +	u64 current_tick;
+> +
+> +	WARN_ON(!clockevent_state_oneshot(evt));
+> +
+> +	current_tick = hyperv_cs->read(NULL);
+> +	current_tick += delta;
+> +	hv_init_timer(0, current_tick);
+> +	return 0;
+> +}
+> +
+> +static int hv_ce_shutdown(struct clock_event_device *evt)
+> +{
+> +	hv_init_timer(0, 0);
+> +	hv_init_timer_config(0, 0);
+> +	if (direct_mode_enabled)
+> +		hv_disable_stimer0_percpu_irq(stimer0_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hv_ce_set_oneshot(struct clock_event_device *evt)
+> +{
+> +	union hv_stimer_config timer_cfg;
+> +
+> +	timer_cfg.as_uint64 = 0;
+> +	timer_cfg.enable = 1;
+> +	timer_cfg.auto_enable = 1;
+> +	if (direct_mode_enabled) {
+> +		/*
+> +		 * When it expires, the timer will directly interrupt
+> +		 * on the specified hardware vector/IRQ.
+> +		 */
+> +		timer_cfg.direct_mode = 1;
+> +		timer_cfg.apic_vector = stimer0_vector;
+> +		hv_enable_stimer0_percpu_irq(stimer0_irq);
+> +	} else {
+> +		/*
+> +		 * When it expires, the timer will generate a VMbus message,
+> +		 * to be handled by the normal VMbus interrupt handler.
+> +		 */
+> +		timer_cfg.direct_mode = 0;
+> +		timer_cfg.sintx = stimer0_message_sint;
+> +	}
+> +	hv_init_timer_config(0, timer_cfg.as_uint64);
+> +	return 0;
+> +}
+> +
+> +/*
+> + * hv_stimer_init - Per-cpu initialization of the clockevent
+> + */
+> +int hv_stimer_init(unsigned int cpu)
+> +{
+> +	struct clock_event_device *ce;
+> +
+> +	if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
+> +		ce = per_cpu_ptr(hv_clock_event, cpu);
+> +		ce->name = "Hyper-V clockevent";
+> +		ce->features = CLOCK_EVT_FEAT_ONESHOT;
+> +		ce->cpumask = cpumask_of(cpu);
+> +		ce->rating = 1000;
+> +		ce->set_state_shutdown = hv_ce_shutdown;
+> +		ce->set_state_oneshot = hv_ce_set_oneshot;
+> +		ce->set_next_event = hv_ce_set_next_event;
+> +
+> +		clockevents_config_and_register(ce,
+> +						HV_CLOCK_HZ,
+> +						HV_MIN_DELTA_TICKS,
+> +						HV_MAX_MAX_DELTA_TICKS);
+> +	}
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_stimer_init);
+> +
+> +/*
+> + * hv_stimer_cleanup - Per-cpu cleanup of the clockevent
+> + */
+> +int hv_stimer_cleanup(unsigned int cpu)
+> +{
+> +	struct clock_event_device *ce;
+> +
+> +	/* Turn off clockevent device */
+> +	if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
+> +		ce = per_cpu_ptr(hv_clock_event, cpu);
+> +		clockevents_unbind_device(ce, cpu);
+> +		hv_ce_shutdown(ce);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_stimer_cleanup);
+> +
+> +/* hv_stimer_alloc - Global initialization of the clockevent and stimer0 */
+> +int hv_stimer_alloc(int sint)
+> +{
+> +	hv_clock_event = alloc_percpu(struct clock_event_device);
+> +	if (!hv_clock_event)
+> +		return -ENOMEM;
+> +
+> +	direct_mode_enabled = ms_hyperv.misc_features &
+> +			HV_STIMER_DIRECT_MODE_AVAILABLE;
+> +	if (direct_mode_enabled &&
+> +	    hv_setup_stimer0_irq(&stimer0_irq, &stimer0_vector,
+> +				hv_stimer0_isr)) {
+> +		free_percpu(hv_clock_event);
+> +		return -EINVAL;
+> +	}
+> +
+> +	stimer0_message_sint = sint;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_stimer_alloc);
+> +
+> +/* hv_stimer_free - Free global resources allocated by hv_stimer_alloc() */
+> +void hv_stimer_free(void)
+> +{
+> +	if (direct_mode_enabled)
+> +		hv_remove_stimer0_irq(stimer0_irq);
+> +	free_percpu(hv_clock_event);
+> +}
+> +EXPORT_SYMBOL_GPL(hv_stimer_free);
+> +
+> +/*
+> + * Do a global cleanup of clockevents for the cases of kexec and
+> + * vmbus exit
+> + */
+> +void hv_stimer_global_cleanup(void)
+> +{
+> +	int	cpu;
+> +	struct clock_event_device *ce;
+> +
+> +	if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE)
+> +		for_each_present_cpu(cpu) {
+> +			ce = per_cpu_ptr(hv_clock_event, cpu);
+> +			clockevents_unbind_device(ce, cpu);
+> +		}
+> +	hv_stimer_free();
+> +}
+> +EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 1c1a251..c423e57 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -10,6 +10,9 @@ config HYPERV
+>  	  Select this option to run Linux as a Hyper-V client operating
+>  	  system.
+>  
+> +config HYPERV_TIMER
+> +	def_bool HYPERV
+> +
+>  config HYPERV_TSCPAGE
+>         def_bool HYPERV && X86_64
+>  
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index 4565302..bd6452f 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/version.h>
+>  #include <linux/random.h>
+>  #include <linux/clockchips.h>
+
+(very minor nit, just an idea for future cleanup):
+
+I think we can throw away
+
+ #include <linux/random.h>
+ #include <linux/clockchips.h>
+
+now.
+
+> +#include <clocksource/hyperv_timer.h>
+>  #include <asm/mshyperv.h>
+>  #include "hyperv_vmbus.h"
+>  
+> @@ -36,21 +37,6 @@
+>  struct hv_context hv_context;
+>  
+>  /*
+> - * If false, we're using the old mechanism for stimer0 interrupts
+> - * where it sends a VMbus message when it expires. The old
+> - * mechanism is used when running on older versions of Hyper-V
+> - * that don't support Direct Mode. While Hyper-V provides
+> - * four stimer's per CPU, Linux uses only stimer0.
+> - */
+> -static bool direct_mode_enabled;
+> -static int stimer0_irq;
+> -static int stimer0_vector;
+> -
+> -#define HV_TIMER_FREQUENCY (10 * 1000 * 1000) /* 100ns period */
+> -#define HV_MAX_MAX_DELTA_TICKS 0xffffffff
+> -#define HV_MIN_DELTA_TICKS 1
+> -
+> -/*
+>   * hv_init - Main initialization routine.
+>   *
+>   * This routine must be called before any other routines in here are called
+> @@ -60,9 +46,6 @@ int hv_init(void)
+>  	hv_context.cpu_context = alloc_percpu(struct hv_per_cpu_context);
+>  	if (!hv_context.cpu_context)
+>  		return -ENOMEM;
+> -
+> -	direct_mode_enabled = ms_hyperv.misc_features &
+> -			HV_STIMER_DIRECT_MODE_AVAILABLE;
+>  	return 0;
+>  }
+>  
+> @@ -101,89 +84,6 @@ int hv_post_message(union hv_connection_id connection_id,
+>  	return status & 0xFFFF;
+>  }
+>  
+> -/*
+> - * ISR for when stimer0 is operating in Direct Mode.  Direct Mode
+> - * does not use VMbus or any VMbus messages, so process here and not
+> - * in the VMbus driver code.
+> - */
+> -
+> -static void hv_stimer0_isr(void)
+> -{
+> -	struct hv_per_cpu_context *hv_cpu;
+> -
+> -	hv_cpu = this_cpu_ptr(hv_context.cpu_context);
+> -	hv_cpu->clk_evt->event_handler(hv_cpu->clk_evt);
+> -	add_interrupt_randomness(stimer0_vector, 0);
+> -}
+> -
+> -static int hv_ce_set_next_event(unsigned long delta,
+> -				struct clock_event_device *evt)
+> -{
+> -	u64 current_tick;
+> -
+> -	WARN_ON(!clockevent_state_oneshot(evt));
+> -
+> -	current_tick = hyperv_cs->read(NULL);
+> -	current_tick += delta;
+> -	hv_init_timer(0, current_tick);
+> -	return 0;
+> -}
+> -
+> -static int hv_ce_shutdown(struct clock_event_device *evt)
+> -{
+> -	hv_init_timer(0, 0);
+> -	hv_init_timer_config(0, 0);
+> -	if (direct_mode_enabled)
+> -		hv_disable_stimer0_percpu_irq(stimer0_irq);
+> -
+> -	return 0;
+> -}
+> -
+> -static int hv_ce_set_oneshot(struct clock_event_device *evt)
+> -{
+> -	union hv_stimer_config timer_cfg;
+> -
+> -	timer_cfg.as_uint64 = 0;
+> -	timer_cfg.enable = 1;
+> -	timer_cfg.auto_enable = 1;
+> -	if (direct_mode_enabled) {
+> -		/*
+> -		 * When it expires, the timer will directly interrupt
+> -		 * on the specified hardware vector/IRQ.
+> -		 */
+> -		timer_cfg.direct_mode = 1;
+> -		timer_cfg.apic_vector = stimer0_vector;
+> -		hv_enable_stimer0_percpu_irq(stimer0_irq);
+> -	} else {
+> -		/*
+> -		 * When it expires, the timer will generate a VMbus message,
+> -		 * to be handled by the normal VMbus interrupt handler.
+> -		 */
+> -		timer_cfg.direct_mode = 0;
+> -		timer_cfg.sintx = VMBUS_MESSAGE_SINT;
+> -	}
+> -	hv_init_timer_config(0, timer_cfg.as_uint64);
+> -	return 0;
+> -}
+> -
+> -static void hv_init_clockevent_device(struct clock_event_device *dev, int cpu)
+> -{
+> -	dev->name = "Hyper-V clockevent";
+> -	dev->features = CLOCK_EVT_FEAT_ONESHOT;
+> -	dev->cpumask = cpumask_of(cpu);
+> -	dev->rating = 1000;
+> -	/*
+> -	 * Avoid settint dev->owner = THIS_MODULE deliberately as doing so will
+> -	 * result in clockevents_config_and_register() taking additional
+> -	 * references to the hv_vmbus module making it impossible to unload.
+> -	 */
+> -
+> -	dev->set_state_shutdown = hv_ce_shutdown;
+> -	dev->set_state_oneshot = hv_ce_set_oneshot;
+> -	dev->set_next_event = hv_ce_set_next_event;
+> -}
+> -
+> -
+>  int hv_synic_alloc(void)
+>  {
+>  	int cpu;
+> @@ -212,14 +112,6 @@ int hv_synic_alloc(void)
+>  		tasklet_init(&hv_cpu->msg_dpc,
+>  			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
+>  
+> -		hv_cpu->clk_evt = kzalloc(sizeof(struct clock_event_device),
+> -					  GFP_KERNEL);
+> -		if (hv_cpu->clk_evt == NULL) {
+> -			pr_err("Unable to allocate clock event device\n");
+> -			goto err;
+> -		}
+> -		hv_init_clockevent_device(hv_cpu->clk_evt, cpu);
+> -
+>  		hv_cpu->synic_message_page =
+>  			(void *)get_zeroed_page(GFP_ATOMIC);
+>  		if (hv_cpu->synic_message_page == NULL) {
+> @@ -242,11 +134,6 @@ int hv_synic_alloc(void)
+>  		INIT_LIST_HEAD(&hv_cpu->chan_list);
+>  	}
+>  
+> -	if (direct_mode_enabled &&
+> -	    hv_setup_stimer0_irq(&stimer0_irq, &stimer0_vector,
+> -				hv_stimer0_isr))
+> -		goto err;
+> -
+>  	return 0;
+>  err:
+>  	/*
+> @@ -265,7 +152,6 @@ void hv_synic_free(void)
+>  		struct hv_per_cpu_context *hv_cpu
+>  			= per_cpu_ptr(hv_context.cpu_context, cpu);
+>  
+> -		kfree(hv_cpu->clk_evt);
+>  		free_page((unsigned long)hv_cpu->synic_event_page);
+>  		free_page((unsigned long)hv_cpu->synic_message_page);
+>  		free_page((unsigned long)hv_cpu->post_msg_page);
+> @@ -324,36 +210,9 @@ int hv_synic_init(unsigned int cpu)
+>  
+>  	hv_set_synic_state(sctrl.as_uint64);
+>  
+> -	/*
+> -	 * Register the per-cpu clockevent source.
+> -	 */
+> -	if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE)
+> -		clockevents_config_and_register(hv_cpu->clk_evt,
+> -						HV_TIMER_FREQUENCY,
+> -						HV_MIN_DELTA_TICKS,
+> -						HV_MAX_MAX_DELTA_TICKS);
+> -	return 0;
+> -}
+> -
+> -/*
+> - * hv_synic_clockevents_cleanup - Cleanup clockevent devices
+> - */
+> -void hv_synic_clockevents_cleanup(void)
+> -{
+> -	int cpu;
+> +	hv_stimer_init(cpu);
+>  
+> -	if (!(ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE))
+> -		return;
+> -
+> -	if (direct_mode_enabled)
+> -		hv_remove_stimer0_irq(stimer0_irq);
+> -
+> -	for_each_present_cpu(cpu) {
+> -		struct hv_per_cpu_context *hv_cpu
+> -			= per_cpu_ptr(hv_context.cpu_context, cpu);
+> -
+> -		clockevents_unbind_device(hv_cpu->clk_evt, cpu);
+> -	}
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -401,14 +260,7 @@ int hv_synic_cleanup(unsigned int cpu)
+>  	if (channel_found && vmbus_connection.conn_state == CONNECTED)
+>  		return -EBUSY;
+>  
+> -	/* Turn off clockevent device */
+> -	if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
+> -		struct hv_per_cpu_context *hv_cpu
+> -			= this_cpu_ptr(hv_context.cpu_context);
+> -
+> -		clockevents_unbind_device(hv_cpu->clk_evt, cpu);
+> -		hv_ce_shutdown(hv_cpu->clk_evt);
+> -	}
+> +	hv_stimer_cleanup(cpu);
+>  
+>  	hv_get_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
+>  
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index e5467b8..a8f8aee 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -151,7 +151,6 @@ struct hv_per_cpu_context {
+>  	 * per-cpu list of the channels based on their CPU affinity.
+>  	 */
+>  	struct list_head chan_list;
+> -	struct clock_event_device *clk_evt;
+>  };
+>  
+>  struct hv_context {
+> @@ -189,8 +188,6 @@ extern int hv_post_message(union hv_connection_id connection_id,
+>  
+>  extern int hv_synic_cleanup(unsigned int cpu);
+>  
+> -extern void hv_synic_clockevents_cleanup(void);
+> -
+>  /* Interface */
+>  
+>  void hv_ringbuffer_pre_init(struct vmbus_channel *channel);
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 1cb9408..89aca5d 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -43,6 +43,7 @@
+>  #include <linux/kdebug.h>
+>  #include <linux/efi.h>
+>  #include <linux/random.h>
+> +#include <clocksource/hyperv_timer.h>
+>  #include "hyperv_vmbus.h"
+>  
+>  struct vmbus_dynid {
+> @@ -968,17 +969,6 @@ static void vmbus_onmessage_work(struct work_struct *work)
+>  	kfree(ctx);
+>  }
+>  
+> -static void hv_process_timer_expiration(struct hv_message *msg,
+> -					struct hv_per_cpu_context *hv_cpu)
+> -{
+> -	struct clock_event_device *dev = hv_cpu->clk_evt;
+> -
+> -	if (dev->event_handler)
+> -		dev->event_handler(dev);
+> -
+> -	vmbus_signal_eom(msg, HVMSG_TIMER_EXPIRED);
+> -}
+> -
+>  void vmbus_on_msg_dpc(unsigned long data)
+>  {
+>  	struct hv_per_cpu_context *hv_cpu = (void *)data;
+> @@ -1172,9 +1162,10 @@ static void vmbus_isr(void)
+>  
+>  	/* Check if there are actual msgs to be processed */
+>  	if (msg->header.message_type != HVMSG_NONE) {
+> -		if (msg->header.message_type == HVMSG_TIMER_EXPIRED)
+> -			hv_process_timer_expiration(msg, hv_cpu);
+> -		else
+> +		if (msg->header.message_type == HVMSG_TIMER_EXPIRED) {
+> +			hv_stimer0_isr();
+> +			vmbus_signal_eom(msg, HVMSG_TIMER_EXPIRED);
+> +		} else
+>  			tasklet_schedule(&hv_cpu->msg_dpc);
+>  	}
+>  
+> @@ -1276,14 +1267,19 @@ static int vmbus_bus_init(void)
+>  	ret = hv_synic_alloc();
+>  	if (ret)
+>  		goto err_alloc;
+> +
+> +	ret = hv_stimer_alloc(VMBUS_MESSAGE_SINT);
+> +	if (ret < 0)
+> +		goto err_alloc;
+> +
+>  	/*
+> -	 * Initialize the per-cpu interrupt state and
+> -	 * connect to the host.
+> +	 * Initialize the per-cpu interrupt state and stimer state.
+> +	 * Then connect to the host.
+>  	 */
+>  	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online",
+>  				hv_synic_init, hv_synic_cleanup);
+>  	if (ret < 0)
+> -		goto err_alloc;
+> +		goto err_cpuhp;
+>  	hyperv_cpuhp_online = ret;
+>  
+>  	ret = vmbus_connect();
+> @@ -1331,6 +1327,8 @@ static int vmbus_bus_init(void)
+>  
+>  err_connect:
+>  	cpuhp_remove_state(hyperv_cpuhp_online);
+> +err_cpuhp:
+> +	hv_stimer_free();
+>  err_alloc:
+>  	hv_synic_free();
+>  	hv_remove_vmbus_irq();
+> @@ -2077,7 +2075,7 @@ static int vmbus_acpi_add(struct acpi_device *device)
+>  
+>  static void hv_kexec_handler(void)
+>  {
+> -	hv_synic_clockevents_cleanup();
+> +	hv_stimer_global_cleanup();
+>  	vmbus_initiate_unload(false);
+>  	vmbus_connection.conn_state = DISCONNECTED;
+>  	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
+> @@ -2088,6 +2086,8 @@ static void hv_kexec_handler(void)
+>  
+>  static void hv_crash_handler(struct pt_regs *regs)
+>  {
+> +	int cpu;
+> +
+>  	vmbus_initiate_unload(true);
+>  	/*
+>  	 * In crash handler we can't schedule synic cleanup for all CPUs,
+> @@ -2095,7 +2095,9 @@ static void hv_crash_handler(struct pt_regs *regs)
+>  	 * for kdump.
+>  	 */
+>  	vmbus_connection.conn_state = DISCONNECTED;
+> -	hv_synic_cleanup(smp_processor_id());
+> +	cpu = smp_processor_id();
+> +	hv_stimer_cleanup(cpu);
+> +	hv_synic_cleanup(cpu);
+>  	hyperv_cleanup();
+>  };
+>  
+> @@ -2144,7 +2146,7 @@ static void __exit vmbus_exit(void)
+>  	hv_remove_kexec_handler();
+>  	hv_remove_crash_handler();
+>  	vmbus_connection.conn_state = DISCONNECTED;
+> -	hv_synic_clockevents_cleanup();
+> +	hv_stimer_global_cleanup();
+>  	vmbus_disconnect();
+>  	hv_remove_vmbus_irq();
+>  	for_each_online_cpu(cpu) {
+> diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyperv_timer.h
+> new file mode 100644
+> index 0000000..ba5dc17
+> --- /dev/null
+> +++ b/include/clocksource/hyperv_timer.h
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Definitions for the clocksource provided by the Hyper-V
+> + * hypervisor to guest VMs, as described in the Hyper-V Top
+> + * Level Functional Spec (TLFS).
+> + *
+> + * Copyright (C) 2019, Microsoft, Inc.
+> + *
+> + * Author:  Michael Kelley <mikelley@microsoft.com>
+> + */
+> +
+> +#ifndef __CLKSOURCE_HYPERV_TIMER_H
+> +#define __CLKSOURCE_HYPERV_TIMER_H
+> +
+> +#define HV_MAX_MAX_DELTA_TICKS 0xffffffff
+> +#define HV_MIN_DELTA_TICKS 1
+> +
+> +/* Routines called by the VMbus driver */
+> +extern int hv_stimer_alloc(int sint);
+> +extern void hv_stimer_free(void);
+> +extern int hv_stimer_init(unsigned int cpu);
+> +extern int hv_stimer_cleanup(unsigned int cpu);
+> +extern void hv_stimer_global_cleanup(void);
+> +extern void hv_stimer0_isr(void);
+> +
+> +#endif
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
