@@ -2,29 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AE5D30D7E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 31 May 2019 13:48:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41FD63158E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 31 May 2019 21:44:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfEaLsy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 31 May 2019 07:48:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55826 "EHLO mx1.suse.de"
+        id S1727415AbfEaTop (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 31 May 2019 15:44:45 -0400
+Received: from mail-eopbgr720066.outbound.protection.outlook.com ([40.107.72.66]:51090
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726307AbfEaLsy (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 31 May 2019 07:48:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 845C9AD4E;
-        Fri, 31 May 2019 11:48:52 +0000 (UTC)
-Subject: Re: [RFC PATCH v2 04/12] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-To:     Nadav Amit <namit@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
+        id S1727147AbfEaTop (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 31 May 2019 15:44:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fhf9yg12FYwPe3trfsjjhu4+MxOB+vRFhpqtdNhWi8k=;
+ b=ipKZwRiUyYBdAvKtxV9TBNrqnmqAzQhF2KGzWhK8G3aNB7PD/Je1lEFQIwvXEeeKuRqSBawmyjVQWTRWu4a5mWLnOJEvyW+FLCYF+pH0/gM2oij6T33gSEcRt+MNkid9t4ph1bQY1TunTAYKDiY9CD6nXZdu8sAxm7YRyRc30Q8=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB6694.namprd05.prod.outlook.com (20.178.235.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.13; Fri, 31 May 2019 19:44:41 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.016; Fri, 31 May 2019
+ 19:44:41 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Juergen Gross <jgross@suse.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@intel.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -32,149 +42,73 @@ Cc:     Borislav Petkov <bp@alien8.de>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [RFC PATCH v2 04/12] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Thread-Topic: [RFC PATCH v2 04/12] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Thread-Index: AQHVF3tF8UKMn76vfUO/W6G8mcgAUaaFHqkAgACE8gA=
+Date:   Fri, 31 May 2019 19:44:41 +0000
+Message-ID: <1DEA29A7-D033-4816-876C-05E7D77F0437@vmware.com>
 References: <20190531063645.4697-1-namit@vmware.com>
  <20190531063645.4697-5-namit@vmware.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a847ee9c-4faf-c8b4-43bb-cc30e0980796@suse.com>
-Date:   Fri, 31 May 2019 13:48:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ <a847ee9c-4faf-c8b4-43bb-cc30e0980796@suse.com>
+In-Reply-To: <a847ee9c-4faf-c8b4-43bb-cc30e0980796@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ff6d24d-760f-4cf1-93a5-08d6e6006cb9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB6694;
+x-ms-traffictypediagnostic: BYAPR05MB6694:
+x-microsoft-antispam-prvs: <BYAPR05MB6694A02D23273C4945DC9657D0190@BYAPR05MB6694.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 00540983E2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(5660300002)(6246003)(33656002)(66946007)(4744005)(99286004)(25786009)(54906003)(316002)(2906002)(66476007)(64756008)(66446008)(76116006)(73956011)(68736007)(66556008)(4326008)(7416002)(476003)(66066001)(229853002)(8936002)(14454004)(6512007)(6506007)(2616005)(8676002)(53546011)(446003)(76176011)(11346002)(486006)(81156014)(82746002)(305945005)(6436002)(186003)(6116002)(3846002)(71190400001)(26005)(71200400001)(6916009)(256004)(83716004)(6486002)(81166006)(7736002)(102836004)(478600001)(53936002)(86362001)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6694;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8vzZaIBhzD6qajL16JVgIzMw6d4O8dWiIxREAOQKbgqx7lEuupRTbVsCWDWGr93Cy3VSBBjH9syRZNtEOL2Zn3yu900mPiwa0bKgWpELQ92Kgd+f+yFap9jSai30Wt6Rrty57+qNsl1IxGpoSlhyf2+xWjes0o+DnUjIaSZ98myWf1POpTCv7F33sZvFvqqdwRs0v7NUGH4nU5wNF3zlFeLEkI6JZazDoVWpK8Nue3QyZSGFKToCmGgBGgJCd23hd5SE1uycaK+bcxzgfV7IKBe3+pEjxkkzXyZGsVlqdwMnDt6WsLZhRG0ykA2UQBHZ2hbrzyyPJNDOstW+Ts7fvhlKEIrwSC0yzt47CNLxFXisPrf0Sw1xRTXcchSxXACzzDoEiPd97LOyc/Ym/LvwpxmDnM3oKBVb5zbXtveRK2I=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <498DEB6111D0B64C9D5657F78CFDD0EF@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190531063645.4697-5-namit@vmware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ff6d24d-760f-4cf1-93a5-08d6e6006cb9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 19:44:41.6564
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6694
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 31/05/2019 08:36, Nadav Amit wrote:
-> To improve TLB shootdown performance, flush the remote and local TLBs
-> concurrently. Introduce flush_tlb_multi() that does so. The current
-> flush_tlb_others() interface is kept, since paravirtual interfaces need
-> to be adapted first before it can be removed. This is left for future
-> work. In such PV environments, TLB flushes are not performed, at this
-> time, concurrently.
-> 
-> Add a static key to tell whether this new interface is supported.
-> 
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Sasha Levin <sashal@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: linux-hyperv@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: kvm@vger.kernel.org
-> Cc: xen-devel@lists.xenproject.org
-> Signed-off-by: Nadav Amit <namit@vmware.com>
-> ---
->  arch/x86/hyperv/mmu.c                 |  2 +
->  arch/x86/include/asm/paravirt.h       |  8 +++
->  arch/x86/include/asm/paravirt_types.h |  6 ++
->  arch/x86/include/asm/tlbflush.h       |  6 ++
->  arch/x86/kernel/kvm.c                 |  1 +
->  arch/x86/kernel/paravirt.c            |  3 +
->  arch/x86/mm/tlb.c                     | 80 +++++++++++++++++++++++----
->  arch/x86/xen/mmu_pv.c                 |  2 +
->  8 files changed, 96 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-> index e65d7fe6489f..ca28b400c87c 100644
-> --- a/arch/x86/hyperv/mmu.c
-> +++ b/arch/x86/hyperv/mmu.c
-> @@ -233,4 +233,6 @@ void hyperv_setup_mmu_ops(void)
->  	pr_info("Using hypercall for remote TLB flush\n");
->  	pv_ops.mmu.flush_tlb_others = hyperv_flush_tlb_others;
->  	pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-> +
-> +	static_key_disable(&flush_tlb_multi_enabled.key);
->  }
-> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-> index c25c38a05c1c..192be7254457 100644
-> --- a/arch/x86/include/asm/paravirt.h
-> +++ b/arch/x86/include/asm/paravirt.h
-> @@ -47,6 +47,8 @@ static inline void slow_down_io(void)
->  #endif
->  }
->  
-> +DECLARE_STATIC_KEY_TRUE(flush_tlb_multi_enabled);
-> +
->  static inline void __flush_tlb(void)
->  {
->  	PVOP_VCALL0(mmu.flush_tlb_user);
-> @@ -62,6 +64,12 @@ static inline void __flush_tlb_one_user(unsigned long addr)
->  	PVOP_VCALL1(mmu.flush_tlb_one_user, addr);
->  }
->  
-> +static inline void flush_tlb_multi(const struct cpumask *cpumask,
-> +				   const struct flush_tlb_info *info)
-> +{
-> +	PVOP_VCALL2(mmu.flush_tlb_multi, cpumask, info);
-> +}
-> +
->  static inline void flush_tlb_others(const struct cpumask *cpumask,
->  				    const struct flush_tlb_info *info)
->  {
-> diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-> index 946f8f1f1efc..3a156e63c57d 100644
-> --- a/arch/x86/include/asm/paravirt_types.h
-> +++ b/arch/x86/include/asm/paravirt_types.h
-> @@ -211,6 +211,12 @@ struct pv_mmu_ops {
->  	void (*flush_tlb_user)(void);
->  	void (*flush_tlb_kernel)(void);
->  	void (*flush_tlb_one_user)(unsigned long addr);
-> +	/*
-> +	 * flush_tlb_multi() is the preferred interface. When it is used,
-> +	 * flush_tlb_others() should return false.
+> On May 31, 2019, at 4:48 AM, Juergen Gross <jgross@suse.com> wrote:
+>=20
+> On 31/05/2019 08:36, Nadav Amit wrote:
+>>=20
+>> --- a/arch/x86/include/asm/paravirt_types.h
+>> +++ b/arch/x86/include/asm/paravirt_types.h
+>> @@ -211,6 +211,12 @@ struct pv_mmu_ops {
+>> 	void (*flush_tlb_user)(void);
+>> 	void (*flush_tlb_kernel)(void);
+>> 	void (*flush_tlb_one_user)(unsigned long addr);
+>> +	/*
+>> +	 * flush_tlb_multi() is the preferred interface. When it is used,
+>> +	 * flush_tlb_others() should return false.
+>=20
+> Didn't you want to remove/change this comment?
 
-Didn't you want to remove/change this comment?
-
-
-Juergen
+Yes! Sorry for that. Fixed now.
