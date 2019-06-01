@@ -2,113 +2,137 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41FD63158E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 31 May 2019 21:44:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18CCE3211C
+	for <lists+linux-hyperv@lfdr.de>; Sun,  2 Jun 2019 01:00:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfEaTop (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 31 May 2019 15:44:45 -0400
-Received: from mail-eopbgr720066.outbound.protection.outlook.com ([40.107.72.66]:51090
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        id S1726414AbfFAW77 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 1 Jun 2019 18:59:59 -0400
+Received: from mail-eopbgr820094.outbound.protection.outlook.com ([40.107.82.94]:41568
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727147AbfEaTop (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 31 May 2019 15:44:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
+        id S1726149AbfFAW77 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 1 Jun 2019 18:59:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=fSb6VxGImQRbmaTavkMeZHoUsSVBf1DXWtzP/HAgRvmWBW14ual5jgSPk9qMxRD5bHZjI3ApOHBwsnc5pcE46fdq4e3YORh1MfZ3RMdq9F86ngck98feab2GpO4NL44j64Mj0NiXTw1WGEnSf5WVe20K3nnDWhpvF4OnU3t7epA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fhf9yg12FYwPe3trfsjjhu4+MxOB+vRFhpqtdNhWi8k=;
- b=ipKZwRiUyYBdAvKtxV9TBNrqnmqAzQhF2KGzWhK8G3aNB7PD/Je1lEFQIwvXEeeKuRqSBawmyjVQWTRWu4a5mWLnOJEvyW+FLCYF+pH0/gM2oij6T33gSEcRt+MNkid9t4ph1bQY1TunTAYKDiY9CD6nXZdu8sAxm7YRyRc30Q8=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB6694.namprd05.prod.outlook.com (20.178.235.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.13; Fri, 31 May 2019 19:44:41 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1943.016; Fri, 31 May 2019
- 19:44:41 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Juergen Gross <jgross@suse.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+ bh=6n8cSrZdPBP+APjT0/IEZ2BwuACDxsAQURtUZpdtFGg=;
+ b=LmtRpazrLyzJLd1oQEqthEibTQtsCFdFtMI2EukQYlrugMU0LM6u0qzruVJ1cxpvwBhdZ/l/3qbOyrfzL+qfFmtulut7sfsfZQ2UE8CcjJXd6a40oFprCIfgc8FU9+MDjvBHa3kRWkrgUNWzxzlgPjSVcoKd8X/uszYZykY/b40=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6n8cSrZdPBP+APjT0/IEZ2BwuACDxsAQURtUZpdtFGg=;
+ b=P5a+za9LL/HR4pI5A4E15ovJHrU0eC5i7p9VKaaoOo92tqJMOyyru9eg1xrAr0AHHEMF6nOYDBqzNvAL5/i5cyRgvK8EgLm9SDV2q05hukyiMDi8yCJ6HTehGrNcWn9j+QOE7NMAlLsiB41UaaMNRu+CYrmnOhczmApTmTjwT/k=
+Received: from BYAPR21MB1221.namprd21.prod.outlook.com (2603:10b6:a03:107::12)
+ by BYAPR21MB1221.namprd21.prod.outlook.com (2603:10b6:a03:107::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1943.3; Sat, 1 Jun
+ 2019 22:59:56 +0000
+Received: from BYAPR21MB1221.namprd21.prod.outlook.com
+ ([fe80::d005:4de8:ffbf:ba6b]) by BYAPR21MB1221.namprd21.prod.outlook.com
+ ([fe80::d005:4de8:ffbf:ba6b%7]) with mapi id 15.20.1943.015; Sat, 1 Jun 2019
+ 22:59:56 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: Re: [RFC PATCH v2 04/12] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Thread-Topic: [RFC PATCH v2 04/12] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Thread-Index: AQHVF3tF8UKMn76vfUO/W6G8mcgAUaaFHqkAgACE8gA=
-Date:   Fri, 31 May 2019 19:44:41 +0000
-Message-ID: <1DEA29A7-D033-4816-876C-05E7D77F0437@vmware.com>
-References: <20190531063645.4697-1-namit@vmware.com>
- <20190531063645.4697-5-namit@vmware.com>
- <a847ee9c-4faf-c8b4-43bb-cc30e0980796@suse.com>
-In-Reply-To: <a847ee9c-4faf-c8b4-43bb-cc30e0980796@suse.com>
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
+Thread-Topic: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
+Thread-Index: AQHVF8LqT31hu0oy4EC9yHNNMbYtz6aGQ4zQ
+Date:   Sat, 1 Jun 2019 22:59:56 +0000
+Message-ID: <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
+References: <20190531150923.12376-1-yuehaibing@huawei.com>
+In-Reply-To: <20190531150923.12376-1-yuehaibing@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-01T22:59:54.1676311Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0e76142d-58b5-4ed7-bcde-8854964c8780;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5ff6d24d-760f-4cf1-93a5-08d6e6006cb9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB6694;
-x-ms-traffictypediagnostic: BYAPR05MB6694:
-x-microsoft-antispam-prvs: <BYAPR05MB6694A02D23273C4945DC9657D0190@BYAPR05MB6694.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(5660300002)(6246003)(33656002)(66946007)(4744005)(99286004)(25786009)(54906003)(316002)(2906002)(66476007)(64756008)(66446008)(76116006)(73956011)(68736007)(66556008)(4326008)(7416002)(476003)(66066001)(229853002)(8936002)(14454004)(6512007)(6506007)(2616005)(8676002)(53546011)(446003)(76176011)(11346002)(486006)(81156014)(82746002)(305945005)(6436002)(186003)(6116002)(3846002)(71190400001)(26005)(71200400001)(6916009)(256004)(83716004)(6486002)(81166006)(7736002)(102836004)(478600001)(53936002)(86362001)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6694;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
+x-ms-office365-filtering-correlation-id: a4ab7b9d-d25e-40d3-a23a-08d6e6e4ddb7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR21MB1221;
+x-ms-traffictypediagnostic: BYAPR21MB1221:
+x-microsoft-antispam-prvs: <BYAPR21MB12215469F4F965808C78C289D71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00550ABE1F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(39860400002)(136003)(376002)(199004)(189003)(186003)(74316002)(229853002)(5660300002)(66476007)(66066001)(52536014)(66446008)(2906002)(256004)(22452003)(68736007)(6436002)(6116002)(11346002)(10090500001)(1511001)(76176011)(478600001)(486006)(2501003)(26005)(33656002)(476003)(9686003)(55016002)(446003)(316002)(8676002)(64756008)(76116006)(6246003)(14454004)(81156014)(71200400001)(66946007)(66556008)(8990500004)(53936002)(7736002)(86362001)(8936002)(71190400001)(305945005)(25786009)(73956011)(54906003)(7696005)(81166006)(10290500003)(6506007)(3846002)(4326008)(99286004)(110136005)(52396003)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1221;H:BYAPR21MB1221.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8vzZaIBhzD6qajL16JVgIzMw6d4O8dWiIxREAOQKbgqx7lEuupRTbVsCWDWGr93Cy3VSBBjH9syRZNtEOL2Zn3yu900mPiwa0bKgWpELQ92Kgd+f+yFap9jSai30Wt6Rrty57+qNsl1IxGpoSlhyf2+xWjes0o+DnUjIaSZ98myWf1POpTCv7F33sZvFvqqdwRs0v7NUGH4nU5wNF3zlFeLEkI6JZazDoVWpK8Nue3QyZSGFKToCmGgBGgJCd23hd5SE1uycaK+bcxzgfV7IKBe3+pEjxkkzXyZGsVlqdwMnDt6WsLZhRG0ykA2UQBHZ2hbrzyyPJNDOstW+Ts7fvhlKEIrwSC0yzt47CNLxFXisPrf0Sw1xRTXcchSxXACzzDoEiPd97LOyc/Ym/LvwpxmDnM3oKBVb5zbXtveRK2I=
+x-microsoft-antispam-message-info: C4Y7O9stUinpPoHXFU9OYB3+n/CMkQYw6eItoBXj4T7AqdOGbpclD3v16eYbKB7FFxdhf7N6aIsVNyXWPuE+jgKa2dFYKChc5g02NS1X5YI5mQ9xSWZwTKjpjslc7Xi5f2JLDnK2JRkrZ3+yG6OwTLnTMjI5IvOC2Jq0g4kx3hhNt66vU6+2yC+NUgLu15dU6lK/EcEmivt8Y3ZSbnUSWrTkvBDhqwhw/0UNneqI4814FTUSprM+yuNdhzcqulQ9f9ULPy76/CCURB02wdN4GKe++z050Sdeiwukj/lRRY2FyrmSatRB7T3nb7olpDb/wFftWQDPSBFKlIRWaUl30Qscb+T0zopTNIv1APu65rnapKTGlVWJaW7/j4Gj75anJ/sFUQqOiRTCL8B7McPHnFkILYOF5Pn0e+zm/y7FHRg=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <498DEB6111D0B64C9D5657F78CFDD0EF@namprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ff6d24d-760f-4cf1-93a5-08d6e6006cb9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 19:44:41.6564
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4ab7b9d-d25e-40d3-a23a-08d6e6e4ddb7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2019 22:59:56.4076
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6694
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1221
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> On May 31, 2019, at 4:48 AM, Juergen Gross <jgross@suse.com> wrote:
+From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 A=
+M
 >=20
-> On 31/05/2019 08:36, Nadav Amit wrote:
->>=20
->> --- a/arch/x86/include/asm/paravirt_types.h
->> +++ b/arch/x86/include/asm/paravirt_types.h
->> @@ -211,6 +211,12 @@ struct pv_mmu_ops {
->> 	void (*flush_tlb_user)(void);
->> 	void (*flush_tlb_kernel)(void);
->> 	void (*flush_tlb_one_user)(unsigned long addr);
->> +	/*
->> +	 * flush_tlb_multi() is the preferred interface. When it is used,
->> +	 * flush_tlb_others() should return false.
+> while building without CONFIG_SYSFS, fails as below:
 >=20
-> Didn't you want to remove/change this comment?
+> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
+> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
+> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_wor=
+k':
+> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
+> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
+> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
+> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
+> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
+>=20
+> Select SYSFS while PCI_HYPERV is set to fix this.
+>=20
 
-Yes! Sorry for that. Fixed now.
+I'm wondering if is the right way to fix the problem.  Conceptually
+is it possible to setup & operate virtual PCI devices like=20
+pci-hyperv.c does, even if sysfs is not present?  Or is it right to
+always required sysfs?
+
+The function pci_dev_assign_slot() in slot.c has a null implementation
+in include/linux/pci.h when CONFIG_SYSFS is not defined, which
+seems to be trying to solve the same problem for that function.  And
+if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
+pci_hp_create_module_link() and pci_hp_remove_module_link()
+look like they would have the same problem.  Maybe there should
+be degenerate implementations of pci_create_slot() and
+pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
+
+But I'll admit I don't know the full story behind how PCI slots
+are represented and used, so maybe I'm off base.  I just noticed
+the inconsistency in how other functions in slot.c are handled.
+
+Thoughts?
+
+Michael
