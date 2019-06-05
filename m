@@ -2,31 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BCEB236430
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 21:10:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AC9736420
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 21:10:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfFETKD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Jun 2019 15:10:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52610 "EHLO
+        id S1726795AbfFETJg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Jun 2019 15:09:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49232 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfFETKD (ORCPT
+        with ESMTP id S1726660AbfFETJf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:10:03 -0400
+        Wed, 5 Jun 2019 15:09:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=E/iOQT4M1fyenwDbyi+jqJusuZ1NUczgmpSGXIQ2f+0=; b=M/uUYRR8pgDnnzzz4z4TbrU+9D
-        GPsjq2ZKOcMVS1H8gsKcilta+otGh2XS3aUQd1ajUwasAh52+CrohDwRcmv5YXxwti+HJMhZTmjgj
-        XntimabGSGg6z2wQJnWXnrymQbeHuKn5y2J+cyhPjdDYoBWVg+VuDFQA7JpL75+hU1i6vxttofkCE
-        vwzndjdfQuiK3u7gXhRYVjJ1n6IgY/AJIBzsqY+2OFxomE6nc7y4rMA4ssWz0lwAPY5aND9gIDfsc
-        x+JU83gIZQ+sj0n8Hw8/fU1x1+jABSSj2CQkJReliwpQmnoRoPIlFDeSjIz20A14i1edYfTctRpi3
-        JIatSf2Q==;
+        bh=iu6giSDQep7gyGP1lDKtlc6IYXmVnaTVrX/CCTaVb0M=; b=DjtDAC+Fj3ONzc3f/LuiTUKvxo
+        SDHshO4T3HLu3MQm0sH37Fbdepe5vHrMh2X85ZIRB3VKOFCMD6eu9hbSHPVXb/JEZlTVz4fb/QaOO
+        BDhpIj3EXUQVUT2d08hdmc3vkXIK09a1I2y36ZeBdJojaOBtTGQKqMEq1bBjcQ9+oxSMJ6wh9XndQ
+        XFFmfRdMT7PK47VLSVOApDsSWhQlhOShT9lQkQ27wwQ5dQ9Reu8WMtU3dBcEwVqIH/+3N3VSUo+dA
+        Al21lR6b/0ULA1Vne9lErcUCQ0iQn/gB9iDUQXUDKnuMLXYjLzLH5ccM+azrWJFGQdvlsLAuQBjnS
+        RkEjsxRA==;
 Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYbHk-00063E-KD; Wed, 05 Jun 2019 19:09:21 +0000
+        id 1hYbHo-00067d-E1; Wed, 05 Jun 2019 19:09:25 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Sebastian Ott <sebott@linux.ibm.com>,
@@ -41,9 +41,9 @@ Cc:     Sebastian Ott <sebott@linux.ibm.com>,
         megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
         linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
         usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/13] mpt3sas: set virt_boundary_mask in the scsi host
-Date:   Wed,  5 Jun 2019 21:08:34 +0200
-Message-Id: <20190605190836.32354-12-hch@lst.de>
+Subject: [PATCH 12/13] usb-storage: set virt_boundary_mask in the scsi host
+Date:   Wed,  5 Jun 2019 21:08:35 +0200
+Message-Id: <20190605190836.32354-13-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190605190836.32354-1-hch@lst.de>
 References: <20190605190836.32354-1-hch@lst.de>
@@ -56,47 +56,63 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 This ensures all proper DMA layer handling is taken care of by the
-SCSI midlayer.  Note that the effect is global, as the IOMMU merging
-is based off a paramters in struct device.  We could still turn if off
-if no PCIe devices are present, but I don't know how to find that out.
-
-Also remove the bogus nomerges flag, merges do take the virt_boundary
-into account.
+SCSI midlayer.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/mpt3sas/mpt3sas_scsih.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/usb/storage/scsiglue.c | 10 ----------
+ drivers/usb/storage/usb.c      | 10 ++++++++++
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-index 1ccfbc7eebe0..03a0df2a3379 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -2361,14 +2361,6 @@ scsih_slave_configure(struct scsi_device *sdev)
- 		pcie_device_put(pcie_device);
- 		spin_unlock_irqrestore(&ioc->pcie_device_lock, flags);
- 		scsih_change_queue_depth(sdev, qdepth);
--		/* Enable QUEUE_FLAG_NOMERGES flag, so that IOs won't be
--		 ** merged and can eliminate holes created during merging
--		 ** operation.
--		 **/
--		blk_queue_flag_set(QUEUE_FLAG_NOMERGES,
--				sdev->request_queue);
--		blk_queue_virt_boundary(sdev->request_queue,
--				ioc->page_size - 1);
- 		return 0;
- 	}
+diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+index 59190d88fa9f..02c3b66b3f78 100644
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -65,7 +65,6 @@ static const char* host_info(struct Scsi_Host *host)
+ static int slave_alloc (struct scsi_device *sdev)
+ {
+ 	struct us_data *us = host_to_us(sdev->host);
+-	int maxp;
  
-@@ -10472,6 +10464,9 @@ _scsih_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	shost->transportt = mpt3sas_transport_template;
- 	shost->unique_id = ioc->id;
+ 	/*
+ 	 * Set the INQUIRY transfer length to 36.  We don't use any of
+@@ -74,15 +73,6 @@ static int slave_alloc (struct scsi_device *sdev)
+ 	 */
+ 	sdev->inquiry_len = 36;
  
-+	/* XXX: only strictly needed if NVMe devices are attached */
-+	shost->virt_boundary_mask = ioc->page_size - 1;
+-	/*
+-	 * USB has unusual scatter-gather requirements: the length of each
+-	 * scatterlist element except the last must be divisible by the
+-	 * Bulk maxpacket value.  Fortunately this value is always a
+-	 * power of 2.  Inform the block layer about this requirement.
+-	 */
+-	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+ 	/*
+ 	 * Some host controllers may have alignment requirements.
+ 	 * We'll play it safe by requiring 512-byte alignment always.
+diff --git a/drivers/usb/storage/usb.c b/drivers/usb/storage/usb.c
+index 9a79cd9762f3..b0f23f4f58e3 100644
+--- a/drivers/usb/storage/usb.c
++++ b/drivers/usb/storage/usb.c
+@@ -1050,6 +1050,16 @@ int usb_stor_probe2(struct us_data *us)
+ 	usb_autopm_get_interface_no_resume(us->pusb_intf);
+ 	snprintf(us->scsi_name, sizeof(us->scsi_name), "usb-storage %s",
+ 					dev_name(&us->pusb_intf->dev));
 +
- 	if (ioc->is_mcpu_endpoint) {
- 		/* mCPU MPI support 64K max IO */
- 		shost->max_sectors = 128;
++	/*
++	 * USB has unusual scatter-gather requirements: the length of each
++	 * scatterlist element except the last must be divisible by the
++	 * Bulk maxpacket value.  Fortunately this value is always a
++	 * power of 2.  Inform the block layer about this requirement.
++	 */
++	us_to_host(us)->virt_boundary_mask =
++		usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0) - 1;
++
+ 	result = scsi_add_host(us_to_host(us), dev);
+ 	if (result) {
+ 		dev_warn(dev,
 -- 
 2.20.1
 
