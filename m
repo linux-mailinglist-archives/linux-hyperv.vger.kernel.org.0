@@ -2,95 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E42836514
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 22:06:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDBBB3654F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 22:22:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfFEUGO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Jun 2019 16:06:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40807 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfFEUGN (ORCPT
+        id S1726561AbfFEUWj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Jun 2019 16:22:39 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33586 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfFEUWi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Jun 2019 16:06:13 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so15478732pfn.7
-        for <linux-hyperv@vger.kernel.org>; Wed, 05 Jun 2019 13:06:13 -0700 (PDT)
+        Wed, 5 Jun 2019 16:22:38 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r6so86357qkc.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 05 Jun 2019 13:22:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l7GhV0rxoysHd+vvOUHogmhN5DQrglKoRNofE0ycuO0=;
-        b=hN6b0WC20PQgBwgB8GcxiUQNjzpKmlnWeqPxJINYTrzJ4bm3njIQPSZqbc7xR2m6VI
-         KyvvUi/dSLNVG6oDyBXgeBHzfbYJr5SngfFoJQ4HClmJrcss92fT70J7krjz/+Cb2/l1
-         FxMUmok4aYP/FH1i9+23AYbGtjLZpnEcOV6+6p6IbCQOMJXuS/VQ6YtoWnNvpChf9BLZ
-         ovISLwjgeQXk1cmKf/dwf5EzFicUHMPPqwUrlnLRDomCi41jfvOkz1IniPjlqqrBSfLW
-         bRCBpL9ZDH8ypaDStAvFsbHQllTErDRxWDw/VLP2dcPRcHk0XMCHTJocyYpMzqaKUe9R
-         zuOQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hdVKMo8506TgrZK1PYQwv5IIzq/3ub7YoF/TJnHz4iQ=;
+        b=jn33M/OLPMrHDhWB/oB3uBW6KyUZwZ3dHbeuh1XlGJHpj6dwZhMsOO5OOrjM6STAk4
+         qROquiS6fMH0HrsaHJQe7IWfco1/3CwVA1Gz+FGmFpUONVqiEw31nfTAMmDzWlOeuUEZ
+         mk6d5RDBk04fmPauqpzDR3UBYRMhcvzlsYSc74mHKl9XePav6wRDF+ORoRV2fKHFG/sb
+         cUQUGUyyBaCwXiDs4NT1HvJhutfWYLBEeCwb+RHe4UP0YFMmyv3lmlZz7HJMeHb2peh0
+         c0KHydFemqtXhwO8HH1TOYZIPA8HQnsiNT2WYwoU7yhfgAcf8QGzWgN4SKzBFML0mJnJ
+         tpyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l7GhV0rxoysHd+vvOUHogmhN5DQrglKoRNofE0ycuO0=;
-        b=gzNJr4mtP5P1uYCzQs6TtmxFvRbnLYA9OSU8yG7yPpzDRJRlR8VTD9wvYEERugh9Y7
-         LN0kfH7TzFkLmcstSi+W4JwtQLbGn0HuKTdhmVTOVKVp/36rSDbxH04yfNvZRn2ZDxlS
-         Ijo5ykXGE+XfGBY/ZeXUsZfE3vde8oLGiZ46FxZy5QSwj9019jmMUTFF28NMY+zA3wlY
-         4Fa2wGgj+U7NcRtTr58BgxK8YL9+Yrbcm+ngYP1zfNzdrfEVc4NPmcEToKeAiaP2xf8V
-         BIN+wInnJymse0jyOeTi3GZoNbrlyJq5hljcw5d1hlvcYnRlG/ReFZkneaPBbIMnkmFp
-         8bBw==
-X-Gm-Message-State: APjAAAVTU4myxkbN/nZgFho+1I/+Sxh4DeWHr1PX3n1Mjp4j++1I27Mn
-        GpakXus5totcbhlbT1r5/lsIuQ==
-X-Google-Smtp-Source: APXvYqx/+/Zs8iF6UF8Q8m4EDjG/ZA+q/uo9tVjjqADp8znFIDFnHuncS1pney7X90oCg9wYY8pwyA==
-X-Received: by 2002:a17:90a:2648:: with SMTP id l66mr18261604pje.65.1559765172900;
-        Wed, 05 Jun 2019 13:06:12 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id x5sm28978961pjp.21.2019.06.05.13.06.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 05 Jun 2019 13:06:12 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 13:06:10 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Subject: Re: [PATCH] revert async probing of VMBus scsi device
-Message-ID: <20190605130610.4c9ca561@hermes.lan>
-In-Reply-To: <20190605192647.GA25034@infradead.org>
-References: <20190605185205.12583-1-sthemmin@microsoft.com>
-        <20190605185637.GA31439@infradead.org>
-        <20190605120640.00358689@hermes.lan>
-        <20190605190722.GA19684@infradead.org>
-        <20190605121020.1a41b753@hermes.lan>
-        <20190605192647.GA25034@infradead.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hdVKMo8506TgrZK1PYQwv5IIzq/3ub7YoF/TJnHz4iQ=;
+        b=rBnO8BxM4IBOg553uUXWd9HRJA3zLRHHfC8lhA4KNgAg8SslOqoxkCDFGvf0aSWANU
+         X5kwAtmhUCoEX++TwJbcwPUouVZGYarWb/+2ziltLDuhEuBGav0TAFYehUptV75YWcLz
+         ZL4PeShr9y5HaYbaqvmfeHglYIgwVmgQV0yU0bIqhbfHXPvxaB4UTeUdvZz1vf1tpkdZ
+         qCya6r/cneh9BIkhzPKSwQOK//KIKZ9eI1CfGrr99HJU1jJoowRJi4M9ow/s6OLDyfTC
+         Q1iGYdT9nHoAntlby7MtfyYDAfiA8e5uMPjZuw8545gIy5Losf6idJJVcE3SEaSbjBDZ
+         gHZw==
+X-Gm-Message-State: APjAAAWpfj67tjdcJlU2NEMfagpktZQvyrq40wxssUpWPM4DpKjONniW
+        L6agqFtMzApF3FmR80w7ibnEyQ==
+X-Google-Smtp-Source: APXvYqzsyiPSTmn82JkgPtH+Z1+lnK81jan/CvvnzRGGA4oYrI2ETBGBe6mNB1mjYk7SLXHnNDomow==
+X-Received: by 2002:a37:6312:: with SMTP id x18mr35736460qkb.300.1559766157655;
+        Wed, 05 Jun 2019 13:22:37 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id v9sm884883qti.60.2019.06.05.13.22.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 13:22:36 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hYcQd-0002uk-Vd; Wed, 05 Jun 2019 17:22:35 -0300
+Date:   Wed, 5 Jun 2019 17:22:35 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/13] IB/iser: set virt_boundary_mask in the scsi host
+Message-ID: <20190605202235.GC3273@ziepe.ca>
+References: <20190605190836.32354-1-hch@lst.de>
+ <20190605190836.32354-9-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605190836.32354-9-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 5 Jun 2019 12:26:47 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
+On Wed, Jun 05, 2019 at 09:08:31PM +0200, Christoph Hellwig wrote:
+> This ensures all proper DMA layer handling is taken care of by the
+> SCSI midlayer.
 
-> On Wed, Jun 05, 2019 at 12:10:20PM -0700, Stephen Hemminger wrote:
-> > > Sure.  But they should not get a way out for just one specific driver.  
-> > 
-> > There are people running new kernels on 6 year old distributions.
-> > Was every distribution smart enough then? If you think so, then
-> > this not necessary.  
-> 
-> I think you are missing my point.  If we want a way to disable this,
-> we:
-> 
->  a) want it opt-in
->  b) it needs to for the whole SCSI layer and not just one driver
+Maybe not entirely related to this series, but it looks like the SCSI
+layer is changing the device global dma_set_max_seg_size() - at least
+in RDMA the dma device is being shared between many users, so we
+really don't want SCSI to make this value smaller.
 
-There is some possible issues with how initial images are deployed
-with temporary disks.  The temp disks come pre-formatted with a blank
-NTFS and cloudinit reformats them to ext4 the first time.
+Can we do something about this?
 
-Not sure if ordering matters, or if cloudinit is smart enough to do
-the right thing. I am trying to get an answer.
+Wondering about other values too, and the interaction with the new
+combining stuff in umem.c
 
-It might just be that the first boot should turn off async probing
-for the whole scsi layer via kernel cmdline. Or it might not be an issue
-if cloudinit was written by developers smart enough to handle moving
-disks.
+Thanks,
+Jason
