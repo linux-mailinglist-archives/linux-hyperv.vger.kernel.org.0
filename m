@@ -2,124 +2,80 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47BA536427
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 21:10:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99EC436439
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 21:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfFETJh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Jun 2019 15:09:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49434 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbfFETJg (ORCPT
+        id S1726537AbfFETKY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Jun 2019 15:10:24 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40506 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbfFETKX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:09:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3bkukSS82+wj1sa4UwaAnaEsPot66Pp1IhVKWWk3PRs=; b=mGRP1yv+6nhs3018nR7FDir6MR
-        yW2KpUdkVXd8h8RkJdDj1tuGagsIAIvpd1VsALfxZ1DkT4wTVouzt7qhx+73meALgT70AlcO5xLHj
-        mTIETncl9oUJn/qpMemeFTJGAcf9Mk/DdNXarbduY3tsrC0BpsrAU63i+ieaDTF+frDi5rUDG95zO
-        q4mlexgv5VIHBxFBUrE5p3dVpmNhgD6qhgXTrM1ZvvIMuwKpIxJce+GwGO3FW3tBca0H74QS1jVrx
-        GVv4fTGrwEQe7jPzVrmoe1J027ZfC4xFWFkAjvSMCJmU9Ie+smQqtLl9B8rKE+HvIybF29GTgGbqf
-        aKajtGeQ==;
-Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYbHs-0006Cv-4J; Wed, 05 Jun 2019 19:09:28 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: [PATCH 13/13] uas: set virt_boundary_mask in the scsi host
-Date:   Wed,  5 Jun 2019 21:08:36 +0200
-Message-Id: <20190605190836.32354-14-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190605190836.32354-1-hch@lst.de>
-References: <20190605190836.32354-1-hch@lst.de>
+        Wed, 5 Jun 2019 15:10:23 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so15396681pfn.7
+        for <linux-hyperv@vger.kernel.org>; Wed, 05 Jun 2019 12:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ECON+3GqS4gPhtd0pv7FErM7REhB/G/cWUwMq48vsuw=;
+        b=jish6J8M/xP0Fp6UOlEa+Ly3bbYcg/Q/GGmqjPbTE+LnbRn8KO2KjMTEQGktrU3Y2m
+         fHXFGMy6x4fkSawSJKjjvqoZ4AMdUoWZboAeeGPuer2ukfjUSSvaWsUQf7fRk0KEhH8E
+         L2gaedIJ8fDffWKAqLQgeD9/l2I2RJJRCOAbDM2Ro58QwOWXASbCn6PlyFDzsBahC6kA
+         mRU7YkayEy+tqNIIi+J5osjuxSI6l5pFy9yH7/2goJkrnjWmW4fMCfmFdL7eqgNqFpiw
+         OVKD61ZBQoQE6+qDtOO1GrUZ+/uPugM920SFXc/t1/fn/DmWBVVTUKlMuRt4etA1PR7U
+         AiUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ECON+3GqS4gPhtd0pv7FErM7REhB/G/cWUwMq48vsuw=;
+        b=CJaiQPz43Cn+qjvT+A4g2y7J8Hobgvpx+yY75UvmxbBS6zqbg5WTHG8mHRCZ98Vkrt
+         TP1v1SLm9zUIeWGyPzKrUTstfPUcUDtXvY54Xso2rSiF4vgUsentIrMuKjd7n67BtTsV
+         ZnnCCh17eyUXPg9dmDTGD9LeLZkAwQsXC/RfouSfWA87ZEhuEqncut5U+xMI/upXDyOM
+         +AcEoKCSxBaKpck6rik3I45yU+6u88oG/RF8DxOjXNM62c8p6j3EqYiDuC8qJ6HTkfjr
+         uS9bhtiHHi8VPj+l74kMr+KYsiSIFxYGhjDuhoTPYtSw1PSM9KBhRIywni/HFee4ja1z
+         Xcjw==
+X-Gm-Message-State: APjAAAWNx/wRz4vgGWX+VGXidoj3BsoH5bUv5aAjPvxZgSUmZniiZNVP
+        WM3XKGl7qKK0fP5FZoEeSdwwVA==
+X-Google-Smtp-Source: APXvYqye5sLFtUV5ShpAXZlEr0EuAV0uNSE4iugyD42OUt69HRIWpRIXqGtLvlM3f2RxFe5+Aa1FUA==
+X-Received: by 2002:a63:5b5c:: with SMTP id l28mr365033pgm.158.1559761822336;
+        Wed, 05 Jun 2019 12:10:22 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id x1sm18065098pgq.13.2019.06.05.12.10.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 05 Jun 2019 12:10:22 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 12:10:20 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>
+Subject: Re: [PATCH] revert async probing of VMBus scsi device
+Message-ID: <20190605121020.1a41b753@hermes.lan>
+In-Reply-To: <20190605190722.GA19684@infradead.org>
+References: <20190605185205.12583-1-sthemmin@microsoft.com>
+        <20190605185637.GA31439@infradead.org>
+        <20190605120640.00358689@hermes.lan>
+        <20190605190722.GA19684@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This ensures all proper DMA layer handling is taken care of by the
-SCSI midlayer.
+On Wed, 5 Jun 2019 12:07:23 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/usb/storage/uas.c | 36 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 20 deletions(-)
+> On Wed, Jun 05, 2019 at 12:06:40PM -0700, Stephen Hemminger wrote:
+> > > Which is true for every device, and why we use UUIDs or label for
+> > > mounts that are supposed to be stable.  
+> > 
+> > Not everyone is smart enough to do that.  
+> 
+> Sure.  But they should not get a way out for just one specific driver.
 
-diff --git a/drivers/usb/storage/uas.c b/drivers/usb/storage/uas.c
-index 047c5922618f..d20919e7bbf4 100644
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -789,29 +789,9 @@ static int uas_slave_alloc(struct scsi_device *sdev)
- {
- 	struct uas_dev_info *devinfo =
- 		(struct uas_dev_info *)sdev->host->hostdata;
--	int maxp;
- 
- 	sdev->hostdata = devinfo;
- 
--	/*
--	 * We have two requirements here. We must satisfy the requirements
--	 * of the physical HC and the demands of the protocol, as we
--	 * definitely want no additional memory allocation in this path
--	 * ruling out using bounce buffers.
--	 *
--	 * For a transmission on USB to continue we must never send
--	 * a package that is smaller than maxpacket. Hence the length of each
--         * scatterlist element except the last must be divisible by the
--         * Bulk maxpacket value.
--	 * If the HC does not ensure that through SG,
--	 * the upper layer must do that. We must assume nothing
--	 * about the capabilities off the HC, so we use the most
--	 * pessimistic requirement.
--	 */
--
--	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
--	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
--
- 	/*
- 	 * The protocol has no requirements on alignment in the strict sense.
- 	 * Controllers may or may not have alignment restrictions.
-@@ -1004,6 +984,22 @@ static int uas_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	 */
- 	shost->can_queue = devinfo->qdepth - 2;
- 
-+	/*
-+	 * We have two requirements here. We must satisfy the requirements of
-+	 * the physical HC and the demands of the protocol, as we definitely
-+	 * want no additional memory allocation in this path ruling out using
-+	 * bounce buffers.
-+	 *
-+	 * For a transmission on USB to continue we must never send a package
-+	 * that is smaller than maxpacket.  Hence the length of each scatterlist
-+	 * element except the last must be divisible by the Bulk maxpacket
-+	 * value.  If the HC does not ensure that through SG, the upper layer
-+	 * must do that.  We must assume nothing about the capabilities off the
-+	 * HC, so we use the most pessimistic requirement.
-+	 */
-+	shost->virt_boundary_mask =
-+		usb_maxpacket(udev, devinfo->data_in_pipe, 0) - 1;
-+
- 	usb_set_intfdata(intf, shost);
- 	result = scsi_add_host(shost, &intf->dev);
- 	if (result)
--- 
-2.20.1
-
+There are people running new kernels on 6 year old distributions.
+Was every distribution smart enough then? If you think so, then
+this not necessary.
