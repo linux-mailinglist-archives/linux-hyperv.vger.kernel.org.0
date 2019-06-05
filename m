@@ -2,31 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EED336412
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 21:10:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 197EC363E6
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 21:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfFETJq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Jun 2019 15:09:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50448 "EHLO
+        id S1726843AbfFETJT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Jun 2019 15:09:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47180 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfFETJp (ORCPT
+        with ESMTP id S1726752AbfFETJS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:09:45 -0400
+        Wed, 5 Jun 2019 15:09:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=eFJweHzSpLpiZ2x1/tGLuA1P3AGVwoc6WM7qjfxVfqw=; b=PtFwz/8oRRY6msCt/J+NIzc7jL
-        KBTxzch1pLxKacNvnqKxg7CTNpIQvCd/e9l/vgyz91GPB/hOqqCnM9etxNoPPnw4yAGzcr1umOP1d
-        g6r4QyvCMfVlLHYupSJFPPxnhDRBeVDP/2DUlN19O2SoudtCOGAqISF019+t85LyPXlALTX/vHSLz
-        KFPhRdCpnNx39OfVgAfXIKA0hMnWT1klLQviKNjqNiXkoALr55fVQ4ppxIEN16CX4X8w54itG1IDJ
-        vVHeKUkp0xTRc1nohARWA7jYty4LnjM/IuXA2FocoD45TEHVr5bQ2+86YAq9p6hRimkhYLEj55RtG
-        R5ssmYhA==;
+        bh=Ft2pGuvl7lOdipsW5yXOzcXLvsOnET6aGSo+dOUOkYE=; b=e/LRwE9rAPGwNv/3w25xvDQ/yU
+        XrfQV4bNSr3EZ2VqzRz6SXbHPy/59Kbccl4U5FVoa7eEfXV2RfR+PoG7rmjg36NtRLsSbNmnvSNJj
+        lDzKzhbP36+QwCDxfau3aYGvhYwi/QRkBnAWzpyGjQ6t3cNAEnRBdirghH92UHb+nBo59MPcCA6BF
+        NJLHNNfzljpAK8SsVLk5O3dSaSK1K9h7Lay+DsxZLpRpq1rPKoFj6RdBxdvOBotGUSzsqV9ADYYPv
+        KfAqNXWyVRTh4D6wftFOSQF9qA+5SyiNWpmZcn30FaT4mc+8P8mFr8rZ4r1vaPW3R9iusGdJdXRMG
+        +07J9XIA==;
 Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYbHS-0005cs-FI; Wed, 05 Jun 2019 19:09:03 +0000
+        id 1hYbHW-0005ir-71; Wed, 05 Jun 2019 19:09:07 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Sebastian Ott <sebott@linux.ibm.com>,
@@ -41,9 +41,9 @@ Cc:     Sebastian Ott <sebott@linux.ibm.com>,
         megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
         linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
         usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/13] ufshcd: set max_segment_size in the scsi host template
-Date:   Wed,  5 Jun 2019 21:08:29 +0200
-Message-Id: <20190605190836.32354-7-hch@lst.de>
+Subject: [PATCH 07/13] storvsc: set virt_boundary_mask in the scsi host template
+Date:   Wed,  5 Jun 2019 21:08:30 +0200
+Message-Id: <20190605190836.32354-8-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190605190836.32354-1-hch@lst.de>
 References: <20190605190836.32354-1-hch@lst.de>
@@ -55,35 +55,37 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-We need to also mirror the value to the device to ensure IOMMU merging
-doesn't undo it, and the SCSI host level parameter will ensure that.
+This ensures all proper DMA layer handling is taken care of by the
+SCSI midlayer.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/storvsc_drv.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 8c1c551f2b42..4e524ade489e 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4586,8 +4586,6 @@ static int ufshcd_slave_configure(struct scsi_device *sdev)
- 	struct request_queue *q = sdev->request_queue;
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 8472de1007ff..e61051c026f6 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1434,9 +1434,6 @@ static int storvsc_device_configure(struct scsi_device *sdevice)
+ {
+ 	blk_queue_rq_timeout(sdevice->request_queue, (storvsc_timeout * HZ));
  
- 	blk_queue_update_dma_pad(q, PRDT_DATA_BYTE_COUNT_PAD - 1);
--	blk_queue_max_segment_size(q, PRDT_DATA_BYTE_COUNT_MAX);
+-	/* Ensure there are no gaps in presented sgls */
+-	blk_queue_virt_boundary(sdevice->request_queue, PAGE_SIZE - 1);
 -
- 	return 0;
- }
+ 	sdevice->no_write_same = 1;
  
-@@ -6990,6 +6988,7 @@ static struct scsi_host_template ufshcd_driver_template = {
- 	.sg_tablesize		= SG_ALL,
- 	.cmd_per_lun		= UFSHCD_CMD_PER_LUN,
- 	.can_queue		= UFSHCD_CAN_QUEUE,
-+	.max_segment_size	= PRDT_DATA_BYTE_COUNT_MAX,
- 	.max_host_blocked	= 1,
- 	.track_queue_depth	= 1,
- 	.sdev_groups		= ufshcd_driver_groups,
+ 	/*
+@@ -1709,6 +1706,8 @@ static struct scsi_host_template scsi_driver = {
+ 	.this_id =		-1,
+ 	/* Make sure we dont get a sg segment crosses a page boundary */
+ 	.dma_boundary =		PAGE_SIZE-1,
++	/* Ensure there are no gaps in presented sgls */
++	.virt_boundary_mask =	PAGE_SIZE-1,
+ 	.no_write_same =	1,
+ 	.track_queue_depth =	1,
+ };
 -- 
 2.20.1
 
