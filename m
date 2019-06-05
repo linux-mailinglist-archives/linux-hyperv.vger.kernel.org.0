@@ -2,80 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99EC436439
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 21:10:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DF673647F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jun 2019 21:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfFETKY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Jun 2019 15:10:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40506 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfFETKX (ORCPT
+        id S1726604AbfFETRV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Jun 2019 15:17:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45448 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbfFETRU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Jun 2019 15:10:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so15396681pfn.7
-        for <linux-hyperv@vger.kernel.org>; Wed, 05 Jun 2019 12:10:22 -0700 (PDT)
+        Wed, 5 Jun 2019 15:17:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w34so12909860pga.12
+        for <linux-hyperv@vger.kernel.org>; Wed, 05 Jun 2019 12:17:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ECON+3GqS4gPhtd0pv7FErM7REhB/G/cWUwMq48vsuw=;
-        b=jish6J8M/xP0Fp6UOlEa+Ly3bbYcg/Q/GGmqjPbTE+LnbRn8KO2KjMTEQGktrU3Y2m
-         fHXFGMy6x4fkSawSJKjjvqoZ4AMdUoWZboAeeGPuer2ukfjUSSvaWsUQf7fRk0KEhH8E
-         L2gaedIJ8fDffWKAqLQgeD9/l2I2RJJRCOAbDM2Ro58QwOWXASbCn6PlyFDzsBahC6kA
-         mRU7YkayEy+tqNIIi+J5osjuxSI6l5pFy9yH7/2goJkrnjWmW4fMCfmFdL7eqgNqFpiw
-         OVKD61ZBQoQE6+qDtOO1GrUZ+/uPugM920SFXc/t1/fn/DmWBVVTUKlMuRt4etA1PR7U
-         AiUg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dhmtJ4+79vRolYDJuB/HeVo2S5DNUc8fMTsNT6fH0i0=;
+        b=F8KuVE0d725JnKlMiv02aZ4rRXlJ9I/vn2LLG24+latMd3LSnG12/jfOXWJD2X/jbk
+         8EdRhgr60Iuw8SjKl0AcQ13JsEHBrxj05xHTT75dj0l/Qu1fciOl/d+HNkuaCYIOEq13
+         lBNXbfnPXZLCgLmFsP+8hO/H4KiCwGHx4gIx38xJEczDJiLNWrsm4gesIV6ahHpEzfhp
+         mdILtmy3Y7HsrggqjBb76Igji2tadfBj7NYuEudnwLCAtianakhgRweW/ElIbbDCWhxN
+         yNwCXa7Nx2JSf+Fefqd4KOAtFk5ThZt/ABiV5ORlNiCi2oyx1dsh3Gm0xthYrz8l5mFt
+         6B3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ECON+3GqS4gPhtd0pv7FErM7REhB/G/cWUwMq48vsuw=;
-        b=CJaiQPz43Cn+qjvT+A4g2y7J8Hobgvpx+yY75UvmxbBS6zqbg5WTHG8mHRCZ98Vkrt
-         TP1v1SLm9zUIeWGyPzKrUTstfPUcUDtXvY54Xso2rSiF4vgUsentIrMuKjd7n67BtTsV
-         ZnnCCh17eyUXPg9dmDTGD9LeLZkAwQsXC/RfouSfWA87ZEhuEqncut5U+xMI/upXDyOM
-         +AcEoKCSxBaKpck6rik3I45yU+6u88oG/RF8DxOjXNM62c8p6j3EqYiDuC8qJ6HTkfjr
-         uS9bhtiHHi8VPj+l74kMr+KYsiSIFxYGhjDuhoTPYtSw1PSM9KBhRIywni/HFee4ja1z
-         Xcjw==
-X-Gm-Message-State: APjAAAWNx/wRz4vgGWX+VGXidoj3BsoH5bUv5aAjPvxZgSUmZniiZNVP
-        WM3XKGl7qKK0fP5FZoEeSdwwVA==
-X-Google-Smtp-Source: APXvYqye5sLFtUV5ShpAXZlEr0EuAV0uNSE4iugyD42OUt69HRIWpRIXqGtLvlM3f2RxFe5+Aa1FUA==
-X-Received: by 2002:a63:5b5c:: with SMTP id l28mr365033pgm.158.1559761822336;
-        Wed, 05 Jun 2019 12:10:22 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id x1sm18065098pgq.13.2019.06.05.12.10.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 05 Jun 2019 12:10:22 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 12:10:20 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Subject: Re: [PATCH] revert async probing of VMBus scsi device
-Message-ID: <20190605121020.1a41b753@hermes.lan>
-In-Reply-To: <20190605190722.GA19684@infradead.org>
-References: <20190605185205.12583-1-sthemmin@microsoft.com>
-        <20190605185637.GA31439@infradead.org>
-        <20190605120640.00358689@hermes.lan>
-        <20190605190722.GA19684@infradead.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dhmtJ4+79vRolYDJuB/HeVo2S5DNUc8fMTsNT6fH0i0=;
+        b=U2PBx2Ec1g2st9h1LiSHtd75KylGbMQLrFRKwuZKnjhSygEAaAdJouBLx3srqp3wh6
+         kXRmRC9/yYEyKEQE8puIo6EMhTYg0c2EabQ5oEdGVI8reZF+aIs32OhxjdBQYC76IJBP
+         JQ+z8G3XPeYqnpVJdVr8q4glrvqC7brq8YTz4q9Mvx7d47FfVdaWpJ2aMBtcenjbL0sU
+         NVlMw/FelVUOtMPTCtav2yx2cuwcjN2bJbHJ+zWCjYMsoWoUq9F7RWILdMIuyeNuWjup
+         M+OWWhG/ITJCKYOW6gz35CWztt+jMzUruI+hiHeDEmEO/a0Q0QqpYBQ8SoKUqtpK+mjL
+         GJdA==
+X-Gm-Message-State: APjAAAWrLxlB+ajPiEUutSioYtk0iFXXmQ8WVhxMD2Qaz99pOt8xuvUV
+        TmfkbSvavQV2oVGwifH/nx3zdw==
+X-Google-Smtp-Source: APXvYqztVaS1ibhclO02O+1c0xMIScuc0JduY91PsnnTXTwPY5JG40sHE+S7Y/qw2jdWh3mAfk9cAw==
+X-Received: by 2002:a17:90a:480d:: with SMTP id a13mr45087965pjh.40.1559762240246;
+        Wed, 05 Jun 2019 12:17:20 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id u7sm10218273pgl.64.2019.06.05.12.17.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 12:17:19 -0700 (PDT)
+Subject: Re: properly communicate queue limits to the DMA layer
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+References: <20190605190836.32354-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <591cfa1e-fecb-7d00-c855-3b9eb8eb8a2a@kernel.dk>
+Date:   Wed, 5 Jun 2019 13:17:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190605190836.32354-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 5 Jun 2019 12:07:23 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
-
-> On Wed, Jun 05, 2019 at 12:06:40PM -0700, Stephen Hemminger wrote:
-> > > Which is true for every device, and why we use UUIDs or label for
-> > > mounts that are supposed to be stable.  
-> > 
-> > Not everyone is smart enough to do that.  
+On 6/5/19 1:08 PM, Christoph Hellwig wrote:
+> Hi Jens,
 > 
-> Sure.  But they should not get a way out for just one specific driver.
+> we've always had a bit of a problem communicating the block layer
+> queue limits to the DMA layer, which needs to respect them when
+> an IOMMU that could merge segments is used.  Unfortunately most
+> drivers don't get this right.  Oddly enough we've been mostly
+> getting away with it, although lately dma-debug has been catching
+> a few of those issues.
+> 
+> The segment merging fix for devices with PRP-like structures seems
+> to have escalated this a bit.  The first patch fixes the actual
+> report from Sebastian, while the rest fix every drivers that appears
+> to have the problem based on a code audit looking for drivers using
+> blk_queue_max_segment_size, blk_queue_segment_boundary or
+> blk_queue_virt_boundary and calling dma_map_sg eventually.  Note
+> that for SCSI drivers I've taken the blk_queue_virt_boundary setting
+> to the SCSI core, similar to how we did it for the other two settings
+> a while ago.  This also deals with the fact that the DMA layer
+> settings are on a per-device granularity, so the per-device settings
+> in a few SCSI drivers can't actually work in an IOMMU environment.
+> 
+> It would be nice to eventually pass these limits as arguments to
+> dma_map_sg, but that is a far too big series for the 5.2 merge
+> window.
 
-There are people running new kernels on 6 year old distributions.
-Was every distribution smart enough then? If you think so, then
-this not necessary.
+Since I'm heading out shortly and since I think this should make
+the next -rc, I'll tentatively queue this up.
+
+-- 
+Jens Axboe
+
