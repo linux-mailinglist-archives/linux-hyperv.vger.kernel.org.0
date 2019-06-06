@@ -2,85 +2,126 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E77C37830
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2019 17:37:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73E1B379D7
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2019 18:37:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbfFFPhb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 6 Jun 2019 11:37:31 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35667 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729448AbfFFPhb (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:37:31 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so559932ioo.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 06 Jun 2019 08:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=7FsPigjoq8C26eFiFz4PbLbviE4sOu/NaNL8Wv/dWZY=;
-        b=AFDD/k2/le52Hdd/TKthmiFLkpxwsE8wgwm+ToBDcTp5nk5LpKOXg2c5jC8eyqSr8U
-         PbQa5dsh5SDeL6j0empaIJIbULAJcPWpVBbqfwPg+RIvS/9Z4t7qTgc+J2TnzpXamk2f
-         Jk2clgGQMDirG2oKq3gaszEI2ZXgq2nzh2D7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=7FsPigjoq8C26eFiFz4PbLbviE4sOu/NaNL8Wv/dWZY=;
-        b=VRYpy7Bgag3RZq7ielwqHP+970x0v3LAwmKeTQKRvkMJ8UTD9rCcyNsAFSiHh3c3Rp
-         IOo21xXYcPMvX3kKHwHcKee516elRjsrrGNshSCN8qALanD+BsE5KyBftHv1cC88hez1
-         +N/yKogIRXfHtzcaSzanETj/qnaYgf5u8vFh+i3ueCcOBF2HJXJajqvRGteX8uTIH4SA
-         M2Qi/bnkVsLskNStsA8g6lEDiKgMzkf8UEZ1+kGpaaLbx3uMJY+DhXs04FAumfjhvmgl
-         u4db5d4/B2OKUFFXQDaNnbMbvNRvXt5yz8A3m6v3MXw3sNxd/w+1E5NUTdMN/w+k5ZHW
-         DC2g==
-X-Gm-Message-State: APjAAAU/leG9OCfSIq1/wfnJkI6TGx2+feMlQ1wZONcQHkrF9yE+vgkC
-        5JULqzmaPO2wMwRSKal2Lr9JFRn07bjOhgi15lNI0Q==
-X-Google-Smtp-Source: APXvYqxuIiFVwwy3SZOPoMV5d6L9mjSBqLBwyeJYTl2PURpa5yAIPkIYD/4gZiMQyRghGYi7pdemfpa8qFQTyevPY6Q=
-X-Received: by 2002:a5d:9502:: with SMTP id d2mr14353761iom.2.1559835449946;
- Thu, 06 Jun 2019 08:37:29 -0700 (PDT)
-From:   Kashyap Desai <kashyap.desai@broadcom.com>
-References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-11-hch@lst.de>
-In-Reply-To: <20190605190836.32354-11-hch@lst.de>
+        id S1726777AbfFFQhs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 6 Jun 2019 12:37:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbfFFQhs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 6 Jun 2019 12:37:48 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D882A206BB;
+        Thu,  6 Jun 2019 16:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559839067;
+        bh=SBlCYXjXf9Dmv/1zjLqy5l9A1C3/vFnxMgdVK5+kQww=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ieLpvDzWcm5ztonnfpaX04Bf5XtKdgUmixTRnLfue8zPzBFlHhb0bdxXJ0QUOI8hC
+         m390QKwAJBsuYwTCBnC6dbDKIrWmrnCmIuIzIC6i23+8X0Jg2W9R3FozjfKP9deUz5
+         OEpzhHSWIZ/ihC8lYmNu8MNLNJEYCpggsMCjdmw0=
+Date:   Thu, 6 Jun 2019 12:37:45 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "will.deacon@arm.com" <will.deacon@arm.com>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 0/2] Drivers: hv: Move Hyper-V clock/timer code to
+ separate clocksource driver
+Message-ID: <20190606163745.GL29739@sasha-vm>
+References: <1558969089-13204-1-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQNLjZIO2zMn7N+9xPobnDbFSu4o5gI2RJdJo5AtPRA=
-Date:   Thu, 6 Jun 2019 21:07:27 +0530
-Message-ID: <cd713506efb9579d1f69a719d831c28d@mail.gmail.com>
-Subject: RE: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi host
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
-        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
-        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1558969089-13204-1-git-send-email-mikelley@microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Mon, May 27, 2019 at 02:59:07PM +0000, Michael Kelley wrote:
+>This patch series moves Hyper-V clock/timer code to a separate Hyper-V
+>clocksource driver. Previously, Hyper-V clock/timer code and data
+>structures were mixed in with other Hyper-V code in the ISA independent
+>drivers/hv code as well as in arch dependent code. The new Hyper-V
+>clocksource driver is ISA independent, with a just few dependencies on
+>arch specific functions. The patch series does not change any behavior
+>or functionality -- it only reorganizes the existing code and fixes up
+>the linkages. A few places outside of Hyper-V code are fixed up to use
+>the new #include file structure.
 >
-> This ensures all proper DMA layer handling is taken care of by the SCSI
-> midlayer.  Note that the effect is global, as the IOMMU merging is based
-> off a
-> paramters in struct device.  We could still turn if off if no PCIe devices
-> are
-> present, but I don't know how to find that out.
+>This restructuring is in response to Marc Zyngier's review comments
+>on supporting Hyper-V running on ARM64, and is a good idea in general.
+>It increases the amount of code shared between the x86 and ARM64
+>architectures, and reduces the size of the new code for supporting
+>Hyper-V on ARM64. A new version of the Hyper-V on ARM64 patches will
+>follow once this clocksource restructuring is accepted.
 >
-> Also remove the bogus nomerges flag, merges do take the virt_boundary into
-> account.
+>The code is diff'ed against Linux 5.2.0-rc1-next-20190524.
+>
+>Changes in v3:
+>* Removed boolean argument to hv_init_clocksource(). Always call
+>sched_clock_register, which is needed on ARM64 but a no-op on x86.
+>* Removed separate cpuhp setup in hv_stimer_alloc() and instead
+>directly call hv_stimer_init() and hv_stimer_cleanup() from
+>corresponding VMbus functions.  This more closely matches original
+>code and avoids clocksource stop/restart problems on ARM64 when
+>VMbus code denies CPU offlining request.
+>
+>Changes in v2:
+>* Revised commit short descriptions so the distinction between
+>the first and second patches is clearer [GregKH]
+>* Renamed new clocksource driver files and functions to use
+>existing "timer" and "stimer" names instead of introducing
+>"syntimer". [Vitaly Kuznetsov]
+>* Introduced CONFIG_HYPER_TIMER to fix build problem when
+>CONFIG_HYPERV=m [Vitaly Kuznetsov]
+>* Added "Suggested-by: Marc Zyngier"
+>
+>Michael Kelley (2):
+>  Drivers: hv: Create Hyper-V clocksource driver from existing
+>    clockevents code
+>  Drivers: hv: Move Hyper-V clocksource code to new clocksource driver
+>
+> MAINTAINERS                          |   2 +
+> arch/x86/entry/vdso/vclock_gettime.c |   1 +
+> arch/x86/entry/vdso/vma.c            |   2 +-
+> arch/x86/hyperv/hv_init.c            |  91 +---------
+> arch/x86/include/asm/hyperv-tlfs.h   |   6 +
+> arch/x86/include/asm/mshyperv.h      |  81 ++-------
+> arch/x86/kernel/cpu/mshyperv.c       |   2 +
+> arch/x86/kvm/x86.c                   |   1 +
+> drivers/clocksource/Makefile         |   1 +
+> drivers/clocksource/hyperv_timer.c   | 321 +++++++++++++++++++++++++++++++++++
+> drivers/hv/Kconfig                   |   3 +
+> drivers/hv/hv.c                      | 156 +----------------
+> drivers/hv/hv_util.c                 |   1 +
+> drivers/hv/hyperv_vmbus.h            |   3 -
+> drivers/hv/vmbus_drv.c               |  42 ++---
+> include/clocksource/hyperv_timer.h   | 105 ++++++++++++
+> 16 files changed, 484 insertions(+), 334 deletions(-)
+> create mode 100644 drivers/clocksource/hyperv_timer.c
+> create mode 100644 include/clocksource/hyperv_timer.h
 
-Hi Christoph, Changes for <megaraid_sas> and <mpt3sas> looks good. We want
-to confirm few sanity before ACK. BTW, what benefit we will see moving
-virt_boundry setting to SCSI mid layer ? Is it just modular approach OR any
-functional fix ?
+Queued for hyperv-next, thanks!
 
-Kashyap
+--
+Thanks,
+Sasha
