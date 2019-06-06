@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5B1736E25
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2019 10:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 229C636E2F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2019 10:09:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfFFIIA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 6 Jun 2019 04:08:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34201 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfFFIH7 (ORCPT
+        id S1727057AbfFFIJL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 6 Jun 2019 04:09:11 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34144 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFIJL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:07:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c85so1033365pfc.1;
-        Thu, 06 Jun 2019 01:07:59 -0700 (PDT)
+        Thu, 6 Jun 2019 04:09:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h2so918056pgg.1;
+        Thu, 06 Jun 2019 01:09:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=XCO3qo9+TquCRGCErGjH7wLbJcwWMhAPFzVepnTCaPU=;
-        b=pWaZPsCxIx9Yl7/C7lmmLYjfFUTv3Jh1PNoQTRZVfh7k0k3RtLy8RaZgLDbsmrNBMx
-         BwudOvAaWGXZIqTlwwMjoGr0/n8vCH7WsTIB9iaoc4yO0rp6N3S1mQRrsLzj5/hC7XAj
-         d3ASjSrOUX0yTj1joHp5HtbXrfio1DzFK+787cbHdbCHMbOzLBbNjyZZKZwCTHLwjZXx
-         HgiaBL18zqInYpAfGRNYeOhkUxhYyXXW/qekfiGFh6EjcIQRVt4ecRjyqr3zQpa031eI
-         O8vAVjm1Yr8jhJ5ld86tkatpRiKAvJUcm0QH/LBEbhLTNC/r5UadSyShMUl3wGBUMck9
-         DQFw==
+        bh=Ky+FTpxo6a36SL4K0iIgUU/tHa/3+eYpA5PzCdmnJx4=;
+        b=t4gI9njCjaOZKLyGot/fIzUaOn3Rz5FSDAHZc7kpLyfVfz63VhR/wj6Wt+pUDeONID
+         hQtYhsLP1U4146+eg8kD6RuDxVUiGqvRhef6S41jo2OdVwfZIzcRkATYWUDCdCKP1/h0
+         qWOOkzh+rnht3fMwENXxDNsLg2b6+00H2Q9tzrD5GOfzq0c5hX+25Ud4FnUeLiMPmbSr
+         fQkY1UpwJGacCivsbqjo4H+NI+P9F91bJNPsUH7M00w3nU9TPtuDWtjD+Eh2rQdjGtYW
+         Zga47v/nmbDglnpHzG2gqOjuOj/xOd13wSSFCt5dYBhZkKWHTjZ4RP1+MLKnHMDPy0yH
+         1g8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XCO3qo9+TquCRGCErGjH7wLbJcwWMhAPFzVepnTCaPU=;
-        b=k7NDsAaBD25nw60RnPR2JmZTOSEF1rW/2svKeLu+1e1ahe1UhF6eie4483xZ5iuBCS
-         3VE/lOoawGNzvuHWGznW0W5wMKq45aK2qr6z1fuxC0YlgU8wsxIN/D8E+jrZi9Cz54Qf
-         HH0HiTyfjxeWXtysQ3fnIb5P3EO9nPOXsfK3RnSIBsahRUxVhT7oRMP4oiNvH5gHOKv7
-         LilqEoEVdieFn9HMiHE8H4jCeXbvmJRRh/2DIrvebQiBao1Jn794sspTOhLPvL8wWXPz
-         uSSOlMpDufex6qbtxwcJjeGVzAu/KW5Y2de3hUB8RSEOCKM8fmw+E2N3HaT58a88QF+B
-         siQA==
-X-Gm-Message-State: APjAAAWcHJrLlS0YkjGvhuDQU58Odrp0wnqt/fwczkzOsrC0kBLRgjeq
-        n4PyYDqGe0FnTw20VNrLsu9H4szksTE=
-X-Google-Smtp-Source: APXvYqzUrccvA6IYn5V4dvuCAX0GiFhIE/oQ5lJgZc6joE2IyYwJSmbmjXl9EL07C+0liogvz9TItw==
-X-Received: by 2002:a17:90a:5d15:: with SMTP id s21mr49092505pji.125.1559808479011;
-        Thu, 06 Jun 2019 01:07:59 -0700 (PDT)
+        bh=Ky+FTpxo6a36SL4K0iIgUU/tHa/3+eYpA5PzCdmnJx4=;
+        b=Uf8HBZ2sVqdnhBrBiegJFDg5TXZ9CAfVPNL0419eCRxJvSnvN+1Ocoj+SqpFFDAc7u
+         C22wXw7+lof865MWkmqA02lR9qwOyP1Nn0iSGDJSLiwyPDp7CcScBOWL8uC+NPJ2bE5R
+         p6xqobZztYOneYnPcr0+duxLc6n4MSE6+Hjw08T20Ql9r0REitdPqJJ6OftQqiPEpFOL
+         KUIf9kFcgNdEJNosgycZ4CfO7fTmd75DBI5LqP58yS3x5HZHSZrn5DkYlWnn3RE206Hn
+         sZ3WqdkqyfdUaovWKpIkf2CAp3EIBNSTR2c7xJJDrAaRXaoPUU8W/gvTt8SZj+qgCkF9
+         od2g==
+X-Gm-Message-State: APjAAAV/70v7aDEPGyj5tMU/a4RmJOIBE4r3bGItYvgsngKmN1JUDGl/
+        /ozP3WZ1m1VABEV+a/pJraenV29sSYA=
+X-Google-Smtp-Source: APXvYqwrbAzQkk3ogvSRciqvHC8EJIsJFylvt2mkuD3j8jx7DoH9GP/4hjDNi6RTpEHjcPF89eeCMQ==
+X-Received: by 2002:a63:2ac9:: with SMTP id q192mr2229673pgq.144.1559808549768;
+        Thu, 06 Jun 2019 01:09:09 -0700 (PDT)
 Received: from maya190131 ([13.66.160.195])
-        by smtp.gmail.com with ESMTPSA id a25sm1343998pfo.112.2019.06.06.01.07.58
+        by smtp.gmail.com with ESMTPSA id y10sm1133287pfm.68.2019.06.06.01.09.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 01:07:58 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 08:07:58 +0000
+        Thu, 06 Jun 2019 01:09:09 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 08:09:09 +0000
 From:   Maya Nakamura <m.maya.nakamura@gmail.com>
 To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
         sthemmin@microsoft.com, sashal@kernel.org
 Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/5] HID: hv: Remove dependencies on PAGE_SIZE for ring
+Subject: [PATCH v2 5/5] Input: hv: Remove dependencies on PAGE_SIZE for ring
  buffer
-Message-ID: <0e9385a241dc7c26445eb7e104d08e2e2c5d30de.1559807514.git.m.maya.nakamura@gmail.com>
+Message-ID: <68e9744aa7b2d4e463e48f4422f6b19c38e55bab.1559807514.git.m.maya.nakamura@gmail.com>
 References: <cover.1559807514.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -70,24 +70,24 @@ not depend on the guest page size.
 
 Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
 ---
- drivers/hid/hid-hyperv.c | 4 ++--
+ drivers/input/serio/hyperv-keyboard.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-index d3311d714d35..e8b154fa38e2 100644
---- a/drivers/hid/hid-hyperv.c
-+++ b/drivers/hid/hid-hyperv.c
-@@ -112,8 +112,8 @@ struct synthhid_input_report {
+diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
+index 7935e52b5435..a3480dbfadd2 100644
+--- a/drivers/input/serio/hyperv-keyboard.c
++++ b/drivers/input/serio/hyperv-keyboard.c
+@@ -83,8 +83,8 @@ struct synth_kbd_keystroke {
  
- #pragma pack(pop)
+ #define HK_MAXIMUM_MESSAGE_SIZE 256
  
--#define INPUTVSC_SEND_RING_BUFFER_SIZE		(10*PAGE_SIZE)
--#define INPUTVSC_RECV_RING_BUFFER_SIZE		(10*PAGE_SIZE)
-+#define INPUTVSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
-+#define INPUTVSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
+-#define KBD_VSC_SEND_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
+-#define KBD_VSC_RECV_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
++#define KBD_VSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
++#define KBD_VSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
  
- 
- enum pipe_prot_msg_type {
+ #define XTKBD_EMUL0     0xe0
+ #define XTKBD_EMUL1     0xe1
 -- 
 2.17.1
 
