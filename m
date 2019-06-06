@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91C5336E17
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2019 10:05:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7939136E1D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jun 2019 10:07:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFFIFW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 6 Jun 2019 04:05:22 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41222 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfFFIFW (ORCPT
+        id S1726605AbfFFIG6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 6 Jun 2019 04:06:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43802 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfFFIG6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:05:22 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 83so892603pgg.8;
-        Thu, 06 Jun 2019 01:05:21 -0700 (PDT)
+        Thu, 6 Jun 2019 04:06:58 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cl9so598027plb.10;
+        Thu, 06 Jun 2019 01:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ouvvf9dJU+os5Ak7rjWYZrZK3ACKmLEodaHvlTlzcEc=;
-        b=ZH5VoJzSi6DSD799sd022i6+YXg7iXxAbZ7USRkscKg7Urms6QlI4mJ/URqAOeJ8qJ
-         Z5IJ/vM7+6NVRNYRTsHdN1pyOYqrOF7gsNHIMeBUXVHNoOFAoxKUGSMBcZv6K4M/kWWj
-         caNF7jyNypmFzh0L6U1YVHTjMmKki0Nwi5aSb9KI95MaeS2Xzl68lmgEocLGDGWj6i2X
-         REE/BNWqnzXaVyJXnXv8WYcne1gDNjtxYb/01QixAAwG/+ENh1rfVQHCYU3JQq2P8A9J
-         67VapW8e8fy1zLssEqI1Ded2ehuU0YiBkqNE9SzJtjG67C+gt9nHUlK3yKq07IMFLiKg
-         hQ7w==
+        bh=B7PI3lRvcRn5YsjKZaM8VAfEA9LM5Mb34wcf1QlCT9E=;
+        b=a1mUz4yagvLdR6fk3zHnxeQ82AYyd7LEyimBOtJBFKZhzwuQ4gGCI+hx1ThK/qvBcz
+         HiRhWQkwAGKFW0BuVJGuaBr78/DmvEmg2kwByCh+T5xDU5I0uq+P8dvbjVggUsLjgF7+
+         61p+kFIcG7Xr3s0Ty/+VdpIXyTaV8V5k+tURvtW4qqjtui3GnWWBgfFIKaJ9JCA7Scyi
+         00NhOdqkriK4Yf2G6O2nYiPagoGkxVvzUNlEGiD4XTW9ImYNL9rknP5cTjd3nhnI8ZDZ
+         3SN1ssBC/q7dNTxGD9vDmQlo0z84Vpqug/ABbD/hZ6XnAqaiAVGoxG48I06OL1rCj2oN
+         aRww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ouvvf9dJU+os5Ak7rjWYZrZK3ACKmLEodaHvlTlzcEc=;
-        b=PuKqTzs5cBKu991WbFLK6WLQ/QBhvelUV7E41oaEaWL0tv+JL8pX4qQc6YQ66UPkrG
-         kkjN8Y5RbmkWotIOsZ9FKsIQ9OiHSsFabmetsve8IZDaVQnzzcmXZV4j6i3YqSd64mBK
-         Ox7ccETGwroLx2A3pTsLZTdOvHTKa82XS2npbs12cOtC5bHwiLF4kAO8+hpXmRc0Bab+
-         cGJYXXtq6NFh2tq6I5b1zCxFdW99AmPzq7pX4DVUKTVgeairuFp+vJGwZ7ly7pvp2XhO
-         eme+gIiox8vMscEf8942K9KaACAb8SNX0+vG4SfS/XDhIDksDjSgOlA/0licywYQ/8C9
-         AOoQ==
-X-Gm-Message-State: APjAAAUc++YrdoxigEZ4nJ+D/fIwOuGonBLGczr9j87y0rcgFqlQiDWu
-        +BhW5ge+zl6MYF604VEE9g5nVL9JQSI=
-X-Google-Smtp-Source: APXvYqxj1+DHpVWOnnaeWKG7SeN92b76OfgMqw504KhsCqTwFbSEryXEoLDgOFWQej9QqZwmxSnfmw==
-X-Received: by 2002:a65:5004:: with SMTP id f4mr2253196pgo.268.1559808321065;
-        Thu, 06 Jun 2019 01:05:21 -0700 (PDT)
+        bh=B7PI3lRvcRn5YsjKZaM8VAfEA9LM5Mb34wcf1QlCT9E=;
+        b=JkDDahf0p7eOHoAwm9iDPHvwl+jUHXwXtAMbJUf51rJhN9IOLLyztf5utk2GIL9oLE
+         ROo0dhBKO0MaNUnh/DEj2wivTIMHK6c4pOXLYNKdKVsPBIcOf2bxkdIfxaRL66sMhVNy
+         2xeNi6BRe8sbs0ZbqdTRpCyQbsu4ZRQnVXtWxpbxdIb0urnHjod0Ed5aovy3N0RFqvYY
+         jSXX4VzXWiyJapqxh6wausOtZeuLFIvRtDjgnfwbWD90vKC/3uX6R4o6p3C0ZG76tqTw
+         6RYWJfkcLOeghDUCiBr2nEcfNedsnj4Y7WAsdLWUWYKENGYWJCVNqauwKUdFhCa2HMQM
+         kbsw==
+X-Gm-Message-State: APjAAAW9U19dMGeu6LaKJjiq24Y2/0gz6JVYJsQqnKJeiYo5r4X5opmY
+        5cTmtYNn7PdiHOrC0M8RaLEnmd+3jbo=
+X-Google-Smtp-Source: APXvYqwfsilz/VH+eooS8YRH2YGQydhBg/MSHihk39URW/f21Zb3zXkXFfFzqewMBfL0KcpP+Pltlg==
+X-Received: by 2002:a17:902:b093:: with SMTP id p19mr13696085plr.174.1559808417954;
+        Thu, 06 Jun 2019 01:06:57 -0700 (PDT)
 Received: from maya190131 ([13.66.160.195])
-        by smtp.gmail.com with ESMTPSA id m6sm1216015pjl.18.2019.06.06.01.05.20
+        by smtp.gmail.com with ESMTPSA id 128sm1164580pff.16.2019.06.06.01.06.57
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 01:05:20 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 08:05:20 +0000
+        Thu, 06 Jun 2019 01:06:57 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 08:06:57 +0000
 From:   Maya Nakamura <m.maya.nakamura@gmail.com>
 To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
         sthemmin@microsoft.com, sashal@kernel.org
 Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] x86: hv: hv_init.c: Add functions to
- allocate/deallocate page for Hyper-V
-Message-ID: <5cf4ad6f3fae8dec33e364b367b99cbb5b0f2ba4.1559807514.git.m.maya.nakamura@gmail.com>
+Subject: [PATCH v2 3/5] hv: vmbus: Replace page definition with Hyper-V
+ specific one
+Message-ID: <210c56ddb1dafc20ba289e6be9165efe8a5e818c.1559807514.git.m.maya.nakamura@gmail.com>
 References: <cover.1559807514.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -65,43 +65,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Introduce two new functions, hv_alloc_hyperv_page() and
-hv_free_hyperv_page(), to allocate/deallocate memory with the size and
-alignment that Hyper-V expects as a page. Although currently they are
-not used, they are ready to be used to allocate/deallocate memory on x86
-when their ARM64 counterparts are implemented, keeping symmetry between
-architectures with potentially different guest page sizes.
+Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
+not be 4096 on all architectures and Hyper-V always runs with a page
+size of 4096.
 
 Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
 ---
- arch/x86/hyperv/hv_init.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/hv/hyperv_vmbus.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index e4ba467a9fc6..84baf0e9a2d4 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -98,6 +98,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
- u32 hv_max_vp_index;
- EXPORT_SYMBOL_GPL(hv_max_vp_index);
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index e5467b821f41..5489b061d261 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -208,11 +208,11 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
+ 		       u64 *requestid, bool raw);
  
-+void *hv_alloc_hyperv_page(void)
-+{
-+	BUILD_BUG_ON(!(PAGE_SIZE == HV_HYP_PAGE_SIZE));
-+
-+	return (void *)__get_free_page(GFP_KERNEL);
-+}
-+EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
-+
-+void hv_free_hyperv_page(unsigned long addr)
-+{
-+	free_page(addr);
-+}
-+EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
-+
- static int hv_cpu_init(unsigned int cpu)
- {
- 	u64 msr_vp_index;
+ /*
+- * Maximum channels is determined by the size of the interrupt page
+- * which is PAGE_SIZE. 1/2 of PAGE_SIZE is for send endpoint interrupt
+- * and the other is receive endpoint interrupt
++ * Maximum channels, 16348, is determined by the size of the interrupt page,
++ * which is HV_HYP_PAGE_SIZE. 1/2 of HV_HYP_PAGE_SIZE is to send endpoint
++ * interrupt, and the other is to receive endpoint interrupt.
+  */
+-#define MAX_NUM_CHANNELS	((PAGE_SIZE >> 1) << 3)	/* 16348 channels */
++#define MAX_NUM_CHANNELS	((HV_HYP_PAGE_SIZE >> 1) << 3)
+ 
+ /* The value here must be in multiple of 32 */
+ /* TODO: Need to make this configurable */
 -- 
 2.17.1
 
