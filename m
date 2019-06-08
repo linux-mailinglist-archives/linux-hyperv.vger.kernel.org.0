@@ -2,46 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B18B33934B
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Jun 2019 19:32:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87F5E39BB2
+	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Jun 2019 10:10:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfFGRbw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 7 Jun 2019 13:31:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50960 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729355AbfFGRbw (ORCPT
+        id S1727362AbfFHIKr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 8 Jun 2019 04:10:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39883 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfFHIKr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:31:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57HIpx6178003;
-        Fri, 7 Jun 2019 17:30:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=g9qgPYWy2UeZZX7Q5xvayFUZ5+Jlv5AgZT4Wz1d17eI=;
- b=GquEmfpf1HBT7vX2CzX+dMvzNB0wpOB4iQtcXeOAyF2DoiXBKIsxxFSTqxuQEeD3dFsE
- NW/2qE6nTYp8yIdaZlmQWE+LLZF9hQdENVg3wyoapAls1vxX2q+9hAztXIlTcBohI7iE
- puGOc+EVwd+Wj8du+nhWNsaHMeyQXzpQZb9TZBrehPH95mB9xQPTriWtztvyVvBfZJSY
- ZvDGQ2w0kte1RG2ckQVBBt6EnYhIHB7zOIRVQHpveA/dR7UH9rQ/u//0E/s5itVU17r+
- 9iPvrwQcznyJ2mXDhgxzinr5bV6Wic02t6r2sOO0mi4aLy1ulC69fy/YracyVTUd+Ixp yw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2suj0qyhpc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 17:30:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57HU97U102069;
-        Fri, 7 Jun 2019 17:30:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2swngk4vhc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 17:30:36 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x57HUY6s025234;
-        Fri, 7 Jun 2019 17:30:34 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 10:30:34 -0700
-To:     Jens Axboe <axboe@kernel.dk>
+        Sat, 8 Jun 2019 04:10:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z23so3865812wma.4
+        for <linux-hyperv@vger.kernel.org>; Sat, 08 Jun 2019 01:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A/98s+ZxLWi2AxlogIx4Ijtu1jW2DrfDadsqadJKMuo=;
+        b=pCcz/EmJC6hgluYq5PvYf+aGmHKDD1vCR1Mi8XWSw3otEtjhq3rifcApmd4NBMij2u
+         4D/9i3hBYMZtDWxnNb/MRtGSwBaNiUODq5uH7spiDBk+aEdHwroZ7t/JVmnwBHw/mZPF
+         HpV4REQHX2jRfSIU7PK34BCZL3Ftv9jurqOR/QisIAK4GkHhmecp9epktkhQj6IBRzqw
+         UifbYQdqC1H/rLMt+5f4T66G9gCzdE+oZZ7tO+JAQH4DkJEvozPUxWoe0XpBQqPhCK3q
+         87fnqNTeQ68yHyg6gKX1/O24jSKM16QaXQAWgLHh7coxgbFXkJIErPwfcQ3TpxqXhI8p
+         uxVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A/98s+ZxLWi2AxlogIx4Ijtu1jW2DrfDadsqadJKMuo=;
+        b=Ag9WCF0Wv8fQZtNtizCOnvRXSTKZKlp98nMqCgDNABJzvpb7vPP3/10cQNTpXLE5ce
+         uOe38tDNtvqyvGyuVyUkSb9cYK3G1mTt8Ds/vcfGf9KbVG70kNcPHv8W5q7ZT38VUiqy
+         dD9+8x8RZlcNrgHC3UacQJG9t7C+Smoa0XfFopVKbrlYx3FK23uByC029PS7wn7ieqU9
+         xBnPrsYH0adhwU/5b+inKOYtwBe2393LznV59lHL57OP+s3/bHjYXJLwmQUjuc3Wydnl
+         sMN/J5436E0PLyDJzKJvxkRAuv04OikgjEffFdrylLzduffiwKvOtSzIapmeCdY8sVNT
+         5sUA==
+X-Gm-Message-State: APjAAAUqvQxXT/IM99hTrUpa5n1DhGjUPUgc7zPkTZNZZvWpGzZsi+sI
+        vwxZpVaPzYV/V2tf92pFbMEjSw==
+X-Google-Smtp-Source: APXvYqxzdnROeTHjScvyEAbURnezUITWgF87dJmRZvr0Lb6G4TViG5IoiBIGZmRJaGL6s4d+RprNoA==
+X-Received: by 2002:a1c:e715:: with SMTP id e21mr6683506wmh.16.1559981445791;
+        Sat, 08 Jun 2019 01:10:45 -0700 (PDT)
+Received: from [10.97.4.179] (aputeaux-682-1-82-78.w90-86.abo.wanadoo.fr. [90.86.61.78])
+        by smtp.gmail.com with ESMTPSA id e17sm3849742wrt.95.2019.06.08.01.10.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 08 Jun 2019 01:10:44 -0700 (PDT)
+Subject: Re: properly communicate queue limits to the DMA layer
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
         Sebastian Ott <sebott@linux.ibm.com>,
         Sagi Grimberg <sagi@grimberg.me>,
@@ -55,47 +61,40 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
         linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
         usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: Re: properly communicate queue limits to the DMA layer
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
 References: <20190605190836.32354-1-hch@lst.de>
-        <591cfa1e-fecb-7d00-c855-3b9eb8eb8a2a@kernel.dk>
-        <20190605192405.GA18243@lst.de>
-        <f07d0abf-b3eb-f530-37b9-e66454740b3f@kernel.dk>
-Date:   Fri, 07 Jun 2019 13:30:30 -0400
-In-Reply-To: <f07d0abf-b3eb-f530-37b9-e66454740b3f@kernel.dk> (Jens Axboe's
-        message of "Thu, 6 Jun 2019 23:52:35 -0600")
-Message-ID: <yq1o939i9qh.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+ <591cfa1e-fecb-7d00-c855-3b9eb8eb8a2a@kernel.dk>
+ <20190605192405.GA18243@lst.de>
+ <f07d0abf-b3eb-f530-37b9-e66454740b3f@kernel.dk> <yq1o939i9qh.fsf@oracle.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <379c82a1-f61d-7463-791e-57f1cdeaa9db@kernel.dk>
+Date:   Sat, 8 Jun 2019 02:10:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=528
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=574 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070116
+In-Reply-To: <yq1o939i9qh.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On 6/7/19 11:30 AM, Martin K. Petersen wrote:
+> 
+> Jens,
+> 
+>>> The SCSI bits will need a bit more review, and possibly tweaking
+>>> fo megaraid and mpt3sas.  But they are really independent of the
+>>> other patches, so maybe skip them for now and leave them for Martin
+>>> to deal with.
+>>
+>> I dropped the SCSI bits.
+> 
+> I'll monitor and merge them.
 
-Jens,
-
->> The SCSI bits will need a bit more review, and possibly tweaking
->> fo megaraid and mpt3sas.  But they are really independent of the
->> other patches, so maybe skip them for now and leave them for Martin
->> to deal with.
->
-> I dropped the SCSI bits.
-
-I'll monitor and merge them.
+Great, thanks Martin.
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Jens Axboe
+
