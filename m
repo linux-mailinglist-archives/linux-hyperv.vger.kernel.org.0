@@ -2,103 +2,179 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C09B3BDC3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jun 2019 22:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8684416C7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Jun 2019 23:20:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbfFJUtD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 10 Jun 2019 16:49:03 -0400
-Received: from mail-eopbgr800137.outbound.protection.outlook.com ([40.107.80.137]:56544
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727771AbfFJUtD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 10 Jun 2019 16:49:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=Pt+ys4dZ90RPw8wZ/JkD0YceRc9UpNZaqJqYRorVKJ9+XSrIm27IigzoGQu45h6QLv5/tAkNu3aHU4/ilzaoMOZQBS83FJcPCB9VHDVftS0X0vxKMA0yLr4evhNOR/CQjoKNxzQBUq67Ygt/0StUgb7w8QUVnyXcfyN9A6IAxwU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VeL0vvoCA7S5fA05kZ2XiOJ/w+mfnMktNYiM8ehy95U=;
- b=jvIMYDFnMvd62QodzATHTzw+nCxYvb55/zNdvsx950D7uO58pedIyOerEX44HNO16l1UlApfVKg2cx36pxqwMxRuViLZ+9EyC8uV2ZmDrkh2/kfdOBLT0SJaHZekGtRCCZH/8cxUjbkbr7roiGtEES5QacXQmWPirPH9xcBokSI=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VeL0vvoCA7S5fA05kZ2XiOJ/w+mfnMktNYiM8ehy95U=;
- b=WNzFAASsevSrd3qvrotby09eKkKtb2N7yqmDHeNFL4whVhYnZEmHY6fK5yhMCS60+GBudl2kxCOIvaG57NL8N7YKlSSatFlM3n1y45RzIvNBYFsCThi82EU1dC6exoQoe6dOCmdJytUThyDtHUSh0SI2dwYdFqaLQ4saOlSRIBg=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (2603:10b6:5:169::22)
- by DM6PR21MB1353.namprd21.prod.outlook.com (2603:10b6:5:175::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.0; Mon, 10 Jun
- 2019 20:49:00 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::b825:2209:d3e2:8f11]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::b825:2209:d3e2:8f11%8]) with mapi id 15.20.2008.002; Mon, 10 Jun 2019
- 20:49:00 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Subject: [PATCH hyperv-fixes] hv_netvsc: Set probe mode to sync
-Thread-Topic: [PATCH hyperv-fixes] hv_netvsc: Set probe mode to sync
-Thread-Index: AQHVH83uUShjEVupf06mW38xrZET1g==
-Date:   Mon, 10 Jun 2019 20:49:00 +0000
-Message-ID: <1560199685-13447-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0040.namprd14.prod.outlook.com
- (2603:10b6:300:12b::26) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5dd72015-aacb-45de-848a-08d6ede510b2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1353;
-x-ms-traffictypediagnostic: DM6PR21MB1353:
-x-microsoft-antispam-prvs: <DM6PR21MB13532018064C78957BB56398AC130@DM6PR21MB1353.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 0064B3273C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(39860400002)(366004)(136003)(376002)(189003)(199004)(4744005)(110136005)(6436002)(54906003)(4720700003)(6486002)(3846002)(486006)(6116002)(7846003)(53936002)(10290500003)(6392003)(386003)(102836004)(36756003)(99286004)(71190400001)(6506007)(52396003)(71200400001)(52116002)(6512007)(2616005)(476003)(66476007)(26005)(186003)(66446008)(478600001)(5660300002)(64756008)(66556008)(25786009)(14454004)(14444005)(66066001)(81166006)(107886003)(66946007)(68736007)(256004)(73956011)(50226002)(7736002)(2906002)(4326008)(81156014)(8936002)(8676002)(305945005)(10090500001)(2501003)(22452003)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1353;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zW8dFNSFUjawzF8eFf9Tc7ihA/69v6+CxOGgT0TKvEGqc8FeZSk2zOcMuyEo5+nzZcptO3w/eaIEEU7Wkk/ruKuf1aJ0Tk8ea3djyrZYFmlhgx87rbeMTnjhmPX2v1/T5lvZVP/9AZlwSvNRBL71bf6EIyMNVmFUMxqPbwMMvDZWLYDLT5PEEI8LadcVK9SY1Yf5IAU+6upJ7j8JmYo0TJap9a9B5BsZd8RgS+UG9uakdUoMTaTTMbx30lOsiJ9KCd/APudJUl/bvZulHZTImy6nMSWCOlJ/n7phm0kdOQ0X2QleJcx5BlAVtbRFdhrDto3348Ue2NHCLQS654/Tv+ACnstCWtGEDSCCkl3/mAPooCXLeSRsLBwxXyTjGCj2uk6A2Yqr34CPw31bmjIs51/Rc6MKg5r0j+M160OV3tc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S2406712AbfFKVUI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 11 Jun 2019 17:20:08 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34594 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407020AbfFKVUI (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 11 Jun 2019 17:20:08 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c26so22223702edt.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 11 Jun 2019 14:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3OOJyWbB6/jxUd7+KAEy96qdC4Tdsl/f96tHzMaVcB4=;
+        b=jyXIkF1GdcmUnLu0AjQVG+Udjq0UcLRwKiUZCFdPn8a+eUUs0JzwnCONzTAOgGvuuL
+         8qywm8p9GaPge4mxScd7qXROT/CTuLJQpFl2FOylF96lRmgQ4fQvRcuYuCInAT5gHpWh
+         Anuw3mQQ0ML9bICJ8UdTd7HL3HN9oMf9ogRugDvI1U/pGKPwFPIZr5xwo9aKz6tSL9V4
+         PNu9kyl72rjbyjy1b8MTUB2fHoUgRpKJq1MVudCAG3SC8hfdFVVx/gVKqooXi1vcxQLG
+         BMq7V6uYNvrRn6rQT5vUSD2LQfSuqy7EbRgy3wUz9ateaSAcjBUsdixYhK0zQNNmM++7
+         H68Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3OOJyWbB6/jxUd7+KAEy96qdC4Tdsl/f96tHzMaVcB4=;
+        b=rUVwFS/lhRw9Lbz8WlNG9NWXhmVX3x9on0VEyUkj4HG3ZOlLiy9BecB8ELmylbwvvd
+         5cINzzebhjI2D08phOZRzNEPUZ0K52MNbC3gAkphm7ct/Tp4bcehXWkdwtcyEN8pBlf6
+         Iifs3QAeM8Q6WSJ9cM43CRtYAYysVejCZx1T79SMMS5XX9ISoPydmPJnFEuvxQS+aQLm
+         2ZQ64nVKmDOoKcgoqevg2VFFqn59WtuHkKO0lN8kTlJHMrBIVz26R5CRNkV6j7x8kRU3
+         /UX2YceBUdq6Vjx0C3FZ9UC+Jk/C0ZEPCLNZdmbWHkmJ+MBf40Hq2gDwYSuOsJEUxndH
+         K/cg==
+X-Gm-Message-State: APjAAAW2vn3U3Wpr0SjTqp2ZtvInWvll2ELlNoybsuqiEI4zsoig8zLB
+        fsm/1vwkvPVJTDYfuF11jGGuwQ==
+X-Google-Smtp-Source: APXvYqy8UkurlAlIz6eWbNQVfj0pLtyKFJ1RdwsS4Mhclx5Ug3s5dTGx4YcObvRBnw363mK1Ak9kYA==
+X-Received: by 2002:a50:f385:: with SMTP id g5mr2541498edm.14.1560288005996;
+        Tue, 11 Jun 2019 14:20:05 -0700 (PDT)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id a15sm1967030ejr.4.2019.06.11.14.20.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 14:20:05 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <dima@arista.com>,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: [PATCH] x86/hyperv: Disable preemption while setting reenlightenment vector
+Date:   Tue, 11 Jun 2019 22:20:03 +0100
+Message-Id: <20190611212003.26382-1-dima@arista.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5dd72015-aacb-45de-848a-08d6ede510b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2019 20:49:00.8189
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lkmlhyz@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1353
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Rm9yIGJldHRlciBjb25zaXN0ZW5jeSBvZiBzeW50aGV0aWMgTklDIG5hbWVzLCB3ZSBzZXQgdGhl
-IHByb2JlIG1vZGUgdG8NClBST0JFX0ZPUkNFX1NZTkNIUk9OT1VTLiBTbyB0aGUgbmFtZXMgY2Fu
-IGJlIGFsaWduZWQgd2l0aCB0aGUgdm1idXMNCmNoYW5uZWwgb2ZmZXIgc2VxdWVuY2UuDQoNClNp
-Z25lZC1vZmYtYnk6IEhhaXlhbmcgWmhhbmcgPGhhaXlhbmd6QG1pY3Jvc29mdC5jb20+DQotLS0N
-CiBkcml2ZXJzL25ldC9oeXBlcnYvbmV0dnNjX2Rydi5jIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9u
-ZXQvaHlwZXJ2L25ldHZzY19kcnYuYyBiL2RyaXZlcnMvbmV0L2h5cGVydi9uZXR2c2NfZHJ2LmMN
-CmluZGV4IDAzZWE1YTcuLmFmZGNjNTYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL25ldC9oeXBlcnYv
-bmV0dnNjX2Rydi5jDQorKysgYi9kcml2ZXJzL25ldC9oeXBlcnYvbmV0dnNjX2Rydi5jDQpAQCAt
-MjQwNyw3ICsyNDA3LDcgQEAgc3RhdGljIGludCBuZXR2c2NfcmVtb3ZlKHN0cnVjdCBodl9kZXZp
-Y2UgKmRldikNCiAJLnByb2JlID0gbmV0dnNjX3Byb2JlLA0KIAkucmVtb3ZlID0gbmV0dnNjX3Jl
-bW92ZSwNCiAJLmRyaXZlciA9IHsNCi0JCS5wcm9iZV90eXBlID0gUFJPQkVfUFJFRkVSX0FTWU5D
-SFJPTk9VUywNCisJCS5wcm9iZV90eXBlID0gUFJPQkVfRk9SQ0VfU1lOQ0hST05PVVMsDQogCX0s
-DQogfTsNCiANCi0tIA0KMS44LjMuMQ0KDQo=
+KVM support may be compiled as dynamic module, which triggers the
+following splat on modprobe:
+
+ KVM: vmx: using Hyper-V Enlightened VMCS
+ BUG: using smp_processor_id() in preemptible [00000000] code: modprobe/466 caller is debug_smp_processor_id+0x17/0x19
+ CPU: 0 PID: 466 Comm: modprobe Kdump: loaded Not tainted 4.19.43 #1
+ Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
+ Call Trace:
+  dump_stack+0x61/0x7e
+  check_preemption_disabled+0xd4/0xe6
+  debug_smp_processor_id+0x17/0x19
+  set_hv_tscchange_cb+0x1b/0x89
+  kvm_arch_init+0x14a/0x163 [kvm]
+  kvm_init+0x30/0x259 [kvm]
+  vmx_init+0xed/0x3db [kvm_intel]
+  do_one_initcall+0x89/0x1bc
+  do_init_module+0x5f/0x207
+  load_module+0x1b34/0x209b
+  __ia32_sys_init_module+0x17/0x19
+  do_fast_syscall_32+0x121/0x1fa
+  entry_SYSENTER_compat+0x7f/0x91
+
+The easiest solution seems to be disabling preemption while setting up
+reenlightment MSRs. While at it, fix hv_cpu_*() callbacks.
+
+Fixes: 93286261de1b4 ("x86/hyperv: Reenlightenment notifications
+support")
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Cathy Avery <cavery@redhat.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>
+Cc: Mohammed Gamal <mmorsy@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Roman Kagan <rkagan@virtuozzo.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+Cc: devel@linuxdriverproject.org
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: x86@kernel.org
+Reported-by: Prasanna Panchamukhi <panchamukhi@arista.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ arch/x86/hyperv/hv_init.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 1608050e9df9..0bdd79ecbff8 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -91,7 +91,7 @@ EXPORT_SYMBOL_GPL(hv_max_vp_index);
+ static int hv_cpu_init(unsigned int cpu)
+ {
+ 	u64 msr_vp_index;
+-	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
++	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
+ 	void **input_arg;
+ 	struct page *pg;
+ 
+@@ -103,7 +103,7 @@ static int hv_cpu_init(unsigned int cpu)
+ 
+ 	hv_get_vp_index(msr_vp_index);
+ 
+-	hv_vp_index[smp_processor_id()] = msr_vp_index;
++	hv_vp_index[cpu] = msr_vp_index;
+ 
+ 	if (msr_vp_index > hv_max_vp_index)
+ 		hv_max_vp_index = msr_vp_index;
+@@ -182,7 +182,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	struct hv_reenlightenment_control re_ctrl = {
+ 		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+ 		.enabled = 1,
+-		.target_vp = hv_vp_index[smp_processor_id()]
+ 	};
+ 	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+ 
+@@ -196,7 +195,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	/* Make sure callback is registered before we write to MSRs */
+ 	wmb();
+ 
++	preempt_disable();
++	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
+ 	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
++	preempt_enable();
++
+ 	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
+ }
+ EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
+-- 
+2.22.0
+
