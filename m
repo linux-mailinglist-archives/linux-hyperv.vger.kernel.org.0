@@ -2,182 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D6F084226C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jun 2019 12:26:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C213F4229B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jun 2019 12:36:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405312AbfFLKZt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Jun 2019 06:25:49 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56268 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391669AbfFLKZt (ORCPT
+        id S2406375AbfFLKgF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Jun 2019 06:36:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54742 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406027AbfFLKgF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:25:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a15so5961732wmj.5
-        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jun 2019 03:25:46 -0700 (PDT)
+        Wed, 12 Jun 2019 06:36:05 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g135so6019085wme.4
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jun 2019 03:36:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=xuz7wl9JI/1izuO7h6cmpUujshUximjTTA0wiCF4sTg=;
-        b=jo3paqyL/ARvzKvD0SkqQJy1cIau+n8dwoilC6Az/ICMe+AjosbOMAyX0ORDVI6Vjc
-         lKJpOFtKML5gZQ2PbPrMLo3pAQ5ypwp2DyVcPR+TTXw7cnvYajQi0TwrEpw+bZpXohuF
-         Cq0RcECYz134bCGzhz7ZYYCize2KQ9M+pTPgin69yV9+3CiCHDGO/bG3j6j5y0p3Udnw
-         W92Bub6qpuQEtvWk062Ge8y85VNhU1ZP34m0tXAmg/f0fZSWdnirwviqNPGE3VxgfGc7
-         UGhUJiTwEbU9VURaOQttKSLP/Q0HLaHZLkM2rx5sDRQXb6QUmYtzmXqCbsAMslEFC6gV
-         1bOA==
-X-Gm-Message-State: APjAAAWtKEX9Z1iXsCtoormbcRtRG0G+cPlV9wDWaOKGaoXeh5tL2P8k
-        B0t4SurvsmzQfOU7OUBwf5f4Zg==
-X-Google-Smtp-Source: APXvYqyvXjwdxbX8PPfz/CW94/F08nXOpdTiba2085ImP1ZnWBDiUcxjjeVDZN0HlcN+tUZgfwgZfw==
-X-Received: by 2002:a05:600c:1008:: with SMTP id c8mr22199755wmc.133.1560335146039;
-        Wed, 12 Jun 2019 03:25:46 -0700 (PDT)
+         :message-id:mime-version;
+        bh=F2AOmZb2yguiGSmSU0nhevs48sI1vSX5WkrCsfTsjyQ=;
+        b=bVn+2qywaR2qReWzasOxEYPqq9kvm27zp0AR9tbSYpzf+wxEJ0QM5pLCgLvOwgRdtR
+         g8rwOJLQYwl0NxqEzxlBS/GhJdn+yIdiaZgLY+aHs8GILMkSdMzUqCzVlrWhjn9Zm4a7
+         DffYBbC91YYFBdtUe01zBjURfeUvCoz+n0TvLWZGlgmV1YGv+O3iXQOrjPld/2CztsPf
+         IWrNW/W9CytNk3Fp1IzngdH249UJ74n79lqDse5UjfpOzNcDL4RKjthxThrWUf0Ui0w4
+         VMzu02oBFNlFifjAO3nqY2GxfxuC2BY6HIMFxYujOrXWNe8gj5OSYBww+fbwfTTlZH96
+         hc2A==
+X-Gm-Message-State: APjAAAWYQdlD+eFdF4wW+NjuYinve0MAOO+NP2SvNLLS3rRNTb0Z4UWX
+        k7XR/Gd01cy567LOz/YzDRDlVA==
+X-Google-Smtp-Source: APXvYqxNR2gVHhO6j5Y+UrOQNTZS2wito02Q/MeNcfwjcH9EZhZUbFaMW+BWDVTz7rkhc+WsLQVgMg==
+X-Received: by 2002:a7b:c933:: with SMTP id h19mr22587462wml.52.1560335762925;
+        Wed, 12 Jun 2019 03:36:02 -0700 (PDT)
 Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id f2sm13793660wru.31.2019.06.12.03.25.44
+        by smtp.gmail.com with ESMTPSA id q21sm4318286wmq.13.2019.06.12.03.36.01
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 03:25:45 -0700 (PDT)
+        Wed, 12 Jun 2019 03:36:02 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Prasanna Panchamukhi <panchamukhi@arista.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Cathy Avery <cavery@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Michael Kelley \(EOSG\)" <Michael.H.Kelley@microsoft.com>,
-        Mohammed Gamal <mmorsy@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devel@linuxdriverproject.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting reenlightenment vector
-In-Reply-To: <20190612093506.GH3436@hirez.programming.kicks-ass.net>
-References: <20190611212003.26382-1-dima@arista.com> <20190612093506.GH3436@hirez.programming.kicks-ass.net>
-Date:   Wed, 12 Jun 2019 12:25:44 +0200
-Message-ID: <87tvcvdrrr.fsf@vitty.brq.redhat.com>
+To:     Maya Nakamura <m.maya.nakamura@gmail.com>
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org
+Subject: Re: [PATCH v2 1/5] x86: hv: hyperv-tlfs.h: Create and use Hyper-V page definitions
+In-Reply-To: <67be3e283c0f28326f9c31a64f399fe659ad5690.1559807514.git.m.maya.nakamura@gmail.com>
+References: <cover.1559807514.git.m.maya.nakamura@gmail.com> <67be3e283c0f28326f9c31a64f399fe659ad5690.1559807514.git.m.maya.nakamura@gmail.com>
+Date:   Wed, 12 Jun 2019 12:36:01 +0200
+Message-ID: <87pnnjdram.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
+Maya Nakamura <m.maya.nakamura@gmail.com> writes:
 
-> On Tue, Jun 11, 2019 at 10:20:03PM +0100, Dmitry Safonov wrote:
->> KVM support may be compiled as dynamic module, which triggers the
->> following splat on modprobe:
->> 
->>  KVM: vmx: using Hyper-V Enlightened VMCS
->>  BUG: using smp_processor_id() in preemptible [00000000] code: modprobe/466 caller is debug_smp_processor_id+0x17/0x19
->>  CPU: 0 PID: 466 Comm: modprobe Kdump: loaded Not tainted 4.19.43 #1
->>  Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
->>  Call Trace:
->>   dump_stack+0x61/0x7e
->>   check_preemption_disabled+0xd4/0xe6
->>   debug_smp_processor_id+0x17/0x19
->>   set_hv_tscchange_cb+0x1b/0x89
->>   kvm_arch_init+0x14a/0x163 [kvm]
->>   kvm_init+0x30/0x259 [kvm]
->>   vmx_init+0xed/0x3db [kvm_intel]
->>   do_one_initcall+0x89/0x1bc
->>   do_init_module+0x5f/0x207
->>   load_module+0x1b34/0x209b
->>   __ia32_sys_init_module+0x17/0x19
->>   do_fast_syscall_32+0x121/0x1fa
->>   entry_SYSENTER_compat+0x7f/0x91
->> 
->> The easiest solution seems to be disabling preemption while setting up
->> reenlightment MSRs. While at it, fix hv_cpu_*() callbacks.
->> 
->> Fixes: 93286261de1b4 ("x86/hyperv: Reenlightenment notifications
->> support")
->> 
->> Cc: Andy Lutomirski <luto@kernel.org>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Cathy Avery <cavery@redhat.com>
->> Cc: Haiyang Zhang <haiyangz@microsoft.com>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
->> Cc: "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>
->> Cc: Mohammed Gamal <mmorsy@redhat.com>
->> Cc: Paolo Bonzini <pbonzini@redhat.com>
->> Cc: Radim Krčmář <rkrcmar@redhat.com>
->> Cc: Roman Kagan <rkagan@virtuozzo.com>
->> Cc: Sasha Levin <sashal@kernel.org>
->> Cc: Stephen Hemminger <sthemmin@microsoft.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
->> 
->> Cc: devel@linuxdriverproject.org
->> Cc: kvm@vger.kernel.org
->> Cc: linux-hyperv@vger.kernel.org
->> Cc: x86@kernel.org
->> Reported-by: Prasanna Panchamukhi <panchamukhi@arista.com>
->> Signed-off-by: Dmitry Safonov <dima@arista.com>
->> ---
->>  arch/x86/hyperv/hv_init.c | 9 ++++++---
->>  1 file changed, 6 insertions(+), 3 deletions(-)
->> 
->> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
->> index 1608050e9df9..0bdd79ecbff8 100644
->> --- a/arch/x86/hyperv/hv_init.c
->> +++ b/arch/x86/hyperv/hv_init.c
->> @@ -91,7 +91,7 @@ EXPORT_SYMBOL_GPL(hv_max_vp_index);
->>  static int hv_cpu_init(unsigned int cpu)
->>  {
->>  	u64 msr_vp_index;
->> -	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
->> +	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
->>  	void **input_arg;
->>  	struct page *pg;
->>  
->> @@ -103,7 +103,7 @@ static int hv_cpu_init(unsigned int cpu)
->>  
->>  	hv_get_vp_index(msr_vp_index);
->>  
->> -	hv_vp_index[smp_processor_id()] = msr_vp_index;
->> +	hv_vp_index[cpu] = msr_vp_index;
->>  
->>  	if (msr_vp_index > hv_max_vp_index)
->>  		hv_max_vp_index = msr_vp_index;
->> @@ -182,7 +182,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
->>  	struct hv_reenlightenment_control re_ctrl = {
->>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
->>  		.enabled = 1,
->> -		.target_vp = hv_vp_index[smp_processor_id()]
->>  	};
->>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
->>  
->> @@ -196,7 +195,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
->>  	/* Make sure callback is registered before we write to MSRs */
->>  	wmb();
->>  
->> +	preempt_disable();
->> +	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
->>  	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
->> +	preempt_enable();
->> +
->>  	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
->>  }
->>  EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
+> Define HV_HYP_PAGE_SHIFT, HV_HYP_PAGE_SIZE, and HV_HYP_PAGE_MASK because
+> the Linux guest page size and hypervisor page size concepts are
+> different, even though they happen to be the same value on x86.
 >
-> This looks bogus, MSRs are a per-cpu resource, you had better know what
-> CPUs you're on and be stuck to it when you do wrmsr. This just fudges
-> the code to make the warning go away and doesn't fix the actual problem
-> afaict.
+> Also, replace PAGE_SIZE with HV_HYP_PAGE_SIZE.
+>
+> Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index cdf44aa9a501..44bd68aefd00 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -12,6 +12,16 @@
+>  #include <linux/types.h>
+>  #include <asm/page.h>
+>  
+> +/*
+> + * While not explicitly listed in the TLFS, Hyper-V always runs with a page size
+> + * of 4096. These definitions are used when communicating with Hyper-V using
+> + * guest physical pages and guest physical page addresses, since the guest page
+> + * size may not be 4096 on all architectures.
+> + */
+> +#define HV_HYP_PAGE_SHIFT	12
+> +#define HV_HYP_PAGE_SIZE	BIT(HV_HYP_PAGE_SHIFT)
+> +#define HV_HYP_PAGE_MASK	(~(HV_HYP_PAGE_SIZE - 1))
+> +
+>  /*
+>   * The below CPUID leaves are present if VersionAndFeatures.HypervisorPresent
+>   * is set by CPUID(HvCpuIdFunctionVersionAndFeatures).
+> @@ -841,7 +851,7 @@ union hv_gpa_page_range {
+>   * count is equal with how many entries of union hv_gpa_page_range can
+>   * be populated into the input parameter page.
+>   */
+> -#define HV_MAX_FLUSH_REP_COUNT ((PAGE_SIZE - 2 * sizeof(u64)) /	\
+> +#define HV_MAX_FLUSH_REP_COUNT ((HV_HYP_PAGE_SIZE - 2 * sizeof(u64)) /	\
+>  				sizeof(union hv_gpa_page_range))
+>  
+>  struct hv_guest_mapping_flush_list {
 
-Actually, we don't care which CPU will receive the reenlightenment
-notification and TSC Emulation in Hyper-V is, of course, global. We have
-code which re-assignes the notification to some other CPU in case the
-one it's currently assigned to goes away (see hv_cpu_die()).
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
 Vitaly
