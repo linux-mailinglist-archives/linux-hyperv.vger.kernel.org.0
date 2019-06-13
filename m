@@ -2,219 +2,363 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 080AB4497A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jun 2019 19:18:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AE454451F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jun 2019 18:42:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfFMRRg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 13 Jun 2019 13:17:36 -0400
-Received: from mail-eopbgr770132.outbound.protection.outlook.com ([40.107.77.132]:2436
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726599AbfFLVTL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:19:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=mmupSiemNSs9hbENrT+hrNTVWS1fwFKiRg2Da/hmqd61v6xBOqZlbDoTfxSEntCMw6tXZg+BwlYpqhwBvmNW7jWQ1PZnRUvZa3ZQ7At4eJvSUWuQGG/V3ZHrzDaYANZZFCMen4u+2EXsKOHR0uv7nAmrPQG4KgbbK1svH8HgKjw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QgJrMctd0aMe1+68ix0S6iaQIrybwOZnc6c1v7PL16w=;
- b=RkOmj+ZoYaIbjuLHgnaLxQIf1SRch8hj4XuHCTk6leVlQBnovs0+OGFgV1pmkL4ESbuEBjZ8psyeqbme17Npv6gZcQUK9AHR18ossmidon2ptl/8YbvZLOF5NitCP4x8bSPc1k83X/hzzIybWmJ5QTqAkeKoh0NX86USF0RHKJE=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QgJrMctd0aMe1+68ix0S6iaQIrybwOZnc6c1v7PL16w=;
- b=gmIy0NGMoh2qjntpBqLlk2NlHgbWj0uuWOhDSA959/IzDwxFabJEgCHH/4/6YShNH0P5KTXKj3fJXrUDvaxdnomgoCC4Zz6uaZbh3TFls8DSjCd5+y//w8iDZO1G9lrq5idCrYJXhqoS5DtKaT/IUMejbwguHhqg39jPTCkJhmw=
-Received: from MW2PR2101MB1116.namprd21.prod.outlook.com (2603:10b6:302:a::33)
- by MW2PR2101MB1082.namprd21.prod.outlook.com (2603:10b6:302:a::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.0; Wed, 12 Jun
- 2019 21:19:07 +0000
-Received: from MW2PR2101MB1116.namprd21.prod.outlook.com
- ([fe80::a1f6:c002:82ba:ad47]) by MW2PR2101MB1116.namprd21.prod.outlook.com
- ([fe80::a1f6:c002:82ba:ad47%9]) with mapi id 15.20.2008.002; Wed, 12 Jun 2019
- 21:19:07 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
+        id S1730577AbfFMQmG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 13 Jun 2019 12:42:06 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40517 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730523AbfFMGt2 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 13 Jun 2019 02:49:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d30so10353777pgm.7;
+        Wed, 12 Jun 2019 23:49:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EWV8HqUW5nD4lYeuHZCchPJIr3ycVzu67AOhwAlhylY=;
+        b=UZ49QdGgk8Z46G08bZVj8g4zlEmwOTCw5eYH79Um9ramjkPF+VPoyBr1iH01k1nb0P
+         9vGLR3Pxt5zVkizQfBUja/4BDlYiOjj/sbWqtHrcAR9UubtAEcHHu1qJ6VYcvQ/azQjK
+         SAcfSS4i0rlANIdbDIuxY/A6KmxoWtvdbKBeMJxA2HjKoAkr3C/x7z8LmuhrOxyzyK5w
+         h/QTjA/r0cK/Cje/sp4lXNccpAws5pWQBIdOK6/TW2jKIpiGu938LUnxCBBJqP28dR5a
+         Bs6NMm4XObmoj93mrT8mdGc2v6861OZZjLY/haXHgbAqbW4/n0+F3z+FMgynzFG7+cmP
+         BbPA==
+X-Gm-Message-State: APjAAAXuK4DaVyTx7ds2LHJk18H5WnKmN9JbNYXIrM0dPu9miBJAn/UO
+        31wtsU4Ni6YZLmmNOvzzzyw=
+X-Google-Smtp-Source: APXvYqw+K1atiiGJQgLV9SN1EyEIO2KJbWIsQQ3d5N7HeaIcjGnehk9lu87UMmJtEDHDqZuBy4rhjg==
+X-Received: by 2002:a17:90a:8a10:: with SMTP id w16mr3546662pjn.133.1560408567383;
+        Wed, 12 Jun 2019 23:49:27 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id i3sm1559973pfa.175.2019.06.12.23.49.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 23:49:26 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] hvsock: fix epollout hang from race condition
-Thread-Topic: [PATCH net] hvsock: fix epollout hang from race condition
-Thread-Index: AdUhY/kd1+XRZykcRS6vcxcYhC9DaQ==
-Date:   Wed, 12 Jun 2019 21:19:06 +0000
-Message-ID: <MW2PR2101MB11164C6EEAA5C511B395EF3AC0EC0@MW2PR2101MB1116.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sunilmut@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:b9f7:3762:5546:eb5f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a52cc49f-fb58-41af-31c4-08d6ef7b9a74
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MW2PR2101MB1082;
-x-ms-traffictypediagnostic: MW2PR2101MB1082:
-x-microsoft-antispam-prvs: <MW2PR2101MB1082519EC0CE513C4102926DC0EC0@MW2PR2101MB1082.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(346002)(39860400002)(376002)(189003)(199004)(7696005)(52396003)(305945005)(486006)(10290500003)(25786009)(4326008)(74316002)(8990500004)(68736007)(6506007)(81166006)(81156014)(5660300002)(14444005)(52536014)(256004)(476003)(8936002)(1511001)(8676002)(86362001)(7736002)(76116006)(186003)(33656002)(316002)(2906002)(6116002)(14454004)(66476007)(54906003)(102836004)(478600001)(66946007)(22452003)(73956011)(71190400001)(64756008)(66556008)(6636002)(71200400001)(53936002)(55016002)(10090500001)(6436002)(66446008)(110136005)(46003)(99286004)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1082;H:MW2PR2101MB1116.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7m+BQm0qVo7D2iK/jefGproTsjet7hKEs7YQ1iMJ7Vb7DYGuJR9XBw21ryJTiCoGpLdxIT4vk6xztis0BsP7m3v4ZrEOqXI6mhrkypH2Kd8lH+PrUp/X1hpAR4lLz0j9TK30Njb1y0jZGeD4+vvCyj/WNeWL28Cri7l+E3RkJIyurc9cLAN1T7KaFarqNnDQZCW7E0SzA5XcVokaWAVK5KHDvk+gckS+zqEvzkex4nYBRQltLdCbakAMQVokNrsdO9390W2isXoMLj+YqCgSP01vVZiXcmyVVCDKSKDco9LcKAgWKwaetPwHeYHsDIjIfojxg8EVhUHPbq9lrmHp5OsFasu5frvNHjiHZt3MO4xGoXd9LoZXQR62s50CwUxGp1wSKJsoIzKbtoDM/mQVSbCY2dFrLZ39XVTCn8QEgeg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
+Date:   Wed, 12 Jun 2019 23:48:08 -0700
+Message-Id: <20190613064813.8102-5-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190613064813.8102-1-namit@vmware.com>
+References: <20190613064813.8102-1-namit@vmware.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a52cc49f-fb58-41af-31c4-08d6ef7b9a74
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 21:19:06.9886
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1082
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Currently, hvsock can enter into a state where epoll_wait on EPOLLOUT will
-not return even when the hvsock socket is writable, under some race
-condition. This can happen under the following sequence:
-- fd =3D socket(hvsocket)
-- fd_out =3D dup(fd)
-- fd_in =3D dup(fd)
-- start a writer thread that writes data to fd_out with a combination of
-  epoll_wait(fd_out, EPOLLOUT) and
-- start a reader thread that reads data from fd_in with a combination of
-  epoll_wait(fd_in, EPOLLIN)
-- On the host, there are two threads that are reading/writing data to the
-  hvsocket
+To improve TLB shootdown performance, flush the remote and local TLBs
+concurrently. Introduce flush_tlb_multi() that does so. The current
+flush_tlb_others() interface is kept, since paravirtual interfaces need
+to be adapted first before it can be removed. This is left for future
+work. In such PV environments, TLB flushes are not performed, at this
+time, concurrently.
 
-stack:
-hvs_stream_has_space
-hvs_notify_poll_out
-vsock_poll
-sock_poll
-ep_poll
+Add a static key to tell whether this new interface is supported.
 
-Race condition:
-check for epollout from ep_poll():
-	assume no writable space in the socket
-	hvs_stream_has_space() returns 0
-check for epollin from ep_poll():
-	assume socket has some free space < HVS_PKT_LEN(HVS_SEND_BUF_SIZE)
-	hvs_stream_has_space() will clear the channel pending send size
-	host will not notify the guest because the pending send size has
-		been cleared and so the hvsocket will never mark the
-		socket writable
-
-Now, the EPOLLOUT will never return even if the socket write buffer is
-empty.
-
-The fix is to set the pending size to the default size and never change it.
-This way the host will always notify the guest whenever the writable space
-is bigger than the pending size. The host is already optimized to *only*
-notify the guest when the pending size threshold boundary is crossed and
-not everytime.
-
-This change also reduces the cpu usage somewhat since hv_stream_has_space()
-is in the hotpath of send:
-vsock_stream_sendmsg()->hv_stream_has_space()
-Earlier hv_stream_has_space was setting/clearing the pending size on every
-call.
-
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: kvm@vger.kernel.org
+Cc: xen-devel@lists.xenproject.org
+Signed-off-by: Nadav Amit <namit@vmware.com>
 ---
- net/vmw_vsock/hyperv_transport.c | 39 ++++++++----------------------------=
----
- 1 file changed, 8 insertions(+), 31 deletions(-)
+ arch/x86/hyperv/mmu.c                 |  2 +
+ arch/x86/include/asm/paravirt.h       |  8 +++
+ arch/x86/include/asm/paravirt_types.h |  6 +++
+ arch/x86/include/asm/tlbflush.h       |  6 +++
+ arch/x86/kernel/kvm.c                 |  1 +
+ arch/x86/kernel/paravirt.c            |  3 ++
+ arch/x86/mm/tlb.c                     | 71 ++++++++++++++++++++++-----
+ arch/x86/xen/mmu_pv.c                 |  2 +
+ 8 files changed, 87 insertions(+), 12 deletions(-)
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index 982a8dc..8d1ea9e 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -220,18 +220,6 @@ static void hvs_set_channel_pending_send_size(struct v=
-mbus_channel *chan)
- 	set_channel_pending_send_size(chan,
- 				      HVS_PKT_LEN(HVS_SEND_BUF_SIZE));
-=20
--	/* See hvs_stream_has_space(): we must make sure the host has seen
--	 * the new pending send size, before we can re-check the writable
--	 * bytes.
--	 */
--	virt_mb();
--}
--
--static void hvs_clear_channel_pending_send_size(struct vmbus_channel *chan=
-)
--{
--	set_channel_pending_send_size(chan, 0);
--
--	/* Ditto */
- 	virt_mb();
- }
-=20
-@@ -301,9 +289,6 @@ static void hvs_channel_cb(void *ctx)
- 	if (hvs_channel_readable(chan))
- 		sk->sk_data_ready(sk);
-=20
--	/* See hvs_stream_has_space(): when we reach here, the writable bytes
--	 * may be already less than HVS_PKT_LEN(HVS_SEND_BUF_SIZE).
--	 */
- 	if (hv_get_bytes_to_write(&chan->outbound) > 0)
- 		sk->sk_write_space(sk);
- }
-@@ -404,6 +389,13 @@ static void hvs_open_connection(struct vmbus_channel *=
-chan)
- 	set_per_channel_state(chan, conn_from_host ? new : sk);
- 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
-=20
-+	/* Set the pending send size to max packet size to always get
-+	 * notifications from the host when there is enough writable space.
-+	 * The host is optimized to send notifications only when the pending
-+	 * size boundary is crossed, and not always.
-+	 */
-+	hvs_set_channel_pending_send_size(chan);
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index e65d7fe6489f..ca28b400c87c 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -233,4 +233,6 @@ void hyperv_setup_mmu_ops(void)
+ 	pr_info("Using hypercall for remote TLB flush\n");
+ 	pv_ops.mmu.flush_tlb_others = hyperv_flush_tlb_others;
+ 	pv_ops.mmu.tlb_remove_table = tlb_remove_table;
 +
- 	if (conn_from_host) {
- 		new->sk_state =3D TCP_ESTABLISHED;
- 		sk->sk_ack_backlog++;
-@@ -697,23 +689,8 @@ static s64 hvs_stream_has_data(struct vsock_sock *vsk)
- static s64 hvs_stream_has_space(struct vsock_sock *vsk)
- {
- 	struct hvsock *hvs =3D vsk->trans;
--	struct vmbus_channel *chan =3D hvs->chan;
--	s64 ret;
--
--	ret =3D hvs_channel_writable_bytes(chan);
--	if (ret > 0)  {
--		hvs_clear_channel_pending_send_size(chan);
--	} else {
--		/* See hvs_channel_cb() */
--		hvs_set_channel_pending_send_size(chan);
--
--		/* Re-check the writable bytes to avoid race */
--		ret =3D hvs_channel_writable_bytes(chan);
--		if (ret > 0)
--			hvs_clear_channel_pending_send_size(chan);
--	}
-=20
--	return ret;
-+	return hvs_channel_writable_bytes(hvs->chan);
++	static_key_disable(&flush_tlb_multi_enabled.key);
  }
-=20
- static u64 hvs_stream_rcvhiwat(struct vsock_sock *vsk)
---=20
-2.7.4
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index c25c38a05c1c..192be7254457 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -47,6 +47,8 @@ static inline void slow_down_io(void)
+ #endif
+ }
+ 
++DECLARE_STATIC_KEY_TRUE(flush_tlb_multi_enabled);
++
+ static inline void __flush_tlb(void)
+ {
+ 	PVOP_VCALL0(mmu.flush_tlb_user);
+@@ -62,6 +64,12 @@ static inline void __flush_tlb_one_user(unsigned long addr)
+ 	PVOP_VCALL1(mmu.flush_tlb_one_user, addr);
+ }
+ 
++static inline void flush_tlb_multi(const struct cpumask *cpumask,
++				   const struct flush_tlb_info *info)
++{
++	PVOP_VCALL2(mmu.flush_tlb_multi, cpumask, info);
++}
++
+ static inline void flush_tlb_others(const struct cpumask *cpumask,
+ 				    const struct flush_tlb_info *info)
+ {
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index 946f8f1f1efc..b93b3d90729a 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -211,6 +211,12 @@ struct pv_mmu_ops {
+ 	void (*flush_tlb_user)(void);
+ 	void (*flush_tlb_kernel)(void);
+ 	void (*flush_tlb_one_user)(unsigned long addr);
++	/*
++	 * flush_tlb_multi() is the preferred interface, which is capable to
++	 * flush both local and remote CPUs.
++	 */
++	void (*flush_tlb_multi)(const struct cpumask *cpus,
++				const struct flush_tlb_info *info);
+ 	void (*flush_tlb_others)(const struct cpumask *cpus,
+ 				 const struct flush_tlb_info *info);
+ 
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index dee375831962..79272938cf79 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -569,6 +569,9 @@ static inline void flush_tlb_page(struct vm_area_struct *vma, unsigned long a)
+ 	flush_tlb_mm_range(vma->vm_mm, a, a + PAGE_SIZE, PAGE_SHIFT, false);
+ }
+ 
++void native_flush_tlb_multi(const struct cpumask *cpumask,
++			     const struct flush_tlb_info *info);
++
+ void native_flush_tlb_others(const struct cpumask *cpumask,
+ 			     const struct flush_tlb_info *info);
+ 
+@@ -593,6 +596,9 @@ static inline void arch_tlbbatch_add_mm(struct arch_tlbflush_unmap_batch *batch,
+ extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+ 
+ #ifndef CONFIG_PARAVIRT
++#define flush_tlb_multi(mask, info)	\
++	native_flush_tlb_multi(mask, info)
++
+ #define flush_tlb_others(mask, info)	\
+ 	native_flush_tlb_others(mask, info)
+ 
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 5169b8cc35bb..00d81e898717 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -630,6 +630,7 @@ static void __init kvm_guest_init(void)
+ 	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+ 		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+ 		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
++		static_key_disable(&flush_tlb_multi_enabled.key);
+ 	}
+ 
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 98039d7fb998..ac00afed5570 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -159,6 +159,8 @@ unsigned paravirt_patch_insns(void *insn_buff, unsigned len,
+ 	return insn_len;
+ }
+ 
++DEFINE_STATIC_KEY_TRUE(flush_tlb_multi_enabled);
++
+ static void native_flush_tlb(void)
+ {
+ 	__native_flush_tlb();
+@@ -363,6 +365,7 @@ struct paravirt_patch_template pv_ops = {
+ 	.mmu.flush_tlb_user	= native_flush_tlb,
+ 	.mmu.flush_tlb_kernel	= native_flush_tlb_global,
+ 	.mmu.flush_tlb_one_user	= native_flush_tlb_one_user,
++	.mmu.flush_tlb_multi	= native_flush_tlb_multi,
+ 	.mmu.flush_tlb_others	= native_flush_tlb_others,
+ 	.mmu.tlb_remove_table	=
+ 			(void (*)(struct mmu_gather *, void *))tlb_remove_page,
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index c34bcf03f06f..db73d5f1dd43 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -551,7 +551,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
+ 		 * garbage into our TLB.  Since switching to init_mm is barely
+ 		 * slower than a minimal flush, just switch to init_mm.
+ 		 *
+-		 * This should be rare, with native_flush_tlb_others skipping
++		 * This should be rare, with native_flush_tlb_multi skipping
+ 		 * IPIs to lazy TLB mode CPUs.
+ 		 */
+ 		switch_mm_irqs_off(NULL, &init_mm, NULL);
+@@ -635,9 +635,12 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
+ 	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
+ }
+ 
+-static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
++static void flush_tlb_func_local(void *info)
+ {
+ 	const struct flush_tlb_info *f = info;
++	enum tlb_flush_reason reason;
++
++	reason = (f->mm == NULL) ? TLB_LOCAL_SHOOTDOWN : TLB_LOCAL_MM_SHOOTDOWN;
+ 
+ 	flush_tlb_func_common(f, true, reason);
+ }
+@@ -655,14 +658,21 @@ static void flush_tlb_func_remote(void *info)
+ 	flush_tlb_func_common(f, false, TLB_REMOTE_SHOOTDOWN);
+ }
+ 
+-static bool tlb_is_not_lazy(int cpu, void *data)
++static inline bool tlb_is_not_lazy(int cpu)
+ {
+ 	return !per_cpu(cpu_tlbstate.is_lazy, cpu);
+ }
+ 
+-void native_flush_tlb_others(const struct cpumask *cpumask,
+-			     const struct flush_tlb_info *info)
++static DEFINE_PER_CPU(cpumask_t, flush_tlb_mask);
++
++void native_flush_tlb_multi(const struct cpumask *cpumask,
++			    const struct flush_tlb_info *info)
+ {
++	/*
++	 * Do accounting and tracing. Note that there are (and have always been)
++	 * cases in which a remote TLB flush will be traced, but eventually
++	 * would not happen.
++	 */
+ 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
+ 	if (info->end == TLB_FLUSH_ALL)
+ 		trace_tlb_flush(TLB_REMOTE_SEND_IPI, TLB_FLUSH_ALL);
+@@ -682,10 +692,14 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
+ 		 * means that the percpu tlb_gen variables won't be updated
+ 		 * and we'll do pointless flushes on future context switches.
+ 		 *
+-		 * Rather than hooking native_flush_tlb_others() here, I think
++		 * Rather than hooking native_flush_tlb_multi() here, I think
+ 		 * that UV should be updated so that smp_call_function_many(),
+ 		 * etc, are optimal on UV.
+ 		 */
++		local_irq_disable();
++		flush_tlb_func_local((__force void *)info);
++		local_irq_enable();
++
+ 		cpumask = uv_flush_tlb_others(cpumask, info);
+ 		if (cpumask)
+ 			smp_call_function_many(cpumask, flush_tlb_func_remote,
+@@ -704,11 +718,39 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
+ 	 * doing a speculative memory access.
+ 	 */
+ 	if (info->freed_tables)
+-		smp_call_function_many(cpumask, flush_tlb_func_remote,
+-			       (void *)info, 1);
+-	else
+-		on_each_cpu_cond_mask(tlb_is_not_lazy, flush_tlb_func_remote,
+-				(void *)info, 1, GFP_ATOMIC, cpumask);
++		__smp_call_function_many(cpumask, flush_tlb_func_remote,
++					 flush_tlb_func_local, (void *)info, 1);
++	else {
++		/*
++		 * Although we could have used on_each_cpu_cond_mask(),
++		 * open-coding it has several performance advantages: (1) we can
++		 * use specialized functions for remote and local flushes; (2)
++		 * no need for indirect branch to test if TLB is lazy; (3) we
++		 * can use a designated cpumask for evaluating the condition
++		 * instead of allocating a new one.
++		 *
++		 * This works under the assumption that there are no nested TLB
++		 * flushes, an assumption that is already made in
++		 * flush_tlb_mm_range().
++		 */
++		struct cpumask *cond_cpumask = this_cpu_ptr(&flush_tlb_mask);
++		int cpu;
++
++		cpumask_clear(cond_cpumask);
++
++		for_each_cpu(cpu, cpumask) {
++			if (tlb_is_not_lazy(cpu))
++				__cpumask_set_cpu(cpu, cond_cpumask);
++		}
++		__smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
++					 flush_tlb_func_local, (void *)info, 1);
++	}
++}
++
++void native_flush_tlb_others(const struct cpumask *cpumask,
++			     const struct flush_tlb_info *info)
++{
++	native_flush_tlb_multi(cpumask, info);
+ }
+ 
+ /*
+@@ -774,10 +816,15 @@ static void flush_tlb_on_cpus(const cpumask_t *cpumask,
+ {
+ 	int this_cpu = smp_processor_id();
+ 
++	if (static_branch_likely(&flush_tlb_multi_enabled)) {
++		flush_tlb_multi(cpumask, info);
++		return;
++	}
++
+ 	if (cpumask_test_cpu(this_cpu, cpumask)) {
+ 		lockdep_assert_irqs_enabled();
+ 		local_irq_disable();
+-		flush_tlb_func_local(info, TLB_LOCAL_MM_SHOOTDOWN);
++		flush_tlb_func_local((__force void *)info);
+ 		local_irq_enable();
+ 	}
+ 
+diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+index beb44e22afdf..0cb277848cb4 100644
+--- a/arch/x86/xen/mmu_pv.c
++++ b/arch/x86/xen/mmu_pv.c
+@@ -2474,6 +2474,8 @@ void __init xen_init_mmu_ops(void)
+ 
+ 	pv_ops.mmu = xen_mmu_ops;
+ 
++	static_key_disable(&flush_tlb_multi_enabled.key);
++
+ 	memset(dummy_mapping, 0xff, PAGE_SIZE);
+ }
+ 
+-- 
+2.20.1
+
