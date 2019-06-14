@@ -2,122 +2,160 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B9D46C62
-	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Jun 2019 00:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A5546CAA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Jun 2019 01:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfFNWdY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Jun 2019 18:33:24 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:44554 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfFNWdX (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Jun 2019 18:33:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rhGH8vXrbfkTpqfy9SG7tV3FRuGTSRoQ0FXi9YN+f4E=; b=ijB5goFFdS+erFs2GYvxqE7Iv
-        oSwFh7xFBAsh9tpJyjt2A7G2wU5AVJnwvUd84S2unF9MbSZi5foK2S3PEREOFfgym9J3u4dn9bPQi
-        MWso1gcq4O2HW7lIgeuk/nyVJke55kSSlWJGzCZCTpd6nyjtv473J8/6rrLQjDg0Wj2pxy3SS33Ee
-        4GQ+IlMnDM2325lUhbweMDAjaoVT6vP0LSOsXm5mA2GSCRPqwsuA1+c9aN9TbP1T7/nJbx+4IN0qW
-        ZdQFKiyS7xfJ04RmJSrWxG/r+Q/uGbHTnjmOPl/5iQf71qutrsDgxhibUlkZSaT5MPo0ynMy9R5pq
-        cMYSw9lyA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38712)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hbul4-0004DD-OZ; Fri, 14 Jun 2019 23:33:18 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hbukw-0002YP-RD; Fri, 14 Jun 2019 23:33:10 +0100
-Date:   Fri, 14 Jun 2019 23:33:10 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
-        Russ Dill <Russ.Dill@ti.com>,
-        Sebastian Capella <sebastian.capella@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1726218AbfFNXIu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 Jun 2019 19:08:50 -0400
+Received: from mail-eopbgr1310123.outbound.protection.outlook.com ([40.107.131.123]:8811
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726046AbfFNXIt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 14 Jun 2019 19:08:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=XP+j5GVgIH+zJhyFAoP1pdYT9x6lAJlcl12CiXdzoaJqeWU2FKl/hJDYgF7SEpJy5GCvQIdG07L9RmUuZMca354x/BUArIb/2figIp2KBntghO3b2SMOS0/CiNx1/D5JxiUXulRDb+Y9XhuSO5nPLAEuN5Ydi4AP3uT8q0KTtYo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=91wbSZpcH4jJO/PNEpkaEwEBqSaSTl1O6E4KDK41f6o=;
+ b=k3JgwAheQPzMNgGTr3suWE/WBbQDhpYrYUcdtEb2QQg50tiWbiGdbc8c/4IsqEU5y0IkxvyfyyIUv4JAzv1cDvGq3xxI+r1AocjpDTXP7vpSsey+I3n6AHGlsJ28tcaUDa0wsmObXfotH4kBdCxSRdwqlRxLl/YuX995s/viqD0=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=91wbSZpcH4jJO/PNEpkaEwEBqSaSTl1O6E4KDK41f6o=;
+ b=RGPCGstrK2W8pfK6H+awLzH8CxxSj/2ER7841WsyfiXin1jQpBw6eMlejPQHh0+gOOy2EHSg5HpPs+ubaEPh7uG0MLQNWeNVNypJ3oLfbR9j3XCOtTwwXLtrm1hVvOCYsvy8RwEFssOvoeQn+EHd2OCksfbkkXKQjuh3OyIv2Vg=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0137.APCP153.PROD.OUTLOOK.COM (10.170.188.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.0; Fri, 14 Jun 2019 23:08:40 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d896:4219:e493:b04%4]) with mapi id 15.20.2008.007; Fri, 14 Jun 2019
+ 23:08:40 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
         Sasha Levin <Alexander.Levin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+CC:     "olaf@aepfle.de" <olaf@aepfle.de>,
         "apw@canonical.com" <apw@canonical.com>,
         "jasowang@redhat.com" <jasowang@redhat.com>,
         vkuznets <vkuznets@redhat.com>,
         "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: Re: [PATCH] ACPI: PM: Export the function
- acpi_sleep_state_supported()
-Message-ID: <20190614223310.pwwoefu5qdvcuaiy@shell.armlinux.org.uk>
-References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
- <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
- <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Subject: RE: [PATCH 2/2] hv_balloon: Reorganize the probe function
+Thread-Topic: [PATCH 2/2] hv_balloon: Reorganize the probe function
+Thread-Index: AQHVIuDsvIeorl+TakinvZrlEfDGAKabr1KwgAAKBOA=
+Date:   Fri, 14 Jun 2019 23:08:39 +0000
+Message-ID: <PU1P153MB01699145D8BDE54ABAFF7EF5BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1560537692-37400-1-git-send-email-decui@microsoft.com>
+ <1560537692-37400-2-git-send-email-decui@microsoft.com>
+ <BL0PR2101MB13487B8D2A157AA7FCFD159DD7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+In-Reply-To: <BL0PR2101MB13487B8D2A157AA7FCFD159DD7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-14T21:56:21.9387171Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fb391304-eed6-45c4-a296-25ce2c9f2395;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:f:a444:4515:ca58:8eeb]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c41acfa3-7831-4ea5-ebdd-08d6f11d3d41
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0137;
+x-ms-traffictypediagnostic: PU1P153MB0137:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB01370D5D8161BAE1F346D579BFEE0@PU1P153MB0137.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(39860400002)(346002)(376002)(189003)(199004)(99286004)(11346002)(2201001)(102836004)(76176011)(110136005)(6506007)(256004)(7696005)(7736002)(54906003)(1511001)(6116002)(14444005)(2906002)(33656002)(486006)(476003)(446003)(8676002)(186003)(316002)(5660300002)(81156014)(81166006)(74316002)(71200400001)(86362001)(71190400001)(305945005)(22452003)(8936002)(6636002)(46003)(6436002)(4326008)(478600001)(8990500004)(68736007)(64756008)(52536014)(66556008)(10290500003)(229853002)(55016002)(14454004)(73956011)(66946007)(2501003)(6246003)(53936002)(76116006)(10090500001)(66446008)(9686003)(66476007)(25786009)(266184004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0137;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RN7amEHCUz8TeK7su7SZ3yebrd48I9J+If1XkRDqsVwQkiNbgOvUrKlETC+TvfzyQvq9ba40Fwu/b5tQ63ojMv/IPJm9J0y17vlMSYjF1TT1OYAjxil+g+01wsbG6ev1+3OtHz5fp0WWRBmEr8lYeTGp85MUElklxH87bxn8eDIgoWBHfLLOtl/ZXbWFVkw9D06M3sZpwp0fbFRZMz1dYirVNyVxcJUgGXY78Or0mDxNj/yFiqAQPZT+kVPTp7s/IgaIh1+j2kdgRbElgS961JLk7gLZqdIqLvjeuaqcSW6BpjWCaodzME5ZxFWb14+9gaapJ0K2I/+pvW9IT4+hypFJzo/Pzm3FxbA6v753AxQAMVpT1A20OPkzbeQ+eh2q8BUIDtzSYG1q1vsXA8q1eMSO0Qr8RnQU14kQNiX8WUE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c41acfa3-7831-4ea5-ebdd-08d6f11d3d41
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 23:08:39.9642
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0137
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
-
-On Fri, Jun 14, 2019 at 10:19:02PM +0000, Dexuan Cui wrote:
-> > -----Original Message-----
-> > From: Michael Kelley <mikelley@microsoft.com>
-> > Sent: Friday, June 14, 2019 1:48 PM
-> > To: Dexuan Cui <decui@microsoft.com>; linux-acpi@vger.kernel.org;
-> > rjw@rjwysocki.net; lenb@kernel.org; robert.moore@intel.com;
-> > erik.schmauss@intel.com
-> > Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; KY Srinivasan
-> > <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> > Haiyang Zhang <haiyangz@microsoft.com>; Sasha Levin
-> > <Alexander.Levin@microsoft.com>; olaf@aepfle.de; apw@canonical.com;
-> > jasowang@redhat.com; vkuznets <vkuznets@redhat.com>;
-> > marcelo.cerri@canonical.com
-> > Subject: RE: [PATCH] ACPI: PM: Export the function
-> > acpi_sleep_state_supported()
-> > 
-> > It seems that sleep.c isn't built when on the ARM64 architecture.  Using
-> > acpi_sleep_state_supported() directly in hv_balloon.c will be problematic
-> > since hv_balloon.c needs to be architecture independent when the
-> > Hyper-V ARM64 support is added.  If that doesn't change, a per-architecture
-> > wrapper will be needed to give hv_balloon.c the correct information.  This
-> > may affect whether acpi_sleep_state_supported() needs to be exported vs.
-> > just removing the "static".   I'm not sure what the best approach is.
-> > 
-> > Michael
-> 
-> + some ARM experts who worked on arch/arm/kernel/hibernate.c.
-> 
-> drivers/acpi/sleep.c is only built if ACPI_SYSTEM_POWER_STATES_SUPPORT
-> is defined, but it looks this option is not defined on ARM.
-> 
-> It looks ARM does not support the ACPI S4 state, then how do we know 
-> if an ARM host supports hibernation or not?
-
-Don't forget that Linux does not support ACPI on 32-bit ARM, which is
-quite different from the situation on 64-bit ARM.
-
-arch/arm/kernel/hibernate.c is only for 32-bit ARM, and is written with
-the assumption that there is no interaction required with any firmware
-to save state, and later restore state upon resuming.
-
-Or am I missing something?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+PiBGcm9tOiBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4NCj4gU2VudDog
+RnJpZGF5LCBKdW5lIDE0LCAyMDE5IDI6NTYgUE0NCj4gPiAuLi4NCj4gPiArCXJldCA9IGJhbGxv
+b25fY29ubmVjdF92c3AoZGV2KTsNCj4gPiArCWlmIChyZXQgIT0gMCkNCj4gPiArCQlyZXR1cm4g
+cmV0Ow0KPiA+ICsNCj4gPiAgCWRtX2RldmljZS5zdGF0ZSA9IERNX0lOSVRJQUxJWkVEOw0KPiA+
+IC0JbGFzdF9wb3N0X3RpbWUgPSBqaWZmaWVzOw0KPiANCj4gSSB3YXMgY3VyaW91cyBhYm91dCB0
+aGUgYWJvdmUgZGVsZXRpb24uICBCdXQgSSBndWVzcyB0aGUgbGluZQ0KPiBpcyBub3QgbmVlZGVk
+IGFzIHRoZSB0aW1lX2FmdGVyKCkgY2hlY2sgaW4gcG9zdF9zdGF0dXMoKSBzaG91bGQNCj4gaGFu
+ZGxlIGFuIGluaXRpYWwgdmFsdWUgb2YgMCBmb3IgbGFzdF9wb3N0X3RpbWUganVzdCBmaW5lLg0K
+DQpJbiBhIDMyLWJpdCBrZXJuZWwsIHNpemVvZih1bnNpZ25lZCBsb25nKSBpcyA0LCBhbmQgdGhl
+IGdsb2JhbCAzMi1iaXQNCnZhcmlsYWJsZSAiamlmZmllcyIgY2FuIG92ZXJmbG93IGluIDQ5Ljcg
+ZGF5cyBpZiBIWiBpcyBkZWZpbmVkIGFzIDEwMDA7DQpzbyBpbiB0aGVvcnkgdGhlcmUgaXMgYSB0
+aW55IGNoYW5jZSB0aW1lX2FmdGVyKCkgY2FuIG5vdCB3b3JrIGFzDQpleHBlY3RlZCBoZXJlIChp
+LmUuIHdlJ3JlIGxvYWRpbmcgaHZfYmFsbG9vbiBkcml2ZXIgd2hlbiB0aGUNCiJqaWZmaWVzIiBp
+cyBqdXN0IGFib3V0IHRvIG92ZXJmbG93LCB3aGljaCBpcyBoaWdobHkgdW5saWtlbHkgaW4gcHJh
+Y3RpY2UpOw0KZXZlbiBpZiB0aGF0IGhhcHBlbnMsIHdlIGRvIG5vdCBjYXJlLCBzaW5jZSB0aGUg
+Y29uc2VxdWVuY2UgaXMNCmp1c3QgdGhhdCB0aGUgbWVtb3J5IHByZXNzdXJlIHJlcG9ydGluZyBp
+cyBkZWxheWVkIGJ5IDEgc2Vjb25kLiA6LSkNCg0KPiA+ICsNCj4gPiArCWRtX2RldmljZS50aHJl
+YWQgPQ0KPiA+ICsJCSBrdGhyZWFkX3J1bihkbV90aHJlYWRfZnVuYywgJmRtX2RldmljZSwgImh2
+X2JhbGxvb24iKTsNCj4gPiArCWlmIChJU19FUlIoZG1fZGV2aWNlLnRocmVhZCkpIHsNCj4gPiAr
+CQlyZXQgPSBQVFJfRVJSKGRtX2RldmljZS50aHJlYWQpOw0KPiA+ICsJCWdvdG8gcHJvYmVfZXJy
+b3I7DQo+ID4gKwl9DQo+IA0KPiBKdXN0IGFuIG9ic2VydmF0aW9uOiAgdGhpcyB0aHJlYWQgY3Jl
+YXRpb24gbm93IGhhcHBlbnMgYXQgdGhlIGVuZCBvZiB0aGUNCj4gcHJvYmluZyBwcm9jZXNzLiAg
+QnV0IHRoYXQncyBnb29kLCBiZWNhdXNlIGluIHRoZSBvbGQgY29kZSwgdGhlIHRocmVhZA0KPiB3
+YXMgc3RhcnRlZCBhbmQgY291bGQgcnVuIGJlZm9yZSB0aGUgcHJvdG9jb2wgdmVyc2lvbiBoYWQg
+YmVlbg0KPiBuZWdvdGlhdGVkLiAgU28gSSdsbCBhc3N1bWUgeW91ciBjaGFuZ2UgaGVyZSBpcyBp
+bnRlbnRpb25hbC4NCg0KWWVzLCB0aGlzIGlzIGludGVudGlvbmFsLg0KIA0KPiA+DQo+ID4gIAly
+ZXR1cm4gMDsNCj4gPg0KPiA+IC1wcm9iZV9lcnJvcjI6DQo+ID4gK3Byb2JlX2Vycm9yOg0KPiA+
+ICsJdm1idXNfY2xvc2UoZGV2LT5jaGFubmVsKTsNCj4gPiAgI2lmZGVmIENPTkZJR19NRU1PUllf
+SE9UUExVRw0KPiA+ICsJdW5yZWdpc3Rlcl9tZW1vcnlfbm90aWZpZXIoJmh2X21lbW9yeV9uYik7
+DQo+IA0KPiBIbW1tLiBFdmlkZW50bHkgdGhlIGFib3ZlIGNsZWFudXAgd2FzIG1pc3NpbmcgaW4g
+dGhlDQo+IG9sZCBjb2RlLg0KDQpZZXMuDQogDQo+ID4gIAlyZXN0b3JlX29ubGluZV9wYWdlX2Nh
+bGxiYWNrKCZodl9vbmxpbmVfcGFnZSk7DQo+ID4gICNlbmRpZg0KPiA+IC0Ja3RocmVhZF9zdG9w
+KGRtX2RldmljZS50aHJlYWQpOw0KPiA+IC0NCj4gPiAtcHJvYmVfZXJyb3IxOg0KPiA+IC0Jdm1i
+dXNfY2xvc2UoZGV2LT5jaGFubmVsKTsNCj4gPiAgCXJldHVybiByZXQ7DQo+ID4gIH0NCj4gPg0K
+PiA+IEBAIC0xNzM0LDExICsxNzQyLDExIEBAIHN0YXRpYyBpbnQgYmFsbG9vbl9yZW1vdmUoc3Ry
+dWN0IGh2X2RldmljZQ0KPiAqZGV2KQ0KPiA+ICAJY2FuY2VsX3dvcmtfc3luYygmZG0tPmJhbGxv
+b25fd3JrLndyayk7DQo+ID4gIAljYW5jZWxfd29ya19zeW5jKCZkbS0+aGFfd3JrLndyayk7DQo+
+ID4NCj4gPiAtCXZtYnVzX2Nsb3NlKGRldi0+Y2hhbm5lbCk7DQo+ID4gIAlrdGhyZWFkX3N0b3Ao
+ZG0tPnRocmVhZCk7DQo+ID4gKwl2bWJ1c19jbG9zZShkZXYtPmNoYW5uZWwpOw0KPiANCj4gUHJl
+c3VtYWJseSB0aGlzIGlzIGFuIGludGVudGlvbmFsIG9yZGVyaW5nIGNoYW5nZSBhcyB3ZWxsLg0K
+PiBUaGUga3RocmVhZCBzaG91bGQgYmUgc3RvcHBlZCBiZWZvcmUgY2xvc2luZyB0aGUgY2hhbm5l
+bC4NCg0KWWVzLiBUaGUgb2xkIGNvZGUgaXMgYnVnZ3k6IGFmdGVyIHRoZSB2bWJ1c19jbG9zZSgp
+LCB0aGVyZSBpcw0KYSBzbWFsbCB3aW5kb3cgaW4gd2hpY2ggdGhlIG9sZCBjb2RlIGNhbiBzdGls
+bCB0cnkgdG8gc2VuZA0KbWVzc2FnZXMgdG8gdGhlIGhvc3QgdmlhIGEgZnJlZWQgcmluZ2J1ZmZl
+ciwgY2F1c2luZyBwYW5pYy4NCiANCj4gPiAgI2lmZGVmIENPTkZJR19NRU1PUllfSE9UUExVRw0K
+PiA+IC0JcmVzdG9yZV9vbmxpbmVfcGFnZV9jYWxsYmFjaygmaHZfb25saW5lX3BhZ2UpOw0KPiA+
+ICAJdW5yZWdpc3Rlcl9tZW1vcnlfbm90aWZpZXIoJmh2X21lbW9yeV9uYik7DQo+ID4gKwlyZXN0
+b3JlX29ubGluZV9wYWdlX2NhbGxiYWNrKCZodl9vbmxpbmVfcGFnZSk7DQo+IA0KPiBBbmQgeW91
+J3ZlIGNoYW5nZWQgdGhlIG9yZGVyaW5nIG9mIHRoZXNlIHN0ZXBzIHNvIHRoZXkgYXJlDQo+IHRo
+ZSBpbnZlcnNlIG9mIHdoZW4gdGhleSBhcmUgc2V0IHVwLiAgQWxzbyBhIGdvb2QgY2xlYW51cCAu
+Li4uDQoNClllcy4gVGhlIGNoYW5nZSBpcyBub3QgcmVhbGx5IG5lY2Vzc2FyeSwgYnV0IGxldCdz
+IGp1c3QgZG8gaXQNCmluIGEgYmV0dGVyIG1hbm5lci4NCiANCj4gDQo+IFJldmlld2VkLWJ5OiBN
+aWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4NCg0KVGhha3MgZm9yIHRoZSBk
+ZXRhaWxlZCBjb21tZW50cyENCg0KVGhhbmtzLA0KLS0gRGV4dWFuDQo=
