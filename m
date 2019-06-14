@@ -2,36 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4B5245CCA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Jun 2019 14:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C69C460B6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Jun 2019 16:28:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfFNM1i (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Jun 2019 08:27:38 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38294 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727575AbfFNM1h (ORCPT
+        id S1728486AbfFNO2l (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 Jun 2019 10:28:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38613 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728074AbfFNO2l (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:27:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QxUKDdY2dKpoYGcE4+TvUL/5FWjEOYf2V7NOvYst/OY=; b=Jhve8YJcuersR0vM8sELxrHaP
-        GfdkAw8sRhMjj2lQASFIotkwAlHdA0Aacss9m4SyklG6PGhfdT11lREyD7IoOZ/Rbwd7jvU7RSL2I
-        NwSxQ4Vj/txHuukYGmgNxwTRvqPpX3fo8CWcTSwSwdSxceji+sxS8N6ybSVSv9qcP8cBViYJkgX/a
-        cn4yquF7ua1eLa48mNq+b8CTEH+EibrtV63t1nMVgdKA6jHmCyv2DXNpE7If8uZSnJK7aDRHyLGi6
-        AQdSMsmihP2b3AFGHWK6RgtDeolehY1tN4w4k04Hwj2rWXSyP+dKejiQNCWL+NJtJo5TXX8UBElGk
-        U8/wu12Tg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hblIm-0007fe-0U; Fri, 14 Jun 2019 12:27:28 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C62FC2040DE62; Fri, 14 Jun 2019 14:27:26 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 14:27:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Safonov <dima@arista.com>
+        Fri, 14 Jun 2019 10:28:41 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s15so2547016wmj.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 14 Jun 2019 07:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gJhQ1swIhwsziMzQ39z2HtlgHPGl8G/dIf/ljZ3Elzc=;
+        b=NzGe0lBZPlBdzTofmXIqrp22eBCKs83VYeCnTK1eLSFKeAtWNjdsyZ2C+eNgP34v6z
+         egu+yF4BKK1a/sX3NPASmkynDghdKukYbeAAArjve9Vm9PVY37mF1MlfL6i7cnC4S/jk
+         0jlTWuGX3rjIy7t9ZjO+eB1yi8wAYgeGDeHIDst0kFOxPIx1gWQC3mqbmK/Z0JzH8lOh
+         15Q/Ju47sxgD5mGMCu2/Jq0peO7YPgQHySPoTjD3MDzwE8D6Ab+JiHN4+eYCfR9qeC1z
+         ou79yxXjD2bH/FKleRdybm5V1f34MAS6rLu1cvz+J6VpQVOpJ7u3D0PYOLlSoNPlkZpK
+         Dp0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gJhQ1swIhwsziMzQ39z2HtlgHPGl8G/dIf/ljZ3Elzc=;
+        b=bcUVUOHs21Xz2sd3GBArLOyPHTx9Gk6TkQUcVk/lAVaWtOpMo1lijQsoMGEDPRQg7b
+         Eb53Yebui3cR/8vvpYxPIN/sgJaa8MZzszTO2dcztI0dlP+b3w5ZGDLSMpgop3f1DFy6
+         QZMY01H7o+DYXu+Ej7csVbWi6pivVJbtckqvy6cwDL3ebSPC4ja0ODJ0s32Ri3xth8gz
+         a7t/FhJ+GUS7jRjskPZln2pWUjPleVcCcjV7NKJfdPq+QvfdNH/a+sq4RixMLTHvbuRt
+         xDrnv63tDvjOGfMVLH9uf7LtP4RMpK3TFNOv/rVZLFDtHNYBqwD66oNPkNySUTsV+e4x
+         hVaw==
+X-Gm-Message-State: APjAAAXnbq3ofC0q4MX3jrpAN94n4Kitg3VyIRZOpCU+0yvx3DhD20O/
+        XxkF2X/mWUGqjBjiJol6NicJsQ==
+X-Google-Smtp-Source: APXvYqzSaBn/LW5PNl3Fw68CoiWJ8zHyUfbFM0QEo1S/tMx9V8OOACrj70RsjtKYpezFPjq9p2+eYw==
+X-Received: by 2002:a1c:208c:: with SMTP id g134mr8349611wmg.112.1560522519747;
+        Fri, 14 Jun 2019 07:28:39 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id f2sm4990720wrq.48.2019.06.14.07.28.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 07:28:38 -0700 (PDT)
+Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting
+ reenlightenment vector
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         linux-kernel@vger.kernel.org,
         Prasanna Panchamukhi <panchamukhi@arista.com>,
@@ -44,69 +61,83 @@ Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
         Mohammed Gamal <mmorsy@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
         Roman Kagan <rkagan@virtuozzo.com>,
         Sasha Levin <sashal@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         devel@linuxdriverproject.org, kvm@vger.kernel.org,
         linux-hyperv@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting
- reenlightenment vector
-Message-ID: <20190614122726.GL3436@hirez.programming.kicks-ass.net>
 References: <20190611212003.26382-1-dima@arista.com>
  <8736kff6q3.fsf@vitty.brq.redhat.com>
  <20190614082807.GV3436@hirez.programming.kicks-ass.net>
  <877e9o7a4e.fsf@vitty.brq.redhat.com>
  <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
+ <20190614122726.GL3436@hirez.programming.kicks-ass.net>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <d0ea735e-487e-8205-9415-8708a686ede9@arista.com>
+Date:   Fri, 14 Jun 2019 15:28:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190614122726.GL3436@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:50:51PM +0100, Dmitry Safonov wrote:
-> On 6/14/19 11:08 AM, Vitaly Kuznetsov wrote:
-> > Peter Zijlstra <peterz@infradead.org> writes:
-> > 
-> >> @@ -182,7 +182,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
-> >>  	struct hv_reenlightenment_control re_ctrl = {
-> >>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
-> >>  		.enabled = 1,
-> >> -		.target_vp = hv_vp_index[smp_processor_id()]
-> >> +		.target_vp = hv_vp_index[raw_smp_processor_id()]
-> >>  	};
-> >>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
-> >>  
-> > 
-> > Yes, this should do, thanks! I'd also suggest to leave a comment like
-> > 	/* 
-> >          * This function can get preemted and migrate to a different CPU
-> > 	 * but this doesn't matter. We just need to assign
-> > 	 * reenlightenment notification to some online CPU. In case this
-> >          * CPU goes offline, hv_cpu_die() will re-assign it to some
-> >  	 * other online CPU.
-> > 	 */
-> 
-> What if the cpu goes down just before wrmsrl()?
-> I mean, hv_cpu_die() will reassign another cpu, but this thread will be
-> resumed on some other cpu and will write cpu number which is at that
-> moment already down?
-> 
-> (probably I miss something)
-> 
-> And I presume it's guaranteed that during hv_cpu_die() no other cpu may
-> go down:
-> :	new_cpu = cpumask_any_but(cpu_online_mask, cpu);
-> :	re_ctrl.target_vp = hv_vp_index[new_cpu];
-> :	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
 
-Then cpus_read_lock() is the right interface, not preempt_disable().
 
-I know you probably can't change the HV interface, but I'm thinking its
-rather daft you have to specify a CPU at all for this. The HV can just
-pick one and send the notification there, who cares.
+On 6/14/19 1:27 PM, Peter Zijlstra wrote:
+> On Fri, Jun 14, 2019 at 12:50:51PM +0100, Dmitry Safonov wrote:
+>> On 6/14/19 11:08 AM, Vitaly Kuznetsov wrote:
+>>> Peter Zijlstra <peterz@infradead.org> writes:
+>>>
+>>>> @@ -182,7 +182,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>>>>  	struct hv_reenlightenment_control re_ctrl = {
+>>>>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+>>>>  		.enabled = 1,
+>>>> -		.target_vp = hv_vp_index[smp_processor_id()]
+>>>> +		.target_vp = hv_vp_index[raw_smp_processor_id()]
+>>>>  	};
+>>>>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+>>>>  
+>>>
+>>> Yes, this should do, thanks! I'd also suggest to leave a comment like
+>>> 	/* 
+>>>          * This function can get preemted and migrate to a different CPU
+>>> 	 * but this doesn't matter. We just need to assign
+>>> 	 * reenlightenment notification to some online CPU. In case this
+>>>          * CPU goes offline, hv_cpu_die() will re-assign it to some
+>>>  	 * other online CPU.
+>>> 	 */
+>>
+>> What if the cpu goes down just before wrmsrl()?
+>> I mean, hv_cpu_die() will reassign another cpu, but this thread will be
+>> resumed on some other cpu and will write cpu number which is at that
+>> moment already down?
+>>
+>> (probably I miss something)
+>>
+>> And I presume it's guaranteed that during hv_cpu_die() no other cpu may
+>> go down:
+>> :	new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+>> :	re_ctrl.target_vp = hv_vp_index[new_cpu];
+>> :	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+> 
+> Then cpus_read_lock() is the right interface, not preempt_disable().
+> 
+> I know you probably can't change the HV interface, but I'm thinking its
+> rather daft you have to specify a CPU at all for this. The HV can just
+> pick one and send the notification there, who cares.
+
+Heh, I thought cpus_read_lock() is more "internal" api and
+preempt_diable() is prefered ;-)
+
+Will send v2 with the suggested comment and cpus_read_lock().
+
+-- 
+          Dima
