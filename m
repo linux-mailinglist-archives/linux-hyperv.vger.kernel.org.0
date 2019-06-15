@@ -2,140 +2,123 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E38A246E01
-	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Jun 2019 05:22:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 302CD46E62
+	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Jun 2019 07:01:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbfFODWl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Jun 2019 23:22:41 -0400
-Received: from mail-eopbgr1300123.outbound.protection.outlook.com ([40.107.130.123]:24704
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1725927AbfFOFBB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 15 Jun 2019 01:01:01 -0400
+Received: from mail-eopbgr710137.outbound.protection.outlook.com ([40.107.71.137]:62838
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726046AbfFODWk (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Jun 2019 23:22:40 -0400
+        id S1725943AbfFOFBB (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 15 Jun 2019 01:01:01 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=gwsy3WASoF6iR6tS6z5zwuvlaF8qTdNgJbClLnKVloIDwaRxdnmBS9xxI1VIcdaQUz2VcfuBSMuiCJv4v8agY6TBFFlYhK44fY5LY7QgqmA13s/4VgjIgzry3t5rOWixOfxHkE+C2vJu9rIYA0MfjCZUpl/AJWYjB6ZntTjN5TU=
+ b=SUWPY/RJZZnEYG2U5sqUGFozbGwdU50aKwl1a8XOoo5ZxqIhBIOvzdJ7UpKOmH0oJCh8zIkjdqI2Yu+lcFMyP7Momp0adKaTdrATDODxIxNIG6W5pMabABNocsTE5xD7p/hcoVas9a5JQupRVo6XJV24EImT9AcKJwTgZbiTVb0=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=testarcselector01;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M2AXyhJVVGhFzvVBmILv4vK9BxFH/Dy6rx/v7G5oOWk=;
- b=eGY07Ck4ouVLvHDm/5HDPJEzXHckgkZhGJWhG9+1rnuIZqNKPBwK1m26VpT149jn6d1cFC7pmkUlRZJQl5/GNZWy/N3TQxTFRnCEdvixrcOoJpJNh44U1nU8DLxUpRfkh2dOitEx7OHe2g3PcsU7UEaZ6rMeLqfSbpDo/A41wwA=
+ bh=OUsdzV/SEDlwM1lUFoaFZNEm19FDHQ7U8mOZDJzfNxk=;
+ b=RXfzXAr+OsZHTIp22DaNg6RZa3uhBR3XRoJ6+OvrzJZeW/RwbWFWOzmzBICTG56yd1SHZP3lx4377YWoJi2cChlB5OjRzfMb9FvlDxXVgsPTQyrpwvNns7eC4884syORCe0f1u7zmgstfYhJX0h3Zty+h6jSdAQSQ+NFn0KxBYk=
 ARC-Authentication-Results: i=1; test.office365.com
  1;spf=none;dmarc=none;dkim=none;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M2AXyhJVVGhFzvVBmILv4vK9BxFH/Dy6rx/v7G5oOWk=;
- b=hr1+PF+PBtvpX9luSPSY1OQEe2mWm1rKJLtBkA+rU6fxSVEigshOasZesXsWWYHMagYtm1TBGyyB3iu2zDbnMFS/Fct4rsfzg2LtecicjRV31mEK7kHBCM5Vq470vawCKV2Tw8YEKtJup0mH3yI8kXgySv3VG+4XsLPLG8HIobo=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0170.APCP153.PROD.OUTLOOK.COM (10.170.189.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.0; Sat, 15 Jun 2019 03:22:32 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d896:4219:e493:b04%4]) with mapi id 15.20.2008.007; Sat, 15 Jun 2019
- 03:22:32 +0000
+ bh=OUsdzV/SEDlwM1lUFoaFZNEm19FDHQ7U8mOZDJzfNxk=;
+ b=hEKsidmq6BlEpq0tWOTM22SOvV1rztDW7HwobGNX3p16yPc25hv/xj/HJS5PTlUFxZtG0rqoFn3YRBA2mmuZhLoLtMXU6mRop6ADsjHnDSxj5chemSj4vXhz1ghCapJmgdLn6R+ekyxLCnhBAFeOs9sifaU3blNR37g+iPTAglg=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (2603:10b6:805:4::19)
+ by SN6PR2101MB0975.namprd21.prod.outlook.com (2603:10b6:805:4::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.7; Sat, 15 Jun
+ 2019 05:00:57 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::d8f0:bc1e:20d2:9bf6]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::d8f0:bc1e:20d2:9bf6%3]) with mapi id 15.20.2008.002; Sat, 15 Jun 2019
+ 05:00:57 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     David Miller <davem@davemloft.net>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net] hvsock: fix epollout hang from race condition
-Thread-Topic: [PATCH net] hvsock: fix epollout hang from race condition
-Thread-Index: AQHVIyAf1+XRZykcRS6vcxcYhC9DaaacCm+g
-Date:   Sat, 15 Jun 2019 03:22:32 +0000
-Message-ID: <PU1P153MB0169BACDA500F94910849770BFE90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <MW2PR2101MB11164C6EEAA5C511B395EF3AC0EC0@MW2PR2101MB1116.namprd21.prod.outlook.com>
- <20190614.191456.407433636343988177.davem@davemloft.net>
-In-Reply-To: <20190614.191456.407433636343988177.davem@davemloft.net>
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH net] hv_sock: Suppress bogus "may be used uninitialized"
+ warnings
+Thread-Topic: [PATCH net] hv_sock: Suppress bogus "may be used uninitialized"
+ warnings
+Thread-Index: AQHVIzdRyJ4h5bYUQkOiYCme+G2mpw==
+Date:   Sat, 15 Jun 2019 05:00:57 +0000
+Message-ID: <1560574826-99551-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-15T03:22:30.1109385Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5a22ec33-d84a-451d-b0f2-0c7166ab82c0;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-clientproxiedby: CO2PR05CA0053.namprd05.prod.outlook.com
+ (2603:10b6:102:2::21) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:3526:f0c3:b438:bf24]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 69941d72-7002-4100-c0c4-08d6f140b488
+x-ms-office365-filtering-correlation-id: 3a986c8c-a497-4d5f-7795-08d6f14e73a7
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0170;
-x-ms-traffictypediagnostic: PU1P153MB0170:
-x-microsoft-antispam-prvs: <PU1P153MB01701222672E50AF18679331BFE90@PU1P153MB0170.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB0975;
+x-ms-traffictypediagnostic: SN6PR2101MB0975:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SN6PR2101MB09757CA0B2040B4B154E333ABFE90@SN6PR2101MB0975.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 0069246B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(39830400003)(376002)(136003)(199004)(189003)(10090500001)(229853002)(8936002)(6116002)(4326008)(52536014)(446003)(6246003)(2906002)(10290500003)(14444005)(256004)(71190400001)(14454004)(86362001)(476003)(6636002)(99286004)(7696005)(6506007)(71200400001)(81166006)(110136005)(486006)(76176011)(22452003)(55016002)(11346002)(316002)(53546011)(1511001)(81156014)(102836004)(186003)(54906003)(46003)(9686003)(73956011)(66946007)(76116006)(66446008)(66476007)(33656002)(8676002)(5660300002)(478600001)(66556008)(25786009)(74316002)(53936002)(7736002)(66574012)(6436002)(68736007)(64756008)(305945005)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0170;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(136003)(376002)(396003)(39860400002)(199004)(189003)(50226002)(1511001)(71190400001)(71200400001)(102836004)(25786009)(107886003)(4326008)(8676002)(99286004)(22452003)(8936002)(66446008)(81166006)(73956011)(5660300002)(6116002)(64756008)(66946007)(36756003)(66476007)(52396003)(52116002)(66556008)(81156014)(2906002)(386003)(316002)(2501003)(3846002)(54906003)(6506007)(305945005)(66066001)(486006)(110136005)(86362001)(26005)(6512007)(6486002)(53936002)(186003)(10090500001)(3450700001)(6436002)(7736002)(4744005)(68736007)(10290500003)(14444005)(476003)(2616005)(43066004)(256004)(4720700003)(478600001)(6636002)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0975;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rWfEb6SykSagv/37FLhh2DFctVWTWcykXJNlCcjGGSo1lqeGHrvmHDFTImkiGXkHDBKwroh9Ezp0rKWF/XdtOOXuOx9i62Z98yD5fweUybWq9bWONX/3TWc6ylh9J2ER5O8bFu1qdUoBouFd3XTTXf/7LJYwuBTcjWZvZVvl+bmF7oTQLNPAaLS9PxKUZhib9jm3SGW0HYgeZ4bNG1YLElTUOyMnHSKZzKWIqJkjzA9h8pgvTuyoBo4PPvc58YzB/lpb4lXdo2MqLoBrUEA/PI3RAPG2aE01DmnaajDP2uvrbLSSSjX87tKwu7pVOu61mgWe0pLziScfaMKygAk20RtbHR3bRaJjvY5cMyFK2MbII+qujBMjW4/4o4lITKoBHqmlbBF0IIvh/MYADIpjic3cK7SkJBz7PWM0CTEF/LQ=
-Content-Type: text/plain; charset="iso-8859-7"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: JCb1ApIo0sXOd4NdYsgqbHlZWFFhByBKPfaniuML6jUq+VJC5aTw0U4RUKQcIqPhZ+dTfzRnKVKKYrae2RyrQpFMUr8hX3EfswrU5lvV4JyOuK4OXyWhIyEnBv3iLZXlG1TdqGTMzDcW7jLwRVSh7iqDzf5p21jCl7lwxVd1IXA6ob+qIX26hp8w0P4hZaA0zdqzxRkhPm3GFYZ7wzvxPaanKibnVjMFL6lTu9Wsg6ygTu9PG1VbXZRd06H5TEbqpZE+7R+n5TJtv7jeaZWMSkL4UN4RqrOaBxh6eD990jzsy7dDZ2iB5H9xriZcdIH2x8qnxmuUMpHdIG1YqNfH+aGSKaHkBjFa025H2yQAPZJiJuXtzIaOE20cjfJM6MK4I8pCPecVJOJT12xkPHWQ3GkgPEOrmreNBdXrP85sP+k=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2D67B7DBD8191F448FC3EAEB0514E697@namprd21.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69941d72-7002-4100-c0c4-08d6f140b488
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2019 03:22:32.4698
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a986c8c-a497-4d5f-7795-08d6f14e73a7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2019 05:00:57.6278
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0170
+X-MS-Exchange-CrossTenant-userprincipalname: lkmldc@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0975
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of David Miller
-> Sent: Friday, June 14, 2019 7:15 PM
-> To: Sunil Muthuswamy <sunilmut@microsoft.com>
->=20
-> This adds lots of new warnings:
->=20
-> net/vmw_vsock/hyperv_transport.c: In function =A1hvs_probe=A2:
-> net/vmw_vsock/hyperv_transport.c:205:20: warning: =A1vnew=A2 may be used
-> uninitialized in this function [-Wmaybe-uninitialized]
->    remote->svm_port =3D host_ephemeral_port++;
->    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-> net/vmw_vsock/hyperv_transport.c:332:21: note: =A1vnew=A2 was declared he=
-re
->   struct vsock_sock *vnew;
->                      ^~~~
-> net/vmw_vsock/hyperv_transport.c:406:22: warning: =A1hvs_new=A2 may be
-> used uninitialized in this function [-Wmaybe-uninitialized]
->    hvs_new->vm_srv_id =3D *if_type;
->    ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
-> net/vmw_vsock/hyperv_transport.c:333:23: note: =A1hvs_new=A2 was declared
-> here
->   struct hvsock *hvs, *hvs_new;
->                        ^~~~~~~
-
-Hi David,
-These warnings are not introduced by this patch from Sunil.
-
-I'm not sure why I didn't notice these warnings before. =20
-Probably my gcc version is not new eought?=20
-
-Actually these warnings are bogus, as I checked the related functions,
-which may confuse the compiler's static analysis.
-
-I'm going to make a patch to initialize the pointers to NULL to suppress
-the warnings. My patch will be based on the latest's net.git + this patch
-from Sunil.
-
-Thanks,
--- Dexuan
+Z2NjIDguMi4wIG1heSByZXBvcnQgdGhlc2UgYm9ndXMgd2FybmluZ3MgdW5kZXIgc29tZSBjb25k
+aXRpb246DQoNCndhcm5pbmc6IOKAmHZuZXfigJkgbWF5IGJlIHVzZWQgdW5pbml0aWFsaXplZCBp
+biB0aGlzIGZ1bmN0aW9uDQp3YXJuaW5nOiDigJhodnNfbmV34oCZIG1heSBiZSB1c2VkIHVuaW5p
+dGlhbGl6ZWQgaW4gdGhpcyBmdW5jdGlvbg0KDQpBY3R1YWxseSwgdGhlIDIgcG9pbnRlcnMgYXJl
+IG9ubHkgaW5pdGlhbGl6ZWQgYW5kIHVzZWQgaWYgdGhlIHZhcmlhYmxlDQoiY29ubl9mcm9tX2hv
+c3QiIGlzIHRydWUuIFRoZSBjb2RlIGlzIG5vdCBidWdneSBoZXJlLg0KDQpTaWduZWQtb2ZmLWJ5
+OiBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNyb3NvZnQuY29tPg0KLS0tDQogbmV0L3Ztd192c29jay9o
+eXBlcnZfdHJhbnNwb3J0LmMgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25z
+KCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvbmV0L3Ztd192c29jay9oeXBlcnZf
+dHJhbnNwb3J0LmMgYi9uZXQvdm13X3Zzb2NrL2h5cGVydl90cmFuc3BvcnQuYw0KaW5kZXggOGQx
+ZWE5ZWRhOGEyLi5jZDNmNDdmNTRmYTcgMTAwNjQ0DQotLS0gYS9uZXQvdm13X3Zzb2NrL2h5cGVy
+dl90cmFuc3BvcnQuYw0KKysrIGIvbmV0L3Ztd192c29jay9oeXBlcnZfdHJhbnNwb3J0LmMNCkBA
+IC0zMjksOCArMzI5LDggQEAgc3RhdGljIHZvaWQgaHZzX29wZW5fY29ubmVjdGlvbihzdHJ1Y3Qg
+dm1idXNfY2hhbm5lbCAqY2hhbikNCiANCiAJc3RydWN0IHNvY2thZGRyX3ZtIGFkZHI7DQogCXN0
+cnVjdCBzb2NrICpzaywgKm5ldyA9IE5VTEw7DQotCXN0cnVjdCB2c29ja19zb2NrICp2bmV3Ow0K
+LQlzdHJ1Y3QgaHZzb2NrICpodnMsICpodnNfbmV3Ow0KKwlzdHJ1Y3QgdnNvY2tfc29jayAqdm5l
+dyA9IE5VTEw7DQorCXN0cnVjdCBodnNvY2sgKmh2cywgKmh2c19uZXcgPSBOVUxMOw0KIAlpbnQg
+cmV0Ow0KIA0KIAlpZl90eXBlID0gJmNoYW4tPm9mZmVybXNnLm9mZmVyLmlmX3R5cGU7DQotLSAN
+CjIuMTkuMQ0KDQo=
