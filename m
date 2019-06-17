@@ -2,154 +2,212 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF5248883
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2019 18:15:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D23954892A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2019 18:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfFQQPA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 Jun 2019 12:15:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:55192 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfFQQPA (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:15:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92C4B28;
-        Mon, 17 Jun 2019 09:14:59 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2F353F718;
-        Mon, 17 Jun 2019 09:14:56 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 17:14:54 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Russ Dill <Russ.Dill@ti.com>,
-        Sebastian Capella <sebastian.capella@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+        id S1727417AbfFQQkA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Jun 2019 12:40:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34528 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfFQQkA (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:40:00 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k11so10736516wrl.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 17 Jun 2019 09:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QbiPhpQVwadkxwWwxjXwvyYtMv62C8jLCWc43wCVGgA=;
+        b=Nbt6c8XjsUO1WKmxXBx2rhdqfo6aRRO3XCDZCOYk/LJEdRiTStAP9V+2Ec4HPkNy3i
+         dcb3fJA1iEDY1Fd5wZ5M3tsA+03Z4ouYS9uEqSbe+yz3IqqzhYkeXmAqDoRHoIc6C54c
+         KZ2LZM30yJN8ph2G6nO9YtZ5oR605ysGYifEdWja6Tg5QTO+Aqy5cEys1HSHg4sXO4NE
+         mZwXj5bT6p3ccyJ/thqe4QQ8BCzlSbVbMQpe9cv6j7zJH+B1GQt44guX2VDbGVN/Mo9i
+         DPqOX0hhXvTGcieympMKVTr3d7GXt830jVu/UnRRcqcWanL+5d7zsN9ql7GdeWR0bIjP
+         WGww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QbiPhpQVwadkxwWwxjXwvyYtMv62C8jLCWc43wCVGgA=;
+        b=P7sLh+uebdGufhccls3LT34dDctQIW0JhPIIYTitUseRP+FZYhZnRcBcV5zPOozF4v
+         bunARvfLkuiLeMcbt4m4x8q7qh7V+3jKgh3BEqhTgL04dDlXAsdHIUThZfh5KELnK/XB
+         K9ShoMrTqixN3WsEV+aRTPNj94gktTgI4a4HezQnLs05rJ7pmzKA31XJFFEzbpHVsNt0
+         JcbpJNDv2Ag16S5iubbWcZ2lHE3H/1gbVdhxvOlzqO/Xz7w++gXUzV8pYIp8azpknvxb
+         n9C1CsuKNI3UlwfhGRfEqbrO3kIlnvnfhml64NWvM7FQA8yW3TFwgJ7fn3DzViEhtnqc
+         U0cA==
+X-Gm-Message-State: APjAAAUPyJn/3ExoJfveXnq3NyINz8rOHsh+nf+kkmLIDhJ78gE3bq3h
+        w95Dus+fKSKJ4BI8ZoEVI8OXxQ==
+X-Google-Smtp-Source: APXvYqxWmprhSIQFrp6t1xWST1zp4m0M4IRmuT1yMzRfcK4ZLnwK4Kkm5/WSedVmpsHQ739OSSRy2Q==
+X-Received: by 2002:a5d:6449:: with SMTP id d9mr21108302wrw.192.1560789597394;
+        Mon, 17 Jun 2019 09:39:57 -0700 (PDT)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id y133sm20578382wmg.5.2019.06.17.09.39.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 09:39:56 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: Re: [PATCH] ACPI: PM: Export the function
- acpi_sleep_state_supported()
-Message-ID: <20190617161454.GB27113@e121166-lin.cambridge.arm.com>
-References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
- <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
- <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: [PATCHv2] x86/hyperv: Hold cpus_read_lock() on assigning reenlightenment vector
+Date:   Mon, 17 Jun 2019 17:39:55 +0100
+Message-Id: <20190617163955.25659-1-dima@arista.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:19:02PM +0000, Dexuan Cui wrote:
-> > -----Original Message-----
-> > From: Michael Kelley <mikelley@microsoft.com>
-> > Sent: Friday, June 14, 2019 1:48 PM
-> > To: Dexuan Cui <decui@microsoft.com>; linux-acpi@vger.kernel.org;
-> > rjw@rjwysocki.net; lenb@kernel.org; robert.moore@intel.com;
-> > erik.schmauss@intel.com
-> > Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; KY Srinivasan
-> > <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> > Haiyang Zhang <haiyangz@microsoft.com>; Sasha Levin
-> > <Alexander.Levin@microsoft.com>; olaf@aepfle.de; apw@canonical.com;
-> > jasowang@redhat.com; vkuznets <vkuznets@redhat.com>;
-> > marcelo.cerri@canonical.com
-> > Subject: RE: [PATCH] ACPI: PM: Export the function
-> > acpi_sleep_state_supported()
-> > 
-> > From: Dexuan Cui <decui@microsoft.com>  Sent: Friday, June 14, 2019 11:19
-> > AM
-> > >
-> > > In a Linux VM running on Hyper-V, when ACPI S4 is enabled, the balloon
-> > > driver (drivers/hv/hv_balloon.c) needs to ask the host not to do memory
-> > > hot-add/remove.
-> > >
-> > > So let's export acpi_sleep_state_supported() for the hv_balloon driver.
-> > > This might also be useful to the other drivers in the future.
-> > >
-> > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > > ---
-> > >  drivers/acpi/sleep.c    | 3 ++-
-> > >  include/acpi/acpi_bus.h | 2 ++
-> > >  2 files changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> > > index a34deccd7317..69755411e008 100644
-> > > --- a/drivers/acpi/sleep.c
-> > > +++ b/drivers/acpi/sleep.c
-> > > @@ -79,7 +79,7 @@ static int acpi_sleep_prepare(u32 acpi_state)
-> > >  	return 0;
-> > >  }
-> > >
-> > > -static bool acpi_sleep_state_supported(u8 sleep_state)
-> > > +bool acpi_sleep_state_supported(u8 sleep_state)
-> > >  {
-> > >  	acpi_status status;
-> > >  	u8 type_a, type_b;
-> > > @@ -89,6 +89,7 @@ static bool acpi_sleep_state_supported(u8 sleep_state)
-> > >  		|| (acpi_gbl_FADT.sleep_control.address
-> > >  			&& acpi_gbl_FADT.sleep_status.address));
-> > >  }
-> > > +EXPORT_SYMBOL_GPL(acpi_sleep_state_supported);
-> > >
-> > >  #ifdef CONFIG_ACPI_SLEEP
-> > >  static u32 acpi_target_sleep_state = ACPI_STATE_S0;
-> > > diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> > > index 31b6c87d6240..5b102e7bbf25 100644
-> > > --- a/include/acpi/acpi_bus.h
-> > > +++ b/include/acpi/acpi_bus.h
-> > > @@ -651,6 +651,8 @@ static inline int acpi_pm_set_bridge_wakeup(struct
-> > device *dev,
-> > > bool enable)
-> > >  }
-> > >  #endif
-> > >
-> > > +bool acpi_sleep_state_supported(u8 sleep_state);
-> > > +
-> > >  #ifdef CONFIG_ACPI_SLEEP
-> > >  u32 acpi_target_system_state(void);
-> > >  #else
-> > > --
-> > > 2.19.1
-> > 
-> > It seems that sleep.c isn't built when on the ARM64 architecture.  Using
-> > acpi_sleep_state_supported() directly in hv_balloon.c will be problematic
-> > since hv_balloon.c needs to be architecture independent when the
-> > Hyper-V ARM64 support is added.  If that doesn't change, a per-architecture
-> > wrapper will be needed to give hv_balloon.c the correct information.  This
-> > may affect whether acpi_sleep_state_supported() needs to be exported vs.
-> > just removing the "static".   I'm not sure what the best approach is.
-> > 
-> > Michael
-> 
-> + some ARM experts who worked on arch/arm/kernel/hibernate.c.
-> 
-> drivers/acpi/sleep.c is only built if ACPI_SYSTEM_POWER_STATES_SUPPORT
-> is defined, but it looks this option is not defined on ARM.
-> 
-> It looks ARM does not support the ACPI S4 state, then how do we know 
-> if an ARM host supports hibernation or not?
+KVM support may be compiled as dynamic module, which triggers the
+following splat on modprobe (under CONFIG_DEBUG_PREEMPT):
 
-Maybe we should start from understanding why you need to know whether
-Hibernate is possible to answer your question ?
+ KVM: vmx: using Hyper-V Enlightened VMCS
+ BUG: using smp_processor_id() in preemptible [00000000] code: modprobe/466
+ caller is debug_smp_processor_id+0x17/0x19
+ CPU: 0 PID: 466 Comm: modprobe Kdump: loaded Not tainted 4.19.43 #1
+ Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
+ Call Trace:
+  dump_stack+0x61/0x7e
+  check_preemption_disabled+0xd4/0xe6
+  debug_smp_processor_id+0x17/0x19
+  set_hv_tscchange_cb+0x1b/0x89
+  kvm_arch_init+0x14a/0x163 [kvm]
+  kvm_init+0x30/0x259 [kvm]
+  vmx_init+0xed/0x3db [kvm_intel]
+  do_one_initcall+0x89/0x1bc
+  do_init_module+0x5f/0x207
+  load_module+0x1b34/0x209b
+  __ia32_sys_init_module+0x17/0x19
+  do_fast_syscall_32+0x121/0x1fa
+  entry_SYSENTER_compat+0x7f/0x91
 
-On ARM64 platforms system states are entered through PSCI firmware
-interface that works for ACPI and device tree alike.
+Hold cpus_read_lock() so that MSR will be written for an online CPU,
+even if set_hv_tscchange_cb() gets being preempted.
+While at it, cleanup smp_processor_id()'s in hv_cpu_init() and add a
+lockdep assert into hv_cpu_die().
 
-Lorenzo
+Fixes: 93286261de1b4 ("x86/hyperv: Reenlightenment notifications
+support")
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Cathy Avery <cavery@redhat.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>
+Cc: Mohammed Gamal <mmorsy@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Roman Kagan <rkagan@virtuozzo.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+Cc: devel@linuxdriverproject.org
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: x86@kernel.org
+Reported-by: Prasanna Panchamukhi <panchamukhi@arista.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+v1 link: lkml.kernel.org/r/20190611212003.26382-1-dima@arista.com
+
+NOTE that I hadn't a chance to test v2 on hyperv machine so far,
+ONLY BUILD TESTED. (In hope that the patch still makes sense and Kbuild
+bot will report any issue).
+
+ arch/x86/hyperv/hv_init.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 1608050e9df9..ec7fd7d6c125 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -20,6 +20,7 @@
+ #include <linux/clockchips.h>
+ #include <linux/hyperv.h>
+ #include <linux/slab.h>
++#include <linux/cpu.h>
+ #include <linux/cpuhotplug.h>
+ 
+ #ifdef CONFIG_HYPERV_TSCPAGE
+@@ -91,7 +92,7 @@ EXPORT_SYMBOL_GPL(hv_max_vp_index);
+ static int hv_cpu_init(unsigned int cpu)
+ {
+ 	u64 msr_vp_index;
+-	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
++	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
+ 	void **input_arg;
+ 	struct page *pg;
+ 
+@@ -103,7 +104,7 @@ static int hv_cpu_init(unsigned int cpu)
+ 
+ 	hv_get_vp_index(msr_vp_index);
+ 
+-	hv_vp_index[smp_processor_id()] = msr_vp_index;
++	hv_vp_index[cpu] = msr_vp_index;
+ 
+ 	if (msr_vp_index > hv_max_vp_index)
+ 		hv_max_vp_index = msr_vp_index;
+@@ -182,7 +183,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	struct hv_reenlightenment_control re_ctrl = {
+ 		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+ 		.enabled = 1,
+-		.target_vp = hv_vp_index[smp_processor_id()]
+ 	};
+ 	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+ 
+@@ -196,7 +196,16 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	/* Make sure callback is registered before we write to MSRs */
+ 	wmb();
+ 
++	/*
++	 * As reenlightenment vector is global, there is no difference which
++	 * CPU will register MSR, though it should be an online CPU.
++	 * hv_cpu_die() callback guarantees that on CPU teardown
++	 * another CPU will re-register MSR back.
++	 */
++	cpus_read_lock();
++	re_ctrl.target_vp = hv_vp_index[raw_smp_processor_id()];
+ 	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
++	cpus_read_unlock();
+ 	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
+ }
+ EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
+@@ -239,6 +248,7 @@ static int hv_cpu_die(unsigned int cpu)
+ 
+ 	rdmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+ 	if (re_ctrl.target_vp == hv_vp_index[cpu]) {
++		lockdep_assert_cpus_held();
+ 		/* Reassign to some other online CPU */
+ 		new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+ 
+-- 
+2.22.0
+
