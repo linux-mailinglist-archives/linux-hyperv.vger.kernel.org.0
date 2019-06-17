@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 22CB348A36
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2019 19:35:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F0B148A3C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2019 19:35:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfFQRfA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 Jun 2019 13:35:00 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:44915 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfFQRe7 (ORCPT
+        id S1728609AbfFQRfI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Jun 2019 13:35:08 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38894 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfFQRfI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:34:59 -0400
-Received: by mail-ot1-f41.google.com with SMTP id b7so10062877otl.11;
-        Mon, 17 Jun 2019 10:34:59 -0700 (PDT)
+        Mon, 17 Jun 2019 13:35:08 -0400
+Received: by mail-ot1-f65.google.com with SMTP id d17so10110344oth.5;
+        Mon, 17 Jun 2019 10:35:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=+KhrMhcJSvItbb/04gtqwcqQ9SN2qd7j6u0HCMyKS6E=;
-        b=XXzUfQ0ukktnJJaic1zggX+fWxjEYmzOzSxWn0jvsTXzULkD6ej0/2Fk078q3o8H82
-         9COn1WwO4TQ4Lc+jTIO1CON/LQguijBILL0vHMmTUwiSH9LjHVWsyzNwBbCM/RP2+RrZ
-         YlAC4Yy0rJ3vc/wSKTkQQLHet43MHbQwrWjGhc9YRnWYLRjfSgn07J9xwDjbG7+v1a6R
-         M65I8hqTkzeiQ6V5YqvXKBik0H3Z+AtcZv1ID5Baul+pz6bx/TupUdm3BT/uriZlax8i
-         WbAPB82sJNSUPCFHZUwa419eirgtnXc3fciWrmBIAgILSlCuDOi9OMP2ZBQ7wil0zaJV
-         IoDg==
-X-Gm-Message-State: APjAAAWkOdPrcdUeRLcxX+sQrJSS6YGFkDIiQg0yimd7AId8MRM0wjkr
-        4I/IYLxsw/wmWu8p7OiVTq09a5rD
-X-Google-Smtp-Source: APXvYqw4lPJrI+6zOs9y/O1bT7RZrUAy23CAA9kmsuPCQVBaNM+qFrJsL0hd5XEVKnvZDkd1ixC6PA==
-X-Received: by 2002:a9d:3b84:: with SMTP id k4mr51257508otc.27.1560792897912;
-        Mon, 17 Jun 2019 10:34:57 -0700 (PDT)
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=FM2Q7ZOmlVoFwsuJQDbrn3PkqbHIxnRIpgV3g1ovINvWTJ+//zBB4/7vkDSfEFgWoQ
+         +WqKju8P0rZT/UTt59Lyx83dFB8pPF8hkZY9+whx6TfxtrWPdDJjHRL5hu2HH7WyR7xj
+         qHQiv+hrC/PuduuouWWKwe1ytv1AoZm6Ss4fJ3/vcEsBGXBTtLL8X0P0v30x4flFA++H
+         DGsAorJ/+96KCJYSvy4EDcWmwh68XIPUAm1xec4Q8lNMaWqcHR8+nXwUhdAFowFEOWkH
+         LjEkNvDgJNDQyvjrMfE2K+tV7nB0R/ziSK73uv2wjkIH24t3m1aXJ86dT3LC3JI/1yRC
+         24nA==
+X-Gm-Message-State: APjAAAVhmqVXOeX65zmzgno2QPbEOmApBarmaf7E7WzQngsYaaq4vLuC
+        FqixJtMvjAk8JGaJMRBy2A5D6+GL
+X-Google-Smtp-Source: APXvYqwN0qju9dtyrVDJLTxV0rvPxolJl3H38qslFsbaaN9rmLu8EL2nad9C/muzD7FHUWYwo2jf/w==
+X-Received: by 2002:a9d:7245:: with SMTP id a5mr21278150otk.232.1560792906692;
+        Mon, 17 Jun 2019 10:35:06 -0700 (PDT)
 Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id q8sm4732988oib.29.2019.06.17.10.34.56
+        by smtp.gmail.com with ESMTPSA id p13sm4642077otq.15.2019.06.17.10.35.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 10:34:57 -0700 (PDT)
-Subject: Re: [PATCH 5/8] IB/iser: set virt_boundary_mask in the scsi host
+        Mon, 17 Jun 2019 10:35:05 -0700 (PDT)
+Subject: Re: [PATCH 6/8] IB/srp: set virt_boundary_mask in the scsi host
 To:     Christoph Hellwig <hch@lst.de>,
         "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc:     Max Gurtovoy <maxg@mellanox.com>,
@@ -44,14 +44,14 @@ Cc:     Max Gurtovoy <maxg@mellanox.com>,
         megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20190617122000.22181-1-hch@lst.de>
- <20190617122000.22181-6-hch@lst.de>
+ <20190617122000.22181-7-hch@lst.de>
 From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <26fd5237-9a8a-3bda-ae6c-8825030f5ca5@grimberg.me>
-Date:   Mon, 17 Jun 2019 10:34:54 -0700
+Message-ID: <d660e5ab-c1a9-a1dc-b63b-147a1b77b6e8@grimberg.me>
+Date:   Mon, 17 Jun 2019 10:35:04 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190617122000.22181-6-hch@lst.de>
+In-Reply-To: <20190617122000.22181-7-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,4 +60,4 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Acked-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
