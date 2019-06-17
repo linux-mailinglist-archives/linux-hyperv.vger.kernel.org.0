@@ -2,31 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE7E3481C1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2019 14:21:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D52C8481D3
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jun 2019 14:21:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfFQMUT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 Jun 2019 08:20:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59204 "EHLO
+        id S1727749AbfFQMUk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Jun 2019 08:20:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59218 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727432AbfFQMUQ (ORCPT
+        with ESMTP id S1727483AbfFQMUT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:20:16 -0400
+        Mon, 17 Jun 2019 08:20:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=u9cOLJO48WXOB3dtbix3j/JKFkfHMXGferUcOdddO0s=; b=SbuVVZK4nKRDFcvtcrN1V2UCMg
-        xVbKX39WvDnXIH1RIBRqxilfJSa8P7Jj8BD+YxSIHkov3XW1L74INi6IwtRGs1VyxejO6Ogn18Gbi
-        CEpUzj9QmOx/EFCGk5aWM2nv4Dj1nEn6PFueILrpqIoOSvht006cS29Wvi4j3t2CmMbebDppEVeE1
-        W9cJ7/Y1+PxpSN3LyyLtayCRQVxAJlB7rgBEhdqQRy8075iTTJq8h5fWjRDjMquEBW7qm5j7n/XdH
-        0/53iHjyjc0n2maAChyQvTc5eTMXTA1u8o1HbCdJyUFN/sDqtEtkrposSNkQaI3kUKNIo8n1MzAkv
-        tCrvOUzQ==;
+        bh=rAru/g/esClPI2WAaX3PUnaPhvPum8MkxndH0C4U79k=; b=QkZ4Xgh5y91dYvFuT64YOH0Xwn
+        u5bqL9vAPRDcR+CsmKyese77tj7wJfgFvWsq9gy4tOsq/V+EmewMoDFVVsZnoObZwzIGLgVMHpRaH
+        hHC+CHJlrDMjnz/JjVWhBMbcIwuxWndBXhYHOyBibnjsLyU4Ucnp0W79+87ZlBaoLVOMlxCvUKVA9
+        iW9/n3virNs6E0IQOtb09OH4lzUVb5NMXTbyg+ngIU/XY359SDDH1+59PmtIrSAql2wPkRLNNyXXR
+        RKZF1GaRe3Fnqb/oof9Kvit4WOM/7jWEqov8Cawxc9SuQsOHK2hLnJQtWZxN2LaptfnJ68D1x3j0P
+        LwxzQ1ZA==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqcP-0004ft-AS; Mon, 17 Jun 2019 12:20:13 +0000
+        id 1hcqcR-0004gJ-Lt; Mon, 17 Jun 2019 12:20:16 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
@@ -34,9 +34,9 @@ Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
         linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
         megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/8] storvsc: set virt_boundary_mask in the scsi host template
-Date:   Mon, 17 Jun 2019 14:19:56 +0200
-Message-Id: <20190617122000.22181-5-hch@lst.de>
+Subject: [PATCH 5/8] IB/iser: set virt_boundary_mask in the scsi host
+Date:   Mon, 17 Jun 2019 14:19:57 +0200
+Message-Id: <20190617122000.22181-6-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190617122000.22181-1-hch@lst.de>
 References: <20190617122000.22181-1-hch@lst.de>
@@ -53,32 +53,83 @@ SCSI midlayer.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/storvsc_drv.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/infiniband/ulp/iser/iscsi_iser.c | 35 +++++-------------------
+ 1 file changed, 7 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index b89269120a2d..7ed6f2fc1446 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1422,9 +1422,6 @@ static int storvsc_device_configure(struct scsi_device *sdevice)
- {
- 	blk_queue_rq_timeout(sdevice->request_queue, (storvsc_timeout * HZ));
+diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
+index 9c185a8dabd3..841b66397a57 100644
+--- a/drivers/infiniband/ulp/iser/iscsi_iser.c
++++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
+@@ -613,6 +613,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
+ 	struct Scsi_Host *shost;
+ 	struct iser_conn *iser_conn = NULL;
+ 	struct ib_conn *ib_conn;
++	struct ib_device *ib_dev;
+ 	u32 max_fr_sectors;
  
--	/* Ensure there are no gaps in presented sgls */
--	blk_queue_virt_boundary(sdevice->request_queue, PAGE_SIZE - 1);
+ 	shost = iscsi_host_alloc(&iscsi_iser_sht, 0, 0);
+@@ -643,16 +644,19 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
+ 		}
+ 
+ 		ib_conn = &iser_conn->ib_conn;
++		ib_dev = ib_conn->device->ib_device;
+ 		if (ib_conn->pi_support) {
+-			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
++			u32 sig_caps = ib_dev->attrs.sig_prot_cap;
+ 
+ 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
+ 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
+ 						   SHOST_DIX_GUARD_CRC);
+ 		}
+ 
+-		if (iscsi_host_add(shost,
+-				   ib_conn->device->ib_device->dev.parent)) {
++		if (!(ib_dev->attrs.device_cap_flags & IB_DEVICE_SG_GAPS_REG))
++			shost->virt_boundary_mask = ~MASK_4K;
++
++		if (iscsi_host_add(shost, ib_dev->dev.parent)) {
+ 			mutex_unlock(&iser_conn->state_mutex);
+ 			goto free_host;
+ 		}
+@@ -958,30 +962,6 @@ static umode_t iser_attr_is_visible(int param_type, int param)
+ 	return 0;
+ }
+ 
+-static int iscsi_iser_slave_alloc(struct scsi_device *sdev)
+-{
+-	struct iscsi_session *session;
+-	struct iser_conn *iser_conn;
+-	struct ib_device *ib_dev;
 -
- 	sdevice->no_write_same = 1;
- 
- 	/*
-@@ -1697,6 +1694,8 @@ static struct scsi_host_template scsi_driver = {
- 	.this_id =		-1,
- 	/* Make sure we dont get a sg segment crosses a page boundary */
- 	.dma_boundary =		PAGE_SIZE-1,
-+	/* Ensure there are no gaps in presented sgls */
-+	.virt_boundary_mask =	PAGE_SIZE-1,
- 	.no_write_same =	1,
- 	.track_queue_depth =	1,
- };
+-	mutex_lock(&unbind_iser_conn_mutex);
+-
+-	session = starget_to_session(scsi_target(sdev))->dd_data;
+-	iser_conn = session->leadconn->dd_data;
+-	if (!iser_conn) {
+-		mutex_unlock(&unbind_iser_conn_mutex);
+-		return -ENOTCONN;
+-	}
+-	ib_dev = iser_conn->ib_conn.device->ib_device;
+-
+-	if (!(ib_dev->attrs.device_cap_flags & IB_DEVICE_SG_GAPS_REG))
+-		blk_queue_virt_boundary(sdev->request_queue, ~MASK_4K);
+-
+-	mutex_unlock(&unbind_iser_conn_mutex);
+-
+-	return 0;
+-}
+-
+ static struct scsi_host_template iscsi_iser_sht = {
+ 	.module                 = THIS_MODULE,
+ 	.name                   = "iSCSI Initiator over iSER",
+@@ -994,7 +974,6 @@ static struct scsi_host_template iscsi_iser_sht = {
+ 	.eh_device_reset_handler= iscsi_eh_device_reset,
+ 	.eh_target_reset_handler = iscsi_eh_recover_target,
+ 	.target_alloc		= iscsi_target_alloc,
+-	.slave_alloc            = iscsi_iser_slave_alloc,
+ 	.proc_name              = "iscsi_iser",
+ 	.this_id                = -1,
+ 	.track_queue_depth	= 1,
 -- 
 2.20.1
 
