@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1507D49A45
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Jun 2019 09:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D9AA49926
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Jun 2019 08:45:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725919AbfFRHS5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Jun 2019 03:18:57 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46526 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfFRHS5 (ORCPT
+        id S1726413AbfFRGpc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Jun 2019 02:45:32 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:44122 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfFRGpb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:18:57 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so5298741pls.13;
-        Tue, 18 Jun 2019 00:18:57 -0700 (PDT)
+        Tue, 18 Jun 2019 02:45:31 -0400
+Received: by mail-vk1-f196.google.com with SMTP id w186so2571389vkd.11;
+        Mon, 17 Jun 2019 23:45:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=9SP9uqBfa577y4F42b9AqTEJcR+B1XMFG1PF2pX07MA=;
-        b=lb4q+R/UEvyQZ08PlnQSuDevHiuHIIzSn3Yj2DIGmGAmeFS4FEmMtMhFckfnYzUQzY
-         QCHqN8k0Hw7suErE73R1n6sI7J3TAlgJYrIIgD69u89pgJFmriA8Zdas3ZVnjnXBCyyJ
-         wUqDlAVj1R8nfl/Q79fu5ntbUOoReEnibFyntGAf/KQPeUTLQR8DnqZ/hRfa6LI2K5DR
-         ynRXu3b5B38DE91u/jsOgfpvPEtCpeQJ4zkyd1HR5uVqaM1v6WXIrokR1E+fLUdIH/ZM
-         zxNsrmj2Wy/CZXdBAZuXu/KcyPDHYIWb8bWV/VwV6b5BneJP5P2vBo/iOOntaWbeIxf3
-         ET4g==
+        bh=ReyzkEJ0mqgLcwXEOt1orApmxGBjw7txCjk9AIkHxWA=;
+        b=ADV+E6NpxQ50gJHp6hd6dI8C+jQrTYyObZBldrnzIVa2WLszDwucTA6CiLBcDnQN8X
+         frAmZ+MA9IHvI6SgjVQ2/FWtdzYAIe694fBaqFbSgJVFAntiKq+9xDjM7s7YJB/6NYy8
+         cwu/oggvpOHjdlFzfMvswb8dkQp4bEUN49s9uhxnhIu5+st3CiIlBvfi5v/36zNgVnAm
+         Ju4rLyYDS9/RXQa1+R/Qy+v/HMgA4mmtdqXvBUKFj58eprQ8q6GqLAqc8hGd70x8RIc4
+         hfqGJ0zshAxEBeH0exILboBmbeo/1cE14rKdd3TYx6ioCx+QVF0G9fqq819K9D0L5Py7
+         YOjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9SP9uqBfa577y4F42b9AqTEJcR+B1XMFG1PF2pX07MA=;
-        b=AIDApinv4ZFTNVVgVkfE5yLR0ZHcEjuh0oiOmn+onLfutt24vy6aWdEgFxp218Rrpx
-         HLg/991rpa+lpSSOMb6XnjKWeDN3Q97Zfv6vuXBWnBSDO6YZXSFNKXtSHAVsAE48iM3s
-         P+w/kxvBh1fFxpRWJFGo5vVaRpJxoRgcqHwt5k8td/L1Pw/x3UzvkJ84g+PtmbjnuLds
-         86aK7QMpHBKOqIe6niBMuZam0W0ntf1FMYXIn6z4h+5iIGosL+uvbU7uqpKVDf1k7Ryo
-         hQGvJqZlU/dT8sFmOQGI6Qp+bcWVPmHAGZhs9rkiVA91OlrhAIopJ/IthBHDH1OJcPi5
-         7foQ==
-X-Gm-Message-State: APjAAAUcYHUVqHhCxQeAX+jYnn0NoMBsC1ckHotBYhTYDwKUdhnSLJ99
-        VZZoM+S7HTWaQqnKqovnKEMvgLJvpBk=
-X-Google-Smtp-Source: APXvYqz60fEoiLIuJqC3LO7Hilm9ePItQ9CaC2RXYfG74Fs73qPxiydc3yBZyWxTxPkAY/XPAuXN7A==
-X-Received: by 2002:a17:902:3103:: with SMTP id w3mr2257057plb.84.1560838283094;
-        Mon, 17 Jun 2019 23:11:23 -0700 (PDT)
+        bh=ReyzkEJ0mqgLcwXEOt1orApmxGBjw7txCjk9AIkHxWA=;
+        b=PBC9pdiUUlXEfP0n1f0RVRvp5KgFqYNg59alKMpldhkwfPNbH/d+K97yjPQIAct0H1
+         vF8nuGm/vpsNtaOxIv2PHWEVbmHR34NmDjcsW5XSBupjfYW4OIC+9mTAZTGmPJEbphgq
+         JUau1MjmcoDzz2hIIFC/B+1kJ+/8h3NKYfHwJPC4iVdrZUPpdSUXF6qV8iPahhvvhb/F
+         OP23TbczqLK1YgXL7vbTrs4kyf9innKz7BYF4FOlFVRjUkA75Qt9Vn//4piJppwQ1Flw
+         wS/SZbzMQyIyUTD2pTLZem2Fa5WXmQ0sc3DX/rStyQsk8YIqdsVPBhiPxPXWnv8mB7O3
+         7VJQ==
+X-Gm-Message-State: APjAAAWhwNdKLCj91WudWf+2KNKwf+D2v6EnS3x6+lRCtws79gIieY/7
+        jxhQQsZVfqcsuclopvatG/1UZRVuFHk=
+X-Google-Smtp-Source: APXvYqwlkXGD+qYFV6HV681y30CFFECs91e5IG9gbYhPtEYIiiGhdfnV9MsIND0ZgcRhLhSp6r4tDQ==
+X-Received: by 2002:a63:e649:: with SMTP id p9mr1109979pgj.276.1560838389298;
+        Mon, 17 Jun 2019 23:13:09 -0700 (PDT)
 Received: from maya190131 ([13.66.160.195])
-        by smtp.gmail.com with ESMTPSA id c26sm13070476pfr.71.2019.06.17.23.11.22
+        by smtp.gmail.com with ESMTPSA id z74sm6415835pgz.41.2019.06.17.23.13.09
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 23:11:23 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 06:11:22 +0000
+        Mon, 17 Jun 2019 23:13:09 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 06:13:08 +0000
 From:   Maya Nakamura <m.maya.nakamura@gmail.com>
 To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
         sthemmin@microsoft.com, sashal@kernel.org
 Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/5] x86: hv: hyperv-tlfs.h: Create and use Hyper-V page
- definitions
-Message-ID: <01d19ae7b855d72f6f4fa09bd954aeb3863d170f.1560837096.git.m.maya.nakamura@gmail.com>
+Subject: [PATCH v3 2/5] x86: hv: hv_init.c: Add functions to
+ allocate/deallocate page for Hyper-V
+Message-ID: <d19c28cda88bf1706baff883380dfd321da30a68.1560837096.git.m.maya.nakamura@gmail.com>
 References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -65,49 +65,46 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Define HV_HYP_PAGE_SHIFT, HV_HYP_PAGE_SIZE, and HV_HYP_PAGE_MASK because
-the Linux guest page size and hypervisor page size concepts are
-different, even though they happen to be the same value on x86.
+Introduce two new functions, hv_alloc_hyperv_page() and
+hv_free_hyperv_page(), to allocate/deallocate memory with the size and
+alignment that Hyper-V expects as a page. Although currently they are
+not used, they are ready to be used to allocate/deallocate memory on x86
+when their ARM64 counterparts are implemented, keeping symmetry between
+architectures with potentially different guest page sizes.
 
-Also, replace PAGE_SIZE with HV_HYP_PAGE_SIZE.
-
+Link: https://lore.kernel.org/lkml/87muindr9c.fsf@vitty.brq.redhat.com/
 Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
 Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/include/asm/hyperv-tlfs.h | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/hyperv/hv_init.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index af78cd72b8f3..4097edf552b3 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -12,6 +12,16 @@
- #include <linux/types.h>
- #include <asm/page.h>
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 0e033ef11a9f..e8960a83add7 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -37,6 +37,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
+ u32 hv_max_vp_index;
+ EXPORT_SYMBOL_GPL(hv_max_vp_index);
  
-+/*
-+ * While not explicitly listed in the TLFS, Hyper-V always runs with a page size
-+ * of 4096. These definitions are used when communicating with Hyper-V using
-+ * guest physical pages and guest physical page addresses, since the guest page
-+ * size may not be 4096 on all architectures.
-+ */
-+#define HV_HYP_PAGE_SHIFT	12
-+#define HV_HYP_PAGE_SIZE	BIT(HV_HYP_PAGE_SHIFT)
-+#define HV_HYP_PAGE_MASK	(~(HV_HYP_PAGE_SIZE - 1))
++void *hv_alloc_hyperv_page(void)
++{
++	BUILD_BUG_ON(PAGE_SIZE != HV_HYP_PAGE_SIZE);
 +
- /*
-  * The below CPUID leaves are present if VersionAndFeatures.HypervisorPresent
-  * is set by CPUID(HvCpuIdFunctionVersionAndFeatures).
-@@ -847,7 +857,7 @@ union hv_gpa_page_range {
-  * count is equal with how many entries of union hv_gpa_page_range can
-  * be populated into the input parameter page.
-  */
--#define HV_MAX_FLUSH_REP_COUNT ((PAGE_SIZE - 2 * sizeof(u64)) /	\
-+#define HV_MAX_FLUSH_REP_COUNT ((HV_HYP_PAGE_SIZE - 2 * sizeof(u64)) / \
- 				sizeof(union hv_gpa_page_range))
- 
- struct hv_guest_mapping_flush_list {
++	return (void *)__get_free_page(GFP_KERNEL);
++}
++EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
++
++void hv_free_hyperv_page(unsigned long addr)
++{
++	free_page(addr);
++}
++EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
++
+ static int hv_cpu_init(unsigned int cpu)
+ {
+ 	u64 msr_vp_index;
 -- 
 2.17.1
 
