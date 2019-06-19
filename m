@@ -2,93 +2,87 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EF3F499DD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Jun 2019 09:06:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 299B54AF55
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Jun 2019 03:09:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfFRHF7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Jun 2019 03:05:59 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36677 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfFRHF7 (ORCPT
+        id S1726037AbfFSBJK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Jun 2019 21:09:10 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36508 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfFSBJK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:05:59 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so7101409pfl.3;
-        Tue, 18 Jun 2019 00:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KY0hOmAa86HuZE0h9c7QHLSN/sFybZcvdeeWuBmi/OU=;
-        b=Ue8LR2Qk7y+EWsK1kXFMPLzPeXzkdfH0ztEPZVb5Jfusm1NYSEeT8qzhlDfQo/Mo7m
-         l9409MLPWW+t0N0zo++a14pi+SGGltJ0SS42uhY4SXXGgGi8HAOE+LIGSyFLRA3NfbtE
-         zisJAa/0g+CPDB7AKAO2nYYFmLPH0ypBESfc0UCOavmrIrB0PoXhmASaaXN1DbY2quVq
-         lIdZ3KIjdRBUdJMe5gTa05BWd2YrDH+OAptQsADdxajQOZBK8XWvB/Rz4HWFSdGFYwBy
-         gvcj70OXo+RRh5f5nWUyIdktSspfSuZQBQ3QsJqNz1KMuGqDklr9UxiZHVATVylJMcyH
-         4Gpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KY0hOmAa86HuZE0h9c7QHLSN/sFybZcvdeeWuBmi/OU=;
-        b=iTPL4beohlgK0QWR+SH1a9kEirgWvihaXVFnjMi76HFnxjASzOzBJRVIUvJU2WGVzV
-         WzfI3VOgjHyV9An/oKIo6DLaDYp7z3R/tzDq0XsFSBbfooj2AHYv0vrweMJp3gKiuuid
-         oahgx2lVr76P3UTgsxW8b0sNqb88Rua2Hy3UvYxk1NZ4CmHyzDDUKZ0//ktFSkW4985v
-         MCpY/3dSSQayj6HCq3as9jYVnl4yRepxF8ktvWlJ/WD+adHnvBwbv2m3ifZ3mMouyB6h
-         V0Cqgxy7w6UHjP8G8HQfj9Tn7FY7rCT3TAPSLZHiEGFbkxLj+OIlKi400UvJD7SJ5OpJ
-         Um+g==
-X-Gm-Message-State: APjAAAVvjP6uulz8yfrrg/2KJ0w4wH2eN21mH5Ae3ozVSKfo9hrEQPng
-        8WrNN2kjfqo90q6+qb2UTpVgJ1JsWJA=
-X-Google-Smtp-Source: APXvYqxTytyfk9wnV8foDumcE1FOZD+ACJGrgFdfF44453aFg6xoz3efdMevejBUgM67y8CrZf3Wng==
-X-Received: by 2002:a17:90a:9b08:: with SMTP id f8mr3264521pjp.103.1560838638921;
-        Mon, 17 Jun 2019 23:17:18 -0700 (PDT)
-Received: from maya190131 ([13.66.160.195])
-        by smtp.gmail.com with ESMTPSA id y185sm14143581pfy.110.2019.06.17.23.17.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 23:17:18 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 06:17:18 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        Tue, 18 Jun 2019 21:09:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J14MIZ192415;
+        Wed, 19 Jun 2019 01:09:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=O0Ag6RZRGGfE7EiTJNqvl7FmPVNtYsR6M0cJqHhvRaQ=;
+ b=ALiwAPeHZpWcQeuIU/Mw8YWcHJAqhKvNc03R+vD3Cs0hShAYykcS9Jm9olLHk3qoOgXg
+ KJVoGBCzJwcX9ukQqnBrKlCPF6BSBYJ6Kb8Mj2UI12qb8ywbabgV40WzNS+ZyZA2Mqo7
+ 53QywJU5BHQF6yfqlgNHrr6Aact1yLyfETrV4x8K5wagWXjJ3+27cxCY3ynYPPt6LPIo
+ L/lu87YGuVgOSkZlqdlrlih9R5+cnsSmqkYs0FOy0MSe08fpOm5eW51gjRt0JzgmaGYG
+ 5B9YOpBiuhSGVKRXSucurFnqeZurTLBxDhWGFVAe6Ozw8Udv6cxw9Y7Y9liQMBljjcOX IA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t78098fyp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 01:09:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J17dQ8051946;
+        Wed, 19 Jun 2019 01:09:03 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2t77yn1yxb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 01:09:03 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J192bR005720;
+        Wed, 19 Jun 2019 01:09:02 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Jun 2019 18:09:01 -0700
+To:     Branden Bonaby <brandonbonaby94@gmail.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/5] Input: hv: Remove dependencies on PAGE_SIZE for ring
- buffer
-Message-ID: <78f6e9646f762c51febba6c5a52eb777c238d4aa.1560837096.git.m.maya.nakamura@gmail.com>
-References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
+Subject: Re: [PATCH] scsi: storvsc: Add ability to change scsi queue depth
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190614234822.5193-1-brandonbonaby94@gmail.com>
+Date:   Tue, 18 Jun 2019 21:08:59 -0400
+In-Reply-To: <20190614234822.5193-1-brandonbonaby94@gmail.com> (Branden
+        Bonaby's message of "Fri, 14 Jun 2019 19:48:22 -0400")
+Message-ID: <yq1fto6xtxw.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1560837096.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=798
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190007
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=862 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190007
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Define the ring buffer size as a constant expression because it should
-not depend on the guest page size.
 
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/input/serio/hyperv-keyboard.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Branden,
 
-diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-index 8e457e50f837..88ae7c2ac3c8 100644
---- a/drivers/input/serio/hyperv-keyboard.c
-+++ b/drivers/input/serio/hyperv-keyboard.c
-@@ -75,8 +75,8 @@ struct synth_kbd_keystroke {
- 
- #define HK_MAXIMUM_MESSAGE_SIZE 256
- 
--#define KBD_VSC_SEND_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
--#define KBD_VSC_RECV_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
-+#define KBD_VSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
-+#define KBD_VSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
- 
- #define XTKBD_EMUL0     0xe0
- #define XTKBD_EMUL1     0xe1
+> Adding functionality to allow the SCSI queue depth to be changed, by
+> utilizing the "scsi_change_queue_depth" function.
+
+Applied to 5.3/scsi-queue. Please run checkpatch before submission. I
+fixed it up this time.
+
+Thanks!
+
 -- 
-2.17.1
-
+Martin K. Petersen	Oracle Linux Engineering
