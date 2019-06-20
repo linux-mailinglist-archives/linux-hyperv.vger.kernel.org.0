@@ -2,110 +2,121 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE65E4C7D4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Jun 2019 09:04:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45E2E4CCED
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Jun 2019 13:31:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbfFTHEP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Jun 2019 03:04:15 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41761 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfFTHEP (ORCPT
+        id S1731651AbfFTLbN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Jun 2019 07:31:13 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41673 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfFTLbM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:04:15 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c11so1225614qkk.8
-        for <linux-hyperv@vger.kernel.org>; Thu, 20 Jun 2019 00:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qra3uPbmwxdDyA4AaZlBHKJVrJf/WvX+mVnEuv9KXzU=;
-        b=W8Kq8n3Tk/T94dHOWAMcyWhdnrnuJks3EX2wE7Bfqelm6h6U/w8oSPk7CCXKmTjmoU
-         TfeeCKVRvJNzayy9f6Wi+t1jtIkmar2UUzYZX9NejWdA9c0Y6KWK9OBS3ZGo5Qs2aFIW
-         DRhFxFA4WqFOqWagNobpAj/17ziKwPPEJgIUw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qra3uPbmwxdDyA4AaZlBHKJVrJf/WvX+mVnEuv9KXzU=;
-        b=HNq3oih2DGGFAj+efx6uOMHHPom1wHcj/zjE+YuY64toJ5FMycmTIROkBYOdFyeQyi
-         Yj3Gf3Ay2uzeF5aDbYtTRazpwej6B9akrv5Sp5vmCuZdlZ7b692pQgEx7kYpQi2VD5gS
-         S1CrtRISIXqIt6ZnOC38nH9rIAT948e4oFucLtQLGdtD/cbgnT4qwGSZ/SeWZ3N8trvj
-         JoEKY/qBQSiD3kGNVb6nlzYXK8tCQokkSO1H5VvToaMg9yTRMgOk/QPCNF7CAk1eQeO5
-         L3iwEO44GVzZc2mjwJn+0f+hR5Io7brkb34MZbHkcC95zxc66qrolELecjdYmRi42Xi5
-         AkVw==
-X-Gm-Message-State: APjAAAVXnLb4n/LwHwRQOFqwkSuUTKlKQZmUJvkloOrvN76M1MQ1Bqlr
-        WcJff9WwZZtZccO39jBvD/GlCVAzPI4HkFsmHL+Qfw==
-X-Google-Smtp-Source: APXvYqyn0Z6SBnEwII20nrJnyGd3pOxDX+LJHUmak7ix9Cp2YOWeFQYLIzeYzQfPuf1S6FLxj/0GSbcuVaf/Pu4uJV4=
-X-Received: by 2002:a37:ea0c:: with SMTP id t12mr35032475qkj.117.1561014254295;
- Thu, 20 Jun 2019 00:04:14 -0700 (PDT)
+        Thu, 20 Jun 2019 07:31:12 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id D30728053C; Thu, 20 Jun 2019 13:30:57 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 13:30:57 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "robert.moore@intel.com" <robert.moore@intel.com>,
+        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Russ Dill <Russ.Dill@ti.com>,
+        Sebastian Capella <sebastian.capella@linaro.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: Re: [PATCH] ACPI: PM: Export the function
+ acpi_sleep_state_supported()
+Message-ID: <20190620113057.GA16460@atrey.karlin.mff.cuni.cz>
+References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
+ <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+ <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190617161454.GB27113@e121166-lin.cambridge.arm.com>
+ <PU1P153MB016902786ABA34BD01430F83BFE50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <20190617122000.22181-1-hch@lst.de> <20190617122000.22181-8-hch@lst.de>
- <CACVXFVObpdjN6V9qS-C9NG5xcrPqmx-X22qVamOSZf81Vog6zw@mail.gmail.com> <CA+RiK64sFfY79i7q2YbN5HcZ4wzVOcLWgDJnPbf6=ycdcmC-Mg@mail.gmail.com>
-In-Reply-To: <CA+RiK64sFfY79i7q2YbN5HcZ4wzVOcLWgDJnPbf6=ycdcmC-Mg@mail.gmail.com>
-From:   Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
-Date:   Thu, 20 Jun 2019 12:38:52 +0530
-Message-ID: <CA+RiK64_31h+UHA7r3BdPo7AjUTyfEKYfskEquqbCZ84d4pbKw@mail.gmail.com>
-Subject: Re: [PATCH 7/8] mpt3sas: set an unlimited max_segment_size for SAS
- 3.0 HBAs
-To:     Ming Lei <tom.leiming@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        megaraidlinux.pdl@broadcom.com,
-        PDL-MPT-FUSIONLINUX <MPT-FusionLinux.pdl@broadcom.com>,
-        linux-hyperv@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB016902786ABA34BD01430F83BFE50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Acked-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Lorenzo Pieralisi
+> > Sent: Monday, June 17, 2019 9:15 AM
+> > > ...
+> > > + some ARM experts who worked on arch/arm/kernel/hibernate.c.
+> > >
+> > > drivers/acpi/sleep.c is only built if ACPI_SYSTEM_POWER_STATES_SUPPORT
+> > > is defined, but it looks this option is not defined on ARM.
+> > >
+> > > It looks ARM does not support the ACPI S4 state, then how do we know
+> > > if an ARM host supports hibernation or not?
+> > 
+> > Maybe we should start from understanding why you need to know whether
+> > Hibernate is possible to answer your question ?
+> > 
+> > On ARM64 platforms system states are entered through PSCI firmware
+> > interface that works for ACPI and device tree alike.
+> > 
+> > Lorenzo
+> 
+> Hi Lorenzo,
+> It looks I may have confused you as I didn't realize the word "ARM" only means
+> 32-bit ARM. It looks the "ARM" arch and the "ARM64" arch are very different.
+> 
+> As far as I know, Hyper-V only supports x86 and "ARM64", and it's unlikely to
+> support 32-bit ARM in the future, so actually I don't really need to know if and
+> how a 32-bit ARM machine supports hibernation.
+> 
+> When a Linux guest runs on Hyper-V (x86_32, x86_64, or ARM64) , we have a
+> front-end balloon driver in the guest, which balloons up/down and
+> hot adds/removes the guest's memory when the host requests that. The problem
+> is: the back-end driver on the host can not really save and restore the states
+> related to the front-end balloon driver on guest hibernation, so we made the
+> decision that balloon up/down and hot-add/remove are not supported when
+> we enable hibernation for a guest; BTW, we still want to load the front-end
+> driver in the guest, because the dirver has a functionality of reporting the
+> guest's memory pressure to the host, which we think is useful.
+> 
+> On x86_32 and x86_64, we enable hibernation for a guest by enabling
+> the virtual ACPI S4 state for the guest; on ARM64, so far we don't have the
+> host side changes required to support guest hibernation, so the details are
+> still unclear.
+> 
+> After I discussed with Michael Kelley, it looks we don't really need to
+> export drivers/acpi/sleep.c: acpi_sleep_state_supported(), but I think we do
+> need to make it non-static.
+> 
+> Now I propose the below changes. I plan to submit a patch first for the
+> changes made to drivers/acpi/sleep.c and include/acpi/acpi_bus.h in a few
+> days, if there is no objection.
+> 
+> Please let me know how you think of this. Thanks!
 
-On Thu, Jun 20, 2019 at 12:34 PM Suganath Prabu Subramani
-<suganath-prabu.subramani@broadcom.com> wrote:
->
-> Please consider this as Acked-by: Suganath Prabu
-> <suganath-prabu.subramani@broadcom.com>
->
->
-> On Tue, Jun 18, 2019 at 6:16 AM Ming Lei <tom.leiming@gmail.com> wrote:
-> >
-> > On Mon, Jun 17, 2019 at 8:21 PM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > When using a virt_boundary_mask, as done for NVMe devices attached to
-> > > mpt3sas controllers we require an unlimited max_segment_size, as the
-> > > virt boundary merging code assumes that.  But we also need to propagate
-> > > that to the DMA mapping layer to make dma-debug happy.  The SCSI layer
-> > > takes care of that when using the per-host virt_boundary setting, but
-> > > given that mpt3sas only wants to set the virt_boundary for actual
-> > > NVMe devices we can't rely on that.  The DMA layer maximum segment
-> > > is global to the HBA however, so we have to set it explicitly.  This
-> > > patch assumes that mpt3sas does not have a segment size limitation,
-> > > which seems true based on the SGL format, but will need to be verified.
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  drivers/scsi/mpt3sas/mpt3sas_scsih.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-> > > index 1ccfbc7eebe0..c719b807f6d8 100644
-> > > --- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-> > > +++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-> > > @@ -10222,6 +10222,7 @@ static struct scsi_host_template mpt3sas_driver_template = {
-> > >         .this_id                        = -1,
-> > >         .sg_tablesize                   = MPT3SAS_SG_DEPTH,
-> > >         .max_sectors                    = 32767,
-> > > +       .max_segment_size               = 0xffffffff,
-> >
-> > .max_segment_size should be aligned, either setting it here correctly or
-> > forcing to make it aligned in scsi-core.
-> >
-> > Thanks,
-> > Ming Lei
+No.
+
+Hibernation should be always supported, no matter what firmware. If it
+can powerdown, it can hibernate.
+
+That is for x86-32/64, too.
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
