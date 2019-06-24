@@ -2,118 +2,105 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2651554E23
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Jun 2019 14:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C32E51E56
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Jun 2019 00:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfFYMAy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Jun 2019 08:00:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38982 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbfFYMAy (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:00:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PBwbue034996;
-        Tue, 25 Jun 2019 12:00:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=5KptyXNJmsTfP77XZt6SnuUAhHI9DQzGxKm5f7pgB/c=;
- b=j2inzlHbUEQOiQV5l7ffpAUJwcDn+DMuix5apmXpZYRI7Rq9KtJIDGGufxayF0dOP6Ch
- 9AuaavWay5I/CBSiBvawjJQBgp9hQPYlL4FpN8NtHsLasrT/l+1WQhbhUBHJ3kSwmbRw
- E1m6oS8h9bOJfK4eZL9fv0uhN70aETlK4YS3vMKf/n86/wHcDhU671ukG6b9IqhJG7Gf
- HMeKNgnkBMsBegrN/JdHIQS3vLIFWuN8SHNtLzS03BcvB/qj/HQ4538mWh9fFCnWWzkz
- JiDFTiKMtc4ctA4OVW6fU0OhH9hlX4YBtj22KzETO7RsguTBR9fqMMx1WV3XriBqdbZY LA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t9cyqbucn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 12:00:10 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PBwx38130593;
-        Tue, 25 Jun 2019 12:00:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2t9p6u51ax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 12:00:09 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5PC08f9023716;
-        Tue, 25 Jun 2019 12:00:08 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 05:00:08 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, peterz@infradead.org,
-        srinivas.eeda@oracle.com,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Waiman Long <longman@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-hyperv@vger.kernel.org
-Subject: [PATCH v2 6/7] locking/spinlocks, paravirt, hyperv: Correct the hv_nopvspin case
-Date:   Mon, 24 Jun 2019 20:02:58 +0800
-Message-Id: <1561377779-28036-7-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906250097
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250097
+        id S1726413AbfFXWcO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 24 Jun 2019 18:32:14 -0400
+Received: from mail-eopbgr00050.outbound.protection.outlook.com ([40.107.0.50]:23877
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726388AbfFXWcN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 24 Jun 2019 18:32:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XN4+lVoQ+cOhCtCUzOmlmlY7AZq9vD0eMs1RW46yp0U=;
+ b=LXTAztfnnZaR4vCAyWym15Zi67JPdOiy68GR6Ut9fLjhk7/cnBrXMD6wChzl1NsVVKObJPPVfNq/1mWSxCrIw1s4NQVIz0IxVnl0uohzCf97P9HGqB5mJZpm0whZ4DWrdmyVZVXBq9+w+cWG2y70Ra3TfKLDjMt8Tq1Du/5IVvM=
+Received: from DB6PR05CA0014.eurprd05.prod.outlook.com (2603:10a6:6:14::27) by
+ AM4PR0501MB2337.eurprd05.prod.outlook.com (2603:10a6:200:53::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.16; Mon, 24 Jun
+ 2019 22:32:10 +0000
+Received: from VE1EUR03FT055.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::209) by DB6PR05CA0014.outlook.office365.com
+ (2603:10a6:6:14::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2008.16 via Frontend
+ Transport; Mon, 24 Jun 2019 22:32:10 +0000
+Authentication-Results: spf=pass (sender IP is 193.47.165.134)
+ smtp.mailfrom=mellanox.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none
+ header.from=mellanox.com;
+Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
+ 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
+Received: from mtlcas13.mtl.com (193.47.165.134) by
+ VE1EUR03FT055.mail.protection.outlook.com (10.152.19.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2008.13 via Frontend Transport; Mon, 24 Jun 2019 22:32:09 +0000
+Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4; Tue, 25 Jun 2019 01:32:09
+ +0300
+Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Tue,
+ 25 Jun 2019 01:32:09 +0300
+Received: from [172.16.0.6] (172.16.0.6) by MTLCAS01.mtl.com (10.0.8.71) with
+ Microsoft SMTP Server (TLS) id 14.3.301.0; Tue, 25 Jun 2019 01:32:06 +0300
+Subject: Re: [PATCH 5/8] IB/iser: set virt_boundary_mask in the scsi host
+To:     Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+CC:     Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        <linux-rdma@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <megaraidlinux.pdl@broadcom.com>,
+        <MPT-FusionLinux.pdl@broadcom.com>, <linux-hyperv@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190617122000.22181-1-hch@lst.de>
+ <20190617122000.22181-6-hch@lst.de>
+From:   Max Gurtovoy <maxg@mellanox.com>
+Message-ID: <bbea1029-e434-a633-5516-fe6a92e60beb@mellanox.com>
+Date:   Tue, 25 Jun 2019 01:32:06 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190617122000.22181-6-hch@lst.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.16.0.6]
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(346002)(396003)(2980300002)(189003)(199004)(2616005)(65826007)(7416002)(486006)(16526019)(26005)(77096007)(126002)(336012)(446003)(476003)(54906003)(16576012)(58126008)(23676004)(2486003)(106002)(356004)(7736002)(305945005)(229853002)(47776003)(70586007)(2906002)(70206006)(8676002)(81156014)(81166006)(65956001)(65806001)(67846002)(478600001)(230700001)(186003)(50466002)(76176011)(64126003)(110136005)(316002)(11346002)(3846002)(53546011)(6116002)(558084003)(4326008)(86362001)(5660300002)(31696002)(31686004)(8936002)(6246003)(36756003)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0501MB2337;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1a4a9614-d169-4a47-9da4-08d6f8f3cbb9
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:AM4PR0501MB2337;
+X-MS-TrafficTypeDiagnostic: AM4PR0501MB2337:
+X-Microsoft-Antispam-PRVS: <AM4PR0501MB2337CA366F2AA78E17D1EFABB6E00@AM4PR0501MB2337.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:813;
+X-Forefront-PRVS: 007814487B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: LVuO0N6wtddtvKl1LL1Z73/Uzmeh7Kv2WF8quQAsWAJfWXUYwhtg1/66+IruTRauyQlfWSTFUNTyrj60P3lt2W5XbrHun4QiwOqN9XEITaRtPTVKX8OrUUliTvLan/H8ZCV3LZ8DVf7fPivFeYy0eiyuXbsD0wAb+herqMzHNEHHs5u4xqSyZXU9ss7or4RyZT6Qs+YEFD7YNIOQrAQkiP6WZcAlrKkqF4x9/16b8l+TR5Z7a09oovg9C4PHJ/LVImEvPzi3EBqFr6heiPgPdIgYiPAkMH76oNPjkrh6gRE+DPnsPEMJc7ubpVPnjIewV/HinJVvrK96VRsmG1jb9wYjawm5NdcUW6qhbXv8leoMOXRomxWZAQTQaLf1GvPG6PO0Ak0K7uQOmSZK4lx0eWZUe9k4Wx6xTa26TiiDpvI=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2019 22:32:09.4232
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a4a9614-d169-4a47-9da4-08d6f8f3cbb9
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0501MB2337
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-With the boot parameter "hv_nopvspin" specified a Hyperv guest should
-not make use of paravirt spinlocks, but behave as if running on bare
-metal. This is not true, however, as the qspinlock code will fall back
-to a test-and-set scheme when it is detecting a hypervisor.
+On 6/17/2019 3:19 PM, Christoph Hellwig wrote:
+> This ensures all proper DMA layer handling is taken care of by the
+> SCSI midlayer.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-In order to avoid this disable the virt_spin_lock_key.
 
-Same change for XEN is already in Commit e6fd28eb3522
-("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
+Looks good,
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: linux-hyperv@vger.kernel.org
----
- arch/x86/hyperv/hv_spinlock.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-index 07f21a0..d90b4b0 100644
---- a/arch/x86/hyperv/hv_spinlock.c
-+++ b/arch/x86/hyperv/hv_spinlock.c
-@@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
- 
- void __init hv_init_spinlocks(void)
- {
-+	if (unlikely(!hv_pvspin))
-+		static_branch_disable(&virt_spin_lock_key);
-+
- 	if (!hv_pvspin || !apic ||
- 	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
- 	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
--- 
-1.8.3.1
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 
