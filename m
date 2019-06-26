@@ -2,30 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A278559ED
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Jun 2019 23:29:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65FF855EDC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jun 2019 04:35:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfFYV33 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Jun 2019 17:29:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5376 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFYV33 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Jun 2019 17:29:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 14:29:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,417,1557212400"; 
-   d="scan'208";a="172501044"
-Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga002.jf.intel.com with ESMTP; 25 Jun 2019 14:29:23 -0700
-Subject: Re: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
-To:     Nadav Amit <namit@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        id S1726387AbfFZCfJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 25 Jun 2019 22:35:09 -0400
+Received: from mail-eopbgr800079.outbound.protection.outlook.com ([40.107.80.79]:45675
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726376AbfFZCfJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 25 Jun 2019 22:35:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=WN0PzdT3EVaMOhTilL/yDT8Y5IvlK5bkUmztKdV8IzxDjRO4EGcTUWHoCW4rwmgmrEOZeNKpn/T3qfCiZuFfV85YF38p7+EHXa2SmA30PWDMfStTVDySOAFYaOB7UJBBXIeeP045TBnq3b5hYPSSbcWC7LHc+/u+u9Iit4zmcfI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=10EjENznDVRg5UJUmgUUFTcggz+0bK+P1trUUdfj6XU=;
+ b=THNKT43sseCG6d+kahvSpNsTQi00qoEl2D8Ds2COzqrhURBTjRLUxQKAvpiwvO9V+JOcuA9c4YZo8qeawhKWA4cek8NoeSGEStQdn5+Y03802hEY7cmiDkcW1fQvgZrwfeLNMOvPqbtgI05kzcNRmElNkjaU6JG0fAstY9ayTIY=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=10EjENznDVRg5UJUmgUUFTcggz+0bK+P1trUUdfj6XU=;
+ b=WVtkMWPBiTowdOtw7wU48MYj9g0VyXQhcKapTxctBuhvlVBCcXS2EEwM41qLA9awdjhUl6NpYZfGAaAnSxj84F/eKuB3R8xqHhcxx740z9VQJNXwLMHKIgA4AK/hOj9I4qWVGO86JyTV4uVqf0cFTIyPhRqEv5ZL6yVagPY0UoY=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5733.namprd05.prod.outlook.com (20.178.48.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Wed, 26 Jun 2019 02:35:01 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2008.007; Wed, 26 Jun 2019
+ 02:35:01 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -35,390 +50,293 @@ Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
         Juergen Gross <jgross@suse.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
+Thread-Topic: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
+Thread-Index: AQHVIbQneqvfvnASJUSZoJZyXs9Ulaas9rUAgABVYwA=
+Date:   Wed, 26 Jun 2019 02:35:00 +0000
+Message-ID: <1545B936-7CEC-4A1C-B776-74004F774218@vmware.com>
 References: <20190613064813.8102-1-namit@vmware.com>
  <20190613064813.8102-5-namit@vmware.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <723d63ee-c8cb-14a1-0eb9-265e580360f4@intel.com>
-Date:   Tue, 25 Jun 2019 14:29:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190613064813.8102-5-namit@vmware.com>
-Content-Type: text/plain; charset=utf-8
+ <723d63ee-c8cb-14a1-0eb9-265e580360f4@intel.com>
+In-Reply-To: <723d63ee-c8cb-14a1-0eb9-265e580360f4@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [204.134.128.110]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bd870911-ff78-43df-ddfd-08d6f9dee34f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5733;
+x-ms-traffictypediagnostic: BYAPR05MB5733:
+x-microsoft-antispam-prvs: <BYAPR05MB573310FD9BBCD306C95FE737D0E20@BYAPR05MB5733.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00808B16F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39860400002)(136003)(396003)(189003)(199004)(54534003)(81156014)(8936002)(91956017)(476003)(66476007)(76116006)(14454004)(66946007)(6116002)(478600001)(229853002)(3846002)(33656002)(8676002)(7416002)(305945005)(73956011)(99286004)(316002)(81166006)(102836004)(76176011)(2616005)(53546011)(186003)(26005)(2906002)(6506007)(68736007)(4326008)(54906003)(36756003)(6246003)(25786009)(446003)(11346002)(7736002)(30864003)(256004)(66446008)(486006)(5660300002)(6512007)(53936002)(6486002)(71200400001)(71190400001)(6916009)(14444005)(6436002)(86362001)(66066001)(66556008)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5733;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qX2L1VOGaLFIH/zZxhCKDgPlKJ7Zcc1+D/JQ+tHXnYmPUiohPRWHMsZDFbSA9FhXdlXuSlb5y07I7L+Cg/9m9GU6+8UFigHn9qQ3CsrslPIq1SoRNWGEF3oPtxx0xinj0HeBtxKutNEZPaqsouoRaqU6VERiKd47FRWAOE62cdqdpTetRT9m6Ic7a22NmWKHYIOmDrIHmE3cM5p3ITZHv3VOPxU2whCTVWPJLJEWurGU6Ij1G/OFDXtX8ZkNNbjS3DJdfP80SuQAr13cp3e8OTR4+UxgdNy1Iw4PpMy6yb/NZSrf4deOCg3+IQ4PA2PyP6AoR0u3P7bGMd8PJ2lbfLxq0IxADd4D5wfOiTZQIU7WlaVlD53HJM57p6KRTZSOIpE+mZcgkVjKEtr9E95ZJboUIyvjfEQYtAIxeIx6+qQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <181ED1A020C2D849A6998B3B3F29587F@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd870911-ff78-43df-ddfd-08d6f9dee34f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 02:35:01.0102
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5733
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 6/12/19 11:48 PM, Nadav Amit wrote:
-> To improve TLB shootdown performance, flush the remote and local TLBs
-> concurrently. Introduce flush_tlb_multi() that does so. The current
-> flush_tlb_others() interface is kept, since paravirtual interfaces need
-> to be adapted first before it can be removed. This is left for future
-> work. In such PV environments, TLB flushes are not performed, at this
-> time, concurrently.
-> 
-> Add a static key to tell whether this new interface is supported.
-> 
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Sasha Levin <sashal@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: linux-hyperv@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: kvm@vger.kernel.org
-> Cc: xen-devel@lists.xenproject.org
-> Signed-off-by: Nadav Amit <namit@vmware.com>
-> ---
->  arch/x86/hyperv/mmu.c                 |  2 +
->  arch/x86/include/asm/paravirt.h       |  8 +++
->  arch/x86/include/asm/paravirt_types.h |  6 +++
->  arch/x86/include/asm/tlbflush.h       |  6 +++
->  arch/x86/kernel/kvm.c                 |  1 +
->  arch/x86/kernel/paravirt.c            |  3 ++
->  arch/x86/mm/tlb.c                     | 71 ++++++++++++++++++++++-----
->  arch/x86/xen/mmu_pv.c                 |  2 +
->  8 files changed, 87 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-> index e65d7fe6489f..ca28b400c87c 100644
-> --- a/arch/x86/hyperv/mmu.c
-> +++ b/arch/x86/hyperv/mmu.c
-> @@ -233,4 +233,6 @@ void hyperv_setup_mmu_ops(void)
->  	pr_info("Using hypercall for remote TLB flush\n");
->  	pv_ops.mmu.flush_tlb_others = hyperv_flush_tlb_others;
->  	pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-> +
-> +	static_key_disable(&flush_tlb_multi_enabled.key);
->  }
-> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-> index c25c38a05c1c..192be7254457 100644
-> --- a/arch/x86/include/asm/paravirt.h
-> +++ b/arch/x86/include/asm/paravirt.h
-> @@ -47,6 +47,8 @@ static inline void slow_down_io(void)
->  #endif
->  }
->  
-> +DECLARE_STATIC_KEY_TRUE(flush_tlb_multi_enabled);
-> +
->  static inline void __flush_tlb(void)
->  {
->  	PVOP_VCALL0(mmu.flush_tlb_user);
-> @@ -62,6 +64,12 @@ static inline void __flush_tlb_one_user(unsigned long addr)
->  	PVOP_VCALL1(mmu.flush_tlb_one_user, addr);
->  }
->  
-> +static inline void flush_tlb_multi(const struct cpumask *cpumask,
-> +				   const struct flush_tlb_info *info)
-> +{
-> +	PVOP_VCALL2(mmu.flush_tlb_multi, cpumask, info);
-> +}
-> +
->  static inline void flush_tlb_others(const struct cpumask *cpumask,
->  				    const struct flush_tlb_info *info)
->  {
-> diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-> index 946f8f1f1efc..b93b3d90729a 100644
-> --- a/arch/x86/include/asm/paravirt_types.h
-> +++ b/arch/x86/include/asm/paravirt_types.h
-> @@ -211,6 +211,12 @@ struct pv_mmu_ops {
->  	void (*flush_tlb_user)(void);
->  	void (*flush_tlb_kernel)(void);
->  	void (*flush_tlb_one_user)(unsigned long addr);
-> +	/*
-> +	 * flush_tlb_multi() is the preferred interface, which is capable to
-> +	 * flush both local and remote CPUs.
-> +	 */
-> +	void (*flush_tlb_multi)(const struct cpumask *cpus,
-> +				const struct flush_tlb_info *info);
->  	void (*flush_tlb_others)(const struct cpumask *cpus,
->  				 const struct flush_tlb_info *info);
->  
-> diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-> index dee375831962..79272938cf79 100644
-> --- a/arch/x86/include/asm/tlbflush.h
-> +++ b/arch/x86/include/asm/tlbflush.h
-> @@ -569,6 +569,9 @@ static inline void flush_tlb_page(struct vm_area_struct *vma, unsigned long a)
->  	flush_tlb_mm_range(vma->vm_mm, a, a + PAGE_SIZE, PAGE_SHIFT, false);
->  }
->  
-> +void native_flush_tlb_multi(const struct cpumask *cpumask,
-> +			     const struct flush_tlb_info *info);
-> +
->  void native_flush_tlb_others(const struct cpumask *cpumask,
->  			     const struct flush_tlb_info *info);
->  
-> @@ -593,6 +596,9 @@ static inline void arch_tlbbatch_add_mm(struct arch_tlbflush_unmap_batch *batch,
->  extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
->  
->  #ifndef CONFIG_PARAVIRT
-> +#define flush_tlb_multi(mask, info)	\
-> +	native_flush_tlb_multi(mask, info)
-> +
->  #define flush_tlb_others(mask, info)	\
->  	native_flush_tlb_others(mask, info)
->  
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 5169b8cc35bb..00d81e898717 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -630,6 +630,7 @@ static void __init kvm_guest_init(void)
->  	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
->  		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
->  		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-> +		static_key_disable(&flush_tlb_multi_enabled.key);
->  	}
->  
->  	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-> diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-> index 98039d7fb998..ac00afed5570 100644
-> --- a/arch/x86/kernel/paravirt.c
-> +++ b/arch/x86/kernel/paravirt.c
-> @@ -159,6 +159,8 @@ unsigned paravirt_patch_insns(void *insn_buff, unsigned len,
->  	return insn_len;
->  }
->  
-> +DEFINE_STATIC_KEY_TRUE(flush_tlb_multi_enabled);
-> +
->  static void native_flush_tlb(void)
->  {
->  	__native_flush_tlb();
-> @@ -363,6 +365,7 @@ struct paravirt_patch_template pv_ops = {
->  	.mmu.flush_tlb_user	= native_flush_tlb,
->  	.mmu.flush_tlb_kernel	= native_flush_tlb_global,
->  	.mmu.flush_tlb_one_user	= native_flush_tlb_one_user,
-> +	.mmu.flush_tlb_multi	= native_flush_tlb_multi,
->  	.mmu.flush_tlb_others	= native_flush_tlb_others,
->  	.mmu.tlb_remove_table	=
->  			(void (*)(struct mmu_gather *, void *))tlb_remove_page,
-> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-> index c34bcf03f06f..db73d5f1dd43 100644
-> --- a/arch/x86/mm/tlb.c
-> +++ b/arch/x86/mm/tlb.c
-> @@ -551,7 +551,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
->  		 * garbage into our TLB.  Since switching to init_mm is barely
->  		 * slower than a minimal flush, just switch to init_mm.
->  		 *
-> -		 * This should be rare, with native_flush_tlb_others skipping
-> +		 * This should be rare, with native_flush_tlb_multi skipping
->  		 * IPIs to lazy TLB mode CPUs.
->  		 */
-
-Nit, since we're messing with this, it can now be
-"native_flush_tlb_multi()" since it is a function.
-
->  		switch_mm_irqs_off(NULL, &init_mm, NULL);
-> @@ -635,9 +635,12 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
->  	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
->  }
->  
-> -static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
-> +static void flush_tlb_func_local(void *info)
->  {
->  	const struct flush_tlb_info *f = info;
-> +	enum tlb_flush_reason reason;
-> +
-> +	reason = (f->mm == NULL) ? TLB_LOCAL_SHOOTDOWN : TLB_LOCAL_MM_SHOOTDOWN;
-
-Should we just add the "reason" to flush_tlb_info?  It's OK-ish to imply
-it like this, but seems like it would be nicer and easier to track down
-the origins of these things if we did this at the caller.
-
->  	flush_tlb_func_common(f, true, reason);
->  }
-> @@ -655,14 +658,21 @@ static void flush_tlb_func_remote(void *info)
->  	flush_tlb_func_common(f, false, TLB_REMOTE_SHOOTDOWN);
->  }
->  
-> -static bool tlb_is_not_lazy(int cpu, void *data)
-> +static inline bool tlb_is_not_lazy(int cpu)
->  {
->  	return !per_cpu(cpu_tlbstate.is_lazy, cpu);
->  }
-
-Nit: the compiler will probably inline this sucker anyway.  So, for
-these kinds of patches, I'd resist the urge to do these kinds of tweaks,
-especially since it starts to hide the important change on the line.
-
-> -void native_flush_tlb_others(const struct cpumask *cpumask,
-> -			     const struct flush_tlb_info *info)
-> +static DEFINE_PER_CPU(cpumask_t, flush_tlb_mask);
-> +
-> +void native_flush_tlb_multi(const struct cpumask *cpumask,
-> +			    const struct flush_tlb_info *info)
->  {
-> +	/*
-> +	 * Do accounting and tracing. Note that there are (and have always been)
-> +	 * cases in which a remote TLB flush will be traced, but eventually
-> +	 * would not happen.
-> +	 */
->  	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
->  	if (info->end == TLB_FLUSH_ALL)
->  		trace_tlb_flush(TLB_REMOTE_SEND_IPI, TLB_FLUSH_ALL);
-> @@ -682,10 +692,14 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
->  		 * means that the percpu tlb_gen variables won't be updated
->  		 * and we'll do pointless flushes on future context switches.
->  		 *
-> -		 * Rather than hooking native_flush_tlb_others() here, I think
-> +		 * Rather than hooking native_flush_tlb_multi() here, I think
->  		 * that UV should be updated so that smp_call_function_many(),
->  		 * etc, are optimal on UV.
->  		 */
-> +		local_irq_disable();
-> +		flush_tlb_func_local((__force void *)info);
-> +		local_irq_enable();
-> +
->  		cpumask = uv_flush_tlb_others(cpumask, info);
->  		if (cpumask)
->  			smp_call_function_many(cpumask, flush_tlb_func_remote,
-> @@ -704,11 +718,39 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
->  	 * doing a speculative memory access.
->  	 */
->  	if (info->freed_tables)
-> -		smp_call_function_many(cpumask, flush_tlb_func_remote,
-> -			       (void *)info, 1);
-> -	else
-> -		on_each_cpu_cond_mask(tlb_is_not_lazy, flush_tlb_func_remote,
-> -				(void *)info, 1, GFP_ATOMIC, cpumask);
-> +		__smp_call_function_many(cpumask, flush_tlb_func_remote,
-> +					 flush_tlb_func_local, (void *)info, 1);
-> +	else {
-
-I prefer brackets be added for 'if' blocks like this since it doesn't
-take up any meaningful space and makes it less prone to compile errors.
-
-> +		/*
-> +		 * Although we could have used on_each_cpu_cond_mask(),
-> +		 * open-coding it has several performance advantages: (1) we can
-> +		 * use specialized functions for remote and local flushes; (2)
-> +		 * no need for indirect branch to test if TLB is lazy; (3) we
-> +		 * can use a designated cpumask for evaluating the condition
-> +		 * instead of allocating a new one.
-> +		 *
-> +		 * This works under the assumption that there are no nested TLB
-> +		 * flushes, an assumption that is already made in
-> +		 * flush_tlb_mm_range().
-> +		 */
-> +		struct cpumask *cond_cpumask = this_cpu_ptr(&flush_tlb_mask);
-
-This is logically a stack-local variable, right?  But, since we've got
-preempt off and cpumasks can be huge, we don't want to allocate it on
-the stack.  That might be worth a comment somewhere.
-
-> +		int cpu;
-> +
-> +		cpumask_clear(cond_cpumask);
-> +
-> +		for_each_cpu(cpu, cpumask) {
-> +			if (tlb_is_not_lazy(cpu))
-> +				__cpumask_set_cpu(cpu, cond_cpumask);
-> +		}
-
-FWIW, it's probably worth calling out in the changelog that this loop
-exists in on_each_cpu_cond_mask() too.  It looks bad here, but it's no
-worse than what it replaces.
-
-> +		__smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
-> +					 flush_tlb_func_local, (void *)info, 1);
-> +	}
-> +}
-
-There was a __force on an earlier 'info' cast.  Could you talk about
-that for a minute an explain why that one is needed?
-
-> +void native_flush_tlb_others(const struct cpumask *cpumask,
-> +			     const struct flush_tlb_info *info)
-> +{
-> +	native_flush_tlb_multi(cpumask, info);
->  }
->  
->  /*
-> @@ -774,10 +816,15 @@ static void flush_tlb_on_cpus(const cpumask_t *cpumask,
->  {
->  	int this_cpu = smp_processor_id();
->  
-> +	if (static_branch_likely(&flush_tlb_multi_enabled)) {
-> +		flush_tlb_multi(cpumask, info);
-> +		return;
-> +	}
-
-Probably needs a comment for posterity above the if()^^:
-
-	/* Use the optimized flush_tlb_multi() where we can. */
-
-> --- a/arch/x86/xen/mmu_pv.c
-> +++ b/arch/x86/xen/mmu_pv.c
-> @@ -2474,6 +2474,8 @@ void __init xen_init_mmu_ops(void)
->  
->  	pv_ops.mmu = xen_mmu_ops;
->  
-> +	static_key_disable(&flush_tlb_multi_enabled.key);
-> +
->  	memset(dummy_mapping, 0xff, PAGE_SIZE);
->  }
-
-More comments, please.  Perhaps:
-
-	Existing paravirt TLB flushes are incompatible with
-	flush_tlb_multi() because....  Disable it when they are
-	in use.
+PiBPbiBKdW4gMjUsIDIwMTksIGF0IDI6MjkgUE0sIERhdmUgSGFuc2VuIDxkYXZlLmhhbnNlbkBp
+bnRlbC5jb20+IHdyb3RlOg0KPiANCj4gT24gNi8xMi8xOSAxMTo0OCBQTSwgTmFkYXYgQW1pdCB3
+cm90ZToNCj4+IFRvIGltcHJvdmUgVExCIHNob290ZG93biBwZXJmb3JtYW5jZSwgZmx1c2ggdGhl
+IHJlbW90ZSBhbmQgbG9jYWwgVExCcw0KPj4gY29uY3VycmVudGx5LiBJbnRyb2R1Y2UgZmx1c2hf
+dGxiX211bHRpKCkgdGhhdCBkb2VzIHNvLiBUaGUgY3VycmVudA0KPj4gZmx1c2hfdGxiX290aGVy
+cygpIGludGVyZmFjZSBpcyBrZXB0LCBzaW5jZSBwYXJhdmlydHVhbCBpbnRlcmZhY2VzIG5lZWQN
+Cj4+IHRvIGJlIGFkYXB0ZWQgZmlyc3QgYmVmb3JlIGl0IGNhbiBiZSByZW1vdmVkLiBUaGlzIGlz
+IGxlZnQgZm9yIGZ1dHVyZQ0KPj4gd29yay4gSW4gc3VjaCBQViBlbnZpcm9ubWVudHMsIFRMQiBm
+bHVzaGVzIGFyZSBub3QgcGVyZm9ybWVkLCBhdCB0aGlzDQo+PiB0aW1lLCBjb25jdXJyZW50bHku
+DQo+PiANCj4+IEFkZCBhIHN0YXRpYyBrZXkgdG8gdGVsbCB3aGV0aGVyIHRoaXMgbmV3IGludGVy
+ZmFjZSBpcyBzdXBwb3J0ZWQuDQo+PiANCj4+IENjOiAiSy4gWS4gU3Jpbml2YXNhbiIgPGt5c0Bt
+aWNyb3NvZnQuY29tPg0KPj4gQ2M6IEhhaXlhbmcgWmhhbmcgPGhhaXlhbmd6QG1pY3Jvc29mdC5j
+b20+DQo+PiBDYzogU3RlcGhlbiBIZW1taW5nZXIgPHN0aGVtbWluQG1pY3Jvc29mdC5jb20+DQo+
+PiBDYzogU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPg0KPj4gQ2M6IFRob21hcyBHbGVp
+eG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KPj4gQ2M6IEluZ28gTW9sbmFyIDxtaW5nb0ByZWRo
+YXQuY29tPg0KPj4gQ2M6IEJvcmlzbGF2IFBldGtvdiA8YnBAYWxpZW44LmRlPg0KPj4gQ2M6IHg4
+NkBrZXJuZWwub3JnDQo+PiBDYzogSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPg0KPj4g
+Q2M6IFBhb2xvIEJvbnppbmkgPHBib256aW5pQHJlZGhhdC5jb20+DQo+PiBDYzogRGF2ZSBIYW5z
+ZW4gPGRhdmUuaGFuc2VuQGxpbnV4LmludGVsLmNvbT4NCj4+IENjOiBBbmR5IEx1dG9taXJza2kg
+PGx1dG9Aa2VybmVsLm9yZz4NCj4+IENjOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVh
+ZC5vcmc+DQo+PiBDYzogQm9yaXMgT3N0cm92c2t5IDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNv
+bT4NCj4+IENjOiBsaW51eC1oeXBlcnZAdmdlci5rZXJuZWwub3JnDQo+PiBDYzogbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZw0KPj4gQ2M6IHZpcnR1YWxpemF0aW9uQGxpc3RzLmxpbnV4LWZv
+dW5kYXRpb24ub3JnDQo+PiBDYzoga3ZtQHZnZXIua2VybmVsLm9yZw0KPj4gQ2M6IHhlbi1kZXZl
+bEBsaXN0cy54ZW5wcm9qZWN0Lm9yZw0KPj4gU2lnbmVkLW9mZi1ieTogTmFkYXYgQW1pdCA8bmFt
+aXRAdm13YXJlLmNvbT4NCj4+IC0tLQ0KPj4gYXJjaC94ODYvaHlwZXJ2L21tdS5jICAgICAgICAg
+ICAgICAgICB8ICAyICsNCj4+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0LmggICAgICAg
+fCAgOCArKysNCj4+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0X3R5cGVzLmggfCAgNiAr
+KysNCj4+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3RsYmZsdXNoLmggICAgICAgfCAgNiArKysNCj4+
+IGFyY2gveDg2L2tlcm5lbC9rdm0uYyAgICAgICAgICAgICAgICAgfCAgMSArDQo+PiBhcmNoL3g4
+Ni9rZXJuZWwvcGFyYXZpcnQuYyAgICAgICAgICAgIHwgIDMgKysNCj4+IGFyY2gveDg2L21tL3Rs
+Yi5jICAgICAgICAgICAgICAgICAgICAgfCA3MSArKysrKysrKysrKysrKysrKysrKysrLS0tLS0N
+Cj4+IGFyY2gveDg2L3hlbi9tbXVfcHYuYyAgICAgICAgICAgICAgICAgfCAgMiArDQo+PiA4IGZp
+bGVzIGNoYW5nZWQsIDg3IGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KPj4gDQo+PiBk
+aWZmIC0tZ2l0IGEvYXJjaC94ODYvaHlwZXJ2L21tdS5jIGIvYXJjaC94ODYvaHlwZXJ2L21tdS5j
+DQo+PiBpbmRleCBlNjVkN2ZlNjQ4OWYuLmNhMjhiNDAwYzg3YyAxMDA2NDQNCj4+IC0tLSBhL2Fy
+Y2gveDg2L2h5cGVydi9tbXUuYw0KPj4gKysrIGIvYXJjaC94ODYvaHlwZXJ2L21tdS5jDQo+PiBA
+QCAtMjMzLDQgKzIzMyw2IEBAIHZvaWQgaHlwZXJ2X3NldHVwX21tdV9vcHModm9pZCkNCj4+IAlw
+cl9pbmZvKCJVc2luZyBoeXBlcmNhbGwgZm9yIHJlbW90ZSBUTEIgZmx1c2hcbiIpOw0KPj4gCXB2
+X29wcy5tbXUuZmx1c2hfdGxiX290aGVycyA9IGh5cGVydl9mbHVzaF90bGJfb3RoZXJzOw0KPj4g
+CXB2X29wcy5tbXUudGxiX3JlbW92ZV90YWJsZSA9IHRsYl9yZW1vdmVfdGFibGU7DQo+PiArDQo+
+PiArCXN0YXRpY19rZXlfZGlzYWJsZSgmZmx1c2hfdGxiX211bHRpX2VuYWJsZWQua2V5KTsNCj4+
+IH0NCj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydC5oIGIvYXJj
+aC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnQuaA0KPj4gaW5kZXggYzI1YzM4YTA1YzFjLi4xOTJi
+ZTcyNTQ0NTcgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydC5o
+DQo+PiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9wYXJhdmlydC5oDQo+PiBAQCAtNDcsNiAr
+NDcsOCBAQCBzdGF0aWMgaW5saW5lIHZvaWQgc2xvd19kb3duX2lvKHZvaWQpDQo+PiAjZW5kaWYN
+Cj4+IH0NCj4+IA0KPj4gK0RFQ0xBUkVfU1RBVElDX0tFWV9UUlVFKGZsdXNoX3RsYl9tdWx0aV9l
+bmFibGVkKTsNCj4+ICsNCj4+IHN0YXRpYyBpbmxpbmUgdm9pZCBfX2ZsdXNoX3RsYih2b2lkKQ0K
+Pj4gew0KPj4gCVBWT1BfVkNBTEwwKG1tdS5mbHVzaF90bGJfdXNlcik7DQo+PiBAQCAtNjIsNiAr
+NjQsMTIgQEAgc3RhdGljIGlubGluZSB2b2lkIF9fZmx1c2hfdGxiX29uZV91c2VyKHVuc2lnbmVk
+IGxvbmcgYWRkcikNCj4+IAlQVk9QX1ZDQUxMMShtbXUuZmx1c2hfdGxiX29uZV91c2VyLCBhZGRy
+KTsNCj4+IH0NCj4+IA0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmbHVzaF90bGJfbXVsdGkoY29u
+c3Qgc3RydWN0IGNwdW1hc2sgKmNwdW1hc2ssDQo+PiArCQkJCSAgIGNvbnN0IHN0cnVjdCBmbHVz
+aF90bGJfaW5mbyAqaW5mbykNCj4+ICt7DQo+PiArCVBWT1BfVkNBTEwyKG1tdS5mbHVzaF90bGJf
+bXVsdGksIGNwdW1hc2ssIGluZm8pOw0KPj4gK30NCj4+ICsNCj4+IHN0YXRpYyBpbmxpbmUgdm9p
+ZCBmbHVzaF90bGJfb3RoZXJzKGNvbnN0IHN0cnVjdCBjcHVtYXNrICpjcHVtYXNrLA0KPj4gCQkJ
+CSAgICBjb25zdCBzdHJ1Y3QgZmx1c2hfdGxiX2luZm8gKmluZm8pDQo+PiB7DQo+PiBkaWZmIC0t
+Z2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnRfdHlwZXMuaCBiL2FyY2gveDg2L2lu
+Y2x1ZGUvYXNtL3BhcmF2aXJ0X3R5cGVzLmgNCj4+IGluZGV4IDk0NmY4ZjFmMWVmYy4uYjkzYjNk
+OTA3MjlhIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnRfdHlw
+ZXMuaA0KPj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnRfdHlwZXMuaA0KPj4g
+QEAgLTIxMSw2ICsyMTEsMTIgQEAgc3RydWN0IHB2X21tdV9vcHMgew0KPj4gCXZvaWQgKCpmbHVz
+aF90bGJfdXNlcikodm9pZCk7DQo+PiAJdm9pZCAoKmZsdXNoX3RsYl9rZXJuZWwpKHZvaWQpOw0K
+Pj4gCXZvaWQgKCpmbHVzaF90bGJfb25lX3VzZXIpKHVuc2lnbmVkIGxvbmcgYWRkcik7DQo+PiAr
+CS8qDQo+PiArCSAqIGZsdXNoX3RsYl9tdWx0aSgpIGlzIHRoZSBwcmVmZXJyZWQgaW50ZXJmYWNl
+LCB3aGljaCBpcyBjYXBhYmxlIHRvDQo+PiArCSAqIGZsdXNoIGJvdGggbG9jYWwgYW5kIHJlbW90
+ZSBDUFVzLg0KPj4gKwkgKi8NCj4+ICsJdm9pZCAoKmZsdXNoX3RsYl9tdWx0aSkoY29uc3Qgc3Ry
+dWN0IGNwdW1hc2sgKmNwdXMsDQo+PiArCQkJCWNvbnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAq
+aW5mbyk7DQo+PiAJdm9pZCAoKmZsdXNoX3RsYl9vdGhlcnMpKGNvbnN0IHN0cnVjdCBjcHVtYXNr
+ICpjcHVzLA0KPj4gCQkJCSBjb25zdCBzdHJ1Y3QgZmx1c2hfdGxiX2luZm8gKmluZm8pOw0KPj4g
+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vdGxiZmx1c2guaCBiL2FyY2gv
+eDg2L2luY2x1ZGUvYXNtL3RsYmZsdXNoLmgNCj4+IGluZGV4IGRlZTM3NTgzMTk2Mi4uNzkyNzI5
+MzhjZjc5IDEwMDY0NA0KPj4gLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20vdGxiZmx1c2guaA0K
+Pj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vdGxiZmx1c2guaA0KPj4gQEAgLTU2OSw2ICs1
+NjksOSBAQCBzdGF0aWMgaW5saW5lIHZvaWQgZmx1c2hfdGxiX3BhZ2Uoc3RydWN0IHZtX2FyZWFf
+c3RydWN0ICp2bWEsIHVuc2lnbmVkIGxvbmcgYSkNCj4+IAlmbHVzaF90bGJfbW1fcmFuZ2Uodm1h
+LT52bV9tbSwgYSwgYSArIFBBR0VfU0laRSwgUEFHRV9TSElGVCwgZmFsc2UpOw0KPj4gfQ0KPj4g
+DQo+PiArdm9pZCBuYXRpdmVfZmx1c2hfdGxiX211bHRpKGNvbnN0IHN0cnVjdCBjcHVtYXNrICpj
+cHVtYXNrLA0KPj4gKwkJCSAgICAgY29uc3Qgc3RydWN0IGZsdXNoX3RsYl9pbmZvICppbmZvKTsN
+Cj4+ICsNCj4+IHZvaWQgbmF0aXZlX2ZsdXNoX3RsYl9vdGhlcnMoY29uc3Qgc3RydWN0IGNwdW1h
+c2sgKmNwdW1hc2ssDQo+PiAJCQkgICAgIGNvbnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqaW5m
+byk7DQo+PiANCj4+IEBAIC01OTMsNiArNTk2LDkgQEAgc3RhdGljIGlubGluZSB2b2lkIGFyY2hf
+dGxiYmF0Y2hfYWRkX21tKHN0cnVjdCBhcmNoX3RsYmZsdXNoX3VubWFwX2JhdGNoICpiYXRjaCwN
+Cj4+IGV4dGVybiB2b2lkIGFyY2hfdGxiYmF0Y2hfZmx1c2goc3RydWN0IGFyY2hfdGxiZmx1c2hf
+dW5tYXBfYmF0Y2ggKmJhdGNoKTsNCj4+IA0KPj4gI2lmbmRlZiBDT05GSUdfUEFSQVZJUlQNCj4+
+ICsjZGVmaW5lIGZsdXNoX3RsYl9tdWx0aShtYXNrLCBpbmZvKQlcDQo+PiArCW5hdGl2ZV9mbHVz
+aF90bGJfbXVsdGkobWFzaywgaW5mbykNCj4+ICsNCj4+ICNkZWZpbmUgZmx1c2hfdGxiX290aGVy
+cyhtYXNrLCBpbmZvKQlcDQo+PiAJbmF0aXZlX2ZsdXNoX3RsYl9vdGhlcnMobWFzaywgaW5mbykN
+Cj4+IA0KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9rdm0uYyBiL2FyY2gveDg2L2tl
+cm5lbC9rdm0uYw0KPj4gaW5kZXggNTE2OWI4Y2MzNWJiLi4wMGQ4MWU4OTg3MTcgMTAwNjQ0DQo+
+PiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwva3ZtLmMNCj4+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9r
+dm0uYw0KPj4gQEAgLTYzMCw2ICs2MzAsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQga3ZtX2d1ZXN0
+X2luaXQodm9pZCkNCj4+IAkgICAga3ZtX3BhcmFfaGFzX2ZlYXR1cmUoS1ZNX0ZFQVRVUkVfU1RF
+QUxfVElNRSkpIHsNCj4+IAkJcHZfb3BzLm1tdS5mbHVzaF90bGJfb3RoZXJzID0ga3ZtX2ZsdXNo
+X3RsYl9vdGhlcnM7DQo+PiAJCXB2X29wcy5tbXUudGxiX3JlbW92ZV90YWJsZSA9IHRsYl9yZW1v
+dmVfdGFibGU7DQo+PiArCQlzdGF0aWNfa2V5X2Rpc2FibGUoJmZsdXNoX3RsYl9tdWx0aV9lbmFi
+bGVkLmtleSk7DQo+PiAJfQ0KPj4gDQo+PiAJaWYgKGt2bV9wYXJhX2hhc19mZWF0dXJlKEtWTV9G
+RUFUVVJFX1BWX0VPSSkpDQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3BhcmF2aXJ0
+LmMgYi9hcmNoL3g4Ni9rZXJuZWwvcGFyYXZpcnQuYw0KPj4gaW5kZXggOTgwMzlkN2ZiOTk4Li5h
+YzAwYWZlZDU1NzAgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvcGFyYXZpcnQuYw0K
+Pj4gKysrIGIvYXJjaC94ODYva2VybmVsL3BhcmF2aXJ0LmMNCj4+IEBAIC0xNTksNiArMTU5LDgg
+QEAgdW5zaWduZWQgcGFyYXZpcnRfcGF0Y2hfaW5zbnModm9pZCAqaW5zbl9idWZmLCB1bnNpZ25l
+ZCBsZW4sDQo+PiAJcmV0dXJuIGluc25fbGVuOw0KPj4gfQ0KPj4gDQo+PiArREVGSU5FX1NUQVRJ
+Q19LRVlfVFJVRShmbHVzaF90bGJfbXVsdGlfZW5hYmxlZCk7DQo+PiArDQo+PiBzdGF0aWMgdm9p
+ZCBuYXRpdmVfZmx1c2hfdGxiKHZvaWQpDQo+PiB7DQo+PiAJX19uYXRpdmVfZmx1c2hfdGxiKCk7
+DQo+PiBAQCAtMzYzLDYgKzM2NSw3IEBAIHN0cnVjdCBwYXJhdmlydF9wYXRjaF90ZW1wbGF0ZSBw
+dl9vcHMgPSB7DQo+PiAJLm1tdS5mbHVzaF90bGJfdXNlcgk9IG5hdGl2ZV9mbHVzaF90bGIsDQo+
+PiAJLm1tdS5mbHVzaF90bGJfa2VybmVsCT0gbmF0aXZlX2ZsdXNoX3RsYl9nbG9iYWwsDQo+PiAJ
+Lm1tdS5mbHVzaF90bGJfb25lX3VzZXIJPSBuYXRpdmVfZmx1c2hfdGxiX29uZV91c2VyLA0KPj4g
+KwkubW11LmZsdXNoX3RsYl9tdWx0aQk9IG5hdGl2ZV9mbHVzaF90bGJfbXVsdGksDQo+PiAJLm1t
+dS5mbHVzaF90bGJfb3RoZXJzCT0gbmF0aXZlX2ZsdXNoX3RsYl9vdGhlcnMsDQo+PiAJLm1tdS50
+bGJfcmVtb3ZlX3RhYmxlCT0NCj4+IAkJCSh2b2lkICgqKShzdHJ1Y3QgbW11X2dhdGhlciAqLCB2
+b2lkICopKXRsYl9yZW1vdmVfcGFnZSwNCj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9tbS90bGIu
+YyBiL2FyY2gveDg2L21tL3RsYi5jDQo+PiBpbmRleCBjMzRiY2YwM2YwNmYuLmRiNzNkNWYxZGQ0
+MyAxMDA2NDQNCj4+IC0tLSBhL2FyY2gveDg2L21tL3RsYi5jDQo+PiArKysgYi9hcmNoL3g4Ni9t
+bS90bGIuYw0KPj4gQEAgLTU1MSw3ICs1NTEsNyBAQCBzdGF0aWMgdm9pZCBmbHVzaF90bGJfZnVu
+Y19jb21tb24oY29uc3Qgc3RydWN0IGZsdXNoX3RsYl9pbmZvICpmLA0KPj4gCQkgKiBnYXJiYWdl
+IGludG8gb3VyIFRMQi4gIFNpbmNlIHN3aXRjaGluZyB0byBpbml0X21tIGlzIGJhcmVseQ0KPj4g
+CQkgKiBzbG93ZXIgdGhhbiBhIG1pbmltYWwgZmx1c2gsIGp1c3Qgc3dpdGNoIHRvIGluaXRfbW0u
+DQo+PiAJCSAqDQo+PiAtCQkgKiBUaGlzIHNob3VsZCBiZSByYXJlLCB3aXRoIG5hdGl2ZV9mbHVz
+aF90bGJfb3RoZXJzIHNraXBwaW5nDQo+PiArCQkgKiBUaGlzIHNob3VsZCBiZSByYXJlLCB3aXRo
+IG5hdGl2ZV9mbHVzaF90bGJfbXVsdGkgc2tpcHBpbmcNCj4+IAkJICogSVBJcyB0byBsYXp5IFRM
+QiBtb2RlIENQVXMuDQo+PiAJCSAqLw0KPiANCj4gTml0LCBzaW5jZSB3ZSdyZSBtZXNzaW5nIHdp
+dGggdGhpcywgaXQgY2FuIG5vdyBiZQ0KPiAibmF0aXZlX2ZsdXNoX3RsYl9tdWx0aSgpIiBzaW5j
+ZSBpdCBpcyBhIGZ1bmN0aW9uLg0KDQpTdXJlLg0KDQo+IA0KPj4gc3dpdGNoX21tX2lycXNfb2Zm
+KE5VTEwsICZpbml0X21tLCBOVUxMKTsNCj4+IEBAIC02MzUsOSArNjM1LDEyIEBAIHN0YXRpYyB2
+b2lkIGZsdXNoX3RsYl9mdW5jX2NvbW1vbihjb25zdCBzdHJ1Y3QgZmx1c2hfdGxiX2luZm8gKmYs
+DQo+PiAJdGhpc19jcHVfd3JpdGUoY3B1X3RsYnN0YXRlLmN0eHNbbG9hZGVkX21tX2FzaWRdLnRs
+Yl9nZW4sIG1tX3RsYl9nZW4pOw0KPj4gfQ0KPj4gDQo+PiAtc3RhdGljIHZvaWQgZmx1c2hfdGxi
+X2Z1bmNfbG9jYWwoY29uc3Qgdm9pZCAqaW5mbywgZW51bSB0bGJfZmx1c2hfcmVhc29uIHJlYXNv
+bikNCj4+ICtzdGF0aWMgdm9pZCBmbHVzaF90bGJfZnVuY19sb2NhbCh2b2lkICppbmZvKQ0KPj4g
+ew0KPj4gCWNvbnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqZiA9IGluZm87DQo+PiArCWVudW0g
+dGxiX2ZsdXNoX3JlYXNvbiByZWFzb247DQo+PiArDQo+PiArCXJlYXNvbiA9IChmLT5tbSA9PSBO
+VUxMKSA/IFRMQl9MT0NBTF9TSE9PVERPV04gOiBUTEJfTE9DQUxfTU1fU0hPT1RET1dOOw0KPiAN
+Cj4gU2hvdWxkIHdlIGp1c3QgYWRkIHRoZSAicmVhc29uIiB0byBmbHVzaF90bGJfaW5mbz8gIEl0
+J3MgT0staXNoIHRvIGltcGx5DQo+IGl0IGxpa2UgdGhpcywgYnV0IHNlZW1zIGxpa2UgaXQgd291
+bGQgYmUgbmljZXIgYW5kIGVhc2llciB0byB0cmFjayBkb3duDQo+IHRoZSBvcmlnaW5zIG9mIHRo
+ZXNlIHRoaW5ncyBpZiB3ZSBkaWQgdGhpcyBhdCB0aGUgY2FsbGVyLg0KDQpJIHByZWZlciBub3Qg
+dG8uIEkgd2FudCBsYXRlciB0byBpbmxpbmUgZmx1c2hfdGxiX2luZm8gaW50byB0aGUgc2FtZQ0K
+Y2FjaGVsaW5lIHRoYXQgaG9sZHMgY2FsbF9mdW5jdGlvbl9kYXRhLiBJbmNyZWFzaW5nIHRoZSBz
+aXplIG9mDQpmbHVzaF90bGJfaW5mbyBmb3Igbm8gZ29vZCByZWFzb24gd2lsbCBub3QgaGVscOKA
+pg0KDQo+PiBmbHVzaF90bGJfZnVuY19jb21tb24oZiwgdHJ1ZSwgcmVhc29uKTsNCj4+IH0NCj4+
+IEBAIC02NTUsMTQgKzY1OCwyMSBAQCBzdGF0aWMgdm9pZCBmbHVzaF90bGJfZnVuY19yZW1vdGUo
+dm9pZCAqaW5mbykNCj4+IAlmbHVzaF90bGJfZnVuY19jb21tb24oZiwgZmFsc2UsIFRMQl9SRU1P
+VEVfU0hPT1RET1dOKTsNCj4+IH0NCj4+IA0KPj4gLXN0YXRpYyBib29sIHRsYl9pc19ub3RfbGF6
+eShpbnQgY3B1LCB2b2lkICpkYXRhKQ0KPj4gK3N0YXRpYyBpbmxpbmUgYm9vbCB0bGJfaXNfbm90
+X2xhenkoaW50IGNwdSkNCj4+IHsNCj4+IAlyZXR1cm4gIXBlcl9jcHUoY3B1X3RsYnN0YXRlLmlz
+X2xhenksIGNwdSk7DQo+PiB9DQo+IA0KPiBOaXQ6IHRoZSBjb21waWxlciB3aWxsIHByb2JhYmx5
+IGlubGluZSB0aGlzIHN1Y2tlciBhbnl3YXkuICBTbywgZm9yDQo+IHRoZXNlIGtpbmRzIG9mIHBh
+dGNoZXMsIEknZCByZXNpc3QgdGhlIHVyZ2UgdG8gZG8gdGhlc2Uga2luZHMgb2YgdHdlYWtzLA0K
+PiBlc3BlY2lhbGx5IHNpbmNlIGl0IHN0YXJ0cyB0byBoaWRlIHRoZSBpbXBvcnRhbnQgY2hhbmdl
+IG9uIHRoZSBsaW5lLg0KDQpPZiBjb3Vyc2UuDQoNCj4gDQo+PiAtdm9pZCBuYXRpdmVfZmx1c2hf
+dGxiX290aGVycyhjb25zdCBzdHJ1Y3QgY3B1bWFzayAqY3B1bWFzaywNCj4+IC0JCQkgICAgIGNv
+bnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqaW5mbykNCj4+ICtzdGF0aWMgREVGSU5FX1BFUl9D
+UFUoY3B1bWFza190LCBmbHVzaF90bGJfbWFzayk7DQo+PiArDQo+PiArdm9pZCBuYXRpdmVfZmx1
+c2hfdGxiX211bHRpKGNvbnN0IHN0cnVjdCBjcHVtYXNrICpjcHVtYXNrLA0KPj4gKwkJCSAgICBj
+b25zdCBzdHJ1Y3QgZmx1c2hfdGxiX2luZm8gKmluZm8pDQo+PiB7DQo+PiArCS8qDQo+PiArCSAq
+IERvIGFjY291bnRpbmcgYW5kIHRyYWNpbmcuIE5vdGUgdGhhdCB0aGVyZSBhcmUgKGFuZCBoYXZl
+IGFsd2F5cyBiZWVuKQ0KPj4gKwkgKiBjYXNlcyBpbiB3aGljaCBhIHJlbW90ZSBUTEIgZmx1c2gg
+d2lsbCBiZSB0cmFjZWQsIGJ1dCBldmVudHVhbGx5DQo+PiArCSAqIHdvdWxkIG5vdCBoYXBwZW4u
+DQo+PiArCSAqLw0KPj4gCWNvdW50X3ZtX3RsYl9ldmVudChOUl9UTEJfUkVNT1RFX0ZMVVNIKTsN
+Cj4+IAlpZiAoaW5mby0+ZW5kID09IFRMQl9GTFVTSF9BTEwpDQo+PiAJCXRyYWNlX3RsYl9mbHVz
+aChUTEJfUkVNT1RFX1NFTkRfSVBJLCBUTEJfRkxVU0hfQUxMKTsNCj4+IEBAIC02ODIsMTAgKzY5
+MiwxNCBAQCB2b2lkIG5hdGl2ZV9mbHVzaF90bGJfb3RoZXJzKGNvbnN0IHN0cnVjdCBjcHVtYXNr
+ICpjcHVtYXNrLA0KPj4gCQkgKiBtZWFucyB0aGF0IHRoZSBwZXJjcHUgdGxiX2dlbiB2YXJpYWJs
+ZXMgd29uJ3QgYmUgdXBkYXRlZA0KPj4gCQkgKiBhbmQgd2UnbGwgZG8gcG9pbnRsZXNzIGZsdXNo
+ZXMgb24gZnV0dXJlIGNvbnRleHQgc3dpdGNoZXMuDQo+PiAJCSAqDQo+PiAtCQkgKiBSYXRoZXIg
+dGhhbiBob29raW5nIG5hdGl2ZV9mbHVzaF90bGJfb3RoZXJzKCkgaGVyZSwgSSB0aGluaw0KPj4g
+KwkJICogUmF0aGVyIHRoYW4gaG9va2luZyBuYXRpdmVfZmx1c2hfdGxiX211bHRpKCkgaGVyZSwg
+SSB0aGluaw0KPj4gCQkgKiB0aGF0IFVWIHNob3VsZCBiZSB1cGRhdGVkIHNvIHRoYXQgc21wX2Nh
+bGxfZnVuY3Rpb25fbWFueSgpLA0KPj4gCQkgKiBldGMsIGFyZSBvcHRpbWFsIG9uIFVWLg0KPj4g
+CQkgKi8NCj4+ICsJCWxvY2FsX2lycV9kaXNhYmxlKCk7DQo+PiArCQlmbHVzaF90bGJfZnVuY19s
+b2NhbCgoX19mb3JjZSB2b2lkICopaW5mbyk7DQo+PiArCQlsb2NhbF9pcnFfZW5hYmxlKCk7DQo+
+PiArDQo+PiAJCWNwdW1hc2sgPSB1dl9mbHVzaF90bGJfb3RoZXJzKGNwdW1hc2ssIGluZm8pOw0K
+Pj4gCQlpZiAoY3B1bWFzaykNCj4+IAkJCXNtcF9jYWxsX2Z1bmN0aW9uX21hbnkoY3B1bWFzaywg
+Zmx1c2hfdGxiX2Z1bmNfcmVtb3RlLA0KPj4gQEAgLTcwNCwxMSArNzE4LDM5IEBAIHZvaWQgbmF0
+aXZlX2ZsdXNoX3RsYl9vdGhlcnMoY29uc3Qgc3RydWN0IGNwdW1hc2sgKmNwdW1hc2ssDQo+PiAJ
+ICogZG9pbmcgYSBzcGVjdWxhdGl2ZSBtZW1vcnkgYWNjZXNzLg0KPj4gCSAqLw0KPj4gCWlmIChp
+bmZvLT5mcmVlZF90YWJsZXMpDQo+PiAtCQlzbXBfY2FsbF9mdW5jdGlvbl9tYW55KGNwdW1hc2ss
+IGZsdXNoX3RsYl9mdW5jX3JlbW90ZSwNCj4+IC0JCQkgICAgICAgKHZvaWQgKilpbmZvLCAxKTsN
+Cj4+IC0JZWxzZQ0KPj4gLQkJb25fZWFjaF9jcHVfY29uZF9tYXNrKHRsYl9pc19ub3RfbGF6eSwg
+Zmx1c2hfdGxiX2Z1bmNfcmVtb3RlLA0KPj4gLQkJCQkodm9pZCAqKWluZm8sIDEsIEdGUF9BVE9N
+SUMsIGNwdW1hc2spOw0KPj4gKwkJX19zbXBfY2FsbF9mdW5jdGlvbl9tYW55KGNwdW1hc2ssIGZs
+dXNoX3RsYl9mdW5jX3JlbW90ZSwNCj4+ICsJCQkJCSBmbHVzaF90bGJfZnVuY19sb2NhbCwgKHZv
+aWQgKilpbmZvLCAxKTsNCj4+ICsJZWxzZSB7DQo+IA0KPiBJIHByZWZlciBicmFja2V0cyBiZSBh
+ZGRlZCBmb3IgJ2lmJyBibG9ja3MgbGlrZSB0aGlzIHNpbmNlIGl0IGRvZXNuJ3QNCj4gdGFrZSB1
+cCBhbnkgbWVhbmluZ2Z1bCBzcGFjZSBhbmQgbWFrZXMgaXQgbGVzcyBwcm9uZSB0byBjb21waWxl
+IGVycm9ycy4NCg0KSWYgeW91IHNheSBzby4NCg0KPiANCj4+ICsJCS8qDQo+PiArCQkgKiBBbHRo
+b3VnaCB3ZSBjb3VsZCBoYXZlIHVzZWQgb25fZWFjaF9jcHVfY29uZF9tYXNrKCksDQo+PiArCQkg
+KiBvcGVuLWNvZGluZyBpdCBoYXMgc2V2ZXJhbCBwZXJmb3JtYW5jZSBhZHZhbnRhZ2VzOiAoMSkg
+d2UgY2FuDQo+PiArCQkgKiB1c2Ugc3BlY2lhbGl6ZWQgZnVuY3Rpb25zIGZvciByZW1vdGUgYW5k
+IGxvY2FsIGZsdXNoZXM7ICgyKQ0KPj4gKwkJICogbm8gbmVlZCBmb3IgaW5kaXJlY3QgYnJhbmNo
+IHRvIHRlc3QgaWYgVExCIGlzIGxhenk7ICgzKSB3ZQ0KPj4gKwkJICogY2FuIHVzZSBhIGRlc2ln
+bmF0ZWQgY3B1bWFzayBmb3IgZXZhbHVhdGluZyB0aGUgY29uZGl0aW9uDQo+PiArCQkgKiBpbnN0
+ZWFkIG9mIGFsbG9jYXRpbmcgYSBuZXcgb25lLg0KPj4gKwkJICoNCj4+ICsJCSAqIFRoaXMgd29y
+a3MgdW5kZXIgdGhlIGFzc3VtcHRpb24gdGhhdCB0aGVyZSBhcmUgbm8gbmVzdGVkIFRMQg0KPj4g
+KwkJICogZmx1c2hlcywgYW4gYXNzdW1wdGlvbiB0aGF0IGlzIGFscmVhZHkgbWFkZSBpbg0KPj4g
+KwkJICogZmx1c2hfdGxiX21tX3JhbmdlKCkuDQo+PiArCQkgKi8NCj4+ICsJCXN0cnVjdCBjcHVt
+YXNrICpjb25kX2NwdW1hc2sgPSB0aGlzX2NwdV9wdHIoJmZsdXNoX3RsYl9tYXNrKTsNCj4gDQo+
+IFRoaXMgaXMgbG9naWNhbGx5IGEgc3RhY2stbG9jYWwgdmFyaWFibGUsIHJpZ2h0PyAgQnV0LCBz
+aW5jZSB3ZSd2ZSBnb3QNCj4gcHJlZW1wdCBvZmYgYW5kIGNwdW1hc2tzIGNhbiBiZSBodWdlLCB3
+ZSBkb24ndCB3YW50IHRvIGFsbG9jYXRlIGl0IG9uDQo+IHRoZSBzdGFjay4gIFRoYXQgbWlnaHQg
+YmUgd29ydGggYSBjb21tZW50IHNvbWV3aGVyZS4NCg0KSSB3aWxsIGFkZCBhIGNvbW1lbnQgaGVy
+ZS4NCg0KPiANCj4+ICsJCWludCBjcHU7DQo+PiArDQo+PiArCQljcHVtYXNrX2NsZWFyKGNvbmRf
+Y3B1bWFzayk7DQo+PiArDQo+PiArCQlmb3JfZWFjaF9jcHUoY3B1LCBjcHVtYXNrKSB7DQo+PiAr
+CQkJaWYgKHRsYl9pc19ub3RfbGF6eShjcHUpKQ0KPj4gKwkJCQlfX2NwdW1hc2tfc2V0X2NwdShj
+cHUsIGNvbmRfY3B1bWFzayk7DQo+PiArCQl9DQo+IA0KPiBGV0lXLCBpdCdzIHByb2JhYmx5IHdv
+cnRoIGNhbGxpbmcgb3V0IGluIHRoZSBjaGFuZ2Vsb2cgdGhhdCB0aGlzIGxvb3ANCj4gZXhpc3Rz
+IGluIG9uX2VhY2hfY3B1X2NvbmRfbWFzaygpIHRvby4gIEl0IGxvb2tzIGJhZCBoZXJlLCBidXQg
+aXQncyBubw0KPiB3b3JzZSB0aGFuIHdoYXQgaXQgcmVwbGFjZXMuDQoNCkFkZGVkLg0KDQo+IA0K
+Pj4gKwkJX19zbXBfY2FsbF9mdW5jdGlvbl9tYW55KGNvbmRfY3B1bWFzaywgZmx1c2hfdGxiX2Z1
+bmNfcmVtb3RlLA0KPj4gKwkJCQkJIGZsdXNoX3RsYl9mdW5jX2xvY2FsLCAodm9pZCAqKWluZm8s
+IDEpOw0KPj4gKwl9DQo+PiArfQ0KPiANCj4gVGhlcmUgd2FzIGEgX19mb3JjZSBvbiBhbiBlYXJs
+aWVyICdpbmZvJyBjYXN0LiAgQ291bGQgeW91IHRhbGsgYWJvdXQNCj4gdGhhdCBmb3IgYSBtaW51
+dGUgYW4gZXhwbGFpbiB3aHkgdGhhdCBvbmUgaXMgbmVlZGVkPw0KDQpJIGhhdmUgbm8gaWRlYSB3
+aGVyZSB0aGUgX19mb3JjZSBjYW1lIGZyb20uIEnigJlsbCByZW1vdmUgaXQuDQoNCj4gDQo+PiAr
+dm9pZCBuYXRpdmVfZmx1c2hfdGxiX290aGVycyhjb25zdCBzdHJ1Y3QgY3B1bWFzayAqY3B1bWFz
+aywNCj4+ICsJCQkgICAgIGNvbnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqaW5mbykNCj4+ICt7
+DQo+PiArCW5hdGl2ZV9mbHVzaF90bGJfbXVsdGkoY3B1bWFzaywgaW5mbyk7DQo+PiB9DQo+PiAN
+Cj4+IC8qDQo+PiBAQCAtNzc0LDEwICs4MTYsMTUgQEAgc3RhdGljIHZvaWQgZmx1c2hfdGxiX29u
+X2NwdXMoY29uc3QgY3B1bWFza190ICpjcHVtYXNrLA0KPj4gew0KPj4gCWludCB0aGlzX2NwdSA9
+IHNtcF9wcm9jZXNzb3JfaWQoKTsNCj4+IA0KPj4gKwlpZiAoc3RhdGljX2JyYW5jaF9saWtlbHko
+JmZsdXNoX3RsYl9tdWx0aV9lbmFibGVkKSkgew0KPj4gKwkJZmx1c2hfdGxiX211bHRpKGNwdW1h
+c2ssIGluZm8pOw0KPj4gKwkJcmV0dXJuOw0KPj4gKwl9DQo+IA0KPiBQcm9iYWJseSBuZWVkcyBh
+IGNvbW1lbnQgZm9yIHBvc3Rlcml0eSBhYm92ZSB0aGUgaWYoKV5eOg0KPiANCj4gCS8qIFVzZSB0
+aGUgb3B0aW1pemVkIGZsdXNoX3RsYl9tdWx0aSgpIHdoZXJlIHdlIGNhbi4gKi8NCg0KUmlnaHQu
+DQoNCj4gDQo+PiAtLS0gYS9hcmNoL3g4Ni94ZW4vbW11X3B2LmMNCj4+ICsrKyBiL2FyY2gveDg2
+L3hlbi9tbXVfcHYuYw0KPj4gQEAgLTI0NzQsNiArMjQ3NCw4IEBAIHZvaWQgX19pbml0IHhlbl9p
+bml0X21tdV9vcHModm9pZCkNCj4+IA0KPj4gCXB2X29wcy5tbXUgPSB4ZW5fbW11X29wczsNCj4+
+IA0KPj4gKwlzdGF0aWNfa2V5X2Rpc2FibGUoJmZsdXNoX3RsYl9tdWx0aV9lbmFibGVkLmtleSk7
+DQo+PiArDQo+PiAJbWVtc2V0KGR1bW15X21hcHBpbmcsIDB4ZmYsIFBBR0VfU0laRSk7DQo+PiB9
+DQo+IA0KPiBNb3JlIGNvbW1lbnRzLCBwbGVhc2UuICBQZXJoYXBzOg0KPiANCj4gCUV4aXN0aW5n
+IHBhcmF2aXJ0IFRMQiBmbHVzaGVzIGFyZSBpbmNvbXBhdGlibGUgd2l0aA0KPiAJZmx1c2hfdGxi
+X211bHRpKCkgYmVjYXVzZS4uLi4gIERpc2FibGUgaXQgd2hlbiB0aGV5IGFyZQ0KPiAJaW4gdXNl
+Lg0KDQpUaGVyZSBpcyBubyBpbmhlcmVudCByZWFzb24gZm9yIHRoZW0gdG8gYmUgaW5jb21wYXRp
+YmxlLiBTb21lb25lIG5lZWRzIHRvDQphZGFwdCB0aGVtLiBJIHdpbGwgdXNlIG15IGFmZmlsaWF0
+aW9uIGFzIGFuIGV4Y3VzZSBmb3IgdGhlIHF1ZXN0aW9uIOKAnHdoeQ0KZG9u4oCZdCB5b3UgZG8g
+aXQ/4oCdIDstKQ0KDQpBbnlob3csIEkgd2lsbCBhZGQgYSBjb21tZW50Lg0KDQo=
