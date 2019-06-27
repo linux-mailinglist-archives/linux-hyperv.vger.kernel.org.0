@@ -2,97 +2,93 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF1A258DF0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Jun 2019 00:28:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88D9158E10
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Jun 2019 00:39:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfF0W2x (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 27 Jun 2019 18:28:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbfF0W2x (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:28:53 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 542FE2063F;
-        Thu, 27 Jun 2019 22:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561674532;
-        bh=6gDuV+DVL5Bbj1QRS6t+kNeAHKtQQVMNQqIxE+766Lk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Owhjj5MUM+bk7m39E3qMZJQshMRs1inLMvVheIBkFQTyF1mnp8ZzEOlEORXuaAObe
-         AiLVAMrJZMh39QZV0FMyLxhbhwTS09aSMZuyntRYJwA8vHGiH5h1bGgws0e2EAdF66
-         r1e6HA5Vs/cItxOEJOsnHPmiikj34gPmTPz2Ji3A=
-Date:   Thu, 27 Jun 2019 18:28:51 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
-        bp@alien8.de, hpa@zytor.com, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
-        srinivas.eeda@oracle.com, Waiman Long <longman@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S1726536AbfF0Wjy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 27 Jun 2019 18:39:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60004 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfF0Wjy (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 27 Jun 2019 18:39:54 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgd3D-0001yR-93; Fri, 28 Jun 2019 00:39:31 +0200
+Date:   Fri, 28 Jun 2019 00:39:30 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] locking/spinlocks, paravirt, hyperv: Correct the
- hv_nopvspin case
-Message-ID: <20190627222851.GC11506@sasha-vm>
-References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
- <1561377779-28036-7-git-send-email-zhenzhong.duan@oracle.com>
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv2] x86/hyperv: Hold cpus_read_lock() on assigning
+ reenlightenment vector
+In-Reply-To: <20190617163955.25659-1-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1906280033510.32342@nanos.tec.linutronix.de>
+References: <20190617163955.25659-1-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1561377779-28036-7-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 08:02:58PM +0800, Zhenzhong Duan wrote:
->With the boot parameter "hv_nopvspin" specified a Hyperv guest should
->not make use of paravirt spinlocks, but behave as if running on bare
->metal. This is not true, however, as the qspinlock code will fall back
->to a test-and-set scheme when it is detecting a hypervisor.
->
->In order to avoid this disable the virt_spin_lock_key.
->
->Same change for XEN is already in Commit e6fd28eb3522
->("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
->
->Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->Cc: Waiman Long <longman@redhat.com>
->Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
->Cc: "K. Y. Srinivasan" <kys@microsoft.com>
->Cc: Haiyang Zhang <haiyangz@microsoft.com>
->Cc: Stephen Hemminger <sthemmin@microsoft.com>
->Cc: Sasha Levin <sashal@kernel.org>
->Cc: Thomas Gleixner <tglx@linutronix.de>
->Cc: Ingo Molnar <mingo@redhat.com>
->Cc: Borislav Petkov <bp@alien8.de>
->Cc: linux-hyperv@vger.kernel.org
->---
-> arch/x86/hyperv/hv_spinlock.c | 3 +++
-> 1 file changed, 3 insertions(+)
->
->diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
->index 07f21a0..d90b4b0 100644
->--- a/arch/x86/hyperv/hv_spinlock.c
->+++ b/arch/x86/hyperv/hv_spinlock.c
->@@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
->
-> void __init hv_init_spinlocks(void)
-> {
->+	if (unlikely(!hv_pvspin))
->+		static_branch_disable(&virt_spin_lock_key);
+On Mon, 17 Jun 2019, Dmitry Safonov wrote:
+> @@ -196,7 +196,16 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>  	/* Make sure callback is registered before we write to MSRs */
+>  	wmb();
+>  
+> +	/*
+> +	 * As reenlightenment vector is global, there is no difference which
+> +	 * CPU will register MSR, though it should be an online CPU.
+> +	 * hv_cpu_die() callback guarantees that on CPU teardown
+> +	 * another CPU will re-register MSR back.
+> +	 */
+> +	cpus_read_lock();
+> +	re_ctrl.target_vp = hv_vp_index[raw_smp_processor_id()];
+>  	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+> +	cpus_read_unlock();
 
-This should be combined in the conditional under it, which already
-attempts to disable PV spinlocks, note how hv_pvspin is checked there.
-hc_pvspin isn't the only reason we would disable PV spinlocks on hyperv.
+Should work
 
-Also, there's no need for the unlikely() here, it's only getting called
-once...
+>  	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
+>  }
+>  EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
+> @@ -239,6 +248,7 @@ static int hv_cpu_die(unsigned int cpu)
+>  
+>  	rdmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+>  	if (re_ctrl.target_vp == hv_vp_index[cpu]) {
+> +		lockdep_assert_cpus_held();
 
---
+So you're not trusting the hotplug core code to hold the lock when it
+brings a CPU down and invokes that callback? Come on
+
+>  		/* Reassign to some other online CPU */
+>  		new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+
 Thanks,
-Sasha
+
+	tglx
