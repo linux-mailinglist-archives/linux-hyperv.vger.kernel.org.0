@@ -2,142 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A349C5A458
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Jun 2019 20:41:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CFC35A948
+	for <lists+linux-hyperv@lfdr.de>; Sat, 29 Jun 2019 08:50:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfF1Slj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 28 Jun 2019 14:41:39 -0400
-Received: from mail-eopbgr680096.outbound.protection.outlook.com ([40.107.68.96]:59556
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726497AbfF1Sli (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:41:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fExCDPy2DRiTZAkM2VeUX6WX+vcLVkzEFrt6yAnj5bEkbLV/D1nwbyiOnNTM3htUHvVJvWmX/BObemY2qH3QEyyWJ+KDZUdBwZ9Ii+lR5bWFvvszfnxVephhe/wWT/jf97ElIBFXZK+rU4/nkLNVJqIszEYrW6tY/JlDcLUabrWhWEZOl5DQgj+8qKtzlRccym5uhaWBXj8OiFLuFjscN4IWqOIKbPULudow53u8+rMgT9jQTfsZsLUXPLpuMVek/frHdntTMJQvJksHSo8NM+FzZe4BwMYYYfUH7NVzaBBqXu+eT7cbTaKRDGFQJmoPt0jm4/fo57tQdPQ11psKVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mLwjYMi/BBolilHTYkIuishxYaJTpZbSDu6cNT6co3s=;
- b=bE45Itfz0p6WciEKE9dKPByIEds8lxtkHtBt9K0HzCUVlwlJV6JJlW74EC5Hj/9XOXqd8O02OvVhdnaDyBTFKplKPsl8D32VxGBieNbWS8Kfr8rj+ROazYfQOm3+383/ZSxJOZoD2zdK6oucVqONMoyg1FF6KECZ4dQk38jlTdWhiIpurYCZWeVxW/HuE6t9Zi7aPKzeE2mVl4leWB/anRtOPzC7aYRFxakuxbPF3BJpLs8FyqXJsQxs/rPnYfGFvpj0m9FxAuweMN/4C3pHZC2t4+3G/f73FeTzw5whMTTAA11dpwiN1FlelJCkmJtrGud1fRtqbt9kuWdJEdKnHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mLwjYMi/BBolilHTYkIuishxYaJTpZbSDu6cNT6co3s=;
- b=Lb3lcQCJ12mg4HhBY+MWgt8+bXn6kYN3YYTjyBNCTiAgbP2JdUaHJMJoGcnMOKYU9uKqAIbElR3y439rl8mx1iOxlkXkrdBkedGSpOc0zzx7ztm6bhmE8RSoCmftKCUBaoGanmho9T6Q/o/zAincWfCG6a6KMn2afrurIySzyOA=
-Received: from BL0PR2101MB1348.namprd21.prod.outlook.com (20.177.244.150) by
- BL0PR2101MB0979.namprd21.prod.outlook.com (52.132.20.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.4; Fri, 28 Jun 2019 18:40:56 +0000
-Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
- ([fe80::4814:2790:9342:9582]) by BL0PR2101MB1348.namprd21.prod.outlook.com
- ([fe80::4814:2790:9342:9582%2]) with mapi id 15.20.2052.005; Fri, 28 Jun 2019
- 18:40:56 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
+        id S1726719AbfF2Gut (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 29 Jun 2019 02:50:49 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38215 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbfF2Gut (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 29 Jun 2019 02:50:49 -0400
+Received: by mail-pl1-f194.google.com with SMTP id 9so3696001ple.5;
+        Fri, 28 Jun 2019 23:50:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aT8yS1f8zu7gIaeWTUIp6sbTg4VXV0oDXYNI0tw7bjo=;
+        b=a1HZ2pZUdPntMMwkXLl5kH4fKhJesWaeKJq2HaL3jWfMgZz5exlYIKLDi4L/2uO1AL
+         lRe58iBwOM75v5dERnCZKBDyeUSf3LLh4CD2JFosrPJoClIff4+0zxZZCuF5TW77bzg+
+         312oQ9fVg6jgV6FU9RCGbFLa1AdrZy20BhwgWINDFX5mQuI0Mfarw6FPcJk7/nUN3v48
+         jE6uM68sKF9KOBdDPYS/GlZZ5GMkYzq5tyHZ23eMmwvvZztmE8ngb7I0QJNV29+rV4xF
+         3X+6Mh4sm7V6zVWVYID+nQpB0qVnKuJNCs/Fh79vbrFEYVQEoIkCriXIQYQ/ewK+Ni8e
+         fPlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aT8yS1f8zu7gIaeWTUIp6sbTg4VXV0oDXYNI0tw7bjo=;
+        b=Eg7OAPcXiCPIZt61JtyJ2LW3JkjaexkCD+kZyn0lYT98KncIFWaGJqcSc9xm23eGsW
+         jq21EjWUd1Tr3DC7bOKSHf7TzudNv3tocuo6hdr9hs5knIXPchUHVg2QO7LMhjD5PCiy
+         PTQxcpH+0yI0LevsQXFIHrM2yjsco8kt/QtJ9p7Pxb90dNfQzLlf6+PFnti1LJGz8/Eq
+         p4IiTsxA/5lGE6KF74s/LUJRMenYXD7i8kxkcgs/IRdjfz1swG7HXs49hGYQIxWeFaBX
+         4DDvcxKye/GN6kh7qulo1Omoimpa80VH14OpDTFaYms0U9rLo4K4QmJArzMtyTKVe49s
+         TTUA==
+X-Gm-Message-State: APjAAAVcoeO/tsDfpxHbJP48E8Q21U8Bz+UWJ2N1/jCaEIU72YqSQh6t
+        PLSxKqF86CIPw38KWSpY+Hzvsv3M9nU=
+X-Google-Smtp-Source: APXvYqxcQWrbKx1bfH2VeHwhwp1sEAA+Sg368l4EWApXd2geM3Xtog+YRICICXqCf3MVvMLWbJ21Pg==
+X-Received: by 2002:a17:902:9307:: with SMTP id bc7mr15684481plb.183.1561791048825;
+        Fri, 28 Jun 2019 23:50:48 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id h21sm3225675pgg.75.2019.06.28.23.50.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 28 Jun 2019 23:50:48 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 06:50:47 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Sasha Levin <sashal@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: RE: [PATCH v6 18/19] x86: Add support for generic vDSO
-Thread-Topic: [PATCH v6 18/19] x86: Add support for generic vDSO
-Thread-Index: AQHVFvJX/FWqgsMYXUWDuWvrdwhvDKaDyyHwgBdL5YCAAKgjAIAMJX0AgAHb0oCAADMqgIAAGq6AgAAKXgCAB3oPIA==
-Date:   Fri, 28 Jun 2019 18:40:56 +0000
-Message-ID: <BL0PR2101MB1348C26A569D83E9D7BB03CDD7FC0@BL0PR2101MB1348.namprd21.prod.outlook.com>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-19-vincenzo.frascino@arm.com>
- <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
- <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
- <20190614211710.GQ1513@sasha-vm>
- <alpine.DEB.2.21.1906221542270.5503@nanos.tec.linutronix.de>
- <20190623190929.GL2226@sasha-vm>
- <alpine.DEB.2.21.1906240006090.32342@nanos.tec.linutronix.de>
- <BYAPR21MB135202F46C4B023B51EBBFD0D7E00@BYAPR21MB1352.namprd21.prod.outlook.com>
- <alpine.DEB.2.21.1906240221550.32342@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1906240221550.32342@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-28T18:40:54.3514619Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=12c4760d-43f5-416f-b56a-135069a968d4;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 70d38258-35d1-4317-571d-08d6fbf82869
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BL0PR2101MB0979;
-x-ms-traffictypediagnostic: BL0PR2101MB0979:
-x-microsoft-antispam-prvs: <BL0PR2101MB09791FE051D90F996EBA6326D7FC0@BL0PR2101MB0979.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 00826B6158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(136003)(39860400002)(396003)(366004)(189003)(199004)(4744005)(76116006)(4326008)(73956011)(446003)(10290500003)(478600001)(11346002)(5660300002)(68736007)(6246003)(71190400001)(71200400001)(33656002)(486006)(6436002)(25786009)(66066001)(99286004)(8990500004)(66476007)(14444005)(102836004)(256004)(66946007)(186003)(6916009)(7696005)(26005)(76176011)(54906003)(229853002)(6506007)(64756008)(66446008)(476003)(10090500001)(66556008)(86362001)(7736002)(305945005)(14454004)(74316002)(53936002)(52536014)(7416002)(316002)(2906002)(22452003)(9686003)(8676002)(8936002)(3846002)(6116002)(81156014)(81166006)(55016002)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB0979;H:BL0PR2101MB1348.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bHsin/NqNsXiytgX5zQnA258TkoJJuSoswu0uRaEiI76OTPz/cktBkMt7i6upscG7j3ppy/2eAT5Q4SUBudM8NoQFkxXW+8bpPN7vrDm01FgjR/2wNj7Gh/kJAlrHEF+vn7NnWOQeTFcBuOroI9fqO8yMd4FW3kDb4puD51K+E/GsmootqPGrRzbI5tF7gG69jxEhZVmiOvm4RlHmLMvCwkZ+52sTWzduP0VbuR1jw25SKAXuJTTz1jFJd4t61F4nsghE6+/GJgLvojhD/+CjxqWKma/UUiwhyCUDcShceWLSiOzyXL+7GqWf0t/94cTJ/XBN/dozmr/3Nd3uk0nECBwmtRdam7x19rimz56hLkfw6dd6WsRjhVlmyuGoLCS5bXyXJw6os/nG9CddCDuF8bJb7sQE6BhFRsDNgs91Lk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] x86: hv: hv_init.c: Add functions to
+ allocate/deallocate page for Hyper-V
+Message-ID: <20190629065046.GA20171@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net>
+References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
+ <d19c28cda88bf1706baff883380dfd321da30a68.1560837096.git.m.maya.nakamura@gmail.com>
+ <alpine.DEB.2.21.1906272334560.32342@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70d38258-35d1-4317-571d-08d6fbf82869
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2019 18:40:56.6446
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0979
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906272334560.32342@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de> Sent: Sunday, June 23, 2019 5:25=
- PM
->=20
-> I don't care whether this goes into 5.3 or later. If you can provide me
-> rebased self contained patches on top of
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/vdso
->=20
-> I'm happy to pull them in on top.
->=20
-
-I've sent out "v4" of the patch set to create a Hyper-V clocksource, based
-on the above tree.  It is contained to Hyper-V code, plus updating a #inclu=
-de
-statement in two of the VDSO files and in one KVM file.  If the KVM file
-update is problematic, the patch set can just wait until 5.3-rc1.
-
-Michael
+On Thu, Jun 27, 2019 at 11:38:14PM +0200, Thomas Gleixner wrote:
+> Maya,
+> 
+> On Tue, 18 Jun 2019, Maya Nakamura wrote:
+> 
+> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > index 0e033ef11a9f..e8960a83add7 100644
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -37,6 +37,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
+> >  u32 hv_max_vp_index;
+> >  EXPORT_SYMBOL_GPL(hv_max_vp_index);
+> >  
+> > +void *hv_alloc_hyperv_page(void)
+> > +{
+> > +	BUILD_BUG_ON(PAGE_SIZE != HV_HYP_PAGE_SIZE);
+> > +
+> > +	return (void *)__get_free_page(GFP_KERNEL);
+> > +}
+> > +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
+> > +
+> > +void hv_free_hyperv_page(unsigned long addr)
+> > +{
+> > +	free_page(addr);
+> > +}
+> > +EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
+> 
+> These functions need to be declared in a header file.
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+Thank you for pointing that out, Thomas. I will resubmit my patch set to
+include a header file with the function prototypes.
