@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B2A662FFF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Jul 2019 07:31:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B35C62FFD
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Jul 2019 07:30:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbfGIFb1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 9 Jul 2019 01:31:27 -0400
-Received: from mail-eopbgr820117.outbound.protection.outlook.com ([40.107.82.117]:5824
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        id S1727506AbfGIFaH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 9 Jul 2019 01:30:07 -0400
+Received: from mail-eopbgr810121.outbound.protection.outlook.com ([40.107.81.121]:9192
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727311AbfGIFb1 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:31:27 -0400
+        id S1725975AbfGIFaH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 9 Jul 2019 01:30:07 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ryjatj8aDdBGA7uEDawYUpHg5t1u9oeEB49loFPFnJQ736Q9UYAplz2GR5T8CeKTthT3MdyG0Tgkw/mhrxpKJ9MVcgdJu7mU6aEo8SSfhlmaD0UvB6uPGDzDMt14/5yGDjiGRhytzrcDpjCIMn2eNRjA6t/nYyDjM4n8K5RmiWLvLUvyGPKXQm0R9P8sDU+3WjhTllW2crnNoqX3m9Xz3zSuSoxs/Wm8pG9CadRFjkHKcE4c8HCmiReg4+uDQBrXybCTtdWs3yoPLPHPyN2bJqReITEz5p/vtrayXIDYIRxBweXl7H6AVURoeY9rzEL/JkVRSuo3nFd0yR9XSYsNSA==
+ b=AP+nmO8KqkPlsSpvkk43BB5yRfojDS+mFjy7fHskR/IrWqbknkA3ZMb2skW02FFgnhRXrhUB3Iw+dwl/JUkazRmAMXVMGwpkTqbbhiR/06WMQIgXkYrAtmkSvpb1CtKfMCofaq/Kb9YFuH3AU84AvakPij//TQ1qIVwKtkekXETZzue7g7REUJMQb4igmqvdhyRCwlky2b49cdS4AIN/fMQ+hWSKLjyg8qhQugQFlDCjWR6amCLkTfWGgP3L7nevKbBic+ImFJmT5CCZ6ZnpJ86eenw0Jn1vjQgEx3FoJMnZlD+HbdEai0KEP/WzY/+r5om3rgoYu35qCd2TQBoWzw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3+O3P1q1GNQyUZ6Moom7ipu8lndqLQcgedwqXhVXSdE=;
- b=fQY7/5C2w/O7rCaZ5rQJTGPP2SUStEzXEkKqbREKOfQIqgs5zW3gH+EZNURPWygUCWdk7GCTpORRBmX48B7NmTsyUQNS7t5hFEs/1RrmP5xMJhx/JL7YZDVE86DfkB2AZTHFaUar8Zl8r/zAQEN893mtm7CeCp+BOH2XCVcbTA7wSzgh1po/MzftqIUJDaDmhRuoWrjKV6r+XmgvlGBwgcWRjN3GXFvfKFQVn14c6p8GByAt8KldTJKQdObO3FBsaCSg3exv3W8qSzkrwYZxvyAr2hvAVw0jQjknjeFvGHtYshf7ALro1Tcx6D2Wpj5u7KmxDB5R14F9Ns++ZP1rkQ==
+ bh=Gr17+lWf5H0N5B0x29WS7E9Zm1LionacF9LpQib/R7M=;
+ b=i7hAe3cQXFkTbuSeqWsav1a29UwJowAesBDhbOCtp5xtJHI47FhKUH0FyhideAq4U+hfieop7rEHN1Vwi8KL9sE7wAvfbhlVpMvccAv9kvgP38fVIs0HJg/0ZwDwJ8t1+OXe4/tSMZVj/h+9EuiG1brq7Sv5wRtz+V+6pPpGy6aAB1DD/whU7PkgJ2Z0S2mRACABGdjAH9Tt8fFqwOkToXyeyBJ2wsv9nLISJrw5NoboX79gyDRtGZ2p/nsEjOR0UpkyPVvsGtvTEFUgT62EpdFZ4wnmrpgc0KhgM0xvFhdngbq+V6k0+Wq9vZnvzTfgYavtAwJQX6Fh4ScdQTdXCw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
  smtp.mailfrom=microsoft.com;dmarc=pass action=none
  header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3+O3P1q1GNQyUZ6Moom7ipu8lndqLQcgedwqXhVXSdE=;
- b=j22ahYrE3gTHoaJSLflg4eshxd/0wCv4Ndq0BIMXYNX7MQdjIo7I82cJdATKPsalyGrm18GQkEdSnO9CL/RNNB/6oQUGEVHJKKX4BeOL4FDtHPREwEUncXtUAxeL0EBedMPqdnlWj0Wkm3lFPFWDVhNFSLwMMtx5bKRXCJnmIHs=
+ bh=Gr17+lWf5H0N5B0x29WS7E9Zm1LionacF9LpQib/R7M=;
+ b=GZSV/OsPhu8pCuDdr57TJVARaT72C0y9xW2eTcIkNw9h3KJXrFykqFO1giIDyfK9pE1HieScke+RtsaSr/s57WEwxxRZ5+NoZXGO8dYrOfDwT9JLBVIqYT2AgIo4RIOBH5IBwPD3jZ2JKuNR4OhWRegoXLKg3pIdg4mdkMvx5aU=
 Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
  SN6PR2101MB1040.namprd21.prod.outlook.com (52.132.115.13) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.3; Tue, 9 Jul 2019 05:29:27 +0000
+ 15.20.2094.3; Tue, 9 Jul 2019 05:29:28 +0000
 Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
  ([fe80::60d7:a692:61f4:e6ab]) by SN6PR2101MB0942.namprd21.prod.outlook.com
  ([fe80::60d7:a692:61f4:e6ab%3]) with mapi id 15.20.2094.001; Tue, 9 Jul 2019
- 05:29:27 +0000
+ 05:29:28 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
@@ -47,13 +47,13 @@ To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>
 CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH 3/7] Drivers: hv: vmbus: Split hv_synic_init/cleanup into regs
- and timer settings
-Thread-Topic: [PATCH 3/7] Drivers: hv: vmbus: Split hv_synic_init/cleanup into
- regs and timer settings
-Thread-Index: AQHVNhdG/NzuAifub0WMnyiBKyXMnw==
-Date:   Tue, 9 Jul 2019 05:29:27 +0000
-Message-ID: <1562650084-99874-4-git-send-email-decui@microsoft.com>
+Subject: [PATCH 4/7] Drivers: hv: vmbus: Suspend/resume the synic for
+ hibernation
+Thread-Topic: [PATCH 4/7] Drivers: hv: vmbus: Suspend/resume the synic for
+ hibernation
+Thread-Index: AQHVNhdHAZrxEDUncEGWO0fIfq/1aw==
+Date:   Tue, 9 Jul 2019 05:29:28 +0000
+Message-ID: <1562650084-99874-5-git-send-email-decui@microsoft.com>
 References: <1562650084-99874-1-git-send-email-decui@microsoft.com>
 In-Reply-To: <1562650084-99874-1-git-send-email-decui@microsoft.com>
 Reply-To: Dexuan Cui <decui@microsoft.com>
@@ -70,24 +70,24 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 1.8.3.1
 x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8fb37e67-7826-421f-fe40-08d7042e6909
+x-ms-office365-filtering-correlation-id: edcab254-e035-400f-3baa-08d7042e69b7
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1040;
 x-ms-traffictypediagnostic: SN6PR2101MB1040:|SN6PR2101MB1040:
-x-microsoft-antispam-prvs: <SN6PR2101MB1040F6B0C6026C7F32D4C70EBFF10@SN6PR2101MB1040.namprd21.prod.outlook.com>
+x-microsoft-antispam-prvs: <SN6PR2101MB104089DD92F78DB52697863CBFF10@SN6PR2101MB1040.namprd21.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(396003)(136003)(39860400002)(199004)(189003)(6436002)(10290500003)(43066004)(2906002)(2501003)(4720700003)(316002)(54906003)(110136005)(6486002)(22452003)(64756008)(1511001)(66556008)(256004)(66446008)(66476007)(478600001)(73956011)(476003)(66946007)(52116002)(66066001)(305945005)(8676002)(81156014)(81166006)(5660300002)(76176011)(486006)(4326008)(36756003)(6116002)(3846002)(71190400001)(71200400001)(25786009)(99286004)(8936002)(50226002)(446003)(107886003)(10090500001)(2616005)(6512007)(14454004)(26005)(11346002)(53936002)(68736007)(186003)(3450700001)(7736002)(386003)(6506007)(102836004)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1040;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(396003)(136003)(39860400002)(199004)(189003)(6436002)(10290500003)(43066004)(2906002)(2501003)(4720700003)(316002)(54906003)(110136005)(6486002)(22452003)(64756008)(1511001)(66556008)(256004)(66446008)(66476007)(478600001)(73956011)(14444005)(476003)(66946007)(52116002)(66066001)(305945005)(8676002)(81156014)(81166006)(5660300002)(76176011)(486006)(4326008)(36756003)(6116002)(3846002)(71190400001)(71200400001)(25786009)(99286004)(8936002)(50226002)(446003)(107886003)(10090500001)(2616005)(6512007)(14454004)(26005)(11346002)(53936002)(68736007)(186003)(3450700001)(7736002)(386003)(6506007)(15650500001)(102836004)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1040;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BoOypzu70Bod4E4DWcMDqDhHxu/o6RQg9X+7LWUpO22U+00DHHjIoYy+CaYPW4UumSm7FSALA6XKply44qyzVqnOpRQht7XGpOtt9Du3/xA9TP1IHv/qD+FBUkZBpICndN8Eb3mvdAAiwUWPe86XMbgnJGO9as/e4Qb17gYe5j0nWw4+IT0G1Ms/UEyMoPRht93mQYbuXNB6Mn4L5M6M5olPi2gs6zRjdzuCImhY+MeFId6950uWoYJqmDVNIow5xw2jgQA5KxOds8pKTt6vZLwj+7RhTpgwO56Z2QxigNtwvrb6HEictELlmZhwFcf+SX+uN3s9T+CG9r1qFYzPx39ggTzgso0kKQZDo0f9FCwbIHXy4+QaVo8TKFTNf7bquCvPCDN6a5bLBwJkh/fBPLyX17mUidjrx8rjc0oNkcQ=
+x-microsoft-antispam-message-info: aiMBmToB3VvGkh/Pz3RN8tgqtcsxcwJ6JjktqHl7XcHHQnuZ/hJekkwp4KlLoSCrumIKOWp9Odj9+3GshIEMJaDEmrR/MiWnIx8d3hF7ha84uVIHZFzJQXG3oaXcUdaKnDbre48HzjfsPtPgZxRqDWq/tmYbDzZSGcvCyIm4umJMoAP4hLart/QHYSJBJPuGzrtYECqC6v1DyJIyRwCqg9BPwwDxMCC1ewmYdZqCuhE7yHh5Ld+Byn/+INx515D1QrmLiQG7/eUH6uxpQwelJi5pTuatH88p3rFDzcEvLCb48levHWJoaQmLBY4JkQYfwMjfdjBl7HFYb6GEfU7g4Jnsx0xW7fIHz0pIVSUTbFgjfaPTSWbnG3dY7Un+Nr4N3vhcra93zLTCsSjU+K6etIg6SW1yVVOBq3plY9D+ANI=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fb37e67-7826-421f-fe40-08d7042e6909
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 05:29:27.6711
+X-MS-Exchange-CrossTenant-Network-Message-Id: edcab254-e035-400f-3baa-08d7042e69b7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 05:29:28.6726
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
@@ -99,146 +99,85 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-There is only one functional change: the unnecessary check
-"if (sctrl.enable !=3D 1) return -EFAULT;" is removed, because when we're i=
-n
-hv_synic_cleanup(), we're absolutely sure sctrl.enable must be 1.
-
-The new functions hv_synic_disable/enable_regs() will be used by a later pa=
-tch
-to support hibernation.
+This is needed when we resume the old kernel from the "current" kernel.
 
 Signed-off-by: Dexuan Cui <decui@microsoft.com>
 ---
- drivers/hv/hv.c           | 66 ++++++++++++++++++++++++++-----------------=
-----
- drivers/hv/hyperv_vmbus.h |  2 ++
- 2 files changed, 39 insertions(+), 29 deletions(-)
+ drivers/hv/vmbus_drv.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 6188fb7..fcc5279 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -154,7 +154,7 @@ void hv_synic_free(void)
-  * retrieve the initialized message and event pages.  Otherwise, we create=
- and
-  * initialize the message and event pages.
-  */
--int hv_synic_init(unsigned int cpu)
-+void hv_synic_enable_regs(unsigned int cpu)
- {
- 	struct hv_per_cpu_context *hv_cpu
- 		=3D per_cpu_ptr(hv_context.cpu_context, cpu);
-@@ -196,6 +196,11 @@ int hv_synic_init(unsigned int cpu)
- 	sctrl.enable =3D 1;
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 72d5a7c..1c2d935 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -30,6 +30,7 @@
+ #include <linux/kdebug.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
++#include <linux/syscore_ops.h>
+ #include <clocksource/hyperv_timer.h>
+ #include "hyperv_vmbus.h"
 =20
- 	hv_set_synic_state(sctrl.as_uint64);
+@@ -2088,6 +2089,41 @@ static void hv_crash_handler(struct pt_regs *regs)
+ 	hyperv_cleanup();
+ };
+=20
++static int hv_synic_suspend(void)
++{
++	/*
++	 * Here we only need to care about CPU0: when the other CPUs are
++	 * offlined, hv_synic_cleanup() has been called for them, and the
++	 * timers on them have been automatically disabled and deleted in
++	 * tick_cleanup_dead_cpu().
++	 */
++	hv_stimer_cleanup(0);
++
++	hv_synic_disable_regs(0);
++
++	return 0;
 +}
 +
-+int hv_synic_init(unsigned int cpu)
++static void hv_synic_resume(void)
 +{
-+	hv_synic_enable_regs(cpu);
-=20
- 	hv_stimer_init(cpu);
-=20
-@@ -205,20 +210,45 @@ int hv_synic_init(unsigned int cpu)
- /*
-  * hv_synic_cleanup - Cleanup routine for hv_synic_init().
-  */
--int hv_synic_cleanup(unsigned int cpu)
-+void hv_synic_disable_regs(unsigned int cpu)
- {
- 	union hv_synic_sint shared_sint;
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
- 	union hv_synic_scontrol sctrl;
-+
-+	hv_get_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
-+
-+	shared_sint.masked =3D 1;
-+
-+	/* Need to correctly cleanup in the case of SMP!!! */
-+	/* Disable the interrupt */
-+	hv_set_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
-+
-+	hv_get_simp(simp.as_uint64);
-+	simp.simp_enabled =3D 0;
-+	simp.base_simp_gpa =3D 0;
-+
-+	hv_set_simp(simp.as_uint64);
-+
-+	hv_get_siefp(siefp.as_uint64);
-+	siefp.siefp_enabled =3D 0;
-+	siefp.base_siefp_gpa =3D 0;
-+
-+	hv_set_siefp(siefp.as_uint64);
-+
-+	/* Disable the global synic bit */
-+	hv_get_synic_state(sctrl.as_uint64);
-+	sctrl.enable =3D 0;
-+	hv_set_synic_state(sctrl.as_uint64);
++	/*
++	 * Here we only need to care about CPU0: when the other CPUs are
++	 * onlined, hv_synic_init() has been called, and the timers are
++	 * added there.
++	 *
++	 * Note: we don't need to call hv_stimer_init() for stimer0, because
++	 * it is not deleted before hibernation and it's resumed in
++	 * timekeeping_resume().
++	 */
++	hv_synic_enable_regs(0);
 +}
 +
-+int hv_synic_cleanup(unsigned int cpu)
-+{
- 	struct vmbus_channel *channel, *sc;
- 	bool channel_found =3D false;
- 	unsigned long flags;
++/* The callbacks run only on CPU0, with irqs_disabled. */
++static struct syscore_ops hv_synic_syscore_ops =3D {
++	.suspend =3D hv_synic_suspend,
++	.resume =3D hv_synic_resume,
++};
++
+ static int __init hv_acpi_init(void)
+ {
+ 	int ret, t;
+@@ -2118,6 +2154,8 @@ static int __init hv_acpi_init(void)
+ 	hv_setup_kexec_handler(hv_kexec_handler);
+ 	hv_setup_crash_handler(hv_crash_handler);
 =20
--	hv_get_synic_state(sctrl.as_uint64);
--	if (sctrl.enable !=3D 1)
--		return -EFAULT;
--
- 	/*
- 	 * Search for channels which are bound to the CPU we're about to
- 	 * cleanup. In case we find one and vmbus is still connected we need to
-@@ -249,29 +279,7 @@ int hv_synic_cleanup(unsigned int cpu)
-=20
- 	hv_stimer_cleanup(cpu);
-=20
--	hv_get_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
--
--	shared_sint.masked =3D 1;
--
--	/* Need to correctly cleanup in the case of SMP!!! */
--	/* Disable the interrupt */
--	hv_set_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
--
--	hv_get_simp(simp.as_uint64);
--	simp.simp_enabled =3D 0;
--	simp.base_simp_gpa =3D 0;
--
--	hv_set_simp(simp.as_uint64);
--
--	hv_get_siefp(siefp.as_uint64);
--	siefp.siefp_enabled =3D 0;
--	siefp.base_siefp_gpa =3D 0;
--
--	hv_set_siefp(siefp.as_uint64);
--
--	/* Disable the global synic bit */
--	sctrl.enable =3D 0;
--	hv_set_synic_state(sctrl.as_uint64);
-+	hv_synic_disable_regs(cpu);
-=20
++	register_syscore_ops(&hv_synic_syscore_ops);
++
  	return 0;
- }
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 362e70e..26ea161 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -171,8 +171,10 @@ extern int hv_post_message(union hv_connection_id conn=
-ection_id,
 =20
- extern void hv_synic_free(void);
+ cleanup:
+@@ -2130,6 +2168,8 @@ static void __exit vmbus_exit(void)
+ {
+ 	int cpu;
 =20
-+extern void hv_synic_enable_regs(unsigned int cpu);
- extern int hv_synic_init(unsigned int cpu);
-=20
-+extern void hv_synic_disable_regs(unsigned int cpu);
- extern int hv_synic_cleanup(unsigned int cpu);
-=20
- /* Interface */
++	unregister_syscore_ops(&hv_synic_syscore_ops);
++
+ 	hv_remove_kexec_handler();
+ 	hv_remove_crash_handler();
+ 	vmbus_connection.conn_state =3D DISCONNECTED;
 --=20
 1.8.3.1
 
