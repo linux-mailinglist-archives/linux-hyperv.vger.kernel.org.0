@@ -2,87 +2,116 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9298D65F75
-	for <lists+linux-hyperv@lfdr.de>; Thu, 11 Jul 2019 20:32:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99FD16684A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Jul 2019 10:11:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfGKScV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 11 Jul 2019 14:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbfGKScV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 11 Jul 2019 14:32:21 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCCFC208E4;
-        Thu, 11 Jul 2019 18:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562869940;
-        bh=ZGJHGxvWjkmLrsWM1dhqmklzcHtzVUWFgm5DE5lo7Vk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=b6ciN7n2S8VrPN4nnZomJ4JBTxlYIC22zJ1StXo74zKXooJfhdnfniXtRh1lAIK4Z
-         crnfOC4kwGnwtVP8oaPtKGBCXDWwT1rxywsgwZ8Cv4ftplvtrIpakvL18Ejq0eoFgI
-         KEs7evYWfVKEd/96mEGrdxMkJFAG4lVWQ+7Dv2Z8=
-Date:   Thu, 11 Jul 2019 14:32:18 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        linux-kernel@vger.kernel.org, linux-kernel@microsoft.com
-Subject: [GIT PULL] hyper-v patches for 5.3
-Message-ID: <20190711183218.GA10104@sasha-vm>
+        id S1726074AbfGLILU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 12 Jul 2019 04:11:20 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39800 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLILS (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 12 Jul 2019 04:11:18 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so4404078pls.6;
+        Fri, 12 Jul 2019 01:11:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=M4aojHkTRgr5KR1nVQ76cFFCD98YRnC1NfZVjSYBlNk=;
+        b=Ni8XL8v212tRdbisi8LSUtOWTiNTMLlyiFa83bbMOuJLAfScdz6uoEshtt9ucTSXaV
+         QVG8DTLD6aSOIkrpeguq0w4ULqxvNyqIPV30grG9AuXzVM8yOAK3uFQGyPsp/M3lQS7P
+         2AB8pwR8CodK83TeA0sVFmoU10cKemmfVXlVJ3xyl8Q8gzXJFr9+ZRLSIBRwisyhp7lp
+         muZ5HVwQK6cHAjFbW4QvXVaxWrF2ATrD5en08vlbPaMfu9eEF++RGA/a5sLSYi68YAka
+         dUIYf/bvKT73ccwp5vLE51SOnJhsEoKN3vAzpc0I/ZG/W/oukZlhZ55QYYWgcBSY2k/X
+         fb2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=M4aojHkTRgr5KR1nVQ76cFFCD98YRnC1NfZVjSYBlNk=;
+        b=JNsubdqipXD4Tktvd07zCaJeMBdoz9sZZhAfi/fdYMxz19O9A6XGpApMwyZRMkJdr1
+         TK50KQcMAtp3bzku9ErkN9ZXX/czVPE8/zE3E29pmKj4uvZv1NpUU3OaXbfGDJI2vgCB
+         P7aK1BgBgx0Aj4+srPov9uHM3a/G2mfbab20f5E2Ozf4nZSZxCrbLT4L78VAMWEAmz1S
+         kyfeaygMXpsDpB+YxHyG5bAoRDT1F490cfPxKWqjcPA6MQ0iPiPYgPmd5wJTqHUGijA3
+         5Ei0JAIPAMK41U1yDFiAZOPLbmyJ2gypUkSGC7IscHNK/Y2PWXaPVCsp7MP7F+fu//hQ
+         mzag==
+X-Gm-Message-State: APjAAAUxXFyDikkeNsE2Zp/jgT/DMA1sw2QQ1DY/IRq7F24oV71MbtpT
+        q7g1T+1fzW0shCKctJSTQRRuzZMo3cZpEA==
+X-Google-Smtp-Source: APXvYqyAS5YP5nGv7DRKpFwhIeSDumf77QEARmpZNer0pmdleI0B9QtricOEDvDCvBGyEtTM9luRkA==
+X-Received: by 2002:a17:902:aa03:: with SMTP id be3mr9842898plb.240.1562919077770;
+        Fri, 12 Jul 2019 01:11:17 -0700 (PDT)
+Received: from maya190711 ([52.250.118.122])
+        by smtp.gmail.com with ESMTPSA id t2sm7207474pgo.61.2019.07.12.01.11.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 01:11:17 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 08:11:16 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/5] hv: Remove dependencies on guest page size
+Message-ID: <cover.1562916939.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus,
+The Linux guest page size and hypervisor page size concepts are
+different, even though they happen to be the same value on x86. Hyper-V
+code mixes up the two, so this patchset begins to address that by
+creating and using a set of Hyper-V specific page definitions.
 
-Please pull the signed tag below for two Hyper-V commits for 5.3.
+A major benefit of those new definitions is that they support non-x86
+architectures, such as ARM64, that use different page sizes. On ARM64,
+the guest page size may not be 4096, and Hyper-V always runs with a page
+size of 4096.
 
-You will see a conflict in arch/x86/include/asm/mshyperv.h due to
-few Hyper-V related patches that went through tglx's tree, please
-resolve that by keeping the header inclusion at the end but removing the
-TSC related code. For reference, this is a correct resolution in
-linux-next:
-https://lore.kernel.org/lkml/20190709195358.25af244b@canb.auug.org.au/ .
+In this patchset, the first two patches lay the foundation for the
+others, creating definitions and preparing for allocation of memory with
+the size and alignment that Hyper-V expects as a page. Patch 3 applies
+the page size definition where the guest VM and Hyper-V communicate, and
+where the code intends to use the Hyper-V page size. The last two
+patches set the ring buffer size to a fixed value, removing the
+dependency on the guest page size.
 
-Yes, this conflict is new-ish, but mostly because we split a series of
-patches between this tree and tglx's. The patch in question is the same
-as it was when I've accepted it back in May, and is well tested at this
-point.
+This is the initial set of changes to the Hyper-V code, and future
+patches will make additional changes using the same foundation, for
+example, replace __vmalloc() and related functions when Hyper-V pages
+are intended.
 
-The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
+Changes in v4 (all apply to patch 2 only):
+- Remove file name from the subject.
+- Include prototypes of two new functions.
+- Add another Link tag.
 
-  Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
+Changes in v3:
+- Simplify expression for BUILD_BUG_ON() in patch 2.
+- Add Link and Reviewed-by tags.
 
-are available in the Git repository at:
+Change in v2:
+- Replace patch 2 with a new one.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
+Maya Nakamura (5):
+  x86: hv: hyperv-tlfs.h: Create and use Hyper-V page definitions
+  x86: hv: Add functions to allocate/deallocate page for Hyper-V
+  hv: vmbus: Replace page definition with Hyper-V specific one
+  HID: hv: Remove dependencies on PAGE_SIZE for ring buffer
+  Input: hv: Remove dependencies on PAGE_SIZE for ring buffer
 
-for you to fetch changes up to 765e33f5211ab620c117ff1ee0c4f38c10f7a973:
+ arch/x86/hyperv/hv_init.c             | 14 ++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h    | 12 +++++++++++-
+ arch/x86/include/asm/mshyperv.h       |  5 ++++-
+ drivers/hid/hid-hyperv.c              |  4 ++--
+ drivers/hv/hyperv_vmbus.h             |  8 ++++----
+ drivers/input/serio/hyperv-keyboard.c |  4 ++--
+ 6 files changed, 37 insertions(+), 10 deletions(-)
 
-  Drivers: hv: vmbus: Break out ISA independent parts of mshyperv.h (2019-07-08 19:06:27 -0400)
+-- 
+2.17.1
 
-----------------------------------------------------------------
-- Add a module description to the Hyper-V vmbus module.
-- Rework some vmbus code to separate architecture specifics out to
-arch/x86/. This is part of the work of adding arm64 support to Hyper-V.
-
-----------------------------------------------------------------
-Joseph Salisbury (1):
-      drivers: hv: Add a module description line to the hv_vmbus driver
-
-Michael Kelley (1):
-      Drivers: hv: vmbus: Break out ISA independent parts of mshyperv.h
-
- MAINTAINERS                     |   1 +
- arch/x86/include/asm/mshyperv.h | 148 ++--------------------------------------------------
- drivers/hv/vmbus_drv.c          |   1 +
- include/asm-generic/mshyperv.h  | 180 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 187 insertions(+), 143 deletions(-)
- create mode 100644 include/asm-generic/mshyperv.h
