@@ -2,95 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6810B6B4E2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jul 2019 05:08:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59FFC6C369
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jul 2019 01:04:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfGQDI3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 16 Jul 2019 23:08:29 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57436 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfGQDI2 (ORCPT
+        id S1727657AbfGQXDx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Jul 2019 19:03:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55555 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbfGQXDx (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 16 Jul 2019 23:08:28 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6H35cca191468;
-        Wed, 17 Jul 2019 03:08:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=UEaaAVvgCGyb+7Yj61X9MJGTm0YgTvSRv1ONnMOutJQ=;
- b=GOiTdgfTFSbb/EFuPcJN7jTYkY32Qmns5pYKAj8sb8IUcHKX3AiiAvu0KZr2DhGuUTjl
- Q+ViMT+0FbMmKkcPnICdmmxs+N+7nfidYVrJDJsF3cXRn0PLLpbAfF2s3M7HLZv0gYfj
- WNqq+LZR5C8T+WQ0Vdks5WvoyMpZaAnPccg6+SN5MIYBLpU6kfSOxxbmnsSvzWTTdLZM
- brw8TGVSUYnNBT4KD2ukTj6IdHno3pnlq/aIADGZlnIFmhVSgz3vb9x1y5cGcIIffbgh
- jvOO1we7rSUyeE9/yl0uH6nLZFtLVSeZ7ecKJmDL0/wp2mT4NG3B8YXVUcdziP4fQpvR 0g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2tq78pquay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 03:08:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6H32jv8038951;
-        Wed, 17 Jul 2019 03:08:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tq4du8s0c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 03:08:00 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6H37wC2022960;
-        Wed, 17 Jul 2019 03:07:58 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 03:07:58 +0000
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: properly communicate queue limits to the DMA layer v2
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190617122000.22181-1-hch@lst.de>
-        <20190715165823.GA10029@lst.de> <yq1tvbn2ofc.fsf@oracle.com>
-        <20190715174617.GA11094@lst.de>
-Date:   Tue, 16 Jul 2019 23:07:55 -0400
-In-Reply-To: <20190715174617.GA11094@lst.de> (Christoph Hellwig's message of
-        "Mon, 15 Jul 2019 19:46:17 +0200")
-Message-ID: <yq1y30xxss4.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 17 Jul 2019 19:03:53 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hnsxW-0006ey-Qb; Thu, 18 Jul 2019 01:03:39 +0200
+Date:   Thu, 18 Jul 2019 01:03:37 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dexuan Cui <decui@microsoft.com>
+cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>, vkuznets <vkuznets@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>
+Subject: Re: [PATCH] x86/hyper-v: Zero out the VP assist page to fix CPU
+ offlining
+In-Reply-To: <PU1P153MB01697CBE66649B4BA91D8B48BFFA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Message-ID: <alpine.DEB.2.21.1907180058210.1778@nanos.tec.linutronix.de>
+References: <PU1P153MB01697CBE66649B4BA91D8B48BFFA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=907
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907170036
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=953 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170036
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Dexuan,
 
-Christoph,
+On Thu, 4 Jul 2019, Dexuan Cui wrote:
 
-> I think all the patches on the block side went into 5.2, but it's been
-> a while, so I might misremember..
+> When a CPU is being offlined, the CPU usually still receives a few
+> interrupts (e.g. reschedule IPIs), after hv_cpu_die() disables the
+> HV_X64_MSR_VP_ASSIST_PAGE, so hv_apic_eoi_write() may not write the EOI
+> MSR, if the apic_assist field's bit0 happens to be 1; as a result, Hyper-V
+> may not be able to deliver all the interrupts to the CPU, and the CPU may
+> not be stopped, and the kernel will hang soon.
+> 
+> The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
+> 5.2.1 "GPA Overlay Pages"), so with this fix we're sure the apic_assist
+> field is still zero, after the VP ASSIST PAGE is disabled.
+> 
+> Fixes: ba696429d290 ("x86/hyper-v: Implement EOI assist")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_init.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 0e033ef11a9f..db51a301f759 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -60,8 +60,14 @@ static int hv_cpu_init(unsigned int cpu)
+>  	if (!hv_vp_assist_page)
+>  		return 0;
+>  
+> +	/*
+> +	 * The ZERO flag is necessary, because in the case of CPU offlining
+> +	 * the page can still be used by hv_apic_eoi_write() for a while,
+> +	 * after the VP ASSIST PAGE is disabled in hv_cpu_die().
+> +	 */
+>  	if (!*hvp)
+> -		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
+> +		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO,
+> +				 PAGE_KERNEL);
 
-I checked my notes and the reason I held them back was that I was
-waiting for a response from Broadcom wrt. the megaraid segment size
-limitation.  However, given that mpt3sas was acked, I assume it's the
-same thing.
+This is the allocation when the CPU is brought online for the first
+time. So what effect has zeroing at allocation time vs. offlining and
+potentially receiving IPIs? That allocation is never freed.
 
-I'm not so keen on how big the last batch of patches for the merge
-window is getting. But I queued your fixes up for 5.3.
+Neither the comment nor the changelog make any sense to me.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+
+	tglx
+
