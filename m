@@ -2,123 +2,114 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A90716EA3F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jul 2019 19:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E11F76EC1A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jul 2019 23:36:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfGSRdy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Jul 2019 13:33:54 -0400
-Received: from mail-eopbgr720112.outbound.protection.outlook.com ([40.107.72.112]:31709
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727850AbfGSRdy (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Jul 2019 13:33:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZORznNMZmwiWsMe/Ff7TZ2c38m9autV9X7T+N4L/NN0/xTK+Wfg3C/DXHsu5P9LHaRM6/TMWo+6nb+kQayaaCtZb+uOkg85nxPYhcIdqJ0PY8k/kp4SLrIcN5htb7RUGy6TPgDLOHyvUq5pXrhILoU0RSVgZptqB4OPFhf099qQHivL9chH182bA5WsqEr8vqt5GjjJejOYN0WBMD5BOYiNgJwh7afalJfR04J3taR9PKQH7efQwXbY3eIQIYPOnaN551re5R0XO7VTYKmMWtSpfdNUE2TUYalEkcX67GYbf8WlB9V2q47Uhis/9GskV0jDPvNsgAtkuIXqsyvGSiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ISBpmTld/0RI0g5vNVgx3TACni6otPCXp2fENFWSXB8=;
- b=EWhdWkjym1ruTW6iixpiazFZwOyCdiguk87asO3ThrrkmQGBhor259gC5M5DiiD6tu7s+Huu+o71USgOZ16HIuA9rbob8YqYOILclKEr8mw8fYhoEhJsBLkZj2CuMJ9WjHL5T1baO4WBGJhr5a5Mm20eW1SfmBQImcHc7KCRhPBMa0OFHEVodJ6ie5XYGg9fj1tAG23/NidLH2lCKspJ4CdcCtlzSM8ClSVPtfWEgL2MVd/cieOscCrCgHd4IHnpNF5eGO1yu7uznvr2OScbHPbdCco3/n80MxYZNgQwOcX5VGJ1m1yMlhnJcUUJm4oE6TEUPQcbapE6qdV6dDtmfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ISBpmTld/0RI0g5vNVgx3TACni6otPCXp2fENFWSXB8=;
- b=HNjhuoaoJcnJorCilzeOOU1rWli4tJTyMiWcKb0mVCkycHf3wLq2Vw0n4qmUhrn+caH7iMS4Q65tQxnSetnqTZPVhogqa/6oSpeD1Aae276Nia8nK0aUVrEhw8Sr7TgzopUjyO4Q8U+nxafztPT8J3nnED+eSxPpmxga1EeAdFM=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1290.namprd21.prod.outlook.com (20.179.52.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.1; Fri, 19 Jul 2019 17:33:52 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::6055:de8a:48c1:4271]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::6055:de8a:48c1:4271%6]) with mapi id 15.20.2115.005; Fri, 19 Jul 2019
- 17:33:51 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1728487AbfGSVgE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Jul 2019 17:36:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:10870 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727603AbfGSVgD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 19 Jul 2019 17:36:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jul 2019 14:36:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,283,1559545200"; 
+   d="scan'208";a="162524739"
+Received: from ray.jf.intel.com (HELO [10.7.201.140]) ([10.7.201.140])
+  by orsmga008.jf.intel.com with ESMTP; 19 Jul 2019 14:36:00 -0700
+Subject: Re: [PATCH v3 0/9] x86: Concurrent TLB flushes
+To:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Sasha Levin <sashal@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] hv_netvsc: Fix extra rcu_read_unlock in
- netvsc_recv_callback()
-Thread-Topic: [PATCH net] hv_netvsc: Fix extra rcu_read_unlock in
- netvsc_recv_callback()
-Thread-Index: AQHVPlghcMnY7sIqPkOgR8UytHrZ6g==
-Date:   Fri, 19 Jul 2019 17:33:51 +0000
-Message-ID: <1563557581-17669-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1001CA0013.namprd10.prod.outlook.com
- (2603:10b6:301:2a::26) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dbcef387-5553-463d-e35a-08d70c6f43cc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1290;
-x-ms-traffictypediagnostic: DM6PR21MB1290:|DM6PR21MB1290:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1290C5ECD01E498BDF4098F7ACCB0@DM6PR21MB1290.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 01039C93E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(189003)(199004)(2616005)(50226002)(8936002)(6116002)(305945005)(81156014)(81166006)(3846002)(7736002)(66066001)(68736007)(476003)(5660300002)(25786009)(6436002)(7846003)(6486002)(36756003)(6392003)(2201001)(2906002)(4720700003)(478600001)(4326008)(53936002)(10290500003)(52116002)(6512007)(4744005)(110136005)(8676002)(102836004)(6506007)(386003)(71200400001)(71190400001)(26005)(66946007)(66476007)(66446008)(64756008)(66556008)(54906003)(14454004)(14444005)(10090500001)(256004)(99286004)(2501003)(316002)(186003)(486006)(22452003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1290;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MDjGXvmaq6LXYCwutbSN0svDG9lMNK3ExYsntiRp9bribR9O03+4vSIIB5H6l5FFgRy3LUrUuS9KIHLBaSBueKxLQnc3wQ7lvVoYabXzOZwv1nO8QrcqEF2+58YXKC8XgYMazLt5kBceSscyWmR9A61cxA6dTUPHStZC/IhzTdKazCJG+2PEc2OnXc3gkMf8aowcB561UX2PwP9wp26vWCTIICT6iF7uJwuz1CLr9ArTmk+pMr8yGaHCxMdqz7jnuEFAO7FqpPjeUU7ru76ZIZv/8Gg6etUP9p4bk75uNXdcwe9vXyh0oSx2woFdSefDB8URJIvwnGVP1PDbONWktwFLZKiuxMTQoj90+EVOcZJSqRqMar4rFc7kkUCT5uTf8zOeiSoBrv52F9oz+a8WvpCV7rFwq2rneGsPsPtUl6U=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+References: <20190719005837.4150-1-namit@vmware.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <21b9c9f2-de63-71e9-34e3-8206b778f8b7@intel.com>
+Date:   Fri, 19 Jul 2019 14:36:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbcef387-5553-463d-e35a-08d70c6f43cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 17:33:51.8286
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lkmlhyz@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1290
+In-Reply-To: <20190719005837.4150-1-namit@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-There is an extra rcu_read_unlock left in netvsc_recv_callback(),
-after a previous patch that removes RCU from this function.
-This patch removes the extra RCU unlock.
+Thanks for doing this, it's something I've been hoping someone would do
+for a long time.
 
-Fixes: 345ac08990b8 ("hv_netvsc: pass netvsc_device to receive callback")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/hyperv/netvsc_drv.c | 1 -
- 1 file changed, 1 deletion(-)
+While I kinda wish we had performance data for each individual patch (at
+least the behavior-changing ones), this does look like a good
+improvement.  That might, for instance, tell is a bit about how the
+separating out "is_lazy" compares to the "check before setting"
+optimization.  But, they're both sane enough on their own that I'm not
+too worried.
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
-v.c
-index afdcc56..3544e19 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -836,7 +836,6 @@ int netvsc_recv_callback(struct net_device *net,
-=20
- 	if (unlikely(!skb)) {
- 		++net_device_ctx->eth_stats.rx_no_memory;
--		rcu_read_unlock();
- 		return NVSP_STAT_FAIL;
- 	}
-=20
---=20
-1.8.3.1
+I had some nits that I hope get covered in later revisions, if sent.
+But, overall looks fine.  For the series:
 
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
