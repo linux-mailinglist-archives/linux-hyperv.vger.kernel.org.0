@@ -2,139 +2,196 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98CBC6CA9A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jul 2019 10:05:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCD876D802
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jul 2019 02:58:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733131AbfGRIEt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Jul 2019 04:04:49 -0400
-Received: from mail-eopbgr1320119.outbound.protection.outlook.com ([40.107.132.119]:62432
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbfGRIEt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:04:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L4limz0iBa++VSBoXdCns5DNhiLfHQsQeicgxVjxqADEg4Pv0Gq8fpa2SwnM7t1uL0jB0dJ7efoapOdWTN8BlXDttXiR/y6cp2b/w/w8dNiaqoyO4Wh7D9htEidRruBB4q+Uc5PEytiW0l0EHcp5m2HGtUhv2uIscrGD1kPHtKsVGfm9yztc0rRyDVSAgRnssxqVJyppgqhQ86vAPQVlkcIBDEBAaI/AEjrAEsJkqVHIf3S5piy3eav9/KM3v+wcNdR0e1IzDMK1y7JWuwGkxTZJEytCieLt3AsUu0ovvGuYwRrMU1B0jaeHtubfylL5UFphhF/T0KbQiCOMkSeOCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zkEEzOZ3IOk5E/Cb42Q97OLKv+Vxfx/adDcUM9V/ZG0=;
- b=oQOn3WgdAHBob0kzLHaVsF9/qkCx3xPAfLcnd6Ff20dAjpq/K9pIMkLu8UWc1i5fTslBAYn7aClI5tqRRyR/65wGZODTMq1DixJ+eBhGQrEOIuL+S9issOu1IP14n9YIdufRsRyE3akayc4kjHyNrA4E4NHO2JTx2j0nIaWxqwLmpIiTNevGMLcPU9MZJH/2q1RGaaYa24JialjSGK3D7CY79iO5lCWoqYk8cPOvUDnnnI3ULDJ3eXxt0IdEtkAuXYsJj3GOKXGRJF/njU0umGrr2tyrmVdMD7XLn9JME5+O2DrHE7sTXHsYjwspIp54iL8MOt+8Js14WubkeROqUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zkEEzOZ3IOk5E/Cb42Q97OLKv+Vxfx/adDcUM9V/ZG0=;
- b=C9I85veloljQJ6x5aNbE9KJAYItoNxkA1JT4hlaSmP0/nEKCUMG5goNaiKlcVJ4BPeiYuP8bzlvezh0fMJTdMnEmjp6QQF4rLLCHbgzgifZZOvOBhDKFhMsLJMt7xumn4A+pDNXONcjJ89PB3SZrNjAkbX3cIV3YxpNbzBwzovg=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0107.APCP153.PROD.OUTLOOK.COM (10.170.188.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.0; Thu, 18 Jul 2019 08:04:38 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::383c:3887:faf8:650a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::383c:3887:faf8:650a%5]) with mapi id 15.20.2115.005; Thu, 18 Jul 2019
- 08:04:38 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1726045AbfGSA67 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Jul 2019 20:58:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39867 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfGSA66 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 18 Jul 2019 20:58:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so13655318pgi.6;
+        Thu, 18 Jul 2019 17:58:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RWWNgv0WcWjfE9wWYHQhoeNKyBfGxLtvDshgZHYc1vE=;
+        b=TI80sLTaRhpFMe8tn7BS5nXuhpKYxs7wmEnANGJMyCFvkvEteuEhqCEtgO0ziIu0rf
+         kEy9Gtv+msFRMIANvUU/oimdps2d2hnYX2IJJFKm/jM1Vfy4c60u8wy2o52mfyyvCmYb
+         dKkQrHZU2RaZQ/41n1L2jj8El/rsasHr2hOnJKG0HOW2gZ9w535y0tv4hV3geHY3dKtn
+         U5ac4XnCiGMY/gTJTTgc/vF2u7pbq5M4ITjv4rPKi+MVyAZfZSeC8FuFkQv8hA2Y5rYw
+         gESZNpyAmd5tyMhxRLQRH7XXgye29x82D4QfoIgonBwQ1oizdLloA1uaSsRVLD6/Vaxz
+         SJZQ==
+X-Gm-Message-State: APjAAAWj6Tt+Yf5WtByAGrl8JvcjFmbKinrZqT/kY5ux7+vUR6NwdWzT
+        MrcLJln5kPBAKvp4daMHvG8=
+X-Google-Smtp-Source: APXvYqxZoIKjz9ViGfUIEExjwwIbnjfGtWb7w9xiUnCbHyVRrBrLCxFCFJP5cS9IAYKOxxdelYaABg==
+X-Received: by 2002:a63:a346:: with SMTP id v6mr4814748pgn.57.1563497937499;
+        Thu, 18 Jul 2019 17:58:57 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id j128sm14025166pfg.28.2019.07.18.17.58.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 17:58:56 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Sasha Levin <sashal@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>, vkuznets <vkuznets@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>
-Subject: RE: [PATCH] x86/hyper-v: Zero out the VP assist page to fix CPU
- offlining
-Thread-Topic: [PATCH] x86/hyper-v: Zero out the VP assist page to fix CPU
- offlining
-Thread-Index: AdUyCb6p1/Ch6raqSV2uCwYf/NBGWgK6h7yAAAMgE9AADYqTAAAAYumQAAGMtAAAADPgAA==
-Date:   Thu, 18 Jul 2019 08:04:38 +0000
-Message-ID: <PU1P153MB01690BCF3771C221C3677158BFC80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <PU1P153MB01697CBE66649B4BA91D8B48BFFA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <alpine.DEB.2.21.1907180058210.1778@nanos.tec.linutronix.de>
- <PU1P153MB01693AB444C4A432FBA2507BBFC80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <alpine.DEB.2.21.1907180846290.1778@nanos.tec.linutronix.de>
- <PU1P153MB0169BE20761D77E7FD9A3D57BFC80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <alpine.DEB.2.21.1907180955130.1778@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907180955130.1778@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-18T08:04:35.1133646Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=78361c5f-caa3-402f-a2c6-c9969352d5e4;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:4518:88f8:ed53:3c89]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c33b21f3-19d3-4712-dfbd-08d70b5694e1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0107;
-x-ms-traffictypediagnostic: PU1P153MB0107:|PU1P153MB0107:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB01072DD1827810256E966C61BFC80@PU1P153MB0107.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1850;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(366004)(199004)(189003)(54534003)(6916009)(10090500001)(7416002)(7696005)(99286004)(4326008)(10290500003)(6436002)(8990500004)(25786009)(53936002)(55016002)(476003)(486006)(68736007)(446003)(11346002)(9686003)(256004)(14454004)(186003)(33656002)(102836004)(76176011)(2906002)(5660300002)(6506007)(46003)(6246003)(229853002)(54906003)(71200400001)(71190400001)(7736002)(478600001)(66446008)(8936002)(86362001)(6116002)(8676002)(316002)(81156014)(81166006)(76116006)(22452003)(4744005)(305945005)(66946007)(74316002)(64756008)(66476007)(66556008)(52536014)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0107;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RPcGEodoGOpf/88hBHDChMs4fMDP7UZYfNuyL0fHHf+IJJZKFCbpqzeMh1Hveus1GYI2ulwFIq1xsW6mj9NIY+POsEPyF3/cLFqV9JqLYJGpemGaSmu0DfeAzd67GHAU2LNlhKNaWJkIAIV9M1K6Imji29L3mB85H+y1Y6D4dFFaMnCLgjCRSLmwyDa/VFl4TcpQHWUUhpS1Eew9s6esaoutGJR/RjzkIfL/i+j5jTqZN1a/pbM3XpCCJ0t3JIy2KMy0sVDQuaQ3EH+Hw1ZntdwWAjdiwMDatz9BxIA163xf/LThhyfVrJF8/iTUyXj5pbWpps8pzXTCqnj57cdFIs+C6Ke3Pm5u+GyShMO3SV+KzB9DGg8rC56C9dUOO41J8ipDYXtoW1x7voblChsBb4nKEZX+sZyezj/SINH1D7U=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v3 0/9] x86: Concurrent TLB flushes
+Date:   Thu, 18 Jul 2019 17:58:28 -0700
+Message-Id: <20190719005837.4150-1-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c33b21f3-19d3-4712-dfbd-08d70b5694e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 08:04:38.4900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0107
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> Sent: Thursday, July 18, 2019 12:56 AM
-> To: Dexuan Cui <decui@microsoft.com>
->=20
-> On Thu, 18 Jul 2019, Dexuan Cui wrote:
-> >
-> > The concept of the "overlay page" seems weird, and frankly speaking,
-> > I don't really understand why the Hyper-V guys invented it, but as far
-> > as this patch here is concerned, I think the patch is safe and it can
-> > indeed fix the CPU offlining issue I described.
->=20
-> Then this needs some really good explanation and in the change log becaus=
-e
-> that's really obscure behaviour.
->=20
-> 	tglx
+[ Cover-letter is identical to v2, including benchmark results,
+  excluding the change log. ] 
 
-Agreed. I'll combine my replies into the changelog and post a v2 of
-the one-line patch.
+Currently, local and remote TLB flushes are not performed concurrently,
+which introduces unnecessary overhead - each INVLPG can take 100s of
+cycles. This patch-set allows TLB flushes to be run concurrently: first
+request the remote CPUs to initiate the flush, then run it locally, and
+finally wait for the remote CPUs to finish their work.
 
-Thanks,
--- Dexuan
+In addition, there are various small optimizations to avoid unwarranted
+false-sharing and atomic operations.
+
+The proposed changes should also improve the performance of other
+invocations of on_each_cpu(). Hopefully, no one has relied on this
+behavior of on_each_cpu() that invoked functions first remotely and only
+then locally [Peter says he remembers someone might do so, but without
+further information it is hard to know how to address it].
+
+Running sysbench on dax/ext4 w/emulated-pmem, write-cache disabled on
+2-socket, 48-logical-cores (24+SMT) Haswell-X, 5 repetitions:
+
+ sysbench fileio --file-total-size=3G --file-test-mode=rndwr \
+  --file-io-mode=mmap --threads=X --file-fsync-mode=fdatasync run
+
+  Th.   tip-jun28 avg (stdev)   +patch-set avg (stdev)  change
+  ---   ---------------------   ----------------------  ------
+  1     1267765 (14146)         1299253 (5715)          +2.4%
+  2     1734644 (11936)         1799225 (19577)         +3.7%
+  4     2821268 (41184)         2919132 (40149)         +3.4%
+  8     4171652 (31243)         4376925 (65416)         +4.9%
+  16    5590729 (24160)         5829866 (8127)          +4.2%
+  24    6250212 (24481)         6522303 (28044)         +4.3%
+  32    3994314 (26606)         4077543 (10685)         +2.0%
+  48    4345177 (28091)         4417821 (41337)         +1.6%
+
+(Note that on configurations with up to 24 threads numactl was used to
+set all threads on socket 1, which explains the drop in performance when
+going to 32 threads).
+
+Running the same benchmark with security mitigations disabled (PTI,
+Spectre, MDS):
+
+  Th.   tip-jun28 avg (stdev)   +patch-set avg (stdev)  change
+  ---   ---------------------   ----------------------  ------
+  1     1598896 (5174)          1607903 (4091)          +0.5%
+  2     2109472 (17827)         2224726 (4372)          +5.4%
+  4     3448587 (11952)         3668551 (30219)         +6.3%
+  8     5425778 (29641)         5606266 (33519)         +3.3%
+  16    6931232 (34677)         7054052 (27873)         +1.7%
+  24    7612473 (23482)         7783138 (13871)         +2.2%
+  32    4296274 (18029)         4283279 (32323)         -0.3%
+  48    4770029 (35541)         4764760 (13575)         -0.1%
+
+Presumably, PTI requires two invalidations of each mapping, which allows
+to get higher benefits from concurrency when PTI is on. At the same
+time, when mitigations are on, other overheads reduce the potential
+speedup.
+
+I tried to reduce the size of the code of the main patch, which required
+restructuring of the series.
+
+v2 -> v3:
+* Open-code the remote/local-flush decision code [Andy]
+* Fix hyper-v, Xen implementations [Andrew]
+* Fix redundant TLB flushes.
+
+v1 -> v2:
+* Removing the patches that Thomas took [tglx]
+* Adding hyper-v, Xen compile-tested implementations [Dave]
+* Removing UV [Andy]
+* Adding lazy optimization, removing inline keyword [Dave]
+* Restructuring patch-set
+
+RFCv2 -> v1:
+* Fix comment on flush_tlb_multi [Juergen]
+* Removing async invalidation optimizations [Andy]
+* Adding KVM support [Paolo]
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: x86@kernel.org
+Cc: xen-devel@lists.xenproject.org
+
+Nadav Amit (9):
+  smp: Run functions concurrently in smp_call_function_many()
+  x86/mm/tlb: Remove reason as argument for flush_tlb_func_local()
+  x86/mm/tlb: Open-code on_each_cpu_cond_mask() for tlb_is_not_lazy()
+  x86/mm/tlb: Flush remote and local TLBs concurrently
+  x86/mm/tlb: Privatize cpu_tlbstate
+  x86/mm/tlb: Do not make is_lazy dirty for no reason
+  cpumask: Mark functions as pure
+  x86/mm/tlb: Remove UV special case
+  x86/mm/tlb: Remove unnecessary uses of the inline keyword
+
+ arch/x86/hyperv/mmu.c                 |  10 +-
+ arch/x86/include/asm/paravirt.h       |   6 +-
+ arch/x86/include/asm/paravirt_types.h |   4 +-
+ arch/x86/include/asm/tlbflush.h       |  47 ++++-----
+ arch/x86/include/asm/trace/hyperv.h   |   2 +-
+ arch/x86/kernel/kvm.c                 |  11 ++-
+ arch/x86/kernel/paravirt.c            |   2 +-
+ arch/x86/mm/init.c                    |   2 +-
+ arch/x86/mm/tlb.c                     | 133 ++++++++++++++++----------
+ arch/x86/xen/mmu_pv.c                 |  11 +--
+ include/linux/cpumask.h               |   6 +-
+ include/linux/smp.h                   |  27 ++++--
+ include/trace/events/xen.h            |   2 +-
+ kernel/smp.c                          | 133 ++++++++++++--------------
+ 14 files changed, 218 insertions(+), 178 deletions(-)
+
+-- 
+2.20.1
+
