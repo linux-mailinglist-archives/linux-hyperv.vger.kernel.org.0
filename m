@@ -2,467 +2,199 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5CF6D808
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jul 2019 02:59:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B4BA6D950
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jul 2019 05:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfGSA7G (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Jul 2019 20:59:06 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40370 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfGSA7F (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Jul 2019 20:59:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so13661284pgj.7;
-        Thu, 18 Jul 2019 17:59:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z7W4PDkWeXaZPrNUK/c+i+vfjf2MjCOK5AU8zvB9S68=;
-        b=T15T3GlKk2a55vgbNwDM0mUvHA0CnMPtcRE5h0nJYtjZyOJm2BHt4acXnlVZ0nfbz2
-         A74ssYKd1UrE+hNaQtYGDAd9qjdEXdk9GEBvKua4hYNaIhNI8qg0buMXBal+45UD1k4y
-         shNDLl9+t8cLBFgJ5g7FInO5XeBUDA2tqIkB+yCw2OOeMMa7N+XH/ndtButEjXHEGClK
-         Afebrk3j9kr1df43UO+Rm1JBkhtHImr4Ea9XHeOKtriQbPVpEj0foYMuR4n7ZWcindVu
-         e2m1d2K8rKWHzD5uqihZ/911HWngPux7/MsrgXCNDM3PdsGM2MPjFwH7QRbR40NFx7Ta
-         /87w==
-X-Gm-Message-State: APjAAAUv6UjUqOk8cnO9ZYUMBaI6oQ95xPWo+caQ38P2ZCMWwmQNHrq3
-        4F8kYl3WtPkGuAhd49tyeW0=
-X-Google-Smtp-Source: APXvYqxNQ0/uVeaBzcrQoRXrm7ObjvZMyoE1Ndm/375Wyb17fCmZyR76u8EhnAcUCW/z5bktSF56tQ==
-X-Received: by 2002:a63:bd0a:: with SMTP id a10mr50136769pgf.55.1563497944208;
-        Thu, 18 Jul 2019 17:59:04 -0700 (PDT)
-Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j128sm14025166pfg.28.2019.07.18.17.59.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 17:59:03 -0700 (PDT)
-From:   Nadav Amit <namit@vmware.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S1726066AbfGSDWr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Jul 2019 23:22:47 -0400
+Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:1152
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726055AbfGSDWr (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 18 Jul 2019 23:22:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BexL4rknCQPPiVi2AM+U9TP4QLJ9IfBlRDJG+szsk+jLRLOuW+Ltwr17+r83d94dZG6S3ifx9vawfMos7iYge4JXaiDsg1SDljOy8lpVrL9g3HIhGh5Biy7gkVmaIrX7WmLRUK3mg+8KlY1uqnGykvgiRjNQMbk0atFVg8Y1T556ClGr+mgl2GqRfNpDH5mu2D142soHoeCcpaUszZhCwN8jFHTQNUclLJMhicsBJJ8+HxQg8kLrqOVj3Gl1iyfXFsattmSwCJSRM62tCalCTzPP5gDgf4ylG/l3PGyTP8CsrB2GkiCS57EBu6OVYf9jJ+UwjJS7ntnjL9p/kTfRgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C7OOzUXIkXNQVKBgq+RH4TVBKG1F7aVKkPsCj4wkJRk=;
+ b=DFfjh42igKyXlwqKYINxbbMZXzsWrSjYLYhNS3v4ocLRhUBF2j8PURBMopz1wh9bHREvk3Sa6Wsd1hCXYDZegdBkC554obTNu6yOsItQMJGQWvEDqWeMlJr/pqRZb35gPUpM/Iv5wZll0OicbqDXua1G2CMCUjMUQJKbzZouo+uEgnQ70SONdrgAdPPKp8rhOBsiG6QWFQtJbAeAotFin+9gl1lMibai+5AjcWgdQe2WiqcKzhfzuxYguL7U5m+4pdmTmBOC5Maly1r/I9IVzFsQNcPuIXiM7gSBRJjRZYWbJF1u9GgHjVudGW6+wx4qjq3K3Ra4KIp2rTtcFljK3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C7OOzUXIkXNQVKBgq+RH4TVBKG1F7aVKkPsCj4wkJRk=;
+ b=j4Yq7cnsqlQ1zi2kNzDcCM2KtfeWmvj7Fa2bKK/nSFqYtKI9bqhaHxCtUq7p4yD1kwDsz6btPgaQvNQOIpdW+KMy1p1KeJGdo5OKlk0Hi0jz7w4h6Lxc2r3CYUEzGQ+PZ1x40dR1tkQhvDV64gfXM/CTtoTBk+Mk8znhFYj4ND0=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0140.APCP153.PROD.OUTLOOK.COM (10.170.188.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.0; Fri, 19 Jul 2019 03:22:36 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::383c:3887:faf8:650a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::383c:3887:faf8:650a%5]) with mapi id 15.20.2115.005; Fri, 19 Jul 2019
+ 03:22:36 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        vkuznets <vkuznets@redhat.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH v3 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
-Date:   Thu, 18 Jul 2019 17:58:32 -0700
-Message-Id: <20190719005837.4150-5-namit@vmware.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719005837.4150-1-namit@vmware.com>
-References: <20190719005837.4150-1-namit@vmware.com>
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>
+Subject: [PATCH v2] x86/hyper-v: Zero out the VP ASSIST PAGE to fix CPU
+ offlining
+Thread-Topic: [PATCH v2] x86/hyper-v: Zero out the VP ASSIST PAGE to fix CPU
+ offlining
+Thread-Index: AdU94G2xIVn7CyIeS/6O8LXGJUvDAA==
+Date:   Fri, 19 Jul 2019 03:22:35 +0000
+Message-ID: <PU1P153MB0169B716A637FABF07433C04BFCB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-19T03:22:32.0829896Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5dd41e98-2884-4d2f-a875-9f8196cfcfd0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:515a:5ef4:7d96:37ed]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ca99e34d-d1a1-4f62-0bd1-08d70bf85897
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0140;
+x-ms-traffictypediagnostic: PU1P153MB0140:|PU1P153MB0140:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 2
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0140949E76B7A4464D0092C4BFCB0@PU1P153MB0140.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01039C93E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(199004)(54534003)(189003)(66446008)(64756008)(66556008)(55016002)(110136005)(54906003)(99286004)(66476007)(66946007)(76116006)(2501003)(14444005)(53936002)(305945005)(102836004)(33656002)(7736002)(86362001)(74316002)(71190400001)(71200400001)(4326008)(966005)(9686003)(10090500001)(478600001)(46003)(6306002)(6116002)(7416002)(7696005)(5660300002)(8676002)(14454004)(2906002)(316002)(8936002)(68736007)(81156014)(81166006)(8990500004)(52536014)(10290500003)(476003)(486006)(256004)(25786009)(1511001)(186003)(6436002)(6506007)(22452003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0140;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NmJdbnc8pJkJKQx+DtJV2bT+1Omc1g1NyB7Mokw44r+rkz7O5uTQoInNCZRg4ozFf+RmoIEBLrIZQ9gDquvG0xPM+ZVF1an/Cuut97VlEBudWSMmjD7WB+FpCI9th593MshAsUsb2KeI/sDxWJugJUD4Z2b4lR+67l+Rn5pAaDOF72129eThsEoUMR5TYlx809hDWBlRz3gtgjwCxDufp1+YIx3/c+/b1Cjohso/QRr6/I6Tpm5c0HDj7i51AiNTnWPiFKRp85G5T6Tx5USAaw/jpPAVIXpS3PG7xt49v0OHrPqiZelPbmLi5zWm7lbGrQiI6SLjR9YDvHb7oC4OKNMnGYTQoI6vg3rCOk+GFyIaiZeLsC+N6u1MydnNuUnsjClbZYpxzvQaxx3Be5MdxtwDgFy9JwWwsKHdreZMLjk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca99e34d-d1a1-4f62-0bd1-08d70bf85897
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2019 03:22:35.7586
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0140
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-To improve TLB shootdown performance, flush the remote and local TLBs
-concurrently. Introduce flush_tlb_multi() that does so. Introduce
-paravirtual versions of flush_tlb_multi() for KVM, Xen and hyper-v (Xen
-and hyper-v are only compile-tested).
 
-While the updated smp infrastructure is capable of running a function on
-a single local core, it is not optimized for this case. The multiple
-function calls and the indirect branch introduce some overhead, and
-might make local TLB flushes slower than they were before the recent
-changes.
+The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
+5.2.1 "GPA Overlay Pages" for the details) and here is an excerpt:
 
-Before calling the SMP infrastructure, check if only a local TLB flush
-is needed to restore the lost performance in this common case. This
-requires to check mm_cpumask() one more time, but unless this mask is
-updated very frequently, this should impact performance negatively.
+"
+The hypervisor defines several special pages that "overlay" the guest's
+Guest Physical Addresses (GPA) space. Overlays are addressed GPA but are
+not included in the normal GPA map maintained internally by the hypervisor.
+Conceptually, they exist in a separate map that overlays the GPA map.
 
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: linux-hyperv@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: virtualization@lists.linux-foundation.org
-Cc: kvm@vger.kernel.org
-Cc: xen-devel@lists.xenproject.org
-Signed-off-by: Nadav Amit <namit@vmware.com>
+If a page within the GPA space is overlaid, any SPA page mapped to the
+GPA page is effectively "obscured" and generally unreachable by the
+virtual processor through processor memory accesses.
+
+If an overlay page is disabled, the underlying GPA page is "uncovered",
+and an existing mapping becomes accessible to the guest.
+"
+
+SPA =3D System Physical Address =3D the final real physical address.
+
+When a CPU (e.g. CPU1) is being onlined, in hv_cpu_init(), we allocate the
+VP ASSIST PAGE and enable the EOI optimization for this CPU by writing the
+MSR HV_X64_MSR_VP_ASSIST_PAGE. From now on, hvp->apic_assist belongs to the
+special SPA page, and this CPU *always* uses hvp->apic_assist (which is
+shared with the hypervisor) to decide if it needs to write the EOI MSR.
+
+When a CPU (e.g. CPU1) is being offlined, on this CPU, we do:
+1. in hv_cpu_die(), we disable the EOI optimizaton for this CPU, and from
+   now on hvp->apic_assist belongs to the original "normal" SPA page;
+2. we finish the remaining work of stopping this CPU;
+3. this CPU is completely stopped.
+
+Between 1 and 3, this CPU can still receive interrupts (e.g. reschedule
+IPIs from CPU0, and Local APIC timer interrupts), and this CPU *must* write
+the EOI MSR for every interrupt received, otherwise the hypervisor may not
+deliver further interrupts, which may be needed to completely stop the CPU.
+
+So, after we disable the EOI optimization in hv_cpu_die(), we need to make
+sure hvp->apic_assist's bit0 is zero. The easiest way is we just zero out
+the page when it's allocated in hv_cpu_init().
+
+Note 1: after the "normal" SPA page is allocted and zeroed out, neither the
+hypervisor nor the guest writes into the page, so the page remains with
+zeros.
+
+Note 2: see Section 10.3.5 "EOI Assist" for the details of the EOI
+optimization. When the optimization is enabled, the guest can still write
+the EOI MSR register irrespective of the "No EOI required" value, though
+by doing so we can't benefit from the optimization.
+
+Fixes: ba696429d290 ("x86/hyper-v: Implement EOI assist")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
 ---
- arch/x86/hyperv/mmu.c                 | 10 +++---
- arch/x86/include/asm/paravirt.h       |  6 ++--
- arch/x86/include/asm/paravirt_types.h |  4 +--
- arch/x86/include/asm/tlbflush.h       |  8 ++---
- arch/x86/include/asm/trace/hyperv.h   |  2 +-
- arch/x86/kernel/kvm.c                 | 11 +++++--
- arch/x86/kernel/paravirt.c            |  2 +-
- arch/x86/mm/tlb.c                     | 47 ++++++++++++++++++---------
- arch/x86/xen/mmu_pv.c                 | 11 +++----
- include/trace/events/xen.h            |  2 +-
- 10 files changed, 62 insertions(+), 41 deletions(-)
 
-diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index e65d7fe6489f..8740d8b21db3 100644
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -50,8 +50,8 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
- 	return gva_n - offset;
- }
- 
--static void hyperv_flush_tlb_others(const struct cpumask *cpus,
--				    const struct flush_tlb_info *info)
-+static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
-+				   const struct flush_tlb_info *info)
- {
- 	int cpu, vcpu, gva_n, max_gvas;
- 	struct hv_tlb_flush **flush_pcpu;
-@@ -59,7 +59,7 @@ static void hyperv_flush_tlb_others(const struct cpumask *cpus,
- 	u64 status = U64_MAX;
- 	unsigned long flags;
- 
--	trace_hyperv_mmu_flush_tlb_others(cpus, info);
-+	trace_hyperv_mmu_flush_tlb_multi(cpus, info);
- 
- 	if (!hv_hypercall_pg)
- 		goto do_native;
-@@ -156,7 +156,7 @@ static void hyperv_flush_tlb_others(const struct cpumask *cpus,
- 	if (!(status & HV_HYPERCALL_RESULT_MASK))
- 		return;
- do_native:
--	native_flush_tlb_others(cpus, info);
-+	native_flush_tlb_multi(cpus, info);
- }
- 
- static u64 hyperv_flush_tlb_others_ex(const struct cpumask *cpus,
-@@ -231,6 +231,6 @@ void hyperv_setup_mmu_ops(void)
- 		return;
- 
- 	pr_info("Using hypercall for remote TLB flush\n");
--	pv_ops.mmu.flush_tlb_others = hyperv_flush_tlb_others;
-+	pv_ops.mmu.flush_tlb_multi = hyperv_flush_tlb_multi;
- 	pv_ops.mmu.tlb_remove_table = tlb_remove_table;
- }
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index dce26f1d13e1..8c6c2394393b 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -62,10 +62,10 @@ static inline void __flush_tlb_one_user(unsigned long addr)
- 	PVOP_VCALL1(mmu.flush_tlb_one_user, addr);
- }
- 
--static inline void flush_tlb_others(const struct cpumask *cpumask,
--				    const struct flush_tlb_info *info)
-+static inline void flush_tlb_multi(const struct cpumask *cpumask,
-+				   const struct flush_tlb_info *info)
- {
--	PVOP_VCALL2(mmu.flush_tlb_others, cpumask, info);
-+	PVOP_VCALL2(mmu.flush_tlb_multi, cpumask, info);
- }
- 
- static inline void paravirt_tlb_remove_table(struct mmu_gather *tlb, void *table)
-diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-index 639b2df445ee..c82969f38845 100644
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -211,8 +211,8 @@ struct pv_mmu_ops {
- 	void (*flush_tlb_user)(void);
- 	void (*flush_tlb_kernel)(void);
- 	void (*flush_tlb_one_user)(unsigned long addr);
--	void (*flush_tlb_others)(const struct cpumask *cpus,
--				 const struct flush_tlb_info *info);
-+	void (*flush_tlb_multi)(const struct cpumask *cpus,
-+				const struct flush_tlb_info *info);
- 
- 	void (*tlb_remove_table)(struct mmu_gather *tlb, void *table);
- 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index dee375831962..610e47dc66ef 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -517,7 +517,7 @@ static inline void __flush_tlb_one_kernel(unsigned long addr)
-  *  - flush_tlb_page(vma, vmaddr) flushes one page
-  *  - flush_tlb_range(vma, start, end) flushes a range of pages
-  *  - flush_tlb_kernel_range(start, end) flushes a range of kernel pages
-- *  - flush_tlb_others(cpumask, info) flushes TLBs on other cpus
-+ *  - flush_tlb_multi(cpumask, info) flushes TLBs on multiple cpus
-  *
-  * ..but the i386 has somewhat limited tlb flushing capabilities,
-  * and page-granular flushes are available only on i486 and up.
-@@ -569,7 +569,7 @@ static inline void flush_tlb_page(struct vm_area_struct *vma, unsigned long a)
- 	flush_tlb_mm_range(vma->vm_mm, a, a + PAGE_SIZE, PAGE_SHIFT, false);
- }
- 
--void native_flush_tlb_others(const struct cpumask *cpumask,
-+void native_flush_tlb_multi(const struct cpumask *cpumask,
- 			     const struct flush_tlb_info *info);
- 
- static inline u64 inc_mm_tlb_gen(struct mm_struct *mm)
-@@ -593,8 +593,8 @@ static inline void arch_tlbbatch_add_mm(struct arch_tlbflush_unmap_batch *batch,
- extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
- 
- #ifndef CONFIG_PARAVIRT
--#define flush_tlb_others(mask, info)	\
--	native_flush_tlb_others(mask, info)
-+#define flush_tlb_multi(mask, info)	\
-+	native_flush_tlb_multi(mask, info)
- 
- #define paravirt_tlb_remove_table(tlb, page) \
- 	tlb_remove_page(tlb, (void *)(page))
-diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/trace/hyperv.h
-index ace464f09681..85ca8560c7f9 100644
---- a/arch/x86/include/asm/trace/hyperv.h
-+++ b/arch/x86/include/asm/trace/hyperv.h
-@@ -8,7 +8,7 @@
- 
- #if IS_ENABLED(CONFIG_HYPERV)
- 
--TRACE_EVENT(hyperv_mmu_flush_tlb_others,
-+TRACE_EVENT(hyperv_mmu_flush_tlb_multi,
- 	    TP_PROTO(const struct cpumask *cpus,
- 		     const struct flush_tlb_info *info),
- 	    TP_ARGS(cpus, info),
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index b7f34fe2171e..de40657d9025 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -595,7 +595,7 @@ static void __init kvm_apf_trap_init(void)
- 
- static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
- 
--static void kvm_flush_tlb_others(const struct cpumask *cpumask,
-+static void kvm_flush_tlb_multi(const struct cpumask *cpumask,
- 			const struct flush_tlb_info *info)
- {
- 	u8 state;
-@@ -609,6 +609,11 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
- 	 * queue flush_on_enter for pre-empted vCPUs
- 	 */
- 	for_each_cpu(cpu, flushmask) {
-+		/*
-+		 * The local vCPU is never preempted, so we do not explicitly
-+		 * skip check for local vCPU - it will never be cleared from
-+		 * flushmask.
-+		 */
- 		src = &per_cpu(steal_time, cpu);
- 		state = READ_ONCE(src->preempted);
- 		if ((state & KVM_VCPU_PREEMPTED)) {
-@@ -618,7 +623,7 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
- 		}
- 	}
- 
--	native_flush_tlb_others(flushmask, info);
-+	native_flush_tlb_multi(flushmask, info);
- }
- 
- static void __init kvm_guest_init(void)
-@@ -643,7 +648,7 @@ static void __init kvm_guest_init(void)
- 	if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
- 	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
- 	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
--		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
-+		pv_ops.mmu.flush_tlb_multi = kvm_flush_tlb_multi;
- 		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
- 	}
- 
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 0aa6256eedd8..6af40844a730 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -363,7 +363,7 @@ struct paravirt_patch_template pv_ops = {
- 	.mmu.flush_tlb_user	= native_flush_tlb,
- 	.mmu.flush_tlb_kernel	= native_flush_tlb_global,
- 	.mmu.flush_tlb_one_user	= native_flush_tlb_one_user,
--	.mmu.flush_tlb_others	= native_flush_tlb_others,
-+	.mmu.flush_tlb_multi	= native_flush_tlb_multi,
- 	.mmu.tlb_remove_table	=
- 			(void (*)(struct mmu_gather *, void *))tlb_remove_page,
- 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index abbf55fa8b81..63c00908bdd9 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -551,7 +551,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
- 		 * garbage into our TLB.  Since switching to init_mm is barely
- 		 * slower than a minimal flush, just switch to init_mm.
- 		 *
--		 * This should be rare, with native_flush_tlb_others skipping
-+		 * This should be rare, with native_flush_tlb_multi() skipping
- 		 * IPIs to lazy TLB mode CPUs.
- 		 */
- 		switch_mm_irqs_off(NULL, &init_mm, NULL);
-@@ -665,9 +665,14 @@ static bool tlb_is_not_lazy(int cpu)
- 
- static DEFINE_PER_CPU(cpumask_t, flush_tlb_mask);
- 
--void native_flush_tlb_others(const struct cpumask *cpumask,
--			     const struct flush_tlb_info *info)
-+void native_flush_tlb_multi(const struct cpumask *cpumask,
-+			    const struct flush_tlb_info *info)
- {
+v2: there is no code change. I just improved the comment and the changelog
+according to the discussion with tglx:
+    https://lkml.org/lkml/2019/7/17/781
+    https://lkml.org/lkml/2019/7/18/91
+
+ arch/x86/hyperv/hv_init.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 0e033ef11a9f..d26832cb38bb 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -60,8 +60,16 @@ static int hv_cpu_init(unsigned int cpu)
+ 	if (!hv_vp_assist_page)
+ 		return 0;
+=20
 +	/*
-+	 * Do accounting and tracing. Note that there are (and have always been)
-+	 * cases in which a remote TLB flush will be traced, but eventually
-+	 * would not happen.
++	 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
++	 * 5.2.1 "GPA Overlay Pages"). Here it must be zeroed out to make sure
++	 * we always write the EOI MSR in hv_apic_eoi_write() *after* the
++	 * EOI optimization is disabled in hv_cpu_die(), otherwise a CPU may
++	 * not be stopped in the case of CPU offlining and the VM will hang.
 +	 */
- 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
- 	if (info->end == TLB_FLUSH_ALL)
- 		trace_tlb_flush(TLB_REMOTE_SEND_IPI, TLB_FLUSH_ALL);
-@@ -687,10 +692,12 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
- 		 * means that the percpu tlb_gen variables won't be updated
- 		 * and we'll do pointless flushes on future context switches.
- 		 *
--		 * Rather than hooking native_flush_tlb_others() here, I think
-+		 * Rather than hooking native_flush_tlb_multi() here, I think
- 		 * that UV should be updated so that smp_call_function_many(),
- 		 * etc, are optimal on UV.
- 		 */
-+		flush_tlb_func_local((void *)info);
-+
- 		cpumask = uv_flush_tlb_others(cpumask, info);
- 		if (cpumask)
- 			smp_call_function_many(cpumask, flush_tlb_func_remote,
-@@ -709,8 +716,9 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
- 	 * doing a speculative memory access.
- 	 */
- 	if (info->freed_tables) {
--		smp_call_function_many(cpumask, flush_tlb_func_remote,
--			       (void *)info, 1);
-+		__smp_call_function_many(cpumask, flush_tlb_func_remote,
-+					 flush_tlb_func_local,
-+					 (void *)info, 1);
- 	} else {
- 		/*
- 		 * Although we could have used on_each_cpu_cond_mask(),
-@@ -737,7 +745,8 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
- 			if (tlb_is_not_lazy(cpu))
- 				__cpumask_set_cpu(cpu, cond_cpumask);
- 		}
--		smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
-+		__smp_call_function_many(cond_cpumask, flush_tlb_func_remote,
-+					 flush_tlb_func_local,
- 					 (void *)info, 1);
- 	}
- }
-@@ -818,16 +827,20 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 	info = get_flush_tlb_info(mm, start, end, stride_shift, freed_tables,
- 				  new_tlb_gen);
- 
--	if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
-+	/*
-+	 * flush_tlb_multi() is not optimized for the common case in which only
-+	 * a local TLB flush is needed. Optimize this use-case by calling
-+	 * flush_tlb_func_local() directly in this case.
-+	 */
-+	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
-+		flush_tlb_multi(mm_cpumask(mm), info);
-+	} else if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
- 		lockdep_assert_irqs_enabled();
- 		local_irq_disable();
- 		flush_tlb_func_local(info);
- 		local_irq_enable();
- 	}
- 
--	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids)
--		flush_tlb_others(mm_cpumask(mm), info);
--
- 	put_flush_tlb_info();
- 	put_cpu();
- }
-@@ -890,16 +903,20 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- {
- 	int cpu = get_cpu();
- 
--	if (cpumask_test_cpu(cpu, &batch->cpumask)) {
-+	/*
-+	 * flush_tlb_multi() is not optimized for the common case in which only
-+	 * a local TLB flush is needed. Optimize this use-case by calling
-+	 * flush_tlb_func_local() directly in this case.
-+	 */
-+	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
-+		flush_tlb_multi(&batch->cpumask, &full_flush_tlb_info);
-+	} else if (cpumask_test_cpu(cpu, &batch->cpumask)) {
- 		lockdep_assert_irqs_enabled();
- 		local_irq_disable();
- 		flush_tlb_func_local((void *)&full_flush_tlb_info);
- 		local_irq_enable();
- 	}
- 
--	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids)
--		flush_tlb_others(&batch->cpumask, &full_flush_tlb_info);
--
- 	cpumask_clear(&batch->cpumask);
- 
- 	put_cpu();
-diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-index 26e8b326966d..48f7c7eb4dbc 100644
---- a/arch/x86/xen/mmu_pv.c
-+++ b/arch/x86/xen/mmu_pv.c
-@@ -1345,8 +1345,8 @@ static void xen_flush_tlb_one_user(unsigned long addr)
- 	preempt_enable();
- }
- 
--static void xen_flush_tlb_others(const struct cpumask *cpus,
--				 const struct flush_tlb_info *info)
-+static void xen_flush_tlb_multi(const struct cpumask *cpus,
-+				const struct flush_tlb_info *info)
- {
- 	struct {
- 		struct mmuext_op op;
-@@ -1356,7 +1356,7 @@ static void xen_flush_tlb_others(const struct cpumask *cpus,
- 	const size_t mc_entry_size = sizeof(args->op) +
- 		sizeof(args->mask[0]) * BITS_TO_LONGS(num_possible_cpus());
- 
--	trace_xen_mmu_flush_tlb_others(cpus, info->mm, info->start, info->end);
-+	trace_xen_mmu_flush_tlb_multi(cpus, info->mm, info->start, info->end);
- 
- 	if (cpumask_empty(cpus))
- 		return;		/* nothing to do */
-@@ -1365,9 +1365,8 @@ static void xen_flush_tlb_others(const struct cpumask *cpus,
- 	args = mcs.args;
- 	args->op.arg2.vcpumask = to_cpumask(args->mask);
- 
--	/* Remove us, and any offline CPUS. */
-+	/* Remove any offline CPUs */
- 	cpumask_and(to_cpumask(args->mask), cpus, cpu_online_mask);
--	cpumask_clear_cpu(smp_processor_id(), to_cpumask(args->mask));
- 
- 	args->op.cmd = MMUEXT_TLB_FLUSH_MULTI;
- 	if (info->end != TLB_FLUSH_ALL &&
-@@ -2396,7 +2395,7 @@ static const struct pv_mmu_ops xen_mmu_ops __initconst = {
- 	.flush_tlb_user = xen_flush_tlb,
- 	.flush_tlb_kernel = xen_flush_tlb,
- 	.flush_tlb_one_user = xen_flush_tlb_one_user,
--	.flush_tlb_others = xen_flush_tlb_others,
-+	.flush_tlb_multi = xen_flush_tlb_multi,
- 	.tlb_remove_table = tlb_remove_table,
- 
- 	.pgd_alloc = xen_pgd_alloc,
-diff --git a/include/trace/events/xen.h b/include/trace/events/xen.h
-index 9a0e8af21310..546022acf160 100644
---- a/include/trace/events/xen.h
-+++ b/include/trace/events/xen.h
-@@ -362,7 +362,7 @@ TRACE_EVENT(xen_mmu_flush_tlb_one_user,
- 	    TP_printk("addr %lx", __entry->addr)
- 	);
- 
--TRACE_EVENT(xen_mmu_flush_tlb_others,
-+TRACE_EVENT(xen_mmu_flush_tlb_multi,
- 	    TP_PROTO(const struct cpumask *cpus, struct mm_struct *mm,
- 		     unsigned long addr, unsigned long end),
- 	    TP_ARGS(cpus, mm, addr, end),
--- 
-2.20.1
+ 	if (!*hvp)
+-		*hvp =3D __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
++		*hvp =3D __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO,
++				 PAGE_KERNEL);
+=20
+ 	if (*hvp) {
+ 		u64 val;
+--=20
+2.19.1
 
