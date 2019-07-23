@@ -2,91 +2,119 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CAFF709C0
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Jul 2019 21:33:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6CD471D05
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Jul 2019 18:39:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfGVTdE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Jul 2019 15:33:04 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37354 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfGVTdE (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Jul 2019 15:33:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zw0OzLY2qkyLgMJYZmR8YfjGW2oVP8VhhsbR5Yd/A7w=; b=TqldDQQlZ5ZIvVudiXOATvg8+6
-        99A+Mn8ucymBMPFhYx39j7RhwEqzKlskYs7uBA2fXig+Bxy7FrABNjSPOmH4GIcSvZhdDn6/2+ZsJ
-        VUg6cZbX8pBbqtj2bpRyU9Hzp/nnIWZowUX2X0jd2bLQuCjO1IrSHkq7ZpEA2agi1YNRwmTRLLboh
-        67TOwpPTag0FdERZ4yZ/3XiWzg/K9OYALvLZ0986XmDMNqvH4LVlmKnnhtNsUUIsaVZ0eY6sn+2NN
-        AtPJRQxOZ5Fl/h2Qzpox5vkgD09aPBondQwxq2tWQ+ZSFyHsqkgVr0smD7+AfjWNC6hLNxOuTf5H+
-        UtPXJ1DA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpe3J-0006Hn-Eh; Mon, 22 Jul 2019 19:32:53 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A1F78980C59; Mon, 22 Jul 2019 21:32:51 +0200 (CEST)
-Date:   Mon, 22 Jul 2019 21:32:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        id S1729699AbfGWQjs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 Jul 2019 12:39:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:28574 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728505AbfGWQjs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 23 Jul 2019 12:39:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 09:39:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,299,1559545200"; 
+   d="scan'208";a="180790441"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2019 09:39:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 5DE8681; Tue, 23 Jul 2019 19:39:44 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: Re: [PATCH v3 4/9] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Message-ID: <20190722193251.GF6698@worktop.programming.kicks-ass.net>
-References: <20190719005837.4150-1-namit@vmware.com>
- <20190719005837.4150-5-namit@vmware.com>
- <20190722191433.GD6698@worktop.programming.kicks-ass.net>
- <58DA0841-33C2-4D16-A671-08064A15001C@vmware.com>
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] hv_sock: Use consistent types for UUIDs
+Date:   Tue, 23 Jul 2019 19:39:43 +0300
+Message-Id: <20190723163943.65991-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <58DA0841-33C2-4D16-A671-08064A15001C@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 07:27:09PM +0000, Nadav Amit wrote:
-> > On Jul 22, 2019, at 12:14 PM, Peter Zijlstra <peterz@infradead.org> wrote:
+The rest of Hyper-V code is using new types for UUID handling.
+Convert hv_sock as well.
 
-> > But then we can still do something like the below, which doesn't change
-> > things and still gets rid of that dual function crud, simplifying
-> > smp_call_function_many again.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ net/vmw_vsock/hyperv_transport.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-> Nice! I will add it on top, if you don’t mind (instead squashing it).
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index f2084e3f7aa4..2a1719c0f8d2 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -77,11 +77,11 @@ struct hvs_send_buf {
+ 					 VMBUS_PKT_TRAILER_SIZE)
+ 
+ union hvs_service_id {
+-	uuid_le	srv_id;
++	guid_t	srv_id;
+ 
+ 	struct {
+ 		unsigned int svm_port;
+-		unsigned char b[sizeof(uuid_le) - sizeof(unsigned int)];
++		unsigned char b[sizeof(guid_t) - sizeof(unsigned int)];
+ 	};
+ };
+ 
+@@ -89,8 +89,8 @@ union hvs_service_id {
+ struct hvsock {
+ 	struct vsock_sock *vsk;
+ 
+-	uuid_le vm_srv_id;
+-	uuid_le host_srv_id;
++	guid_t vm_srv_id;
++	guid_t host_srv_id;
+ 
+ 	struct vmbus_channel *chan;
+ 	struct vmpacket_descriptor *recv_desc;
+@@ -159,21 +159,21 @@ struct hvsock {
+ #define MIN_HOST_EPHEMERAL_PORT		(MAX_HOST_LISTEN_PORT + 1)
+ 
+ /* 00000000-facb-11e6-bd58-64006a7986d3 */
+-static const uuid_le srv_id_template =
+-	UUID_LE(0x00000000, 0xfacb, 0x11e6, 0xbd, 0x58,
+-		0x64, 0x00, 0x6a, 0x79, 0x86, 0xd3);
++static const guid_t srv_id_template =
++	GUID_INIT(0x00000000, 0xfacb, 0x11e6, 0xbd, 0x58,
++		  0x64, 0x00, 0x6a, 0x79, 0x86, 0xd3);
+ 
+-static bool is_valid_srv_id(const uuid_le *id)
++static bool is_valid_srv_id(const guid_t *id)
+ {
+-	return !memcmp(&id->b[4], &srv_id_template.b[4], sizeof(uuid_le) - 4);
++	return !memcmp(&id->b[4], &srv_id_template.b[4], sizeof(guid_t) - 4);
+ }
+ 
+-static unsigned int get_port_by_srv_id(const uuid_le *svr_id)
++static unsigned int get_port_by_srv_id(const guid_t *svr_id)
+ {
+ 	return *((unsigned int *)svr_id);
+ }
+ 
+-static void hvs_addr_init(struct sockaddr_vm *addr, const uuid_le *svr_id)
++static void hvs_addr_init(struct sockaddr_vm *addr, const guid_t *svr_id)
+ {
+ 	unsigned int port = get_port_by_srv_id(svr_id);
+ 
+@@ -316,7 +316,7 @@ static void hvs_close_connection(struct vmbus_channel *chan)
+ 
+ static void hvs_open_connection(struct vmbus_channel *chan)
+ {
+-	uuid_le *if_instance, *if_type;
++	guid_t *if_instance, *if_type;
+ 	unsigned char conn_from_host;
+ 
+ 	struct sockaddr_vm addr;
+-- 
+2.20.1
 
-Not at all.
-
-> The original decision to have local/remote functions was mostly to provide
-> the generality.
-> 
-> I would change the last argument of __smp_call_function_many() from “wait”
-> to “flags” that would indicate whether to run the function locally, since I
-> don’t want to change the semantics of smp_call_function_many() and decide
-> whether to run the function locally purely based on the mask. Let me know if
-> you disagree.
-
-Agreed.
