@@ -2,60 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51D5475C15
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jul 2019 02:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 560B775FD3
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jul 2019 09:28:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfGZA0Y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 25 Jul 2019 20:26:24 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:41406 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfGZA0X (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 25 Jul 2019 20:26:23 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5417212650647;
-        Thu, 25 Jul 2019 17:26:23 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 17:26:22 -0700 (PDT)
-Message-Id: <20190725.172622.69380355082748817.davem@davemloft.net>
-To:     himadrispandya@gmail.com
-Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, himadri18.07@gmail.com
-Subject: Re: [PATCH] hv_sock: use HV_HYP_PAGE_SIZE instead of PAGE_SIZE_4K
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190725051125.10605-1-himadri18.07@gmail.com>
-References: <20190725051125.10605-1-himadri18.07@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 25 Jul 2019 17:26:23 -0700 (PDT)
+        id S1726001AbfGZH2Y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 26 Jul 2019 03:28:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46750 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbfGZH2Y (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 26 Jul 2019 03:28:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 18647AF47;
+        Fri, 26 Jul 2019 07:28:23 +0000 (UTC)
+Subject: Re: [PATCH v3 4/9] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+To:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190719005837.4150-1-namit@vmware.com>
+ <20190719005837.4150-5-namit@vmware.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <3fc06d95-5f17-4642-cd91-49a0f70057c0@suse.com>
+Date:   Fri, 26 Jul 2019 09:28:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190719005837.4150-5-namit@vmware.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RnJvbTogSGltYWRyaSBQYW5keWEgPGhpbWFkcmlzcGFuZHlhQGdtYWlsLmNvbT4NCkRhdGU6IFRo
-dSwgMjUgSnVsIDIwMTkgMDU6MTE6MjUgKzAwMDANCg0KPiBPbGRlciB3aW5kb3dzIGhvc3RzIHJl
-cXVpcmUgdGhlIGh2X3NvY2sgcmluZyBidWZmZXIgdG8gYmUgZGVmaW5lZA0KPiB1c2luZyA0SyBw
-YWdlcy4gVGhpcyB3YXMgYWNoaWV2ZWQgYnkgdXNpbmcgdGhlIHN5bWJvbCBQQUdFX1NJWkVfNEsN
-Cj4gZGVmaW5lZCBzcGVjaWZpY2FsbHkgZm9yIHRoaXMgcHVycG9zZS4gQnV0IG5vdyB3ZSBoYXZl
-IGEgbmV3IHN5bWJvbA0KPiBIVl9IWVBfUEFHRV9TSVpFIGRlZmluZWQgaW4gaHlwZXJ2LXRsZnMg
-d2hpY2ggY2FuIGJlIHVzZWQgZm9yIHRoaXMuDQo+IA0KPiBUaGlzIHBhdGNoIHJlbW92ZXMgdGhl
-IGRlZmluaXRpb24gb2Ygc3ltYm9sIFBBR0VfU0laRV80SyBhbmQgcmVwbGFjZXMNCj4gaXRzIHVz
-YWdlIHdpdGggdGhlIHN5bWJvbCBIVl9IWVBfUEFHRV9TSVpFLiBUaGlzIHBhdGNoIGFsc28gYWxp
-Z25zDQo+IHNuZGJ1ZiBhbmQgcmN2YnVmIHRvIGh5cGVyLXYgc3BlY2lmaWMgcGFnZSBzaXplIHVz
-aW5nIEhWX0hZUF9QQUdFX1NJWkUNCj4gaW5zdGVhZCBvZiB0aGUgZ3Vlc3QgcGFnZSBzaXplKFBB
-R0VfU0laRSkgYXMgaHlwZXItdiBleHBlY3RzIHRoZSBwYWdlDQo+IHNpemUgdG8gYmUgNEsgYW5k
-IGl0IG1pZ2h0IG5vdCBiZSB0aGUgY2FzZSBvbiBBUk02NCBhcmNoaXRlY3R1cmUuDQo+IA0KPiBT
-aWduZWQtb2ZmLWJ5OiBIaW1hZHJpIFBhbmR5YSA8aGltYWRyaTE4LjA3QGdtYWlsLmNvbT4NCg0K
-VGhpcyBkb2Vzbid0IGNvbXBpbGU6DQoNCiAgQ0MgW01dICBuZXQvdm13X3Zzb2NrL2h5cGVydl90
-cmFuc3BvcnQubw0KbmV0L3Ztd192c29jay9oeXBlcnZfdHJhbnNwb3J0LmM6NTg6Mjg6IGVycm9y
-OiChSFZfSFlQX1BBR0VfU0laRaIgdW5kZWNsYXJlZCBoZXJlIChub3QgaW4gYSBmdW5jdGlvbik7
-IGRpZCB5b3UgbWVhbiChSFZfTUVTU0FHRV9TSVpFoj8NCiAjZGVmaW5lIEhWU19TRU5EX0JVRl9T
-SVpFIChIVl9IWVBfUEFHRV9TSVpFIC0gc2l6ZW9mKHN0cnVjdCB2bXBpcGVfcHJvdG9faGVhZGVy
-KSkNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+DQo=
+On 19.07.19 02:58, Nadav Amit wrote:
+> To improve TLB shootdown performance, flush the remote and local TLBs
+> concurrently. Introduce flush_tlb_multi() that does so. Introduce
+> paravirtual versions of flush_tlb_multi() for KVM, Xen and hyper-v (Xen
+> and hyper-v are only compile-tested).
+> 
+> While the updated smp infrastructure is capable of running a function on
+> a single local core, it is not optimized for this case. The multiple
+> function calls and the indirect branch introduce some overhead, and
+> might make local TLB flushes slower than they were before the recent
+> changes.
+> 
+> Before calling the SMP infrastructure, check if only a local TLB flush
+> is needed to restore the lost performance in this common case. This
+> requires to check mm_cpumask() one more time, but unless this mask is
+> updated very frequently, this should impact performance negatively.
+> 
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: x86@kernel.org
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: virtualization@lists.linux-foundation.org
+> Cc: kvm@vger.kernel.org
+> Cc: xen-devel@lists.xenproject.org
+> Signed-off-by: Nadav Amit <namit@vmware.com>
+> ---
+>   arch/x86/hyperv/mmu.c                 | 10 +++---
+>   arch/x86/include/asm/paravirt.h       |  6 ++--
+>   arch/x86/include/asm/paravirt_types.h |  4 +--
+>   arch/x86/include/asm/tlbflush.h       |  8 ++---
+>   arch/x86/include/asm/trace/hyperv.h   |  2 +-
+>   arch/x86/kernel/kvm.c                 | 11 +++++--
+>   arch/x86/kernel/paravirt.c            |  2 +-
+>   arch/x86/mm/tlb.c                     | 47 ++++++++++++++++++---------
+>   arch/x86/xen/mmu_pv.c                 | 11 +++----
+>   include/trace/events/xen.h            |  2 +-
+>   10 files changed, 62 insertions(+), 41 deletions(-)
+
+Xen and paravirt parts: Reviewed-by: Juergen Gross <jgross@suse.com>
+
+
+Juergen
