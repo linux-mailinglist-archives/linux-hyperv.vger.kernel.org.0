@@ -2,143 +2,217 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D8997B69E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 Jul 2019 02:16:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99DC57B795
+	for <lists+linux-hyperv@lfdr.de>; Wed, 31 Jul 2019 03:25:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbfGaAQ0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 Jul 2019 20:16:26 -0400
-Received: from mail-eopbgr1300118.outbound.protection.outlook.com ([40.107.130.118]:35502
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1726164AbfGaBZ4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 Jul 2019 21:25:56 -0400
+Received: from mail-eopbgr1320101.outbound.protection.outlook.com ([40.107.132.101]:35882
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726210AbfGaAQ0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 Jul 2019 20:16:26 -0400
+        id S1725911AbfGaBZz (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 30 Jul 2019 21:25:55 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D1VU4oVxnpL9si1NGddJ5NnTYRp8I+XpwPBQ69+IF/jiojNrcxtA5gqHpDFuvDFzk353PsQUP4MfxwbG3GCGKuJqta78WJadtj8eOzvHwC5p6/+UaTxruHfthC0zj1DxFIWQUi9NRBm991gL+uox7HPeE3jvtwbwu6ch5NzWiXdPNlrBY7DeRcFyyvUKaTZqltz3gYnglxPK37GXiwpTT1EtrYSOM181hlfKpS5Nf3dVtmKglk9OY0vmALErP/Q1K7q1zGK+VuTT/y5QA9qrTskT5UVTIyFN62eL6iu+MDzKtnPhGrzKa/LT7DhhAwexhedLhTXZDX7fwMRfxu48QA==
+ b=bEH6c27w+PM3nfGYEpFiDEjzn9DUnEK7N6WZVBUP5F5/sD+Rcnzo5eFlDNm2kAQC7LzcltmUOnO1YtV3B/jGTuN02ewPPFYQ0JunWwwhd9HF2F617yVIfB0tAZ2fJJZ+UVhDGlhRaTBShgA9npgkBUNODWzvLpyDLA7s56oqj/228su8G5nqshcLSQcSsWnyMHg0j9mhcbMtgdSYaw46xmjRMbFDwFNhJHLqYiP5CVWlfIIkar2vUAdI8ghtTC0jrloGvUWiWVw7LCxFLtkKtFqIHmu3xwYybgvF9F/80YZeBNYa9HkeRMLpSOQIamtNMTU+ltd/88boTqy6qiEncg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TtDtO36V+3Pmq22b84VGHF9oJtVvdHW4DHssI+28WJE=;
- b=ejQa0Owt8BVYIula5GfaR7UG9/6gdKhlTf50jaGIwXCbWLkHIeVHb77vTKhR4HQINUw3wv2mjghvGrXSuHdj94Tr1WfL4BPn5Pn6mXHY1eCCmVDP8uUmQ/dEf0/TXywLTnxhlRGaznFnzvktF6O0XWLXu80jKYe2CL9zrpyPmii9UQKkk0Gnq0/0yO0aMNikKiq4JNLLhfJRBHOsBG25HrkNj6nB073QRu/QarPgeG/bPGbOGCxWA333LxgjpCgSfpNXrYPuPt06IDMvY/kA+ZYcXYuWnR2ef3P7YbQmaU8TaxP8RtPTfvKDFK6oDe2PPhRYfxwnXGI3Chz76poeXw==
+ bh=thm68vWJDTJqC+ZV40mX//nMUgdYsUcdxVCjvVDMtbc=;
+ b=nxJrgKhWQIU27ktpOPGKu2QM/NuyOZ63kdJto5b0kIxSU8tdNISRItvwcByJnQRxAxhaUcjNG1Z8UIGICBXiq+qO+A/2nwb3Mp57awybsw6LVUJu/XY4OorvzeksZJ5Tu+oMjhTFEblCVtgKhrZbktb2Ogki2Gfv/UGFM5wzGnhQTj6kpHhTZOY/ASu73/ivNnWjUOL997FA2iRFN7cG7SsqKUYSZ4TxBIzAkldbJkHHhok9nRd0V5/q/mDiWKN9Lwv/ynbZcxWn3+aZQeXnZ8dYdwf4QFlnlQL7zFJtB5cJYk9b/zFpRR1x6L2I+v+CMRgYpwnR9Uzn3sZrdJqMKA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TtDtO36V+3Pmq22b84VGHF9oJtVvdHW4DHssI+28WJE=;
- b=CoZ3XWw1GMZfC2qV+XS/dB2XZah1BU0bb+JzmFB6u3KB4skrbToGCmqX8XSBxOxW2RmEz2HBdEXLMAUf3thbJcT2uLfE1/zAbgMo2ke9lAxR2g51xEhVwmNbLyFVtT46RubtiziOAlMdu8j0yy1RhKVS+JG2DOpUAm9pRsui2as=
+ bh=thm68vWJDTJqC+ZV40mX//nMUgdYsUcdxVCjvVDMtbc=;
+ b=NuBjPQ/K+EyRrVqp7BoHyqCVmVxRcpZd/fV8iGcBHlGZyPjPPs0TJxnVcqpW1V5/GetRg4BQufZeoX/HUvoAZz2lHexgZqJ4ekjH5GDWibQA5CPULwzPQQiIUmWbojfO7iTu+Xh65nUmHhlqpmf2jHsx5ERM47IKow5BRYCOJoc=
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0171.APCP153.PROD.OUTLOOK.COM (10.170.189.15) with Microsoft SMTP
+ PU1P153MB0139.APCP153.PROD.OUTLOOK.COM (10.170.188.141) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Wed, 31 Jul 2019 00:16:17 +0000
+ 15.20.2157.3; Wed, 31 Jul 2019 01:25:46 +0000
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::d44e:57b7:d8fc:e91c%8]) with mapi id 15.20.2157.001; Wed, 31 Jul 2019
- 00:16:17 +0000
+ 01:25:46 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        David Miller <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 6/7] Drivers: hv: vmbus: Suspend/resume the vmbus itself
- for hibernation
-Thread-Topic: [PATCH 6/7] Drivers: hv: vmbus: Suspend/resume the vmbus itself
- for hibernation
-Thread-Index: AQHVNhdJZWKYdNj8hk22NGM1tZCwVabj7olQgAAL3RA=
-Date:   Wed, 31 Jul 2019 00:16:17 +0000
-Message-ID: <PU1P153MB0169B839BF81829C6572C02CBFDF0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1562650084-99874-1-git-send-email-decui@microsoft.com>
- <1562650084-99874-7-git-send-email-decui@microsoft.com>
- <MWHPR21MB078461F2DB6FE0A6D0647B70D7DC0@MWHPR21MB0784.namprd21.prod.outlook.com>
-In-Reply-To: <MWHPR21MB078461F2DB6FE0A6D0647B70D7DC0@MWHPR21MB0784.namprd21.prod.outlook.com>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: [PATCH v2 net] hv_sock: Fix hang when a connection is closed
+Thread-Topic: [PATCH v2 net] hv_sock: Fix hang when a connection is closed
+Thread-Index: AdVHPmu2nCw89Ds2Tx6HccJLUcFnXg==
+Date:   Wed, 31 Jul 2019 01:25:45 +0000
+Message-ID: <PU1P153MB01696DDD3A3F601370701DD2BFDF0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-30T23:25:35.5916184Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-31T01:25:42.9249599Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3253bf88-42be-4c76-912a-1ac61c3e3840;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5fb33ce5-3f70-4230-92d8-446001a362ef;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
 x-originating-ip: [2001:4898:80e8:1:c0f7:3271:ccd8:4d01]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e6be4a90-6731-47c9-b890-08d7154c4e93
+x-ms-office365-filtering-correlation-id: f875bf19-0189-4eb7-6107-08d71556034c
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0171;
-x-ms-traffictypediagnostic: PU1P153MB0171:|PU1P153MB0171:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0139;
+x-ms-traffictypediagnostic: PU1P153MB0139:|PU1P153MB0139:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0171939B14CD83124582BF60BFDF0@PU1P153MB0171.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB01399350552811B6F45317E1BFDF0@PU1P153MB0139.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 011579F31F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(366004)(396003)(376002)(189003)(199004)(54534003)(6506007)(186003)(6246003)(46003)(8936002)(71200400001)(71190400001)(15650500001)(305945005)(2501003)(256004)(11346002)(10090500001)(478600001)(476003)(486006)(68736007)(14454004)(2906002)(74316002)(8990500004)(99286004)(102836004)(10290500003)(110136005)(6116002)(5660300002)(66946007)(66446008)(64756008)(229853002)(53936002)(66556008)(66476007)(76176011)(446003)(9686003)(76116006)(33656002)(81166006)(81156014)(4326008)(55016002)(52536014)(86362001)(7736002)(6436002)(1511001)(8676002)(25786009)(22452003)(2201001)(7696005)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0171;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(54534003)(51234002)(199004)(189003)(52536014)(316002)(486006)(7416002)(10090500001)(10290500003)(25786009)(81166006)(81156014)(305945005)(4326008)(5660300002)(110136005)(68736007)(186003)(8676002)(2906002)(66446008)(64756008)(66556008)(2501003)(74316002)(1511001)(6116002)(33656002)(66946007)(54906003)(6506007)(66476007)(22452003)(71200400001)(14444005)(71190400001)(76116006)(6436002)(478600001)(7736002)(53936002)(8990500004)(86362001)(256004)(14454004)(99286004)(476003)(7696005)(55016002)(9686003)(8936002)(102836004)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0139;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: zNnMIGRaEl0WKT2MG7rCoUnVMNyJ8P+k9ZD5qvDDpNDL7KWd1v+H9OM6lUB0MCQ/IJpfL7le+Hgmv/cLCmmO/ZBba0McEbGhw2Ihzj3GVkdnPg527bc7uBLwKu4k8LqMEAhg0UoNGZpEpK+sxgPSmBRHZ79dN+lL0m3+/7oXp6t4bxIu/lenV5uhFnkEu9CXRjDOG8pGVY9J2J8QbSHBERjn6KrepGfQbfm8OevT+Bs5anQDd095Tmpb6bLl5VtzwX1j22Ou0bI3LElr1qU5Hq4n78rv072qGpZSVWTSv47e84O1tiMS10GJhXETmXDvVTLqKGDoGYAXBV4m9R/HRoFcKIm8xsMDK70WtzMHs6FzCq80/iw+oy5w4cszSB1jk0dOIkgruMhMugQnSvIkjkFexitzhV8G0KDoeUA8yq4=
+x-microsoft-antispam-message-info: rO7CYCcEHk8JKSQf/pzsEjaHBDT4Rxf1IvOjsj0WZevs9Lz1yJ3+GVYI+Tu5W03bCpoh0zz+1zMD4lPYOlPNsAmrXzuBAoHNOiRNF3ljIMGzcZ1cy/MDbJt8EGk3Z3J/GSCDEskyJNPItPPCW2vbLFC024Xp0Cz+9UgY5+Wk++TP2sIzKOf+tZkI62KCSLuA2MhEqDByBcg3G3EaFu8m+swxbM+pO9NPOx8r2CH0r8g2n1DgmI/cHNLiVDpPcV9LSEBsLbbNmA74n0GiDicJRFPCDC4vg/59W4mvB4jHnqnYv6HnuoKOdNUjoLBgShMAAQsvSEjR8EnPP2S8Bm0rJD3QfCtd383glmEWbuIc0hO94WB006bAOc1LQqqrZqeZ6WQbh7R2IJlcYh0+TWw2rKBvs+oFCckTIXXV492PsUc=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6be4a90-6731-47c9-b890-08d7154c4e93
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 00:16:17.1798
+X-MS-Exchange-CrossTenant-Network-Message-Id: f875bf19-0189-4eb7-6107-08d71556034c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2019 01:25:45.8275
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 21JhzbnYu0OpO2tjx78u/MGUpzvLFtswyrx71iC6qNpGEZQaP24/raN2tFRW5z3cgEMg1GHcqC7nnX6r3Hrn5A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0171
+X-MS-Exchange-CrossTenant-userprincipalname: E6dZU1lHIMdHnIGLvTcVfBDnvb22Pth1kbvGOcvZBs3K+6BbWfKZyk0h031jxQiTeCST3xLK2MQfXEBfzsKAVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0139
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Tuesday, July 30, 2019 4:26 PM
-> From: Dexuan Cui <decui@microsoft.com>  Sent: Monday, July 8, 2019 10:30
-> PM
-> >
-> > This is needed when we resume the old kernel from the "current" kernel.
->=20
-> Perhaps a bit more descriptive commit message could be supplied?
 
-I'll use this as the new changelog:
+There is a race condition for an established connection that is being close=
+d
+by the guest: the refcnt is 4 at the end of hvs_release() (Note: here the
+'remove_sock' is false):
 
-Before Linux enters hibernation, it sends the CHANNELMSG_UNLOAD message to
-the host so all the offers are gone. After hibernation, Linux needs to re-n=
-egotiate
-with the host using the same vmbus protocol version (which was in use
-before hibernation), and ask the host to re-offer the vmbus devices.=20
+1 for the initial value;
+1 for the sk being in the bound list;
+1 for the sk being in the connected list;
+1 for the delayed close_work.
 
-> > +
-> > +	ret =3D vmbus_negotiate_version(msginfo, vmbus_proto_version);
->=20
-> I think this code answers my earlier question:  Upon resume, we negotiate
-> the same
-> VMbus protocol version we had at time of hibernation, even if running on =
-a
-> newer
-> version of Hyper-V that might support newer protocol versions.  Hence the
-> offer
-> messages should not have any previously reserved fields now being used.  =
- A
-> comment to this effect would be useful.
+After hvs_release() finishes, __vsock_release() -> sock_put(sk) *may*
+decrease the refcnt to 3.
 
-Ok, let me add a comment before the line.
+Concurrently, hvs_close_connection() runs in another thread:
+  calls vsock_remove_sock() to decrease the refcnt by 2;
+  call sock_put() to decrease the refcnt to 0, and free the sk;
+  next, the "release_sock(sk)" may hang due to use-after-free.
 
-I'll post a v2 of the patchset, including the "[PATCH 4/7]", which needs a =
-small change.
+In the above, after hvs_release() finishes, if hvs_close_connection() runs
+faster than "__vsock_release() -> sock_put(sk)", then there is not any issu=
+e,
+because at the beginning of hvs_close_connection(), the refcnt is still 4.
 
-Thanks,
--- Dexuan
+The issue can be resolved if an extra reference is taken when the
+connection is established.
+
+Fixes: a9eeb998c28d ("hv_sock: Add support for delayed close")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Cc: stable@vger.kernel.org
+
+---
+
+Changes in v2:=20
+  Changed the location of the sock_hold() call.=20
+  Updated the changelog accordingly.
+ =20
+  Thanks Sunil for the suggestion!
+
+
+With the proper kernel debugging options enabled, first a warning can
+appear:
+
+kworker/1:0/4467 is freeing memory ..., with a lock still held there!
+stack backtrace:
+Workqueue: events vmbus_onmessage_work [hv_vmbus]
+Call Trace:
+ dump_stack+0x67/0x90
+ debug_check_no_locks_freed.cold.52+0x78/0x7d
+ slab_free_freelist_hook+0x85/0x140
+ kmem_cache_free+0xa5/0x380
+ __sk_destruct+0x150/0x260
+ hvs_close_connection+0x24/0x30 [hv_sock]
+ vmbus_onmessage_work+0x1d/0x30 [hv_vmbus]
+ process_one_work+0x241/0x600
+ worker_thread+0x3c/0x390
+ kthread+0x11b/0x140
+ ret_from_fork+0x24/0x30
+
+and then the following release_sock(sk) can hang:
+
+watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [kworker/1:0:4467]
+...
+irq event stamp: 62890
+CPU: 1 PID: 4467 Comm: kworker/1:0 Tainted: G        W         5.2.0+ #39
+Workqueue: events vmbus_onmessage_work [hv_vmbus]
+RIP: 0010:queued_spin_lock_slowpath+0x2b/0x1e0
+...
+Call Trace:
+ do_raw_spin_lock+0xab/0xb0
+ release_sock+0x19/0xb0
+ vmbus_onmessage_work+0x1d/0x30 [hv_vmbus]
+ process_one_work+0x241/0x600
+ worker_thread+0x3c/0x390
+ kthread+0x11b/0x140
+ ret_from_fork+0x24/0x30
+
+ net/vmw_vsock/hyperv_transport.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
+ort.c
+index f2084e3f7aa4..9d864ebeb7b3 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -312,6 +312,11 @@ static void hvs_close_connection(struct vmbus_channel =
+*chan)
+ 	lock_sock(sk);
+ 	hvs_do_close_lock_held(vsock_sk(sk), true);
+ 	release_sock(sk);
++
++	/* Release the refcnt for the channel that's opened in
++	 * hvs_open_connection().
++	 */
++	sock_put(sk);
+ }
+=20
+ static void hvs_open_connection(struct vmbus_channel *chan)
+@@ -407,6 +412,9 @@ static void hvs_open_connection(struct vmbus_channel *c=
+han)
+ 	}
+=20
+ 	set_per_channel_state(chan, conn_from_host ? new : sk);
++
++	/* This reference will be dropped by hvs_close_connection(). */
++	sock_hold(conn_from_host ? new : sk);
+ 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
+=20
+ 	/* Set the pending send size to max packet size to always get
+--=20
+2.19.1
+
