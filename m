@@ -2,141 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A428580096
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2019 21:02:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C46398009B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Aug 2019 21:02:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbfHBTCV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 2 Aug 2019 15:02:21 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43540 "EHLO
+        id S2391350AbfHBTC2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Aug 2019 15:02:28 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36143 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729829AbfHBTCU (ORCPT
+        with ESMTP id S1729829AbfHBTCZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 2 Aug 2019 15:02:20 -0400
-Received: by mail-io1-f68.google.com with SMTP id k20so1175153ios.10;
-        Fri, 02 Aug 2019 12:02:20 -0700 (PDT)
+        Fri, 2 Aug 2019 15:02:25 -0400
+Received: by mail-io1-f68.google.com with SMTP id o9so50800044iom.3;
+        Fri, 02 Aug 2019 12:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=vX8vlz05PAbtwj04IRyDoHvPXHFs00D4ccSNjAMsI0A=;
-        b=A+xuqPf0eIp+OcH/IL74pGtJWJapiXZ6yLVE6xBfzGNQY/swYlq14QnMTMz/Qf7US9
-         Nfs8VxABbBqX2qJlp2hG6HDeCtJDtpcUUi/lXmuqdMZ9jjd2XuE2SzJIG2FXNNZ4mrGL
-         Igoyb8QAO3kdzjeWA/Rz/LXVmDhYddQY8V6QKXKC688M4Bz1WZBgJYwYWiAnqo5iXQx/
-         KXdneh7qhxQqIIx+RpwAznD2QQi71mF/l1f6vRn/QYfv5ssj8BJdd8z9XnMK9AtIIe+N
-         g38W5Mo2Dczccf+yybwyYF8m7sxdnZV5t5dFtQFbNUc1kgCYfhqcTU0D2QHYijobCm3f
-         MhLA==
+        bh=LU1v53rpJU85ROHrGM2LXyEvX+BcLjuC9gY0fUSnT8U=;
+        b=E6KIjL4Zoie0tQ3Oxl3zMRIe+CxD2LtJ4Ur4jIRbidsuSbkZ1MSaFApkDj0VVa5zLo
+         rLeFWXOYjCn3g4fvwm8fJLHWTIvwnAD4Qb8yiFSD+ExRRylPVPaEAXY+DL6/rcaZJKoI
+         Gcct0L7BGcak6Ttz4J9lREyAt8RXpQo8dGbeJw29De3/0eQDvoi6zO61k1OIKb6BlSWw
+         iXSzUawdhSsxLZbVRovN0hggU4UGYf8MZWAH2+36SYThqEtSdDWkHkuahbGWvviIXOBB
+         se4eAqW/zSTP/CVr8gTXby7GrQeRKBn9z+CNjAN1K5RCqKk14ZUv0y3jT7cSNfanEVwq
+         Xrcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vX8vlz05PAbtwj04IRyDoHvPXHFs00D4ccSNjAMsI0A=;
-        b=K7zBi9Wi/8YNfJCrPcic+MTvsuLhJr0fYNC28T8Cl1mUpuv2Es07y+C0ySS4TjpBc2
-         4t2v4FLWf7jfQfWl2W6R9QVVNpLeU77791F2GFMFVQzef+65nNskbhUY0QVHqLcquCj+
-         5h3fXzs6ic4YS69RooasOxlHKByv2D0ElvG2seyyEnB+ap0H4ZKwAtrhc8fdMfxWpJj3
-         RC71ObGMNeGOmi9WodY950mDPbNvSww92AWvleimap2QE0fY8CmYC6+hCLi05CStOIoD
-         nJpEHO9e93N3zI6Bp6wIwuGIBlRUb7PtVqSt0Llre7yEi7OJaXuK4bEIvcR6E8KM97dc
-         2Ijg==
-X-Gm-Message-State: APjAAAUpQW1kpkAiMPqP4DYzcqKKvKZQH/3zsz1/w/6mM6GitZXSBeeF
-        dE4ACsxGOPqLgRghZ2UVTA==
-X-Google-Smtp-Source: APXvYqw66ahshAJ4h21vc1jML60PKKwYTAcHJHZxuuqKnQxg3VnjFt0DjTEWicJibcA+qpZtkakFzA==
-X-Received: by 2002:a02:a183:: with SMTP id n3mr145575969jah.74.1564772539896;
-        Fri, 02 Aug 2019 12:02:19 -0700 (PDT)
+        bh=LU1v53rpJU85ROHrGM2LXyEvX+BcLjuC9gY0fUSnT8U=;
+        b=LZiwaakRu5ggI2791fIG/NA3nr9HXEDNv+sIosBUZe0xme66PlRPvF1NKCp3bhEqnv
+         47Bru+ub338JW9fJtuWHEeMcBX1HwQW37pWQ622XGPi7tBdBCEuuAtbzfzJ7FFJ7u5dT
+         LRsCw8ONs9PhBCGmqk81P1de+cnDbd+8y1JOtewh+9L01Sx4bCPIAFHLG+WcIG84PHbQ
+         pY9u9HTqw5TG0byaaKRW7u2PMGn+4dmeNNfP1q9t+MTF44qILnSYR3YBwLaXWpa3prpT
+         MATp/ZVfFYvBIZ/wzmwMpI/CxJtq7o/G9c9gYc1x2QONE6sG/XI2m5mJokIf6dCMRB17
+         Wd2Q==
+X-Gm-Message-State: APjAAAU7TkBdc2vKbEJPwrSis3NlWmiJVAMtYs7GpF0pq3iXMoRqLMd2
+        +KQy0gXE9V1u0nOldBhb0g==
+X-Google-Smtp-Source: APXvYqyiicCe8RFdyINyOeMNu1vMfsPrOvU9rRMEgC1UlObsouSg7VyAv38wUS/Q626R+16jkTKa+Q==
+X-Received: by 2002:a6b:2c96:: with SMTP id s144mr2186608ios.57.1564772544219;
+        Fri, 02 Aug 2019 12:02:24 -0700 (PDT)
 Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id i4sm98958268iog.31.2019.08.02.12.02.19
+        by smtp.gmail.com with ESMTPSA id p3sm119176019iom.7.2019.08.02.12.02.23
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 02 Aug 2019 12:02:19 -0700 (PDT)
-Date:   Fri, 2 Aug 2019 15:02:17 -0400
+        Fri, 02 Aug 2019 12:02:23 -0700 (PDT)
+Date:   Fri, 2 Aug 2019 15:02:22 -0400
 From:   Branden Bonaby <brandonbonaby94@gmail.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] drivers: hv: vmbus: Introduce latency testing
-Message-ID: <20190802190217.GA27145@Test-Virtual-Machine>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org
+Subject: Re: [PATCH 2/3] drivers: hv: vmbus: add fuzz test attributes to sysfs
+Message-ID: <20190802190222.GA27277@Test-Virtual-Machine>
 References: <cover.1564527684.git.brandonbonaby94@gmail.com>
- <18193677a879c402d00955c445ae7ce461b4198f.1564527684.git.brandonbonaby94@gmail.com>
- <87d0hoggyc.fsf@vitty.brq.redhat.com>
+ <20f96dba927eaa42fceeebfc7a6a37f3b1a9ee65.1564527684.git.brandonbonaby94@gmail.com>
+ <87a7csggvj.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d0hoggyc.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87a7csggvj.fsf@vitty.brq.redhat.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 09:32:59AM +0200, Vitaly Kuznetsov wrote:
+On Fri, Aug 02, 2019 at 09:34:40AM +0200, Vitaly Kuznetsov wrote:
 > Branden Bonaby <brandonbonaby94@gmail.com> writes:
 > 
-> > Introduce user specified latency in the packet reception path.
+> > Expose the test parameters as part of the sysfs channel attributes.
+> > We will control the testing state via these attributes.
 > >
 > > Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
 > > ---
-> >  drivers/hv/connection.c  |  5 +++++
-> >  drivers/hv/ring_buffer.c | 10 ++++++++++
-> >  include/linux/hyperv.h   | 14 ++++++++++++++
-> >  3 files changed, 29 insertions(+)
+> >  Documentation/ABI/stable/sysfs-bus-vmbus | 22 ++++++
+> >  drivers/hv/vmbus_drv.c                   | 97 +++++++++++++++++++++++-
+> >  2 files changed, 118 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> > index 09829e15d4a0..2a2c22f5570e 100644
-> > --- a/drivers/hv/connection.c
-> > +++ b/drivers/hv/connection.c
-> > @@ -354,9 +354,14 @@ void vmbus_on_event(unsigned long data)
-> >  {
-> >  	struct vmbus_channel *channel = (void *) data;
-> >  	unsigned long time_limit = jiffies + 2;
-> > +	struct vmbus_channel *test_channel = !channel->primary_channel ?
-> > +						channel :
-> > +						channel->primary_channel;
-> >  
-> >  	trace_vmbus_on_event(channel);
-> >  
-> > +	if (unlikely(test_channel->fuzz_testing_buffer_delay > 0))
-> > +		udelay(test_channel->fuzz_testing_buffer_delay);
-> >  	do {
-> >  		void (*callback_fn)(void *);
-> >  
-> > diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> > index 9a03b163cbbd..d7627c9023d6 100644
-> > --- a/drivers/hv/ring_buffer.c
-> > +++ b/drivers/hv/ring_buffer.c
-> > @@ -395,7 +395,12 @@ struct vmpacket_descriptor *hv_pkt_iter_first(struct vmbus_channel *channel)
-> >  {
-> >  	struct hv_ring_buffer_info *rbi = &channel->inbound;
-> >  	struct vmpacket_descriptor *desc;
-> > +	struct vmbus_channel *test_channel = !channel->primary_channel ?
-> > +						channel :
-> > +						channel->primary_channel;
-> >  
-> > +	if (unlikely(test_channel->fuzz_testing_message_delay > 0))
-> > +		udelay(test_channel->fuzz_testing_message_delay);
-> >  	if (hv_pkt_iter_avail(rbi) < sizeof(struct vmpacket_descriptor))
-> >  		return NULL;
-> >  
-> > @@ -420,7 +425,12 @@ __hv_pkt_iter_next(struct vmbus_channel *channel,
-> >  	struct hv_ring_buffer_info *rbi = &channel->inbound;
-> >  	u32 packetlen = desc->len8 << 3;
-> >  	u32 dsize = rbi->ring_datasize;
-> > +	struct vmbus_channel *test_channel = !channel->primary_channel ?
-> > +						channel :
-> > +						channel->primary_channel;
+> > diff --git a/Documentation/ABI/stable/sysfs-bus-vmbus b/Documentation/ABI/stable/sysfs-bus-vmbus
+> > index 8e8d167eca31..239fcb6fdc75 100644
+> > --- a/Documentation/ABI/stable/sysfs-bus-vmbus
+> > +++ b/Documentation/ABI/stable/sysfs-bus-vmbus
+> > @@ -185,3 +185,25 @@ Contact:        Michael Kelley <mikelley@microsoft.com>
+> >  Description:    Total number of write operations that encountered an outbound
+> >  		ring buffer full condition
+> >  Users:          Debugging tools
+> > +
+> > +What:           /sys/bus/vmbus/devices/<UUID>/fuzz_test_state
 > 
-> This pattern is repeated 3 times so a define is justified. I would also
-> reversed the logic:
-> 
->    test_channel = channel->primary_channel ? channel->primary_channel : channel;
-> 
-> >  
-> > +	if (unlikely(test_channel->fuzz_testing_message_delay > 0))
-> > +		udelay(test_channel->fuzz_testing_message_delay);
-> 
-> unlikely() is good but if it was under #ifdef it would've been even better.
-> 
-> >  	/* bump offset to next potential packet */
+> I would prefer this to go under /sys/kernel/debug/ as this is clearly a
+> debug/test feature.
 > -- 
 > Vitaly
 
-Makes sense, I'll address the repeated code and will change the way I
-handled that if statement. Using an ifdef CONFIG_HYPERV_TESTING
-seems like a good thing to add in here like you suggested.
+Alright, it is testing so I see what you mean and why the code in 
+this patch should go in debugfs. Will fix that and resend.
+
+Branden Bonaby 
