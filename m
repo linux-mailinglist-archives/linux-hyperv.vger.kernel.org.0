@@ -2,73 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B065883911
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Aug 2019 20:55:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83D778396E
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Aug 2019 21:13:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfHFSze (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Aug 2019 14:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfHFSzd (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:55:33 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2953C214C6;
-        Tue,  6 Aug 2019 18:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565117733;
-        bh=OFNe4cx5n7BU2ztYRPRilOpQxiFFszGkU5k0ee0lgwI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ieZfYW/7dJMqNDvD9xxwr0JT47lTdC+yJlm6ytFcnzJjm/i/jrJA6K0168204MM/N
-         ayRy1CbN1vbTA29bBkP8khNiy/BUjQ/OYqX7a3KKjUvT/21aBfG9Mva5qgqSJnKsp7
-         05tCt9lcWijPAmqgRpGSU+GWdvVbeIYpiANB0wBw=
-Date:   Tue, 6 Aug 2019 13:55:31 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1725948AbfHFTNL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Aug 2019 15:13:11 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44701 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfHFTNL (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 6 Aug 2019 15:13:11 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d79so63742135qke.11
+        for <linux-hyperv@vger.kernel.org>; Tue, 06 Aug 2019 12:13:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=VnZDZzBAZi4D2nAqWC3qKDXkK4ME9tg6Ir4ylUba4jg=;
+        b=SGfjoPA4i1Mm/bTUKSTpZMu1+1qm1orBY6Je1wobz3GeFacipSg3vaAISShedMFloX
+         LklV3gXrz4aVn2LkyVj4UGkiuug9d6vhoRh51P1R8K08xXmni+YlDqLz8dI3NLFPUtKm
+         oXY6zQlFVCaE3xrmablLByoFZQyld45ysxfuYu+Xc5ngbYZpKCyfE+FXoPrChbqAQHHM
+         DtLsZmCMf0xURVExyIwdvQDIWIY39E/4jCu6x3sLTdiAC3HbVr/wFL4DQJkY+DtHK78U
+         xpyCC6A7pGy23rjcJ8F5xwjRU6ri2zszNhOdqCpClLxZzFBTnmnjXiZE5BLiiVrPSHxA
+         AKVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=VnZDZzBAZi4D2nAqWC3qKDXkK4ME9tg6Ir4ylUba4jg=;
+        b=Mm1gbLHpl9NY4xdb1Tlg2kuqr/NzvS1K9kjvwRYWKtQEEk57YW8Ry3A+eX+nv62F0B
+         q4Tjh8FoYYjMI9GDydiMBte+eNWWE0TGSvYN7zRLC9ntgvjZQScu9Sbr0kADohmMBXF+
+         LXHtdjxN540baRMQ298p77vQQ6zFgND8L75kNFyAaSPRKCWES2joLenMvvzKGM1s+h5Z
+         bhTsYtu17AeGQEAwI4k31Mg4r5QqBsrOvwZCKYjPPKATAm2ZUtitinnbXpS1itkhmCgD
+         WF4N3QGjdsmA2rQ7K8F1pAG7apRIEEHkNhNhCwi2i+wcVDgMsYM58Lp9cQrlONqER85k
+         gvdA==
+X-Gm-Message-State: APjAAAVNlNN+N3EOrCiYLJcX4vXO/0e1NR1brN4qKieZ8p+Y8vTi2jYa
+        IaRferkQMFeZ2RRTZ89pxWp78w==
+X-Google-Smtp-Source: APXvYqwTM9Nkb/KONg55InkFyQG+V6Xua7EUBriiyRj1o00r4ii18WpOUrQTfkoxnkYCgxcEOVoOUQ==
+X-Received: by 2002:a37:311:: with SMTP id 17mr4499484qkd.466.1565118790235;
+        Tue, 06 Aug 2019 12:13:10 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id z19sm40441271qtu.43.2019.08.06.12.13.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 12:13:10 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 12:12:42 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Message-ID: <20190806185531.GS151852@google.com>
-References: <1564771954-9181-1-git-send-email-haiyangz@microsoft.com>
- <20190805183657.GD17747@sasha-vm>
+        "sashal@kernel.org" <sashal@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: Re: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
+Message-ID: <20190806121242.141c2324@cakuba.netronome.com>
+In-Reply-To: <PU1P153MB0169AECABF6094A3E7BEE381BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <PU1P153MB0169AECABF6094A3E7BEE381BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805183657.GD17747@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 02:36:57PM -0400, Sasha Levin wrote:
-> On Fri, Aug 02, 2019 at 06:52:56PM +0000, Haiyang Zhang wrote:
-> > Due to Azure host agent settings, the device instance ID's bytes 8 and 9
-> > are no longer unique. This causes some of the PCI devices not showing up
-> > in VMs with multiple passthrough devices, such as GPUs. So, as recommended
-> > by Azure host team, we now use the bytes 4 and 5 which usually provide
-> > unique numbers.
-> > 
-> > In the rare cases of collision, we will detect and find another number
-> > that is not in use.
-> > Thanks to Michael Kelley <mikelley@microsoft.com> for proposing this idea.
-
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+On Tue, 6 Aug 2019 05:17:44 +0000, Dexuan Cui wrote:
+> This fixes a warning of "suspicious rcu_dereference_check() usage"
+> when nload runs.
 > 
-> Acked-by: Sasha Levin <sashal@kernel.org>
-> 
-> Bjorn, will you take it through the PCI tree or do you want me to take
-> it through hyper-v?
+> Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
-Lorenzo usually applies patches to drivers/pci/controller/*, so that
-would be my preference.
+Minor change in behaviour would perhaps be worth acknowledging in the
+commit message (since you check ndev for NULL later now), and a Fixes
+tag would be good.
 
-Bjorn
+But the looks pretty straightforward and correct!
