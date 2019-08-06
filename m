@@ -2,51 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 236E08284B
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Aug 2019 01:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1C2982ACC
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Aug 2019 07:18:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbfHEXz4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Aug 2019 19:55:56 -0400
-Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:20557
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1726711AbfHFFSS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Aug 2019 01:18:18 -0400
+Received: from mail-eopbgr1300094.outbound.protection.outlook.com ([40.107.130.94]:34048
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728483AbfHEXz4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Aug 2019 19:55:56 -0400
+        id S1725798AbfHFFSR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 6 Aug 2019 01:18:17 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P1RdAm6HfpAWD0NcjLmkiIn//yITTzfFlEl9Xkh00JbiZf7tR8BwplZuOISw+7L0oTWya0oZ0j1e00+1km7SW4j42nYieQZAq1LrL0xtf5Aw8hhlf3KNlpd3j0RZnO903Fko8187BrKFgKVF3uNWvzpJ6cK3RX8DX/JE+kNLVe2yA1fwbbhubSu93uqpT0ysOoYBEkRRD1W7Jt0eYmSVat31bOymZrjUfRCS0XD1lcz7YOLOOlUz7XHvakT6J+9rQkOPEsB7odHxvWoNwqnKe9IORahZelobzW6Y49zd9kx3WQkgOQlR+JHw07SsIfSklYKgJR+ITABYAMVjxtxVBg==
+ b=BCwylK22+SaUBsaQHd+lTb0yc1c2hDCAcDYD11XhWagkYaPljr35Adhmt1yG9a8eqj2L1hApxlVx/NOWBCGxO1INB7K/HY/Ilq+bcF9T1Sksn1tRSpa7//EOvgNsaEUSkNTJiW9aGl/05Yf4ybKZQT8Jpc9kucmtn8U5GLwZ/fblku1c/cfdcgNnJHJrSXwamoxZrT2eIzqVoeOdtpr3n1V1QwZ7bUPh6OSs8JDQohJlfcZk5on/2alqOI+eTJ+f9L8x8jZ+0RaY2U/rmVGYxiHgYu7GZXZvQsa61veH+IGTkgXG6+pFbpn8GxNIT4oTo1d7DvTsR4IEizGMTUA/TQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5gTZ5ZZD63ZifUDMQygz2r+KVwTABQE++Oq/DRGLRFo=;
- b=BxDawDzaw8LU4fC+ZfQTj9KPNMNoAIpXJzBXKK9KEPg3XIFcEGVW4LrtRmEfllw/ReKOmxpJMcffU6qTEOzBX1JKf47unSjA5ktVsufQ2HedFpY4Byc3Llo4Vjouo8UzW/JNVsM5VHGsTiE5THMe/fSgYzR/+6Nsk5XOyp4MgRdTlFR1RC4yjo3R1ZZT/DAi7eM6e9KFOYC2bxPA7Ijp6H+Jkju92nvj7k2MPGHlz8/ADemU4ocByxDvYg1GIZMNZctvGkoUNUURqg5qJfqzIvLnKMPtX/mAQ6eqA1M7aJ2ZRYekzUSgyJSr7Zgw98eeFMAgdfUeErwxJ4+eZjgDgw==
+ bh=pyEG+Ela2OW7niYY7Nbb2krLEK5P1iF/Sdg80C2D5LI=;
+ b=DAN0mEl/nihblhdDr897ShmMeIzH421WNr7cLWsVuLAVcFy1aB7vy3AoUiQJZKpZTWQaiWNfMYQ9AqLoCUzLFNDODF1mCZxHnJefVfqOMZ/2bYYWYkU+Bh6hQW1Z7mfsDsuPMQ4ePVHY+MObNQEa5Z9jO9SmCkdHZMKQ0xY3PnzfOROFSndw30jcJDpPpVtj0Dd4dXjE/xwmcYYfGsPnWmfzw2dJRQoxzkBTYdnPkmXtqIxvqKVGNKP6QEwVIJqi9iQ+ZZ+WuPvmIjC+4tMQF9jSOERE1W2LuFbhwcsdnQoU+4UDgCAaec8uogeuMWGDq2MdyS8+ZBXuekpnFx/N8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5gTZ5ZZD63ZifUDMQygz2r+KVwTABQE++Oq/DRGLRFo=;
- b=Uo12q3Bd/WCYZ2KXxOxbIQPeY0Kyk0L6X7V5hZi7bWKYyF38+1FyIcaeDwMiqy+/cmi1C7WOl40mx514qUeymHZiHzFxMy8y/8yrOCD8c8zLtBxD4fsvj27ZUqkG3BmVI9pDNsNeG5CbwqykSDE2HcnEpCywsOX1LAu/LQbTAf4=
+ bh=pyEG+Ela2OW7niYY7Nbb2krLEK5P1iF/Sdg80C2D5LI=;
+ b=hqzOdPVd30pRHT5uBIAn6+mKl306bTpA7d2Uz0PptzWuEB2w3bCQSJ+E85XWhI7GnBomfRqMgavWqJB9wGP5GsIisu5qAaCbysP72RD35jHJpbpT53oXCOyz4kvkPdIKHbohj7kcSnXIRBRSbw1+DXsnx6YKLC2yiMkDpIxObFQ=
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) with Microsoft SMTP
+ PU1P153MB0186.APCP153.PROD.OUTLOOK.COM (10.170.187.144) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Mon, 5 Aug 2019 23:55:47 +0000
+ 15.20.2157.2; Tue, 6 Aug 2019 05:17:44 +0000
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Mon, 5 Aug 2019
- 23:55:47 +0000
+ ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Tue, 6 Aug 2019
+ 05:17:44 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Yidong Ren <Yidong.Ren@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: hv_netvsc: WARNING: suspicious RCU usage?
-Thread-Topic: hv_netvsc: WARNING: suspicious RCU usage?
-Thread-Index: AdVK97JbsdQk75jSTeGC/HNWaEL3qg==
-Date:   Mon, 5 Aug 2019 23:55:47 +0000
-Message-ID: <PU1P153MB0169B7073A4865D50AED9EE5BFDA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Stephen Hemminger <sthemmin@microsoft.com>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
+Thread-Topic: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
+Thread-Index: AdVMFVwGFODpycnVS02FuESxq+YKEg==
+Date:   Tue, 6 Aug 2019 05:17:44 +0000
+Message-ID: <PU1P153MB0169AECABF6094A3E7BEE381BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -54,104 +62,120 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-05T23:55:44.4679731Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-06T05:17:40.7810580Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1a064ef1-8d65-41ee-93fc-f62f22dbc6b5;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0a7ae532-a90b-4d21-8231-087ebdf2b42d;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:1:821c:4530:43a5:69ff]
+x-originating-ip: [2601:600:a280:1760:f805:f5de:9ada:9d42]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 22bb41f6-8081-4793-5b9a-08d71a006fcd
+x-ms-office365-filtering-correlation-id: dbf3047f-598a-4ffa-9caa-08d71a2d69cd
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0169;
-x-ms-traffictypediagnostic: PU1P153MB0169:|PU1P153MB0169:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0186;
+x-ms-traffictypediagnostic: PU1P153MB0186:|PU1P153MB0186:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB016930A71E8B7BF63C3505E5BFDA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 01208B1E18
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(346002)(39860400002)(396003)(376002)(199004)(189003)(2906002)(71200400001)(66556008)(102836004)(22452003)(478600001)(8990500004)(66476007)(316002)(110136005)(6506007)(6436002)(52536014)(55016002)(256004)(10290500003)(305945005)(81166006)(81156014)(9686003)(76116006)(5660300002)(8936002)(14454004)(8676002)(33656002)(68736007)(7696005)(186003)(10090500001)(7736002)(74316002)(14444005)(476003)(2501003)(66446008)(64756008)(25786009)(53936002)(6116002)(86362001)(99286004)(1511001)(486006)(46003)(71190400001)(66946007)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0169;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB018689130AB5F533B71B0027BFD50@PU1P153MB0186.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-forefront-prvs: 0121F24F22
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(39860400002)(136003)(376002)(366004)(189003)(199004)(186003)(102836004)(7736002)(2501003)(9686003)(66476007)(66556008)(64756008)(5660300002)(14444005)(76116006)(110136005)(66446008)(66946007)(256004)(4326008)(10290500003)(86362001)(46003)(305945005)(52536014)(68736007)(6506007)(53936002)(6436002)(486006)(6116002)(1511001)(22452003)(476003)(55016002)(10090500001)(74316002)(2906002)(7416002)(8936002)(81156014)(81166006)(14454004)(8676002)(7696005)(8990500004)(71200400001)(6636002)(316002)(25786009)(71190400001)(99286004)(478600001)(54906003)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0186;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YlK8YV0XQgdx5ZaOq/smPbyHFnscfFjMVSKgfzxwiwvWNvLsi7i2gBw3jj4P/aV5TVQPZiail/El5l1EHTrxZ5zJDkw7SI1JJ8mUP1BNs9UeZy3rxY8NhENZELN8w7P26+XBF3rGSvNAQSRhtckA2Ym7UN0we1v0PAF/aKx99T47bFAQzj5HzyaIc4dlzajOUJV5o+YFaw+iEr8N9rHRFte8aAUT/lzqjp66GcDnysfFV8HOlBgS/zEjNHB0KRXDoxkqvkDUTcFvQmnhJHC5L2fUedgiBqvWAq1B4s06jmL4TQL4YRlxcgbmCIgjqLIwu358Oq4aEzSl3mkCzT2MJvSr3CLMG85sWO8EBNoxQBwkmITNoeSXAl0WOEyswm5EImQeQpWZRrvaoVgYgbAAvy5qxXhGpsNPbu1+SjrGfew=
+x-microsoft-antispam-message-info: GNvyxGs+Oa/AujcPoaZU/IRqJLvhQnxbg/6MYKSYq3dqP2JGrPPzjw4hpc5cc6cazlcV8L/FFIQmgt/XbgGspVSnoXwUZHlPQGTEMbO6Yy3a2ql/skOn7aEvxF74XLsjshAbNxz8KM1KH8bkIpfl03AHJHY8uzAQ+o6VQroohyS1l6FmqH+1l2kYX1gst29R7kUA484bG/0rGPI5PxazCI9kEQX9QDU4q4kWuiM4OEx4xkQCf3aWJCr+gPZzbUMdhm5vSDD68b3v5Cb3IFprxgffRD8Cu7xu1Ab3jwSmi1WhxAQ9qfg9PPCyRFXb953HpKeaa8fanZ3MYj0xa3XnqR8ZT1s+TxpQdSinSPgPblAMJyhfQwQ2ikpoYrxsRZRVZFNgEIq46gkjaAtKCef9Tv4F4qpwJ+kiPfrXZvHf+rk=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22bb41f6-8081-4793-5b9a-08d71a006fcd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2019 23:55:47.0558
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbf3047f-598a-4ffa-9caa-08d71a2d69cd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 05:17:44.2600
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TBWHflb/vnxUVID0fkhn4qzY9zYTpRM+UoOjY8E+70EL11VIZDjl6xm9XI0TdKvjIMop6Xu/Ko6Q0q0rmUmkjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0169
+X-MS-Exchange-CrossTenant-userprincipalname: 3qBai28Ik47qz2GhqLz1Mjc08gOiQTvymDu63nWVMENVH3KKHBpYnfjP4spnfYT9yGEqCpFUxTBOUQSXDSXk4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0186
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
-After the VM boots up, I always get the below call-trace when I run "nload"=
- for the first time:
 
-[  113.910911] WARNING: suspicious RCU usage
-[  113.913244] 5.2.0+ #19 Not tainted
-[  113.915216] -----------------------------
-[  113.917521] drivers/net/hyperv/netvsc_drv.c:1243 suspicious rcu_derefere=
-nce_check() usage!
-[  113.922191]
-[  113.922191] other info that might help us debug this:
-[  113.926573]
-[  113.926573] rcu_scheduler_active =3D 2, debug_locks =3D 1
-[  113.930052] 4 locks held by nload/1977:
-[  113.932251]  #0: 0000000080b71e86 (&p->lock){+.+.}, at: seq_read+0x41/0x=
-3d0
-[  113.936115]  #1: 00000000cacff770 (&of->mutex){+.+.}, at: kernfs_seq_sta=
-rt+0x2a/0x90
-[  113.940115]  #2: 00000000287c988f (kn->count#134){.+.+}, at: kernfs_seq_=
-start+0x32/0x90
-[  113.944292]  #3: 00000000996fa9cc (dev_base_lock){++.+}, at: netstat_sho=
-w.isra.25+0x4a/0xb0
-[  113.958076]
-[  113.958076] stack backtrace:
-[  113.958081] CPU: 3 PID: 1977 Comm: nload Not tainted 5.2.0+ #19
-[  113.958083] Hardware name: Microsoft Corporation Virtual Machine/Virtual=
- Machine, BIOS 090006  04/28/2016
-[  113.958084] Call Trace:
-[  113.958091]  dump_stack+0x67/0x90
-[  113.973663]  netvsc_get_stats64+0x159/0x170 [hv_netvsc]
-[  113.973663]  dev_get_stats+0x55/0xb0
-[  113.973663]  netstat_show.isra.25+0x5b/0xb0
-[  113.973663]  dev_attr_show+0x15/0x40
-[  113.981661]  sysfs_kf_seq_show+0xad/0xf0
-[  113.981661]  seq_read+0x146/0x3d0
-[  113.981661]  vfs_read+0x9c/0x160
-[  113.989025]  ksys_read+0x5c/0xd0
-[  113.989025]  do_syscall_64+0x5e/0x220
-[  113.989025]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  113.989025] RIP: 0033:0x7f4485daaf31
+This fixes a warning of "suspicious rcu_dereference_check() usage"
+when nload runs.
 
-nload is a console application which monitors network traffic and bandwidth=
- usage in real time.
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/net/hyperv/netvsc_drv.c | 44 +++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
-The warning is caused by the rcu_dereference_rtnl() :
-
-1239 static void netvsc_get_stats64(struct net_device *net,
-1240                                struct rtnl_link_stats64 *t)
-1241 {
-1242         struct net_device_context *ndev_ctx =3D netdev_priv(net);
-1243         struct netvsc_device *nvdev =3D rcu_dereference_rtnl(ndev_ctx-=
->nvdev);
-
-I think here netvsc_get_stats64() neither holds rcu_read_lock() nor RTNL
-
-IMO it should call rcu_read_lock()/unlock(), or get RTNL to fix the warning=
-?
-
-Thanks,
--- Dexuan
-
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
+v.c
+index f9209594624b5..25502d335b94f 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1236,25 +1236,10 @@ static void netvsc_get_pcpu_stats(struct net_device=
+ *net,
+ 	}
+ }
+=20
+-static void netvsc_get_stats64(struct net_device *net,
+-			       struct rtnl_link_stats64 *t)
++static void netvsc_get_per_chan_stats(struct netvsc_device *nvdev,
++				      struct rtnl_link_stats64 *t)
+ {
+-	struct net_device_context *ndev_ctx =3D netdev_priv(net);
+-	struct netvsc_device *nvdev =3D rcu_dereference_rtnl(ndev_ctx->nvdev);
+-	struct netvsc_vf_pcpu_stats vf_tot;
+-	int i;
+-
+-	if (!nvdev)
+-		return;
+-
+-	netdev_stats_to_stats64(t, &net->stats);
+-
+-	netvsc_get_vf_stats(net, &vf_tot);
+-	t->rx_packets +=3D vf_tot.rx_packets;
+-	t->tx_packets +=3D vf_tot.tx_packets;
+-	t->rx_bytes   +=3D vf_tot.rx_bytes;
+-	t->tx_bytes   +=3D vf_tot.tx_bytes;
+-	t->tx_dropped +=3D vf_tot.tx_dropped;
++	u32 i;
+=20
+ 	for (i =3D 0; i < nvdev->num_chn; i++) {
+ 		const struct netvsc_channel *nvchan =3D &nvdev->chan_table[i];
+@@ -1286,6 +1271,29 @@ static void netvsc_get_stats64(struct net_device *ne=
+t,
+ 	}
+ }
+=20
++static void netvsc_get_stats64(struct net_device *net,
++			       struct rtnl_link_stats64 *t)
++{
++	struct net_device_context *ndev_ctx =3D netdev_priv(net);
++	struct netvsc_device *nvdev;
++	struct netvsc_vf_pcpu_stats vf_tot;
++
++	netdev_stats_to_stats64(t, &net->stats);
++
++	netvsc_get_vf_stats(net, &vf_tot);
++	t->rx_packets +=3D vf_tot.rx_packets;
++	t->tx_packets +=3D vf_tot.tx_packets;
++	t->rx_bytes   +=3D vf_tot.rx_bytes;
++	t->tx_bytes   +=3D vf_tot.tx_bytes;
++	t->tx_dropped +=3D vf_tot.tx_dropped;
++
++	rcu_read_lock();
++	nvdev =3D rcu_dereference(ndev_ctx->nvdev);
++	if (nvdev)
++		netvsc_get_per_chan_stats(nvdev, t);
++	rcu_read_unlock();
++}
++
+ static int netvsc_set_mac_addr(struct net_device *ndev, void *p)
+ {
+ 	struct net_device_context *ndc =3D netdev_priv(ndev);
