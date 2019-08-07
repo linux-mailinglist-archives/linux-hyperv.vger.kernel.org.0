@@ -2,270 +2,138 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41AD083E0A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2019 01:52:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B463684512
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Aug 2019 08:58:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfHFXwR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Aug 2019 19:52:17 -0400
-Received: from mail-eopbgr760105.outbound.protection.outlook.com ([40.107.76.105]:6036
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        id S1727344AbfHGG4j (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Aug 2019 02:56:39 -0400
+Received: from mail-eopbgr1310100.outbound.protection.outlook.com ([40.107.131.100]:9136
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726085AbfHFXwR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:52:17 -0400
+        id S1727281AbfHGG4i (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 7 Aug 2019 02:56:38 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jkvaXponIbazxcyZ+pnXVHqwlFNF7nAjKaLwpe9IVa6sz8oM2sE37NXxERF/B3PHu19L6I4hck67a4pr+Fc9cxrIqMBAm3IPGdCbuxSSZ60Q0MvpiByOyyzxh72yPKwqjBe7sxDP+3mtjgDPaKoSim/DNkSMBp0Bq5afYQdQ+up9z+om6auNmpEgdnDMFvfffzfIt5kNXDCvxtwVNizEmdyEEWcXOvK18zR73h+N5tchTw+jc5T6LQNYv9tIplKrlQIWECroU9fzGBDkh7xHnhz8zSxAV9z8F7IOGEhqQibuP39G4WF9xWAF8sVPgr4INhMFOsFCD4UiQXb8qkehWQ==
+ b=T5g/3+yNxb/zgcMIO0AQ3RISiX8ssmFzCcreSK0VhEGdi7qXerowxsWDIEXAbORyTH9k26NGRMyzYUGF2dCI1lE3lZZvYp4zitE1s81pqQ4toRk+ztkU3O8vDPPR1bO6NoWc9thiMO1YucU/E9lXlHOFH/PcLxnyAK6TS8qbMXcM1qkZFfV0egg9NpaV0p142uNEOSI3nEczgynWnxOZ94AlNNLMvTndbMRBMUTPOLdUkK3uabwdMRNtU/7xYiXSN+DwvmsD02WA8DYBvl3MJzlLRa2vJTX91HLy7ZWHPIzGk55IzUlszrkEusv0AhKx+9GZTa8WoBubEsTU64bFDw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UdGooF6lqIGjaxd5CDiKNX8zauUOGDGtFj2redNTTHk=;
- b=hyTlnl2WJ5GV+uDo5qklUKGlvcqheI/9toproHsoQOe3lC/Wh6i/NNvEDPZeHhq3Ym9DkFcBhQyvRIpNXtFEIO/A0hl0gZ6vXKZmIM9AqHtyiuhqI5RqwWYU6k1FL1E2QhEycebyDw/cCwAgkHFSdOh9i0zImfCQqWM2CIqOpIMyLF2zFqeSlpps9VB4lQivmsUJYLis3CSSSkSAwJvuUPaKd+K8iAouqm9aXEeOqY8JK7oTr2AQSQ+KcTfxLc81idxut0Pw23baTmkrPOGa2ue5juGkrlQ955EZXTMKv+OmXnhZ6zgbaUFEEKHiUVA4QSXV3BJ+nMt8RkbHfTWWyw==
+ bh=NmuflkPpMi8zfU7PGiKZXEUyI9dC1fJj3eCZCsICeAE=;
+ b=RuNV3saHbK9RKhYYJEedwoe5YaHj/TkkmIHWH0GCNf+Uy3bOKoILsUmk156I8YPs3MaTIG/aVt9AmNvHWK/gWJUJK5d//J9IQGLGZrUrZB5oCbjeWtgTmazBEoBLzVR039a7JV5z9rk+msoP5odccGJNDeujKdR4e6sOj4O0WPgzHbqpqbn8yM0k/XdObnR5qYSDyMC28SPG2dUEp0dPTSNe2hHXFlxVIf/zD8TL/bglAPUXHOANCS7JMfaRVDA5bccvbvdkGQeCUxBpWu8sGaBbbE7saH/QOh5uqMaP4Nw4cUZBFT2+VemE+b7bzJnbzkxi0Pn/Qba2AsSOQawzIg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UdGooF6lqIGjaxd5CDiKNX8zauUOGDGtFj2redNTTHk=;
- b=Va9aDLWB+UkfoAOVm1fEQb3roC4BAKpBMdR85ZHIEFrawpeHDDOp+/YSbZJM5hYPrlyL7Y0EzgLPHxbdW9SxQVz1rKCkZPFGHhTnU/cOPyZSMulxOg/mQewO9dnpAQM3OgE+/oLCJVs8TXMPBed0vIELgLbPEsdhaZPbM3PvAO4=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1322.namprd21.prod.outlook.com (20.179.53.73) with Microsoft SMTP
+ bh=NmuflkPpMi8zfU7PGiKZXEUyI9dC1fJj3eCZCsICeAE=;
+ b=KVjos8LSIIDPxspPIbtbn/ErKa1O8tpzU4Q19eXyDKkxoLTfHc6g2Ch8MRYbg1eKjzfCa9vYTGX7ZQFIbw4mC8OlK7TuSO5YfPm8oJyzvYUvTT/GYunVEU5U3y7LFc9ElPVP0UuqZTFnrmZcP7mZwsLzRIw9bZKdr8NFWby0Ito=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.8; Tue, 6 Aug 2019 23:52:11 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::6055:de8a:48c1:4271]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::6055:de8a:48c1:4271%5]) with mapi id 15.20.2157.001; Tue, 6 Aug 2019
- 23:52:11 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+ 15.20.2157.2; Wed, 7 Aug 2019 06:56:12 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Wed, 7 Aug 2019
+ 06:56:12 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Topic: [PATCH v2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Index: AQHVTLH3GagQ2bG1NUyV/+P043l1Zw==
-Date:   Tue, 6 Aug 2019 23:52:11 +0000
-Message-ID: <1565135484-31351-1-git-send-email-haiyangz@microsoft.com>
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
+Thread-Topic: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
+Thread-Index: AdVMFVwGFODpycnVS02FuESxq+YKEgAdY+cAABfZVkA=
+Date:   Wed, 7 Aug 2019 06:56:12 +0000
+Message-ID: <PU1P153MB0169F8B31B25E995742CCB0BBFD40@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <PU1P153MB0169AECABF6094A3E7BEE381BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190806121242.141c2324@cakuba.netronome.com>
+In-Reply-To: <20190806121242.141c2324@cakuba.netronome.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR0201CA0035.namprd02.prod.outlook.com
- (2603:10b6:301:74::48) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-07T06:56:09.1298538Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a5d92f6b-b5aa-4b3e-805f-73ee1cb38d23;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:d40f:1221:5def:ae65]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 71584e17-55a7-40da-5269-08d71ac91987
+x-ms-office365-filtering-correlation-id: 1065dff6-d59e-45d1-ee93-08d71b04558f
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1322;
-x-ms-traffictypediagnostic: DM6PR21MB1322:|DM6PR21MB1322:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0153;
+x-ms-traffictypediagnostic: PU1P153MB0153:|PU1P153MB0153:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB13223876D2E65DC5CE5499C1ACD50@DM6PR21MB1322.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 0121F24F22
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(376002)(366004)(39860400002)(136003)(199004)(189003)(4720700003)(66066001)(5660300002)(8676002)(476003)(7736002)(50226002)(486006)(66446008)(66556008)(305945005)(53936002)(186003)(36756003)(66476007)(2616005)(64756008)(99286004)(26005)(81156014)(316002)(386003)(6506007)(10290500003)(4326008)(102836004)(66946007)(478600001)(2906002)(6486002)(6116002)(3846002)(2501003)(52116002)(14444005)(14454004)(110136005)(256004)(6436002)(25786009)(22452003)(6392003)(54906003)(7846003)(68736007)(8936002)(2201001)(6512007)(10090500001)(71200400001)(81166006)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1322;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-microsoft-antispam-prvs: <PU1P153MB01531A97D333EC42C6A6FA09BFD40@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(199004)(189003)(446003)(14454004)(6246003)(9686003)(7416002)(53546011)(6506007)(486006)(229853002)(476003)(11346002)(14444005)(256004)(6436002)(102836004)(53936002)(55016002)(46003)(66446008)(64756008)(66946007)(68736007)(10090500001)(8990500004)(66556008)(66476007)(76116006)(5660300002)(186003)(4744005)(2906002)(74316002)(10290500003)(478600001)(7736002)(305945005)(33656002)(6116002)(7696005)(76176011)(8676002)(71190400001)(71200400001)(316002)(54906003)(1511001)(4326008)(25786009)(81156014)(81166006)(8936002)(99286004)(86362001)(110136005)(52536014)(22452003)(6636002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DcPKfhxCDO5erbuAFjV9bEaqRK9RGCqYLDtvcUSwE6e5swVmcw+wcnkd6sG1wOjqwXNBqbrdosgz23xv4wiAu4op1NuprqBIsYacUewVDHlVx4AnB1mNXNVFF5iyzhnN5YHN90/A+Njmds/d/sbXb4jIRA0R/MzFzOvINUB9KrZWm4tzkWppYfNf1nL4HgRnN5RpuiAKthZ1sgBXpabh13owtdGAceWIbJHu5AFV9O4VFmUU+8pNrnxNv8r8QjZ0HX7qfe+r95UUGQS86RDcyfymsPs8XhwfdHLKEm4QjE6JWDvYg5ZQsp3lGCEfdmFZdNy5lZmWiASBMQkUpFYNW82S1CpUBsS5q5f4W05kR+cNyNVZcfklVVN1WrcgBZ22T/7dRBB5ikfroE6va7MjJ6xYrjsgQhfNulD5+BZDT18=
-Content-Type: text/plain; charset="iso-8859-1"
+x-microsoft-antispam-message-info: YN/IsYnS09xEOV93iWlK5JwicLQJBnseLb3Tja37SeOxl0qsdbvRGgDDtVyuxZIZf8ivgzy1z7mPcFnzWtJo1uBybaBxI0duKif+YbPADph7zHvIAV78Znkak0Cxr/SpsB5dPXksadZfmyNp8cBvdwXAY+ZW1s3nwXKIfjtri5NVcn3z+XXQA17DdXXgaMKeh1OsHkkAJwUCd1WveKzbZEXJko/Y9nvIKF4Q004Ty0O2+q6C335puLP1FApqiwd0bcw1cRmo/jwJtbf9fmW4/RrZScrbGO98M57WJ9rzkpBBY9eOtV5bm6+8FFrOBxX7er86VXDWY3SF7pzOrL/Kn5WMJosWheS1R+ylkNMxOsn9BL4ZMIt6T+chDWFrRDd3A70PQfrc0BTp1Q6ZWNEBs1roFrz5pkPbeXVmp1RfYkg=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71584e17-55a7-40da-5269-08d71ac91987
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 23:52:11.7220
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1065dff6-d59e-45d1-ee93-08d71b04558f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 06:56:12.1132
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: i67uNrdCbs7LkM4nYyVld3tTtQt7EQU77ZgC4yKVQ/Sn8zRZbVEGgK9OlCk5hsP5FYp1iz2jK+t8nLfTes5xpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1322
+X-MS-Exchange-CrossTenant-userprincipalname: ukUhvCu00a86KJybLZBjGEIUzP4JHT32gQerYAJFpfFzO4wop30Hny0puNqhpKhsKI3kmjy9CtIY8OeL7g7tfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Currently in Azure cloud, for passthrough devices including GPU, the
-host sets the device instance ID's bytes 8 - 15 to a value derived from
-the host HWID, which is the same on all devices in a VM. So, the device
-instance ID's bytes 8 and 9 provided by the host are no longer unique.
+> From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Sent: Tuesday, August 6, 2019 12:13 PM
+> To: Dexuan Cui <decui@microsoft.com>
+>=20
+> On Tue, 6 Aug 2019 05:17:44 +0000, Dexuan Cui wrote:
+> > This fixes a warning of "suspicious rcu_dereference_check() usage"
+> > when nload runs.
+> >
+> > Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>=20
+> Minor change in behaviour would perhaps be worth acknowledging in the
+> commit message (since you check ndev for NULL later now), and a Fixes
+> tag would be good.
+>=20
+> But the looks pretty straightforward and correct!
 
-This can cause device passthrough to VMs to fail because the bytes 8 and
-9 is used as PCI domain number. So, as recommended by Azure host team,
-we now use the bytes 4 and 5 which usually contain unique numbers as PCI
-domain. The chance of collision is greatly reduced. In the rare cases of
-collision, we will detect and find another number that is not in use.
+Hi,
+Yeah, it looks the minor behavior change doesn't matter, because IMO the=20
+'nvdev' can only be NULL when the NIC is being removed, or the MTU is
+being changed, etc.
 
-Thanks to Michael Kelley <mikelley@microsoft.com> for proposing this idea.
+The Fixes tag is:
+Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Acked-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++--=
-----
- 1 file changed, 79 insertions(+), 13 deletions(-)
+If I should send a v2, please let me know.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
-ci-hyperv.c
-index 40b6254..4f3d97e 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hb=
-us)
- 		complete(&hbus->remove_event);
- }
-=20
-+#define HVPCI_DOM_MAP_SIZE (64 * 1024)
-+static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
-+
-+/*
-+ * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define =
-0
-+ * as invalid for passthrough PCI devices of this driver.
-+ */
-+#define HVPCI_DOM_INVALID 0
-+
-+/**
-+ * hv_get_dom_num() - Get a valid PCI domain number
-+ * Check if the PCI domain number is in use, and return another number if
-+ * it is in use.
-+ *
-+ * @dom: Requested domain number
-+ *
-+ * return: domain number on success, HVPCI_DOM_INVALID on failure
-+ */
-+static u16 hv_get_dom_num(u16 dom)
-+{
-+	unsigned int i;
-+
-+	if (test_and_set_bit(dom, hvpci_dom_map) =3D=3D 0)
-+		return dom;
-+
-+	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
-+		if (test_and_set_bit(i, hvpci_dom_map) =3D=3D 0)
-+			return i;
-+	}
-+
-+	return HVPCI_DOM_INVALID;
-+}
-+
-+/**
-+ * hv_put_dom_num() - Mark the PCI domain number as free
-+ * @dom: Domain number to be freed
-+ */
-+static void hv_put_dom_num(u16 dom)
-+{
-+	clear_bit(dom, hvpci_dom_map);
-+}
-+
- /**
-  * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
-  * @hdev:	VMBus's tracking struct for this root PCI bus
-@@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 			const struct hv_vmbus_device_id *dev_id)
- {
- 	struct hv_pcibus_device *hbus;
-+	u16 dom_req, dom;
- 	int ret;
-=20
- 	/*
-@@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	hbus->state =3D hv_pcibus_init;
-=20
- 	/*
--	 * The PCI bus "domain" is what is called "segment" in ACPI and
--	 * other specs.  Pull it from the instance ID, to get something
--	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
--	 * do the same thing for consistency.  Note that, since this code
--	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
--	 * that (1) the only domain in use for something that looks like
--	 * a physical PCI bus (which is actually emulated by the
--	 * hypervisor) is domain 0 and (2) there will be no overlap
--	 * between domains derived from these instance IDs in the same
--	 * VM.
-+	 * The PCI bus "domain" is what is called "segment" in ACPI and other
-+	 * specs. Pull it from the instance ID, to get something usually
-+	 * unique. In rare cases of collision, we will find out another number
-+	 * not in use.
-+	 *
-+	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
-+	 * together with this guest driver can guarantee that (1) The only
-+	 * domain used by Gen1 VMs for something that looks like a physical
-+	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
-+	 * (2) There will be no overlap between domains (after fixing possible
-+	 * collisions) in the same VM.
- 	 */
--	hbus->sysdata.domain =3D hdev->dev_instance.b[9] |
--			       hdev->dev_instance.b[8] << 8;
-+	dom_req =3D hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
-+	dom =3D hv_get_dom_num(dom_req);
-+
-+	if (dom =3D=3D HVPCI_DOM_INVALID) {
-+		dev_err(&hdev->device,
-+			"Unable to use dom# 0x%hx or other numbers", dom_req);
-+		ret =3D -EINVAL;
-+		goto free_bus;
-+	}
-+
-+	if (dom !=3D dom_req)
-+		dev_info(&hdev->device,
-+			 "PCI dom# 0x%hx has collision, using 0x%hx",
-+			 dom_req, dom);
-+
-+	hbus->sysdata.domain =3D dom;
-=20
- 	hbus->hdev =3D hdev;
- 	refcount_set(&hbus->remove_lock, 1);
-@@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 					   hbus->sysdata.domain);
- 	if (!hbus->wq) {
- 		ret =3D -ENOMEM;
--		goto free_bus;
-+		goto free_dom;
- 	}
-=20
- 	ret =3D vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-@@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	vmbus_close(hdev->channel);
- destroy_wq:
- 	destroy_workqueue(hbus->wq);
-+free_dom:
-+	hv_put_dom_num(hbus->sysdata.domain);
- free_bus:
- 	free_page((unsigned long)hbus);
- 	return ret;
-@@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
- 	put_hvpcibus(hbus);
- 	wait_for_completion(&hbus->remove_event);
- 	destroy_workqueue(hbus->wq);
-+
-+	hv_put_dom_num(hbus->sysdata.domain);
-+
- 	free_page((unsigned long)hbus);
- 	return 0;
- }
-@@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
-=20
- static int __init init_hv_pci_drv(void)
- {
-+	/* Set the invalid domain number's bit, so it will not be used */
-+	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
-+
- 	return vmbus_driver_register(&hv_pci_drv);
- }
-=20
---=20
-1.8.3.1
+Thanks,
+-- Dexuan
 
