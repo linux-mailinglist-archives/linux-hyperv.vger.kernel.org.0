@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C22308772C
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Aug 2019 12:25:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03CCC877B3
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Aug 2019 12:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406366AbfHIKZT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Aug 2019 06:25:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53931 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406037AbfHIKZT (ORCPT
+        id S2406159AbfHIKo5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Aug 2019 06:44:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34118 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfHIKo5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:25:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 10so5168827wmp.3
-        for <linux-hyperv@vger.kernel.org>; Fri, 09 Aug 2019 03:25:17 -0700 (PDT)
+        Fri, 9 Aug 2019 06:44:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 31so97837296wrm.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 09 Aug 2019 03:44:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=9RMmhoSUrN0Bhtv9fCJWAnol3TBLl1D92lZ0b8FvEvQ=;
-        b=QtDpC4EdRI/zicBjIAlvDcLCU0dMAdXgyZFz707slwvKABTu0hiybVLF65zFdic9GB
-         nRRqIa9266NVuG0SP64u93b9FuA+IRIiinRDaicCL9Cob+6H4U6tzrXvvZawmKve5FKa
-         7LNd95EhIHL/mvyA4+Ed98tZLMmsPymmsml5svGpRhIb2yhJd42VxZHOjcz95aGYC51Y
-         YQMIp/U+cF9Oq442Uu2rTRZfXLDoXGg4sTQuTBUi4BzV/GG6Wb6VbRo1GnYrdaa5oKQk
-         9T/E2AAN6+XCHrP61rKNFg7fwROzimZZv5GEZaBZ0lor5ENacgLOPP8iN0SRDEH0kUnU
-         pWPA==
-X-Gm-Message-State: APjAAAV8EqWVvi61I59dubp5mU7X17SnwOF9kIat6tSfnj09tZJmgnXe
-        qEbqRCTpv7XtOozHaCtgvdyLBg==
-X-Google-Smtp-Source: APXvYqyJ40a5L04Ns0aHchac7p2jnJnwM+yb5T8gVpHG3KVtOStxdWUTnYLvrdmG+zuCj+G/jj4KJg==
-X-Received: by 2002:a1c:7606:: with SMTP id r6mr9682972wmc.118.1565346317107;
-        Fri, 09 Aug 2019 03:25:17 -0700 (PDT)
+        bh=9WzyURDH7ESFlnfzMS62H/D7+dda89YOvkjObehxwI4=;
+        b=OC9+Jnz+pR3NqTINqcDBp/jS1gcriU6ms7ytDhM1S6ahkcP0kHN20BRorimEZdg5Cu
+         adKYuoDavTZY27TDdcVUMV8lJbeUau8sQGsH7KxpF8gCJZJDUVSKXmI23j5xlsuxk+W3
+         chx6e7bO8C17C4ZjoKM8Z1h7+brdCiRjTNuXrwr+vuIEmkvUURZp8qF5K2sISz1LQd8u
+         XlG+cdyMlkDn/6rTZ/UIocQe5UYZl1gUtKj7L7lRjV+JxBjKFYzQCX+neztK3Bn102M2
+         5bbm/VtxIK7w8gNfqn9vR78+WF2wHlYhM3yANIZxqK8jbqrtON2qiNI76KOvl3NCAAST
+         zQ7g==
+X-Gm-Message-State: APjAAAV9qNFEDC0SdW66GuV/BmkqIh/imSGY7KbBpSEFWhU/eTjiKc7E
+        e+65mieRdAwsrZLavdZVqlEyEQ==
+X-Google-Smtp-Source: APXvYqyShx0+uf7pVce5ZDJOlO/Kcni/X/ot9S5XvNCwawUL4fIjZNa87xwbrVguDjFtFCSkw6VU0g==
+X-Received: by 2002:adf:df8b:: with SMTP id z11mr22569218wrl.62.1565347494857;
+        Fri, 09 Aug 2019 03:44:54 -0700 (PDT)
 Received: from vitty.brq.redhat.com (ip-89-176-127-93.net.upcbroadband.cz. [89.176.127.93])
-        by smtp.gmail.com with ESMTPSA id u6sm5604014wml.9.2019.08.09.03.25.15
+        by smtp.gmail.com with ESMTPSA id u1sm5907164wml.14.2019.08.09.03.44.53
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 03:25:16 -0700 (PDT)
+        Fri, 09 Aug 2019 03:44:54 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     lantianyu1986@gmail.com
 Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
@@ -43,11 +43,11 @@ Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
         haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
         tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
         x86@kernel.org, michael.h.kelley@microsoft.com
-Subject: Re: [PATCH 1/3] x86/Hyper-V: Fix definition of struct hv_vp_assist_page
-In-Reply-To: <20190809094939.76093-2-Tianyu.Lan@microsoft.com>
-References: <20190809094939.76093-1-Tianyu.Lan@microsoft.com> <20190809094939.76093-2-Tianyu.Lan@microsoft.com>
-Date:   Fri, 09 Aug 2019 12:25:14 +0200
-Message-ID: <87tvaqbppx.fsf@vitty.brq.redhat.com>
+Subject: Re: [PATCH 2/3] KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+In-Reply-To: <20190809094939.76093-3-Tianyu.Lan@microsoft.com>
+References: <20190809094939.76093-1-Tianyu.Lan@microsoft.com> <20190809094939.76093-3-Tianyu.Lan@microsoft.com>
+Date:   Fri, 09 Aug 2019 12:44:52 +0200
+Message-ID: <87r25ubot7.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
@@ -59,43 +59,106 @@ lantianyu1986@gmail.com writes:
 
 > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 >
-> The struct hv_vp_assist_page was defined incorrectly.
-> The "vtl_control" should be u64[3], "nested_enlightenments_control"
-> should be a u64 and there is 7 reserved bytes following "enlighten_vmentry".
-> This patch is to fix it.
+> This patch adds new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH and let
+> user space to enable direct tlb flush function when only Hyper-V
+> hypervsior capability is exposed to VM. This patch also adds
+> enable_direct_tlbflush callback in the struct kvm_x86_ops and
+> platforms may use it to implement direct tlb flush support.
 >
 > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > ---
->  arch/x86/include/asm/hyperv-tlfs.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  Documentation/virtual/kvm/api.txt | 10 ++++++++++
+>  arch/x86/include/asm/kvm_host.h   |  2 ++
+>  arch/x86/kvm/x86.c                |  8 ++++++++
+>  include/uapi/linux/kvm.h          |  1 +
+>  4 files changed, 21 insertions(+)
 >
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index af78cd72b8f3..a79703c56ebe 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -517,11 +517,11 @@ struct hv_timer_message_payload {
->  /* Define virtual processor assist page structure. */
->  struct hv_vp_assist_page {
->  	__u32 apic_assist;
-> -	__u32 reserved;
-> -	__u64 vtl_control[2];
-> +	__u32 reserved1;
-> +	__u64 vtl_control[3];
->  	__u64 nested_enlightenments_control[2];
+> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+> index 2cd6250b2896..45308ed6dd75 100644
+> --- a/Documentation/virtual/kvm/api.txt
+> +++ b/Documentation/virtual/kvm/api.txt
+> @@ -5289,3 +5289,13 @@ Architectures: x86
+>  This capability indicates that KVM supports paravirtualized Hyper-V IPI send
+>  hypercalls:
+>  HvCallSendSyntheticClusterIpi, HvCallSendSyntheticClusterIpiEx.
+> +8.21 KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+> +
+> +Architecture: x86
+> +
+> +This capability indicates that KVM supports Hyper-V direct tlb flush function.
+> +User space should enable this feature only when Hyper-V hypervisor capability
+> +is exposed to guest and KVM profile is hided. Both Hyper-V and KVM hypercalls
+> +use RAX and RCX registers to pass parameters. If KVM hypercall is exposed
+> +to L2 guest with direct tlbflush enabled, Hyper-V may mistake KVM hypercall
+> +for Hyper-V tlb flush Hypercall due to paremeter register overlap.
 
-In PATCH3 you define 'struct hv_nested_enlightenments_control' and it is
-64bit long, not 128. We should change it here too as ...
+First, we need to explicitly state that this is for KVM on Hyper-V and
+second, that this disables normal hypercall handling by KVM.
 
-> -	__u32 enlighten_vmentry;
+My take:
 
-enlighten_vmentry filed will get a very different offset breaking
-Enlightened VMCS.
+This capability indicates that KVM running on top of Hyper-V hypervisor
+enables Direct TLB flush for its guests meaning that TLB flush
+hypercalls are handled by Level 1 hypervisor (Hyper-V) bypassing KVM. 
+Due to the different ABI for hypercall parameters between Hyper-V and
+KVM, enabling this capability effectively disables all hypercall
+handling by KVM (as some KVM hypercall may be mistakenly treated as TLB
+flush hypercalls by Hyper-C) so userspace should disable KVM
+identification in CPUID.
 
-> -	__u32 padding;
-> +	__u8 enlighten_vmentry;
-> +	__u8 reserved2[7];
->  	__u64 current_nested_vmcs;
->  } __packed;
+I think we should also enforce this somehow leaving only Hyper-V style
+hypercalls handling (for Windows guests) in place.
+
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 0cc5b611a113..667d154e89d4 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1205,6 +1205,8 @@ struct kvm_x86_ops {
+>  	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
+>  
+>  	bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
+> +
+> +	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+>  };
+>  
+>  struct kvm_arch_async_pf {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 9d7b9e6a0939..a9d8ee7f7bf0 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3183,6 +3183,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  		r = kvm_x86_ops->get_nested_state ?
+>  			kvm_x86_ops->get_nested_state(NULL, NULL, 0) : 0;
+>  		break;
+> +	case KVM_CAP_HYPERV_DIRECT_TLBFLUSH:
+> +		r = kvm_x86_ops->enable_direct_tlbflush ? 1 : 0;
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> @@ -3953,6 +3956,11 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+>  				r = -EFAULT;
+>  		}
+>  		return r;
+> +	case KVM_CAP_HYPERV_DIRECT_TLBFLUSH:
+> +		if (!kvm_x86_ops->enable_direct_tlbflush)
+> +			return -ENOTTY;
+> +
+> +		return kvm_x86_ops->enable_direct_tlbflush(vcpu);
+>  
+>  	default:
+>  		return -EINVAL;
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index a7c19540ce21..cb959bc925b1 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -996,6 +996,7 @@ struct kvm_ppc_resize_hpt {
+>  #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
+>  #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
+>  #define KVM_CAP_PMU_EVENT_FILTER 173
+> +#define KVM_CAP_HYPERV_DIRECT_TLBFLUSH 174
+>  
+>  #ifdef KVM_CAP_IRQ_ROUTING
 
 -- 
 Vitaly
