@@ -2,52 +2,74 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8022888435
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Aug 2019 22:42:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE91B89F27
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Aug 2019 15:06:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfHIUmj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Aug 2019 16:42:39 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37894 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbfHIUmj (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:42:39 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C6822145E7446;
-        Fri,  9 Aug 2019 13:42:38 -0700 (PDT)
-Date:   Fri, 09 Aug 2019 13:42:38 -0700 (PDT)
-Message-Id: <20190809.134238.370705461293465028.davem@davemloft.net>
-To:     decui@microsoft.com
-Cc:     netdev@vger.kernel.org, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, jakub.kicinski@netronome.com,
-        sashal@kernel.org, kys@microsoft.com, mikelley@microsoft.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        olaf@aepfle.de, apw@canonical.com, jasowang@redhat.com,
-        vkuznets@redhat.com, marcelo.cerri@canonical.com
-Subject: Re: [PATCH net v2] hv_netvsc: Fix a warning of suspicious RCU usage
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <PU1P153MB0169A6492DCBB490FE7FE52CBFD60@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <PU1P153MB0169A6492DCBB490FE7FE52CBFD60@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 09 Aug 2019 13:42:39 -0700 (PDT)
+        id S1728682AbfHLNGN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Aug 2019 09:06:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:50008 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726458AbfHLNGM (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 12 Aug 2019 09:06:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DC3415AB;
+        Mon, 12 Aug 2019 06:06:12 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 206B23F706;
+        Mon, 12 Aug 2019 06:06:10 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 14:06:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: Re: [PATCH v2] PCI: hv: Fix panic by calling hv_pci_remove_slots()
+ earlier
+Message-ID: <20190812130607.GD20861@e121166-lin.cambridge.arm.com>
+References: <PU1P153MB01693F32F6BB02F9655CC84EBFD90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190806201611.GT151852@google.com>
+ <PU1P153MB0169F9EDD707FFE1517F8D56BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB0169F9EDD707FFE1517F8D56BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
-Date: Fri, 9 Aug 2019 01:58:08 +0000
-
-> This fixes a warning of "suspicious rcu_dereference_check() usage"
-> when nload runs.
+On Tue, Aug 06, 2019 at 08:41:17PM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Bjorn Helgaas
+> > Sent: Tuesday, August 6, 2019 1:16 PM
+> > To: Dexuan Cui <decui@microsoft.com>
+> > 
+> > Thanks for updating this.  But you didn't update the subject line,
+> > which is really still a little too low-level.  Maybe Lorenzo will fix
+> > this.  Something like this, maybe?
+> > 
+> >   PCI: hv: Avoid use of hv_pci_dev->pci_slot after freeing it
 > 
-> Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> This is better. Thanks!
+> 
+> I hope Lorenzo can help to fix this so I could avoid a v3. :-)
 
-Applied.
+You should have fixed it yourself, this time I will.
+
+Thanks,
+Lorenzo
