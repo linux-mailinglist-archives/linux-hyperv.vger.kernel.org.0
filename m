@@ -2,273 +2,155 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E08938A58E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Aug 2019 20:21:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81E508A64F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Aug 2019 20:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfHLSU6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Aug 2019 14:20:58 -0400
-Received: from mail-eopbgr730128.outbound.protection.outlook.com ([40.107.73.128]:18624
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726185AbfHLSU5 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Aug 2019 14:20:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KfnrkIe5s2QuaZwJ+sgJ6uisgdyCNLByLQ630S03vMBT3ryogUWySX3wPTEL7JUWqYHQB9F3r2TGWazVwNQmd6606A7boX9LJjsSsgcBcgSNdtCHpSncgxdAsumzZx2xKJVuoFdyW0WibG8kxIKtqHob65DoOfLYfk2klCakyRpcIyuCDLFeT5W8+bhHiv/cKtPY+SGGIKluzSBb8+aLaR4iRTrAIuhMDHhYSGIVf+jlrSKB0XnTA3cC6XzSeFWAmv51130mGFRJMn8XnjKg2S1gvxnR9fxSagLUyBVBjg65uSMC+L2jLLzIcJke9zl4gFwm2O5QJ6Xmt8O+YBimHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uf4KyVwcAvNntoEj21P2H/GFPThcxmHUEFT5P6Kj6OM=;
- b=VlOWcYXvEQiboPY0DwAN54fIgH8E9r1V9nvTp/VAQ+vE4Afu+Xzu11xBTcG6k+5iHbwOdIrEB5BHQxPJ/yUXXP+gcu+8SJvPlIXM63odxAknZiXTLHpJO/oBwHx2skEUiu8PHBJr34aieRNJIbi62JIYsxnY+bm02V+B2kQJAdxOyo4wzEQy3crnqIK7791FN3mOYBPUu7DnVEdIaZTAtEewXhyfPU9W+9BiHNrztEoCGCVtWZpcucfTRj6CzCedJfrliToKRSgW52Ex73q8BCIhODFFiIDgM3Os7Wiqfc/O2WYpOghNTNTZnimX4SG/4TMbgCZ1Y8y7eoaQzftOWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uf4KyVwcAvNntoEj21P2H/GFPThcxmHUEFT5P6Kj6OM=;
- b=WOPKJU09z+luAT1P5UtFDlL+vTDgb72pIYikcV9QTws7DYUGI3/syTCEtO47GPiqDdjfbaubJJ/hoDn0zUfNBWFZA4tbDtjmjhYS1gDMng2Yj1HEUbxJeYr+zF4hew+6zLJ7qNZvjmGTkRfbrY4OZUGK3R3q7nsUpUWKxCtkmGY=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1196.namprd21.prod.outlook.com (20.179.49.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Mon, 12 Aug 2019 18:20:54 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Mon, 12 Aug 2019
- 18:20:54 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1726488AbfHLS2F (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Aug 2019 14:28:05 -0400
+Received: from mga06.intel.com ([134.134.136.31]:31130 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbfHLS2F (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 12 Aug 2019 14:28:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Aug 2019 11:27:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,378,1559545200"; 
+   d="scan'208";a="170142286"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga008.jf.intel.com with ESMTP; 12 Aug 2019 11:27:18 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hxF2K-0001mk-Vy; Mon, 12 Aug 2019 21:27:16 +0300
+Date:   Mon, 12 Aug 2019 21:27:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Topic: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Index: AQHVUTqte27Lajt/EEyKPTfwyVUozw==
-Date:   Mon, 12 Aug 2019 18:20:53 +0000
-Message-ID: <1565634013-19404-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR04CA0076.namprd04.prod.outlook.com
- (2603:10b6:102:1::44) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 142f42cb-29d3-4c0b-5583-08d71f51cfe9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1196;
-x-ms-traffictypediagnostic: DM6PR21MB1196:|DM6PR21MB1196:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1196B43A23B5ED9DD791BEB3ACD30@DM6PR21MB1196.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2201;
-x-forefront-prvs: 012792EC17
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(376002)(346002)(136003)(396003)(189003)(199004)(36756003)(66946007)(6436002)(386003)(476003)(6506007)(66066001)(4326008)(53936002)(14454004)(50226002)(25786009)(66446008)(6392003)(7846003)(71190400001)(102836004)(71200400001)(6486002)(2201001)(6512007)(66476007)(26005)(64756008)(305945005)(5660300002)(22452003)(110136005)(81156014)(316002)(99286004)(10090500001)(14444005)(2906002)(52116002)(6116002)(3846002)(81166006)(66556008)(478600001)(2501003)(10290500003)(256004)(7736002)(486006)(2616005)(54906003)(186003)(8936002)(4720700003)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1196;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JkCbnkWv30vfUBeD4xEyTkOS6uWSpljYN/FjRPgwKGRa+j0LI2eKOO2gZDoHR0bP0Z2RuR2mcRexGKJ7ou95OfL42Ui9opdSx/8u5JJgi2rbz0KgZ62P7eer9tT6DSO/Rb4vWWcykFp32kKEN3keDW91NFlJdLEqUF3ap5NArL4jGoZ0x3E4xs8dWuki0XbLWvrZzHS7gbQc0lsNrjc7syMPdt1LeKbHIMe76k9UHmv2LpYxSSb1bhqhhae7eEnu2nZ+W5YH+4NoGZWEULzQjVXAOTRQejtNWzaxlMo4jTp9DyiDKVROzEZLm8/bP3Ka+V1E0p2wuh00t0pHLonmpR/oPHjG3yHFZN5RoiX+MNLNerXS6AuXXVR42ubtmudNGacLLfDPLODFnFLobfqPwE1NC7hHaXFY3ZbsLDDmhAc=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        linux-hyperv@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH v1] Tools: hv: move to tools buildsystem
+Message-ID: <20190812182716.GS30120@smile.fi.intel.com>
+References: <20190628170542.28481-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 142f42cb-29d3-4c0b-5583-08d71f51cfe9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2019 18:20:53.9580
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: teM4ich8tl42SdXcPpcZkgN5VV69/CiB7H1iBkfqi3/CQHfbC+gJ/uYvK+MN5equA35rMkDxdom+q2ybk77zxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1196
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628170542.28481-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Currently in Azure cloud, for passthrough devices including GPU, the host
-sets the device instance ID's bytes 8 - 15 to a value derived from the host
-HWID, which is the same on all devices in a VM. So, the device instance
-ID's bytes 8 and 9 provided by the host are no longer unique. This can
-cause device passthrough to VMs to fail because the bytes 8 and 9 are used
-as PCI domain number. Collision of domain numbers will cause the second
-device with the same domain number fail to load.
+On Fri, Jun 28, 2019 at 08:05:42PM +0300, Andy Shevchenko wrote:
+> There is a nice buildsystem dedicated for userspace tools in Linux kernel tree.
+> Switch gpio target to be built by it.
+> 
 
-As recommended by Azure host team, the bytes 4, 5 have more uniqueness
-(info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI domain
-numbers. On older hosts, bytes 4, 5 can also be used -- no backward
-compatibility issues here. The chance of collision is greatly reduced. In
-the rare cases of collision, we will detect and find another number that is
-not in use.
+Any comments on this?
 
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Acked-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++--=
-----
- 1 file changed, 79 insertions(+), 13 deletions(-)
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  tools/hv/Build    |  3 +++
+>  tools/hv/Makefile | 51 +++++++++++++++++++++++++++++++++++++----------
+>  2 files changed, 44 insertions(+), 10 deletions(-)
+>  create mode 100644 tools/hv/Build
+> 
+> diff --git a/tools/hv/Build b/tools/hv/Build
+> new file mode 100644
+> index 000000000000..6cf51fa4b306
+> --- /dev/null
+> +++ b/tools/hv/Build
+> @@ -0,0 +1,3 @@
+> +hv_kvp_daemon-y += hv_kvp_daemon.o
+> +hv_vss_daemon-y += hv_vss_daemon.o
+> +hv_fcopy_daemon-y += hv_fcopy_daemon.o
+> diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+> index 5db5e62cebda..b57143d9459c 100644
+> --- a/tools/hv/Makefile
+> +++ b/tools/hv/Makefile
+> @@ -1,28 +1,55 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Makefile for Hyper-V tools
+> -
+> -WARNINGS = -Wall -Wextra
+> -CFLAGS = $(WARNINGS) -g $(shell getconf LFS_CFLAGS)
+> -
+> -CFLAGS += -D__EXPORTED_HEADERS__ -I../../include/uapi -I../../include
+> +include ../scripts/Makefile.include
+>  
+>  sbindir ?= /usr/sbin
+>  libexecdir ?= /usr/libexec
+>  sharedstatedir ?= /var/lib
+>  
+> -ALL_PROGRAMS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
+> +ifeq ($(srctree),)
+> +srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+> +srctree := $(patsubst %/,%,$(dir $(srctree)))
+> +endif
+> +
+> +# Do not use make's built-in rules
+> +# (this improves performance and avoids hard-to-debug behaviour);
+> +MAKEFLAGS += -r
+> +
+> +override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+> +
+> +ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
+> +ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+>  
+>  ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
+>  
+>  all: $(ALL_PROGRAMS)
+>  
+> -%: %.c
+> -	$(CC) $(CFLAGS) -o $@ $^
+> +export srctree OUTPUT CC LD CFLAGS
+> +include $(srctree)/tools/build/Makefile.include
+> +
+> +HV_KVP_DAEMON_IN := $(OUTPUT)hv_kvp_daemon-in.o
+> +$(HV_KVP_DAEMON_IN): FORCE
+> +	$(Q)$(MAKE) $(build)=hv_kvp_daemon
+> +$(OUTPUT)hv_kvp_daemon: $(HV_KVP_DAEMON_IN)
+> +	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+> +
+> +HV_VSS_DAEMON_IN := $(OUTPUT)hv_vss_daemon-in.o
+> +$(HV_VSS_DAEMON_IN): FORCE
+> +	$(Q)$(MAKE) $(build)=hv_vss_daemon
+> +$(OUTPUT)hv_vss_daemon: $(HV_VSS_DAEMON_IN)
+> +	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+> +
+> +HV_FCOPY_DAEMON_IN := $(OUTPUT)hv_fcopy_daemon-in.o
+> +$(HV_FCOPY_DAEMON_IN): FORCE
+> +	$(Q)$(MAKE) $(build)=hv_fcopy_daemon
+> +$(OUTPUT)hv_fcopy_daemon: $(HV_FCOPY_DAEMON_IN)
+> +	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
+>  
+>  clean:
+> -	$(RM) hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
+> +	rm -f $(ALL_PROGRAMS)
+> +	find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
+>  
+> -install: all
+> +install: $(ALL_PROGRAMS)
+>  	install -d -m 755 $(DESTDIR)$(sbindir); \
+>  	install -d -m 755 $(DESTDIR)$(libexecdir)/hypervkvpd; \
+>  	install -d -m 755 $(DESTDIR)$(sharedstatedir); \
+> @@ -33,3 +60,7 @@ install: all
+>  	for script in $(ALL_SCRIPTS); do \
+>  		install $$script -m 755 $(DESTDIR)$(libexecdir)/hypervkvpd/$${script%.sh}; \
+>  	done
+> +
+> +FORCE:
+> +
+> +.PHONY: all install clean FORCE prepare
+> -- 
+> 2.20.1
+> 
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
-ci-hyperv.c
-index 40b6254..4f3d97e 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hb=
-us)
- 		complete(&hbus->remove_event);
- }
-=20
-+#define HVPCI_DOM_MAP_SIZE (64 * 1024)
-+static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
-+
-+/*
-+ * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define =
-0
-+ * as invalid for passthrough PCI devices of this driver.
-+ */
-+#define HVPCI_DOM_INVALID 0
-+
-+/**
-+ * hv_get_dom_num() - Get a valid PCI domain number
-+ * Check if the PCI domain number is in use, and return another number if
-+ * it is in use.
-+ *
-+ * @dom: Requested domain number
-+ *
-+ * return: domain number on success, HVPCI_DOM_INVALID on failure
-+ */
-+static u16 hv_get_dom_num(u16 dom)
-+{
-+	unsigned int i;
-+
-+	if (test_and_set_bit(dom, hvpci_dom_map) =3D=3D 0)
-+		return dom;
-+
-+	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
-+		if (test_and_set_bit(i, hvpci_dom_map) =3D=3D 0)
-+			return i;
-+	}
-+
-+	return HVPCI_DOM_INVALID;
-+}
-+
-+/**
-+ * hv_put_dom_num() - Mark the PCI domain number as free
-+ * @dom: Domain number to be freed
-+ */
-+static void hv_put_dom_num(u16 dom)
-+{
-+	clear_bit(dom, hvpci_dom_map);
-+}
-+
- /**
-  * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
-  * @hdev:	VMBus's tracking struct for this root PCI bus
-@@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 			const struct hv_vmbus_device_id *dev_id)
- {
- 	struct hv_pcibus_device *hbus;
-+	u16 dom_req, dom;
- 	int ret;
-=20
- 	/*
-@@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	hbus->state =3D hv_pcibus_init;
-=20
- 	/*
--	 * The PCI bus "domain" is what is called "segment" in ACPI and
--	 * other specs.  Pull it from the instance ID, to get something
--	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
--	 * do the same thing for consistency.  Note that, since this code
--	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
--	 * that (1) the only domain in use for something that looks like
--	 * a physical PCI bus (which is actually emulated by the
--	 * hypervisor) is domain 0 and (2) there will be no overlap
--	 * between domains derived from these instance IDs in the same
--	 * VM.
-+	 * The PCI bus "domain" is what is called "segment" in ACPI and other
-+	 * specs. Pull it from the instance ID, to get something usually
-+	 * unique. In rare cases of collision, we will find out another number
-+	 * not in use.
-+	 *
-+	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
-+	 * together with this guest driver can guarantee that (1) The only
-+	 * domain used by Gen1 VMs for something that looks like a physical
-+	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
-+	 * (2) There will be no overlap between domains (after fixing possible
-+	 * collisions) in the same VM.
- 	 */
--	hbus->sysdata.domain =3D hdev->dev_instance.b[9] |
--			       hdev->dev_instance.b[8] << 8;
-+	dom_req =3D hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
-+	dom =3D hv_get_dom_num(dom_req);
-+
-+	if (dom =3D=3D HVPCI_DOM_INVALID) {
-+		dev_err(&hdev->device,
-+			"Unable to use dom# 0x%hx or other numbers", dom_req);
-+		ret =3D -EINVAL;
-+		goto free_bus;
-+	}
-+
-+	if (dom !=3D dom_req)
-+		dev_info(&hdev->device,
-+			 "PCI dom# 0x%hx has collision, using 0x%hx",
-+			 dom_req, dom);
-+
-+	hbus->sysdata.domain =3D dom;
-=20
- 	hbus->hdev =3D hdev;
- 	refcount_set(&hbus->remove_lock, 1);
-@@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 					   hbus->sysdata.domain);
- 	if (!hbus->wq) {
- 		ret =3D -ENOMEM;
--		goto free_bus;
-+		goto free_dom;
- 	}
-=20
- 	ret =3D vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-@@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	vmbus_close(hdev->channel);
- destroy_wq:
- 	destroy_workqueue(hbus->wq);
-+free_dom:
-+	hv_put_dom_num(hbus->sysdata.domain);
- free_bus:
- 	free_page((unsigned long)hbus);
- 	return ret;
-@@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
- 	put_hvpcibus(hbus);
- 	wait_for_completion(&hbus->remove_event);
- 	destroy_workqueue(hbus->wq);
-+
-+	hv_put_dom_num(hbus->sysdata.domain);
-+
- 	free_page((unsigned long)hbus);
- 	return 0;
- }
-@@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
-=20
- static int __init init_hv_pci_drv(void)
- {
-+	/* Set the invalid domain number's bit, so it will not be used */
-+	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
-+
- 	return vmbus_driver_register(&hv_pci_drv);
- }
-=20
---=20
-1.8.3.1
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
