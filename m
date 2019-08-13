@@ -2,80 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0FFD8AF22
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2019 08:04:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F9318B28D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2019 10:33:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfHMGEf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Aug 2019 02:04:35 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36791 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfHMGEe (ORCPT
+        id S1727623AbfHMIdn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Aug 2019 04:33:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38117 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbfHMIdn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Aug 2019 02:04:34 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j17so21901640lfp.3;
-        Mon, 12 Aug 2019 23:04:33 -0700 (PDT)
+        Tue, 13 Aug 2019 04:33:43 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m125so688168wmm.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 13 Aug 2019 01:33:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZrEVxpcyV4DCMvRSKxFdoalgE5BxnEvtduw2O/ncmic=;
-        b=CH03GcsRDfIFs7I2m4ENoc6GLIoCVBM2g0Xk+IPc8RN0i32k1xTcbqfbCh07zoJD3g
-         HUZppBws/OsZbqUyAtPxcfI0Nv0igGGzIad4id8RzYH88Eqc11MNA4J1S7XXoGWwNHC0
-         q4Kl5tOEr9vkXWT/Myai4XuwDX+xjl54mbE9mBiV0EhCo1WsWHabN0jMOGbrjYPdMz8I
-         xXZ60uNoXG4R2qg4ai7etwr0LCApNiVFgMi5VEhsQPll/+Mbi4NIS1NXsaWomKRFt8W4
-         KdhM4a9+1gFwSGS+70ezanX7qABnofRVrQJZjqrMo1X+e25YPHXeJGpYINfE0KGSxl/2
-         aZtA==
-X-Gm-Message-State: APjAAAVyUClfCa77wZkt/UFcosqeAtwgegQiTyanqaWNWFIt3yCsCP4C
-        /+7ez8R0N3z+TN6s96kU/3C6wCZoOZc=
-X-Google-Smtp-Source: APXvYqzOX0mWizuXqkZv2Us/VAQ5DA4Vdhvcexj1vcgAkJjLiVHUm11+eQXxaf59C/MGSUHfrVNWBA==
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr22298150lfp.61.1565676272527;
-        Mon, 12 Aug 2019 23:04:32 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id f22sm2316967ljh.22.2019.08.12.23.04.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 23:04:32 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Hyper-V: Fix typo in a filepath
-Date:   Tue, 13 Aug 2019 09:04:22 +0300
-Message-Id: <20190813060422.12634-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190325212516.26489-1-joe@perches.com>
-References: <20190325212516.26489-1-joe@perches.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=i0/UjSTsRJKJbyjXWi8yfVIZ9WUaTfbBMXtRMChek+4=;
+        b=WrUZs1pc6OsTjg0qIUQnD7DmIZ4BO4f+bMHMyWhV32EHdnEmsk26IYclpeu9Fx7Rm4
+         piyjx5BFkKcOlJSI2bA8CQuVw14+CQHW53O7RZ4up7yAfrobea9qY6a+e2QsLR2cBC4r
+         tbmLOgjnX8b3ot8lwfWKoRpUBpyzGkbSUED/2HwoKwYmrXSwFEvDN1opkUbH+9gvVCJW
+         C6UwilKBmcN+icL8Hf1B77qVBcQCnv8Ir0b0GdQfJD+I00pWuEfT5vaQL+vjVadrzkSz
+         Jh/Gfoa8Hl+wDXOTOu2I4GguEV5SNVY3yJ+R3X+73Nfbdwy6gX85iF20Mz0JjAFQgrWl
+         DC5A==
+X-Gm-Message-State: APjAAAXO+Rp2CM/lg7761SOAaqNKWrf+dU/0PMwU30iwfIInVIEsyOmd
+        ecf79Bks/eg15rOy/qAQBgrx+Q==
+X-Google-Smtp-Source: APXvYqyUfqZfLtR2Esa+Td8DFXYYAp7MU1a2o74SoqdyLzHA14yv0VpukFvmQdgqpzYxsXYqDLPgnA==
+X-Received: by 2002:a05:600c:296:: with SMTP id 22mr1658378wmk.148.1565685221880;
+        Tue, 13 Aug 2019 01:33:41 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 4sm1438988wmd.26.2019.08.13.01.33.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 01:33:41 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <lantianyu1986@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger kernel org" <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "ashal\@kernel.org" <ashal@kernel.org>
+Subject: RE: [PATCH 0/2] clocksource/Hyper-V: Add Hyper-V specific sched clock function
+In-Reply-To: <DM5PR21MB0137E03AAD8C2EA61EC81ED7D7D30@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com> <87zhkxksxd.fsf@vitty.brq.redhat.com> <20190729110927.GC31398@hirez.programming.kicks-ass.net> <87wog1kpib.fsf@vitty.brq.redhat.com> <CAOLK0py6ngy9kAnZcRMBK8U45s2L5Wo4X0NP_qPM0zv7WjeVQQ@mail.gmail.com> <DM5PR21MB0137E03AAD8C2EA61EC81ED7D7D30@DM5PR21MB0137.namprd21.prod.outlook.com>
+Date:   Tue, 13 Aug 2019 10:33:37 +0200
+Message-ID: <87sgq5a2hq.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Fix typo in hyperv-iommu.c filepath.
+Michael Kelley <mikelley@microsoft.com> writes:
 
-Cc: Lan Tianyu <Tianyu.Lan@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: linux-hyperv@vger.kernel.org
-Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Tianyu Lan <lantianyu1986@gmail.com> Sent: Tuesday, July 30, 2019 6:41 AM
+>> 
+>> On Mon, Jul 29, 2019 at 8:13 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>> >
+>> > Peter Zijlstra <peterz@infradead.org> writes:
+>> >
+>> > > On Mon, Jul 29, 2019 at 12:59:26PM +0200, Vitaly Kuznetsov wrote:
+>> > >> lantianyu1986@gmail.com writes:
+>> > >>
+>> > >> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>> > >> >
+>> > >> > Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_clock
+>> > >> > on x86.  But native_sched_clock() directly uses the raw TSC value, which
+>> > >> > can be discontinuous in a Hyper-V VM.   Add the generic hv_setup_sched_clock()
+>> > >> > to set the sched clock function appropriately.  On x86, this sets
+>> > >> > pv_ops.time.sched_clock to read the Hyper-V reference TSC value that is
+>> > >> > scaled and adjusted to be continuous.
+>> > >>
+>> > >> Hypervisor can, in theory, disable TSC page and then we're forced to use
+>> > >> MSR-based clocksource but using it as sched_clock() can be very slow,
+>> > >> I'm afraid.
+>> > >>
+>> > >> On the other hand, what we have now is probably worse: TSC can,
+>> > >> actually, jump backwards (e.g. on migration) and we're breaking the
+>> > >> requirements for sched_clock().
+>> > >
+>> > > That (obviously) also breaks the requirements for using TSC as
+>> > > clocksource.
+>> > >
+>> > > IOW, it breaks the entire purpose of having TSC in the first place.
+>> >
+>> > Currently, we mark raw TSC as unstable when running on Hyper-V (see
+>> > 88c9281a9fba6), 'TSC page' (which is TSC * scale + offset) is being used
+>> > instead. The problem is that 'TSC page' can be disabled by the
+>> > hypervisor and in that case the only remaining clocksource is MSR-based
+>> > (slow).
+>> >
+>> 
+>> Yes, that will be slow if Hyper-V doesn't expose hv tsc page and
+>> kernel uses MSR based
+>> clocksource. Each MSR read will trigger one VM-EXIT. This also happens on other
+>> hypervisors (e,g, KVM doesn't expose KVM clock). Hypervisor should
+>> take this into
+>> account and determine which clocksource should be exposed or not.
+>> 
+>
+> We've confirmed with the Hyper-V team that the TSC page is always available
+> on Hyper-V 2016 and later, and on Hyper-V 2012 R2 when the physical
+> hardware presents an InvariantTSC.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2764e0872ebd..51ab502485ac 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7452,7 +7452,7 @@ F:	drivers/net/hyperv/
- F:	drivers/scsi/storvsc_drv.c
- F:	drivers/uio/uio_hv_generic.c
- F:	drivers/video/fbdev/hyperv_fb.c
--F:	drivers/iommu/hyperv_iommu.c
-+F:	drivers/iommu/hyperv-iommu.c
- F:	net/vmw_vsock/hyperv_transport.c
- F:	include/clocksource/hyperv_timer.h
- F:	include/linux/hyperv.h
+Currently we check that TSC page is valid on every read and it seems
+this is redundant, right? It is either available on boot or not. I can
+only imagine migrating a VM to a non-InvariantTSC host when Hyper-V will
+likely disable the page (and we can get reenlightenment notification
+then).
+
+>  But the Linux Kconfig's are set up so
+> the TSC page is not used for 32-bit guests -- all clock reads are synthetic MSR
+> reads.  For 32-bit, this set of changes will add more overhead because the
+> sched clock reads will now be MSR reads.
+>
+> I would be inclined to fix the problem, even with the perf hit on 32-bit Linux.
+> I don’t have any data on 32-bit Linux being used in a Hyper-V guest, but it's not
+> supported in Azure so usage is pretty small.  The alternative would be to continue
+> to use the raw TSC value on 32-bit, even with the risk of a discontinuity in case of
+> live migration or similar scenarios.
+
+The issue needs fixing, I agree, however using MSR based clocksource as
+sched clock may give us too big of a performance hit (not sure who cares
+about 32 bit guest performance nowadays but still). What stops us from
+enabling TSC page for 32 bit guests if it is available?
+
 -- 
-2.21.0
-
+Vitaly
