@@ -2,68 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8691E8BAE6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2019 15:56:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 634DA8BB73
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Aug 2019 16:25:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfHMN4z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Aug 2019 09:56:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35938 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729163AbfHMN4z (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Aug 2019 09:56:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g67so1542298wme.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 13 Aug 2019 06:56:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=9SWKHAYzBe41Ol9gswyfxjexOkRqsX5G/TdknhMFVq8=;
-        b=EmaXdOSC8zGzm0KgjO8PtB2xteUjXZ7dZuaz/QX/Il1CA9JhrT4gr739v7yKrzvm3u
-         61qj0B7axTQ4O2AYpxZHD/Hjozn2VXAebOPoDgPALOqEwtmvxdEuKkzR9oSVJBOC7T3l
-         RgOTv3cZtW6A+JCIa6EX/XszRcL4pIrqt2dw2/D8tVELclZRoYF2sLYVaDsA6Gw3OL7j
-         gkIlP3Cm1xoTDJqtvWMnBaRmJHNkliEN3bK43oLHHVfsL1pmn5vysgJC+LynWd0WXtK3
-         E7I+OGtEnubSi8GeY9LT8mUFIubEBOW/XL+m3i3465MPhc3Pnv+jIK6Sla4WpxWqip4P
-         5Ztg==
-X-Gm-Message-State: APjAAAWwD7LiTfD0/IogImlQEs51Uhgq6vRytDS16B7e2ac7K4zSlc80
-        FU5Fq53+7YX2jSeqVyF0QHtaIQ==
-X-Google-Smtp-Source: APXvYqzkcyUcteVlgxvQGBrtOPqeRLtcHQb+IMNCpUQGwbWcEyBW+FrNU3lnylGez+r6EeY7H5WxyA==
-X-Received: by 2002:a05:600c:21c1:: with SMTP id x1mr2969799wmj.37.1565704613440;
-        Tue, 13 Aug 2019 06:56:53 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id m23sm2203685wml.41.2019.08.13.06.56.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 13 Aug 2019 06:56:52 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S1729524AbfHMOZr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Aug 2019 10:25:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:37942 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729344AbfHMOZr (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 13 Aug 2019 10:25:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 088F8344;
+        Tue, 13 Aug 2019 07:25:46 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A971F3F706;
+        Tue, 13 Aug 2019 07:25:44 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 15:25:40 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-hyperv@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v1] Tools: hv: move to tools buildsystem
-In-Reply-To: <20190812182716.GS30120@smile.fi.intel.com>
-References: <20190628170542.28481-1-andriy.shevchenko@linux.intel.com> <20190812182716.GS30120@smile.fi.intel.com>
-Date:   Tue, 13 Aug 2019 15:56:49 +0200
-Message-ID: <87lfvx9nj2.fsf@vitty.brq.redhat.com>
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Message-ID: <20190813142540.GA5070@e121166-lin.cambridge.arm.com>
+References: <1565634013-19404-1-git-send-email-haiyangz@microsoft.com>
+ <20190813101417.GA14977@e121166-lin.cambridge.arm.com>
+ <DM6PR21MB1337D4F34CAA49BE369FB793CAD20@DM6PR21MB1337.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR21MB1337D4F34CAA49BE369FB793CAD20@DM6PR21MB1337.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+On Tue, Aug 13, 2019 at 12:55:59PM +0000, Haiyang Zhang wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: Tuesday, August 13, 2019 6:14 AM
+> > To: Haiyang Zhang <haiyangz@microsoft.com>
+> > Cc: sashal@kernel.org; bhelgaas@google.com; linux-
+> > hyperv@vger.kernel.org; linux-pci@vger.kernel.org; KY Srinivasan
+> > <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> > olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH v3] PCI: hv: Detect and fix Hyper-V PCI domain number
+> > collision
+> > 
+> > On Mon, Aug 12, 2019 at 06:20:53PM +0000, Haiyang Zhang wrote:
+> > > Currently in Azure cloud, for passthrough devices including GPU, the host
+> > > sets the device instance ID's bytes 8 - 15 to a value derived from the host
+> > > HWID, which is the same on all devices in a VM. So, the device instance
+> > > ID's bytes 8 and 9 provided by the host are no longer unique. This can
+> > > cause device passthrough to VMs to fail because the bytes 8 and 9 are used
+> > > as PCI domain number. Collision of domain numbers will cause the second
+> > > device with the same domain number fail to load.
+> > >
+> > > As recommended by Azure host team, the bytes 4, 5 have more uniqueness
+> > > (info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI domain
+> > > numbers. On older hosts, bytes 4, 5 can also be used -- no backward
+> > > compatibility issues here. The chance of collision is greatly reduced. In
+> > > the rare cases of collision, we will detect and find another number that is
+> > > not in use.
+> > 
+> > I have not explained what I meant correctly. This patch fixes an
+> > issue and the "find another number" fallback can be also applied
+> > to the current kernel without changing the bytes you use for
+> > domain numbers.
+> > 
+> > This patch would leave old kernels susceptible to breakage.
+> > 
+> > Again, I have no Azure knowledge but it seems better to me to
+> > add a fallback "find another number" allocation on top of mainline
+> > and send it to stable kernels. Then we can add another patch to
+> > change the bytes you use to reduce the number of collision.
+> > 
+> > Please let me know what you think, thanks.
+> 
+> Thanks for your clarification.
+> Actually, I hope the stable kernel will be patched to use bytes 4,5 too,
+> because host provided numbers are persistent across reboots, we like
+> to use them if possible.
+> 
+> I think we can either --
+> 1) Apply this patch for mainline and stable kernels as well.
+> 2) Or, break this patch into two patches, and apply both of them for 
+> Mainline and stable kernels.
 
-> On Fri, Jun 28, 2019 at 08:05:42PM +0300, Andy Shevchenko wrote:
->> There is a nice buildsystem dedicated for userspace tools in Linux kernel tree.
->> Switch gpio target to be built by it.
->> 
->
-> Any comments on this?
->
+(2) since one patch is a fix and the other one an (optional - however
+important it is) change.
 
-Minor nit: "gpio target" in the commit message should be replaced with
-"Hyper-V daemons".
+This way if the optional change needs reverting we still have a working
+kernel.
 
--- 
-Vitaly
+In the end it is up to you - I am just expressing what I think is the
+most sensible way forward.
+
+Lorenzo
