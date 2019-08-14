@@ -2,75 +2,100 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD1E88CA6B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Aug 2019 06:34:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBDBB8CCF0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Aug 2019 09:35:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfHNEea (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 14 Aug 2019 00:34:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbfHNEea (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 14 Aug 2019 00:34:30 -0400
-Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A732064A;
-        Wed, 14 Aug 2019 04:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565757269;
-        bh=YXfRePtrpgOp4VoVjGqzpZyjQJeuzOvercRnHiUWlN4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=brJjf4O+x1eiH8OsOXOavdaAHfwFbDDfO80eCQ/6wJq0DMsZ+kZhifa6UHFKqeQ6R
-         qi1D1sCoSX4y+1l3akjYpeaeMM6AjPhEWtLZH4vN65IBWbz7Apndw1s24zNK9DIjjh
-         TVDNfpT3amygGdbsDVcXfMUhtfWUhews9XrJrKto=
-Date:   Tue, 13 Aug 2019 23:34:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Message-ID: <20190814043428.GC206171@google.com>
-References: <1565743084-2069-1-git-send-email-haiyangz@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565743084-2069-1-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727031AbfHNHe6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 14 Aug 2019 03:34:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46236 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfHNHe6 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 14 Aug 2019 03:34:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q139so4786687pfc.13;
+        Wed, 14 Aug 2019 00:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RHOMr4ptKfjquPk5bhUDtq5uLFKfISVcupJSVaOf/TA=;
+        b=FBi/8nGE8HcVC+P34RYHPJ9g24kSlA2MLqh/h6tXLHEDmsvkRu1ZcmKJQYTkbdfJoJ
+         cBACdIbmQsqSzhry0zkObXx60Y4ZEqjl2lMl2vqZ+ku+oDS1mPhZjBcB5E3VTa+jgzOd
+         f+Vzm3pjeyQOzUd6R34loEr9V6PZmL1m718Dh3pY+Xp1b3AAsP9UPbTZAswnZRMq0BlY
+         lVkenWT/0tKIjO22TX713kE+0k6mMfZh5loTOnBiJTf3cMX+YwZ/4jsFGO896yPUQMSM
+         7ppi95qVM1xYvbnqaTKZ8MXiDlCVpIFgvaLyaj2W1oeza8FJwleyN1+bWf2fBiIuP8XK
+         HLlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RHOMr4ptKfjquPk5bhUDtq5uLFKfISVcupJSVaOf/TA=;
+        b=f5ca3j0wnw5wkiBdoJkDYhXkZrjvY/hktiErP6u4nqs+u/Mn62xdVao8M3W8A6/leI
+         jOAcyyFw56NAlGa20kPVWUKF9B/y8F4F8HtvHcYF8X9u4O6Bm2k01lm9LoKjZb8Qb8xs
+         Q8wBR4uM8jlihgcapBfw8/0aKcDXjUH8X37HuqbSERZT7PJUPJ7/HbTPm9i/295CO9/P
+         azF8VWMKlXF3MLszijohhNLeYCaXjbAqWW3mNEmuyTeU4zqNCDa4w7Fgyh0gnPhgN/Pe
+         nHJ2IzXNIDc5s1Gsxs4QA02/NrUa7vnHjEzLxjW5JVCwm6bmQX5JApvzx+LKwEv4qKxh
+         Gzrg==
+X-Gm-Message-State: APjAAAVZGXpqm9JFxkhxxDLl/F2wGQpQVrEzxiHN2xPmo274+vddzr9r
+        gigc9jHCVNdZIYV7FnzrmpE=
+X-Google-Smtp-Source: APXvYqznL4dsNbQONSJciPqTQxe+yFkIGRzx4cM9Q0lLHaDfbY7p0gHdYdXVzAJPhJQVqIjLYM32gQ==
+X-Received: by 2002:a17:90a:9202:: with SMTP id m2mr5879136pjo.16.1565768097390;
+        Wed, 14 Aug 2019 00:34:57 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.114])
+        by smtp.googlemail.com with ESMTPSA id v184sm109639230pfb.82.2019.08.14.00.34.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 00:34:56 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com
+Subject: [PATCH V2 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
+Date:   Wed, 14 Aug 2019 15:34:44 +0800
+Message-Id: <20190814073447.96141-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thanks for splitting these; I think that makes more sense.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-On Wed, Aug 14, 2019 at 12:38:54AM +0000, Haiyang Zhang wrote:
-> Currently in Azure cloud, for passthrough devices including GPU, the host
-> sets the device instance ID's bytes 8 - 15 to a value derived from the host
-> HWID, which is the same on all devices in a VM. So, the device instance
-> ID's bytes 8 and 9 provided by the host are no longer unique. This can
-> cause device passthrough to VMs to fail because the bytes 8 and 9 are used
-> as PCI domain number. Collision of domain numbers will cause the second
-> device with the same domain number fail to load.
+This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
+in L0 can delegate L1 hypervisor to handle tlb flush request from
+L2 guest when direct tlb flush is enabled in L1.
 
-I think this patch is fine.  I could be misunderstanding the commit
-log, but when you say "the ID bytes 8 and 9 are *no longer* unique",
-that suggests that they *used* to be unique but stopped being unique
-at some point, which of course raises the question of *when* they
-became non-unique.
+Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
+feature from user space. User space should enable this feature only
+when Hyper-V hypervisor capability is exposed to guest and KVM profile
+is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
+We hope L2 guest doesn't use KVM hypercall when the feature is
+enabled. Detail please see comment of new API "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
 
-The specific information about that point would be useful to have in
-the commit log, e.g., is this related to a specific version of Azure,
-a configuration change, etc?
+Change since v1:
+       - Fix offset issue in the patch 1.
+       - Update description of KVM KVM_CAP_HYPERV_DIRECT_TLBFLUSH.
 
-Does this problem affect GPUs more than other passthrough devices?  If
-all passthrough devices are affected, why mention GPUs in particular?
-I can't tell whether that information is relevant or superfluous.
+Tianyu Lan (2):
+  x86/Hyper-V: Fix definition of struct hv_vp_assist_page
+  KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
 
-Bjorn
+Vitaly Kuznetsov (1):
+  KVM/Hyper-V/VMX: Add direct tlb flush support
+
+ Documentation/virtual/kvm/api.txt  | 12 ++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h | 24 +++++++++++++++++++-----
+ arch/x86/include/asm/kvm_host.h    |  2 ++
+ arch/x86/kvm/vmx/evmcs.h           |  2 ++
+ arch/x86/kvm/vmx/vmx.c             | 38 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.c                 |  8 ++++++++
+ include/linux/kvm_host.h           |  1 +
+ include/uapi/linux/kvm.h           |  1 +
+ 8 files changed, 83 insertions(+), 5 deletions(-)
+
+-- 
+2.14.5
+
