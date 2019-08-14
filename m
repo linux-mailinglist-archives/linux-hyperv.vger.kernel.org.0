@@ -2,221 +2,122 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E295D8D32B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Aug 2019 14:32:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6ED18D49F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Aug 2019 15:26:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfHNMch (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 14 Aug 2019 08:32:37 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36915 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNMch (ORCPT
+        id S1727898AbfHNN0T (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 14 Aug 2019 09:26:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36865 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727721AbfHNN0T (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 14 Aug 2019 08:32:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d1so20202833pgp.4;
-        Wed, 14 Aug 2019 05:32:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yRBqiCdvpXqOkL/WM9A4HqBy4MpVKKMPnymNrlH0bgE=;
-        b=bQvxaCSlgO0OHvR5lamJbX8KAEZPgsvcoCmQAIorMCFkQWDgZDLJO7/2A43mKVACHE
-         cJHBtvwYQN77jHGyc9fs7ZnK+5DnkqVDsLHOvAzCT0V82sCAz3mXfb0K0Gv/Na5RDLqW
-         evO9of2oY35uEdTuYtCEd2sxsghvYWqCaynhUUTTUuflS0N59Wk7wgSjLU3ps8xMY9i+
-         HSbY8jyg06SbimoRe0DDwzTFhI0UXSwJKaxp3kfyVqBgBkeUp5aarr9YXAhgLzhcK89v
-         e3TdS2Hgk+Ih9l46EbW1TwvUgghHRCOloJ3mJ0lYiKOV/KK0V/wVkwma31zLC1cS1BvT
-         E5cw==
+        Wed, 14 Aug 2019 09:26:19 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z23so4464888wmf.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 14 Aug 2019 06:26:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yRBqiCdvpXqOkL/WM9A4HqBy4MpVKKMPnymNrlH0bgE=;
-        b=hoZpLHOsSW7aOZpg8MmgptqkjgKUu7o4F0cA4TNVSLiTRDf63qgqYcb75oO9egLVUI
-         9XX35H9EVnpd4PdULYPHL22zV1sNsBMG6UNf/8CBPUEQLh5M4AY+0O0V7VxQLBjeQDPW
-         vDDKI3C1547sVTeD2SZAwmUmeGqCT0RDTN01qPFhPWl4zxUEVQP36LKAkoV6mSczkQh2
-         W7gNk4eC6vjSULP0ttNQH/J7DUt0KOvqKtlK8IMgqQYGcrngBplesoubFj1xCBKW/MUc
-         OIIu/Xb6KUOrmNczcrWBUTEHFTjmlZzuOn9PH92L+J9N+rXbjjl/MrDn4+iWAYjUDT1v
-         dgMw==
-X-Gm-Message-State: APjAAAWujTzwnL56hd/I4paWxYShj/+6Ky3RgmmaLtAP7vwv5dDG1axT
-        qYv5PKmGXv1hx5nrjUTs3cQ=
-X-Google-Smtp-Source: APXvYqwmxV8GqjiaZErHdEmtH3XJNXU3OtVOcDARB7OoNEfI0kwU6mw2I/AGyCSeal8g1n8jdf/blw==
-X-Received: by 2002:a63:9245:: with SMTP id s5mr39611419pgn.123.1565785956014;
-        Wed, 14 Aug 2019 05:32:36 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.52])
-        by smtp.googlemail.com with ESMTPSA id u69sm135276430pgu.77.2019.08.14.05.32.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 05:32:35 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xAZiPJjmd3PI+GZoBuvq/KNF0BWtwepJ9HhFWDTukEY=;
+        b=GWtn0WdS6r2+eY+weE5gOw3x0Xo9jN91+bxk4qgjeDn4wh4tmKD1Qwh0703+Q47xj5
+         Q5yLvMABeirBxNIEafyS0Whne/qaOSJdEkwt/ck5Yb8DbJra1sD4u0UVLTfmxg+C0a6+
+         iDm0cm4l1AzPMgK8hPQVKAYIGebG7sEwEIdCW/Uk2rlifUcrTBmEpNqSs8mhyzClHAjM
+         jnzaEUMmV6FQWnSeU+hyoH2e7duz3HhB2drsJcKfuADuky2l31/KWYXOKSZlBqje3EVm
+         0a4/49jp3FLMl2+QY30xpCiv0WUvp7O0DPURV/kyoeQLv7p26+fROKPBdSn70h8TcDZv
+         SKUg==
+X-Gm-Message-State: APjAAAU0q75H7CFrViAr2fWrGzsM6Bcv1w5xBdhmX54gfBSGo3/Y8QG9
+        R9RoVCI2E2m+w6XPoT3iK8Opvg==
+X-Google-Smtp-Source: APXvYqw5R7ojamwpGp9GNDYM/3FlDkueNtnfQMNYbHyZwrsXb2PfA9JrdUUz9Jm+0mWhZEM/oEFv/w==
+X-Received: by 2002:a1c:3587:: with SMTP id c129mr8953730wma.90.1565789177208;
+        Wed, 14 Aug 2019 06:26:17 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:2cae:66cd:dd43:92d9? ([2001:b07:6468:f312:2cae:66cd:dd43:92d9])
+        by smtp.gmail.com with ESMTPSA id z6sm25300600wre.76.2019.08.14.06.26.16
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 14 Aug 2019 06:26:16 -0700 (PDT)
+Subject: Re: [PATCH V2 1/3] x86/Hyper-V: Fix definition of struct
+ hv_vp_assist_page
+To:     lantianyu1986@gmail.com, rkrcmar@redhat.com, corbet@lwn.net,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        daniel.lezcano@linaro.org, arnd@arndb.de,
         michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH V2 2/2] clocksource/Hyper-V:  Add Hyper-V specific sched clock function
-Date:   Wed, 14 Aug 2019 20:32:16 +0800
-Message-Id: <20190814123216.32245-3-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20190814123216.32245-1-Tianyu.Lan@microsoft.com>
-References: <20190814123216.32245-1-Tianyu.Lan@microsoft.com>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, vkuznets@redhat.com
+References: <20190814073447.96141-1-Tianyu.Lan@microsoft.com>
+ <20190814073447.96141-2-Tianyu.Lan@microsoft.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <a73173b2-da31-b5fc-394f-462c7e0bf1d4@redhat.com>
+Date:   Wed, 14 Aug 2019 15:26:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190814073447.96141-2-Tianyu.Lan@microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On 14/08/19 09:34, lantianyu1986@gmail.com wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> The struct hv_vp_assist_page was defined incorrectly.
+> The "vtl_control" should be u64[3], "nested_enlightenments
+> _control" should be a u64 and there is 7 reserved bytes
+> following "enlighten_vmentry". This patch is to fix it.
 
-Hyper-V guests use the default native_sched_clock() in pv_ops.time.sched_clock
-on x86.  But native_sched_clock() directly uses the raw TSC value, which
-can be discontinuous in a Hyper-V VM. Add the generic hv_setup_sched_clock()
-to set the sched clock function appropriately. On x86, this sets pv_ops.time.
-sched_clock to read the Hyper-V reference TSC value that is scaled and adjusted
-to be continuous.
+How did the assignment to vp_ap->current_nested_vmcs work then?  Does
+the guest simply not care?
 
-Also move the Hyper-V reference TSC initialization much earlier in the boot
-process so no discontinuity is observed when pv_ops.time.sched_clock
-calculates its offset.
+Paolo
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- arch/x86/hyperv/hv_init.c          |  2 --
- arch/x86/kernel/cpu/mshyperv.c     |  8 ++++++++
- drivers/clocksource/hyperv_timer.c | 22 ++++++++++++----------
- include/asm-generic/mshyperv.h     |  1 +
- 4 files changed, 21 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 0d258688c8cf..866dfb3dca48 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -301,8 +301,6 @@ void __init hyperv_init(void)
- 
- 	x86_init.pci.arch_init = hv_pci_init;
- 
--	/* Register Hyper-V specific clocksource */
--	hv_init_clocksource();
- 	return;
- 
- remove_cpuhp_state:
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 062f77279ce3..53afd33990eb 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -29,6 +29,7 @@
- #include <asm/timer.h>
- #include <asm/reboot.h>
- #include <asm/nmi.h>
-+#include <clocksource/hyperv_timer.h>
- 
- struct ms_hyperv_info ms_hyperv;
- EXPORT_SYMBOL_GPL(ms_hyperv);
-@@ -338,9 +339,16 @@ static void __init ms_hyperv_init_platform(void)
- 		x2apic_phys = 1;
- # endif
- 
-+	/* Register Hyper-V specific clocksource */
-+	hv_init_clocksource();
- #endif
- }
- 
-+void hv_setup_sched_clock(void *sched_clock)
-+{
-+	pv_ops.time.sched_clock = sched_clock;
-+}
-+
- const __initconst struct hypervisor_x86 x86_hyper_ms_hyperv = {
- 	.name			= "Microsoft Hyper-V",
- 	.detect			= ms_hyperv_platform,
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 432aa331df04..dad8af198e20 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -215,6 +215,7 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
- #ifdef CONFIG_HYPERV_TSCPAGE
- 
- static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
-+static u64 hv_sched_clock_offset __ro_after_init;
- 
- struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- {
-@@ -222,7 +223,7 @@ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- }
- EXPORT_SYMBOL_GPL(hv_get_tsc_page);
- 
--static u64 notrace read_hv_sched_clock_tsc(void)
-+static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
- {
- 	u64 current_tick = hv_read_tsc_page(&tsc_pg);
- 
-@@ -232,9 +233,9 @@ static u64 notrace read_hv_sched_clock_tsc(void)
- 	return current_tick;
- }
- 
--static u64 read_hv_clock_tsc(struct clocksource *arg)
-+static u64 read_hv_sched_clock_tsc(void)
- {
--	return read_hv_sched_clock_tsc();
-+	return read_hv_clock_tsc(NULL) - hv_sched_clock_offset;
- }
- 
- static struct clocksource hyperv_cs_tsc = {
-@@ -246,7 +247,7 @@ static struct clocksource hyperv_cs_tsc = {
- };
- #endif
- 
--static u64 notrace read_hv_sched_clock_msr(void)
-+static u64 notrace read_hv_clock_msr(struct clocksource *arg)
- {
- 	u64 current_tick;
- 	/*
-@@ -258,9 +259,9 @@ static u64 notrace read_hv_sched_clock_msr(void)
- 	return current_tick;
- }
- 
--static u64 read_hv_clock_msr(struct clocksource *arg)
-+static u64 read_hv_sched_clock_msr(void)
- {
--	return read_hv_sched_clock_msr();
-+	return read_hv_clock_msr(NULL) - hv_sched_clock_offset;
- }
- 
- static struct clocksource hyperv_cs_msr = {
-@@ -298,8 +299,9 @@ static bool __init hv_init_tsc_clocksource(void)
- 	hv_set_clocksource_vdso(hyperv_cs_tsc);
- 	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
- 
--	/* sched_clock_register is needed on ARM64 but is a no-op on x86 */
--	sched_clock_register(read_hv_sched_clock_tsc, 64, HV_CLOCK_HZ);
-+	hv_sched_clock_offset = hyperv_cs->read(hyperv_cs);
-+	hv_setup_sched_clock(read_hv_sched_clock_tsc);
-+
- 	return true;
- }
- #else
-@@ -329,7 +331,7 @@ void __init hv_init_clocksource(void)
- 	hyperv_cs = &hyperv_cs_msr;
- 	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
- 
--	/* sched_clock_register is needed on ARM64 but is a no-op on x86 */
--	sched_clock_register(read_hv_sched_clock_msr, 64, HV_CLOCK_HZ);
-+	hv_sched_clock_offset = hyperv_cs->read(hyperv_cs);
-+	hv_setup_sched_clock(read_hv_sched_clock_msr);
- }
- EXPORT_SYMBOL_GPL(hv_init_clocksource);
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 0becb7d9704d..18d8e2d8210f 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -167,6 +167,7 @@ void hyperv_report_panic(struct pt_regs *regs, long err);
- void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
- bool hv_is_hyperv_initialized(void);
- void hyperv_cleanup(void);
-+void hv_setup_sched_clock(void *sched_clock);
- #else /* CONFIG_HYPERV */
- static inline bool hv_is_hyperv_initialized(void) { return false; }
- static inline void hyperv_cleanup(void) {}
--- 
-2.14.5
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> --
+> Change since v1:
+>        Move definition of struct hv_nested_enlightenments_control
+>        into this patch to fix offset issue.
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index af78cd72b8f3..cf0b2a04271d 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -514,14 +514,24 @@ struct hv_timer_message_payload {
+>  	__u64 delivery_time;	/* When the message was delivered */
+>  } __packed;
+>  
+> +struct hv_nested_enlightenments_control {
+> +	struct {
+> +		__u32 directhypercall:1;
+> +		__u32 reserved:31;
+> +	} features;
+> +	struct {
+> +		__u32 reserved;
+> +	} hypercallControls;
+> +} __packed;
+> +
+>  /* Define virtual processor assist page structure. */
+>  struct hv_vp_assist_page {
+>  	__u32 apic_assist;
+> -	__u32 reserved;
+> -	__u64 vtl_control[2];
+> -	__u64 nested_enlightenments_control[2];
+> -	__u32 enlighten_vmentry;
+> -	__u32 padding;
+> +	__u32 reserved1;
+> +	__u64 vtl_control[3];
+> +	struct hv_nested_enlightenments_control nested_control;
+> +	__u8 enlighten_vmentry;
+> +	__u8 reserved2[7];
+>  	__u64 current_nested_vmcs;
+>  } __packed;
+>  
+> 
 
