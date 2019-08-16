@@ -2,132 +2,222 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CCE18F17D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Aug 2019 19:01:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A5B8FF76
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Aug 2019 11:52:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbfHORBs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 15 Aug 2019 13:01:48 -0400
-Received: from mail-eopbgr750131.outbound.protection.outlook.com ([40.107.75.131]:28414
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729157AbfHORBr (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 15 Aug 2019 13:01:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H/Ypsij+LaKYHWY4ZL5QMpruMJoBKRy4DuuWwoPy3W6ybxBb+pKFBBLexkrYD4usEQE7y5ivxdtqraK+BtIzMLvp5g2vusFByEeq0lIdKZp/rvUfOxciMWQIoK1lLZI3RAG2TqF6KbglkB+FrLFqnl43wye27T1jU4Hqd3YgEtR+vlJgIhKZsw2tPRC49OQ9hgIhojISe0O3r5xV2MtCIo/1enqbNTDRTDBDspQX5JPh1TaiEMkxRajdVFF2WlgrvCbpw9QSRLmUR0ZNU9Pn/B3bI0l9nAT3/hQplPNXRRMISPN8GB3gzj40xMmEKPtPMP6idMcgrWDe9+mVw7Sacg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zgcDpRUMjuJAWhzK2bog4nWoAxxCJh2WjK3u6Upsg9s=;
- b=PBA/3RjIXWpQ+vxQnCY6RTyOd5J5FQRWA6mUQteJTGceeat+CKzVfuSj9zqMHdPcbN9rGT4eJctU2PWALMEM/QWUaL8/lETie7v1KfbzLKwchSS405UDheftXcVbLBQ23UiV+OOyUukCq7MrWgaCPUkvOnF2ulngkqa1qSExJQo1dO3DvQq0SVYmaOH3PjXIdTz94etxVobunhyjW+M8Z3e6KhZUQi6GcGeKx/BjLjtx5yGa0dmWCD9eh3iigfXsIzHRbPkUV1o/ZuR5J7Bk/QB9AyEVZhugIZ6IFP2Wi1weDrIJTWeCS8jaW1lRRInOwDo6mWRTEAi8DrbaDSi/uQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zgcDpRUMjuJAWhzK2bog4nWoAxxCJh2WjK3u6Upsg9s=;
- b=UH1q53gXOETtBLTOUZUlUmj/CT8fhtVTmonnuANCw6npAfPmGROKoc6F8YfVxTL9rPNiUARQuctvau7sD46ZRa+ORyz2E7CHog+Mbir12MU+tUWcfY879V0OU+4WtzhRUPPp31unmny4/pOOMwMuX0tdVdpVxzYyvcf9v3+M1/E=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1306.namprd21.prod.outlook.com (20.179.52.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.11; Thu, 15 Aug 2019 17:01:45 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Thu, 15 Aug 2019
- 17:01:45 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
+        id S1726845AbfHPJwR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Aug 2019 05:52:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:54360 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbfHPJwR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 16 Aug 2019 05:52:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDA8328;
+        Fri, 16 Aug 2019 02:52:16 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 699173F706;
+        Fri, 16 Aug 2019 02:52:15 -0700 (PDT)
+Date:   Fri, 16 Aug 2019 10:52:08 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6,2/2] PCI: hv: Use bytes 4 and 5 from instance ID as the PCI
- domain numbers
-Thread-Topic: [PATCH v6,2/2] PCI: hv: Use bytes 4 and 5 from instance ID as
- the PCI domain numbers
-Thread-Index: AQHVU4seoLCJ4XnpvECmtlYiCdCsfg==
-Date:   Thu, 15 Aug 2019 17:01:45 +0000
-Message-ID: <1565888460-38694-2-git-send-email-haiyangz@microsoft.com>
+Subject: Re: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
+ collision
+Message-ID: <20190816095208.GA23677@e121166-lin.cambridge.arm.com>
 References: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR13CA0008.namprd13.prod.outlook.com
- (2603:10b6:300:16::18) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 10df0480-5fc3-44e9-9e5a-08d721a23fd5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1306;
-x-ms-traffictypediagnostic: DM6PR21MB1306:|DM6PR21MB1306:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB13061F2327E38A65553A4FB5ACAC0@DM6PR21MB1306.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01304918F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(199004)(189003)(52116002)(6506007)(26005)(2501003)(76176011)(6512007)(110136005)(316002)(66946007)(54906003)(7736002)(305945005)(22452003)(66556008)(4720700003)(6486002)(64756008)(8676002)(102836004)(3846002)(66446008)(99286004)(66476007)(6392003)(7846003)(6436002)(14454004)(6116002)(386003)(2906002)(476003)(2616005)(486006)(446003)(11346002)(36756003)(25786009)(10290500003)(81166006)(478600001)(81156014)(66066001)(256004)(14444005)(50226002)(2201001)(5660300002)(186003)(8936002)(10090500001)(53936002)(71200400001)(71190400001)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1306;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WPhcGPc8764MwueafTvc+/BPlDOJUjWHWnH/tgcWykB+f+rKpis8CB6U7HeLGZpOgDc6QepQ9UiDtTFNeIrurzDds2QyGaucpw7ZT7/biVAfDreBcKTwhNYyCCwSWzyDjabWfnBEtTBhTYy0Uzmqjsndq6+m2tKuPkiTy98SE07BBqn0OrraFFspiH+5OScuNvoa7OGoJUQQ00pirBm8zP5wPj/uufjMEIz8ea8LbFiqIjLn3joC2MWsLGgRvZ6ak3ZyGp0F5d1RlY26lz2oluCglnYwmjWNxICUjVKhe03ojiPnjJHqmD9HHHuQKSHJA4qxRHDVe39KMJv5LDDlvVIs5/z7oSrLRwsE85i3vs8l6Vau1lC/7vWLg9J//iuQUP88MHBgTK9vxuWhtT0ligfv/uUvPs0xWeXVv3zA7Cw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10df0480-5fc3-44e9-9e5a-08d721a23fd5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Aug 2019 17:01:45.0698
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ySmzuOeHv4FtjLGB/2aSg35cBH/nDIt8auJT7DSIGlD8f0tQbibwWCeDdZYeWBe1qbDzvG8Dua4TJmSCmSuhXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1306
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-As recommended by Azure host team, the bytes 4, 5 have more uniqueness
-(info entropy) than bytes 8, 9. So now we use bytes 4, 5 as the PCI domain
-numbers. On older hosts, bytes 4, 5 can also be used -- no backward
-compatibility issues here. The chance of collision is greatly reduced.
+On Thu, Aug 15, 2019 at 05:01:37PM +0000, Haiyang Zhang wrote:
+> Currently in Azure cloud, for passthrough devices, the host sets the device
+> instance ID's bytes 8 - 15 to a value derived from the host HWID, which is
+> the same on all devices in a VM. So, the device instance ID's bytes 8 and 9
+> provided by the host are no longer unique. This affects all Azure hosts
+> since July 2018, and can cause device passthrough to VMs to fail because
+> the bytes 8 and 9 are used as PCI domain number. Collision of domain
+> numbers will cause the second device with the same domain number fail to
+> load.
+> 
+> In the cases of collision, we will detect and find another number that is
+> not in use.
+> 
+> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Acked-by: Sasha Levin <sashal@kernel.org>
 
-In the rare cases of collision, the driver code detects and finds another
-number that is not in use.
+I assume you will take care of backporting and sending this patch
+to stable kernels given that you have not applied any tag with
+such request.
 
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Acked-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pci-hyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I appreciate it may not be easy to define but a Fixes: tag would help.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
-ci-hyperv.c
-index 31b8fd5..4f3d97e 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2590,7 +2590,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	 * (2) There will be no overlap between domains (after fixing possible
- 	 * collisions) in the same VM.
- 	 */
--	dom_req =3D hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
-+	dom_req =3D hdev->dev_instance.b[5] << 8 | hdev->dev_instance.b[4];
- 	dom =3D hv_get_dom_num(dom_req);
-=20
- 	if (dom =3D=3D HVPCI_DOM_INVALID) {
---=20
-1.8.3.1
+Thanks,
+Lorenzo
 
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 92 +++++++++++++++++++++++++++++++------
+>  1 file changed, 79 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 40b6254..31b8fd5 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2510,6 +2510,48 @@ static void put_hvpcibus(struct hv_pcibus_device *hbus)
+>  		complete(&hbus->remove_event);
+>  }
+>  
+> +#define HVPCI_DOM_MAP_SIZE (64 * 1024)
+> +static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
+> +
+> +/*
+> + * PCI domain number 0 is used by emulated devices on Gen1 VMs, so define 0
+> + * as invalid for passthrough PCI devices of this driver.
+> + */
+> +#define HVPCI_DOM_INVALID 0
+> +
+> +/**
+> + * hv_get_dom_num() - Get a valid PCI domain number
+> + * Check if the PCI domain number is in use, and return another number if
+> + * it is in use.
+> + *
+> + * @dom: Requested domain number
+> + *
+> + * return: domain number on success, HVPCI_DOM_INVALID on failure
+> + */
+> +static u16 hv_get_dom_num(u16 dom)
+> +{
+> +	unsigned int i;
+> +
+> +	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
+> +		return dom;
+> +
+> +	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
+> +		if (test_and_set_bit(i, hvpci_dom_map) == 0)
+> +			return i;
+> +	}
+> +
+> +	return HVPCI_DOM_INVALID;
+> +}
+> +
+> +/**
+> + * hv_put_dom_num() - Mark the PCI domain number as free
+> + * @dom: Domain number to be freed
+> + */
+> +static void hv_put_dom_num(u16 dom)
+> +{
+> +	clear_bit(dom, hvpci_dom_map);
+> +}
+> +
+>  /**
+>   * hv_pci_probe() - New VMBus channel probe, for a root PCI bus
+>   * @hdev:	VMBus's tracking struct for this root PCI bus
+> @@ -2521,6 +2563,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  			const struct hv_vmbus_device_id *dev_id)
+>  {
+>  	struct hv_pcibus_device *hbus;
+> +	u16 dom_req, dom;
+>  	int ret;
+>  
+>  	/*
+> @@ -2535,19 +2578,34 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	hbus->state = hv_pcibus_init;
+>  
+>  	/*
+> -	 * The PCI bus "domain" is what is called "segment" in ACPI and
+> -	 * other specs.  Pull it from the instance ID, to get something
+> -	 * unique.  Bytes 8 and 9 are what is used in Windows guests, so
+> -	 * do the same thing for consistency.  Note that, since this code
+> -	 * only runs in a Hyper-V VM, Hyper-V can (and does) guarantee
+> -	 * that (1) the only domain in use for something that looks like
+> -	 * a physical PCI bus (which is actually emulated by the
+> -	 * hypervisor) is domain 0 and (2) there will be no overlap
+> -	 * between domains derived from these instance IDs in the same
+> -	 * VM.
+> +	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+> +	 * specs. Pull it from the instance ID, to get something usually
+> +	 * unique. In rare cases of collision, we will find out another number
+> +	 * not in use.
+> +	 *
+> +	 * Note that, since this code only runs in a Hyper-V VM, Hyper-V
+> +	 * together with this guest driver can guarantee that (1) The only
+> +	 * domain used by Gen1 VMs for something that looks like a physical
+> +	 * PCI bus (which is actually emulated by the hypervisor) is domain 0.
+> +	 * (2) There will be no overlap between domains (after fixing possible
+> +	 * collisions) in the same VM.
+>  	 */
+> -	hbus->sysdata.domain = hdev->dev_instance.b[9] |
+> -			       hdev->dev_instance.b[8] << 8;
+> +	dom_req = hdev->dev_instance.b[8] << 8 | hdev->dev_instance.b[9];
+> +	dom = hv_get_dom_num(dom_req);
+> +
+> +	if (dom == HVPCI_DOM_INVALID) {
+> +		dev_err(&hdev->device,
+> +			"Unable to use dom# 0x%hx or other numbers", dom_req);
+> +		ret = -EINVAL;
+> +		goto free_bus;
+> +	}
+> +
+> +	if (dom != dom_req)
+> +		dev_info(&hdev->device,
+> +			 "PCI dom# 0x%hx has collision, using 0x%hx",
+> +			 dom_req, dom);
+> +
+> +	hbus->sysdata.domain = dom;
+>  
+>  	hbus->hdev = hdev;
+>  	refcount_set(&hbus->remove_lock, 1);
+> @@ -2562,7 +2620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  					   hbus->sysdata.domain);
+>  	if (!hbus->wq) {
+>  		ret = -ENOMEM;
+> -		goto free_bus;
+> +		goto free_dom;
+>  	}
+>  
+>  	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+> @@ -2639,6 +2697,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	vmbus_close(hdev->channel);
+>  destroy_wq:
+>  	destroy_workqueue(hbus->wq);
+> +free_dom:
+> +	hv_put_dom_num(hbus->sysdata.domain);
+>  free_bus:
+>  	free_page((unsigned long)hbus);
+>  	return ret;
+> @@ -2720,6 +2780,9 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  	put_hvpcibus(hbus);
+>  	wait_for_completion(&hbus->remove_event);
+>  	destroy_workqueue(hbus->wq);
+> +
+> +	hv_put_dom_num(hbus->sysdata.domain);
+> +
+>  	free_page((unsigned long)hbus);
+>  	return 0;
+>  }
+> @@ -2747,6 +2810,9 @@ static void __exit exit_hv_pci_drv(void)
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	/* Set the invalid domain number's bit, so it will not be used */
+> +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+> +
+>  	return vmbus_driver_register(&hv_pci_drv);
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
