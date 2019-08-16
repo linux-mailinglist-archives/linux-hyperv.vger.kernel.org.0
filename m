@@ -2,147 +2,310 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AC679011F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Aug 2019 14:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41A929017E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Aug 2019 14:27:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfHPMK2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Aug 2019 08:10:28 -0400
-Received: from mail-eopbgr790128.outbound.protection.outlook.com ([40.107.79.128]:2403
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727022AbfHPMK2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Aug 2019 08:10:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gp+nJKa/HtU2+O9RaamkooPC07KyW7JyBITZL5i0eEJZ4XMjZKoZwBfqmytM8l0jkBLfNfPtB0cVACtllkBxY5XbBFVwkdQUJW04EUHGaIXB9QWRo3KPeWO1Fs8IpFusEU6XWZUKBYe6bcJ8Sgu226Tmf1NQJmRAr0p5rUfsfzQvuHs3j034scWlRPO7ZHjBfTYvjyDuYRsZF7uZYzbffW+gZV+gZWy5umOwaccWaS1E3S9/7i6p82hqjAFK5UqiI9m6rCfKjbX6aKuxMt7d54pWZqxzIfHNAO2DmuNXgX47m2/U1fG7lpDRqNj16RlDvUghSQDBOaxn0Nd8jE+utA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kkLzh6ohCU+Upn4/chf50IZRMev5DmD4TWoJX/sEqm0=;
- b=kNK2LPkHY6DCMo83hidDkBr+ADzWpnhwt7bUY5wXIHa/h7OU43TUE+za10nCclL97yl2EsApPFCM8cS7k/8pn0CuXLgg32uHmI2KRJUIvurzKao1UESuuoBD/m5d9KIVF95JMmoiQL14sRTR7f73KXZQuKCswa2/nfza0z2WwCBwm8wDycI8J7nRwsva17aNLgD9OBvlFAruZJkt6/f1A/n1GPG5P3DINNPVsMH8eN2YBJ9gOJKgLfv4gov4scXrfllMJTjwLFuTLY3AQzeQLKJ5lTnZs2lWCRmWOUq6I/qTx345kVBaLNF5S0+neX5Pbbpjj7UUCwY25nfVFLs/0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kkLzh6ohCU+Upn4/chf50IZRMev5DmD4TWoJX/sEqm0=;
- b=EpCH6wYjJb3bO1NyNcrvdTdoa2dqbmi3817QCa8mM+ZhX/7sODyTnjOIkNhGeMSbpJ4JdSjcBAqArfqGoyOJK8wJUiaUJeNXdxIo2XrsJ+1ZY1QAs/gyVGqmvcQ7zBEGbzZwzcB93Kp9nw9esu7oPAF/uTFGfUFHTnmN5QPhCxI=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1306.namprd21.prod.outlook.com (20.179.52.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.11; Fri, 16 Aug 2019 12:10:11 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2199.007; Fri, 16 Aug 2019
- 12:10:11 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        id S1727169AbfHPM1f (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Aug 2019 08:27:35 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40328 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbfHPM1f (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 16 Aug 2019 08:27:35 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so3936000wmj.5
+        for <linux-hyperv@vger.kernel.org>; Fri, 16 Aug 2019 05:27:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=i8GTKczDao+f0rWi7nMc/7vSnceCGi95sUaqyHpV3eo=;
+        b=PNv7Hvv5K0sQ/6jwpEXroew7p8BlB7y3dS0Ba85Q61PaMIXwT22LVrQXMOM3W3FBwL
+         ZGIP39JoPdbKElQjhZSmBt2Cg2iWIWUqyL8JV1q3F8RoAbyRoRPM6GBBoqMs71BNF85r
+         OZrnC5wc3lXYI+C1dkQoYix+FCSs7AQ+9jJJ2s7S599yl6Yq35aznntQe8GRS3YoeVVm
+         0roY3PvROydjWhSgroNpXO3NwEjIpCxnJ5V+y3dJw2S7Xyq1lSN7/Gt7OlWo67I7S2sC
+         mKAoakQAstYhHCZ7Yj7+vevTLeFa4o9Pl0pyhtlD6PsSjIudkG1xnHVlhA2GCxpQr4VM
+         N+qg==
+X-Gm-Message-State: APjAAAW5brZVsG/rKi2K85/2upxVSWqxF65RzCfWUWbmQ0pZfysrAlGN
+        H0dQ3VQHSqFwPSEJNR/P6TDdfA==
+X-Google-Smtp-Source: APXvYqz5POVD8d0hDu3+HT/ogWFdIQxctT6BfNfWDcMulU0XWKLX3/LVv51Y/SwlMMtXIWFDIGGCzw==
+X-Received: by 2002:a05:600c:24d0:: with SMTP id 16mr6960658wmu.83.1565958452915;
+        Fri, 16 Aug 2019 05:27:32 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id l3sm8609082wrb.41.2019.08.16.05.27.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2019 05:27:32 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
+        "leon\@kernel.org" <leon@kernel.org>,
+        "eranbe\@mellanox.com" <eranbe@mellanox.com>,
+        "lorenzo.pieralisi\@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Topic: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Index: AQHVU4sZzIMW0sD7mkCdS1T3X/90YKb9iXIAgAAl90A=
-Date:   Fri, 16 Aug 2019 12:10:11 +0000
-Message-ID: <DM6PR21MB13371F6BCEF5FE4C2804B0FDCAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1565888460-38694-1-git-send-email-haiyangz@microsoft.com>
- <20190816095208.GA23677@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190816095208.GA23677@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-16T12:10:10.0116028Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f4e876b5-5a3c-444c-8962-ef2bdeef118e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3c0f7156-b776-46a7-e101-08d72242b05a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1306;
-x-ms-traffictypediagnostic: DM6PR21MB1306:|DM6PR21MB1306:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1306EF132F02DEE9CDFB9BCFCAAF0@DM6PR21MB1306.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(396003)(346002)(39860400002)(136003)(43544003)(199004)(13464003)(189003)(33656002)(76116006)(6506007)(305945005)(6916009)(7696005)(10090500001)(76176011)(26005)(9686003)(316002)(55016002)(66946007)(54906003)(7736002)(53546011)(66476007)(22452003)(66556008)(64756008)(52536014)(102836004)(8676002)(66446008)(99286004)(74316002)(3846002)(14454004)(229853002)(6436002)(6116002)(476003)(2906002)(66066001)(446003)(10290500003)(11346002)(81166006)(8990500004)(478600001)(4326008)(81156014)(25786009)(256004)(5660300002)(186003)(6246003)(8936002)(86362001)(53936002)(71190400001)(71200400001)(14444005)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1306;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: axwHO+ltufopO9ioJ6aZI2AQY4XuQ0UJn+egXmLw9pclCJLPODfMU68hxLZ3N17q7ckVQABRUk7m+nffmsEakAIal+J4Stkwqd2IFXwW2VhHWBMDSooozqcnWswL1pHa0RYd8DstscDZN3Ud+UNVG4OceL1hHI83DfDFzN5fa1+PggMf/u7SxZVTS4CwqZE6wwVQwgmBx+EzZE+AdCIMDcH8jyXUZHGS+fsUO8DFT4EiMLfO2Kr2PsW20xs4/WJzu4734mxajuDN6mbZvdAihiAkOxFBcvj2SAH5SzVoNj51ksb6q28LhUcmUVVVPmeG/8RxaDcY5qPehZbJGoOOrjJ7LV5dUYhwgQFOwMu3LJXngt6MR795RmIhj2dYuaHnw8C3cYDenerax3sEwahbde57RfOx5IPil7FJCjV5nak=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for software backchannel interface
+In-Reply-To: <1565809632-39138-3-git-send-email-haiyangz@microsoft.com>
+References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com> <1565809632-39138-3-git-send-email-haiyangz@microsoft.com>
+Date:   Fri, 16 Aug 2019 14:27:31 +0200
+Message-ID: <878srt8fd8.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c0f7156-b776-46a7-e101-08d72242b05a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 12:10:11.7080
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KguNFS2FknB19sckN/UkMDCQfoxBIAUzYv1XkBLWpue/GsXR3PYxMY3zDLAcDsXPaPp+GDFq4FOfOefB82SJsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1306
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Haiyang Zhang <haiyangz@microsoft.com> writes:
 
+> This mini driver is a helper driver allows other drivers to
+> have a common interface with the Hyper-V PCI frontend driver.
+>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+> ---
+>  MAINTAINERS                              |  1 +
+>  drivers/pci/Kconfig                      |  1 +
+>  drivers/pci/controller/Kconfig           |  7 ++++
+>  drivers/pci/controller/Makefile          |  1 +
+>  drivers/pci/controller/pci-hyperv-mini.c | 70 ++++++++++++++++++++++++++++++++
+>  drivers/pci/controller/pci-hyperv.c      | 12 ++++--
+>  include/linux/hyperv.h                   | 30 ++++++++++----
+>  7 files changed, 111 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/pci/controller/pci-hyperv-mini.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e352550..c4962b9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7453,6 +7453,7 @@ F:	drivers/hid/hid-hyperv.c
+>  F:	drivers/hv/
+>  F:	drivers/input/serio/hyperv-keyboard.c
+>  F:	drivers/pci/controller/pci-hyperv.c
+> +F:	drivers/pci/controller/pci-hyperv-mini.c
+>  F:	drivers/net/hyperv/
+>  F:	drivers/scsi/storvsc_drv.c
+>  F:	drivers/uio/uio_hv_generic.c
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 2ab9240..bb852f5 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -182,6 +182,7 @@ config PCI_LABEL
+>  config PCI_HYPERV
+>          tristate "Hyper-V PCI Frontend"
+>          depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+> +	select PCI_HYPERV_MINI
+>          help
+>            The PCI device frontend driver allows the kernel to import arbitrary
+>            PCI devices from a PCI backend to support PCI driver domains.
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index fe9f9f1..8e31cba 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -281,5 +281,12 @@ config VMD
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called vmd.
+>  
+> +config PCI_HYPERV_MINI
+> +	tristate "Hyper-V PCI Mini"
+> +	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+> +	help
+> +	  The Hyper-V PCI Mini is a helper driver allows other drivers to
+> +	  have a common interface with the Hyper-V PCI frontend driver.
+> +
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Friday, August 16, 2019 5:52 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; bhelgaas@google.com; linux-
-> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; KY Srinivasan
-> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH v6,1/2] PCI: hv: Detect and fix Hyper-V PCI domain
-> number collision
->=20
-> On Thu, Aug 15, 2019 at 05:01:37PM +0000, Haiyang Zhang wrote:
-> > Currently in Azure cloud, for passthrough devices, the host sets the
-> > device instance ID's bytes 8 - 15 to a value derived from the host
-> > HWID, which is the same on all devices in a VM. So, the device
-> > instance ID's bytes 8 and 9 provided by the host are no longer unique.
-> > This affects all Azure hosts since July 2018, and can cause device
-> > passthrough to VMs to fail because the bytes 8 and 9 are used as PCI
-> > domain number. Collision of domain numbers will cause the second
-> > device with the same domain number fail to load.
-> >
-> > In the cases of collision, we will detect and find another number that
-> > is not in use.
-> >
-> > Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > Acked-by: Sasha Levin <sashal@kernel.org>
->=20
-> I assume you will take care of backporting and sending this patch to stab=
-le
-> kernels given that you have not applied any tag with such request.
->=20
-> I appreciate it may not be easy to define but a Fixes: tag would help.
+Out of pure curiosity, why not just export this interface from
+PCI_HYPERV directly? Why do we need this stub?
 
-Sure, I will add a Fixes tag, and Cc stable. Usually Sasha from our team wi=
-ll
-do the stable porting in batches.
+>  source "drivers/pci/controller/dwc/Kconfig"
+>  endmenu
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index d56a507..77e0132 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -4,6 +4,7 @@ obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+>  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+>  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
+>  obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+> +obj-$(CONFIG_PCI_HYPERV_MINI) += pci-hyperv-mini.o
+>  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+>  obj-$(CONFIG_PCI_AARDVARK) += pci-aardvark.o
+>  obj-$(CONFIG_PCI_TEGRA) += pci-tegra.o
+> diff --git a/drivers/pci/controller/pci-hyperv-mini.c b/drivers/pci/controller/pci-hyperv-mini.c
+> new file mode 100644
+> index 0000000..9b6cd1c
+> --- /dev/null
+> +++ b/drivers/pci/controller/pci-hyperv-mini.c
+> @@ -0,0 +1,70 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) Microsoft Corporation.
+> + *
+> + * Author:
+> + *   Haiyang Zhang <haiyangz@microsoft.com>
+> + *
+> + * This mini driver is a helper driver allows other drivers to
+> + * have a common interface with the Hyper-V PCI frontend driver.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/hyperv.h>
+> +
+> +struct hyperv_pci_block_ops hvpci_block_ops;
+> +EXPORT_SYMBOL(hvpci_block_ops);
+> +
+> +int hyperv_read_cfg_blk(struct pci_dev *dev, void *buf, unsigned int buf_len,
+> +			unsigned int block_id, unsigned int *bytes_returned)
+> +{
+> +	if (!hvpci_block_ops.read_block)
+> +		return -EOPNOTSUPP;
+> +
+> +	return hvpci_block_ops.read_block(dev, buf, buf_len, block_id,
+> +					  bytes_returned);
+> +}
+> +EXPORT_SYMBOL(hyperv_read_cfg_blk);
+> +
+> +int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
+> +			 unsigned int block_id)
+> +{
+> +	if (!hvpci_block_ops.write_block)
+> +		return -EOPNOTSUPP;
+> +
+> +	return hvpci_block_ops.write_block(dev, buf, len, block_id);
+> +}
+> +EXPORT_SYMBOL(hyperv_write_cfg_blk);
+> +
+> +int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
+> +				void (*block_invalidate)(void *context,
+> +							 u64 block_mask))
+> +{
+> +	if (!hvpci_block_ops.reg_blk_invalidate)
+> +		return -EOPNOTSUPP;
+> +
+> +	return hvpci_block_ops.reg_blk_invalidate(dev, context,
+> +						  block_invalidate);
+> +}
+> +EXPORT_SYMBOL(hyperv_reg_block_invalidate);
+> +
+> +static void __exit exit_hv_pci_mini(void)
+> +{
+> +	pr_info("unloaded\n");
+> +}
+> +
+> +static int __init init_hv_pci_mini(void)
+> +{
+> +	pr_info("loaded\n");
+> +
+> +	return 0;
+> +}
+> +
+> +module_init(init_hv_pci_mini);
+> +module_exit(exit_hv_pci_mini);
+> +
+> +MODULE_DESCRIPTION("Hyper-V PCI Mini");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 57adeca..9c93ac2 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -983,7 +983,6 @@ int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+>  	*bytes_returned = comp_pkt.bytes_returned;
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL(hv_read_config_block);
+>  
+>  /**
+>   * hv_pci_write_config_compl() - Invoked when a response packet for a write
+> @@ -1070,7 +1069,6 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+>  
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL(hv_write_config_block);
+>  
+>  /**
+>   * hv_register_block_invalidate() - Invoked when a config block invalidation
+> @@ -1101,7 +1099,6 @@ int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+>  	return 0;
+>  
+>  }
+> -EXPORT_SYMBOL(hv_register_block_invalidate);
+>  
+>  /* Interrupt management hooks */
+>  static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+> @@ -3045,10 +3042,19 @@ static int hv_pci_remove(struct hv_device *hdev)
+>  static void __exit exit_hv_pci_drv(void)
+>  {
+>  	vmbus_driver_unregister(&hv_pci_drv);
+> +
+> +	hvpci_block_ops.read_block = NULL;
+> +	hvpci_block_ops.write_block = NULL;
+> +	hvpci_block_ops.reg_blk_invalidate = NULL;
+>  }
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	/* Initialize PCI block r/w interface */
+> +	hvpci_block_ops.read_block = hv_read_config_block;
+> +	hvpci_block_ops.write_block = hv_write_config_block;
+> +	hvpci_block_ops.reg_blk_invalidate = hv_register_block_invalidate;
+> +
+>  	return vmbus_driver_register(&hv_pci_drv);
+>  }
+>  
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index 9d37f8c..2afe6fd 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -1579,18 +1579,32 @@ struct vmpacket_descriptor *
+>  	    pkt = hv_pkt_iter_next(channel, pkt))
+>  
+>  /*
+> - * Functions for passing data between SR-IOV PF and VF drivers.  The VF driver
+> + * Interface for passing data between SR-IOV PF and VF drivers. The VF driver
+>   * sends requests to read and write blocks. Each block must be 128 bytes or
+>   * smaller. Optionally, the VF driver can register a callback function which
+>   * will be invoked when the host says that one or more of the first 64 block
+>   * IDs is "invalid" which means that the VF driver should reread them.
+>   */
+>  #define HV_CONFIG_BLOCK_SIZE_MAX 128
+> -int hv_read_config_block(struct pci_dev *dev, void *buf, unsigned int buf_len,
+> -			 unsigned int block_id, unsigned int *bytes_returned);
+> -int hv_write_config_block(struct pci_dev *dev, void *buf, unsigned int len,
+> -			  unsigned int block_id);
+> -int hv_register_block_invalidate(struct pci_dev *dev, void *context,
+> -				 void (*block_invalidate)(void *context,
+> -							  u64 block_mask));
+> +
+> +int hyperv_read_cfg_blk(struct pci_dev *dev, void *buf, unsigned int buf_len,
+> +			unsigned int block_id, unsigned int *bytes_returned);
+> +int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
+> +			 unsigned int block_id);
+> +int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
+> +				void (*block_invalidate)(void *context,
+> +							 u64 block_mask));
+> +
+> +struct hyperv_pci_block_ops {
+> +	int (*read_block)(struct pci_dev *dev, void *buf, unsigned int buf_len,
+> +			  unsigned int block_id, unsigned int *bytes_returned);
+> +	int (*write_block)(struct pci_dev *dev, void *buf, unsigned int len,
+> +			   unsigned int block_id);
+> +	int (*reg_blk_invalidate)(struct pci_dev *dev, void *context,
+> +				  void (*block_invalidate)(void *context,
+> +							   u64 block_mask));
+> +};
+> +
+> +extern struct hyperv_pci_block_ops hvpci_block_ops;
+> +
+>  #endif /* _HYPERV_H */
 
-Thanks,
-- Haiyang
+-- 
+Vitaly
