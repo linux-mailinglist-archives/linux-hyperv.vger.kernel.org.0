@@ -2,202 +2,222 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 621E990424
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Aug 2019 16:48:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E599044A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Aug 2019 17:00:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfHPOsx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Aug 2019 10:48:53 -0400
-Received: from mail-eopbgr730099.outbound.protection.outlook.com ([40.107.73.99]:13536
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727371AbfHPOsw (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Aug 2019 10:48:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E07gdw6I2l08cbgRvTnyjHr4JIU+VXSaHKA2KUYnYW+73OiNHzWI0cmAZo+64ruaBY3AwHp3+retQXbskVeQhih08UtFxod10j4OiHLtf6siXXBe+pTA6hWVT+HeS1YM0lDzE7jpzHhd3X012tSSooGsmOsDgPs06rPfGDo8CgzXYP0wCH22vg56BpWDjQdJd8ZKJyGVnkuVYYkN8rmRKNnc4IL3RyZbIw2x0k6aWjipB7pFqjNf/FnP9XKcsV+RjO0etixL9Fkpr6UmXPxHoh8KkZOvSCqcyYv7/F47geFD+RMrC9I6ilVS6ymx6eqc9/Vy/tFsw0QspIpe4k5qVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PY+tg+KOkgEb0DjfbyMaw5efnvppS83nBvwHLIRZBHk=;
- b=FfVYedURHwUfeTWT1144IHLVkpCQXCTGK80IoPQ+xRh9nsnMM1Jff2fMVWpBJPTAvrb4to7S3DXR0IyPDU862Kgqs8YU0aCmSb0ETgsss9p2GCV6PNAsLP0i4xYqeXd5ZypauaC2VfDeVU3OOEFZHLWAjCIf4KaEOHmrJYfMAtIRKIYgahxf6FcoDjF6ozmVqBZ/Ju/rQACfQrV9rSbVwiYq/rvoe2wthZ228M4RJnVDsRrmcuJ6eZrruqsQOLvw2fYy7ZrqvUvZkkWQJg53QMAZJNi3S7cR2HEbmjRwOgZNHVrl/LBT4C7rM+UByNEjer2Tyz9liwIjSFF6vLghDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PY+tg+KOkgEb0DjfbyMaw5efnvppS83nBvwHLIRZBHk=;
- b=KgIHaIpX5KvqBcILgsPmsTMd38Rdr9puGKOR8PMU5C7irbdW2D/cEVn1fJiUIO0gVIJzWg5irCmST5SFVGUWQsN4nsoqdTE7lnJbBG8U2VaESJaT5Nv/y4N4HXYEXxiNKzk8oErqpN28D/kLbYSCMG0zmFlPbG2j7z1kVu3kU78=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1292.namprd21.prod.outlook.com (20.179.52.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.5; Fri, 16 Aug 2019 14:48:48 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2199.007; Fri, 16 Aug 2019
- 14:48:48 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "eranbe@mellanox.com" <eranbe@mellanox.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for
- software backchannel interface
-Thread-Topic: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver for
- software backchannel interface
-Thread-Index: AQHVUtO4i0f5rhE14EmISE1mYwr8y6b9tkuAgAAliYA=
-Date:   Fri, 16 Aug 2019 14:48:48 +0000
-Message-ID: <DM6PR21MB13375FA0BA0220A91EF448E1CAAF0@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1565809632-39138-1-git-send-email-haiyangz@microsoft.com>
- <1565809632-39138-3-git-send-email-haiyangz@microsoft.com>
- <878srt8fd8.fsf@vitty.brq.redhat.com>
-In-Reply-To: <878srt8fd8.fsf@vitty.brq.redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-16T14:48:47.0931313Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=31ce1e32-5d60-43d7-ad92-451c2d4f5574;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 871fb072-934e-429e-c29d-08d72258d8be
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1292;
-x-ms-traffictypediagnostic: DM6PR21MB1292:|DM6PR21MB1292:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1292755D3E03992BAC7BDCFACAAF0@DM6PR21MB1292.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(13464003)(199004)(189003)(71200400001)(102836004)(55016002)(6246003)(54906003)(305945005)(478600001)(8676002)(81156014)(7696005)(25786009)(8990500004)(229853002)(7416002)(99286004)(14454004)(76176011)(81166006)(256004)(9686003)(4326008)(3846002)(2201001)(110136005)(2906002)(7736002)(6436002)(6116002)(74316002)(53936002)(33656002)(66946007)(316002)(2501003)(22452003)(71190400001)(86362001)(10290500003)(5660300002)(486006)(76116006)(446003)(64756008)(66556008)(11346002)(6506007)(26005)(66446008)(8936002)(10090500001)(66066001)(52536014)(186003)(53546011)(476003)(66476007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1292;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IIthBiS3KUpVZ7bZUBDHxE8s0f06PIOGJ8padxBJvqJEPBLtAPqKMoBI2uK1BG1sfRXK/4yhkPLZH+i6GRrsyJ7SsD3G9IWnptl7CRKbSgb8oWrK355cK4RCUM3gmyTK8XKBnd6yYcC+c8hDvKfbKkH9XWGmJ/6KmrOYUcz/4DyAwOtsMCaYFvVgQbNVdrkxNPvvE4jpNJbxxBZ18e7Eb7O3B3xZWe3i3s1NXlYJ6i7ULRibfgs4LFDg62TR2kNXJI3Gfogzi0GBRxm3s4E9wsNs8V8ZDZmiqyiFyd9dVrtl8TKx0UNLi6iCGVa0rqDZNHAtYj+zr+lKO/lFwHa5WtiY8lVOqGl6jaSxBfWa3UnTNwaIXfzQLUXHMa3Jlv4V0aO2QTshfa82xUdqnNCQzLLwSEFJnEsWrrqxe5GcVeo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727326AbfHPPA1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Aug 2019 11:00:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52931 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfHPPA1 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 16 Aug 2019 11:00:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o4so4292307wmh.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 16 Aug 2019 08:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eEktMynsAcH66TtPZndp2mGx6pMeqCeqO+5iafrtukI=;
+        b=RfKZ6skhAB1ZgZ6x27FSohEQSQS9goYWUB+/+tsJACDJHruX0U88Pk9tF/TIV5pjdb
+         UWESEOqzC46IYRLHA9LYVj7YzgO4W9sf4SGYxol6GxrVMK6I4u9QOIlvmgS0JTPPWbqm
+         WEU1Oa2z/dl+K9xwnGuKoit7j3davtBi+q5RTzpOne5jKcCXRdOoKQvnrSbHKuYT1Cnc
+         audeblUb7qROlVl8rH4+7IH5h5mg2jmWHM8cUcTP3kuLeS4XPwv+wPGZ3KaohtCVfpzY
+         EpirUD1e9NDADqOMmiGa9eP1JV44IZaJ+qF7SU1mpx7XJLSANPchhDLqUBktCOtH4Naf
+         KtcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eEktMynsAcH66TtPZndp2mGx6pMeqCeqO+5iafrtukI=;
+        b=X9RhJmZ+QWSYOZwg3NLkaqTKCCkP31mew15tUn7TQ38O9sQhXq+Bop7Z7PVIGzLYO5
+         hM/jU6LW7FPbt4zEmsGr53Gl5qevf7sS/A9PTFNszZwPmPMuyJkycky+y5YC59kvHxCy
+         cst5ru/0ex5SLFMk+RRInxlqqWfsva/jlIsaJKuPLk3HBA06gU9/JJPHbfO72r/Hy3VN
+         PHHEKGQ2kl7hvHGHt952W1zkzy6/t8GrSY6QWPxOKC4vPkRLMSgSDUwa7qrONbETLDND
+         dUOOTEUT2Xm/dZ0+U9beA5WnyEPqFP486JSxadViQqU0S8K57xH6JuHZtDQEQSWKrslt
+         8Vxw==
+X-Gm-Message-State: APjAAAWvbEXAQN4NiMyPBrrImYml0TZyDmSS0nnS7euX44pUI6ft7KwC
+        fHez/9vBDtNn8AqNceVZS1ET/A==
+X-Google-Smtp-Source: APXvYqw9JAzsdIazEnafgTHIxtSU/hEPo+MT5eK5Fu0cwHUxHNxWMumIdjl1WXANg+kI5NVRNzqbQA==
+X-Received: by 2002:a1c:238e:: with SMTP id j136mr7792008wmj.144.1565967624558;
+        Fri, 16 Aug 2019 08:00:24 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d4e8:1742:2f00:abef? ([2a01:e34:ed2f:f020:d4e8:1742:2f00:abef])
+        by smtp.googlemail.com with ESMTPSA id r16sm12475740wrc.81.2019.08.16.08.00.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 08:00:23 -0700 (PDT)
+Subject: Re: [PATCH V2 1/2] clocksource/Hyper-v: Allocate Hyper-V tsc page
+ statically
+To:     lantianyu1986@gmail.com, luto@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, arnd@arndb.de, michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20190814123216.32245-1-Tianyu.Lan@microsoft.com>
+ <20190814123216.32245-2-Tianyu.Lan@microsoft.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <78625f69-550d-212c-d3a0-89356ba98d2a@linaro.org>
+Date:   Fri, 16 Aug 2019 17:00:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 871fb072-934e-429e-c29d-08d72258d8be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 14:48:48.3438
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IvG1via0dNRD1krqyNGlWtNi87UMTsNNUyx3yYuLIoSQ7DuIC+oFY1PSChKbWHS+5JseSq3Dq+mSx1ID4DsJ/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1292
+In-Reply-To: <20190814123216.32245-2-Tianyu.Lan@microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On 14/08/2019 14:32, lantianyu1986@gmail.com wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> Prepare to add Hyper-V sched clock callback and move Hyper-V
+> Reference TSC initialization much earlier in the boot process.  Earlier
+> initialization is needed so that it happens while the timestamp value
+> is still 0 and no discontinuity in the timestamp will occur when
+> pv_ops.time.sched_clock calculates its offset.  The earlier
+> initialization requires that the Hyper-V TSC page be allocated
+> statically instead of with vmalloc(), so fixup the references
+> to the TSC page and the method of getting its physical address.
+> 
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+> ---
+>     Change since v1:
+>            - Update commit log
+>            - Remove and operation of tsc page's va with PAGE_MASK
+> 
+>  arch/x86/entry/vdso/vma.c          |  2 +-
+>  drivers/clocksource/hyperv_timer.c | 12 ++++--------
+>  2 files changed, 5 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+> index 349a61d8bf34..f5937742b290 100644
+> --- a/arch/x86/entry/vdso/vma.c
+> +++ b/arch/x86/entry/vdso/vma.c
+> @@ -122,7 +122,7 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+>  
+>  		if (tsc_pg && vclock_was_used(VCLOCK_HVCLOCK))
+>  			return vmf_insert_pfn(vma, vmf->address,
+> -					vmalloc_to_pfn(tsc_pg));
+> +					virt_to_phys(tsc_pg) >> PAGE_SHIFT);
+>  	}
+>  
+>  	return VM_FAULT_SIGBUS;
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index ba2c79e6a0ee..432aa331df04 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -214,17 +214,17 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
+>  
+>  #ifdef CONFIG_HYPERV_TSCPAGE
+>  
+> -static struct ms_hyperv_tsc_page *tsc_pg;
+> +static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
+>  
+>  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+>  {
+> -	return tsc_pg;
+> +	return &tsc_pg;
+>  }
+>  EXPORT_SYMBOL_GPL(hv_get_tsc_page);
+>  
+>  static u64 notrace read_hv_sched_clock_tsc(void)
+>  {
+> -	u64 current_tick = hv_read_tsc_page(tsc_pg);
+> +	u64 current_tick = hv_read_tsc_page(&tsc_pg);
+>  
+>  	if (current_tick == U64_MAX)
+>  		hv_get_time_ref_count(current_tick);
+> @@ -280,12 +280,8 @@ static bool __init hv_init_tsc_clocksource(void)
+>  	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+>  		return false;
+>  
+> -	tsc_pg = vmalloc(PAGE_SIZE);
+> -	if (!tsc_pg)
+> -		return false;
+> -
+>  	hyperv_cs = &hyperv_cs_tsc;
+> -	phys_addr = page_to_phys(vmalloc_to_page(tsc_pg));
+> +	phys_addr = virt_to_phys(&tsc_pg);
+>  
+>  	/*
+>  	 * The Hyper-V TLFS specifies to preserve the value of reserved
+> 
 
 
-> -----Original Message-----
-> From: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Sent: Friday, August 16, 2019 8:28 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>; sashal@kernel.org;
-> davem@davemloft.net; saeedm@mellanox.com; leon@kernel.org;
-> eranbe@mellanox.com; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
-> linux-pci@vger.kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan
-> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH net-next, 2/6] PCI: hv: Add a Hyper-V PCI mini driver=
- for
-> software backchannel interface
->=20
-> Haiyang Zhang <haiyangz@microsoft.com> writes:
->=20
-> > This mini driver is a helper driver allows other drivers to have a
-> > common interface with the Hyper-V PCI frontend driver.
-> >
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-> > ---
-> >  MAINTAINERS                              |  1 +
-> >  drivers/pci/Kconfig                      |  1 +
-> >  drivers/pci/controller/Kconfig           |  7 ++++
-> >  drivers/pci/controller/Makefile          |  1 +
-> >  drivers/pci/controller/pci-hyperv-mini.c | 70
-> ++++++++++++++++++++++++++++++++
-> >  drivers/pci/controller/pci-hyperv.c      | 12 ++++--
-> >  include/linux/hyperv.h                   | 30 ++++++++++----
-> >  7 files changed, 111 insertions(+), 11 deletions(-)  create mode
-> > 100644 drivers/pci/controller/pci-hyperv-mini.c
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS index e352550..c4962b9 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -7453,6 +7453,7 @@ F:	drivers/hid/hid-hyperv.c
-> >  F:	drivers/hv/
-> >  F:	drivers/input/serio/hyperv-keyboard.c
-> >  F:	drivers/pci/controller/pci-hyperv.c
-> > +F:	drivers/pci/controller/pci-hyperv-mini.c
-> >  F:	drivers/net/hyperv/
-> >  F:	drivers/scsi/storvsc_drv.c
-> >  F:	drivers/uio/uio_hv_generic.c
-> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig index
-> > 2ab9240..bb852f5 100644
-> > --- a/drivers/pci/Kconfig
-> > +++ b/drivers/pci/Kconfig
-> > @@ -182,6 +182,7 @@ config PCI_LABEL
-> >  config PCI_HYPERV
-> >          tristate "Hyper-V PCI Frontend"
-> >          depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
-> &&
-> > X86_64
-> > +	select PCI_HYPERV_MINI
-> >          help
-> >            The PCI device frontend driver allows the kernel to import a=
-rbitrary
-> >            PCI devices from a PCI backend to support PCI driver domains=
-.
-> > diff --git a/drivers/pci/controller/Kconfig
-> > b/drivers/pci/controller/Kconfig index fe9f9f1..8e31cba 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -281,5 +281,12 @@ config VMD
-> >  	  To compile this driver as a module, choose M here: the
-> >  	  module will be called vmd.
-> >
-> > +config PCI_HYPERV_MINI
-> > +	tristate "Hyper-V PCI Mini"
-> > +	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
-> && X86_64
-> > +	help
-> > +	  The Hyper-V PCI Mini is a helper driver allows other drivers to
-> > +	  have a common interface with the Hyper-V PCI frontend driver.
-> > +
->=20
-> Out of pure curiosity, why not just export this interface from PCI_HYPERV
-> directly? Why do we need this stub?
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-The pci_hyperv can only be loaded on VMs on Hyper-V and Azure. Other=20
-drivers like MLX5e will have symbolic dependency of pci_hyperv if they=20
-use functions exported by pci_hyperv. This dependency will cause other=20
-drivers fail to load on other platforms, like VMs on KVM. So we created=20
-this mini driver, which can be loaded on any platforms to provide the=20
-symbolic dependency.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-Thanks,
-- Haiyang
