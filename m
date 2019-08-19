@@ -2,144 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D7C7923A7
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Aug 2019 14:41:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B1EB9248F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Aug 2019 15:18:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfHSMlE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Aug 2019 08:41:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3572 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfHSMlE (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Aug 2019 08:41:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 05:41:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,403,1559545200"; 
-   d="scan'208";a="195528721"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Aug 2019 05:41:02 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id BEEB3128; Mon, 19 Aug 2019 15:41:01 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-hyperv@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH v2] Tools: hv: move to tools buildsystem
-Date:   Mon, 19 Aug 2019 15:41:00 +0300
-Message-Id: <20190819124100.81289-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.23.0.rc1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727487AbfHSNR6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Aug 2019 09:17:58 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40905 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfHSNR6 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 19 Aug 2019 09:17:58 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h3so964615pls.7;
+        Mon, 19 Aug 2019 06:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=aZ+5nrs0LMjDpHKkki7nAhcxgYSF9NknvkkgLtDTGPg=;
+        b=DEpiA+AQKlaUh3RF+A0tZaaCuPvzPryNNQGETkC05fPPFgLCBJEVRfWOmKQ1ziEoFj
+         0PubyaCZZn8frFwQksrf7erQSUkvwLZimSyuB+vonblyBB5nok7c0gNHiIWcvv3r9M1U
+         fKeX+BcrCw+VCzfoHHgdZ+4h7rP+p9Olgg5kKt5LrMu0XjnoJAEIAXMzx3/d/9wCe7Oc
+         G9BfFkm9svfl2GFqBSa3xBvAAa+jRnSSNGS7JUYdo/Dan45GObCNhtA+C6FcaeAxwGXW
+         ASlz1auo0fqa0wQKb0hbbpEOyfyFH5IUoK+iVAcV1fVy7J8KCdieL8ezBoq3F9r2lgrD
+         1T2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aZ+5nrs0LMjDpHKkki7nAhcxgYSF9NknvkkgLtDTGPg=;
+        b=WD1TjZgcHnjWjbSDq5sUm/QBxOMKmcHap02SkzD7B1M14UZon9gQ/eWuH0X5jEWwKO
+         z4iWH61MA+5PUbIrkXbTB0CyxIDWsX8mWs41MrUX4j/7qbDYX2spbyWv+CC51Ho+y5sm
+         tgqFceX6GROWWx5i12BHcnYXcXnBxLKK0Bok8HRf494OxPr4yheopWrdtLisSVLTT18p
+         t+hc2CSpJHvQVuK8TH9s8OOrkzq8qTg4M4GGQRb2rSiBs96nFbKmDlwpAcqq5iYmv/52
+         LIgDY0SpcKt7LXipM2ZWVhaFSX939Z38nmZTpe8U4kBPsg6EpbGdv3JI7CZqrodsIvCp
+         ++1A==
+X-Gm-Message-State: APjAAAVEGrOkIaZstyfyx3y3rHjWDziDKFoKQRTbAsVoBetIR1XSlJ1P
+        W6Znomk1ZgS1WVo7m2Z2zC4=
+X-Google-Smtp-Source: APXvYqwecO8PDw3ZtuO6GQH+gpgy16iXAFvZIPaahS3WlVOAzV7gXtbyN0+gxYyd2JNffYM6wmGAkA==
+X-Received: by 2002:a17:902:b094:: with SMTP id p20mr2016081plr.320.1566220677481;
+        Mon, 19 Aug 2019 06:17:57 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.114])
+        by smtp.googlemail.com with ESMTPSA id h20sm16184329pfq.156.2019.08.19.06.17.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 06:17:56 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com
+Subject: [PATCH V3 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
+Date:   Mon, 19 Aug 2019 21:17:34 +0800
+Message-Id: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-There is a nice buildsystem dedicated for userspace tools in Linux kernel tree.
-Switch Hyper-V daemons to be built by it.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-- fix commit message (Vitaly)
+This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
+in L0 can delegate L1 hypervisor to handle tlb flush request from
+L2 guest when direct tlb flush is enabled in L1.
 
- tools/hv/Build    |  3 +++
- tools/hv/Makefile | 51 +++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 44 insertions(+), 10 deletions(-)
- create mode 100644 tools/hv/Build
+Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
+feature from user space. User space should enable this feature only
+when Hyper-V hypervisor capability is exposed to guest and KVM profile
+is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
+We hope L2 guest doesn't use KVM hypercall when the feature is
+enabled. Detail please see comment of new API "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
 
-diff --git a/tools/hv/Build b/tools/hv/Build
-new file mode 100644
-index 000000000000..6cf51fa4b306
---- /dev/null
-+++ b/tools/hv/Build
-@@ -0,0 +1,3 @@
-+hv_kvp_daemon-y += hv_kvp_daemon.o
-+hv_vss_daemon-y += hv_vss_daemon.o
-+hv_fcopy_daemon-y += hv_fcopy_daemon.o
-diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-index 5db5e62cebda..b57143d9459c 100644
---- a/tools/hv/Makefile
-+++ b/tools/hv/Makefile
-@@ -1,28 +1,55 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for Hyper-V tools
--
--WARNINGS = -Wall -Wextra
--CFLAGS = $(WARNINGS) -g $(shell getconf LFS_CFLAGS)
--
--CFLAGS += -D__EXPORTED_HEADERS__ -I../../include/uapi -I../../include
-+include ../scripts/Makefile.include
- 
- sbindir ?= /usr/sbin
- libexecdir ?= /usr/libexec
- sharedstatedir ?= /var/lib
- 
--ALL_PROGRAMS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
-+ifeq ($(srctree),)
-+srctree := $(patsubst %/,%,$(dir $(CURDIR)))
-+srctree := $(patsubst %/,%,$(dir $(srctree)))
-+endif
-+
-+# Do not use make's built-in rules
-+# (this improves performance and avoids hard-to-debug behaviour);
-+MAKEFLAGS += -r
-+
-+override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
-+
-+ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
-+ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
- 
- ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
- 
- all: $(ALL_PROGRAMS)
- 
--%: %.c
--	$(CC) $(CFLAGS) -o $@ $^
-+export srctree OUTPUT CC LD CFLAGS
-+include $(srctree)/tools/build/Makefile.include
-+
-+HV_KVP_DAEMON_IN := $(OUTPUT)hv_kvp_daemon-in.o
-+$(HV_KVP_DAEMON_IN): FORCE
-+	$(Q)$(MAKE) $(build)=hv_kvp_daemon
-+$(OUTPUT)hv_kvp_daemon: $(HV_KVP_DAEMON_IN)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-+
-+HV_VSS_DAEMON_IN := $(OUTPUT)hv_vss_daemon-in.o
-+$(HV_VSS_DAEMON_IN): FORCE
-+	$(Q)$(MAKE) $(build)=hv_vss_daemon
-+$(OUTPUT)hv_vss_daemon: $(HV_VSS_DAEMON_IN)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-+
-+HV_FCOPY_DAEMON_IN := $(OUTPUT)hv_fcopy_daemon-in.o
-+$(HV_FCOPY_DAEMON_IN): FORCE
-+	$(Q)$(MAKE) $(build)=hv_fcopy_daemon
-+$(OUTPUT)hv_fcopy_daemon: $(HV_FCOPY_DAEMON_IN)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
- 
- clean:
--	$(RM) hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
-+	rm -f $(ALL_PROGRAMS)
-+	find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
- 
--install: all
-+install: $(ALL_PROGRAMS)
- 	install -d -m 755 $(DESTDIR)$(sbindir); \
- 	install -d -m 755 $(DESTDIR)$(libexecdir)/hypervkvpd; \
- 	install -d -m 755 $(DESTDIR)$(sharedstatedir); \
-@@ -33,3 +60,7 @@ install: all
- 	for script in $(ALL_SCRIPTS); do \
- 		install $$script -m 755 $(DESTDIR)$(libexecdir)/hypervkvpd/$${script%.sh}; \
- 	done
-+
-+FORCE:
-+
-+.PHONY: all install clean FORCE prepare
+Change since v2:
+       - Move hv assist page(hv_pa_pg) from struct kvm  to struct kvm_hv.
+
+Change since v1:
+       - Fix offset issue in the patch 1.
+       - Update description of KVM KVM_CAP_HYPERV_DIRECT_TLBFLUSH.
+
+
+Tianyu Lan (2):
+  x86/Hyper-V: Fix definition of struct hv_vp_assist_page
+  KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+
+Vitaly Kuznetsov (1):
+  KVM/Hyper-V/VMX: Add direct tlb flush support
+
+ Documentation/virtual/kvm/api.txt  | 13 +++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h | 24 ++++++++++++++++++-----
+ arch/x86/include/asm/kvm_host.h    |  4 ++++
+ arch/x86/kvm/vmx/evmcs.h           |  2 ++
+ arch/x86/kvm/vmx/vmx.c             | 39 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.c                 |  8 ++++++++
+ include/uapi/linux/kvm.h           |  1 +
+ 7 files changed, 86 insertions(+), 5 deletions(-)
+
 -- 
-2.23.0.rc1
+2.14.5
 
