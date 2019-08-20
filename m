@@ -2,57 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F09296DDD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Aug 2019 01:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99E5196DE0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Aug 2019 01:40:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfHTXj2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Aug 2019 19:39:28 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36382 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfHTXj2 (ORCPT
+        id S1726363AbfHTXkF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Aug 2019 19:40:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45028 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfHTXkF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:39:28 -0400
-Received: by mail-io1-f66.google.com with SMTP id o9so945287iom.3;
-        Tue, 20 Aug 2019 16:39:27 -0700 (PDT)
+        Tue, 20 Aug 2019 19:40:05 -0400
+Received: by mail-io1-f67.google.com with SMTP id j4so851897iop.11;
+        Tue, 20 Aug 2019 16:40:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=DeWtOKCyg/K8GqA/tTk3GSVBk93R4cXWzNOU+dJCafw=;
-        b=mtoyR/RPSRa8f0otaxOl+lWxBU5TLtVmCDtdzwk8unc7hdFaaJO6Y+nSCS9jx+d/XO
-         Q0w4t8N7ku0RwVVifHCMrfYwo/M1cAvB+z9PrDoVN1ouo5iH8AXuvAycsZqkvka2D2qp
-         Los2aA5H3XIdg09kLgyLrlFfrrXUr+yi3iMcZLL585T/wIX7/9AMHzwOmZE6/Ec9K+Hh
-         pqqcYS8gJD0QJ2636b9lFUv4Fl1BBNIsD0fDjHf7C5eOPbTRn4r+zwkdRplRA1NzArvs
-         kwQIT0zHIQf/jD0Vp46ZYQiXlJd11U77RW3mwJtNep/7rjeqo1Wrlbd0BhRpfbDHFgWm
-         1vMg==
+        bh=P0iyTqh26krI16pEQcPNV/5KL5JW20muCXy/cpunlA0=;
+        b=aAgr3O+HwAdCnNKvwfYZli7ccxjVweZNHhb0Me4AvQezHWfd8s8GcDJ7bI/9cLsbYr
+         WfR9i4gUHUZqsJRtzJSEm+iYarmKdlk2zLsWi1wd6gL+AeLL9A7ccHcSgWmzRCZqrbn7
+         gaLREyQkYWBj3B+505CfjoKfpcvjoeH3uH2Y8ix1eFqruMRchNGHkjW78AokWr/DdZ7a
+         dLdwSUHeucIFCZFCNBwmu+KFLrR4sJwJBdYix9d6eP4cjle2EeNVFCSzE15hEQilaAS3
+         q2aaP9hhZVBcH6PEZXVZXHsHz074EL/pDuhxg9mywzP3ZyRPquS+boiavvPKCCdtgduW
+         uZ+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DeWtOKCyg/K8GqA/tTk3GSVBk93R4cXWzNOU+dJCafw=;
-        b=tVCCxjbcfLKRajpweQW4jjvSkp+sIvQgm6DztcMT2zEZNoDCNGoLcef2jQKlYeF2UR
-         wpDnhHKMbe5PS04+tdpJeU69r4sOme05eeogKrhvIUFbtmI1uwTIOmQpSq7c6Z3kBHiz
-         01Jp8CTvyJxCJvqPr4/YJPlOaR7bK88Ij0FY1mk4blzOkAy/mjU/M87lRFOrM6+e1wBB
-         TI11l3xg5EyfVrl9T5EUu1myZkOk1giI+jaOjNj4+9CT34TBZwHJ5OrlfOkbLbscgcSx
-         D5RR14kFywsMehPmw0zQ09HZCKYexEnAPzSOc/g2TRFgX3l5Mig7m7LL3iRjvmpYYPwt
-         v+5g==
-X-Gm-Message-State: APjAAAVW6x613kBRJh2yetNTEN7ke3in9QE6sEEpbf6uGW0tZzkkFCxD
-        qQQYj29kIckFuhFHu2ao2dcvc/zqyJCI
-X-Google-Smtp-Source: APXvYqwtxZ7JBOmLpVMQej3nzE8VyU5BHEQpfj55vsktUnn1xgAqXTMMvdtud00uorFe27blCUBlqg==
-X-Received: by 2002:a6b:4a11:: with SMTP id w17mr3397938iob.21.1566344367427;
-        Tue, 20 Aug 2019 16:39:27 -0700 (PDT)
+        bh=P0iyTqh26krI16pEQcPNV/5KL5JW20muCXy/cpunlA0=;
+        b=lW9RG8NMHFGCmCq7AfCTB4uT+0MIblmtQbdaMv3by/vR+ZV2SnnSfn5ISUg0IcluKS
+         Jh653nLVj5edQczl3U8mrMSFmEr0RmM4gshbfURPbZwiaEYw+MNiCBLWd8Zo0Vrjf26A
+         uZDMY0OiRfMpJwV6C0NiOCkkXHZX8fFGnSecwj+cioohltcB8zFoKit6rYVgi44Q7YPO
+         pvM8u/R9rdEu57UIhuaKr0S6b7sFtFKkOkkJKoIyvpTc5D5mniX1ulGZwnInQhwoZ1hD
+         1062w1J33CfWQgAFgyERPOp0tMnd+gcvZY6vdCMMG8kP+9ledXPMG81CvLfndXOVuiQE
+         M6Aw==
+X-Gm-Message-State: APjAAAU3C0LYlAZzgPKZg/q6X8/4+yZ/suYHK0WMDcpgOX5JsY/6ODAd
+        lKzqy/PoD3TxYQZZYFQeMMEzZEDKo6yc
+X-Google-Smtp-Source: APXvYqwktECI5OlFhrdFpP5OOs60AMm9jkEebZ8s/hlFhAJmyz0nfpeXA32M1LGkac4YysK+xCu8XQ==
+X-Received: by 2002:a5d:9d58:: with SMTP id k24mr23083916iok.289.1566344404277;
+        Tue, 20 Aug 2019 16:40:04 -0700 (PDT)
 Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id y25sm19611034iol.59.2019.08.20.16.39.26
+        by smtp.gmail.com with ESMTPSA id e22sm14723802iog.2.2019.08.20.16.40.03
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 20 Aug 2019 16:39:27 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 19:39:25 -0400
+        Tue, 20 Aug 2019 16:40:03 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 19:40:01 -0400
 From:   Branden Bonaby <brandonbonaby94@gmail.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         sashal@kernel.org
 Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/3] drivers: hv: vmbus: add test attributes to debugfs
-Message-ID: <a17474c59601a98576f1e002a57192f6314b4aaf.1566340843.git.brandonbonaby94@gmail.com>
+Subject: [PATCH v3 3/3] tools: hv: add vmbus testing tool
+Message-ID: <c63cae8e916cbfa4a3fe627da3a545736d0b45dc.1566340843.git.brandonbonaby94@gmail.com>
 References: <cover.1566340843.git.brandonbonaby94@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -64,271 +64,370 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Expose the test parameters as part of the debugfs channel attributes.
-We will control the testing state via these attributes.
+This is a userspace tool to drive the testing. Currently it supports
+introducing user specified delay in the host to guest communication
+path on a per-channel basis.
 
 Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
 ---
 Changes in v3:
- - Change call to IS_ERR_OR_NULL, to IS_ERR.
+ - Align python tool to match Linux coding style.
 
 Changes in v2:
- - Move test attributes to debugfs.
- - Wrap test code under #ifdef statements.
- - Add new documentation file under Documentation/ABI/testing.
- - Make commit message reflect the change from from sysfs to debugfs.
+ - Move testing location to new location in debugfs.
 
- Documentation/ABI/testing/debugfs-hyperv |  21 +++
- MAINTAINERS                              |   1 +
- drivers/hv/vmbus_drv.c                   | 167 +++++++++++++++++++++++
- 3 files changed, 189 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-hyperv
+ tools/hv/vmbus_testing | 342 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 342 insertions(+)
+ create mode 100644 tools/hv/vmbus_testing
 
-diff --git a/Documentation/ABI/testing/debugfs-hyperv b/Documentation/ABI/testing/debugfs-hyperv
+diff --git a/tools/hv/vmbus_testing b/tools/hv/vmbus_testing
 new file mode 100644
-index 000000000000..b25f751fafa8
+index 000000000000..0f249f6ee698
 --- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-hyperv
-@@ -0,0 +1,21 @@
-+What:           /sys/kernel/debug/hyperv/<UUID>/fuzz_test_state
-+Date:           August 2019
-+KernelVersion:  5.3
-+Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-+Description:    Fuzz testing status of a vmbus device, whether its in an ON
-+                state or a OFF state
-+Users:          Debugging tools
++++ b/tools/hv/vmbus_testing
+@@ -0,0 +1,342 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++#
++# Program to allow users to fuzz test Hyper-V drivers
++# by interfacing with Hyper-V debugfs directories
++# author: Branden Bonaby
 +
-+What:           /sys/kernel/debug/hyperv/<UUID>/delay/fuzz_test_buffer_interrupt_delay
-+Date:           August 2019
-+KernelVersion:  5.3
-+Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-+Description:    Fuzz testing buffer delay value between 0 - 1000
-+Users:          Debugging tools
++import os
++import cmd
++import argparse
++from collections import defaultdict
++from argparse import RawDescriptionHelpFormatter
 +
-+What:           /sys/kernel/debug/hyperv/<UUID>/delay/fuzz_test_message_delay
-+Date:           August 2019
-+KernelVersion:  5.3
-+Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-+Description:    Fuzz testing message delay value between 0 - 1000
-+Users:          Debugging tools
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e81e60bd7c26..120284a8185f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7460,6 +7460,7 @@ F:	include/uapi/linux/hyperv.h
- F:	include/asm-generic/mshyperv.h
- F:	tools/hv/
- F:	Documentation/ABI/stable/sysfs-bus-vmbus
-+F:	Documentation/ABI/testing/debugfs-hyperv
- 
- HYPERBUS SUPPORT
- M:	Vignesh Raghavendra <vigneshr@ti.com>
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index ebd35fc35290..d2e47f04d172 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -919,6 +919,10 @@ static void vmbus_device_release(struct device *device)
- 	struct hv_device *hv_dev = device_to_hv_device(device);
- 	struct vmbus_channel *channel = hv_dev->channel;
- 
-+#ifdef CONFIG_HYPERV_TESTING
-+	hv_debug_rm_dev_dir(hv_dev);
-+#endif /* CONFIG_HYPERV_TESTING */
-+
- 	mutex_lock(&vmbus_connection.channel_mutex);
- 	hv_process_channel_removal(channel);
- 	mutex_unlock(&vmbus_connection.channel_mutex);
-@@ -1727,6 +1731,9 @@ int vmbus_device_register(struct hv_device *child_device_obj)
- 		pr_err("Unable to register primary channeln");
- 		goto err_kset_unregister;
- 	}
-+#ifdef CONFIG_HYPERV_TESTING
-+	hv_debug_add_dev_dir(child_device_obj);
-+#endif /* CONFIG_HYPERV_TESTING */
- 
- 	return 0;
- 
-@@ -2086,6 +2093,159 @@ static void hv_crash_handler(struct pt_regs *regs)
- 	hyperv_cleanup();
- };
- 
-+#ifdef CONFIG_HYPERV_TESTING
-+
-+struct dentry *hv_root;
-+
-+static int hv_debugfs_delay_get(void *data, u64 *val)
-+{
-+	*val = *(u32 *)data;
-+	return 0;
++# debugfs paths for vmbus must exist (same as in lsvmbus)
++debugfs_sys_path = "/sys/kernel/debug/hyperv"
++if not os.path.isdir(debugfs_sys_path):
++        print("{} doesn't exist/check permissions".format(debugfs_sys_path))
++        exit(-1)
++# Do not change unless, you change the debugfs attributes
++# in "/sys/kernel/debug/hyperv/<UUID>/". All fuzz testing
++# attributes will start with "fuzz_test".
++pathlen = len(debugfs_sys_path)
++fuzz_state_location = "fuzz_test_state"
++fuzz_states = {
++        0 : "Disable",
++        1 : "Enable"
 +}
 +
-+static int hv_debugfs_delay_set(void *data, u64 val)
-+{
-+	if (val >= 1 && val <= 1000)
-+		*(u32 *)data = val;
-+	/*Best to not use else statement here since we want
-+	 * the delay to remain the same if val > 1000
-+	 */
-+	else if (val <= 0)
-+		*(u32 *)data = 0;
-+	return 0;
++fuzz_methods = {
++        1 : "Delay_testing"
 +}
 +
-+DEFINE_DEBUGFS_ATTRIBUTE(hv_debugfs_delay_fops, hv_debugfs_delay_get,
-+			 hv_debugfs_delay_set, "%llu\n");
-+
-+/* Setup delay files to store test values */
-+int hv_debug_delay_files(struct hv_device *dev, struct dentry *root)
-+{
-+	struct vmbus_channel *channel = dev->channel;
-+	char *buffer = "fuzz_test_buffer_interrupt_delay";
-+	char *message = "fuzz_test_message_delay";
-+	int *buffer_val = &channel->fuzz_testing_interrupt_delay;
-+	int *message_val = &channel->fuzz_testing_message_delay;
-+	struct dentry *buffer_file, *message_file;
-+
-+	buffer_file = debugfs_create_file(buffer, 0644, root,
-+					  buffer_val,
-+					  &hv_debugfs_delay_fops);
-+	if (IS_ERR(buffer_file)) {
-+		pr_debug("debugfs_hyperv: file %s not created\n", buffer);
-+		return PTR_ERR(buffer_file);
-+	}
-+
-+	message_file = debugfs_create_file(message, 0644, root,
-+					   message_val,
-+					   &hv_debugfs_delay_fops);
-+	if (IS_ERR(message_file)) {
-+		pr_debug("debugfs_hyperv: file %s not created\n", message);
-+		return PTR_ERR(message_file);
-+	}
-+
-+	return 0;
++fuzz_delay_types = {
++        1 : "fuzz_test_buffer_interrupt_delay",
++        2 : "fuzz_test_message_delay"
 +}
 +
-+/* Setup test state value for vmbus device */
-+int hv_debug_set_test_state(struct hv_device *dev, struct dentry *root)
-+{
-+	struct vmbus_channel *channel = dev->channel;
-+	bool *state = &channel->fuzz_testing_state;
-+	char *status = "fuzz_test_state";
-+	struct dentry *test_state;
++def parse_args():
++        parser = argparse.ArgumentParser(description = "vmbus_testing "
++                "[-s] [0|1] [-q] [-p] <debugfs-path>\n""vmbus_testing [-s]"
++                " [0|1] [-q][-p] <debugfs-path> delay [-d] [val][val] [-E|-D]\n"
++                "vmbus_testing [-q] disable-all\n"
++                "vmbus_testing [-q] view [-v|-V]\n"
++                "vmbus_testing --version",
++                epilog = "Current testing options {}".format(fuzz_methods),
++                prog = 'vmbus_testing',
++                formatter_class = RawDescriptionHelpFormatter)
++        subparsers = parser.add_subparsers(dest = "action")
++        parser.add_argument("--version", action = "version",
++                        version = '%(prog)s 1.0')
++        parser.add_argument("-q","--quiet", action = "store_true",
++                        help = "silence none important test messages")
++        parser.add_argument("-s","--state", metavar = "", type = int,
++                        choices = range(0, 2),
++                        help = "Turn testing ON or OFF for a single device."
++                        " The value (1) will turn testing ON. The value"
++                        " of (0) will turn testing OFF with the default set"
++                        " to (0).")
++        parser.add_argument("-p","--path", metavar = "",
++                        help = "Refers to the debugfs path to a vmbus device."
++                        " If the path is not a valid path to a vmbus device,"
++                        " the program will exit. The path must be the"
++                        " absolute path; use the lsvmbus command to find"
++                        " the path.")
++        parser_delay = subparsers.add_parser("delay",
++                        help = "Delay buffer/message reads in microseconds.",
++                        description = "vmbus_testing -s [0|1] [-q] -p "
++                        "<debugfs-path> delay -d "
++                        "[buffer-delay-value] [message-delay-value]\n"
++                        "vmbus_testing [-q] delay [buffer-delay-value] "
++                                "[message-delay-value] -E\n"
++                        "vmbus_testing [-q] delay [buffer-delay-value] "
++                                "[message-delay-value] -D",
++                        formatter_class = RawDescriptionHelpFormatter)
++        delay_group = parser_delay.add_mutually_exclusive_group()
++        delay_group.add_argument("-E", "--en_all", action = "store_true",
++                        help = "Enable Buffer/Message Delay testing on ALL"
++                        " devices. Use -d option with this to set the values"
++                        " for both the buffer delay and the message delay. No"
++                        " value can be (0) or less than (-1). If testing is"
++                        " disabled on a device prior to running this command,"
++                        " testing will be enabled on the device as a result"
++                        " of this command.")
++        delay_group.add_argument("-D", "--dis_all", action = "store_true",
++                        help = "Disable Buffer/Message delay testing on ALL"
++                        " devices. A  value equal to (-1) will keep the"
++                        " current delay value, and a value equal to (0) will"
++                        " remove delay testing for the specfied delay column."
++                        " only values (-1) and (0) will be accepted but at"
++                        " least one value must be a (0) or a (-1).")
++        parser_delay.add_argument("-d", "--delay_time", metavar = "", nargs = 2,
++                        type = check_range, default = [0, 0], required = (True),
++                        help = "Buffer/message delay time. A value of (0) will"
++                        "disable delay testing on the specified delay column,"
++                        " while a value of (-1) will ignore the specified"
++                        " delay column. The default values are [0] & [0]."
++                        " The first column represents the buffer delay value"
++                        " and the second represents the message delay value."
++                        " Value constraints: -1 <= value <= 1000.")
++        parser_dis_all = subparsers.add_parser("disable-all",
++                        help = "Disable ALL testing on all vmbus devices.",
++                        description = "vmbus_testing disable-all",
++                        formatter_class = RawDescriptionHelpFormatter)
++        parser_view = subparsers.add_parser("view",
++                        help = "View testing on vmbus devices.",
++                        description = "vmbus_testing view -V\n"
++                        "vmbus_testing -p <debugfs-path> view -v",
++                        formatter_class = RawDescriptionHelpFormatter)
++        view_group = parser_view.add_mutually_exclusive_group()
++        view_group.add_argument("-V", "--view_all", action = "store_true",
++                        help = "View the test status for all vmbus devices.")
++        view_group.add_argument("-v", "--view_single", action = "store_true",
++                        help = "View test values for a single vmbus device.")
 +
-+	test_state = debugfs_create_bool(status, 0644, root, state);
-+	if (IS_ERR(test_state)) {
-+		pr_debug("debugfs_hyperv: file %s not created\n", status);
-+		return PTR_ERR(test_state);
-+	}
++        return  parser.parse_args()
 +
-+	return 0;
-+}
++# value checking for range checking input in parser
++def check_range(arg1):
++        try:
++                val = int(arg1)
++        except ValueError as err:
++                raise argparse.ArgumentTypeError(str(err))
++        if val < -1 or val > 1000:
++                message = ("\n\nExpected -1 <= value <= 1000, got value"
++                            " {}\n").format(val)
++                raise argparse.ArgumentTypeError(message)
++        return val
 +
-+/* Bind hv device to a dentry for debugfs */
-+void hv_debug_set_dir_dentry(struct hv_device *dev, struct dentry *root)
-+{
-+	if (hv_root)
-+		dev->debug_dir = root;
-+}
++def main():
++        try:
++                dev_list = []
++                for dir in os.listdir(debugfs_sys_path):
++                        dev_list.append(os.path.join(debugfs_sys_path, dir))
++                #key value, pairs
++                #key = debugfs device path
++                #value = list of fuzz testing attributes.
++                dev_files = defaultdict(list)
++                for dev in dev_list:
++                        path = os.path.join(dev, "delay")
++                        for f in os.listdir(path):
++                                if (f.startswith("fuzz_test")):
++                                        dev_files[path].append(f)
 +
-+/* Create all test dentry's and names for fuzz testing */
-+int hv_debug_add_dev_dir(struct hv_device *dev)
-+{
-+	const char *device = dev_name(&dev->device);
-+	char *delay_name = "delay";
-+	struct dentry *delay, *dev_root;
-+	int ret;
++                dev_files.default_factory = None
++                args = parse_args()
++                path = args.path
++                state = args.state
++                quiet = args.quiet
++                if (not quiet):
++                        print("*** Use lsvmbus to get vmbus device type"
++                                " information.*** ")
++                if (state is not None and validate_args_path(path, dev_list)):
++                        if (state is not get_test_state(path)):
++                                change_test_state(path, quiet)
++                        state = get_test_state(path)
++                if (state == 0 and path is not None):
++                        disable_testing_single_device(path, 0, quiet)
++                        return
++                #Use subparsers as the key for different fuzz testing methods
++                if (args.action == "delay"):
++                        delay = args.delay_time
++                        if (validate_delay_values(args, delay)):
++                                delay_test_all_devices(dev_list, delay, quiet)
++                        elif (validate_args_path(path, dev_list)):
++                                if(get_test_state(path) == 1):
++                                        delay_test_store(path, delay, quiet)
++                                        return
++                                print("device testing OFF, use -s 1 to turn ON")
++                elif (args.action == "disable-all"):
++                        disable_all_testing(dev_list, quiet)
++                elif (args.action == "view"):
++                        if (args.view_all):
++                                all_devices_test_status(dev_list)
++                        elif (args.view_single):
++                                if (validate_args_path(path, dev_list)):
++                                        device_test_values(dev_files, path)
++                                        return
++                                print("Error,(check path) usage: -p"\
++                                            " <debugfs device path> view -v")
++        except AttributeError:
++                print("check usage, 1 or more elements not provided")
++                exit(-1)
 +
-+	if (!IS_ERR(hv_root)) {
-+		dev_root = debugfs_create_dir(device, hv_root);
-+		if (IS_ERR(dev_root)) {
-+			pr_debug("debugfs_hyperv: %s/%s/ not created\n",
-+				 TESTING, device);
-+			return PTR_ERR(dev_root);
-+		}
++# Validate delay values to make sure they are acceptable to
++# to either enable all delays on a device or disable all
++# delays on a device
++def validate_delay_values(args, delay):
++        if (args.en_all):
++                for i in delay:
++                        if (i < -1 or i == 0):
++                                print("\nError, Values must be"
++                                        " equal to -1 or be > 0, use"
++                                        " -d option")
++                                exit(-1)
++                return True
++        elif (args.dis_all):
++                for i in delay:
++                        if (i < -1 or i > 0):
++                                print("\nError, at least 1 value"
++                                        " is not a (0) or a (-1)")
++                                exit(-1)
++                return True
++        else:
++                return False
 +
-+		hv_debug_set_test_state(dev, dev_root);
-+		hv_debug_set_dir_dentry(dev, dev_root);
-+		delay = debugfs_create_dir(delay_name, dev_root);
 +
-+		if (IS_ERR(delay)) {
-+			pr_debug("debugfs_hyperv: %s/%s/%s/ not created\n",
-+				 TESTING, device, delay_name);
-+			return PTR_ERR(delay);
-+		}
-+		ret = hv_debug_delay_files(dev, delay);
++# Validate argument path
++def validate_args_path(path, dev_list):
++        if (path in dev_list):
++                return True
++        else:
++                return False
 +
-+		return ret;
-+	}
-+	pr_debug("debugfs_hyperv: %s/ not in root debugfs path\n", TESTING);
-+	return PTR_ERR(hv_root);
-+}
++# display Testing status of single device
++def device_test_values(dev_files, path):
 +
-+/* Remove dentry associated with released hv device */
-+void hv_debug_rm_dev_dir(struct hv_device *dev)
-+{
-+	if (!IS_ERR(hv_root))
-+		debugfs_remove_recursive(dev->debug_dir);
-+}
++        delay_path = os.path.join(path, 'delay')
++        for test in dev_files.get(delay_path):
++                print("{}".format(test), end = '')
++                print((" value =  {}")\
++                        .format(read_test_files(os.path.join(delay_path, test))))
 +
-+/* Remove all dentrys associated with vmbus testing */
-+void hv_debug_rm_all_dir(void)
-+{
-+	debugfs_remove_recursive(hv_root);
-+}
++# display Testing state of devices
++def all_devices_test_status(dev_list):
++    for device in dev_list:
++        if (get_test_state(device) is 1):
++                print("Testing = ON for: {}".format(device.split("/")[5]))
++        else:
++                print("Testing = OFF for: {}".format(device.split("/")[5]))
 +
-+/* Delay buffer/message reads on a vmbus channel */
-+void hv_debug_delay_test(struct vmbus_channel *channel, enum delay delay_type)
-+{
-+	struct vmbus_channel *test_channel =	channel->primary_channel ?
-+						channel->primary_channel :
-+						channel;
-+	bool state = test_channel->fuzz_testing_state;
++# read the vmbus device files, path must be absolute path before calling
++def read_test_files(path):
++        try:
++                with open(path,"r") as f:
++                        state = f.readline().strip()
++                        if (state == 'N'):
++                                state = 0
++                        elif (state == 'Y'):
++                                state = 1
++                return int(state)
 +
-+	if (state) {
-+		if (delay_type == 0)
-+			udelay(test_channel->fuzz_testing_interrupt_delay);
-+		else
-+			udelay(test_channel->fuzz_testing_message_delay);
-+	}
-+}
++        except IOError as e:
++                errno, strerror = e.args
++                print("I/O error({0}): {1} on file {2}"
++                        .format(errno, strerror, path))
++                exit(-1)
++        except ValueError:
++                print ("Element to int conversion error in: \n{}".format(path))
++                exit(-1)
 +
-+/* Initialize top dentry for vmbus testing */
-+int hv_debug_init(void)
-+{
-+	hv_root = debugfs_create_dir(TESTING, NULL);
-+	if (IS_ERR(hv_root)) {
-+		pr_debug("debugfs_hyperv: %s/ not created\n", TESTING);
-+		return PTR_ERR(hv_root);
-+	}
++# writing to vmbus device files, path must be absolute path before calling
++def write_test_files(path, value):
++        try:
++                with open(path,"w") as f:
++                        f.write("{}".format(value))
++        except IOError as e:
++                errno, strerror = e.args
++                print("I/O error({0}): {1} on file {2}"
++                        .format(errno, strerror, path))
++                exit(-1)
 +
-+	return 0;
-+}
-+#endif /* CONFIG_HYPERV_TESTING */
++# change testing state of device
++def change_test_state(device, quiet):
++        state_path = os.path.join(device, fuzz_state_location)
++        if (get_test_state(device) is 0):
++                write_test_files(state_path, 1)
++                if (not quiet):
++                            print("Testing = ON for device: {}"
++                                    .format(state_path.split("/")[5]))
++        else:
++                write_test_files(state_path, 0)
++                if (not quiet):
++                            print("Testing = OFF for device: {}"
++                                    .format(state_path.split("/")[5]))
 +
- static int __init hv_acpi_init(void)
- {
- 	int ret, t;
-@@ -2108,6 +2268,9 @@ static int __init hv_acpi_init(void)
- 		ret = -ETIMEDOUT;
- 		goto cleanup;
- 	}
-+#ifdef CONFIG_HYPERV_TESTING
-+	hv_debug_init();
-+#endif /* CONFIG_HYPERV_TESTING */
- 
- 	ret = vmbus_bus_init();
- 	if (ret)
-@@ -2140,6 +2303,10 @@ static void __exit vmbus_exit(void)
- 
- 		tasklet_kill(&hv_cpu->msg_dpc);
- 	}
-+#ifdef CONFIG_HYPERV_TESTING
-+	hv_debug_rm_all_dir();
-+#endif /* CONFIG_HYPERV_TESTING */
++# get testing state of device
++def get_test_state(device):
++        #state == 1 - test = ON
++        #state == 0 - test = OFF
++        return  read_test_files(os.path.join(device, fuzz_state_location))
 +
- 	vmbus_free_channels();
- 
- 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
++# Enter 1 - 1000 microseconds, into a single device using the
++# fuzz_test_buffer_interrupt_delay and fuzz_test_message_delay
++# debugfs attributes
++def delay_test_store(device,delay_length, quiet):
++
++        try:
++                # delay[0]- buffer delay, delay[1]- message delay
++                buff_test = os.path.join(os.path.sep,device, 'delay',
++                                            fuzz_delay_types.get(1))
++                mess_test = os.path.join(os.path.sep,device, 'delay',
++                                            fuzz_delay_types.get(2))
++
++                if (delay_length[0] >= 0):
++                        write_test_files(buff_test, delay_length[0])
++                if (delay_length[1] >= 0):
++                        write_test_files(mess_test, delay_length[1])
++                if (not quiet):
++                        print("Buffer delay testing = {} for: {}"
++                                .format(read_test_files(buff_test),
++                                buff_test.split("/")[5]))
++                        print("Message delay testing = {} for: {}"
++                                .format(read_test_files(mess_test),
++                                mess_test.split("/")[5]))
++        except IOError as e:
++                errno, strerror = e.args
++                print("I/O error({0}): {1} on files {2}{3}"
++                        .format(errno, strerror, buff_test, mess_test))
++                exit(-1)
++
++#enabling/disabling delay testing on all devices
++def delay_test_all_devices(dev_list,delay,quiet):
++
++        for device in (dev_list):
++                if (get_test_state(device) is 0):
++                        change_test_state(device,quiet)
++                delay_test_store(device, delay, quiet)
++
++#disabling testing on single device
++def disable_testing_single_device(device,test_type,quiet):
++
++        #test_type represents corresponding key
++        #delay method in delay_methods dict.
++        #special type 0 , used to disable all
++        #testing on SINGLE device.
++
++        if (test_type is 1 or test_type is 0):
++                #disable list [buffer,message]
++                disable_delay = [0, 0]
++                if (get_test_state(device) is 1):
++                        change_test_state(device, quiet)
++                delay_test_store(device, disable_delay, quiet)
++
++#disabling testing on ALL devices
++def disable_all_testing(dev_list,quiet):
++
++        #delay disable list [buffer,message]
++        for device in dev_list:
++                disable_testing_single_device(device, 0, quiet)
++
++if __name__ == "__main__":
++        main()
 -- 
 2.17.1
 
