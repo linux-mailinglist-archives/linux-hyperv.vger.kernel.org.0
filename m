@@ -2,119 +2,200 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DA5695EFF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2019 14:38:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12EE896136
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2019 15:47:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbfHTMiW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Aug 2019 08:38:22 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40425 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729383AbfHTMiW (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:38:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so3184787pgj.7;
-        Tue, 20 Aug 2019 05:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nPEeXkHVugtuWFlIz8GtMsMv1+S0Lha6cbNZpxpRArU=;
-        b=LJOIlwqNYHXD7cHZ6EOsmob8xvknsOMLrMfO5zhrO/hlOWCbl9oRhwtm6GgYdix2xu
-         er230DjbgsQiYIUvGeSCtB/XU+iCevsrploFnAK3HjojGToNX3MeX+f3z/WRg2j1Q7xa
-         vUTX4He41+Um9Hj+tyTyBgDEwdDaMgrIqsgXJom2/xdfqHRguDhVy+xCHIRVJUg35sw2
-         v39oOT5FZyi8moTwiCsatiaiE1FMrKTuHTp/hDmSNmT68FzLGFXSH8cJpKBoqkVfqXIF
-         kN8k2VksGohU40xiIxRPVyFZ9SpWPms3lbT/tIhWAMUB9tF+4pGAzRm8ZMgvLl5RqOOF
-         cEUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nPEeXkHVugtuWFlIz8GtMsMv1+S0Lha6cbNZpxpRArU=;
-        b=rsDxLZB8Ol9Z1JkEpKv7TqgFOIFUX4cgnQormXapeQlUs3p+J3FLlwJG+1Bqsd/b4F
-         5pSJ/xOmZJWEa/I5klFwN3Qyj0W1gee4GIFxuqg5fk1r2mbrPq0aBX0m1CFhCKqzaDjp
-         MWODilI6oa5T4UyWSdyHTSKkWsv8JIwLsHHgezGtibP8u2ZKMQwLuxL6I0wyPIpUWWEX
-         S7LW0blJQTZOCYA3ijcvYPXMEGEuskGuTg+sMcPtsDjnHRwpw1l36FKO0LEdL75Ny28V
-         K+rg2+6zEZIpGSsIE0Qg32lFnILS2VgKyfSj+g4ZW5YiW/rdqfdYylGIC4n+ZmpQpwmQ
-         LwWA==
-X-Gm-Message-State: APjAAAUd3nO+H5mBxAhsL321nsAJBJQlIUzSS98G9UsaVvwEZt3faF5a
-        aMXxrrOM1Y+F8z8IKqnWQJ61qiLin4FDPv1KxnQ=
-X-Google-Smtp-Source: APXvYqwggjmfndZ9vdx+84JSw4dPC+8rQAoRcmAZ/Rgr8ykhjxqa0jdGrCOY5Bb3JWVdr8YvApTm37u9Tm5cVXV+lE4=
-X-Received: by 2002:a65:5043:: with SMTP id k3mr25355913pgo.406.1566304701388;
- Tue, 20 Aug 2019 05:38:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
- <20190819131737.26942-3-Tianyu.Lan@microsoft.com> <alpine.DEB.2.21.1908191522390.2147@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1908191522390.2147@nanos.tec.linutronix.de>
-From:   Tianyu Lan <lantianyu1986@gmail.com>
-Date:   Tue, 20 Aug 2019 20:38:11 +0800
-Message-ID: <CAOLK0pxPKh3Gr8TVPqGernoHSTY=UyjwjqC4wEyR=Vo500ygFQ@mail.gmail.com>
-Subject: Re: [PATCH V3 2/3] KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>, corbet@lwn.net,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1730541AbfHTNmK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Aug 2019 09:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730090AbfHTNmK (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:10 -0400
+Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9291C22DD6;
+        Tue, 20 Aug 2019 13:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566308529;
+        bh=pPvlQ6dl9MKm5PRAI8NVs32P0UDOwDAGOHHGbrzORI8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ntzglEjgU0JnilO/FovVBj4RbJTPcxIXeSXklatRkk5xIlU+qYETI7E3aEh1DYbha
+         6wGc5gr0TqO0VG00bsiPELrjRiDmZGmpYMl4RTMWSPaEhBP9jRzT0Hwb5m4ovVp+z9
+         FnkE1XU8zUFhSTKekR/dVnUd7AHDoNGKnplqQ5GQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Adrian Vladu <avladu@cloudbasesolutions.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        kvm <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
-        "linux-kernel@vger kernel org" <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Dexuan Cui <decui@microsoft.com>,
+        Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 43/44] tools: hv: fixed Python pep8/flake8 warnings for lsvmbus
+Date:   Tue, 20 Aug 2019 09:40:27 -0400
+Message-Id: <20190820134028.10829-43-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
+References: <20190820134028.10829-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Thomas:
-               Thanks for your review. Will fix your comment in the
-next version.
+From: Adrian Vladu <avladu@cloudbasesolutions.com>
 
-On Mon, Aug 19, 2019 at 9:27 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Mon, 19 Aug 2019, lantianyu1986@gmail.com wrote:
->
-> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> >
-> > This patch adds
->
-> Same git grep command as before
->
-> >  new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH and let
->
-> baseball cap? Please do not use weird acronyms. This is text and there is
-> not limitation on characters.
->
-> > user space to enable direct tlb flush function when only Hyper-V
-> > hypervsior capability is exposed to VM.
->
-> Sorry, but I'm not understanding this sentence.
->
-> > This patch also adds
->
-> Once more
->
-> > enable_direct_tlbflush callback in the struct kvm_x86_ops and
-> > platforms may use it to implement direct tlb flush support.
->
-> Please tell in the changelog WHY you are doing things not what. The what is
-> obviously in the patch.
->
-> So you want to explain what you are trying to achieve and why it is
-> useful. Then you can add a short note about what you are adding, but not at
-> the level of detail which is available from the diff itself.
->
-> Thanks,
->
->         tglx
+[ Upstream commit 5912e791f3018de0a007c8cfa9cb38c97d3e5f5c ]
 
+Fixed pep8/flake8 python style code for lsvmbus tool.
 
+The TAB indentation was on purpose ignored (pep8 rule W191) to make
+sure the code is complying with the Linux code guideline.
+The following command doe not show any warnings now:
+pep8 --ignore=W191 lsvmbus
+flake8 --ignore=W191 lsvmbus
 
---
-Best regards
-Tianyu Lan
+Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
+
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/hv/lsvmbus | 75 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 42 insertions(+), 33 deletions(-)
+
+diff --git a/tools/hv/lsvmbus b/tools/hv/lsvmbus
+index 55e7374bade0d..099f2c44dbed2 100644
+--- a/tools/hv/lsvmbus
++++ b/tools/hv/lsvmbus
+@@ -4,10 +4,10 @@
+ import os
+ from optparse import OptionParser
+ 
++help_msg = "print verbose messages. Try -vv, -vvv for  more verbose messages"
+ parser = OptionParser()
+-parser.add_option("-v", "--verbose", dest="verbose",
+-		   help="print verbose messages. Try -vv, -vvv for \
+-			more verbose messages", action="count")
++parser.add_option(
++	"-v", "--verbose", dest="verbose", help=help_msg, action="count")
+ 
+ (options, args) = parser.parse_args()
+ 
+@@ -21,27 +21,28 @@ if not os.path.isdir(vmbus_sys_path):
+ 	exit(-1)
+ 
+ vmbus_dev_dict = {
+-	'{0e0b6031-5213-4934-818b-38d90ced39db}' : '[Operating system shutdown]',
+-	'{9527e630-d0ae-497b-adce-e80ab0175caf}' : '[Time Synchronization]',
+-	'{57164f39-9115-4e78-ab55-382f3bd5422d}' : '[Heartbeat]',
+-	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}' : '[Data Exchange]',
+-	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}' : '[Backup (volume checkpoint)]',
+-	'{34d14be3-dee4-41c8-9ae7-6b174977c192}' : '[Guest services]',
+-	'{525074dc-8985-46e2-8057-a307dc18a502}' : '[Dynamic Memory]',
+-	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}' : 'Synthetic mouse',
+-	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}' : 'Synthetic keyboard',
+-	'{da0a7802-e377-4aac-8e77-0558eb1073f8}' : 'Synthetic framebuffer adapter',
+-	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}' : 'Synthetic network adapter',
+-	'{32412632-86cb-44a2-9b5c-50d1417354f5}' : 'Synthetic IDE Controller',
+-	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}' : 'Synthetic SCSI Controller',
+-	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}' : 'Synthetic fiber channel adapter',
+-	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}' : 'Synthetic RDMA adapter',
+-	'{44c4f61d-4444-4400-9d52-802e27ede19f}' : 'PCI Express pass-through',
+-	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}' : '[Reserved system device]',
+-	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}' : '[Reserved system device]',
+-	'{3375baf4-9e15-4b30-b765-67acb10d607b}' : '[Reserved system device]',
++	'{0e0b6031-5213-4934-818b-38d90ced39db}': '[Operating system shutdown]',
++	'{9527e630-d0ae-497b-adce-e80ab0175caf}': '[Time Synchronization]',
++	'{57164f39-9115-4e78-ab55-382f3bd5422d}': '[Heartbeat]',
++	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}': '[Data Exchange]',
++	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}': '[Backup (volume checkpoint)]',
++	'{34d14be3-dee4-41c8-9ae7-6b174977c192}': '[Guest services]',
++	'{525074dc-8985-46e2-8057-a307dc18a502}': '[Dynamic Memory]',
++	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}': 'Synthetic mouse',
++	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}': 'Synthetic keyboard',
++	'{da0a7802-e377-4aac-8e77-0558eb1073f8}': 'Synthetic framebuffer adapter',
++	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}': 'Synthetic network adapter',
++	'{32412632-86cb-44a2-9b5c-50d1417354f5}': 'Synthetic IDE Controller',
++	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}': 'Synthetic SCSI Controller',
++	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}': 'Synthetic fiber channel adapter',
++	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}': 'Synthetic RDMA adapter',
++	'{44c4f61d-4444-4400-9d52-802e27ede19f}': 'PCI Express pass-through',
++	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}': '[Reserved system device]',
++	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}': '[Reserved system device]',
++	'{3375baf4-9e15-4b30-b765-67acb10d607b}': '[Reserved system device]',
+ }
+ 
++
+ def get_vmbus_dev_attr(dev_name, attr):
+ 	try:
+ 		f = open('%s/%s/%s' % (vmbus_sys_path, dev_name, attr), 'r')
+@@ -52,6 +53,7 @@ def get_vmbus_dev_attr(dev_name, attr):
+ 
+ 	return lines
+ 
++
+ class VMBus_Dev:
+ 	pass
+ 
+@@ -66,12 +68,13 @@ for f in os.listdir(vmbus_sys_path):
+ 
+ 	chn_vp_mapping = get_vmbus_dev_attr(f, 'channel_vp_mapping')
+ 	chn_vp_mapping = [c.strip() for c in chn_vp_mapping]
+-	chn_vp_mapping = sorted(chn_vp_mapping,
+-		key = lambda c : int(c.split(':')[0]))
++	chn_vp_mapping = sorted(
++		chn_vp_mapping, key=lambda c: int(c.split(':')[0]))
+ 
+-	chn_vp_mapping = ['\tRel_ID=%s, target_cpu=%s' %
+-				(c.split(':')[0], c.split(':')[1])
+-					for c in chn_vp_mapping]
++	chn_vp_mapping = [
++		'\tRel_ID=%s, target_cpu=%s' %
++		(c.split(':')[0], c.split(':')[1]) for c in chn_vp_mapping
++	]
+ 	d = VMBus_Dev()
+ 	d.sysfs_path = '%s/%s' % (vmbus_sys_path, f)
+ 	d.vmbus_id = vmbus_id
+@@ -85,7 +88,7 @@ for f in os.listdir(vmbus_sys_path):
+ 	vmbus_dev_list.append(d)
+ 
+ 
+-vmbus_dev_list  = sorted(vmbus_dev_list, key = lambda d : int(d.vmbus_id))
++vmbus_dev_list = sorted(vmbus_dev_list, key=lambda d: int(d.vmbus_id))
+ 
+ format0 = '%2s: %s'
+ format1 = '%2s: Class_ID = %s - %s\n%s'
+@@ -95,9 +98,15 @@ for d in vmbus_dev_list:
+ 	if verbose == 0:
+ 		print(('VMBUS ID ' + format0) % (d.vmbus_id, d.dev_desc))
+ 	elif verbose == 1:
+-		print (('VMBUS ID ' + format1) %	\
+-			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping))
++		print(
++			('VMBUS ID ' + format1) %
++			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping)
++		)
+ 	else:
+-		print (('VMBUS ID ' + format2) % \
+-			(d.vmbus_id, d.class_id, d.dev_desc, \
+-			d.device_id, d.sysfs_path, d.chn_vp_mapping))
++		print(
++			('VMBUS ID ' + format2) %
++			(
++				d.vmbus_id, d.class_id, d.dev_desc,
++				d.device_id, d.sysfs_path, d.chn_vp_mapping
++			)
++		)
+-- 
+2.20.1
+
