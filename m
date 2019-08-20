@@ -2,144 +2,112 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF1BB96C95
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Aug 2019 01:00:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDA4F96DD8
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Aug 2019 01:38:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbfHTXA0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Aug 2019 19:00:26 -0400
-Received: from mail-eopbgr750124.outbound.protection.outlook.com ([40.107.75.124]:2549
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfHTXA0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:00:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k2pSIxb3vGNFKQ2AGngvx1CC377QywYN4fJne9npi5p2BMfb4pP7WbXnH27BDhcCRuuIE+UjFrLMNDU/1/chzhHhReUSqbGmANlcTyuv5ItUa3/16GoPwDPz3/3jBcNCsNx0d//8CcT/++ob97OQfaru566WTBFuIJlY4mLoQssUGwme5Kw93u9Owu48WTDUif8v48UWX+hPWAS1SKuPww5bOekQcDIEcL72VQzFY0yZ/PuzBb4dcNCUk00GlEV7SLW5+isdh2eLJs0n0rMVll1fYtzmHZuDYlhk/0dHhJf89UiKFDi/TKrBnm01nrhkJMlMAOVvxO0C2suA/Yo7cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MR0VZaEZLdxY9z75jCWi0hPlqHKns2uqrzNdyNs772M=;
- b=Rv47X1ElEXMypApuQAmRUmhMhi4D4HbqbWu3qMe/C6DQzocWREHKCkWz0WrVYoZNnUU4HGXtqhq5boAQSN9iOE/2kGr4WYZJMLNU9/B5PCmsOQw0HZmCNByhKiYJRXwbssVWlIh99KrPHWvMsnfPUVulKvfRIqWA/FhBfw7tVQNw/Er8IYoDQuAL4F4W5NBf42bC3f+oS0zx8vR0MkG2eJI/0EUPayIziGBcRppPPg8hh+PmQwRn733vQSA7jXIA0v9Pw45Fxjn29JJb3rw3J7tcB3gLBzd602l7HNRae+5QylGcztPrrgAm3OR7DsawiFR6yYsgHXWcEkWdnUiTOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MR0VZaEZLdxY9z75jCWi0hPlqHKns2uqrzNdyNs772M=;
- b=cQHGdpTDEhUFY/WrRxUTVrfG3DYPzPwZ8wQpKTWs0rLVBeHFloVwVDn/1kYttbqbjTqqzSbn74PXrZ0d1SIlqIzBVempHrhd3ljFh/2vp0x0Kdl4h68Mj00hqPtnSaczIvcnbKwbtRSV5PhCuApMOiV8AsfN5gqPoioPIERxBiI=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1451.namprd21.prod.outlook.com (20.180.23.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.3; Tue, 20 Aug 2019 23:00:23 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2220.000; Tue, 20 Aug 2019
- 23:00:23 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "eranbe@mellanox.com" <eranbe@mellanox.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next,v2 2/6] PCI: hv: Add a Hyper-V PCI interface
- driver for software backchannel interface
-Thread-Topic: [PATCH net-next,v2 2/6] PCI: hv: Add a Hyper-V PCI interface
- driver for software backchannel interface
-Thread-Index: AQHVVsSabXkFF5JzvUOerk/7F+w+SqcEbZ2AgAA6XzA=
-Date:   Tue, 20 Aug 2019 23:00:22 +0000
-Message-ID: <DM6PR21MB1337D02F2DE44173AD64734DCAAB0@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1566242976-108801-1-git-send-email-haiyangz@microsoft.com>
-        <1566242976-108801-3-git-send-email-haiyangz@microsoft.com>
- <20190820.122925.1080288470348205792.davem@davemloft.net>
-In-Reply-To: <20190820.122925.1080288470348205792.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-20T23:00:21.1479761Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=373ea2b7-f035-43cb-b372-7a26cd2ba4ab;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [12.235.16.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 43700d19-88a3-4728-3fd5-08d725c22e99
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1451;
-x-ms-traffictypediagnostic: DM6PR21MB1451:|DM6PR21MB1451:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB14518A09D02C5330845547ACCAAB0@DM6PR21MB1451.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(199004)(189003)(13464003)(52536014)(66446008)(64756008)(66556008)(66476007)(476003)(229853002)(478600001)(22452003)(86362001)(53936002)(6116002)(316002)(3846002)(76116006)(6246003)(66946007)(256004)(74316002)(14444005)(4326008)(8990500004)(6916009)(10290500003)(7736002)(14454004)(486006)(25786009)(305945005)(10090500001)(33656002)(186003)(54906003)(2906002)(8936002)(26005)(71190400001)(71200400001)(9686003)(55016002)(5660300002)(76176011)(66066001)(7416002)(11346002)(102836004)(7696005)(8676002)(6436002)(81156014)(53546011)(6506007)(81166006)(99286004)(446003)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1451;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: J2k3WyFgNCv653qIxQw8OjEXZ9Vf2Niw/d0DeSx5LsvhGyw5+KbNnzsXc4GlmpMuU6lsNCmve/iR4HaFp5moQyQYKiix+f3Qa4AgPDHhbuKcTS6grs95PlBX0T9oNJp23Mt92JEFG/4kV4xOf+vvBhLMbY2dbVW7HB47Zr2QFMH8MM9Iq+TVvrUYCW2SRSP4Zy250E+c0d2uj+zSQmyKE4WwtM0pPhdkh2G2j8icmlvBXVCZsBvGesHyzwDcjzvqkO7w9Lcx1X3Kb7kTKBnbi+6RKwJMiB7yx5BC0qIU/Ng4y23R1oLrOr8n3V9XhL1fqTYO/YxwacPc0dLdVP93FtomaSZ199kKbQ0V4YrCpPhMmi6hRe7F2x0JilaKgEVeAE0bO4qU3UOjqchoWfY8c4X1Ocw0DS/2ksxMIBg1fZo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726254AbfHTXio (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Aug 2019 19:38:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38689 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfHTXio (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 20 Aug 2019 19:38:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id p12so925265iog.5;
+        Tue, 20 Aug 2019 16:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=h1utGPSe6HUXp2tUTW1s5hatB9U0uQHZHJs19pSNpeg=;
+        b=slcHWYPFTCS3BoN5stMChrCjyTTtJ9aa1GPUABMy6vMY4bAr+rlJR8lbsRD7LiAaI0
+         c7SCglm5RSjFWkDAiVUVCZrhvcHwEkDZ3vXIn0oG9AMfWXxoQxYwubr6FYpPhiz9G6Bc
+         GYBQ/ge0xThbAGRJBQMtf5tGfY0yriBPFN1t71LBu91/zrVWw/5UsCsRgd58zJUImIMU
+         CShOivjrlWXMZPQRh6JFh/AEwdoEjhhucbTDcnA+jP/AFqMLXcRcf/Hv5Gnf+5SNzf2S
+         CcBdQMk/HWkBY2OZHm3RWtpnM1IVEoyEOAxhtXitD+nrb8KPBX74XBWoXI4N3y8hq1pL
+         lPOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=h1utGPSe6HUXp2tUTW1s5hatB9U0uQHZHJs19pSNpeg=;
+        b=PaauQfnTUlHct7AfJsu48ht+xYO3RhODM9QQ4yISOBhx/MUeaOWWt4PwGU7CW7QkYO
+         QGGcDMMH1nlW8iNRWn89Si0Gmy3PulOG9LUTn6vbxg/ohDfC3Pmk7WYywRzx/2+4DHJN
+         hAQuestfCHaJWSl+qrAlfk38qyZ2sGGOYd/PzFOh3JQ2C2fcWKtWjPMU8GeR8oAvcUaj
+         CGkVwS2eA02asy5lAhNzc1MxSLYBehTMAZ8z2ZgyW0mTC38ahnB7vbVA9WKY9E5MYQvp
+         e/fH9NMGHKD19nMsZCWoqj2ix3BkD7ilXpmoc95u7vawYHsZunNG/iS4n6lQ8H8t1pg0
+         S1Dg==
+X-Gm-Message-State: APjAAAXGS6vEPGz+dwA+NqaSzmusn2lzrtyDr7OsgxT6Ch5HYwKQimz+
+        4NcEBWXvUBqGLP6G41P2+w==
+X-Google-Smtp-Source: APXvYqxfWlnQcd6iq5uw5cOnDE7zHYi3S7KCVAYlNbp8AW29iYlMVq38htp+SbgV6RHB8R6DHB0Huw==
+X-Received: by 2002:a5d:8d12:: with SMTP id p18mr3546216ioj.251.1566344322996;
+        Tue, 20 Aug 2019 16:38:42 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id y5sm19796408ioc.86.2019.08.20.16.38.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 16:38:42 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 19:38:40 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org
+Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] hv: vmbus: add fuzz testing to hv device
+Message-ID: <cover.1566340843.git.brandonbonaby94@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43700d19-88a3-4728-3fd5-08d725c22e99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 23:00:23.0230
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NI7zPLD4aYFUkiduwJnPPrh90xcbk2AsnXaVBUNHSZW+H6y8iYbj9/URLq+CVD4Q6aC20JxKgzlvaFnyCNNxfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1451
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+This patchset introduces a testing framework for Hyper-V drivers.
+This framework allows us to introduce delays in the packet receive
+path on a per-device basis. While the current code only supports
+introducing arbitrary delays in the host/guest communication path,
+we intend to expand this to support error injection in the future.
 
+changes in v3:
+  patch 2: change call to IS_ERR_OR_NULL, to IS_ERR.
 
-> -----Original Message-----
-> From: David Miller <davem@davemloft.net>
-> Sent: Tuesday, August 20, 2019 3:29 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; saeedm@mellanox.com; leon@kernel.org;
-> eranbe@mellanox.com; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
-> linux-pci@vger.kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH net-next,v2 2/6] PCI: hv: Add a Hyper-V PCI interface
-> driver for software backchannel interface
->=20
-> From: Haiyang Zhang <haiyangz@microsoft.com>
-> Date: Mon, 19 Aug 2019 19:30:47 +0000
->=20
-> > +static void __exit exit_hv_pci_intf(void) {
-> > +	pr_info("unloaded\n");
-> > +}
-> > +
-> > +static int __init init_hv_pci_intf(void) {
-> > +	pr_info("loaded\n");
-> > +
->=20
-> Clogging up the logs with useless messages like this is inappropriate.
-> Please remove these pr_info() calls.
->=20
-> Also, all of these symbols should probably be GPL exported.
+  patch 3: Align python tool to match Linux coding style.
 
-I will update the patch -- remove the pr_info, and use EXPORT_SYMBOL_GPL()
-for the symbols.
+Changes in v2:
+  Patch 1: As per Vitaly's suggestion, wrapped the test code under an
+           #ifdef and updated the Kconfig file, so that the test code
+           will only be used when the config option is set to true.
+           (default is false).
 
-Thanks,
-- Haiyang
+           Updated hyperv_vmbus header to contain new #ifdef with new
+           new functions for the test code.
+
+  Patch 2: Moved code from under sysfs to debugfs and wrapped it under
+           the new ifdef.
+
+           Updated MAINTAINERS file with new debugfs-hyperv file under
+           the section for hyperv.
+
+  Patch 3: Updated testing tool with new debugfs location.
+
+Branden Bonaby (3):
+  drivers: hv: vmbus: Introduce latency testing
+  drivers: hv: vmbus: add fuzz test attributes to debugfs
+  tools: hv: add vmbus testing tool
+
+ Documentation/ABI/testing/debugfs-hyperv |  21 ++
+ MAINTAINERS                              |   1 +
+ drivers/hv/Kconfig                       |   7 +
+ drivers/hv/connection.c                  |   3 +
+ drivers/hv/hyperv_vmbus.h                |  20 ++
+ drivers/hv/ring_buffer.c                 |   7 +
+ drivers/hv/vmbus_drv.c                   | 167 +++++++++++
+ include/linux/hyperv.h                   |  21 ++
+ tools/hv/vmbus_testing                   | 342 +++++++++++++++++++++++
+ 9 files changed, 589 insertions(+)
+ create mode 100644 Documentation/ABI/testing/debugfs-hyperv
+ create mode 100644 tools/hv/vmbus_testing
+
+-- 
+2.17.1
 
