@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B294960D4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2019 15:43:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44F3E960D8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2019 15:43:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbfHTNn3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Aug 2019 09:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39200 "EHLO mail.kernel.org"
+        id S1730883AbfHTNnd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Aug 2019 09:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730166AbfHTNnZ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:43:25 -0400
+        id S1730875AbfHTNnc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:43:32 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35CAE22DA9;
-        Tue, 20 Aug 2019 13:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C3A52087E;
+        Tue, 20 Aug 2019 13:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308605;
-        bh=4/L2wx3XUlichasHvmRlE6mRfe8WWhpTpxf7i/61zhM=;
+        s=default; t=1566308611;
+        bh=+GpJ6hCkPxj3nzmJ3U386dLprsd+bv2NsXfze3k/pao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rOnuL08J8JBavo1oOWtgvBaYq7XlrgMjGSUU0b0xoBxggCc3lUFIqhhyVBuyaACf5
-         IapMY8XotmH9Ppb1UKvI1Qu+WjONEr0QgcxuvOtbAozidva8JN9IeW8biU6qFaGsUT
-         3Mnlv41nzrXPd7E1UZtBhSuhZNMKvGGCDEyNb9kw=
+        b=oY8jktVMQRPSJFoH0HNr+qv8zz2+nH56vbOJYZUzuL5MLUKq7yYCeiHh2+Y68Wagn
+         mxx60y1EIIrNOGBpaXXvT+vqbU5cnB9I5s5btRirAze4h5V7Gv7CHBDqNugObToIQn
+         YYdbV5hd5TWRD3H7ZgjyIA1IMnih1ZIYK9z3it5s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Adrian Vladu <avladu@cloudbasesolutions.com>,
@@ -32,12 +32,12 @@ Cc:     Adrian Vladu <avladu@cloudbasesolutions.com>,
         Sasha Levin <sashal@kernel.org>,
         Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
         linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 7/7] tools: hv: fix KVP and VSS daemons exit code
-Date:   Tue, 20 Aug 2019 09:43:15 -0400
-Message-Id: <20190820134315.11720-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 4/4] tools: hv: fix KVP and VSS daemons exit code
+Date:   Tue, 20 Aug 2019 09:43:25 -0400
+Message-Id: <20190820134325.11825-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134315.11720-1-sashal@kernel.org>
-References: <20190820134315.11720-1-sashal@kernel.org>
+In-Reply-To: <20190820134325.11825-1-sashal@kernel.org>
+References: <20190820134325.11825-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -81,7 +81,7 @@ index 1774800668168..fffc7c4184599 100644
  			print_usage(argv);
  			exit(EXIT_FAILURE);
 diff --git a/tools/hv/hv_vss_daemon.c b/tools/hv/hv_vss_daemon.c
-index e0829809c8970..bdc1891e0a9a3 100644
+index 5d51d6ff08e6a..b5465f92ed50e 100644
 --- a/tools/hv/hv_vss_daemon.c
 +++ b/tools/hv/hv_vss_daemon.c
 @@ -164,6 +164,8 @@ int main(int argc, char *argv[])
