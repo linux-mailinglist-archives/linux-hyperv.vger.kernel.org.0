@@ -2,152 +2,119 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53DF7954F6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2019 05:18:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DA5695EFF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Aug 2019 14:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbfHTDSK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Aug 2019 23:18:10 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40512 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfHTDSK (ORCPT
+        id S1729844AbfHTMiW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Aug 2019 08:38:22 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40425 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfHTMiW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:18:10 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so2345575pgj.7;
-        Mon, 19 Aug 2019 20:18:09 -0700 (PDT)
+        Tue, 20 Aug 2019 08:38:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so3184787pgj.7;
+        Tue, 20 Aug 2019 05:38:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5e6eaDGk/6j5T5h1NKftcrs+tBj3G4/S+VohjD6nD6U=;
-        b=WVls6EByLVpXNPmLfFFZy/d/Vw1FhdBighDj3pt2mLWCZqhhVzfbnZBGKil4hoXHeI
-         W/5hA7gbP5Lyi5p7tTtPNYOmTvdxJOfKC9E+k3YA2bwI4G9ctxI3oJBbLgkiNLeykE9G
-         I7PTjVUzm0iOu9i3yFBBInlEt9vtOS+3UN+R3bKT1FrHwzxxUvzh52Fb97to8j/K0ba6
-         gugPzQURBScEZdhvpXbsMVQWYk6a9FQ1DQ//67gxp6e6gjk1q7CHdTndhKTXI46pcLD9
-         lTtfhLQQxFtRzIsAHObwBzQyv5DOaLjqGS9ArSayYNcGm2/3YgSWdsJs9q6UVXJzlel6
-         IrkQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nPEeXkHVugtuWFlIz8GtMsMv1+S0Lha6cbNZpxpRArU=;
+        b=LJOIlwqNYHXD7cHZ6EOsmob8xvknsOMLrMfO5zhrO/hlOWCbl9oRhwtm6GgYdix2xu
+         er230DjbgsQiYIUvGeSCtB/XU+iCevsrploFnAK3HjojGToNX3MeX+f3z/WRg2j1Q7xa
+         vUTX4He41+Um9Hj+tyTyBgDEwdDaMgrIqsgXJom2/xdfqHRguDhVy+xCHIRVJUg35sw2
+         v39oOT5FZyi8moTwiCsatiaiE1FMrKTuHTp/hDmSNmT68FzLGFXSH8cJpKBoqkVfqXIF
+         kN8k2VksGohU40xiIxRPVyFZ9SpWPms3lbT/tIhWAMUB9tF+4pGAzRm8ZMgvLl5RqOOF
+         cEUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5e6eaDGk/6j5T5h1NKftcrs+tBj3G4/S+VohjD6nD6U=;
-        b=hdw1eVAV+NQ+h500UTNBVXww6uGCn7NRgdpBn5w2/KOWdbsddI7OJP2AaD/oRktb0K
-         Gev7lOywCY41x3R0vvirKRgpTegvu1ZMSyHXdulIiy3hbKQVWRwuSVZq/BnA8Eas/GYZ
-         8p7EWUs7z4vXY0YftZuMNoqGAjS/kBMt6pO0Q/Ds2v7rEBrtRlbJziStBrEgu+ogad24
-         i030suyToEBFjuAGE4H9phzWSsl/NufOC9wpC6ectUcE2mBneFfKL3YUwHq06QkHENz4
-         QTwwiZkyTS7f58umaDGcvrUK3+mouICshrxrvq/vLHzJtSmbmadQnMqWaKL2Y9gzPG9X
-         6fUQ==
-X-Gm-Message-State: APjAAAVpvwCjbLW0lDgN3TlKOKNHu+60xqxDs/ueagZXLMp3FxvnmDxO
-        LFFybkaqR8c5yPiz4pQROJE=
-X-Google-Smtp-Source: APXvYqzIxDeuruppnpbEE0Lz3eELVRgwuAlSlZ6eXS+PP+RSzTHa/+wnpV9TezWBvzTJXrb5dE4ZLg==
-X-Received: by 2002:a17:90a:ac0a:: with SMTP id o10mr4476048pjq.143.1566271088648;
-        Mon, 19 Aug 2019 20:18:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id t7sm17671364pfh.101.2019.08.19.20.18.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 20:18:07 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 20:18:05 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Input: hyperv-keyboard: Use in-place iterator API in the
- channel callback
-Message-ID: <20190820031805.GO121898@dtor-ws>
-References: <1566270066-27546-1-git-send-email-decui@microsoft.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nPEeXkHVugtuWFlIz8GtMsMv1+S0Lha6cbNZpxpRArU=;
+        b=rsDxLZB8Ol9Z1JkEpKv7TqgFOIFUX4cgnQormXapeQlUs3p+J3FLlwJG+1Bqsd/b4F
+         5pSJ/xOmZJWEa/I5klFwN3Qyj0W1gee4GIFxuqg5fk1r2mbrPq0aBX0m1CFhCKqzaDjp
+         MWODilI6oa5T4UyWSdyHTSKkWsv8JIwLsHHgezGtibP8u2ZKMQwLuxL6I0wyPIpUWWEX
+         S7LW0blJQTZOCYA3ijcvYPXMEGEuskGuTg+sMcPtsDjnHRwpw1l36FKO0LEdL75Ny28V
+         K+rg2+6zEZIpGSsIE0Qg32lFnILS2VgKyfSj+g4ZW5YiW/rdqfdYylGIC4n+ZmpQpwmQ
+         LwWA==
+X-Gm-Message-State: APjAAAUd3nO+H5mBxAhsL321nsAJBJQlIUzSS98G9UsaVvwEZt3faF5a
+        aMXxrrOM1Y+F8z8IKqnWQJ61qiLin4FDPv1KxnQ=
+X-Google-Smtp-Source: APXvYqwggjmfndZ9vdx+84JSw4dPC+8rQAoRcmAZ/Rgr8ykhjxqa0jdGrCOY5Bb3JWVdr8YvApTm37u9Tm5cVXV+lE4=
+X-Received: by 2002:a65:5043:: with SMTP id k3mr25355913pgo.406.1566304701388;
+ Tue, 20 Aug 2019 05:38:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566270066-27546-1-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
+ <20190819131737.26942-3-Tianyu.Lan@microsoft.com> <alpine.DEB.2.21.1908191522390.2147@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908191522390.2147@nanos.tec.linutronix.de>
+From:   Tianyu Lan <lantianyu1986@gmail.com>
+Date:   Tue, 20 Aug 2019 20:38:11 +0800
+Message-ID: <CAOLK0pxPKh3Gr8TVPqGernoHSTY=UyjwjqC4wEyR=Vo500ygFQ@mail.gmail.com>
+Subject: Re: [PATCH V3 2/3] KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>, corbet@lwn.net,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        kvm <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
+        "linux-kernel@vger kernel org" <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 03:01:23AM +0000, Dexuan Cui wrote:
-> Simplify the ring buffer handling with the in-place API.
-> 
-> Also avoid the dynamic allocation and the memory leak in the channel
-> callback function.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> Hi Dmitry, can this patch go through Sasha's hyperv tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
-> 
-> This is a purely Hyper-V specific change.
+Hi Thomas:
+               Thanks for your review. Will fix your comment in the
+next version.
 
-Sure, no problem.
+On Mon, Aug 19, 2019 at 9:27 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Mon, 19 Aug 2019, lantianyu1986@gmail.com wrote:
+>
+> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >
+> > This patch adds
+>
+> Same git grep command as before
+>
+> >  new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH and let
+>
+> baseball cap? Please do not use weird acronyms. This is text and there is
+> not limitation on characters.
+>
+> > user space to enable direct tlb flush function when only Hyper-V
+> > hypervsior capability is exposed to VM.
+>
+> Sorry, but I'm not understanding this sentence.
+>
+> > This patch also adds
+>
+> Once more
+>
+> > enable_direct_tlbflush callback in the struct kvm_x86_ops and
+> > platforms may use it to implement direct tlb flush support.
+>
+> Please tell in the changelog WHY you are doing things not what. The what is
+> obviously in the patch.
+>
+> So you want to explain what you are trying to achieve and why it is
+> useful. Then you can add a short note about what you are adding, but not at
+> the level of detail which is available from the diff itself.
+>
+> Thanks,
+>
+>         tglx
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-> 
->  drivers/input/serio/hyperv-keyboard.c | 35 ++++++-----------------------------
->  1 file changed, 6 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-> index 88ae7c2..e486a8a 100644
-> --- a/drivers/input/serio/hyperv-keyboard.c
-> +++ b/drivers/input/serio/hyperv-keyboard.c
-> @@ -237,40 +237,17 @@ static void hv_kbd_handle_received_packet(struct hv_device *hv_dev,
->  
->  static void hv_kbd_on_channel_callback(void *context)
->  {
-> +	struct vmpacket_descriptor *desc;
->  	struct hv_device *hv_dev = context;
-> -	void *buffer;
-> -	int bufferlen = 0x100; /* Start with sensible size */
->  	u32 bytes_recvd;
->  	u64 req_id;
-> -	int error;
->  
-> -	buffer = kmalloc(bufferlen, GFP_ATOMIC);
-> -	if (!buffer)
-> -		return;
-> -
-> -	while (1) {
-> -		error = vmbus_recvpacket_raw(hv_dev->channel, buffer, bufferlen,
-> -					     &bytes_recvd, &req_id);
-> -		switch (error) {
-> -		case 0:
-> -			if (bytes_recvd == 0) {
-> -				kfree(buffer);
-> -				return;
-> -			}
-> -
-> -			hv_kbd_handle_received_packet(hv_dev, buffer,
-> -						      bytes_recvd, req_id);
-> -			break;
-> +	foreach_vmbus_pkt(desc, hv_dev->channel) {
-> +		bytes_recvd = desc->len8 * 8;
-> +		req_id = desc->trans_id;
->  
-> -		case -ENOBUFS:
-> -			kfree(buffer);
-> -			/* Handle large packet */
-> -			bufferlen = bytes_recvd;
-> -			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
-> -			if (!buffer)
-> -				return;
-> -			break;
-> -		}
-> +		hv_kbd_handle_received_packet(hv_dev, desc, bytes_recvd,
-> +					      req_id);
->  	}
->  }
->  
-> -- 
-> 1.8.3.1
-> 
 
--- 
-Dmitry
+--
+Best regards
+Tianyu Lan
