@@ -2,69 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60437978B4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Aug 2019 14:00:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE14B98669
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Aug 2019 23:16:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfHUL71 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Aug 2019 07:59:27 -0400
-Received: from mail-eopbgr1300103.outbound.protection.outlook.com ([40.107.130.103]:21422
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1729140AbfHUVQM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Aug 2019 17:16:12 -0400
+Received: from mail-eopbgr710134.outbound.protection.outlook.com ([40.107.71.134]:57191
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726527AbfHUL70 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Aug 2019 07:59:26 -0400
+        id S1727629AbfHUVQM (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 21 Aug 2019 17:16:12 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kcbQLRXhUhHYmsNavmspj0qGsQOFs3PfMP6ny9rKqSMc0FyQRYtH26AmS4nfV6mYGvsU7anYRdnHAAIOaJ6+QV2i7VCkqYG3IOWBvpf3tmjc70hnAgkVTK7POdMApLY+45S5LmUESbQvwTfnafeHnLAOBfvsZrPa8zC1DCDBLM39hv/P51F7MNcg+xMfG+C0OebE/gbnK9uKa2zylYfJNIemkJh7un9RLkORQXJ/FQ1FTYWivNzWFlCNdLXhxeCfKll5EKLpef82VFdsG/g802Fygn6iIOVxO/Zkb/Sw9rUIYubhJTTX26zVqRsq86/qQPrLBbWJ4JXgCQ263GmqbA==
+ b=LWN2TEoSfE8igSqp128TVGk/RVOix6pyz/nPHo/aW3+QTDS35s0QHqDpR6m79cJwjdPDl8sPPk6an3jle5OGKfWx1YJFZMFqAXZ5zhfYsOVQ09QEvYJljMOqtQOBp2wyesYQo8nbuB12Tf29U16fPyOCSgovy0+JeFQ44oiTANCOUACy+5DAKWrxVAmUx/NezAIVkXB12PbP6RatEuYyimo3lB727KPplCzu/xnhZzFiCEJhuTbraN6OVJWEuwkZ4T91w448PuaCG22rSeqmzngv/bMw5CoZ7IClZlwx0CAZ1aLLPMdS6P7sDBFHvAjiMevA5Dk1biHDbRCGRInFBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xEL/B5T9Yj9wDNOmaX9FT8+AevNZ785C9cgfOJceSYM=;
- b=XnkTQbu9aRaODhLwTMCqwO8OoERvO7RZkVVuER+OsTx8TEMdkgBIM/BuX6MnYyZCYmhKZ6Br6VJp6T1cT9Yo7WotmxkSSvllmEzSZnu6JQJpF+76tpQWNXpNbIBGSTuDUJZemPIq0bDpxzduSJvTlQQ8rnCnWAvfsIjH2A5SO1KS50smau7IGmD7BqIhQn9VeLZHKOo0ITz/wScQ0B1yeCAeg7sgdnU1twtg1lKNXnFbhenW0CkGRRw+oDE++8aiwstgYrfw4gUnwDXCY32byMcMrPbGuK2IMEr1gcmJO+K3dB8WZaEUeRDaIVvZ/qKeY9wRQzjXKTG4MelO6LHVvA==
+ bh=Pt8qftx0rrBvKjoUAQy2lvzw5jm3uiHq7238aaOT+c0=;
+ b=aqF23Y0SfLs6eFLztJijVWtEGAWwIqa27pQQIc/puEAvLrCEpO8Qi9dJZYsiRmoH5cjNqUNGMgeQ33Oe+hdmbJcY/l3K/BnmMNR3t9v+i+bvUbbcfnCpWu/4PXRBW5MBuBgQ4MTVCW9plPJVnGv6Aw9hkWCgYr/c+mswIYskkXEcUJyXEpYL7xxsf+GocUY6wnbD8Jv9lvX1UBRK30HaLaXfKRZauTV6OUrkQsTz4k4g9/FaMAMJOfg7I7XNf5YFFCYgPkyOrzp0dWnuxsiTnKfQbbKCHT7ebThbpPs3mFBZSH3USNiyXZqnShEhCXubdqhaTNgtYiMXZnh+/b/D9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xEL/B5T9Yj9wDNOmaX9FT8+AevNZ785C9cgfOJceSYM=;
- b=d1CR/CaKVt0lr+Xq/woGPfBw4kEOoZyiRV7o22cihKzci2oF3mBdiTVba9KTW+TE0lk58myuLOX519wqq8Hxc71B3pzRc+otDsSNq5AWUJ1rthrLNS73B26uRSPDaLKUvz5JDky6Dnp2hkZQAiBqsD6pa4XFndjbCH+qglOI2HA=
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM (52.132.240.17) by
- KL1P15301MB0343.APCP153.PROD.OUTLOOK.COM (52.132.242.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.4; Wed, 21 Aug 2019 11:59:19 +0000
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e]) by KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e%8]) with mapi id 15.20.2220.000; Wed, 21 Aug 2019
- 11:59:19 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "shc_work@mail.ru" <shc_work@mail.ru>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
-        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
-        "info@metux.net" <info@metux.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+ bh=Pt8qftx0rrBvKjoUAQy2lvzw5jm3uiHq7238aaOT+c0=;
+ b=imtvD2V3Qz/YLpMiGB3OrBAXTnm+pKzDjEEwfN/ng88VRk8QbXLx8BMxxbbOjPoGwqbhDHzZ9wM5y8JzCHimseS77QTqDhvRW9AEiUltLiv3sMWXK5+mRfCq3nR4U+M+xJo8KERioAJu/1veB3XUfWfeIl72a/TKVcvmktmuHlo=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0762.namprd21.prod.outlook.com (10.173.172.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id
+ 15.20.2220.4; Wed, 21 Aug 2019 21:16:08 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Wed, 21 Aug 2019
+ 21:16:08 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         KY Srinivasan <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Iouri Tarassov <iourit@microsoft.com>
-Subject: RE: [PATCH] video: hyperv: hyperv_fb: Support deferred IO for Hyper-V
- frame buffer driver
-Thread-Topic: [PATCH] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Thread-Index: AQHVUcL5xwYcgiTbLE2rph4+nLCFt6cBbYBAgAQTWPA=
-Date:   Wed, 21 Aug 2019 11:59:18 +0000
-Message-ID: <KL1P15301MB026487D86E439FA67B25C42CBBAA0@KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM>
-References: <20190813103548.2008-1-weh@microsoft.com>
- <DM5PR21MB0137E0BB19D8A0E6385BB316D7A90@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB0137E0BB19D8A0E6385BB316D7A90@DM5PR21MB0137.namprd21.prod.outlook.com>
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: RE: [PATCH] x86/hyper-v: enable TSC page clocksource on 32bit
+Thread-Topic: [PATCH] x86/hyper-v: enable TSC page clocksource on 32bit
+Thread-Index: AQHVWAbGhyyHHv+f0kyOaJzPRqIeCKcGGWMQ
+Date:   Wed, 21 Aug 2019 21:16:08 +0000
+Message-ID: <DM5PR21MB0137D9762756109A46CBFD6AD7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20190821095650.1841-1-vkuznets@redhat.com>
+In-Reply-To: <20190821095650.1841-1-vkuznets@redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -72,186 +64,206 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-18T22:41:11.4651147Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-21T21:16:06.6066656Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ccd13015-0c82-412f-bb9a-41c31ca9a93d;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=10b403f3-dad3-48aa-9286-af16ec58d835;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=weh@microsoft.com; 
-x-originating-ip: [167.220.255.109]
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4d91bb9a-d139-481a-737b-08d7262eff75
+x-ms-office365-filtering-correlation-id: 5f1eb8b2-863e-4897-b91f-08d7267cc8ea
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KL1P15301MB0343;
-x-ms-traffictypediagnostic: KL1P15301MB0343:|KL1P15301MB0343:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0762;
+x-ms-traffictypediagnostic: DM5PR21MB0762:|DM5PR21MB0762:|DM5PR21MB0762:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KL1P15301MB0343FAC996A3DBA52B81518DBBAA0@KL1P15301MB0343.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR21MB07621C6BEE9AA69BAE80365FD7AA0@DM5PR21MB0762.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(376002)(136003)(366004)(13464003)(199004)(189003)(6436002)(8990500004)(102836004)(7416002)(66476007)(11346002)(8676002)(53546011)(9686003)(55016002)(10290500003)(33656002)(2501003)(66446008)(76116006)(64756008)(81166006)(81156014)(74316002)(71200400001)(1250700005)(66946007)(25786009)(86362001)(71190400001)(66556008)(305945005)(2201001)(7736002)(5660300002)(14444005)(256004)(486006)(66066001)(110136005)(6246003)(53936002)(476003)(446003)(14454004)(99286004)(26005)(8936002)(22452003)(186003)(316002)(2906002)(52536014)(76176011)(3846002)(6116002)(7696005)(229853002)(6636002)(478600001)(6506007)(10090500001)(1511001)(241875001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:KL1P15301MB0343;H:KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(396003)(136003)(366004)(39860400002)(189003)(199004)(5660300002)(22452003)(74316002)(316002)(486006)(305945005)(102836004)(26005)(8676002)(7736002)(6506007)(66066001)(229853002)(54906003)(66446008)(64756008)(8936002)(66556008)(66476007)(66946007)(53936002)(81166006)(81156014)(476003)(446003)(10290500003)(11346002)(110136005)(2906002)(99286004)(7416002)(186003)(6246003)(55016002)(86362001)(256004)(6436002)(478600001)(33656002)(7696005)(9686003)(6116002)(76116006)(8990500004)(25786009)(14454004)(10090500001)(76176011)(71190400001)(71200400001)(52536014)(4326008)(3846002)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0762;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: raHwhlIaoGzzFSiic1z47czlX67l2UC31Hy3Ia7gsHrfFbpUqrtPMcK6K64JIJAimYK439gZxhjvGbU23GUGgQiOlVEol0hxxzzFF5sfW3q0qAXDkaghpowCcjjaoCulLt/R1IhaJklNwbNbjRAnRVNV8aSlviAMu/WKsAg40nVtiEAkpIJxenoXhjApvEl+tY9z5SjRBzFH6BHl2ddVVtthfizS7dOv+2/jPUAbi8a7M0Sqwp1tJ+RbiRdRnmsHPZOWhh6pJbtvkNUeVZ34JadSV29RTLMhp1ZqC/5uiMp6+Q1UitoZnlwRsiwbNaN76IIEHWlgY7CH8OO/XNxB8S/7/QvsqnEpqGVvdnaFU4UbemaXjI5gyE47WaS1OfAHK2XH7eulmRvzQKTt4jWcKnQ3GovwtP2zYhyysfHwfyk=
+x-microsoft-antispam-message-info: xu4Uo9nEuojn6qjRnHzhloZKz16NnDT8IQoSHsUgGwUmNhGB3NJzf5HW/nhkKM+rca//YS5zTQavZEQBm0Ot2/yyzbg0YYz+D6Eup9BRrDHvCM8cOgaWEsDUHeRAxBzI0amLMwf09Qo6LgbSwR8UKUICCMeoPbOMRvXhQ3WxPFRdohWq6EMRq2TcHFfYy5zHwNPw3X0UOAy0iqMCdd/Gr07oIxNZIEyBl3nIsBoZ2fk1RzL3vaJqf0BqTCGSPQtiWMK019JizPPJugyJhQexmF6a/aQb4tlevu94Cyj38Q2lQcGcUBl/6fymxgQpg9Hl/Nq85u2+Hr6/evf4dffG+xUZl8eQCgsnR39YhXFM0uGWbvRcJdZ5Wix3N9UzgSkVB7QNbYLDJD86Iz+CfBN5x8IrFXPeBNfNLGxTzfZzr4M=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d91bb9a-d139-481a-737b-08d7262eff75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 11:59:18.7715
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f1eb8b2-863e-4897-b91f-08d7267cc8ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 21:16:08.3161
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9fn5VbpxX0LES9eFSvaac6mP9UWLqCclAbwmZvma2iPCXFep8PQXYo7aPkoNrmcanQm/JoJ7za7+nuzlbRLzYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0343
+X-MS-Exchange-CrossTenant-userprincipalname: puej3lKzHVkMOCGJo6siYjsL5uNJxaNeQXtoZfeg45FAAMHAr+/QQxgQezln0E4Cp6N3SfyoBLtC6EVAESieR49Ea2LzVcunpT2Ziy2eVgY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0762
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thanks Michael. See my reply inline to some of your comments.
-
-> -----Original Message-----
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Monday, August 19, 2019 6:41 AM
-> To: Wei Hu <weh@microsoft.com>; rdunlap@infradead.org; shc_work@mail.ru;
-
-> > -	msg.dirt.rect[0].x1 =3D 0;
-> > -	msg.dirt.rect[0].y1 =3D 0;
-> > -	msg.dirt.rect[0].x2 =3D info->var.xres;
-> > -	msg.dirt.rect[0].y2 =3D info->var.yres;
-> > +	msg.dirt.rect[0].x1 =3D (x1 < 0 || x1 > x2) ? 0 : x1;
-> > +	msg.dirt.rect[0].y1 =3D (y2 < 0 || y1 > y2) ? 0 : y1;
+From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Wednesday, August 21, 20=
+19 2:57 AM
 >=20
-> This should be:
+> There is no particular reason to not enable TSC page clocksource
+> on 32-bit. mul_u64_u64_shr() is available and despite the increased
+> computational complexity (compared to 64bit) TSC page is still a huge
+> win compared to MSR-based clocksource.
 >=20
-> 	msg.dirt.rect[0].y1 =3D (y1 < 0 || y1 > y2) ? 0 : y1;
+> In-kernel reads:
+>   MSR based clocksource: 3361 cycles
+>   TSC page clocksource: 49 cycles
 >=20
-> Also, throughout the code, I don't think there are any places where
-> x or y coordinate values are ever negative.  INT_MAX or 0 is used as the
-> sentinel value indicating "not set".  So can all the tests for less than =
-0
-> now be eliminated, both in this function and in other functions?
+> Reads from userspace (unilizing vDSO in case of TSC page):
+
+s/unilizing/utilizing/
+
+>   MSR based clocksource: 5664 cycles
+>   TSC page clocksource: 131 cycles
 >=20
-> > +	msg.dirt.rect[0].x2 =3D
-> > +		(x2 < x1 || x2 > info->var.xres) ? info->var.xres : x2;
-> > +	msg.dirt.rect[0].y2 =3D
-> > +		(y2 < y1 || y2 > info->var.yres) ? info->var.yres : y2;
+> Enabling TSC page on 32bits allows us to get rid of CONFIG_HYPERV_TSCPAGE
+> as it is now not any different from CONFIG_HYPERV_TIMER.
 >=20
-> How exactly is the dirty rectangle specified to Hyper-V?  Suppose the fra=
-me
-> buffer resolution is 100x200.  If you want to specify the entire rectangl=
-e, the
-> first coordinate is (0, 0).  But what is the second coordinate?  Should i=
-t be
-> (99, 199) or (100, 200)?  The above code (and original code) implies it
-> should specified as (100, 200), which is actually a point outside the
-> maximum resolution, which is counter-intuitive and makes me wonder
-> if the code is correct.
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/include/asm/vdso/gettimeofday.h |  6 +++---
+>  drivers/clocksource/hyperv_timer.c       | 11 -----------
+>  drivers/hv/Kconfig                       |  3 ---
+>  include/clocksource/hyperv_timer.h       |  6 ++----
+>  4 files changed, 5 insertions(+), 21 deletions(-)
 >=20
-[Wei Hu]=20
-The current code treat the entire framebuffer rectangle as (0,0) -> (var.xr=
-es, var.yres).
-Every time it sends refresh request, these are two points sent to host and =
-host
-seems accept it. See the above (x1, y1) and (x2, y2)  in the deleted lines.
-
-So in your example the second coordinate is (100, 200).=20
-
-
-> > +/* Deferred IO callback */
-> > +static void synthvid_deferred_io(struct fb_info *p,
-> > +				 struct list_head *pagelist)
-> > +{
-> > +	struct hvfb_par *par =3D p->par;
-> > +	struct page *page;
-> > +	unsigned long start, end;
-> > +	int y1, y2, miny, maxy;
-> > +	unsigned long flags;
-> > +
-> > +	miny =3D INT_MAX;
-> > +	maxy =3D 0;
-> > +
-> > +	list_for_each_entry(page, pagelist, lru) {
-> > +		start =3D page->index << PAGE_SHIFT;
-> > +		end =3D start + PAGE_SIZE - 1;
-> > +		y1 =3D start / p->fix.line_length;
-> > +		y2 =3D end / p->fix.line_length;
+> diff --git a/arch/x86/include/asm/vdso/gettimeofday.h
+> b/arch/x86/include/asm/vdso/gettimeofday.h
+> index ba71a63cdac4..e9ee139cf29e 100644
+> --- a/arch/x86/include/asm/vdso/gettimeofday.h
+> +++ b/arch/x86/include/asm/vdso/gettimeofday.h
+> @@ -51,7 +51,7 @@ extern struct pvclock_vsyscall_time_info pvclock_page
+>  	__attribute__((visibility("hidden")));
+>  #endif
 >=20
-> The above division rounds down because any remainder is discarded.  I
-> wondered whether rounding down is correct, which got me to thinking
-> about how the dirty rectangle is specified.  Is y2 the index of the last
-> dirty row?  If so, that's not consistent with the code in synthvid_update=
-(),
-> which might choose var.yres as y2, and that's the index of a row outside
-> of the frame buffer.
+> -#ifdef CONFIG_HYPERV_TSCPAGE
+> +#ifdef CONFIG_HYPERV_TIMER
+>  extern struct ms_hyperv_tsc_page hvclock_page
+>  	__attribute__((visibility("hidden")));
+>  #endif
+> @@ -228,7 +228,7 @@ static u64 vread_pvclock(void)
+>  }
+>  #endif
 >=20
-[Wei Hu]=20
-In this place we try to figure out and merge all the faulted pages into one
-big dirty rectangle. A page in memory represents one or multiple lines in
-frame buffer. For example, one faulted page could represent all the linear=
-=20
-pixels from (x, y) to (x-1, y+1). In this case we just form the dirty recta=
-ngle
-as (0, y) -> (var.xres, y+1). Also keep in mind we need to merge multiple
-pages. That's why in the end the dirty rectangle is (0, miny) -> (var.xres,=
- maxy).
-
-
-> > +		if (y2 > p->var.yres)
-> > +			y2 =3D p->var.yres;
-> > +		miny =3D min_t(int, miny, y1);
-> > +		maxy =3D max_t(int, maxy, y2);
-> > +
-> > +		/* Copy from dio space to mmio address */
-> > +		if (par->fb_ready) {
-> > +			spin_lock_irqsave(&par->docopy_lock, flags);
-> > +			hvfb_docopy(par, start, PAGE_SIZE);
-> > +			spin_unlock_irqrestore(&par->docopy_lock, flags);
-> > +		}
-> > +	}
-> > +
-> > +	if (par->fb_ready)
-> > +		synthvid_update(p, 0, miny, p->var.xres, maxy);
-> > +}
-
-
-
-
-> > +
-> > +		if (j =3D=3D info->var.yres)
-> > +			break;
-> > +		hvfb_docopy(par,
-> > +			    j * info->fix.line_length +
-> > +			    (x1 * screen_depth / 8),
-> > +			    (x2 - x1 + 1) * screen_depth / 8);
+> -#ifdef CONFIG_HYPERV_TSCPAGE
+> +#ifdef CONFIG_HYPERV_TIMER
+>  static u64 vread_hvclock(void)
+>  {
+>  	return hv_read_tsc_page(&hvclock_page);
+> @@ -251,7 +251,7 @@ static inline u64 __arch_get_hw_counter(s32 clock_mod=
+e)
+>  		return vread_pvclock();
+>  	}
+>  #endif
+> -#ifdef CONFIG_HYPERV_TSCPAGE
+> +#ifdef CONFIG_HYPERV_TIMER
+>  	if (clock_mode =3D=3D VCLOCK_HVCLOCK) {
+>  		barrier();
+>  		return vread_hvclock();
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyp=
+erv_timer.c
+> index ba2c79e6a0ee..b6083faab540 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -212,8 +212,6 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
+>  struct clocksource *hyperv_cs;
+>  EXPORT_SYMBOL_GPL(hyperv_cs);
 >=20
-> Whether the +1 is needed above gets back to the question I
-> raised earlier about how to interpret the coordinates -- whether
-> the (x2, y2) coordinate is just outside the dirty rectangle or
-> just inside the dirty rectangle.  Most of the code seems to treat
-> it as being just outside the dirty rectangle, in which case the +1
-> should not be used.
+> -#ifdef CONFIG_HYPERV_TSCPAGE
+> -
+>  static struct ms_hyperv_tsc_page *tsc_pg;
 >=20
-[Wei Hu]=20
-This dirty rectangle is not from page fault, but rather from frame buffer
-framework when the screen is in text mode. I am not 100% sure if the dirty
-rectangle given from kernel includes on extra line outside or not.  Here I=
-=20
-just play it safe by copying one extra line in the worst case.
+>  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+> @@ -244,7 +242,6 @@ static struct clocksource hyperv_cs_tsc =3D {
+>  	.mask	=3D CLOCKSOURCE_MASK(64),
+>  	.flags	=3D CLOCK_SOURCE_IS_CONTINUOUS,
+>  };
+> -#endif
+>=20
+>  static u64 notrace read_hv_sched_clock_msr(void)
+>  {
+> @@ -271,7 +268,6 @@ static struct clocksource hyperv_cs_msr =3D {
+>  	.flags	=3D CLOCK_SOURCE_IS_CONTINUOUS,
+>  };
+>=20
+> -#ifdef CONFIG_HYPERV_TSCPAGE
+>  static bool __init hv_init_tsc_clocksource(void)
+>  {
+>  	u64		tsc_msr;
+> @@ -306,13 +302,6 @@ static bool __init hv_init_tsc_clocksource(void)
+>  	sched_clock_register(read_hv_sched_clock_tsc, 64, HV_CLOCK_HZ);
+>  	return true;
+>  }
+> -#else
+> -static bool __init hv_init_tsc_clocksource(void)
+> -{
+> -	return false;
+> -}
+> -#endif
+> -
+>=20
+>  void __init hv_init_clocksource(void)
+>  {
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 9a59957922d4..79e5356a737a 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -14,9 +14,6 @@ config HYPERV
+>  config HYPERV_TIMER
+>  	def_bool HYPERV
+>=20
+> -config HYPERV_TSCPAGE
+> -       def_bool HYPERV && X86_64
+> -
+>  config HYPERV_UTILS
+>  	tristate "Microsoft Hyper-V Utilities driver"
+>  	depends on HYPERV && CONNECTOR && NLS
+> diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyp=
+erv_timer.h
+> index a821deb8ecb2..f72e4619d0a7 100644
+> --- a/include/clocksource/hyperv_timer.h
+> +++ b/include/clocksource/hyperv_timer.h
+> @@ -28,12 +28,10 @@ extern void hv_stimer_cleanup(unsigned int cpu);
+>  extern void hv_stimer_global_cleanup(void);
+>  extern void hv_stimer0_isr(void);
+>=20
+> -#if IS_ENABLED(CONFIG_HYPERV)
+> +#ifdef CONFIG_HYPERV_TIMER
+>  extern struct clocksource *hyperv_cs;
+>  extern void hv_init_clocksource(void);
+> -#endif /* CONFIG_HYPERV */
+>=20
+> -#ifdef CONFIG_HYPERV_TSCPAGE
+>  extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
+>=20
+>  static inline notrace u64
+> @@ -102,6 +100,6 @@ static inline u64 hv_read_tsc_page_tsc(const struct
+> ms_hyperv_tsc_page *tsc_pg,
+>  {
+>  	return U64_MAX;
+>  }
+> -#endif /* CONFIG_HYPERV_TSCPAGE */
+> +#endif /* CONFIG_HYPERV_TIMER */
 
-Suppose dirty rectangle only contain one pixel, for example (0,0) is the on=
-ly
-pixel changed in the entire frame buffer. If kernel sends me dirty rectangl=
-e as
-(0, 0) -> (0, 0), the above function works correctly. If the kernel sends
- (0, 0) -> (1, 1), then the above function just copies one extra row and on=
-e extra
-column, which should also be fine. The hvfb_docopy() takes care of the=20
-edge cases.
+There's a #else prior to the #endif that has TSCPAGE misspelled
+as TSC_PAGE in the comment.  Should probably fix the comment ...
 
-Thanks,
-Wei
+>=20
+>  #endif
+> --
+> 2.20.1
+
+Overall an excellent removal of unnecessary complexity.  Thx.
+Two minor nits notwithstanding,
+
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+
+
