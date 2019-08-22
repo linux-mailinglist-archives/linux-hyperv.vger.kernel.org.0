@@ -2,435 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4743798ABA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2019 07:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5607198ADA
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2019 07:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbfHVFGF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Aug 2019 01:06:05 -0400
-Received: from mail-eopbgr810109.outbound.protection.outlook.com ([40.107.81.109]:28619
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731353AbfHVFGF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:06:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FcUIIeD48e6+HPY7XPtY7Yzd6DIWnYzevzC36NJkwi+6R3n7piHss/XHs0BBvz7G5me/sEAgi7xp7Y8mLMl+E+d9kv2HnQD+Dl5+yBm9AhzhCLfBiob2Gbk8jaulTlaVYbmB8nDYQpSevUfaiZKL3zk0VoZlQFJHbt9U2zywg32PudgetZMQdWxpZtYt4HJIdJouHVq9yI+L3BhM4yhJKxQ411H4rPQq2MPmOAyAuV51FjXHUE1aYwCLTW/y0x7/6SUd9ryPURIWJfwSJfBIn88KnicAiNqg3iGQ24SMjSdDw5H1pUVBf9HQXuh3kuiZSxdjrcsylc9j76MVFFHVjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qJut3ge3rzBZu7s0lmJW6718rfv48Bvu2R3RCzYzVOg=;
- b=gLZ5MzwVytLuStk6Hrznl3SCzxLIm1p3sUUttzXzSkn4/CIhLSZELJ9VRRKrK01vbQEdxxdAVExp2Qmm6B23NX5zEXtWhIsDQCpta4eZxRue1nxYgqDVN3Oc8C6P1W04mKHMiU0GlGTeU7gPacV1rC4xXj4aYijk+tEB7ZYzMkjZHnlLD1YtGoYoCVsz5+cFdEZzOnA8F/85yzHYIvHEb6epIvGLUFcbvQP5gPAmHlvZflGYVqAPFQ4AeippJyunD82I9y/wvtozhLH4LBiDGE5L4rJYnMBU1je8H4KML0IyAYkb8njD97TwqF0FA90i7/TNPPDZQO8nRYdzX8Lf3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qJut3ge3rzBZu7s0lmJW6718rfv48Bvu2R3RCzYzVOg=;
- b=aStOkcKJMQkCvnppwOOPByCDH2dDRSmfMs+wgWUEpnZtx9D/kX+LwlyoT202YjonrbyDZK/9eCTbm79QE64ae3Cb0bgHZgWeNwe1OZ57kqzL54faf+AQkxFqQNVtZXenVQxolSHlnem9aF3rQtnRcqIx9optFme8Rk8ciasQiUU=
-Received: from MN2PR21MB1248.namprd21.prod.outlook.com (20.179.20.225) by
- MN2PR21MB1279.namprd21.prod.outlook.com (20.179.21.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.4; Thu, 22 Aug 2019 05:06:01 +0000
-Received: from MN2PR21MB1248.namprd21.prod.outlook.com
- ([fe80::147a:ea1f:326d:832e]) by MN2PR21MB1248.namprd21.prod.outlook.com
- ([fe80::147a:ea1f:326d:832e%3]) with mapi id 15.20.2199.011; Thu, 22 Aug 2019
- 05:06:01 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "eranbe@mellanox.com" <eranbe@mellanox.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next,v4, 6/6] net/mlx5e: Add mlx5e HV VHCA stats agent
-Thread-Topic: [PATCH net-next,v4, 6/6] net/mlx5e: Add mlx5e HV VHCA stats
- agent
-Thread-Index: AQHVWKdKh2+NWrz/8EWbrTfJz7rlOw==
-Date:   Thu, 22 Aug 2019 05:06:00 +0000
-Message-ID: <1566450236-36757-7-git-send-email-haiyangz@microsoft.com>
-References: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0039.namprd14.prod.outlook.com
- (2603:10b6:300:12b::25) To MN2PR21MB1248.namprd21.prod.outlook.com
- (2603:10b6:208:3b::33)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 279aa970-e71e-4799-f9c0-08d726be6cc5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR21MB1279;
-x-ms-traffictypediagnostic: MN2PR21MB1279:|MN2PR21MB1279:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR21MB127930A0DECE4614B59DAA34ACA50@MN2PR21MB1279.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(136003)(366004)(376002)(346002)(189003)(199004)(71200400001)(71190400001)(186003)(446003)(66066001)(2616005)(4326008)(36756003)(6392003)(6436002)(256004)(53936002)(7846003)(7416002)(6512007)(26005)(6486002)(14444005)(11346002)(316002)(2906002)(2201001)(110136005)(22452003)(54906003)(10090500001)(476003)(25786009)(386003)(7736002)(64756008)(81156014)(66946007)(66446008)(8936002)(10290500003)(478600001)(66476007)(2501003)(102836004)(4720700003)(6116002)(3846002)(6506007)(305945005)(5660300002)(486006)(99286004)(66556008)(81166006)(14454004)(50226002)(8676002)(52116002)(76176011)(42413003)(142933001)(32563001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1279;H:MN2PR21MB1248.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7dNJRHgMJTw1jIrVBYD5fYdt71/BGTpQuP30kUufSu47PzKvabR58vYn8q0Fp4f/bRwdxHF1DrhtZt2yaL6/91JYnCZGLqDwo7ngPUefzsLSqGhPm6xFpQIBBa8ZM/k/+sobICyAZ0Xf/GroiOPlFZ/s3012p9kOWVfzyVopPWqYCQz4liuCtqCT220OZuMCdOGShlQGv19JFRy63ESZjtdq+CfiW10iwilapU+uGlptcz0JgLKQgYg6dpr8dfwHOKKRAjxKg/1a9nL52Kq7evhuoS2NEGfZ3TlVJQGcflXuwSh+B6btfqLsmPWuSNmdt/h854Z2yeXb0PmEnW4DQUa6XPZ/WyYfqOWurVo1JVF60cn2CJm2ke8iTWFEd4JutuNRS+03w2Ec9wjy9iLG/dXzd9GNzZr011lHdFKjH1w=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 279aa970-e71e-4799-f9c0-08d726be6cc5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 05:06:00.8069
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Szn7Ag5mSeUQVuSxTLZDSh25UrgFuj7FuMjDdeSd9rtrfeTXsHCGgpxDyLe8SjH/ZiYTCcr5pHlCE4iKfm3qew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1279
+        id S1730037AbfHVFjJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Aug 2019 01:39:09 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41103 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729854AbfHVFjJ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 22 Aug 2019 01:39:09 -0400
+Received: by mail-pl1-f195.google.com with SMTP id m9so2738956pls.8;
+        Wed, 21 Aug 2019 22:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PffswB8wLkH//GMkNj72Aq/AWOuk9sDOFYYFBy0MDFk=;
+        b=jaQEeHApin3cj7B+uK4JdOwGroXhaL20ll4T5FzzWnPrhWr9ap3oxn9ZXwRRjofJJL
+         zcwBG4fv/8tlD+a+04rVYv/sX5SXxlEKseqZE10Q2qw0c6QHqr6SoR0jM3CIUwNNPEs6
+         ugqBjzu262o6pU/VNIhPsrgA/ngys/Ff/Qb+EUVAEBVx25rMZaxMH5YRC3LfCVg/aIuW
+         Wrd38PgD74RU++fSkjcWNLXmPt/+FEir9WdY9ao29f2CpJUr/yTm6mHCgjJX3H3J1o8p
+         bVg2MIGgNl/TvElW48g/KLxI9cdK3SROLU/xXEztylH8TEOQXAqkgAEKCTlRKoBmDYxI
+         edAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PffswB8wLkH//GMkNj72Aq/AWOuk9sDOFYYFBy0MDFk=;
+        b=gnV+qrzjBS7ME5Bc4rrCr7jKRMPsuylLfJQY8829eW7vzqk2s3kGmJz/B1J98McGqx
+         jhiC/qNACWbQlpRNO2ohChqe0/TlLeCSSx6jlvUtqWSSiYcUm0HyiyfASNNH3UQaFCPv
+         cYPQ2ah/v1bHRvJd8LQqo3BDnq/WkLZsR+n//m01qr0JQkefVfWiYK0+K8ZOTIq2h8s3
+         Tc3WzROmo0o/QxeEHsyHSSPQK/GDeYTDqO/r6DvQsbSgAkSG45Tab1Mmsq7UG2b0eDKP
+         ym/RZJYPuUch33+3EP/GyPo7CbqR0DXsJ8/4yQwfKYQNrLDlqnNErNo2NbtwDaw40sE2
+         jgiw==
+X-Gm-Message-State: APjAAAVgywK654x5cv+TwO+si2VfagU8/Ny/J2hb/io4lZNy+NyR3WEj
+        mE2ypXZSbNNECHZvoPg9O/k=
+X-Google-Smtp-Source: APXvYqyL2YhXLlLPd0qIqo0j/qX6iW4qA1lcbcnK2ZDWX10ozTy48wMLHIN1QMqWwbv4Ejh/Hjg43Q==
+X-Received: by 2002:a17:902:1126:: with SMTP id d35mr6142256pla.330.1566452348778;
+        Wed, 21 Aug 2019 22:39:08 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.52])
+        by smtp.googlemail.com with ESMTPSA id q8sm6762482pje.2.2019.08.21.22.39.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 21 Aug 2019 22:39:08 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        daniel.lezcano@linaro.org, michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/Hyper-V: Fix build error with CONFIG_HYPERV_TSCPAGE=N
+Date:   Thu, 22 Aug 2019 13:38:52 +0800
+Message-Id: <20190822053852.239309-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-HV VHCA stats agent is responsible on running a preiodic rx/tx
-packets/bytes stats update. Currently the supported format is version
-MLX5_HV_VHCA_STATS_VERSION. Block ID 1 is dedicated for statistics data
-transfer from the VF to the PF.
+Both Hyper-V tsc page and Hyper-V tsc MSR code use variable
+hv_sched_clock_offset for their sched clock callback and so
+define the variable regardless of CONFIG_HYPERV_TSCPAGE setting.
 
-The reporter fetch the statistics data from all opened channels, fill it
-in a buffer and send it to mlx5_hv_vhca_write_agent.
-
-As the stats layer should include some metadata per block (sequence and
-offset), the HV VHCA layer shall modify the buffer before actually send it
-over block 1.
-
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/Makefile   |   1 +
- drivers/net/ethernet/mellanox/mlx5/core/en.h       |  13 ++
- .../ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c | 162 +++++++++++++++++=
-++++
- .../ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h |  25 ++++
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |   3 +
- .../net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h  |   1 +
- 6 files changed, 205 insertions(+)
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stat=
-s.c
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stat=
-s.h
+This patch is based on the top of "git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+timers/core".
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net=
-/ethernet/mellanox/mlx5/core/Makefile
-index 8d443fc..f4de9cc 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-@@ -36,6 +36,7 @@ mlx5_core-$(CONFIG_MLX5_CORE_EN_DCB) +=3D en_dcbnl.o en/p=
-ort_buffer.o
- mlx5_core-$(CONFIG_MLX5_ESWITCH)     +=3D en_rep.o en_tc.o en/tc_tun.o lib=
-/port_tun.o lag_mp.o \
- 					lib/geneve.o en/tc_tun_vxlan.o en/tc_tun_gre.o \
- 					en/tc_tun_geneve.o diag/en_tc_tracepoint.o
-+mlx5_core-$(CONFIG_PCI_HYPERV_INTERFACE) +=3D en/hv_vhca_stats.o
-=20
- #
- # Core extra
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/eth=
-ernet/mellanox/mlx5/core/en.h
-index 7316571..4467927 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -54,6 +54,7 @@
- #include "mlx5_core.h"
- #include "en_stats.h"
- #include "en/fs.h"
-+#include "lib/hv_vhca.h"
-=20
- extern const struct net_device_ops mlx5e_netdev_ops;
- struct page_pool;
-@@ -782,6 +783,15 @@ struct mlx5e_modify_sq_param {
- 	int rl_index;
- };
-=20
-+#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
-+struct mlx5e_hv_vhca_stats_agent {
-+	struct mlx5_hv_vhca_agent *agent;
-+	struct delayed_work        work;
-+	u16                        delay;
-+	void                      *buf;
-+};
-+#endif
-+
- struct mlx5e_xsk {
- 	/* UMEMs are stored separately from channels, because we don't want to
- 	 * lose them when channels are recreated. The kernel also stores UMEMs,
-@@ -853,6 +863,9 @@ struct mlx5e_priv {
- 	struct devlink_health_reporter *tx_reporter;
- 	struct devlink_health_reporter *rx_reporter;
- 	struct mlx5e_xsk           xsk;
-+#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
-+	struct mlx5e_hv_vhca_stats_agent stats_agent;
-+#endif
- };
-=20
- struct mlx5e_profile {
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c b/d=
-rivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c
-new file mode 100644
-index 0000000..c37b4ac
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c
-@@ -0,0 +1,162 @@
-+// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
-+// Copyright (c) 2018 Mellanox Technologies
-+
-+#include "en.h"
-+#include "en/hv_vhca_stats.h"
-+#include "lib/hv_vhca.h"
-+#include "lib/hv.h"
-+
-+struct mlx5e_hv_vhca_per_ring_stats {
-+	u64     rx_packets;
-+	u64     rx_bytes;
-+	u64     tx_packets;
-+	u64     tx_bytes;
-+};
-+
-+static void
-+mlx5e_hv_vhca_fill_ring_stats(struct mlx5e_priv *priv, int ch,
-+			      struct mlx5e_hv_vhca_per_ring_stats *data)
-+{
-+	struct mlx5e_channel_stats *stats;
-+	int tc;
-+
-+	stats =3D &priv->channel_stats[ch];
-+	data->rx_packets =3D stats->rq.packets;
-+	data->rx_bytes   =3D stats->rq.bytes;
-+
-+	for (tc =3D 0; tc < priv->max_opened_tc; tc++) {
-+		data->tx_packets +=3D stats->sq[tc].packets;
-+		data->tx_bytes   +=3D stats->sq[tc].bytes;
-+	}
-+}
-+
-+static void mlx5e_hv_vhca_fill_stats(struct mlx5e_priv *priv, u64 *data,
-+				     int buf_len)
-+{
-+	int ch, i =3D 0;
-+
-+	for (ch =3D 0; ch < priv->max_nch; ch++) {
-+		u64 *buf =3D data + i;
-+
-+		if (WARN_ON_ONCE(buf +
-+				 sizeof(struct mlx5e_hv_vhca_per_ring_stats) >
-+				 data + buf_len))
-+			return;
-+
-+		mlx5e_hv_vhca_fill_ring_stats(priv, ch,
-+					      (struct mlx5e_hv_vhca_per_ring_stats *)buf);
-+		i +=3D sizeof(struct mlx5e_hv_vhca_per_ring_stats) / sizeof(u64);
-+	}
-+}
-+
-+static int mlx5e_hv_vhca_stats_buf_size(struct mlx5e_priv *priv)
-+{
-+	return (sizeof(struct mlx5e_hv_vhca_per_ring_stats) *
-+		priv->max_nch);
-+}
-+
-+static void mlx5e_hv_vhca_stats_work(struct work_struct *work)
-+{
-+	struct mlx5e_hv_vhca_stats_agent *sagent;
-+	struct mlx5_hv_vhca_agent *agent;
-+	struct delayed_work *dwork;
-+	struct mlx5e_priv *priv;
-+	int buf_len, rc;
-+	void *buf;
-+
-+	dwork =3D to_delayed_work(work);
-+	sagent =3D container_of(dwork, struct mlx5e_hv_vhca_stats_agent, work);
-+	priv =3D container_of(sagent, struct mlx5e_priv, stats_agent);
-+	buf_len =3D mlx5e_hv_vhca_stats_buf_size(priv);
-+	agent =3D sagent->agent;
-+	buf =3D sagent->buf;
-+
-+	memset(buf, 0, buf_len);
-+	mlx5e_hv_vhca_fill_stats(priv, buf, buf_len);
-+
-+	rc =3D mlx5_hv_vhca_agent_write(agent, buf, buf_len);
-+	if (rc) {
-+		mlx5_core_err(priv->mdev,
-+			      "%s: Failed to write stats, err =3D %d\n",
-+			      __func__, rc);
-+		return;
-+	}
-+
-+	if (sagent->delay)
-+		queue_delayed_work(priv->wq, &sagent->work, sagent->delay);
-+}
-+
-+enum {
-+	MLX5_HV_VHCA_STATS_VERSION     =3D 1,
-+	MLX5_HV_VHCA_STATS_UPDATE_ONCE =3D 0xFFFF,
-+};
-+
-+static void mlx5e_hv_vhca_stats_control(struct mlx5_hv_vhca_agent *agent,
-+					struct mlx5_hv_vhca_control_block *block)
-+{
-+	struct mlx5e_hv_vhca_stats_agent *sagent;
-+	struct mlx5e_priv *priv;
-+
-+	priv =3D mlx5_hv_vhca_agent_priv(agent);
-+	sagent =3D &priv->stats_agent;
-+
-+	block->version =3D MLX5_HV_VHCA_STATS_VERSION;
-+	block->rings   =3D priv->max_nch;
-+
-+	if (!block->command) {
-+		cancel_delayed_work_sync(&priv->stats_agent.work);
-+		return;
-+	}
-+
-+	sagent->delay =3D block->command =3D=3D MLX5_HV_VHCA_STATS_UPDATE_ONCE ? =
-0 :
-+			msecs_to_jiffies(block->command * 100);
-+
-+	queue_delayed_work(priv->wq, &sagent->work, sagent->delay);
-+}
-+
-+static void mlx5e_hv_vhca_stats_cleanup(struct mlx5_hv_vhca_agent *agent)
-+{
-+	struct mlx5e_priv *priv =3D mlx5_hv_vhca_agent_priv(agent);
-+
-+	cancel_delayed_work_sync(&priv->stats_agent.work);
-+}
-+
-+int mlx5e_hv_vhca_stats_create(struct mlx5e_priv *priv)
-+{
-+	int buf_len =3D mlx5e_hv_vhca_stats_buf_size(priv);
-+	struct mlx5_hv_vhca_agent *agent;
-+
-+	priv->stats_agent.buf =3D kvzalloc(buf_len, GFP_KERNEL);
-+	if (!priv->stats_agent.buf)
-+		return -ENOMEM;
-+
-+	agent =3D mlx5_hv_vhca_agent_create(priv->mdev->hv_vhca,
-+					  MLX5_HV_VHCA_AGENT_STATS,
-+					  mlx5e_hv_vhca_stats_control, NULL,
-+					  mlx5e_hv_vhca_stats_cleanup,
-+					  priv);
-+
-+	if (IS_ERR_OR_NULL(agent)) {
-+		if (IS_ERR(agent))
-+			netdev_warn(priv->netdev,
-+				    "Failed to create hv vhca stats agent, err =3D %ld\n",
-+				    PTR_ERR(agent));
-+
-+		kfree(priv->stats_agent.buf);
-+		return IS_ERR_OR_NULL(agent);
-+	}
-+
-+	priv->stats_agent.agent =3D agent;
-+	INIT_DELAYED_WORK(&priv->stats_agent.work, mlx5e_hv_vhca_stats_work);
-+
-+	return 0;
-+}
-+
-+void mlx5e_hv_vhca_stats_destroy(struct mlx5e_priv *priv)
-+{
-+	if (IS_ERR_OR_NULL(priv->stats_agent.agent))
-+		return;
-+
-+	mlx5_hv_vhca_agent_destroy(priv->stats_agent.agent);
-+	kfree(priv->stats_agent.buf);
-+}
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h b/d=
-rivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h
-new file mode 100644
-index 0000000..664463f
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
-+/* Copyright (c) 2019 Mellanox Technologies. */
-+
-+#ifndef __MLX5_EN_STATS_VHCA_H__
-+#define __MLX5_EN_STATS_VHCA_H__
-+#include "en.h"
-+
-+#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
-+
-+int mlx5e_hv_vhca_stats_create(struct mlx5e_priv *priv);
-+void mlx5e_hv_vhca_stats_destroy(struct mlx5e_priv *priv);
-+
-+#else
-+
-+static inline int mlx5e_hv_vhca_stats_create(struct mlx5e_priv *priv)
-+{
-+	return 0;
-+}
-+
-+static inline void mlx5e_hv_vhca_stats_destroy(struct mlx5e_priv *priv)
-+{
-+}
-+#endif
-+
-+#endif /* __MLX5_EN_STATS_VHCA_H__ */
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/ne=
-t/ethernet/mellanox/mlx5/core/en_main.c
-index 7fdea64..fa4bf2d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -62,6 +62,7 @@
- #include "en/xsk/setup.h"
- #include "en/xsk/rx.h"
- #include "en/xsk/tx.h"
-+#include "en/hv_vhca_stats.h"
-=20
-=20
- bool mlx5e_check_fragmented_striding_rq_cap(struct mlx5_core_dev *mdev)
-@@ -5109,6 +5110,7 @@ static void mlx5e_nic_enable(struct mlx5e_priv *priv)
- 	if (mlx5e_monitor_counter_supported(priv))
- 		mlx5e_monitor_counter_init(priv);
-=20
-+	mlx5e_hv_vhca_stats_create(priv);
- 	if (netdev->reg_state !=3D NETREG_REGISTERED)
- 		return;
- #ifdef CONFIG_MLX5_CORE_EN_DCB
-@@ -5141,6 +5143,7 @@ static void mlx5e_nic_disable(struct mlx5e_priv *priv=
-)
-=20
- 	queue_work(priv->wq, &priv->set_rx_mode_work);
-=20
-+	mlx5e_hv_vhca_stats_destroy(priv);
- 	if (mlx5e_monitor_counter_supported(priv))
- 		mlx5e_monitor_counter_cleanup(priv);
-=20
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h b/driver=
-s/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
-index 984e7ad..4bad6a5 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
-@@ -13,6 +13,7 @@
-=20
- enum mlx5_hv_vhca_agent_type {
- 	MLX5_HV_VHCA_AGENT_CONTROL =3D 0,
-+	MLX5_HV_VHCA_AGENT_STATS   =3D 1,
- 	MLX5_HV_VHCA_AGENT_MAX =3D 32,
- };
-=20
---=20
-1.8.3.1
+ drivers/clocksource/hyperv_timer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index dad8af198e20..c322ab4d3689 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -22,6 +22,7 @@
+ #include <asm/mshyperv.h>
+ 
+ static struct clock_event_device __percpu *hv_clock_event;
++static u64 hv_sched_clock_offset __ro_after_init;
+ 
+ /*
+  * If false, we're using the old mechanism for stimer0 interrupts
+@@ -215,7 +216,6 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
+ #ifdef CONFIG_HYPERV_TSCPAGE
+ 
+ static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
+-static u64 hv_sched_clock_offset __ro_after_init;
+ 
+ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+ {
+-- 
+2.14.5
 
