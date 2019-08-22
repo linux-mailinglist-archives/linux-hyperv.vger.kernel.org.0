@@ -2,98 +2,114 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5607198ADA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2019 07:39:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E898198CAB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2019 09:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbfHVFjJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Aug 2019 01:39:09 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41103 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbfHVFjJ (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:39:09 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m9so2738956pls.8;
-        Wed, 21 Aug 2019 22:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=PffswB8wLkH//GMkNj72Aq/AWOuk9sDOFYYFBy0MDFk=;
-        b=jaQEeHApin3cj7B+uK4JdOwGroXhaL20ll4T5FzzWnPrhWr9ap3oxn9ZXwRRjofJJL
-         zcwBG4fv/8tlD+a+04rVYv/sX5SXxlEKseqZE10Q2qw0c6QHqr6SoR0jM3CIUwNNPEs6
-         ugqBjzu262o6pU/VNIhPsrgA/ngys/Ff/Qb+EUVAEBVx25rMZaxMH5YRC3LfCVg/aIuW
-         Wrd38PgD74RU++fSkjcWNLXmPt/+FEir9WdY9ao29f2CpJUr/yTm6mHCgjJX3H3J1o8p
-         bVg2MIGgNl/TvElW48g/KLxI9cdK3SROLU/xXEztylH8TEOQXAqkgAEKCTlRKoBmDYxI
-         edAQ==
+        id S1731716AbfHVHwT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Aug 2019 03:52:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57998 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730037AbfHVHwS (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:52:18 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F07202A09CE
+        for <linux-hyperv@vger.kernel.org>; Thu, 22 Aug 2019 07:52:17 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id m7so2783778wrw.22
+        for <linux-hyperv@vger.kernel.org>; Thu, 22 Aug 2019 00:52:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PffswB8wLkH//GMkNj72Aq/AWOuk9sDOFYYFBy0MDFk=;
-        b=gnV+qrzjBS7ME5Bc4rrCr7jKRMPsuylLfJQY8829eW7vzqk2s3kGmJz/B1J98McGqx
-         jhiC/qNACWbQlpRNO2ohChqe0/TlLeCSSx6jlvUtqWSSiYcUm0HyiyfASNNH3UQaFCPv
-         cYPQ2ah/v1bHRvJd8LQqo3BDnq/WkLZsR+n//m01qr0JQkefVfWiYK0+K8ZOTIq2h8s3
-         Tc3WzROmo0o/QxeEHsyHSSPQK/GDeYTDqO/r6DvQsbSgAkSG45Tab1Mmsq7UG2b0eDKP
-         ym/RZJYPuUch33+3EP/GyPo7CbqR0DXsJ8/4yQwfKYQNrLDlqnNErNo2NbtwDaw40sE2
-         jgiw==
-X-Gm-Message-State: APjAAAVgywK654x5cv+TwO+si2VfagU8/Ny/J2hb/io4lZNy+NyR3WEj
-        mE2ypXZSbNNECHZvoPg9O/k=
-X-Google-Smtp-Source: APXvYqyL2YhXLlLPd0qIqo0j/qX6iW4qA1lcbcnK2ZDWX10ozTy48wMLHIN1QMqWwbv4Ejh/Hjg43Q==
-X-Received: by 2002:a17:902:1126:: with SMTP id d35mr6142256pla.330.1566452348778;
-        Wed, 21 Aug 2019 22:39:08 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.52])
-        by smtp.googlemail.com with ESMTPSA id q8sm6762482pje.2.2019.08.21.22.39.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 22:39:08 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        daniel.lezcano@linaro.org, michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/Hyper-V: Fix build error with CONFIG_HYPERV_TSCPAGE=N
-Date:   Thu, 22 Aug 2019 13:38:52 +0800
-Message-Id: <20190822053852.239309-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=7BKcrVO8Nhd+WXGWUEZTUpLjr5rNDrS+NAVt7gSeayI=;
+        b=Kf7soFa7v8Dae6ImPOY00aU498RSWfxKjDMBFLYcRVIbA1x7t6G563VBHCb0Fw8kUV
+         pYdbbscWzLwdpWlbh98WdQKRuPG5SjP1i9R21QsHatOZP5kEKDlce0Ka1AVxaiiBceG1
+         I9vp4FIpNbibKXUvUs69TZjjJ8emhs5BaCSr4AnAkoN0LdOI9H6kyvP41XORasO3/7fo
+         MbiNSfOZ/VhHIOT20q/IJ3k7mHroYd6Kzh2zkgo6U8HtK/+lJ6dmivP2cP5oYhS3TMMf
+         y/T8qI10vaKlxV3I70Zl/5+esLy8mHIqSYCgRPaP6iHP4hVmkcVcWp1J4/YVu1QDU5rZ
+         WSwA==
+X-Gm-Message-State: APjAAAXQLQzHBrR3laL51VFqGcK05/Jb1tD6UBH15N8vOu+VDmvZ7YhB
+        JBzeEiMAHBKsICMp+Lsk5YA96dOmacK57EVMU0AMzZlyGkkfqc+aybw7lo6WjljcvhpgNiQQhws
+        MUkIix4kZOo3HDOQUDEj0zYj0
+X-Received: by 2002:a7b:c0d4:: with SMTP id s20mr4324442wmh.122.1566460336705;
+        Thu, 22 Aug 2019 00:52:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwWuWvgDKAuh+xWDFJnsdBvnUFY6ufegdNELeez5PrP8mvCRsuw/nstCz8A23ZrVau0d9htVA==
+X-Received: by 2002:a7b:c0d4:: with SMTP id s20mr4324415wmh.122.1566460336454;
+        Thu, 22 Aug 2019 00:52:16 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id i5sm26461922wrn.48.2019.08.22.00.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 00:52:15 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] x86/hyper-v: enable TSC page clocksource on 32bit
+In-Reply-To: <alpine.DEB.2.21.1908212321320.1983@nanos.tec.linutronix.de>
+References: <20190821095650.1841-1-vkuznets@redhat.com> <alpine.DEB.2.21.1908212316040.1983@nanos.tec.linutronix.de> <alpine.DEB.2.21.1908212321320.1983@nanos.tec.linutronix.de>
+Date:   Thu, 22 Aug 2019 09:52:14 +0200
+Message-ID: <877e75r61d.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-Both Hyper-V tsc page and Hyper-V tsc MSR code use variable
-hv_sched_clock_offset for their sched clock callback and so
-define the variable regardless of CONFIG_HYPERV_TSCPAGE setting.
+> On Wed, 21 Aug 2019, Thomas Gleixner wrote:
+>
+>> On Wed, 21 Aug 2019, Vitaly Kuznetsov wrote:
+>> 
+>> > There is no particular reason to not enable TSC page clocksource
+>> > on 32-bit. mul_u64_u64_shr() is available and despite the increased
+>> > computational complexity (compared to 64bit) TSC page is still a huge
+>> > win compared to MSR-based clocksource.
+>> > 
+>> > In-kernel reads:
+>> >   MSR based clocksource: 3361 cycles
+>> >   TSC page clocksource: 49 cycles
+>> > 
+>> > Reads from userspace (unilizing vDSO in case of TSC page):
+>> >   MSR based clocksource: 5664 cycles
+>> >   TSC page clocksource: 131 cycles
+>> > 
+>> > Enabling TSC page on 32bits allows us to get rid of CONFIG_HYPERV_TSCPAGE
+>> 
+>> s/allows us/allows/
+>> 
+>> > as it is now not any different from CONFIG_HYPERV_TIMER.
+>> > 
+>> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> > ---
+>> >  arch/x86/include/asm/vdso/gettimeofday.h |  6 +++---
+>> >  drivers/clocksource/hyperv_timer.c       | 11 -----------
+>> >  drivers/hv/Kconfig                       |  3 ---
+>> >  include/clocksource/hyperv_timer.h       |  6 ++----
+>> >  4 files changed, 5 insertions(+), 21 deletions(-)
+>> 
+>> Really nice cleanup as a side effect of adding functionality.
+>
+> That said, could you please rebase that on
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+>
+> as I just applied the TSC page patches there and this conflicts left and
+> right.
 
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
-This patch is based on the top of "git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-timers/core".
+Sure, v2 is coming!
 
- drivers/clocksource/hyperv_timer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index dad8af198e20..c322ab4d3689 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -22,6 +22,7 @@
- #include <asm/mshyperv.h>
- 
- static struct clock_event_device __percpu *hv_clock_event;
-+static u64 hv_sched_clock_offset __ro_after_init;
- 
- /*
-  * If false, we're using the old mechanism for stimer0 interrupts
-@@ -215,7 +216,6 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
- #ifdef CONFIG_HYPERV_TSCPAGE
- 
- static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
--static u64 hv_sched_clock_offset __ro_after_init;
- 
- struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- {
 -- 
-2.14.5
-
+Vitaly
