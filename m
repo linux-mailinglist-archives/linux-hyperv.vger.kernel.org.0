@@ -2,203 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 502A3990AD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2019 12:25:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB31699170
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2019 12:57:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387545AbfHVKZl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Aug 2019 06:25:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39852 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730918AbfHVKZf (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:25:35 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2E5807BDA0
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Aug 2019 10:25:35 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id f14so1864019wmh.7
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Aug 2019 03:25:35 -0700 (PDT)
+        id S2387919AbfHVKzq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Aug 2019 06:55:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40639 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731683AbfHVKzq (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:55:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c5so5085232wmb.5;
+        Thu, 22 Aug 2019 03:55:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BPmd91qz3a0HiNpHiRZCkjVJHjiYHrK/cHq1mbQuN28=;
+        b=NGLGGDx2k7Rpo9b+f1V5n7eDS3u1cwHKo2Yw+ouspmGBrABNAuqgInxox6hPBe0a/1
+         AjcoAYxQzyR4kLDAV7rBLknwSRQRlxwlfOcAmkoXhtLZ6LUvVkVyDUOAHfKrZCkdeNuv
+         XJC3Ln+DikWpIeAOuI21u/ah0gPPWtY6WoDjWasea2rg7WhkVO9MXfVHZn0OnemkdSgE
+         ruodghO5w+EuuCpauZmfwzsxXbxZlTYJmzCizJs3Owy+5hPqVGzJuTMinT1mD2KRQjvS
+         n4BiPVifEiOwN3ZktAaP7hMDzJv++6D/Rlfeoe9+vespmtHpGsfNi6K5eQFrK8Zdnffb
+         FdyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OkWE/ypXtm5ByIaQmws7qUqEgpMrRSHM+eiQENF8y7E=;
-        b=dvWH/nceRY/+E8BH3Wn1AejfbaHgKnlS+fPeACNNN4DDCR2zRy+IPyjNKMPGPBz8JM
-         UYfJVDEtXPBxoYXMYW/6pGjsWpF7LVnd7fc7XUjJxZSZdfnx6IDG3yQRsnPmb0SGKp80
-         fPXLasqV6WvLsVAZqG39IpYUAWF5/M5uQWFc6Ui4semx4USbXosGHoB9rS9ULCaP14wx
-         hBIkPp1g2o2hBL4kBlubeMdkQZNby8qXtY83I2ZpDiwlhDsdjoC2t4EOmhzgPU5uDFvU
-         ux4ByT9xjr7xcOiipo4a3mwhuw+1r1ZOd4mCrnqnwpUxVtKy8HDwOhxdBqA5wVpUPX+2
-         87ag==
-X-Gm-Message-State: APjAAAUkvCLBpQ3RggXWIYUEPydh7tJF6X7gCNdzE2lTm1RcvzoKCCfA
-        jd/y4DK+qMz9CvoIWHWJrNq84AadUx4IaIxL9zEhVVsGsOjmfwODSSCCA+g6+nvZBCU1yx067o5
-        0F/eF+0lBPUsRWN/u5plyhYp2
-X-Received: by 2002:a1c:a383:: with SMTP id m125mr5554923wme.57.1566469533831;
-        Thu, 22 Aug 2019 03:25:33 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzfnLy3HKEn/7VIiE1whM0k6Xh58TuFmITLJJOXHevPzuzCcy4uuxv6bxU801laeEZq5DwlZQ==
-X-Received: by 2002:a1c:a383:: with SMTP id m125mr5554883wme.57.1566469533587;
-        Thu, 22 Aug 2019 03:25:33 -0700 (PDT)
-Received: from steredhat (host80-221-dynamic.18-79-r.retail.telecomitalia.it. [79.18.221.80])
-        by smtp.gmail.com with ESMTPSA id f13sm17769033wrr.5.2019.08.22.03.25.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 03:25:33 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 12:25:29 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "jhansen@vmware.com" <jhansen@vmware.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vsock: Fix a lockdep warning in __vsock_release()
-Message-ID: <20190822102529.q5ozdvh6kbymi6ni@steredhat>
-References: <1566270830-28981-1-git-send-email-decui@microsoft.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BPmd91qz3a0HiNpHiRZCkjVJHjiYHrK/cHq1mbQuN28=;
+        b=IIAcnWwXslyke6a75z5AF5kEDwpvbJOUiOWVPIr6gzfJU0sv2RDn3BjnQWEFcaI3mm
+         OyrPcs1a+8aRMJ2kv9aET1gMH1eYKQgTWSIy065cnqAsmpn5zz5Wd2m+zsKpAsDZeRBT
+         oFI2sslkELS4wH+pjVxmbtfaJRPp66440aSeVafPEx4+FUcG+XPIxdK5moewJVcUSCIz
+         AoKBTStruFOrfCiNeA5PESik1NJdtvOzrJAnjSFZZELqGCTjkKauX8385zVzBVb/02Fr
+         yDZ/+8GaEFoe0wiYfJP425nLJNcMLgwg184GggY6SxWhq8jWGB6aXpRq+8T56anUt1QU
+         g0bA==
+X-Gm-Message-State: APjAAAW3fUTDqKsdcLIv5UGnEYw1dEPnZJZ68r62zy7kSMnJbzwvIxaO
+        z2hlzE/BW1gJf45Jw2COk+bsHuSZnxLWdghUAtJYAgLg97GVIA==
+X-Google-Smtp-Source: APXvYqz6nmeITqN8OHhPeu8R9sb4KwCAE+cTx1cn/MvjCN0ye+3jhjA33DhB4gGWP3VRTlj9WwKWXc1YcWgPEkbiMgA=
+X-Received: by 2002:a1c:a615:: with SMTP id p21mr5540001wme.121.1566471344250;
+ Thu, 22 Aug 2019 03:55:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566270830-28981-1-git-send-email-decui@microsoft.com>
-User-Agent: NeoMutt/20180716
+References: <1566243316-113690-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1566243316-113690-1-git-send-email-longli@linuxonhyperv.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Thu, 22 Aug 2019 18:55:32 +0800
+Message-ID: <CACVXFVOGdvMDSZTUNH3DrXErm1E4LKBjzCFpL3r815JFJbvM4A@mail.gmail.com>
+Subject: Re: [PATCH] storvsc: setup 1:1 mapping between hardware queue and CPU queue
+To:     longli@linuxonhyperv.com
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Long Li <longli@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 03:14:22AM +0000, Dexuan Cui wrote:
-> Lockdep is unhappy if two locks from the same class are held.
-> 
-> Fix the below warning by making __vsock_release() non-recursive -- this
-> patch is kind of ugly, but it looks to me there is not a better way to
-> deal with the problem here.
-> 
-> ============================================
-> WARNING: possible recursive locking detected
-> 5.2.0+ #6 Not tainted
-> --------------------------------------------
-> a.out/1020 is trying to acquire lock:
-> 0000000074731a98 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_sock]
-> 
-> but task is already holding lock:
-> 0000000014ff8397 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
-> 
-> other info that might help us debug this:
->  Possible unsafe locking scenario:
-> 
->        CPU0
->        ----
->   lock(sk_lock-AF_VSOCK);
->   lock(sk_lock-AF_VSOCK);
-> 
->  *** DEADLOCK ***
-> 
->  May be due to missing lock nesting notation
-> 
-> 2 locks held by a.out/1020:
->  #0: 00000000f8bceaa7 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_release+0x2d/0xa0
->  #1: 0000000014ff8397 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
-> 
-> stack backtrace:
-> CPU: 7 PID: 1020 Comm: a.out Not tainted 5.2.0+ #6
-> Call Trace:
->  dump_stack+0x67/0x90
->  __lock_acquire.cold.66+0x14d/0x1f8
->  lock_acquire+0xb5/0x1c0
->  lock_sock_nested+0x6d/0x90
->  hvs_release+0x10/0x120 [hv_sock]
->  __vsock_release+0x24/0xf0 [vsock]
->  __vsock_release+0xa0/0xf0 [vsock]
->  vsock_release+0x12/0x30 [vsock]
->  __sock_release+0x37/0xa0
->  sock_close+0x14/0x20
->  __fput+0xc1/0x250
->  task_work_run+0x98/0xc0
->  do_exit+0x3dd/0xc60
->  do_group_exit+0x47/0xc0
->  get_signal+0x169/0xc60
->  do_signal+0x30/0x710
->  exit_to_usermode_loop+0x50/0xa0
->  do_syscall_64+0x1fc/0x220
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+On Tue, Aug 20, 2019 at 3:36 AM <longli@linuxonhyperv.com> wrote:
+>
+> From: Long Li <longli@microsoft.com>
+>
+> storvsc doesn't use a dedicated hardware queue for a given CPU queue. When
+> issuing I/O, it selects returning CPU (hardware queue) dynamically based on
+> vmbus channel usage across all channels.
+>
+> This patch sets up a 1:1 mapping between hardware queue and CPU queue, thus
+> avoiding unnecessary locking at upper layer when issuing I/O.
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
 > ---
->  net/vmw_vsock/af_vsock.c         | 33 ++++++++++++++++++++++++++++++++-
->  net/vmw_vsock/hyperv_transport.c |  2 +-
->  2 files changed, 33 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> index ab47bf3..420f605 100644
-> --- a/net/vmw_vsock/af_vsock.c
-> +++ b/net/vmw_vsock/af_vsock.c
-> @@ -638,6 +638,37 @@ struct sock *__vsock_create(struct net *net,
+>  drivers/scsi/storvsc_drv.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index b89269120a2d..26c16d40ec46 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -1682,6 +1682,18 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+>         return 0;
 >  }
->  EXPORT_SYMBOL_GPL(__vsock_create);
->  
-> +static void __vsock_release2(struct sock *sk)
+>
+> +static int storvsc_map_queues(struct Scsi_Host *shost)
 > +{
-> +	if (sk) {
-> +		struct sk_buff *skb;
-> +		struct vsock_sock *vsk;
+> +       unsigned int cpu;
+> +       struct blk_mq_queue_map *qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
 > +
-> +		vsk = vsock_sk(sk);
-> +
-> +		/* The release call is supposed to use lock_sock_nested()
-> +		 * rather than lock_sock(), if a lock should be acquired.
-> +		 */
-> +		transport->release(vsk);
-> +
-> +		/* Use the nested version to avoid the warning
-> +		 * "possible recursive locking detected".
-> +		 */
-> +		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+> +       for_each_possible_cpu(cpu) {
+> +               qmap->mq_map[cpu] = cpu;
+> +       }
 
-What about using lock_sock_nested() in the __vsock_release() without
-define this new function?
+Block layer provides the helper of blk_mq_map_queues(), so suggest you to use
+the default cpu mapping, instead of inventing a new one.
 
-> +		sock_orphan(sk);
-> +		sk->sk_shutdown = SHUTDOWN_MASK;
-> +
-> +		while ((skb = skb_dequeue(&sk->sk_receive_queue)))
-> +			kfree_skb(skb);
-> +
-> +		/* This sk can not be a listener, so it's unnecessary
-> +		 * to call vsock_dequeue_accept().
-> +		 */
-> +		release_sock(sk);
-> +		sock_put(sk);
-> +	}
-> +}
-> +
->  static void __vsock_release(struct sock *sk)
->  {
->  	if (sk) {
-> @@ -659,7 +690,7 @@ static void __vsock_release(struct sock *sk)
->  
->  		/* Clean up any sockets that never were accepted. */
->  		while ((pending = vsock_dequeue_accept(sk)) != NULL) {
-> -			__vsock_release(pending);
-> +			__vsock_release2(pending);
->  			sock_put(pending);
->  		}
->  
-> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-> index 9d864eb..4b126b2 100644
-> --- a/net/vmw_vsock/hyperv_transport.c
-> +++ b/net/vmw_vsock/hyperv_transport.c
-> @@ -559,7 +559,7 @@ static void hvs_release(struct vsock_sock *vsk)
->  	struct sock *sk = sk_vsock(vsk);
->  	bool remove_sock;
->  
-> -	lock_sock(sk);
-> +	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
-
-Should we update also other transports?
-
-Thanks,
-Stefano
+thanks,
+Ming Lei
