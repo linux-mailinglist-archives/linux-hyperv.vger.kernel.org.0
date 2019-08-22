@@ -2,104 +2,92 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB31699170
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2019 12:57:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C7E89937E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Aug 2019 14:30:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387919AbfHVKzq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Aug 2019 06:55:46 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40639 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731683AbfHVKzq (ORCPT
+        id S1729746AbfHVMaB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Aug 2019 08:30:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40445 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729212AbfHVMaB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:55:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c5so5085232wmb.5;
-        Thu, 22 Aug 2019 03:55:44 -0700 (PDT)
+        Thu, 22 Aug 2019 08:30:01 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e27so5362931ljb.7
+        for <linux-hyperv@vger.kernel.org>; Thu, 22 Aug 2019 05:30:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BPmd91qz3a0HiNpHiRZCkjVJHjiYHrK/cHq1mbQuN28=;
-        b=NGLGGDx2k7Rpo9b+f1V5n7eDS3u1cwHKo2Yw+ouspmGBrABNAuqgInxox6hPBe0a/1
-         AjcoAYxQzyR4kLDAV7rBLknwSRQRlxwlfOcAmkoXhtLZ6LUvVkVyDUOAHfKrZCkdeNuv
-         XJC3Ln+DikWpIeAOuI21u/ah0gPPWtY6WoDjWasea2rg7WhkVO9MXfVHZn0OnemkdSgE
-         ruodghO5w+EuuCpauZmfwzsxXbxZlTYJmzCizJs3Owy+5hPqVGzJuTMinT1mD2KRQjvS
-         n4BiPVifEiOwN3ZktAaP7hMDzJv++6D/Rlfeoe9+vespmtHpGsfNi6K5eQFrK8Zdnffb
-         FdyA==
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=gE70CB6Tkq3bClPuHhtwnmCaH80OICLWg4/vQflhg3iVWHefE2agEbQW+EU7qrWj/8
+         lhelub5BbYtpKhplGxjkKiKA6oLE7Yc7W9tuR1azHFf/48D/IyB81vpAkstEAu4pmetM
+         t5tpv0Z22Jmh9PFZYKJaciwyLq5v+92hHqPevEzsG4n6j2M74W5fbS/ERijITqFBLdmr
+         OvKbV1WivHjDFbEJpeIIZWNZKtVuUS/DfcT84tMBSx21qd5DkIvw5p/su/qugPb52fNF
+         2oU7raztDLqfFf0j1ckIH4+pcaJNKDeZLRb4Viow4/ToVCLY5qmt6tvNcVmuQMt/pXA/
+         eVmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BPmd91qz3a0HiNpHiRZCkjVJHjiYHrK/cHq1mbQuN28=;
-        b=IIAcnWwXslyke6a75z5AF5kEDwpvbJOUiOWVPIr6gzfJU0sv2RDn3BjnQWEFcaI3mm
-         OyrPcs1a+8aRMJ2kv9aET1gMH1eYKQgTWSIy065cnqAsmpn5zz5Wd2m+zsKpAsDZeRBT
-         oFI2sslkELS4wH+pjVxmbtfaJRPp66440aSeVafPEx4+FUcG+XPIxdK5moewJVcUSCIz
-         AoKBTStruFOrfCiNeA5PESik1NJdtvOzrJAnjSFZZELqGCTjkKauX8385zVzBVb/02Fr
-         yDZ/+8GaEFoe0wiYfJP425nLJNcMLgwg184GggY6SxWhq8jWGB6aXpRq+8T56anUt1QU
-         g0bA==
-X-Gm-Message-State: APjAAAW3fUTDqKsdcLIv5UGnEYw1dEPnZJZ68r62zy7kSMnJbzwvIxaO
-        z2hlzE/BW1gJf45Jw2COk+bsHuSZnxLWdghUAtJYAgLg97GVIA==
-X-Google-Smtp-Source: APXvYqz6nmeITqN8OHhPeu8R9sb4KwCAE+cTx1cn/MvjCN0ye+3jhjA33DhB4gGWP3VRTlj9WwKWXc1YcWgPEkbiMgA=
-X-Received: by 2002:a1c:a615:: with SMTP id p21mr5540001wme.121.1566471344250;
- Thu, 22 Aug 2019 03:55:44 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=aWwEGZ7IKPwlD1SyN53LweuoS+rG8j2WBRgPDxMagPA=;
+        b=btvL8KfoKmBuqP/ze6Y0jhIjRlWfqMHLJB1iuOytDydNvnaQlojQUvIUiL2o80KgEo
+         G8R9vzi0TwPVkLz2VJOy0LeLx5UhHAyP7g+NjwRfKl5oJoCqxy8uEFx8npM5bUaHjyZH
+         yxYQ23LRM8eFZYYxNi781bVRjDXyc9yHmMpBK6A07i0HQzkesvTsb/MWUZEib96bU58m
+         Be19LReYqpLpurNMEtuM2jt5tJjI6/DsWydi/AJRsPPSNRRjsH/1E3E+7BhhQ6wSLpMc
+         ftSAcEfLfqcfEdBnA3s7bN61YZ4+BcNpPxugt0TxSAMRHC94PuQc3AYu8c/a/yANlZB/
+         VdsQ==
+X-Gm-Message-State: APjAAAV9GOMjKCP4XjFSTbR5qGCC9A1+5k7uExUsI4onORtuiiLADphb
+        2898CGuAAIAReCfq4m/qHsZJu80meYmxIJSUop8=
+X-Google-Smtp-Source: APXvYqyQDbAERqizD/fiPgWPSryj2DSi56X7aYFgH8qSvyGKDetfRn5xno1Zm/pei35T/G14EEvuq14bNK/E6+iPEmE=
+X-Received: by 2002:a2e:9a50:: with SMTP id k16mr15265763ljj.75.1566476999717;
+ Thu, 22 Aug 2019 05:29:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <1566243316-113690-1-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1566243316-113690-1-git-send-email-longli@linuxonhyperv.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Thu, 22 Aug 2019 18:55:32 +0800
-Message-ID: <CACVXFVOGdvMDSZTUNH3DrXErm1E4LKBjzCFpL3r815JFJbvM4A@mail.gmail.com>
-Subject: Re: [PATCH] storvsc: setup 1:1 mapping between hardware queue and CPU queue
-To:     longli@linuxonhyperv.com
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hyperv@vger.kernel.org,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Long Li <longli@microsoft.com>
+Received: by 2002:a19:dc4f:0:0:0:0:0 with HTTP; Thu, 22 Aug 2019 05:29:58
+ -0700 (PDT)
+Reply-To: eku.lawfirm@gmail.com
+From:   "Law firm(Eku and Associates)" <elenabaltach66@gmail.com>
+Date:   Thu, 22 Aug 2019 12:29:58 +0000
+Message-ID: <CAOGpsp6s7VJ4Oi32We4K-+udN3s8NOH4EZRnX6q2WKSWZKXEZQ@mail.gmail.com>
+Subject: MY $25,000,000.00 INVESTMENT PROPOSAL WITH YOU AND IN YOUR COUNTRY.
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 3:36 AM <longli@linuxonhyperv.com> wrote:
->
-> From: Long Li <longli@microsoft.com>
->
-> storvsc doesn't use a dedicated hardware queue for a given CPU queue. When
-> issuing I/O, it selects returning CPU (hardware queue) dynamically based on
-> vmbus channel usage across all channels.
->
-> This patch sets up a 1:1 mapping between hardware queue and CPU queue, thus
-> avoiding unnecessary locking at upper layer when issuing I/O.
->
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  drivers/scsi/storvsc_drv.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> index b89269120a2d..26c16d40ec46 100644
-> --- a/drivers/scsi/storvsc_drv.c
-> +++ b/drivers/scsi/storvsc_drv.c
-> @@ -1682,6 +1682,18 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
->         return 0;
->  }
->
-> +static int storvsc_map_queues(struct Scsi_Host *shost)
-> +{
-> +       unsigned int cpu;
-> +       struct blk_mq_queue_map *qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
-> +
-> +       for_each_possible_cpu(cpu) {
-> +               qmap->mq_map[cpu] = cpu;
-> +       }
+--=20
+Dear,
+With due respect this is not spam or Scam mail, because I have
+contacted you before and there was no response from you,I apologise if
+the contents of this mail are contrary to your moral ethics, which I
+feel may be of great disturbance to your person, but please treat this
+with absolute confidentiality, believing that this email reaches you
+in good faith. My contacting you is not a mistake or a coincidence
+because God can use any person known or unknown to accomplish great
+things.
+I am a lawyer and I have an investment business proposal to offer you.
+It is not official but should be considered as legal and confidential
+business. I have a customer's deposit of $US25 million dollars ready
+to be moved for investment if you can partner with us. We are ready to
+offer you 10% of this total amount as your compensation for supporting
+the transaction to completion. If you are interested to help me please
+reply me with your full details as stated below:
+(1) Your full names:
+(2) Your address:
+(3) Your occupation:
+(4) Your mobile telephone number:
+(5) Your nationality:
+(6) Your present location:
+(7) Your age:
+So that I will provide you more details on what to do and what is
+required for successful completion.
+Note: DO NOT REPLY ME IF YOU ARE NOT INTERESTED AND WITHOUT THE ABOVE
+MENTIONED DETAILS
 
-Block layer provides the helper of blk_mq_map_queues(), so suggest you to use
-the default cpu mapping, instead of inventing a new one.
-
-thanks,
-Ming Lei
+Sinc=C3=A8rement v=C3=B4tre,
+Avocat Etienne Eku Esq.(Lawfirm)
+Procureur principal. De Cabinet d=E2=80=99avocats de l=E2=80=99Afrique de l=
+=E2=80=99ouest.
+Skype:westafricalawfirm
