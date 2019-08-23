@@ -2,177 +2,130 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 156A99A61A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2019 05:38:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 076DD9A6E6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2019 07:06:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391563AbfHWDiy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Aug 2019 23:38:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42462 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732546AbfHWDiy (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:38:54 -0400
-Received: by mail-io1-f65.google.com with SMTP id e20so16804801iob.9;
-        Thu, 22 Aug 2019 20:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9AVmOGbIsZQv/2ofQ4IWa2M0lJ73id2YbZ5T55/p234=;
-        b=PNR/OnrFCJ9qWeHxxTo4/BXyJ5MRxGDYxwDBxmStRgGs9mHapBSw1jexOrtcuQr3k5
-         VIPHTSUmPR01mjhRc7xOPXvEMXgvOveli84/jJ+G2N9BRaN5RJCA0wk9EGvgcuL8GGrE
-         Ob4Zj2UVDkKerW26MCqxscJxkdJ8WWmphgGxwZXiTLWp2qY6wpVkGmlBPs5p+pbZlyDe
-         y0QBO52bDZ/SDBK51ArRMrize4hT0+HK93PKe+uj1A/B1jittjlnsD2J5aXj56sLqToN
-         VwNwt4DP854MhJWMb4Ua81ZQJ8AQP/QdlUEusPHxtgPFeZVsd4pDwXihfCxmbWvG3AZ3
-         cQ1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9AVmOGbIsZQv/2ofQ4IWa2M0lJ73id2YbZ5T55/p234=;
-        b=jLptAbjMwCpVWbl7SHkvQU70miVw8cglCvYIlI6G1gIinypJvIXgzcPb7R61xBMNaD
-         qOudDyHmLwBG8CqpmyOWiFMwcP7tnGG2tImpsGYDyIk1plKiQw33d21xdu+YdRImy+zS
-         e64isnsIy/9+WK83BdwTSGsAgO5u/wseHNbDuOj7r+b1OidH6286p8AqWTSHJN/B08xp
-         56sSZ6Kfj1Bc1zRq+0NJhDAmpT/BB/tXi47tMQUT8spYQUNj7FETmr9Egf2PO2wiG8gr
-         E04ek13KGXK7TW0MWErt85y0jizFN846ClIi3uziULQHw6Qx0KMwUyUH8hMbe77WnXAV
-         fbqg==
-X-Gm-Message-State: APjAAAVoZo/4ZIkcUFHNyw/GjJTDTETKTkl/ZZcaQr/iA7+hs8L6eYRK
-        muZ0RK6ERLmQSQOmbH4pmhMMK6Mgi3xL
-X-Google-Smtp-Source: APXvYqxOSeQzfdWxi6gD2CNj2oB78c97wZV62Bm56NMa2OFeGRqMmzwosu33VmbJlnggbs0myRlUzg==
-X-Received: by 2002:a6b:4a11:: with SMTP id w17mr3777472iob.21.1566531532816;
-        Thu, 22 Aug 2019 20:38:52 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id y19sm1221442ioj.62.2019.08.22.20.38.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 22 Aug 2019 20:38:52 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 23:38:50 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
+        id S2391749AbfHWFGE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 23 Aug 2019 01:06:04 -0400
+Received: from mail-eopbgr60089.outbound.protection.outlook.com ([40.107.6.89]:9026
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725613AbfHWFGE (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 23 Aug 2019 01:06:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MuwmZg+F+DuuUfkI9B3WPzZgnkWu2MWbEV56dadRy5hFBIdqF5WK3tE8+xYC+AhD7zoAcaQf9vUXOcA6eczi95pFCItGuWgiPQnJlmO8uRNU/yez4KVvB0GnDVbuHuCwl3sPCvWmBkduZuaG8Et9cHmFDI0u0FHRAa3U5MfWPfCG5D84YniUlnnT68xE+QF3VIYI5ERoNXL+B4jz3HJofCk6CYib8P27d686Yst0MREuV7AhWX31GWH3YMR++TsYNbr9IcwEyyl4UdXSgxTVZXGMU4QSS1MqR/bAvzDyLKuAJN0Vg6FhrIHNAz4+rTlvGg7H3/6WzidsFgB6MAvZ3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vFLvs6ANTVDUp946rlS0uh1fpeto0VHsz8UPYTqKK6E=;
+ b=OlqMIha8i3XwCft5Y66RaPcBWArNsY4+dIFe95SfnYj+BbDgtx4tt0GGSkPiwPybywuWhcCTddV4+oQdSqAjGYMt+S+UwRRQfAtC0iEtUsUzbvFv9eU1p6DukO1ZGz44NZCdx1Rf/0g6e2oifocNFUBqTXuoIVUT6Ll03BGCrPpCQJbrzjzv33cQu5qoJ13q3lhTYvsOaJsrm5c9epvlJr8HPvSZxJDlKXT7cnD6eRS3/qhVfgZQtae6GOvWgR5e+cKjyU0ec+Dk2oZ2M/ID0LGueCMoF5I40dAKPcKBX/Jbpg4AxJSFG/qzoMh10TVjAMl56NKSat6rgveTq5n3Xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vFLvs6ANTVDUp946rlS0uh1fpeto0VHsz8UPYTqKK6E=;
+ b=c/1Tkm9V7PIZNj3zrwrEF4J4/eFIeDCyC2FxlP6b0+yfAlqy1JHr7UqwuGtn7WEyPkT0lZod0VEv2PcOTmNxDSte0BuidZG5AUyOWXVRdaZtJU6rljYtQ9fhQCHaCuXHrinSP64i4AiF+KGUxtK9S52lY+/mSuw7/GkRVjgo+yQ=
+Received: from AM0PR0502MB4068.eurprd05.prod.outlook.com (52.133.38.142) by
+ AM0PR0502MB4050.eurprd05.prod.outlook.com (52.133.37.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Fri, 23 Aug 2019 05:05:20 +0000
+Received: from AM0PR0502MB4068.eurprd05.prod.outlook.com
+ ([fe80::9d51:ae68:d177:fc94]) by AM0PR0502MB4068.eurprd05.prod.outlook.com
+ ([fe80::9d51:ae68:d177:fc94%3]) with mapi id 15.20.2178.020; Fri, 23 Aug 2019
+ 05:05:20 +0000
+From:   Eran Ben Elisha <eranbe@mellanox.com>
+To:     haiyangz <haiyangz@microsoft.com>,
+        David Miller <davem@davemloft.net>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        kys <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] drivers: hv: vmbus: Introduce latency testing
-Message-ID: <20190823033850.GA41496@Test-Virtual-Machine>
-References: <cover.1566266609.git.brandonbonaby94@gmail.com>
- <ebca54bf70d2af53de419c1b7ac8db5b77b888cb.1566266609.git.brandonbonaby94@gmail.com>
- <DM5PR21MB01375C24AE9ECD93DBE856C2D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
+Subject: Re: [PATCH net-next,v5, 0/6] Add software backchannel and mlx5e HV
+ VHCA stats
+Thread-Topic: [PATCH net-next,v5, 0/6] Add software backchannel and mlx5e HV
+ VHCA stats
+Thread-Index: AQHVWTieJNg4lNlPokigzqQxpEz7DacHwLuAgAAAK6CAAAF/AIAAAF1ggABrKYA=
+Date:   Fri, 23 Aug 2019 05:05:20 +0000
+Message-ID: <1179f6f7-9e58-c601-1319-52be4182e0db@mellanox.com>
+References: <1566512708-13785-1-git-send-email-haiyangz@microsoft.com>
+ <20190822.153315.1245817410062415025.davem@davemloft.net>
+ <DM6PR21MB133743FB2006A28AE10A170CCAA50@DM6PR21MB1337.namprd21.prod.outlook.com>
+ <20190822.153912.2269276523787180347.davem@davemloft.net>
+ <DM6PR21MB133778F0890449A5D58DD9D5CAA50@DM6PR21MB1337.namprd21.prod.outlook.com>
+In-Reply-To: <DM6PR21MB133778F0890449A5D58DD9D5CAA50@DM6PR21MB1337.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0090.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:18::30) To AM0PR0502MB4068.eurprd05.prod.outlook.com
+ (2603:10a6:208:d::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=eranbe@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [77.126.5.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9c7688ce-78c2-4e64-18e2-08d727877f04
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR0502MB4050;
+x-ms-traffictypediagnostic: AM0PR0502MB4050:
+x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR0502MB4050BD31EB49C483CD91B852BAA40@AM0PR0502MB4050.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0138CD935C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(39850400004)(346002)(376002)(199004)(189003)(13464003)(316002)(2906002)(6486002)(102836004)(64756008)(66446008)(26005)(66476007)(66946007)(305945005)(25786009)(71190400001)(81166006)(81156014)(52116002)(478600001)(229853002)(71200400001)(110136005)(8936002)(99286004)(6506007)(386003)(6246003)(7736002)(7416002)(4326008)(6512007)(53546011)(14444005)(8676002)(256004)(36756003)(76176011)(11346002)(446003)(66066001)(2616005)(53936002)(54906003)(86362001)(1511001)(486006)(5660300002)(6116002)(186003)(3846002)(476003)(14454004)(31696002)(31686004)(6436002)(66556008)(42413003)(142933001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0502MB4050;H:AM0PR0502MB4068.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: umwJwdbRmpRJaJ9vDR/o9VVvmDiIpnfikDWhHdUfbkVPzAPgUHpP+ejWEBRwN4ABop7u0osmBvJZD7qs7aei/aUwzbVjJtaokP8evtEnuRpRPxoyQEgb5hEHMWKNUmNWh+aScBbPL80gkhz6cGjBoqV9qvCeULOMKdaMnb2RiCshDblSFc3pKFVW/3N36RkvdhER5LSHGJIhEIYWp2Yvra48s6ShLgSyiVgcsK3+qaHFO4po7eEBIB0V7PbaJNLM9Jm5lyt0NKXQ7vqqV2JgMausgIXO4lTpskj1NLqjUfIfsMb6jUFAUVVV0s07T7oIShYdmC5gPpo7ieyIM2cjZVs2470I+6Xc5CDIM4vET1R71yCcLyK8guef9tJQvoqqkMqPHQ89SJlRMX6GmLGrlELfiI3gjjl913j3FX4izu4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C24F5E41B18E3D468A0AF8B2D0A9CF05@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR21MB01375C24AE9ECD93DBE856C2D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c7688ce-78c2-4e64-18e2-08d727877f04
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 05:05:20.3298
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gO6QCNpmBmzr8drzXOOBu8RJ3buv/dQCt5dOs4i5qFZAqK9I0oHK0bTJ66TXiy1GOYgXIuO6lRuGbyK0OoQuOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB4050
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> >  endmenu
-> > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> > index 09829e15d4a0..c9c63a4033cd 100644
-> > --- a/drivers/hv/connection.c
-> > +++ b/drivers/hv/connection.c
-> > @@ -357,6 +357,9 @@ void vmbus_on_event(unsigned long data)
-> > 
-> >  	trace_vmbus_on_event(channel);
-> > 
-> > +#ifdef CONFIG_HYPERV_TESTING
-> > +	hv_debug_delay_test(channel, INTERRUPT_DELAY);
-> > +#endif /* CONFIG_HYPERV_TESTING */
-> 
-> You are following Vitaly's suggestion to use #ifdef's so no code is
-> generated when HYPERV_TESTING is not enabled.  However, this
-> direct approach to using #ifdef's really clutters the code and makes
-> it harder to read and follow.  The better approach is to use the
-> #ifdef in the include file where the functions are defined.  If
-> HYPERV_TESTING is not enabled, provide a #else that defines
-> the function with an empty implementation for which the compiler
-> will generate no code.   An as example, see the function definition
-> for hyperv_init() in arch/x86/include/asm/mshyperv.h.  There are
-> several functions treated similarly in that include file.
-> 
-
-I checked out the code in arch/x86/include/asm/mshyperv.h, after
-thinking about it, I'm wondering if it would be better just to have
-two files one called hv_debugfs.c and the other hyperv_debugfs.h.
-I could put the code definitions in hv_debugfs.c and at the top
-include the hyperv_debugfs.h file which would house the declarations
-of these functions under the ifdef. Then like you alluded too use
-an #else statement that would have the null implementations of the
-above functions. Then put an #include "hyperv_debugfs.h" in the
-hyperv_vmbus.h file. I figured instead of putting the code directly
-into the vmbus_drv.c file it might be best to put them in a seperate
-file like hv_debugfs.c. This way when we start adding more tests we
-don't bloat the vmbus_drv.c file unnecessarily. The hv_debugfs.c
-file would have the #ifdef CONFIG_HYPERV_TESTING at the top so if
-its not enabled  those null implementations in "hyperv_debugfs.h"
-woud kick in anywhere that included the hyperv_vmbus.h file which
-is what we want.
-
-what do you think?
-
-> 
-> >  	do {
-> >  		void (*callback_fn)(void *);
-> > 
-> > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> > index 362e70e9d145..edf14f596d8c 100644
-> > --- a/drivers/hv/hyperv_vmbus.h
-> > +++ b/drivers/hv/hyperv_vmbus.h
-> > @@ -357,4 +357,24 @@ enum hvutil_device_state {
-> >  	HVUTIL_DEVICE_DYING,     /* driver unload is in progress */
-> >  };
-> > 
-> > +#ifdef CONFIG_HYPERV_TESTING
-> > +#include <linux/debugfs.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/err.h>
-> 
-> Generally #include files should go at the top of the file, even if they
-> are only needed conditionally.
->
-
-I see , will change
-
-> > +#define TESTING "hyperv"
-> 
-> I'm not seeing what this line is for, or how it is used.
-
-I used it as the top level name for the dentry that
-would appear in debugfs but now I realize its actually
-not needed, so i'll remove this.
-
-> > --- a/include/linux/hyperv.h
-> > +++ b/include/linux/hyperv.h
-> > @@ -926,6 +926,21 @@ struct vmbus_channel {
-> >  	 * full outbound ring buffer.
-> >  	 */
-> >  	u64 out_full_first;
-> > +
-> > +#ifdef CONFIG_HYPERV_TESTING
-> > +	/* enabling/disabling fuzz testing on the channel (default is false)*/
-> > +	bool fuzz_testing_state;
-> > +
-> > +	/* Interrupt delay will delay the guest from emptying the ring buffer
-> > +	 * for a specific amount of time. The delay is in microseconds and will
-> > +	 * be between 1 to a maximum of 1000, its default is 0 (no delay).
-> > +	 * The  Message delay will delay guest reading on a per message basis
-> > +	 * in microseconds between 1 to 1000 with the default being 0
-> > +	 * (no delay).
-> > +	 */
-> > +	u32 fuzz_testing_interrupt_delay;
-> > +	u32 fuzz_testing_message_delay;
-> > +#endif /* CONFIG_HYPERV_TESTING */
-> 
-> For fields in a data structure like this, you don't have much choice
-> but to put the #ifdef directly inline.  However, for small fields like this
-> and where the data structure isn't size sensitive, you could consider
-> omitting the #ifdef and just always including the fields even when
-> HYPERV_TESTING is not enabled.  I don't have a strong preference
-> either way.
->
-
-I'll take the ifdefs out since the fields aren't too big
-
+DQoNCk9uIDgvMjMvMjAxOSAxOjQzIEFNLCBIYWl5YW5nIFpoYW5nIHdyb3RlOg0KPiANCj4gDQo+
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4gRnJvbTogRGF2aWQgTWlsbGVyIDxkYXZl
+bUBkYXZlbWxvZnQubmV0Pg0KPj4gU2VudDogVGh1cnNkYXksIEF1Z3VzdCAyMiwgMjAxOSAzOjM5
+IFBNDQo+PiBUbzogSGFpeWFuZyBaaGFuZyA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT4NCj4+IENj
+OiBzYXNoYWxAa2VybmVsLm9yZzsgc2FlZWRtQG1lbGxhbm94LmNvbTsgbGVvbkBrZXJuZWwub3Jn
+Ow0KPj4gZXJhbmJlQG1lbGxhbm94LmNvbTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsgYmhl
+bGdhYXNAZ29vZ2xlLmNvbTsNCj4+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWh5
+cGVydkB2Z2VyLmtlcm5lbC5vcmc7DQo+PiBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBLWSBTcmlu
+aXZhc2FuIDxreXNAbWljcm9zb2Z0LmNvbT47IFN0ZXBoZW4NCj4+IEhlbW1pbmdlciA8c3RoZW1t
+aW5AbWljcm9zb2Z0LmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggbmV0LW5leHQsdjUsIDAvNl0gQWRkIHNvZnR3YXJlIGJhY2tjaGFubmVs
+IGFuZCBtbHg1ZQ0KPj4gSFYgVkhDQSBzdGF0cw0KPj4NCj4+IEZyb206IEhhaXlhbmcgWmhhbmcg
+PGhhaXlhbmd6QG1pY3Jvc29mdC5jb20+DQo+PiBEYXRlOiBUaHUsIDIyIEF1ZyAyMDE5IDIyOjM3
+OjEzICswMDAwDQo+Pg0KPj4+IFRoZSB2NSBpcyBwcmV0dHkgbXVjaCB0aGUgc2FtZSBhcyB2NCwg
+ZXhjZXB0IEVyYW4gaGFkIGEgZml4IHRvIHBhdGNoICMzIGluDQo+PiByZXNwb25zZSB0bw0KPj4+
+IExlb24gUm9tYW5vdnNreSA8bGVvbkBrZXJuZWwub3JnPi4NCj4+DQo+PiBXZWxsIHlvdSBub3cg
+aGF2ZSB0byBzZW5kIG1lIGEgcGF0Y2ggcmVsYXRpdmUgdG8gdjQgaW4gb3JkZXIgdG8gZml4IHRo
+YXQuDQo+Pg0KPj4gV2hlbiBJIHNheSAiYXBwbGllZCIsIHRoZSBzZXJpZXMgaXMgaW4gbXkgdHJl
+ZSBhbmQgaXMgdGhlcmVmb3JlIHBlcm1hbmVudC4NCj4+IEl0IGlzIHRoZXJlZm9yZSBuZXZlciBh
+cHByb3ByaWF0ZSB0byB0aGVuIHBvc3QgYSBuZXcgdmVyc2lvbiBvZiB0aGUgc2VyaWVzLg0KPiAN
+Cj4gVGhhbmtzLg0KPiANCj4gRXJhbiwgY291bGQgeW91IHN1Ym1pdCBhbm90aGVyIHBhdGNoIGZv
+ciB0aGUgZml4IHRvIHBhdGNoICMzPw0KDQpTdXJlLCB3aWxsIHByZXBhcmUgYW5kIHNlbmQgbGF0
+ZXIgdG9kYXkuDQoNCj4gDQo+IC0gSGFpeWFuZw0KPiANCg==
