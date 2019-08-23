@@ -2,156 +2,193 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B46E9BB9C
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2019 06:23:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A0D59BC07
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2019 08:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725798AbfHXEXH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 24 Aug 2019 00:23:07 -0400
-Received: from mail-eopbgr820097.outbound.protection.outlook.com ([40.107.82.97]:4016
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbfHXEXH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 24 Aug 2019 00:23:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=arEv4FG5fUI8BaQ0hpAibay/5mForhL0LyNu3bGLAKi9cAHtJ4VtzDSmoddMuANAPQj3uE4OYklH7djvIH0dp/bxTj+CqZedYeZIo6zLDi7rQFdDKLr3GkjxWGwjaSA7miepLGE45pZrW5LV+/dC+/q+8n8LdCYboKuAEN+aPR6NTZt9g9iv0eSmzlT8eIdGF0/zN6BWKC5vgW8uG6k8py5ceUfSbkZUH99E1AN5b44Fku5xK4cMGsVEItc+GsidkQwQcfbyzGjm3MqMcTbCMSfahqucStQgYZWeuDi7SfeQDLjM1wccXLpcDCeme0HmxmiScPs1MEpXub1MnNXHkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6M3t0C/yZOiWBcg8+GhsZgGG1CilhjLw2Pvaa90u5FI=;
- b=UlDqbCIj014+aHnHVVbedXsFO1+fkF+lpt+UiDPV+6cyh+JcYC9jZmgvS/OiCtsST0jrKhOmuCS7pcsGSOiN7n2+FFlkorkX1+KRd2nOWdiWmrHO6dsAPNQk6qvPlQBuXcF6WOs3rR/1e0GXliAV+lPy9x6M5jdpCr0JaQkvVaAsY80GnPgtKFDbc3S5U4Xp2KK/pKXqnEqAawMS76MNn4l0FvGh1fDyXEALRV3HoOjW2ZElac5/99bj54WV5p7tqWICkZKJYczO/fH4NMsgXHG4RugqrPKCFpZVLFvd7e0rAqLzC84YTlSyltMj7hSbuTR4a7PA+jiOSAsvhJWycQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6M3t0C/yZOiWBcg8+GhsZgGG1CilhjLw2Pvaa90u5FI=;
- b=Ufo2pF60WPVEKCzVxZa8k5iHUKA7IiCgEric31Br1bLPppVKthuRo7JQNqlbJedE0prqG0KL7NweGIdJKwOx8Nfo8QTkSWJ7LJBM55zSKWBoFxzqqAOrZQgOslVage73HUo4WDQCDli5zniwmuZuoCc79xuiOlKcTY1fkGCWbZA=
-Received: from MWHPR21MB0861.namprd21.prod.outlook.com (2603:10b6:300:77::15)
- by MWHPR21MB0861.namprd21.prod.outlook.com (2603:10b6:300:77::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.11; Sat, 24 Aug
- 2019 04:23:04 +0000
-Received: from MWHPR21MB0861.namprd21.prod.outlook.com (2603:10b6:300:77::15)
- by MWHPR21MB0861.namprd21.prod.outlook.com (2603:10b6:300:77::15) with
- TransportReplication id Version 15.20 (Build 2220.11); Sat, 24 Aug 2019
- 04:23:04 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Fri, 23 Aug 2019
- 19:51:57 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
+        id S1726018AbfHXGCm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 24 Aug 2019 02:02:42 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36284 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfHXGCl (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 24 Aug 2019 02:02:41 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f19so6876971plr.3;
+        Fri, 23 Aug 2019 23:02:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PBhfWEbouVzAKjWN+Pc+TxdOjUmjwfquupK+iz/fQ4A=;
+        b=EnTwEhE4eOYxQ1U6tV59etlY0TArtp3YiUp6pDGsDdUusgJf9v5EvhiMZzZlcTj9of
+         cTsyLFhQYDBlRAPOIT2A6EE3zdK2JujbOn6pQ5p9RPDSnm2Z0YjYn+h7XT0yZOQmpaOx
+         StZJHvdGDp8p2joX0lLtZJHJNMIcE/R8C53EpASNOGYRF8h9HY9wRjltsv3J+VFxzww5
+         E2bM9YrVyzdVCEIAOv5Rr5xlLzqbkxxHh0OMRM1vnqbNDrgcDJl6erZEk6asYRkXm/cB
+         xPcThFZ/T0fugr0p8czJ4Dc/L1T7ymj7CjjhBspxcMxrjM0i8UWonX1XFR6mgvH8+NaJ
+         fjAA==
+X-Gm-Message-State: APjAAAW79wxZPOV/iKloAOIOdQTbMsazbkXCmT1mdAvR5KGQjEluTdwR
+        bho1LciBlzftAW/rOAAOACY29fgear4b5g==
+X-Google-Smtp-Source: APXvYqxyv6SnHafwAq2wDS1W1xROCWpkM31he4PdrXfsHzhw8ccWshBnDB7Isij98lfCJIj1o8scog==
+X-Received: by 2002:a17:902:248:: with SMTP id 66mr8776408plc.19.1566626560378;
+        Fri, 23 Aug 2019 23:02:40 -0700 (PDT)
+Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id i11sm6505645pfk.34.2019.08.23.23.02.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 23:02:39 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 06/12] Drivers: hv: vmbus: Add a helper function
- is_sub_channel()
-Thread-Topic: [PATCH v3 06/12] Drivers: hv: vmbus: Add a helper function
- is_sub_channel()
-Thread-Index: AQHVVvnd1/zp+soxM0mbE8pOD/myQKcJKiqA
-Date:   Fri, 23 Aug 2019 19:51:57 +0000
-Message-ID: <DM5PR21MB01375EFE9F76EDED7CC96F95D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
- <1566265863-21252-7-git-send-email-decui@microsoft.com>
-In-Reply-To: <1566265863-21252-7-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T19:51:55.3399838Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=df67a566-7186-471d-8c67-4185fd91456e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MWHPR21MB0861:|MWHPR21MB0861:|MWHPR21MB0861:
-x-ms-office365-filtering-correlation-id: 871e8440-a0ef-4a6c-5baa-08d728035b19
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR21MB0861;
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB08615C0F9AA99CB7580F824AD7A70@MWHPR21MB0861.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 0139052FDB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(39860400002)(376002)(346002)(396003)(199004)(189003)(10090500001)(74316002)(305945005)(66066001)(52536014)(14454004)(7736002)(486006)(6436002)(53936002)(476003)(229853002)(1511001)(446003)(26005)(256004)(14444005)(102836004)(9686003)(11346002)(186003)(2906002)(8990500004)(55016002)(81156014)(81166006)(478600001)(64756008)(66556008)(22452003)(2201001)(76176011)(66946007)(71190400001)(71200400001)(66476007)(7696005)(86362001)(52396003)(76116006)(6506007)(6246003)(2501003)(5660300002)(33656002)(8936002)(3846002)(6116002)(10290500003)(25786009)(316002)(110136005)(99286004)(4326008)(66446008)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR21MB0861;H:MWHPR21MB0861.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: W01ku238fVBf84v5LeyRt+Cau/t/6PdOYRsD+VoSVF4P4elk596AFqETP4AXkRsynAK97Do6Pb3Nbmzz0keQx0p6VqGHB6EcO97vUZ1Ggp1is94so5M/aBv3o7ggwlI+MFooAANmXC4zri8lpu3Ztiq6TM0QGKIElyLgalObs/md6Ylhn2XOEb1hAnQFFoR/KS7ZodGOmClJYEA1jXFzE1beojPFA4Yr2Dxuxfu1Lkb5myRIh7Ud/yb9KxN2thuhSwc49NzSnzt0T33LCuPPLJPNxxB8XTUso05aDug35tuteZ/IDBe/J48dJJD8yGVw2ncah35T5dNEyWQOasPA41X/xs3asxPxpSEQ4xzM/TkjAx15JLEorfW4gsCCQ98OPmXysvfa53D0fEQ+MQpY3jS0YfWv7zTy8ZmBvmslyCY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 871e8440-a0ef-4a6c-5baa-08d728035b19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 19:51:57.1907
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BTjFPLZQi4q5YiFJwrsgNaE12Hi+i/iBRcRCqwikyEWfTYL+r1pEhQZ88N10KkkbIJBUY4QaQhxTcNzhX/ltmqEL1ZYIJo+VELVEdG0jcEQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0861
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v4 0/9] x86/tlb: Concurrent TLB flushes
+Date:   Fri, 23 Aug 2019 15:41:44 -0700
+Message-Id: <20190823224153.15223-1-namit@vmware.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Monday, August 19, 2019 6:52 P=
-M
->=20
-> The existing method of telling if a channel is sub-channel in
-> vmbus_process_offer() is cumbersome. This new simple helper function
-> is preferred in future.
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  include/linux/hyperv.h | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->=20
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 6256cc3..2d39248 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -245,7 +245,10 @@ struct vmbus_channel_offer {
->  		} pipe;
->  	} u;
->  	/*
-> -	 * The sub_channel_index is defined in win8.
-> +	 * The sub_channel_index is defined in Win8: a value of zero means a
-> +	 * primary channel and a value of non-zero means a sub-channel.
-> +	 *
-> +	 * Before Win8, the field is reserved, meaning it's always zero.
->  	 */
->  	u16 sub_channel_index;
->  	u16 reserved3;
-> @@ -934,6 +937,11 @@ static inline bool is_hvsock_channel(const struct vm=
-bus_channel
-> *c)
->  		  VMBUS_CHANNEL_TLNPI_PROVIDER_OFFER);
->  }
->=20
-> +static inline bool is_sub_channel(const struct vmbus_channel *c)
-> +{
-> +	return c->offermsg.offer.sub_channel_index !=3D 0;
-> +}
-> +
->  static inline void set_channel_affinity_state(struct vmbus_channel *c,
->  					      enum hv_numa_policy policy)
->  {
-> --
-> 1.8.3.1
+[ Similar cover-letter to v3 with updated performance numbers on skylake.
+  Sorry for the time it since the last version. ]
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Currently, local and remote TLB flushes are not performed concurrently,
+which introduces unnecessary overhead - each PTE flushing can take 100s
+of cycles. This patch-set allows TLB flushes to be run concurrently:
+first request the remote CPUs to initiate the flush, then run it
+locally, and finally wait for the remote CPUs to finish their work.
+
+In addition, there are various small optimizations to avoid, for
+example, unwarranted false-sharing.
+
+The proposed changes should also improve the performance of other
+invocations of on_each_cpu(). Hopefully, no one has relied on this
+behavior of on_each_cpu() that invoked functions first remotely and only
+then locally [Peter says he remembers someone might do so, but without
+further information it is hard to know how to address it].
+
+Running sysbench on dax/ext4 w/emulated-pmem, write-cache disabled on
+2-socket, 56-logical-cores (28+SMT) Skylake, 5 repetitions:
+
+sysbench fileio --file-total-size=3G --file-test-mode=rndwr \
+ --file-io-mode=mmap --threads=X --file-fsync-mode=fdatasync run
+
+ Th.   tip-aug22 avg (stdev)   +patch-set avg (stdev)  change
+ ---   ---------------------   ----------------------  ------
+ 1	1152920 (7453)		1169469 (9059)		+1.4%
+ 2	1545832 (12555)		1584172 (10484) 	+2.4%
+ 4	2480703 (12039)		2518641 (12875)		+1.5%
+ 8	3684486 (26007)		3840343 (44144)		+4.2%
+ 16	4981567 (23565)		5125756 (15458)		+2.8%
+ 32	5679542 (10116)		5887826 (6121)		+3.6%
+ 56	5630944 (17937)		5812514 (26264)		+3.2%
+
+(Note that on configurations with up to 28 threads numactl was used to
+set all threads on socket 1, which explains the drop in performance when
+going to 32 threads).
+
+Running the same benchmark with security mitigations disabled (PTI,
+Spectre, MDS):
+
+ Th.   tip-aug22 avg (stdev)   +patch-set avg (stdev)  change
+ ---   ---------------------   ----------------------  ------
+ 1	1444119 (8524)		1469606 (10527)		+1.7%
+ 2	1921540 (24169)		1961899 (14450)		+2.1%
+ 4	3073716 (21786)		3199880 (16774)		+4.1%
+ 8	4700698 (49534)		4802312 (11043)		+2.1%
+ 16	6005180 (6366)		6006656 (31624)		   0%
+ 32	6826466 (10496)		6886622 (19110)		+0.8%
+ 56	6832344 (13468)		6885586 (20646)		+0.8%
+
+The results are somewhat different than the results that have been obtained on
+Haswell-X, which were sent before and the maximum performance improvement is
+smaller. However, the performance improvement is significant.
+
+v3 -> v4:
+  * Merge flush_tlb_func_local and flush_tlb_func_remote() [Peter]
+  * Prevent preemption on_each_cpu(). It is not needed, but it prevents
+    concerns. [Peter/tglx]
+  * Adding acked-, review-by tags
+
+v2 -> v3:
+* Open-code the remote/local-flush decision code [Andy]
+* Fix hyper-v, Xen implementations [Andrew]
+* Fix redundant TLB flushes.
+
+v1 -> v2:
+* Removing the patches that Thomas took [tglx]
+* Adding hyper-v, Xen compile-tested implementations [Dave]
+* Removing UV [Andy]
+* Adding lazy optimization, removing inline keyword [Dave]
+* Restructuring patch-set
+
+RFCv2 -> v1:
+* Fix comment on flush_tlb_multi [Juergen]
+* Removing async invalidation optimizations [Andy]
+* Adding KVM support [Paolo]
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: x86@kernel.org
+Cc: xen-devel@lists.xenproject.org
+
+Nadav Amit (9):
+  smp: Run functions concurrently in smp_call_function_many()
+  x86/mm/tlb: Unify flush_tlb_func_local() and flush_tlb_func_remote()
+  x86/mm/tlb: Open-code on_each_cpu_cond_mask() for tlb_is_not_lazy()
+  x86/mm/tlb: Flush remote and local TLBs concurrently
+  x86/mm/tlb: Privatize cpu_tlbstate
+  x86/mm/tlb: Do not make is_lazy dirty for no reason
+  cpumask: Mark functions as pure
+  x86/mm/tlb: Remove UV special case
+  x86/mm/tlb: Remove unnecessary uses of the inline keyword
+
+ arch/x86/hyperv/mmu.c                 |  10 +-
+ arch/x86/include/asm/paravirt.h       |   6 +-
+ arch/x86/include/asm/paravirt_types.h |   4 +-
+ arch/x86/include/asm/tlbflush.h       |  52 +++----
+ arch/x86/include/asm/trace/hyperv.h   |   2 +-
+ arch/x86/kernel/kvm.c                 |  11 +-
+ arch/x86/kernel/paravirt.c            |   2 +-
+ arch/x86/mm/init.c                    |   2 +-
+ arch/x86/mm/tlb.c                     | 195 ++++++++++++++------------
+ arch/x86/xen/mmu_pv.c                 |  11 +-
+ include/linux/cpumask.h               |   6 +-
+ include/linux/smp.h                   |  34 ++++-
+ include/trace/events/xen.h            |   2 +-
+ kernel/smp.c                          | 138 +++++++++---------
+ 14 files changed, 254 insertions(+), 221 deletions(-)
+
+-- 
+2.17.1
 
