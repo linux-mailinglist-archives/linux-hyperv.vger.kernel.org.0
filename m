@@ -2,39 +2,44 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 234F19B7A0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Aug 2019 22:25:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B46E9BB9C
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Aug 2019 06:23:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389577AbfHWUZH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 23 Aug 2019 16:25:07 -0400
-Received: from mail-eopbgr710136.outbound.protection.outlook.com ([40.107.71.136]:45952
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        id S1725798AbfHXEXH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 24 Aug 2019 00:23:07 -0400
+Received: from mail-eopbgr820097.outbound.protection.outlook.com ([40.107.82.97]:4016
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389571AbfHWUZH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 23 Aug 2019 16:25:07 -0400
+        id S1725782AbfHXEXH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 24 Aug 2019 00:23:07 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iJlePm7RLZMvp7uJaTSuWAZD6lYLfdCd00OO/HwEB35hu5tNTM4Hz3MMvXEX/hw6tdFIPYwCIlNJQY9y311FPe2KZf5TrhfmmwPIO9ceiXA+K6nj2q6sjhSKAmzEilSUK1F5oSoZ5kZENBFA7XizVsEpCoBp+1CyXZl9/4SIKeR6M44k2uf+/gkoM/F2bozI17HTscswcSLBv5p7yd0qNYuCRyghknWCPHXkCQk3ipZUpmylptW1wTc5trqpVULAIk9nWHdJpWlo5SQhWxdgjdznkzTWSKcU7dLJ32FBWM582cv888fz85XmllhBoEugQhPaVm0UJztfIxkAcAq3JA==
+ b=arEv4FG5fUI8BaQ0hpAibay/5mForhL0LyNu3bGLAKi9cAHtJ4VtzDSmoddMuANAPQj3uE4OYklH7djvIH0dp/bxTj+CqZedYeZIo6zLDi7rQFdDKLr3GkjxWGwjaSA7miepLGE45pZrW5LV+/dC+/q+8n8LdCYboKuAEN+aPR6NTZt9g9iv0eSmzlT8eIdGF0/zN6BWKC5vgW8uG6k8py5ceUfSbkZUH99E1AN5b44Fku5xK4cMGsVEItc+GsidkQwQcfbyzGjm3MqMcTbCMSfahqucStQgYZWeuDi7SfeQDLjM1wccXLpcDCeme0HmxmiScPs1MEpXub1MnNXHkA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wgsZoAKU8iXXU441HwTaOHTfE8iGYjGF0KB6FhAyVYc=;
- b=epaDykyS52Y/xrOuRCheWsGX+LliK3iBhBEdFuRijJkajFHHM6FFJRmUA3Zs888AYs3xqeua7noyN7Qm2y/OmZHIyvnr7Cf+IQvT0Tm3tkv/YwHIjDMYDDleyfVUpITmhIlFI6YXv3Camk3g7+PlWQdGtr04zuFCQux18V07ulgT+ugSV/qZjegV2UuG0bwwuHGLJcl+8O6pLq63GQxz9yjNE/8qoFHqNtYXD7Ma83OiO4KtmltEU4kes9o8GAFrYr1U59Rk2ylq7U98NkZUFFbRRAF+vuO7Ed48L3yfCNJvck1+mKVswJdaqW2tnUGYfL8iYftCxsC7OV7niui7tw==
+ bh=6M3t0C/yZOiWBcg8+GhsZgGG1CilhjLw2Pvaa90u5FI=;
+ b=UlDqbCIj014+aHnHVVbedXsFO1+fkF+lpt+UiDPV+6cyh+JcYC9jZmgvS/OiCtsST0jrKhOmuCS7pcsGSOiN7n2+FFlkorkX1+KRd2nOWdiWmrHO6dsAPNQk6qvPlQBuXcF6WOs3rR/1e0GXliAV+lPy9x6M5jdpCr0JaQkvVaAsY80GnPgtKFDbc3S5U4Xp2KK/pKXqnEqAawMS76MNn4l0FvGh1fDyXEALRV3HoOjW2ZElac5/99bj54WV5p7tqWICkZKJYczO/fH4NMsgXHG4RugqrPKCFpZVLFvd7e0rAqLzC84YTlSyltMj7hSbuTR4a7PA+jiOSAsvhJWycQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wgsZoAKU8iXXU441HwTaOHTfE8iGYjGF0KB6FhAyVYc=;
- b=D7z8XMVUgkGoGWmx87f/mWMskjOPf9ZtK03VOcc7wcepoi+XxpDJPLDp7gl5SBa2DvDuQKg9Ek06AguI8K3VgKUGEQEQMfImGqrZejJKYqkDjbmDFos78JhBzZWzZqUQywWR4f96HQQeE9/tyUWyecqj2WK9NZQYtOuG6NgzS5k=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0140.namprd21.prod.outlook.com (10.173.173.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.4; Fri, 23 Aug 2019 20:25:03 +0000
+ bh=6M3t0C/yZOiWBcg8+GhsZgGG1CilhjLw2Pvaa90u5FI=;
+ b=Ufo2pF60WPVEKCzVxZa8k5iHUKA7IiCgEric31Br1bLPppVKthuRo7JQNqlbJedE0prqG0KL7NweGIdJKwOx8Nfo8QTkSWJ7LJBM55zSKWBoFxzqqAOrZQgOslVage73HUo4WDQCDli5zniwmuZuoCc79xuiOlKcTY1fkGCWbZA=
+Received: from MWHPR21MB0861.namprd21.prod.outlook.com (2603:10b6:300:77::15)
+ by MWHPR21MB0861.namprd21.prod.outlook.com (2603:10b6:300:77::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.11; Sat, 24 Aug
+ 2019 04:23:04 +0000
+Received: from MWHPR21MB0861.namprd21.prod.outlook.com (2603:10b6:300:77::15)
+ by MWHPR21MB0861.namprd21.prod.outlook.com (2603:10b6:300:77::15) with
+ TransportReplication id Version 15.20 (Build 2220.11); Sat, 24 Aug 2019
+ 04:23:04 +0000
 Received: from DM5PR21MB0137.namprd21.prod.outlook.com
  ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
  ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Fri, 23 Aug 2019
- 20:25:03 +0000
+ 19:51:57 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     Dexuan Cui <decui@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
@@ -46,16 +51,16 @@ To:     Dexuan Cui <decui@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         "tglx@linutronix.de" <tglx@linutronix.de>
 CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 12/12] Drivers: hv: vmbus: Resume after fixing up old
- primary channels
-Thread-Topic: [PATCH v3 12/12] Drivers: hv: vmbus: Resume after fixing up old
- primary channels
-Thread-Index: AQHVVvnhnZYV8iEJF0ORPS4BQ7lYm6cJMgUQ
-Date:   Fri, 23 Aug 2019 20:25:02 +0000
-Message-ID: <DM5PR21MB01370691E881D59773B9EF60D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+Subject: RE: [PATCH v3 06/12] Drivers: hv: vmbus: Add a helper function
+ is_sub_channel()
+Thread-Topic: [PATCH v3 06/12] Drivers: hv: vmbus: Add a helper function
+ is_sub_channel()
+Thread-Index: AQHVVvnd1/zp+soxM0mbE8pOD/myQKcJKiqA
+Date:   Fri, 23 Aug 2019 19:51:57 +0000
+Message-ID: <DM5PR21MB01375EFE9F76EDED7CC96F95D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
 References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
- <1566265863-21252-13-git-send-email-decui@microsoft.com>
-In-Reply-To: <1566265863-21252-13-git-send-email-decui@microsoft.com>
+ <1566265863-21252-7-git-send-email-decui@microsoft.com>
+In-Reply-To: <1566265863-21252-7-git-send-email-decui@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -63,41 +68,41 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T20:25:01.1543000Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T19:51:55.3399838Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ed8325f3-7994-47a0-9ecc-2c1fc987ecca;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=df67a566-7186-471d-8c67-4185fd91456e;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=mikelley@microsoft.com; 
 x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c8f073f4-1e54-44ae-dfe1-08d72807fa9e
+x-ms-traffictypediagnostic: MWHPR21MB0861:|MWHPR21MB0861:|MWHPR21MB0861:
+x-ms-office365-filtering-correlation-id: 871e8440-a0ef-4a6c-5baa-08d728035b19
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0140;
-x-ms-traffictypediagnostic: DM5PR21MB0140:|DM5PR21MB0140:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR21MB0861;
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB01407F39E3FD7548ACDFB95CD7A40@DM5PR21MB0140.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0138CD935C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(136003)(396003)(346002)(199004)(189003)(305945005)(26005)(446003)(11346002)(14444005)(81156014)(8676002)(102836004)(6506007)(256004)(81166006)(186003)(486006)(476003)(7696005)(7736002)(76176011)(22452003)(4326008)(74316002)(6246003)(3846002)(6116002)(9686003)(10090500001)(55016002)(1511001)(8990500004)(2906002)(66066001)(6436002)(53936002)(5660300002)(14454004)(110136005)(316002)(86362001)(478600001)(2201001)(66476007)(71200400001)(71190400001)(76116006)(66556008)(10290500003)(66946007)(99286004)(25786009)(64756008)(33656002)(66446008)(2501003)(8936002)(229853002)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0140;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-microsoft-antispam-prvs: <MWHPR21MB08615C0F9AA99CB7580F824AD7A70@MWHPR21MB0861.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 0139052FDB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(39860400002)(376002)(346002)(396003)(199004)(189003)(10090500001)(74316002)(305945005)(66066001)(52536014)(14454004)(7736002)(486006)(6436002)(53936002)(476003)(229853002)(1511001)(446003)(26005)(256004)(14444005)(102836004)(9686003)(11346002)(186003)(2906002)(8990500004)(55016002)(81156014)(81166006)(478600001)(64756008)(66556008)(22452003)(2201001)(76176011)(66946007)(71190400001)(71200400001)(66476007)(7696005)(86362001)(52396003)(76116006)(6506007)(6246003)(2501003)(5660300002)(33656002)(8936002)(3846002)(6116002)(10290500003)(25786009)(316002)(110136005)(99286004)(4326008)(66446008)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR21MB0861;H:MWHPR21MB0861.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /hXv5Oc/lqKv5+Ka+T8AgRzyU0fFzVcnKOmNeT3de2vDacxwd5gijvPKZye+ZqUVGFv8W50Z3UsFipGyy/767RPO+IIfAqcgVpYWPAWpYiL7sypO7nYQ+zu+BJieW5mn+5JZy/cnIdjIktnSvguYh0MeR0T1GJf330fAA40SODGuqDeDmMVKJ9nvyxr0k16nlgq5ScborERs3S99YclYxBjXYlWitbuxctbClNq9zwswv+k2H/CCpRiVSGPn/hv6t3pgx3CvDXNcMlLAElovjlgfJBterAMbaH0wuFBi4ZptoLRpL6FQ8Hcwmd4NcNVv1BkAQV6dhaR87Z5Bch9VWuU6yl4RFsaO3ubkogMnpWbHAST0GwUz98BC4o2qQw6/uwXfGGDJ3Pa36drO0Kpu4SwPliO2NVN05NHdS0qsqTg=
+x-microsoft-antispam-message-info: W01ku238fVBf84v5LeyRt+Cau/t/6PdOYRsD+VoSVF4P4elk596AFqETP4AXkRsynAK97Do6Pb3Nbmzz0keQx0p6VqGHB6EcO97vUZ1Ggp1is94so5M/aBv3o7ggwlI+MFooAANmXC4zri8lpu3Ztiq6TM0QGKIElyLgalObs/md6Ylhn2XOEb1hAnQFFoR/KS7ZodGOmClJYEA1jXFzE1beojPFA4Yr2Dxuxfu1Lkb5myRIh7Ud/yb9KxN2thuhSwc49NzSnzt0T33LCuPPLJPNxxB8XTUso05aDug35tuteZ/IDBe/J48dJJD8yGVw2ncah35T5dNEyWQOasPA41X/xs3asxPxpSEQ4xzM/TkjAx15JLEorfW4gsCCQ98OPmXysvfa53D0fEQ+MQpY3jS0YfWv7zTy8ZmBvmslyCY=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8f073f4-1e54-44ae-dfe1-08d72807fa9e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 20:25:03.0062
+X-MS-Exchange-CrossTenant-Network-Message-Id: 871e8440-a0ef-4a6c-5baa-08d728035b19
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2019 19:51:57.1907
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rBwIMEeqCakkQtuOYrCsrt3b2ZCeWDxN5QYiAeloZhAj8sRYdVjLcmRIrKwRgeKWHyAbllOwBimBC5RSAv3gzHkR5EvT1LGGB0oDcckDCIs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0140
+X-MS-Exchange-CrossTenant-userprincipalname: BTjFPLZQi4q5YiFJwrsgNaE12Hi+i/iBRcRCqwikyEWfTYL+r1pEhQZ88N10KkkbIJBUY4QaQhxTcNzhX/ltmqEL1ZYIJo+VELVEdG0jcEQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0861
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
@@ -106,69 +111,47 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 From: Dexuan Cui <decui@microsoft.com> Sent: Monday, August 19, 2019 6:52 P=
 M
 >=20
-> When the host re-offers the primary channels upon resume, the host only
-> guarantees the Instance GUID  doesn't change, so vmbus_bus_suspend()
-> should invalidate channel->offermsg.child_relid and figure out the
-> number of primary channels that need to be fixed up upon resume.
->=20
-> Upon resume, vmbus_onoffer() finds the old channel structs, and maps
-> the new offers to the old channels, and fixes up the old structs,
-> and finally the resume callbacks of the VSC drivers will re-open
-> the channels.
+> The existing method of telling if a channel is sub-channel in
+> vmbus_process_offer() is cumbersome. This new simple helper function
+> is preferred in future.
 >=20
 > Signed-off-by: Dexuan Cui <decui@microsoft.com>
 > ---
->  drivers/hv/channel_mgmt.c | 76 +++++++++++++++++++++++++++++++++++------=
-------
->  drivers/hv/connection.c   |  2 ++
->  drivers/hv/hyperv_vmbus.h | 14 +++++++++
->  drivers/hv/vmbus_drv.c    | 17 +++++++++++
->  include/linux/hyperv.h    |  3 ++
->  5 files changed, 93 insertions(+), 19 deletions(-)
+>  include/linux/hyperv.h | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >=20
-> @@ -875,12 +913,21 @@ static void vmbus_onoffer(struct
-> vmbus_channel_message_header *hdr)
->  		atomic_dec(&vmbus_connection.offer_in_progress);
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index 6256cc3..2d39248 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -245,7 +245,10 @@ struct vmbus_channel_offer {
+>  		} pipe;
+>  	} u;
+>  	/*
+> -	 * The sub_channel_index is defined in win8.
+> +	 * The sub_channel_index is defined in Win8: a value of zero means a
+> +	 * primary channel and a value of non-zero means a sub-channel.
+> +	 *
+> +	 * Before Win8, the field is reserved, meaning it's always zero.
+>  	 */
+>  	u16 sub_channel_index;
+>  	u16 reserved3;
+> @@ -934,6 +937,11 @@ static inline bool is_hvsock_channel(const struct vm=
+bus_channel
+> *c)
+>  		  VMBUS_CHANNEL_TLNPI_PROVIDER_OFFER);
+>  }
 >=20
->  		/*
-> -		 * We're resuming from hibernation: we expect the host to send
-> -		 * exactly the same offers that we had before the hibernation.
-> +		 * We're resuming from hibernation: all the sub-channel and
-> +		 * hv_sock channels we had before the hibernation should have
-> +		 * been cleaned up, and now we must be seeing a re-offered
-> +		 * primary channel that we had before the hibernation.
->  		 */
+> +static inline bool is_sub_channel(const struct vmbus_channel *c)
+> +{
+> +	return c->offermsg.offer.sub_channel_index !=3D 0;
+> +}
 > +
-> +		WARN_ON(oldchannel->offermsg.child_relid !=3D INVALID_RELID);
-> +		/* Fix up the relid. */
-> +		oldchannel->offermsg.child_relid =3D offer->child_relid;
-> +
->  		offer_sz =3D sizeof(*offer);
-> -		if (memcmp(offer, &oldchannel->offermsg, offer_sz) =3D=3D 0)
-> +		if (memcmp(offer, &oldchannel->offermsg, offer_sz) =3D=3D 0) {
-> +			check_ready_for_resume_event();
->  			return;
-> +		}
->=20
->  		pr_debug("Mismatched offer from the host (relid=3D%d)\n",
->  			 offer->child_relid);
-> @@ -890,6 +937,11 @@ static void vmbus_onoffer(struct
-> vmbus_channel_message_header *hdr)
->  				     false);
->  		print_hex_dump_debug("New vmbus offer: ", DUMP_PREFIX_OFFSET,
->  				     16, 4, offer, offer_sz, false);
-> +
-> +		vmbus_setup_channel_state(oldchannel, offer);
-> +
-> +		check_ready_for_resume_event();
+>  static inline void set_channel_affinity_state(struct vmbus_channel *c,
+>  					      enum hv_numa_policy policy)
+>  {
+> --
+> 1.8.3.1
 
-This is the error case where the new offer didn't match some aspect of
-the old offer.  Is the intent to proceed and use the new offer?   I can see
-that check_ready_for_resume_event() has to be called in the error case,
-otherwise the resume operation will hang forever, but I'm not sure about
-setting up the channel state and then proceeding as if all is good.
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-> +
->  		return;
->  	}
->=20
