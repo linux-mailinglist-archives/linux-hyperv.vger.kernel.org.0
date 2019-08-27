@@ -2,113 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE9F69D33D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Aug 2019 17:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F8559DE2E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Aug 2019 08:41:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730951AbfHZPmE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 26 Aug 2019 11:42:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39347 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729800AbfHZPmE (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:42:04 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i63so16330401wmg.4;
-        Mon, 26 Aug 2019 08:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BuKiLPPx3WZb18KjEBPIDucn0EvSVWkRKmbpGZhpx+A=;
-        b=VAzJwDRuBaxBdFubOwbTnTfVQq9MfH+ytDLchNHQMQQ8ecq0q+LhTNcNoavQ2Wauko
-         /Uom0aUGQJx4//eKpLCL7XH1BGeJ9vlNyjDopVVydGi2EkiElRo1cR61XIJZ55g4rZ/A
-         DDjYzCg83uMzyPlVufvjb/rxD+Ae/xWjgEKVwvzn63/I/51EPNQqyti8fuBDuAFvnRWu
-         z9heqT0thRiVuJPSDiFqEHCagGXCv22RDjSKExEMA9Jc42PM6cnE1zqi5zVNWmUuEHfb
-         c40Y34Nq//Zc01oyzKHysavfyTdaowaXPSobtolIetIWGpZtOH/mrgyYraDEaAHubCES
-         5scg==
+        id S1726134AbfH0Gls (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 27 Aug 2019 02:41:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42532 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfH0Glr (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 27 Aug 2019 02:41:47 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C833C0568FA
+        for <linux-hyperv@vger.kernel.org>; Tue, 27 Aug 2019 06:41:47 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id b15so339371wrp.21
+        for <linux-hyperv@vger.kernel.org>; Mon, 26 Aug 2019 23:41:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=BuKiLPPx3WZb18KjEBPIDucn0EvSVWkRKmbpGZhpx+A=;
-        b=n+LhylHAOMM9Y1eGfW4Hs1OJzvqR9bPlm6cZtT81h1bB2fxvhks50KZQXOLT+twXuy
-         EMWoGt1gYYEAxcW0n23cT8k+FQB4nbctG5ATKL0nlyn91ndbVYFXZbZs92C1Jo2NXzG1
-         sXVTe+GlZ+ab/l97xf55lIY4NY8zJ9JGizXKetFgZ4dn09T0Imh1Bb2/crzTY9DFPa1z
-         Lu12AJAnzAMOmLNN1Drbux/32zW3hsSk89r7CE1XzauDFO/l5M3lbzUGAUoJDRkKC+G4
-         NEtsHd/tOYHVn4v30Hm+jFVnhrE25fMEcdwq6+b4CCPlsgMEVuOF7d1QBLp485h3ZN+Q
-         KJrg==
-X-Gm-Message-State: APjAAAU2K4Sms0iZW46mchjklg3z0RAID2NAx5OSiCPlbkEFzjyY/L57
-        bxi3ht2jd3UJ8iDSkVxjHh0=
-X-Google-Smtp-Source: APXvYqzvHRKG3k5WDrYTTbUuQ0IVTK+v4eHtFzB3In8kqXePOoZn326xQ7UkwrF+Hh0HO/fH8WqJ1Q==
-X-Received: by 2002:a1c:c018:: with SMTP id q24mr22317873wmf.162.1566834121939;
-        Mon, 26 Aug 2019 08:42:01 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id g26sm12148959wmh.32.2019.08.26.08.42.00
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=R3N0Ux8sXWlDkwBv6LnZ39XXekdpR8uOz0RxueTkq8c=;
+        b=cfJGSl4YHxBitk9iQ/IEM2RQ7RV7nAhqVlQMC6f5BKxcS/UY7aoCdNPpyUS5tpuzCc
+         SWLf3vu+ZwU+TpuS8nBNdeK0bcuUllNhnNwZ2O/7Uuzy8/VtIBgI0AR5fWQh+RiGoUjz
+         YeDuY3tZ7qNAuY+qeHJXcwKFZvJMqCtqDf84+0Gks8J+KAunmheerYnBYTv/rJ2zTKRt
+         ZBGfnE9xaATWum8J8T8KjsadyeTPNLhvgq7KAj5GdZ8zCw/Sd/IeZRe/CaSIwckn8yXn
+         5EeXEKkO68CY/7sKOxaX5vw91PgbFfeNKz4X5ZjNCHYCmgQKklqpHd9CvEEgXONQ8YvQ
+         lcaw==
+X-Gm-Message-State: APjAAAVemv6ipXVJK7Q5Yj6rWc/6g1F2fLB+new6uTF4j23JiCSByF56
+        9c7iOoBQ+ndyUfhAZRmnSrQNE1n9Rz+MPJFIDgTUrzHMmERigY8liVhGENd3ZpIbsux+kup2DpK
+        TLKBnmGnWXnnSKnfa+jHMkuYd
+X-Received: by 2002:a1c:6145:: with SMTP id v66mr27541192wmb.42.1566888106026;
+        Mon, 26 Aug 2019 23:41:46 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy2GI0NmyS361uOvgSgC8vAQPveBM+fESLiQwCenbAGMgIf/+ayRt++zlV0fLjGFgWERAv3gA==
+X-Received: by 2002:a1c:6145:: with SMTP id v66mr27541156wmb.42.1566888105812;
+        Mon, 26 Aug 2019 23:41:45 -0700 (PDT)
+Received: from vitty.brq.redhat.com (ip-89-176-161-20.net.upcbroadband.cz. [89.176.161.20])
+        by smtp.gmail.com with ESMTPSA id 39sm42348076wrc.45.2019.08.26.23.41.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2019 08:42:00 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH] PCI: hv: Make functions only used locally static in pci-hyperv.c
-Date:   Mon, 26 Aug 2019 17:41:59 +0200
-Message-Id: <20190826154159.9005-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        Mon, 26 Aug 2019 23:41:45 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     lantianyu1986@gmail.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        rkrcmar@redhat.com, corbet@lwn.net, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, michael.h.kelley@microsoft.com
+Subject: Re: [PATCH V3 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
+In-Reply-To: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
+References: <20190819131737.26942-1-Tianyu.Lan@microsoft.com>
+Date:   Tue, 27 Aug 2019 08:41:43 +0200
+Message-ID: <87ftlnm7o8.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Functions hv_read_config_block(), hv_write_config_block()
-and hv_register_block_invalidate() are not used anywhere
-else and are local to drivers/pci/controller/pci-hyperv.c,
-and do not need to be in global scope, so make these static.
+lantianyu1986@gmail.com writes:
 
-Resolve compiler warning that can be seen when building with
-warnings enabled (W=1).
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>
+> This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
+> in L0 can delegate L1 hypervisor to handle tlb flush request from
+> L2 guest when direct tlb flush is enabled in L1.
+>
+> Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
+> feature from user space. User space should enable this feature only
+> when Hyper-V hypervisor capability is exposed to guest and KVM profile
+> is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
+> We hope L2 guest doesn't use KVM hypercall when the feature is
+> enabled. Detail please see comment of new API
+> "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- drivers/pci/controller/pci-hyperv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I was thinking about this for awhile and I think I have a better
+proposal. Instead of adding this new capability let's enable direct TLB
+flush when KVM guest enables Hyper-V Hypercall page (writes to
+HV_X64_MSR_HYPERCALL) - this guarantees that the guest doesn't need KVM
+hypercalls as we can't handle both KVM-style and Hyper-V-style
+hypercalls simultaneously and kvm_emulate_hypercall() does:
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index f1f300218fab..c9642e429c2d 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -930,7 +930,7 @@ static void hv_pci_read_config_compl(void *context, struct pci_response *resp,
-  *
-  * Return: 0 on success, -errno on failure
-  */
--int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
-+static int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
- 			 unsigned int block_id, unsigned int *bytes_returned)
- {
- 	struct hv_pcibus_device *hbus =
-@@ -1010,7 +1010,7 @@ static void hv_pci_write_config_compl(void *context, struct pci_response *resp,
-  *
-  * Return: 0 on success, -errno on failure
-  */
--int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
-+static int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
- 			  unsigned int block_id)
- {
- 	struct hv_pcibus_device *hbus =
-@@ -1079,7 +1079,7 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
-  *
-  * Return: 0 on success, -errno on failure
-  */
--int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
-+static int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
- 				 void (*block_invalidate)(void *context,
- 							  u64 block_mask))
- {
+	if (kvm_hv_hypercall_enabled(vcpu->kvm))
+		return kvm_hv_hypercall(vcpu);
+
+What do you think?
+
+(and instead of adding the capability we can add kvm.ko module parameter
+to enable direct tlb flush unconditionally, like
+'hv_direct_tlbflush=-1/0/1' with '-1' being the default (autoselect
+based on Hyper-V hypercall enablement, '0' - permanently disabled, '1' -
+permanenetly enabled)).
+
 -- 
-2.22.1
-
+Vitaly
