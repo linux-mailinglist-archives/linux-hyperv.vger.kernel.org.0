@@ -2,210 +2,128 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2F89FE11
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Aug 2019 11:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CE77A0D72
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Aug 2019 00:18:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfH1JMi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 28 Aug 2019 05:12:38 -0400
-Received: from mail-eopbgr1310123.outbound.protection.outlook.com ([40.107.131.123]:1680
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726975AbfH1JMh (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 28 Aug 2019 05:12:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AQkTe3PhcOVnvrN3XfNyKztTDHh4JuQpYg1CyZsr7jQWufm4yx3sE4V58wZ/u0/rUf1TodDuGoxK78MMmY/A4LwVrxmehi+/clj0qxbEDu7aBIohmoMC0ovri8sfweowCp5kvUl+hDK/VcwEtPvgTt3DmKsbP8RvFO2875DVPL5nuFDc9KyKlEbpcC1UlQM5VJ99J01RtKXfpCIjK99WbsR7zY9faPbtVeVdksTkceM9tcJWbCG0SFv+NZ00xuBgvG79f0idhE47u8FCJ35eX0/e/j37joOZs8xlYbThZY1OF8VEt23i6e/+YgyTl53JMgaKGVgVNgk0Zwht/Ua2QA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JkoVukJyoJ+Behl1JHtmxjroUKALx6RWAo09tW5ko3E=;
- b=E2M6cAE92PdvMxTbvazzRPIeKvFGE89shPLbyYtum6ayM5k0P5C+wFRF9WlcmtoxuvZ8imEE8hVbMNvEIBMd4ChrZXHCOJq1HF0mha4XdpXhTwWlPSVcnyN0nOJdhTqCOnDKW2DqS4SmtMg6wsDy1rIZlJiBbvbqUq+r0fOXvWcYERTaBu3uV0tjM1MrGdM4VAaLo/IQU+Bu+hZOABnKq28S2uO9k5qm8RfHJkHajgnIBpvDow5vx/Iuh3o4+w6tR6PgIDjzDI5noThyb65TaAg9gDQGABDpgYwrrNpt2h0027A36Ij6Jdg2qPjTxS/hJr5NTOcRP0D2ndXp/bN9/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JkoVukJyoJ+Behl1JHtmxjroUKALx6RWAo09tW5ko3E=;
- b=UqVo5Swiq2fmGbXvk85uZ4VsHGAheV4ooehxHl89XQb63WGhuF6ZzQCI/R//Rqep/7u4eoJtxU9CsUv4sP2hw9jIYmjLt2LsyPUcbMnggYSClmZxL1Bj1kNd2StWVYBbi7UEPdqwYvE+f6bfOG6r9qtDvB7TK/Py9CGqjBSal/I=
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM (52.132.240.17) by
- KL1P15301MB0006.APCP153.PROD.OUTLOOK.COM (10.170.167.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.3; Wed, 28 Aug 2019 09:12:31 +0000
-Received: from KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e]) by KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM
- ([fe80::c402:2ce2:cafa:8b1e%9]) with mapi id 15.20.2241.000; Wed, 28 Aug 2019
- 09:12:31 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "shc_work@mail.ru" <shc_work@mail.ru>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
-        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
-        "info@metux.net" <info@metux.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+        id S1727017AbfH1WSv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 28 Aug 2019 18:18:51 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50184 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfH1WSv (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 28 Aug 2019 18:18:51 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v15so1655978wml.0;
+        Wed, 28 Aug 2019 15:18:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EAM+t57qqYuwniU8bRaWennUhmMsaEkJJTB53gDhRV0=;
+        b=PzPFLhXrn053PrK+Im4s20CBgdlwWdD5vf7c2qvmraHFMtcRNGOax3ZxrfVOJLsNi3
+         RJxiH4tXGWBYfSPw6+3I8vtZeTD9tB4tL0CWcferER8wbL3pZmfcEHByNB++kckMWtm1
+         II4sQzdAzkx/TuyjLqLbRum/n+kGKqk1HoLpww7xpOX4pesNCxdw87AVciQtgsL0JmzZ
+         xmvPJQu0b6mL3cjmfkbnKxZMnd2hgW6BydXPxjMO+te/8BKnN0g44Zl5h0htIrgf01KB
+         5ohsIvfvswNN96W6dWfQD6sl2Iq0UoM2C4aBYqAqPzwEO1SQ/4UmYLuhm+PIBFWs/e7p
+         L2SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=EAM+t57qqYuwniU8bRaWennUhmMsaEkJJTB53gDhRV0=;
+        b=Shz/4ZIcs2eHXJcpaJQEO9tnJpU9DEZTExq+ZtmeeJzoo8VRUAkPFQcpfAzgE23nn1
+         dlOOWo2n+XnFqV+Xl8ZHHiyirXiEICBBa5DwjAl4w3GKKiYoMsVnvmwiJLIgGMA9ER6+
+         nokJIZwEAGzSw0RKAMJElivz6/TFKFsfXSv/5OMw91DMHcXpZRSPYXBeY8iNzgh82UsJ
+         0tAjQCzkOGpNz9sToXruanMG4CRoVRWlBm7Zu189PKkTMQ/s29q37W/PXnLVWYwCOKUN
+         TgSojQVEg40ER5/l39CZW6nVrIHzhlhWhl8kc+vwYf7EIC0kJ9SWYt6Rdrxz4gylcqpr
+         IhKA==
+X-Gm-Message-State: APjAAAW9TUFMuZULABqMlaH+ZpjkfOrv9s0tWRTZ5mhBI8GdL0B8yzhb
+        J6792m8AF3e6k8m3TuWwyUA=
+X-Google-Smtp-Source: APXvYqytiyMA527g+v36HgxoxNOILeUCUvgDIlxBt4nYEzP9HjFrZBhYtT/kswy2sO7/NmcFjIJFGg==
+X-Received: by 2002:a1c:f910:: with SMTP id x16mr7122619wmh.69.1567030729551;
+        Wed, 28 Aug 2019 15:18:49 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id 7sm411012wmj.46.2019.08.28.15.18.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2019 15:18:48 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATHC v2] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Thread-Topic: [PATHC v2] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Thread-Index: AQHVXMoQkghsJmF5GU+6GBoMEWqB8KcPrJWwgACTu4A=
-Date:   Wed, 28 Aug 2019 09:12:30 +0000
-Message-ID: <KL1P15301MB026463D9F94CE517E7A63216BBA30@KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM>
-References: <20190827112421.2770-1-weh@microsoft.com>
- <DM5PR21MB0137969B8EB3146160C86A2DD7A30@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB0137969B8EB3146160C86A2DD7A30@DM5PR21MB0137.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-28T00:07:19.1202362Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=87e41fa5-44a0-4c5f-8eea-bba2bafd67f3;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=weh@microsoft.com; 
-x-originating-ip: [167.220.255.109]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a55a85ca-4de8-4418-e6d4-08d72b97db33
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KL1P15301MB0006;
-x-ms-traffictypediagnostic: KL1P15301MB0006:|KL1P15301MB0006:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KL1P15301MB0006D942EF1C5940189987B3BBA30@KL1P15301MB0006.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 014304E855
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39860400002)(376002)(346002)(136003)(199004)(13464003)(189003)(81166006)(81156014)(8676002)(476003)(76116006)(229853002)(2201001)(7736002)(76176011)(26005)(256004)(22452003)(2501003)(14444005)(7696005)(7416002)(66066001)(2906002)(99286004)(1250700005)(186003)(66946007)(8936002)(66476007)(110136005)(64756008)(66556008)(1511001)(66446008)(316002)(33656002)(6246003)(71190400001)(53936002)(6636002)(25786009)(10090500001)(305945005)(5660300002)(52536014)(6506007)(102836004)(3846002)(6116002)(55016002)(9686003)(446003)(11346002)(478600001)(10290500003)(6436002)(486006)(86362001)(71200400001)(74316002)(14454004)(8990500004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:KL1P15301MB0006;H:KL1P15301MB0264.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EMGJr0HT1ZjAsHGeY+xTzfgsDBKvoish+//9quWFPXjVJhY/c6RKr3wVcx/CBtG5Q/QyqpFOjaZQaVOtOJZZw7AoF80Blo5NqpHEGAMstCG7CRoqSjP/iXNTRW/N5BPUrL8KEVijNnZnNxHNqLXm8htNFYNJFOui+6VP2jRq6hhiMPTy3RNhFTnvZzMEUffQUKJt+KSkA5020P67pWpB5t2Ez3XezUHe9NECQhEinA7Dgnl2fTqoohTYg5t5HtoKhecLK6+uZNp4hyxEJOC5uOeqd2kFGRN44hmHx4XnDTvP8RGueRTZaEyW+HVYmQtvnGW1dxd0AaCJ67AkZ0vE+DQAeOI4autDDP4ADohezIf5j9chI6oMVw6M4YHptqU5QDYdqBYujzaxSru/lq9BgUmRq2oQf7hOeOYvwsPJEkE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH v2] PCI: hv: Make functions only used locally static in pci-hyperv.c
+Date:   Thu, 29 Aug 2019 00:18:46 +0200
+Message-Id: <20190828221846.6672-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190826154159.9005-1-kw@linux.com>
+References: <20190826154159.9005-1-kw@linux.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a55a85ca-4de8-4418-e6d4-08d72b97db33
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2019 09:12:30.8395
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LTcwVsIBhSYKpv4IoWzcxEm7m1WoYrBwJjA5CxLGYptNMR6T/8Qp/Ztg2rmQE/vGNrvBgvteSSPLcZwt4qzSxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0006
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Functions hv_read_config_block(), hv_write_config_block()
+and hv_register_block_invalidate() are not used anywhere
+else and are local to drivers/pci/controller/pci-hyperv.c,
+and do not need to be in global scope, so make these static.
 
+Resolve following compiler warning that can be seen when
+building with warnings enabled (W=1):
 
-> -----Original Message-----
-> From: Michael Kelley <mikelley@microsoft.com>
->=20
-> From: Wei Hu <weh@microsoft.com>  Sent: Tuesday, August 27, 2019 4:25 AM
-> >
-> > Without deferred IO support, hyperv_fb driver informs the host to refre=
-sh
-> > the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter th=
-ere
-> > is screen update or not. This patch supports deferred IO for screens in
-> > graphics mode and also enables the frame buffer on-demand refresh. The
-> > highest refresh rate is still set at 20Hz.
-> >
-> > Currently Hyper-V only takes a physical address from guest as the start=
-ing
-> > address of frame buffer. This implies the guest must allocate contiguou=
-s
-> > physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
-> > accept address from MMIO region as frame buffer address. Due to these
-> > limitations on Hyper-V host, we keep a shadow copy of frame buffer
-> > in the guest. This means one more copy of the dirty rectangle inside
-> > guest when doing the on-demand refresh. This can be optimized in the
-> > future with help from host. For now the host performance gain from defe=
-rred
-> > IO outweighs the shadow copy impact in the guest.
-> >
-> > v2: Incorporated review comments from Michael Kelley
-> > - Increased dirty rectangle by one row in deferred IO case when sending
-> > to Hyper-V.
-> > - Corrected the dirty rectangle size in the text mode.
-> > - Added more comments.
-> > - Other minor code cleanups.
->=20
-> Version history should go after the "---" below so it is not included in
-> the commit message.
->=20
-[Wei Hu]=20
-I saw version history in the commit logs.=20
+drivers/pci/controller/pci-hyperv.c:933:5: warning: no previous prototype for ‘hv_read_config_block’ [-Wmissing-prototypes]
+ int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+     ^
+drivers/pci/controller/pci-hyperv.c:1013:5: warning: no previous prototype for ‘hv_write_config_block’ [-Wmissing-prototypes]
+ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+     ^
+drivers/pci/controller/pci-hyperv.c:1082:5: warning: no previous prototype for ‘hv_register_block_invalidate’ [-Wmissing-prototypes]
+ int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+     ^
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Changes in v2:
+  Update commit message to include compiler warning.
 
-> >
-> > Signed-off-by: Wei Hu <weh@microsoft.com>
-> > ---
-> >  drivers/video/fbdev/Kconfig     |   1 +
-> >  drivers/video/fbdev/hyperv_fb.c | 221 +++++++++++++++++++++++++++++---
-> >  2 files changed, 202 insertions(+), 20 deletions(-)
-> >
-> > +/* Deferred IO callback */
-> > +static void synthvid_deferred_io(struct fb_info *p,
-> > +				 struct list_head *pagelist)
-> > +{
-> > +	struct hvfb_par *par =3D p->par;
-> > +	struct page *page;
-> > +	unsigned long start, end;
-> > +	int y1, y2, miny, maxy;
-> > +	unsigned long flags;
-> > +
-> > +	miny =3D INT_MAX;
-> > +	maxy =3D 0;
-> > +
-> > +	/*
-> > +	 * Merge dirty pages. It is possible that last page cross
-> > +	 * over the end of frame buffer row yres. This is taken care of
-> > +	 * in synthvid_update function by clamping the y2
-> > +	 * value to yres.
-> > +	 */
-> > +	list_for_each_entry(page, pagelist, lru) {
-> > +		start =3D page->index << PAGE_SHIFT;
-> > +		end =3D start + PAGE_SIZE - 1;
-> > +		y1 =3D start / p->fix.line_length;
-> > +		y2 =3D end / p->fix.line_length;
-> > +		if (y2 > p->var.yres)
-> > +			y2 =3D p->var.yres;
->=20
-> The above test seems contradictory to the comment that
-> says the clamping is done in synthvid_update().  Also, since
-> the above calculation of y2 is "inclusive", the clamping should
-> be done to yres - 1 in order to continue to be inclusive.  Then
-> when maxy + 1 is passed to synthvid_update() everything works
-> out correctly.
->
-[Wei Hu]=20
-Actually the original code I sent out just works correctly.  It always get
-the inclusive rectangle in the above loop, and only send one more extra
-line (if y2 =3D=3D yres) to sythvid_update() and it is clamped inside that=
-=20
-function. Changing it to yres -1 and sending maxy + 1 to sytnvid_update()
-makes it the same as the original code in this case, and would end up=20
-always copy and refresh one extra row when y2 < yres.
+ drivers/pci/controller/pci-hyperv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The comment I added was according to your last review comment asking
-to add some comments explaining it. Maybe I mis-understood. I thought
-since you wanted me to change to maxy + 1, the code could reach yres + 1
-so it will be clamped in synthvid_update() to yres.
-
- Wei
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index f1f300218fab..c9642e429c2d 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -930,7 +930,7 @@ static void hv_pci_read_config_compl(void *context, struct pci_response *resp,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
++static int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+ 			 unsigned int block_id, unsigned int *bytes_returned)
+ {
+ 	struct hv_pcibus_device *hbus =
+@@ -1010,7 +1010,7 @@ static void hv_pci_write_config_compl(void *context, struct pci_response *resp,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
++static int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+ 			  unsigned int block_id)
+ {
+ 	struct hv_pcibus_device *hbus =
+@@ -1079,7 +1079,7 @@ int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int len,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
++static int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
+ 				 void (*block_invalidate)(void *context,
+ 							  u64 block_mask))
+ {
+-- 
+2.22.1
 
