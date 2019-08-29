@@ -2,40 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 723DEA2380
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Aug 2019 20:16:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD03A253A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Aug 2019 20:29:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbfH2SP4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Aug 2019 14:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57788 "EHLO mail.kernel.org"
+        id S1729151AbfH2SPF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Aug 2019 14:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbfH2SPz (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:15:55 -0400
+        id S1729125AbfH2SPE (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:15:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8FB92339E;
-        Thu, 29 Aug 2019 18:15:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1305B23407;
+        Thu, 29 Aug 2019 18:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102554;
-        bh=yVRUMQJSQoxwSH6O9SFEnlYW1w+85UDAAB5Wyab50X8=;
+        s=default; t=1567102503;
+        bh=7Duq5gO18jH/qa/5J91ieVvtbecfCbQ9i5hLM1vO4xI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NmSPGrnMHLgfLvU4IRwgKiVwGTJmmLaL4HGiEzet21hQ61miE0bzpi1cTeXvM4eHf
-         muncq01QHJThI6RTucW+Q6PuepUwJzlm3eJ7y2GMeD1s2+WyELs5+cw+2IfV/RhTgL
-         HwyV3dGICxqlGzuoD7r2wx0aES40nezsQ5CvsC+8=
+        b=IzCht8j124mUZtLsUokwbfFUX7FfL3FGZHWsPaZcdh5tRb2XdUtFGMEgpjoocC+UD
+         BmdzHfKksX8eWSxb+6miofxufBRC/6rw055YmvEdZZ6YpWJRBlwf2LsduY0Gj9PsIL
+         ytpYi+75jhieUds4ZIKqRlo2jt2cRlKKgy51/DxQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/45] hv_netvsc: Fix a warning of suspicious RCU usage
-Date:   Thu, 29 Aug 2019 14:15:05 -0400
-Message-Id: <20190829181547.8280-5-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 54/76] Tools: hv: kvp: eliminate 'may be used uninitialized' warning
+Date:   Thu, 29 Aug 2019 14:12:49 -0400
+Message-Id: <20190829181311.7562-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190829181547.8280-1-sashal@kernel.org>
-References: <20190829181547.8280-1-sashal@kernel.org>
+In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
+References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -44,52 +43,40 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 6d0d779dca73cd5acb649c54f81401f93098b298 ]
+[ Upstream commit 89eb4d8d25722a0a0194cf7fa47ba602e32a6da7 ]
 
-This fixes a warning of "suspicious rcu_dereference_check() usage"
-when nload runs.
+When building hv_kvp_daemon GCC-8.3 complains:
 
-Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+hv_kvp_daemon.c: In function ‘kvp_get_ip_info.constprop’:
+hv_kvp_daemon.c:812:30: warning: ‘ip_buffer’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  struct hv_kvp_ipaddr_value *ip_buffer;
+
+this seems to be a false positive: we only use ip_buffer when
+op == KVP_OP_GET_IP_INFO and it is only unset when op == KVP_OP_ENUMERATE.
+
+Silence the warning by initializing ip_buffer to NULL.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/hv/hv_kvp_daemon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index cc60ef9634db2..6f6c0dbd91fc8 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1248,12 +1248,15 @@ static void netvsc_get_stats64(struct net_device *net,
- 			       struct rtnl_link_stats64 *t)
- {
- 	struct net_device_context *ndev_ctx = netdev_priv(net);
--	struct netvsc_device *nvdev = rcu_dereference_rtnl(ndev_ctx->nvdev);
-+	struct netvsc_device *nvdev;
- 	struct netvsc_vf_pcpu_stats vf_tot;
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index d7e06fe0270ee..6d809abaf338a 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -809,7 +809,7 @@ kvp_get_ip_info(int family, char *if_name, int op,
+ 	int sn_offset = 0;
+ 	int error = 0;
+ 	char *buffer;
+-	struct hv_kvp_ipaddr_value *ip_buffer;
++	struct hv_kvp_ipaddr_value *ip_buffer = NULL;
+ 	char cidr_mask[5]; /* /xyz */
+ 	int weight;
  	int i;
- 
-+	rcu_read_lock();
-+
-+	nvdev = rcu_dereference(ndev_ctx->nvdev);
- 	if (!nvdev)
--		return;
-+		goto out;
- 
- 	netdev_stats_to_stats64(t, &net->stats);
- 
-@@ -1292,6 +1295,8 @@ static void netvsc_get_stats64(struct net_device *net,
- 		t->rx_packets	+= packets;
- 		t->multicast	+= multicast;
- 	}
-+out:
-+	rcu_read_unlock();
- }
- 
- static int netvsc_set_mac_addr(struct net_device *ndev, void *p)
 -- 
 2.20.1
 
