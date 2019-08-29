@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AECBA246F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Aug 2019 20:23:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B569A243B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Aug 2019 20:22:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbfH2SQ7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Aug 2019 14:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59088 "EHLO mail.kernel.org"
+        id S1730065AbfH2SR2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Aug 2019 14:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729890AbfH2SQ7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Aug 2019 14:16:59 -0400
+        id S1730063AbfH2SR2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:17:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63E0423403;
-        Thu, 29 Aug 2019 18:16:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D0F92189D;
+        Thu, 29 Aug 2019 18:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567102618;
-        bh=D+8zjNwZ8CrhkbgQn80DEiwKxkuOAmXsZZc/8oApyLs=;
+        s=default; t=1567102647;
+        bh=GMoAzwSR+XjclkVLdBs2F+bB87N7Ju4xv4DHWUbv9HM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qg+FCSZ5qx4Ax/MUUknRBG+s2FtfvaCwNkJDUF25kSi9sWA+F5xlbD3wlxFSHQkp+
-         OaGhH8qBpO60vLqu/RsJ77DYMV+atztU55vCCatudQkDL5IpwlMZdsQhu4sF7D2Dp0
-         iSIlHhfAXm8BrfcwEQ3BhPLpg8OyfR+25K0fIGn8=
+        b=oTyiH3hVH3jrjsW8PjtXc9gbURu52B8hQJX6vcrkn7rCquPOv39xhvQkUJLLD4kZC
+         h/sobMROfGGj0DEBXXf+Ls6NnH5TD9lDKXo3L/gNY4D4is4cyzSXDUmg/68oeW9pel
+         Gn+knJM0nUmQFV3F8ncHOJ6qQ8hoPN94kpPajKqk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dexuan Cui <decui@microsoft.com>,
-        "David S . Miller" <davem@davemloft.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/27] hv_netvsc: Fix a warning of suspicious RCU usage
-Date:   Thu, 29 Aug 2019 14:16:28 -0400
-Message-Id: <20190829181655.8741-2-sashal@kernel.org>
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 21/27] Input: hyperv-keyboard: Use in-place iterator API in the channel callback
+Date:   Thu, 29 Aug 2019 14:16:47 -0400
+Message-Id: <20190829181655.8741-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190829181655.8741-1-sashal@kernel.org>
 References: <20190829181655.8741-1-sashal@kernel.org>
@@ -46,50 +46,71 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 6d0d779dca73cd5acb649c54f81401f93098b298 ]
+[ Upstream commit d09bc83640d524b8467a660db7b1d15e6562a1de ]
 
-This fixes a warning of "suspicious rcu_dereference_check() usage"
-when nload runs.
+Simplify the ring buffer handling with the in-place API.
 
-Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
+Also avoid the dynamic allocation and the memory leak in the channel
+callback function.
+
 Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/input/serio/hyperv-keyboard.c | 35 +++++----------------------
+ 1 file changed, 6 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index eb92720dd1c4a..33c1f6548fb79 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1170,12 +1170,15 @@ static void netvsc_get_stats64(struct net_device *net,
- 			       struct rtnl_link_stats64 *t)
+diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
+index 55288a026e4e2..c137ffa6fdec8 100644
+--- a/drivers/input/serio/hyperv-keyboard.c
++++ b/drivers/input/serio/hyperv-keyboard.c
+@@ -245,40 +245,17 @@ static void hv_kbd_handle_received_packet(struct hv_device *hv_dev,
+ 
+ static void hv_kbd_on_channel_callback(void *context)
  {
- 	struct net_device_context *ndev_ctx = netdev_priv(net);
--	struct netvsc_device *nvdev = rcu_dereference_rtnl(ndev_ctx->nvdev);
-+	struct netvsc_device *nvdev;
- 	struct netvsc_vf_pcpu_stats vf_tot;
- 	int i;
++	struct vmpacket_descriptor *desc;
+ 	struct hv_device *hv_dev = context;
+-	void *buffer;
+-	int bufferlen = 0x100; /* Start with sensible size */
+ 	u32 bytes_recvd;
+ 	u64 req_id;
+-	int error;
  
-+	rcu_read_lock();
-+
-+	nvdev = rcu_dereference(ndev_ctx->nvdev);
- 	if (!nvdev)
+-	buffer = kmalloc(bufferlen, GFP_ATOMIC);
+-	if (!buffer)
 -		return;
-+		goto out;
+-
+-	while (1) {
+-		error = vmbus_recvpacket_raw(hv_dev->channel, buffer, bufferlen,
+-					     &bytes_recvd, &req_id);
+-		switch (error) {
+-		case 0:
+-			if (bytes_recvd == 0) {
+-				kfree(buffer);
+-				return;
+-			}
+-
+-			hv_kbd_handle_received_packet(hv_dev, buffer,
+-						      bytes_recvd, req_id);
+-			break;
++	foreach_vmbus_pkt(desc, hv_dev->channel) {
++		bytes_recvd = desc->len8 * 8;
++		req_id = desc->trans_id;
  
- 	netdev_stats_to_stats64(t, &net->stats);
- 
-@@ -1214,6 +1217,8 @@ static void netvsc_get_stats64(struct net_device *net,
- 		t->rx_packets	+= packets;
- 		t->multicast	+= multicast;
+-		case -ENOBUFS:
+-			kfree(buffer);
+-			/* Handle large packet */
+-			bufferlen = bytes_recvd;
+-			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
+-			if (!buffer)
+-				return;
+-			break;
+-		}
++		hv_kbd_handle_received_packet(hv_dev, desc, bytes_recvd,
++					      req_id);
  	}
-+out:
-+	rcu_read_unlock();
  }
  
- static int netvsc_set_mac_addr(struct net_device *ndev, void *p)
 -- 
 2.20.1
 
