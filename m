@@ -2,135 +2,187 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D98BA40CC
-	for <lists+linux-hyperv@lfdr.de>; Sat, 31 Aug 2019 01:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB07A4116
+	for <lists+linux-hyperv@lfdr.de>; Sat, 31 Aug 2019 01:37:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfH3XMF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 30 Aug 2019 19:12:05 -0400
-Received: from mail-eopbgr680115.outbound.protection.outlook.com ([40.107.68.115]:19431
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        id S1728317AbfH3XhQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 30 Aug 2019 19:37:16 -0400
+Received: from mail-eopbgr1310095.outbound.protection.outlook.com ([40.107.131.95]:58170
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728143AbfH3XMF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 30 Aug 2019 19:12:05 -0400
+        id S1728217AbfH3XhQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 30 Aug 2019 19:37:16 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jC9uC2r98jx3IkYBFHl0SveYmN3KeZ2KpP1q7rD7pFedDPH3AnS0/XGGV5M6As4o96NAVogRLMRB2XT17XfVVedcC0O+KtmOW0t1LDNLUfg61zc7IhFoXFEtOBRx9IxXAR8HVj3lzo9EolQhslqT3MSrmZOJznH961TOieBg3qCCIGLz/3w1CCNZoACVBSjhOdYSrE+wkmK44UERAhkMrZQcgOQfE3sA0a1p/IX+5OETP6FDToqovpoPI9ScJkcRvuzSHaOCMrCRvOdcGhWYH5q3uqIK93oC2e9y+ixEWeH0K7+1cMuuTQnU4m6nfRvyqOgP1j+Esoc0yEYdJJR4XQ==
+ b=ZcQhqN7PyQIsshSA8boyZld0CbnD29LOQENhXOhdVgIvAVh3nxCPRUvBc3cQYZB1mzUIAy6UI+a9BVXNPc6AARHvC1hvVE0GkNs2ZbxHn+VWmXEWh+WoUvdeZC+ddIYxivUkm45+QtOz1GbGY3JN76SadRP8aznTg+ltVDvZk5S2EqgZXfIRL2UMgs6YhSxvc6/oiyIeko+qATQ2vMqTcY39zOOkmtn4VkFontbAR7zRIbxbRyHIjB7+eK76TXLxOEHnUESSsK2GeZMdpm3S9bPpBRhqGaRzyyCICYQ+dzXzFo/qb6QmeNbHNqJmH8T9DbjxGbNPTF5zREdNhNuZLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zIF0tsi3+r7Ueh14bJmSM/MQEXzObJu7TnL2W3CK2ok=;
- b=I4GPETq9nd646r4lXPHEMYGJHh+cxNz2vSEDMRLeVrSVQPU5zbhmBJX6/7s2ShwCq+cAzheOXdFXOyYl3fpjJB3b2vylHD+bAWyhFca33Z/v/hB3vE8igVa10Q0Lb/mVGofaKzdEq0lnmBGMRtw4rEHbd17PAc7I4SqV5Lawfb04TzEnu07uxqrfhzNwReL8/5aehHOGHl6wr2eD8GkRX0zJo4xJsmt2XFi/SBEGxqDIzY1/nNQoMwrv4oCTf134BBcxmPHh8uypZh0ANMqiVzGmcnOdMzWxQYQTQ61WqVTIz/DqgcJKuqE7tFu4SSXrA2PkG8ppqmxEqk7ra3Shlg==
+ bh=i+FOjMBVBkLxAtBvWvCYoUX/DXubYULb7vnCcbdPH8k=;
+ b=ky/+KzOtZSKH34m5GggN6Rfa08d4gHjn27cjg51CYao9fAl+ukOmXizKI1hpUiskPmLLiBFBxVpjLe4vCXEyckh588IneGBZayYpDwv6pVXBru1bR0UCzvXrwbZkpHxVE7SzBLIcLgD4onwI0xWXf6HfM2SHFAhc85biBiwjPMuOvdUZU0uemdjbV30qmPukwl0x9AGUNozO3ndA3DD7bDDgX5+KB4PQkQ1zNSYDs18kTm31Z1qsgkP9ZLhOkEDQshRWX1DF+L7Nkq2/5mcDqCBVfJgLcznT+Tfk4urLfockSZmh2zWfkypREmzuip8OmxrT8kNrrbW2yZMbwFS23w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zIF0tsi3+r7Ueh14bJmSM/MQEXzObJu7TnL2W3CK2ok=;
- b=By/09ie1+c1jOwvBqhTeKdxQXpdGH3/TB23mNAjIq2HkoNF8KZS2HtawkJwiZ/uVubE4beZb3BZeVeM9N2JBAAPaivLm10t+D5Mw6yq3YuBRu7yOwUimSYVFRwsGtN4oZfrqMRm+SffUWVP34P5QmOh5M27AerHhoo4WAP67wGA=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1417.namprd21.prod.outlook.com (20.180.21.19) with Microsoft SMTP
+ bh=i+FOjMBVBkLxAtBvWvCYoUX/DXubYULb7vnCcbdPH8k=;
+ b=NT026+qdwXI/+m3sxLJkeo+rzfPKJ/RtUKAN+uVz0jbafzlrloLQAjg+JWsgnsrghw0JzIqKYcotAiqu27fl4uWXjdGY42L3zypFqz3cYGqZbfr48wtBJcx/V3tbC1lBB8rPv8gOIP/Nh+Mu6fmqGfOafQZ950v7lGT70RtpIo0=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0140.APCP153.PROD.OUTLOOK.COM (10.170.188.142) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.9; Fri, 30 Aug 2019 23:12:01 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2220.000; Fri, 30 Aug 2019
- 23:12:01 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
+ 15.20.2241.2; Fri, 30 Aug 2019 23:37:07 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2241.006; Fri, 30 Aug 2019
+ 23:37:07 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Bloch <markb@mellanox.com>
-Subject: RE: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to VF
- NIC
-Thread-Topic: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to VF
- NIC
-Thread-Index: AQHVXuVjZEYmBu9A80OagVmDV3gGfqcUUN2AgAAB2gA=
-Date:   Fri, 30 Aug 2019 23:12:01 +0000
-Message-ID: <DM6PR21MB13377EA9E315E7A5AEEB2BB5CABD0@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1567136656-49288-1-git-send-email-haiyangz@microsoft.com>
-        <1567136656-49288-3-git-send-email-haiyangz@microsoft.com>
- <20190830160451.43a61cf9@cakuba.netronome.com>
-In-Reply-To: <20190830160451.43a61cf9@cakuba.netronome.com>
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 02/12] x86/hyper-v: Implement
+ hv_is_hibernation_supported()
+Thread-Topic: [PATCH v3 02/12] x86/hyper-v: Implement
+ hv_is_hibernation_supported()
+Thread-Index: AQHVVvnbeUNjfG6a0EKsx3hMtEEAZKcJJ23ggAsvpbA=
+Date:   Fri, 30 Aug 2019 23:37:07 +0000
+Message-ID: <PU1P153MB0169492C8723AA3CD650A8EEBFBD0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
+ <1566265863-21252-3-git-send-email-decui@microsoft.com>
+ <DM5PR21MB0137A7EC5E51EAF8A0667359D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR21MB0137A7EC5E51EAF8A0667359D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-30T23:11:59.4825663Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T19:50:19.4147320Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=77108b9b-e507-4b4f-a99a-af7675992fe5;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d9b27438-246a-4a4e-b2fe-93c271246a48;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:8:8f:1cae:476:aa38]
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [131.107.159.158]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dfd28e99-ef6e-4757-99e9-08d72d9f76ed
+x-ms-office365-filtering-correlation-id: 20937a5b-19c3-4d79-c508-08d72da2f8a4
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1417;
-x-ms-traffictypediagnostic: DM6PR21MB1417:|DM6PR21MB1417:|DM6PR21MB1417:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0140;
+x-ms-traffictypediagnostic: PU1P153MB0140:|PU1P153MB0140:
 x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB14172660D12A724D7F460711CABD0@DM6PR21MB1417.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-microsoft-antispam-prvs: <PU1P153MB0140BC81CC0FEED6D4DC6912BFBD0@PU1P153MB0140.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 0145758B1D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(39860400002)(366004)(136003)(396003)(346002)(376002)(189003)(199004)(13464003)(6916009)(7696005)(74316002)(316002)(22452003)(86362001)(76176011)(8676002)(54906003)(53546011)(25786009)(102836004)(52536014)(5660300002)(99286004)(4326008)(4744005)(66446008)(33656002)(66556008)(66476007)(64756008)(6506007)(66946007)(486006)(10090500001)(76116006)(446003)(476003)(11346002)(186003)(71200400001)(71190400001)(6116002)(229853002)(14454004)(478600001)(53936002)(305945005)(55016002)(81166006)(81156014)(9686003)(8936002)(10290500003)(46003)(8990500004)(7736002)(2906002)(256004)(6436002)(6246003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1417;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(39860400002)(396003)(136003)(346002)(54534003)(199004)(189003)(99286004)(2501003)(316002)(14454004)(14444005)(22452003)(5660300002)(2906002)(110136005)(6116002)(3846002)(53936002)(256004)(8936002)(52536014)(81166006)(8990500004)(66066001)(102836004)(8676002)(81156014)(1511001)(7736002)(25786009)(476003)(305945005)(2201001)(6246003)(486006)(6436002)(10290500003)(71200400001)(55016002)(186003)(76116006)(6506007)(11346002)(76176011)(66446008)(66946007)(229853002)(66556008)(66476007)(64756008)(26005)(7696005)(10090500001)(478600001)(74316002)(446003)(9686003)(4326008)(71190400001)(33656002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0140;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZJj5A68ShccpLbKkgmoptdH4djju/xICwd+nvNReJFvxcs7cVfrqc6Xzx1TXLp5NQ8EoB1MJmPNhcjJlK5cV6bD2FMbsrj9ggRfqM0zU9u6SHBQllFNW/o7IXFYvW3DiXbx38A9jwXfr3ug/UNJasicTx2Y4YErNuJ6Rp1+f8KBGIpCddHNNhBALIjlVtx3Kr2zHLsH7G2FDL85HMsqR6JpZN7q2Hzk9n/9aKvKcPijnfv0pCsU+4HRdwOF1DYbgFjZiPok8yov1vm+/nkOLmb18ZvQ4Fo0hRxKQKsRmjrfurr5xVm4XFEO8Cd/ebEAkV+qjWDG8aePRZfwAxGhgplzTNzDnt0iZSfW9W1aXx+0mZbhaq52gjvbh9ho+07gdg0/XAD9aDUbGyxc+sJE6mQSI+l04b8UgDFRB+KpYfiE=
+x-microsoft-antispam-message-info: Grfs/hzCRY+pYImy9FuP1WL21+wzS5mKBlRYJFO/IXZSLYIh8UvzF4tLhEn01ErLj/wdJi1vaVHWRFNDL0Rp1KEB0NIK74baUE0c1Kq7Lqb/2F82R2HQYTy/bTC6+WTYLYdac66TlnwqdFHGTtGfD8iFcrSbw9L3lt2KvVk2UWr0V+ogIYPQL1PsNRvjRahHw20VAo//okAbWCgq7t97ilLFUpdjNbEUX6ck27elkYd71Nkmjc7N85hqlQuKzyt2lJBRZALcPMgMDSCsf1quPNliuJ1C4KiCFDxo+FIMYi9PbOtp2GSmrUv9Y/8nV30gThxsFxaRmSshBOmO6fjWgdXb0Ptue/aF4sZTPFnB9aYA4kCljigRD7ufaK+L4LCywB/4IDIGv3In4235T6CUwoXbDnZ0A9H+mB9ao+MOMxc=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfd28e99-ef6e-4757-99e9-08d72d9f76ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 23:12:01.3870
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20937a5b-19c3-4d79-c508-08d72da2f8a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2019 23:37:07.1326
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JjAB3+5q3JnnR/tL6G8+nY2cwZ2L7/FwwisF3PwHzHtzCXbKWDYW/oTlsJ/gylaMVsAfjjqEExbM+Pav/+1TMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1417
+X-MS-Exchange-CrossTenant-userprincipalname: hKBiem01yK75hmGljzDeT5TU++o+TelnIHMBR+iddVbEwnn470ENEStYg/AD0zniVPYc8DIUvTl+9GHet+IeHg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0140
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Sent: Friday, August 30, 2019 4:05 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> <vkuznets@redhat.com>; davem@davemloft.net; linux-
-> kernel@vger.kernel.org; Mark Bloch <markb@mellanox.com>
-> Subject: Re: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to=
- VF
-> NIC
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Friday, August 23, 2019 12:50 PM
 >=20
-> On Fri, 30 Aug 2019 03:45:38 +0000, Haiyang Zhang wrote:
-> > VF NIC may go down then come up during host servicing events. This
-> > causes the VF NIC offloading feature settings to roll back to the
-> > defaults. This patch can synchronize features from synthetic NIC to
-> > the VF NIC during ndo_set_features (ethtool -K), and
-> > netvsc_register_vf when VF comes back after host events.
+> From: Dexuan Cui <decui@microsoft.com> Sent: August 19, 2019 6:52 PM
 > >
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: Mark Bloch <markb@mellanox.com>
+> > When a Linux VM runs on Hyper-V and hibernates, it must disable the
+> > memory hot-add/remove and balloon up/down capabilities in the hv_balloo=
+n
+> > driver.
 >=20
-> If we want to make this change in behaviour we should change net_failover
-> at the same time.
+> I'm unclear on the above statement.  I think the requirement is that
+> ballooning must not be active when hibernation is initiated.  Is hibernat=
+ion
+> blocked in that case?  If not, what happens?
 
-I will check net_failover. Thanks.
+Ballooning (and hot-addition of memory) must not be active if the user
+wants the Linux VM to support hibernation, not just when hibernation is
+initiated. This is because ballooning and hot-addition of memory are
+incompatible with hibernation according to Hyper-V team, e.g. upon
+hibernation the balloon VSP doesn't save any info about ballooned-out
+pages (if any), so after Linux resumes, Linux balloon VSC expects that the
+VSP will return the pages if Linux is under memory pressure, but the VSP
+will never return the pages, since the VSP thinks it never stole the
+pages from the VM.
+
+So, if the user wants Linux VM to support hibernation, Linux must completel=
+y
+forbid ballooning and hot-addition of memory, and hence the only
+functionality of balloon VSC is reporting the memory pressure to the host.
+
+Ideally, when Linux detects that the user wants it to support hibernation,
+the balloon VSC should tell the VSP that it does not support ballooning and
+hot-addition; however, the current version of the VSP requires
+the VSC should support these capabilities, otherwise the capability negotia=
+tion
+fails and the VSC can not load at all, so in my changes to the VSC driver, =
+I
+still report to the VSP that Linux supports the capabilities, but the VSC
+ignores the host's requests of balloon up/down and hot add, and returns an
+error to the VSP, when applicable.
+
+BTW, in the future the balloon VSP driver will allow the VSC to not support
+the capabilities of balloon up/down and hot add.
+
+The remaining problem is: how can Linux know the user wants Linux VM
+to support hibernation?
+
+The ACPI S4 state is not a must for hibernation to work, because Linux is
+able to hibernate as long as the system can shut down.
+
+My decision is that: we artificially use the presence of the virtual
+ACPI S4 state as the indicator of the user's intent of using hibernation.
+BTW, I believe the Windows team made the same decision.
+
+Once all the vmbus and VSC patches are accepted, I'll submit a patch to
+forbid hibernation if the virtual ACPI S4 state is absent, e.g.
+hv_is_hibernation_supported() is false.
+
+> > By default, Hyper-V does not enable the virtual ACPI S4 state for a VM;
+> > on recent Hyper-V hosts, the administrator is able to enable the virtua=
+l
+> > ACPI S4 state for a VM, so we hope to use the presence of the virtual A=
+CPI
+>=20
+> "we hope" sounds very indefinite. :-(    Does ACPI S4 have to be enabled =
+for
+> hibernation to be initiated?  Goes back to my first question ....
+
+Technically, we don't have to enable ACPI S4, but in practice, as I mention=
+ed,
+I'll submit a patch to forbid hibernation if ACPI S4 is absent.
+
+>=20
+> > S4 state as a hint for hv_balloon to disable the aforementioned
+> > capabilities.
+> >
+> > The new API will be used by hv_balloon.
+
+I'll add my above explanation into the changelog in v4.
+
+Thanks,
+-- Dexuan
