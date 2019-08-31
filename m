@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B403CA414D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 31 Aug 2019 02:24:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1E6AA419B
+	for <lists+linux-hyperv@lfdr.de>; Sat, 31 Aug 2019 04:01:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbfHaAYh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 30 Aug 2019 20:24:37 -0400
-Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:35280
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1728267AbfHaCBq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 30 Aug 2019 22:01:46 -0400
+Received: from mail-eopbgr1300098.outbound.protection.outlook.com ([40.107.130.98]:21280
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727708AbfHaAYg (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 30 Aug 2019 20:24:36 -0400
+        id S1728246AbfHaCBp (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 30 Aug 2019 22:01:45 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IT/096RlYKhhmkrpLRbpG+8a6cfXkFxikRJ4fNZ5Q9vSCxloT4z/MHfM/scl6YcF8lm7rcvi7+y02cs78NwR58HCN5jlZDCsuZ8qdPemz8KzSfzKM160H3VAtpPd1S4pbD9dONYOmBzMmW3mGB4PjXL7nlR9ykKR/LIwt+RaHSbNrTNulNv39N+JKrAiz/m+QKbuE9H55cX0cDPVmgPzv1Fwdg2Rd6aVotP5QSvO9UDQvA1PXE/a0Pb97GGoQxQZDnb9V3qMv+eLP59b4s2yaiYPZE0WXrdX4C1PfT1z6DI3IwE/wZfMR5k5DrMLDsd9RsVb/9MgX8yc5LUImGvAFg==
+ b=liNga97ZcJlWJhjRw44csq+CIF1vtthct6jXJSToCm5IVWJMqCD6HM6gZCqZBNS0KWR0kHFgbeveQCmT6FMhmqBSNIZdlRma2HKetlczr7ow4a1xsmdfNj20i7RpdwDFHUP+lZL5eBIwRCAusKl4dFX+Cp8HEc2xlGWiunuhK5mWJAbQh9Nq+wDkfKFDdFI1Dn9Fq2L22bQShFwW+60rBnVR9YYGuAL1ZQt6//ZhwCqyEgqxFW86AN/bKSiQs9FVUfvW4ORt2SVac4U8sTfgoFZTTfqXqzFdMy/HubpZ4WGc60LROU0ZVKMp4oaDmbESdlil384n8KDmV+tpajg25w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1uvJgc4rvO3h0faUYhNZS7FKAVOrKUg+K0QMalayAwY=;
- b=QAgOlmgOTEKxhC39hnJxphx/6T3JtvW8VixG4zXHUrT0BJazJVoimM5PNu4YPRcr/iwHAVZ6irAyzRT1qABCM7p0sJRJU2uUpQ/tLT5/XVSxUCvpp9u4zegVIZG7zEYb5cGYPkiSrEgI7Wpkw46RqD+/QyXXKsg1zgbLbMcM80ztpVNe1AE5qVmtwruVGMQ8vZtH4/pvpwOGjrDwwUMoMkrBzaQyBL1xFKhcDHiHSuRfPG9fUISOTa1XsYi9DlexXfDwomthYGnFdXIzNcTHdppxLQvQ9cnpX3aZ82nfUGvHYAEDysKYbkwLATAbH3wzjL1/JVmYlC2aUTjeSslKSg==
+ bh=FTOeg8ivEO8FprdJugCquGVdA8LgdolKrd9VxjbhI0o=;
+ b=iOSkcwPNY8hyHlfEcZOyxBZQkJW4IqsandMluRjIPI02Zujt5ETHZFg3SfCucS1/+QzybfJY0Oouz6dG/xNq3qfVqYEEzucobhuswlgwx9KuyM62JzQfmwc9IEXFTTwVWdesyJQaTWxaLq/JijYB9kosA1C+k99pqI35QoFfubN3fcpYlci86/qw+vb73bL3P8Kh4Sa0DZVK2M/W82F6wHhFo46sFyWcZXTeoJVJiVqnhzl8h+TPonldifIFROXAgSmCX28OKGAR1xgnSb0rpSfTEV+zjwMVJTK/6zLRkOhW12yCzq+pKCntKpRCWhO2zXqWgU9/HqFWbUX1EsR5+Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1uvJgc4rvO3h0faUYhNZS7FKAVOrKUg+K0QMalayAwY=;
- b=Y//j2uMTIk2ESFQb+a81iaAWCreTtF8pkNMK0TlLXT0+nvvmyk43VlyJVFr5ddzaAiPRXBeewlAQNnwjanuNTylBjCEyoXQike8Yuych1DnsJlZQWpLXGIV2VTTLGRAU8gU03vVCdSWxrPKR/HowMJ38Km2aKY5aqmyz2b2MV5s=
+ bh=FTOeg8ivEO8FprdJugCquGVdA8LgdolKrd9VxjbhI0o=;
+ b=JvpkIul1I4TklH1b6ooB7oj4ViNZ7b5/xS2/17K2MdiM0DU3SaOxjVS4Uy2i5EbtMybi0XtBMUbFftFx4uQOHUqqXohFnMmh5H/N9qvkaIfMsnL3YyRckrPzqsBU5ekmZqEOstMxnz/qABX5v7519WNLrTGckmLUjHcyEN+In8c=
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0124.APCP153.PROD.OUTLOOK.COM (10.170.188.138) with Microsoft SMTP
+ PU1P153MB0170.APCP153.PROD.OUTLOOK.COM (10.170.189.14) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.3; Sat, 31 Aug 2019 00:23:49 +0000
+ 15.20.2241.2; Sat, 31 Aug 2019 02:00:56 +0000
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2241.006; Sat, 31 Aug 2019
- 00:23:49 +0000
+ 02:00:56 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     Michael Kelley <mikelley@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
@@ -46,17 +46,17 @@ To:     Michael Kelley <mikelley@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         "tglx@linutronix.de" <tglx@linutronix.de>
 CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 08/12] Drivers: hv: vmbus: Ignore the offers when
- resuming from hibernation
-Thread-Topic: [PATCH v3 08/12] Drivers: hv: vmbus: Ignore the offers when
- resuming from hibernation
-Thread-Index: AQHVVvnez8f5+ZNs+0+5s8sO4QKl7KcJKo+wgAtLSZA=
-Date:   Sat, 31 Aug 2019 00:23:49 +0000
-Message-ID: <PU1P153MB01691DCFF28612DFCA852401BFBC0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Subject: RE: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels by
+ force upon suspend
+Thread-Topic: [PATCH v3 10/12] Drivers: hv: vmbus: Clean up hv_sock channels
+ by force upon suspend
+Thread-Index: AQHVVvngIm13qifSzE6BddexMOZgK6cJK+3ggAtlaXA=
+Date:   Sat, 31 Aug 2019 02:00:56 +0000
+Message-ID: <PU1P153MB0169EC39BD51EFF1FD3BB73CBFBC0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 References: <1566265863-21252-1-git-send-email-decui@microsoft.com>
- <1566265863-21252-9-git-send-email-decui@microsoft.com>
- <DM5PR21MB01375F5A46E46079DA611622D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB01375F5A46E46079DA611622D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+ <1566265863-21252-11-git-send-email-decui@microsoft.com>
+ <DM5PR21MB013722B88011C7D587BB6182D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR21MB013722B88011C7D587BB6182D7A40@DM5PR21MB0137.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -64,92 +64,81 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T19:56:42.9471406Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-23T20:02:10.5815340Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e21d423b-8579-4709-963a-79ab2ea4258c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9569c2bc-1aff-407a-a5da-655ff005400a;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [131.107.159.158]
+x-originating-ip: [2601:600:a280:7f70:5cbd:8ecd:62e5:20b7]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 32cc424d-1830-4473-a6d6-08d72da97ec2
+x-ms-office365-filtering-correlation-id: 09b10d9e-c98c-4a85-4d3f-08d72db70fe0
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0124;
-x-ms-traffictypediagnostic: PU1P153MB0124:|PU1P153MB0124:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0170;
+x-ms-traffictypediagnostic: PU1P153MB0170:|PU1P153MB0170:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB012487D6E8C1FE09CA65CAE4BFBC0@PU1P153MB0124.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-microsoft-antispam-prvs: <PU1P153MB01709D30853FFA80FC1B9777BFBC0@PU1P153MB0170.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 014617085B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(189003)(199004)(9686003)(33656002)(26005)(14454004)(66946007)(66476007)(66556008)(66446008)(64756008)(76116006)(10290500003)(476003)(102836004)(7736002)(25786009)(4326008)(10090500001)(305945005)(11346002)(55016002)(6506007)(53936002)(446003)(110136005)(74316002)(229853002)(6246003)(2501003)(186003)(22452003)(486006)(86362001)(66066001)(2201001)(81156014)(81166006)(14444005)(5660300002)(256004)(1511001)(8936002)(8990500004)(498600001)(6116002)(3846002)(8676002)(6436002)(52536014)(71190400001)(71200400001)(2906002)(99286004)(76176011)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0124;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(189003)(199004)(76116006)(110136005)(2501003)(74316002)(8936002)(25786009)(4326008)(102836004)(478600001)(6246003)(229853002)(186003)(6116002)(8990500004)(53936002)(76176011)(71190400001)(71200400001)(1511001)(6506007)(55016002)(7696005)(9686003)(6436002)(14454004)(446003)(66946007)(10290500003)(66446008)(64756008)(66476007)(66556008)(86362001)(10090500001)(81156014)(14444005)(256004)(305945005)(81166006)(2906002)(22452003)(316002)(33656002)(99286004)(11346002)(476003)(486006)(2201001)(8676002)(46003)(52536014)(5660300002)(15650500001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0170;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IMJoOT9uS20ZTH01WJmsfmQXsOgzJ9o0PC3rsszfPYkw/RxEoi7re8umHD0PqVYPzzfxVuqL75tKDw6c9dymUKquRSOK+XdGVHHoylMSeyREQk8GNlaReF2oauRWK64m55UslzYFz9NG+WtNILeKfx9GOYrrUftr977K9dh0j5JPOtODAWh7hdwEfYR0U7E1J2EpW1Y9w1Zzs6ZJduW1R5KBubVvwPNI4raAla16L4VRiDD/kopvnh/vtRucjSYmpvjhr0c4EZlDiFWflWvnUlLQTqVPMJX0ee5lfIdGyCd71uLVXmSALajt//bvjkB1Z94ztp6yj/0xk5xKkl8L0V1x8MOLDA2zkjFp4TgEjOZuWSW8E8yWnpwgmhtRwv3ftHRp9f3GrTcs+S9+Yl/LxX3aQKrbX6Fy0MlJjXZYYIQ=
+x-microsoft-antispam-message-info: lYKW8WemgNGZNO3OofiwvL6eCblTs81akiy/wmlC1aE9a/QpHKsUmBjZNWJAL8ynbsRhy/atTEkJDIEUw56Elg9SaKwkiMdTLFFyvd/dVtCn3pPQnZ8IuCK+M17elAHa6BDaTUB1vf7EbBswimqFMFT2PWTGFZEYmaVN4fvXDQoJVWthKhuoDcYrK3IYu04Z5AId/uWuJ9Ss00/S4p+PgrTXJ1BltbWOT6CrnofSZeFL6n3v1UZQs3LkWAOew2iGVcB1PKgSzobLIkwi4eUNdZkKOAbw0wxG1f1Bh78naInM3pPm4OV6X28UwaHkkWKbvXR2/rntSNCq4sB3UcmCmBTnCyBnNLYKooU4Y8DJp8po66VtIb0j+IDvwTKp7skkA5htejt0E4WiOLFetrRVjDxJ1zHo+Ja/k8FuwPgyzck=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32cc424d-1830-4473-a6d6-08d72da97ec2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2019 00:23:49.2135
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09b10d9e-c98c-4a85-4d3f-08d72db70fe0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2019 02:00:56.1049
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uJQNavORUBm3T8RVZ5HnYgeSWUXB8q8p9ULrk+s8vd7mLAAgNEUWuoVLOXiT8JnAnj8hthn69uU5/H79oSf1Ag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0124
+X-MS-Exchange-CrossTenant-userprincipalname: YcHP+UsPBYXNnI9M3l1OQk3pskd3xpj+ZVogPTbAItNSXbgeqJDJ4GfMUOMQ6nZNkXtJSUDHRcdS5SHNR7JH1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0170
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 > From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Friday, August 23, 2019 12:57 PM
+> Sent: Friday, August 23, 2019 1:02 PM
 >=20
-> From: Dexuan Cui <decui@microsoft.com>  Sent: August 19, 2019 6:52 PM
+> From: Dexuan Cui Sent: Monday, August 19, 2019 6:52 PM
 > >
-> > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> > @@ -337,6 +337,33 @@ struct vmbus_channel *relid2channel(u32 relid)
-> >  }
+> > Fake RESCIND_CHANNEL messages to clean up hv_sock channels by force for
+> > hibernation. There is no better method to clean up the channels since
+> > some of the channels may still be referenced by the userspace apps when
+> > hiberantin is triggered: in this case, the "rescind" fields of the
+>=20
+> s/hiberantin/hibernation/
+
+Thanks! Will fix this in v4.
+
+> > @@ -2091,6 +2127,25 @@ static int vmbus_acpi_add(struct acpi_device
+> *device)
 > >
-> >  /*
-> > + * find_primary_channel_by_offer - Get the channel object given the ne=
-w
-> offer.
-> > + * This is only used in the resume path of hibernation.
-> > + */
-> > +struct vmbus_channel *
-> > +find_primary_channel_by_offer(const struct vmbus_channel_offer_channel
-> *offer)
-> > +{
+> >  static int vmbus_bus_suspend(struct device *dev)
+> >  {
 > > +	struct vmbus_channel *channel;
-> > +	const guid_t *inst1, *inst2;
 > > +
-> > +	WARN_ON(!mutex_is_locked(&vmbus_connection.channel_mutex));
-> > +
-> > +	/* Ignore sub-channel offers. */
-> > +	if (offer->offer.sub_channel_index !=3D 0)
-> > +		return NULL;
-> > +
-> > +	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-> > +		inst1 =3D &channel->offermsg.offer.if_instance;
-> > +		inst2 =3D &offer->offer.if_instance;
-> > +
-> > +		if (guid_equal(inst1, inst2))
-> > +			return channel;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
+> > +	while (atomic_read(&vmbus_connection.offer_in_progress) !=3D 0) {
+> > +		/*
+> > +		 * We wait here until any channel offer is currently
+> > +		 * being processed.
+> > +		 */
 >=20
-> Any particular reason this new function is in connection.c instead of
-> putting it in channel_mgmt.c where it is called?
+> The wording of the comment is a bit off.  Maybe
+>=20
+> 		/*
+> 		 * We wait here until the completion of any channel
+> 		 * offers that are currently in progress.
+> 		 */
 
-There is a similar function relid2channel(), which is in connection.c.
-
-Since the new function is only used in channel_mgmt.c. I'll move it to
-channel_mgmt.c in v4.
+Will use the better version this in v4.=20
 
 Thanks,
 -- Dexuan
