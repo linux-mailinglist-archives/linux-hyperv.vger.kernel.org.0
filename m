@@ -2,109 +2,124 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD714A5673
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2019 14:42:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08B88A5695
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Sep 2019 14:47:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbfIBMmD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 2 Sep 2019 08:42:03 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37745 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729844AbfIBMmC (ORCPT
+        id S1729690AbfIBMqY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 2 Sep 2019 08:46:24 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41583 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729878AbfIBMqX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 2 Sep 2019 08:42:02 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b10so1489648plr.4;
-        Mon, 02 Sep 2019 05:42:02 -0700 (PDT)
+        Mon, 2 Sep 2019 08:46:23 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so7432678pgg.8;
+        Mon, 02 Sep 2019 05:46:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6bMBJGLXpJhft8Uqn8LI3hEGKJdQ2rbX77O2fwCWI2E=;
-        b=Wl35b6Q2vhQOwMbHRjRpL84HFK8WhqSwlYtxUV+0x2B3gqQ03umc3iEHozseCfzpOp
-         4P3fbqiqSRS3obSnqmP9B/FpYu3hmibxC/sZwM/rhee086SZtgvQmvo9eaUg69WkVFIx
-         wbdCcRK6vOsSeTMJUHgHlWXRaYojtAFYN7tduaAutWDdDrJjxTpuQ6yKda8o1YywuIxM
-         r/lR41obOtSjX/jBaqKjMKP4e3RqEg7lJ4068KAycK1Zn6zf024uXHWRcDXxja0V2uOB
-         Dj4XYxuH7MzniF4f/glaRRgR1xuTMqDd3i2UggJ3lKJ8MWgVOIhkCu5nHYjsmE1iZE1d
-         is9Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pgpliINIcPhRc7BoPrS9B0ow1dlVmDoEwaS8EkZIGsk=;
+        b=iKcHDACooIYXG12YqobbLfwrs0m9jJ0g9pUEG/yHkkVSUkM+4P2KHKsylGwM7IFasO
+         77lLo5fMqVvA1ZyFcVvUs9kp97t7EYK9xLbVze9DNahb00gwgfTrT7i6NftOA7WOFszY
+         BQm26EUDi9RHFXHYXMgnFfZYRopoBYYZK8p+sd3Koqh5TbLKd5wi0n/Mm7UtAsrQjeFs
+         n/Z6jMYgcDOvMn+KGep5g5kdw5Ct9tg4tfK6fPPf2dY9tnz3iF+t0SiGmHqnQXI+tZpJ
+         AovmJaUzEHmO+HmLgO+yqXmIDkrKWIfHx51iUR3DplGeOYQ4uQ3QwGCr8/TqhGJH/6IK
+         vf4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6bMBJGLXpJhft8Uqn8LI3hEGKJdQ2rbX77O2fwCWI2E=;
-        b=dtmzixKKqAQL5rLJcXzQGYEhmOQ0qfXC5SLc1bvByNiW+PbsL/4xVbea/+B+aFxf4t
-         VPV6rcXkDFKW7Ft5swSJqH9zWyC37dqzv+QF4VcvyJmlb31HYrziOSwfr4AKGq+6Ry8Q
-         VD5GhUfEJ9gAFy2/FImG0q2OfKK7FQ13PeOXZg1snbMwk77zA3WbgzAbFxG6wDFIAGj3
-         vUVO+p80smJSxL2/oFhH7IimETKBF0eC+I/KNr0TU1cdPz/zAfpbdXUbO0qli+FsBTj1
-         LNNzCYHNnXxSZ2fWLuGTt9PoytmE5cuQgACNmTELtoXqX10jIltdmIzb6Uyfv0ZtFcql
-         mWSA==
-X-Gm-Message-State: APjAAAXqkAywDoQMZ7oV6BkatUcIGAWQ5N1nzW956gsHGeT44POAxDxN
-        f0h0xTNz0fQWy5dgG0BzxYw=
-X-Google-Smtp-Source: APXvYqwL8FuvpT89PhUcwAWXg2lJsDj/gqyiSZZDDqJbgrkM/4x/NHTlG0g63mGuez68xRVcnuk+jQ==
-X-Received: by 2002:a17:902:346:: with SMTP id 64mr29692851pld.151.1567428122261;
-        Mon, 02 Sep 2019 05:42:02 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.52])
-        by smtp.googlemail.com with ESMTPSA id y194sm15942600pfg.116.2019.09.02.05.41.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 05:42:01 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH V2] x86/Hyper-V: Fix overflow issue in the fill_gva_list()
-Date:   Mon,  2 Sep 2019 20:41:43 +0800
-Message-Id: <20190902124143.119478-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pgpliINIcPhRc7BoPrS9B0ow1dlVmDoEwaS8EkZIGsk=;
+        b=A4KOY9h4wtF2HQWMuvaAf9cuKlr319RZKVSNpARiKbY7nWf9nZ8JmNUre4CDHEIWa9
+         7+zbNz0H5DnN69u9SKvLo6RQlc/ESScLtat52W63O343jOn5vkqRf+meHJknOsjQxIFq
+         7MvyGaniDT7s/RUfg1SJHqUYRh8lQV9KgYw5cUzuQ7fOPrkslKt0TpYaqOYKb7TM7HT4
+         1htSiJFYPcECnit2mky8Wm6NrEZ5i5Og2saTLw3fpOm22+AtpV7WIk2PL+Uo6e6FOR1y
+         wW7FJkwLMGow8TreHaKz48DVPp3MIIC54hp1/EcP2EUIn8z5/JErysJAWunrXqp8d2hG
+         NJRA==
+X-Gm-Message-State: APjAAAW4xTMRFH1gBaxZPDbsvIHe5dCUoTQlAWBiseVmkH15nzbx1vtv
+        jOULevzs0UEt96w535bqIc7dBe2ESo222mHhAQA=
+X-Google-Smtp-Source: APXvYqxXfUfYYlSHCGT8QWcRuQ7m0TRU6YfPCzIJqacGx9wipMEOCpcJgFUg1vZ65kU4tE0DEW8M4geXJQCCfGj37x8=
+X-Received: by 2002:aa7:8219:: with SMTP id k25mr34409763pfi.72.1567428382975;
+ Mon, 02 Sep 2019 05:46:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190830061540.211072-1-Tianyu.Lan@microsoft.com> <DM5PR21MB0137B7C2AAD0FC65CB3E1306D7BD0@DM5PR21MB0137.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR21MB0137B7C2AAD0FC65CB3E1306D7BD0@DM5PR21MB0137.namprd21.prod.outlook.com>
+From:   Tianyu Lan <lantianyu1986@gmail.com>
+Date:   Mon, 2 Sep 2019 20:46:15 +0800
+Message-ID: <CAOLK0pwEMg7kSsRNfKa6=uQ1eVGa-HdNG=qMBernoe7XwS-0_w@mail.gmail.com>
+Subject: Re: [PATCH] x86/Hyper-V: Fix overflow issue in the fill_gva_list()
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Sat, Aug 31, 2019 at 1:41 AM Michael Kelley <mikelley@microsoft.com> wrote:
+>
+> From: lantianyu1986@gmail.com  Sent: Thursday, August 29, 2019 11:16 PM
+> >
+> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >
+> > fill_gva_list() populates gva list and adds offset
+> > HV_TLB_FLUSH_UNIT(0x1000000) to variable "cur"
+> > in the each loop. When diff between "end" and "cur" is
+> > less than HV_TLB_FLUSH_UNIT, the gva entry should
+> > be the last one and the loop should be end.
+> >
+> > If cur is equal or greater than 0xFF000000 on 32-bit
+> > mode, "cur" will be overflow after adding HV_TLB_FLUSH_UNIT.
+> > Its value will be wrapped and less than "end". fill_gva_list()
+> > falls into an infinite loop and fill gva list out of
+> > border finally.
+> >
+> > Set "cur" to be "end" to make loop end when diff is
+> > less than HV_TLB_FLUSH_UNIT and add HV_TLB_FLUSH_UNIT to
+> > "cur" when diff is equal or greater than HV_TLB_FLUSH_UNIT.
+> > Fix the overflow issue.
+>
+> Let me suggest simplifying the commit message a bit.  It
+> doesn't need to describe every line of the code change.   I think
+> it should also make clear that the same problem could occur on
+> 64-bit systems with the right "start" address.  My suggestion:
+>
+> When the 'start' parameter is >=  0xFF000000 on 32-bit
+> systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
+> fill_gva_list gets into an infinite loop.  With such inputs,
+> 'cur' overflows after adding HV_TLB_FLUSH_UNIT and always
+> compares as less than end.  Memory is filled with guest virtual
+> addresses until the system crashes
+>
+> Fix this by never incrementing 'cur' to be larger than 'end'.
+>
+> >
+> > Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
+> > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote
+> > TLB flush")
+>
+> The "Fixes:" line needs to not wrap.  It's exempt from the
+> "wrap at 75 columns" rule in order to simplify parsing scripts.
+>
+> The code itself looks good.
 
-When the 'start' parameter is >=  0xFF000000 on 32-bit
-systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
-fill_gva_list gets into an infinite loop.  With such inputs,
-'cur' overflows after adding HV_TLB_FLUSH_UNIT and always
-compares as less than end.  Memory is filled with guest virtual
-addresses until the system crashes
-
-Fix this by never incrementing 'cur' to be larger than 'end'.
-
-Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
----
-Change since v1:
-     - Simply the commit message 
-
- arch/x86/hyperv/mmu.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index e65d7fe6489f..5208ba49c89a 100644
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -37,12 +37,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
- 		 * Lower 12 bits encode the number of additional
- 		 * pages to flush (in addition to the 'cur' page).
- 		 */
--		if (diff >= HV_TLB_FLUSH_UNIT)
-+		if (diff >= HV_TLB_FLUSH_UNIT) {
- 			gva_list[gva_n] |= ~PAGE_MASK;
--		else if (diff)
-+			cur += HV_TLB_FLUSH_UNIT;
-+		}  else if (diff) {
- 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
-+			cur = end;
-+		}
- 
--		cur += HV_TLB_FLUSH_UNIT;
- 		gva_n++;
- 
- 	} while (cur < end);
+Hi Michael:
+       Thanks for suggestion. Update commit log in V2.
 -- 
-2.14.5
-
+Best regards
+Tianyu Lan
