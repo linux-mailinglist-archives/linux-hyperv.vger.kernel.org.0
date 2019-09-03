@@ -2,121 +2,141 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BEF7EA63BF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Sep 2019 10:22:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41035A6E67
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Sep 2019 18:26:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfICIWK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 Sep 2019 04:22:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:33864 "EHLO foss.arm.com"
+        id S1730105AbfICQZ6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 Sep 2019 12:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfICIWJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:22:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0694028;
-        Tue,  3 Sep 2019 01:22:09 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F12E03F246;
-        Tue,  3 Sep 2019 01:22:03 -0700 (PDT)
-Subject: Re: [PATCH] irqdomain: Add the missing assignment of domain->fwnode
- for named fwnode
-To:     Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S1730513AbfICQZ4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:56 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D549C23717;
+        Tue,  3 Sep 2019 16:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567527955;
+        bh=h+d4u5kndta5HqWAnAN9o4gvTNOwWTJ5yg5EuUBs6as=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bSdQDpKJYc2lN4Tw1RMTGAEluKXNuoctTjeICF9iHnjz7A6H7zlUubdOk8yiREz/q
+         D6NdaIFr0VcQBH8JO+DEpeOY1RNgLs8G5DnwgcuyFVf2JD3sJpQfUSYXeEN1zNtubl
+         HaOit7XRT8w26wWHK5QGaTn+rNng7o66AoE2CPks=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>
-References: <PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <4acd6871-ca66-b45d-50b8-8609eee0e488@kernel.org>
-Date:   Tue, 3 Sep 2019 09:22:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Haiyang Zhang <haiyangz@microsoft.com>, Stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 021/167] Drivers: hv: kvp: Fix the recent regression caused by incorrect clean-up
+Date:   Tue,  3 Sep 2019 12:22:53 -0400
+Message-Id: <20190903162519.7136-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
+References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Dexuan,
+From: Dexuan Cui <decui@microsoft.com>
 
-On 03/09/2019 00:14, Dexuan Cui wrote:
-> 
-> Recently device pass-through stops working for Linux VM running on Hyper-V.
-> 
-> git-bisect shows the regression is caused by the recent commit
-> 467a3bb97432 ("PCI: hv: Allocate a named fwnode ..."), but the root cause
-> is that the commit d59f6617eef0 forgets to set the domain->fwnode for
-> IRQCHIP_FWNODE_NAMED*, and as a result:
-> 
-> 1. The domain->fwnode remains to be NULL.
-> 
-> 2. irq_find_matching_fwspec() returns NULL since "h->fwnode == fwnode" is
-> false, and pci_set_bus_msi_domain() sets the Hyper-V PCI root bus's
-> msi_domain to NULL.
-> 
-> 3. When the device is added onto the root bus, the device's dev->msi_domain
-> is set to NULL in pci_set_msi_domain().
-> 
-> 4. When a device driver tries to enable MSI-X, pci_msi_setup_msi_irqs()
-> calls arch_setup_msi_irqs(), which uses the native MSI chip (i.e.
-> arch/x86/kernel/apic/msi.c: pci_msi_controller) to set up the irqs, but
-> actually pci_msi_setup_msi_irqs() is supposed to call
-> msi_domain_alloc_irqs() with the hbus->irq_domain, which is created in
-> hv_pcie_init_irq_domain() and is associated with the Hyper-V chip
-> hv_msi_irq_chip. Consequently, the irq line is not properly set up, and
-> the device driver can not receive any interrupt.
-> 
-> Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
-> Fixes: 467a3bb97432 ("PCI: hv: Allocate a named fwnode instead of an address-based one")
-> Reported-by: Lili Deng <v-lide@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> Note: the commit 467a3bb97432 ("PCI: hv: Allocate a named fwnode ...") has not
-> gone in Linus's tree yet (the commit is in linux-next for a while), so the commit ID
-> in the changelog can change when it goes in Linus's tree.
+[ Upstream commit e670de54c813b5bc3672dd1c67871dc60e9206f4 ]
 
-This branch is supposed to be stable, and I try to only apply fixes to
-it. This normally ensures that commit IDs are the same once they land in
-Linus' tree.
+In kvp_send_key(), we do need call process_ib_ipinfo() if
+message->kvp_hdr.operation is KVP_OP_GET_IP_INFO, because it turns out
+the userland hv_kvp_daemon needs the info of operation, adapter_id and
+addr_family. With the incorrect fc62c3b1977d, the host can't get the
+VM's IP via KVP.
 
-> This patch works in my test, but I'm not 100% sure this is the right fix. 
-> 
-> Looking forward to your comment!
-> 
->  kernel/irq/irqdomain.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index e7bbab149750..132672b74e4b 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -149,6 +149,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
->  		switch (fwid->type) {
->  		case IRQCHIP_FWNODE_NAMED:
->  		case IRQCHIP_FWNODE_NAMED_ID:
-> +			domain->fwnode = fwnode;
->  			domain->name = kstrdup(fwid->name, GFP_KERNEL);
->  			if (!domain->name) {
->  				kfree(domain);
-> 
+And, fc62c3b1977d added a "break;", but actually forgot to initialize
+the key_size/value in the case of KVP_OP_SET, so the default key_size of
+0 is passed to the kvp daemon, and the pool files
+/var/lib/hyperv/.kvp_pool_* can't be updated.
 
-Looks absolutely correct to me, thanks for fixing it. I've applied it on
-top of irqchip-next.
+This patch effectively rolls back the previous fc62c3b1977d, and
+correctly fixes the "this statement may fall through" warnings.
 
-Thanks,
+This patch is tested on WS 2012 R2 and 2016.
 
-	M.
+Fixes: fc62c3b1977d ("Drivers: hv: kvp: Fix two "this statement may fall through" warnings")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Cc: K. Y. Srinivasan <kys@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hv/hv_kvp.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
+index a7513a8a8e372..d6106e1a0d4af 100644
+--- a/drivers/hv/hv_kvp.c
++++ b/drivers/hv/hv_kvp.c
+@@ -353,6 +353,9 @@ static void process_ib_ipinfo(void *in_msg, void *out_msg, int op)
+ 
+ 		out->body.kvp_ip_val.dhcp_enabled = in->kvp_ip_val.dhcp_enabled;
+ 
++		/* fallthrough */
++
++	case KVP_OP_GET_IP_INFO:
+ 		utf16s_to_utf8s((wchar_t *)in->kvp_ip_val.adapter_id,
+ 				MAX_ADAPTER_ID_SIZE,
+ 				UTF16_LITTLE_ENDIAN,
+@@ -405,7 +408,11 @@ kvp_send_key(struct work_struct *dummy)
+ 		process_ib_ipinfo(in_msg, message, KVP_OP_SET_IP_INFO);
+ 		break;
+ 	case KVP_OP_GET_IP_INFO:
+-		/* We only need to pass on message->kvp_hdr.operation.  */
++		/*
++		 * We only need to pass on the info of operation, adapter_id
++		 * and addr_family to the userland kvp daemon.
++		 */
++		process_ib_ipinfo(in_msg, message, KVP_OP_GET_IP_INFO);
+ 		break;
+ 	case KVP_OP_SET:
+ 		switch (in_msg->body.kvp_set.data.value_type) {
+@@ -446,9 +453,9 @@ kvp_send_key(struct work_struct *dummy)
+ 
+ 		}
+ 
+-		break;
+-
+-	case KVP_OP_GET:
++		/*
++		 * The key is always a string - utf16 encoding.
++		 */
+ 		message->body.kvp_set.data.key_size =
+ 			utf16s_to_utf8s(
+ 			(wchar_t *)in_msg->body.kvp_set.data.key,
+@@ -456,6 +463,17 @@ kvp_send_key(struct work_struct *dummy)
+ 			UTF16_LITTLE_ENDIAN,
+ 			message->body.kvp_set.data.key,
+ 			HV_KVP_EXCHANGE_MAX_KEY_SIZE - 1) + 1;
++
++		break;
++
++	case KVP_OP_GET:
++		message->body.kvp_get.data.key_size =
++			utf16s_to_utf8s(
++			(wchar_t *)in_msg->body.kvp_get.data.key,
++			in_msg->body.kvp_get.data.key_size,
++			UTF16_LITTLE_ENDIAN,
++			message->body.kvp_get.data.key,
++			HV_KVP_EXCHANGE_MAX_KEY_SIZE - 1) + 1;
+ 		break;
+ 
+ 	case KVP_OP_DELETE:
 -- 
-Jazz is not dead, it just smells funny...
+2.20.1
+
