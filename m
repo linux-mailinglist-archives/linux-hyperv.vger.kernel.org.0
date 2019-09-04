@@ -2,104 +2,75 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89CC5A7064
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Sep 2019 18:39:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3573DA88BC
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Sep 2019 21:22:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbfICQjG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 Sep 2019 12:39:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46272 "EHLO mail.kernel.org"
+        id S1730753AbfIDOXq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 Sep 2019 10:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730510AbfICQZz (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730572AbfIDOXq (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:23:46 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83AC22377B;
-        Tue,  3 Sep 2019 16:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03ED422CED;
+        Wed,  4 Sep 2019 14:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527954;
-        bh=VUr8/gL+HwNDBli2Fr8nY5NVsSZHaE0f72ury9fFXfw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Et7Q+O0X6m0ZczvgyvYdi6V894pTw8uZA/j0GeMkst25+W46Q1Nv/xrAP2PQCPllC
-         dRR+BpV6XJFY8szimomAe/dPtrwoqOoz+pVRetiupm+MWb0XCIEvl8L5XmsEC7UfTP
-         9nHQ2gtvoyMoI0yv39aUojhUc5374K07wHmchnLE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        s=default; t=1567607025;
+        bh=q4hCRkM7CBlSJ5qN5g57oao1y0pVDCO/sOHQjBQihhY=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=Hp6aanycZdKm59KxYy4A+pXujfEVf/oWNkMVKfp/xIX8ftyzXDe/l4sNuzlwOny+B
+         9s3gfctACIDYIRlj66faWLbQjPtqk7nqrm83ulFHPVPLvXIgkinDIk1DoJf+x0ervO
+         /otWvmmupU9DuhGRi4ikQCrs5YEoltQY9JsDo4no=
+Date:   Wed, 4 Sep 2019 16:23:27 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+cc:     "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 020/167] Drivers: hv: kvp: Fix the indentation of some "break" statements
-Date:   Tue,  3 Sep 2019 12:22:52 -0400
-Message-Id: <20190903162519.7136-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] HID: hyperv: Use in-place iterator API in the channel
+ callback
+In-Reply-To: <KU1P153MB016679060F4360071B751AF0BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+Message-ID: <nycvar.YFH.7.76.1909041623050.31470@cbobk.fhfr.pm>
+References: <1566269763-26817-1-git-send-email-decui@microsoft.com> <KU1P153MB016679060F4360071B751AF0BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+On Tue, 3 Sep 2019, Dexuan Cui wrote:
 
-[ Upstream commit d544c22d6951be3386ac59bb9a99c9bc566b3f09 ]
+> > Hi Jiri, Benjamin, can this patch go through Sasha's hyperv tree:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+> > 
+> > This is a purely Hyper-V specific change.
+> 
+> Hi Jiri, Benjamin,
+> Are you OK if this patch for the Hyper-V HID driver goes through the Hyper-V
+> tree maintained by Sasha Levin? It's a purely Hyper-V change, and I have
+> been using the patch for several months and there is no regression.
 
-No functional change.
+No problem with that. Feel free to add
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Cc: K. Y. Srinivasan <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hv/hv_kvp.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+	Acked-by: Jiri Kosina <jkosina@suse.cz>
 
-diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-index 57715a0c81202..a7513a8a8e372 100644
---- a/drivers/hv/hv_kvp.c
-+++ b/drivers/hv/hv_kvp.c
-@@ -420,7 +420,7 @@ kvp_send_key(struct work_struct *dummy)
- 				UTF16_LITTLE_ENDIAN,
- 				message->body.kvp_set.data.value,
- 				HV_KVP_EXCHANGE_MAX_VALUE_SIZE - 1) + 1;
--				break;
-+			break;
- 
- 		case REG_U32:
- 			/*
-@@ -456,7 +456,7 @@ kvp_send_key(struct work_struct *dummy)
- 			UTF16_LITTLE_ENDIAN,
- 			message->body.kvp_set.data.key,
- 			HV_KVP_EXCHANGE_MAX_KEY_SIZE - 1) + 1;
--			break;
-+		break;
- 
- 	case KVP_OP_DELETE:
- 		message->body.kvp_delete.key_size =
-@@ -466,12 +466,12 @@ kvp_send_key(struct work_struct *dummy)
- 			UTF16_LITTLE_ENDIAN,
- 			message->body.kvp_delete.key,
- 			HV_KVP_EXCHANGE_MAX_KEY_SIZE - 1) + 1;
--			break;
-+		break;
- 
- 	case KVP_OP_ENUMERATE:
- 		message->body.kvp_enum_data.index =
- 			in_msg->body.kvp_enum_data.index;
--			break;
-+		break;
- 	}
- 
- 	kvp_transaction.state = HVUTIL_USERSPACE_REQ;
+in that case.
+
+Thanks,
+
 -- 
-2.20.1
+Jiri Kosina
+SUSE Labs
 
