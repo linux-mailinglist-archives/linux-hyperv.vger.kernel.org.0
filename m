@@ -2,147 +2,168 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D6B8AC213
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Sep 2019 23:37:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C350FAC2AA
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Sep 2019 00:45:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404060AbfIFVhN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 6 Sep 2019 17:37:13 -0400
-Received: from mail-eopbgr800112.outbound.protection.outlook.com ([40.107.80.112]:2240
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        id S2405068AbfIFWp4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 6 Sep 2019 18:45:56 -0400
+Received: from mail-eopbgr1310113.outbound.protection.outlook.com ([40.107.131.113]:8560
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731199AbfIFVhN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 6 Sep 2019 17:37:13 -0400
+        id S2405017AbfIFWp4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 6 Sep 2019 18:45:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=coJ/rkKQ+M2vVGHfTJyXIxZVJ0irutTbrmEDefSLk/VTAxZ4e3GaCQTt7YYnoSRKmBc+f2tP+Chv53F3grlkGV8P+BseKbT5scRieLbBzx40RPmL6SwtTsv5Ly5OAiQ0PLNKGYrOBWFclvcRbt7NaiTRAOjGNiLbtASZ//bCHGVNowRnzvLMpvCWTMuLxauX/+6Kc8MxWzwcvoinr+SKdsUlIQZLJPqIb3FoizERFyCvC5btaHghQ8mCzBhYIgZ+Fyp/XUviUK5uxPgsoN/2+YUN1iUZ3DeuQjd9WSn2/zBbIXbDROmJ+dMsdQCmxBhyq6nTp9L1JoRWZjI4IPeDGA==
+ b=JXdiO6KE71LrNhwaax+bDPEfg02J757Pwioxm9sOCBrQpTYrp7pQi/t4Ua215sWtNQmqA058YjmEnO7c0CpR6ALalrH+iITbUJeJuw/NfTQR/C8xUDChZJeroIC1GlCW3DNVCemD+GjbMHuky2WSnrxJ/YC3yE9MjXqYEmHsKqPDkxT2Tq9C0M5Oz1GW5KvLxA8smWbl6NVBjbKBuiKIdXN43EOiyn12duIl5CICtjsHbWRgsqrny2LGIA1OAlLTRCRtvgYTJqthcUPwUEnmQewnCYLtrdJIvrvWSEFQYnkgF9+aQnx8Qu127IBU1B2LYd79ax5qHS3QVHpFkC9QJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=17E1Gt9up4rFdm4X6yBcGi/oSJhEGKJEOJwiQe27pNw=;
- b=mb5Chu99Uc1SZ+6VWaJZ3z5ux0kObk33RRoNeGcaBvizstMgWpjiBEHy1kyXhuhODDjg8Zk9hu6nEGLzuDmrrmn3/23HC+hogHVcoXmHhrsWq3fPAs7hRdvcaOHgoZFsuxwCBy+7H2v9hKq+izUAFQj4GAYCt0UaFsZLNM1RhA7jRveY1Ul81FCdf8WGizhXoyCXCeDjyOYGLeBgfQcWkSNtDr+Pg5Xpe+no+gjWHE2DGQGeur9oalEaNXSm3QkvL/DU2AtH4bu79GVuikw2bGpbz1/pHLV6F46avEbZJ7tUSJsE7+ejNbviTuLY6uz7stqjMpPIgMqZuS7Zhq4ZRQ==
+ bh=1VOfhLMEwc0nEH2aJAM/nO+8GviGtXlqHMBCiFlL1Q4=;
+ b=mHRLOzhcb0d9Gbsf8ZXPKpzW/mo8oF3yNMB6stpURDdLdVDVNGzmSQZcZV8ZFBc3OrOlWfXiKbj5AF6SWkPOakac/kWARrJPxLXKPnNCZwyAeoka4umXTrUt2ryWrZizfm3gqihh45YZ7syHrtuUKCn87eikQi/pU9EWY//yPPvfdlWdk0JROsFgvo1F2oIfCpqPcoS26fdolBvFE/R+0cECPcD0Qz7lSbF0Qs3F8QDsPdcXFUkYc4zjq1ioAJpG5btsZXw9v3oGMVrHiUr+lVF6bujuhgoC79An31DjbBxt5eFLKWZtv9j91jNmCVZ36+8veFoA/Fl4WPFt763m5g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=17E1Gt9up4rFdm4X6yBcGi/oSJhEGKJEOJwiQe27pNw=;
- b=YJZzfgdcX1ynDyT6rnYPkjAghaoi6OU0ZpFbbswO/osU05j3D3saofGhZ1idND5IcbMC3x0p4eie88370FFYQE93cJJa2XF2ZuuJPs0KyJMp5MWEr++oxCZPApShAvZej0PnZAaCuieKc9tUlNBVaj35Hr2f3Jq73DC7yf/HV9Y=
-Received: from CY4PR21MB0741.namprd21.prod.outlook.com (10.173.189.7) by
- CY4PR21MB0504.namprd21.prod.outlook.com (10.172.122.14) with Microsoft SMTP
+ bh=1VOfhLMEwc0nEH2aJAM/nO+8GviGtXlqHMBCiFlL1Q4=;
+ b=ljyDan3uquWjv7RTkBe0azq2hRibLm2kgS9KuaL1xcbfuJcFkdBaeHpapb10cQxS4nNJaJTOkIoLcglySWFXdJdN1JQsEXOvxRB55BsW4gtBzsnRRWPu1YDApqoEp32L/GgvKJ8NMylOVVcltzBe4pP8m8NIjBgm6x0x0AdG9Ko=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0203.APCP153.PROD.OUTLOOK.COM (52.133.194.146) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.6; Fri, 6 Sep 2019 21:37:10 +0000
-Received: from CY4PR21MB0741.namprd21.prod.outlook.com
- ([fe80::5caa:ae40:7c3a:4b1d]) by CY4PR21MB0741.namprd21.prod.outlook.com
- ([fe80::5caa:ae40:7c3a:4b1d%5]) with mapi id 15.20.2263.005; Fri, 6 Sep 2019
- 21:37:10 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Sasha Levin <sashal@kernel.org>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+ 15.20.2263.6; Fri, 6 Sep 2019 22:45:31 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2263.005; Fri, 6 Sep 2019
+ 22:45:31 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v4] storvsc: setup 1:1 mapping between hardware queue and
- CPU queue
-Thread-Topic: [Patch v4] storvsc: setup 1:1 mapping between hardware queue and
- CPU queue
-Thread-Index: AQHVZNfzh3iwmMSVZkCYZWyrh5uiJ6cfE/gAgAAXvIA=
-Date:   Fri, 6 Sep 2019 21:37:09 +0000
-Message-ID: <CY4PR21MB0741A256EEF9D8DBAF50ED03CEBA0@CY4PR21MB0741.namprd21.prod.outlook.com>
-References: <1567790660-48142-1-git-send-email-longli@linuxonhyperv.com>
- <20190906200820.GE1528@sasha-vm>
-In-Reply-To: <20190906200820.GE1528@sasha-vm>
+Subject: RE: [PATCH v5 0/9] Enhance the hv_vmbus driver to support hibernation
+Thread-Topic: [PATCH v5 0/9] Enhance the hv_vmbus driver to support
+ hibernation
+Thread-Index: AQHVZO4q3kr8cCc730q424LopDWEJqcfGZvg
+Date:   Fri, 6 Sep 2019 22:45:31 +0000
+Message-ID: <PU1P153MB01697512A097B489E0440E13BFBA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
+ <20190906200325.GD1528@sasha-vm>
+In-Reply-To: <20190906200325.GD1528@sasha-vm>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-06T22:45:29.0874008Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=02fde12d-e263-4d00-b3b2-d0d411bc1267;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:f:edde:db5c:c6fe:798]
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:310e:b8a5:374f:67ac]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5163b9e5-65cd-4b58-45bc-08d733125f83
+x-ms-office365-filtering-correlation-id: 86e431e7-c086-45f0-081c-08d7331bec3d
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CY4PR21MB0504;
-x-ms-traffictypediagnostic: CY4PR21MB0504:|CY4PR21MB0504:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0203;
+x-ms-traffictypediagnostic: PU1P153MB0203:|PU1P153MB0203:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR21MB05040E3D4389A48D42D1EC26CEBA0@CY4PR21MB0504.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <PU1P153MB0203CE8B1B4A7684BB13105BBFBA0@PU1P153MB0203.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 0152EBA40F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(346002)(396003)(39860400002)(376002)(189003)(199004)(54534003)(9686003)(52536014)(486006)(53936002)(66476007)(66946007)(66556008)(7736002)(6116002)(10290500003)(66446008)(99286004)(186003)(305945005)(46003)(14454004)(64756008)(25786009)(478600001)(2906002)(7696005)(10090500001)(11346002)(76116006)(446003)(256004)(6506007)(316002)(74316002)(76176011)(6246003)(81156014)(86362001)(81166006)(33656002)(102836004)(5660300002)(2501003)(110136005)(22452003)(6436002)(8936002)(71190400001)(71200400001)(229853002)(476003)(8990500004)(8676002)(55016002)(54906003)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0504;H:CY4PR21MB0741.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(61514002)(199004)(189003)(71190400001)(55016002)(476003)(76176011)(22452003)(54906003)(6246003)(99286004)(10090500001)(6436002)(8936002)(6916009)(7696005)(81166006)(81156014)(9686003)(8676002)(71200400001)(33656002)(14454004)(2906002)(256004)(53936002)(14444005)(4326008)(478600001)(25786009)(6116002)(486006)(6506007)(86362001)(8990500004)(7736002)(305945005)(52536014)(46003)(74316002)(10290500003)(66946007)(76116006)(66556008)(66476007)(64756008)(66446008)(229853002)(316002)(5660300002)(446003)(186003)(11346002)(102836004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0203;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wZ/0UT/W2dLzOgdvX3G4/OTXOnuUngqmoPpiX3xpgGnip58pSkOtrAs0v4yzxcZ6dDHAmb39CpbuY5kTtAIabpMiQ/V+287vIT9P3mFyKuzS7OaJDZ8WQgggQf/BCaRV/EfJFDskJ4JdkglnLKkqU5AsNwrxkesALfn6NvXAjhOaVRcrs+x5MMVupqItiSxIxqPMNpXAWXMZXv9Xj6UmZmrPcXS/9ZrU55VUpTAOMTUgDpza4TszQbBbKGuuBBnD9YXf4RFfeVkwES15+JbYnpAssJwmrsFhfhbVDz/xGWlrGiqm5oBJ3ImNgAPPR894Ef67fFmJ7fFq+Tn2fTxJDKfzjLvSl/o4kfDo5gqRXrbw3tVAqtkhefRrvwMmP4NLDmCjy5ffd93WGwhm2LgxJAvLf/OP0JDTh0TL4uO9IGE=
+x-microsoft-antispam-message-info: YBuErGLUIztwNtm3vIZDRN6D/DJS1TOOLCDLRN8/887rjF9e2WnOsk8342T7kfQucYe236eBxVNprZVj+FG4sfmny8SvqHc2Kgww9/pI5oIFYe9X2MNHn70rKyQ1IrXitpl15P6oB03NZi9fHeeFR/cYI5lFqc55NfQ3FLaQLun6deUP7AsAl9Cvg8nVpXyk20z0j21KzzmdVsyhtLdnAWgyR887rn85YVRlju96rkWnbhugYZPJtdJxpPrLjE2zTItkTE1oRwngfPIy/yOqJNJ53JtnkPQ4RBNYwU65nOT0Ee1Yf8PoqM5wqWns30ouLahJdL6QPvfsZlSXY9JxDGgZR1TgkfnehU7IRneyp7BCHEhJgE0nXV1s11dxyvNJfREOhz/+M2LLGzopiLc14Ont8nFRuxT9Af9p7yX5M5w=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5163b9e5-65cd-4b58-45bc-08d733125f83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 21:37:09.8432
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86e431e7-c086-45f0-081c-08d7331bec3d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 22:45:31.2123
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1+1urYpNxvCSeFGwAjAL0Fyg8ckeZ8Xe3NPjO+97uOXGy98YwRST76IdO+vYrSeOcQgZOEfsUbwTcHJ7INMDRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0504
+X-MS-Exchange-CrossTenant-userprincipalname: vj/Fv0Us/gjYvDeL1lK0FTS/1vn3Y1seRpukBWsFDdfN30QvNkXFwAub6uk67hMiA9jFAqwkco56gSVMocqJow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0203
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
->Subject: Re: [Patch v4] storvsc: setup 1:1 mapping between hardware queue
->and CPU queue
->
->On Fri, Sep 06, 2019 at 10:24:20AM -0700, longli@linuxonhyperv.com wrote:
->>From: Long Li <longli@microsoft.com>
->>
->>storvsc doesn't use a dedicated hardware queue for a given CPU queue.
->>When issuing I/O, it selects returning CPU (hardware queue) dynamically
->>based on vmbus channel usage across all channels.
->>
->>This patch advertises num_present_cpus() as number of hardware queues.
->>This will have upper layer setup 1:1 mapping between hardware queue and
->>CPU queue and avoid unnecessary locking when issuing I/O.
->>
->>Signed-off-by: Long Li <longli@microsoft.com>
->>---
->>
->>Changes:
->>v2: rely on default upper layer function to map queues. (suggested by
->>Ming Lei
->><tom.leiming@gmail.com>)
->>v3: use num_present_cpus() instead of num_online_cpus(). Hyper-v
->>doesn't support hot-add CPUs. (suggested by Michael Kelley
->><mikelley@microsoft.com>)
->>v4: move change logs to after Signed-of-by
->>
->> drivers/scsi/storvsc_drv.c | 3 +--
->> 1 file changed, 1 insertion(+), 2 deletions(-)
->>
->>diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
->>index b89269120a2d..cf987712041a 100644
->>--- a/drivers/scsi/storvsc_drv.c
->>+++ b/drivers/scsi/storvsc_drv.c
->>@@ -1836,8 +1836,7 @@ static int storvsc_probe(struct hv_device *device,
->> 	/*
->> 	 * Set the number of HW queues we are supporting.
->> 	 */
->>-	if (stor_device->num_sc !=3D 0)
->>-		host->nr_hw_queues =3D stor_device->num_sc + 1;
->>+	host->nr_hw_queues =3D num_present_cpus();
->
->Just looking at the change notes for v3: why isn't this
->num_active_cpus() then? One can still isolate CPUs on hyper-v, no?
+> From: Sasha Levin <sashal@kernel.org>
+> Sent: Friday, September 6, 2019 1:03 PM
+> On Thu, Sep 05, 2019 at 11:01:14PM +0000, Dexuan Cui wrote:
+> >This patchset (consisting of 9 patches) was part of the v4 patchset (con=
+sisting
+> >of 12 patches):
+> >
+> >The other 3 patches in v4 are posted in another patchset, which will go
+> >through the tip.git tree.
+> >
+> >All the 9 patches here are now rebased to the hyperv tree's hyperv-next
+> branch, and all the 9 patches have Michael Kelley's Signed-off-by's.
+> >
+> >Please review.
+>=20
+> Given that these two series depend on each other, I'd much prefer for
+> them to go through one tree.
 
-The isolated CPU can be made online at run time. For example, even maxcpus=
-=3Dx is put on the boot line, individual CPUs can still be made online/offl=
-ine.
+Hi Sasha,
+Yeah, that would be ideal. The problem here is: the other patchset conflict=
+s
+with the existing patches in the tip.git tree's timers/core branch, so IMO=
+=20
+the 3 patches have to go through the tip tree:
 
->
->--
->Thanks,
->Sasha
+[PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for hibernati=
+on
+[PATCH v5 2/3] x86/hyper-v: Implement hv_is_hibernation_supported()
+[PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V clocksource for =
+hibernation
+
+> But, I may be wrong, and I'm going to see if a scenario such as this
+> make sense. I've queued this one to the hyperv-next, but I'll wait for
+> the x86 folks to send their pull request to Linus first before I do it
+> for these patches.
+
+Actually IMHO you don't need to wait, because there is not a build
+dependency, so either patchset can go into the Linus's tree first.
+
+The 2 patchsets are just the first step to make hibernation work for Linux =
+VM
+running on Hyper-V. Next I'm going to post some high-level VSC patches for
+hv_balloon, hv_utils, hv_netvsc, hid_hyperv, hv_storvsc, hyperv_keyboard,=20
+hyperv_fb,etc. All of these should go through the hyperv tree, since they'r=
+e
+pure hyper-v changes, and they depend on this 9-patch patchset. I'll make
+a note in every patch so the subsystem maintainers will be aware and ack it=
+.
+
+Among the VSC patches, the hv_balloon patch does depend on the 2nd patch:
+    [PATCH v5 2/3] x86/hyper-v: Implement hv_is_hibernation_supported().
+I think I'll wait for the aforementioned 2 patchsets to be in first, before=
+ posting
+the hv_balloon patch.
+
+> Usually cases such as these are the exception, but for Hyper-V it seems
+> to be the norm, so I'm curious to see how this will unfold.
+>=20
+> Thanks,
+> Sasha
+
+Thanks for taking care all the patches!
+
+Thanks,
+-- Dexuan
