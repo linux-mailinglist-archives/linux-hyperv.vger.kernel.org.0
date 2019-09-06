@@ -2,172 +2,215 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E62AAF13
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Sep 2019 01:23:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18825AAFB3
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Sep 2019 02:14:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388923AbfIEXXP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 Sep 2019 19:23:15 -0400
-Received: from mail-eopbgr720117.outbound.protection.outlook.com ([40.107.72.117]:4016
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733128AbfIEXXO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 Sep 2019 19:23:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QkM6n/72SaPiRoOgbBkBjMD4wPnLagPHyMHGhocVZ+wsI3ejn1vxoRDfvUf3ouhLRHzAk9yIEgYPwLFzoeKNaENs3PzfT08pp9d2RLFSD+2G8yOdwzs642LPceFzz06RypXjM0Hg+uY7bz4oE8UcOf0IOvT3Ux9ijqNBRwkewzwHdIhqXFD9femiOZTzHdKGYaB/B6Mklmsd69hGhgBvtXDRDpxNTNgDGCtAfdkPCo6CRBm0WmSydj+LC9Fw1vs5+rXMytttp6ysLhZdXQBery7bhI51UHuCjuTY8DEA36h5D0e73tw6pLjacGyptWt02zY0yhVh8B7Sx21KpVfDyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XLXZJoFvAsuji7Xt+B38YnSUmRLxb+E15GK8aClGxK8=;
- b=eTwoqo3Lm4LH73AZncWrpvEGwz6ja5eesS/dq50V1cquN7rdeXlqyJmBVe1As0JrUpMkFt8BBt6nzPcbD5F2VJUQGPYvj2I/EMymJPO2PnDJA1m9yB+pUcyxX3sSrivh9L4z6+0KTmx/CzLO+wrXgL8yPPtaysCIC8DYPIBspsgZ0Tx0lAEcb3MPRs3AdRkxkuEazmnxnxDVWJCR8RnrD39P6SadMNOLSO8xTOCGuggOyAGQRv3JHJtUEf3OeBI2KiUlkvOgaFQro6gJjOjXnpHiPi3MECKFyKXPbO809dgatg1I2RcwPi11ajkq5bQnK/Mf7XyzC+5aO/EEDDgO8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XLXZJoFvAsuji7Xt+B38YnSUmRLxb+E15GK8aClGxK8=;
- b=mkQNv+DtzceOGY6kcZlZj8WI+9DXOk/bgHR/We8RY2kHcmbZTfXROh+Splr+mSDFTb4vZx8fMgUbvgeAeSNleVqIiFKk9xjS98C5Ty3f+1h+ug/ACffwshukVBDEVUGZe1/mb72A/SBAcRskT+rqjfKDDzaNYW52C51+38dGNO4=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1241.namprd21.prod.outlook.com (20.179.50.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.10; Thu, 5 Sep 2019 23:23:12 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::a419:3eba:811b:847b]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::a419:3eba:811b:847b%5]) with mapi id 15.20.2263.005; Thu, 5 Sep 2019
- 23:23:12 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S2389509AbfIFAOB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Sep 2019 20:14:01 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41505 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389391AbfIFAOB (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 5 Sep 2019 20:14:01 -0400
+Received: by mail-io1-f68.google.com with SMTP id r26so8798815ioh.8;
+        Thu, 05 Sep 2019 17:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nJVwwPSAJKVbMbsLZ7VhY19jh2tOjHarFelaWr5DkmM=;
+        b=OAFKh8Uk/OpeBEl5IM4Hb86xkRhQaV/2jTeQCc6WZg/Wenq2PXT4upoXc2NF4HJmr4
+         X1P/l6Ja8YC7pFSGLUkuHJ8eyYo+MKotckGZ4fzUPDhNbf4+BUSRAn7nkSitwu3Tucmv
+         FBhpm42qlSVUsZsMMGaWGl4D0W7TwNo06cVkPXwJn5F5se+f+n2Tepyq/DS6UhlLiNn5
+         kBoQvcslAw6OMb/kSjF8Me74EaNIFaQUJjul9fyEdfXepP5JUnfmUnK4vE5rO2R0mBnB
+         Sk1Gmnn1vyUiKwjjyuSzyh/WouYfylxcO45JjpJTBl6DhzYQ2KhhoZXyN587c53P6yTH
+         4zsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nJVwwPSAJKVbMbsLZ7VhY19jh2tOjHarFelaWr5DkmM=;
+        b=iXxsBfWvx9z24pIM8uvrIgVUjGBZsAuXI/dCp1Xt093l/Hjzh1wMolktfG0q2v7K4M
+         jS1bBXr8jxWdnW3qEy7by4to6kwsvoCr2sq9KfFIVpbSst1CAQkrUQxuGyAvD/eMEV9Q
+         x1ms2rRn60RKCU6pzsGXCzXChwzmhMIjy8LfkTRN51iPneL0fZR4Y/e3dhcHxyn+UlQJ
+         cN4mJfXsg1Y2i3NxhOx6eRonEXvgrBdjk+McX5KVKhlEEGNSwFnU2ukRfyN4cNHP9V4n
+         VEJEWRySmVxErAI24/TwtUkeYXBVapPSs4YADRnu4ht+/lrUTiZBq8j/pMPLAHebU8bA
+         Envg==
+X-Gm-Message-State: APjAAAVndyyqTdYKu+Y4+JZxnwuDEqWs82t/doEzFqKpkxTJde0ZfYYO
+        gmFfjlEfBMxaTF/FtxaCrQ==
+X-Google-Smtp-Source: APXvYqzT2Xor7edLiL1XzktT3DBrWzzdvfX5Iz2WUTIaqNdyXPwfyzimT2M5f4q0P0OqiUGHaS2DpQ==
+X-Received: by 2002:a5e:8c01:: with SMTP id n1mr7253657ioj.152.1567728840096;
+        Thu, 05 Sep 2019 17:14:00 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id s201sm7974407ios.83.2019.09.05.17.13.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Sep 2019 17:13:58 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 20:13:56 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Bloch <markb@mellanox.com>
-Subject: [PATCH net-next,v2, 2/2] hv_netvsc: Sync offloading features to VF
- NIC
-Thread-Topic: [PATCH net-next,v2, 2/2] hv_netvsc: Sync offloading features to
- VF NIC
-Thread-Index: AQHVZEDix2e9FNcwgkWwLrAPfhxrqQ==
-Date:   Thu, 5 Sep 2019 23:23:12 +0000
-Message-ID: <1567725722-33552-3-git-send-email-haiyangz@microsoft.com>
-References: <1567725722-33552-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1567725722-33552-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR17CA0082.namprd17.prod.outlook.com
- (2603:10b6:300:c2::20) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7a31fd0b-f2d3-4b5f-a67c-08d73258051d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1241;
-x-ms-traffictypediagnostic: DM6PR21MB1241:|DM6PR21MB1241:|DM6PR21MB1241:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1241D31FBE24F233001A3D0AACBB0@DM6PR21MB1241.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:747;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(136003)(396003)(39860400002)(376002)(189003)(199004)(7846003)(6392003)(4720700003)(6436002)(14444005)(66066001)(10290500003)(305945005)(25786009)(6512007)(8676002)(256004)(36756003)(8936002)(81156014)(81166006)(5660300002)(52116002)(4326008)(53936002)(478600001)(99286004)(2201001)(7736002)(10090500001)(22452003)(3846002)(71200400001)(6116002)(316002)(71190400001)(66476007)(66556008)(64756008)(66946007)(66446008)(14454004)(2906002)(446003)(11346002)(2616005)(486006)(476003)(186003)(76176011)(26005)(6486002)(386003)(54906003)(110136005)(50226002)(2501003)(6506007)(102836004)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1241;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IrMDACHfHb0Uxq82stY+RI/h221EDPYCiLHblxysKpGR0Y27mOvpVOcCD/FlO1uoXBz2LdWxnSBy+2PwamQt61H+GYA0VTMpg5v9A0L9Y2gFBIdc4qCOEBZzl1sJmbtNzQWLeedHMxyH7Az5woYz0lL5k2Y5CNyKrPhsV7Y6SWqIAzgd3CyfXJbe1HpqZHQMunfSMe8UzjjfxgnoVukue58S9VgNah1GfL2PaSEOrWX2HnbJGHxO8MzcZRKxdGwFPxDcaXdKkgiaH/h95n6QesPLZciSi88gO+W0J1xVAbgrY219kI9j/vg0OOY/G4i2fatEnTc2ibBdYB7VN7IyMpNjf5mHb6Hn4m8VcvNdyI7p0lpQOPING8ALIzrngoXyRMpWJkoaRRB/0gSKpNuychtiPywFQvgdxMqBrJgjU/s=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] drivers: hv: vmbus: Introduce latency testing
+Message-ID: <20190906001356.GA17342@Test-Virtual-Machine>
+References: <cover.1567047549.git.brandonbonaby94@gmail.com>
+ <da1ab5c98ce902ec181a799d8d1f040e8cc39af6.1567047549.git.brandonbonaby94@gmail.com>
+ <DM5PR21MB0137F04798C30379AD6CE553D7BE0@DM5PR21MB0137.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a31fd0b-f2d3-4b5f-a67c-08d73258051d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 23:23:12.1314
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: up45kQSHc/vhQblMGTVs+YHRomcsBUXd8fBSVJq5OI4795o2gJEzi8k6amgHJ9mTQgYOO6XyDfbz4b0KnPIdLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1241
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR21MB0137F04798C30379AD6CE553D7BE0@DM5PR21MB0137.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-VF NIC may go down then come up during host servicing events. This
-causes the VF NIC offloading feature settings to roll back to the
-defaults. This patch can synchronize features from synthetic NIC to
-the VF NIC during ndo_set_features (ethtool -K),
-and netvsc_register_vf when VF comes back after host events.
+On Mon, Sep 02, 2019 at 06:31:04PM +0000, Michael Kelley wrote:
+> From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Wednesday, August 28, 2019 9:24 PM
+> > 
+> > Introduce user specified latency in the packet reception path
+> > By exposing the test parameters as part of the debugfs channel
+> > attributes. We will control the testing state via these attributes.
+> > 
+> > Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
+> > ---
+> > diff --git a/Documentation/ABI/testing/debugfs-hyperv
+> > b/Documentation/ABI/testing/debugfs-hyperv
+> > new file mode 100644
+> > index 000000000000..0903e6427a2d
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/debugfs-hyperv
+> > @@ -0,0 +1,23 @@
+> > +What:           /sys/kernel/debug/hyperv/<UUID>/fuzz_test_state
+> > +Date:           August 2019
+> > +KernelVersion:  5.3
+> 
+> Given the way the timing works for adding code to the Linux kernel,
+> the earliest your new code will be included is 5.4.  The merge window
+> for 5.4 will open in two weeks, so your code would need to be accepted
+> by then to be included in 5.4.  Otherwise, it won't make it until the next
+> merge window, which would be for 5.5.  I would suggest changing this
+> (and the others below) to 5.4 for now, but you might have to change to
+> 5.5 if additional revisions are needed.
+> 
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Mark Bloch <markb@mellanox.com>
----
- drivers/net/hyperv/netvsc_drv.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+I see, I'll keep this in mind when submitting the further revisions
+thanks
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
-v.c
-index 1f1192e..39dddcd 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1785,13 +1785,15 @@ static int netvsc_set_features(struct net_device *n=
-dev,
- 	netdev_features_t change =3D features ^ ndev->features;
- 	struct net_device_context *ndevctx =3D netdev_priv(ndev);
- 	struct netvsc_device *nvdev =3D rtnl_dereference(ndevctx->nvdev);
-+	struct net_device *vf_netdev =3D rtnl_dereference(ndevctx->vf_netdev);
- 	struct ndis_offload_params offloads;
-+	int ret =3D 0;
-=20
- 	if (!nvdev || nvdev->destroy)
- 		return -ENODEV;
-=20
- 	if (!(change & NETIF_F_LRO))
--		return 0;
-+		goto syncvf;
-=20
- 	memset(&offloads, 0, sizeof(struct ndis_offload_params));
-=20
-@@ -1803,7 +1805,19 @@ static int netvsc_set_features(struct net_device *nd=
-ev,
- 		offloads.rsc_ip_v6 =3D NDIS_OFFLOAD_PARAMETERS_RSC_DISABLED;
- 	}
-=20
--	return rndis_filter_set_offload_params(ndev, nvdev, &offloads);
-+	ret =3D rndis_filter_set_offload_params(ndev, nvdev, &offloads);
-+
-+	if (ret)
-+		features ^=3D NETIF_F_LRO;
-+
-+syncvf:
-+	if (!vf_netdev)
-+		return ret;
-+
-+	vf_netdev->wanted_features =3D features;
-+	netdev_update_features(vf_netdev);
-+
-+	return ret;
- }
-=20
- static u32 netvsc_get_msglevel(struct net_device *ndev)
-@@ -2181,6 +2195,10 @@ static int netvsc_register_vf(struct net_device *vf_=
-netdev)
-=20
- 	dev_hold(vf_netdev);
- 	rcu_assign_pointer(net_device_ctx->vf_netdev, vf_netdev);
-+
-+	vf_netdev->wanted_features =3D ndev->features;
-+	netdev_update_features(vf_netdev);
-+
- 	return NOTIFY_OK;
- }
-=20
---=20
-1.8.3.1
+> > diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+> > index a1eec7177c2d..d754bd86ca47 100644
+> > --- a/drivers/hv/Makefile
+> > +++ b/drivers/hv/Makefile
+> > @@ -2,6 +2,7 @@
+> >  obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
+> >  obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
+> >  obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
+> > +obj-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+> 
+> There's an additional complexity here that I failed to describe to
+> you in my previous comments.  :-(    The above line makes the
+> hv_debugfs code part of the main Linux OS image -- i.e., the
+> vmlinuz file that gets installed into /boot, such that if hv_debugfs
+> is built, it is always loaded into the memory of the running system.
+> That's OK, but we should consider the alternative, which is to
+> make the hv_debugfs code part of the hv_vmbus module that
+> is specified a bit further down in the same Makefile.   A module
+> is installed into /lib/modules/<kernel version>/kernel, and
+> is only loaded into memory on the running system if something
+> actually references code in the module.  This approach helps avoid
+> loading code into memory that isn't actually used.
+> 
+> Whether code is built as a separate module or is just built into
+> the main vmlinuz file is also controlled by the .config file setting.
+> For example, CONFIG_HYPERV=m says to treat hv_vmbus as a
+> separate module, while CONFIG_HYPERV=y says to build the
+> hv_vmbus module directly into the vmlinuz file even though the
+> Makefile constructs it as a module.
+> 
+> Making hv_debugfs part of the hv_vmbus module is generally better
+> than just building it into the main vmlinuz because it's best to include
+> only things that must always be present in the main vmlinuz file.
+> hv_debugfs doesn't have any reason it needs to always be present.
+> By comparison, hv_balloon is included in the main vmlinuz, which
+> might be due to it dealing with memory mgmt and needing to be
+> in the vmlinuz image, but I'm not sure.
+> 
+> You can make hv_debugfs part of the hv_vmbus module with this line
+> placed after the line specifying hv_vmbus_y, instead of the line you
+> currently have:
+> 
+> hv_vmbus-$(CONFIG_HYPERV_TESTING)       += hv_debugfs.o
+> 
 
+Ah, I see now. That makes sense I'll go ahead and make the adjustments
+
+thanks
+
+> > +
+> > +static int hv_debugfs_delay_set(void *data, u64 val)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (val >= 1 && val <= 1000)
+> > +		*(u32 *)data = val;
+> > +	else if (val == 0)
+> > +		*(u32 *)data = 0;
+> 
+> I think this "else if" clause can be folded into the first
+> "if" statement by just checking "val >= 0".
+> 
+
+good call, I'll fold it into one statement 
+
+> 
+> > +/* Remove dentry associated with released hv device */
+> > +void hv_debug_rm_dev_dir(struct hv_device *dev)
+> > +{
+> > +	if (!IS_ERR(hv_debug_root))
+> > +		debugfs_remove_recursive(dev->debug_dir);
+> > +}
+> 
+> This function is the first of five functions that are called by
+> code outside of hv_debugfs.c.   You probably saw the separate
+> email from the kbuild test robot showing a build error on each
+> of these five functions.  Here's why.
+> 
+> When CONFIG_HYPERV=m is set, and hv_vmbus is built as a
+> module, there are references to the five functions from the
+> module to your hv_debugfs that is built as core code in
+> vmlinuz.  By default, Linux does not allow such core code to
+> be called by modules.   Core code must add a statement like:
+> 
+> EXPORT_SYMBOL_GPL(hv_debug_rm_dev_dir);
+> 
+> to allow the module to call it.   This gives the code writer
+> a very minimal amount of scope control.  However, if you build 
+> hv_debugfs as part of the module hv_vmbus, and the only
+> references to the five functions are within the module hv_vmbus,
+> then the EXPORT statements aren't needed because all
+> references are internal to the hv_vmbus module.  But if
+> you envision a function like hv_debug_delay_test() being
+> called by other Hyper-V drivers that are outside the
+> hv_vmbus module, then you will need the EXPORT statement
+> at least for that function.
+> 
+> You probably have your .config file setup with
+> CONFIG_HYPERV=y.  In that case, the hv_vmbus module is
+> built-in to the kernel, so you didn't get the errors reported
+> by the kbuild test robot.  When testing new code, it's a
+> good practice to build with the HYPERV settings set to
+> 'm' to make sure that any issues with module references
+> get flushed out and fixed.
+> 
+> Michael
+
+Oh I see, I'll test it out as a module so I can fix this. As for
+exporting hv_debug_delay_test() It might come in handy later but
+I think for now I should focus on just the ones in the hv_vmbus
+module for now. 
+
+thanks
