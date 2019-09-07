@@ -2,49 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE02DAC96D
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Sep 2019 23:41:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DBF5AC96F
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Sep 2019 23:41:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406818AbfIGVlZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 7 Sep 2019 17:41:25 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43724 "EHLO
+        id S2406830AbfIGVlc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 7 Sep 2019 17:41:32 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44365 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732468AbfIGVlZ (ORCPT
+        with ESMTP id S1732468AbfIGVlc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 7 Sep 2019 17:41:25 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u72so5480753pgb.10;
-        Sat, 07 Sep 2019 14:41:24 -0700 (PDT)
+        Sat, 7 Sep 2019 17:41:32 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so5475154pgl.11;
+        Sat, 07 Sep 2019 14:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=Zj674LUoNkKvSpexmegA5PsZaKcGFKG4/kThw6ZXlmw=;
-        b=Ujox5d061GkoJp1y4gs3/uinU01AK46f9UdarPx27G2y1doaNX1SE5I+pgGob0a5xq
-         D7naagu+P+UhLSm36uYT2/ZbPOVD/+lYyDb62ieH655Wfp1Twoitw1+DetYB6tJoYZV7
-         mAPa5PZfA5MTIzejdGl0ftr1u6aapyu99pEq4yrW30hF6rh0oBUjUsVaWDhokWEfSmEy
-         YHkz/g2ZSRovh5Hz45kJJynuABEvmOrcI9AmcO/Pzqhro3NT3c7vO5cgFaH4d4Hk15Px
-         KAy/zaOFRAsiJiQ2Iqpeigz8cpiyCt5vtvHH12MLqnzlhnDJ87YKjN09D3C9lwP5wCTo
-         0mfA==
+        bh=rar7+a8LD0KANAp/lVeGtNr0VZS4OVkIBwxcWjVF7fo=;
+        b=kwSx+U26sg/1ZFJEwjbGN++gHnIHb25rHZQsX7kQge9MWN2Wn/8QiDbNh5Yx/3ecs0
+         1zEkIP8zO8k8w4wnReHUF009lMiHIidZHKDpcJx6DabjzX3j+xIFQpAF6Am1pHQScsyx
+         A2iliUkyQT0+XOOHJdQ2Uf7WvinVvPa0XTTlUL5NwE0EoE/Jd8nqZndeJn1xBgJf8JLy
+         GesKao2qJon0PnciwA1FJofqTgS8vpb+86V6Mn/Z0cGUv1AGRaKYz5CmQ9OEkLlr+e/Y
+         1jaz9g9YSTdBJ83S6AWzyyrD7cza1zehSuSFX1wB42VOeTMc9t9QlzckCkzKCaKVKELm
+         3I6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=Zj674LUoNkKvSpexmegA5PsZaKcGFKG4/kThw6ZXlmw=;
-        b=QRO9NztZa9FA2URgKhf8Rr1jIQ+9AYX1xkZhiD+r33DdpdgVi9M3kmvH3urDVi5P80
-         LpYQMUJZ9931H+AxDOh9/R7xDeDtDQX6X08/ncC4zxMdWJl2smsQ7RE6pgn0IRB7lqY7
-         hpNLI6wOr5K4ENvCvYeJCjhcyUFsSuG30EtLW9SuCB6MJWD5BnMF4NtuKDHCOowtTSqI
-         kyiqA92PZdaeKvEC9D6UNsGrvxsxMCpP41TsteJzyExEch4dqeFZDXqRnXjxn3rnnR1B
-         6lZAXemwM4MMNnS6443Q2CqyWDzT0JsHhpsZltIWIHXlqtAn3CptDnUkAy4HIWiAVylr
-         hKJQ==
-X-Gm-Message-State: APjAAAWUUqS0ZjKgSISe7HagUAwefuw9DFnPZk6hOMdW/DJoAu3Nzh9T
-        /CM3Cv30bA/RyHCef9rxLC4=
-X-Google-Smtp-Source: APXvYqxfWkn27m4YwwErHi0RMDLqVgW7yc2OyNzSnRttW+TV1ma82at8a0X804W7PsbzNHRM+aaXvw==
-X-Received: by 2002:a65:430b:: with SMTP id j11mr14111649pgq.383.1567892484556;
-        Sat, 07 Sep 2019 14:41:24 -0700 (PDT)
+        bh=rar7+a8LD0KANAp/lVeGtNr0VZS4OVkIBwxcWjVF7fo=;
+        b=sQ/EsivDa61yO7abIv7ZRltQmHrKoSm2w+YSO1mqhTPRTYurgtD6Cq9k2HmfXyqlfC
+         KCnUEhuEmX6sKRmRMP25poUA8ke0fBe8aK9HSMGbVxmUpcnSY8jKPLU2DcT3swOTFI5j
+         GjG+SS/D0pZ2axk7SAFkAEk6qVadvb9ynSGEpoZdVtxfOJ41FJjMGFdQ5gKAkBmheIZw
+         xvGmLjw6m0RUS3JAvkNgolol/LoZ9hZ26TT74nmzRJrZntzTaDkcD9zQjq0ix+yOHaFB
+         w0pgVN6v9+cs/jKiaobzxMy0MQEwS94LhFVf/2KtR2KKsHCHR/tfr/G0w46JMR+9yyJl
+         Bc9A==
+X-Gm-Message-State: APjAAAWLq28DDOCuDVAIteh9zdjOhgwfzf5OETI+ThhAehSOEgfwZbxu
+        ASWS+uxPTa2JdCNIaCVpstw=
+X-Google-Smtp-Source: APXvYqwoZAkoLr5to9U2rXC0sBG3iafTZgw6qEDbSJDElFdfik0viB+6vT7qjTj7VVZh0WLTfkqGzA==
+X-Received: by 2002:a62:1658:: with SMTP id 85mr19104372pfw.195.1567892491692;
+        Sat, 07 Sep 2019 14:41:31 -0700 (PDT)
 Received: from localhost.localdomain ([112.79.80.177])
-        by smtp.gmail.com with ESMTPSA id h11sm9078516pgv.5.2019.09.07.14.41.17
+        by smtp.gmail.com with ESMTPSA id h11sm9078516pgv.5.2019.09.07.14.41.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 07 Sep 2019 14:41:23 -0700 (PDT)
+        Sat, 07 Sep 2019 14:41:30 -0700 (PDT)
 From:   Souptick Joarder <jrdr.linux@gmail.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         sashal@kernel.org, boris.ostrovsky@oracle.com, jgross@suse.com,
@@ -55,9 +55,9 @@ To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
 Cc:     linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH 1/3] hv_ballon: Avoid calling dummy function __online_page_set_limits()
-Date:   Sun,  8 Sep 2019 03:17:02 +0530
-Message-Id: <8e1bc9d3b492f6bde16e95ebc1dee11d6aefabd7.1567889743.git.jrdr.linux@gmail.com>
+Subject: [PATCH 2/3] xen/ballon: Avoid calling dummy function __online_page_set_limits()
+Date:   Sun,  8 Sep 2019 03:17:03 +0530
+Message-Id: <854db2cf8145d9635249c95584d9a91fd774a229.1567889743.git.jrdr.linux@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1567889743.git.jrdr.linux@gmail.com>
 References: <cover.1567889743.git.jrdr.linux@gmail.com>
@@ -73,21 +73,21 @@ to this function can be avoided.
 
 Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 ---
- drivers/hv/hv_balloon.c | 1 -
+ drivers/xen/balloon.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 6fb4ea5..9bab443 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -680,7 +680,6 @@ static void hv_page_online_one(struct hv_hotadd_state *has, struct page *pg)
- 		__ClearPageOffline(pg);
- 
- 	/* This frame is currently backed; online the page. */
--	__online_page_set_limits(pg);
- 	__online_page_increment_counters(pg);
- 	__online_page_free(pg);
- 
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 4e11de6..05b1f7e 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -376,7 +376,6 @@ static void xen_online_page(struct page *page, unsigned int order)
+ 	mutex_lock(&balloon_mutex);
+ 	for (i = 0; i < size; i++) {
+ 		p = pfn_to_page(start_pfn + i);
+-		__online_page_set_limits(p);
+ 		__SetPageOffline(p);
+ 		__balloon_append(p);
+ 	}
 -- 
 1.9.1
 
