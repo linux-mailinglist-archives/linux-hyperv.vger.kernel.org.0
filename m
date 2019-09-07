@@ -2,168 +2,106 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C350FAC2AA
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Sep 2019 00:45:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D86EAC3E7
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Sep 2019 03:35:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405068AbfIFWp4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 6 Sep 2019 18:45:56 -0400
-Received: from mail-eopbgr1310113.outbound.protection.outlook.com ([40.107.131.113]:8560
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405017AbfIFWp4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 6 Sep 2019 18:45:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JXdiO6KE71LrNhwaax+bDPEfg02J757Pwioxm9sOCBrQpTYrp7pQi/t4Ua215sWtNQmqA058YjmEnO7c0CpR6ALalrH+iITbUJeJuw/NfTQR/C8xUDChZJeroIC1GlCW3DNVCemD+GjbMHuky2WSnrxJ/YC3yE9MjXqYEmHsKqPDkxT2Tq9C0M5Oz1GW5KvLxA8smWbl6NVBjbKBuiKIdXN43EOiyn12duIl5CICtjsHbWRgsqrny2LGIA1OAlLTRCRtvgYTJqthcUPwUEnmQewnCYLtrdJIvrvWSEFQYnkgF9+aQnx8Qu127IBU1B2LYd79ax5qHS3QVHpFkC9QJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1VOfhLMEwc0nEH2aJAM/nO+8GviGtXlqHMBCiFlL1Q4=;
- b=mHRLOzhcb0d9Gbsf8ZXPKpzW/mo8oF3yNMB6stpURDdLdVDVNGzmSQZcZV8ZFBc3OrOlWfXiKbj5AF6SWkPOakac/kWARrJPxLXKPnNCZwyAeoka4umXTrUt2ryWrZizfm3gqihh45YZ7syHrtuUKCn87eikQi/pU9EWY//yPPvfdlWdk0JROsFgvo1F2oIfCpqPcoS26fdolBvFE/R+0cECPcD0Qz7lSbF0Qs3F8QDsPdcXFUkYc4zjq1ioAJpG5btsZXw9v3oGMVrHiUr+lVF6bujuhgoC79An31DjbBxt5eFLKWZtv9j91jNmCVZ36+8veFoA/Fl4WPFt763m5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1VOfhLMEwc0nEH2aJAM/nO+8GviGtXlqHMBCiFlL1Q4=;
- b=ljyDan3uquWjv7RTkBe0azq2hRibLm2kgS9KuaL1xcbfuJcFkdBaeHpapb10cQxS4nNJaJTOkIoLcglySWFXdJdN1JQsEXOvxRB55BsW4gtBzsnRRWPu1YDApqoEp32L/GgvKJ8NMylOVVcltzBe4pP8m8NIjBgm6x0x0AdG9Ko=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0203.APCP153.PROD.OUTLOOK.COM (52.133.194.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.6; Fri, 6 Sep 2019 22:45:31 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2263.005; Fri, 6 Sep 2019
- 22:45:31 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v5 0/9] Enhance the hv_vmbus driver to support hibernation
-Thread-Topic: [PATCH v5 0/9] Enhance the hv_vmbus driver to support
- hibernation
-Thread-Index: AQHVZO4q3kr8cCc730q424LopDWEJqcfGZvg
-Date:   Fri, 6 Sep 2019 22:45:31 +0000
-Message-ID: <PU1P153MB01697512A097B489E0440E13BFBA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
- <20190906200325.GD1528@sasha-vm>
-In-Reply-To: <20190906200325.GD1528@sasha-vm>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-06T22:45:29.0874008Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=02fde12d-e263-4d00-b3b2-d0d411bc1267;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:310e:b8a5:374f:67ac]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 86e431e7-c086-45f0-081c-08d7331bec3d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0203;
-x-ms-traffictypediagnostic: PU1P153MB0203:|PU1P153MB0203:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0203CE8B1B4A7684BB13105BBFBA0@PU1P153MB0203.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0152EBA40F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(61514002)(199004)(189003)(71190400001)(55016002)(476003)(76176011)(22452003)(54906003)(6246003)(99286004)(10090500001)(6436002)(8936002)(6916009)(7696005)(81166006)(81156014)(9686003)(8676002)(71200400001)(33656002)(14454004)(2906002)(256004)(53936002)(14444005)(4326008)(478600001)(25786009)(6116002)(486006)(6506007)(86362001)(8990500004)(7736002)(305945005)(52536014)(46003)(74316002)(10290500003)(66946007)(76116006)(66556008)(66476007)(64756008)(66446008)(229853002)(316002)(5660300002)(446003)(186003)(11346002)(102836004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0203;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YBuErGLUIztwNtm3vIZDRN6D/DJS1TOOLCDLRN8/887rjF9e2WnOsk8342T7kfQucYe236eBxVNprZVj+FG4sfmny8SvqHc2Kgww9/pI5oIFYe9X2MNHn70rKyQ1IrXitpl15P6oB03NZi9fHeeFR/cYI5lFqc55NfQ3FLaQLun6deUP7AsAl9Cvg8nVpXyk20z0j21KzzmdVsyhtLdnAWgyR887rn85YVRlju96rkWnbhugYZPJtdJxpPrLjE2zTItkTE1oRwngfPIy/yOqJNJ53JtnkPQ4RBNYwU65nOT0Ee1Yf8PoqM5wqWns30ouLahJdL6QPvfsZlSXY9JxDGgZR1TgkfnehU7IRneyp7BCHEhJgE0nXV1s11dxyvNJfREOhz/+M2LLGzopiLc14Ont8nFRuxT9Af9p7yX5M5w=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S2406419AbfIGBfN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 6 Sep 2019 21:35:13 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:42009 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405673AbfIGBfM (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 6 Sep 2019 21:35:12 -0400
+Received: by mail-ua1-f66.google.com with SMTP id w16so2653365uap.9
+        for <linux-hyperv@vger.kernel.org>; Fri, 06 Sep 2019 18:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=C+0rVi6PzTMFYTcbcIBgVtgcdKuod3fbgGTlJ3s1Cbc=;
+        b=LDeLoKrgQnhTkRoGE0qHkNXA77KSUk6LqEq23v4a+InO+HdoYRAa0tuV1WhlJaOduo
+         I3Pd55j4aiR8h9Ura1I9gi5apYG8aoprP1KWJ1bsR6Nq6NsrJJMv0EoAJjRwIKEDMuqN
+         QLX4QjLNLFDgzPRH00kQ0su0FDMNY0cjW5wJED82HjNqcOxVFQWjFjL1arpanoFhJIj8
+         8W1C79/WdydgdyiFzQjGp2fy5D+JzJV9RoSsGpw8tgFG2+RccwvP3dkbp23+MKXMpXG1
+         2n+ghMYlH7q4JMGO9Qx81QyIUn7evwhtm8tpfMs/5KZmzhx0NPpo9AWYsGub2zlLag34
+         dx3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=C+0rVi6PzTMFYTcbcIBgVtgcdKuod3fbgGTlJ3s1Cbc=;
+        b=QhGD/ycwpKPthB3xzF45iic7mflWeVrLlbizIZZ3ffmgeJM6pIzKHxloK5H9Exfowl
+         KIfzUppmqO1kWc6mRry2u82FrH+jVL2RJb7oYr/9uhn/GiaACCvdMcd6cw1vniCnIvKp
+         vcehaejGwKQssRK2vdQhzbunHv/sIu6nR/AhE+vabXTv68E+YBvtOmGOMuXWXCkfbtXK
+         81g8doU9Hw23vLZrhBqa2w+q7/DGtdy6u6gMSaylhb8U2aZsR0hRd9VYK8OSh7k9H1dI
+         jGCMXEccfYcZy0c1iyyUrJELy2wnVBJi7+bD34TFzYJYfzZ96f1RBRsfHFnWuk/9STvf
+         oqxg==
+X-Gm-Message-State: APjAAAVafyigdp9NYVGH1Y2RkjYIxn6WJ9jrHRuI6GT7IxztBM1CxpDe
+        ON4h4J4v1NPtUPwdGLNXW+kHZC9MwWvu55yx0qg=
+X-Google-Smtp-Source: APXvYqzIxIMwMyRCdkgO6FHpzJDn+KCJvm1DeQX+OomspEdZOmJGFau2SVPHiJ3fDRYvRmAdV0kRwG1eq44EUYIUEm0=
+X-Received: by 2002:a9f:309a:: with SMTP id j26mr5722816uab.60.1567820111785;
+ Fri, 06 Sep 2019 18:35:11 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86e431e7-c086-45f0-081c-08d7331bec3d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2019 22:45:31.2123
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vj/Fv0Us/gjYvDeL1lK0FTS/1vn3Y1seRpukBWsFDdfN30QvNkXFwAub6uk67hMiA9jFAqwkco56gSVMocqJow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0203
+Received: by 2002:a1f:c545:0:0:0:0:0 with HTTP; Fri, 6 Sep 2019 18:35:11 -0700 (PDT)
+Reply-To: waltonalice41@gmail.com
+From:   Alice Walton <saraharmony501@gmail.com>
+Date:   Sat, 7 Sep 2019 02:35:11 +0100
+Message-ID: <CAHoQAbXwSKX9aVsDZz8aqqzPygpAEXmzYtiu5ogDXC9xJMf55w@mail.gmail.com>
+Subject: Please forgive me
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Sasha Levin <sashal@kernel.org>
-> Sent: Friday, September 6, 2019 1:03 PM
-> On Thu, Sep 05, 2019 at 11:01:14PM +0000, Dexuan Cui wrote:
-> >This patchset (consisting of 9 patches) was part of the v4 patchset (con=
-sisting
-> >of 12 patches):
-> >
-> >The other 3 patches in v4 are posted in another patchset, which will go
-> >through the tip.git tree.
-> >
-> >All the 9 patches here are now rebased to the hyperv tree's hyperv-next
-> branch, and all the 9 patches have Michael Kelley's Signed-off-by's.
-> >
-> >Please review.
->=20
-> Given that these two series depend on each other, I'd much prefer for
-> them to go through one tree.
+My Dearest,
 
-Hi Sasha,
-Yeah, that would be ideal. The problem here is: the other patchset conflict=
-s
-with the existing patches in the tip.git tree's timers/core branch, so IMO=
-=20
-the 3 patches have to go through the tip tree:
+Please forgive me for stressing you with my predicaments as I know
+that this letter may come to you as a big surprise.
 
-[PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for hibernati=
-on
-[PATCH v5 2/3] x86/hyper-v: Implement hv_is_hibernation_supported()
-[PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V clocksource for =
-hibernation
+Actually, I came across your E-mail from my personal search afterward
+I decided to email you directly believing that you will be honest to
+fulfil my final wish before anything happens to me. Meanwhile, I am
+Madam Alice Walton, 71 years old childless widow from France but i
+reside and doing Gold mining business in Africa before i fall sick.
 
-> But, I may be wrong, and I'm going to see if a scenario such as this
-> make sense. I've queued this one to the hyperv-next, but I'll wait for
-> the x86 folks to send their pull request to Linus first before I do it
-> for these patches.
+I am suffering from Adenocarcinoma Cancer of the lungs for the past 8
+years and from all indication my condition is really deteriorating as
+my doctors have confirmed and courageously advised me that I may not
+live beyond 3 weeks from now for the reason that my tumor has reached
+a critical stage which has defiled all forms of medical treatment.
 
-Actually IMHO you don't need to wait, because there is not a build
-dependency, so either patchset can go into the Linus's tree first.
+Since my days are numbered, I=E2=80=99ve decided willingly to fulfil my
+long-time vow to donate to the less privileges the sum of($18.5
+million dollars) I deposited in my offshore account over 7 years now
+because I have tried to handle this project by myself but I have seen
+that my health could not allow me to do so anymore.
 
-The 2 patchsets are just the first step to make hibernation work for Linux =
-VM
-running on Hyper-V. Next I'm going to post some high-level VSC patches for
-hv_balloon, hv_utils, hv_netvsc, hid_hyperv, hv_storvsc, hyperv_keyboard,=20
-hyperv_fb,etc. All of these should go through the hyperv tree, since they'r=
-e
-pure hyper-v changes, and they depend on this 9-patch patchset. I'll make
-a note in every patch so the subsystem maintainers will be aware and ack it=
-.
+My promise to God includes building of well-equipped charity
+foundation/hospital and a technical school for the orphans and less
+privileges.
 
-Among the VSC patches, the hv_balloon patch does depend on the 2nd patch:
-    [PATCH v5 2/3] x86/hyper-v: Implement hv_is_hibernation_supported().
-I think I'll wait for the aforementioned 2 patchsets to be in first, before=
- posting
-the hv_balloon patch.
+Since i am not capable to handle this again myself due to my critical
+health condition,please i need your consent to help me receive my
+money from the bank and use it to do this divine works of God in your
+country in my name so that my soul can be at rest if anything happens
+to me.
 
-> Usually cases such as these are the exception, but for Hyper-V it seems
-> to be the norm, so I'm curious to see how this will unfold.
->=20
-> Thanks,
-> Sasha
+If you will be honest, kind and willing to assist me handle this
+charity project as I=E2=80=99ve mentioned here, I will like you to provide =
+me
+your personal data like,
 
-Thanks for taking care all the patches!
+(1) Your full name:
+(2) country:
+(3) Occupation:
+(4) phone number:
+(5) Age:
 
-Thanks,
--- Dexuan
+Let me have this data so that i can link you up with my bank as my
+representative and receiver of the funds now that i am still alive.
+
+Warmest Regards!
+Mrs. Alice Walton
