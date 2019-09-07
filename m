@@ -2,106 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D86EAC3E7
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Sep 2019 03:35:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B59DDAC498
+	for <lists+linux-hyperv@lfdr.de>; Sat,  7 Sep 2019 06:26:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406419AbfIGBfN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 6 Sep 2019 21:35:13 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:42009 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405673AbfIGBfM (ORCPT
+        id S2404331AbfIGE02 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 7 Sep 2019 00:26:28 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37006 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404301AbfIGE01 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 6 Sep 2019 21:35:12 -0400
-Received: by mail-ua1-f66.google.com with SMTP id w16so2653365uap.9
-        for <linux-hyperv@vger.kernel.org>; Fri, 06 Sep 2019 18:35:12 -0700 (PDT)
+        Sat, 7 Sep 2019 00:26:27 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b10so4144209plr.4
+        for <linux-hyperv@vger.kernel.org>; Fri, 06 Sep 2019 21:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=C+0rVi6PzTMFYTcbcIBgVtgcdKuod3fbgGTlJ3s1Cbc=;
-        b=LDeLoKrgQnhTkRoGE0qHkNXA77KSUk6LqEq23v4a+InO+HdoYRAa0tuV1WhlJaOduo
-         I3Pd55j4aiR8h9Ura1I9gi5apYG8aoprP1KWJ1bsR6Nq6NsrJJMv0EoAJjRwIKEDMuqN
-         QLX4QjLNLFDgzPRH00kQ0su0FDMNY0cjW5wJED82HjNqcOxVFQWjFjL1arpanoFhJIj8
-         8W1C79/WdydgdyiFzQjGp2fy5D+JzJV9RoSsGpw8tgFG2+RccwvP3dkbp23+MKXMpXG1
-         2n+ghMYlH7q4JMGO9Qx81QyIUn7evwhtm8tpfMs/5KZmzhx0NPpo9AWYsGub2zlLag34
-         dx3g==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=uRpzcGRK0gWOk89qrLh7rcTqBiKXyCtjzVPSfOAgpVU=;
+        b=etwCiax2gYdlC4zP7k7KvjURjCrgAs+KXsRggYDRDUSymUUnwC/2d3q8vjQwUWtudw
+         OSlZL4GgcgosbLef5+vO8HsQSFba21KpO+8TzzlB/xLI3mkZrv+qC2MyzRbX7/DW00VY
+         1qJWdUbMv87N3RbQ7gkM8xgBTX7pTUwAHsH9SqiluIV2b+uU71JYYmisQZF0IK6RZVhl
+         jNNaJOoj9OaJUZFwrOJRkY6emDZTA6RBNSIW2IYqQ1G/Si/2hEo5Vdp1YviTIyBQDa/B
+         sW9vwo5ucxzgbZynOtDN0nB2u3aQ5+5pT8Ftz7eALy7+EGvelHsKuetu+FVTbcoYlNwu
+         IilA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=C+0rVi6PzTMFYTcbcIBgVtgcdKuod3fbgGTlJ3s1Cbc=;
-        b=QhGD/ycwpKPthB3xzF45iic7mflWeVrLlbizIZZ3ffmgeJM6pIzKHxloK5H9Exfowl
-         KIfzUppmqO1kWc6mRry2u82FrH+jVL2RJb7oYr/9uhn/GiaACCvdMcd6cw1vniCnIvKp
-         vcehaejGwKQssRK2vdQhzbunHv/sIu6nR/AhE+vabXTv68E+YBvtOmGOMuXWXCkfbtXK
-         81g8doU9Hw23vLZrhBqa2w+q7/DGtdy6u6gMSaylhb8U2aZsR0hRd9VYK8OSh7k9H1dI
-         jGCMXEccfYcZy0c1iyyUrJELy2wnVBJi7+bD34TFzYJYfzZ96f1RBRsfHFnWuk/9STvf
-         oqxg==
-X-Gm-Message-State: APjAAAVafyigdp9NYVGH1Y2RkjYIxn6WJ9jrHRuI6GT7IxztBM1CxpDe
-        ON4h4J4v1NPtUPwdGLNXW+kHZC9MwWvu55yx0qg=
-X-Google-Smtp-Source: APXvYqzIxIMwMyRCdkgO6FHpzJDn+KCJvm1DeQX+OomspEdZOmJGFau2SVPHiJ3fDRYvRmAdV0kRwG1eq44EUYIUEm0=
-X-Received: by 2002:a9f:309a:: with SMTP id j26mr5722816uab.60.1567820111785;
- Fri, 06 Sep 2019 18:35:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=uRpzcGRK0gWOk89qrLh7rcTqBiKXyCtjzVPSfOAgpVU=;
+        b=Pe0ObryIEopImdEhX+fk8A/hjVb23uJNVaTZcgtX7msJUvP2ffhVFO77WIKX0Ospcy
+         WhdOUk3eKY97yjcO53L/VS5gJPfLWKyVMX7gCIHHYu4sM6lXyrD4qSqMJAMx0uiCM0K0
+         TJEZxL8MxnaaA0s+4OxgeHATwh9R9uIhczEWAbK+F7zsVimInZ5GUr6gPRZ1Ho2MPNhZ
+         jJP1jDMLxI+rXyZ1pGbIUVhgSYkM8AN2A464wVwdb03Zjrgbo3O57FdnZP3QPCdoxsaa
+         D087S29MIuFrH/hBGgZZKCKE5YizYi2Ud66/JPvu3xdMnY5Dt7F6WKnJOvMNJtDbXZBU
+         JJ+w==
+X-Gm-Message-State: APjAAAXWNpuLMwk1JqVdk91HShbLLLmL1sCPZgyxpueI7Lvp/9lwmVnn
+        F4khfpvURJPbDEJSM+ECGZbARg==
+X-Google-Smtp-Source: APXvYqxE3DEYli99jbhJRPwsT4eS+AzKygv9JQnFqqCwc5fAJeR+sbz8pQ8zDfV5T+ASAwBuB9DdCA==
+X-Received: by 2002:a17:902:b215:: with SMTP id t21mr6431411plr.141.1567830387142;
+        Fri, 06 Sep 2019 21:26:27 -0700 (PDT)
+Received: from cakuba.netronome.com ([45.41.183.19])
+        by smtp.gmail.com with ESMTPSA id z12sm7810845pfj.41.2019.09.06.21.26.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2019 21:26:26 -0700 (PDT)
+Date:   Fri, 6 Sep 2019 21:25:48 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Bloch <markb@mellanox.com>
+Subject: Re: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to VF
+ NIC
+Message-ID: <20190906212548.685b5f83@cakuba.netronome.com>
+In-Reply-To: <DM6PR21MB13373166435FD2FC5543D349CABB0@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1567136656-49288-1-git-send-email-haiyangz@microsoft.com>
+        <1567136656-49288-3-git-send-email-haiyangz@microsoft.com>
+        <20190830160451.43a61cf9@cakuba.netronome.com>
+        <DM6PR21MB13373166435FD2FC5543D349CABB0@DM6PR21MB1337.namprd21.prod.outlook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Received: by 2002:a1f:c545:0:0:0:0:0 with HTTP; Fri, 6 Sep 2019 18:35:11 -0700 (PDT)
-Reply-To: waltonalice41@gmail.com
-From:   Alice Walton <saraharmony501@gmail.com>
-Date:   Sat, 7 Sep 2019 02:35:11 +0100
-Message-ID: <CAHoQAbXwSKX9aVsDZz8aqqzPygpAEXmzYtiu5ogDXC9xJMf55w@mail.gmail.com>
-Subject: Please forgive me
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-My Dearest,
+On Thu, 5 Sep 2019 23:07:32 +0000, Haiyang Zhang wrote:
+> > On Fri, 30 Aug 2019 03:45:38 +0000, Haiyang Zhang wrote:  
+> > > VF NIC may go down then come up during host servicing events. This
+> > > causes the VF NIC offloading feature settings to roll back to the
+> > > defaults. This patch can synchronize features from synthetic NIC to
+> > > the VF NIC during ndo_set_features (ethtool -K), and
+> > > netvsc_register_vf when VF comes back after host events.
+> > >
+> > > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > > Cc: Mark Bloch <markb@mellanox.com>  
+> > 
+> > If we want to make this change in behaviour we should change net_failover
+> > at the same time.  
+> 
+> After checking the net_failover, I found it's for virtio based SRIOV, and very 
+> different from what we did for Hyper-V based SRIOV.
+> 
+> We let the netvsc driver acts as both the synthetic (PV) driver and the transparent 
+> bonding master for the VF NIC. But net_failover acts as a master device on top 
+> of both virtio PV NIC, and VF NIC. And the net_failover doesn't implemented 
+> operations, like ndo_set_features.
+> So the code change for our netvsc driver cannot be applied to net_failover driver.
+> 
+> I will re-submit my two patches (fixing the extra tab in the 1st one as you pointed 
+> out). Thanks!
 
-Please forgive me for stressing you with my predicaments as I know
-that this letter may come to you as a big surprise.
-
-Actually, I came across your E-mail from my personal search afterward
-I decided to email you directly believing that you will be honest to
-fulfil my final wish before anything happens to me. Meanwhile, I am
-Madam Alice Walton, 71 years old childless widow from France but i
-reside and doing Gold mining business in Africa before i fall sick.
-
-I am suffering from Adenocarcinoma Cancer of the lungs for the past 8
-years and from all indication my condition is really deteriorating as
-my doctors have confirmed and courageously advised me that I may not
-live beyond 3 weeks from now for the reason that my tumor has reached
-a critical stage which has defiled all forms of medical treatment.
-
-Since my days are numbered, I=E2=80=99ve decided willingly to fulfil my
-long-time vow to donate to the less privileges the sum of($18.5
-million dollars) I deposited in my offshore account over 7 years now
-because I have tried to handle this project by myself but I have seen
-that my health could not allow me to do so anymore.
-
-My promise to God includes building of well-equipped charity
-foundation/hospital and a technical school for the orphans and less
-privileges.
-
-Since i am not capable to handle this again myself due to my critical
-health condition,please i need your consent to help me receive my
-money from the bank and use it to do this divine works of God in your
-country in my name so that my soul can be at rest if anything happens
-to me.
-
-If you will be honest, kind and willing to assist me handle this
-charity project as I=E2=80=99ve mentioned here, I will like you to provide =
-me
-your personal data like,
-
-(1) Your full name:
-(2) country:
-(3) Occupation:
-(4) phone number:
-(5) Age:
-
-Let me have this data so that i can link you up with my bank as my
-representative and receiver of the funds now that i am still alive.
-
-Warmest Regards!
-Mrs. Alice Walton
+I think it stands to reason that two modules which implement the same
+functionality behave the same.
