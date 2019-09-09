@@ -2,24 +2,24 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACDADAD43B
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Sep 2019 09:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ACB0AD441
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Sep 2019 09:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388565AbfIIHy2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 9 Sep 2019 03:54:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45140 "EHLO mx1.redhat.com"
+        id S1726164AbfIIHyq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 9 Sep 2019 03:54:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49470 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388497AbfIIHy2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 9 Sep 2019 03:54:28 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S2388623AbfIIHym (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:54:42 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9088783F3C;
-        Mon,  9 Sep 2019 07:54:27 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2FD6B18CB8EA;
+        Mon,  9 Sep 2019 07:54:42 +0000 (UTC)
 Received: from [10.36.116.173] (ovpn-116-173.ams2.redhat.com [10.36.116.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1673860A35;
-        Mon,  9 Sep 2019 07:54:23 +0000 (UTC)
-Subject: Re: [PATCH 2/3] xen/ballon: Avoid calling dummy function
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A24FA10013D9;
+        Mon,  9 Sep 2019 07:54:38 +0000 (UTC)
+Subject: Re: [PATCH 3/3] mm/memory_hotplug.c: Remove
  __online_page_set_limits()
 To:     Souptick Joarder <jrdr.linux@gmail.com>, kys@microsoft.com,
         haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
@@ -30,7 +30,7 @@ To:     Souptick Joarder <jrdr.linux@gmail.com>, kys@microsoft.com,
 Cc:     linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
 References: <cover.1567889743.git.jrdr.linux@gmail.com>
- <854db2cf8145d9635249c95584d9a91fd774a229.1567889743.git.jrdr.linux@gmail.com>
+ <9afe6c5a18158f3884a6b302ac2c772f3da49ccc.1567889743.git.jrdr.linux@gmail.com>
 From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
@@ -77,45 +77,61 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <2cb8666a-166b-5391-bc83-cc90eb4c87b9@redhat.com>
-Date:   Mon, 9 Sep 2019 09:54:23 +0200
+Message-ID: <36e4a98c-29da-9319-ccb1-a90f378250c6@redhat.com>
+Date:   Mon, 9 Sep 2019 09:54:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <854db2cf8145d9635249c95584d9a91fd774a229.1567889743.git.jrdr.linux@gmail.com>
+In-Reply-To: <9afe6c5a18158f3884a6b302ac2c772f3da49ccc.1567889743.git.jrdr.linux@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 09 Sep 2019 07:54:27 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Mon, 09 Sep 2019 07:54:42 +0000 (UTC)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On 07.09.19 23:47, Souptick Joarder wrote:
-> __online_page_set_limits() is a dummy function and an extra call
-> to this function can be avoided.
+> As both the callers of this dummy __online_page_set_limits()
+> is removed, this can be removed permanently.
 > 
 > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 > ---
->  drivers/xen/balloon.c | 1 -
->  1 file changed, 1 deletion(-)
+>  include/linux/memory_hotplug.h | 1 -
+>  mm/memory_hotplug.c            | 5 -----
+>  2 files changed, 6 deletions(-)
 > 
-> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-> index 4e11de6..05b1f7e 100644
-> --- a/drivers/xen/balloon.c
-> +++ b/drivers/xen/balloon.c
-> @@ -376,7 +376,6 @@ static void xen_online_page(struct page *page, unsigned int order)
->  	mutex_lock(&balloon_mutex);
->  	for (i = 0; i < size; i++) {
->  		p = pfn_to_page(start_pfn + i);
-> -		__online_page_set_limits(p);
->  		__SetPageOffline(p);
->  		__balloon_append(p);
->  	}
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f46ea71..8ee3a2a 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -105,7 +105,6 @@ extern unsigned long __offline_isolated_pages(unsigned long start_pfn,
+>  extern int set_online_page_callback(online_page_callback_t callback);
+>  extern int restore_online_page_callback(online_page_callback_t callback);
+>  
+> -extern void __online_page_set_limits(struct page *page);
+>  extern void __online_page_increment_counters(struct page *page);
+>  extern void __online_page_free(struct page *page);
+>  
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index c73f099..dc0118f 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -604,11 +604,6 @@ int restore_online_page_callback(online_page_callback_t callback)
+>  }
+>  EXPORT_SYMBOL_GPL(restore_online_page_callback);
+>  
+> -void __online_page_set_limits(struct page *page)
+> -{
+> -}
+> -EXPORT_SYMBOL_GPL(__online_page_set_limits);
+> -
+>  void __online_page_increment_counters(struct page *page)
+>  {
+>  	adjust_managed_page_count(page, 1);
 > 
-
 Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
