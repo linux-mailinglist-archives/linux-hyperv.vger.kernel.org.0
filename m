@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74A40AE08B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Sep 2019 00:16:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A555AE0E0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Sep 2019 00:20:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392023AbfIIWQP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 9 Sep 2019 18:16:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44996 "EHLO mail.kernel.org"
+        id S2406235AbfIIWQt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 9 Sep 2019 18:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388675AbfIIWQO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:16:14 -0400
+        id S2406221AbfIIWQr (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 9 Sep 2019 18:16:47 -0400
 Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8A4F2171F;
-        Mon,  9 Sep 2019 22:16:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA5D721A4A;
+        Mon,  9 Sep 2019 22:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067374;
-        bh=sgpC2KLS/4Rjhn2ZMgXWoTc6xu05EmuS7/jOsnoo6nI=;
+        s=default; t=1568067406;
+        bh=cA0/ajFdxMeE7KcBnjMNO94Hp7DUcbWHvPWzYGo6SCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BLUr5BTSCND9B9C+eHv5gcT3OHgdBnaPQonF6MYtVbQSb9ui5qWf2GcM6bitQvcnd
-         3q5EPLrTgK7YoqwOKJSf0h1mb5bkUeKji4Xgsm3MPq2ORB9nHsHqjYo0nhkEiAC1XM
-         i0ZibcmY7CsMcRPTxYBPNPtAx9t1P9YagAKI4Ep8=
+        b=kVTSKDmxouI/xgDgqXI2lGlp8eeosOcupZ9J8NbQ2ORKRe/qXsNLHaPf5a0BCEe6d
+         pS7jKOtDMDp84bRhPMJefxPQ5HVnWc0m6WYE6CgwS4Se32hiEhydsenWIwu40a5jTw
+         qO35hp+4MN02bf8Lf8RE7lpbWVpsA3vqDR/DLjMo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
@@ -34,12 +34,12 @@ Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 05/12] x86/hyper-v: Fix overflow bug in fill_gva_list()
-Date:   Mon,  9 Sep 2019 11:40:45 -0400
-Message-Id: <20190909154052.30941-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 4/8] x86/hyper-v: Fix overflow bug in fill_gva_list()
+Date:   Mon,  9 Sep 2019 11:41:19 -0400
+Message-Id: <20190909154124.31146-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190909154052.30941-1-sashal@kernel.org>
-References: <20190909154052.30941-1-sashal@kernel.org>
+In-Reply-To: <20190909154124.31146-1-sashal@kernel.org>
+References: <20190909154124.31146-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -78,7 +78,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index e65d7fe6489f3..5208ba49c89a9 100644
+index ef5f29f913d7b..2f34d52753526 100644
 --- a/arch/x86/hyperv/mmu.c
 +++ b/arch/x86/hyperv/mmu.c
 @@ -37,12 +37,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
