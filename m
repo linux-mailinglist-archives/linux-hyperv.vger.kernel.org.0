@@ -2,103 +2,90 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E0DAE0F2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Sep 2019 00:20:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89E60AEAED
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Sep 2019 14:56:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731557AbfIIWSR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 9 Sep 2019 18:18:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406323AbfIIWRG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 9 Sep 2019 18:17:06 -0400
-Received: from sasha-vm.mshome.net (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7E5521D79;
-        Mon,  9 Sep 2019 22:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568067425;
-        bh=SD+/dPytZJTVINNwhSYESFDl7e+W+IhKtgomcj9nMj0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvYhKFWS/2CAYw1F65A0jEayrUeC8/6KEol+azhi/a5K+0ldzNvOPukHGcZI/OS+b
-         zWi+HYU8oOuCNSohsz+BpJOtK7HGPA65Occk3lphOx/3rtdRSdD8q59WUqORpGSQfC
-         XW8ZNrXo/Mh0YHMiqm67sK10W6wTbyNUWDcH4hus=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Jong Hyun Park <park.jonghyun@yonsei.ac.kr>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 4/8] x86/hyper-v: Fix overflow bug in fill_gva_list()
-Date:   Mon,  9 Sep 2019 11:41:41 -0400
-Message-Id: <20190909154145.31263-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190909154145.31263-1-sashal@kernel.org>
-References: <20190909154145.31263-1-sashal@kernel.org>
+        id S2392683AbfIJM4m (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 10 Sep 2019 08:56:42 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44368 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731546AbfIJM4m (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 10 Sep 2019 08:56:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u14so16290601ljj.11;
+        Tue, 10 Sep 2019 05:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ThZUjst48nBsQQrwmyp4kkeqgEJqPKlkWHGIw30bhN4=;
+        b=b3q/Lpqg9Sp34lOtUgzjULZ9aV3rmUKNkbT0CrVcbQzJ9ET1bQxl9z9U9BxJs7qMny
+         n94QaUzz81Lo0A4ZGMfzKns8Agjx4Bf2PoMlceqJGMeNwuOD6bdZLREa7H/LenwpuCo+
+         Y+oIzhIA9H8HYwHjTTtV9f4IG3o5KfXSnGFFr7IkSzv9m2X9+F5+M82mQ5Go8kzhU+tg
+         qekG0xSEC51m0qJTX5VfXsIxSYWuJojb6yItYiPBCiqbui+363+EO94btvTPeNABHwV3
+         CZ2ul6a0X5Gv20H/I114/+V5GgEUBeNlseTDrMc2me8SZZpFZtQZwa83USnlRJ0cxUw/
+         /Abg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ThZUjst48nBsQQrwmyp4kkeqgEJqPKlkWHGIw30bhN4=;
+        b=n/W/Zt4keH38rCiYZfq6rrCiXYFnopXtNSqKXaJ6Vo30v8y61MxlIzkMvqOEMTpIDP
+         nnHcX3PQUd11h07VNQAhwrJ3FrxzPiyMipI5+E9+w4AYrPrAe+Y6uQ1BbOH5dnssi9hN
+         NWZliF1Def5CrxXOvA9kKeEKokFiftXU3wUqnEt+jT2JRm++wEB53OOuUGUYM1ncKIkt
+         yFq7JVcjeNytoByuMuuj4qpLddk0c3vfVg9FFtRVpa7BxyGLwiZz02ylgUO5P9CVqZek
+         hGrbc8CSBMVLcNn3ACrINDCOrDsE+6D5Q+FzRt2yKl0e2vOl4owTIeze2/T/lFK8eo2x
+         +Ztw==
+X-Gm-Message-State: APjAAAV5NsTSC2y3tTakPMuEv8WET+ZZwxYnvZz4M9NYDy0jRlUTLIh/
+        OuEVdG3EINQgwxTX8eYJk51xxk8cf81Aj5lvbjw=
+X-Google-Smtp-Source: APXvYqxq4KmKDj3pDHYdpmtLYyyUHmVZr8CQS2gK4J2CDzE4ivbWi++aFawMEADWVn/+QqgnnwuW1PQNzQrcK1Tku6s=
+X-Received: by 2002:a2e:83d6:: with SMTP id s22mr19759114ljh.104.1568120200429;
+ Tue, 10 Sep 2019 05:56:40 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <cover.1567889743.git.jrdr.linux@gmail.com> <20190909154253.q55olcm4cqwh7izd@box>
+In-Reply-To: <20190909154253.q55olcm4cqwh7izd@box>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Tue, 10 Sep 2019 18:26:28 +0530
+Message-ID: <CAFqt6zZNHGdgaiiRvz-1AFe5g1652oyZpNQidK1V0B6weQHz0w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Remove __online_page_set_limits()
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>, sstabellini@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+        osalvador@suse.com, Michal Hocko <mhocko@suse.com>,
+        pasha.tatashin@soleen.com, Dan Williams <dan.j.williams@intel.com>,
+        richard.weiyang@gmail.com, Qian Cai <cai@lca.pw>,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Mon, Sep 9, 2019 at 9:12 PM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
+> On Sun, Sep 08, 2019 at 03:17:01AM +0530, Souptick Joarder wrote:
+> > __online_page_set_limits() is a dummy function and an extra call
+> > to this can be avoided.
+> >
+> > As both of the callers are now removed, __online_page_set_limits()
+> > can be removed permanently.
+> >
+> > Souptick Joarder (3):
+> >   hv_ballon: Avoid calling dummy function __online_page_set_limits()
+> >   xen/ballon: Avoid calling dummy function __online_page_set_limits()
+> >   mm/memory_hotplug.c: Remove __online_page_set_limits()
+> >
+> >  drivers/hv/hv_balloon.c        | 1 -
+> >  drivers/xen/balloon.c          | 1 -
+> >  include/linux/memory_hotplug.h | 1 -
+> >  mm/memory_hotplug.c            | 5 -----
+> >  4 files changed, 8 deletions(-)
+>
+> Do we really need 3 separate patches to remove 8 lines of code?
 
-[ Upstream commit 4030b4c585c41eeefec7bd20ce3d0e100a0f2e4d ]
-
-When the 'start' parameter is >=  0xFF000000 on 32-bit
-systems, or >= 0xFFFFFFFF'FF000000 on 64-bit systems,
-fill_gva_list() gets into an infinite loop.
-
-With such inputs, 'cur' overflows after adding HV_TLB_FLUSH_UNIT
-and always compares as less than end.  Memory is filled with
-guest virtual addresses until the system crashes.
-
-Fix this by never incrementing 'cur' to be larger than 'end'.
-
-Reported-by: Jong Hyun Park <park.jonghyun@yonsei.ac.kr>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 2ffd9e33ce4a ("x86/hyper-v: Use hypercall for remote TLB flush")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/hyperv/mmu.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index 56c9ebac946fe..47718fff0b797 100644
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -57,12 +57,14 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
- 		 * Lower 12 bits encode the number of additional
- 		 * pages to flush (in addition to the 'cur' page).
- 		 */
--		if (diff >= HV_TLB_FLUSH_UNIT)
-+		if (diff >= HV_TLB_FLUSH_UNIT) {
- 			gva_list[gva_n] |= ~PAGE_MASK;
--		else if (diff)
-+			cur += HV_TLB_FLUSH_UNIT;
-+		}  else if (diff) {
- 			gva_list[gva_n] |= (diff - 1) >> PAGE_SHIFT;
-+			cur = end;
-+		}
- 
--		cur += HV_TLB_FLUSH_UNIT;
- 		gva_n++;
- 
- 	} while (cur < end);
--- 
-2.20.1
-
+I prefer to split into series of 3 which looks more clean. But I am ok
+with other option.
+Would you like to merge into single one ?
