@@ -2,63 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E119B05E9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Sep 2019 01:34:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A98BB05EE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Sep 2019 01:35:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfIKXeP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 11 Sep 2019 19:34:15 -0400
-Received: from mail-eopbgr720123.outbound.protection.outlook.com ([40.107.72.123]:63793
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        id S1728818AbfIKXfT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 Sep 2019 19:35:19 -0400
+Received: from mail-eopbgr770124.outbound.protection.outlook.com ([40.107.77.124]:55939
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726525AbfIKXeP (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 11 Sep 2019 19:34:15 -0400
+        id S1726525AbfIKXfT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 11 Sep 2019 19:35:19 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CxRvxv4iilQcIEmDBY5ORSBkTu4wgfWwFzmhswY3S+MhzDgOWVEaKcOyp0kfHLXmJ0cMon17ERMilPhz8yd49bfk76LIH646ifFSr5YxcF4x2vaf6Q1v3RzFvy5/MCdLq+hFG1MVHpZmtMABWw69SoZUl3RN8DwJhjri1lc6HnBHwXYHd7eWbxQFiiItTjbpMnl4HVtzpWEalirdcjkiB9OYb4cPP6yLlT6M/r8rsBLe/vXmPMK9LmCfSpnx/48Web5/Z8S3+cPi/fQbe8caY91w/oOBOmu4ZTNLZzaMJgvAH8hr+sgfSeuPnjpO1g6O315KVYsL19nFoqVrWbBwWw==
+ b=I9I2tB8TkewRvrxLzeY0MXyU9/wiJnG7CL0f1hH5/M4Yrumq+LBY8sYmy0IcRUauNmrbM2F2V8QQ6rkCt30K7UMgI+/bBHIHu7bOwy/FBW1v9Q2VnR70jfHc0VzoC1r1fi/xYMmmv53aC+CF0Cp1HMjrvAuLPJshUAXLy56qfXM3VyxTdaPjrxM+9SkqHV/7bon9dRdmFRIfKSqsSFDjULBHnabRIV7zJWhjiKONRMPy4z7wOMN0ZloovA+Pbff19mjIJapvZdABNKF2KAEJ4PyfRDg0IoUKn9QX2ckYQ3lRR1xWukpctgKa4EFN7KTo9r/OuP1m7yUm90BY7UGZGg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2i0TtoMANsDUuR3gA1tMLi1H40lAHbI+cepHWyW1JFY=;
- b=EBykw5Tgjicp/X85eAa8lESrxgdYLFJHGOsHTYBT0SOJ2E2B8Mu2XhxmPYHI2Z4WouJVth/TNh2Pt7QlwP6wp/DeWoojzdLUklFmytuVZioDortPRGTKrU9QtihV3ZUK1q0HgyeRUiUy2uKORxO2qAG69CtyhZ4BeVtI8RhwURW02X8WWCCEVuNE0sjETIyCB8ZVRgNDcWeAKVq9jY3RKIaccdfMj7Si3QEEZIJYRtXhRMYmkVzUdGhh/yOjqnY6uvw88hkqZPQtGNGXvmhhmIwK+Y5zoDSfMEeQ3o58pBWDYxgBNx2lPlqbMoFAsYorDNvhUU9uuS0LEEf2O12fug==
+ bh=LUdyIerOvZn8WQEiEu5WWdzAT1S478LEaLVDQrossB0=;
+ b=DXBKlKCdp/tyQWlYrUaak7Pk1llKcsyV2GxYf6m1j9zL5yetJMYMGqaH/9c2O8/tylZLF1898zo+WP7cScEHqBMDuKJ09D7oyAaMnnqzDRlWPbYLW2S7g7FTeVZN4CZTrV0DCmt63z9THR2IDjVh8jjj6PMp+zZUSnYKzPpSGfVWfUoEIwm0zJ+yq4K0HsAXubwvZb2Ukh3DY8LztdGlYiEGdS9TwNCnTnsKzKd89/tXYHTlsSl45Zrbzlx/cVuVmSttIDwyH/v2q/i+n6epofg/X8WKeQ61uuRUcUTH8gcFJ4W2J2+Q34DzSy8UcLip1vFGmcM2Cgua/VO1SgbNFw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2i0TtoMANsDUuR3gA1tMLi1H40lAHbI+cepHWyW1JFY=;
- b=RpJbnd3o1DAkH5qeX+QTwQJyLEgH/4WuSX7cW9tC2j/p+Sz0iwK9sZv+0glAE4v08iin/ottFUPDpyxxLZ4Lu0cKHFvbZr4p/ohuJp5R23Ay26eUpRuP6UtEuHkH8PrlmRsUv7q34w2DpKab29Z+O1ji/qQxuPY5TG6wZY8bXZY=
+ bh=LUdyIerOvZn8WQEiEu5WWdzAT1S478LEaLVDQrossB0=;
+ b=h06eJY3aUUGoYwIJ6l58fHS2Z85q3DIqwLzmCIWkw7DNiCK0DfXd1cKC4tVWxk9qhmnZtPV8nSh2+Zl8T/VOau3oumH8QRV5YW2FO80mG178EQE2cnF/YYKC7Q6dUUHpyEXL9gKuFylKFgswFU1g3E5TGPQ/Zpou47ev6DKLYcY=
 Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB0928.namprd21.prod.outlook.com (52.132.117.20) with Microsoft SMTP
+ SN6PR2101MB0909.namprd21.prod.outlook.com (52.132.117.10) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.5; Wed, 11 Sep 2019 23:34:12 +0000
+ 15.20.2263.10; Wed, 11 Sep 2019 23:35:16 +0000
 Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
  ([fe80::dd56:aa4f:204f:86a4]) by SN6PR2101MB0942.namprd21.prod.outlook.com
  ([fe80::dd56:aa4f:204f:86a4%3]) with mapi id 15.20.2263.005; Wed, 11 Sep 2019
- 23:34:12 +0000
+ 23:35:16 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "sashal@kernel.org" <sashal@kernel.org>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>
 CC:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] video: hyperv_fb: Add the support of hibernation
-Thread-Topic: [PATCH] video: hyperv_fb: Add the support of hibernation
-Thread-Index: AQHVaPlpoGmoU9RhmUGZUZsMyZEthw==
-Date:   Wed, 11 Sep 2019 23:34:10 +0000
-Message-ID: <1568244833-66476-1-git-send-email-decui@microsoft.com>
+Subject: [PATCH] scsi: storvsc: Add the support of hibernation
+Thread-Topic: [PATCH] scsi: storvsc: Add the support of hibernation
+Thread-Index: AQHVaPmQQ30E4hrjgUuSDngi9Du3cA==
+Date:   Wed, 11 Sep 2019 23:35:16 +0000
+Message-ID: <1568244905-66625-1-git-send-email-decui@microsoft.com>
 Reply-To: Dexuan Cui <decui@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR02CA0057.namprd02.prod.outlook.com
- (2603:10b6:301:60::46) To SN6PR2101MB0942.namprd21.prod.outlook.com
+x-clientproxiedby: MWHPR1201CA0005.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::15) To SN6PR2101MB0942.namprd21.prod.outlook.com
  (2603:10b6:805:4::19)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
@@ -66,39 +66,40 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 1.8.3.1
 x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2f1bbde1-400d-466f-b660-08d737108c2a
+x-ms-office365-filtering-correlation-id: 59cbefb5-c9dd-4a4b-91d4-08d73710b31c
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB0928;
-x-ms-traffictypediagnostic: SN6PR2101MB0928:|SN6PR2101MB0928:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB0909;
+x-ms-traffictypediagnostic: SN6PR2101MB0909:|SN6PR2101MB0909:
 x-ms-exchange-transport-forked: True
 x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <SN6PR2101MB09283DFA890F3B80771C916ABFB10@SN6PR2101MB0928.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:576;
+x-microsoft-antispam-prvs: <SN6PR2101MB09096FC2612C8E959D95AAEEBFB10@SN6PR2101MB0909.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:517;
 x-forefront-prvs: 0157DEB61B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(396003)(376002)(366004)(199004)(189003)(256004)(14444005)(476003)(2616005)(71200400001)(71190400001)(486006)(66556008)(1511001)(14454004)(66446008)(64756008)(66476007)(36756003)(66946007)(52116002)(110136005)(81156014)(50226002)(2501003)(8936002)(6506007)(386003)(81166006)(186003)(8676002)(66066001)(305945005)(316002)(10090500001)(7736002)(10290500003)(102836004)(26005)(5660300002)(22452003)(6512007)(6306002)(53936002)(2201001)(3450700001)(6486002)(6436002)(478600001)(43066004)(99286004)(966005)(6636002)(107886003)(4720700003)(6116002)(4326008)(86362001)(25786009)(3846002)(2906002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0928;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(376002)(346002)(39860400002)(396003)(189003)(199004)(3450700001)(6512007)(6306002)(486006)(476003)(2616005)(2201001)(14444005)(256004)(6486002)(86362001)(36756003)(5660300002)(186003)(4326008)(102836004)(6436002)(53936002)(25786009)(26005)(107886003)(10290500003)(316002)(478600001)(2501003)(43066004)(52116002)(14454004)(386003)(6506007)(110136005)(66066001)(99286004)(1511001)(22452003)(6636002)(4720700003)(71200400001)(71190400001)(305945005)(66446008)(66946007)(66476007)(66556008)(64756008)(50226002)(966005)(10090500001)(7736002)(2906002)(81156014)(8676002)(8936002)(81166006)(6116002)(3846002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0909;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /a1DryAih0s377TX92sTzxaz3V6wlH165CXfVXjo1B7bKS0lXc2jmSvlpeIYs1MoOcZTNrQJIsjwEF447pkI4fv6PmZ9+zU6tri/8IEFmEUFWqTCedqmGbDbJ216LhkULbp/P5l7tgSYGSqTocF4EWvU6TbvqyrjdvPC0fgVh37G/a1b3cBBBwpFAsUq4KLsvDVi3buMFhexikfGKq0lCTZUgOt1A7GJxbDEq8fuI7AjSxwByG0OlL3HRPsYm98Am/XnJvP3vy7BKODQ+PlNPgN3wTnbtoGN5ZW7ePr3VrvE6VWWULWwzXk/ieu1TtkPEINDfcMXFQVQABHFD2mfUg/380mWyr/+jj72YX0b4YT7LMgbwHFsKY73Xb74KVQ89U4ylxnafa7N0CxMHWJoLCuTZBF8JZDFW24SxFtCiNU=
+x-microsoft-antispam-message-info: s9rujWZM/0rorl9a2CyfBGdzOF+58q0urFMvYQp5Ruf9pA1vY2+KmFgmwx0n230OvF8SJyyfigeZK5PK+BvqR7dPZ6kYjWZLbj8Fq8+7Hezb509N0KAgFFGcXKNq1yCCX4K8E22cP1ghAPDrg4IdsCp9fZJdTcDxNIPEsWu9gTMbHa6A9XTXc59SKdTBP96EpMkJ/JwYjvrqgZ82TWRFO4DRbdUP+b+04pR5f2DQ33xeG5zNGad/lGNfAiaTqyc7swFGa6WdkgGp1EOBKEHGpu0uxvYoLXXK/jvoddUjEBmyalP5nxQoekWzTJ0miaqgKb3Iz21WKwGNP1zlR6VjT/O3XUdD9eraE1jpJ7mGRyW6s5bCcLannS2nbFiWrucWdpMyMfv9fUImDzpMetFLb2lraclLWSZzNi6TKfDc0DA=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f1bbde1-400d-466f-b660-08d737108c2a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 23:34:12.0520
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59cbefb5-c9dd-4a4b-91d4-08d73710b31c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2019 23:35:16.2681
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PzU1sJ8FNNZJAUpRS52fHkIUd9UTxq/1/oG/7ZO6u/P1axiWoFIE72OUIoV3BKE+V8X3rLX5KRJP5v7cn6XOHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0928
+X-MS-Exchange-CrossTenant-userprincipalname: 64LNPdQUhPL7oR6hbsEs/pI8cH/+CiI9sycVPdtUDTFBC400RvYvy9PHUHDWU0U25kN1zOiPQL3H/kbIpSV5ag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0909
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This patch depends on the vmbus side change of the definition of
-struct hv_driver.
+When we're in storvsc_suspend(), we're sure the SCSI layer has quiesced the
+scsi device by scsi_bus_suspend() -> ... -> scsi_device_quiesce(), so the
+low level SCSI adapter driver only needs to suspend/resume its own state.
 
 Signed-off-by: Dexuan Cui <decui@microsoft.com>
 ---
@@ -111,101 +112,72 @@ https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=3Dh=
 yperv-next
 
 I request this patch should go through Sasha's tree rather than the
-fbdev tree.
+SCSI tree.
 
- drivers/video/fbdev/hyperv_fb.c | 59 +++++++++++++++++++++++++++++++++++++=
-++++
- 1 file changed, 59 insertions(+)
+ drivers/scsi/storvsc_drv.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_f=
-b.c
-index 2dcb7c5..fe4731f 100644
---- a/drivers/video/fbdev/hyperv_fb.c
-+++ b/drivers/video/fbdev/hyperv_fb.c
-@@ -34,6 +34,7 @@
- #include <linux/fb.h>
- #include <linux/pci.h>
- #include <linux/efi.h>
-+#include <linux/console.h>
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index ed8b9ac..9fbf604 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1727,6 +1727,13 @@ enum {
 =20
- #include <linux/hyperv.h>
+ MODULE_DEVICE_TABLE(vmbus, id_table);
 =20
-@@ -211,6 +212,7 @@ struct hvfb_par {
-=20
- 	struct delayed_work dwork;
- 	bool update;
-+	bool update_saved; /* The value of 'update' before hibernation */
-=20
- 	u32 pseudo_palette[16];
- 	u8 init_buf[MAX_VMBUS_PKT_SIZE];
-@@ -878,6 +880,61 @@ static int hvfb_remove(struct hv_device *hdev)
++static const struct { guid_t guid; } fc_guid =3D { HV_SYNTHFC_GUID };
++
++static bool hv_dev_is_fc(struct hv_device *hv_dev)
++{
++	return guid_equal(&fc_guid.guid, &hv_dev->dev_type);
++}
++
+ static int storvsc_probe(struct hv_device *device,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+@@ -1935,11 +1942,45 @@ static int storvsc_remove(struct hv_device *dev)
  	return 0;
  }
 =20
-+static int hvfb_suspend(struct hv_device *hdev)
++static int storvsc_suspend(struct hv_device *hv_dev)
 +{
-+	struct fb_info *info =3D hv_get_drvdata(hdev);
-+	struct hvfb_par *par =3D info->par;
++	struct storvsc_device *stor_device =3D hv_get_drvdata(hv_dev);
++	struct Scsi_Host *host =3D stor_device->host;
++	struct hv_host_device *host_dev =3D shost_priv(host);
 +
-+	console_lock();
++	storvsc_wait_to_drain(stor_device);
 +
-+	/* 1 means do suspend */
-+	fb_set_suspend(info, 1);
++	drain_workqueue(host_dev->handle_error_wq);
 +
-+	cancel_delayed_work_sync(&par->dwork);
++	vmbus_close(hv_dev->channel);
 +
-+	par->update_saved =3D par->update;
-+	par->update =3D false;
-+	par->fb_ready =3D false;
++	memset(stor_device->stor_chns, 0,
++	       num_possible_cpus() * sizeof(void *));
 +
-+	vmbus_close(hdev->channel);
++	kfree(stor_device->stor_chns);
++	stor_device->stor_chns =3D NULL;
 +
-+	console_unlock();
++	cpumask_clear(&stor_device->alloced_cpus);
 +
 +	return 0;
 +}
 +
-+static int hvfb_resume(struct hv_device *hdev)
++static int storvsc_resume(struct hv_device *hv_dev)
 +{
-+	struct fb_info *info =3D hv_get_drvdata(hdev);
-+	struct hvfb_par *par =3D info->par;
 +	int ret;
 +
-+	console_lock();
-+
-+	ret =3D synthvid_connect_vsp(hdev);
-+	if (ret !=3D 0)
-+		goto out;
-+
-+	ret =3D synthvid_send_config(hdev);
-+	if (ret !=3D 0) {
-+		vmbus_close(hdev->channel);
-+		goto out;
-+	}
-+
-+	par->fb_ready =3D true;
-+	par->update =3D par->update_saved;
-+
-+	schedule_delayed_work(&par->dwork, HVFB_UPDATE_DELAY);
-+
-+	/* 0 means do resume */
-+	fb_set_suspend(info, 0);
-+
-+out:
-+	console_unlock();
-+
++	ret =3D storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
++				     hv_dev_is_fc(hv_dev));
 +	return ret;
 +}
 +
-=20
- static const struct pci_device_id pci_stub_id_table[] =3D {
- 	{
-@@ -901,6 +958,8 @@ static int hvfb_remove(struct hv_device *hdev)
+ static struct hv_driver storvsc_drv =3D {
+ 	.name =3D KBUILD_MODNAME,
  	.id_table =3D id_table,
- 	.probe =3D hvfb_probe,
- 	.remove =3D hvfb_remove,
-+	.suspend =3D hvfb_suspend,
-+	.resume =3D hvfb_resume,
+ 	.probe =3D storvsc_probe,
+ 	.remove =3D storvsc_remove,
++	.suspend =3D storvsc_suspend,
++	.resume =3D storvsc_resume,
  	.driver =3D {
  		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
  	},
