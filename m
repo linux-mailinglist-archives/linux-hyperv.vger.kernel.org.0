@@ -2,24 +2,25 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DCFFB0C47
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Sep 2019 12:08:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A717AB0C51
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Sep 2019 12:11:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730909AbfILKIp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 Sep 2019 06:08:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54582 "EHLO mx1.redhat.com"
+        id S1730970AbfILKLi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 12 Sep 2019 06:11:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48336 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730454AbfILKIp (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:08:45 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1730831AbfILKLi (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 12 Sep 2019 06:11:38 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 960AA30044CE;
-        Thu, 12 Sep 2019 10:08:44 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 41C60105786C;
+        Thu, 12 Sep 2019 10:11:37 +0000 (UTC)
 Received: from [10.36.117.168] (ovpn-117-168.ams2.redhat.com [10.36.117.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E038960852;
-        Thu, 12 Sep 2019 10:08:42 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D1BF5D6A5;
+        Thu, 12 Sep 2019 10:11:35 +0000 (UTC)
 Subject: Re: [PATCH] hv_balloon: Add the support of hibernation
+From:   David Hildenbrand <david@redhat.com>
 To:     Dexuan Cui <decui@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -29,7 +30,7 @@ To:     Dexuan Cui <decui@microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>
 References: <1568245010-66879-1-git-send-email-decui@microsoft.com>
-From:   David Hildenbrand <david@redhat.com>
+ <42de5835-8faa-2047-0f77-db51dd57b036@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -75,229 +76,38 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <42de5835-8faa-2047-0f77-db51dd57b036@redhat.com>
-Date:   Thu, 12 Sep 2019 12:08:42 +0200
+Message-ID: <dfee4472-da92-fdc7-f277-c98c2e37d09b@redhat.com>
+Date:   Thu, 12 Sep 2019 12:11:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1568245010-66879-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <42de5835-8faa-2047-0f77-db51dd57b036@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 12 Sep 2019 10:08:44 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 12 Sep 2019 10:11:37 +0000 (UTC)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12.09.19 01:36, Dexuan Cui wrote:
-> When hibernation is enabled, we must ignore the balloon up/down and
-> hot-add requests from the host, if any.
+On 12.09.19 12:08, David Hildenbrand wrote:
+> On 12.09.19 01:36, Dexuan Cui wrote:
+>> When hibernation is enabled, we must ignore the balloon up/down and
+>> hot-add requests from the host, if any.
+>>
+>> Fow now, if people want to test hibernation, please blacklist hv_balloon
+>> or do not enable Dynamic Memory and Memory Resizing. See the comment in
+>> balloon_probe() for more info.
+>>
 > 
-> Fow now, if people want to test hibernation, please blacklist hv_balloon
-> or do not enable Dynamic Memory and Memory Resizing. See the comment in
-> balloon_probe() for more info.
-> 
+> Why do you even care about supporting hibernation? Can't you just pause
+> the VM in the hypervisor and continue to live a happy life? :)
 
-Why do you even care about supporting hibernation? Can't you just pause
-the VM in the hypervisor and continue to live a happy life? :)
-
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> This patch is basically a pure Hyper-V specific change and it has a
-> build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus: Implement
-> suspend/resume for VSC drivers for hibernation"), which is on Sasha Levin's
-> Hyper-V tree's hyperv-next branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=hyperv-next
-> 
-> I request this patch should go through Sasha's tree rather than the
-> other tree(s).
-> 
->  drivers/hv/hv_balloon.c | 101 +++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 99 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 34bd735..7df0f67 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -24,6 +24,8 @@
->  
->  #include <linux/hyperv.h>
->  
-> +#include <asm/mshyperv.h>
-> +
->  #define CREATE_TRACE_POINTS
->  #include "hv_trace_balloon.h"
->  
-> @@ -457,6 +459,7 @@ struct hot_add_wrk {
->  	struct work_struct wrk;
->  };
->  
-> +static bool allow_hibernation;
->  static bool hot_add = true;
->  static bool do_hot_add;
->  /*
-> @@ -1053,8 +1056,12 @@ static void hot_add_req(struct work_struct *dummy)
->  	else
->  		resp.result = 0;
->  
-> -	if (!do_hot_add || (resp.page_count == 0))
-> -		pr_err("Memory hot add failed\n");
-> +	if (!do_hot_add || resp.page_count == 0) {
-> +		if (!allow_hibernation)
-> +			pr_err("Memory hot add failed\n");
-> +		else
-> +			pr_info("Ignore hot-add request!\n");
-> +	}
->  
->  	dm->state = DM_INITIALIZED;
->  	resp.hdr.trans_id = atomic_inc_return(&trans_id);
-> @@ -1509,6 +1516,11 @@ static void balloon_onchannelcallback(void *context)
->  			break;
->  
->  		case DM_BALLOON_REQUEST:
-> +			if (allow_hibernation) {
-> +				pr_info("Ignore balloon-up request!\n");
-> +				break;
-> +			}
-> +
->  			if (dm->state == DM_BALLOON_UP)
->  				pr_warn("Currently ballooning\n");
->  			bal_msg = (struct dm_balloon *)recv_buffer;
-> @@ -1518,6 +1530,11 @@ static void balloon_onchannelcallback(void *context)
->  			break;
->  
->  		case DM_UNBALLOON_REQUEST:
-> +			if (allow_hibernation) {
-> +				pr_info("Ignore balloon-down request!\n");
-> +				break;
-> +			}
-> +
->  			dm->state = DM_BALLOON_DOWN;
->  			balloon_down(dm,
->  				 (struct dm_unballoon_request *)recv_buffer);
-> @@ -1623,6 +1640,11 @@ static int balloon_connect_vsp(struct hv_device *dev)
->  	cap_msg.hdr.size = sizeof(struct dm_capabilities);
->  	cap_msg.hdr.trans_id = atomic_inc_return(&trans_id);
->  
-> +	/*
-> +	 * When hibernation (i.e. virtual ACPI S4 state) is enabled, the host
-> +	 * currently still requires the bits to be set, so we have to add code
-> +	 * to fail the host's hot-add and balloon up/down requests, if any.
-> +	 */
->  	cap_msg.caps.cap_bits.balloon = 1;
->  	cap_msg.caps.cap_bits.hot_add = 1;
->  
-> @@ -1672,6 +1694,24 @@ static int balloon_probe(struct hv_device *dev,
->  {
->  	int ret;
->  
-> +#if 0
-
-I am not sure if that's a good idea. Can't you base this series on
-hv_is_hibernation_supported() ?
-
-> +	/*
-> +	 * The patch to implement hv_is_hibernation_supported() is going
-> +	 * through the tip tree. For now, let's hardcode allow_hibernation
-> +	 * to false to keep the current behavior of hv_balloon. If people
-> +	 * want to test hibernation, please blacklist hv_balloon fow now
-> +	 * or do not enable Dynamid Memory and Memory Resizing.
-> +	 *
-> +	 * We'll remove the conditional compilation as soon as
-> +	 * hv_is_hibernation_supported() is available in the mainline tree.
-> +	 */
-> +	allow_hibernation = hv_is_hibernation_supported();
-> +#else
-> +	allow_hibernation = false;
-> +#endif
-> +	if (allow_hibernation)
-> +		hot_add = false;
-> +
->  #ifdef CONFIG_MEMORY_HOTPLUG
->  	do_hot_add = hot_add;
->  #else
-> @@ -1711,6 +1751,8 @@ static int balloon_probe(struct hv_device *dev,
->  	return 0;
->  
->  probe_error:
-> +	dm_device.state = DM_INIT_ERROR;
-> +	dm_device.thread  = NULL;
->  	vmbus_close(dev->channel);
->  #ifdef CONFIG_MEMORY_HOTPLUG
->  	unregister_memory_notifier(&hv_memory_nb);
-> @@ -1752,6 +1794,59 @@ static int balloon_remove(struct hv_device *dev)
->  	return 0;
->  }
->  
-> +static int balloon_suspend(struct hv_device *hv_dev)
-> +{
-> +	struct hv_dynmem_device *dm = hv_get_drvdata(hv_dev);
-> +
-> +	tasklet_disable(&hv_dev->channel->callback_event);
-> +
-> +	cancel_work_sync(&dm->balloon_wrk.wrk);
-> +	cancel_work_sync(&dm->ha_wrk.wrk);
-> +
-> +	if (dm->thread) {
-> +		kthread_stop(dm->thread);
-> +		dm->thread = NULL;
-> +		vmbus_close(hv_dev->channel);
-> +	}
-> +
-> +	tasklet_enable(&hv_dev->channel->callback_event);
-> +
-> +	return 0;
-> +
-> +}
-> +
-> +static int balloon_resume(struct hv_device *dev)
-> +{
-> +	int ret;
-> +
-> +	dm_device.state = DM_INITIALIZING;
-> +
-> +	ret = balloon_connect_vsp(dev);
-> +
-> +	if (ret != 0)
-> +		goto out;
-> +
-> +	dm_device.thread =
-> +		 kthread_run(dm_thread_func, &dm_device, "hv_balloon");
-> +	if (IS_ERR(dm_device.thread)) {
-> +		ret = PTR_ERR(dm_device.thread);
-> +		dm_device.thread = NULL;
-> +		goto close_channel;
-> +	}
-> +
-> +	dm_device.state = DM_INITIALIZED;
-> +	return 0;
-> +close_channel:
-> +	vmbus_close(dev->channel);
-> +out:
-> +	dm_device.state = DM_INIT_ERROR;
-> +#ifdef CONFIG_MEMORY_HOTPLUG
-> +	unregister_memory_notifier(&hv_memory_nb);
-> +	restore_online_page_callback(&hv_online_page);
-> +#endif
-> +	return ret;
-> +}
-> +
->  static const struct hv_vmbus_device_id id_table[] = {
->  	/* Dynamic Memory Class ID */
->  	/* 525074DC-8985-46e2-8057-A307DC18A502 */
-> @@ -1766,6 +1861,8 @@ static int balloon_remove(struct hv_device *dev)
->  	.id_table = id_table,
->  	.probe =  balloon_probe,
->  	.remove =  balloon_remove,
-> +	.suspend = balloon_suspend,
-> +	.resume = balloon_resume,
->  	.driver = {
->  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->  	},
-> 
+(to be more precise, most QEMU/KVM distributions I am aware of don't
+support suspend/hibernation of guests for said reason, so I wonder why
+Hyper-V needs it)
 
 
 -- 
