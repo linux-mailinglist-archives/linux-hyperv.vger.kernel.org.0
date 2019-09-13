@@ -2,159 +2,158 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81899B191F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2019 09:46:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79B8AB2448
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2019 18:43:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfIMHqK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 13 Sep 2019 03:46:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37328 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbfIMHqJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 13 Sep 2019 03:46:09 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2015C2BFDC;
-        Fri, 13 Sep 2019 07:46:09 +0000 (UTC)
-Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 68D95600CE;
-        Fri, 13 Sep 2019 07:46:07 +0000 (UTC)
-Subject: Re: [PATCH] hv_balloon: Add the support of hibernation
-To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1726558AbfIMQnc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Sep 2019 12:43:32 -0400
+Received: from mail-eopbgr1320101.outbound.protection.outlook.com ([40.107.132.101]:42080
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387977AbfIMQnc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 13 Sep 2019 12:43:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dt0FmWFRCjGhwQq2VZ61uDgSfL3U4ZzUXtOlTnKWwjQXt9FaJnRC1n6B5htshxDBCTWTT3X3kOagIVooLKhI/EQgy6aUYXyDOhWqantmrbKzTj0pSC2EyBuiUqtfcneW0kr5k6xm3zvgLJGdZqDdL79GEF6SfXRCD1EDm9pEm+PQalMc5V3dJ4gDYPdJjUQTN5VMUmw4Sn0HavYnzb+6Axlhl+o66ydrPu4qtOSG04slSnAAVJo5JQi+sux+lx20ueR2nTQHq3HJ0kzoGhuj1zRORXMq0+RLAssBba95rmGpuES+9L7tSOW508ubUg8IlDzOvqUvfSHtJEa9evNRvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HyUD1V+n46Hs6GZ706iemZ0kGlO64KOOEBfgJi8T95o=;
+ b=cMEfChDGX4rYyVFY6pGJQkOTh2wOyofcVSUIIsmhNPN+Nw67jbV0DqQt/VBglFEpRJpfr6W9duoEhhoWaqUxbUz4QTPJgirG3DqCh4ChMLC/L7Fk8hsEW3DlrAQM1cuDwhz7ttGFXOzLlMRpYHPNTeAAP2DLpsHZKdpQRKDpNZUeJrtO88Bx+uTr/c1/WgbN8g8pupG62ho0jI+JEDc4jwjp8tg7rP0zhuw+ulWiT9vNcfbL7Bni8MuXS34o/CeDTT2oGIyCSEE41nh7iYnVkqj8PveoN4aKaIVpLMgMX8NcC9kkfRzB589NjvrDL2tjq0zBkhoaTvM87dGQUJ/73Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HyUD1V+n46Hs6GZ706iemZ0kGlO64KOOEBfgJi8T95o=;
+ b=BjqSkyZPdHc1ULjvEy/upURG2gqRh9PM5fOJxUEkjp59UNVHf/5/WjU27V/7vYW3q60+iY9qCoOkbR4B9V04UC5t7Z6jPmBiKW2DYHakEuEeQVIHAEtYjhZWrdKVwCQRd4I3lr9q0pm9Opw6MnaGVrD2OKasCKSMDlJ2RfMsb/8=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0122.APCP153.PROD.OUTLOOK.COM (10.170.188.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.12; Fri, 13 Sep 2019 16:42:46 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2284.009; Fri, 13 Sep 2019
+ 16:42:46 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "sashal@kernel.org" <sashal@kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>
-References: <1568245010-66879-1-git-send-email-decui@microsoft.com>
- <42de5835-8faa-2047-0f77-db51dd57b036@redhat.com>
- <PU1P153MB0169E922DF7A5A43C7026D82BFB00@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <7d218fd5-76d9-f5fa-548a-76fe5dfab230@redhat.com>
-Date:   Fri, 13 Sep 2019 09:46:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <PU1P153MB0169E922DF7A5A43C7026D82BFB00@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
+Subject: RE: [PATCH 2/3] hv_utils: Support host-initiated hibernation request
+Thread-Topic: [PATCH 2/3] hv_utils: Support host-initiated hibernation request
+Thread-Index: AQHVaYbpS3JYwkEU8UOlr6/1A/pZaqcpNTMA
+Date:   Fri, 13 Sep 2019 16:42:45 +0000
+Message-ID: <PU1P153MB01695D3A23744080FF1EE437BFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568245130-70712-1-git-send-email-decui@microsoft.com>
+ <1568245130-70712-3-git-send-email-decui@microsoft.com>
+ <87a7b9cwfj.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87a7b9cwfj.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 13 Sep 2019 07:46:09 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-13T16:42:42.9538298Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=81e69111-edc8-459e-ae89-e1f800fe1af4;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [73.140.237.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8b7e9140-66e9-40b2-d6ce-08d738696802
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0122;
+x-ms-traffictypediagnostic: PU1P153MB0122:|PU1P153MB0122:|PU1P153MB0122:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 1
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB01225C68C5FBE91EDBA7972BBFB30@PU1P153MB0122.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(39860400002)(366004)(396003)(346002)(51914003)(199004)(189003)(186003)(446003)(25786009)(6506007)(86362001)(11346002)(66066001)(8990500004)(305945005)(10090500001)(7736002)(54906003)(22452003)(478600001)(52536014)(6916009)(33656002)(966005)(316002)(256004)(74316002)(14454004)(14444005)(10290500003)(4326008)(8936002)(71190400001)(71200400001)(76176011)(66446008)(99286004)(64756008)(76116006)(66556008)(66946007)(66476007)(7696005)(81166006)(102836004)(26005)(8676002)(6306002)(6436002)(55016002)(6246003)(9686003)(81156014)(486006)(5660300002)(2906002)(6116002)(3846002)(229853002)(476003)(107886003)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0122;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yKygbCfaKpDo3bv1pqZqr0x/9pusMAxC9tWHqVL5anCgxnFvowdaBAc6emoP2Kwq4JP2FR1llAb1evxHM6aAYc8ebYq+9H7p9SzKNDXI4rjIXRADSmVRkPm9U3WHAnK3FRFwYHBy+T9DtA/seT2Yo9rVmiTsB/qXYUi/GOY8ZCfxOSdK/nF+yIY6G703WyizCQTJ3S+k82T/lPFeqJqM5FyUIJqdkGh+bC6v1mESpR7P4hf9J70gc4ZhSvtaN1ljYFGuubg9u+0eSA/u1bqElmrZEiTsUDMmi3pM0W7UYJMDqLsdKYQDOFTt6A13ldgstCl3lM3Y2w9uuV+vBuzTNIHI2e1e6I4Lf6867WLVJkMRGLRDmlbcbRWejtEMJHgwcU5GpwXFMpPO8JzfGbRLrKocb291Xp/M7fIHAGnaYEI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b7e9140-66e9-40b2-d6ce-08d738696802
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 16:42:45.9495
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yCDQhfCtt4UpZTB4wi6uLD7PG+Pj6vK1SEI24uGmYS6ZSKcjoJrLTlW8oq53Oe1Mvfmqe7GCY6PzvS6nqL/nQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0122
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12.09.19 21:18, Dexuan Cui wrote:
->> From: David Hildenbrand <david@redhat.com>
->> Sent: Thursday, September 12, 2019 3:09 AM
->> On 12.09.19 01:36, Dexuan Cui wrote:
->>> When hibernation is enabled, we must ignore the balloon up/down and
->>> hot-add requests from the host, if any.
->>
->> Why do you even care about supporting hibernation? Can't you just pause
->> the VM in the hypervisor and continue to live a happy life? :)
->>
->> (to be more precise, most QEMU/KVM distributions I am aware of don't
->> support suspend/hibernation of guests for said reason, so I wonder why
->> Hyper-V needs it)
-> 
-> In some scenarios, hibernation can be better than pause/unpause,
-> save/restore and live migration:
-> 
-> 1. Compared to pause/unpause, the VM can power off completely with
-> hibernation, and all the states are saved inside the VM image, then the
-> image can be copied to another host to start the VM again, as long as
-> the new host uses exactly the same configuration for the VM.
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Sent: Thursday, September 12, 2019 9:27 AM
+>=20
+> Dexuan Cui <decui@microsoft.com> writes:
+>=20
+> > +static void perform_hibernation(struct work_struct *dummy)
+> > +{
+> > +	/*
+> > +	 * The user is expected to create the program, which can be a simple
+> > +	 * script containing two lines:
+> > +	 * #!/bin/bash
+> > +	 * echo disk > /sys/power/state
+>=20
+> 'systemctl hibernate' is what people do nowadays :-)
 
-Okay, under QEMU that also works just fine via pause/unpause (e.g.,
-simply migration).
+Thanks for sharing this command!=20
+=20
+> > +	 */
+> > +	static char hibernate_cmd[PATH_MAX] =3D "/sbin/hyperv-hibernate";
+> > +
+>=20
+> Let's not do that (I remember when we were triggering network restart
+> from netvsc and it was a lot of pain).
+>=20
+> Receiving hybernation request from the host is similar to pushing power
+> button on your desktop: an ACPI event is going to be generated and your
+> userspace will somehow react to it. I see two options:
+> 1) We try to hook up some existing userspace (udev?)
+> 2) We write a new hyperv-daemon handling the request (with a config file
+> instead of hardcoding please).
+>=20
+> Vitaly
 
-> 
-> 2. Compared to pause/unpause, hibernation may be more reliable, since it's
-> performed by the VM kernel rather than the host, so the VM kernel may
-> better tackle some clock-source/event-sensitive issues.
+Thanks for the suggestions!=20
+I prefer the udev method, e.g. something like this:
 
-Not sure I agree, but maybe that's a Hyper-V special issue.
+	char *uevent_env[2] =3D { "EVENT=3Dhibernate", NULL };
+	kobject_uevent_env(&ctx->dev->device.kobj, KOBJ_CHANGE, uevent_env);
 
-> 
-> 3. Hibernation can be especially useful when we pass through a PCIe device,
-> e.g. a NIC, a NVMe controller or a GPU, to the VM, as usually save/restore
-> and live migration can not work with this kind of configuration, because
-> usually the host doesn't know how to save/restore the state of the PCIe
-> device.
+Then the user is expected to create the below udev rule file, which is appl=
+ied
+upon the host-initiated hibernation request:
 
-Interesting. Under QEMU/KVM (especially for migration), the discussed
-solutions I am aware of rather wanted to temporarily unplug the PCI
-devices or replace them with some kind of "standby" device temporarily.
+root@localhost:~# cat /usr/lib/udev/rules.d/40-vm-hibernation.rules
+SUBSYSTEM=3D=3D"vmbus", ACTION=3D=3D"change", DRIVER=3D=3D"hv_utils", ENV{E=
+VENT}=3D=3D"hibernate", RUN+=3D"/usr/bin/systemctl hibernate"
 
+The full patch is here:
+https://github.com/dcui/linux/commit/0d92b53f48a8dca92bbd3493ea9c5bd098c996=
+23
 
-Anyhow, would it also be an option for you instead of making the balloon
-basically useless in case the virtual ACPI S4 state is enabled to
-
-a) Remember if there was a harmful requests that was processed (memory
-add, balloon up, balloon down) - or if the device is *currently* in an
-un-hibernatable state. E.g., if somebody inflated the balloon, you can't
-hibernate. But if the balloon was deflated again, you can again hibernate.
-
-b) Block hibernation in balloon_suspend() in case the device is in such
-an un-hibernatable state.
-
-
-Then you don't need hv_is_hibernation_supported(). The VM is able to
-hibernate as long as Dynamic Memory and Memory Resizing was not used.
-This is something that can be documented perfectly well.
-
--- 
+I'll post it as v2.
 
 Thanks,
-
-David / dhildenb
+-- Dexuan
