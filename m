@@ -2,470 +2,546 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14E6CB1732
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2019 04:32:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B8A3B17FB
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Sep 2019 08:03:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfIMCca (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 Sep 2019 22:32:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39879 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfIMCca (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 Sep 2019 22:32:30 -0400
-Received: by mail-io1-f66.google.com with SMTP id a1so1576960ioc.6;
-        Thu, 12 Sep 2019 19:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FJ0hCDSXGfFNrfC1PBNAE7sy9qEEpPHhtJvi0Wd+cIU=;
-        b=em/CPP73OyhQxo4eAK5W66LnmzunjNJ2Yhq1dAv7tNtzqD0ysNmVcbAkEFLS4pjih3
-         FuCoqg/uGBCHMfwfVQmRxMidwh8PxUrM35NgcbmtCNi9gZPE356eur1ntdRyc8hCYMR1
-         XZrhWtO17Evz5kaq/VDElzFkFmISAIvFagg6z7WE7VTwypfaFQy7GlFMl06g8EXRu4td
-         NPavoBPZFyzJZJNQQmmtp9bR4YSz6p3EpaiCaUYyiGvpBtP3TEZDLJbP5Bz0NPcG2a0D
-         86bVsf2UBNo4EaUbDcvQI7Doaf/wQCdD9y/2Vhx5RduqgZnnYyLJcptj5HRkrEwrqd+d
-         bhgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FJ0hCDSXGfFNrfC1PBNAE7sy9qEEpPHhtJvi0Wd+cIU=;
-        b=TYIDQ8gHuc3XnL9iksvAszq0/u/JAs3a8Fg0QuXgtWGVYs+VSFxZXQsm6rfKYCIqNY
-         j3BWcM5WqK8ug+9wdFMQ5jp9VHTusJjWSzTCwyZqaQKcak1aJvRpteirUfraq+l8fGJQ
-         gW6yq8pILkRBjct6HbRqE6O29+trb57GC1QsnusWm1hY5Dew8RmAbqkQmUVn+h95ZGCO
-         W627tgLcg8EzJ947//fosTOWCVdqJh6TClTJHEV6L37S8wm2nQtdrI0QuJ+rt7pdSNMP
-         TQ0p/4ye4f3DIw+h1aBArvp3JgccPgG26amTRxgu+GQhT6ibRALL66WUxzP7uZQZXSIy
-         o2WA==
-X-Gm-Message-State: APjAAAUQO0eun/1WsIEOy4sNJZGaHlp2Qr+qwjH9m1gIImz8I5CBy4dh
-        GBEe7x9Uf4a8k4gPN5FlpA==
-X-Google-Smtp-Source: APXvYqyou7qe+n3LeXTZ8Uv6c6Jfxp5Re0nJto3oTXAuClfMXjkeq1uyWET9Um6Qd6flNHcdzzL6LQ==
-X-Received: by 2002:a05:6638:692:: with SMTP id i18mr965761jab.108.1568341948930;
-        Thu, 12 Sep 2019 19:32:28 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id q5sm17597119iob.65.2019.09.12.19.32.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Sep 2019 19:32:28 -0700 (PDT)
-Date:   Thu, 12 Sep 2019 22:32:26 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org
-Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] tools: hv: add vmbus testing tool
-Message-ID: <d86e470874e4f209dfa681a0a81cee3230efa2e6.1568320416.git.brandonbonaby94@gmail.com>
-References: <cover.1568320416.git.brandonbonaby94@gmail.com>
+        id S1726841AbfIMGC7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Sep 2019 02:02:59 -0400
+Received: from mail-eopbgr710098.outbound.protection.outlook.com ([40.107.71.98]:39816
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbfIMGC7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 13 Sep 2019 02:02:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nX04JJT3Px0RvO24eGcmJPLWVOuN2NdScn2/7PIi9ZBmr736yfrEPaHwnaxaYPCgeGn8/EH+LagKbx8XQWLs70NGJYfe6ZRqaGexrbikZiyXMviqnF3eTQSvmZyfR0yWUUQxGMLNge8dRoWRIzyVhjgujal8SJKpJvuH1m4bwFRuiLeZ3yZxqb32TILocXPMWJIMgrb0/qdNce2tm2XdfNaEBYIletSm4I7MHCAZ3H4E41uPs0KR474EriVJpILtHNixwTkkaLujqIezfiStWYgUhIBA2Wd9XTljm2UQMASraZAwVPV3FpcoLsKpYyy24b4Z2KZpwwPZyQjajrlc5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EFrlKwQoF4wsohqguEeEx/8oNrA7Otllo5s1o7GLeNQ=;
+ b=XxG83qZWi5DPaE/dVyD84wXDpqMl9rYFZAQRyucbAyFWGDjq9KBFo+0urcBXWrhr24huBuDf42SGcY9MOAS2rUkuUc01aEpzj6JFR1V7WJxILO1jJMhRwuKZq7WHQ+kpEsTg/xTYEh0cSpZ8tn3AtFcuowvT80XMgXPZu2SgO1hYa7M8QlDkgFxAzZR5qXrenmR+AGzHIIu/b4chti0QDSR55ynvQ78r6P1JhjWwkvZvU1rEcetH2EZgTLZwxYax2ydbOnRBOfOCK1K8Zn1qlJGx+3hXoLGlKksTX3AzU21/iFbOjEyqTiWBcKLTEztfQm2/wgOx9lwfTYMxbKTyqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EFrlKwQoF4wsohqguEeEx/8oNrA7Otllo5s1o7GLeNQ=;
+ b=PypIEZhh4+M5+K6SBcC5xlVKxlptZ+BK87RLMDsS9p+vq32E6+eylysAPoFwHQV2AYPZoLv76Sva9Cx6c5gHhfkQ5IH4mW84ocwy2JPtvWrIg29evgzFseBF1OPi1fvPWeYZbKWPWs1xaT5kK6chwPj1oxdM5V82jjpoj0l0Afs=
+Received: from DM6PR21MB1401.namprd21.prod.outlook.com (10.255.109.88) by
+ DM6PR21MB1417.namprd21.prod.outlook.com (20.180.21.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.5; Fri, 13 Sep 2019 06:02:55 +0000
+Received: from DM6PR21MB1401.namprd21.prod.outlook.com
+ ([fe80::bd0e:e64e:a357:3759]) by DM6PR21MB1401.namprd21.prod.outlook.com
+ ([fe80::bd0e:e64e:a357:3759%5]) with mapi id 15.20.2284.008; Fri, 13 Sep 2019
+ 06:02:55 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "info@metux.net" <info@metux.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+CC:     Wei Hu <weh@microsoft.com>
+Subject: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for Hyper-V
+ frame buffer driver
+Thread-Topic: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Index: AQHVafjiL2AndauzGUaHnigxWapFww==
+Date:   Fri, 13 Sep 2019 06:02:55 +0000
+Message-ID: <20190913060209.3604-1-weh@microsoft.com>
+Reply-To: Wei Hu <weh@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SG2PR04CA0135.apcprd04.prod.outlook.com
+ (2603:1096:3:16::19) To DM6PR21MB1401.namprd21.prod.outlook.com
+ (2603:10b6:5:22d::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=weh@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [167.220.255.113]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c408b3a9-a60d-46e5-84bc-08d738100506
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1417;
+x-ms-traffictypediagnostic: DM6PR21MB1417:|DM6PR21MB1417:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR21MB1417019ABB06DB584EA12334BBB30@DM6PR21MB1417.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0159AC2B97
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(376002)(39860400002)(346002)(396003)(189003)(199004)(6636002)(6116002)(66066001)(71200400001)(22452003)(99286004)(102836004)(36756003)(71190400001)(25786009)(2201001)(386003)(107886003)(186003)(6506007)(66946007)(7416002)(1250700005)(86362001)(110136005)(2616005)(476003)(26005)(2906002)(486006)(256004)(14454004)(66476007)(64756008)(66556008)(14444005)(66446008)(305945005)(3846002)(10090500001)(4326008)(8936002)(5660300002)(8676002)(53936002)(6512007)(478600001)(3450700001)(2501003)(30864003)(1511001)(10290500003)(316002)(1076003)(7736002)(81156014)(50226002)(43066004)(6486002)(6436002)(81166006)(52116002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1417;H:DM6PR21MB1401.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8LtWCN79Imfdhhdc+7ePMp1aFp9ua0aSymsTmzwzalEduNPauJC5aelDq32NxOcSB7fhvrAWkOSjy3fWfU1YO1PsZJd+MiCa/pK5N+r9JtdYlPBgUtfD/JsIeIIMl44aKDuWLRDkHBHOIF32Ft7NiY7ZUpz8bb24gKMs2imwfBA760RP2/fdxGOJRDn2gTiPbivm8po/7Qsh7eUSX51TzbWUctaBRgYk3Qw8QJb1TRiPpOVwdAMpg4zuawg3Ib+D9zPGdDEw3O4qZX+fW2Ca4Hq37zNDxd6kMb38MCE1GAHDnG1i19pCBjoQDLsUdTaUw6TVTG7CTt7mqeFGZzMqSzxDdOcUPLYPB6YswL2S0l1qWb8bazwovJbUuo/Wo/JR6rlNPwOtGBX1lV5VTllvmjjflGOOitBCzUbsMuAGG6M=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1568320416.git.brandonbonaby94@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c408b3a9-a60d-46e5-84bc-08d738100506
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2019 06:02:55.4142
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IpdQ8lbP+sReuU4BxYLPZi+Ayaf0i8FXJFTpU1lUc15Nm+6z+zFBWhoQ6UCVJkdaigGdU9qPvq/kezwie/doZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1417
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is a userspace tool to drive the testing. Currently it supports
-introducing user specified delay in the host to guest communication
-path on a per-channel basis.
+Without deferred IO support, hyperv_fb driver informs the host to refresh
+the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter there
+is screen update or not. This patch supports deferred IO for screens in
+graphics mode and also enables the frame buffer on-demand refresh. The
+highest refresh rate is still set at 20Hz.
 
-Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
+Currently Hyper-V only takes a physical address from guest as the starting
+address of frame buffer. This implies the guest must allocate contiguous
+physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+accept address from MMIO region as frame buffer address. Due to these
+limitations on Hyper-V host, we keep a shadow copy of frame buffer
+in the guest. This means one more copy of the dirty rectangle inside
+guest when doing the on-demand refresh. This can be optimized in the
+future with help from host. For now the host performance gain from deferred
+IO outweighs the shadow copy impact in the guest.
+
+Signed-off-by: Wei Hu <weh@microsoft.com>
 ---
-Changes in v4:
-- Based on Harrys comments, made the tool more
-  user friendly and added more error checking.
+    v2: Incorporated review comments from Michael Kelley
+    - Increased dirty rectangle by one row in deferred IO case when sending
+    to Hyper-V.
+    - Corrected the dirty rectangle size in the text mode.
+    - Added more comments.
+    - Other minor code cleanups.
 
-Changes in v3:
-- Align python tool to match Linux coding style.
+    v3: Incorporated more review comments
+    - Removed a few unnecessary variable tests
 
-Changes in v2:
- - Move testing location to new location in debugfs.
+    v4: Incorporated test and review feedback from Dexuan Cui
+    - Not disable interrupt while acquiring docopy_lock in
+      hvfb_update_work(). This avoids significant bootup delay in
+      large vCPU count VMs.
 
- tools/hv/vmbus_testing | 376 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 376 insertions(+)
- create mode 100644 tools/hv/vmbus_testing
+    v5: Completely remove the unnecessary docopy_lock after discussing
+    with Dexuan Cui.
 
-diff --git a/tools/hv/vmbus_testing b/tools/hv/vmbus_testing
-new file mode 100644
-index 000000000000..e7212903dd1d
---- /dev/null
-+++ b/tools/hv/vmbus_testing
-@@ -0,0 +1,376 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Program to allow users to fuzz test Hyper-V drivers
-+# by interfacing with Hyper-V debugfs attributes.
-+# Current test methods available:
-+#       1. delay testing
-+#
-+# Current file/directory structure of hyper-V debugfs:
-+#       /sys/kernel/debug/hyperv/UUID
-+#       /sys/kernel/debug/hyperv/UUID/<test-state filename>
-+#       /sys/kernel/debug/hyperv/UUID/<test-method sub-directory>
-+#
-+# author: Branden Bonaby <brandonbonaby94@gmail.com>
+ drivers/video/fbdev/Kconfig     |   1 +
+ drivers/video/fbdev/hyperv_fb.c | 208 +++++++++++++++++++++++++++++---
+ 2 files changed, 189 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index 1b2f5f31fb6f..e781f89a1824 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -2241,6 +2241,7 @@ config FB_HYPERV
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+ 	select FB_CFB_IMAGEBLIT
++	select FB_DEFERRED_IO
+ 	help
+ 	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
+=20
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_f=
+b.c
+index fe319fc39bec..89a5ec3741b9 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -237,6 +237,7 @@ struct synthvid_msg {
+ #define RING_BUFSIZE (256 * 1024)
+ #define VSP_TIMEOUT (10 * HZ)
+ #define HVFB_UPDATE_DELAY (HZ / 20)
++#define HVFB_ONDEMAND_THROTTLE (HZ / 20)
+=20
+ struct hvfb_par {
+ 	struct fb_info *info;
+@@ -256,6 +257,16 @@ struct hvfb_par {
+ 	bool synchronous_fb;
+=20
+ 	struct notifier_block hvfb_panic_nb;
 +
-+import os
-+import cmd
-+import argparse
-+import glob
-+from argparse import RawDescriptionHelpFormatter
-+from argparse import RawTextHelpFormatter
-+from enum import Enum
++	/* Memory for deferred IO and frame buffer itself */
++	unsigned char *dio_vp;
++	unsigned char *mmio_vp;
++	unsigned long mmio_pp;
 +
-+# Do not change unless, you change the debugfs attributes
-+# in /drivers/hv/debugfs.c. All fuzz testing
-+# attributes will start with "fuzz_test".
++	/* Dirty rectangle, protected by delayed_refresh_lock */
++	int x1, y1, x2, y2;
++	bool delayed_refresh;
++	spinlock_t delayed_refresh_lock;
+ };
+=20
+ static uint screen_width =3D HVFB_WIDTH;
+@@ -264,6 +275,7 @@ static uint screen_width_max =3D HVFB_WIDTH;
+ static uint screen_height_max =3D HVFB_HEIGHT;
+ static uint screen_depth;
+ static uint screen_fb_size;
++static uint dio_fb_size; /* FB size for deferred IO */
+=20
+ /* Send message to Hyper-V host */
+ static inline int synthvid_send(struct hv_device *hdev,
+@@ -350,28 +362,88 @@ static int synthvid_send_ptr(struct hv_device *hdev)
+ }
+=20
+ /* Send updated screen area (dirty rectangle) location to host */
+-static int synthvid_update(struct fb_info *info)
++static int
++synthvid_update(struct fb_info *info, int x1, int y1, int x2, int y2)
+ {
+ 	struct hv_device *hdev =3D device_to_hv_device(info->device);
+ 	struct synthvid_msg msg;
+=20
+ 	memset(&msg, 0, sizeof(struct synthvid_msg));
++	if (x2 =3D=3D INT_MAX)
++		x2 =3D info->var.xres;
++	if (y2 =3D=3D INT_MAX)
++		y2 =3D info->var.yres;
+=20
+ 	msg.vid_hdr.type =3D SYNTHVID_DIRT;
+ 	msg.vid_hdr.size =3D sizeof(struct synthvid_msg_hdr) +
+ 		sizeof(struct synthvid_dirt);
+ 	msg.dirt.video_output =3D 0;
+ 	msg.dirt.dirt_count =3D 1;
+-	msg.dirt.rect[0].x1 =3D 0;
+-	msg.dirt.rect[0].y1 =3D 0;
+-	msg.dirt.rect[0].x2 =3D info->var.xres;
+-	msg.dirt.rect[0].y2 =3D info->var.yres;
++	msg.dirt.rect[0].x1 =3D (x1 > x2) ? 0 : x1;
++	msg.dirt.rect[0].y1 =3D (y1 > y2) ? 0 : y1;
++	msg.dirt.rect[0].x2 =3D
++		(x2 < x1 || x2 > info->var.xres) ? info->var.xres : x2;
++	msg.dirt.rect[0].y2 =3D
++		(y2 < y1 || y2 > info->var.yres) ? info->var.yres : y2;
+=20
+ 	synthvid_send(hdev, &msg);
+=20
+ 	return 0;
+ }
+=20
++static void hvfb_docopy(struct hvfb_par *par,
++			unsigned long offset,
++			unsigned long size)
++{
++	if (!par || !par->mmio_vp || !par->dio_vp || !par->fb_ready ||
++	    size =3D=3D 0 || offset >=3D dio_fb_size)
++		return;
 +
-+# debugfs path for hyperv must exist before proceeding
-+debugfs_hyperv_path = "/sys/kernel/debug/hyperv"
-+if not os.path.isdir(debugfs_hyperv_path):
-+        print("{} doesn't exist/check permissions".format(debugfs_hyperv_path))
-+        exit(-1)
++	if (offset + size > dio_fb_size)
++		size =3D dio_fb_size - offset;
 +
-+class dev_state(Enum):
-+        off = 0
-+        on = 1
++	memcpy(par->mmio_vp + offset, par->dio_vp + offset, size);
++}
 +
-+# File names, that correspond to the files created in
-+# /drivers/hv/debugfs.c
-+class f_names(Enum):
-+        state_f = "fuzz_test_state"
-+        buff_f =  "fuzz_test_buffer_interrupt_delay"
-+        mess_f =  "fuzz_test_message_delay"
++/* Deferred IO callback */
++static void synthvid_deferred_io(struct fb_info *p,
++				 struct list_head *pagelist)
++{
++	struct hvfb_par *par =3D p->par;
++	struct page *page;
++	unsigned long start, end;
++	int y1, y2, miny, maxy;
 +
-+# Both single_actions and all_actions are used
-+# for error checking and to allow for some subparser
-+# names to be abbreviated. Do not abbreviate the
-+# test method names, as it will become less intuitive
-+# as to what the user can do. If you do decide to
-+# abbreviate the test method name, make sure the main
-+# function reflects this change.
++	miny =3D INT_MAX;
++	maxy =3D 0;
 +
-+all_actions = [
-+        "disable_all",
-+        "D",
-+        "enable_all",
-+        "view_all",
-+        "V"
-+]
++	/*
++	 * Merge dirty pages. It is possible that last page cross
++	 * over the end of frame buffer row yres. This is taken care of
++	 * in synthvid_update function by clamping the y2
++	 * value to yres.
++	 */
++	list_for_each_entry(page, pagelist, lru) {
++		start =3D page->index << PAGE_SHIFT;
++		end =3D start + PAGE_SIZE - 1;
++		y1 =3D start / p->fix.line_length;
++		y2 =3D end / p->fix.line_length;
++		miny =3D min_t(int, miny, y1);
++		maxy =3D max_t(int, maxy, y2);
 +
-+single_actions = [
-+        "disable_single",
-+        "d",
-+        "enable_single",
-+        "view_single",
-+        "v"
-+]
++		/* Copy from dio space to mmio address */
++		if (par->fb_ready)
++			hvfb_docopy(par, start, PAGE_SIZE);
++	}
 +
-+def main():
++	if (par->fb_ready)
++		synthvid_update(p, 0, miny, p->var.xres, maxy + 1);
++}
 +
-+        file_map = recursive_file_lookup(debugfs_hyperv_path, dict())
-+        args = parse_args()
-+        if (not args.action):
-+                print ("Error, no options selected...exiting")
-+                exit(-1)
-+        arg_set = { k for (k,v) in vars(args).items() if v and k != "action" }
-+        arg_set.add(args.action)
-+        path = args.path if "path" in arg_set else None
-+        if (path and path[-1] == "/"):
-+                path = path[:-1]
-+        validate_args_path(path, arg_set, file_map)
-+        if (path and "enable_single" in arg_set):
-+            state_path = locate_state(path, file_map)
-+            set_test_state(state_path, dev_state.on.value, args.quiet)
++static struct fb_deferred_io synthvid_defio =3D {
++	.delay		=3D HZ / 20,
++	.deferred_io	=3D synthvid_deferred_io,
++};
+=20
+ /*
+  * Actions on received messages from host:
+@@ -618,7 +690,7 @@ static int synthvid_send_config(struct hv_device *hdev)
+ 	msg->vid_hdr.type =3D SYNTHVID_VRAM_LOCATION;
+ 	msg->vid_hdr.size =3D sizeof(struct synthvid_msg_hdr) +
+ 		sizeof(struct synthvid_vram_location);
+-	msg->vram.user_ctx =3D msg->vram.vram_gpa =3D info->fix.smem_start;
++	msg->vram.user_ctx =3D msg->vram.vram_gpa =3D par->mmio_pp;
+ 	msg->vram.is_vram_gpa_specified =3D 1;
+ 	synthvid_send(hdev, msg);
+=20
+@@ -628,7 +700,7 @@ static int synthvid_send_config(struct hv_device *hdev)
+ 		ret =3D -ETIMEDOUT;
+ 		goto out;
+ 	}
+-	if (msg->vram_ack.user_ctx !=3D info->fix.smem_start) {
++	if (msg->vram_ack.user_ctx !=3D par->mmio_pp) {
+ 		pr_err("Unable to set VRAM location\n");
+ 		ret =3D -ENODEV;
+ 		goto out;
+@@ -645,19 +717,77 @@ static int synthvid_send_config(struct hv_device *hde=
+v)
+=20
+ /*
+  * Delayed work callback:
+- * It is called at HVFB_UPDATE_DELAY or longer time interval to process
+- * screen updates. It is re-scheduled if further update is necessary.
++ * It is scheduled to call whenever update request is received and it has
++ * not been called in last HVFB_ONDEMAND_THROTTLE time interval.
+  */
+ static void hvfb_update_work(struct work_struct *w)
+ {
+ 	struct hvfb_par *par =3D container_of(w, struct hvfb_par, dwork.work);
+ 	struct fb_info *info =3D par->info;
++	unsigned long flags;
++	int x1, x2, y1, y2;
++	int j;
+=20
++	spin_lock_irqsave(&par->delayed_refresh_lock, flags);
++	/* Reset the request flag */
++	par->delayed_refresh =3D false;
 +
-+        # Use subparsers as the key for different actions
-+        if ("delay" in arg_set):
-+                validate_delay_values(args.delay_time)
-+                if (args.enable_all):
-+                        set_delay_all_devices(file_map, args.delay_time,
-+                                              args.quiet)
-+                else:
-+                        set_delay_values(path, file_map, args.delay_time,
-+                                         args.quiet)
-+        elif ("disable_all" in arg_set or "D" in arg_set):
-+                disable_all_testing(file_map)
-+        elif ("disable_single" in arg_set or "d" in arg_set):
-+                disable_testing_single_device(path, file_map)
-+        elif ("view_all" in arg_set or "V" in arg_set):
-+                get_all_devices_test_status(file_map)
-+        elif ("view_single" in arg_set or  "v" in arg_set):
-+                get_device_test_values(path, file_map)
++	/* Store the dirty rectangle to local variables */
++	x1 =3D par->x1;
++	x2 =3D par->x2;
++	y1 =3D par->y1;
++	y2 =3D par->y2;
 +
-+# Get the state location
-+def locate_state(device, file_map):
-+        return file_map[device][f_names.state_f.value]
++	/* Clear dirty rectangle */
++	par->x1 =3D par->y1 =3D INT_MAX;
++	par->x2 =3D par->y2 =3D 0;
 +
-+# Validate delay values to make sure they are acceptable to
-+# enable delays on a device
-+def validate_delay_values(delay):
++	spin_unlock_irqrestore(&par->delayed_refresh_lock, flags);
 +
-+        if (delay[0]  == -1 and delay[1] == -1):
-+                print("\nError, At least 1 value must be greater than 0")
-+                exit(-1)
-+        for i in delay:
-+                if (i < -1 or i == 0 or i > 1000):
-+                        print("\nError, Values must be  equal to -1 "
-+                              "or be > 0 and <= 1000")
-+                        exit(-1)
++	if (x1 > info->var.xres || x2 > info->var.xres ||
++	    y1 > info->var.yres || y2 > info->var.yres || x2 <=3D x1)
++		return;
 +
-+# Validate argument path
-+def validate_args_path(path, arg_set, file_map):
++	/* Copy the dirty rectangle to frame buffer memory */
++	for (j =3D y1; j < y2; j++) {
++		hvfb_docopy(par,
++			    j * info->fix.line_length +
++			    (x1 * screen_depth / 8),
++			    (x2 - x1) * screen_depth / 8);
++	}
 +
-+        if (not path and any(element in arg_set for element in single_actions)):
-+                print("Error, path (-p) REQUIRED for the specified option. "
-+                      "Use (-h) to check usage.")
-+                exit(-1)
-+        elif (path and any(item in arg_set for item in all_actions)):
-+                print("Error, path (-p) NOT REQUIRED for the specified option. "
-+                      "Use (-h) to check usage." )
-+                exit(-1)
-+        elif (path not in file_map and any(item in arg_set
-+                                           for item in single_actions)):
-+                print("Error, path '{}' not a valid vmbus device".format(path))
-+                exit(-1)
++	/* Refresh */
+ 	if (par->fb_ready)
+-		synthvid_update(info);
++		synthvid_update(info, x1, y1, x2, y2);
++}
 +
-+# display Testing status of single device
-+def get_device_test_values(path, file_map):
++/*
++ * Control the on-demand refresh frequency. It schedules a delayed
++ * screen update if it has not yet.
++ */
++static void hvfb_ondemand_refresh_throttle(struct hvfb_par *par,
++					   int x1, int y1, int w, int h)
++{
++	unsigned long flags;
++	int x2 =3D x1 + w;
++	int y2 =3D y1 + h;
 +
-+        for name in file_map[path]:
-+                file_location = file_map[path][name]
-+                print( name + " = " + str(read_test_files(file_location)))
++	spin_lock_irqsave(&par->delayed_refresh_lock, flags);
 +
-+# Create a map of the vmbus devices and their associated files
-+# [key=device, value = [key = filename, value = file path]]
-+def recursive_file_lookup(path, file_map):
++	/* Merge dirty rectangle */
++	par->x1 =3D min_t(int, par->x1, x1);
++	par->y1 =3D min_t(int, par->y1, y1);
++	par->x2 =3D max_t(int, par->x2, x2);
++	par->y2 =3D max_t(int, par->y2, y2);
 +
-+        for f_path in glob.iglob(path + '**/*'):
-+                if (os.path.isfile(f_path)):
-+                        if (f_path.rsplit("/",2)[0] == debugfs_hyperv_path):
-+                                directory = f_path.rsplit("/",1)[0]
-+                        else:
-+                                directory = f_path.rsplit("/",2)[0]
-+                        f_name = f_path.split("/")[-1]
-+                        if (file_map.get(directory)):
-+                                file_map[directory].update({f_name:f_path})
-+                        else:
-+                                file_map[directory] = {f_name:f_path}
-+                elif (os.path.isdir(f_path)):
-+                        recursive_file_lookup(f_path,file_map)
-+        return file_map
++	/* Schedule a delayed screen update if not yet */
++	if (par->delayed_refresh =3D=3D false) {
++		schedule_delayed_work(&par->dwork,
++				      HVFB_ONDEMAND_THROTTLE);
++		par->delayed_refresh =3D true;
++	}
+=20
+-	if (par->update)
+-		schedule_delayed_work(&par->dwork, HVFB_UPDATE_DELAY);
++	spin_unlock_irqrestore(&par->delayed_refresh_lock, flags);
+ }
+=20
+ static int hvfb_on_panic(struct notifier_block *nb,
+@@ -669,7 +799,8 @@ static int hvfb_on_panic(struct notifier_block *nb,
+ 	par =3D container_of(nb, struct hvfb_par, hvfb_panic_nb);
+ 	par->synchronous_fb =3D true;
+ 	info =3D par->info;
+-	synthvid_update(info);
++	hvfb_docopy(par, 0, dio_fb_size);
++	synthvid_update(info, 0, 0, INT_MAX, INT_MAX);
+=20
+ 	return NOTIFY_DONE;
+ }
+@@ -730,7 +861,10 @@ static void hvfb_cfb_fillrect(struct fb_info *p,
+=20
+ 	cfb_fillrect(p, rect);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, rect->dx, rect->dy,
++					       rect->width, rect->height);
+ }
+=20
+ static void hvfb_cfb_copyarea(struct fb_info *p,
+@@ -740,7 +874,10 @@ static void hvfb_cfb_copyarea(struct fb_info *p,
+=20
+ 	cfb_copyarea(p, area);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, area->dx, area->dy,
++					       area->width, area->height);
+ }
+=20
+ static void hvfb_cfb_imageblit(struct fb_info *p,
+@@ -750,7 +887,10 @@ static void hvfb_cfb_imageblit(struct fb_info *p,
+=20
+ 	cfb_imageblit(p, image);
+ 	if (par->synchronous_fb)
+-		synthvid_update(p);
++		synthvid_update(p, 0, 0, INT_MAX, INT_MAX);
++	else
++		hvfb_ondemand_refresh_throttle(par, image->dx, image->dy,
++					       image->width, image->height);
+ }
+=20
+ static struct fb_ops hvfb_ops =3D {
+@@ -809,6 +949,9 @@ static int hvfb_getmem(struct hv_device *hdev, struct f=
+b_info *info)
+ 	resource_size_t pot_start, pot_end;
+ 	int ret;
+=20
++	dio_fb_size =3D
++		screen_width * screen_height * screen_depth / 8;
 +
-+# display Testing state of devices
-+def get_all_devices_test_status(file_map):
+ 	if (gen2vm) {
+ 		pot_start =3D 0;
+ 		pot_end =3D -1;
+@@ -843,9 +986,14 @@ static int hvfb_getmem(struct hv_device *hdev, struct =
+fb_info *info)
+ 	if (!fb_virt)
+ 		goto err2;
+=20
++	/* Allocate memory for deferred IO */
++	par->dio_vp =3D vzalloc(round_up(dio_fb_size, PAGE_SIZE));
++	if (par->dio_vp =3D=3D NULL)
++		goto err3;
 +
-+        for device in file_map:
-+                if (get_test_state(locate_state(device, file_map)) is 1):
-+                        print("Testing = ON for: {}"
-+                              .format(device.split("/")[5]))
-+                else:
-+                        print("Testing = OFF for: {}"
-+                              .format(device.split("/")[5]))
+ 	info->apertures =3D alloc_apertures(1);
+ 	if (!info->apertures)
+-		goto err3;
++		goto err4;
+=20
+ 	if (gen2vm) {
+ 		info->apertures->ranges[0].base =3D screen_info.lfb_base;
+@@ -857,16 +1005,23 @@ static int hvfb_getmem(struct hv_device *hdev, struc=
+t fb_info *info)
+ 		info->apertures->ranges[0].size =3D pci_resource_len(pdev, 0);
+ 	}
+=20
++	/* Physical address of FB device */
++	par->mmio_pp =3D par->mem->start;
++	/* Virtual address of FB device */
++	par->mmio_vp =3D (unsigned char *) fb_virt;
 +
-+# read the vmbus device files, path must be absolute path before calling
-+def read_test_files(path):
-+        try:
-+                with open(path,"r") as f:
-+                        file_value = f.readline().strip()
-+                return int(file_value)
+ 	info->fix.smem_start =3D par->mem->start;
+-	info->fix.smem_len =3D screen_fb_size;
+-	info->screen_base =3D fb_virt;
+-	info->screen_size =3D screen_fb_size;
++	info->fix.smem_len =3D dio_fb_size;
++	info->screen_base =3D par->dio_vp;
++	info->screen_size =3D dio_fb_size;
+=20
+ 	if (!gen2vm)
+ 		pci_dev_put(pdev);
+=20
+ 	return 0;
+=20
++err4:
++	vfree(par->dio_vp);
+ err3:
+ 	iounmap(fb_virt);
+ err2:
+@@ -884,6 +1039,7 @@ static void hvfb_putmem(struct fb_info *info)
+ {
+ 	struct hvfb_par *par =3D info->par;
+=20
++	vfree(par->dio_vp);
+ 	iounmap(info->screen_base);
+ 	vmbus_free_mmio(par->mem->start, screen_fb_size);
+ 	par->mem =3D NULL;
+@@ -909,6 +1065,11 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	init_completion(&par->wait);
+ 	INIT_DELAYED_WORK(&par->dwork, hvfb_update_work);
+=20
++	par->delayed_refresh =3D false;
++	spin_lock_init(&par->delayed_refresh_lock);
++	par->x1 =3D par->y1 =3D INT_MAX;
++	par->x2 =3D par->y2 =3D 0;
 +
-+        except IOError as e:
-+                errno, strerror = e.args
-+                print("I/O error({0}): {1} on file {2}"
-+                      .format(errno, strerror, path))
-+                exit(-1)
-+        except ValueError:
-+                print ("Element to int conversion error in: \n{}".format(path))
-+                exit(-1)
+ 	/* Connect to VSP */
+ 	hv_set_drvdata(hdev, info);
+ 	ret =3D synthvid_connect_vsp(hdev);
+@@ -960,6 +1121,10 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	info->fbops =3D &hvfb_ops;
+ 	info->pseudo_palette =3D par->pseudo_palette;
+=20
++	/* Initialize deferred IO */
++	info->fbdefio =3D &synthvid_defio;
++	fb_deferred_io_init(info);
 +
-+# writing to vmbus device files, path must be absolute path before calling
-+def write_test_files(path, value):
+ 	/* Send config to host */
+ 	ret =3D synthvid_send_config(hdev);
+ 	if (ret)
+@@ -981,6 +1146,7 @@ static int hvfb_probe(struct hv_device *hdev,
+ 	return 0;
+=20
+ error:
++	fb_deferred_io_cleanup(info);
+ 	hvfb_putmem(info);
+ error2:
+ 	vmbus_close(hdev->channel);
+@@ -1003,6 +1169,8 @@ static int hvfb_remove(struct hv_device *hdev)
+ 	par->update =3D false;
+ 	par->fb_ready =3D false;
+=20
++	fb_deferred_io_cleanup(info);
 +
-+        try:
-+                with open(path,"w") as f:
-+                        f.write("{}".format(value))
-+        except IOError as e:
-+                errno, strerror = e.args
-+                print("I/O error({0}): {1} on file {2}"
-+                      .format(errno, strerror, path))
-+                exit(-1)
-+
-+# set testing state of device
-+def set_test_state(state_path, state_value, quiet):
-+
-+        write_test_files(state_path, state_value)
-+        if (get_test_state(state_path) is 1):
-+                if (not quiet):
-+                        print("Testing = ON for device: {}"
-+                              .format(state_path.split("/")[5]))
-+        else:
-+                if (not quiet):
-+                        print("Testing = OFF for device: {}"
-+                              .format(state_path.split("/")[5]))
-+
-+# get testing state of device
-+def get_test_state(state_path):
-+        #state == 1 - test = ON
-+        #state == 0 - test = OFF
-+        return  read_test_files(state_path)
-+
-+# write 1 - 1000 microseconds, into a single device using the
-+# fuzz_test_buffer_interrupt_delay and fuzz_test_message_delay
-+# debugfs attributes
-+def set_delay_values(device, file_map, delay_length, quiet):
-+
-+        try:
-+                interrupt = file_map[device][f_names.buff_f.value]
-+                message = file_map[device][f_names.mess_f.value]
-+
-+                # delay[0]- buffer interrupt delay, delay[1]- message delay
-+                if (delay_length[0] >= 0 and delay_length[0] <= 1000):
-+                        write_test_files(interrupt, delay_length[0])
-+                if (delay_length[1] >= 0 and delay_length[1] <= 1000):
-+                        write_test_files(message, delay_length[1])
-+                if (not quiet):
-+                        print("Buffer delay testing = {} for: {}"
-+                              .format(read_test_files(interrupt),
-+                                      interrupt.split("/")[5]))
-+                        print("Message delay testing = {} for: {}"
-+                              .format(read_test_files(message),
-+                                      message.split("/")[5]))
-+        except IOError as e:
-+                errno, strerror = e.args
-+                print("I/O error({0}): {1} on files {2}{3}"
-+                      .format(errno, strerror, interrupt, message))
-+                exit(-1)
-+
-+# enabling delay testing on all devices
-+def set_delay_all_devices(file_map, delay, quiet):
-+
-+        for device in (file_map):
-+                set_test_state(locate_state(device, file_map),
-+                               dev_state.on.value,
-+                               quiet)
-+                set_delay_values(device, file_map, delay, quiet)
-+
-+# disable all testing on a SINGLE device.
-+def disable_testing_single_device(device, file_map):
-+
-+        for name in file_map[device]:
-+                file_location = file_map[device][name]
-+                write_test_files(file_location, dev_state.off.value)
-+        print("ALL testing now OFF for {}".format(device.split("/")[-1]))
-+
-+# disable all testing on ALL devices
-+def disable_all_testing(file_map):
-+
-+        for device in file_map:
-+                disable_testing_single_device(device, file_map)
-+
-+def parse_args():
-+        parser = argparse.ArgumentParser(prog = "vmbus_testing",usage ="\n"
-+                "%(prog)s [delay]   [-h] [-e|-E] -t [-p]\n"
-+                "%(prog)s [view_all       | V]      [-h]\n"
-+                "%(prog)s [disable_all    | D]      [-h]\n"
-+                "%(prog)s [disable_single | d]      [-h|-p]\n"
-+                "%(prog)s [view_single    | v]      [-h|-p]\n"
-+                "%(prog)s --version\n",
-+                description = "\nUse lsvmbus to get vmbus device type "
-+                "information.\n" "\nThe debugfs root path is "
-+                "/sys/kernel/debug/hyperv",
-+                formatter_class = RawDescriptionHelpFormatter)
-+        subparsers = parser.add_subparsers(dest = "action")
-+        parser.add_argument("--version", action = "version",
-+                version = '%(prog)s 0.1.0')
-+        parser.add_argument("-q","--quiet", action = "store_true",
-+                help = "silence none important test messages."
-+                       " This will only work when enabling testing"
-+                       " on a device.")
-+        # Use the path parser to hold the --path attribute so it can
-+        # be shared between subparsers. Also do the same for the state
-+        # parser, as all testing methods will use --enable_all and
-+        # enable_single.
-+        path_parser = argparse.ArgumentParser(add_help=False)
-+        path_parser.add_argument("-p","--path", metavar = "",
-+                help = "Debugfs path to a vmbus device. The path "
-+                "must be the absolute path to the device.")
-+        state_parser = argparse.ArgumentParser(add_help=False)
-+        state_group = state_parser.add_mutually_exclusive_group(required = True)
-+        state_group.add_argument("-E", "--enable_all", action = "store_const",
-+                                 const = "enable_all",
-+                                 help = "Enable the specified test type "
-+                                 "on ALL vmbus devices.")
-+        state_group.add_argument("-e", "--enable_single",
-+                                 action = "store_const",
-+                                 const = "enable_single",
-+                                 help = "Enable the specified test type on a "
-+                                 "SINGLE vmbus device.")
-+        parser_delay = subparsers.add_parser("delay",
-+                        parents = [state_parser, path_parser],
-+                        help = "Delay the ring buffer interrupt or the "
-+                        "ring buffer message reads in microseconds.",
-+                        prog = "vmbus_testing",
-+                        usage = "%(prog)s [-h]\n"
-+                        "%(prog)s -E -t [value] [value]\n"
-+                        "%(prog)s -e -t [value] [value] -p",
-+                        description = "Delay the ring buffer interrupt for "
-+                        "vmbus devices, or delay the ring buffer message "
-+                        "reads for vmbus devices (both in microseconds). This "
-+                        "is only on the host to guest channel.")
-+        parser_delay.add_argument("-t", "--delay_time", metavar = "", nargs = 2,
-+                        type = check_range, default =[0,0], required = (True),
-+                        help = "Set [buffer] & [message] delay time. "
-+                        "Value constraints: -1 == value "
-+                        "or 0 < value <= 1000.\n"
-+                        "Use -1 to keep the previous value for that delay "
-+                        "type, or a value > 0 <= 1000 to change the delay "
-+                        "time.")
-+        parser_dis_all = subparsers.add_parser("disable_all",
-+                        aliases = ['D'], prog = "vmbus_testing",
-+                        usage = "%(prog)s [disable_all | D] -h\n"
-+                        "%(prog)s [disable_all | D]\n",
-+                        help = "Disable ALL testing on ALL vmbus devices.",
-+                        description = "Disable ALL testing on ALL vmbus "
-+                        "devices.")
-+        parser_dis_single = subparsers.add_parser("disable_single",
-+                        aliases = ['d'],
-+                        parents = [path_parser], prog = "vmbus_testing",
-+                        usage = "%(prog)s [disable_single | d] -h\n"
-+                        "%(prog)s [disable_single | d] -p\n",
-+                        help = "Disable ALL testing on a SINGLE vmbus device.",
-+                        description = "Disable ALL testing on a SINGLE vmbus "
-+                        "device.")
-+        parser_view_all = subparsers.add_parser("view_all", aliases = ['V'],
-+                        help = "View the test state for ALL vmbus devices.",
-+                        prog = "vmbus_testing",
-+                        usage = "%(prog)s [view_all | V] -h\n"
-+                        "%(prog)s [view_all | V]\n",
-+                        description = "This shows the test state for ALL the "
-+                        "vmbus devices.")
-+        parser_view_single = subparsers.add_parser("view_single",
-+                        aliases = ['v'],parents = [path_parser],
-+                        help = "View the test values for a SINGLE vmbus "
-+                        "device.",
-+                        description = "This shows the test values for a SINGLE "
-+                        "vmbus device.", prog = "vmbus_testing",
-+                        usage = "%(prog)s [view_single | v] -h\n"
-+                        "%(prog)s [view_single | v] -p")
-+
-+        return  parser.parse_args()
-+
-+# value checking for range checking input in parser
-+def check_range(arg1):
-+
-+        try:
-+                val = int(arg1)
-+        except ValueError as err:
-+                raise argparse.ArgumentTypeError(str(err))
-+        if val < -1 or val > 1000:
-+                message = ("\n\nvalue must be -1 or  0 < value <= 1000. "
-+                           "Value program received: {}\n").format(val)
-+                raise argparse.ArgumentTypeError(message)
-+        return val
-+
-+if __name__ == "__main__":
-+        main()
--- 
-2.17.1
+ 	unregister_framebuffer(info);
+ 	cancel_delayed_work_sync(&par->dwork);
+=20
+--=20
+2.20.1
 
