@@ -2,45 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A61AFB3ECE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Sep 2019 18:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9F25B3ECC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Sep 2019 18:23:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbfIPQXG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 16 Sep 2019 12:23:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54178 "EHLO mx1.redhat.com"
+        id S1730969AbfIPQXI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 Sep 2019 12:23:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42950 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729720AbfIPQXF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:23:05 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        id S1730738AbfIPQXH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 16 Sep 2019 12:23:07 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6BA055117D
-        for <linux-hyperv@vger.kernel.org>; Mon, 16 Sep 2019 16:23:05 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id f23so116490wmh.9
-        for <linux-hyperv@vger.kernel.org>; Mon, 16 Sep 2019 09:23:05 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2EBE53B714
+        for <linux-hyperv@vger.kernel.org>; Mon, 16 Sep 2019 16:23:07 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id o16so117619wru.10
+        for <linux-hyperv@vger.kernel.org>; Mon, 16 Sep 2019 09:23:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DnhcrFhYT0NJ78dPeEqKXN/V1tHyuglzQzoOeMUR4QY=;
-        b=tftaAqGEOXQ8x5+H8FkPKtqInYJh4OoHZNEri1/FocerHU5Nf6arQr+EnZtQiejUDv
-         8Dko6ZscvC2PmqafV7A9h57cgs99+P6d+9lokzYCiyIuG/XhROy/5IKSmmjWY70HzYSi
-         g8wHyN8sDxPgxx6TuW/8D2ftiA33HxI9by9t9i2UdlgNYHuSyLW6WMZfK6GBFOhquxly
-         WzzY5IKYUZLo5NOjGdu1My8ckQssCfySuL3VqPCSZZwotO7bhRp2nPPJk6k8gz4GGWlU
-         WWkviNM4wA9G2pBNCfGKfL+sFP5sPOwH3JX95FAVoHe2wBM7g+sPIhbFiJG68+yIxnfO
-         MitA==
-X-Gm-Message-State: APjAAAXMk448YdAwaeFEJNtcU/i6I4nDEIs1+zB1pL9gkOr+lvyyd0HK
-        fSyV2YENtfGC3Q9otR4FlMny9WhTddfIpKYf/UwJ2rZYZm9zwOrOAcmVY31U0DYVTwJ5dbRBa3i
-        OqEAeX+JWv6CAPGpPBzKsgF/D
-X-Received: by 2002:a1c:2144:: with SMTP id h65mr32630wmh.114.1568650984102;
-        Mon, 16 Sep 2019 09:23:04 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwqBQYTcgo16PkRqlPSOV/k7mPpgorRRib7zPPDxcWoF61Nz7u2WkI+Bq4Zjx3zql/YwldjxQ==
-X-Received: by 2002:a1c:2144:: with SMTP id h65mr32612wmh.114.1568650983843;
-        Mon, 16 Sep 2019 09:23:03 -0700 (PDT)
+        bh=hTif/hdyQ2dgFmG83XOhs3M15HFTZ4c2i4bvJhs3seA=;
+        b=Qill7a8DpP8pEgcyvfmlsJQD4PvJGEr1QHvsGkQjlc1V4yg8IfZIT882ZoQpghzxFe
+         rY48rssdkbLXeWKBbHkTMKPcXBeTq2JVZWEnr6VF+BIK5HyX418d9PtbNC21/ZhajkhZ
+         G3b0aVDtTMuEUfTuigSsaklZlfPEBMCkbevi1GSJ+VJMTYACZTX2gwxUTpRPeZFAH3yg
+         BPD+fibxNNlgbdYpORjxMxauDwpVTHWPDyk0kSI2Ye4i8WTL2ur+dz2w7WyCYU6A8+Qn
+         //KCFUg6QK8Qv5Rf0ku25jj2zigF3UhmCqN/tP/wIrj+0lb6iyS+m6Xadz4jC5EbW6AL
+         hFgA==
+X-Gm-Message-State: APjAAAXGPWaOtsLXrHvmcua9OUw/hA9VvZmmfq/zh/ySAGmw0QhUEB+v
+        vb13it+LHrXRx+C0eEhbF2TY+OSnDfCzDqoN1+NLGXt5o3nBEHYmuEO+MNPV12i7ihMQqEjQboP
+        XRUMZjLI6EkTZTxBZPR88DZau
+X-Received: by 2002:a7b:c3c6:: with SMTP id t6mr20516wmj.5.1568650985770;
+        Mon, 16 Sep 2019 09:23:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwJ2BsBwbNvJMLRpYPdToi80JcADK8zG0+oHLr+0eXOrKGkWIoV4bSie2tXYamBJOS5FHSDNw==
+X-Received: by 2002:a7b:c3c6:: with SMTP id t6mr20494wmj.5.1568650985442;
+        Mon, 16 Sep 2019 09:23:05 -0700 (PDT)
 Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q10sm78370575wrd.39.2019.09.16.09.23.00
+        by smtp.gmail.com with ESMTPSA id q10sm78370575wrd.39.2019.09.16.09.23.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 09:23:01 -0700 (PDT)
+        Mon, 16 Sep 2019 09:23:04 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -54,9 +54,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Michael Kelley <mikelley@microsoft.com>,
         Roman Kagan <rkagan@virtuozzo.com>
-Subject: [PATCH 1/3] cpu/SMT: create and export cpu_smt_possible()
-Date:   Mon, 16 Sep 2019 18:22:56 +0200
-Message-Id: <20190916162258.6528-2-vkuznets@redhat.com>
+Subject: [PATCH 2/3] KVM: x86: hyper-v: set NoNonArchitecturalCoreSharing CPUID bit when SMT is impossible
+Date:   Mon, 16 Sep 2019 18:22:57 +0200
+Message-Id: <20190916162258.6528-3-vkuznets@redhat.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190916162258.6528-1-vkuznets@redhat.com>
 References: <20190916162258.6528-1-vkuznets@redhat.com>
@@ -67,64 +67,77 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-KVM needs to know if SMT is theoretically possible, this means it is
-supported and not forcefully disabled ('nosmt=force'). Create and
-export cpu_smt_possible() answering this question.
+Hyper-V 2019 doesn't expose MD_CLEAR CPUID bit to guests when it cannot
+guarantee that two virtual processors won't end up running on sibling SMT
+threads without knowing about it. This is done as an optimization as in
+this case there is nothing the guest can do to protect itself against MDS
+and issuing additional flush requests is just pointless. On bare metal the
+topology is known, however, when Hyper-V is running nested (e.g. on top of
+KVM) it needs an additional piece of information: a confirmation that the
+exposed topology (wrt vCPU placement on different SMT threads) is
+trustworthy.
+
+NoNonArchitecturalCoreSharing (CPUID 0x40000004 EAX bit 18) is described in
+TLFS as follows: "Indicates that a virtual processor will never share a
+physical core with another virtual processor, except for virtual processors
+that are reported as sibling SMT threads." From KVM we can give such
+guarantee in two cases:
+- SMT is unsupported or forcefully disabled (just 'disabled' doesn't work
+ as it can become re-enabled during the lifetime of the guest).
+- vCPUs are properly pinned so the scheduler won't put them on sibling
+SMT threads (when they're not reported as such).
+
+This patch reports NoNonArchitecturalCoreSharing bit in to userspace in the
+first case. The second case is outside of KVM's domain of responsibility
+(as vCPU pinning is actually done by someone who manages KVM's userspace -
+e.g. libvirt pinning QEMU threads).
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- include/linux/cpu.h |  2 ++
- kernel/cpu.c        | 11 +++++++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/hyperv-tlfs.h | 7 +++++++
+ arch/x86/kvm/hyperv.c              | 4 +++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index fcb1386bb0d4..6d48fc456d58 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -201,12 +201,14 @@ enum cpuhp_smt_control {
- extern enum cpuhp_smt_control cpu_smt_control;
- extern void cpu_smt_disable(bool force);
- extern void cpu_smt_check_topology(void);
-+extern bool cpu_smt_possible(void);
- extern int cpuhp_smt_enable(void);
- extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
- #else
- # define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
- static inline void cpu_smt_disable(bool force) { }
- static inline void cpu_smt_check_topology(void) { }
-+static inline bool cpu_smt_possible(void) { return false; }
- static inline int cpuhp_smt_enable(void) { return 0; }
- static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
- #endif
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index e84c0873559e..2f8c2631e641 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -389,8 +389,7 @@ enum cpuhp_smt_control cpu_smt_control __read_mostly = CPU_SMT_ENABLED;
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index af78cd72b8f3..989a1efe7f5e 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -170,6 +170,13 @@
+ /* Recommend using enlightened VMCS */
+ #define HV_X64_ENLIGHTENED_VMCS_RECOMMENDED		BIT(14)
  
- void __init cpu_smt_disable(bool force)
- {
--	if (cpu_smt_control == CPU_SMT_FORCE_DISABLED ||
--		cpu_smt_control == CPU_SMT_NOT_SUPPORTED)
-+	if (!cpu_smt_possible())
- 		return;
- 
- 	if (force) {
-@@ -435,6 +434,14 @@ static inline bool cpu_smt_allowed(unsigned int cpu)
- 	 */
- 	return !per_cpu(cpuhp_state, cpu).booted_once;
- }
++/*
++ * Virtual processor will never share a physical core with another virtual
++ * processor, except for virtual processors that are reported as sibling SMT
++ * threads.
++ */
++#define HV_X64_NO_NONARCH_CORESHARING                  BIT(18)
 +
-+/* Returns true if SMT is not supported of forcefully (irreversibly) disabled */
-+bool cpu_smt_possible(void)
-+{
-+	return cpu_smt_control != CPU_SMT_FORCE_DISABLED &&
-+		cpu_smt_control != CPU_SMT_NOT_SUPPORTED;
-+}
-+EXPORT_SYMBOL_GPL(cpu_smt_possible);
- #else
- static inline bool cpu_smt_allowed(unsigned int cpu) { return true; }
- #endif
+ /* Nested features. These are HYPERV_CPUID_NESTED_FEATURES.EAX bits. */
+ #define HV_X64_NESTED_GUEST_MAPPING_FLUSH		BIT(18)
+ #define HV_X64_NESTED_MSR_BITMAP			BIT(19)
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index fff790a3f4ee..9c187d16a9cd 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -23,6 +23,7 @@
+ #include "ioapic.h"
+ #include "hyperv.h"
+ 
++#include <linux/cpu.h>
+ #include <linux/kvm_host.h>
+ #include <linux/highmem.h>
+ #include <linux/sched/cputime.h>
+@@ -1864,7 +1865,8 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+ 			ent->eax |= HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED;
+ 			if (evmcs_ver)
+ 				ent->eax |= HV_X64_ENLIGHTENED_VMCS_RECOMMENDED;
+-
++			if (!cpu_smt_possible())
++				ent->eax |= HV_X64_NO_NONARCH_CORESHARING;
+ 			/*
+ 			 * Default number of spinlock retry attempts, matches
+ 			 * HyperV 2016.
 -- 
 2.20.1
 
