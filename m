@@ -2,45 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02355B3EC8
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Sep 2019 18:23:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A61AFB3ECE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Sep 2019 18:23:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfIPQXD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 16 Sep 2019 12:23:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39112 "EHLO mx1.redhat.com"
+        id S1730211AbfIPQXG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 Sep 2019 12:23:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54178 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbfIPQXD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:23:03 -0400
+        id S1729720AbfIPQXF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 16 Sep 2019 12:23:05 -0400
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 93912B2DC2
-        for <linux-hyperv@vger.kernel.org>; Mon, 16 Sep 2019 16:23:02 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id c188so101908wmd.9
-        for <linux-hyperv@vger.kernel.org>; Mon, 16 Sep 2019 09:23:02 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6BA055117D
+        for <linux-hyperv@vger.kernel.org>; Mon, 16 Sep 2019 16:23:05 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id f23so116490wmh.9
+        for <linux-hyperv@vger.kernel.org>; Mon, 16 Sep 2019 09:23:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FDgjsWSDn6xBrhx6U+9m9Eu+qyYKBG2MdOtlO9XcnZA=;
-        b=iLhOhF0pcslT2gO+bFS0x0moJSSN5iBovsgTamW/kpDt+UTWyUErGTfmlvnRWGHYfz
-         M0/VAq502ZahSb7loiflv/v5C4VT3EEPEub7FdUcgsxpF01w9FQiEvCpcKDzFSwyV32W
-         X9MESIkut4rtyDu5FvHjqmlGoouv/vhSr3qj6SWppiuRFjRUqO/wOOyJLB5m2zR+o3UL
-         aoJO/EiuHxNo6kpRAePtJnG3OK2C9bv693+MgQxv2vYqK5xAMhyQRccynnwB1L7BNcxn
-         ZCnJ0k5PTp9gWV8HNYfBBymwWyHJz9grhvqd3VkdqajUskAQ9redAciW16fl1cCLlcuF
-         wnxg==
-X-Gm-Message-State: APjAAAU6flcDujnSOLCe2JlNbqmRxu1bhSMJV4v9sLgWDoEmrq3N4job
-        4HLR8LIoXnVrJ5DA2Xa+ZWpYFSqhFS4zeFjNuGhgOVHTv2BnhyItxsx6cx2+OUfWQ3K+/ECbdku
-        xKeWBDb9rnxNjdjZtrqNhvgy/
-X-Received: by 2002:a05:600c:295d:: with SMTP id n29mr42849wmd.36.1568650981046;
-        Mon, 16 Sep 2019 09:23:01 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxHalXeJGi+RCuzUK9rmpW00UqDDt5f6sreleDyRFkD/UPh7GhVb0E++elsWy8IafgPDqQgOA==
-X-Received: by 2002:a05:600c:295d:: with SMTP id n29mr42826wmd.36.1568650980794;
-        Mon, 16 Sep 2019 09:23:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DnhcrFhYT0NJ78dPeEqKXN/V1tHyuglzQzoOeMUR4QY=;
+        b=tftaAqGEOXQ8x5+H8FkPKtqInYJh4OoHZNEri1/FocerHU5Nf6arQr+EnZtQiejUDv
+         8Dko6ZscvC2PmqafV7A9h57cgs99+P6d+9lokzYCiyIuG/XhROy/5IKSmmjWY70HzYSi
+         g8wHyN8sDxPgxx6TuW/8D2ftiA33HxI9by9t9i2UdlgNYHuSyLW6WMZfK6GBFOhquxly
+         WzzY5IKYUZLo5NOjGdu1My8ckQssCfySuL3VqPCSZZwotO7bhRp2nPPJk6k8gz4GGWlU
+         WWkviNM4wA9G2pBNCfGKfL+sFP5sPOwH3JX95FAVoHe2wBM7g+sPIhbFiJG68+yIxnfO
+         MitA==
+X-Gm-Message-State: APjAAAXMk448YdAwaeFEJNtcU/i6I4nDEIs1+zB1pL9gkOr+lvyyd0HK
+        fSyV2YENtfGC3Q9otR4FlMny9WhTddfIpKYf/UwJ2rZYZm9zwOrOAcmVY31U0DYVTwJ5dbRBa3i
+        OqEAeX+JWv6CAPGpPBzKsgF/D
+X-Received: by 2002:a1c:2144:: with SMTP id h65mr32630wmh.114.1568650984102;
+        Mon, 16 Sep 2019 09:23:04 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwqBQYTcgo16PkRqlPSOV/k7mPpgorRRib7zPPDxcWoF61Nz7u2WkI+Bq4Zjx3zql/YwldjxQ==
+X-Received: by 2002:a1c:2144:: with SMTP id h65mr32612wmh.114.1568650983843;
+        Mon, 16 Sep 2019 09:23:03 -0700 (PDT)
 Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q10sm78370575wrd.39.2019.09.16.09.22.59
+        by smtp.gmail.com with ESMTPSA id q10sm78370575wrd.39.2019.09.16.09.23.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 09:22:59 -0700 (PDT)
+        Mon, 16 Sep 2019 09:23:01 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -54,10 +54,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Michael Kelley <mikelley@microsoft.com>,
         Roman Kagan <rkagan@virtuozzo.com>
-Subject: [PATCH 0/3] KVM: x86: hyper-v: make L2 Hyper-V 2019 on KVM guests see MD_CLEAR
-Date:   Mon, 16 Sep 2019 18:22:55 +0200
-Message-Id: <20190916162258.6528-1-vkuznets@redhat.com>
+Subject: [PATCH 1/3] cpu/SMT: create and export cpu_smt_possible()
+Date:   Mon, 16 Sep 2019 18:22:56 +0200
+Message-Id: <20190916162258.6528-2-vkuznets@redhat.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190916162258.6528-1-vkuznets@redhat.com>
+References: <20190916162258.6528-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
@@ -65,33 +67,64 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-[The series is KVM specific but the first patch of the series likely requires
- someone else's ACK. hyperv-tlfs.h gets a small addition too.]
+KVM needs to know if SMT is theoretically possible, this means it is
+supported and not forcefully disabled ('nosmt=force'). Create and
+export cpu_smt_possible() answering this question.
 
-It was discovered that L2 guests on Hyper-V 2019 on KVM don't see MD_CLEAR
-bit (and thus think they're MDS vulnerable) even when it is present on the
-host. Turns out, Hyper-V is filtering it out because it is not sure the
-topology L0 is exposing is trustworthy and generally it is not. In some
-specific cases (e.g. when SMT is unsupported or forcesully disabled) it is
-and we can tell this to userspace hoping that it'll pass this info to L1.
-See PATCH2 of the series for additional details.
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ include/linux/cpu.h |  2 ++
+ kernel/cpu.c        | 11 +++++++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-The series can be tested with QEMU-4.1+ and 'hv-passthrough' CPU flag.
-
-Vitaly Kuznetsov (3):
-  cpu/SMT: create and export cpu_smt_possible()
-  KVM: x86: hyper-v: set NoNonArchitecturalCoreSharing CPUID bit when
-    SMT is impossible
-  KVM: selftests: hyperv_cpuid: add check for
-    NoNonArchitecturalCoreSharing bit
-
- arch/x86/include/asm/hyperv-tlfs.h            |  7 +++++
- arch/x86/kvm/hyperv.c                         |  4 ++-
- include/linux/cpu.h                           |  2 ++
- kernel/cpu.c                                  | 11 ++++++--
- .../selftests/kvm/x86_64/hyperv_cpuid.c       | 27 +++++++++++++++++++
- 5 files changed, 48 insertions(+), 3 deletions(-)
-
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index fcb1386bb0d4..6d48fc456d58 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -201,12 +201,14 @@ enum cpuhp_smt_control {
+ extern enum cpuhp_smt_control cpu_smt_control;
+ extern void cpu_smt_disable(bool force);
+ extern void cpu_smt_check_topology(void);
++extern bool cpu_smt_possible(void);
+ extern int cpuhp_smt_enable(void);
+ extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
+ #else
+ # define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
+ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
++static inline bool cpu_smt_possible(void) { return false; }
+ static inline int cpuhp_smt_enable(void) { return 0; }
+ static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
+ #endif
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index e84c0873559e..2f8c2631e641 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -389,8 +389,7 @@ enum cpuhp_smt_control cpu_smt_control __read_mostly = CPU_SMT_ENABLED;
+ 
+ void __init cpu_smt_disable(bool force)
+ {
+-	if (cpu_smt_control == CPU_SMT_FORCE_DISABLED ||
+-		cpu_smt_control == CPU_SMT_NOT_SUPPORTED)
++	if (!cpu_smt_possible())
+ 		return;
+ 
+ 	if (force) {
+@@ -435,6 +434,14 @@ static inline bool cpu_smt_allowed(unsigned int cpu)
+ 	 */
+ 	return !per_cpu(cpuhp_state, cpu).booted_once;
+ }
++
++/* Returns true if SMT is not supported of forcefully (irreversibly) disabled */
++bool cpu_smt_possible(void)
++{
++	return cpu_smt_control != CPU_SMT_FORCE_DISABLED &&
++		cpu_smt_control != CPU_SMT_NOT_SUPPORTED;
++}
++EXPORT_SYMBOL_GPL(cpu_smt_possible);
+ #else
+ static inline bool cpu_smt_allowed(unsigned int cpu) { return true; }
+ #endif
 -- 
 2.20.1
 
