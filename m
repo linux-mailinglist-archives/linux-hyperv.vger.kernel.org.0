@@ -2,148 +2,197 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9E25B4370
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Sep 2019 23:45:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8A13B4377
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Sep 2019 23:46:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbfIPVpp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 16 Sep 2019 17:45:45 -0400
-Received: from mail-eopbgr1300119.outbound.protection.outlook.com ([40.107.130.119]:12689
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1727973AbfIPVqq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 Sep 2019 17:46:46 -0400
+Received: from mail-eopbgr1310090.outbound.protection.outlook.com ([40.107.131.90]:18560
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725912AbfIPVpo (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:45:44 -0400
+        id S1725912AbfIPVqq (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:46:46 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FRdC+TlA1a0IfrXVTObD49e+mhtMWjvlUBDgpdiMxn5rMuLyq19p5cT4kpc0s6TCTDxtt41H8I5XnrV6fisK1BVHCDIV1LHxlYfUUPBDs5aShvQcaT7Y4+sb5BuWLPVsKkMW2ZzfLKuRZ/XHmGNoJ556d2aZyfSuoCgbk7pjSj0/SMf5JObV/vGurm27idGIXdiDfv2h5KnpzJWXysGtsAWoGeSSSH4mPAx2RqQW0wYX75ScM2VeavN8ZcawNoC4Vz4+9cNHSiNTASN/YXTlkqrJ7SWf9S+WAhbvQ0bsKH1u+oi4FnEru8pcNemzpVUvniwlVQ5sAlKQ5sFkKkgDTQ==
+ b=FHX/HT8PfiRc1W7hPZGfjpfPPSxQP7GLA8+dRTv5LnzpTATHzVS9H6y3flm/9RGyk80IpR3/jWv7EaQGX9Tdq9A5U7fUVtwBzpQmRv+ltwUezDCX562DxTMjmoJijhoi5sdYlEwgD0yi/U1cJeNLdf4tCH98S9gDHDd4QHp1SMbWFehw9KTurHhcQGg9srNeZX/Kf0Ycg4WSSyPbF5JAM5BfVG2i0fs5N2wEPMmv0EC5ifV6Xrui+lbUE2yE5rvXTSOpqbXO8mznk7pAaa+HfJp0ZYW2bMmSC+cm1i+R7dD4J95zNnePnWxzloyrKrJphKucLXL3G3yZ3ecCsHWycg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U3cbGL2JCb8Av9tK+Ylswn4m/nWZtnAMbXBvP2bfts8=;
- b=AV4cBgOlXI9tSgA5OxHI+D6KxhaSWvVV8Cutl7Nlgrav1pI1SkRIfqi6VlSCOUMmwyHhw/a/qUx6k34+dzOiqqJq1kcOfCHATPF7X85qhkW1gEpJXgqwC7Q+63YDMTXspgNJckJGGpcOTG17dXhN0UVdae6E4Vit3950Na6uMiDqv+ab0LcEC1KT3QeP+VT+5PVuGy9jSYUdWZ2d34z8gvf9FHiORgC5MN76imNIIl7C85L2BWij2tBwONBMYwgkYoozSzGCkAI9VR+hE6nH0kMCRD/JmwATybCO2Et1hWugjn3bo/MM7MWPeDfaUpugBZbZZvYeDXu4V8obvu2y5w==
+ bh=wZrfhKH5K2D4QgBlCAvCP6kIBGUu3MWa/oEZXYyU5XE=;
+ b=KM/AfNai6XJoxKmrjNcaqWExdR7ggPgi97D48FwYswS6iZuHgkhNQ168rx63iI4HEwj4iFwBken9fiyngzP1p/PC1snubO5eCBh1Ov9hRoC+KW5k5UeSk3uWHtFztizAlqRDBbh/swsW30k0qvyKvMsLzz5754DWJIUH4tbfdPDRGpy4cjcSyK0WKLBZ+VNdEVBo14GDw0gDuA3MZdmerUVwdU8CvwZCCkiUt5nEwruzEk6zzctUqZtsFjesEthKHq35vckuAo1MVll9kQAX+ddjObxU8wyhZZgoS2W1S2K4v58GhCbW0SK24a4SyVUkIowniPJpQuriPulVO7aoAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U3cbGL2JCb8Av9tK+Ylswn4m/nWZtnAMbXBvP2bfts8=;
- b=iOHgui5FYEbObjzBbf5MuXp5xbiz8tessrgBeRmGROnBsmrzI/G+jYL5t2T1TiLmlytraAnAB9sWW+0e83RBDCgAKGmj+CbeAuoDsHtFBx4EGaBEGMsIg9VLT4YTP6jl3yQTzdMMuD04ywHopeVLaZA7OP2BJbhn+tJ2TtKNT/E=
+ bh=wZrfhKH5K2D4QgBlCAvCP6kIBGUu3MWa/oEZXYyU5XE=;
+ b=huYHTmGJKOfIsyKN30murd2e8ROxPO9VeMx2523dThOGU2KiCH4nDCItNEaarX5ta4RFk2wEfeQWomSyZ5C+RrfaKltHu+IUTmNnmXAnUOAfblX8j0bSUyIRBijzQxtDYvxT6AfIM/z0m9eAzVwSXkB8Q9IX8AfF5TFfrnBk+GU=
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
  PU1P153MB0201.APCP153.PROD.OUTLOOK.COM (10.170.190.151) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.3; Mon, 16 Sep 2019 21:45:36 +0000
+ 15.20.2305.3; Mon, 16 Sep 2019 21:46:36 +0000
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::fc44:a784:73e6:c1c2%8]) with mapi id 15.20.2305.000; Mon, 16 Sep 2019
- 21:45:36 +0000
+ 21:46:36 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
+To:     Dexuan Cui <decui@microsoft.com>, Wei Hu <weh@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "info@metux.net" <info@metux.net>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
         "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>
-CC:     Iouri Tarassov <iourit@microsoft.com>
-Subject: RE: [PATCH v4] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Thread-Topic: [PATCH v4] video: hyperv: hyperv_fb: Obtain screen resolution
- from Hyper-V host
-Thread-Index: AQHVY8n1ZHStyEKyQEWtq6qT8x1cIqcdHi/QgAwV3LCABbGEQA==
-Date:   Mon, 16 Sep 2019 21:45:36 +0000
-Message-ID: <PU1P153MB0169E5FA3D359C6BDD50EC34BF8C0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <20190905091120.16761-1-weh@microsoft.com>
- <DM5PR21MB0137D40DF705CDB372497266D7BB0@DM5PR21MB0137.namprd21.prod.outlook.com>
- <PU1P153MB0169656B3EC48BFCF4D8C134BFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <PU1P153MB0169656B3EC48BFCF4D8C134BFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Subject: RE: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Topic: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Index: AQHVafjiL2AndauzGUaHnigxWapFw6cpJzCwgAW1MOA=
+Date:   Mon, 16 Sep 2019 21:46:35 +0000
+Message-ID: <PU1P153MB0169C4B30F86AE8B652A575CBF8C0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20190913060209.3604-1-weh@microsoft.com>
+ <PU1P153MB0169E5E73D258A034B4869DCBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <PU1P153MB0169E5E73D258A034B4869DCBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-05T14:05:47.2964572Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-13T06:37:36.0011933Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5fdc59c0-9d8b-4103-9a31-ed8f82961311;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d71db6b2-3d7b-491a-98c9-03546d3c3e58;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
 x-originating-ip: [2001:4898:80e8:a:58f6:aea4:93d:b127]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4190cbb1-daee-41e5-6dfd-08d73aef3593
+x-ms-office365-filtering-correlation-id: 795de931-06f2-49bd-57e3-08d73aef592b
 x-ms-office365-filtering-ht: Tenant
 x-ms-traffictypediagnostic: PU1P153MB0201:|PU1P153MB0201:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0201E6D109F639B194ACC422BF8C0@PU1P153MB0201.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-microsoft-antispam-prvs: <PU1P153MB020109B3FCFB04E882C35B1BBF8C0@PU1P153MB0201.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(396003)(39860400002)(366004)(376002)(189003)(199004)(66946007)(2501003)(478600001)(8990500004)(6636002)(8676002)(305945005)(7736002)(74316002)(6436002)(10090500001)(53936002)(55016002)(22452003)(486006)(2906002)(81166006)(229853002)(14444005)(256004)(8936002)(6116002)(476003)(46003)(446003)(11346002)(52536014)(25786009)(76116006)(186003)(4326008)(14454004)(81156014)(6246003)(9686003)(110136005)(71190400001)(71200400001)(316002)(107886003)(7696005)(2201001)(86362001)(33656002)(10290500003)(5660300002)(66446008)(64756008)(66556008)(66476007)(6506007)(76176011)(102836004)(99286004)(53546011)(1511001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0201;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(396003)(39860400002)(366004)(376002)(13464003)(189003)(199004)(66946007)(2501003)(478600001)(8990500004)(6636002)(8676002)(305945005)(7736002)(74316002)(6436002)(10090500001)(1250700005)(53936002)(55016002)(22452003)(486006)(2906002)(81166006)(229853002)(14444005)(256004)(8936002)(6116002)(476003)(46003)(446003)(11346002)(52536014)(25786009)(76116006)(186003)(14454004)(81156014)(6246003)(9686003)(110136005)(71190400001)(71200400001)(316002)(7696005)(2201001)(86362001)(7416002)(33656002)(10290500003)(5660300002)(66446008)(64756008)(66556008)(66476007)(6506007)(76176011)(102836004)(99286004)(53546011)(1511001)(241875001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0201;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NjSdzum/rUZYszn0gYkjqkaF0mVTZxc9cOZ12b+HO+9SfWezJDaBwYITiYgoC4g2WY3xPgajz0FAkfSUgQiH5+N9Wr3ohzw7ixIYr8FncoSHW8UC436pQYO76k6fUtImWbe4QJ2GLD3jPA3iRgvkIOrMDe/1MKTO5WzPre1Uop5FQbm1Sbqj/KPKgRCO3wfiVvzm/thApwyGfYsxK8d7DqR+bvQ2NpvLz3c5pyWe7jhJET/TsV372/okGiPaBYKM+R+UhfXbU+AJ0dxCpEylSBiGR0Wgn1Qy1U+nyYpg/xacUchxXO1bdXeLqz5fTd+qG/EknLTQEjxZDDOXioeM/r07U112tznpvYzPzMQesisW4zIENG1BmWqBF8cSTtLVhvp0Ep9sNMt7WoFfN6VlIeEXnkps6qkOWeSYdgpHvr8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: ZfWMvDSHcfjqDW+II0zqnWUNPmCrHe9B8PnpMk64+0MRiKlopGtSyuT4A8xjVHtSzLpmVKDj/wyFLq6itAREMi46XZkDQ+97QsyQ9otHrtW4d4H9fI52qvfRsTI7ga+VeagbRn8doTqEvsgukvHZ3eTVdsuRh55KyWm45jg3mBevaoq7H+90skvgKD6SU1h3PS5eXtgvRTWGTVVVEGEqO9dIR6Vnpm1R62lOZWuNxO8AgdL2yeVFkg8vo4NEfKY6wUTUVipqIniipJ8FTxPQcD4i+ZgxBS37qBTJZaAJ9w8FrICdMhI/PTtxnE2XrEO8hjAFzbQltdJ9ujr59BCt1fx+7r4ODvr39rodzfnXrhnLgIKcX/49CrULO2anwtti1UM+YUH0JgC+4S3hBea/o+E/++ZBdKW3FOPA+lTnCgM=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4190cbb1-daee-41e5-6dfd-08d73aef3593
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 21:45:36.2556
+X-MS-Exchange-CrossTenant-Network-Message-Id: 795de931-06f2-49bd-57e3-08d73aef592b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 21:46:35.9974
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bidzf/l/ul8I2Ome+taSJLOuR/7VGhrkd+KxCAhUyqXwMNlyvbMfnfbDwqINfaM93GJrIUWnjyg7APKvjbUNPg==
+X-MS-Exchange-CrossTenant-userprincipalname: GCMS989hu3Wt3OAt/8pn78Ohh9SoSHD5HcDrOh14Fx2diRbhtW6Trk3UZsghO/tOMA9MhDhTgn8hdnMhdzgtFQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0201
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-PiBGcm9tOiBsaW51eC1oeXBlcnYtb3duZXJAdmdlci5rZXJuZWwub3JnDQo+IDxsaW51eC1oeXBl
-cnYtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgRGV4dWFuIEN1aQ0KPiBTZW50
-OiBUaHVyc2RheSwgU2VwdGVtYmVyIDEyLCAyMDE5IDExOjM5IFBNDQo+IFRvOiBNaWNoYWVsIEtl
-bGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT47IFdlaSBIdSA8d2VoQG1pY3Jvc29mdC5jb20+
-Ow0KPiBiLnpvbG5pZXJraWVAc2Ftc3VuZy5jb207IGxpbnV4LWh5cGVydkB2Z2VyLmtlcm5lbC5v
-cmc7DQo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IGxpbnV4LWZiZGV2QHZnZXIu
-a2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU3RlcGhlbiBIZW1t
-aW5nZXINCj4gPHN0aGVtbWluQG1pY3Jvc29mdC5jb20+OyBzYXNoYWxAa2VybmVsLm9yZzsgSGFp
-eWFuZyBaaGFuZw0KPiA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IEtZIFNyaW5pdmFzYW4gPGt5
-c0BtaWNyb3NvZnQuY29tPg0KPiBDYzogSW91cmkgVGFyYXNzb3YgPGlvdXJpdEBtaWNyb3NvZnQu
-Y29tPg0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHY0XSB2aWRlbzogaHlwZXJ2OiBoeXBlcnZfZmI6
-IE9idGFpbiBzY3JlZW4gcmVzb2x1dGlvbg0KPiBmcm9tIEh5cGVyLVYgaG9zdA0KPiANCj4gPiBG
-cm9tOiBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4NCj4gPiBTZW50OiBU
-aHVyc2RheSwgU2VwdGVtYmVyIDUsIDIwMTkgNzowNiBBTQ0KPiA+DQo+ID4gRnJvbTogV2VpIEh1
-IDx3ZWhAbWljcm9zb2Z0LmNvbT4gU2VudDogVGh1cnNkYXksIFNlcHRlbWJlciA1LCAyMDE5DQo+
-IDI6MTINCj4gPiBBTQ0KPiA+ID4NCj4gPiA+IEJlZ2lubmluZyBmcm9tIFdpbmRvd3MgMTAgUlM1
-KywgVk0gc2NyZWVuIHJlc29sdXRpb24gaXMgb2J0YWluZWQgZnJvbQ0KPiA+IGhvc3QuDQo+ID4g
-PiBUaGUgInZpZGVvPWh5cGVydl9mYiIgYm9vdCB0aW1lIG9wdGlvbiBpcyBub3QgbmVlZGVkLCBi
-dXQgc3RpbGwgY2FuIGJlDQo+ID4gPiB1c2VkIHRvIG92ZXJ3cml0ZSB3aGF0IHRoZSBob3N0IHNw
-ZWNpZmllcy4gVGhlIFZNIHJlc29sdXRpb24gb24gdGhlIGhvc3QNCj4gPiA+IGNvdWxkIGJlIHNl
-dCBieSBleGVjdXRpbmcgdGhlIHBvd2Vyc2hlbGwgInNldC12bXZpZGVvIiBjb21tYW5kLg0KPiA+
-ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IElvdXJpIFRhcmFzc292IDxpb3VyaXRAbWljcm9zb2Z0
-LmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFdlaSBIdSA8d2VoQG1pY3Jvc29mdC5jb20+DQo+
-ID4gPiAtLS0NCj4gPiA+ICAgICB2MjoNCj4gPiA+ICAgICAtIEltcGxlbWVudGVkIGZhbGxiYWNr
-IHdoZW4gdmVyc2lvbiBuZWdvdGlhdGlvbiBmYWlsZWQuDQo+ID4gPiAgICAgLSBEZWZpbmVkIGZ1
-bGwgc2l6ZSBmb3Igc3VwcG9ydGVkX3Jlc29sdXRpb24gYXJyYXkuDQo+ID4gPg0KPiA+ID4gICAg
-IHYzOg0KPiA+ID4gICAgIC0gQ29ycmVjdGVkIHRoZSBzeW50aHZpZCBtYWpvciBhbmQgbWlub3Ig
-dmVyc2lvbiBjb21wYXJpc29uDQo+IHByb2JsZW0uDQo+ID4gPg0KPiA+ID4gICAgIHY0Og0KPiA+
-ID4gICAgIC0gQ2hhbmdlZCBmdW5jdGlvbiBuYW1lIHRvIHN5bnRodmlkX3Zlcl9nZSgpLg0KPiA+
-ID4NCj4gPiA+ICBkcml2ZXJzL3ZpZGVvL2ZiZGV2L2h5cGVydl9mYi5jIHwgMTU5DQo+ID4gKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKystLS0NCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTQ3
-IGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KPiA+ID4NCj4gPg0KPiA+IFJldmlld2Vk
-LWJ5OiBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4NCj4gDQo+IExvb2tz
-IGdvb2QgdG8gbWUuDQo+IA0KPiBSZXZpZXdlZC1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9z
-b2Z0LmNvbT4NCg0KSGkgV2VpLA0KSXQgdHVybnMgb3V0IHdlIG5lZWQgdG8gbWFrZSBhIGZ1cnRo
-ZXIgZml4LiA6LSkNCg0KVGhlIHBhdGNoIGZvcmdldHMgdG8gdGFrZSBwYXItPnVwZGF0ZSBpbnRv
-IGNvbnNpZGVyYXRpb24uDQoNCldoZW4gdGhlIFZNIENvbm5lY3Rpb24gd2luZG93IGlzIGNsb3Nl
-ZCAob3IgbWluaW1pemVkPyksDQp0aGUgaG9zdCBzZW5kcyBhIG1lc3NhZ2UgdG8gdGhlIGd1ZXN0
-LCBhbmQgdGhlIGd1ZXN0IHNldHMNCnBhci0+dXBkYXRlIHRvIGZhbHNlIGluIHN5bnRodmlkX3Jl
-Y3Zfc3ViKCkuDQoNCklmIHBhci0+dXBkYXRlIGlzIGZhbHNlLCB0aGUgZ3Vlc3QgZG9lc24ndCBu
-ZWVkIHRvIGNhbGwNCnN5bnRodmlkX3VwZGF0ZSgpLg0KDQpUaGFua3MsDQotLSBEZXh1YW4NCg==
+
+
+Thanks,
+-- Dexuan
+
+> -----Original Message-----
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Dexuan Cui
+> Sent: Thursday, September 12, 2019 11:38 PM
+> To: Wei Hu <weh@microsoft.com>; Michael Kelley <mikelley@microsoft.com>;
+> rdunlap@infradead.org; shc_work@mail.ru; gregkh@linuxfoundation.org;
+> lee.jones@linaro.org; alexandre.belloni@bootlin.com;
+> baijiaju1990@gmail.com; fthain@telegraphics.com.au; info@metux.net;
+> linux-hyperv@vger.kernel.org; dri-devel@lists.freedesktop.org;
+> linux-fbdev@vger.kernel.org; linux-kernel@vger.kernel.org; sashal@kernel.=
+org;
+> Stephen Hemminger <sthemmin@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>
+> Subject: RE: [PATCH v5] video: hyperv: hyperv_fb: Support deferred IO for
+> Hyper-V frame buffer driver
+>=20
+> > From: Wei Hu <weh@microsoft.com>
+> > Sent: Thursday, September 12, 2019 11:03 PM
+> >
+> > Without deferred IO support, hyperv_fb driver informs the host to refre=
+sh
+> > the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter th=
+ere
+> > is screen update or not. This patch supports deferred IO for screens in
+> > graphics mode and also enables the frame buffer on-demand refresh. The
+> > highest refresh rate is still set at 20Hz.
+> >
+> > Currently Hyper-V only takes a physical address from guest as the start=
+ing
+> > address of frame buffer. This implies the guest must allocate contiguou=
+s
+> > physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+> > accept address from MMIO region as frame buffer address. Due to these
+> > limitations on Hyper-V host, we keep a shadow copy of frame buffer
+> > in the guest. This means one more copy of the dirty rectangle inside
+> > guest when doing the on-demand refresh. This can be optimized in the
+> > future with help from host. For now the host performance gain from defe=
+rred
+> > IO outweighs the shadow copy impact in the guest.
+> >
+> > Signed-off-by: Wei Hu <weh@microsoft.com>
+> > ---
+> >     v2: Incorporated review comments from Michael Kelley
+> >     - Increased dirty rectangle by one row in deferred IO case when sen=
+ding
+> >     to Hyper-V.
+> >     - Corrected the dirty rectangle size in the text mode.
+> >     - Added more comments.
+> >     - Other minor code cleanups.
+> >
+> >     v3: Incorporated more review comments
+> >     - Removed a few unnecessary variable tests
+> >
+> >     v4: Incorporated test and review feedback from Dexuan Cui
+> >     - Not disable interrupt while acquiring docopy_lock in
+> >       hvfb_update_work(). This avoids significant bootup delay in
+> >       large vCPU count VMs.
+> >
+> >     v5: Completely remove the unnecessary docopy_lock after discussing
+> >     with Dexuan Cui.
+>=20
+> Thanks! Looks good to me.
+>=20
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+
+
+Hi Wei,
+It turns out we need to make a further fix. :-)
+
+The patch forgets to take par->update into consideration.
+
+When the VM Connection window is closed (or minimized?),
+the host sends a message to the guest, and the guest sets
+par->update to false in synthvid_recv_sub().
+
+If par->update is false, the guest doesn't need to call
+synthvid_update().
+
+Thanks,
+-- Dexuan
