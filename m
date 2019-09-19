@@ -2,90 +2,74 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27CC1B776C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2019 12:27:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7592BB78EB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Sep 2019 14:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731889AbfISK1w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 Sep 2019 06:27:52 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34277 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730905AbfISK1w (ORCPT
+        id S2388569AbfISMK7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-hyperv@lfdr.de>); Thu, 19 Sep 2019 08:10:59 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36454 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388551AbfISMK7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:27:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568888870;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ig1366euhZE9FQ+BU/G4FDeDExCD+2QP6kSKN1WGaNY=;
-        b=Klfemz4hmAs9HYuZxZoxwuKlqtPzLnGojJc+lTi7gMEMNYNHiwFBFjZch+cIrp2pHvEyqP
-        Ag8AtowPyiWQIBMpyKFH2bhyww6c0YbWOcF/y2jRgrlp5PQLvJ8cG2Yv73jA8ohvoKQXuN
-        Dig6WBnKkFAcKOkbl/t2KG0tbPPpRAA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-95-TlDU4mDhPH6BK6WpC_i7Tw-1; Thu, 19 Sep 2019 06:27:42 -0400
-Received: by mail-wr1-f70.google.com with SMTP id j2so864311wre.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Sep 2019 03:27:42 -0700 (PDT)
+        Thu, 19 Sep 2019 08:10:59 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y189so3097767qkc.3;
+        Thu, 19 Sep 2019 05:10:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=xXbMAImjG3OUwHMb6kPmWON5bGyQvvmz+1UruhCN6yE=;
-        b=cH20H+J7fWBQPSbhgD6Xf6uJEPpYRxPFr4iQqlF+rVIXjWhPh7hRHTP1bWcNkIeFjM
-         7eWpCPv7EJA14kOVCYLs5+248l4CFiSLeJeRGDlzKUJi4rN99PF998KTGaJ+zkDKtI6c
-         v9hMGnGf9s2vbxLTVKtG8n+UlWC/9BZFtg5/8f4LeSWlPrX+sqV7oGSz4ypWOMYlCw/M
-         YVWgGYyrlRJ9mnwqNyywicnuIvEmgdK6+HVJBw7ywDsLrLBg0NsJQaxZ5A647JkVhEjf
-         Chxa/JSxOJzs4OAatDTvT0Pc8fl2RhlUIK/X8nuZuiih6ZRsizMeRfrHeHa424f+sbsj
-         0bJA==
-X-Gm-Message-State: APjAAAX/nwT0PXwuofIOIF5yBG4/DEmvRKiU9DwFyq3Lut4BDwGiC7lg
-        gVTdzoZfBGBZRDaNZo24mb87ZRBwa+C4XjijQdCcbrcogDSs9Vm3pQI8CPSjWzVB6KKMK2xuxKK
-        fD1+D0fvtd0qJhdd7TWThDMcO
-X-Received: by 2002:a5d:4f8c:: with SMTP id d12mr6688935wru.150.1568888861515;
-        Thu, 19 Sep 2019 03:27:41 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz46e8anRMP1kp0PhuFgPO+/GbU0XjcEmMYDIh9szRAuk4BfIfrefzg5JHBBewFOt1LeJvGiQ==
-X-Received: by 2002:a5d:4f8c:: with SMTP id d12mr6688918wru.150.1568888861290;
-        Thu, 19 Sep 2019 03:27:41 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 17sm8806368wrl.15.2019.09.19.03.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 03:27:40 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Rfjil+Gq/luy5INXzAP+YSY4vFtchBGrxw5c+694d1c=;
+        b=ceVXQyGNSLMr5yEULRJK+2srb0yNaT7KzQEhFO1XymeRmKLgB0+G7sghWVKF3CXI6a
+         OWSLh/3+sZkCwGZc6THoIpNJUAX8GKf1xvwIbClzNk78GkKpTsIdZ1U7N8WK4VDYC2ta
+         DB8XumBx+zY4plY+0JRXHYGRBiNq/bB3CpkMIZq0Xb5gZuaALqGeq843jltvL/6Cqbxj
+         AQin3b2FpvUhvILIuMooQNvCG6yznhAUt1+VAEO8z8y934w+gynnPF1qXOcfthQkH/KP
+         sHhJuhqTy0FN+qxN3XZVwKUYxhRFXGXHirAYbeGxR0L7iROrSJ90zYVkoKTjAhPLGIDp
+         Cc2w==
+X-Gm-Message-State: APjAAAWw+I4sPIe8Jhzp8oZ1PpQ3tR9JvhNRuf183lfxfSmRY+2zUmFl
+        Zxu5SZJnX0fQYjG6oys2kbhl66eu+gDwJ4AstK8=
+X-Google-Smtp-Source: APXvYqzEGMHFOqeRV6vBVoW42UtFIGlWnJ0ZoY4L2i95kgRTZeHSNklf6BqNgTS+9n5WCxLwwc4EU4ayKlB0xLq+U2M=
+X-Received: by 2002:ae9:c110:: with SMTP id z16mr2567279qki.352.1568895058438;
+ Thu, 19 Sep 2019 05:10:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <1568870297-108679-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <1568870297-108679-1-git-send-email-decui@microsoft.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Sep 2019 14:10:42 +0200
+Message-ID: <CAK8P3a0oi2MQwt-P8taBt+VS+RTaoeNBgjoYNE7_L2VoQUSaEA@mail.gmail.com>
+Subject: Re: [PATCH] Drivers: hv: vmbus: Fix harmless building warnings
+ without CONFIG_PM
 To:     Dexuan Cui <decui@microsoft.com>
 Cc:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal\@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH 1/3] hv_utils: Add the support of hibernation
-In-Reply-To: <PU1P153MB01694ABFED7ADAE8B40A65F7BF890@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568245130-70712-1-git-send-email-decui@microsoft.com> <1568245130-70712-2-git-send-email-decui@microsoft.com> <877e6dcvzj.fsf@vitty.brq.redhat.com> <PU1P153MB0169C6B4A78787930CC9ED4FBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM> <87pnk0bpe8.fsf@vitty.brq.redhat.com> <PU1P153MB01694ABFED7ADAE8B40A65F7BF890@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Date:   Thu, 19 Sep 2019 12:27:39 +0200
-Message-ID: <87ftksa8dg.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-X-MC-Unique: TlDU4mDhPH6BK6WpC_i7Tw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dexuan Cui <decui@microsoft.com> writes:
+On Thu, Sep 19, 2019 at 7:19 AM Dexuan Cui <decui@microsoft.com> wrote:
+>
+> If CONFIG_PM is not set, we can comment out these functions to avoid the
+> below warnings:
+>
+> drivers/hv/vmbus_drv.c:2208:12: warning: ‘vmbus_bus_resume’ defined but not used [-Wunused-function]
+> drivers/hv/vmbus_drv.c:2128:12: warning: ‘vmbus_bus_suspend’ defined but not used [-Wunused-function]
+> drivers/hv/vmbus_drv.c:937:12: warning: ‘vmbus_resume’ defined but not used [-Wunused-function]
+> drivers/hv/vmbus_drv.c:918:12: warning: ‘vmbus_suspend’ defined but not used [-Wunused-function]
+>
+> Fixes: 271b2224d42f ("Drivers: hv: vmbus: Implement suspend/resume for VSC drivers for hibernation")
+> Fixes: f53335e3289f ("Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation")
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
-> BTW, for vss, maybe the VM should not hibernate if there is a backup=20
-> ongoing? -- if the file system is frozen by hv_vss_daemon, and the VM
-> hibernates, then when the VM resumes back, it's almost always true that=
-=20
-> the VM won't receive the host's VSS_OP_THAW request, and the VM will
-> end up in an unusable state.
+I think this will still produce a warning if CONFIG_PM is set but
+CONFIG_PM_SLEEP is not, possibly in other configurations as
+well.
 
-Makes sense. Or, alternatively, can we postpone hibernation until after
-VSS_OP_THAW?
-
---=20
-Vitaly
-
+      Arnd
