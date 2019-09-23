@@ -2,45 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 640F5BB81B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Sep 2019 17:37:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48B0ABB9E2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Sep 2019 18:48:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfIWPh3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 23 Sep 2019 11:37:29 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43380 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfIWPh3 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 23 Sep 2019 11:37:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HwVxnNpp1n9OA+fVGYRWNY81ByHgzbvYySZmkNsPir4=; b=DUU3BOMoLfS6XyZ4vX2N30p+5
-        1mukSx1t4eKaeRVjA11BqrRKFTAlUXc6iPM1lGEnOcBsGGRb9LxT4dtUNab93sI0CVTrvWbrmecj8
-        JvyhmaWm42JOLJOghiqYdNSduNLUY/bcsr58hqmrU8X8zdcWdWV5865p6WY9RDN/DByZ59VpNst0p
-        s91gLm8STVZ8OnfqvYIK0mAN8fNGL9eSf1OnhI5EaKN22egfHntF5r1fPf4g+I3ghGdz3rhy6CxHs
-        FDuuofPY1UKSOCs+kmQ0sWOD03ad93lH8Kj/eAwX/ZTPWB7rEHrgtqN6+fUpVhgAI1GqAfba7Ey6I
-        k+Lqh8JSg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCQOp-0004me-Ea; Mon, 23 Sep 2019 15:37:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C0037303DFD;
-        Mon, 23 Sep 2019 17:36:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F0CB020D80D44; Mon, 23 Sep 2019 17:37:13 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 17:37:13 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+        id S2390629AbfIWQsa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 Sep 2019 12:48:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35092 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387922AbfIWQsa (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:48:30 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 342814E938
+        for <linux-hyperv@vger.kernel.org>; Mon, 23 Sep 2019 16:48:30 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id o188so6980172wmo.5
+        for <linux-hyperv@vger.kernel.org>; Mon, 23 Sep 2019 09:48:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tZRb6baOmGI150lVZ1gc8cSyiavau4pWVjiukU4sc/o=;
+        b=Pslew4gwdRH6L/9Iiq++z8sK4Kpp4cO2bcEZ97aZqgOotuyJp0QSf3PYAuXMnkzNyk
+         1dbvuR2i77r8F33C/3+/x0kVipcMHyqqXQKmIlBSKd7WiyW3xkxlFuytva5x4EayjvRm
+         YF+9pF42nJbscJzyvUNMnYUbJ+qqsDP2fukAmKw9bvK1ePHBItk3K11S7dvGRVa/7irL
+         8J5Jjx0KiHjMwMFfk6wpYGATqcamIybflxM07373TRKSggMNMaQJYYzb/dc1RBXMQvOt
+         tITqFxmOd3GX9BiuG2qP6r3AFq/JwFOTjusGfOJd1o+lXiESKFGJMltjamNeh3YpEdVS
+         S/Ng==
+X-Gm-Message-State: APjAAAX152n6+FV7VlRbJcy2ACvRuYrrMvdQVGhc3rdH2wj0eIOLvin5
+        Eb6mx0Q4Z06jdPkNXX05/J1AIh1fD5H6Tvs+Ixu8sBhQ+EWriD3yrhF3GtHZXLuT/1KBnjylaZ0
+        sU7Xky9PaRUZRrXobKn70BYyv
+X-Received: by 2002:a1c:5fd6:: with SMTP id t205mr435304wmb.124.1569257308762;
+        Mon, 23 Sep 2019 09:48:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwKleoftvyPkeoDX6aFTInlvLMkcvJSxl8ouKtBOQtpSvrSkEsMlpES5OZY/GzkKzpGkare/g==
+X-Received: by 2002:a1c:5fd6:: with SMTP id t205mr435269wmb.124.1569257308463;
+        Mon, 23 Sep 2019 09:48:28 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9520:22e6:6416:5c36? ([2001:b07:6468:f312:9520:22e6:6416:5c36])
+        by smtp.gmail.com with ESMTPSA id m62sm16138307wmm.35.2019.09.23.09.48.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Sep 2019 09:48:27 -0700 (PDT)
+Subject: Re: [PATCH 2/3] KVM: x86: hyper-v: set NoNonArchitecturalCoreSharing
+ CPUID bit when SMT is impossible
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -48,46 +56,35 @@ Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Roman Kagan <rkagan@virtuozzo.com>
-Subject: Re: [PATCH 2/3] KVM: x86: hyper-v: set NoNonArchitecturalCoreSharing
- CPUID bit when SMT is impossible
-Message-ID: <20190923153713.GF2369@hirez.programming.kicks-ass.net>
 References: <20190916162258.6528-1-vkuznets@redhat.com>
  <20190916162258.6528-3-vkuznets@redhat.com>
+ <20190923153713.GF2369@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <06687f31-0941-46ad-e05c-cb3cfe211051@redhat.com>
+Date:   Mon, 23 Sep 2019 18:48:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916162258.6528-3-vkuznets@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190923153713.GF2369@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 06:22:57PM +0200, Vitaly Kuznetsov wrote:
-> Hyper-V 2019 doesn't expose MD_CLEAR CPUID bit to guests when it cannot
-> guarantee that two virtual processors won't end up running on sibling SMT
-> threads without knowing about it. This is done as an optimization as in
-> this case there is nothing the guest can do to protect itself against MDS
-> and issuing additional flush requests is just pointless. On bare metal the
-> topology is known, however, when Hyper-V is running nested (e.g. on top of
-> KVM) it needs an additional piece of information: a confirmation that the
-> exposed topology (wrt vCPU placement on different SMT threads) is
-> trustworthy.
-> 
-> NoNonArchitecturalCoreSharing (CPUID 0x40000004 EAX bit 18) is described in
-> TLFS as follows: "Indicates that a virtual processor will never share a
-> physical core with another virtual processor, except for virtual processors
-> that are reported as sibling SMT threads." From KVM we can give such
-> guarantee in two cases:
-> - SMT is unsupported or forcefully disabled (just 'disabled' doesn't work
->  as it can become re-enabled during the lifetime of the guest).
-> - vCPUs are properly pinned so the scheduler won't put them on sibling
-> SMT threads (when they're not reported as such).
-> 
-> This patch reports NoNonArchitecturalCoreSharing bit in to userspace in the
-> first case. The second case is outside of KVM's domain of responsibility
-> (as vCPU pinning is actually done by someone who manages KVM's userspace -
-> e.g. libvirt pinning QEMU threads).
+On 23/09/19 17:37, Peter Zijlstra wrote:
+>> This patch reports NoNonArchitecturalCoreSharing bit in to userspace in the
+>> first case. The second case is outside of KVM's domain of responsibility
+>> (as vCPU pinning is actually done by someone who manages KVM's userspace -
+>> e.g. libvirt pinning QEMU threads).
+> This is purely about guest<->guest MDS, right? Ie. not worse than actual
+> hardware.
 
-This is purely about guest<->guest MDS, right? Ie. not worse than actual
-hardware.
+Even within the same guest.  If vCPU 1 is on virtual core 1 and vCPU 2
+is on virtual core 2, but they can share the same physical core, core
+scheduling in the guest can do nothing about it.
+
+Paolo
