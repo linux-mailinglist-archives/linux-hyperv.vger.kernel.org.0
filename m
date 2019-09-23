@@ -2,24 +2,25 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4673BB2DE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Sep 2019 13:34:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 502FABB2F6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Sep 2019 13:43:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393874AbfIWLeY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 23 Sep 2019 07:34:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38602 "EHLO mx1.redhat.com"
+        id S1732238AbfIWLnt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 Sep 2019 07:43:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41994 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393808AbfIWLeX (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 23 Sep 2019 07:34:23 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1726146AbfIWLns (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 23 Sep 2019 07:43:48 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7C5018C8933;
-        Mon, 23 Sep 2019 11:34:22 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 77850300CA4B;
+        Mon, 23 Sep 2019 11:43:48 +0000 (UTC)
 Received: from [10.36.116.207] (ovpn-116-207.ams2.redhat.com [10.36.116.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B984C60925;
-        Mon, 23 Sep 2019 11:34:19 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E23345D9E2;
+        Mon, 23 Sep 2019 11:43:44 +0000 (UTC)
 Subject: Re: [PATCH v1 0/3] mm/memory_hotplug: Export generic_online_page()
+From:   David Hildenbrand <david@redhat.com>
 To:     Michal Hocko <mhocko@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Souptick Joarder <jrdr.linux@gmail.com>,
@@ -38,7 +39,7 @@ References: <20190909114830.662-1-david@redhat.com>
  <20190923085807.GD6016@dhcp22.suse.cz>
  <df15f269-48df-8738-c714-9fae3cb3b44c@redhat.com>
  <20190923111559.GK6016@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
+ <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -84,115 +85,124 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
-Date:   Mon, 23 Sep 2019 13:34:18 +0200
+Message-ID: <388fdfa4-6cd9-bfcd-3f7b-546e54c11a97@redhat.com>
+Date:   Mon, 23 Sep 2019 13:43:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190923111559.GK6016@dhcp22.suse.cz>
+In-Reply-To: <88ac3511-4ad8-d5c8-8e6a-0cca0a0f0989@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 23 Sep 2019 11:34:22 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 23 Sep 2019 11:43:48 +0000 (UTC)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 23.09.19 13:15, Michal Hocko wrote:
-> On Mon 23-09-19 11:31:30, David Hildenbrand wrote:
->> On 23.09.19 10:58, Michal Hocko wrote:
->>> On Fri 20-09-19 10:17:54, David Hildenbrand wrote:
->>>> On 09.09.19 13:48, David Hildenbrand wrote:
->>>>> Based on linux/next + "[PATCH 0/3] Remove __online_page_set_limits()"
+On 23.09.19 13:34, David Hildenbrand wrote:
+> On 23.09.19 13:15, Michal Hocko wrote:
+>> On Mon 23-09-19 11:31:30, David Hildenbrand wrote:
+>>> On 23.09.19 10:58, Michal Hocko wrote:
+>>>> On Fri 20-09-19 10:17:54, David Hildenbrand wrote:
+>>>>> On 09.09.19 13:48, David Hildenbrand wrote:
+>>>>>> Based on linux/next + "[PATCH 0/3] Remove __online_page_set_limits()"
+>>>>>>
+>>>>>> Let's replace the __online_page...() functions by generic_online_page().
+>>>>>> Hyper-V only wants to delay the actual onlining of un-backed pages, so we
+>>>>>> can simpy re-use the generic function.
+>>>>>>
+>>>>>> Only compile-tested.
+>>>>>>
+>>>>>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>>>>>>
+>>>>>> David Hildenbrand (3):
+>>>>>>   mm/memory_hotplug: Export generic_online_page()
+>>>>>>   hv_balloon: Use generic_online_page()
+>>>>>>   mm/memory_hotplug: Remove __online_page_free() and
+>>>>>>     __online_page_increment_counters()
+>>>>>>
+>>>>>>  drivers/hv/hv_balloon.c        |  3 +--
+>>>>>>  include/linux/memory_hotplug.h |  4 +---
+>>>>>>  mm/memory_hotplug.c            | 17 ++---------------
+>>>>>>  3 files changed, 4 insertions(+), 20 deletions(-)
+>>>>>>
 >>>>>
->>>>> Let's replace the __online_page...() functions by generic_online_page().
->>>>> Hyper-V only wants to delay the actual onlining of un-backed pages, so we
->>>>> can simpy re-use the generic function.
->>>>>
->>>>> Only compile-tested.
->>>>>
->>>>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
->>>>>
->>>>> David Hildenbrand (3):
->>>>>   mm/memory_hotplug: Export generic_online_page()
->>>>>   hv_balloon: Use generic_online_page()
->>>>>   mm/memory_hotplug: Remove __online_page_free() and
->>>>>     __online_page_increment_counters()
->>>>>
->>>>>  drivers/hv/hv_balloon.c        |  3 +--
->>>>>  include/linux/memory_hotplug.h |  4 +---
->>>>>  mm/memory_hotplug.c            | 17 ++---------------
->>>>>  3 files changed, 4 insertions(+), 20 deletions(-)
->>>>>
+>>>>> Ping, any comments on this one?
 >>>>
->>>> Ping, any comments on this one?
+>>>> Unification makes a lot of sense to me. You can add
+>>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>>>
+>>>> I will most likely won't surprise if I asked for more here though ;)
 >>>
->>> Unification makes a lot of sense to me. You can add
->>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>> I'm not surprised, but definitely not in a negative sense ;) I was
+>>> asking myself if we could somehow rework this, too.
 >>>
->>> I will most likely won't surprise if I asked for more here though ;)
->>
->> I'm not surprised, but definitely not in a negative sense ;) I was
->> asking myself if we could somehow rework this, too.
->>
->>> I have to confess I really detest the whole concept of a hidden callback
->>> with a very weird API. Is this something we can do about? I do realize
->>> that adding a callback would require either cluttering the existing APIs
->>> but maybe we can come up with something more clever. Or maybe existing
->>> external users of online callback can do that as a separate step after
->>> the online is completed - or is this impossible due to locking
->>> guarantees?
+>>>> I have to confess I really detest the whole concept of a hidden callback
+>>>> with a very weird API. Is this something we can do about? I do realize
+>>>> that adding a callback would require either cluttering the existing APIs
+>>>> but maybe we can come up with something more clever. Or maybe existing
+>>>> external users of online callback can do that as a separate step after
+>>>> the online is completed - or is this impossible due to locking
+>>>> guarantees?
+>>>>
 >>>
+>>> The use case of this (somewhat special) callback really is to avoid
+>>> selected (unbacked in the hypervisor) pages to get put to the buddy just
+>>> now, but instead to defer that (sometimes, defer till infinity ;) ).
+>>> Especially, to hinder these pages from getting touched at all. Pages
+>>> that won't be put to the buddy will usually get PG_offline set (e.g.,
+>>> Hyper-V and XEN) - the only two users I am aware of.
+>>>
+>>> For Hyper-V (and also eventually virtio-mem), it is important to set
+>>> PG_offline before marking the section to be online (SECTION_IS_ONLINE).
+>>> Only this way, PG_offline is properly set on all pfn_to_online_page()
+>>> pages, meaning "don't touch this page" - e.g., used to skip over such
+>>> pages when suspending or by makedumpfile to skip over such offline pages
+>>> when creating a memory dump.
 >>
->> The use case of this (somewhat special) callback really is to avoid
->> selected (unbacked in the hypervisor) pages to get put to the buddy just
->> now, but instead to defer that (sometimes, defer till infinity ;) ).
->> Especially, to hinder these pages from getting touched at all. Pages
->> that won't be put to the buddy will usually get PG_offline set (e.g.,
->> Hyper-V and XEN) - the only two users I am aware of.
+>> Thanks for the clarification. I have never really studied what those
+>> callbacks are doing really.
 >>
->> For Hyper-V (and also eventually virtio-mem), it is important to set
->> PG_offline before marking the section to be online (SECTION_IS_ONLINE).
->> Only this way, PG_offline is properly set on all pfn_to_online_page()
->> pages, meaning "don't touch this page" - e.g., used to skip over such
->> pages when suspending or by makedumpfile to skip over such offline pages
->> when creating a memory dump.
-> 
-> Thanks for the clarification. I have never really studied what those
-> callbacks are doing really.
-> 
->> So if we would e.g., try to piggy-back onto the memory_notify()
->> infrastructure, we could
->> 1. Online all pages to the buddy (dropping the callback)
->> 2. E.g., memory_notify(MEM_ONLINE_PAGES, &arg);
->> -> in the notifier, pull pages from the buddy, mark sections online
->> 3. Set all involved sections online (online_mem_sections())
-> 
-> This doesn't really sound any better. For one pages are immediately
-> usable when they hit the buddy allocator so this is racy and thus not
-> reliable.
-> 
->> However, I am not sure what actually happens after 1. - we are only
->> holding the device hotplug lock and the memory hotplug lock, so the
->> pages can just get allocated. Also, it sounds like more work and code
->> for the same end result (okay, if the rework is really necessary, though).
+>>> So if we would e.g., try to piggy-back onto the memory_notify()
+>>> infrastructure, we could
+>>> 1. Online all pages to the buddy (dropping the callback)
+>>> 2. E.g., memory_notify(MEM_ONLINE_PAGES, &arg);
+>>> -> in the notifier, pull pages from the buddy, mark sections online
+>>> 3. Set all involved sections online (online_mem_sections())
 >>
->> So yeah, while the current callback might not be optimal, I don't see an
->> easy and clean way to rework this. With the change in this series we are
->> at least able to simply defer doing what would have been done without
->> the callback - not perfect but better.
+>> This doesn't really sound any better. For one pages are immediately
+>> usable when they hit the buddy allocator so this is racy and thus not
+>> reliable.
 >>
->> Do you have anything in mind that could work out and make this nicer?
+>>> However, I am not sure what actually happens after 1. - we are only
+>>> holding the device hotplug lock and the memory hotplug lock, so the
+>>> pages can just get allocated. Also, it sounds like more work and code
+>>> for the same end result (okay, if the rework is really necessary, though).
+>>>
+>>> So yeah, while the current callback might not be optimal, I don't see an
+>>> easy and clean way to rework this. With the change in this series we are
+>>> at least able to simply defer doing what would have been done without
+>>> the callback - not perfect but better.
+>>>
+>>> Do you have anything in mind that could work out and make this nicer?
+>>
+>> I am wondering why those pages get onlined when they are, in fact,
+>> supposed to be offline.
+>>
 > 
-> I am wondering why those pages get onlined when they are, in fact,
-> supposed to be offline.
+> It's the current way of emulating sub-memory-block hotplug on top of the
+> memory bock device API we have. Hyper-V and XEN have been using that for
+> a long time.
 > 
 
-It's the current way of emulating sub-memory-block hotplug on top of the
-memory bock device API we have. Hyper-V and XEN have been using that for
-a long time.
+So one idea would be to let clients set pages to PG_offline during
+MEM_GOING_ONLINE. We could then skip any PG_offline pages when onlining
+pages, not onlining them to the buddy.
+
+But then, there still has to be a way to online pages when required -
+e.g., generic_online_page(). At least the callback could go.
 
 -- 
 
