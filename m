@@ -2,152 +2,196 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEA32BE873
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2019 00:49:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7EFEBE8D8
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2019 01:19:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbfIYWtk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Sep 2019 18:49:40 -0400
-Received: from mail-eopbgr1320130.outbound.protection.outlook.com ([40.107.132.130]:22541
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1726033AbfIYXTC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Sep 2019 19:19:02 -0400
+Received: from mail-eopbgr810111.outbound.protection.outlook.com ([40.107.81.111]:51651
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729604AbfIYWtk (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:49:40 -0400
+        id S1725821AbfIYXTC (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:19:02 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HEdk/oQONk6bv73qNqg/Bh/TJB3Vtyt+nFdFo5t3tPq9tqxCX8iqxNG6YB92OijW3q0Z2UhxRDdcJiueA2NIZF2Qls5TyUcY9UZGcaNEuuwpclk1ne4s/VK0tpwTDYFDObXVX6+3m9Uph6Tav9YMXCOeaSs+MFaoHxvb0I2B5OLYQU5tRlMsAOeFGFlHkQKEIHIjJk6Xu588RlH5CsTvaJlY+H+3xvqGLslowerVO4sI2n0HkVzTQEA/ZT7wPD23XsOriuwm5UbOy8UVCJxmtv+7xgQhQz0XkKUC83aGkOAbr+zukrsGu/d/YgodLZFoSdGOn9mB0cZZEvls4ke3TQ==
+ b=LFLEX36xuv+KdsTI1bQcYOt6gXdW7cjV8VGxGIFzQUQnyW/bM+iL11D8oArcCeRgWtMEWktQuKpCkhOZyQ40SD9YCxK2giUz1D+IuJK2FGrErxW32kD3OxZvzFlQh/h5nbL5+zs3BoFGrEaNOJYUVHFvb58i/IiFIT3senK7MtkMtm+go0C/EILWnfi3stBpP514F1MlO5hFVnRpOqDqt7Of832UDpAni/6FJR/9LZXdQlQ54oF9QcyaDciNEqeZqpP0KNSClj5k3fvxYF2iyiesl9F133w6Q2pSGzMhZYWP5cQFAiMiFY839u+BpHBwrnDpfYW/qNaIVuel3m7twQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e/5Hot15RqpbN++rLgjrxKMVjJYK8CfoIl0+eZL8bG0=;
- b=ACzSc1rTLkCYRc+ZcOD3fomT0bqfss/ez2VHxGeW7ItgSPmx8uUw7t0N28hmNPmIYY9Sz06TztnAA7y1AunA1+i1aHYka5WjqF+sBC8bZNHCaBIS64bjWwXFhwpf2vD6Lg/RZzJXhAe+pUkvs9IkHr8WySdPTS+yYSO0pi6aXxJr928Sk+Z8sYoa+ra1mUh+fnxwPK1yW4tKFc0HKzuVPsKr+xyLZj9EJAZ5hSA9ZLTeHrEkC4Xnh7I55Z+AEPKj3TBwWD9jFr4LtdQvhfehQZFJXEG7qqcCiX11Dm1pauCG6WQZQ2noHgSG8fPPfRZ1FyfJVESHOCYiNFFJXNBC6g==
+ bh=WeiiXLUz0fmj7sw43hVNZwO3vA1UaowzRE9Kev7cGLg=;
+ b=LyhxEKmYOwEBQwGbcUMRxJobn9CZCYznXJUiLae9dZCf08ypI7tso05iARQBiikuOsmxACmJ+sNsDZGwzKBqVRV3jXdi6Qe+l56uYuJjGqePbWALJx6JD0lz3EfUEZvh4JIR9pEfQcYOFXUSS69mOk/FCUEu3cJtSoIy1s9BLm+E4Lopy43hyJ/RdH0SPHC4C+j0/vctxtqLUFiJcVU/AzoRzjdYrFroGxzLP4WAU3WhstR1BTDKV9xZrR4Nzxb8P5/3tazoaQnw/5Xf9NTzjqftp0L+lx0YPGImGZxyXjd6FGakhEyKSrFZcr8yBLdxFouDTkJLu8tcGWOn6zK1cA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e/5Hot15RqpbN++rLgjrxKMVjJYK8CfoIl0+eZL8bG0=;
- b=egd20KHORIAxvH/34gZ05dJ553g4Jr8dqgCh40uV0wOwHwOjI+IluOe6DgxtQqoyEepQ8tCrxHNtD7WlWxCq8PaDB3jkZmtXWOniCx1Gd8J55mgVWjAjvjNl8+L2OzNwBjqvvms1SHQNZ7vMW5EzT9VoN5oRIoPDS1xsIAbQhik=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0137.APCP153.PROD.OUTLOOK.COM (10.170.188.139) with Microsoft SMTP
+ bh=WeiiXLUz0fmj7sw43hVNZwO3vA1UaowzRE9Kev7cGLg=;
+ b=RFXt8KJ8WJbaUfNiM5PK5pcJe4fimK+DY3dTVriDfXxaPEmh7uZ01J4xR/ftXYHDEc27tGikHSfKYvoy1gqqgTCphwWMLZwJzyMvZg4+X5tlv8IXiH8LZDfom8s4iRzmKFh4NKs02z2jwcPsiny5l0ttpOy6upOd5N6eXSYsOtk=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB0926.namprd21.prod.outlook.com (52.132.117.15) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.3; Wed, 25 Sep 2019 22:49:35 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 22:49:35 +0000
+ 15.20.2327.6; Wed, 25 Sep 2019 23:18:59 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 23:18:59 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH v5 0/3] Enhance Hyper-V for hibernation
-Thread-Topic: [PATCH v5 0/3] Enhance Hyper-V for hibernation
-Thread-Index: AQHVZDvWiJN7KE4mZkeEB0PYga91O6c9Gb9w
-Date:   Wed, 25 Sep 2019 22:49:35 +0000
-Message-ID: <PU1P153MB01692C8EC435F7F108564BAEBF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1567723581-29088-1-git-send-email-decui@microsoft.com>
+        Michael Kelley <mikelley@microsoft.com>
+CC:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH][RESEND] clocksource/drivers: hyperv_timer: Fix CPU offlining
+ by unbinding the timer
+Thread-Topic: [PATCH][RESEND] clocksource/drivers: hyperv_timer: Fix CPU
+ offlining by unbinding the timer
+Thread-Index: AQHVc/ecbv5QrwA48EqrdEdWUjIEMQ==
+Date:   Wed, 25 Sep 2019 23:18:59 +0000
+Message-ID: <1569453525-41874-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T22:49:32.7769187Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5220183a-209f-4c76-a7f5-88915c722ca3;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-clientproxiedby: MWHPR12CA0039.namprd12.prod.outlook.com
+ (2603:10b6:301:2::25) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 792fe893-6aed-498f-4344-08d7420aa373
+x-ms-office365-filtering-correlation-id: 12b6d31d-1e4e-4418-2faf-08d7420ebe86
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0137:|PU1P153MB0137:
+x-ms-traffictypediagnostic: SN6PR2101MB0926:|SN6PR2101MB0926:
 x-ms-exchange-transport-forked: True
 x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <PU1P153MB013792FCBD8C2EBBD4B251CEBF870@PU1P153MB0137.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <SN6PR2101MB09264A58F56408F55E82B867BF870@SN6PR2101MB0926.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
 x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(1511001)(10290500003)(110136005)(478600001)(6636002)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006)(2501003)(55016002)(99286004)(22452003)(10090500001)(316002)(256004)(6306002)(86362001)(14444005)(9686003)(8990500004)(2201001)(71200400001)(71190400001)(33656002)(5660300002)(52536014)(6246003)(2906002)(966005)(6116002)(4326008)(14454004)(102836004)(6436002)(186003)(305945005)(6506007)(46003)(7416002)(7736002)(229853002)(476003)(7696005)(76176011)(486006)(25786009)(81156014)(8676002)(11346002)(8936002)(81166006)(74316002)(446003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0137;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(376002)(39860400002)(136003)(396003)(199004)(189003)(99286004)(256004)(8676002)(81166006)(8936002)(386003)(6506007)(14444005)(478600001)(966005)(102836004)(10290500003)(3450700001)(36756003)(7736002)(52116002)(4720700003)(3846002)(50226002)(6486002)(81156014)(6636002)(25786009)(5660300002)(43066004)(107886003)(2201001)(66946007)(66476007)(64756008)(66556008)(66446008)(71190400001)(2616005)(4326008)(476003)(6436002)(14454004)(2906002)(6116002)(305945005)(86362001)(66066001)(110136005)(6512007)(6306002)(26005)(316002)(1511001)(186003)(10090500001)(71200400001)(22452003)(2501003)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0926;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MbljAvkGnmlJYBADJuNlLmBQ4V4ZaTCx+lRcZlJpDtxBWaDYCk/nsV4o0lc3MbanfKtXtgnbhneI3VwQyUe9003sJLjKohxLRzoWSKM6Gq/WmcerCHGTTDQaJAOF87CzxJeAcqoIVcQ27n/cz+uvTxex0bXM1/PpHvklOX5Aq5J2OWaOEOENHPIYXVLAJSZ7s2lj610iihr5OhLDbOWi9Ohr77ZkrgWboB1HsQX0be2kPrmhYxHuFCVPHVdAjzKEg/C2900ARUd5pEJ2WDrsKbs/nwe6sMrdHoP07fYkGXq1H1ebKS28/bCCmcYrHAy7ARGpDY8KLfXSdJ1N+Eb7ia4/KJF0WBmsys2jB7ILg9SxpwZ7Ytcv+0p80a75zz5RMvCDM0gmuCbnmuMxnTN6oCmi3ZbaA9+d/ssorV1glzo+R4q/VQ2OnmC4QdLs7TSMN2SqjJ3Upvwl2wH3FepUsQ==
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: 2Ea2UFSUQIZ9a9ZTkmcSUOv518ncNZFxpa0HS6xUkcBbQlM19BrAX8o38jRWJCvfSi2rcO/MPf7Zs6piLRkwz9+Tlu3TAOC1abO1L+mXSWOVnDGQUEX3aFKRKop5Lst0x3I07k0orLZtxN8lFW1n7D8ZK64BOly4EYMxRs7h4zsxw70tZKX7OksXSt3nU2p2sUL9FPlubq3koSYCEqCEZSQpLYrz4U7rRFg0XDA+/qv9yomDk5KT0m/YEKH1D40JI+iDJHirl2FsMS3IXmTeIpTpnv3zaCjN/cApd86zDQAbRPuSnPi1fHN7Y3A6pWBxRStkyCXHznfGzRd63HLLpBRXyA90EuEEXrGKqxjl18fnkWTq7FI66ITSfeiIOVHM2oRi0oLLSeMlIS5P8uMHPv7etaWifSuKI+MnL2bTJLCex6yhHHPLlN2YanlQL3Lr1MXubfaHPfyJhJP6vLABpA==
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 792fe893-6aed-498f-4344-08d7420aa373
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:49:35.1173
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12b6d31d-1e4e-4418-2faf-08d7420ebe86
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 23:18:59.2813
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z1Tw3C8+9yPTLOFw5rF6AUrDFfYZvoWoEc+RQcb6GkSXF1xm6+9z9iUDAt3vSHYf6bBLPLZy752h/2PQjJ8kCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0137
+X-MS-Exchange-CrossTenant-userprincipalname: q8welkBKSr4yfy9yrF5Q7aCQGHtZALKiOiSl/iW/TW/F4JvQZWkcHMhccawqM0KvKLXYlYZjqDwuF5BLtHSdXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0926
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Thursday, September 5, 2019 3:47 PM
->=20
-> This patchset (consisting of 3 patches) was part of the v4 patchset (cons=
-isting
-> of 12 patches): https://lkml.org/lkml/2019/9/2/894
->=20
-> I realized these 3 patches must go through the tip.git tree, because I ha=
-ve
-> to rebase 2 of the 3 patches due to recent changes from others in the tip
-> tree.
->=20
-> All the 3 patches are now rebased to the tip tree's timers/core branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3Dtime=
-rs/core
-> , and all the 3 patches have Michael Kelley's Signed-off-by's.
->=20
-> Please review.
->=20
-> Thanks!
-> Dexuan
->=20
-> Dexuan Cui (3):
->   x86/hyper-v: Suspend/resume the hypercall page for hibernation
->   x86/hyper-v: Implement hv_is_hibernation_supported()
->   clocksource/drivers: Suspend/resume Hyper-V clocksource for
->     hibernation
->=20
->  arch/x86/hyperv/hv_init.c          | 40
-> ++++++++++++++++++++++++++++++++++++++
->  drivers/clocksource/hyperv_timer.c | 25 ++++++++++++++++++++++++
->  include/asm-generic/mshyperv.h     |  2 ++
->  3 files changed, 67 insertions(+)
+The commit fd1fea6834d0 says "No behavior is changed", but actually it
+removes the clockevents_unbind_device() call from hv_synic_cleanup().
 
-Hi tglx and all,
-Can you please take a look at this patchset (3 patches in total)?
+In the discussion earlier this month, I thought the unbind call is
+unnecessary (see https://www.spinics.net/lists/arm-kernel/msg739888.html),
+however, after more investigation, when a VM runs on Hyper-V, it turns out
+the unbind call must be kept, otherwise CPU offling may not work, because
+a per-cpu timer device is still needed, after hv_synic_cleanup() disables
+the per-cpu Hyper-V timer device.
 
-IMO it's better for the 3 patches to go through the tip.git tree, but if yo=
-u
-(the x86 maintainers) have no objection, the patches can also go through
-Saha Levin's Hyper-V tree, because the dependent patches have landed
-in Linus's tree now.
+The issue is found in the hibernation test. These are the details:
 
-Thanks,
--- Dexuan
+1. CPU0 hangs in wait_for_ap_thread(), when trying to offline CPU1:
+
+hibernation_snapshot
+  create_image
+    suspend_disable_secondary_cpus
+      freeze_secondary_cpus
+        _cpu_down(1, 1, CPUHP_OFFLINE)
+          cpuhp_kick_ap_work
+            cpuhp_kick_ap
+              __cpuhp_kick_ap
+                wait_for_ap_thread()
+
+2. CPU0 hangs because CPU1 hangs this way: after CPU1 disables the per-cpu
+Hyper-V timer device in hv_synic_cleanup(), CPU1 sets a timer... Please
+read on to see how this can happen.
+
+2.1 By "_cpu_down(1, 1, CPUHP_OFFLINE):", CPU0 first tries to move CPU1 to
+the CPUHP_TEARDOWN_CPU state and this wakes up the cpuhp/1 thread on CPU1;
+the thread is basically a loop of executing various callbacks defined in
+the global array cpuhp_hp_states[]: see smpboot_thread_fn().
+
+2.2 This is how a callback is called on CPU1:
+  smpboot_thread_fn
+    ht->thread_fn(td->cpu), i.e. cpuhp_thread_fun
+      cpuhp_invoke_callback
+        state =3D st->state
+        st->state--
+        cpuhp_get_step(state)->teardown.single()
+
+2.3 At first, the state of CPU1 is CPUHP_ONLINE, which defines a
+.teardown.single of NULL, so the execution of the code returns to the loop
+in smpboot_thread_fn(), and then reruns cpuhp_invoke_callback() with a
+smaller st->state.
+
+2.4 The .teardown.single of every state between CPUHP_ONLINE and
+CPUHP_TEARDOWN_CPU runs one by one.
+
+2.5 When it comes to the CPUHP_AP_ONLINE_DYN range, hv_synic_cleanup()
+runs: see vmbus_bus_init(). It calls hv_stimer_cleanup() ->
+hv_ce_shutdown() to disable the per-cpu timer device, so timer interrupt
+will no longer happen on CPU1.
+
+2.6 Later, the .teardown.single of CPUHP_AP_SMPBOOT_THREADS, i.e.
+smpboot_park_threads(), starts to run, trying to park all the other
+hotplug_threads, e.g. ksoftirqd/1 and rcuc/1; here a timer can be set up
+this way and the timer will never be fired since CPU1 doesn't have
+an active timer device now, so CPU1 hangs and can not be offlined:
+  smpboot_park_threads
+    smpboot_park_thread
+      kthread_park
+        wait_task_inactive
+          schedule_hrtimeout(&to, HRTIMER_MODE_REL)
+
+With this patch, when the per-cpu Hyper-V timer device is disabled, the
+system switches to the Local APIC timer, and the hang issue can not
+happen.
+
+Fixes: fd1fea6834d0 ("clocksource/drivers: Make Hyper-V clocksource ISA agn=
+ostic")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+
+The patch was firstly posted on Jul 27: https://lkml.org/lkml/2019/7/27/5
+
+There is no change since then.
+
+ drivers/clocksource/hyperv_timer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyper=
+v_timer.c
+index ba2c79e6a0ee..17b96f9ed0c9 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -139,6 +139,7 @@ void hv_stimer_cleanup(unsigned int cpu)
+ 	/* Turn off clockevent device */
+ 	if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
+ 		ce =3D per_cpu_ptr(hv_clock_event, cpu);
++		clockevents_unbind_device(ce, cpu);
+ 		hv_ce_shutdown(ce);
+ 	}
+ }
+--=20
+2.19.1
+
