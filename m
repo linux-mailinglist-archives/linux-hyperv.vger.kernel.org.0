@@ -2,196 +2,206 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7EFEBE8D8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2019 01:19:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 958D7BE8DB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2019 01:21:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbfIYXTC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Sep 2019 19:19:02 -0400
-Received: from mail-eopbgr810111.outbound.protection.outlook.com ([40.107.81.111]:51651
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725821AbfIYXTC (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Sep 2019 19:19:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LFLEX36xuv+KdsTI1bQcYOt6gXdW7cjV8VGxGIFzQUQnyW/bM+iL11D8oArcCeRgWtMEWktQuKpCkhOZyQ40SD9YCxK2giUz1D+IuJK2FGrErxW32kD3OxZvzFlQh/h5nbL5+zs3BoFGrEaNOJYUVHFvb58i/IiFIT3senK7MtkMtm+go0C/EILWnfi3stBpP514F1MlO5hFVnRpOqDqt7Of832UDpAni/6FJR/9LZXdQlQ54oF9QcyaDciNEqeZqpP0KNSClj5k3fvxYF2iyiesl9F133w6Q2pSGzMhZYWP5cQFAiMiFY839u+BpHBwrnDpfYW/qNaIVuel3m7twQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WeiiXLUz0fmj7sw43hVNZwO3vA1UaowzRE9Kev7cGLg=;
- b=LyhxEKmYOwEBQwGbcUMRxJobn9CZCYznXJUiLae9dZCf08ypI7tso05iARQBiikuOsmxACmJ+sNsDZGwzKBqVRV3jXdi6Qe+l56uYuJjGqePbWALJx6JD0lz3EfUEZvh4JIR9pEfQcYOFXUSS69mOk/FCUEu3cJtSoIy1s9BLm+E4Lopy43hyJ/RdH0SPHC4C+j0/vctxtqLUFiJcVU/AzoRzjdYrFroGxzLP4WAU3WhstR1BTDKV9xZrR4Nzxb8P5/3tazoaQnw/5Xf9NTzjqftp0L+lx0YPGImGZxyXjd6FGakhEyKSrFZcr8yBLdxFouDTkJLu8tcGWOn6zK1cA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WeiiXLUz0fmj7sw43hVNZwO3vA1UaowzRE9Kev7cGLg=;
- b=RFXt8KJ8WJbaUfNiM5PK5pcJe4fimK+DY3dTVriDfXxaPEmh7uZ01J4xR/ftXYHDEc27tGikHSfKYvoy1gqqgTCphwWMLZwJzyMvZg4+X5tlv8IXiH8LZDfom8s4iRzmKFh4NKs02z2jwcPsiny5l0ttpOy6upOd5N6eXSYsOtk=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB0926.namprd21.prod.outlook.com (52.132.117.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.6; Wed, 25 Sep 2019 23:18:59 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::7d1a:ddb:3473:b383]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::7d1a:ddb:3473:b383%9]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 23:18:59 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
+        id S1727876AbfIYXVM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Sep 2019 19:21:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41015 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbfIYXVM (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 25 Sep 2019 19:21:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s1so240519pgv.8
+        for <linux-hyperv@vger.kernel.org>; Wed, 25 Sep 2019 16:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YT7tDn+xx6T7cN5VNv8l2EaVVo+fdzIO6anhfSbpivo=;
+        b=ZqvMzAxHz5fdPAQAYua74PeoVIFvBkR124I3FMnOxRhPUn059jSalG4VKT/IpItmPG
+         b51iboZh5gzQUpH5ntb1mB4Qe2cbBY5fgnX1qOEH9gIADvH0KWeeaxe44VQ08LmtCz8c
+         3s4RWWaS4wETcVp+1aGXWRK/reRUgF3DPItm9D+EAaB8YIhigjlhDKAyphdAImp26MYL
+         bTQ2ahhnLLj/C1dFglVhqTuPzd4t8+jo5fBOeRJcyxrGqoSXB2bA8IeDHikO1FRnvFIv
+         qD53RgMLiLF/Ej0uhayAJt/SLyfwmJ0r18X441/enJvkbRB9mXh+C5X9XRACzTsh33ER
+         Njcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=YT7tDn+xx6T7cN5VNv8l2EaVVo+fdzIO6anhfSbpivo=;
+        b=NOTNM/qL4HPKIzoTfdqyvdSbCLVU/fM2AKLHtxDiABq3hwpmwofyI4TLjk1zwKWSjf
+         H/Hf0hOG1yhANQJHfueniQUIKYsKfVynppSwVB2U7KaCwCJhVT2lUstuTNWXDatBJz6I
+         sSZmL9vGEuybIzrDbNgR/zM8M4Xz73PUmgow6mn8P9LeQ0IhFLPPPHNV00ezgvkRlB/+
+         WZXNFUomRtd9lL6zX3pHLDk664X91TQ33phZ+Eo9G3gYv49zzchoX5L6FAFaT6nwbdFD
+         kOfQIzF+UXXoB4NHA9cocXf/SKLVQ0o7L4Ip7t57MaUPLnPHe5PVmcNQAb2UZU/neasM
+         U6FA==
+X-Gm-Message-State: APjAAAWvNIoMj9/8aKqqrU60x3bG9jSRzh86zSLhlg8OSNm354XUsoO8
+        irIliJ9WGaDqrat3Hdv2z5mThw==
+X-Google-Smtp-Source: APXvYqzN6/FR3mrnCzd85Mk+Rcc96lFZci8p0FV9tHuDYC78H67Ds8UyLqWlRQ+5Zfw0sXZCwcAcSQ==
+X-Received: by 2002:aa7:8f03:: with SMTP id x3mr224989pfr.91.1569453671428;
+        Wed, 25 Sep 2019 16:21:11 -0700 (PDT)
+Received: from [172.20.32.102] ([12.206.46.62])
+        by smtp.googlemail.com with ESMTPSA id i16sm94771pfa.184.2019.09.25.16.21.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Sep 2019 16:21:10 -0700 (PDT)
+Subject: Re: [PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V
+ clocksource for hibernation
+To:     Dexuan Cui <decui@microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>,
+        "bp@alien8.de" <bp@alien8.de>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH][RESEND] clocksource/drivers: hyperv_timer: Fix CPU offlining
- by unbinding the timer
-Thread-Topic: [PATCH][RESEND] clocksource/drivers: hyperv_timer: Fix CPU
- offlining by unbinding the timer
-Thread-Index: AQHVc/ecbv5QrwA48EqrdEdWUjIEMQ==
-Date:   Wed, 25 Sep 2019 23:18:59 +0000
-Message-ID: <1569453525-41874-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR12CA0039.namprd12.prod.outlook.com
- (2603:10b6:301:2::25) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12b6d31d-1e4e-4418-2faf-08d7420ebe86
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: SN6PR2101MB0926:|SN6PR2101MB0926:
-x-ms-exchange-transport-forked: True
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <SN6PR2101MB09264A58F56408F55E82B867BF870@SN6PR2101MB0926.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(376002)(39860400002)(136003)(396003)(199004)(189003)(99286004)(256004)(8676002)(81166006)(8936002)(386003)(6506007)(14444005)(478600001)(966005)(102836004)(10290500003)(3450700001)(36756003)(7736002)(52116002)(4720700003)(3846002)(50226002)(6486002)(81156014)(6636002)(25786009)(5660300002)(43066004)(107886003)(2201001)(66946007)(66476007)(64756008)(66556008)(66446008)(71190400001)(2616005)(4326008)(476003)(6436002)(14454004)(2906002)(6116002)(305945005)(86362001)(66066001)(110136005)(6512007)(6306002)(26005)(316002)(1511001)(186003)(10090500001)(71200400001)(22452003)(2501003)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0926;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2Ea2UFSUQIZ9a9ZTkmcSUOv518ncNZFxpa0HS6xUkcBbQlM19BrAX8o38jRWJCvfSi2rcO/MPf7Zs6piLRkwz9+Tlu3TAOC1abO1L+mXSWOVnDGQUEX3aFKRKop5Lst0x3I07k0orLZtxN8lFW1n7D8ZK64BOly4EYMxRs7h4zsxw70tZKX7OksXSt3nU2p2sUL9FPlubq3koSYCEqCEZSQpLYrz4U7rRFg0XDA+/qv9yomDk5KT0m/YEKH1D40JI+iDJHirl2FsMS3IXmTeIpTpnv3zaCjN/cApd86zDQAbRPuSnPi1fHN7Y3A6pWBxRStkyCXHznfGzRd63HLLpBRXyA90EuEEXrGKqxjl18fnkWTq7FI66ITSfeiIOVHM2oRi0oLLSeMlIS5P8uMHPv7etaWifSuKI+MnL2bTJLCex6yhHHPLlN2YanlQL3Lr1MXubfaHPfyJhJP6vLABpA==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Cc:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
+ <1567723581-29088-4-git-send-email-decui@microsoft.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8ba5e2fd-6a9f-b61b-685e-23a69cabe3a2@linaro.org>
+Date:   Thu, 26 Sep 2019 01:21:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12b6d31d-1e4e-4418-2faf-08d7420ebe86
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 23:18:59.2813
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q8welkBKSr4yfy9yrF5Q7aCQGHtZALKiOiSl/iW/TW/F4JvQZWkcHMhccawqM0KvKLXYlYZjqDwuF5BLtHSdXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0926
+In-Reply-To: <1567723581-29088-4-git-send-email-decui@microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The commit fd1fea6834d0 says "No behavior is changed", but actually it
-removes the clockevents_unbind_device() call from hv_synic_cleanup().
+On 06/09/2019 00:47, Dexuan Cui wrote:
+> This is needed for hibernation, e.g. when we resume the old kernel, we need
+> to disable the "current" kernel's TSC page and then resume the old kernel's.
+> 
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-In the discussion earlier this month, I thought the unbind call is
-unnecessary (see https://www.spinics.net/lists/arm-kernel/msg739888.html),
-however, after more investigation, when a VM runs on Hyper-V, it turns out
-the unbind call must be kept, otherwise CPU offling may not work, because
-a per-cpu timer device is still needed, after hv_synic_cleanup() disables
-the per-cpu Hyper-V timer device.
+I can take this patch if needed.
 
-The issue is found in the hibernation test. These are the details:
+> ---
+>  drivers/clocksource/hyperv_timer.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index 726a65e..07f4747 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -237,12 +237,37 @@ static u64 read_hv_sched_clock_tsc(void)
+>  	return read_hv_clock_tsc(NULL) - hv_sched_clock_offset;
+>  }
+>  
+> +static void suspend_hv_clock_tsc(struct clocksource *arg)
+> +{
+> +	u64 tsc_msr;
+> +
+> +	/* Disable the TSC page */
+> +	hv_get_reference_tsc(tsc_msr);
+> +	tsc_msr &= ~BIT_ULL(0);
+> +	hv_set_reference_tsc(tsc_msr);
+> +}
+> +
+> +
+> +static void resume_hv_clock_tsc(struct clocksource *arg)
+> +{
+> +	phys_addr_t phys_addr = virt_to_phys(&tsc_pg);
+> +	u64 tsc_msr;
+> +
+> +	/* Re-enable the TSC page */
+> +	hv_get_reference_tsc(tsc_msr);
+> +	tsc_msr &= GENMASK_ULL(11, 0);
+> +	tsc_msr |= BIT_ULL(0) | (u64)phys_addr;
+> +	hv_set_reference_tsc(tsc_msr);
+> +}
+> +
+>  static struct clocksource hyperv_cs_tsc = {
+>  	.name	= "hyperv_clocksource_tsc_page",
+>  	.rating	= 400,
+>  	.read	= read_hv_clock_tsc,
+>  	.mask	= CLOCKSOURCE_MASK(64),
+>  	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.suspend= suspend_hv_clock_tsc,
+> +	.resume	= resume_hv_clock_ts,>  };
+>  
+>  static u64 notrace read_hv_clock_msr(struct clocksource *arg)
+> 
 
-1. CPU0 hangs in wait_for_ap_thread(), when trying to offline CPU1:
 
-hibernation_snapshot
-  create_image
-    suspend_disable_secondary_cpus
-      freeze_secondary_cpus
-        _cpu_down(1, 1, CPUHP_OFFLINE)
-          cpuhp_kick_ap_work
-            cpuhp_kick_ap
-              __cpuhp_kick_ap
-                wait_for_ap_thread()
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-2. CPU0 hangs because CPU1 hangs this way: after CPU1 disables the per-cpu
-Hyper-V timer device in hv_synic_cleanup(), CPU1 sets a timer... Please
-read on to see how this can happen.
-
-2.1 By "_cpu_down(1, 1, CPUHP_OFFLINE):", CPU0 first tries to move CPU1 to
-the CPUHP_TEARDOWN_CPU state and this wakes up the cpuhp/1 thread on CPU1;
-the thread is basically a loop of executing various callbacks defined in
-the global array cpuhp_hp_states[]: see smpboot_thread_fn().
-
-2.2 This is how a callback is called on CPU1:
-  smpboot_thread_fn
-    ht->thread_fn(td->cpu), i.e. cpuhp_thread_fun
-      cpuhp_invoke_callback
-        state =3D st->state
-        st->state--
-        cpuhp_get_step(state)->teardown.single()
-
-2.3 At first, the state of CPU1 is CPUHP_ONLINE, which defines a
-.teardown.single of NULL, so the execution of the code returns to the loop
-in smpboot_thread_fn(), and then reruns cpuhp_invoke_callback() with a
-smaller st->state.
-
-2.4 The .teardown.single of every state between CPUHP_ONLINE and
-CPUHP_TEARDOWN_CPU runs one by one.
-
-2.5 When it comes to the CPUHP_AP_ONLINE_DYN range, hv_synic_cleanup()
-runs: see vmbus_bus_init(). It calls hv_stimer_cleanup() ->
-hv_ce_shutdown() to disable the per-cpu timer device, so timer interrupt
-will no longer happen on CPU1.
-
-2.6 Later, the .teardown.single of CPUHP_AP_SMPBOOT_THREADS, i.e.
-smpboot_park_threads(), starts to run, trying to park all the other
-hotplug_threads, e.g. ksoftirqd/1 and rcuc/1; here a timer can be set up
-this way and the timer will never be fired since CPU1 doesn't have
-an active timer device now, so CPU1 hangs and can not be offlined:
-  smpboot_park_threads
-    smpboot_park_thread
-      kthread_park
-        wait_task_inactive
-          schedule_hrtimeout(&to, HRTIMER_MODE_REL)
-
-With this patch, when the per-cpu Hyper-V timer device is disabled, the
-system switches to the Local APIC timer, and the hang issue can not
-happen.
-
-Fixes: fd1fea6834d0 ("clocksource/drivers: Make Hyper-V clocksource ISA agn=
-ostic")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
-
-The patch was firstly posted on Jul 27: https://lkml.org/lkml/2019/7/27/5
-
-There is no change since then.
-
- drivers/clocksource/hyperv_timer.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyper=
-v_timer.c
-index ba2c79e6a0ee..17b96f9ed0c9 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -139,6 +139,7 @@ void hv_stimer_cleanup(unsigned int cpu)
- 	/* Turn off clockevent device */
- 	if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
- 		ce =3D per_cpu_ptr(hv_clock_event, cpu);
-+		clockevents_unbind_device(ce, cpu);
- 		hv_ce_shutdown(ce);
- 	}
- }
---=20
-2.19.1
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
