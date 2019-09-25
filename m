@@ -2,154 +2,119 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FE65BE82E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2019 00:16:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3345BE83B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Sep 2019 00:23:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfIYWQX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Sep 2019 18:16:23 -0400
-Received: from mail-eopbgr1320130.outbound.protection.outlook.com ([40.107.132.130]:6166
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1728238AbfIYWXc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Sep 2019 18:23:32 -0400
+Received: from mail-eopbgr700101.outbound.protection.outlook.com ([40.107.70.101]:39762
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728277AbfIYWQW (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Sep 2019 18:16:22 -0400
+        id S1727010AbfIYWXb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 25 Sep 2019 18:23:31 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Sot1f9Y58IdYsy7lGHFtc8ONOqwUEnnekosvr0l4xZ36XNRPlpDNHz4qG2FVJr6zBbvWlNQUNgKMMpoCbQ9br4bNt/MQmFrKxrEm8AMQEUwNffmk0q35IgSfmOhUGb4OSXpvXEtYNdd7pqWEgZvO2tyuzaAWTRyEylDvCPwmqdlXq8K7qYxXi4/f7yHDMJfDXYzqbk3XYCa8+JpT9J2A6QcIMtI6r/W4rc17MZUmHBCm4UCEbdULIBIAvFF9M1Cs7btxjR6eWJi5VCsqe2lDTLjciDp+n53sU84XTt71cB/meeaREwaN3BNl81ESSjbAZa/5bd9US2T2uSYIP8xdqQ==
+ b=kHvCd09gCLTrmHTcUR1psY+nRFbZQ6tTdJwFTtw2wiKoid+qfCIe6Q726g0vs0OISX8tNqGmh9j7lrfhRvoXu6KGOMIjfnCpi6WucvLc9rcEe08TIG97ymdFJ/EJhQ1urd2JwXJOqahSsby3XgfGSFmMBfWMihYKLHrRFsvtf+Eh9L/uNm1/f744mi/7+XTS3auTCQD0HeI48mK1U9yEzdQx1JyYssaZDaYCHm0fI+D2+lCgX/oXX+Ejvxf/pVr1+iIS5MglLXtJ9vA8wYYn3mvLRaOqt3e9HR4wLtXygKf7J+t/74JtTpGwfHEn7KuzR359XlMNemH1TZen+sK5zg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WM3WYywFc/OjM6ZRxGVQJDOpPB26M/wiA8GDFJk2VXU=;
- b=Sy3ZY81IM4cdJLQDAxPgh2krV4yIm4JO9fr8IJaP+wPeOc8CB2q+jqpxEpIR9K/ce0s9dZIsNZcjZSSf0g4imfvV2/9rpvbFafCJHQeI25YJXaqu0+hbsA4q2K0qPUdjORcjZ+7mcs19OnNtgZPrCR6C72xQwgzLVwlf8JC4kIyNuo66/3JQjIaNRK2wwk6GV/qefbvVjlXhVyt8Segez39EdjQ3Bno/NM+j/6UMZFCILBF0GS3ntsZB1I9VSTdtLFLnce2mg99Pl+lbMPxQmjMH8K9mgJ+j2sA5ngzl65CJlVIETcV0YWXet1idSMZpC9yNk5ajriCnlXPOjve53w==
+ bh=NRem3lWQqXik2HLucQ9dV31hBwYtbB/bVMNCPabWeZg=;
+ b=O6owLXuPh48xX76fHykGUZ5wiyYT9B1Mp3hAUGQ2J8vnFJkphqlLWHZHjOYA743ote9cs4iOupAkGCuJEwBkNKBAjnZvNu7jw/T2uOdfjfp7fQdoFA5QgPUgoV9aaNNbumZeE4vSfjBgJ7H3fLw1me8BaueNo/x59WN9mqF1cLtD84k1R0o1f9aWDtnkiizd2vueLHAgJyH6Ql9MjvJPqMWrWPkArTOroB5BT/E4ZBxnzI+ratu6xdd4UGlYZ6wHU4ZB8oxEQQpc1QnQhTE9wLpdOuUlK95O1QWujHuCh1dvueUnY6YsO+XxKicjEJloeSHK/j1kKYVBW5nXz5VdPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WM3WYywFc/OjM6ZRxGVQJDOpPB26M/wiA8GDFJk2VXU=;
- b=dHL0EUAPjye7GPKMoG8MujPyl4fCkLYwTH33bMB5Rb2f6M5XK8M51aXMCcA9uTPF6ECJeA2xTJt9KLDRcXfoxlFXUxSjl75crwfFPXyJOcxSjWkCprH8FFFAtA9C19SRBd/Diz7vPL54wvvHYSrlSLH4YsZBcHunGYxriPqTEyw=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0137.APCP153.PROD.OUTLOOK.COM (10.170.188.139) with Microsoft SMTP
+ bh=NRem3lWQqXik2HLucQ9dV31hBwYtbB/bVMNCPabWeZg=;
+ b=gAd1ZhSJ2SQyiQIPkfvzw7oUw/fKJwTBsSmbi7roJp1OG41AwFIrGOhnTf9KOTyS4+AeTiaMWtxsRqahJjpM5Y2SQPdFqjS4OKaf97FDL6x29f0g9pJb66PqtMFSmmolMdkahWDHJOEN821FBTNvmlkdSScwt/cO54g5zeU5c+o=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1226.namprd21.prod.outlook.com (20.179.50.18) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.3; Wed, 25 Sep 2019 22:15:18 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
- 22:15:18 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kbuild test robot <lkp@intel.com>
-CC:     "kbuild-all@01.org" <kbuild-all@01.org>,
+ 15.20.2305.3; Wed, 25 Sep 2019 22:23:28 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::488c:54f6:842e:4c1b]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::488c:54f6:842e:4c1b%7]) with mapi id 15.20.2327.004; Wed, 25 Sep 2019
+ 22:23:28 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "sashal@kernel.org" <sashal@kernel.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH v2] scsi: storvsc: Add the support of hibernation
-Thread-Topic: [PATCH v2] scsi: storvsc: Add the support of hibernation
-Thread-Index: AQHVc+yzKPLAAiKv9kWlGVY81JBAn6c888eg
-Date:   Wed, 25 Sep 2019 22:15:18 +0000
-Message-ID: <PU1P153MB0169E8F4FF7FAB990A10954ABF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1569442244-16726-1-git-send-email-decui@microsoft.com>
- <201909260511.qkZEo9lk%lkp@intel.com>
-In-Reply-To: <201909260511.qkZEo9lk%lkp@intel.com>
+Subject: RE: [PATCH v2][PATCH net] hv_netvsc: Add the support of hibernation
+Thread-Topic: [PATCH v2][PATCH net] hv_netvsc: Add the support of hibernation
+Thread-Index: AQHVc+0lDC5AZrZT/kSUmTsZN92eDKc893KA
+Date:   Wed, 25 Sep 2019 22:23:28 +0000
+Message-ID: <DM6PR21MB1337194387A53DF549398F1ACA870@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1569449034-29924-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <1569449034-29924-1-git-send-email-decui@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T22:15:15.9530993Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-25T22:23:26.9387517Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c1caed55-c678-4d8d-9f8d-ec8d6f3aecd9;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=05dc5d50-2768-4e9e-8630-62d09477aeac;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:35f9:636:b84a:df21]
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eb851f3f-cf5b-4736-7622-08d74205d956
+x-ms-office365-filtering-correlation-id: e0a306a5-b516-466e-4b14-08d74206fda9
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0137:|PU1P153MB0137:
+x-ms-traffictypediagnostic: DM6PR21MB1226:|DM6PR21MB1226:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0137F6898304D73C97B1E707BF870@PU1P153MB0137.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <DM6PR21MB12269BF23C99E98537637EABCA870@DM6PR21MB1226.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2089;
 x-forefront-prvs: 01713B2841
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(366004)(39860400002)(376002)(199004)(189003)(10290500003)(478600001)(6916009)(54906003)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006)(55016002)(99286004)(22452003)(10090500001)(5024004)(316002)(256004)(86362001)(14444005)(9686003)(8990500004)(71200400001)(71190400001)(33656002)(5660300002)(52536014)(107886003)(6246003)(2906002)(6116002)(4326008)(14454004)(102836004)(6436002)(305945005)(53546011)(6506007)(186003)(46003)(7736002)(229853002)(25786009)(476003)(7696005)(76176011)(486006)(81166006)(81156014)(8676002)(11346002)(8936002)(74316002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0137;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(189003)(199004)(13464003)(3846002)(6636002)(6246003)(26005)(1511001)(8676002)(102836004)(76176011)(22452003)(81156014)(186003)(5024004)(2906002)(53546011)(86362001)(10090500001)(6506007)(99286004)(256004)(14444005)(2201001)(7696005)(81166006)(66066001)(7736002)(6116002)(74316002)(8990500004)(305945005)(25786009)(229853002)(33656002)(66446008)(64756008)(8936002)(52536014)(4744005)(66946007)(76116006)(2501003)(476003)(71190400001)(486006)(9686003)(10290500003)(71200400001)(6436002)(316002)(11346002)(110136005)(55016002)(478600001)(5660300002)(14454004)(66556008)(446003)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1226;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MU1b1zrHJuP1rmyul436nE/3U8SnUrwIIvYG/zBMeqJ45JUpaQhfC5/7CIGspkCj26KhHamsxotZoPuhiS8GJnB69x9dFftWgD4hTk1ZqezXsdIruUvj+QqEQ212W3gXtBum+4nfNPvyDMJlhcvz0GYfjj1UfmW/BXXiFK9Xv7/VWmhwdJgjPPMGlnUtlVNUOtFpzcKm+SBvoXYkUu4qBxg52US+Tz/MRdnGVTAjbiaacXySYbjOJ2Fo0kB1QH5b+Gr3Z6ZAYiOBmGlHFBl0RpZr2igKAuzWA2ES0dcWOJ0JVdbL3AusTzWUTfL9XO070K6cSK+SC5QN1jfGLu/B4wBgDlcKRMZ4wM1Vp997j/dns8JzLW57X6OBjtVfbpjWbo/++fSB+xXHMCqjeVyqHsHQsPErVnNuwsN6eMhP9PE=
+x-microsoft-antispam-message-info: ee9uHZcmjYCDE0gr3Hm16KTdSxaV3JZ6xdU5nJ8fG4dBvzgGyu4h8B1U8mbjujuQRAdFKSxqNWM/ZXLcImyQGjQmSF37avMpL5XZ15Rdz6CZFiARLegdYzswYJ7+LoFoFF+AywHqE786NMVKK+1zOjlkqqGis6Qq+SnR6GCEsdHfYFJGB29C9HOVw/6IuWwIPjgURRhezxrbAH0IgXOvETZ0P2eAy2aOHhtFkZWF9rl6cRMWy1X6CDN2GSoPHFnsUcC780jLjeJ+LMDrJ8995cRO4kIGWDdVboTqwlJ83ScEk9CezOFzoX8HyDexw9VYJhgZOCx69R/VjiDfoxtzl3yAxwM0OUWaugrdLz3dRLQbmFfjwPSVhED8ifalvFbv2x2CBEBh0f/iGwwLSx0SnUcdvfDR1+6/rSsT+lvJHDY=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb851f3f-cf5b-4736-7622-08d74205d956
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:15:18.0618
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0a306a5-b516-466e-4b14-08d74206fda9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2019 22:23:28.7379
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6JiFNJj6MxeG2cl5UAIrFA424cvgEVzz3sQENaahJ7Z/gr9AmiKPklCm8jyx/Yzi5YUoK+jSUhQN6VI1NirdQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0137
+X-MS-Exchange-CrossTenant-userprincipalname: miscHE2fDX4a74eVZYZloHeRcgjvm9rLUIIp/qTqPM7UI7PsJGeMQFXNGZ+DOFZQokvcR8m3jnV8PjHqEPM+ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1226
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: kbuild test robot <lkp@intel.com>
-> Sent: Wednesday, September 25, 2019 2:55 PM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: kbuild-all@01.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+
+
+> -----Original Message-----
+> From: Dexuan Cui <decui@microsoft.com>
+> Sent: Wednesday, September 25, 2019 6:04 PM
+> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
 > <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; sashal@kernel.org; jejb@linux.ibm.com;
-> martin.petersen@oracle.com; linux-hyperv@vger.kernel.org;
-> linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org; Michael Kelley
-> <mikelley@microsoft.com>; Dexuan Cui <decui@microsoft.com>
-> Subject: Re: [PATCH v2] scsi: storvsc: Add the support of hibernation
+> <sthemmin@microsoft.com>; sashal@kernel.org; davem@davemloft.net;
+> linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Michael Kelley <mikelley@microsoft.com>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Subject: [PATCH v2][PATCH net] hv_netvsc: Add the support of hibernation
 >=20
-> Hi Dexuan,
+> The existing netvsc_detach() and netvsc_attach() APIs make it easy to
+> implement the suspend/resume callbacks.
 >=20
-> Thank you for the patch! Yet something to improve:
->=20
-> [auto build test ERROR on mkp-scsi/for-next]
-> [cannot apply to v5.3 next-20190924]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help
-> improve the system. BTW, we also suggest to use '--base' option to specif=
-y the
-> base tree in git format-patch, please see
-> [...snipped...]
-> config: x86_64-rhel (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-13) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=3Dx86_64
->=20
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->=20
-> All errors (new ones prefixed by >>):
->=20
-> >> drivers//scsi/storvsc_drv.c:1981:3: error: 'struct hv_driver' has no m=
-ember
-> named 'suspend'
->      .suspend =3D storvsc_suspend,
->       ^~~~~~~
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
-This patch depends on the below patch in Linus's tree (today):
-271b2224d42f ("Drivers: hv: vmbus: Implement suspend/resume for VSC drivers=
- for hibernation")
-So, we don't really have an issue here.
-
-The mkp-scsi/for-next branch needs to do a merge with Linus's master branch=
-.
-
-Thanks,
--- Dexuan
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
