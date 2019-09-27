@@ -2,87 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52E67C045D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 13:30:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34A54C04CB
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 14:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfI0L2m (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 Sep 2019 07:28:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:64723 "EHLO mx1.redhat.com"
+        id S1726809AbfI0MFP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 Sep 2019 08:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbfI0L2l (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 Sep 2019 07:28:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726087AbfI0MFP (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:05:15 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 47D5C18C428E;
-        Fri, 27 Sep 2019 11:28:41 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-249.ams2.redhat.com [10.36.117.249])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 47A785D9C3;
-        Fri, 27 Sep 2019 11:28:38 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-hyperv@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 2946B217D7;
+        Fri, 27 Sep 2019 12:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569585914;
+        bh=W3Fut34UYd87648+dZlDGceVMqrfwS5SkthrB6eivls=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ov8RUuH/Vluia5z9gTayuY3fyS6jNImzZIAwMUryKnJXG9Lz+T6yOD54+T8IViSYH
+         ws3GBi0RdsNwQHXG8jHxP0g6HRX8a0Ng5XvGjjHRQflxFecx/K2v+5LpzwWkajR52v
+         +NW866OC9BVmZ6l3ic09nwkjI57H/1UtS4EdqK10=
+Date:   Fri, 27 Sep 2019 08:05:13 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: [RFC PATCH 13/13] vsock: fix bind() behaviour taking care of CID
-Date:   Fri, 27 Sep 2019 13:27:03 +0200
-Message-Id: <20190927112703.17745-14-sgarzare@redhat.com>
-In-Reply-To: <20190927112703.17745-1-sgarzare@redhat.com>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] HID: hyperv: Add the support of hibernation
+Message-ID: <20190927120513.GM8171@sasha-vm>
+References: <1568244952-66716-1-git-send-email-decui@microsoft.com>
+ <PU1P153MB01695CEE01D65E8CD5CFA4E9BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <nycvar.YFH.7.76.1909261521410.24354@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.1909261522380.24354@cbobk.fhfr.pm>
+ <PU1P153MB016973F30CC1A52E46D15230BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 27 Sep 2019 11:28:41 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB016973F30CC1A52E46D15230BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-When we are looking for a socket bound to a specific address,
-we also have to take into account the CID.
+On Fri, Sep 27, 2019 at 05:42:31AM +0000, Dexuan Cui wrote:
+>> From: Jiri Kosina <jikos@kernel.org>
+>> Sent: Thursday, September 26, 2019 6:23 AM
+>> To: Dexuan Cui <decui@microsoft.com>
+>>
+>> On Thu, 26 Sep 2019, Jiri Kosina wrote:
+>>
+>> > > > This patch is basically a pure Hyper-V specific change and it has a
+>> > > > build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus:
+>> > > > Implement
+>> > > > suspend/resume for VSC drivers for hibernation"), which is on Sasha
+>> Levin's
+>> > > > Hyper-V tree's hyperv-next branch [ ... snipped ...]
+>> > > >
+>> > > > I request this patch should go through Sasha's tree rather than the
+>> > > > input subsystem's tree.
+>> > > >
+>> > > > Hi Jiri, Benjamin, can you please Ack?
+>> > >
+>> > > Hi Jiri, Benjamin,
+>> > > Can you please take a look at the patch?
+>> >
+>> > Hi Dexuan,
+>> >
+>> > I am planning to process it once 5.4 merge window is over and thus hid.git
+>> > is open again for 5.5 material.
+>>
+>> Ah, now I see you asked for this go through hyperv tree. For that, feel
+>> free to add
+>> 	Acked-by: Jiri Kosina <jkosina@suse.cz>
+>> Jiri Kosina
+>
+>Thanks for the Ack, Jiri!
+>
+>I have a bunch of patches, including this one, to support Linux VM's hibernation
+>when the VM runs on Hyper-V. I just feel it would be better for all of them to
+>go through the Hyper-V tree. :-)
 
-This patch is useful with multi-transports support because it
-allows the binding of the same port with different CID, and
-it prevents a connection to a wrong socket bound to the same
-port, but with different CID.
+Thank Dexuan, Jiri,
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- net/vmw_vsock/af_vsock.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Dexuan, I've been silently ignoring your patches for the past few weeks
+for the same reason as Jiri has mentioned. I'll pick them all up once
+the 5.4 merge window closes in a few days.
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 750b62711b01..bffa6fa7b8e5 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -230,10 +230,16 @@ static struct sock *__vsock_find_bound_socket(struct sockaddr_vm *addr)
- {
- 	struct vsock_sock *vsk;
- 
--	list_for_each_entry(vsk, vsock_bound_sockets(addr), bound_table)
--		if (addr->svm_port == vsk->local_addr.svm_port)
-+	list_for_each_entry(vsk, vsock_bound_sockets(addr), bound_table) {
-+		if (vsock_addr_equals_addr(addr, &vsk->local_addr))
- 			return sk_vsock(vsk);
- 
-+		if (addr->svm_port == vsk->local_addr.svm_port &&
-+		    (vsk->local_addr.svm_cid == VMADDR_CID_ANY ||
-+		     addr->svm_cid == VMADDR_CID_ANY))
-+			return sk_vsock(vsk);
-+	}
-+
- 	return NULL;
- }
- 
--- 
-2.21.0
-
+--
+Thanks,
+Sasha
