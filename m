@@ -2,23 +2,23 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CEAB8C0429
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 13:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EB5AC0438
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 13:30:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfI0L1k (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 Sep 2019 07:27:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38706 "EHLO mx1.redhat.com"
+        id S1727124AbfI0L1W (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 Sep 2019 07:27:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39806 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfI0L1j (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 Sep 2019 07:27:39 -0400
+        id S1725890AbfI0L1W (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 27 Sep 2019 07:27:22 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62BD110C094B;
-        Fri, 27 Sep 2019 11:27:39 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id BD24A8A1CA7;
+        Fri, 27 Sep 2019 11:27:21 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-117-249.ams2.redhat.com [10.36.117.249])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 457435D9C3;
-        Fri, 27 Sep 2019 11:27:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3F2445D9C3;
+        Fri, 27 Sep 2019 11:27:17 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     netdev@vger.kernel.org
 Cc:     linux-hyperv@vger.kernel.org,
@@ -33,89 +33,48 @@ Cc:     linux-hyperv@vger.kernel.org,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Dexuan Cui <decui@microsoft.com>,
         Jorgen Hansen <jhansen@vmware.com>
-Subject: [RFC PATCH 03/13] vsock: remove include/linux/vm_sockets.h file
-Date:   Fri, 27 Sep 2019 13:26:53 +0200
-Message-Id: <20190927112703.17745-4-sgarzare@redhat.com>
+Subject: [RFC PATCH 01/13] vsock/vmci: remove unused VSOCK_DEFAULT_CONNECT_TIMEOUT
+Date:   Fri, 27 Sep 2019 13:26:51 +0200
+Message-Id: <20190927112703.17745-2-sgarzare@redhat.com>
 In-Reply-To: <20190927112703.17745-1-sgarzare@redhat.com>
 References: <20190927112703.17745-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Fri, 27 Sep 2019 11:27:39 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Fri, 27 Sep 2019 11:27:21 +0000 (UTC)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This header file now only includes the "uapi/linux/vm_sockets.h".
-We can include directly it when needed.
+The VSOCK_DEFAULT_CONNECT_TIMEOUT definition was introduced with
+commit d021c344051af ("VSOCK: Introduce VM Sockets"), but it is
+never used in the net/vmw_vsock/vmci_transport.c.
+
+VSOCK_DEFAULT_CONNECT_TIMEOUT is used and defined in
+net/vmw_vsock/af_vsock.c
 
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- include/linux/vm_sockets.h            | 13 -------------
- include/net/af_vsock.h                |  2 +-
- include/net/vsock_addr.h              |  2 +-
- net/vmw_vsock/vmci_transport_notify.h |  1 -
- 4 files changed, 2 insertions(+), 16 deletions(-)
- delete mode 100644 include/linux/vm_sockets.h
+ net/vmw_vsock/vmci_transport.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/include/linux/vm_sockets.h b/include/linux/vm_sockets.h
-deleted file mode 100644
-index 7dd899ccb920..000000000000
---- a/include/linux/vm_sockets.h
-+++ /dev/null
-@@ -1,13 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * VMware vSockets Driver
-- *
-- * Copyright (C) 2007-2013 VMware, Inc. All rights reserved.
+diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
+index 8c9c4ed90fa7..f8e3131ac480 100644
+--- a/net/vmw_vsock/vmci_transport.c
++++ b/net/vmw_vsock/vmci_transport.c
+@@ -78,11 +78,6 @@ static int PROTOCOL_OVERRIDE = -1;
+ #define VMCI_TRANSPORT_DEFAULT_QP_SIZE       262144
+ #define VMCI_TRANSPORT_DEFAULT_QP_SIZE_MAX   262144
+ 
+-/* The default peer timeout indicates how long we will wait for a peer response
+- * to a control message.
 - */
+-#define VSOCK_DEFAULT_CONNECT_TIMEOUT (2 * HZ)
 -
--#ifndef _VM_SOCKETS_H
--#define _VM_SOCKETS_H
--
--#include <uapi/linux/vm_sockets.h>
--
--#endif /* _VM_SOCKETS_H */
-diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
-index 80ea0f93d3f7..c660402b10f2 100644
---- a/include/net/af_vsock.h
-+++ b/include/net/af_vsock.h
-@@ -10,7 +10,7 @@
+ /* Helper function to convert from a VMCI error code to a VSock error code. */
  
- #include <linux/kernel.h>
- #include <linux/workqueue.h>
--#include <linux/vm_sockets.h>
-+#include <uapi/linux/vm_sockets.h>
- 
- #include "vsock_addr.h"
- 
-diff --git a/include/net/vsock_addr.h b/include/net/vsock_addr.h
-index 57d2db5c4bdf..cf8cc140d68d 100644
---- a/include/net/vsock_addr.h
-+++ b/include/net/vsock_addr.h
-@@ -8,7 +8,7 @@
- #ifndef _VSOCK_ADDR_H_
- #define _VSOCK_ADDR_H_
- 
--#include <linux/vm_sockets.h>
-+#include <uapi/linux/vm_sockets.h>
- 
- void vsock_addr_init(struct sockaddr_vm *addr, u32 cid, u32 port);
- int vsock_addr_validate(const struct sockaddr_vm *addr);
-diff --git a/net/vmw_vsock/vmci_transport_notify.h b/net/vmw_vsock/vmci_transport_notify.h
-index 7843f08d4290..a1aa5a998c0e 100644
---- a/net/vmw_vsock/vmci_transport_notify.h
-+++ b/net/vmw_vsock/vmci_transport_notify.h
-@@ -11,7 +11,6 @@
- #include <linux/types.h>
- #include <linux/vmw_vmci_defs.h>
- #include <linux/vmw_vmci_api.h>
--#include <linux/vm_sockets.h>
- 
- #include "vmci_transport.h"
- 
+ static s32 vmci_transport_error_to_vsock_error(s32 vmci_error)
 -- 
 2.21.0
 
