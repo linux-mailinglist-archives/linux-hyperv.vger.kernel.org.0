@@ -2,133 +2,180 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 652FDBFF86
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 09:01:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 694EEC0138
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 10:33:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfI0HBQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 Sep 2019 03:01:16 -0400
-Received: from mail-eopbgr1310117.outbound.protection.outlook.com ([40.107.131.117]:22852
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725804AbfI0HBQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:01:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QvMOqkO4CqDiRkVi4SypeH0lUwEnkP/2dlnL1f1mufY5plsrPwOrOMtdSlUa+omyzwl8xb2YsuABW+Rw0mAYaGknQ7McpMIN8veQ44b/rtWj6ouTT3Z1S/jJOFrDnjEwCs2loKCA8txi5tOdTNk1+RWUXtswONu3OKiGiPuf2G23vGdRH6rcSSkoSRMAL5eQ7RlEeUsViK95fzW88CYdDXFXG0YVkU5dupuJ0O/dD7mOw8VTboHuK/WhYEhrSx8fR7qcRZ7tWAo3A+uFpwCZlp/hZyV+KJEl3l8jqUWVbQyMsKYInCX5+K0Riew9OSPF4fYiEEgbwdCDzxoa/rbYUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k2qx+MoifyY9iDZp5CWqTlJ2bK3JSKpYz1v70AuDUZw=;
- b=ncaevBglMgIOZShUeVRxzo7y/Hd4Fw6N7UETGJqXsja41bCJ/nOkvv4AY37c/hQQXGe+VQNxJp0068Se3mZG/5oDTPPKfvwxdU6YoVlYc+CmoQdwFEOS30Ey5swPr9fwpDdA9Ejsy0at+Sh8OWG0Ez0kWxLesSewZIlEyHUV49LfM2kQV1Cy6WFbe98blDgYNwPE932e/oXAKEYN43u8XYShwy96B8uYmt7Oop/QjWpAu5diVErWe0zMp2tP7yQcs/szVHQ4OP8WJRihbK6JJz9k9/eWmG4GGu7ypCSaijrdQT98YWWCaF8ooUm/NhtvwtfbrPQae6Oo4XuF8aUojw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k2qx+MoifyY9iDZp5CWqTlJ2bK3JSKpYz1v70AuDUZw=;
- b=HtvO4CWsPx5Lw8Vmh4JWNcV+u6D/EqxNx+Ox4oc+HdlD9oNOdaTLer6auX4nFRu9t0wbGEFi0lYh33rnG6/LzZtmiIcsSI5Gb0j4OJ1Yo1oX0jHrrMqRfG7HbkMNypHanAViDxGZ1mr2Jooed9sIK7WO9syB9IarqPmpRxbVtbE=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0155.APCP153.PROD.OUTLOOK.COM (10.170.189.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.4; Fri, 27 Sep 2019 07:01:08 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.009; Fri, 27 Sep 2019
- 07:01:08 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
+        id S1726178AbfI0IdF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 Sep 2019 04:33:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60394 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbfI0IdF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 27 Sep 2019 04:33:05 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EC693C05AA52
+        for <linux-hyperv@vger.kernel.org>; Fri, 27 Sep 2019 08:33:04 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id 190so2434430wme.4
+        for <linux-hyperv@vger.kernel.org>; Fri, 27 Sep 2019 01:33:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8q/w5sAXzXN1dRT+MgNlQctaxYrMedzUaye5evRWr8c=;
+        b=Tygc7LuzT9nwYKPYoW/nmV7RRvGYzSAcW+wMmc+DCCxCaOnA9Qpyj76CrOdio3Jrnj
+         bexQQGda87kcna0eDtQNkWKY0OA6TLP8fBwuWPMbAJ0b2lzV8mZIRTWEmZYSCNPe/6UV
+         6vofb+6T+PjYcybHFQIlYNtT5kTDkhL7o6f1QZa6/lPDU70lBWsk0Qy4fDGjTbLwYGSB
+         uLAvz6EOkE7R4jexVA65vlIw+yoR0GML63qkGCxE8LYY4hMrkgHtG+T41AcVb2DoKuRh
+         iz/mMrOHY4wRivlKT4p6cNUm8db9xs5HcOm/rqCHrCfkSEseSo9CFDfiPwCfpIEPtUvN
+         Kq3g==
+X-Gm-Message-State: APjAAAX8+U2RuwwWB1ZcztT+dARDM5L6H0DFlIAj7Ob0MJPRNMjG8HLr
+        Mvn+JWOEQ6whEGP1+SFbShNyTrJRTX2EF/aYFFZgGwXZGC43RtN+S5b82pmYjxmhN8R0vX0e71X
+        Q3PCm2Qp5hSmeC5PD0+ZsBAeP
+X-Received: by 2002:adf:e9c5:: with SMTP id l5mr1966697wrn.40.1569573183635;
+        Fri, 27 Sep 2019 01:33:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz1XqOwNHa9WBwgJ453lXOPmAttGZXlCqgWAiPmgeffopvvBWugkK9DmTJuCHziUY3/8n0+bQ==
+X-Received: by 2002:adf:e9c5:: with SMTP id l5mr1966676wrn.40.1569573183304;
+        Fri, 27 Sep 2019 01:33:03 -0700 (PDT)
+Received: from steredhat.homenet.telecomitalia.it (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id 33sm2224730wra.41.2019.09.27.01.33.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 01:33:02 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 10:32:59 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "ytht.net@gmail.com" <ytht.net@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH 4/4] PCI: hv: Change pci_protocol_version to per-hbus
-Thread-Topic: [PATCH 4/4] PCI: hv: Change pci_protocol_version to per-hbus
-Thread-Index: AQHVdIeFCShWsTFDfkCdYqKWFRgLg6c/GIZA
-Date:   Fri, 27 Sep 2019 07:01:07 +0000
-Message-ID: <PU1P153MB016915A4E7D17C6BE5DEC71DBF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568245086-70601-1-git-send-email-decui@microsoft.com>
- <1568245086-70601-5-git-send-email-decui@microsoft.com>
- <20190926162856.GA7827@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190926162856.GA7827@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-27T07:01:06.1624134Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7be1dd46-1a69-455b-8139-5214366c5d53;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:557a:f14b:ea25:465f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b97bbd72-86f3-46c8-0cd7-08d7431878fb
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0155:|PU1P153MB0155:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0155DEC497FDB4DB878ED9BBBF810@PU1P153MB0155.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1122;
-x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(136003)(396003)(39860400002)(366004)(189003)(199004)(476003)(86362001)(25786009)(2906002)(6246003)(107886003)(4326008)(229853002)(55016002)(9686003)(10290500003)(6436002)(6916009)(478600001)(6116002)(46003)(74316002)(8990500004)(99286004)(7736002)(4744005)(305945005)(256004)(102836004)(10090500001)(76176011)(52536014)(7696005)(316002)(54906003)(186003)(6506007)(5660300002)(64756008)(66556008)(66476007)(66446008)(81156014)(76116006)(14454004)(81166006)(66946007)(8676002)(8936002)(71190400001)(71200400001)(22452003)(486006)(446003)(33656002)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0155;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vQ3s8HWazHTz8jqEPRdFN0RkfWvdkWKFvhnw+0UcfJDmVYisH7wXRp1BOHu2KFYoYDW+9pBBc5J+7Dxi3t8jfbqQnA7Ua5eUtXJFS1YOxo/gZnQX60e/eSDHOMbOVIint3zltfXXEzYF/VAHt4qrt5w2SOcA5NrjmV+of0p3/qhyW8QP3lFH2oOah2lI8TNFTqiooRfgbIGs/94fVK3k2DgNcBOSeWGl25HyJ9MZjCz7sp/7IlqHuO40mUuvY07Vb7R0rgtflMV0iOuGienUnSZWjrksBzHvtPWUmKcS+DbagR30WH0SlghChC3486l3wvjTKp1/azSf/FzfxjM7CqyAr2Oyaz2DkM8JyzNbd6W/586YgfyjWCF4G//gmGCfHCKE9MLLdTk5lGHbG6D5fHWCN/rcOD5WU5RLHazmJGY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "jhansen@vmware.com" <jhansen@vmware.com>
+Subject: Re: [PATCH net v2] vsock: Fix a lockdep warning in __vsock_release()
+Message-ID: <20190927083259.zpzseatncogfdrv4@steredhat.homenet.telecomitalia.it>
+References: <1569460241-57800-1-git-send-email-decui@microsoft.com>
+ <20190926074749.sltehhkcgfduu7n2@steredhat.homenet.telecomitalia.it>
+ <PU1P153MB01698C46C9348B9762D5E122BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b97bbd72-86f3-46c8-0cd7-08d7431878fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 07:01:07.9522
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nYHcEsrUHKVOgL0UUhVV2TnktwgUE8Diw99140Z8ClIFLI3/43kMrC3r0dzKOlsRFME7f+agkEfApfU68eVN+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0155
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB01698C46C9348B9762D5E122BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Thursday, September 26, 2019 9:29 AM
->=20
-> On Wed, Sep 11, 2019 at 11:38:23PM +0000, Dexuan Cui wrote:
-> > A VM can have multiple hbus. It looks incorrect for the second hbus's
-> > hv_pci_protocol_negotiation() to set the global variable
-> > 'pci_protocol_version' (which was set by the first hbus), even if the
-> > same value is written.
-> >
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
->=20
-> This is a fix that seems unrelated to the rest of the series.
+On Fri, Sep 27, 2019 at 05:37:20AM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Stefano Garzarella
+> > Sent: Thursday, September 26, 2019 12:48 AM
+> > 
+> > Hi Dexuan,
+> > 
+> > On Thu, Sep 26, 2019 at 01:11:27AM +0000, Dexuan Cui wrote:
+> > > ...
+> > > NOTE: I only tested the code on Hyper-V. I can not test the code for
+> > > virtio socket, as I don't have a KVM host. :-( Sorry.
+> > >
+> > > @Stefan, @Stefano: please review & test the patch for virtio socket,
+> > > and let me know if the patch breaks anything. Thanks!
+> > 
+> > Comment below, I'll test it ASAP!
+> 
+> Stefano, Thank you!
+> 
+> BTW, this is how I tested the patch:
+> 1. write a socket server program in the guest. The program calls listen()
+> and then calls sleep(10000 seconds). Note: accept() is not called.
+> 
+> 2. create some connections to the server program in the guest.
+> 
+> 3. kill the server program by Ctrl+C, and "dmesg" will show the scary
+> call-trace, if the kernel is built with 
+> 	CONFIG_LOCKDEP=y
+> 	CONFIG_LOCKDEP_SUPPORT=y
+> 
+> 4. Apply the patch, do the same test and we should no longer see the call-trace.
 
-Correct.
-=20
-> AFAICS the version also affects code paths in the driver, which
-> means that in case you have busses with different versions the
-> current code is wrong in this respect.
+Thanks very useful! I'll follow these steps!
 
-Correct.
+> 
+> > > -		lock_sock(sk);
+> > > +		/* When "level" is 2, use the nested version to avoid the
+> > > +		 * warning "possible recursive locking detected".
+> > > +		 */
+> > > +		if (level == 1)
+> > > +			lock_sock(sk);
+> > 
+> > Since lock_sock() calls lock_sock_nested(sk, 0), could we use directly
+> > lock_sock_nested(sk, level) with level = 0 in vsock_release() and
+> > level = SINGLE_DEPTH_NESTING here in the while loop?
+> > 
+> > Thanks,
+> > Stefano
+> 
+> IMHO it's better to make the lock usage more explicit, as the patch does.
+> 
+> lock_sock_nested(sk, level) or lock_sock_nested(sk, 0) seems a little
+> odd to me. But I'm open to your suggestion: if any of the network
+> maintainers, e.g. davem, also agrees with you, I'll change the code 
+> as you suggested. :-)
 
-> You have to capture this concept in the commit log, it reads as
-> an optional change but it looks like a potential bug.
->=20
-> Lorenzo
+Sure!
 
-Agreed. Let me improve the commit log in v2.
+Just to be clear, I'm proposing this (plus the changes in the transports
+and yours useful comments):
+
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -638,7 +638,7 @@ struct sock *__vsock_create(struct net *net,
+ }
+ EXPORT_SYMBOL_GPL(__vsock_create);
+
+-static void __vsock_release(struct sock *sk)
++static void __vsock_release(struct sock *sk, int level)
+ {
+        if (sk) {
+                struct sk_buff *skb;
+@@ -650,7 +650,7 @@ static void __vsock_release(struct sock *sk)
+
+                transport->release(vsk);
+
+-               lock_sock(sk);
++               lock_sock_nested(sk, level);
+                sock_orphan(sk);
+                sk->sk_shutdown = SHUTDOWN_MASK;
+
+@@ -659,7 +659,7 @@ static void __vsock_release(struct sock *sk)
+
+                /* Clean up any sockets that never were accepted. */
+                while ((pending = vsock_dequeue_accept(sk)) != NULL) {
+-                       __vsock_release(pending);
++                       __vsock_release(pending, SINGLE_DEPTH_NESTING);
+                        sock_put(pending);
+                }
+
+@@ -708,7 +708,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space);
+
+ static int vsock_release(struct socket *sock)
+ {
+-       __vsock_release(sock->sk);
++       __vsock_release(sock->sk, 0);
+        sock->sk = NULL;
+        sock->state = SS_FREE;
 
 Thanks,
--- Dexuan
+Stefano
