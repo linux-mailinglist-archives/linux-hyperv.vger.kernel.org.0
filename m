@@ -2,66 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EAC59BFF5F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 08:49:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8AD4BFF82
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 09:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbfI0Gti (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 Sep 2019 02:49:38 -0400
-Received: from mail-eopbgr1320134.outbound.protection.outlook.com ([40.107.132.134]:8263
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1725812AbfI0HAv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 Sep 2019 03:00:51 -0400
+Received: from mail-eopbgr1310133.outbound.protection.outlook.com ([40.107.131.133]:19808
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725812AbfI0Gti (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 Sep 2019 02:49:38 -0400
+        id S1725804AbfI0HAv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 27 Sep 2019 03:00:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HkIc+d4zHGh+xPMd4nW6BTB7DZ2nYCeMmPsCdqAGshqlR1+NqtAEP5DgJfwu5y4i3mzzisbp6j9kDqSTAVzEjelhAfH26mB+kzGumKzMbh47JLFU9RspiEZQF+j9iT8xVd+k8RH6KaW0gLbmNfcMtHceO0953t6c8K7VcRW7+sjk72KqkvvzUeYQzLUECzRTF0noxLdxPqL2HZSvNWOu9KuPSIrfLBvft7TYsQ2nYK8OUN0aZatRmDHDILmYoDTabgu3MnQYnJMy0R0MJM8yb2lBQrE+iWx6uOT8THS2OoPKa8NF9AmK48ASPofxjnZLDxOSaoqNwR9xpyVgtTc7RQ==
+ b=NKGFKPJiasNtwjPE7YhvfPxTOMlBgzIpxfRHVd0YGjYjZSWM/Tok+itiv5pZAW7U55CQkBUNJIKTjpAdwHmfzQ3LCqc+/wms4pSIR8nwOsSP5kcBMB77k/I3A+TfCuzamGulFsWk7eXsh/pjuxB/uKd/qJkmJdU7fe2z34Fn+aiuL3+QFGuHE3pufxkpSr5V9PvdWwOVT4wRT6fVBheSptMltavJxF5H96Pts9M18SgqKKsVz4qE/3eFTeHGpXeNG8fKXrSlf1jwHRVceAo8ysgHyc3psJZ6i5gODEpV51yOGdbBiY3FBIGqcdPOmgy52dw6ZHWYE5OMPujcjBNBhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oYc8G/ttPt0J2xy7FkwsOD56/5VRUyPGEPWavnvvb7s=;
- b=SWpxNyEL0Vsb7xdcRP/O+5yV3d+8DgJAjNSyPqnauxU1At9uwTdsduJRn1nHkgB0/kv9ZNEWksSYzsV/7DkwrMuE5oEmJ/UIytPH+M4k/m9cwT235G1gEQhtT/LIRAbYrYq/EP0tOnIugU3gmW8UBgdISSpX+H0g/jB+5YsmtG3WIRw2Ll/UV3OvQm80tShN3worNOLFlFpqp6JsBvdgiRvxVACoH0a0E8bIhdSzxC1PzEXCIpWVjtamM/dpGlKImGUsQazLezK5yjMMuvWCfoe/ONY5zb8OhpUJl3GOk2b8Q3PPGIy77YG8eyfOGQHbX0DPAM1eWVqDaalINy/aGg==
+ bh=9DhD484/bq8eFpP2TIW/lPziiZcZbHY7GQVS3jdPd6g=;
+ b=T96zNRsLIzXAOn2EkGztsMLWrc1B6noR7bmr1II3YnJzzcG648rjd8Dzl8eqx7YKs8GZfK4613e9PQdq1+0QxcS/6XSy9Kj5JenmD7uTw3Xf8KorORoINMyiKDLLxAhVhntOldbSCmJeZYZS2m7zZWv0IiDBvaVvkLNGSlc3pRJwxcc0nsJziXN0E9gdeawwX3ryffI82XGxEyLmR3dbxWlsuIMtL0B7nvmeC9rKIYJmhtL+KTDMeMD+gI+IZB7Y4y0LOxD3KL/TKIoCiUpt9dHRgJX5BpoA3X60fnARkwud8QhT9ubtD+KTmIZ8o2Qtwum5ckJpleJPrHch5o5NBA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oYc8G/ttPt0J2xy7FkwsOD56/5VRUyPGEPWavnvvb7s=;
- b=VRR4Ff7pC/cL41kQO5Wv6pzw45JEQtsd2XpB6w9ChzXpnpmN0SxVVcflaK+3oVjsIR75kuj1Qc/hFazoSmNlaz4fFd3H54ypKMVPI07el6QX9dCTXXq4N0dbRr2jfBZPxMkIW9rjxlcWS8JvxRXp5KVV4lgOq5vZbiowViCOOhM=
+ bh=9DhD484/bq8eFpP2TIW/lPziiZcZbHY7GQVS3jdPd6g=;
+ b=N2TPPGC8+0P49nI4/peGlRmGwNCPMKAVarYtKgyNjYavZNotRhtvT5x3UlHICoQj4xVwtRp4qlJugCaJYOtvBdquJpL/754kihXpuZQ2sTT9i8Ds7e0IVTfyvC0BYL06xzsmCDDrSjcXlvGwSnkmeTSyqlzZng5Bm1bIeltxurk=
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0138.APCP153.PROD.OUTLOOK.COM (10.170.188.140) with Microsoft SMTP
+ PU1P153MB0155.APCP153.PROD.OUTLOOK.COM (10.170.189.11) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.2; Fri, 27 Sep 2019 06:48:53 +0000
+ 15.20.2327.4; Fri, 27 Sep 2019 07:00:40 +0000
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.009; Fri, 27 Sep 2019
- 06:48:53 +0000
+ 07:00:40 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: RE: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for
- hibernation
-Thread-Topic: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page
- for hibernation
-Thread-Index: AQHVdFddc0vkIIkGmEOkqRoIHJJIFqc/CHEA
-Date:   Fri, 27 Sep 2019 06:48:52 +0000
-Message-ID: <PU1P153MB01695A159E9843B4E1EC13AEBF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
- <1567723581-29088-2-git-send-email-decui@microsoft.com>
- <87ef0372wv.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87ef0372wv.fsf@vitty.brq.redhat.com>
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH 2/4] PCI: hv: Add the support of hibernation
+Thread-Topic: [PATCH 2/4] PCI: hv: Add the support of hibernation
+Thread-Index: AQHVdIfH3fC8IaTlNE+UKx6f51EquKc/Fv0w
+Date:   Fri, 27 Sep 2019 07:00:39 +0000
+Message-ID: <PU1P153MB0169D7BA6134460B354DFCF0BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1568245086-70601-1-git-send-email-decui@microsoft.com>
+ <1568245086-70601-3-git-send-email-decui@microsoft.com>
+ <20190926163049.GB7827@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190926163049.GB7827@e121166-lin.cambridge.arm.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -69,105 +62,67 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-27T06:48:51.2878957Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-27T07:00:38.3231724Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=da16a730-ee30-4582-b8df-bb4da2a05b46;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=544c566a-4e95-4f56-9c99-b9b33894ad3a;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
 x-originating-ip: [2601:600:a280:7f70:557a:f14b:ea25:465f]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5b5bbd45-5edc-46d8-d7d4-08d74316c2e8
+x-ms-office365-filtering-correlation-id: 61204121-1258-4e55-3583-08d743186834
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0138:|PU1P153MB0138:|PU1P153MB0138:
+x-ms-traffictypediagnostic: PU1P153MB0155:|PU1P153MB0155:
 x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB013893DAFB4FF4AD0552FC6CBF810@PU1P153MB0138.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-microsoft-antispam-prvs: <PU1P153MB01552FAE5A68E59F327ACDB8BF810@PU1P153MB0155.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(136003)(376002)(346002)(396003)(189003)(199004)(14444005)(4326008)(256004)(81166006)(99286004)(7696005)(2906002)(55016002)(102836004)(229853002)(6916009)(6506007)(71200400001)(71190400001)(476003)(81156014)(6116002)(8676002)(86362001)(46003)(11346002)(15650500001)(25786009)(186003)(486006)(76176011)(8936002)(9686003)(22452003)(52536014)(33656002)(10090500001)(6436002)(66446008)(446003)(305945005)(8990500004)(74316002)(10290500003)(7416002)(7736002)(54906003)(66476007)(66556008)(64756008)(76116006)(66946007)(478600001)(316002)(5660300002)(14454004)(6246003)(107886003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0138;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(136003)(396003)(39860400002)(366004)(189003)(199004)(476003)(86362001)(25786009)(2906002)(6246003)(107886003)(4326008)(229853002)(55016002)(9686003)(10290500003)(6436002)(6916009)(478600001)(6116002)(46003)(74316002)(8990500004)(99286004)(7736002)(4744005)(305945005)(256004)(102836004)(10090500001)(76176011)(52536014)(7696005)(316002)(54906003)(186003)(6506007)(5660300002)(64756008)(66556008)(66476007)(66446008)(81156014)(76116006)(14454004)(81166006)(66946007)(8676002)(14444005)(8936002)(71190400001)(71200400001)(22452003)(486006)(446003)(33656002)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0155;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EdT5y2i2PR0TN3hSfRWfZw0XW1CTDDE/iRKCB515lfZgw62K4N+kpsV7rIDLm+4QpDpNM5La9R1NGXLppLEl8Z91mwkmIapfG5PDvXfkQ3oqIq7gtzSLuHJ3xGnSFkLaTgIbSz2wk4JLm3rsBsxfghiQMTeFCxAxgSIl7j88APLh2EDZf9KW2DCy1q+08usM6y76hzDDkRx4KWby0NRCetRPDxa7wojKkOmzUNSoxhkWxj5RNjRG4cZAwW4YaLX01CPJN1So14kWO0UNycOAm4QepCzcGpdN05537nfj9tQv9aV/M9jxFb6KdfBW5I7K/CjdEHriI9qXBWieCZPCm4ui5VPWyKW2oyXdKo78K1VxRe1h4DtcjVibiQJxVZdSSvgVBuYv+qmNZD9yX8j2+s7cHKV6p1q5wlm7kuY2nL4=
+x-microsoft-antispam-message-info: oKJY/DBXUAvqNCKrCM8ZInCUvYqxwViZliaJsoEZ9hKA1deL2mYp0gUbUu/ODoXwwNKF978+fqYGix2cYErPMmuo2V5RMPsSViEb+B26eLGKqrzfUThTXOrfCwPA2hySONmttTh3FIKDZe5yMXmnwgWD7GlkybD1xQduxOGZogGxMXS0+zdc74IFPxSJPT+i3fllo2ybii8bdB/zr64YgxA1CY8qzcUXfqIRyvME+/KvOEnAZoQE5exe/Da8SDuUAUr/N9liiAIOxXimiUh8RukE7Z8SgL05zz7azlKqVh4zdl+Nrb/BXzZc5F40VDFAOtiIUBVmigcI+/1L8hNsL82eV2bzAt755gUdYIT077ZVvvMKIZhfyGMSu8m4Gbuk1d1ez1VIzyv0EcY1h60txphkSMDX6aSbPKzuj4A7IQs=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b5bbd45-5edc-46d8-d7d4-08d74316c2e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 06:48:53.0188
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61204121-1258-4e55-3583-08d743186834
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 07:00:39.8025
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +tUps0hlqGHaNF9fFRPvcfbNcL0tCWLoIhuSD5zTscDGLd2My8tBneU8UJSkakAGLS+0Qn8IqqxesCyToVVLug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0138
+X-MS-Exchange-CrossTenant-userprincipalname: T1DfHP1e1ATkS31Ajj9vZp3LoP3B/neFOZR7P73PIb5IMcJiaDOEcppWyLYUcJa4immlI0cNSqWLxzR9leQdQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0155
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Sent: Thursday, September 26, 2019 3:44 AM
-> > [...]
-> > +static int hv_suspend(void)
-> > +{
-> > +	union hv_x64_msr_hypercall_contents hypercall_msr;
-> > +
-> > +	/* Reset the hypercall page */
-> > +	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> > +	hypercall_msr.enable =3D 0;
-> > +	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> > +
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Sent: Thursday, September 26, 2019 9:31 AM
 >=20
-> (trying to think out loud, not sure there's a real issue):
+> On Wed, Sep 11, 2019 at 11:38:20PM +0000, Dexuan Cui wrote:
+> > Implement the suspend/resume callbacks for hibernation.
+> >
+> > hv_pci_suspend() needs to prevent any new work from being queued: a lat=
+er
+> > patch will address this issue.
 >=20
-> When PV IPIs (or PV TLB flush) are enabled we do the following checks:
+> I don't see why you have two separate patches, the second one fixing the
+> previous (this one). Squash them together and merge them as such, or
+> there is something I am missing here.
 >=20
-> 	if (!hv_hypercall_pg)
-> 		return false;
->=20
-> or
->         if (!hv_hypercall_pg)
->                 goto do_native;
->=20
-> which will pass as we're not invalidating the pointer. Can we actually
-> be sure that the kernel will never try to send an IPI/do TLB flush
-> before we resume?
->=20
-> Vitaly
+> Lorenzo
 
-When hv_suspend() and hv_resume() are called by syscore_suspend()
-and syscore_resume(), respectively, all the non-boot CPUs are disabled and
-only CPU0 is active and interrupts are disabled, e.g. see
+I was trying to make it easier to review the changes by spliting the change=
+s
+into 2 smaller patches. :-)
 
-hibernate() ->=20
-  hibernation_snapshot() ->
-    create_image() ->
-      suspend_disable_secondary_cpus()
-      local_irq_disable()
-
-      syscore_suspend()
-      swsusp_arch_suspend
-      syscore_resume
-
-      local_irq_enable
-      enable_nonboot_cpus
-
-
-So, I'm pretty sure no IPI can happen between hv_suspend() and hv_resume().
-self-IPI is not supposed to happen either, since interrupts are disabled.
-
-IMO TLB flush should not be an issue either, unless the kernel changes page
-tables between hv_suspend() and hv_resume(), which is not the case as I
-checked the related code, but it looks in theory that might happen, say, in
-the future, so if you insist we should save the variable "hv_hypercall_pg"
-to a temporary variable and set the "hv_hypercall_pg" to NULL before we
-disable the hypercall page, I would be happy to post a new version of this
-patch, or we can keep this patch as is and I can make an extra patch.
+I'll merge patch 2/4 and patch 3/4 into one patch, and post a v2.
 
 Thanks,
 -- Dexuan
