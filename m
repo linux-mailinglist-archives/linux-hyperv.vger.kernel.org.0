@@ -2,137 +2,131 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 294E0C01C0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 11:05:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D872C0415
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Sep 2019 13:27:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbfI0JF3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 Sep 2019 05:05:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33510 "EHLO mx1.redhat.com"
+        id S1726087AbfI0L1R (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 Sep 2019 07:27:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52976 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfI0JF3 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 Sep 2019 05:05:29 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725890AbfI0L1R (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 27 Sep 2019 07:27:17 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2F38F63704
-        for <linux-hyperv@vger.kernel.org>; Fri, 27 Sep 2019 09:05:28 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id s25so1962507wmh.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 27 Sep 2019 02:05:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=bbUXI7HnyvMO5i/vr47nNTN4Si9R/+ix2Rzt2/ZHUhs=;
-        b=AyGS9fPez9cAqxlJxOPp5AdK65PFGFVFiyusvmbQR5QUP/WVCNnXuwoPaJtogwarFV
-         CGpKaQKWw6pB/zwZHoHXNqFPzDmgHR7G7EltGHiGVl1RtJKFDuMEORR3tJUeXsu6rNKw
-         ziApBbtZ1naeBsB7p8nEUXGBDL2W0lwK9fupcTy/m7YxdsQoUhjt6hLnI/9iGtSJXKV0
-         oqelW5v8oFun7vg+UWDM7ggPrZjs/k9ScYQxrgHddgj1Whj8goc9FT5COB3Wkk/1V0sP
-         8/V+t0pI4/6AOctIAmSTB3WRe5ivf7w/f492W386xrZr8b1yaASjNZi16Su9V4CS4fQg
-         IIKQ==
-X-Gm-Message-State: APjAAAXxlA6OxKRpm0H4wlwwIorYNaqki2Dxv4GGHb8427MDBt9bJd2l
-        96WJ3AbXfMcY5u/tNCK8xUlx3KK1RpHs602F5FqaTZTt8+LqXnAUQlhWbNxr4TDRw1ZfegZTIHl
-        JotOVLRp9YmRiMUYCIZUQnJFV
-X-Received: by 2002:adf:e692:: with SMTP id r18mr1981248wrm.339.1569575126800;
-        Fri, 27 Sep 2019 02:05:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzPOcDzEUz+3oqTj5hKkr/Dy8Oktp+i4+1rcA8T68L3TfE+56f5nDqHHhlKeou23g29xgZxEQ==
-X-Received: by 2002:adf:e692:: with SMTP id r18mr1981220wrm.339.1569575126530;
-        Fri, 27 Sep 2019 02:05:26 -0700 (PDT)
-Received: from vitty.brq.redhat.com ([95.82.135.182])
-        by smtp.gmail.com with ESMTPSA id w18sm5380136wmc.9.2019.09.27.02.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 02:05:25 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "arnd\@arndb.de" <arnd@arndb.de>, "bp\@alien8.de" <bp@alien8.de>,
-        "daniel.lezcano\@linaro.org" <daniel.lezcano@linaro.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa\@zytor.com" <hpa@zytor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo\@redhat.com" <mingo@redhat.com>,
-        "sashal\@kernel.org" <sashal@kernel.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id E42E0C05975D;
+        Fri, 27 Sep 2019 11:27:16 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-249.ams2.redhat.com [10.36.117.249])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D2685D9C9;
+        Fri, 27 Sep 2019 11:27:04 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: RE: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for hibernation
-In-Reply-To: <PU1P153MB01695A159E9843B4E1EC13AEBF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1567723581-29088-1-git-send-email-decui@microsoft.com> <1567723581-29088-2-git-send-email-decui@microsoft.com> <87ef0372wv.fsf@vitty.brq.redhat.com> <PU1P153MB01695A159E9843B4E1EC13AEBF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Date:   Fri, 27 Sep 2019 11:05:24 +0200
-Message-ID: <877e5u6re3.fsf@vitty.brq.redhat.com>
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: [RFC PATCH 00/13] vsock: add multi-transports support
+Date:   Fri, 27 Sep 2019 13:26:50 +0200
+Message-Id: <20190927112703.17745-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 27 Sep 2019 11:27:17 +0000 (UTC)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dexuan Cui <decui@microsoft.com> writes:
+Hi all,
+this series adds the multi-transports support to vsock, following
+this proposal:
+https://www.spinics.net/lists/netdev/msg575792.html
 
->> From: Vitaly Kuznetsov <vkuznets@redhat.com>
->> Sent: Thursday, September 26, 2019 3:44 AM
->> > [...]
->> > +static int hv_suspend(void)
->> > +{
->> > +	union hv_x64_msr_hypercall_contents hypercall_msr;
->> > +
->> > +	/* Reset the hypercall page */
->> > +	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->> > +	hypercall_msr.enable = 0;
->> > +	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->> > +
->> 
->> (trying to think out loud, not sure there's a real issue):
->> 
->> When PV IPIs (or PV TLB flush) are enabled we do the following checks:
->> 
->> 	if (!hv_hypercall_pg)
->> 		return false;
->> 
->> or
->>         if (!hv_hypercall_pg)
->>                 goto do_native;
->> 
->> which will pass as we're not invalidating the pointer. Can we actually
->> be sure that the kernel will never try to send an IPI/do TLB flush
->> before we resume?
->> 
->> Vitaly
->
-> When hv_suspend() and hv_resume() are called by syscore_suspend()
-> and syscore_resume(), respectively, all the non-boot CPUs are disabled and
-> only CPU0 is active and interrupts are disabled, e.g. see
->
-> hibernate() -> 
->   hibernation_snapshot() ->
->     create_image() ->
->       suspend_disable_secondary_cpus()
->       local_irq_disable()
->
->       syscore_suspend()
->       swsusp_arch_suspend
->       syscore_resume
->
->       local_irq_enable
->       enable_nonboot_cpus
->
->
-> So, I'm pretty sure no IPI can happen between hv_suspend() and hv_resume().
-> self-IPI is not supposed to happen either, since interrupts are disabled.
->
-> IMO TLB flush should not be an issue either, unless the kernel changes page
-> tables between hv_suspend() and hv_resume(), which is not the case as I
-> checked the related code, but it looks in theory that might happen, say, in
-> the future, so if you insist we should save the variable "hv_hypercall_pg"
-> to a temporary variable and set the "hv_hypercall_pg" to NULL before we
-> disable the hypercall page
+With the multi-transports support, we can use vsock with nested VMs
+(using also different hypervisors) loading both guest->host and
+host->guest transports at the same time.
+Before this series, vmci-transport supported this behavior but only
+using VMware hypervisor on L0, L1, etc.
 
-Let's do it as a future proof so we can keep relying on !hv_hypercall_pg
-everywhere we need. No need to change this patch IMO, a follow-up would
-do.
+The first 8 patches are cleanups and preparations, maybe some of
+these can go regardless of this series.
+
+Patch 9 changes the hvs_remote_addr_init(). setting the
+VMADDR_CID_HOST as remote CID instead of VMADDR_CID_ANY to make
+the choice of transport to be used work properly.
+@Dexuan Could this change break anything?
+
+Patch 10 adds multi-transports support.
+RFC:
+- I'd like to move MODULE_ALIAS_NETPROTO(PF_VSOCK) to af_vsock.c.
+  @Jorgen could this break the VMware products?
+
+- DGRAM sockets are handled as before, I don't know if make sense
+  work on it now, or when another transport will support DGRAM.
+  The big issues here is that we cannot link 1-1 a socket to
+  transport as for stream sockets since DGRAM is not
+  connection-oriented.
+
+Patches 11 and 12 maybe can be merged with patch 10.
+Patch 11 maybe is tricky, but it allows to have vmci_transport and
+vhost_vsock loaded at the same time and it also alleviates the
+problem of having MODULE_ALIAS_NETPROTO(PF_VSOCK) in vmci_transport.c
+Patch 12 prevents the transport modules unloading while sockets are
+assigned to them.
+
+Patch 13 fixes an issue in the bind() logic discoverable only with
+the new multi-transport support.
+
+I've tested this series with nested KVM (vsock-transport [L0,L1],
+virtio-transport[L1,L2]) and with VMware (L0) + KVM (L1)
+(vmci-transport [L0,L1], vhost-transport [L1], virtio-transport[L2]).
+
+@Dexuan please can you test on HyperV that I didn't break anything
+even without nested VMs?
+I'll try to setup a Windows host where to test the nested VMs.
+
+Thanks in advance for your comments and suggestions,
+Stefano
+
+Stefano Garzarella (13):
+  vsock/vmci: remove unused VSOCK_DEFAULT_CONNECT_TIMEOUT
+  vsock: remove vm_sockets_get_local_cid()
+  vsock: remove include/linux/vm_sockets.h file
+  vsock: add 'transport' member in the struct vsock_sock
+  vsock/virtio: add transport parameter to the
+    virtio_transport_reset_no_sock()
+  vsock: add 'struct vsock_sock *' param to vsock_core_get_transport()
+  vsock: handle buffer_size sockopts in the core
+  vsock: move vsock_insert_unbound() in the vsock_create()
+  hv_sock: set VMADDR_CID_HOST in the hvs_remote_addr_init()
+  vsock: add multi-transports support
+  vsock: add 'transport_hg' to handle g2h\h2g transports
+  vsock: prevent transport modules unloading
+  vsock: fix bind() behaviour taking care of CID
+
+ drivers/vhost/vsock.c                   |  96 +++---
+ include/linux/virtio_vsock.h            |  18 +-
+ include/linux/vm_sockets.h              |  15 -
+ include/net/af_vsock.h                  |  35 ++-
+ include/net/vsock_addr.h                |   2 +-
+ net/vmw_vsock/af_vsock.c                | 374 ++++++++++++++++++------
+ net/vmw_vsock/hyperv_transport.c        |  68 ++---
+ net/vmw_vsock/virtio_transport.c        | 177 ++++++-----
+ net/vmw_vsock/virtio_transport_common.c | 127 +++-----
+ net/vmw_vsock/vmci_transport.c          | 123 +++-----
+ net/vmw_vsock/vmci_transport.h          |   3 -
+ net/vmw_vsock/vmci_transport_notify.h   |   1 -
+ 12 files changed, 555 insertions(+), 484 deletions(-)
+ delete mode 100644 include/linux/vm_sockets.h
 
 -- 
-Vitaly
+2.21.0
+
