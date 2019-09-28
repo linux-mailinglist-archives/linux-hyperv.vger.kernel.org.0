@@ -2,228 +2,163 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FF49C0E9E
-	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Sep 2019 01:43:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8492C0EFD
+	for <lists+linux-hyperv@lfdr.de>; Sat, 28 Sep 2019 02:32:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfI0XnQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 Sep 2019 19:43:16 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35327 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfI0XnQ (ORCPT
+        id S1726061AbfI1AcB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 Sep 2019 20:32:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45973 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbfI1AcB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 Sep 2019 19:43:16 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w6so3116459lfl.2;
-        Fri, 27 Sep 2019 16:43:13 -0700 (PDT)
+        Fri, 27 Sep 2019 20:32:01 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q7so4267014pgi.12;
+        Fri, 27 Sep 2019 17:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e7WHTlF5j/P4gg+BSNhTXJlGnXVX3nV/g0Irc6cqhsM=;
+        b=F23XAdYROX4Ag1mZzXNOd7dBSssvJcCvUj0vQJjuGrx6qPVM+BBsg5jRgY4/fXkaMF
+         54N94+rcdqr2C7Kob4ioQiIYWH7lAnWC2EILZHyLDDMfIXXNEsHB+YbaRO2QJqQtJz1Y
+         amkurX9QleO3Vdy8zXuah5xlszKXimnIMJo8oaOFk4bQANIa10+KBD1EiEB07BMKeeuN
+         eiteO6zuIom3JnP2pEV7RI2EbjuN5ocRp7tghAwu0sIlYvkmvNdgw9LP9DVKx2f+trqJ
+         PzPp3iIAH8hfyosTvvsgCPi370QGZoLtfm+6lBcZiRNwV+fDTK0KpzNTW7SwuBQjNZkc
+         NRwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=c8uGLij7T5Lhd9NNM8IRpienFCfZLI1fF2YsMfwjMb0=;
-        b=nGEy3BShGtH9jG0mH+ZtDfICSzXbZwOQWP3jeLcW93g20Qkt/JnkUI6i/1tsHCXtQq
-         5mAoANpqa1BecDWxVjyr6VZkOS0xU69VvudDeerrU1SJlAjtkmfBqoIUNfOAdtffnEhE
-         muVvtwrXJZ7q+f+tGWt3q6xnFFSEFJlcmZlPS7sAYm2L92Hy9g9Q1tHwwOLte1K3e/KJ
-         qg+R2okbKGnfOEB4wF3h91EF9ey9x2YUhje6aSw/jaVb+sXU1Hzj+IbrdnOVCoISAv9c
-         bpCTkxGJVqijAc0U22vuNZ7U1So4HNUfhva14qO2qxIhHPiMl7k8XH9s0T4bIuk7ufse
-         LUUg==
-X-Gm-Message-State: APjAAAWaqLjk8krkp7T8bzcPm61xAYWxTdyPgbmKapb5dRQr/WVEYTiC
-        qEUt/KnkRFuDjUHlq94YDZNuey8rsTY=
-X-Google-Smtp-Source: APXvYqxaiyRdOlpBwWGF862QfV4eTAG1q+uwD8zL+weLda64/duQKMgTc/QRXQANLb7+8tTLId6QQQ==
-X-Received: by 2002:ac2:4c8f:: with SMTP id d15mr4785336lfl.74.1569627792625;
-        Fri, 27 Sep 2019 16:43:12 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id b67sm788812ljf.5.2019.09.27.16.43.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e7WHTlF5j/P4gg+BSNhTXJlGnXVX3nV/g0Irc6cqhsM=;
+        b=YbeqwB1EySa3rDTEW1SfRAySDHxt3YV0nJsA54CCtnGelYx7F5d28kYrGsRrhBLtR6
+         GQbyO4ltJonl0Tk3KTicvFhyOEODBSv1XvyZw6ggs3ZYBaHVOFp+wSZD5BNxe4r8fmGD
+         NKlSEQsbL5hBIjxYCPNnF/9QycDYn8wHTLeIJhLRKO9n4KYZmQRnSgpkwAoRj5Mj/x8E
+         Dd3KU8E94IYiMcOm4ZkhJylxpb3ewRJ07Pzo3s0drZvKvTNmpsqcHR6F1M+6PGNS3Rn7
+         lcGKFGV0zbOB0X3vxatpG1W5AG3CPNHbXrrjiT0qYmWhajRoEn+BJ8of6OJSLVfIB2oW
+         mRrQ==
+X-Gm-Message-State: APjAAAWr87RuJebuQ0X/6PslaooyIyjFrjUCFz0rIsUX0ERjf7wv62qS
+        o7no8SAiU9qIDk1/nrg5ZPQ=
+X-Google-Smtp-Source: APXvYqxCRxj/rIS2Lutpwu67qqFnf6WJi/rSxR/9L2bP1KWiXpCBCkVQCajZTFz0L+gT1lGV+6qDuw==
+X-Received: by 2002:a62:7597:: with SMTP id q145mr7424576pfc.181.1569630719518;
+        Fri, 27 Sep 2019 17:31:59 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id e192sm5470219pfh.83.2019.09.27.17.31.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 16:43:12 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        x86@kernel.org, linux-s390@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH RESEND v3 01/26] PCI: Add define for the number of standard PCI BARs
-Date:   Sat, 28 Sep 2019 02:43:08 +0300
-Message-Id: <20190927234308.23935-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190916204158.6889-3-efremov@linux.com>
-References: <20190916204158.6889-3-efremov@linux.com>
+        Fri, 27 Sep 2019 17:31:58 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 17:31:56 -0700
+From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Message-ID: <20190928003156.GU237523@dtor-ws>
+References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
+ <20190919161752.GS237523@dtor-ws>
+ <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Code that iterates over all standard PCI BARs typically uses
-PCI_STD_RESOURCE_END. However, it requires the "unusual" loop condition
-"i <= PCI_STD_RESOURCE_END" rather than something more standard like
-"i < PCI_STD_NUM_BARS".
+On Sat, Sep 21, 2019 at 06:56:04AM +0000, Dexuan Cui wrote:
+> > From: dmitry.torokhov@gmail.com <dmitry.torokhov@gmail.com>
+> > Sent: Thursday, September 19, 2019 9:18 AM
+> > 
+> > Hi Dexuan,
+> > 
+> > On Wed, Sep 11, 2019 at 11:36:20PM +0000, Dexuan Cui wrote:
+> > > We need hv_kbd_pm_notify() to make sure the pm_wakeup_hard_event()
+> > call
+> > > does not prevent the system from entering hibernation: the hibernation
+> > > is a relatively long process, which can be aborted by the call
+> > > pm_wakeup_hard_event(), which is invoked upon keyboard events.
+> > >
+> > > diff --git a/drivers/input/serio/hyperv-keyboard.c
+> > b/drivers/input/serio/hyperv-keyboard.c
+> > > index 88ae7c2..277dc4c 100644
+> > > --- a/drivers/input/serio/hyperv-keyboard.c
+> > > +++ b/drivers/input/serio/hyperv-keyboard.c
+> > > @@ -10,6 +10,7 @@
+> > >  #include <linux/hyperv.h>
+> > >  #include <linux/serio.h>
+> > >  #include <linux/slab.h>
+> > > +#include <linux/suspend.h>
+> > >
+> > >  /*
+> > >   * Current version 1.0
+> > > @@ -95,6 +96,9 @@ struct hv_kbd_dev {
+> > >  	struct completion wait_event;
+> > >  	spinlock_t lock; /* protects 'started' field */
+> > >  	bool started;
+> > > +
+> > > +	struct notifier_block pm_nb;
+> > > +	bool hibernation_in_progress;
+> > 
+> > Why do you use notifier block instead of exposing proper PM methods if
+> > you want to support hibernation?
+> > 
+> > Dmitry
+> 
+> Hi,
+> In the patch I do implement hv_kbd_suspend() and hv_kbd_resume(), and
+> add them into the hv_kbd_drv struct:
+> 
+> @@ -416,6 +472,8 @@ static struct  hv_driver hv_kbd_drv = {
+>         .id_table = id_table,
+>         .probe = hv_kbd_probe,
+>         .remove = hv_kbd_remove,
+> +       .suspend = hv_kbd_suspend,
+> +       .resume = hv_kbd_resume,
+> 
+> The .suspend and .resume callbacks are inroduced by another patch (which
+> uses the dev_pm_ops struct):
+> 271b2224d42f ("Drivers: hv: vmbus: Implement suspend/resume for VSC drivers for hibernation")
+> (which is on the Hyper-V tree's hyperv-next branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/commit/?h=hyperv-next&id=271b2224d42f88870e6b060924ee374871c131fc )
+> 
+> The only purpose of the notifier is to set the variable 
+> kbd_dev->hibernation_in_progress to true during the hibernation process.
+> 
+> As I explained in the changelog, the hibernation is a long process (which
+> can take 10+ seconds), during which the user may unintentionally touch
+> the keyboard, causing key up/down events, which are still handled by
+> hv_kbd_on_receive(), which calls pm_wakeup_hard_event(), which
+> calls some other functions which increase the global counter
+> "pm_abort_suspend", and hence pm_wakeup_pending() becomes true.
+> 
+> pm_wakeup_pending() is tested in a lot of places in the suspend
+> process and eventually an unintentional keystroke (or mouse movement,
+> when it comes to the Hyper-V mouse driver drivers/hid/hid-hyperv.c)
+> causes the whole hibernation process to be aborted. Usually this
+> behavior is not expected by the user, I think.
 
-This patch adds the definition PCI_STD_NUM_BARS which is equivalent to
-"PCI_STD_RESOURCE_END + 1". To iterate through all possible BARs, loop
-conditions changed to the *number* of BARs "i < PCI_STD_NUM_BARS",
-instead of the index of the last valid BAR "i <= PCI_STD_RESOURCE_END"
-or PCI_ROM_RESOURCE. The magic constant (6) is also replaced with new
-define PCI_STD_NUM_BARS.
+Why not? If a device is configured as wakeup source, then it activity
+should wake up the system, unless you disable it.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/pci/pci-sysfs.c       |  4 ++--
- drivers/pci/pci.c             | 13 +++++++------
- drivers/pci/proc.c            |  4 ++--
- drivers/pci/quirks.c          |  4 ++--
- include/linux/pci.h           |  2 +-
- include/uapi/linux/pci_regs.h |  1 +
- 6 files changed, 15 insertions(+), 13 deletions(-)
+> 
+> So, I use the notifier to set the flag variable and with it the driver can
+> know when it should not call pm_wakeup_hard_event().
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 965c72104150..3e26b8e03bd5 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1257,7 +1257,7 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
- {
- 	int i;
- 
--	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		struct bin_attribute *res_attr;
- 
- 		res_attr = pdev->res_attr[i];
-@@ -1328,7 +1328,7 @@ static int pci_create_resource_files(struct pci_dev *pdev)
- 	int retval;
- 
- 	/* Expose the PCI resources from this device as files */
--	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 
- 		/* skip empty resources */
- 		if (!pci_resource_len(pdev, i))
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1b27b5af3d55..7d543986026b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -674,7 +674,7 @@ struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res)
- {
- 	int i;
- 
--	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		struct resource *r = &dev->resource[i];
- 
- 		if (r->start && resource_contains(r, res))
-@@ -3768,7 +3768,7 @@ void pci_release_selected_regions(struct pci_dev *pdev, int bars)
- {
- 	int i;
- 
--	for (i = 0; i < 6; i++)
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++)
- 		if (bars & (1 << i))
- 			pci_release_region(pdev, i);
- }
-@@ -3779,7 +3779,7 @@ static int __pci_request_selected_regions(struct pci_dev *pdev, int bars,
- {
- 	int i;
- 
--	for (i = 0; i < 6; i++)
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++)
- 		if (bars & (1 << i))
- 			if (__pci_request_region(pdev, i, res_name, excl))
- 				goto err_out;
-@@ -3827,7 +3827,7 @@ EXPORT_SYMBOL(pci_request_selected_regions_exclusive);
- 
- void pci_release_regions(struct pci_dev *pdev)
- {
--	pci_release_selected_regions(pdev, (1 << 6) - 1);
-+	pci_release_selected_regions(pdev, (1 << PCI_STD_NUM_BARS) - 1);
- }
- EXPORT_SYMBOL(pci_release_regions);
- 
-@@ -3846,7 +3846,8 @@ EXPORT_SYMBOL(pci_release_regions);
-  */
- int pci_request_regions(struct pci_dev *pdev, const char *res_name)
- {
--	return pci_request_selected_regions(pdev, ((1 << 6) - 1), res_name);
-+	return pci_request_selected_regions(pdev,
-+			((1 << PCI_STD_NUM_BARS) - 1), res_name);
- }
- EXPORT_SYMBOL(pci_request_regions);
- 
-@@ -3868,7 +3869,7 @@ EXPORT_SYMBOL(pci_request_regions);
- int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
- {
- 	return pci_request_selected_regions_exclusive(pdev,
--					((1 << 6) - 1), res_name);
-+				((1 << PCI_STD_NUM_BARS) - 1), res_name);
- }
- EXPORT_SYMBOL(pci_request_regions_exclusive);
- 
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index fe7fe678965b..cb61ec2c24e8 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -248,13 +248,13 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
- 	}
- 
- 	/* Make sure the caller is mapping a real resource for this device */
--	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (dev->resource[i].flags & res_bit &&
- 		    pci_mmap_fits(dev, i, vma,  PCI_MMAP_PROCFS))
- 			break;
- 	}
- 
--	if (i >= PCI_ROM_RESOURCE)
-+	if (i >= PCI_STD_NUM_BARS)
- 		return -ENODEV;
- 
- 	if (fpriv->mmap_state == pci_mmap_mem &&
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 44c4ae1abd00..998454b0ae8d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -475,7 +475,7 @@ static void quirk_extend_bar_to_page(struct pci_dev *dev)
- {
- 	int i;
- 
--	for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		struct resource *r = &dev->resource[i];
- 
- 		if (r->flags & IORESOURCE_MEM && resource_size(r) < PAGE_SIZE) {
-@@ -1810,7 +1810,7 @@ static void quirk_alder_ioapic(struct pci_dev *pdev)
- 	 * The next five BARs all seem to be rubbish, so just clean
- 	 * them out.
- 	 */
--	for (i = 1; i < 6; i++)
-+	for (i = 1; i < PCI_STD_NUM_BARS; i++)
- 		memset(&pdev->resource[i], 0, sizeof(pdev->resource[i]));
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_EESSC,	quirk_alder_ioapic);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 82e4cd1b7ac3..cf7d16305243 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -76,7 +76,7 @@ enum pci_mmap_state {
- enum {
- 	/* #0-5: standard PCI resources */
- 	PCI_STD_RESOURCES,
--	PCI_STD_RESOURCE_END = 5,
-+	PCI_STD_RESOURCE_END = PCI_STD_RESOURCES + PCI_STD_NUM_BARS - 1,
- 
- 	/* #6: expansion ROM resource */
- 	PCI_ROM_RESOURCE,
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f28e562d7ca8..68b571d491eb 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -34,6 +34,7 @@
-  * of which the first 64 bytes are standardized as follows:
-  */
- #define PCI_STD_HEADER_SIZEOF	64
-+#define PCI_STD_NUM_BARS	6	/* Number of standard BARs */
- #define PCI_VENDOR_ID		0x00	/* 16 bits */
- #define PCI_DEVICE_ID		0x02	/* 16 bits */
- #define PCI_COMMAND		0x04	/* 16 bits */
+No, please implement hibernation support properly, as notifier + flag is
+a hack. In this particular case you do not want to have your
+hv_kbd_resume() to be called in place of pm_ops->thaw() as that is what
+reenables the keyboard vmbus channel and causes the undesired wakeup
+events. Your vmbus implementation should allow individual drivers to
+control the set of PM operations that they wish to use, instead of
+forcing everything through suspend/resume.
+
+Thanks.
+
 -- 
-2.21.0
-
+Dmitry
