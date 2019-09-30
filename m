@@ -2,178 +2,171 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B1E9C1899
-	for <lists+linux-hyperv@lfdr.de>; Sun, 29 Sep 2019 19:45:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21FDDC2274
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Sep 2019 15:51:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfI2RoY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 29 Sep 2019 13:44:24 -0400
-Received: from mail-eopbgr1300125.outbound.protection.outlook.com ([40.107.130.125]:28944
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728576AbfI2RoY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:44:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D/DUIgBSEj6iCbrj7+gR6jhpbW0TFl1MFBhuz7QfRKbf1PCwN3jr4xmHzVsVL2fkULQopCxzo4DP7lLyoVMcuWqPudxZc3+jGBpVfceH8bX8dAIo6zwTb/Jtcmf/GF1aucC7jd6XmfHTpV4yVW+Wq7sh+L1ZQAV6rby7M3EFzXMBESI1j2frPSvEmNRj5TM2irKZbGaJsoQMc47zZ/EFI5XX/PrrbBTq1kRJyGJF1+KPQ7pC3YZbSOky7dC/MOdruwHgkvXF6oX/9TQEstu35a1zznKohrjlS4NvWjkbbwcDfEu6ZIFnncYkqTuVpRGzltLlG+5WDlq4BxNM06zuDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qG6F8Qmj3dxTMOQLAg0mctvFKmTjXFY9LGxT/ttbwxE=;
- b=g3zVRlAWqvb+XMIWMemrzUiFPz+K04WF1NJtRf1BCx7RMCB3JGE5IVvp6FYNgR48Rco3BD7lR3FhfZK5pwJtFvXGKF0Ph6+DmC8WAR4O7TRtDcgka0J+mxqiSiwBde8c6K+xBUlP93pT82MK8ROPt7IW0VCkGTwyJ/JwttB2DvIHL9LrB2qxF64+K5PXQnwxUHeDadAx4XODBaRaVoiv1x0c2ca6NJzEyXALK02QZF3GHhuF16cfldQXwwZeLpNAISGF+iEpj67GHWJ2WvV2jTtHUpYtiwOspBHwxCRiXNiptfHan0cN5u7pjw65jx+g24/6bISH5t0mTKyQu8sq9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qG6F8Qmj3dxTMOQLAg0mctvFKmTjXFY9LGxT/ttbwxE=;
- b=b2MqTkifBOMXSA0Zy54ExZ1fUbSQ2xC1YoKH17u961D1h0uF3hhIEsZDmIHulR6tJ0FVVy21ywQ0ETuvnuCxmwkR3vMt96Q0xk0ygqgbqbTQtEPQd05QrT31tpa4ym4706POxL8jI+c/AGcQuuJDRJApiPxjzcjSQhSzwxo7syg=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0105.APCP153.PROD.OUTLOOK.COM (10.170.188.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.5; Sun, 29 Sep 2019 17:44:10 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.009; Sun, 29 Sep 2019
- 17:44:10 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     Jiri Kosina <jikos@kernel.org>, KY Srinivasan <kys@microsoft.com>,
+        id S1731451AbfI3Nvg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 30 Sep 2019 09:51:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34672 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731422AbfI3Nvc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:51:32 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5ACC72A09BF
+        for <linux-hyperv@vger.kernel.org>; Mon, 30 Sep 2019 13:51:31 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id m6so3960455wmf.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 30 Sep 2019 06:51:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KJecfdV4cU2EkR1odbrtXYLFF3/KCfbmiXi5v/OdwmM=;
+        b=IsP/HgPz2pbLalCZ4ZSY1uBPx0F0m6c+4zBMbRHw+IY3+iXWqKo6okIuSVh272S2Qz
+         vX7OVxeWFM/QSKMqYfe28ukJSli/u5QmEAP4lrvpfG18eBjfZEEKJdFbyxR7r24zSqWK
+         Fi19OvNix+XbgI+V6hKa1dlrqbbSaowW204qUyqHcxrYnaPHYPs22dPHulFW4PaURRU2
+         4hpY9UxKH8azzlbuXO9hlin+jUiEy5iKkNOeDdOy1bk1ngVho4/0GxbbjrkBPhK2rzgy
+         GzDT44WQC71PdTWRJQep3RtRURrk+fLE+RGjx7lvvR+0WGkHlF3C2er7dsyHr5bhT3tW
+         FqJg==
+X-Gm-Message-State: APjAAAXZdCjXb0jiRlKC3sqr6PIdYl5KwtJiFkxJg0hkyk46dUc2Y0XT
+        /EJOjpoTDfjRCrF3DMsrYVmQDHJFVWEBMAraUomm8yZ7SW/h4VQIJXtsuTopCMUgZNuAclKwdB8
+        K3AemBVpumlEFCvJOCcxwcEv4
+X-Received: by 2002:a05:600c:238a:: with SMTP id m10mr18590269wma.51.1569851489006;
+        Mon, 30 Sep 2019 06:51:29 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwO29KpzdE/B4PZ3FyZQ0b+zqrWaXagG+JSizcZd8LEziw9BOwffjU331R6jmlmhQgquk4C4Q==
+X-Received: by 2002:a05:600c:238a:: with SMTP id m10mr18590238wma.51.1569851488775;
+        Mon, 30 Sep 2019 06:51:28 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id h63sm26377926wmf.15.2019.09.30.06.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 06:51:28 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 15:51:25 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "ytht.net@gmail.com" <ytht.net@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] HID: hyperv: Add the support of hibernation
-Thread-Topic: [PATCH] HID: hyperv: Add the support of hibernation
-Thread-Index: AQHVaPmqZINIgyUXxE2R4/KRfEe4oqc84yhwgAEls4CAAABQAIABEIwQgABr94CAA4KkgA==
-Date:   Sun, 29 Sep 2019 17:44:09 +0000
-Message-ID: <PU1P153MB01698048162343130F34DAE0BF830@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568244952-66716-1-git-send-email-decui@microsoft.com>
- <PU1P153MB01695CEE01D65E8CD5CFA4E9BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <nycvar.YFH.7.76.1909261521410.24354@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1909261522380.24354@cbobk.fhfr.pm>
- <PU1P153MB016973F30CC1A52E46D15230BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190927120513.GM8171@sasha-vm>
-In-Reply-To: <20190927120513.GM8171@sasha-vm>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-29T17:44:05.5467302Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9133849a-7cab-4f19-b59a-aed0a3aed70d;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:f552:8d99:acf1:1120]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b9ee66b3-2a03-40ac-28c6-08d74504a23e
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0105:|PU1P153MB0105:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB010595965F781D7EFCE0605ABF830@PU1P153MB0105.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 017589626D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(51914003)(189003)(199004)(6436002)(305945005)(74316002)(446003)(11346002)(46003)(102836004)(81156014)(81166006)(10090500001)(8676002)(6916009)(8936002)(186003)(7736002)(486006)(476003)(2906002)(7696005)(33656002)(6116002)(71190400001)(71200400001)(6506007)(53546011)(99286004)(14454004)(76176011)(25786009)(86362001)(54906003)(10290500003)(55016002)(66946007)(316002)(22452003)(229853002)(5660300002)(4326008)(256004)(107886003)(6246003)(76116006)(14444005)(9686003)(52536014)(478600001)(8990500004)(66446008)(64756008)(66476007)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0105;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uqJIvfTMxaWkYzV6uSQwupb72StnhBwJRt1uzLPyYSw5og21CRUCJ9AAOuFggeBON+MHB2Fg+baQa+ciRJUZgVgFUfikm0Ilfdxf2SqXdGr5c1Svfw7cK3dz4vWkJSiLMq1EeVk3jUUS4frDP0FCwlXY//ITks2ZfwBGYbJWw65sZMxLlcXYeidx8nHCZn78jr1e1seZ6ObydbI2P0PXXjDwl7BYebGHB4SnSP1N4tztmuJ/5+jZ1TBLcgLah9GjqWCUGmD6/0fku5Sy2SJqIlSU4TlDJs0lJrQNVMNY/LoaprK48Y4EUpK/BVxiahA5o7UGjxlVHNmsg0XTW6ST1j1wWB+fyGQIFJa4qIZzhj0s17hnDzYqGLkWzK73rj390I3kzGfrMnkiVpuklRKk3R+iXBA7dLF5HzNF5C8chAE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "jhansen@vmware.com" <jhansen@vmware.com>
+Subject: Re: [PATCH net v2] vsock: Fix a lockdep warning in __vsock_release()
+Message-ID: <20190930135125.prztj336splp74wq@steredhat>
+References: <1569460241-57800-1-git-send-email-decui@microsoft.com>
+ <20190926074749.sltehhkcgfduu7n2@steredhat.homenet.telecomitalia.it>
+ <PU1P153MB01698C46C9348B9762D5E122BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9ee66b3-2a03-40ac-28c6-08d74504a23e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Sep 2019 17:44:09.4376
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sAxPgTLN00QntE8cGjiQHK/T7h570iTDQyuehJ+h3lWh43zI9KvxpJYH5SHJzPzbvcgqmLwoxEDi4zGnQdfPYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB01698C46C9348B9762D5E122BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Sasha Levin <sashal@kernel.org>
-> Sent: Friday, September 27, 2019 5:05 AM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: Jiri Kosina <jikos@kernel.org>; KY Srinivasan <kys@microsoft.com>;
-> Haiyang Zhang <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; benjamin.tissoires@redhat.com;
-> linux-hyperv@vger.kernel.org; linux-input@vger.kernel.org;
-> linux-kernel@vger.kernel.org; Michael Kelley <mikelley@microsoft.com>
-> Subject: Re: [PATCH] HID: hyperv: Add the support of hibernation
->=20
-> On Fri, Sep 27, 2019 at 05:42:31AM +0000, Dexuan Cui wrote:
-> >> From: Jiri Kosina <jikos@kernel.org>
-> >> Sent: Thursday, September 26, 2019 6:23 AM
-> >> To: Dexuan Cui <decui@microsoft.com>
-> >>
-> >> On Thu, 26 Sep 2019, Jiri Kosina wrote:
-> >>
-> >> > > > This patch is basically a pure Hyper-V specific change and it ha=
-s a
-> >> > > > build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus=
-:
-> >> > > > Implement
-> >> > > > suspend/resume for VSC drivers for hibernation"), which is on Sa=
-sha
-> >> Levin's
-> >> > > > Hyper-V tree's hyperv-next branch [ ... snipped ...]
-> >> > > >
-> >> > > > I request this patch should go through Sasha's tree rather than =
-the
-> >> > > > input subsystem's tree.
-> >> > > >
-> >> > > > Hi Jiri, Benjamin, can you please Ack?
-> >> > >
-> >> > > Hi Jiri, Benjamin,
-> >> > > Can you please take a look at the patch?
-> >> >
-> >> > Hi Dexuan,
-> >> >
-> >> > I am planning to process it once 5.4 merge window is over and thus h=
-id.git
-> >> > is open again for 5.5 material.
-> >>
-> >> Ah, now I see you asked for this go through hyperv tree. For that, fee=
-l
-> >> free to add
-> >> 	Acked-by: Jiri Kosina <jkosina@suse.cz>
-> >> Jiri Kosina
-> >
-> >Thanks for the Ack, Jiri!
-> >
-> >I have a bunch of patches, including this one, to support Linux VM's
-> hibernation
-> >when the VM runs on Hyper-V. I just feel it would be better for all of t=
-hem to
-> >go through the Hyper-V tree. :-)
->=20
-> Thank Dexuan, Jiri,
->=20
-> Dexuan, I've been silently ignoring your patches for the past few weeks
-> for the same reason as Jiri has mentioned. I'll pick them all up once
-> the 5.4 merge window closes in a few days.
->=20
-> Thanks,
-> Sasha
+On Fri, Sep 27, 2019 at 05:37:20AM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Stefano Garzarella
+> > Sent: Thursday, September 26, 2019 12:48 AM
+> > 
+> > Hi Dexuan,
+> > 
+> > On Thu, Sep 26, 2019 at 01:11:27AM +0000, Dexuan Cui wrote:
+> > > ...
+> > > NOTE: I only tested the code on Hyper-V. I can not test the code for
+> > > virtio socket, as I don't have a KVM host. :-( Sorry.
+> > >
+> > > @Stefan, @Stefano: please review & test the patch for virtio socket,
+> > > and let me know if the patch breaks anything. Thanks!
+> > 
+> > Comment below, I'll test it ASAP!
+> 
+> Stefano, Thank you!
+> 
+> BTW, this is how I tested the patch:
+> 1. write a socket server program in the guest. The program calls listen()
+> and then calls sleep(10000 seconds). Note: accept() is not called.
+> 
+> 2. create some connections to the server program in the guest.
+> 
+> 3. kill the server program by Ctrl+C, and "dmesg" will show the scary
+> call-trace, if the kernel is built with 
+> 	CONFIG_LOCKDEP=y
+> 	CONFIG_LOCKDEP_SUPPORT=y
+> 
+> 4. Apply the patch, do the same test and we should no longer see the call-trace.
+> 
 
-Thanks, Sasha!
+Hi Dexuan,
+I tested on virtio socket and it works as expected!
 
-BTW, I'll post a v2 for this patch, as IMO I may be able to get rid of the
-mousevsc_pm_notify in this patch by disabling the channel callback
-in the suspend function.
+With your patch applied I don't have issues and call-trace. Without
+the patch I have a very similar call-trace (as expected):
+    ============================================
+    WARNING: possible recursive locking detected
+    5.3.0-vsock #17 Not tainted
+    --------------------------------------------
+    python3/872 is trying to acquire lock:
+    ffff88802b650110 (sk_lock-AF_VSOCK){+.+.}, at: virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
 
-Thanks,
--- Dexuan
+    but task is already holding lock:
+    ffff88803597ce10 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x3f/0x130 [vsock]
+
+    other info that might help us debug this:
+     Possible unsafe locking scenario:
+
+           CPU0
+           ----
+      lock(sk_lock-AF_VSOCK);
+      lock(sk_lock-AF_VSOCK);
+
+     *** DEADLOCK ***
+
+     May be due to missing lock nesting notation
+
+    2 locks held by python3/872:
+     #0: ffff88802c957180 (&sb->s_type->i_mutex_key#8){+.+.}, at: __sock_release+0x2d/0xb0
+     #1: ffff88803597ce10 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x3f/0x130 [vsock]
+
+    stack backtrace:
+    CPU: 0 PID: 872 Comm: python3 Not tainted 5.3.0-vsock #17
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+    Call Trace:
+     dump_stack+0x85/0xc0
+     __lock_acquire.cold+0xad/0x22b
+     lock_acquire+0xc4/0x1a0
+     ? virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
+     lock_sock_nested+0x5d/0x80
+     ? virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
+     virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
+     ? mark_held_locks+0x49/0x70
+     ? _raw_spin_unlock_irqrestore+0x44/0x60
+     __vsock_release+0x2d/0x130 [vsock]
+     __vsock_release+0xb9/0x130 [vsock]
+     vsock_release+0x12/0x30 [vsock]
+     __sock_release+0x3d/0xb0
+     sock_close+0x14/0x20
+     __fput+0xc1/0x250
+     task_work_run+0x93/0xb0
+     exit_to_usermode_loop+0xd3/0xe0
+     syscall_return_slowpath+0x205/0x310
+     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+
+Feel free to add:
+
+Tested-by: Stefano Garzarella <sgarzare@redhat.com>
