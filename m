@@ -2,267 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE302C26E6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Sep 2019 22:45:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91CE6C2701
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Sep 2019 22:45:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfI3UmZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 30 Sep 2019 16:42:25 -0400
-Received: from mail-eopbgr730136.outbound.protection.outlook.com ([40.107.73.136]:25596
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        id S1728573AbfI3UoR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 30 Sep 2019 16:44:17 -0400
+Received: from mail-eopbgr1300137.outbound.protection.outlook.com ([40.107.130.137]:5032
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726425AbfI3UmY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:42:24 -0400
+        id S1729158AbfI3UoQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:44:16 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XD5PAy6VlrMFtYHfmwZiEwHxVRjdBd2r/AFMbS3msZLgHaIekAiAUHnFGTjrKEixyOIEuHwMbRfAg49DuZazAkwZyxv756CuucpLqPs2Xdx6kCZV8osn7gGsUth3BY5NuAoeekbzs1mJV9CjxuEP+rEOcI7NGA5il1y0guoTzEjmiVP3eB66A2wob6DjKgte/oZ5rG/JX/LanZsz7eYHIOlLUBD9Af2obES2Cfwy77vhp/2WPX2ZYQhU6+uUuw97YkIGbRV21YgSZ45qAEQcFl0Xh0YF4lf109dNMCNItrPyPX9tJxhOdT+Yr3kscKp+tYWEs7p6ZQx3X1nLbxYd3Q==
+ b=h/CtkMee/6Rj3Hcony3w6FFUBfiTPWnfkrRwRte+LzqBLXwiCdfIter663Je1a/OgUMoADR/m7rzJpKeZ4gU+FTtZgzjK0Rw7bAn57MvD+jYtdKv5kZYDJS3mPu0FByBG6mz4rFvMVDCGY1wiF+GJFHtpe47l/tkVZ32uq17E4ZdYUFCMPMPnjB3HctB9IOuXF7e0XggyirAeX8Ak6IrZFyB6753/WwQxUxJ/iPxJ7s25bZLpB/pWBXp5/Jsvwiw99sDGRMx4gxrbnaxmOChmtB40lYoFSEkHYPvpkR5BicfVBbt0nJkgKJvA3ax2Qc6rReFEDuR9bMlW1E6wYe+HA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4VLe6uWWiY/qpEe3s/bHgLDaeTsdh1kwDEUaDim+pJY=;
- b=Pe4ge3OjxiimrmuGfpnPFq1fba6Cs1TmLh7vlsc30+5kc00ZuJjLZpvZg8wg3nrlCSvlu++cGbiP5IqSEVxKsYFRfXPGEv3WDhqLhnv9jdHJlGgBJ15HJ9fsmwsvOR9CKcqTtatTxHQRpPLDmmnz/glvVx7TnDIP9RLZcSg51f2C9QNeuoRYh80ElQMWFjrzv4NrMZ2se+S/lRxkaGVdSIKbVb2xgOroIaxpJzvG8M330tu8c/SHXl1FsHVk+QIi2lSjqDNLgCe/YXSDb7pVNlVo2eo8wpGZIWWx7NXjdkHSW/nTj3jmiOFZ0FT3LonjaZRBmf19XAMWbCfm7bv7hA==
+ bh=Y7TT+kyzC8pC5j2sJkhcpA9ZFEYCfHh0UaNuv91qNf4=;
+ b=JLzCdqORpfLt21o1/zvptkgbxABHSCbtKW4kb2ag7Nx9CTRANbk6qd0umvYbylXAqMm2rSsyv7ay6AN1hG4SENhCiqzBBd12d/k0lGAUDZ9AWP/ZcXNPu7kWNKYOa690Gxmz/E8wdcrhWyQgxolZNErOEhqvANIYf1Dj30gs3pELBM8FceQvFBjdriI0c10tQFs6WObHOfMEY4inWdud9huGyuhGwhQtQRUZVWRSSK2TOYAMbXf8Mgya4zxDXl1tojpFv7ExZ5M+joX1r+ErRES/zYyqjimBJVFxP1CA5y4Bym22ssCMQuUdwBloIAYnFyRGXPIwqOs+CdsHLcdpVA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4VLe6uWWiY/qpEe3s/bHgLDaeTsdh1kwDEUaDim+pJY=;
- b=ONatBT9rpDxOkGRRVqhVR8UPRpAK3xAvTTXxs4RUvFk581fVuzTNsftZHmvGwWPuxZqwLAPOz2t6TgCTq+j8jI9pCjz2hRsdNy/TYgXcgBR8dl1+8JktQFkoDvcHrp+5UCmgOO5zdfC0PegXZkk14zJh9i0UOvLI2BWrs0oe+nQ=
-Received: from MW2PR2101MB0937.namprd21.prod.outlook.com (52.132.146.10) by
- MW2PR2101MB0972.namprd21.prod.outlook.com (52.132.146.21) with Microsoft SMTP
+ bh=Y7TT+kyzC8pC5j2sJkhcpA9ZFEYCfHh0UaNuv91qNf4=;
+ b=SfDxHizdWUflTqzyYVg6yoVqEFsZMo43YFbP5konigU5RWQVN6UxIXDgzizguKEJ+krZMmt/9rj0SVPMJKNa5FBTeFm2pHysaYkIBtSvOokv/5xqiZmJXOFwdS6R0i47aZgRSZXf59K/6+2JWA96VtWLW15LYdzQdRpHb70Nk4I=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0187.APCP153.PROD.OUTLOOK.COM (10.170.188.151) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.3; Mon, 30 Sep 2019 18:43:50 +0000
-Received: from MW2PR2101MB0937.namprd21.prod.outlook.com
- ([fe80::adb9:3e84:c02f:a6e5]) by MW2PR2101MB0937.namprd21.prod.outlook.com
- ([fe80::adb9:3e84:c02f:a6e5%4]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 18:43:50 +0000
+ 15.20.2327.3; Mon, 30 Sep 2019 18:49:33 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.009; Mon, 30 Sep 2019
+ 18:49:33 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     "davem@davemloft.net" <davem@davemloft.net>,
-        KY Srinivasan <kys@microsoft.com>,
+To:     vkuznets <vkuznets@redhat.com>
+CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "ytht.net@gmail.com" <ytht.net@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        "sgarzare@redhat.com" <sgarzare@redhat.com>,
-        "jhansen@vmware.com" <jhansen@vmware.com>
-Subject: [PATCH net v3] vsock: Fix a lockdep warning in __vsock_release()
-Thread-Topic: [PATCH net v3] vsock: Fix a lockdep warning in __vsock_release()
-Thread-Index: AQHVd77/dTwgXN3aQEytMriZU2+CuA==
-Date:   Mon, 30 Sep 2019 18:43:50 +0000
-Message-ID: <1569868998-56603-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: RE: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for
+ hibernation
+Thread-Topic: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page
+ for hibernation
+Thread-Index: AQHVdFddc0vkIIkGmEOkqRoIHJJIFqc/CHEAgAA0RQCABVkvEA==
+Date:   Mon, 30 Sep 2019 18:49:33 +0000
+Message-ID: <PU1P153MB0169804D32B95E0A145CD0B9BF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
+ <1567723581-29088-2-git-send-email-decui@microsoft.com>
+ <87ef0372wv.fsf@vitty.brq.redhat.com>
+ <PU1P153MB01695A159E9843B4E1EC13AEBF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <877e5u6re3.fsf@vitty.brq.redhat.com>
+In-Reply-To: <877e5u6re3.fsf@vitty.brq.redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR21CA0032.namprd21.prod.outlook.com
- (2603:10b6:300:129::18) To MW2PR2101MB0937.namprd21.prod.outlook.com
- (2603:10b6:302:4::10)
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-30T18:49:30.9074667Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d3e7ddcd-9ddb-4e60-9369-b0af671a3cae;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
+x-originating-ip: [2001:4898:80e8:2:d492:e91a:5e0:dd92]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4298583d-c9ee-4ebb-fdf9-08d745d62258
+x-ms-office365-filtering-correlation-id: 178f43f5-62cb-430c-c11f-08d745d6ef61
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: MW2PR2101MB0972:|MW2PR2101MB0972:
+x-ms-traffictypediagnostic: PU1P153MB0187:|PU1P153MB0187:|PU1P153MB0187:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB097223F7D12543FBEA0CC0CCBF820@MW2PR2101MB0972.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:497;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0187C0D3EE6EC3B4AB2932DDBF820@PU1P153MB0187.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(396003)(346002)(376002)(199004)(189003)(1511001)(102836004)(6506007)(22452003)(71200400001)(25786009)(66476007)(316002)(64756008)(52116002)(386003)(66946007)(2201001)(66556008)(2906002)(2616005)(186003)(8936002)(10090500001)(7736002)(8676002)(81166006)(486006)(50226002)(5660300002)(99286004)(86362001)(66446008)(305945005)(3450700001)(14454004)(256004)(478600001)(3846002)(476003)(26005)(4720700003)(36756003)(10290500003)(71190400001)(81156014)(14444005)(66066001)(2501003)(7416002)(6116002)(6512007)(43066004)(110136005)(6486002)(6436002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0972;H:MW2PR2101MB0937.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(316002)(102836004)(476003)(486006)(46003)(7696005)(186003)(6436002)(9686003)(10290500003)(14454004)(76176011)(55016002)(53546011)(6116002)(99286004)(8990500004)(10090500001)(5660300002)(52536014)(22452003)(8936002)(6506007)(6916009)(7416002)(8676002)(71190400001)(81156014)(81166006)(71200400001)(446003)(11346002)(54906003)(86362001)(2906002)(4744005)(256004)(66476007)(66556008)(64756008)(478600001)(33656002)(14444005)(229853002)(107886003)(25786009)(76116006)(66946007)(6246003)(74316002)(305945005)(7736002)(66446008)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0187;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VMot/gftkqjyeSWsI/zrWW/qP8FQE1ymAm8MNEeuLIGn+sF4U+5JE2NbeRF85thVKR+sL0xHdd6nOw0OV/IFlrcEkGJaX5Nzjat8bb3e8ZlBvN6BCx+Dup1JKq/uCuwiZwcJZBXlRCkpOT7A6+XqzJe28eAH7dNuJHE3X6ugGMAW6p+cNM6HK4geTQws+5f+OHkhZUqLapCpgflRs4oWyZAfgyn5nQRbIW4q2/sPbXX80oXb311SpGk/kqJb8wpD9A8W6+1A1YIXe/xyGaQj7tN7vcCC9pprlue9uICWZ4848+ONa4LCnEkN7bbX+jgJmwNNf+pIpCi9KpJ1SfQ5BSXN1cZbms//jBghmxNt16VJ9Fe8uwEzwB8FD+RtFdaNeaBC4uhf/oGUyWZ9ScpiimiTK7SqGxJb3YuBBXAgK74=
-Content-Type: text/plain; charset="iso-8859-1"
+x-microsoft-antispam-message-info: P1cTnrr60EXWZdug3y36Nrug6T/QeGlYVDK/09Tyj1Pz6dQs+2kk9VjpW5MhnnbjLZGrLRtuuHwlSilC6f5/3XxomitwKJ9MLUfROwXjZeOMSZxZw0M74DoaUe1t1f0/0BydJ0kn7PcAGOBiIO3y+lOc8mAsS9HqQh9NW2XIQawP5vQwFkg6RupOSNgXS28Axr+jjJsofmNiYnV8I1Z9CgMGsM5F1ZtKCEYiklBs7+VycGm9fXMSEFv1/K9IKvs+4C8cmb+eGFEtZjtHX3Mzq0jYWjJvktg7nLZxhAuvHOEvZwQT0D6dfmL6MHrm02AuxjVL5KEaJCycULYdhlWXVT60YP16dwm02NGcaQ8F1c8PlGHLue3siUJ5Nf6Oy0QTCB0piR/mQIVMzjMaxFHb18VcHhucpOPoiNxxY3RBkbE=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4298583d-c9ee-4ebb-fdf9-08d745d62258
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 18:43:50.2117
+X-MS-Exchange-CrossTenant-Network-Message-Id: 178f43f5-62cb-430c-c11f-08d745d6ef61
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 18:49:33.3935
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: L6ytQc6JCDshj5jqInJdpnwy7kABz1ERGzhroQb12qbDXo+ISQM+aj64Dd8fEOixszkMZnbkzXXgQpV0NoDzXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0972
+X-MS-Exchange-CrossTenant-userprincipalname: +J46sI8EARYq6eRD+9qksQ7dIPIoEibkNwyiB9dhCePxY39U+nKuWIbPuBJWDp7cuwvDehHE9lwoDcy1OockZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0187
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Lockdep is unhappy if two locks from the same class are held.
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Sent: Friday, September 27, 2019 2:05 AM
+> To: Dexuan Cui <decui@microsoft.com>
+>=20
+> Dexuan Cui <decui@microsoft.com> writes:
+> ...
+> > So, I'm pretty sure no IPI can happen between hv_suspend() and
+> hv_resume().
+> > self-IPI is not supposed to happen either, since interrupts are disable=
+d.
+> >
+> > IMO TLB flush should not be an issue either, unless the kernel changes =
+page
+> > tables between hv_suspend() and hv_resume(), which is not the case as I
+> > checked the related code, but it looks in theory that might happen, say=
+, in
+> > the future, so if you insist we should save the variable "hv_hypercall_=
+pg"
+> > to a temporary variable and set the "hv_hypercall_pg" to NULL before we
+> > disable the hypercall page
+>=20
+> Let's do it as a future proof so we can keep relying on !hv_hypercall_pg
+> everywhere we need. No need to change this patch IMO, a follow-up would
+> do.
+> Vitaly
 
-Fix the below warning for hyperv and virtio sockets (vmci socket code
-doesn't have the issue) by using lock_sock_nested() when __vsock_release()
-is called recursively:
+Now I think it would be better to do it in this patch. :-)
+I'll post a v6 to follow your suggestion.
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-WARNING: possible recursive locking detected
-5.3.0+ #1 Not tainted
---------------------------------------------
-server/1795 is trying to acquire lock:
-ffff8880c5158990 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_s=
-ock]
-
-but task is already holding lock:
-ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [v=
-sock]
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(sk_lock-AF_VSOCK);
-  lock(sk_lock-AF_VSOCK);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-2 locks held by server/1795:
- #0: ffff8880c5d05ff8 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_relea=
-se+0x2d/0xa0
- #1: ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0x=
-f0 [vsock]
-
-stack backtrace:
-CPU: 5 PID: 1795 Comm: server Not tainted 5.3.0+ #1
-Call Trace:
- dump_stack+0x67/0x90
- __lock_acquire.cold.67+0xd2/0x20b
- lock_acquire+0xb5/0x1c0
- lock_sock_nested+0x6d/0x90
- hvs_release+0x10/0x120 [hv_sock]
- __vsock_release+0x24/0xf0 [vsock]
- __vsock_release+0xa0/0xf0 [vsock]
- vsock_release+0x12/0x30 [vsock]
- __sock_release+0x37/0xa0
- sock_close+0x14/0x20
- __fput+0xc1/0x250
- task_work_run+0x98/0xc0
- do_exit+0x344/0xc60
- do_group_exit+0x47/0xb0
- get_signal+0x15c/0xc50
- do_signal+0x30/0x720
- exit_to_usermode_loop+0x50/0xa0
- do_syscall_64+0x24e/0x270
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f4184e85f31
-
-Tested-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
-
-Changes in v2:
-  Avoid the duplication of code in v1.
-  Also fix virtio socket code.
-
-
-Changes in v3:
-  Use "lock_sock_nested(sk, level);" -- suggested by Stefano.
-  Add Stefano's Tested-by.
-
- net/vmw_vsock/af_vsock.c                | 16 ++++++++++++----
- net/vmw_vsock/hyperv_transport.c        |  2 +-
- net/vmw_vsock/virtio_transport_common.c |  2 +-
- 3 files changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index ab47bf3ab66e..2ab43b2bba31 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -638,7 +638,7 @@ struct sock *__vsock_create(struct net *net,
- }
- EXPORT_SYMBOL_GPL(__vsock_create);
-=20
--static void __vsock_release(struct sock *sk)
-+static void __vsock_release(struct sock *sk, int level)
- {
- 	if (sk) {
- 		struct sk_buff *skb;
-@@ -648,9 +648,17 @@ static void __vsock_release(struct sock *sk)
- 		vsk =3D vsock_sk(sk);
- 		pending =3D NULL;	/* Compiler warning. */
-=20
-+		/* The release call is supposed to use lock_sock_nested()
-+		 * rather than lock_sock(), if a sock lock should be acquired.
-+		 */
- 		transport->release(vsk);
-=20
--		lock_sock(sk);
-+		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
-+		 * version to avoid the warning "possible recursive locking
-+		 * detected". When "level" is 0, lock_sock_nested(sk, level)
-+		 * is the same as lock_sock(sk).
-+		 */
-+		lock_sock_nested(sk, level);
- 		sock_orphan(sk);
- 		sk->sk_shutdown =3D SHUTDOWN_MASK;
-=20
-@@ -659,7 +667,7 @@ static void __vsock_release(struct sock *sk)
-=20
- 		/* Clean up any sockets that never were accepted. */
- 		while ((pending =3D vsock_dequeue_accept(sk)) !=3D NULL) {
--			__vsock_release(pending);
-+			__vsock_release(pending, SINGLE_DEPTH_NESTING);
- 			sock_put(pending);
- 		}
-=20
-@@ -708,7 +716,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space);
-=20
- static int vsock_release(struct socket *sock)
- {
--	__vsock_release(sock->sk);
-+	__vsock_release(sock->sk, 0);
- 	sock->sk =3D NULL;
- 	sock->state =3D SS_FREE;
-=20
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index 261521d286d6..c443db7af8d4 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -559,7 +559,7 @@ static void hvs_release(struct vsock_sock *vsk)
- 	struct sock *sk =3D sk_vsock(vsk);
- 	bool remove_sock;
-=20
--	lock_sock(sk);
-+	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 	remove_sock =3D hvs_close_lock_held(vsk);
- 	release_sock(sk);
- 	if (remove_sock)
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio=
-_transport_common.c
-index 5bb70c692b1e..a666ef8fc54e 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -820,7 +820,7 @@ void virtio_transport_release(struct vsock_sock *vsk)
- 	struct sock *sk =3D &vsk->sk;
- 	bool remove_sock =3D true;
-=20
--	lock_sock(sk);
-+	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
- 	if (sk->sk_type =3D=3D SOCK_STREAM)
- 		remove_sock =3D virtio_transport_close(vsk);
-=20
---=20
-2.19.1
-
+Thanks,
+-- Dexuan
