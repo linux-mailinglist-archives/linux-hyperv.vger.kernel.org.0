@@ -2,165 +2,241 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98BA1C2A3D
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Oct 2019 01:09:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8731CC2E35
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Oct 2019 09:47:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbfI3XG4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 30 Sep 2019 19:06:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42079 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfI3XG4 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:06:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z12so8213405pgp.9;
-        Mon, 30 Sep 2019 16:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=OLxymM47T0Z1xEhjhIp3XuVNW/xM7/kJdYnYvwoTXKg=;
-        b=BFkxIMgMo8eIDnqEV/lGUUdNzbWlckVIZvjpa2wckogM1CB++2BZTv5rhENJbw9KXB
-         xrwAPH/Ci638zbgs2tOo4XFoRWOIJATfSDEqHNTWnl13Km5BxERRMrrKC7D2G0V5+9bR
-         sVRkHWvm8lw0EFn7koXox1/fSg/03r9RDUDmt7JnaINE8kzc6gOh5eFzmrMT5DJnp7Au
-         BcuB0mKpXAfKjkCGDDACyFSNEOZ40GkKTsVqzKt7oVSKXKyQTuHrFRX1rB9OxB1Tct9I
-         7dKRY2A5csxaGZhIV3nQ9+UfOiWYCjlRCKfTMcdXuPshFspxdMM5EVYE3QNIW3ytwp0K
-         Yqtg==
+        id S1732931AbfJAH2h (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Oct 2019 03:28:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50216 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732901AbfJAH2h (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 1 Oct 2019 03:28:37 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4450D81F10
+        for <linux-hyperv@vger.kernel.org>; Tue,  1 Oct 2019 07:28:36 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id s25so544084wmh.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 01 Oct 2019 00:28:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=OLxymM47T0Z1xEhjhIp3XuVNW/xM7/kJdYnYvwoTXKg=;
-        b=jaQ7LongkihvjjPb8MZ1nVTMuWKChMw7CFBD38fEWx8hw0w+i/5f/hnssbP3LKU1qw
-         U2GAnf0KL5xTYHyxgaGifBBVOtGzq7VBGPCSuMpnKQfsb/p8mewgx8sMw5vTJ7QLfrVB
-         tfAe3Rc/ccPZ/QN2RNj6c1O+oKx1TZntw4DKkr7K1sLpbxrqsyj3LxQKRcYUr8W5YXJ/
-         LYqFwNEBxnVFnsjIlI+/GBs7F9gDCbZi8G1THVzOBYvKjPI3jQSnCSt+XhGO2P/ul5HV
-         TVLONeEy7QCvo4waVP7Jp7Ou7BD7JpJsfzpK0XGYCrgzUO7BoohIyl8cftKnNJprbTS5
-         gKBg==
-X-Gm-Message-State: APjAAAUbtfiFEuLqfuY+kV1RcJmJqJJ+KbM5mXGw2td5ZXGGkiMcfK2a
-        pjBJ8vjPrqr3jznW8SZBG3E=
-X-Google-Smtp-Source: APXvYqzzLO5KuAdNsnaabmSaBPVzVBrpuRISI4r/AYhZW+pFUJ8mN6Kb4MdLgXpTGPJxPVdCVXiBeA==
-X-Received: by 2002:a62:7d81:: with SMTP id y123mr24346543pfc.133.1569884815033;
-        Mon, 30 Sep 2019 16:06:55 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id f15sm12652398pfd.141.2019.09.30.16.06.53
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rGxRLfEJC1VYNtKSX6kyfg0tMas1+rSvzHhUE5eK6q4=;
+        b=gYvdm3+PeEdb7f7eNGD5mDtpmv8LsB7CblhfVPt1lSpBMyO+ugFWywb3t1slewOhwb
+         Gs56NKq4BJlxcueQXAchFxQpIWr1WCHLJHsId0KjVb+i82LkpO0w6Ryv97cP/JwcH2Bl
+         ZMUde60CpKqX0oESQR9G5RN0VacMRV+QNqUgOA58YKtc9tptS6+74nELfZz2yCMxLuLD
+         boaVB8W1ZaHZ+PMxI8zgOAb/cFrc2qP9TA9NkhTN9/qIyJwLL0kozsJ7Cd7P27mDOyrD
+         JRLXNUqA97svX5yDz1taRXRcJZReW7Hpo9z/SiXObmQOr85FZhTCbFV4OFuiL4n6bMmV
+         60NQ==
+X-Gm-Message-State: APjAAAWYPQgJPiSg6xU4M1QmvxTVX3r27dHshk6zLx5SCxTe5gS/4egf
+        SlPDtgRJew70kBOjnYBocn2Mjfb6sYQhh3Bukq/zDrI6kXFiDCAuFqv2bFVVsZs3eQfIHaIqsvO
+        G/uoIHlP7X/LVBrYtlAbTjE9T
+X-Received: by 2002:a5d:5231:: with SMTP id i17mr16517844wra.142.1569914914943;
+        Tue, 01 Oct 2019 00:28:34 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwzfP3jzsJGYljEi7cfS5kj/VjiNXOMN2jPKXfvjeLCGNRNerLEOfzcw+u+tiV4YVMMyE9GAQ==
+X-Received: by 2002:a5d:5231:: with SMTP id i17mr16517808wra.142.1569914914666;
+        Tue, 01 Oct 2019 00:28:34 -0700 (PDT)
+Received: from steredhat.homenet.telecomitalia.it (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id a71sm1892939wme.11.2019.10.01.00.28.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 16:06:54 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 16:06:52 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+        Tue, 01 Oct 2019 00:28:34 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 09:28:31 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     Dexuan Cui <decui@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "ytht.net@gmail.com" <ytht.net@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Message-ID: <20190930230652.GW237523@dtor-ws>
-References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
- <20190919161752.GS237523@dtor-ws>
- <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190928003156.GU237523@dtor-ws>
- <PU1P153MB0169C315F7F9EBEBED4C7A7DBF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "jhansen@vmware.com" <jhansen@vmware.com>
+Subject: Re: [PATCH net v3] vsock: Fix a lockdep warning in __vsock_release()
+Message-ID: <20191001072831.msry462b7l32fhsw@steredhat.homenet.telecomitalia.it>
+References: <1569868998-56603-1-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PU1P153MB0169C315F7F9EBEBED4C7A7DBF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1569868998-56603-1-git-send-email-decui@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 10:09:27PM +0000, Dexuan Cui wrote:
-> > From: dmitry.torokhov@gmail.com <dmitry.torokhov@gmail.com>
-> > Sent: Friday, September 27, 2019 5:32 PM
-> > > ...
-> > > pm_wakeup_pending() is tested in a lot of places in the suspend
-> > > process and eventually an unintentional keystroke (or mouse movement,
-> > > when it comes to the Hyper-V mouse driver drivers/hid/hid-hyperv.c)
-> > > causes the whole hibernation process to be aborted. Usually this
-> > > behavior is not expected by the user, I think.
-> > 
-> > Why not? If a device is configured as wakeup source, then it activity
-> > should wake up the system, unless you disable it.
+On Mon, Sep 30, 2019 at 06:43:50PM +0000, Dexuan Cui wrote:
+> Lockdep is unhappy if two locks from the same class are held.
 > 
-> Generally speaking, I agree, but compared to a physical machine, IMO 
-> the scenario is a little differnet when it comes to a VM running on Hyper-V:
-> on the host there is a window that represents the VM, and the user can
-> unintentionally switch the keyboard input focus to the window (or move
-> the mouse/cursor over the window) and then the host automatically 
-> sends some special keystrokes (and mouse events) , and this aborts the
-> hibernation process.  
+> Fix the below warning for hyperv and virtio sockets (vmci socket code
+> doesn't have the issue) by using lock_sock_nested() when __vsock_release()
+> is called recursively:
 > 
-> And, when it comes to the Hyper-V mouse device, IMO it's easy for the
-> user to unintentionally move the mouse after the "hibernation" button
-> is clicked. I suppose a physical machine would have the same issue, though.
+> ============================================
+> WARNING: possible recursive locking detected
+> 5.3.0+ #1 Not tainted
+> --------------------------------------------
+> server/1795 is trying to acquire lock:
+> ffff8880c5158990 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_sock]
+> 
+> but task is already holding lock:
+> ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
+> 
+> other info that might help us debug this:
+>  Possible unsafe locking scenario:
+> 
+>        CPU0
+>        ----
+>   lock(sk_lock-AF_VSOCK);
+>   lock(sk_lock-AF_VSOCK);
+> 
+>  *** DEADLOCK ***
+> 
+>  May be due to missing lock nesting notation
+> 
+> 2 locks held by server/1795:
+>  #0: ffff8880c5d05ff8 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_release+0x2d/0xa0
+>  #1: ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
+> 
+> stack backtrace:
+> CPU: 5 PID: 1795 Comm: server Not tainted 5.3.0+ #1
+> Call Trace:
+>  dump_stack+0x67/0x90
+>  __lock_acquire.cold.67+0xd2/0x20b
+>  lock_acquire+0xb5/0x1c0
+>  lock_sock_nested+0x6d/0x90
+>  hvs_release+0x10/0x120 [hv_sock]
+>  __vsock_release+0x24/0xf0 [vsock]
+>  __vsock_release+0xa0/0xf0 [vsock]
+>  vsock_release+0x12/0x30 [vsock]
+>  __sock_release+0x37/0xa0
+>  sock_close+0x14/0x20
+>  __fput+0xc1/0x250
+>  task_work_run+0x98/0xc0
+>  do_exit+0x344/0xc60
+>  do_group_exit+0x47/0xb0
+>  get_signal+0x15c/0xc50
+>  do_signal+0x30/0x720
+>  exit_to_usermode_loop+0x50/0xa0
+>  do_syscall_64+0x24e/0x270
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x7f4184e85f31
+> 
+> Tested-by: Stefano Garzarella <sgarzare@redhat.com>
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
 
-If waking the machine up by mouse/keyboard activity is not desired in
-Hyper-V environment, then simply disable them as wakeup sources.
+The patch LGTM and and functionally it's the same as the v2 that I tested, so:
+
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+
+Thanks,
+Stefano
 
 > 
-> > > So, I use the notifier to set the flag variable and with it the driver can
-> > > know when it should not call pm_wakeup_hard_event().
-> > 
-> > No, please implement hibernation support properly, as notifier + flag is
-> > a hack. 
+> Changes in v2:
+>   Avoid the duplication of code in v1.
+>   Also fix virtio socket code.
 > 
-> The keyboard/mouse driver can avoid the flag by disabling the 
-> keyboard/mouse event handling, but the problem is that they don't know
-> when exactly they should disable the event handling. I think the PM
-> notifier is the only way to tell the drivers a hibernation process is ongoing.
-
-Whatever initiates hibernation (in userspace) can adjust wakeup sources
-as needed if you want them disabled completely.
-
 > 
-> Do you think this idea (notifer + disabling event handling) is acceptable?
-
-No, I believe this a hack, that is why I am pushing back on this.
-
+> Changes in v3:
+>   Use "lock_sock_nested(sk, level);" -- suggested by Stefano.
+>   Add Stefano's Tested-by.
 > 
-> If not, then I'll have to remove the notifer completely, and document this as
-> a known issue to the user: when a hibernation process is started, be careful
-> to not switch input focus and not touch the keyboard/mouse until the
-> hibernation process is finished. :-)
+>  net/vmw_vsock/af_vsock.c                | 16 ++++++++++++----
+>  net/vmw_vsock/hyperv_transport.c        |  2 +-
+>  net/vmw_vsock/virtio_transport_common.c |  2 +-
+>  3 files changed, 14 insertions(+), 6 deletions(-)
 > 
-> > In this particular case you do not want to have your
-> > hv_kbd_resume() to be called in place of pm_ops->thaw() as that is what
-> > reenables the keyboard vmbus channel and causes the undesired wakeup
-> > events. 
+> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> index ab47bf3ab66e..2ab43b2bba31 100644
+> --- a/net/vmw_vsock/af_vsock.c
+> +++ b/net/vmw_vsock/af_vsock.c
+> @@ -638,7 +638,7 @@ struct sock *__vsock_create(struct net *net,
+>  }
+>  EXPORT_SYMBOL_GPL(__vsock_create);
+>  
+> -static void __vsock_release(struct sock *sk)
+> +static void __vsock_release(struct sock *sk, int level)
+>  {
+>  	if (sk) {
+>  		struct sk_buff *skb;
+> @@ -648,9 +648,17 @@ static void __vsock_release(struct sock *sk)
+>  		vsk = vsock_sk(sk);
+>  		pending = NULL;	/* Compiler warning. */
+>  
+> +		/* The release call is supposed to use lock_sock_nested()
+> +		 * rather than lock_sock(), if a sock lock should be acquired.
+> +		 */
+>  		transport->release(vsk);
+>  
+> -		lock_sock(sk);
+> +		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
+> +		 * version to avoid the warning "possible recursive locking
+> +		 * detected". When "level" is 0, lock_sock_nested(sk, level)
+> +		 * is the same as lock_sock(sk).
+> +		 */
+> +		lock_sock_nested(sk, level);
+>  		sock_orphan(sk);
+>  		sk->sk_shutdown = SHUTDOWN_MASK;
+>  
+> @@ -659,7 +667,7 @@ static void __vsock_release(struct sock *sk)
+>  
+>  		/* Clean up any sockets that never were accepted. */
+>  		while ((pending = vsock_dequeue_accept(sk)) != NULL) {
+> -			__vsock_release(pending);
+> +			__vsock_release(pending, SINGLE_DEPTH_NESTING);
+>  			sock_put(pending);
+>  		}
+>  
+> @@ -708,7 +716,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space);
+>  
+>  static int vsock_release(struct socket *sock)
+>  {
+> -	__vsock_release(sock->sk);
+> +	__vsock_release(sock->sk, 0);
+>  	sock->sk = NULL;
+>  	sock->state = SS_FREE;
+>  
+> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+> index 261521d286d6..c443db7af8d4 100644
+> --- a/net/vmw_vsock/hyperv_transport.c
+> +++ b/net/vmw_vsock/hyperv_transport.c
+> @@ -559,7 +559,7 @@ static void hvs_release(struct vsock_sock *vsk)
+>  	struct sock *sk = sk_vsock(vsk);
+>  	bool remove_sock;
+>  
+> -	lock_sock(sk);
+> +	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+>  	remove_sock = hvs_close_lock_held(vsk);
+>  	release_sock(sk);
+>  	if (remove_sock)
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 5bb70c692b1e..a666ef8fc54e 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -820,7 +820,7 @@ void virtio_transport_release(struct vsock_sock *vsk)
+>  	struct sock *sk = &vsk->sk;
+>  	bool remove_sock = true;
+>  
+> -	lock_sock(sk);
+> +	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+>  	if (sk->sk_type == SOCK_STREAM)
+>  		remove_sock = virtio_transport_close(vsk);
+>  
+> -- 
+> 2.19.1
 > 
-> This is only part of the issues. Another example: before the
-> pm_ops()->freeze()'s of all the devices are called, pm_wakeup_pending()
-> is already tested in a lot of places (e.g. in try_to_freeze_tasks ()) in the 
-> suspend process, and can abort the whole suspend process upon the user's
-> unintentional input focus switch, keystroke and mouse movement.
-
-How long is the prepare() phase on your systems? User may wiggle mouse
-at any time really, even before the notifier fires up.
-
-> 
-> > Your vmbus implementation should allow individual drivers to
-> > control the set of PM operations that they wish to use, instead of
-> > forcing everything through suspend/resume.
-> > 
-> > Dmitry
-> 
-> Since the devices are pure software-emulated devices, no PM operation was
-> supported in the past, and now suspend/resume are the only two PM operations
-> we're going to support. If the idea (notifer + disabling event handling) is not
-> good enough, we'll have to document the issue to the user, as I described above.
-
-¯\_(ツ)_/¯ If you do not want to implement hibernation properly in vmbus
-code that is totally up to you (have you read in pm.h how freeze() is
-different from suspend()?).
-
-Thanks.
 
 -- 
-Dmitry
