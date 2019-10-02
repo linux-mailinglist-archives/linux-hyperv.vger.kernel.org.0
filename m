@@ -2,113 +2,176 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E16ADC88CE
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Oct 2019 14:40:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59149C8F74
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Oct 2019 19:10:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfJBMkF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Oct 2019 08:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
+        id S1727365AbfJBRKH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Oct 2019 13:10:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45210 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbfJBMkF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Oct 2019 08:40:05 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 430082133F;
-        Wed,  2 Oct 2019 12:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570020003;
-        bh=C27WP3WjY83XjqK00FA77hEI/TbJNxmgHsX3G7ohuJY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r1ISHHmlUa3ArxhsAN1rIrYFbdp7E9Nft088x4rC2BWSc1rug9fMRZiNAEvlaN9sk
-         psxK5zJ4K0fRIworDS+q3PHxoLSWsTxwjQE2GdAQfEPZ2BVH804MSe+aysCm4f7xwy
-         KNwsXlVW8+wyrVavZo30CoO4tzHc6UVNjBTRJcfA=
-Date:   Wed, 2 Oct 2019 08:40:02 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "shc_work@mail.ru" <shc_work@mail.ru>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
-        "info@metux.net" <info@metux.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: Re: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for
- Hyper-V frame buffer driver
-Message-ID: <20191002124002.GL17454@sasha-vm>
-References: <20190918060227.6834-1-weh@microsoft.com>
- <DM5PR21MB0137DA408FE59E8C1171CFFCD78E0@DM5PR21MB0137.namprd21.prod.outlook.com>
- <DM5PR21MB01375E8543451D4550D622CDD7880@DM5PR21MB0137.namprd21.prod.outlook.com>
- <20191001184828.GF8171@sasha-vm>
- <PU1P153MB0169811097EA55DF795888B2BF9C0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        id S1726798AbfJBRKH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 2 Oct 2019 13:10:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Oct 2019 10:10:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,249,1566889200"; 
+   d="scan'208";a="191001391"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Oct 2019 10:10:06 -0700
+Date:   Wed, 2 Oct 2019 10:10:06 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 1/4] x86/kvm: Add "nopvspin" parameter to disable PV
+ spinlocks
+Message-ID: <20191002171006.GB9615@linux.intel.com>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-2-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169811097EA55DF795888B2BF9C0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1569847479-13201-2-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 08:09:41AM +0000, Dexuan Cui wrote:
->> -----Original Message-----
->> From: Sasha Levin <sashal@kernel.org>
->> Sent: Tuesday, October 1, 2019 11:48 AM
->>
->> On Fri, Sep 20, 2019 at 05:26:34PM +0000, Michael Kelley wrote:
->> >From: Michael Kelley <mikelley@microsoft.com>  Sent: Wednesday,
->> September 18, 2019 2:48 PM
->> >> >
->> >> > Without deferred IO support, hyperv_fb driver informs the host to refresh
->> >> > the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter there
->> >> > is screen update or not. This patch supports deferred IO for screens in
->> >> > graphics mode and also enables the frame buffer on-demand refresh. The
->> >> > highest refresh rate is still set at 20Hz.
->> >> >
->> >> > Currently Hyper-V only takes a physical address from guest as the starting
->> >> > address of frame buffer. This implies the guest must allocate contiguous
->> >> > physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
->> >> > accept address from MMIO region as frame buffer address. Due to these
->> >> > limitations on Hyper-V host, we keep a shadow copy of frame buffer
->> >> > in the guest. This means one more copy of the dirty rectangle inside
->> >> > guest when doing the on-demand refresh. This can be optimized in the
->> >> > future with help from host. For now the host performance gain from
->> deferred
->> >> > IO outweighs the shadow copy impact in the guest.
->> >> >
->> >> > Signed-off-by: Wei Hu <weh@microsoft.com>
->> >
->> >Sasha -- this patch and one other from Wei Hu for the Hyper-V frame buffer
->> >driver should be ready.  Both patches affect only the Hyper-V frame buffer
->> >driver so can go through the Hyper-V tree.  Can you pick these up?  Thx.
->>
->> I can't get this to apply anywhere, what tree is it based on?
->>
->> --
->> Thanks,
->> Sasha
->
->Hi Sasha,
->Today's hyperv/linux.git's hyperv-next branch's top commit is
->    48b72a2697d5 ("hv_netvsc: Add the support of hibernation").
->
->Please pick up two patches from Wei Hu:
->#1: [PATCH v4] video: hyperv: hyperv_fb: Obtain screen resolution from Hyper-V host
->#2: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for Hyper-V frame buffer driver
+On Mon, Sep 30, 2019 at 08:44:36PM +0800, Zhenzhong Duan wrote:
+> There are cases where a guest tries to switch spinlocks to bare metal
+> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
+> "hv_nopvspin" on HYPER_V).
+> 
+> That feature is missed on KVM, add a new parameter "nopvspin" to disable
+> PV spinlocks for KVM guest.
+> 
+> This new parameter is also used to replace "xen_nopvspin" and
+> "hv_nopvspin".
 
-Ah, I guess I was missing the first one. I've queued both for
-hyperv-next, thanks!
+This is confusing as there are no Xen or Hyper-V changes in this patch.
+Please make it clear that you're talking about future patches, e.g.:
 
---
-Thanks,
-Sasha
+  The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
+  parameters in future patches.
+
+> 
+> The global variable pvspin isn't defined as __initdata as it's used at
+> runtime by XEN guest.
+
+Same comment as above regarding what this patch is doing versus what will
+be done in the future.  Arguably you should even mark it __initdata in
+this patch and deal with conflict in the Xen patch, e.g. use it only to
+set the existing xen_pvspin variable.
+
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krcmar <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will@kernel.org>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 4 ++++
+>  arch/x86/include/asm/qspinlock.h                | 1 +
+>  arch/x86/kernel/kvm.c                           | 7 +++++++
+>  kernel/locking/qspinlock.c                      | 7 +++++++
+>  4 files changed, 19 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c7ac2f3..4b956d8 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5330,6 +5330,10 @@
+>  			as generic guest with no PV drivers. Currently support
+>  			XEN HVM, KVM, HYPER_V and VMWARE guest.
+>  
+> +	nopvspin	[X86,KVM] Disables the qspinlock slow path
+> +			using PV optimizations which allow the hypervisor to
+> +			'idle' the guest on lock contention.
+> +
+>  	xirc2ps_cs=	[NET,PCMCIA]
+>  			Format:
+>  			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
+> diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+> index 444d6fd..34a4484 100644
+> --- a/arch/x86/include/asm/qspinlock.h
+> +++ b/arch/x86/include/asm/qspinlock.h
+> @@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
+>  extern void __pv_init_lock_hash(void);
+>  extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
+>  extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
+> +extern bool pvspin;
+>  
+>  #define	queued_spin_unlock queued_spin_unlock
+>  /**
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index e820568..a4f108d 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -842,6 +842,13 @@ void __init kvm_spinlock_init(void)
+>  	if (num_possible_cpus() == 1)
+>  		return;
+>  
+> +	if (!pvspin) {
+> +		pr_info("PV spinlocks disabled\n");
+> +		static_branch_disable(&virt_spin_lock_key);
+> +		return;
+> +	}
+> +	pr_info("PV spinlocks enabled\n");
+
+These prints could be confusing as KVM also disables PV spinlocks when it
+sees KVM_HINTS_REALTIME.
+
+> +
+>  	__pv_init_lock_hash();
+>  	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+>  	pv_ops.lock.queued_spin_unlock =
+> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+> index 2473f10..945b510 100644
+> --- a/kernel/locking/qspinlock.c
+> +++ b/kernel/locking/qspinlock.c
+> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+>  #include "qspinlock_paravirt.h"
+>  #include "qspinlock.c"
+>  
+> +bool pvspin = true;
+
+This can be __ro_after_init, or probably better __initdata and have Xen
+snapshot the value for its use case.
+
+Personal preference: I'd invert the bool and name it nopvspin to make it
+easier to connect the variable to the kernel param.
+
+> +static __init int parse_nopvspin(char *arg)
+> +{
+> +	pvspin = false;
+> +	return 0;
+> +}
+> +early_param("nopvspin", parse_nopvspin);
+>  #endif
+> -- 
+> 1.8.3.1
+> 
