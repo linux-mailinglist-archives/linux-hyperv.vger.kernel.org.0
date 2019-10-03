@@ -2,132 +2,197 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92633C9867
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 08:44:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 943C0C9C5D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 12:34:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfJCGoy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Oct 2019 02:44:54 -0400
-Received: from mail-eopbgr1300117.outbound.protection.outlook.com ([40.107.130.117]:59744
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725497AbfJCGoy (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Oct 2019 02:44:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UallpPXBEEqVcDOOhxMxkaLov4yuIaDLuizWfNpxwm/4XfcINUQdqAmtCjldcNyPWkAFsJTkWBOMWIBLbEBy+JhSX3Bj6tknyHKvcje+b3n2ywKep21304pD/Dpggo/e8aFhtteBRjXONUlzzMXbtyXAbOyhx0+ZKB9W0Pz2bGWYdvRtcr+VZ3lnG17cgJzzHwZlkOVXFWq1RH+UGGp4unKXt42CYevt1LVxO72j40BaSNKtupcBsT0Gmv1KCGYfC8NfajiiCjOQS0g3DDOfTHeffvjnsFg9po+3XU3sDuVyoljWrojelODsAjCfWs2pb2+wLOxh86iQwo4/6sHb4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XzTi/bd79kdo4uu5/8krTJiB7nb/MdXsYmOR5LLVuZc=;
- b=b50ZM90GrWg/FqfEgpJ7DsGYUONmKu+IKZ0YvCaQrDlWOLklPPgRX1UFxznM80mUPE0UeowOjj7iCOpfpfk4XNV6dwIpjf1GxxuRtvF6x8B4KGttc+ovnXEj3f5tmCcLDTVn+MYAqnoZ+a2aXAvQYTIGNPXcwCcqcDIv6SwiVup24rBAcXn/LmdTkPwnewiKO4nHqxs21cLGcQATL+aoJRfKZ3IXcbHMIQnuvvpx7Ln8QjC07K2nER+1LtgxX4CAgdcXBN4rwhq80b6pN6CNCSwCqE4To4IaX2woFyw8mqgR8SPKV35MpCRptreqBDNI9vS397TRTI3zzBvxGZ1liQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XzTi/bd79kdo4uu5/8krTJiB7nb/MdXsYmOR5LLVuZc=;
- b=hxlT2Gi+dj1690Hk6JM6AZF/fext1NsKYsXB8D4EmPk+7F+a9i14ua0SMupYXjcyuS9SltN/W4JgjqdeP6VNatYb+hYSTJso59XlwatCLtTwtHGtS40pVGtdVJwVBpAMXPRq7zUSplIXwRkg3stWogzE7Z9X9SPLUmwkxU/1G4c=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0187.APCP153.PROD.OUTLOOK.COM (10.170.188.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.3; Thu, 3 Oct 2019 06:44:05 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.021; Thu, 3 Oct 2019
- 06:44:05 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Thread-Topic: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Thread-Index: AQHVbwXQRPtGDntMcU+sv4R8q5dPMac1q4VggAqesgCABFerkIAAR5AAgAAEvxCAA52PEA==
-Date:   Thu, 3 Oct 2019 06:44:04 +0000
-Message-ID: <PU1P153MB0169CC57749BF297F2581B02BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
- <20190919161752.GS237523@dtor-ws>
- <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190928003156.GU237523@dtor-ws>
- <PU1P153MB0169C315F7F9EBEBED4C7A7DBF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190930230652.GW237523@dtor-ws>
- <PU1P153MB01696258D9983DF59D68E748BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <PU1P153MB01696258D9983DF59D68E748BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T05:35:12.9166695Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b8fbbc20-ec57-44eb-b763-8c5867f66517;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:24b0:cdff:a7c5:c70f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e54bb8f-0ace-4921-9d5b-08d747cd15b5
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0187:|PU1P153MB0187:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB01875BDB1344A08938A40952BF9F0@PU1P153MB0187.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01792087B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(376002)(396003)(366004)(39860400002)(199004)(189003)(74316002)(2940100002)(229853002)(52536014)(66946007)(64756008)(66446008)(66476007)(66556008)(14454004)(102836004)(2906002)(6116002)(5660300002)(76116006)(8990500004)(99286004)(316002)(76176011)(6916009)(6506007)(22452003)(71200400001)(186003)(7696005)(71190400001)(54906003)(305945005)(446003)(8936002)(11346002)(2351001)(81166006)(33656002)(86362001)(486006)(10090500001)(8676002)(81156014)(2501003)(25786009)(478600001)(6436002)(55016002)(5640700003)(256004)(14444005)(107886003)(4326008)(6246003)(9686003)(476003)(46003)(10290500003)(1361003)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0187;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FY2sOINe7ZVumXp3E7adJUjFpwDN9N55EiJpblczxJax9vUaZbHSXC1vI0+J4RjT4W1XCoFkgNvO1n1pVmqAgTih2IRMYBGrvjr2F+27IXvQ3d3VkRz/InieoNk/RaOnVywfVpaAxt4cYIRF1ncRWeb+piDRGFiKpr799MrlsIp3NZm4AmYIpxxGZBlupSMwuN/7N2XfadpI/zCqz2P3ALNMel6lmMGNktaOUvCupZxgwATfhix36EkMDpBYPAi4/YLEE+PYqLTYSllmbfzdxV2VVlmwyg7s/zgpivr7V5rXT6FRAivQyDRqqngFMELzR/nzcS1R3rfVZBdJ5dNsoqC4DVFns3LH+jP6zaK1WZNmoz8hMM8wdOhpd87PsjXyPhA22N26wdETK2jvoKzUHokxfQr+NtarNTs9JtGRl4Q=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728140AbfJCKcp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Oct 2019 06:32:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59128 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbfJCKcp (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 3 Oct 2019 06:32:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93ATQT0037217;
+        Thu, 3 Oct 2019 10:30:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=ir++mkQJfcEAASN1DoMDHnUr4GmG7owUrxYcR27Bluw=;
+ b=fV1omv2Zf9uP6tzCN12xv2NX/kzW1yZ26H6Hw6vk0QJb9n1badh/rofP7TKda5gR9me3
+ BJR9IYKq2Ip7nKL6StCFBSotta5ljLQb1csBQ+GzN6vgYOE9ZO1Tl0dYB/Y3Johe0vSm
+ hY12O0lkuIh2VtIwbgQlpHvDCUtwyq8VaATGwFME5W2bMmxpCYEr/nKLmNl7cLsQhF82
+ NNWkYsvCLJo6P2H3WVXvqEnixiVZfjpREpHymSt9WKV6tosP6RDHbG0c1qxNRJ9I6nbH
+ cScAJ/O71byeqN61hvq0qhXOkIMKHxvmOKhOHFHXniGgeRYKtCns2kaZHOprLZt/kyh+ kA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2v9yfqjw50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 10:30:54 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93ASnou057692;
+        Thu, 3 Oct 2019 10:30:54 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2vcg63bx65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 10:30:53 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x93AUlmi013736;
+        Thu, 3 Oct 2019 10:30:47 GMT
+Received: from [10.191.0.240] (/10.191.0.240)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Oct 2019 03:30:47 -0700
+Subject: Re: [PATCH v3 1/4] x86/kvm: Add "nopvspin" parameter to disable PV
+ spinlocks
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-2-git-send-email-zhenzhong.duan@oracle.com>
+ <20191002171006.GB9615@linux.intel.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <a789fb32-3830-e36b-f648-d070c742384f@oracle.com>
+Date:   Thu, 3 Oct 2019 18:30:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e54bb8f-0ace-4921-9d5b-08d747cd15b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 06:44:04.9798
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UmwmdAPkB+pFQuMQ8du4BoZT+YXDzxUqfIm4DPr0ZcVJ7LuZQw080L/haVh8fxE1gCsJz1yv+9ITQBfdml8cIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0187
+In-Reply-To: <20191002171006.GB9615@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910030096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910030096
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-PiBGcm9tOiBEZXh1YW4gQ3VpDQo+IFNlbnQ6IFdlZG5lc2RheSwgT2N0b2JlciAyLCAyMDE5IDEw
-OjM1IFBNDQo+ID4gLi4uIA0KPiA+DQo+ID4gwq9cXyjjg4QpXy/CryBJZiB5b3UgZG8gbm90IHdh
-bnQgdG8gaW1wbGVtZW50IGhpYmVybmF0aW9uIHByb3Blcmx5IGluIHZtYnVzDQo+ID4gY29kZSB0
-aGF0IGlzIHRvdGFsbHkgdXAgdG8geW91IChoYXZlIHlvdSByZWFkIGluIHBtLmggaG93IGZyZWV6
-ZSgpIGlzDQo+ID4gZGlmZmVyZW50IGZyb20gc3VzcGVuZCgpPykuDQo+ID4gRG1pdHJ5DQo+IA0K
-PiBJIHVuZGVyc3RhbmQgZnJlZXplKCkgaXMgZGlmZmVyZW50IGZyb20gc3VzcGVuZCgpLiBIZXJl
-IEkgdHJlYXQgc3VzcGVuZCgpIGFzIGENCj4gaGVhdnl3ZWlnaHQgZnJlZXplKCkgZm9yIHNpbXBs
-aWNpdHkgYW5kIElNSE8gdGhlIGV4dHJhIGNvc3Qgb2YgdGltZSBpcw0KPiBuZWdsZWN0YWJsZSBj
-b25zaWRlcmluZyB0aGUgbG9uZyBoaWJlcm5hdGlvbiBwcm9jZXNzLCB3aGljaCBjYW4gdGFrZQ0K
-PiA1fjEwKyBzZWNvbmRzLg0KPiANCj4gRXZlbiBpZiBJIGltcGxlbWVudCBhbGwgdGhlIHBtIG9w
-cywgSU1PIHRoZSBpc3N1ZSB3ZSdyZSB0YWxraW5nIGFib3V0DQo+IChpLmUuIHRoZSBoaWJlcm5h
-dGlvbiBwcm9jZXNzIGNhbiBiZSBhYm9ydGVkIGJ5IHVzZXIncyBrZXlib2FyZC9tb3VzZQ0KPiBh
-Y3Rpdml0aWVzKSBzdGlsbCBleGlzdHMuIEFjdHVhbGx5IEkgdGhpbmsgYSBwaHlzaWNhbCBMaW51
-eCBtYWNoaW5lIHNob3VsZCBoYXZlDQo+IHRoZSBzYW1lIGlzc3VlLg0KPiANCj4gSW4gcHJhY3Rp
-Y2UsIElNTyB0aGUgaXNzdWUgaXMgbm90IGEgYmlnIGNvbmNlcm4sIGFzIHRoZSBWTSB1c3VhbGx5
-IHJ1bnMgaW4NCj4gYSByZW1vdGUgZGF0YSBjZW50ZXIsIGFuZCB0aGUgdXNlciBoYXMgbm8gYWNj
-ZXNzIHRvIHRoZSBWTSdzDQo+IGtleWJvYXJkL21vdXNlLiA6LSkNCj4gDQo+IEkgaG9wZSBJIHVu
-ZGVyc3Rvb2QgeW91ciBjb21tZW50cy4gSSdsbCBwb3N0IGEgdjIgd2l0aG91dCB0aGUgbm90aWZp
-ZXIuDQo+IFBsZWFzZSBBY2sgdGhlIHYyIGlmIGl0IGxvb2tzIGdvb2QgdG8geW91Lg0KPiANCj4g
-LS0gRGV4dWFuDQoNCkkgdGhpbmsgSSB1bmRlcnN0b29kIG5vdzogaXQgbG9va3MgdGhlIHZtYnVz
-IGRyaXZlciBzaG91bGQgaW1wbGVtZW50DQphIHByZXBhcmUoKSBvciBmcmVlemUoKSwgd2hpY2gg
-Y2FsbHMgdGhlIGh5cGVydl9rZXlib2FyZCBkcml2ZXIncw0KcHJlcGFyZSgpIG9yIGZyZWV6ZSgp
-LCB3aGljaCBjYW4gc2V0IHRoZSBmbGFnIG9yIGRpc2FibGUgdGhlIGtleWJvYXJkDQpldmVudCBo
-YW5kbGluZy4gVGhpcyB3YXkgd2UgZG9uJ3QgbmVlZCB0aGUgbm90aWZpZXIuDQoNClBsZWFzZSBs
-ZXQgbWUga25vdyBpZiBJIHN0aWxsIGRvbid0IGdldCBpdCByaWdodC4NCg0KVGhhbmtzLA0KLS0g
-RGV4dWFuDQo=
+On 2019/10/3 1:10, Sean Christopherson wrote:
+
+> On Mon, Sep 30, 2019 at 08:44:36PM +0800, Zhenzhong Duan wrote:
+>> There are cases where a guest tries to switch spinlocks to bare metal
+>> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
+>> "hv_nopvspin" on HYPER_V).
+>>
+>> That feature is missed on KVM, add a new parameter "nopvspin" to disable
+>> PV spinlocks for KVM guest.
+>>
+>> This new parameter is also used to replace "xen_nopvspin" and
+>> "hv_nopvspin".
+> This is confusing as there are no Xen or Hyper-V changes in this patch.
+> Please make it clear that you're talking about future patches, e.g.:
+>
+>    The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
+>    parameters in future patches.
+
+Will fix
+
+>
+>> The global variable pvspin isn't defined as __initdata as it's used at
+>> runtime by XEN guest.
+> Same comment as above regarding what this patch is doing versus what will
+> be done in the future.  Arguably you should even mark it __initdata in
+> this patch and deal with conflict in the Xen patch, e.g. use it only to
+> set the existing xen_pvspin variable.
+
+Will fix
+
+>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+
+......snip
+
+>>   /**
+>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+>> index e820568..a4f108d 100644
+>> --- a/arch/x86/kernel/kvm.c
+>> +++ b/arch/x86/kernel/kvm.c
+>> @@ -842,6 +842,13 @@ void __init kvm_spinlock_init(void)
+>>   	if (num_possible_cpus() == 1)
+>>   		return;
+>>   
+>> +	if (!pvspin) {
+>> +		pr_info("PV spinlocks disabled\n");
+>> +		static_branch_disable(&virt_spin_lock_key);
+>> +		return;
+>> +	}
+>> +	pr_info("PV spinlocks enabled\n");
+> These prints could be confusing as KVM also disables PV spinlocks when it
+> sees KVM_HINTS_REALTIME.
+
+What about below:
+
+pr_info("PV spinlocks disabled forced by \"nopvspin\" parameter.\n");
+
+Or you prefer separate print for each disabling like below?
+
+         /* Does host kernel support KVM_FEATURE_PV_UNHALT? */
+         if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT)) {
+                 pr_info("PV spinlocks disabled, KVM_FEATURE_PV_UNHALT feature needed.\n");
+                 return;
+         }
+
+         if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
+                 pr_info("PV spinlocks disabled, having non-preemption hints.\n");
+                 return;
+         }
+
+         /* Don't use the pvqspinlock code if there is only 1 vCPU. */
+         if (num_possible_cpus() == 1) {
+                 pr_info("PV spinlocks disabled on UP.\n");
+                 return;
+         }
+	if (!pvspin) {
+		pr_info("PV spinlocks disabled forced by \"nopvspin\" parameter.\n");
+		static_branch_disable(&virt_spin_lock_key);
+		return;
+	}
+	pr_info("PV spinlocks enabled\n");
+
+>
+>> +
+>>   	__pv_init_lock_hash();
+>>   	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+>>   	pv_ops.lock.queued_spin_unlock =
+>> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+>> index 2473f10..945b510 100644
+>> --- a/kernel/locking/qspinlock.c
+>> +++ b/kernel/locking/qspinlock.c
+>> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+>>   #include "qspinlock_paravirt.h"
+>>   #include "qspinlock.c"
+>>   
+>> +bool pvspin = true;
+> This can be __ro_after_init, or probably better __initdata and have Xen
+> snapshot the value for its use case.
+
+I will use __initdata
+
+>
+> Personal preference: I'd invert the bool and name it nopvspin to make it
+> easier to connect the variable to the kernel param.
+
+OK, will do that.  Thanks for review for all the patches.
+
+Zhenzhong
+
