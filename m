@@ -2,55 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ADAECAD8A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 19:48:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5116CADFF
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 20:18:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfJCRpg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Oct 2019 13:45:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37449 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730530AbfJCRpg (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Oct 2019 13:45:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so2226517pfo.4;
-        Thu, 03 Oct 2019 10:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=cTaX338E0Xi7tlWl150QisR1sVTVGkEbaKzGC+/ciNs=;
-        b=QQcAnwxF76LQ1iEdNrNWVvOLiJ3Pv9O/72dUcsxjGOQigOb5iuS9UbQ7rLfUwzX/gJ
-         jqBErtxrGhgaZLQE6p4fAEypMdxCOl9NmDvsjra8+YCjZ9Cr1uIn2Z2i/upxhdCIoGuI
-         VT+tSQPPqcmRTKABq3cWVni37mU57j9Dc2jULLNkIMxitydg5/pSiHALAeYx3eDfESvl
-         bCEttP6mG3DRJ+bY2mF/pIUSSZW3c/nWGer7SkCNfqOGkB5381hD1j1MbHzeKB3FKTi8
-         pR6Z3UvBLJWEMvU/VJCiiK3Rkr1RZqOWbRCVJH7E+OOwQFQ8JcjVv9jOINXvEsAMJw4i
-         pkhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=cTaX338E0Xi7tlWl150QisR1sVTVGkEbaKzGC+/ciNs=;
-        b=cC55GZ7dHncJe5qdRJdsHC/v1HWw7YtFe6fv+mzdS50Is0/Vs5HkKDtVRgo0CJPHja
-         tCLZJiCjyYmd7DVeOI5JdvGEOLkyFPG84s+gj2jZIpRAJqESoHdCELeR6kvS/wAMkHEU
-         9g29EPpwcmFHf0WYJa837f9DaGQLHbIo1arG9uR1cDFI7DZEyeCi+jqgbmqHBpiR4vks
-         d57idsNkHOA5LQ24x7nFS3O5VjfUDXHIbmO/x1mqQP9mYN+LiUW2yMlKTa4pzLg6benX
-         bUWp32Ee7d3U9X03mbcgsueDznv7oKcZFfyT5KcBAyDdEH5K1MxKM8UPkmC3yeplAKmF
-         x49w==
-X-Gm-Message-State: APjAAAVxh9sPCGgGZa9Uxgft2C7geoUZmKVhaBJ235PUh7KI/AQeQWIo
-        9aiP3KKCjr83xxkZMiailG0=
-X-Google-Smtp-Source: APXvYqyhfSmDaD5ho1JbN3LelcUweH4EA3Q2Q7tRjR4/lz4xS/Ll4Y4s4rLKfFgDVHeBDFpoz1hf7Q==
-X-Received: by 2002:a17:90a:be08:: with SMTP id a8mr11998250pjs.92.1570124733826;
-        Thu, 03 Oct 2019 10:45:33 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 7sm2799565pgj.35.2019.10.03.10.45.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 10:45:32 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 10:45:30 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
+        id S2387836AbfJCSS7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Oct 2019 14:18:59 -0400
+Received: from mail-eopbgr1300110.outbound.protection.outlook.com ([40.107.130.110]:58944
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731113AbfJCSS6 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 3 Oct 2019 14:18:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i5LYwP1wkUCJhK41joc5buLVaVApHP9A5w4ftxCD7PeO5u/fs3xEicXf3eRYFXA0yfvoQc4QLgW03mr+6czLOuJJzs1Xw3EQVjdtSXBvNCmW6heKOJklO0hghY7x4HPjQRSOm/kMujUpzxmjVtD//+fB7h6c+XUPVOYqVnvenpa0FibI+bcZ2AwIDEMBy6V60bGjv7JWOSJuga832k769u3xc+GkWj338Zvq03EeG7iKUr0CgVReVu7qKW1WvC4aDP5gFvMgCcptdVS5MY7uaCpR5t89FowLWgEqvlvgaeHqMHysbq/Fe1lygkpYSyPCqrYu76gCpNnPADl8OCRd4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lZVzpDglIsz6Us7WGaF6KHFvSgYy7koC23diZDQqa6M=;
+ b=a74INfAH++hBF98o/BCcIyO7Imu/Z1qF0id9Rrb3fyYDNvKnHN8213pXykHgN4P7iKFTw2raFvyohwJ+DMUdvtiC1fzvRQw8zkWMwbGKLOZ+YI/gDY84/PGGohF5DbT8Uii+Xv2sJaZOoQwtmyeqUpVAxMDoqXeWuo5i+RTEbMJTW6+ZOmQcDRFQNS61m0OnBv2PwCmGR1Qy4r/iOvb8GkhwWqq3+9Ym30sweWr2VqEjkFoMDBBuTHy6rlUWZ75Kn/lpG/EMwYcQ2rtYepWC3qNtiB0ckgKkZcyoRFJAeRzfE1Kw6ISJUBcpXZoqb+VXnmxS98bMpjUEzxvt+6MLhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lZVzpDglIsz6Us7WGaF6KHFvSgYy7koC23diZDQqa6M=;
+ b=ZxEj+hURUKvMuxoJG4jp+6AUjBIkgjglwPH5CUJVvuAEyMT+OlWSAl8affuNb/Y3vH5iJuV+tzoYiN8FrZ4S6IUz02XA5QyqOBeYFrSqEP6rtxpi4DnOF1IEWCpEKNd4psgYu0OgvywdDQTRSsM6K8C4xrhUxKMr+p0h+tQ8AK8=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0108.APCP153.PROD.OUTLOOK.COM (10.170.188.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.10; Thu, 3 Oct 2019 18:18:37 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.021; Thu, 3 Oct 2019
+ 18:18:37 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "sashal@kernel.org" <sashal@kernel.org>,
@@ -58,8 +45,11 @@ Cc:     KY Srinivasan <kys@microsoft.com>,
         "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
-Message-ID: <20191003174530.GB22365@dtor-ws>
+Subject: RE: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Topic: [PATCH] Input: hyperv-keyboard: Add the support of hibernation
+Thread-Index: AQHVbwXQRPtGDntMcU+sv4R8q5dPMac1q4VggAqesgCABFerkIAAR5AAgAAEvxCAA52PEIAAuuYAgAAIzDA=
+Date:   Thu, 3 Oct 2019 18:18:37 +0000
+Message-ID: <PU1P153MB016904AA7BAC9255552A89E1BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
  <20190919161752.GS237523@dtor-ws>
  <PU1P153MB016914A7C827CA35D7FEB66ABF8B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
@@ -68,63 +58,73 @@ References: <1568244975-66795-1-git-send-email-decui@microsoft.com>
  <20190930230652.GW237523@dtor-ws>
  <PU1P153MB01696258D9983DF59D68E748BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
  <PU1P153MB0169CC57749BF297F2581B02BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20191003174530.GB22365@dtor-ws>
+In-Reply-To: <20191003174530.GB22365@dtor-ws>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T18:18:35.5985548Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=33ad7441-da83-448d-b128-7a96e2c029e8;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:e8be:9c25:96c9:9a3c]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a1826418-1d76-4f6e-29bd-08d7482e1c67
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0108:|PU1P153MB0108:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB010888048611AE415CA99A1ABF9F0@PU1P153MB0108.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(189003)(199004)(5640700003)(229853002)(74316002)(5660300002)(2351001)(305945005)(107886003)(8936002)(14454004)(99286004)(81156014)(8676002)(6246003)(7696005)(6916009)(6436002)(1361003)(6506007)(10290500003)(486006)(476003)(316002)(2501003)(22452003)(76176011)(446003)(186003)(11346002)(55016002)(7736002)(9686003)(54906003)(71200400001)(478600001)(71190400001)(46003)(14444005)(256004)(64756008)(66556008)(33656002)(66476007)(66946007)(76116006)(102836004)(8990500004)(52536014)(66446008)(86362001)(25786009)(10090500001)(2906002)(4326008)(81166006)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0108;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: op95pzlrpbwfKDGzhroTWub/CrivSmxUvRYbHBOD7GJm3q2ccB1gy/jlILtr2Irear0o2kUU6mGTUG1QWvhOF3aKF6+6sL3K12QYK3DvCEel1e6qKi2RK9075z5u7YMfTnFGtfYYPfWjJlolf0nSHqjiJ7yQyaNNLvmWvf6eJA2ZJq8aGqBdAXwEF85eE1MBWXwc//LIeC9GR+xdm279+eNkX3p3usClUKL8Uje9ciozZ4hX8+X3aH7PDuPEy6C+N2B4DOhqghaMLZL3WhXU6r0gk0+ulpEJmcxLbDThrDbSR9397Apr1eyoMYcSqzbMRIkXb0h143wCxTycQ+60LNpju1f8E1Ezwvn+ur7T2eZIzX7wrxQ1B9iSbbt5pdrECqFRx+VuOp51mE1nmhKdQ+K3ejyJAP0jUqqfDvdwR30=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PU1P153MB0169CC57749BF297F2581B02BF9F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1826418-1d76-4f6e-29bd-08d7482e1c67
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 18:18:37.4235
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XZbyaLYTWd+346zLLABlxVPtqglh5Zk/SmjOmyPsPxql4YWZZeuctJcCOPpOPQWHGMIEfOsePdj9JnvqgP/LuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0108
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 03, 2019 at 06:44:04AM +0000, Dexuan Cui wrote:
-> > From: Dexuan Cui
-> > Sent: Wednesday, October 2, 2019 10:35 PM
-> > > ... 
-> > >
-> > > ¯\_(ツ)_/¯ If you do not want to implement hibernation properly in vmbus
-> > > code that is totally up to you (have you read in pm.h how freeze() is
-> > > different from suspend()?).
-> > > Dmitry
-> > 
-> > I understand freeze() is different from suspend(). Here I treat suspend() as a
-> > heavyweight freeze() for simplicity and IMHO the extra cost of time is
-> > neglectable considering the long hibernation process, which can take
-> > 5~10+ seconds.
-> > 
-> > Even if I implement all the pm ops, IMO the issue we're talking about
-> > (i.e. the hibernation process can be aborted by user's keyboard/mouse
-> > activities) still exists. Actually I think a physical Linux machine should have
-> > the same issue.
-> > 
-> > In practice, IMO the issue is not a big concern, as the VM usually runs in
-> > a remote data center, and the user has no access to the VM's
-> > keyboard/mouse. :-)
-> > 
-> > I hope I understood your comments. I'll post a v2 without the notifier.
-> > Please Ack the v2 if it looks good to you.
-> > 
-> > -- Dexuan
-> 
-> I think I understood now: it looks the vmbus driver should implement
-> a prepare() or freeze(), which calls the hyperv_keyboard driver's
-> prepare() or freeze(), which can set the flag or disable the keyboard
-> event handling. This way we don't need the notifier.
-
-Right. I think in practice the current suspend implementation can work
-as freeze() for the HV keyboard, because in suspend you shut off vmbus
-channel, so there should not be wakeup signals anymore. What you do not
-want is to have the current resume to be used in place of thaw(), as
-there you re-enable the vmbus channel and resume sending wakeup requests
-as you are writing out the hibernation image to storage.
-
-I think if vmbus allowed HV keyboard driver to supply empty thaw() and
-poweroff() implementations, while using suspend() as freeze() and
-resume() as restore(), it would solve the issue for you.
-
-Thanks.
-
--- 
-Dmitry
+PiBGcm9tOiBkbWl0cnkudG9yb2tob3ZAZ21haWwuY29tIDxkbWl0cnkudG9yb2tob3ZAZ21haWwu
+Y29tPg0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAzLCAyMDE5IDEwOjQ2IEFNDQo+ID4NCj4g
+PiBJIHRoaW5rIEkgdW5kZXJzdG9vZCBub3c6IGl0IGxvb2tzIHRoZSB2bWJ1cyBkcml2ZXIgc2hv
+dWxkIGltcGxlbWVudA0KPiA+IGEgcHJlcGFyZSgpIG9yIGZyZWV6ZSgpLCB3aGljaCBjYWxscyB0
+aGUgaHlwZXJ2X2tleWJvYXJkIGRyaXZlcidzDQo+ID4gcHJlcGFyZSgpIG9yIGZyZWV6ZSgpLCB3
+aGljaCBjYW4gc2V0IHRoZSBmbGFnIG9yIGRpc2FibGUgdGhlIGtleWJvYXJkDQo+ID4gZXZlbnQg
+aGFuZGxpbmcuIFRoaXMgd2F5IHdlIGRvbid0IG5lZWQgdGhlIG5vdGlmaWVyLg0KPiANCj4gUmln
+aHQuIEkgdGhpbmsgaW4gcHJhY3RpY2UgdGhlIGN1cnJlbnQgc3VzcGVuZCBpbXBsZW1lbnRhdGlv
+biBjYW4gd29yaw0KPiBhcyBmcmVlemUoKSBmb3IgdGhlIEhWIGtleWJvYXJkLCBiZWNhdXNlIGlu
+IHN1c3BlbmQgeW91IHNodXQgb2ZmIHZtYnVzDQo+IGNoYW5uZWwsIHNvIHRoZXJlIHNob3VsZCBu
+b3QgYmUgd2FrZXVwIHNpZ25hbHMgYW55bW9yZS4gV2hhdCB5b3UgZG8gbm90DQo+IHdhbnQgaXMg
+dG8gaGF2ZSB0aGUgY3VycmVudCByZXN1bWUgdG8gYmUgdXNlZCBpbiBwbGFjZSBvZiB0aGF3KCks
+IGFzDQo+IHRoZXJlIHlvdSByZS1lbmFibGUgdGhlIHZtYnVzIGNoYW5uZWwgYW5kIHJlc3VtZSBz
+ZW5kaW5nIHdha2V1cCByZXF1ZXN0cw0KPiBhcyB5b3UgYXJlIHdyaXRpbmcgb3V0IHRoZSBoaWJl
+cm5hdGlvbiBpbWFnZSB0byBzdG9yYWdlLg0KPiANCj4gSSB0aGluayBpZiB2bWJ1cyBhbGxvd2Vk
+IEhWIGtleWJvYXJkIGRyaXZlciB0byBzdXBwbHkgZW1wdHkgdGhhdygpIGFuZA0KPiBwb3dlcm9m
+ZigpIGltcGxlbWVudGF0aW9ucywgd2hpbGUgdXNpbmcgc3VzcGVuZCgpIGFzIGZyZWV6ZSgpIGFu
+ZA0KPiByZXN1bWUoKSBhcyByZXN0b3JlKCksIGl0IHdvdWxkIHNvbHZlIHRoZSBpc3N1ZSBmb3Ig
+eW91Lg0KPiANCj4gRG1pdHJ5DQoNCkV4YWN0bHkuIEknbGwgaGF2ZSB0byBmaXggdm1idXMgZmly
+c3QsIHRoZW4gcG9zdCBhIHYyIGZvciB0aGlzIHBhdGNoLg0KDQpUaGFua3MsDQotLSBEZXh1YW4N
+Cg==
