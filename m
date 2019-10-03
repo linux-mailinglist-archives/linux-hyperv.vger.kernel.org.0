@@ -2,126 +2,251 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F6C0C9D1B
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 13:22:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B939C9EDF
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 14:53:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbfJCLWx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Oct 2019 07:22:53 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60132 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729304AbfJCLWx (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Oct 2019 07:22:53 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BKtlW077138;
-        Thu, 3 Oct 2019 11:22:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=Djdgiv+tAn1DIDSeZL7stKvfsy/kly/tC4eydmMJNLc=;
- b=H2CF2yCGybuG1eycM0ssSuGhfjeyhmwxaJKdZRYZQIKHx9u+WvC/djQYxflnIFLe/twm
- aXc3Qts7JLOWFMOdG51ROT2dI7RJANufU7DDTVgu3tuNRYhfIx7sj/5PZTrk4RhSArXY
- L+F/OOhp1Jv1PkBpM+AU8IpdgITA4a4Lm1Jb7rbgw52Hz+O+1qMp+1l4Lq0+jzJ0yDSc
- 9G55+IMVjE3SvlmubBqZ4Ye+obX18P7uL2Sqfuor1QqBI+XIXoGBjaxW8VLJl/EdLVJ7
- BHGvqPvVVnuFdkrZkNfiHm61UtK4d38isL2qb6s3QWuizEM5c4c5XaTog98FfYoJo+2b FA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2v9yfqk6tq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 11:22:25 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BKKIu174569;
-        Thu, 3 Oct 2019 11:22:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2vcg63eap9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Oct 2019 11:22:24 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x93BMMZS032544;
-        Thu, 3 Oct 2019 11:22:22 GMT
-Received: from [10.191.0.240] (/10.191.0.240)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 03 Oct 2019 04:22:22 -0700
-Subject: Re: [PATCH v3 4/4] x86/hyperv: Mark "hv_nopvspin" parameter obsolete
- and map it to "nopvspin"
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
+        id S1730158AbfJCMww (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Oct 2019 08:52:52 -0400
+Received: from mail-bgr052101131032.outbound.protection.outlook.com ([52.101.131.32]:39553
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729086AbfJCMww (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 3 Oct 2019 08:52:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R3dxoCwKnakPX/cHiy5q7cCRX7526ywWOvOoja8ykhqbMgn1vml4boUeAT902XyvisWbcul2wIRojUXViINQw8RroMkwxOF1SLREbIHnGA+fSLWkKvnd24Mrwh08aKjrMJDwlD3sfRtCxw/dbjo9m4j24vDAjaH7oB5GQAqUtXFWnsf9YUc0oaE7919LThfNDULlFnJbFBJLNS9nhbUgy4BaaTifInN3lbwKoGhXlhnLH/Xq9SDifHR0jE9sSc27/vPbBQgZr2n0CH+LGSZB6wor+aC/g/woRIPAgG508t4rvL0bbYA0Y5+FZi0ZSJ6NOB64BI5eRPeAtJslfbQIRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PFMB/SKgwhjXozDHCjtqyx342Yknn75zOMDN2A2bwM0=;
+ b=iDGWAkd13fGGceQMnfHu9JNTWPjL6isiU6URHsrP2qBGTs5wB2a8RpTPX7kQtarpIZYM93Ij59GSd40jbd3+8seC+TBEu5Y2iYnLKSnhWURLS7oXGMmhzkjep2iACprOxvknbwPso7hQPPZdCETzZHsffhaFyMgzW9ST7LxzJAkI6RXGNbgzolPdy+qRQcG+Waw5Wpwb9V8eTVD+/ZWXv9nr0Bo7Xr4ujOFmSWM+FZzOww2ubF+VHtNR3Qa7xjca3LeYx6DWWp7MmsucU+6X8sMyIQAkmVeZOUTUacasRrpIaafN8SD2WdcMcGRPZ7s23Gpx8VG4QaJ3ZW2WTyE6Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PFMB/SKgwhjXozDHCjtqyx342Yknn75zOMDN2A2bwM0=;
+ b=fQyfTiqGw3tWNaTEhPsSPk5YsqEB2N0X+lh4yNmDswAto/76XEVmRype0FRuK6abr1yy4HWizPuv9Ldoajbq7XQH47Q/fbcDXLyBw1nQM3S5dKNj5zKZfjfeUCYHZqAFZiM0OnoFzcnvGGnsy//+JB7GBthC7yhwgZ9wWPzyGdc=
+Received: from AM0PR08MB5537.eurprd08.prod.outlook.com (20.179.36.87) by
+ AM0PR08MB4321.eurprd08.prod.outlook.com (20.179.33.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Thu, 3 Oct 2019 12:52:39 +0000
+Received: from AM0PR08MB5537.eurprd08.prod.outlook.com
+ ([fe80::a8ea:5223:db78:dd3]) by AM0PR08MB5537.eurprd08.prod.outlook.com
+ ([fe80::a8ea:5223:db78:dd3%7]) with mapi id 15.20.2305.023; Thu, 3 Oct 2019
+ 12:52:39 +0000
+From:   Roman Kagan <rkagan@virtuozzo.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Joerg Roedel <jroedel@suse.de>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
- <1569847479-13201-5-git-send-email-zhenzhong.duan@oracle.com>
- <20191002171952.GE9615@linux.intel.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <f52083d6-9964-c995-1acf-a11ed1dbf935@oracle.com>
-Date:   Thu, 3 Oct 2019 19:22:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191002171952.GE9615@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+Thread-Topic: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+Thread-Index: AQHVeQrgrl6z6kaUqkyr6D3zFBAn2KdIv6eAgAAhHwA=
+Date:   Thu, 3 Oct 2019 12:52:39 +0000
+Message-ID: <20191003125236.GA2424@rkaganb.sw.ru>
+References: <20191002101923.4981-1-rkagan@virtuozzo.com>
+ <87muei14ms.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87muei14ms.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US, ru-RU
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910030106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910030106
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.12.1 (2019-06-15)
+mail-followup-to: Roman Kagan <rkagan@virtuozzo.com>,   Vitaly Kuznetsov
+ <vkuznets@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,    Michael
+ Kelley <mikelley@microsoft.com>,       Lan Tianyu <Tianyu.Lan@microsoft.com>,  Joerg
+ Roedel <jroedel@suse.de>,      "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang
+ Zhang <haiyangz@microsoft.com>,        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,        Thomas Gleixner <tglx@linutronix.de>,   Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,     "H. Peter Anvin"
+ <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+x-originating-ip: [185.231.240.5]
+x-clientproxiedby: HE1PR08CA0078.eurprd08.prod.outlook.com
+ (2603:10a6:7:2a::49) To AM0PR08MB5537.eurprd08.prod.outlook.com
+ (2603:10a6:208:148::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rkagan@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 19f560dd-35aa-4b00-2c85-08d7480092a5
+x-ms-traffictypediagnostic: AM0PR08MB4321:|AM0PR08MB4321:|AM0PR08MB4321:
+x-microsoft-antispam-prvs: <AM0PR08MB43210ED23AC679D787FD5137C99F0@AM0PR08MB4321.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(376002)(396003)(366004)(136003)(346002)(39830400003)(189003)(199004)(86362001)(102836004)(76176011)(7416002)(6246003)(8936002)(4326008)(66066001)(25786009)(305945005)(14454004)(8676002)(229853002)(9686003)(6512007)(6436002)(6486002)(478600001)(81166006)(81156014)(6916009)(7736002)(256004)(66556008)(66476007)(66446008)(36756003)(66946007)(33656002)(64756008)(2906002)(486006)(316002)(58126008)(54906003)(99286004)(6116002)(3846002)(14444005)(5660300002)(1076003)(476003)(52116002)(11346002)(26005)(386003)(6506007)(71190400001)(71200400001)(186003)(446003)(30126002);DIR:OUT;SFP:1501;SCL:5;SRVR:AM0PR08MB4321;H:AM0PR08MB5537.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-transport-forked: True
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TjI9/LbzaqUTXFMH4NOopvw23+sX445Vf1pikL2i2QIYPqvV1kzO2lL/owH1z+SQpa9ieHkkzQ4xAOYUG1cHUxyJCapaf4Y5qSMpaPiRA2BVXeqomzCadxVN9b4C9ICSjwcWXw0NOKx0BzV+nlq10I4WeCQMxHXd5DcxWbL46AYAuyCPjQBsiI9vi9Ium2V8/Bbcc5Ce0mFPW8HfVQyps4jW0VEvAfMv/JZECvFNNzWfBWDEOyzjren92vIMW9Dy1IFncFOijvb5wRYSQq7Amu5sek7nKTr0yNp1tJQehTWrN3TJ0wZvE9gYxAKQWFonvAgxicIbhuPITA3ggIcVMGYx12/B5krvAreAwrv3Ywt5n1kD4tl1HwDHfHvGU+UE7AKXMujXnRTkiNTtLGBsVRQCIoJFX1BnA10CNje9+VvSlCaqADCIeZc9csxtaNYI758kzT4+Q8FqUHc/zazszlKJKtleIHvhyj66ll3StpANy0+UcPlkx2JPgQk+6V71
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7B19018AE6A6374F866DBB575EF2F96F@eurprd08.prod.outlook.com>
+MIME-Version: 1.0
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19f560dd-35aa-4b00-2c85-08d7480092a5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 12:52:39.6601
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TmPezP5kS/FtM2Js+H2BsnnZm2AOW7e5mTFMgZ/Exow+x2pK2ZodNlbUo97feS9GpHbr+vzADHue/Z6j5YUa+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4321
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Thu, Oct 03, 2019 at 12:54:03PM +0200, Vitaly Kuznetsov wrote:
+> Roman Kagan <rkagan@virtuozzo.com> writes:
+> 
+> > Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
+> > when supported by the vcpus.
+> >
+> > However, the apic access functions for Hyper-V enlightened apic assume
+> > xapic mode only.
+> >
+> > As a result, Linux fails to bring up secondary cpus when run as a guest
+> > in QEMU/KVM with both hv_apic and x2apic enabled.
+> >
+> > I didn't manage to make my instance of Hyper-V expose x2apic to the
+> > guest; nor does Hyper-V spec document the expected behavior.  However,
+> > a Windows guest running in QEMU/KVM with hv_apic and x2apic and a big
+> > number of vcpus (so that it turns on x2apic mode) does use enlightened
+> > apic MSRs passing unshifted 32bit destination id and falls back to the
+> > regular x2apic MSRs for less frequently used apic fields.
+> >
+> > So implement the same behavior, by replacing enlightened apic access
+> > functions (only those where it makes a difference) with their
+> > x2apic-aware versions when x2apic is in use.
+> >
+> > Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
+> > Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
+> > ---
+> > v1 -> v2:
+> > - add ifdefs to handle !CONFIG_X86_X2APIC
+> >
+> >  arch/x86/hyperv/hv_apic.c | 54 ++++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 51 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> > index 5c056b8aebef..eb1434ae9e46 100644
+> > --- a/arch/x86/hyperv/hv_apic.c
+> > +++ b/arch/x86/hyperv/hv_apic.c
+> > @@ -84,6 +84,44 @@ static void hv_apic_write(u32 reg, u32 val)
+> >  	}
+> >  }
+> >  
+> > +#ifdef CONFIG_X86_X2APIC
+> > +static void hv_x2apic_icr_write(u32 low, u32 id)
+> > +{
+> > +	wrmsr(HV_X64_MSR_ICR, low, id);
+> > +}
+> 
+> AFAIU you're trying to mirror native_x2apic_icr_write() here but this is
+> different from what hv_apic_icr_write() does
+> (SET_APIC_DEST_FIELD(id)).
 
-On 2019/10/3 1:19, Sean Christopherson wrote:
-> On Mon, Sep 30, 2019 at 08:44:39PM +0800, Zhenzhong Duan wrote:
->> Includes asm/hypervisor.h in order to reference x86_hyper_type.
->>
->> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
->> Cc: Haiyang Zhang <haiyangz@microsoft.com>
->> Cc: Stephen Hemminger <sthemmin@microsoft.com>
->> Cc: Sasha Levin <sashal@kernel.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> ---
-...snip
->> @@ -64,7 +63,7 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
->>   
->>   void __init hv_init_spinlocks(void)
->>   {
->> -	if (!hv_pvspin || !apic ||
->> +	if (!pvspin || !apic ||
->>   	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
->>   	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
->>   		pr_info("PV spinlocks disabled\n");
->> @@ -82,7 +81,9 @@ void __init hv_init_spinlocks(void)
->>   
->>   static __init int hv_parse_nopvspin(char *arg)
->>   {
->> -	hv_pvspin = false;
->> +	pr_notice("\"hv_nopvspin\" is deprecated, please use \"nopvspin\" instead\n");
->> +	if (x86_hyper_type == X86_HYPER_MS_HYPERV)
->> +		pvspin = false;
-> Personal preference would be to keep the hv_pvspin variable and add the
-> extra check in hv_init_spinlocks().
+Right.  In xapic mode the ICR2 aka the high 4 bytes of ICR is programmed
+with the destination id in the highest byte; in x2apic mode the whole
+ICR2 is set to the 32bit destination id.
 
-OK, will do that way. Thanks
+> Is it actually correct? (I think you've tested this and it is but)
 
-Zhenzhong
+As I wrote in the commit log, I haven't tested it in the sense that I
+ran a Linux guest in a Hyper-V VM exposing x2apic to the guest, because
+I didn't manage to configure it to do so.  OTOH I did run a Windows
+guest in QEMU/KVM with hv_apic and x2apic enabled and saw it write
+destination ids unshifted to the ICR2 part of ICR, so I assume it's
+correct.
 
+> Michael, could you please shed some light here?
+
+Would be appreciated, indeed.
+
+> > +static u32 hv_x2apic_read(u32 reg)
+> > +{
+> > +	u32 reg_val, hi;
+> > +
+> > +	switch (reg) {
+> > +	case APIC_EOI:
+> > +		rdmsr(HV_X64_MSR_EOI, reg_val, hi);
+> > +		return reg_val;
+> > +	case APIC_TASKPRI:
+> > +		rdmsr(HV_X64_MSR_TPR, reg_val, hi);
+> > +		return reg_val;
+> > +
+> > +	default:
+> > +		return native_apic_msr_read(reg);
+> > +	}
+> > +}
+> > +
+> > +static void hv_x2apic_write(u32 reg, u32 val)
+> > +{
+> > +	switch (reg) {
+> > +	case APIC_EOI:
+> > +		wrmsr(HV_X64_MSR_EOI, val, 0);
+> > +		break;
+> > +	case APIC_TASKPRI:
+> > +		wrmsr(HV_X64_MSR_TPR, val, 0);
+> > +		break;
+> > +	default:
+> > +		native_apic_msr_write(reg, val);
+> > +	}
+> > +}
+> > +#endif /* CONFIG_X86_X2APIC */
+> > +
+> >  static void hv_apic_eoi_write(u32 reg, u32 val)
+> >  {
+> >  	struct hv_vp_assist_page *hvp = hv_vp_assist_page[smp_processor_id()];
+> > @@ -262,9 +300,19 @@ void __init hv_apic_init(void)
+> >  	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
+> >  		pr_info("Hyper-V: Using MSR based APIC access\n");
+> >  		apic_set_eoi_write(hv_apic_eoi_write);
+> > -		apic->read      = hv_apic_read;
+> > -		apic->write     = hv_apic_write;
+> > -		apic->icr_write = hv_apic_icr_write;
+> > +#ifdef CONFIG_X86_X2APIC
+> > +		if (x2apic_enabled()) {
+> > +			apic->read      = hv_x2apic_read;
+> > +			apic->write     = hv_x2apic_write;
+> > +			apic->icr_write = hv_x2apic_icr_write;
+> > +		} else {
+> > +#endif
+> > +			apic->read      = hv_apic_read;
+> > +			apic->write     = hv_apic_write;
+> > +			apic->icr_write = hv_apic_icr_write;
+> 
+> (just wondering): Is it always safe to assume that we cannot switch
+> between apic_flat/x2apic in runtime?
+
+I guess so.  All apic choices are made early at __init, obviously before
+the secondary CPUs are brought up, and aren't reconsidered afterwards.
+
+> Moreover, the only difference
+> between hv_apic_read/hv_apic_write and hv_x2apic_read/hv_x2apic_write is
+> native_apic_mem_{read,write} -> native_apic_msr_{read,write}. Would it
+> make sense to move if (x2apic_enabled()) and merge these functions?
+
+x2apic_enabled() is too heavy for that: it reads MSR_IA32_APICBASE.  One
+could probably use a read-mostly global variable instead but I'm not
+sure it would make the code better.
+
+Thanks,
+Roman.
