@@ -2,127 +2,153 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D5673CAFD8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 22:17:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9361CCB0BD
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 23:01:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731905AbfJCURS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Oct 2019 16:17:18 -0400
-Received: from mail-eopbgr1320128.outbound.protection.outlook.com ([40.107.132.128]:6116
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725957AbfJCURR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Oct 2019 16:17:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T0B6B+fR5JqHTlbrPiQlSXpD8T/P2uABg157YEcVPbQcbwFHh9zvo4uxzQdDgXqgSf7FJ/msz+88U4hs2dqH4ZTqJKGDx5u548KKgHtCuWuczjCwHyYznxQqcalTHsrbLVANLb+nUgunB1BYP2mtJ+Jn6HnfFZF3MzIry89AQE6OCysqj/91YONF+992q7WhyPTKNkj917EQ48yCjldJ+gY5rKuYADp9U8RxM0PJvKkwFKamLE+QRA0lDkw6+HaNeJg+2C4T8CGjg6l/Erk7BYAAA/BJFVpZuvunXsNEEVRUN91ev0tdgbKNGE/Sqzi9stqUdVkyKnLDtYFpqq7Kkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91GpBJ2TmaRHSqR6iDo3i3JkyEp7T3maUXSRcjLWjq0=;
- b=D/4hhY21sn7sSlhNiejC2z1K2L1rwdtmR9OAU7tGCgH3cFV7KkFwPEh8udQFCdCeLyMlQ8A6qPij45lIu+W3OO3OfPKNaOb0I8BwY5knfdGGEu8s9ZWJjE+LjwN1Qet1IzruBhmmOsCe3iCmW2KHpI8UsHZyfMtHA8y9DAqOPVDzBuk8mfOWfRRC55jVPPWVwL23IehBJws/9ruRNwBJ9Aq4qbnHVwz/Mn1HqOUDYVuufC6FBMvGzNgq3y29PsaUTgP1x6XJfxz80Y7G+4YTmLnP1mt857QKsNH3AS3aqregUfZto3aFmPE8DTVMkWFOnq8PqAH1j1EKCfXfpfBybw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91GpBJ2TmaRHSqR6iDo3i3JkyEp7T3maUXSRcjLWjq0=;
- b=eD67drbqWTVAQKHP26IgZJcW43XCefAa8JC0acJrUiD7h/Ge2D1hbaI/a8PkalENY4Jsokak3sgW20EHQZH+yml4EyYbcTfvqg19ylE7VJ4MYCqDY+OxL2RV8ZP+ZSVcYOfxkAAMioR3I4XPt26eO5eavuWVgnkdRLqNSh5Eb8c=
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM (10.170.173.13) by
- KU1P153MB0167.APCP153.PROD.OUTLOOK.COM (10.170.173.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.6; Thu, 3 Oct 2019 20:17:07 +0000
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::ccb6:acbd:7d4c:7f7c]) by KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::ccb6:acbd:7d4c:7f7c%6]) with mapi id 15.20.2347.011; Thu, 3 Oct 2019
- 20:17:07 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: RE: [RFC PATCH 08/13] vsock: move vsock_insert_unbound() in the
- vsock_create()
-Thread-Topic: [RFC PATCH 08/13] vsock: move vsock_insert_unbound() in the
- vsock_create()
-Thread-Index: AQHVdSatVEha0YvJokiAPbW0TOdB9adJZJkg
-Date:   Thu, 3 Oct 2019 20:17:07 +0000
-Message-ID: <KU1P153MB01663CA0F105C416555A06FFBF9F0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-9-sgarzare@redhat.com>
-In-Reply-To: <20190927112703.17745-9-sgarzare@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T20:17:05.5588798Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ccffdd80-9d38-4480-b37d-9cdc3b475856;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:9:4930:a527:7f59:8664]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 53055dd8-d731-496c-2277-08d7483eaa1a
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: KU1P153MB0167:|KU1P153MB0167:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KU1P153MB0167812C5F15F8A01E503C4BBF9F0@KU1P153MB0167.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 01792087B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(366004)(136003)(346002)(376002)(189003)(199004)(54906003)(66446008)(110136005)(66946007)(66476007)(25786009)(316002)(66556008)(64756008)(8990500004)(52536014)(6116002)(22452003)(7696005)(99286004)(2906002)(86362001)(6246003)(76116006)(4326008)(478600001)(5660300002)(10090500001)(4744005)(14454004)(10290500003)(33656002)(81156014)(2501003)(55016002)(8676002)(81166006)(9686003)(486006)(256004)(14444005)(229853002)(6436002)(8936002)(446003)(11346002)(6506007)(76176011)(476003)(46003)(7416002)(305945005)(186003)(102836004)(7736002)(71200400001)(74316002)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:KU1P153MB0167;H:KU1P153MB0166.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sdIqOYISXf6AYfcGDo90igjX+FEW55gEwKhbX54BHsNkOZquki0wAgqabXPRyjCKpJ3PMNRLU0JH1GBv65VSxbGrPM1Ip8WkaIlKGYlZ+cOPAmchoTyJHjjPglvbfhrv2YrJVLbWh7p3hu88Qw3d6cm3LkEsVb2JsqL6KcJxij95l5BZXD6w2tyfJOAC/PABX9uOwzLhqpTPlfaF22uR1qc8pzZzJTDNmdW5p3Jf66cmb/OIMusLJ6aR7PYA9B3saZ2LuNZA/LChBmyMvAxHIw/dru9W/dFMwPzISEFzNJMMBPAkSkWcRQg1G9JRvaDZiRVsd5GDnZyI6uh0pvMaRBLJ0Pnbfch2LrkVMivIt5Uch5qt7HjWBM5muIxxMdkKmEGbP5JEStOlEdjAKhykPIo7hr/l/dcCAbXbci991H0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1730436AbfJCVBk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Oct 2019 17:01:40 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44975 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728869AbfJCVBk (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 3 Oct 2019 17:01:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id w12so8756307iol.11;
+        Thu, 03 Oct 2019 14:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=E5SAchAqbt5StPb+s2j3ybaKfrX09uCoGQITz/dDUpk=;
+        b=pBKhH56piWOqZZ0XAvUgyFpneZ68ZJgWSbjmYs7zpwuFJcntG55dfrSzXUAw6IecO+
+         ikJqW+BIkiX1v9tG7uHt+Gg1uWoHMu35Xop7k/QqeZPZ4/h2kyeGEXR/naL6KyWBXjZS
+         obQHSjNMXIWpmcDfawPAb+39E2V0ID8zyLEflWc+d+fnetgEG4WXU7Eit0uut0je+Pk9
+         FGznii1X0SB+UsbxwedrsCsJUqiDrBwUygvdIs6Q7brXYadz3xJv5uirNvNZ66aMLHng
+         GhG8/2Pf6qAJePHKnQtDkKklXjZ8tVldoKbFQehBE+YYC6EIwrrP7abeKEXMSKpGrRiX
+         rVpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=E5SAchAqbt5StPb+s2j3ybaKfrX09uCoGQITz/dDUpk=;
+        b=VuodHcbgHz2WXd5wf/gJ99Uv0m6XxBn1xHXt79aqAwQi5gXNusWry3g2RLFgYU6Wc0
+         spoou6bu4yeP+e7MjGw4gkM0PcQMfSYVXTHjd8BSpaBWXOPXpzynRku7+deqHtN2Bbz3
+         +XTIZsrv9xqzS5DOSWB3tCQ/b9y7ab8WElJQR6my+23dmxU3Zb7VOOyWwPaUFkOxPdRO
+         HgJV3DWB8I6hPXvG74NweKoLD5fYYaisX9AyiUv9jQV3cj55RwmUSD0WgJrV11E2AaHm
+         rB0y61o8QpLwINWjj4YMN6NK70BPwS89rN+1Mi3L9Yi6ZIHZDu/p7fnfeA+v81nwb2Cp
+         WM8Q==
+X-Gm-Message-State: APjAAAVGUM95dhkupWEvH/FkGrPZNwF9UT8rXZskn1wu8kcpAuKEgEg3
+        1m6Chig76/q6vEWruElhdT46s4bRd02h
+X-Google-Smtp-Source: APXvYqyaM5jB82UnO5hjpqAJhFAH/8ynrmAa3zb8Mx7Fio1SwT7qqn9KwzK0mD7zpUCM7kRDaTivJQ==
+X-Received: by 2002:a92:3851:: with SMTP id f78mr11603006ila.179.1570136499208;
+        Thu, 03 Oct 2019 14:01:39 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id c17sm1900489ild.31.2019.10.03.14.01.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 03 Oct 2019 14:01:38 -0700 (PDT)
+Date:   Thu, 3 Oct 2019 17:01:36 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org
+Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] hv: vmbus: add fuzz testing to hv device
+Message-ID: <cover.1570130325.git.brandonbonaby94@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53055dd8-d731-496c-2277-08d7483eaa1a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 20:17:07.0329
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wQGlk8XzZJhaxrpkVFGfShpL9gH5q+Y+fylgrFulSPSMcaxA+rMkGVRgOCJbWLc2zfPu/fHjpdMzxeMG6go5OA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0167
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> Sent: Friday, September 27, 2019 4:27 AM
->=20
-> vsock_insert_unbound() was called only when 'sock' parameter of
-> __vsock_create() was not null. This only happened when
-> __vsock_create() was called by vsock_create().
->=20
-> In order to simplify the multi-transports support, this patch
-> moves vsock_insert_unbound() at the end of vsock_create().
->=20
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  net/vmw_vsock/af_vsock.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->=20
+This patchset introduces a testing framework for Hyper-V drivers.
+This framework allows us to introduce delays in the packet receive
+path on a per-device basis. While the current code only supports
+introducing arbitrary delays in the host/guest communication path,
+we intend to expand this to support error injection in the future.
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+changes in v6:
+  patch 1:
+	changed kernel version in 
+	Documentation/ABI/testing/debugfs-hyperv to 5.5
+	
+	removed less than 0 if statement when dealing with
+	u64 datatype, as suggested by michael.
+
+changes in v5:
+  patch 1:
+        As per Stephen's suggestion, Moved CONFIG_HYPERV_TESTING
+        to lib/Kconfig.debug.
+
+        Fixed build issue reported by Kbuild, with Michael's
+        suggestion to make hv_debugfs part of the hv_vmbus
+        module.
+
+changes in v4:
+  patch 1:
+        Combined previous v3 patches 1 and 2, into a single patch
+        which is now patch 1. This was done so that calls to
+        the new debugfs functions are in the same patch as
+        the definitions for these functions.
+
+        Moved debugfs code from "vmbus_drv.c" that was in
+        previous v3 patch 2, into a new file "debugfs.c" in
+        drivers/hv.
+
+        Updated the Makefile to compile "debugfs.c" if
+        CONFIG_HYPERV_TESTING is enabled
+
+        As per Michael's comments, added empty implementations
+        of the new functions, so the compiler will not generate
+        code when CONFIG_HYPERV_TESTING is not enabled.
+
+  patch 2 (was previously v3 patch 3):
+        Based on Harrys comments, made the tool more
+        user friendly and added more error checking.
+
+changes in v3:
+  patch 2: change call to IS_ERR_OR_NULL, to IS_ERR.
+
+  patch 3: Align python tool to match Linux coding style.
+
+Changes in v2:
+  Patch 1: As per Vitaly's suggestion, wrapped the test code under an
+           #ifdef and updated the Kconfig file, so that the test code
+           will only be used when the config option is set to true.
+           (default is false).
+
+           Updated hyperv_vmbus header to contain new #ifdef with new
+           new functions for the test code.
+
+  Patch 2: Moved code from under sysfs to debugfs and wrapped it under
+           the new ifdef.
+
+           Updated MAINTAINERS file with new debugfs-hyperv file under
+           the section for hyperv.
+
+  Patch 3: Updated testing tool with new debugfs location.
+
+Branden Bonaby (2):
+  drivers: hv: vmbus: Introduce latency testing
+  tools: hv: add vmbus testing tool
+
+ Documentation/ABI/testing/debugfs-hyperv |  23 ++
+ MAINTAINERS                              |   1 +
+ drivers/hv/Makefile                      |   1 +
+ drivers/hv/connection.c                  |   1 +
+ drivers/hv/hv_debugfs.c                  | 178 +++++++++++
+ drivers/hv/hyperv_vmbus.h                |  31 ++
+ drivers/hv/ring_buffer.c                 |   2 +
+ drivers/hv/vmbus_drv.c                   |   6 +
+ include/linux/hyperv.h                   |  19 ++
+ lib/Kconfig.debug                        |   7 +
+ tools/hv/vmbus_testing                   | 376 +++++++++++++++++++++++
+ 11 files changed, 645 insertions(+)
+ create mode 100644 Documentation/ABI/testing/debugfs-hyperv
+ create mode 100644 drivers/hv/hv_debugfs.c
+ create mode 100755 tools/hv/vmbus_testing
+
+-- 
+2.17.1
+
