@@ -2,192 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CF00C9CBB
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 12:54:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F22CC9D13
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 13:21:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfJCKyI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Oct 2019 06:54:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:61484 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbfJCKyI (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Oct 2019 06:54:08 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 336AE2A09A0
-        for <linux-hyperv@vger.kernel.org>; Thu,  3 Oct 2019 10:54:07 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id m14so937007wru.17
-        for <linux-hyperv@vger.kernel.org>; Thu, 03 Oct 2019 03:54:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=GffyjIVlPnvsrRSrHxajUWEZWrzULU9iPsHRwjh280A=;
-        b=qn4fSvWqd0ZSU3fk/C8G1Uzi+GeUDP0PSCXOhhjgjT/1pkmX52VfK/Iq5BW7J3MR6l
-         OIn+oEZOMuYOK2hsg8/egHZwVLJL78q7dfjxvYPJu/tBruLCdM5ITD5jboky5xPbQqkM
-         cHzjX1x07WE/mo3Iw68jTaKtorPyiAO2sYOAEBFii1Fgxdvjpcax8MlSAgO+7rF4+3Rr
-         O+MHaW1AKTqJi1V0pRZWxGLd6e8EPoDJOfzxfK5VxQVk49sg/wGZVHBy1/9cbsQ9wD+t
-         lkr/Wvwziy8f8L22cFx9sVCG//I3J+PGM1ETfq5Tk4rjxCCZ+T7kBbiqKy3waBgJOgSf
-         Pl1A==
-X-Gm-Message-State: APjAAAVsWlppE0dfDzCF0B27vXcoOsOuI/Pq5jQlz/0xxg68sinjFV5N
-        DZ3oXuHoAS4IGDsPpLLUq0Ap//ZbnJ3SJbNOhYv0Oab+TmrsFBc8gi3BKvUAgJuGBkvVyWJtRtX
-        IvHyBKY5Eq6SVppq0J/jJRQQU
-X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr6708226wrv.248.1570100045802;
-        Thu, 03 Oct 2019 03:54:05 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyv3Z0Cd9/KSakZBKWO86WJgzxHATqe7HQh3z6HK3wpvt0UzrjZziBeGUCN3si1Uj2bHlWO1w==
-X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr6708199wrv.248.1570100045516;
-        Thu, 03 Oct 2019 03:54:05 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z5sm3892422wrs.54.2019.10.03.03.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2019 03:54:04 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Roman Kagan <rkagan@virtuozzo.com>
-Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
+        id S1729642AbfJCLVs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Oct 2019 07:21:48 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58872 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729304AbfJCLVs (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 3 Oct 2019 07:21:48 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BKtFP077082;
+        Thu, 3 Oct 2019 11:21:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=r4fTn8v6IGQxS08sc1goJtM+I/0/djaSKLGXMb40fsQ=;
+ b=e5yyq1MXb9D1cVJWuSpSzQlncmeIGGVzbUJi1XYPsgWf3uJ5TmIe9IwU8e9ny9xUFe5l
+ 5wbE6dydFNwoYWxokzezK4H7V3w/tU9sp0W6alvQU5VvqcAkrSKIdtI/UXym9i+xuqOB
+ 9cvzaWMqOx3sBK3AZdouei990kc7BSUEnboi3tLw6ycwyWyCrn5SJR1Pvpz8PgNPVHbb
+ Gvgbvsl2zkWDbQFqbtFPAMbUuGijQyw9SHbDRrDs4uVF3+I1lbpdv2SL01GMijCC6xx/
+ 3Q2WKLjRNZiQaTIv5L1iG9MoZVVkjYXUhkZJraIihTkWYe82AHLha5L2AEyLaeDh/Mvv /g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2v9yfqk6nf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 11:21:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x93BKLY5174632;
+        Thu, 3 Oct 2019 11:21:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2vcg63e8b2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Oct 2019 11:21:18 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x93BLECk026220;
+        Thu, 3 Oct 2019 11:21:14 GMT
+Received: from [10.191.0.240] (/10.191.0.240)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Oct 2019 04:21:14 -0700
+Subject: Re: [PATCH v3 3/4] xen: Mark "xen_nopvspin" parameter obsolete and
+ map it to "nopvspin"
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/hyperv: make vapic support x2apic mode
-In-Reply-To: <20191002101923.4981-1-rkagan@virtuozzo.com>
-References: <20191002101923.4981-1-rkagan@virtuozzo.com>
-Date:   Thu, 03 Oct 2019 12:54:03 +0200
-Message-ID: <87muei14ms.fsf@vitty.brq.redhat.com>
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1569847479-13201-4-git-send-email-zhenzhong.duan@oracle.com>
+ <20191002171805.GD9615@linux.intel.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <cbfb13ec-bd0c-d9df-e61e-8a08f2c9f526@oracle.com>
+Date:   Thu, 3 Oct 2019 19:21:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191002171805.GD9615@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910030106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9398 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910030106
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Roman Kagan <rkagan@virtuozzo.com> writes:
 
-> Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
-> when supported by the vcpus.
->
-> However, the apic access functions for Hyper-V enlightened apic assume
-> xapic mode only.
->
-> As a result, Linux fails to bring up secondary cpus when run as a guest
-> in QEMU/KVM with both hv_apic and x2apic enabled.
->
-> I didn't manage to make my instance of Hyper-V expose x2apic to the
-> guest; nor does Hyper-V spec document the expected behavior.  However,
-> a Windows guest running in QEMU/KVM with hv_apic and x2apic and a big
-> number of vcpus (so that it turns on x2apic mode) does use enlightened
-> apic MSRs passing unshifted 32bit destination id and falls back to the
-> regular x2apic MSRs for less frequently used apic fields.
->
-> So implement the same behavior, by replacing enlightened apic access
-> functions (only those where it makes a difference) with their
-> x2apic-aware versions when x2apic is in use.
->
-> Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
-> Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
-> ---
-> v1 -> v2:
-> - add ifdefs to handle !CONFIG_X86_X2APIC
->
->  arch/x86/hyperv/hv_apic.c | 54 ++++++++++++++++++++++++++++++++++++---
->  1 file changed, 51 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-> index 5c056b8aebef..eb1434ae9e46 100644
-> --- a/arch/x86/hyperv/hv_apic.c
-> +++ b/arch/x86/hyperv/hv_apic.c
-> @@ -84,6 +84,44 @@ static void hv_apic_write(u32 reg, u32 val)
->  	}
->  }
->  
-> +#ifdef CONFIG_X86_X2APIC
-> +static void hv_x2apic_icr_write(u32 low, u32 id)
-> +{
-> +	wrmsr(HV_X64_MSR_ICR, low, id);
-> +}
+On 2019/10/3 1:18, Sean Christopherson wrote:
+> On Mon, Sep 30, 2019 at 08:44:38PM +0800, Zhenzhong Duan wrote:
+>> Fix stale description of "xen_nopvspin" as we use qspinlock now.
+>>
+>> Signed-off-by: Zhenzhong Duan<zhenzhong.duan@oracle.com>
+>> Reviewed-by: Juergen Gross<jgross@suse.com>
+>> Cc: Jonathan Corbet<corbet@lwn.net>
+>> Cc: Boris Ostrovsky<boris.ostrovsky@oracle.com>
+>> Cc: Juergen Gross<jgross@suse.com>
+>> Cc: Stefano Stabellini<sstabellini@kernel.org>
+>> Cc: Thomas Gleixner<tglx@linutronix.de>
+>> Cc: Ingo Molnar<mingo@redhat.com>
+>> Cc: Borislav Petkov<bp@alien8.de>
+>> Cc: "H. Peter Anvin"<hpa@zytor.com>
+>> ---
+...snip
+>> @@ -93,7 +92,7 @@ void xen_init_lock_cpu(int cpu)
+>>   
+>>   void xen_uninit_lock_cpu(int cpu)
+>>   {
+>> -	if (!xen_pvspin)
+>> +	if (!pvspin)
+>>   		return;
+>>   
+>>   	unbind_from_irqhandler(per_cpu(lock_kicker_irq, cpu), NULL);
+>> @@ -117,9 +116,9 @@ void __init xen_init_spinlocks(void)
+>>   
+>>   	/*  Don't need to use pvqspinlock code if there is only 1 vCPU. */
+>>   	if (num_possible_cpus() == 1)
+>> -		xen_pvspin = false;
+>> +		pvspin = false;
+> As suggested in the other patch, if you incorporate pvspin (or nopvspin)
+> into xen_pvspin then the param can be __initdata and the diff for this
+> patch will be smaller, e.g. you wouldn't need the xen_domain() shenanigans
+> in xen_parse_nopvspin().
 
-AFAIU you're trying to mirror native_x2apic_icr_write() here but this is
-different from what hv_apic_icr_write() does
-(SET_APIC_DEST_FIELD(id)). Is it actually correct? (I think you've
-tested this and it is but) Michael, could you please shed some light
-here?
+Ok, will fix. Thanks
 
-> +
-> +static u32 hv_x2apic_read(u32 reg)
-> +{
-> +	u32 reg_val, hi;
-> +
-> +	switch (reg) {
-> +	case APIC_EOI:
-> +		rdmsr(HV_X64_MSR_EOI, reg_val, hi);
-> +		return reg_val;
-> +	case APIC_TASKPRI:
-> +		rdmsr(HV_X64_MSR_TPR, reg_val, hi);
-> +		return reg_val;
-> +
-> +	default:
-> +		return native_apic_msr_read(reg);
-> +	}
-> +}
-> +
-> +static void hv_x2apic_write(u32 reg, u32 val)
-> +{
-> +	switch (reg) {
-> +	case APIC_EOI:
-> +		wrmsr(HV_X64_MSR_EOI, val, 0);
-> +		break;
-> +	case APIC_TASKPRI:
-> +		wrmsr(HV_X64_MSR_TPR, val, 0);
-> +		break;
-> +	default:
-> +		native_apic_msr_write(reg, val);
-> +	}
-> +}
-> +#endif /* CONFIG_X86_X2APIC */
-> +
->  static void hv_apic_eoi_write(u32 reg, u32 val)
->  {
->  	struct hv_vp_assist_page *hvp = hv_vp_assist_page[smp_processor_id()];
-> @@ -262,9 +300,19 @@ void __init hv_apic_init(void)
->  	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
->  		pr_info("Hyper-V: Using MSR based APIC access\n");
->  		apic_set_eoi_write(hv_apic_eoi_write);
-> -		apic->read      = hv_apic_read;
-> -		apic->write     = hv_apic_write;
-> -		apic->icr_write = hv_apic_icr_write;
-> +#ifdef CONFIG_X86_X2APIC
-> +		if (x2apic_enabled()) {
-> +			apic->read      = hv_x2apic_read;
-> +			apic->write     = hv_x2apic_write;
-> +			apic->icr_write = hv_x2apic_icr_write;
-> +		} else {
-> +#endif
-> +			apic->read      = hv_apic_read;
-> +			apic->write     = hv_apic_write;
-> +			apic->icr_write = hv_apic_icr_write;
+Zhenzhong
 
-(just wondering): Is it always safe to assume that we cannot switch
-between apic_flat/x2apic in runtime? Moreover, the only difference
-between hv_apic_read/hv_apic_write and hv_x2apic_read/hv_x2apic_write is
-native_apic_mem_{read,write} -> native_apic_msr_{read,write}. Would it
-make sense to move if (x2apic_enabled()) and merge these functions?
-
-> +#ifdef CONFIG_X86_X2APIC
-> +		}
-> +#endif
->  		apic->icr_read  = hv_apic_icr_read;
->  	}
->  }
-
--- 
-Vitaly
