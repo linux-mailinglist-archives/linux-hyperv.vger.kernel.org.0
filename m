@@ -2,470 +2,168 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF314CB0C1
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Oct 2019 23:02:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54F4BCB221
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2019 01:06:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfJCVCK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Oct 2019 17:02:10 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44092 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbfJCVCJ (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Oct 2019 17:02:09 -0400
-Received: by mail-io1-f68.google.com with SMTP id w12so8759648iol.11;
-        Thu, 03 Oct 2019 14:02:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aZLktE2MxeAG8mpl9ezSNfU/PGgXY8eZsekVtDAmkf8=;
-        b=ZkfBY/NTQcHPfE8QobhF//w4tvRen8h9I0KN7rkNuCdaeTpd/T7TfEebefE/oG5VxU
-         gNn9yUc/GuE4H4+IXtXUCVUTgz8QfUWmoY/dgZzJFjOfx2W6mBYunRTAzll7zyp7kNb9
-         vruxZDf7PkTF2HvAyuzB9zHoCEqOmbwnRDGnISwQBXwSM5jnQBXKCrY31B1bCBR0raTM
-         ujvufFUFDdPbT41S4QpvfehBtQ+d9EBCJ7epG9EQbvv1NNNQNKysXo22/Q26gd1E+X6Y
-         8jJpyHaa2jfk8ibO0Yedj6InNBTKHdPF9+GAdGkr/5qAGTdZJp/yEcfa21F8P+NRdSa2
-         S3bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aZLktE2MxeAG8mpl9ezSNfU/PGgXY8eZsekVtDAmkf8=;
-        b=tC7hafpey4PM6gGG3b/Wea8oHFp4yjOgsbngdB2yJ8EwGp1Ba1TYcvVNCA3pgo6D1w
-         QpBFby6UGpxwRPXjErrfTM2/dnprp3x+c1KfYkk6Tfw+Z1eJg80X4xDkXU9bJRxMKrHm
-         IsQB3y0y/KqOHMANQt/lS5hmRw+5m9e2v1/bmfLCm1oz9YEz1FoGyRs/lIZYvplcjoEz
-         gr/APRwMzjW9A9PmqhUAab46TFaPqP0W/XFlCxASV6S+YMuQHUEpQY2DhlllbkBJ8VSe
-         Md41WFHB9eDulmsPPs+AQkyeNL2Rf4/hy4KlKXhBqB83S2P3a4Ow/1LW0Rcl3emMJ433
-         1DEQ==
-X-Gm-Message-State: APjAAAWJKGY9zAkPmRDUyRa3E0hB4etFLiLk8k69f+SVGopg+EX96Q56
-        /qm7oaRBWVGe0279HcQdWg==
-X-Google-Smtp-Source: APXvYqxMqshGXTgyFZi39nTdrlUgB+DZ1uiGZ5yNcq0iM/zy2i73IPlqQOH2U2CITRFd9mfLRlkU8A==
-X-Received: by 2002:a6b:f411:: with SMTP id i17mr10187781iog.201.1570136528106;
-        Thu, 03 Oct 2019 14:02:08 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id l186sm1552641ioa.54.2019.10.03.14.02.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 03 Oct 2019 14:02:07 -0700 (PDT)
-Date:   Thu, 3 Oct 2019 17:02:05 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org
-Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/2] tools: hv: add vmbus testing tool
-Message-ID: <f8face9978e452e778bbf7e303ad816f432aebcb.1570130325.git.brandonbonaby94@gmail.com>
+        id S1730278AbfJCXGL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Oct 2019 19:06:11 -0400
+Received: from mail-eopbgr760131.outbound.protection.outlook.com ([40.107.76.131]:14844
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727452AbfJCXGK (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 3 Oct 2019 19:06:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VEVHX7gH+pxdZ8yjbDAUA0++qPDsjYwJLhN09rfS2yBhxonIo1fzzxazw5BUmG5AdexbKoYf1G622vsW2vPKKCktBGmquL4h+e/ufd81+3rQQatiTKrlmWAxQ7o5i/dvIaBndfIr7KoUuX7OpfPPGmiGIuMyEIXGvI5w99J+FAKxdlaEBu3BRFVLGwd35FgWJ72drbF2BfzrDIOdsSHQL+g559xyk1W/0Zr2Kc01Roi6pxY3bYg60z+UqRH88x7RFP+HGO2ZN02bdxR1DftK0gurAtSNGrVa/u0g7qW1DNHfG2L95gKwPAc9BFtd8GfFQ2vk4y3XQSzfFWgmDfyZww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QFsfbBf9p5NvIpQVulQ7lBuFNpyZE+dpv6TRmbeOIW8=;
+ b=j4QZx3/FVNNo5xWlIgZqitkKLGHVZCcVTHqipypW6KP3xYef5TKAlDwbonVUERT+JkNmETBWNadfeIvpLjsAgPzpbbL+5Yr7QFPW/LaHPZUHhr1c3c6yoe3mEn38xGZMHo57ZhkGjCqYjeaddswa2YdKsYoneheWmvfZpUU0lAIVJRdh+0kYeQDLtcB3ZZBiKigw9tSPFUzsD/1ooAqp72oxKrFZOuLdsfzD8eHJ5IHm/CeeiWj8KidoZeGK9Sq9VSPpiOZAngAaMScJLXEf6N8aRCZfzdta6B+QVdYxVrwNOFIMB6LJiryAr7RtQeg1p3tUjvUAGczfY1+4RgpUzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QFsfbBf9p5NvIpQVulQ7lBuFNpyZE+dpv6TRmbeOIW8=;
+ b=b58XUOGnjYMC3Mu3mdKxtQQaQnrEWnU5m2yzd/Br3SDD/qDwoZAVBiSi4wPpqOdoy+ntZCXhVnflmiGb7oegqi4NLVgHnX7D+WE+/aVpGOwA8QbA+HpGKHjKuiKkvKo94oClrPtH9+wSzHS+BUA1/DVxtb1s9s1fl3kYBqb8wsI=
+Received: from CY4PR21MB0136.namprd21.prod.outlook.com (10.173.189.18) by
+ CY4PR21MB0791.namprd21.prod.outlook.com (10.175.121.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.7; Thu, 3 Oct 2019 23:05:28 +0000
+Received: from CY4PR21MB0136.namprd21.prod.outlook.com
+ ([fe80::a849:fd6f:615d:64e9]) by CY4PR21MB0136.namprd21.prod.outlook.com
+ ([fe80::a849:fd6f:615d:64e9%10]) with mapi id 15.20.2327.009; Thu, 3 Oct 2019
+ 23:05:28 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     brandonbonaby94 <brandonbonaby94@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>
+CC:     brandonbonaby94 <brandonbonaby94@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v6 1/2] drivers: hv: vmbus: Introduce latency testing
+Thread-Topic: [PATCH v6 1/2] drivers: hv: vmbus: Introduce latency testing
+Thread-Index: AQHVei3JXD/BzUXMhEaGftCyaV0YaKdJiWAw
+Date:   Thu, 3 Oct 2019 23:05:28 +0000
+Message-ID: <CY4PR21MB0136A1ED299DAA92F9301865D79F0@CY4PR21MB0136.namprd21.prod.outlook.com>
 References: <cover.1570130325.git.brandonbonaby94@gmail.com>
+ <d3e32c4995c8e4992fab91c3e43c2b0d6a3ef0f2.1570130325.git.brandonbonaby94@gmail.com>
+In-Reply-To: <d3e32c4995c8e4992fab91c3e43c2b0d6a3ef0f2.1570130325.git.brandonbonaby94@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-03T23:05:26.3343154Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=992fd9df-ec37-4abe-bcf4-58c01f6b3831;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 464ef189-4758-41c7-3fd7-08d748562ede
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: CY4PR21MB0791:|CY4PR21MB0791:|CY4PR21MB0791:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <CY4PR21MB07915A2074CD3E3AB88AD050D79F0@CY4PR21MB0791.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1751;
+x-forefront-prvs: 01792087B6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(39860400002)(366004)(346002)(396003)(189003)(199004)(478600001)(305945005)(55016002)(1511001)(9686003)(4326008)(6246003)(66476007)(66556008)(64756008)(66446008)(66946007)(2501003)(6506007)(74316002)(7736002)(7696005)(11346002)(99286004)(186003)(76176011)(2906002)(26005)(446003)(102836004)(476003)(229853002)(6436002)(33656002)(22452003)(316002)(76116006)(54906003)(52536014)(81156014)(86362001)(25786009)(71190400001)(110136005)(486006)(66066001)(8676002)(8936002)(10290500003)(5660300002)(81166006)(6116002)(3846002)(10090500001)(8990500004)(14454004)(71200400001)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0791;H:CY4PR21MB0136.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EViOfk9SVdx+OzCMWGT9W+ggfvhBr6M4olyogVYPzi9Ia9JeTxL3S+eOEiIdqL+1z08OS8tUUyGBDYE/QlZLeO0r2RN7jrEzuwNJX3xuDt34feyRwYFyKx86TQfLWifO8Ij7bympZfqLOnp3pqRZSm84ALcTsQF9WZfYmtcyX6Fu1gGoDpBQ5cK9kPjcDmHoUTBVk9hSu8hxrrJ2UrUT9ZpG3ScsSpx0teP07dTij0vEdnp3+y6KV8udmQCCE45kuBopprxkAwPhEIsnLbOUr+PqgzGVTccxOeG3tk0uYHGw8fBCr+ldLkD3zi/67Q24HyrvigJ18yWrkYhgxyYTPV/4htDv2igzXgqbQ+/B1HyAhEPe2tzzpfV8L35oqCQq66ldp6hrmW1siG93U3aqM6dOGtzZI52BWkPcyXGnTH8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1570130325.git.brandonbonaby94@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 464ef189-4758-41c7-3fd7-08d748562ede
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2019 23:05:28.6169
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Xk4VUc62n7kQe/yFcvcadH48pgcNG4TpiICOCG+NO88itKfiO9kZTi6YXkCYVPz1AdS4kUf0iyNgcIXB8ubZhVYtfh/Qqgr3SQ1c0IYgyV8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0791
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is a userspace tool to drive the testing. Currently it supports
-introducing user specified delay in the host to guest communication
-path on a per-channel basis.
+From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Thursday, October 3,=
+ 2019 2:02 PM
+>=20
+> Introduce user specified latency in the packet reception path
+> By exposing the test parameters as part of the debugfs channel
+> attributes. We will control the testing state via these attributes.
+>=20
+> Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
+> ---
+> changes in v6:
+>  - changed kernel version in
+>    Documentation/ABI/testing/debugfs-hyperv to 5.5
+>=20
+>  - removed less than 0 if statement when dealing with
+>    u64 datatype, as suggested by Michael.
+>=20
+> changes in v5:
+>  - As per Stephen's suggestion, Moved CONFIG_HYPERV_TESTING
+>    to lib/Kconfig.debug.
+>=20
+>  - Fixed build issue reported by Kbuild, with Michael's
+>    suggestion to make hv_debugfs part of the hv_vmbus
+>    module.
+>=20
+>  - updated debugfs-hyperv to show kernel version 5.4
+>=20
+> changes in v4:
+>  - Combined v3 patch 2 into this patch, and changed the
+>    commit description to reflect this.
+>=20
+>  - Moved debugfs code from "vmbus_drv.c" that was in
+>    previous v3 patch 2, into a new file "debugfs.c" in
+>    drivers/hv.
+>=20
+>  - Updated the Makefile to compile "debugfs.c" if
+>    CONFIG_HYPERV_TESTING is enabled
+>=20
+>  - As per Michael's comments, added empty implementations
+>    of the new functions, so the compiler will not generate
+>    code when CONFIG_HYPERV_TESTING is not enabled.
+>=20
+>  - Added microseconds into description for files in
+>    Documentation/ABI/testing/debugfs-hyperv.
+>=20
+> Changes in v2:
+>  - Add #ifdef in Kconfig file so test code will not interfere
+>    with non-test code.
+>  - Move test code functions for delay to hyperv_vmbus header
+>    file.
+>  - Wrap test code under #ifdef statement.
+>=20
+>  Documentation/ABI/testing/debugfs-hyperv |  23 +++
+>  MAINTAINERS                              |   1 +
+>  drivers/hv/Makefile                      |   1 +
+>  drivers/hv/connection.c                  |   1 +
+>  drivers/hv/hv_debugfs.c                  | 178 +++++++++++++++++++++++
+>  drivers/hv/hyperv_vmbus.h                |  31 ++++
+>  drivers/hv/ring_buffer.c                 |   2 +
+>  drivers/hv/vmbus_drv.c                   |   6 +
+>  include/linux/hyperv.h                   |  19 +++
+>  lib/Kconfig.debug                        |   7 +
+>  10 files changed, 269 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/debugfs-hyperv
+>  create mode 100644 drivers/hv/hv_debugfs.c
+>=20
 
-Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
----
-Changes in v4:
-- Based on Harrys comments, made the tool more
-  user friendly and added more error checking.
-
-Changes in v3:
-- Align python tool to match Linux coding style.
-
-Changes in v2:
- - Move testing location to new location in debugfs.
-
- tools/hv/vmbus_testing | 376 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 376 insertions(+)
- create mode 100755 tools/hv/vmbus_testing
-
-diff --git a/tools/hv/vmbus_testing b/tools/hv/vmbus_testing
-new file mode 100755
-index 000000000000..e7212903dd1d
---- /dev/null
-+++ b/tools/hv/vmbus_testing
-@@ -0,0 +1,376 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Program to allow users to fuzz test Hyper-V drivers
-+# by interfacing with Hyper-V debugfs attributes.
-+# Current test methods available:
-+#       1. delay testing
-+#
-+# Current file/directory structure of hyper-V debugfs:
-+#       /sys/kernel/debug/hyperv/UUID
-+#       /sys/kernel/debug/hyperv/UUID/<test-state filename>
-+#       /sys/kernel/debug/hyperv/UUID/<test-method sub-directory>
-+#
-+# author: Branden Bonaby <brandonbonaby94@gmail.com>
-+
-+import os
-+import cmd
-+import argparse
-+import glob
-+from argparse import RawDescriptionHelpFormatter
-+from argparse import RawTextHelpFormatter
-+from enum import Enum
-+
-+# Do not change unless, you change the debugfs attributes
-+# in /drivers/hv/debugfs.c. All fuzz testing
-+# attributes will start with "fuzz_test".
-+
-+# debugfs path for hyperv must exist before proceeding
-+debugfs_hyperv_path = "/sys/kernel/debug/hyperv"
-+if not os.path.isdir(debugfs_hyperv_path):
-+        print("{} doesn't exist/check permissions".format(debugfs_hyperv_path))
-+        exit(-1)
-+
-+class dev_state(Enum):
-+        off = 0
-+        on = 1
-+
-+# File names, that correspond to the files created in
-+# /drivers/hv/debugfs.c
-+class f_names(Enum):
-+        state_f = "fuzz_test_state"
-+        buff_f =  "fuzz_test_buffer_interrupt_delay"
-+        mess_f =  "fuzz_test_message_delay"
-+
-+# Both single_actions and all_actions are used
-+# for error checking and to allow for some subparser
-+# names to be abbreviated. Do not abbreviate the
-+# test method names, as it will become less intuitive
-+# as to what the user can do. If you do decide to
-+# abbreviate the test method name, make sure the main
-+# function reflects this change.
-+
-+all_actions = [
-+        "disable_all",
-+        "D",
-+        "enable_all",
-+        "view_all",
-+        "V"
-+]
-+
-+single_actions = [
-+        "disable_single",
-+        "d",
-+        "enable_single",
-+        "view_single",
-+        "v"
-+]
-+
-+def main():
-+
-+        file_map = recursive_file_lookup(debugfs_hyperv_path, dict())
-+        args = parse_args()
-+        if (not args.action):
-+                print ("Error, no options selected...exiting")
-+                exit(-1)
-+        arg_set = { k for (k,v) in vars(args).items() if v and k != "action" }
-+        arg_set.add(args.action)
-+        path = args.path if "path" in arg_set else None
-+        if (path and path[-1] == "/"):
-+                path = path[:-1]
-+        validate_args_path(path, arg_set, file_map)
-+        if (path and "enable_single" in arg_set):
-+            state_path = locate_state(path, file_map)
-+            set_test_state(state_path, dev_state.on.value, args.quiet)
-+
-+        # Use subparsers as the key for different actions
-+        if ("delay" in arg_set):
-+                validate_delay_values(args.delay_time)
-+                if (args.enable_all):
-+                        set_delay_all_devices(file_map, args.delay_time,
-+                                              args.quiet)
-+                else:
-+                        set_delay_values(path, file_map, args.delay_time,
-+                                         args.quiet)
-+        elif ("disable_all" in arg_set or "D" in arg_set):
-+                disable_all_testing(file_map)
-+        elif ("disable_single" in arg_set or "d" in arg_set):
-+                disable_testing_single_device(path, file_map)
-+        elif ("view_all" in arg_set or "V" in arg_set):
-+                get_all_devices_test_status(file_map)
-+        elif ("view_single" in arg_set or  "v" in arg_set):
-+                get_device_test_values(path, file_map)
-+
-+# Get the state location
-+def locate_state(device, file_map):
-+        return file_map[device][f_names.state_f.value]
-+
-+# Validate delay values to make sure they are acceptable to
-+# enable delays on a device
-+def validate_delay_values(delay):
-+
-+        if (delay[0]  == -1 and delay[1] == -1):
-+                print("\nError, At least 1 value must be greater than 0")
-+                exit(-1)
-+        for i in delay:
-+                if (i < -1 or i == 0 or i > 1000):
-+                        print("\nError, Values must be  equal to -1 "
-+                              "or be > 0 and <= 1000")
-+                        exit(-1)
-+
-+# Validate argument path
-+def validate_args_path(path, arg_set, file_map):
-+
-+        if (not path and any(element in arg_set for element in single_actions)):
-+                print("Error, path (-p) REQUIRED for the specified option. "
-+                      "Use (-h) to check usage.")
-+                exit(-1)
-+        elif (path and any(item in arg_set for item in all_actions)):
-+                print("Error, path (-p) NOT REQUIRED for the specified option. "
-+                      "Use (-h) to check usage." )
-+                exit(-1)
-+        elif (path not in file_map and any(item in arg_set
-+                                           for item in single_actions)):
-+                print("Error, path '{}' not a valid vmbus device".format(path))
-+                exit(-1)
-+
-+# display Testing status of single device
-+def get_device_test_values(path, file_map):
-+
-+        for name in file_map[path]:
-+                file_location = file_map[path][name]
-+                print( name + " = " + str(read_test_files(file_location)))
-+
-+# Create a map of the vmbus devices and their associated files
-+# [key=device, value = [key = filename, value = file path]]
-+def recursive_file_lookup(path, file_map):
-+
-+        for f_path in glob.iglob(path + '**/*'):
-+                if (os.path.isfile(f_path)):
-+                        if (f_path.rsplit("/",2)[0] == debugfs_hyperv_path):
-+                                directory = f_path.rsplit("/",1)[0]
-+                        else:
-+                                directory = f_path.rsplit("/",2)[0]
-+                        f_name = f_path.split("/")[-1]
-+                        if (file_map.get(directory)):
-+                                file_map[directory].update({f_name:f_path})
-+                        else:
-+                                file_map[directory] = {f_name:f_path}
-+                elif (os.path.isdir(f_path)):
-+                        recursive_file_lookup(f_path,file_map)
-+        return file_map
-+
-+# display Testing state of devices
-+def get_all_devices_test_status(file_map):
-+
-+        for device in file_map:
-+                if (get_test_state(locate_state(device, file_map)) is 1):
-+                        print("Testing = ON for: {}"
-+                              .format(device.split("/")[5]))
-+                else:
-+                        print("Testing = OFF for: {}"
-+                              .format(device.split("/")[5]))
-+
-+# read the vmbus device files, path must be absolute path before calling
-+def read_test_files(path):
-+        try:
-+                with open(path,"r") as f:
-+                        file_value = f.readline().strip()
-+                return int(file_value)
-+
-+        except IOError as e:
-+                errno, strerror = e.args
-+                print("I/O error({0}): {1} on file {2}"
-+                      .format(errno, strerror, path))
-+                exit(-1)
-+        except ValueError:
-+                print ("Element to int conversion error in: \n{}".format(path))
-+                exit(-1)
-+
-+# writing to vmbus device files, path must be absolute path before calling
-+def write_test_files(path, value):
-+
-+        try:
-+                with open(path,"w") as f:
-+                        f.write("{}".format(value))
-+        except IOError as e:
-+                errno, strerror = e.args
-+                print("I/O error({0}): {1} on file {2}"
-+                      .format(errno, strerror, path))
-+                exit(-1)
-+
-+# set testing state of device
-+def set_test_state(state_path, state_value, quiet):
-+
-+        write_test_files(state_path, state_value)
-+        if (get_test_state(state_path) is 1):
-+                if (not quiet):
-+                        print("Testing = ON for device: {}"
-+                              .format(state_path.split("/")[5]))
-+        else:
-+                if (not quiet):
-+                        print("Testing = OFF for device: {}"
-+                              .format(state_path.split("/")[5]))
-+
-+# get testing state of device
-+def get_test_state(state_path):
-+        #state == 1 - test = ON
-+        #state == 0 - test = OFF
-+        return  read_test_files(state_path)
-+
-+# write 1 - 1000 microseconds, into a single device using the
-+# fuzz_test_buffer_interrupt_delay and fuzz_test_message_delay
-+# debugfs attributes
-+def set_delay_values(device, file_map, delay_length, quiet):
-+
-+        try:
-+                interrupt = file_map[device][f_names.buff_f.value]
-+                message = file_map[device][f_names.mess_f.value]
-+
-+                # delay[0]- buffer interrupt delay, delay[1]- message delay
-+                if (delay_length[0] >= 0 and delay_length[0] <= 1000):
-+                        write_test_files(interrupt, delay_length[0])
-+                if (delay_length[1] >= 0 and delay_length[1] <= 1000):
-+                        write_test_files(message, delay_length[1])
-+                if (not quiet):
-+                        print("Buffer delay testing = {} for: {}"
-+                              .format(read_test_files(interrupt),
-+                                      interrupt.split("/")[5]))
-+                        print("Message delay testing = {} for: {}"
-+                              .format(read_test_files(message),
-+                                      message.split("/")[5]))
-+        except IOError as e:
-+                errno, strerror = e.args
-+                print("I/O error({0}): {1} on files {2}{3}"
-+                      .format(errno, strerror, interrupt, message))
-+                exit(-1)
-+
-+# enabling delay testing on all devices
-+def set_delay_all_devices(file_map, delay, quiet):
-+
-+        for device in (file_map):
-+                set_test_state(locate_state(device, file_map),
-+                               dev_state.on.value,
-+                               quiet)
-+                set_delay_values(device, file_map, delay, quiet)
-+
-+# disable all testing on a SINGLE device.
-+def disable_testing_single_device(device, file_map):
-+
-+        for name in file_map[device]:
-+                file_location = file_map[device][name]
-+                write_test_files(file_location, dev_state.off.value)
-+        print("ALL testing now OFF for {}".format(device.split("/")[-1]))
-+
-+# disable all testing on ALL devices
-+def disable_all_testing(file_map):
-+
-+        for device in file_map:
-+                disable_testing_single_device(device, file_map)
-+
-+def parse_args():
-+        parser = argparse.ArgumentParser(prog = "vmbus_testing",usage ="\n"
-+                "%(prog)s [delay]   [-h] [-e|-E] -t [-p]\n"
-+                "%(prog)s [view_all       | V]      [-h]\n"
-+                "%(prog)s [disable_all    | D]      [-h]\n"
-+                "%(prog)s [disable_single | d]      [-h|-p]\n"
-+                "%(prog)s [view_single    | v]      [-h|-p]\n"
-+                "%(prog)s --version\n",
-+                description = "\nUse lsvmbus to get vmbus device type "
-+                "information.\n" "\nThe debugfs root path is "
-+                "/sys/kernel/debug/hyperv",
-+                formatter_class = RawDescriptionHelpFormatter)
-+        subparsers = parser.add_subparsers(dest = "action")
-+        parser.add_argument("--version", action = "version",
-+                version = '%(prog)s 0.1.0')
-+        parser.add_argument("-q","--quiet", action = "store_true",
-+                help = "silence none important test messages."
-+                       " This will only work when enabling testing"
-+                       " on a device.")
-+        # Use the path parser to hold the --path attribute so it can
-+        # be shared between subparsers. Also do the same for the state
-+        # parser, as all testing methods will use --enable_all and
-+        # enable_single.
-+        path_parser = argparse.ArgumentParser(add_help=False)
-+        path_parser.add_argument("-p","--path", metavar = "",
-+                help = "Debugfs path to a vmbus device. The path "
-+                "must be the absolute path to the device.")
-+        state_parser = argparse.ArgumentParser(add_help=False)
-+        state_group = state_parser.add_mutually_exclusive_group(required = True)
-+        state_group.add_argument("-E", "--enable_all", action = "store_const",
-+                                 const = "enable_all",
-+                                 help = "Enable the specified test type "
-+                                 "on ALL vmbus devices.")
-+        state_group.add_argument("-e", "--enable_single",
-+                                 action = "store_const",
-+                                 const = "enable_single",
-+                                 help = "Enable the specified test type on a "
-+                                 "SINGLE vmbus device.")
-+        parser_delay = subparsers.add_parser("delay",
-+                        parents = [state_parser, path_parser],
-+                        help = "Delay the ring buffer interrupt or the "
-+                        "ring buffer message reads in microseconds.",
-+                        prog = "vmbus_testing",
-+                        usage = "%(prog)s [-h]\n"
-+                        "%(prog)s -E -t [value] [value]\n"
-+                        "%(prog)s -e -t [value] [value] -p",
-+                        description = "Delay the ring buffer interrupt for "
-+                        "vmbus devices, or delay the ring buffer message "
-+                        "reads for vmbus devices (both in microseconds). This "
-+                        "is only on the host to guest channel.")
-+        parser_delay.add_argument("-t", "--delay_time", metavar = "", nargs = 2,
-+                        type = check_range, default =[0,0], required = (True),
-+                        help = "Set [buffer] & [message] delay time. "
-+                        "Value constraints: -1 == value "
-+                        "or 0 < value <= 1000.\n"
-+                        "Use -1 to keep the previous value for that delay "
-+                        "type, or a value > 0 <= 1000 to change the delay "
-+                        "time.")
-+        parser_dis_all = subparsers.add_parser("disable_all",
-+                        aliases = ['D'], prog = "vmbus_testing",
-+                        usage = "%(prog)s [disable_all | D] -h\n"
-+                        "%(prog)s [disable_all | D]\n",
-+                        help = "Disable ALL testing on ALL vmbus devices.",
-+                        description = "Disable ALL testing on ALL vmbus "
-+                        "devices.")
-+        parser_dis_single = subparsers.add_parser("disable_single",
-+                        aliases = ['d'],
-+                        parents = [path_parser], prog = "vmbus_testing",
-+                        usage = "%(prog)s [disable_single | d] -h\n"
-+                        "%(prog)s [disable_single | d] -p\n",
-+                        help = "Disable ALL testing on a SINGLE vmbus device.",
-+                        description = "Disable ALL testing on a SINGLE vmbus "
-+                        "device.")
-+        parser_view_all = subparsers.add_parser("view_all", aliases = ['V'],
-+                        help = "View the test state for ALL vmbus devices.",
-+                        prog = "vmbus_testing",
-+                        usage = "%(prog)s [view_all | V] -h\n"
-+                        "%(prog)s [view_all | V]\n",
-+                        description = "This shows the test state for ALL the "
-+                        "vmbus devices.")
-+        parser_view_single = subparsers.add_parser("view_single",
-+                        aliases = ['v'],parents = [path_parser],
-+                        help = "View the test values for a SINGLE vmbus "
-+                        "device.",
-+                        description = "This shows the test values for a SINGLE "
-+                        "vmbus device.", prog = "vmbus_testing",
-+                        usage = "%(prog)s [view_single | v] -h\n"
-+                        "%(prog)s [view_single | v] -p")
-+
-+        return  parser.parse_args()
-+
-+# value checking for range checking input in parser
-+def check_range(arg1):
-+
-+        try:
-+                val = int(arg1)
-+        except ValueError as err:
-+                raise argparse.ArgumentTypeError(str(err))
-+        if val < -1 or val > 1000:
-+                message = ("\n\nvalue must be -1 or  0 < value <= 1000. "
-+                           "Value program received: {}\n").format(val)
-+                raise argparse.ArgumentTypeError(message)
-+        return val
-+
-+if __name__ == "__main__":
-+        main()
--- 
-2.17.1
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
