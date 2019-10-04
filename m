@@ -2,95 +2,134 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D149CBFB5
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2019 17:48:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A74CC123
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2019 18:57:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390025AbfJDPsT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Oct 2019 11:48:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
+        id S1729542AbfJDQ5V (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Oct 2019 12:57:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40298 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389794AbfJDPsT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Oct 2019 11:48:19 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726119AbfJDQ5T (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 4 Oct 2019 12:57:19 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 287A020830;
-        Fri,  4 Oct 2019 15:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570204098;
-        bh=S2WPOl/0NG3P+Mug85lHlPzdbG1nDs6G5hw05L4rq7o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gogeOTWhbb1G6lu8oXCbTK9S5PfIvspwQwfnbqhWBqa+hQQ8IKcyDwvPGeG08EnqQ
-         qzDzKdG8vwYJM4Gn4OJSHW/FacZhCbzhEfQh8si6Yf/+0VN2jz5CTXRMRZd1ZleDh3
-         vIJiykQYVLi5JEY2ueqXlhGTh0sp5nL6lh/SrZDY=
-Date:   Fri, 4 Oct 2019 11:48:17 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Himadri Pandya <himadrispandya@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        by mx1.redhat.com (Postfix) with ESMTPS id ECB04793C4
+        for <linux-hyperv@vger.kernel.org>; Fri,  4 Oct 2019 16:57:17 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id w2so3017305wrn.4
+        for <linux-hyperv@vger.kernel.org>; Fri, 04 Oct 2019 09:57:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=4DO6HRjszW9MYsu/gJ4YiZkg106jhOFShol6836AY7U=;
+        b=c4cMbI9ubhM20twahIP+FGyW0Ek6lz4meoC5JWdY1iT+B8PTEEEEoZ/nbljZrUsNm6
+         kp5sW2flxvtoO1rlenux2mxLE15hUrnUDc2QZoMVFDC2+fc+kABtgb5hs+gUm0cG4/GP
+         Pdm7zlQaU3u78Sd1nL9S9rhSxaZANlr1uCR2i8QltTrhzev7lMdAUk0ctrCHz0rwaA2x
+         L8YokZzBmwNW9cjbHs2v9J8F82IIJYcRnuUrzpQdu1zgHFnAMEoyybvW1tpLfsRVMQTr
+         n7DWTm2XHb472u8Q7PB3NS3AP1C04HPdFGYLWmOcUTQIa93tXW0h+YuIVGzr6oVoOiR/
+         smqA==
+X-Gm-Message-State: APjAAAXl3e719hWbMlee9XEkAExWfGChrSGC4+wdBoWHgMngULUIt7yO
+        +SGJqzAbJfTFhiL+qkQcLpGI5+EJKxI/+W9ui6PmZhqCuodUxR4GbWZiDNUk46xUiFnkGb0WXpi
+        TbWBZbchFjVG270LVc8ishyfS
+X-Received: by 2002:adf:ce89:: with SMTP id r9mr4693349wrn.335.1570208236674;
+        Fri, 04 Oct 2019 09:57:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxZHhNq7nQiI6Fd/RsV8j3dFIp0ycu+uqTI+ubiO6/TGoQoY612gvIeAT0G0evGhIrNPG1XXw==
+X-Received: by 2002:adf:ce89:: with SMTP id r9mr4693320wrn.335.1570208236389;
+        Fri, 04 Oct 2019 09:57:16 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a192sm5727832wma.1.2019.10.04.09.57.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2019 09:57:15 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Andrea Parri <parri.andrea@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        x86@kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "himadri18.07" <himadri18.07@gmail.com>
-Subject: Re: [PATCH] hv_sock: use HV_HYP_PAGE_SIZE instead of PAGE_SIZE_4K
-Message-ID: <20191004154817.GL17454@sasha-vm>
-References: <20190725051125.10605-1-himadri18.07@gmail.com>
- <MWHPR21MB078479F82BBA6D3E6527ECECD7DF0@MWHPR21MB0784.namprd21.prod.outlook.com>
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>
+Subject: Re: [PATCH 1/2] x86/hyperv: Allow guests to enable InvariantTSC
+In-Reply-To: <20191003155200.22022-1-parri.andrea@gmail.com>
+References: <20191003155200.22022-1-parri.andrea@gmail.com>
+Date:   Fri, 04 Oct 2019 18:57:14 +0200
+Message-ID: <87k19k1mad.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <MWHPR21MB078479F82BBA6D3E6527ECECD7DF0@MWHPR21MB0784.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 01:02:03AM +0000, Michael Kelley wrote:
->From: Himadri Pandya <himadrispandya@gmail.com> Sent: Wednesday, July 24, 2019 10:11 PM
->>
->> Older windows hosts require the hv_sock ring buffer to be defined
->> using 4K pages. This was achieved by using the symbol PAGE_SIZE_4K
->> defined specifically for this purpose. But now we have a new symbol
->> HV_HYP_PAGE_SIZE defined in hyperv-tlfs which can be used for this.
->>
->> This patch removes the definition of symbol PAGE_SIZE_4K and replaces
->> its usage with the symbol HV_HYP_PAGE_SIZE. This patch also aligns
->> sndbuf and rcvbuf to hyper-v specific page size using HV_HYP_PAGE_SIZE
->> instead of the guest page size(PAGE_SIZE) as hyper-v expects the page
->> size to be 4K and it might not be the case on ARM64 architecture.
->>
->> Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
->> ---
->>  net/vmw_vsock/hyperv_transport.c | 21 +++++++++++----------
->>  1 file changed, 11 insertions(+), 10 deletions(-)
->>
->> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
->> index f2084e3f7aa4..ecb5d72d8010 100644
->> --- a/net/vmw_vsock/hyperv_transport.c
->> +++ b/net/vmw_vsock/hyperv_transport.c
->> @@ -13,15 +13,16 @@
->>  #include <linux/hyperv.h>
->>  #include <net/sock.h>
->>  #include <net/af_vsock.h>
->> +#include <asm/hyperv-tlfs.h>
->>
->
->Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
->
->This patch depends on a prerequisite patch in
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/hyperv
->
->that defines HV_HYP_PAGE_SIZE.
+Andrea Parri <parri.andrea@gmail.com> writes:
 
-David, the above prerequisite patch is now upstream, so this patch
-should be good to go. Would you take it through the net tree or should I
-do it via the hyperv tree?
+> If the hardware supports TSC scaling, Hyper-V will set bit 15 of the
+> HV_PARTITION_PRIVILEGE_MASK in guest VMs with a compatible Hyper-V
+> configuration version.  Bit 15 corresponds to the
+> AccessTscInvariantControls privilege.  If this privilege bit is set,
+> guests can access the HvSyntheticInvariantTscControl MSR: guests can
+> set bit 0 of this synthetic MSR to enable the InvariantTSC feature.
+> After setting the synthetic MSR, CPUID will enumerate support for
+> InvariantTSC.
 
---
-Thanks,
-Sasha
+I tried getting more information from TLFS but as of 5.0C this feature
+is not described there. I'm really interested in why this additional
+interface is needed, e.g. why can't Hyper-V just set InvariantTSC
+unconditionally when TSC scaling is supported?
+
+>
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 5 +++++
+>  arch/x86/kernel/cpu/mshyperv.c     | 7 ++++++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 7741e211f7f51..5f10f7f2098db 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -86,6 +86,8 @@
+>  #define HV_X64_ACCESS_FREQUENCY_MSRS		BIT(11)
+>  /* AccessReenlightenmentControls privilege */
+>  #define HV_X64_ACCESS_REENLIGHTENMENT		BIT(13)
+> +/* AccessTscInvariantControls privilege */
+> +#define HV_X64_ACCESS_TSC_INVARIANT		BIT(15)
+>  
+>  /*
+>   * Feature identification: indicates which flags were specified at partition
+> @@ -278,6 +280,9 @@
+>  #define HV_X64_MSR_TSC_EMULATION_CONTROL	0x40000107
+>  #define HV_X64_MSR_TSC_EMULATION_STATUS		0x40000108
+>  
+> +/* TSC invariant control */
+> +#define HV_X64_MSR_TSC_INVARIANT_CONTROL	0x40000118
+> +
+>  /*
+>   * Declare the MSR used to setup pages used to communicate with the hypervisor.
+>   */
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 267daad8c0360..105844d542e5c 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -286,7 +286,12 @@ static void __init ms_hyperv_init_platform(void)
+>  	machine_ops.shutdown = hv_machine_shutdown;
+>  	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
+>  #endif
+> -	mark_tsc_unstable("running on Hyper-V");
+> +	if (ms_hyperv.features & HV_X64_ACCESS_TSC_INVARIANT) {
+> +		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x1);
+> +		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+> +	} else {
+> +		mark_tsc_unstable("running on Hyper-V");
+> +	}
+>  
+>  	/*
+>  	 * Generation 2 instances don't support reading the NMI status from
+
+-- 
+Vitaly
