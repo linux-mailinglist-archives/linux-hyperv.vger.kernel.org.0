@@ -2,47 +2,46 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91DF6CBE23
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2019 16:55:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD2E8CBE5B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Oct 2019 16:59:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389043AbfJDOzA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Oct 2019 10:55:00 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56592 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388870AbfJDOzA (ORCPT
+        id S2389573AbfJDO7X (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Oct 2019 10:59:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57278 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389131AbfJDO7W (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Oct 2019 10:55:00 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x94EhutG020918;
-        Fri, 4 Oct 2019 14:52:59 GMT
+        Fri, 4 Oct 2019 10:59:22 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x94EhmZV069018;
+        Fri, 4 Oct 2019 14:57:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=71xMsougzFRjhf26xVcD9RH+FFwlVsgZYMghr9MGGOk=;
- b=kko/rqbeQC0h2Cl3LuTG4DijMfU+AMYt4CQrywqEvWg5n+Lst4VOaDS1W965q3NN0qCs
- fHaxsRsjxdrT3Fj7mQ04TZGJGGgDA8I7EF2InhxtYThp3WyFb/T94+MtbFwAQklfNv5a
- c5jFFaLTyfrvvEG9fkJTSANaAND0vzHjgN0PTeXrpET+Jn6m96rJBMXZpx4NXAKkHb0G
- mD/0TYd6nlQNb21LeWrcmXA1nbIhujPIXZidz7XmI6dTcxVw0wlbSKnqJ5dLnrVknKG5
- xzqPsyXQKKvF/PnRPCmELqkFej6ufql0ovRP2SCy/INz1kyDtDshVlztMcNcrgSUrt8E 8g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2v9yfquy3e-1
+ bh=MQp6pQEk6c2J46kM+Rq+0/IvdlE/pOv9wvLqN1pav1Y=;
+ b=cjVyJ9ZLano8/eaRnld8lt3eO3JnJUtD0QMVATAdEOup382ZMNC9dt40e898iyRuc1EV
+ 5X5i2fDLVLGyOoRMSZqFBd59ItVql4WVDbs0DGCYD3QjpPVCX8BLjtznDBp9o0/QIs/w
+ 7N5q3ANjeWgxbcnvnpcc/RcCA3wMRNCKvKvwPcy9MmdCM0fjX1Z940tHoBvLHYgRtLpu
+ yL87vZWY4nCUrdSGzy0jx7fqaqp1/fbPahUR4cZxUipUiRkY16eW85pGqdw4qCyoVBXP
+ /wM5jyMQ4S5wmuXvrecr+nx485SaL95FCW1TmI8a2LRk58F/x1WQzqJuK2xNgBPuTqlr hw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2v9xxvc4ar-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 04 Oct 2019 14:52:58 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x94EnLvd148212;
-        Fri, 4 Oct 2019 14:52:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2vdk0uq7vu-1
+        Fri, 04 Oct 2019 14:57:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x94EnLKc172823;
+        Fri, 4 Oct 2019 14:57:25 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2vdn19x456-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 04 Oct 2019 14:52:57 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x94EqtRY016989;
-        Fri, 4 Oct 2019 14:52:55 GMT
+        Fri, 04 Oct 2019 14:57:25 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x94EvMvl020182;
+        Fri, 4 Oct 2019 14:57:23 GMT
 Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 04 Oct 2019 07:52:54 -0700
-Subject: Re: [PATCH v4 1/4] x86/kvm: Add "nopvspin" parameter to disable PV
- spinlocks
+        with ESMTP ; Fri, 04 Oct 2019 07:57:22 -0700
+Subject: Re: [PATCH v4 3/4] xen: Mark "xen_nopvspin" parameter obsolete
 To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
         linux-kernel@vger.kernel.org
 Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
@@ -53,9 +52,9 @@ Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
         wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
         jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
         Jonathan Corbet <corbet@lwn.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>
+        "H. Peter Anvin" <hpa@zytor.com>
 References: <1570111335-12731-1-git-send-email-zhenzhong.duan@oracle.com>
- <1570111335-12731-2-git-send-email-zhenzhong.duan@oracle.com>
+ <1570111335-12731-4-git-send-email-zhenzhong.duan@oracle.com>
 From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
@@ -101,12 +100,12 @@ Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
  Fm5PY8YtX576DchSP6qJC57/eAAe/9ztZdVAdesQwGb9hZHJc75B+VNm4xrh/PJO6c1THqdQ
  19WVJ+7rDx3PhVncGlbAOiiiE3NOFPJ1OQYxPKtpBUukAlOTnkKE6QcA4zckFepUkfmBV1wM
  Jg6OxFYd01z+a+oL
-Message-ID: <26ef7beb-dad0-13c9-fc2f-217a5e046e4d@oracle.com>
-Date:   Fri, 4 Oct 2019 10:52:45 -0400
+Message-ID: <2c644c4a-f562-3271-ce0b-e60a44d82d89@oracle.com>
+Date:   Fri, 4 Oct 2019 10:57:13 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <1570111335-12731-2-git-send-email-zhenzhong.duan@oracle.com>
+In-Reply-To: <1570111335-12731-4-git-send-email-zhenzhong.duan@oracle.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -117,7 +116,7 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ma
  engine=8.0.1-1908290000 definitions=main-1910040135
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9399 signatures=668684
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1910040135
@@ -127,43 +126,33 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On 10/3/19 10:02 AM, Zhenzhong Duan wrote:
->  void __init kvm_spinlock_init(void)
+> Map "xen_nopvspin" to "nopvspin", fix stale description of "xen_nopvspin"
+> as we use qspinlock now.
+>
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
+with a small nit
+
+>  void __init xen_init_spinlocks(void)
 >  {
-> -	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
-> -	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
-> -		return;
-> -
-> -	if (kvm_para_has_hint(KVM_HINTS_REALTIME))
-> +	/*
-> +	 * Don't use the pvqspinlock code if no KVM_FEATURE_PV_UNHALT feature
-> +	 * support, or there is REALTIME hints or only 1 vCPU.
-> +	 */
-> +	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) ||
-> +	    kvm_para_has_hint(KVM_HINTS_REALTIME) ||
-> +	    num_possible_cpus() == 1) {
-> +		pr_info("PV spinlocks disabled\n");
->  		return;
-> +	}
+> +	if (nopvspin)
+> +		xen_pvspin = false;
 >  
-> -	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
-> -	if (num_possible_cpus() == 1)
-> +	if (nopvspin) {
-> +		pr_info("PV spinlocks disabled forced by \"nopvspin\" parameter.\n");
-> +		static_branch_disable(&virt_spin_lock_key);
+>  	/*  Don't need to use pvqspinlock code if there is only 1 vCPU. */
+>  	if (num_possible_cpus() == 1)
 
-Would it make sense to bring here the other site where the key is
-disabled (in kvm_smp_prepare_cpus())?
-
-(and, in fact, shouldn't all of the checks that result in early return
-above disable the key?)
+I'd fold the change into this 'if' statement, I think it will still be
+clear what the comment refers to.
 
 -boris
-
->  		return;
-> +	}
-> +	pr_info("PV spinlocks enabled\n");
->  
->  	__pv_init_lock_hash();
->  	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
->
 
