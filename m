@@ -2,61 +2,65 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3624FCC597
-	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Oct 2019 00:05:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DA82CC5ED
+	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Oct 2019 00:33:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfJDWFN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Oct 2019 18:05:13 -0400
-Received: from mail-eopbgr680097.outbound.protection.outlook.com ([40.107.68.97]:60238
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        id S1728781AbfJDWdd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Oct 2019 18:33:33 -0400
+Received: from mail-eopbgr700139.outbound.protection.outlook.com ([40.107.70.139]:53857
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726002AbfJDWFN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Oct 2019 18:05:13 -0400
+        id S1727548AbfJDWdd (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 4 Oct 2019 18:33:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aNRXurYIl1F2JyqOSUVK/U5deuHqIjiiqEPD1wjVRYEY2pZc/M54sgu/CY+53uZ6pOXOCqXkl9H4C+dWicHatKurwO14WENM+p5lhhk5QW07U0rYGx/IUdKsLl1nPj7fMq7z2dkJMOKQBRy4plXWfDIAJHQzb9UVk6MgSRjcHS6M8CWnPwD+Xm1lMOrDiTC0AfBgdKxiu2nPrPQgJtytE/IuugEVXDe5ccNNUYJ1PPh77LFkajzDyt9j8hHr2Wtd9VFyNZ8mwvDb1zt85twq+fm1CjKBxmUa4rvXdDqukB+93b+ApxCseqV5Njbmhqey9C113eQalnLcHfTd9y6PpA==
+ b=CnJAFYDHZPYNjjWDknz51d//VkUzwU/kaukSN3CjI1QGRVOWcpKKIHPajMfJSFRkaiI0KuV/CVPLH/V2HpXFCGv7sVM9NKm5+U8EBTfpFrJpsQi0sC/IAfynRLJ+OKAZYgidpw564RSGtIVlHLparC8k/VsWLTUQww1l2OBLN0A9rMTsxCcloNC9XadVX3nYTdfecXTyBaQ6OiXGT5fnK3Jl7kmER9FakaJtG+0ihKvSaqcI0l+LzAowhpdly8tMJWfm9PI6E6po/pNE2XyOGli2KAfGScdXi+xMyMP17YJ94aBJfGNmrLWegGn6cPAGXZH2MnXfnzOMaL3x2l2gbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0UDBt7Qzp0syHqHm2Zu0pva4HCXFwl94zBVw7QmzZ6k=;
- b=JOIvdpPZiHYuQBMqO/MoextSEipAW64Y1wWD9Ma3g5m+imlpy3+6BSpQyth8FiXshOcJ9v3Tn73ULFv7tfsxzx0sZeym6Fmq7h2vrfsMdVd016P39WBBJ0aBuqrVMO6tidaeDD7G3jFqL7WqLUfEnhl5tM83VXhKLXvhf0ED/oU3OlDCxgWZ9/hdSsjSB6M76T+3mhGQ82LRfOPUVt8s0A3jUqL+kbnDbNTDkE7XW5D0w0+6WYAFyqav22J04Kde9mHJifTK/Z/6cL7gtiejm2yjI1niNWY6IDJFtCuAKbJTh4QBJWoOMMXcoRahznAUdlvovZPbKfJoZfzmsiz1yg==
+ bh=ipzJS26IRZJ72N+odoZrDKHKtivHmE/mlk8nbyunYqQ=;
+ b=glPJCgYs8diyyfK9zdLQWYndBSsCgbvng2BejG07IzEkHtAoW2UI5TvHCk3tb17t7RaJZSiPFM8Xz0ELVGajv8iD14VUb3y/hSN84ZUMLYkEDv+jFCWTqddCMIze6vJjJrr9cXvV5iIgRzvUCP5uf2nSL2uzZca1wVvPT6tX/bt7J5C74pmMYlPlWEkS4VBoFBj2LIz0hHwdXEoH+68o5CIMH9msddbWOsuiksPx7WZZ+5Km7UyDEn2GCuOrAB8s7t/iJ2o/eDXXYzJ9XeBBWJoVtmts+wU/d1E9EuXD/+1H2Mm38wyZgy4235zJk83Dxtrd0rH54GaVcdiX0VHP9w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0UDBt7Qzp0syHqHm2Zu0pva4HCXFwl94zBVw7QmzZ6k=;
- b=eH8sATI7jLS+FEZ9coHMzeekRIRoDIEgoLrOsnlY2l8mX22afd5vzyC55wUROL2pQODl6nFpQ0jLuHf+TOP5aeBjqXInV1GBtbkejgKjYRTaiJhnxNvQ85SCbdBOaGZSSythNPfit0GcLFO2+W4hAi4AmyYY7OdjzT0KclCM3lg=
+ bh=ipzJS26IRZJ72N+odoZrDKHKtivHmE/mlk8nbyunYqQ=;
+ b=Acco0LPmWBW/hl6N2J4vz+ETxfO2V6pHBpgEqRU9Pivqy7lH+uXdqkawD1ePF4p37KE8ePzLJAgTVdkLprBKuzGBoFbqlVK5fK4lPopp8QeotPf2a+IL424rptXzCylHxD12ECh8H1OvQWKzVMCgYd4hsLPwBA/n1V/XoPwBiSE=
 Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0698.namprd21.prod.outlook.com (10.175.112.13) with Microsoft SMTP
+ DM5PR21MB0281.namprd21.prod.outlook.com (10.173.174.16) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.11; Fri, 4 Oct 2019 22:05:09 +0000
+ 15.20.2347.0; Fri, 4 Oct 2019 22:33:29 +0000
 Received: from DM5PR21MB0137.namprd21.prod.outlook.com
  ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
  ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.012; Fri, 4 Oct 2019
- 22:05:09 +0000
+ 22:33:29 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
+To:     Roman Kagan <rkagan@virtuozzo.com>
+CC:     vkuznets <vkuznets@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andrea Parri <parri.andrea@gmail.com>
-Subject: RE: [PATCH 1/2] x86/hyperv: Allow guests to enable InvariantTSC
-Thread-Topic: [PATCH 1/2] x86/hyperv: Allow guests to enable InvariantTSC
-Thread-Index: AQHVegKONOQa53Lxu0KKenjrGuzu3adKtYUAgABS/GA=
-Date:   Fri, 4 Oct 2019 22:05:09 +0000
-Message-ID: <DM5PR21MB01371F96CD845743D9777DC5D79E0@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20191003155200.22022-1-parri.andrea@gmail.com>
- <87k19k1mad.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87k19k1mad.fsf@vitty.brq.redhat.com>
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+Thread-Topic: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+Thread-Index: AQHVeQrgrl6z6kaUqkyr6D3zFBAn2KdIv6eAgAAhHwCAAOlpQIAAbTiAgADZYJA=
+Date:   Fri, 4 Oct 2019 22:33:29 +0000
+Message-ID: <DM5PR21MB0137FCE28A16166207E08C7CD79E0@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20191002101923.4981-1-rkagan@virtuozzo.com>
+ <87muei14ms.fsf@vitty.brq.redhat.com> <20191003125236.GA2424@rkaganb.sw.ru>
+ <CY4PR21MB0136269170E69EA8F02A89E9D79E0@CY4PR21MB0136.namprd21.prod.outlook.com>
+ <20191004091855.GA26970@rkaganb.sw.ru>
+In-Reply-To: <20191004091855.GA26970@rkaganb.sw.ru>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -64,83 +68,127 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-04T22:05:08.2645000Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-04T22:33:27.3495621Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e41bfd43-9d57-441e-a34e-8737abbaa483;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8f8051ff-be74-4bb4-9e27-c7431927dce0;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=mikelley@microsoft.com; 
 x-originating-ip: [131.107.159.48]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3ffdca8b-30c5-4018-6f98-08d74916ec55
+x-ms-office365-filtering-correlation-id: 1cf42221-92b8-45fb-42d9-08d7491ae19d
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM5PR21MB0698:|DM5PR21MB0698:|DM5PR21MB0698:
+x-ms-traffictypediagnostic: DM5PR21MB0281:|DM5PR21MB0281:|DM5PR21MB0281:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR21MB06986E05276BB98156C223B5D79E0@DM5PR21MB0698.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <DM5PR21MB028154CFA1B2BED0C90925F8D79E0@DM5PR21MB0281.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 018093A9B5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(39860400002)(136003)(396003)(376002)(189003)(199004)(305945005)(6436002)(5660300002)(446003)(76116006)(6116002)(22452003)(478600001)(7736002)(66946007)(74316002)(10290500003)(2906002)(11346002)(66476007)(66556008)(64756008)(66446008)(33656002)(8990500004)(10090500001)(110136005)(316002)(186003)(6506007)(9686003)(26005)(102836004)(54906003)(55016002)(229853002)(7696005)(6246003)(71200400001)(2201001)(86362001)(71190400001)(256004)(14444005)(76176011)(52536014)(99286004)(14454004)(476003)(81166006)(486006)(2501003)(8676002)(81156014)(8936002)(7416002)(66066001)(3846002)(4326008)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0698;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(376002)(396003)(366004)(189003)(199004)(6436002)(64756008)(66476007)(476003)(66446008)(66556008)(14454004)(8936002)(86362001)(2906002)(52536014)(7696005)(76116006)(74316002)(33656002)(5660300002)(478600001)(229853002)(6506007)(76176011)(102836004)(66946007)(256004)(6246003)(186003)(10290500003)(7416002)(446003)(305945005)(10090500001)(14444005)(11346002)(486006)(55016002)(8676002)(25786009)(22452003)(54906003)(9686003)(316002)(99286004)(26005)(3846002)(6116002)(8990500004)(6916009)(4326008)(71200400001)(81166006)(7736002)(81156014)(66066001)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0281;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4jSnYQmhtKgvCdNCJj8XlDoWznC0y++0dtHoRKcG1iMYzzU6rAT5mmLvmn9G0qISbmpSQBYLB5oTJjprSOhboSnF3wamXdFX/O6HnE7GWUtQjmHinYTTvnhmn72IhMa5kq/TJXat4rrBAwDUtHdYbsFyA6Bul/kencdS2HLPjC6AS5Pu9w8FSxI36eF4glw8YS/8CjRDwE3UwP1zjfhbybePj9SrfIy58BL66eb8e1agY2xN7D+3tGhm4Vm7D8h3WAwmPvwBO1WEvt/6y53Fm2eO+mu3huARHv3RYqQk6yJePZA99MeLYWKKYNbWDP8jK3IDqKxX/9qFMbscprzI+dmX3hTjlD6OFxSuATPK75NRchQhMnUVEc+Uwtcgzf7El2ytFRBXPbfpAEb3c7C/WKi4IInyjIph1i74IfagU0g=
+x-microsoft-antispam-message-info: vNcCKvKv6QAClLFLQiNOFSdQaA0gyojlGKueO3VhieZFmiQuhJHf7WdQNcw2O2iRUib9keI32hdBvR0lYmrDgYebZk0I+qApuV7owt+NaQw9nRtbVDUp6vtAOneQ9DsPU40bJSOkQ6mMvr5oDEPLjloExSM4tk+QIm1pfLuEtCIcILHbvFI31VvFGzo7NtXj0QxAJ7p2HWVtqT3hqkeXodx1eU2Ilck1OynqqhqwKJZJytOs/mInnEru//JyyxhEm9BPrFL+HXunXauZ36Zfg/Z0/UYNFl5gunI8Ku9jM+xw+yTeQ4LACH1zTeSO/d+PG8hhHmDFgMlvsXUTjSv+NcUX5GG63VvbChJVK5RzRioo29eNs7bAJL7/yb2ssPMTCb1OTOgfeHrlGNbHFA0lPB1YPsa6xx5RuY/yFY343Vc=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ffdca8b-30c5-4018-6f98-08d74916ec55
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 22:05:09.7885
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cf42221-92b8-45fb-42d9-08d7491ae19d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2019 22:33:29.6522
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bqLXvBqAXBBuwGx+knkdbxrne92ftP4bG/j4IyiRf6pVpdxp6AF88LqDGzDvi0DttoVuSdWHq8/EC32NVTV855jhvkpcNnxAxqzhbjLAtwc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0698
+X-MS-Exchange-CrossTenant-userprincipalname: YwH9+nS/TDiAqE3quInJOeNTCVkI8yziRNFGGKzmUUs/H3hPzf8kplbb7W1LVC8odhz5kJMyjD1eq5MjfTHtavjSUYv0aHfLwqmeflBudi0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0281
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Friday, October 4, 2019 =
-9:57 AM
+From: Roman Kagan <rkagan@virtuozzo.com> Sent: Friday, October 4, 2019 2:19=
+ AM
 >=20
-> Andrea Parri <parri.andrea@gmail.com> writes:
+> On Fri, Oct 04, 2019 at 03:01:51AM +0000, Michael Kelley wrote:
+> > From: Roman Kagan <rkagan@virtuozzo.com> Sent: Thursday, October 3, 201=
+9 5:53 AM
+> > > >
+> > > > AFAIU you're trying to mirror native_x2apic_icr_write() here but th=
+is is
+> > > > different from what hv_apic_icr_write() does
+> > > > (SET_APIC_DEST_FIELD(id)).
+> > >
+> > > Right.  In xapic mode the ICR2 aka the high 4 bytes of ICR is program=
+med
+> > > with the destination id in the highest byte; in x2apic mode the whole
+> > > ICR2 is set to the 32bit destination id.
+> > >
+> > > > Is it actually correct? (I think you've tested this and it is but)
+> > >
+> > > As I wrote in the commit log, I haven't tested it in the sense that I
+> > > ran a Linux guest in a Hyper-V VM exposing x2apic to the guest, becau=
+se
+> > > I didn't manage to configure it to do so.  OTOH I did run a Windows
+> > > guest in QEMU/KVM with hv_apic and x2apic enabled and saw it write
+> > > destination ids unshifted to the ICR2 part of ICR, so I assume it's
+> > > correct.
+> > >
+> > > > Michael, could you please shed some light here?
+> > >
+> > > Would be appreciated, indeed.
+> > >
+> >
+> > The newest version of Hyper-V provides an x2apic in a guest VM when the
+> > number of vCPUs in the VM is > 240.  This version of Hyper-V is beginni=
+ng
+> > to be deployed in Azure to enable the M416v2 VM size, but the functiona=
+lity
+> > is not yet available for the on-premises version of Hyper-V.  However, =
+I can
+> > test this configuration internally with the above patch -- give me a fe=
+w days.
+> >
+> > An additional complication is that when running on Intel processors tha=
+t offer
+> > vAPIC functionality, the Hyper-V "hints" value does *not* recommend usi=
+ng the
+> > MSR-based APIC accesses.  In this case, memory-mapped access to the x2a=
+pic
+> > registers is faster than the synthetic MSRs.
 >=20
-> > If the hardware supports TSC scaling, Hyper-V will set bit 15 of the
-> > HV_PARTITION_PRIVILEGE_MASK in guest VMs with a compatible Hyper-V
-> > configuration version.  Bit 15 corresponds to the
-> > AccessTscInvariantControls privilege.  If this privilege bit is set,
-> > guests can access the HvSyntheticInvariantTscControl MSR: guests can
-> > set bit 0 of this synthetic MSR to enable the InvariantTSC feature.
-> > After setting the synthetic MSR, CPUID will enumerate support for
-> > InvariantTSC.
->=20
-> I tried getting more information from TLFS but as of 5.0C this feature
-> is not described there. I'm really interested in why this additional
-> interface is needed, e.g. why can't Hyper-V just set InvariantTSC
-> unconditionally when TSC scaling is supported?
+> I guess you mean "using regular x2apic MSRs compared to the synthetic
+> MSRs". =20
+
+Yes, of course you are correct.
+
+> Indeed they do essentially the same thing, and there's no reason
+> for one set of MSRs to be significantly faster than the other.  However,
+> hv_apic_eoi_write makes use of "apic assists" aka lazy EOI which is
+> certainly a win, and I'm not sure if it works without hv_apic.
 >=20
 
-Yes, this is very new functionality that is not yet available in a released
-version of Hyper-V.  And as you know, the Hyper-V TLFS has gotten
-woefully out-of-date. :-(
+I've checked with the Hyper-V people and the presence of vAPIC makes
+a difference.  If vAPIC is present in the hardware:
+1) Hyper-V does not set the HV_X64_APIC_ACCESS_RECOMMENDED flag
+2) The architectural MSRs should be used instead of the Hyper-V
+    synthetic MSRs, as they are significantly faster.  The architectural
+    MSRs do not cause a VMEXIT because they are handled entirely by
+    the vAPIC microcode in the CPU.  The synthetic MSRs do cause a VMEXIT.
+3) The lazy EOI functionality should not be used
 
-Your question is the same question I asked.   The reason given by
-Hyper-V is to take the more cautious approach of not "automatically"
-giving VMs an InvariantTSC due to updating the underlying Hyper-V
-version.  Instead, guest VMs must have been explicitly coded to take
-advantage of the new InvariantTSC feature.  It's not clear to me how
-much of this caution is driven by Windows guests vs. Linux or FreeBSD
-guests, but it is what it is.
+If vAPIC is not present in the hardware:
+1) Hyper-V will set HV_X64_APIC_ACCESS_RECOMMENDED
+2) Either set of MSRs has about the same performance, but we
+    should use the synthetic MSRs.
+3) The lazy EOI functionality has some value and should be used
 
-Having to explicitly enable the InvariantTSC does give the Linux code
-the opportunity to be a bit cleaner by doing things like not marking
-the TSC as unstable when the InvariantTSC feature is present, and to
-mark the TSC as reliable so we don't try to do TSC synchronization
-(which Hyper-V does not want guests to try to do).
+The same will apply to the AMD AVIC in some Hyper-V updates that
+are coming soon.
+
+So I think your code makes sense given the above information.  By
+Monday I'll try to test it on a Hyper-V guest VM with x2APIC.
 
 Michael
