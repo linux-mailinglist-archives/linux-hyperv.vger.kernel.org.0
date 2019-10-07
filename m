@@ -2,142 +2,199 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09A0FCE949
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Oct 2019 18:32:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CA91CEA5B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Oct 2019 19:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfJGQcE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Oct 2019 12:32:04 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39752 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbfJGQcE (ORCPT
+        id S1728031AbfJGROX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Oct 2019 13:14:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53189 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728028AbfJGROX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Oct 2019 12:32:04 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r3so16113008wrj.6;
-        Mon, 07 Oct 2019 09:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+psXr2moFENqtCIAGa6EJe/FepyA9u0xvKcvjuFUI3s=;
-        b=TrVMgq4kHvMp3JKtkb7H0LtYEQoEgP25lAc/0CgCns/QoycaaVHRckO7itR3PxqLft
-         xW/EnBzQ8TGXhaDKDi9YzE1bCfTZ4c1A3xYy7EK5dKOwa+M7way0hbj2OUI7PJ+fluZG
-         xNN5/PMs9zP/sYFKutyn/f9jKNqgUaYVf2/5IXctw2+Ie6NFoVtz9vI3FCwEgWZarkaG
-         xq7jZlEqxl3CI9jrI6V2S3BG2Qomwo1u1SocSJPrToBxYPYJCvXUR3oTSpStBBalv0R2
-         xkzmXMsxJoGB1yD6XfhbdYPzskLHDIVNtoLPPodd4MRptdgkNB5q6GnVc7v53rqaXFDX
-         jiuQ==
+        Mon, 7 Oct 2019 13:14:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1570468461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9PAQ2tFm+AtM3TzgFRHpTr4JMn+XXrxy7maVApAdIJM=;
+        b=TBr/jIm5U0T3kC5lkFdVu9m/ys9S+2vsOPx9LeeOWF3HNTeNJDVa0a4AekQmKLEx3clVWt
+        bVmjglYY4i3uG4E+T1bF9CtyOL4N56bt3v7hny0rLlahdvroYAaJG3VwIXskZiOBht7kgn
+        KsiRKfRD2H2pO5IdeZbkCBJaqzWovnA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-jJoI8UOEPya7klctS70YVw-1; Mon, 07 Oct 2019 13:14:20 -0400
+Received: by mail-wr1-f69.google.com with SMTP id f3so7822493wrr.23
+        for <linux-hyperv@vger.kernel.org>; Mon, 07 Oct 2019 10:14:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+psXr2moFENqtCIAGa6EJe/FepyA9u0xvKcvjuFUI3s=;
-        b=MkQE7qpVxSLgjkK6ITYQ210jWleVDBRYijyr+4vVp9WuC/iTSt1JGb78MiG3Ts1jna
-         tczW8OEXR9XAtlU9isAiwCKJfemh0C4bU+3m9ghuxe5YABF0B00TD+Wq1ary/KVivN5K
-         svUgVyAv+ggTed0jDfOXCMXsOs9uuo4CPgnewQcgWJejbcTts+pN6xZ37fzoCk7TFNiD
-         n9ks4nLzU1NnvaBKsFe5pfYxQ+54M6HDJW87lr+dq52TgTIIl6AxMN3hX/NY3iD3ZW8V
-         7yieSb4ZMYu6YvtOu8Wdq8H/hmIFaIBMXs1AzBJV0CC/5gNexiYMMQC7JvpUBexWMLq8
-         2QpA==
-X-Gm-Message-State: APjAAAXnpVqxYG55Mlg2JxFOyWIe1DNa6YHu+H/N+uWwCaJAyb9bEUq7
-        zp3pt/idffmVqetNYK52L9tAJi17ew+KrA==
-X-Google-Smtp-Source: APXvYqzrcXw54BDORsz0/TccRj2Hqw+oZ0dsc5Egb5OsfkzQ6S7y7F559sJJCN54XUquy+F036cmoA==
-X-Received: by 2002:adf:cc0a:: with SMTP id x10mr18987206wrh.195.1570465921405;
-        Mon, 07 Oct 2019 09:32:01 -0700 (PDT)
-Received: from localhost.localdomain (userh394.uk.uudial.com. [194.69.102.21])
-        by smtp.gmail.com with ESMTPSA id a9sm148524wmf.14.2019.10.07.09.32.00
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=VGV18VA+AE3LfmjZMCSFNrwz/PRTgDak/4MGgvP+8ac=;
+        b=c9ZXIluzYAS3b2HP75qHU2/gk+lYpb/hxo2QoH4OBS2cKqTPQ9bC3x19rjCeHOJs/x
+         BBrjhdFwOv58zcLwpQLRx7DNxZpBEdl6eln3NOJZcmbcGfrsbbxD00AASP4eTv2Le9rt
+         ZjKdcyIOdJdW2X5FfJ8TkfQyE04PCyo/5C0WmydtCxDBg25a/LIJN3zUipp8zv0i0cVq
+         /OpOqoA/JWI3rI4vtj4fohtXY32yFHLaen7gBSIWYRxbhptsUfkzosZwGxQcZA4xn/l6
+         7Rw1W7+pNbGct0gyqhJqGgQRL/LRPe7tawYJ0AeTDUd6u2UwYg1jzXeNDbO8wkzryC3x
+         f7MQ==
+X-Gm-Message-State: APjAAAX013DSfp1vESNL4msIIrqcHIm48bwZ/mI9jZ+UEFoKqYYOBExd
+        30rBMIsWIF3gwzkt2tt1phzIoHYDT/OhrM5kjBwh5f9TYO4UuhQYLUOPF9JHRFwnSTs5iVwbUyJ
+        tIijNH2x9hD7I21VUWocR7YxL
+X-Received: by 2002:adf:8163:: with SMTP id 90mr19785223wrm.129.1570468458709;
+        Mon, 07 Oct 2019 10:14:18 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyTsAKryRHUYEwNfXDnDTXesB2iGCqDbuGhIV1Lf/H5FCI4hmBIRgnrP9hPRrF/bojTQJsKHQ==
+X-Received: by 2002:adf:8163:: with SMTP id 90mr19785200wrm.129.1570468458441;
+        Mon, 07 Oct 2019 10:14:18 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id y18sm40294127wro.36.2019.10.07.10.14.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2019 09:32:00 -0700 (PDT)
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+        Mon, 07 Oct 2019 10:14:17 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Andrea Parri <parri.andrea@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
 Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
         Andrea Parri <parri.andrea@gmail.com>
-Subject: [PATCH 2/2] Drivers: hv: vmbus: Enable VMBus protocol versions 5.1 and 5.2
-Date:   Mon,  7 Oct 2019 18:31:15 +0200
-Message-Id: <20191007163115.26197-3-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191007163115.26197-1-parri.andrea@gmail.com>
-References: <20191007163115.26197-1-parri.andrea@gmail.com>
+Subject: Re: [PATCH 1/2] Drivers: hv: vmbus: Introduce table of VMBus protocol versions
+In-Reply-To: <20191007163115.26197-2-parri.andrea@gmail.com>
+References: <20191007163115.26197-1-parri.andrea@gmail.com> <20191007163115.26197-2-parri.andrea@gmail.com>
+Date:   Mon, 07 Oct 2019 19:14:16 +0200
+Message-ID: <87eezo1nrr.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: jJoI8UOEPya7klctS70YVw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hyper-V has added VMBus protocol versions 5.1 and 5.2 in recent release
-versions.  Allow Linux guests to negotiate these new protocol versions
-on versions of Hyper-V that support them.
+Andrea Parri <parri.andrea@gmail.com> writes:
 
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
----
- drivers/hv/connection.c | 12 +++++++-----
- include/linux/hyperv.h  |  4 ++++
- 2 files changed, 11 insertions(+), 5 deletions(-)
+> The technique used to get the next VMBus version seems increasisly
+> clumsy as the number of VMBus versions increases.  Performance is
+> not a concern since this is only done once during system boot; it's
+> just that we'll end up with more lines of code than is really needed.
+>
+> As an alternative, introduce a table with the version numbers listed
+> in order (from the most recent to the oldest).  vmbus_connect() loops
+> through the versions listed in the table until it gets an accepted
+> connection or gets to the end of the table (invalid version).
+>
+> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+> ---
+>  drivers/hv/connection.c | 51 +++++++++++++++--------------------------
+>  include/linux/hyperv.h  |  2 --
+>  2 files changed, 19 insertions(+), 34 deletions(-)
+>
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index 6e4c015783ffc..90a32c9d79403 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -40,29 +40,19 @@ EXPORT_SYMBOL_GPL(vmbus_connection);
+>  __u32 vmbus_proto_version;
+>  EXPORT_SYMBOL_GPL(vmbus_proto_version);
+> =20
+> -static __u32 vmbus_get_next_version(__u32 current_version)
+> -{
+> -=09switch (current_version) {
+> -=09case (VERSION_WIN7):
+> -=09=09return VERSION_WS2008;
+> -
+> -=09case (VERSION_WIN8):
+> -=09=09return VERSION_WIN7;
+> -
+> -=09case (VERSION_WIN8_1):
+> -=09=09return VERSION_WIN8;
+> -
+> -=09case (VERSION_WIN10):
+> -=09=09return VERSION_WIN8_1;
+> -
+> -=09case (VERSION_WIN10_V5):
+> -=09=09return VERSION_WIN10;
+> -
+> -=09case (VERSION_WS2008):
+> -=09default:
+> -=09=09return VERSION_INVAL;
+> -=09}
+> -}
+> +/*
+> + * Table of VMBus versions listed from newest to oldest; the table
+> + * must terminate with VERSION_INVAL.
+> + */
+> +__u32 vmbus_versions[] =3D {
+> +=09VERSION_WIN10_V5,
+> +=09VERSION_WIN10,
+> +=09VERSION_WIN8_1,
+> +=09VERSION_WIN8,
+> +=09VERSION_WIN7,
+> +=09VERSION_WS2008,
+> +=09VERSION_INVAL
+> +};
+> =20
+>  int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 v=
+ersion)
+>  {
+> @@ -169,8 +159,8 @@ int vmbus_negotiate_version(struct vmbus_channel_msgi=
+nfo *msginfo, u32 version)
+>   */
+>  int vmbus_connect(void)
+>  {
+> -=09int ret =3D 0;
+>  =09struct vmbus_channel_msginfo *msginfo =3D NULL;
+> +=09int i, ret =3D 0;
+>  =09__u32 version;
+> =20
+>  =09/* Initialize the vmbus connection */
+> @@ -244,21 +234,18 @@ int vmbus_connect(void)
+>  =09 * version.
+>  =09 */
+> =20
+> -=09version =3D VERSION_CURRENT;
+> +=09for (i =3D 0; ; i++) {
+> +=09=09version =3D vmbus_versions[i];
+> +=09=09if (version =3D=3D VERSION_INVAL)
+> +=09=09=09goto cleanup;
 
-diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index 90a32c9d79403..d05fef3e09080 100644
---- a/drivers/hv/connection.c
-+++ b/drivers/hv/connection.c
-@@ -45,6 +45,8 @@ EXPORT_SYMBOL_GPL(vmbus_proto_version);
-  * must terminate with VERSION_INVAL.
-  */
- __u32 vmbus_versions[] = {
-+	VERSION_WIN10_V5_2,
-+	VERSION_WIN10_V5_1,
- 	VERSION_WIN10_V5,
- 	VERSION_WIN10,
- 	VERSION_WIN8_1,
-@@ -70,12 +72,12 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
- 	msg->vmbus_version_requested = version;
- 
- 	/*
--	 * VMBus protocol 5.0 (VERSION_WIN10_V5) requires that we must use
--	 * VMBUS_MESSAGE_CONNECTION_ID_4 for the Initiate Contact Message,
-+	 * VMBus protocol 5.0 (VERSION_WIN10_V5) and higher require that we must
-+	 * use VMBUS_MESSAGE_CONNECTION_ID_4 for the Initiate Contact Message,
- 	 * and for subsequent messages, we must use the Message Connection ID
- 	 * field in the host-returned Version Response Message. And, with
--	 * VERSION_WIN10_V5, we don't use msg->interrupt_page, but we tell
--	 * the host explicitly that we still use VMBUS_MESSAGE_SINT(2) for
-+	 * VERSION_WIN10_V5 and higher, we don't use msg->interrupt_page, but we
-+	 * tell the host explicitly that we still use VMBUS_MESSAGE_SINT(2) for
- 	 * compatibility.
- 	 *
- 	 * On old hosts, we should always use VMBUS_MESSAGE_CONNECTION_ID (1).
-@@ -400,7 +402,7 @@ int vmbus_post_msg(void *buffer, size_t buflen, bool can_sleep)
- 		case HV_STATUS_INVALID_CONNECTION_ID:
- 			/*
- 			 * See vmbus_negotiate_version(): VMBus protocol 5.0
--			 * requires that we must use
-+			 * and higher require that we must use
- 			 * VMBUS_MESSAGE_CONNECTION_ID_4 for the Initiate
- 			 * Contact message, but on old hosts that only
- 			 * support VMBus protocol 4.0 or lower, here we get
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 7073f1eb3618c..5ecb2ff7cc25d 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -183,6 +183,8 @@ static inline u32 hv_get_avail_to_write_percent(
-  * 3 . 0  (Windows 8 R2)
-  * 4 . 0  (Windows 10)
-  * 5 . 0  (Newer Windows 10)
-+ * 5 . 1  (Windows 10 RS4)
-+ * 5 . 2  (Windows Server 2019, RS5)
-  */
- 
- #define VERSION_WS2008  ((0 << 16) | (13))
-@@ -191,6 +193,8 @@ static inline u32 hv_get_avail_to_write_percent(
- #define VERSION_WIN8_1    ((3 << 16) | (0))
- #define VERSION_WIN10	((4 << 16) | (0))
- #define VERSION_WIN10_V5 ((5 << 16) | (0))
-+#define VERSION_WIN10_V5_1 ((5 << 16) | (1))
-+#define VERSION_WIN10_V5_2 ((5 << 16) | (2))
- 
- #define VERSION_INVAL -1
- 
--- 
-2.23.0
+If you use e.g. ARRAY_SIZE() you can get rid of VERSION_INVAL - and make
+this code look more natural.
+> =20
+> -=09do {
+>  =09=09ret =3D vmbus_negotiate_version(msginfo, version);
+>  =09=09if (ret =3D=3D -ETIMEDOUT)
+>  =09=09=09goto cleanup;
+> =20
+>  =09=09if (vmbus_connection.conn_state =3D=3D CONNECTED)
+>  =09=09=09break;
+> -
+> -=09=09version =3D vmbus_get_next_version(version);
+> -=09} while (version !=3D VERSION_INVAL);
+> -
+> -=09if (version =3D=3D VERSION_INVAL)
+> -=09=09goto cleanup;
+> +=09}
+> =20
+>  =09vmbus_proto_version =3D version;
+>  =09pr_info("Vmbus version:%d.%d\n",
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index b4a017093b697..7073f1eb3618c 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -194,8 +194,6 @@ static inline u32 hv_get_avail_to_write_percent(
+> =20
+>  #define VERSION_INVAL -1
+> =20
+> -#define VERSION_CURRENT VERSION_WIN10_V5
+> -
+>  /* Make maximum size of pipe payload of 16K */
+>  #define MAX_PIPE_DATA_PAYLOAD=09=09(sizeof(u8) * 16384)
+
+--=20
+Vitaly
 
