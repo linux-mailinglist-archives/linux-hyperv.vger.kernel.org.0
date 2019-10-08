@@ -2,119 +2,196 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BAE85CFD41
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Oct 2019 17:12:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D729CFE7E
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Oct 2019 18:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725989AbfJHPM3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 8 Oct 2019 11:12:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:7058 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfJHPM2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 8 Oct 2019 11:12:28 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 362EC44BD7
-        for <linux-hyperv@vger.kernel.org>; Tue,  8 Oct 2019 15:12:28 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id k2so9260027wrn.7
-        for <linux-hyperv@vger.kernel.org>; Tue, 08 Oct 2019 08:12:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=TVxQtqSMZ2FHlKInFtkoosjtqyBQr57VDotUlK3rfd8=;
-        b=RkWf8end3ARaG2foX9n8YC064Q56xfiDK0pZrpRE5Ii7kolxGFSVgRo1wbbrx1J7l7
-         oz/LjhvMKDmeumsGCYENYxxhb4yQ/OkWF0XHyVMWCGCQZbxGH5a6DZcoJrhJBFSjQNbf
-         sxy5CrHrdyHVCIzrhNWiHpIgW/MBdoXA045O3ken3UTi2kZ7VUcE8fAx16UqyDqMEs2y
-         6uqttBOAbJ5E3j4yABeiw5kA5Tw2gQ6WfR9b4LG5eHkd/0eRBcP/6o5pHCPCrOcPGGuZ
-         gU8IrWUgDggcglK21aJRQtcTi3tehgTaUtllOlcqB2ILyuP+z5wOlXG/i7HHm86wC4OQ
-         4VaA==
-X-Gm-Message-State: APjAAAXDj8b1kMTl0hV+DMa/Hxe6Drhy/IqIeYYeDxLqqqijMYtLN45m
-        mqUcls0Lcd9dGhc9leCYfaB5+3gS+T8yZ56yNa8Qi15NXYtObBvXW5RQgM97m5vuG7i9w0gnZ0i
-        Yy2oKnvOL9n9kjqzf4IP5mwSO
-X-Received: by 2002:a5d:6885:: with SMTP id h5mr27879944wru.92.1570547546797;
-        Tue, 08 Oct 2019 08:12:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzWPsbrFzZkwZFlcJmltVPmPI8g9/KYtbdTHTU1bA2U1kTZdyLlLDzQYpTdTZpJfELXjnhHew==
-X-Received: by 2002:a5d:6885:: with SMTP id h5mr27879921wru.92.1570547546560;
-        Tue, 08 Oct 2019 08:12:26 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id h7sm19634893wrs.15.2019.10.08.08.12.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2019 08:12:25 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andrea Parri <parri.andrea@gmail.com>
-Subject: RE: [PATCH 1/2] x86/hyperv: Allow guests to enable InvariantTSC
-In-Reply-To: <DM5PR21MB01371F96CD845743D9777DC5D79E0@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20191003155200.22022-1-parri.andrea@gmail.com> <87k19k1mad.fsf@vitty.brq.redhat.com> <DM5PR21MB01371F96CD845743D9777DC5D79E0@DM5PR21MB0137.namprd21.prod.outlook.com>
-Date:   Tue, 08 Oct 2019 17:12:25 +0200
-Message-ID: <87tv8jz2xy.fsf@vitty.brq.redhat.com>
+        id S1728798AbfJHQEG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 8 Oct 2019 12:04:06 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:35653 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727753AbfJHQEG (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 8 Oct 2019 12:04:06 -0400
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x98G3unh020436;
+        Wed, 9 Oct 2019 01:03:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x98G3unh020436
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1570550637;
+        bh=wybdrSAUDiWttDrdYwmnM3PPCTy7GU0Fn5r1t39IAV4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=stsY27QmY3e4cdjd26j3AwIR2go+/rLzbRRgGbZrpIS02vfgKk3A1y2mcdjVUX79g
+         rOGdkw0ABhDPWk6atIw3FE2dcV5zottd+ucAhnIg4s/FIp+Van5kWdekfHfssUn4G2
+         8tzzNK7mBrRTKl+iY8wYRjpcmoE55nROfRTWw4uYHl5oWSxpiX9zh3qX/HNHmN2+WF
+         JZLZ7ly5d1UBbV8To1WclFXiudwECV3PQWwzXpFvE+IiqmAqzebOzkyTDNJjEVhlUX
+         GMtJv5UU2XjqPuoOhvgKSs6DDCydQzCPiDTeHjDPMArr3t0AXqGHM74bLj328Gg7hX
+         vxuGFR1e9Fnhg==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id m21so5342716ual.13;
+        Tue, 08 Oct 2019 09:03:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAUV3E/l/I5bOTc0/iRANZvFOkP2ygFywZeLyg5B/wWFpnZHkxjS
+        1bVVgtBUkmId8JQyhcmbC1ynlr3pwqzm+/yjjh0=
+X-Google-Smtp-Source: APXvYqxAKivaqtk30va8WrQGa0qaiwLZZ+L7SLNr+fd+sRgHvQEnmpEuBnc7hWFcbzyxQvrMZcXeMUkpcGU06JnVDMA=
+X-Received: by 2002:ab0:6355:: with SMTP id f21mr18556759uap.40.1570550635843;
+ Tue, 08 Oct 2019 09:03:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191008131508.21189-1-liuw@liuw.name>
+In-Reply-To: <20191008131508.21189-1-liuw@liuw.name>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 9 Oct 2019 01:03:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQpszkwtp2mAfoPajkRi0SHPspivWn9sUsxO0oua2X6NQ@mail.gmail.com>
+Message-ID: <CAK7LNAQpszkwtp2mAfoPajkRi0SHPspivWn9sUsxO0oua2X6NQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] kconfig: add hvconfig for Linux on Hyper-V
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Linux Kconfig List <linux-kbuild@vger.kernel.org>,
+        Wei Liu <liuwe@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
-
-> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Friday, October 4, 2019 9:57 AM
->> 
->> Andrea Parri <parri.andrea@gmail.com> writes:
->> 
->> > If the hardware supports TSC scaling, Hyper-V will set bit 15 of the
->> > HV_PARTITION_PRIVILEGE_MASK in guest VMs with a compatible Hyper-V
->> > configuration version.  Bit 15 corresponds to the
->> > AccessTscInvariantControls privilege.  If this privilege bit is set,
->> > guests can access the HvSyntheticInvariantTscControl MSR: guests can
->> > set bit 0 of this synthetic MSR to enable the InvariantTSC feature.
->> > After setting the synthetic MSR, CPUID will enumerate support for
->> > InvariantTSC.
->> 
->> I tried getting more information from TLFS but as of 5.0C this feature
->> is not described there. I'm really interested in why this additional
->> interface is needed, e.g. why can't Hyper-V just set InvariantTSC
->> unconditionally when TSC scaling is supported?
->> 
+On Tue, Oct 8, 2019 at 10:15 PM Wei Liu <wei.liu@kernel.org> wrote:
 >
-> Yes, this is very new functionality that is not yet available in a released
-> version of Hyper-V.  And as you know, the Hyper-V TLFS has gotten
-> woefully out-of-date. :-(
+> From: Wei Liu <liuwe@microsoft.com>
 >
-> Your question is the same question I asked.   The reason given by
-> Hyper-V is to take the more cautious approach of not "automatically"
-> giving VMs an InvariantTSC due to updating the underlying Hyper-V
-> version.  Instead, guest VMs must have been explicitly coded to take
-> advantage of the new InvariantTSC feature.  It's not clear to me how
-> much of this caution is driven by Windows guests vs. Linux or FreeBSD
-> guests, but it is what it is.
+> Add an config file snippet which enalbes additional options useful for
+> running the kernel in a Hyper-V guest.
 >
-> Having to explicitly enable the InvariantTSC does give the Linux code
-> the opportunity to be a bit cleaner by doing things like not marking
-> the TSC as unstable when the InvariantTSC feature is present, and to
-> mark the TSC as reliable so we don't try to do TSC synchronization
-> (which Hyper-V does not want guests to try to do).
+> The expected use case is a user provides an existing config file then
+> executes `make hvconfig`. It will merge those options with the
+> provided config file.
+>
+> Based on similar concept for Xen and KVM.
+>
+> Signed-off-by: Wei Liu <liuwe@microsoft.com>
+> ---
+> RFC: I only tested this on x86.  Although the config options included in
+> hv_guest.config don't seem to be arch-specific, we should probably
+> move the ones not yet implemented on Arm to an x86 specific config
+> file.
+> ---
+>  Documentation/admin-guide/README.rst |  3 +++
+>  kernel/configs/hv_guest.config       | 33 ++++++++++++++++++++++++++++
+>  scripts/kconfig/Makefile             |  5 +++++
+>  3 files changed, 41 insertions(+)
+>  create mode 100644 kernel/configs/hv_guest.config
+>
+> diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+> index cc6151fc0845..d5f4389a7a2f 100644
+> --- a/Documentation/admin-guide/README.rst
+> +++ b/Documentation/admin-guide/README.rst
+> @@ -224,6 +224,9 @@ Configuring the kernel
+>       "make xenconfig"   Enable additional options for xen dom0 guest kernel
+>                          support.
+>
+> +     "make hvconfig"    Enable additional options for Hyper-V guest kernel
+> +                        support.
+> +
+>       "make tinyconfig"  Configure the tiniest possible kernel.
+>
+>     You can find more information on using the Linux kernel config tools
+> diff --git a/kernel/configs/hv_guest.config b/kernel/configs/hv_guest.config
+> new file mode 100644
+> index 000000000000..0e71e34a2d4d
+> --- /dev/null
+> +++ b/kernel/configs/hv_guest.config
+> @@ -0,0 +1,33 @@
+> +CONFIG_NET=y
+> +CONFIG_NET_CORE=y
+> +CONFIG_NETDEVICES=y
+> +CONFIG_BLOCK=y
+> +CONFIG_BLK_DEV=y
+> +CONFIG_NETWORK_FILESYSTEMS=y
+> +CONFIG_INET=y
+> +CONFIG_TTY=y
+> +CONFIG_SERIAL_8250=y
+> +CONFIG_SERIAL_8250_CONSOLE=y
+> +CONFIG_IP_PNP=y
+> +CONFIG_IP_PNP_DHCP=y
+> +CONFIG_BINFMT_ELF=y
+> +CONFIG_PCI=y
+> +CONFIG_PCI_MSI=y
+> +CONFIG_DEBUG_KERNEL=y
+> +CONFIG_VIRTUALIZATION=y
+> +CONFIG_HYPERVISOR_GUEST=y
+> +CONFIG_PARAVIRT=y
+> +CONFIG_HYPERV=y
+> +CONFIG_HYPERV_VSOCKETS=y
+> +CONFIG_PCI_HYPERV=y
+> +CONFIG_PCI_HYPERV_INTERFACE=y
+> +CONFIG_HYPERV_STORAGE=y
+> +CONFIG_HYPERV_NET=y
+> +CONFIG_HYPERV_KEYBOARD=y
+> +CONFIG_FB_HYPERV=y
+> +CONFIG_HID_HYPERV_MOUSE=y
+> +CONFIG_HYPERV=y
+> +CONFIG_HYPERV_TIMER=y
+> +CONFIG_HYPERV_UTILS=y
+> +CONFIG_HYPERV_BALLOON=y
+> +CONFIG_HYPERV_IOMMU=y
+> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+> index ef2f2336c469..2ee46301b22e 100644
+> --- a/scripts/kconfig/Makefile
+> +++ b/scripts/kconfig/Makefile
+> @@ -104,6 +104,10 @@ PHONY += xenconfig
+>  xenconfig: xen.config
+>         @:
+>
+> +PHONY += hvconfig
+> +hvconfig: hv_guest.config
+> +       @:
+> +
 
-Thank you for these additional details Michael,
 
-we'll probably have to add support for this bit to KVM and I'd like to
-know the background. From Linux perspective, no matter what's the
-interface we'd like to get InvariantTSC.
+Does this need to be hooked up to kconfig Makefile?
 
-Feel free to add
+In my understanding, this code provides
+"make hvconfig" as a shorthand for "make hv_guest.config"
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Please do not do this.
+
+
+See "xenconfig" as a bad example.
+
+"make xenconfig" is a shorthand of "make xen.config".
+This exists to save just one character typing.
+
+
+If I allow this, people would push more and more random pointless shorthands,
+which are essentially unrelated to kconfig.
+
+
+kvmconfig and xenconfig are just historical mistakes.
+
+
+Please drop the changes to scripts/kconfig/Makefile.
+
+Also, please do not use misleading "kconfig:" for the subject prefix.
+You can use the subject prefix "hyper-v:" or something.
+
+
+Thanks.
+
+
+>  PHONY += tinyconfig
+>  tinyconfig:
+>         $(Q)$(MAKE) -f $(srctree)/Makefile allnoconfig tiny.config
+> @@ -138,6 +142,7 @@ help:
+>         @echo  '                    default value without prompting'
+>         @echo  '  kvmconfig       - Enable additional options for kvm guest kernel support'
+>         @echo  '  xenconfig       - Enable additional options for xen dom0 and guest kernel support'
+> +       @echo  '  hvconfig        - Enable additional options for Hyper-V guest kernel support'
+>         @echo  '  tinyconfig      - Configure the tiniest possible kernel'
+>         @echo  '  testconfig      - Run Kconfig unit tests (requires python3 and pytest)'
+>
+> --
+> 2.20.1
+>
+
 
 -- 
-Vitaly
+Best Regards
+Masahiro Yamada
