@@ -2,275 +2,225 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37EA8D01CB
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Oct 2019 21:56:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5243DD0288
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Oct 2019 22:54:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbfJHT41 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 8 Oct 2019 15:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbfJHT41 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 8 Oct 2019 15:56:27 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 396C1218AC;
-        Tue,  8 Oct 2019 19:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570564586;
-        bh=0nMoZ85ygsNBdXAqiyinbiqycG88Jyb222PyEdKvVZs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=W+XNfzlCwDwF/rOZTOeXFXdurCTiWoV+D11WBIR8XNAeA7u65Uvob10IiWDRcKjgf
-         NrAkCOWJ3b+14JRjZSChaUDrEM7Nlgdd1djEPtzdyY7tHjlHYMM2fLQpvMu6M6wu28
-         PyFWqx81e8Wea3yueHk+1u/LJXENK2w7kqKN5Nkg=
-Date:   Tue, 8 Oct 2019 14:56:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S1730674AbfJHUyz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 8 Oct 2019 16:54:55 -0400
+Received: from mail-eopbgr790135.outbound.protection.outlook.com ([40.107.79.135]:2048
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730523AbfJHUyy (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 8 Oct 2019 16:54:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IOXI1qg3x6B/kS49NRedIVLsUdZwoy+vuZDGl+X+V7JSgE4DYZcFb8DWf8aSvmWfPQkwpgfkL0+E28ceXetSwACNih7egdgjJxJUp7K9cl5S5lddS3H1HMr1G4i004B0eiJ0YteqQGK/lc8Mecx3c/L3HpHBe/h8V9bQx4Ua0eh3y6NbnO+xMXusx/rDC+SchIGRbaaR7JBhYoOixu7/DSvaKGcmInYIl293d9lMgNINj3xrsN5cX0i+ZdirmdnQimxVdc7Up2kJYB+l2oP7ySq7NC+WccIiDH8WtDIcbgvD+xoH0WAM84WbasKQbMX5vxUcmjZotriwsZG0tLcpfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ytBaq0fwxlwfP/lJqWdo5bdiSsoJwepxG/t7I7sLP0w=;
+ b=Q74Pjh4ZtwAwhz9rWVij31BbCNzzhuWexQsL5hn0kKalhlc3Qqd1XBuo++Ymt4vY9NBNO0ws8+LWTiN7jjzFc/xSsrnl/F0/+btMGOTSqrBgYuRHntNUyBDSnUC9cW+lSykB2c1btfNvm8GYEkRVnd3Db/Wff7oP42xMra4UzayatNqKFplPmPw0NkTQTb3pnF3A1YqPfragoa5UKb0oLL9wJmkpXBE3UXtW030/J+Ava86vEON4gdxB8KRHGcqgNCT2DaXpBnBKyCR66wE4lbE30eg/pOzKtxapMnq67tz3gqwafDRT3L8y3kIKz71yIKKK9ojnHsMGt9RmC4FVzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ytBaq0fwxlwfP/lJqWdo5bdiSsoJwepxG/t7I7sLP0w=;
+ b=O5fUuTSoGbfpHiAs14lvhVxSiWYUJAt3b1tAvJnJ5Ux4RpeY5+43UCeYCDKp6+GzKFy7/cgtKtGDDAgIRG/Cir0wTd5bN6rmOS7rltL0NduPDALOQe1r9IRBoqV80Ya5dF8HD7Csq9TGtA3v/ZVwwTm5nTkchOhOR3dTc4RgXPI=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0764.namprd21.prod.outlook.com (10.173.172.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id
+ 15.20.2367.2; Tue, 8 Oct 2019 20:54:51 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.016; Tue, 8 Oct 2019
+ 20:54:51 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Roman Kagan <rkagan@virtuozzo.com>
+CC:     vkuznets <vkuznets@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Joerg Roedel <jroedel@suse.de>,
         KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Message-ID: <20191008195624.GA198287@google.com>
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+Thread-Topic: [PATCH v2] x86/hyperv: make vapic support x2apic mode
+Thread-Index: AQHVeQrgrl6z6kaUqkyr6D3zFBAn2KdIv6eAgAAhHwCAAOlpQIAAbTiAgADZYJCABg2jwA==
+Date:   Tue, 8 Oct 2019 20:54:50 +0000
+Message-ID: <DM5PR21MB0137D136B42F72296B24B11AD79A0@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20191002101923.4981-1-rkagan@virtuozzo.com>
+ <87muei14ms.fsf@vitty.brq.redhat.com> <20191003125236.GA2424@rkaganb.sw.ru>
+ <CY4PR21MB0136269170E69EA8F02A89E9D79E0@CY4PR21MB0136.namprd21.prod.outlook.com>
+ <20191004091855.GA26970@rkaganb.sw.ru>
+ <DM5PR21MB0137FCE28A16166207E08C7CD79E0@DM5PR21MB0137.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR21MB0137FCE28A16166207E08C7CD79E0@DM5PR21MB0137.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-04T22:33:27.3495621Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8f8051ff-be74-4bb4-9e27-c7431927dce0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:f:dd36:c36c:f433:5add]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: efffe2b7-89fa-4e1a-8eda-08d74c31c34f
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM5PR21MB0764:|DM5PR21MB0764:|DM5PR21MB0764:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR21MB07649DB7E8B88D8BBA3F1624D79A0@DM5PR21MB0764.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01842C458A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(199004)(189003)(14454004)(81166006)(33656002)(6916009)(478600001)(5660300002)(71190400001)(86362001)(71200400001)(25786009)(14444005)(256004)(46003)(186003)(102836004)(486006)(54906003)(7416002)(81156014)(52536014)(7736002)(305945005)(74316002)(8676002)(316002)(22452003)(8936002)(11346002)(476003)(446003)(6436002)(55016002)(9686003)(229853002)(66556008)(7696005)(66476007)(66446008)(64756008)(6116002)(2906002)(99286004)(6246003)(6506007)(66946007)(8990500004)(76116006)(10290500003)(10090500001)(76176011)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0764;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xGQHgbilpsV4LH1Y+YJtQ00WKHOICTAV5QV8943iE9cdyUgK1BcWf9lCqN8aEFiFQUBj6IrPXRZYWZ3IiJwqt+s2QnARlT6L81t02xnf4Lmzj0dpsbXLaKs9Wws/irNedo9OgE+WQnIBFGqMB4BVe4mPGmPE3j381odZFbp6JjjjbDrMHrTpBqleeoZRd64idbdQ93PbzjDjn7fUutDG8ytRFl7H+4Osp1N/p77qRaa4t6pJ/iaYN/Z4KHF0l4CRheSuEQB1Py9k2SYbTue01VNAPwsUQHzlrIqpIJo6S9dzOk8K9F4X0cwzIOH5KfsrbZ6tF+YSxVXMx70i54rBxs5FOES/qvkxRuZt3IYnI7dDhrD7m6Lx3/KJ0UXzWb3yMZh89uWVM8IFig7VKhibQ4Cn41SRpGBhOOfOpGczdVg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a2d8ad9f-b59d-57e4-f014-645e7b796cc4@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efffe2b7-89fa-4e1a-8eda-08d74c31c34f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2019 20:54:50.7775
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SW1nbofe+sCZiPo2M1iGVtoJvSC5CnCGvLTu7e6D4w2sIbNYwNZPudjlI6xtMjLwlCDn5XAKFaqDbLMMxVi9cdGtKsl3nabFlskXC/pUfes=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0764
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 07:32:27PM +0200, Rafael J. Wysocki wrote:
-> On 10/7/2019 8:57 PM, Dexuan Cui wrote:
-> > > -----Original Message-----
-> > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > Sent: Monday, October 7, 2019 6:24 AM
-> > > To: Dexuan Cui <decui@microsoft.com>
-> > > Cc: lorenzo.pieralisi@arm.com; linux-pci@vger.kernel.org; Michael Kelley
-> > > <mikelley@microsoft.com>; linux-hyperv@vger.kernel.org;
-> > > linux-kernel@vger.kernel.org; driverdev-devel@linuxdriverproject.org; Sasha
-> > > Levin <Alexander.Levin@microsoft.com>; Haiyang Zhang
-> > > <haiyangz@microsoft.com>; KY Srinivasan <kys@microsoft.com>;
-> > > olaf@aepfle.de; apw@canonical.com; jasowang@redhat.com; vkuznets
-> > > <vkuznets@redhat.com>; marcelo.cerri@canonical.com; Stephen Hemminger
-> > > <sthemmin@microsoft.com>; jackm@mellanox.com
-> > > Subject: Re: [PATCH v2] PCI: PM: Move to D0 before calling
-> > > pci_legacy_resume_early()
-> > > 
-> > > On Wed, Aug 14, 2019 at 01:06:55AM +0000, Dexuan Cui wrote:
-> > > > In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
-> > > > 
-> > > > In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
-> > > > but the current code misses the pci_legacy_resume_early() path, so the
-> > > > state remains in PCI_UNKNOWN in that path. As a result, in the resume
-> > > > phase of hibernation, this causes an error for the Mellanox VF driver,
-> > > > which fails to enable MSI-X because pci_msi_supported() is false due
-> > > > to dev->current_state != PCI_D0:
-> > > > 
-> > > > mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
-> > > > mlx4_core a6d1:00:02.0: Sending reset
-> > > > mlx4_core a6d1:00:02.0: Sending vhcr0
-> > > > mlx4_core a6d1:00:02.0: HCA minimum page size:512
-> > > > mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
-> > > > mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode,
-> > > aborting
-> > > > PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
-> > > > PM: Device a6d1:00:02.0 failed to thaw: error -95
-> > > > 
-> > > > To be more accurate, the "resume" phase means the "thaw" callbacks which
-> > > > run before the system enters hibernation: when the user runs the command
-> > > > "echo disk > /sys/power/state" for hibernation, first the kernel "freezes"
-> > > > all the devices and creates a hibernation image, then the kernel "thaws"
-> > > > the devices including the disk/NIC, writes the memory to the disk, and
-> > > > powers down. This patch fixes the error message for the Mellanox VF driver
-> > > > in this phase.
+From: Michael Kelley <mikelley@microsoft.com> Sent: Friday, October 4, 2019=
+ 3:33 PM
+>=20
+> From: Roman Kagan <rkagan@virtuozzo.com> Sent: Friday, October 4, 2019 2:=
+19 AM
+> >
+> > On Fri, Oct 04, 2019 at 03:01:51AM +0000, Michael Kelley wrote:
+> > > From: Roman Kagan <rkagan@virtuozzo.com> Sent: Thursday, October 3, 2=
+019 5:53 AM
+> > > > >
+> > > > > AFAIU you're trying to mirror native_x2apic_icr_write() here but =
+this is
+> > > > > different from what hv_apic_icr_write() does
+> > > > > (SET_APIC_DEST_FIELD(id)).
+> > > >
+> > > > Right.  In xapic mode the ICR2 aka the high 4 bytes of ICR is progr=
+ammed
+> > > > with the destination id in the highest byte; in x2apic mode the who=
+le
+> > > > ICR2 is set to the 32bit destination id.
+> > > >
+> > > > > Is it actually correct? (I think you've tested this and it is but=
+)
+> > > >
+> > > > As I wrote in the commit log, I haven't tested it in the sense that=
+ I
+> > > > ran a Linux guest in a Hyper-V VM exposing x2apic to the guest, bec=
+ause
+> > > > I didn't manage to configure it to do so.  OTOH I did run a Windows
+> > > > guest in QEMU/KVM with hv_apic and x2apic enabled and saw it write
+> > > > destination ids unshifted to the ICR2 part of ICR, so I assume it's
+> > > > correct.
+> > > >
+> > > > > Michael, could you please shed some light here?
+> > > >
+> > > > Would be appreciated, indeed.
+> > > >
+> > >
+> > > The newest version of Hyper-V provides an x2apic in a guest VM when t=
+he
+> > > number of vCPUs in the VM is > 240.  This version of Hyper-V is begin=
+ning
+> > > to be deployed in Azure to enable the M416v2 VM size, but the functio=
+nality
+> > > is not yet available for the on-premises version of Hyper-V.  However=
+, I can
+> > > test this configuration internally with the above patch -- give me a =
+few days.
+> > >
+> > > An additional complication is that when running on Intel processors t=
+hat offer
+> > > vAPIC functionality, the Hyper-V "hints" value does *not* recommend u=
+sing the
+> > > MSR-based APIC accesses.  In this case, memory-mapped access to the x=
+2apic
+> > > registers is faster than the synthetic MSRs.
+> >
+> > I guess you mean "using regular x2apic MSRs compared to the synthetic
+> > MSRs".
+>=20
+> Yes, of course you are correct.
+>=20
+> > Indeed they do essentially the same thing, and there's no reason
+> > for one set of MSRs to be significantly faster than the other.  However=
+,
+> > hv_apic_eoi_write makes use of "apic assists" aka lazy EOI which is
+> > certainly a win, and I'm not sure if it works without hv_apic.
+> >
+>=20
+> I've checked with the Hyper-V people and the presence of vAPIC makes
+> a difference.  If vAPIC is present in the hardware:
+> 1) Hyper-V does not set the HV_X64_APIC_ACCESS_RECOMMENDED flag
+> 2) The architectural MSRs should be used instead of the Hyper-V
+>     synthetic MSRs, as they are significantly faster.  The architectural
+>     MSRs do not cause a VMEXIT because they are handled entirely by
+>     the vAPIC microcode in the CPU.  The synthetic MSRs do cause a VMEXIT=
+.
+> 3) The lazy EOI functionality should not be used
+>=20
+> If vAPIC is not present in the hardware:
+> 1) Hyper-V will set HV_X64_APIC_ACCESS_RECOMMENDED
+> 2) Either set of MSRs has about the same performance, but we
+>     should use the synthetic MSRs.
+> 3) The lazy EOI functionality has some value and should be used
+>=20
+> The same will apply to the AMD AVIC in some Hyper-V updates that
+> are coming soon.
+>=20
+> So I think your code makes sense given the above information.  By
+> Monday I'll try to test it on a Hyper-V guest VM with x2APIC.
+>=20
 
-Wordsmithing nit: what the patch does is not "fix the error message";
-what it does is fix the *problem*, i.e., the fact that we can't
-operate the device because we can't enable MSI-X.  The message is only
-a symptom.
+I've smoke tested your code with a Hyper-V guest VM with x2APIC
+and 1024 vCPUs and HV_X64_APIC_ACCESS_RECOMMENDED
+enabled.  The new x2apic functions you have added appear to work.
+No issues were seen.
 
-IIUC the relevant part of the system hibernation sequence is:
+However, based on further discussion with the Hyper-V team, the
+architectural MSRs and the synthetic MSRs really are interchangeable
+with an x2apic.  There's no perf difference like there is with the
+memory-mapped registers in the classic APIC.  So your new x2apic
+functions aren't really needed -- all that's needed is to skip plugging
+in the hv_apic functions when an x2apic is present.  The native x2apic
+functions will work just fine.  Note that even with x2apic,
+hv_apic_eoi_write() should still be used to take advantage of the
+lazy EOI functionality.  It's OK to use the synthetic EOI MSR with
+x2apic for this case, so again no additional code is needed.
 
-  pci_pm_freeze_noirq
-  pci_pm_thaw_noirq
-  pci_pm_thaw
+I quickly changed the code to do the above so that the architectural
+MSRs are used, and those changes successfully smoke test on the
+same 1024 vCPU VM with no problems.  I tested with vAPIC enabled
+and with vAPIC disabled, and all looks good.
 
-And the execution flow is:
-
-  pci_pm_freeze_noirq
-    if (pci_has_legacy_pm_support(pci_dev)) # true for mlx4
-      pci_legacy_suspend_late(dev, PMSG_FREEZE)
-	pci_pm_set_unknown_state
-	  dev->current_state = PCI_UNKNOWN  # <---
-  pci_pm_thaw_noirq
-    if (pci_has_legacy_pm_support(pci_dev)) # true
-      pci_legacy_resume_early(dev)          # noop; mlx4 doesn't implement
-  pci_pm_thaw                               # returns -95 EOPNOTSUPP
-    if (pci_has_legacy_pm_support(pci_dev)) # true
-      pci_legacy_resume
-	drv->resume
-	  mlx4_resume                       # mlx4_driver.resume (legacy)
-	    mlx4_load_one
-	      mlx4_enable_msi_x
-		pci_enable_msix_range
-		  __pci_enable_msix_range
-		    __pci_enable_msix
-		      if (!pci_msi_supported())
-			if (dev->current_state != PCI_D0)  # <---
-			  return 0
-			return -EINVAL
-		err = -EOPNOTSUPP
-		"INTx is not supported ..."
-
-(These are just my notes; you don't need to put them all into the
-commit message.  I'm just sharing them in case I'm not understanding
-correctly.)
-
-> > > > When the system starts again, a fresh kernel starts to run, and when the
-> > > > kernel detects that a hibernation image was saved, the kernel "quiesces"
-> > > > the devices, and then "restores" the devices from the saved image. In this
-> > > > path:
-> > > > device_resume_noirq() -> ... ->
-> > > >    pci_pm_restore_noirq() ->
-> > > >      pci_pm_default_resume_early() ->
-> > > >        pci_power_up() moves the device states back to PCI_D0. This path is
-> > > > not broken and doesn't need my patch.
-> > > > 
-
-The cc list suggests that this might be a fix for a user-reported
-problem.  Is there a launchpad or similar link you could include here?
-
-Should this be marked for stable?
-
-> > > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > > This looks like a bugfix for 5839ee7389e8 ("PCI / PM: Force devices to
-> > > D0 in pci_pm_thaw_noirq()") so maybe it should be marked for stable as
-> > > 5839ee7389e8 was?
-> > > 
-> > > Rafael, could you confirm?
-> 
-> No, it is not a bug fix for that commit.  The underlying issue would be
-> there without that commit too.
-
-Oh, right, I dunno what I was thinking, sorry.
-
-> > > > --- a/drivers/pci/pci-driver.c
-> > > > +++ b/drivers/pci/pci-driver.c
-> > > > @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device
-> > > *dev)
-> > > >   			return error;
-> > > >   	}
-> > > > 
-> > > > -	if (pci_has_legacy_pm_support(pci_dev))
-> > > > -		return pci_legacy_resume_early(dev);
-> > > > -
-> > > >   	/*
-> > > >   	 * pci_restore_state() requires the device to be in D0 (because of MSI
-> > > >   	 * restoration among other things), so force it into D0 in case the
-> > > >   	 * driver's "freeze" callbacks put it into a low-power state directly.
-> > > >   	 */
-> > > >   	pci_set_power_state(pci_dev, PCI_D0);
-> > > > +
-> > > > +	if (pci_has_legacy_pm_support(pci_dev))
-> > > > +		return pci_legacy_resume_early(dev);
-> > > > +
-> > > >   	pci_restore_state(pci_dev);
-> > > > 
-> > > >   	if (drv && drv->pm && drv->pm->thaw_noirq)
-> > > > --
-> > > > 2.19.1
-> > > > 
-> The patch looks reasonable to me, but the comment above the
-> pci_set_power_state() call needs to be updated too IMO.
-
-Hmm.
-
-1) pci_restore_state() mainly writes config space, which doesn't
-require the device to be in D0.  The only thing I see that would
-require D0 is the MSI-X MMIO space, so to be more specific, the
-comment could say "restoring the MSI-X *MMIO* state requires the
-device to be in D0".
-
-But I think you meant some other comment change.  Did you mean
-something along the lines of "a legacy drv->resume_early() callback
-and pci_restore_state() both require the device to be in D0"?
-
-If something else, maybe you could propose some text?
-
-2) I assume pci_pm_thaw_noirq() should leave the device in a
-functionally equivalent state, whether it uses legacy PM or not.  Do
-we want something like the patch below instead?  If we *do* want to
-skip pci_restore_state() for legacy PM, maybe we should add a comment.
-
-3) Documentation/power/pci.rst says:
-
-  ... devices have to be brought back to the fully functional
-  state ...
-
-  pci_pm_thaw_noirq() ... doesn't put the device into the full power
-  state and doesn't attempt to restore its standard configuration
-  registers.
-
-That doesn't seem consistent, and it looks like pci_pm_thaw_noirq()
-actually *does* put the device in full power (D0) state and restore
-config registers.
-
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index a8124e47bf6e..30c721fd6bcf 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1068,7 +1068,7 @@ static int pci_pm_thaw_noirq(struct device *dev)
- {
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	struct device_driver *drv = dev->driver;
--	int error = 0;
-+	int error;
- 
- 	if (pcibios_pm_ops.thaw_noirq) {
- 		error = pcibios_pm_ops.thaw_noirq(dev);
-@@ -1076,9 +1076,6 @@ static int pci_pm_thaw_noirq(struct device *dev)
- 			return error;
- 	}
- 
--	if (pci_has_legacy_pm_support(pci_dev))
--		return pci_legacy_resume_early(dev);
--
- 	/*
- 	 * pci_restore_state() requires the device to be in D0 (because of MSI
- 	 * restoration among other things), so force it into D0 in case the
-@@ -1087,10 +1084,13 @@ static int pci_pm_thaw_noirq(struct device *dev)
- 	pci_set_power_state(pci_dev, PCI_D0);
- 	pci_restore_state(pci_dev);
- 
-+	if (pci_has_legacy_pm_support(pci_dev))
-+		return pci_legacy_resume_early(dev);
-+
- 	if (drv && drv->pm && drv->pm->thaw_noirq)
--		error = drv->pm->thaw_noirq(dev);
-+		return drv->pm->thaw_noirq(dev);
- 
--	return error;
-+	return 0;
- }
- 
- static int pci_pm_thaw(struct device *dev)
+Michael
