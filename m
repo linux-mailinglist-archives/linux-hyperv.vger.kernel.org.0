@@ -2,150 +2,85 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DB99D21DD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Oct 2019 09:39:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64D1FD2480
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Oct 2019 11:00:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732993AbfJJHiJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Oct 2019 03:38:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45188 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732926AbfJJH3I (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:29:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u12so2331058pls.12;
-        Thu, 10 Oct 2019 00:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZRrVLXwmpo4xQzXPyPqYPbJsiga9xziaedvCp7FhOE0=;
-        b=FDDOEmTJXVTCe/j4jUtg65bcxfOZ96Hb33qWjaE8DKhPm28ZhA5kCRW9NXghUcH+me
-         KTvCIX5X6m6l1j32jnPXL8/8twUioHrEAk+IshxyxXsavy2lx/PUL4hic5U4LHFgVaUn
-         fa621I3JVaSQyZTwoEKxyH8LGpY2gBRl6jWfk76q/megCp34fZwcsCJ+Tbk287tivvk+
-         o6qmbAfIiBAaLa+eOXhSYPl3w1vjPUuDsYLca27EuDknhq7VAsKxLOOa3sf6L88eXku3
-         FGhmyiLnh53HUF06rIrC1RQT0iTGjr3eommjmnLRNpBf2Am1U7F9o59qwy81suDSpV75
-         1EPw==
+        id S2389221AbfJJIqF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Oct 2019 04:46:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35610 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389240AbfJJIqE (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 10 Oct 2019 04:46:04 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3995087638
+        for <linux-hyperv@vger.kernel.org>; Thu, 10 Oct 2019 08:46:04 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id k4so2407608wru.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 10 Oct 2019 01:46:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZRrVLXwmpo4xQzXPyPqYPbJsiga9xziaedvCp7FhOE0=;
-        b=dx1UtC/dr30NmH8jPDTaowHtrzkomq59IC+cLd2Q75eYnbxHXBJjdl+E9mGbRQ6DP8
-         F6f7AEcawmTn+zT5DKDlEF5ZzCz5BlRf8vwVdYAEckmQMT5e9gQ5hPx/MhCzZsY4D79l
-         WffbvHdN+diLC7XSx1NF1Nu7p3u6FoTu5s4grZvO4XHa+ajtkGarlqbAEpyg2Tnyv0IL
-         RHnuQrkWG9BnybyqhRNZvqcek2kDXkxOQIR06N5iGaa1smllOzIfSu01Bess3K0X05Oy
-         u9oV0yaReIce4s2nug1KWbz6Jv0iL+r3sEZvMYLuTR44WLqDVn0GBPBZSLrjw1rK5q8i
-         63FA==
-X-Gm-Message-State: APjAAAW+ZZa4+kdaDJ4Vj+N2L0Arm7m+6+HjD2Y1wD5zOlod9d8i+l1T
-        xQ4XZ9xINh1Z/7QS+HtRKpQ=
-X-Google-Smtp-Source: APXvYqyn0W2pI1YMiNV1UgZzss1HUG1vYlIM7U9NlK7YdxNTCuDuWlIW4Ge1hh0t3JyUP1nKi9G1uQ==
-X-Received: by 2002:a17:902:47:: with SMTP id 65mr7783959pla.94.1570692548062;
-        Thu, 10 Oct 2019 00:29:08 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([167.220.255.39])
-        by smtp.googlemail.com with ESMTPSA id v8sm12673274pje.6.2019.10.10.00.29.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Oct 2019 00:29:07 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-        mingo@kernel.org, mpe@ellerman.id.au, pasha.tatashin@soleen.com,
-        osalvador@suse.de, richardw.yang@linux.intel.com,
-        Tianyu.Lan@microsoft.com, christophe.leroy@c-s.fr, bp@suse.de,
-        rdunlap@infradead.org, michael.h.kelley@microsoft.com,
-        kys@microsoft.com, sashal@kernel.org
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH] mm/resource: Move child to new resource when release mem region.
-Date:   Thu, 10 Oct 2019 15:28:56 +0800
-Message-Id: <20191010072856.20079-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tR/b93II6w98Y1JcW5QoZrFBl2Ih7JvmORnV8m5CDsk=;
+        b=nQNQIst9p85OnjcqpQ5blbqOBti1ySib3HaFaQMoux59hf2BwJPEs8l3D922ZUuFsl
+         qlZjB5akKoZrjVclMbHyCpGx1w28llPbTymQrACWxFhiKZd1orRY68rwLyrfUmp60jm9
+         /PD8ODCy4ViJc2k7zOiCh3iR/LK7XBeDbMGqHxJdjM+PrX0/z3fNXloFJYUaYBJhS9KP
+         TpXjvfOBArbiNM3PEkHaRZmm9pKawzGNPmVMbHRs0xj6wFd6UCy4Ck5nBeEr308HK3Qx
+         j5FD9Opj1shzPevIU34Ss55E7zsKtRS9I4gY68NfL33LvzNTOflDN1Y2xPlhmm7Y2YBL
+         Y0Gg==
+X-Gm-Message-State: APjAAAUz79G2JQvSQIULPaV2dOQyS8zRLu8UdFs76+XdoU5ToCCu24Zy
+        CsqB1D1358PHttjL6mf7h+AXz7shw6JELLQxEDIkFHHOgdTvxBeT7rCJxuSXXE6f6QjghRCox1N
+        BY82zBsnUTdKTwJz1142AdMdC
+X-Received: by 2002:adf:e401:: with SMTP id g1mr5700485wrm.211.1570697162834;
+        Thu, 10 Oct 2019 01:46:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyrGXBfAqLL3DSANixqvzd6znc5l0D4LZnBiMcWibn1Ag6PBFlGAQzLidI7EwNDBrIbfhWgrA==
+X-Received: by 2002:adf:e401:: with SMTP id g1mr5700471wrm.211.1570697162619;
+        Thu, 10 Oct 2019 01:46:02 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id q124sm8324726wma.5.2019.10.10.01.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 01:46:01 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 10:45:59 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 00/13] vsock: add multi-transports support
+Message-ID: <20191010084559.a4t6v7dopeqffn55@steredhat>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20191009132952.GO5747@stefanha-x1.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009132952.GO5747@stefanha-x1.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Wed, Oct 09, 2019 at 02:29:52PM +0100, Stefan Hajnoczi wrote:
+> On Fri, Sep 27, 2019 at 01:26:50PM +0200, Stefano Garzarella wrote:
+> > Hi all,
+> > this series adds the multi-transports support to vsock, following
+> > this proposal:
+> > https://www.spinics.net/lists/netdev/msg575792.html
+> 
+> Nice series!  I have left a few comments but overall it looks promising.
 
-When release mem region, old mem region may be splited to
-two regions. Current allocate new struct resource for high
-end mem region but not move child resources whose ranges are
-in the high end range to new resource. When adjust old mem
-region's range, adjust_resource() detects child region's range
-is out of new range and return error. Move child resources to
-high end resource before adjusting old mem range.
+Thank you very much for the comments!
 
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
-This patch is to prepare for memory hot-remove function
-in Hyper-V balloon driver.
----
- kernel/resource.c | 38 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 34 insertions(+), 4 deletions(-)
+I'll follow them and respin.
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 158f04ec1d4f..7856347adfd2 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -181,6 +181,38 @@ static struct resource *alloc_resource(gfp_t flags)
- 	return res;
- }
- 
-+static void move_child_to_newresource(struct resource *old,
-+				      struct resource *new)
-+{
-+	struct resource *tmp, **p, **np;
-+
-+	if (!old->child)
-+		return;
-+
-+	p = &old->child;
-+	np = &new->child;
-+
-+	for (;;) {
-+		tmp = *p;
-+		if (!tmp)
-+			break;
-+
-+		if (tmp->start >= new->start && tmp->end <= new->end) {
-+			tmp->parent = new;
-+			*np = tmp;
-+			np = &tmp->sibling;
-+			*p = tmp->sibling;
-+
-+			if (!tmp->sibling)
-+				*np = NULL;
-+			continue;
-+		}
-+
-+		p = &tmp->sibling;
-+	}
-+}
-+
- /* Return the conflict entry if you can't request it */
- static struct resource * __request_resource(struct resource *root, struct resource *new)
- {
-@@ -1231,9 +1263,6 @@ EXPORT_SYMBOL(__release_region);
-  * Note:
-  * - Additional release conditions, such as overlapping region, can be
-  *   supported after they are confirmed as valid cases.
-- * - When a busy memory resource gets split into two entries, the code
-- *   assumes that all children remain in the lower address entry for
-- *   simplicity.  Enhance this logic when necessary.
-  */
- int release_mem_region_adjustable(struct resource *parent,
- 				  resource_size_t start, resource_size_t size)
-@@ -1316,11 +1345,12 @@ int release_mem_region_adjustable(struct resource *parent,
- 			new_res->sibling = res->sibling;
- 			new_res->child = NULL;
- 
-+			move_child_to_newresource(res, new_res);
-+			res->sibling = new_res;
- 			ret = __adjust_resource(res, res->start,
- 						start - res->start);
- 			if (ret)
- 				break;
--			res->sibling = new_res;
- 			new_res = NULL;
- 		}
- 
--- 
-2.14.5
-
+Cheers,
+Stefano
