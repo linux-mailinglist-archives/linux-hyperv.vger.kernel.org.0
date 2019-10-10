@@ -2,46 +2,46 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DE52D2528
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Oct 2019 11:01:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48F95D266F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Oct 2019 11:33:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390031AbfJJIyh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Oct 2019 04:54:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49460 "EHLO mx1.redhat.com"
+        id S2387822AbfJJJdA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Oct 2019 05:33:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33127 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389962AbfJJIuZ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Oct 2019 04:50:25 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        id S2387751AbfJJJdA (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:33:00 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 082AF7FDCD
-        for <linux-hyperv@vger.kernel.org>; Thu, 10 Oct 2019 08:50:25 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id x11so768531wro.15
-        for <linux-hyperv@vger.kernel.org>; Thu, 10 Oct 2019 01:50:24 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 549A64ACA7
+        for <linux-hyperv@vger.kernel.org>; Thu, 10 Oct 2019 09:32:59 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id i14so2459455wro.19
+        for <linux-hyperv@vger.kernel.org>; Thu, 10 Oct 2019 02:32:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kbUGk/zH7Jd7BlhB+4/oDRz4mPdioNN/Nf5e+ZFx1KA=;
-        b=sf9+YGOF9qdTfNewJ6ja4dJsgrQidALliKfUlPzFyjgnYne4m/Fouh5iWWf7sUEB3C
-         MIEmF8hh2BeUtT7s5jmkqYJfM4S8Hd9y21hrsUtt21k2H59Y6Wljjk5q1ksB7E4gsFbu
-         iAESLyiJvHVDMBdpfTJc3b82VCBOBCOIzioWkXnK3mtgHU3+Wby3XL5xrgV0mwj22Q+T
-         rP5zuqdPNfq7t3iZkxZfwKwHZyPygbEuFOZKs2/Faj/YdPyw54BnL8qXzMF55arfKcX/
-         yib/Bo9yTfJp8BeKD5kLrKiYDdZPMNHpudENemrH4ucxf/+ZAE1YeeoMcVfwjlqTK4W5
-         SDEg==
-X-Gm-Message-State: APjAAAWZW9hgGLhOYtEd7r66py+/N+R9ObmMH5c9zucOAcyKH1BW+QSA
-        VUvJi4d1O04VfPLQPSi1aWedAjVQSFeG9WC5n1h87+cfepa5qOHSY0UECI3zaQACxbfDQNAGeLy
-        xu4RxHyco8NI5AR/nw9LhuvvF
-X-Received: by 2002:a5d:6a4e:: with SMTP id t14mr7690221wrw.286.1570697423407;
-        Thu, 10 Oct 2019 01:50:23 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwoCA81jZEGW66oRDsEIESbM+AgkqiF20vI6cPaP0YoBTkJocF4+GdZwig79Aeir6Qomx30bw==
-X-Received: by 2002:a5d:6a4e:: with SMTP id t14mr7690208wrw.286.1570697423217;
-        Thu, 10 Oct 2019 01:50:23 -0700 (PDT)
+        bh=hHaFcnAL50S5bJDTlPYhhk0RlrftYjgtnZsbNVxdruw=;
+        b=fuPjlCPrBSpl/pPNVvl6EgPVY3u8Atub6R3OJahbQwqX2IcFarZT76Don+dTZdXQTd
+         6aQmvZYx9RSbnIHkS51nQHxmkInuQ+D2+RUkxtSI5aVf3l85A5C3lgFHG+jJ4kpDGQas
+         BcmJ80L0UR2iuR9Wc3W3UU8HNpm+uhsbGgwaCBy5ia+MNHO0xW9YR7Jv95pw06S1WY3H
+         vBnWk9+fnBbKDeUt+oceHjZ+VG1LD1AIfGgUnjinh/tVl9IfCpPV66URYNaOlB15cqA/
+         28OYJCkOcq/XJitf/pZuHAMXJiQDnc9cwAAQuVGsJnDxt3LYnA6e/wbr4IYDQ8tZMUow
+         81TQ==
+X-Gm-Message-State: APjAAAXEY4hbvxGdwJXrYE6Y3FaSdIkwhJjk+oEXwDe2hIDtoL3FNQv1
+        fivVBL/7Ydo+CITdeiZv3UJAhztBi6g+aEsDiH0HcfgXNOB1EVz1whVTEttZ6R+0m0L3bmb/ari
+        LZn35jIYgww5cDFFH6KH5ETnR
+X-Received: by 2002:adf:f5c2:: with SMTP id k2mr8086180wrp.0.1570699978009;
+        Thu, 10 Oct 2019 02:32:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwZYmKYcpphquBJXQEx7PcBznop7/J4yPxwExmJMbotDVgXFZgLM3mbUlPv6hfBGTfBY51rWA==
+X-Received: by 2002:adf:f5c2:: with SMTP id k2mr8086156wrp.0.1570699977733;
+        Thu, 10 Oct 2019 02:32:57 -0700 (PDT)
 Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id y8sm6284711wrm.64.2019.10.10.01.50.21
+        by smtp.gmail.com with ESMTPSA id f83sm6597182wmf.43.2019.10.10.02.32.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 01:50:22 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 10:50:20 +0200
+        Thu, 10 Oct 2019 02:32:56 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 11:32:54 +0200
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     Stefan Hajnoczi <stefanha@gmail.com>
 Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
@@ -55,41 +55,103 @@ Cc:     netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 06/13] vsock: add 'struct vsock_sock *' param to
- vsock_core_get_transport()
-Message-ID: <20191010085020.w5mbse7mnpzalhyr@steredhat>
+Subject: Re: [RFC PATCH 07/13] vsock: handle buffer_size sockopts in the core
+Message-ID: <20191010093254.aluys4hpsfcepb42@steredhat>
 References: <20190927112703.17745-1-sgarzare@redhat.com>
- <20190927112703.17745-7-sgarzare@redhat.com>
- <20191009115433.GG5747@stefanha-x1.localdomain>
+ <20190927112703.17745-8-sgarzare@redhat.com>
+ <20191009123026.GH5747@stefanha-x1.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009115433.GG5747@stefanha-x1.localdomain>
+In-Reply-To: <20191009123026.GH5747@stefanha-x1.localdomain>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:54:33PM +0100, Stefan Hajnoczi wrote:
-> On Fri, Sep 27, 2019 at 01:26:56PM +0200, Stefano Garzarella wrote:
-> > -const struct vsock_transport *vsock_core_get_transport(void)
-> > +const struct vsock_transport *vsock_core_get_transport(struct vsock_sock *vsk)
-> >  {
-> >  	/* vsock_register_mutex not taken since only the transport uses this
-> >  	 * function and only while registered.
-> >  	 */
-> > -	return transport_single;
+On Wed, Oct 09, 2019 at 01:30:26PM +0100, Stefan Hajnoczi wrote:
+> On Fri, Sep 27, 2019 at 01:26:57PM +0200, Stefano Garzarella wrote:
+> > @@ -140,18 +145,11 @@ struct vsock_transport {
+> >  		struct vsock_transport_send_notify_data *);
+> >  	int (*notify_send_post_enqueue)(struct vsock_sock *, ssize_t,
+> >  		struct vsock_transport_send_notify_data *);
+> > +	int (*notify_buffer_size)(struct vsock_sock *, u64 *);
 > 
-> This comment is about protecting transport_single.  It no longer applies
-> when using vsk->transport.  Please drop it.
+> Is ->notify_buffer_size() called under lock_sock(sk)?  If yes, please
+> document it.
 
-Right, dropped.
+Yes, it is. I'll document it!
 
 > 
-> Otherwise:
+> > +static void vsock_update_buffer_size(struct vsock_sock *vsk,
+> > +				     const struct vsock_transport *transport,
+> > +				     u64 val)
+> > +{
+> > +	if (val > vsk->buffer_max_size)
+> > +		val = vsk->buffer_max_size;
+> > +
+> > +	if (val < vsk->buffer_min_size)
+> > +		val = vsk->buffer_min_size;
+> > +
+> > +	if (val != vsk->buffer_size &&
+> > +	    transport && transport->notify_buffer_size)
+> > +		transport->notify_buffer_size(vsk, &val);
 > 
-> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> Why does this function return an int if we don't check the return value?
+> 
+
+Copy and past :-(
+I'll fix it returning void since I don't think it can fail.
+
+> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > index fc046c071178..bac9e7430a2e 100644
+> > --- a/net/vmw_vsock/virtio_transport_common.c
+> > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > @@ -403,17 +403,13 @@ int virtio_transport_do_socket_init(struct vsock_sock *vsk,
+> >  	if (psk) {
+> >  		struct virtio_vsock_sock *ptrans = psk->trans;
+> >  
+> > -		vvs->buf_size	= ptrans->buf_size;
+> > -		vvs->buf_size_min = ptrans->buf_size_min;
+> > -		vvs->buf_size_max = ptrans->buf_size_max;
+> >  		vvs->peer_buf_alloc = ptrans->peer_buf_alloc;
+> > -	} else {
+> > -		vvs->buf_size = VIRTIO_VSOCK_DEFAULT_BUF_SIZE;
+> > -		vvs->buf_size_min = VIRTIO_VSOCK_DEFAULT_MIN_BUF_SIZE;
+> > -		vvs->buf_size_max = VIRTIO_VSOCK_DEFAULT_MAX_BUF_SIZE;
+> >  	}
+> >  
+> > -	vvs->buf_alloc = vvs->buf_size;
+> > +	if (vsk->buffer_size > VIRTIO_VSOCK_MAX_BUF_SIZE)
+> > +		vsk->buffer_size = VIRTIO_VSOCK_MAX_BUF_SIZE;
+> 
+> Hmm...this could be outside the [min, max] range.  I'm not sure how much
+> it matters.
+
+The core guarantees that vsk->buffer_size is <= of the max, so since we are
+lowering it, the max should be respected. For the min you are right,
+but I think this limit is stricter than the min set by the user.
+
+> 
+> Another issue is that this patch drops the VIRTIO_VSOCK_MAX_BUF_SIZE
+> limit that used to be enforced by virtio_transport_set_buffer_size().
+> Now the limit is only applied at socket init time.  If the buffer size
+> is changed later then VIRTIO_VSOCK_MAX_BUF_SIZE can be exceeded.  If
+> that doesn't matter, why even bother with VIRTIO_VSOCK_MAX_BUF_SIZE
+> here?
+> 
+
+The .notify_buffer_size() should avoid this issue, since it allows the
+transport to limit the buffer size requested after the initialization.
+
+But again the min set by the user can not be respected and in the
+previous implementation we forced it to VIRTIO_VSOCK_MAX_BUF_SIZE.
+
+Now we don't limit the min, but we guarantee only that vsk->buffer_size
+is lower than VIRTIO_VSOCK_MAX_BUF_SIZE.
+
+Can that be an acceptable compromise?
 
 Thanks,
 Stefano
