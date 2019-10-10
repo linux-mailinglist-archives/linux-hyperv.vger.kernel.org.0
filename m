@@ -2,105 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B5BBD2C8C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Oct 2019 16:30:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16212D2E11
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Oct 2019 17:46:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfJJO3i (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Oct 2019 10:29:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:13781 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfJJO3i (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Oct 2019 10:29:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 07:29:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,280,1566889200"; 
-   d="scan'208";a="198370364"
-Received: from svsearig-mobl.amr.corp.intel.com (HELO [10.251.1.55]) ([10.251.1.55])
-  by orsmga006.jf.intel.com with ESMTP; 10 Oct 2019 07:29:36 -0700
-Subject: Re: [PATCH] mm/resource: Move child to new resource when release mem
- region.
-To:     lantianyu1986@gmail.com, dan.j.williams@intel.com,
-        dave.hansen@linux.intel.com, mingo@kernel.org, mpe@ellerman.id.au,
-        pasha.tatashin@soleen.com, osalvador@suse.de,
-        richardw.yang@linux.intel.com, Tianyu.Lan@microsoft.com,
-        christophe.leroy@c-s.fr, bp@suse.de, rdunlap@infradead.org,
-        michael.h.kelley@microsoft.com, kys@microsoft.com,
-        sashal@kernel.org
-Cc:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        linux-hyperv@vger.kernel.org
-References: <20191010072856.20079-1-Tianyu.Lan@microsoft.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <77e08231-0687-8d8d-0faf-c490a8b510d4@intel.com>
-Date:   Thu, 10 Oct 2019 07:29:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726396AbfJJPqS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Oct 2019 11:46:18 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41975 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfJJPqS (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 10 Oct 2019 11:46:18 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q9so8502259wrm.8;
+        Thu, 10 Oct 2019 08:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sC7OgET7WuI6MVv7t9GfPyX9NmB9ODXWMBvtaCRh7aA=;
+        b=bsDyFOUNIz0iGZ9C5a6DZWtYVC1f/1+CiyJ6Zkytog2cAj0j51ooR8Ns6sOhpj2NAq
+         zC1x11Thn8EWQCrpgDdS5d10ipSRR/j0RN4PHB5QftXRSUsDaEGMOiJVslkyM8RS8mfj
+         iMEPaDfclD7uV/l0GTaMcscEiM7atfXN84y7SMQjaR/Hjtf0VqDrXq3EBKqMoeS3xs70
+         ky8e3Ei8gFe9fBzhsL5Z1sxUzRcSLGlVdXsBMnGEO5jyZYK8nMn3DghFrU96jjCWSCso
+         DyDeTR0mrZ2miQBylRqK0naROAdiF1BFmnZC1q01G6tbICB3b3/tNP1kYokQF3Ql+uTV
+         1zFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sC7OgET7WuI6MVv7t9GfPyX9NmB9ODXWMBvtaCRh7aA=;
+        b=rBC+GHlyAXT1gkXFdgwMVC12MnWgKkb/0KBEIzd2PKEHp6v6YevnxNZHcXDWcOzeC8
+         5FrVDpTt+Ioa4Nu+KKEfjt5DY0jl3K2+jL4W2bcBtbCy8Q3TKprd5EthF6Sqnh27gQco
+         r4pnDq3i9qAHwh55ob6tRb1/Gfo168sBYH8q2YunlCpYhWERSpuGTaNP0TD1c7L8P3CC
+         CgXQvBprR4Hg22fueHr4Oz0UKnZPiBwIbmd99FIYcNKUTDW88jkBLJ51oOrzhqRX1Cv5
+         aQNeBdrHg4IH9eBCgO+xlmKzLKY+QKdx6itg12cyVmgiVyBd+eYzKmnNXr5XHwNis48n
+         4eXA==
+X-Gm-Message-State: APjAAAXppnPtUjZmAOD4YrNnOs1nJMylReF2XNBIxxgDnJxF6xcoLEbd
+        LTDDyhpLSnViI7tI48BJT+UXMRwk9gccBQ==
+X-Google-Smtp-Source: APXvYqx7OMJNGGu4fqxeXC2N1JbijhETuH3V/dxLnimGu/kq/uuzbLUXwtFMmmiD/gr+lut+mEkKVg==
+X-Received: by 2002:a5d:6246:: with SMTP id m6mr9446584wrv.262.1570722375663;
+        Thu, 10 Oct 2019 08:46:15 -0700 (PDT)
+Received: from andrea.corp.microsoft.com ([2a01:110:8012:1010:e9a3:da77:7120:dee0])
+        by smtp.gmail.com with ESMTPSA id u25sm6719807wml.4.2019.10.10.08.46.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 08:46:14 -0700 (PDT)
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH v2 0/3] Drivers: hv: vmbus: Miscellaneous improvements
+Date:   Thu, 10 Oct 2019 17:45:57 +0200
+Message-Id: <20191010154600.23875-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191010072856.20079-1-Tianyu.Lan@microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 10/10/19 12:28 AM, lantianyu1986@gmail.com wrote:
-> When release mem region, old mem region may be splited to
-> two regions. Current allocate new struct resource for high
-> end mem region but not move child resources whose ranges are
-> in the high end range to new resource. When adjust old mem
-> region's range, adjust_resource() detects child region's range
-> is out of new range and return error. Move child resources to
-> high end resource before adjusting old mem range.
+Hi all,
 
-From the comment, it appears the old code intended to have the behavior
-that you are changing.  Could you explain _why_ this has become a
-problem for you?
+The patchset:
+
+  - refactors the VMBus negotiation code by introducing the table of
+    VMBus protocol versions (patch 1/3),
+
+  - enables VMBus protocol version 4.1, 5.1 and 5.2 (patch 2/3),
+
+  - introduces a module parameter to cap the VMBus protocol versions
+    which a guest can negotiate with the hypervisor (patch 3/3).
+
+Thanks,
+  Andrea
+
+---
+
+Changes since v1 ([1]):
+  - remove the VERSION_INVAL macro (Vitaly Kuznetsov and Dexuan Cui)
+  - make the table of VMBus protocol versions static (Dexuan Cui)
+  - enable VMBus protocol version 4.1 (Michael Kelley)
+  - introduce module parameter to cap the VMBus version (Dexuan Cui)
+
+[1] https://lkml.kernel.org/r/20191007163115.26197-1-parri.andrea@gmail.com
+
+Andrea Parri (3):
+  Drivers: hv: vmbus: Introduce table of VMBus protocol versions
+  Drivers: hv: vmbus: Enable VMBus protocol versions 4.1, 5.1 and 5.2
+  Drivers: hv: vmbus: Add module parameter to cap the VMBus version
+
+ drivers/hv/connection.c          | 68 ++++++++++++++++----------------
+ drivers/hv/vmbus_drv.c           |  3 +-
+ drivers/net/hyperv/netvsc.c      |  6 +--
+ include/linux/hyperv.h           | 12 +++---
+ net/vmw_vsock/hyperv_transport.c |  4 +-
+ 5 files changed, 48 insertions(+), 45 deletions(-)
+
+-- 
+2.23.0
 
