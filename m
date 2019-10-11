@@ -2,124 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C6C4D32AE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Oct 2019 22:47:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB684D3B0F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Oct 2019 10:27:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfJJUnq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Oct 2019 16:43:46 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34135 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfJJUnq (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Oct 2019 16:43:46 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 3so10749887qta.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 10 Oct 2019 13:43:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=Qnm/xOF1axoKltic9wOhlDvxehnhsqO9AK9SKyqjBMQ=;
-        b=GtW/+rLPRQ8fSLH9IHSYXTdJDHRrh5NBGuGJCy8vNyG0Mm89yc5AVLhmyStQ64cL/a
-         HnbJh2FlMxKowpSAcTU1qA2cV8F4fax78oYTI9G7GzFHIFJIjjmCiyF45F069J8xtBsq
-         FTzcvoIoyKK8FrDmi1rF+IXznTcxHJKy2/Q9TJNTuHivI/SDXajuoRwTtaJzdIzFvaG4
-         fgKB/n9Uxu7Jn2HtGg6CpYx+2exCRXupYtm5QePgFMVgAPnmShQIy7ow0axRMe2CloPK
-         OYUKC8qU82as3jECbuuKO8JzSDFSZ0wQalyI3uEmGxxUx4WX2LT6IbP5c4KM4r+7IqtP
-         xrlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Qnm/xOF1axoKltic9wOhlDvxehnhsqO9AK9SKyqjBMQ=;
-        b=iSJRKL723Y433OG05FnTCO4rDFb+2oCitkTsoJ3rEbmqHhrG+L41qLDt19TSQxWUuD
-         yRN4/6Yap50BEpbOXe/vL+AfxLGQ2elCb1T12jEgyN9u9Hc/uqLRTfwPW7MeudNnYGQ3
-         ivTmyMvY7rBeUCap19ty8P1GqxprHVLW3mfSRTJ8m795NGAW6M0ULFST0a/EYq2r03Q+
-         zADUxM0pZwqsHdUKCsCOb+uSjIapnaYXkvaqmevmdiUf5O/ihH+a7qFAedhcwSvaoSRz
-         c9XfKQd4V01RQViZE8ncPqeg3vIWVUYQ+h85pE8ouPoTcHL3C/VpsNRWFA7nlA3SgyDQ
-         4aZw==
-X-Gm-Message-State: APjAAAXmfmVGPxvUNsXlPRAusuTTiUu8f+PcvGyw9MYBkWfu9CU9NapV
-        iuZSXiSJYnzbr/ZuWm3mhGAJ/Q==
-X-Google-Smtp-Source: APXvYqyZrdHLApmMF/CBgXhn6HNdqvblVZ4R6rAbfwsXZm+T2cz+AV0njLlD4/0JZCQok6LgXNieSg==
-X-Received: by 2002:ac8:4311:: with SMTP id z17mr12075001qtm.213.1570740224747;
-        Thu, 10 Oct 2019 13:43:44 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id p22sm3133129qkk.92.2019.10.10.13.43.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 13:43:44 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 13:43:26 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Michael Kelley <mikelley@microsoft.com>, davem@davemloft.net,
-        Himadri Pandya <himadrispandya@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S1726706AbfJKI1T (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 11 Oct 2019 04:27:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40800 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbfJKI1T (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 11 Oct 2019 04:27:19 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 25DF7302C09B;
+        Fri, 11 Oct 2019 08:27:19 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 91C105D9DC;
+        Fri, 11 Oct 2019 08:27:15 +0000 (UTC)
+Date:   Fri, 11 Oct 2019 09:27:14 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@gmail.com>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "himadri18.07" <himadri18.07@gmail.com>
-Subject: Re: [PATCH] hv_sock: use HV_HYP_PAGE_SIZE instead of PAGE_SIZE_4K
-Message-ID: <20191010134326.608d363d@cakuba.netronome.com>
-In-Reply-To: <20191010170606.GA1396@sasha-vm>
-References: <20190725051125.10605-1-himadri18.07@gmail.com>
-        <MWHPR21MB078479F82BBA6D3E6527ECECD7DF0@MWHPR21MB0784.namprd21.prod.outlook.com>
-        <20191004154817.GL17454@sasha-vm>
-        <20191010170606.GA1396@sasha-vm>
-Organization: Netronome Systems, Ltd.
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [RFC PATCH 07/13] vsock: handle buffer_size sockopts in the core
+Message-ID: <20191011082714.GF12360@stefanha-x1.localdomain>
+References: <20190927112703.17745-1-sgarzare@redhat.com>
+ <20190927112703.17745-8-sgarzare@redhat.com>
+ <20191009123026.GH5747@stefanha-x1.localdomain>
+ <20191010093254.aluys4hpsfcepb42@steredhat>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Y/WcH0a6A93yCHGr"
+Content-Disposition: inline
+In-Reply-To: <20191010093254.aluys4hpsfcepb42@steredhat>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 11 Oct 2019 08:27:19 +0000 (UTC)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 10 Oct 2019 13:06:06 -0400, Sasha Levin wrote:
-> On Fri, Oct 04, 2019 at 11:48:17AM -0400, Sasha Levin wrote:
-> >On Wed, Jul 31, 2019 at 01:02:03AM +0000, Michael Kelley wrote:  
-> >>From: Himadri Pandya <himadrispandya@gmail.com> Sent: Wednesday, July 24, 2019 10:11 PM  
-> >>>
-> >>>Older windows hosts require the hv_sock ring buffer to be defined
-> >>>using 4K pages. This was achieved by using the symbol PAGE_SIZE_4K
-> >>>defined specifically for this purpose. But now we have a new symbol
-> >>>HV_HYP_PAGE_SIZE defined in hyperv-tlfs which can be used for this.
-> >>>
-> >>>This patch removes the definition of symbol PAGE_SIZE_4K and replaces
-> >>>its usage with the symbol HV_HYP_PAGE_SIZE. This patch also aligns
-> >>>sndbuf and rcvbuf to hyper-v specific page size using HV_HYP_PAGE_SIZE
-> >>>instead of the guest page size(PAGE_SIZE) as hyper-v expects the page
-> >>>size to be 4K and it might not be the case on ARM64 architecture.
-> >>>
-> >>>Signed-off-by: Himadri Pandya <himadri18.07@gmail.com>
-> >>>---
-> >>> net/vmw_vsock/hyperv_transport.c | 21 +++++++++++----------
-> >>> 1 file changed, 11 insertions(+), 10 deletions(-)
-> >>>
-> >>>diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-> >>>index f2084e3f7aa4..ecb5d72d8010 100644
-> >>>--- a/net/vmw_vsock/hyperv_transport.c
-> >>>+++ b/net/vmw_vsock/hyperv_transport.c
-> >>>@@ -13,15 +13,16 @@
-> >>> #include <linux/hyperv.h>
-> >>> #include <net/sock.h>
-> >>> #include <net/af_vsock.h>
-> >>>+#include <asm/hyperv-tlfs.h>
-> >>>  
-> >>
-> >>Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
-> >>
-> >>This patch depends on a prerequisite patch in
-> >>
-> >>  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/hyperv
-> >>
-> >>that defines HV_HYP_PAGE_SIZE.  
-> >
-> >David, the above prerequisite patch is now upstream, so this patch
-> >should be good to go. Would you take it through the net tree or should I
-> >do it via the hyperv tree?  
-> 
-> Ping?
 
-Is this a fix? It's slightly unclear from the description of the patch.
-I think the best course of action would be reposting it again, with
-either [PATCH net] in the subject and a Fixes tag if it's a fix, or
-[PATCH net-next] otherwise.
+--Y/WcH0a6A93yCHGr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Oct 10, 2019 at 11:32:54AM +0200, Stefano Garzarella wrote:
+> On Wed, Oct 09, 2019 at 01:30:26PM +0100, Stefan Hajnoczi wrote:
+> > On Fri, Sep 27, 2019 at 01:26:57PM +0200, Stefano Garzarella wrote:
+> > Another issue is that this patch drops the VIRTIO_VSOCK_MAX_BUF_SIZE
+> > limit that used to be enforced by virtio_transport_set_buffer_size().
+> > Now the limit is only applied at socket init time.  If the buffer size
+> > is changed later then VIRTIO_VSOCK_MAX_BUF_SIZE can be exceeded.  If
+> > that doesn't matter, why even bother with VIRTIO_VSOCK_MAX_BUF_SIZE
+> > here?
+> >=20
+>=20
+> The .notify_buffer_size() should avoid this issue, since it allows the
+> transport to limit the buffer size requested after the initialization.
+>=20
+> But again the min set by the user can not be respected and in the
+> previous implementation we forced it to VIRTIO_VSOCK_MAX_BUF_SIZE.
+>=20
+> Now we don't limit the min, but we guarantee only that vsk->buffer_size
+> is lower than VIRTIO_VSOCK_MAX_BUF_SIZE.
+>=20
+> Can that be an acceptable compromise?
+
+I think so.
+
+Setting buffer sizes was never tested or used much by userspace
+applications that I'm aware of.  We should probably include tests for
+changing buffer sizes in the test suite.
+
+Stefan
+
+--Y/WcH0a6A93yCHGr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2gPOIACgkQnKSrs4Gr
+c8hnpAf/bZLlTd0r+EaHBLvVtn6u74O2zVoTaaQWQnOazMVH14CZaHHOu1c41TX7
+Q0re/sK84wgqeIYkL3oZytOaV0XcGl6gisahwdaj2B0vFbihvsFYpvh7RDO3HQ68
+w1qOfDkUS9sTi3UYClbO7gHJfF/29ekUBFgoscFN8DwmqhMZ0BmjlQbI5G7Bx/vb
+BsykLfJ1+i+pjEwaf7OnJWjg/D/XEcMgWuwt3TDu4weM4m7URnromXRaunFLetC5
+rq7dPRsobckPtCGqpZlg9p9YRqCfyVJKOd/by5XeJVT/0aC5fi0t/gHLBSwCpL3R
+6nAoSm1TARBDHhE/TRKT7m4aV/5H3Q==
+=76ga
+-----END PGP SIGNATURE-----
+
+--Y/WcH0a6A93yCHGr--
