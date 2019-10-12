@@ -2,139 +2,155 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE439D4E4F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Oct 2019 10:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03DC8D501D
+	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Oct 2019 15:35:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfJLIoM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 12 Oct 2019 04:44:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40120 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbfJLImM (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 12 Oct 2019 04:42:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9C8d3I5005712;
-        Sat, 12 Oct 2019 08:40:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=eTLCc8eWlTUmLnYiMct7cflsemw5ED6SJHMEBd984nY=;
- b=j30w7pPALDgopJ4pGWnCJS1/9jQn6QG03r+u5ObslfJMqn7zIKaKQnQS5BAu23EUZP2g
- mf2muP0iGYXuxmFp6bjU8pidcKg9pSU6ec93baDYNfaOdtS2xewSK7WcCLZTkzJ50Lxw
- GqKTU0guXmfG1HFZUQXTGeXskTFdqX1/IyDaVNUhVnk5AMry4eSJFq/TIVDGZUrsEGFu
- PNdpOpR9xlxMjyNutSmxh00Btm84uEtkp5Dl33vEqicctzE0Lq+eKvAO8AjwuPAItQ0b
- Nhy49fJQyAvsFomXvv7Ew3UMO8tjWzwHYNlhx/mYoZzAPIqUCDsZP8MuGCe8JgXVuzXR 1A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vk6sq0pb3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 08:40:24 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9C8cGL9154374;
-        Sat, 12 Oct 2019 08:40:23 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vk3xw8vhe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 08:40:23 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9C8eIcl029967;
-        Sat, 12 Oct 2019 08:40:18 GMT
-Received: from [10.191.25.133] (/10.191.25.133)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 12 Oct 2019 01:40:17 -0700
-Subject: Re: [PATCH v5 0/5] Add a unified parameter "nopvspin"
-To:     linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, peterz@infradead.org
-References: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <d04aacc3-c816-94a6-052f-bf306ec23941@oracle.com>
-Date:   Sat, 12 Oct 2019 16:40:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        id S1728399AbfJLNer (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 12 Oct 2019 09:34:47 -0400
+Received: from mail-eopbgr710131.outbound.protection.outlook.com ([40.107.71.131]:6171
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726821AbfJLNer (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 12 Oct 2019 09:34:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZPF3LDQkkUXlrZI0jfUwiYSeAOh4iLH0ZfMjMs/hvidDNPX2pETLYjDdMVLp9Cp2434JGBS+QpazOudTtFas7UcY2amg6TRl5lsgWelVQvOzJPRKqPnNJu1jX/hgilSbnyKnQzrwWjeeukULhnlsuoT7L4equK3LL0CsCNDyJUjPwkiFaPyf7Kxuvcm6ZqMD9vrX6EhPLKWNKEffSvHn1nW6vm3wdkB8exKkHZPYPLi5gqvrf7laM+K96b21ep+1oBxjrhtxJC6o2I+LAWYkInDzUmXLBCUSVdaVIqr8NYmCslzU6H63QrERngtAf2478jdfrCSDfCVjimxYPX6SGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pH/w4b4CpBH5KUC7U7bWuVURBaWNVFfwXlx+WFT8E3E=;
+ b=JoHH4IohYXH96zVZanoYx84Blj4JjSMcPV0b3dp+4Mu0qSdFSTQ2TbBQlFSNJ7Pzjpxqu9EmEZX63KJqKaL+1yRXrK51O1RTUqk9P8FOYa+t6atVNTNXSoDqRokmprfNNe9Tqk2RccElT/ag4ybMAZke3U+YLSsgSbYdyztOYSQngTGaEQxBPWLjvRZnW0noBDLH7VWMza80whyvBGq7qYD8vjcsHp2CdT5vVQBtyqONcIiGbwhjq6scBL1P6XHtCBHPpG9rVUNyEidQtSccMI6C0yK439em8urSOBsgEvCaGhpLYa7SOVKRB4JeQOE7GuVaLjBcfKznsVx7Mo40iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pH/w4b4CpBH5KUC7U7bWuVURBaWNVFfwXlx+WFT8E3E=;
+ b=PmDfA3YgssYog1QvRVdyzoPajyANKFAL1i6/Mmir+ecXUQCd9LzbeV40c2oAqy27b1zHb0H6lEeEyt4bEJ7zOCAkybDuxqk0umSZ51HfNqnHB1KFvRSNhwj2PBywsie1CmZx525dDdKOA6NpZ0o5DX/I9wjLQc3uS6ZjWTWECZw=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0153.namprd21.prod.outlook.com (10.173.173.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.5; Sat, 12 Oct 2019 13:34:43 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.021; Sat, 12 Oct
+ 2019 13:34:43 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Andrea Parri <parri.andrea@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH v2 2/3] Drivers: hv: vmbus: Enable VMBus protocol versions
+ 4.1, 5.1 and 5.2
+Thread-Topic: [PATCH v2 2/3] Drivers: hv: vmbus: Enable VMBus protocol
+ versions 4.1, 5.1 and 5.2
+Thread-Index: AQHVf4HgvATy1vXyFUC0tQ1s264IN6dXAtzA
+Date:   Sat, 12 Oct 2019 13:34:43 +0000
+Message-ID: <DM5PR21MB0137ACE07DCD2A6BBEC83665D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20191010154600.23875-1-parri.andrea@gmail.com>
+ <20191010154600.23875-3-parri.andrea@gmail.com>
+In-Reply-To: <20191010154600.23875-3-parri.andrea@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9407 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910120081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9407 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910120081
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-12T13:34:41.4247170Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=916a6818-2ace-450a-b146-ae9113aeebcd;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4356966d-e236-41bd-9340-08d74f18f0d9
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM5PR21MB0153:|DM5PR21MB0153:|DM5PR21MB0153:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR21MB01538962C01FEA4022A60064D7960@DM5PR21MB0153.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0188D66E61
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(396003)(346002)(376002)(189003)(199004)(476003)(4326008)(6246003)(7736002)(305945005)(446003)(11346002)(107886003)(66066001)(486006)(229853002)(99286004)(74316002)(81156014)(81166006)(8936002)(26005)(8676002)(102836004)(186003)(2501003)(7696005)(76176011)(6506007)(25786009)(3846002)(110136005)(52536014)(6116002)(33656002)(55016002)(9686003)(5660300002)(22452003)(10090500001)(64756008)(66556008)(6436002)(2906002)(316002)(66446008)(71200400001)(256004)(71190400001)(478600001)(66476007)(8990500004)(2201001)(66946007)(10290500003)(86362001)(14454004)(76116006)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0153;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0HF94iEKqA7zor03WTbAhQ/KA/neANmNAzaYuaaLGKEl5XdBhiXjYUyhm5Tli2gTaRNyO3NFl0kMSS0qllZ0ebBg+kHYOXVbRG6T7LoUlxJj13UnuPmX0B7rbcPGO/WFEH27tlh6d/2r03piiIzxEsPpiTnXXB5Dc8XFc5kDl4pwz4iFx4Ridrg5vVctpu6q5oqRmUgGmZkjhGbGZjO4pq7A4ejH/qRpAt9RXutLttX8eBoz1SwQWz0mIZ0Lx1ZKleC3vzfFPgAhnIN31XM/iVSvcpTJrdqYVKN5VoESNk8CkHgjzsvGLIaglISNOkszvUS///cqARktAUayYErpTiivcsdYjP4gKZYaBvkmmeYHjQF4hQ4vBDjzBaQrtyNaBrjMl6WAWlFkgbuS+xhzOBlhEhKwEWHx85JTgpmxKZY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4356966d-e236-41bd-9340-08d74f18f0d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2019 13:34:43.4095
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1pKey32Y5jBBHmQgI7hmZjlpKZxPIUI4TN3U4HabIIpuW5Ft4uuK1sN84hn2kFL+YC/67ZAW0fA/kPfzRz0dfZ5ciI10S7LBi2CpIJbTlyY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0153
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The last two patches are reviewed, will any KVM expert be willing to 
-review the first three patches?
+From: Andrea Parri <parri.andrea@gmail.com> Sent: Thursday, October 10, 201=
+9 8:46 AM
+>=20
+> Hyper-V has added VMBus protocol versions 5.1 and 5.2 in recent release
+> versions.  Allow Linux guests to negotiate these new protocol versions
+> on versions of Hyper-V that support them.  While on this, also allow
+> guests to negotiate the VMBus protocol version 4.1 (which was missing).
+>=20
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+> ---
+>  drivers/hv/connection.c          | 15 +++++++++------
+>  drivers/net/hyperv/netvsc.c      |  6 +++---
+>  include/linux/hyperv.h           |  8 +++++++-
+>  net/vmw_vsock/hyperv_transport.c |  4 ++--
+>  4 files changed, 21 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index c08b62dbd151f..a4f80e30b0207 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -182,15 +182,21 @@ static inline u32 hv_get_avail_to_write_percent(
+>   * 2 . 4  (Windows 8)
+>   * 3 . 0  (Windows 8 R2)
+>   * 4 . 0  (Windows 10)
+> + * 4 . 1  (Windows 10 RS3)
+>   * 5 . 0  (Newer Windows 10)
+> + * 5 . 1  (Windows 10 RS4)
+> + * 5 . 2  (Windows Server 2019, RS5)
+>   */
+>=20
+>  #define VERSION_WS2008  ((0 << 16) | (13))
+>  #define VERSION_WIN7    ((1 << 16) | (1))
+>  #define VERSION_WIN8    ((2 << 16) | (4))
+>  #define VERSION_WIN8_1    ((3 << 16) | (0))
+> -#define VERSION_WIN10	((4 << 16) | (0))
+> +#define VERSION_WIN10_V4 ((4 << 16) | (0))
 
-They are all KVM related changes. Thanks
+I would recommend not changing the symbol name for version 4.0.
+The change makes it more consistent with the later VERSION_WIN10_*
+symbols, but it doesn't fundamentally add any clarity and I'm not sure
+it's worth the churn in the other files that have to be touched. It's a
+judgment call, and that's just my input.
 
-Zhenzhong
+> +#define VERSION_WIN10_V4_1 ((4 << 16) | (1))
+>  #define VERSION_WIN10_V5 ((5 << 16) | (0))
+> +#define VERSION_WIN10_V5_1 ((5 << 16) | (1))
+> +#define VERSION_WIN10_V5_2 ((5 << 16) | (2))
+>=20
 
-On 2019/10/7 17:04, Zhenzhong Duan wrote:
-> There are cases folks want to disable spinlock optimization for
-> debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
-> and "hv_nopvspin" to support that, but kvm doesn't.
->
-> The first patch adds that feature to KVM guest with "nopvspin".
->
-> For compatibility reason original parameters "xen_nopvspin" and
-> "hv_nopvspin" are retained and marked obsolete.
->
-> v5:
-> PATCH1: new patch to revert a currently unnecessory commit,
->          code is simpler a bit after that change.         [Boris Ostrovsky]
-> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
->          reorder with PATCH2 to better reflect dependency
-> PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
-> PATCH5: add Reviewed-by                                  [Michael Kelley]
->
-> v4:
-> PATCH1: use variable name nopvspin instead of pvspin and
->          defined it as __initdata, changed print message,
->          updated patch description                     [Sean Christopherson]
-> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
-> PATCH3: make variable nopvsin and xen_pvspin coexist
->          remove Reviewed-by due to code change         [Sean Christopherson]
-> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
->
-> v3:
-> PATCH2: Fix indentation
->
-> v2:
-> PATCH1: pick the print code change into separate PATCH2,
->          updated patch description             [Vitaly Kuznetsov]
-> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
-> PATCH3: add Reviewed-by                       [Juergen Gross]
->
-> Zhenzhong Duan (5):
->    Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
->      get initialized"
->    x86/kvm: Change print code to use pr_*() format
->    x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
->    xen: Mark "xen_nopvspin" parameter obsolete
->    x86/hyperv: Mark "hv_nopvspin" parameter obsolete
->
->   Documentation/admin-guide/kernel-parameters.txt | 14 +++++-
->   arch/x86/hyperv/hv_spinlock.c                   |  4 ++
->   arch/x86/include/asm/qspinlock.h                |  1 +
->   arch/x86/kernel/kvm.c                           | 63 ++++++++++++++-----------
->   arch/x86/xen/spinlock.c                         |  4 +-
->   kernel/locking/qspinlock.c                      |  7 +++
->   6 files changed, 62 insertions(+), 31 deletions(-)
->
+Michael
