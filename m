@@ -2,171 +2,192 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47F31D5028
-	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Oct 2019 15:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D7CED5372
+	for <lists+linux-hyperv@lfdr.de>; Sun, 13 Oct 2019 02:30:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfJLNrt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 12 Oct 2019 09:47:49 -0400
-Received: from mail-eopbgr690134.outbound.protection.outlook.com ([40.107.69.134]:51360
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        id S1727983AbfJMAaZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 12 Oct 2019 20:30:25 -0400
+Received: from mail-eopbgr790120.outbound.protection.outlook.com ([40.107.79.120]:28971
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727115AbfJLNrt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 12 Oct 2019 09:47:49 -0400
+        id S1727909AbfJMAaZ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 12 Oct 2019 20:30:25 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bcaVPgZid9f49/jJJ0vri7FJuH1H2XPkh2BDLOrjZur8c2BNoCbA9a+OAqa8qvE2XN1I0zHoftSUgQ3Jj+bXyWCz4K2JQhHzcLG4TpjWJei+puzDFv1yr1iPjV6SlxPuPJ2CO4UHnnQfPMPLDfP4xixXYpPrGtkQp/zlVYT9a3Q3NWUeZ5hXNzBPHt/w5xUd8MT1Ui9xxTfTz5OvqHBWdXnX3z6GhE1mjwtKDrPfyku43hGXQoSPdlHaW9KFP7DNBRIVe5J30hGXUBbtbvRdWROgUKZW40XI1FMsSYBxyMTWW0hYgOFtE7sHPCaF0MxOqZBRCfqoD0loqbXD68fbpg==
+ b=bJ6Br5WaM9OuTWFe3PWfxz08gDuaDcZUjc/rAt7vW+iAvXmPfBXW4tqrl+Y2ESLpqSjZavV/oxgHTVIXSC+OASoSSdpVNXIu30g8K6YbIpoFIOl577MgUZbgOGO9l0MuM03FULfq9m0D/O352x13Vi56rJXBnQp4oK2MIn04KVgBQH/OsbBn6Bg8YY2g5/9UK8vp9DvsIcPCepa94TolLceJdj266wcVDk6vEwPAbpN6F0CeWp5z6dLJpsr3dN3LyRPLJDXX6Tj6KnoJtcXO0b3WEoLzPSLNAuF+xh/4nOjhz88m2jglxZko8clg1GcJqM985oExLgW22L4L1Jlhxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=klEGAeZOuCgnZ26joLgkBsAeo/3i/DL8hZ8sl5DK58w=;
- b=TakQuJtZBp+3XOi6CD/wOWYvNgeDPZCPQppyURmTjxpBBitcp7m4qQoXHFNTgdcdxLuuzlinHXfD08WHZN8uuyKomfUf3w7DpQ0eCdZvJKUEw/Mx1THuBXYAW6L0+AWVdBJoeze604XNXteh9EwwSPra4eh1ZnJ5IIBv8LcqOi1XKtov1eWPKsdA+hpBWogL4oVC2bd/xhXUNAxZOLuxc0vEBC3SGG4r6FV0MR88QxhlL9SeC7Twkv1x6a2k0Tre84vOPlu6mE4vs4oSfTs6IZ6MLjg/UI5Ur6B0MF81VTZVPN/BzpqDn4V3J1HJr+AsYb747sAYri0rEGCwdvSuig==
+ bh=EG5G7qimE+xE/nYI+QR78uOrIjHq0uVn+zkQGG+GXl8=;
+ b=Gy7PnMjwpK84e2xmbR4rnkeUhTnGdEncvIjtn97Mi7f1CU9gck94OdCFTlnUlZSNIsizWjGnA3bQrzxattZBo0XFBFSKFWGPPTerPS58kjNDaShPZnjHlsJ6FD+I0Qj3wHThVPP0HFnKamuUOXL5HvE2rd1xJ2k4SubNJofEzWE6ARkbkoQul6trur/jxso/iXj7ONEnEYA4oRghzaOKc/DmqYO/2nuar8kRuazd3bRfzbWNG3HVr2FulmKdo1sBaQooaZOSoFDbtgWXGamNV3QpGeCOxB6e3XUnQemfDW/ZEKPVBanD/Q0p4zA5DLilZd03O1aBCKSn7lntvhiz6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=klEGAeZOuCgnZ26joLgkBsAeo/3i/DL8hZ8sl5DK58w=;
- b=b+gv+pVNCX6WigCKI4E/BqiJd1pnSlGl6pzIl9rO+sjc1hIFH98KwHMcEXtCTZcm291s4n+qiENHlDPj18d3ILqTM0q71FNJJTYJuezlre8vf4bbCW8YBnCtQLfXm3/cPQlC+IQrOw7WWrnihtksSeH/C70/KHstawa8t3OC9x8=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0170.namprd21.prod.outlook.com (10.173.173.21) with Microsoft SMTP
+ bh=EG5G7qimE+xE/nYI+QR78uOrIjHq0uVn+zkQGG+GXl8=;
+ b=atBv3aWKBStKRqdtc86HeM/9jgil2ZMYV20sgaWlShGTHRmXaIl3CvOR4GfBsYEOE+yKlm1hdSQ7+y9Tiwp3+MmeHyWMLCVcdHJymWyADS92SCDxSgVwuTVfssqFlNQRrcqMbPsEuQoqwq45OEyaMIyx8esazMkwd0S0NWQUbSU=
+Received: from SN6PR2101MB1135.namprd21.prod.outlook.com (52.132.114.24) by
+ SN6PR2101MB0941.namprd21.prod.outlook.com (52.132.114.18) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.2; Sat, 12 Oct 2019 13:47:45 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.021; Sat, 12 Oct
- 2019 13:47:45 +0000
+ 15.20.2367.4; Sun, 13 Oct 2019 00:30:21 +0000
+Received: from SN6PR2101MB1135.namprd21.prod.outlook.com
+ ([fe80::1cc6:7b31:4489:4fbb]) by SN6PR2101MB1135.namprd21.prod.outlook.com
+ ([fe80::1cc6:7b31:4489:4fbb%6]) with mapi id 15.20.2367.012; Sun, 13 Oct 2019
+ 00:30:21 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
+To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v2 1/3] Drivers: hv: vmbus: Introduce table of VMBus
- protocol versions
-Thread-Topic: [PATCH v2 1/3] Drivers: hv: vmbus: Introduce table of VMBus
- protocol versions
-Thread-Index: AQHVf4Hg40bNBUJlOE6Y2bup7gaANadXBJtA
-Date:   Sat, 12 Oct 2019 13:47:45 +0000
-Message-ID: <DM5PR21MB013798776480FFA5DCD22442D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20191010154600.23875-1-parri.andrea@gmail.com>
- <20191010154600.23875-2-parri.andrea@gmail.com>
-In-Reply-To: <20191010154600.23875-2-parri.andrea@gmail.com>
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "himadrispandya@gmail.com" <himadrispandya@gmail.com>
+Subject: [PATCH net-next v2] hv_sock: use HV_HYP_PAGE_SIZE for Hyper-V
+ communication
+Thread-Topic: [PATCH net-next v2] hv_sock: use HV_HYP_PAGE_SIZE for Hyper-V
+ communication
+Thread-Index: AQHVgV1l4vYfBVWVdUyd4ivx4Qf29w==
+Date:   Sun, 13 Oct 2019 00:30:21 +0000
+Message-ID: <1570926595-8877-1-git-send-email-mikelley@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-12T13:47:42.9929354Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7b229e38-2479-4489-aa72-6716b77a7d61;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-clientproxiedby: MWHPR22CA0048.namprd22.prod.outlook.com
+ (2603:10b6:300:69::34) To SN6PR2101MB1135.namprd21.prod.outlook.com
+ (2603:10b6:805:4::24)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [131.107.159.247]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cf855a0b-116d-4271-33db-08d74f1ac2df
+x-ms-office365-filtering-correlation-id: 965f8288-97b2-4d75-ec74-08d74f74881b
 x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM5PR21MB0170:|DM5PR21MB0170:|DM5PR21MB0170:
+x-ms-traffictypediagnostic: SN6PR2101MB0941:|SN6PR2101MB0941:
 x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR21MB017025AF787F82D8F40F26E3D7960@DM5PR21MB0170.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0188D66E61
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(136003)(396003)(346002)(39860400002)(189003)(199004)(26005)(99286004)(8936002)(256004)(2501003)(4326008)(9686003)(52536014)(14444005)(22452003)(14454004)(33656002)(55016002)(316002)(10290500003)(486006)(71200400001)(71190400001)(478600001)(186003)(446003)(11346002)(76116006)(66446008)(64756008)(66556008)(66476007)(66946007)(476003)(81166006)(81156014)(7696005)(6246003)(76176011)(6506007)(8676002)(107886003)(5660300002)(2906002)(305945005)(102836004)(66066001)(2201001)(3846002)(10090500001)(8990500004)(229853002)(6116002)(74316002)(6436002)(54906003)(7736002)(110136005)(25786009)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0170;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-microsoft-antispam-prvs: <SN6PR2101MB094170C8C752C5E01A089B9CD7910@SN6PR2101MB0941.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 01894AD3B8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(376002)(136003)(396003)(39860400002)(189003)(199004)(26005)(14454004)(81166006)(102836004)(50226002)(8936002)(71190400001)(478600001)(71200400001)(86362001)(2201001)(110136005)(4720700003)(10290500003)(386003)(6506007)(52116002)(4326008)(186003)(99286004)(81156014)(256004)(305945005)(7736002)(2501003)(8676002)(476003)(486006)(1511001)(6436002)(5660300002)(2616005)(2906002)(66066001)(316002)(6116002)(3846002)(36756003)(64756008)(66556008)(66446008)(66476007)(66946007)(25786009)(22452003)(10090500001)(6486002)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0941;H:SN6PR2101MB1135.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aXqj7ad1qJ/KFlb8pSHvbbX7CKhD/NVq2lrM4Y4hhWaUjOOsbTFn2ug/Wq+7cBdXB2XlIWoXGpce++YUFx5DrNb+UsH+Y+olFG1C/zZT+J7o1Id3gG3SSS/g5mlpFSCxcysdhmvaht/vHFYlVG/P0X9jwWDeyls3xjmLCjvy9KJCY72eXOdpo+evhEFMxPwAj3URcQhH6bAoNQenBYtodiqK+aNfpvpex9HvBmq9fYGJy3a2KidXRvrVKZ23MOeboIJmPgkFxU04cutckz0SAgMaEmKBw5OW8KPyY9tehfRb63Np9b4ugLk6gnArKPn/GcO6U7p6vSaMKy+aryv/0U1Fbc1GpcyUZpfqtdbxsnHROVNI/VXgLy3aCvqLEpE6Oha1J7R9GekMC8aynNGHtmCPy4EAMp7fMzr2trjM08k=
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: kv4mqjfvFdszKLFEZpn4M8SzkiRl8K1Vd5FDJo+qwcYiXKbdeUPO8R5ln/Hf5uSkUT0JL59ShpK7j8evSoFK3rr7GGQ/FQ4g8IgT8MHHWUyGe1KYKyalMNoFHclUJtxNkb1fsISocM6L4FDLcEMMdeoDyXzyBYCPBMfVy7u4Ay6f1wvUGdUTlHcyGUzBh0KZd4jSkaoaYWACFHT3qPi9XF6MlATI4bjvwn1k2omvrFIwPdjwqMDP0keP+u0R2p23xjrM6NvzI/CM/97adv3IDK2txDAL7l+bqAdUNLkBPM2L/zTACJ1JrLLV517M/aHrXu6YWPS8uRJ1rCsz+7dg1bJuAsHSIYPXvsInhHxh8G/OKuK7FxsVg17f9OT/EWieZ8N0uDYQ3unMJd9J/sp5tqb2/e1pQAXy3N1LSOVE+nU=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf855a0b-116d-4271-33db-08d74f1ac2df
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2019 13:47:45.2526
+X-MS-Exchange-CrossTenant-Network-Message-Id: 965f8288-97b2-4d75-ec74-08d74f74881b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Oct 2019 00:30:21.6415
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9D1jlBvfV3zqXufaum9Rocd15HQJGotiOqsWxdWlxo0rVD0wZUg3OmuAnelAyYiJf2gkAhhaBl0FFHinWsyukMR05J/6Jq3fWr8E+7n97dY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0170
+X-MS-Exchange-CrossTenant-userprincipalname: 0Vqvz5Z5c+zxQGd33iXL4uZC8uc7CfC9eoWSoTjki+q2PmIANFXHabyqCLyP0Yh+S5mH4cd7ZIYOlOUWVlS8cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0941
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com> Sent: Thursday, October 10, 201=
-9 8:46 AM
->=20
-> The technique used to get the next VMBus version seems increasisly
-> clumsy as the number of VMBus versions increases.  Performance is
-> not a concern since this is only done once during system boot; it's
-> just that we'll end up with more lines of code than is really needed.
->=20
-> As an alternative, introduce a table with the version numbers listed
-> in order (from the most recent to the oldest).  vmbus_connect() loops
-> through the versions listed in the table until it gets an accepted
-> connection or gets to the end of the table (invalid version).
->=20
-> Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-> ---
->  drivers/hv/connection.c | 46 ++++++++++++++---------------------------
->  drivers/hv/vmbus_drv.c  |  3 +--
->  include/linux/hyperv.h  |  4 ----
->  3 files changed, 17 insertions(+), 36 deletions(-)
->=20
-> @@ -244,20 +232,18 @@ int vmbus_connect(void)
->  	 * version.
->  	 */
->=20
-> -	version =3D VERSION_CURRENT;
-> +	for (i =3D 0; i < ARRAY_SIZE(vmbus_versions); i++) {
-> +		version =3D vmbus_versions[i];
->=20
-> -	do {
->  		ret =3D vmbus_negotiate_version(msginfo, version);
->  		if (ret =3D=3D -ETIMEDOUT)
->  			goto cleanup;
->=20
->  		if (vmbus_connection.conn_state =3D=3D CONNECTED)
->  			break;
-> +	}
->=20
-> -		version =3D vmbus_get_next_version(version);
-> -	} while (version !=3D VERSION_INVAL);
-> -
-> -	if (version =3D=3D VERSION_INVAL)
-> +	if (vmbus_connection.conn_state !=3D CONNECTED)
->  		goto cleanup;
->=20
+From: Himadri Pandya <himadrispandya@gmail.com>
 
-This is a nit, but the loop exit path bugs me.  When a connection
-is established, the loop is exited by the "break", and then
-conn_state has to be tested again to decide whether the loop
-exited due to getting a connection vs. hitting the end of the list.
-Slightly cleaner in my mind would be:
+Current code assumes PAGE_SIZE (the guest page size) is equal
+to the page size used to communicate with Hyper-V (which is
+always 4K). While this assumption is true on x86, it may not
+be true for Hyper-V on other architectures. For example,
+Linux on ARM64 may have PAGE_SIZE of 16K or 64K. A new symbol,
+HV_HYP_PAGE_SIZE, has been previously introduced to use when
+the Hyper-V page size is intended instead of the guest page size.
 
-	for (i=3D0; ; i++) {
-		if (i =3D=3D ARRAY_SIZE(vmbus_versions))
-			goto cleanup;
+Make this code work on non-x86 architectures by using the new
+HV_HYP_PAGE_SIZE symbol instead of PAGE_SIZE, where appropriate.
+Also replace the now redundant PAGE_SIZE_4K with HV_HYP_PAGE_SIZE.
+The change has no effect on x86, but lays the groundwork to run
+on ARM64 and others.
 
-		version  =3D vmbus_versions[i];
-		ret =3D vmbus_negotiate_version(msginfo, version);
-		if (ret =3D=3D -ETIMEDOUT)
-			goto cleanup;
+Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
 
-		if (vmbus_connection.conn_state =3D=3D CONNECTED)
-			break;
-	}
+Changes in v2:
+* Revised commit message and subject [Jakub Kicinski]
 
-Michael
+---
+ net/vmw_vsock/hyperv_transport.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
+ort.c
+index 261521d..d2929ea 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -13,15 +13,16 @@
+ #include <linux/hyperv.h>
+ #include <net/sock.h>
+ #include <net/af_vsock.h>
++#include <asm/hyperv-tlfs.h>
+=20
+ /* Older (VMBUS version 'VERSION_WIN10' or before) Windows hosts have some
+- * stricter requirements on the hv_sock ring buffer size of six 4K pages. =
+Newer
+- * hosts don't have this limitation; but, keep the defaults the same for c=
+ompat.
++ * stricter requirements on the hv_sock ring buffer size of six 4K pages.
++ * hyperv-tlfs defines HV_HYP_PAGE_SIZE as 4K. Newer hosts don't have this
++ * limitation; but, keep the defaults the same for compat.
+  */
+-#define PAGE_SIZE_4K		4096
+-#define RINGBUFFER_HVS_RCV_SIZE (PAGE_SIZE_4K * 6)
+-#define RINGBUFFER_HVS_SND_SIZE (PAGE_SIZE_4K * 6)
+-#define RINGBUFFER_HVS_MAX_SIZE (PAGE_SIZE_4K * 64)
++#define RINGBUFFER_HVS_RCV_SIZE (HV_HYP_PAGE_SIZE * 6)
++#define RINGBUFFER_HVS_SND_SIZE (HV_HYP_PAGE_SIZE * 6)
++#define RINGBUFFER_HVS_MAX_SIZE (HV_HYP_PAGE_SIZE * 64)
+=20
+ /* The MTU is 16KB per the host side's design */
+ #define HVS_MTU_SIZE		(1024 * 16)
+@@ -54,7 +55,8 @@ struct hvs_recv_buf {
+  * ringbuffer APIs that allow us to directly copy data from userspace buff=
+er
+  * to VMBus ringbuffer.
+  */
+-#define HVS_SEND_BUF_SIZE (PAGE_SIZE_4K - sizeof(struct vmpipe_proto_heade=
+r))
++#define HVS_SEND_BUF_SIZE \
++		(HV_HYP_PAGE_SIZE - sizeof(struct vmpipe_proto_header))
+=20
+ struct hvs_send_buf {
+ 	/* The header before the payload data */
+@@ -393,10 +395,10 @@ static void hvs_open_connection(struct vmbus_channel =
+*chan)
+ 	} else {
+ 		sndbuf =3D max_t(int, sk->sk_sndbuf, RINGBUFFER_HVS_SND_SIZE);
+ 		sndbuf =3D min_t(int, sndbuf, RINGBUFFER_HVS_MAX_SIZE);
+-		sndbuf =3D ALIGN(sndbuf, PAGE_SIZE);
++		sndbuf =3D ALIGN(sndbuf, HV_HYP_PAGE_SIZE);
+ 		rcvbuf =3D max_t(int, sk->sk_rcvbuf, RINGBUFFER_HVS_RCV_SIZE);
+ 		rcvbuf =3D min_t(int, rcvbuf, RINGBUFFER_HVS_MAX_SIZE);
+-		rcvbuf =3D ALIGN(rcvbuf, PAGE_SIZE);
++		rcvbuf =3D ALIGN(rcvbuf, HV_HYP_PAGE_SIZE);
+ 	}
+=20
+ 	ret =3D vmbus_open(chan, sndbuf, rcvbuf, NULL, 0, hvs_channel_cb,
+@@ -670,7 +672,7 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vs=
+k, struct msghdr *msg,
+ 	ssize_t ret =3D 0;
+ 	ssize_t bytes_written =3D 0;
+=20
+-	BUILD_BUG_ON(sizeof(*send_buf) !=3D PAGE_SIZE_4K);
++	BUILD_BUG_ON(sizeof(*send_buf) !=3D HV_HYP_PAGE_SIZE);
+=20
+ 	send_buf =3D kmalloc(sizeof(*send_buf), GFP_KERNEL);
+ 	if (!send_buf)
+--=20
+1.8.3.1
+
