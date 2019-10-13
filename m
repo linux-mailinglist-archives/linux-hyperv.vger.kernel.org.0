@@ -2,45 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99AFAD5564
-	for <lists+linux-hyperv@lfdr.de>; Sun, 13 Oct 2019 11:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21462D5566
+	for <lists+linux-hyperv@lfdr.de>; Sun, 13 Oct 2019 11:06:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfJMJCt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 13 Oct 2019 05:02:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49352 "EHLO mx1.redhat.com"
+        id S1728662AbfJMJGc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 13 Oct 2019 05:06:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41280 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728080AbfJMJCs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 13 Oct 2019 05:02:48 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        id S1728514AbfJMJGc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 13 Oct 2019 05:06:32 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B47CDC05683F
-        for <linux-hyperv@vger.kernel.org>; Sun, 13 Oct 2019 09:02:47 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id z17so7020654wru.13
-        for <linux-hyperv@vger.kernel.org>; Sun, 13 Oct 2019 02:02:47 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 36E9B8553B
+        for <linux-hyperv@vger.kernel.org>; Sun, 13 Oct 2019 09:06:31 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id s25so3569614wmh.1
+        for <linux-hyperv@vger.kernel.org>; Sun, 13 Oct 2019 02:06:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=8Io2fFp+LSlEu5IIHdAyNIkb3kMUT1TQFKgMauDHggc=;
-        b=gsRR5MjmgTP7WKIYj0rDn8oQ8y5B9mFayrSrLdd9WaETLKUqQpX0zMszOjidis0n1K
-         UPvlbnteThoQ6S4Pw5vZC5ToAgyCHsI2jGgBWJq9mSoMGWWKUjKLmglqRXBb3k+UE7JO
-         FvkiVV4ORHDy8m/WX4c718qD/PE7Gpdvzs2cYwWBfl+ANKxKoWIv1HndVQA394aHXu4t
-         Yecz6n2FmMy5k8rTaomPiHXTUtnTrEGu5epgZMa4P52zfAurB6RhWUeRwMDFCgy0Dqvi
-         keWHL4zJmODXvbpHvAhzxMb0ev4Xgf0LQ+s6U6huOxMSo7P5j1nVgEVyBZ0YrcHoiR0m
-         tzXQ==
-X-Gm-Message-State: APjAAAVOPJ3TZZMwLFy2yoTlQaqTZH8H577MfAQwr+k8VgnagU8vcHpc
-        qM+QPtUK8Rh07KzfCgq7uvaEg3y0TQsnFz0uQVjUOmZA/SuCiMfbAIAPxDwVUsiiMBYYqeP+HJ8
-        C2mbB/FBKNGfcuZzY6GQPqR9+
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr20391549wrp.234.1570957366302;
-        Sun, 13 Oct 2019 02:02:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwKAheZffHkSCPWMhS6Cg1JEcvChcdw7s3Ft8V5LOHraZQFHzUpf5Zi6v2gCGKg53hSBohZcg==
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr20391527wrp.234.1570957366037;
-        Sun, 13 Oct 2019 02:02:46 -0700 (PDT)
+        bh=VqGJ+hSukCwxrY9wctom7RVU8clkF/NcvjQS4FJ08d8=;
+        b=UuorSjA6bj/+GzUoQUQLLDUIUmwouDYiyLQxbfuCqH1Do9MpF+dHb4J82FUJWH1RBs
+         JMSMpRNWIvov7KDsTqyWv30ctZABIWqWWfOLyqx4So6C8nFib97/J6yMf4xp6DurEEAW
+         98MzkI7K3L4N14MhaIjXQbHm7kcl2n6PeYKVAIFDrT/rkpyE6NkniZj41hTdYWeT7lNR
+         4hbk4pc9EYYpqpvxi9CLkRPIdRML7P3v+7y1s35LWxEKTcWlc/bH7CcG95HD55sd4amu
+         Xi02wqV33SnrV+nsQkZbdinAQDdBccGNWM0fXZmLvP6Uf4fgad69G7aISYug7ebTrQY4
+         1q7A==
+X-Gm-Message-State: APjAAAXli6vAjXLSRM+cUbXU8SdwuPR/OqlNokNqlW0q9/WZxchGhMqP
+        PdBd3MBML/DXR2Y7OSC1TfM7evVOYUmIcbn6CC9fWkV1kmcMd4wVvA9Iaio0J5J2T+NpfvntVj7
+        PITcS57pDCrBzPE5Uu2D6Gdb1
+X-Received: by 2002:a1c:a556:: with SMTP id o83mr11323962wme.0.1570957589790;
+        Sun, 13 Oct 2019 02:06:29 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx9H7YU924Gq8Q6Bdsu5/sBl5aGWk9k6285SStbrDxHGELMBwGpeswMbxzpq3J1tU1U+Tx6Gg==
+X-Received: by 2002:a1c:a556:: with SMTP id o83mr11323930wme.0.1570957589541;
+        Sun, 13 Oct 2019 02:06:29 -0700 (PDT)
 Received: from vitty.brq.redhat.com ([95.82.135.110])
-        by smtp.gmail.com with ESMTPSA id f18sm11958383wmh.43.2019.10.13.02.02.44
+        by smtp.gmail.com with ESMTPSA id z189sm25692604wmc.25.2019.10.13.02.06.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Oct 2019 02:02:45 -0700 (PDT)
+        Sun, 13 Oct 2019 02:06:28 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
         linux-kernel@vger.kernel.org
@@ -52,13 +52,12 @@ Cc:     linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
         jmattson@google.com, joro@8bytes.org, boris.ostrovsky@oracle.com,
         jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
         Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 3/5] x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
-In-Reply-To: <1570439071-9814-4-git-send-email-zhenzhong.duan@oracle.com>
-References: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com> <1570439071-9814-4-git-send-email-zhenzhong.duan@oracle.com>
-Date:   Sun, 13 Oct 2019 11:02:44 +0200
-Message-ID: <87o8yl587f.fsf@vitty.brq.redhat.com>
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v5 2/5] x86/kvm: Change print code to use pr_*() format
+In-Reply-To: <1570439071-9814-3-git-send-email-zhenzhong.duan@oracle.com>
+References: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com> <1570439071-9814-3-git-send-email-zhenzhong.duan@oracle.com>
+Date:   Sun, 13 Oct 2019 11:06:26 +0200
+Message-ID: <87lftp5819.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
@@ -68,25 +67,12 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Zhenzhong Duan <zhenzhong.duan@oracle.com> writes:
 
-> There are cases where a guest tries to switch spinlocks to bare metal
-> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
-> "hv_nopvspin" on HYPER_V).
+> pr_*() is preferred than printk(KERN_* ...), after change all the print
+> in arch/x86/kernel/kvm.c will have "kvm_guest: xxx" style.
 >
-> That feature is missed on KVM, add a new parameter "nopvspin" to disable
-> PV spinlocks for KVM guest.
->
-> The new 'nopvspin' parameter will also replace Xen and Hyper-V specific
-> parameters in future patches.
->
-> Define variable nopvsin as global because it will be used in future
-> patches as above.
+> No functional change.
 >
 > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
 > Cc: Paolo Bonzini <pbonzini@redhat.com>
 > Cc: Radim Krcmar <rkrcmar@redhat.com>
 > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
@@ -94,112 +80,135 @@ Zhenzhong Duan <zhenzhong.duan@oracle.com> writes:
 > Cc: Wanpeng Li <wanpengli@tencent.com>
 > Cc: Jim Mattson <jmattson@google.com>
 > Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
 > ---
->  Documentation/admin-guide/kernel-parameters.txt |  5 +++++
->  arch/x86/include/asm/qspinlock.h                |  1 +
->  arch/x86/kernel/kvm.c                           | 21 +++++++++++++++++----
->  kernel/locking/qspinlock.c                      |  7 +++++++
->  4 files changed, 30 insertions(+), 4 deletions(-)
+>  arch/x86/kernel/kvm.c | 30 ++++++++++++++++--------------
+>  1 file changed, 16 insertions(+), 14 deletions(-)
 >
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c7ac2f3..89d77ea 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5330,6 +5330,11 @@
->  			as generic guest with no PV drivers. Currently support
->  			XEN HVM, KVM, HYPER_V and VMWARE guest.
->  
-> +	nopvspin	[X86,KVM]
-> +			Disables the qspinlock slow path using PV optimizations
-> +			which allow the hypervisor to 'idle' the guest on lock
-> +			contention.
-> +
->  	xirc2ps_cs=	[NET,PCMCIA]
->  			Format:
->  			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
-> diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-> index 444d6fd..d86ab94 100644
-> --- a/arch/x86/include/asm/qspinlock.h
-> +++ b/arch/x86/include/asm/qspinlock.h
-> @@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
->  extern void __pv_init_lock_hash(void);
->  extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
->  extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
-> +extern bool nopvspin;
->  
->  #define	queued_spin_unlock queued_spin_unlock
->  /**
 > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index ef836d6..6e14bd4 100644
+> index 3bc6a266..ef836d6 100644
 > --- a/arch/x86/kernel/kvm.c
 > +++ b/arch/x86/kernel/kvm.c
-> @@ -825,18 +825,31 @@ __visible bool __kvm_vcpu_is_preempted(long cpu)
+> @@ -7,6 +7,8 @@
+>   *   Authors: Anthony Liguori <aliguori@us.ibm.com>
 >   */
->  void __init kvm_spinlock_init(void)
->  {
-> -	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
-> -	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
-> +	/*
-> +	 * Disable PV qspinlocks if host kernel doesn't support
-> +	 * KVM_FEATURE_PV_UNHALT feature or there is only 1 vCPU.
-> +	 * virt_spin_lock_key is enabled to avoid lock holder
-> +	 * preemption issue.
-> +	 */
-> +	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) ||
-> +	    num_possible_cpus() == 1) {
-> +		pr_info("PV spinlocks disabled\n");
-
-Why don't we need static_branch_disable(&virt_spin_lock_key) here?
-
-Also, as you're printing the exact reason for PV spinlocks disablement
-in other cases, I'd suggest separating "no host support" and "single
-CPU" cases.
-
->  		return;
-> +	}
 >  
->  	if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
-> +		pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME hints.\n");
->  		static_branch_disable(&virt_spin_lock_key);
+> +#define pr_fmt(fmt) "kvm_guest: " fmt
+> +
+>  #include <linux/context_tracking.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> @@ -286,8 +288,8 @@ static void kvm_register_steal_time(void)
 >  		return;
+>  
+>  	wrmsrl(MSR_KVM_STEAL_TIME, (slow_virt_to_phys(st) | KVM_MSR_ENABLED));
+> -	pr_info("kvm-stealtime: cpu %d, msr %llx\n",
+> -		cpu, (unsigned long long) slow_virt_to_phys(st));
+> +	pr_info("stealtime: cpu %d, msr %llx\n", cpu,
+> +		(unsigned long long) slow_virt_to_phys(st));
+>  }
+>  
+>  static DEFINE_PER_CPU_DECRYPTED(unsigned long, kvm_apic_eoi) = KVM_PV_EOI_DISABLED;
+> @@ -321,8 +323,7 @@ static void kvm_guest_cpu_init(void)
+>  
+>  		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
+>  		__this_cpu_write(apf_reason.enabled, 1);
+> -		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
+> -		       smp_processor_id());
+> +		pr_info("setup async PF for cpu %d\n", smp_processor_id());
 >  	}
 >  
-> -	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
-> -	if (num_possible_cpus() == 1)
-> +	if (nopvspin) {
-> +		pr_info("PV spinlocks disabled forced by \"nopvspin\" parameter.\n");
+>  	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI)) {
+> @@ -347,8 +348,7 @@ static void kvm_pv_disable_apf(void)
+>  	wrmsrl(MSR_KVM_ASYNC_PF_EN, 0);
+>  	__this_cpu_write(apf_reason.enabled, 0);
+>  
+> -	printk(KERN_INFO"Unregister pv shared memory for cpu %d\n",
+> -	       smp_processor_id());
+> +	pr_info("Unregister pv shared memory for cpu %d\n", smp_processor_id());
+>  }
+>  
+>  static void kvm_pv_guest_cpu_reboot(void *unused)
+> @@ -469,7 +469,8 @@ static void __send_ipi_mask(const struct cpumask *mask, int vector)
+>  		} else {
+>  			ret = kvm_hypercall4(KVM_HC_SEND_IPI, (unsigned long)ipi_bitmap,
+>  				(unsigned long)(ipi_bitmap >> BITS_PER_LONG), min, icr);
+> -			WARN_ONCE(ret < 0, "KVM: failed to send PV IPI: %ld", ret);
+> +			WARN_ONCE(ret < 0, "kvm_guest: failed to send PV IPI: %ld",
+> +				  ret);
+>  			min = max = apic_id;
+>  			ipi_bitmap = 0;
+>  		}
+> @@ -479,7 +480,8 @@ static void __send_ipi_mask(const struct cpumask *mask, int vector)
+>  	if (ipi_bitmap) {
+>  		ret = kvm_hypercall4(KVM_HC_SEND_IPI, (unsigned long)ipi_bitmap,
+>  			(unsigned long)(ipi_bitmap >> BITS_PER_LONG), min, icr);
+> -		WARN_ONCE(ret < 0, "KVM: failed to send PV IPI: %ld", ret);
+> +		WARN_ONCE(ret < 0, "kvm_guest: failed to send PV IPI: %ld",
+> +			  ret);
+>  	}
+>  
+>  	local_irq_restore(flags);
+> @@ -509,7 +511,7 @@ static void kvm_setup_pv_ipi(void)
+>  {
+>  	apic->send_IPI_mask = kvm_send_ipi_mask;
+>  	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
+> -	pr_info("KVM setup pv IPIs\n");
+> +	pr_info("setup pv IPIs\n");
 
-Nit: to make it sound better a comma is missing between 'disabled' and
-'forced', or
+Not your fault but in WARN_ONCE() above we use 'PV' capitalized so I'd
+suggest we converge on something: either capitalize them all or make
+them all lowercase.
 
-"PV spinlocks forcefully disabled by ..." if you prefer.
+>  }
+>  
+>  static void kvm_smp_send_call_func_ipi(const struct cpumask *mask)
+> @@ -631,11 +633,11 @@ static void __init kvm_guest_init(void)
+>  	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+>  	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+>  		smp_ops.send_call_func_ipi = kvm_smp_send_call_func_ipi;
+> -		pr_info("KVM setup pv sched yield\n");
+> +		pr_info("setup pv sched yield\n");
 
-> +		static_branch_disable(&virt_spin_lock_key);
+here
+
+>  	}
+>  	if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/kvm:online",
+>  				      kvm_cpu_online, kvm_cpu_down_prepare) < 0)
+> -		pr_err("kvm_guest: Failed to install cpu hotplug callbacks\n");
+> +		pr_err("failed to install cpu hotplug callbacks\n");
+>  #else
+>  	sev_map_percpu_data();
+>  	kvm_guest_cpu_init();
+> @@ -738,7 +740,7 @@ static __init int kvm_setup_pv_tlb_flush(void)
+>  			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
+>  				GFP_KERNEL, cpu_to_node(cpu));
+>  		}
+> -		pr_info("KVM setup pv remote TLB flush\n");
+> +		pr_info("setup pv remote TLB flush\n");
+
+and here too.
+
+>  	}
+>  
+>  	return 0;
+> @@ -866,8 +868,8 @@ static void kvm_enable_host_haltpoll(void *i)
+>  void arch_haltpoll_enable(unsigned int cpu)
+>  {
+>  	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
+> -		pr_err_once("kvm: host does not support poll control\n");
+> -		pr_err_once("kvm: host upgrade recommended\n");
+> +		pr_err_once("host does not support poll control\n");
+> +		pr_err_once("host upgrade recommended\n");
 >  		return;
-> +	}
-> +
-> +	pr_info("PV spinlocks enabled\n");
->  
->  	__pv_init_lock_hash();
->  	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
-> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> index 2473f10..75193d6 100644
-> --- a/kernel/locking/qspinlock.c
-> +++ b/kernel/locking/qspinlock.c
-> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
->  #include "qspinlock_paravirt.h"
->  #include "qspinlock.c"
->  
-> +bool nopvspin __initdata;
-> +static __init int parse_nopvspin(char *arg)
-> +{
-> +	nopvspin = true;
-> +	return 0;
-> +}
-> +early_param("nopvspin", parse_nopvspin);
->  #endif
+>  	}
+
+Other than the above,
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
 Vitaly
