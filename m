@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81E74D6BE9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Oct 2019 01:02:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F9BD6BE7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Oct 2019 01:02:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfJNXCI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Oct 2019 19:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52510 "EHLO mail.kernel.org"
+        id S1726399AbfJNXCK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Oct 2019 19:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbfJNXCI (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Oct 2019 19:02:08 -0400
+        id S1726393AbfJNXCJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 14 Oct 2019 19:02:09 -0400
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80597217F9;
-        Mon, 14 Oct 2019 23:02:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2007421882;
+        Mon, 14 Oct 2019 23:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571094126;
-        bh=e5ELKufEIki4aTdl20aS5WbH85Df9dXGiXMAgJHmzvk=;
+        s=default; t=1571094129;
+        bh=OTdm4D5QsUvEdMjHsLdj8VxjE2uHi2PlTnEpkKDjENw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W18/YeT62/0vSMnL2xR4IGUluqcwtOJNKnCnKTJ5CbOtbg7lnOhFzamXjXcfcap6A
-         RYqbVJBkfVtSTxVGbZd8AqDWOpW8ZDomLnAySVvC4XYGdk8KcWe7swNspRp9tNj6l+
-         ACQAOPSq7IaI3k3uw40y8kGIRvVk1iv85/lFVoD4=
+        b=qJpX+DtDtGu93cjz7aWAU+r0YiZOe+OmJdsx+pga9hftMJB73le99HTNGE7z14IOV
+         JbvHPPe4J5+N6hMG9cWFCjhvVk/ee3JgHPYCr984TO4fMLtdTjflhGh324x65w/Sw3
+         UvKsgBnky2lpCKVk0YkUH5ARDnXg8K3KYkqL2GRY=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Dexuan Cui <decui@microsoft.com>
 Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
@@ -38,9 +38,9 @@ Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         linux-kernel@vger.kernel.org,
         driverdev-devel@linuxdriverproject.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 6/7] PCI/PM: Wrap long lines in documentation
-Date:   Mon, 14 Oct 2019 18:00:15 -0500
-Message-Id: <20191014230016.240912-7-helgaas@kernel.org>
+Subject: [PATCH 7/7] PCI/MSI: Move power state check out of pci_msi_supported()
+Date:   Mon, 14 Oct 2019 18:00:16 -0500
+Message-Id: <20191014230016.240912-8-helgaas@kernel.org>
 X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
 In-Reply-To: <20191014230016.240912-1-helgaas@kernel.org>
 References: <20191014230016.240912-1-helgaas@kernel.org>
@@ -53,68 +53,54 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Documentation/power/pci.rst is wrapped to fit in 80 columns, but directory
-structure changes made a few lines longer.  Wrap them so they all fit in 80
-columns again.
+27e20603c54b ("PCI/MSI: Move D0 check into pci_msi_check_device()")
+moved the power state check into pci_msi_check_device(), which was
+subsequently renamed to pci_msi_supported().  This didn't change the
+behavior, since both callers checked the power state.
+
+However, it doesn't fit the current "pci_msi_supported()" name, which
+should return what the device is capable of, independent of the power
+state.
+
+Move the power state check back into the callers for readability.  No
+functional change intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- Documentation/power/pci.rst | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/pci/msi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
-index 1525c594d631..db41a770a2f5 100644
---- a/Documentation/power/pci.rst
-+++ b/Documentation/power/pci.rst
-@@ -426,12 +426,12 @@ pm->runtime_idle() callback.
- 2.4. System-Wide Power Transitions
- ----------------------------------
- There are a few different types of system-wide power transitions, described in
--Documentation/driver-api/pm/devices.rst.  Each of them requires devices to be handled
--in a specific way and the PM core executes subsystem-level power management
--callbacks for this purpose.  They are executed in phases such that each phase
--involves executing the same subsystem-level callback for every device belonging
--to the given subsystem before the next phase begins.  These phases always run
--after tasks have been frozen.
-+Documentation/driver-api/pm/devices.rst.  Each of them requires devices to be
-+handled in a specific way and the PM core executes subsystem-level power
-+management callbacks for this purpose.  They are executed in phases such that
-+each phase involves executing the same subsystem-level callback for every device
-+belonging to the given subsystem before the next phase begins.  These phases
-+always run after tasks have been frozen.
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 0884bedcfc7a..20e9c729617c 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -861,7 +861,7 @@ static int pci_msi_supported(struct pci_dev *dev, int nvec)
+ 	if (!pci_msi_enable)
+ 		return 0;
  
- 2.4.1. System Suspend
- ^^^^^^^^^^^^^^^^^^^^^
-@@ -636,12 +636,12 @@ System restore requires a hibernation image to be loaded into memory and the
- pre-hibernation memory contents to be restored before the pre-hibernation system
- activity can be resumed.
+-	if (!dev || dev->no_msi || dev->current_state != PCI_D0)
++	if (!dev || dev->no_msi)
+ 		return 0;
  
--As described in Documentation/driver-api/pm/devices.rst, the hibernation image is loaded
--into memory by a fresh instance of the kernel, called the boot kernel, which in
--turn is loaded and run by a boot loader in the usual way.  After the boot kernel
--has loaded the image, it needs to replace its own code and data with the code
--and data of the "hibernated" kernel stored within the image, called the image
--kernel.  For this purpose all devices are frozen just like before creating
-+As described in Documentation/driver-api/pm/devices.rst, the hibernation image
-+is loaded into memory by a fresh instance of the kernel, called the boot kernel,
-+which in turn is loaded and run by a boot loader in the usual way.  After the
-+boot kernel has loaded the image, it needs to replace its own code and data with
-+the code and data of the "hibernated" kernel stored within the image, called the
-+image kernel.  For this purpose all devices are frozen just like before creating
- the image during hibernation, in the
+ 	/*
+@@ -972,7 +972,7 @@ static int __pci_enable_msix(struct pci_dev *dev, struct msix_entry *entries,
+ 	int nr_entries;
+ 	int i, j;
  
- 	prepare, freeze, freeze_noirq
-@@ -691,8 +691,8 @@ controlling the runtime power management of their devices.
+-	if (!pci_msi_supported(dev, nvec))
++	if (!pci_msi_supported(dev, nvec) || dev->current_state != PCI_D0)
+ 		return -EINVAL;
  
- At the time of this writing there are two ways to define power management
- callbacks for a PCI device driver, the recommended one, based on using a
--dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst, and the
--"legacy" one, in which the .suspend(), .suspend_late(), .resume_early(), and
-+dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst, and
-+the "legacy" one, in which the .suspend(), .suspend_late(), .resume_early(), and
- .resume() callbacks from struct pci_driver are used.  The legacy approach,
- however, doesn't allow one to define runtime power management callbacks and is
- not really suitable for any new drivers.  Therefore it is not covered by this
+ 	nr_entries = pci_msix_vec_count(dev);
+@@ -1058,7 +1058,7 @@ static int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+ 	int nvec;
+ 	int rc;
+ 
+-	if (!pci_msi_supported(dev, minvec))
++	if (!pci_msi_supported(dev, minvec) || dev->current_state != PCI_D0)
+ 		return -EINVAL;
+ 
+ 	/* Check whether driver already requested MSI-X IRQs */
 -- 
 2.23.0.700.g56cf767bdb-goog
 
