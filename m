@@ -2,102 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EB28D5FCD
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Oct 2019 12:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 227B1D6BCA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Oct 2019 01:00:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731308AbfJNKJc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Oct 2019 06:09:32 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34157 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730880AbfJNKJb (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:09:31 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y135so14136035wmc.1;
-        Mon, 14 Oct 2019 03:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o2MGbH0sl7jl/AOs9onFYSQLsVIpoiec9/okAKmAn3E=;
-        b=DNlqi/Qbk92sYsfunZrpAJH79XZwsdm0TzASMQNGdRoO7DIEf+JObAoz6guoOquWx1
-         2yhAU33ZVi0MXMmaeLEGM7KmyHm0qqpa08f+jKeTuhKpTBEwJhDhSI8t5UT9M7RMv60D
-         Zh3DNr1me+EspD/8ZvY2CwKjlzszCJxeXi0aRmlD41+bEryy9N9LCDC4etF69rJr4c6e
-         FuKse1xUsVu8mNWUIH6do8L9uxtvhR8kJy10hNZoVbFPkawHxSYOP4f8Z6Si4el9rL2x
-         2N4ZdxmYBV4dKsBbLLxi19b4x+gf45GKndPNmdAwoV7ZNBWhyqDY99bA/FCH/mmgj496
-         Pvbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o2MGbH0sl7jl/AOs9onFYSQLsVIpoiec9/okAKmAn3E=;
-        b=mGfuWmONuKeDlIUVo1xpWf+rcMzjszoXGdTVGOJyj6k+DxskW6+emHxqtVVmeAuol+
-         hAbNmbu8IjH8ehWxBVejHRQMn2GzP3WWvilG0F6DDuX+ItUuGJZprE2mZ9jBwbQkudFf
-         Z/lV4fwh4PEqxOAs2vouaiQyWkEHPcAvYGp/pBKhNrS9Xhh02cG9L318z5A1QJgH/dad
-         A5torJCiCy7IBRM6UlCxMD50QcnmdxJZTNVqtcUjNYOpfSKEY29Ta/0Z2rcsl+AMj4ii
-         w7fGwZUTfAm9i5EjmS7E4MECIcU10w6PBclDSvBuRFtBBoLIwPB2XkiUg85SAZAAxsef
-         DT+g==
-X-Gm-Message-State: APjAAAWLiQIL6EEQzOeIIXdD8N4C0hklgYOwXjo/peImBQNlibahhCSi
-        SA3Bnykw2gvoSxs0Bn/mJd0=
-X-Google-Smtp-Source: APXvYqzssuGzVNBk2ayLJQK0M+PP70+MlYJlryvhbvu4J9Bzn9tkYOLIwMBLalOfn6xeyS8rK+XAYA==
-X-Received: by 2002:a1c:a708:: with SMTP id q8mr13162577wme.86.1571047768995;
-        Mon, 14 Oct 2019 03:09:28 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:484d:bbc3:12dc:348b])
-        by smtp.gmail.com with ESMTPSA id l7sm17686122wrv.77.2019.10.14.03.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 03:09:28 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 12:09:25 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1726023AbfJNXAr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Oct 2019 19:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbfJNXAr (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 14 Oct 2019 19:00:47 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05A332133F;
+        Mon, 14 Oct 2019 23:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571094046;
+        bh=XqPAXn+ga1kYewIdDzsVOZ1HjiGk6w5zCGO+lJ563dw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=p/bpCy46EIZr1Vr/b4SANZeuQBFWndiUiRdCCXHwqLBJ/RHaIAqgbcv9qR7gfB9+0
+         cG71WcdBmPlE2U2b6quaFh5SnYCBx6ota6CW07Rj7thn0ZIhL+BShMZvSQ9O7B3hFo
+         SgGKIy2F55a5FT4p2SmMU+fjsFBvJee/P8eV1t30=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v2 2/3] Drivers: hv: vmbus: Enable VMBus protocol
- versions 4.1, 5.1 and 5.2
-Message-ID: <20191014100925.GB11206@andrea.guest.corp.microsoft.com>
-References: <20191010154600.23875-1-parri.andrea@gmail.com>
- <20191010154600.23875-3-parri.andrea@gmail.com>
- <DM5PR21MB0137ACE07DCD2A6BBEC83665D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>, olaf@aepfle.de,
+        apw@canonical.com, jasowang@redhat.com, vkuznets@redhat.com,
+        marcelo.cerri@canonical.com, jackm@mellanox.com,
+        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        driverdev-devel@linuxdriverproject.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v3 0/7] PCI: PM: Move to D0 before calling pci_legacy_resume_early()
+Date:   Mon, 14 Oct 2019 18:00:09 -0500
+Message-Id: <20191014230016.240912-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR21MB0137ACE07DCD2A6BBEC83665D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> > @@ -182,15 +182,21 @@ static inline u32 hv_get_avail_to_write_percent(
-> >   * 2 . 4  (Windows 8)
-> >   * 3 . 0  (Windows 8 R2)
-> >   * 4 . 0  (Windows 10)
-> > + * 4 . 1  (Windows 10 RS3)
-> >   * 5 . 0  (Newer Windows 10)
-> > + * 5 . 1  (Windows 10 RS4)
-> > + * 5 . 2  (Windows Server 2019, RS5)
-> >   */
-> > 
-> >  #define VERSION_WS2008  ((0 << 16) | (13))
-> >  #define VERSION_WIN7    ((1 << 16) | (1))
-> >  #define VERSION_WIN8    ((2 << 16) | (4))
-> >  #define VERSION_WIN8_1    ((3 << 16) | (0))
-> > -#define VERSION_WIN10	((4 << 16) | (0))
-> > +#define VERSION_WIN10_V4 ((4 << 16) | (0))
-> 
-> I would recommend not changing the symbol name for version 4.0.
-> The change makes it more consistent with the later VERSION_WIN10_*
-> symbols, but it doesn't fundamentally add any clarity and I'm not sure
-> it's worth the churn in the other files that have to be touched. It's a
-> judgment call, and that's just my input.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-My fingers were itching:  ;-) I've reverted this change, following
-your recommendation.
+Dexuan, the important thing here is the first patch, which is your [1],
+which I modified by doing pci_restore_state() as well as setting to D0:
 
-Thanks,
-  Andrea
+  pci_set_power_state(pci_dev, PCI_D0);
+  pci_restore_state(pci_dev);
+
+I'm proposing some more patches on top.  None are relevant to the problem
+you're solving; they're just minor doc and other updates in the same area.
+
+Rafael, if you have a chance to look at these, I'd appreciate it.  I tried
+to make the doc match the code, but I'm no PM expert.
+
+[1] https://lore.kernel.org/r/KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
+
+
+Dexuan Cui (1):
+  PCI/PM: Always return devices to D0 when thawing
+
+Bjorn Helgaas (6):
+  PCI/PM: Correct pci_pm_thaw_noirq() documentation
+  PCI/PM: Clear PCIe PME Status even for legacy power management
+  PCI/PM: Run resume fixups before disabling wakeup events
+  PCI/PM: Make power management op coding style consistent
+  PCI/PM: Wrap long lines in documentation
+  PCI/MSI: Move power state check out of pci_msi_supported()
+
+ Documentation/power/pci.rst | 38 +++++++-------
+ drivers/pci/msi.c           |  6 +--
+ drivers/pci/pci-driver.c    | 99 ++++++++++++++++++-------------------
+ 3 files changed, 71 insertions(+), 72 deletions(-)
+
+-- 
+2.23.0.700.g56cf767bdb-goog
+
