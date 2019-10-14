@@ -2,149 +2,122 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1424D5E89
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Oct 2019 11:18:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C678D5F63
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Oct 2019 11:52:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbfJNJSq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Oct 2019 05:18:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38004 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730785AbfJNJSm (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:18:42 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EC41D73A6C
-        for <linux-hyperv@vger.kernel.org>; Mon, 14 Oct 2019 09:18:41 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id w2so8273285wrn.4
-        for <linux-hyperv@vger.kernel.org>; Mon, 14 Oct 2019 02:18:41 -0700 (PDT)
+        id S1731067AbfJNJwJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Oct 2019 05:52:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35475 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730740AbfJNJwJ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:52:09 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v8so18924527wrt.2;
+        Mon, 14 Oct 2019 02:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TgbHwKMY+OVVpJwkvai2RZenJKOMFPjpVaxMPbCBN5c=;
+        b=elRGhDdYM5z0fh+u2IZyo1JzQV3H7y+UrHsWM7o/96lM7+Ebs6p8gPbSvJ3AVhwJBj
+         0NaTzI4MZEPEaXP6FqpGKddIbjjUo/h3yv+u1gRnlgcU8DFQDR0lPjDD1lxDWyHvLKqK
+         3/O6c+NKmB9mGLM3ikw52QIHKw9zDHJjlz8o2NVxkvnT8MyK0RVkOfE41JxQgyBHuZS+
+         sK0H63CzgAsyROvFwi1LQbLicVptacN6HMiQtFR/kYFrXLewZJEeKfjSGdD0taVpV33/
+         +/SoMOlx52DP38EiUcth+pT1z/j4ZsVeUg8nXnPW8OG8OCvUVZICpLt6TxV0bJCsTH/i
+         NRDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=I4lbvaq6vVdEN7xa2xYOpTCkhvY6ZkuoHSMKJd3XSac=;
-        b=tuPYB4++nQtfpVl45Fwalw/GtLNGKQLTiZPHf6nYMCwOrI5CQucOqqURLZY3+vK45/
-         V7GK2xkE33XyQ6QWJaNiX1Xa1pVA7MKKc3vny3v7UshJ9aEa4SU/ASFjR6EzMW0xBojB
-         90OcunCxCNZ7mIApIxpvdUGz4oiKYxah8VBVTQzNRdBmyZ2U+/W1AlGyZeEQMtsUaxD9
-         nYnzWIfDeDUUTfiWR6kat6XEu3StO2m1uEgyF6nswiq9ol/b+BM9o5Pv3uvM1yE0NFPQ
-         iu0wU2fWz+AlHfx7awYDahRdHFeh1QTjlQ7n6NOsBeMoaakmNwg6rTU0e+s0OLgtBfJT
-         WT5Q==
-X-Gm-Message-State: APjAAAU1XJ49mDI4h8pDcEfcFSGKH9WJ7GVVDzSNAc5MngT9gx60oXZJ
-        afOotWGsxSxBzOv5tYf0CE26MF4XJOI1a6AIElqZIrHTmLgRLLIgjcaZe5XErNzI1xX9KZpWKB1
-        PA2VsmBk6+PDYyjexzH7vYJRo
-X-Received: by 2002:a5d:4b09:: with SMTP id v9mr23805274wrq.127.1571044720432;
-        Mon, 14 Oct 2019 02:18:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwar4f7SJRAHyQ+5Z2fHgpCWGXj/TXfvOHxHfn21TXUp6RnIgTR2a5itwE7yCxFrOcXsEFiVg==
-X-Received: by 2002:a5d:4b09:: with SMTP id v9mr23805240wrq.127.1571044720157;
-        Mon, 14 Oct 2019 02:18:40 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z125sm20070555wme.37.2019.10.14.02.18.38
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TgbHwKMY+OVVpJwkvai2RZenJKOMFPjpVaxMPbCBN5c=;
+        b=Ji+Zgwo1BSJnYe32mb3kSSurSzRHMQEQpvOt20XDBJjrg5ELwcN8+t6ddmmoe+O62e
+         QoJOA3pLIuQ46KU+xg66XEvgI8KPKN07vwK56HNQuI7QTYBLcvUDA7T0oP7368HdVfza
+         XWy7wGyTRK798KpsAQzxfpNV7P/4sN5aPxJ3f3b/rFK/X9UwAdUN9Yy7P1nR5AIi0K9l
+         zRe0W+u2xZCKiC8yVq8yqbjM19/frpCWZRVv2fcqL7gj+MAqbCqtNeCTJg/3Y87UtK6+
+         2Vt03JKSLWn/jrl+dE8vs7JlK6TBG2Df+I5o6ric4liH9EuDM+pMe0YIYQtUEz+akWuS
+         RcVA==
+X-Gm-Message-State: APjAAAVyuDdAjx9yOC6R3hs+0IRpee1YNhYd9aOvB5udUJiJh4qKUs9I
+        8KdtlJkKB7oAccoTOhLWZi2P/B3RJu8=
+X-Google-Smtp-Source: APXvYqz1DO5pTofEXIw0VuTnZxvGGS4XOx24scLh6dbp7EmJkpptvcoPoDUeJr/fbSXfHIkghsFIMw==
+X-Received: by 2002:adf:e90d:: with SMTP id f13mr25249204wrm.104.1571046726846;
+        Mon, 14 Oct 2019 02:52:06 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:484d:bbc3:12dc:348b])
+        by smtp.gmail.com with ESMTPSA id r6sm19715339wmh.38.2019.10.14.02.52.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 02:18:39 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 3/5] x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
-In-Reply-To: <4e1ef1d3-527b-bb70-5536-d9daeb50b7c7@oracle.com>
-References: <1570439071-9814-1-git-send-email-zhenzhong.duan@oracle.com> <1570439071-9814-4-git-send-email-zhenzhong.duan@oracle.com> <87o8yl587f.fsf@vitty.brq.redhat.com> <4e1ef1d3-527b-bb70-5536-d9daeb50b7c7@oracle.com>
-Date:   Mon, 14 Oct 2019 11:18:38 +0200
-Message-ID: <878spn65xt.fsf@vitty.brq.redhat.com>
+        Mon, 14 Oct 2019 02:52:06 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 11:52:00 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Introduce table of VMBus
+ protocol versions
+Message-ID: <20191014095200.GA11206@andrea.guest.corp.microsoft.com>
+References: <20191010154600.23875-1-parri.andrea@gmail.com>
+ <20191010154600.23875-2-parri.andrea@gmail.com>
+ <DM5PR21MB013798776480FFA5DCD22442D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR21MB013798776480FFA5DCD22442D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Zhenzhong Duan <zhenzhong.duan@oracle.com> writes:
+> > @@ -244,20 +232,18 @@ int vmbus_connect(void)
+> >  	 * version.
+> >  	 */
+> > 
+> > -	version = VERSION_CURRENT;
+> > +	for (i = 0; i < ARRAY_SIZE(vmbus_versions); i++) {
+> > +		version = vmbus_versions[i];
+> > 
+> > -	do {
+> >  		ret = vmbus_negotiate_version(msginfo, version);
+> >  		if (ret == -ETIMEDOUT)
+> >  			goto cleanup;
+> > 
+> >  		if (vmbus_connection.conn_state == CONNECTED)
+> >  			break;
+> > +	}
+> > 
+> > -		version = vmbus_get_next_version(version);
+> > -	} while (version != VERSION_INVAL);
+> > -
+> > -	if (version == VERSION_INVAL)
+> > +	if (vmbus_connection.conn_state != CONNECTED)
+> >  		goto cleanup;
+> > 
+> 
+> This is a nit, but the loop exit path bugs me.  When a connection
+> is established, the loop is exited by the "break", and then
+> conn_state has to be tested again to decide whether the loop
+> exited due to getting a connection vs. hitting the end of the list.
+> Slightly cleaner in my mind would be:
+> 
+> 	for (i=0; ; i++) {
+> 		if (i == ARRAY_SIZE(vmbus_versions))
+> 			goto cleanup;
+> 
+> 		version  = vmbus_versions[i];
+> 		ret = vmbus_negotiate_version(msginfo, version);
+> 		if (ret == -ETIMEDOUT)
+> 			goto cleanup;
+> 
+> 		if (vmbus_connection.conn_state == CONNECTED)
+> 			break;
+> 	}
 
-> On 2019/10/13 17:02, Vitaly Kuznetsov wrote:
->> Zhenzhong Duan <zhenzhong.duan@oracle.com> writes:
-> ...snip
->> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->> index ef836d6..6e14bd4 100644
->> --- a/arch/x86/kernel/kvm.c
->> +++ b/arch/x86/kernel/kvm.c
->> @@ -825,18 +825,31 @@ __visible bool __kvm_vcpu_is_preempted(long cpu)
->>    */
->>   void __init kvm_spinlock_init(void)
->>   {
->> -	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
->> -	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
->> +	/*
->> +	 * Disable PV qspinlocks if host kernel doesn't support
->> +	 * KVM_FEATURE_PV_UNHALT feature or there is only 1 vCPU.
->> +	 * virt_spin_lock_key is enabled to avoid lock holder
->> +	 * preemption issue.
->> +	 */
->> +	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) ||
->> +	    num_possible_cpus() == 1) {
->> +		pr_info("PV spinlocks disabled\n");
->> Why don't we need static_branch_disable(&virt_spin_lock_key) here?
->
-> Thanks for review.
->
-> I have a brief explanation in above comment area.
->
-> Boris also raised the same question in v4 and see my detailed explanation
->
-> in https://lkml.org/lkml/2019/10/6/39
->
->>
->> Also, as you're printing the exact reason for PV spinlocks disablement
->> in other cases, I'd suggest separating "no host support" and "single
->> CPU" cases.
->
-> Will do after reaching a consensus on your first question.
+Indeed.  I applied this locally, for the next iteration.  Thank you for
+the review, Michael.
 
-Oh, sorry I missed v4 discussion. As I'm not the first to ask why we
-don't do static_branch_disable(&virt_spin_lock_key) here I suggest we do
-the followin:
-
-- Split !kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) and
-  num_possible_cpus() == 1 cases
-- Do static_branch_disable(&virt_spin_lock_key) for UP case (just for
-  consistency).
-- Add a comment why we don't do that for
-  !kvm_para_has_feature(KVM_FEATURE_PV_UNHALT) case (basically, what you
-  replied to Boris)
-
-This will also allow us to print the exact reason.
-
->
->>
->>>   		return;
->>> +	}
->>>   
->>>   	if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
->>> +		pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME hints.\n");
->>>   		static_branch_disable(&virt_spin_lock_key);
->>>   		return;
->>>   	}
->>>   
->>> -	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
->>> -	if (num_possible_cpus() == 1)
->>> +	if (nopvspin) {
->>> +		pr_info("PV spinlocks disabled forced by \"nopvspin\" parameter.\n");
->> Nit: to make it sound better a comma is missing between 'disabled' and
->> 'forced', or
->>
->> "PV spinlocks forcefully disabled by ..." if you prefer.
->
-> Will do.
->
-> Zhenzhong
->
->
-
--- 
-Vitaly
+  Andrea
