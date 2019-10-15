@@ -2,53 +2,46 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BCF4D7363
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Oct 2019 12:35:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 528A5D73FE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Oct 2019 12:57:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730767AbfJOKfg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 15 Oct 2019 06:35:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44776 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfJOKfg (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:35:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z9so23184378wrl.11;
-        Tue, 15 Oct 2019 03:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZhF+IJMFrGCNSt/DYaWxJMskyfNVl1OJiwVFgA4loI=;
-        b=phKt1qHNEFEJNA1t+ZpAsxyeHJG01qYZqf07iMDNOj/R/AI+QF4k4ftjUBAEhBLqfW
-         B8PgmrupMXS+crT4mizGWEuCs7N71Yw1VHfvuQrvJfe+vU3CNE78lpWCx9Povq4P/kTp
-         Ii4xaqThvDDlCnIJMwM5A8M3uw6svphS7iaTWIF+bm5z1vizxpGupIQSMAiGmvutI4+Q
-         VBQ4FDtRWOamvRSMBSokcMxypAuzgkn83Lhh7B2xef/SEGYKJ/L5Dg8BHBDjDHlkRzJT
-         2M5IXf4Ada1fRUk5OzPzkFihvjAuvTgvNOtkWp5Vgqc9Kz5o1Qg7wVAdt6Soe+jfLo3B
-         7a1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZhF+IJMFrGCNSt/DYaWxJMskyfNVl1OJiwVFgA4loI=;
-        b=eOMd9KdIYFTiZdugH4WiTXixlWmz5RgDnIaHPtddU1QYTKDCq5axbZQ4lPouIYYbf1
-         Oo/KdLog3xJhRSSgQ8dcE+Suka07QnWQ6pojCKynI5NONHgKvgXxIVOyXdouL6JfpMN7
-         OiWXPh7kHebGCzbWzde0aqWajyW6S60lnHDGrAaNJkIXOd6Mq63AXGWWm9U3Ecl0EO9n
-         bqnFKWQOplxQJh3XIjjMBeP1w+wIul+q56TbbRnju/PsesuRdyKpAJLAr4tGmDMUtohb
-         Q+6PUB/6WGYYocEwVyqVD8D0AKXpkBd1c/moj5jqWrA9uzqQbfGMtmDav/RUpHf5L+Dm
-         CU6w==
-X-Gm-Message-State: APjAAAUNSiMvxn8u97WrRD4cfA4t2Oa9FXl2Q3xLO2fc2QQkdYIZlmRw
-        F6up5qnNxONvMPDPqu0Umu0urASZBmy7zQ==
-X-Google-Smtp-Source: APXvYqwbx/z0JfB8Tw+7CM0PNbXcRtKsIyNEpzo53nL0HJKVRpO4HUFgZ70IHYwoWPeSM3Na+kuHdQ==
-X-Received: by 2002:a5d:6949:: with SMTP id r9mr27369305wrw.106.1571135733069;
-        Tue, 15 Oct 2019 03:35:33 -0700 (PDT)
-Received: from andrea.corp.microsoft.com ([2a01:110:8012:1010:8d42:cc61:bfff:65c2])
-        by smtp.gmail.com with ESMTPSA id a13sm55546549wrf.73.2019.10.15.03.35.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 03:35:32 -0700 (PDT)
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        x86@kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        id S1728432AbfJOK5D (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 15 Oct 2019 06:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbfJOK5D (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:57:03 -0400
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D2022089C;
+        Tue, 15 Oct 2019 10:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571137022;
+        bh=dnP3I0453xbeVkzuRn8mK2w4ROoFLtsCNmpT7EIfIag=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QKavsu1JJ+lWqRq6CjnZhVIjctg+IY/PV9dF9xhF8VoDcGdoIeBRMoWgBOS0D9+Wm
+         IGQ1d8UvXzFDvVPxtGrN4MXnfBrkPikyGwm3Ctt526DUxbglBE/s14ksmkPX7GjAV3
+         0CqnX7V59XaiOg31KdIaN83Sc4W4gFWus9e/4xLM=
+Received: by mail-qk1-f178.google.com with SMTP id y144so18690477qkb.7;
+        Tue, 15 Oct 2019 03:57:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAVjrCQ0ZXB1m5LToUzP1k76oBlUyo1ls2bXXuBsHwo+MyI8gNPQ
+        VUDkVkEte4LFjsJzOo+SfiGgJ2nC7PCu76VTkPc=
+X-Google-Smtp-Source: APXvYqx5kf8mO8pPHFCbswwtKKpCHJvQQ4CmZ5SlTPttYVBGa3KdYKwperC0jTheIvv74XdcpMO16DAeIwuW4Ujexos=
+X-Received: by 2002:a37:6689:: with SMTP id a131mr32134156qkc.345.1571137021649;
+ Tue, 15 Oct 2019 03:57:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191015103502.13156-1-parri.andrea@gmail.com>
+In-Reply-To: <20191015103502.13156-1-parri.andrea@gmail.com>
+From:   Wei Liu <wei.liu@kernel.org>
+Date:   Tue, 15 Oct 2019 11:56:50 +0100
+X-Gmail-Original-Message-ID: <CAHd7Wqxzs54nQ_x_uCCSBQV9eW1p-CD9J+64DmV67abxMbJDWA@mail.gmail.com>
+Message-ID: <CAHd7Wqxzs54nQ_x_uCCSBQV9eW1p-CD9J+64DmV67abxMbJDWA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        x86@kernel.org, "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
@@ -57,53 +50,26 @@ Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         "H . Peter Anvin" <hpa@zytor.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>
-Subject: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
-Date:   Tue, 15 Oct 2019 12:35:02 +0200
-Message-Id: <20191015103502.13156-1-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Michael reported that the x86/hyperv initialization code printed the
-following dmesg when running in a VM on Hyper-V:
+On Tue, 15 Oct 2019 at 11:35, Andrea Parri <parri.andrea@gmail.com> wrote:
+>
+> Michael reported that the x86/hyperv initialization code printed the
+> following dmesg when running in a VM on Hyper-V:
+>
+>   [    0.000738] Booting paravirtualized kernel on bare hardware
+>
+> Let the x86/hyperv initialization code set pv_info.name to "Hyper-V";
+> with this addition, the dmesg read:
+>
+>   [    0.000172] Booting paravirtualized kernel on Hyper-V
+>
+> Reported-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
 
-  [    0.000738] Booting paravirtualized kernel on bare hardware
-
-Let the x86/hyperv initialization code set pv_info.name to "Hyper-V";
-with this addition, the dmesg read:
-
-  [    0.000172] Booting paravirtualized kernel on Hyper-V
-
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
----
-Changes since v1 ([1]):
-  - move the setting of pv_info.name to ms_hyperv_init_platform() (Wei Liu)
-
-[1] https://lkml.kernel.org/r/20191015092937.11244-1-parri.andrea@gmail.com
-
- arch/x86/kernel/cpu/mshyperv.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 267daad8c0360..e7f0776e2a811 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -216,6 +216,8 @@ static void __init ms_hyperv_init_platform(void)
- 	int hv_host_info_ecx;
- 	int hv_host_info_edx;
- 
-+	pv_info.name = "Hyper-V";
-+
- 	/*
- 	 * Extract the features and hints
- 	 */
--- 
-2.23.0
-
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
