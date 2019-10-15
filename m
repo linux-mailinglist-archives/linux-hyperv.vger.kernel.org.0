@@ -2,74 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 528A5D73FE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Oct 2019 12:57:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5C52D7572
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Oct 2019 13:47:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfJOK5D (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 15 Oct 2019 06:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfJOK5D (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:57:03 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D2022089C;
-        Tue, 15 Oct 2019 10:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571137022;
-        bh=dnP3I0453xbeVkzuRn8mK2w4ROoFLtsCNmpT7EIfIag=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QKavsu1JJ+lWqRq6CjnZhVIjctg+IY/PV9dF9xhF8VoDcGdoIeBRMoWgBOS0D9+Wm
-         IGQ1d8UvXzFDvVPxtGrN4MXnfBrkPikyGwm3Ctt526DUxbglBE/s14ksmkPX7GjAV3
-         0CqnX7V59XaiOg31KdIaN83Sc4W4gFWus9e/4xLM=
-Received: by mail-qk1-f178.google.com with SMTP id y144so18690477qkb.7;
-        Tue, 15 Oct 2019 03:57:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAVjrCQ0ZXB1m5LToUzP1k76oBlUyo1ls2bXXuBsHwo+MyI8gNPQ
-        VUDkVkEte4LFjsJzOo+SfiGgJ2nC7PCu76VTkPc=
-X-Google-Smtp-Source: APXvYqx5kf8mO8pPHFCbswwtKKpCHJvQQ4CmZ5SlTPttYVBGa3KdYKwperC0jTheIvv74XdcpMO16DAeIwuW4Ujexos=
-X-Received: by 2002:a37:6689:: with SMTP id a131mr32134156qkc.345.1571137021649;
- Tue, 15 Oct 2019 03:57:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191015103502.13156-1-parri.andrea@gmail.com>
-In-Reply-To: <20191015103502.13156-1-parri.andrea@gmail.com>
-From:   Wei Liu <wei.liu@kernel.org>
-Date:   Tue, 15 Oct 2019 11:56:50 +0100
-X-Gmail-Original-Message-ID: <CAHd7Wqxzs54nQ_x_uCCSBQV9eW1p-CD9J+64DmV67abxMbJDWA@mail.gmail.com>
-Message-ID: <CAHd7Wqxzs54nQ_x_uCCSBQV9eW1p-CD9J+64DmV67abxMbJDWA@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        x86@kernel.org, "K . Y . Srinivasan" <kys@microsoft.com>,
+        id S1728086AbfJOLrK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 15 Oct 2019 07:47:10 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43704 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfJOLrJ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:47:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j18so23447287wrq.10;
+        Tue, 15 Oct 2019 04:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2rFh15VrB4DEKcYfjt476nNyBnV2R8iO+x5S3m+Zx9s=;
+        b=M44lzqYZ55PCUtw3DvsrdQZn/ARc2y7bf3Hs+7Tj2fei/jNSDBfdWh8cfXKTOAKsvY
+         SHBv/u9sMAP43yNXWl6wBlr/leLB/Xuqni4a+YYvCQtR7yQN5R68epVhwzU+XsKyjeWL
+         kGDErTlZZhuc9so36ovhMRIf6P1VE8xM7UIbrLULMmsYRLAoPO8t0zY/3eccNgWeyb3y
+         qFSQfD69DPfuX3E/abCstS+DW5K6Ct+roBaizDHaBuUxincE2mpMvsMyieSsxvEcI04C
+         JT+MHdwFI9OczZFDIFcpUYLaXxcO1NsgDFB+ZGEWFQew9k+NZAqaofjWtQy3iox9unY9
+         xLrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2rFh15VrB4DEKcYfjt476nNyBnV2R8iO+x5S3m+Zx9s=;
+        b=p4uWHH7GymW+MzlBjqvFd7sGmfvQpo6/Hc8Dr0ytNW43uMVouz4TVkvRNcdBRK0VxC
+         AlT5RUwUWWAkcVN7/qLxL1zowA4/hNbWlFs/9uECpxEbQNM1j2Fo5MDKGGWj349T0ykM
+         mTEtc15tEQzu6IZ4A+IoPlW9whSN6ru83zEuDJpTVZtwVoONxsEqRhdu56oWEamlOeBZ
+         ZX3wjVauxwmMRY5trKc+ViOK/Ht/BnMRDJESnJiINgG47JdgiFffyp5S/rPmJIM+FaRb
+         3Jh12pSeBYOZHoxxMNDZ92CYycOZEeC/2n3/ryX5SLALXEaScu1J1IQaO/IiPeRPwxzl
+         Pegw==
+X-Gm-Message-State: APjAAAX83mIMumSqlw4KJYEE3KkYXblQdrfuI1iWgY94zPMK86Sj2mmJ
+        TH+00ccSwbPqwiLgZtwaxQJDEAjJUaI3qw==
+X-Google-Smtp-Source: APXvYqzfLHeVyovVfvjsOtMX1WbIcgz8S/+Bh0XBIL8YKw8jbzwdIlKeIIEmB8ocHE7M5CxvuheMJw==
+X-Received: by 2002:a5d:540d:: with SMTP id g13mr26160793wrv.8.1571140026937;
+        Tue, 15 Oct 2019 04:47:06 -0700 (PDT)
+Received: from andrea.corp.microsoft.com ([2a01:110:8012:1010:8d42:cc61:bfff:65c2])
+        by smtp.gmail.com with ESMTPSA id u11sm20237307wmd.32.2019.10.15.04.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 04:47:05 -0700 (PDT)
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH v3 0/3] Drivers: hv: vmbus: Miscellaneous improvements
+Date:   Tue, 15 Oct 2019 13:46:43 +0200
+Message-Id: <20191015114646.15354-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, 15 Oct 2019 at 11:35, Andrea Parri <parri.andrea@gmail.com> wrote:
->
-> Michael reported that the x86/hyperv initialization code printed the
-> following dmesg when running in a VM on Hyper-V:
->
->   [    0.000738] Booting paravirtualized kernel on bare hardware
->
-> Let the x86/hyperv initialization code set pv_info.name to "Hyper-V";
-> with this addition, the dmesg read:
->
->   [    0.000172] Booting paravirtualized kernel on Hyper-V
->
-> Reported-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+Hi all,
 
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
+The patchset:
+
+  - refactors the VMBus negotiation code by introducing the table of
+    VMBus protocol versions (patch 1/3),
+
+  - enables VMBus protocol version 4.1, 5.1 and 5.2 (patch 2/3),
+
+  - introduces a module parameter to cap the VMBus protocol versions
+    which a guest can negotiate with the hypervisor (patch 3/3).
+
+Thanks,
+  Andrea
+
+---
+Changes since v2 ([1]):
+  - refactor the loop exit path in vmbus_connect() (Michael Kelley)
+  - do not rename VERSION_WIN10 (Michael Kelley)
+
+Changes since v1 ([2]):
+  - remove the VERSION_INVAL macro (Vitaly Kuznetsov and Dexuan Cui)
+  - make the table of VMBus protocol versions static (Dexuan Cui)
+  - enable VMBus protocol version 4.1 (Michael Kelley)
+  - introduce module parameter to cap the VMBus version (Dexuan Cui)
+
+[1] https://lkml.kernel.org/r/20191010154600.23875-1-parri.andrea@gmail.com
+[2] https://lkml.kernel.org/r/20191007163115.26197-1-parri.andrea@gmail.com
+
+Andrea Parri (3):
+  Drivers: hv: vmbus: Introduce table of VMBus protocol versions
+  Drivers: hv: vmbus: Enable VMBus protocol versions 4.1, 5.1 and 5.2
+  Drivers: hv: vmbus: Add module parameter to cap the VMBus version
+
+ drivers/hv/connection.c | 72 +++++++++++++++++++++--------------------
+ drivers/hv/vmbus_drv.c  |  3 +-
+ include/linux/hyperv.h  | 12 ++++---
+ 3 files changed, 45 insertions(+), 42 deletions(-)
+
+-- 
+2.23.0
+
