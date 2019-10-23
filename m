@@ -2,84 +2,152 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBA05E156C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Oct 2019 11:10:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D37CFE16C1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Oct 2019 11:56:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390590AbfJWJKm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 23 Oct 2019 05:10:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:39233 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390530AbfJWJKm (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:10:42 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DAB3A68BE1; Wed, 23 Oct 2019 11:10:37 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 11:10:37 +0200
-From:   "hch@lst.de" <hch@lst.de>
-To:     Wei Hu <weh@microsoft.com>
-Cc:     "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S2390278AbfJWJ4M (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 23 Oct 2019 05:56:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37149 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390938AbfJWJ4M (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:56:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571824571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PjIrWxilILjTXJMM4pZ+a2frsZYLFCvzVYmdT4dKHeA=;
+        b=b5zDXq8J97LwC5WX8PDjo+cfJdZZOnEezlbTMRhRHpU2HUGLbaQxaw+As7v+urTLtBvPCO
+        jM5JM27+/lVGh8aIP74TVhqRuUiISgaAurfsQFsZZn7yRTifKcU5ghkF4R+odbPzYeFbAN
+        WSNSePJTMlPVIAqAazHXU5EXB1LqDpc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-AIB5fJO8MnCfZd5pS6ln_A-1; Wed, 23 Oct 2019 05:56:07 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B56EC1800DD0;
+        Wed, 23 Oct 2019 09:56:05 +0000 (UTC)
+Received: from steredhat.redhat.com (unknown [10.36.118.164])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1BEEB5C1B2;
+        Wed, 23 Oct 2019 09:55:54 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "info@metux.net" <info@metux.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "dcui@microsoft.com" <dcui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] video: hyperv: hyperv_fb: Use physical memory for fb
- on HyperV Gen 1 VMs.
-Message-ID: <20191023091037.GB21910@lst.de>
-References: <20191022110905.4032-1-weh@microsoft.com>
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH net-next 00/14] vsock: add multi-transports support
+Date:   Wed, 23 Oct 2019 11:55:40 +0200
+Message-Id: <20191023095554.11340-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191022110905.4032-1-weh@microsoft.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: AIB5fJO8MnCfZd5pS6ln_A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> +	select DMA_CMA
+This series adds the multi-transports support to vsock, following
+this proposal: https://www.spinics.net/lists/netdev/msg575792.html
 
-Thіs needs to be
+With the multi-transports support, we can use VSOCK with nested VMs
+(using also different hypervisors) loading both guest->host and
+host->guest transports at the same time.
+Before this series, vmci-transport supported this behavior but only
+using VMware hypervisor on L0, L1, etc.
 
-	select DMA_CMA if HAVE_DMA_CONTIGUOUS
+RFC: https://patchwork.ozlabs.org/cover/1168442/
+RFC -> v1:
+- Added R-b/A-b from Dexuan and Stefan
+- Fixed comments and typos in several patches (Stefan)
+- Patch 7: changed .notify_buffer_size return to void (Stefan)
+- Added patch 8 to simplify the API exposed to the transports (Stefan)
+- Patch 11:
+  + documented VSOCK_TRANSPORT_F_* flags (Stefan)
+  + fixed vsock_assign_transport() when the socket is already assigned
+  + moved features outside of struct vsock_transport, and used as
+    parameter of vsock_core_register() as a preparation of Patch 12
+- Removed "vsock: add 'transport_hg' to handle g2h\h2g transports" patch
+- Added patch 12 to register vmci_transport only when VMCI guest/host
+  are active
 
-> +#include <linux/dma-contiguous.h>
+The first 9 patches are cleanups and preparations, maybe some of
+these can go regardless of this series.
 
-> +	/* Allocate from CMA */
-> +	// request_pages = (request_size >> PAGE_SHIFT) + 1;
-> +	request_pages = (round_up(request_size, PAGE_SIZE) >> PAGE_SHIFT);
-> +	page = dma_alloc_from_contiguous(NULL, request_pages, 0, false);
+Patch 10 changes the hvs_remote_addr_init(). setting the
+VMADDR_CID_HOST as remote CID instead of VMADDR_CID_ANY to make
+the choice of transport to be used work properly.
 
-dma_alloc_from_contiguous is an internal helper, you must use it
-through dma_alloc_coherent and pass a struct device to that function.
+Patch 11 adds multi-transports support.
 
-> +	if (!gen2vm) {
-> +		pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
-> +			PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
-> +		if (!pdev) {
-> +			pr_err("Unable to find PCI Hyper-V video\n");
-> +			return -ENODEV;
-> +		}
-> +	}
+Patch 12 touch a little bit the vmci_transport and the vmci driver
+to register the vmci_transport only when there are active host/guest.
 
-Please actually implement a pci_driver instead of hacks like this.
+Patch 13 prevents the transport modules unloading while sockets are
+assigned to them.
 
-> +			par->need_docopy = false;
-> +			goto getmem1;
-> +		} else {
+Patch 14 fixes an issue in the bind() logic discoverable only with
+the new multi-transport support.
 
-No need for an else after a goto.
+I've tested this series with nested KVM (vsock-transport [L0,L1],
+virtio-transport[L1,L2]) and with VMware (L0) + KVM (L1)
+(vmci-transport [L0,L1], vhost-transport [L1], virtio-transport[L2]).
+
+Dexuan successfully tested the RFC series on HyperV with a Linux guest.
+
+Stefano Garzarella (14):
+  vsock/vmci: remove unused VSOCK_DEFAULT_CONNECT_TIMEOUT
+  vsock: remove vm_sockets_get_local_cid()
+  vsock: remove include/linux/vm_sockets.h file
+  vsock: add 'transport' member in the struct vsock_sock
+  vsock/virtio: add transport parameter to the
+    virtio_transport_reset_no_sock()
+  vsock: add 'struct vsock_sock *' param to vsock_core_get_transport()
+  vsock: handle buffer_size sockopts in the core
+  vsock: add vsock_create_connected() called by transports
+  vsock: move vsock_insert_unbound() in the vsock_create()
+  hv_sock: set VMADDR_CID_HOST in the hvs_remote_addr_init()
+  vsock: add multi-transports support
+  vsock/vmci: register vmci_transport only when VMCI guest/host are
+    active
+  vsock: prevent transport modules unloading
+  vsock: fix bind() behaviour taking care of CID
+
+ drivers/misc/vmw_vmci/vmci_driver.c     |  50 ++++
+ drivers/misc/vmw_vmci/vmci_driver.h     |   2 +
+ drivers/misc/vmw_vmci/vmci_guest.c      |   2 +
+ drivers/misc/vmw_vmci/vmci_host.c       |   7 +
+ drivers/vhost/vsock.c                   |  96 +++---
+ include/linux/virtio_vsock.h            |  18 +-
+ include/linux/vm_sockets.h              |  15 -
+ include/linux/vmw_vmci_api.h            |   2 +
+ include/net/af_vsock.h                  |  44 +--
+ include/net/vsock_addr.h                |   2 +-
+ net/vmw_vsock/af_vsock.c                | 376 ++++++++++++++++++------
+ net/vmw_vsock/hyperv_transport.c        |  70 ++---
+ net/vmw_vsock/virtio_transport.c        | 177 ++++++-----
+ net/vmw_vsock/virtio_transport_common.c | 131 +++------
+ net/vmw_vsock/vmci_transport.c          | 137 +++------
+ net/vmw_vsock/vmci_transport.h          |   3 -
+ net/vmw_vsock/vmci_transport_notify.h   |   1 -
+ 17 files changed, 627 insertions(+), 506 deletions(-)
+ delete mode 100644 include/linux/vm_sockets.h
+
+--=20
+2.21.0
 
