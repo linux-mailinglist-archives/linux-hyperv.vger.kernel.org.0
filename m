@@ -2,196 +2,141 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA77E3600
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Oct 2019 16:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24593E36D9
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Oct 2019 17:41:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409530AbfJXOxU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 24 Oct 2019 10:53:20 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:33798 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409522AbfJXOxU (ORCPT
+        id S2405861AbfJXPlV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 24 Oct 2019 11:41:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55216 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726139AbfJXPlV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:53:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571928798;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=0mp4UnfMmFBuAFZUwVWAjKo0HN743MLM5cwfxhfpVk0=;
-        b=Nw1GQz9jiGSQNi7TAYWR/0CCpMMHrmYhxmQU73QOYACcGXLJMNX7tPevrIjR1OWxvY
-        S5IA2By8AOpBD32oqnrPbU+nvOFl49lcGjlFmiFjt1o0vKfT8ikdoQdPGB2K+VS6JIFh
-        SpUzxbzN8mFb0qjdQ4g0sU8gMp8R88uS86YDIUH9pGDWn22OPfVeoBmgOCLv6r9yqO4P
-        obOpc0VTWZB/Ldp2hqbBEJXceDOPPB8QKhdIWz+JJW3CgMTV4E6bfgcWL00I+yeU3P4m
-        2+CCEiP5yR5ApO84NJp6c3ox3+0G5Phr5WRkbdQm4WTspYkhX4VjqsvklJDKGON2aDrn
-        m8Yg==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuz7MdiQehTvc3KJf+T+odQ=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
-        with ESMTPSA id e01a77v9OEoBcWQ
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 24 Oct 2019 16:50:11 +0200 (CEST)
-From:   Olaf Hering <olaf@aepfle.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Thu, 24 Oct 2019 11:41:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571931679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3wFDaqZ0NbxQNGne9paddG3mzo8aRis+uvC8kKNNdSM=;
+        b=TOZ7iUymbzXb0W1Shtt8HREuL0eQDT5Kvo5R+3KJG6mxQo8HF+hrdiEiUA19RsqjDNiFw0
+        2NDoslv2dqxyAc2F1JSwOdtq2FWwskmZtqCc4sLJdg3UR2aBFiMxT/IiqJi8R22C2RQfbx
+        KAmFnGhxgcyGTYW+/92YZ8807sgyxro=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-ra28wWr0N-iUCwABpxgLJw-1; Thu, 24 Oct 2019 11:41:11 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35FCA801E74;
+        Thu, 24 Oct 2019 15:21:58 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.34.246.221])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 90C7C5D9CA;
+        Thu, 24 Oct 2019 15:21:53 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Olaf Hering <olaf@aepfle.de>
-Subject: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-Date:   Thu, 24 Oct 2019 16:49:43 +0200
-Message-Id: <20191024144943.26199-1-olaf@aepfle.de>
-X-Mailer: git-send-email 2.16.4
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH] x86/hyper-v: micro-optimize send_ipi_one case
+Date:   Thu, 24 Oct 2019 17:21:52 +0200
+Message-Id: <20191024152152.25577-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: ra28wWr0N-iUCwABpxgLJw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The hostname is resolved just once since commit 58125210ab3b ("Tools:
-hv: cache FQDN in kvp_daemon to avoid timeouts") to make sure the VM
-responds within the timeout limits to requests from the host.
+When sending an IPI to a single CPU there is no need to deal with cpumasks.
+With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
+cycles) improvement with smp_call_function_single() loop benchmark. The
+optimization, however, is tiny and straitforward. Also, send_ipi_one() is
+important for PV spinlock kick.
 
-If for some reason getaddrinfo fails, the string returned by the
-"FullyQualifiedDomainName" request contains some error string, which is
-then used by tools on the host side.
+I was also wondering if it would make sense to switch to using regular
+APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
+cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
+vector)).
 
-Adjust the code to resolve the current hostname in a separate thread.
-This thread loops until getaddrinfo returns success. During this time
-all "FullyQualifiedDomainName" requests will be answered with an empty
-string.
-
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- tools/hv/Makefile        |  2 ++
- tools/hv/hv_kvp_daemon.c | 69 ++++++++++++++++++++++++++++++++----------------
- 2 files changed, 48 insertions(+), 23 deletions(-)
+ arch/x86/hyperv/hv_apic.c           | 22 +++++++++++++++++++---
+ arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
+ 2 files changed, 34 insertions(+), 3 deletions(-)
 
-diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-index b57143d9459c..3b5481015a84 100644
---- a/tools/hv/Makefile
-+++ b/tools/hv/Makefile
-@@ -22,6 +22,8 @@ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
- 
- ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
- 
-+$(OUTPUT)hv_kvp_daemon: LDFLAGS += -lpthread
-+
- all: $(ALL_PROGRAMS)
- 
- export srctree OUTPUT CC LD CFLAGS
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index e9ef4ca6a655..22cf1c4dbf5c 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -41,6 +41,7 @@
- #include <net/if.h>
- #include <limits.h>
- #include <getopt.h>
-+#include <pthread.h>
- 
- /*
-  * KVP protocol: The user mode component first registers with the
-@@ -85,7 +86,7 @@ static char *processor_arch;
- static char *os_build;
- static char *os_version;
- static char *lic_version = "Unknown version";
--static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
-+static char *full_domain_name;
- static struct utsname uts_buf;
- 
- /*
-@@ -1327,27 +1328,53 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
- 	return error;
- }
- 
--
--static void
--kvp_get_domain_name(char *buffer, int length)
-+/*
-+ * Async retrival of Fully Qualified Domain Name because getaddrinfo takes an
-+ * unpredictable amount of time to finish.
-+ */
-+static void *kvp_getaddrinfo(void *p)
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index e01078e93dd3..847f9d0328fe 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -194,10 +194,26 @@ static bool __send_ipi_mask(const struct cpumask *mas=
+k, int vector)
+=20
+ static bool __send_ipi_one(int cpu, int vector)
  {
--	struct addrinfo	hints, *info ;
--	int error = 0;
-+	char *tmp, **str_ptr = (char **)p;
-+	char hostname[HOST_NAME_MAX + 1];
-+	struct addrinfo	*info, hints = {
-+		.ai_family = AF_INET, /* Get only ipv4 addrinfo. */
-+		.ai_socktype = SOCK_STREAM,
-+		.ai_flags = AI_CANONNAME,
-+	};
-+	int ret;
+-=09struct cpumask mask =3D CPU_MASK_NONE;
++=09int ret;
+=20
+-=09cpumask_set_cpu(cpu, &mask);
+-=09return __send_ipi_mask(&mask, vector);
++=09trace_hyperv_send_ipi_one(cpu, vector);
 +
-+	if (gethostname(hostname, sizeof(hostname) - 1) < 0)
-+		goto out;
++=09if (unlikely(!hv_hypercall_pg))
++=09=09return false;
 +
-+	do {
-+		ret = getaddrinfo(hostname, NULL, &hints, &info);
-+		if (ret)
-+			sleep(1);
-+	} while (ret);
++=09if (unlikely((vector < HV_IPI_LOW_VECTOR) ||
++=09=09     (vector > HV_IPI_HIGH_VECTOR)))
++=09=09return false;
 +
-+	ret = asprintf(&tmp, "%s", info->ai_canonname);
-+	freeaddrinfo(info);
-+	if (ret <= 0)
-+		goto out;
++=09if (cpu >=3D 64)
++=09=09goto do_ex_hypercall;
 +
-+	if (ret > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)
-+		tmp[HV_KVP_EXCHANGE_MAX_VALUE_SIZE - 1] = '\0';
-+	*str_ptr = tmp;
- 
--	gethostname(buffer, length);
--	memset(&hints, 0, sizeof(hints));
--	hints.ai_family = AF_INET; /*Get only ipv4 addrinfo. */
--	hints.ai_socktype = SOCK_STREAM;
--	hints.ai_flags = AI_CANONNAME;
-+out:
-+	pthread_exit(NULL);
-+}
++=09ret =3D hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
++=09=09=09=09     BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
++=09return ((ret =3D=3D 0) ? true : false);
 +
-+static void kvp_obtain_domain_name(char **str_ptr)
-+{
-+	pthread_t t;
- 
--	error = getaddrinfo(buffer, NULL, &hints, &info);
--	if (error != 0) {
--		snprintf(buffer, length, "getaddrinfo failed: 0x%x %s",
--			error, gai_strerror(error));
-+	if (pthread_create(&t, NULL, kvp_getaddrinfo, str_ptr)) {
-+		syslog(LOG_ERR, "pthread_create failed; error: %d %s",
-+			errno, strerror(errno));
- 		return;
- 	}
--	snprintf(buffer, length, "%s", info->ai_canonname);
--	freeaddrinfo(info);
-+	pthread_detach(t);
++do_ex_hypercall:
++=09return __send_ipi_mask_ex(cpumask_of(cpu), vector);
  }
- 
- void print_usage(char *argv[])
-@@ -1412,11 +1439,7 @@ int main(int argc, char *argv[])
- 	 * Retrieve OS release information.
- 	 */
- 	kvp_get_os_info();
--	/*
--	 * Cache Fully Qualified Domain Name because getaddrinfo takes an
--	 * unpredictable amount of time to finish.
--	 */
--	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
-+	kvp_obtain_domain_name(&full_domain_name);
- 
- 	if (kvp_file_init()) {
- 		syslog(LOG_ERR, "Failed to initialize the pools");
-@@ -1571,7 +1594,7 @@ int main(int argc, char *argv[])
- 
- 		switch (hv_msg->body.kvp_enum_data.index) {
- 		case FullyQualifiedDomainName:
--			strcpy(key_value, full_domain_name);
-+			strcpy(key_value, full_domain_name ? : "");
- 			strcpy(key_name, "FullyQualifiedDomainName");
- 			break;
- 		case IntegrationServicesVersion:
+=20
+ static void hv_send_ipi(int cpu, int vector)
+diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/tra=
+ce/hyperv.h
+index ace464f09681..4d705cb4d63b 100644
+--- a/arch/x86/include/asm/trace/hyperv.h
++++ b/arch/x86/include/asm/trace/hyperv.h
+@@ -71,6 +71,21 @@ TRACE_EVENT(hyperv_send_ipi_mask,
+ =09=09      __entry->ncpus, __entry->vector)
+ =09);
+=20
++TRACE_EVENT(hyperv_send_ipi_one,
++=09    TP_PROTO(int cpu,
++=09=09     int vector),
++=09    TP_ARGS(cpu, vector),
++=09    TP_STRUCT__entry(
++=09=09    __field(int, cpu)
++=09=09    __field(int, vector)
++=09=09    ),
++=09    TP_fast_assign(__entry->cpu =3D cpu;
++=09=09=09   __entry->vector =3D vector;
++=09=09    ),
++=09    TP_printk("cpu %d vector %x",
++=09=09      __entry->cpu, __entry->vector)
++=09);
++
+ #endif /* CONFIG_HYPERV */
+=20
+ #undef TRACE_INCLUDE_PATH
+--=20
+2.20.1
+
