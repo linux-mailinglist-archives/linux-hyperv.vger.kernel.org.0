@@ -2,50 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0EF9E48C7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Oct 2019 12:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 682E0E4BDD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Oct 2019 15:15:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409586AbfJYKoM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 25 Oct 2019 06:44:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36492 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407955AbfJYKoL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:44:11 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2394463AbfJYNP6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 25 Oct 2019 09:15:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31629 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2393624AbfJYNP6 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:15:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572009357;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Qc7JyFaQ3Jjw6yQFnv45T7QS+wjmR7iVCKyhF3rYk0U=;
+        b=KYfluYqgCDbDKtw0AimJ/MwSmStB/N54JA1YmDCfKTC06Pm/8jKmp3ut0bNfeIahle3Rod
+        R0zO/PUyWlo+O+NGMZ9hOumvlMfKiNUxnjQvGvvkBwVO7Cwl+rH6YECghT7d2xf7zQansR
+        ZGm0++ergp78jYis+Ovx9xmuFtwSbOk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-8ekQ5j0IMNeA5_AvJaMQLg-1; Fri, 25 Oct 2019 09:15:53 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2C1614E832
-        for <linux-hyperv@vger.kernel.org>; Fri, 25 Oct 2019 10:44:11 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id z23so744568wml.0
-        for <linux-hyperv@vger.kernel.org>; Fri, 25 Oct 2019 03:44:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=xLtoZSUJtLXfr2GPGv3stYcfCQVAfI7dC3ODzlq3CwA=;
-        b=s5S9trBIbjGG7IlALcsKnUNLS2LfINMA5WFHeHnzH+8Qtt1kryzzv4gMqkxKUS1uCl
-         cdnTNb2+xXbap4FgqCEvufwa/APT+XZLczidzDatLSF8l/tmqYZtD/vr8j+Fvrx2/uGe
-         4rxYOfLk/bq7KEDn5Oo4VmVpW2UFqmE8bvZKVHdd785PPanS0/DO8zM9lytXx1GKKqG0
-         /wytDz/yFfL9ZpJuFsKXWtWnK9pvJtSdRTcOhgdr3k5vXtPZCDUsoQJ3Bjr1X7pV23PT
-         lyfwcInCb+kt2qkzYNYRypZ+epQuqo1ZABdrTEgfd+cnQ1IvO2kghq9mTY8jQNzn04+t
-         ou3w==
-X-Gm-Message-State: APjAAAVV3/EfHodcR3zhSQk/+SZO1NIQqCJdf60dYxn/pa133uBsNu9f
-        FJIW7lNcBKA1BQU6fj5+C9kCvey3+j+tLt3JayRefsutIrtx5nv6IkigcRJRleNdO66qrKsrObl
-        QT47ihWV53nwqPgAdS1QXTOoe
-X-Received: by 2002:a1c:6405:: with SMTP id y5mr3080034wmb.175.1572000249784;
-        Fri, 25 Oct 2019 03:44:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxsRUknjwKaf4n/Q/NFMTG8SODIFMIf015chHWuD9N5BsDqxI54rtI51KxXOfmREWqKoD6dAQ==
-X-Received: by 2002:a1c:6405:: with SMTP id y5mr3079992wmb.175.1572000249403;
-        Fri, 25 Oct 2019 03:44:09 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id g5sm1882252wma.43.2019.10.25.03.44.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 03:44:08 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 058C347B;
+        Fri, 25 Oct 2019 13:15:51 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 27C84600CD;
+        Fri, 25 Oct 2019 13:15:48 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Roman Kagan <rkagan@virtuozzo.com>
-Cc:     "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>,
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -53,104 +42,96 @@ Cc:     "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] x86/hyper-v: micro-optimize send_ipi_one case
-In-Reply-To: <20191024163204.GA4673@rkaganb.sw.ru>
-References: <20191024152152.25577-1-vkuznets@redhat.com> <20191024163204.GA4673@rkaganb.sw.ru>
-Date:   Fri, 25 Oct 2019 12:44:07 +0200
-Message-ID: <87r231xfyg.fsf@vitty.brq.redhat.com>
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Joe Perches <joe@perches.com>
+Subject: [PATCH v2] x86/hyper-v: micro-optimize send_ipi_one case
+Date:   Fri, 25 Oct 2019 15:15:46 +0200
+Message-Id: <20191025131546.18794-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 8ekQ5j0IMNeA5_AvJaMQLg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Roman Kagan <rkagan@virtuozzo.com> writes:
+When sending an IPI to a single CPU there is no need to deal with cpumasks.
+With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
+cycles) improvement with smp_call_function_single() loop benchmark. The
+optimization, however, is tiny and straitforward. Also, send_ipi_one() is
+important for PV spinlock kick.
 
-> On Thu, Oct 24, 2019 at 05:21:52PM +0200, Vitaly Kuznetsov wrote:
->> When sending an IPI to a single CPU there is no need to deal with cpumasks.
->> With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
->> cycles) improvement with smp_call_function_single() loop benchmark. The
->> optimization, however, is tiny and straitforward. Also, send_ipi_one() is
->> important for PV spinlock kick.
->> 
->> I was also wondering if it would make sense to switch to using regular
->> APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
->> cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
->> vector)).
->
-> Is it with APICv or emulated apic?
+I was also wondering if it would make sense to switch to using regular
+APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
+cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
+vector)).
 
-That's actually a good question. Yesterday I was testing this on WS2019
-host with Xeon e5-2420 v2 (Ivy Bridge EN) which I *think* should already
-support APICv - but I'm not sure and ark.intel.com is not
-helpful. Today, I decided to re-test on something more modern and I got
-WS2016 host with E5-2667 v4 (Broadwell) and the results are:
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+Changes since v1:
+ - Style changes [Roman, Joe]
+---
+ arch/x86/hyperv/hv_apic.c           | 13 ++++++++++---
+ arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
+ 2 files changed, 25 insertions(+), 3 deletions(-)
 
-'Ex' hypercall: 18000 cycles
-orig_apic.send_IPI(): 46000 cycles
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index e01078e93dd3..fd17c6341737 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -194,10 +194,17 @@ static bool __send_ipi_mask(const struct cpumask *mas=
+k, int vector)
+=20
+ static bool __send_ipi_one(int cpu, int vector)
+ {
+-=09struct cpumask mask =3D CPU_MASK_NONE;
++=09trace_hyperv_send_ipi_one(cpu, vector);
+=20
+-=09cpumask_set_cpu(cpu, &mask);
+-=09return __send_ipi_mask(&mask, vector);
++=09if (!hv_hypercall_pg || (vector < HV_IPI_LOW_VECTOR) ||
++=09    (vector > HV_IPI_HIGH_VECTOR))
++=09=09return false;
++
++=09if (cpu >=3D 64)
++=09=09return __send_ipi_mask_ex(cpumask_of(cpu), vector);
++
++=09return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
++=09=09=09       BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
+ }
+=20
+ static void hv_send_ipi(int cpu, int vector)
+diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/tra=
+ce/hyperv.h
+index ace464f09681..4d705cb4d63b 100644
+--- a/arch/x86/include/asm/trace/hyperv.h
++++ b/arch/x86/include/asm/trace/hyperv.h
+@@ -71,6 +71,21 @@ TRACE_EVENT(hyperv_send_ipi_mask,
+ =09=09      __entry->ncpus, __entry->vector)
+ =09);
+=20
++TRACE_EVENT(hyperv_send_ipi_one,
++=09    TP_PROTO(int cpu,
++=09=09     int vector),
++=09    TP_ARGS(cpu, vector),
++=09    TP_STRUCT__entry(
++=09=09    __field(int, cpu)
++=09=09    __field(int, vector)
++=09=09    ),
++=09    TP_fast_assign(__entry->cpu =3D cpu;
++=09=09=09   __entry->vector =3D vector;
++=09=09    ),
++=09    TP_printk("cpu %d vector %x",
++=09=09      __entry->cpu, __entry->vector)
++=09);
++
+ #endif /* CONFIG_HYPERV */
+=20
+ #undef TRACE_INCLUDE_PATH
+--=20
+2.20.1
 
-I'm, however, just assuming that Hyper-V uses APICv when it's available
-and have no idea how to check from within the guest. I'm also not sure
-if WS2019 is so much faster or if there are other differences on these
-hosts which matter.
-
->
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  arch/x86/hyperv/hv_apic.c           | 22 +++++++++++++++++++---
->>  arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
->>  2 files changed, 34 insertions(+), 3 deletions(-)
->> 
->> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
->> index e01078e93dd3..847f9d0328fe 100644
->> --- a/arch/x86/hyperv/hv_apic.c
->> +++ b/arch/x86/hyperv/hv_apic.c
->> @@ -194,10 +194,26 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
->>  
->>  static bool __send_ipi_one(int cpu, int vector)
->>  {
->> -	struct cpumask mask = CPU_MASK_NONE;
->> +	int ret;
->>  
->> -	cpumask_set_cpu(cpu, &mask);
->> -	return __send_ipi_mask(&mask, vector);
->> +	trace_hyperv_send_ipi_one(cpu, vector);
->> +
->> +	if (unlikely(!hv_hypercall_pg))
->> +		return false;
->> +
->> +	if (unlikely((vector < HV_IPI_LOW_VECTOR) ||
->> +		     (vector > HV_IPI_HIGH_VECTOR)))
->> +		return false;
->
-> I guess 'ulikely' is unnecessary in these cases.
->
-
-All I can say is that the resulting asm with my gcc is a bit different
-:-)
-
->> +
->> +	if (cpu >= 64)
->> +		goto do_ex_hypercall;
->> +
->> +	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
->> +				     BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
->> +	return ((ret == 0) ? true : false);
->
-> D'oh.  Isn't "return ret == 0;" or just "return ret;" good enough?
-
-That's how we do stuff in __send_ipi_mask() :-) I'll send v2
-implementing Joe's suggestion to drop 'ret' and just do
-return !hv_do_fast_hypercall16().
-
->
-> These tiny nitpicks are no reason to hold the patch though, so
->
-> Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
-
-Thanks!
-
--- 
-Vitaly
