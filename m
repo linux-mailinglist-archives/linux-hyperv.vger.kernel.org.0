@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF69CE5C22
-	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Oct 2019 15:28:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C60CBE5BD7
+	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Oct 2019 15:26:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfJZNVA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 26 Oct 2019 09:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
+        id S1729286AbfJZN0G (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 26 Oct 2019 09:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728757AbfJZNU7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:59 -0400
+        id S1729328AbfJZNWI (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38A3821E6F;
-        Sat, 26 Oct 2019 13:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 778CB222BE;
+        Sat, 26 Oct 2019 13:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096059;
-        bh=sT9oGxFDElGkZpBJtg+vMBwQFwRn09b3hp6SSHi9yxk=;
+        s=default; t=1572096127;
+        bh=U6HFSLK8B3LhppeobNpVbWvQmbuqRJyH+5DZKjc7zO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KC+N4/aC2kUGG8T18Mvm4CVFxR4hMdeScTQ25YXYSP7giTugnj7PrglAd6ik8gsH/
-         SUdYO4RkRM1drFFHb/eGcdHlKB02/dRzSr+8cQbrNBeiIFjfmcU4L+zQYGe3qT19jI
-         cqFD2oIhHxxRPZT+ZYNLsYZO8AZPL7uNHR6tx0lw=
+        b=uE2ssZ7uMywAv3tiKOZwCSGAXIa4hP6Gcm8rGJNkDfylfoH+DL+sEjOosO/29usXq
+         keFfCVVgZOC5jdtoRmteTF6Ax2ShsV/LGhAqBbMvOoJTUvwzyrC+1zDGbcDVRkk2f3
+         yhwyVB0OBhmSqmA6pPYFIJ0uGIlfucUFSgqb42m0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Andrea Parri <parri.andrea@gmail.com>,
@@ -31,12 +31,12 @@ Cc:     Andrea Parri <parri.andrea@gmail.com>,
         Wei Liu <wei.liu@kernel.org>,
         YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 55/59] x86/hyperv: Set pv_info.name to "Hyper-V"
-Date:   Sat, 26 Oct 2019 09:19:06 -0400
-Message-Id: <20191026131910.3435-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 29/33] x86/hyperv: Set pv_info.name to "Hyper-V"
+Date:   Sat, 26 Oct 2019 09:21:06 -0400
+Message-Id: <20191026132110.4026-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
-References: <20191026131910.3435-1-sashal@kernel.org>
+In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
+References: <20191026132110.4026-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -75,10 +75,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 852e74e48890b..1bec5e4bb1fa9 100644
+index c0201b11e9e2a..4e7adccf812d4 100644
 --- a/arch/x86/kernel/cpu/mshyperv.c
 +++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -207,6 +207,10 @@ static void __init ms_hyperv_init_platform(void)
+@@ -171,6 +171,10 @@ static void __init ms_hyperv_init_platform(void)
  	int hv_host_info_ecx;
  	int hv_host_info_edx;
  
