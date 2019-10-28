@@ -2,137 +2,306 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F006E7AFA
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Oct 2019 22:07:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EAA1E7B62
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Oct 2019 22:33:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404003AbfJ1VHS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 28 Oct 2019 17:07:18 -0400
-Received: from mail-eopbgr750137.outbound.protection.outlook.com ([40.107.75.137]:55799
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730207AbfJ1VHN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 28 Oct 2019 17:07:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fubqZpJnaC8u5GQihyapZd/aXLRv3dEb8BL9o5zpcFFtZgQrSUlW0IicQCa1q0wktoIrA6beu7ElxqDyR2ceqdrorhQSUG7ZQQfiz19+5WbkGrtoiFXB9Rq7W+ImlfUZLkww0DdctbAPDsGJURxl6X4u1bBZsby67lnG1jOb1GDjSNkj+fMzgfNAcREMjGAav9H6o6+pZuaLneYXlcIX14YEETXUFOPrsrB5K0FJdQnoJjZ7grjeH5QtcoftECY2pafBOd0iyfEZzVU1LEY4JakuLW0rqEQmuD5P+hSWCRqyYAvhrtc+kzIP6+CGZkuf2uaFwwEi5xbUh8lTht7B7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXEKnuN40jJ5SBw+kVEj2OgD4rOSYa6KtHCy4GTVcp0=;
- b=MsH/aNLD6wsFdiQOg0ZtzVwP8gLPGPbK7eLxHJx9PM4ts4+T0DXiDuB3Ug53Yvu2SoM9mnQ2UqjczkXQ4mRmvC5uU33cvPM/Jf5NJdeh/9dDgziaHQQp0lspI5A9YuRQlp9275Sz7Us7KKwaqPdkhV6L8raKr0OcW0LxKPskZ0BH5U+TsM0wgCbDCiAvfZlO4a6qWKXIyzlr1qoCM+0ZMBDlSP8eUYtiEZXvV4ScnK8+2g3zeHqCUPV21GMjqgtSkCcVei/5WWuCQJP8iHZvwSwVCbUz7BkHBSYBlV8JVmUOwGaSAZ2eKxeK8acunTr0qY6UPXIEE/s7KLDZctz5Sg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXEKnuN40jJ5SBw+kVEj2OgD4rOSYa6KtHCy4GTVcp0=;
- b=KfLt3mCCdtZPX7zXPTxXGznGIz1TBdy+jkm/wTI1s4BY8RKAIoEahwdNqnUBelXEKCoyWiC6aY2Rz9ljBw+HgrCojkBGAlK2itE8lCfePiqDUDDR9d9Kl7GmZM7mIOoZunwpdQnatuIRrXbP+jqXHZfE/HaGuXc7WlnORsD7nks=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
- DM6PR21MB1404.namprd21.prod.outlook.com (20.180.22.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.8; Mon, 28 Oct 2019 21:07:11 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::756e:8d3f:e463:3bf7]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::756e:8d3f:e463:3bf7%3]) with mapi id 15.20.2408.016; Mon, 28 Oct 2019
- 21:07:11 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
+        id S1730838AbfJ1Vd3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 28 Oct 2019 17:33:29 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40448 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730436AbfJ1Vd2 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 28 Oct 2019 17:33:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 15so7846855pgt.7
+        for <linux-hyperv@vger.kernel.org>; Mon, 28 Oct 2019 14:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=jEdPM8+CeSN6YUxMRCSzn6h9zX/2P2PBOeSoWjOyGwU=;
+        b=bdl88kZF4sDffbc4FuxXRHGyWjQp7MkgkLicu4ygU8bjQP92Pk0Iz9iWsO9KDkuc4/
+         OWXgXpNgDaAyo15UFcQjqsHvBdmND76PEX359b0q8/jMTyJBJMTBx5b8QUaUG4ctQI8O
+         G1t8aNCXViLW/M6z74CJRHSjbi/PV17zzIy0jlj1JX1SSHZU8KmU8wohwGeDehZ1VXzE
+         /4wqibp0QVsR97msGf8JKGASqC1PIkhD59WPj2JwtDmSBr0kQpdlLO7doLn+B53l+eMZ
+         vkcj2cAn+t9m/hIRtyG8OA4RzULPw+QxE6ZpPUuGPRV1Q/7YwPWALUxGCTVUd/Y3woho
+         M6ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=jEdPM8+CeSN6YUxMRCSzn6h9zX/2P2PBOeSoWjOyGwU=;
+        b=rFI6dgqndJ6FKxExUMljb8Tu4GTTfqREAxf5ZnWJyiURK6Q/7QGAAq3HeBYnZLRbYK
+         7gI45pKLyV8iNibkkRnNza8j10SEfSQcbu2e4lTP4/RJhJ1hFSjrjYLvcgPLt/bxgNRh
+         hzPCflvGSg8Lns19htT/m7A6nBrEpLQJzqtxPgd2vqU2lTSwAeurUjBu6chFB3lCHMw7
+         0KLi8ps4tpuiZbfzVycdm0zMgG1Vdhp49fF6ZGQIbuV1jLPO/4cC8kOt65jF0TANN1vy
+         H9/nQVuNdEAnAux39dLct8sGMCeHGpxiOpfIWujq9hpkttFUDuqAkmbbQXeXB1oQZIHi
+         ollw==
+X-Gm-Message-State: APjAAAXwSWc/R4FC6OMROh137liOH1fNRj2h4n13PD9+dxTC+SReCKNd
+        HrNvb/V2k+lfbxyxiYVUoSXeog==
+X-Google-Smtp-Source: APXvYqy9OriwAtFJ734hHSc7dz3dHQ5c1a6LhaFVhJVlRYd1p7+V+rQWXdKlsj5AENvQYC6Tl4P2Gw==
+X-Received: by 2002:a17:90a:a882:: with SMTP id h2mr1782558pjq.1.1572298407836;
+        Mon, 28 Oct 2019 14:33:27 -0700 (PDT)
+Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id b14sm11228415pfi.95.2019.10.28.14.33.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 14:33:27 -0700 (PDT)
+Date:   Mon, 28 Oct 2019 14:33:22 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
         "davem@davemloft.net" <davem@davemloft.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next, 4/4] hv_netvsc: Update document for XDP support
-Thread-Topic: [PATCH net-next, 4/4] hv_netvsc: Update document for XDP support
-Thread-Index: AQHVjdOqeF2skKD6Y0io1FAqZWRRAw==
-Date:   Mon, 28 Oct 2019 21:07:11 +0000
-Message-ID: <1572296801-4789-5-git-send-email-haiyangz@microsoft.com>
+Subject: Re: [PATCH net-next, 3/4] hv_netvsc: Add XDP support
+Message-ID: <20191028143322.45d81da4@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <1572296801-4789-4-git-send-email-haiyangz@microsoft.com>
 References: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1572296801-4789-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR04CA0076.namprd04.prod.outlook.com
- (2603:10b6:102:1::44) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b5df6643-1b7a-423a-8c18-08d75beacc99
-x-ms-traffictypediagnostic: DM6PR21MB1404:|DM6PR21MB1404:|DM6PR21MB1404:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB14049BFC29E7ADE4E00BE821AC660@DM6PR21MB1404.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0204F0BDE2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(346002)(396003)(39860400002)(136003)(199004)(189003)(6512007)(446003)(36756003)(54906003)(50226002)(486006)(22452003)(2616005)(476003)(305945005)(14454004)(478600001)(2501003)(6392003)(66066001)(7846003)(66476007)(66446008)(64756008)(66556008)(66946007)(10290500003)(6436002)(386003)(10090500001)(102836004)(7736002)(99286004)(11346002)(76176011)(52116002)(5660300002)(186003)(26005)(6506007)(256004)(8936002)(81156014)(81166006)(6116002)(6486002)(3846002)(4326008)(8676002)(2201001)(316002)(110136005)(25786009)(2906002)(4720700003)(71200400001)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1404;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: N2iu8QmvCapfjPeyHZjuDypd2A2cbxTl33hDk1j8ao+8ILwOJ+Fc2R6k4BdfcO78e8jF//lop4cZy87auDxGCJTpKZn/1fmNSLPRoHgmLU5Da8g4vRWKtj1/Mj0yMP3xCwcVLc1mIdsHG9QZDvKbqjGknOEataRn/XX5wO9QzYna8rEsiKT7LN0Dj4X93h1iMJv1hKDHEs6Blaxt2BZ/+9wVfa5Rt5QsOKJmZvx6mHbFm+GIgDi4uns7bsIMcMwmm6UZgm4mryky/XdvfnZ0U1IamvT8HyfjakdVsuOIW9q9vC4xJbHLu42oXshrqRhlpcBpCONoKoMtPJPcjojRl25f1QtFn68vyDS/VZZX2gPIKrfW2Ytyi3gdVJN6AVUObs0ohG7HFp8b16rhfZaY1KoMdFR4WWXR6+uWVCfomtJx0z8PHviqhvghED9FnO40
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        <1572296801-4789-4-git-send-email-haiyangz@microsoft.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5df6643-1b7a-423a-8c18-08d75beacc99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2019 21:07:11.1213
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KMNWNELcFRmEOdzrLnQ8aJ1PWR/TcqXTh4no8W6DD5VLqb5BCr9e4fY8t8kLD991IRZAn7Fv7XtbDIlepQ/OOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1404
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Added the new section in the document regarding XDP support
-by hv_netvsc driver.
+On Mon, 28 Oct 2019 21:07:04 +0000, Haiyang Zhang wrote:
+> This patch adds support of XDP in native mode for hv_netvsc driver, and
+> transparently sets the XDP program on the associated VF NIC as well.
+> 
+> XDP program cannot run with LRO (RSC) enabled, so you need to disable LRO
+> before running XDP:
+>         ethtool -K eth0 lro off
+> 
+> XDP actions not yet supported:
+>         XDP_TX, XDP_REDIRECT
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- .../networking/device_drivers/microsoft/netvsc.txt         | 14 ++++++++++=
-++++
- 1 file changed, 14 insertions(+)
+I don't think we want to merge support without at least XDP_TX these
+days..
 
-diff --git a/Documentation/networking/device_drivers/microsoft/netvsc.txt b=
-/Documentation/networking/device_drivers/microsoft/netvsc.txt
-index 3bfa635..69ccfca 100644
---- a/Documentation/networking/device_drivers/microsoft/netvsc.txt
-+++ b/Documentation/networking/device_drivers/microsoft/netvsc.txt
-@@ -82,3 +82,17 @@ Features
-   contain one or more packets. The send buffer is an optimization, the dri=
-ver
-   will use slower method to handle very large packets or if the send buffe=
-r
-   area is exhausted.
-+
-+  XDP support
-+  -----------
-+  XDP (eXpress Data Path) is a feature that runs eBPF bytecode at the earl=
-y
-+  stage when packets arrive at a NIC card. The goal is to increase perform=
-ance
-+  for packet processing, reducing the overhead of SKB allocation and other
-+  upper network layers.
-+
-+  hv_netvsc supports XDP in native mode, and transparently sets the XDP
-+  program on the associated VF NIC as well.
-+
-+  XDP program cannot run with LRO (RSC) enabled, so you need to disable LR=
-O
-+  before running XDP:
-+	ethtool -K eth0 lro off
---=20
-1.8.3.1
+And without the ability to prepend headers this may be the least
+complete initial XDP implementation we've seen :(
 
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+
+> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+> index d22a36f..688487b 100644
+> --- a/drivers/net/hyperv/netvsc.c
+> +++ b/drivers/net/hyperv/netvsc.c
+> @@ -122,8 +122,10 @@ static void free_netvsc_device(struct rcu_head *head)
+>  	vfree(nvdev->send_buf);
+>  	kfree(nvdev->send_section_map);
+>  
+> -	for (i = 0; i < VRSS_CHANNEL_MAX; i++)
+> +	for (i = 0; i < VRSS_CHANNEL_MAX; i++) {
+> +		xdp_rxq_info_unreg(&nvdev->chan_table[i].xdp_rxq);
+>  		vfree(nvdev->chan_table[i].mrc.slots);
+> +	}
+>  
+>  	kfree(nvdev);
+>  }
+> @@ -1370,6 +1372,10 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
+>  		nvchan->net_device = net_device;
+>  		u64_stats_init(&nvchan->tx_stats.syncp);
+>  		u64_stats_init(&nvchan->rx_stats.syncp);
+> +
+> +		xdp_rxq_info_reg(&nvchan->xdp_rxq, ndev, i);
+> +		xdp_rxq_info_reg_mem_model(&nvchan->xdp_rxq,
+> +					   MEM_TYPE_PAGE_SHARED, NULL);
+
+These can fail.
+
+>  	}
+>  
+>  	/* Enable NAPI handler before init callbacks */
+> diff --git a/drivers/net/hyperv/netvsc_bpf.c b/drivers/net/hyperv/netvsc_bpf.c
+> new file mode 100644
+> index 0000000..4d235ac
+> --- /dev/null
+> +++ b/drivers/net/hyperv/netvsc_bpf.c
+> @@ -0,0 +1,211 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright (c) 2019, Microsoft Corporation.
+> + *
+> + * Author:
+> + *   Haiyang Zhang <haiyangz@microsoft.com>
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/netdevice.h>
+> +#include <linux/etherdevice.h>
+> +#include <linux/ethtool.h>
+> +#include <linux/bpf.h>
+> +#include <linux/bpf_trace.h>
+> +#include <linux/kernel.h>
+> +#include <net/xdp.h>
+> +
+> +#include <linux/mutex.h>
+> +#include <linux/rtnetlink.h>
+> +
+> +#include "hyperv_net.h"
+> +
+> +u32 netvsc_run_xdp(struct net_device *ndev, struct netvsc_channel *nvchan,
+> +		   void **p_pbuf)
+> +{
+> +	struct page *page = NULL;
+> +	void *data = nvchan->rsc.data[0];
+> +	u32 len = nvchan->rsc.len[0];
+> +	void *pbuf = data;
+> +	struct bpf_prog *prog;
+> +	struct xdp_buff xdp;
+> +	u32 act = XDP_PASS;
+> +
+> +	*p_pbuf = NULL;
+> +
+> +	rcu_read_lock();
+> +	prog = rcu_dereference(nvchan->bpf_prog);
+> +
+> +	if (!prog || nvchan->rsc.cnt > 1)
+
+Can rsc.cnt == 1 not be ensured at setup time? This looks quite
+limiting if random frames could be forced to bypass the filter.
+
+> +		goto out;
+> +
+> +	/* copy to a new page buffer if data are not within a page */
+> +	if (virt_to_page(data) != virt_to_page(data + len - 1)) {
+> +		page = alloc_page(GFP_ATOMIC);
+> +		if (!page)
+> +			goto out;
+
+Returning XDP_PASS on allocation failure seems highly questionable.
+
+> +		pbuf = page_address(page);
+> +		memcpy(pbuf, nvchan->rsc.data[0], len);
+> +
+> +		*p_pbuf = pbuf;
+> +	}
+> +
+> +	xdp.data_hard_start = pbuf;
+> +	xdp.data = xdp.data_hard_start;
+
+This patch also doesn't add any headroom for XDP to prepend data :(
+
+> +	xdp_set_data_meta_invalid(&xdp);
+> +	xdp.data_end = xdp.data + len;
+> +	xdp.rxq = &nvchan->xdp_rxq;
+> +	xdp.handle = 0;
+> +
+> +	act = bpf_prog_run_xdp(prog, &xdp);
+> +
+> +	switch (act) {
+> +	case XDP_PASS:
+> +		/* Pass to upper layers */
+> +		break;
+> +
+> +	case XDP_ABORTED:
+> +		trace_xdp_exception(ndev, prog, act);
+> +		break;
+> +
+> +	case XDP_DROP:
+> +		break;
+> +
+> +	default:
+> +		bpf_warn_invalid_xdp_action(act);
+> +	}
+> +
+> +out:
+> +	rcu_read_unlock();
+> +
+> +	if (page && act != XDP_PASS) {
+> +		*p_pbuf = NULL;
+> +		__free_page(page);
+> +	}
+> +
+> +	return act;
+> +}
+> +
+> +unsigned int netvsc_xdp_fraglen(unsigned int len)
+> +{
+> +	return SKB_DATA_ALIGN(len) +
+> +	       SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+> +}
+> +
+> +struct bpf_prog *netvsc_xdp_get(struct netvsc_device *nvdev)
+> +{
+> +	return rtnl_dereference(nvdev->chan_table[0].bpf_prog);
+> +}
+> +
+> +int netvsc_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+> +		   struct netvsc_device *nvdev)
+> +{
+> +	struct bpf_prog *old_prog;
+> +	int frag_max, i;
+> +
+> +	old_prog = netvsc_xdp_get(nvdev);
+> +
+> +	if (!old_prog && !prog)
+> +		return 0;
+
+I think this case is now handled by the core.
+
+> +	frag_max = netvsc_xdp_fraglen(dev->mtu + ETH_HLEN);
+> +	if (prog && frag_max > PAGE_SIZE) {
+> +		netdev_err(dev, "XDP: mtu:%u too large, frag:%u\n",
+> +			   dev->mtu, frag_max);
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	if (prog && (dev->features & NETIF_F_LRO)) {
+> +		netdev_err(dev, "XDP: not support LRO\n");
+
+Please report this via extack, that way users will see it in the console
+in which they're installing the program.
+
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	if (prog) {
+> +		prog = bpf_prog_add(prog, nvdev->num_chn);
+> +		if (IS_ERR(prog))
+> +			return PTR_ERR(prog);
+> +	}
+> +
+> +	for (i = 0; i < nvdev->num_chn; i++)
+> +		rcu_assign_pointer(nvdev->chan_table[i].bpf_prog, prog);
+> +
+> +	if (old_prog)
+> +		for (i = 0; i < nvdev->num_chn; i++)
+> +			bpf_prog_put(old_prog);
+> +
+> +	return 0;
+> +}
+> +
+> +int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
+> +{
+> +	struct netdev_bpf xdp;
+> +	bpf_op_t ndo_bpf;
+> +
+> +	ASSERT_RTNL();
+> +
+> +	if (!vf_netdev)
+> +		return 0;
+> +
+> +	ndo_bpf = vf_netdev->netdev_ops->ndo_bpf;
+> +	if (!ndo_bpf)
+> +		return 0;
+> +
+> +	memset(&xdp, 0, sizeof(xdp));
+> +
+> +	xdp.command = XDP_SETUP_PROG;
+> +	xdp.prog = prog;
+> +
+> +	return ndo_bpf(vf_netdev, &xdp);
+
+IMHO the automatic propagation is not a good idea. Especially if the
+propagation doesn't make the entire installation fail if VF doesn't
+have ndo_bpf.
+
+> +}
