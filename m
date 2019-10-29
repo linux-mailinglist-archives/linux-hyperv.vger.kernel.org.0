@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 659D7E7F59
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Oct 2019 05:46:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDD33E84B4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Oct 2019 10:52:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfJ2EqC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 29 Oct 2019 00:46:02 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:56011 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbfJ2EqC (ORCPT
+        id S1728070AbfJ2JwG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 29 Oct 2019 05:52:06 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:44155 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728236AbfJ2JwG (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 29 Oct 2019 00:46:02 -0400
-Received: by mail-il1-f200.google.com with SMTP id n81so11732686ili.22
-        for <linux-hyperv@vger.kernel.org>; Mon, 28 Oct 2019 21:46:02 -0700 (PDT)
+        Tue, 29 Oct 2019 05:52:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id q13so10659779iot.11
+        for <linux-hyperv@vger.kernel.org>; Tue, 29 Oct 2019 02:52:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=YLV8f9ZsfAXyIIZYYq3+IarNtK/1IHU/hb3TF47qpcU=;
-        b=ExFw6YR6nMp8ys2m0smOCoXvfE/gbdxvkJ6+xEyyNaJEftKbvcY+ocANOM49sHQIup
-         G/QabQU0ar8FsCNs8y3lMuofEadCYUDEVuowMrgXCXNeV6qY8Q53sHqrBW5s4YaTjqv4
-         AJtAWThc03OOhcl5W1f3ljvaZdvNMLBaOIzdTecY9UakofzjSj74PzPMfNC1n7tohCNQ
-         Gh18Bnuv82rrLFHwUPkszCwEkVOMK35/HZrU3M/39IgaJYFxe4xz1U09r28JXSloLHH1
-         zmPO1BmhJBE3s0mBoteBxa85viNfKKAL6LZASJ5zOEFJTJwSkyWTB2aMswwEIY2L5IBG
-         KR+A==
-X-Gm-Message-State: APjAAAWa2Sl36XXHwNjvA6jsm5K90TyefUp7oK5KkQtynPxRAhmt6LPU
-        49qla4M46hZ1x5LAlcEjS1u0w/f27HQKVDVP/JTQXQpcPw12
-X-Google-Smtp-Source: APXvYqy8A5HcqCyEPL5dtBElWBUVccfpfDJnoTHkuyLyMyzE3tC2AL+v78u811xV2KkRr1yWR23ZU1ZAqiGqqPS8jMwtkIRFFbuv
+        bh=KhTni5i4fWNYOrXXdKRZL7n4/+Q2oXySWZR+SGDk+1M=;
+        b=M3SfMbGrW+QfP2SPD2PRBCn6SsT5wr7CH/ZVKbcYAF1t6wUD8llJ0FN57UYBrqK7hH
+         NT0qXDYzfDppuqyvrOAVRyxDe+kQFo7rX8FmbRYiX8QeaXdWJhu9SFXM7PZnNU9pUHDR
+         FwVrngTdA+OR72RRwf+QD0HBUojNBDMTxGELax8XJf+RHOsne/qGJ736DcV1VmrxnmbP
+         er97BJ6NLkUHifwN9ULKcbKIbHIob1mP6fHZWFGGf1A+MpLFexzaj04jQg4hRIRTNCFI
+         jx5UBM6HRDNAzqL/GC7x1kbf0f0gLp1mavbo/tIF/LMqMHksNwzidXLwdDsLKagra2/4
+         q+XA==
+X-Gm-Message-State: APjAAAUwTPTbVVUU3Zu7+CQ7T+zp1yfWHRRwn0uE4DYq0k9mYOykFqfH
+        rRqZpl9vtoYHLZuNbIn3n+ptjiN8pjEv4zWAzgRb2YMFknN9
+X-Google-Smtp-Source: APXvYqxJ9xrCQYDM3zjASN2O14TUYOL1Vq099EpzYllPSctTMS5wHjd4pXl9VmehlTUaytj82L6S0Af4Z1CPJkWAD5Rc60MY47Nk
 MIME-Version: 1.0
-X-Received: by 2002:a5e:d90c:: with SMTP id n12mr1656385iop.140.1572324361470;
- Mon, 28 Oct 2019 21:46:01 -0700 (PDT)
-Date:   Mon, 28 Oct 2019 21:46:01 -0700
-In-Reply-To: <000000000000fc25a1059602460a@google.com>
+X-Received: by 2002:a92:8dd9:: with SMTP id w86mr25132844ill.93.1572342721346;
+ Tue, 29 Oct 2019 02:52:01 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 02:52:00 -0700
+In-Reply-To: <000000000000044a7f0595fbaf2c@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000987900596054b0f@google.com>
-Subject: Re: INFO: trying to register non-static key in bond_3ad_update_lacp_rate
-From:   syzbot <syzbot+0d083911ab18b710da71@syzkaller.appspotmail.com>
+Message-ID: <0000000000006db1370596099128@google.com>
+Subject: Re: INFO: trying to register non-static key in bond_3ad_update_ad_actor_settings
+From:   syzbot <syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com>
 To:     a@unstable.cc, alex.aring@gmail.com, allison@lohutok.net,
         andrew@lunn.ch, andy@greyhouse.net, ap420073@gmail.com,
         aroulin@cumulusnetworks.com, ast@domdv.de,
         b.a.t.m.a.n@lists.open-mesh.org, bridge@lists.linux-foundation.org,
         cleech@redhat.com, daniel@iogearbox.net, davem@davemloft.net,
         dcaratti@redhat.com, dsa@cumulusnetworks.com, edumazet@google.com,
-        f.fainelli@gmail.com, fw@strlen.de, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, gvaradar@cisco.com, haiyangz@microsoft.com,
-        idosch@mellanox.com, info@metux.net, ivan.khoronzhuk@linaro.org,
-        j.vosburgh@gmail.com, j@w1.fi, jakub.kicinski@netronome.com,
-        jhs@mojatatu.com, jiri@mellanox.com, jiri@resnulli.us,
-        johan.hedberg@gmail.com, johannes.berg@intel.com,
+        f.fainelli@gmail.com, fw@strlen.de, gbastien@versatic.net,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        haiyangz@microsoft.com, idosch@mellanox.com, info@metux.net,
+        ivan.khoronzhuk@linaro.org, j.vosburgh@gmail.com, j@w1.fi,
+        jakub.kicinski@netronome.com, jhs@mojatatu.com, jiri@mellanox.com,
+        jiri@resnulli.us, johan.hedberg@gmail.com, johannes.berg@intel.com,
         john.hurley@netronome.com, jwi@linux.ibm.com,
         kstewart@linuxfoundation.org, kvalo@codeaurora.org,
-        kys@microsoft.com, lariel@mellanox.com, linmiaohe@huawei.com,
+        kys@microsoft.com, linmiaohe@huawei.com,
         linux-bluetooth@vger.kernel.org, linux-hams@vger.kernel.org,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-ppp@vger.kernel.org, linux-wireless@vger.kernel.org,
         linux-wpan@vger.kernel.org, liuhangbin@gmail.com,
-        marcel@holtmann.org, mareklindner@neomailbox.ch
+        marcel@holtmann.org, mareklindner@neomailbox.ch, mcroce@redhat.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
@@ -72,17 +72,17 @@ Date:   Mon Oct 21 18:47:51 2019 +0000
 
      net: core: add generic lockdep keys
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467f674e00000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12b54d70e00000
 start commit:   60c1769a Add linux-next specific files for 20191028
 git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667f674e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1267f674e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11b54d70e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b54d70e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
-dashboard link: https://syzkaller.appspot.com/bug?extid=0d083911ab18b710da71
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15381ee0e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11571570e00000
+dashboard link: https://syzkaller.appspot.com/bug?extid=8da67f407bcba2c72e6e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14d43a04e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16be3b9ce00000
 
-Reported-by: syzbot+0d083911ab18b710da71@syzkaller.appspotmail.com
+Reported-by: syzbot+8da67f407bcba2c72e6e@syzkaller.appspotmail.com
 Fixes: ab92d68fc22f ("net: core: add generic lockdep keys")
 
 For information about bisection process see: https://goo.gl/tpsmEJ#bisection
