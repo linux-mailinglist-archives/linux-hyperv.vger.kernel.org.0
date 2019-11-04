@@ -2,317 +2,146 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78EE4EDC24
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Nov 2019 11:10:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83734EE325
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Nov 2019 16:08:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfKDKKQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 4 Nov 2019 05:10:16 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:60443 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727322AbfKDKKQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:10:16 -0500
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 697DB87634
-        for <linux-hyperv@vger.kernel.org>; Mon,  4 Nov 2019 10:10:15 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id e25so10227477wra.9
-        for <linux-hyperv@vger.kernel.org>; Mon, 04 Nov 2019 02:10:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g+8Oj0bCYOu+EhlP3wibB9YhJUghmgDH8FSiQZ7/iSA=;
-        b=iBYtoddzjUOdY6ZxZrWSekHKLzx7Yro1a7/KW9J/4MPM15YZ0WMsqNFqct5TgL6ewV
-         UOsNnVscvRQ60c778j1e2eWBpWpbvPoQFJLgm66qSCtktNbf181xVJMy+5iaug2dyyIW
-         J6mpIFwzNZEwSbXBRFH9B7ZBtPav4G+pIWFgePrLU21ssBb8Bapse8PIuzm91B6K+Gfy
-         04GiyGMOG2ebJTFsviB7EzlCdz6Ozm1PA8JNPsGlSK/s2pSyDEQtGYiXfXWSLhm03wJt
-         Nk6pjwr7FansVjFmzIt9hUb+QTESFqB+RL57QosdlNCYk/jfdwsd+rRyTXJG+eeO0sZB
-         +DiQ==
-X-Gm-Message-State: APjAAAWnL6Ub+oUnIFeiB0p4FhRV0Cz49yg5bFncn5qKhzo7S23v/FTo
-        zcu1Yl043tt+BL0fmCraJD+0d6SQNJBupf0QyucAW9S0/pRtVeei0hLCrGVVR6+AdStCwLHntRT
-        /bE095Kv+U6KpzMVwN042m/SH
-X-Received: by 2002:a5d:5391:: with SMTP id d17mr185664wrv.382.1572862213941;
-        Mon, 04 Nov 2019 02:10:13 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxH1lap2B0a/ZOQA/meVQma9lyYnliFOKbdX4X0tlkJRdHzNLtyTsr3l9TCUV9K4c/wzZBv0w==
-X-Received: by 2002:a5d:5391:: with SMTP id d17mr185643wrv.382.1572862213586;
-        Mon, 04 Nov 2019 02:10:13 -0800 (PST)
-Received: from steredhat.homenet.telecomitalia.it (a-nu5-32.tin.it. [212.216.181.31])
-        by smtp.gmail.com with ESMTPSA id z9sm20176624wrv.1.2019.11.04.02.10.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 02:10:13 -0800 (PST)
-Date:   Mon, 4 Nov 2019 11:10:10 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jorgen Hansen <jhansen@vmware.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Wang <jasowang@redhat.com>,
+        id S1728014AbfKDPI5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 4 Nov 2019 10:08:57 -0500
+Received: from mail-eopbgr680098.outbound.protection.outlook.com ([40.107.68.98]:38883
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727796AbfKDPI5 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:08:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f++d+hKklZSlca2GPYTtxnjPbawy3fTZ7eM3yqCH6LVg+SBdaq5L+dNBYaw4kwv04JJkTG5sLyeuEEa3RzgxitgJyFkT0NsfHFCjw/aFvtK8ziuigr5CW+/ZDQ6+5QMtyYvPamTI+OeahHKNoG60HKI53c76zVs2YoOXEKE8yVgNy6GIK75VUJZv3neSdERcSjT4kNO/rDecTn4uA1WgCiqF7uLdvT1RMn9WVvIoL+8vK61Y/56SoyvZbfQY3xIZYmXGk3Hnk3ZYM8RHBRT1H4mxwplKrM9QlxCQof662khXiR5yDQM7yhEND+FFEoYLqS216mqg7GNJorEbcEI2jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hLCXeS1gL5d5twtgdHqcQE6EMIGT1P8Aqu39LoHT+IM=;
+ b=bmJKmIbthZtQsL8eL/wAgMJgqZdcgR2mjCNs/4Si6VLwi5Qb4T62GLKLKKwYJa+EUKigyjGXWEK7BircnQYTdWreIUvTViAcdlX5iEJTBAPcgZ0YHq8Gq+FtUD7ocJLXccgErCWysDTxCMJ5RNn2mHSVfBJpqWc3NKSfvP2j1g3iBRUtk71V4+Xb6kjSi+Lzi+s0Z4narfnbWAUIBiRbcEN9DD6RQBGcKdni4/XLarsyoLIIqzmO4LognXZD6Pcyk4VPfDRlftdO+xbu3PQBvEIkSgTLv1+LLDdDX7CJKDvzZE9jfoV3Fcz6I7jFfeityZU782+v5qpTaJNiEpw0Vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hLCXeS1gL5d5twtgdHqcQE6EMIGT1P8Aqu39LoHT+IM=;
+ b=g507y0VFrwv450alWGGTEJWCnuCBWXBODklVovobsGmf0XfaqqXDC0HzgyKhOWACcqUy5+SXZS4dDijHETqnPqAj+Fwzbyi/TOUxE+v3E0fbiXiOWjBnPuliLTbxZSFAUoPBo8ZGBO0VA7nBBrANxuRUSaEQiCWW07PoaT3K2u4=
+Received: from BYAPR21MB1366.namprd21.prod.outlook.com (20.179.59.143) by
+ BYAPR21MB1285.namprd21.prod.outlook.com (20.179.58.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.7; Mon, 4 Nov 2019 15:08:46 +0000
+Received: from BYAPR21MB1366.namprd21.prod.outlook.com
+ ([fe80::895e:2ab9:ef45:998f]) by BYAPR21MB1366.namprd21.prod.outlook.com
+ ([fe80::895e:2ab9:ef45:998f%8]) with mapi id 15.20.2430.020; Mon, 4 Nov 2019
+ 15:08:46 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-hyperv@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Olaf Hering <olaf@aepfle.de>, Sasha Levin <sashal@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next 12/14] vsock/vmci: register vmci_transport only
- when VMCI guest/host are active
-Message-ID: <20191104101010.we3nsgh4gxiu4vh5@steredhat.homenet.telecomitalia.it>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191023095554.11340-13-sgarzare@redhat.com>
+        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH net-next, 2/4] hv_netvsc: Fix error handling in
+ netvsc_attach()
+Thread-Topic: [PATCH net-next, 2/4] hv_netvsc: Fix error handling in
+ netvsc_attach()
+Thread-Index: AQHVjdOlMqN/vjaJcUKbzuSUMA+bEad2zieAgARX9eA=
+Date:   Mon, 4 Nov 2019 15:08:43 +0000
+Message-ID: <BYAPR21MB13667058A6F6C641EC973327CA7F0@BYAPR21MB1366.namprd21.prod.outlook.com>
+References: <1572296801-4789-3-git-send-email-haiyangz@microsoft.com>
+ <cdf7b308-940a-ff9c-07ae-f42b94687e24@web.de>
+In-Reply-To: <cdf7b308-940a-ff9c-07ae-f42b94687e24@web.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-04T15:08:39.9166307Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=50585190-9c09-45ff-9f3c-b2383bb559df;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dd63b10d-399b-4e2e-17cb-08d76138e3f5
+x-ms-traffictypediagnostic: BYAPR21MB1285:|BYAPR21MB1285:|BYAPR21MB1285:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR21MB1285D3AA15ABB76D86C1A976CA7F0@BYAPR21MB1285.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0211965D06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(366004)(376002)(136003)(346002)(189003)(199004)(13464003)(99286004)(53546011)(76176011)(8990500004)(6506007)(4326008)(7696005)(6666004)(7736002)(305945005)(11346002)(446003)(6436002)(486006)(26005)(2501003)(102836004)(71200400001)(71190400001)(6246003)(186003)(55016002)(6306002)(2906002)(476003)(3846002)(6116002)(9686003)(10290500003)(66556008)(25786009)(33656002)(110136005)(54906003)(316002)(66066001)(10090500001)(229853002)(74316002)(22452003)(81166006)(5660300002)(2201001)(52536014)(8936002)(8676002)(5024004)(256004)(81156014)(478600001)(76116006)(66446008)(66946007)(14454004)(86362001)(66476007)(64756008)(966005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1285;H:BYAPR21MB1366.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5ibgZl/sFendGpNl8if2v/kXuvXe3aoUDbBF+M8QfU2IVdMPnwDr7prkcTaTS4/sE5x/dY9dbtW9DCmOAF4IUP8equOUmjv/zv0aThe6vkg1bzmcHOB4j7VF3A52HW3m48PUdnFHtO6vf9AbUB1drVHRwY5HuO1grnMHEnJgXS52pIgVVDrwUJ71/nf959aE9AoE8aNnCuJE0Zc3IRD6HYCLRYALdhjkFEYNuyljYi98Ss+jSw3kjwtb0kDIl+0nRhPLsJc/C4OjKWBkVyhf+sKPkIRS1AALMod+b0aFt+WZOgDoa3mzBwyU4B9xFzPTt7XNgJbhw+f0iHCsUcWaZK/48BqWH0Gb33iuGkZC2vmHxDR/DP/TJUU0fXmMP/O4S7+FgHN1f+boTRiso2zTdVswFl4IBh2B/4yBoWbs1SQ1Ph6gyCXRsaSxLT4fACyR
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023095554.11340-13-sgarzare@redhat.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd63b10d-399b-4e2e-17cb-08d76138e3f5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2019 15:08:43.3507
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j+qLMco07I1h7z35RgkKol9g2cTTWn88BEwZONeKBrpUAWjrjNmb8obrT7JazHhTRkIr6HLrROvgjkGx15QVlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1285
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Jorgen,
-I'm preparing the v2, but first, if you have time, I'd like to have
-a comment from you on this patch that modifies a bit vmci.
-
-Thank you very much,
-Stefano
-
-On Wed, Oct 23, 2019 at 11:55:52AM +0200, Stefano Garzarella wrote:
-> To allow other transports to be loaded with vmci_transport,
-> we register the vmci_transport as G2H or H2G only when a VMCI guest
-> or host is active.
-> 
-> To do that, this patch adds a callback registered in the vmci driver
-> that will be called when a new host or guest become active.
-> This callback will register the vmci_transport in the VSOCK core.
-> If the transport is already registered, we ignore the error coming
-> from vsock_core_register().
-> 
-> Cc: Jorgen Hansen <jhansen@vmware.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  drivers/misc/vmw_vmci/vmci_driver.c | 50 +++++++++++++++++++++++++++++
->  drivers/misc/vmw_vmci/vmci_driver.h |  2 ++
->  drivers/misc/vmw_vmci/vmci_guest.c  |  2 ++
->  drivers/misc/vmw_vmci/vmci_host.c   |  7 ++++
->  include/linux/vmw_vmci_api.h        |  2 ++
->  net/vmw_vsock/vmci_transport.c      | 29 +++++++++++------
->  6 files changed, 82 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/misc/vmw_vmci/vmci_driver.c b/drivers/misc/vmw_vmci/vmci_driver.c
-> index 819e35995d32..195afbd7edc1 100644
-> --- a/drivers/misc/vmw_vmci/vmci_driver.c
-> +++ b/drivers/misc/vmw_vmci/vmci_driver.c
-> @@ -28,6 +28,9 @@ MODULE_PARM_DESC(disable_guest,
->  static bool vmci_guest_personality_initialized;
->  static bool vmci_host_personality_initialized;
->  
-> +static DEFINE_MUTEX(vmci_vsock_mutex); /* protects vmci_vsock_transport_cb */
-> +static vmci_vsock_cb vmci_vsock_transport_cb;
-> +
->  /*
->   * vmci_get_context_id() - Gets the current context ID.
->   *
-> @@ -45,6 +48,53 @@ u32 vmci_get_context_id(void)
->  }
->  EXPORT_SYMBOL_GPL(vmci_get_context_id);
->  
-> +/*
-> + * vmci_register_vsock_callback() - Register the VSOCK vmci_transport callback.
-> + *
-> + * The callback will be called every time a new host or guest become active,
-> + * or if they are already active when this function is called.
-> + * To unregister the callback, call this function with NULL parameter.
-> + *
-> + * Returns 0 on success. -EBUSY if a callback is already registered.
-> + */
-> +int vmci_register_vsock_callback(vmci_vsock_cb callback)
-> +{
-> +	int err = 0;
-> +
-> +	mutex_lock(&vmci_vsock_mutex);
-> +
-> +	if (vmci_vsock_transport_cb && callback) {
-> +		err = -EBUSY;
-> +		goto out;
-> +	}
-> +
-> +	vmci_vsock_transport_cb = callback;
-> +
-> +	if (!vmci_vsock_transport_cb)
-> +		goto out;
-> +
-> +	if (vmci_guest_code_active())
-> +		vmci_vsock_transport_cb(false);
-> +
-> +	if (vmci_host_users() > 0)
-> +		vmci_vsock_transport_cb(true);
-> +
-> +out:
-> +	mutex_unlock(&vmci_vsock_mutex);
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(vmci_register_vsock_callback);
-> +
-> +void vmci_call_vsock_callback(bool is_host)
-> +{
-> +	mutex_lock(&vmci_vsock_mutex);
-> +
-> +	if (vmci_vsock_transport_cb)
-> +		vmci_vsock_transport_cb(is_host);
-> +
-> +	mutex_unlock(&vmci_vsock_mutex);
-> +}
-> +
->  static int __init vmci_drv_init(void)
->  {
->  	int vmci_err;
-> diff --git a/drivers/misc/vmw_vmci/vmci_driver.h b/drivers/misc/vmw_vmci/vmci_driver.h
-> index aab81b67670c..990682480bf6 100644
-> --- a/drivers/misc/vmw_vmci/vmci_driver.h
-> +++ b/drivers/misc/vmw_vmci/vmci_driver.h
-> @@ -36,10 +36,12 @@ extern struct pci_dev *vmci_pdev;
->  
->  u32 vmci_get_context_id(void);
->  int vmci_send_datagram(struct vmci_datagram *dg);
-> +void vmci_call_vsock_callback(bool is_host);
->  
->  int vmci_host_init(void);
->  void vmci_host_exit(void);
->  bool vmci_host_code_active(void);
-> +int vmci_host_users(void);
->  
->  int vmci_guest_init(void);
->  void vmci_guest_exit(void);
-> diff --git a/drivers/misc/vmw_vmci/vmci_guest.c b/drivers/misc/vmw_vmci/vmci_guest.c
-> index 7a84a48c75da..cc8eeb361fcd 100644
-> --- a/drivers/misc/vmw_vmci/vmci_guest.c
-> +++ b/drivers/misc/vmw_vmci/vmci_guest.c
-> @@ -637,6 +637,8 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
->  		  vmci_dev->iobase + VMCI_CONTROL_ADDR);
->  
->  	pci_set_drvdata(pdev, vmci_dev);
-> +
-> +	vmci_call_vsock_callback(false);
->  	return 0;
->  
->  err_free_irq:
-> diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
-> index 833e2bd248a5..ff3c396146ff 100644
-> --- a/drivers/misc/vmw_vmci/vmci_host.c
-> +++ b/drivers/misc/vmw_vmci/vmci_host.c
-> @@ -108,6 +108,11 @@ bool vmci_host_code_active(void)
->  	     atomic_read(&vmci_host_active_users) > 0);
->  }
->  
-> +int vmci_host_users(void)
-> +{
-> +	return atomic_read(&vmci_host_active_users);
-> +}
-> +
->  /*
->   * Called on open of /dev/vmci.
->   */
-> @@ -338,6 +343,8 @@ static int vmci_host_do_init_context(struct vmci_host_dev *vmci_host_dev,
->  	vmci_host_dev->ct_type = VMCIOBJ_CONTEXT;
->  	atomic_inc(&vmci_host_active_users);
->  
-> +	vmci_call_vsock_callback(true);
-> +
->  	retval = 0;
->  
->  out:
-> diff --git a/include/linux/vmw_vmci_api.h b/include/linux/vmw_vmci_api.h
-> index acd9fafe4fc6..f28907345c80 100644
-> --- a/include/linux/vmw_vmci_api.h
-> +++ b/include/linux/vmw_vmci_api.h
-> @@ -19,6 +19,7 @@
->  struct msghdr;
->  typedef void (vmci_device_shutdown_fn) (void *device_registration,
->  					void *user_data);
-> +typedef void (*vmci_vsock_cb) (bool is_host);
->  
->  int vmci_datagram_create_handle(u32 resource_id, u32 flags,
->  				vmci_datagram_recv_cb recv_cb,
-> @@ -37,6 +38,7 @@ int vmci_doorbell_destroy(struct vmci_handle handle);
->  int vmci_doorbell_notify(struct vmci_handle handle, u32 priv_flags);
->  u32 vmci_get_context_id(void);
->  bool vmci_is_context_owner(u32 context_id, kuid_t uid);
-> +int vmci_register_vsock_callback(vmci_vsock_cb callback);
->  
->  int vmci_event_subscribe(u32 event,
->  			 vmci_event_cb callback, void *callback_data,
-> diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
-> index 2eb3f16d53e7..04437f822d82 100644
-> --- a/net/vmw_vsock/vmci_transport.c
-> +++ b/net/vmw_vsock/vmci_transport.c
-> @@ -2053,19 +2053,22 @@ static bool vmci_check_transport(struct vsock_sock *vsk)
->  	return vsk->transport == &vmci_transport;
->  }
->  
-> -static int __init vmci_transport_init(void)
-> +void vmci_vsock_transport_cb(bool is_host)
->  {
-> -	int features = VSOCK_TRANSPORT_F_DGRAM | VSOCK_TRANSPORT_F_H2G;
-> -	int cid;
-> -	int err;
-> +	int features;
->  
-> -	cid = vmci_get_context_id();
-> +	if (is_host)
-> +		features = VSOCK_TRANSPORT_F_H2G;
-> +	else
-> +		features = VSOCK_TRANSPORT_F_G2H;
->  
-> -	if (cid == VMCI_INVALID_ID)
-> -		return -EINVAL;
-> +	vsock_core_register(&vmci_transport, features);
-> +}
->  
-> -	if (cid != VMCI_HOST_CONTEXT_ID)
-> -		features |= VSOCK_TRANSPORT_F_G2H;
-> +static int __init vmci_transport_init(void)
-> +{
-> +	int features = VSOCK_TRANSPORT_F_DGRAM;
-> +	int err;
->  
->  	/* Create the datagram handle that we will use to send and receive all
->  	 * VSocket control messages for this context.
-> @@ -2079,7 +2082,6 @@ static int __init vmci_transport_init(void)
->  		pr_err("Unable to create datagram handle. (%d)\n", err);
->  		return vmci_transport_error_to_vsock_error(err);
->  	}
-> -
->  	err = vmci_event_subscribe(VMCI_EVENT_QP_RESUMED,
->  				   vmci_transport_qp_resumed_cb,
->  				   NULL, &vmci_transport_qp_resumed_sub_id);
-> @@ -2094,8 +2096,14 @@ static int __init vmci_transport_init(void)
->  	if (err < 0)
->  		goto err_unsubscribe;
->  
-> +	err = vmci_register_vsock_callback(vmci_vsock_transport_cb);
-> +	if (err < 0)
-> +		goto err_unregister;
-> +
->  	return 0;
->  
-> +err_unregister:
-> +	vsock_core_unregister(&vmci_transport);
->  err_unsubscribe:
->  	vmci_event_unsubscribe(vmci_transport_qp_resumed_sub_id);
->  err_destroy_stream_handle:
-> @@ -2121,6 +2129,7 @@ static void __exit vmci_transport_exit(void)
->  		vmci_transport_qp_resumed_sub_id = VMCI_INVALID_ID;
->  	}
->  
-> +	vmci_register_vsock_callback(NULL);
->  	vsock_core_unregister(&vmci_transport);
->  }
->  module_exit(vmci_transport_exit);
-> -- 
-> 2.21.0
-> 
-
--- 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFya3VzIEVsZnJpbmcg
+PE1hcmt1cy5FbGZyaW5nQHdlYi5kZT4NCj4gU2VudDogRnJpZGF5LCBOb3ZlbWJlciAxLCAyMDE5
+IDQ6NDMgUE0NCj4gVG86IEhhaXlhbmcgWmhhbmcgPGhhaXlhbmd6QG1pY3Jvc29mdC5jb20+OyBs
+aW51eC0NCj4gaHlwZXJ2QHZnZXIua2VybmVsLm9yZzsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZw0K
+PiBDYzoga2VybmVsLWphbml0b3JzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZzsgRGF2aWQgUy4NCj4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0PjsgS1kg
+U3Jpbml2YXNhbiA8a3lzQG1pY3Jvc29mdC5jb20+OyBPbGFmDQo+IEhlcmluZyA8b2xhZkBhZXBm
+bGUuZGU+OyBTYXNoYSBMZXZpbiA8c2FzaGFsQGtlcm5lbC5vcmc+OyBTdGVwaGVuDQo+IEhlbW1p
+bmdlciA8c3RoZW1taW5AbWljcm9zb2Z0LmNvbT47IHZrdXpuZXRzIDx2a3V6bmV0c0ByZWRoYXQu
+Y29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIG5ldC1uZXh0LCAyLzRdIGh2X25ldHZzYzogRml4
+IGVycm9yIGhhbmRsaW5nIGluDQo+IG5ldHZzY19hdHRhY2goKQ0KPiANCj4gPiBJZiBybmRpc19m
+aWx0ZXJfb3BlbigpIGZhaWxzLCB3ZSBuZWVkIHRvIHJlbW92ZSB0aGUgcm5kaXMgZGV2aWNlDQo+
+ID4gY3JlYXRlZCBpbiBlYXJsaWVyIHN0ZXBzLCBiZWZvcmUgcmV0dXJuaW5nIGFuIGVycm9yIGNv
+ZGUuIE90aGVyd2lzZSwNCj4gPiB0aGUgcmV0cnkgb2YNCj4gPiBuZXR2c2NfYXR0YWNoKCkgZnJv
+bSBpdHMgY2FsbGVycyB3aWxsIGZhaWwgYW5kIGhhbmcuDQo+IA0KPiBIb3cgZG8geW91IHRoaW5r
+IGFib3V0IHRvIGNob29zZSBhIG1vcmUg4oCcaW1wZXJhdGl2ZSBtb29k4oCdIGZvciB5b3VyDQo+
+IGNoYW5nZSBkZXNjcmlwdGlvbj8NCj4gaHR0cHM6Ly9uYW0wNi5zYWZlbGlua3MucHJvdGVjdGlv
+bi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGZ2l0LmsNCj4gZXJuZWwub3JnJTJGcHVi
+JTJGc2NtJTJGbGludXglMkZrZXJuZWwlMkZnaXQlMkZ0b3J2YWxkcyUyRmxpbnV4LmdpdCUNCj4g
+MkZ0cmVlJTJGRG9jdW1lbnRhdGlvbiUyRnByb2Nlc3MlMkZzdWJtaXR0aW5nLQ0KPiBwYXRjaGVz
+LnJzdCUzRmlkJTNEMGRiZTZjYjhmN2UwNWJjOTYxMTYwMmVmNDU5ODBhNmM1N2IyNDVhMyUyM24x
+NTENCj4gJmFtcDtkYXRhPTAyJTdDMDElN0NoYWl5YW5neiU0MG1pY3Jvc29mdC5jb20lN0MxNjJh
+YTAxNmY0NWU0MjkzYw0KPiBhYmIwOGQ3NWYwYzBmZWUlN0M3MmY5ODhiZjg2ZjE0MWFmOTFhYjJk
+N2NkMDExZGI0NyU3QzElN0MwJTdDNjM3DQo+IDA4MjM3Nzc5NjI5NTE1OSZhbXA7c2RhdGE9eXRq
+eEdZVFBJMkQ0Qm9OYnNsS1B2QmJzZkdVRU03aFhqMVlBaUcNCj4gaG44SWslM0QmYW1wO3Jlc2Vy
+dmVkPTANCkFncmVlZC4gVGhhbmtzLg0KDQoNCj4gDQo+IA0KPiDigKYNCj4gPiArKysgYi9kcml2
+ZXJzL25ldC9oeXBlcnYvbmV0dnNjX2Rydi5jDQo+ID4gQEAgLTk4Miw3ICs5ODIsNyBAQCBzdGF0
+aWMgaW50IG5ldHZzY19hdHRhY2goc3RydWN0IG5ldF9kZXZpY2UgKm5kZXYsDQo+ID4gIAlpZiAo
+bmV0aWZfcnVubmluZyhuZGV2KSkgew0KPiA+ICAJCXJldCA9IHJuZGlzX2ZpbHRlcl9vcGVuKG52
+ZGV2KTsNCj4gPiAgCQlpZiAocmV0KQ0KPiA+IC0JCQlyZXR1cm4gcmV0Ow0KPiA+ICsJCQlnb3Rv
+IGVycjsNCj4gPg0KPiA+ICAJCXJkZXYgPSBudmRldi0+ZXh0ZW5zaW9uOw0KPiA+ICAJCWlmICgh
+cmRldi0+bGlua19zdGF0ZSkNCj4g4oCmDQo+IA0KPiBJIHdvdWxkIHByZWZlciB0byBzcGVjaWZ5
+IHRoZSBjb21wbGV0ZWQgZXhjZXB0aW9uIGhhbmRsaW5nIChhZGRpdGlvbiBvZiB0d28NCj4gZnVu
+Y3Rpb24gY2FsbHMpIGJ5IGEgY29tcG91bmQgc3RhdGVtZW50IGluIHRoZSBzaG93biBpZiBicmFu
+Y2ggZGlyZWN0bHkuDQo+IA0KPiBJZiB5b3Ugd291bGQgaW5zaXN0IHRvIHVzZSBhIGdvdG8gc3Rh
+dGVtZW50LCBJIGZpbmQgYW4gb3RoZXIgbGFiZWwgbW9yZQ0KPiBhcHByb3ByaWF0ZSBhY2NvcmRp
+bmcgdG8gdGhlIExpbnV4IGNvZGluZyBzdHlsZS4NCg0KSSB3aWxsIGhhdmUgbW9yZSBwYXRjaGVz
+IHRoYXQgbWFrZSBtdWx0aXBsZSBlbnRyeSBwb2ludHMgb2YgZXJyb3IgY2xlYW4gdXAgDQpzdGVw
+cyAtLSBzbyBJIHVzZWQgZ290byBpbnN0ZWFkIG9mIHB1dHRpbmcgdGhlIGZ1bmN0aW9ucyBpbiBl
+YWNoIGlmLWJyYW5jaC4NCg0KSSB3aWxsIG5hbWUgdGhlIGxhYmVscyBtb3JlIG1lYW5pbmdmdWxs
+eS4NCg0KVGhhbmtzLA0KLSBIYWl5YW5nDQo=
