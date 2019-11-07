@@ -2,38 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7626DF307F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2019 14:52:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92732F3117
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2019 15:16:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbfKGNwD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Nov 2019 08:52:03 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:9000 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389192AbfKGNwD (ORCPT
+        id S2389154AbfKGOPw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Nov 2019 09:15:52 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58443 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388868AbfKGOPv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:52:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573134721;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=xePb0EruLlu0nO5HtILqFKWXJ1QLBtzbkUwOSAhevVY=;
-        b=NXjTJHsvHtbkJP3pxp/2rSK3PLCYBdnd7kDoMoPSiO4KsDJoHLWsVIH05nBd4GCqrE
-        /Hs/McN9zb4OF81PXb8OOlgLGr7gGgkdKl5kXy22gIHKsrb0/xTqRCgmgvOjaicLcwK5
-        u1KR8ThBsXDXwlWXGmX2Awpr073df7VIxcCck2vN3oyLeCsf66OOTdsmdS4tVpNAczjC
-        maRn+obuPrcVQXWv3Wcv1rSwUWJKLxYoMdmqCbyC2myoN5FjiX/UrHdviy5PSUEcAFIG
-        WNrnkiuomvaEeip0tfIdxK18e692OVUUpu9kW8oquqJChMACK3c/84sX8W/IOYHyThcT
-        Gu6w==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4kV1cX92EW4mFvNjTRB"
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id 20735bvA7DmxlOo
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 7 Nov 2019 14:48:59 +0100 (CET)
-Date:   Thu, 7 Nov 2019 14:48:50 +0100
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+        Thu, 7 Nov 2019 09:15:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573136150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IQQGeA2GqC4Q8lGdu4U1hGsjXCIjFvgN1cEaPoJfzWs=;
+        b=NtycCoo3RNlpb4OFNjVeFujY1NE3uyfu1VmI0WD+0cmVI0ZRpkME3EPFeisuJDz/GNTa53
+        csGYHEb77y9vW9xIfpJC6HU+yn1dqRBoDWDTEaSED7z3qB/OVKyP3SSdA4hak8v52p2/J6
+        4vSAOVeoICR3VBdlJNFZX4Aql90H+1M=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-CS--QH8TO4G51UrR0F6FgA-1; Thu, 07 Nov 2019 09:15:48 -0500
+Received: by mail-wr1-f69.google.com with SMTP id w9so239636wrn.9
+        for <linux-hyperv@vger.kernel.org>; Thu, 07 Nov 2019 06:15:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=NuQrs5SJVY4jlHa2zxbalzQjTYTxUlDQ8ZHPfqmiNQ8=;
+        b=VhPd5uarY7yYIyC+B/OfIJbcaNCyPzRudizGFa94pmdY45uML8FhY+K+rbwElaxTsr
+         nzmqWqdJB7Z53eBHdVx7YiTMDIIyxmUB28ilcWki33vjgtMoy5EcNzL5hYzdklkx28bX
+         EXQFnr98qkMxJH2Fu6r2H5Q7Ue5tsKqrwmSQvdFT5LZ0Owqr7KiyO89CLdWWP5PkIUjO
+         9oFoOjtc06zPo1t9f2IVhdehvw+tqJi5ERlHv/2WChVqtZGg5XpNKZf6hbfQZ0nghRa6
+         P41FWjW4CO/60S4UMoRf42dNFY4bNgBjxbKGv1Iay0K3E6QAzpqE1wHWo3/cZdrYkgZP
+         WTzA==
+X-Gm-Message-State: APjAAAURV09BS2AYhjJ6iKhY6+mwsKEvOcATjnHQb9CIBeuKkBeShcBG
+        yhgIcOrOmlqb8TZ1mae7SXXYlY1sCb3BiKg/tnJ7nQpjNSyQjglVn0i1jpPcop2RGDW4+woqh00
+        GaUEkoll59ev0HVKOydKJ5Fme
+X-Received: by 2002:a5d:4982:: with SMTP id r2mr3134194wrq.254.1573136147571;
+        Thu, 07 Nov 2019 06:15:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzwgCFT8usXbCPQK392QCEz4oeVoY26l3u2JDtD2xITZhSqFPvEqq5eSP3DgLKVukd6BnLc8A==
+X-Received: by 2002:a5d:4982:: with SMTP id r2mr3134177wrq.254.1573136147337;
+        Thu, 07 Nov 2019 06:15:47 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id m15sm2185865wrq.97.2019.11.07.06.15.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 06:15:46 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Olaf Hering <olaf@aepfle.de>
 Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -41,69 +59,53 @@ Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         "open list\:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-Message-ID: <20191107144850.37587edb.olaf@aepfle.de>
-In-Reply-To: <874kzfbybk.fsf@vitty.brq.redhat.com>
-References: <20191024144943.26199-1-olaf@aepfle.de>
-        <874kzfbybk.fsf@vitty.brq.redhat.com>
-X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+In-Reply-To: <20191107144850.37587edb.olaf@aepfle.de>
+References: <20191024144943.26199-1-olaf@aepfle.de> <874kzfbybk.fsf@vitty.brq.redhat.com> <20191107144850.37587edb.olaf@aepfle.de>
+Date:   Thu, 07 Nov 2019 15:15:45 +0100
+Message-ID: <87zhh7ai26.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TfRDKLn+ytyQpDe=3EHiVfq"; protocol="application/pgp-signature"
+X-MC-Unique: CS--QH8TO4G51UrR0F6FgA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---Sig_/TfRDKLn+ytyQpDe=3EHiVfq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Olaf Hering <olaf@aepfle.de> writes:
 
-Am Thu, 07 Nov 2019 14:39:11 +0100
-schrieb Vitaly Kuznetsov <vkuznets@redhat.com>:
+> Am Thu, 07 Nov 2019 14:39:11 +0100
+> schrieb Vitaly Kuznetsov <vkuznets@redhat.com>:
+>
+>> Olaf Hering <olaf@aepfle.de> writes:
+>
+>> Is it only EAI_AGAIN or do you see any other return values which justify
+>> the retry? I'm afraid that in case of a e.g. non-existing hostname we'll
+>> be infinitely looping with EAI_FAIL.
+>
+> I currently do not have a setup that reproduces the failure.
+> I think if this thread loops forever, so be it.
+>
+> The report I have shows "getaddrinfo failed: 0xfffffffe Name or service n=
+ot known" on the host side.
+> And that went away within the VM once "networking was fixed", whatever th=
+is means.
+> But hv_kvp_daemon would report the error string forever.
 
-> Olaf Hering <olaf@aepfle.de> writes:
+Looping forever with a permanent error is pretty unusual...
 
-> Is it only EAI_AGAIN or do you see any other return values which justify
-> the retry? I'm afraid that in case of a e.g. non-existing hostname we'll
-> be infinitely looping with EAI_FAIL.
+>
+>> > +=09pthread_detach(t); =20
+>> I think this should be complemented with pthread_cancel/pthread_join
+>> before exiting main().
+>
+> If the thread is detached, it is exactly that: detached. Why do you think=
+ the main thread should wait for the detached thread?
 
-I currently do not have a setup that reproduces the failure.
-I think if this thread loops forever, so be it.
+Ah, my bad: you actually can't join a detached thread, scratch my
+comment.
 
-The report I have shows "getaddrinfo failed: 0xfffffffe Name or service not=
- known" on the host side.
-And that went away within the VM once "networking was fixed", whatever this=
- means.
-But hv_kvp_daemon would report the error string forever.
+--=20
+Vitaly
 
-> > +	pthread_detach(t); =20
-> I think this should be complemented with pthread_cancel/pthread_join
-> before exiting main().
-
-If the thread is detached, it is exactly that: detached. Why do you think t=
-he main thread should wait for the detached thread?
-
-Olaf
-
---Sig_/TfRDKLn+ytyQpDe=3EHiVfq
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl3EIMIACgkQ86SN7mm1
-DoDUzxAAoj3rIvo4UnuYA6gdsJXo/4gzx1ef87gMMUDuTYvUerULqG3HqC0PbzWg
-T7nX3L8MqHDqTJ3NhZyIuicIqGub5HfwnzQDnTMS/1PIW/t0tkiVbFbnXyYaRx9B
-wC8aJLxpaR6NT4XCqq1HMv1zF2fr329phf3kFOPRONGwRoh1ACgk8N9cVnK6Wakl
-SCXWvXxaUtpt5I3A9UQUmQUSDDtv2+DrHiJctWfVZR2ZW2EVSeCNqMVJS4ZyF6Fo
-WMPCnb/5zLlLYo204jlsdEB9ny/FgKrLhjQeuEO2Mt+qBXK//Rz79jRQLhKB1EpV
-NrIpSgZ2PJAmnKRXVoKhqDo6CkPHmCbZFlWHGbmaRg9b5tQpY2cTiZI/4UgM8IIm
-ogFuGEFAM7uWC+iPKgf/apAofMmNoL/8YHwThlgCptHZZotaZu/FdFHnUT1mYSY/
-BsfFqhjjNKFkiy4J0GubudeCyKCyiIQ+aQ3inXDCJF3Mh2EbV4MMGIkzy9BqjCG3
-pnmv5kcSXiuUv4r/KGBS0L+JD9D9cAQcF2arbs/YR4U20WbMQb+WHQmZgfKmjW9u
-hLvAPIQSvkt6SJOVhqxUtC+YpuNp8gn+muX2SeTVFhIzYUhDwRUKdwGA/vcYeD+O
-NT2FTV4m6T68jhRCWT1EcvAYztABDp8g9mhn2KJYvssbbstKIpk=
-=A5vV
------END PGP SIGNATURE-----
-
---Sig_/TfRDKLn+ytyQpDe=3EHiVfq--
