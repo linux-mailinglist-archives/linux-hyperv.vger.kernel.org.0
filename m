@@ -2,98 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F312F2A45
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2019 10:10:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6678DF2F33
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2019 14:27:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733221AbfKGJKl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Nov 2019 04:10:41 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37968 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733142AbfKGJKl (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:10:41 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iSdoJ-0002WC-Ai; Thu, 07 Nov 2019 10:10:35 +0100
-To:     Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH v5 2/8] arm64: hyperv: Add hypercall and register access  functions
-X-PHP-Originating-Script: 0:main.inc
+        id S2388697AbfKGN05 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Nov 2019 08:26:57 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:57108 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388525AbfKGN04 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:26:56 -0500
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AB91081F05
+        for <linux-hyperv@vger.kernel.org>; Thu,  7 Nov 2019 13:26:56 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id f14so772490wmc.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 07 Nov 2019 05:26:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=sY5GQZQRR37FgRTpgS+peb+lk0hBcwjkBJyRvYYH6Hw=;
+        b=kfR7iNjRmccwhtUTcKIKXtPuAdrU6kZ+p8Scy+KNvnWeex2hHh07GbgRGZo8f0WOKY
+         hsXiku1o/yNRiThU6K5UPcHogXr+X707knWf5wN3Ew8tFu3cz7G9jI+ykaE4es3XyfM7
+         qhlpllPlYHIMcqKAFiRVjN91H8oKUDzC7OBlIgm8ln61bX9EGLfEFWNaSRfRXiphI2Un
+         SR7Hul5XziOa5ltCP+3YeaO+PUIAWLCMEyC2/Bw59UVNpXhVg1ByNCPenJktOuh9Fa5+
+         zZrUZ3JvwKia+gh96SQwfXo8iFnvN813rQQZO73D1vZbEiHYxx3DtTwZeWriVuQSb7Ld
+         mA1A==
+X-Gm-Message-State: APjAAAVng8y2M5K8EDM+G1H2dGUkm+iYdEO/zINyADhSeCShyj0IKvb3
+        /O+hUyYV3TYYOeymjB4XIkXrSsFUUSikR4s9DzKy3ZTr3bVcjH3RD/gw0YfXN4rzZyPSLlp8618
+        j+3PCX1GiyaE7vApa4wXVwFZU
+X-Received: by 2002:a1c:3b08:: with SMTP id i8mr2855693wma.56.1573133215354;
+        Thu, 07 Nov 2019 05:26:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxTxNfiovI0w9kYuknzKXffvwCptiTG92icmrRUIsqrAdos08hnvVnr3eQTmeYuQjClpj2+4A==
+X-Received: by 2002:a1c:3b08:: with SMTP id i8mr2855658wma.56.1573133215051;
+        Thu, 07 Nov 2019 05:26:55 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id w13sm2269778wrm.8.2019.11.07.05.26.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 05:26:54 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v3] x86/hyper-v: micro-optimize send_ipi_one case
+In-Reply-To: <20191027151938.7296-1-vkuznets@redhat.com>
+References: <20191027151938.7296-1-vkuznets@redhat.com>
+Date:   Thu, 07 Nov 2019 14:26:53 +0100
+Message-ID: <877e4bbyw2.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 07 Nov 2019 10:19:56 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <will@kernel.org>, <catalin.marinas@arm.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, <devel@linuxdriverproject.org>,
-        <olaf@aepfle.de>, <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, <jasowang@redhat.com>,
-        <marcelo.cerri@canonical.com>, KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "boqun.feng" <boqun.feng@gmail.com>
-In-Reply-To: <DM5PR21MB013730D09CB8BA7658DE57F7D7790@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <1570129355-16005-1-git-send-email-mikelley@microsoft.com>
- <1570129355-16005-3-git-send-email-mikelley@microsoft.com>
- <8cdc86e5bcf861c74069e0d349910c94@www.loen.fr>
- <DM5PR21MB013730D09CB8BA7658DE57F7D7790@DM5PR21MB0137.namprd21.prod.outlook.com>
-Message-ID: <c8403255bf874856c10f07189e27080a@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: mikelley@microsoft.com, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, devel@linuxdriverproject.org, olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com, jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com, sunilmut@microsoft.com, boqun.feng@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2019-11-06 19:08, Michael Kelley wrote:
-> From: Marc Zyngier <maz@kernel.org>  Sent: Wednesday, November 6,
-> 2019 2:20 AM
->>
->> On 2019-10-03 20:12, Michael Kelley wrote:
->> > Add ARM64-specific code to make Hyper-V hypercalls and to
->> > access virtual processor synthetic registers via hypercalls.
->> > Hypercalls use a Hyper-V specific calling sequence with a non-zero
->> > immediate value per Section 2.9 of the SMC Calling Convention
->> > spec.
->>
->> I find this "following the spec by actively sidestepping it" counter
->> productive. You (or rather the Hyper-V people) are reinventing the
->> wheel (of the slightly square variety) instead of using the standard
->> that the whole of the ARM ecosystem seems happy to take advantage
->> of.
->>
->> I wonder what is the rational for this. If something doesn't quite
->> work for Hyper-V, I think we'd all like to know.
->>
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+
+> When sending an IPI to a single CPU there is no need to deal with cpumasks.
+> With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
+> cycles) improvement with smp_call_function_single() loop benchmark. The
+> optimization, however, is tiny and straitforward. Also, send_ipi_one() is
+> important for PV spinlock kick.
 >
-> I'll go another round internally with the Hyper-V people on this
-> topic and impress upon them the desire of the Linux community to
-> have Hyper-V adopt the true spirit of the spec.  But I know they are
-> fairly set in their approach at this point, regardless of the 
-> technical
-> merits or lack thereof.  Hyper-V is shipping and in use as a 
-> commercial
-> product on ARM64 hardware, which makes it harder to change.  I
-> hope we can find a way to avoid a complete impasse ....
+> I was also wondering if it would make sense to switch to using regular
+> APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
+> cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
+> vector)).
+>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+> Changes since v2:
+>  - Check VP number instead of CPU number against >= 64 [Michael]
+>  - Check for VP_INVAL
 
-Hyper-V shipping with their own calling convention is fine by me. Linux
-having to implement multiple calling conventions because the Hyper-V
-folks refuse (for undisclosed reason) to adopt the standard isn't fine 
-at
-all.
+Hi Sasha,
 
-HV can perfectly retain its interface for Windows or other things, but
-please *at least* implement the standard interface on which all 
-existing
-operating systems rely.
+do you have plans to pick this up for hyperv-next or should we ask x86
+folks to?
 
-Thanks,
+Thanks!
 
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Vitaly
