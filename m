@@ -2,106 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 12016F31B6
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2019 15:44:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E061EF3487
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2019 17:21:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKGOod (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Nov 2019 09:44:33 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47834 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726754AbfKGOod (ORCPT
+        id S1726640AbfKGQVN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Nov 2019 11:21:13 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33957 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfKGQVN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:44:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573137872;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uokYutLXxZLmrspkhT2MmzUiCDD5/pP/FDqbke/Wsbo=;
-        b=atOJhmTiL4tnqM4j00PnLlT406NpbmVzn5I5ZeirZviTQOHfIjXEWu4mqSPdJQk+yB4YCt
-        Bb6nphQfcRNwdeDiINfWYfVNTT+1hMNYTzeWvoc2VutlEOCZq59+RJPLft+47gYO4jUGEu
-        De7IDW7/dx7kbDVnxnDy5SRXdlaU+Sw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-oiXkTUqxOzeVuCRjgHemNw-1; Thu, 07 Nov 2019 09:44:31 -0500
-Received: by mail-wr1-f71.google.com with SMTP id e7so1139170wro.22
-        for <linux-hyperv@vger.kernel.org>; Thu, 07 Nov 2019 06:44:30 -0800 (PST)
+        Thu, 7 Nov 2019 11:21:13 -0500
+Received: by mail-il1-f194.google.com with SMTP id p6so2345735ilp.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 07 Nov 2019 08:21:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Qm1wcEL4DyEFOx/poYUPWTsHpur944bFsf+pfVpPSb4=;
+        b=LU9HzPvvswy6jeyzyB6+lzwaCllpTUyT5zDGzeotvfUb8HpFnL79eis8uVoj/V9ElL
+         bX+ll+zd+OaCV5ltovulkxoPZuBCZuk4qTRZ+P0YW5mg37C2U7nkJyJo6xwIPEoPVZqN
+         UfjAXD8TUOW6vEJBeKyT+I07HgxPrENKq1QZSuu6mhKGhBIEC+j7+sjIn7Zhyh0aXano
+         wawQT4pNPKyUy3QhxiOhV49RlUhcnDnOwCMIKsaPdiL0TpUgOg4BPBurfqu1GCSs56y0
+         pQwHQcwBWGtE6L78TvGT46Vxqf4CtI9EkiCYJMCO8O3HWCzhbMEO0A8Fq3Qx5cvOYcgo
+         IRVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=gVCbv0LzqaX/qvKbIQst3PDmSY4xjmIqqe/yjz+5HCQ=;
-        b=E1B9xcF8J+0GOQZzLl/MfClr1qWOL91Rl4hLDEfzHWkWeqimz7Ld16UvSn+6qO/eTy
-         MXPkOPgnZRNWrPguSCA6lqwmK8+rfwmVSPpBNT74IP/wf8+vB+SxauXqI+yYtu5waTeP
-         CkHg54EX8UZgvn8n2gUy7q3BMTv9F/uH96JA+85/J4C8YdynVr4snXA4MmzeBro1s+iE
-         79Iu9hDO177ZpmyVLfiukr1PednIbVK02zM28oE9LqEMDQNRGeivrceRWUD//NDbVqjo
-         cFsIZySsQCOlkAP8T6JwHjGXRn4qK9yWovliqciGDTCStRxF3wGf3Lbbob6bnpwwLE7m
-         eyvA==
-X-Gm-Message-State: APjAAAXlKo2hkBNlmxyNBa/tdJMkdjjz6mdpjSl9TAwE/KlCZj8sxkIT
-        +TWhDUZxPjSUzrkjUCFJmHYMLzEb14SwKuJLNvpW3Ju7ixvEvBZGbPjPBdJeOKWlvOWLzb8GMuj
-        frDByAMsjzmuG6XuuPybLWybh
-X-Received: by 2002:adf:f048:: with SMTP id t8mr3418714wro.237.1573137869677;
-        Thu, 07 Nov 2019 06:44:29 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxUI1JLHk53Xg60Bfi3+RoW23Um++7OLDP36Ol51PbWYQBdWIxnkrQYImvKgZXpd3GbH1R6MQ==
-X-Received: by 2002:adf:f048:: with SMTP id t8mr3418652wro.237.1573137868856;
-        Thu, 07 Nov 2019 06:44:28 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z14sm2475247wrl.60.2019.11.07.06.44.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 06:44:28 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Olaf Hering <olaf@aepfle.de>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "open list\:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-In-Reply-To: <20191107152059.6cae8f30.olaf@aepfle.de>
-References: <20191024144943.26199-1-olaf@aepfle.de> <874kzfbybk.fsf@vitty.brq.redhat.com> <20191107144850.37587edb.olaf@aepfle.de> <87zhh7ai26.fsf@vitty.brq.redhat.com> <20191107152059.6cae8f30.olaf@aepfle.de>
-Date:   Thu, 07 Nov 2019 15:44:27 +0100
-Message-ID: <87wocbagqc.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Qm1wcEL4DyEFOx/poYUPWTsHpur944bFsf+pfVpPSb4=;
+        b=oKqp1xK70OwdAKWPBr8QYq2xD1FRWmzrdvv1DfAXevDaLn7wpWdfR4S33AxmCcXcAh
+         4tEO9vHy9d5+yIy6B52mxeQh3MCuCo0w1xXtxanSz3IZxSFUYQRB1HT9tKHXH+Irjg3+
+         u4czSAWfaAQ9ZYvP/CuCn/9Qfm1O9FZaArI71qTbyDtPRlqFX0CewkBXGmSBBSTs8aG0
+         TYvI6Z4aWD4JVAcPUKH98vKfTquHfdHRIn3LkZeYJS78Av+Bh5kwKkGF/Cp9y3tMYs01
+         YNTsA/egHviB6Bff7iqdnAPBu3E0aZCPnouCxUqBfpolKm8CpAkTrZ3BwC8zV+OymgcZ
+         6UDw==
+X-Gm-Message-State: APjAAAXbgHGXZGFvr+Gb1bqxOj9E7pfN+Q4N5uT6EhI0Sy+NOOsgAOxW
+        xl60re7v6P+DqNZnEkuwWpwUAwdd8lgC5Zzccmg=
+X-Google-Smtp-Source: APXvYqy6tj0Ms9dvsBi4uxcOSBCUJscuOeFtw95kC7XJRC7Tz0NZ86d3CIKj1ZcOwX5ZaaOCdw5F1lD9V219rMlKuYQ=
+X-Received: by 2002:a92:9e4c:: with SMTP id q73mr5426611ili.53.1573143672496;
+ Thu, 07 Nov 2019 08:21:12 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: oiXkTUqxOzeVuCRjgHemNw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Received: by 2002:a05:6638:3bc:0:0:0:0 with HTTP; Thu, 7 Nov 2019 08:21:12
+ -0800 (PST)
+Reply-To: sgt.hester33@gmail.com
+From:   Ann Hester <barristermessan@gmail.com>
+Date:   Thu, 7 Nov 2019 16:21:12 +0000
+Message-ID: <CADsZzQJ8RF97vQS3viDX9fuKcOd6X-r=3e2iTWqJCfJVktZ-xA@mail.gmail.com>
+Subject: Groeten
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Olaf Hering <olaf@aepfle.de> writes:
+Hoe is het met je? mijn naam is Ann Hester, antwoord me alsjeblieft.
 
-> Am Thu, 07 Nov 2019 15:15:45 +0100
-> schrieb Vitaly Kuznetsov <vkuznets@redhat.com>:
->
->> Looping forever with a permanent error is pretty unusual...
->
-> That might be true, but how would you detect a permanent error?
-> Just because the DNS server is gone for one hour does not mean it will be=
- gone forever.
-
-'man 3 getaddrinfo' lists the following:
-
-       EAI_ADDRFAMILY
-       EAI_AGAIN
-       EAI_BADFLAGS
-       EAI_FAIL
-       EAI_FAMILY
-       EAI_MEMORY
-       EAI_NODATA
-       EAI_NONAME
-       EAI_SERVICE
-       EAI_SOCKTYPE
-       EAI_SYSTEM
-
-I *think* what you're aiming at is EAI_AGAIN and EAI_FAIL, the rest
-should probably terminate the resolver thread (e.g. AF_INET is
-unsupported or something like that).
-
---=20
-Vitaly
-
+How are you? my name is Ann Hester, please reply me.
