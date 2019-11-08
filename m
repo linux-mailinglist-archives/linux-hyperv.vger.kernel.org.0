@@ -2,78 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DAFB1F3A62
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Nov 2019 22:21:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC38F487E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Nov 2019 12:57:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbfKGVVk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Nov 2019 16:21:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49659 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfKGVVj (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Nov 2019 16:21:39 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iSpDk-00061v-Lo; Thu, 07 Nov 2019 22:21:36 +0100
-Date:   Thu, 7 Nov 2019 22:21:35 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-cc:     Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v3] x86/hyper-v: micro-optimize send_ipi_one case
-In-Reply-To: <877e4bbyw2.fsf@vitty.brq.redhat.com>
-Message-ID: <alpine.DEB.2.21.1911072220590.27903@nanos.tec.linutronix.de>
-References: <20191027151938.7296-1-vkuznets@redhat.com> <877e4bbyw2.fsf@vitty.brq.redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S2390995AbfKHLpB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 8 Nov 2019 06:45:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390989AbfKHLpB (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:45:01 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C15FA222D1;
+        Fri,  8 Nov 2019 11:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573213500;
+        bh=hmx5Rpbn7yfuwK7i95I3Vro9XyTui2okvZWKHzrJrQY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sTZty8DAdEBDHT4WIALcrttyNc01UkznJ5JCcVxjxljFI/5+SKAkxYCbpUh9DohVe
+         QSCcijha0W+To5eteUmkbeF0e6kUY3NDkRfoyu61AFvfNxo9I5bHD5OeO0EROVq8ui
+         EXhA5MYjScxJzKlKA9XcgTTpsXjW/ru6diWTv9Po=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 077/103] Drivers: hv: vmbus: Fix synic per-cpu context initialization
+Date:   Fri,  8 Nov 2019 06:42:42 -0500
+Message-Id: <20191108114310.14363-77-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191108114310.14363-1-sashal@kernel.org>
+References: <20191108114310.14363-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 7 Nov 2019, Vitaly Kuznetsov wrote:
+From: Michael Kelley <mikelley@microsoft.com>
 
-> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
-> 
-> > When sending an IPI to a single CPU there is no need to deal with cpumasks.
-> > With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
-> > cycles) improvement with smp_call_function_single() loop benchmark. The
-> > optimization, however, is tiny and straitforward. Also, send_ipi_one() is
-> > important for PV spinlock kick.
-> >
-> > I was also wondering if it would make sense to switch to using regular
-> > APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
-> > cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
-> > vector)).
-> >
-> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > ---
-> > Changes since v2:
-> >  - Check VP number instead of CPU number against >= 64 [Michael]
-> >  - Check for VP_INVAL
-> 
-> Hi Sasha,
-> 
-> do you have plans to pick this up for hyperv-next or should we ask x86
-> folks to?
+[ Upstream commit f25a7ece08bdb1f2b3c4bbeae942682fc3a99dde ]
 
-I'm picking up the constant TSC one anyway, so I can just throw that in as
-well.
+If hv_synic_alloc() errors out, the state of the per-cpu context
+for some CPUs is unknown since the zero'ing is done as each
+CPU is iterated over.  In such case, hv_synic_cleanup() may try to
+free memory based on uninitialized values.  Fix this by zero'ing
+the per-cpu context for all CPUs before doing any memory
+allocations that might fail.
 
-Thanks,
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hv/hv.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-	tglx
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index fe041f22521da..23f312b4c6aa2 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -148,6 +148,17 @@ static void hv_init_clockevent_device(struct clock_event_device *dev, int cpu)
+ int hv_synic_alloc(void)
+ {
+ 	int cpu;
++	struct hv_per_cpu_context *hv_cpu;
++
++	/*
++	 * First, zero all per-cpu memory areas so hv_synic_free() can
++	 * detect what memory has been allocated and cleanup properly
++	 * after any failures.
++	 */
++	for_each_present_cpu(cpu) {
++		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
++		memset(hv_cpu, 0, sizeof(*hv_cpu));
++	}
+ 
+ 	hv_context.hv_numa_map = kzalloc(sizeof(struct cpumask) * nr_node_ids,
+ 					 GFP_ATOMIC);
+@@ -157,10 +168,8 @@ int hv_synic_alloc(void)
+ 	}
+ 
+ 	for_each_present_cpu(cpu) {
+-		struct hv_per_cpu_context *hv_cpu
+-			= per_cpu_ptr(hv_context.cpu_context, cpu);
++		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
+ 
+-		memset(hv_cpu, 0, sizeof(*hv_cpu));
+ 		tasklet_init(&hv_cpu->msg_dpc,
+ 			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
+ 
+-- 
+2.20.1
+
