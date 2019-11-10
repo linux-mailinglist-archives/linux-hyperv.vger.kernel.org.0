@@ -2,40 +2,50 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E0226F49C8
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Nov 2019 13:06:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A617F62AB
+	for <lists+linux-hyperv@lfdr.de>; Sun, 10 Nov 2019 03:44:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389635AbfKHLlt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 8 Nov 2019 06:41:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55358 "EHLO mail.kernel.org"
+        id S1728624AbfKJCok (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 9 Nov 2019 21:44:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389629AbfKHLlt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:41:49 -0500
+        id S1728617AbfKJCok (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:44:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E513222C4;
-        Fri,  8 Nov 2019 11:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB6A21848;
+        Sun, 10 Nov 2019 02:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213308;
-        bh=3ES43x8ohLQmZDTu+juPnCitXAo/wPlqMTd883fgsjI=;
+        s=default; t=1573353879;
+        bh=LlzMNDJ0JCchkYkAHu29SOMVRQeTRHAAwXM9PKy8u+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsAp50mYMpMlVQGLpRxyVOlBXQJMqOSY4E7LAAg5Uszu7zpGGx/AvvaJLbdw7/F8o
-         Ovx3GbMdMuat4RMMCFll2xlKKNmeeo/X4PiqQc8SyAAz47Kbeoi5t8fWctn2IkVirb
-         2UArmWNu6+439k87oRnRUDrUJicKUqwHwoZB0tG0=
+        b=D0tNJv57iUmVUWbNs2zqpneo7YwUmQr+6mmfdg7Cr7MFR3y45EwVzhyLdzc62rxNe
+         Sa5wfQfTwOkuoE11jWNpaAUtSmuFH0WJPypVjSXSEvOWVXDD+fjPQlE9DDcfKByuyC
+         Et94AL0E3L/caDsN05VygW+/XUc+IA8lfQNadfec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
+        Olaf Aepfle <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Marcelo Cerri <marcelo.cerri@canonical.com>,
+        Josh Poulson <jopoulso@microsoft.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 156/205] Drivers: hv: vmbus: Fix synic per-cpu context initialization
-Date:   Fri,  8 Nov 2019 06:37:03 -0500
-Message-Id: <20191108113752.12502-156-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 156/191] x86/hyperv: Suppress "PCI: Fatal: No config space access function found"
+Date:   Sat,  9 Nov 2019 21:39:38 -0500
+Message-Id: <20191110024013.29782-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
-References: <20191108113752.12502-1-sashal@kernel.org>
+In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
+References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -45,60 +55,79 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit f25a7ece08bdb1f2b3c4bbeae942682fc3a99dde ]
+[ Upstream commit 2f285f46240d67060061d153786740d4df53cd78 ]
 
-If hv_synic_alloc() errors out, the state of the per-cpu context
-for some CPUs is unknown since the zero'ing is done as each
-CPU is iterated over.  In such case, hv_synic_cleanup() may try to
-free memory based on uninitialized values.  Fix this by zero'ing
-the per-cpu context for all CPUs before doing any memory
-allocations that might fail.
+A Generation-2 Linux VM on Hyper-V doesn't have the legacy PCI bus, and
+users always see the scary warning, which is actually harmless.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suppress it.
+
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: KY Srinivasan <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>
+Cc: Olaf Aepfle <olaf@aepfle.de>
+Cc: Andy Whitcroft <apw@canonical.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Marcelo Cerri <marcelo.cerri@canonical.com>
+Cc: Josh Poulson <jopoulso@microsoft.com>
+Link: https://lkml.kernel.org/r/ <KU1P153MB0166D977DC930996C4BF538ABF1D0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/hv.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 8e923e70e5945..12bc9fa211117 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -189,6 +189,17 @@ static void hv_init_clockevent_device(struct clock_event_device *dev, int cpu)
- int hv_synic_alloc(void)
- {
- 	int cpu;
-+	struct hv_per_cpu_context *hv_cpu;
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 3fb8551552862..8a9cff1f129dc 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -17,6 +17,7 @@
+  *
+  */
+ 
++#include <linux/efi.h>
+ #include <linux/types.h>
+ #include <asm/apic.h>
+ #include <asm/desc.h>
+@@ -257,6 +258,22 @@ static int hv_cpu_die(unsigned int cpu)
+ 	return 0;
+ }
+ 
++static int __init hv_pci_init(void)
++{
++	int gen2vm = efi_enabled(EFI_BOOT);
 +
 +	/*
-+	 * First, zero all per-cpu memory areas so hv_synic_free() can
-+	 * detect what memory has been allocated and cleanup properly
-+	 * after any failures.
++	 * For Generation-2 VM, we exit from pci_arch_init() by returning 0.
++	 * The purpose is to suppress the harmless warning:
++	 * "PCI: Fatal: No config space access function found"
 +	 */
-+	for_each_present_cpu(cpu) {
-+		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
-+		memset(hv_cpu, 0, sizeof(*hv_cpu));
-+	}
++	if (gen2vm)
++		return 0;
++
++	/* For Generation-1 VM, we'll proceed in pci_arch_init().  */
++	return 1;
++}
++
+ /*
+  * This function is to be invoked early in the boot sequence after the
+  * hypervisor has been detected.
+@@ -333,6 +350,8 @@ void __init hyperv_init(void)
  
- 	hv_context.hv_numa_map = kcalloc(nr_node_ids, sizeof(struct cpumask),
- 					 GFP_KERNEL);
-@@ -198,10 +209,8 @@ int hv_synic_alloc(void)
- 	}
+ 	hv_apic_init();
  
- 	for_each_present_cpu(cpu) {
--		struct hv_per_cpu_context *hv_cpu
--			= per_cpu_ptr(hv_context.cpu_context, cpu);
-+		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
- 
--		memset(hv_cpu, 0, sizeof(*hv_cpu));
- 		tasklet_init(&hv_cpu->msg_dpc,
- 			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
- 
++	x86_init.pci.arch_init = hv_pci_init;
++
+ 	/*
+ 	 * Register Hyper-V specific clocksource.
+ 	 */
 -- 
 2.20.1
 
