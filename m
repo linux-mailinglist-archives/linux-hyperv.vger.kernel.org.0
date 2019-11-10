@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A617F62AB
-	for <lists+linux-hyperv@lfdr.de>; Sun, 10 Nov 2019 03:44:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B08EDF641D
+	for <lists+linux-hyperv@lfdr.de>; Sun, 10 Nov 2019 03:57:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfKJCok (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 9 Nov 2019 21:44:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44276 "EHLO mail.kernel.org"
+        id S1727347AbfKJC5d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 9 Nov 2019 21:57:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbfKJCok (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:44:40 -0500
+        id S1729439AbfKJC4s (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:56:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB6A21848;
-        Sun, 10 Nov 2019 02:44:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B42224A1;
+        Sun, 10 Nov 2019 02:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353879;
-        bh=LlzMNDJ0JCchkYkAHu29SOMVRQeTRHAAwXM9PKy8u+4=;
+        s=default; t=1573354089;
+        bh=XnRIcdZVlp6No/mC06k2e6r9GyXH2JlTE8agqW0ry2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0tNJv57iUmVUWbNs2zqpneo7YwUmQr+6mmfdg7Cr7MFR3y45EwVzhyLdzc62rxNe
-         Sa5wfQfTwOkuoE11jWNpaAUtSmuFH0WJPypVjSXSEvOWVXDD+fjPQlE9DDcfKByuyC
-         Et94AL0E3L/caDsN05VygW+/XUc+IA8lfQNadfec=
+        b=IpKpujuGz23sL4v2yY4XKsg/TLIWLb8uBEn65eT82kAm5UP1/SajJK2xTPXHxbIBr
+         SEvIUgdZdlb9dbZ/rheejE5aJzbqfnAtIYtw9+Gcc/QJZmdncZlmw0KxQLRnA9KArd
+         ZI71tupIo8I3UOtmDGfPGbdSdhvXdD6IzkKBjs9c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dexuan Cui <decui@microsoft.com>,
@@ -40,12 +40,12 @@ Cc:     Dexuan Cui <decui@microsoft.com>,
         Marcelo Cerri <marcelo.cerri@canonical.com>,
         Josh Poulson <jopoulso@microsoft.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 156/191] x86/hyperv: Suppress "PCI: Fatal: No config space access function found"
-Date:   Sat,  9 Nov 2019 21:39:38 -0500
-Message-Id: <20191110024013.29782-156-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 085/109] x86/hyperv: Suppress "PCI: Fatal: No config space access function found"
+Date:   Sat,  9 Nov 2019 21:45:17 -0500
+Message-Id: <20191110024541.31567-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
-References: <20191110024013.29782-1-sashal@kernel.org>
+In-Reply-To: <20191110024541.31567-1-sashal@kernel.org>
+References: <20191110024541.31567-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -85,7 +85,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 19 insertions(+)
 
 diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 3fb8551552862..8a9cff1f129dc 100644
+index 2e9d58cc371e6..2653b7b25d176 100644
 --- a/arch/x86/hyperv/hv_init.c
 +++ b/arch/x86/hyperv/hv_init.c
 @@ -17,6 +17,7 @@
@@ -94,9 +94,9 @@ index 3fb8551552862..8a9cff1f129dc 100644
  
 +#include <linux/efi.h>
  #include <linux/types.h>
- #include <asm/apic.h>
- #include <asm/desc.h>
-@@ -257,6 +258,22 @@ static int hv_cpu_die(unsigned int cpu)
+ #include <asm/hypervisor.h>
+ #include <asm/hyperv.h>
+@@ -101,6 +102,22 @@ static int hv_cpu_init(unsigned int cpu)
  	return 0;
  }
  
@@ -119,9 +119,9 @@ index 3fb8551552862..8a9cff1f129dc 100644
  /*
   * This function is to be invoked early in the boot sequence after the
   * hypervisor has been detected.
-@@ -333,6 +350,8 @@ void __init hyperv_init(void)
+@@ -154,6 +171,8 @@ void hyperv_init(void)
  
- 	hv_apic_init();
+ 	hyper_alloc_mmu();
  
 +	x86_init.pci.arch_init = hv_pci_init;
 +
