@@ -2,112 +2,154 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCF86F79F6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Nov 2019 18:29:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6544F79FF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Nov 2019 18:31:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKKR36 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Nov 2019 12:29:58 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39030 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfKKR35 (ORCPT
+        id S1727059AbfKKRbD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 Nov 2019 12:31:03 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39964 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726978AbfKKRbC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:29:57 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 29so9859089pgm.6
-        for <linux-hyperv@vger.kernel.org>; Mon, 11 Nov 2019 09:29:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fA7Fsg1gpMy56Uu36LA4owNDl1Jh20vv8x7SlaV4qs8=;
-        b=iacXhPkc9FGy32VeGcUizlaxp9TQyTa3YCq/Mk6DC1chJi3XqsDkHLsbxG5ogjF7mL
-         cHrCAE9nMRbY1ne2C3sr4IhOPaWJ2BRnmockFOBbL70I54EDazU88zBM3JO+CpK73UQ3
-         PodZNDoDnD8qH1DoJ1oiFoNgNkaTTyEFmoesB2/PI8l9OtBr5MTXGwh0+SkMxIIiKwBD
-         oKc631VrVtl2JSu7Nt5yTatGHrE46KsgfPCuwoSyITvpyvrCJXb6MU68VvMyD0GnQNeq
-         2XLnaTQkBqfugUlXoMFeoT1nyAYH8VQDHPUEw3yCqSvvMO9cPzry4w02tpH4rmIb0xCh
-         76HQ==
+        Mon, 11 Nov 2019 12:31:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573493460;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Pu/XRjHN00bp26uJKyF+eeNc+4bMeKaeoX1nXunFjQ=;
+        b=AMeZWD2OJaHQ7WD79e9FoMMfnpUiOaD00DXkERn9wWGUrx+Z9XTul+aOIFPUsvZUNzG+ra
+        LSCxi0NM3eOEIpo7LdbVMQ4XSJEAHEcJfkYszZbLGgoXy0Baz5AkXHA3b9KGsY4wP2D58q
+        PG4pXZy+9YbikxFpT+rc3eIND3X7cWE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-q7c7kgtMOQOFrAqmOXRFwg-1; Mon, 11 Nov 2019 12:30:58 -0500
+Received: by mail-wm1-f71.google.com with SMTP id m68so51871wme.7
+        for <linux-hyperv@vger.kernel.org>; Mon, 11 Nov 2019 09:30:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fA7Fsg1gpMy56Uu36LA4owNDl1Jh20vv8x7SlaV4qs8=;
-        b=PjDnlt30ifNWLVO8dwyqw2w/XQibEi7ymldz1tOjKFMG6EqTcmHa5aCIUmh+SFC8fq
-         OJlwj5k0UBokpfdXPSg6PC+I4CWhmKMaor758ySHS+UwdBztyF/q5CwRHh6zgkl8xssQ
-         xvM6BxtxnWgxLQrbBsBFl/5nKBeuBQTH/TT7sp3lNg5RnDnvWXnOhkWNhy/wZavyXBQB
-         i7iEtpeV9I4+1s9d/Byw9ICrNmbAYVjs510LmiaelHhsozxS5puhfSdzZN5nDcA1+srH
-         6liGTJFZ+w84vthb5KQrMeURxc+oljwTkP8Fk9RI7dhTp6nGZK56UaCUZa4hBu1pcXBM
-         QUCA==
-X-Gm-Message-State: APjAAAWpP9t0tVhkLNzEF3i2IQsso55faSHx7oMWk+mXzXjW8fRkRgRi
-        9xVguNSM2roGGMNsAHnoKiJXrw==
-X-Google-Smtp-Source: APXvYqz/ZDi0j4sGOiniVLuzA+Rs8BpMrp5miPmhe+9uGIOTxXjJNz7l6UCNqvoKgWBmZet2LW3hWA==
-X-Received: by 2002:a63:7015:: with SMTP id l21mr27824906pgc.200.1573493397028;
-        Mon, 11 Nov 2019 09:29:57 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id r184sm17589538pfc.106.2019.11.11.09.29.56
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OGemqcYu9gXrdCs7NgbTRCHoieRkJLCT5RXpmkbgD3I=;
+        b=NxtBqIlYU8u5rYkeuEQrLY33YpaPU6A3LHujCwepQR5H7J9WB170QfiZvVj9wvBXgW
+         InHGaa4mHtBog+2t1NgsHY+JCDOm2FJ4CPQBaYlNepzT7SxKkZOGLzh3YWNNokhyk6ts
+         cUROZNX1lArluLBTdEzNGb2irb7/Vb4s5aQMSRP1N+EQF/fK00PKiEKQsahkIV+VZFJt
+         SdMiNyRF7DTrqsAcPQD/hUKidEYyxUgsRMtMtTXlDsu3C7KxcvVohpREzlBBhCRVQcvA
+         L9ShBn/Zb0n8DQ3r4NHRsLTlk1kESLCVG4HaPGYWOw7yZLZ8Q15I1jS+yz7MmJ3WReP4
+         mpkA==
+X-Gm-Message-State: APjAAAXkrO4U4TAanLMVqq4RWFr6I+yaVH6727JIweagkHhAFqyb/Ty7
+        3X9UcanaeNOcmOLKhYU0zI1LmZJ07QPKCDRcZkbHUzjNmHrEI7cxPC0hQYwz0SSuDvxVjLM21TE
+        Qw0/FyYRV3IIqYM3Yye+1sbsI
+X-Received: by 2002:adf:ed4b:: with SMTP id u11mr2059901wro.215.1573493456385;
+        Mon, 11 Nov 2019 09:30:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxtK1/4KWgD9KPJoU+tAGhHUeUEQrzwzlucpPtfP0PmUdGJAdIPC9pkDZltrDfXpW0g+AEtzQ==
+X-Received: by 2002:adf:ed4b:: with SMTP id u11mr2059871wro.215.1573493456151;
+        Mon, 11 Nov 2019 09:30:56 -0800 (PST)
+Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
+        by smtp.gmail.com with ESMTPSA id m1sm1701700wrv.37.2019.11.11.09.30.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2019 09:29:56 -0800 (PST)
-Date:   Mon, 11 Nov 2019 09:29:48 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     lantianyu1986@gmail.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, KY Srinivasan <kys@microsoft.com>,
+        Mon, 11 Nov 2019 09:30:55 -0800 (PST)
+Date:   Mon, 11 Nov 2019 18:30:53 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jorgen Hansen <jhansen@vmware.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, sashal@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net, robh@kernel.org,
-        Jonathan.Cameron@huawei.com, paulmck@linux.ibm.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, vkuznets <vkuznets@redhat.com>
-Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
-Message-ID: <20191111092948.047f1708@hermes.lan>
-In-Reply-To: <20191111172322.GB1077444@kroah.com>
-References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
-        <20191111094920.GA135867@kroah.com>
-        <20191111084712.37ba7d5a@hermes.lan>
-        <20191111172322.GB1077444@kroah.com>
+        Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH net-next 12/14] vsock/vmci: register vmci_transport only
+ when VMCI guest/host are active
+Message-ID: <20191111173053.erwfzawioxje635o@steredhat>
+References: <20191023095554.11340-1-sgarzare@redhat.com>
+ <20191023095554.11340-13-sgarzare@redhat.com>
+ <MWHPR05MB3376266BC6AE9E6E0B75F1A1DA740@MWHPR05MB3376.namprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <MWHPR05MB3376266BC6AE9E6E0B75F1A1DA740@MWHPR05MB3376.namprd05.prod.outlook.com>
+X-MC-Unique: q7c7kgtMOQOFrAqmOXRFwg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, 11 Nov 2019 18:23:22 +0100
-Greg KH <gregkh@linuxfoundation.org> wrote:
+On Mon, Nov 11, 2019 at 04:27:28PM +0000, Jorgen Hansen wrote:
+> > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> > Sent: Wednesday, October 23, 2019 11:56 AM
+> >=20
+> > To allow other transports to be loaded with vmci_transport,
+> > we register the vmci_transport as G2H or H2G only when a VMCI guest
+> > or host is active.
+> >=20
+> > To do that, this patch adds a callback registered in the vmci driver
+> > that will be called when a new host or guest become active.
+> > This callback will register the vmci_transport in the VSOCK core.
+> > If the transport is already registered, we ignore the error coming
+> > from vsock_core_register().
+>=20
+> So today this is mainly an issue for the VMCI vsock transport, because
+> VMCI autoloads with vsock (and with this solution it can continue to
+> do that, so none of our old products break due to changed behavior,
+> which is great).
 
-> On Mon, Nov 11, 2019 at 08:47:12AM -0800, Stephen Hemminger wrote:
-> > On Mon, 11 Nov 2019 01:49:20 -0800
-> > "Greg KH" <gregkh@linuxfoundation.org> wrote:
-> >   
-> > > > +	ret = sysfs_create_bin_file(&channel->kobj,    
-> > > &ring_buffer_bin_attr);  
-> > > > +	if (ret)
-> > > > +		dev_notice(&dev->device,
-> > > > +			   "sysfs create ring bin file failed; %d\n",    
-> > > ret);  
-> > > > +    
-> > > 
-> > > Again, don't create sysfs files on your own, the bus code should be
-> > > doing this for you automatically and in a way that is race-free.
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h  
-> > 
-> > The sysfs file is only created if the VFIO/UIO driveris used.  
-> 
-> That's even worse.  Again, sysfs files should be automatically created
-> by the driver core when the device is created.  To randomly add/remove
-> random files after that happens means userspace is never notified of
-> that and that's not good.
-> 
-> We've been working for a while to fix up these types of races, don't
-> purposfully add new ones for no good reason please :)
-> 
-> thanks,
-> 
-> greg k-h
+I tried to not break anything :-)
 
-The handler for this sysfs file is in the vfio (and uio) driver.
-How would this work if bus handled it?
+>                  Shouldn't vhost behave similar, so that any module
+> that registers a h2g transport only does so if it is in active use?
+>=20
+
+The vhost-vsock module will load when the first hypervisor open
+/dev/vhost-vsock, so in theory, when there's at least one active user.
+
+>=20
+> > --- a/drivers/misc/vmw_vmci/vmci_host.c
+> > +++ b/drivers/misc/vmw_vmci/vmci_host.c
+> > @@ -108,6 +108,11 @@ bool vmci_host_code_active(void)
+> >  =09     atomic_read(&vmci_host_active_users) > 0);
+> >  }
+> >=20
+> > +int vmci_host_users(void)
+> > +{
+> > +=09return atomic_read(&vmci_host_active_users);
+> > +}
+> > +
+> >  /*
+> >   * Called on open of /dev/vmci.
+> >   */
+> > @@ -338,6 +343,8 @@ static int vmci_host_do_init_context(struct
+> > vmci_host_dev *vmci_host_dev,
+> >  =09vmci_host_dev->ct_type =3D VMCIOBJ_CONTEXT;
+> >  =09atomic_inc(&vmci_host_active_users);
+> >=20
+> > +=09vmci_call_vsock_callback(true);
+> > +
+>=20
+> Since we don't unregister the transport if user count drops back to 0, we=
+ could
+> just call this the first time, a VM is powered on after the module is loa=
+ded.
+
+Yes, make sense. can I use the 'vmci_host_active_users' or is better to
+add a new 'vmci_host_vsock_loaded'?
+
+My doubt is that vmci_host_active_users can return to 0, so when it returns
+to 1, we call vmci_call_vsock_callback() again.
+
+Thanks,
+Stefano
+
