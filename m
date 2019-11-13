@@ -2,68 +2,192 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F00A4FB48B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2019 17:02:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFC79FB54E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Nov 2019 17:38:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfKMQCw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 13 Nov 2019 11:02:52 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:21167 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfKMQCw (ORCPT
+        id S1728523AbfKMQiw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 13 Nov 2019 11:38:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57120 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728520AbfKMQiv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:02:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573660970;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=I73G9HN3FlFTa8LqWbK87pCnw61L83mZNnFTq0Yp9x0=;
-        b=Z9sWOyY1uQdbrxbpYa831J8UTed15dUWw/62VKQ4oGCHXDjEgrjTATUNcMzaHqqTF+
-        7IxBMO3v0rID+XrNBT5sB2pMyx+imDIjOXuLrdIVHCE/SE+RoGKPk+XphU2/nyiaHcLE
-        inRXMB6J5sTmDRHcbCLVKdJCJqqJeNAY+2VsOE8QU+mNTfvWbLRe3L/PtuvkrJcb/g4O
-        wslf00/bSkqALtvZ846iGBu/63yhAEKCRiwi1ul3cud06NjWhocY16zRou601sKb23eo
-        Ba8f6tJnrUISvODIZAS7Zyb/LIqVY+jotQWg3MO1HB7/zA1MCZvsbSY2vSMV1YGthwVv
-        /Yvw==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS325Pjw=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
-        with ESMTPSA id 20735bvADG2oGi2
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 13 Nov 2019 17:02:50 +0100 (CET)
-From:   Olaf Hering <olaf@aepfle.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Wed, 13 Nov 2019 11:38:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573663131;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QqzCZrrw+N1LqLUBngxMhEYqWKp5yMdHfOeTcezaP3c=;
+        b=ck6WKRP6pR+OweE3bLxOUrX+Ur1dWghtQZXNyE28NHEZ2kFGVMlhOyfjEnPPT9xKjseW+N
+        U0qU9KPtUgVwh80VBtIefOVvSo/nEHVM1DWzr/y9vpdghrDBVs0sRgtAp0ZGO+cNzp8Tbn
+        LWFRgfwbnoChSWsXdPPOmTxU2ah3HfI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-117-79iGMyOhO9SIbKVnpSubzA-1; Wed, 13 Nov 2019 11:38:48 -0500
+Received: by mail-wr1-f71.google.com with SMTP id v6so1861720wrm.18
+        for <linux-hyperv@vger.kernel.org>; Wed, 13 Nov 2019 08:38:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9rmRmGxbCej/NSmLlrw5qBptbx4sAiez+aV0DPKoxmk=;
+        b=kerdWGB3gFxhXLrSvTENVAZ59KxlIptwiV/dMo/MFuxix9j7h9TettDGFVlWLvghQS
+         B86rl5MXsatmrhUOhJu27NIJyLOlwdae13aSyj5QxEnZKvf2u4ScqCiUE8+vNsNJF/58
+         0SgOhFHGD38gU5/Ts0vw+kjKdAT/JAQxYsPgfaK5uDTNUmW0W1VtOOHHFU4YgTHUmF6e
+         0B4MTU71b1E2WuF4pY+eS34CkKUqIBb4r//OpraWZQ+p6d47x/K48BRXQsqdibcFAN0i
+         ckCvb6vIHZ8G7dMILzF1Gr7rypgzLKGQvjIpbsHX9Zz3pA0tTzbZhAlI3KslHxCREY6m
+         91gw==
+X-Gm-Message-State: APjAAAUYlmvaxvMwJLDwy58c6z02fKiamxnvDkjndLRqS82+UJPfmwmV
+        8n6f7bRub79qFiaeGSMqFMyuBMW02Ya+sC5ZsbyRltPcvHJga5WyREn4tCCq7+3g0SnTsZmspGC
+        o949kA+LlBsxZVp1NaIYBgRxv
+X-Received: by 2002:adf:f0c4:: with SMTP id x4mr2417505wro.217.1573663126802;
+        Wed, 13 Nov 2019 08:38:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxXrDaHddzqNUvTPvMV4jXm5tNoMjrSJ3IvH3rKSatkd4o3Pvp2hT95nFuBwmA+H3+NDewgsg==
+X-Received: by 2002:adf:f0c4:: with SMTP id x4mr2417472wro.217.1573663126527;
+        Wed, 13 Nov 2019 08:38:46 -0800 (PST)
+Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
+        by smtp.gmail.com with ESMTPSA id q17sm2813058wmj.12.2019.11.13.08.38.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Nov 2019 08:38:45 -0800 (PST)
+Date:   Wed, 13 Nov 2019 17:38:42 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jorgen Hansen <jhansen@vmware.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS)
-Cc:     Olaf Hering <olaf@aepfle.de>
-Subject: [PATCH v1] tools/hv: add .gitignore
-Date:   Wed, 13 Nov 2019 17:02:46 +0100
-Message-Id: <20191113160247.26294-1-olaf@aepfle.de>
-X-Mailer: git-send-email 2.16.4
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH net-next 11/14] vsock: add multi-transports support
+Message-ID: <20191113163842.6byl2qul4nbjf5no@steredhat>
+References: <20191023095554.11340-1-sgarzare@redhat.com>
+ <20191023095554.11340-12-sgarzare@redhat.com>
+ <MWHPR05MB33761FE4DA27130C72FC5048DA740@MWHPR05MB3376.namprd05.prod.outlook.com>
+ <20191111171740.xwo7isdmtt7ywibo@steredhat>
+ <MWHPR05MB33764F82AFA882B921A11E56DA770@MWHPR05MB3376.namprd05.prod.outlook.com>
+ <20191112103630.vd3kbk7xnplv6rey@steredhat>
+ <MWHPR05MB3376560CFD2A710723843828DA760@MWHPR05MB3376.namprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <MWHPR05MB3376560CFD2A710723843828DA760@MWHPR05MB3376.namprd05.prod.outlook.com>
+X-MC-Unique: 79iGMyOhO9SIbKVnpSubzA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hide build artefacts in "git status" output.
+On Wed, Nov 13, 2019 at 02:30:24PM +0000, Jorgen Hansen wrote:
+> > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> > Sent: Tuesday, November 12, 2019 11:37 AM
+>=20
+> > > > > You already mentioned that you are working on a fix for loopback
+> > > > > here for the guest, but presumably a host could also do loopback.
+> > > >
+> > > > IIUC we don't support loopback in the host, because in this case th=
+e
+> > > > application will use the CID_HOST as address, but if we are in a ne=
+sted
+> > > > VM environment we are in trouble.
+> > >
+> > > If both src and dst CID are CID_HOST, we should be fairly sure that t=
+his
+> > > Is host loopback, no? If src is anything else, we would do G2H.
+> > >
+> >=20
+> > The problem is that we don't know the src until we assign a transport
+> > looking at the dst. (or if the user bound the socket to CID_HOST before
+> > the connect(), but it is not very common)
+> >=20
+> > So if we are in a L1 and the user uses the local guest CID, it works, b=
+ut if
+> > it uses the HOST_CID, the packet will go to the L0.
+> >=20
+> > If we are in L0, it could be simple, because we can simply check if G2H
+> > is not loaded, so any packet to CID_HOST, is host loopback.
+> >=20
+> > I think that if the user uses the IOCTL_VM_SOCKETS_GET_LOCAL_CID, to se=
+t
+> > the dest CID for the loopback, it works in both cases because we return=
+ the
+> > HOST_CID in L0, and always the guest CID in L1, also if a H2G is loaded=
+ to
+> > handle the L2.
+> >=20
+> > Maybe we should document this in the man page.
+>=20
+> Yeah, it seems like a good idea to flesh out the routing behavior for nes=
+ted
+> VMs in the man page.
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
----
- tools/hv/.gitignore | 3 +++
- 1 file changed, 3 insertions(+)
- create mode 100644 tools/hv/.gitignore
+I'll do it.
 
-diff --git a/tools/hv/.gitignore b/tools/hv/.gitignore
-new file mode 100644
-index 000000000000..88b05e35a6e0
---- /dev/null
-+++ b/tools/hv/.gitignore
-@@ -0,0 +1,3 @@
-+hv_fcopy_daemon
-+hv_kvp_daemon
-+hv_vss_daemon
+>=20
+> >=20
+> > But I have a question: Does vmci support the host loopback?
+> > I've tried, and it seems not.
+>=20
+> Only for datagrams - not for stream sockets.
+> =20
+
+Ok, I'll leave the datagram loopback as before.
+
+> > Also vhost-vsock doesn't support it, but virtio-vsock does.
+> >=20
+> > > >
+> > > > Since several people asked about this feature at the KVM Forum, I w=
+ould
+> > like
+> > > > to add a new VMADDR_CID_LOCAL (i.e. using the reserved 1) and
+> > implement
+> > > > loopback in the core.
+> > > >
+> > > > What do you think?
+> > >
+> > > What kind of use cases are mentioned in the KVM forum for loopback?
+> > One concern
+> > > is that we have to maintain yet another interprocess communication
+> > mechanism,
+> > > even though other choices exist already  (and those are likely to be =
+more
+> > efficient
+> > > given the development time and specific focus that went into those). =
+To
+> > me, the
+> > > local connections are mainly useful as a way to sanity test the proto=
+col and
+> > transports.
+> > > However, if loopback is compelling, it would make sense have it in th=
+e core,
+> > since it
+> > > shouldn't need a specific transport.
+> >=20
+> > The common use cases is for developer point of view, and to test the
+> > protocol and transports as you said.
+> >=20
+> > People that are introducing VSOCK support in their projects, would like=
+ to
+> > test them on their own PC without starting a VM.
+> >=20
+> > The idea is to move the code to handle loopback from the virtio-vsock,
+> > in the core, but in another series :-)
+>=20
+> OK, that makes sense.
+
+Thanks,
+Stefano
+
