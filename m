@@ -2,61 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36356FC35D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Nov 2019 10:59:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D6B1FC389
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Nov 2019 11:04:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfKNJ7b (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 14 Nov 2019 04:59:31 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30501 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727500AbfKNJ7Y (ORCPT
+        id S1726115AbfKNKEV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 14 Nov 2019 05:04:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57628 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726024AbfKNKEV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 14 Nov 2019 04:59:24 -0500
+        Thu, 14 Nov 2019 05:04:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573725563;
+        s=mimecast20190719; t=1573725861;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=f6p99asKfS17+1LG2xwN+D8QSOUVOyNnDSLD47Fl13g=;
-        b=aGh47xNqfzE9HVzs0pywmRl9zAvBrLZr5l0oVvMtsiJXFkz0Zu7zPQJX6fEXvm8YBf61Qv
-        6SNxXZBD9KTVuQlyrnmp5B0fSyVzABV49aswz5kgxCpAOjU8zho7dnRDb4C2XXJ/CPU4JG
-        pq2nxoXerhmb9wWjOwFBSzvOxgQdeW0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-e3OCytPZPqa2rbdTCFHZcQ-1; Thu, 14 Nov 2019 04:59:21 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F308E800052;
-        Thu, 14 Nov 2019 09:59:19 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-81.ams2.redhat.com [10.36.117.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D826165DB;
-        Thu, 14 Nov 2019 09:59:14 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org
-Subject: [PATCH net-next v2 15/15] vhost/vsock: refuse CID assigned to the guest->host transport
-Date:   Thu, 14 Nov 2019 10:57:50 +0100
-Message-Id: <20191114095750.59106-16-sgarzare@redhat.com>
-In-Reply-To: <20191114095750.59106-1-sgarzare@redhat.com>
-References: <20191114095750.59106-1-sgarzare@redhat.com>
+        bh=jLl4ACsFJPD0eyiByuCfJkYMTcF52xdC015U8Ny7BfU=;
+        b=GcYwfx/I+OzQzQJZUwTG8OV5hNeOHG52pvBtpsjKOoR6zBuj8ov0Ajpfcx9ERMlMXBpQKa
+        soWZPp3wjbafCFFRi7napMIy7aEd+KNKvHHFYobUSggpjAbkMvBkdyVCQVJx/i2AC1yNnA
+        fysMLeuXxv4NEx4287haCOiysR36GI8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-94-79-MCUFXMs6L77tFr_-MoQ-1; Thu, 14 Nov 2019 05:04:20 -0500
+Received: by mail-wr1-f72.google.com with SMTP id p4so4072290wrw.15
+        for <linux-hyperv@vger.kernel.org>; Thu, 14 Nov 2019 02:04:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=MIYY6vTJ40iNpcIA6nOMAvyesiyY+lIANTNB53LU3fw=;
+        b=ard6tcYxeNcZFviIwXa+flovQUTq3IqRinY162Y0E/Y/idcKjigcT5Kyf4AgLho4ah
+         e0MuLLIzB7g8XCo1G96X5yy7HKxjx7zn5VD1e3N3epx++BRWH7oJdg2hphsSkErvICu2
+         M6wnSGrnQu6Kv1gTOisB9BM9Bg3UA/o+olNzT2LiJLywiFrRsqARLhHapK41eeQcMUEc
+         jyuCa3f2QDQhMPYVtvEl47/fZKfjQQWwopQQAxKGwxH4tFkNjpHcMPqScVeBmjph47qI
+         h55MDU0eicXmKpSlo2j3bwC3V3pgIs38BM8y/2AvzAe2C+kMLuvQQ0jsw/ivX09jxFzp
+         lGXA==
+X-Gm-Message-State: APjAAAUrCT1HB0Q4TgmH8GTwJ00n7Ov6jfuzhS7hQDC5lojFeUGEQkXw
+        fKXbFD51qDftpToGtHnm3FxuemJesDyBc02eLDzA9HdXsgaKPLhMqvRQ+whpy4orF7VMiErz9Q3
+        n34NU9jree6W30utSvsKKuvqT
+X-Received: by 2002:adf:f9c4:: with SMTP id w4mr7088527wrr.88.1573725858593;
+        Thu, 14 Nov 2019 02:04:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyOtVn0G+YuKxp+AJfhyXSauq4aTtil7UF2WPkekaphH4ARhSylyzFJu+uHYsv/QY5pO9f4yg==
+X-Received: by 2002:adf:f9c4:: with SMTP id w4mr7088501wrr.88.1573725858332;
+        Thu, 14 Nov 2019 02:04:18 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id y6sm6459803wrr.19.2019.11.14.02.04.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 02:04:17 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Fix crash handler reset of Hyper-V synic
+In-Reply-To: <1573713076-8446-1-git-send-email-mikelley@microsoft.com>
+References: <1573713076-8446-1-git-send-email-mikelley@microsoft.com>
+Date:   Thu, 14 Nov 2019 11:04:16 +0100
+Message-ID: <87mucykc4f.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: e3OCytPZPqa2rbdTCFHZcQ-1
+X-MC-Unique: 79-MCUFXMs6L77tFr_-MoQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -65,33 +73,49 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In a nested VM environment, we have to refuse to assign to a nested
-guest the same CID assigned to our guest->host transport.
-In this way, the user can use the local CID for loopback.
+Michael Kelley <mikelley@microsoft.com> writes:
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- drivers/vhost/vsock.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> The crash handler calls hv_synic_cleanup() to shutdown the
+> Hyper-V synthetic interrupt controller.  But if the CPU
+> that calls hv_synic_cleanup() has a VMbus channel interrupt
+> assigned to it (which is likely the case in smaller VM sizes),
+> hv_synic_cleanup() returns an error and the synthetic
+> interrupt controller isn't shutdown.  While the lack of
+> being shutdown hasn't caused a known problem, it still
+> should be fixed for highest reliability.
+>
+> So directly call hv_synic_disable_regs() instead of
+> hv_synic_cleanup(), which ensures that the synic is always
+> shutdown.
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index fdda9ec625ad..dde392b91bb3 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -718,6 +718,12 @@ static int vhost_vsock_set_cid(struct vhost_vsock *vso=
-ck, u64 guest_cid)
- =09if (guest_cid > U32_MAX)
- =09=09return -EINVAL;
-=20
-+=09/* Refuse if CID is assigned to the guest->host transport (i.e. nested
-+=09 * VM), to make the loopback work.
-+=09 */
-+=09if (vsock_find_cid(guest_cid))
-+=09=09return -EADDRINUSE;
-+
- =09/* Refuse if CID is already in use */
- =09mutex_lock(&vhost_vsock_mutex);
- =09other =3D vhost_vsock_get(guest_cid);
+Generally, when performing kdump doing as little work as possible is
+always preferred and hv_synic_cleanup() does too much: taking mutex,
+walking through channel list,...=20
+
+Also, hv_synic_cleanup() was calling hv_stimer_cleanup() and we have a
+second redundant invocation in hv_crash_handler().
+
+>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  drivers/hv/vmbus_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 664a415..665920d 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -2305,7 +2305,7 @@ static void hv_crash_handler(struct pt_regs *regs)
+>  =09vmbus_connection.conn_state =3D DISCONNECTED;
+>  =09cpu =3D smp_processor_id();
+>  =09hv_stimer_cleanup(cpu);
+> -=09hv_synic_cleanup(cpu);
+> +=09hv_synic_disable_regs(cpu);
+>  =09hyperv_cleanup();
+>  };
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
 --=20
-2.21.0
+Vitaly
 
