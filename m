@@ -2,120 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D6B1FC389
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Nov 2019 11:04:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C697CFCBC5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Nov 2019 18:27:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfKNKEV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 14 Nov 2019 05:04:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57628 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726024AbfKNKEV (ORCPT
+        id S1725976AbfKNR11 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 14 Nov 2019 12:27:27 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44707 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfKNR10 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 14 Nov 2019 05:04:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573725861;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jLl4ACsFJPD0eyiByuCfJkYMTcF52xdC015U8Ny7BfU=;
-        b=GcYwfx/I+OzQzQJZUwTG8OV5hNeOHG52pvBtpsjKOoR6zBuj8ov0Ajpfcx9ERMlMXBpQKa
-        soWZPp3wjbafCFFRi7napMIy7aEd+KNKvHHFYobUSggpjAbkMvBkdyVCQVJx/i2AC1yNnA
-        fysMLeuXxv4NEx4287haCOiysR36GI8=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-94-79-MCUFXMs6L77tFr_-MoQ-1; Thu, 14 Nov 2019 05:04:20 -0500
-Received: by mail-wr1-f72.google.com with SMTP id p4so4072290wrw.15
-        for <linux-hyperv@vger.kernel.org>; Thu, 14 Nov 2019 02:04:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=MIYY6vTJ40iNpcIA6nOMAvyesiyY+lIANTNB53LU3fw=;
-        b=ard6tcYxeNcZFviIwXa+flovQUTq3IqRinY162Y0E/Y/idcKjigcT5Kyf4AgLho4ah
-         e0MuLLIzB7g8XCo1G96X5yy7HKxjx7zn5VD1e3N3epx++BRWH7oJdg2hphsSkErvICu2
-         M6wnSGrnQu6Kv1gTOisB9BM9Bg3UA/o+olNzT2LiJLywiFrRsqARLhHapK41eeQcMUEc
-         jyuCa3f2QDQhMPYVtvEl47/fZKfjQQWwopQQAxKGwxH4tFkNjpHcMPqScVeBmjph47qI
-         h55MDU0eicXmKpSlo2j3bwC3V3pgIs38BM8y/2AvzAe2C+kMLuvQQ0jsw/ivX09jxFzp
-         lGXA==
-X-Gm-Message-State: APjAAAUrCT1HB0Q4TgmH8GTwJ00n7Ov6jfuzhS7hQDC5lojFeUGEQkXw
-        fKXbFD51qDftpToGtHnm3FxuemJesDyBc02eLDzA9HdXsgaKPLhMqvRQ+whpy4orF7VMiErz9Q3
-        n34NU9jree6W30utSvsKKuvqT
-X-Received: by 2002:adf:f9c4:: with SMTP id w4mr7088527wrr.88.1573725858593;
-        Thu, 14 Nov 2019 02:04:18 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyOtVn0G+YuKxp+AJfhyXSauq4aTtil7UF2WPkekaphH4ARhSylyzFJu+uHYsv/QY5pO9f4yg==
-X-Received: by 2002:adf:f9c4:: with SMTP id w4mr7088501wrr.88.1573725858332;
-        Thu, 14 Nov 2019 02:04:18 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id y6sm6459803wrr.19.2019.11.14.02.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 02:04:17 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        Thu, 14 Nov 2019 12:27:26 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iVItt-0003AZ-5S; Thu, 14 Nov 2019 17:27:21 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal\@kernel.org" <sashal@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Fix crash handler reset of Hyper-V synic
-In-Reply-To: <1573713076-8446-1-git-send-email-mikelley@microsoft.com>
-References: <1573713076-8446-1-git-send-email-mikelley@microsoft.com>
-Date:   Thu, 14 Nov 2019 11:04:16 +0100
-Message-ID: <87mucykc4f.fsf@vitty.brq.redhat.com>
+        Sasha Levin <sashal@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] video: hyperv: hyperv_fb: fix indentation issue
+Date:   Thu, 14 Nov 2019 17:27:20 +0000
+Message-Id: <20191114172720.322023-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MC-Unique: 79-MCUFXMs6L77tFr_-MoQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
+From: Colin Ian King <colin.king@canonical.com>
 
-> The crash handler calls hv_synic_cleanup() to shutdown the
-> Hyper-V synthetic interrupt controller.  But if the CPU
-> that calls hv_synic_cleanup() has a VMbus channel interrupt
-> assigned to it (which is likely the case in smaller VM sizes),
-> hv_synic_cleanup() returns an error and the synthetic
-> interrupt controller isn't shutdown.  While the lack of
-> being shutdown hasn't caused a known problem, it still
-> should be fixed for highest reliability.
->
-> So directly call hv_synic_disable_regs() instead of
-> hv_synic_cleanup(), which ensures that the synic is always
-> shutdown.
+There is a block of statements that are indented
+too deeply, remove the extraneous tabs.
 
-Generally, when performing kdump doing as little work as possible is
-always preferred and hv_synic_cleanup() does too much: taking mutex,
-walking through channel list,...=20
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/video/fbdev/hyperv_fb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Also, hv_synic_cleanup() was calling hv_stimer_cleanup() and we have a
-second redundant invocation in hv_crash_handler().
-
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 664a415..665920d 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -2305,7 +2305,7 @@ static void hv_crash_handler(struct pt_regs *regs)
->  =09vmbus_connection.conn_state =3D DISCONNECTED;
->  =09cpu =3D smp_processor_id();
->  =09hv_stimer_cleanup(cpu);
-> -=09hv_synic_cleanup(cpu);
-> +=09hv_synic_disable_regs(cpu);
->  =09hyperv_cleanup();
->  };
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
---=20
-Vitaly
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index 4cd27e5172a1..5fcf4bdf85ab 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -582,8 +582,8 @@ static int synthvid_get_supported_resolution(struct hv_device *hdev)
+ 	t = wait_for_completion_timeout(&par->wait, VSP_TIMEOUT);
+ 	if (!t) {
+ 		pr_err("Time out on waiting resolution response\n");
+-			ret = -ETIMEDOUT;
+-			goto out;
++		ret = -ETIMEDOUT;
++		goto out;
+ 	}
+ 
+ 	if (msg->resolution_resp.resolution_count == 0) {
+-- 
+2.20.1
 
