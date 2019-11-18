@@ -2,163 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDCCFFFCD1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Nov 2019 02:24:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB0C0100940
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Nov 2019 17:33:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfKRBYK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 17 Nov 2019 20:24:10 -0500
-Received: from mail-eopbgr750115.outbound.protection.outlook.com ([40.107.75.115]:64481
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        id S1726435AbfKRQdb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 18 Nov 2019 11:33:31 -0500
+Received: from mail-eopbgr790108.outbound.protection.outlook.com ([40.107.79.108]:48542
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726627AbfKRBYK (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 17 Nov 2019 20:24:10 -0500
+        id S1726322AbfKRQdb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 18 Nov 2019 11:33:31 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j+zFHLuMQByd97xLq0AEUOw1Z+yxtliO0zlxXB+cnT8EO21eCPitaRlzpysRXOTBr6zIMvz3HQSsb6y7vKz8Cx9hoCZ1axW1BdWFO4bggEevmSw3USQ7VxKwWMqzzRYe8WpjbuqfmzCMG76QBol02/h85FPb5q6bZTVJq79I6Pl2+OpAeQYSzwf+yDju7IBjhLOdrSrNKS0PovIFJrgCCliHJ9zg6xK83atKI1WCAZa3dzjsdfj/BrxT/v2zuzFTaQsRpQYal7xF0Eze2MPcF4uZEclw7l6eKVuXF4bPYloccFvpvSu37IqbkyWIdLhP1YSwk6YfurGXn2SNHeQr7w==
+ b=Mzc+H+fzW3iMRt8NcUUz0/1UsAUf+BK4w3CCygQdvf5sQWEO9PtwhCcKnBsVwINTHsYKhQfH8hvaRVcr9MfWzxaf76xodoEAwOVVJiKMCB3yY7kwy9iaZkpo9ebn+rGf8Xk60J+BpLu0vuRXVc7+FqQz/msuhIXbpMaKcApwzsaW1xcHRN1/tBz1E80DhYS8S02t9i2EkmtJw4jBXiq5WP0b9EA68Qftl9dWmGky7ru6sM7tXKDpygIq7MDkE7n1deukGcZ9co7qR6f80f7y+xS5MufHMcUy/iPboWIC+d2+9IyQJtXJ3O8DnRfgYQlCBdvhwrHSf5/qYITE4A7kCw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=19bP9yZ9te5ajfi90OhIB6d3HFWLsK6fAGZ32t0JNBs=;
- b=Sln0tLX+jcEs14w7Kg9SzXIR2Mg5oxRkvjtpSWIVQ/Djqw5tJz3oHCyf5uATQjrTBuwvBaUThmhs2k88ErDOntw/pyuNicxj+xwZVjPbPeGFOpZnW6sY68BK+H535LPX/bqvtVk6oUTKq3atBbqBAVdUlgfV3sAw82qdz5BGYPkLB+apUXp4iJrH77Kow4m4KKlrXlRW4XqtZCAUaWQ/6Z5zttw4etffH0q8/VZyho+QVlKudgzcPmvcLOzhfaO9aW22TeWOdjZTlIPb4/s3wU7/iNVpeRsuLCLExtDTk/Rwb6pP0R42mWhPP+mT+S7wDkJCC0GqHSvtr62NDx0AYA==
+ bh=wYX+twZkjEJaM7LYiurxRVscCaFll+TmB6BHOd2FRcg=;
+ b=NGEXRZU3wIKfomhaIvtAHewpTgppCBLaqNY3tU6iPRSLgUiNHlQ72Yk9G///eDTPb10sJ6tssjj2SHMn5SZPo5zBWS+hKu+9aXDDuPHbI1HsY7QuLesMna8VLhXp/cEWvwZJi+BYJphUSDYq4uOUjtLKGEfu76AyBeRu3LThsg0rw18jhDLfO0O5OTqfbnwYcfqyD7lx7alxItfrUOl/pRCMjo8OcdVZrNoSoDj37KlMlYmnr0xDylnnxuj3Eu3g20mMdxeV6bEXJzyGPw1AXocQxZf1ZP6ba4HiIteOhtvoY/9iPzQ/oag0CACO3QF5YSlfFOreLMZNdnGsg7aDZw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=19bP9yZ9te5ajfi90OhIB6d3HFWLsK6fAGZ32t0JNBs=;
- b=btrERMu/DxEHYHy0l7LXe+B0rlO2gEQyHajizcZIVJ9sflrbxgojHfpyTOojfXwg3p1v2v1qMLJOMF88DJIvbiHw1gJrW099f7y21y/RfFPPZaug3CTAcQAkfewsYg7EoQplIglOR80Rd4/iQm1Syz0XrU7+yoF2bnTY/mYs/xM=
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
- CY4PR21MB0742.namprd21.prod.outlook.com (10.173.189.8) with Microsoft SMTP
+ bh=wYX+twZkjEJaM7LYiurxRVscCaFll+TmB6BHOd2FRcg=;
+ b=NjG8+n1OkA+dhHRUsDrnMfTWug53l643OPruHUJhtzfqAkDWqwl8IXcNcWBL5UZ2GEYMfgglgPp0+OzRfyRBe5x1vN99IYfIqiLa5mSbM241IpN6xeP2gE6YWwPlei3gNR4F5OyyaPJ+B5e48aX0/xt62i2WeJS9tm0yuCHIej8=
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1147.namprd21.prod.outlook.com (20.179.50.140) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.7; Mon, 18 Nov 2019 01:23:15 +0000
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::ed94:4b6d:5371:285c%5]) with mapi id 15.20.2495.004; Mon, 18 Nov 2019
- 01:23:15 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        vkuznets <vkuznets@redhat.com>,
+ 15.20.2495.0; Mon, 18 Nov 2019 16:33:28 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::2c55:a47d:cd39:94d6]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::2c55:a47d:cd39:94d6%9]) with mapi id 15.20.2474.015; Mon, 18 Nov 2019
+ 16:33:28 +0000
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CY4PR01CA0019.prod.exchangelabs.com (2603:10b6:903:1f::29) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 18 Nov 2019 16:33:27 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "Ganapatrao.Kulkarni@cavium.com" <Ganapatrao.Kulkarni@cavium.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "steven.price@arm.com" <steven.price@arm.com>,
-        "josephl@nvidia.com" <josephl@nvidia.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v2 1/1] x86/hyperv: Initialize clockevents earlier in CPU
- onlining
-Thread-Topic: [PATCH v2 1/1] x86/hyperv: Initialize clockevents earlier in CPU
- onlining
-Thread-Index: AQHVmb9TAIfD7Ra2tkqgwSg/PXh9y6eLwmaQgARlu/A=
-Date:   Mon, 18 Nov 2019 01:23:15 +0000
-Message-ID: <CY4PR21MB062904EB8E4B90192E893750D74D0@CY4PR21MB0629.namprd21.prod.outlook.com>
-References: <1573607467-9456-1-git-send-email-mikelley@microsoft.com>
- <PU1P153MB0169807BF9CE60FC3CA51B31BF700@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <PU1P153MB0169807BF9CE60FC3CA51B31BF700@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net, 0/2] Fix send indirection table offset
+Thread-Topic: [PATCH net, 0/2] Fix send indirection table offset
+Thread-Index: AQHVni3nXKSQXzj1fEmogVoKSCv0gQ==
+Date:   Mon, 18 Nov 2019 16:33:27 +0000
+Message-ID: <1574094751-98966-1-git-send-email-haiyangz@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-15T06:48:42.1892075Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=190e6afc-81e3-4faf-aab4-b7e2d8190add;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-clientproxiedby: CY4PR01CA0019.prod.exchangelabs.com (2603:10b6:903:1f::29)
+ To DM6PR21MB1242.namprd21.prod.outlook.com (2603:10b6:5:169::22)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c4d9dbeb-2bc0-4d0a-b8d0-08d76bc5e2e7
-x-ms-traffictypediagnostic: CY4PR21MB0742:|CY4PR21MB0742:|CY4PR21MB0742:
+x-ms-office365-filtering-correlation-id: 5aa61180-534f-4233-635d-08d76c450a48
+x-ms-traffictypediagnostic: DM6PR21MB1147:|DM6PR21MB1147:|DM6PR21MB1147:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <CY4PR21MB0742AB1E7F485E1641FADDCBD74D0@CY4PR21MB0742.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-microsoft-antispam-prvs: <DM6PR21MB1147151199AE64A965DF407AAC4D0@DM6PR21MB1147.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
 x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(396003)(136003)(366004)(346002)(51914003)(189003)(199004)(31014005)(86362001)(1511001)(2906002)(2201001)(305945005)(486006)(26005)(102836004)(7736002)(186003)(6506007)(11346002)(3846002)(6116002)(66066001)(446003)(476003)(76176011)(7696005)(74316002)(7416002)(14444005)(71190400001)(71200400001)(229853002)(6436002)(9686003)(256004)(55016002)(10090500001)(8990500004)(33656002)(52536014)(316002)(2501003)(10290500003)(478600001)(66476007)(66446008)(64756008)(66556008)(66946007)(14454004)(81166006)(25786009)(76116006)(81156014)(6246003)(22452003)(8676002)(5660300002)(99286004)(110136005)(8936002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0742;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(396003)(136003)(346002)(366004)(199004)(189003)(22452003)(2906002)(2201001)(6506007)(7736002)(6116002)(52116002)(3846002)(71200400001)(71190400001)(256004)(305945005)(66946007)(66446008)(22746008)(66476007)(4744005)(10090500001)(5660300002)(478600001)(10290500003)(4720700003)(25786009)(36756003)(66066001)(486006)(316002)(102836004)(64756008)(66556008)(7846003)(6436002)(6392003)(6486002)(110136005)(54906003)(2616005)(956004)(476003)(2501003)(16526019)(186003)(6512007)(81166006)(81156014)(8676002)(26005)(386003)(4326008)(50226002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1147;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QbqfDrtmQ3I5+tJMGVMCYjFoiapROQEdVtjxYLSWA5hNunSF4dgf0ubvVdnRyRI6U+apUyjxdJQm9kFgE8BcCidb+FYxiMdpTtKhBz6OFdAQk+cV8JKAzW4ICQyIS9Pa44LB/59RBe91ToTMerONlj58sHlFCJTZP41Xq2P/TeJO+nNow2d1P1EqIaZfal2YkAOnY5Y3TyhZzBqEmNDPRImm+v7nWwTmH4HpS8oIbHRhI1Hg0JbUcJGYDmAIA68JXXQ9kJ+5rZNswpVtI1C3QSUQLHnig262t5xHvYiOXIEHB/01ZuYpxWg1lwO8iJed62bcduODuB8R09Yv9+vCi2Bk2MuOyVpZV4js/B0dr8fYYY6bHdwPl4mXQrgSX06UEHv8iUpFGmitwvcqNE6HO3Cn0S82kHoZnKqzUkCC8ZUkktcvnVIl5+oUbVcYz93+
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: +Fuo2y466eLXz8qX9B4IF5px7vGXd5QrQnAU891GdC5ZogT46DZUD7Z/jCEhVRWdUoorFtRTYKYpa+j+0vfmKhG7qiakJp3DNmtr1wOKK3tRFkenu+jUpWWOT/d5nk53i0ix/7uDoxYSZB+Sv8BBG2uhAGPdrFUBQeq7hlcaD7wCBR6BOIaG+8Xmzl+KTK1bm+YWROuAbkvMUR9s/MWc5MgXpLFdZouNKZJ6JIEUfxOZRyN9m3TJ+JfnLdqbS7MmgMceBtURillsIrSz2q5zJtPNwmP8nfPOdfE6k3Qr8HlcOHVqMeTrYMgyiF71zhFsAFAQAYD+ExU8XHV1KtZjLWdVT3ENkblz1WYBapirZMEYMgwL6sUXblf6tiyT1GOmnIMaALfWZGX+Kbw48xUS29B8qvIRktqx2py19sCbqBBpLZ+eydA6acPHhMbyjk4A
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4d9dbeb-2bc0-4d0a-b8d0-08d76bc5e2e7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 01:23:15.4751
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5aa61180-534f-4233-635d-08d76c450a48
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 16:33:28.0022
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: o3uEdgvcvlCfYujrJOdiRmyozs1EUK6dcAe6pbe7qPtOYqYD26jgOBlZfrjgINDBYdvkvqJiXrRNEKYoJO698oHH/P/y0l1SnxWySgz6CLk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0742
+X-MS-Exchange-CrossTenant-userprincipalname: Z7oTEeFzC8S9GizIIq96ItxqkKvCovOtIcbUDfVQw6hs+8LzQ9HN43eF/feLHI8+OeypU1yDoP2LxIG53RYc/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1147
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>  Sent: Thursday, November 14, 2019 1=
-0:49 PM
-> > From: Michael Kelley <mikelley@microsoft.com>
-> > Sent: Tuesday, November 12, 2019 5:12 PM
-> > ...
-> > @@ -190,14 +278,20 @@ void hv_stimer_free(void)
-> >  void hv_stimer_global_cleanup(void)
-> >  {
-> >  	int	cpu;
-> >  ...
-> > +	/*
-> > +	 * hv_stime_legacy_cleanup() will stop the stimer if Direct
-> > +	 * Mode is not enabled, and fallback to the LAPIC timer.
-> > +	 */
-> > +	for_each_present_cpu(cpu) {
-> > +		hv_stimer_legacy_cleanup(cpu);
-> >  	}
-> > +
-> > +	/*
-> > +	 * If Direct Mode is enabled, the cpuhp teardown callback
-> > +	 * (hv_stimer_cleanup) will be run on all CPUs to stop the
-> > +	 * stimers.
-> > +	 */
-> >  	hv_stimer_free();
-> >  }
->=20
-> In the case of direct_mode_enabled =3D=3D true: When hv_vmbus unloads,
-> vmbus_exit() -> hv_stimer_global_cleanup() -> hv_stimer_free() ->
-> cpuhp_remove_state() disables the direct mode timers.
->=20
-> This does not look symmetric since hv_stimer_alloc() is called before
-> hv_vmbus loads, but I suppose this is not a real issue because hv_vmbus
-> should never unload in practice. :-)
+Fix send indirection table offset issues related to guest and
+host bugs.
 
-Thanks for the review.  Looking at this a bit more, ideally
-hv_stimer_global_cleanup() should go away entirely.  vmbus_exit() should
-let the call to cpuhp_remove_state() clean up the stimer on each CPU via=20
-hv_synic_cleanup().   But vmbus_exit() shuts down the VMbus first, which
-is really the wrong order.
 
-As you say, vmbus_exit() never gets called in practice, so it's not a
-current issue.  But I'll look at fixing this in a future patch so that it
-makes logical sense.
+Haiyang Zhang (2):
+  hv_netvsc: Fix offset usage in netvsc_send_table()
+  hv_netvsc: Fix send_table offset in case of a host bug
 
-Michael
+ drivers/net/hyperv/hyperv_net.h |  3 ++-
+ drivers/net/hyperv/netvsc.c     | 35 +++++++++++++++++++++++++++--------
+ 2 files changed, 29 insertions(+), 9 deletions(-)
 
->=20
-> Tested-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+--=20
+1.8.3.1
 
