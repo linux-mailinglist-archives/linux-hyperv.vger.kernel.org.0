@@ -2,212 +2,184 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBAAD100D60
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Nov 2019 22:01:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F19310111A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Nov 2019 03:05:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfKRVBU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 18 Nov 2019 16:01:20 -0500
-Received: from mail-eopbgr770132.outbound.protection.outlook.com ([40.107.77.132]:50270
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726272AbfKRVBU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 18 Nov 2019 16:01:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MBLJdl5ywhZu69qactmXhMpbs7q14Y46aAvZ73dVa+ahQKoFN26dhsLDpSa6XEfGjkSmdndoqjexUIYV9ByZeDf1A++6yE3+IYabc2K0vf8qfH+DkTaJzOctyPJ0NS925oxtY6N5b7b3ijdSIMn9AHJC4XgTbfG+BqqpqPhcKdmfl7pcJVgEhcKiAdZAP7UynOOSATZ93z62JQVOdxi1I7eaB/l2SgNn7eKJ1HumoZyDLYyey5c9as8CYZnmqpTLbk+dGHq9l89EXNXpWPcejreWDR2r6LwHv2hP/aJnaERu/zIyh3ESSSL6eoxj6ofJLNvQb37wYLnhr8OBF31t5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YIaDSRtXnFSbfhjxkIS4frVRt3RY+jhkzTIsIhJRju4=;
- b=NCC9g2JUswQyAKzwjVGw56iILI7NfUxrj7EYLu3Ta6bBiUYGpMcC2cWML1++3gCpTOtPVUE4mdPfo/x0X+826FSdA+gz64jSYWG0nBccBit+k8/pQFDLz6HqMIN9xE5ZXaG3waRdNbQSwsN2+npTIADmxKZ95cY6e2xeLd79cpcWXUwJq3mkZSqhye4FV+tK8Z2c1roIpUJh7uxhlJWKvBEPxF8iGhuKjGe9vNVl9isrMav2HRgCUCxZAhhUmmc7V5XhQPjebCjH/qq+TkZgeLZv7noOifopeNLADkgMrfCSi3Y1e/Dc+v1QT/IXvfpTgQp9HH3vokSsd8xBFyIMOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YIaDSRtXnFSbfhjxkIS4frVRt3RY+jhkzTIsIhJRju4=;
- b=MwtE/hrlhPLmpV5VASTW6FEcOO/qBWYRCiBNrRknuprzeuCrJRiUBH9z6ZQt3bYKYzIyVFlLq7Jvs97gQTmBzZW02wYp/ogLSCm5XGc0i8iJ0ht0xzrCQE2CukUVfKDLcoxxfrCsc9JzTjkQkmsdGZkNfNQCSAnAVrDIK0s1Iec=
-Received: from BYAPR21MB1366.namprd21.prod.outlook.com (20.179.59.143) by
- BYAPR21MB1143.namprd21.prod.outlook.com (20.179.56.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.5; Mon, 18 Nov 2019 21:01:17 +0000
-Received: from BYAPR21MB1366.namprd21.prod.outlook.com
- ([fe80::897c:7b4:f111:eafd]) by BYAPR21MB1366.namprd21.prod.outlook.com
- ([fe80::897c:7b4:f111:eafd%5]) with mapi id 15.20.2495.006; Mon, 18 Nov 2019
- 21:01:16 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH net, 1/2] hv_netvsc: Fix offset usage in
- netvsc_send_table()
-Thread-Topic: [PATCH net, 1/2] hv_netvsc: Fix offset usage in
- netvsc_send_table()
-Thread-Index: AQHVni4BMQAA5uuFYkCid07sy0QKsaeRLukAgAASHQCAACVGAIAAA0Sw
-Date:   Mon, 18 Nov 2019 21:01:16 +0000
-Message-ID: <BYAPR21MB1366AB00EC1239A2ABEE9531CA4D0@BYAPR21MB1366.namprd21.prod.outlook.com>
-References: <1574094751-98966-1-git-send-email-haiyangz@microsoft.com>
- <1574094751-98966-2-git-send-email-haiyangz@microsoft.com>
- <87wobxgkkv.fsf@vitty.brq.redhat.com>
- <MN2PR21MB13758E83B89BD524B41B71C2CA4D0@MN2PR21MB1375.namprd21.prod.outlook.com>
- <DM5PR21MB0634CF7997BD9F9B6326D1CED74D0@DM5PR21MB0634.namprd21.prod.outlook.com>
-In-Reply-To: <DM5PR21MB0634CF7997BD9F9B6326D1CED74D0@DM5PR21MB0634.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-18T18:39:29.5028454Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=821fed68-78ee-4326-a00c-9705c5f44674;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fe396234-0700-461e-4063-08d76c6a7433
-x-ms-traffictypediagnostic: BYAPR21MB1143:|BYAPR21MB1143:|BYAPR21MB1143:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR21MB1143EE99C188716D0DCAE7DDCA4D0@BYAPR21MB1143.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0225B0D5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(376002)(366004)(396003)(199004)(189003)(13464003)(64756008)(71190400001)(71200400001)(10090500001)(3846002)(66946007)(76116006)(6116002)(256004)(99286004)(8676002)(8936002)(229853002)(74316002)(14454004)(66066001)(54906003)(6436002)(4326008)(6246003)(110136005)(22452003)(316002)(81156014)(81166006)(55016002)(9686003)(8990500004)(186003)(25786009)(26005)(86362001)(1511001)(52536014)(478600001)(2906002)(446003)(11346002)(5660300002)(486006)(66476007)(476003)(76176011)(7696005)(305945005)(7736002)(33656002)(66556008)(66446008)(102836004)(6506007)(10290500003)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1143;H:BYAPR21MB1366.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AWERKTfeAvSNSa2yHzHm/4NZi/E7SLZn2hA5xbe9cL0aCPcfmo1Rbjk6r9mt4NAkOkufYopH2LUaNXvkdZOf5PZEbekAGzKCAFFrAk6vU0PjouoZcYYpK5YVuhauf2AtfAmftnl7TnsibrFTUxoWXSxkns92ODYTXZ6vGI1TWT2M+Uidp4pTes4aWWckYyU35muwLyTOZgxMlki/ZPBZX2fwjPKGBw1x3NtKa2MFccGEgw9Sn4WsgOacJsI/OTS2A/AYcw39iScBHY+xmg8zxl+QyPhn9khI6R7d7Egxct8nGBeTqzXG2UKsPxMM0J2uYkEoPqXws4HdPnbHB13USolhljyVvJmc6XZwhk4qGZ0znkYajaW/zoroCZsJKmZ20teuYUddIzZov6JO3MKhPuCFL2THuqJd90BnneKwuzbr2C7zz5Epr7YPTvDSe45F
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727200AbfKSCFA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 18 Nov 2019 21:05:00 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:42584 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfKSCE7 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 18 Nov 2019 21:04:59 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ20JOq174419;
+        Tue, 19 Nov 2019 02:02:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=LwULDTBc+rigjf0sejI3ferVE3V7uWPReTZ8S+pp39s=;
+ b=nhWJqFQPkRIoMDNFK7WxEUVy8QzdSc+fs2Wc6Y3w+YAb9AqfvqN5wDV5ElCfPoHEUkjX
+ lLuO9+DwoNmXSapMrkqBvjaG+Ksppzaai/gCAXn9gVXxhR2lJKMIELISSIOwLqESBcFr
+ NdO2JxTm/oeAvwpE6EgHNNFpw0PGBK8hIT8V1XTtlxGBGQfQp557AdzPVeCZEmp3At0S
+ pWnvuN5AhiaKiUSo7nxeMS+/o1rkagV7qyJ7RiMKWW1Wn9Kcju1YHmllNaKHRzGlhXdi
+ a46VvEb73TrvmbFYIPEBuvtN/RlPGcCx2GvCtGdUTGjNJ8gpQ0KwCkRNuDqLKb2LtRML 5g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2wa92pkvs7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 02:02:09 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ1xPOD118317;
+        Tue, 19 Nov 2019 02:02:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wc09wja66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 02:02:08 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJ225L5024440;
+        Tue, 19 Nov 2019 02:02:05 GMT
+Received: from [10.191.19.228] (/10.191.19.228)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 18:02:04 -0800
+Subject: Re: [PATCH v8 0/5] Add a unified parameter "nopvspin"
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        pbonzini@redhat.com
+Cc:     mingo@redhat.com, bp@alien8.de, x86@kernel.org, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com, peterz@infradead.org,
+        will@kernel.org, linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
+ <86263ee3-f94f-8a6b-3842-f15fb0316798@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <1ef9b26d-3b21-f285-bb93-063ee30e546f@oracle.com>
+Date:   Tue, 19 Nov 2019 10:01:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe396234-0700-461e-4063-08d76c6a7433
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2019 21:01:16.6474
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UBfXbDKS2I1cAqfQnjvdBHLeDNtl0OwMr8ej7vj4SpYy2YQ3A6yJO7dYyULVC75Y2IjxQdoW123ttwfTr+TR/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1143
+In-Reply-To: <86263ee3-f94f-8a6b-3842-f15fb0316798@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190016
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190016
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Hi Maintainers,
+
+May I get a final update on this patchset?
+
+There is only a few days remaining before my layoff at Oracle. I can't 
+login the mail address after that.
+
+No matter if you prefer to reject it, please let me know. I'd like to 
+get an end to this patchset.
+
+Thanks
+
+Zhenzhong
 
 
-> -----Original Message-----
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Monday, November 18, 2019 3:47 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>; vkuznets
-> <vkuznets@redhat.com>
-> Cc: KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; olaf@aepfle.de; davem@davemloft.net; linux-
-> kernel@vger.kernel.org; sashal@kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org
-> Subject: RE: [PATCH net, 1/2] hv_netvsc: Fix offset usage in netvsc_send_=
-table()
->=20
-> From: Haiyang Zhang <haiyangz@microsoft.com> Sent: Monday, November 18,
-> 2019 10:40 AM
-> > > -----Original Message-----
-> > > From: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > > Sent: Monday, November 18, 2019 12:29 PM
-> > >
-> > > Haiyang Zhang <haiyangz@microsoft.com> writes:
-> > >
-> > > > To reach the data region, the existing code adds offset in struct
-> > > > nvsp_5_send_indirect_table on the beginning of this struct. But the
-> > > > offset should be based on the beginning of its container,
-> > > > struct nvsp_message. This bug causes the first table entry missing,
-> > > > and adds an extra zero from the zero pad after the data region.
-> > > > This can put extra burden on the channel 0.
-> > > >
-> > > > So, correct the offset usage. Also add a boundary check to ensure
-> > > > not reading beyond data region.
-> > > >
-> > > > Fixes: 5b54dac856cb ("hyperv: Add support for virtual Receive Side
-> Scaling
-> > > (vRSS)")
-> > > > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > > > ---
-> > > >  drivers/net/hyperv/hyperv_net.h |  3 ++-
-> > > >  drivers/net/hyperv/netvsc.c     | 26 ++++++++++++++++++--------
-> > > >  2 files changed, 20 insertions(+), 9 deletions(-)
-> > > >
-> > > > diff --git a/drivers/net/hyperv/hyperv_net.h
-> > > b/drivers/net/hyperv/hyperv_net.h
-> > > > index 670ef68..fb547f3 100644
-> > > > --- a/drivers/net/hyperv/hyperv_net.h
-> > > > +++ b/drivers/net/hyperv/hyperv_net.h
-> > > > @@ -609,7 +609,8 @@ struct nvsp_5_send_indirect_table {
-> > > >  	/* The number of entries in the send indirection table */
-> > > >  	u32 count;
-> > > >
-> > > > -	/* The offset of the send indirection table from top of this stru=
-ct.
-> > > > +	/* The offset of the send indirection table from the beginning of
-> > > > +	 * struct nvsp_message.
-> > > >  	 * The send indirection table tells which channel to put the send
-> > > >  	 * traffic on. Each entry is a channel number.
-> > > >  	 */
-> > > > diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvs=
-c.c
-> > > > index d22a36f..efd30e2 100644
-> > > > --- a/drivers/net/hyperv/netvsc.c
-> > > > +++ b/drivers/net/hyperv/netvsc.c
-> > > > @@ -1178,20 +1178,28 @@ static int netvsc_receive(struct net_device
-> *ndev,
-> > > >  }
-> > > >
-> > > >  static void netvsc_send_table(struct net_device *ndev,
-> > > > -			      const struct nvsp_message *nvmsg)
-> > > > +			      const struct nvsp_message *nvmsg,
-> > > > +			      u32 msglen)
-> > > >  {
-> > > >  	struct net_device_context *net_device_ctx =3D netdev_priv(ndev);
-> > > > -	u32 count, *tab;
-> > > > +	u32 count, offset, *tab;
-> > > >  	int i;
-> > > >
-> > > >  	count =3D nvmsg->msg.v5_msg.send_table.count;
-> > > > +	offset =3D nvmsg->msg.v5_msg.send_table.offset;
-> > > > +
-> > > >  	if (count !=3D VRSS_SEND_TAB_SIZE) {
-> > > >  		netdev_err(ndev, "Received wrong send-table size:%u\n",
-> > > count);
-> > > >  		return;
-> > > >  	}
-> > > >
-> > > > -	tab =3D (u32 *)((unsigned long)&nvmsg->msg.v5_msg.send_table +
-> > > > -		      nvmsg->msg.v5_msg.send_table.offset);
-> > > > +	if (offset + count * sizeof(u32) > msglen) {
-> > >
-> > > Nit: I think this can overflow.
-> >
-> > To prevent overflow, I will change it to:
-> > 	if (offset > msglen || offset + count * sizeof(u32) > msglen) {
-> > Thanks,
-> > - Haiyang
->=20
-> Actually, this would be simpler since we already trust msglen and count
-> to have good values:
->=20
-> 	if (offset > msglen - count * sizeof(u32)) {
-
-Great idea. Thanks!
-
-
+On 2019/10/29 9:33, Zhenzhong Duan wrote:
+> Hi Baolo, Thomas
+>
+> This patchset is reviewed pass and keep silent for a while, will 
+> anyone of you
+>
+> consider to pick it up? Thanks
+>
+> Zhenzhong
+>
+> On 2019/10/23 19:16, Zhenzhong Duan wrote:
+>> There are cases folks want to disable spinlock optimization for
+>> debug/test purpose. Xen and hyperv already have parameters 
+>> "xen_nopvspin"
+>> and "hv_nopvspin" to support that, but kvm doesn't.
+>>
+>> The first patch adds that feature to KVM guest with "nopvspin".
+>>
+>> For compatibility reason original parameters "xen_nopvspin" and
+>> "hv_nopvspin" are retained and marked obsolete.
+>>
+>> v8:
+>> PATCH2: use 'kvm-guest' instead of 'kvm_guest'        [Sean 
+>> Christopherson]
+>> PATCH3: add a comment to explain missed 'return'      [Sean 
+>> Christopherson]
+>>
+>> v7:
+>> PATCH3: update comment and use goto, add RB              [Vitaly 
+>> Kuznetsov]
+>>
+>> v6:
+>> PATCH1: add Reviewed-by                                  [Vitaly 
+>> Kuznetsov]
+>> PATCH2: change 'pv' to 'PV', add Reviewed-by             [Vitaly 
+>> Kuznetsov]
+>> PATCH3: refactor 'if' branch in kvm_spinlock_init()      [Vitaly 
+>> Kuznetsov]
+>>
+>> v5:
+>> PATCH1: new patch to revert a currently unnecessory commit,
+>>          code is simpler a bit after that change.         [Boris 
+>> Ostrovsky]
+>> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
+>>          reorder with PATCH2 to better reflect dependency
+>> PATCH4: fold 'if' statement, add Reviewed-by             [Boris 
+>> Ostrovsky]
+>> PATCH5: add Reviewed-by [Michael Kelley]
+>>
+>> v4:
+>> PATCH1: use variable name nopvspin instead of pvspin and
+>>          defined it as __initdata, changed print message,
+>>          updated patch description                     [Sean 
+>> Christopherson]
+>> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean 
+>> Christopherson]
+>> PATCH3: make variable nopvsin and xen_pvspin coexist
+>>          remove Reviewed-by due to code change         [Sean 
+>> Christopherson]
+>> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean 
+>> Christopherson]
+>>
+>> v3:
+>> PATCH2: Fix indentation
+>>
+>> v2:
+>> PATCH1: pick the print code change into separate PATCH2,
+>>          updated patch description             [Vitaly Kuznetsov]
+>> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+>> PATCH3: add Reviewed-by                       [Juergen Gross]
+>>
+>> Zhenzhong Duan (5):
+>>    Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
+>>      get initialized"
+>>    x86/kvm: Change print code to use pr_*() format
+>>    x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+>>    xen: Mark "xen_nopvspin" parameter obsolete
+>>    x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+>>
+>>   Documentation/admin-guide/kernel-parameters.txt | 14 ++++-
+>>   arch/x86/hyperv/hv_spinlock.c                   |  4 ++
+>>   arch/x86/include/asm/qspinlock.h                |  1 +
+>>   arch/x86/kernel/kvm.c                           | 79 
+>> ++++++++++++++++---------
+>>   arch/x86/xen/spinlock.c                         |  4 +-
+>>   kernel/locking/qspinlock.c                      |  7 +++
+>>   6 files changed, 76 insertions(+), 33 deletions(-)
+>>
