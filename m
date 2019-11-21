@@ -2,206 +2,147 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CACE51046E6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Nov 2019 00:18:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DECE61047B8
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Nov 2019 01:50:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbfKTXSl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Nov 2019 18:18:41 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41709 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfKTXSk (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:18:40 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t8so480854plr.8
-        for <linux-hyperv@vger.kernel.org>; Wed, 20 Nov 2019 15:18:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wmtUR/eihp0PUvrLKsh7wVU4zqxo6xGU5zxiqoarIqE=;
-        b=p2G0T3jgz6bXlwZjpvll8ad4xuXJX1PCwdWxV8mTLvBJNPr+A4y10oHp5zDr6t54Gf
-         OfkS1NHrAugnkuzwclxNLuUBWLWtzXNz8Wc3MIeSzZnkIq5iaOtYYyUgbVgQD+FuTE3n
-         vAb8kgLCoKm88R10sL9ltWOieO97SxL3GSvsUulumE7DsE3/qlgX2r42bt/j++O0CMZI
-         bsHmNccOcon35TsSaHwNyZqRaB9sJz0mQ/8GERZLG/AXV0DHuNK629sQI5t9pDTiMolD
-         q+y18tonjpHPNI6wvnGPATDieKBUb9XPD946HsDG+h8w8xcSRjjCoiuNnfKMwS0X1xMk
-         ItCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wmtUR/eihp0PUvrLKsh7wVU4zqxo6xGU5zxiqoarIqE=;
-        b=D6LbOApzO3PAxLWh0dd0LQQ4ev+RrS9pid907VlvVAecpvlqMmX47M98oCP/znPoaX
-         EgegtfzbSWUBmlzWeNIWtNEO39wgeB46sNMMqItwzWNhxI9yc1/wldY7/h4QX7mjsNK/
-         axMxXMlA8SrceVGix1q47OpX+moYZqaZQFLLDEOX6bmmSyasZlJcbEOfgHALQ10RDcfx
-         hCWVGlhidWRiO9EjiPuI+ZdPgqjREBIFGej2337Rrj7SCv7BSHCl8gf8/nWLdZF8vlK9
-         nn1mg25DAfutlkUvyLrsQOsSLG18QU/sf9R5JennmC8//zgojY+D0M1OtifSMvTAgx5A
-         60dw==
-X-Gm-Message-State: APjAAAWAI85XXhT/Pcex0o+tY4+whG46Y6mfjCxA206/gqRo6UNyJ6gk
-        9khjoTB+vT5W+8AjHpNpBsB5HA==
-X-Google-Smtp-Source: APXvYqw0TaIkfAiYDhUvl10ZLxlCJpmLGUmkEzRbDKn+3bQbVgvytLloXmk3XGGDCqVdvnqHnR4G1A==
-X-Received: by 2002:a17:90a:9286:: with SMTP id n6mr6979262pjo.84.1574291917274;
-        Wed, 20 Nov 2019 15:18:37 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id j21sm485855pfa.58.2019.11.20.15.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 15:18:37 -0800 (PST)
-Date:   Wed, 20 Nov 2019 15:18:28 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     <lantianyu1986@gmail.com>, <cohuck@redhat.com>,
-        "KY Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
-        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
-        <Jonathan.Cameron@huawei.com>, <paulmck@linux.ibm.com>,
-        "Michael Kelley" <mikelley@microsoft.com>,
-        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
-Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
-Message-ID: <20191120151828.2d593b81@hermes.lan>
-In-Reply-To: <20191120133147.1d627348@x1.home>
-References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
-        <20191119165620.0f42e5ba@x1.home>
-        <20191120103503.5f7bd7c4@hermes.lan>
-        <20191120120715.0cecf5ea@x1.home>
-        <20191120114611.4721a7e9@hermes.lan>
-        <20191120133147.1d627348@x1.home>
+        id S1726333AbfKUAu0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Nov 2019 19:50:26 -0500
+Received: from mail-eopbgr1300117.outbound.protection.outlook.com ([40.107.130.117]:2706
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726202AbfKUAu0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 20 Nov 2019 19:50:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MRiy1E9aIjy61X6MkvU6FoO87di8/K+7NccbOTJ8KA3W/+qnipnxgfEz0OW+nOXfLps6FHMnK3gkBvTtXTvIwBy7yXZzXr3r6796vhan9VFX9ViQI1eGDGBb1NQwk6tubTBcShDURquwq92qHW2C4g2NFF2ifVGGeYGSalFXlwBcH0TG1n11ucuzIFw5NkT92yQD+JgsMVvbqs3jyTAwTvEqT0uAxmjDUFD/egd+n1CUJ19nKYAwwSPG5wdcarTiaSF5A/UGe8s8V1m7i/1mhQkDNUZ7I0O4XHA8vc+wwis6pREpU/+lNBD8fG2RqXmbtc6VTtFek3eg1mO2sYcxKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AP/wLcVOsTGzmUvaHhnBHvrW+nZ25FO5Vy0wDWKrMHI=;
+ b=cmmFm6X/MpEpvl1F+MTQheD9TPfdH4dixVtWRD4JcBRED/6N1NZInmCTAYqhzpOU2WmoY1tFtCsqbBrZLZxLfB4P3GCtYdQs4mxqwtyGFPf/fQkN/YywbUPZdfkz7K6kNklHPTf54nPvu9mA5qpGksLbovn5Gzn+InKBoH6H4ZRIcuQyAE1BqlvUUb31FWC5qxSwuneIfN0xThM9QLb7/StgarCc/MDS9CI6u/FkNwurQa3TW68P1dWqULoK2f0NAo1zCP9t3tjzCpVErzq82s3hs0WB+0vm0tKtuannBY1pxPIQ6qEzKNIUrjqh4u+Qmd+ikANuCIRd84+sPxM73Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AP/wLcVOsTGzmUvaHhnBHvrW+nZ25FO5Vy0wDWKrMHI=;
+ b=KF8mPjNDudM4eUged7Li91wDu0PdcPjyeYv4mrjw7UK6Spj5p9HHGZGwBFtdJ24rDVLFw4w6SI9eCXKgYk393P/aZxEhg4kMk5n/svxvL103VP0dkLTp8+slPcebZ7A8swi4vXM8RVamYQfmhNRz6NuOb5TPSXkqns9XQq6mU24=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0172.APCP153.PROD.OUTLOOK.COM (10.170.189.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.0; Thu, 21 Nov 2019 00:50:18 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::704b:f2b6:33d:557a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::704b:f2b6:33d:557a%9]) with mapi id 15.20.2495.010; Thu, 21 Nov 2019
+ 00:50:18 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: RE: [PATCH v2 2/4] PCI: hv: Add the support of hibernation
+Thread-Topic: [PATCH v2 2/4] PCI: hv: Add the support of hibernation
+Thread-Index: AQHVn8bS/DqK5/y4PU+iJ9zuKs55jqeUwW9Q
+Date:   Thu, 21 Nov 2019 00:50:17 +0000
+Message-ID: <PU1P153MB0169D0A99D5687FBDB02536BBF4E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1574234218-49195-1-git-send-email-decui@microsoft.com>
+ <1574234218-49195-3-git-send-email-decui@microsoft.com>
+ <20191120172026.GE3279@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191120172026.GE3279@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-21T00:50:15.9009207Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a364226a-e37e-4eb3-aa43-53a93ad1a097;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:f4fa:7273:7e45:7e9d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4d7b3fa6-50a1-456b-0030-08d76e1cc774
+x-ms-traffictypediagnostic: PU1P153MB0172:|PU1P153MB0172:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB017239496A4A5ED34C7695DBBF4E0@PU1P153MB0172.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(39860400002)(136003)(366004)(54534003)(199004)(189003)(76176011)(52536014)(76116006)(14444005)(256004)(33656002)(74316002)(5660300002)(86362001)(6116002)(14454004)(10090500001)(46003)(6246003)(71190400001)(2906002)(71200400001)(10290500003)(476003)(8936002)(66446008)(64756008)(66556008)(66476007)(8990500004)(9686003)(55016002)(22452003)(25786009)(102836004)(8676002)(107886003)(316002)(11346002)(6506007)(81166006)(6436002)(54906003)(81156014)(446003)(6916009)(99286004)(305945005)(229853002)(478600001)(486006)(7736002)(186003)(7696005)(66946007)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0172;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6GsVLCVbCvZ8TiH2zBdKMERgqfYJph1bSHcv5z0XSxbvifnwlWxSYFavIfKCFUiAMKNIC/gqBT4o62427r336DTzg1T+FiINfrB1jxU4Pf9OccQztU/0JRQWhxEO6boeLY8w/5ffwbKHI1Ptnw0rQjLokNKm+H35Jw4d+eLt86amthZwMwEJat1YjK+Io89BefPlA/AyAikZD94Qn8BNyVdRghiN+2mSBYCaSElvdE4z9UHvVm0uLALYBYPCxnscTw5Rkh8CG5uNTPC3kl0xbNW2iGBFLNGF+uxKgEGLmnkKVKlfFoFoVqUkVrbMH+DZPitw6wDmJsZrPcKRZHF/rrXk4f6TR3+EgYQz5iL0KzBlAKceQ4eW4TTggWYZn9XDXIf41PWVuIzkUlaSyhlFExt8mELF1OkiQn5UeeNEajNmNZvOf65HUj0QzDno8K8u
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d7b3fa6-50a1-456b-0030-08d76e1cc774
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 00:50:17.6754
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y82gsdLTXfKESYkuKT0qulnY9Rp2ZW58m5fe/MjMUP8RbkqcdB0ZCNLKiqjjmhiXuTEXto83ae2gckyXEaKKbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0172
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 20 Nov 2019 13:31:47 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Sent: Wednesday, November 20, 2019 9:20 AM
+>=20
+> On Tue, Nov 19, 2019 at 11:16:56PM -0800, Dexuan Cui wrote:
+> > Implement the suspend/resume callbacks.
+> >
+> > We must make sure there is no pending work items before we call
+> > vmbus_close().
+>=20
+> Where ? Why ? Imagine a developer reading this log to try to understand
+> why you made this change, do you really think this commit log is
+> informative in its current form ?
+>=20
+> I am not asking a book but this is a significant feature please make
+> an effort to explain it (I can update the log for you but please
+> write one and I shall do it).
+>=20
+> Lorenzo
 
-> On Wed, 20 Nov 2019 11:46:11 -0800
-> Stephen Hemminger <stephen@networkplumber.org> wrote:
-> 
-> > On Wed, 20 Nov 2019 12:07:15 -0700
-> > Alex Williamson <alex.williamson@redhat.com> wrote:
-> >   
-> > > On Wed, 20 Nov 2019 10:35:03 -0800
-> > > Stephen Hemminger <stephen@networkplumber.org> wrote:
-> > >     
-> > > > On Tue, 19 Nov 2019 15:56:20 -0800
-> > > > "Alex Williamson" <alex.williamson@redhat.com> wrote:
-> > > >       
-> > > > > On Mon, 11 Nov 2019 16:45:07 +0800
-> > > > > lantianyu1986@gmail.com wrote:
-> > > > >         
-> > > > > > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > > > > > 
-> > > > > > This patch is to add VFIO VMBUS driver support in order to expose
-> > > > > > VMBUS devices to user space drivers(Reference Hyper-V UIO driver).
-> > > > > > DPDK now has netvsc PMD driver support and it may get VMBUS resources
-> > > > > > via VFIO interface with new driver support.
-> > > > > > 
-> > > > > > So far, Hyper-V doesn't provide virtual IOMMU support and so this
-> > > > > > driver needs to be used with VFIO noiommu mode.          
-> > > > > 
-> > > > > Let's be clear here, vfio no-iommu mode taints the kernel and was a
-> > > > > compromise that we can re-use vfio-pci in its entirety, so it had a
-> > > > > high code reuse value for minimal code and maintenance investment.  It
-> > > > > was certainly not intended to provoke new drivers that rely on this mode
-> > > > > of operation.  In fact, no-iommu should be discouraged as it provides
-> > > > > absolutely no isolation.  I'd therefore ask, why should this be in the
-> > > > > kernel versus any other unsupportable out of tree driver?  It appears
-> > > > > almost entirely self contained.  Thanks,
-> > > > > 
-> > > > > Alex        
-> > > > 
-> > > > The current VMBUS access from userspace is from uio_hv_generic
-> > > > there is (and will not be) any out of tree driver for this.      
-> > > 
-> > > I'm talking about the driver proposed here.  It can only be used in a
-> > > mode that taints the kernel that its running on, so why would we sign
-> > > up to support 400 lines of code that has no safe way to use it?
-> > >      
-> > > > The new driver from Tianyu is to make VMBUS behave like PCI.
-> > > > This simplifies the code for DPDK and other usermode device drivers
-> > > > because it can use the same API's for VMBus as is done for PCI.      
-> > > 
-> > > But this doesn't re-use the vfio-pci API at all, it explicitly defines
-> > > a new vfio-vmbus API over the vfio interfaces.  So a user mode driver
-> > > might be able to reuse some vfio support, but I don't see how this has
-> > > anything to do with PCI.
-> > >     
-> > > > Unfortunately, since Hyper-V does not support virtual IOMMU yet,
-> > > > the only usage modle is with no-iommu taint.      
-> > > 
-> > > Which is what makes it unsupportable and prompts the question why it
-> > > should be included in the mainline kernel as it introduces a
-> > > maintenance burden and normalizes a usage model that's unsafe.  Thanks,    
-> > 
-> > Many existing userspace drivers are unsafe:
-> >   - out of tree DPDK igb_uio is unsafe.
+Sorry for being sloppy on this patch's changelog! Can you please use the
+below? I can also post v3 with the new changelog if that's better.
 
-> Why is it out of tree?
+PCI: hv: Add the support of hibernation
 
-Agree, it really shouldn't be. The original developers hoped that
-VFIO and VFIO-noiommu would replace it. But since DPDK has to run
-on ancient distro's and other non VFIO hardware it still lives.
+hv_pci_suspend() runs in a process context as a callback in dpm_suspend().
+When it starts to run, the channel callback hv_pci_onchannelcallback(),
+which runs in a tasklet context, can be still running concurrently and
+scheduling new work items onto hbus->wq in hv_pci_devices_present() and
+hv_pci_eject_device(), and the work item handlers can access the vmbus
+channel, which can be being closed by hv_pci_suspend(), e.g. the work item
+handler pci_devices_present_work() -> new_pcichild_device() writes to
+the vmbus channel.
 
-Because it is not suitable for merging for many reasons.
-Mostly because it allows MSI and other don't want that.
- 
-> 
-> 
-> >   - VFIO with noiommu is unsafe.  
-> 
-> Which taints the kernel and requires raw I/O user privs.
-> 
-> >   - hv_uio_generic is unsafe.  
-> 
-> Gosh, it's pretty coy about this, no kernel tainting, no user
-> capability tests, no scary dmesg or Kconfig warnings.  Do users know
-> it's unsafe?
+To eliminate the race, hv_pci_suspend() disables the channel callback
+tasklet, sets hbus->state to hv_pcibus_removing, and re-enables the tasklet=
+.
 
-It should taint in same way as VFIO with noiommu.
-Yes it is documented as unsafe (but not in kernel source).
-It really has same unsafeness as uio_pci_generic, and there is not warnings
-around that.
+This way, when hv_pci_suspend() proceeds, it knows that no new work item
+can be scheduled, and then it flushes hbus->wq and safely closes the vmbus
+channel.
 
-> 
-> > This new driver is not any better or worse. This sounds like a complete
-> > repeat of the discussion that occurred before introducing VFIO noiommu mode.
-> > 
-> > Shouldn't vmbus vfio taint the kernel in the same way as vfio noiommu does?  
-> 
-> Yes, the no-iommu interaction happens at the vfio-core level.  I can't
-> speak for any of the uio interfaces you mention, but I know that
-> uio_pci_generic is explicitly intended for non-DMA use cases and in
-> fact the efforts to enable MSI/X support in that driver and the
-> objections raised for breaking that usage model by the maintainer, is
-> what triggered no-iommu support for vfio.  IIRC, the rationale was
-> largely for code reuse both at the kernel and userspace driver level,
-> while imposing a minimal burden in vfio-core for this dummy iommu
-> driver.  vfio explicitly does not provide a DMA mapping solution for
-> no-iommu use cases because I'm not willing to maintain any more lines
-> of code to support this usage model.  The tainting imposed by this model
-> and incomplete API was intended to be a big warning to discourage its
-> use and as features like vIOMMU become more prevalent and bare metal
-> platforms without physical IOMMUs hopefully become less prevalent,
-> maybe no-iommu could be phased out or removed.
-
-Doing vIOMMU at scale with a non-Linux host, take a a long time.
-Tainting doesn't make it happen any sooner. It just makes users
-live harder. Sorry blaming the user and giving a bad experience doesn't help anyone.
-
-> You might consider this a re-hashing of those previous discussions, but
-> to me it seems like taking advantage of and promoting an interface that
-> should have plenty of warning signs that this is not a safe way to use
-> the device from userspace.  Without some way to take advantage of the
-> code in a safe way, this just seems to be normalizing an unsupportable
-> usage model.  Thanks,
-
-
-The use case for all this stuff has been dedicated infrastructure.
-It would be good if security was more baked in but it isn't.
-Most users cover it over by either being dedicated applicances
-or use LSM to protect UIO.
+Thanks,
+-- Dexuan
