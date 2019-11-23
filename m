@@ -2,26 +2,26 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFD30107C5A
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Nov 2019 02:57:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E77F4107C5E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Nov 2019 02:57:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKWB5X (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 22 Nov 2019 20:57:23 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:49204 "EHLO
+        id S1726825AbfKWB50 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 22 Nov 2019 20:57:26 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:49234 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfKWB5X (ORCPT
+        with ESMTP id S1725962AbfKWB5Z (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 22 Nov 2019 20:57:23 -0500
+        Fri, 22 Nov 2019 20:57:25 -0500
 Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 066ED20B7185; Fri, 22 Nov 2019 17:57:21 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 066ED20B7185
+        id 0A16C20B7185; Fri, 22 Nov 2019 17:57:25 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A16C20B7185
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1574474241;
-        bh=gIJrJeTFvzjeq3cv8GeCLZf+wvNgSkRxnNYZKGHyJpU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XMVUICtieloUm4YeD6VnMvEzTnz+KDVpcinp5XeXxLvL39SPDpwly3xWXqjQyU3IF
-         84ry6fAzR5L+xE/xfX15F+nWBvBfCUXfC/W4F8C9B1hxMgNXw/4UieBrahipb3awei
-         OcW6+nOFhZRNwacOzrYrogPAx9WU+rRG9P+dNCUc=
+        s=default; t=1574474245;
+        bh=k5DecXeY7B/HloVG4kw+Eo7utly4mbWEKzaJFXDhGqs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pfr9OsyS6yEjMPsOK4fGA8HT4iOoPE+PwMyc3IyXG/FD6zS1twkPvXKY6gi1aUVce
+         RAB+cZJevtiIT7FYBqhNQUCg3MqOI39dBJKiYwdLupC8R2ojdtk+7beV+JbUsZlDM3
+         5gUhBgW6dV0IrYvoexl50GKP4yQVFqwfnW3X5wvc=
 From:   longli@linuxonhyperv.com
 To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -33,10 +33,12 @@ To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH 1/2] PCI: hv: decouple the func definition in hv_dr_state from VSP message
-Date:   Fri, 22 Nov 2019 17:57:08 -0800
-Message-Id: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+Subject: [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2
+Date:   Fri, 22 Nov 2019 17:57:09 -0800
+Message-Id: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
@@ -44,28 +46,56 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Long Li <longli@microsoft.com>
 
-hv_dr_state is used to find present PCI devices on the bus. The structure
-reuses struct pci_function_description from VSP message to describe a device.
+Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
+PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the bus.
+The vNUMA node tells which guest NUMA node this device is on based on guest
+VM configuration topology and physical device inforamtion.
 
-To prepare support for pci_function_description v2, we need to decouple this
-dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
-
-There is no functionality change.
+The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
 
 Signed-off-by: Long Li <longli@microsoft.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++---------
- 1 file changed, 69 insertions(+), 31 deletions(-)
+ drivers/pci/controller/pci-hyperv.c | 107 ++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index f1f300218fab..f2e028cfa7cd 100644
+index f2e028cfa7cd..488235563c7d 100644
 --- a/drivers/pci/controller/pci-hyperv.c
 +++ b/drivers/pci/controller/pci-hyperv.c
-@@ -507,10 +507,24 @@ struct hv_dr_work {
- 	struct hv_pcibus_device *bus;
+@@ -63,6 +63,7 @@
+ enum pci_protocol_version_t {
+ 	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
+ 	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
++	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* VB */
  };
  
-+struct hv_pcidev_description {
+ #define CPU_AFFINITY_ALL	-1ULL
+@@ -72,6 +73,7 @@ enum pci_protocol_version_t {
+  * first.
+  */
+ static enum pci_protocol_version_t pci_protocol_versions[] = {
++	PCI_PROTOCOL_VERSION_1_3,
+ 	PCI_PROTOCOL_VERSION_1_2,
+ 	PCI_PROTOCOL_VERSION_1_1,
+ };
+@@ -124,6 +126,7 @@ enum pci_message_type {
+ 	PCI_RESOURCES_ASSIGNED2		= PCI_MESSAGE_BASE + 0x16,
+ 	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
+ 	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
++	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
+ 	PCI_MESSAGE_MAXIMUM
+ };
+ 
+@@ -169,6 +172,26 @@ struct pci_function_description {
+ 	u32	ser;	/* serial number */
+ } __packed;
+ 
++enum pci_device_description_flags {
++	HV_PCI_DEVICE_FLAG_NONE			= 0x0,
++	HV_PCI_DEVICE_FLAG_NUMA_AFFINITY	= 0x1,
++};
++
++struct pci_function_description2 {
 +	u16	v_id;	/* vendor ID */
 +	u16	d_id;	/* device ID */
 +	u8	rev;
@@ -77,112 +107,88 @@ index f1f300218fab..f2e028cfa7cd 100644
 +	u32	ser;	/* serial number */
 +	u32	flags;
 +	u16	virtual_numa_node;
-+};
++	u16	reserved;
++} __packed;
 +
- struct hv_dr_state {
- 	struct list_head list_entry;
- 	u32 device_count;
--	struct pci_function_description func[0];
-+	struct hv_pcidev_description func[0];
- };
- 
- enum hv_pcichild_state {
-@@ -527,7 +541,7 @@ struct hv_pci_dev {
- 	refcount_t refs;
- 	enum hv_pcichild_state state;
- 	struct pci_slot *pci_slot;
--	struct pci_function_description desc;
-+	struct hv_pcidev_description desc;
- 	bool reported_missing;
- 	struct hv_pcibus_device *hbus;
- 	struct work_struct wrk;
-@@ -1862,7 +1876,7 @@ static void q_resource_requirements(void *context, struct pci_response *resp,
-  * Return: Pointer to the new tracking struct
-  */
- static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
--		struct pci_function_description *desc)
-+		struct hv_pcidev_description *desc)
- {
- 	struct hv_pci_dev *hpdev;
- 	struct pci_child_message *res_req;
-@@ -1973,7 +1987,7 @@ static void pci_devices_present_work(struct work_struct *work)
- {
- 	u32 child_no;
- 	bool found;
--	struct pci_function_description *new_desc;
-+	struct hv_pcidev_description *new_desc;
- 	struct hv_pci_dev *hpdev;
- 	struct hv_pcibus_device *hbus;
- 	struct list_head removed;
-@@ -2090,43 +2104,26 @@ static void pci_devices_present_work(struct work_struct *work)
- 	put_hvpcibus(hbus);
- 	kfree(dr);
- }
--
  /**
-- * hv_pci_devices_present() - Handles list of new children
-+ * hv_pci_start_relations_work() - Queue work to start device discovery
-  * @hbus:	Root PCI bus, as understood by this driver
-- * @relations:	Packet from host listing children
-+ * @dr:		The list of children returned from host
-  *
-- * This function is invoked whenever a new list of devices for
-- * this bus appears.
-+ * Return:  0 on success, 1 on failure
-  */
--static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
--				   struct pci_bus_relations *relations)
-+static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
-+				       struct hv_dr_state *dr)
- {
--	struct hv_dr_state *dr;
- 	struct hv_dr_work *dr_wrk;
--	unsigned long flags;
- 	bool pending_dr;
-+	unsigned long flags;
+  * struct hv_msi_desc
+  * @vector:		IDT entry
+@@ -304,6 +327,12 @@ struct pci_bus_relations {
+ 	struct pci_function_description func[0];
+ } __packed;
  
- 	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
- 	if (!dr_wrk)
--		return;
--
--	dr = kzalloc(offsetof(struct hv_dr_state, func) +
--		     (sizeof(struct pci_function_description) *
--		      (relations->device_count)), GFP_NOWAIT);
--	if (!dr)  {
--		kfree(dr_wrk);
--		return;
--	}
-+		return 1;
- 
- 	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
- 	dr_wrk->bus = hbus;
--	dr->device_count = relations->device_count;
--	if (dr->device_count != 0) {
--		memcpy(dr->func, relations->func,
--		       sizeof(struct pci_function_description) *
--		       dr->device_count);
--	}
- 
- 	spin_lock_irqsave(&hbus->device_list_lock, flags);
- 	/*
-@@ -2144,6 +2141,46 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
- 		get_hvpcibus(hbus);
- 		queue_work(hbus->wq, &dr_wrk->wrk);
- 	}
++struct pci_bus_relations2 {
++	struct pci_incoming_message incoming;
++	u32 device_count;
++	struct pci_function_description2 func[0];
++} __packed;
 +
-+	return 0;
+ struct pci_q_res_req_response {
+ 	struct vmpacket_descriptor hdr;
+ 	s32 status;			/* negative values are failures */
+@@ -1417,6 +1446,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		break;
+ 
+ 	case PCI_PROTOCOL_VERSION_1_2:
++	case PCI_PROTOCOL_VERSION_1_3:
+ 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
+ 					dest,
+ 					hpdev->desc.win_slot.slot,
+@@ -1798,6 +1828,25 @@ static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
+ 	}
+ }
+ 
++/*
++ * Set NUMA node for the devices on the bus
++ */
++static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
++{
++	struct pci_dev *dev;
++	struct pci_bus *bus = hbus->pci_bus;
++	struct hv_pci_dev *hv_dev;
++
++	list_for_each_entry(dev, &bus->devices, bus_list) {
++		hv_dev = get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
++		if (!hv_dev)
++			continue;
++
++		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
++			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
++	}
 +}
 +
+ /**
+  * create_root_hv_pci_bus() - Expose a new root PCI bus
+  * @hbus:	Root PCI bus, as understood by this driver
+@@ -1820,6 +1869,7 @@ static int create_root_hv_pci_bus(struct hv_pcibus_device *hbus)
+ 
+ 	pci_lock_rescan_remove();
+ 	pci_scan_child_bus(hbus->pci_bus);
++	pci_assign_numa_node(hbus);
+ 	pci_bus_assign_resources(hbus->pci_bus);
+ 	hv_pci_assign_slots(hbus);
+ 	pci_bus_add_devices(hbus->pci_bus);
+@@ -2088,6 +2138,7 @@ static void pci_devices_present_work(struct work_struct *work)
+ 		 */
+ 		pci_lock_rescan_remove();
+ 		pci_scan_child_bus(hbus->pci_bus);
++		pci_assign_numa_node(hbus);
+ 		hv_pci_assign_slots(hbus);
+ 		pci_unlock_rescan_remove();
+ 		break;
+@@ -2183,6 +2234,46 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+ 		kfree(dr);
+ }
+ 
 +/**
-+ * hv_pci_devices_present() - Handles list of new children
++ * hv_pci_devices_present2() - Handles list of new children
 + * @hbus:	Root PCI bus, as understood by this driver
-+ * @relations:	Packet from host listing children
++ * @relations2:	Packet from host listing children
 + *
-+ * This function is invoked whenever a new list of devices for
-+ * this bus appears.
++ * This function is the v2 version of hv_pci_devices_present()
 + */
-+static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
-+				   struct pci_bus_relations *relations)
++static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
++				    struct pci_bus_relations2 *relations)
 +{
 +	struct hv_dr_state *dr;
 +	int i;
@@ -205,34 +211,48 @@ index f1f300218fab..f2e028cfa7cd 100644
 +		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
 +		dr->func[i].win_slot = relations->func[i].win_slot;
 +		dr->func[i].ser = relations->func[i].ser;
++		dr->func[i].flags = relations->func[i].flags;
++		dr->func[i].virtual_numa_node =
++			relations->func[i].virtual_numa_node;
 +	}
 +
 +	if (hv_pci_start_relations_work(hbus, dr))
 +		kfree(dr);
- }
- 
++}
++
  /**
-@@ -3018,7 +3055,7 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
- 		struct pci_packet teardown_packet;
- 		u8 buffer[sizeof(struct pci_message)];
- 	} pkt;
--	struct pci_bus_relations relations;
-+	struct hv_dr_state *dr;
- 	struct hv_pci_compl comp_pkt;
- 	int ret;
+  * hv_eject_device_work() - Asynchronously handles ejection
+  * @work:	Work struct embedded in internal device struct
+@@ -2288,6 +2379,7 @@ static void hv_pci_onchannelcallback(void *context)
+ 	struct pci_response *response;
+ 	struct pci_incoming_message *new_message;
+ 	struct pci_bus_relations *bus_rel;
++	struct pci_bus_relations2 *bus_rel2;
+ 	struct pci_dev_inval_block *inval;
+ 	struct pci_dev_incoming *dev_message;
+ 	struct hv_pci_dev *hpdev;
+@@ -2355,6 +2447,21 @@ static void hv_pci_onchannelcallback(void *context)
+ 				hv_pci_devices_present(hbus, bus_rel);
+ 				break;
  
-@@ -3030,8 +3067,9 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
- 		return;
++			case PCI_BUS_RELATIONS2:
++
++				bus_rel2 = (struct pci_bus_relations2 *)buffer;
++				if (bytes_recvd <
++				    offsetof(struct pci_bus_relations2, func) +
++				    (sizeof(struct pci_function_description2) *
++				     (bus_rel2->device_count))) {
++					dev_err(&hbus->hdev->device,
++						"bus relations v2 too small\n");
++					break;
++				}
++
++				hv_pci_devices_present2(hbus, bus_rel2);
++				break;
++
+ 			case PCI_EJECT:
  
- 	/* Delete any children which might still exist. */
--	memset(&relations, 0, sizeof(relations));
--	hv_pci_devices_present(hbus, &relations);
-+	dr = kzalloc(sizeof(*dr), GFP_ATOMIC);
-+	if (dr && hv_pci_start_relations_work(hbus, dr))
-+		kfree(dr);
- 
- 	ret = hv_send_resources_released(hdev);
- 	if (ret)
+ 				dev_message = (struct pci_dev_incoming *)buffer;
 -- 
 2.17.1
 
