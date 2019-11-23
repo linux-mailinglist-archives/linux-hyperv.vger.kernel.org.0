@@ -2,257 +2,141 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E77F4107C5E
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Nov 2019 02:57:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F96E108122
+	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Nov 2019 00:51:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfKWB50 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 22 Nov 2019 20:57:26 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:49234 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfKWB5Z (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 22 Nov 2019 20:57:25 -0500
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 0A16C20B7185; Fri, 22 Nov 2019 17:57:25 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A16C20B7185
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1574474245;
-        bh=k5DecXeY7B/HloVG4kw+Eo7utly4mbWEKzaJFXDhGqs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfr9OsyS6yEjMPsOK4fGA8HT4iOoPE+PwMyc3IyXG/FD6zS1twkPvXKY6gi1aUVce
-         RAB+cZJevtiIT7FYBqhNQUCg3MqOI39dBJKiYwdLupC8R2ojdtk+7beV+JbUsZlDM3
-         5gUhBgW6dV0IrYvoexl50GKP4yQVFqwfnW3X5wvc=
-From:   longli@linuxonhyperv.com
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        id S1726910AbfKWXvW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 23 Nov 2019 18:51:22 -0500
+Received: from mail-eopbgr800135.outbound.protection.outlook.com ([40.107.80.135]:29472
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726759AbfKWXvW (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 23 Nov 2019 18:51:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cESjzx+jltVYNz8+f5CDfp5ysh6yQT2s1XEymXhrXLpLXw2Cn21JyDgYmBh4bHUGyFk8xvC55HugKpmrOcVIBnwsGR9NUQ/HSsYn/exZSTBTXtVsS4uFKqmI+jKKDOwm6KUHMUEMCgoPDPi2mvxNLnkq1N3py0iNfunjCEQ5sEU95E6ggtnNKTaJI+TmQ6Waw2eKNE0DawVhF6c85kaWR7J0lwAKs+UmAWKcFtQr8+L9qe77PceMlbwsth3eC9Jx89Ou+1cSrK4oKdTB4KfpSKlm1Mq/Hk50NBtPUtoEJz2Sp58m5QdhCP33F1KAKP7npnaM3EiTsVlCM/1swxMwJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wPoyttWIAfCmtSiJzboeCBHnD1CjPwsA9DGskvn+/O0=;
+ b=OxznLbviZyMzBS9YF4zQLhy+q1K1vgrKIGWyTX5Bn8huzAhi4FdK6ds0f6ZAx3xPuwIjbuf/fay1ysA9KuPHigO9TqU73ex18Dm13hyrVpws+Aqizkb3y6tFhjQ6byhleQRquE+1LwzmgF57RS13EeEfpTCPN7cDUegEV/C+3aeNC1D/HLcOyi03A8cxC6pv14W2i7gRUcXmTqTF6147r8Wb5OfCaqOhaDNSfOkm1XzfCNdKdzTkd7bqHmCDN90IhsoNZY4iaO2YLGipgeQ+iLzhWBDFsN9w24+jCG2ge7fP0DrjfOOhN0Mhy75I2rKdvsmi1QG+Oh+P4LdwEtMBjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wPoyttWIAfCmtSiJzboeCBHnD1CjPwsA9DGskvn+/O0=;
+ b=ZNI2h/psy4puvKiMYW+jfOOeA4QB+WCND/PzWvMMvuNGkU7e3zbgnwm29AaCeKrvR1OH+mJGVuTXZSuxyK88IgPZtzbqRgnL4EVa2M55ogPV51BMDR3uYkVTUsh8/7UnO75fRxDSZspQJbMpk0Flc8qv8NuDQngsGkzkhejDkGE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
+ DM6PR21MB1180.namprd21.prod.outlook.com (20.179.48.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.3; Sat, 23 Nov 2019 23:51:18 +0000
+Received: from DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::a8b2:cdb:8839:3031]) by DM6PR21MB1242.namprd21.prod.outlook.com
+ ([fe80::a8b2:cdb:8839:3031%4]) with mapi id 15.20.2495.010; Sat, 23 Nov 2019
+ 23:51:18 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
         linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2
-Date:   Fri, 22 Nov 2019 17:57:09 -0800
-Message-Id: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
+Subject: [PATCH net-next] hv_netvsc: make recording RSS hash depend on feature flag
+Date:   Sat, 23 Nov 2019 15:50:17 -0800
+Message-Id: <1574553017-87877-1-git-send-email-haiyangz@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
-References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR19CA0024.namprd19.prod.outlook.com
+ (2603:10b6:300:d4::34) To DM6PR21MB1242.namprd21.prod.outlook.com
+ (2603:10b6:5:169::22)
+MIME-Version: 1.0
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR19CA0024.namprd19.prod.outlook.com (2603:10b6:300:d4::34) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Sat, 23 Nov 2019 23:51:17 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 48485434-9539-4f9a-3ac0-08d7707008cf
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1180:|DM6PR21MB1180:|DM6PR21MB1180:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM6PR21MB1180D4AEB0B6051F2856D37EAC480@DM6PR21MB1180.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
+X-Forefront-PRVS: 0230B09AC4
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(39860400002)(136003)(199004)(189003)(8676002)(305945005)(50226002)(16526019)(186003)(6436002)(6506007)(4326008)(36756003)(22452003)(52116002)(51416003)(6486002)(26005)(48376002)(956004)(386003)(66476007)(2616005)(50466002)(16586007)(66946007)(316002)(10090500001)(47776003)(2906002)(66066001)(4720700003)(8936002)(6116002)(10290500003)(478600001)(3846002)(81166006)(66556008)(7736002)(25786009)(6512007)(81156014)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1180;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 521CIfvlXbHlFwWdZkDLqx9OxEStgB3PkJJBmTwsztAPvK/mELqDmSmcWGew0QKRAO6kyZMZP0aNcPZkXGKSU4ZRONx8RZgcE0BEAxL7GlnLaDiruNDP2ZKzFTJQTzgBzdKwGZzMfM1592qYzgp5HpRt8dMAZNstT6wrchHNuNc0gKUnXSlLF5ewoRVJ/6rg+3bnphj4nRdA/orZpFCM/PQlTCJ/o3t3uEhSrt3BP8zE3t9OLYYqksq7niJWBeIlUIKZxWATe/WXxw0dXK5ldLClRZ1OyT1sbNIUCPeohiDaw9cBX4AyoPAba4W+Ca79lXBM+Rk6mJm3KiOrKDT1XpYnKIh6dxvNNKWQtjGIFHE1RUEYOtJzuJCENXReX2Y5AilW0Cowhnh7MklSnV7uuGOzpXGXBtbdclDA44ChOHmyo9+0tiAG0TIfcUrFZr7n
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48485434-9539-4f9a-3ac0-08d7707008cf
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2019 23:51:18.6169
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 51zfMmdZ8SX9w5M/4+VmVUhENCBO0eMABkNk+vgTusLbrBCVp/7VGngYipHpRh/YduRGSjqiabvrxnolp8iY+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1180
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+From: Stephen Hemminger <sthemmin@microsoft.com>
 
-Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
-PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the bus.
-The vNUMA node tells which guest NUMA node this device is on based on guest
-VM configuration topology and physical device inforamtion.
+The recording of RSS hash should be controlled by NETIF_F_RXHASH.
 
-The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
-
-Signed-off-by: Long Li <longli@microsoft.com>
+Fixes: 1fac7ca4e63b ("hv_netvsc: record hardware hash in skb")
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 107 ++++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
+ drivers/net/hyperv/hyperv_net.h   | 3 ++-
+ drivers/net/hyperv/netvsc_drv.c   | 2 +-
+ drivers/net/hyperv/rndis_filter.c | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index f2e028cfa7cd..488235563c7d 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -63,6 +63,7 @@
- enum pci_protocol_version_t {
- 	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
- 	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
-+	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* VB */
- };
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index 4209d1cf57f6..0be5ce90dc7c 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -822,7 +822,8 @@ struct nvsp_message {
  
- #define CPU_AFFINITY_ALL	-1ULL
-@@ -72,6 +73,7 @@ enum pci_protocol_version_t {
-  * first.
-  */
- static enum pci_protocol_version_t pci_protocol_versions[] = {
-+	PCI_PROTOCOL_VERSION_1_3,
- 	PCI_PROTOCOL_VERSION_1_2,
- 	PCI_PROTOCOL_VERSION_1_1,
- };
-@@ -124,6 +126,7 @@ enum pci_message_type {
- 	PCI_RESOURCES_ASSIGNED2		= PCI_MESSAGE_BASE + 0x16,
- 	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
- 	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
-+	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
- 	PCI_MESSAGE_MAXIMUM
- };
+ #define NETVSC_SUPPORTED_HW_FEATURES (NETIF_F_RXCSUM | NETIF_F_IP_CSUM | \
+ 				      NETIF_F_TSO | NETIF_F_IPV6_CSUM | \
+-				      NETIF_F_TSO6 | NETIF_F_LRO | NETIF_F_SG)
++				      NETIF_F_TSO6 | NETIF_F_LRO | \
++				      NETIF_F_SG | NETIF_F_RXHASH)
  
-@@ -169,6 +172,26 @@ struct pci_function_description {
- 	u32	ser;	/* serial number */
- } __packed;
- 
-+enum pci_device_description_flags {
-+	HV_PCI_DEVICE_FLAG_NONE			= 0x0,
-+	HV_PCI_DEVICE_FLAG_NUMA_AFFINITY	= 0x1,
-+};
-+
-+struct pci_function_description2 {
-+	u16	v_id;	/* vendor ID */
-+	u16	d_id;	/* device ID */
-+	u8	rev;
-+	u8	prog_intf;
-+	u8	subclass;
-+	u8	base_class;
-+	u32	subsystem_id;
-+	union win_slot_encoding win_slot;
-+	u32	ser;	/* serial number */
-+	u32	flags;
-+	u16	virtual_numa_node;
-+	u16	reserved;
-+} __packed;
-+
- /**
-  * struct hv_msi_desc
-  * @vector:		IDT entry
-@@ -304,6 +327,12 @@ struct pci_bus_relations {
- 	struct pci_function_description func[0];
- } __packed;
- 
-+struct pci_bus_relations2 {
-+	struct pci_incoming_message incoming;
-+	u32 device_count;
-+	struct pci_function_description2 func[0];
-+} __packed;
-+
- struct pci_q_res_req_response {
- 	struct vmpacket_descriptor hdr;
- 	s32 status;			/* negative values are failures */
-@@ -1417,6 +1446,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		break;
- 
- 	case PCI_PROTOCOL_VERSION_1_2:
-+	case PCI_PROTOCOL_VERSION_1_3:
- 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
- 					dest,
- 					hpdev->desc.win_slot.slot,
-@@ -1798,6 +1828,25 @@ static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
+ #define VRSS_SEND_TAB_SIZE 16  /* must be power of 2 */
+ #define VRSS_CHANNEL_MAX 64
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 5fa5c49e481b..868e22e286ca 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -803,7 +803,7 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
+ 			skb->ip_summed = CHECKSUM_UNNECESSARY;
  	}
- }
  
-+/*
-+ * Set NUMA node for the devices on the bus
-+ */
-+static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
-+{
-+	struct pci_dev *dev;
-+	struct pci_bus *bus = hbus->pci_bus;
-+	struct hv_pci_dev *hv_dev;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		hv_dev = get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
-+		if (!hv_dev)
-+			continue;
-+
-+		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
-+			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
-+	}
-+}
-+
- /**
-  * create_root_hv_pci_bus() - Expose a new root PCI bus
-  * @hbus:	Root PCI bus, as understood by this driver
-@@ -1820,6 +1869,7 @@ static int create_root_hv_pci_bus(struct hv_pcibus_device *hbus)
+-	if (hash_info)
++	if (hash_info && (net->features & NETIF_F_RXHASH))
+ 		skb_set_hash(skb, *hash_info, PKT_HASH_TYPE_L4);
  
- 	pci_lock_rescan_remove();
- 	pci_scan_child_bus(hbus->pci_bus);
-+	pci_assign_numa_node(hbus);
- 	pci_bus_assign_resources(hbus->pci_bus);
- 	hv_pci_assign_slots(hbus);
- 	pci_bus_add_devices(hbus->pci_bus);
-@@ -2088,6 +2138,7 @@ static void pci_devices_present_work(struct work_struct *work)
- 		 */
- 		pci_lock_rescan_remove();
- 		pci_scan_child_bus(hbus->pci_bus);
-+		pci_assign_numa_node(hbus);
- 		hv_pci_assign_slots(hbus);
- 		pci_unlock_rescan_remove();
- 		break;
-@@ -2183,6 +2234,46 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
- 		kfree(dr);
- }
+ 	if (vlan) {
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index c06178380ac8..206b4e77eaf0 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1214,6 +1214,7 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
+ 	/* Compute tx offload settings based on hw capabilities */
+ 	net->hw_features |= NETIF_F_RXCSUM;
+ 	net->hw_features |= NETIF_F_SG;
++	net->hw_features |= NETIF_F_RXHASH;
  
-+/**
-+ * hv_pci_devices_present2() - Handles list of new children
-+ * @hbus:	Root PCI bus, as understood by this driver
-+ * @relations2:	Packet from host listing children
-+ *
-+ * This function is the v2 version of hv_pci_devices_present()
-+ */
-+static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
-+				    struct pci_bus_relations2 *relations)
-+{
-+	struct hv_dr_state *dr;
-+	int i;
-+
-+	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-+		     (sizeof(struct hv_pcidev_description) *
-+		      (relations->device_count)), GFP_NOWAIT);
-+
-+	if (!dr)
-+		return;
-+
-+	dr->device_count = relations->device_count;
-+	for (i = 0; i < dr->device_count; i++) {
-+		dr->func[i].v_id = relations->func[i].v_id;
-+		dr->func[i].d_id = relations->func[i].d_id;
-+		dr->func[i].rev = relations->func[i].rev;
-+		dr->func[i].prog_intf = relations->func[i].prog_intf;
-+		dr->func[i].subclass = relations->func[i].subclass;
-+		dr->func[i].base_class = relations->func[i].base_class;
-+		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
-+		dr->func[i].win_slot = relations->func[i].win_slot;
-+		dr->func[i].ser = relations->func[i].ser;
-+		dr->func[i].flags = relations->func[i].flags;
-+		dr->func[i].virtual_numa_node =
-+			relations->func[i].virtual_numa_node;
-+	}
-+
-+	if (hv_pci_start_relations_work(hbus, dr))
-+		kfree(dr);
-+}
-+
- /**
-  * hv_eject_device_work() - Asynchronously handles ejection
-  * @work:	Work struct embedded in internal device struct
-@@ -2288,6 +2379,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	struct pci_response *response;
- 	struct pci_incoming_message *new_message;
- 	struct pci_bus_relations *bus_rel;
-+	struct pci_bus_relations2 *bus_rel2;
- 	struct pci_dev_inval_block *inval;
- 	struct pci_dev_incoming *dev_message;
- 	struct hv_pci_dev *hpdev;
-@@ -2355,6 +2447,21 @@ static void hv_pci_onchannelcallback(void *context)
- 				hv_pci_devices_present(hbus, bus_rel);
- 				break;
- 
-+			case PCI_BUS_RELATIONS2:
-+
-+				bus_rel2 = (struct pci_bus_relations2 *)buffer;
-+				if (bytes_recvd <
-+				    offsetof(struct pci_bus_relations2, func) +
-+				    (sizeof(struct pci_function_description2) *
-+				     (bus_rel2->device_count))) {
-+					dev_err(&hbus->hdev->device,
-+						"bus relations v2 too small\n");
-+					break;
-+				}
-+
-+				hv_pci_devices_present2(hbus, bus_rel2);
-+				break;
-+
- 			case PCI_EJECT:
- 
- 				dev_message = (struct pci_dev_incoming *)buffer;
+ 	if ((hwcaps.csum.ip4_txcsum & NDIS_TXCSUM_ALL_TCP4) == NDIS_TXCSUM_ALL_TCP4) {
+ 		/* Can checksum TCP */
 -- 
-2.17.1
+2.20.1
 
