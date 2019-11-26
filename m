@@ -2,69 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D546B109C7D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2019 11:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B6A10A65D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Nov 2019 23:08:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfKZKqx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 26 Nov 2019 05:46:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:60996 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbfKZKqx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 26 Nov 2019 05:46:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8997A30E;
-        Tue, 26 Nov 2019 02:46:52 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2003F3F52E;
-        Tue, 26 Nov 2019 02:46:50 -0800 (PST)
-Date:   Tue, 26 Nov 2019 10:46:45 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Subject: Re: [PATCH v3 0/4] Enhance pci-hyperv to support hibernation, and 2
- misc fixes
-Message-ID: <20191126104645.GA26274@e121166-lin.cambridge.arm.com>
-References: <1574660034-98780-1-git-send-email-decui@microsoft.com>
+        id S1726103AbfKZWIj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 26 Nov 2019 17:08:39 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41653 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfKZWIj (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 26 Nov 2019 17:08:39 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m4so22028894ljj.8
+        for <linux-hyperv@vger.kernel.org>; Tue, 26 Nov 2019 14:08:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=HKfgpS+2A63pY1/tbn81dW2kf6Vv+DZXGigDxV8sq6U=;
+        b=ic/xycZc1O4lHfmOMxj9joKd/YqU/2MV6+VEQChkB33/Tw5sw/cpWJLiJ5kTH+qzsd
+         oVebLZ6AQRERwqXWyT8yLrNdNPqDaof1sgn42K5YA2gUga51GV0r67/a65Ai6m5tRrlq
+         +E1+4G+jRV1H0O4IuUwB9e5cohfeiUZn+6/SR8OKRat+SYSbBQx23E+rVJy2ywSyyEx4
+         Ok7zLnHU2BqAERqi5UlQnAVqUldqYAV9eEOttucl2hekvvlek8xcecMg1HyLU5VklqOa
+         OCiZqcj+hg0z8bzlavbo5AWlCyIorqW9ho+4l3Hi/Cxd4HIyUxN6kneW8llUQ6SCYGgN
+         mdRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=HKfgpS+2A63pY1/tbn81dW2kf6Vv+DZXGigDxV8sq6U=;
+        b=jRmoExQMjF358j6R0PS3npMDYkO6w32ugEdAI1ilfytsnZ+oepJ6yZ1UHXa1XWdDmm
+         ifp/BCuGfR6DG62uevUy+JjECNKORlnb8r9rGz22dG/kaXoTep0BhSlxzQZWh9/nfFHD
+         MrkNN5TvkFVJlDd7yxIiFhDWxl6AbkseW1DgcnFy8zdYtdyCcMxSJu5D7ZwniLC3QOTQ
+         e1wLPKxdejnvfefD03Iomg7Y9ySGdyfvlowQjw83DoeVVMbEoSQT8uFc72FFVYNXq57+
+         NrmngYCEEPLhcq1yqnz5gq1FLkirW6VuNXLl5vDTy2MH0x1oaEe6808R/tmzZabk1+cv
+         Puuw==
+X-Gm-Message-State: APjAAAUers+nbIC3zJjhKCe44fPL25cZF6XJ7OXRewgUks0vbbQxaQrB
+        YNlCxSSVtsxznIFf3htsc83cClZLtOZdHW6k0gQ=
+X-Google-Smtp-Source: APXvYqz5z2zqQT1R0rvGmmHJmWwE8ukMxuXSqeNcUjawniPvx7hCgV959X7mAlo0/+AQ2SabTFw6A2VV25QoXYjipdE=
+X-Received: by 2002:a05:651c:1066:: with SMTP id y6mr28974583ljm.96.1574806117247;
+ Tue, 26 Nov 2019 14:08:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574660034-98780-1-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: by 2002:ab3:7d8f:0:0:0:0:0 with HTTP; Tue, 26 Nov 2019 14:08:36
+ -0800 (PST)
+Reply-To: adamseden19@hotmail.com
+From:   CAPTAIN ADAMS EDEN <amifavour112@gmail.com>
+Date:   Tue, 26 Nov 2019 22:08:36 +0000
+Message-ID: <CAFeKKL=rEJ2Mnt4taCB-rmwvJXydLCiALvvZax9cAUiD-MKYSQ@mail.gmail.com>
+Subject: How are you?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Nov 24, 2019 at 09:33:50PM -0800, Dexuan Cui wrote:
-> I suggest the patchset goes through the pci.git tree.
-> 
-> Patch #1: no functional change.
-> Patch #2 enhances the pci-hyperv driver to support hibernation.
-> Patch #3 is unrelated to hibernation.
-> Patch #4 is unrelated to hibernation.
-> 
-> Changes in v3:
-> Patch #1: Added Michael Kelley's Signed-off-by.
-> Patch #2: Used a better commit log message from Michael Kelley.
-> Patch #3: Added Michael Kelley's Signed-off-by.
-> Patch #4: Used kzalloc() rather than get_zeroed_page()/kmemleak_alloc()/
->           kmemleak_free(), and added the necessary comments.
-> 
-> Michael, can you please review #2 and #4 again?
-> 
-> Dexuan Cui (4):
->   PCI: hv: Reorganize the code in preparation of hibernation
->   PCI: hv: Add the support of hibernation
->   PCI: hv: Change pci_protocol_version to per-hbus
->   PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer
-> 
->  drivers/pci/controller/pci-hyperv.c | 208 ++++++++++++++++++++++++----
->  1 file changed, 179 insertions(+), 29 deletions(-)
+-- 
+Good Morning
 
-Applied to pci/hv, should be able to hit v5.5, thanks.
-
-Lorenzo
+Please do you speak English? I sent you to message no response.
+Regards.
+Adams.
