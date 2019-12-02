@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBB9410F361
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Dec 2019 00:30:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 144EB10F3B3
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Dec 2019 00:59:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbfLBXaE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 2 Dec 2019 18:30:04 -0500
-Received: from mail-eopbgr1320112.outbound.protection.outlook.com ([40.107.132.112]:8315
+        id S1725899AbfLBX75 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 2 Dec 2019 18:59:57 -0500
+Received: from mail-eopbgr1320110.outbound.protection.outlook.com ([40.107.132.110]:30791
         "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725834AbfLBXaE (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:30:04 -0500
+        id S1725775AbfLBX75 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 2 Dec 2019 18:59:57 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HiMnzVxyvOc8y4C+PO9lRFhKbbZpJLbF+C+0my3n6yVm13Uq0O5zKJPfutZzudzzQrJcV+JXb0Pz1kG6f1RP/s1eONkri6M3m4SNsWF8YXgps8gf9gIHp69AUScmUlePwJwLEm7lNPq0UEbDPY4hMbzIIYWTqoSbnREI2Q3CGfW6phXWQyzQfpyfmls09DfmLG/wj0tBnOfMn7JusWHgH/W/gkkPrScEeV4oINdLaHRcF868nP8+gt9hUI6EED1Fpf2gsbEgDEQsUW/JghFcTP/N9d5w7z9ohjcnmuHJPgA0jK7G7wV++id46zaNcTOiQEQB7E/a9bObLURnCVMvtQ==
+ b=Al1pN+r0zLUWuutcljsXM1hTEevN/xC4d0KDN2EwWHn26/5pWmO8zDVuANIkbVm2RRYqo5zYMLqEdIm3xXhgJmnoisQFbWfKmPiuO9qio7TITboFpOG9ttD4tJV9mTnl65VW7C/RjjDSVEyZRPL35qqW8+cCsrfFBIEc8/v5gba/l7ZrEHSQ/p6jmWb32tlnGMVG9/Jplxg/msOcusd0RvY1ZYvfhWNRFRjl0Sl0sXksDpIVtTIfLMVVYF5T2nNe5A5d3bLrv0/fbqRXUExU3TF7FhFI3iBJith0+q7zEKxn6lH+VmnIBrHNRbaJFGbU4LUcnHj6LF5Owuk6zAa2Og==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1GlB/Q2Pc83KGER82Oh+239+g4OXTN/13jq6hvxh0vo=;
- b=jPGtcgXNq4jmIzE7bDuRYixhNtn8hToDFPMTIdFBJKvtlsh18GXRLNUQ1PaZcjV9qSp9jAGYtX3tOiAIibOVyoTQ4+dw8ltlNSSjk+gvbDcQbd4Lpe1I934RVlcKR8j9ITWwib/G6ot4/Ir8vZA+PJ0u1Hd3OdvqQerOflzfXljo8ZkGyFHyEbw2LOYBWj8KhQMHJULvP+UvekWvOxUb9wRNETED/1bFU4x8Tcuod3brR7rrYnAAtyFuswIxc6/2tLZR63DCnDLA+oI2e0SwZCwBTCOGsETyN30spFkTn8fk+l5RK03TZxp+l+JoBzH65Dd8M5TJO0sknyfcXg4+Tw==
+ bh=oe2L8bzEnwGmX3GLscAK1iL+8v4xS+dj4heGcxrolHU=;
+ b=C0kNYsnGkTHIZiaSjSDEHOHH+1nm2w3IlHaC3782VeVEJAYidAm95nFNu4koFp+msu/nBhpPmsHYZgabaVYUs5+VjvzA13/eMzTelf/KOzF7JCfWovCPWF+gHM1xjF7KAGa4dNBTMF+pL2GVd/POS3qdhbHpjuoTL4odrFptemfXZ/7pZ5p5X14AzxPv9dlceXR3DSD8fMeD5Y/WHFVMj1hVykWRtFvszu/JOHED7mwSe+KJ+nE1K275W2QtxGfU0P2NFkWzVXsrwxmcrDR2lxbC/VXy3dtoLr9JeDk0UJztFgn/q2ibRdJHsdPXdxbGX0uNskj5N/L0ssRE+ecuQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1GlB/Q2Pc83KGER82Oh+239+g4OXTN/13jq6hvxh0vo=;
- b=j0oTeSPIzevtEBM6wvcvfEpKaMZZTHFH4tABYq/v9r0AGl+o7pZSKDrnI6w1o67Q42/gOkJO8nMpzIKvripE8Wtd/uql4k5+J/Rw6WfC9AcoAYlzkh6OBO78T0kEwh+4kv2iktKXf7uDwcPpLrqzg0fSxBi7mzgkndFm7YSUwtk=
+ bh=oe2L8bzEnwGmX3GLscAK1iL+8v4xS+dj4heGcxrolHU=;
+ b=U9wEliuaUqPlZPue0rYinMeWfEiPE60Ql2JjYmHGnpOi2j/+ddHPA5NThpiRsT8capJRTuo7ek9lgxbUyzVjiI3jZZSmAf00cEvK79w7mBvJxkhfOm0l254Qr1/2bAdLyxtRl50tuItvm/o+GH5oM+B5bhVyv9Ni/cud3LuXVCo=
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0154.APCP153.PROD.OUTLOOK.COM (10.170.189.10) with Microsoft SMTP
+ PU1P153MB0106.APCP153.PROD.OUTLOOK.COM (10.170.188.11) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.3; Mon, 2 Dec 2019 23:29:13 +0000
+ 15.20.2516.0; Mon, 2 Dec 2019 23:59:09 +0000
 Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::704b:f2b6:33d:557a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
  ([fe80::704b:f2b6:33d:557a%9]) with mapi id 15.20.2538.000; Mon, 2 Dec 2019
- 23:29:13 +0000
+ 23:59:09 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
         KY Srinivasan <kys@microsoft.com>,
@@ -48,15 +48,16 @@ To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     Long Li <longli@microsoft.com>
-Subject: RE: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
- hv_dr_state from VSP message
-Thread-Topic: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
- hv_dr_state from VSP message
-Thread-Index: AQHVoaFgjOtcMfD6iE6p9Y6zUQz9k6enVJCA
-Date:   Mon, 2 Dec 2019 23:29:13 +0000
-Message-ID: <PU1P153MB016971582C7371E29065D83DBF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
+ support PCI_BUS_RELATIONS2
+Thread-Topic: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
+ support PCI_BUS_RELATIONS2
+Thread-Index: AQHVoaFkXIxw3tqrZk6POfn/+X8rjaenViVA
+Date:   Mon, 2 Dec 2019 23:59:09 +0000
+Message-ID: <PU1P153MB0169CFE46920BAEEE11CA9B7BF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
+ <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -64,41 +65,41 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-02T23:29:11.3940351Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-02T23:59:07.6209316Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c6971509-4c17-459c-8ca4-1b8fc6fe4e74;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f258566e-1d09-4e97-950d-9e44dee110b0;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
 x-originating-ip: [2001:4898:80e8:3:8f1:d9c8:629b:7ac]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a5282433-6b26-490c-7cab-08d7777f70e5
-x-ms-traffictypediagnostic: PU1P153MB0154:|PU1P153MB0154:
+x-ms-office365-filtering-correlation-id: d469e003-f1c3-4799-5da5-08d777839f83
+x-ms-traffictypediagnostic: PU1P153MB0106:|PU1P153MB0106:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0154069993BEF2E7B344919EBF430@PU1P153MB0154.APCP153.PROD.OUTLOOK.COM>
+x-microsoft-antispam-prvs: <PU1P153MB0106191546EC58344414616ABF430@PU1P153MB0106.APCP153.PROD.OUTLOOK.COM>
 x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0239D46DB6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(366004)(39860400002)(136003)(346002)(189003)(199004)(446003)(6116002)(305945005)(25786009)(2501003)(229853002)(76116006)(86362001)(4326008)(64756008)(52536014)(7736002)(66556008)(10290500003)(66446008)(66946007)(8936002)(2201001)(8990500004)(66476007)(478600001)(81166006)(81156014)(14454004)(10090500001)(74316002)(1511001)(33656002)(11346002)(316002)(46003)(256004)(14444005)(8676002)(5660300002)(102836004)(6506007)(110136005)(7696005)(6436002)(9686003)(2906002)(76176011)(99286004)(6246003)(186003)(71200400001)(55016002)(71190400001)(107886003)(22452003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0154;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(39860400002)(366004)(346002)(189003)(199004)(33656002)(478600001)(10290500003)(2906002)(4326008)(107886003)(66446008)(64756008)(46003)(66476007)(2201001)(9686003)(55016002)(5660300002)(1511001)(22452003)(316002)(7736002)(305945005)(74316002)(256004)(6436002)(10090500001)(110136005)(52536014)(229853002)(2501003)(99286004)(86362001)(102836004)(186003)(8990500004)(6506007)(71190400001)(71200400001)(81156014)(7696005)(25786009)(76176011)(8936002)(11346002)(446003)(81166006)(8676002)(6116002)(76116006)(66556008)(66946007)(6246003)(14454004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0106;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ycpNH3RXTKuIkyHwbxThuhnOie4MIi70GCb5+/hBUvgJ83I8mQy441dWSjTqLcJ59hSSOQ6H6kI47ibsNugtWT0Mr7vHaeMk3MLXO2U4VaW0EX/u/f/D8m71to1fbX/bTr7H2xHCmfDcAIHZLeFl3oRJd2Ej6CYTSVoeep33j4uiYPaCp7TUDqyssHDHfWjT+p5fLL1UvD7mAL5WGX0IkrhY3xQXOlWK9zqBhxpwCTrB3e8xss6PtfuMxawUKreGbo1f+xQt7IbJnBSuT6Nh2il9fQWqVn2Q0P4bH2C//FvaKOz9ZDWV2dSBbYlWOX9LohFnl9OFMKHxWs/s5LL/TTERxUe+59eRaR74V9iMlEGRjb/B590fWhfJowqugeHfDEzaDRh+dyEdA1Au4IH/tQClegVMbzUxvUsN/vJk0WQAXFs+fuEuYx9VQY645h7/
+x-microsoft-antispam-message-info: dXPe3l5ZheOj+jAcRZ9iBtT+ZqpEirKRYI+woxcpqgnBTEellY69RvSPSrGjlJuJCQSv1u041ncnir83zeBhvzhVLlGUzo2tbcQ54Lfb7+mhCFVnrjNP4gNxy02q66RY2x39ffNfRLTE0C4yUOEO9aHu25Uplis/REFAXXRjCNdLJfCPxAfnrJcTzz7U0C7LhppOGJEcsfsxp0nhnBQ5ZPvZ5AHlYD5sZd8mVERikccteNSz3a6sHBp/3FyyHgzbMTcOl6MR1QbIwsLRFDFqgo9RYFhkpvkBcXrfp2fNlurlaReL/a5HgR7yFfjj+PCE5CR8jRAhjRWyTgdYjSuTbo4rPIxZfL4pnckjkxZs3vTQXNT2TJXUpoSFNl9Xwd3UJ5tT2XIofcAMHQf29nJLmXoM1mARnUagS8m4dcPMcYl9hbZ87NvnY9tAk1X/fK6r
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5282433-6b26-490c-7cab-08d7777f70e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 23:29:13.1146
+X-MS-Exchange-CrossTenant-Network-Message-Id: d469e003-f1c3-4799-5da5-08d777839f83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 23:59:09.2674
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rZAD14LaoVIubD4dM4TkbPMYOwDLZYL7x5eosEjZylUvQ8eVdV6gkwTuD//tfy3RskDRMJcfJhE05g8SJWVsqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0154
+X-MS-Exchange-CrossTenant-userprincipalname: ZPAiaL7+Ulvk6KRnZIMdxDsQXs8lBKY2VwFBileeHujXAc7acF7XB6D6J/LSNaPovtpVTbCxM/s8LTKHfC8UOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0106
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
@@ -106,8 +107,18 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 > From: linux-hyperv-owner@vger.kernel.org
 > Sent: Friday, November 22, 2019 5:57 PM
-> ...=20
-> +struct hv_pcidev_description {
+>  ...
+> @@ -63,6 +63,7 @@
+>  enum pci_protocol_version_t {
+>  	PCI_PROTOCOL_VERSION_1_1 =3D PCI_MAKE_VERSION(1, 1),	/* Win10
+> */
+>  	PCI_PROTOCOL_VERSION_1_2 =3D PCI_MAKE_VERSION(1, 2),	/* RS1 */
+> +	PCI_PROTOCOL_VERSION_1_3 =3D PCI_MAKE_VERSION(1, 3),	/* VB */
+>  };
+
+What is "VB" ? Can we use a more meaningful name here? :-)
+
+> +struct pci_function_description2 {
 > +	u16	v_id;	/* vendor ID */
 > +	u16	d_id;	/* device ID */
 > +	u8	rev;
@@ -117,69 +128,40 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 > +	u32	subsystem_id;
 > +	union win_slot_encoding win_slot;
 
-Change the spact to a TAB? :-)
+space -> TAB?
 
->  /**
-> - * hv_pci_devices_present() - Handles list of new children
-> + * hv_pci_start_relations_work() - Queue work to start device discovery
->   * @hbus:	Root PCI bus, as understood by this driver
-> - * @relations:	Packet from host listing children
-> + * @dr:		The list of children returned from host
->   *
-> - * This function is invoked whenever a new list of devices for
-> - * this bus appears.
-> + * Return:  0 on success, 1 on failure
->   */
+> +/*
+> + * Set NUMA node for the devices on the bus
+> + */
+> +static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
 
-Usually we return a negative value upon error, if possible.
+IMO we'd better add a "hv_" prefix to this function's name, otherwise it lo=
+oks
+more like a generic PCI subsystem API.
 
-> -static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
-> -				   struct pci_bus_relations *relations)
-> +static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
-> +				       struct hv_dr_state *dr)
->  {
-> -	struct hv_dr_state *dr;
->  	struct hv_dr_work *dr_wrk;
-> -	unsigned long flags;
->  	bool pending_dr;
-> +	unsigned long flags;
->=20
->  	dr_wrk =3D kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
->  	if (!dr_wrk)
-> -		return;
-> -
-> -	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
-> -		     (sizeof(struct pci_function_description) *
-> -		      (relations->device_count)), GFP_NOWAIT);
-> -	if (!dr)  {
-> -		kfree(dr_wrk);
-> -		return;
-> -	}
-> +		return 1;
+> +{
+> +	struct pci_dev *dev;
+> +	struct pci_bus *bus =3D hbus->pci_bus;
+> +	struct hv_pci_dev *hv_dev;
+> +
+> +	list_for_each_entry(dev, &bus->devices, bus_list) {
+> +		hv_dev =3D get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
+> +		if (!hv_dev)
+> +			continue;
+> +
+> +		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+> +			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
+> +	}
+> +}
 
-How about "return -ENOMEM;" ?
-=20
-> @@ -3018,7 +3055,7 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
->  		struct pci_packet teardown_packet;
->  		u8 buffer[sizeof(struct pci_message)];
->  	} pkt;
-> -	struct pci_bus_relations relations;
-> +	struct hv_dr_state *dr;
->  	struct hv_pci_compl comp_pkt;
->  	int ret;
->=20
-> @@ -3030,8 +3067,9 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
->  		return;
->=20
->  	/* Delete any children which might still exist. */
-> -	memset(&relations, 0, sizeof(relations));
-> -	hv_pci_devices_present(hbus, &relations);
-> +	dr =3D kzalloc(sizeof(*dr), GFP_ATOMIC);
-
-Here we are in a process context, so GFP_KERNEL is preferred.
-
-> +	if (dr && hv_pci_start_relations_work(hbus, dr))
-> +		kfree(dr);
+Can you please give a brief background introduction to dev->numa_node,
+e.g. how is it used here? -- is it used when a PCI device driver (e.g. the =
+mlx
+driver) asks the kernel to allocate memory for DMA, or allocate MSI interru=
+pts?
+How big is the performance gain in the tests? I'm curious as it looks uncle=
+ar
+to me how dev->numa_node is used by the PCI subsystem.
 
 Thanks,
 -- Dexuan
