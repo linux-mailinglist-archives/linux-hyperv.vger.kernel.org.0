@@ -2,52 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8816710FAB7
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Dec 2019 10:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1486810FC61
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Dec 2019 12:18:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfLCJ0y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 Dec 2019 04:26:54 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43990 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfLCJ0y (ORCPT
+        id S1726339AbfLCLRs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 Dec 2019 06:17:48 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25418 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725939AbfLCLRr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 Dec 2019 04:26:54 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n1so2676399wra.10;
-        Tue, 03 Dec 2019 01:26:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SZdfC+gFtVklBpHF7XF3yKS4xbagQBubfYPugqhRugk=;
-        b=aDs2YAsOEnOy5MORl6ZJIiOEESJ7SrV+tBNsG7s0DhwI8IAa+WmSS2HHd4QyjWGSJ/
-         ldRTToqQ7fQK307trD2DA1pagxWm6spcShdYjO1bCT5zkFNurwT8D0qFsmSSEUBqQVn9
-         Z2Zj1HZOONpz9ZI8OlPB6cYCLrisPtiHZPkN+kZ/Qkwrv6OYQdkg4ifUYV0RgQrtxBHy
-         Ngqwe37IcYAgs+JB/PBz+qMv8mc+6lkEbD2x5TcMRk7CuL/LFUSdqB1iMLYZ4bG1D9G2
-         wj0QR3TKc67oNoo5knJzrwdTSto5TOtorlUqVKc7rBt0YKFHYhH+mW0TIY8+1NlWPXWq
-         fHAQ==
+        Tue, 3 Dec 2019 06:17:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575371867;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P0GMfVL6QAezA2eT0aIWQXB/37RirCO0eO2hEzXqpFM=;
+        b=gFVruzjSiGxkv8iSoeg1Io5S3NxZaxTBgESUeQZQ3xXUqEpUivEDkZHUidoApQXUkEPDuB
+        u0nRBNfzsikXj8UCFk/P/BOceSAaL6qbghGv8khWkbUhJ4lswPW6ljTFQSpr57RBFSj/2A
+        P87H56lHEMkxcCdPdgrhb4HHmnbDEvI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-AFOwbi6xNUSBPziTaY0PIg-1; Tue, 03 Dec 2019 06:17:43 -0500
+Received: by mail-wr1-f71.google.com with SMTP id b2so1613605wrj.9
+        for <linux-hyperv@vger.kernel.org>; Tue, 03 Dec 2019 03:17:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SZdfC+gFtVklBpHF7XF3yKS4xbagQBubfYPugqhRugk=;
-        b=c1AdemUnx3odErCdLs+LsxlPTyI49QecveN/sDr4pYlv1bTx+tBjxZua0Z+sO6RbkR
-         BLqV+rkAx12Pxyo7NHFe0hw7feRtOhOXrr3r+HPD652yaaiP9yDYsbGXom7XxBJeDAT5
-         un3YcuudF2Oh84ITlNBGmltQ2TWfNIN6AZD0CNI4i6jhrMCALri4xfo91ZnbETbGwZYV
-         mUD3YsxHKGlYJanSXo6M9NWO7v/i/SUpIBsuUh8c+8Mm+/RCjievx+yXCp7r5Hb95dbq
-         vBTLJkdffJc4hA2taQ89kJf/mUabLrVoHIh6WWmpq0aOJhnEWVVC03we6SjAoXpTdGeO
-         Nxzg==
-X-Gm-Message-State: APjAAAX3SAyo34SWOyIVUxxYy27w3qJqh3oSsO6a/BsSCGUETXteo/1x
-        TF142FSfwbpTs9ULp4+KQDg=
-X-Google-Smtp-Source: APXvYqyWUu9z3na0YvFr46Iqp7ei5QNeidd0TaMx3re4eCOYeNXe9t/Q0pvxheWa/uyUnaKqbmgSNw==
-X-Received: by 2002:a5d:43c7:: with SMTP id v7mr3806207wrr.32.1575365212035;
-        Tue, 03 Dec 2019 01:26:52 -0800 (PST)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id v17sm2696979wrt.91.2019.12.03.01.26.50
+         :mime-version:content-disposition:in-reply-to;
+        bh=8m7nF4w29pgZQB4V/SdwIROmAwTn+h+KHeQv4HnXE8M=;
+        b=iJQi/NKZEzuDMpRUUt0zOs3qvFuLFor+EMtJLuEpuOkhXMcO/68lkfogZyRSFQn8hq
+         GQ1qq+ngZSwABPbz2isvOFJ1XdMaatIAmhQXua56ziNqFN+ifBAazHPFp/OSkUA7WoRE
+         ip+/pFlzPQuD71bBSLi4GQCASTXY5dBIQPn7dlFD5hzdAXG06biyWx4EN6VQaOT52H2O
+         s20QETd3isAMLqQ2P6IDc87zIoJ5zpCzj4V7HBGbfdnrV2MIOF+ATaUindYouo/6xOtQ
+         sze5wdEtp0rRHCsQWsa/LPlYtBdJ/ioyb8TCzIAjT7Pf8i0zqguu2Tp8MDO9J7SLBdBC
+         tFHg==
+X-Gm-Message-State: APjAAAXJW/G+5gyPMZMPcs6IEEpy/Y4Q/JkcsTs3m7EqTp6W6toqYcnR
+        kSo+etfTAzFWlYSYnEH1FVJLFhCAzjeJy9RMpquwNQOrf1T0IBtlvV/HdtUuMH2x2pxGNJdpJNK
+        kDoe90uy32cQvNElvidWPs56K
+X-Received: by 2002:a5d:49c7:: with SMTP id t7mr4444062wrs.369.1575371862795;
+        Tue, 03 Dec 2019 03:17:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxHsfuHbTjkQH8eviKJ48+Nlp7C/1JLX3I4FiWaDe4+xpQuoyOM0/YkQJewOzX/cskP8i9LEw==
+X-Received: by 2002:a5d:49c7:: with SMTP id t7mr4444037wrs.369.1575371862537;
+        Tue, 03 Dec 2019 03:17:42 -0800 (PST)
+Received: from steredhat (host28-88-dynamic.16-87-r.retail.telecomitalia.it. [87.16.88.28])
+        by smtp.gmail.com with ESMTPSA id p17sm3209682wrx.20.2019.12.03.03.17.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 01:26:50 -0800 (PST)
-Date:   Tue, 3 Dec 2019 09:26:49 +0000
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
+        Tue, 03 Dec 2019 03:17:41 -0800 (PST)
+Date:   Tue, 3 Dec 2019 12:17:39 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
 Cc:     netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
         kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
         Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
@@ -56,83 +61,88 @@ Cc:     netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>,
         Jorgen Hansen <jhansen@vmware.com>
 Subject: Re: [RFC PATCH 0/3] vsock: support network namespace
-Message-ID: <20191203092649.GB153510@stefanha-x1.localdomain>
+Message-ID: <20191203111739.jbxptcpmvtwg7j2g@steredhat>
 References: <20191128171519.203979-1-sgarzare@redhat.com>
+ <20191203092649.GB153510@stefanha-x1.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
+In-Reply-To: <20191203092649.GB153510@stefanha-x1.localdomain>
+X-MC-Unique: AFOwbi6xNUSBPziTaY0PIg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191128171519.203979-1-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
---XOIedfhf+7KOe/yw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Nov 28, 2019 at 06:15:16PM +0100, Stefano Garzarella wrote:
-> Hi,
-> now that we have multi-transport upstream, I started to take a look to
-> support network namespace (netns) in vsock.
+On Tue, Dec 03, 2019 at 09:26:49AM +0000, Stefan Hajnoczi wrote:
+> On Thu, Nov 28, 2019 at 06:15:16PM +0100, Stefano Garzarella wrote:
+> > Hi,
+> > now that we have multi-transport upstream, I started to take a look to
+> > support network namespace (netns) in vsock.
+> >=20
+> > As we partially discussed in the multi-transport proposal [1], it could
+> > be nice to support network namespace in vsock to reach the following
+> > goals:
+> > - isolate host applications from guest applications using the same port=
+s
+> >   with CID_ANY
+> > - assign the same CID of VMs running in different network namespaces
+> > - partition VMs between VMMs or at finer granularity
+> >=20
+> > This preliminary implementation provides the following behavior:
+> > - packets received from the host (received by G2H transports) are
+> >   assigned to the default netns (init_net)
+> > - packets received from the guest (received by H2G - vhost-vsock) are
+> >   assigned to the netns of the process that opens /dev/vhost-vsock
+> >   (usually the VMM, qemu in my tests, opens the /dev/vhost-vsock)
+> >     - for vmci I need some suggestions, because I don't know how to do
+> >       and test the same in the vmci driver, for now vmci uses the
+> >       init_net
+> > - loopback packets are exchanged only in the same netns
+> >=20
+> > Questions:
+> > 1. Should we make configurable the netns (now it is init_net) where
+> >    packets from the host should be delivered?
 >=20
-> As we partially discussed in the multi-transport proposal [1], it could
-> be nice to support network namespace in vsock to reach the following
-> goals:
-> - isolate host applications from guest applications using the same ports
->   with CID_ANY
-> - assign the same CID of VMs running in different network namespaces
-> - partition VMs between VMMs or at finer granularity
+> Yes, it should be possible to have multiple G2H (e.g. virtio-vsock)
+> devices and to assign them to different net namespaces.  Something like
+> net/core/dev.c:dev_change_net_namespace() will eventually be needed.
 >=20
-> This preliminary implementation provides the following behavior:
-> - packets received from the host (received by G2H transports) are
->   assigned to the default netns (init_net)
-> - packets received from the guest (received by H2G - vhost-vsock) are
->   assigned to the netns of the process that opens /dev/vhost-vsock
->   (usually the VMM, qemu in my tests, opens the /dev/vhost-vsock)
->     - for vmci I need some suggestions, because I don't know how to do
->       and test the same in the vmci driver, for now vmci uses the
->       init_net
-> - loopback packets are exchanged only in the same netns
+
+Make sense, but for now we support only one G2H.
+How we can provide this feature to the userspace?
+Should we interface vsock with ip-link(8)?
+
+I don't know if initially we can provide through sysfs a way to set the
+netns of the only G2H loaded.
+
+> > 2. Should we provide an ioctl in vhost-vsock to configure the netns
+> >    to use? (instead of using the netns of the process that opens
+> >    /dev/vhost-vsock)
 >=20
-> Questions:
-> 1. Should we make configurable the netns (now it is init_net) where
->    packets from the host should be delivered?
+> Creating the vhost-vsock instance in the process' net namespace makes
+> sense.  Maybe wait for a use case before adding an ioctl.
+>=20
 
-Yes, it should be possible to have multiple G2H (e.g. virtio-vsock)
-devices and to assign them to different net namespaces.  Something like
-net/core/dev.c:dev_change_net_namespace() will eventually be needed.
+Agree.
 
-> 2. Should we provide an ioctl in vhost-vsock to configure the netns
->    to use? (instead of using the netns of the process that opens
->    /dev/vhost-vsock)
+> > 3. Should we provide a way to disable the netns support in vsock?
+>=20
+> The code should follow CONFIG_NET_NS semantics.  I'm not sure what they
+> are exactly since struct net is always defined, regardless of whether
+> network namespaces are enabled.
 
-Creating the vhost-vsock instance in the process' net namespace makes
-sense.  Maybe wait for a use case before adding an ioctl.
+I think that if CONFIG_NET_NS is not defined, all sockets and processes
+are assigned to init_net and this RFC should work in this case, but I'll
+try this case before v1.
 
-> 3. Should we provide a way to disable the netns support in vsock?
+I was thinking about the Kata's use case, I don't know if they launch the
+VM in a netns and even the runtime in the host runs inside the same netns.
 
-The code should follow CONFIG_NET_NS semantics.  I'm not sure what they
-are exactly since struct net is always defined, regardless of whether
-network namespaces are enabled.
+I'll send an e-mail to kata mailing list.
 
---XOIedfhf+7KOe/yw
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Stefano
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3mKlkACgkQnKSrs4Gr
-c8h54wf/eNE48AsDKZkZl+68dw3paeS7KLIQEPgUklUhfhqp/IHdX9uG2R88hvCl
-rMCQbGHSMQ+yb7gPxN1+0tVXFX7Rf2Cqed4Lwqfq0VvufS80FUk4GiQZKKgk4LRv
-/8x4or61TnKGbApxbJnQ+zdj1OirmGwrO8jEt4beMPgsfY80yzl6GcKwYwsOYzeg
-w+28vrKtnprab8l8D0DnVIggTtyep72rsGdeOi4KtSmrUoM8GVExUDmwBQtUJ4xo
-5+OJJjQ+EzPuKWxGIahFrZAHDGerrVHWyltH/LTq+BU0VNR+Ta726WWzDKVx7v6d
-YQm7/TdSAT3l9Id0uVC9+DEM455UIw==
-=v5qS
------END PGP SIGNATURE-----
-
---XOIedfhf+7KOe/yw--
