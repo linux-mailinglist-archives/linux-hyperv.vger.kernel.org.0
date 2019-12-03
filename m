@@ -2,41 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 144EB10F3B3
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Dec 2019 00:59:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6056110F3EE
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Dec 2019 01:40:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725899AbfLBX75 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 2 Dec 2019 18:59:57 -0500
-Received: from mail-eopbgr1320110.outbound.protection.outlook.com ([40.107.132.110]:30791
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1725941AbfLCAkO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 2 Dec 2019 19:40:14 -0500
+Received: from mail-eopbgr740101.outbound.protection.outlook.com ([40.107.74.101]:38080
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfLBX75 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 2 Dec 2019 18:59:57 -0500
+        id S1725899AbfLCAkN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 2 Dec 2019 19:40:13 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Al1pN+r0zLUWuutcljsXM1hTEevN/xC4d0KDN2EwWHn26/5pWmO8zDVuANIkbVm2RRYqo5zYMLqEdIm3xXhgJmnoisQFbWfKmPiuO9qio7TITboFpOG9ttD4tJV9mTnl65VW7C/RjjDSVEyZRPL35qqW8+cCsrfFBIEc8/v5gba/l7ZrEHSQ/p6jmWb32tlnGMVG9/Jplxg/msOcusd0RvY1ZYvfhWNRFRjl0Sl0sXksDpIVtTIfLMVVYF5T2nNe5A5d3bLrv0/fbqRXUExU3TF7FhFI3iBJith0+q7zEKxn6lH+VmnIBrHNRbaJFGbU4LUcnHj6LF5Owuk6zAa2Og==
+ b=TmvKn6pTRB2aRm6C92LhvuAjfUp2nYSPmJI/pnExNOtDPb9MkjBRT3zUPjvK9qjSwgN0XZVaiHH+4obQIZFn47URvbRK1McdcmA5wrSroQg10qsXPRdlBd+aGoXtzz2vV9ib34j1DLMt5EDLpWVMdJR+upvx7rdNyKfWu53nvy6lJ4OxiWXhNqt+OXMQ4blFrifvZPN8AX3+qrIVVJHIZC8enVA/OqgU1PUnr297PV15XofqfrZ/E97YuQ+O6nE9nJRR+DRonxwqUaHevMfE34SLRLwqzrx9sezsSEL+6AnIVn9VjprWOnvSQDGhr4+LgLq0gi/jzCSZYAMxnGDFfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oe2L8bzEnwGmX3GLscAK1iL+8v4xS+dj4heGcxrolHU=;
- b=C0kNYsnGkTHIZiaSjSDEHOHH+1nm2w3IlHaC3782VeVEJAYidAm95nFNu4koFp+msu/nBhpPmsHYZgabaVYUs5+VjvzA13/eMzTelf/KOzF7JCfWovCPWF+gHM1xjF7KAGa4dNBTMF+pL2GVd/POS3qdhbHpjuoTL4odrFptemfXZ/7pZ5p5X14AzxPv9dlceXR3DSD8fMeD5Y/WHFVMj1hVykWRtFvszu/JOHED7mwSe+KJ+nE1K275W2QtxGfU0P2NFkWzVXsrwxmcrDR2lxbC/VXy3dtoLr9JeDk0UJztFgn/q2ibRdJHsdPXdxbGX0uNskj5N/L0ssRE+ecuQg==
+ bh=hpY0cSmVOo/Hih9bOgtiwXpRCY959kSuENLkTyDt6TA=;
+ b=UGKMXq5sIL6N5vF2FT9TcK/XdJDYxR1fl8/u1R5uNb23AZ19P8ijhExnwzj6riIOylna5km3DDsm6HiaovCSlS5VD7jHKXjlNFtO0mA0Mm3hUxQT/pl1yMNfT05Lg53BIx0CQy2p44TcEpFEYrriEBAGC4ZUQxDcEuoqYsvt/jLIkgVOfGO8kbYJM4xrnuy/p4xL+4bRcaLG+qt6Js5F3Sy9ltl8FVQlu6AVS9d+PKyqn+HxsKPtoB5kNY6KbrzLcHULFoXFRDFmGdCSpM9g2u1MKECXo8z1ImubXIb3MkuBtFf6miBK3e2DfQVwvkExBz+3SzAjEecuaDyiL9V2PQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oe2L8bzEnwGmX3GLscAK1iL+8v4xS+dj4heGcxrolHU=;
- b=U9wEliuaUqPlZPue0rYinMeWfEiPE60Ql2JjYmHGnpOi2j/+ddHPA5NThpiRsT8capJRTuo7ek9lgxbUyzVjiI3jZZSmAf00cEvK79w7mBvJxkhfOm0l254Qr1/2bAdLyxtRl50tuItvm/o+GH5oM+B5bhVyv9Ni/cud3LuXVCo=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0106.APCP153.PROD.OUTLOOK.COM (10.170.188.11) with Microsoft SMTP
+ bh=hpY0cSmVOo/Hih9bOgtiwXpRCY959kSuENLkTyDt6TA=;
+ b=Jy/581m/bjlJe0CEd3TIr5EcX0z/1q5HpNBLdsCVGvLx1KHH1gVgOFij/xQ8/uTJdK+jqq3q9EI9LXj6Mzek4f3EQ1Cl1FQFJGc8iFrXr8fhGPJop429IAdkOOoM9WPAZyRD3Aobt/+7aMpLGF5NscFIpOZTSdx8OFsjPHCpIFc=
+Received: from MW2PR2101MB1132.namprd21.prod.outlook.com (52.132.146.17) by
+ MW2PR2101MB1068.namprd21.prod.outlook.com (52.132.149.21) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.0; Mon, 2 Dec 2019 23:59:09 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::704b:f2b6:33d:557a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::704b:f2b6:33d:557a%9]) with mapi id 15.20.2538.000; Mon, 2 Dec 2019
- 23:59:09 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+ 15.20.2495.8; Tue, 3 Dec 2019 00:39:31 +0000
+Received: from MW2PR2101MB1132.namprd21.prod.outlook.com
+ ([fe80::5499:4a0f:6079:dcb3]) by MW2PR2101MB1132.namprd21.prod.outlook.com
+ ([fe80::5499:4a0f:6079:dcb3%3]) with mapi id 15.20.2538.000; Tue, 3 Dec 2019
+ 00:39:31 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -47,17 +48,16 @@ To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Long Li <longli@microsoft.com>
-Subject: RE: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
- support PCI_BUS_RELATIONS2
-Thread-Topic: [EXTERNAL] [PATCH 2/2] PCI: hv: Add support for protocol 1.3 and
- support PCI_BUS_RELATIONS2
-Thread-Index: AQHVoaFkXIxw3tqrZk6POfn/+X8rjaenViVA
-Date:   Mon, 2 Dec 2019 23:59:09 +0000
-Message-ID: <PU1P153MB0169CFE46920BAEEE11CA9B7BF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Subject: RE: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVoaFZDrNNi9eblUS6WB9as+FYyaenjVmAgAAThZA=
+Date:   Tue, 3 Dec 2019 00:39:30 +0000
+Message-ID: <MW2PR2101MB1132A6039C540F473C9AD55BCE420@MW2PR2101MB1132.namprd21.prod.outlook.com>
 References: <1574474229-44840-1-git-send-email-longli@linuxonhyperv.com>
- <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1574474229-44840-2-git-send-email-longli@linuxonhyperv.com>
+ <PU1P153MB016971582C7371E29065D83DBF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <PU1P153MB016971582C7371E29065D83DBF430@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -65,103 +65,132 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-02T23:59:07.6209316Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-02T23:29:11.3940351Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f258566e-1d09-4e97-950d-9e44dee110b0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c6971509-4c17-459c-8ca4-1b8fc6fe4e74;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:3:8f1:d9c8:629b:7ac]
+ smtp.mailfrom=longli@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:1:eded:db5c:c6fe:798]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d469e003-f1c3-4799-5da5-08d777839f83
-x-ms-traffictypediagnostic: PU1P153MB0106:|PU1P153MB0106:
+x-ms-office365-filtering-correlation-id: 56cf8091-35a4-45dd-e718-08d7778942e9
+x-ms-traffictypediagnostic: MW2PR2101MB1068:|MW2PR2101MB1068:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0106191546EC58344414616ABF430@PU1P153MB0106.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0239D46DB6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(39860400002)(366004)(346002)(189003)(199004)(33656002)(478600001)(10290500003)(2906002)(4326008)(107886003)(66446008)(64756008)(46003)(66476007)(2201001)(9686003)(55016002)(5660300002)(1511001)(22452003)(316002)(7736002)(305945005)(74316002)(256004)(6436002)(10090500001)(110136005)(52536014)(229853002)(2501003)(99286004)(86362001)(102836004)(186003)(8990500004)(6506007)(71190400001)(71200400001)(81156014)(7696005)(25786009)(76176011)(8936002)(11346002)(446003)(81166006)(8676002)(6116002)(76116006)(66556008)(66946007)(6246003)(14454004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0106;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-microsoft-antispam-prvs: <MW2PR2101MB106836F4F30D262C9147AD70CE420@MW2PR2101MB1068.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(366004)(136003)(39860400002)(199004)(189003)(6436002)(2201001)(74316002)(305945005)(7736002)(33656002)(7696005)(10090500001)(76176011)(446003)(11346002)(5660300002)(52536014)(8990500004)(102836004)(2501003)(6506007)(256004)(14444005)(186003)(99286004)(229853002)(71200400001)(66946007)(71190400001)(2906002)(1511001)(8936002)(86362001)(6246003)(46003)(14454004)(64756008)(9686003)(66476007)(66556008)(55016002)(316002)(66446008)(22452003)(25786009)(10290500003)(15650500001)(110136005)(6116002)(81156014)(8676002)(478600001)(81166006)(76116006)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1068;H:MW2PR2101MB1132.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dXPe3l5ZheOj+jAcRZ9iBtT+ZqpEirKRYI+woxcpqgnBTEellY69RvSPSrGjlJuJCQSv1u041ncnir83zeBhvzhVLlGUzo2tbcQ54Lfb7+mhCFVnrjNP4gNxy02q66RY2x39ffNfRLTE0C4yUOEO9aHu25Uplis/REFAXXRjCNdLJfCPxAfnrJcTzz7U0C7LhppOGJEcsfsxp0nhnBQ5ZPvZ5AHlYD5sZd8mVERikccteNSz3a6sHBp/3FyyHgzbMTcOl6MR1QbIwsLRFDFqgo9RYFhkpvkBcXrfp2fNlurlaReL/a5HgR7yFfjj+PCE5CR8jRAhjRWyTgdYjSuTbo4rPIxZfL4pnckjkxZs3vTQXNT2TJXUpoSFNl9Xwd3UJ5tT2XIofcAMHQf29nJLmXoM1mARnUagS8m4dcPMcYl9hbZ87NvnY9tAk1X/fK6r
+x-microsoft-antispam-message-info: 7bsszGTUL/SdWntnXQNk0vzbSFMKUgN30KHGtu0VKq8tVth181ZGgv37gj0T9ZSswnGAzaSuMQdv+jYsBEP4D6oijG1VmgvwG/NEUVD0AdaZMKN3137SEihtHdAjBzRypT0nGUfMd3gFnWpII9FSW+unoZ++iUt0ln8V7daeGoPn03cee2V8FMjpceYlEWsOL3r8JaaKBzX+Bc9e9CQeguUbewkLBFxYqrKcM3Bfi1IvcnTgzx6qrGUNi47ykoVpswMnkfUsOwW/LATkCVbQYQQvmAx1n/C3NF4CDOXbwoJ2bzl34jdSqQPltW+2tzitjkvBFECar+9Fd1UoeGdUshhljMjTOKXfnT4A1AJF3U4jOQj8aNp0B8TUz84UHbW5eBXTC0iQO3s7yB4UvAOpXSTRpt5pHAEqo9QL9SqYP7SdCCYTZ94Lq2qm0O4KRSsC
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d469e003-f1c3-4799-5da5-08d777839f83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2019 23:59:09.2674
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56cf8091-35a4-45dd-e718-08d7778942e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 00:39:31.0885
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZPAiaL7+Ulvk6KRnZIMdxDsQXs8lBKY2VwFBileeHujXAc7acF7XB6D6J/LSNaPovtpVTbCxM/s8LTKHfC8UOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0106
+X-MS-Exchange-CrossTenant-userprincipalname: gdUwYv+2+GOgnmpcz+P45tdQ4GOiqwopI2Qjwfzvm3v7KQHEE5le/FDppxGeoKJgjMjjrwMNUlaFaiyiW/bZ6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1068
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> Sent: Friday, November 22, 2019 5:57 PM
->  ...
-> @@ -63,6 +63,7 @@
->  enum pci_protocol_version_t {
->  	PCI_PROTOCOL_VERSION_1_1 =3D PCI_MAKE_VERSION(1, 1),	/* Win10
-> */
->  	PCI_PROTOCOL_VERSION_1_2 =3D PCI_MAKE_VERSION(1, 2),	/* RS1 */
-> +	PCI_PROTOCOL_VERSION_1_3 =3D PCI_MAKE_VERSION(1, 3),	/* VB */
->  };
+>Subject: RE: [EXTERNAL] [PATCH 1/2] PCI: hv: decouple the func definition =
+in
+>hv_dr_state from VSP message
+>
+>> From: linux-hyperv-owner@vger.kernel.org
+>> Sent: Friday, November 22, 2019 5:57 PM ...
+>> +struct hv_pcidev_description {
+>> +	u16	v_id;	/* vendor ID */
+>> +	u16	d_id;	/* device ID */
+>> +	u8	rev;
+>> +	u8	prog_intf;
+>> +	u8	subclass;
+>> +	u8	base_class;
+>> +	u32	subsystem_id;
+>> +	union win_slot_encoding win_slot;
+>
+>Change the spact to a TAB? :-)
+>
+>>  /**
+>> - * hv_pci_devices_present() - Handles list of new children
+>> + * hv_pci_start_relations_work() - Queue work to start device
+>> + discovery
+>>   * @hbus:	Root PCI bus, as understood by this driver
+>> - * @relations:	Packet from host listing children
+>> + * @dr:		The list of children returned from host
+>>   *
+>> - * This function is invoked whenever a new list of devices for
+>> - * this bus appears.
+>> + * Return:  0 on success, 1 on failure
+>>   */
+>
+>Usually we return a negative value upon error, if possible.
+>
+>> -static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>> -				   struct pci_bus_relations *relations)
+>> +static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
+>> +				       struct hv_dr_state *dr)
+>>  {
+>> -	struct hv_dr_state *dr;
+>>  	struct hv_dr_work *dr_wrk;
+>> -	unsigned long flags;
+>>  	bool pending_dr;
+>> +	unsigned long flags;
+>>
+>>  	dr_wrk =3D kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
+>>  	if (!dr_wrk)
+>> -		return;
+>> -
+>> -	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
+>> -		     (sizeof(struct pci_function_description) *
+>> -		      (relations->device_count)), GFP_NOWAIT);
+>> -	if (!dr)  {
+>> -		kfree(dr_wrk);
+>> -		return;
+>> -	}
+>> +		return 1;
+>
+>How about "return -ENOMEM;" ?
+>
+>> @@ -3018,7 +3055,7 @@ static void hv_pci_bus_exit(struct hv_device
+>*hdev)
+>>  		struct pci_packet teardown_packet;
+>>  		u8 buffer[sizeof(struct pci_message)];
+>>  	} pkt;
+>> -	struct pci_bus_relations relations;
+>> +	struct hv_dr_state *dr;
+>>  	struct hv_pci_compl comp_pkt;
+>>  	int ret;
+>>
+>> @@ -3030,8 +3067,9 @@ static void hv_pci_bus_exit(struct hv_device
+>*hdev)
+>>  		return;
+>>
+>>  	/* Delete any children which might still exist. */
+>> -	memset(&relations, 0, sizeof(relations));
+>> -	hv_pci_devices_present(hbus, &relations);
+>> +	dr =3D kzalloc(sizeof(*dr), GFP_ATOMIC);
+>
+>Here we are in a process context, so GFP_KERNEL is preferred.
+>
+>> +	if (dr && hv_pci_start_relations_work(hbus, dr))
+>> +		kfree(dr);
+>
+>Thanks,
+>-- Dexuan
 
-What is "VB" ? Can we use a more meaningful name here? :-)
+Thanks! I will send v2 to address those comments.
 
-> +struct pci_function_description2 {
-> +	u16	v_id;	/* vendor ID */
-> +	u16	d_id;	/* device ID */
-> +	u8	rev;
-> +	u8	prog_intf;
-> +	u8	subclass;
-> +	u8	base_class;
-> +	u32	subsystem_id;
-> +	union win_slot_encoding win_slot;
-
-space -> TAB?
-
-> +/*
-> + * Set NUMA node for the devices on the bus
-> + */
-> +static void pci_assign_numa_node(struct hv_pcibus_device *hbus)
-
-IMO we'd better add a "hv_" prefix to this function's name, otherwise it lo=
-oks
-more like a generic PCI subsystem API.
-
-> +{
-> +	struct pci_dev *dev;
-> +	struct pci_bus *bus =3D hbus->pci_bus;
-> +	struct hv_pci_dev *hv_dev;
-> +
-> +	list_for_each_entry(dev, &bus->devices, bus_list) {
-> +		hv_dev =3D get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
-> +		if (!hv_dev)
-> +			continue;
-> +
-> +		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
-> +			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
-> +	}
-> +}
-
-Can you please give a brief background introduction to dev->numa_node,
-e.g. how is it used here? -- is it used when a PCI device driver (e.g. the =
-mlx
-driver) asks the kernel to allocate memory for DMA, or allocate MSI interru=
-pts?
-How big is the performance gain in the tests? I'm curious as it looks uncle=
-ar
-to me how dev->numa_node is used by the PCI subsystem.
-
-Thanks,
--- Dexuan
+Long
