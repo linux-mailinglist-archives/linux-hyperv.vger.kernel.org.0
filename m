@@ -2,147 +2,241 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1486810FC61
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Dec 2019 12:18:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 330E411219D
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Dec 2019 03:53:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfLCLRs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 Dec 2019 06:17:48 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25418 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725939AbfLCLRr (ORCPT
+        id S1726678AbfLDCxq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 Dec 2019 21:53:46 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:56184 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfLDCxp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 Dec 2019 06:17:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575371867;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P0GMfVL6QAezA2eT0aIWQXB/37RirCO0eO2hEzXqpFM=;
-        b=gFVruzjSiGxkv8iSoeg1Io5S3NxZaxTBgESUeQZQ3xXUqEpUivEDkZHUidoApQXUkEPDuB
-        u0nRBNfzsikXj8UCFk/P/BOceSAaL6qbghGv8khWkbUhJ4lswPW6ljTFQSpr57RBFSj/2A
-        P87H56lHEMkxcCdPdgrhb4HHmnbDEvI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-AFOwbi6xNUSBPziTaY0PIg-1; Tue, 03 Dec 2019 06:17:43 -0500
-Received: by mail-wr1-f71.google.com with SMTP id b2so1613605wrj.9
-        for <linux-hyperv@vger.kernel.org>; Tue, 03 Dec 2019 03:17:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8m7nF4w29pgZQB4V/SdwIROmAwTn+h+KHeQv4HnXE8M=;
-        b=iJQi/NKZEzuDMpRUUt0zOs3qvFuLFor+EMtJLuEpuOkhXMcO/68lkfogZyRSFQn8hq
-         GQ1qq+ngZSwABPbz2isvOFJ1XdMaatIAmhQXua56ziNqFN+ifBAazHPFp/OSkUA7WoRE
-         ip+/pFlzPQuD71bBSLi4GQCASTXY5dBIQPn7dlFD5hzdAXG06biyWx4EN6VQaOT52H2O
-         s20QETd3isAMLqQ2P6IDc87zIoJ5zpCzj4V7HBGbfdnrV2MIOF+ATaUindYouo/6xOtQ
-         sze5wdEtp0rRHCsQWsa/LPlYtBdJ/ioyb8TCzIAjT7Pf8i0zqguu2Tp8MDO9J7SLBdBC
-         tFHg==
-X-Gm-Message-State: APjAAAXJW/G+5gyPMZMPcs6IEEpy/Y4Q/JkcsTs3m7EqTp6W6toqYcnR
-        kSo+etfTAzFWlYSYnEH1FVJLFhCAzjeJy9RMpquwNQOrf1T0IBtlvV/HdtUuMH2x2pxGNJdpJNK
-        kDoe90uy32cQvNElvidWPs56K
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr4444062wrs.369.1575371862795;
-        Tue, 03 Dec 2019 03:17:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxHsfuHbTjkQH8eviKJ48+Nlp7C/1JLX3I4FiWaDe4+xpQuoyOM0/YkQJewOzX/cskP8i9LEw==
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr4444037wrs.369.1575371862537;
-        Tue, 03 Dec 2019 03:17:42 -0800 (PST)
-Received: from steredhat (host28-88-dynamic.16-87-r.retail.telecomitalia.it. [87.16.88.28])
-        by smtp.gmail.com with ESMTPSA id p17sm3209682wrx.20.2019.12.03.03.17.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2019 03:17:41 -0800 (PST)
-Date:   Tue, 3 Dec 2019 12:17:39 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [RFC PATCH 0/3] vsock: support network namespace
-Message-ID: <20191203111739.jbxptcpmvtwg7j2g@steredhat>
-References: <20191128171519.203979-1-sgarzare@redhat.com>
- <20191203092649.GB153510@stefanha-x1.localdomain>
-MIME-Version: 1.0
-In-Reply-To: <20191203092649.GB153510@stefanha-x1.localdomain>
-X-MC-Unique: AFOwbi6xNUSBPziTaY0PIg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Tue, 3 Dec 2019 21:53:45 -0500
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 85E9C20B7185; Tue,  3 Dec 2019 18:53:44 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 85E9C20B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1575428024;
+        bh=zD1VstL0WWSJSKj5SLiHaiJQUWQv4EYx/XzCCkUI55M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BAfTP3DzVUstbG73/BnjLOO5qJrpcdA3S5NS13M4GCMPWJ6zZLH9DlwSxgkEz+hdP
+         Yl/pffxS5f9ySpS4oPyfbeKqFiZHpox56srxIFaMRS+04eCneG1VhEuDDZTZT0RfIF
+         asCBnaeYbZBSxtUFvUiNVNc20Vx/C6KBmkC2VFCE=
+From:   longli@linuxonhyperv.com
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v2 1/2] PCI: hv: decouple the func definition in hv_dr_state from VSP message
+Date:   Tue,  3 Dec 2019 18:53:36 -0800
+Message-Id: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 09:26:49AM +0000, Stefan Hajnoczi wrote:
-> On Thu, Nov 28, 2019 at 06:15:16PM +0100, Stefano Garzarella wrote:
-> > Hi,
-> > now that we have multi-transport upstream, I started to take a look to
-> > support network namespace (netns) in vsock.
-> >=20
-> > As we partially discussed in the multi-transport proposal [1], it could
-> > be nice to support network namespace in vsock to reach the following
-> > goals:
-> > - isolate host applications from guest applications using the same port=
-s
-> >   with CID_ANY
-> > - assign the same CID of VMs running in different network namespaces
-> > - partition VMs between VMMs or at finer granularity
-> >=20
-> > This preliminary implementation provides the following behavior:
-> > - packets received from the host (received by G2H transports) are
-> >   assigned to the default netns (init_net)
-> > - packets received from the guest (received by H2G - vhost-vsock) are
-> >   assigned to the netns of the process that opens /dev/vhost-vsock
-> >   (usually the VMM, qemu in my tests, opens the /dev/vhost-vsock)
-> >     - for vmci I need some suggestions, because I don't know how to do
-> >       and test the same in the vmci driver, for now vmci uses the
-> >       init_net
-> > - loopback packets are exchanged only in the same netns
-> >=20
-> > Questions:
-> > 1. Should we make configurable the netns (now it is init_net) where
-> >    packets from the host should be delivered?
->=20
-> Yes, it should be possible to have multiple G2H (e.g. virtio-vsock)
-> devices and to assign them to different net namespaces.  Something like
-> net/core/dev.c:dev_change_net_namespace() will eventually be needed.
->=20
+From: Long Li <longli@microsoft.com>
 
-Make sense, but for now we support only one G2H.
-How we can provide this feature to the userspace?
-Should we interface vsock with ip-link(8)?
+hv_dr_state is used to find present PCI devices on the bus. The structure
+reuses struct pci_function_description from VSP message to describe a device.
 
-I don't know if initially we can provide through sysfs a way to set the
-netns of the only G2H loaded.
+To prepare support for pci_function_description v2, we need to decouple this
+dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
 
-> > 2. Should we provide an ioctl in vhost-vsock to configure the netns
-> >    to use? (instead of using the netns of the process that opens
-> >    /dev/vhost-vsock)
->=20
-> Creating the vhost-vsock instance in the process' net namespace makes
-> sense.  Maybe wait for a use case before adding an ioctl.
->=20
+There is no functionality change.
 
-Agree.
+Signed-off-by: Long Li <longli@microsoft.com>
+---
 
-> > 3. Should we provide a way to disable the netns support in vsock?
->=20
-> The code should follow CONFIG_NET_NS semantics.  I'm not sure what they
-> are exactly since struct net is always defined, regardless of whether
-> network namespaces are enabled.
+Changes
+v2: changed some spaces to tabs, changed failure code to -ENOMEM
 
-I think that if CONFIG_NET_NS is not defined, all sockets and processes
-are assigned to init_net and this RFC should work in this case, but I'll
-try this case before v1.
+ drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++---------
+ 1 file changed, 69 insertions(+), 31 deletions(-)
 
-I was thinking about the Kata's use case, I don't know if they launch the
-VM in a netns and even the runtime in the host runs inside the same netns.
-
-I'll send an e-mail to kata mailing list.
-
-Thanks,
-Stefano
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index f1f300218fab..8c1533be6ad0 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -507,10 +507,24 @@ struct hv_dr_work {
+ 	struct hv_pcibus_device *bus;
+ };
+ 
++struct hv_pcidev_description {
++	u16	v_id;	/* vendor ID */
++	u16	d_id;	/* device ID */
++	u8	rev;
++	u8	prog_intf;
++	u8	subclass;
++	u8	base_class;
++	u32	subsystem_id;
++	union	win_slot_encoding win_slot;
++	u32	ser;	/* serial number */
++	u32	flags;
++	u16	virtual_numa_node;
++};
++
+ struct hv_dr_state {
+ 	struct list_head list_entry;
+ 	u32 device_count;
+-	struct pci_function_description func[0];
++	struct hv_pcidev_description func[0];
+ };
+ 
+ enum hv_pcichild_state {
+@@ -527,7 +541,7 @@ struct hv_pci_dev {
+ 	refcount_t refs;
+ 	enum hv_pcichild_state state;
+ 	struct pci_slot *pci_slot;
+-	struct pci_function_description desc;
++	struct hv_pcidev_description desc;
+ 	bool reported_missing;
+ 	struct hv_pcibus_device *hbus;
+ 	struct work_struct wrk;
+@@ -1862,7 +1876,7 @@ static void q_resource_requirements(void *context, struct pci_response *resp,
+  * Return: Pointer to the new tracking struct
+  */
+ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+-		struct pci_function_description *desc)
++		struct hv_pcidev_description *desc)
+ {
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_child_message *res_req;
+@@ -1973,7 +1987,7 @@ static void pci_devices_present_work(struct work_struct *work)
+ {
+ 	u32 child_no;
+ 	bool found;
+-	struct pci_function_description *new_desc;
++	struct hv_pcidev_description *new_desc;
+ 	struct hv_pci_dev *hpdev;
+ 	struct hv_pcibus_device *hbus;
+ 	struct list_head removed;
+@@ -2090,43 +2104,26 @@ static void pci_devices_present_work(struct work_struct *work)
+ 	put_hvpcibus(hbus);
+ 	kfree(dr);
+ }
+-
+ /**
+- * hv_pci_devices_present() - Handles list of new children
++ * hv_pci_start_relations_work() - Queue work to start device discovery
+  * @hbus:	Root PCI bus, as understood by this driver
+- * @relations:	Packet from host listing children
++ * @dr:		The list of children returned from host
+  *
+- * This function is invoked whenever a new list of devices for
+- * this bus appears.
++ * Return:  0 on success, -errno on failure
+  */
+-static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+-				   struct pci_bus_relations *relations)
++static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
++				       struct hv_dr_state *dr)
+ {
+-	struct hv_dr_state *dr;
+ 	struct hv_dr_work *dr_wrk;
+-	unsigned long flags;
+ 	bool pending_dr;
++	unsigned long flags;
+ 
+ 	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
+ 	if (!dr_wrk)
+-		return;
+-
+-	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+-		     (sizeof(struct pci_function_description) *
+-		      (relations->device_count)), GFP_NOWAIT);
+-	if (!dr)  {
+-		kfree(dr_wrk);
+-		return;
+-	}
++		return -ENOMEM;
+ 
+ 	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
+ 	dr_wrk->bus = hbus;
+-	dr->device_count = relations->device_count;
+-	if (dr->device_count != 0) {
+-		memcpy(dr->func, relations->func,
+-		       sizeof(struct pci_function_description) *
+-		       dr->device_count);
+-	}
+ 
+ 	spin_lock_irqsave(&hbus->device_list_lock, flags);
+ 	/*
+@@ -2144,6 +2141,46 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+ 		get_hvpcibus(hbus);
+ 		queue_work(hbus->wq, &dr_wrk->wrk);
+ 	}
++
++	return 0;
++}
++
++/**
++ * hv_pci_devices_present() - Handles list of new children
++ * @hbus:	Root PCI bus, as understood by this driver
++ * @relations:	Packet from host listing children
++ *
++ * This function is invoked whenever a new list of devices for
++ * this bus appears.
++ */
++static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
++				   struct pci_bus_relations *relations)
++{
++	struct hv_dr_state *dr;
++	int i;
++
++	dr = kzalloc(offsetof(struct hv_dr_state, func) +
++		     (sizeof(struct hv_pcidev_description) *
++		      (relations->device_count)), GFP_NOWAIT);
++
++	if (!dr)
++		return;
++
++	dr->device_count = relations->device_count;
++	for (i = 0; i < dr->device_count; i++) {
++		dr->func[i].v_id = relations->func[i].v_id;
++		dr->func[i].d_id = relations->func[i].d_id;
++		dr->func[i].rev = relations->func[i].rev;
++		dr->func[i].prog_intf = relations->func[i].prog_intf;
++		dr->func[i].subclass = relations->func[i].subclass;
++		dr->func[i].base_class = relations->func[i].base_class;
++		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
++		dr->func[i].win_slot = relations->func[i].win_slot;
++		dr->func[i].ser = relations->func[i].ser;
++	}
++
++	if (hv_pci_start_relations_work(hbus, dr))
++		kfree(dr);
+ }
+ 
+ /**
+@@ -3018,7 +3055,7 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+ 		struct pci_packet teardown_packet;
+ 		u8 buffer[sizeof(struct pci_message)];
+ 	} pkt;
+-	struct pci_bus_relations relations;
++	struct hv_dr_state *dr;
+ 	struct hv_pci_compl comp_pkt;
+ 	int ret;
+ 
+@@ -3030,8 +3067,9 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+ 		return;
+ 
+ 	/* Delete any children which might still exist. */
+-	memset(&relations, 0, sizeof(relations));
+-	hv_pci_devices_present(hbus, &relations);
++	dr = kzalloc(sizeof(*dr), GFP_KERNEL);
++	if (dr && hv_pci_start_relations_work(hbus, dr))
++		kfree(dr);
+ 
+ 	ret = hv_send_resources_released(hdev);
+ 	if (ret)
+-- 
+2.17.1
 
