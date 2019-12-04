@@ -2,153 +2,161 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8169112F8C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Dec 2019 17:06:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1463B1135DD
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Dec 2019 20:41:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfLDQGH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 Dec 2019 11:06:07 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50354 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728315AbfLDQGE (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 Dec 2019 11:06:04 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so297268wmg.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 04 Dec 2019 08:06:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wxrUqTMqo50V57e2RWtzbfQH+UG1ZSUW0KlDikQwg6A=;
-        b=lBwyShSdyyKsxPbRpFlKd0sLBOV622n9XBqMK+/wrH2KRxOE8ec3vLZ+6wtQ+Mjq0J
-         kkj0EMx3kLN/rUzdOxA+qLmlUDdOeQcyyA2oe/7AyZX6/4diWv9/9dACm4HrQ4l3yN6Z
-         d00VmuCBfZkowdUBJWvJaP6UAWv0CmPkc66Qn6RsEhrNC0xDpuSa3HX1sOMHUfyozd8T
-         /NUz/FKDZrcRkbYyJXcAdFbzJgHiHcfcqOzGASjaJa8j2YOgkIz22Q7maKgZ42hc4+Tr
-         L0pjPo9olASWenGOFYsb4hGr018fs2/gEa1Hf5jRZSPzHkrNupXS/a5rVuvT9NTP9Mc/
-         Wa6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wxrUqTMqo50V57e2RWtzbfQH+UG1ZSUW0KlDikQwg6A=;
-        b=V9XFpG8dVlyYOBnmzX9CIzCCbotunJzKcPK1CjZCjGI6esfyvCKsYPjxKY3sYGjKWm
-         8YXKxbSEkdXK7une0kDB8SikewNZB+Dfe8eDf5Rt0VLMUZPbWzRyqvfmJjqzMet4iIhF
-         eh3v7D4IZOIzzUvjF6YoIQzuLzDiLXvW6veayly04dyiXdYWOSK5/zFrlOOduZMgRI++
-         5BB54NcbpvYPj8LoBWOkycthy1yVUdtv3LhZOlCJmYpQ4zjhMPyoo5dRwSEw4cRybJ2s
-         jDH3yKLA7/do0M+ABQRR/PVeylkdTHTd8o9eYIgD5qRtQe7+trsTHs66ygvB9S2yaQ77
-         OISg==
-X-Gm-Message-State: APjAAAX/akhF6DzeYxgrFpr//ClP8qVz8YcodDSuB9rw9RcZUdtlP6r3
-        fBC7tsbbs5f4bn/zFMz0ikDbFw==
-X-Google-Smtp-Source: APXvYqxMVqWi9q1B2yxmC4wZZZXSVhGzdbBIEJ6FLUS/NdeoPIgPNzB45PC1XWQDPGk1SMeruQtajw==
-X-Received: by 2002:a7b:c152:: with SMTP id z18mr291425wmi.109.1575475561349;
-        Wed, 04 Dec 2019 08:06:01 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:d965:ceae:a314:6edb? ([2a01:e34:ed2f:f020:d965:ceae:a314:6edb])
-        by smtp.googlemail.com with ESMTPSA id s8sm8481843wrt.57.2019.12.04.08.05.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2019 08:06:00 -0800 (PST)
-Subject: Re: [PATCH v6] clocksource/drivers: Suspend/resume Hyper-V
- clocksource for hibernation
-To:     decui@microsoft.com, arnd@arndb.de, bp@alien8.de,
-        haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, sashal@kernel.org, sthemmin@microsoft.com,
-        tglx@linutronix.de, x86@kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com, vkuznets@redhat.com
-Cc:     linux-arch@vger.kernel.org
-References: <1574233946-48377-1-git-send-email-decui@microsoft.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <fc5c9000-9753-4f64-2912-3e2a794f5528@linaro.org>
-Date:   Wed, 4 Dec 2019 17:05:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <1574233946-48377-1-git-send-email-decui@microsoft.com>
-Content-Type: text/plain; charset=utf-8
+        id S1727912AbfLDTlb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 Dec 2019 14:41:31 -0500
+Received: from mail-eopbgr690102.outbound.protection.outlook.com ([40.107.69.102]:24322
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727867AbfLDTlb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 4 Dec 2019 14:41:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OoCUvFmCymUg6Gkjxmt0BRjBj5AhwMI1rHOuzsg0QLFvVvxQFFulhLZesX9Ls7mp6hd8RJKp+RNL9SKjJFbF0Lx+EBLBH97sce+iw73oVNeU4WDyzlxojyd3AOjLAQ0wAYcDgS1rFUcAgv7t7i/w25X1FCBszEcVyA1drofrpN9+vmnONom3Tgpc8GRynA+WN16wIoFGZMMs8QcPvsdMSeYLdcW/zwFZAHjtSozLbhCrAK3DqsUOPwfDlmZx/0ZsFWcCazOshk+jw/4DqIAsOlqDrFt2qwsAuYpyhXu5F4TPOKaedAb0DpQu9sNVe5slBjMoq7dItHYuDD6A82mgjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BDoEM7EgNd6eOXCaY4bLJsYyW1U3Lz2SQMA3P3LXDv8=;
+ b=LHD967lccKQeBnLtR2wWfeMOAg0je5fWh3glaso5ynjfo/9+AR67s7y4IN+58n8VnIkZi0rahOijdKmIo6WOvosUO2bwRhuWIzYq7Jw/KEyc1eMl4WecCuIayeM84Ti9/sEyv6Jk9X+P+OoI5Q7gpXqTUQJxZ6fpCgtu499XyQkGzSAno35ZsBjo3r6NqTIYZ87yyJq0OvKhqBBpfQD4wjwchRwKmAzB2Qz/1M7+A1l6TRf9CUbTJIFQgQmfL8zKOJ1knlLrgOSCOsGKhodESNQY6phNWY7+3i/iIv5YDbsYO+EmGgpcPDbYyU2LWiFU37pUeRoB9QCTJlHmaq3YpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BDoEM7EgNd6eOXCaY4bLJsYyW1U3Lz2SQMA3P3LXDv8=;
+ b=KzQqsxoXrnO8/37roOs/4rUfBMu7pIjufkb4fwLpeX4e3JXADS3TrEMRieuONt2T+/knBuJ4+TWqKGr0JvKGcHz+UBGYCPPaGmgF3pZypq3ikC9yOUZkIvsbPxQ3RyY/6HPmgSSNzHAF8NBxoGqVAgRMNfFfAx2HEsxMTGJjQpU=
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
+ CY4PR21MB0823.namprd21.prod.outlook.com (10.173.192.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.8; Wed, 4 Dec 2019 19:41:27 +0000
+Received: from CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c]) by CY4PR21MB0629.namprd21.prod.outlook.com
+ ([fe80::ed94:4b6d:5371:285c%4]) with mapi id 15.20.2516.003; Wed, 4 Dec 2019
+ 19:41:27 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Long Li <longli@microsoft.com>
+Subject: RE: [Patch v2 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [Patch v2 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVqk4NaxK6CpnVL0m95xDbFY0JxKeqYMPA
+Date:   Wed, 4 Dec 2019 19:41:27 +0000
+Message-ID: <CY4PR21MB0629F44348FF838E261932BCD75D0@CY4PR21MB0629.namprd21.prod.outlook.com>
+References: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-04T19:41:25.7087183Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b21d9c28-862c-4501-a145-112dc716f4a8;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:3:5d27:4b38:668e:1019]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1cd25bc4-7b5e-46b3-feb7-08d778f1f42c
+x-ms-traffictypediagnostic: CY4PR21MB0823:|CY4PR21MB0823:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR21MB0823AB1F32876CC92E64A243D75D0@CY4PR21MB0823.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(39860400002)(396003)(136003)(189003)(199004)(7736002)(99286004)(66946007)(52536014)(14454004)(8676002)(2201001)(76116006)(66476007)(478600001)(110136005)(33656002)(102836004)(81156014)(229853002)(81166006)(66556008)(5660300002)(64756008)(4744005)(66446008)(55016002)(6116002)(10290500003)(4326008)(22452003)(86362001)(186003)(25786009)(305945005)(7696005)(76176011)(8936002)(14444005)(10090500001)(15650500001)(9686003)(2906002)(71200400001)(2501003)(74316002)(11346002)(71190400001)(316002)(6246003)(6506007)(6436002)(107886003)(8990500004)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0823;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: =?us-ascii?Q?q0nYnwAM2OQNJN+U/iIx3EFjdwlqFu7X15rhQbOZXjF5KZLFnfCb5/pcIpO5?=
+ =?us-ascii?Q?GqB19E0Nih5eAc4TJYN+sDr1iAT8R+lnTfqMuUHw3FzgHlAUkB7PO3Odq5Ur?=
+ =?us-ascii?Q?xI1VN6K7flXIMMXzitTbQZQLpOjo3KOw3GDpGqebrcivsxVz/S5Uf0J+rsMv?=
+ =?us-ascii?Q?qUF+BnilKShitZaoxxOQJ3CPV5NE7vh02CpdLhIIT7YiNQFKHvplxSZ9gpIA?=
+ =?us-ascii?Q?n75v8OKA7FNngR77kaQdDPKos9L4PJnOXRxSBpFff5mtrdQWx978mOANioSd?=
+ =?us-ascii?Q?9VIJOvvP4EZr/QGH73qqKAU2XuQ1Xpwtig3J0bZRdeHRQgHjee0HS/woq+xS?=
+ =?us-ascii?Q?ii8HQZP7UeeU7ABMjmLbaNQwp5aQ6asfn2cY5lnC78YfOtMP+f7/I2od9vWs?=
+ =?us-ascii?Q?ay4b7KejxNlIftrDXfgKqhWdo5XBnuGMeBnVgiyau2Cb6QXkOm52+QMOepYA?=
+ =?us-ascii?Q?+gZu/0GwvM7nx2SSV5tDZ3/4MdmcIwbSOQAIMuZHH/w+wh/9xhhGn2+DkATs?=
+ =?us-ascii?Q?72HDX9qGDgfRb0k2hVafVoHgqkJanCUmuVjhpEerC37SDnmQf6LbcASnvgD3?=
+ =?us-ascii?Q?i5MLcflccZR8ECS+b4gOZmAgrrdx+qm2mPjEFASL4YxISXsSUijJMoY4g8nv?=
+ =?us-ascii?Q?pv8ByvsQiXkZPjd8RABa8rMXwYScY/ssNoH3+lOuF5DYVBVGIIAL2XA0LHK/?=
+ =?us-ascii?Q?B1HarK2s6lUE98+ZhqtJsUpsYIiTEvSPCO5ynBIXDbsz6exURQa4lfjKwyZT?=
+ =?us-ascii?Q?xqFzHE+Iq5ylvTaOmuV+NJJTPB0ivP7hAlgcCUcMCP+eLgA+9BHjYXvOAcJR?=
+ =?us-ascii?Q?whbzkOSP8LVNrNIHC0XEdmb1g5d6HPkYqexy+5EbOHp+RKFRUgD+ciYCA3W0?=
+ =?us-ascii?Q?psbv9j2VDyXFQmDZm9f2LkFA56cPevY3wWJQj1kOkuac0GCwFICpZKr7T3oH?=
+ =?us-ascii?Q?KZcMMItvMEhrH5095js0qsgZ252JwiSic8VmOhL0MQhpzKMaIJejkpf1jCwm?=
+ =?us-ascii?Q?YJ8OOAP62MS9IBIwfyGpIBKFd0d9QHpg/UIabOR4B3nMFKgnnnapj7JLQLkr?=
+ =?us-ascii?Q?vMc+KxbmgevGNG+uFRSmKMcMcw3DAFwV7wtRqce0QBX9bi6Bkcyhc8Tvinhf?=
+ =?us-ascii?Q?IZaOFzNjUssiIJm5M+PYn6obJO8/xo/ysI84R/pI3JN/iXnKiwrvK2w6+J4J?=
+ =?us-ascii?Q?HDQdS5aryqX4zS833tnt/5v1WOB3gl41mMGrDr1iRZ0UR6D7UUCIFrV7qPXS?=
+ =?us-ascii?Q?P7PcIkPQxKcBbpMTglnHbXDMtcJjFbh0e8d9W4fbfc9csvkk3T0Wnx46+nPE?=
+ =?us-ascii?Q?7366I6KVxBSyJ8ddGzuaQxt+Szq1+tSZ3iPJG6sXylSvmmGrY1jN6AGfCAFN?=
+ =?us-ascii?Q?gC2WC7Dz1hbpaL+75hCbq+KjxEASfQnalGf8S6qLm3nPWJV9gMblsABWDGES?=
+ =?us-ascii?Q?UFrrYWhGeOPbiSw/hzMtVOWw9S9qzZ9L0Vp9JIZEEFGM1UeiowdHssna4b3F?=
+ =?us-ascii?Q?AVoOZZquF6ckZzQe69LcWWvao+xaJqL3VPt73lUMX4Btf89sco+glEOjLIx3?=
+ =?us-ascii?Q?bgxlxGFLbRpq0Gd+7pmHnPGTpY2Xy8Eovp7SFxz4HfPBSVsFF6PkAShzNGyv?=
+ =?us-ascii?Q?hD33kpd55EcbRFiBbi9t0wapH8e2jaGZuwhMm4SqVujzFT4YSMRO91stTPau?=
+ =?us-ascii?Q?1ohogQQjFjJQlNBrkbfl8K7bbf8uP3zsVL/GMwhNr7IukWzHprVeqkmVy9R2?=
+ =?us-ascii?Q?AyEV2j4sc89M+54z8qmA1YdkkbKUyjO0qRgu3y6fxr/P370nb5q8h1APcrsc?=
+ =?us-ascii?Q?+q46M0FAMiB+EAVGu/eEc6tPXeYOpz+DEQEYQu9Ozu3EwRRtVD5aSMA8a9LX?=
+ =?us-ascii?Q?roPSszmA6LSt0hJU4A=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cd25bc4-7b5e-46b3-feb7-08d778f1f42c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 19:41:27.3846
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: upd1SGVkvtknhJS3KW7A4FyUBgGzm/Xb/7/rTqpiKG7HJagVig7/r0h1r7pxWrLeFESfLO7mJYFaHFN887HB1hmDB5gk4qjUFp+fB0kmL9E=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0823
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 20/11/2019 08:12, Dexuan Cui wrote:
-> This is needed for hibernation, e.g. when we resume the old kernel, we need
-> to disable the "current" kernel's TSC page and then resume the old kernel's.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+From: Long Li <longli@microsoft.com> Sent: Tuesday, December 3, 2019 6:54 P=
+M
+>=20
+> hv_dr_state is used to find present PCI devices on the bus. The structure
+> reuses struct pci_function_description from VSP message to describe a dev=
+ice.
+>=20
+> To prepare support for pci_function_description v2, we need to decouple t=
+his
+> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages=
+.
+>=20
+> There is no functionality change.
+>=20
+> Signed-off-by: Long Li <longli@microsoft.com>
 > ---
-> 
-> This patch is part of the v5 patchset:
->   https://lkml.org/lkml/2019/9/5/1158
->   https://lkml.org/lkml/2019/9/5/1161
-> 
->   Actually v6 is the same as v1 (v2~v5 were posted with the other patches).
-> 
->   Please pick up this patch into the tip.git tree, probably onto the branch
-> timers/core.
+>=20
+> Changes
+> v2: changed some spaces to tabs, changed failure code to -ENOMEM
+>=20
+>  drivers/pci/controller/pci-hyperv.c | 100 +++++++++++++++++++---------
+>  1 file changed, 69 insertions(+), 31 deletions(-)
+>=20
 
-Applied, thanks!
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
