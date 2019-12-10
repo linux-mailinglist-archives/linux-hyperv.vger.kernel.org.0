@@ -2,124 +2,84 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB24F118397
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2019 10:31:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1686118CE1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Dec 2019 16:46:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfLJJbr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 10 Dec 2019 04:31:47 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35638 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfLJJbr (ORCPT
+        id S1727211AbfLJPqZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 10 Dec 2019 10:46:25 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42032 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727178AbfLJPqZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:31:47 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so19204164wro.2;
-        Tue, 10 Dec 2019 01:31:45 -0800 (PST)
+        Tue, 10 Dec 2019 10:46:25 -0500
+Received: by mail-pl1-f196.google.com with SMTP id x13so28257plr.9;
+        Tue, 10 Dec 2019 07:46:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bpI+KSQjVizekLOTqRO9QHhCCkeA25xOcgVNFSMIVJ4=;
-        b=a+MeZ1Vrjiw5Y7skASSivWiCZqb/XvferZcrYNnkoSGw/nmgJX645OcRxXyTPnQOWZ
-         PRPo/kAAL+oGi32ezRt2Au6WjY8i35tMWo8FsQLlBwuLyHODXFSOTDw+IMhmS6QBkeko
-         Pu5olkeP8uSzjS6fhX4KgBfsBhHmPZsgKQB9Cy+8JlVG25n7T4sKBREGBSPk0OdrhuQx
-         /EjkcNTW5BqcIOjlEpHQPN8dxB7XuhzY4HLy1atEth0MZebZpvoOXhxbvTLte+u/AnZI
-         z42tg3m6fVRKyv4lbIFSiSWjaz93D8upIY/vZZwVdO1IqMLwlmHtXmqczYwJnhhSYSJj
-         7VDw==
+        h=from:to:cc:subject:date:message-id;
+        bh=SEVzYm5jNJz4VDppe7/WWH/36/csGHzBj+3YG9crYxM=;
+        b=eNKUlyZV+9AK1rbPzSc599PR8/HSVo0lodnmDdgldEBN+E8992+FTU0pFM/BGwnRcH
+         JAxUwICUHyHn0fe2PDB8IPK5J2ulLLVCxPCSoIlVq8ink6QYMpUvg1wtEFYTmJtG0Aq4
+         FmagRIeEWF8vc3f1ZIDGXaygRrcXQp33KVybMXUp+hupPuuye2cNt4jaGv8NnO6Ppe5q
+         VXiAhpSunwIaX/0TC1mVYTkVImYNC0+dqChCaIQNefOMfwRwAadw5Jf/TWrRIMxV8SeV
+         WNhnXbn+tv/bK4U0imlAM3QUz5SYnzTbw+8Zatgv3E7/216iAUJUsnt7mvF7/g4XMaKl
+         97eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bpI+KSQjVizekLOTqRO9QHhCCkeA25xOcgVNFSMIVJ4=;
-        b=kZxzVS1LlCZl3xrboppiKca2RVCo+kRIWUFsOIJ2YKeOPAD2r1MxQFWjoSMfBSkCdy
-         YnFzMFh1gFVcY0KbKdlcDbJorRsvpen0N2rO9bq/xJL96WHAZ/+BVIvnvfjLLiRZMHRT
-         mUp8wCSmLo9zSQicptbXRrVY5eY/07NKtogJMr6LvEGRgQBxlEeBzXJs0PUhXjWexKOA
-         TPRyYhLvURzzB5p352IxILNPl53R/3BGg08+9k6xBkYVbQDKu2CxEki8fGcpjYxozb5M
-         ZJRNoHDbSfMB04Upkk94X2br0UrToWA30cm7OcA0R4bM/vjdoNp5AVzWyT1uB016U7O0
-         84jw==
-X-Gm-Message-State: APjAAAV9iV7WCoIom6AiZ2Q0bpqEcPiAQTARjICgvF9b/tqpH7bDMChC
-        gObL81/kIJZUGeWVQ4B+b1gQRiFQqEfF285e
-X-Google-Smtp-Source: APXvYqxWGiaybhCl9DlfGoAm1B5j8O5erlMSACMm9aif0qYGOKaX9NqvbLu4rN9iI1ca4/OPF4INig==
-X-Received: by 2002:a5d:6a8e:: with SMTP id s14mr2102243wru.150.1575970304470;
-        Tue, 10 Dec 2019 01:31:44 -0800 (PST)
-Received: from localhost.localdomain (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
-        by smtp.gmail.com with ESMTPSA id n3sm2372611wmc.27.2019.12.10.01.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 01:31:43 -0800 (PST)
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andrea Parri <parri.andrea@gmail.com>
-Subject: [PATCH 2/2] clocksource/hyperv: Set TSC clocksource as default w/ InvariantTSC
-Date:   Tue, 10 Dec 2019 10:30:54 +0100
-Message-Id: <20191210093054.32230-3-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191210093054.32230-1-parri.andrea@gmail.com>
-References: <20191210093054.32230-1-parri.andrea@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SEVzYm5jNJz4VDppe7/WWH/36/csGHzBj+3YG9crYxM=;
+        b=sshqrgdjhvBwda3JhTZAOLU66b43vsew2XVdRlvYFg0pB8UCTvhdB/rxqHZz6cwO5o
+         x7bPlzcpqIPVhAvLiMqjxYFJxWgjZy3/BiQeT3WGIjE5UUosQhWsMEMsvXyY7iQ/+RcY
+         Wkol/J4lT/13MWZbjRMmizTxUsGqKZ1aS+0DMgXaouy8n+NnZgJrtf3B+8vOPtSpnLrW
+         3gv448C2J+8bdd0C/vycFevZdYH6wXOGfaEdxoWQeQxWQfWDkNSi0ZSHJEXonl7m96uD
+         CLn6uZ6YgQrvDLEuKAt+GUIAPLmCuC9GZX4PJF/hLnrhSWph8tKkawL4puVpdd7LodEp
+         oBrA==
+X-Gm-Message-State: APjAAAWQLC2OSsiZ4YsYf4pITonxqdEone3UyQA7RqPQ4Dr5N1EK6F63
+        WfCKr0StA84+yEsI6q5IROI=
+X-Google-Smtp-Source: APXvYqytYp0R9zyeFlRgYBWM3uJZ4gUjN8fiMjYfYdCW0CrSvIjuPbzjXajrvhEJz9y++TYaz9rvHA==
+X-Received: by 2002:a17:902:aa8f:: with SMTP id d15mr36828933plr.80.1575992784728;
+        Tue, 10 Dec 2019 07:46:24 -0800 (PST)
+Received: from localhost.corp.microsoft.com ([167.220.255.5])
+        by smtp.googlemail.com with ESMTPSA id k13sm4113815pfp.48.2019.12.10.07.46.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 07:46:24 -0800 (PST)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, jgg@ziepe.ca,
+        dave.hansen@linux.intel.com, david@redhat.com, namit@vmware.com,
+        richardw.yang@linux.intel.com, christophe.leroy@c-s.fr,
+        tglx@linutronix.de, Tianyu.Lan@microsoft.com, osalvador@suse.de,
+        michael.h.kelley@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, vkuznets@redhat.com, eric.devolder@oracle.com
+Subject: [RFC PATCH 0/4] x86/Hyper-V: Add Dynamic memory hot-remove function
+Date:   Tue, 10 Dec 2019 23:46:07 +0800
+Message-Id: <20191210154611.10958-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Change the Hyper-V clocksource ratings to 250, below the TSC clocksource
-rating of 300.  In configurations where Hyper-V offers an InvariantTSC,
-the TSC is not marked "unstable", so the TSC clocksource is available
-and preferred.  With the higher rating, it will be the default.  On
-older hardware and Hyper-V versions, the TSC is marked "unstable", so no
-TSC clocksource is created and the selected Hyper-V clocksource will be
-the default.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
----
- drivers/clocksource/hyperv_timer.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Hyper-V provides dynamic memory hot add/remove function.
+Memory hot-add has already enabled in Hyper-V balloon driver.
+Now add memory hot-remove function.
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 0eb528db4822d..6a92f945916d4 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -302,6 +302,14 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
-  * the other that uses the TSC reference page feature as defined in the
-  * TLFS.  The MSR version is for compatibility with old versions of
-  * Hyper-V and 32-bit x86.  The TSC reference page version is preferred.
-+ *
-+ * The Hyper-V clocksource ratings of 250 are chosen to be below the
-+ * TSC clocksource rating of 300.  In configurations where Hyper-V offers
-+ * an InvariantTSC, the TSC is not marked "unstable", so the TSC clocksource
-+ * is available and preferred.  With the higher rating, it will be the
-+ * default.  On older hardware and Hyper-V versions, the TSC is marked
-+ * "unstable", so no TSC clocksource is created and the selected Hyper-V
-+ * clocksource will be the default.
-  */
- 
- u64 (*hv_read_reference_counter)(void);
-@@ -340,7 +348,7 @@ static u64 read_hv_sched_clock_tsc(void)
- 
- static struct clocksource hyperv_cs_tsc = {
- 	.name	= "hyperv_clocksource_tsc_page",
--	.rating	= 400,
-+	.rating	= 250,
- 	.read	= read_hv_clock_tsc_cs,
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-@@ -370,7 +378,7 @@ static u64 read_hv_sched_clock_msr(void)
- 
- static struct clocksource hyperv_cs_msr = {
- 	.name	= "hyperv_clocksource_msr",
--	.rating	= 400,
-+	.rating	= 250,
- 	.read	= read_hv_clock_msr_cs,
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+Tianyu Lan (4):
+  mm/resource: Move child to new resource when release mem region.
+  mm/hotplug: Expose is_mem_section_removable() and offline_pages()
+  Hyper-V/Balloon: Call add_memory() with dm_device.ha_lock.
+  x86/Hyper-V: Add memory hot remove function
+
+ drivers/hv/hv_balloon.c | 707 ++++++++++++++++++++++++++++++++++++++++++------
+ kernel/resource.c       |  38 ++-
+ mm/memory_hotplug.c     |   2 +
+ 3 files changed, 664 insertions(+), 83 deletions(-)
+
 -- 
-2.24.0
+2.14.5
 
