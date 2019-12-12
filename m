@@ -2,86 +2,194 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FBF711CC54
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Dec 2019 12:35:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D24A911CE7B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Dec 2019 14:37:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbfLLLfC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 Dec 2019 06:35:02 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:48295 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729025AbfLLLfB (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:35:01 -0500
-Received: by mail-io1-f69.google.com with SMTP id e15so1308284ioh.15
-        for <linux-hyperv@vger.kernel.org>; Thu, 12 Dec 2019 03:35:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=zFl6E7DmT67W68XqVzR2aCsqjcFpWexNUq+6/CXmVUk=;
-        b=M5+mm8cP+Q45LRiMrTlfo7S6snKdLimmIfYiIIfSbGJO0lL5h2ptE0ydr6FeV+e5b3
-         C6deIi9u1+PgZrVpmiJIx0E5gLmfNUJkWou4CkU9vHsdVJU9g9HND4tFYG/puh5nwE3a
-         ZslAKj7efvz7KE7KScFmXNNdXg+4zaL2OwQ3lj8qemiSRE80Bh+28L6VVEfNgo7VUTH0
-         2qsSOIDA5o7UpnAQLToIVsfDdMcI1YRwO0Fgp6Juab5ee1hi6wa6EmU3GhiXvIDDo1Im
-         BZRvOxxPlWg2jVO1FRBz+QuN9Ovad66/pZ/D1n4hU+a68YKQKg2EkCjOwQaZ7Gh3e3d+
-         rkFg==
-X-Gm-Message-State: APjAAAX6npTLHS/nBKgqix7V/nkLjSrW0BEoqs6f3n3Ip1a9c5kJd01t
-        +MaNLmpUF4XjcYKTrV2eQPmaHNVZSt/GwgdZr1+7dTrZfUyp
-X-Google-Smtp-Source: APXvYqx7tAF42179GqyQGzxmn7mnoZxL7LgtxR3PNlsI/lOpd2FmYULEa+vakNib69tHnoQvSF7+iHISpB+uiby7hAsvBYRTiqDc
+        id S1729405AbfLLNhy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 12 Dec 2019 08:37:54 -0500
+Received: from mail-eopbgr1310108.outbound.protection.outlook.com ([40.107.131.108]:6160
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729428AbfLLNhx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:37:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eIGhC/PLipgsVv6FyxUKg7ZBu5/NQQ4uWpOsPgsoVM3pS1q/ZSjbzOGouki2A1qtlTRAuFg3lFSb8P4JRnE2hPO23+oowtllYRF+qLuxLlkxRu0UprbxFRWlTf/G1g6rDjSdOhWIAo7d/SPg5EQ3D7HWV1l9Wj7nJxkVw96kEqg8zgLar9NXIqBgju8ePU0zAHvRXRFl16d7fGbxqakh+TSVV4zn+B2GknB/K3tAlVZepD44uZ0aEu+bPYZjHKMTu0FONI0visZ5SOfDjTF0pGcJWcrsAyn/B7XSuNq0V7PnmEWfp6lFmHNBl3J+J1y+B4NvezAzZswa/xDmllsDJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T7kW9obHpWnq6d+jqOYFJfRMZylMMu4R92+/D5KVNJw=;
+ b=SyUgP+9AAescJT0srfHggnxTEsPNuOJue+LdufkEZPAsMdMefINQtUNDjwSpge1lsHAQmkebEHD1123TdA8HoDyXhGzi6qbq6pyp9umKJLKe+t8Gubr7YdWHGTDGpWa4DEdpBhqcG2D/xcKRFMEUjCwQLw6lqw1f7XE06gVdHTR7T0i7ArQebCNsTgxpJBg1LZ7pJPIxSSmdPIPYPEY1LiMX4ZrAhhJmmwq/c4x2dqsn4CwY3tMWDzoYmfkPnic9mWfcPjbu9+CwgZ7QBJwVil9pzr/Y+K49JK1JgQ2/0mcdeM2870RTNERAtqnSNdEnS6Ax92sY+2TGCOKN+TJk7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T7kW9obHpWnq6d+jqOYFJfRMZylMMu4R92+/D5KVNJw=;
+ b=ifZu5tSok8YuF66J+I4wu2plQnJFufPaRX9RpIIP4Zb+k3zuJglzgMEZRNnW0Je8zmm6pMn6HUVOCO7YQ8QpkDAT7EQPfcde6v/kbr1BGd6QSv05WrEdOp90rtPyTl0yp1j12ktd/O7/bIGBnmqePRnP+4VUBmnHyHo9v6lHBYY=
+Received: from PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM (10.255.67.139) by
+ PS1P15301MB0250.APCP153.PROD.OUTLOOK.COM (10.255.65.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.7; Thu, 12 Dec 2019 13:37:44 +0000
+Received: from PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM
+ ([fe80::c5bb:5af:a6b6:9f2d]) by PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM
+ ([fe80::c5bb:5af:a6b6:9f2d%7]) with mapi id 15.20.2559.009; Thu, 12 Dec 2019
+ 13:37:44 +0000
+From:   Tianyu Lan <Tianyu.Lan@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>,
+        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "eric.devolder@oracle.com" <eric.devolder@oracle.com>
+Subject: RE: [EXTERNAL] Re: [RFC PATCH 4/4] x86/Hyper-V: Add memory hot remove
+ function
+Thread-Topic: [EXTERNAL] Re: [RFC PATCH 4/4] x86/Hyper-V: Add memory hot
+ remove function
+Thread-Index: AQHVsDSVAmZoEFWZtkS2Kq1wiU/Phae2K6Og
+Date:   Thu, 12 Dec 2019 13:37:43 +0000
+Message-ID: <PS1P15301MB03464A08271DC99E0617DF8792550@PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM>
+References: <20191210154611.10958-1-Tianyu.Lan@microsoft.com>
+ <20191210154611.10958-5-Tianyu.Lan@microsoft.com>
+ <87mubyc367.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87mubyc367.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=tiala@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-12T13:37:41.6440274Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=77b4d887-a426-44da-a9a5-d32c97dc732f;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tianyu.Lan@microsoft.com; 
+x-originating-ip: [167.220.255.55]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ca3f40f9-2361-4652-b99b-08d77f0877d9
+x-ms-traffictypediagnostic: PS1P15301MB0250:|PS1P15301MB0250:|PS1P15301MB0250:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PS1P15301MB02506E8F07004B6A2608498392550@PS1P15301MB0250.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(346002)(396003)(136003)(366004)(199004)(189003)(71200400001)(7696005)(52536014)(5660300002)(8990500004)(76116006)(9686003)(66946007)(55016002)(66476007)(66556008)(64756008)(66446008)(110136005)(81156014)(81166006)(8936002)(2906002)(54906003)(8676002)(33656002)(6636002)(6506007)(186003)(478600001)(4326008)(10290500003)(316002)(26005)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:PS1P15301MB0250;H:PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1+hKvRz01hQhd9vZoyeiJZShn3tlnpErqILfkvQUt9SI8dYXlSLn0oIGMrbrAoV/+m851ykEiFMxETj/mGEaSGwLq4XiOdonw7jj3JGO0gZMDLVfyiI5Io8BO6yLvg/Y6Gju7+6VCv1UUlnlQ9NMl23JKC0RmbthqRHYV2MmewF1BylxSx6Ar+knYGTKdVzHCHuHC6er7r1JZtxoMT8uxjA/EY9r6PS9fC8nA3gSkLwv7VyS8TtN0Uj1G5BnJImYPlbd8TtWW3co0Cc0kqy1CrNV3JP6rsge/+AmrB6BervwEGJZf6L4TgaW1RHeIqD2JikGNNyxFGlXPmBlKY0384k2mDtUvrKmNODc9T+z8EN5VXzAg/EV0NBxEiCG2cetDNL614WcEKRJvRu+Hr+3fGByGMEL5vaZhTAy6e2yNvqdSPch/ry1aknzaQArzblq
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a92:3b19:: with SMTP id i25mr7844146ila.85.1576150500982;
- Thu, 12 Dec 2019 03:35:00 -0800 (PST)
-Date:   Thu, 12 Dec 2019 03:35:00 -0800
-In-Reply-To: <000000000000b6b03205997b71cf@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b949ee0599802274@google.com>
-Subject: Re: BUG: corrupted list in __dentry_kill (2)
-From:   syzbot <syzbot+31043da7725b6ec210f1@syzkaller.appspotmail.com>
-To:     a@unstable.cc, alex.aring@gmail.com, allison@lohutok.net,
-        andrew@lunn.ch, andy@greyhouse.net, ap420073@gmail.com,
-        ast@domdv.de, ast@kernel.org, b.a.t.m.a.n@lists.open-mesh.org,
-        bpf@vger.kernel.org, bridge@lists.linux-foundation.org,
-        cleech@redhat.com, daniel@iogearbox.net, davem@davemloft.net,
-        dsa@cumulusnetworks.com, dsahern@gmail.com, dvyukov@google.com,
-        f.fainelli@gmail.com, fw@strlen.de, gregkh@linuxfoundation.org,
-        haiyangz@microsoft.com, hawk@kernel.org, hdanton@sina.com,
-        idosch@mellanox.com, info@metux.net, j.vosburgh@gmail.com, j@w1.fi,
-        jakub.kicinski@netronome.com, jhs@mojatatu.com, jiri@mellanox.com,
-        jiri@resnulli.us, johan.hedberg@gmail.com, johannes.berg@intel.com,
-        john.fastabend@gmail.com, john.hurley@netronome.com,
-        jwi@linux.ibm.com, kafai@fb.com, kstewart@linuxfoundation.org,
-        kvalo@codeaurora.org, kys@microsoft.com,
-        linux-bluetooth@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ppp@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-wpan@vger.kernel.org,
-        liuhangbin@gmail.com, marcel@holtmann.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca3f40f9-2361-4652-b99b-08d77f0877d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 13:37:43.9400
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iQZi6I5mnB9KkmsAHKjgm2bZ9V3/A/T3CoQuCq4pyu1rlmvrwi6l/m6t8/9rs2/gapXXPEZZ2km7m2yT9kEwaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PS1P15301MB0250
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-syzbot has bisected this bug to:
 
-commit ab92d68fc22f9afab480153bd82a20f6e2533769
-Author: Taehee Yoo <ap420073@gmail.com>
-Date:   Mon Oct 21 18:47:51 2019 +0000
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+>=20
+> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >
+> > @@ -376,6 +391,27 @@ struct dm_hot_add_response {
+> >  	__u32 result;
+> >  } __packed;
+> >
+> > +struct dm_hot_remove {
+> > +	struct dm_header hdr;
+> > +	__u32 virtual_node;
+> > +	__u32 page_count;
+> > +	__u32 qos_flags;
+> > +	__u32 reservedZ;
+> > +} __packed;
+> > +
+> > +struct dm_hot_remove_response {
+> > +	struct dm_header hdr;
+> > +	__u32 result;
+> > +	__u32 range_count;
+> > +	__u64 more_pages:1;
+> > +	__u64 reservedz:63;
+> > +	union dm_mem_page_range range_array[]; } __packed;
+> > +
+> > +#define DM_REMOVE_QOS_LARGE	 (1 << 0)
+> > +#define DM_REMOVE_QOS_LOCAL	 (1 << 1)
+> > +#define DM_REMOVE_QoS_MASK       (0x3)
+>=20
+> Capitalize 'QoS' to make it match previous two lines please.
+>=20
 
-     net: core: add generic lockdep keys
+Yes, Will fix it.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d37cb6e00000
-start commit:   938f49c8 Add linux-next specific files for 20191211
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=11d37cb6e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16d37cb6e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=96834c884ba7bb81
-dashboard link: https://syzkaller.appspot.com/bug?extid=31043da7725b6ec210f1
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12dc83dae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ac8396e00000
+> > +
+> >  /*
+> >   * Types of information sent from host to the guest.
+> >   */
+> > @@ -457,6 +493,13 @@ struct hot_add_wrk {
+> >  	struct work_struct wrk;
+> >  };
+> >
+> > +struct hot_remove_wrk {
+> > +	__u32 virtual_node;
+> > +	__u32 page_count;
+> > +	__u32 qos_flags;
+> > +	struct work_struct wrk;
+> > +};
+> > +
+> >  static bool hot_add =3D true;
+> >  static bool do_hot_add;
+> >  /*
+> > @@ -489,6 +532,7 @@ enum hv_dm_state {
+> >  	DM_BALLOON_UP,
+> >  	DM_BALLOON_DOWN,
+> >  	DM_HOT_ADD,
+> > +	DM_HOT_REMOVE,
+> >  	DM_INIT_ERROR
+> >  };
+> >
+> > @@ -515,11 +559,13 @@ struct hv_dynmem_device {
+> >  	 * State to manage the ballooning (up) operation.
+> >  	 */
+> >  	struct balloon_state balloon_wrk;
+> > +	struct balloon_state unballoon_wrk;
+> >
+> >  	/*
+> >  	 * State to execute the "hot-add" operation.
+>=20
+> This comment is stale now.
+>=20
 
-Reported-by: syzbot+31043da7725b6ec210f1@syzkaller.appspotmail.com
-Fixes: ab92d68fc22f ("net: core: add generic lockdep keys")
+Will update. Thanks.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> >  	 */
+> >  	struct hot_add_wrk ha_wrk;
+> > +	struct hot_remove_wrk hr_wrk;
+>=20
+> Do we actually want to work struct and all the problems with their
+> serialization? Can we get away with one?
+
+I think it's possible to just use one work to handle  all kind of msgs
+with a work struct which contains parameters for all dm msgs and identify
+the msg type in the work callback function.=20
+
+
+=20
+
