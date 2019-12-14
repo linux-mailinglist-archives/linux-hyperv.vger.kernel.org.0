@@ -2,194 +2,114 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D24A911CE7B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Dec 2019 14:37:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0980111F3B2
+	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Dec 2019 20:30:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfLLNhy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 Dec 2019 08:37:54 -0500
-Received: from mail-eopbgr1310108.outbound.protection.outlook.com ([40.107.131.108]:6160
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729428AbfLLNhx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:37:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eIGhC/PLipgsVv6FyxUKg7ZBu5/NQQ4uWpOsPgsoVM3pS1q/ZSjbzOGouki2A1qtlTRAuFg3lFSb8P4JRnE2hPO23+oowtllYRF+qLuxLlkxRu0UprbxFRWlTf/G1g6rDjSdOhWIAo7d/SPg5EQ3D7HWV1l9Wj7nJxkVw96kEqg8zgLar9NXIqBgju8ePU0zAHvRXRFl16d7fGbxqakh+TSVV4zn+B2GknB/K3tAlVZepD44uZ0aEu+bPYZjHKMTu0FONI0visZ5SOfDjTF0pGcJWcrsAyn/B7XSuNq0V7PnmEWfp6lFmHNBl3J+J1y+B4NvezAzZswa/xDmllsDJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T7kW9obHpWnq6d+jqOYFJfRMZylMMu4R92+/D5KVNJw=;
- b=SyUgP+9AAescJT0srfHggnxTEsPNuOJue+LdufkEZPAsMdMefINQtUNDjwSpge1lsHAQmkebEHD1123TdA8HoDyXhGzi6qbq6pyp9umKJLKe+t8Gubr7YdWHGTDGpWa4DEdpBhqcG2D/xcKRFMEUjCwQLw6lqw1f7XE06gVdHTR7T0i7ArQebCNsTgxpJBg1LZ7pJPIxSSmdPIPYPEY1LiMX4ZrAhhJmmwq/c4x2dqsn4CwY3tMWDzoYmfkPnic9mWfcPjbu9+CwgZ7QBJwVil9pzr/Y+K49JK1JgQ2/0mcdeM2870RTNERAtqnSNdEnS6Ax92sY+2TGCOKN+TJk7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T7kW9obHpWnq6d+jqOYFJfRMZylMMu4R92+/D5KVNJw=;
- b=ifZu5tSok8YuF66J+I4wu2plQnJFufPaRX9RpIIP4Zb+k3zuJglzgMEZRNnW0Je8zmm6pMn6HUVOCO7YQ8QpkDAT7EQPfcde6v/kbr1BGd6QSv05WrEdOp90rtPyTl0yp1j12ktd/O7/bIGBnmqePRnP+4VUBmnHyHo9v6lHBYY=
-Received: from PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM (10.255.67.139) by
- PS1P15301MB0250.APCP153.PROD.OUTLOOK.COM (10.255.65.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.7; Thu, 12 Dec 2019 13:37:44 +0000
-Received: from PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM
- ([fe80::c5bb:5af:a6b6:9f2d]) by PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM
- ([fe80::c5bb:5af:a6b6:9f2d%7]) with mapi id 15.20.2559.009; Thu, 12 Dec 2019
- 13:37:44 +0000
-From:   Tianyu Lan <Tianyu.Lan@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>,
-        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "eric.devolder@oracle.com" <eric.devolder@oracle.com>
-Subject: RE: [EXTERNAL] Re: [RFC PATCH 4/4] x86/Hyper-V: Add memory hot remove
- function
-Thread-Topic: [EXTERNAL] Re: [RFC PATCH 4/4] x86/Hyper-V: Add memory hot
- remove function
-Thread-Index: AQHVsDSVAmZoEFWZtkS2Kq1wiU/Phae2K6Og
-Date:   Thu, 12 Dec 2019 13:37:43 +0000
-Message-ID: <PS1P15301MB03464A08271DC99E0617DF8792550@PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM>
-References: <20191210154611.10958-1-Tianyu.Lan@microsoft.com>
- <20191210154611.10958-5-Tianyu.Lan@microsoft.com>
- <87mubyc367.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87mubyc367.fsf@vitty.brq.redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=tiala@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-12T13:37:41.6440274Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=77b4d887-a426-44da-a9a5-d32c97dc732f;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Tianyu.Lan@microsoft.com; 
-x-originating-ip: [167.220.255.55]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ca3f40f9-2361-4652-b99b-08d77f0877d9
-x-ms-traffictypediagnostic: PS1P15301MB0250:|PS1P15301MB0250:|PS1P15301MB0250:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PS1P15301MB02506E8F07004B6A2608498392550@PS1P15301MB0250.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(346002)(396003)(136003)(366004)(199004)(189003)(71200400001)(7696005)(52536014)(5660300002)(8990500004)(76116006)(9686003)(66946007)(55016002)(66476007)(66556008)(64756008)(66446008)(110136005)(81156014)(81166006)(8936002)(2906002)(54906003)(8676002)(33656002)(6636002)(6506007)(186003)(478600001)(4326008)(10290500003)(316002)(26005)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:PS1P15301MB0250;H:PS1P15301MB0346.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1+hKvRz01hQhd9vZoyeiJZShn3tlnpErqILfkvQUt9SI8dYXlSLn0oIGMrbrAoV/+m851ykEiFMxETj/mGEaSGwLq4XiOdonw7jj3JGO0gZMDLVfyiI5Io8BO6yLvg/Y6Gju7+6VCv1UUlnlQ9NMl23JKC0RmbthqRHYV2MmewF1BylxSx6Ar+knYGTKdVzHCHuHC6er7r1JZtxoMT8uxjA/EY9r6PS9fC8nA3gSkLwv7VyS8TtN0Uj1G5BnJImYPlbd8TtWW3co0Cc0kqy1CrNV3JP6rsge/+AmrB6BervwEGJZf6L4TgaW1RHeIqD2JikGNNyxFGlXPmBlKY0384k2mDtUvrKmNODc9T+z8EN5VXzAg/EV0NBxEiCG2cetDNL614WcEKRJvRu+Hr+3fGByGMEL5vaZhTAy6e2yNvqdSPch/ry1aknzaQArzblq
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726875AbfLNTaa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 14 Dec 2019 14:30:30 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43092 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfLNTa3 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 14 Dec 2019 14:30:29 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k197so1254687pga.10
+        for <linux-hyperv@vger.kernel.org>; Sat, 14 Dec 2019 11:30:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=8m+mIQybzPaMhyllV8M24lvSQe2bTRL/4FeQ9BAt9Rg=;
+        b=v0vv4/nevwZ0h0QI0iLwMoCOox6HCrRjTxAFAm8BiSWIn/3MoN2ymskGUUtaTooz2m
+         0gt1ZZZ71ODtrhzw35UYJemvEf48PE9Y+haWK81vn1yaPy190xYMlLNevezCcXtLtZ60
+         XSIN0Xe8d0BVHHfEs07NLyKQ40FUSZAIn7vLmNPlmRje+7GGvuojszNUylMFYT2LKLs3
+         JUgAVZVWf/QfQU3ALCnekQJGWmCYlmSpBFKhD060l3i7ODkJ/KO9l0Vbrfpg2ZN2xEam
+         5mkxYsi/iNVxlZpkVNbiMWTBKMypYDPxiNPgiSvwjp/0EYZCt2zEWOUOgsNoGyaluEqo
+         5EzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=8m+mIQybzPaMhyllV8M24lvSQe2bTRL/4FeQ9BAt9Rg=;
+        b=B/s5Eml+DwapA2YP+SlmBl/M5u1y76SzKfsLFa6z1VvoWslmKAl95WWik9XydzEZFS
+         P+m5tiaDFYOfzVXisD+U/7ucwTWa81l1x+UI5PjOqMhp2ka4X0dUKiLM0v5hUWTB3RR8
+         xcz+bFJ7xRvRDzGVNELlIDFAl7iUpAnT2IcO61oIhLGOsdVyMTSHUUqgm0SKMR6rIsqN
+         y79kFVmTK4EGlYwCDK5NK6epybyF5C4XA5Zij9KBpNbqKmcmO4yJHvSlT1mwcZQNbk2t
+         D2/6qi+jBe2QZmIC99R3TTjCaJm1w6ULV0Ki3Wz9nVmNCclQtHCZoh4f1KdOA0diUlZL
+         2NJw==
+X-Gm-Message-State: APjAAAXxwhdHjsvEXQtdq5YcT/KLXgUA2E8hkmYy33RhnVAQgUwFaNGg
+        7qn89j2sTL/BPxHJf8eZ4IUmXA==
+X-Google-Smtp-Source: APXvYqydEQC93uE9aFoQrBDU9to7Enmv6EqE1GrIh9R0bN67mX/nT11jWrIrP0Cj7flLCHUVszdIkA==
+X-Received: by 2002:aa7:85d3:: with SMTP id z19mr6861440pfn.62.1576351828972;
+        Sat, 14 Dec 2019 11:30:28 -0800 (PST)
+Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
+        by smtp.gmail.com with ESMTPSA id s27sm16592197pfd.88.2019.12.14.11.30.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Dec 2019 11:30:28 -0800 (PST)
+Date:   Sat, 14 Dec 2019 11:30:25 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2,net] hv_netvsc: Fix tx_table init in
+ rndis_set_subchannel()
+Message-ID: <20191214113025.363f21e2@cakuba.netronome.com>
+In-Reply-To: <1576103187-2681-1-git-send-email-haiyangz@microsoft.com>
+References: <1576103187-2681-1-git-send-email-haiyangz@microsoft.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca3f40f9-2361-4652-b99b-08d77f0877d9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 13:37:43.9400
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iQZi6I5mnB9KkmsAHKjgm2bZ9V3/A/T3CoQuCq4pyu1rlmvrwi6l/m6t8/9rs2/gapXXPEZZ2km7m2yT9kEwaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PS1P15301MB0250
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Wed, 11 Dec 2019 14:26:27 -0800, Haiyang Zhang wrote:
+> Host can provide send indirection table messages anytime after RSS is
+> enabled by calling rndis_filter_set_rss_param(). So the host provided
+> table values may be overwritten by the initialization in
+> rndis_set_subchannel().
+> 
+> To prevent this problem, move the tx_table initialization before calling
+> rndis_filter_set_rss_param().
+> 
+> Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after subchannels open")
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-> From: Vitaly Kuznetsov <vkuznets@redhat.com>
->=20
-> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> >
-> > @@ -376,6 +391,27 @@ struct dm_hot_add_response {
-> >  	__u32 result;
-> >  } __packed;
-> >
-> > +struct dm_hot_remove {
-> > +	struct dm_header hdr;
-> > +	__u32 virtual_node;
-> > +	__u32 page_count;
-> > +	__u32 qos_flags;
-> > +	__u32 reservedZ;
-> > +} __packed;
-> > +
-> > +struct dm_hot_remove_response {
-> > +	struct dm_header hdr;
-> > +	__u32 result;
-> > +	__u32 range_count;
-> > +	__u64 more_pages:1;
-> > +	__u64 reservedz:63;
-> > +	union dm_mem_page_range range_array[]; } __packed;
-> > +
-> > +#define DM_REMOVE_QOS_LARGE	 (1 << 0)
-> > +#define DM_REMOVE_QOS_LOCAL	 (1 << 1)
-> > +#define DM_REMOVE_QoS_MASK       (0x3)
->=20
-> Capitalize 'QoS' to make it match previous two lines please.
->=20
+Applied, but there are two more problems with this code:
+ - you should not reset the indirection table if it was configured by
+   the user to something other than the default (use the
+   netif_is_rxfh_configured() helper to check for that)
+ - you should use the ethtool_rxfh_indir_default() wrapper
 
-Yes, Will fix it.
+Please fix the former problem in the net tree, and after net is merged
+into linux/master and net-next in a week or two please follow up with
+the fix for the latter for net-next.
 
-> > +
-> >  /*
-> >   * Types of information sent from host to the guest.
-> >   */
-> > @@ -457,6 +493,13 @@ struct hot_add_wrk {
-> >  	struct work_struct wrk;
-> >  };
-> >
-> > +struct hot_remove_wrk {
-> > +	__u32 virtual_node;
-> > +	__u32 page_count;
-> > +	__u32 qos_flags;
-> > +	struct work_struct wrk;
-> > +};
-> > +
-> >  static bool hot_add =3D true;
-> >  static bool do_hot_add;
-> >  /*
-> > @@ -489,6 +532,7 @@ enum hv_dm_state {
-> >  	DM_BALLOON_UP,
-> >  	DM_BALLOON_DOWN,
-> >  	DM_HOT_ADD,
-> > +	DM_HOT_REMOVE,
-> >  	DM_INIT_ERROR
-> >  };
-> >
-> > @@ -515,11 +559,13 @@ struct hv_dynmem_device {
-> >  	 * State to manage the ballooning (up) operation.
-> >  	 */
-> >  	struct balloon_state balloon_wrk;
-> > +	struct balloon_state unballoon_wrk;
-> >
-> >  	/*
-> >  	 * State to execute the "hot-add" operation.
->=20
-> This comment is stale now.
->=20
-
-Will update. Thanks.
-
-> >  	 */
-> >  	struct hot_add_wrk ha_wrk;
-> > +	struct hot_remove_wrk hr_wrk;
->=20
-> Do we actually want to work struct and all the problems with their
-> serialization? Can we get away with one?
-
-I think it's possible to just use one work to handle  all kind of msgs
-with a work struct which contains parameters for all dm msgs and identify
-the msg type in the work callback function.=20
-
-
-=20
+> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+> index 206b4e7..05bc5ec8 100644
+> --- a/drivers/net/hyperv/rndis_filter.c
+> +++ b/drivers/net/hyperv/rndis_filter.c
+> @@ -1171,6 +1171,9 @@ int rndis_set_subchannel(struct net_device *ndev,
+>  	wait_event(nvdev->subchan_open,
+>  		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
+>  
+> +	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
+> +		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
+> +
+>  	/* ignore failures from setting rss parameters, still have channels */
+>  	if (dev_info)
+>  		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
+> @@ -1180,9 +1183,6 @@ int rndis_set_subchannel(struct net_device *ndev,
+>  	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
+>  	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
+>  
+> -	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
+> -		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
+> -
+>  	return 0;
+>  }
+>  
 
