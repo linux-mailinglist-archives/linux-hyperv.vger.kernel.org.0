@@ -2,203 +2,190 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C5E99123F3E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Dec 2019 06:47:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C8C8127381
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Dec 2019 03:30:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfLRFrj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 Dec 2019 00:47:39 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35544 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfLRFri (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 Dec 2019 00:47:38 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z76so986159qka.2;
-        Tue, 17 Dec 2019 21:47:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rdMMSS5mGXhXxSzn8vN5OSqGco+TdXWURJZsejhpNlU=;
-        b=IbnAbj6RtNE27gTD/82fE5rTu6luXBFeErBAampq/mDtF+82hybj1EYlIJDNleRtWb
-         Tc4xby6WNKEe1VSWAzvQ40QRBdEwkpaoip/jXm9+Y+0/Tdp34uz38tiuwZMmV3ZpCX+7
-         bO+zDh5JQqe502cQCnq8O8hMlBmXcXFxstpyjlB6KqjnSJs6eyObBs9hyl+/FL3Y1wkq
-         k9CEZwWyoAAnbiVWo5OLtx6PDUm03DNKDOhovQncKCIVwQztzjY5dDfDcORDypYn1Ciq
-         IFdm/4n/bUxaAX34UFIFDcwT7AykhHSdACqkLGLZmGzdHLujESdTVCUvUhxVm2CULKmL
-         Uzcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rdMMSS5mGXhXxSzn8vN5OSqGco+TdXWURJZsejhpNlU=;
-        b=PHAaRmQ+kvY3lUAHSGkf3gM9bzsmYyVT0MzB1ncsSksX/G8VyB5MqKVAcL6GkiiHvq
-         NHM577f6hjKmBqwRhfzwSf+k/MvOhWVVTB4nb2muvnsXvNbYUo6imjQ5t/D4ubSlkCVp
-         YdCeW2MKvfh0LSDY7cbQihkbGOngo1E83a5c2dcZeRF5TT3aQoTS/4CqkqWrItd8LqMP
-         +oxMmiuoVVP4Z0wkMdNcyLB1rBKY+GPrzUAC36GR9NVdeu8qyE3rZtvpHrp3oLWYGNWN
-         MrvGzVvC4YWrdi63SeFWn/wk1BKWJ+qRzjJrkutXrpmi9GypIsnrWLFWjPrEqxoBkrB0
-         UNBA==
-X-Gm-Message-State: APjAAAVFj+s0/i7JgNKpwMi71FR5isFGEzpbjdQzUX+rWBkYrj7Y0CBk
-        w2VeSgDWKTvdRx+n0ziozU8=
-X-Google-Smtp-Source: APXvYqxaNz0RO1lOZKINUdqFpRia863ytJsrYewYWjT74VbIG5he6WOrbsQMH4RbQA7++XwYkL1Icg==
-X-Received: by 2002:ae9:e41a:: with SMTP id q26mr790211qkc.288.1576648057742;
-        Tue, 17 Dec 2019 21:47:37 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id t198sm354933qke.6.2019.12.17.21.47.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Dec 2019 21:47:37 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 751CC22223;
-        Wed, 18 Dec 2019 00:47:35 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 18 Dec 2019 00:47:35 -0500
-X-ME-Sender: <xms:dr35XX1gdcqGAIqLT51JyHjdGnzLF1l4WLjUXPweExjBpT4Ci871Yw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtkedgkeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephe
-    dvrdduheehrdduuddurdejudenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
-    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
-    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
-    mhgvnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:dr35XQd4G4lVVfUNeZx2swRweY951aczqjlN0OH0Ok8mYQMGgCrtzQ>
-    <xmx:dr35XeAEw3MdzyfTpxLn4CyJvUYuy7W7U_PYH1XUlribC_owMFWxJg>
-    <xmx:dr35XX93UVrpEnOnntHX8srZBT8vFtWAMQ0ErbFr4ymsIt3qA4Z23Q>
-    <xmx:d735XRpK3pJiUKvIRHERfgQkVY3faW59Xm1i2MFCfRkSRilXSIUcNFuGAOc>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 06F2B8005A;
-        Wed, 18 Dec 2019 00:47:33 -0500 (EST)
-Date:   Wed, 18 Dec 2019 13:47:32 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S1727129AbfLTCaO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 Dec 2019 21:30:14 -0500
+Received: from mail-eopbgr760115.outbound.protection.outlook.com ([40.107.76.115]:20490
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726964AbfLTCaO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 19 Dec 2019 21:30:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HpORmJzJL1SkrI9b7aDlejhsq6/LoOCPwzxHLCKMkAcP7NIVkPkMdhKl4z+3HRoMldhnjQ9f2pDdl1qqTS5+H1NZVH8+1PhaV3MTsxUvf1dN9Auw35M/85kOYjKlsk2xIiu0jZVWG2sPvp/xxre9JGUDa8s+lZLjereQpvhhJCYmh4EXy6zVBneCD0HyMY9IO/ov3WyRem32wLeI7cT/jY0W3SZ8/YBH8ZVMdTgGSFdW43aygmcpAmWn9lnN0ALmhr5/dqreAaPV0jeXbSzA1FoWV1YzNAGhIXSrhX1fv4ovPGIn3ADfFo7D8MUtAobxdO87Ze4rQre8Mao53r3z3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YUErxkwJxf/TDdpi8gYXLJBEg+vu3u25t/g3+9uL53g=;
+ b=Ib5hUwJ79dnKCwSY2UKIhsT33kGmnATz+dUDmDI+A/TWDFBfV5YauWvjmJW+P9zcc6nyZ8hukb9BC3DIc7qg/0kF99CPTnMC9LjlEH9CR3f7w1q0DCFocXQx9R4LSBzMzrJoCFEIBJENFm4styqrxig6ml21p/nwePlKl+phyc1nOS9zUZxbtXhTctiTli8RwJVhjC7lPcTJx0yp3FRaxU2yyxGKo+pT8TTb25fb4cslenqpGXB2TrAn1AxQ9+PtSXYXdCdmZP7MY+o6cD4rTU58CdPOs+xwZYg6QGCroXJ3wzKi9kOYNsVzxWv0r2DxBNpxOLT0QUdby1Qi+n/U7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YUErxkwJxf/TDdpi8gYXLJBEg+vu3u25t/g3+9uL53g=;
+ b=MkGqRIE4kJBMgFErSzOIdoIkfSHdWH3T42FqdbUsl9K4IyLVPKKSYE2t/ZDC1LZ8tll+OxkRN+FrWhNxcLeOkiWF/9KJ6XewvLiM084mEYbIljHGDQ9Tl76D0IdlS5mJfzfAhPmbYu5jFwptcIT5cyfSjFqjK8kIpxcw4nCBavc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
+ DM5PR2101MB1064.namprd21.prod.outlook.com (52.132.130.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.3; Fri, 20 Dec 2019 02:30:11 +0000
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6099:4461:d0ca:f3f6]) by DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6099:4461:d0ca:f3f6%9]) with mapi id 15.20.2581.005; Fri, 20 Dec 2019
+ 02:30:10 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC 6/6] arm64: hyperv: Enable vDSO
-Message-ID: <20191218054732.GK97412@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20191216001922.23008-1-boqun.feng@gmail.com>
- <20191216001922.23008-7-boqun.feng@gmail.com>
- <87y2vb82lz.fsf@vitty.brq.redhat.com>
+Subject: [PATCH net] hv_netvsc: Fix unwanted rx_table reset
+Date:   Thu, 19 Dec 2019 18:28:10 -0800
+Message-Id: <1576808890-71212-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: CO1PR15CA0065.namprd15.prod.outlook.com
+ (2603:10b6:101:1f::33) To DM5PR2101MB0901.namprd21.prod.outlook.com
+ (2603:10b6:4:a7::30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2vb82lz.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO1PR15CA0065.namprd15.prod.outlook.com (2603:10b6:101:1f::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend Transport; Fri, 20 Dec 2019 02:30:09 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7690528f-bd74-4c67-d873-08d784f488d1
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB1064:|DM5PR2101MB1064:|DM5PR2101MB1064:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB1064A258119424AAE9456F09AC2D0@DM5PR2101MB1064.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 025796F161
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(39860400002)(376002)(346002)(199004)(189003)(6486002)(81156014)(81166006)(10290500003)(2616005)(8936002)(2906002)(478600001)(6512007)(6666004)(956004)(66476007)(66556008)(5660300002)(6506007)(186003)(8676002)(26005)(66946007)(52116002)(16526019)(316002)(4326008)(36756003)(26123001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1064;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: p1zFQWt69BIqaZy4L3SBvDRBjJgUHdRC9bLWG2REwYfnLyw9tSsF92VNS/98lDZoAqvrOdLhjwNvtq7vPrWk0iMMrw6sfumRqZYbSYHrZ7nsBRmpMUzoSooHkFmNtT33N54O0XpniTUefTlXZnWwgjwIr9QKo4p/pBiVe/eNAoBTX2h/yK/l8UxuJ1kDj2Mgly4vS2UlqoodonGvM0PbkwhZQev95ltmHnmJgElhQ7HRWrV1dNvpuycmQ7u/KUoL/7rsefg5Dz8Zap7IypLn/DefTqJ9LHRNP/Tc1MTme3YK5iMX6cA6DUZWJfVYiJfn7g4jRCscpan+2CPoNC13xpAUHJDrvl+mJ/mK6hsVi5Wv9y93NPnNGo+oaQp0eTdjpjJZsSXSfkk65t8bt5pkuffAsqlLo2i/2v5kg0iN5vS4arMLSs/DFiHAbKm2IVIo9EltMWfySIQ5OwSlucqYLI0/OoUmw0gK/6cw5h/+0RRp6vhBvtFPoyQ1BhhdMJsh
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7690528f-bd74-4c67-d873-08d784f488d1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2019 02:30:10.8919
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZN15GyaE1c9pzYVZcIj06tOghLQ1XUnLmkcu+cj96fRMsn7pQQgm2d3DD2Z6xCgftW67fcR0a7QSX7qEN0nykg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1064
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 03:10:16PM +0100, Vitaly Kuznetsov wrote:
-> Boqun Feng <boqun.feng@gmail.com> writes:
-> 
-> > Similar to x86, add a new vclock_mode VCLOCK_HVCLOCK, and reuse the
-> > hv_read_tsc_page() for userspace to read tsc page clocksource.
-> >
-> > Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> > ---
-> >  arch/arm64/include/asm/clocksource.h       |  3 ++-
-> >  arch/arm64/include/asm/mshyperv.h          |  2 +-
-> >  arch/arm64/include/asm/vdso/gettimeofday.h | 19 +++++++++++++++++++
-> >  3 files changed, 22 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/include/asm/clocksource.h b/arch/arm64/include/asm/clocksource.h
-> > index fbe80057468c..c6acd45fe748 100644
-> > --- a/arch/arm64/include/asm/clocksource.h
-> > +++ b/arch/arm64/include/asm/clocksource.h
-> > @@ -4,7 +4,8 @@
-> >  
-> >  #define VCLOCK_NONE	0	/* No vDSO clock available.		*/
-> >  #define VCLOCK_CNTVCT	1	/* vDSO should use cntvcnt		*/
-> > -#define VCLOCK_MAX	1
-> > +#define VCLOCK_HVCLOCK	2	/* vDSO should use vread_hvclock()	*/
-> > +#define VCLOCK_MAX	2
-> >  
-> >  struct arch_clocksource_data {
-> >  	int vclock_mode;
-> > diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-> > index 0afb00e3501d..7c85dd816dca 100644
-> > --- a/arch/arm64/include/asm/mshyperv.h
-> > +++ b/arch/arm64/include/asm/mshyperv.h
-> > @@ -90,7 +90,7 @@ extern void hv_get_vpreg_128(u32 reg, struct hv_get_vp_register_output *result);
-> >  #define hv_set_reference_tsc(val) \
-> >  		hv_set_vpreg(HV_REGISTER_REFERENCE_TSC, val)
-> >  #define hv_set_clocksource_vdso(val) \
-> > -		((val).archdata.vclock_mode = VCLOCK_NONE)
-> > +		((val).archdata.vclock_mode = VCLOCK_HVCLOCK)
-> >  
-> >  #if IS_ENABLED(CONFIG_HYPERV)
-> >  #define hv_enable_stimer0_percpu_irq(irq)	enable_percpu_irq(irq, 0)
-> > diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-> > index e6e3fe0488c7..7e689b903f4d 100644
-> > --- a/arch/arm64/include/asm/vdso/gettimeofday.h
-> > +++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-> > @@ -67,6 +67,20 @@ int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-> >  	return ret;
-> >  }
-> >  
-> > +#ifdef CONFIG_HYPERV_TIMER
-> > +/* This will override the default hv_get_raw_timer() */
-> > +#define hv_get_raw_timer() __arch_counter_get_cntvct()
-> > +#include <clocksource/hyperv_timer.h>
-> > +
-> > +extern struct ms_hyperv_tsc_page
-> > +_hvclock_page __attribute__((visibility("hidden")));
-> > +
-> > +static u64 vread_hvclock(void)
-> > +{
-> > +	return hv_read_tsc_page(&_hvclock_page);
-> > +}
-> > +#endif
-> 
-> The function is almost the same on x86 (&_hvclock_page ->
-> &hvclock_page), would it maybe make sense to move this to arch neutral
-> clocksource/hyperv_timer.h?
-> 
+In existing code, the receive indirection table, rx_table, is in
+struct rndis_device, which will be reset when changing MTU, ringparam,
+etc. User configured receive indirection table values will be lost.
 
-I'm not sure whether the underscore matters in the vDSO data symbol, so
-I follow the architectural name convention. If the leading underscore
-doesn't have special purpose I'm happy to move this to arch neutral
-header file.
+To fix this, move rx_table to struct net_device_context, and check
+netif_is_rxfh_configured(), so rx_table will be set to default only
+if no user configured value.
 
-> > +
-> >  static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-> >  {
-> >  	u64 res;
-> > @@ -78,6 +92,11 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-> >  	if (clock_mode == VCLOCK_NONE)
-> >  		return __VDSO_USE_SYSCALL;
-> >  
-> > +#ifdef CONFIG_HYPERV_TIMER
-> > +	if (likely(clock_mode == VCLOCK_HVCLOCK))
-> > +		return vread_hvclock();
-> 
-> I'm not sure likely() is justified here: it'll make ALL builds which
-> enable CONFIG_HYPERV_TIMER (e.g. distro kernels) to prefer
-> VCLOCK_HVCLOCK, even if the kernel is not running on Hyper-V.
-> 
+Fixes: ff4a44199012 ("netvsc: allow get/set of RSS indirection table")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ drivers/net/hyperv/hyperv_net.h   |  3 ++-
+ drivers/net/hyperv/netvsc_drv.c   |  4 ++--
+ drivers/net/hyperv/rndis_filter.c | 10 +++++++---
+ 3 files changed, 11 insertions(+), 6 deletions(-)
 
-Make sense. Thanks for pointing this out! I will change it in the next
-version.
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index 9caa876..dc44819 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -169,7 +169,6 @@ struct rndis_device {
+ 
+ 	u8 hw_mac_adr[ETH_ALEN];
+ 	u8 rss_key[NETVSC_HASH_KEYLEN];
+-	u16 rx_table[ITAB_NUM];
+ };
+ 
+ 
+@@ -940,6 +939,8 @@ struct net_device_context {
+ 
+ 	u32 tx_table[VRSS_SEND_TAB_SIZE];
+ 
++	u16 rx_table[ITAB_NUM];
++
+ 	/* Ethtool settings */
+ 	u8 duplex;
+ 	u32 speed;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index eff8fef..68bf671 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1662,7 +1662,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+ 		for (i = 0; i < ITAB_NUM; i++)
+-			indir[i] = rndis_dev->rx_table[i];
++			indir[i] = ndc->rx_table[i];
+ 	}
+ 
+ 	if (key)
+@@ -1692,7 +1692,7 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
+ 				return -EINVAL;
+ 
+ 		for (i = 0; i < ITAB_NUM; i++)
+-			rndis_dev->rx_table[i] = indir[i];
++			ndc->rx_table[i] = indir[i];
+ 	}
+ 
+ 	if (!key) {
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index 05bc5ec8..857c4be 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -773,6 +773,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 				   const u8 *rss_key, u16 flag)
+ {
+ 	struct net_device *ndev = rdev->ndev;
++	struct net_device_context *ndc = netdev_priv(ndev);
+ 	struct rndis_request *request;
+ 	struct rndis_set_request *set;
+ 	struct rndis_set_complete *set_complete;
+@@ -812,7 +813,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	/* Set indirection table entries */
+ 	itab = (u32 *)(rssp + 1);
+ 	for (i = 0; i < ITAB_NUM; i++)
+-		itab[i] = rdev->rx_table[i];
++		itab[i] = ndc->rx_table[i];
+ 
+ 	/* Set hask key values */
+ 	keyp = (u8 *)((unsigned long)rssp + rssp->hashkey_offset);
+@@ -1312,6 +1313,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 				      struct netvsc_device_info *device_info)
+ {
+ 	struct net_device *net = hv_get_drvdata(dev);
++	struct net_device_context *ndc = netdev_priv(net);
+ 	struct netvsc_device *net_device;
+ 	struct rndis_device *rndis_device;
+ 	struct ndis_recv_scale_cap rsscap;
+@@ -1398,9 +1400,11 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	/* We will use the given number of channels if available. */
+ 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+ 
+-	for (i = 0; i < ITAB_NUM; i++)
+-		rndis_device->rx_table[i] = ethtool_rxfh_indir_default(
++	if (!netif_is_rxfh_configured(net)) {
++		for (i = 0; i < ITAB_NUM; i++)
++			ndc->rx_table[i] = ethtool_rxfh_indir_default(
+ 						i, net_device->num_chn);
++	}
+ 
+ 	atomic_set(&net_device->open_chn, 1);
+ 	vmbus_set_sc_create_callback(dev->channel, netvsc_sc_open);
+-- 
+1.8.3.1
 
-Regards,
-Boqun
-
-> > +#endif
-> > +
-> >  	/*
-> >  	 * This isb() is required to prevent that the counter value
-> >  	 * is speculated.
-> 
-> -- 
-> Vitaly
-> 
