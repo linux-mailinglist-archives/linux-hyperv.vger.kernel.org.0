@@ -2,141 +2,141 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 855BB12A3CB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Dec 2019 19:03:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1C2712A6D3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Dec 2019 09:46:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfLXSDR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 24 Dec 2019 13:03:17 -0500
-Received: from mail-co1nam11on2103.outbound.protection.outlook.com ([40.107.220.103]:15073
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S1726106AbfLYIqb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Dec 2019 03:46:31 -0500
+Received: from mail-bgr052101135018.outbound.protection.outlook.com ([52.101.135.18]:27319
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726171AbfLXSDR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 24 Dec 2019 13:03:17 -0500
+        id S1726025AbfLYIqa (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 25 Dec 2019 03:46:30 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q1dF81J6Evr/Z/e1NF1GX4KpnSpI+bLXIybuU8zxl+nVGAryQjBwl7VKRS+Q2JoWwYKtVtYb7YeF7k1LmlxGQs7+VNGzq590ED7i9rhCWPMa4kez761y1UtMjxGCMb8x0GDH6yK6Bok5tcNPpq2o8sNg7T13ZdfsKIxJl/Le39NFUeVlrgYTHQMXqw+OZrRBE2LI2soAd/AjANIikNhQDEtE2afzdkhoOGd/qCuXOy/Wa446cL6j46uHwVm0pLlqX/HxcK8CKQ1yQKCMhUgQtKif9MHD2aBoDHeXm/KcGVrUuEAmtH1BeI0dPfzvy4sRzfSsS1SxRC2TelojsEqvuw==
+ b=fFXs3SRLNZOhFxR9AFbquEpx4LYEGwHnbeq/bqKhTpSt2ulFzhFre8CbZG10ZaJh99EWqqXLlU8ZhgYTClDkPETWLcf+ny9B0NOKAChaZOKBV9LpBx7DWwExVWF0IGgGZNAehgdmS7HvBIJgRwb4+e8x69JtTrFyYRvGDpQ5WVc+pbDOctjHlh1LPMJy2+dW7XH83PuPoyTfAIlA2Aljl/uBI1z5kPlNskN+GrjMjEbrNdbmnSdVR3pp+Fj23Qi1EB1NYfOavj2RrjsL6QQzdNKIVwq55boZJ4pCoA8NqFEgXzhgfCMSL1qCt/GEXkw+G8tnKNihvR2fTu14MDMpuA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZqbJHT/aB/dtCjCC3fT8KvKlauun+xAijvryN4hDAus=;
- b=f5vgTtkRF85xzouaNUKfdUUavlw9ctcjvgIGMBX7sVsfFueX38EUYU/6yYqVPvomWu9Uiuk2gdKi1QVc05ypqPoqRdchRhn+RNYW1Uah3FnLOexA6+R8K6IQ+s6HFDH2R50jRNerU+sq/Ap2jCC+QJCPSlCHUcklRU3kOgbIq+VtbwjdiBgpF4n6BdGgb86oLpbs+XvBC/9OM/l3+cSlrJAyzDCZceQsfm2bVUEpXAURav7GiE9vHq9Q9hoQm599CbS7v8HkFRQqXLGW3QU+D2b8M5xKenDsDJjg+Z1ZyumbnWpfD80S9o03mhezVca1N73aAILSUgIENuRAfotWwA==
+ bh=TffTKq7nBNpLLD5zBFuYoRNa24HFraDVx5XxqzOHrvc=;
+ b=kmlC3wPPvy+KUWk9f3XFkAtZpo7YPsAnYf45390kEmxP30LbJ3zCcHqLp99wtw/S+EbN/qHmbMFYvIhASDwC6YTp02Te6HPtnHqBmGK+ACMfGWj59vtzmnS4uc8PzjE5yE2ohR4ldoX9r36Stc5TmCGHcTS7HVmnZEa+UrV8n3NiediXCMunb+t6RKxEmAV1nZuhWzaus/mFIN90P7z5uv4mUSWTmL1xN2ZRahYWXCYCRU3V6mQDUPS+FtBd4/R5paMIL4/+8WzBA2Tmgq4iFMQQJMn1DHxF4+IJIndeCwH5kHlJcDmaLnT2q13chW8qRJT1xF0WPLiU5gHhAobbcA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZqbJHT/aB/dtCjCC3fT8KvKlauun+xAijvryN4hDAus=;
- b=LmXN4pXo0/qZzkx5ew9oVW8XGEXvyq1X0mqg9sPMiPaWmnq0eumFLNZYcRljt3MxunmAPovxG1jZpOnc11dDOlOTMLTjgMzPh89eTrbmMkHY1mCLtmUwdFBmE5vZynfoA0awlLGhB6dvyjGJTFz/aJjyIDHfTYm+ImxhN792qiw=
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com (10.175.115.19) by
- CY4PR21MB0776.namprd21.prod.outlook.com (10.173.192.22) with Microsoft SMTP
+ bh=TffTKq7nBNpLLD5zBFuYoRNa24HFraDVx5XxqzOHrvc=;
+ b=r7WvxZrLHQUXL7/7HnNUJlwI9WWsIMepALFvDgec7xSKV0fjt78bLj6B7szsAMv1OhVWMMOrwqOwrY0rjRWGAEBoqr01wn56/HDaOOIUm9JRrbx5PFc74LcycNqqyenIonPpUudcgSK4GuXnWuPpu04yx8db6yFYo2qOvwG5iqA=
+Received: from VI1PR08MB4608.eurprd08.prod.outlook.com (20.178.80.22) by
+ VI1PR08MB2783.eurprd08.prod.outlook.com (10.170.236.144) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.1; Tue, 24 Dec 2019 18:03:15 +0000
-Received: from CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::654d:8bdd:471:e0ac]) by CY4PR21MB0629.namprd21.prod.outlook.com
- ([fe80::654d:8bdd:471:e0ac%9]) with mapi id 15.20.2602.006; Tue, 24 Dec 2019
- 18:03:15 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Roman Kagan <rkagan@virtuozzo.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: flow control in vmbus ring buffers
+ 15.20.2559.16; Wed, 25 Dec 2019 08:46:19 +0000
+Received: from VI1PR08MB4608.eurprd08.prod.outlook.com
+ ([fe80::acb0:a61d:f08a:1c12]) by VI1PR08MB4608.eurprd08.prod.outlook.com
+ ([fe80::acb0:a61d:f08a:1c12%7]) with mapi id 15.20.2559.017; Wed, 25 Dec 2019
+ 08:46:19 +0000
+From:   Roman Kagan <rkagan@virtuozzo.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: flow control in vmbus ring buffers
 Thread-Topic: flow control in vmbus ring buffers
-Thread-Index: AQHVuki/5e8dawcR8kGygRTboGxxoqfJecsAgAAYkzA=
-Date:   Tue, 24 Dec 2019 18:03:15 +0000
-Message-ID: <CY4PR21MB06295F8CEE034AD045EEBE79D7290@CY4PR21MB0629.namprd21.prod.outlook.com>
+Thread-Index: AQHVuki/5e8dawcR8kGygRTboGxxoqfJecsAgAAYkzCAAPiZgA==
+Date:   Wed, 25 Dec 2019 08:46:19 +0000
+Message-ID: <20191225084615.GB168681@rkaganb.sw.ru>
 References: <20191224105605.GA164618@rkaganb.sw.ru>
  <20191224162832.GA168681@rkaganb.sw.ru>
-In-Reply-To: <20191224162832.GA168681@rkaganb.sw.ru>
-Accept-Language: en-US
+ <CY4PR21MB06295F8CEE034AD045EEBE79D7290@CY4PR21MB0629.namprd21.prod.outlook.com>
+In-Reply-To: <CY4PR21MB06295F8CEE034AD045EEBE79D7290@CY4PR21MB0629.namprd21.prod.outlook.com>
+Accept-Language: en-US, ru-RU
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-24T18:03:13.2388567Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a171fc1d-c77c-4f9e-aa84-c5766394c574;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+mail-followup-to: Roman Kagan <rkagan@virtuozzo.com>,   Michael Kelley
+ <mikelley@microsoft.com>,      "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>
+x-originating-ip: [185.231.240.5]
+x-clientproxiedby: HE1PR05CA0161.eurprd05.prod.outlook.com
+ (2603:10a6:7:28::48) To VI1PR08MB4608.eurprd08.prod.outlook.com
+ (2603:10a6:803:c0::22)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
+ smtp.mailfrom=rkagan@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 56df775a-7576-46db-61a2-08d7889b8c4f
-x-ms-traffictypediagnostic: CY4PR21MB0776:
-x-microsoft-antispam-prvs: <CY4PR21MB0776477C4B8FE0A9D1EFDDDED7290@CY4PR21MB0776.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0261CCEEDF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(346002)(396003)(136003)(39860400002)(189003)(199004)(7696005)(2906002)(8936002)(86362001)(186003)(26005)(71200400001)(6506007)(76116006)(33656002)(66946007)(66446008)(66556008)(64756008)(66476007)(52536014)(8676002)(316002)(81166006)(81156014)(110136005)(5660300002)(9686003)(8990500004)(55016002)(10290500003)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0776;H:CY4PR21MB0629.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
+x-ms-office365-filtering-correlation-id: 6038271e-a104-4921-f43c-08d78916e915
+x-ms-traffictypediagnostic: VI1PR08MB2783:|VI1PR08MB2783:|VI1PR08MB2783:
+x-microsoft-antispam-prvs: <VI1PR08MB2783934ACF336FDF53819F0CC9280@VI1PR08MB2783.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02622CEF0A
+x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(396003)(39840400004)(346002)(136003)(376002)(366004)(199004)(189003)(36756003)(52116002)(6506007)(6512007)(6916009)(6486002)(26005)(4326008)(186003)(9686003)(2906002)(66476007)(71200400001)(64756008)(5660300002)(66446008)(8676002)(8936002)(316002)(81166006)(33656002)(81156014)(66946007)(1076003)(86362001)(478600001)(66556008)(30126003);DIR:OUT;SFP:1501;SCL:5;SRVR:VI1PR08MB2783;H:VI1PR08MB4608.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;CAT:OSPM;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +L8KXFNkYYri8OrqZky5aLQzeYjOUL5CPD0/KV87Hb2Jm2iJGlEfQPnMlwNxtE3RbmIo1i7iSLOHzMImJdo8AC3UIZx9YxRc8Unqmjj1xpsaNc77ZMMy0YZLd6Wwgqa+KubKl7qa5GYStd8sH0mLKMjHmoW6WsMHoFNkCOty43TVI9OOcJk8zZar6hHFAo9VWoiMQAEpHSTHh/YkWpkDlegprWgXCHmRMhzY60MJ0n2uQTlUAnFkdfMmx99IHaRP/3uhWgVchPVYrW5/uuaCUDFxNmZqUl7LSsKckl/rBTl0HCqn3kX/rYoujlcs7XGFUnsgZZ6wu8NTQG49f0URJhogXkpIvsmsE6HGhy6uZ6be2Tpo8mvFd+jxsmX7DImR7N3cjrNB4Y2v01GuhYJdJeAy9y5H8W0YBrqvMJFOU9V5BF8toZfIxPx19jXm44BH
+x-microsoft-antispam-message-info: O8quXRyKXzIMYH8MRurVvbq7qp3mmCxLLaXfdiXyrqJjlP+6WEur7rl0jIT+Iq7LNFlvyrByK5V9Kiv223eiFrgGX/rm+tDIMIlEhOwxkCWFbozouydbMiynds5z3c8yTxhaeyyHNADATCcUl/2AmgJ9tGc5InfK9RLvq0rtkyVccSzsCpP+2CYxAT6Ykr+8M4nfmPu9yxgHDlBqOd1A1wefLzySyN/xNQQ4eWjWZVtAaqaVqZEGJpVRfgm+T0D0V3lDT/+Q2e4l223mNyN7qHVgRdgWVU/rT03L0vrXNLFcXbT7euRBknnXmaqVvfQoN9nasFGkPU47/Y8pLs9rstnqBuseQvubIA6hKCr1YBW/OodTLYY4UiZakUF3Dw6seheYBpoYn6b1NOgkac7WkBQUZJ4HOVfo8TJFcrE9cC0WyigWCgv6uQUOA0Trw7Ln4NS4XwRjuGIBXR2CooACcvlmOq2MCSL4G1923WFWHtqiBRdIoMlPJ4mZf+6WaD1yYkPDomVcAfgQ2OiZ/z74rt8lymp5tZpIHevyET2u6H8FUHe64Uj3RreyeMmYcuwy5QG7rdHSp2pVltxAx2JZqAYGrnK29e/OM7OGtubPpNGY/mNDBtcwG0EWn2Lg2mEjZUbrd44SkFhygfjxRLnkujDydt/jnTB6KzI7l8nn6dycRqmBU5boF0VtBvJBsTMj9jX15dnx0end3wKrfzYVRLam7g0YxTeDpqKjNLwNBctbSgi/1ELfuupOjE0pf3vBcWfXLARKz6F/Ik7tcAxVOA==
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-ID: <1C79998B14F12F4782C7B05E24746869@eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56df775a-7576-46db-61a2-08d7889b8c4f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Dec 2019 18:03:15.0336
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6038271e-a104-4921-f43c-08d78916e915
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Dec 2019 08:46:19.2058
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KlLOYt7dVWicbTS1d+YDxriizWIOjf1sqXORiUn5u4P1Znho7kmLCYA38OT6L8aoN2dYTfiGCbd4+CRpek256zM+UjwAaVlhyUYxC6XJ20g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0776
+X-MS-Exchange-CrossTenant-userprincipalname: GtY3WBM/Fy4IEGrgLngZDDv6Ruyj/dZXUCDyS3YFLe42Mj/LCIVGeLmjQ4CpENyCmSqRrRFY+qwOfZnGS01zsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2783
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Roman Kagan <rkagan@virtuozzo.com> Sent: Tuesday, December 24, 2019 8=
-:29 AM
->=20
-> On Tue, Dec 24, 2019 at 10:56:08AM +0000, Roman Kagan wrote:
-> > I'm trying to get my head around how the flow control in vmbus ring
-> > buffers works.
-> >
-> > In particular, I'm failing to see how the following can be prevented:
-> >
-> >
-> >      producer                     |       consumer
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > read read_index                   |
-> > (enough room for packet)          |
-> > write pending_send_sz =3D 0         |
-> > write packet                      |
-> > update write_index                |
-> >                                   | read write_index
-> > read read_index                   | read packet
-> > (not enough room for packet)      | update read_index (=3D write_index)
-> >                                   | read pending_send_sz =3D 0
-> > write pending_send_sz =3D X         | skip notification
-> > go to sleep                       | go to sleep
-> >                                 stall
-> >
-> > Could anybody please shed some light on how it's supposed to work?
->=20
-> Sorry to reply to myself, but looks like the answer is to re-read
-> read_index on the producer side after setting pending_send_sz.
->=20
+On Tue, Dec 24, 2019 at 06:03:15PM +0000, Michael Kelley wrote:
+> From: Roman Kagan <rkagan@virtuozzo.com> Sent: Tuesday, December 24, 2019 8:29 AM
+> > 
+> > On Tue, Dec 24, 2019 at 10:56:08AM +0000, Roman Kagan wrote:
+> > > I'm trying to get my head around how the flow control in vmbus ring
+> > > buffers works.
+> > >
+> > > In particular, I'm failing to see how the following can be prevented:
+> > >
+> > >
+> > >      producer                     |       consumer
+> > > ==================================================================
+> > > read read_index                   |
+> > > (enough room for packet)          |
+> > > write pending_send_sz = 0         |
+> > > write packet                      |
+> > > update write_index                |
+> > >                                   | read write_index
+> > > read read_index                   | read packet
+> > > (not enough room for packet)      | update read_index (= write_index)
+> > >                                   | read pending_send_sz = 0
+> > > write pending_send_sz = X         | skip notification
+> > > go to sleep                       | go to sleep
+> > >                                 stall
+> > >
+> > > Could anybody please shed some light on how it's supposed to work?
+> > 
+> > Sorry to reply to myself, but looks like the answer is to re-read
+> > read_index on the producer side after setting pending_send_sz.
+> > 
+> 
+> Are you seeing a problem in the Linux guest code in drivers/hv/ring_buffer.c?
 
-Are you seeing a problem in the Linux guest code in drivers/hv/ring_buffer.=
-c?
-The only time the Linux guest as the producer sets pending_send_sz is in th=
-e
-hv_socket code.  Or are you looking at the KVM code that does emulation of
-Hyper-V, where KVM is acting as the producer?
+No, nothing in particular.
 
-Just curious as to what prompted your question.  I did the most recent fixe=
-s a
-couple years ago to the Linux guest code for handling the ring buffer inter=
-action
-with Hyper-V, and if there is still a problem, I'm super interested. :-)
+> The only time the Linux guest as the producer sets pending_send_sz is in the
+> hv_socket code.
 
-Michael
+Indeed.  This surprized me somewhat, but, well...
+
+> Or are you looking at the KVM code that does emulation of Hyper-V,
+> where KVM is acting as the producer?
+
+Yes, at the QEMU code, more precisely.  I wrote it a while back and now
+have some spare cycles to at last submit it to mainline QEMU; while
+reviewing it I noticed this part that I did wrong.
+
+Thanks,
+Roman.
