@@ -2,262 +2,92 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AFA412AE55
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Dec 2019 20:40:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77DFC12B7F4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Dec 2019 18:52:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfLZTk4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 26 Dec 2019 14:40:56 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:53638 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbfLZTk4 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 26 Dec 2019 14:40:56 -0500
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id A9C1720B4798; Thu, 26 Dec 2019 11:40:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A9C1720B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1577389255;
-        bh=VIK2Q0hFXOFilAkgLu1S7mIVRWc2XaLB+41jdR8gf5A=;
+        id S1728098AbfL0RnG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 Dec 2019 12:43:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727156AbfL0RnG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:06 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E4D52173E;
+        Fri, 27 Dec 2019 17:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577468585;
+        bh=uFvVNQ0ST9CDv74Dab0CJbZ4XEODJPVqosS+Ii1lLvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JIYFjhBRGpSXvJzNz33cvpfYeA4Uj6wN5oCwnDfy06l2xJsQEAvgpXA183oSyJ+kk
-         0xZ/ewha686HZ1ZlaD4+lyWdq7oiHW/gSzuq0A8DsA0qVLCNITOxNTGmSMQCoX/Bp0
-         i25bBRQHVrQLl+0feDwMvncnOEyR/t1ALh3/XxwA=
-From:   longli@linuxonhyperv.com
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [Patch v3 2/2] PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2
-Date:   Thu, 26 Dec 2019 11:40:41 -0800
-Message-Id: <1577389241-108450-2-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1577389241-108450-1-git-send-email-longli@linuxonhyperv.com>
-References: <1577389241-108450-1-git-send-email-longli@linuxonhyperv.com>
+        b=BeOQ25WOE9Prt8OOtsMW9x3kEkEWI9E6CgFVESgAvHbHktlHZSxG5rysIcBFoKA2q
+         v2AsgcyJ3WV0D2Vu424njsg+BS1EkrUNEtmqOp+4xYpxEXtbefmolvt1hNXC9PHKWy
+         DAU7ER8RzubG1NR5nnlDA8ZLdS+7L7JgWPsFn2TM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 108/187] hv_netvsc: Fix tx_table init in rndis_set_subchannel()
+Date:   Fri, 27 Dec 2019 12:39:36 -0500
+Message-Id: <20191227174055.4923-108-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
+References: <20191227174055.4923-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
-PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the bus.
-The vNUMA node tells which guest NUMA node this device is on based on guest
-VM configuration topology and physical device inforamtion.
+[ Upstream commit c39ea5cba5a2e97fc01b78c85208bf31383b399c ]
 
-The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
+Host can provide send indirection table messages anytime after RSS is
+enabled by calling rndis_filter_set_rss_param(). So the host provided
+table values may be overwritten by the initialization in
+rndis_set_subchannel().
 
-Signed-off-by: Long Li <longli@microsoft.com>
+To prevent this problem, move the tx_table initialization before calling
+rndis_filter_set_rss_param().
+
+Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after subchannels open")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes
-v2: Changed some spaces to tabs, added put_pcichild() after get_pcichild_wslot(), renamed pci_assign_numa_node() to hv_pci_assign_numa_node()
+ drivers/net/hyperv/rndis_filter.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- drivers/pci/controller/pci-hyperv.c | 109 ++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 4452c6bae6cf..b03119f94cd7 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -63,6 +63,7 @@
- enum pci_protocol_version_t {
- 	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
- 	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
-+	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* Vibranium */
- };
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index abaf8156d19d..e3d3c9097ff1 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1165,6 +1165,9 @@ int rndis_set_subchannel(struct net_device *ndev,
+ 	wait_event(nvdev->subchan_open,
+ 		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
  
- #define CPU_AFFINITY_ALL	-1ULL
-@@ -72,6 +73,7 @@ enum pci_protocol_version_t {
-  * first.
-  */
- static enum pci_protocol_version_t pci_protocol_versions[] = {
-+	PCI_PROTOCOL_VERSION_1_3,
- 	PCI_PROTOCOL_VERSION_1_2,
- 	PCI_PROTOCOL_VERSION_1_1,
- };
-@@ -124,6 +126,7 @@ enum pci_message_type {
- 	PCI_RESOURCES_ASSIGNED2		= PCI_MESSAGE_BASE + 0x16,
- 	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
- 	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
-+	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
- 	PCI_MESSAGE_MAXIMUM
- };
- 
-@@ -169,6 +172,26 @@ struct pci_function_description {
- 	u32	ser;	/* serial number */
- } __packed;
- 
-+enum pci_device_description_flags {
-+	HV_PCI_DEVICE_FLAG_NONE			= 0x0,
-+	HV_PCI_DEVICE_FLAG_NUMA_AFFINITY	= 0x1,
-+};
++	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
++		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
 +
-+struct pci_function_description2 {
-+	u16	v_id;	/* vendor ID */
-+	u16	d_id;	/* device ID */
-+	u8	rev;
-+	u8	prog_intf;
-+	u8	subclass;
-+	u8	base_class;
-+	u32	subsystem_id;
-+	union	win_slot_encoding win_slot;
-+	u32	ser;	/* serial number */
-+	u32	flags;
-+	u16	virtual_numa_node;
-+	u16	reserved;
-+} __packed;
-+
- /**
-  * struct hv_msi_desc
-  * @vector:		IDT entry
-@@ -304,6 +327,12 @@ struct pci_bus_relations {
- 	struct pci_function_description func[0];
- } __packed;
+ 	/* ignore failures from setting rss parameters, still have channels */
+ 	if (dev_info)
+ 		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
+@@ -1174,9 +1177,6 @@ int rndis_set_subchannel(struct net_device *ndev,
+ 	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
+ 	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
  
-+struct pci_bus_relations2 {
-+	struct pci_incoming_message incoming;
-+	u32 device_count;
-+	struct pci_function_description2 func[0];
-+} __packed;
-+
- struct pci_q_res_req_response {
- 	struct vmpacket_descriptor hdr;
- 	s32 status;			/* negative values are failures */
-@@ -1417,6 +1446,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		break;
- 
- 	case PCI_PROTOCOL_VERSION_1_2:
-+	case PCI_PROTOCOL_VERSION_1_3:
- 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
- 					dest,
- 					hpdev->desc.win_slot.slot,
-@@ -1798,6 +1828,27 @@ static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
- 	}
+-	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
+-		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
+-
+ 	return 0;
  }
  
-+/*
-+ * Set NUMA node for the devices on the bus
-+ */
-+static void hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
-+{
-+	struct pci_dev *dev;
-+	struct pci_bus *bus = hbus->pci_bus;
-+	struct hv_pci_dev *hv_dev;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		hv_dev = get_pcichild_wslot(hbus, devfn_to_wslot(dev->devfn));
-+		if (!hv_dev)
-+			continue;
-+
-+		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
-+			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
-+
-+		put_pcichild(hv_dev);
-+	}
-+}
-+
- /**
-  * create_root_hv_pci_bus() - Expose a new root PCI bus
-  * @hbus:	Root PCI bus, as understood by this driver
-@@ -1820,6 +1871,7 @@ static int create_root_hv_pci_bus(struct hv_pcibus_device *hbus)
- 
- 	pci_lock_rescan_remove();
- 	pci_scan_child_bus(hbus->pci_bus);
-+	hv_pci_assign_numa_node(hbus);
- 	pci_bus_assign_resources(hbus->pci_bus);
- 	hv_pci_assign_slots(hbus);
- 	pci_bus_add_devices(hbus->pci_bus);
-@@ -2088,6 +2140,7 @@ static void pci_devices_present_work(struct work_struct *work)
- 		 */
- 		pci_lock_rescan_remove();
- 		pci_scan_child_bus(hbus->pci_bus);
-+		hv_pci_assign_numa_node(hbus);
- 		hv_pci_assign_slots(hbus);
- 		pci_unlock_rescan_remove();
- 		break;
-@@ -2184,6 +2237,46 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
- 		kfree(dr);
- }
- 
-+/**
-+ * hv_pci_devices_present2() - Handles list of new children
-+ * @hbus:	Root PCI bus, as understood by this driver
-+ * @relations2:	Packet from host listing children
-+ *
-+ * This function is the v2 version of hv_pci_devices_present()
-+ */
-+static void hv_pci_devices_present2(struct hv_pcibus_device *hbus,
-+				    struct pci_bus_relations2 *relations)
-+{
-+	struct hv_dr_state *dr;
-+	int i;
-+
-+	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-+		     (sizeof(struct hv_pcidev_description) *
-+		      (relations->device_count)), GFP_NOWAIT);
-+
-+	if (!dr)
-+		return;
-+
-+	dr->device_count = relations->device_count;
-+	for (i = 0; i < dr->device_count; i++) {
-+		dr->func[i].v_id = relations->func[i].v_id;
-+		dr->func[i].d_id = relations->func[i].d_id;
-+		dr->func[i].rev = relations->func[i].rev;
-+		dr->func[i].prog_intf = relations->func[i].prog_intf;
-+		dr->func[i].subclass = relations->func[i].subclass;
-+		dr->func[i].base_class = relations->func[i].base_class;
-+		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
-+		dr->func[i].win_slot = relations->func[i].win_slot;
-+		dr->func[i].ser = relations->func[i].ser;
-+		dr->func[i].flags = relations->func[i].flags;
-+		dr->func[i].virtual_numa_node =
-+			relations->func[i].virtual_numa_node;
-+	}
-+
-+	if (hv_pci_start_relations_work(hbus, dr))
-+		kfree(dr);
-+}
-+
- /**
-  * hv_eject_device_work() - Asynchronously handles ejection
-  * @work:	Work struct embedded in internal device struct
-@@ -2289,6 +2382,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	struct pci_response *response;
- 	struct pci_incoming_message *new_message;
- 	struct pci_bus_relations *bus_rel;
-+	struct pci_bus_relations2 *bus_rel2;
- 	struct pci_dev_inval_block *inval;
- 	struct pci_dev_incoming *dev_message;
- 	struct hv_pci_dev *hpdev;
-@@ -2356,6 +2450,21 @@ static void hv_pci_onchannelcallback(void *context)
- 				hv_pci_devices_present(hbus, bus_rel);
- 				break;
- 
-+			case PCI_BUS_RELATIONS2:
-+
-+				bus_rel2 = (struct pci_bus_relations2 *)buffer;
-+				if (bytes_recvd <
-+				    offsetof(struct pci_bus_relations2, func) +
-+				    (sizeof(struct pci_function_description2) *
-+				     (bus_rel2->device_count))) {
-+					dev_err(&hbus->hdev->device,
-+						"bus relations v2 too small\n");
-+					break;
-+				}
-+
-+				hv_pci_devices_present2(hbus, bus_rel2);
-+				break;
-+
- 			case PCI_EJECT:
- 
- 				dev_message = (struct pci_dev_incoming *)buffer;
 -- 
-2.17.1
+2.20.1
 
