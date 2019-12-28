@@ -2,92 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 77DFC12B7F4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Dec 2019 18:52:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D35B712BFAE
+	for <lists+linux-hyperv@lfdr.de>; Sun, 29 Dec 2019 00:46:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfL0RnG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 Dec 2019 12:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbfL0RnG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:06 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E4D52173E;
-        Fri, 27 Dec 2019 17:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468585;
-        bh=uFvVNQ0ST9CDv74Dab0CJbZ4XEODJPVqosS+Ii1lLvg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BeOQ25WOE9Prt8OOtsMW9x3kEkEWI9E6CgFVESgAvHbHktlHZSxG5rysIcBFoKA2q
-         v2AsgcyJ3WV0D2Vu424njsg+BS1EkrUNEtmqOp+4xYpxEXtbefmolvt1hNXC9PHKWy
-         DAU7ER8RzubG1NR5nnlDA8ZLdS+7L7JgWPsFn2TM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        id S1726100AbfL1Xqz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 28 Dec 2019 18:46:55 -0500
+Received: from mail-dm6nam10on2115.outbound.protection.outlook.com ([40.107.93.115]:44128
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbfL1Xqy (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 28 Dec 2019 18:46:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IK+EX0Q6mIwQITHl6qsH6e7Y2AdA2bplaaIJVax+AX75BuJz7J7/0Z0oxObQmK5j87gz2i2aZoctuKBydrjx7YXcYYmmGGNg8fY6tXM3DjbFo0cfg8BVCDgf26/TVLLWQRF+b9+NM+BY1jJUiJ1o1iqvPWfazF1OnjTtT2itpTZli2c1TDih7q/S6b92CsBGKv3+6x8eHYNTsC1WL6wdgoUsoTprAv2ZQATQvGR57/MvUAi0kG4zhowDQtgHGPErXCHJOKI+ucMByimOH6YKnaaEcC8fih2/rjNrcBRBKg6O7zyMWoxUMr3YhXwUOtyFiTMh4Et7qCcj173yCEM9nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CH9XhAmj/M19pR1mX9L2wRkkzfErzVmgW9+4CIZn2tE=;
+ b=LQQpwzL2XJ/EWdRymhz2aufpWXbG0iP6lZYu3KhlkbyrVoGWcHFt1uERF3KjqzaZwwBpIZssG3PaDUNlgDRfMaMeV/2xkl6zXdDkpn14CqQrg2h6eObMcaQEzOVHPEjerx5ey+SZkgL/CbR9Nyd/ohomZy07+DOpZrtQiQjNu+ChTf8lMISsu/H+unLfvmqU19DBpbVo+Y/G8oLl3bzkm8lVvToh5wcQ0t1dU9aNG+iv6nEiyfI/0eDEf0eDS1kfshHnmync5Ip7wXXG5iuaf0kHP6qhFXkOZne/GXMnVhuUXUUmCm7CXoN3da50SNWxWXaxbfX++UeBaL2HroNoJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CH9XhAmj/M19pR1mX9L2wRkkzfErzVmgW9+4CIZn2tE=;
+ b=c9BPzEhRKafXm43DHKtgRhUFCGsGcAnhmKjmiIcHypbbc3SQA/3Gq2RKwMKbjpvbZkDxnF3Un3yxx94I8YRua3XXTlYyXdw+lu29DFS0qq0xD4es8RdlI3EjZ0MdCs45jb8zBaQfeC8wmnQf3KlQ12Y0PUgIeRbg+iKcHP2uCEY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
+ DM5PR2101MB0727.namprd21.prod.outlook.com (10.167.110.39) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.1; Sat, 28 Dec 2019 23:46:52 +0000
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91]) by DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91%9]) with mapi id 15.20.2623.000; Sat, 28 Dec 2019
+ 23:46:51 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 108/187] hv_netvsc: Fix tx_table init in rndis_set_subchannel()
-Date:   Fri, 27 Dec 2019 12:39:36 -0500
-Message-Id: <20191227174055.4923-108-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
-References: <20191227174055.4923-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next, 0/3] Add vmbus dev_num and enable netvsc async probing
+Date:   Sat, 28 Dec 2019 15:46:30 -0800
+Message-Id: <1577576793-113222-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MWHPR1201CA0022.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::32) To DM5PR2101MB0901.namprd21.prod.outlook.com
+ (2603:10b6:4:a7::30)
+MIME-Version: 1.0
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR1201CA0022.namprd12.prod.outlook.com (2603:10b6:301:4a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Sat, 28 Dec 2019 23:46:50 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dc3f0869-66a4-46f5-5319-08d78bf03627
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB0727:|DM5PR2101MB0727:|DM5PR2101MB0727:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB07278A7A1379C663200C0ED0AC250@DM5PR2101MB0727.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-Forefront-PRVS: 02652BD10A
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(396003)(366004)(376002)(199004)(189003)(6666004)(478600001)(81156014)(10290500003)(6506007)(8936002)(4326008)(2616005)(36756003)(316002)(81166006)(52116002)(26005)(956004)(8676002)(2906002)(4744005)(5660300002)(66556008)(186003)(66476007)(66946007)(16526019)(6512007)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0727;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: j2Ovl+UU6k2nCV9oU14/KznEnpnl4t7BwqDtYq7GqWZ08u1/g7eaTocNZky94FEzXE9MoIYbEXD/q1LwT6itopZXKHyO4wd1K0IDGrU0TrO3y7wy0luRtxoK4txl4c+xnOQst9D6yK4VrY2bf9uDdmeIobMPcP09u/4d86aC2GrekqiWY8PwPRKNj+4NNcY9m0D07s2uGjkv0oH7cHRo/QiuzPPs2QMvjd2TIf/dO1dAIKlKlRWWnnyhSBSbFMhWZAkclCg1VWJ/6DkmovatDadZzznCpa4oo5YAn/Q7BaEK+mbgrsZvDeeLV51EDyw1ElMI5wtC+LqW/zD7Xn/4X1X4sOlA5npB23ZkW+k0ZfGvb9raeTo+w3FZEgQ0DNHYgyCUhS+dwF+AwErGFqdLPYyDZR8nubtOvshIGb2JsHzOnLxNr4Y69cCea3ttpZow
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc3f0869-66a4-46f5-5319-08d78bf03627
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Dec 2019 23:46:51.6191
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 529gLGuMJcN4ItidXwvtjFmQnI61J8RSwyEcjRUXa2Cj0AUC85qEmM3SJu/190N7qccIM4gVNG+i+Ut7Ylo8dg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0727
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+Add dev_num for vmbus device based on channel offer sequence.
+Use this number for nic naming, and enable async probing.
 
-[ Upstream commit c39ea5cba5a2e97fc01b78c85208bf31383b399c ]
+Haiyang Zhang (3):
+  Drivers: hv: vmbus: Add a dev_num variable based on channel offer sequence
+  Drivers: hv: vmbus: Add dev_num to sysfs
+  hv_netvsc: Name NICs based on vmbus offer sequence and use async probe
 
-Host can provide send indirection table messages anytime after RSS is
-enabled by calling rndis_filter_set_rss_param(). So the host provided
-table values may be overwritten by the initialization in
-rndis_set_subchannel().
+ Documentation/ABI/stable/sysfs-bus-vmbus |  8 +++++++
+ drivers/hv/channel_mgmt.c                | 40 ++++++++++++++++++++++++++++++--
+ drivers/hv/vmbus_drv.c                   | 13 +++++++++++
+ drivers/net/hyperv/netvsc_drv.c          | 18 +++++++++++---
+ include/linux/hyperv.h                   |  6 +++++
+ 5 files changed, 80 insertions(+), 5 deletions(-)
 
-To prevent this problem, move the tx_table initialization before calling
-rndis_filter_set_rss_param().
-
-Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after subchannels open")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/hyperv/rndis_filter.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index abaf8156d19d..e3d3c9097ff1 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1165,6 +1165,9 @@ int rndis_set_subchannel(struct net_device *ndev,
- 	wait_event(nvdev->subchan_open,
- 		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
- 
-+	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
-+		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
-+
- 	/* ignore failures from setting rss parameters, still have channels */
- 	if (dev_info)
- 		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
-@@ -1174,9 +1177,6 @@ int rndis_set_subchannel(struct net_device *ndev,
- 	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
- 	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
- 
--	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
--		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
--
- 	return 0;
- }
- 
 -- 
-2.20.1
+1.8.3.1
 
