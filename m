@@ -2,289 +2,106 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF21812DABF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Dec 2019 18:51:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9915812DBFE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Dec 2019 23:14:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfLaRvu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 31 Dec 2019 12:51:50 -0500
-Received: from mail-dm6nam10on2092.outbound.protection.outlook.com ([40.107.93.92]:27119
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        id S1727081AbfLaWO2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 31 Dec 2019 17:14:28 -0500
+Received: from mail-bn7nam10on2133.outbound.protection.outlook.com ([40.107.92.133]:6706
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726060AbfLaRvt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 31 Dec 2019 12:51:49 -0500
+        id S1727054AbfLaWO2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 31 Dec 2019 17:14:28 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X36cYJJJ2lapdxXXjHBL47VuJXoRCmxw5mF7u1kGNQcAuk3bh+1dxOTkfk2cGEGIK2VuuHeaYtVnoEx36zZGjL/59xvE+5e+1UhROLlFiG33UgUoTjTfMEAPDsmzxPSwRZ1ECrnzaeihZ7WwaBh12P0ZJFSKZbAJHbS+5HI7PnaOaSqGkyYqcNjE1xwElE18D+PmAiVEpW9agswEd4KLbLBDr3uRjchHWTyZujxFWD5YJEK88nLxYDRCFP79Qy+lo015sKwWOo+/1uIGH33nh0ZxOWfQ2AjAf1rVl2wNiIXCm8mN/+7OZDZ9XXPg2wYkTFdlQ1To6GZlxsNb0FLKxA==
+ b=Sq5aJtawhNlVYfJnzYbUeC107HWPtScjPKUCAYCcLMcbu3cwn6JwCRLHcNeBeCeqF3DpMqayT9h096UFurHn54mzwBL13fNOp/IFtUhGCk8edDR6DQ/n44RiklC2z+OI4ffv8SPPJJ+1RzyiY/kMkmzbj++3WoDkEIfEsIuhtp/UHb5rrDMd6FXZj+qtzc0Jb18XvFpA3x31/ouNBQGN4WXTWpDzZhhuPwI4TheLm9E8H5bKCSri0aKiEZrNFA6/5qEHNVahVPAQeXwra41i02WX9Xsd8yLRAO2LP0WIMbR83gdSwQ59NhtY8XEgy6e3EMInWoZQ57howcgjyT4f/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WpTj8PgisKVo158jRnHrQHyeVr9hcVVjLEFeu77NQbY=;
- b=I4jOOSbNnB8Fi/eyTeuH9EL1hZ9YgYnihyztbAJTkI/3Axljgois4zJQnUg7KhNbWDt12cTAw+40Gps5mPVNqDqkfw0eD5iMR88KPaFXnBauUCYcKr+1vnygkBbB7Nop/p4xC79aITT5lndbLemdOjG5jPtb128Pymk3knCfwaRI7fR/fstIM4ZKwNWCNvrv1OZ8z/Hs29vmxMMiarZCY9SYIzXasE7iZ6gAs4ej6DtgfyB5Nv/0b7p2513On+u1VrrTR1TJdKF5TnHh/rCwkvgB8KGgn2mv4mMDfbYi2sfFu29zdRHHwdx5eV0BVSZXDB3OHF6WdY91QLykOB5xwg==
+ bh=LpMEBuCOnClorLvXgI4+sFTHckYa7/rn1JIAb8MQ8dQ=;
+ b=hvbcUwt7CPmp36oys4eVguhzpE8G64/Vgh3mZzHl0MNiojrVVQf3NeANhsVVsehYtVHXEJgluyJbWcCTJIda/CJuhU9tlUzEWgZkhaX4zNrUWXCQAY1Dh0sxDd3xeY29pmfen8WIRANv9a6AIspFrA+uT0p0AOOjr16aFOyR4H5VoN7Ix5xHODz9JwguwTWrByU16z+xCPA8vQzQMV2kedUYkBnGzgWp9Tqk8SvAY2NXRhnKYlbIisxwCEEjYxFoBNCzlWkf5Hu5d87PSXAXKgU6Uwzhg1WttqVseWnqwtGysWfdZEjUN5prVoxHhHBD4xqngiZwv1t+UvwqQ02cFA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WpTj8PgisKVo158jRnHrQHyeVr9hcVVjLEFeu77NQbY=;
- b=GTg+G8Psjl3PMJnFsN/6FW+Q3gxIyLHvzGPZmqfg9E9GPVz5QAd1SMpnQsmZx8tXfkBwG4Mw+N+qAREtHRcNOm4epa5myS/SQGNRineh+Ttdbj32YUNwXPSsmiDj8FFScJQvtRqJH7PsHTthpzTpeoZhdXXC/4RTHiWtmsvTQWI=
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
- MN2PR21MB1248.namprd21.prod.outlook.com (20.179.20.225) with Microsoft SMTP
+ bh=LpMEBuCOnClorLvXgI4+sFTHckYa7/rn1JIAb8MQ8dQ=;
+ b=gnQJ+vE6w5icFVbYO+B4CfRzzZPb+TjlSH+zkffDmfU+4GC3wA9st5KQamtOKbagTSX/Ok7xIHwAkaLqWSZwKSyN+ZLTUP54Mfr2NWF44h7nlltiv7VK0rNvJDcki0cCvu/I4tZJ6EkAZ2+9xxA0bP8BjYEKhHX6fkdZsJ9aKHk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
+ DM5PR2101MB1014.namprd21.prod.outlook.com (52.132.133.36) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.1; Tue, 31 Dec 2019 17:51:43 +0000
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::6de3:c062:9e55:ffc4]) by MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::6de3:c062:9e55:ffc4%5]) with mapi id 15.20.2623.002; Tue, 31 Dec 2019
- 17:51:43 +0000
+ 15.20.2602.6; Tue, 31 Dec 2019 22:14:25 +0000
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91]) by DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91%9]) with mapi id 15.20.2623.000; Tue, 31 Dec 2019
+ 22:14:25 +0000
 From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-CC:     Roman Kagan <rkagan@virtuozzo.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Subject: RE: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
- offer sequence and use async probe
-Thread-Topic: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
- offer sequence and use async probe
-Thread-Index: AQHVv027GHCeFuKLhUO4V+gfj0XECKfUHfwAgABK1lCAABorAIAAA1Zg
-Date:   Tue, 31 Dec 2019 17:51:43 +0000
-Message-ID: <MN2PR21MB1375505C4C5E132B161FB4BFCA260@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
-        <1577736814-21112-4-git-send-email-haiyangz@microsoft.com>
-        <20191231113440.GA380228@rkaganb.sw.ru>
-        <MN2PR21MB1375D41039A8A68A2117DDFCCA260@MN2PR21MB1375.namprd21.prod.outlook.com>
- <20191231093614.75da9bea@hermes.lan>
-In-Reply-To: <20191231093614.75da9bea@hermes.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-31T17:51:41.7454401Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bf1bf49b-1a5d-4997-b143-2364eb4c7d81;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fd387e9b-a39e-4798-7fd2-08d78e1a18cd
-x-ms-traffictypediagnostic: MN2PR21MB1248:|MN2PR21MB1248:|MN2PR21MB1248:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR21MB12485BBDD052EE9DED3D482BCA260@MN2PR21MB1248.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0268246AE7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(136003)(346002)(396003)(189003)(13464003)(199004)(10290500003)(8676002)(9686003)(71200400001)(8990500004)(33656002)(8936002)(66476007)(66556008)(64756008)(66446008)(66946007)(53546011)(55016002)(76116006)(6506007)(86362001)(4326008)(81156014)(478600001)(81166006)(6916009)(2906002)(54906003)(26005)(7696005)(316002)(52536014)(186003)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1248;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xqSHFrRL9YckkA4MshXvnv3V59W7o1Ja2DCYV+8axUsQV5eVAFO8FJAG5JbYduqGQxeZ7UqO9PncM8CFOjEAgiAaY8r/a16jhg1OwSMS5AUyc6pzr8RUFAwt9Lu/Mcvfd3phUII/5NB2cCfXAMHi0ztvtWVd00xAJWEDTi6Lh8HX4mMpT3wW462qJTw0oZlRv1bwbcJYktz/PJhP3w0+vKQNe6NBo7iJl3B1EVO/NGQCRTN1MkqpFi49qavBBvnIZfA4RfevWF4qIlq5hn/1gViOKQoSUEaee40SZzHRarR5fW3pPkxy/2uzJQc8pkh7zSCC+ge/ibpMXjyWithXA3PakaAmNW/+Rox/75i5X5HwEG321JXoqa4kNxHie/Sv34AowV5yfjei51vZA7y56yapyVQmmRZ9iHcsGbXYJaleuNEqNfC17md8r2E5m/62v8L3QZYAxy5wY16jwmFyZ11OUdFgoWPqynqVF7W9CKvoSh2jSLCERlC+IxeMviF2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3,net-next, 0/3] Add vmbus dev_num and allow netvsc probe options
+Date:   Tue, 31 Dec 2019 14:13:31 -0800
+Message-Id: <1577830414-119508-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MWHPR17CA0086.namprd17.prod.outlook.com
+ (2603:10b6:300:c2::24) To DM5PR2101MB0901.namprd21.prod.outlook.com
+ (2603:10b6:4:a7::30)
 MIME-Version: 1.0
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR17CA0086.namprd17.prod.outlook.com (2603:10b6:300:c2::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Tue, 31 Dec 2019 22:14:24 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a5b45bf7-9887-4b9a-77bd-08d78e3ecb4d
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB1014:|DM5PR2101MB1014:|DM5PR2101MB1014:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB1014663AE84A4F8F36C2A9FAAC260@DM5PR2101MB1014.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 0268246AE7
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(39860400002)(376002)(136003)(199004)(189003)(6512007)(4326008)(36756003)(6486002)(66556008)(66476007)(4744005)(66946007)(10290500003)(6666004)(8676002)(16526019)(5660300002)(186003)(956004)(6506007)(8936002)(26005)(2906002)(2616005)(81156014)(478600001)(81166006)(52116002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1014;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tHrDCQTxAzto/UEuq/TgDzFUvFoqYtb1W8qmrsVdOx9WWmklcIGlsty33AtjmYUFNmEEglkkwWE+v/nb2G14W9RAMscywbn7Zhzb173LQyq6bwYqu6sB0XY9vqg9qV2OkPAm7rzPYTBbxSLQcGic7SixuVSpQCX75m4u6BEpOqRAyMbd1i6LWgk0kYn2ZKaFvDfBp7hGHQOSSvbzVDVQ4ZlDzuKwv5VF3iBk287pdHl3wf887h81ZQjEqHLxmzVYEt+FLWV8HVu4B3y38kHb9vc+STGNGOIa1gseklyh0veRkQ4/EJf0475Pczgd/GjCNcFma/ajsbAYwzxIFmbU8LsWcyjtLK4HvKaD21CCLvNh8S7f5xEbRWzivrIfE1iHV/+iOudvBSggHIE4/7ArnXvTbPgk8WPG+CmVrKAUe0orPkR+7skEuiykdfY8moEl
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd387e9b-a39e-4798-7fd2-08d78e1a18cd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Dec 2019 17:51:43.0930
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5b45bf7-9887-4b9a-77bd-08d78e3ecb4d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Dec 2019 22:14:25.3048
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8+6K7CpvM+my8h8jGFIkElkR5SAdsNGyFkzwBHb8nb4KsXhiEP34cB19BgAEt+JQtOQSJC7lacTjvLzimiJRog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1248
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uejf7PG9uUWorrVe9uEDg+SVmCfhGeIo7hNu8zOdKsu4kDNdtlbt7V9LJ9qOA9/HCQ+CAC2uEoPEwRbcbatFMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1014
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Add dev_num for vmbus device based on channel offer sequence.
+User programs can use this number for nic naming.
+Async probing option is allowed for netvsc. Sync probing is still
+the default.
 
+Haiyang Zhang (3):
+  Drivers: hv: vmbus: Add a dev_num variable based on channel offer sequence
+  Drivers: hv: vmbus: Add dev_num to sysfs
+  hv_netvsc: Set probe_type to PROBE_DEFAULT_STRATEGY
 
-> -----Original Message-----
-> From: linux-hyperv-owner@vger.kernel.org <linux-hyperv-
-> owner@vger.kernel.org> On Behalf Of Stephen Hemminger
-> Sent: Tuesday, December 31, 2019 12:36 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Roman Kagan <rkagan@virtuozzo.com>; sashal@kernel.org; linux-
-> hyperv@vger.kernel.org; netdev@vger.kernel.org; KY Srinivasan
-> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; davem@davemloft.net
-> Subject: Re: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus
-> offer sequence and use async probe
->=20
-> On Tue, 31 Dec 2019 16:12:36 +0000
-> Haiyang Zhang <haiyangz@microsoft.com> wrote:
->=20
-> > > -----Original Message-----
-> > > From: Roman Kagan <rkagan@virtuozzo.com>
-> > > Sent: Tuesday, December 31, 2019 6:35 AM
-> > > To: Haiyang Zhang <haiyangz@microsoft.com>
-> > > Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org;
-> > > KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
-> > > <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> > > <vkuznets@redhat.com>; davem@davemloft.net; linux-
-> kernel@vger.kernel.org
-> > > Subject: Re: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on
-> vmbus
-> > > offer sequence and use async probe
-> > >
-> > > On Mon, Dec 30, 2019 at 12:13:34PM -0800, Haiyang Zhang wrote:
-> > > > The dev_num field in vmbus channel structure is assigned to the fir=
-st
-> > > > available number when the channel is offered. So netvsc driver uses=
- it
-> > > > for NIC naming based on channel offer sequence. Now re-enable the
-> > > > async probing mode for faster probing.
-> > > >
-> > > > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > > > ---
-> > > >  drivers/net/hyperv/netvsc_drv.c | 18 +++++++++++++++---
-> > > >  1 file changed, 15 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/net/hyperv/netvsc_drv.c
-> > > > b/drivers/net/hyperv/netvsc_drv.c index f3f9eb8..39c412f 100644
-> > > > --- a/drivers/net/hyperv/netvsc_drv.c
-> > > > +++ b/drivers/net/hyperv/netvsc_drv.c
-> > > > @@ -2267,10 +2267,14 @@ static int netvsc_probe(struct hv_device *d=
-ev,
-> > > >  	struct net_device_context *net_device_ctx;
-> > > >  	struct netvsc_device_info *device_info =3D NULL;
-> > > >  	struct netvsc_device *nvdev;
-> > > > +	char name[IFNAMSIZ];
-> > > >  	int ret =3D -ENOMEM;
-> > > >
-> > > > -	net =3D alloc_etherdev_mq(sizeof(struct net_device_context),
-> > > > -				VRSS_CHANNEL_MAX);
-> > > > +	snprintf(name, IFNAMSIZ, "eth%d", dev->channel->dev_num);
-> > >
-> > > How is this supposed to work when there are other ethernet device typ=
-es on
-> the
-> > > system, which may claim the same device names?
-> > >
-> > > > +	net =3D alloc_netdev_mqs(sizeof(struct net_device_context), name,
-> > > > +			       NET_NAME_ENUM, ether_setup,
-> > > > +			       VRSS_CHANNEL_MAX, VRSS_CHANNEL_MAX);
-> > > > +
-> > > >  	if (!net)
-> > > >  		goto no_net;
-> > > >
-> > > > @@ -2355,6 +2359,14 @@ static int netvsc_probe(struct hv_device *de=
-v,
-> > > >  		net->max_mtu =3D ETH_DATA_LEN;
-> > > >
-> > > >  	ret =3D register_netdevice(net);
-> > > > +
-> > > > +	if (ret =3D=3D -EEXIST) {
-> > > > +		pr_info("NIC name %s exists, request another name.\n",
-> > > > +			net->name);
-> > > > +		strlcpy(net->name, "eth%d", IFNAMSIZ);
-> > > > +		ret =3D register_netdevice(net);
-> > > > +	}
-> > >
-> > > IOW you want the device naming to be predictable, but don't guarantee=
- this?
-> > >
-> > > I think the problem this patchset is trying to solve is much better s=
-olved with
-> a
-> > > udev rule, similar to how it's done for PCI net devices.
-> > > And IMO the primary channel number, being a device's "hardware"
-> > > property, is more suited to be used in the device name, than this com=
-pletely
-> > > ephemeral device number.
-> >
-> > The vmbus number can be affected by other types of devices and/or
-> subchannel
-> > offerings. They are not stable either. That's why this patch set keeps =
-track of
-> the
-> > offering sequence within the same device type in a new variable "dev_nu=
-m".
-> >
-> > As in my earlier email, to avoid impact by other types of NICs, we shou=
-ld put
-> them
-> > into different naming formats, like "vf*", "enP*", etc. And yes, these =
-can be
-> done in
-> > udev.
-> >
-> > But for netvsc (synthetic) NICs, we still want the default naming forma=
-t "eth*".
-> And
-> > the variable "dev_num" gives them the basis for stable naming with Asyn=
-c
-> probing.
-> >
-> > Thanks,
-> > - Haiyang
-> >
->=20
-> The primary requirements for network naming are:
->   1. Network names must be repeatable on each boot. This was the original
-> problem
->      that PCI devices discovered back years ago when parallel probing was
-> enabled.
->   2. Network names must be predictable. If new VM is created, the names
-> should
->      match a similar VM config.
->   3. Names must be persistent. If a NIC is added or deleted, the existing=
- names
->      must not change.
->=20
-> The other things which are important (and this proposal breaks):
->   1. Don't break it principle: an existing VM should not suddenly get int=
-erfaces
->      renamed if kernel is upgraded. A corrallary is that a lot of current=
- userspace
->      code expects eth0. It doesn't look like first interface would be gua=
-ranteed
->      to be eth0.
->=20
->   2. No snowflakes principle: a device driver should follow the current p=
-ractice
->      of other devices. For netvsc, this means VMBus should act like PCI a=
-s much
->      as possible. Is there another driver doing this already?
->=20
->   3. Userspace policy principle: Every distribution has its own policy by=
- now.
->      The solution must make netvsc work reliably on Redhat (udev), Ubuntu
-> (netplan), SuSE (Yast)
->      doing something in the kernel violates #2.
->=20
-> My recommendation would be to take a multi-phase approach:
->   1. Expose persistent value in sysfs now.
->   2. Work with udev/netplan/... to use that value.
->   3. Make parallel VMBus probing an option. So that when distributions ha=
-ve
-> picked up
->      the udev changes they can enable parallel probe. Some will be quick =
-to
-> adopt
->      and the enterprise laggards can get to it when they feel the heat.
->=20
-> Long term wish list (requires host side changes):
->    1. The interface index could be a host side property; the host network=
-ing
->        already has the virtual device table and it is persistent.
->    2. The Azure NIC name should be visible as a property in guest.
->       Then userspace could do rename based on that property.
->       Having multiple disconnected names is leads to confusion.
+ Documentation/ABI/stable/sysfs-bus-vmbus |  8 ++++++
+ drivers/hv/channel_mgmt.c                | 46 ++++++++++++++++++++++++++++++--
+ drivers/hv/vmbus_drv.c                   | 13 +++++++++
+ drivers/net/hyperv/netvsc_drv.c          |  2 +-
+ include/linux/hyperv.h                   |  6 +++++
+ 5 files changed, 72 insertions(+), 3 deletions(-)
 
-Thank you for the detailed recommendations!
-I will do the step 1. Expose persistent value in sysfs now.
-And work on other changes in the future.
+-- 
+1.8.3.1
 
-Thanks,
-- Haiyang
