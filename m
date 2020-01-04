@@ -2,94 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 54F4D12F8E3
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Jan 2020 14:43:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6930813042C
+	for <lists+linux-hyperv@lfdr.de>; Sat,  4 Jan 2020 20:53:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbgACNnz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 3 Jan 2020 08:43:55 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:30089 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbgACNnz (ORCPT
+        id S1726135AbgADTwl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 4 Jan 2020 14:52:41 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:33399 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgADTwl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 3 Jan 2020 08:43:55 -0500
-X-Greylist: delayed 360 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Jan 2020 08:43:54 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578059033;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=nLUaJbwi1ip35T9ouH4xnaMxz+OZ8pmUc8OdZQe4ZWI=;
-        b=OHayZeimyMlBnFjXmNC2zck4TYc/A+tk7PW8/qtfx3Xx4YiqCop64095vgLfwvV+jQ
-        8FpI42xBJAAHFZdciVXb0+Hq2iP1Bw6+96MA9D/87Y37XwAQ7YVc+es7gmTXvV81MtPy
-        Y6cv/WcjUFGpn59npV7ggc2/btjh8z7yLMJBul4bWfBn9bm1/bGy0AZ2HMPhG9q6b5JZ
-        Ef6rDBJ7MAnYHbb946dN+U4lmqfYvlE+HnnTb+njCCEeloENoiqoGKQ/W1AKHTkS/eYQ
-        1SBExzzDWn8QKvliHqqZuK2gRNeY9ZUWrSTCn90Woeoa/Wy+GTWweGPW8GHTb9uLaHtf
-        vceA==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC44eztn93Z9OGdNZkAhh"
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id D0b379w03DVmOY5
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 3 Jan 2020 14:31:48 +0100 (CET)
-Date:   Fri, 3 Jan 2020 14:31:33 +0100
-From:   Olaf Hering <olaf@aepfle.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH v2] tools/hv: async name resolution in kvp_daemon
-Message-ID: <20200103143133.7168cff4.olaf@aepfle.de>
-In-Reply-To: <20191113155400.25456-1-olaf@aepfle.de>
-References: <20191113155400.25456-1-olaf@aepfle.de>
-X-Mailer: Claws Mail 2019.12.16 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/8KC0n9/zLPMhjeiBcAFvawH"; protocol="application/pgp-signature"
+        Sat, 4 Jan 2020 14:52:41 -0500
+Received: from orion.localdomain ([95.114.65.70]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N6bsG-1jmdkd0icQ-0180xh; Sat, 04 Jan 2020 20:52:09 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, mareklindner@neomailbox.ch,
+        sw@simonwunderlich.de, a@unstable.cc, sven@narfation.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
+        edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        jon.maloy@ericsson.com, ying.xue@windriver.com, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH 1/8] net: 8021q: remove unneeded MODULE_VERSION() usage
+Date:   Sat,  4 Jan 2020 20:51:24 +0100
+Message-Id: <20200104195131.16577-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:DUOrLYqXKtl8pRCBke7g4p2qlUJHYsLFb883aZwwRQAyiSsQXdT
+ cy4bqnEYpTvE2T7ZW2zmyRvoH9reEOrH+MCZw1+MTfEwclx1qtJJ+z9F0An+vNLD57fidnW
+ iekCAJ+XZ3u5qQI4aHADVsFfAROL8S8ePLXhBCHYTNrg+oAOpgce5KbMpkzHThP9fVnaK2u
+ dw99EkkdAMJWuXX6rXgCw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VvZJXNrGmTM=:3/L+iYL2SDXV5M3uG6JcT1
+ sbVVqyUggaxakdBmx6vlSFM9NRK6OYv9mISDkjQAM+dGpXa0m+BNpMiP0jPmFVVA4lJLEpcV8
+ /WNf4HCYPv1hKczaua13+mF1Cx/JG90C9DTg+9MQnoPiBM7hxjEE0zjaA2G5N15gXt63gUW1X
+ 304gM8cV6s4X14STp3U19LjjRN9S70ftbC+I3M/FbAvzImCNZl9p47QLaVnJ3jiBCaFnhq+y4
+ 4bu+swHZtsbNmpOCzuFREH4ruFNQNGIGvdavgU/T4RzyxmFIE8NdZbZbwKhq1xZaaat0sNvJt
+ 5vwpC+lZtAHVZkNTMJhS/pRloeKaKdLbt/UEvbIHUnprcFvZdZfe6ulqaTyCteGgn9M+ooM15
+ tQo+DNSMBHWbINyFMcTju0yYl6YE7wRQBjR3Ad1PCv2MbdlniogWIlMb2f0vG7QsD6CVbOAvi
+ ongj0p4vdHcA/qXb6BkueIjdn54vJc3n2FU2Px+yassEOWno+5K5WMW2Y7RtJkgyI4rND1RZG
+ oiqwSsx7tRxwxoDjHX2ol9wjbbidnKOcNVdWBvMNPSUUXvVfH2P/Qh5GYWH4ddmjfX6OigGbl
+ 2nKH/xJfZ3NeDwwf+3uZMuaeWlRuVTvsrG+N/B01h55qTE9Q+5LZ2GQODM3VAKv/TYFkWphz/
+ cnhQeuDYPzpL4FPiGuFA9yoyBvD+okzIToXErulKu1C7lV6o0fg0NjObpRUTQwbNO6ag2jgul
+ c6GetK92ee1+uhoRlYpFoJqwavmkTKu9gpUUQV+WZaP49K9Q00DgMIiP4Fkjlj0f8jRZQ/Zbe
+ 3/PRCteVkjCVOj3YS69w8lEt99PpY2nWtVLzW8DJh4dvE9BPnva3meP8ZJNgPt/Tpt3YaxeYq
+ DRh1ul25K858EuZdVNKA==
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---Sig_/8KC0n9/zLPMhjeiBcAFvawH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Remove MODULE_VERSION(), as it isn't needed at all: the only version
+making sense is the kernel version.
 
-Am Wed, 13 Nov 2019 16:54:00 +0100
-schrieb Olaf Hering <olaf@aepfle.de>:
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ net/8021q/vlan.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-> Adjust the code to resolve the current hostname in a separate thread.
+diff --git a/net/8021q/vlan.c b/net/8021q/vlan.c
+index d4bcfd8f95bf..ded7bf7229cf 100644
+--- a/net/8021q/vlan.c
++++ b/net/8021q/vlan.c
+@@ -36,15 +36,10 @@
+ #include "vlan.h"
+ #include "vlanproc.h"
+ 
+-#define DRV_VERSION "1.8"
+-
+ /* Global VLAN variables */
+ 
+ unsigned int vlan_net_id __read_mostly;
+ 
+-const char vlan_fullname[] = "802.1Q VLAN Support";
+-const char vlan_version[] = DRV_VERSION;
+-
+ /* End of global variables definitions. */
+ 
+ static int vlan_group_prealloc_vid(struct vlan_group *vg,
+@@ -683,7 +678,7 @@ static int __init vlan_proto_init(void)
+ {
+ 	int err;
+ 
+-	pr_info("%s v%s\n", vlan_fullname, vlan_version);
++	pr_info("802.1Q VLAN Support\n");
+ 
+ 	err = register_pernet_subsys(&vlan_net_ops);
+ 	if (err < 0)
+@@ -739,4 +734,3 @@ module_init(vlan_proto_init);
+ module_exit(vlan_cleanup_module);
+ 
+ MODULE_LICENSE("GPL");
+-MODULE_VERSION(DRV_VERSION);
+-- 
+2.11.0
 
-Are you now finally able to compile the patch?
-Did you find some documentation about the host-side API of the "FullyQualif=
-iedDomainName" request?
-Any further comments about the "aim for success" approach?
-
-
-Thanks,
-Olaf
-
---Sig_/8KC0n9/zLPMhjeiBcAFvawH
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl4PQjUACgkQ86SN7mm1
-DoDHlRAAkio4iY0zZA/e2HYJdbpsT6hBLoldQeIEP8szqHJRnb7ctsZcEkWPShqd
-MO5Tgh3kECKjm8fqsXuU8oDWjMLU8Vwn5srgUauWcrQJpNF11dtOwX5DTmAyLE6v
-g8xF/MEYXkhzyqKHK9hdddMPqCTffnKNQSuS2nA1jRUh6MzvbVH2Bklh21xYfSdh
-Hbl1EXNpA/vnr6K4SFfVgf9aV49P21FPA+gq/AgRntVOSKFMTpqxsd8ox4gdgW7H
-v+Di8AfMHFVnCHWCsRpWzLbHqK0CEnwXyE21VpuzPrygHMAW3gG+ZiFu/55/f/6P
-mlKIDQe+QGYezGnL1+/inR186BMcA9CfiM8htCKTC/6Ea23AR+onuy/QjvAMqnKD
-l1c+gt41l/TdhMGBPWHx6UeDQsj4WCwBAaryv0ARLLHr72IcEpKvML98/q/xAkYs
-vce20VuI8yplYBck6EaLRQgf7s+GUHlsBTSAK6UKoFpvFKIUHmsLWkBKDOlwYfsR
-9JV6RTthF/umFjdLaFsnvZPgzcJgDM9cWbxMZZm2trR4ovLhI+Tl/Exzai2mm4xA
-6Y3rQfVchIaLEAQwHtXx124ioBmVm8p3BOZyvq0EE9V1CCJaMHC4a9+JR9eN7dWR
-uQE5ZYCzHGTx2P1oQwpGEboyL5yKikiJOUyw2sEeF6zNcn1Wkq4=
-=0Oyf
------END PGP SIGNATURE-----
-
---Sig_/8KC0n9/zLPMhjeiBcAFvawH--
