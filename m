@@ -2,178 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AF8A131B90
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Jan 2020 23:38:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A704131B9E
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Jan 2020 23:39:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgAFWiM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Jan 2020 17:38:12 -0500
-Received: from mail-eopbgr1300133.outbound.protection.outlook.com ([40.107.130.133]:6073
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1726735AbgAFWjk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 6 Jan 2020 17:39:40 -0500
+Received: from mail-eopbgr750109.outbound.protection.outlook.com ([40.107.75.109]:26411
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726721AbgAFWiL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Jan 2020 17:38:11 -0500
+        id S1726721AbgAFWjj (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 6 Jan 2020 17:39:39 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DMEsMwiBMLqfhzKBzI2gC62+D8UtNgSvjnxif8BznXuZlNchNxCewJqgo6JGVE9Brk9F/C9FSw+qBijV15JHePsPhDhsvsOgnecZy5asFC3O8A+Ey01PdASvv9KhRFtBPsSihHeHzmU7LS8PUeB1KMmaYm1i8zFJqlctgIjAfE41g5lXizGA/xq28q6Eqy4tAaVMaRMl+sil6EYkBR0d7xNbmaq9duA3//8asz0OV9ZwrurZ0oZZ97NRUJRZKuvi7z/S1bs+6RraoehzhSgZYDCUiAvnm+bSEIj2FofXj0vi7m6IzRIb+t5imqImMp+D2p3OjyM337BUCsOKbd+z4Q==
+ b=lf6gLMhJshSwl8qSKfMZnoaQ8b8mTW88RjRspuczU314kpcjGVYyZ9hRb/d+N8Jvx6dSZKrxUKkdqS9hgM7XxIHV2b9p5QahXUM6EIhoE8Ivha0qoK6WNqN+Fb+Vj46YaVfLqgeWoYf95dOtEhuqe8Oc0aYo38mi+i5q9MBHx93rQQSOjzS0zc6HzQW/PguZQ/0qiMNDsOBGRlL0FVO1jt8+wdX9Lf5m/CYBiE/V5e7MWP7b5opockdXFIMAsmWNMYWB4TwVNOJ0KRVvLC35JPwlWA1q2DfuRVe0L5M8vR5xj4nsVxnSxjYJdS26jaa2CqdP9pci3CFbKGfhE7xnxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KiCD50HsVXB3SDNGKs1hwRp9s1laNPeqRrAt3EpEMwY=;
- b=RugJ9mrVF68bVZoQjk7bbHMDVlJEDgqkbxmiltcHZ8XG8pp2PAlEMVFzp2XSalTZ4ye3iN2E7K6hGSSXLlFvi2JceYaJBK6hLUvZZ9k9DeV5MKMV+6JvUOMw2yr5+vsn03oBAR766vRW4Y78E5/wo0fXSIPeZ2LlXVubCQvt5+igoVMUeDmxxm2P5i+NRg1fvh+kZdBM/bMPJ2XG8FT2mlJB4YTV6LghLVZwWCTy35cutGYsVK5D3oYGJQm1HNOBgL9+veoLGKIfxCRyM+9CLTiZetz5jbgjAhOsjO//JyXkpf6uKYL4uPFBBeR/ZhR1H/o1oPPyqO+k20sJrHalfQ==
+ bh=7uANN529b+8BSGabR1XCQGDktRdLyhuFdOC++g3rsLw=;
+ b=eNVEp75EB1c6HNHile4q5Bizs1KLvXelJLCOytEY41JV15ZCJAi+kg+9D9MT+TAPzYtRv4oevw0IwMSoDHvdSz/7MTPwmV7n9kpH788hMXsRP8EcGtf8GCSzibCv3Ty2lwyoizIkm/PGxtPR2fCfIT1C5uI8fxkpEvNldVwXVwiFS6iQJf+l9yVuegJ4EClqWK2wXHLCStD839s/JPbxR6mGeO01M/8Jh0o/4kjGlfw26fW2OM9At5LKpJMHNEj5nWSII1dNBseqcdEJCD3bAFFDOKeBB0Q7S7tFE4aHS2b/VFB71zLXs9b4+jZGvnjcPa7nLhT3PlBIVHz4fVHC/w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KiCD50HsVXB3SDNGKs1hwRp9s1laNPeqRrAt3EpEMwY=;
- b=dmF2P7alSZraMBXg1uLx8R4w/hUK6BnOPg6iSEoBuY+SHpKty8COJXdKQtvToWBVDsSDTjguCwGmYMgHHLoILS7puTaPzL/emFVvnsivP+7AT2bozg2lrKggUa+TDVHSbXYrxHOPWe5jqdoiJG4JTP5vDzTq3FOUjbiQBw80lUg=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0145.APCP153.PROD.OUTLOOK.COM (52.133.156.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.3; Mon, 6 Jan 2020 22:38:00 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::15e7:8155:31bc:d4e7]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::15e7:8155:31bc:d4e7%7]) with mapi id 15.20.2644.002; Mon, 6 Jan 2020
- 22:38:00 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "info@metux.net" <info@metux.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     kbuild test robot <lkp@intel.com>
-Subject: RE: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for fb
- on HyperV Gen 1 VMs.
-Thread-Topic: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for fb
- on HyperV Gen 1 VMs.
-Thread-Index: AQHVxOHxuopG5mY95kawnV462nTW6w==
-Date:   Mon, 6 Jan 2020 22:37:59 +0000
-Message-ID: <HK0P153MB0148F18913BEA45144AF8443BF3C0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <20191209075749.3804-1-weh@microsoft.com>
- <CY4PR21MB06293C21EC5338C98080F6AED7580@CY4PR21MB0629.namprd21.prod.outlook.com>
-In-Reply-To: <CY4PR21MB06293C21EC5338C98080F6AED7580@CY4PR21MB0629.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-09T16:32:55.0594936Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=32db805d-f982-4dfd-985a-2183a1a1211d;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
+ bh=7uANN529b+8BSGabR1XCQGDktRdLyhuFdOC++g3rsLw=;
+ b=EtPDPVRAeoC9KeZS99sDsCnpeCQdve5ClG6xExZozC0kwQ5p1yKsoItocKiR44qzHrE2cvNzcJ2T9Bm8VzrWgHQc99bNTnOUWrENv1q8KFYsG1NITWd5MAc8FYKvzkFVSnORTsUWaXc89za0zomZ8jVBE5msUOq2Iuhyx24lhUg=
+Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:9:9215:9356:cafd:e70d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ad78d3bc-0336-43a8-b8ae-08d792f91593
-x-ms-traffictypediagnostic: HK0P153MB0145:|HK0P153MB0145:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB01453B73FFC8D5E7FB72F0FFBF3C0@HK0P153MB0145.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0274272F87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39860400002)(396003)(136003)(366004)(189003)(199004)(71200400001)(76116006)(316002)(10290500003)(86362001)(7416002)(9686003)(66946007)(478600001)(66476007)(66556008)(64756008)(55016002)(66446008)(53546011)(110136005)(8936002)(4326008)(8990500004)(5660300002)(2906002)(7696005)(6506007)(81166006)(81156014)(52536014)(8676002)(33656002)(186003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0145;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TYfy/9hBwPHtX71CRSOAYpTOfijLZNuE09eWdKZAmqkEQsVJDYe5cAXN08W6/rwgaugrYVxueZQxBzP5nMJJgvZhPBBTNYWVHhLCjnNnkh/7XwEWxgnvrgC6EB/6nt0XBYiksmrQl28x/v1gzOGQDW1GXy/EdAP8RmuJD2bzw41HBjKPI39HKRnMmJloV8l3doBw7vRkvkwj9iz0whpNqJhRZHpy0Cgk6hylbgX47DyiYu/SOnW+33nO4bCg/Lireg3+jyhtBRcWvy82kjFK2W18UM/pPSjSa+Z/FYTWBWU3B+uFz1iiEfVlHXhwCdkApBXGe9g4Ajp8bj0UvA7PsQBD7gOK7mIGh+xOVTWKgLBmFFsDkjQNHOzSX0a0dNTuaE46ksA1YjEUDK95/4K3jPxj1Le8I2gjmGMOpMZiAIuUqMTTsea9hehD5+s35TnNEoVbUi6qHjIy4aKSyuO++ygODrs0ZNYgUWosY2R5Y/bma/SLlbzGKn4ueS7la5ZL
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) by
+ CY4PR21MB0471.namprd21.prod.outlook.com (10.172.121.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.3; Mon, 6 Jan 2020 22:39:36 +0000
+Received: from CY4PR21MB0775.namprd21.prod.outlook.com
+ ([fe80::6155:bc1d:1d39:977b]) by CY4PR21MB0775.namprd21.prod.outlook.com
+ ([fe80::6155:bc1d:1d39:977b%8]) with mapi id 15.20.2644.002; Mon, 6 Jan 2020
+ 22:39:35 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error handling path
+Date:   Mon,  6 Jan 2020 14:39:11 -0800
+Message-Id: <1578350351-129783-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR2001CA0007.namprd20.prod.outlook.com
+ (2603:10b6:301:15::17) To CY4PR21MB0775.namprd21.prod.outlook.com
+ (2603:10b6:903:b8::21)
 MIME-Version: 1.0
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR2001CA0007.namprd20.prod.outlook.com (2603:10b6:301:15::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Mon, 6 Jan 2020 22:39:34 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 49ed48a6-8ae2-4115-a9f4-08d792f94e28
+X-MS-TrafficTypeDiagnostic: CY4PR21MB0471:|CY4PR21MB0471:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR21MB0471E51DDBEA4C10A48569CEBF3C0@CY4PR21MB0471.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0274272F87
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(396003)(376002)(346002)(39860400002)(366004)(199004)(189003)(6506007)(6486002)(2906002)(66946007)(66476007)(66556008)(26005)(3450700001)(2616005)(36756003)(6512007)(956004)(5660300002)(4326008)(86362001)(10290500003)(8936002)(52116002)(316002)(16526019)(107886003)(8676002)(81156014)(6666004)(186003)(478600001)(6636002)(81166006)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0471;H:CY4PR21MB0775.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xwQktqa9VqCBfX6qxcXfv39ocAzuVcNnMcwqaEYMOmbLybPxfeIN3mPkE2JmibJz9rzJUYj6cIZOqC9XEzPIA9Ci0CpK+xXNwIFHMKrxII3OLiOwyGmfd6BIW0sxEhI9VW+8LZFYtKtVNVoT98R9QwzuRd3zcBH5pAsYuUyL4ZhKG+Ndn6aECGEuZitLYFivndefWl9M98G7W68uePESKSjar5qDglEXVUrVpHm83CuuqIhoXmkoyGsPW6ESnnQ1htLlzPEqtCQ6F6pK2r2nGc6C6PVI9ytyIr0U88eGeSqmMFuwfacflMxffYOaH3LyA4C+VymTWCD/iVcXDq1pkg7WYuKtWqzheLi5hRGgxJL8tsgYGMYJwsppgdg08Tjk7UWyAiBnBPNutWsrRxh2KqdWfddpNomY7sr5StDeUCiSWvmkE6eTdGVoLDppf4FbM8N0Bsd2DY34Nds35AVKIIQNZbZooIBWSW9BCiL02LX4Zv7r8EDpgMSwus8e8W2p
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad78d3bc-0336-43a8-b8ae-08d792f91593
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 22:37:59.8621
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49ed48a6-8ae2-4115-a9f4-08d792f94e28
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2020 22:39:35.7471
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /EgCmK1Ap1QFrM8BoWUuJ/CtYV54glkYyXuWQkpbSByV4QB+nlXqnOZBn6N127HB6glQky2coOSTQWFkMTTqxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0145
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0xvEspa+pPzk0R1c+Vm62uWutXleUEOOKpCqoFUUtz2yv6s/uoUdEOWoRF6I7o96hhEECwvZYs9O8Uzdpb2jAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0471
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Monday, December 9, 2019 8:33 AM
-> To: Wei Hu <weh@microsoft.com>; b.zolnierkie@samsung.com; KY
-> Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
-> Stephen Hemminger <sthemmin@microsoft.com>; sashal@kernel.org;
-> hch@lst.de; m.szyprowski@samsung.com; mchehab+samsung@kernel.org;
-> sam@ravnborg.org; gregkh@linuxfoundation.org;
-> alexandre.belloni@bootlin.com; info@metux.net; arnd@arndb.de;
-> dri-devel@lists.freedesktop.org; linux-fbdev@vger.kernel.org;
-> linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.org; Dexuan Cui
-> <decui@microsoft.com>
-> Cc: kbuild test robot <lkp@intel.com>
-> Subject: RE: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for
-> fb on HyperV Gen 1 VMs.
->=20
-> From: Wei Hu <weh@microsoft.com> Sent: Sunday, December 8, 2019 11:58
-> PM
-> >
-> > On Hyper-V, Generation 1 VMs can directly use VM's physical memory for
-> > their framebuffers. This can improve the efficiency of framebuffer and
-> > overall performance for VM. The physical memory assigned to framebuffer
-> > must be contiguous. We use CMA allocator to get contiguous physicial
-> > memory when the framebuffer size is greater than 4MB. For size under
-> > 4MB, we use alloc_pages to achieve this.
-> >
-> > To enable framebuffer memory allocation from CMA, supply a kernel
-> > parameter to give enough space to CMA allocator at boot time. For
-> > example:
-> >     cma=3D130m
-> > This gives 130MB memory to CAM allocator that can be allocated to
-> > framebuffer. If this fails, we fall back to the old way of using
-> > mmio for framebuffer.
-> >
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Wei Hu <weh@microsoft.com>
-> > ---
-> >     v2: Incorporated review comments form hch@lst.de, Michael Kelley
-> and
-> >     Dexuan Cui
-> >     - Use dma_alloc_coherent to allocate large contiguous memory
-> >     - Use phys_addr_t for physical addresses
-> >     - Corrected a few spelling errors and minor cleanups
-> >     - Also tested on 32 bit Ubuntu guest
-> >     v3: Fixed a build issue reported by kbuild test robot and incorport=
-ed
-> >     some review comments from Michael Kelley
-> >     - Add CMA check to avoid link failure
-> >     - Fixed small memory leak introduced by alloc_apertures
-> >     - Cleaned up so code
-> >     v4: Removed request_pages variable as it is no longer needed
-> >
-> >  drivers/video/fbdev/Kconfig     |   1 +
-> >  drivers/video/fbdev/hyperv_fb.c | 182
-> +++++++++++++++++++++++++-------
-> >  2 files changed, 144 insertions(+), 39 deletions(-)
-> >
->=20
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Now that we use kzalloc() to allocate the hbus buffer, we should use
+kfree() in the error path as well.
 
-Tested-by: Dexuan Cui <decui@microsoft.com>
+Also remove the type casting, since it's unnecessary in C.
 
-For a Gen-1 VM running on recent Hyper-V hosts, this patch can greatly=20
-reduce the CPU utilization because it avoids the slow data copy from the=20
-shadow framebuffer to the MMIO framebuffer, and hence it resolves the
-"blurred screen" issue when we output a lot of characters on the text-mode
-ternimal (e.g. "dmesg").
+Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+
+Sorry for missing the error handling path.
+
+ drivers/pci/controller/pci-hyperv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 9977abff92fc..15011a349520 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2922,7 +2922,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
+ 	 * kmemleak to track and scan the hbus buffer.
+ 	 */
+-	hbus = (struct hv_pcibus_device *)kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
++	hbus = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+ 	if (!hbus)
+ 		return -ENOMEM;
+ 	hbus->state = hv_pcibus_init;
+@@ -3058,7 +3058,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ free_dom:
+ 	hv_put_dom_num(hbus->sysdata.domain);
+ free_bus:
+-	free_page((unsigned long)hbus);
++	kfree(hbus);
+ 	return ret;
+ }
+ 
+-- 
+2.19.1
+
