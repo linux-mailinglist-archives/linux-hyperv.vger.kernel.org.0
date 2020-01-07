@@ -2,48 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01C1E132737
+	by mail.lfdr.de (Postfix) with ESMTP id DE6E7132739
 	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2020 14:10:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgAGNKR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Jan 2020 08:10:17 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:32908 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbgAGNKQ (ORCPT
+        id S1727975AbgAGNKU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Jan 2020 08:10:20 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38084 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727814AbgAGNKU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:10:16 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c13so23203026pls.0;
-        Tue, 07 Jan 2020 05:10:16 -0800 (PST)
+        Tue, 7 Jan 2020 08:10:20 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so28592717pfc.5;
+        Tue, 07 Jan 2020 05:10:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UflshzX9upCooqlbNBULwQW482Y7iZonDkQ2ZqdJtWY=;
-        b=cm37evqN7sDVRyad7IRkV3SiLVlNZYjCjyTcvyh0Mk6KL+8oHJJy95dcoSMFBh7hCF
-         LNAC8xe8iv2WX2ddi02NqU7B6VX6p9gWAWAz5nCZxAcyl77dzF1aZM803LQcCNhe548M
-         daqN2pcW1it7uDBzCEyyCUyp1bfoel3FL5w7bVfm5PKBdQius8R6E3ODbySTmpAU2g46
-         DyUSJ6uWAOBoT4s1F0C4H63GY0x+Spuub+yyq7QdJLkO3e8WHOa27iIg2dI49Ilk1Los
-         Nbw58bDOQ0DdjKZjD4ArtESRdiT6WrA8f+yW9MLBVbKxY/QLXTar8Ow+q/i2a6ObT9pg
-         q4zg==
+        bh=yDdbHS4WjgQTjAJRgdeh1BfRON47bl8bqcm6kJmN9nQ=;
+        b=rBR3TlODvd0MzYIQtFqldULdMMZz64ucILNBpLOpH3Wj7htWOMlWNHZ0Zui+r3UJBa
+         0Bw4WZ1kThNBxfI6CkXhJfDdfy0FIBl56ELEsW0z6nvbLIelRJany5uhSy5hnkZgEKje
+         8gMlskFknudaj+TuROD+ry7KCg+riLqz0xKaUI8JHfkO8uhu0RJ7aqSJXQgV7q6Y89g/
+         h9TGKKvX4hLQ1ic9RyOljoDTn7ZIRLD3aHoM3TlQw7m8iLU51DX/rxnpQF29Ri5TqBZY
+         gVNvGr0J78pes+bDCQnf+/aki4CMQ30FLTzaOHoL7Xa36z5aamwAof8ikAMMJDFTNaKs
+         xvXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=UflshzX9upCooqlbNBULwQW482Y7iZonDkQ2ZqdJtWY=;
-        b=enfzdY6dyCgNh0fh3rIjpys/d7vrW052GsY6Gz5gRcGLHTudyvM8j7WHbNxu3wwcDN
-         OB7mK3vi+RXFheg+nJv97DJ/3pXo8naogCiuDPfoL1gIYQElNTsI8LintT8VhBW+ALJp
-         k9qEoZfYnP1hPmpj7PIuQuXNhFD5hX7xwSVTxpk+/p9XRkLk9PXKYiJu8Aa5kDwzrqYv
-         m/pDSvV9WKItFerBfl0IwpzfYBB5yrX+BbBB4ERFmwqRozVo6xcmycDEMR2Z5qN8ZPCr
-         fPbhiWOWaGZBvu97qB+QiNX7auBgW8xwtPSFCOOtH/WXEgK3zV6rA2N+KPzkW0Au58WM
-         63IQ==
-X-Gm-Message-State: APjAAAXBY5kuiBwsCkBnWTNCGjiyQMqRCWb5QLeC2RjIwAxttXvpu6iR
-        WHh9Q6krhn5WO3iWsyutZ8k=
-X-Google-Smtp-Source: APXvYqzKw2GZiH4ZELlsaqBO9ywSoN16CqOAq92Fxa4UiPtcEkV1/H1hnCdeG+ycBVl8GcMy8sO69Q==
-X-Received: by 2002:a17:90a:a88f:: with SMTP id h15mr50246848pjq.32.1578402615841;
-        Tue, 07 Jan 2020 05:10:15 -0800 (PST)
+        bh=yDdbHS4WjgQTjAJRgdeh1BfRON47bl8bqcm6kJmN9nQ=;
+        b=H7GPOGlSWnFedOFtU1bjGlUauHyMGGEX6Sh8BCqaCfEJvGVmMNQbgJHn6hdMzeIy5f
+         AhcKMwfGKA6VBzQvqF6is2jwpVWc/z5rWeKKQ2YjGRVxieOEdAUd8pQFriYFzxN0rnct
+         Dnvb9wPUN08/P2EwWhnRPCo8A0ENuNlNxs21+UFxAPTiwdl+HYVQOMQ/XxAaRQuG34uQ
+         a4qrboYb86DiefJLvHUNYo+nOGSMJPdJ162trapwX5EiWbQxrbFE5jZzp8FDxrbkZAqd
+         FKvxdrSmhAJwEap/w4Db04zFvzH8a+xL/WnUWcG3blQ4a38DdphaIuLSLPALdkss925S
+         8MQw==
+X-Gm-Message-State: APjAAAVDL5qEEMTVseDp+chFE+qC4u0YM5MsDVApJWMPo2ELfNekbV/P
+        Hi62EKop5VNmw0xOKi3Ctd4=
+X-Google-Smtp-Source: APXvYqyRDrHcT8Fp/RKixefeLfAFW8DeRf/C/073UEgRt+zYq5dhXL5f0kOiy84EmljM/Sb6jtcryg==
+X-Received: by 2002:a63:2d44:: with SMTP id t65mr122306192pgt.112.1578402619350;
+        Tue, 07 Jan 2020 05:10:19 -0800 (PST)
 Received: from localhost.corp.microsoft.com ([167.220.255.5])
-        by smtp.googlemail.com with ESMTPSA id m71sm27522400pje.0.2020.01.07.05.10.12
+        by smtp.googlemail.com with ESMTPSA id m71sm27522400pje.0.2020.01.07.05.10.16
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 05:10:15 -0800 (PST)
+        Tue, 07 Jan 2020 05:10:18 -0800 (PST)
 From:   lantianyu1986@gmail.com
 X-Google-Original-From: Tianyu.Lan@microsoft.com
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
@@ -51,9 +51,9 @@ To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
 Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkuznets@redhat.com, eric.devolder@oracle.com
-Subject: [RFC PATCH V2 3/10] x86/Hyper-V/Balloon: Replace hot-add and balloon up works with a common work
-Date:   Tue,  7 Jan 2020 21:09:43 +0800
-Message-Id: <20200107130950.2983-4-Tianyu.Lan@microsoft.com>
+Subject: [RFC PATCH V2 4/10] x86/Hyper-V/Balloon: Convert spin lock ha_lock to mutex
+Date:   Tue,  7 Jan 2020 21:09:44 +0800
+Message-Id: <20200107130950.2983-5-Tianyu.Lan@microsoft.com>
 X-Mailer: git-send-email 2.14.5
 In-Reply-To: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
 References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
@@ -64,210 +64,232 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-The mem hot-remove operation and balloon down will be added
-or moved into work context. Add a common work to handle
-opeations of mem hot-add/remove and balloon up/down.
+ha_lock is to protect ha_region_list and is hold in process
+context. When process mem hot add msg, add_memory() will be
+called in the loop of traversing ha_region_list in order to
+find associated ha region. add_memory() holds device_hotplug_lock
+mutex and ha_lock is also hold in hv_online_page() which is
+called inside add_memory(). So current code needs to release
+ha_lock before calling add_memory() in order to avoid holding
+mutex under spin lock protection and holding ha_lock twice
+which may cause dead lock. When implement mem hot remove, also
+have such issue. To avoid releasing ha_lock in the loop of
+traversing ha_region_list and simplify code, convert ha_lock
+from spin lock to mutex first.
 
 Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 ---
- drivers/hv/hv_balloon.c | 86 ++++++++++++++++++++++++++++++-------------------
- 1 file changed, 52 insertions(+), 34 deletions(-)
+ drivers/hv/hv_balloon.c | 49 ++++++++++++++++++++++---------------------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index b155d0052981..bdb6791e6de1 100644
+index bdb6791e6de1..185146795122 100644
 --- a/drivers/hv/hv_balloon.c
 +++ b/drivers/hv/hv_balloon.c
-@@ -447,15 +447,20 @@ struct hv_hotadd_gap {
- 	unsigned long end_pfn;
- };
- 
--struct balloon_state {
--	__u32 num_pages;
--	struct work_struct wrk;
-+union dm_msg_info {
-+	struct {
-+		__u32 num_pages;
-+	} balloon_state;
-+	struct {
-+		union dm_mem_page_range ha_page_range;
-+		union dm_mem_page_range ha_region_range;
-+	} hot_add;
- };
- 
--struct hot_add_wrk {
--	union dm_mem_page_range ha_page_range;
--	union dm_mem_page_range ha_region_range;
-+struct dm_msg_wrk {
-+	enum dm_message_type msg_type;
- 	struct work_struct wrk;
-+	union dm_msg_info dm_msg;
- };
- 
- static bool allow_hibernation;
-@@ -514,14 +519,9 @@ struct hv_dynmem_device {
- 	unsigned int num_pages_added;
- 
- 	/*
--	 * State to manage the ballooning (up) operation.
-+	 * State to manage the ballooning (up) and "hot-add" operation.
+@@ -546,7 +546,7 @@ struct hv_dynmem_device {
+ 	 * Protects ha_region_list, num_pages_onlined counter and individual
+ 	 * regions from ha_region_list.
  	 */
--	struct balloon_state balloon_wrk;
--
--	/*
--	 * State to execute the "hot-add" operation.
--	 */
--	struct hot_add_wrk ha_wrk;
-+	struct dm_msg_wrk dm_wrk;
+-	spinlock_t ha_lock;
++	struct mutex ha_lock;
  
  	/*
- 	 * This state tracks if the host has specified a hot-add
-@@ -982,7 +982,7 @@ static unsigned long process_hot_add(unsigned long pg_start,
- 
- #endif
- 
--static void hot_add_req(struct work_struct *dummy)
-+static void hot_add_req(union dm_msg_info *msg_info)
+ 	 * A list of hot-add regions.
+@@ -629,7 +629,7 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+ 			      void *v)
  {
- 	struct dm_hot_add_response resp;
- #ifdef CONFIG_MEMORY_HOTPLUG
-@@ -996,11 +996,11 @@ static void hot_add_req(struct work_struct *dummy)
- 	resp.hdr.size = sizeof(struct dm_hot_add_response);
+ 	struct memory_notify *mem = (struct memory_notify *)v;
+-	unsigned long flags, pfn_count;
++	unsigned long pfn_count;
  
- #ifdef CONFIG_MEMORY_HOTPLUG
--	pg_start = dm->ha_wrk.ha_page_range.finfo.start_page;
--	pfn_cnt = dm->ha_wrk.ha_page_range.finfo.page_cnt;
-+	pg_start = msg_info->hot_add.ha_page_range.finfo.start_page;
-+	pfn_cnt = msg_info->hot_add.ha_page_range.finfo.page_cnt;
+ 	switch (val) {
+ 	case MEM_ONLINE:
+@@ -641,7 +641,7 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+ 		break;
  
--	rg_start = dm->ha_wrk.ha_region_range.finfo.start_page;
--	rg_sz = dm->ha_wrk.ha_region_range.finfo.page_cnt;
-+	rg_start = msg_info->hot_add.ha_region_range.finfo.start_page;
-+	rg_sz = msg_info->hot_add.ha_region_range.finfo.page_cnt;
+ 	case MEM_OFFLINE:
+-		spin_lock_irqsave(&dm_device.ha_lock, flags);
++		mutex_lock(&dm_device.ha_lock);
+ 		pfn_count = hv_page_offline_check(mem->start_pfn,
+ 						  mem->nr_pages);
+ 		if (pfn_count <= dm_device.num_pages_onlined) {
+@@ -655,7 +655,7 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+ 			WARN_ON_ONCE(1);
+ 			dm_device.num_pages_onlined = 0;
+ 		}
+-		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++		mutex_unlock(&dm_device.ha_lock);
+ 		break;
+ 	case MEM_GOING_ONLINE:
+ 	case MEM_GOING_OFFLINE:
+@@ -707,12 +707,11 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 	unsigned long start_pfn;
+ 	unsigned long processed_pfn;
+ 	unsigned long total_pfn = pfn_count;
+-	unsigned long flags;
  
- 	if ((rg_start == 0) && (!dm->host_specified_ha_region)) {
- 		unsigned long region_size;
-@@ -1261,9 +1261,9 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 	return num_pages;
- }
+ 	for (i = 0; i < (size/HA_CHUNK); i++) {
+ 		start_pfn = start + (i * HA_CHUNK);
  
--static void balloon_up(struct work_struct *dummy)
-+static void balloon_up(union dm_msg_info *msg_info)
- {
--	unsigned int num_pages = dm_device.balloon_wrk.num_pages;
-+	unsigned int num_pages = msg_info->balloon_state.num_pages;
- 	unsigned int num_ballooned = 0;
- 	struct dm_balloon_response *bl_resp;
- 	int alloc_unit;
-@@ -1313,7 +1313,7 @@ static void balloon_up(struct work_struct *dummy)
+-		spin_lock_irqsave(&dm_device.ha_lock, flags);
++		mutex_lock(&dm_device.ha_lock);
+ 		has->ha_end_pfn +=  HA_CHUNK;
  
- 		if (num_ballooned == 0 || num_ballooned == num_pages) {
- 			pr_debug("Ballooned %u out of %u requested pages.\n",
--				num_pages, dm_device.balloon_wrk.num_pages);
-+				num_pages, msg_info->balloon_state.num_pages);
+ 		if (total_pfn > HA_CHUNK) {
+@@ -724,7 +723,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 		}
  
- 			bl_resp->more_pages = 0;
- 			done = true;
-@@ -1355,6 +1355,22 @@ static void balloon_up(struct work_struct *dummy)
+ 		has->covered_end_pfn +=  processed_pfn;
+-		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++		mutex_unlock(&dm_device.ha_lock);
  
- }
- 
-+static void dm_msg_work(struct work_struct *dummy)
-+{
-+	union dm_msg_info *msg_info = &dm_device.dm_wrk.dm_msg;
-+
-+	switch (dm_device.dm_wrk.msg_type) {
-+	case DM_BALLOON_REQUEST:
-+		balloon_up(msg_info);
-+		break;
-+	case DM_MEM_HOT_ADD_REQUEST:
-+		hot_add_req(msg_info);
-+		break;
-+	default:
-+		return;
-+	}
-+}
-+
- static void balloon_down(struct hv_dynmem_device *dm,
- 			struct dm_unballoon_request *req)
- {
-@@ -1490,6 +1506,8 @@ static void balloon_onchannelcallback(void *context)
- 	struct hv_dynmem_device *dm = hv_get_drvdata(dev);
- 	struct dm_balloon *bal_msg;
- 	struct dm_hot_add *ha_msg;
-+	struct dm_msg_wrk *dm_wrk = &dm_device.dm_wrk;
-+	union dm_msg_info *msg_info = &dm_wrk->dm_msg;
- 	union dm_mem_page_range *ha_pg_range;
- 	union dm_mem_page_range *ha_region;
- 
-@@ -1522,8 +1540,9 @@ static void balloon_onchannelcallback(void *context)
- 				pr_warn("Currently ballooning\n");
- 			bal_msg = (struct dm_balloon *)recv_buffer;
- 			dm->state = DM_BALLOON_UP;
--			dm_device.balloon_wrk.num_pages = bal_msg->num_pages;
--			schedule_work(&dm_device.balloon_wrk.wrk);
-+			msg_info->balloon_state.num_pages = bal_msg->num_pages;
-+			dm_wrk->msg_type = DM_BALLOON_REQUEST;
-+			schedule_work(&dm_wrk->wrk);
- 			break;
- 
- 		case DM_UNBALLOON_REQUEST:
-@@ -1549,8 +1568,9 @@ static void balloon_onchannelcallback(void *context)
+ 		init_completion(&dm_device.ol_waitevent);
+ 		dm_device.ha_waiting = !memhp_auto_online;
+@@ -745,10 +744,10 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
  				 */
- 				dm->host_specified_ha_region = false;
- 				ha_pg_range = &ha_msg->range;
--				dm->ha_wrk.ha_page_range = *ha_pg_range;
--				dm->ha_wrk.ha_region_range.page_range = 0;
-+				msg_info->hot_add.ha_page_range = *ha_pg_range;
-+				msg_info->hot_add.ha_region_range.page_range
-+						= 0;
- 			} else {
- 				/*
- 				 * Host is specifying that we first hot-add
-@@ -1560,10 +1580,11 @@ static void balloon_onchannelcallback(void *context)
- 				dm->host_specified_ha_region = true;
- 				ha_pg_range = &ha_msg->range;
- 				ha_region = &ha_pg_range[1];
--				dm->ha_wrk.ha_page_range = *ha_pg_range;
--				dm->ha_wrk.ha_region_range = *ha_region;
-+				msg_info->hot_add.ha_page_range = *ha_pg_range;
-+				msg_info->hot_add.ha_region_range = *ha_region;
+ 				do_hot_add = false;
  			}
--			schedule_work(&dm_device.ha_wrk.wrk);
-+			dm_wrk->msg_type = DM_MEM_HOT_ADD_REQUEST;
-+			schedule_work(&dm_wrk->wrk);
+-			spin_lock_irqsave(&dm_device.ha_lock, flags);
++			mutex_lock(&dm_device.ha_lock);
+ 			has->ha_end_pfn -= HA_CHUNK;
+ 			has->covered_end_pfn -=  processed_pfn;
+-			spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++			mutex_unlock(&dm_device.ha_lock);
  			break;
+ 		}
  
- 		case DM_INFO_MESSAGE:
-@@ -1707,8 +1728,7 @@ static int balloon_probe(struct hv_device *dev,
+@@ -769,10 +768,9 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ static void hv_online_page(struct page *pg, unsigned int order)
+ {
+ 	struct hv_hotadd_state *has;
+-	unsigned long flags;
+ 	unsigned long pfn = page_to_pfn(pg);
+ 
+-	spin_lock_irqsave(&dm_device.ha_lock, flags);
++	mutex_lock(&dm_device.ha_lock);
+ 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+ 		/* The page belongs to a different HAS. */
+ 		if ((pfn < has->start_pfn) ||
+@@ -782,7 +780,7 @@ static void hv_online_page(struct page *pg, unsigned int order)
+ 		hv_bring_pgs_online(has, pfn, 1UL << order);
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++	mutex_unlock(&dm_device.ha_lock);
+ }
+ 
+ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+@@ -791,9 +789,8 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+ 	struct hv_hotadd_gap *gap;
+ 	unsigned long residual, new_inc;
+ 	int ret = 0;
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&dm_device.ha_lock, flags);
++	mutex_lock(&dm_device.ha_lock);
+ 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+ 		/*
+ 		 * If the pfn range we are dealing with is not in the current
+@@ -840,7 +837,7 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+ 		ret = 1;
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++	mutex_unlock(&dm_device.ha_lock);
+ 
+ 	return ret;
+ }
+@@ -854,12 +851,12 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+ 	struct hv_hotadd_state *has;
+ 	unsigned long pgs_ol = 0;
+ 	unsigned long old_covered_state;
+-	unsigned long res = 0, flags;
++	unsigned long res = 0;
+ 
+ 	pr_debug("Hot adding %lu pages starting at pfn 0x%lx.\n", pg_count,
+ 		pg_start);
+ 
+-	spin_lock_irqsave(&dm_device.ha_lock, flags);
++	mutex_lock(&dm_device.ha_lock);
+ 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+ 		/*
+ 		 * If the pfn range we are dealing with is not in the current
+@@ -912,9 +909,9 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+ 			} else {
+ 				pfn_cnt = size;
+ 			}
+-			spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++			mutex_unlock(&dm_device.ha_lock);
+ 			hv_mem_hot_add(has->ha_end_pfn, size, pfn_cnt, has);
+-			spin_lock_irqsave(&dm_device.ha_lock, flags);
++			mutex_lock(&dm_device.ha_lock);
+ 		}
+ 		/*
+ 		 * If we managed to online any pages that were given to us,
+@@ -923,7 +920,7 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+ 		res = has->covered_end_pfn - old_covered_state;
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++	mutex_unlock(&dm_device.ha_lock);
+ 
+ 	return res;
+ }
+@@ -935,7 +932,6 @@ static unsigned long process_hot_add(unsigned long pg_start,
+ {
+ 	struct hv_hotadd_state *ha_region = NULL;
+ 	int covered;
+-	unsigned long flags;
+ 
+ 	if (pfn_cnt == 0)
+ 		return 0;
+@@ -967,9 +963,9 @@ static unsigned long process_hot_add(unsigned long pg_start,
+ 		ha_region->covered_end_pfn = pg_start;
+ 		ha_region->end_pfn = rg_start + rg_size;
+ 
+-		spin_lock_irqsave(&dm_device.ha_lock, flags);
++		mutex_lock(&dm_device.ha_lock);
+ 		list_add_tail(&ha_region->list, &dm_device.ha_region_list);
+-		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++		mutex_unlock(&dm_device.ha_lock);
+ 	}
+ 
+ do_pg_range:
+@@ -1727,7 +1723,7 @@ static int balloon_probe(struct hv_device *dev,
+ 	init_completion(&dm_device.host_event);
  	init_completion(&dm_device.config_event);
  	INIT_LIST_HEAD(&dm_device.ha_region_list);
- 	spin_lock_init(&dm_device.ha_lock);
--	INIT_WORK(&dm_device.balloon_wrk.wrk, balloon_up);
--	INIT_WORK(&dm_device.ha_wrk.wrk, hot_add_req);
-+	INIT_WORK(&dm_device.dm_wrk.wrk, dm_msg_work);
+-	spin_lock_init(&dm_device.ha_lock);
++	mutex_init(&dm_device.ha_lock);
+ 	INIT_WORK(&dm_device.dm_wrk.wrk, dm_msg_work);
  	dm_device.host_specified_ha_region = false;
  
- #ifdef CONFIG_MEMORY_HOTPLUG
-@@ -1754,8 +1774,7 @@ static int balloon_remove(struct hv_device *dev)
+@@ -1769,7 +1765,6 @@ static int balloon_remove(struct hv_device *dev)
+ 	struct hv_dynmem_device *dm = hv_get_drvdata(dev);
+ 	struct hv_hotadd_state *has, *tmp;
+ 	struct hv_hotadd_gap *gap, *tmp_gap;
+-	unsigned long flags;
+ 
  	if (dm->num_pages_ballooned != 0)
  		pr_warn("Ballooned pages: %d\n", dm->num_pages_ballooned);
+@@ -1782,7 +1777,7 @@ static int balloon_remove(struct hv_device *dev)
+ 	unregister_memory_notifier(&hv_memory_nb);
+ 	restore_online_page_callback(&hv_online_page);
+ #endif
+-	spin_lock_irqsave(&dm_device.ha_lock, flags);
++	mutex_lock(&dm_device.ha_lock);
+ 	list_for_each_entry_safe(has, tmp, &dm->ha_region_list, list) {
+ 		list_for_each_entry_safe(gap, tmp_gap, &has->gap_list, list) {
+ 			list_del(&gap->list);
+@@ -1791,7 +1786,7 @@ static int balloon_remove(struct hv_device *dev)
+ 		list_del(&has->list);
+ 		kfree(has);
+ 	}
+-	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++	mutex_unlock(&dm_device.ha_lock);
  
--	cancel_work_sync(&dm->balloon_wrk.wrk);
--	cancel_work_sync(&dm->ha_wrk.wrk);
-+	cancel_work_sync(&dm->dm_wrk.wrk);
- 
- 	kthread_stop(dm->thread);
- 	vmbus_close(dev->channel);
-@@ -1783,8 +1802,7 @@ static int balloon_suspend(struct hv_device *hv_dev)
- 
- 	tasklet_disable(&hv_dev->channel->callback_event);
- 
--	cancel_work_sync(&dm->balloon_wrk.wrk);
--	cancel_work_sync(&dm->ha_wrk.wrk);
-+	cancel_work_sync(&dm->dm_wrk.wrk);
- 
- 	if (dm->thread) {
- 		kthread_stop(dm->thread);
+ 	return 0;
+ }
 -- 
 2.14.5
 
