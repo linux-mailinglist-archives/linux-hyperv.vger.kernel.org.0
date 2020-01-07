@@ -2,48 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 404E713273C
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2020 14:10:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11A7B13273E
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jan 2020 14:11:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgAGNK1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Jan 2020 08:10:27 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35894 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbgAGNK1 (ORCPT
+        id S1728115AbgAGNKc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Jan 2020 08:10:32 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37529 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727814AbgAGNKc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:10:27 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n59so9258628pjb.1;
-        Tue, 07 Jan 2020 05:10:27 -0800 (PST)
+        Tue, 7 Jan 2020 08:10:32 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q127so28498407pga.4;
+        Tue, 07 Jan 2020 05:10:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IUpxubwinJTic0lIoXBDmYhv+VqElfUG5Oe43WkJgYk=;
-        b=sctSFyyuaxNu7+DSW8JT65VFWFDaTlaw7g9GaXOamkKFJPUS/gpRh2feIkG2qqsnco
-         3E9NZKXXAxYOwcwSETaN+aBNcGcWVBcpur/6PqPVrBPIwcoxsmAFAfCtiXaKG0Bd+yKH
-         7yOptVY/wBFSV78GatJWNenumFzIewJKQqayWpBpR2K7XVGFlMyDwcj5lMGCs7aF7L6m
-         8rlEmxAbSgCTtWWN5UPMLWDmc9PQ7a1S6AYre3kQspVRAKn31/Htxl8wEHMUFJM10tbm
-         GYueaNNQSR0a/CGor0D+CAH/8c8rdJsDgs8SVZLrRiOI1SrYJB04q1eBFB9WQPrJnos3
-         JpsQ==
+        bh=v3pmTcy6qEJwh7e7FysvKYAmuT6y5pD3iMM4o529XwI=;
+        b=YHJyLQq4t57RCkW3gxsrusuYhs5F9mArMG0Vhvkr1tkC65aaC9rZUfZQ/qUjxr1WKc
+         hv94sJEDQQ9tGQjBtmsWdliwIQMRqr6sj4SN6G7Yhl0oNkuGVaZJLMsG7NmducH+gFC7
+         sX79HA4XT9sRBGKZGi8VfUif9TuycwwRhrEJnB2UYOR6pHfgXY26m2qONHEkU3tcXvb1
+         PMi5MAMa+U31YjgI1Zo6ssOVruHa5uS2LaCjWD21qom/6g2YcEf4+1TnHwhoATFMsDJS
+         ++aGUzinOqg6lqZOqXAEm4iaX40RFfjeV8mAOlFmrB1uI3uRdDaPDECyTDIhaCbb1hXX
+         2ESg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=IUpxubwinJTic0lIoXBDmYhv+VqElfUG5Oe43WkJgYk=;
-        b=kdcAqKg9QOJr01BMpLx/BRKQ149HjiFu9Ls5hVbHmjai39YFZh+OqvBqUoOybuiRbr
-         w7cv9fJqRBZYN8mPI56BbvOoUURVN0YO12Oy6WI0i0Aj3ldW4ToohmJlV7FL29qOq1xW
-         XEES9rt62QTV47RTBa0lfxxXTBPw8SthlaSNkC5RjvmWagBDHSJMueK5hmNit1cg7SLD
-         NyiF/djA6yTqIh1DyywlNVhmTQYSoJ7uz/Yn2qkD/+xYTYTve9YU0vBkNAigDVcS+0zQ
-         hjVgQFs62vZEF/Wq+pZ2ib5P/jSIF2wM6Qf2l7D7oYltDfIZbuYF5+rxjwy7HqEZE+lc
-         Ep+A==
-X-Gm-Message-State: APjAAAUMEvVgZvmTDZd4stzeMjZ6fq2Vpe2b9YWU8T358NvLDxYR7JP1
-        vFnBCNOTdTYFB4lPUO0P9qyAydu8DRw=
-X-Google-Smtp-Source: APXvYqwwRlRu2lMeKPEDTCA/ABPySKfxwLbjb8djIkIAD2jMXAhiquzDper9ItvHpbq2ax1CpPYR9Q==
-X-Received: by 2002:a17:90a:cb0f:: with SMTP id z15mr49784416pjt.131.1578402626686;
-        Tue, 07 Jan 2020 05:10:26 -0800 (PST)
+        bh=v3pmTcy6qEJwh7e7FysvKYAmuT6y5pD3iMM4o529XwI=;
+        b=NR6D0m1ibp9KbkLyrVAhMdON057Tq9gGGmcY+UGga8iqpx00YkOluBDHEdI/kSOzbE
+         EhzatDMXeweRaDwvn4PgPglpZ/gwK2KZIqHa2eOdNC02wsMrzHzSnLFYpuyO+Ty0GM7F
+         O94m56ZEIl1nNeBvY+sCLNdg2Dtd0d8U4TJ8wg4z/VUC2dtn70YYOnTLdKlDJp/m31dz
+         w+q2tV44nyPg6Afq2pAUpd0+1J6Qot4gWBuO0HwjngDtChFACwfWgN3CHETVT8DOr/SX
+         RhWgP+hOd4PvVMK1K68qSBRHG1B2tnA2h9DtjBXUttNIBQE2aHZrMaci9oRyMipWE6gk
+         2HrA==
+X-Gm-Message-State: APjAAAXwNiyLjfUl4tXlgtok8a3RxiWoXxcsYfU9J91ca1ZsClcotKMC
+        bawjmXKQWsgJksFvDyPWvkEd4zJwsHc=
+X-Google-Smtp-Source: APXvYqxajOJXvcFFiotYF1Pmrbxc9vj2IYQDtwAWsxNiZTaHmcDk2t1OZ7sfb3pEvWzsIW00qnlxQg==
+X-Received: by 2002:a63:950c:: with SMTP id p12mr117626365pgd.85.1578402630573;
+        Tue, 07 Jan 2020 05:10:30 -0800 (PST)
 Received: from localhost.corp.microsoft.com ([167.220.255.5])
-        by smtp.googlemail.com with ESMTPSA id m71sm27522400pje.0.2020.01.07.05.10.23
+        by smtp.googlemail.com with ESMTPSA id m71sm27522400pje.0.2020.01.07.05.10.26
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 05:10:25 -0800 (PST)
+        Tue, 07 Jan 2020 05:10:29 -0800 (PST)
 From:   lantianyu1986@gmail.com
 X-Google-Original-From: Tianyu.Lan@microsoft.com
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
@@ -51,9 +51,9 @@ To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
 Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkuznets@redhat.com, eric.devolder@oracle.com
-Subject: [RFC PATCH V2 6/10] x86/Hyper-V/Balloon: Enable mem hot-remove capability
-Date:   Tue,  7 Jan 2020 21:09:46 +0800
-Message-Id: <20200107130950.2983-7-Tianyu.Lan@microsoft.com>
+Subject: [RFC PATCH V2 7/10] x86/Hyper-V/Balloon: Handle mem hot-remove request
+Date:   Tue,  7 Jan 2020 21:09:47 +0800
+Message-Id: <20200107130950.2983-8-Tianyu.Lan@microsoft.com>
 X-Mailer: git-send-email 2.14.5
 In-Reply-To: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
 References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
@@ -64,213 +64,259 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Enable mem hot-remove capability, handle request in the
-common work and add mem hot-remove operation later.
+Linux system mem hot plug unit is 128MB and request page
+number maybe not aligned with unit. The non-aligned case
+will handle in the later.
+
+Handle mem hot-remve request:
+First, search memory from ha region list. If find suitable memory
+block, offline & remove memory and create ha region region "gap"
+struct for the range. "gap" means the range in the hot-add region
+is offlined or removed. The following mem hot-add msg may add
+memory in the gap range back.
+
+If there is no suitable memory in the hot-add region, search memory
+from the system memory on the target node and perform offline&remove
+memory.
 
 Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 ---
- drivers/hv/hv_balloon.c | 104 ++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 101 insertions(+), 3 deletions(-)
+ drivers/hv/hv_balloon.c | 188 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 184 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 729dc5551302..43e490f492d5 100644
+index 43e490f492d5..3d8c09fe148a 100644
 --- a/drivers/hv/hv_balloon.c
 +++ b/drivers/hv/hv_balloon.c
-@@ -49,6 +49,7 @@
-  * Changes to 0.2 on 2009/05/14
-  * Changes to 0.3 on 2009/12/03
-  * Changed to 1.0 on 2011/04/05
-+ * Changed to 2.0 on 2019/12/10
-  */
+@@ -56,6 +56,10 @@
+ #define DYNMEM_MAJOR_VERSION(Version) ((__u32)(Version) >> 16)
+ #define DYNMEM_MINOR_VERSION(Version) ((__u32)(Version) & 0xff)
  
- #define DYNMEM_MAKE_VERSION(Major, Minor) ((__u32)(((Major) << 16) | (Minor)))
-@@ -94,7 +95,13 @@ enum dm_message_type {
- 	 * Version 1.0.
- 	 */
- 	DM_INFO_MESSAGE			= 12,
--	DM_VERSION_1_MAX		= 12
-+	DM_VERSION_1_MAX		= 12,
++#define MAX_HOT_REMOVE_ENTRIES						\
++		((PAGE_SIZE - sizeof(struct dm_hot_remove_response))	\
++		 / sizeof(union dm_mem_page_range))
 +
-+	/*
-+	 * Version 2.0
-+	 */
-+	DM_MEM_HOT_REMOVE_REQUEST        = 13,
-+	DM_MEM_HOT_REMOVE_RESPONSE       = 14
- };
+ enum {
+ 	DYNMEM_PROTOCOL_VERSION_1 = DYNMEM_MAKE_VERSION(0, 3),
+ 	DYNMEM_PROTOCOL_VERSION_2 = DYNMEM_MAKE_VERSION(1, 0),
+@@ -697,6 +701,7 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+ {
+ 	struct memory_notify *mem = (struct memory_notify *)v;
+ 	unsigned long pfn_count;
++	int need_unlock;
  
+ 	switch (val) {
+ 	case MEM_ONLINE:
+@@ -708,7 +713,11 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+ 		break;
  
-@@ -123,7 +130,8 @@ union dm_caps {
- 		 * represents an alignment of 2^n in mega bytes.
- 		 */
- 		__u64 hot_add_alignment:4;
--		__u64 reservedz:58;
-+		__u64 hot_remove:1;
-+		__u64 reservedz:57;
- 	} cap_bits;
- 	__u64 caps;
- } __packed;
-@@ -234,7 +242,9 @@ struct dm_capabilities {
- struct dm_capabilities_resp_msg {
- 	struct dm_header hdr;
- 	__u64 is_accepted:1;
--	__u64 reservedz:63;
-+	__u64 hot_remove:1;
-+	__u64 suppress_pressure_reports:1;
-+	__u64 reservedz:61;
- } __packed;
- 
- /*
-@@ -377,6 +387,27 @@ struct dm_hot_add_response {
- 	__u32 result;
- } __packed;
- 
-+struct dm_hot_remove {
-+	struct dm_header hdr;
-+	__u32 virtual_node;
-+	__u32 page_count;
-+	__u32 qos_flags;
-+	__u32 reservedZ;
-+} __packed;
+ 	case MEM_OFFLINE:
+-		mutex_lock(&dm_device.ha_lock);
++		if (dm_device.lock_thread != current) {
++			mutex_lock(&dm_device.ha_lock);
++			need_unlock = 1;
++		}
 +
-+struct dm_hot_remove_response {
-+	struct dm_header hdr;
-+	__u32 result;
-+	__u32 range_count;
-+	__u64 more_pages:1;
-+	__u64 reservedz:63;
-+	union dm_mem_page_range range_array[];
-+} __packed;
+ 		pfn_count = hv_page_offline_check(mem->start_pfn,
+ 						  mem->nr_pages);
+ 		if (pfn_count <= dm_device.num_pages_onlined) {
+@@ -722,7 +731,9 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+ 			WARN_ON_ONCE(1);
+ 			dm_device.num_pages_onlined = 0;
+ 		}
+-		mutex_unlock(&dm_device.ha_lock);
 +
-+#define DM_REMOVE_QOS_LARGE	 (1 << 0)
-+#define DM_REMOVE_QOS_LOCAL	 (1 << 1)
-+#define DM_REMOVE_QOS_MASK       (0x3)
-+
- /*
-  * Types of information sent from host to the guest.
-  */
-@@ -455,6 +486,11 @@ union dm_msg_info {
- 		union dm_mem_page_range ha_page_range;
- 		union dm_mem_page_range ha_region_range;
- 	} hot_add;
-+	struct {
-+		__u32 virtual_node;
-+		__u32 page_count;
-+		__u32 qos_flags;
-+	} hot_remove;
- };
++		if (need_unlock)
++			mutex_unlock(&dm_device.ha_lock);
+ 		break;
+ 	case MEM_GOING_ONLINE:
+ 	case MEM_GOING_OFFLINE:
+@@ -1046,14 +1057,183 @@ static unsigned long process_hot_add(unsigned long pg_start,
+ 	return handle_pg_range(pg_start, pfn_cnt);
+ }
  
- struct dm_msg_wrk {
-@@ -496,6 +532,7 @@ enum hv_dm_state {
- 	DM_BALLOON_UP,
- 	DM_BALLOON_DOWN,
- 	DM_HOT_ADD,
-+	DM_HOT_REMOVE,
- 	DM_INIT_ERROR
- };
- 
-@@ -571,6 +608,35 @@ static struct hv_dynmem_device dm_device;
- 
- static void post_status(struct hv_dynmem_device *dm);
- 
-+static int hv_send_hot_remove_response(
-+		struct dm_hot_remove_response *resp,
-+		unsigned long request_count, bool more_pages)
++static int hv_hot_remove_range(unsigned int nid, unsigned long start_pfn,
++			       unsigned long end_pfn, unsigned long nr_pages,
++			       unsigned long *request_index,
++			       union dm_mem_page_range *range_array,
++			       struct hv_hotadd_state *has)
 +{
-+	struct hv_dynmem_device *dm = &dm_device;
++	unsigned long block_pages = HA_CHUNK;
++	unsigned long rm_pages = nr_pages;
++	unsigned long pfn;
 +	int ret;
 +
-+	resp->hdr.type = DM_MEM_HOT_REMOVE_RESPONSE;
-+	resp->range_count = request_count;
-+	resp->more_pages = more_pages;
-+	resp->hdr.size = sizeof(struct dm_hot_remove_response)
-+			+ sizeof(union dm_mem_page_range) * request_count;
-+	resp->result = !!request_count;
++	for (pfn = start_pfn; pfn < end_pfn; pfn += block_pages) {
++		struct hv_hotadd_gap *gap;
++		int in_gap;
 +
-+	do {
-+		resp->hdr.trans_id = atomic_inc_return(&trans_id);
-+		ret = vmbus_sendpacket(dm->dev->channel, resp,
-+				       resp->hdr.size,
-+				       (unsigned long)NULL,
-+				       VM_PKT_DATA_INBAND, 0);
++		if (*request_index >= MAX_HOT_REMOVE_ENTRIES) {
++			struct dm_hot_remove_response *resp =
++				(struct dm_hot_remove_response *)
++					balloon_up_send_buffer;
 +
-+		if (ret == -EAGAIN)
-+			msleep(20);
-+		post_status(&dm_device);
-+	} while (ret == -EAGAIN);
++			/* Flush out all hot-remove ranges. */
++			ret = hv_send_hot_remove_response(resp, *request_index,
++							  true);
++			if (ret)
++				return ret;
++
++			/* Reset request buffer. */
++			memset(resp, 0x00, PAGE_SIZE);
++			*request_index = 0;
++		}
++
++		/*
++		 * Memory in hot-add region gaps has been offlined or removed
++		 * and so skip it if remove range overlap with gap.
++		 */
++		if (has) {
++			list_for_each_entry(gap, &has->gap_list, list)
++				if (!(pfn >= gap->end_pfn ||
++				      pfn + block_pages < gap->start_pfn)) {
++					in_gap = 1;
++					break;
++				}
++
++			if (in_gap)
++				continue;
++		}
++
++		if (online_section_nr(pfn_to_section_nr(pfn))
++		    && is_mem_section_removable(pfn, block_pages)) {
++			ret = offline_and_remove_memory(nid, pfn << PAGE_SHIFT,
++					block_pages << PAGE_SHIFT);
++			if (ret)
++				continue;
++
++			range_array[*request_index].finfo.start_page = pfn;
++			range_array[*request_index].finfo.page_cnt
++					= block_pages;
++
++			(*request_index)++;
++			nr_pages -= block_pages;
++
++			if (!nr_pages)
++				break;
++		}
++	}
++
++	return rm_pages - nr_pages;
++}
++
++static int hv_hot_remove_from_ha_list(unsigned int nid, unsigned long nr_pages,
++				      unsigned long *request_index,
++				      union dm_mem_page_range *range_array)
++{
++	struct hv_hotadd_state *has;
++	unsigned long start_pfn, end_pfn;
++	int rm_pages;
++	int old_index;
++	int ret, i;
++
++	mutex_lock(&dm_device.ha_lock);
++	dm_device.lock_thread = current;
++	list_for_each_entry(has, &dm_device.ha_region_list, list) {
++		rm_pages = min(nr_pages,
++				has->covered_end_pfn - has->start_pfn);
++		start_pfn = has->start_pfn;
++		end_pfn = has->covered_end_pfn;
++		old_index = *request_index;
++
++		if (!rm_pages || pfn_to_nid(start_pfn) != nid)
++			continue;
++
++		rm_pages = hv_hot_remove_range(nid, start_pfn, end_pfn,
++				rm_pages, request_index, range_array, has);
++		if (rm_pages < 0) {
++			ret = rm_pages;
++			goto error;
++		} else if (!rm_pages) {
++			continue;
++		}
++
++		nr_pages -= rm_pages;
++		dm_device.num_pages_added -= rm_pages;
++
++		/* Create gaps for hot remove regions. */
++		for (i = old_index; i < *request_index; i++) {
++			struct hv_hotadd_gap *gap;
++
++			gap = kzalloc(sizeof(struct hv_hotadd_gap), GFP_ATOMIC);
++			if (!gap) {
++				/*
++				 * Disable dm hot-plug when fails to allocate
++				 * memory for gaps.
++				 */
++				ret = -ENOMEM;
++				do_hot_add = false;
++				goto error;
++			}
++
++			INIT_LIST_HEAD(&gap->list);
++			gap->start_pfn = range_array[i].finfo.start_page;
++			gap->end_pfn =
++				gap->start_pfn + range_array[i].finfo.page_cnt;
++			list_add_tail(&gap->list, &has->gap_list);
++		}
++
++		if (!nr_pages)
++			break;
++	}
++
++	ret = nr_pages;
++ error:
++	dm_device.lock_thread = NULL;
++	mutex_unlock(&dm_device.ha_lock);
 +
 +	return ret;
 +}
 +
- #ifdef CONFIG_MEMORY_HOTPLUG
- static inline bool has_pfn_is_backed(struct hv_hotadd_state *has,
- 				     unsigned long pfn)
-@@ -982,6 +1048,17 @@ static unsigned long process_hot_add(unsigned long pg_start,
- 
- #endif
- 
-+static void hot_remove_req(union dm_msg_info *msg_info)
++static void hv_mem_hot_remove(unsigned int nid, u64 nr_pages)
 +{
-+	struct hv_dynmem_device *dm = &dm_device;
++	struct dm_hot_remove_response *resp
++		= (struct dm_hot_remove_response *)balloon_up_send_buffer;
++	unsigned long start_pfn = node_start_pfn(nid);
++	unsigned long end_pfn = node_end_pfn(nid);
++	unsigned long request_index = 0;
++	int remain_pages;
 +
-+	/* Add hot remove operation later and send failure response. */
-+	hv_send_hot_remove_response((struct dm_hot_remove_response *)
-+				balloon_up_send_buffer, 0, false);
++	/* Todo: Handle request of non-aligned page number later. */
 +
-+	dm->state = DM_INITIALIZED;
++	/* Search hot-remove memory region from hot add list first.*/
++	memset(resp, 0x00, PAGE_SIZE);
++	remain_pages = hv_hot_remove_from_ha_list(nid, nr_pages,
++				&request_index,
++				resp->range_array);
++	if (remain_pages < 0) {
++		/* Send failure response msg. */
++		request_index = 0;
++	} else if (remain_pages) {
++		start_pfn = ALIGN(start_pfn, HA_CHUNK);
++		hv_hot_remove_range(nid, start_pfn, end_pfn, remain_pages,
++				    &request_index, resp->range_array, NULL);
++	}
++
++	hv_send_hot_remove_response(resp, request_index, false);
 +}
 +
- static void hot_add_req(union dm_msg_info *msg_info)
+ #endif
+ 
+ static void hot_remove_req(union dm_msg_info *msg_info)
  {
- 	struct dm_hot_add_response resp;
-@@ -1366,6 +1443,9 @@ static void dm_msg_work(struct work_struct *dummy)
- 	case DM_MEM_HOT_ADD_REQUEST:
- 		hot_add_req(msg_info);
- 		break;
-+	case DM_MEM_HOT_REMOVE_REQUEST:
-+		hot_remove_req(msg_info);
-+		break;
- 	default:
- 		return;
- 	}
-@@ -1506,6 +1586,7 @@ static void balloon_onchannelcallback(void *context)
- 	struct hv_dynmem_device *dm = hv_get_drvdata(dev);
- 	struct dm_balloon *bal_msg;
- 	struct dm_hot_add *ha_msg;
-+	struct dm_hot_remove *hr_msg;
- 	struct dm_msg_wrk *dm_wrk = &dm_device.dm_wrk;
- 	union dm_msg_info *msg_info = &dm_wrk->dm_msg;
- 	union dm_mem_page_range *ha_pg_range;
-@@ -1587,6 +1668,22 @@ static void balloon_onchannelcallback(void *context)
- 			schedule_work(&dm_wrk->wrk);
- 			break;
+ 	struct hv_dynmem_device *dm = &dm_device;
++	unsigned int numa_node = msg_info->hot_remove.virtual_node;
++	unsigned int page_count = msg_info->hot_remove.page_count;
  
-+		case DM_MEM_HOT_REMOVE_REQUEST:
-+			if (dm->state == DM_HOT_REMOVE)
-+				pr_warn("Currently hot-removing.\n");
-+
-+			dm->state = DM_HOT_REMOVE;
-+			hr_msg = (struct dm_hot_remove *)recv_buffer;
-+
-+			msg_info->hot_remove.virtual_node
-+					= hr_msg->virtual_node;
-+			msg_info->hot_remove.page_count = hr_msg->page_count;
-+			msg_info->hot_remove.qos_flags = hr_msg->qos_flags;
-+
-+			dm_wrk->msg_type = DM_MEM_HOT_REMOVE_REQUEST;
-+			schedule_work(&dm_wrk->wrk);
-+			break;
-+
- 		case DM_INFO_MESSAGE:
- 			process_info(dm, (struct dm_info_msg *)dm_msg);
- 			break;
-@@ -1665,6 +1762,7 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	 */
- 	cap_msg.caps.cap_bits.balloon = 1;
- 	cap_msg.caps.cap_bits.hot_add = 1;
-+	cap_msg.caps.cap_bits.hot_remove = 1;
+-	/* Add hot remove operation later and send failure response. */
+-	hv_send_hot_remove_response((struct dm_hot_remove_response *)
++	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG) && do_hot_add)
++		hv_mem_hot_remove(numa_node, page_count);
++	else
++		hv_send_hot_remove_response((struct dm_hot_remove_response *)
+ 				balloon_up_send_buffer, 0, false);
  
- 	/*
- 	 * Specify our alignment requirements as it relates
+ 	dm->state = DM_INITIALIZED;
 -- 
 2.14.5
 
