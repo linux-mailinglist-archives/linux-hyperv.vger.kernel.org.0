@@ -2,249 +2,143 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B0FB136CA6
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2020 13:00:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3976136E55
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jan 2020 14:41:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgAJMAH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 10 Jan 2020 07:00:07 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46354 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727939AbgAJMAF (ORCPT
+        id S1727639AbgAJNlv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 10 Jan 2020 08:41:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54030 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727892AbgAJNlu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:00:05 -0500
+        Fri, 10 Jan 2020 08:41:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578657604;
+        s=mimecast20190719; t=1578663709;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+s42rGCNweegI3ua1aTVb4LJtn2yQPTTMH9TXAr+EXc=;
-        b=IZ99LSWZDFqKu38cbyNKO9rkwdJ7YaVLpploJGtUMBDljWBXove5H72C1VZ9KuZEeOkARq
-        MvY1XlXo6chtgw97AxOrC0BAukM546gOhmZgne1YxKU7m9O+R4RDvY8bTgTIXx0Ieq45wU
-        2Fmhi48n6khJGsIPCKHKAkTxSW98IEI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-196-hrZJVYchPCGQK0ez-kSFoA-1; Fri, 10 Jan 2020 07:00:03 -0500
-X-MC-Unique: hrZJVYchPCGQK0ez-kSFoA-1
-Received: by mail-wr1-f71.google.com with SMTP id o6so788485wrp.8
-        for <linux-hyperv@vger.kernel.org>; Fri, 10 Jan 2020 04:00:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=+s42rGCNweegI3ua1aTVb4LJtn2yQPTTMH9TXAr+EXc=;
-        b=FACGJpZCO2CjWWtLLBVKzexihYU15J3mDrSZY5rntFVM336OsQZr/NB14MBgLNTJ2e
-         WwGe8XBACRhkGLkCmX88oHIAPSikZ7EuXVe+UBddY1X2QRlmInivi4FU/1lkG1dPUtRL
-         kwkToj5STuq7Kz1z3fRL5hQRKMjUeH27QCSCD4NRCCuuggUgnqLxOuDPY6jHAHUrPcVF
-         AVCciTvIn7yGf/GyGfvRFEr13Ib3h7vxCb3vgakHvMv/mXvPVpdI1uemT/mNO6hF+4dr
-         vX18K2vY7Jj5U2YkdoaMDC926sYxSRVAEJ/FmrxlgdHoxPicW68Yx4rL+t/nY3H9EF7k
-         Fkqw==
-X-Gm-Message-State: APjAAAXERcmg5zeRJAe7YwvoA5jhqjSe3jEpsH6pqGZeBgrpIQ6FJDmk
-        vD7oKdqb3MOa+iFi3/zQ7m4etlf4mvqFRknOTUp8XiMc0K3SSFa2XaVd4LAvBl/RTLwuy3ccu/t
-        0PeD9zbO/4tNOpiAD/kpNp7xz
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr3210024wrp.236.1578657601318;
-        Fri, 10 Jan 2020 04:00:01 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy5+0kKs8+INAcy7JLlyzVUvfEzD/INVvB9zh9aSkzLQOAVTQcSdysqcYYLDz0BpOrluviy5g==
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr3209989wrp.236.1578657601000;
-        Fri, 10 Jan 2020 04:00:01 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c5sm2094046wmb.9.2020.01.10.03.59.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 04:00:00 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chenzhou10@huawei.com, tglx@linutronix.de, mingo@redhat.com
-Subject: Re: [PATCH] x86/hyper-v: remove unnecessary conversions to bool
-In-Reply-To: <20200110072047.85398-1-chenzhou10@huawei.com>
-References: <20200110072047.85398-1-chenzhou10@huawei.com>
-Date:   Fri, 10 Jan 2020 12:59:59 +0100
-Message-ID: <875zhjr074.fsf@vitty.brq.redhat.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=xVA3oZcXID8niZI9jrnjXU+fm3QhZ5FVYecpfzIc7P0=;
+        b=Jt92NvlyUW+AqN/kSuafWvXVPKy27s8YtxsPdJB2HQpmGGN5kIm3kIaa3eBFmUxlZ+6n0l
+        b6qaKm315byuoLDBnKhdDgYq8AJ3Th2Eb/bxgye+G1BQ3ZGVLEmhfe2EI/Z8ibrKahbNhO
+        9C/z4evXnX9EU79cBXM6udk2phbc5Oc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-Ufydb897OKWFDYUOw_nbgg-1; Fri, 10 Jan 2020 08:41:43 -0500
+X-MC-Unique: Ufydb897OKWFDYUOw_nbgg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95001DB2A;
+        Fri, 10 Jan 2020 13:41:40 +0000 (UTC)
+Received: from [10.36.118.66] (unknown [10.36.118.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D68A686CC8;
+        Fri, 10 Jan 2020 13:41:36 +0000 (UTC)
+Subject: Re: [RFC PATCH V2 2/10] mm: expose is_mem_section_removable() symbol
+To:     Michal Hocko <mhocko@kernel.org>, lantianyu1986@gmail.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, akpm@linux-foundation.org,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, vkuznets@redhat.com, eric.devolder@oracle.com,
+        vbabka@suse.cz, osalvador@suse.de, pavel.tatashin@microsoft.com,
+        rppt@linux.ibm.com
+References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+ <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
+ <20200107133623.GJ32178@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
+Date:   Fri, 10 Jan 2020 14:41:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200107133623.GJ32178@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Chen Zhou <chenzhou10@huawei.com> writes:
+On 07.01.20 14:36, Michal Hocko wrote:
+> On Tue 07-01-20 21:09:42, lantianyu1986@gmail.com wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> Hyper-V balloon driver will use is_mem_section_removable() to
+>> check whether memory block is removable or not when receive
+>> memory hot remove msg. Expose it.
+>=20
+> I do not think this is a good idea. The check is inherently racy. Why
+> cannot the balloon driver simply hotremove the region when asked?
+>=20
 
-> The conversions to bool are not needed, remove these.
->
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  arch/x86/hyperv/hv_apic.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-> index 40e0e32..3112cf6 100644
-> --- a/arch/x86/hyperv/hv_apic.c
-> +++ b/arch/x86/hyperv/hv_apic.c
-> @@ -133,7 +133,7 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
->  
->  ipi_mask_ex_done:
->  	local_irq_restore(flags);
-> -	return ((ret == 0) ? true : false);
-> +	return ret == 0;
->  }
->  
->  static bool __send_ipi_mask(const struct cpumask *mask, int vector)
-> @@ -186,7 +186,7 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
->  
->  	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
->  				     ipi_arg.cpu_mask);
-> -	return ((ret == 0) ? true : false);
-> +	return ret == 0;
->  
->  do_ex_hypercall:
->  	return __send_ipi_mask_ex(mask, vector);
+It's not only racy, it also gives no guarantees. False postives and
+false negatives are possible.
 
-I'd suggest we get rid of bool functions completely instead, something
-like (untested):
+If you want to avoid having to loop forever trying to offline when
+calling offline_and_remove_memory(), you could try to
+alloc_contig_range() the memory first and then play the
+PG_offline+notifier game like virtio-mem.
 
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index 40e0e322161d..440bda338763 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -97,16 +97,16 @@ static void hv_apic_eoi_write(u32 reg, u32 val)
- /*
-  * IPI implementation on Hyper-V.
-  */
--static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
-+static u16 __send_ipi_mask_ex(const struct cpumask *mask, int vector)
- {
- 	struct hv_send_ipi_ex **arg;
- 	struct hv_send_ipi_ex *ipi_arg;
- 	unsigned long flags;
- 	int nr_bank = 0;
--	int ret = 1;
-+	u16 ret;
- 
- 	if (!(ms_hyperv.hints & HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED))
--		return false;
-+		return U16_MAX;
- 
- 	local_irq_save(flags);
- 	arg = (struct hv_send_ipi_ex **)this_cpu_ptr(hyperv_pcpu_input_arg);
-@@ -129,29 +129,28 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
- 		ipi_arg->vp_set.format = HV_GENERIC_SET_ALL;
- 
- 	ret = hv_do_rep_hypercall(HVCALL_SEND_IPI_EX, 0, nr_bank,
--			      ipi_arg, NULL);
-+				  ipi_arg, NULL);
- 
- ipi_mask_ex_done:
- 	local_irq_restore(flags);
--	return ((ret == 0) ? true : false);
-+	return ret;
- }
- 
--static bool __send_ipi_mask(const struct cpumask *mask, int vector)
-+static u16 __send_ipi_mask(const struct cpumask *mask, int vector)
- {
- 	int cur_cpu, vcpu;
- 	struct hv_send_ipi ipi_arg;
--	int ret = 1;
- 
- 	trace_hyperv_send_ipi_mask(mask, vector);
- 
- 	if (cpumask_empty(mask))
--		return true;
-+		return 0;
- 
- 	if (!hv_hypercall_pg)
--		return false;
-+		return U16_MAX;
- 
- 	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
--		return false;
-+		return U16_MAX;
- 
- 	/*
- 	 * From the supplied CPU set we need to figure out if we can get away
-@@ -172,7 +171,7 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
- 	for_each_cpu(cur_cpu, mask) {
- 		vcpu = hv_cpu_number_to_vp_number(cur_cpu);
- 		if (vcpu == VP_INVAL)
--			return false;
-+			return U16_MAX;
- 
- 		/*
- 		 * This particular version of the IPI hypercall can
-@@ -184,41 +183,40 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
- 		__set_bit(vcpu, (unsigned long *)&ipi_arg.cpu_mask);
- 	}
- 
--	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
--				     ipi_arg.cpu_mask);
--	return ((ret == 0) ? true : false);
-+	return (u16)hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
-+					   ipi_arg.cpu_mask);
- 
- do_ex_hypercall:
- 	return __send_ipi_mask_ex(mask, vector);
- }
- 
--static bool __send_ipi_one(int cpu, int vector)
-+static u16 __send_ipi_one(int cpu, int vector)
- {
- 	int vp = hv_cpu_number_to_vp_number(cpu);
- 
- 	trace_hyperv_send_ipi_one(cpu, vector);
- 
- 	if (!hv_hypercall_pg || (vp == VP_INVAL))
--		return false;
-+		return U16_MAX;
- 
- 	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
--		return false;
-+		return U16_MAX;
- 
- 	if (vp >= 64)
- 		return __send_ipi_mask_ex(cpumask_of(cpu), vector);
- 
--	return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
-+	return (u16)hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
- }
- 
- static void hv_send_ipi(int cpu, int vector)
- {
--	if (!__send_ipi_one(cpu, vector))
-+	if (__send_ipi_one(cpu, vector))
- 		orig_apic.send_IPI(cpu, vector);
- }
- 
- static void hv_send_ipi_mask(const struct cpumask *mask, int vector)
- {
--	if (!__send_ipi_mask(mask, vector))
-+	if (__send_ipi_mask(mask, vector))
- 		orig_apic.send_IPI_mask(mask, vector);
- }
- 
-@@ -231,7 +229,7 @@ static void hv_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
- 	cpumask_copy(&new_mask, mask);
- 	cpumask_clear_cpu(this_cpu, &new_mask);
- 	local_mask = &new_mask;
--	if (!__send_ipi_mask(local_mask, vector))
-+	if (__send_ipi_mask(local_mask, vector))
- 		orig_apic.send_IPI_mask_allbutself(mask, vector);
- }
- 
-@@ -242,13 +240,13 @@ static void hv_send_ipi_allbutself(int vector)
- 
- static void hv_send_ipi_all(int vector)
- {
--	if (!__send_ipi_mask(cpu_online_mask, vector))
-+	if (__send_ipi_mask(cpu_online_mask, vector))
- 		orig_apic.send_IPI_all(vector);
- }
- 
- static void hv_send_ipi_self(int vector)
- {
--	if (!__send_ipi_one(smp_processor_id(), vector))
-+	if (__send_ipi_one(smp_processor_id(), vector))
- 		orig_apic.send_IPI_self(vector);
- }
+I don't remember clearly, but I think pinned pages can make offlining
+loop for a long time. And I remember there were other scenarios as well
+(including out of memory conditions and similar).
 
--- 
-Vitaly
+I sent an RFC [1] for powerpc/memtrace that does the same (just error
+handling is more complicated as it wants to offline and remove multiple
+consecutive memory blocks) - if you want to try to go down that path.
+
+[1] https://lkml.kernel.org/r/20191217123851.8854-1-david@redhat.com
+
+--=20
+Thanks,
+
+David / dhildenb
 
