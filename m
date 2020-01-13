@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5599138BD2
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 07:30:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90CEE138BD6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 07:31:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733212AbgAMGa1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Jan 2020 01:30:27 -0500
-Received: from mail-eopbgr1300133.outbound.protection.outlook.com ([40.107.130.133]:62496
+        id S1733204AbgAMGbG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Jan 2020 01:31:06 -0500
+Received: from mail-eopbgr1300125.outbound.protection.outlook.com ([40.107.130.125]:22292
         "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732311AbgAMGa1 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:30:27 -0500
+        id S1725909AbgAMGbG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:31:06 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WePwmECX8UR7/GCLYGH/TdZKut/2XE6jE3Y7Y+Vuhs0+Uzlg67Go6qBE8cjnNKZxQOfqOeFMVbUyS61hDvlJ2lbvV5WtpTEtZ9+6mubcUBaCNwd/EGVSjHEFf9ok8BAX9gt3EcEeKh/HO13Z7pleFUMpIXj5JRzKS7L904ZHIqshHp2G6qsmHbsRknfvBsZOh+egE9u4MNEVH8YUrP9mZ+vHVMWfvDd1k6QSmmyua9RAQCIiWiA81WYYBbDlSPkOJ8nVfwHA8poz50zA+8MW6KQ1rmyvBaD6I8j7ZEiLrFqYhIKoa3uo/fpTSOv1a8TKlzehR4NVs/QHibld8PNYvA==
+ b=dXmIA93krHNViH1QYhxTw1EFlQEJ3I2LcxiCaVAN8YFouukQ/j6iqoj/O41KVaYUf65RUAmMdB0yEOnN7Q2eat4n8VfYz3536p/HyoKSSLmQqUFqNSj8vwkSFrDx5yiqcl3lj/5gUHC+SWCO3szD1vLkNABPR6b112dufo3aCW26FS95D6aRDRvtnSdHT/XbYdYeJqN27i7OBnQauhnUwmwTPYG2tGqyKsF1kBUcEOqCBGpMLh17+DHnJLVXuUFf9KF/up1fv6kGtwlpfNx7H5blncN6DwCJONfVZsrajlZstZFVPAras1TSv8U5P6ZcXA8jriRQoFBjeof6bCRd7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u2hastcoLbSiRGhqq21pVxA4HXN73Eiw2NX5vtqQWb0=;
- b=j0nGp8/pE/B3mXUxkU2CdpZujqWWrBJZIwIhUJTz/8MwY+WJcFEvsoZfc5vkdsdvOfmnXAeP/JCXYWfae46oW6uqakj6r5xnCuLQwmlYGRHlRJiIuar3/V+UfzFcsU7OjQGbrXUI5DifukY9FiFx99ueC2o5nde3iEMj/Y2pynvd3FbnIsTwEx0+vrmm2nyBT7h2CuLvUdCJg2Mitpn0HO9quM2ZbfZ9BB1+gAgXtrWVIyMUX48foLrp73ITGLQc89kI772rD5bLjoiIw73bzAtllB1fWgTlJ1Jd5xd4keFW8ciBsKX7xYWVAPGO1kyXEcp39gmJJtIWzCk/FOTHcw==
+ bh=g8tqkotIIT2pEkduQV+oC7XbsMW0phpFy8dvhWAZ2p0=;
+ b=ITcPS51zNArl0p/q1omq/k9B100mD6TSjdyZ+FDpTAPiJJccof6d9TbE2/AoI/Qm1OzvrYP3chGno5uhKj7tZo+A/iM12apBYskIjEMn9tKyEVAHzXjlczh6ccJvHr1sbjhFFtD2TJjjrZEk4WotEbYBTYFSJFi2/lmmP5yzaqv3Cnf7AV3nicUK+SHZSPtB+vZw8Ubb2UjB7UdLP2iScpq9ywxJq6Bac1woO7pLkacWp84OHq8Nh9Uc9MAe4CA1eEmNOqGgvHCFJrPjCpmX8Wwh/vqy23pAbw0Ac7UAYffIIZMRZocKul7WX021cKtE9YzG1V1V8n4zINNv5ILhvg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u2hastcoLbSiRGhqq21pVxA4HXN73Eiw2NX5vtqQWb0=;
- b=Kc5WWAjajYV4Z6GmA1KmbuZJJ+tONaPDRuwdCFhMsVNw3XwWA1iZG4EQc1p/sHjyYV2chNr9d+YtzjIGs0ZUMMFXWC7bUsxYqYUGHW1wCWCCJw51f+QNv2DoNgWT1ded2fo8yKDpzZfh7i8UMN/K5UWAwwTUyMEcPaFg6DJnGBM=
+ bh=g8tqkotIIT2pEkduQV+oC7XbsMW0phpFy8dvhWAZ2p0=;
+ b=L+z3vMtd9FF5T9t5wunqt8qn0wow13M3Y0eQwdr/jhdaPKgio9OXVtMKYPur9Rd+3V7uUQOh2k8aZgLZA0rCAqdigd2AIQPUreKnWU0FlaPM5IvpTjYJWn+4t4dbTXrYQVjeDBdm4YrfsmbCMlIdm0NCVWkYn6DmmC4ctZOLMik=
 Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
  HK0P153MB0324.APCP153.PROD.OUTLOOK.COM (52.132.237.21) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.2; Mon, 13 Jan 2020 06:30:21 +0000
+ 15.20.2644.2; Mon, 13 Jan 2020 06:30:58 +0000
 Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
  ([fe80::15e7:8155:31bc:d4e7]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
  ([fe80::15e7:8155:31bc:d4e7%7]) with mapi id 15.20.2644.014; Mon, 13 Jan 2020
- 06:30:21 +0000
+ 06:30:58 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -45,13 +45,11 @@ To:     KY Srinivasan <kys@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
         vkuznets <vkuznets@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/4] Tools: hv: Reopen the devices if read() or write()
- returns errors
-Thread-Topic: [PATCH v2 1/4] Tools: hv: Reopen the devices if read() or
- write() returns errors
-Thread-Index: AdXJ2us37YcsbC5xRo+dztn1Sn9t5w==
-Date:   Mon, 13 Jan 2020 06:30:20 +0000
-Message-ID: <HK0P153MB01486C8C746F8936450C4CE1BF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+Subject: [PATCH v2 2/4] hv_utils: Support host-initiated restart request
+Thread-Topic: [PATCH v2 2/4] hv_utils: Support host-initiated restart request
+Thread-Index: AdXJ2v+CkGXQwSJARV+SWgYtZDG50A==
+Date:   Mon, 13 Jan 2020 06:30:58 +0000
+Message-ID: <HK0P153MB01487F54363A856730BB13FDBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -59,41 +57,41 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T06:30:19.3913829Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T06:30:56.6858983Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=445a901f-62e5-4b70-a3d7-9d004f5f39df;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6a12eb12-6152-4624-a9ab-f6645601545c;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
 x-originating-ip: [2001:4898:80e8:a:fa69:ae29:32b9:aa46]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c6c38c36-14a8-42c3-b3f8-08d797f210a3
+x-ms-office365-filtering-correlation-id: b771b6d7-02cf-4191-ee09-08d797f226e3
 x-ms-traffictypediagnostic: HK0P153MB0324:|HK0P153MB0324:|HK0P153MB0324:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB0324A896A0E60168A1A655DDBF350@HK0P153MB0324.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-microsoft-antispam-prvs: <HK0P153MB0324F112DF47B818320E96A6BF350@HK0P153MB0324.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
 x-forefront-prvs: 028166BF91
 x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(189003)(199004)(5660300002)(10290500003)(33656002)(186003)(7696005)(86362001)(2906002)(6506007)(52536014)(478600001)(81166006)(81156014)(110136005)(316002)(76116006)(8936002)(9686003)(64756008)(55016002)(8990500004)(66556008)(66476007)(66946007)(66446008)(8676002)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0324;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0B6O0HXJWBMd+kPQO3Ne347l26ZZ6zSrxA/NIyCDUz2fT733bDNgAwKfxRmsiP7/yyCCTonZGG1zZzmUCp8/Vy0+6QiSuHwM/SKUc+uttV1lqinknFhE0+2gcz6wM7PFrJC01BUsJrAhSWZ+CQrU96RXes8F4vSh2/xaHgQAt6UoNbE1HjXaYhnUOL/MrSIzNEVLOcaWenl2yx9FgGoAi/DpdHsGEolh9FFGAVcQmo8wUFebRkw8xFWktTI/zKN1En4jR576e1n7aY3vJ5FHQCFRj+jmpWowrdngcEiwNtOVLeM9glNw+0yCL3+tuLcy9Vk7qlyCJWewB6CO/OrfAt0vHQYOQI1F0NpDARrsVpg9GzyhH+NVNL2bL/ZRZGZN85HU3Wdm6wY7fuQdV9Mw5bo7IbZve9FPfCMI5PGMHAg5jCLBYjedsJpImvehPvOh
+x-microsoft-antispam-message-info: jLig1+LmNUGH/ebgXhVhkAa5zn2AOVPglBsxdpwrMa6JyaP9ia9GfpoesUhhYMqzZjXMkIh44PmeMv5MerthZqGdB1Rr7579yBuENSxTBQZGpwq39t4i7asb0CY5rkXQfZZCG8LHKc0LL/P0wG9hdRDwP5UNMaD98f+p8IpOzoXDF2pPo37Qcvyjn/IFp3N6826M3az2fQaMYAAIHdBvL3JcBoTkSy5t4vP2RnZRJaaNO/gjHgS1mszabE76mesW70n/FWVRT7Ea/4GYwwi1yp5RhJO0Q/eVnbXy64is5phl0R0o0TpKHlVCsid9GyBrYhd8hnkIPPFUZqKlc8HDhW34iLak+K3Tz0NWMDpjXmTZefH3MsK32CkF114WUFjQQ/lGjpSMCWjbMXHf3asufIWhcwataHbSpbunDMda0sZYYCBJNhzuGfmV4D8vUetj
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6c38c36-14a8-42c3-b3f8-08d797f210a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 06:30:20.8600
+X-MS-Exchange-CrossTenant-Network-Message-Id: b771b6d7-02cf-4191-ee09-08d797f226e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 06:30:58.2438
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IXOcl9tqageW0jJNUbR06IEmzW0H0KAW/q6o85g6hZkF1DWII6NIF8Ma8NsszuD2wlFdr4CqSVKTsIYjkJ16Hg==
+X-MS-Exchange-CrossTenant-userprincipalname: Y7tVtx3qSlYHofaOW7YS74S3o4Kjy8tW96KVrIuZpzFVG4wJAl3reUDTPPgwquGNHGsnK5lsSkgM+Tq3mNRoxA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0324
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
@@ -101,256 +99,77 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
-The state machine in the hv_utils driver can run out of order in some
-corner cases, e.g. if the kvp daemon doesn't call write() fast enough
-due to some reason, kvp_timeout_func() can run first and move the state
-to HVUTIL_READY; next, when kvp_on_msg() is called it returns -EINVAL
-since kvp_transaction.state is smaller than HVUTIL_USERSPACE_REQ; later,
-the daemon's write() gets an error -EINVAL, and the daemon will exit().
+To test the code, run this command on the host:
 
-We can reproduce the issue by sending a SIGSTOP signal to the daemon, wait
-for 1 minute, and send a SIGCONT signal to the daemon: the daemon will
-exit() quickly.
-
-We can fix the issue by forcing a reset of the device (which means the
-daemon can close() and open() the device again) and doing extra necessary
-clean-up.
+Restart-VM $vm -Type Reboot
 
 Signed-off-by: Dexuan Cui <decui@microsoft.com>
 ---
- tools/hv/hv_fcopy_daemon.c | 19 +++++++++++++++----
- tools/hv/hv_kvp_daemon.c   | 25 ++++++++++++++-----------
- tools/hv/hv_vss_daemon.c   | 25 +++++++++++++++++++------
- 3 files changed, 48 insertions(+), 21 deletions(-)
+ drivers/hv/hv_util.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/tools/hv/hv_fcopy_daemon.c b/tools/hv/hv_fcopy_daemon.c
-index aea2d91ab364..a78a5292589b 100644
---- a/tools/hv/hv_fcopy_daemon.c
-+++ b/tools/hv/hv_fcopy_daemon.c
-@@ -21,7 +21,7 @@
- #include <fcntl.h>
- #include <getopt.h>
+diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+index 766bd8457346..fe3a316380c2 100644
+--- a/drivers/hv/hv_util.c
++++ b/drivers/hv/hv_util.c
+@@ -24,6 +24,8 @@
 =20
--static int target_fd;
-+static int target_fd =3D -1;
- static char target_fname[PATH_MAX];
- static unsigned long long filesize;
+ #define SD_MAJOR	3
+ #define SD_MINOR	0
++#define SD_MINOR_1	1
++#define SD_VERSION_3_1	(SD_MAJOR << 16 | SD_MINOR_1)
+ #define SD_VERSION	(SD_MAJOR << 16 | SD_MINOR)
 =20
-@@ -80,6 +80,8 @@ static int hv_start_fcopy(struct hv_start_fcopy *smsg)
+ #define SD_MAJOR_1	1
+@@ -50,8 +52,9 @@ static int sd_srv_version;
+ static int ts_srv_version;
+ static int hb_srv_version;
 =20
- 	error =3D 0;
- done:
-+	if (error)
-+		memset(target_fname, 0, sizeof(target_fname));
- 	return error;
- }
-=20
-@@ -111,12 +113,16 @@ static int hv_copy_data(struct hv_do_fcopy *cpmsg)
- static int hv_copy_finished(void)
- {
- 	close(target_fd);
-+	target_fd =3D -1;
-+	memset(target_fname, 0, sizeof(target_fname));
- 	return 0;
- }
- static int hv_copy_cancel(void)
- {
- 	close(target_fd);
-+	target_fd =3D -1;
- 	unlink(target_fname);
-+	memset(target_fname, 0, sizeof(target_fname));
- 	return 0;
-=20
- }
-@@ -141,7 +147,7 @@ int main(int argc, char *argv[])
- 		struct hv_do_fcopy copy;
- 		__u32 kernel_modver;
- 	} buffer =3D { };
--	int in_handshake =3D 1;
-+	int in_handshake;
-=20
- 	static struct option long_options[] =3D {
- 		{"help",	no_argument,	   0,  'h' },
-@@ -170,6 +176,9 @@ int main(int argc, char *argv[])
- 	openlog("HV_FCOPY", 0, LOG_USER);
- 	syslog(LOG_INFO, "starting; pid is:%d", getpid());
-=20
-+reopen_fcopy_fd:
-+	hv_copy_cancel();
-+	in_handshake =3D 1;
- 	fcopy_fd =3D open("/dev/vmbus/hv_fcopy", O_RDWR);
-=20
- 	if (fcopy_fd < 0) {
-@@ -196,7 +205,8 @@ int main(int argc, char *argv[])
- 		len =3D pread(fcopy_fd, &buffer, sizeof(buffer), 0);
- 		if (len < 0) {
- 			syslog(LOG_ERR, "pread failed: %s", strerror(errno));
--			exit(EXIT_FAILURE);
-+			close(fcopy_fd);
-+			goto reopen_fcopy_fd;
- 		}
-=20
- 		if (in_handshake) {
-@@ -233,7 +243,8 @@ int main(int argc, char *argv[])
-=20
- 		if (pwrite(fcopy_fd, &error, sizeof(int), 0) !=3D sizeof(int)) {
- 			syslog(LOG_ERR, "pwrite failed: %s", strerror(errno));
--			exit(EXIT_FAILURE);
-+			close(fcopy_fd);
-+			goto reopen_fcopy_fd;
- 		}
- 	}
- }
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index e9ef4ca6a655..3282d48c4487 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -76,7 +76,7 @@ enum {
- 	DNS
+-#define SD_VER_COUNT 2
++#define SD_VER_COUNT 3
+ static const int sd_versions[] =3D {
++	SD_VERSION_3_1,
+ 	SD_VERSION,
+ 	SD_VERSION_1
  };
+@@ -118,11 +121,21 @@ static void perform_shutdown(struct work_struct *dumm=
+y)
+ 	orderly_poweroff(true);
+ }
 =20
--static int in_hand_shake =3D 1;
-+static int in_hand_shake;
-=20
- static char *os_name =3D "";
- static char *os_major =3D "";
-@@ -1400,14 +1400,6 @@ int main(int argc, char *argv[])
- 	openlog("KVP", 0, LOG_USER);
- 	syslog(LOG_INFO, "KVP starting; pid is:%d", getpid());
-=20
--	kvp_fd =3D open("/dev/vmbus/hv_kvp", O_RDWR | O_CLOEXEC);
--
--	if (kvp_fd < 0) {
--		syslog(LOG_ERR, "open /dev/vmbus/hv_kvp failed; error: %d %s",
--			errno, strerror(errno));
--		exit(EXIT_FAILURE);
--	}
--
- 	/*
- 	 * Retrieve OS release information.
- 	 */
-@@ -1423,6 +1415,16 @@ int main(int argc, char *argv[])
- 		exit(EXIT_FAILURE);
- 	}
-=20
-+reopen_kvp_fd:
-+	in_hand_shake =3D 1;
-+	kvp_fd =3D open("/dev/vmbus/hv_kvp", O_RDWR | O_CLOEXEC);
++static void perform_restart(struct work_struct *dummy)
++{
++	orderly_reboot();
++}
 +
-+	if (kvp_fd < 0) {
-+		syslog(LOG_ERR, "open /dev/vmbus/hv_kvp failed; error: %d %s",
-+		       errno, strerror(errno));
-+		exit(EXIT_FAILURE);
-+	}
+ /*
+  * Perform the shutdown operation in a thread context.
+  */
+ static DECLARE_WORK(shutdown_work, perform_shutdown);
+=20
++/*
++ * Perform the restart operation in a thread context.
++ */
++static DECLARE_WORK(restart_work, perform_restart);
 +
- 	/*
- 	 * Register ourselves with the kernel.
- 	 */
-@@ -1458,7 +1460,7 @@ int main(int argc, char *argv[])
- 			       errno, strerror(errno));
-=20
- 			close(kvp_fd);
--			return EXIT_FAILURE;
-+			goto reopen_kvp_fd;
- 		}
-=20
- 		/*
-@@ -1623,7 +1625,8 @@ int main(int argc, char *argv[])
- 		if (len !=3D sizeof(struct hv_kvp_msg)) {
- 			syslog(LOG_ERR, "write failed; error: %d %s", errno,
- 			       strerror(errno));
--			exit(EXIT_FAILURE);
-+			close(kvp_fd);
-+			goto reopen_kvp_fd;
- 		}
- 	}
-=20
-diff --git a/tools/hv/hv_vss_daemon.c b/tools/hv/hv_vss_daemon.c
-index 92902a88f671..e70fed66a5ae 100644
---- a/tools/hv/hv_vss_daemon.c
-+++ b/tools/hv/hv_vss_daemon.c
-@@ -28,6 +28,8 @@
- #include <stdbool.h>
- #include <dirent.h>
-=20
-+static bool fs_frozen;
-+
- /* Don't use syslog() in the function since that can cause write to disk *=
-/
- static int vss_do_freeze(char *dir, unsigned int cmd)
+ static void shutdown_onchannelcallback(void *context)
  {
-@@ -155,8 +157,11 @@ static int vss_operate(int operation)
- 			continue;
- 		}
- 		error |=3D vss_do_freeze(ent->mnt_dir, cmd);
--		if (error && operation =3D=3D VSS_OP_FREEZE)
--			goto err;
-+		if (operation =3D=3D VSS_OP_FREEZE) {
-+			if (error)
-+				goto err;
-+			fs_frozen =3D true;
-+		}
- 	}
-=20
- 	endmntent(mounts);
-@@ -167,6 +172,9 @@ static int vss_operate(int operation)
- 			goto err;
- 	}
-=20
-+	if (operation =3D=3D VSS_OP_THAW && !error)
-+		fs_frozen =3D false;
+ 	struct vmbus_channel *channel =3D context;
+@@ -166,6 +179,14 @@ static void shutdown_onchannelcallback(void *context)
+ 				pr_info("Shutdown request received -"
+ 					    " graceful shutdown initiated\n");
+ 				break;
++			case 2:
++			case 3:
++				pr_info("Restart request received -"
++					    " graceful restart initiated\n");
++				icmsghdrp->status =3D HV_S_OK;
 +
- 	goto out;
- err:
- 	save_errno =3D errno;
-@@ -175,6 +183,7 @@ static int vss_operate(int operation)
- 		endmntent(mounts);
- 	}
- 	vss_operate(VSS_OP_THAW);
-+	fs_frozen =3D false;
- 	/* Call syslog after we thaw all filesystems */
- 	if (ent)
- 		syslog(LOG_ERR, "FREEZE of %s failed; error:%d %s",
-@@ -202,7 +211,7 @@ int main(int argc, char *argv[])
- 	int	op;
- 	struct hv_vss_msg vss_msg[1];
- 	int daemonize =3D 1, long_index =3D 0, opt;
--	int in_handshake =3D 1;
-+	int in_handshake;
- 	__u32 kernel_modver;
-=20
- 	static struct option long_options[] =3D {
-@@ -232,6 +241,10 @@ int main(int argc, char *argv[])
- 	openlog("Hyper-V VSS", 0, LOG_USER);
- 	syslog(LOG_INFO, "VSS starting; pid is:%d", getpid());
-=20
-+reopen_vss_fd:
-+	if (fs_frozen)
-+		vss_operate(VSS_OP_THAW);
-+	in_handshake =3D 1;
- 	vss_fd =3D open("/dev/vmbus/hv_vss", O_RDWR);
- 	if (vss_fd < 0) {
- 		syslog(LOG_ERR, "open /dev/vmbus/hv_vss failed; error: %d %s",
-@@ -285,7 +298,7 @@ int main(int argc, char *argv[])
- 			syslog(LOG_ERR, "read failed; error:%d %s",
- 			       errno, strerror(errno));
- 			close(vss_fd);
--			return EXIT_FAILURE;
-+			goto reopen_vss_fd;
- 		}
-=20
- 		op =3D vss_msg->vss_hdr.operation;
-@@ -318,8 +331,8 @@ int main(int argc, char *argv[])
- 			syslog(LOG_ERR, "write failed; error: %d %s", errno,
- 			       strerror(errno));
-=20
--			if (op =3D=3D VSS_OP_FREEZE)
--				vss_operate(VSS_OP_THAW);
-+			close(vss_fd);
-+			goto reopen_vss_fd;
- 		}
- 	}
-=20
++				schedule_work(&restart_work);
++				break;
+ 			default:
+ 				icmsghdrp->status =3D HV_E_FAIL;
+ 				execute_shutdown =3D false;
 --=20
 2.19.1
 
