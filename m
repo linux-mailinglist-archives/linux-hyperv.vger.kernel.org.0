@@ -2,122 +2,245 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AFB4139A78
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 21:03:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A278139A85
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 21:08:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgAMUDF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Jan 2020 15:03:05 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33790 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgAMUDF (ORCPT
+        id S1728680AbgAMUI0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Jan 2020 15:08:26 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:53490 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgAMUI0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Jan 2020 15:03:05 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 6so5237570pgk.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 13 Jan 2020 12:03:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dDAqkyD/tpiI4U9+257qc3YqD7LGOrkT6Qv3kWgevuE=;
-        b=2MUdmRFc3DM2x6YdfwZWMEm65bzamjR9XdINw9TimbeINbeMnyVtTF0qPit7prP/Uh
-         pXy//399Sf5SND8p5Swx/Q7REar6APJSl2dAqoEVZWffC2Rwfuf2KY/vmpRjvLVZu+kI
-         oEmcDVABS5SJ2CmoPsHKSxNggmZ5/Sh66PEPV6y0+6FHuXYHyYFkYS0to8/aXHo9//Mk
-         qFL/14pNozRgmeOEqlk8rjXJ8WraQT4jaCehig3cHRHD3GydVmphlVMIhLhmZhhwhKg/
-         RfmUPrU04QoxTGAlkO2mkR+poQBz34a3VbZRzqmBjZmfnNLrJw6vx5MXis/V8RI7WpaA
-         8Z9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dDAqkyD/tpiI4U9+257qc3YqD7LGOrkT6Qv3kWgevuE=;
-        b=kqB27r4tQppaxWY6QqbrJ4zPuW3ttXHD95vu2ue4Wt55pw++tGVZ4d4d3q3FGBkb9C
-         fDwBSlbVjXNb3zNhRf9am3I6qJGXFh/fhLMVirSrQJgJyy6bz4i3TTanAt2RtyCJYCPH
-         8tXJQHamdBu03o0KEz6Hy+IpqgxBN6VCfueYGjmPpc/yKvFzhwHJxAFw2WLn4K5nV/5B
-         tLiTNO61pNnLq1jqWo30DbPHETTCGN2QDtqd9hbb1DPnPc4I2v3C++RNBUwSx9+U4rab
-         gFfz/y1DbMCm3s8bZYztduRYsXB9eCbb9ugWGBQWVbb7hX8ORN31+c/jH57D9WbI4/KX
-         TNow==
-X-Gm-Message-State: APjAAAUjJScaP4DG57YiP/vR5K8W6BI5TidOber/hwvFcsoNCwbbYLZm
-        OyGsdP/ZBRUnye8ic0Y6C/9Cdg==
-X-Google-Smtp-Source: APXvYqz6uphmWGcjboP01vghF9D5x3AKtSgg35fYZqjtVxpHV8z8FCrT50vxWER+r7gDYXSul3DEEg==
-X-Received: by 2002:a63:2a49:: with SMTP id q70mr22072600pgq.265.1578945784482;
-        Mon, 13 Jan 2020 12:03:04 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id 189sm15772620pfw.73.2020.01.13.12.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 12:03:04 -0800 (PST)
-Date:   Mon, 13 Jan 2020 12:02:54 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Mohammed Gamal <mgamal@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
-        haiyangz@microsoft.com, netdev@vger.kernel.org, kys@microsoft.com,
-        sashal@kernel.org, vkuznets@redhat.com, cavery@redhat.com,
+        Mon, 13 Jan 2020 15:08:26 -0500
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 31F2220B4798; Mon, 13 Jan 2020 12:08:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 31F2220B4798
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1578946104;
+        bh=2CIn592ZrTU+WFbzikLJFCcmd+GtETD7ol8+pVX3dJc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XhxH/rA9MYAeVh9u7FtBQNPr1t8egWKGUeyGPCZDNr8sHTdI3/gUxFbAukH5sSSrv
+         NjVXq1IzrkWhYUrSYqrAQCKxYDlRqUVrorE9dopAPNOyePIHVxtARt1fT3tOt7O+nX
+         9fDQECaYN7BXHLEp38omHXOeAK0ndpCfMS/HxLts=
+From:   longli@linuxonhyperv.com
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hv_netvsc: Fix memory leak when removing rndis device
-Message-ID: <20200113120254.2f61148d@hermes.lan>
-In-Reply-To: <20200113192752.1266-1-mgamal@redhat.com>
-References: <20200113192752.1266-1-mgamal@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v4 1/2] PCI: hv: Decouple the func definition in hv_dr_state from VSP message
+Date:   Mon, 13 Jan 2020 12:08:20 -0800
+Message-Id: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, 13 Jan 2020 21:27:52 +0200
-Mohammed Gamal <mgamal@redhat.com> wrote:
+From: Long Li <longli@microsoft.com>
 
-> kmemleak detects the following memory leak when hot removing
-> a network device:
-> 
-> unreferenced object 0xffff888083f63600 (size 256):
->   comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
->   hex dump (first 32 bytes):
->     00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
->     00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
->   backtrace:
->     [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
->     [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
->     [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
->     [<00000000046e64f1>] really_probe+0x22f/0xb50
->     [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
->     [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
->     [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
->     [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
->     [<0000000008478399>] device_add+0x10a3/0x18e0
->     [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
->     [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
->     [<000000002c94bb64>] process_one_work+0x919/0x17d0
->     [<0000000096de6781>] worker_thread+0x87/0xb40
->     [<00000000fbe7397e>] kthread+0x333/0x3f0
->     [<000000004f844269>] ret_from_fork+0x3a/0x50
-> 
-> rndis_filter_device_add() allocates an instance of struct rndis_device
-> which never gets deallocated and rndis_filter_device_remove() sets
-> net_device->extension which points to the rndis_device struct to NULL
-> without ever freeing the structure first, leaving it dangling.
-> 
-> This patch fixes this by freeing the structure before setting
-> net_device->extension to NULL
-> 
-> Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
-> ---
->  drivers/net/hyperv/rndis_filter.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-> index 857c4bea451c..d2e094f521a4 100644
-> --- a/drivers/net/hyperv/rndis_filter.c
-> +++ b/drivers/net/hyperv/rndis_filter.c
-> @@ -1443,6 +1443,7 @@ void rndis_filter_device_remove(struct hv_device *dev,
->  	/* Halt and release the rndis device */
->  	rndis_filter_halt_device(net_dev, rndis_dev);
->  
-> +	kfree(rndis_dev);
->  	net_dev->extension = NULL;
->  
->  	netvsc_device_remove(dev);
+hv_dr_state is used to find present PCI devices on the bus. The structure
+reuses struct pci_function_description from VSP message to describe a
+device.
 
-That is one way, but maybe safer to just remove the line that sets
-extension to NULL. That way netvsc_device_remove will clean it up:
-    netvsc_device_remove -> free_netvsc_device_rcu -> free_netvsc_device.
+To prepare support for pci_function_description v2, decouple this
+dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
+
+There is no functionality change.
+
+Signed-off-by: Long Li <longli@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
+Changes
+v2: Changed some spaces to tabs, changed failure code to -ENOMEM
+v3: Revised comment for function hv_pci_devices_present(), reformatted patch title
+v4: Fixed spelling
+
+ drivers/pci/controller/pci-hyperv.c | 101 +++++++++++++++++++---------
+ 1 file changed, 70 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index f1f300218fab..3b3e1967cf08 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -507,10 +507,24 @@ struct hv_dr_work {
+ 	struct hv_pcibus_device *bus;
+ };
+ 
++struct hv_pcidev_description {
++	u16	v_id;	/* vendor ID */
++	u16	d_id;	/* device ID */
++	u8	rev;
++	u8	prog_intf;
++	u8	subclass;
++	u8	base_class;
++	u32	subsystem_id;
++	union	win_slot_encoding win_slot;
++	u32	ser;	/* serial number */
++	u32	flags;
++	u16	virtual_numa_node;
++};
++
+ struct hv_dr_state {
+ 	struct list_head list_entry;
+ 	u32 device_count;
+-	struct pci_function_description func[0];
++	struct hv_pcidev_description func[0];
+ };
+ 
+ enum hv_pcichild_state {
+@@ -527,7 +541,7 @@ struct hv_pci_dev {
+ 	refcount_t refs;
+ 	enum hv_pcichild_state state;
+ 	struct pci_slot *pci_slot;
+-	struct pci_function_description desc;
++	struct hv_pcidev_description desc;
+ 	bool reported_missing;
+ 	struct hv_pcibus_device *hbus;
+ 	struct work_struct wrk;
+@@ -1862,7 +1876,7 @@ static void q_resource_requirements(void *context, struct pci_response *resp,
+  * Return: Pointer to the new tracking struct
+  */
+ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+-		struct pci_function_description *desc)
++		struct hv_pcidev_description *desc)
+ {
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_child_message *res_req;
+@@ -1973,7 +1987,7 @@ static void pci_devices_present_work(struct work_struct *work)
+ {
+ 	u32 child_no;
+ 	bool found;
+-	struct pci_function_description *new_desc;
++	struct hv_pcidev_description *new_desc;
+ 	struct hv_pci_dev *hpdev;
+ 	struct hv_pcibus_device *hbus;
+ 	struct list_head removed;
+@@ -2090,43 +2104,26 @@ static void pci_devices_present_work(struct work_struct *work)
+ 	put_hvpcibus(hbus);
+ 	kfree(dr);
+ }
+-
+ /**
+- * hv_pci_devices_present() - Handles list of new children
++ * hv_pci_start_relations_work() - Queue work to start device discovery
+  * @hbus:	Root PCI bus, as understood by this driver
+- * @relations:	Packet from host listing children
++ * @dr:		The list of children returned from host
+  *
+- * This function is invoked whenever a new list of devices for
+- * this bus appears.
++ * Return:  0 on success, -errno on failure
+  */
+-static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+-				   struct pci_bus_relations *relations)
++static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
++				       struct hv_dr_state *dr)
+ {
+-	struct hv_dr_state *dr;
+ 	struct hv_dr_work *dr_wrk;
+-	unsigned long flags;
+ 	bool pending_dr;
++	unsigned long flags;
+ 
+ 	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
+ 	if (!dr_wrk)
+-		return;
+-
+-	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+-		     (sizeof(struct pci_function_description) *
+-		      (relations->device_count)), GFP_NOWAIT);
+-	if (!dr)  {
+-		kfree(dr_wrk);
+-		return;
+-	}
++		return -ENOMEM;
+ 
+ 	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
+ 	dr_wrk->bus = hbus;
+-	dr->device_count = relations->device_count;
+-	if (dr->device_count != 0) {
+-		memcpy(dr->func, relations->func,
+-		       sizeof(struct pci_function_description) *
+-		       dr->device_count);
+-	}
+ 
+ 	spin_lock_irqsave(&hbus->device_list_lock, flags);
+ 	/*
+@@ -2144,6 +2141,47 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+ 		get_hvpcibus(hbus);
+ 		queue_work(hbus->wq, &dr_wrk->wrk);
+ 	}
++
++	return 0;
++}
++
++/**
++ * hv_pci_devices_present() - Handle list of new children
++ * @hbus:	Root PCI bus, as understood by this driver
++ * @relations:	Packet from host listing children
++ *
++ * Process a new list of devices on the bus. The list of devices is
++ * discovered by VSP and sent to us via VSP message PCI_BUS_RELATIONS,
++ * whenever a new list of devices for this bus appears.
++ */
++static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
++				   struct pci_bus_relations *relations)
++{
++	struct hv_dr_state *dr;
++	int i;
++
++	dr = kzalloc(offsetof(struct hv_dr_state, func) +
++		     (sizeof(struct hv_pcidev_description) *
++		      (relations->device_count)), GFP_NOWAIT);
++
++	if (!dr)
++		return;
++
++	dr->device_count = relations->device_count;
++	for (i = 0; i < dr->device_count; i++) {
++		dr->func[i].v_id = relations->func[i].v_id;
++		dr->func[i].d_id = relations->func[i].d_id;
++		dr->func[i].rev = relations->func[i].rev;
++		dr->func[i].prog_intf = relations->func[i].prog_intf;
++		dr->func[i].subclass = relations->func[i].subclass;
++		dr->func[i].base_class = relations->func[i].base_class;
++		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
++		dr->func[i].win_slot = relations->func[i].win_slot;
++		dr->func[i].ser = relations->func[i].ser;
++	}
++
++	if (hv_pci_start_relations_work(hbus, dr))
++		kfree(dr);
+ }
+ 
+ /**
+@@ -3018,7 +3056,7 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+ 		struct pci_packet teardown_packet;
+ 		u8 buffer[sizeof(struct pci_message)];
+ 	} pkt;
+-	struct pci_bus_relations relations;
++	struct hv_dr_state *dr;
+ 	struct hv_pci_compl comp_pkt;
+ 	int ret;
+ 
+@@ -3030,8 +3068,9 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+ 		return;
+ 
+ 	/* Delete any children which might still exist. */
+-	memset(&relations, 0, sizeof(relations));
+-	hv_pci_devices_present(hbus, &relations);
++	dr = kzalloc(sizeof(*dr), GFP_KERNEL);
++	if (dr && hv_pci_start_relations_work(hbus, dr))
++		kfree(dr);
+ 
+ 	ret = hv_send_resources_released(hdev);
+ 	if (ret)
+-- 
+2.17.1
+
