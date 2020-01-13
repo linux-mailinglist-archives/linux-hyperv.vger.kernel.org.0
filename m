@@ -2,202 +2,106 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4827113942F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 16:01:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C387139A27
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 20:28:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgAMPBw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Jan 2020 10:01:52 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46938 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726943AbgAMPBw (ORCPT
+        id S1728665AbgAMT2N (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Jan 2020 14:28:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20669 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728516AbgAMT2N (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:01:52 -0500
+        Mon, 13 Jan 2020 14:28:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578927710;
+        s=mimecast20190719; t=1578943691;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=yQoUlondQiZq3BZzOlo6E5KTwf7HW/EgW0L7fp0nNGk=;
-        b=F+NqA2PyYvdQCwO3Rs7YLQa61fsoRkDYt1ARGS/sX8lYWFC7yyfed6mW5srirB7fCMkmY3
-        bijBk0IkB4bG7Kn8Mdmptklrc/Fzhnb06AyCT0+hFatQknmbs0Q3MqIjNKTuTaK58SJ1GN
-        FzzI0QJtZsbi/KRyReha+9NL/ufkGi4=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=83iTkLBMNG1LGa8TsFUMUH2o9lD/32HRrzOwnH3fYVM=;
+        b=cFCreJtI+9VPEcThmZU7G2AQKtbKTBvvxEe8261Bv+pTITxnlgx1OW0Byxvgsg3jCTAQVh
+        Ls/hdzbfhO0PUtiJl/44fJlR6eVttNaovUWgLQrMCNrGfjkswNaVBzfMij5zYovn1IVfXx
+        EWrYjLtt3J6WXeO/M/YDwRouFFJ1mC8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-LzYW_N73NBSHwqBLXmuZcA-1; Mon, 13 Jan 2020 10:01:49 -0500
-X-MC-Unique: LzYW_N73NBSHwqBLXmuZcA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-408-Mx5fI6amPC2MwjRRW6fxwQ-1; Mon, 13 Jan 2020 14:28:10 -0500
+X-MC-Unique: Mx5fI6amPC2MwjRRW6fxwQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DAE57801E7B;
-        Mon, 13 Jan 2020 15:01:46 +0000 (UTC)
-Received: from [10.36.117.201] (ovpn-117-201.ams2.redhat.com [10.36.117.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 711095DA70;
-        Mon, 13 Jan 2020 15:01:43 +0000 (UTC)
-Subject: Re: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
- is_mem_section_removable() symbol
-To:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "eric.devolder@oracle.com" <eric.devolder@oracle.com>,
-        "vbabka@suse.cz" <vbabka@suse.cz>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>
-References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
- <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
- <20200107133623.GJ32178@dhcp22.suse.cz>
- <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
- <SG2P153MB0349F85FB0C1C02F55391F6D92350@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <b2eb0e25-453c-451f-5e66-6cc6553753b6@redhat.com>
-Date:   Mon, 13 Jan 2020 16:01:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A942477;
+        Mon, 13 Jan 2020 19:28:09 +0000 (UTC)
+Received: from millenium-falcon.redhat.com (ovpn-200-22.brq.redhat.com [10.40.200.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E00F960BE2;
+        Mon, 13 Jan 2020 19:27:59 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
+        haiyangz@microsoft.com, netdev@vger.kernel.org
+Cc:     kys@microsoft.com, sashal@kernel.org, vkuznets@redhat.com,
+        cavery@redhat.com, linux-kernel@vger.kernel.org,
+        Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH] hv_netvsc: Fix memory leak when removing rndis device
+Date:   Mon, 13 Jan 2020 21:27:52 +0200
+Message-Id: <20200113192752.1266-1-mgamal@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <SG2P153MB0349F85FB0C1C02F55391F6D92350@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 13.01.20 15:49, Tianyu Lan wrote:
->> From: David Hildenbrand <david@redhat.com>
->> Sent: Friday, January 10, 2020 9:42 PM
->> To: Michal Hocko <mhocko@kernel.org>; lantianyu1986@gmail.com
->> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
->> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
->> sashal@kernel.org; akpm@linux-foundation.org; Michael Kelley
->> <mikelley@microsoft.com>; Tianyu Lan <Tianyu.Lan@microsoft.com>; linux=
--
->> hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; linux-mm@kvack.o=
-rg;
->> vkuznets <vkuznets@redhat.com>; eric.devolder@oracle.com; vbabka@suse.=
-cz;
->> osalvador@suse.de; Pasha Tatashin <Pavel.Tatashin@microsoft.com>;
->> rppt@linux.ibm.com
->> Subject: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
->> is_mem_section_removable() symbol
->>
->> On 07.01.20 14:36, Michal Hocko wrote:
->>> On Tue 07-01-20 21:09:42, lantianyu1986@gmail.com wrote:
->>>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->>>>
->>>> Hyper-V balloon driver will use is_mem_section_removable() to check
->>>> whether memory block is removable or not when receive memory hot
->>>> remove msg. Expose it.
->>>
->>> I do not think this is a good idea. The check is inherently racy. Why
->>> cannot the balloon driver simply hotremove the region when asked?
->>>
->>
->> It's not only racy, it also gives no guarantees. False postives and fa=
-lse negatives
->> are possible.
->>
->> If you want to avoid having to loop forever trying to offline when cal=
-ling
->> offline_and_remove_memory(), you could try to
->> alloc_contig_range() the memory first and then play the PG_offline+not=
-ifier
->> game like virtio-mem.
->>
->> I don't remember clearly, but I think pinned pages can make offlining =
-loop for a
->> long time. And I remember there were other scenarios as well (includin=
-g out of
->> memory conditions and similar).
->>
->> I sent an RFC [1] for powerpc/memtrace that does the same (just error
->> handling is more complicated as it wants to offline and remove multipl=
-e
->> consecutive memory blocks) - if you want to try to go down that path.
->>
-> Hi David & Michal:
-> 	Thanks for your review. Some memory blocks are not suitable for hot-pl=
-ug.
-> If not check memory block's removable, offline_pages() will report some=
- failure error
-> e.g, "failed due to memory holes" and  "failure to isolate range". I th=
-ink the check maybe
-> added into offline_and_remove_memory()? This may help to not create/exp=
-ose a new
-> interface to do such check in module.
+kmemleak detects the following memory leak when hot removing
+a network device:
 
-So it's all about the logging output. Duplicating these checks feels
-very wrong. And you will still get plenty of page dumps (read below), so
-that won't help.
+unreferenced object 0xffff888083f63600 (size 256):
+  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
+  hex dump (first 32 bytes):
+    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+  backtrace:
+    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
+    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
+    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
+    [<00000000046e64f1>] really_probe+0x22f/0xb50
+    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
+    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
+    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
+    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
+    [<0000000008478399>] device_add+0x10a3/0x18e0
+    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
+    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
+    [<000000002c94bb64>] process_one_work+0x919/0x17d0
+    [<0000000096de6781>] worker_thread+0x87/0xb40
+    [<00000000fbe7397e>] kthread+0x333/0x3f0
+    [<000000004f844269>] ret_from_fork+0x3a/0x50
 
-We have pr_debug() for these "failure ..." message. that should
-therefore not be an issue on production systems, right?
+rndis_filter_device_add() allocates an instance of struct rndis_device
+which never gets deallocated and rndis_filter_device_remove() sets
+net_device->extension which points to the rndis_device struct to NULL
+without ever freeing the structure first, leaving it dangling.
 
-However, you will see dump_page()s quite often, which logs via pr_warn().
+This patch fixes this by freeing the structure before setting
+net_device->extension to NULL
 
-Of course, we could add a mechanism to temporarily disable logging
-output for these call paths, but it might actually be helpful for
-debugging. We might just want to convert everything that is not actually
-a warning to pr_debug() - especially in dump_page().
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+---
+ drivers/net/hyperv/rndis_filter.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis=
+_filter.c
+index 857c4bea451c..d2e094f521a4 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1443,6 +1443,7 @@ void rndis_filter_device_remove(struct hv_device *d=
+ev,
+ 	/* Halt and release the rndis device */
+ 	rndis_filter_halt_device(net_dev, rndis_dev);
+=20
++	kfree(rndis_dev);
+ 	net_dev->extension =3D NULL;
+=20
+ 	netvsc_device_remove(dev);
 --=20
-Thanks,
-
-David / dhildenb
+2.21.0
 
