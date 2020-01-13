@@ -2,102 +2,173 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A97FC138C9E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 09:07:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83BA81393F6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 15:49:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgAMIHy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Jan 2020 03:07:54 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22043 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728757AbgAMIHx (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:07:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578902872;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/erZ8RnYKJRFY+c1GhVERMG1XNVgTxXo2w1hrK27Sb8=;
-        b=RG0Wi7LXMbHj7Ex9SwF8FPhXKYwM7Dh8Ssy9aSU0pv1nt6CVLHtz6bFtEz9mZO5TblqtX+
-        LsODUHyc0gKIUvby7awqIcd4jzVDc6J9hQ+x/SQZMluYgawD/NgIWhD1HcTYvBzFU7yB8z
-        8yxYh0vdXa+z7U/elJi1ByQVWPuAAQE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-m7vfy-K-PKSqSkFrk8sdIQ-1; Mon, 13 Jan 2020 03:07:48 -0500
-X-MC-Unique: m7vfy-K-PKSqSkFrk8sdIQ-1
-Received: by mail-wr1-f72.google.com with SMTP id d8so4617009wrq.12
-        for <linux-hyperv@vger.kernel.org>; Mon, 13 Jan 2020 00:07:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=/erZ8RnYKJRFY+c1GhVERMG1XNVgTxXo2w1hrK27Sb8=;
-        b=AKcVYA8ZHTReSviPlzoLROmXCCFgj/uiEzaJ0EaR8FBI09OFx/XktEz3Qswptnyd/+
-         yGd7YqDpLgAdd+z0iI1fZN+b4y7JFj+ZFYh527yuDEjWq0Rom0bld1/iF9WP3RzaKR/Q
-         ePIfDeqY4gqSlyjhLZfvD+4ragfsUOgc18vMDvax5z14VlljBKPYBZdRC57Ug3cCrvwB
-         3KSqwz2furgKxyCBwu2jymB2v8g5lKz3DfLLEFdyoadMqxpy5XTUJPH7rLdBhr/FrlX9
-         EwRaww7o7peO7I763+NalzV6gZITfeX8HyW19nQrIhIXbZj9GUzFS3fd2z9iywFQkVc4
-         T4bA==
-X-Gm-Message-State: APjAAAVWLopg1FFYgfxFUgcMCzg2LmcZ+NM05ana90Y1DX2QaoLLYkaP
-        61QnScEdH1MM7wms2o+OJSIIIUaITPaHf9X7W7Ko2x7KDVmDQsSx71PvXbd7OG/g6i3gak6P22F
-        LyLZeGYgqRTBNbJHsKZWJ0cN3
-X-Received: by 2002:a5d:6748:: with SMTP id l8mr1396181wrw.188.1578902867669;
-        Mon, 13 Jan 2020 00:07:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy0QAjNUB/O8hGuT0Ik18PvHdQ1W7LOxSNRFjlfRDriRbr61B/AAKzt1NZh7J71GOTzCEVtdA==
-X-Received: by 2002:a5d:6748:: with SMTP id l8mr1396158wrw.188.1578902867410;
-        Mon, 13 Jan 2020 00:07:47 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id u7sm13323951wmj.3.2020.01.13.00.07.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 00:07:46 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Chen Zhou <chenzhou10@huawei.com>
-Cc:     "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chenzhou10\@huawei.com" <chenzhou10@huawei.com>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "mingo\@redhat.com" <mingo@redhat.com>
-Subject: RE: [PATCH] x86/hyper-v: remove unnecessary conversions to bool
-In-Reply-To: <MW2PR2101MB1052B01B542F0C0A576928CBD73A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200110072047.85398-1-chenzhou10@huawei.com> <875zhjr074.fsf@vitty.brq.redhat.com> <MW2PR2101MB1052B01B542F0C0A576928CBD73A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-Date:   Mon, 13 Jan 2020 09:07:45 +0100
-Message-ID: <87tv4zpyni.fsf@vitty.brq.redhat.com>
+        id S1726943AbgAMOtz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Jan 2020 09:49:55 -0500
+Received: from mail-eopbgr1300102.outbound.protection.outlook.com ([40.107.130.102]:30216
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726505AbgAMOtu (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 13 Jan 2020 09:49:50 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lG4wSDopWDVUqUd49a2vQDljBFzPYYQ4BfdllJxVgfgSCjopZhZj5TSVLWW5VgW480fRh9rmwkU+X6j4HthxD3gEnUndBDu5nu39jd83aObJAHC/cMsVc9CceHi/qMmMDjJD1jXOcpIWWJuINDtEiiqeLS+XkTP7qULyFmZt7491daFuNDb9k/50B9QPy7nV4+Q2E3mN6fAb4RIdKdgHafE41WCJkEJbZpwvFzFOThANzwuIpNTKHgw565+5cr/skohIuZwMFMl6p9lw7aGJrOQbpZcB+1q0h4hlpa+E7u1IM/q81KxdYLbctbc7Y9rA6yzlSnikyeoek1N93PVLDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sYK0mntyGytJIB1/2aqSA4dPqXfPMRI76GIkg/pDN2c=;
+ b=by3NeSdYhQDZcBldN4c79DEGVsK0B/oUM+SZ2nKS4KrOTXWntZhO6nSsbvv5PM10DMHkfDOLx1TSTedUDYdT50zrNeaINOnUWaqDu4RS7FaeHiP+yZ3rFLFngd+Psfqkmfbwj9SBLM6AGmGsPlRXayeerPPp/rhfJxzBC8a4slDHa5suCjnU6B5SP0cn8wnbQyUUQ2ck5t3Llq7VBqWQBNNd2upZZSJ+Hurxjg6c4QhtIbYDIpvge7Hqi43Xo1rF4+MAJ8F/txwMmb896rXAIcXfUttquGchAig9eISFaRqWhmqic67cL2U0PIxj5uSSoDAWVQLj2sZfV7I1DfQsqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sYK0mntyGytJIB1/2aqSA4dPqXfPMRI76GIkg/pDN2c=;
+ b=cBWJlJ7Dfp+NdK4fL2PUbV9binH8NYwHtB14IOi0y1FimPodAjJC+juFnETr2jcOWXtR69LED8R1UIWx9X7yJea/yPkIZmtWKUnotTUvRZbQE7Vbsw1yTfZWmhIDE/gjlHfK7K9yahBhGIVgRmISow7GVQw66BpQZcsWFsAnVaU=
+Received: from SG2P153MB0349.APCP153.PROD.OUTLOOK.COM (52.132.233.84) by
+ SG2P153MB0350.APCP153.PROD.OUTLOOK.COM (52.132.233.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.1; Mon, 13 Jan 2020 14:49:39 +0000
+Received: from SG2P153MB0349.APCP153.PROD.OUTLOOK.COM
+ ([fe80::cce1:5261:6c2:51a9]) by SG2P153MB0349.APCP153.PROD.OUTLOOK.COM
+ ([fe80::cce1:5261:6c2:51a9%8]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
+ 14:49:39 +0000
+From:   Tianyu Lan <Tianyu.Lan@microsoft.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "eric.devolder@oracle.com" <eric.devolder@oracle.com>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>
+Subject: RE: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
+ is_mem_section_removable() symbol
+Thread-Topic: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
+ is_mem_section_removable() symbol
+Thread-Index: AQHVxV94OmmoHHYtiky82H1ysWWO7qfj7JsAgAS1vtA=
+Date:   Mon, 13 Jan 2020 14:49:38 +0000
+Message-ID: <SG2P153MB0349F85FB0C1C02F55391F6D92350@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
+References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+ <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
+ <20200107133623.GJ32178@dhcp22.suse.cz>
+ <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
+In-Reply-To: <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=tiala@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T14:49:35.5863663Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=839a5a22-6b22-45c5-8fad-86981e3dc02c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tianyu.Lan@microsoft.com; 
+x-originating-ip: [167.220.255.55]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9d1eb10e-9d0b-44e0-e59c-08d79837d0e1
+x-ms-traffictypediagnostic: SG2P153MB0350:|SG2P153MB0350:|SG2P153MB0350:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SG2P153MB0350FC0B68AC9CB197DDC87092350@SG2P153MB0350.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(189003)(199004)(110136005)(54906003)(8676002)(2906002)(81166006)(8936002)(4326008)(81156014)(8990500004)(86362001)(71200400001)(7416002)(66446008)(5660300002)(66556008)(55016002)(64756008)(66476007)(52536014)(186003)(498600001)(66946007)(9686003)(7696005)(6506007)(76116006)(26005)(53546011)(10290500003)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:SG2P153MB0350;H:SG2P153MB0349.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UonD3Is0u7MP2s5m/rIYEvRd4KAxY3MSM2X5/KqFBwRxkDALmSkA5qk3RCI4BA20zWUCQkLzMIYwwIXM60cUQYBfOkQRFrKRIA12mI87AFuGrK5Lo7q+7o0Nqw+EfVyNw9AIKf7JH8dO4U+WFFwx9SloXiuYIsKS8ervpNf0x7ICibyNVP6wHJm0wt0wnoGTakpt0Yo9rBXH0ucpHBoGt+84c4MIM8fHXA9jCVdwxh2sWvvF9pfGRp3s2R1yj4NV+UXci18OHImyl2gF2uW6LjWKT1++JD1MDMLTZVoJhX/4ba8W/2Ht1MsxZhSi9nAlOZwrre/sbjfRbJfsWrISyHh1NnZC3k524bz76bUbQiWa+MzVYehqe2TTT2BgweBV1estfNawPXMELP/7dkbrm6xaSkXfZmQhilQ8XoOTbArgVFhxRcZXUDsa8XN1I3Ea
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d1eb10e-9d0b-44e0-e59c-08d79837d0e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 14:49:38.6315
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0tXfxBuFFz4PzQTIV9etBSoPIYVSMKMyUqfx3KWslqf5+E5lqcUtT+p45MhaoyZhqSuCxFtl1poQKr+rGTY91g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0350
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
+> From: David Hildenbrand <david@redhat.com>
+> Sent: Friday, January 10, 2020 9:42 PM
+> To: Michal Hocko <mhocko@kernel.org>; lantianyu1986@gmail.com
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> sashal@kernel.org; akpm@linux-foundation.org; Michael Kelley
+> <mikelley@microsoft.com>; Tianyu Lan <Tianyu.Lan@microsoft.com>; linux-
+> hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; linux-mm@kvack.org;
+> vkuznets <vkuznets@redhat.com>; eric.devolder@oracle.com; vbabka@suse.cz;
+> osalvador@suse.de; Pasha Tatashin <Pavel.Tatashin@microsoft.com>;
+> rppt@linux.ibm.com
+> Subject: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
+> is_mem_section_removable() symbol
+>=20
+> On 07.01.20 14:36, Michal Hocko wrote:
+> > On Tue 07-01-20 21:09:42, lantianyu1986@gmail.com wrote:
+> >> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >>
+> >> Hyper-V balloon driver will use is_mem_section_removable() to check
+> >> whether memory block is removable or not when receive memory hot
+> >> remove msg. Expose it.
+> >
+> > I do not think this is a good idea. The check is inherently racy. Why
+> > cannot the balloon driver simply hotremove the region when asked?
+> >
+>=20
+> It's not only racy, it also gives no guarantees. False postives and false=
+ negatives
+> are possible.
+>=20
+> If you want to avoid having to loop forever trying to offline when callin=
+g
+> offline_and_remove_memory(), you could try to
+> alloc_contig_range() the memory first and then play the PG_offline+notifi=
+er
+> game like virtio-mem.
+>=20
+> I don't remember clearly, but I think pinned pages can make offlining loo=
+p for a
+> long time. And I remember there were other scenarios as well (including o=
+ut of
+> memory conditions and similar).
+>=20
+> I sent an RFC [1] for powerpc/memtrace that does the same (just error
+> handling is more complicated as it wants to offline and remove multiple
+> consecutive memory blocks) - if you want to try to go down that path.
+>=20
+Hi David & Michal:
+	Thanks for your review. Some memory blocks are not suitable for hot-plug.
+If not check memory block's removable, offline_pages() will report some fai=
+lure error
+e.g, "failed due to memory holes" and  "failure to isolate range". I think =
+the check maybe
+added into offline_and_remove_memory()? This may help to not create/expose =
+a new
+interface to do such check in module.
 
-> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Friday, January 10, 2020 4:00 AM
->> 
->> 
->> I'd suggest we get rid of bool functions completely instead, something
->> like (untested):
->
-> Just curious:  Why prefer returning a u16 instead of a bool?  To avoid
-> having to test 'ret' for zero in the return statements, or is there some
-> broader reason?
-
-Basically to preserve hypercall failure code and not hide it under 'false'.
-
->> -				     ipi_arg.cpu_mask);
->> -	return ((ret == 0) ? true : false);
->> +	return (u16)hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
->> +					   ipi_arg.cpu_mask);
->
-> The cast to u16 seems a bit dangerous. The hypercall status code is indeed
-> returned in the low 16 bits of the hypercall result value, so it works, and
-> maybe that is why you suggested u16 as the function return value.  But it
-> is a non-obvious assumption.  
-
-This is not obvious, I agree, and we can create a wrapper for it but we
-more or less must convert it to 'u16': uppper bits don't indicate a
-failure (e.g. 'reps complete').
-
--- 
-Vitaly
 
