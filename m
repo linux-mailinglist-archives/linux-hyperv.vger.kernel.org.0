@@ -2,106 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C387139A27
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 20:28:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52072139A32
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 20:30:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgAMT2N (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Jan 2020 14:28:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20669 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728516AbgAMT2N (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:28:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578943691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=83iTkLBMNG1LGa8TsFUMUH2o9lD/32HRrzOwnH3fYVM=;
-        b=cFCreJtI+9VPEcThmZU7G2AQKtbKTBvvxEe8261Bv+pTITxnlgx1OW0Byxvgsg3jCTAQVh
-        Ls/hdzbfhO0PUtiJl/44fJlR6eVttNaovUWgLQrMCNrGfjkswNaVBzfMij5zYovn1IVfXx
-        EWrYjLtt3J6WXeO/M/YDwRouFFJ1mC8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-Mx5fI6amPC2MwjRRW6fxwQ-1; Mon, 13 Jan 2020 14:28:10 -0500
-X-MC-Unique: Mx5fI6amPC2MwjRRW6fxwQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A942477;
-        Mon, 13 Jan 2020 19:28:09 +0000 (UTC)
-Received: from millenium-falcon.redhat.com (ovpn-200-22.brq.redhat.com [10.40.200.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E00F960BE2;
-        Mon, 13 Jan 2020 19:27:59 +0000 (UTC)
-From:   Mohammed Gamal <mgamal@redhat.com>
-To:     linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
-        haiyangz@microsoft.com, netdev@vger.kernel.org
-Cc:     kys@microsoft.com, sashal@kernel.org, vkuznets@redhat.com,
-        cavery@redhat.com, linux-kernel@vger.kernel.org,
-        Mohammed Gamal <mgamal@redhat.com>
-Subject: [PATCH] hv_netvsc: Fix memory leak when removing rndis device
-Date:   Mon, 13 Jan 2020 21:27:52 +0200
-Message-Id: <20200113192752.1266-1-mgamal@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        id S1728641AbgAMTag (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Jan 2020 14:30:36 -0500
+Received: from mail-eopbgr760098.outbound.protection.outlook.com ([40.107.76.98]:23156
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726435AbgAMTag (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 13 Jan 2020 14:30:36 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QFJWhhKAj4FaegYk3tcaAI7POLSqwyQCV6pY8Hv4mun10im9SAjMlkdi/Pz51DIjTmZ7eFIM7/quNZs95liLQlZjRrEnZZIPPyHPQQUJHuLdxT/CSNgdBUmFQbQ73evrnINpt+sudeeGEKQX6BFt32tHRWm+nvi+ZI/uWMZ7FK03x1dkKdpTQqdlC/2KV++d19UF8Vzm70b9WpAG8+Rhfmv4nTF3EL7fNZjiLdNlofau5JZBpSiGoTIvgJWC8k8PyVdEAEGXqysQmx15ReWxeLKN+NOoVsy23/UDSVEhlJBXVFBgwiDf1NT/UCu+laRaoXsBd4eez21yb8I8glnrWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zSB5ZxMBQMtYpxQNGiXy4d/0mhJpMuhHxCmJstq1Xzc=;
+ b=LFQcGi2WjU1q3PHxNfi/cWw0zvOhg0oEkmC/YC9AKFuol+dU+FoQgkNPtU/mE3i1XwmS25EeVWfAEE95kFKmDymCrdd/7b7DBKAeOyY3ylZwVyJKONJb6fnO0j0C3uIdm1rS7yaFP6529V3T4Z84sgo50gBTdhsM9Hfb9QwGLYCyfJFg35CmYzMexejj0XcBkDNbswdUiBbPG1ywxhGu/zy4m0AD5AaGReg8FNhOP8qQI1NGqF0E7H18nJwflJoS/bKh4BIWDFE07e+6WDhNCBYZuTP3IRltq6ZszDWs3Vd3kJFnmAVG1QiSNnQaboufbOLeJSo+w0XsN+7xecG3iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zSB5ZxMBQMtYpxQNGiXy4d/0mhJpMuhHxCmJstq1Xzc=;
+ b=fNayqSGTi1mxyfAw3Sm4GTywOdPTSCH2aDXCXsLu7Iyn0TaE9GNbkZP7ui0aGL/7+bV8ET64WERTNQY7Ui9PsJZm42ujMd2n2VmelWDs4ByRNuxMzA/LTdK75cRL1AehoXDS6xFakp0dHwFXGna3OZoWawD+FNdxY8w3fSzEMUw=
+Received: from BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) by
+ BL0PR2101MB0996.namprd21.prod.outlook.com (52.132.23.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.6; Mon, 13 Jan 2020 19:30:33 +0000
+Received: from BL0PR2101MB1123.namprd21.prod.outlook.com
+ ([fe80::d1de:7b03:3f66:19fb]) by BL0PR2101MB1123.namprd21.prod.outlook.com
+ ([fe80::d1de:7b03:3f66:19fb%6]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
+ 19:30:33 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Patch v3 1/2] PCI: hv: Decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [Patch v3 1/2] PCI: hv: Decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVvCRkF/InBl2gY02lH0V30pa41qflORQggACewYCAAz9xEA==
+Date:   Mon, 13 Jan 2020 19:30:33 +0000
+Message-ID: <BL0PR2101MB1123E4716CFCB1990968D4FACE350@BL0PR2101MB1123.namprd21.prod.outlook.com>
+References: <BL0PR2101MB1123229A668A200C34A2888ECE3B0@BL0PR2101MB1123.namprd21.prod.outlook.com>
+ <20200111175341.GA238104@google.com>
+In-Reply-To: <20200111175341.GA238104@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a279fdf0-03b7-4921-8d88-000080fcd1fe;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T19:29:32Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=longli@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:edec:db5c:c6fe:798]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 00d59c32-ba87-4e9a-1992-08d7985f0eef
+x-ms-traffictypediagnostic: BL0PR2101MB0996:|BL0PR2101MB0996:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR2101MB09962DBFDF2DF63388B327CECE350@BL0PR2101MB0996.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(366004)(199004)(189003)(478600001)(66946007)(66476007)(66556008)(54906003)(66446008)(76116006)(6506007)(7696005)(15650500001)(6916009)(33656002)(10290500003)(64756008)(8936002)(5660300002)(186003)(52536014)(316002)(8990500004)(4326008)(8676002)(86362001)(81156014)(81166006)(2906002)(55016002)(9686003)(71200400001)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB0996;H:BL0PR2101MB1123.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MiYDH5EhqGyHtgAhTe7t3dUcC/n3oMOrPYbFkigl+44BbEceK2j4UXfuaLwnMPivdnUkgR12FimNQDX3tY4fymeKFwR1W8b7DsCFeygfMPCd+apebySndwX86bacoXT1lylyj+yddEc55oh16VQCbwZ5hJQ896MEjGid8URHpTqcdCjoATeUwhu3Q5DdKL+CkyvQrnzqLXf9Rbl9YfI+2uWarPBLu+e5WInkmeCSp/VywOAXHcqjwNgZVwSCRyrG8OQN+Ppz2NCdSzWxnyhWIX9iQreM5ZdWj+Q8D7LHef5UasQFcPxL/pZJwvXA11MNKdiC/72U7Y5wVyFRfHLZoxDBnXM8tVLULkULFh6jXnEZ/+O/2GK8FnMF+5cE17QYVY9YTgx7rCISSdM2h8ERs3T6LNtvnWVzZw++r1Pt+oMd7mCJDlu9IMdKY8cquSsP
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00d59c32-ba87-4e9a-1992-08d7985f0eef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 19:30:33.5070
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r6qQqugHrpX7qHJki3v2FlRJyRj9Qo1HdJjyOROaNxGzC4oMzlK6MTru9FpWhHHtit/UWHOaHNQY9YZTfX0g+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0996
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-kmemleak detects the following memory leak when hot removing
-a network device:
+>Subject: Re: [Patch v3 1/2] PCI: hv: Decouple the func definition in hv_dr=
+_state
+>from VSP message
+>
+>On Sat, Jan 11, 2020 at 08:27:25AM +0000, Long Li wrote:
+>> Hi Bjorn,
+>>
+>> I have addressed all the prior comments in this v3 patch. Please take a =
+look.
+>
+>Lorenzo normally merges hv updates, so I'm sure this is on his list to tak=
+e a look.
+>I pointed out a few spelling and similar nits, but I didn't review the act=
+ual
+>substance of v3.
+>
+>Bjorn
 
-unreferenced object 0xffff888083f63600 (size 256):
-  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
-  hex dump (first 32 bytes):
-    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-  backtrace:
-    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
-    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
-    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
-    [<00000000046e64f1>] really_probe+0x22f/0xb50
-    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
-    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
-    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
-    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
-    [<0000000008478399>] device_add+0x10a3/0x18e0
-    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
-    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
-    [<000000002c94bb64>] process_one_work+0x919/0x17d0
-    [<0000000096de6781>] worker_thread+0x87/0xb40
-    [<00000000fbe7397e>] kthread+0x333/0x3f0
-    [<000000004f844269>] ret_from_fork+0x3a/0x50
+Thanks, I will address your comments and send v4.
 
-rndis_filter_device_add() allocates an instance of struct rndis_device
-which never gets deallocated and rndis_filter_device_remove() sets
-net_device->extension which points to the rndis_device struct to NULL
-without ever freeing the structure first, leaving it dangling.
-
-This patch fixes this by freeing the structure before setting
-net_device->extension to NULL
-
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
----
- drivers/net/hyperv/rndis_filter.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis=
-_filter.c
-index 857c4bea451c..d2e094f521a4 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1443,6 +1443,7 @@ void rndis_filter_device_remove(struct hv_device *d=
-ev,
- 	/* Halt and release the rndis device */
- 	rndis_filter_halt_device(net_dev, rndis_dev);
-=20
-+	kfree(rndis_dev);
- 	net_dev->extension =3D NULL;
-=20
- 	netvsc_device_remove(dev);
---=20
-2.21.0
-
+Long
