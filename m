@@ -2,118 +2,195 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52072139A32
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 20:30:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35825139A62
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Jan 2020 20:55:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgAMTag (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Jan 2020 14:30:36 -0500
-Received: from mail-eopbgr760098.outbound.protection.outlook.com ([40.107.76.98]:23156
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        id S1727331AbgAMTzt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Jan 2020 14:55:49 -0500
+Received: from mail-bn8nam11on2115.outbound.protection.outlook.com ([40.107.236.115]:6376
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726435AbgAMTag (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:30:36 -0500
+        id S1726985AbgAMTzt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 13 Jan 2020 14:55:49 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QFJWhhKAj4FaegYk3tcaAI7POLSqwyQCV6pY8Hv4mun10im9SAjMlkdi/Pz51DIjTmZ7eFIM7/quNZs95liLQlZjRrEnZZIPPyHPQQUJHuLdxT/CSNgdBUmFQbQ73evrnINpt+sudeeGEKQX6BFt32tHRWm+nvi+ZI/uWMZ7FK03x1dkKdpTQqdlC/2KV++d19UF8Vzm70b9WpAG8+Rhfmv4nTF3EL7fNZjiLdNlofau5JZBpSiGoTIvgJWC8k8PyVdEAEGXqysQmx15ReWxeLKN+NOoVsy23/UDSVEhlJBXVFBgwiDf1NT/UCu+laRaoXsBd4eez21yb8I8glnrWw==
+ b=LITcxhKP41gBasn5z9amOze662wGEzSk9hio9LjhlFbOBokmmSCAL3D0TdNPqjLg2UpJNT559mRxOkV5nwOO9WNpcmMVHJlXtoWa4c6FwwQsKzMCopHGqnovQ2cm1kiag1NiGkK8ALw9/9/6kDDeyZf2kZz/HkKVlN60b3JmM/04Br/ktXjM9YvTva/HbfurKLmpISxMoIB4tfMaZFDXwFPceNvZnFikPVupSYqwNVOBp/zuTcgpl7zPFCQQFtPmAFosDOJUJq8UAL5x0uyokgtduiMtSd1gvPeOYMk0TbcGwlN/I39K0pd2X5r7iBTGuq+8srIdQpPO9a8zsLXxQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSB5ZxMBQMtYpxQNGiXy4d/0mhJpMuhHxCmJstq1Xzc=;
- b=LFQcGi2WjU1q3PHxNfi/cWw0zvOhg0oEkmC/YC9AKFuol+dU+FoQgkNPtU/mE3i1XwmS25EeVWfAEE95kFKmDymCrdd/7b7DBKAeOyY3ylZwVyJKONJb6fnO0j0C3uIdm1rS7yaFP6529V3T4Z84sgo50gBTdhsM9Hfb9QwGLYCyfJFg35CmYzMexejj0XcBkDNbswdUiBbPG1ywxhGu/zy4m0AD5AaGReg8FNhOP8qQI1NGqF0E7H18nJwflJoS/bKh4BIWDFE07e+6WDhNCBYZuTP3IRltq6ZszDWs3Vd3kJFnmAVG1QiSNnQaboufbOLeJSo+w0XsN+7xecG3iQ==
+ bh=/QVCCQ2MIfXYaaFQHYD5acKivoTlhDrJcDzSawoBsnI=;
+ b=U2TLbgDu2VdIEXbFg6xu5DnyFaD4rgEV98X6Nl4dGTSeA+pdlbBdkK6oxCPl8xeFV7xPAu/WLOaNVexmhE/pBDhDFtWPAD0Mns8vDNFHQfVf17PoG8p/lcBUHMt5DX0jxyTMvto9ooIWtwWqSjbiJkYCuT3xH+kGF5WCVSyM+O8g1AgcXFrTahJCcXfvyRb+UkZDaYZ38TzGKKDqlfwR10FGL6kwENBqNydBDw2TsxEJUROZct99a81gJ0SRQ+ns23Ni6Y/+9qba2Yy9z0jRJ4JAGIWS/sUNh7501VpQIHZeHo4/f+IsChEXh1UDLzOhTnL5FCkrgzJAiLNXB4ibjg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSB5ZxMBQMtYpxQNGiXy4d/0mhJpMuhHxCmJstq1Xzc=;
- b=fNayqSGTi1mxyfAw3Sm4GTywOdPTSCH2aDXCXsLu7Iyn0TaE9GNbkZP7ui0aGL/7+bV8ET64WERTNQY7Ui9PsJZm42ujMd2n2VmelWDs4ByRNuxMzA/LTdK75cRL1AehoXDS6xFakp0dHwFXGna3OZoWawD+FNdxY8w3fSzEMUw=
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) by
- BL0PR2101MB0996.namprd21.prod.outlook.com (52.132.23.158) with Microsoft SMTP
+ bh=/QVCCQ2MIfXYaaFQHYD5acKivoTlhDrJcDzSawoBsnI=;
+ b=HqwZ3OWcmgi/4rFLZg82zuCVjX4/whz1kfiXUophk5oR+9hDA/HQqjB33eoDP3+1nJJCgSybeMKX7eq4SyPiyKifdmoICxGltC3gofzFWYi72HqQ2PV9BghSPzs6v07vLheetNfpvdEjWaMSGHWWCnwS8d449TOJeh70hZ/J5Qo=
+Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
+ MN2PR21MB1470.namprd21.prod.outlook.com (20.180.27.71) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Mon, 13 Jan 2020 19:30:33 +0000
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::d1de:7b03:3f66:19fb]) by BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::d1de:7b03:3f66:19fb%6]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
- 19:30:33 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
+ 15.20.2665.3; Mon, 13 Jan 2020 19:55:46 +0000
+Received: from MN2PR21MB1375.namprd21.prod.outlook.com
+ ([fe80::6de3:c062:9e55:ffc4]) by MN2PR21MB1375.namprd21.prod.outlook.com
+ ([fe80::6de3:c062:9e55:ffc4%5]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
+ 19:55:46 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Mohammed Gamal <mgamal@redhat.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        vkuznets <vkuznets@redhat.com>, cavery <cavery@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v3 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Thread-Topic: [Patch v3 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Thread-Index: AQHVvCRkF/InBl2gY02lH0V30pa41qflORQggACewYCAAz9xEA==
-Date:   Mon, 13 Jan 2020 19:30:33 +0000
-Message-ID: <BL0PR2101MB1123E4716CFCB1990968D4FACE350@BL0PR2101MB1123.namprd21.prod.outlook.com>
-References: <BL0PR2101MB1123229A668A200C34A2888ECE3B0@BL0PR2101MB1123.namprd21.prod.outlook.com>
- <20200111175341.GA238104@google.com>
-In-Reply-To: <20200111175341.GA238104@google.com>
+Subject: RE: [PATCH] hv_netvsc: Fix memory leak when removing rndis device
+Thread-Topic: [PATCH] hv_netvsc: Fix memory leak when removing rndis device
+Thread-Index: AQHVykeZNk0GzNDhI0uj+RVD6t6utafo/cLA
+Date:   Mon, 13 Jan 2020 19:55:45 +0000
+Message-ID: <MN2PR21MB1375C1C333928779BC4978ECCA350@MN2PR21MB1375.namprd21.prod.outlook.com>
+References: <20200113192752.1266-1-mgamal@redhat.com>
+In-Reply-To: <20200113192752.1266-1-mgamal@redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a279fdf0-03b7-4921-8d88-000080fcd1fe;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T19:29:32Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T19:55:44.0455820Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e34eb14c-2151-472d-8546-ae6293bc44a1;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:edec:db5c:c6fe:798]
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 00d59c32-ba87-4e9a-1992-08d7985f0eef
-x-ms-traffictypediagnostic: BL0PR2101MB0996:|BL0PR2101MB0996:
+x-ms-office365-filtering-correlation-id: c1db2179-f43a-470a-e7a3-08d798629465
+x-ms-traffictypediagnostic: MN2PR21MB1470:|MN2PR21MB1470:|MN2PR21MB1470:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB09962DBFDF2DF63388B327CECE350@BL0PR2101MB0996.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MN2PR21MB14708BE42EBA743188639588CA350@MN2PR21MB1470.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:551;
 x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(366004)(199004)(189003)(478600001)(66946007)(66476007)(66556008)(54906003)(66446008)(76116006)(6506007)(7696005)(15650500001)(6916009)(33656002)(10290500003)(64756008)(8936002)(5660300002)(186003)(52536014)(316002)(8990500004)(4326008)(8676002)(86362001)(81156014)(81166006)(2906002)(55016002)(9686003)(71200400001)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB0996;H:BL0PR2101MB1123.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(189003)(199004)(2906002)(53546011)(8990500004)(7696005)(498600001)(76116006)(186003)(10290500003)(6506007)(66476007)(66446008)(64756008)(71200400001)(66556008)(86362001)(9686003)(52536014)(8676002)(54906003)(5660300002)(8936002)(26005)(66946007)(55016002)(33656002)(110136005)(81166006)(81156014)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1470;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MiYDH5EhqGyHtgAhTe7t3dUcC/n3oMOrPYbFkigl+44BbEceK2j4UXfuaLwnMPivdnUkgR12FimNQDX3tY4fymeKFwR1W8b7DsCFeygfMPCd+apebySndwX86bacoXT1lylyj+yddEc55oh16VQCbwZ5hJQ896MEjGid8URHpTqcdCjoATeUwhu3Q5DdKL+CkyvQrnzqLXf9Rbl9YfI+2uWarPBLu+e5WInkmeCSp/VywOAXHcqjwNgZVwSCRyrG8OQN+Ppz2NCdSzWxnyhWIX9iQreM5ZdWj+Q8D7LHef5UasQFcPxL/pZJwvXA11MNKdiC/72U7Y5wVyFRfHLZoxDBnXM8tVLULkULFh6jXnEZ/+O/2GK8FnMF+5cE17QYVY9YTgx7rCISSdM2h8ERs3T6LNtvnWVzZw++r1Pt+oMd7mCJDlu9IMdKY8cquSsP
+x-microsoft-antispam-message-info: u0DJpfTa5FUK8j9hpDhZXZrw5+IDT3wYjSyLXdCDhfmh9jFi2loBOcT8o/lb0KtjoMGe+ZbnM/eDkPYrqQPYPFmFlJTvz4vQriSu/FreOg86mBCh2PcyBE91XT6YjTJKdvblFh4gaYrsXP9jSn0m2W6+GzLsZcm1ba892Vlrv5F6fu7jEozfI7q8Zf2AdnCMWMBS8WvSme/BSERDK7/tN4TXCEGA0Pj1/6gJ0HrnNqaA3oWmF/L0aZQQjLlwPOR5BhmEoVBKKUqgh+3lqM1uBdQ+yddmOzmsBLnCKPqPL3pQ+6yceZhcwKOhGH5x99uQjIB75oyWe3TqmiY018BPDZd5yscgQs3FmKRaC6nIoM2AqVI6M5zXI14X1xabqi3HPy/oOcsnJPjQpVadNFxtZVOVhVtmQZQdq8GBJjYsQ3vClDws7cNRQ7aHgK1dL1lq
+x-ms-exchange-antispam-messagedata: 5j9++WxZq7N6/pp2a8GKxuMaqQu93pHMf4K8YiL+ghmsSioo+ORnIC790sWkPvxvbx2kXpyEnjRmyiRt54fJFdQil5remc3Qv0+n37uWeaTSjrdOSJpsyPC4Gk3j27YIyLLl4Mu72oDi6BTRlxb4DQ==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00d59c32-ba87-4e9a-1992-08d7985f0eef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 19:30:33.5070
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1db2179-f43a-470a-e7a3-08d798629465
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 19:55:45.8178
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r6qQqugHrpX7qHJki3v2FlRJyRj9Qo1HdJjyOROaNxGzC4oMzlK6MTru9FpWhHHtit/UWHOaHNQY9YZTfX0g+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0996
+X-MS-Exchange-CrossTenant-userprincipalname: fwi3f7a07ipSt79HYM98GT6kGxsM81rfb9aOH4uOnyH4zrgCj30MdcVOwpr3rYa/hDiZ0RBwulb/BBI/F4ETKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1470
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
->Subject: Re: [Patch v3 1/2] PCI: hv: Decouple the func definition in hv_dr=
-_state
->from VSP message
->
->On Sat, Jan 11, 2020 at 08:27:25AM +0000, Long Li wrote:
->> Hi Bjorn,
->>
->> I have addressed all the prior comments in this v3 patch. Please take a =
-look.
->
->Lorenzo normally merges hv updates, so I'm sure this is on his list to tak=
-e a look.
->I pointed out a few spelling and similar nits, but I didn't review the act=
-ual
->substance of v3.
->
->Bjorn
 
-Thanks, I will address your comments and send v4.
 
-Long
+> -----Original Message-----
+> From: Mohammed Gamal <mgamal@redhat.com>
+> Sent: Monday, January 13, 2020 2:28 PM
+> To: linux-hyperv@vger.kernel.org; Stephen Hemminger
+> <sthemmin@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
+> netdev@vger.kernel.org
+> Cc: KY Srinivasan <kys@microsoft.com>; sashal@kernel.org; vkuznets
+> <vkuznets@redhat.com>; cavery <cavery@redhat.com>; linux-
+> kernel@vger.kernel.org; Mohammed Gamal <mgamal@redhat.com>
+> Subject: [PATCH] hv_netvsc: Fix memory leak when removing rndis device
+>=20
+> kmemleak detects the following memory leak when hot removing a network
+> device:
+>=20
+> unreferenced object 0xffff888083f63600 (size 256):
+>   comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
+>   hex dump (first 32 bytes):
+>     00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
+>     00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+>   backtrace:
+>     [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
+>     [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
+>     [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
+>     [<00000000046e64f1>] really_probe+0x22f/0xb50
+>     [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
+>     [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
+>     [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
+>     [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
+>     [<0000000008478399>] device_add+0x10a3/0x18e0
+>     [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
+>     [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
+>     [<000000002c94bb64>] process_one_work+0x919/0x17d0
+>     [<0000000096de6781>] worker_thread+0x87/0xb40
+>     [<00000000fbe7397e>] kthread+0x333/0x3f0
+>     [<000000004f844269>] ret_from_fork+0x3a/0x50
+>=20
+> rndis_filter_device_add() allocates an instance of struct rndis_device wh=
+ich
+> never gets deallocated and rndis_filter_device_remove() sets net_device-
+> >extension which points to the rndis_device struct to NULL without ever f=
+reeing
+> the structure first, leaving it dangling.
+>=20
+> This patch fixes this by freeing the structure before setting net_device-
+> >extension to NULL
+>=20
+> Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+> ---
+>  drivers/net/hyperv/rndis_filter.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis=
+_filter.c
+> index 857c4bea451c..d2e094f521a4 100644
+> --- a/drivers/net/hyperv/rndis_filter.c
+> +++ b/drivers/net/hyperv/rndis_filter.c
+> @@ -1443,6 +1443,7 @@ void rndis_filter_device_remove(struct hv_device
+> *dev,
+>  	/* Halt and release the rndis device */
+>  	rndis_filter_halt_device(net_dev, rndis_dev);
+>=20
+> +	kfree(rndis_dev);
+>  	net_dev->extension =3D NULL;
+
+The struct rndis_device *should* be freed in free_netvsc_device_rcu()
+=3D=3D> free_netvsc_device():
+
+static void free_netvsc_device(struct rcu_head *head)
+{
+        struct netvsc_device *nvdev
+                =3D container_of(head, struct netvsc_device, rcu);
+        int i;
+
+        kfree(nvdev->extension);
+
+So we no longer free it in the rndis_filter_device_remove().
+
+But, the commit 02400fcee2542ee334a2394e0d9f6efd969fe782 did
+have a bug:
+	Date: Tue, 20 Mar 2018 15:03:03 -0700
+	[PATCH] hv_netvsc: use RCU to fix concurrent rx and queue changes
+
+It should have removed the following line when moving the free() to=20
+free_netvsc_device():
+>  	net_dev->extension =3D NULL;
+Then, the leak of rndis_dev will be fixed. I suggested you to fix it in thi=
+s
+way.
+
+Thanks,
+- Haiyang
+
