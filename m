@@ -2,160 +2,87 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6E1A13A3CE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jan 2020 10:30:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 231D413A441
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jan 2020 10:51:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgANJaj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 14 Jan 2020 04:30:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55036 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726044AbgANJaj (ORCPT
+        id S1729076AbgANJvA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Jan 2020 04:51:00 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38613 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgANJvA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:30:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578994238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dyYkc635y3Mg5t3JufpcgcFgpvBk0l6C1aELJD+IZMY=;
-        b=TL688tU/RHU4+pjDhYwlU6s9D/3WQoBsUOq36QEine0gXfuN50JBs20VWvAUigrYcD1KIn
-        +HG74DWJoi/EMvD9YZAxqiSJkwO0hrS1EjSMlKdqcOU4YwBKxfvD8t9qMqx4DPjl0ZzUWq
-        Q1D9NnkT+Z4i7eMIPzaGqAD6ZD1waRI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-56-Ci5U-WeeOkuusatxSEzUhg-1; Tue, 14 Jan 2020 04:30:36 -0500
-X-MC-Unique: Ci5U-WeeOkuusatxSEzUhg-1
-Received: by mail-wr1-f69.google.com with SMTP id h30so6227577wrh.5
-        for <linux-hyperv@vger.kernel.org>; Tue, 14 Jan 2020 01:30:36 -0800 (PST)
+        Tue, 14 Jan 2020 04:51:00 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y17so11477473wrh.5;
+        Tue, 14 Jan 2020 01:50:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=dyYkc635y3Mg5t3JufpcgcFgpvBk0l6C1aELJD+IZMY=;
-        b=Ll9hLR18VkaL9YinxzAOSpIC5CPzQiWmKffCgBJ0OCYt6p4jRxI1eykS5bXM1rtlmI
-         L/FjrWkkdCF8S9mwHSBuaxW1T4hDMJFhevaxDTVT5J4Pgp2/rm2GFFb8ti7xUWpHOzZ7
-         TGsd7fX866njqsbmzXciO2yvGFeA4oHS0s/3Zcis8iu0SKvmji2zBiHA1Fj3q+3Ovtzc
-         8GBL9G2XDwqPV+r9hcWEBAQcrepSeuAUkPJbAsdipEQEoHGfZlLF+be7BnxusfNmwBQr
-         YNVeSsWwetivuPauPnBJIqpGMZvYNAEiGMHLvKbAZqxmAjI5JEvRDc9d52r3gQY1IOhg
-         uE+A==
-X-Gm-Message-State: APjAAAXDN12RWmaKHDunux87ySodOQtmsfsdjJ9USjHLxfSgAqtmrjJX
-        rphtlZUrjuFtz2fXekw6S5VOUvM+hxyLORDHFz4oqxRrLyk3G/Q1DDgqBiqdQvvf+h+gRRTTk2/
-        qIjWicAGzxsAsS56UdMJsY6F9
-X-Received: by 2002:a5d:528e:: with SMTP id c14mr24834945wrv.308.1578994234027;
-        Tue, 14 Jan 2020 01:30:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyXeNav3h0jnfLrMNE1EGG4ZAk69SUcIbBWsZFpH1FAmt3/buT/FqY5AJA8v3Z60j/pDg7DlQ==
-X-Received: by 2002:a5d:528e:: with SMTP id c14mr24834881wrv.308.1578994233668;
-        Tue, 14 Jan 2020 01:30:33 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id p17sm17848989wmk.30.2020.01.14.01.30.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pEjFsFpCypBmbTAAbsMBZocao2aRdb0v8F3qtUDClnU=;
+        b=mPUrjxnJuhzLL6qO+w/054KsvJgIDO7sUnVlRYpRV7Mz3vliCbrPKwx8aDVPAZJwmf
+         vmTlJvYItaH4e/DXzOhZBf2VNHEdF/+YgFMWhVRbeo2EWJn/rgySIkedTegRC8lUsrHM
+         Xas+L3urUcUoXwKIYThrnO3VfxwcbfTVrV9Yf1X8udgtp+90I3Rw5OBraQ39GZSjBOTg
+         DPJUUofDdOfRJIyaNTkxiSsMUGLZTWqtoSvdxBCyr5kC5CUDTAdkQvlF09fqKqPaTy+K
+         nwOWZ/2k+EBykmOvN2li4SJjwufyTcw30TTc8qlvZulpKCm6Jo6FL7ezU6K8fOg9UhM2
+         Dk3Q==
+X-Gm-Message-State: APjAAAXUrFzL++3bRG7fzGyEzMXlBWVhRj+GDhYA0LufIuWaa6EgN/2E
+        luSq5RdmkQKJxQp678TkwMc=
+X-Google-Smtp-Source: APXvYqzcd9TQA5n6FKsfqJRldrVd7OL4sZZDEncBCpJwnaTi+pv49H3QMRWm9zPqXoTATkShHQWBlg==
+X-Received: by 2002:adf:a746:: with SMTP id e6mr24863095wrd.329.1578995459210;
+        Tue, 14 Jan 2020 01:50:59 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id b10sm19428113wrt.90.2020.01.14.01.50.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 01:30:32 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     lantianyu1986@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-mm@kvack.org, stable@vger.kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, akpm@linux-foundation.org,
-        michael.h.kelley@microsoft.com, decui@microsoft.com
-Subject: Re: [PATCH] x86/Hyper-V: Balloon up according to request page number
-In-Reply-To: <20200114074435.12732-1-Tianyu.Lan@microsoft.com>
-References: <20200114074435.12732-1-Tianyu.Lan@microsoft.com>
-Date:   Tue, 14 Jan 2020 10:30:32 +0100
-Message-ID: <87blr6pepz.fsf@vitty.brq.redhat.com>
+        Tue, 14 Jan 2020 01:50:58 -0800 (PST)
+Date:   Tue, 14 Jan 2020 10:50:57 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tianyu Lan <Tianyu.Lan@microsoft.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "eric.devolder@oracle.com" <eric.devolder@oracle.com>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>
+Subject: Re: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
+ is_mem_section_removable() symbol
+Message-ID: <20200114095057.GK19428@dhcp22.suse.cz>
+References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+ <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
+ <20200107133623.GJ32178@dhcp22.suse.cz>
+ <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
+ <SG2P153MB0349F85FB0C1C02F55391F6D92350@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SG2P153MB0349F85FB0C1C02F55391F6D92350@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-lantianyu1986@gmail.com writes:
+On Mon 13-01-20 14:49:38, Tianyu Lan wrote:
+> Hi David & Michal:
+> 	Thanks for your review. Some memory blocks are not suitable for hot-plug.
+> If not check memory block's removable, offline_pages() will report some failure error
+> e.g, "failed due to memory holes" and  "failure to isolate range". I think the check maybe
+> added into offline_and_remove_memory()? This may help to not create/expose a new
+> interface to do such check in module.
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->
-> Current code has assumption that balloon request memory size aligns
-> with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
-> balloon driver receives non-aligned balloon request, it produces warning
-> and balloon up more memory than requested in order to keep 2MB alignment.
-> Remove the warning and balloon up memory according to actual requested
-> memory size.
->
-> Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/hv_balloon.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 7f3e7ab22d5d..38ad0e44e927 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
->  	if (num_pages < alloc_unit)
->  		return 0;
->  
-> -	for (i = 0; (i * alloc_unit) < num_pages; i++) {
-> +	for (i = 0; i < num_pages / alloc_unit; i++) {
->  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
->  			HV_HYP_PAGE_SIZE)
->  			return i * alloc_unit;
-> @@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
->  
->  	}
->  
-> -	return num_pages;
-> +	return i * alloc_unit;
->  }
->  
->  static void balloon_up(union dm_msg_info *msg_info)
-> @@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
->  	long avail_pages;
->  	unsigned long floor;
->  
-> -	/* The host balloons pages in 2M granularity. */
-> -	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
-> -
->  	/*
->  	 * We will attempt 2M allocations. However, if we fail to
->  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
-
-This looks correct but I've noticed we also have 
-
-	/* Refuse to balloon below the floor, keep the 2M granularity. */
-	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
-		pr_warn("Balloon request will be partially fulfilled. %s\n",
-			avail_pages < num_pages ? "Not enough memory." :
-			"Balloon floor reached.");
-
-		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
-		num_pages -= num_pages % PAGES_IN_2M;
-	}
-
-in balloon_up(). If 2M granularity is not guaranteed in the first place
-we can't keep it.
-
-Also, when alloc_balloon_pages() is called with 2M alloc_unit and the
-region is not 2M aligned, it will return someething < num_pages, the
-next condition, however, only checks for 0:
-
-                if (alloc_unit != 1 && num_ballooned == 0) {
-                        alloc_unit = 1;
-                        continue;
-                }
-
-we will proceed to sending a response to server and try doing next
-iteration by calling alloc_balloon_pages() with 2M alloc_unit again,
-this will finally return 0 and we will switch to 4k. I think we can
-optimize this to:
-
-                if (alloc_unit != 1 && num_ballooned != num_pages) {
-			alloc_unit = 1;
-		        continue;
-		}
-
+Why is a log message a problem in the first place. The operation has
+failed afterall. Does the driver try to offline an arbitrary memory?
+Could you describe your usecase in more details please?
 -- 
-Vitaly
-
+Michal Hocko
+SUSE Labs
