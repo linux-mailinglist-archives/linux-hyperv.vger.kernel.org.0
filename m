@@ -2,197 +2,156 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3730B13C72F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jan 2020 16:16:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0CC913CD7D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jan 2020 20:53:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbgAOPQt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 15 Jan 2020 10:16:49 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:56698 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgAOPQs (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:16:48 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115151646euoutp01c02f8718a37230def4a00af1ad23f2f6~qGFzlNTqc3093130931euoutp01B
-        for <linux-hyperv@vger.kernel.org>; Wed, 15 Jan 2020 15:16:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115151646euoutp01c02f8718a37230def4a00af1ad23f2f6~qGFzlNTqc3093130931euoutp01B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579101406;
-        bh=N07jBECcaGqq4VB4q54/zMIlWBsa3RYsqTuCu9Rdyu4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Tgc2rK2P8dK5dTX0UKLooPDPdkXgjOiINboFzTl8ms9+mjmCaixvjTgxqzdp+8FS4
-         hYFFh0EwZSzEtsQ3PVY6SE7AqHgP9Wk+8g6215HR0INyJ4DHve3JJmyir6O4w3sTLl
-         POQsNvJ/nYBK5lvIPskM21fq7M3kf4pwPEoWbE9U=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200115151646eucas1p11734f25e7720fc56a7ec3c9e3776633f~qGFzEQ0XS2610926109eucas1p1i;
-        Wed, 15 Jan 2020 15:16:46 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 22.91.60698.DDC2F1E5; Wed, 15
-        Jan 2020 15:16:45 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200115151645eucas1p2241fc1538cd4518051c56325fcad5901~qGFyuRK4l3174031740eucas1p2t;
-        Wed, 15 Jan 2020 15:16:45 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200115151645eusmtrp2a0ebdaf8a88140c8f9893147b0fabeb6~qGFytaF8P2330623306eusmtrp2e;
-        Wed, 15 Jan 2020 15:16:45 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-2b-5e1f2cdde18d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 38.BD.07950.DDC2F1E5; Wed, 15
-        Jan 2020 15:16:45 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115151644eusmtip156aac6e446621275c61f447d2333550a~qGFxrL4fL1521915219eusmtip1R;
-        Wed, 15 Jan 2020 15:16:44 +0000 (GMT)
-Subject: Re: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for fb
- on HyperV Gen 1 VMs.
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+        id S1726566AbgAOTx4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 15 Jan 2020 14:53:56 -0500
+Received: from mail-eopbgr1300134.outbound.protection.outlook.com ([40.107.130.134]:11552
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729061AbgAOTxz (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 15 Jan 2020 14:53:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E1Uv+O4bpGxCIqdVgyV1sRQmY+qrjIn14M5ZVApO7YPoLiUVI23F04pF00f/FyAR/0dvRg8991J2fW7aunRLnat4KD1l+99lAmWmMw2EJrwKc1kcUbPcAevhbV3icotL/nVbDTXoTwn2AdfFknQul52VpgEjl2ajZWviHN12mshaeHsxC3h0Jx5Fsx69BuyRbNlC4ln9LjKbKnFYimSnF6pgZVrgANUSFarfcaF2kcY3rWnBGgk10F0zbAPwwq5uOxwWn4Cd4CFncZDn9A2FQF2fFRi4FozjTzzSWg2IvnBlUdSDtaJnze4HXhbXV8ivY/SJdKCjetNdtx5+ESV/qA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tze5gmvtgQVHB8B30YoWMLNlORwzHYHbbdBib0AAjlM=;
+ b=CUxV9RnzZR14w4k80mgJe7EtDaptLn0YtK2pkurwQ36oOzpAppGc7wU1cCadunyr9AXFBJ2fxQ9cnnRJ9qXNxpBU93+kWeVyeqs1GFv+x0Lsbw00A7WFA883WI97h3nXeXEoDjI1Nfv6jW6i+XBpfRcdRBh03l0Vwq4y1I7d8NXxTBtBHGnBCPLRrMdGDnwwupLZ1PWqV8n6AV6OGOl+LEv+BiNaTivdMTgKt2CNXEaIkhAdVw/N6Fb+vr/Iu/SLhXKxY+7KSBuw1w7NkKjErBsbs/nzBLA8FCTy6GJql6mF/1EipBWdha5DoStRDIys9B/iEweLUuSC509mYXZA/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tze5gmvtgQVHB8B30YoWMLNlORwzHYHbbdBib0AAjlM=;
+ b=W1taM/GfMCcOF+GkJNfwGMJ6nKvLmRbI6DVvKa8o+Q/luIv5keeiRZB6IpvJB3jPBe4ZXNGL5Zt66Mxks5iaKg7S/wrLGTUgRb9gp0rJtl8eilLHETDq0H62o2UBS+B7tx5yTEcZFZDA0GjjHN1ktHWHKtdNL3Z3621iIer/xPw=
+Received: from KU1P153MB0150.APCP153.PROD.OUTLOOK.COM (10.170.172.151) by
+ KU1P153MB0199.APCP153.PROD.OUTLOOK.COM (10.170.175.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.2; Wed, 15 Jan 2020 19:53:01 +0000
+Received: from KU1P153MB0150.APCP153.PROD.OUTLOOK.COM
+ ([fe80::8554:391a:5b2f:1d51]) by KU1P153MB0150.APCP153.PROD.OUTLOOK.COM
+ ([fe80::8554:391a:5b2f:1d51%8]) with mapi id 15.20.2644.014; Wed, 15 Jan 2020
+ 19:53:01 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "info@metux.net" <info@metux.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <5a58696d-7f23-a577-c25e-ebe748b1aef0@samsung.com>
-Date:   Wed, 15 Jan 2020 16:16:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <HK0P153MB0148F18913BEA45144AF8443BF3C0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: RE: [PATCH][RESEND] Input: hyperv-keyboard: Add the support of
+ hibernation
+Thread-Topic: [PATCH][RESEND] Input: hyperv-keyboard: Add the support of
+ hibernation
+Thread-Index: AQHVyJv2n9lkqyt02Uq48kiJZ1WZDqfsKE6w
+Date:   Wed, 15 Jan 2020 19:53:00 +0000
+Message-ID: <KU1P153MB01505A56BACA9DA4AF0E7BABBF370@KU1P153MB0150.APCP153.PROD.OUTLOOK.COM>
+References: <1578350444-129991-1-git-send-email-decui@microsoft.com>
+ <20200111162657.GJ1706@sasha-vm>
+In-Reply-To: <20200111162657.GJ1706@sasha-vm>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGc2emM0O1MlYIxw21UaNGQYTEKypq4sM8qYlrXNAKE1AWSQuu
-        D+IKgiCgCFYQIwZKqWBqWWRVUMCojRubYkCDQUjaIigRCyLDQOTtO8t///MnlyWV8fQs9kh4
-        pKAJV4eqaDlVXDdoWfF5+Tz/lQ0ja3CMLYfBwyl1DK66aEL4wy87jS9kF9K4qYTHefnPCdx6
-        rpzAnflFDG5I7JXh1OReGr8vy6Bxz4WvNH7w7DOD7X1XCJzTaqGwfrAIYZOxicbW2qckdqQ5
-        bXThHX9SEH/HeIbPrugmeJPhCs1XZxoZvj2+nuDLW6NpPqnXSvOXSocZ/v7NRppPNBsQ329y
-        3zZ1r3xdoBB65Lig8fQ7JA9O0BVQEW0zT1qMibJoFO8ah5xY4Hwg4XmSTGQlp0fwtHJuHJKP
-        8k8ExnsOJBX9CArsf+gJhflDISENchE8eqOTSYUVgaPFMDph2RlcAAwP7BAFLtxCOP/zHSnu
-        kFw6A9defR97ieZ8ITnGgERWcH6Q1mgaY4pbBEMNGaTIrtwe6OuolUk70+HFrU5KfN+J2w/X
-        C1eLbZJzg4+dWYTE86DEmjHmBVwFC08cg5R09Wa4m/laJvEM6Kk3MxLPgZHHWYQkKEAwHPt9
-        XF2CIPf63/HMa6HNIuZnRy2WQmGZp9TeBG8H7pBiG7hp0GKdLh0xDVKK08bbCoi9rJS2F8PD
-        nIf0hG3c4zwyCal0k5LpJsXRTYqj++97F1EG5CZEacOCBK13uHDCQ6sO00aFB3kEHAszodEv
-        +vJv/a9SVDV0uAZxLFJNVQQPufsrZerj2lNhNQhYUuWieJE+11+pCFSfOi1ojh3URIUK2ho0
-        m6VUbgrve90HlFyQOlIIEYQIQTMxJVinWdFozqeunb67SLmmvfjLk9mNFpvX0ZDa1DJDaXAH
-        s6OsTu9Zrusfad6d4OHrtq/bq/d9p8397KHsvoWV968Nzi9a75Nl7bItNrt45utWbjVtXuUj
-        PxpnWbJl/fYF0c3pj5KVV6ectdhJ54vLnOtvmG3fUnuqvTekK2b+dtbfzvLrGjjxQ0Vpg9Ve
-        y0iNVv0Pu4MiUZ4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe8/Zzs7MxWkqvo3SOF0JnU5nexWTvnnoU5CQpKnDTi5yTnbm
-        rSIsNXPW8IKay7QypXS5HOYlo3TljSDBG3iPErTyssoCm0rOJfjtD8/v9zw88CdxcQVfQl5K
-        0rHaJGUiTbjwPqz3TPpO+njH+I91HEa5i7UCtFbULUBvsi0ADf1eIlBWtZlAIy0MelbfhaHR
-        G+0Ymql/KUC9BhsflRTaCDT4qoJA37I+E+j5+0kBWvqZh6Ha0Y889HTlJUAW0wiBFt514she
-        Jjzpztj/FgGm0nSVqX79FWMsdXkE8/aBScBM5/dgTPtoJsEU2BYIJqd1TcA8KR0mGENTHWB+
-        WbxOu56Thmo1KTp2v0rD6U7QUTIUIJUFI2mAPFgqC1ScDwkIov3CQi+wiZdSWa1fWJxUddfY
-        wEue2JP+0WTgZ4J8Dz0QkpCSw6YhM6YHLqSYqgFwvX8c6AG5MdgLe8ypTsYNro7oCSfzHcDC
-        HDvuYNyoeLj2J8LBuFMH4c3lAdyRccoogFOfaCffgMF+ayNwDAgqBBbm1m1mERUGy4Ytm5lH
-        HYKrvRWbsgcVCd+1Gv8zu2Ff+QzPcUtIRcNis8K5/whcrdy65QnHZqowZ/aGLQsVeAEQG7fZ
-        xm2KcZti3KY8BLw64M6mcOoENRcg5ZRqLiUpQRqvUVvARjOau1eaWoF+8YwVUCSgXUUd614x
-        Yr4ylctQWwEkcdpd1HdvX4xYdEGZcYXVamK1KYksZwVBG78V4hKPeM1Gz5J0sbIgmQIFyxSB
-        isDjiPYU3aY6o8VUglLHXmbZZFa75WGkUJIJrn+oSTvgo6jCJKzrc7GyeWIg3XcuZ5BdPNUy
-        ktdWLfQ7ZJ8qkw/NUXJT3OOJFz+O6kMeHd45tQM2z3qllXPHdtleC1W4YTqq61ZfUXZj4osv
-        EfJ0bDl8nCy4WDNmWwi334lEZ82a+x60/2xpQaebpOjavMQ0WVyiXSlfnW+jeZxKKTuGaznl
-        P9CockovAwAA
-X-CMS-MailID: 20200115151645eucas1p2241fc1538cd4518051c56325fcad5901
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200106223809eucas1p19d62a7481db309e28b64977639dc94c7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200106223809eucas1p19d62a7481db309e28b64977639dc94c7
-References: <20191209075749.3804-1-weh@microsoft.com>
-        <CY4PR21MB06293C21EC5338C98080F6AED7580@CY4PR21MB0629.namprd21.prod.outlook.com>
-        <CGME20200106223809eucas1p19d62a7481db309e28b64977639dc94c7@eucas1p1.samsung.com>
-        <HK0P153MB0148F18913BEA45144AF8443BF3C0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-15T19:52:59.5901958Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9ed1895c-1d7e-4989-a476-4e14ba31c7e4;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:f:ccfa:a1ff:3d4a:ddd8]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 20e9382a-7060-40dd-cbfb-08d799f48707
+x-ms-traffictypediagnostic: KU1P153MB0199:|KU1P153MB0199:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <KU1P153MB01998D3D58D7B2DB973849D0BF370@KU1P153MB0199.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02830F0362
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(39860400002)(136003)(396003)(346002)(189003)(199004)(10290500003)(478600001)(186003)(2906002)(6506007)(52536014)(107886003)(53546011)(7696005)(110136005)(5660300002)(4326008)(71200400001)(8990500004)(76116006)(55016002)(966005)(86362001)(33656002)(9686003)(8676002)(66556008)(81156014)(66476007)(64756008)(66946007)(8936002)(81166006)(316002)(54906003)(66446008)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:KU1P153MB0199;H:KU1P153MB0150.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Te9ut19NDCloWqQbz3zomq6VyRwAcv+17AqDRVqZKgaZNqDiPaa0g+WdMcahQRWjCzEKdbkZyQ5DPr77z2BuD8BMp2TdsYoZlkIjstA23xaflGf4CMNkpmAQ1w20quD/oOZNGprWnKsL8C36dtQWLj6Ejzrz5ZNlwm5utEIVTYCes1+PTvhScz/BCSVaapybBmCLM5IT3KaMS5JKvSEywD7+tgRn9tuICvX1/X+2S2DqV/+9CmEiNVbDhJuxEfl/r2XVXQQfaecT3n8s1eI0V7FGaKX24tRVnZeNJNssXBrLcn+KNM0J875YJBKpMSi14RAhv3aHOK4H8yzSv/NqgZv/z88kufo/Cd9xbYVYEsX53KnO89S06OVnpdPHTcBWK2AKNanNmlsezcTx02Gc456iTg1mS5K+VXaoMbREeolLXopmbx1xpo9tQyrp7Cjj9BJ+jpsten7lUe1TE8p9FdH2UT3PoX2j+9s5yK6Dgcm2Vl2fd5wdsN5TEjqCxCrgd64EDqjbhe+cHKqxOzLGhQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20e9382a-7060-40dd-cbfb-08d799f48707
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 19:53:00.7712
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A70THePywhBsuDIm4PK3Dqs5wX9z5YAcxgiddAVGMOUXpZwG82Ziatcni+W4rx8ZSwoll2C9o1BxZO5VeOhoEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0199
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+> From: Sasha Levin <sashal@kernel.org>
+> Sent: Saturday, January 11, 2020 8:27 AM
+> To: Dexuan Cui <decui@microsoft.com>
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; dmitry.torokhov@gmail.com;
+> linux-hyperv@vger.kernel.org; linux-input@vger.kernel.org;
+> linux-kernel@vger.kernel.org; Michael Kelley <mikelley@microsoft.com>;
+> Sasha Levin <Alexander.Levin@microsoft.com>
+> Subject: Re: [PATCH][RESEND] Input: hyperv-keyboard: Add the support of
+> hibernation
+>=20
+> On Mon, Jan 06, 2020 at 02:40:44PM -0800, Dexuan Cui wrote:
+> >Add suspend() and resume() functions so the Hyper-V virtual keyboard
+> >can participate in VM hibernation.
+> >
+> >Note that the keyboard is a "wakeup" device that could abort an in-progr=
+ess
+> >hibernation if there is keyboard event.  No attempt is made to suppress
+> this
+> >behavior.  If desired, a sysadmin can disable the keyboard as a wakeup
+> device
+> >using standard mechanisms such as:
+> >
+> >echo disabled >
+> /sys/bus/vmbus/drivers/hyperv_keyboard/XXX/power/wakeup
+> >(where XXX is the device's GUID)
+> >
+> >Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+> >Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> >---
+> >
+> >This is a RESEND of
+> https://lkml.org/lkml/2019/11/24/115
+> >
+> >Please review.
+> >
+> >If it looks good, Sasha Levin, can you please pick it up via the
+> >hyperv/linux.git tree, as you did last time for this driver?
+>=20
+> This will need an ack from the input driver maintainers, unless they
+> want to give a blanket ack to this type of patches.
+>=20
+> --
+> Thanks,
+> Sasha
 
-On 1/6/20 11:37 PM, Dexuan Cui wrote:
->> From: Michael Kelley <mikelley@microsoft.com>
->> Sent: Monday, December 9, 2019 8:33 AM
->> To: Wei Hu <weh@microsoft.com>; b.zolnierkie@samsung.com; KY
->> Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
->> Stephen Hemminger <sthemmin@microsoft.com>; sashal@kernel.org;
->> hch@lst.de; m.szyprowski@samsung.com; mchehab+samsung@kernel.org;
->> sam@ravnborg.org; gregkh@linuxfoundation.org;
->> alexandre.belloni@bootlin.com; info@metux.net; arnd@arndb.de;
->> dri-devel@lists.freedesktop.org; linux-fbdev@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.org; Dexuan Cui
->> <decui@microsoft.com>
->> Cc: kbuild test robot <lkp@intel.com>
->> Subject: RE: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for
->> fb on HyperV Gen 1 VMs.
->>
->> From: Wei Hu <weh@microsoft.com> Sent: Sunday, December 8, 2019 11:58
->> PM
->>>
->>> On Hyper-V, Generation 1 VMs can directly use VM's physical memory for
->>> their framebuffers. This can improve the efficiency of framebuffer and
->>> overall performance for VM. The physical memory assigned to framebuffer
->>> must be contiguous. We use CMA allocator to get contiguous physicial
->>> memory when the framebuffer size is greater than 4MB. For size under
->>> 4MB, we use alloc_pages to achieve this.
->>>
->>> To enable framebuffer memory allocation from CMA, supply a kernel
->>> parameter to give enough space to CMA allocator at boot time. For
->>> example:
->>>     cma=130m
->>> This gives 130MB memory to CAM allocator that can be allocated to
->>> framebuffer. If this fails, we fall back to the old way of using
->>> mmio for framebuffer.
->>>
->>> Reported-by: kbuild test robot <lkp@intel.com>
->>> Signed-off-by: Wei Hu <weh@microsoft.com>
->>> ---
->>>     v2: Incorporated review comments form hch@lst.de, Michael Kelley
->> and
->>>     Dexuan Cui
->>>     - Use dma_alloc_coherent to allocate large contiguous memory
->>>     - Use phys_addr_t for physical addresses
->>>     - Corrected a few spelling errors and minor cleanups
->>>     - Also tested on 32 bit Ubuntu guest
->>>     v3: Fixed a build issue reported by kbuild test robot and incorported
->>>     some review comments from Michael Kelley
->>>     - Add CMA check to avoid link failure
->>>     - Fixed small memory leak introduced by alloc_apertures
->>>     - Cleaned up so code
->>>     v4: Removed request_pages variable as it is no longer needed
->>>
->>>  drivers/video/fbdev/Kconfig     |   1 +
->>>  drivers/video/fbdev/hyperv_fb.c | 182
->> +++++++++++++++++++++++++-------
->>>  2 files changed, 144 insertions(+), 39 deletions(-)
->>>
->>
->> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> 
-> Tested-by: Dexuan Cui <decui@microsoft.com>
-> 
-> For a Gen-1 VM running on recent Hyper-V hosts, this patch can greatly 
-> reduce the CPU utilization because it avoids the slow data copy from the 
-> shadow framebuffer to the MMIO framebuffer, and hence it resolves the
-> "blurred screen" issue when we output a lot of characters on the text-mode
-> ternimal (e.g. "dmesg").
+Hi Dmitry,
+May I have your Acked-by for this patch?
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Thanks,
+-- Dexuan
