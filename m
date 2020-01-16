@@ -2,93 +2,142 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C9F713D2F8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2020 05:03:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDB7913DD33
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2020 15:16:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgAPEDS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 15 Jan 2020 23:03:18 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:59698 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbgAPEDS (ORCPT
+        id S1726730AbgAPOQJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Jan 2020 09:16:09 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46881 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgAPOQJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 15 Jan 2020 23:03:18 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G3wVZe147170;
-        Thu, 16 Jan 2020 04:03:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=ritGAYdlcr1yW4YZVj4cu6XlER7GE4xIl+CF3Nw2WWk=;
- b=GZ1CfkcM19XUKLcPxWsrjHkfjyJy0g4tGmueSsrE8QfalOQD0M6KKcYmqpltx2KFScu/
- ermWZpXIzj2yCwLBMsFOPO1o9+1YhfElns5ZeFlNKzfg3Z070w/uEapt1ccsLP0Ysdhe
- uMgSuEWP4Ftj1R1NFcn2s8PpTSrgCLAomejAmsXkvzvM2bmuIdp1NPTXzGGZQFwi7tkz
- kbKRncD70Q+gxNDdzPtSDSIl30l59YX6gpajQffYscFNE3acSyNVjYlwhwkoc8NWbdOM
- 0OByHXDQTqTz/J/BZlj4XmWVVj4iRbgDAlaNr0IrkByRX9JaFtiz0AudRANSiyE1xPa0 +Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xf74sg1jt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 04:03:11 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G3xI9c167700;
-        Thu, 16 Jan 2020 04:03:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2xhy22j86k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 04:03:11 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G4399q032433;
-        Thu, 16 Jan 2020 04:03:09 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 20:03:08 -0800
-To:     longli@linuxonhyperv.com
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
-Subject: Re: [Patch v2] scsi: storvsc: Correctly set number of hardware queues for IDE disk
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1578960516-108228-1-git-send-email-longli@linuxonhyperv.com>
-Date:   Wed, 15 Jan 2020 23:03:05 -0500
-In-Reply-To: <1578960516-108228-1-git-send-email-longli@linuxonhyperv.com>
-        (longli@linuxonhyperv.com's message of "Mon, 13 Jan 2020 16:08:36
-        -0800")
-Message-ID: <yq1h80wnj46.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160031
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160031
+        Thu, 16 Jan 2020 09:16:09 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z124so9937975pgb.13;
+        Thu, 16 Jan 2020 06:16:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Eu4Tz2PSHJmrgZ6GXoLAyXHUq4EjuOki9XQQRKCo8U0=;
+        b=fulQtMWeJzJQoeci+lVO3hnPUXUa8ii7kCvabmXiar4NzJDT43mfCse0/Cq5/HJ00b
+         nVZp7FyBkFWK6cMr0yEj/v7iVyBuqPq/VXo7wPZApgeDIKRUAbpNGEw2m5nYsB9r9Kwf
+         O6rpbddcdhUzK17ns5jmEKoD28JwZB2ONzrKXY6XN10dFY2XIa/s48lfZJeFXaICKtX0
+         fEBMCQv47qv4SHazvM7oUANXT/pMqGf5247ick38zrO8s5lISUVmIDd+6Ec+J2EqBppF
+         WjTdSQ/LQw6jTrddr36hXXBqvmajfwIz0+1G8rusdMdg4ZbHofql3yd2vpNKYZOCus0x
+         1XKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Eu4Tz2PSHJmrgZ6GXoLAyXHUq4EjuOki9XQQRKCo8U0=;
+        b=lP4cSXE8GwaYuH5/eGVhHI+8+DMtAYeBj8px+CVME8mg5zdPrmXEen4N4Xhsru5XGt
+         KyBYV8JCMF77zRRRmaNm+zHLC746rRgl9xFv8ejWJA1qeXf1iU8bMQNeq9e3isV3rP7e
+         W24vd2myd6AlJ5JIaUpIIDCllcqhTt+u39xRiccus5jkvtGO0OFy3OPPaA92UKkR0q8R
+         4RnJA6px1/3ifCwH7Smb8ZxprHuYmfZP7fdGZU+m8oPkuZYuVy9QFGSap/G/zdnBNwfV
+         IQRRIRs6k8+T0SfM3CMGoWzVdYzYK32Euf8Z3udETo8IhdqMitnjBqUfxe0/LhQHB1MA
+         7FGA==
+X-Gm-Message-State: APjAAAVI8Np7Q9LOAbIQ0/UpW/k8yoRo/pM9GilQJm364d5tC400m1Iz
+        KQ6P03ACtrAdaHdy6+KHbHk=
+X-Google-Smtp-Source: APXvYqwz7SeoXpxYa1ScTJ8o2BScv8vmoek9x9ZLmDFye72qed8GxzEMtxQTPygrsRaX/O13lPWFxQ==
+X-Received: by 2002:a63:bc01:: with SMTP id q1mr41620570pge.442.1579184168288;
+        Thu, 16 Jan 2020 06:16:08 -0800 (PST)
+Received: from localhost.corp.microsoft.com ([167.220.255.5])
+        by smtp.googlemail.com with ESMTPSA id j7sm27576502pgn.0.2020.01.16.06.16.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jan 2020 06:16:07 -0800 (PST)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, stable@vger.kernel.org
+Subject: [PATCH V2] x86/Hyper-V: Balloon up according to request page number
+Date:   Thu, 16 Jan 2020 22:16:00 +0800
+Message-Id: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Long,
+Current code has assumption that balloon request memory size aligns
+with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
+balloon driver receives non-aligned balloon request, it produces warning
+and balloon up more memory than requested in order to keep 2MB alignment.
+Remove the warning and balloon up memory according to actual requested
+memory size.
 
-> Commit 0ed881027690 ("scsi: storvsc: setup 1:1 mapping between
-> hardware queue and CPU queue") introduced a regression for disks
-> attached to IDE. For these disks the host VSP only offers one VMBUS
-> channel. Setting multiple queues can overload the VMBUS channel and
-> result in performance drop for high queue depth workload on system
-> with large number of CPUs.
+Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+---
+Change since v2:
+    - Change logic of switching alloc_unit from 2MB to 4KB
+    in the balloon_up() to avoid redundant iteration when
+    handle non-aligned page request.
+    - Remove 2MB alignment operation and comment in balloon_up()
+---
+ drivers/hv/hv_balloon.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-Applied to 5.5/scsi-fixes, thanks!
-
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 7f3e7ab22d5d..536807efbc35 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+ 	if (num_pages < alloc_unit)
+ 		return 0;
+ 
+-	for (i = 0; (i * alloc_unit) < num_pages; i++) {
++	for (i = 0; i < num_pages / alloc_unit; i++) {
+ 		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
+ 			HV_HYP_PAGE_SIZE)
+ 			return i * alloc_unit;
+@@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+ 
+ 	}
+ 
+-	return num_pages;
++	return i * alloc_unit;
+ }
+ 
+ static void balloon_up(union dm_msg_info *msg_info)
+@@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
+ 	long avail_pages;
+ 	unsigned long floor;
+ 
+-	/* The host balloons pages in 2M granularity. */
+-	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
+-
+ 	/*
+ 	 * We will attempt 2M allocations. However, if we fail to
+ 	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
+@@ -1749,14 +1746,13 @@ static void balloon_up(union dm_msg_info *msg_info)
+ 	avail_pages = si_mem_available();
+ 	floor = compute_balloon_floor();
+ 
+-	/* Refuse to balloon below the floor, keep the 2M granularity. */
++	/* Refuse to balloon below the floor. */
+ 	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+ 		pr_warn("Balloon request will be partially fulfilled. %s\n",
+ 			avail_pages < num_pages ? "Not enough memory." :
+ 			"Balloon floor reached.");
+ 
+ 		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
+-		num_pages -= num_pages % PAGES_IN_2M;
+ 	}
+ 
+ 	while (!done) {
+@@ -1770,7 +1766,7 @@ static void balloon_up(union dm_msg_info *msg_info)
+ 		num_ballooned = alloc_balloon_pages(&dm_device, num_pages,
+ 						    bl_resp, alloc_unit);
+ 
+-		if (alloc_unit != 1 && num_ballooned == 0) {
++		if (alloc_unit != 1 && num_ballooned != num_pages) {
+ 			alloc_unit = 1;
+ 			continue;
+ 		}
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.14.5
+
