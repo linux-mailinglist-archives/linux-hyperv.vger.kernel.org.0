@@ -2,37 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F5AD13F236
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2020 19:34:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23D3513F224
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2020 19:33:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733292AbgAPSdv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Jan 2020 13:33:51 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40337 "EHLO
+        id S2392130AbgAPSdc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Jan 2020 13:33:32 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33906 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403801AbgAPRYq (ORCPT
+        by vger.kernel.org with ESMTP id S2403824AbgAPRYw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:46 -0500
+        Thu, 16 Jan 2020 12:24:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579195485;
+        s=mimecast20190719; t=1579195491;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=L1usH87y9Hi/ZiYHMXoHuhdmW1E/8d47ArLsZBDzX7o=;
-        b=XJinJ0kCHyHfEdMKr9DwZZk5Js+UaAI/mIyiqZFM7u+NaTHK0Gp9c8GYI/bKEw3ftfisH4
-        Tomc0I9edkmGHe3lL1XoUx7YOn42wgRqabaQzsWz/zHet9DZabRo/JzqNrEqwHAkkMYLqw
-        MmMwUVWa3qCol1gNEMzhsOG0tFeEthQ=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cbf0JDACQ1z0Tg+uGTmFGjFNBjOD4cliWg8yJbi8qUQ=;
+        b=LHtIFCAHg3/7qcTa8Sz08Q3rUJX4E4DGcN6dMo/xmJbK8VF1BudDd6fvU7D2yxrPipquNI
+        GIa2Oqp8X/ZbBcOLrMrgbEMIPzM+7iU30tTHtmVlcKO/85W5c6Kq/ge3kJwNWPpYL+WDDn
+        yTrwZXK5Liq5pFtOQBqzWXUCLXfVXck=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-dO0yLECUNPe09s1O855Low-1; Thu, 16 Jan 2020 12:24:44 -0500
-X-MC-Unique: dO0yLECUNPe09s1O855Low-1
+ us-mta-278-bBiplUCvO5uGdLfoXn4TUQ-1; Thu, 16 Jan 2020 12:24:49 -0500
+X-MC-Unique: bBiplUCvO5uGdLfoXn4TUQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 397941137843;
-        Thu, 16 Jan 2020 17:24:42 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFB70800D4C;
+        Thu, 16 Jan 2020 17:24:47 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-117-242.ams2.redhat.com [10.36.117.242])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ACF8C5C28F;
-        Thu, 16 Jan 2020 17:24:30 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 593AB5C1D8;
+        Thu, 16 Jan 2020 17:24:45 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     davem@davemloft.net, netdev@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
@@ -43,9 +44,11 @@ Cc:     linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
         linux-hyperv@vger.kernel.org,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH net-next 0/3] vsock: support network namespace
-Date:   Thu, 16 Jan 2020 18:24:25 +0100
-Message-Id: <20200116172428.311437-1-sgarzare@redhat.com>
+Subject: [PATCH net-next 2/3] vsock/virtio_transport_common: handle netns of received packets
+Date:   Thu, 16 Jan 2020 18:24:27 +0100
+Message-Id: <20200116172428.311437-3-sgarzare@redhat.com>
+In-Reply-To: <20200116172428.311437-1-sgarzare@redhat.com>
+References: <20200116172428.311437-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Content-Transfer-Encoding: quoted-printable
@@ -54,84 +57,169 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RFC -> v1:
- * added 'netns' module param to vsock.ko to enable the
-   network namespace support (disabled by default)
- * added 'vsock_net_eq()' to check the "net" assigned to a socket
-   only when 'netns' support is enabled
+This patch allows transports that use virtio_transport_common
+to specify the network namespace where a received packet is to
+be delivered.
 
-RFC: https://patchwork.ozlabs.org/cover/1202235/
+virtio_transport and vhost_transport, for now, use the default
+network namespace.
 
-Now that we have multi-transport upstream, I started to take a look to
-support network namespace in vsock.
+vsock_loopback uses the same network namespace of the transmitter.
 
-As we partially discussed in the multi-transport proposal [1], it could
-be nice to support network namespace in vsock to reach the following
-goals:
-- isolate host applications from guest applications using the same ports
-  with CID_ANY
-- assign the same CID of VMs running in different network namespaces
-- partition VMs between VMMs or at finer granularity
-
-This new feature is disabled by default, because it changes vsock's
-behavior with network namespaces and could break existing applications.
-It can be enabled with the new 'netns' module parameter of vsock.ko.
-
-This implementation provides the following behavior:
-- packets received from the host (received by G2H transports) are
-  assigned to the default netns (init_net)
-- packets received from the guest (received by H2G - vhost-vsock) are
-  assigned to the netns of the process that opens /dev/vhost-vsock
-  (usually the VMM, qemu in my tests, opens the /dev/vhost-vsock)
-    - for vmci I need some suggestions, because I don't know how to do
-      and test the same in the vmci driver, for now vmci uses the
-      init_net
-- loopback packets are exchanged only in the same netns
-
-I tested the series in this way:
-l0_host$ qemu-system-x86_64 -m 4G -M accel=3Dkvm -smp 4 \
-            -drive file=3D/tmp/vsockvm0.img,if=3Dvirtio --nographic \
-            -device vhost-vsock-pci,guest-cid=3D3
-
-l1_vm$ echo 1 > /sys/module/vsock/parameters/netns
-
-l1_vm$ ip netns add ns1
-l1_vm$ ip netns add ns2
- # same CID on different netns
-l1_vm$ ip netns exec ns1 qemu-system-x86_64 -m 1G -M accel=3Dkvm -smp 2 \
-            -drive file=3D/tmp/vsockvm1.img,if=3Dvirtio --nographic \
-            -device vhost-vsock-pci,guest-cid=3D4
-l1_vm$ ip netns exec ns2 qemu-system-x86_64 -m 1G -M accel=3Dkvm -smp 2 \
-            -drive file=3D/tmp/vsockvm2.img,if=3Dvirtio --nographic \
-            -device vhost-vsock-pci,guest-cid=3D4
-
- # all iperf3 listen on CID_ANY and port 5201, but in different netns
-l1_vm$ ./iperf3 --vsock -s # connection from l0 or guests started
-                           # on default netns (init_net)
-l1_vm$ ip netns exec ns1 ./iperf3 --vsock -s
-l1_vm$ ip netns exec ns1 ./iperf3 --vsock -s
-
-l0_host$ ./iperf3 --vsock -c 3
-l2_vm1$ ./iperf3 --vsock -c 2
-l2_vm2$ ./iperf3 --vsock -c 2
-
-[1] https://www.spinics.net/lists/netdev/msg575792.html
-
-Stefano Garzarella (3):
-  vsock: add network namespace support
-  vsock/virtio_transport_common: handle netns of received packets
-  vhost/vsock: use netns of process that opens the vhost-vsock device
-
- drivers/vhost/vsock.c                   | 29 ++++++++++++-----
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ drivers/vhost/vsock.c                   |  1 +
  include/linux/virtio_vsock.h            |  2 ++
- include/net/af_vsock.h                  |  7 +++--
- net/vmw_vsock/af_vsock.c                | 41 +++++++++++++++++++------
- net/vmw_vsock/hyperv_transport.c        |  5 +--
  net/vmw_vsock/virtio_transport.c        |  2 ++
- net/vmw_vsock/virtio_transport_common.c | 12 ++++++--
- net/vmw_vsock/vmci_transport.c          |  5 +--
- 8 files changed, 78 insertions(+), 25 deletions(-)
+ net/vmw_vsock/virtio_transport_common.c | 13 ++++++++++---
+ 4 files changed, 15 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index c2d7d57e98cf..f1d39939d5e4 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -474,6 +474,7 @@ static void vhost_vsock_handle_tx_kick(struct vhost_w=
+ork *work)
+ 			continue;
+ 		}
+=20
++		pkt->net =3D vsock_default_net();
+ 		len =3D pkt->len;
+=20
+ 		/* Deliver to monitoring devices all received packets */
+diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+index 71c81e0dc8f2..d4fc93e6e03e 100644
+--- a/include/linux/virtio_vsock.h
++++ b/include/linux/virtio_vsock.h
+@@ -43,6 +43,7 @@ struct virtio_vsock_pkt {
+ 	struct list_head list;
+ 	/* socket refcnt not held, only use for cancellation */
+ 	struct vsock_sock *vsk;
++	struct net *net;
+ 	void *buf;
+ 	u32 buf_len;
+ 	u32 len;
+@@ -54,6 +55,7 @@ struct virtio_vsock_pkt_info {
+ 	u32 remote_cid, remote_port;
+ 	struct vsock_sock *vsk;
+ 	struct msghdr *msg;
++	struct net *net;
+ 	u32 pkt_len;
+ 	u16 type;
+ 	u16 op;
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_tran=
+sport.c
+index dfbaf6bd8b1c..fb03a1535c21 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -527,6 +527,8 @@ static void virtio_transport_rx_work(struct work_stru=
+ct *work)
+ 			}
+=20
+ 			pkt->len =3D len - sizeof(pkt->hdr);
++			pkt->net =3D vsock_default_net();
++
+ 			virtio_transport_deliver_tap_pkt(pkt);
+ 			virtio_transport_recv_pkt(&virtio_transport, pkt);
+ 		}
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virt=
+io_transport_common.c
+index cecdfd91ed00..6402dea62e45 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -63,6 +63,7 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info=
+ *info,
+ 	pkt->hdr.len		=3D cpu_to_le32(len);
+ 	pkt->reply		=3D info->reply;
+ 	pkt->vsk		=3D info->vsk;
++	pkt->net		=3D info->net;
+=20
+ 	if (info->msg && len > 0) {
+ 		pkt->buf =3D kmalloc(len, GFP_KERNEL);
+@@ -273,6 +274,7 @@ static int virtio_transport_send_credit_update(struct=
+ vsock_sock *vsk,
+ 		.op =3D VIRTIO_VSOCK_OP_CREDIT_UPDATE,
+ 		.type =3D type,
+ 		.vsk =3D vsk,
++		.net =3D sock_net(sk_vsock(vsk)),
+ 	};
+=20
+ 	return virtio_transport_send_pkt_info(vsk, &info);
+@@ -622,6 +624,7 @@ int virtio_transport_connect(struct vsock_sock *vsk)
+ 		.op =3D VIRTIO_VSOCK_OP_REQUEST,
+ 		.type =3D VIRTIO_VSOCK_TYPE_STREAM,
+ 		.vsk =3D vsk,
++		.net =3D sock_net(sk_vsock(vsk)),
+ 	};
+=20
+ 	return virtio_transport_send_pkt_info(vsk, &info);
+@@ -638,6 +641,7 @@ int virtio_transport_shutdown(struct vsock_sock *vsk,=
+ int mode)
+ 			 (mode & SEND_SHUTDOWN ?
+ 			  VIRTIO_VSOCK_SHUTDOWN_SEND : 0),
+ 		.vsk =3D vsk,
++		.net =3D sock_net(sk_vsock(vsk)),
+ 	};
+=20
+ 	return virtio_transport_send_pkt_info(vsk, &info);
+@@ -665,6 +669,7 @@ virtio_transport_stream_enqueue(struct vsock_sock *vs=
+k,
+ 		.msg =3D msg,
+ 		.pkt_len =3D len,
+ 		.vsk =3D vsk,
++		.net =3D sock_net(sk_vsock(vsk)),
+ 	};
+=20
+ 	return virtio_transport_send_pkt_info(vsk, &info);
+@@ -687,6 +692,7 @@ static int virtio_transport_reset(struct vsock_sock *=
+vsk,
+ 		.type =3D VIRTIO_VSOCK_TYPE_STREAM,
+ 		.reply =3D !!pkt,
+ 		.vsk =3D vsk,
++		.net =3D sock_net(sk_vsock(vsk)),
+ 	};
+=20
+ 	/* Send RST only if the original pkt is not a RST pkt */
+@@ -707,6 +713,7 @@ static int virtio_transport_reset_no_sock(const struc=
+t virtio_transport *t,
+ 		.op =3D VIRTIO_VSOCK_OP_RST,
+ 		.type =3D le16_to_cpu(pkt->hdr.type),
+ 		.reply =3D true,
++		.net =3D pkt->net,
+ 	};
+=20
+ 	/* Send RST only if the original pkt is not a RST pkt */
+@@ -991,6 +998,7 @@ virtio_transport_send_response(struct vsock_sock *vsk=
+,
+ 		.remote_port =3D le32_to_cpu(pkt->hdr.src_port),
+ 		.reply =3D true,
+ 		.vsk =3D vsk,
++		.net =3D sock_net(sk_vsock(vsk)),
+ 	};
+=20
+ 	return virtio_transport_send_pkt_info(vsk, &info);
+@@ -1088,7 +1096,6 @@ virtio_transport_recv_listen(struct sock *sk, struc=
+t virtio_vsock_pkt *pkt,
+ void virtio_transport_recv_pkt(struct virtio_transport *t,
+ 			       struct virtio_vsock_pkt *pkt)
+ {
+-	struct net *net =3D vsock_default_net();
+ 	struct sockaddr_vm src, dst;
+ 	struct vsock_sock *vsk;
+ 	struct sock *sk;
+@@ -1116,9 +1123,9 @@ void virtio_transport_recv_pkt(struct virtio_transp=
+ort *t,
+ 	/* The socket must be in connected or bound table
+ 	 * otherwise send reset back
+ 	 */
+-	sk =3D vsock_find_connected_socket(&src, &dst, net);
++	sk =3D vsock_find_connected_socket(&src, &dst, pkt->net);
+ 	if (!sk) {
+-		sk =3D vsock_find_bound_socket(&dst, net);
++		sk =3D vsock_find_bound_socket(&dst, pkt->net);
+ 		if (!sk) {
+ 			(void)virtio_transport_reset_no_sock(t, pkt);
+ 			goto free_pkt;
 --=20
 2.24.1
 
