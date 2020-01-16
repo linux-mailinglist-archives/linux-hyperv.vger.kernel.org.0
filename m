@@ -2,160 +2,90 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADD2B13E005
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2020 17:26:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 685D313E1F5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2020 17:54:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgAPQ0e (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Jan 2020 11:26:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52046 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726088AbgAPQ0e (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:26:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579191993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LQlxSqbAz5Gg0CkQad070bTz8F2AX6/N+P9B7+hnGDo=;
-        b=fKo3K68q54zdlfew/C5LpHN6rVj40ArTeHZSQ7mBl/cZH8h7SQhPfYmfctU/BkepHQvfdx
-        jU3l/ckmBUSRaOD5CHxf1xl40507i7B6EVuJpP1X8rB3u3PfhEuPtrqwzQ1lMTg0fkaRI9
-        xwfCjk8p0B0IgT2VZkzk1q6QPCHakrQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-229-Dp2j06f1PHa-CKdq0xZwmw-1; Thu, 16 Jan 2020 11:26:31 -0500
-X-MC-Unique: Dp2j06f1PHa-CKdq0xZwmw-1
-Received: by mail-wr1-f72.google.com with SMTP id o6so9399985wrp.8
-        for <linux-hyperv@vger.kernel.org>; Thu, 16 Jan 2020 08:26:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=LQlxSqbAz5Gg0CkQad070bTz8F2AX6/N+P9B7+hnGDo=;
-        b=HEToLv9fH+MfHqfuyWvTZzEnBLhe9s6c7gkj2wWs7C+DTxYLZhRF17piLTyGft24mi
-         4k4KHfDMFa4DGR7mjwMtW4FcUMYYBPFDZwxPJq/1fTjUUzj4UwA2KiNV/lWLrS5I0osc
-         R9JnU+akToQEpRQ857SL5dBxtMF+I9lINMOp0lARuvvTl8nOfgIjViaZpcgxbo1MdLPP
-         2v//JbtOLeochMWNwTubQZxFsquwfTeQWIDPKznPIN27GaS+4UZPPBGHMnOwhthAk5A0
-         BW376i2jttxJuwZpCvrMFuj86G9J102LwJbpLtECNe6KoST5hGLp+xzdt7j9UHuPY4pH
-         y1Sw==
-X-Gm-Message-State: APjAAAUUuGxPHN+Q3XinnV5HyBoYnBX0Wm1j6gF73Hf/ikM4ofTRjbIB
-        r1uBMVvPTw3dODbk8veY1KdQsNccCYvSHjWgQtK0Kv5+Q75JDqkBkoSYqtaho9TLCeHGQrLcqxQ
-        znjCB/MhmHG+SLygaridVOvAy
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr6855369wmk.172.1579191990297;
-        Thu, 16 Jan 2020 08:26:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz9EJwBuG6ODNlyZBGksf47bJ8nGES+4PVLl9IGi7RpL8xuA0/DC21LXggZnSo0PfYTMZWZmA==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr6855343wmk.172.1579191990037;
-        Thu, 16 Jan 2020 08:26:30 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id t12sm29701964wrs.96.2020.01.16.08.26.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 08:26:29 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     lantianyu1986@gmail.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org,
-        michael.h.kelley@microsoft.com
-Subject: Re: [PATCH V2] x86/Hyper-V: Balloon up according to request page number
-In-Reply-To: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
-References: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
-Date:   Thu, 16 Jan 2020 17:26:28 +0100
-Message-ID: <87tv4vgyff.fsf@vitty.brq.redhat.com>
+        id S1728927AbgAPQwh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Jan 2020 11:52:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727008AbgAPQwh (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:37 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DEC521582;
+        Thu, 16 Jan 2020 16:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193556;
+        bh=4+Jc9X+Bm+QQga3/srXTli+03HcHZcAlLxin47yvUVc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OlfMSBJoUSuKN8sDQwRfcqH1v4OndOIGTW9HfQybzIbhiAlqtQJ9Ie2x1TUFzxuX8
+         MA4GnuC02Ml+02/L07fyVTjjM1NE+pWv5z01pcBofWvz0nJ3vvV5bn/Z/ajNv2Tn9A
+         gts/xBuYtgve9yHMwGSUbpWP4GUgBqfR3uTNsUFE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 102/205] hv_netvsc: flag software created hash value
+Date:   Thu, 16 Jan 2020 11:41:17 -0500
+Message-Id: <20200116164300.6705-102-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-lantianyu1986@gmail.com writes:
+From: Stephen Hemminger <sthemmin@microsoft.com>
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->
-> Current code has assumption that balloon request memory size aligns
-> with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
-> balloon driver receives non-aligned balloon request, it produces warning
-> and balloon up more memory than requested in order to keep 2MB alignment.
-> Remove the warning and balloon up memory according to actual requested
-> memory size.
->
-> Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
-> Change since v2:
->     - Change logic of switching alloc_unit from 2MB to 4KB
->     in the balloon_up() to avoid redundant iteration when
->     handle non-aligned page request.
->     - Remove 2MB alignment operation and comment in balloon_up()
-> ---
->  drivers/hv/hv_balloon.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 7f3e7ab22d5d..536807efbc35 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
->  	if (num_pages < alloc_unit)
->  		return 0;
->  
-> -	for (i = 0; (i * alloc_unit) < num_pages; i++) {
-> +	for (i = 0; i < num_pages / alloc_unit; i++) {
->  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
->  			HV_HYP_PAGE_SIZE)
->  			return i * alloc_unit;
-> @@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
->  
->  	}
->  
-> -	return num_pages;
-> +	return i * alloc_unit;
->  }
->  
->  static void balloon_up(union dm_msg_info *msg_info)
-> @@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
->  	long avail_pages;
->  	unsigned long floor;
->  
-> -	/* The host balloons pages in 2M granularity. */
-> -	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
-> -
->  	/*
->  	 * We will attempt 2M allocations. However, if we fail to
->  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
-> @@ -1749,14 +1746,13 @@ static void balloon_up(union dm_msg_info *msg_info)
->  	avail_pages = si_mem_available();
->  	floor = compute_balloon_floor();
->  
-> -	/* Refuse to balloon below the floor, keep the 2M granularity. */
-> +	/* Refuse to balloon below the floor. */
->  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
->  		pr_warn("Balloon request will be partially fulfilled. %s\n",
->  			avail_pages < num_pages ? "Not enough memory." :
->  			"Balloon floor reached.");
->  
->  		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
-> -		num_pages -= num_pages % PAGES_IN_2M;
->  	}
->  
->  	while (!done) {
-> @@ -1770,7 +1766,7 @@ static void balloon_up(union dm_msg_info *msg_info)
->  		num_ballooned = alloc_balloon_pages(&dm_device, num_pages,
->  						    bl_resp, alloc_unit);
->  
-> -		if (alloc_unit != 1 && num_ballooned == 0) {
-> +		if (alloc_unit != 1 && num_ballooned != num_pages) {
->  			alloc_unit = 1;
->  			continue;
->  		}
+[ Upstream commit df9f540ca74297a84bafacfa197e9347b20beea5 ]
 
-Thank you for addressing my comments on v1, this all looks good to me
-now so:
+When the driver needs to create a hash value because it
+was not done at higher level, then the hash should be marked
+as a software not hardware hash.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Fixes: f72860afa2e3 ("hv_netvsc: Exclude non-TCP port numbers from vRSS hashing")
+Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/hyperv/netvsc_drv.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 78e3e689a733..0dee358864f3 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -285,9 +285,9 @@ static inline u32 netvsc_get_hash(
+ 		else if (flow.basic.n_proto == htons(ETH_P_IPV6))
+ 			hash = jhash2((u32 *)&flow.addrs.v6addrs, 8, hashrnd);
+ 		else
+-			hash = 0;
++			return 0;
+ 
+-		skb_set_hash(skb, hash, PKT_HASH_TYPE_L3);
++		__skb_set_sw_hash(skb, hash, false);
+ 	}
+ 
+ 	return hash;
+@@ -795,8 +795,7 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
+ 	    skb->protocol == htons(ETH_P_IP))
+ 		netvsc_comp_ipcsum(skb);
+ 
+-	/* Do L4 checksum offload if enabled and present.
+-	 */
++	/* Do L4 checksum offload if enabled and present. */
+ 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
+ 		if (csum_info->receive.tcp_checksum_succeeded ||
+ 		    csum_info->receive.udp_checksum_succeeded)
 -- 
-Vitaly
+2.20.1
 
