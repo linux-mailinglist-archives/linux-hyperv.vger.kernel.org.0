@@ -2,36 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B31B13E88E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2020 18:33:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0FE613F076
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jan 2020 19:22:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404620AbgAPRdC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Jan 2020 12:33:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43552 "EHLO mail.kernel.org"
+        id S2391337AbgAPSVu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Jan 2020 13:21:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392991AbgAPRao (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:44 -0500
+        id S2392492AbgAPR1n (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFAC024713;
-        Thu, 16 Jan 2020 17:30:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 606BF246DD;
+        Thu, 16 Jan 2020 17:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195844;
-        bh=6StsNdWuSYEL+GQ4LyCBoI2E6aXirUVS+EBT1x5Ua5U=;
+        s=default; t=1579195662;
+        bh=tfIoS93B0aTHiVnB1lKZjdoADg62rCABGH7ZfwMWtz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PAJfGziRZLzpRa0CvQ+9/iy+S//iHAfmx8X8kpRYaHOS+GUdNQ7gdAby1yrnTdY5G
-         n/hJLCYC9jpm42YjabZ5W/dIaWs27E/TKiWUIfqzjQFjZMRdYfiJlfjKSlJfe/Lp0/
-         kADIXPXBhW6UosMk8+XO/KZTTJgp7oADp+2Ag228=
+        b=hOQNa8JamiWFYvwlcov/24zePh4gXKgJ5rrXMMztGSogD+1AMt5+YKUGVNqiz/haz
+         53A1Bo0DXIdrLHZ+JUif+eWymx0DRMU5T01lusqlM3bH/NCHBvGwDigWz4oTUh8UQs
+         yA1xFBOVIVjGjINhJCiV/STaangR5CNaNEm4jI7s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 345/371] hv_netvsc: flag software created hash value
-Date:   Thu, 16 Jan 2020 12:23:37 -0500
-Message-Id: <20200116172403.18149-288-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 221/371] netvsc: unshare skb in VF rx handler
+Date:   Thu, 16 Jan 2020 12:21:33 -0500
+Message-Id: <20200116172403.18149-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -44,48 +45,43 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Stephen Hemminger <sthemmin@microsoft.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit df9f540ca74297a84bafacfa197e9347b20beea5 ]
+[ Upstream commit 996ed04741467f6d1552440c92988b132a9487ec ]
 
-When the driver needs to create a hash value because it
-was not done at higher level, then the hash should be marked
-as a software not hardware hash.
+The netvsc VF skb handler should make sure that skb is not
+shared. Similar logic already exists in bonding and team device
+drivers.
 
-Fixes: f72860afa2e3 ("hv_netvsc: Exclude non-TCP port numbers from vRSS hashing")
+This is not an issue in practice because the VF devicex
+does not send up shared skb's. But the netvsc driver
+should do the right thing if it did.
+
+Fixes: 0c195567a8f6 ("netvsc: transparent VF management")
 Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 9e48855f6407..14451e14d99d 100644
+index a89de5752a8c..9e48855f6407 100644
 --- a/drivers/net/hyperv/netvsc_drv.c
 +++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -282,9 +282,9 @@ static inline u32 netvsc_get_hash(
- 		else if (flow.basic.n_proto == htons(ETH_P_IPV6))
- 			hash = jhash2((u32 *)&flow.addrs.v6addrs, 8, hashrnd);
- 		else
--			hash = 0;
-+			return 0;
+@@ -1840,6 +1840,12 @@ static rx_handler_result_t netvsc_vf_handle_frame(struct sk_buff **pskb)
+ 	struct netvsc_vf_pcpu_stats *pcpu_stats
+ 		 = this_cpu_ptr(ndev_ctx->vf_stats);
  
--		skb_set_hash(skb, hash, PKT_HASH_TYPE_L3);
-+		__skb_set_sw_hash(skb, hash, false);
- 	}
++	skb = skb_share_check(skb, GFP_ATOMIC);
++	if (unlikely(!skb))
++		return RX_HANDLER_CONSUMED;
++
++	*pskb = skb;
++
+ 	skb->dev = ndev;
  
- 	return hash;
-@@ -802,8 +802,7 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
- 	    skb->protocol == htons(ETH_P_IP))
- 		netvsc_comp_ipcsum(skb);
- 
--	/* Do L4 checksum offload if enabled and present.
--	 */
-+	/* Do L4 checksum offload if enabled and present. */
- 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
- 		if (csum_info->receive.tcp_checksum_succeeded ||
- 		    csum_info->receive.udp_checksum_succeeded)
+ 	u64_stats_update_begin(&pcpu_stats->syncp);
 -- 
 2.20.1
 
