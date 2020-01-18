@@ -2,59 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 081461418BB
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Jan 2020 18:29:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A5D9141927
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Jan 2020 20:29:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgARR3d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 18 Jan 2020 12:29:33 -0500
-Received: from mail-dm6nam12on2127.outbound.protection.outlook.com ([40.107.243.127]:39008
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        id S1726810AbgART3c (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 18 Jan 2020 14:29:32 -0500
+Received: from mail-dm6nam10on2138.outbound.protection.outlook.com ([40.107.93.138]:63962
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726502AbgARR3d (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 18 Jan 2020 12:29:33 -0500
+        id S1726806AbgART3b (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 18 Jan 2020 14:29:31 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=htVcCx5oZio6pOv2An706/kF4L4viyz27QMC6iOXNbrVr5ZSEKOaeIKo6brQzvCuWycPopDW88+gxQjBIqhqYnL8d4xrD0HHfd+3IZ9PRNMXoXHzeb7nfm9BqllIklIezMyYMAAXGDh3TGdIxIFwZjVeGz2PZ41Qyec1VDDjzQYoL8PfvPBj+reT/OZJpVosukS4qi75XFKRzi/GGhKhZSCD+asYNNRN0Z38NsIxYsPoQ2XUHJxca+/Ix5wK0uLkAAvSO1rVfxXVMIz5gHAf7KtZDZYDeAvNoqTn1ZIm6RWQo+8Ok83HYi77CY/Ty4o2QVPQJuN3qwYAljoqLSwl5A==
+ b=lBtBvB1lD7GOgPkfSbGIJFBj5e6//AT3fZPXmVioVvMhhtfMKv1rbV1pj8mr+ELg9vTd2KbxOOFOl6DKCNLXuXq6VYjyIdX4/eUfTLrb+3Py/xSX/Zi7hLe99sGBBnHII2DfX3GnmQwh9Tm7b7vZaGme82YHyewfRfrs6lbSA96B90BDB67vivLuaE+RDQPL14ybR1KzLO36Axpfn4GrpLyJZZF1G5wadKhlV0fL68v68mWpISMePngcQdnMMDJaaS4r3i3FT8SSmeonfl1ZIAjaVr6W6famtLGLLRhc2jGQxRzN21TWbOUI60I5y4kXcMuw+ogvv8oieJaBDiTjEw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yOor5TVECSRAOFbN9I+LEx08LQy6VJqsyxw0EnsKtKQ=;
- b=SSDTGzBrX1Qpd5n1M6Qe1mofVlWq9iQozzucogIkrHaChRY59sz5yjSNZummmKAGCpNcwrgd5emiYHkYKpbVEgLq4gnP57XXmU37+AB4Zijv/DUjOLboCLT4GdQSfZPhD63xWoeh/OjIX71cet0soNi9maLeasruCWsmOGnNphoKoAg8xI+nhGF7Q/ncUMYkwgwE0ub677gHFdpznPrfDu9fvbGQWFQm6edAh/PLvxz2V3otP5glzCIkNyJTxZzIWgpDHOnyZ1ezN7X7fyeCCnOF9hrIXhwMUW9bxToyshI+ChQjYk5SksCSMnBwpsdS6TAa8hbv2ZWASXcwvohCcQ==
+ bh=qvQXSTONABnpWNd33pVwgZD/aMU5i0BZrnt5B+W9FCw=;
+ b=nF4AkD3SRC70Had1kTQvhdXjtIf2bwBD0LLkbUQ7IQNBjcd1iulc0E/WzyS0WYk01BAfqV5ZMCwPYT8Z7c8JAzONtIc8oSdplhlyYVXYP1YdE5R4YiWcPxXyISrmcma7n72gwSv+VQ5ElUTRMmOBrOjtOoUwPz4ttcWA1x3TAR0h4KGz6aQCf4mcjMiFq3rLYYlORFOgYWM6yFvOp8/+p8CdiWVSiV69ZSB9RiMbQiSrMM6SXDojVS+2gRFsmuC6md8lANs48DmD8FqaZ+MAoZJOho/4WzF+9OszNbTsuBBYVO+/+XXl0xl6oR7oVLpdVuI94fj4GAZoGnSL9DTJtQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yOor5TVECSRAOFbN9I+LEx08LQy6VJqsyxw0EnsKtKQ=;
- b=Nlk0PKEFJssIEECZ2vhoymjAvm77uWw1YVMnVly46cedul4Ps/UXjkcvNaNlwIbjDN0jUN8LGvFcvwz1POlPJYyc24Zi1D7FwzE3kLZqYgbYbBz4VHX8Xrh1XheSsq1rahKuqknVlIIZzjhPnf0JYwJRDDMJWBUBlW047fCoJ+o=
+ bh=qvQXSTONABnpWNd33pVwgZD/aMU5i0BZrnt5B+W9FCw=;
+ b=df0GpXq7x22PRzlY86x3HeFghI2r1Y2eUS+jFCAAjLn5/u0arD6+l2o20a61jFg8Ul4Y6P4itFnzJ2fGPLZ9Mq0JsvmNXAT6XSWABAhqc7ZLe+KokPyHUTckren38xGVUE4h7Jd9sN4IRuZuFSxjtDnRVnGh0oys7tn14QzmjdM=
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (52.132.149.16) by
- MW2PR2101MB0891.namprd21.prod.outlook.com (52.132.152.23) with Microsoft SMTP
+ MW2PR2101MB0940.namprd21.prod.outlook.com (52.132.146.13) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Sat, 18 Jan 2020 17:29:18 +0000
+ 15.20.2644.4; Sat, 18 Jan 2020 19:29:27 +0000
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::f1bb:c094:cb30:ba1f]) by MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::f1bb:c094:cb30:ba1f%6]) with mapi id 15.20.2644.015; Sat, 18 Jan 2020
- 17:29:17 +0000
+ 19:29:27 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
+To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-CC:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Andrea Parri <Andrea.Parri@microsoft.com>
-Subject: RE: [PATCH] Drivers: hv: vmbus: Ignore
- CHANNELMSG_TL_CONNECT_RESULT(23)
-Thread-Topic: [PATCH] Drivers: hv: vmbus: Ignore
- CHANNELMSG_TL_CONNECT_RESULT(23)
-Thread-Index: AQHVx1Tg1xlBNcTrJ0KLEKFR1w6qoqfwtceA
-Date:   Sat, 18 Jan 2020 17:29:17 +0000
-Message-ID: <MW2PR2101MB10524758141F09806D8677FCD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <1578619515-115811-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1578619515-115811-1-git-send-email-decui@microsoft.com>
+        vkuznets <vkuznets@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH V2] x86/Hyper-V: Balloon up according to request page
+ number
+Thread-Topic: [PATCH V2] x86/Hyper-V: Balloon up according to request page
+ number
+Thread-Index: AQHVzHeBeCcAgW5Bc0OpEv2JOO+xBKfwzQOg
+Date:   Sat, 18 Jan 2020 19:29:27 +0000
+Message-ID: <MW2PR2101MB10520A27DC77E3B2F15EC75FD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -62,115 +62,152 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-18T17:29:15.8714183Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-18T19:29:24.8895054Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c22cbd7b-5961-4cb1-a220-690f9063ebe2;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=20eeef19-b79d-4e67-97db-f5edc5648f20;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=mikelley@microsoft.com; 
 x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4099c9d1-e944-44f5-f1bd-08d79c3bf24b
-x-ms-traffictypediagnostic: MW2PR2101MB0891:|MW2PR2101MB0891:
+x-ms-office365-filtering-correlation-id: 51104d43-e1ba-40a9-29aa-08d79c4cbbbe
+x-ms-traffictypediagnostic: MW2PR2101MB0940:|MW2PR2101MB0940:|MW2PR2101MB0940:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB08910E83E63D30B2C9750073D7300@MW2PR2101MB0891.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB0940F7C5C844E4F6F9786B82D7300@MW2PR2101MB0940.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 0286D7B531
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(136003)(366004)(376002)(199004)(189003)(7696005)(2906002)(5660300002)(107886003)(55016002)(6636002)(4326008)(10290500003)(33656002)(478600001)(9686003)(52536014)(66446008)(316002)(86362001)(76116006)(81166006)(64756008)(8676002)(66556008)(54906003)(81156014)(186003)(110136005)(8936002)(66946007)(26005)(71200400001)(8990500004)(6506007)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0891;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(366004)(136003)(39860400002)(376002)(189003)(199004)(81166006)(33656002)(5660300002)(81156014)(10290500003)(186003)(52536014)(478600001)(9686003)(6506007)(26005)(8990500004)(316002)(8676002)(71200400001)(66556008)(76116006)(7696005)(66446008)(4326008)(86362001)(2906002)(54906003)(8936002)(66946007)(66476007)(110136005)(64756008)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0940;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PSUHx9epW9FgYSL+RhL7erpC/23EtfcxpN7085N0I0duQ10NeN5fV4nIsHFIb2JLixlqwjdknVzNYDRKobfqihiG6VsqZ5kjWTG+aQ6VR8QrAavDW9ngqkn6UmkVoHnymccOZJBvJtHvm1pXdMUoq2fkmoqFa2+tPf4vD/H+WHeM52RP4OOf0ATNNK76Uow2iLUAGQI4ZYlJSglp4dB+6EgqaUP902/WXJ0de+GZE7AJEjlfPEOKCNfQPQUFCdD/G1iJrhs2a9xx1spvLI+VYteoxQ+yGdNKBfe0wNCFrI2VI1NVd3WtInAi6jrbOrfZ2uq1po2b5CxaGqrOEMtqsjkfIUMid6IYoMB/FrxJyV7YWpWMz5G+vuoW3PTkrMrf+HCupP+dFvCT08rN80rGSUjcSt+jI2KLyis3Yt49g6+gCss6s+lvnYiAzUhvbEfR
+x-microsoft-antispam-message-info: 7CZ2t0jBEpyJyKOm1Rx5QKa8cC3aSBPV1vm2EmHguw+M6ZMV164Y1HguLe/VkNF9WRDw+xCw5G8cbTnSFR9RogJp8rD5aO0o4+2F3H6C4eGd6LIIXAygPbMVSNCEZJXLJqR+CnYJpolhGnN1RfP1iHYFbaBoE9XawA5SH3MWwqN3NRcInocKmo2gOReUipobEIR8NogPUgz6deAx78XdxgffRCKFt298gEh1pw9T16vSWlOd4CpJjkcDPpYSUScIDEZDqbCVbnKYz61kacO2L+05TgtlKqQEksF1Cr0FuGepnSc2EGcbEgrC+hvf+5CIigy0LNYB9vHZL9w9qK+M69mnOeGqHHzo1zUOSgY/ANuNTx9QTGiyziBcz8HfAWyNzdWZb/nYSYqPdUy7NyLcHEpnMoaG3XJMSB9SKiaNmFQzIrtXXKSDrON4Vz+DvRzK
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4099c9d1-e944-44f5-f1bd-08d79c3bf24b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2020 17:29:17.6332
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51104d43-e1ba-40a9-29aa-08d79c4cbbbe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2020 19:29:27.5934
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EJiI6lzd36b4sRiDoLF7b3K8R47zETcq3MHguSpyfurzn0nQOVr/feGVBmYmQ8Ls/HXWUkvVLwsbX19dmJIXzPtbnRvDJI39FX3fDdK/bxY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0891
+X-MS-Exchange-CrossTenant-userprincipalname: K6EjvkPm4Ld31anXM4jo0mm2Rs6VUUjb+PBcfV2Xh2zBqam/brD4ovDo6etJ8LyOg3+zjdTFYVevlLOfCpE71LZMA7Dw/SEmK6xojctgt2E=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0940
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Thursday, January 9, 2020 5:25=
- PM
+From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Thursday, January 16, 202=
+0 6:16 AM
 >=20
-> When a Linux hv_sock app tries to connect to a Service GUID on which no
-> host app is listening, a recent host (RS3+) sends a
-> CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
-> a warning:
+> Current code has assumption that balloon request memory size aligns
+> with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
+> balloon driver receives non-aligned balloon request, it produces warning
+> and balloon up more memory than requested in order to keep 2MB alignment.
+> Remove the warning and balloon up memory according to actual requested
+> memory size.
 >=20
-> unknown msgtype=3D23
-> WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
->=20
-> Actually Linux can safely ignore the message because the Linux app's
-> connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
-> and vsock_stream_connect(). We don't bother to make use of the message
-> because: 1) it's only supported on recent hosts; 2) a non-trivial effort
-> is required to use the message in Linux, but the benefit is small.
->=20
-> So, let's not see the warning by silently ignoring the message.
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of=
+ 2MB memory
+> block")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > ---
->  drivers/hv/vmbus_drv.c | 5 +++++
->  include/linux/hyperv.h | 2 ++
->  2 files changed, 7 insertions(+)
+> Change since v2:
+>     - Change logic of switching alloc_unit from 2MB to 4KB
+>     in the balloon_up() to avoid redundant iteration when
+>     handle non-aligned page request.
+>     - Remove 2MB alignment operation and comment in balloon_up()
+> ---
+>  drivers/hv/hv_balloon.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
 >=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 4ef5a66df680..c838b6f5f726 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1033,6 +1033,11 @@ void vmbus_on_msg_dpc(unsigned long data)
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 7f3e7ab22d5d..536807efbc35 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct
+> hv_dynmem_device *dm,
+>  	if (num_pages < alloc_unit)
+>  		return 0;
+
+The above test is no longer necessary.  The num_pages < alloc_unit
+case is handled implicitly by your new 'for' loop condition.
+
+>=20
+> -	for (i =3D 0; (i * alloc_unit) < num_pages; i++) {
+> +	for (i =3D 0; i < num_pages / alloc_unit; i++) {
+>  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
+>  			HV_HYP_PAGE_SIZE)
+>  			return i * alloc_unit;
+> @@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct
+> hv_dynmem_device *dm,
+>=20
 >  	}
 >=20
->  	entry =3D &channel_message_table[hdr->msgtype];
-> +
-> +	/* Linux ignores some messages, e.g. CHANNELMSG_TL_CONNECT_RESULT. */
-> +	if (!entry->message_handler)
-> +		goto msg_handled;
-> +
+> -	return num_pages;
+> +	return i * alloc_unit;
+>  }
+>=20
+>  static void balloon_up(union dm_msg_info *msg_info)
+> @@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
+>  	long avail_pages;
+>  	unsigned long floor;
+>=20
+> -	/* The host balloons pages in 2M granularity. */
+> -	WARN_ON_ONCE(num_pages % PAGES_IN_2M !=3D 0);
+> -
+>  	/*
+>  	 * We will attempt 2M allocations. However, if we fail to
+>  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
+> @@ -1749,14 +1746,13 @@ static void balloon_up(union dm_msg_info *msg_inf=
+o)
+>  	avail_pages =3D si_mem_available();
+>  	floor =3D compute_balloon_floor();
+>=20
+> -	/* Refuse to balloon below the floor, keep the 2M granularity. */
+> +	/* Refuse to balloon below the floor. */
+>  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+>  		pr_warn("Balloon request will be partially fulfilled. %s\n",
+>  			avail_pages < num_pages ? "Not enough memory." :
+>  			"Balloon floor reached.");
+>=20
+>  		num_pages =3D avail_pages > floor ? (avail_pages - floor) : 0;
+> -		num_pages -=3D num_pages % PAGES_IN_2M;
+>  	}
+>=20
+>  	while (!done) {
+> @@ -1770,7 +1766,7 @@ static void balloon_up(union dm_msg_info *msg_info)
+>  		num_ballooned =3D alloc_balloon_pages(&dm_device, num_pages,
+>  						    bl_resp, alloc_unit);
+>=20
+> -		if (alloc_unit !=3D 1 && num_ballooned =3D=3D 0) {
+> +		if (alloc_unit !=3D 1 && num_ballooned !=3D num_pages) {
 
-FWIW, with this new check, all of the validity checks in vmbus_onmessage() =
-are
-redundant and could be removed.  There's already a check here that ensures
-msgtype won't be too big, and this new check ensures that message_handler i=
-s
-not NULL.
-
->  	if (entry->handler_type	=3D=3D VMHT_BLOCKING) {
->  		ctx =3D kmalloc(sizeof(*ctx), GFP_ATOMIC);
->  		if (ctx =3D=3D NULL)
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 26f3aeeae1ca..41c58011431e 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -425,6 +425,8 @@ enum vmbus_channel_message_type {
->  	CHANNELMSG_19				=3D 19,
->  	CHANNELMSG_20				=3D 20,
->  	CHANNELMSG_TL_CONNECT_REQUEST		=3D 21,
-> +	CHANNELMSG_22				=3D 22,
-> +	CHANNELMSG_TL_CONNECT_RESULT		=3D 23,
->  	CHANNELMSG_COUNT
->  };
-
-For completeness, I'd like to see the channel_message_table also updated
-with these new entries so that everything stays in sync and is explicitly
-defined.
+Maybe I'm missing something, but I don't think Vitaly's optimization works.=
+  If
+alloc_unit specifies 2 Mbytes, and num_pages specifies 3 Mbytes, then num_b=
+allooned
+will come back as 2 Mbytes, which is correct.  But if we revert alloc_unit =
+to 1 page and
+"continue" in that case, we will lose the 2 Mbytes of memory (it's not free=
+d), and the
+next time through the loop will try to allocate only 1 Mbyte (because num_p=
+ages
+will be decremented by num_ballooned).  I think the original code does the =
+right thing.
 
 Michael
 
->=20
+>  			alloc_unit =3D 1;
+>  			continue;
+>  		}
 > --
-> 2.19.1
+> 2.14.5
 
