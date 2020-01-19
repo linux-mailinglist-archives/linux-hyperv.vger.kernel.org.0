@@ -2,190 +2,148 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F5C61420E8
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2020 00:29:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1A31420F1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2020 00:35:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgASX35 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 19 Jan 2020 18:29:57 -0500
-Received: from mail-dm6nam12on2092.outbound.protection.outlook.com ([40.107.243.92]:19425
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        id S1728886AbgASXfl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 19 Jan 2020 18:35:41 -0500
+Received: from mail-eopbgr1320123.outbound.protection.outlook.com ([40.107.132.123]:19722
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728886AbgASX35 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 19 Jan 2020 18:29:57 -0500
+        id S1728841AbgASXfl (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 19 Jan 2020 18:35:41 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RY9anz3ReA5vStzdyn7+Z/jN6vrVpI9gB+JSiZLycdrpdbTToYi8aWWeyvdfpN6hdJxpH1RlUEPEDLe+mHRg0ZsbCKj8ar7Lq3FRa9XroEsNcN2Oy3T3dgSPAeY6neou5Dv9swCDjNNyZBoVf1swxoriz+XMhfyJPeOfq80xbfwE9dq3FCOTeBUWGQ8eYg6rH5PtSdsWhHlu0rnktZBnqjdsUJ/A2c0YqdEOCHAUYkHh1fIxo1z2n7yJVelQVW3SyGhrJ20myvEY0p/q4d9BxjggdsTd99TmooiFisHqEG/uhu7gGTl0tJXtVKDp3KQ4ZuYrRwz2/vCAEoPL1BqpDw==
+ b=FFw3AFSNDBNRE3l5CQ/5YmBVBTC4jGd9GhWP97sjk49dZTBGQjg1YS5uB+TXha05NgpDzPg5GgbN5JUXRs9mfYFJkrEMUv6PgYW3jlh++V0SO7hy80KtBbWRHoZR0EbyAoLpGXVGKPZG3XDOQxzzzdIFWXvALKzSGzuVHi33SvGpKVlul0018A493M7sBjKgSCtELyuNWNpxErzAxSVN6B2ZNBwlv4/tOlUl/x3VdH7wNP5FyRXO3QCmPve3tQOIOg4x1In7dF2W0KhmLGrDqMKMtr+0pz618ESaizyLzylx1zQJ69+fEdGXU3mAtMAt4YWo3kbDoohU2qN2VAbaZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=El6qEesUZ02ULdUNMQW/zW482zv8eKBU/6d3uHZX8gc=;
- b=d2qi1Ee8sfN+SZ6CZzmfwxpfcfR7b89J488noST5m2iBld1ATe/i7J+lqU+vEKSDnlE10WVAj9Ld6Ag3asyawhkRHNJ9Eosegri1GuikqbpKQYLrFQ/4WOM6cA3frnwQLpXE1gZFKGnOCWIMYqAhCRswjcE6mM1wD0HnwN4s8g9Tyq2GqSfIbd8+FDstHL42+iWEEKyzn06PGN6mvcmbau75nn6/Rw3RjtpJzkzJaxxKCw+EQeXeIvOZpfXr5MCSs+QcAOTs5XNFiqqtJiAi153SRSIqVxThtXrrHri0xM6DQjoYkAktflUNZColo52S0Y/TsntLRd28cAIqwpGMVA==
+ bh=RhIfHI3jlrgTPUVnPwjXDUJnZIwaDGpH/59vf/aB69c=;
+ b=ULyiByKCc+6LEocENvwWbY6+xfjXSMVCAp6Jj1cVps5QVSU5sSG/+E8CcNFmczlJnbRZHsiExWPuSHzIj/HxKPvTCvocGUO+8wba+pikoXBeIwkfJlCpvLd5rcICUpizW9L4fiOaTqSC2pyXHvpWwNEapj+UZY4ESy4HAI4A+DjlRkqWnQz8GkqF4DHN821HIa56XS8EVSsuroK+/Ova7x1nC4piZoViysVTQp8yGQ1SDsQHLXOqoBZXSPZx8AnzkT55WKNFZOxFP+VlzxrXIaM05SghIiKB2npIYSGYemLXBNbb4IWtvsTFMRdKd678YHg94NLRxdm8jZhZF4GRpQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=El6qEesUZ02ULdUNMQW/zW482zv8eKBU/6d3uHZX8gc=;
- b=CCUuTYF0hJ0gjq1lvGNb+NzDkNkAnLtLLEuhLedYh8IK+ht/lMD6wBjRBKU2STalQ5bZMjpDR+QzzNtf0RXpUf8xReRjCel/VMUqvGtQtX1eTeYc+Wjzg4GeA3mpNln6tf+H7xnQFS3f/hmnEAs3jqcFpFSkEBw1Tq0itg/Ny20=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) by
- CY4PR21MB0502.namprd21.prod.outlook.com (10.172.122.12) with Microsoft SMTP
+ bh=RhIfHI3jlrgTPUVnPwjXDUJnZIwaDGpH/59vf/aB69c=;
+ b=VH4BC02kvqef46783dZU/liZf83ffXU7HbLXpKVuTXrEP0W3kOl36bUzneWBHrXZY/59NwPafGxEE3pgVzQEEJcYLJ9AtyyP1GBtU6oG2IjWj0xagGy4Qw5E7cNuX04Tb50U1Lckedo3cnU7BTm1Ew7kG6ZAkLpUpvB8060ioGk=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0147.APCP153.PROD.OUTLOOK.COM (52.133.156.138) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.3; Sun, 19 Jan 2020 23:29:54 +0000
-Received: from CY4PR21MB0775.namprd21.prod.outlook.com
- ([fe80::6155:bc1d:1d39:977b]) by CY4PR21MB0775.namprd21.prod.outlook.com
- ([fe80::6155:bc1d:1d39:977b%8]) with mapi id 15.20.2644.024; Sun, 19 Jan 2020
- 23:29:53 +0000
+ 15.20.2665.11; Sun, 19 Jan 2020 23:35:32 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::f964:752b:ffde:dec7]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::f964:752b:ffde:dec7%8]) with mapi id 15.20.2665.014; Sun, 19 Jan 2020
+ 23:35:32 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     sunilmut@microsoft.com, Andrea.Parri@microsoft.com,
-        weh@microsoft.com, Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v2] Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
-Date:   Sun, 19 Jan 2020 15:29:22 -0800
-Message-Id: <1579476562-125673-1-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR11CA0046.namprd11.prod.outlook.com
- (2603:10b6:300:115::32) To CY4PR21MB0775.namprd21.prod.outlook.com
- (2603:10b6:903:b8::21)
-MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR11CA0046.namprd11.prod.outlook.com (2603:10b6:300:115::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Sun, 19 Jan 2020 23:29:53 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b93688e8-f67f-42a5-9ac6-08d79d377cb2
-X-MS-TrafficTypeDiagnostic: CY4PR21MB0502:|CY4PR21MB0502:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR21MB0502BAE4EA90D4CE9B2F24D8BF330@CY4PR21MB0502.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0287BBA78D
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(189003)(199004)(316002)(6486002)(86362001)(186003)(26005)(10290500003)(66946007)(52116002)(478600001)(6506007)(6666004)(66476007)(66556008)(6512007)(5660300002)(2906002)(16526019)(107886003)(3450700001)(81166006)(8676002)(8936002)(81156014)(2616005)(36756003)(4326008)(6636002)(956004);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0502;H:CY4PR21MB0775.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+To:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+CC:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Andrea Parri <Andrea.Parri@microsoft.com>
+Subject: RE: [PATCH] Drivers: hv: vmbus: Ignore
+ CHANNELMSG_TL_CONNECT_RESULT(23)
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Ignore
+ CHANNELMSG_TL_CONNECT_RESULT(23)
+Thread-Index: AQHVziTPYp9SoZnuM0e6zqOwmV+YqafypUbA
+Date:   Sun, 19 Jan 2020 23:35:32 +0000
+Message-ID: <HK0P153MB01480CADCA0A021A78C874C3BF330@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <1578619515-115811-1-git-send-email-decui@microsoft.com>
+ <MW2PR2101MB10524758141F09806D8677FCD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB10524758141F09806D8677FCD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-18T17:29:15.8714183Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c22cbd7b-5961-4cb1-a220-690f9063ebe2;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:153d:a2e3:607d:8b29]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5d4bf249-16b3-4d15-fa07-08d79d3846ea
+x-ms-traffictypediagnostic: HK0P153MB0147:|HK0P153MB0147:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB0147BAEE632FF9794F375A89BF330@HK0P153MB0147.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0287BBA78D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(366004)(189003)(199004)(5660300002)(86362001)(6636002)(8936002)(7696005)(6506007)(33656002)(52536014)(71200400001)(316002)(478600001)(10290500003)(2906002)(110136005)(186003)(81166006)(76116006)(9686003)(107886003)(55016002)(66556008)(66446008)(64756008)(8676002)(66476007)(81156014)(66946007)(4326008)(54906003)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0147;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZZrrviadH03D3DwWr7S52uEp7QVSiyBXiC6mC1Sfgm8LHx7fMdnxWdDXdYEWx3jFLlDaU3bXuWTZvkfa6Z0ldgdf5ZhIrpiuP2mQB4+GPl9yTpZG73ysdKdUezJKeWFWVSXv5/n6hC4sdQdUhKFQmbBTpJIB3dyWt/78F6Jwreb/nGdykvkL8q1+dKKVBFPMHqSqpKMVNr5nUXvsGBMJ01vE2iJtyXdyPHCBE7NrBgi0JbUgKlbWssqK2l1DXcgU0LGGW/Htq0fsmBkwv32ETK7xno18jSimv+gZjaQG2FNGzow6H/5wEWCqaXMH7Dz9YOuRfja6VP8hle+GXdA/5CCuGM3O/GF6e/uHjSIFk+hqoG21PynbS61PLTExIK76/vfo1Wz4NmseTL66H368HxyAgSUe9i3ZdX4Wc6FC7dO00c6cTnDeJKmmiJvdMtOi
-X-MS-Exchange-AntiSpam-MessageData: DZEwSShZslJsVOLWvdBlgYe1eNs4zyH5lJqEjoWUJxFQ9nlDs3O3gLiCz0KHe64dPLo4PrXmVJfAzNfzLCi/7naW+FXRSD9hZMmStrXy1oxED5bUsXtHbtuM08lwCOEm17y5PsZ04LOBd140HmCaaQ==
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: u6TsCYDcHBbI+jl4GJjHO47cZq5ZrxSBB3eHR9Y8psqaqlylsALc5N1STGWwGrcyeJJoFxlTroXtFaNQSDkJnHgCshjnGPp6GDiSDl8wXX9mWfCNMf3cdkh3C29zc0uboSskGdrC5DpI5htikpQpQF33j8cbzYdGmu5yGSwI2CfAhnI9kp+8CVFyBZeFsCfgWP+21/OMR/CL05B1IB8F7eJz5Nsy7MwoRm/mcNo7nhbT5ysrEZNB82jw0nWXVRJMvAzP5I4fA1kC+RdKKBWtxAgOFP93uhPI/CulpjsSX+IfUXMqTUkytLwIpaRZjH8WdEGw9qMQaFLG9CSQPue0xFU2tf5S+D6rDP3yn0J126re5/TGWDxtamSo1kvJDtKB12VnOm+bz03frgk2DLXC/NuhgTkrZX5hnnSOKVBu6oOYpepwfAG7dZ1GiVUU7u18
+x-ms-exchange-antispam-messagedata: 6KLhXi7DA3RPIeszsbNTxUlax42EucWclu2JibBXFX+1YZv+76PafQFEZW+qQolN10XHevkHIO2M95Vhl/RxP1xOoCIEJXgle1M28Hlg57UVBSxn51IWQ2zwlAnFY/XsrGC6TNKDtOAlsYXB7seM4UYd1iXLQSB0gsZfVMRr4WyMZWcJx886NYdq9rBeviWPYijoiNekEt6uqj6Iv/RG3w==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b93688e8-f67f-42a5-9ac6-08d79d377cb2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2020 23:29:53.8785
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d4bf249-16b3-4d15-fa07-08d79d3846ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2020 23:35:32.5051
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s9oliTmAc3iTzyQ5Njtltr4fJUlUUMsPkj6C1XGjgMbPnvGTafME/SZw6ToI2JvJmnw+/+Xyfb5wIAVxtP8aXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0502
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JpAEOU7TopBroqwLbWP0e38HIlH8UZtpeEtSkt1/mDcZhLhpsDhXKPuxTOytPGBOhbqt1m1wMx3iDfJOGltVYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0147
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-When a Linux hv_sock app tries to connect to a Service GUID on which no
-host app is listening, a recent host (RS3+) sends a
-CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
-a warning:
+> From: Michael Kelley
+> Sent: Saturday, January 18, 2020 9:29 AM
+> > +
+> > +	/* Linux ignores some messages, e.g.
+> CHANNELMSG_TL_CONNECT_RESULT. */
+> > +	if (!entry->message_handler)
+> > +		goto msg_handled;
+> > +
+>=20
+> FWIW, with this new check, all of the validity checks in vmbus_onmessage(=
+)
+> are redundant and could be removed.  There's already a check here that
+> ensures msgtype won't be too big, and this new check ensures that=20
+> message_handler is not NULL.
 
-unknown msgtype=23
-WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
+Agreed. I just sent a v2 that removes the redundant code.
 
-Actually Linux can safely ignore the message because the Linux app's
-connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
-and vsock_stream_connect(). We don't bother to make use of the message
-because: 1) it's only supported on recent hosts; 2) a non-trivial effort
-is required to use the message in Linux, but the benefit is small.
+> >  	if (entry->handler_type	=3D=3D VMHT_BLOCKING) {
+> >  		ctx =3D kmalloc(sizeof(*ctx), GFP_ATOMIC);
+> >  		if (ctx =3D=3D NULL)
+> > diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> > index 26f3aeeae1ca..41c58011431e 100644
+> > --- a/include/linux/hyperv.h
+> > +++ b/include/linux/hyperv.h
+> > @@ -425,6 +425,8 @@ enum vmbus_channel_message_type {
+> >  	CHANNELMSG_19				=3D 19,
+> >  	CHANNELMSG_20				=3D 20,
+> >  	CHANNELMSG_TL_CONNECT_REQUEST		=3D 21,
+> > +	CHANNELMSG_22				=3D 22,
+> > +	CHANNELMSG_TL_CONNECT_RESULT		=3D 23,
+> >  	CHANNELMSG_COUNT
+> >  };
+>=20
+> For completeness, I'd like to see the channel_message_table also updated
+> with these new entries so that everything stays in sync and is explicitly
+> defined.
+>=20
+> Michael
 
-So, let's not see the warning by silently ignoring the message.
+I fixed this in v2 as well.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
-
-In v2 (followed Michael Kelley's suggestions):
-    Removed the redundant code in vmbus_onmessage()
-    Added the new enries into channel_message_table[].
-
- drivers/hv/channel_mgmt.c | 21 +++++++--------------
- drivers/hv/vmbus_drv.c    |  4 ++++
- include/linux/hyperv.h    |  2 ++
- 3 files changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 8eb167540b4f..0370364169c4 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -1351,6 +1351,8 @@ channel_message_table[CHANNELMSG_COUNT] = {
- 	{ CHANNELMSG_19,			0, NULL },
- 	{ CHANNELMSG_20,			0, NULL },
- 	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL },
-+	{ CHANNELMSG_22,			0, NULL },
-+	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL },
- };
- 
- /*
-@@ -1362,25 +1364,16 @@ void vmbus_onmessage(void *context)
- {
- 	struct hv_message *msg = context;
- 	struct vmbus_channel_message_header *hdr;
--	int size;
- 
- 	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
--	size = msg->header.payload_size;
- 
- 	trace_vmbus_on_message(hdr);
- 
--	if (hdr->msgtype >= CHANNELMSG_COUNT) {
--		pr_err("Received invalid channel message type %d size %d\n",
--			   hdr->msgtype, size);
--		print_hex_dump_bytes("", DUMP_PREFIX_NONE,
--				     (unsigned char *)msg->u.payload, size);
--		return;
--	}
--
--	if (channel_message_table[hdr->msgtype].message_handler)
--		channel_message_table[hdr->msgtype].message_handler(hdr);
--	else
--		pr_err("Unhandled channel message type %d\n", hdr->msgtype);
-+	/*
-+	 * vmbus_on_msg_dpc() makes sure the hdr->msgtype here can not go
-+	 * out of bound and the message_handler pointer can not be NULL.
-+	 */
-+	channel_message_table[hdr->msgtype].message_handler(hdr);
- }
- 
- /*
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 4ef5a66df680..029378c27421 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1033,6 +1033,10 @@ void vmbus_on_msg_dpc(unsigned long data)
- 	}
- 
- 	entry = &channel_message_table[hdr->msgtype];
-+
-+	if (!entry->message_handler)
-+		goto msg_handled;
-+
- 	if (entry->handler_type	== VMHT_BLOCKING) {
- 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
- 		if (ctx == NULL)
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 8fa0938f9aee..692c89ccf5df 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -425,6 +425,8 @@ enum vmbus_channel_message_type {
- 	CHANNELMSG_19				= 19,
- 	CHANNELMSG_20				= 20,
- 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
-+	CHANNELMSG_22				= 22,
-+	CHANNELMSG_TL_CONNECT_RESULT		= 23,
- 	CHANNELMSG_COUNT
- };
- 
--- 
-2.19.1
-
+Thanks!
+Dexuan
