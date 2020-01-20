@@ -2,57 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D69E6142F2E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2020 17:04:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20E5114304E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jan 2020 17:53:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgATQES (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Jan 2020 11:04:18 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46136 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726876AbgATQEN (ORCPT
+        id S1729009AbgATQxq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Jan 2020 11:53:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42949 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727285AbgATQxq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:04:13 -0500
+        Mon, 20 Jan 2020 11:53:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579536251;
+        s=mimecast20190719; t=1579539224;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=p4ejQ2/oe91bnyA0QOnuHtrCvG5ijZh9PVgfR3T6gU8=;
-        b=EgKfywjuXiYjewNhok12RHl3ly1/ZIUcCFGNl4K1J5z02gvIsPMFEmEf8pTVU2TP8SqcLT
-        O+hIsB6Fn7uUqJggxP0gAneyCjxLrrIoKlDxISpQlJWtUswqeHkzzJ5Vm4as/v6wVwIHbj
-        j0Y+CXa6pQtgNXDFQS95Fz5xCMFb4fw=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-TA_B5p3AO72QBQgjDDSUQA-1; Mon, 20 Jan 2020 11:04:08 -0500
-X-MC-Unique: TA_B5p3AO72QBQgjDDSUQA-1
-Received: by mail-qv1-f71.google.com with SMTP id ce17so21003173qvb.5
-        for <linux-hyperv@vger.kernel.org>; Mon, 20 Jan 2020 08:04:08 -0800 (PST)
+        bh=z9t8MR+UrzdM1k7Ra8u+CTe/uTutPMJ8BLRkLhrkm60=;
+        b=OlMShFZjn2OfXDDhDiN0YwT11+bjeuwmNaCW5eQOQBP+mlpcjXI8gmzAs9NI6Bz4BU60Mv
+        jG2ZCcg5RKkZ2HoTXapx/s5spK3hPmJqnxe+BGgp4Zt9A93PlPxoDv206xUVHQHBzlZHP9
+        0GTVDfgPlNCA/YphFGxLYPlwBwZn5u0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-fFdK_nsvM9WOespVeIBuwA-1; Mon, 20 Jan 2020 11:53:43 -0500
+X-MC-Unique: fFdK_nsvM9WOespVeIBuwA-1
+Received: by mail-wr1-f70.google.com with SMTP id z10so51499wrt.21
+        for <linux-hyperv@vger.kernel.org>; Mon, 20 Jan 2020 08:53:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=p4ejQ2/oe91bnyA0QOnuHtrCvG5ijZh9PVgfR3T6gU8=;
-        b=YOgzR1ULhgQTOGYef5oqdYa0M1eE0b8+5rP2pFTt5+6YBQ/9ksITbVhJd1KZpPRRTg
-         B1PpDyMAlmkI0z95AAu+lSLgsJhjZiqj88ux/ftg3MpKIl8sBWZSZNebjZ/XdJLyFOhL
-         R1sY4LQpTceh4+map+Nxerna33IFboaRjpZfzjFpip322/r0CYBnuQTxoTMjDeqJhYou
-         GbfYlgCWttk8lvzoud+b2YTh3W2YyuNnyxHjyFdCOYGycGQEqGGf8YJvOBVaBvjz1mUE
-         9T+EDYtjD3llPIKCSzsI3w9BqM/G0v1mKGEqUWgXs/Qn6OY0LUSshld60dCxmkI0zCp3
-         4fuw==
-X-Gm-Message-State: APjAAAWbc9NbY0AqtGUXw8H1xQGylczAFx5aGIOpcloMOftHTKI5IjiC
-        hcJ4S4NO+ctwpfIce3708yGJNNlbJyBz1bWa50GjPn+4Horaf6rDAiLJTnDvEPvWmBqtWjb7Hot
-        /qy18LGUwDcsOACkzNzfFgrEn
-X-Received: by 2002:aed:2d67:: with SMTP id h94mr14145qtd.74.1579536247736;
-        Mon, 20 Jan 2020 08:04:07 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyHYHZZeb/F+oSnPwvaj7ijjCP3wY5WXEKtUs5DPKrE69F2FmzJea/xoQ0/lmBxFbbg2H6+0w==
-X-Received: by 2002:aed:2d67:: with SMTP id h94mr14119qtd.74.1579536247441;
-        Mon, 20 Jan 2020 08:04:07 -0800 (PST)
-Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
-        by smtp.gmail.com with ESMTPSA id 68sm16186184qkj.102.2020.01.20.08.04.03
+        bh=z9t8MR+UrzdM1k7Ra8u+CTe/uTutPMJ8BLRkLhrkm60=;
+        b=oAvDfIjkXmqKIIdWodF1EIu/FBqM86isZJ685g6LhVO/mjxPGKRnvrcE8fHxMSZAEt
+         1Rf3nVceXzqPLxr2TJ+0qOgygYVoc3g9IK2iAFLabJ9b1h+kPGFIsNdnfxdg/q6YJnPE
+         01ydr9h8EhvxejkBu6o8xTUgjFCzfa+C/lcPveEL4uu1Zyb+aL+Jcod1RuJzMUNdAEbm
+         tOsqX4y9COZjeNVy1TZvlr5ea+55K51KwW6IiEtLBoBkKJphk/v1LEck7IYRiH2V7vvP
+         /2/QdgQDJOjEKcU6ubHH+zg1wOZ5n/KDGOwYf3WIm/L3SH6ENdfvkjEBA0hXKLYEJgLl
+         KNZg==
+X-Gm-Message-State: APjAAAXlwVDMmAwXG4b9+BpNzRjawSNlGw79eYuA/mRkDI4vPNpCH72D
+        cP9j8Oa6pg9Qo5o7XBo6KyFe29KseLFDcrbIubfV3fAjUug4c5GKw66WIDBbdzx6Su19xlA1JHx
+        BGEpplIYRiKmZVOriaZjwEYfa
+X-Received: by 2002:adf:ea0f:: with SMTP id q15mr440735wrm.324.1579539222678;
+        Mon, 20 Jan 2020 08:53:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyNW66fPRfK7FwpLegFkuWKTwV9qDnkpodkOYc0ad9mcsdyNY8eyfpyGVBQ2vBixbwS4shXCg==
+X-Received: by 2002:adf:ea0f:: with SMTP id q15mr440720wrm.324.1579539222372;
+        Mon, 20 Jan 2020 08:53:42 -0800 (PST)
+Received: from steredhat (host84-49-dynamic.31-79-r.retail.telecomitalia.it. [79.31.49.84])
+        by smtp.gmail.com with ESMTPSA id c2sm48389367wrp.46.2020.01.20.08.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 08:04:06 -0800 (PST)
-Date:   Mon, 20 Jan 2020 11:04:00 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
+        Mon, 20 Jan 2020 08:53:41 -0800 (PST)
+Date:   Mon, 20 Jan 2020 17:53:39 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
 Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
         Jason Wang <jasowang@redhat.com>, kvm <kvm@vger.kernel.org>,
@@ -60,75 +60,90 @@ Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
 Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
-Message-ID: <20200120110319-mutt-send-email-mst@kernel.org>
+Message-ID: <CAGxU2F5=DQJ56sH4BUqp_7rvaXSF9bFHp4QkpLApJQK0bmd4MA@mail.gmail.com>
 References: <20200116172428.311437-1-sgarzare@redhat.com>
  <20200116172428.311437-2-sgarzare@redhat.com>
  <20200120.100610.546818167633238909.davem@davemloft.net>
  <20200120101735.uyh4o64gb4njakw5@steredhat>
  <20200120060601-mutt-send-email-mst@kernel.org>
  <CAGxU2F6VH8Eb5UH_9KjN6MONbZEo1D7EHAiocVVus6jW55BJDg@mail.gmail.com>
+ <20200120110319-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGxU2F6VH8Eb5UH_9KjN6MONbZEo1D7EHAiocVVus6jW55BJDg@mail.gmail.com>
+In-Reply-To: <20200120110319-mutt-send-email-mst@kernel.org>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 02:58:01PM +0100, Stefano Garzarella wrote:
-> On Mon, Jan 20, 2020 at 1:03 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > On Mon, Jan 20, 2020 at 11:17:35AM +0100, Stefano Garzarella wrote:
-> > > On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wrote:
-> > > > From: Stefano Garzarella <sgarzare@redhat.com>
-> > > > Date: Thu, 16 Jan 2020 18:24:26 +0100
+On Mon, Jan 20, 2020 at 5:04 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> On Mon, Jan 20, 2020 at 02:58:01PM +0100, Stefano Garzarella wrote:
+> > On Mon, Jan 20, 2020 at 1:03 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > On Mon, Jan 20, 2020 at 11:17:35AM +0100, Stefano Garzarella wrote:
+> > > > On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wrote:
+> > > > > From: Stefano Garzarella <sgarzare@redhat.com>
+> > > > > Date: Thu, 16 Jan 2020 18:24:26 +0100
+> > > > >
+> > > > > > This patch adds 'netns' module param to enable this new feature
+> > > > > > (disabled by default), because it changes vsock's behavior with
+> > > > > > network namespaces and could break existing applications.
+> > > > >
+> > > > > Sorry, no.
+> > > > >
+> > > > > I wonder if you can even design a legitimate, reasonable, use case
+> > > > > where these netns changes could break things.
 > > > >
-> > > > > This patch adds 'netns' module param to enable this new feature
-> > > > > (disabled by default), because it changes vsock's behavior with
-> > > > > network namespaces and could break existing applications.
+> > > > I forgot to mention the use case.
+> > > > I tried the RFC with Kata containers and we found that Kata shim-v1
+> > > > doesn't work (Kata shim-v2 works as is) because there are the following
+> > > > processes involved:
+> > > > - kata-runtime (runs in the init_netns) opens /dev/vhost-vsock and
+> > > >   passes it to qemu
+> > > > - kata-shim (runs in a container) wants to talk with the guest but the
+> > > >   vsock device is assigned to the init_netns and kata-shim runs in a
+> > > >   different netns, so the communication is not allowed
+> > > > But, as you said, this could be a wrong design, indeed they already
+> > > > found a fix, but I was not sure if others could have the same issue.
 > > > >
-> > > > Sorry, no.
-> > > >
-> > > > I wonder if you can even design a legitimate, reasonable, use case
-> > > > where these netns changes could break things.
+> > > > In this case, do you think it is acceptable to make this change in
+> > > > the vsock's behavior with netns and ask the user to change the design?
 > > >
-> > > I forgot to mention the use case.
-> > > I tried the RFC with Kata containers and we found that Kata shim-v1
-> > > doesn't work (Kata shim-v2 works as is) because there are the following
-> > > processes involved:
-> > > - kata-runtime (runs in the init_netns) opens /dev/vhost-vsock and
-> > >   passes it to qemu
-> > > - kata-shim (runs in a container) wants to talk with the guest but the
-> > >   vsock device is assigned to the init_netns and kata-shim runs in a
-> > >   different netns, so the communication is not allowed
-> > > But, as you said, this could be a wrong design, indeed they already
-> > > found a fix, but I was not sure if others could have the same issue.
+> > > David's question is what would be a usecase that's broken
+> > > (as opposed to fixed) by enabling this by default.
+> >
+> > Yes, I got that. Thanks for clarifying.
+> > I just reported a broken example that can be fixed with a different
+> > design (due to the fact that before this series, vsock devices were
+> > accessible to all netns).
+> >
 > > >
-> > > In this case, do you think it is acceptable to make this change in
-> > > the vsock's behavior with netns and ask the user to change the design?
+> > > If it does exist, you need a way for userspace to opt-in,
+> > > module parameter isn't that.
 > >
-> > David's question is what would be a usecase that's broken
-> > (as opposed to fixed) by enabling this by default.
-> 
-> Yes, I got that. Thanks for clarifying.
-> I just reported a broken example that can be fixed with a different
-> design (due to the fact that before this series, vsock devices were
-> accessible to all netns).
-> 
+> > Okay, but I honestly can't find a case that can't be solved.
+> > So I don't know whether to add an option (ioctl, sysfs ?) or wait for
+> > a real case to come up.
 > >
-> > If it does exist, you need a way for userspace to opt-in,
-> > module parameter isn't that.
-> 
-> Okay, but I honestly can't find a case that can't be solved.
-> So I don't know whether to add an option (ioctl, sysfs ?) or wait for
-> a real case to come up.
-> 
-> I'll try to see better if there's any particular case where we need
-> to disable netns in vsock.
-> 
-> Thanks,
-> Stefano
+> > I'll try to see better if there's any particular case where we need
+> > to disable netns in vsock.
+> >
+> > Thanks,
+> > Stefano
+>
+> Me neither. so what did you have in mind when you wrote:
+> "could break existing applications"?
 
-Me neither. so what did you have in mind when you wrote:
-"could break existing applications"?
+I had in mind:
+1. the Kata case. It is fixable (the fix is not merged on kata), but
+   older versions will not work with newer Linux.
+
+2. a single process running on init_netns that wants to communicate with
+   VMs handled by VMMs running in different netns, but this case can be
+   solved opening the /dev/vhost-vsock in the same netns of the process
+   that wants to communicate with the VMs (init_netns in this case), and
+   passig it to the VMM.
+
+These cases can work with vsock+netns, but they require changes because
+I'm modifying the vsock behavior with netns.
 
