@@ -2,222 +2,219 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D6AB143FB4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Jan 2020 15:37:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF89D1440C2
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Jan 2020 16:44:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAUOhj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 21 Jan 2020 09:37:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgAUOhj (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:37:39 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729285AbgAUPnv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 21 Jan 2020 10:43:51 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34064 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727817AbgAUPns (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:43:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579621425;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YcbauX61o7tWuEN+WbxCHxYsM/sg+0p71uHLTvabbzY=;
+        b=cVmk0x7Tq0QJfczu48ekLu8xw3xc5XtrH76Fy3Jekz/4Cl8LiX5m4RjOH03BbfsrqluY1p
+        1meH+I05h8D+ovYVIVQSD/dkXz27XOAcyJsbbd4nTs1YnyGZ+bPE5hVe5VtpN13SbUQKBM
+        OXn0ULSc5JNt9pR015KvOV0ugty8zK0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-349-LD4l0I28Mgquq2M4QBsksg-1; Tue, 21 Jan 2020 10:43:41 -0500
+X-MC-Unique: LD4l0I28Mgquq2M4QBsksg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B2B22070C;
-        Tue, 21 Jan 2020 14:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579617458;
-        bh=hha4biDp81wEOPmWi3GEIfBbYU2CcuiLqOjxy9uS7Yc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mCLSoItwpAg/CFYjzmuAV3O4ploxDv+LIqVKIxtWxkJrhA6yO0fXXHl1TT9i/JoJY
-         kZ5rpwrzhgGcfbDMstxSXzo0NI1VwmbQLf9DGkAlnxe+rXDEkzUHjdNRbaO0SSO31k
-         wsW/tv/6+XqC2P4qknAWhGk8S+bX2d/MoEVU3y0I=
-Date:   Tue, 21 Jan 2020 08:37:36 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 2/2] pci: hyperv: Move retarget related struct
- definitions into tlfs
-Message-ID: <20200121143736.GA96172@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C413618FF667;
+        Tue, 21 Jan 2020 15:43:39 +0000 (UTC)
+Received: from localhost (ovpn-117-223.ams2.redhat.com [10.36.117.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 186F210013A7;
+        Tue, 21 Jan 2020 15:43:36 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 15:43:35 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
+        Jason Wang <jasowang@redhat.com>, kvm <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
+Message-ID: <20200121154335.GB641751@stefanha-x1.localdomain>
+References: <20200116172428.311437-2-sgarzare@redhat.com>
+ <20200120.100610.546818167633238909.davem@davemloft.net>
+ <20200120101735.uyh4o64gb4njakw5@steredhat>
+ <20200120060601-mutt-send-email-mst@kernel.org>
+ <CAGxU2F6VH8Eb5UH_9KjN6MONbZEo1D7EHAiocVVus6jW55BJDg@mail.gmail.com>
+ <20200120110319-mutt-send-email-mst@kernel.org>
+ <CAGxU2F5=DQJ56sH4BUqp_7rvaXSF9bFHp4QkpLApJQK0bmd4MA@mail.gmail.com>
+ <20200120170120-mutt-send-email-mst@kernel.org>
+ <CAGxU2F4uW7FNe5xC0sb3Xxr_GABSXuu1Z9n5M=Ntq==T7MaaVw@mail.gmail.com>
+ <20200121055403-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200121055403-mutt-send-email-mst@kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
 Content-Disposition: inline
-In-Reply-To: <20200121015713.69691-2-boqun.feng@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 09:57:13AM +0800, Boqun Feng wrote:
-> For future support of virtual PCI on non-x86 architecture.
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-1) Don't make up random subject line prefixes; look at previous
-practice and follow it, e.g.,
+On Tue, Jan 21, 2020 at 06:14:48AM -0500, Michael S. Tsirkin wrote:
+> On Tue, Jan 21, 2020 at 10:07:06AM +0100, Stefano Garzarella wrote:
+> > On Mon, Jan 20, 2020 at 11:02 PM Michael S. Tsirkin <mst@redhat.com> wr=
+ote:
+> > > On Mon, Jan 20, 2020 at 05:53:39PM +0100, Stefano Garzarella wrote:
+> > > > On Mon, Jan 20, 2020 at 5:04 PM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+> > > > > On Mon, Jan 20, 2020 at 02:58:01PM +0100, Stefano Garzarella wrot=
+e:
+> > > > > > On Mon, Jan 20, 2020 at 1:03 PM Michael S. Tsirkin <mst@redhat.=
+com> wrote:
+> > > > > > > On Mon, Jan 20, 2020 at 11:17:35AM +0100, Stefano Garzarella =
+wrote:
+> > > > > > > > On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wrot=
+e:
+> > > > > > > > > From: Stefano Garzarella <sgarzare@redhat.com>
+> > > > > > > > > Date: Thu, 16 Jan 2020 18:24:26 +0100
+> > > > > > > > >
+> > > > > > > > > > This patch adds 'netns' module param to enable this new=
+ feature
+> > > > > > > > > > (disabled by default), because it changes vsock's behav=
+ior with
+> > > > > > > > > > network namespaces and could break existing application=
+s.
+> > > > > > > > >
+> > > > > > > > > Sorry, no.
+> > > > > > > > >
+> > > > > > > > > I wonder if you can even design a legitimate, reasonable,=
+ use case
+> > > > > > > > > where these netns changes could break things.
+> > > > > > > >
+> > > > > > > > I forgot to mention the use case.
+> > > > > > > > I tried the RFC with Kata containers and we found that Kata=
+ shim-v1
+> > > > > > > > doesn't work (Kata shim-v2 works as is) because there are t=
+he following
+> > > > > > > > processes involved:
+> > > > > > > > - kata-runtime (runs in the init_netns) opens /dev/vhost-vs=
+ock and
+> > > > > > > >   passes it to qemu
+> > > > > > > > - kata-shim (runs in a container) wants to talk with the gu=
+est but the
+> > > > > > > >   vsock device is assigned to the init_netns and kata-shim =
+runs in a
+> > > > > > > >   different netns, so the communication is not allowed
+> > > > > > > > But, as you said, this could be a wrong design, indeed they=
+ already
+> > > > > > > > found a fix, but I was not sure if others could have the sa=
+me issue.
+> > > > > > > >
+> > > > > > > > In this case, do you think it is acceptable to make this ch=
+ange in
+> > > > > > > > the vsock's behavior with netns and ask the user to change =
+the design?
+> > > > > > >
+> > > > > > > David's question is what would be a usecase that's broken
+> > > > > > > (as opposed to fixed) by enabling this by default.
+> > > > > >
+> > > > > > Yes, I got that. Thanks for clarifying.
+> > > > > > I just reported a broken example that can be fixed with a diffe=
+rent
+> > > > > > design (due to the fact that before this series, vsock devices =
+were
+> > > > > > accessible to all netns).
+> > > > > >
+> > > > > > >
+> > > > > > > If it does exist, you need a way for userspace to opt-in,
+> > > > > > > module parameter isn't that.
+> > > > > >
+> > > > > > Okay, but I honestly can't find a case that can't be solved.
+> > > > > > So I don't know whether to add an option (ioctl, sysfs ?) or wa=
+it for
+> > > > > > a real case to come up.
+> > > > > >
+> > > > > > I'll try to see better if there's any particular case where we =
+need
+> > > > > > to disable netns in vsock.
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Stefano
+> > > > >
+> > > > > Me neither. so what did you have in mind when you wrote:
+> > > > > "could break existing applications"?
+> > > >
+> > > > I had in mind:
+> > > > 1. the Kata case. It is fixable (the fix is not merged on kata), bu=
+t
+> > > >    older versions will not work with newer Linux.
+> > >
+> > > meaning they will keep not working, right?
+> >=20
+> > Right, I mean without this series they work, with this series they work
+> > only if the netns support is disabled or with a patch proposed but not
+> > merged in kata.
+> >=20
+> > >
+> > > > 2. a single process running on init_netns that wants to communicate=
+ with
+> > > >    VMs handled by VMMs running in different netns, but this case ca=
+n be
+> > > >    solved opening the /dev/vhost-vsock in the same netns of the pro=
+cess
+> > > >    that wants to communicate with the VMs (init_netns in this case)=
+, and
+> > > >    passig it to the VMM.
+> > >
+> > > again right now they just don't work, right?
+> >=20
+> > Right, as above.
+> >=20
+> > What do you recommend I do?
+> >=20
+> > Thanks,
+> > Stefano
+>=20
+> If this breaks userspace, then we need to maintain compatibility.
+> For example, have two devices, /dev/vhost-vsock and /dev/vhost-vsock-netn=
+s?
 
-  $ git log --oneline drivers/pci/controller/pci-hyperv.c | head
-  877b911a5ba0 PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer
-  14ef39fddd23 PCI: hv: Change pci_protocol_version to per-hbus
-  ac82fc832708 PCI: hv: Add hibernation support
-  a8e37506e79a PCI: hv: Reorganize the code in preparation of hibernation
-  f73f8a504e27 PCI: hv: Use bytes 4 and 5 from instance ID as the PCI domain numbers
-  348dd93e40c1 PCI: hv: Add a Hyper-V PCI interface driver for software backchannel interface
+/dev/vhost-vsock-netns is cleaner and simpler than my suggestion.  I
+like it!
 
-2) Make the commit log complete in itself.  This one (and the previous
-on) is not complete without reading the subject.
+This is nice for containers (say you want to run QEMU inside a container
+on the host) because you can allow only /dev/vhost-vsock-netns inside
+containers.  This prevents them from opening /dev/vhost-vsock to get
+access to the initial network namespace.
 
-3) This patch claims to be a "move", but in fact it also *adds* union
-hv_msi_entry, which didn't exist before.  It's better if you do a pure
-move that doesn't add or change things, plus a separate patch that
-makes changes that need to be reviewed more closely.
+Stefan
 
-> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h  | 38 +++++++++++++++++++++++++++++
->  arch/x86/include/asm/mshyperv.h     |  8 ++++++
->  drivers/pci/controller/pci-hyperv.c | 38 +++--------------------------
->  3 files changed, 50 insertions(+), 34 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index b9ebc20b2385..debe017ae748 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -912,4 +912,42 @@ struct hv_tlb_flush_ex {
->  struct hv_partition_assist_pg {
->  	u32 tlb_lock_count;
->  };
-> +
-> +union hv_msi_entry {
-> +	u64 as_uint64;
-> +	struct {
-> +		u32 address;
-> +		u32 data;
-> +	} __packed;
-> +};
-> +
-> +struct hv_interrupt_entry {
-> +	u32 source;			/* 1 for MSI(-X) */
-> +	u32 reserved1;
-> +	union hv_msi_entry msi_entry;
-> +} __packed;
-> +
-> +/*
-> + * flags for hv_device_interrupt_target.flags
-> + */
-> +#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
-> +#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
-> +
-> +struct hv_device_interrupt_target {
-> +	u32 vector;
-> +	u32 flags;
-> +	union {
-> +		u64 vp_mask;
-> +		struct hv_vpset vp_set;
-> +	};
-> +} __packed;
-> +
-> +/* HvRetargetDeviceInterrupt hypercall */
-> +struct hv_retarget_device_interrupt {
-> +	u64 partition_id;
-> +	u64 device_id;
-> +	struct hv_interrupt_entry int_entry;
-> +	u64 reserved2;
-> +	struct hv_device_interrupt_target int_target;
-> +} __packed __aligned(8);
->  #endif
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 6b79515abb82..d13319d82f6b 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -240,6 +240,14 @@ bool hv_vcpu_is_preempted(int vcpu);
->  static inline void hv_apic_init(void) {}
->  #endif
->  
-> +#if IS_ENABLED(CONFIG_PCI_HYPERV)
-> +#define hv_set_msi_address_from_desc(msi_entry, msi_desc)	\
-> +do {								\
-> +	(msi_entry)->address = (msi_desc)->msg.address_lo;	\
-> +} while (0)
-> +
-> +#endif /* CONFIG_PCI_HYPERV */
-> +
->  #else /* CONFIG_HYPERV */
->  static inline void hyperv_init(void) {}
->  static inline void hyperv_setup_mmu_ops(void) {}
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index aacfcc90d929..2240f2b3643e 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -406,36 +406,6 @@ struct pci_eject_response {
->  
->  static int pci_ring_size = (4 * PAGE_SIZE);
->  
-> -struct hv_interrupt_entry {
-> -	u32	source;			/* 1 for MSI(-X) */
-> -	u32	reserved1;
-> -	u32	address;
-> -	u32	data;
-> -};
-> -
-> -/*
-> - * flags for hv_device_interrupt_target.flags
-> - */
-> -#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
-> -#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
-> -
-> -struct hv_device_interrupt_target {
-> -	u32	vector;
-> -	u32	flags;
-> -	union {
-> -		u64		 vp_mask;
-> -		struct hv_vpset vp_set;
-> -	};
-> -};
-> -
-> -struct retarget_msi_interrupt {
-> -	u64	partition_id;		/* use "self" */
-> -	u64	device_id;
-> -	struct hv_interrupt_entry int_entry;
-> -	u64	reserved2;
-> -	struct hv_device_interrupt_target int_target;
-> -} __packed __aligned(8);
-> -
->  /*
->   * Driver specific state.
->   */
-> @@ -482,7 +452,7 @@ struct hv_pcibus_device {
->  	struct workqueue_struct *wq;
->  
->  	/* hypercall arg, must not cross page boundary */
-> -	struct retarget_msi_interrupt retarget_msi_interrupt_params;
-> +	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
->  
->  	/*
->  	 * Don't put anything here: retarget_msi_interrupt_params must be last
-> @@ -1178,7 +1148,7 @@ static void hv_irq_unmask(struct irq_data *data)
->  {
->  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
->  	struct irq_cfg *cfg = irqd_cfg(data);
-> -	struct retarget_msi_interrupt *params;
-> +	struct hv_retarget_device_interrupt *params;
->  	struct hv_pcibus_device *hbus;
->  	struct cpumask *dest;
->  	cpumask_var_t tmp;
-> @@ -1200,8 +1170,8 @@ static void hv_irq_unmask(struct irq_data *data)
->  	memset(params, 0, sizeof(*params));
->  	params->partition_id = HV_PARTITION_ID_SELF;
->  	params->int_entry.source = 1; /* MSI(-X) */
-> -	params->int_entry.address = msi_desc->msg.address_lo;
-> -	params->int_entry.data = msi_desc->msg.data;
-> +	hv_set_msi_address_from_desc(&params->int_entry.msi_entry, msi_desc);
-> +	params->int_entry.msi_entry.data = msi_desc->msg.data;
->  	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
->  			   (hbus->hdev->dev_instance.b[4] << 16) |
->  			   (hbus->hdev->dev_instance.b[7] << 8) |
-> -- 
-> 2.24.1
-> 
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl4nHCcACgkQnKSrs4Gr
+c8iOjAgArNIcauYKdihZzUB/8JJdrIjzQR0bQf9Ul7ERaBhxeb2+BSqx3L/DLkny
+CYL7HXVrKVs+/OXf7pBdalE69qsOfDdBhDhEBOHI515awLF/7xJHwokchC5j/VQv
+Wcvn9CS3zmks9ssJHRtIdraxTBxc04EAp5U+lDUxRLLjB4HcCLc+CwoS/RV75V92
+3RzOQB4CMmV+4heL+gXh3e7UfvNLEfVyKyOYw8qj1yIAnFkv2Rd8pXxNfPTuH0ch
+2iEJxQy8y8vIqEONnMeDMLWiAmssHjzujKry8UOZ+OdMLPSRLgc487jVvoH9UEQP
+53GYRFwYtUGkG7An19ImstKXkcydcA==
+=CVL/
+-----END PGP SIGNATURE-----
+
+--uZ3hkaAS1mZxFaxD--
+
