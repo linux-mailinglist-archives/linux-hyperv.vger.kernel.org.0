@@ -2,233 +2,319 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B01D7145D22
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jan 2020 21:29:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3BE145E3D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jan 2020 22:43:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgAVU31 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jan 2020 15:29:27 -0500
-Received: from mail-bn7nam10on2110.outbound.protection.outlook.com ([40.107.92.110]:48374
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        id S1725943AbgAVVnA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jan 2020 16:43:00 -0500
+Received: from mail-eopbgr770103.outbound.protection.outlook.com ([40.107.77.103]:54851
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726005AbgAVU30 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:29:26 -0500
+        id S1725975AbgAVVm7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 22 Jan 2020 16:42:59 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lQ5l8GBrEyXtH1UCgcVYgOtJCR4O3fc09HH7UVzVXOY2lBweveK1NJhZq6TuTd/PVxVTTpgY1bM3GIHwGlvz1/IF+qSKnc4+VL6BWMiVqa/xFXS+cvF9XJ6vSAXuKfHqkwUdkRIHeV+Rx5sR4qo3exSv4Z8eO+Rr/8AkHoC/Vobni2qHbKMg8ILw/CJoMDtHs+8R4HiQwjVvpnOJP6T6kUofEaHzpsJQej/1vCLnzuDwInwP15RI8qXU8WrpEdNjKpF6lZeQtsO1cYWtc4dR63xtZrbqG3fiZrRWtVqTpQkmI4YE0uyj00egFkjvsCjS2O6GZqBl1xq8U60QDQ5lrQ==
+ b=AEZAVR6YBi6it29UPxf3DgaoeHTtJCWnIJXYAX/XUf6ILNgsoWtCTBwyo8qaGQx5D1ZThWhHEPowbEVLBwkaFJmo/6R0p7HwhAxt32S17eR0dHOEtDFQXb0mLZivglyAtqzzQk2kCkUnvu8qgF6qVVuNJKuZDaWG3bbYF2ynYZZlc/k79tmcXv3sI3aGHvq8DQ7OrJ7gCz+22OX4SHms4v+YrBOqAWZQa+fZMfqUt+hIdEqS54ewdNiJ4vu2wLaD9NS5yJDGzjESqsZNKVmKZWu7N1DN9bV6z0exTlLJoze5MCSdcVHLb1prKaz0qEeEMh6GDLaaL3ijv/f/zZOElQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CS8fvkrqWJwahEiw0ixYly2vTdgkxneAO6DGDkBX0jY=;
- b=T+IzB61Unbm+HyQX0LCPjvG4zRJFx0OYWNOVXbfydUqy41WXzbIdKRDO8lIZZH12cc48s7Q0JZi9MjPOWWPEIVgNDGm5mFmJraRo60GxGHwZDaeHQo5Y3NUpZlDCRZotacsoKfoDmEl5J6yyUBrltAfsz3e9wGZVa/wz8Ydyzh6zZbEF6N4G9NNUK4hAb7lBOJfKFpbKeD3fFJEth+dP+jkO+G0HdbOvy+NULiLRQA+SQ0rvp+145XkWY4V8IEtstZuOZJX8z9a+MTMqe+HgaN9x6A4816Rzco7flWcCFS4uzJZyjQUHXor7zNkqPR7fdRXWpl0qMqWK7S33VEL8rg==
+ bh=jrYtgktRdHdNOVrZyiOhbUoevCrh0M6VO+W5l9z1uAU=;
+ b=GFIBIEX6AewpgVknYmcrSDB98EmhZq0XCDQ9oZ7csIhtg2ekHUaQG0/hOnmg+EV0sJjwe0R2ZBBOvpJd7fdS4AjY5laWPdII2VeMB8X3dq1pM/LMkt0KUx8g+inzwX1t4+OnCfpxiEF0i9xSKm/29KS4P4Wec4hON+zN/XaBNfcz8OSBRZ+V+w4opRk7Ofp7+PE58GilyjxYo2zrRYJLMtDpemETeNYfwJ/P1MkKOvvNScqKEWj5k46Ep4TJcryssQkcVdwhf+e0ISaxpMhz7gcOvGD/z+F1Smwqm8HQGXKZi2LCvZ8/6soAdr6kyw9EZ5vCAjKNMq8ixBL0KCJeog==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CS8fvkrqWJwahEiw0ixYly2vTdgkxneAO6DGDkBX0jY=;
- b=G5gBz6eD1E0oD7gUpPwH9oV4jXaF6KlSo7o3rApXNJJnVpLMZg4DRGdaSIPPl9PYSChofSvhtaVVkx3buqt0KNqsGF3yGjBqlVxlgU7tIhECxV2PGpVWdeI33dqOpA0nrgphg1NsYutZdHXEAr7QA0FjiGawLHdmvM38tHezKLI=
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
- MN2PR21MB1261.namprd21.prod.outlook.com (20.179.21.27) with Microsoft SMTP
+ bh=jrYtgktRdHdNOVrZyiOhbUoevCrh0M6VO+W5l9z1uAU=;
+ b=P1pj66ATwG1u86IynGhF9AWTau4ypDUNUibUEn7xjEMFWKHxuPTxOIqaof2SM6nYpL3u47ufRjSSvCiftyHcSUeuVXJjsvICEs/5CY+ioqXQR9MYoe3lORJ09xiWA4gVttbmoCX9oRk80M543C1S2gbBzgbTHa+mjhh0L4Tf2DA=
+Received: from SN6PR2101MB1023.namprd21.prod.outlook.com (52.132.117.31) by
+ SN6PR2101MB1344.namprd21.prod.outlook.com (20.178.200.82) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.3; Wed, 22 Jan 2020 20:29:22 +0000
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::5deb:9ab5:f05a:5423]) by MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::5deb:9ab5:f05a:5423%6]) with mapi id 15.20.2686.007; Wed, 22 Jan 2020
- 20:29:22 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ 15.20.2686.9; Wed, 22 Jan 2020 21:42:53 +0000
+Received: from SN6PR2101MB1023.namprd21.prod.outlook.com
+ ([fe80::68fb:50be:3f33:2edd]) by SN6PR2101MB1023.namprd21.prod.outlook.com
+ ([fe80::68fb:50be:3f33:2edd%4]) with mapi id 15.20.2686.006; Wed, 22 Jan 2020
+ 21:42:53 +0000
+From:   Long Li <longli@microsoft.com>
+To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
         KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: RE: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
-Thread-Topic: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
-Thread-Index: AQHV0UjdH1AVu+KRP0+E0p14Je7IQaf3GB+AgAAG3tA=
-Date:   Wed, 22 Jan 2020 20:29:22 +0000
-Message-ID: <MN2PR21MB1375C9F1F2EA6C9F5E95E873CA0C0@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
-        <1579713814-36061-2-git-send-email-haiyangz@microsoft.com>
- <20200122205133.00688f7c@carbon>
-In-Reply-To: <20200122205133.00688f7c@carbon>
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Patch v4 1/2] PCI: hv: Decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Topic: [Patch v4 1/2] PCI: hv: Decouple the func definition in
+ hv_dr_state from VSP message
+Thread-Index: AQHVyk09ZpI6noor9kG6MV8g7Smkvqf3ROSQ
+Date:   Wed, 22 Jan 2020 21:42:52 +0000
+Message-ID: <SN6PR2101MB10234B91D7748441CA18A361CE0C0@SN6PR2101MB1023.namprd21.prod.outlook.com>
+References: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-22T20:29:21.0706536Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8a5f2dba-fefc-4322-8719-75316e7721c8;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=de622098-dfc4-499e-bbb8-0000d6a42635;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-22T21:41:48Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
+ smtp.mailfrom=longli@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:0:edee:db5c:c6fe:798]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 85a4e05a-9c1b-4e77-faaa-08d79f79c44f
-x-ms-traffictypediagnostic: MN2PR21MB1261:|MN2PR21MB1261:|MN2PR21MB1261:
+x-ms-office365-filtering-correlation-id: 3bddfcb3-3d13-4bb7-350e-08d79f8408ed
+x-ms-traffictypediagnostic: SN6PR2101MB1344:|SN6PR2101MB1344:
 x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR21MB12612355AEDB8C2D9165A625CA0C0@MN2PR21MB1261.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-microsoft-antispam-prvs: <SN6PR2101MB13440E0B3EEA9A162049D709CE0C0@SN6PR2101MB1344.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 029097202E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(376002)(136003)(39860400002)(346002)(199004)(189003)(54906003)(52536014)(5660300002)(33656002)(6916009)(55016002)(71200400001)(9686003)(76116006)(86362001)(64756008)(66946007)(66476007)(66446008)(66556008)(8936002)(81166006)(81156014)(26005)(4326008)(10290500003)(6506007)(7696005)(53546011)(186003)(8676002)(478600001)(2906002)(316002)(966005)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1261;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(189003)(199004)(8676002)(52536014)(186003)(2906002)(71200400001)(5660300002)(33656002)(8936002)(86362001)(9686003)(66446008)(7696005)(478600001)(8990500004)(15650500001)(10290500003)(110136005)(316002)(81166006)(81156014)(6506007)(66946007)(55016002)(76116006)(64756008)(66556008)(66476007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1344;H:SN6PR2101MB1023.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WtHIpfBiB63VIgnzefPvCebyIxvoCsxTjt72lv9Rd5dZPzJccKtH54sUXRxYyK5ND2N0fTifraTSqpYFFNBRVkuulXdKvA7mYzWkNB9HeNeYdJpB05DVceBXvxhYyUEHXbX1453q71JrA/clkYWyaIUyleiu0wUrB6rJLroyVcYWRIXg7u7Ie/nhflIHp89l2pzBGvNa8/3RHxct2irGpP+3ctS/VgeB2zmwnAus67UJ/MqZdPSpFidmDOjSh7Fw64TSPRgSmwkYvbFhjeMuYOP1Gj2gJ12b2mtSomgkOMvZoPzpu1JHtjt99LNjdmoDlhibdeDy+G+OzHjliFzzOodRQ10LiUB3vHaNm63IYZBq5QCq7V+mBdE6y2AMJsyqsoTr0Z8CiJQ1S4mFC5XRU33gSUr+u8BcXoOVjMbXtao/Ot3ALxYyQic40+d8ex7N3+8QPje+w4dSHDe/I+uWjMiMNm2HntU0rneJCYE6c48=
-x-ms-exchange-antispam-messagedata: NX76SWcNy5CQK+3uo6qSWNiF2RSPk1ESvT+xVXms2+c63stAKvpm0T4Oe45BU2im3htpW7rgZ+DynVlZs+8B6UorXTjI4FUjknon51JQTHzJb+Nz6ITwGHN3kCidLNsafsCU18+K2nS8qAbHg0hhuw==
+x-microsoft-antispam-message-info: mX8JDklpBMuVjA1Hm6u3X1uqqdibA5GfOiocxjNcGlAo+ATrw9JjHVzAhVu6PuB9Eyr8MzKjxLm5vHz4P7Iah7Dz51AneAPyfcDSwP36ZnMCGrnIbXwxKQgHuuWfoQoXEE50TvIOgktUXEdu61k2GlJWu05RcHaVwx2tJZa/X/HEOQds5NVjbl/jhykn261yi20mKA7+eA5svSFgkN6d2mnLbpdASQJpgYydP4LDCBaJGUJRsThqDMIKDkTJ7zEMr8c7fDwP0WZ5i5qVTNCRhqDZma5VUCiKmjWvvRANc73tgkaNcbh4HZSnop+Fqg2yTH3H4cm40Y8o+0b7IcbYF1elMGjiM3rm3XK7KjQ1zV6iDdYIFIJaf201D7m78iFYasyn89rp1cJvNVE2cdszNCJ7EIb2f5PET2KPDDalsj0M26scrxfInyg/HbkSExt/BpcHlzU4tp6minS3DVnvsU3buJk99QLyeZnDtj8EOmN79OdsTwG8rbOwBeJOXTRS
+x-ms-exchange-antispam-messagedata: KFSpBbVSfC3KdqyI3OVp12KpTjFGffgCgSUUYKPUWeKWU6Zxsl3aryj2FqVCj9FI8dqAhkxueQ2g9XrHEcJJF052gM0UOPEiWNhLhHhQUNiNkxK/TM/IuRWfd4epDYumXheGLsELVLel2jCGehqH95Xx9kfbycVSqJb3/8nF7PkZuD8wA7A5sf5vhXKSnr6u0Yw5GDjhV8//i68AMt5QtA==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85a4e05a-9c1b-4e77-faaa-08d79f79c44f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 20:29:22.7630
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bddfcb3-3d13-4bb7-350e-08d79f8408ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 21:42:52.8578
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pXSNFPfI7xonpBbmh4Ship/pqJK72OrjTmRLnwksVwOwuqNaZdbj8dZ+bg7HZaTpep8CjHI7kkXqJTGUW0MMZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1261
+X-MS-Exchange-CrossTenant-userprincipalname: NFouEtazWnSATOVx7HyMxVjxE8dqduKktHIaEbdrBJw6jov2b2QuqYLLiyFitgs52rakiFd/kYsGL/wnMWWAfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1344
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Hi Lorenzo,
 
+Can you take a look at this patch?
 
-> -----Original Message-----
-> From: Jesper Dangaard Brouer <brouer@redhat.com>
-> Sent: Wednesday, January 22, 2020 2:52 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: brouer@redhat.com; sashal@kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> <vkuznets@redhat.com>; davem@davemloft.net; linux-kernel@vger.kernel.org;
-> Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> Subject: Re: [PATCH V3,net-next, 1/2] hv_netvsc: Add XDP support
->=20
-> On Wed, 22 Jan 2020 09:23:33 -0800
-> Haiyang Zhang <haiyangz@microsoft.com> wrote:
->=20
-> > +u32 netvsc_run_xdp(struct net_device *ndev, struct netvsc_channel *nvc=
-han,
-> > +		   struct xdp_buff *xdp)
-> > +{
-> > +	void *data =3D nvchan->rsc.data[0];
-> > +	u32 len =3D nvchan->rsc.len[0];
-> > +	struct page *page =3D NULL;
-> > +	struct bpf_prog *prog;
-> > +	u32 act =3D XDP_PASS;
-> > +
-> > +	xdp->data_hard_start =3D NULL;
-> > +
-> > +	rcu_read_lock();
-> > +	prog =3D rcu_dereference(nvchan->bpf_prog);
-> > +
-> > +	if (!prog)
-> > +		goto out;
-> > +
-> > +	/* allocate page buffer for data */
-> > +	page =3D alloc_page(GFP_ATOMIC);
->=20
-> The alloc_page() + __free_page() alone[1] cost 231 cycles(tsc) 64.395 ns.
-> Thus, the XDP_DROP case will already be limited to just around 10Gbit/s
-> 14.88 Mpps (67.2ns).
->=20
-> XDP is suppose to be done for performance reasons. This looks like a slow=
-down.
->=20
-> Measurement tool:
-> [1]
-> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgithu=
-b.co
-> m%2Fnetoptimizer%2Fprototype-
-> kernel%2Fblob%2Fmaster%2Fkernel%2Fmm%2Fbench%2Fpage_bench01.c&am
-> p;data=3D02%7C01%7Chaiyangz%40microsoft.com%7C681b5b13e50448d098d408
-> d79f748522%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63715319
-> 5109318994&amp;sdata=3DpncqYIWm1yS5rDf%2BAIbWgskycmuofzl09yA1QmsRb
-> M0%3D&amp;reserved=3D0
+Thanks
 
-On synthetic data path (netvsc), the per channel throughput is much slower =
-than=20
-10Gbps, because of the host side software based vSwitch. Also in most VMs o=
-n=20
-Azure, Accelerated Network (SRIOV) is enabled. So the alloc_page() overhead=
- on=20
-synthetic data path won't impact performance significantly.
+Long
 
->=20
-> > +	if (!page) {
-> > +		act =3D XDP_DROP;
-> > +		goto out;
-> > +	}
-> > +
-> > +	xdp->data_hard_start =3D page_address(page);
-> > +	xdp->data =3D xdp->data_hard_start + NETVSC_XDP_HDRM;
-> > +	xdp_set_data_meta_invalid(xdp);
-> > +	xdp->data_end =3D xdp->data + len;
-> > +	xdp->rxq =3D &nvchan->xdp_rxq;
-> > +	xdp->handle =3D 0;
-> > +
-> > +	memcpy(xdp->data, data, len);
->=20
-> And a memcpy.
+>Subject: [Patch v4 1/2] PCI: hv: Decouple the func definition in hv_dr_sta=
+te from
+>VSP message
+>
+>From: Long Li <longli@microsoft.com>
+>
+>hv_dr_state is used to find present PCI devices on the bus. The structure =
+reuses
+>struct pci_function_description from VSP message to describe a device.
+>
+>To prepare support for pci_function_description v2, decouple this dependen=
+ce in
+>hv_dr_state so it can work with both v1 and v2 VSP messages.
+>
+>There is no functionality change.
+>
+>Signed-off-by: Long Li <longli@microsoft.com>
+>Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>---
+>Changes
+>v2: Changed some spaces to tabs, changed failure code to -ENOMEM
+>v3: Revised comment for function hv_pci_devices_present(), reformatted pat=
+ch
+>title
+>v4: Fixed spelling
+>
+> drivers/pci/controller/pci-hyperv.c | 101 +++++++++++++++++++---------
+> 1 file changed, 70 insertions(+), 31 deletions(-)
+>
+>diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/=
+pci-
+>hyperv.c
+>index f1f300218fab..3b3e1967cf08 100644
+>--- a/drivers/pci/controller/pci-hyperv.c
+>+++ b/drivers/pci/controller/pci-hyperv.c
+>@@ -507,10 +507,24 @@ struct hv_dr_work {
+> 	struct hv_pcibus_device *bus;
+> };
+>
+>+struct hv_pcidev_description {
+>+	u16	v_id;	/* vendor ID */
+>+	u16	d_id;	/* device ID */
+>+	u8	rev;
+>+	u8	prog_intf;
+>+	u8	subclass;
+>+	u8	base_class;
+>+	u32	subsystem_id;
+>+	union	win_slot_encoding win_slot;
+>+	u32	ser;	/* serial number */
+>+	u32	flags;
+>+	u16	virtual_numa_node;
+>+};
+>+
+> struct hv_dr_state {
+> 	struct list_head list_entry;
+> 	u32 device_count;
+>-	struct pci_function_description func[0];
+>+	struct hv_pcidev_description func[0];
+> };
+>
+> enum hv_pcichild_state {
+>@@ -527,7 +541,7 @@ struct hv_pci_dev {
+> 	refcount_t refs;
+> 	enum hv_pcichild_state state;
+> 	struct pci_slot *pci_slot;
+>-	struct pci_function_description desc;
+>+	struct hv_pcidev_description desc;
+> 	bool reported_missing;
+> 	struct hv_pcibus_device *hbus;
+> 	struct work_struct wrk;
+>@@ -1862,7 +1876,7 @@ static void q_resource_requirements(void *context,
+>struct pci_response *resp,
+>  * Return: Pointer to the new tracking struct
+>  */
+> static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hb=
+us,
+>-		struct pci_function_description *desc)
+>+		struct hv_pcidev_description *desc)
+> {
+> 	struct hv_pci_dev *hpdev;
+> 	struct pci_child_message *res_req;
+>@@ -1973,7 +1987,7 @@ static void pci_devices_present_work(struct
+>work_struct *work)  {
+> 	u32 child_no;
+> 	bool found;
+>-	struct pci_function_description *new_desc;
+>+	struct hv_pcidev_description *new_desc;
+> 	struct hv_pci_dev *hpdev;
+> 	struct hv_pcibus_device *hbus;
+> 	struct list_head removed;
+>@@ -2090,43 +2104,26 @@ static void pci_devices_present_work(struct
+>work_struct *work)
+> 	put_hvpcibus(hbus);
+> 	kfree(dr);
+> }
+>-
+> /**
+>- * hv_pci_devices_present() - Handles list of new children
+>+ * hv_pci_start_relations_work() - Queue work to start device discovery
+>  * @hbus:	Root PCI bus, as understood by this driver
+>- * @relations:	Packet from host listing children
+>+ * @dr:		The list of children returned from host
+>  *
+>- * This function is invoked whenever a new list of devices for
+>- * this bus appears.
+>+ * Return:  0 on success, -errno on failure
+>  */
+>-static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>-				   struct pci_bus_relations *relations)
+>+static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
+>+				       struct hv_dr_state *dr)
+> {
+>-	struct hv_dr_state *dr;
+> 	struct hv_dr_work *dr_wrk;
+>-	unsigned long flags;
+> 	bool pending_dr;
+>+	unsigned long flags;
+>
+> 	dr_wrk =3D kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
+> 	if (!dr_wrk)
+>-		return;
+>-
+>-	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
+>-		     (sizeof(struct pci_function_description) *
+>-		      (relations->device_count)), GFP_NOWAIT);
+>-	if (!dr)  {
+>-		kfree(dr_wrk);
+>-		return;
+>-	}
+>+		return -ENOMEM;
+>
+> 	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
+> 	dr_wrk->bus =3D hbus;
+>-	dr->device_count =3D relations->device_count;
+>-	if (dr->device_count !=3D 0) {
+>-		memcpy(dr->func, relations->func,
+>-		       sizeof(struct pci_function_description) *
+>-		       dr->device_count);
+>-	}
+>
+> 	spin_lock_irqsave(&hbus->device_list_lock, flags);
+> 	/*
+>@@ -2144,6 +2141,47 @@ static void hv_pci_devices_present(struct
+>hv_pcibus_device *hbus,
+> 		get_hvpcibus(hbus);
+> 		queue_work(hbus->wq, &dr_wrk->wrk);
+> 	}
+>+
+>+	return 0;
+>+}
+>+
+>+/**
+>+ * hv_pci_devices_present() - Handle list of new children
+>+ * @hbus:	Root PCI bus, as understood by this driver
+>+ * @relations:	Packet from host listing children
+>+ *
+>+ * Process a new list of devices on the bus. The list of devices is
+>+ * discovered by VSP and sent to us via VSP message PCI_BUS_RELATIONS,
+>+ * whenever a new list of devices for this bus appears.
+>+ */
+>+static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>+				   struct pci_bus_relations *relations) {
+>+	struct hv_dr_state *dr;
+>+	int i;
+>+
+>+	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
+>+		     (sizeof(struct hv_pcidev_description) *
+>+		      (relations->device_count)), GFP_NOWAIT);
+>+
+>+	if (!dr)
+>+		return;
+>+
+>+	dr->device_count =3D relations->device_count;
+>+	for (i =3D 0; i < dr->device_count; i++) {
+>+		dr->func[i].v_id =3D relations->func[i].v_id;
+>+		dr->func[i].d_id =3D relations->func[i].d_id;
+>+		dr->func[i].rev =3D relations->func[i].rev;
+>+		dr->func[i].prog_intf =3D relations->func[i].prog_intf;
+>+		dr->func[i].subclass =3D relations->func[i].subclass;
+>+		dr->func[i].base_class =3D relations->func[i].base_class;
+>+		dr->func[i].subsystem_id =3D relations->func[i].subsystem_id;
+>+		dr->func[i].win_slot =3D relations->func[i].win_slot;
+>+		dr->func[i].ser =3D relations->func[i].ser;
+>+	}
+>+
+>+	if (hv_pci_start_relations_work(hbus, dr))
+>+		kfree(dr);
+> }
+>
+> /**
+>@@ -3018,7 +3056,7 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+> 		struct pci_packet teardown_packet;
+> 		u8 buffer[sizeof(struct pci_message)];
+> 	} pkt;
+>-	struct pci_bus_relations relations;
+>+	struct hv_dr_state *dr;
+> 	struct hv_pci_compl comp_pkt;
+> 	int ret;
+>
+>@@ -3030,8 +3068,9 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
+> 		return;
+>
+> 	/* Delete any children which might still exist. */
+>-	memset(&relations, 0, sizeof(relations));
+>-	hv_pci_devices_present(hbus, &relations);
+>+	dr =3D kzalloc(sizeof(*dr), GFP_KERNEL);
+>+	if (dr && hv_pci_start_relations_work(hbus, dr))
+>+		kfree(dr);
+>
+> 	ret =3D hv_send_resources_released(hdev);
+> 	if (ret)
+>--
+>2.17.1
 
-
-As in the commit log:=20
-The Azure/Hyper-V synthetic NIC receive buffer doesn't provide headroom
-for XDP. We thought about re-use the RNDIS header space, but it's too
-small. So we decided to copy the packets to a page buffer for XDP. And,
-most of our VMs on Azure have Accelerated  Network (SRIOV) enabled, so
-most of the packets run on VF NIC. The synthetic NIC is considered as a
-fallback data-path. So the data copy on netvsc won't impact performance
-significantly.
-
->=20
-> > +
-> > +	act =3D bpf_prog_run_xdp(prog, xdp);
-> > +
-> > +	switch (act) {
-> > +	case XDP_PASS:
-> > +	case XDP_TX:
-> > +	case XDP_DROP:
-> > +		break;
-> > +
-> > +	case XDP_ABORTED:
-> > +		trace_xdp_exception(ndev, prog, act);
-> > +		break;
-> > +
-> > +	default:
-> > +		bpf_warn_invalid_xdp_action(act);
-> > +	}
-> > +
-> > +out:
-> > +	rcu_read_unlock();
-> > +
-> > +	if (page && act !=3D XDP_PASS && act !=3D XDP_TX) {
-> > +		__free_page(page);
->=20
-> Given this runs under NAPI you could optimize this easily for XDP_DROP (a=
-nd
-> XDP_ABORTED) by recycling the page in a driver local cache. (The page_poo=
-l
-> also have a driver local cache build in, but it might be overkill to use =
-page_pool
-> in this simple case).
->=20
-> You could do this in a followup patch.
-
-I will do the optimization in a follow-up patch.
-
-Thanks,
-- Haiyang
