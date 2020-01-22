@@ -2,128 +2,230 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 844D5145AC6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jan 2020 18:25:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 216D2145AF1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jan 2020 18:39:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAVRZj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jan 2020 12:25:39 -0500
-Received: from mail-dm6nam10on2102.outbound.protection.outlook.com ([40.107.93.102]:12737
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        id S1725883AbgAVRjE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jan 2020 12:39:04 -0500
+Received: from mail-bn7nam10on2130.outbound.protection.outlook.com ([40.107.92.130]:28097
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725883AbgAVRZj (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:25:39 -0500
+        id S1725802AbgAVRjE (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:39:04 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uu1x1Sr7UzTrZMTQtmG3ZuZIIdYG71BAdN96Hx9riTXlbkLOVOmPFYsPRA9KEcCVeeUaCTKQD0RZWsLUtBqs8GeRpNz/NZ7ONxfKnwBBsGa3Wu7Amo3E/Edd53HaRqNCgnfuY4SmDvcoHQ1/PSEzHyBxSw3tEhVomaUMdIbQSqHkf5CieRi6OeD8/3FtlxwM9aMISjP7WTAwQy8pL5SxVmSVaKUAuQGJpKXp/zZQ7RoSK4q2rgZmDzvzo+jaObOzW1b3Ap2JOWEj16jAmXybshgqi5E4Fz9SJbBfh2y5d7xQVxHGWxzkWNVJpj8/km7WyHEkeLFTe2Vw0sEubp6jjA==
+ b=lAlRvPtJrxJHbTn0JpDXbKWoNi/xND8ZyMnokwUcn+4eio1wyYDtwiqNR6Wo6Sq2wmok6Dthkcx3tFQaVc0KTK1XziPof4vo+5/btG8MaQydLDdDz5PzWsR0DveTPHVigkygPYLJS7AEUWJS5HZo7Utx808iwgf08ES+a8a3FE0xYYSZNX2/t5CIV2Su7Ox38zks/hIm5QhTHVk2UCIGPSiC+PXdfA5jjSExs+i6jXUiN9leqnAop+VTyUwBlkcTrPkTpkIi0xN3JYLQYgZWqMJD1J3kOeNOr75jM4OSnlB+Mf45W4ncWyyXH+jRjf/q8LNqkdRIrMjZzGSV35c2JA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PN6Y/7K5HRgHikv9alqsgK3mwWIvn4eIxNtX8w7Iflw=;
- b=GJUh76wcT98JKtvTh644Epa7GstjVqVBpyH+nqnmIZbIkpup7n8m10YfF77heGceUPJ1Oa5uI25M4Pio4We/f/719Q2wBahMGf9H7fwHrHBCDwSIiDfcZfQGbu/xcyxeEhMUucX5VjM8SlSZFMYyBU9L88muB+UCfMaxBVzgKYAx62uadp/fdFh48JOFsPySfDmqyhgBcuYgFpbip1AH1ZI1vK/gYxAMXCJM06ohpeZp2qiT/XhpbdchMnpqTbcFKkWf73V/nkiYKVkeuo0tQddl1CCphWYqTboF+3Z22dXLwptFUsyXVX8dfw+eLnC9RIS4HWN6HmvW1mA0g16ohA==
+ bh=dvau2sdYtRvun9lo6J8TiuyF81YwJKiFnPM/v8rZqpE=;
+ b=GaTqrbY69RPeYPAI+nU5gIPEMd47uBlZZgS47Gzg6Xxgu5wDBGqswlveFk7Ap3PSI3LLDh8roKM64wJeGl99V89AHOPatAgaPq4LpV2BEIenrATVFNwaeubCcTpEQ47q4IISfNcBZ4CMv9y6ngtRSnRv2w740OMyGCm1CiPOx1HgPKXvUWPf8okss8Ueiw98jgJ+jt7IcV5JvgYlzJ9VGL8BsFRY/AYTw9TuSEsWtdehzlhrLLKJUUJfgR1TztG1zYHlMIbZ7Ut9OhcnBxpTMd389+Umvx4H0Xhn3A9AFG59yZerlZxAQS4zukb+M36MfJy/60/LrBJ77JF1j1y0Qg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PN6Y/7K5HRgHikv9alqsgK3mwWIvn4eIxNtX8w7Iflw=;
- b=KgLFvqHU8oyYMRGK4L79lztxMmxtN9YKE2MQIj6hSHBGmJNHviG4+KbCuQefMy+OA/D86IHzKm7HoIqVRBS/yA9nGbqtyRkVDuzAY7JU6oyNcWEHLvYtijwu1H24ZGRyN7OQhXmrmRJRliZJEM6tozg8owwpLQ/PHklDYpPjjAQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
- DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.3; Wed, 22 Jan 2020 17:25:00 +0000
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::b51c:186a:8630:127e]) by DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::b51c:186a:8630:127e%9]) with mapi id 15.20.2686.008; Wed, 22 Jan 2020
- 17:25:00 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V3,net-next, 2/2] hv_netvsc: Update document for XDP support
-Date:   Wed, 22 Jan 2020 09:23:34 -0800
-Message-Id: <1579713814-36061-3-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
-References: <1579713814-36061-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR12CA0039.namprd12.prod.outlook.com
- (2603:10b6:301:2::25) To DM5PR2101MB0901.namprd21.prod.outlook.com
- (2603:10b6:4:a7::30)
-MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR12CA0039.namprd12.prod.outlook.com (2603:10b6:301:2::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Wed, 22 Jan 2020 17:24:59 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3f5e9f13-43f7-455b-0832-08d79f6001fc
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB0918:|DM5PR2101MB0918:|DM5PR2101MB0918:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB09180E9FAF977AE63C97289DAC0C0@DM5PR2101MB0918.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 029097202E
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(199004)(189003)(16526019)(186003)(316002)(6486002)(52116002)(4326008)(26005)(81156014)(6506007)(81166006)(8676002)(6512007)(8936002)(36756003)(2906002)(66946007)(66476007)(478600001)(5660300002)(66556008)(2616005)(956004)(10290500003)(6666004);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0918;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ bh=dvau2sdYtRvun9lo6J8TiuyF81YwJKiFnPM/v8rZqpE=;
+ b=YN5t9SG/hDMLrlixLHVVyEpm3eSH8XzyvJEE/cQoVIQdOZcugqD3cc9HN5rOKyCWTPZ2cbFI0ZY64iR5292nty3LI2rALCoVVxzf4O09ZKEBv36cf8WC+AlInWuv6WzJz1UEmavMyWmyynwwiZ56/InqC5K4qNJusG7x4Gbd97M=
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com (52.132.128.16) by
+ DM5PR2101MB0965.namprd21.prod.outlook.com (52.132.133.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.3; Wed, 22 Jan 2020 17:39:00 +0000
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com
+ ([fe80::6495:1ae8:e21d:3b43]) by DM5PR2101MB1047.namprd21.prod.outlook.com
+ ([fe80::6495:1ae8:e21d:3b43%5]) with mapi id 15.20.2686.008; Wed, 22 Jan 2020
+ 17:39:00 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 3/4] hv_utils: Support host-initiated hibernation
+ request
+Thread-Topic: [PATCH v2 3/4] hv_utils: Support host-initiated hibernation
+ request
+Thread-Index: AdXJ2xmWH7nlZvI9QtW52nKT4iLjSAHbmnJg
+Date:   Wed, 22 Jan 2020 17:39:00 +0000
+Message-ID: <DM5PR2101MB10477532BDC475656FA3817AD70C0@DM5PR2101MB1047.namprd21.prod.outlook.com>
+References: <HK0P153MB0148FDF9A3AF2352544E6DADBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <HK0P153MB0148FDF9A3AF2352544E6DADBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T06:31:42.4306444Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=90e4698e-3fc7-43d3-857c-c415f1813480;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6a2f44e4-82c5-495f-ed93-08d79f61f776
+x-ms-traffictypediagnostic: DM5PR2101MB0965:|DM5PR2101MB0965:|DM5PR2101MB0965:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR2101MB096527A85E11CCD4F9726106D70C0@DM5PR2101MB0965.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 029097202E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(136003)(396003)(39860400002)(376002)(199004)(189003)(2906002)(110136005)(55016002)(9686003)(478600001)(5660300002)(52536014)(10290500003)(316002)(7696005)(8990500004)(66946007)(66476007)(76116006)(86362001)(66446008)(64756008)(66556008)(81156014)(71200400001)(33656002)(8676002)(8936002)(6506007)(81166006)(26005)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0965;H:DM5PR2101MB1047.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MaDEAj8Hb9VDcLaGP+qUSMn8fc1b5u/p6r8rxWQLkPVif1dc2l14ECRMMmlr+ub14qdnmCJni8InDsoFIywmxfwV5uUpwRkqASc1D66nXnpzKxFWtYQyq0mTl8RE1iieV+yVyLd+11AIGqJoxfFss1qzyJ1ulzZ2ykcV1qSRcsbQp6R/V6enymRttKrx+J78opjlraxWeiabObFaghwFbLl/CYYaJh5DuRSpwj0bbGbKnrRKur07WPPMaXGfu64ZAkCXYlBmFUAfzbKXjuvBZ3BGsZ7en8jnXs2mc7cWYt8UBTkNz6I968RvkbDsAPppcVM0qPqvSwmdCUkZOROf8A/WG6DXHf6bzg7eiesGzopZoiycx+xBjBdsRXq52R9aXqgh8bg0QpMZq+7MrBATXo4SbyZM//yQmO1CHskXgI+M5Bg2s2s9WMRmqtqhE16X
-X-MS-Exchange-AntiSpam-MessageData: KKPOeoHEN72nuH6mP7AaSusIyf7Q/W6grNgsJX86hZMK2cc6uYsTKfUCuinqGhxXdbzxaFW3jmi7HGEEH2bpvqv2ySIszGDh7NejjgQmBQ6/D4s5vaczcxhA0XAZBs62ndHt4aDhz42X4wpvNZWTFw==
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: n74/xyRAMbif3FJJVxicgOuJ9X2stSCA0u3wxB+rrDAmC0UIAJb664JeS7uO4ayjcNRb3CFFIR379oKY2e425IdlBwl1m7EybP+Lk4wHAjKuXCkenmaW9K8KicNgjOvUQcJ4/wiVyXb0Am1cuzTsyzEzm5n36DBeEUUZaTQnqC2MNF9me34jUNOOTLK34X//JxFiVxudDAn51JOPAz3AoY8z9GVsYHRRCBONEvZM9SaoYZKDM5iHELmCKHr3MIE1bD5QFruI3aJwUqlfdmfLvV+oPIO/eJ/Wwb2CoPlz1PfKTvhrAzJOUUYKESk8xxcMlMxUesTpSCZsTjbujop2enp+nLGgwngUKFnP699414zHIpp7Jl/5uxw12O6nP+e9Rod3votC1xTAK0WEtaO8R7fP6MzHW68mge04WhHHUEjViR+KaNK0EPjh2uHBR6Er
+x-ms-exchange-antispam-messagedata: 2jnn7VTRlxs1cYFFoHJgSxobCEVWkY4BChrQxihKuwuzmGyfI4gBc1kCiuYnyO4ooI2vKF5vRKPModM88wFA8B6ne/UfeqGMOD7XaeTygb3qz8RJBvnendQlu3lIRN6KNhx9R+2VRHylSAr9C6gEzg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f5e9f13-43f7-455b-0832-08d79f6001fc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2020 17:25:00.2091
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a2f44e4-82c5-495f-ed93-08d79f61f776
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 17:39:00.6836
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iNMPl6lCU28DVUlP5j08ekQ/zbWXLC7Zdl/6KAIACSXclfxsLaKqglgr6cg13ejP/pmKyHwiGLVk2tlOKGEC2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0918
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HT9EiaBt/+8Q3KaaQ4BUzpQtvXc5znIU9JDgcyKwsKMB4c8d1J7AqBIhU0AN4qAx83w3DYU9U0iKLZJAOT17gBiwwgemC5kcY6/qzCRbEww=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0965
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Added the new section in the document regarding XDP support
-by hv_netvsc driver.
+From: Dexuan Cui <decui@microsoft.com> Sent: Sunday, January 12, 2020 10:32=
+ PM
+>=20
+> Update the Shutdown IC version to 3.2, which is required for the host to
+> send the hibernation request.
+>=20
+> The user is expected to create the below udev rule file, which is applied
+> upon the host-initiated hibernation request:
+>=20
+> root@localhost:~# cat /usr/lib/udev/rules.d/40-vm-hibernation.rules
+> SUBSYSTEM=3D=3D"vmbus", ACTION=3D=3D"change", DRIVER=3D=3D"hv_utils",
+> ENV{EVENT}=3D=3D"hibernate", RUN+=3D"/usr/bin/systemctl hibernate"
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  drivers/hv/hv_util.c | 52 +++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 51 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+> index fe3a316380c2..d5216af62788 100644
+> --- a/drivers/hv/hv_util.c
+> +++ b/drivers/hv/hv_util.c
+> @@ -25,7 +25,9 @@
+>  #define SD_MAJOR	3
+>  #define SD_MINOR	0
+>  #define SD_MINOR_1	1
+> +#define SD_MINOR_2	2
+>  #define SD_VERSION_3_1	(SD_MAJOR << 16 | SD_MINOR_1)
+> +#define SD_VERSION_3_2	(SD_MAJOR << 16 | SD_MINOR_2)
+>  #define SD_VERSION	(SD_MAJOR << 16 | SD_MINOR)
+>=20
+>  #define SD_MAJOR_1	1
+> @@ -52,9 +54,10 @@ static int sd_srv_version;
+>  static int ts_srv_version;
+>  static int hb_srv_version;
+>=20
+> -#define SD_VER_COUNT 3
+> +#define SD_VER_COUNT 4
+>  static const int sd_versions[] =3D {
+>  	SD_VERSION_3_1,
+> +	SD_VERSION_3_2,
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- .../networking/device_drivers/microsoft/netvsc.txt  | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+I think these versions need to listed in descending order, so the new
+SD_VERSION_3_2 should be listed first.  Otherwise a Hyper-V host that
+supports both 3.1 and 3.2 might match on 3.1 first without ever checking
+for a match with 3.2.
 
-diff --git a/Documentation/networking/device_drivers/microsoft/netvsc.txt b/Documentation/networking/device_drivers/microsoft/netvsc.txt
-index 3bfa635..cd63556 100644
---- a/Documentation/networking/device_drivers/microsoft/netvsc.txt
-+++ b/Documentation/networking/device_drivers/microsoft/netvsc.txt
-@@ -82,3 +82,24 @@ Features
-   contain one or more packets. The send buffer is an optimization, the driver
-   will use slower method to handle very large packets or if the send buffer
-   area is exhausted.
-+
-+  XDP support
-+  -----------
-+  XDP (eXpress Data Path) is a feature that runs eBPF bytecode at the early
-+  stage when packets arrive at a NIC card. The goal is to increase performance
-+  for packet processing, reducing the overhead of SKB allocation and other
-+  upper network layers.
-+
-+  hv_netvsc supports XDP in native mode, and transparently sets the XDP
-+  program on the associated VF NIC as well.
-+
-+  Setting / unsetting XDP program on synthetic NIC (netvsc) propagates to
-+  VF NIC automatically. Setting / unsetting XDP program on VF NIC directly
-+  is not recommended, also not propagated to synthetic NIC, and may be
-+  overwritten by setting of synthetic NIC.
-+
-+  XDP program cannot run with LRO (RSC) enabled, so you need to disable LRO
-+  before running XDP:
-+	ethtool -K eth0 lro off
-+
-+  XDP_REDIRECT action is not yet supported.
--- 
-1.8.3.1
+>  	SD_VERSION,
+>  	SD_VERSION_1
+>  };
+> @@ -78,9 +81,45 @@ static const int fw_versions[] =3D {
+>  	UTIL_WS2K8_FW_VERSION
+>  };
+>=20
+> +/*
+> + * Send the "hibernate" udev event in a thread context.
+> + */
+> +struct hibernate_work_context {
+> +	struct work_struct work;
+> +	struct hv_device *dev;
+> +};
+> +
+> +static struct hibernate_work_context hibernate_context;
+> +static bool execute_hibernate;
+> +
+> +static void send_hibernate_uevent(struct work_struct *work)
+> +{
+> +	char *uevent_env[2] =3D { "EVENT=3Dhibernate", NULL };
+> +	struct hibernate_work_context *ctx;
+> +
+> +	ctx =3D container_of(work, struct hibernate_work_context, work);
+> +
+> +	kobject_uevent_env(&ctx->dev->device.kobj, KOBJ_CHANGE, uevent_env);
+> +
+> +	pr_info("Sent hibernation uevent\n");
+> +}
+> +
+> +static int hv_shutdown_init(struct hv_util_service *srv)
+> +{
+> +	struct vmbus_channel *channel =3D srv->channel;
+> +
+> +	INIT_WORK(&hibernate_context.work, send_hibernate_uevent);
+> +	hibernate_context.dev =3D channel->device_obj;
+> +
+> +	execute_hibernate =3D hv_is_hibernation_supported();
+> +
+> +	return 0;
+> +}
+> +
+>  static void shutdown_onchannelcallback(void *context);
+>  static struct hv_util_service util_shutdown =3D {
+>  	.util_cb =3D shutdown_onchannelcallback,
+> +	.util_init =3D hv_shutdown_init,
+>  };
+>=20
+>  static int hv_timesync_init(struct hv_util_service *srv);
+> @@ -187,6 +226,17 @@ static void shutdown_onchannelcallback(void *context=
+)
+>=20
+>  				schedule_work(&restart_work);
+>  				break;
+> +			case 4:
+> +			case 5:
+
+As before, I'm wondering about the interpretation of these numbers.
+
+> +				pr_info("Hibernation request received\n");
+> +
+> +				if (execute_hibernate) {
+> +					icmsghdrp->status =3D HV_S_OK;
+> +					schedule_work(&hibernate_context.work);
+
+Same comment here about the ordering of the schedule_work() call and the
+sending of the response message.  Seems like the code should be consistent
+for all three cases -- shutdown, restart, and hibernate.
+
+> +				} else {
+> +					icmsghdrp->status =3D HV_E_FAIL;
+> +				}
+> +				break;
+>  			default:
+>  				icmsghdrp->status =3D HV_E_FAIL;
+>  				execute_shutdown =3D false;
+> --
+> 2.19.1
 
