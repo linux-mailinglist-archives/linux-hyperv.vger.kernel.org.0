@@ -2,319 +2,274 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A3BE145E3D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jan 2020 22:43:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9C5214630D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jan 2020 09:11:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgAVVnA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jan 2020 16:43:00 -0500
-Received: from mail-eopbgr770103.outbound.protection.outlook.com ([40.107.77.103]:54851
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        id S1725955AbgAWILJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Jan 2020 03:11:09 -0500
+Received: from mail-eopbgr1310090.outbound.protection.outlook.com ([40.107.131.90]:49570
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725975AbgAVVm7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:42:59 -0500
+        id S1725785AbgAWILJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 23 Jan 2020 03:11:09 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AEZAVR6YBi6it29UPxf3DgaoeHTtJCWnIJXYAX/XUf6ILNgsoWtCTBwyo8qaGQx5D1ZThWhHEPowbEVLBwkaFJmo/6R0p7HwhAxt32S17eR0dHOEtDFQXb0mLZivglyAtqzzQk2kCkUnvu8qgF6qVVuNJKuZDaWG3bbYF2ynYZZlc/k79tmcXv3sI3aGHvq8DQ7OrJ7gCz+22OX4SHms4v+YrBOqAWZQa+fZMfqUt+hIdEqS54ewdNiJ4vu2wLaD9NS5yJDGzjESqsZNKVmKZWu7N1DN9bV6z0exTlLJoze5MCSdcVHLb1prKaz0qEeEMh6GDLaaL3ijv/f/zZOElQ==
+ b=CAlCvPNXNEdSkWa5ogY9W0XLPUrw8I3k4C0EOFSSoY7I627d8H4x4R0pSuVE1M0ewpXTgTn+2yzC/DVa1Gw313yjm+FpHSgrZKYUoDADc8chLf8l0H9kp4V9EbIrYX2CDogBKHZiDkbdMc52vSHqr4VU7wyzUvH6yRGztB0V9kKZn6KbMbz7pg2QiMEqFwfIfyACSr7IepH+B/Mwn9oLEsnZava7Q7Djjpo1UMgByVXehpq7/perz5IMWU4GZ/fLIoRHiFBakbNCUTxx9Q+BJ78hHNusjrZuOapE58YXs6b5M6Uz1W49Eau+njHr6t2o/iE1qVcRSKzxVoKjXVFlMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jrYtgktRdHdNOVrZyiOhbUoevCrh0M6VO+W5l9z1uAU=;
- b=GFIBIEX6AewpgVknYmcrSDB98EmhZq0XCDQ9oZ7csIhtg2ekHUaQG0/hOnmg+EV0sJjwe0R2ZBBOvpJd7fdS4AjY5laWPdII2VeMB8X3dq1pM/LMkt0KUx8g+inzwX1t4+OnCfpxiEF0i9xSKm/29KS4P4Wec4hON+zN/XaBNfcz8OSBRZ+V+w4opRk7Ofp7+PE58GilyjxYo2zrRYJLMtDpemETeNYfwJ/P1MkKOvvNScqKEWj5k46Ep4TJcryssQkcVdwhf+e0ISaxpMhz7gcOvGD/z+F1Smwqm8HQGXKZi2LCvZ8/6soAdr6kyw9EZ5vCAjKNMq8ixBL0KCJeog==
+ bh=INN/eSNwJq5C5izLOIlkSH2mG7pFM38FRENTqtfnEGs=;
+ b=L/8tV7+2OSw/CbVfTvL47kP58EyOM/D/x3N7aAMERyI5vzCQwzYqdOnO77abp1+Wx4TWNXFLiOuUxaSfLPcF0C/W6tdfU1/tv9p+tRqx6OLQQmCGhioFaWXcfSYlX3SV4F0XCYYfXbcN0nF4rTxceS/98kxGMkKFO8Hb9l06OY51VxOH7gyKLLlpjtQy7+n9s2xiyz/z2OI53j4UsQVlp5NqcMf0QsNY0mgP9E3dilzc3RsAopVmFkFGOcJoNx+Ys8yOrr5xGG6p4MmAizMPupHpk5sq23qcNHVoXkkbVve51D1oK4gk2Hoczdps2qAwFRcMYp7ztnM9eKQdkMC9+g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jrYtgktRdHdNOVrZyiOhbUoevCrh0M6VO+W5l9z1uAU=;
- b=P1pj66ATwG1u86IynGhF9AWTau4ypDUNUibUEn7xjEMFWKHxuPTxOIqaof2SM6nYpL3u47ufRjSSvCiftyHcSUeuVXJjsvICEs/5CY+ioqXQR9MYoe3lORJ09xiWA4gVttbmoCX9oRk80M543C1S2gbBzgbTHa+mjhh0L4Tf2DA=
-Received: from SN6PR2101MB1023.namprd21.prod.outlook.com (52.132.117.31) by
- SN6PR2101MB1344.namprd21.prod.outlook.com (20.178.200.82) with Microsoft SMTP
+ bh=INN/eSNwJq5C5izLOIlkSH2mG7pFM38FRENTqtfnEGs=;
+ b=NlZXc4O0+CYMF2QJS8J0yV711gSaXR+iXCpClxrRjhtQrGcXU/bpUO7f4ilYSqYI8KhBNuWNJ6owZz9lJwaW5FbuwydDwGhCBihZafuYOhENZvcVGsaI84KSqcfvfpRUkl6hdpS3DtZ/dDhXFEBvBgEjGJbFHN1X13z6ZAuckXI=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0259.APCP153.PROD.OUTLOOK.COM (52.132.236.12) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.9; Wed, 22 Jan 2020 21:42:53 +0000
-Received: from SN6PR2101MB1023.namprd21.prod.outlook.com
- ([fe80::68fb:50be:3f33:2edd]) by SN6PR2101MB1023.namprd21.prod.outlook.com
- ([fe80::68fb:50be:3f33:2edd%4]) with mapi id 15.20.2686.006; Wed, 22 Jan 2020
- 21:42:53 +0000
-From:   Long Li <longli@microsoft.com>
-To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+ 15.20.2686.3; Thu, 23 Jan 2020 08:10:57 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::58ea:c6ae:4ea3:8432%4]) with mapi id 15.20.2686.008; Thu, 23 Jan 2020
+ 08:10:57 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v4 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Thread-Topic: [Patch v4 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Thread-Index: AQHVyk09ZpI6noor9kG6MV8g7Smkvqf3ROSQ
-Date:   Wed, 22 Jan 2020 21:42:52 +0000
-Message-ID: <SN6PR2101MB10234B91D7748441CA18A361CE0C0@SN6PR2101MB1023.namprd21.prod.outlook.com>
-References: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1578946101-74036-1-git-send-email-longli@linuxonhyperv.com>
+Subject: RE: [PATCH v2 1/4] Tools: hv: Reopen the devices if read() or write()
+ returns errors
+Thread-Topic: [PATCH v2 1/4] Tools: hv: Reopen the devices if read() or
+ write() returns errors
+Thread-Index: AdXJ2us37YcsbC5xRo+dztn1Sn9t5wHZtLIwABsCvxA=
+Date:   Thu, 23 Jan 2020 08:10:57 +0000
+Message-ID: <HK0P153MB01483385D79219EBCDE4037DBF0F0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <HK0P153MB01486C8C746F8936450C4CE1BF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+ <DM5PR2101MB1047BBD2C8C7B382D77EF981D70C0@DM5PR2101MB1047.namprd21.prod.outlook.com>
+In-Reply-To: <DM5PR2101MB1047BBD2C8C7B382D77EF981D70C0@DM5PR2101MB1047.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=de622098-dfc4-499e-bbb8-0000d6a42635;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-22T21:41:48Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T06:30:19.3913829Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=445a901f-62e5-4b70-a3d7-9d004f5f39df;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:0:edee:db5c:c6fe:798]
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:21c4:4274:62b5:126b]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3bddfcb3-3d13-4bb7-350e-08d79f8408ed
-x-ms-traffictypediagnostic: SN6PR2101MB1344:|SN6PR2101MB1344:
+x-ms-office365-filtering-correlation-id: 58512725-4c30-4117-ebeb-08d79fdbc6af
+x-ms-traffictypediagnostic: HK0P153MB0259:|HK0P153MB0259:|HK0P153MB0259:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR2101MB13440E0B3EEA9A162049D709CE0C0@SN6PR2101MB1344.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 029097202E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(189003)(199004)(8676002)(52536014)(186003)(2906002)(71200400001)(5660300002)(33656002)(8936002)(86362001)(9686003)(66446008)(7696005)(478600001)(8990500004)(15650500001)(10290500003)(110136005)(316002)(81166006)(81156014)(6506007)(66946007)(55016002)(76116006)(64756008)(66556008)(66476007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1344;H:SN6PR2101MB1023.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK0P153MB02595EC530C24426A44641D9BF0F0@HK0P153MB0259.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(199004)(189003)(86362001)(10290500003)(110136005)(478600001)(186003)(8990500004)(81156014)(33656002)(81166006)(8936002)(8676002)(2906002)(7696005)(6506007)(5660300002)(71200400001)(66446008)(66556008)(55016002)(76116006)(66946007)(52536014)(64756008)(66476007)(316002)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0259;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mX8JDklpBMuVjA1Hm6u3X1uqqdibA5GfOiocxjNcGlAo+ATrw9JjHVzAhVu6PuB9Eyr8MzKjxLm5vHz4P7Iah7Dz51AneAPyfcDSwP36ZnMCGrnIbXwxKQgHuuWfoQoXEE50TvIOgktUXEdu61k2GlJWu05RcHaVwx2tJZa/X/HEOQds5NVjbl/jhykn261yi20mKA7+eA5svSFgkN6d2mnLbpdASQJpgYydP4LDCBaJGUJRsThqDMIKDkTJ7zEMr8c7fDwP0WZ5i5qVTNCRhqDZma5VUCiKmjWvvRANc73tgkaNcbh4HZSnop+Fqg2yTH3H4cm40Y8o+0b7IcbYF1elMGjiM3rm3XK7KjQ1zV6iDdYIFIJaf201D7m78iFYasyn89rp1cJvNVE2cdszNCJ7EIb2f5PET2KPDDalsj0M26scrxfInyg/HbkSExt/BpcHlzU4tp6minS3DVnvsU3buJk99QLyeZnDtj8EOmN79OdsTwG8rbOwBeJOXTRS
-x-ms-exchange-antispam-messagedata: KFSpBbVSfC3KdqyI3OVp12KpTjFGffgCgSUUYKPUWeKWU6Zxsl3aryj2FqVCj9FI8dqAhkxueQ2g9XrHEcJJF052gM0UOPEiWNhLhHhQUNiNkxK/TM/IuRWfd4epDYumXheGLsELVLel2jCGehqH95Xx9kfbycVSqJb3/8nF7PkZuD8wA7A5sf5vhXKSnr6u0Yw5GDjhV8//i68AMt5QtA==
+x-microsoft-antispam-message-info: VJZ84fHigs1jgyBabPJjkZCGiQpO31hirCMpv15256H8GLhSwLrt9rvR2GZ1aPd6c4ENO3KBJPr+xaXQdWEJJVURYpFBZsYyB9bE+etAxSqmy9EJreoe6nirjU1uTUJe5jyhvgGDqpKh9KnnRK3/f8hzQ1hTqAuwRQ7Jah+xkU6Ml5WclvMJFt7rBLP3WxJQD0fP5zKVThfulp9tz5iUtFkxiNARwS/HNIVXsu95m5o8TOR2N21nnpzLIhSb+A7jgsH2IpwOnrrrqkcIouMr/B5xGhYJrEdj5oRp0p8ZwPWEypnUnRlEywyRlBDOH3VUa+veEc/u44mUchZahzW4f6OIH39LYYoSdBR+sbADGJ3YRIfDxhDD3D8HP5/oVo6Fdbu9jMeSu5tLHpKN7ssPS+q5cfm3/t/my82oAShf9MXggZTY2DVghQnCIPPlb+Hx
+x-ms-exchange-antispam-messagedata: ES8sZ7dLmP+yky5hNE0hJYuuUNVy7I9u/tF0XoofSuSrrBJRkwnTS3BP/37XNNrjeGb6nF2cAT6IRyESPl0FKYaAvbhNAFChhsm1laFjjBe3ptZ4Agk4GmrWoRY2yjWAxGb9Uw8YI7DSXd6Vf2Mtwy6EDEV57nfp7Sf3J8HC6QEHVrcQ1MNuZk5k6EgihsyQ7UNVXUe3ZeU3G2GRoQP4Dg==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bddfcb3-3d13-4bb7-350e-08d79f8408ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 21:42:52.8578
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58512725-4c30-4117-ebeb-08d79fdbc6af
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 08:10:57.2198
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NFouEtazWnSATOVx7HyMxVjxE8dqduKktHIaEbdrBJw6jov2b2QuqYLLiyFitgs52rakiFd/kYsGL/wnMWWAfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1344
+X-MS-Exchange-CrossTenant-userprincipalname: /suoJYbqG2YX59nMGPtsOavLyS8u2HGtz5wNEd0gtyHddZo4ilLO3qt6eFj9hZj9KJWImS2RtiyZjY16uMaWSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0259
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Lorenzo,
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Wednesday, January 22, 2020 8:54 AM
+> > ...
+> > @@ -111,12 +113,16 @@ static int hv_copy_data(struct hv_do_fcopy
+> *cpmsg)
+> >  static int hv_copy_finished(void)
+> >  {
+> >  	close(target_fd);
+> > +	target_fd =3D -1;
+> > +	memset(target_fname, 0, sizeof(target_fname));
+>=20
+> I'm not completely clear on why target_fd and target_fname need to
+> be reset.  Could you add a comment with an explanation?  Also,
 
-Can you take a look at this patch?
+After checking the code again, now I think we indeed don't need
+"target_fd =3D -1;", but we need to reset target_fname because the kernel
+hv_utils hibernation patch fakes a CANCEL_FCOPY message upon suspend,
+and later when the VM resumes back the hv_fcopy_daemon may need
+to handle the message by calling hv_copy_cancel(), which tries to remove
+a file specified by target_fname.=20
 
-Thanks
+If some file was copied successfully before suspend, currently=20
+hv_copy_finished() doesn't reset target_fname; so after resume, when
+the daemon handles the faked CANCEL_FCOPY message, hv_copy_cancel()
+removes the file unexpectedly.
 
-Long
+This patch resets target_fname in hv_copy_finished() to avoid the described
+issue.=20
 
->Subject: [Patch v4 1/2] PCI: hv: Decouple the func definition in hv_dr_sta=
-te from
->VSP message
->
->From: Long Li <longli@microsoft.com>
->
->hv_dr_state is used to find present PCI devices on the bus. The structure =
-reuses
->struct pci_function_description from VSP message to describe a device.
->
->To prepare support for pci_function_description v2, decouple this dependen=
-ce in
->hv_dr_state so it can work with both v1 and v2 VSP messages.
->
->There is no functionality change.
->
->Signed-off-by: Long Li <longli@microsoft.com>
->Reviewed-by: Michael Kelley <mikelley@microsoft.com>
->---
->Changes
->v2: Changed some spaces to tabs, changed failure code to -ENOMEM
->v3: Revised comment for function hv_pci_devices_present(), reformatted pat=
-ch
->title
->v4: Fixed spelling
->
-> drivers/pci/controller/pci-hyperv.c | 101 +++++++++++++++++++---------
-> 1 file changed, 70 insertions(+), 31 deletions(-)
->
->diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/=
-pci-
->hyperv.c
->index f1f300218fab..3b3e1967cf08 100644
->--- a/drivers/pci/controller/pci-hyperv.c
->+++ b/drivers/pci/controller/pci-hyperv.c
->@@ -507,10 +507,24 @@ struct hv_dr_work {
-> 	struct hv_pcibus_device *bus;
-> };
->
->+struct hv_pcidev_description {
->+	u16	v_id;	/* vendor ID */
->+	u16	d_id;	/* device ID */
->+	u8	rev;
->+	u8	prog_intf;
->+	u8	subclass;
->+	u8	base_class;
->+	u32	subsystem_id;
->+	union	win_slot_encoding win_slot;
->+	u32	ser;	/* serial number */
->+	u32	flags;
->+	u16	virtual_numa_node;
->+};
->+
-> struct hv_dr_state {
-> 	struct list_head list_entry;
-> 	u32 device_count;
->-	struct pci_function_description func[0];
->+	struct hv_pcidev_description func[0];
-> };
->
-> enum hv_pcichild_state {
->@@ -527,7 +541,7 @@ struct hv_pci_dev {
-> 	refcount_t refs;
-> 	enum hv_pcichild_state state;
-> 	struct pci_slot *pci_slot;
->-	struct pci_function_description desc;
->+	struct hv_pcidev_description desc;
-> 	bool reported_missing;
-> 	struct hv_pcibus_device *hbus;
-> 	struct work_struct wrk;
->@@ -1862,7 +1876,7 @@ static void q_resource_requirements(void *context,
->struct pci_response *resp,
->  * Return: Pointer to the new tracking struct
->  */
-> static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hb=
-us,
->-		struct pci_function_description *desc)
->+		struct hv_pcidev_description *desc)
-> {
-> 	struct hv_pci_dev *hpdev;
-> 	struct pci_child_message *res_req;
->@@ -1973,7 +1987,7 @@ static void pci_devices_present_work(struct
->work_struct *work)  {
-> 	u32 child_no;
-> 	bool found;
->-	struct pci_function_description *new_desc;
->+	struct hv_pcidev_description *new_desc;
-> 	struct hv_pci_dev *hpdev;
-> 	struct hv_pcibus_device *hbus;
-> 	struct list_head removed;
->@@ -2090,43 +2104,26 @@ static void pci_devices_present_work(struct
->work_struct *work)
-> 	put_hvpcibus(hbus);
-> 	kfree(dr);
-> }
->-
-> /**
->- * hv_pci_devices_present() - Handles list of new children
->+ * hv_pci_start_relations_work() - Queue work to start device discovery
->  * @hbus:	Root PCI bus, as understood by this driver
->- * @relations:	Packet from host listing children
->+ * @dr:		The list of children returned from host
->  *
->- * This function is invoked whenever a new list of devices for
->- * this bus appears.
->+ * Return:  0 on success, -errno on failure
->  */
->-static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->-				   struct pci_bus_relations *relations)
->+static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
->+				       struct hv_dr_state *dr)
-> {
->-	struct hv_dr_state *dr;
-> 	struct hv_dr_work *dr_wrk;
->-	unsigned long flags;
-> 	bool pending_dr;
->+	unsigned long flags;
->
-> 	dr_wrk =3D kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
-> 	if (!dr_wrk)
->-		return;
->-
->-	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
->-		     (sizeof(struct pci_function_description) *
->-		      (relations->device_count)), GFP_NOWAIT);
->-	if (!dr)  {
->-		kfree(dr_wrk);
->-		return;
->-	}
->+		return -ENOMEM;
->
-> 	INIT_WORK(&dr_wrk->wrk, pci_devices_present_work);
-> 	dr_wrk->bus =3D hbus;
->-	dr->device_count =3D relations->device_count;
->-	if (dr->device_count !=3D 0) {
->-		memcpy(dr->func, relations->func,
->-		       sizeof(struct pci_function_description) *
->-		       dr->device_count);
->-	}
->
-> 	spin_lock_irqsave(&hbus->device_list_lock, flags);
-> 	/*
->@@ -2144,6 +2141,47 @@ static void hv_pci_devices_present(struct
->hv_pcibus_device *hbus,
-> 		get_hvpcibus(hbus);
-> 		queue_work(hbus->wq, &dr_wrk->wrk);
-> 	}
->+
->+	return 0;
->+}
->+
->+/**
->+ * hv_pci_devices_present() - Handle list of new children
->+ * @hbus:	Root PCI bus, as understood by this driver
->+ * @relations:	Packet from host listing children
->+ *
->+ * Process a new list of devices on the bus. The list of devices is
->+ * discovered by VSP and sent to us via VSP message PCI_BUS_RELATIONS,
->+ * whenever a new list of devices for this bus appears.
->+ */
->+static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->+				   struct pci_bus_relations *relations) {
->+	struct hv_dr_state *dr;
->+	int i;
->+
->+	dr =3D kzalloc(offsetof(struct hv_dr_state, func) +
->+		     (sizeof(struct hv_pcidev_description) *
->+		      (relations->device_count)), GFP_NOWAIT);
->+
->+	if (!dr)
->+		return;
->+
->+	dr->device_count =3D relations->device_count;
->+	for (i =3D 0; i < dr->device_count; i++) {
->+		dr->func[i].v_id =3D relations->func[i].v_id;
->+		dr->func[i].d_id =3D relations->func[i].d_id;
->+		dr->func[i].rev =3D relations->func[i].rev;
->+		dr->func[i].prog_intf =3D relations->func[i].prog_intf;
->+		dr->func[i].subclass =3D relations->func[i].subclass;
->+		dr->func[i].base_class =3D relations->func[i].base_class;
->+		dr->func[i].subsystem_id =3D relations->func[i].subsystem_id;
->+		dr->func[i].win_slot =3D relations->func[i].win_slot;
->+		dr->func[i].ser =3D relations->func[i].ser;
->+	}
->+
->+	if (hv_pci_start_relations_work(hbus, dr))
->+		kfree(dr);
-> }
->
-> /**
->@@ -3018,7 +3056,7 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
-> 		struct pci_packet teardown_packet;
-> 		u8 buffer[sizeof(struct pci_message)];
-> 	} pkt;
->-	struct pci_bus_relations relations;
->+	struct hv_dr_state *dr;
-> 	struct hv_pci_compl comp_pkt;
-> 	int ret;
->
->@@ -3030,8 +3068,9 @@ static void hv_pci_bus_exit(struct hv_device *hdev)
-> 		return;
->
-> 	/* Delete any children which might still exist. */
->-	memset(&relations, 0, sizeof(relations));
->-	hv_pci_devices_present(hbus, &relations);
->+	dr =3D kzalloc(sizeof(*dr), GFP_KERNEL);
->+	if (dr && hv_pci_start_relations_work(hbus, dr))
->+		kfree(dr);
->
-> 	ret =3D hv_send_resources_released(hdev);
-> 	if (ret)
->--
->2.17.1
+In case a file is not fully copied before suspend (which means hv_copy_fini=
+shed()
+is not called), we'd better also reset taret_fname hv_copy_cancel(), since =
+we'd
+better make sure we only try to remove the file once, when we suspend/resum=
+e
+multiple times.
 
+I'll add a comment in the next version of the patch.
+
+> since target_fname is a null terminated string, it seems like
+> target_fname[0] =3D 0 would be sufficient vs. zero'ing all 4096 bytes
+> (PATH_MAX).
+
+I agree. Will use this better method.
+
+> > +reopen_fcopy_fd:
+> > +	hv_copy_cancel();
+> > +	in_handshake =3D 1;
+> >  	fcopy_fd =3D open("/dev/vmbus/hv_fcopy", O_RDWR);
+> >
+> >  	if (fcopy_fd < 0) {
+> > @@ -196,7 +205,8 @@ int main(int argc, char *argv[])
+> >  		len =3D pread(fcopy_fd, &buffer, sizeof(buffer), 0);
+> >  		if (len < 0) {
+> >  			syslog(LOG_ERR, "pread failed: %s", strerror(errno));
+> > -			exit(EXIT_FAILURE);
+> > +			close(fcopy_fd);
+> > +			goto reopen_fcopy_fd;
+>=20
+> In this case and all similar cases in this patch, there may be some risk
+> of getting stuck in a tight loop doing reopens if things are broken
+> in some strange and bizarre way.   Having an absolute limit on the
+> number of reopens is potentially too restrictive as it could limit the
+> number of times a VM could be hibernated and resumed.  Ideally
+> there could a simple rate limit on the reopens -- if it happens too frequ=
+ently,
+> go ahead and exit like the current code does.  Thoughts?
+
+If there is a bug, IMO it's better to get stuck in a tight loop, so the use=
+r
+can notice it more quickly by the "top" command. :-)
+
+With the patch, the daemon can get stuck in the loop only when the daemon
+successfully reopens the dev file and registers itself to the kernel, but f=
+ails
+to handle one of the messages. IMO the chance is pretty small, and if that
+happens, there must be a bug in the hv_utils driver we need to fix, so, aga=
+in,
+IMO it's better to make the bug more noticeable by the tight loop. :-)
+
+If the daemon fails to reopen the dev file or fails to register it to the k=
+ernel,
+the daemon still calls exit().
+
+> >  static int vss_do_freeze(char *dir, unsigned int cmd)
+> >  {
+> > @@ -155,8 +157,11 @@ static int vss_operate(int operation)
+> >  			continue;
+> >  		}
+> >  		error |=3D vss_do_freeze(ent->mnt_dir, cmd);
+> > -		if (error && operation =3D=3D VSS_OP_FREEZE)
+> > -			goto err;
+> > +		if (operation =3D=3D VSS_OP_FREEZE) {
+> > +			if (error)
+> > +				goto err;
+> > +			fs_frozen =3D true;
+> > +		}
+> >  	}
+> >
+> >  	endmntent(mounts);
+>=20
+> Shortly after the above code, there's code specifically to
+> do the root filesystem last.  It has the same error test as above,
+> and it seems like it should also be setting fs_frozen =3D true if
+> it is successful.
+
+Yes, I missed that. Will add code for that.
+=20
+> > @@ -167,6 +172,9 @@ static int vss_operate(int operation)
+> >  			goto err;
+> >  	}
+> >
+> > +	if (operation =3D=3D VSS_OP_THAW && !error)
+> > +		fs_frozen =3D false;
+> > +
+> >  	goto out;
+> >  err:
+> >  	save_errno =3D errno;
+> > @@ -175,6 +183,7 @@ static int vss_operate(int operation)
+> >  		endmntent(mounts);
+> >  	}
+> >  	vss_operate(VSS_OP_THAW);
+> > +	fs_frozen =3D false;
+> >  	/* Call syslog after we thaw all filesystems */
+> >  	if (ent)
+> >  		syslog(LOG_ERR, "FREEZE of %s failed; error:%d %s",
+> > @@ -202,7 +211,7 @@ int main(int argc, char *argv[])
+> >  	int	op;
+> >  	struct hv_vss_msg vss_msg[1];
+> >  	int daemonize =3D 1, long_index =3D 0, opt;
+> > -	int in_handshake =3D 1;
+> > +	int in_handshake;
+> >  	__u32 kernel_modver;
+> >
+> >  	static struct option long_options[] =3D {
+> > @@ -232,6 +241,10 @@ int main(int argc, char *argv[])
+> >  	openlog("Hyper-V VSS", 0, LOG_USER);
+> >  	syslog(LOG_INFO, "VSS starting; pid is:%d", getpid());
+> >
+> > +reopen_vss_fd:
+> > +	if (fs_frozen)
+> > +		vss_operate(VSS_OP_THAW);
+>=20
+> Need to set fs_frozen =3D false after the above statement?
+
+fs_frozen is set to false in vss_operate(), but there is a chance
+vss_operate() may fail due to some reason, and hence fs_frozen may
+remain to be true. I'll add the below code:
+
+@@ -242,8 +242,14 @@ int main(int argc, char *argv[])
+        syslog(LOG_INFO, "VSS starting; pid is:%d", getpid());
+
+ reopen_vss_fd:
+-       if (fs_frozen)
+-               vss_operate(VSS_OP_THAW);
++       if (fs_frozen) {
++               if (vss_operate(VSS_OP_THAW) || fs_frozen) {
++                       syslog(LOG_ERR, "failed to thaw file system: err=3D=
+%d",
++                              errno);
++                       exit(EXIT_FAILURE);
++               }
++       }
++
+        in_handshake =3D 1;
+        vss_fd =3D open("/dev/vmbus/hv_vss", O_RDWR);
+
+Thanks,
+-- Dexuan
