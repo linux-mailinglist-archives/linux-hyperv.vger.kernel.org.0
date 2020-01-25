@@ -2,64 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7644A1492C8
-	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Jan 2020 02:44:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F18BB1492D8
+	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Jan 2020 02:59:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387608AbgAYBor (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 24 Jan 2020 20:44:47 -0500
-Received: from mail-eopbgr1300137.outbound.protection.outlook.com ([40.107.130.137]:1883
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S2387675AbgAYB7J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 24 Jan 2020 20:59:09 -0500
+Received: from mail-eopbgr1310129.outbound.protection.outlook.com ([40.107.131.129]:39616
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387542AbgAYBoq (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 24 Jan 2020 20:44:46 -0500
+        id S2387608AbgAYB7J (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 24 Jan 2020 20:59:09 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ww05MQRLHX+bit+DT123lTTK88OFInVcp1O4msmCsUZIggglNGVUSK0qtY25GGpDBf2HJoIvj7Q2n5wHX6EUm+XZWYr5OB8Teo28Y4qsocI0k7v9T4Cmka3sh8WcENDetpY/uW3n6yOUDbj5oOolSw1+EYWkkPMKv/QD1iJE3uubaAsnl94l7VAOcOmYNEacJ70Uja+TT1JRFLgcdeIkITpm925g/Th3OTZWqc4OyQADENYKE1KlsYPw8ZkCaIwsucP869flCKvO6aVhDhfy4uzOVPlP8Rwc3XUgfMGiwxkB+Bh/al9/7sMgqtomL/YKJq4qlCSntl4fn/PIZKYPIw==
+ b=aRsdIEE8EL5MqyeVPtfPcaU2/lJTasB139n6SZS6YO47i4RnyxtuFWdJvakQexAcpD8thqI/XfSNuMlLmbUqo8nt06V4kjEmxEDwIwyrQb+QZLLQkDYfVJ8jx7ZJz1m0ezgfcXc89xFzSDUqzmL5rlJ7I4FGc1zyCIfQAycFAMjWTC9arsmOCfNvbEKNbOAGy5XsxMB8KXR6aT1wrfJmTitb4olMnAqORBH0oj5mFw6ggdjq1y6xMutf+jZom1oq+BvyH0qJ0a34w18WeijbfkVYEV/bBpj6wEzkqkeAjcOAnOrkHB3mTITswLVf+mk5wp939dg6fY5SP4qyX0ql6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tN3lpDuKXJRxYPBFxbxHaV8NENsqzTZQN3gQOhisIXY=;
- b=SO3wVTDf/0rQrqIjFNLDz4wFwWwO6yNIoYyTrHCKUrWNjanxThqJ5tEjAjcPk0F+W/i5ejjZKzhxuIKNh8xK5uQpuH097tgShePzG15ZuL7Fc0ogmNnhpV2uGxeg6I7UluXB9ykXXuFjHCn9pzqAIbFL6xXfSeKkwrLbwf04G3miHuzN65+nEKUoHcYYHyVDCYaU1Zocms4H7c4+XhrQbRKR90CEs8/xMzgaW9VXyrEkphUAQXeXxmD4jzdj0M3JV9EMZNFcUotTQoD5dTGlEgHKiCwp1qBRhKn4yCbXLvzsFHm3EBhCdHuF3VX/2TkoWkOGKnV13MfhNP0HgmuYPA==
+ bh=RSCy2Uy7Ii9m+DanAQQSHGc3Enl/XkXaR8uF/aocOrM=;
+ b=Cc6rJXAjNrn9AJaetMSslo4479SfN11qFipGQiXMw92k5YUFsx4MLCiDwwYRHRIWbPSFrZkS3v6ve3PsU9CUd+KLW6ZpoYkuRKsP/9Q6cVDy9mnryhqlQdysRkuphCpwT9fGZEz1M+5xT3xVe9FYKD1has2oPujf/OTczqmmo40BJVgu6evbuiqSbm0NvKgfaOd4BoXH8qEnl8w7BvyC/5Qek3OA+4JybtpGy0VU5Jq4c2RLSS8qiQtLEtXE5KOSInoO+roswxOdbDddiWwnLE1UcBeG0qvLYJRxkHnMlsN48lvuBDBIkmwV618wx+y4RoQ6/PT9C++Wa+3J6Ma05w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tN3lpDuKXJRxYPBFxbxHaV8NENsqzTZQN3gQOhisIXY=;
- b=X5GMJimdodAy1JSXdgaFDMnViG8d74GZq2ySomvUKCBfeNejoiz2k/NkHSzuAJw9AGpG4qnGKf1ImRQGQ94D2D7JAYrQ896yKyhQkRzmtY+P/AdWIytFZOb2lai3ZeoD3JQ2XPqqZvuZ4LNECaoFxjeRYHL+IHwIFC+eglAXOls=
+ bh=RSCy2Uy7Ii9m+DanAQQSHGc3Enl/XkXaR8uF/aocOrM=;
+ b=E4YCedBnh/O8lBkDj08/s/tYdAbOw+z9n1vCdtrocYTnFbXGhHuZleNfLL359qMM/2ETZEzrKS16yp53ysieQ+VNzmUjzvykqaFYE1oR3dsmiqzbvzoRcSdgAt/W+C+0+XoujuJdfIh33rOTwaKrRAxyERq3TAS4t6TiUdSSEiY=
 Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0276.APCP153.PROD.OUTLOOK.COM (52.132.236.79) with Microsoft SMTP
+ HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.3; Sat, 25 Jan 2020 01:44:34 +0000
+ 15.20.2707.0; Sat, 25 Jan 2020 01:59:03 +0000
 Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
  ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
  ([fe80::58ea:c6ae:4ea3:8432%4]) with mapi id 15.20.2707.000; Sat, 25 Jan 2020
- 01:44:33 +0000
+ 01:59:03 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+To:     Sasha Levin <sashal@kernel.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH v6][RESEND] x86/hyperv: Suspend/resume the hypercall page
- for hibernation
-Thread-Topic: [PATCH v6][RESEND] x86/hyperv: Suspend/resume the hypercall page
- for hibernation
-Thread-Index: AQHVxOKfKplvVmki0EiTTmOHhKt+Nqf6tz7w
-Date:   Sat, 25 Jan 2020 01:44:31 +0000
-Message-ID: <HK0P153MB0148ED41CE96B637019DF26ABF090@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <1578350559-130275-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1578350559-130275-1-git-send-email-decui@microsoft.com>
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: RE: [PATCH][RESEND] Input: hyperv-keyboard: Add the support of
+ hibernation
+Thread-Topic: [PATCH][RESEND] Input: hyperv-keyboard: Add the support of
+ hibernation
+Thread-Index: AQHVyJv2n9lkqyt02Uq48kiJZ1WZDqfsKE6wgA6IxeA=
+Date:   Sat, 25 Jan 2020 01:59:03 +0000
+Message-ID: <HK0P153MB01489C2ABCFF40822EC8B695BF090@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <1578350444-129991-1-git-send-email-decui@microsoft.com>
+ <20200111162657.GJ1706@sasha-vm>
+ <KU1P153MB01505A56BACA9DA4AF0E7BABBF370@KU1P153MB0150.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <KU1P153MB01505A56BACA9DA4AF0E7BABBF370@KU1P153MB0150.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -67,72 +64,104 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-25T01:44:28.7104793Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-15T19:52:59.5901958Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ce328d69-c3f1-469a-b636-a08c9d3f1dff;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9ed1895c-1d7e-4989-a476-4e14ba31c7e4;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
 x-originating-ip: [2601:600:a280:7f70:20cd:da83:19e9:3198]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e30ba3c5-a78a-4d91-e26f-08d7a1382088
-x-ms-traffictypediagnostic: HK0P153MB0276:|HK0P153MB0276:|HK0P153MB0276:
+x-ms-office365-filtering-correlation-id: bb80d8f2-2873-469a-4124-08d7a13a2769
+x-ms-traffictypediagnostic: HK0P153MB0148:|HK0P153MB0148:
 x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB0276D852B21FDF134CFAF62BBF090@HK0P153MB0276.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-microsoft-antispam-prvs: <HK0P153MB01486026F3A5EBD36440E9C6BF090@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 0293D40691
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(199004)(189003)(7696005)(71200400001)(6506007)(81156014)(5660300002)(81166006)(52536014)(186003)(10290500003)(76116006)(478600001)(9686003)(55016002)(966005)(66476007)(66946007)(66446008)(64756008)(66556008)(8676002)(8936002)(8990500004)(4326008)(4744005)(7416002)(86362001)(110136005)(33656002)(2906002)(316002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0276;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(136003)(376002)(366004)(39860400002)(199004)(189003)(33656002)(4326008)(110136005)(81156014)(186003)(966005)(7696005)(478600001)(10290500003)(81166006)(9686003)(52536014)(316002)(107886003)(76116006)(8676002)(64756008)(66556008)(8990500004)(66946007)(66476007)(8936002)(6506007)(66446008)(86362001)(71200400001)(5660300002)(2906002)(54906003)(55016002)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0148;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zhsUCS6zuEW3yh5RoCErOfR8G8y/WXFHkU/O7YPPBW+ersYzrlzrVA8LCCa0+oh/gbu2IManlJmiK0c7lOjnsCfu7E9C9eBIZ9+PpPW/P3OimVHXvkPMKFhOhxQG9Vr1CkT15Wc2WPMaaQEj2Ns45e3X2MSxHPnfVJRiYFr1rlJfx1OIrHm8DgCpj8FhyhAb3TvvxMSZRjL9XrkLX+tL4BF/VEz/GQVf+tfY3iUWcqJOLOkDdCziCbPNZq2LOZecPnhkNgl1r60LMXD8d5meyJ27DlqHFySVODWFxb10b6/wNFqc+u5xGIXFoQ2TwRhyhX/A6RQtCJskiQB3Su6cdiroBv6bBi2F5DoBoLZ9VP5BfVCdWy+/cTCLbzZA78lpV8ELkIfFsk7iY2rk7xuyOOFJEg0zM2dpNrew6eGkzT8d3zDgLDVC+xSRo9o2H1Epw4BqkHYQwh3sFNWVULjmp8ieXhThC2uPP7dTFWRfR6Zlzh4JIABFRqo7ckGQbwuCOsZ1GEKs/mVGyFsgGq6Q1gRMTCjzqtQ6Mie84CGq++Un1soM8fBCnh+5HfaCQWV2K3/nQlOJuyq7LNNr5/yEBg==
-x-ms-exchange-antispam-messagedata: akpUXhnEnMfQMR6JkqlDBD4VRgCUzXsFzNN4OGOSzK91nCGT5AhKFOeDrUp/sk5xQiKI3Nok4QrfnDEl5+mQPJzESDfZn3VlGpY4bAqB6gCUwemOjF1ftqpDAOcqXFgNvfIB4gyXeMY2A+EV1GRAlwfJZsHzwZNy9UdzkZW4MnxibGnovayJ2Vw9AjwuP5Y3lCPlCHLa7qEovHd9GR/XzQ==
+x-microsoft-antispam-message-info: rtJ6qFmbbWbqKqKfVBytn6wgjGOCfMbsOoTzo7GL6cOkAhYCkd4wvVkE3i7H/dFEkhLm1I0ZUYiFiN+8cutGa6BF8P4O7mFOOap71thTlOlQFS7Y509d3dY6QYFOEN66LazPPd/uxCNeNPiM2C7I1lXTd5U1VzsmrAzVB1h1h4AyVAKAl82SDtNtRGw1QxwBYiBuSlHFMlf0E0gUZTDjApQ6ORW7pyMDT41cDMQMskyMkUzuUWf6BQ7Qu1K6bRozvyCQxpDQEfYx/cBo2JLSA1S0FXf3Nx2yh+tbbewss81JPsJBLvQBQBBxq/Xft5tzhHWXVi451gcWS5IkonlNMO0h20nmHpahNnh3m9tZC0nfEbWZ//ub4oQqSD9BbfIuPmyBy7wIZTs+i3AvIEyFw6qdBJu27Y9xbzMYl6114fsFteXLeJ4euy0cHQUZCsISA1coar7VzzUk/0DkA3Agn6L+JcOj8h663StF9J3gwnTvz0JD7UyZEbMNZjLAwHVBMbiddJT+MdsYSUvihNcA80j93Q0ld1e7CHwocthjhbpR2CaTicIexav0ZTy50KsF
+x-ms-exchange-antispam-messagedata: c2EtfjDMF43vF+T+qXPmOtmAK1BA5yaUGBqX/lAj2BB/uTvRWurVwsAETOzZ4CUh/m4p77nT0PNWcvg9AefpBi1LPBslZ087oKztaGMuA3YcgGL5TmKCoMRRvbt5RQwBKhcL+MKJHTXajg1DhnBF0yd8neMsjhGDMMcTjllYGNCYj5NGcmCGaGV9PVwZ9jRf6C/TPsXmfbLn6b1o7lG49w==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e30ba3c5-a78a-4d91-e26f-08d7a1382088
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jan 2020 01:44:31.6535
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb80d8f2-2873-469a-4124-08d7a13a2769
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jan 2020 01:59:03.3741
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZgTRsSyTTv6NwNVtGtKn/QDSlkGItlRqzxFUagtpAGzpIOgt85MHb689KK4dkieX/G0+kB926pbJjMj4aCu/og==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0276
+X-MS-Exchange-CrossTenant-userprincipalname: FBqSGcC/g/ODW0OSZ5AY4epkNEseU1OqXSPTCEQwS0bWmGH0sabKK+17bvywCPjskzCidW1/QeUTzCXtd1u3EQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0148
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Monday, January 6, 2020 2:43 PM
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Dexuan Cui
+> Sent: Wednesday, January 15, 2020 11:53 AM
+> > ...
+> > On Mon, Jan 06, 2020 at 02:40:44PM -0800, Dexuan Cui wrote:
+> > >Add suspend() and resume() functions so the Hyper-V virtual keyboard
+> > >can participate in VM hibernation.
+> > >
+> > >Note that the keyboard is a "wakeup" device that could abort an in-pro=
+gress
+> > >hibernation if there is keyboard event.  No attempt is made to suppres=
+s
+> > this
+> > >behavior.  If desired, a sysadmin can disable the keyboard as a wakeup
+> > device
+> > >using standard mechanisms such as:
+> > >
+> > >echo disabled >
+> > /sys/bus/vmbus/drivers/hyperv_keyboard/XXX/power/wakeup
+> > >(where XXX is the device's GUID)
+> > >
+> > >Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+> > >Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > >---
+> > >
+> > >This is a RESEND of https://lkml.org/lkml/2019/11/24/115 .
+> >
+> > >Please review.
+> > >
+> > >If it looks good, Sasha Levin, can you please pick it up via the
+> > >hyperv/linux.git tree, as you did last time for this driver?
+> >
+> > This will need an ack from the input driver maintainers, unless they
+> > want to give a blanket ack to this type of patches.
+> >
+> > Thanks,
+> > Sasha
 >=20
-> This is needed for hibernation, e.g. when we resume the old kernel, we ne=
-ed
-> to disable the "current" kernel's hypercall page and then resume the old
-> kernel's.
+> Hi Dmitry,
+> May I have your Acked-by for this patch?
 >=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->=20
-> This is a RESEND of https://lkml.org/lkml/2019/11/20/68
->=20
-> Please review.
->=20
-> If it looks good, can you please pick it up through the tip.git tree?
->=20
->  arch/x86/hyperv/hv_init.c | 48
-> +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
+> Thanks
+> -- Dexuan
 
-Hi, Vitaly and x86 maintainers,
-Can you please take a look at this patch?
+It looks Dmitry may be on leave and there is no ACK from any input driver
+maintainers. :-(
+
+Sasha, for this patch, I would suggest it may as well go directly through t=
+he
+Hyper-V tree because
+1. It's really small and it's a pure Hyper-V change.
+2. This is for a new functionality and it can not break any existing code.
+3. I'm pretty sure it can not cause any merge conflict or build failure.
+
+It's still wonderful to get an Ack or some comment from the input driver
+maintainer(s), so maybe let's wait more time (e.g. a week?) and then I
+suggust we proceed.
 
 Thanks,
 -- Dexuan
