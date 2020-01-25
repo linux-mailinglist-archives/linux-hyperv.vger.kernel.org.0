@@ -2,69 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2B611497F5
-	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Jan 2020 22:41:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CEBB1497FA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 25 Jan 2020 22:42:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgAYVlo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 25 Jan 2020 16:41:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56546 "EHLO mail.kernel.org"
+        id S1727441AbgAYVmO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 25 Jan 2020 16:42:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgAYVln (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 25 Jan 2020 16:41:43 -0500
+        id S1726690AbgAYVmO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 25 Jan 2020 16:42:14 -0500
 Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1024820716;
-        Sat, 25 Jan 2020 21:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D473B20716;
+        Sat, 25 Jan 2020 21:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579988503;
-        bh=EkoP8mp3H+BuaFmFH9KUtUPs07vqCNs8nUzXWhJ/RHA=;
+        s=default; t=1579988534;
+        bh=tm468yLK258z+vQZXxvZSvh8Ke8beUu1DDpbah1vEM0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fB4tHrRsWahRKd/nvTJ1BEt7XKx37Je0atpPqw5IvDLj/8ZIV8yuGAi78TtadRd0o
-         lXwyikMCVkw8iavUfTkRwpVcQ50vnkb5zWxyiKElaiXX3K6XkkMk3KbF9vCChfRIB3
-         mGPuRS9Kqx6R8hnDWcbPcNOFdIvEJfOOwNbd+YTg=
-Date:   Sat, 25 Jan 2020 16:41:41 -0500
+        b=GWnw1/hXdUba87olIdOt0wxcKWcWUcAk9eUpQJJCHimA79OKNS5wd0ESOUhM9GBhw
+         d0PeNYeuU/bU0csR07exNDMbWF2MQ5D4rN7c9amodJS2rCCKP6GD516LkCRok8SG7Z
+         mrpfMG1waiwUhBAxvVlS4qTxRbnHOuK2XnY4GMqs=
+Date:   Sat, 25 Jan 2020 16:42:12 -0500
 From:   Sasha Levin <sashal@kernel.org>
 To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+Cc:     Dexuan Cui <decui@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH V4] x86/Hyper-V: Balloon up according to request page
- number
-Message-ID: <20200125214141.GK1706@sasha-vm>
-References: <20200121034912.2725-1-Tianyu.Lan@microsoft.com>
- <MW2PR2101MB1052B2248B0F9B92F98A2201D70D0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Andrea Parri <Andrea.Parri@microsoft.com>,
+        Wei Hu <weh@microsoft.com>
+Subject: Re: [PATCH v2] Drivers: hv: vmbus: Ignore
+ CHANNELMSG_TL_CONNECT_RESULT(23)
+Message-ID: <20200125214212.GL1706@sasha-vm>
+References: <1579476562-125673-1-git-send-email-decui@microsoft.com>
+ <MW2PR2101MB1052AEC27FF7287F5BA81C91D7320@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052B2248B0F9B92F98A2201D70D0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB1052AEC27FF7287F5BA81C91D7320@MW2PR2101MB1052.namprd21.prod.outlook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:36:26AM +0000, Michael Kelley wrote:
->From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Monday, January 20, 2020 7:49 PM
+On Mon, Jan 20, 2020 at 12:51:51AM +0000, Michael Kelley wrote:
+>From: Dexuan Cui <decui@microsoft.com> Sent: Sunday, January 19, 2020 3:29 PM
 >>
->> Current code has assumption that balloon request memory size aligns
->> with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
->> balloon driver receives non-aligned balloon request, it produces warning
->> and balloon up more memory than requested in order to keep 2MB alignment.
->> Remove the warning and balloon up memory according to actual requested
->> memory size.
+>> When a Linux hv_sock app tries to connect to a Service GUID on which no
+>> host app is listening, a recent host (RS3+) sends a
+>> CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
+>> a warning:
 >>
->> Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory
->> block")
->> Cc: stable@vger.kernel.org
->> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>> unknown msgtype=23
+>> WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
+>>
+>> Actually Linux can safely ignore the message because the Linux app's
+>> connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
+>> and vsock_stream_connect(). We don't bother to make use of the message
+>> because: 1) it's only supported on recent hosts; 2) a non-trivial effort
+>> is required to use the message in Linux, but the benefit is small.
+>>
+>> So, let's not see the warning by silently ignoring the message.
+>>
+>> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>> ---
+>>
+>> In v2 (followed Michael Kelley's suggestions):
+>>     Removed the redundant code in vmbus_onmessage()
+>>     Added the new enries into channel_message_table[].
+>>
+>>  drivers/hv/channel_mgmt.c | 21 +++++++--------------
+>>  drivers/hv/vmbus_drv.c    |  4 ++++
+>>  include/linux/hyperv.h    |  2 ++
+>>  3 files changed, 13 insertions(+), 14 deletions(-)
+>>
 >
 >Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
