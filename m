@@ -2,71 +2,72 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17C3D156DFC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Feb 2020 04:40:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 410B5156DF3
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Feb 2020 04:40:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgBJDkP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 9 Feb 2020 22:40:15 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46087 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbgBJDkK (ORCPT
+        id S1727439AbgBJDkL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 9 Feb 2020 22:40:11 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40632 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbgBJDkJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 9 Feb 2020 22:40:10 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e21so141389qtp.13;
+        Sun, 9 Feb 2020 22:40:09 -0500
+Received: by mail-qk1-f195.google.com with SMTP id b7so5222451qkl.7;
         Sun, 09 Feb 2020 19:40:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vaUfZ3vd9HQfy5hm3J3nHvIU5a5fojBakofme2e8oDo=;
-        b=e6sFDqmhOxEJ5WN3dMK5O2omGe2qI/ckFjkz7TG5EHoTJaMjVjSxsVjaEzq+dIH2dP
-         w2kHoOxt3NP+4W7jhSAU2Ak0WanA0vP3NaxXxfxurjQWqnbzJXGX41uFSFb8MQM99Hwh
-         CZCXJelEPKHMGM5M4KULanWS9Q8gatSTEv9Qjd+dP5QwweblbgozGls58yBwSWVQak5q
-         /8wsKGupBTSMi6vpqS+M00LlJcnkFBvyTTPtRkjmX6mkNppVnYD//X452gDJlNzIx61l
-         KAQlublxOtb0E1pFy/oHyx4ErHCEvPMRKRP5wDM7o3do6nfX8Fm9ohAKuTi0BnqHkJJP
-         1pPQ==
+        bh=X8h5VsF3OjOh8Qi5/AzA/qGpUS3Vn4vEIDA3DU9bJh8=;
+        b=Rl0lTSbEjeXdxQiqlcu9+KT40vHjEHpujjrzHiwl+8vfEjSj1ufw46i7BZsO6p8LZC
+         3JHsfhd3JW+7dRpd2qqbaBImxVv7df8Ol3S+TF/o+obZ2tU9zh3IHc1Cl9XrzBuFUKOt
+         1rS1vGhRV+hgmRxZgxjcyosLObHq3g9rOkQ3UZR/fFPOwJrPZ+76Ard78+OtV2pbm6fD
+         t9q/QmkSfbnTfSGNni7T49wINkb7FY5c2lLKktdNLRgwOe0sfGfXtGlOL2F4F/ig9ukB
+         Iau0C3JFZ6o2RBwxtEQO1b3U4SLSfM9kMi+pCgS6q4CK8I/GB/7n5nj/CtDg7e34XmbW
+         z6QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vaUfZ3vd9HQfy5hm3J3nHvIU5a5fojBakofme2e8oDo=;
-        b=H/X+WClMDR/c+WkB6i1LOgBJQ0MnqbyLpZt6lCZvnbnJLQNWKnCXtHowUtIWiDn/bx
-         DQKsc+colNWAUSp/TbaatZtsLBDfdOE902x9y/HfIJL/Fb2tekfVJfV8bzU4bSYygUMm
-         JG1Olh68X+UMEnAKzbhXDlx5BCRuRAYgtGp+3CwSfrlGv5fOVUJAChi7udlwrKHm2iNM
-         SmZHZIapnQYR9n/8es9KflUuo6I3hSmoGBlZrgBPyJpZJdj1tc5g8aY+J9jlXMnvh6sF
-         jjZePLDNhIhAzv7dQ1oUrY2GSwN8SJQ8II8/Fbpf7Xua+pk44TI6kmvram8+NdxkW9IX
-         dY8w==
-X-Gm-Message-State: APjAAAU6T+9sGkHYU3AMvR4v9hRw4ShE4S73s94Ql9Cay9wYiQksF6mZ
-        9oyMiPJGLHhokNa1vDMb49Y=
-X-Google-Smtp-Source: APXvYqxBiHAep5MJI98kbIEFyI4HgXXqB+cY4d6mZ5eiVFz7gYqYnW9wYxuDxMafvk5DPcRdKwSO7w==
-X-Received: by 2002:ac8:176f:: with SMTP id u44mr8056958qtk.379.1581306008555;
+        bh=X8h5VsF3OjOh8Qi5/AzA/qGpUS3Vn4vEIDA3DU9bJh8=;
+        b=FRQyYEuT40Zg958MYTKvpylJ66oCthTY6esYk30VnWbcKGuqpOT63ErW6YmdwC2Nid
+         P2QKGiBdNqPOXQlcN9/49ZamvZsVPeHuuR1kkWlrhBP8JDgQQe/ohHV+xu7UcZ9Sozwa
+         ZyO9nOuUp0xukvkkENNGzLS2s7aTRP3bQJQxai5ZxDe4FanDnGFO2LxnZI8gLMVORkrJ
+         3ZHBAe7374GeE4tdMwpzL0ykz/PgzDVa8kCxPbLboTGXJlKrAn7zgSjW/UPVZ/EerQ6d
+         +vecQCfOsmFimJfFuMvb4mQiVLY+bac/rmT2izEUKQB6xyIkOsBqaho3aK6jBGamPvhu
+         Pa2Q==
+X-Gm-Message-State: APjAAAUtzeWUlB0qn2nPGh1mZa2TFgxfREKiqgkDfBYiukL/SxXfya4/
+        eczZXqfRzhhcm5VCuitMM1U=
+X-Google-Smtp-Source: APXvYqwwL/ocfBXYIDI8PrkokJlolucpauqGjneJdmdhc9hbuIgUGxE9twubCS8UJYHwpyI/OhNG3Q==
+X-Received: by 2002:a05:620a:1366:: with SMTP id d6mr4293044qkl.230.1581306008057;
         Sun, 09 Feb 2020 19:40:08 -0800 (PST)
 Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id y28sm5216125qkj.44.2020.02.09.19.40.06
+        by smtp.gmail.com with ESMTPSA id y21sm5408681qto.15.2020.02.09.19.40.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Sun, 09 Feb 2020 19:40:06 -0800 (PST)
 Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 5E73B21F69;
+        by mailauth.nyi.internal (Postfix) with ESMTP id 5F99221F6D;
         Sun,  9 Feb 2020 22:40:05 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
+Received: from mailfrontend2 ([10.202.2.163])
   by compute6.internal (MEProxy); Sun, 09 Feb 2020 22:40:05 -0500
-X-ME-Sender: <xms:ktBAXqH5lYWrrSWSU11mtDQjIxdHtQ99Fe23LYKxXJ_-i_wd1R8g6g>
+X-ME-Sender: <xms:lNBAXkXy3AJaiK32Z3YtSANz9_6NEg5nO94AjuIOFsJjwhvRJjrcKA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedtgddvkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
     fuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvufffkffojghfggfgsedt
     keertdertddtnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghngh
-    esghhmrghilhdrtghomheqnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvsh
-    hmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheeh
-    vddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:ktBAXgcGMucie6gcwqvZb3VdWzzL5Hn2V3RH5aCLihLCs6Ymv9L1XQ>
-    <xmx:ktBAXrbk21Exo0fXGeDB7ZE9b8Ah5q9d_vDby8a6IzKthdGhiusQnw>
-    <xmx:ktBAXrrGkRO-FeqDFhjQbrjb3KGD4sD73KS9J2PLOTomIVFEdr-8fg>
-    <xmx:ldBAXhHH4Oc8uI7DnRoUE2VuWKxv_LW0GArZOoy6j4uOe_Wi3nCFiRm2Ces>
+    esghhmrghilhdrtghomheqnecuffhomhgrihhnpehmihgtrhhoshhofhhtrdgtohhmnecu
+    kfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
+    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:lNBAXktU-z9WB2B22sZPjaJ4WVyy_N2I04uaJrETkyZp8GZytVFiMQ>
+    <xmx:lNBAXkOSLPM2BYoW7whOY_46wQq3oeB5Ie-wZ_WGEy_Hwu-vnzvevw>
+    <xmx:lNBAXsoTgxjnHsYkS_sei2Qnx4OyNSklWA15QHuJSnAWD_fEUQN9qA>
+    <xmx:ldBAXhcXS6IzmE1VkT2PRUfyrO257eKWWW7zYVgpD-dJoExz7cK0XShEzpo>
 Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2C8EC3280069;
-        Sun,  9 Feb 2020 22:40:02 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7A59530600DC;
+        Sun,  9 Feb 2020 22:40:04 -0500 (EST)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
@@ -83,9 +84,9 @@ Cc:     Michael Kelley <mikelley@microsoft.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Boqun Feng <boqun.feng@gmail.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>
-Subject: [PATCH v3 1/3] PCI: hv: Move hypercall related definitions into tlfs header
-Date:   Mon, 10 Feb 2020 11:39:51 +0800
-Message-Id: <20200210033953.99692-2-boqun.feng@gmail.com>
+Subject: [PATCH v3 2/3] PCI: hv: Move retarget related structures into tlfs header
+Date:   Mon, 10 Feb 2020 11:39:52 +0800
+Message-Id: <20200210033953.99692-3-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200210033953.99692-1-boqun.feng@gmail.com>
 References: <20200210033953.99692-1-boqun.feng@gmail.com>
@@ -96,59 +97,128 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Currently HVCALL_RETARGET_INTERRUPT and HV_PARTITION_ID_SELF are defined
-in pci-hyperv.c. However, similar to other hypercall related
-definitions, it makes more sense to put them in the tlfs header file.
+Currently, retarget_msi_interrupt and other structures it relys on are
+defined in pci-hyperv.c. However, those structures are actually defined
+in Hypervisor Top-Level Functional Specification [1] and may be
+different in sizes of fields or layout from architecture to
+architecture. Let's move those definitions into x86's tlfs header file
+to support virtual PCI on non-x86 architectures in the future. Note that
+"__packed" attribute is added to these structures during the movement
+for the same reason as we use the attribute for other TLFS structures in
+the header file: make sure the structures meet the specification and
+avoid anything unexpected from the compilers.
 
-Besides, these definitions are arch-dependent, so for the support of
-virtual PCI on non-x86 archs in the future, move them into arch-specific
-tlfs header file.
+Additionally, rename struct retarget_msi_interrupt to
+hv_retarget_msi_interrupt for the consistent naming convention, also
+mirroring the name in TLFS.
+
+[1]: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
 
 Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
 ---
- arch/x86/include/asm/hyperv-tlfs.h  | 3 +++
- drivers/pci/controller/pci-hyperv.c | 6 ------
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/hyperv-tlfs.h  | 31 ++++++++++++++++++++++++++
+ drivers/pci/controller/pci-hyperv.c | 34 ++---------------------------
+ 2 files changed, 33 insertions(+), 32 deletions(-)
 
 diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index 92abc1e42bfc..dffed0e10a68 100644
+index dffed0e10a68..a0b6a88d2f05 100644
 --- a/arch/x86/include/asm/hyperv-tlfs.h
 +++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -376,6 +376,7 @@ struct hv_tsc_emulation_status {
- #define HVCALL_SEND_IPI_EX			0x0015
- #define HVCALL_POST_MESSAGE			0x005c
- #define HVCALL_SIGNAL_EVENT			0x005d
-+#define HVCALL_RETARGET_INTERRUPT		0x007e
- #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
- #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
- 
-@@ -405,6 +406,8 @@ enum HV_GENERIC_SET_FORMAT {
- 	HV_GENERIC_SET_ALL,
+@@ -912,4 +912,35 @@ struct hv_tlb_flush_ex {
+ struct hv_partition_assist_pg {
+ 	u32 tlb_lock_count;
  };
- 
-+#define HV_PARTITION_ID_SELF                    ((u64)-1)
 +
- #define HV_HYPERCALL_RESULT_MASK	GENMASK_ULL(15, 0)
- #define HV_HYPERCALL_FAST_BIT		BIT(16)
- #define HV_HYPERCALL_VARHEAD_OFFSET	17
++struct hv_interrupt_entry {
++	u32 source;			/* 1 for MSI(-X) */
++	u32 reserved1;
++	u32 address;
++	u32 data;
++} __packed;
++
++/*
++ * flags for hv_device_interrupt_target.flags
++ */
++#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
++#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
++
++struct hv_device_interrupt_target {
++	u32 vector;
++	u32 flags;
++	union {
++		u64 vp_mask;
++		struct hv_vpset vp_set;
++	};
++} __packed;
++
++/* HvRetargetDeviceInterrupt hypercall */
++struct hv_retarget_device_interrupt {
++	u64 partition_id;		/* use "self" */
++	u64 device_id;
++	struct hv_interrupt_entry int_entry;
++	u64 reserved2;
++	struct hv_device_interrupt_target int_target;
++} __packed __aligned(8);
+ #endif
 diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9977abff92fc..aacfcc90d929 100644
+index aacfcc90d929..0d9b74503577 100644
 --- a/drivers/pci/controller/pci-hyperv.c
 +++ b/drivers/pci/controller/pci-hyperv.c
-@@ -406,12 +406,6 @@ struct pci_eject_response {
+@@ -406,36 +406,6 @@ struct pci_eject_response {
  
  static int pci_ring_size = (4 * PAGE_SIZE);
  
--/*
-- * Definitions or interrupt steering hypercall.
-- */
--#define HV_PARTITION_ID_SELF		((u64)-1)
--#define HVCALL_RETARGET_INTERRUPT	0x7e
+-struct hv_interrupt_entry {
+-	u32	source;			/* 1 for MSI(-X) */
+-	u32	reserved1;
+-	u32	address;
+-	u32	data;
+-};
 -
- struct hv_interrupt_entry {
- 	u32	source;			/* 1 for MSI(-X) */
- 	u32	reserved1;
+-/*
+- * flags for hv_device_interrupt_target.flags
+- */
+-#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
+-#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
+-
+-struct hv_device_interrupt_target {
+-	u32	vector;
+-	u32	flags;
+-	union {
+-		u64		 vp_mask;
+-		struct hv_vpset vp_set;
+-	};
+-};
+-
+-struct retarget_msi_interrupt {
+-	u64	partition_id;		/* use "self" */
+-	u64	device_id;
+-	struct hv_interrupt_entry int_entry;
+-	u64	reserved2;
+-	struct hv_device_interrupt_target int_target;
+-} __packed __aligned(8);
+-
+ /*
+  * Driver specific state.
+  */
+@@ -482,7 +452,7 @@ struct hv_pcibus_device {
+ 	struct workqueue_struct *wq;
+ 
+ 	/* hypercall arg, must not cross page boundary */
+-	struct retarget_msi_interrupt retarget_msi_interrupt_params;
++	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+ 
+ 	/*
+ 	 * Don't put anything here: retarget_msi_interrupt_params must be last
+@@ -1178,7 +1148,7 @@ static void hv_irq_unmask(struct irq_data *data)
+ {
+ 	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+ 	struct irq_cfg *cfg = irqd_cfg(data);
+-	struct retarget_msi_interrupt *params;
++	struct hv_retarget_device_interrupt *params;
+ 	struct hv_pcibus_device *hbus;
+ 	struct cpumask *dest;
+ 	cpumask_var_t tmp;
 -- 
 2.24.1
 
