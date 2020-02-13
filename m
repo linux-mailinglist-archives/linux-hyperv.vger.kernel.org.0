@@ -2,144 +2,147 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C28415B675
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Feb 2020 02:15:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6901115B7E6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Feb 2020 04:44:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgBMBP2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Feb 2020 20:15:28 -0500
-Received: from gateway31.websitewelcome.com ([192.185.144.219]:33793 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729289AbgBMBP2 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Feb 2020 20:15:28 -0500
-X-Greylist: delayed 1474 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 20:15:27 EST
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 3224F9E3D1
-        for <linux-hyperv@vger.kernel.org>; Wed, 12 Feb 2020 18:50:53 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 22iTj7EBbvBMd22iTj5qLZ; Wed, 12 Feb 2020 18:50:53 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oNtS80ALTefLju8sXnhUYyqruAR8Cl5rZOZKlDdi3/o=; b=O6E89Kl1z/UOh3gllATe8Wi3cR
-        x/TDcLBjptHyATw2n2/d70Tr9OQ6VklUFJ3eo1Dch4M/zLSE3I86K4Z0l6QofCllkVSMqjzWASmgb
-        mwO7JjC7vu/UR8xY4HZbrhTQv86mqRvXFBL/mpmKOXR6cWHbyz9qEk3s7M/Jq+VIbh1lQ3JAW2fAa
-        g00iYXlgXl4PSG+tjDrntzMx2Lnkzp95Ydn0Llxu3ctF2XvNAbFqYBatLgJWt9CqJ/ATAcf/xiRII
-        H4X74kdy9YqbtQ6XiZ1gi3NjY7Q2CSLPjW5wSXLL7FvRpazRxUu3ospLuWRT2i6Oyt9RwDmv78VGa
-        4dlntZ9w==;
-Received: from [200.68.141.42] (port=17629 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j22iQ-003lou-MG; Wed, 12 Feb 2020 18:50:51 -0600
-Date:   Wed, 12 Feb 2020 18:50:48 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S1729562AbgBMDnx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Feb 2020 22:43:53 -0500
+Received: from mail-eopbgr1320124.outbound.protection.outlook.com ([40.107.132.124]:17747
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729515AbgBMDnx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 12 Feb 2020 22:43:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a5EHSoxBgmEvkHe0ZMDgSRyIsOFYDq7ttavonhlXl9DV53bnRNQqAWA6u5wP4QX2k4RZfb8VaAhgle/RF9HdXJIUeXMO1RzdS7akdlQy8N5kIJzH5vRwshzFAR6QfieZ9VrDfdZo0RHxMnoIEMCj7TC8W4cynPEWmts+NbS2n5xUxD6g5Tlcg2YZIcyhD+8HPWaXdKfmRUXOgrr6EU+fCFFJHhvXceiLc8H8PqoGiV2kAZ89O1WRR7t7ZkHBP5LJpBQMoH9qbFVcTEGIqRDK0sar9fnLYDGHBWjf0oWev6FaTwiOiuQ4SFUOzyLeZYwNgEwCrujDdYZIk61j8P7m5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E3gYpHuQ0uuFtArwD91pE95y0Kyk/Kj4d4PSaGcdKDw=;
+ b=msooulSJI6F7aQUMhbkcuMzlszJQW29HpK9BdHUnP2GtLEG0j6JWa4H4lWZ+ecl3JONaQ7K/zZwDLKppSJVFCQ/tpQebjo0+R7y1mn3tZs4iDBEldtrXrnAgPXTMe7RJZtLzLYFJgVCdWAjSiPiXUzHMAuCTw8j65L0JgWWZhMyXySXAF+V9FPmsA7a9vs//ulk4ljdoqxtKrV8Rn6hqKsJ9NyviNzyKT+nCDz1risgMZq9eUlau0ZLUM9Cj9FuCrXoDseFwlZbNUsjnBetPaxRL18sgOs65HGAavGe1e4VxmE8MiA2RMoHW24HG+fibtkV5T1Rc2Yushc8mNsHz5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E3gYpHuQ0uuFtArwD91pE95y0Kyk/Kj4d4PSaGcdKDw=;
+ b=ecwo4Nj4XufLoNr4axg32ZFPnmVQvUmgBi+8gJqQG8/ChFh3datX3yx4ua3AgpY7WQRxooZp1Yqbm07MDtKzUztz7JnJmQRk8v6xqBWqzZQR18IqvD2cmJ6hieoDxmjE62zXHgAZ1AILDiZvXjo2XseulP/ZvduBpWti/oob1Mc=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0292.APCP153.PROD.OUTLOOK.COM (52.132.236.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.2; Thu, 13 Feb 2020 03:43:41 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::58ea:c6ae:4ea3:8432%5]) with mapi id 15.20.2750.007; Thu, 13 Feb 2020
+ 03:43:41 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] PCI: hv: Replace zero-length array with flexible-array member
-Message-ID: <20200213005048.GA9662@embeddedor.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: Replace zero-length array with flexible-array
+ member
+Thread-Topic: [PATCH] PCI: hv: Replace zero-length array with flexible-array
+ member
+Thread-Index: AQHV4gsYucMpvat5UUSDAQTTiNi7uKgYdpbQ
+Date:   Thu, 13 Feb 2020 03:43:40 +0000
+Message-ID: <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <20200213005048.GA9662@embeddedor.com>
+In-Reply-To: <20200213005048.GA9662@embeddedor.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-13T03:43:39.3474924Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d08b85ce-1d8f-49a6-889f-41446c59405c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:c129:4d3:3571:d407]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4606557a-eba4-4e46-f2fb-08d7b036eb03
+x-ms-traffictypediagnostic: HK0P153MB0292:|HK0P153MB0292:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB029260484E69915796A17CB7BF1A0@HK0P153MB0292.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 031257FE13
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(199004)(189003)(86362001)(316002)(81166006)(7696005)(8676002)(71200400001)(186003)(54906003)(8936002)(110136005)(81156014)(2906002)(66946007)(478600001)(4326008)(33656002)(6506007)(10290500003)(66476007)(9686003)(76116006)(66556008)(55016002)(66446008)(64756008)(5660300002)(8990500004)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0292;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YSE02fdnMPCXUG62qEdDjJ0uONQgagRNo2hOKPEV/MLAE1JsEqDuADeT89ewcEjlyXpWnEXD0I5Goc7JlHVTt7+54Z5OVuwGCYBroEOxt2/8Rti0V0Zw/PkZ0soxCmrlPRdxHuneVBnvP0gagm0LcX1e1txYLPkfYyKmtZhdYgMvTJ0TIXQw5eIYMJtgWkgr2ADrRL5E6iRSMKcgT2huYfU+BKlTU5taLIFCo3K1SSu/qf4Gg/n19KqqOsWkRVTxxvDvBgdOtI7gRawXKEC6rKd63CGB/CqdwRxo7iDDKEYke4/3attlGr1ZbHqMU3FENBF/oKnELDv2HpMagXeq1IvFnW7W2ldQ0fqUL/s0xjbzda+L0g4+KhSJVuZWo0BQJrA5Kcap8+Y19kbwriLt/Ht+AZpGJ1nTC0/iiF27S7Eh7JWV6A6/rSUvBCNKGPmv
+x-ms-exchange-antispam-messagedata: C6SRptTY+1NYk3NMp4rBVKap3aWX5FSM9mq8M04jH1+rnWlV+Z6tp2+Xpof7hkXhsKdlEi0gb7xMrCGErm8et+RUA22bvaPp7KZMjM4pK6i0dwxSdiy7xKg81cBGmfW4QyP09yBM+OK0QVA7I0qOWakamtVlOanTFSO+G1ZwkCh9cENu9DDsA9lkD1wSWDboEbAJvf9oHD0z6hfjbDxKUw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.42
-X-Source-L: No
-X-Exim-ID: 1j22iQ-003lou-MG
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:17629
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 71
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4606557a-eba4-4e46-f2fb-08d7b036eb03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2020 03:43:40.9674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0RB9BCpfTZOnsZXet7cJAV1ddN6XmbzFnq2MTgtrriizcK6njOEChJa+i6J9kpGHnBQuiasTCzlxfemUWFsIiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0292
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Gustavo A. R. Silva
+> Sent: Wednesday, February 12, 2020 4:51 PM
+>  ...
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2]=
+,
+> introduced in C99:
+>=20
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>=20
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>=20
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>=20
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>=20
+> This issue was found with the help of Coccinelle.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Looks good to me. Thanks, Gustavo!
+=20
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+FWIW, it looks there are a lot of more to fix in the kernel tree: the below
+commands return 1373 for me:
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+grep -nr '\[0\];$' * | grep '\.h:' | grep -v =3D | wc -l
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+Running the commands against the kernel/ directory returns 3.
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/pci/controller/pci-hyperv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9977abff92fc..be957268f9d6 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -260,7 +260,7 @@ struct pci_packet {
- 				int resp_packet_size);
- 	void *compl_ctxt;
- 
--	struct pci_message message[0];
-+	struct pci_message message[];
- };
- 
- /*
-@@ -296,7 +296,7 @@ struct pci_bus_d0_entry {
- struct pci_bus_relations {
- 	struct pci_incoming_message incoming;
- 	u32 device_count;
--	struct pci_function_description func[0];
-+	struct pci_function_description func[];
- } __packed;
- 
- struct pci_q_res_req_response {
-@@ -508,7 +508,7 @@ struct hv_dr_work {
- struct hv_dr_state {
- 	struct list_head list_entry;
- 	u32 device_count;
--	struct pci_function_description func[0];
-+	struct pci_function_description func[];
- };
- 
- enum hv_pcichild_state {
--- 
-2.23.0
-
+Thanks,
+-- Dexuan
