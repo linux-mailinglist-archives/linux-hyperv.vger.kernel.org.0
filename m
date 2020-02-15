@@ -2,52 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04FA015FCBD
-	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Feb 2020 06:24:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6FFC15FEF0
+	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Feb 2020 16:20:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgBOFYB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 15 Feb 2020 00:24:01 -0500
-Received: from mail-eopbgr1300103.outbound.protection.outlook.com ([40.107.130.103]:24928
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1726141AbgBOPUM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 15 Feb 2020 10:20:12 -0500
+Received: from mail-eopbgr680133.outbound.protection.outlook.com ([40.107.68.133]:21316
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725795AbgBOFYA (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 15 Feb 2020 00:24:00 -0500
+        id S1726131AbgBOPUL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 15 Feb 2020 10:20:11 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WvAHt6cY9m/GgDEl5DMqkDI/UtvNEdSb5xar1Yi5RGQMT5iWa4pYahl0awUARFUh24keLTKLaZvYpEXJOqfw3SJsqr0u3oEXB0mTzn1FQBIgj4oD4rnc3NbdJiLo6tJYZJrpP3XEeSP+EoMuRUnfxfLiI8Ty9RsPwi/SxzTjeD927+2N6jx0guVi6wzwdBmCVom6tFkMdUbBwpBPV20FsHPbsw6j1k0qWsNsyzLlMnJIHhx1gQTO0ZH19+3qbCd+5sPW63zWJmzJCuKAMgZKvuPdy0ak62RpeV+0DVSGDlizjx2A/+DU9Z2TvdMcP6w9Ot/PEXgjlSKaiMAc4IbX6A==
+ b=TxmLgdfveWq7OcZ1OkhN37Q+XoT+pb42Sd7rccsSb278e+qRU2UhlDQAbbN65Dq0i4vJuSykpr5dUyP8n+FJ1aj6zCMAtYMpMSvfGcBLdn6AtpQTA7L3h/Y0CsAKbiZoUW+1Exk7VMj33co2MPOp6iFpp6wmg+tz9K8M6XdZWtr1IhjWolihUuYyKna113dLQU2GCnNZNmCo5q31JJWF96EO4H/rlAzoEi9MCTFYPhJ/uMHQn0Z7vvtGaZGqfEz+sAdlz+B4Rc3YzAxH6KT5dJBKMHu9XfflTjK2b4kqRW2um/UkVroePc0c+bawzvRaR3shtgMUn54xlBh1I2Olkg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X+TNbtH8Sw3Pdb3j14YmnUVQSiji3nf1c8Pvcdspoyk=;
- b=B0hr/PYRm7WXgGP4iseUjAap7UdHIdt5TK0sUxV8xyrXTbe45Jhiz8Y4b+3czHWz3h+lpd1g44jwopol0qA2bOF5Z+R2b8to2k0yUc0hlDkeL1loW7jjbDDaq6ypLNqYP9LPnvyG4VNhW04BOAUTZgEOIi39Q5yG4QOroVjcAL5FfwKdB0fOmEW8DxmwVl6PIvYg3GqJCPziLX8Q5WLt0gWqcReWGDBAxHmLj8BYZ7bZxD3uZlqvVQD0IqqZP9G5w8M1QNP7XBepaOobZyQuI76cyi1PTC2DUr+QMp55FmiLR2v3fUNR4P9ae9uTldZoc7U0E/WJCwx4PuTgUNoJvA==
+ bh=XoSfqgB+Smdrkn931Vkg/pFlrj1SwYgqMquO397tQRo=;
+ b=UeyRR1tWM6IrCx1gg8EeCKdisnvbxQFd/GIrH3NmMemBc7vgboTntZGtpTrw/Yjt5Ssiz90XxRm/5TZ5HYqd6ykrly4KjH4QuAprrwO9jt7mB9gzc74Z24MvD3+3mtcdgxcJyL4Dv957L0TyJCjYhCGJ0yXBy8Jtw4ayKjk9aDcsl74nGP2mZ1S4/fRgg4NdXiMCxXgDIa9sOZ0TRsSQuSn2N/RmfWkszNwUz8em9zhSpu0D8078kE66mzfpOirgGGqnF0dJ6A7sGH/6YrCFVBu0LdF2egJvcpoYqqVb0SpXPndGfVi9eCWuPRcqoimER6NPzj//dh5JHAsN3WDLQQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X+TNbtH8Sw3Pdb3j14YmnUVQSiji3nf1c8Pvcdspoyk=;
- b=E3oW9mDNsHnMhuo4cRu4lHVTOehAZiAR14euZX3lguPmhFOsZvWv0tXMmdHxeM2ljMNbStP/C4OFxcO/ZxLM3/ZAi2WVgBf1zvOrAtp4oTNWutQZLXpf1jI7qcm82QSvBMi/FxA/W/GS+PKPR89zXQYQNJ0YmJDuDi+UanHgjpA=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0244.APCP153.PROD.OUTLOOK.COM (10.255.253.75) with Microsoft SMTP
+ bh=XoSfqgB+Smdrkn931Vkg/pFlrj1SwYgqMquO397tQRo=;
+ b=TYY9UZnIsIgdYEHAUwDqYY9t1guKwEYeWGeDsztCCzGMY/nETN9//YCveofsEvruk8h9iy4v8uXUD6w9NDgGtIZzYFqIHfPmoXoNXWehlGjj73ELdcJLH/14z8hFxErNzTjKbK0DkOExDUhZB55aGRSp33af/lC08a5ppf9K+Qc=
+Received: from MN2PR21MB1437.namprd21.prod.outlook.com (20.180.26.10) by
+ MN2PR21MB1296.namprd21.prod.outlook.com (20.179.21.154) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.4; Sat, 15 Feb 2020 05:23:55 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432%5]) with mapi id 15.20.2750.014; Sat, 15 Feb 2020
- 05:23:55 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
+ 15.20.2750.3; Sat, 15 Feb 2020 15:20:08 +0000
+Received: from MN2PR21MB1437.namprd21.prod.outlook.com
+ ([fe80::8d80:65c8:8df6:b6f6]) by MN2PR21MB1437.namprd21.prod.outlook.com
+ ([fe80::8d80:65c8:8df6:b6f6%6]) with mapi id 15.20.2729.010; Sat, 15 Feb 2020
+ 15:20:08 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Is it safe for a NIC driver to use all the 48 bytes of skb->cb?
+Subject: RE: Is it safe for a NIC driver to use all the 48 bytes of skb->cb?
 Thread-Topic: Is it safe for a NIC driver to use all the 48 bytes of skb->cb?
-Thread-Index: AdXjukH6tGicVKR8QjWZ+wsQCSffGw==
-Date:   Sat, 15 Feb 2020 05:23:55 +0000
-Message-ID: <HK0P153MB0148311C48144413792A0FBEBF140@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+Thread-Index: AdXjukH6tGicVKR8QjWZ+wsQCSffGwAV8b7g
+Date:   Sat, 15 Feb 2020 15:20:08 +0000
+Message-ID: <MN2PR21MB1437345219FA1CC3A75B9875CA140@MN2PR21MB1437.namprd21.prod.outlook.com>
+References: <HK0P153MB0148311C48144413792A0FBEBF140@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <HK0P153MB0148311C48144413792A0FBEBF140@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -62,106 +64,101 @@ msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0bdb99fb-ade9-4625-91de-e48aae6b21ec;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:9:9a10:13a:9851:57b7]
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c2a50d69-2c84-4673-5dd9-08d7b1d740bd
-x-ms-traffictypediagnostic: HK0P153MB0244:|HK0P153MB0244:
+x-ms-office365-filtering-correlation-id: afc6c0ee-5b35-4ace-985e-08d7b22a8acc
+x-ms-traffictypediagnostic: MN2PR21MB1296:|MN2PR21MB1296:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB02449C4A5664FA6810D0DAFEBF140@HK0P153MB0244.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <MN2PR21MB1296578F07F8988864CBB15CCA140@MN2PR21MB1296.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 03142412E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(71200400001)(8676002)(7696005)(4326008)(6506007)(86362001)(186003)(33656002)(2906002)(8936002)(81156014)(81166006)(64756008)(66446008)(316002)(66946007)(66556008)(55016002)(76116006)(10290500003)(66476007)(5660300002)(9686003)(478600001)(110136005)(8990500004)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0244;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(366004)(136003)(376002)(199004)(189003)(66946007)(66556008)(64756008)(66476007)(66446008)(76116006)(86362001)(110136005)(316002)(478600001)(9686003)(33656002)(4326008)(2906002)(8990500004)(26005)(186003)(81156014)(10290500003)(81166006)(6506007)(7696005)(53546011)(5660300002)(55016002)(71200400001)(8936002)(52536014)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1296;H:MN2PR21MB1437.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: x37SN1arD31duZQnj7GgD4PT8/7K/L6CE6C0vW/xBByIp9y6P4kgd+V5JNk8xdcLjb4NvmcP7w/3dXEbd+vbvMluX/ISQFuEijlcip23iQmb5Fpf2zGHn9J9UO7WvC7hmOJcLILKEoKo3p4kOpCzKZyOPxKEEHn/t+9tNPRBxJMgHAsd/ZVX4mvm0wsX0YYj+jykKiFdO+mSNSyxUrvJuHIyUtF8gzBP57mWwpM/+8d20DPzQe7czZj3HXvd9LMt8MKhRhepP0JWlmFB5w4TaI3o2eu+qYKLJiAiU6tmtufd3sEwTXrOChWLCKKdoVoVx9NI3xpvRnHITLEE3isiqqZuApcMVf7w9n0dFxo/ADC/gUkDsgrYAY9c4ZojndYqPjkDGUrWElO/LCoBZ21xrMKH3X7CWlIs0ZSVNXpK+hfjpBXOPDicpm3iG5OuoWIq
-x-ms-exchange-antispam-messagedata: NbtndxpGpAXFjUrT0dcL81y/HPrFjJNOsOigRgtvW1gJWa7i3ao6tbha5HcFgu7uvcVV+P3F1gcJ2F5ypIYBnLo9KsiWmRrFsgtz1+AVM7m8iLeY6tBfxtwFY0gUfZ+gulKZ+SeOaV/DKDD8N/lYSPAZkgYLjz8k2iDUt95sWHNkA9KHDEB8zr/9iMvySdgjH690nX+3YyO0nycyK8LF4A==
+x-microsoft-antispam-message-info: LY+xpsDiA265HLZB9iYhDGOTz9L4Ss3VkLVJW6Ml8fDhNBRfby93na2bnPfkgfvNnmm6q+88JgLSgHgXm1oAuqm1C8QRpy60naL9jjZkkaXXbN7NC/KCl0zUN1eYWiiPTZjedn8pDXTJqUuq5A+aADGKKta4z9GSUparg6TKOXprn3Lm4M1t7LkYl8i346SWxJoUm4Puxy2GqdlIPYrcHtEkXl+l+vZSQakXxyeWOPvGhsserlZBCFJpFe4L6ql8+p1ZBhcYrj0rZX6V+Xqft0f02IfLSmFOXkRsapXCFF6GIrLl3l7+N46AdoNpoIgTylMg0qRaGzyR6UP8YBC2um+M0apEOWG1qAMYuPdNr4GMgTOx0N9c1imtqlUNMkvYKa0UBbG8lKgwXrFRDOjnuXQaY1VAeKMMZ8hFrX+yQdzVVp8mWTSGUa6vaW1ZHsen
+x-ms-exchange-antispam-messagedata: KBeovyE8m99YMsZlCeorMjrCKN2KM0uGsOkFYgyVAw5X98TCQdPL0ljcugNbBgsnNAQVAb7FBNExqwZ//E3GqCTeODgRS/45aK+178xuq44h++bsj8zH7ng4fSWNODgpmgf5pxJBaVJQFXXuXOy5tQ==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2a50d69-2c84-4673-5dd9-08d7b1d740bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Feb 2020 05:23:55.4443
+X-MS-Exchange-CrossTenant-Network-Message-Id: afc6c0ee-5b35-4ace-985e-08d7b22a8acc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Feb 2020 15:20:08.1865
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BEshrHY2NbAwqj4OpjbB5ngdtWpR7n147rW2qY7Ui4LOZc3cb2F1gA/7us2kEv2XUI+LtgCfd2PHlBneU6CWAQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0244
+X-MS-Exchange-CrossTenant-userprincipalname: rXxZuOEgbh5MGisrkermZxeYAv5tj/2dtO8gdusMKN0te/0uxFD9SPfa/oSM5h9+0bTarffj4HX7BWyomM6S9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1296
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
-It looks all the layers of drivers among the network stack can use the 48-b=
-yte
-skb->cb array. Is there any rule how they should coordinate with each other=
-?
 
-I noticed the last 16 bytes are used by struct skb_gso_cb:
 
-include/linux/skbuff.h:
-struct skb_gso_cb {
-        union {
-                int     mac_offset;
-                int     data_offset;
-        };
-        int     encap_level;
-        __wsum  csum;
-        __u16   csum_start;
-};
-#define SKB_SGO_CB_OFFSET       32
-#define SKB_GSO_CB(skb) ((struct skb_gso_cb *)((skb)->cb + SKB_SGO_CB_OFFSE=
-T))
+> -----Original Message-----
+> From: Dexuan Cui <decui@microsoft.com>
+> Sent: Saturday, February 15, 2020 12:24 AM
+> To: Haiyang Zhang <haiyangz@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; David S. Miller <davem@davemloft.net>;
+> netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; linux-
+> kernel@vger.kernel.org
+> Cc: linux-hyperv@vger.kernel.org
+> Subject: Is it safe for a NIC driver to use all the 48 bytes of skb->cb?
+>=20
+> Hi,
+> It looks all the layers of drivers among the network stack can use the 48=
+-byte
+> skb->cb array. Is there any rule how they should coordinate with each oth=
+er?
+>=20
+> I noticed the last 16 bytes are used by struct skb_gso_cb:
+>=20
+> include/linux/skbuff.h:
+> struct skb_gso_cb {
+>         union {
+>                 int     mac_offset;
+>                 int     data_offset;
+>         };
+>         int     encap_level;
+>         __wsum  csum;
+>         __u16   csum_start;
+> };
+> #define SKB_SGO_CB_OFFSET       32
+> #define SKB_GSO_CB(skb) ((struct skb_gso_cb *)((skb)->cb +
+> SKB_SGO_CB_OFFSET))
+>=20
+> Does this mean a low level NIC driver (e.g. hv_netvsc) should only use th=
+e first
+> 32 bytes? What if the upper layer network stack starts to take up more sp=
+ace in
+> the future?
 
-Does this mean a low level NIC driver (e.g. hv_netvsc) should only use
-the first 32 bytes? What if the upper layer network stack starts to take up
-more space in the future?=20
+According to the comments in skbuff.h below, it is the responsibility of th=
+e owning
+layer to make a SKB clone, if it wants to keep the data across layers. So, =
+every layer
+can still use all of the 48 bytes.
 
-Now hv_netvsc assumes it can use all of the 48-bytes, though it uses only=20
-20 bytes, but just in case the struct hv_netvsc_packet grows to >32 bytes i=
-n the
-future, should we change the BUILD_BUG_ON() in netvsc_start_xmit() to
- BUILD_BUG_ON(sizeof(struct hv_netvsc_packet) > SKB_SGO_CB_OFFSET);
-? =20
-
-struct hv_netvsc_packet {
-        /* Bookkeeping stuff */
-        u8 cp_partial; /* partial copy into send buffer */
-
-        u8 rmsg_size; /* RNDIS header and PPI size */
-        u8 rmsg_pgcnt; /* page count of RNDIS header and PPI */
-        u8 page_buf_cnt;
-
-        u16 q_idx;
-        u16 total_packets;
-
-        u32 total_bytes;
-        u32 send_buf_index;
-        u32 total_data_buflen;
-};
-
-static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *net)
-{
-...
         /*
-         * Place the rndis header in the skb head room and
-         * the skb->cb will be used for hv_netvsc_packet
-         * structure.
+         * This is the control buffer. It is free to use for every
+         * layer. Please put your private variables there. If you
+         * want to keep them across layers you have to do a skb_clone()
+         * first. This is owned by whoever has the skb queued ATM.
          */
-        ret =3D skb_cow_head(skb, RNDIS_AND_PPI_SIZE);
-        if (ret)
-                goto no_memory;
+        char                    cb[48] __aligned(8);
 
-        /* Use the skb control buffer for building up the packet */
-        BUILD_BUG_ON(sizeof(struct hv_netvsc_packet) >
-                        FIELD_SIZEOF(struct sk_buff, cb));
-        packet =3D (struct hv_netvsc_packet *)skb->cb;
+> Now hv_netvsc assumes it can use all of the 48-bytes, though it uses only
+> 20 bytes, but just in case the struct hv_netvsc_packet grows to >32 bytes=
+ in the
+> future, should we change the BUILD_BUG_ON() in netvsc_start_xmit() to
+> BUILD_BUG_ON(sizeof(struct hv_netvsc_packet) > SKB_SGO_CB_OFFSET); ?
+
+Based on the explanation above, the existing hv_netvsc code is correct.
 
 Thanks,
--- Dexuan
-
+- Haiyang
