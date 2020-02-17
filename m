@@ -2,152 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42D6615FF98
-	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Feb 2020 19:04:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76107161CD9
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Feb 2020 22:39:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgBOSEX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 15 Feb 2020 13:04:23 -0500
-Received: from mail-eopbgr1310112.outbound.protection.outlook.com ([40.107.131.112]:45632
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726299AbgBOSEX (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 15 Feb 2020 13:04:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gODo6Eg2bOczH3ZnCUVnAocLODBLwtdP25rav1sL8ZB0CPoJ3XKPdUO8qfdiqiUcCQccQ/w7rv8LP6sRj8Y/iaFL6JL6ePbWeS6FooryjxexSTaSDgcOMsp4PyCpzM1rC1dfTv7IT/hn1mHScz+j0pLHDPGwWyebvej9ILHFAaljGOzS35jwfK5ae0/uH1qJb9rDbwnMrmFfRvrUcvPjtUudVxvnIK7eDqYQyHymKtSLPBtm9E1+V1Z5YXPpvB61qbjGe0BLO/gZCpJgkiIk4us3kIJOtFChOwrNNTS0lrirHQErAx4Ap/pwQk0+RDLld8w40sO9d3cFGq+bnLw0jQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5IQ09c0TtSv91JazQv6A1MqL2/rQKaRFLkeXrHvLjJY=;
- b=mf/2NMRtvdNvvhERzmaMfsg1yQiUlCoAsw2mc5vDGWMo/ehba91CHtY27phkVHG3G6I+SR5NBVCOL5L6CjZ0ioNyN6vxLmrY/4m3qq2NG5+jDNl+9zpiHlRTkCt6AtobfFCCAWHQ/1NBzStZ8zbLC9belbogyBYj/hH53omehxKOaSeGtgoUlsCIsxSCiWotCjtFYjPMc1/jCLGzD6V/6k3GMpiNyDIp5yuH8VKGOQyY7Was+x/p605Y9r+JRsF12MhYNnjhj/6Rv6MwXy8FATzq0X6BAE+p9xd9CHo6WZNjRMCH24aPaLTQG9DAJylJJ14IDQw4URfTayeT0wEslw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5IQ09c0TtSv91JazQv6A1MqL2/rQKaRFLkeXrHvLjJY=;
- b=BE9oqbOYOzytTzmMOffYV9wLFy9bRFOH/Yi+VSeEhrv7dxJn96oIMVWU9ONrUOTt9CXt+Xl9lpORnZriCj7jZGkk0SMVI66Uss+ZADS+eEOLKO7uIqtdYTANTK08RAaYRg7IbdN+PdPW+4aq0ifFDk8pmYQpmklWfqQvSctxse8=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0242.APCP153.PROD.OUTLOOK.COM (10.255.253.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.4; Sat, 15 Feb 2020 18:04:14 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::58ea:c6ae:4ea3:8432%5]) with mapi id 15.20.2750.014; Sat, 15 Feb 2020
- 18:04:13 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        id S1729676AbgBQVjh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Feb 2020 16:39:37 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35710 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728935AbgBQVjh (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 17 Feb 2020 16:39:37 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w12so21494408wrt.2;
+        Mon, 17 Feb 2020 13:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=pQK+JSaj4X1ouX/nv3XugRaRb5vhJaYjMLbHKqXiJLs=;
+        b=tRxbEzBjpxae4/jPkX1ksr+AcCQ64ru3BPDzjqwTU82KNKYS4zCXaPWBV+ZO5ottcE
+         SWRr3JAXQpC0gyS+wvRGCiIV4U7PA5WMbz2ZSGOVn7SsIblDcq7V3IvlODWdUH8p0ZeP
+         sCvsYdTwQE2yPqtNrPz6d1lxZtBN6p6isE2YiGyv2JTZHAKg31zP2fe1rcF1Al3uFeA6
+         uiKo+SF5Lcs5EuO1azjUgTpoU2DReG7SX6W8+ujPHNv7MEWktBJFkZQKhjLy9uu1OizE
+         Jh0qS3HZKJGRz9Hc84QtlrjF3T0y9mRnpe/R7e9MGNwBJa9fWcRifsPM/jzkNm8IjdmP
+         LUxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=pQK+JSaj4X1ouX/nv3XugRaRb5vhJaYjMLbHKqXiJLs=;
+        b=EuXsJmXSuow80EnJPHYONBimakZupXfMjrmjETsHnKuMNye063HQNRX6b5wtxxlXXa
+         s5QIdUgOLCCkaRL55yqsrJyvET+MAIWC1Hilzin1hwYmx38dynfg+E0AbotrQIsdH5Bu
+         usPi4gshVIMGdOvsWdH5DYrVzuQihcpTu4U/f2oZ+gABwRr0cDvaQMUvi5cFMipYZGK5
+         AJ10owrzCHeUJCwRV01hE1ec+sWgLhD80NUAz9aWbflW5XPeS6JdJ98e1xO9h+Ue6Bf5
+         EfeOnli7lXTL/2XiECxdZemwEQhUd8hfxR5EM3uBnVvQpiZrUE6mQInRuzz9sYSQ4Jzc
+         f8pQ==
+X-Gm-Message-State: APjAAAUpBXFde1CcJPLsdrBV6lqv0wiB1JNElg7XIY3RkiXnuPeLQZ+7
+        2dlvCN1UMxeGLJC5as1Az0GLvai9Wk0=
+X-Google-Smtp-Source: APXvYqxtgfXlPYMtn3A/6f+SlQuvmEQ1uS0kThsmRCNvSY3l7Z1IWf9fXRqMYdc2QonmDvWxMh0+og==
+X-Received: by 2002:a5d:4d06:: with SMTP id z6mr24421643wrt.241.1581975575195;
+        Mon, 17 Feb 2020 13:39:35 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:41c6:31a6:d880:888? (p200300EA8F29600041C631A6D8800888.dip0.t-ipconnect.de. [2003:ea:8f29:6000:41c6:31a6:d880:888])
+        by smtp.googlemail.com with ESMTPSA id t13sm2892378wrw.19.2020.02.17.13.39.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2020 13:39:34 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH net-next 0/3] net: core: add helper tcp_v6_gso_csum_prep
+To:     David Miller <davem@davemloft.net>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Rasesh Mody <rmody@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>,
+        Parvi Kaustubhi <pkaustub@cisco.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Guo-Fu Tseng <cooldavid@cooldavid.org>,
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        Timur Tabi <timur@kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: Is it safe for a NIC driver to use all the 48 bytes of skb->cb?
-Thread-Topic: Is it safe for a NIC driver to use all the 48 bytes of skb->cb?
-Thread-Index: AdXjukH6tGicVKR8QjWZ+wsQCSffGwAV8b7gAAVVXhA=
-Date:   Sat, 15 Feb 2020 18:04:13 +0000
-Message-ID: <HK0P153MB0148861FD9AAB88A98084206BF140@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <HK0P153MB0148311C48144413792A0FBEBF140@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
- <MN2PR21MB1437345219FA1CC3A75B9875CA140@MN2PR21MB1437.namprd21.prod.outlook.com>
-In-Reply-To: <MN2PR21MB1437345219FA1CC3A75B9875CA140@MN2PR21MB1437.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-15T05:23:53.1818868Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0bdb99fb-ade9-4625-91de-e48aae6b21ec;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:6019:e41b:6ca1:9563]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9080d85c-e669-4b44-c2ec-08d7b2417725
-x-ms-traffictypediagnostic: HK0P153MB0242:|HK0P153MB0242:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB02427222D06ACA326601D36BBF140@HK0P153MB0242.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 03142412E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(366004)(376002)(346002)(39860400002)(189003)(199004)(55016002)(8676002)(10290500003)(9686003)(76116006)(6506007)(5660300002)(66946007)(33656002)(52536014)(81156014)(81166006)(86362001)(66476007)(64756008)(66446008)(186003)(478600001)(71200400001)(66556008)(8990500004)(53546011)(110136005)(4326008)(8936002)(7696005)(316002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0242;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vjr26dNI5eg04PzDHRJ1YgCrNBhwF5rwSAu95QY47+NSNkQX+vE3JT5pSixCdh5Vft/ch+xn5G4M/a73GcALe58bsdgvozx+YHmEGqmPzRw4suZpuuq132AYK4IBGyrQ874Lf9xppL/77s1jeMFMMOsJD5BVsonIAF5gmk0b1VruxZs47Nj6LhLaNM/vTqdq5VQfDu4PPXUjxHgt6RSJzPak7CzyUnMDFaFwPwf1lG9Or900ss6R7aRjTBSIlAIUaNEdaY8LUfMixZ9ZPU1mIOxl0kHRpf6dIUD/vFKyVa//dEEeGeFXyniZgCQ3WvnksPXfWSWn3H1fbcwhWQxco4xVPCNPIHc+/IXcB5Y1eYMUyyRezOdoJGDrzxsOAR6e3FCUpb/tk93707Di/Zo3RU9uZ1vxxUn9alae/fCeYL3S8OgAFhlXXc4nX8ZHFyaQ
-x-ms-exchange-antispam-messagedata: yaJCMWrNI79Pjx2nFrHAkvXDHapOWz6FJTnALxpZ1Q5BBkIGSGrZosJjj3dznQ4wkLTnPZcI7IAW4hlXWhe5uImZPKQFou2XP+anhAbligf1L8RlzmbGrS69ZNGcdOWAGoa2OsBaVZkRALTL1TcPSqaI8SH96so9GhDmfbUCIwCQQoZ0oCIdMdF5SqtCpNQi7FsueakOx9uBMUCMrNw7Bw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sasha Levin <sashal@kernel.org>,
+        Ronak Doshi <doshir@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, linux-hyperv@vger.kernel.org,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Message-ID: <76cd6cfc-f4f3-ece7-203a-0266b7f02a12@gmail.com>
+Date:   Mon, 17 Feb 2020 22:39:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9080d85c-e669-4b44-c2ec-08d7b2417725
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Feb 2020 18:04:13.3618
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D0CJdlMqCDpfVllu7M5GP0YeSkSRUmiKulsMQ0yxdIyJ9YKYFdJc24o1jI/hw4PtwsG52la7wDG7skUEBLzX2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0242
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Haiyang Zhang <haiyangz@microsoft.com>
-> Sent: Saturday, February 15, 2020 7:20 AM
-> To: Dexuan Cui <decui@microsoft.com>; Stephen Hemminger
->=20
-> According to the comments in skbuff.h below, it is the responsibility of =
-the
-> owning layer to make a SKB clone, if it wants to keep the data across lay=
-ers.=20
-> So, every layer can still use all of the 48 bytes.
->=20
->         /*
->          * This is the control buffer. It is free to use for every
->          * layer. Please put your private variables there. If you
->          * want to keep them across layers you have to do a skb_clone()
->          * first. This is owned by whoever has the skb queued ATM.
->          */
->         char                    cb[48] __aligned(8);
->=20
-> > Now hv_netvsc assumes it can use all of the 48-bytes, though it uses on=
-ly
-> > 20 bytes, but just in case the struct hv_netvsc_packet grows to >32 byt=
-es in
-> the
-> > future, should we change the BUILD_BUG_ON() in netvsc_start_xmit() to
-> > BUILD_BUG_ON(sizeof(struct hv_netvsc_packet) > SKB_SGO_CB_OFFSET); ?
->=20
-> Based on the explanation above, the existing hv_netvsc code is correct.
->=20
-> Thanks,
-> - Haiyang
+Several network drivers for chips that support TSO6 share the same code
+for preparing the TCP header. A difference is that some reset the
+payload_len whilst others don't do this. Let's factor out this common
+code to a new helper.
 
-Got it. So if the upper layer saves something in the cb, it must do a skb_c=
-lone()
-and pass the new skb to hv_netvsc. hv_netvsc is the lowest layer in the net=
-work=20
-stack, so it can use all the 48 bytes without calling skb_clone().
+Heiner Kallweit (3):
+  net: core: add helper tcp_v6_gso_csum_prep
+  r8169: use new helper tcp_v6_gso_csum_prep
+  net: use new helper tcp_v6_gso_csum_prep
 
-BTW, now I happen to have a different question: in netvsc_probe() we have=20
-net->needed_headroom =3D RNDIS_AND_PPI_SIZE;
-I think this means when the network stack (ARP, IP, ICMP, TCP, UDP,etc) pas=
-ses a=20
-skb to hv_netvsc, the skb's headroom is increased by an extra size of=20
-net->needed_headroom, right? Then in netvsc_xmit(), why do we still need to
-call skb_cow_head(skb, RNDIS_AND_PPI_SIZE)? -- this looks unnecessary to me=
-?
+ drivers/net/ethernet/atheros/alx/main.c       |  5 +---
+ .../net/ethernet/atheros/atl1c/atl1c_main.c   |  6 ++---
+ drivers/net/ethernet/brocade/bna/bnad.c       |  7 +----
+ drivers/net/ethernet/cisco/enic/enic_main.c   |  3 +--
+ drivers/net/ethernet/intel/e1000/e1000_main.c |  6 +----
+ drivers/net/ethernet/intel/e1000e/netdev.c    |  5 +---
+ drivers/net/ethernet/jme.c                    |  7 +----
+ .../net/ethernet/pensando/ionic/ionic_txrx.c  |  5 +---
+ drivers/net/ethernet/qualcomm/emac/emac-mac.c |  7 ++---
+ drivers/net/ethernet/realtek/r8169_main.c     | 26 ++-----------------
+ drivers/net/ethernet/socionext/netsec.c       |  6 +----
+ drivers/net/hyperv/netvsc_drv.c               |  5 +---
+ drivers/net/usb/r8152.c                       | 26 ++-----------------
+ drivers/net/vmxnet3/vmxnet3_drv.c             |  5 +---
+ include/net/ip6_checksum.h                    | 12 +++++++++
+ 15 files changed, 30 insertions(+), 101 deletions(-)
 
-PS, what does the "cow" here mean? Copy On Write? It looks skb_cow_head()
-just copies the data (if necessary) and it has nothing to do with the=20
-write-protection in the MMU code.
+-- 
+2.25.0
 
-Thanks,
-Dexuan
