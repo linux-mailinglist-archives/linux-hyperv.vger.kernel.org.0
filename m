@@ -2,82 +2,64 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F5D1632E2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Feb 2020 21:17:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EF161632D0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Feb 2020 21:16:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgBRUQL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Feb 2020 15:16:11 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34802 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgBRUQL (ORCPT
+        id S1727001AbgBRUQW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Feb 2020 15:16:22 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55208 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbgBRUQW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:16:11 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n10so23590979wrm.1;
-        Tue, 18 Feb 2020 12:16:09 -0800 (PST)
+        Tue, 18 Feb 2020 15:16:22 -0500
+Received: by mail-wm1-f65.google.com with SMTP id n3so1904082wmk.4;
+        Tue, 18 Feb 2020 12:16:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bFMbK7LyKRnHu/ZMhuK+JeN3P8TImavRX9bgAiZfMtk=;
-        b=QXTAl6KeEOAmHWG0qH4S6XmPJj4USYFkCIZ78dT/rmi09maEvpVOzZ//BmyS1kesW5
-         XI0TPXmZ4qZ31jlmuQf0h92ss4SwkWJD0CejHK2mP4ontx77GV16UeS5NSj1hJT9DdLM
-         7Jp/3ahcbfRwH6xUmZPVnPH/+DZFAaM5OFoXpCQUaqd7lr2KciD2f1UX97+D9esFaXeb
-         MHqm3+rmkAeECR3RkLCiE3l94YF4S6XbViZ/ur1ZSwK6SZ4lbKgVBkwNoCkeZWI37kMC
-         WmvS9n0GQIDsgnLwBpALegvqZ7pIl5NjrlFPcg6hlF7QDFnkxvHaaQKfgGjjT9VCyVBW
-         ytag==
+        bh=P04rn9lFXpmxUOEq7MJs3reKsxv52XdBYh7sLajh3CY=;
+        b=FW4MonpJa2N0pddv7lUanWtAX779jwjYA7p5umStKtEpH7S74naMUfR9GiKJB6oT70
+         /EXBZ5Nr2ETHlbAvkiU3ExXuhEkN3dVYdB7TsCvnS+pgGIoooWTdOc2hZfmqNKB9x65k
+         lxc8OX6KOlNDO1ibspOIXe3ihI2ccVLOZZNIoaxxgtk2R/d19BzWP4xeWTiZhqHuwQT1
+         3doutBf8dp/LcvleJCppISFwTLlgCEkOwCDuXX5FFZaTsDJyhEYQEfOI9RCgeV0y+1HF
+         qyLJtoOr7upsCTUSDiJ/XsBHX8m6WfoG5b7glrxAESk4dHXLDvFAjbiX4GWmtOrpKvMC
+         yPvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=bFMbK7LyKRnHu/ZMhuK+JeN3P8TImavRX9bgAiZfMtk=;
-        b=EfB0TFcT1Y440VwWf/O2PCUs3cbQBmr5XoiW6Jg69qwiGoGb1LifHg5omOpVkFn1zT
-         mbt1NwSbpLFFlgri3aiX8YiNktex5L5iOnsNvqeoHm1rYbnxsF1v9mIOD7t2BoEaAZq9
-         Z5k6omMjPOiWsTIwZGF2KrPwqyFqYdYRJg+2TnBmB4IasF3EYZds+x6pt/5KJJ7HvxKG
-         QzbVylhYfHWLLsZ9xU0EQEO9ww0dY10RLQeIGWbmWHMZdcOFgJr7E84YZNWBDaSf85An
-         HVBtMik+zTH7X+TRvVbFhNoTYL/aaCZAUQqGjcjpXJmiixd3n3JHh7c/MzY7Ccv+VCCo
-         jQHA==
-X-Gm-Message-State: APjAAAUy7J+I4lg7sJ9avF+rqSVm3c2bnw9k1GNAOyfs/Ws7JP/C4C8L
-        I7J4ZSOfvvyrcg18rihpVWhyjm5NVqQ=
-X-Google-Smtp-Source: APXvYqx0o7TLaD/TAtGQo3xJ8sCR+Q65dDtECgJ0RmmNYCrQiqxI1MUf49p/dryUzt3jnppRFGzHDQ==
-X-Received: by 2002:adf:f28f:: with SMTP id k15mr30535210wro.230.1582056968961;
-        Tue, 18 Feb 2020 12:16:08 -0800 (PST)
+        bh=P04rn9lFXpmxUOEq7MJs3reKsxv52XdBYh7sLajh3CY=;
+        b=HZR3JUaFMEQGfmL17OVyoIFnoDqHqmrPvrDd+XT2C51DkhaVA5P8od+A6U5vULFY2r
+         xT6ZwgbOkxQU9u0j1A+RPk95ra4MAmwYHlwWj3yciEnoZlkolyXZEkIhMdhffrAnQx4k
+         88uc663OEl244rWwURMOeeLwSr/XDmPvLlf89KgpsgVzjhoWzVJ3IPm7Mq+8J5OJcq/L
+         12Z/t6BzA4upT8G3Ko/uY77pMSdrktPqZI06oHacm4AuIDwmf55h+VzT83P3z02RsWol
+         xHOQnLcAEJ55RtT4I5GY5vU+0rBLUzqJ2o+kVpL5xogiQCXOPqtLj7pLzLCjiXudBjO8
+         8S1g==
+X-Gm-Message-State: APjAAAWZLw3ITXsbuxriYt1ycsoL0xeJycInxIwXM6I0b4obEtPeApqt
+        eeM4Ei6D1Vq6HHb2XrnWXWO0iGOO
+X-Google-Smtp-Source: APXvYqxWxx3vX4zkRPsVLD6wkEKUHPEBac8V27LgRCjAP9sRfDhzHOQQ/cKZrdyd4rt60fN/4Kcr2A==
+X-Received: by 2002:a05:600c:291d:: with SMTP id i29mr5098417wmd.39.1582056979539;
+        Tue, 18 Feb 2020 12:16:19 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
-        by smtp.googlemail.com with ESMTPSA id p26sm4590202wmc.24.2020.02.18.12.16.07
+        by smtp.googlemail.com with ESMTPSA id t9sm7890993wrv.63.2020.02.18.12.16.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 12:16:08 -0800 (PST)
-Subject: [PATCH net-next v2 01/13] net: core: add helper tcp_v6_gso_csum_prep
+        Tue, 18 Feb 2020 12:16:19 -0800 (PST)
+Subject: [PATCH net-next v2 11/13] hv_netvsc: use new helper
+ tcp_v6_gso_csum_prep
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     David Miller <davem@davemloft.net>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Rasesh Mody <rmody@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Christian Benvenuti <benve@cisco.com>,
-        Govindarajulu Varadarajan <_govind@gmx.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Guo-Fu Tseng <cooldavid@cooldavid.org>,
-        Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        Timur Tabi <timur@kernel.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>
+        Sasha Levin <sashal@kernel.org>
 Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, linux-hyperv@vger.kernel.org,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
+        linux-hyperv@vger.kernel.org
 References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
-Message-ID: <82ba1653-6a88-edf2-b22f-938b64e46655@gmail.com>
-Date:   Tue, 18 Feb 2020 20:56:41 +0100
+Message-ID: <52eb76b1-5acd-9d88-1496-889504b60e92@gmail.com>
+Date:   Tue, 18 Feb 2020 21:11:43 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -90,38 +72,29 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Several network drivers for chips that support TSO6 share the same code
-for preparing the TCP header, so let's factor it out to a helper.
-A difference is that some drivers reset the payload_len whilst others
-don't do this. This value is overwritten by TSO anyway, therefore
-the new helper resets it in general.
+Use new helper tcp_v6_gso_csum_prep in additional network drivers.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 ---
- include/net/ip6_checksum.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/hyperv/netvsc_drv.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/include/net/ip6_checksum.h b/include/net/ip6_checksum.h
-index 7bec95df4..27ec612cd 100644
---- a/include/net/ip6_checksum.h
-+++ b/include/net/ip6_checksum.h
-@@ -76,6 +76,15 @@ static inline void __tcp_v6_send_check(struct sk_buff *skb,
- 	}
- }
- 
-+static inline void tcp_v6_gso_csum_prep(struct sk_buff *skb)
-+{
-+	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
-+	struct tcphdr *th = tcp_hdr(skb);
-+
-+	ipv6h->payload_len = 0;
-+	th->check = ~tcp_v6_check(0, &ipv6h->saddr, &ipv6h->daddr, 0);
-+}
-+
- #if IS_ENABLED(CONFIG_IPV6)
- static inline void tcp_v6_send_check(struct sock *sk, struct sk_buff *skb)
- {
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 65e12cb07..5ee282b20 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -638,10 +638,7 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
+ 		} else {
+ 			lso_info->lso_v2_transmit.ip_version =
+ 				NDIS_TCP_LARGE_SEND_OFFLOAD_IPV6;
+-			ipv6_hdr(skb)->payload_len = 0;
+-			tcp_hdr(skb)->check =
+-				~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
+-						 &ipv6_hdr(skb)->daddr, 0, IPPROTO_TCP, 0);
++			tcp_v6_gso_csum_prep(skb);
+ 		}
+ 		lso_info->lso_v2_transmit.tcp_header_offset = skb_transport_offset(skb);
+ 		lso_info->lso_v2_transmit.mss = skb_shinfo(skb)->gso_size;
 -- 
 2.25.1
 
