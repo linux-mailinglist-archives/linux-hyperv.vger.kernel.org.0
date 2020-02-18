@@ -2,53 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1289162F1E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Feb 2020 19:54:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 601261630B3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Feb 2020 20:55:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgBRSya (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Feb 2020 13:54:30 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53793 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgBRSy3 (ORCPT
+        id S1726352AbgBRTz2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Feb 2020 14:55:28 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43191 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTz2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:54:29 -0500
-Received: by mail-wm1-f67.google.com with SMTP id s10so3868838wmh.3;
-        Tue, 18 Feb 2020 10:54:28 -0800 (PST)
+        Tue, 18 Feb 2020 14:55:28 -0500
+Received: by mail-wr1-f67.google.com with SMTP id r11so25424056wrq.10;
+        Tue, 18 Feb 2020 11:55:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1dJr5fWtmgL5ZWKfudWGcy2nFnCOukxqjG9HGhea3rc=;
-        b=i26UeAYelCy7U1A8/lwfSWuKD6ty6MuaX0kbrq6tzijhBOyrJHSPcHPMflkjW4ctmg
-         dXOzg8z8CpuvzrqZRiqoJTViSk1VgSAzkRoasR83KQaslqB1kzObh37AkUQ3kcBFBri9
-         3SlMcjIG3y5o3BAvpVKCk6yOGFTS9VpnYv5qu5WMS/Z95Mm18CQljUcsP2/2KL88z3Rp
-         BauSmQyR5TGyrYyKDGfVzSAbcvcebAw4Hk8XsbOvk5/ngH+Oa/yLlW3wfCVDMSFPac7f
-         LnLryS8huIxPvunu7OoWrweZdRD86earFdvzrES3bJKxlMfySGH6LfBmlwBiSbRJUaFo
-         ZGaA==
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=2XbnpJ3DCsRKiHe1DaCKVtnJE9/aeVVRESQe3D8Emz0=;
+        b=vUohnzwHM6ww95pQT57+3W9rF4ypv0oi9Sr2c9p3s83ysEDCy4B8i7wA2YEjpx4o7O
+         NcjBuJOYJT3TkV38cAxuxjb+GQg+/EGWFW7GqjNTqfN9IXB1ujD8cfSNj805Eqi9UL3J
+         sVm9BCtuHEfxKEPYZxsEhZJn7fhEIQrGxl+bbVqNYURgddAdzTdXM+0zuWbYJmPrQY59
+         wKP2rd4F6kVeZdGKvosiHVzXPskpRcN+Ld9zlmdZfT1pXW9Pmgt5x9Wmmq76Ugw2uFx1
+         kRSPDlv37YJUGIgNKnCM8XV/FSdiTFZJzGUDuK+ZYgrIDM8RGYpeMxkNLm4rW2QysL8S
+         aFaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1dJr5fWtmgL5ZWKfudWGcy2nFnCOukxqjG9HGhea3rc=;
-        b=PsArpl4FYXeU1u0fADXgTH/DqwqljOXkWd6IdgmyL4jVyTN5gsYBhMmUPee2MYOOYA
-         TYGz6IBNkgmbRUIWPsoId+LThVZecHiTBXbDI9RWEzR+iJ+ei1Gx/TVp7tvvw1fWos8K
-         ttrw+STElWP5WtSWMF2mZ6uMAzM1ftaRtF9OdnS1opnuajD92tJmKJa4O0suCCpgbIaY
-         HgtlU1a7W1hJG2RpG79LpyPMcUuP/Py5VFolGrMnMlTTVkmLuOps+nje97+RcoO1CCu+
-         Q0nlZmhTMr9bYSueZdKu0e/pMHzXlYZvvTocNOjkRLfCxTQ0C0yRtfxh08Tv/oe7TBKV
-         oAbg==
-X-Gm-Message-State: APjAAAVLIV9GBSBu3LDW1VI2dMuG+lMZtwdCvwQpo5KPHTX/C9L/M8AU
-        av/gxLlpeb6bjYHR00BIW0Fqa+n3vYM=
-X-Google-Smtp-Source: APXvYqxYgBXJufEEemNhgT0u53WakZwZ21MeNb7+y3FjScnyw0psrHFJLQKWd4DJGrX4UhzYbMWY6A==
-X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr4828770wmo.12.1582052067709;
-        Tue, 18 Feb 2020 10:54:27 -0800 (PST)
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=2XbnpJ3DCsRKiHe1DaCKVtnJE9/aeVVRESQe3D8Emz0=;
+        b=G99VNtUeZnAbiQpqH+h+WNaENDsKM/BH/9xIe9NHnD0vTTShat8nl5vgNFzFoIx435
+         6AYY6Ty3gU+tagblMyluJCiS/tGnROjp0kY/xMsHxQ0/umTw2qAXySp4p9uKJJvQn/oM
+         g/loia1ZNRfhlzuZPx3Rhr4IFpwjKc04Apnyptu4o8Xv0O0EpEMWWtf6JBPgCVXuzgsQ
+         NiDK0GaXO83SQWzRZuTiEyxtIH2BNXBGax4ZZOxWv1lt7jIssMNWPXwqMHldTF3I2CEm
+         a8gQp+6HtA8w/NE306hSIx4iSTKQ+k8S4qNt9CEQgINwjpMO0F21l9Wp5ndjQzBZAMG9
+         4oQQ==
+X-Gm-Message-State: APjAAAXEnkIb9Lj2ZrXMmEc6i//VLL+ii3YKufknS+CJByYbAehP7s+c
+        J66mFT8Nk0AcURHiUEHV1nCThg+dCRo=
+X-Google-Smtp-Source: APXvYqxgH2Zy4SF7Ru6OgX1SQtM0GsOax0n4VqsktL36jANdSqE9ij6StXtgtan9ISXSA9S4DFix+Q==
+X-Received: by 2002:a5d:438c:: with SMTP id i12mr30082796wrq.51.1582055724084;
+        Tue, 18 Feb 2020 11:55:24 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
-        by smtp.googlemail.com with ESMTPSA id u14sm6925152wrm.51.2020.02.18.10.54.26
+        by smtp.googlemail.com with ESMTPSA id t187sm4914865wmt.25.2020.02.18.11.55.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 10:54:27 -0800 (PST)
-Subject: Re: [PATCH net-next 3/3] net: use new helper tcp_v6_gso_csum_prep
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
+        Tue, 18 Feb 2020 11:55:23 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH net-next v2 0/13] net: core: add helper tcp_v6_gso_csum_prep
+To:     David Miller <davem@davemloft.net>,
         Realtek linux nic maintainers <nic_swsd@realtek.com>,
         Jay Cliburn <jcliburn@gmail.com>,
         Chris Snook <chris.snook@gmail.com>,
@@ -70,22 +69,16 @@ Cc:     David Miller <davem@davemloft.net>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
         Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "VMware, Inc." <pv-drivers@vmware.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        linux-hyperv@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-hyperv@vger.kernel.org,
         Linux USB Mailing List <linux-usb@vger.kernel.org>
-References: <76cd6cfc-f4f3-ece7-203a-0266b7f02a12@gmail.com>
- <9270ae4b-feb1-6a4d-8a22-fbe5e47b7617@gmail.com>
- <CAKgT0UdP78GGnowWC85YiTAHOr63NiLa25=2TSckKBEzGBdeJA@mail.gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <e6b59cad-b6a6-73fc-7d75-3cc9ce6411ab@gmail.com>
-Date:   Tue, 18 Feb 2020 19:54:19 +0100
+Message-ID: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
+Date:   Tue, 18 Feb 2020 20:55:18 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UdP78GGnowWC85YiTAHOr63NiLa25=2TSckKBEzGBdeJA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -94,37 +87,44 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 18.02.2020 19:34, Alexander Duyck wrote:
-> On Mon, Feb 17, 2020 at 1:43 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
->>
->> Use new helper tcp_v6_gso_csum_prep in additional network drivers.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  drivers/net/ethernet/atheros/alx/main.c       |  5 +---
->>  .../net/ethernet/atheros/atl1c/atl1c_main.c   |  6 ++---
->>  drivers/net/ethernet/brocade/bna/bnad.c       |  7 +----
->>  drivers/net/ethernet/cisco/enic/enic_main.c   |  3 +--
->>  drivers/net/ethernet/intel/e1000/e1000_main.c |  6 +----
->>  drivers/net/ethernet/intel/e1000e/netdev.c    |  5 +---
->>  drivers/net/ethernet/jme.c                    |  7 +----
->>  .../net/ethernet/pensando/ionic/ionic_txrx.c  |  5 +---
->>  drivers/net/ethernet/qualcomm/emac/emac-mac.c |  7 ++---
->>  drivers/net/ethernet/socionext/netsec.c       |  6 +----
->>  drivers/net/hyperv/netvsc_drv.c               |  5 +---
->>  drivers/net/usb/r8152.c                       | 26 ++-----------------
->>  drivers/net/vmxnet3/vmxnet3_drv.c             |  5 +---
->>  13 files changed, 16 insertions(+), 77 deletions(-)
->>
-> 
-> It might make sense to break this up into several smaller patches
-> based on the maintainers for the various driver bits.
-> 
-OK
+Several network drivers for chips that support TSO6 share the same code
+for preparing the TCP header, so let's factor it out to a helper.
+A difference is that some drivers reset the payload_len whilst others
+don't do this. This value is overwritten by TSO anyway, therefore
+the new helper resets it in general.
 
-> So the changes all look fine to me, but I am not that familiar with
-> the non-Intel drivers.
-> 
-> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
+Heiner Kallweit (13):
+  net: core: add helper tcp_v6_gso_csum_prep
+  r8169: use new helper tcp_v6_gso_csum_prep
+  net: atheros: use new helper tcp_v6_gso_csum_prep
+  bna: use new helper tcp_v6_gso_csum_prep
+  enic: use new helper tcp_v6_gso_csum_prep
+  e1000(e): use new helper tcp_v6_gso_csum_prep
+  jme: use new helper tcp_v6_gso_csum_prep
+  ionic: use new helper tcp_v6_gso_csum_prep
+  net: qcom/emac: use new helper tcp_v6_gso_csum_prep
+  net: socionext: use new helper tcp_v6_gso_csum_prep
+  hv_netvsc: use new helper tcp_v6_gso_csum_prep
+  r8152: use new helper tcp_v6_gso_csum_prep
+  vmxnet3: use new helper tcp_v6_gso_csum_prep
+
+ drivers/net/ethernet/atheros/alx/main.c       |  5 +---
+ .../net/ethernet/atheros/atl1c/atl1c_main.c   |  6 ++---
+ drivers/net/ethernet/brocade/bna/bnad.c       |  7 +----
+ drivers/net/ethernet/cisco/enic/enic_main.c   |  3 +--
+ drivers/net/ethernet/intel/e1000/e1000_main.c |  6 +----
+ drivers/net/ethernet/intel/e1000e/netdev.c    |  5 +---
+ drivers/net/ethernet/jme.c                    |  7 +----
+ .../net/ethernet/pensando/ionic/ionic_txrx.c  |  5 +---
+ drivers/net/ethernet/qualcomm/emac/emac-mac.c |  7 ++---
+ drivers/net/ethernet/realtek/r8169_main.c     | 26 ++-----------------
+ drivers/net/ethernet/socionext/netsec.c       |  6 +----
+ drivers/net/hyperv/netvsc_drv.c               |  5 +---
+ drivers/net/usb/r8152.c                       | 26 ++-----------------
+ drivers/net/vmxnet3/vmxnet3_drv.c             |  5 +---
+ include/net/ip6_checksum.h                    |  9 +++++++
+ 15 files changed, 27 insertions(+), 101 deletions(-)
+
+-- 
+2.25.1
 
