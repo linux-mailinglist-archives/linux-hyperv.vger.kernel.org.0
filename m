@@ -2,147 +2,127 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC079168386
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Feb 2020 17:33:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA5B16882C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Feb 2020 21:17:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgBUQdO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 21 Feb 2020 11:33:14 -0500
-Received: from mail-bn8nam12on2136.outbound.protection.outlook.com ([40.107.237.136]:37251
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        id S1726761AbgBUURi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 21 Feb 2020 15:17:38 -0500
+Received: from mail-eopbgr1300135.outbound.protection.outlook.com ([40.107.130.135]:54592
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726393AbgBUQdO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:33:14 -0500
+        id S1726683AbgBUURh (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 21 Feb 2020 15:17:37 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MVJvMkkT3sDPfnWefX28Wu5Xr6oFr1tr4D+TQiXnNRGCLS4vHZr3hYtDF5YPe3aUpNmx4yQ7A5X1mcojZgOLq7fI0DgOooLa0WaqrDAGteoXag8Z3r5ttGX0dRY1+TIMWdCMTWKDunSZUgdRDsFxhkZDpFddFdC1Hj/UWmMtSH16xnFuIneS+lcfVA+sX+bnvY+oTX/uCft1zxIF22HcQ6XxTIcb3V7qL8qhfI96Ts5t1/auSx9pBATXaOz30WBvJwt1R3NaSHP30TYmud0Nf1zkzGxsuvKKeLPjKzUonOChuAvG0K2W6Gs2mUetvkpVTHX7+f8TFBAkoKL9UjNoyw==
+ b=J5PXGp2L/y2v2rZxLVAZh5Z3gx0HY0sQXUExDn1YC5TWWy/TxfUoVECrQS492/ET2ADIUhKfOn47BQIme9XNCgvAx5Ims7w1HoUuv3hh8gDAtnbXBTi5OaQITCguQ05/2RzDdyPBOoit7flOFoJqMW6JUdhV7Srox6iNyDAPUlT47jHFCc50fNkYa7L4p6PqO2WWCYILCW95YmtDu/UoaAMJO9b5CBkaiqDRv/LG7v/Qj/miFQz4iimTLKlY3slvYZlOZkk53WMDZG1DmvoadvklGNsvlWLRxFk3lMwHc+KKNBfXtAuYOdsy3bLw5Rd4hiaoGuNBcNscpygoMnXs5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91W/YNxy7KdLwBwjVKKOhcMkqnYvOALOdWuHUTPZPpA=;
- b=dKJAJfMOGaHgeFq7HzGBRjSAf3tiQR61qvo0H7Oqz1Pu0H1suwQTi9xU4p4dt6WoQemyaOe65heH1sbX3tfqkECDPI0RsVrLg1FxQdEBiDLOLWgLVKzntuHaf0o8iGMSZoxg+1CHU8nfGa7hWKywsUO9bdjIYt/DtxJMa1Gi/8SpKo8pvX/OqiO+YP+ZsYin4hLz9c/sKugS+sZjoJd6oIm5m6g65WTaYlP7iDtqDBVOqwdBI9qp6GyOTs9/SLrFNqHBO+wFpufbOwZSrD2oRcoc2RUuat6xKmHgxK+oKggCkEjoFfQCQvIQQsNUUoivm9MJ9trVI6StM3NkViczJQ==
+ bh=nFbyesmyoIJ0fQqCx4h6y6Y8fHL39vGTNpu9E0gi/5E=;
+ b=SdHDMbTEKo9BSnhb0QfHb1foQaHN3vpa/IKKMbxODRrmTsLFSRSwPpvP9d/DaC7eypvZkBU1Ur+V4nZeLQtQOtGI7gjAlBsYxaNcQa61TuzM33ekjiyHLCQcbh9qcPcDtEnpl67y+bVDOhie4ipZ4j95npPY924KXy8PGQLf+wAmjyKmp/hmhpIfn0m6nBwWSeyy3MdlyYBb40EgJ63wGwXXpQT/S7k/Gp4JqV6NF8mXomSEUzHNy5dcQCjnpJeeQTCFC2JOjn6EZspwG06Kg7GmxYqioWhcM6LcLgXyULb1vTt5eYbseo9AqbGkaVmNtMvs7A0uVFp9KkKJXXBxyg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=91W/YNxy7KdLwBwjVKKOhcMkqnYvOALOdWuHUTPZPpA=;
- b=DnF8UDKPeo+p9Ebduh2/wJOEcJ2sV6aEcbDlOyUIa4Uix7JAfYIg5lYUf7HxIJnaSh9ua5dez3U45KAsRxqPnbVNZ51uSFW+H0zo05zry9WQPd3mJW8I2eynMlWg1zAbUwbZzaaczn/KUstSCFgWQNHBMg+FSAx3+/a3ytR1rZs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
- DM5PR2101MB1079.namprd21.prod.outlook.com (52.132.130.13) with Microsoft SMTP
+ bh=nFbyesmyoIJ0fQqCx4h6y6Y8fHL39vGTNpu9E0gi/5E=;
+ b=S0zW8WjhJye+tyEhHggt5LiKpqE9aTEyzNpQfrO16lBe2/GYIE9UHt5cQVT63hffGiQJbKwSzaXNmm8Aq/t04uCSDjmBK3n5PZhy/jjf1X55bOtSbH7H7A9QZZ8Y/LHTNo+2EaGYs82EnT5KIqCkZiTZ6UC70zhbAOoBYBJjP6Y=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0259.APCP153.PROD.OUTLOOK.COM (52.132.236.12) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.4; Fri, 21 Feb 2020 16:33:10 +0000
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::b51c:186a:8630:127e]) by DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::b51c:186a:8630:127e%9]) with mapi id 15.20.2750.000; Fri, 21 Feb 2020
- 16:33:10 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: [net PATCH] hv_netvsc: Fix unwanted wakeup in netvsc_attach()
-Date:   Fri, 21 Feb 2020 08:32:18 -0800
-Message-Id: <1582302738-24352-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: CO2PR04CA0131.namprd04.prod.outlook.com
- (2603:10b6:104:7::33) To DM5PR2101MB0901.namprd21.prod.outlook.com
- (2603:10b6:4:a7::30)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 2
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR04CA0131.namprd04.prod.outlook.com (2603:10b6:104:7::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Fri, 21 Feb 2020 16:33:07 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8f96a27c-695a-4cf4-e5e4-08d7b6ebbb7c
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB1079:|DM5PR2101MB1079:|DM5PR2101MB1079:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB1079190B2A4D81E73B5EAA1FAC120@DM5PR2101MB1079.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
-X-Forefront-PRVS: 0320B28BE1
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(39860400002)(396003)(366004)(346002)(199004)(189003)(8936002)(6666004)(186003)(6512007)(26005)(16526019)(6506007)(7846003)(2906002)(6486002)(66476007)(316002)(66556008)(956004)(36756003)(66946007)(2616005)(8676002)(478600001)(10290500003)(52116002)(5660300002)(81166006)(81156014)(4326008)(26123001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1079;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ 15.20.2772.4; Fri, 21 Feb 2020 20:17:29 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::a02a:44fa:5f1:dd74]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::a02a:44fa:5f1:dd74%2]) with mapi id 15.20.2772.009; Fri, 21 Feb 2020
+ 20:17:28 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: RE: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
+ handling path
+Thread-Topic: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
+ handling path
+Thread-Index: AQHV6MTTYxxTTdKrHUimkreM9jFb+KgmFYKw
+Date:   Fri, 21 Feb 2020 20:17:28 +0000
+Message-ID: <HK0P153MB014824764A8F7310502291C3BF120@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <1578350351-129783-1-git-send-email-decui@microsoft.com>
+ <20200221144003.GD15440@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200221144003.GD15440@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-21T20:17:26.4167793Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e05456d8-ca32-4dfc-a11c-32be868d8b4c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:9:44ce:5ee7:dfaf:44c6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ff8b8168-fba2-4216-cae6-08d7b70b130f
+x-ms-traffictypediagnostic: HK0P153MB0259:|HK0P153MB0259:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB02595DF50C1B38F6EC1DE061BF120@HK0P153MB0259.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0320B28BE1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(189003)(199004)(107886003)(478600001)(4744005)(4326008)(55016002)(66446008)(6506007)(54906003)(8990500004)(66946007)(66476007)(5660300002)(316002)(66556008)(76116006)(64756008)(9686003)(52536014)(8676002)(81166006)(7696005)(8936002)(33656002)(81156014)(186003)(6916009)(86362001)(2906002)(71200400001)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0259;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: K9a8jqrNaFOo0K0wgFuQGLlbXlot2Ae7pVPF6q2BoNM9IvRrpw3UTN4VOawHP+1mODQcrUv82eNkbDfsKkne5iwaJupZAhdexgoFhbGdm0PKzJ3sPKKLMcZzc/G1R7A7aYDYZ4+yvTzDzXidQakIF2M6x1EI8Iysw4ZY5gAtsI/v0AdrMqadn6MRerh7zdifk+ZRrgL1wAvLjgJW2ACKei9r6a6KiGlv+XQFWqMhxXClD0pGlTY3Is+uPdhj/oUcoKhzYq4jOWOoazkw04DBvtvfwbPA1O7Nizk1EPseT+mbf59k+Ce2xmXGC/sKWzqxCRUpyCMArKBEk0FQYP0z5sdEr1EuIt5sVGUbI4nxVGEwxbTqwGFODDrF6rYGxnoMD+omS5EUCeHJGzZlT3gWQwev7CMiqDVxKyEfnA2Y7zEClr9E4j7DsMyYb4ZXKI9g7WfEPKiARlVYVCCz0mm7P10eG942BC8S9O5QgC66/csA+VQwIX+fAeECQL3zRFhJ
-X-MS-Exchange-AntiSpam-MessageData: SimskdsE69HmdMpnAeimShRE54ALwmn/kyuELKqm2vAAGJFFxQndwVORvlcdZFDs93Y8u2gPWmy4UkNe0JYbRFKCz2+s0hg/NK8WAbidcdtn82CVWTVOIXpk2HsS1sHoFvpG1CdrGQcBU4oc1ZTifg==
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3GLj/Ivn0+dmTLfywiL6bYIP2Bpt7GtoZEy7Xv1Ap17Wx+CRhFO/Syh7djGP44pFjy8f+EHABccFLQQcgoNi8EUrbfl4MwHxxF3bn86h2GcmfzpJx504ZSKlM3exUKpYx+ZoO6rNNAGUZR+cAvff8zA0GrJdUFJczxd0qNa2NeDSLcB2riH4Vs2s3dhKejIUJNuBmanHejOsTXe3Nl7QQBm98JGstkoxvuxPIjBSTAYOGtwzhNmSwJsADfUGL43myZlcx3crHHXO/tjgUfP3TL6tcWqPmOZ1VgLNsjwO1g6e7cxhrgJGuYITjDN3F8Zb7klW78tvpLMYbKkodl1KiANj1MwfSsLwLRtOZrWFEQGUEem/SSck8eGOQd8hux8l7T9eLmb6gH8QcW+9+PTCrOZmPsnHM2uWP6kXpmctqb4oXC3zmPLrVSvp650p9KiV
+x-ms-exchange-antispam-messagedata: MKO3sTCnCfnPsZ3Ma7yml5CMFEI0tlH6lV/W1HYoD7ZlYk7EViObIpD/evSULijx7sVlAMBtPw1EEQMswoDlZxH1DUdDIutzMBROFv1jnh1eRilERLgQcD7+CSknFoa/WLTDL3yrT4oR5VSbpO+h9IrWwi+b7UfolbTwEPtjwpxOKCHHAVz0K3WmHVCUlFIIkqhQb5BbFw4YQ4zmunm6IA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f96a27c-695a-4cf4-e5e4-08d7b6ebbb7c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2020 16:33:10.4941
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff8b8168-fba2-4216-cae6-08d7b70b130f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 20:17:28.4382
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GBNzm+XtUCFJBUB11Ca4fYMSW8uCoIi0strNmboMi1dSqf8jxvDu6b2tu22fI2DIISHhFfip/LO6nMf55h6rZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1079
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: I8IuJkXoph3AlFexd7ApdHcO0d4cIQu8H7dCqqcozwwckeSceoxvtrdC1RZ5H68NPTE8qRoN7dyOJDsxr4+zuw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0259
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-When netvsc_attach() is called by operations like changing MTU, etc.,
-an extra wakeup may happen while netvsc_attach() calling
-rndis_filter_device_add() which sends rndis messages when queue is
-stopped in netvsc_detach(). The completion message will wake up queue 0.
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Lorenzo Pieralisi
+> Sent: Friday, February 21, 2020 6:40 AM
+>=20
+> On Mon, Jan 06, 2020 at 02:39:11PM -0800, Dexuan Cui wrote:
+> > Now that we use kzalloc() to allocate the hbus buffer, we should use
+> > kfree() in the error path as well.
+> >
+> > Also remove the type casting, since it's unnecessary in C.
+>=20
+> Two unrelated logical changes -> two patches please, I know it is
+> tempting but it is important to split logical changes into separate
+> patches.
+>=20
+> Thanks,
+> Lorenzo
 
-We can reproduce the issue by changing MTU etc., then the wake_queue
-counter from "ethtool -S" will increase beyond stop_queue counter:
-     stop_queue: 0
-     wake_queue: 1
-The issue causes queue wake up, and counter increment, no other ill
-effects in current code. So we didn't see any network problem for now.
+Ok, will post 2 separate patches shortly.
 
-To fix this, initialize tx_disable to true, and set it to false when
-the NIC is ready to be attached or registered.
-
-Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-
----
- drivers/net/hyperv/netvsc.c     | 2 +-
- drivers/net/hyperv/netvsc_drv.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index ae3f308..1b320bc 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -99,7 +99,7 @@ static struct netvsc_device *alloc_net_device(void)
- 
- 	init_waitqueue_head(&net_device->wait_drain);
- 	net_device->destroy = false;
--	net_device->tx_disable = false;
-+	net_device->tx_disable = true;
- 
- 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
- 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 65e12cb..2c0a24c 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1068,6 +1068,7 @@ static int netvsc_attach(struct net_device *ndev,
- 	}
- 
- 	/* In any case device is now ready */
-+	nvdev->tx_disable = false;
- 	netif_device_attach(ndev);
- 
- 	/* Note: enable and attach happen when sub-channels setup */
-@@ -2476,6 +2477,8 @@ static int netvsc_probe(struct hv_device *dev,
- 	else
- 		net->max_mtu = ETH_DATA_LEN;
- 
-+	nvdev->tx_disable = false;
-+
- 	ret = register_netdevice(net);
- 	if (ret != 0) {
- 		pr_err("Unable to register netdev.\n");
--- 
-1.8.3.1
-
+Thanks,
+-- Dexuan
