@@ -2,127 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFA5B16882C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Feb 2020 21:17:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EBA3168CC6
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Feb 2020 07:00:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgBUURi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 21 Feb 2020 15:17:38 -0500
-Received: from mail-eopbgr1300135.outbound.protection.outlook.com ([40.107.130.135]:54592
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1726189AbgBVGAm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 22 Feb 2020 01:00:42 -0500
+Received: from mail-eopbgr680134.outbound.protection.outlook.com ([40.107.68.134]:5153
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726683AbgBUURh (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:17:37 -0500
+        id S1726053AbgBVGAm (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 22 Feb 2020 01:00:42 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J5PXGp2L/y2v2rZxLVAZh5Z3gx0HY0sQXUExDn1YC5TWWy/TxfUoVECrQS492/ET2ADIUhKfOn47BQIme9XNCgvAx5Ims7w1HoUuv3hh8gDAtnbXBTi5OaQITCguQ05/2RzDdyPBOoit7flOFoJqMW6JUdhV7Srox6iNyDAPUlT47jHFCc50fNkYa7L4p6PqO2WWCYILCW95YmtDu/UoaAMJO9b5CBkaiqDRv/LG7v/Qj/miFQz4iimTLKlY3slvYZlOZkk53WMDZG1DmvoadvklGNsvlWLRxFk3lMwHc+KKNBfXtAuYOdsy3bLw5Rd4hiaoGuNBcNscpygoMnXs5Q==
+ b=jZ3nD87NQKFeoI59KwNKaJonYby35Xm1b3J/UlgIwmsYvA9mwiMZfp7QT4qTCifGhizenTVzAzYwZQDWN4qnloizixdyZWJwcmvWsEHOC5rUofG8gSKPgK+TyrLtlzrlSVQsLNGKIPBOA4ivp1H18wQOF6HmLrCyZ+4N36+KvuaQe6Fy2oqrN4wGFvTW9PkjVKeBQ6dgSfDFh8/aEjIgOplDK2qypMcR2dZGI7QfzLtJLPO4RlzFAFEe0eUDWfzayAE/paWTIMrjjsMUnZqXMeV+8I3F+nyjVrp8p3+mr1aPy9igQBP1VOL4IA677hWCFEQ9WRpffhj3oK873FIreQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nFbyesmyoIJ0fQqCx4h6y6Y8fHL39vGTNpu9E0gi/5E=;
- b=SdHDMbTEKo9BSnhb0QfHb1foQaHN3vpa/IKKMbxODRrmTsLFSRSwPpvP9d/DaC7eypvZkBU1Ur+V4nZeLQtQOtGI7gjAlBsYxaNcQa61TuzM33ekjiyHLCQcbh9qcPcDtEnpl67y+bVDOhie4ipZ4j95npPY924KXy8PGQLf+wAmjyKmp/hmhpIfn0m6nBwWSeyy3MdlyYBb40EgJ63wGwXXpQT/S7k/Gp4JqV6NF8mXomSEUzHNy5dcQCjnpJeeQTCFC2JOjn6EZspwG06Kg7GmxYqioWhcM6LcLgXyULb1vTt5eYbseo9AqbGkaVmNtMvs7A0uVFp9KkKJXXBxyg==
+ bh=sVfGPXOnjJ7gkW9g2nEcBnQ3/ZOoL/YqiMF1B12XDho=;
+ b=kO/pcWUcwyIHjK3I1RqRT5pzgj7DeFZcLdNl+fbucQg7iW4J58ExaQemdN9GOepuYd8n1KhgKb64tLJ9GoJwzp2hfJ/g902HLmr5VnBMzO/uhawYXD4Pr2QtfEmiLW808kY+i93PK5NEkSKJWF4fikSprf4L2dDZ6zoazDYCtldVGw71cr5Q1mlNlmA18NThotHrIkJTDqn5gbDzokSGoBYQdt/uYvQ7pATaL2ZKw+xuAYLGKRlMjapxeKctWqK+DGQ76h5eC+fX2HgNTlskVrNSazIw+Fug9EfbiSoIBlLSKdmEZ0nsy2vDdHzAc/yBFKI6oxEhQpP6Sf5R5mGlUA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nFbyesmyoIJ0fQqCx4h6y6Y8fHL39vGTNpu9E0gi/5E=;
- b=S0zW8WjhJye+tyEhHggt5LiKpqE9aTEyzNpQfrO16lBe2/GYIE9UHt5cQVT63hffGiQJbKwSzaXNmm8Aq/t04uCSDjmBK3n5PZhy/jjf1X55bOtSbH7H7A9QZZ8Y/LHTNo+2EaGYs82EnT5KIqCkZiTZ6UC70zhbAOoBYBJjP6Y=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0259.APCP153.PROD.OUTLOOK.COM (52.132.236.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.4; Fri, 21 Feb 2020 20:17:29 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::a02a:44fa:5f1:dd74]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::a02a:44fa:5f1:dd74%2]) with mapi id 15.20.2772.009; Fri, 21 Feb 2020
- 20:17:28 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: RE: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
- handling path
-Thread-Topic: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
- handling path
-Thread-Index: AQHV6MTTYxxTTdKrHUimkreM9jFb+KgmFYKw
-Date:   Fri, 21 Feb 2020 20:17:28 +0000
-Message-ID: <HK0P153MB014824764A8F7310502291C3BF120@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <1578350351-129783-1-git-send-email-decui@microsoft.com>
- <20200221144003.GD15440@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200221144003.GD15440@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-21T20:17:26.4167793Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e05456d8-ca32-4dfc-a11c-32be868d8b4c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
+ bh=sVfGPXOnjJ7gkW9g2nEcBnQ3/ZOoL/YqiMF1B12XDho=;
+ b=PBb0jSguSr4yTCqhMTbot5RUASGMNdFisHT5L/LxMHaIG4Yb6fqscOd6x8Z7jccNEfUVSMcvm6UXkgUZ7mkoQ9dJeCFprOjXlzHCruhoxv3GQAqST2DZjsmRWWyDeFG87T02fVgh9GvocbJecQLZ79x9AVy6TM75hI4b1gFCIMI=
+Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:9:44ce:5ee7:dfaf:44c6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ff8b8168-fba2-4216-cae6-08d7b70b130f
-x-ms-traffictypediagnostic: HK0P153MB0259:|HK0P153MB0259:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB02595DF50C1B38F6EC1DE061BF120@HK0P153MB0259.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0320B28BE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(189003)(199004)(107886003)(478600001)(4744005)(4326008)(55016002)(66446008)(6506007)(54906003)(8990500004)(66946007)(66476007)(5660300002)(316002)(66556008)(76116006)(64756008)(9686003)(52536014)(8676002)(81166006)(7696005)(8936002)(33656002)(81156014)(186003)(6916009)(86362001)(2906002)(71200400001)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0259;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3GLj/Ivn0+dmTLfywiL6bYIP2Bpt7GtoZEy7Xv1Ap17Wx+CRhFO/Syh7djGP44pFjy8f+EHABccFLQQcgoNi8EUrbfl4MwHxxF3bn86h2GcmfzpJx504ZSKlM3exUKpYx+ZoO6rNNAGUZR+cAvff8zA0GrJdUFJczxd0qNa2NeDSLcB2riH4Vs2s3dhKejIUJNuBmanHejOsTXe3Nl7QQBm98JGstkoxvuxPIjBSTAYOGtwzhNmSwJsADfUGL43myZlcx3crHHXO/tjgUfP3TL6tcWqPmOZ1VgLNsjwO1g6e7cxhrgJGuYITjDN3F8Zb7klW78tvpLMYbKkodl1KiANj1MwfSsLwLRtOZrWFEQGUEem/SSck8eGOQd8hux8l7T9eLmb6gH8QcW+9+PTCrOZmPsnHM2uWP6kXpmctqb4oXC3zmPLrVSvp650p9KiV
-x-ms-exchange-antispam-messagedata: MKO3sTCnCfnPsZ3Ma7yml5CMFEI0tlH6lV/W1HYoD7ZlYk7EViObIpD/evSULijx7sVlAMBtPw1EEQMswoDlZxH1DUdDIutzMBROFv1jnh1eRilERLgQcD7+CSknFoa/WLTDL3yrT4oR5VSbpO+h9IrWwi+b7UfolbTwEPtjwpxOKCHHAVz0K3WmHVCUlFIIkqhQb5BbFw4YQ4zmunm6IA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com (20.179.72.138) by
+ BN8PR21MB1249.namprd21.prod.outlook.com (20.179.74.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.5; Sat, 22 Feb 2020 06:00:40 +0000
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::18c0:bfd0:9181:4c62]) by BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::18c0:bfd0:9181:4c62%8]) with mapi id 15.20.2772.004; Sat, 22 Feb 2020
+ 06:00:39 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2 1/2] PCI: hv: Remove unnecessary type casting from kzalloc
+Date:   Fri, 21 Feb 2020 21:59:56 -0800
+Message-Id: <1582351197-12303-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: CO2PR04CA0117.namprd04.prod.outlook.com
+ (2603:10b6:104:7::19) To BN8PR21MB1139.namprd21.prod.outlook.com
+ (2603:10b6:408:72::10)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR04CA0117.namprd04.prod.outlook.com (2603:10b6:104:7::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend Transport; Sat, 22 Feb 2020 06:00:38 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d742a3f7-c305-4962-34a4-08d7b75c8aee
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1249:|BN8PR21MB1249:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR21MB1249E855BCEC95AC60FA0FBABFEE0@BN8PR21MB1249.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 03218BFD9F
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(396003)(366004)(39860400002)(376002)(189003)(199004)(26005)(8676002)(186003)(316002)(3450700001)(81156014)(5660300002)(6666004)(6512007)(16526019)(6506007)(2906002)(81166006)(8936002)(478600001)(10290500003)(4326008)(86362001)(36756003)(66556008)(2616005)(66946007)(52116002)(107886003)(6636002)(956004)(4744005)(6486002)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1249;H:BN8PR21MB1139.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NkmjmcfvVeahwbpeO3AeS/9XGlFLuZqZwU4avS8pKVRobRLAlkuh0Px+aJp5ldCnBew5M8FP4Hh/lUBZmqUqSrbfXykjmM2YG85CzIt3uncFWxO4IA7y+AUrQnq95AcplCslh5hsWSsxNnvAzv05vG8a5lIvEPzYklSi7hWHag8zL6THiUAvVOdbjM7QkH1rbB4An2mz4Pxb4v4LWc48PSHP60aFZHsS8xuScShDwrnB9AYzkv5Y/W2gfHhr14sK0bRZ60e9qCTieu9cxHpPo/bxCvLu3bVCdaZQtS4757wGr5QJlAs5n/hJ9d7vIpLlFcHS0o9Afbbr2kDv8yLghjdERcVIkTzyD90v+BT3iXuLBSbXPJWjpGbdTYEQljO2b6SKoJopHY68VHesOOeHrOv82A14wt8mHmtHgYtijyh1JuwcUIqvKl0JxRxlkBYP
+X-MS-Exchange-AntiSpam-MessageData: z4/rMeGl9PMt7PCjhBSdzqxk+scwIMcQkFaH5q37gA8vkdZygDrRdrTA8rgptMHdwSqXG3Ls0dc+Mj0JDmSRhfQ8ScEmZU9g+1SSmL/xEjx6eeL/yzNQyABeBvYIVjljg7ORHv4I3EJNR/VDC+MraQ==
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff8b8168-fba2-4216-cae6-08d7b70b130f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 20:17:28.4382
+X-MS-Exchange-CrossTenant-Network-Message-Id: d742a3f7-c305-4962-34a4-08d7b75c8aee
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2020 06:00:39.8581
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I8IuJkXoph3AlFexd7ApdHcO0d4cIQu8H7dCqqcozwwckeSceoxvtrdC1RZ5H68NPTE8qRoN7dyOJDsxr4+zuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0259
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sUT2eLtxrOKsny9dn6VUMvPobOxHTClFsQRRFKd4Mja5bO7JBxgiE+OKUsxwnpqBN5Mtrw6zalYkhI4xunKilw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1249
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Lorenzo Pieralisi
-> Sent: Friday, February 21, 2020 6:40 AM
->=20
-> On Mon, Jan 06, 2020 at 02:39:11PM -0800, Dexuan Cui wrote:
-> > Now that we use kzalloc() to allocate the hbus buffer, we should use
-> > kfree() in the error path as well.
-> >
-> > Also remove the type casting, since it's unnecessary in C.
->=20
-> Two unrelated logical changes -> two patches please, I know it is
-> tempting but it is important to split logical changes into separate
-> patches.
->=20
-> Thanks,
-> Lorenzo
+In C, there is no need to cast a void * to any other pointer type.
 
-Ok, will post 2 separate patches shortly.
+Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
 
-Thanks,
--- Dexuan
+Change in v2: this was part of v1.
+
+ drivers/pci/controller/pci-hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 9977abff92fc..0fe0283368d2 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2922,7 +2922,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
+ 	 * kmemleak to track and scan the hbus buffer.
+ 	 */
+-	hbus = (struct hv_pcibus_device *)kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
++	hbus = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+ 	if (!hbus)
+ 		return -ENOMEM;
+ 	hbus->state = hv_pcibus_init;
+-- 
+2.19.1
+
