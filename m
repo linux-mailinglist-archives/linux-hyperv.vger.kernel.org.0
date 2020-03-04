@@ -2,117 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 288A61792CB
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Mar 2020 15:55:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06328179748
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Mar 2020 18:55:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgCDOzw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 Mar 2020 09:55:52 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36774 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725795AbgCDOzw (ORCPT
+        id S1729471AbgCDRzO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 Mar 2020 12:55:14 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40109 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728926AbgCDRzO (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:55:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583333750;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oKVK8TwDwaGEB6ayUlSBTUyLsbqiCprj+fuuCbfWt8c=;
-        b=cFWnPGwecYHq6TiQBNMWMq5NL4NhZ5F5Q14K1CBzy+sU3qUItacu0PDlcq2dMZsMTlbtNO
-        7F8V+feRUDML4DdEZlT5IIpMjCwMqUNM+d7jUILncOlalPF9qvVXXAoiaspzTCBBOAUvx7
-        kWFeVlQOGn0FNAUo8cYLaZTHNriK3ao=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-IES4NnVoNEaX7D9Hc_0XjQ-1; Wed, 04 Mar 2020 09:55:46 -0500
-X-MC-Unique: IES4NnVoNEaX7D9Hc_0XjQ-1
-Received: by mail-qk1-f199.google.com with SMTP id k194so1459634qke.10
-        for <linux-hyperv@vger.kernel.org>; Wed, 04 Mar 2020 06:55:46 -0800 (PST)
+        Wed, 4 Mar 2020 12:55:14 -0500
+Received: by mail-wm1-f65.google.com with SMTP id e26so2807046wme.5;
+        Wed, 04 Mar 2020 09:55:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oKVK8TwDwaGEB6ayUlSBTUyLsbqiCprj+fuuCbfWt8c=;
-        b=YJvP0VgfbToOtZyxvNZLY4FuzC+aMduhOwS/J2GlkeC3BxClc2QHSJ3JYJlgC3bkr3
-         VzfZvDy1DrixL6EwHDDJsByhnrETIjW2LCJlaiJwyo/TJ7PpyhnKhhKs/znCHYRUgGgi
-         IAlpkibCMHBIMhD/GwbN8iclpb0kIE5Rdm3YBUnq/SY5hwMm96Bi2piqpQYiNaV1+5n4
-         VO3LZEwmGot87Y1glrW6BuHDt2AYINB963malLVZxH9EEatbtA90MX5oR/Oxw376rKwO
-         XIoonggs7w7LfQtmgRyHvwFIxsBUgNdPunrOR2kxfOuW0PbRF1AZaZb7ue0EM1en0HRS
-         DceQ==
-X-Gm-Message-State: ANhLgQ28FscBqANmivXOurrgZsIdISYYknkATKxkUiAuwT220dMgMPil
-        GZTmwBtO9hjFfDhbI17JK4jBwdcBtgZeLSIbVt6NI55XHIZdMzCrxQP2X9BAPCYbz8kHp0OldfW
-        HWE3nyzFUlDU3tEr9zChU09e4bdHq+ENLEOp1Ga1f
-X-Received: by 2002:a05:620a:1517:: with SMTP id i23mr3121556qkk.459.1583333746199;
-        Wed, 04 Mar 2020 06:55:46 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsCAa2/9q1HqrDGCRKmEqLJ4HJoEC8U/Z96fo7d9Ti23/A7BUH/Rq0FcHkVHybbcOgLpahxaE1ZwaDldnelFJ8=
-X-Received: by 2002:a05:620a:1517:: with SMTP id i23mr3121533qkk.459.1583333745910;
- Wed, 04 Mar 2020 06:55:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20200229173007.61838-1-tanure@linux.com> <CAO-hwJJDv=LnOQDbgWwg2sOccM9Tt-h=082Coi0aYdwG-CG-Kg@mail.gmail.com>
- <20200302120951.fhdafzl5xtnmjrls@debian> <20200304144858.xc6ekcvbzrhbggsc@debian>
-In-Reply-To: <20200304144858.xc6ekcvbzrhbggsc@debian>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 4 Mar 2020 15:55:34 +0100
-Message-ID: <CAO-hwJ+-xZgiNhOcRo1k3hGQxxkPd2RVrAbA3Gq1P28h7M1gdA@mail.gmail.com>
-Subject: Re: [PATCH] HID: hyperv: NULL check before some freeing functions is
- not needed.
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Lucas Tanure <tanure@linux.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IXbD/GgJVPZ9WOOjQZpIDfTuKHqUvdwDS5tyVn1vzKs=;
+        b=dZW/rNEE4siDef5TElhDwRimjVffVGL/eOVlNvygHaKe9GqFlWeXkbCIMvCK3PCaQr
+         +RmoAAoMydHmWeDXg35PHKU5FbUnpljLq1iE0S6P3N+yWp0lnYrWw9mM+SnXNNRe6gfl
+         FCISM22tFhE/KC2LjQT1WI5MOSuS/dm54S55YvmE6jjfqLTzfQkQj4HU3RqC89TQ0er3
+         vHYmm64WT8Cjzc3sObAijW4zuScMmaN0Un+Xf4bDjhVTrTrQZxw0gShFf7AOdFTbSzIh
+         oQh3CDKvJCCHSdDEDAUQy+O1WfhJkcVL4oKUE5zZH9jfj5pnWVxthweTDqrqiVXx9gCf
+         R/Nw==
+X-Gm-Message-State: ANhLgQ1DQXr77lGXKu7uGgOwWlInL18ONrS+2rC6uNFh/sD90rRrTFXN
+        GSrpkcotjqAyyhjW1LcUqugC1Bqu
+X-Google-Smtp-Source: ADFU+vs9Ns5cKiBuxZvEKxGfUWqB4Wx333NSJ3TdOFT09JNhgx8N5gGqFg8moiDT+XIM3+5kO/phPg==
+X-Received: by 2002:a7b:c019:: with SMTP id c25mr4825181wmb.126.1583344512200;
+        Wed, 04 Mar 2020 09:55:12 -0800 (PST)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id o8sm5015597wmh.15.2020.03.04.09.55.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 09:55:11 -0800 (PST)
+Date:   Wed, 4 Mar 2020 17:55:09 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>, linux-hyperv@vger.kernel.org,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH] PCI: hv: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200304175509.dwhn63omfzewaukv@debian>
+References: <20200213005048.GA9662@embeddedor.com>
+ <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 3:49 PM Wei Liu <wei.liu@kernel.org> wrote:
->
-> On Mon, Mar 02, 2020 at 12:09:51PM +0000, Wei Liu wrote:
-> > Hi Benjamin
-> >
-> > On Mon, Mar 02, 2020 at 11:16:30AM +0100, Benjamin Tissoires wrote:
-> > > On Sat, Feb 29, 2020 at 6:30 PM Lucas Tanure <tanure@linux.com> wrote:
-> > > >
-> > > > Fix below warnings reported by coccicheck:
-> > > > drivers/hid/hid-hyperv.c:197:2-7: WARNING: NULL check before some freeing functions is not needed.
-> > > > drivers/hid/hid-hyperv.c:211:2-7: WARNING: NULL check before some freeing functions is not needed.
-> > > >
-> > > > Signed-off-by: Lucas Tanure <tanure@linux.com>
-> > > > ---
-> > >
-> > > Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > >
-> > > Sasha, do you prefer taking this through your tree or through the HID
-> > > one. I don't think we have much scheduled for hyperv, so it's up to
-> > > you.
-> >
-> > Sasha stepped down as a hyperv maintainer a few days back. I will be
-> > taking over maintenance of the hyperv tree.
-> >
-> > The problem is at the moment I haven't got write access to the
-> > repository hosted on git.kernel.org. That's something I will need to
-> > sort out as soon as possible.
-> >
-> > In the meantime, it would be great if you can pick up this patch so that
-> > it doesn't get lost while I sort out access on my side.
->
-> Hi Benjamin
->
-> I got access to the Hyper-V tree. I will be picking this patch up since
-> I haven't got a confirmation from your side.
->
+On Thu, Feb 13, 2020 at 03:43:40AM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Gustavo A. R. Silva
+> > Sent: Wednesday, February 12, 2020 4:51 PM
+> >  ...
+> > The current codebase makes use of the zero-length array language
+> > extension to the C90 standard, but the preferred mechanism to declare
+> > variable-length types such as these ones is a flexible array member[1][2],
+> > introduced in C99:
+> > 
+> > struct foo {
+> >         int stuff;
+> >         struct boo array[];
+> > };
+> > 
+> > By making use of the mechanism above, we will get a compiler warning
+> > in case the flexible array does not occur last in the structure, which
+> > will help us prevent some kind of undefined behavior bugs from being
+> > inadvertently introduced[3] to the codebase from now on.
+> > 
+> > Also, notice that, dynamic memory allocations won't be affected by
+> > this change:
+> > 
+> > "Flexible array members have incomplete type, and so the sizeof operator
+> > may not be applied. As a quirk of the original implementation of
+> > zero-length arrays, sizeof evaluates to zero."[1]
+> > 
+> > This issue was found with the help of Coccinelle.
+> 
+> Looks good to me. Thanks, Gustavo!
+>  
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> 
 
-Great, thanks.
+Lorenzo, will you be picking up this patch? It seems to me you've been
+handling patches to pci-hyperv.c. This patch is not yet in pci/hv branch
+in your repository.
 
-Sorry, I am pulled in freedesktop tasks right now that are a little bit urgent.
+Let me know what you think.
 
-Glad you quickly set up the access rights.
-
-Cheers,
-Benjamin
-
+Wei.
