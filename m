@@ -2,130 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C450617A70E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2020 15:01:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDFDF17A752
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2020 15:24:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCEOBr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 Mar 2020 09:01:47 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36164 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgCEOBq (ORCPT
+        id S1726131AbgCEOYB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Mar 2020 09:24:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57689 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725974AbgCEOYB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:01:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j16so7181806wrt.3;
-        Thu, 05 Mar 2020 06:01:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CdRrk1lQ1WyvzaaT5BfrZN2ALBnMZwS8yyu5uJl/AA4=;
-        b=Ox1T4ga0WB7Ku57bvtqm3KOlVlLSs3T3aHRhRwVuO4bkD50xpNKMmUemDWy/p0Velq
-         xWfL3TicfkNJCATedCX/ABl+lplqb+kIb/Au8twcIpBkMX6/3tdI2Ad0roZf50qBppsp
-         oM/bCOg+72O/3mIj7uhdq7HUe85jbr1bDuLqRJHWeF9IsQ2zuYO91POxkXtNxEgWV3iV
-         oecG3QoMgh9/tmHk49Iwmp2uZ5WP3aoiU5u1fic1ebGyZlw8IcmurnVlotnMw8HXf7+s
-         ia2facMUNUNJXcuWKGoUNwREzs1LbZcxaA9TsvArTYRawNV3t5v6LzxO+Fe63KtsXomO
-         hnHQ==
+        Thu, 5 Mar 2020 09:24:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583418239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7wS/wcb85DkcLBGKnRxV24Ml02OHwCI8OhAwRihp0FA=;
+        b=EixRMxFxaR9v60oqUjfN07paIyEu1l92RwDz2CmDxYJ8XOiX9Kyap0p+pmWtawBGPrxh9H
+        ynr9tBTDfa75j+CGLHKDsBB+QuLvDl1gglUJRF9YP2Dm4gV8sY4ezn6VDi9rIwzo0Xp5sa
+        t2tRftcKqW3+e+buBFDam1WTuOzRu2o=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-q_-PijgnPpKKrmX8CHMdRg-1; Thu, 05 Mar 2020 09:23:57 -0500
+X-MC-Unique: q_-PijgnPpKKrmX8CHMdRg-1
+Received: by mail-wr1-f69.google.com with SMTP id w11so2351729wrp.20
+        for <linux-hyperv@vger.kernel.org>; Thu, 05 Mar 2020 06:23:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CdRrk1lQ1WyvzaaT5BfrZN2ALBnMZwS8yyu5uJl/AA4=;
-        b=YMoiFtPa1gBldOdcC3UNh7PQjODGMLh9TBsfT4Eal4r+PKArJuGmB6k9/2idqxxCDR
-         AlaAR6TN21kd6dVhwzmeDZOduBujjlJZWfs4caYoghwAiLPrwDjBmoezWXhUnmszL+R7
-         STuGQuWhBvzfBTcE3P9QY/0WerO0pPF+mgyKNDHsKyxH2lvDHSCGvHAZuMnJDPGeebdx
-         9lqz1hsjzN6tOL3igTSECcJNo350EkWb1RBDla+WKRe0FAXTSQPXH1gdJ28H58ocxqTr
-         VF4h1nemtd1sLxYrzwE5ZN4D8Dp0oUtLUI5h1U52l2MAOWNNqJmglXTS5A6KhZM9Yv8a
-         M9Ew==
-X-Gm-Message-State: ANhLgQ0sNXgTbDvgc1ysa4m1yFKhyKkQQp9h3l6py2En8mahSe2bGsjH
-        4cmtKszfBOIu8B8qKzHupEuCiucX
-X-Google-Smtp-Source: ADFU+vsuO+xInr/d+F65KwhyjhJxy42YP2wDfLuF+upnK9tRl9EGK/Bi+kEgEax0+k2+jGXa9EhDdg==
-X-Received: by 2002:adf:fc81:: with SMTP id g1mr10887859wrr.410.1583416904077;
-        Thu, 05 Mar 2020 06:01:44 -0800 (PST)
-Received: from linux.local ([31.154.166.148])
-        by smtp.gmail.com with ESMTPSA id c72sm3379824wme.35.2020.03.05.06.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 06:01:43 -0800 (PST)
-From:   Jon Doron <arilou@gmail.com>
-To:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     vkuznets@redhat.com, Jon Doron <arilou@gmail.com>
-Subject: [PATCH v2 4/4] x86/kvm/hyper-v: Add support for synthetic debugger via hypercalls
-Date:   Thu,  5 Mar 2020 16:01:42 +0200
-Message-Id: <20200305140142.413220-5-arilou@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200305140142.413220-1-arilou@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7wS/wcb85DkcLBGKnRxV24Ml02OHwCI8OhAwRihp0FA=;
+        b=q/7pOQ5Oh+whsv48qMe0GXnVdyJeRU5BSPgVk8ec0j9RH9RuRedZ5JDUwBzKkEYNiK
+         eRF5Sq0zHRMXQtP23yMuLsevySV2cK93BQyzNK6MTcz9xI8kxWXpO6VauHU1XhBkeHGm
+         ENyKQrbhp6giCt0m6Lav/sIiVBnsl/BFcF9m6W4pfMoFa4WIHb4aiNWtb/DwQf7rkkfR
+         SbtNBZcEtlV7NKWxk5eIMQCPUqIL9mg9imkVlEPOeUpYsvRSds/zpUpLdpjf+rxOyczl
+         BRpFPTJ4bvCON3y5WiRlGqffLbKb6+r1C+TQXzMN5Fe+JwZ4dee6OR3PlIeE1hBWni9j
+         puOA==
+X-Gm-Message-State: ANhLgQ3sSVgPLBEjK4kTri1JyTQw81kMShOqR1+jngCHIkiI4KnwDuzC
+        9751jxfiJqiYlMIew5zdLPItA01nEx0974TZs/3r17GSPluJ89n4Sxzy1Yp2azr6iyZfZcoWsTx
+        P3sdCxDJNZL5WWIvK3e7GdcS2
+X-Received: by 2002:a05:6000:1186:: with SMTP id g6mr1840641wrx.331.1583418236633;
+        Thu, 05 Mar 2020 06:23:56 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsCAlsOC+yFneBefdJyj3+DCMaXPX18cRQKObXoQhxnoFrirb6aowWyILujBlj4CBuhZjFHmQ==
+X-Received: by 2002:a05:6000:1186:: with SMTP id g6mr1840623wrx.331.1583418236409;
+        Thu, 05 Mar 2020 06:23:56 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id z12sm17349361wrs.43.2020.03.05.06.23.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 06:23:55 -0800 (PST)
+Subject: Re: [PATCH v2 1/4] x86/kvm/hyper-v: Align the hcall param for
+ kvm_hyperv_exit
+To:     Jon Doron <arilou@gmail.com>, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Cc:     vkuznets@redhat.com
 References: <20200305140142.413220-1-arilou@gmail.com>
+ <20200305140142.413220-2-arilou@gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <09762184-9913-d334-0a33-b76d153bc371@redhat.com>
+Date:   Thu, 5 Mar 2020 15:23:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200305140142.413220-2-arilou@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-There is another mode for the synthetic debugger which uses hypercalls
-to send/recv network data instead of the MSR interface.
+On 05/03/20 15:01, Jon Doron wrote:
+> Signed-off-by: Jon Doron <arilou@gmail.com>
+> ---
+>  include/uapi/linux/kvm.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 4b95f9a31a2f..9b4d449f4d20 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -200,6 +200,7 @@ struct kvm_hyperv_exit {
+>  			__u64 input;
+>  			__u64 result;
+>  			__u64 params[2];
+> +			__u32 pad;
+>  		} hcall;
+>  	} u;
+>  };
+> 
 
-This interface is much slower and less recommended since you might get
-a lot of VMExits while KDVM polling for new packets to recv, rather
-than simply checking the pending page to see if there is data avialble
-and then request.
+Can you explain the purpose of this patch?
 
-Signed-off-by: Jon Doron <arilou@gmail.com>
----
- arch/x86/include/asm/hyperv-tlfs.h |  5 +++++
- arch/x86/kvm/hyperv.c              | 17 +++++++++++++++++
- 2 files changed, 22 insertions(+)
-
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index 8efdf974c23f..4fa6bf3732a6 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -283,6 +283,8 @@
- #define HV_X64_MSR_SYNDBG_PENDING_BUFFER	0x400000F5
- #define HV_X64_MSR_SYNDBG_OPTIONS		0x400000FF
- 
-+#define HV_X64_SYNDBG_OPTION_USE_HCALLS		BIT(2)
-+
- /* Hyper-V guest crash notification MSR's */
- #define HV_X64_MSR_CRASH_P0			0x40000100
- #define HV_X64_MSR_CRASH_P1			0x40000101
-@@ -392,6 +394,9 @@ struct hv_tsc_emulation_status {
- #define HVCALL_SEND_IPI_EX			0x0015
- #define HVCALL_POST_MESSAGE			0x005c
- #define HVCALL_SIGNAL_EVENT			0x005d
-+#define HVCALL_POST_DEBUG_DATA			0x0069
-+#define HVCALL_RETRIEVE_DEBUG_DATA		0x006a
-+#define HVCALL_RESET_DEBUG_SESSION		0x006b
- #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
- #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
- 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index d657a312004a..52517e11e643 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1800,6 +1800,23 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 		}
- 		ret = kvm_hv_send_ipi(vcpu, ingpa, outgpa, true, false);
- 		break;
-+	case HVCALL_POST_DEBUG_DATA:
-+	case HVCALL_RETRIEVE_DEBUG_DATA:
-+	case HVCALL_RESET_DEBUG_SESSION: {
-+		struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
-+		if (!(syndbg->options & HV_X64_SYNDBG_OPTION_USE_HCALLS)) {
-+			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
-+			break;
-+		}
-+		vcpu->run->exit_reason = KVM_EXIT_HYPERV;
-+		vcpu->run->hyperv.type = KVM_EXIT_HYPERV_HCALL;
-+		vcpu->run->hyperv.u.hcall.input = param;
-+		vcpu->run->hyperv.u.hcall.params[0] = ingpa;
-+		vcpu->run->hyperv.u.hcall.params[1] = outgpa;
-+		vcpu->arch.complete_userspace_io =
-+				kvm_hv_hypercall_complete_userspace;
-+		return 0;
-+	}
- 	default:
- 		ret = HV_STATUS_INVALID_HYPERCALL_CODE;
- 		break;
--- 
-2.24.1
+Paolo
 
