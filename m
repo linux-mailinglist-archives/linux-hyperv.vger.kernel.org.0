@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC8F117AC64
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2020 18:21:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFE7417AC11
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2020 18:19:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgCERT6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 Mar 2020 12:19:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41432 "EHLO mail.kernel.org"
+        id S1727121AbgCERSN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Mar 2020 12:18:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbgCERO4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:56 -0500
+        id S1728117AbgCERPf (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68C1B208CD;
-        Thu,  5 Mar 2020 17:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3015421739;
+        Thu,  5 Mar 2020 17:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428496;
-        bh=lO1UH01J7A3H2aiiOH7025Kaf9ZfmBqsMYKoSCLkem0=;
+        s=default; t=1583428534;
+        bh=7EZFA0yEFYm/NUSzTiHK2MXkr9twqygEe+mMb0V/yWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYZOWTiSvUF3k3vxP9c0j1rrQacjF8xP9HZBfBxgOLEsS6AR93BsCq7B/65Io8VdN
-         4KH2Tg/7ZupAPH2PsMnhT1M3DbSvucLinvxWFU1cbrZ14evmiUyfHmkkXTd0+6ir7L
-         Ci9oymwoIZPibkuSXcaf3kqSkaXa5gzY4AAakRwE=
+        b=mvLsdfTm1WOt1yORKmrZEVT0Syp/rWy2nXoBAxYvfxliDFnk3G64LROa0yD8MmjOV
+         TAQMgrMoebLtUAsjxnsVqcgAR7KFe4nG6UhzRNwt+4AK0WE1j0aQn1N21OIE2WJS4e
+         0FrRM2lGXMl6f1WEwwjSH4Q6pXs92XeBqj8VJY1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 28/58] hv_netvsc: Fix unwanted wakeup in netvsc_attach()
-Date:   Thu,  5 Mar 2020 12:13:49 -0500
-Message-Id: <20200305171420.29595-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 14/31] hv_netvsc: Fix unwanted wakeup in netvsc_attach()
+Date:   Thu,  5 Mar 2020 12:14:58 -0500
+Message-Id: <20200305171516.30028-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
-References: <20200305171420.29595-1-sashal@kernel.org>
+In-Reply-To: <20200305171516.30028-1-sashal@kernel.org>
+References: <20200305171516.30028-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -73,10 +73,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index eab83e71567a9..6c0732fc8c250 100644
+index dbfd3a0c97d3b..77a9a753d9794 100644
 --- a/drivers/net/hyperv/netvsc.c
 +++ b/drivers/net/hyperv/netvsc.c
-@@ -99,7 +99,7 @@ static struct netvsc_device *alloc_net_device(void)
+@@ -110,7 +110,7 @@ static struct netvsc_device *alloc_net_device(void)
  
  	init_waitqueue_head(&net_device->wait_drain);
  	net_device->destroy = false;
@@ -86,10 +86,10 @@ index eab83e71567a9..6c0732fc8c250 100644
  	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
  	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
 diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 0dee358864f30..ca16ae8c83328 100644
+index 7ab576d8b6227..bdb55db4523b1 100644
 --- a/drivers/net/hyperv/netvsc_drv.c
 +++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -973,6 +973,7 @@ static int netvsc_attach(struct net_device *ndev,
+@@ -984,6 +984,7 @@ static int netvsc_attach(struct net_device *ndev,
  	}
  
  	/* In any case device is now ready */
@@ -97,7 +97,7 @@ index 0dee358864f30..ca16ae8c83328 100644
  	netif_device_attach(ndev);
  
  	/* Note: enable and attach happen when sub-channels setup */
-@@ -2350,6 +2351,8 @@ static int netvsc_probe(struct hv_device *dev,
+@@ -2336,6 +2337,8 @@ static int netvsc_probe(struct hv_device *dev,
  	else
  		net->max_mtu = ETH_DATA_LEN;
  
