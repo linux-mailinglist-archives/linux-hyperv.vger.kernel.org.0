@@ -2,95 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FEAF17A972
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2020 16:59:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A960E17AAC7
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2020 17:45:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgCEP7F (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 Mar 2020 10:59:05 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35307 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgCEP7F (ORCPT
+        id S1725991AbgCEQpZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Mar 2020 11:45:25 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26419 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726004AbgCEQpZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:59:05 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r7so7685737wro.2;
-        Thu, 05 Mar 2020 07:59:04 -0800 (PST)
+        Thu, 5 Mar 2020 11:45:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583426724;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ctNq4CCoaNBHGFzM1KPycpQ4JYOcWX3tmGXm2KQziW8=;
+        b=ftA4Otd+w4thiQWFMnr+QVKAp5U8emMbdrxFELHRI+q2mWK3ybRbqXcv3sVcEjvIwXKoQR
+        tXQsAbHBIRgbx68FEx+RmXvJSwiH0nrROCS+emvrUN92BVWd8qh5NfFL0xuBQxxwXcieDI
+        G3qNYI3VhNDY9f28N1iJd3e3E0dHyL8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-172-JhQSio5nMGS9SZ_p0ZHHfA-1; Thu, 05 Mar 2020 11:45:23 -0500
+X-MC-Unique: JhQSio5nMGS9SZ_p0ZHHfA-1
+Received: by mail-wm1-f69.google.com with SMTP id d129so2307998wmd.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 05 Mar 2020 08:45:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=aCB9L1TCzoGV2wPRhB/5CLpoAqtfcOA7EFraTWxgd74=;
-        b=cqGlS1xk7wG0NnLLcjcuNia/wPD/dnf24mXs/sLI6jPUC9sTUEK4xUiJrtdGm1k53s
-         BrI43owyJlBG4F0A9J/7YKfRMBqT7atv6xN6RkA1QUU4MdfCvGg8G2+1NYCB9paT2AtS
-         srO6t25Ffjt8N3N0wyZd7/l20k+j2vdJ6jOYHpA1UZXKjxR0+ucRwhqgWSsSZm3ZWpKh
-         ZN9ShH0gabqZaVCZuqZFxrqcF7DYPCAqfez+Ij8Ghyr6femvl/Xvrv24/ZCQYGivhP76
-         B2aRW91+zQeyNysegH6VCL+P9vFA/k5aBB6f00iK+Tus9p+m8k881o+ExJQvvKXwJW42
-         UshQ==
-X-Gm-Message-State: ANhLgQ1x3HPWuoXlJ9e8VSeFrkJnUa2GYrJGq1eJ3hE2J4t1sVXOo3Bn
-        ESn9A2DrnBEpluTq4uDY0yQ=
-X-Google-Smtp-Source: ADFU+vvMwTPvKadCAFBemUxuFtpBthjV2ZtzZjzNC6JbbgqinjgxbqNSGThIPS/v5DHroI6F6JDlCg==
-X-Received: by 2002:a5d:5290:: with SMTP id c16mr2345631wrv.235.1583423944306;
-        Thu, 05 Mar 2020 07:59:04 -0800 (PST)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id p15sm9453994wma.40.2020.03.05.07.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:59:03 -0800 (PST)
-Date:   Thu, 5 Mar 2020 15:59:02 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        sashal@kernel.org, haiyangz@microsoft.com
-Subject: [GIT PULL] Hyper-V commits for 5.6-rc
-Message-ID: <20200305155901.xmstcqwutrb6s7pi@debian>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ctNq4CCoaNBHGFzM1KPycpQ4JYOcWX3tmGXm2KQziW8=;
+        b=NfNbsCMwi1fFEuHXnq1Ew7jlzV/H4XLbsRmhP9izqmZIFAmLIrOWbpz063ySjUPTn6
+         QkB1zZREdbgGqy3P0+sHrilb1L8pVYYLLlxH5cADwvTbGSJh664hOgXJf8KRj9RSHvUR
+         hn0T0m7viRUEPY1BIa+706It4Oej3WdH/zp9ODZhonDNStn8N3JTfwTGZh4/+EwkpfAz
+         l/vZcpLErfSBwYf68d+Hl70YQVIm6n257RySltWpj6/7E3HZTgx5oS6Rl35ePSIBGYVE
+         w7Oi59v7VkKcBsqdmiIxh/oLWG8tBVD9LX8ZFX8LuzGjcT01oBz8gQx9CXo0E9cm9a27
+         n3Rg==
+X-Gm-Message-State: ANhLgQ0V96LNAvdvP13d7BhO9R+rnKlAmJp+AXe3kUHuk33Q1f19tkVL
+        27S8ydYq9MThK6kDezAKL/O8ivkJ6PEGo1XLmR8QshaoWYhfUOZQRKvTog9xdOEweeC31BjFzQP
+        FngZUlFqbf7rJRAAzs9HwHYmO
+X-Received: by 2002:a05:600c:4108:: with SMTP id j8mr10410538wmi.188.1583426720208;
+        Thu, 05 Mar 2020 08:45:20 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtqIAyf6ANiV/6hH7zyPHEAgMKe6UD6gdYRfrFD40jdUM+Pii4EnaD7zdAuV588Uc8uu6P6iQ==
+X-Received: by 2002:a05:600c:4108:: with SMTP id j8mr10410494wmi.188.1583426719539;
+        Thu, 05 Mar 2020 08:45:19 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id m19sm9856625wmc.34.2020.03.05.08.45.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 08:45:18 -0800 (PST)
+Subject: Re: [PATCH v2 1/4] x86/kvm/hyper-v: Align the hcall param for
+ kvm_hyperv_exit
+To:     Jon Doron <arilou@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20200305140142.413220-1-arilou@gmail.com>
+ <20200305140142.413220-2-arilou@gmail.com>
+ <09762184-9913-d334-0a33-b76d153bc371@redhat.com>
+ <CAP7QCoj9=mZCWdiOa92QP9Fjb=p3DfKTs0xHKZYQ+yRiMabmLA@mail.gmail.com>
+ <0edfee0e-01ee-bb62-5fc5-67d7d45ec192@redhat.com>
+ <CAP7QCogGkC_wOPuuz2cZDb0aRv0GzMGDR2Y0voU8w4hdtO39BQ@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bb520125-71e5-51b2-5477-164205656fb7@redhat.com>
+Date:   Thu, 5 Mar 2020 17:45:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAP7QCogGkC_wOPuuz2cZDb0aRv0GzMGDR2Y0voU8w4hdtO39BQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus,
+On 05/03/20 16:52, Jon Doron wrote:
+> bah you are right sorry :( but if ill do that ill break userspace no?
 
-Sasha Levin recently stepped down as the Hyper-V tree maintainer and I
-(along with Haiyang Zhang) will be responsible for sending Hyper-V
-patches to you.
+No, you'd just be making the padding explicit.
 
-This is mostly a "dry-run" attempt to sort out any wrinkles on my end.
-If I have done something stupid, let me know.
+Paolo
 
-Please pull from the signed tag below.
+> 
+> On Thu, Mar 5, 2020 at 5:30 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>> On 05/03/20 15:53, Jon Doron wrote:
+>>> Vitaly recommended we will align the struct to 64bit...
+>> Oh, then I think you actually should add a padding after "__u32 type;"
+>> and "__u32 msr;" if you want to make it explicit.  The patch, as is, is
+>> not aligning anything, hence my confusion.
 
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
-
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
-tags/hyperv-fixes-signed
-
-for you to fetch changes up to 5313b2a58ef02e2b077d7ae8088043609e3155b0:
-
-  HID: hyperv: NULL check before some freeing functions is not needed.
-(2020-03-05 14:17:11 +0000)
-
-----------------------------------------------------------------
-- Update MAINTAINERS file for Hyper-V.
-- One cleanup patch for Hyper-V HID driver.
-
-----------------------------------------------------------------
-Lucas Tanure (1):
-      HID: hyperv: NULL check before some freeing functions is not needed.
-
-Sasha Levin (1):
-      Hyper-V: Drop Sasha Levin from the Hyper-V maintainers
-
-Wei Liu (1):
-      Hyper-V: add myself as a maintainer
-
- MAINTAINERS              | 2 +-
- drivers/hid/hid-hyperv.c | 6 ++----
- 2 files changed, 3 insertions(+), 5 deletions(-)
