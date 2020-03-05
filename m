@@ -2,94 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A960E17AAC7
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2020 17:45:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E1B17ACCA
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Mar 2020 18:22:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgCEQpZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 Mar 2020 11:45:25 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26419 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726004AbgCEQpZ (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:45:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583426724;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ctNq4CCoaNBHGFzM1KPycpQ4JYOcWX3tmGXm2KQziW8=;
-        b=ftA4Otd+w4thiQWFMnr+QVKAp5U8emMbdrxFELHRI+q2mWK3ybRbqXcv3sVcEjvIwXKoQR
-        tXQsAbHBIRgbx68FEx+RmXvJSwiH0nrROCS+emvrUN92BVWd8qh5NfFL0xuBQxxwXcieDI
-        G3qNYI3VhNDY9f28N1iJd3e3E0dHyL8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-JhQSio5nMGS9SZ_p0ZHHfA-1; Thu, 05 Mar 2020 11:45:23 -0500
-X-MC-Unique: JhQSio5nMGS9SZ_p0ZHHfA-1
-Received: by mail-wm1-f69.google.com with SMTP id d129so2307998wmd.2
-        for <linux-hyperv@vger.kernel.org>; Thu, 05 Mar 2020 08:45:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ctNq4CCoaNBHGFzM1KPycpQ4JYOcWX3tmGXm2KQziW8=;
-        b=NfNbsCMwi1fFEuHXnq1Ew7jlzV/H4XLbsRmhP9izqmZIFAmLIrOWbpz063ySjUPTn6
-         QkB1zZREdbgGqy3P0+sHrilb1L8pVYYLLlxH5cADwvTbGSJh664hOgXJf8KRj9RSHvUR
-         hn0T0m7viRUEPY1BIa+706It4Oej3WdH/zp9ODZhonDNStn8N3JTfwTGZh4/+EwkpfAz
-         l/vZcpLErfSBwYf68d+Hl70YQVIm6n257RySltWpj6/7E3HZTgx5oS6Rl35ePSIBGYVE
-         w7Oi59v7VkKcBsqdmiIxh/oLWG8tBVD9LX8ZFX8LuzGjcT01oBz8gQx9CXo0E9cm9a27
-         n3Rg==
-X-Gm-Message-State: ANhLgQ0V96LNAvdvP13d7BhO9R+rnKlAmJp+AXe3kUHuk33Q1f19tkVL
-        27S8ydYq9MThK6kDezAKL/O8ivkJ6PEGo1XLmR8QshaoWYhfUOZQRKvTog9xdOEweeC31BjFzQP
-        FngZUlFqbf7rJRAAzs9HwHYmO
-X-Received: by 2002:a05:600c:4108:: with SMTP id j8mr10410538wmi.188.1583426720208;
-        Thu, 05 Mar 2020 08:45:20 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtqIAyf6ANiV/6hH7zyPHEAgMKe6UD6gdYRfrFD40jdUM+Pii4EnaD7zdAuV588Uc8uu6P6iQ==
-X-Received: by 2002:a05:600c:4108:: with SMTP id j8mr10410494wmi.188.1583426719539;
-        Thu, 05 Mar 2020 08:45:19 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
-        by smtp.gmail.com with ESMTPSA id m19sm9856625wmc.34.2020.03.05.08.45.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 08:45:18 -0800 (PST)
-Subject: Re: [PATCH v2 1/4] x86/kvm/hyper-v: Align the hcall param for
- kvm_hyperv_exit
-To:     Jon Doron <arilou@gmail.com>
-Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20200305140142.413220-1-arilou@gmail.com>
- <20200305140142.413220-2-arilou@gmail.com>
- <09762184-9913-d334-0a33-b76d153bc371@redhat.com>
- <CAP7QCoj9=mZCWdiOa92QP9Fjb=p3DfKTs0xHKZYQ+yRiMabmLA@mail.gmail.com>
- <0edfee0e-01ee-bb62-5fc5-67d7d45ec192@redhat.com>
- <CAP7QCogGkC_wOPuuz2cZDb0aRv0GzMGDR2Y0voU8w4hdtO39BQ@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <bb520125-71e5-51b2-5477-164205656fb7@redhat.com>
-Date:   Thu, 5 Mar 2020 17:45:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726498AbgCERWe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Mar 2020 12:22:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgCERNy (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:54 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CE9E21556;
+        Thu,  5 Mar 2020 17:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583428434;
+        bh=Ij2MEWRjjy9It1Ke61TFe1l8jjI4fJ1Dr5t94RjaqVQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A1oeuaHFdnpSz2VjTyPUIASebVfsTjl86hCgAisi3peDXP5NIiz3Pb/vMo3gklhqv
+         LnDyAMB8rJB+wfNd5OVhC1m2JLV6mGKK3JHeWYshMx+tKtxhglthqWuQsetTgv/qFZ
+         rWL6EyFp9SjnGdu+ePx8ipNdgWnck3hY5YVFO1Bc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 32/67] hv_netvsc: Fix unwanted wakeup in netvsc_attach()
+Date:   Thu,  5 Mar 2020 12:12:33 -0500
+Message-Id: <20200305171309.29118-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
+References: <20200305171309.29118-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAP7QCogGkC_wOPuuz2cZDb0aRv0GzMGDR2Y0voU8w4hdtO39BQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 05/03/20 16:52, Jon Doron wrote:
-> bah you are right sorry :( but if ill do that ill break userspace no?
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-No, you'd just be making the padding explicit.
+[ Upstream commit f6f13c125e05603f68f5bf31f045b95e6d493598 ]
 
-Paolo
+When netvsc_attach() is called by operations like changing MTU, etc.,
+an extra wakeup may happen while netvsc_attach() calling
+rndis_filter_device_add() which sends rndis messages when queue is
+stopped in netvsc_detach(). The completion message will wake up queue 0.
 
-> 
-> On Thu, Mar 5, 2020 at 5:30 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->> On 05/03/20 15:53, Jon Doron wrote:
->>> Vitaly recommended we will align the struct to 64bit...
->> Oh, then I think you actually should add a padding after "__u32 type;"
->> and "__u32 msr;" if you want to make it explicit.  The patch, as is, is
->> not aligning anything, hence my confusion.
+We can reproduce the issue by changing MTU etc., then the wake_queue
+counter from "ethtool -S" will increase beyond stop_queue counter:
+     stop_queue: 0
+     wake_queue: 1
+The issue causes queue wake up, and counter increment, no other ill
+effects in current code. So we didn't see any network problem for now.
+
+To fix this, initialize tx_disable to true, and set it to false when
+the NIC is ready to be attached or registered.
+
+Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/hyperv/netvsc.c     | 2 +-
+ drivers/net/hyperv/netvsc_drv.c | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index eab83e71567a9..6c0732fc8c250 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -99,7 +99,7 @@ static struct netvsc_device *alloc_net_device(void)
+ 
+ 	init_waitqueue_head(&net_device->wait_drain);
+ 	net_device->destroy = false;
+-	net_device->tx_disable = false;
++	net_device->tx_disable = true;
+ 
+ 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
+ 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index f3f9eb8a402a2..ee1ad7ae75550 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -977,6 +977,7 @@ static int netvsc_attach(struct net_device *ndev,
+ 	}
+ 
+ 	/* In any case device is now ready */
++	nvdev->tx_disable = false;
+ 	netif_device_attach(ndev);
+ 
+ 	/* Note: enable and attach happen when sub-channels setup */
+@@ -2354,6 +2355,8 @@ static int netvsc_probe(struct hv_device *dev,
+ 	else
+ 		net->max_mtu = ETH_DATA_LEN;
+ 
++	nvdev->tx_disable = false;
++
+ 	ret = register_netdevice(net);
+ 	if (ret != 0) {
+ 		pr_err("Unable to register netdev.\n");
+-- 
+2.20.1
 
