@@ -2,77 +2,145 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F3817BA2F
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Mar 2020 11:29:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E504117C09C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Mar 2020 15:43:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgCFK3J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 6 Mar 2020 05:29:09 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37393 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgCFK3J (ORCPT
+        id S1727518AbgCFOnK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 6 Mar 2020 09:43:10 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40215 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbgCFOnJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:29:09 -0500
-Received: by mail-wr1-f66.google.com with SMTP id 6so1718038wre.4;
-        Fri, 06 Mar 2020 02:29:07 -0800 (PST)
+        Fri, 6 Mar 2020 09:43:09 -0500
+Received: by mail-lf1-f68.google.com with SMTP id p5so2106783lfc.7;
+        Fri, 06 Mar 2020 06:43:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o3DVrX7dUQC3QbATMcETpnI+Z1HuqofnTymVGHpuzYY=;
+        b=EzhkDARjUonOmJKZoBakTmmlGVDqNwzGwuuQy1BwfgVX1ZPNyRN5CkIAkTQ+F7vec9
+         MkLjHlk+N1stZU4cVrxU/yj/oMih/909riqXGFFYvoGSWTlUY5Yb8eNM+Sr9i3xNwSJV
+         paRrBnSAYwW1P80pEsG1bz+cmroutc329rCzWAKM/BNL9Eo47fQmBwk1i9hiSI7/AJdq
+         7cikL7nijfYad/JHCVfJGue/VCN+t28u0MdKp22DRF5Hz6ckdTa2IXm0rIiUQm7Fb0rj
+         /Qe9b6vhn+XrGqrE+od5CYKWBekJMAMO+OSFa3wQ24ycxxUh25Fe10dA+aQ201YZXCTX
+         iPnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kPmvm5eep4b15mdjBsaFZDnjDCC2+N4EYbDGpSejUoI=;
-        b=eyunxr9X2CcqC055epinyd7TPLTWSX3qdUKqbxUgTJgzC4OmqDHh35TURP5XgCN+8a
-         g2/3HkjOs/EeJhAO3rPEEmD85NtOnL/B4HzUmtEDzGnAx1mDUFRe703nTHZJPgqIV6yV
-         oVcJDCLsBsRYVxTbnERCA7qs608UbJQYsCYDc/4ZyOGkhybszlH8+kZ0LszvlvHSrZ3v
-         J9y+Fbaz9M4/wn6y4Vm3IuI/e6NEme832uD7I0wlOGxyG2uh/Zgvbu2s/ysAau7cVHc9
-         xXp5oefkXl3zH9FKbr2f1K58iBAUurgDsE7NRznk8+DN3buteIeAxFqAgwTbp/8BWZC2
-         WKkw==
-X-Gm-Message-State: ANhLgQ0l300C8RnGmfocfZ4S6aXIbpoCwa+kJsjLZx+PML9BT8YmmxMf
-        ag6kxW93ukSmYfKEEc87dBQBKWph
-X-Google-Smtp-Source: ADFU+vuf9OdMAReh9/+brhM7Nvsa4VH/zzToHxnC+7vV4GfFUX3cG99oYOKa0H9UBCPR0ORcGMisKw==
-X-Received: by 2002:a5d:5224:: with SMTP id i4mr3143044wra.285.1583490547034;
-        Fri, 06 Mar 2020 02:29:07 -0800 (PST)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id i6sm15429541wra.42.2020.03.06.02.29.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 02:29:06 -0800 (PST)
-Date:   Fri, 6 Mar 2020 10:29:04 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        Sasha Levin <sashal@kernel.org>, haiyangz@microsoft.com
-Subject: Re: [GIT PULL] Hyper-V commits for 5.6-rc
-Message-ID: <20200306102904.625skxmfbne2zwbp@debian>
-References: <20200305155901.xmstcqwutrb6s7pi@debian>
- <CAHk-=wisKNsaOOCO8TfigKwmuqX83+KvntYeGq-KbOcSPunQbg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o3DVrX7dUQC3QbATMcETpnI+Z1HuqofnTymVGHpuzYY=;
+        b=Gdey5uVXO6lyOBET/CiCmeSeEntcRdkNvkeZ3ILGhq8Cg72Y2zFpbRwBnh2XAlVoQO
+         GzhgWZROA7jlu372eIjyod+nTr8UKxkjw17RB7UbtV+AiqVTJLWyDN+lFfbmlbXAJDHi
+         Ta9J73OpQgjT8QxbiScIpsg4tZTyXsA1VMFq8QAzNagFYo5qYMAmNAbVE9NpJgiaUSt8
+         +xi1XZbZBlm8j2n4YgtSgyzqH19CNAUGuMllMFIIPujS3fayE7cBf4sWhlrJxn2PcA+L
+         hX1oThehlSnHvSGDh+ybpLg7po4NAgcK1tUPfIxEe9r7hlI06a6XK7lK1fZv+OM+Hnam
+         ZUrg==
+X-Gm-Message-State: ANhLgQ0p6XYtaKo6kRkX5HaTouKbOPpuMT2vBj6JUKYUe36AMuSh+aMo
+        kDAbxkMRfdelBglmfOwluQcOR8PCGTLdWfxxTgs=
+X-Google-Smtp-Source: ADFU+vtgJtFcdoBBGOREy3c0wSP0h7mwVRGzOddZ4+/os0YZq+NZJqsqxRhrORPMro+0YFi++XxBHND5tERQDnkkBRY=
+X-Received: by 2002:a19:f507:: with SMTP id j7mr2186508lfb.161.1583505787299;
+ Fri, 06 Mar 2020 06:43:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wisKNsaOOCO8TfigKwmuqX83+KvntYeGq-KbOcSPunQbg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20200305140142.413220-1-arilou@gmail.com> <20200305140142.413220-2-arilou@gmail.com>
+ <09762184-9913-d334-0a33-b76d153bc371@redhat.com> <CAP7QCoj9=mZCWdiOa92QP9Fjb=p3DfKTs0xHKZYQ+yRiMabmLA@mail.gmail.com>
+ <0edfee0e-01ee-bb62-5fc5-67d7d45ec192@redhat.com> <87ftelepwz.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87ftelepwz.fsf@vitty.brq.redhat.com>
+From:   Jon Doron <arilou@gmail.com>
+Date:   Fri, 6 Mar 2020 16:42:55 +0200
+Message-ID: <CAP7QCoiqjtpmMwo_P17pzNg5wP=6MaCRw7_TLu6GPQHH1XVT0g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] x86/kvm/hyper-v: Align the hcall param for kvm_hyperv_exit
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 12:28:48PM -0600, Linus Torvalds wrote:
-> On Thu, Mar 5, 2020 at 9:59 AM Wei Liu <wei.liu@kernel.org> wrote:
+Thanks Vitaly and Paoloo I'll fix the 1st patch and wait for the final
+review on the other 3 and submit v3, I'll also look into adding
+the proper test for the Hypercall patch to
+https://git.kernel.org/pub/scm/virt/kvm/kvm-unit-tests.git, and submit
+a separate patch
+to that repository.
+
+Thanks,
+-- Jon.
+
+On Fri, Mar 6, 2020 at 12:30 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Paolo Bonzini <pbonzini@redhat.com> writes:
+>
+> > On 05/03/20 15:53, Jon Doron wrote:
+> >> Vitaly recommended we will align the struct to 64bit...
 > >
-> > This is mostly a "dry-run" attempt to sort out any wrinkles on my end.
-> > If I have done something stupid, let me know.
-> 
-> Looks fine. I generally like seeing the commits being a bit older than
-> these are - you seem to have applied or rebased them not all that long
-> before sending the pull request. I prefer seeing that they've been in
-> linux-next etc, but for soemthing small like this I guess it doesn't
-> much matter. Next time?
-
-Ack.
-
-Those patches were applied not very long before sending the pull request
-because I thought simple patches should be fine.
-
-In the future I will let patches go in linux-next first.
-
-Wei.
+> > Oh, then I think you actually should add a padding after "__u32 type;"
+> > and "__u32 msr;" if you want to make it explicit.  The patch, as is, is
+> > not aligning anything, hence my confusion.
+> >
+>
+> Right,
+>
+> the problem I tried to highlight is that without propper padding ABI may
+> change, e.g.
+>
+> #include <stdio.h>
+> #include <stdint.h>
+> #include <stddef.h>
+>
+> #define __u32 uint32_t
+> #define __u64 uint64_t
+>
+> struct kvm_hyperv_exit {
+>         __u32 type;
+>         union {
+>                 struct {
+>                         __u32 msr;
+>                         __u64 control;
+>                         __u64 evt_page;
+>                         __u64 msg_page;
+>                 } synic;
+>                 struct {
+>                         __u64 input;
+>                         __u64 result;
+>                         __u64 params[2];
+>                 } hcall;
+>         } u;
+> };
+>
+> int main() {
+>         printf("%d\n", offsetof(struct kvm_hyperv_exit, u.synic.control));
+>         printf("%d\n", offsetof(struct kvm_hyperv_exit, u.hcall.input));
+>
+>         return 0;
+> }
+>
+> $ gcc -m32 1.c -o 1
+> $ ./1
+> 8
+> 4
+>
+> $ gcc 1.c -o 1
+> $ ./1
+> 16
+> 8
+>
+> if we add a padding after 'type' and 'msr' we'll get
+> $ gcc -m32 1.c -o 1
+> $ ./1
+> 16
+> 8
+>
+> $ gcc 1.c -o 1
+> $ ./1
+> 16
+> 8
+>
+> which is much better. Technically, this is an ABI change on 32 bit but
+> I'm pretty sure noone cares (famous last words!).
+>
+> --
+> Vitaly
+>
