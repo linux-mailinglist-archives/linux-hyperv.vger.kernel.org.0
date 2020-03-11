@@ -2,103 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6250180494
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Mar 2020 18:14:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB6B1180F8E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Mar 2020 06:13:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgCJROR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 10 Mar 2020 13:14:17 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36604 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgCJROR (ORCPT
+        id S1726855AbgCKFNy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 Mar 2020 01:13:54 -0400
+Received: from smtprelay0137.hostedemail.com ([216.40.44.137]:42890 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726472AbgCKFNy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:14:17 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s5so12989936wrg.3;
-        Tue, 10 Mar 2020 10:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YxvAecFulSD8TnYu6Bdw3yluyHTPsAWlb/0EQPhybgQ=;
-        b=SPr60n6OSWbLna/pRLxYdMcGAsdyqT7XCIi+09nutJD29iRPlx6m8oVdZcK4iApRtG
-         32KAdMaO2Jg1mWSXym/DmureZCJ/qe0xzsc43FZIHpa3fjwf4IKfNfuEo7MIJoLhe29o
-         CfHEnQy1CRQbOSggcj1urjjYJ7QWJB4bgmCGbxziFgvBV5h1hJwHbts5FhOIicctDb9T
-         7rmZBDpsMH9msitNbBC6bKKlf6Hwxn6t9cNjKdhoupY6J1SPg/eYRg5P1xk3rmEciOiq
-         IZOLzaqiwYk9+rNcR2ZDHJu1zhwJm5eUwoY4ltmH1FbCM31wO8R/HZyyvLeq7j7UIz+E
-         O74Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YxvAecFulSD8TnYu6Bdw3yluyHTPsAWlb/0EQPhybgQ=;
-        b=oYDUz98Gvdit9NvWuifZisrVaoNk5WLjKgWYrWzWGEwBf9MgL5X6C1oiJjPBk6SRHz
-         H7ORrxY60MxfYTXtPJkyyJ+OiknFNXKIsCpjvSP6IqPoPeoNKvS80DEqYLXC3nzVHS7y
-         9C3I6pUJdZDwIwcatpRVG+zTdEZnyRmLqZ6QZyLV6M6GmjesABpkFXtjlyd8VaiUxrZ1
-         KA6LscbDPcTsB8FvxkLj2Cn2R23qsWjN1GrIfVRD7jl1CE81/P94LEyVJKGqpPxwaZlN
-         0AuVhoMxJ36GK/4/xSNsG2T6JB9/P7qfjF4Z2tHdkAi2eLOPFI7QfR7eRBiCpFMgdzFf
-         UhFQ==
-X-Gm-Message-State: ANhLgQ2bV4HWh/W/KmaeUFEXbJQAjo4/wwwd3KHcJLFgcvB34DqSvH4z
-        n5cK8uwiDh38FEupSVX5jKmzpIAKQBU=
-X-Google-Smtp-Source: ADFU+vthAIE2MZTZEesfjfcou/8n96q9par0YA5nRJM1HOgesSd20O6u7XfzN09curTSNmGTLof0zw==
-X-Received: by 2002:adf:9d8f:: with SMTP id p15mr25885968wre.160.1583860453844;
-        Tue, 10 Mar 2020 10:14:13 -0700 (PDT)
-Received: from jondnuc (IGLD-84-229-155-229.inter.net.il. [84.229.155.229])
-        by smtp.gmail.com with ESMTPSA id i6sm1963972wru.40.2020.03.10.10.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 10:14:13 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 19:14:12 +0200
-From:   Jon Doron <arilou@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] x86/kvm/hyper-v: Explicitly align hcall param for
- kvm_hyperv_exit
-Message-ID: <20200310171412.GC13767@jondnuc>
-References: <20200309182017.3559534-1-arilou@gmail.com>
- <20200309182017.3559534-2-arilou@gmail.com>
- <87k13sb14a.fsf@vitty.brq.redhat.com>
+        Wed, 11 Mar 2020 01:13:54 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id CEC3318074F14;
+        Wed, 11 Mar 2020 05:07:24 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 103FF10185974;
+        Wed, 11 Mar 2020 05:07:22 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:541:800:857:960:967:973:982:988:989:1260:1311:1314:1345:1359:1437:1515:1534:1542:1711:1730:1747:1777:1792:2393:2525:2560:2563:2682:2685:2859:2902:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3352:3865:3866:3867:3870:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:4605:5007:6261:9025:9592:10004:10848:11026:11473:11658:11914:12043:12048:12296:12297:12438:12555:12679:12895:12986:13894:14096:14181:14394:14721:21080:21433:21627:21773:21811:21939:30054,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:0,LUA_SUMMARY:none
+X-HE-Tag: dolls43_23050b1e12945
+X-Filterd-Recvd-Size: 3010
+Received: from joe-laptop.perches.com (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 11 Mar 2020 05:07:20 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH -next 019/491] Hyper-V CORE AND DRIVERS: Use fallthrough;
+Date:   Tue, 10 Mar 2020 21:51:33 -0700
+Message-Id: <84677022b8ec4ad14bddab57d871dcbfc0b4a1bf.1583896348.git.joe@perches.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1583896344.git.joe@perches.com>
+References: <cover.1583896344.git.joe@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <87k13sb14a.fsf@vitty.brq.redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 10/03/2020, Vitaly Kuznetsov wrote:
->Jon Doron <arilou@gmail.com> writes:
->
->> Signed-off-by: Jon Doron <arilou@gmail.com>
->> ---
->>  include/uapi/linux/kvm.h | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->> index 4b95f9a31a2f..7acfd6a2569a 100644
->> --- a/include/uapi/linux/kvm.h
->> +++ b/include/uapi/linux/kvm.h
->> @@ -189,6 +189,7 @@ struct kvm_hyperv_exit {
->>  #define KVM_EXIT_HYPERV_SYNIC          1
->>  #define KVM_EXIT_HYPERV_HCALL          2
->>  	__u32 type;
->> +	__u32 pad;
->>  	union {
->>  		struct {
->>  			__u32 msr;
->
->Sorry if I missed something but I think the suggestion was to pad this
->'msr' too (in case we're aiming at making padding explicit for the whole
->structure). Or is there any reason to not do that?
->
->Also, I just noticed that we have a copy of this definition in
->Documentation/virt/kvm/api.rst - it will need to be updated (and sorry
->for not noticing it earlier).
->
->-- 
->Vitaly
->
+Convert the various uses of fallthrough comments to fallthrough;
 
-Heh sure no problem will fix in v5, but going to wait for a verdict on 
-the location for the new CPUID leafs and MSRs for the synthetic 
-debugger.
+Done via script
+Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
 
--- Jon.
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ drivers/hv/hv_kvp.c             | 4 +---
+ drivers/hv/vmbus_drv.c          | 2 +-
+ drivers/video/fbdev/hyperv_fb.c | 4 ++--
+ 3 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
+index e74b144..da4686 100644
+--- a/drivers/hv/hv_kvp.c
++++ b/drivers/hv/hv_kvp.c
+@@ -353,9 +353,7 @@ static void process_ib_ipinfo(void *in_msg, void *out_msg, int op)
+ 				MAX_IP_ADDR_SIZE);
+ 
+ 		out->body.kvp_ip_val.dhcp_enabled = in->kvp_ip_val.dhcp_enabled;
+-
+-		/* fallthrough */
+-
++		fallthrough;
+ 	case KVP_OP_GET_IP_INFO:
+ 		utf16s_to_utf8s((wchar_t *)in->kvp_ip_val.adapter_id,
+ 				MAX_ADAPTER_ID_SIZE,
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 029378..0befc0 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1188,7 +1188,7 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
+ 
+ 			case HV_CALL_BATCHED:
+ 				hv_begin_read(&channel->inbound);
+-				/* fallthrough */
++				fallthrough;
+ 			case HV_CALL_DIRECT:
+ 				tasklet_schedule(&channel->callback_event);
+ 			}
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index e4c3c8b..02411d 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -648,13 +648,13 @@ static int synthvid_connect_vsp(struct hv_device *hdev)
+ 		ret = synthvid_negotiate_ver(hdev, SYNTHVID_VERSION_WIN10);
+ 		if (!ret)
+ 			break;
+-		/* Fallthrough */
++		fallthrough;
+ 	case VERSION_WIN8:
+ 	case VERSION_WIN8_1:
+ 		ret = synthvid_negotiate_ver(hdev, SYNTHVID_VERSION_WIN8);
+ 		if (!ret)
+ 			break;
+-		/* Fallthrough */
++		fallthrough;
+ 	case VERSION_WS2008:
+ 	case VERSION_WIN7:
+ 		ret = synthvid_negotiate_ver(hdev, SYNTHVID_VERSION_WIN7);
+-- 
+2.24.0
+
