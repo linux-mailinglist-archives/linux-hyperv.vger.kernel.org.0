@@ -2,125 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA38718398D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Mar 2020 20:35:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6884D1847E4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Mar 2020 14:20:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCLTe6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 Mar 2020 15:34:58 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39487 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgCLTe6 (ORCPT
+        id S1726553AbgCMNU5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Mar 2020 09:20:57 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40813 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgCMNU4 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 Mar 2020 15:34:58 -0400
-Received: by mail-ed1-f68.google.com with SMTP id df19so2758564edb.6;
-        Thu, 12 Mar 2020 12:34:55 -0700 (PDT)
+        Fri, 13 Mar 2020 09:20:56 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f3so5073864wrw.7;
+        Fri, 13 Mar 2020 06:20:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tjc8SoLQ0iPPs5R6tqoI7FEpA5bssvpFOpirSCG9AUo=;
-        b=CFZ1HPm0mxFV0beitDy0baFDD/IA1iQOtNcX1sDKDUi2JvKxVFWtJv64b1wCvb+L2+
-         4Vlei0IZRqkcHMyais94mQH/rseflDbTa3yLUqm1ZBp+ni9gJM8D2ek7r5bjejHJYcz6
-         z3JGe09vZUpswT4lHddMzyq2cy/pJyFz0Xgk/NEdOrYVIfbDIeSEL+mvF3ttCxElcun1
-         n0hDLu3eomFsKuI6PnEIhRkNcGoyBsMvMC/1Es7U+bhA/vhB057W1+Jst8rlibJAtfBR
-         x2IJIKwTglXpJfyxEQvk56g/Ft8kNy97UpmgnRA22JtO4eAD1lWB4gRoTAWuGJlIZTvx
-         xCmg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uwCiu2+wFwTgNtqnIu7f8w30xax2anlVmGhqQ2d23uI=;
+        b=JJqctYwYpYLlkRXcaX+NqzFqPyV5AhCG9giq/MX7SCx0v1V1Lg/VU6idMdl32TRG24
+         MPoS6r5ckEgPARi0LgtLgm6vP25doAlEKk+N3lSb6tr4oG3vug6UsjwRBN/AjY2tkPxW
+         XRR7NpX5/jVtArwaOA0n8/LhiqG8IYJKOmBzEKm0uFIK82lflmDZOMa3K0voiGWgrR9g
+         lBqw3jepyfxr4ijjCEZ8gGcJAS2Jv97v259M2rISiOM8viWyK/BPodyLqydsVsPHBDRD
+         M0cVsoY6od7Ls8j09JPXytlmeVGliW7uqQQmdtZk0GoLg0PoOsUxCT7UQqSOC6pzMTCX
+         P7sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tjc8SoLQ0iPPs5R6tqoI7FEpA5bssvpFOpirSCG9AUo=;
-        b=NOFpgO5c4aDUVc1i3NAypZhUFZhTW7Uw7oUabKTKjuNt9rTEj3XRwO4W7M71GEn9X0
-         7t6a9AFXg6hIVNgn6QFAzIM32fhqYN8kcuwiAPh9Uy129I2DohV4VaLP2SlotzEcTJbk
-         ePamlK0yRS1u4XpGkPlRWevU69O4yMTLRNp9721eAboLtGX8pI7+1Cr41Mjj5TV5emJa
-         LJT5NwCqw0Z6c9t9LzFDQ5G77HYs6CMJI1e8fSUtBVabv+Rx0seInC7yuJHy9tDAiOdx
-         7Ez3azlzpsvjR/V8hJbBo7L6EppF+3TLBGhIsQFESK5LvI77HKTDHTxw3Kpxc3g33CrN
-         86iQ==
-X-Gm-Message-State: ANhLgQ09E7Dcpdh2m4byOr/bIodBld/MlE4VMkox4896bfObH+mZ3Ni1
-        BKXxAIDhtvCZpfMz/DMqVtAR+hBWHr1KPjlpE3ZAKb/N
-X-Google-Smtp-Source: ADFU+vtUp1Wbm3wLnbEbvXOKoGZ7oChMTHWtz3SGgqckSy0cx/rsf5so0GzY5TvzZqr/Qc3C0E/ssx8h2eE+BcXyKMc=
-X-Received: by 2002:a50:8d11:: with SMTP id s17mr8282457eds.243.1584041695236;
- Thu, 12 Mar 2020 12:34:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200309182017.3559534-1-arilou@gmail.com> <20200309182017.3559534-3-arilou@gmail.com>
- <DM5PR2101MB104761F98A44ACB77DA5B414D7FE0@DM5PR2101MB1047.namprd21.prod.outlook.com>
- <20200310032453.GC3755153@jondnuc> <MW2PR2101MB10522800EB048383C227F556D7FF0@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <87d09hr89w.fsf@vitty.brq.redhat.com> <MW2PR2101MB10527BA547449B34FEC65C1FD7FD0@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <20200312191216.GA2950@jondnuc> <MW2PR2101MB1052572531F218BF7DAFBA2AD7FD0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB1052572531F218BF7DAFBA2AD7FD0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uwCiu2+wFwTgNtqnIu7f8w30xax2anlVmGhqQ2d23uI=;
+        b=janNMJMNhpJNvaubtmi8xdALxkN8yW89p7xm7p6Z/O7FDyuepbxw6LcEvsWpie4JEH
+         eI9gUZZy0y1OBRzQXCJkdU1mqDsjNRPMQWcE3Q1PpkzHyga0cYP5d7Xy66KJkJ7inhuf
+         zlcqt7CiGXe4+qNLeL6M2sk+x7fV2XEclTpRaHot6PvQm1jtZ67+1aBtFrbmfLekBgSS
+         UUoL6ObbXYH7DncPCCRR2chmVUxr8N7X/xbKBOQb9nX/oy9ydk0pHksO9kZJNlims9As
+         OQN3G6B1qFjg3CvO6MhhTeWQHwx6Iyzy/y5Z6nm9cnr7J8RzHs1y2e5ZzakiGIvsQstt
+         Qjyg==
+X-Gm-Message-State: ANhLgQ0CzwL3YTPyYmCFSoqeB8dDbxmk2UcSVs037dDTjTP5FA01Z7DS
+        JZ3PSbiFrm8P0Xb3yhiwJ6fM40BrpBU=
+X-Google-Smtp-Source: ADFU+vsveTEgaA9u+6b5flsmtaadZk8zvbxpPt83ExWqQmGeOxLfmJtW0NfRc5e2j7uJwXPZIB713Q==
+X-Received: by 2002:a05:6000:12c6:: with SMTP id l6mr18691775wrx.217.1584105654145;
+        Fri, 13 Mar 2020 06:20:54 -0700 (PDT)
+Received: from jondnuc.lan (IGLD-84-229-155-229.inter.net.il. [84.229.155.229])
+        by smtp.gmail.com with ESMTPSA id v8sm77112121wrw.2.2020.03.13.06.20.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 06:20:53 -0700 (PDT)
 From:   Jon Doron <arilou@gmail.com>
-Date:   Thu, 12 Mar 2020 21:34:43 +0200
-Message-ID: <CAP7QCogGPQTzEJDAeJGvJT3FBr2BQ9QvCJYGoQ12W99JqdjrtA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] x86/hyper-v: Add synthetic debugger definitions
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     vkuznets <vkuznets@redhat.com>, Wei Liu <wei.liu@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     vkuznets@redhat.com, Jon Doron <arilou@gmail.com>
+Subject: [PATCH v5 0/5] x86/kvm/hyper-v: add support for synthetic debugger
+Date:   Fri, 13 Mar 2020 15:20:29 +0200
+Message-Id: <20200313132034.132315-1-arilou@gmail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sure thing
+Add support for the synthetic debugger interface of hyper-v, the
+synthetic debugger has 2 modes.
+1. Use a set of MSRs to send/recv information (undocumented so it's not
+   going to the hyperv-tlfs.h)
+2. Use hypercalls
 
-On Thu, Mar 12, 2020 at 9:32 PM Michael Kelley <mikelley@microsoft.com> wrote:
->
-> From: Jon Doron <arilou@gmail.com>  Sent: Thursday, March 12, 2020 12:12 PM
-> >
-> > On 12/03/2020, Michael Kelley wrote:
-> > >From: Vitaly Kuznetsov <vkuznets@redhat.com>  Sent: Thursday, March 12, 2020 6:51 AM
-> > >>
-> > >> Michael Kelley <mikelley@microsoft.com> writes:
-> > >>
-> > >> > I'm flexible, and trying to not be a pain-in-the-neck. :-)  What would
-> > >> > the KVM guys think about putting the definitions in a KVM specific
-> > >> > #include file, and clearly marking them as deprecated, mostly
-> > >> > undocumented, and used only to support debugging old Windows
-> > >> > versions?
-> > >>
-> > >> I *think* we should do the following: defines which *are* present in
-> > >> TLFS doc (e.g. HV_FEATURE_DEBUG_MSRS_AVAILABLE,
-> > >> HV_STATUS_OPERATION_DENIED, ...) go to asm/hyperv-tlfs.h, the rest
-> > >> (syndbg) stuff goes to kvm-specific include (I'd suggest we just use
-> > >> hyperv.h we already have).
-> > >>
-> > >> What do you think?
-> > >>
-> > >
-> > >I could live with this proposal, since they *are* in the TLFS v6.0 as it
-> > >exists today. However, v6.0 seems inconsistent in what parts of this
-> > >debugging functionality it exposes, probably just because someone
-> > >hasn't thought comprehensively about the topic across the whole
-> > >document.   I'll make sure that it gets looked at in the next revision
-> > >(which should be a lot sooner that the 2+ years it took to get the v6.0
-> > >revision done).   But I won't be surprised if the remaining vestiges are
-> > >removed at that time, in which case we would want to move the
-> > >definitions from hyperv-tlfs.h to KVM's hyper.h.
-> > >
-> > >Michael
-> >
-> > Hi guys, just a quick note I went over the old HyperV TLFS and it seems
-> > like all the Syndbg MSRs are documented (under Appendix F: Hypervisor
-> > Synthetic MSRs, from v5.0b).
-> >
-> > It seems like the undocumented stuff is HV_X64_MSR_SYNDBG_OPTIONS which
-> > seems kinda odd because that's how you enable the hypercalls debugging
-> > interface which is documented.
-> >
-> > And the syndbg CPUID leafs are not documented as well.
-> >
-> > So would you like me to put all the MSRs in the tlfs omitting the
-> > HV_X64_MSR_SYNDBG_OPTIONS.
-> >
-> > So in hyperv.h we will have HV_X64_MSR_SYNDBG_OPTIONS and the CPUID
-> > leafs.
-> >
->
-> Could you make the decision based on the new v6.0 of the Hyper-V TLFS?
-> See https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
-> to get a copy.  I think some of the synthetic debugger stuff has been dropped
-> from the v6.0 version compared with the earlier v5.0 versions, and I'd like the
-> updates to hyperv-tlfs.h to reflect that newest version.
->
-> Michael
+The first mode is based the following MSRs:
+1. Control/Status MSRs which either asks for a send/recv .
+2. Send/Recv MSRs each holds GPA where the send/recv buffers are.
+3. Pending MSR, holds a GPA to a PAGE that simply has a boolean that
+   indicates if there is data pending to issue a recv VMEXIT.
+
+The first mode implementation is to simply exit to user-space when
+either the control MSR or the pending MSR are being set.
+Then it's up-to userspace to implement the rest of the logic of sending/recving.
+
+In the second mode instead of using MSRs KNet will simply issue
+Hypercalls with the information to send/recv, in this mode the data
+being transferred is UDP encapsulated, unlike in the previous mode in
+which you get just the data to send.
+
+The new hypercalls will exit to userspace which will be incharge of
+re-encapsulating if needed the UDP packets to be sent.
+
+There is an issue though in which KDNet does not respect the hypercall
+page and simply issues vmcall/vmmcall instructions depending on the cpu
+type expecting them to be handled as it a real hypercall was issued.
+
+Jon Doron (5):
+  x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
+  x86/hyper-v: Add synthetic debugger definitions
+  x86/kvm/hyper-v: Add support for synthetic debugger capability
+  x86/kvm/hyper-v: enable hypercalls regardless of hypercall page
+  x86/kvm/hyper-v: Add support for synthetic debugger via hypercalls
+
+ Documentation/virt/kvm/api.rst     |  18 ++++
+ arch/x86/include/asm/hyperv-tlfs.h |   6 ++
+ arch/x86/include/asm/kvm_host.h    |  13 +++
+ arch/x86/kvm/hyperv.c              | 162 ++++++++++++++++++++++++++++-
+ arch/x86/kvm/hyperv.h              |  27 +++++
+ arch/x86/kvm/trace.h               |  51 +++++++++
+ arch/x86/kvm/x86.c                 |   9 ++
+ include/uapi/linux/kvm.h           |  13 +++
+ 8 files changed, 297 insertions(+), 2 deletions(-)
+
+-- 
+2.24.1
+
