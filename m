@@ -2,229 +2,232 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE4E1856E7
-	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Mar 2020 02:30:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 795EA185728
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Mar 2020 02:32:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgCOBa3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 14 Mar 2020 21:30:29 -0400
-Received: from mail-eopbgr700109.outbound.protection.outlook.com ([40.107.70.109]:3776
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        id S1726826AbgCOBcW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 14 Mar 2020 21:32:22 -0400
+Received: from mail-mw2nam10on2097.outbound.protection.outlook.com ([40.107.94.97]:13053
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727206AbgCOBa2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:30:28 -0400
+        id S1726716AbgCOBcV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:32:21 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eyh/rK7PqGfs1GTT04/xd7CFSGR+ZJ/BkoVZEd4feozNJzglKT6uzzFmfJRj2olemprZoOKIUOo/1t92WKvGsd0uKaUf/VuRQd5jVZ8sb4mCZtnM9xAFGhQz1Y3LB/2FKKpgX3KjK/SKOEDKOusAAxG/BT6xWPU3aUAMJNiSKvrYe0dFLwJZvQ9IkRzUxJxuRzJ4lg2OAL6gRtm5+cXEfq4H+V8D0KhRivTin277Vtiei2Zh1e1YfNoqr9mOjNPFNKUCax32T2zAE3xJyjJQol6lvMDMXBnyBQwR6UUE1qzoFNmWBU6hTr48FcB4GuE6fhqoiTR0G/LcZCVJM753GQ==
+ b=cB1ToQbaikyQpiH3vOLKSgGHyVfK+9f388XH5VF4ZSy6CVNyabSEih6b1KVjB+tIlbV28EUyMGSLztsyeqcmRO8Ovms0u41ur51cLFlwLkp2RvNmrZnNloGxSGu1dAooBMgH/1WHWpdS2u+OoTL44M/lpvXNyJfpktFH8k0UuV1gBoVHSJ8ildBmDo2askuj3r7VPlKDP6PowsypwxQfOzEg0S+G23Pjh8Mnj2kOcy4U6ZgCvNPaBHXAtORTiFiyoloC+C7eTKFNqsQI9JCm+8+Hmrk/5NekwTT6OmSRkaZ9MtqE+yiFlMCfztgPHkPzKWNAlXlJH8ve79qcKiOr5g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kDNDhKNMMl/elMotPjXPxRshnKot+EpSDmiev/+jHog=;
- b=HOJZbX3907AqC9R1b62n49kZHJUwE87PEr/K+rHiumiC7WJafbhn8hqLx2RrbeS+FTxMDsYdO3a+Gt0G+bcPM87EldvJvYHbLgVUJ7CHooBnWOjgIyIpqdhW9x6X+moZvgybP9izOOf5eS8ZGS4cUR/McGKf0IzScNCNuefqIQU6CvAZ2paMe2crgtRu4NuKkALvJDfkA7Gy8yT91hdL6y2mL8NFhl105ozIpPVOvF7BfvNUXOFYKBZkuN0XcYX1ud9/4AsLQVnmhxNNAlO0vRn37/9rhfKEF3xK+x/JcozKuIVgvcGZjQda+lyf8HIYQ8tQoGUHcp2+ValmLpR1Bg==
+ bh=NHV8a9pcFFWQTnd4HapIeaqDNPT6mfyCP7xMUlmD/L8=;
+ b=oR/p4XyyWT3bSqhmvWqVj3MmeIYtDNptqlPJlZdJz/7C5DZdnRQLQmyc2xSmwtpehJaT1RMeYJsUsKx39A4xdfIAGC90y/IehjBx14wkJBlLPpGSSR5dIiwNjziH4w74uhKvpZn7tPIWb5uyxAn/bRvD4Q6okKLRHTbR145jHt5MtK0hY7fJMC5OuWJC+WKBOdKvm8TFeFh2UTMrMHlAk7hbQlQXNLTNcQDDiBCqqSRegAHMDUfGkXNgN8sbYcngSzYkX4199AODTQAqWKFhHa+ckMY2GGNqC72MfXjlFNj/Qunhh7OaR+Drtl/zb4hW9LH5Odc2km6d5T562P+x/w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kDNDhKNMMl/elMotPjXPxRshnKot+EpSDmiev/+jHog=;
- b=J8ENPY1Rs+j+ZWIW99eJY9tydJ6GUYiq4o3TpgTOzrerv2Xuagpk9Kw8nMM/jHUEKRoKgP4QuM4N2U0qkRWM3D0qarNGh4DaPyQGfEcncQDT9LkIoe6Wg8PvOCfnUKvsvpLKH2bQqlAUSlumYm464oKqs48ymCaiFveQE+Blhko=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0987.namprd21.prod.outlook.com (2603:10b6:302:4::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.2; Sat, 14 Mar
- 2020 14:14:41 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2835.003; Sat, 14 Mar 2020
- 14:14:41 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Jon Doron <arilou@gmail.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH v5 2/5] x86/hyper-v: Add synthetic debugger definitions
-Thread-Topic: [PATCH v5 2/5] x86/hyper-v: Add synthetic debugger definitions
-Thread-Index: AQHV+To/OcoVcvMEKUyFhrb80x2BNahG+0vAgACI2ICAAJ2b0A==
-Date:   Sat, 14 Mar 2020 14:14:41 +0000
-Message-ID: <MW2PR2101MB105281002BEE02E23A43D517D7FB0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200313132034.132315-1-arilou@gmail.com>
- <20200313132034.132315-3-arilou@gmail.com>
- <MW2PR2101MB10521050158699C7C96613F5D7FA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <20200314044451.GA15879@jondnuc>
-In-Reply-To: <20200314044451.GA15879@jondnuc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-14T14:14:39.3506328Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cbf0e3a3-3ab2-42b4-b7d6-f4742b40c351;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
+ bh=NHV8a9pcFFWQTnd4HapIeaqDNPT6mfyCP7xMUlmD/L8=;
+ b=fbSqai0u0wL7pusbq5tfzTQuJDdOWMX3BX8NHKb5Ocru6drQcjUPlZoLct7BE37HZIBCs2cc7iGQPXv+r68pseSLo9OtE8WjSQNGXUboKHvso7EtsBzBXfn3C2dfDZcYPoIicUVkuE+i66VfHoqYDiQwqtYl1yl792feMQF1ySg=
+Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 99c06d0e-9967-43e0-fee2-08d7c82209b0
-x-ms-traffictypediagnostic: MW2PR2101MB0987:|MW2PR2101MB0987:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB098715E975D133394FE87B8CD7FB0@MW2PR2101MB0987.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 034215E98F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(199004)(478600001)(10290500003)(66946007)(81166006)(55016002)(7696005)(76116006)(71200400001)(8990500004)(5660300002)(66556008)(66446008)(9686003)(8676002)(64756008)(33656002)(6916009)(8936002)(186003)(66476007)(81156014)(6506007)(4326008)(316002)(26005)(54906003)(52536014)(86362001)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0987;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ViMIIhg3MWmj2P8Lk4fxq0LoUlDOtJ5ce/X/pVJY9TfuCltUTGGTk3HZ15BPsCLtKSTp2+UiuAmqcMLGVR+51eqOkg/fiv//JJHrf86sfChpSI3+VLCGzmz8uc1OXpezGIuU8Q2/aJGiXK/AGP1osFiZAXcp4JPF5JIFIhZx9QYqjnZq7YXEryvvLkuTHs2BfoyuC2fkT3N674v92w0O53kYBy4yk/GdXQerLpkEWBVyjNpHTsk44BRdXBC1Nc3xR7kSvVTw4r5FB1r3KLgqmJxtfVEEzuV1d5p70rW+kkk5+WlradmUMDuJ7Si56cmxuMTbwcirz9t59m+XbOM8KFNklJCwWcsRLATLgJ1dCCAAv6g5baaRQUh3ihOcBB8Kqeh/A7P/vrKCY36hBzBPiu2R1a9l12qmBmXo8YnMy57w6GM9pB/ckGHqJg4aMDEb
-x-ms-exchange-antispam-messagedata: MMQiIax0Xd1Z5KelQB/BmUSvX3xhoEULSJbsaHy5ELODGh6V9HfeUBRLy+YfahzJ/5tYpf51g3SIl5WfP/aWVD9cmiXbBuRwYggz7IgLAYaUoYWGhe+hoOjSiiGjZchDpk+zWUJFnbCeM8WRvWUxOQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from SN6PR2101MB0927.namprd21.prod.outlook.com (2603:10b6:805:a::18)
+ by SN6PR2101MB1632.namprd21.prod.outlook.com (2603:10b6:805:53::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.4; Sat, 14 Mar
+ 2020 15:35:57 +0000
+Received: from SN6PR2101MB0927.namprd21.prod.outlook.com
+ ([fe80::a819:6437:1733:17b3]) by SN6PR2101MB0927.namprd21.prod.outlook.com
+ ([fe80::a819:6437:1733:17b3%9]) with mapi id 15.20.2835.008; Sat, 14 Mar 2020
+ 15:35:57 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
+        catalin.marinas@arm.com, mark.rutland@arm.com, maz@kernel.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arch@vger.kernel.org,
+        olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com,
+        jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com
+Cc:     mikelley@microsoft.com, sunilmut@microsoft.com,
+        boqun.feng@gmail.com
+Subject: [PATCH v6 00/10] Subject: Enable Linux guests on Hyper-V on ARM64
+Date:   Sat, 14 Mar 2020 08:35:09 -0700
+Message-Id: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR22CA0047.namprd22.prod.outlook.com
+ (2603:10b6:300:69::33) To SN6PR2101MB0927.namprd21.prod.outlook.com
+ (2603:10b6:805:a::18)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mhkkerneltest.corp.microsoft.com (131.107.159.247) by MWHPR22CA0047.namprd22.prod.outlook.com (2603:10b6:300:69::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Sat, 14 Mar 2020 15:35:56 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [131.107.159.247]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bca0b8a4-e0d2-4a10-f661-08d7c82d6400
+X-MS-TrafficTypeDiagnostic: SN6PR2101MB1632:|SN6PR2101MB1632:|SN6PR2101MB1632:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB1632CA9DBC2E079346B8144ED7FB0@SN6PR2101MB1632.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 034215E98F
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(199004)(10290500003)(478600001)(2906002)(6486002)(36756003)(8936002)(66946007)(26005)(86362001)(2616005)(16526019)(186003)(956004)(66556008)(6636002)(66476007)(4326008)(7416002)(316002)(81166006)(8676002)(81156014)(52116002)(7696005)(6666004)(5660300002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1632;H:SN6PR2101MB0927.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TIFQGL1u+bzpeThgYYrSTA/JZvZgmA7U+nY3pOmsgVioqxqRDWrBuNsVvZ/piqwwuLzk3mOgjP8EHcbqGrN8+iyIlL28skKtsalCBwd9VuYDB45q5n20dPlX9GK+/wBQQEvVEl4a3sobAijVa1VAsYHAOrOoPBVLXwwdPSGlTpv5cKTchPO3ELndQiGaBQOBXSssG6wlEi0UegSVfLvzasDJib9klQc9GXoEWZvIyGrXl+Ox9LxbPnvHJ6bYaHwgg148KfyDAJJJ+rKAQ70q4fUf//WR3N21a+/duQXV/QfIDcG+v3K2yIejsHouJzPy4oomf1SEaXPG/KC4yb9yklfQ/XluNvZb+dU4bkoS0ScSjhGIbx3AicZc7UQ+AX2uicbDaPsvtzBldRx5J0qOHwwYeYFCuBqhMyXUgv1l+60ziRfPLtdXqCMBJfYjJSkAh/nUvHsZPbZDTrNwOKIzQFcAXr8+ilPXKacWVeHCT3XXC5QzG/07I7EDzz55rfYK
+X-MS-Exchange-AntiSpam-MessageData: BUqqDMCRXJaTUfARN2oBsTyxAw6JBE5e2FlAcwG656L6K/vVB/IJeAtvZcN6IfErWhSvEwLhiPjTgI3rLGMzluZf+j7YVi3w/FvzQtns5FY7vcZNu0MBTY3skC94OusLUC11adeRdIF33LpY7qzBfw==
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99c06d0e-9967-43e0-fee2-08d7c82209b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2020 14:14:41.1693
+X-MS-Exchange-CrossTenant-Network-Message-Id: bca0b8a4-e0d2-4a10-f661-08d7c82d6400
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2020 15:35:57.4591
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uqJvnW02fUI2zqKVdLRd4F56aWd0jEkPJf1UybtscZtITmu3KM5zK4bP3GuY5Nod4/PMLl7sCEyyE2ZvZ5EtleDzTSZTkgnOfuJ1MMcDuCs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0987
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 09NTPQAhSjQKpAvO4SN/WQDoG5YmJ0el1nWyuescoHykE8Hq10k6Ym0bAUsCPsUSxd1lvgzcW4zyvbTxoSy7gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1632
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Jon Doron <arilou@gmail.com>  Sent: Friday, March 13, 2020 9:45 PM
->=20
-> On 13/03/2020, Michael Kelley wrote:
-> >From: Jon Doron <arilou@gmail.com> Sent: Friday, March 13, 2020 6:21 AM
-> >>
-> >> Hyper-V synthetic debugger has two modes, one that uses MSRs and
-> >> the other that use Hypercalls.
-> >>
-> >> Add all the required definitions to both types of synthetic debugger
-> >> interface.
-> >>
-> >> Some of the required new CPUIDs and MSRs are not documented in the TLF=
-S
-> >> so they are in hyperv.h instead.
-> >>
-> >> Signed-off-by: Jon Doron <arilou@gmail.com>
-> >> ---
-> >>  arch/x86/include/asm/hyperv-tlfs.h |  6 ++++++
-> >>  arch/x86/kvm/hyperv.h              | 22 ++++++++++++++++++++++
-> >>  2 files changed, 28 insertions(+)
-> >>
-> >> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm=
-/hyperv-tlfs.h
-> >> index 92abc1e42bfc..671ce2a39d4b 100644
-> >> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> >> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> >> @@ -131,6 +131,8 @@
-> >>  #define HV_FEATURE_FREQUENCY_MSRS_AVAILABLE		BIT(8)
-> >>  /* Crash MSR available */
-> >>  #define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE		BIT(10)
-> >> +/* Support for debug MSRs available */
-> >> +#define HV_FEATURE_DEBUG_MSRS_AVAILABLE			BIT(11)
-> >>  /* stimer Direct Mode is available */
-> >>  #define HV_STIMER_DIRECT_MODE_AVAILABLE			BIT(19)
-> >>
-> >> @@ -376,6 +378,9 @@ struct hv_tsc_emulation_status {
-> >>  #define HVCALL_SEND_IPI_EX			0x0015
-> >>  #define HVCALL_POST_MESSAGE			0x005c
-> >>  #define HVCALL_SIGNAL_EVENT			0x005d
-> >> +#define HVCALL_POST_DEBUG_DATA			0x0069
-> >> +#define HVCALL_RETRIEVE_DEBUG_DATA		0x006a
-> >> +#define HVCALL_RESET_DEBUG_SESSION		0x006b
-> >>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
-> >>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
-> >>
-> >> @@ -419,6 +424,7 @@ enum HV_GENERIC_SET_FORMAT {
-> >>  #define HV_STATUS_INVALID_HYPERCALL_INPUT	3
-> >>  #define HV_STATUS_INVALID_ALIGNMENT		4
-> >>  #define HV_STATUS_INVALID_PARAMETER		5
-> >> +#define HV_STATUS_OPERATION_DENIED		8
-> >>  #define HV_STATUS_INSUFFICIENT_MEMORY		11
-> >>  #define HV_STATUS_INVALID_PORT_ID		17
-> >>  #define HV_STATUS_INVALID_CONNECTION_ID		18
-> >> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
-> >> index 757cb578101c..56bc3416b62f 100644
-> >> --- a/arch/x86/kvm/hyperv.h
-> >> +++ b/arch/x86/kvm/hyperv.h
-> >> @@ -23,6 +23,28 @@
-> >>
-> >>  #include <linux/kvm_host.h>
-> >>
-> >> +/* These defines are required by KDNet and they are not part of Hyper=
--V TLFS */
-> >
-> >I'm looking for a bit more info in the comment so that it's clear that t=
-he
-> >synthetic debugger functionality is not committed to be available going
-> >forward. Perhaps something along the lines of:
-> >
-> >/* The #defines related to the synthetic debugger are required by KDNet,=
- but
-> > * they are not documented in the Hyper-V TLFS because the synthetic deb=
-ugger
-> > * functionality has been deprecated and is subject to removal in future=
- versions
-> > * of Windows.
-> > */
-> >
-> >But with that additional comment text,
-> >
-> >Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> >
->=20
-> Sure thing, but one quick question I have noticed that in the 6.0 TLFS
-> the bit indicating the DEBUG_MSRS are available is still documented is
-> that intentional or a juss a miss?
+This series enables Linux guests running on Hyper-V on ARM64
+hardware. New ARM64-specific code in arch/arm64/hyperv initializes
+Hyper-V, including its interrupts and hypercall mechanism.
+Existing architecture independent drivers for Hyper-V's VMbus and
+synthetic devices just work when built for ARM64. Hyper-V code is
+built and included in the image and modules only if CONFIG_HYPERV
+is enabled.
 
-From the side conversation I had with the Hyper-V people, I think
-this is just a miss.  They took out the MSR definitions, but forgot to
-take out the flag indicating the presence of the MSRs.  As I think I
-mentioned in an earlier email, there will be future updates to the
-TLFS, and I've put this topic on my list of things to make sure get
-cleaned up.
+The ten patches are organized as follows:
+1) Add include files that define the Hyper-V interface as
+   described in the Hyper-V Top Level Functional Spec (TLFS), plus
+   additional definitions specific to Linux running on Hyper-V.
 
-Michael
+2) Add #define for vendor specific owner definition to linux/arm-smccc.h
 
->=20
-> Cheers,
-> -- Jon.
->=20
-> >> +#define HYPERV_CPUID_SYNDBG_VENDOR_AND_MAX_FUNCTIONS	0x40000080
-> >> +#define HYPERV_CPUID_SYNDBG_INTERFACE			0x40000081
-> >> +#define HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES	0x40000082
-> >> +
-> >> +/*
-> >> + * Hyper-V synthetic debugger platform capabilities
-> >> + * These are HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES.EAX bits.
-> >> + */
-> >> +#define HV_X64_SYNDBG_CAP_ALLOW_KERNEL_DEBUGGING	BIT(1)
-> >> +
-> >> +/* Hyper-V Synthetic debug options MSR */
-> >> +#define HV_X64_MSR_SYNDBG_CONTROL		0x400000F1
-> >> +#define HV_X64_MSR_SYNDBG_STATUS		0x400000F2
-> >> +#define HV_X64_MSR_SYNDBG_SEND_BUFFER		0x400000F3
-> >> +#define HV_X64_MSR_SYNDBG_RECV_BUFFER		0x400000F4
-> >> +#define HV_X64_MSR_SYNDBG_PENDING_BUFFER	0x400000F5
-> >> +#define HV_X64_MSR_SYNDBG_OPTIONS		0x400000FF
-> >> +
-> >> +/* Hyper-V HV_X64_MSR_SYNDBG_OPTIONS bits */
-> >> +#define HV_X64_SYNDBG_OPTION_USE_HCALLS		BIT(2)
-> >> +
-> >>  static inline struct kvm_vcpu_hv *vcpu_to_hv_vcpu(struct kvm_vcpu *vc=
-pu)
-> >>  {
-> >>  	return &vcpu->arch.hyperv;
-> >> --
-> >> 2.24.1
-> >
+3) thru 7) Add core Hyper-V support on ARM64, including hypercalls,
+   interrupt handlers, kexec & panic handlers, and core hypervisor
+   initialization.
+
+8) Update the existing VMbus driver to generalize interrupt
+   management across x86/x64 and ARM64.
+
+9) Export screen_info so it may be used by the Hyper-V frame buffer
+   driver built as a module. It's already exported for x86,
+   powerpc, and alpha architectures.
+
+10) Make CONFIG_HYPERV selectable on ARM64 in addition to x86/x64.
+
+Some areas of Linux guests on Hyper-V on ARM64 are a work-
+in-progress:
+
+* Hyper-V on ARM64 currently runs with a 4 Kbyte page size, but
+  allows guests with 16K/64K page size. However, the Linux drivers
+  for Hyper-V synthetic devices assume the guest page size is 4K.
+  This patch set lays the groundwork for larger guest page sizes,
+  but additional patches are coming to update these drivers.
+
+* The Hyper-V vPCI driver at drivers/pci/host/pci-hyperv.c has
+  x86/x64-specific code and is not being built for ARM64. Fixing
+  this driver to enable vPCI devices on ARM64 will be done later.
+
+In a few cases, terminology from the x86/x64 world has been carried
+over into the ARM64 code ("MSR", "TSC").  Hyper-V still uses the
+x86/x64 terminology and has not replaced it with something more
+generic, so the code uses the Hyper-V terminology.  This will be
+fixed when Hyper-V updates the usage in the TLFS.
+
+This patch set is based on a 5.6-rc5 linux-next tree.
+
+Changes in v6:
+* Use SMCCC hypercall interface instead of direct invocation
+  of HVC instruction and the Hyper-V hypercall interface
+  [Marc Zyngier]
+* Reimplemented functions to alloc/free Hyper-V size pages
+  using kmalloc/kfree since kmalloc now guarantees alignment of
+  power of 2 size allocations [Marc Zyngier]
+* Export screen_info in arm64 architecture so it can be used
+  by the Hyper-V buffer driver built as a module
+* Renamed source file arch/arm64/hyperv/hv_init.c to hv_core.c
+  to better reflect its content
+* Fixed the bit position of certain feature flags presented by
+  Hyper-V to the guest.  The bit positions on ARM64 don't match
+  the position on x86 like originally thought.
+* Minor fixups to rebase to 5.6-rc5 linux-next
+
+Changes in v5:
+* Minor fixups to rebase to 5.4-rc1 linux-next
+
+Changes in v4:
+* Moved clock-related code into an architecture independent
+  Hyper-V clocksource driver that is already upstream. Clock
+  related code is removed from this patch set except for the
+  ARM64 specific interrupt handler. [Marc Zyngier]
+* Separately upstreamed the split of mshyperv.h into arch independent
+  and arch dependent portions. The arch independent portion has been
+  removed from this patch set.
+* Divided patch #2 of the series into multiple smaller patches
+  [Marc Zyngier]
+* Changed a dozen or so smaller things based on feedback
+  [Marc Zyngier, Will Deacon]
+* Added functions to alloc/free Hyper-V size pages for use by
+  drivers for Hyper-V synthetic devices when updated to not assume
+  guest page size and Hyper-v page size are the same
+
+Changes in v3:
+* Added initialization of hv_vp_index array like was recently
+  added on x86 branch [KY Srinivasan]
+* Changed Hyper-V ARM64 register symbols to be all uppercase 
+  instead of mixed case [KY Srinivasan]
+* Separated mshyperv.h into two files, one architecture
+  independent and one architecture dependent. After this code
+  is upstream, will make changes to the x86 code to use the
+  architecture independent file and remove duplication. And
+  once we have a multi-architecture Hyper-V TLFS, will do a
+  separate patch to split hyperv-tlfs.h in the same way.
+  [KY Srinivasan]
+* Minor tweaks to rebase to latest linux-next code
+
+Changes in v2:
+* Removed patch to implement slow_virt_to_phys() on ARM64.
+  Use of slow_virt_to_phys() in arch independent Hyper-V
+  drivers has been eliminated by commit 6ba34171bcbd
+  ("Drivers: hv: vmbus: Remove use of slow_virt_to_phys()")
+* Minor tweaks to rebase to latest linux-next code
+
+Michael Kelley (10):
+  arm64: hyperv: Add core Hyper-V include files
+  arm/arm64: smccc-1.1: Add vendor specific owner definition
+  arm64: hyperv: Add hypercall and register access functions
+  arm64: hyperv: Add memory alloc/free functions for Hyper-V size pages
+  arm64: hyperv: Add interrupt handlers for VMbus and stimer
+  arm64: hyperv: Add kexec and panic handlers
+  arm64: hyperv: Initialize hypervisor on boot
+  Drivers: hv: vmbus: Add hooks for per-CPU IRQ
+  arm64: efi: Export screen_info
+  Drivers: hv: Enable Hyper-V code to be built on ARM64
+
+ MAINTAINERS                          |   3 +
+ arch/arm64/Kbuild                    |   1 +
+ arch/arm64/hyperv/Makefile           |   2 +
+ arch/arm64/hyperv/hv_core.c          | 418 +++++++++++++++++++++++++++++++++++
+ arch/arm64/hyperv/mshyperv.c         | 165 ++++++++++++++
+ arch/arm64/include/asm/hyperv-tlfs.h | 413 ++++++++++++++++++++++++++++++++++
+ arch/arm64/include/asm/mshyperv.h    | 115 ++++++++++
+ arch/arm64/kernel/efi.c              |   1 +
+ arch/x86/include/asm/mshyperv.h      |   4 +
+ drivers/hv/Kconfig                   |   3 +-
+ drivers/hv/hv.c                      |   3 +
+ include/asm-generic/mshyperv.h       |   5 +
+ include/linux/arm-smccc.h            |   1 +
+ 13 files changed, 1133 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/hyperv/Makefile
+ create mode 100644 arch/arm64/hyperv/hv_core.c
+ create mode 100644 arch/arm64/hyperv/mshyperv.c
+ create mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
+ create mode 100644 arch/arm64/include/asm/mshyperv.h
+
+-- 
+1.8.3.1
+
