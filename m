@@ -2,151 +2,174 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CE2618599B
-	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Mar 2020 04:16:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C01D01859B0
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Mar 2020 04:32:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgCODQC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 14 Mar 2020 23:16:02 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33787 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725793AbgCODQC (ORCPT
+        id S1727021AbgCODcj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 14 Mar 2020 23:32:39 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37761 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCODci (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:16:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584242161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a97+Df7ov789sy1dUrQf2ip/rUJBLWnpFYIx0FFhbAY=;
-        b=KNThzAY99ieQka1vAaq/RJqpHFfAZeu5Il0TSMg0tPAciNqyJF4a/LbDKEgUB7FSOUmkjG
-        GIb6+syQLBpPHFH/ZJ+v5Bppn3G2GN95p8g3uqkeRCaD+RH1NgnlpTEd+0pc+cOh0qSn2J
-        +GrCFfEFAyCINFmkxjw0gYd9AZiWGgg=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-C1F79mkmO7G8vasiZA-FQA-1; Sat, 14 Mar 2020 07:14:16 -0400
-X-MC-Unique: C1F79mkmO7G8vasiZA-FQA-1
-Received: by mail-wr1-f72.google.com with SMTP id 94so1115028wrr.3
-        for <linux-hyperv@vger.kernel.org>; Sat, 14 Mar 2020 04:14:16 -0700 (PDT)
+        Sat, 14 Mar 2020 23:32:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b23so17490661edx.4;
+        Sat, 14 Mar 2020 20:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2k/FWhwnxSmRyvkYX/addpqZAvvD/zc/fmTTZk2KfTg=;
+        b=IiTYEo9sQU3SJruOebAutscq7dbKBvfhkn3R5mw7EDPR2Sqlrn3wTQMSALZ+Uaam7K
+         5iMgr7cPHPXworFSjRk69JMzFZUiutV7QVAY8bWp1ZY2yC/vtOBwqaLQ5X9Uul6fjp78
+         GEZuSjgAaLuc+99oNf8ZoBNN3u4VNy4mMl8I8ZVfFrksDtDuMpQ/9dlGvpbH1oCcgR58
+         WujcnofzwgXwyh/D1tS/W5Wd2nXCOUZ0Jsg9R6cUsmQ3guLGWQixhrvGRDg8XrwG37PW
+         QiBQUOVHYVRKYCABPxNJCkIeTLow2koe9AM2rXzHxCH9mTYHDXsRtFbiNYB0JmBUuIUU
+         SODg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a97+Df7ov789sy1dUrQf2ip/rUJBLWnpFYIx0FFhbAY=;
-        b=uaF7C5H0/YDffGKFlbw2XOlmQfP9N83oAHGVuxq4mJ+8tNsohGKonzNWt71xbb7DAo
-         3ueLC3UjT/MmxgiKksITF+QouksWVJ2UDzeyPD7e3UNMISpQimY1CvCIYuYs2xxgXid1
-         oqza+ZYkD3Wi9pCpCTUiBBRaXg+dFgPLU5kJwH86ny/TL4SKI3bTW6CIJhSqoLD+D35f
-         /juHRbSuTw2Q4ZrOTNkVr5OAtNR5jBXb3Ca+Oi5kTd0AhjM2aCeOEB24L8RyY+0M9Hnw
-         m7ScLtxVtU5hTCdXdM+CR6335iJ8rV6LWwf+Hz6FV/5igmm4zxHX3N38Pzr6k6TFVJXV
-         MI/g==
-X-Gm-Message-State: ANhLgQ2RyvwNQ+uJ0qOX8UP8ZXL//DIkYrle3drT42tKrtEBxGG2Tqmj
-        r1QlLeXpysUR5EGofeu38MwUR/3ZohFC4mnttBoY8K8DTYb73koJ67sw5qFxXsEBxTTyIBeI6s7
-        zG40A/e4omYtzoMd1bBW91JoN
-X-Received: by 2002:a5d:4c47:: with SMTP id n7mr6703131wrt.254.1584184455377;
-        Sat, 14 Mar 2020 04:14:15 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vspYTZUq3KJfifWUW/XTOvXTc1qsx25s1jBEUFu51U/OrTqfY6pI8+7wYMFcbRRtzK8nl0a/A==
-X-Received: by 2002:a5d:4c47:: with SMTP id n7mr6703105wrt.254.1584184455082;
-        Sat, 14 Mar 2020 04:14:15 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.174.5])
-        by smtp.gmail.com with ESMTPSA id n4sm5329135wrs.64.2020.03.14.04.14.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Mar 2020 04:14:14 -0700 (PDT)
-Subject: Re: [PATCH v8 0/5] Add a unified parameter "nopvspin"
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, x86@kernel.org,
-        peterz@infradead.org
-Cc:     mingo@redhat.com, bp@alien8.de, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com, will@kernel.org,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e31f932b-9838-09a7-49d4-f90dc673960c@redhat.com>
-Date:   Sat, 14 Mar 2020 12:14:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2k/FWhwnxSmRyvkYX/addpqZAvvD/zc/fmTTZk2KfTg=;
+        b=h3G9EzAxBkFEtwNavT0fblr3hU4MLNaaxHlceJjmcJOLPXrSszOdP1DN5y7hKB64nJ
+         sfs9FVRpZAuf1OBdc3DOCybumDhG4C3eCWD/AwdiNJ9S1AfUzoYQbQFDGAIDfLIe0LPj
+         yfBJ0XyNuTBR4UYW2R5TPRpp64j1csTheGvTsBaYyV2wddNTy9f9CZAmnUTF2IOgq1BN
+         snvjkINk+vfiVGRGjOLvODf2ioyGQ2MCujb9+UT638dt8JZG8IxUQqPZdhQqOhtrob7Y
+         j2Fz1T1p0wx+JAoUbwDbS8Xmlho99YtwXaOH8t2l3gcfwwfoMY2w2DjIMI1wGAZex1Vq
+         J+Zw==
+X-Gm-Message-State: ANhLgQ0ot7WC4Nx8Xcmycfz+caCsFIQ8GSfqCrieB9GpRYSt0qOpI8d/
+        qr5UOD5jalFDwj9KRDxqC9sOk20a03U=
+X-Google-Smtp-Source: ADFU+vuKsq+WEtB5MHCLDZ2FmbzoJHHzISseL9CuIYL9j3TSemupcSx5bJsmtyAJiaBJkowVKDtXLQ==
+X-Received: by 2002:a5d:49d2:: with SMTP id t18mr20783550wrs.279.1584161094000;
+        Fri, 13 Mar 2020 21:44:54 -0700 (PDT)
+Received: from jondnuc (IGLD-84-229-155-229.inter.net.il. [84.229.155.229])
+        by smtp.gmail.com with ESMTPSA id q3sm18455477wmj.38.2020.03.13.21.44.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 21:44:53 -0700 (PDT)
+Date:   Sat, 14 Mar 2020 06:44:51 +0200
+From:   Jon Doron <arilou@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+Subject: Re: [PATCH v5 2/5] x86/hyper-v: Add synthetic debugger definitions
+Message-ID: <20200314044451.GA15879@jondnuc>
+References: <20200313132034.132315-1-arilou@gmail.com>
+ <20200313132034.132315-3-arilou@gmail.com>
+ <MW2PR2101MB10521050158699C7C96613F5D7FA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10521050158699C7C96613F5D7FA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Peter/Thomas, can you apply this to tip or give your Acked-by?
+On 13/03/2020, Michael Kelley wrote:
+>From: Jon Doron <arilou@gmail.com> Sent: Friday, March 13, 2020 6:21 AM
+>>
+>> Hyper-V synthetic debugger has two modes, one that uses MSRs and
+>> the other that use Hypercalls.
+>>
+>> Add all the required definitions to both types of synthetic debugger
+>> interface.
+>>
+>> Some of the required new CPUIDs and MSRs are not documented in the TLFS
+>> so they are in hyperv.h instead.
+>>
+>> Signed-off-by: Jon Doron <arilou@gmail.com>
+>> ---
+>>  arch/x86/include/asm/hyperv-tlfs.h |  6 ++++++
+>>  arch/x86/kvm/hyperv.h              | 22 ++++++++++++++++++++++
+>>  2 files changed, 28 insertions(+)
+>>
+>> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+>> index 92abc1e42bfc..671ce2a39d4b 100644
+>> --- a/arch/x86/include/asm/hyperv-tlfs.h
+>> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+>> @@ -131,6 +131,8 @@
+>>  #define HV_FEATURE_FREQUENCY_MSRS_AVAILABLE		BIT(8)
+>>  /* Crash MSR available */
+>>  #define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE		BIT(10)
+>> +/* Support for debug MSRs available */
+>> +#define HV_FEATURE_DEBUG_MSRS_AVAILABLE			BIT(11)
+>>  /* stimer Direct Mode is available */
+>>  #define HV_STIMER_DIRECT_MODE_AVAILABLE			BIT(19)
+>>
+>> @@ -376,6 +378,9 @@ struct hv_tsc_emulation_status {
+>>  #define HVCALL_SEND_IPI_EX			0x0015
+>>  #define HVCALL_POST_MESSAGE			0x005c
+>>  #define HVCALL_SIGNAL_EVENT			0x005d
+>> +#define HVCALL_POST_DEBUG_DATA			0x0069
+>> +#define HVCALL_RETRIEVE_DEBUG_DATA		0x006a
+>> +#define HVCALL_RESET_DEBUG_SESSION		0x006b
+>>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
+>>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
+>>
+>> @@ -419,6 +424,7 @@ enum HV_GENERIC_SET_FORMAT {
+>>  #define HV_STATUS_INVALID_HYPERCALL_INPUT	3
+>>  #define HV_STATUS_INVALID_ALIGNMENT		4
+>>  #define HV_STATUS_INVALID_PARAMETER		5
+>> +#define HV_STATUS_OPERATION_DENIED		8
+>>  #define HV_STATUS_INSUFFICIENT_MEMORY		11
+>>  #define HV_STATUS_INVALID_PORT_ID		17
+>>  #define HV_STATUS_INVALID_CONNECTION_ID		18
+>> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+>> index 757cb578101c..56bc3416b62f 100644
+>> --- a/arch/x86/kvm/hyperv.h
+>> +++ b/arch/x86/kvm/hyperv.h
+>> @@ -23,6 +23,28 @@
+>>
+>>  #include <linux/kvm_host.h>
+>>
+>> +/* These defines are required by KDNet and they are not part of Hyper-V TLFS */
+>
+>I'm looking for a bit more info in the comment so that it's clear that the
+>synthetic debugger functionality is not committed to be available going
+>forward. Perhaps something along the lines of:
+>
+>/* The #defines related to the synthetic debugger are required by KDNet, but
+> * they are not documented in the Hyper-V TLFS because the synthetic debugger
+> * functionality has been deprecated and is subject to removal in future versions
+> * of Windows.
+> */
+>
+>But with that additional comment text,
+>
+>Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>
 
-Thanks,
+Sure thing, but one quick question I have noticed that in the 6.0 TLFS 
+the bit indicating the DEBUG_MSRS are available is still documented is 
+that intentional or a juss a miss?
 
-Paolo
+Cheers,
+-- Jon.
 
-On 23/10/19 13:16, Zhenzhong Duan wrote:
-> There are cases folks want to disable spinlock optimization for
-> debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
-> and "hv_nopvspin" to support that, but kvm doesn't.
-> 
-> The first patch adds that feature to KVM guest with "nopvspin".
-> 
-> For compatibility reason original parameters "xen_nopvspin" and
-> "hv_nopvspin" are retained and marked obsolete.
-> 
-> v8:
-> PATCH2: use 'kvm-guest' instead of 'kvm_guest'        [Sean Christopherson]
-> PATCH3: add a comment to explain missed 'return'      [Sean Christopherson]
-> 
-> v7:
-> PATCH3: update comment and use goto, add RB              [Vitaly Kuznetsov]
-> 
-> v6:
-> PATCH1: add Reviewed-by                                  [Vitaly Kuznetsov]
-> PATCH2: change 'pv' to 'PV', add Reviewed-by             [Vitaly Kuznetsov]
-> PATCH3: refactor 'if' branch in kvm_spinlock_init()      [Vitaly Kuznetsov]
-> 
-> v5:
-> PATCH1: new patch to revert a currently unnecessory commit,
->         code is simpler a bit after that change.         [Boris Ostrovsky]
-> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
->         reorder with PATCH2 to better reflect dependency                               
-> PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
-> PATCH5: add Reviewed-by                                  [Michael Kelley]
-> 
-> v4:
-> PATCH1: use variable name nopvspin instead of pvspin and
->         defined it as __initdata, changed print message,
->         updated patch description                     [Sean Christopherson]
-> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
-> PATCH3: make variable nopvsin and xen_pvspin coexist
->         remove Reviewed-by due to code change         [Sean Christopherson]
-> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
-> 
-> v3:
-> PATCH2: Fix indentation
-> 
-> v2:
-> PATCH1: pick the print code change into separate PATCH2,
->         updated patch description             [Vitaly Kuznetsov]
-> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
-> PATCH3: add Reviewed-by                       [Juergen Gross]
-> 
-> Zhenzhong Duan (5):
->   Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
->     get initialized"
->   x86/kvm: Change print code to use pr_*() format
->   x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
->   xen: Mark "xen_nopvspin" parameter obsolete
->   x86/hyperv: Mark "hv_nopvspin" parameter obsolete
-> 
->  Documentation/admin-guide/kernel-parameters.txt | 14 ++++-
->  arch/x86/hyperv/hv_spinlock.c                   |  4 ++
->  arch/x86/include/asm/qspinlock.h                |  1 +
->  arch/x86/kernel/kvm.c                           | 79 ++++++++++++++++---------
->  arch/x86/xen/spinlock.c                         |  4 +-
->  kernel/locking/qspinlock.c                      |  7 +++
->  6 files changed, 76 insertions(+), 33 deletions(-)
-> 
-
+>> +#define HYPERV_CPUID_SYNDBG_VENDOR_AND_MAX_FUNCTIONS	0x40000080
+>> +#define HYPERV_CPUID_SYNDBG_INTERFACE			0x40000081
+>> +#define HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES	0x40000082
+>> +
+>> +/*
+>> + * Hyper-V synthetic debugger platform capabilities
+>> + * These are HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES.EAX bits.
+>> + */
+>> +#define HV_X64_SYNDBG_CAP_ALLOW_KERNEL_DEBUGGING	BIT(1)
+>> +
+>> +/* Hyper-V Synthetic debug options MSR */
+>> +#define HV_X64_MSR_SYNDBG_CONTROL		0x400000F1
+>> +#define HV_X64_MSR_SYNDBG_STATUS		0x400000F2
+>> +#define HV_X64_MSR_SYNDBG_SEND_BUFFER		0x400000F3
+>> +#define HV_X64_MSR_SYNDBG_RECV_BUFFER		0x400000F4
+>> +#define HV_X64_MSR_SYNDBG_PENDING_BUFFER	0x400000F5
+>> +#define HV_X64_MSR_SYNDBG_OPTIONS		0x400000FF
+>> +
+>> +/* Hyper-V HV_X64_MSR_SYNDBG_OPTIONS bits */
+>> +#define HV_X64_SYNDBG_OPTION_USE_HCALLS		BIT(2)
+>> +
+>>  static inline struct kvm_vcpu_hv *vcpu_to_hv_vcpu(struct kvm_vcpu *vcpu)
+>>  {
+>>  	return &vcpu->arch.hyperv;
+>> --
+>> 2.24.1
+>
