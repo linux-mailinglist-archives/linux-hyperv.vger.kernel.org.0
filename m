@@ -2,119 +2,151 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A966218570D
-	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Mar 2020 02:32:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CE2618599B
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Mar 2020 04:16:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgCOBby (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 14 Mar 2020 21:31:54 -0400
-Received: from mail-mw2nam10on2123.outbound.protection.outlook.com ([40.107.94.123]:18974
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726571AbgCOBbv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:31:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EqgbUa4m0sRCgvojFf0Ql6UCZZt9ciOHZsw3v1VYRT6rm3xE3SLH4XAROHyo0pALcYX5dr+pbXGV2yQdOg9qXs/J+C9UtRlK327QHHq4SEf3tK8MQ9zI4lzsOrdxhqmAnOEl9HrdgRMaaNYdjRWMWs0fePGoM1N9mruAP+tjJfzLZgMwY71mZnnxWFocFAvYLwKfvo/Ljh09ebAX4mjWBs8Fx/jVTfrz7O7OotKTYJcj4rcy9xDyB8tRdtY6Ke8k+7YFU5tINh/s8gzpw22lp+QwHAEzYXvmxgVMoSe4MRWDVmMWeXWi5Vad+eivD9yyLL3FZQQYGj6j643si8f23w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ewbfHZXjxiR3o31sgRc557/LsbDk01g0KASzcHU7ci4=;
- b=PioBw2r7g3wqF3WRsje86J7JAH5LJ6YlHyZ0oNNR0fVo6NRa62r9dp4hy+hp5rijjRhPORDFyfNkhjzZQvvry/qTE7TTo479a0LdTgQ5u0zZBV5UpWVJZJCZVaaGv1R/jUqntUf+lvyvmkKehYR7I8oao3VQ7w9wpBTBAc2uW3t9RGyPapL0jhLYr1BLkZwKHwQlTg4eq5e5oPPYXjRg4LPtw7X4LwHJx9aqojprVAcM0oPpVxvrg3S36muoIGCfdAclA6H6eCQ/3M149KlXsulzUfJuf5OaiUaPauVCQnByO5ob9+eUPlqC/x2zngQ7zyroCjwGzadtqUWwnb5Fwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ewbfHZXjxiR3o31sgRc557/LsbDk01g0KASzcHU7ci4=;
- b=eFZ/Dv+Sqv0aS7QOrRkJTbBKcn1Y+iTQRY8h/rrAIXZZywyjATrvwRMlIy09YuRqMJilCDT8AFhG8c9gxRQx1/XZm140GqNcnmoxZQ201+hnqtowJFEFY5uB/efIvOWaFzvEIdtt1+ff5G5J3dEtU8tp2uDw1QKqHDv4nEDvIgA=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-Received: from SN6PR2101MB0927.namprd21.prod.outlook.com (2603:10b6:805:a::18)
- by SN6PR2101MB1632.namprd21.prod.outlook.com (2603:10b6:805:53::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.4; Sat, 14 Mar
- 2020 15:36:16 +0000
-Received: from SN6PR2101MB0927.namprd21.prod.outlook.com
- ([fe80::a819:6437:1733:17b3]) by SN6PR2101MB0927.namprd21.prod.outlook.com
- ([fe80::a819:6437:1733:17b3%9]) with mapi id 15.20.2835.008; Sat, 14 Mar 2020
- 15:36:15 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
-        catalin.marinas@arm.com, mark.rutland@arm.com, maz@kernel.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arch@vger.kernel.org,
-        olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com,
-        jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com
-Cc:     mikelley@microsoft.com, sunilmut@microsoft.com,
-        boqun.feng@gmail.com
-Subject: [PATCH v6 10/10] Drivers: hv: Enable Hyper-V code to be built on ARM64
-Date:   Sat, 14 Mar 2020 08:35:19 -0700
-Message-Id: <1584200119-18594-11-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR22CA0047.namprd22.prod.outlook.com
- (2603:10b6:300:69::33) To SN6PR2101MB0927.namprd21.prod.outlook.com
- (2603:10b6:805:a::18)
+        id S1726648AbgCODQC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 14 Mar 2020 23:16:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33787 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725793AbgCODQC (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 14 Mar 2020 23:16:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584242161;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a97+Df7ov789sy1dUrQf2ip/rUJBLWnpFYIx0FFhbAY=;
+        b=KNThzAY99ieQka1vAaq/RJqpHFfAZeu5Il0TSMg0tPAciNqyJF4a/LbDKEgUB7FSOUmkjG
+        GIb6+syQLBpPHFH/ZJ+v5Bppn3G2GN95p8g3uqkeRCaD+RH1NgnlpTEd+0pc+cOh0qSn2J
+        +GrCFfEFAyCINFmkxjw0gYd9AZiWGgg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-C1F79mkmO7G8vasiZA-FQA-1; Sat, 14 Mar 2020 07:14:16 -0400
+X-MC-Unique: C1F79mkmO7G8vasiZA-FQA-1
+Received: by mail-wr1-f72.google.com with SMTP id 94so1115028wrr.3
+        for <linux-hyperv@vger.kernel.org>; Sat, 14 Mar 2020 04:14:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a97+Df7ov789sy1dUrQf2ip/rUJBLWnpFYIx0FFhbAY=;
+        b=uaF7C5H0/YDffGKFlbw2XOlmQfP9N83oAHGVuxq4mJ+8tNsohGKonzNWt71xbb7DAo
+         3ueLC3UjT/MmxgiKksITF+QouksWVJ2UDzeyPD7e3UNMISpQimY1CvCIYuYs2xxgXid1
+         oqza+ZYkD3Wi9pCpCTUiBBRaXg+dFgPLU5kJwH86ny/TL4SKI3bTW6CIJhSqoLD+D35f
+         /juHRbSuTw2Q4ZrOTNkVr5OAtNR5jBXb3Ca+Oi5kTd0AhjM2aCeOEB24L8RyY+0M9Hnw
+         m7ScLtxVtU5hTCdXdM+CR6335iJ8rV6LWwf+Hz6FV/5igmm4zxHX3N38Pzr6k6TFVJXV
+         MI/g==
+X-Gm-Message-State: ANhLgQ2RyvwNQ+uJ0qOX8UP8ZXL//DIkYrle3drT42tKrtEBxGG2Tqmj
+        r1QlLeXpysUR5EGofeu38MwUR/3ZohFC4mnttBoY8K8DTYb73koJ67sw5qFxXsEBxTTyIBeI6s7
+        zG40A/e4omYtzoMd1bBW91JoN
+X-Received: by 2002:a5d:4c47:: with SMTP id n7mr6703131wrt.254.1584184455377;
+        Sat, 14 Mar 2020 04:14:15 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vspYTZUq3KJfifWUW/XTOvXTc1qsx25s1jBEUFu51U/OrTqfY6pI8+7wYMFcbRRtzK8nl0a/A==
+X-Received: by 2002:a5d:4c47:: with SMTP id n7mr6703105wrt.254.1584184455082;
+        Sat, 14 Mar 2020 04:14:15 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.174.5])
+        by smtp.gmail.com with ESMTPSA id n4sm5329135wrs.64.2020.03.14.04.14.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Mar 2020 04:14:14 -0700 (PDT)
+Subject: Re: [PATCH v8 0/5] Add a unified parameter "nopvspin"
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, x86@kernel.org,
+        peterz@infradead.org
+Cc:     mingo@redhat.com, bp@alien8.de, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com, will@kernel.org,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e31f932b-9838-09a7-49d4-f90dc673960c@redhat.com>
+Date:   Sat, 14 Mar 2020 12:14:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkkerneltest.corp.microsoft.com (131.107.159.247) by MWHPR22CA0047.namprd22.prod.outlook.com (2603:10b6:300:69::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Sat, 14 Mar 2020 15:36:14 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [131.107.159.247]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c41030ce-8aee-4bb4-38ef-08d7c82d6eed
-X-MS-TrafficTypeDiagnostic: SN6PR2101MB1632:|SN6PR2101MB1632:|SN6PR2101MB1632:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <SN6PR2101MB16327AADEB88436A6FEF0C13D7FB0@SN6PR2101MB1632.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
-X-Forefront-PRVS: 034215E98F
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(199004)(10290500003)(478600001)(2906002)(6486002)(36756003)(8936002)(66946007)(26005)(86362001)(2616005)(16526019)(186003)(956004)(66556008)(6636002)(66476007)(4326008)(7416002)(316002)(81166006)(8676002)(81156014)(52116002)(7696005)(5660300002)(4744005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1632;H:SN6PR2101MB0927.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DmmrIj9Pbqf3HQSltxRWgBjfKRTilXkE66NuN+XuUJJK0X6Njy7V88b3KcItA5ml3N6EOfljH/0/DPqD0dcoqbQzIp/OGSRb7hvxKyJ0xfbRcFbT8TUzOuBk/isOvqJsldn3UxsJgqC6G9eJyGv6qDtQD7oi5rDWOBWfx2ZD+Njp2fqLWgTMW08BlnI4Yz84/e1HKVHTc6yK0Yb/V4F4SrMuGTA6hs53/8EtGZqzS1crs8LNRm/TuFBKjdqW61WCA/cawKCMPIn3phF/UcHAlO9wznQiX4g3ebuXKsOT1xntUNdxVgJc4OCeAFMzyQLJjCQ+2NhWUr2MOQfheEMdnnHRwlWfBs9mSJM/rd35Y0oolL0kzKsT2dNxvul1XYWZpjcKl8a0IfiozNDxe8nG2dNVUe1qYaqSjP75WZQxIOG0LJSmURAaudt03RZiN8gtiwBbcdwUePJ2zTv7+CF0IJK3RjsGYWqDif2ItKNTJFbqogMFyH21xOYk8uoDXWCi
-X-MS-Exchange-AntiSpam-MessageData: oGp78VyOM4K55cfx7H8dsJAts2bA7praWlDraerJi3nRNRXibod51b/5789RO/2z8CZ9p8hCHm/3oYe5WP5FCvCHn3Y5bcFStdY8g8ZWUy1nThrYLFdjZ5heZnv1SSHATsvFX9/zPYY4KrVAZNsZ+A==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c41030ce-8aee-4bb4-38ef-08d7c82d6eed
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2020 15:36:15.8287
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y/Uqfhne5r354bY9UjuU+r0VrJeIkY5+Gq5vURugkh0cFYVORTrGzmovic/iEbo3mjUHADuaKethdRqLkYsTBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1632
+In-Reply-To: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Update drivers/hv/Kconfig so CONFIG_HYPERV can be selected on
-ARM64, causing the Hyper-V specific code to be built.
+Peter/Thomas, can you apply this to tip or give your Acked-by?
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/hv/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 79e5356..1113e49 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -4,7 +4,8 @@ menu "Microsoft Hyper-V guest support"
- 
- config HYPERV
- 	tristate "Microsoft Hyper-V client drivers"
--	depends on X86 && ACPI && X86_LOCAL_APIC && HYPERVISOR_GUEST
-+	depends on ACPI && \
-+			((X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) || ARM64)
- 	select PARAVIRT
- 	select X86_HV_CALLBACK_VECTOR
- 	help
--- 
-1.8.3.1
+Paolo
+
+On 23/10/19 13:16, Zhenzhong Duan wrote:
+> There are cases folks want to disable spinlock optimization for
+> debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
+> and "hv_nopvspin" to support that, but kvm doesn't.
+> 
+> The first patch adds that feature to KVM guest with "nopvspin".
+> 
+> For compatibility reason original parameters "xen_nopvspin" and
+> "hv_nopvspin" are retained and marked obsolete.
+> 
+> v8:
+> PATCH2: use 'kvm-guest' instead of 'kvm_guest'        [Sean Christopherson]
+> PATCH3: add a comment to explain missed 'return'      [Sean Christopherson]
+> 
+> v7:
+> PATCH3: update comment and use goto, add RB              [Vitaly Kuznetsov]
+> 
+> v6:
+> PATCH1: add Reviewed-by                                  [Vitaly Kuznetsov]
+> PATCH2: change 'pv' to 'PV', add Reviewed-by             [Vitaly Kuznetsov]
+> PATCH3: refactor 'if' branch in kvm_spinlock_init()      [Vitaly Kuznetsov]
+> 
+> v5:
+> PATCH1: new patch to revert a currently unnecessory commit,
+>         code is simpler a bit after that change.         [Boris Ostrovsky]
+> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
+>         reorder with PATCH2 to better reflect dependency                               
+> PATCH4: fold 'if' statement, add Reviewed-by             [Boris Ostrovsky]
+> PATCH5: add Reviewed-by                                  [Michael Kelley]
+> 
+> v4:
+> PATCH1: use variable name nopvspin instead of pvspin and
+>         defined it as __initdata, changed print message,
+>         updated patch description                     [Sean Christopherson]
+> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean Christopherson]
+> PATCH3: make variable nopvsin and xen_pvspin coexist
+>         remove Reviewed-by due to code change         [Sean Christopherson]
+> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean Christopherson]
+> 
+> v3:
+> PATCH2: Fix indentation
+> 
+> v2:
+> PATCH1: pick the print code change into separate PATCH2,
+>         updated patch description             [Vitaly Kuznetsov]
+> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+> PATCH3: add Reviewed-by                       [Juergen Gross]
+> 
+> Zhenzhong Duan (5):
+>   Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
+>     get initialized"
+>   x86/kvm: Change print code to use pr_*() format
+>   x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+>   xen: Mark "xen_nopvspin" parameter obsolete
+>   x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+> 
+>  Documentation/admin-guide/kernel-parameters.txt | 14 ++++-
+>  arch/x86/hyperv/hv_spinlock.c                   |  4 ++
+>  arch/x86/include/asm/qspinlock.h                |  1 +
+>  arch/x86/kernel/kvm.c                           | 79 ++++++++++++++++---------
+>  arch/x86/xen/spinlock.c                         |  4 +-
+>  kernel/locking/qspinlock.c                      |  7 +++
+>  6 files changed, 76 insertions(+), 33 deletions(-)
+> 
 
