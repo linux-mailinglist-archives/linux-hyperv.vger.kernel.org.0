@@ -2,174 +2,434 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C01D01859B0
-	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Mar 2020 04:32:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 710E0185EBB
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Mar 2020 18:31:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgCODcj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 14 Mar 2020 23:32:39 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37761 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCODci (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 14 Mar 2020 23:32:38 -0400
-Received: by mail-ed1-f65.google.com with SMTP id b23so17490661edx.4;
-        Sat, 14 Mar 2020 20:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2k/FWhwnxSmRyvkYX/addpqZAvvD/zc/fmTTZk2KfTg=;
-        b=IiTYEo9sQU3SJruOebAutscq7dbKBvfhkn3R5mw7EDPR2Sqlrn3wTQMSALZ+Uaam7K
-         5iMgr7cPHPXworFSjRk69JMzFZUiutV7QVAY8bWp1ZY2yC/vtOBwqaLQ5X9Uul6fjp78
-         GEZuSjgAaLuc+99oNf8ZoBNN3u4VNy4mMl8I8ZVfFrksDtDuMpQ/9dlGvpbH1oCcgR58
-         WujcnofzwgXwyh/D1tS/W5Wd2nXCOUZ0Jsg9R6cUsmQ3guLGWQixhrvGRDg8XrwG37PW
-         QiBQUOVHYVRKYCABPxNJCkIeTLow2koe9AM2rXzHxCH9mTYHDXsRtFbiNYB0JmBUuIUU
-         SODg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2k/FWhwnxSmRyvkYX/addpqZAvvD/zc/fmTTZk2KfTg=;
-        b=h3G9EzAxBkFEtwNavT0fblr3hU4MLNaaxHlceJjmcJOLPXrSszOdP1DN5y7hKB64nJ
-         sfs9FVRpZAuf1OBdc3DOCybumDhG4C3eCWD/AwdiNJ9S1AfUzoYQbQFDGAIDfLIe0LPj
-         yfBJ0XyNuTBR4UYW2R5TPRpp64j1csTheGvTsBaYyV2wddNTy9f9CZAmnUTF2IOgq1BN
-         snvjkINk+vfiVGRGjOLvODf2ioyGQ2MCujb9+UT638dt8JZG8IxUQqPZdhQqOhtrob7Y
-         j2Fz1T1p0wx+JAoUbwDbS8Xmlho99YtwXaOH8t2l3gcfwwfoMY2w2DjIMI1wGAZex1Vq
-         J+Zw==
-X-Gm-Message-State: ANhLgQ0ot7WC4Nx8Xcmycfz+caCsFIQ8GSfqCrieB9GpRYSt0qOpI8d/
-        qr5UOD5jalFDwj9KRDxqC9sOk20a03U=
-X-Google-Smtp-Source: ADFU+vuKsq+WEtB5MHCLDZ2FmbzoJHHzISseL9CuIYL9j3TSemupcSx5bJsmtyAJiaBJkowVKDtXLQ==
-X-Received: by 2002:a5d:49d2:: with SMTP id t18mr20783550wrs.279.1584161094000;
-        Fri, 13 Mar 2020 21:44:54 -0700 (PDT)
-Received: from jondnuc (IGLD-84-229-155-229.inter.net.il. [84.229.155.229])
-        by smtp.gmail.com with ESMTPSA id q3sm18455477wmj.38.2020.03.13.21.44.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 21:44:53 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 06:44:51 +0200
-From:   Jon Doron <arilou@gmail.com>
+        id S1728966AbgCORbb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 15 Mar 2020 13:31:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728947AbgCORbb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 15 Mar 2020 13:31:31 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBCB8206B1;
+        Sun, 15 Mar 2020 17:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584293490;
+        bh=wyPKiOwBox4zyYo6q4dHotbRk4wts+qz3vKFfmPqolk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LnsavhJMuq/NfHWvZLaILWN92IBV/MUgTdzSm8qzytNbdVlShyvTlPcZ/UGvknQpc
+         FTnDmZIXPUXP8HRjtrwwg/npWk6tSc2YPUDCgvym2OGyftE+7hs8gibfYmfWVIWEw3
+         gC3O/qUFjixe+nL7uu+GD5nu7l3X/q35hSi9/k1c=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jDX6l-00CueO-MT; Sun, 15 Mar 2020 17:31:27 +0000
+Date:   Sun, 15 Mar 2020 17:31:25 +0000
+Message-ID: <86v9n5zfrm.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
 To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: Re: [PATCH v5 2/5] x86/hyper-v: Add synthetic debugger definitions
-Message-ID: <20200314044451.GA15879@jondnuc>
-References: <20200313132034.132315-1-arilou@gmail.com>
- <20200313132034.132315-3-arilou@gmail.com>
- <MW2PR2101MB10521050158699C7C96613F5D7FA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB10521050158699C7C96613F5D7FA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Cc:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
+        catalin.marinas@arm.com, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arch@vger.kernel.org,
+        olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com,
+        jasowang@redhat.com, marcelo.cerri@canonical.com,
+        kys@microsoft.com, sunilmut@microsoft.com, boqun.feng@gmail.com
+Subject: Re: [PATCH v6 01/10] arm64: hyperv: Add core Hyper-V include files
+In-Reply-To: <1584200119-18594-2-git-send-email-mikelley@microsoft.com>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+        <1584200119-18594-2-git-send-email-mikelley@microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: mikelley@microsoft.com, will@kernel.org, ardb@kernel.org, arnd@arndb.de, catalin.marinas@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org, linux-arch@vger.kernel.org, olaf@aepfle.de, apw@canonical.com, vkuznets@redhat.com, jasowang@redhat.com, marcelo.cerri@canonical.com, kys@microsoft.com, sunilmut@microsoft.com, boqun.feng@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 13/03/2020, Michael Kelley wrote:
->From: Jon Doron <arilou@gmail.com> Sent: Friday, March 13, 2020 6:21 AM
->>
->> Hyper-V synthetic debugger has two modes, one that uses MSRs and
->> the other that use Hypercalls.
->>
->> Add all the required definitions to both types of synthetic debugger
->> interface.
->>
->> Some of the required new CPUIDs and MSRs are not documented in the TLFS
->> so they are in hyperv.h instead.
->>
->> Signed-off-by: Jon Doron <arilou@gmail.com>
->> ---
->>  arch/x86/include/asm/hyperv-tlfs.h |  6 ++++++
->>  arch/x86/kvm/hyperv.h              | 22 ++++++++++++++++++++++
->>  2 files changed, 28 insertions(+)
->>
->> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
->> index 92abc1e42bfc..671ce2a39d4b 100644
->> --- a/arch/x86/include/asm/hyperv-tlfs.h
->> +++ b/arch/x86/include/asm/hyperv-tlfs.h
->> @@ -131,6 +131,8 @@
->>  #define HV_FEATURE_FREQUENCY_MSRS_AVAILABLE		BIT(8)
->>  /* Crash MSR available */
->>  #define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE		BIT(10)
->> +/* Support for debug MSRs available */
->> +#define HV_FEATURE_DEBUG_MSRS_AVAILABLE			BIT(11)
->>  /* stimer Direct Mode is available */
->>  #define HV_STIMER_DIRECT_MODE_AVAILABLE			BIT(19)
->>
->> @@ -376,6 +378,9 @@ struct hv_tsc_emulation_status {
->>  #define HVCALL_SEND_IPI_EX			0x0015
->>  #define HVCALL_POST_MESSAGE			0x005c
->>  #define HVCALL_SIGNAL_EVENT			0x005d
->> +#define HVCALL_POST_DEBUG_DATA			0x0069
->> +#define HVCALL_RETRIEVE_DEBUG_DATA		0x006a
->> +#define HVCALL_RESET_DEBUG_SESSION		0x006b
->>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
->>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
->>
->> @@ -419,6 +424,7 @@ enum HV_GENERIC_SET_FORMAT {
->>  #define HV_STATUS_INVALID_HYPERCALL_INPUT	3
->>  #define HV_STATUS_INVALID_ALIGNMENT		4
->>  #define HV_STATUS_INVALID_PARAMETER		5
->> +#define HV_STATUS_OPERATION_DENIED		8
->>  #define HV_STATUS_INSUFFICIENT_MEMORY		11
->>  #define HV_STATUS_INVALID_PORT_ID		17
->>  #define HV_STATUS_INVALID_CONNECTION_ID		18
->> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
->> index 757cb578101c..56bc3416b62f 100644
->> --- a/arch/x86/kvm/hyperv.h
->> +++ b/arch/x86/kvm/hyperv.h
->> @@ -23,6 +23,28 @@
->>
->>  #include <linux/kvm_host.h>
->>
->> +/* These defines are required by KDNet and they are not part of Hyper-V TLFS */
->
->I'm looking for a bit more info in the comment so that it's clear that the
->synthetic debugger functionality is not committed to be available going
->forward. Perhaps something along the lines of:
->
->/* The #defines related to the synthetic debugger are required by KDNet, but
-> * they are not documented in the Hyper-V TLFS because the synthetic debugger
-> * functionality has been deprecated and is subject to removal in future versions
-> * of Windows.
-> */
->
->But with that additional comment text,
->
->Reviewed-by: Michael Kelley <mikelley@microsoft.com>
->
+On Sat, 14 Mar 2020 15:35:10 +0000,
+Hi Michael,
 
-Sure thing, but one quick question I have noticed that in the 6.0 TLFS 
-the bit indicating the DEBUG_MSRS are available is still documented is 
-that intentional or a juss a miss?
+Michael Kelley <mikelley@microsoft.com> wrote:
+> 
+> hyperv-tlfs.h defines Hyper-V interfaces from the Hyper-V Top Level
+> Functional Spec (TLFS). The TLFS is distinctly oriented to x86/x64,
+> and Hyper-V has not separated out the architecture-dependent parts into
+> x86/x64 vs. ARM64. So hyperv-tlfs.h includes information for ARM64
+> that is not yet formally published. The TLFS is available here:
+> 
+>   docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
+> 
+> mshyperv.h defines Linux-specific structures and routines for
+> interacting with Hyper-V on ARM64, and #includes the architecture-
+> independent part of mshyperv.h in include/asm-generic.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  MAINTAINERS                          |   2 +
+>  arch/arm64/include/asm/hyperv-tlfs.h | 413 +++++++++++++++++++++++++++++++++++
+>  arch/arm64/include/asm/mshyperv.h    | 115 ++++++++++
+>  3 files changed, 530 insertions(+)
+>  create mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
+>  create mode 100644 arch/arm64/include/asm/mshyperv.h
 
-Cheers,
--- Jon.
+So this is a pretty large patch, mostly containing constants and other
+data structures that don't necessarily make sense immediately (or at
+least, I can't make sense of it without reading all the other 9
+patches and going back to patch #1).
 
->> +#define HYPERV_CPUID_SYNDBG_VENDOR_AND_MAX_FUNCTIONS	0x40000080
->> +#define HYPERV_CPUID_SYNDBG_INTERFACE			0x40000081
->> +#define HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES	0x40000082
->> +
->> +/*
->> + * Hyper-V synthetic debugger platform capabilities
->> + * These are HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES.EAX bits.
->> + */
->> +#define HV_X64_SYNDBG_CAP_ALLOW_KERNEL_DEBUGGING	BIT(1)
->> +
->> +/* Hyper-V Synthetic debug options MSR */
->> +#define HV_X64_MSR_SYNDBG_CONTROL		0x400000F1
->> +#define HV_X64_MSR_SYNDBG_STATUS		0x400000F2
->> +#define HV_X64_MSR_SYNDBG_SEND_BUFFER		0x400000F3
->> +#define HV_X64_MSR_SYNDBG_RECV_BUFFER		0x400000F4
->> +#define HV_X64_MSR_SYNDBG_PENDING_BUFFER	0x400000F5
->> +#define HV_X64_MSR_SYNDBG_OPTIONS		0x400000FF
->> +
->> +/* Hyper-V HV_X64_MSR_SYNDBG_OPTIONS bits */
->> +#define HV_X64_SYNDBG_OPTION_USE_HCALLS		BIT(2)
->> +
->>  static inline struct kvm_vcpu_hv *vcpu_to_hv_vcpu(struct kvm_vcpu *vcpu)
->>  {
->>  	return &vcpu->arch.hyperv;
->> --
->> 2.24.1
->
+Could you please consider splitting this into more discreet bits that
+get added as required by the supporting code?
+
+So here's only a few sparse comments:
+
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 58bb5c4..398cfdb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7809,6 +7809,8 @@ F:	arch/x86/include/asm/trace/hyperv.h
+>  F:	arch/x86/include/asm/hyperv-tlfs.h
+>  F:	arch/x86/kernel/cpu/mshyperv.c
+>  F:	arch/x86/hyperv
+> +F:	arch/arm64/include/asm/hyperv-tlfs.h
+> +F:	arch/arm64/include/asm/mshyperv.h
+>  F:	drivers/clocksource/hyperv_timer.c
+>  F:	drivers/hid/hid-hyperv.c
+>  F:	drivers/hv/
+> diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
+> new file mode 100644
+> index 0000000..5e6a087
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/hyperv-tlfs.h
+> @@ -0,0 +1,413 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * This file contains definitions from the Hyper-V Hypervisor Top-Level
+> + * Functional Specification (TLFS):
+> + * https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
+> + *
+> + * Copyright (C) 2019, Microsoft, Inc.
+> + *
+> + * Author : Michael Kelley <mikelley@microsoft.com>
+> + */
+> +
+> +#ifndef _ASM_HYPERV_TLFS_H
+> +#define _ASM_HYPERV_TLFS_H
+> +
+> +#include <linux/types.h>
+> +
+> +/*
+> + * All data structures defined in the TLFS that are shared between Hyper-V
+> + * and a guest VM use Little Endian byte ordering.  This matches the default
+> + * byte ordering of Linux running on ARM64, so no special handling is required.
+> + */
+> +
+> +
+> +/*
+> + * While not explicitly listed in the TLFS, Hyper-V always runs with a page
+> + * size of 4096. These definitions are used when communicating with Hyper-V
+> + * using guest physical pages and guest physical page addresses, since the
+> + * guest page size may not be 4096 on ARM64.
+> + */
+> +#define HV_HYP_PAGE_SHIFT	12
+> +#define HV_HYP_PAGE_SIZE	(1 << HV_HYP_PAGE_SHIFT)
+
+Probably worth writing this as 1UL to be on the safe side.
+
+> +#define HV_HYP_PAGE_MASK	(~(HV_HYP_PAGE_SIZE - 1))
+> +
+> +/*
+> + * These Hyper-V registers provide information equivalent to the CPUID
+> + * instruction on x86/x64.
+> + */
+> +#define HV_REGISTER_HYPERVISOR_VERSION		0x00000100 /*CPUID 0x40000002 */
+> +#define	HV_REGISTER_PRIVILEGES_AND_FEATURES	0x00000200 /*CPUID 0x40000003 */
+> +#define	HV_REGISTER_FEATURES			0x00000201 /*CPUID 0x40000004 */
+> +#define	HV_REGISTER_IMPLEMENTATION_LIMITS	0x00000202 /*CPUID 0x40000005 */
+> +#define HV_ARM64_REGISTER_INTERFACE_VERSION	0x00090006 /*CPUID 0x40000001 */
+> +
+> +/*
+> + * Feature identification. HvRegisterPrivilegesAndFeaturesInfo returns a
+> + * 128-bit value with flags indicating which features are available to the
+> + * partition based upon the current partition privileges. The 128-bit
+> + * value is broken up with different portions stored in different 32-bit
+> + * fields in the ms_hyperv structure.
+> + */
+> +
+> +/* Partition Reference Counter available*/
+> +#define HV_MSR_TIME_REF_COUNT_AVAILABLE		BIT(1)
+> +
+> +/* Synthetic Timers available */
+> +#define HV_MSR_SYNTIMER_AVAILABLE		BIT(3)
+> +
+> +/* Reference TSC available */
+> +#define HV_MSR_REFERENCE_TSC_AVAILABLE		BIT(9)
+> +
+> +
+> +/*
+> + * This group of flags is in the high order 64-bits of the returned
+> + * 128-bit value. Note that this set of bit positions differs from what
+> + * is used on x86/x64 architecture.
+> + */
+> +
+> +/* Crash MSRs available */
+> +#define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE	BIT(8)
+
+It is confusing that you don't have a single bit space for all these
+flags. It'd probably help if you had a structure describing this
+128bit value in multiple 32bit or 64bit words, and indicating which
+field the bit position is relevant to.
+
+[...]
+
+> +/* Define the hypercall status result */
+> +
+> +union hv_hypercall_status {
+> +	u64 as_uint64;
+
+nit: it'd be more consistent if as_uint64 was actually a uint64 type.
+
+> +	struct {
+> +		u16 status;
+> +		u16 reserved;
+> +		u16 reps_completed;  /* Low 12 bits */
+> +		u16 reserved2;
+> +	};
+> +};
+> +
+> +/* hypercall status code */
+> +#define HV_STATUS_SUCCESS			0
+> +#define HV_STATUS_INVALID_HYPERCALL_CODE	2
+> +#define HV_STATUS_INVALID_HYPERCALL_INPUT	3
+> +#define HV_STATUS_INVALID_ALIGNMENT		4
+> +#define HV_STATUS_INSUFFICIENT_MEMORY		11
+> +#define HV_STATUS_INVALID_CONNECTION_ID		18
+> +#define HV_STATUS_INSUFFICIENT_BUFFERS		19
+> +
+> +/* Define input and output layout for Get VP Register hypercall */
+> +struct hv_get_vp_register_input {
+> +	u64 partitionid;
+> +	u32 vpindex;
+> +	u8  inputvtl;
+> +	u8  padding[3];
+> +	u32 name0;
+> +	u32 name1;
+> +} __packed;
+> +
+> +struct hv_get_vp_register_output {
+> +	u64 registervaluelow;
+> +	u64 registervaluehigh;
+> +} __packed;
+> +
+> +#define HV_FLUSH_ALL_PROCESSORS			BIT(0)
+> +#define HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES	BIT(1)
+> +#define HV_FLUSH_NON_GLOBAL_MAPPINGS_ONLY	BIT(2)
+
+I"m curious: Are these supposed to be PV'd TLB invalidation
+operations?
+
+> +#define HV_FLUSH_USE_EXTENDED_RANGE_FORMAT	BIT(3)
+> +
+> +enum HV_GENERIC_SET_FORMAT {
+> +	HV_GENERIC_SET_SPARSE_4K,
+> +	HV_GENERIC_SET_ALL,
+> +};
+> +
+> +/*
+> + * The Hyper-V TimeRefCount register and the TSC
+> + * page provide a guest VM clock with 100ns tick rate
+> + */
+> +#define HV_CLOCK_HZ (NSEC_PER_SEC/100)
+> +
+> +/*
+> + * The fields in this structure are set by Hyper-V and read
+> + * by the Linux guest.  They should be accessed with READ_ONCE()
+> + * so the compiler doesn't optimize in a way that will cause
+> + * problems.  The union pads the size out to the page size
+> + * used to communicate with Hyper-V.
+> + */
+> +struct ms_hyperv_tsc_page {
+> +	union {
+> +		struct {
+> +			u32 tsc_sequence;
+> +			u32 reserved1;
+> +			u64 tsc_scale;
+> +			s64 tsc_offset;
+> +		} __packed;
+> +		u8 reserved2[HV_HYP_PAGE_SIZE];
+> +	};
+> +};
+> +
+> +/* Define the number of synthetic interrupt sources. */
+> +#define HV_SYNIC_SINT_COUNT		(16)
+> +/* Define the expected SynIC version. */
+> +#define HV_SYNIC_VERSION_1		(0x1)
+> +
+> +#define HV_SYNIC_CONTROL_ENABLE		(1ULL << 0)
+> +#define HV_SYNIC_SIMP_ENABLE		(1ULL << 0)
+> +#define HV_SYNIC_SIEFP_ENABLE		(1ULL << 0)
+> +#define HV_SYNIC_SINT_MASKED		(1ULL << 16)
+> +#define HV_SYNIC_SINT_AUTO_EOI		(1ULL << 17)
+> +#define HV_SYNIC_SINT_VECTOR_MASK	(0xFF)
+
+Let's me guess: a PV interrupt controller? Do you really need this?
+Specially as I don't see any PV irqchip driver in this submission...
+
+[...]
+
+> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
+> new file mode 100644
+> index 0000000..60b3f68
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/mshyperv.h
+> @@ -0,0 +1,115 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Linux-specific definitions for managing interactions with Microsoft's
+> + * Hyper-V hypervisor. The definitions in this file are specific to
+> + * the ARM64 architecture.  See include/asm-generic/mshyperv.h for
+> + * definitions are that architecture independent.
+> + *
+> + * Definitions that are specified in the Hyper-V Top Level Functional
+> + * Spec (TLFS) should not go in this file, but should instead go in
+> + * hyperv-tlfs.h.
+> + *
+> + * Copyright (C) 2019, Microsoft, Inc.
+> + *
+> + * Author : Michael Kelley <mikelley@microsoft.com>
+> + */
+> +
+> +#ifndef _ASM_MSHYPERV_H
+> +#define _ASM_MSHYPERV_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdesc.h>
+> +#include <linux/arm-smccc.h>
+> +#include <asm/hyperv-tlfs.h>
+> +
+> +/*
+> + * Define the IRQ numbers/vectors used by Hyper-V VMbus interrupts
+> + * and by STIMER0 Direct Mode interrupts. Hyper-V should be supplying
+> + * these values through ACPI, but there are no other interrupting
+> + * devices in a Hyper-V VM on ARM64, so it's OK to hard code for now.
+
+I'm not convinced it is OK. If you don't try to do the right thing
+now, what is the incentive to do it later? Starting to hard code
+things is akin to going back to the ARM board files of old. Been
+there, managed to fix it, not going back to it again anytime soon.
+
+> + * The "CALLBACK_VECTOR" terminology is a left-over from the x86/x64
+> + * world that is used in architecture independent Hyper-V code.
+> + */
+> +#define HYPERVISOR_CALLBACK_VECTOR 16
+> +#define	HV_STIMER0_IRQNR	   17
+> +
+> +extern u64 hv_do_hvc(u64 control, ...);
+> +extern u64 hv_do_hvc_fast_get(u64 control, u64 input1, u64 input2, u64 input3,
+> +		struct hv_get_vp_register_output *output);
+> +
+> +/*
+> + * Declare calls to get and set Hyper-V VP register values on ARM64, which
+> + * requires a hypercall.
+> + */
+> +extern void hv_set_vpreg(u32 reg, u64 value);
+> +extern u64 hv_get_vpreg(u32 reg);
+> +extern void hv_get_vpreg_128(u32 reg, struct hv_get_vp_register_output *result);
+> +
+> +/*
+> + * Use the Hyper-V provided stimer0 as the timer that is made
+> + * available to the architecture independent Hyper-V drivers.
+> + */
+> +#define hv_init_timer(timer, tick) \
+> +		hv_set_vpreg(HV_REGISTER_STIMER0_COUNT + (2*timer), tick)
+> +#define hv_init_timer_config(timer, val) \
+> +		hv_set_vpreg(HV_REGISTER_STIMER0_CONFIG + (2*timer), val)
+> +#define hv_get_current_tick(tick) \
+> +		(tick = hv_get_vpreg(HV_REGISTER_TIME_REFCOUNT))
+> +
+> +#define hv_get_simp(val) (val = hv_get_vpreg(HV_REGISTER_SIPP))
+> +#define hv_set_simp(val) hv_set_vpreg(HV_REGISTER_SIPP, val)
+> +
+> +#define hv_get_siefp(val) (val = hv_get_vpreg(HV_REGISTER_SIFP))
+> +#define hv_set_siefp(val) hv_set_vpreg(HV_REGISTER_SIFP, val)
+> +
+> +#define hv_get_synic_state(val) (val = hv_get_vpreg(HV_REGISTER_SCONTROL))
+> +#define hv_set_synic_state(val) hv_set_vpreg(HV_REGISTER_SCONTROL, val)
+> +
+> +#define hv_get_vp_index(index) (index = hv_get_vpreg(HV_REGISTER_VPINDEX))
+> +
+> +#define hv_signal_eom()	hv_set_vpreg(HV_REGISTER_EOM, 0)
+> +
+> +/*
+> + * Hyper-V SINT registers are numbered sequentially, so we can just
+> + * add the SINT number to the register number of SINT0
+> + */
+> +#define hv_get_synint_state(sint_num, val) \
+> +		(val = hv_get_vpreg(HV_REGISTER_SINT0 + sint_num))
+> +#define hv_set_synint_state(sint_num, val) \
+> +		hv_set_vpreg(HV_REGISTER_SINT0 + sint_num, val)
+> +
+> +#define hv_get_crash_ctl(val) \
+> +		(val = hv_get_vpreg(HV_REGISTER_CRASH_CTL))
+> +#define hv_get_time_ref_count(val) \
+> +		(val = hv_get_vpreg(HV_REGISTER_TIME_REFCOUNT))
+> +#define hv_get_reference_tsc(val) \
+> +		(val = hv_get_vpreg(HV_REGISTER_REFERENCE_TSC))
+> +#define hv_set_reference_tsc(val) \
+> +		hv_set_vpreg(HV_REGISTER_REFERENCE_TSC, val)
+> +#define hv_enable_vdso_clocksource()
+> +#define hv_set_clocksource_vdso(val) \
+> +		((val).vdso_clock_mode = VDSO_CLOCKMODE_NONE)
+> +
+> +#if IS_ENABLED(CONFIG_HYPERV)
+
+I don't think this guards anything useful.
+
+> +#define hv_enable_stimer0_percpu_irq(irq)	enable_percpu_irq(irq, 0)
+> +#define hv_disable_stimer0_percpu_irq(irq)	disable_percpu_irq(irq)
+
+and this looks pretty premature.
+
+> +#endif
+> +
+> +/* ARM64 specific code to read the hardware clock */
+> +#define hv_get_raw_timer() arch_timer_read_counter()
+> +
+> +/* SMCCC hypercall parameters */
+> +#define HV_SMCCC_FUNC_NUMBER	1
+> +#define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
+> +				ARM_SMCCC_STD_CALL,		\
+> +				ARM_SMCCC_SMC_64,		\
+> +				ARM_SMCCC_OWNER_VENDOR_HYP,	\
+
+This is only defined in patch #2...
+
+> +				HV_SMCCC_FUNC_NUMBER)
+> +
+> +#include <asm-generic/mshyperv.h>
+> +
+> +#endif
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
