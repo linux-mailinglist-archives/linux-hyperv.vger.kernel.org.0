@@ -2,150 +2,148 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2798A1866E2
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2020 09:48:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 212A4186E53
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2020 16:12:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgCPIsR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 16 Mar 2020 04:48:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:57731 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730075AbgCPIsR (ORCPT
+        id S1731688AbgCPPM3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 Mar 2020 11:12:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35169 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729964AbgCPPM3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:48:17 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MC2o9-1j1LE32CGj-00CP7u; Mon, 16 Mar 2020 09:48:14 +0100
-Received: by mail-qk1-f179.google.com with SMTP id q17so53282qki.0;
-        Mon, 16 Mar 2020 01:48:14 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2sQq79nLvQREcZiQTvcnVO0Jdy3o0UnsCRASSgMAj0l/BtrS10
-        YJOGfusQrr3a4H8nIf+9BZC/D/iNBAYkARzkl1Y=
-X-Google-Smtp-Source: ADFU+vvOY/BGxo7kSvcD97t4Z1vQUfkOL22qs/tI6hULqTssDTO2tyghsLEAxf/j8ykiL2awuFtXPZNlBwPgv73H9fE=
-X-Received: by 2002:a37:b984:: with SMTP id j126mr23783692qkf.3.1584348493133;
- Mon, 16 Mar 2020 01:48:13 -0700 (PDT)
+        Mon, 16 Mar 2020 11:12:29 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m3so18493922wmi.0;
+        Mon, 16 Mar 2020 08:12:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pP29NNx6Ci3tKu2VMQ6svFhSLpTYpkSdhU02iawHkFs=;
+        b=Dnwlz34mWXgBWLnFf8OBoTMCCjGEIjnY7+NNYOn65l9S3hkmn81ytzDfT6y9PhntMr
+         SFLK54ZKh9T0dnqBCNjg18J/5xXqU6Dutf65o0mA9LJ8tUK/KdKNChq8ouj9QeRcRCbS
+         8n501882hm2Sc8eBAPEhX3CMGqQqmzy9vUs4LqvYxBoLveX9Q/FO07l2DJCXPUnEwsHX
+         YtQnY5FLBu4kySaj89LiqlrQQbbiwwE21QFOyfe4ybweOkNlHfxnktLSO6qeWRxQYzX+
+         4ZUSW3yMfjcdy+eoEC1nCzKPtrjSTvAUJKm5we85MalKwaG0fMwCMGOY7Z8try3A1Y8O
+         Iv7g==
+X-Gm-Message-State: ANhLgQ0W5UHiRbs/JemC3KLjZLExWn9Qp5gdfhE+bwbL5oyIhngWTDWj
+        /0hgMDXn9rQ8ikPfltraVe8=
+X-Google-Smtp-Source: ADFU+vu/tvS5V97YVVfKD2ivxmneOufMFO5W9ErMHPP4C5Ju1eQN39CBYRDgFDWYm0T37VQ9dxYtJg==
+X-Received: by 2002:a7b:c75a:: with SMTP id w26mr10625158wmk.2.1584371544960;
+        Mon, 16 Mar 2020 08:12:24 -0700 (PDT)
+Received: from localhost ([37.188.132.163])
+        by smtp.gmail.com with ESMTPSA id s15sm347045wrr.45.2020.03.16.08.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 08:12:24 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:12:23 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 1/5] drivers/base/memory: rename MMOP_ONLINE_KEEP to
+ MMOP_ONLINE
+Message-ID: <20200316151223.GS11482@dhcp22.suse.cz>
+References: <20200311123026.16071-1-david@redhat.com>
+ <20200311123026.16071-2-david@redhat.com>
 MIME-Version: 1.0
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com> <1584200119-18594-2-git-send-email-mikelley@microsoft.com>
-In-Reply-To: <1584200119-18594-2-git-send-email-mikelley@microsoft.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 16 Mar 2020 09:47:57 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1GFDUY4mXzst4Ds+S-4SGXso6-jfpsYyy-eHyceAC1Zg@mail.gmail.com>
-Message-ID: <CAK8P3a1GFDUY4mXzst4Ds+S-4SGXso6-jfpsYyy-eHyceAC1Zg@mail.gmail.com>
-Subject: Re: [PATCH v6 01/10] arm64: hyperv: Add core Hyper-V include files
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, olaf@aepfle.de,
-        Andy Whitcroft <apw@canonical.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, marcelo.cerri@canonical.com,
-        "K. Y. Srinivasan" <kys@microsoft.com>, sunilmut@microsoft.com,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:vJNFxqx7xMrPQ5nbEdJ3fk0xh0usEdIXP0e2LvvLfoJAW0tqWmy
- lm27DXlP2eYMLTCYlsu5IPgelnN34aLGlK9m+GD7ASAHIL1oP6nhS56y5EUD87OKQirRtQE
- uU8pitB/HueuQ2H+J0HD8SdedXOVlXnVB3XC594ySF+Ol+GJEreY6U0+3YsUGZPHtLuoJGF
- pVTbI/M9wb0YV8Jbx8ZGg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:78s2dhzdfOA=:cQdWSYSu57O9iLoiyga1fQ
- v2AZBQtOdlFxN9nndNnuFTP/oVl0pHX5OYFHV9WmQS94V17OQ6alBWTl5CDRBZUhNKaEOw5MC
- F9rj23uQtjXUQ0Fbr5AbPIGZr1wKZi3p5IOr0mcJlEJt3RQ52mjuo/+Eou52HITgvaFnlee0b
- PwWJZbDFS6DHhdSSfBuUq/it5B+VgSquMGGgWnVDjfRKrxdXZ9Rr588a0RDKV7DfouJN9rfwa
- xhT14QgochMqD3/E6eLQaSDkK3pGuCjnNbqxFeJ+580nEbNrF8nFL4JWAAo6w1SKU4q+2nwR+
- 7fovTKMCtxTdSnkq5uV0M9Gf8qiWjmkXL3NJFYRd9U30clKb8c+M0fQLaRSt/C9kN1DvrwGI8
- wG4hdVSW95j6H/IVaFhdagoLxinO2q6OM+zgowCxrAgklC2bBSYZxFsxnKfMlJjgUxkzEVOj4
- BLpVdAR85jlo9oNt5fXnr3tDUddC43/kfYYpRH8eSRYHTUy5CydufiC5coo70wkUq+jH28RsL
- DJRhDAxlulfbiiWPeJkxVVxId7GU6PVUg3AfPjo7yacxa+kWAoGXlP0U6s2WNT46OsB3OyI0s
- qiL+NrzIYz2qcLDMAdYC4b2r1gA7lB+qk7CjUOgFEAjDIkzjcJ0KGdn0TsSE67oBCJSAifXSw
- fKPEbZmGUOx1zEka2xw8ICszwV4oEVRi19tXXuiW9EcDNswL5TxbRTLtH0G27zynI20ZMBioI
- y5+KgGkf11ktXaroHqqC/Lp9R5ryHpU9P5b4bjHl8DLhetv86e0mBt6XwVw78LqMGliuoi7/k
- TkOtekCf2mpPjLLRdO3zs/cwTVAc3zh5OETRy+OuGi1AuYMwOo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311123026.16071-2-david@redhat.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
+On Wed 11-03-20 13:30:22, David Hildenbrand wrote:
+> The name is misleading. Let's just name it like the online_type name we
+> expose to user space ("online").
 
-> +
-> +/* Define input and output layout for Get VP Register hypercall */
-> +struct hv_get_vp_register_input {
-> +       u64 partitionid;
-> +       u32 vpindex;
-> +       u8  inputvtl;
-> +       u8  padding[3];
-> +       u32 name0;
-> +       u32 name1;
-> +} __packed;
+I would disagree the name is misleading. It just says that you want to
+online and keep the zone type. Nothing I would insist on though.
 
-Are you sure these need to be made byte-aligned according to the
-specification? If the structure itself is aligned to 64 bit, better mark only
-the individual fields that are misaligned as __packed.
+> Add some documentation to the types.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/base/memory.c          | 9 +++++----
+>  include/linux/memory_hotplug.h | 6 +++++-
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 6448c9ece2cb..8c5ce42c0fc3 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
+>  	 * attribute and need to set the online_type.
+>  	 */
+>  	if (mem->online_type < 0)
+> -		mem->online_type = MMOP_ONLINE_KEEP;
+> +		mem->online_type = MMOP_ONLINE;
+>  
+>  	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+>  
+> @@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+>  	else if (sysfs_streq(buf, "online_movable"))
+>  		online_type = MMOP_ONLINE_MOVABLE;
+>  	else if (sysfs_streq(buf, "online"))
+> -		online_type = MMOP_ONLINE_KEEP;
+> +		online_type = MMOP_ONLINE;
+>  	else if (sysfs_streq(buf, "offline"))
+>  		online_type = MMOP_OFFLINE;
+>  	else {
+> @@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+>  	switch (online_type) {
+>  	case MMOP_ONLINE_KERNEL:
+>  	case MMOP_ONLINE_MOVABLE:
+> -	case MMOP_ONLINE_KEEP:
+> +	case MMOP_ONLINE:
+>  		/* mem->online_type is protected by device_hotplug_lock */
+>  		mem->online_type = online_type;
+>  		ret = device_online(&mem->dev);
+> @@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
+>  	}
+>  
+>  	nid = mem->nid;
+> -	default_zone = zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, nr_pages);
+> +	default_zone = zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
+> +					  nr_pages);
+>  	strcat(buf, default_zone->name);
+>  
+>  	print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f4d59155f3d4..261dbf010d5d 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -47,9 +47,13 @@ enum {
+>  
+>  /* Types for control the zone type of onlined and offlined memory */
+>  enum {
+> +	/* Offline the memory. */
+>  	MMOP_OFFLINE = -1,
+> -	MMOP_ONLINE_KEEP,
+> +	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
+> +	MMOP_ONLINE,
+> +	/* Online the memory to ZONE_NORMAL. */
+>  	MMOP_ONLINE_KERNEL,
+> +	/* Online the memory to ZONE_MOVABLE. */
+>  	MMOP_ONLINE_MOVABLE,
+>  };
+>  
+> -- 
+> 2.24.1
 
-If the structure is aligned to only 32-bit addresses instead of
-64-bit, mark it as "__packed __aligned(4)" to let the compiler
-generate better code for accessing it.
-
-Also, in order to write portable code, it would be helpful to mark
-all the fields as explicitly little-endian, and use __le32_to_cpu()
-etc for accessing them.
-
-> +/* Define synthetic interrupt controller message flags. */
-> +union hv_message_flags {
-> +       __u8 asu8;
-> +       struct {
-> +               __u8 msg_pending:1;
-> +               __u8 reserved:7;
-> +       } __packed;
-> +};
-
-For similar reasons, please avoid bit fields and just use a
-bit mask on the first member of the union.
-
-The __packed annotation here is not meaningful,
-as the total size is already only a single byte.
-
-> +/* Define port identifier type. */
-> +union hv_port_id {
-> +       __u32 asu32;
-> +       struct {
-> +               __u32 id:24;
-> +               __u32 reserved:8;
-> +       }  __packed u;
-> +};
-
-Here, the __packed annotation is inconsistent with the use
-in the rest of the file: marking only one member of the union
-as __packed means that the union itself is still expected to
-be 4 byte aligned. I would expect that either all of these
-structures have a sensible alignment, or they are all
-completely unaligned.
-
-> + * Use the Hyper-V provided stimer0 as the timer that is made
-> + * available to the architecture independent Hyper-V drivers.
-> + */
-> +#define hv_init_timer(timer, tick) \
-> +               hv_set_vpreg(HV_REGISTER_STIMER0_COUNT + (2*timer), tick)
-> +#define hv_init_timer_config(timer, val) \
-> +               hv_set_vpreg(HV_REGISTER_STIMER0_CONFIG + (2*timer), val)
-> +#define hv_get_current_tick(tick) \
-> +               (tick = hv_get_vpreg(HV_REGISTER_TIME_REFCOUNT))
-
-In general, we prefer inline functions over macros in header files.
-
-> +#if IS_ENABLED(CONFIG_HYPERV)
-> +#define hv_enable_stimer0_percpu_irq(irq)      enable_percpu_irq(irq, 0)
-> +#define hv_disable_stimer0_percpu_irq(irq)     disable_percpu_irq(irq)
-> +#endif
-
-Should there be an #else definition here? It helps readability
-to have the two versions (with and without hyperv support) close
-together rather than in different files. If there is no other
-definition, just drop the #if.
-
-     Arnd
+-- 
+Michal Hocko
+SUSE Labs
