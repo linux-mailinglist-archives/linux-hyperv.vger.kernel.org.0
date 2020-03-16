@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6256E186E68
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2020 16:19:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94DB7186E6A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2020 16:20:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731696AbgCPPT0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 16 Mar 2020 11:19:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38289 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729856AbgCPPT0 (ORCPT
+        id S1731375AbgCPPUx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 Mar 2020 11:20:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34857 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729856AbgCPPUx (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:19:26 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t13so12164402wmi.3;
-        Mon, 16 Mar 2020 08:19:24 -0700 (PDT)
+        Mon, 16 Mar 2020 11:20:53 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h4so1111829wru.2;
+        Mon, 16 Mar 2020 08:20:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9gCLfTwG3giIuIHsNt54BqZ2oPFCe851NK97n7eWk0U=;
-        b=kjAsd3vqIDXPBheSE4Ep3nle0/UXfTq4ajDnjCnQBA3a4wA1FJ2epKcA0mgchyjSgs
-         bZiQMO2Oxk6U5j/4pNPj4BStVgc2Ub6b+EjAgX+N6UpDiV14stVDgStnDjxc3LMcglC1
-         jGwPizkc4Oqy7lMtV7IzXMBdXhfwmdY+jzJNFQFMW2EbFm6xoHWhncTFCUkcrkjXnSVi
-         3VQNFLVi34INX/r/j4eTUYAP7s6JuD9lirX4p8SXEGIIdIor2ZOhKX850DbjBrFZt82G
-         MVYEZE335ILbUGP2PpOQ0QmEvGiIfL+nQvtIJOoBjNNB/KlvGU4oX8zudJmQnhKZtGi5
-         lO8w==
-X-Gm-Message-State: ANhLgQ0MAnaKRYHtxcWaDnAIz9WPrHz2F6GLTaG679D9CHtlmSQsBeiq
-        QZGIr+5qoQ+PPv53tAJ7zD4=
-X-Google-Smtp-Source: ADFU+vvOYExuooXZ898XQrqAGBWNBedWRADee7iQ/jiwP4Lm03/iQnl4/TOMx1px3Igm+ARPH+fmlA==
-X-Received: by 2002:a7b:c0cf:: with SMTP id s15mr29520903wmh.106.1584371964191;
-        Mon, 16 Mar 2020 08:19:24 -0700 (PDT)
+        bh=PHFwU/9Gwprc+RyvAszebJ6mggkLL/7mXQpDoqU9oeU=;
+        b=jcedxD7NKQYDtUMcNkqQHGlt1H5Xpaw3RnwFUgSnatacPWrln81Dr9TIkc2965EqBm
+         k1MYPg6psepbbXe/a1Iib0rl9LDLUgjd7+URVv1j0z6lHZruNfGkCobCLZoRC1oKug30
+         JkxX8KSLmSiQsrhZm5ks0P0rOk4W2PxSEdtFGUXSQad1qvwjA+iEHqnL8XvmMECzwgCy
+         5ttSoj635qpw+1LMdC14Y0Z3siW8lCCX9jOjkWXGvEzThd2CY1OBYYZFmJIrvxht+kJ+
+         5tqX7lfnIwWKiz9GQ6ZwAXPDI86whLhO2AhY/hc8N1W4hKobiiYyw9YUvipOBg/7iK4u
+         luCg==
+X-Gm-Message-State: ANhLgQ2BCvWIVF6KN1GFZDMd8RrUa9+KpZF4iB39h4lEfAUIlmUj3Hb6
+        qXYr94gLn0xrubpwkVZqhJs=
+X-Google-Smtp-Source: ADFU+vuaSBhAghb7CaWtuVCz1nkuUiUyxqyZeuHdtukKOxs3qogmtqhAePyHD4CPFq9QAfjmqizbvA==
+X-Received: by 2002:adf:db49:: with SMTP id f9mr15327113wrj.145.1584372051365;
+        Mon, 16 Mar 2020 08:20:51 -0700 (PDT)
 Received: from localhost ([37.188.132.163])
-        by smtp.gmail.com with ESMTPSA id w204sm79069wma.1.2020.03.16.08.19.23
+        by smtp.gmail.com with ESMTPSA id b187sm18218wmb.42.2020.03.16.08.20.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:19:23 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 16:19:22 +0100
+        Mon, 16 Mar 2020 08:20:50 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 16:20:47 +0100
 From:   Michal Hocko <mhocko@kernel.org>
 To:     David Hildenbrand <david@redhat.com>
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
@@ -45,34 +45,23 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Baoquan He <bhe@redhat.com>,
         Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v1 2/5] drivers/base/memory: map MMOP_OFFLINE to 0
-Message-ID: <20200316151922.GT11482@dhcp22.suse.cz>
+Subject: Re: [PATCH v1 3/5] drivers/base/memory: store mapping between MMOP_*
+ and string in an array
+Message-ID: <20200316152047.GU11482@dhcp22.suse.cz>
 References: <20200311123026.16071-1-david@redhat.com>
- <20200311123026.16071-3-david@redhat.com>
+ <20200311123026.16071-4-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311123026.16071-3-david@redhat.com>
+In-Reply-To: <20200311123026.16071-4-david@redhat.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed 11-03-20 13:30:23, David Hildenbrand wrote:
-> I have no idea why we have to start at -1.
-
-Because this is how the offline state offline was represented
-originally.
-
-> Just treat 0 as the special
-> case. Clarify a comment (which was wrong, when we come via
-> device_online() the first time, the online_type would have been 0 /
-> MEM_ONLINE). The default is now always MMOP_OFFLINE.
-
-git grep says that you have covered the only remaining place which
-hasn't used the enum value.
-
-> This is a preparation to use the online_type as an array index.
+On Wed 11-03-20 13:30:24, David Hildenbrand wrote:
+> Let's use a simple array which we can reuse soon. While at it, move the
+> string->mmop conversion out of the device hotplug lock.
 > 
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -86,49 +75,78 @@ hasn't used the enum value.
 Acked-by: Michal Hocko <mhocko@suse.com>
 
 > ---
->  drivers/base/memory.c          | 11 ++++-------
->  include/linux/memory_hotplug.h |  2 +-
->  2 files changed, 5 insertions(+), 8 deletions(-)
+>  drivers/base/memory.c | 38 +++++++++++++++++++++++---------------
+>  1 file changed, 23 insertions(+), 15 deletions(-)
 > 
 > diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 8c5ce42c0fc3..e7e77cafef80 100644
+> index e7e77cafef80..8a7f29c0bf97 100644
 > --- a/drivers/base/memory.c
 > +++ b/drivers/base/memory.c
-> @@ -211,17 +211,14 @@ static int memory_subsys_online(struct device *dev)
->  		return 0;
+> @@ -28,6 +28,24 @@
 >  
->  	/*
-> -	 * If we are called from state_store(), online_type will be
-> -	 * set >= 0 Otherwise we were called from the device online
-> -	 * attribute and need to set the online_type.
-> +	 * When called via device_online() without configuring the online_type,
-> +	 * we want to default to MMOP_ONLINE.
->  	 */
-> -	if (mem->online_type < 0)
-> +	if (mem->online_type == MMOP_OFFLINE)
->  		mem->online_type = MMOP_ONLINE;
+>  #define MEMORY_CLASS_NAME	"memory"
 >  
->  	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+> +static const char *const online_type_to_str[] = {
+> +	[MMOP_OFFLINE] = "offline",
+> +	[MMOP_ONLINE] = "online",
+> +	[MMOP_ONLINE_KERNEL] = "online_kernel",
+> +	[MMOP_ONLINE_MOVABLE] = "online_movable",
+> +};
+> +
+> +static int memhp_online_type_from_str(const char *str)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(online_type_to_str); i++) {
+> +		if (sysfs_streq(str, online_type_to_str[i]))
+> +			return i;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+>  #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
+>  
+>  static int sections_per_block;
+> @@ -236,26 +254,17 @@ static int memory_subsys_offline(struct device *dev)
+>  static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+>  			   const char *buf, size_t count)
+>  {
+> +	const int online_type = memhp_online_type_from_str(buf);
+>  	struct memory_block *mem = to_memory_block(dev);
+> -	int ret, online_type;
+> +	int ret;
+> +
+> +	if (online_type < 0)
+> +		return -EINVAL;
+>  
+>  	ret = lock_device_hotplug_sysfs();
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (sysfs_streq(buf, "online_kernel"))
+> -		online_type = MMOP_ONLINE_KERNEL;
+> -	else if (sysfs_streq(buf, "online_movable"))
+> -		online_type = MMOP_ONLINE_MOVABLE;
+> -	else if (sysfs_streq(buf, "online"))
+> -		online_type = MMOP_ONLINE;
+> -	else if (sysfs_streq(buf, "offline"))
+> -		online_type = MMOP_OFFLINE;
+> -	else {
+> -		ret = -EINVAL;
+> -		goto err;
+> -	}
 > -
-> -	/* clear online_type */
-> -	mem->online_type = -1;
-> +	mem->online_type = MMOP_OFFLINE;
+>  	switch (online_type) {
+>  	case MMOP_ONLINE_KERNEL:
+>  	case MMOP_ONLINE_MOVABLE:
+> @@ -271,7 +280,6 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+>  		ret = -EINVAL; /* should never happen */
+>  	}
 >  
->  	return ret;
->  }
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 261dbf010d5d..c2e06ed5e0e9 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -48,7 +48,7 @@ enum {
->  /* Types for control the zone type of onlined and offlined memory */
->  enum {
->  	/* Offline the memory. */
-> -	MMOP_OFFLINE = -1,
-> +	MMOP_OFFLINE = 0,
->  	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
->  	MMOP_ONLINE,
->  	/* Online the memory to ZONE_NORMAL. */
+> -err:
+>  	unlock_device_hotplug();
+>  
+>  	if (ret < 0)
 > -- 
 > 2.24.1
 
