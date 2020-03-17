@@ -2,52 +2,51 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EF8A187FF2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 12:06:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E74FE188158
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 12:17:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgCQLGA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 Mar 2020 07:06:00 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:24066 "EHLO
+        id S1727244AbgCQLQw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 Mar 2020 07:16:52 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:49147 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728517AbgCQLF6 (ORCPT
+        by vger.kernel.org with ESMTP id S1727455AbgCQLIk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:05:58 -0400
+        Tue, 17 Mar 2020 07:08:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584443157;
+        s=mimecast20190719; t=1584443320;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=4nMRe0qdJ7XFd1Hd5ZLK3jwEMI8pUyqEZs72AcpBHM8=;
-        b=K0KXmsG948wXCbc4FZV7NzW6tTf5RKbcFhJ/dOWqzRrQVt+O4hagAtZ7f4mOFTrzuZgrw+
-        FoS7rcBJj+qDCkbcPa6WAQXTF3t7ZmivTMBmSD7lCdKhgG4Q/UFvzGgZFgRFo2LsR7qipc
-        17MmBf7hS9pDdniaUlaOrFp6O7vXjMY=
+        bh=nN+zzflDgGyuX29zgU2ZjErtQUtvX1GawHmDMWANkg4=;
+        b=cNgEhSc/45mwY9Y8e9WX1ghyhIZunvw4Le+7Wz/idv+S6/QF2sO+7ITkn5IJwHgFHCZaqp
+        dth/QA6OGe7ubN3RQe6lIcc54i/dNRZIQNux+lb7eAz0Qy71crsaBcUKmv5Ip/UmNMVuLO
+        v2CK02jtyT7nFtHjuQab31qNmNWKXL0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-CRYosjjBMmud8zcb0sTWVA-1; Tue, 17 Mar 2020 07:05:55 -0400
-X-MC-Unique: CRYosjjBMmud8zcb0sTWVA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-422-JWSot35nNg2uA3hQ5yD47w-1; Tue, 17 Mar 2020 07:08:36 -0400
+X-MC-Unique: JWSot35nNg2uA3hQ5yD47w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 370C2800D4E;
-        Tue, 17 Mar 2020 11:05:53 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 960F8477;
+        Tue, 17 Mar 2020 11:08:34 +0000 (UTC)
 Received: from [10.36.112.136] (ovpn-112-136.ams2.redhat.com [10.36.112.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 03EDC8F37B;
-        Tue, 17 Mar 2020 11:05:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A2965DA76;
+        Tue, 17 Mar 2020 11:08:32 +0000 (UTC)
 Subject: Re: [PATCH v2 8/8] mm/memory_hotplug: allow to specify a default
  online_type
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>,
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-hyperv@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
         Oscar Salvador <osalvador@suse.de>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Baoquan He <bhe@redhat.com>
 References: <20200317104942.11178-1-david@redhat.com>
  <20200317104942.11178-9-david@redhat.com>
- <20200317110121.GN26018@dhcp22.suse.cz>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -93,64 +92,36 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <04ad4a95-e455-5fa4-01e0-fa2e0416adbb@redhat.com>
-Date:   Tue, 17 Mar 2020 12:05:50 +0100
+Message-ID: <8860f1db-4c75-d4ef-2ded-1cbbfb992d73@redhat.com>
+Date:   Tue, 17 Mar 2020 12:08:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200317110121.GN26018@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200317104942.11178-9-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 17.03.20 12:01, Michal Hocko wrote:
-> On Tue 17-03-20 11:49:42, David Hildenbrand wrote:
->> For now, distributions implement advanced udev rules to essentially
->> - Don't online any hotplugged memory (s390x)
->> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
->>   hyperv)
->> - Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
->>   care of (e.g., bare metal, special virt environments)
->>
->> In summary: All memory is usually onlined the same way, however, the
->> kernel always has to ask user space to come up with the same answer.
->> E.g., Hyper-V always waits for a memory block to get onlined before
->> continuing, otherwise it might end up adding memory faster than
->> hotplugging it, which can result in strange OOM situations. This waiting
->> slows down adding of a bigger amount of memory.
->>
->> Let's allow to specify a default online_type, not just "online" and
->> "offline". This allows distributions to configure the default online_type
->> when booting up and be done with it.
->>
->> We can now specify "offline", "online", "online_movable" and
->> "online_kernel" via
->> - "memhp_default_state=" on the kernel cmdline
->> - /sys/devices/system/memory/auto_online_blocks
->> just like we are able to specify for a single memory block via
->> /sys/devices/system/memory/memoryX/state
->>
->> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
+On 17.03.20 11:49, David Hildenbrand wrote:
+> For now, distributions implement advanced udev rules to essentially
+> - Don't online any hotplugged memory (s390x)
+> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
+>   hyperv)
+> - Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
+>   care of (e.g., bare metal, special virt environments)
 > 
-> As I've said earlier and several times already, I really dislike this
-> interface. But it is fact that this patch doesn't make it any worse.
-> Quite contrary, so feel free to add
-> Acked-by: Michal Hocko <mhocko@suse.com>
+> In summary: All memory is usually onlined the same way, however, the
+> kernel always has to ask user space to come up with the same answer.
+> E.g., Hyper-V always waits for a memory block to get onlined before
+> continuing, otherwise it might end up adding memory faster than
+> hotplugging it, which can result in strange OOM situations. This waiting
 
-Thanks Michal!
+s/hotplugging/onlining/
 
 -- 
 Thanks,
