@@ -2,48 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5455018856F
+	by mail.lfdr.de (Postfix) with ESMTP id DADE6188570
 	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 14:25:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCQNZd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 Mar 2020 09:25:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44473 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgCQNZc (ORCPT
+        id S1726740AbgCQNZp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 Mar 2020 09:25:45 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38230 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbgCQNZd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:25:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b72so11936630pfb.11;
-        Tue, 17 Mar 2020 06:25:31 -0700 (PDT)
+        Tue, 17 Mar 2020 09:25:33 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w3so9630367plz.5;
+        Tue, 17 Mar 2020 06:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MrCO2qWyLt6GMelevFESZLUc05GAVUhiejhFIhGEowk=;
-        b=risv9eC7+uHtXwh/CzDfDJH5WmA7Fn2ZJa99N5UwNHJv+lRrugy3ATRq24yk9loL1G
-         aB3RevozFPsxX+0ww5fL3rPq40NGOWKYo72EjzR7Ipxv8gXjpR/EC6a70HdkfeuiqNNX
-         Amsn2FU1Berl4UWfV/q/+BMY5BeSWWZrZBbw2+zQ3s7A3GyUrALdXfUOpfrizxlro2Dk
-         f3e0qL1iKHOFl01LO57er970PXrt+bT1Ynp59XOYavbePqPb77cUkcbezAJpa02iJfGl
-         bQtsDaJSi1aE8CD+W75fzEyXqa2gqGkxtmyeJb6Kc07ODWOLQ1ChZasqBpHDdlLGazRE
-         9zJA==
+        bh=kvShCFneTqNWCShSIFRg6DQFBqujhrj5sjdHfCk9weg=;
+        b=r6lEtRqdkojIaCRzqksEKRqICnthfZXUavxesNwoNyv3H6rjq75b5EUE9AKoh0MhBS
+         6vIFmOM73ladz7zHK1QecXEe4WqzlgEk40azox9L5gP10rqNuIQPqrQR7JQfSVl4NB4p
+         j/KgRlWtwsbS8pae84BnC2RHoDTF0+7QNIu6L2qn01qtRtqP7WY+HzLP0QsMPiR4sDAk
+         Lfa10fcI9uYuOgLrDvAuLyrZI6/jXq5rh6W1VMMhLFb0LKNtL1vUrTLHbCCePukZchkk
+         PjNV5aD1iapF/p+z3AIbH5MR7VTaoKRY+06rIq/mjFLz58CQIBjN5bUuUTP9Mj56fSZD
+         n1Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MrCO2qWyLt6GMelevFESZLUc05GAVUhiejhFIhGEowk=;
-        b=eVIJbMrgF27d/Xr0s8QC7EDoM/rwASWMYdKXz+DVHBvtnl1IeTkKVC+xV6/mvy2bER
-         rGNMLJUuhdlXxxPYAN35eWWMjQz2tmoESN+yixuWFt6TGAoHpdxoQVd1b8MdN+Y7ZTzE
-         WNsnCgAlJOraZQZcKl4xw47uPUncy+dT0BAp3D0U2fq2cKMWaHo59YGRuD6Xl2fQz3qR
-         Ojg1LdHZvH5F/wuTiu7ixa2d0P2noZtE9nevht6sgZwBEu7lgGXr4RDmIZY3I7/x0pM1
-         tzg2AdVbTW65PxlplsXgcZBCEtde/gBuyf878nEJDOnaGNLtPAM5AmpPu09AYaaVEkS5
-         NniA==
-X-Gm-Message-State: ANhLgQ1z/UP4a+SM6ARze6DBPgFRiMiv/bMbh0ByeNKw+mFObIElth2m
-        gSbUdC2S1aqjrZMwNh02c2Q=
-X-Google-Smtp-Source: ADFU+vter7IHF9YQ0RfQDuJek1E+T8QCews5dM5EJv3wjPu1lFDxKWlNtZTm4MD1Az20y9UbmCtWpg==
-X-Received: by 2002:a63:31c9:: with SMTP id x192mr5265390pgx.88.1584451531408;
-        Tue, 17 Mar 2020 06:25:31 -0700 (PDT)
+        bh=kvShCFneTqNWCShSIFRg6DQFBqujhrj5sjdHfCk9weg=;
+        b=kJ54M8ichXkjeP5TnBVI4NbdQxA+hXRG8M3Bv7xm53E8V3sYGQfU/VPXzn9lkqMWVY
+         Bj16afPnq3KLsJ6kmzUikkGxt76u36NpA44HcB6aFz6MJhFb0rKPOqywgjyXqO35+Hu3
+         wWcES+0OEkjB1U+fTjxk+hq3vmNGMzeLol81Eezt9LxSn0PqZ3UCUUP7Uuj9zZVU46ui
+         kzN4a+wvVyXJ/f1I6kFNy831CEQkFXY4FhRpXdC6Hl9/kViqGmfEQnn3MGu6/z+LVWjK
+         BEB3B1xxy/zUxwVvqQ1zmwubO/jxAfeyVEYgsp/2LUeb+yX8UNj+nI2Ho9Ph5XJKYJHK
+         qvWw==
+X-Gm-Message-State: ANhLgQ34lsbAhL3wqKtyrAw8EIViPCnc/6Oe2+bLu6l0daTKlbLoA/ko
+        2dAlbuNS/serRXu5oKltHl8=
+X-Google-Smtp-Source: ADFU+vteWXHd6n9nuJOFGQMBnhZ/il1kMyVw9aW2v4v52kZvfrF89ZHOa/PNnFOHez1jtvt8yhSkHQ==
+X-Received: by 2002:a17:902:b208:: with SMTP id t8mr4228476plr.94.1584451532323;
+        Tue, 17 Mar 2020 06:25:32 -0700 (PDT)
 Received: from localhost.corp.microsoft.com ([167.220.2.210])
-        by smtp.googlemail.com with ESMTPSA id e30sm2910902pga.6.2020.03.17.06.25.30
+        by smtp.googlemail.com with ESMTPSA id e30sm2910902pga.6.2020.03.17.06.25.31
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 06:25:30 -0700 (PDT)
+        Tue, 17 Mar 2020 06:25:31 -0700 (PDT)
 From:   ltykernel@gmail.com
 X-Google-Original-From: Tianyu.Lan@microsoft.com
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
@@ -53,9 +53,9 @@ To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
 Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkuznets@redhat.com
-Subject: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
-Date:   Tue, 17 Mar 2020 06:25:21 -0700
-Message-Id: <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
+Subject: [PATCH 3/4] x86/Hyper-V: Trigger crash enlightenment only once during system crash.
+Date:   Tue, 17 Mar 2020 06:25:22 -0700
+Message-Id: <20200317132523.1508-4-Tianyu.Lan@microsoft.com>
 X-Mailer: git-send-email 2.14.5
 In-Reply-To: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
 References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
@@ -66,33 +66,56 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-If fail to register kmsg dump on Hyper-V platform, hv_panic_page
-will not be used anywhere. So free and reset it.
+Hyper-V expects guest only triggers crash enlightenment.
+The second crash notify will be ignored by Hyper-V.
+
+Current code may trigger crash enlightenment during system
+panic twice.
+1) The enlightenment is triggered in hyperv_panic/die_event()
+via hyperv_report_panic().
+2) hv_kmsg_dump() reports kmsg to host via hyperv_report_panic_msg().
+
+Fix it. If kmsg dump is registered successfully, just report
+kmsg via hyperv_report_panic_msg() and not report register values
+via hyperv_report_panic().
 
 Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 ---
- drivers/hv/vmbus_drv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/hv/vmbus_drv.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index b56b9fb9bd90..b043efea092a 100644
+index b043efea092a..1787d6246251 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
- 			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
- 			if (hv_panic_page) {
- 				ret = kmsg_dump_register(&hv_kmsg_dumper);
--				if (ret)
-+				if (ret) {
- 					pr_err("Hyper-V: kmsg dump register "
- 						"error 0x%x\n", ret);
-+					hv_free_hyperv_page(
-+					    (unsigned long)hv_panic_page);
-+					hv_panic_page = NULL;
-+				}
- 			} else
- 				pr_err("Hyper-V: panic message page memory "
- 					"allocation failed");
+@@ -55,7 +55,12 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+ 
+ 	vmbus_initiate_unload(true);
+ 
+-	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
++	/*
++	 * Crash notify only can be triggered once. If crash notify
++	 * message is available, just report kmsg to crash buffer.
++	 */
++	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
++	    && !hv_panic_page) {
+ 		regs = current_pt_regs();
+ 		hyperv_report_panic(regs, val);
+ 	}
+@@ -68,7 +73,12 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+ 	struct die_args *die = (struct die_args *)args;
+ 	struct pt_regs *regs = die->regs;
+ 
+-	hyperv_report_panic(regs, val);
++	/*
++	 * Crash notify only can be triggered once. If crash notify
++	 * message is available, just report kmsg to crash buffer.
++	 */
++	if (!hv_panic_page)
++		hyperv_report_panic(regs, val);
+ 	return NOTIFY_DONE;
+ }
+ 
 -- 
 2.14.5
 
