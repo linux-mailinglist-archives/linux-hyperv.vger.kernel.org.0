@@ -2,102 +2,132 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 238BA188C39
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 18:36:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 118EB188D68
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 19:46:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgCQRgF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 Mar 2020 13:36:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37196 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgCQRgE (ORCPT
+        id S1726473AbgCQSqm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 Mar 2020 14:46:42 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:34504 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726388AbgCQSqm (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 Mar 2020 13:36:04 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 6so26811177wre.4;
-        Tue, 17 Mar 2020 10:36:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HK4dtU6wlFNqeoi15VIX4txP4pHLLBJv5Yu+/ozsMlo=;
-        b=mfTsH6hLkOkCjRj90Xkh5eCAR1D8QvYRXBBDfM8ysrjex48uAq8j5cAOBXgu3aTKkZ
-         tn+83Bf+sSBGoRNjUBMS+E6fEqlG93CuiPBKbsz/G2FhW0ydRoBvR6DE8NG09NiOkr1a
-         iOg3HgM1xrqUfFyy1zcz5eSFR7wANA3lZEOTpAPnMaIbRghlgBKFTS6nsDVX9kKPegpt
-         ztlv4gm7AYqyvjw/6IlaGr+GNwhTvEyrVlum9UT6tWTOU3spONGeE0EGTGKvFKsS2oG7
-         aA+ZcfIbLfQr4YeZRWcPWSf1K/0FzLE5sn3RmtXWIdzaYOFEPzt6pyBijk6pNJYX2O7x
-         c3gQ==
-X-Gm-Message-State: ANhLgQ2S7iOPCkwz0mak60Xlg8n4kBvv60XQfjg9DIMWn0XLXizdUmIN
-        gEcCmHQDH202hK2JWUwlo58=
-X-Google-Smtp-Source: ADFU+vu9SYdwcgSZ2H4PuIVI9Wp9pPurJ3waoqVZWzO5zEOoKjPO/99OtjvJeY7eWQrGvPrFKK8lGg==
-X-Received: by 2002:a5d:4ac2:: with SMTP id y2mr69149wrs.263.1584466563140;
-        Tue, 17 Mar 2020 10:36:03 -0700 (PDT)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id k126sm202548wme.4.2020.03.17.10.36.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 10:36:02 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 17:36:00 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     ltykernel@gmail.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to
- register kmsg dump
-Message-ID: <20200317173600.2hqznyabyj4nckjo@debian>
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
+        Tue, 17 Mar 2020 14:46:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584470800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=p+gUZ3MksGK8ss75Fy3aNWaApfXH5ekf0JoR/2di0Nk=;
+        b=WCApuWIJ11m1IwBtrdU0iTVeXgW05qsmomIir6Bal0eQqaTkjmG/Ry4eVduv3Cmv9H+ddU
+        Rv3hPl3QkG8T6I5dhWDh0NmrkVJuvd2YScTFeFIduxIHEFi1pD3iQtJMv+fyIYfQG/Zwdk
+        dGucYqXS5WfRchgrBwYD3R3gP/T9O98=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-13-OTY4g5TdPYucAu64lVsgDQ-1; Tue, 17 Mar 2020 14:46:38 -0400
+X-MC-Unique: OTY4g5TdPYucAu64lVsgDQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24F19800D50;
+        Tue, 17 Mar 2020 18:46:36 +0000 (UTC)
+Received: from [10.36.112.136] (ovpn-112-136.ams2.redhat.com [10.36.112.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A62E29081A;
+        Tue, 17 Mar 2020 18:46:28 +0000 (UTC)
+Subject: Re: [PATCH v2 5/8] hv_balloon: don't check for memhp_auto_online
+ manually
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20200317104942.11178-1-david@redhat.com>
+ <20200317104942.11178-6-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <1d335b12-8585-6617-f0d6-68c333c33c6f@redhat.com>
+Date:   Tue, 17 Mar 2020 19:46:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200317104942.11178-6-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 06:25:21AM -0700, ltykernel@gmail.com wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> 
-> If fail to register kmsg dump on Hyper-V platform, hv_panic_page
-> will not be used anywhere. So free and reset it.
-> 
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index b56b9fb9bd90..b043efea092a 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
->  			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
->  			if (hv_panic_page) {
->  				ret = kmsg_dump_register(&hv_kmsg_dumper);
-> -				if (ret)
-> +				if (ret) {
->  					pr_err("Hyper-V: kmsg dump register "
->  						"error 0x%x\n", ret);
-> +					hv_free_hyperv_page(
-> +					    (unsigned long)hv_panic_page);
-> +					hv_panic_page = NULL;
-> +				}
+> @@ -1707,6 +1701,7 @@ static int balloon_probe(struct hv_device *dev,
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+>  	set_online_page_callback(&hv_online_page);
+>  	register_memory_notifier(&hv_memory_nb);
+> +	init_completion(&dm_device.ol_waitevent);
 
-While this modification looks correct to me, there is a call to free
-hv_panic_page in the err_alloc path. That makes the error handling a bit
-confusing here.
+I'll move this one line up.
 
-I think you can just remove that function call in err_alloc path.
-
-Wei.
-
->  			} else
->  				pr_err("Hyper-V: panic message page memory "
->  					"allocation failed");
-> -- 
-> 2.14.5
+>  #endif
+>  
+>  	hv_set_drvdata(dev, &dm_device);
 > 
+
+
+-- 
+Thanks,
+
+David / dhildenb
+
