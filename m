@@ -2,184 +2,113 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBAC2186F0A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Mar 2020 16:49:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D278187841
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 04:48:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731904AbgCPPtC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 16 Mar 2020 11:49:02 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:48581 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731868AbgCPPtB (ORCPT
+        id S1726386AbgCQDs0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 Mar 2020 23:48:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37171 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgCQDs0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 16 Mar 2020 11:49:01 -0400
-X-Greylist: delayed 1910 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 11:49:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584373740;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=aJCci1JpnVafZT1pCNJDWw/c8ajwNjmH5zsDBnK+wN4=;
-        b=Up9+HPH8gfbKxHiKKnI0SDspHR4E7tv/ao/32Ti1Y/gFnDYDHZiBk97AVCAqrGLErPnH9F
-        /gzHyDG8piyebHQLgh3cYgz47lM21NHRTBDU2HN5Y9YrjfaSzssornbaScGv1KtYq+eN4n
-        hQ7q/vs7FswRr/9xGxqhbbCltOshjaA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-K1fzh2o9PiCg1bNXJzv67w-1; Mon, 16 Mar 2020 11:48:56 -0400
-X-MC-Unique: K1fzh2o9PiCg1bNXJzv67w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7BEFB1196B20;
-        Mon, 16 Mar 2020 15:48:39 +0000 (UTC)
-Received: from [10.36.118.207] (ovpn-118-207.ams2.redhat.com [10.36.118.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4216E5DA7B;
-        Mon, 16 Mar 2020 15:48:37 +0000 (UTC)
-Subject: Re: [PATCH v1 5/5] mm/memory_hotplug: allow to specify a default
- online_type
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200311123026.16071-1-david@redhat.com>
- <20200311123026.16071-6-david@redhat.com>
- <20200316153131.GW11482@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <5ed312d3-bc2d-38da-166e-452ae3df9e81@redhat.com>
-Date:   Mon, 16 Mar 2020 16:48:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 16 Mar 2020 23:48:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 6so23825290wre.4;
+        Mon, 16 Mar 2020 20:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FrKlI3sd00+t1N/OzNDhMxZ6Gkz1BB4AwGkkgntEVIU=;
+        b=D0YlpZUxZXl0ocStqqZ8JRBOU64KdAWnHdiKFg9shQ/OR4Op9SINZCdUQmm4gXN+Ul
+         wLtpt98z6sc9LqYUwfcTqIcxjf3mgkKpY0Gw/rXk6FS90olTq44DQpHF94l1cHRW0Tz/
+         gI818jSLzO1dx1NwwR/+d3ushN/uEMktaw+/XJzt2MMOol6SBKTQmFb5T5uc9XUycgCY
+         Z6lJ4BSdd+MFvCr96qOue2seEd9LckycNO3Qdk5XYjENSaqlBxlvy3//7X8Xf7Jq9nbi
+         Eq0GwhXGIW5JAaFU1yftfTGpdi6G2+wItF1gnwsil8eWRcBmf5JZKWrf0dqUPI+9/Vx+
+         KaZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FrKlI3sd00+t1N/OzNDhMxZ6Gkz1BB4AwGkkgntEVIU=;
+        b=GT8mOkhpQofmY0ky+blyx3FjWyFYFYLlhnxIuys7EMkY/UHXKmmQ34RoZv1Om83FGz
+         8omHLbI82Bc+u3C91beKnv4lMlwV8uuNrqVa5MG6pcI8GZqmx4G9pSkaXh3Qsn/KGV/V
+         wyrzQRAYMbP9tln6QjDJ0xP+7oxXe+5t1pga8ijnMmf4sp1qU4MKd0jnS5AV+nmccHwI
+         NcEkKTP/O94+dfWrJo4ptLIBUdBZHupSuGiPwrALybIyTUmvRQbKfgoEi100+i6r6Fh0
+         EvcjBthhm7n2Do4wbfuLaCR2GYkMD4BvFcmYYHKOWfNStyj4HssbVxe2hLSeBywooVV5
+         gKWg==
+X-Gm-Message-State: ANhLgQ1fwPGvX6h+FPwZE/hR2gS8rw7/HEccdI5P/KxHGacne1C0QSeX
+        zEkD9GncDktgSE7PJ3craTnc8ZyoCK4=
+X-Google-Smtp-Source: ADFU+vsOLrCitUkZGjpfFFU6lT84rq+gBAhbdnqEN6gYJq5Z/Rs0bY3AKGXGLxi6NHK129Hkljb6jg==
+X-Received: by 2002:a5d:69c1:: with SMTP id s1mr3239639wrw.351.1584416904565;
+        Mon, 16 Mar 2020 20:48:24 -0700 (PDT)
+Received: from jondnuc.lan (IGLD-84-229-155-229.inter.net.il. [84.229.155.229])
+        by smtp.gmail.com with ESMTPSA id c23sm1457757wrb.79.2020.03.16.20.48.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 20:48:23 -0700 (PDT)
+From:   Jon Doron <arilou@gmail.com>
+To:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     vkuznets@redhat.com, Jon Doron <arilou@gmail.com>
+Subject: [PATCH v6 0/5] x86/kvm/hyper-v: add support for synthetic debugger
+Date:   Tue, 17 Mar 2020 05:47:59 +0200
+Message-Id: <20200317034804.112538-1-arilou@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200316153131.GW11482@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 16.03.20 16:31, Michal Hocko wrote:
-> On Wed 11-03-20 13:30:26, David Hildenbrand wrote:
->> For now, distributions implement advanced udev rules to essentially
->> - Don't online any hotplugged memory (s390x)
->> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
->>   hyperv)
->> - Online all memory to ZONE_MOVABLE in case the zone imbalance is take=
-n
->>   care of (e.g., bare metal, special virt environments)
->>
->> In summary: All memory is usually onlined the same way, however, the
->> kernel always has to ask userspace to come up with the same answer.
->> E.g., HyperV always waits for a memory block to get onlined before
->> continuing, otherwise it might end up adding memory faster than
->> hotplugging it, which can result in strange OOM situations.
->>
->> Let's allow to specify a default online_type, not just "online" and
->> "offline". This allows distributions to configure the default online_t=
-ype
->> when booting up and be done with it.
->>
->> We can now specify "offline", "online", "online_movable" and
->> "online_kernel" via
->> - "memhp_default_state=3D" on the kernel cmdline
->> - /sys/devices/systemn/memory/auto_online_blocks
->> just like we are able to specify for a single memory block via
->> /sys/devices/systemn/memory/memoryX/state
->=20
-> I still strongly believe that the whole interface is wrong. This is jus=
-t
-> adding more lipstick on the pig. On the other hand I recognize that the
-> event based onlining is a PITA as well. The proper interface would
-> somehow communicate the type of the memory via the event or other sysfs
-> attribute and then the FW/HV could tell that this is an offline memory,
-> hotplugable memory or just an additional memory that doesn't need to
-> support hotremove by the consumer. The userspace or the kernel could
-> handle the hotadd request much more easier that way.
+Add support for the synthetic debugger interface of hyper-v, the
+synthetic debugger has 2 modes.
+1. Use a set of MSRs to send/recv information (undocumented so it's not
+   going to the hyperv-tlfs.h)
+2. Use hypercalls
 
-Yeah, and I proposed patches like that which were not well received [1] [=
-2].
+The first mode is based the following MSRs:
+1. Control/Status MSRs which either asks for a send/recv .
+2. Send/Recv MSRs each holds GPA where the send/recv buffers are.
+3. Pending MSR, holds a GPA to a PAGE that simply has a boolean that
+   indicates if there is data pending to issue a recv VMEXIT.
 
-But then, user space usually wants to online all memory the same way
-right now. Also, HyperV and virtio-mem don't want to wait for onlining
-to happen in user space, because it slows down the whole "add a hole
-bunch of memory" process.
+The first mode implementation is to simply exit to user-space when
+either the control MSR or the pending MSR are being set.
+Then it's up-to userspace to implement the rest of the logic of sending/recving.
 
->=20
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->=20
-> That being said, I will not object to this patch. I simply gave up
-> fighting this interface. So if it works for consumers and it doesn't
-> break the existing userspace (which is shouldn't AFAICS) then go ahead.
+In the second mode instead of using MSRs KNet will simply issue
+Hypercalls with the information to send/recv, in this mode the data
+being transferred is UDP encapsulated, unlike in the previous mode in
+which you get just the data to send.
 
-As it solves a real problem and makes the interface to auto online
-usable, I don't think anything speaks against it.
+The new hypercalls will exit to userspace which will be incharge of
+re-encapsulating if needed the UDP packets to be sent.
 
-Thanks!
+There is an issue though in which KDNet does not respect the hypercall
+page and simply issues vmcall/vmmcall instructions depending on the cpu
+type expecting them to be handled as it a real hypercall was issued.
 
-[1] https://spinics.net/lists/linux-driver-devel/msg118337.html
-[2]
-https://www.mail-archive.com/xen-devel@lists.xenproject.org/msg32420.html
+It's important to note that part of this feature has been subject to be
+removed in future versions of Windows, which is why some of the
+defintions will not be present the the TLFS but in the kvm hyperv header
+instead.
 
---=20
-Thanks,
+Jon Doron (5):
+  x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
+  x86/hyper-v: Add synthetic debugger definitions
+  x86/kvm/hyper-v: Add support for synthetic debugger capability
+  x86/kvm/hyper-v: enable hypercalls regardless of hypercall page
+  x86/kvm/hyper-v: Add support for synthetic debugger via hypercalls
 
-David / dhildenb
+ Documentation/virt/kvm/api.rst     |  18 ++++
+ arch/x86/include/asm/hyperv-tlfs.h |   6 ++
+ arch/x86/include/asm/kvm_host.h    |  13 +++
+ arch/x86/kvm/hyperv.c              | 162 ++++++++++++++++++++++++++++-
+ arch/x86/kvm/hyperv.h              |  32 ++++++
+ arch/x86/kvm/trace.h               |  51 +++++++++
+ arch/x86/kvm/x86.c                 |   9 ++
+ include/uapi/linux/kvm.h           |  13 +++
+ 8 files changed, 302 insertions(+), 2 deletions(-)
+
+-- 
+2.24.1
 
