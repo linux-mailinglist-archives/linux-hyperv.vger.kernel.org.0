@@ -2,52 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9D94187EA6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 11:50:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6957A187EA9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 11:50:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725995AbgCQKuE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 Mar 2020 06:50:04 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:30542 "EHLO
+        id S1726016AbgCQKuK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 Mar 2020 06:50:10 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:34149 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726329AbgCQKuE (ORCPT
+        by vger.kernel.org with ESMTP id S1726467AbgCQKuJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:50:04 -0400
+        Tue, 17 Mar 2020 06:50:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584442203;
+        s=mimecast20190719; t=1584442209;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/zIoqC9iuXsa5f8/VSxEZwSGgHlkLg8Xk5BlvkskKTA=;
-        b=JCg8NkvhTJAzgT0yctm0naF7VQsG9UUKNb1XuYUynfMl4EAqs3+jncuQcejzdi/fPRXakZ
-        IaFJCLLzSNTASVKzf5X2T8MRi8eQ82utjWnZI3YOOoIY0et+hE/E8hlxJsT9g67cyKyJd+
-        ADhyhmIIA+o5aESnkDI/EGtm19pxxbw=
+        bh=9+aMWLUapVvNMXY/iDTt59UcxSOTA2pdOne/agbEdHc=;
+        b=HnjP14xdqDEhQa2Ud9ajKofor3KJDFTi4KJOggk3A8mBirLD3v6b5cAfWy+zqNtD4gAgU2
+        Hb/dvGdTrTjYlMn9afAKerLzU26Oj/0MpiN2Ioao0WfFrDAudFpOAFYnrP7FsQ45MuO2/7
+        GmIfxgIpwKaM9GqRLgL6W8Dp2j5Mlso=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-_Xga-gJhPG62y0Zo0G7AJA-1; Tue, 17 Mar 2020 06:49:59 -0400
-X-MC-Unique: _Xga-gJhPG62y0Zo0G7AJA-1
+ us-mta-362-tM93PLi1MDS_IoxpDVxnVw-1; Tue, 17 Mar 2020 06:50:05 -0400
+X-MC-Unique: tM93PLi1MDS_IoxpDVxnVw-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97A57107ACC4;
-        Tue, 17 Mar 2020 10:49:57 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AD59107ACC9;
+        Tue, 17 Mar 2020 10:50:03 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-112-136.ams2.redhat.com [10.36.112.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF78673865;
-        Tue, 17 Mar 2020 10:49:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E5DBF73865;
+        Tue, 17 Mar 2020 10:49:57 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
         linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
         Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Michal Hocko <mhocko@kernel.org>,
         Oscar Salvador <osalvador@suse.de>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 1/8] drivers/base/memory: rename MMOP_ONLINE_KEEP to MMOP_ONLINE
-Date:   Tue, 17 Mar 2020 11:49:35 +0100
-Message-Id: <20200317104942.11178-2-david@redhat.com>
+Subject: [PATCH v2 2/8] drivers/base/memory: map MMOP_OFFLINE to 0
+Date:   Tue, 17 Mar 2020 11:49:36 +0100
+Message-Id: <20200317104942.11178-3-david@redhat.com>
 In-Reply-To: <20200317104942.11178-1-david@redhat.com>
 References: <20200317104942.11178-1-david@redhat.com>
 MIME-Version: 1.0
@@ -58,13 +59,16 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The name is misleading and it's not really clear what is "kept". Let's ju=
-st
-name it like the online_type name we expose to user space ("online").
+Historically, we used the value -1. Just treat 0 as the special
+case now. Clarify a comment (which was wrong, when we come via
+device_online() the first time, the online_type would have been 0 /
+MEM_ONLINE). The default is now always MMOP_OFFLINE. This removes the
+last user of the manual "-1", which didn't use the enum value.
 
-Add some documentation to the types.
+This is a preparation to use the online_type as an array index.
 
 Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@kernel.org>
@@ -74,74 +78,50 @@ Cc: Baoquan He <bhe@redhat.com>
 Cc: Wei Yang <richard.weiyang@gmail.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/base/memory.c          | 9 +++++----
- include/linux/memory_hotplug.h | 6 +++++-
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ drivers/base/memory.c          | 11 ++++-------
+ include/linux/memory_hotplug.h |  2 +-
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 6448c9ece2cb..8c5ce42c0fc3 100644
+index 8c5ce42c0fc3..e7e77cafef80 100644
 --- a/drivers/base/memory.c
 +++ b/drivers/base/memory.c
-@@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
- 	 * attribute and need to set the online_type.
+@@ -211,17 +211,14 @@ static int memory_subsys_online(struct device *dev)
+ 		return 0;
+=20
+ 	/*
+-	 * If we are called from state_store(), online_type will be
+-	 * set >=3D 0 Otherwise we were called from the device online
+-	 * attribute and need to set the online_type.
++	 * When called via device_online() without configuring the online_type,
++	 * we want to default to MMOP_ONLINE.
  	 */
- 	if (mem->online_type < 0)
--		mem->online_type =3D MMOP_ONLINE_KEEP;
-+		mem->online_type =3D MMOP_ONLINE;
+-	if (mem->online_type < 0)
++	if (mem->online_type =3D=3D MMOP_OFFLINE)
+ 		mem->online_type =3D MMOP_ONLINE;
 =20
  	ret =3D memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+-
+-	/* clear online_type */
+-	mem->online_type =3D -1;
++	mem->online_type =3D MMOP_OFFLINE;
 =20
-@@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct=
- device_attribute *attr,
- 	else if (sysfs_streq(buf, "online_movable"))
- 		online_type =3D MMOP_ONLINE_MOVABLE;
- 	else if (sysfs_streq(buf, "online"))
--		online_type =3D MMOP_ONLINE_KEEP;
-+		online_type =3D MMOP_ONLINE;
- 	else if (sysfs_streq(buf, "offline"))
- 		online_type =3D MMOP_OFFLINE;
- 	else {
-@@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct=
- device_attribute *attr,
- 	switch (online_type) {
- 	case MMOP_ONLINE_KERNEL:
- 	case MMOP_ONLINE_MOVABLE:
--	case MMOP_ONLINE_KEEP:
-+	case MMOP_ONLINE:
- 		/* mem->online_type is protected by device_hotplug_lock */
- 		mem->online_type =3D online_type;
- 		ret =3D device_online(&mem->dev);
-@@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
- 	}
-=20
- 	nid =3D mem->nid;
--	default_zone =3D zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, n=
-r_pages);
-+	default_zone =3D zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
-+					  nr_pages);
- 	strcat(buf, default_zone->name);
-=20
- 	print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
+ 	return ret;
+ }
 diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
 g.h
-index f4d59155f3d4..261dbf010d5d 100644
+index 261dbf010d5d..c2e06ed5e0e9 100644
 --- a/include/linux/memory_hotplug.h
 +++ b/include/linux/memory_hotplug.h
-@@ -47,9 +47,13 @@ enum {
-=20
+@@ -48,7 +48,7 @@ enum {
  /* Types for control the zone type of onlined and offlined memory */
  enum {
-+	/* Offline the memory. */
- 	MMOP_OFFLINE =3D -1,
--	MMOP_ONLINE_KEEP,
-+	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
-+	MMOP_ONLINE,
-+	/* Online the memory to ZONE_NORMAL. */
- 	MMOP_ONLINE_KERNEL,
-+	/* Online the memory to ZONE_MOVABLE. */
- 	MMOP_ONLINE_MOVABLE,
- };
-=20
+ 	/* Offline the memory. */
+-	MMOP_OFFLINE =3D -1,
++	MMOP_OFFLINE =3D 0,
+ 	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
+ 	MMOP_ONLINE,
+ 	/* Online the memory to ZONE_NORMAL. */
 --=20
 2.24.1
 
