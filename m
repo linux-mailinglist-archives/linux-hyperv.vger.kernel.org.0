@@ -2,58 +2,44 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F189188A3F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 17:29:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70392188A4D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Mar 2020 17:33:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbgCQQ3S (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 Mar 2020 12:29:18 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:37622 "EHLO
+        id S1726121AbgCQQdO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 Mar 2020 12:33:14 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:52574 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726473AbgCQQ3R (ORCPT
+        by vger.kernel.org with ESMTP id S1726066AbgCQQdN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:29:17 -0400
+        Tue, 17 Mar 2020 12:33:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584462556;
+        s=mimecast20190719; t=1584462793;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hJ9IRxNEXJZnQrunYJpAkXFYXEUKw/iYEqZiM94FqR4=;
-        b=cptiBHPhfZ2cGBgOSRZh7Sm/Fo1Ne2eAHWj/T2+gcTHlzvbxmjacUrQ6TmNywaSPtGj0NO
-        21GQHMu1dA9CG2qx0rjn8jtmijPlnlOt6YfMCjwX/OiZmLZek2WuJR0FdtDSIq0t4N5jCZ
-        tNm8j2u1CmYgdiVOw6DBXec7mS48akw=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-i3V-N9UMOP2gSiAu-r_Qbg-1; Tue, 17 Mar 2020 12:29:15 -0400
-X-MC-Unique: i3V-N9UMOP2gSiAu-r_Qbg-1
-Received: by mail-wr1-f69.google.com with SMTP id 94so6253372wrr.3
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 Mar 2020 09:29:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=hJ9IRxNEXJZnQrunYJpAkXFYXEUKw/iYEqZiM94FqR4=;
-        b=kf5GeJKairNyjHO/cEck/ywTPGTAt/1QeLDhP8QrLjiDXWw2wEEDQsJs8l6T/TDD/c
-         qS00Kqb12pkCC+R1TgbXYkLvshp5BobOjpG5HOnMI0foUNyfickDPHL1L3Bk9F5e1OL6
-         O2r/ovgQ06W3BAQS8Hb4Jeq3v/0EyyF082Ld/mZ/1BsqQTuuSfk3+zuZBd1rpLeC9akK
-         UvFve06wFtVMuSB5Xn4O0prQdIAaXQjsvpENy7k7CjqRYobfeF2yL7uBKkeqha1nPczB
-         6AhRuXa6g4j/kO9sZi9izk/Ur+CTbEG4GLf9DUnhwW8Kb95TciMt7bSETbF+D1Nit08L
-         yCuQ==
-X-Gm-Message-State: ANhLgQ2/DOl9XhasWpG+WUdKbg/a1nGPJrovclCN6ny11Y3XC2Si2SZF
-        TldEdYtHPT9jTMNMgPW2xn5eblsson5/PHjURTlyV7cI9YtZ7RS2TFLONbzusWadp0c3do1K2uu
-        rx5A8w3iL1mZ59kt1UCZA8HO5
-X-Received: by 2002:a1c:4c16:: with SMTP id z22mr155409wmf.50.1584462553802;
-        Tue, 17 Mar 2020 09:29:13 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vu7fxbd1NOj1Fd8X5IeMCfKPLtyDx4k9CrBADtVAaVO0WdO+/adOUSeBrq8Zo7JnejqPA35DQ==
-X-Received: by 2002:a1c:4c16:: with SMTP id z22mr155367wmf.50.1584462553538;
-        Tue, 17 Mar 2020 09:29:13 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 19sm4550594wma.3.2020.03.17.09.29.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 09:29:11 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=K0HQ1NiPt5y0Gsela1lYdmm/H+kBv9nAKFUHiViJugc=;
+        b=UopeTWeuRRtfRYY5C5et32eA6aL4LMFh7X59AzPiXTm0glCWGx4RnYbvkXsYGKcGVjmZEu
+        JpleuqnS3iihI088Ln6pAHAgq0LB0vDHljZJbLuTYrge7l4PDWaEiGD0v1prAp7klaVGt1
+        GvcmtThjEOS62tqEgZ/s2WaCA+PiSTU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-v-f1Hj57NfOK7fRaaotmBA-1; Tue, 17 Mar 2020 12:33:11 -0400
+X-MC-Unique: v-f1Hj57NfOK7fRaaotmBA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D8A3100550D;
+        Tue, 17 Mar 2020 16:33:09 +0000 (UTC)
+Received: from [10.36.112.136] (ovpn-112-136.ams2.redhat.com [10.36.112.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C74345C1BB;
+        Tue, 17 Mar 2020 16:33:05 +0000 (UTC)
+Subject: Re: [PATCH v2 5/8] hv_balloon: don't check for memhp_auto_online
+ manually
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        linux-hyperv@vger.kernel.org,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -64,135 +50,114 @@ Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Baoquan He <bhe@redhat.com>,
         Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v2 5/8] hv_balloon: don't check for memhp_auto_online manually
-In-Reply-To: <20200317104942.11178-6-david@redhat.com>
-References: <20200317104942.11178-1-david@redhat.com> <20200317104942.11178-6-david@redhat.com>
-Date:   Tue, 17 Mar 2020 17:29:09 +0100
-Message-ID: <877dzj3pyi.fsf@vitty.brq.redhat.com>
+References: <20200317104942.11178-1-david@redhat.com>
+ <20200317104942.11178-6-david@redhat.com>
+ <877dzj3pyi.fsf@vitty.brq.redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <8e64674f-09df-3635-bb88-f55f6b7c73ab@redhat.com>
+Date:   Tue, 17 Mar 2020 17:33:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <877dzj3pyi.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> writes:
+On 17.03.20 17:29, Vitaly Kuznetsov wrote:
+> David Hildenbrand <david@redhat.com> writes:
+> 
+>> We get the MEM_ONLINE notifier call if memory is added right from the
+>> kernel via add_memory() or later from user space.
+>>
+>> Let's get rid of the "ha_waiting" flag - the wait event has an inbuilt
+>> mechanism (->done) for that. Initialize the wait event only once and
+>> reinitialize before adding memory. Unconditionally call complete() and
+>> wait_for_completion_timeout().
+>>
+>> If there are no waiters, complete() will only increment ->done - which
+>> will be reset by reinit_completion(). If complete() has already been
+>> called, wait_for_completion_timeout() will not wait.
+>>
+>> There is still the chance for a small race between concurrent
+>> reinit_completion() and complete(). If complete() wins, we would not
+>> wait - which is tolerable (and the race exists in current code as
+>> well).
+> 
+> How can we see concurent reinit_completion() and complete()? Obvioulsy,
+> we are not onlining new memory in kernel and hv_mem_hot_add() calls are
+> serialized, we're waiting up to 5*HZ for the added block to come online
+> before proceeding to the next one. Or do you mean we actually hit this
+> 5*HZ timeout, proceeded to the next block and immediately after
+> reinit_completion() we saw complete() for the previously added block?
 
-> We get the MEM_ONLINE notifier call if memory is added right from the
-> kernel via add_memory() or later from user space.
->
-> Let's get rid of the "ha_waiting" flag - the wait event has an inbuilt
-> mechanism (->done) for that. Initialize the wait event only once and
-> reinitialize before adding memory. Unconditionally call complete() and
-> wait_for_completion_timeout().
->
-> If there are no waiters, complete() will only increment ->done - which
-> will be reset by reinit_completion(). If complete() has already been
-> called, wait_for_completion_timeout() will not wait.
->
-> There is still the chance for a small race between concurrent
-> reinit_completion() and complete(). If complete() wins, we would not
-> wait - which is tolerable (and the race exists in current code as
-> well).
+Yes exactly - or if an admin manually offlines+re-onlines a random
+memory block.
 
-How can we see concurent reinit_completion() and complete()? Obvioulsy,
-we are not onlining new memory in kernel and hv_mem_hot_add() calls are
-serialized, we're waiting up to 5*HZ for the added block to come online
-before proceeding to the next one. Or do you mean we actually hit this
-5*HZ timeout, proceeded to the next block and immediately after
-reinit_completion() we saw complete() for the previously added block?
-This is tolerable indeed, we're making forward progress (and this all is
-'best effort' anyway).
+> This is tolerable indeed, we're making forward progress (and this all is
+> 'best effort' anyway).
 
->
-> Note: We only wait for "some" memory to get onlined, which seems to be
->       good enough for now.
->
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: linux-hyperv@vger.kernel.org
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/hv/hv_balloon.c | 25 ++++++++++---------------
->  1 file changed, 10 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index a02ce43d778d..af5e09f08130 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -533,7 +533,6 @@ struct hv_dynmem_device {
->  	 * State to synchronize hot-add.
->  	 */
->  	struct completion  ol_waitevent;
-> -	bool ha_waiting;
->  	/*
->  	 * This thread handles hot-add
->  	 * requests from the host as well as notifying
-> @@ -634,10 +633,7 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
->  	switch (val) {
->  	case MEM_ONLINE:
->  	case MEM_CANCEL_ONLINE:
-> -		if (dm_device.ha_waiting) {
-> -			dm_device.ha_waiting = false;
-> -			complete(&dm_device.ol_waitevent);
-> -		}
-> +		complete(&dm_device.ol_waitevent);
->  		break;
->  
->  	case MEM_OFFLINE:
-> @@ -726,8 +722,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
->  		has->covered_end_pfn +=  processed_pfn;
->  		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
->  
-> -		init_completion(&dm_device.ol_waitevent);
-> -		dm_device.ha_waiting = !memhp_auto_online;
-> +		reinit_completion(&dm_device.ol_waitevent);
->  
->  		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
->  		ret = add_memory(nid, PFN_PHYS((start_pfn)),
-> @@ -753,15 +748,14 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
->  		}
->  
->  		/*
-> -		 * Wait for the memory block to be onlined when memory onlining
-> -		 * is done outside of kernel (memhp_auto_online). Since the hot
-> -		 * add has succeeded, it is ok to proceed even if the pages in
-> -		 * the hot added region have not been "onlined" within the
-> -		 * allowed time.
-> +		 * Wait for memory to get onlined. If the kernel onlined the
-> +		 * memory when adding it, this will return directly. Otherwise,
-> +		 * it will wait for user space to online the memory. This helps
-> +		 * to avoid adding memory faster than it is getting onlined. As
-> +		 * adding succeeded, it is ok to proceed even if the memory was
-> +		 * not onlined in time.
->  		 */
-> -		if (dm_device.ha_waiting)
-> -			wait_for_completion_timeout(&dm_device.ol_waitevent,
-> -						    5*HZ);
-> +		wait_for_completion_timeout(&dm_device.ol_waitevent, 5 * HZ);
->  		post_status(&dm_device);
->  	}
->  }
-> @@ -1707,6 +1701,7 @@ static int balloon_probe(struct hv_device *dev,
->  #ifdef CONFIG_MEMORY_HOTPLUG
->  	set_online_page_callback(&hv_online_page);
->  	register_memory_notifier(&hv_memory_nb);
-> +	init_completion(&dm_device.ol_waitevent);
->  #endif
->  
->  	hv_set_drvdata(dev, &dm_device);
+Exactly my thoughts.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+[...]
+
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+
+Thanks!
 
 -- 
-Vitaly
+Thanks,
+
+David / dhildenb
 
