@@ -2,188 +2,132 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D4091898F7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2020 11:10:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48D59189C6F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2020 13:56:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgCRKK2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 Mar 2020 06:10:28 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:57155 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCRKK1 (ORCPT
+        id S1726546AbgCRM45 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 18 Mar 2020 08:56:57 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:29823 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726765AbgCRM44 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:10:27 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MfYDO-1jlMQi0Qg4-00fxps; Wed, 18 Mar 2020 11:10:24 +0100
-Received: by mail-qk1-f173.google.com with SMTP id h14so37696429qke.5;
-        Wed, 18 Mar 2020 03:10:23 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3gSZgWkdJWHoe5WeZY5cW3/nvNMwgMzj5hms8APhafXakm590l
-        9NJGnWJhwlf82cGKUu9D65XKxdX7Vl3aaBMUyyo=
-X-Google-Smtp-Source: ADFU+vvAakuOMd3ErCSUomMX8z0py4x5kF0p1NXkPKJUf0Yfay59WpIhVqcU89UsHhxlAYx4b/h6YAwzOwru6S0xj2Q=
-X-Received: by 2002:a37:6455:: with SMTP id y82mr3173930qkb.286.1584526222619;
- Wed, 18 Mar 2020 03:10:22 -0700 (PDT)
+        Wed, 18 Mar 2020 08:56:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584536215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c9OQLq568ttEIueUGuMUb23dN7QtaHm5mZw/a87/b74=;
+        b=cyAHkxcCpbjkA38SGbJTS7k969BfRuX2G9jTOjMbrDka4po9zAQvBboKUnc/cqMGI38DwN
+        DZwsPFjGegX494ZFd30blreAH2H1EyuKXSSQYREKD7SH3uYg8LWJHY7kuZASWJPi2CN0Lc
+        fZW5oxis6VpIAi9nyGQXO5MPURgNpJM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-BvA9l6G5NjWulMqGjHSQaQ-1; Wed, 18 Mar 2020 08:56:53 -0400
+X-MC-Unique: BvA9l6G5NjWulMqGjHSQaQ-1
+Received: by mail-wr1-f72.google.com with SMTP id u18so12227020wrn.11
+        for <linux-hyperv@vger.kernel.org>; Wed, 18 Mar 2020 05:56:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=c9OQLq568ttEIueUGuMUb23dN7QtaHm5mZw/a87/b74=;
+        b=QhpK1n373UFYnDjjthMla1XH0cSetNltyJk1g/fQ9CiSN5SOvDpszaUBPt0BM/ZekS
+         u6wtIdUUHG0bkV2PSOXRf7i61rMWaXlyS0nKx7l+JyzZgV2jEYTbbbRjxmAPYvJLDgFb
+         l+vB7k+kARBDJEMukwKs95zBnOW6fwXsR4hrI5BplclNVq1guWGHCRTZfrvr+yFE91TG
+         nvFtPfxbeTWYuB34ZU3qpJXhrD1knqb0J907Ro2PpR2i2jFpCvsI356HpdcsROfR1869
+         8qc+ixW3D0qG8cjKpm8l+N0vECt5YiD/hy0ZyHCs5OP6srBxq1Vj4qzya7oPi+I+tOad
+         A7+A==
+X-Gm-Message-State: ANhLgQ3J91ZfCbxnC/o/csm+Tmgh96MQ6in2eUnitPJbdwZba8fcUaJM
+        JScjHrDNgEjmCq59briyxxH9Ae52Ae8ielpXa5C683wEWIjX31/r/XRpLKNdS35q0FO1Njc4gQT
+        MAqtx/8qX/TIr+oBUMTWZKRGk
+X-Received: by 2002:adf:e891:: with SMTP id d17mr5509629wrm.348.1584536211220;
+        Wed, 18 Mar 2020 05:56:51 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsu6NX99ToSq9XsCTNE17TrJduAWxqFRpvNndDOnAPnU3c14uxrUpAN9ZL5FWUSnFwSgLDg4g==
+X-Received: by 2002:adf:e891:: with SMTP id d17mr5509613wrm.348.1584536210950;
+        Wed, 18 Mar 2020 05:56:50 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id r9sm3874667wma.47.2020.03.18.05.56.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 05:56:50 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Jon Doron <arilou@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
+In-Reply-To: <20200317034804.112538-2-arilou@gmail.com>
+References: <20200317034804.112538-1-arilou@gmail.com> <20200317034804.112538-2-arilou@gmail.com>
+Date:   Wed, 18 Mar 2020 13:56:49 +0100
+Message-ID: <87r1xp3jou.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-2-git-send-email-mikelley@microsoft.com>
- <CAK8P3a1GFDUY4mXzst4Ds+S-4SGXso6-jfpsYyy-eHyceAC1Zg@mail.gmail.com> <MW2PR2101MB10524879CD685710A51AB740D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB10524879CD685710A51AB740D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 18 Mar 2020 11:10:06 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a02EULGxyuKFq8YnbG8BQ_m-RKciaNEc9ZbdP2yz9dt+Q@mail.gmail.com>
-Message-ID: <CAK8P3a02EULGxyuKFq8YnbG8BQ_m-RKciaNEc9ZbdP2yz9dt+Q@mail.gmail.com>
-Subject: Re: [PATCH v6 01/10] arm64: hyperv: Add core Hyper-V include files
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:smUb2w4heNdSNB9yZ7n4eJSJIj6+13Vm+vxn/gMm+oubjVt2Lco
- t8yfV/Ua7OQdDkxM7g3doew78zjj7ezzCeYrKRQq/mroH4od0IXyB1IdDIo+PTu94Sn+UOK
- mK3mx6EplklCazvbzSQW6nJwYey6gq+cQ0XWbZxZ5D3OAJmUxiqLaIK4K/WRYbgyH2sn8tq
- TGfToRBZx6AAlkPN5T+Ng==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zssKbvN/uHk=:jBOpXsKPnuklkLOyBfwouw
- 0cLBo+4jc+SDTrVRt0sQZkDldoP8lRoj12f9Ov0RJ8v/gU21hdbXpWaGYHRY3yqvMrDAx6VvI
- JKJHdu+gCG/b2SwxARWLawNOqKFpqEKkhEGa+ixW//T5D0hE7L49ciubbucsUNAavij0/+K3N
- RM4PoAXhqlWU3mbwTbPhTtviaVkyg58dEoK8hV4k4UvoTy4512AGrKKPTpf+nFN663V3e7d4B
- Za4fwWotIYQgZsPU25u+YUpOrhuBQmEwURv8JQhnI8EwDuZgP0I2F0qNrh2sjs1DgNT3C7PUc
- RCMAPUPD8h/eUGKl9vM1ULsq+8CO8NNmt6MZTdrTZIbvQw0UBazlXScKq9kMriBkSZZGHK7gA
- TnlyeynkGylrq6SSucAZwszmIsyqCTolyn4ScYCgfMI4C3tUORVM/E+jhte2MG3HOG0D3CZKO
- TAYFLCGpz39POJTAQ9FQGam6gQpysbbN6MA/9r6s4wBxV8g3xZedmUua+w011fOxeBKEAQX3v
- d3gCZs3eBLcVfSVWB9X5BlG5F3x1D5HmYND2iYVSokNs9fveBTVFIoQjR/xD1v7lghJAbNNtb
- CXd7JrcUFIQaDJ8nuTevvoatIrircKhEtk3Wnd4mu6a79DODD9VrntsT9u6bx62EaKCuvJofo
- iiE0vjgUvyrYL+JP4Nkj5AmvIwkJID5at4RP4ZtCBnDkETtUhNrhEQz/d+gbrzzD06OdqJ7Re
- KDdo+OvgT5Hi46VmnA/+aCqr7OvBbhxaB0IiltQyy5ihG/XVib6QEiHRYWTP8FmJAqIXck4FG
- EsIP+Jqfnuw4KCDdli1myGaGs9CtqR/L3j+bbSUwKsp+7VPuv8=
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 1:12 AM Michael Kelley <mikelley@microsoft.com> wrote:
-> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, March 16, 2020 1:48 AM
-> > On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
-> >
-> > > +
-> > > +/* Define input and output layout for Get VP Register hypercall */
-> > > +struct hv_get_vp_register_input {
-> > > +       u64 partitionid;
-> > > +       u32 vpindex;
-> > > +       u8  inputvtl;
-> > > +       u8  padding[3];
-> > > +       u32 name0;
-> > > +       u32 name1;
-> > > +} __packed;
-> >
-> > Are you sure these need to be made byte-aligned according to the
-> > specification? If the structure itself is aligned to 64 bit, better mark only
-> > the individual fields that are misaligned as __packed.
-> >
-> > If the structure is aligned to only 32-bit addresses instead of
-> > 64-bit, mark it as "__packed __aligned(4)" to let the compiler
-> > generate better code for accessing it.
+Jon Doron <arilou@gmail.com> writes:
+
+> Signed-off-by: Jon Doron <arilou@gmail.com>
+> ---
+>  Documentation/virt/kvm/api.rst | 2 ++
+>  include/uapi/linux/kvm.h       | 2 ++
+>  2 files changed, 4 insertions(+)
 >
-> None of the fields are misaligned and it will always be aligned to 64-bit
-> addresses, so there should be no padding needed or added.  There was
-> a discussion of __packed and the Hyper-V data structures in general on
-> LKML here:  https://lkml.org/lkml/2018/11/30/848.  Adding __packed was
-> done as a preventative measure, not because anything was actually
-> broken.  Marking as __aligned(8) here would indicate the correct intent,
-> though the use of the structure always ensures 64-bit alignment.
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index ebd383fba939..4872c47bbcff 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -5025,9 +5025,11 @@ EOI was received.
+>    #define KVM_EXIT_HYPERV_SYNIC          1
+>    #define KVM_EXIT_HYPERV_HCALL          2
+>  			__u32 type;
+> +			__u32 pad1;
+>  			union {
+>  				struct {
+>  					__u32 msr;
+> +					__u32 pad2;
+>  					__u64 control;
+>  					__u64 evt_page;
+>  					__u64 msg_page;
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 4b95f9a31a2f..7ee0ddc4c457 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
+>  #define KVM_EXIT_HYPERV_SYNIC          1
+>  #define KVM_EXIT_HYPERV_HCALL          2
+>  	__u32 type;
+> +	__u32 pad1;
+>  	union {
+>  		struct {
+>  			__u32 msr;
+> +			__u32 pad2;
+>  			__u64 control;
+>  			__u64 evt_page;
+>  			__u64 msg_page;
 
-Just drop the __packed annotations then, they just confuse the compiler
-in this case. In particular, when the compiler thinks that a structure is
-misaligned, it tries to avoid using load/store instructions on it that are
-inefficient or trap with misaligned code, so having default alignment
-produces better object code.
+This looks good to me but probably not to an unprepared reader some time
+later. What's going on here is:
 
-> > Also, in order to write portable code, it would be helpful to mark
-> > all the fields as explicitly little-endian, and use __le32_to_cpu()
-> > etc for accessing them.
->
-> There's an opening comment in this file stating that all data
-> structures shared between Hyper-V and a guest VM are little
-> endian.  Is there some other marking to consider using?
+The problem the patch is trying to address is the fact that 'struct
+kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
+modes. In 64-bit mode the default alignment boundary is 64 bits thus
+forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
+boundary is at 32 bits thus no extra gaps. This is an issue as even when
+the kernel is 64 bit, the userspace using the interface can be both 32
+and 64 bit but the same 32 bit userspace has to work with 32 bit kernel.
+The issue is fixed by forcing the 64 bit layout, this leads to ABI
+change for 32 bit builds and while we are obviously breaking '32 bit
+userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
+with 64 bit kernel' one. As the interface has no (known) users and 32
+bit KVM is rather baroque nowadays, this seems like a reasonable
+decision.
 
-Yes, device drivers should generally define data structures using
-the __le32, __le64 etc types, and use the conversion functions
-to access them. Building with 'make C=1' usually tells you when
-you have mismatched annotations.
+I think something like the paragraph above should be the commit
+message. With this fixed,
 
-> We have definitely not allowed for the case of Hyper-V running on
-> a big endian architecture.  There are a *lot* of messages and data
-> structures passed between the guest and Hyper-V, and coding
-> to handle either endianness is a big project.  I'm doubtful
-> of the value until and unless we actually have a need for it.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-In general, the use of big-endian software on Linux is declining, however
+-- 
+Vitaly
 
-- arm64 as an architecture is meant to support both endian types,
-  and we still try to ensure it works either way as long as there are
-  users that depend on it.
-
-- The remaining users of big-endian software are probably
-  more likely to run on virtual machines than on real hardware
-
-- Any device driver should generally be written against portable
-  interfaces, even if you think you know how it will be used. As
-  driver writers tend to look at existing code for new drivers, it's
-  better to have them all be portable. (This is a similar argument
-  to the irqchip interface).
-
-Even if you don't convert any of the existing architecture independent
-code to run both ways, I see no reason to not do it for new drivers.
-
-> > > +/* Define synthetic interrupt controller message flags. */
-> > > +union hv_message_flags {
-> > > +       __u8 asu8;
-> > > +       struct {
-> > > +               __u8 msg_pending:1;
-> > > +               __u8 reserved:7;
-> > > +       } __packed;
-> > > +};
-> >
-> > For similar reasons, please avoid bit fields and just use a
-> > bit mask on the first member of the union.
->
-> Unfortunately, changing to a bit mask ripples into
-> architecture independent code and into the x86
-> implementation.  I'd prefer not to drag that complexity
-> into this patch set.
-
-How so? If this file is arm64 specific, there should be no need to make
-x86 do the same change.
-
-> > > + * Use the Hyper-V provided stimer0 as the timer that is made
-> > > + * available to the architecture independent Hyper-V drivers.
-> > > + */
-> > > +#define hv_init_timer(timer, tick) \
-> > > +               hv_set_vpreg(HV_REGISTER_STIMER0_COUNT + (2*timer), tick)
-> > > +#define hv_init_timer_config(timer, val) \
-> > > +               hv_set_vpreg(HV_REGISTER_STIMER0_CONFIG + (2*timer), val)
-> > > +#define hv_get_current_tick(tick) \
-> > > +               (tick = hv_get_vpreg(HV_REGISTER_TIME_REFCOUNT))
-> >
-> > In general, we prefer inline functions over macros in header files.
->
-> I can change the "set" calls to inline functions.  As you can see, the "get"
-> functions are coded and used in architecture independent code and on
-> the x86 side in a way that won't convert to inline functions.
-
-Ok.
-
-        Arnd
