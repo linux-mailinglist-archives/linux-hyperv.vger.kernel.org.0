@@ -2,132 +2,112 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48D59189C6F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2020 13:56:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90683189C84
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Mar 2020 14:06:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgCRM45 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 Mar 2020 08:56:57 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:29823 "EHLO
+        id S1726845AbgCRNFx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 18 Mar 2020 09:05:53 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:59946 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726765AbgCRM44 (ORCPT
+        by vger.kernel.org with ESMTP id S1726821AbgCRNFx (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:56:56 -0400
+        Wed, 18 Mar 2020 09:05:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584536215;
+        s=mimecast20190719; t=1584536751;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=c9OQLq568ttEIueUGuMUb23dN7QtaHm5mZw/a87/b74=;
-        b=cyAHkxcCpbjkA38SGbJTS7k969BfRuX2G9jTOjMbrDka4po9zAQvBboKUnc/cqMGI38DwN
-        DZwsPFjGegX494ZFd30blreAH2H1EyuKXSSQYREKD7SH3uYg8LWJHY7kuZASWJPi2CN0Lc
-        fZW5oxis6VpIAi9nyGQXO5MPURgNpJM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-443-BvA9l6G5NjWulMqGjHSQaQ-1; Wed, 18 Mar 2020 08:56:53 -0400
-X-MC-Unique: BvA9l6G5NjWulMqGjHSQaQ-1
-Received: by mail-wr1-f72.google.com with SMTP id u18so12227020wrn.11
-        for <linux-hyperv@vger.kernel.org>; Wed, 18 Mar 2020 05:56:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=c9OQLq568ttEIueUGuMUb23dN7QtaHm5mZw/a87/b74=;
-        b=QhpK1n373UFYnDjjthMla1XH0cSetNltyJk1g/fQ9CiSN5SOvDpszaUBPt0BM/ZekS
-         u6wtIdUUHG0bkV2PSOXRf7i61rMWaXlyS0nKx7l+JyzZgV2jEYTbbbRjxmAPYvJLDgFb
-         l+vB7k+kARBDJEMukwKs95zBnOW6fwXsR4hrI5BplclNVq1guWGHCRTZfrvr+yFE91TG
-         nvFtPfxbeTWYuB34ZU3qpJXhrD1knqb0J907Ro2PpR2i2jFpCvsI356HpdcsROfR1869
-         8qc+ixW3D0qG8cjKpm8l+N0vECt5YiD/hy0ZyHCs5OP6srBxq1Vj4qzya7oPi+I+tOad
-         A7+A==
-X-Gm-Message-State: ANhLgQ3J91ZfCbxnC/o/csm+Tmgh96MQ6in2eUnitPJbdwZba8fcUaJM
-        JScjHrDNgEjmCq59briyxxH9Ae52Ae8ielpXa5C683wEWIjX31/r/XRpLKNdS35q0FO1Njc4gQT
-        MAqtx/8qX/TIr+oBUMTWZKRGk
-X-Received: by 2002:adf:e891:: with SMTP id d17mr5509629wrm.348.1584536211220;
-        Wed, 18 Mar 2020 05:56:51 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsu6NX99ToSq9XsCTNE17TrJduAWxqFRpvNndDOnAPnU3c14uxrUpAN9ZL5FWUSnFwSgLDg4g==
-X-Received: by 2002:adf:e891:: with SMTP id d17mr5509613wrm.348.1584536210950;
-        Wed, 18 Mar 2020 05:56:50 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id r9sm3874667wma.47.2020.03.18.05.56.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 05:56:50 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Jon Doron <arilou@gmail.com>
-Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
-In-Reply-To: <20200317034804.112538-2-arilou@gmail.com>
-References: <20200317034804.112538-1-arilou@gmail.com> <20200317034804.112538-2-arilou@gmail.com>
-Date:   Wed, 18 Mar 2020 13:56:49 +0100
-Message-ID: <87r1xp3jou.fsf@vitty.brq.redhat.com>
+        bh=rEc/Fi0HtCRksr3RR+jEtjuBFNtDmtlrQKs7EcBkpIE=;
+        b=eRScT9fvdjP8vE5amJ10n7xofE2dvOtPMkDlJgTWoDwlVCtMXN6Yju2EgxGXBniYDsWcgc
+        hWOsbJt/DnDE0/IE7hQyJs7PHR09fhCWDtxa32nvVDmimGMXvNs1fHecEeQEiktKI6lYfD
+        2Q+NrWTc1peU+A+1pwJY0QdwUxKdeBc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-Fx28kn8nP7-AcMX5JfSHgA-1; Wed, 18 Mar 2020 09:05:50 -0400
+X-MC-Unique: Fx28kn8nP7-AcMX5JfSHgA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61AF8107B7DD;
+        Wed, 18 Mar 2020 13:05:46 +0000 (UTC)
+Received: from localhost (ovpn-12-66.pek2.redhat.com [10.72.12.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 637AA67265;
+        Wed, 18 Mar 2020 13:05:20 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 21:05:17 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Yumei Huang <yuhuang@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>,
+        Milan Zamazal <mzamazal@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v2 0/8] mm/memory_hotplug: allow to specify a default
+ online_type
+Message-ID: <20200318130517.GC30899@MiWiFi-R3L-srv>
+References: <20200317104942.11178-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317104942.11178-1-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Jon Doron <arilou@gmail.com> writes:
+On 03/17/20 at 11:49am, David Hildenbrand wrote:
+> Distributions nowadays use udev rules ([1] [2]) to specify if and
+> how to online hotplugged memory. The rules seem to get more complex with
+> many special cases. Due to the various special cases,
+> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE cannot be used. All memory hotplug
+> is handled via udev rules.
+> 
+> Everytime we hotplug memory, the udev rule will come to the same
+> conclusion. Especially Hyper-V (but also soon virtio-mem) add a lot of
+> memory in separate memory blocks and wait for memory to get onlined by user
+> space before continuing to add more memory blocks (to not add memory faster
+> than it is getting onlined). This of course slows down the whole memory
+> hotplug process.
+> 
+> To make the job of distributions easier and to avoid udev rules that get
+> more and more complicated, let's extend the mechanism provided by
+> - /sys/devices/system/memory/auto_online_blocks
+> - "memhp_default_state=" on the kernel cmdline
+> to be able to specify also "online_movable" as well as "online_kernel"
 
-> Signed-off-by: Jon Doron <arilou@gmail.com>
-> ---
->  Documentation/virt/kvm/api.rst | 2 ++
->  include/uapi/linux/kvm.h       | 2 ++
->  2 files changed, 4 insertions(+)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index ebd383fba939..4872c47bbcff 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -5025,9 +5025,11 @@ EOI was received.
->    #define KVM_EXIT_HYPERV_SYNIC          1
->    #define KVM_EXIT_HYPERV_HCALL          2
->  			__u32 type;
-> +			__u32 pad1;
->  			union {
->  				struct {
->  					__u32 msr;
-> +					__u32 pad2;
->  					__u64 control;
->  					__u64 evt_page;
->  					__u64 msg_page;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 4b95f9a31a2f..7ee0ddc4c457 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
->  #define KVM_EXIT_HYPERV_SYNIC          1
->  #define KVM_EXIT_HYPERV_HCALL          2
->  	__u32 type;
-> +	__u32 pad1;
->  	union {
->  		struct {
->  			__u32 msr;
-> +			__u32 pad2;
->  			__u64 control;
->  			__u64 evt_page;
->  			__u64 msg_page;
+This patch series looks good, thanks. Since Andrew has merged it to -mm again,
+I won't add my Reviewed-by to bother. 
 
-This looks good to me but probably not to an unprepared reader some time
-later. What's going on here is:
+Hi David, Vitaly
 
-The problem the patch is trying to address is the fact that 'struct
-kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
-modes. In 64-bit mode the default alignment boundary is 64 bits thus
-forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
-boundary is at 32 bits thus no extra gaps. This is an issue as even when
-the kernel is 64 bit, the userspace using the interface can be both 32
-and 64 bit but the same 32 bit userspace has to work with 32 bit kernel.
-The issue is fixed by forcing the 64 bit layout, this leads to ABI
-change for 32 bit builds and while we are obviously breaking '32 bit
-userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
-with 64 bit kernel' one. As the interface has no (known) users and 32
-bit KVM is rather baroque nowadays, this seems like a reasonable
-decision.
+There are several things unclear to me.
 
-I think something like the paragraph above should be the commit
-message. With this fixed,
+So, these improved interfaces are used to alleviate the burden of the 
+existing udev rules, or try to replace it? As you know, we have been
+using udev rules to interact between kernel and user space on bare metal,
+and guests who want to hot add/remove.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+And also the OOM issue in hyperV when onlining pages after adding memory
+block. I am not a virt devel expert, could this happen on bare metal
+system?
 
--- 
-Vitaly
+Thanks
+Baoquan
 
