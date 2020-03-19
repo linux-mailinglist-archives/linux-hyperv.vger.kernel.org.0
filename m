@@ -2,132 +2,124 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CCEE218ADF6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 09:08:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 640A418AE21
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 09:13:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725895AbgCSIIr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 Mar 2020 04:08:47 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:43346 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725768AbgCSIIr (ORCPT
+        id S1725768AbgCSINC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 Mar 2020 04:13:02 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46666 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgCSINC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:08:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584605326;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SlJrsOiPEFfP8xQL+2MTzWgFawZiNaS1jJXa4jmFhqA=;
-        b=iYlLg5hIVV2TyvX3y0YaBXJF//DSwwn78FJCDwDUvvV5v0JADbapACF6kEaI3Ysa+IO60M
-        jDGb8m3ODXoYLfvO+qXVuRu6Tm+3mmEZFCt+pXxq+jz4rEN9AoX4lt3Gc+qrEwWJ1bDJXg
-        qsGsRpcO+/uu61Lm7XNtbbZ5rZSidRU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-53-ORspJVxhOWegU1XW-1VN2Q-1; Thu, 19 Mar 2020 04:08:44 -0400
-X-MC-Unique: ORspJVxhOWegU1XW-1VN2Q-1
-Received: by mail-wr1-f69.google.com with SMTP id d17so607103wrw.19
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Mar 2020 01:08:44 -0700 (PDT)
+        Thu, 19 Mar 2020 04:13:02 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y30so837207pga.13;
+        Thu, 19 Mar 2020 01:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ac1YV381+pu+9t+a/snJbLjzWPHz5dhKlor8SQORWwk=;
+        b=Za+oOSYZruRvXcb3jvvrfDOxN1r4gMFYrIHrPH+NLDOOV/dU81M8LlZcV71oCnaywF
+         nDJifkcOnIy2J8SWGVkoPEGhEElNgNaGOu1j0L2jW41zObzPejqGuryJDOh87NSBdowr
+         W6RBvHPVGxLHfzKBegLovxWkuWRkyKKE86N8BNQiyaclUn8Qi88sYGCbsK364tUVa/td
+         xnY0+1BmrodEIFu5J7OleM935QQmSYIp4jRLICQPB33Ti4Nogl/mM8sFQ7qEoLUcEfvm
+         ifpfC5cnJXlx/QZ6TakYEIIQphlvfM53IY7L8r3HwRL9o8cyUU01gstK/x0Ip3/hhdGs
+         AvhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=SlJrsOiPEFfP8xQL+2MTzWgFawZiNaS1jJXa4jmFhqA=;
-        b=dN5kSdIQ9s2TF4EJftbj2yoBDzNTkWs3wAgrQdeUKOduqge5Q3/j5Id7s1+BucysRk
-         lQqBkeWb6a2NnGspSt/15ZHI/DqVHBVdrXz/OyayjCNBFjRWie0IIMCjq91VP08DuRQg
-         ar7RoOzfIJQX/NplSLT86OWJW5HT6ICPJeRHMT80VjhxX9s3+L6NJtane1fOpl56Lkx8
-         ZucloUTSm+vGU7RlnXbCPxRvaw6vYSvhbtXwqupzwdAFD2UX14/qQOFACe+BeWuM2+zT
-         sVqYvWSMq/dZ3QixMmWKtwzB5qcHXppRxKw/uYyUOhBiRQc+4/Yc5Lvro14hnozHN7cQ
-         OK2Q==
-X-Gm-Message-State: ANhLgQ2OjyRVJzvvigmD2atwqGgdd66rr4BsyJtdyWFIyQ9PYa6ies2g
-        tYjzYwqcBNl5aXEFVO6TsqIicBTVEX5KJ7XZfwCDM6qYDXRWkS6XRJa27SRClq78LCVMRexleOE
-        iTicseB7kfFTzA13u/+eC2m9T
-X-Received: by 2002:a7b:c4cd:: with SMTP id g13mr2246559wmk.151.1584605322951;
-        Thu, 19 Mar 2020 01:08:42 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuHul2WwD85TA8ajS4E+DeyZ8lqBhFZsQV3ofqPUzIbkGIIMM6eJzdwpfnX3UGfRPKInTOCMw==
-X-Received: by 2002:a7b:c4cd:: with SMTP id g13mr2246536wmk.151.1584605322742;
-        Thu, 19 Mar 2020 01:08:42 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id r18sm2275564wro.13.2020.03.19.01.08.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 01:08:42 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Jon Doron <arilou@gmail.com>
-Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v8 1/5] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
-In-Reply-To: <20200319063836.678562-2-arilou@gmail.com>
-References: <20200319063836.678562-1-arilou@gmail.com> <20200319063836.678562-2-arilou@gmail.com>
-Date:   Thu, 19 Mar 2020 09:08:41 +0100
-Message-ID: <87k13g22d2.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ac1YV381+pu+9t+a/snJbLjzWPHz5dhKlor8SQORWwk=;
+        b=P3U2S1xXjzvJA19+XpOGMSE4oAbmpIyL36b56+VbLJfT+xNa5izPhPE7P9G/JDRl9o
+         SNhLWuMlAciNTVWCj3zfPXM3n62JfdJ5oQgbQzhN583bsCDmytDdAC5J+fOglTpm32A5
+         4wVkkzLRMxQZk8oABgmvaDS/QeFFZdDERpHNeyCpq+17eak48qpo2R4rVdc+begiHvRL
+         jXeFxcrdXaZCEhAggS4MVtF2NnzMAGR1t/FHFNuNj0QQw0J5EGQhGbTkcU53YhW6nC32
+         lA3n2fGmFgSXM1m//t1F8F1k/q2IwkPYMIKYe4PgQyRO5Ee0u9jaMoqS8PWbzxUcIRI5
+         cYQA==
+X-Gm-Message-State: ANhLgQ3+kMSqMA4E72+fHqUVRmLm5k9QMyjfuOyRCz5j9Lcozjfr8cui
+        qmavGxGsEPX6//qo7ab8FfU=
+X-Google-Smtp-Source: ADFU+vuUYCNoMeUgkA/1IgD1NG/JZmJhAbBzL1jvwz0SYdcYS0LdsBPwlXa2sPuDTncEr3ayDRgW9g==
+X-Received: by 2002:aa7:99c8:: with SMTP id v8mr2640858pfi.151.1584605581088;
+        Thu, 19 Mar 2020 01:13:01 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
+        by smtp.gmail.com with ESMTPSA id 67sm1362804pfe.168.2020.03.19.01.12.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 01:13:00 -0700 (PDT)
+Subject: Re: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to register
+ kmsg dump
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
+ <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
+ <20200317173600.2hqznyabyj4nckjo@debian>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <0105c10b-b546-6d93-bb49-e9a4ce4589f6@gmail.com>
+Date:   Thu, 19 Mar 2020 16:12:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200317173600.2hqznyabyj4nckjo@debian>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Jon Doron <arilou@gmail.com> writes:
+Hi Wei:
+	Thanks for your review.
 
-> The problem the patch is trying to address is the fact that 'struct
-> kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
-> modes.
->
-> In 64-bit mode the default alignment boundary is 64 bits thus
-> forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
-> boundary is at 32 bits thus no extra gaps.
->
-> This is an issue as even when the kernel is 64 bit, the userspace using
-> the interface can be both 32 and 64 bit but the same 32 bit userspace has
-> to work with 32 bit kernel.
->
-> The issue is fixed by forcing the 64 bit layout, this leads to ABI
-> change for 32 bit builds and while we are obviously breaking '32 bit
-> userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
-> with 64 bit kernel' one.
->
-> As the interface has no (known) users and 32 bit KVM is rather baroque
-> nowadays, this seems like a reasonable decision.
->
-> Signed-off-by: Jon Doron <arilou@gmail.com>
-> ---
->  Documentation/virt/kvm/api.rst | 2 ++
->  include/uapi/linux/kvm.h       | 2 ++
->  2 files changed, 4 insertions(+)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index ebd383fba939..4872c47bbcff 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -5025,9 +5025,11 @@ EOI was received.
->    #define KVM_EXIT_HYPERV_SYNIC          1
->    #define KVM_EXIT_HYPERV_HCALL          2
->  			__u32 type;
-> +			__u32 pad1;
->  			union {
->  				struct {
->  					__u32 msr;
-> +					__u32 pad2;
->  					__u64 control;
->  					__u64 evt_page;
->  					__u64 msg_page;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 4b95f9a31a2f..7ee0ddc4c457 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
->  #define KVM_EXIT_HYPERV_SYNIC          1
->  #define KVM_EXIT_HYPERV_HCALL          2
->  	__u32 type;
-> +	__u32 pad1;
->  	union {
->  		struct {
->  			__u32 msr;
-> +			__u32 pad2;
->  			__u64 control;
->  			__u64 evt_page;
->  			__u64 msg_page;
+On 3/18/2020 1:36 AM, Wei Liu wrote:
+> On Tue, Mar 17, 2020 at 06:25:21AM -0700, ltykernel@gmail.com wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> If fail to register kmsg dump on Hyper-V platform, hv_panic_page
+>> will not be used anywhere. So free and reset it.
+>>
+>> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>> ---
+>>   drivers/hv/vmbus_drv.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index b56b9fb9bd90..b043efea092a 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
+>>   			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
+>>   			if (hv_panic_page) {
+>>   				ret = kmsg_dump_register(&hv_kmsg_dumper);
+>> -				if (ret)
+>> +				if (ret) {
+>>   					pr_err("Hyper-V: kmsg dump register "
+>>   						"error 0x%x\n", ret);
+>> +					hv_free_hyperv_page(
+>> +					    (unsigned long)hv_panic_page);
+>> +					hv_panic_page = NULL;
+>> +				}
+> 
+> While this modification looks correct to me, there is a call to free
+> hv_panic_page in the err_alloc path. That makes the error handling a bit
+> confusing here.
+> 
+> I think you can just remove that function call in err_alloc path.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+OK. Will update in the next version.
 
--- 
-Vitaly
-
+> 
+> Wei.
+> 
+>>   			} else
+>>   				pr_err("Hyper-V: panic message page memory "
+>>   					"allocation failed");
+>> -- 
+>> 2.14.5
+>>
