@@ -2,170 +2,140 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0FDA18B788
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 14:34:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3047A18B8A9
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 15:08:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgCSNeA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 Mar 2020 09:34:00 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:47223 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729100AbgCSNNL (ORCPT
+        id S1726785AbgCSOIQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 Mar 2020 10:08:16 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:33852 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgCSOIQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584623590;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aB+Y80kj2DmkC4n/sS+MBsl3w+H0UjquEf2pZ3ZsG2g=;
-        b=JwSi1ypqNqmfo7GkKQr1ifGZ/IaZCQTO8JE2O6eh5xodu0fLLbCuir6zV+WpSbB0t69eul
-        PpyeFHoQ00Os7UisNwzzDFAkaeuWNs2vcaXoKdh3mFxbbdYHCApj705+u02Xe3j0fzHpma
-        NjKaC3cz+hbh2Z7Wc+K6G5gWWggqPS4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-ZsPPbzZHN2eQW0KwgD2BNQ-1; Thu, 19 Mar 2020 09:13:06 -0400
-X-MC-Unique: ZsPPbzZHN2eQW0KwgD2BNQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 696D88010D9;
-        Thu, 19 Mar 2020 13:13:03 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-197.ams2.redhat.com [10.36.114.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB87460BF7;
-        Thu, 19 Mar 2020 13:13:00 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 8/8] mm/memory_hotplug: allow to specify a default online_type
-Date:   Thu, 19 Mar 2020 14:12:21 +0100
-Message-Id: <20200319131221.14044-9-david@redhat.com>
-In-Reply-To: <20200319131221.14044-1-david@redhat.com>
-References: <20200319131221.14044-1-david@redhat.com>
+        Thu, 19 Mar 2020 10:08:16 -0400
+Received: by mail-pj1-f67.google.com with SMTP id q16so2355121pje.1;
+        Thu, 19 Mar 2020 07:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O7Q51zmRS7g4gxwj7MQtP4qiQBx0T9QoIdivgK4vLVI=;
+        b=JRl6HA2/zf7Vvf60cE21OWI9S0qRbhP70JRWPmuedNCx8LrcCrszbNh4+ftzFYTmiI
+         u5qM7hDwCykZmR4fwobtn0fOIN13LN3lBb71h9cICv3eUixaJFZwhjXjuomMhppv6Woz
+         ddR4Gmd3UmY9wg2zTq+PrcuF64C2ZP/51WzGe/413gChPM7GHzC4AtOYQ6kCXzHOabex
+         Sh+4TbPDJTkEWkgU30FR4mDdy05ZN6Us0fokChT6CY0ZqbzJWH9fXgAMtT6yvynQkiMF
+         EsFbg4yrkS+sxTYH6J+zydRLLb4/Lfs+Jj1yCmEwgjbhH9UoXdBzuSznM8L3Rm0a/MRc
+         tQaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O7Q51zmRS7g4gxwj7MQtP4qiQBx0T9QoIdivgK4vLVI=;
+        b=igbPDBvUn6MeGTIiKTy+waY4/6MGdILJeJCI5LqfuQiXnblbZ3J6Zgv4z1HeivXlCg
+         qD+xXhAbDveGjsKKgGuVcltg+zyGS9Ee+O8GZmuWrkFrf1lgdQ4xTMNq8xyTg1v8TkFR
+         LUT/sDKpk8Rkne238GZuBN1+hqS6UIS7zUPPbD9vCaj/fS1Ptk5Dhxc3lk949ch5Yjnz
+         pyMCdrtd1E5jgUKTwdBKOcPV4mimHm2AojcdcdsNQiU9vNpYSGhYV0Hmed+K3Lf8smot
+         BHgHX4ur73lvOLLAFs5L0g8jysn+sxGoh/8gulH9mVEvcWf0q3Jo3Yk2mbFcUdM31omZ
+         Ea2A==
+X-Gm-Message-State: ANhLgQ0hDLH8Q4PYMsdp+A2QRLwiRbPnpBSCD6utSugtv34+sCuEicOn
+        0eFbPvxB+KAOkLVu6Aq3XD0=
+X-Google-Smtp-Source: ADFU+vt3Uom3z61eXimWi6EYH31AV5srNGn4SND8daBCtBbNg5Si/yyHZbXUD35dwdCBvZjiBbe1KQ==
+X-Received: by 2002:a17:902:82c2:: with SMTP id u2mr3682951plz.125.1584626894899;
+        Thu, 19 Mar 2020 07:08:14 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
+        by smtp.gmail.com with ESMTPSA id l11sm2434715pjy.44.2020.03.19.07.08.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 07:08:14 -0700 (PDT)
+Subject: Re: [PATCH 0/4] x86/Hyper-V: Panic code path fixes
+To:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
+ <MW2PR2101MB1052F185AF4134EB2BB9ECBFD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <1d1bc90c-7fbe-6123-eeea-5f9a5aad77e4@gmail.com>
+Date:   Thu, 19 Mar 2020 22:08:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <MW2PR2101MB1052F185AF4134EB2BB9ECBFD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-For now, distributions implement advanced udev rules to essentially
-- Don't online any hotplugged memory (s390x)
-- Online all memory to ZONE_NORMAL (e.g., most virt environments like
-  hyperv)
-- Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
-  care of (e.g., bare metal, special virt environments)
+Hi Michael:
+      Thanks for your review.
 
-In summary: All memory is usually onlined the same way, however, the
-kernel always has to ask user space to come up with the same answer.
-E.g., Hyper-V always waits for a memory block to get onlined before
-continuing, otherwise it might end up adding memory faster than
-onlining it, which can result in strange OOM situations. This waiting
-slows down adding of a bigger amount of memory.
+On 3/19/2020 8:57 AM, Michael Kelley wrote:
+> From: ltykernel@gmail.com <ltykernel@gmail.com> Sent: Tuesday, March 17, 2020 6:25 AM
+>>
+>> This patchset fixes some issues in the Hyper-V panic code path.
+>> Patch 1 resolves issue that panic system still responses network
+>> packets.
+>> Patch 2-3 resolves crash enlightenment issues.
+>> Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
+>> VM in order to report crash data or kmsg to host before running
+>> kdump kernel.
+> 
+> I still see an issue that isn't addressed by these patches.  The VMbus
+> driver registers a "die notifier" and a "panic notifier".   But die() will
+> eventually call panic() if panic_on_oops is set (which I think it typically
+> is).  If the CRASH_NOTIFY_MSG option is *not* enabled, then
+> hyperv_report_panic() could get called by the die notifier, and then
+> again by the panic notifier.
+> 
+> Do we even need the "die notifier"?  If it was removed, there would
+> not be any notification to Hyper-V via the die() path unless panic_on_oops
+> is set, which I think is actually the correct behavior.  I'm not
+> completely clear on what is supposed to happen in general to the
+> Linux kernel if panic_on_oops is not set. Does it try to continue to run?
+> If so, then we should not be notifying Hyper-V if panic_on_oops is not
+> set, and removing the die notifier is the right thing to do.
+> 
 
-Let's allow to specify a default online_type, not just "online" and
-"offline". This allows distributions to configure the default online_type
-when booting up and be done with it.
+hyperv_report_panic() has re-enter check inside and so kernel only 
+reports crash register data once during die(). From comment in the
+hyperv_report_panic(), register value reported in die chain is more
+exact than value in panic chain. The register value in die chain is
+passed by die() caller. Register value reported in panic chain
+is collected in the hyperv_panic_event().
 
-We can now specify "offline", "online", "online_movable" and
-"online_kernel" via
-- "memhp_default_state=3D" on the kernel cmdline
-- /sys/devices/system/memory/auto_online_blocks
-just like we are able to specify for a single memory block via
-/sys/devices/system/memory/memoryX/state
 
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/base/memory.c          | 11 +++++------
- include/linux/memory_hotplug.h |  2 ++
- mm/memory_hotplug.c            |  8 ++++----
- 3 files changed, 11 insertions(+), 10 deletions(-)
+If panic_on_oops is not set, the task should be killed and kernel
+still runs. In this case, we may not trigger crash enlightenment.
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 8d3e16dab69f..2b09b68b9f78 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -35,7 +35,7 @@ static const char *const online_type_to_str[] =3D {
- 	[MMOP_ONLINE_MOVABLE] =3D "online_movable",
- };
-=20
--static int memhp_online_type_from_str(const char *str)
-+int memhp_online_type_from_str(const char *str)
- {
- 	int i;
-=20
-@@ -394,13 +394,12 @@ static ssize_t auto_online_blocks_store(struct devi=
-ce *dev,
- 					struct device_attribute *attr,
- 					const char *buf, size_t count)
- {
--	if (sysfs_streq(buf, "online"))
--		memhp_default_online_type =3D MMOP_ONLINE;
--	else if (sysfs_streq(buf, "offline"))
--		memhp_default_online_type =3D MMOP_OFFLINE;
--	else
-+	const int online_type =3D memhp_online_type_from_str(buf);
-+
-+	if (online_type < 0)
- 		return -EINVAL;
-=20
-+	memhp_default_online_type =3D online_type;
- 	return count;
- }
-=20
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
-g.h
-index 6d6f85bb66e9..93d9ada74ddd 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -118,6 +118,8 @@ extern int arch_add_memory(int nid, u64 start, u64 si=
-ze,
- 			   struct mhp_params *params);
- extern u64 max_mem_size;
-=20
-+extern int memhp_online_type_from_str(const char *str);
-+
- /* Default online_type (MMOP_*) when new memory blocks are added. */
- extern int memhp_default_online_type;
- /* If movable_node boot option specified */
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 4efcf8cb9ac5..89197163d138 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -74,10 +74,10 @@ int memhp_default_online_type =3D MMOP_ONLINE;
-=20
- static int __init setup_memhp_default_state(char *str)
- {
--	if (!strcmp(str, "online"))
--		memhp_default_online_type =3D MMOP_ONLINE;
--	else if (!strcmp(str, "offline"))
--		memhp_default_online_type =3D MMOP_OFFLINE;
-+	const int online_type =3D memhp_online_type_from_str(str);
-+
-+	if (online_type >=3D 0)
-+		memhp_default_online_type =3D online_type;
-=20
- 	return 1;
- }
---=20
-2.24.1
 
+
+> Michael
+> 
+>>
+>> Tianyu Lan (4):
+>>    x86/Hyper-V: Unload vmbus channel in hv panic callback
+>>    x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+>>    x86/Hyper-V: Trigger crash enlightenment only once during  system
+>>      crash.
+>>    x86/Hyper-V: Report crash register data or ksmg before running crash
+>>      kernel
+>>
+>>   arch/x86/kernel/cpu/mshyperv.c | 10 ++++++++++
+>>   drivers/hv/channel_mgmt.c      |  5 +++++
+>>   drivers/hv/vmbus_drv.c         | 35 +++++++++++++++++++++++++----------
+>>   3 files changed, 40 insertions(+), 10 deletions(-)
+>>
+>> --
+>> 2.14.5
+> 
