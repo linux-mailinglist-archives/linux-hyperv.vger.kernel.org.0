@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 640A418AE21
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 09:13:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB3E18AE42
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 09:24:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725768AbgCSINC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 Mar 2020 04:13:02 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46666 "EHLO
+        id S1725787AbgCSIYV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 Mar 2020 04:24:21 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42188 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgCSINC (ORCPT
+        with ESMTP id S1725767AbgCSIYV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:13:02 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y30so837207pga.13;
-        Thu, 19 Mar 2020 01:13:01 -0700 (PDT)
+        Thu, 19 Mar 2020 04:24:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h8so862500pgs.9;
+        Thu, 19 Mar 2020 01:24:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ac1YV381+pu+9t+a/snJbLjzWPHz5dhKlor8SQORWwk=;
-        b=Za+oOSYZruRvXcb3jvvrfDOxN1r4gMFYrIHrPH+NLDOOV/dU81M8LlZcV71oCnaywF
-         nDJifkcOnIy2J8SWGVkoPEGhEElNgNaGOu1j0L2jW41zObzPejqGuryJDOh87NSBdowr
-         W6RBvHPVGxLHfzKBegLovxWkuWRkyKKE86N8BNQiyaclUn8Qi88sYGCbsK364tUVa/td
-         xnY0+1BmrodEIFu5J7OleM935QQmSYIp4jRLICQPB33Ti4Nogl/mM8sFQ7qEoLUcEfvm
-         ifpfC5cnJXlx/QZ6TakYEIIQphlvfM53IY7L8r3HwRL9o8cyUU01gstK/x0Ip3/hhdGs
-         AvhQ==
+        bh=XvsrEbF8xrvFrxkOmbaObXzMDRIRtTUFbRE8kMKL+mc=;
+        b=SC7aMPeVpiaTGPI8CivsJotSRGwHhkm8so60m8Zguy01Of7Lz84x2/CPJOtgWGG5Ak
+         r+TEqhmvyHHAEFbguxLx9eCWiiW3d0eLgCZSDZCGVK2UzZvidaM0laEG+n+AeYRmS9/8
+         dQPVQwWlVuDbjWTldq3HIoWCcWjecUTFij8mszqKXzPm7nbBTaUIBAzmthZGkbbo3O47
+         mLuL8Mbx/w9pY4aXYlm+9yNsUO85/N7DxYQHBTvemaF3FnnmlPhJZihHGAKfUbSefUfX
+         SmtVW5sFKF976LzyXwOXdAImy6DSu1AWqHpRGSB+co9b4ZXXaT5PvGgur2DlakIohbqg
+         eEvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ac1YV381+pu+9t+a/snJbLjzWPHz5dhKlor8SQORWwk=;
-        b=P3U2S1xXjzvJA19+XpOGMSE4oAbmpIyL36b56+VbLJfT+xNa5izPhPE7P9G/JDRl9o
-         SNhLWuMlAciNTVWCj3zfPXM3n62JfdJ5oQgbQzhN583bsCDmytDdAC5J+fOglTpm32A5
-         4wVkkzLRMxQZk8oABgmvaDS/QeFFZdDERpHNeyCpq+17eak48qpo2R4rVdc+begiHvRL
-         jXeFxcrdXaZCEhAggS4MVtF2NnzMAGR1t/FHFNuNj0QQw0J5EGQhGbTkcU53YhW6nC32
-         lA3n2fGmFgSXM1m//t1F8F1k/q2IwkPYMIKYe4PgQyRO5Ee0u9jaMoqS8PWbzxUcIRI5
-         cYQA==
-X-Gm-Message-State: ANhLgQ3+kMSqMA4E72+fHqUVRmLm5k9QMyjfuOyRCz5j9Lcozjfr8cui
-        qmavGxGsEPX6//qo7ab8FfU=
-X-Google-Smtp-Source: ADFU+vuUYCNoMeUgkA/1IgD1NG/JZmJhAbBzL1jvwz0SYdcYS0LdsBPwlXa2sPuDTncEr3ayDRgW9g==
-X-Received: by 2002:aa7:99c8:: with SMTP id v8mr2640858pfi.151.1584605581088;
-        Thu, 19 Mar 2020 01:13:01 -0700 (PDT)
+        bh=XvsrEbF8xrvFrxkOmbaObXzMDRIRtTUFbRE8kMKL+mc=;
+        b=FsqpCVwgA6SpyDd2RFFJEsci+K0Rg/vxzmKcu6WEm6d7yDhtW/9qJaAzv0Ft8oPWl6
+         JjiSRuVFzaa0SifIKJpw3lfKEIJ09tluhABAVj/GNbuOVG5jWQUnP+rbsSHW5pJGDM39
+         7yjuOh5oxfJ9UMz3xqjW1VJ3jbGTcpD3sW1qOaBZ5rB54HbSRBXGrLdTKSfDtG/pYK4a
+         uvIC2imJ/7cwfcQ7zMCMKoFalLWEmkS3N20MoJ6r2H1sd+Nwyg5j992l+ArF1JQinbcQ
+         kCW4ioO166dr+fsQowCgBbJJGpEvTMatTs70jGOJ8X692d37PxvRcsT6oQ6CqD6WrndR
+         seYA==
+X-Gm-Message-State: ANhLgQ2X5ap2kEugdFjiFIR6jLNgMFwbQiYOpG3YkwS6Wl0shgKsgo9G
+        U47h8jxS/H73XrG7ASApkuIZ3pYv
+X-Google-Smtp-Source: ADFU+vscUUIkItJKYr8NScV0txk2GFY9ez92M0zablKilI0FdURxoMHyq00OdzpdoKDegWe3eax8Zg==
+X-Received: by 2002:aa7:91c7:: with SMTP id z7mr2767320pfa.237.1584606259683;
+        Thu, 19 Mar 2020 01:24:19 -0700 (PDT)
 Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
-        by smtp.gmail.com with ESMTPSA id 67sm1362804pfe.168.2020.03.19.01.12.56
+        by smtp.gmail.com with ESMTPSA id l6sm1366180pff.173.2020.03.19.01.24.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 01:13:00 -0700 (PDT)
-Subject: Re: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to register
- kmsg dump
+        Thu, 19 Mar 2020 01:24:19 -0700 (PDT)
+Subject: Re: [PATCH 0/4] x86/Hyper-V: Unload vmbus channel in hv panic
+ callback
 To:     Wei Liu <wei.liu@kernel.org>
 Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
@@ -57,69 +57,80 @@ Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkuznets@redhat.com
 References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
- <20200317173600.2hqznyabyj4nckjo@debian>
+ <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
+ <20200317173553.jerf6gjtaotqjbac@debian>
 From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <0105c10b-b546-6d93-bb49-e9a4ce4589f6@gmail.com>
-Date:   Thu, 19 Mar 2020 16:12:54 +0800
+Message-ID: <d00f5535-d498-058e-d529-11dfec976454@gmail.com>
+Date:   Thu, 19 Mar 2020 16:24:13 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200317173600.2hqznyabyj4nckjo@debian>
+In-Reply-To: <20200317173553.jerf6gjtaotqjbac@debian>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Wei:
-	Thanks for your review.
-
-On 3/18/2020 1:36 AM, Wei Liu wrote:
-> On Tue, Mar 17, 2020 at 06:25:21AM -0700, ltykernel@gmail.com wrote:
+On 3/18/2020 1:35 AM, Wei Liu wrote:
+> On Tue, Mar 17, 2020 at 06:25:20AM -0700, ltykernel@gmail.com wrote:
 >> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 >>
->> If fail to register kmsg dump on Hyper-V platform, hv_panic_page
->> will not be used anywhere. So free and reset it.
+>> Customer reported Hyper-V VM still responded network traffic
+>> ack packets after kernel panic with kernel parameter "panic=0”.
+>> This becauses vmbus driver interrupt handler still works
+>> on the panic cpu after kernel panic. Panic cpu falls into
+>> infinite loop of panic() with interrupt enabled at that point.
+>> Vmbus driver can still handle network traffic.
+>>
+>> This confuses remote service that the panic system is still
+>> alive when it gets ack packets. Unload vmbus channel in hv panic
+>> callback and fix it.
+>>
+>> vmbus_initiate_unload() maybe double called during panic process
+>> (e.g, hyperv_panic_event() and hv_crash_handler()). So check
+>> and set connection state in vmbus_initiate_unload() to resolve
+>> reenter issue.
 >>
 >> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 >> ---
->>   drivers/hv/vmbus_drv.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>   drivers/hv/channel_mgmt.c |  5 +++++
+>>   drivers/hv/vmbus_drv.c    | 17 +++++++++--------
+>>   2 files changed, 14 insertions(+), 8 deletions(-)
 >>
->> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
->> index b56b9fb9bd90..b043efea092a 100644
->> --- a/drivers/hv/vmbus_drv.c
->> +++ b/drivers/hv/vmbus_drv.c
->> @@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
->>   			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
->>   			if (hv_panic_page) {
->>   				ret = kmsg_dump_register(&hv_kmsg_dumper);
->> -				if (ret)
->> +				if (ret) {
->>   					pr_err("Hyper-V: kmsg dump register "
->>   						"error 0x%x\n", ret);
->> +					hv_free_hyperv_page(
->> +					    (unsigned long)hv_panic_page);
->> +					hv_panic_page = NULL;
->> +				}
+>> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+>> index 0370364169c4..893493f2b420 100644
+>> --- a/drivers/hv/channel_mgmt.c
+>> +++ b/drivers/hv/channel_mgmt.c
+>> @@ -839,6 +839,9 @@ void vmbus_initiate_unload(bool crash)
+>>   {
+>>   	struct vmbus_channel_message_header hdr;
+>>   
+>> +	if (vmbus_connection.conn_state == DISCONNECTED)
+>> +		return;
+>> +
+>>   	/* Pre-Win2012R2 hosts don't support reconnect */
+>>   	if (vmbus_proto_version < VERSION_WIN8_1)
+>>   		return;
+>> @@ -857,6 +860,8 @@ void vmbus_initiate_unload(bool crash)
+>>   		wait_for_completion(&vmbus_connection.unload_event);
+>>   	else
+>>   		vmbus_wait_for_unload();
+>> +
+>> +	vmbus_connection.conn_state = DISCONNECTED;
 > 
-> While this modification looks correct to me, there is a call to free
-> hv_panic_page in the err_alloc path. That makes the error handling a bit
-> confusing here.
+> This is only set at the end of the function.  I don't see how this solve
+> the re-entrant issue with the check at the beginning. Do I miss anything
+> here?
 > 
-> I think you can just remove that function call in err_alloc path.
 
-OK. Will update in the next version.
+For this issue, vmbus_initiate_unload() maybe called on the panic vcpu
+twice and so just split check and set conn_state.
 
+> Maybe this function should check and set the state to
+> DISCONNECTING/DISCONNECTED at the beginning of this function?
 > 
-> Wei.
-> 
->>   			} else
->>   				pr_err("Hyper-V: panic message page memory "
->>   					"allocation failed");
->> -- 
->> 2.14.5
->>
+Yes, Vitaly also gave suggestion to use "xchg" to check and set
+conn_state. Will update in the next version.
