@@ -2,59 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 670B418BCA9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 17:33:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C447418BD15
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 17:52:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgCSQdX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 Mar 2020 12:33:23 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39422 "EHLO
+        id S1727146AbgCSQwR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 Mar 2020 12:52:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35796 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbgCSQdW (ORCPT
+        with ESMTP id S1727222AbgCSQwQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:33:22 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a9so21967wmj.4;
-        Thu, 19 Mar 2020 09:33:21 -0700 (PDT)
+        Thu, 19 Mar 2020 12:52:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m3so3175474wmi.0;
+        Thu, 19 Mar 2020 09:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EV0H/xHTVbYqHl2SwE3LQu0p/ZfnWJaxt/btO6HNCKc=;
-        b=RJtNiJ3k6sAQDNVAqFF3d2CVXcvwFgvzjPC0w+H5R7gWQps28vhYZy7GgZRM06MHya
-         QQToYt3EjmXhucEHTTvjR2hIFJxawkijfrEt8iN8LtDMLt+j6AwONiJSxTULhlCNicK/
-         +2o07B+kQGc/5U0zBOnKomsAAPEA1SyHhbaxhsqSEVcs2J5aIsAF/b3hnElTY5l/yVGY
-         FW3tBOTVHWiCiVxbKsIH2UfwuUwtau3dd3Z0YMgmaG/L4gaSLfteA3UF0aZQWm1E4kin
-         XVSYSvYkEtok8vrKTtSzm+rcUV6j7CmguoLOaJTsGftxMjOZcOw2ChsJlGdiHRtOWKFj
-         C8UA==
+        bh=hB9EOmeEoQOPuImvB9jQhgdyqLRUd97IR5tYRMN/KRg=;
+        b=Y4xc6fEDR9ZHOybEP5BSWaD2bCPXt0bWNVHUYEZEoiO95Tr1osrH5Jg+ukA+i2z9Ui
+         8736XBhtjQpD23VoNl2wnLTxw7vrkSpl4aRfQH9IlWPeTp5zvZ+U8x4yrhdcaNZXo5e4
+         9Gq9vqwItg4qNpX2rl4QntOkZcN/mPIoowB3YasVy5lknqPdaWhmmIKjvHsbTW8leN3u
+         95GD69hDivtRX2YaRauGxLAAMBOiLXlYhZYAptC84AAB3U+edwC07k7IGUDAU32IoeEA
+         rkttdRg5/vN0IIDtzGg9TNzJMsegxA7CBENS/LuzyaKZfMDg73to4nj9d6CtbP+kl/Tp
+         Z8JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EV0H/xHTVbYqHl2SwE3LQu0p/ZfnWJaxt/btO6HNCKc=;
-        b=lKI/QxGzvatFFAhOb4U4RjWMyDpNyiUB6Njz+fmfzclSzo20MHjNOlCxBlI4mOiFCD
-         iTOc1eS/I0rvjB3H4FifA+GCp538C7dGCb7/s2NfA4t6DsFwq91l4Miv8RV8eO3G/Ghr
-         GDtlm9CuzRJRhcfXwl0FKfCraPUGqf0emnbeQnY+RKVCU5Xwy72t35QJzYKnWrvMGEq8
-         zwxryCN/xWAHV9rorIg4/ezjyKOY/MgGZclZUMtkZgvWTchJaPyKdDpRno4LbGcygszl
-         qH652o39ksNFGY2rty7IbKtyzHhkhQGH0kcV/4sYdSJVBiv/hYjvv5TY14sBEFfYUKB4
-         YlpA==
-X-Gm-Message-State: ANhLgQ2Fk0G1OvTm20nv4hTg1sw4YWGc+t6kRUQQE1A6JndtyR14e7b0
-        1L8MF2zwHWcsk4FQCMSZSou1vDoZGroh6Y9DrR0=
-X-Google-Smtp-Source: ADFU+vumPc/wa4n9qWnBfWoVelrKk4kAGib5WSrNdiwqlrFqLF1BlylJKsfGJ5rFJXKaGKbYD3+R/QLpQgtoSmTw7E4=
-X-Received: by 2002:a1c:1fc7:: with SMTP id f190mr4567359wmf.2.1584635599696;
- Thu, 19 Mar 2020 09:33:19 -0700 (PDT)
+        bh=hB9EOmeEoQOPuImvB9jQhgdyqLRUd97IR5tYRMN/KRg=;
+        b=Kuuvk2/9GgTPS+zdkgWWLLl+BrX3Q6ERbYwEv/JeZHdHclWB1iC26SNKkmOnWviCsy
+         mcceZ8O0cjJVs8b04zI6pLPACJn1fpdCjSLey8CY8seLwtsS9j6w1fWiEksUNy2EoHlL
+         AD84gUPPr1vofGVz6FwJV+xUEPzo6Avoo34xhAwVOXNdynr5/13HAdh5lVEsD0RoxU5n
+         tpgyLkIxFBbN4/KcoAoK53oX8/e5MdRzRmABnHTal59EzWTsxugKQru7Ort2fHLHmfk7
+         p5+eVkJEUo6BU6XKYNu2Gy+fCL4zWFwp9klP1WtEu1fLEFwsNfPNdoAjRfeKxvN+8ISC
+         Fw6A==
+X-Gm-Message-State: ANhLgQ2FTvbp1/kLTuW4JHqDaHR/Pi9etQE10CEirYylY/WJCm88l20p
+        RNaoCQU9wndoBgo2NJPWGYFJUKIbLh8BRF2y0Dc=
+X-Google-Smtp-Source: ADFU+vv1zSb3f06esRnDQl+NjMCVPD282wJZ/FHh2w2P8kdQDmilSBiF4CcKHzLjYAQ03eTB5GFF5fFsJ6f1/h7dKu8=
+X-Received: by 2002:a05:600c:2709:: with SMTP id 9mr4778011wmm.30.1584636735093;
+ Thu, 19 Mar 2020 09:52:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-4-david@redhat.com>
-In-Reply-To: <20200319131221.14044-4-david@redhat.com>
+References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-7-david@redhat.com>
+In-Reply-To: <20200319131221.14044-7-david@redhat.com>
 From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 19 Mar 2020 17:33:08 +0100
-Message-ID: <CAM9Jb+i-idWyxCX1vPow3VPGBbqTQEAbzLio0vn1QLHrpGJSSg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] drivers/base/memory: store mapping between MMOP_*
- and string in an array
+Date:   Thu, 19 Mar 2020 17:52:04 +0100
+Message-ID: <CAM9Jb+jaia-AxpvxsTOVxYg_S=xZy2UY5srARA2J2_DkXPgZ7g@mail.gmail.com>
+Subject: Re: [PATCH v3 6/8] mm/memory_hotplug: unexport memhp_auto_online
 To:     David Hildenbrand <david@redhat.com>
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
         Wei Yang <richard.weiyang@gmail.com>,
         Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Michal Hocko <mhocko@kernel.org>,
         Oscar Salvador <osalvador@suse.de>,
@@ -66,12 +64,10 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> Let's use a simple array which we can reuse soon. While at it, move the
-> string->mmop conversion out of the device hotplug lock.
+> All in-tree users except the mm-core are gone. Let's drop the export.
 >
 > Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
 > Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: Michal Hocko <mhocko@kernel.org>
 > Cc: Oscar Salvador <osalvador@suse.de>
@@ -80,83 +76,24 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 > Cc: Wei Yang <richard.weiyang@gmail.com>
 > Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  drivers/base/memory.c | 38 +++++++++++++++++++++++---------------
->  1 file changed, 23 insertions(+), 15 deletions(-)
+>  mm/memory_hotplug.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index e7e77cafef80..8a7f29c0bf97 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -28,6 +28,24 @@
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index da6aab272c9b..e21a7d53ade5 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -71,7 +71,6 @@ bool memhp_auto_online;
+>  #else
+>  bool memhp_auto_online = true;
+>  #endif
+> -EXPORT_SYMBOL_GPL(memhp_auto_online);
 >
->  #define MEMORY_CLASS_NAME      "memory"
->
-> +static const char *const online_type_to_str[] = {
-> +       [MMOP_OFFLINE] = "offline",
-> +       [MMOP_ONLINE] = "online",
-> +       [MMOP_ONLINE_KERNEL] = "online_kernel",
-> +       [MMOP_ONLINE_MOVABLE] = "online_movable",
-> +};
-> +
-> +static int memhp_online_type_from_str(const char *str)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(online_type_to_str); i++) {
-> +               if (sysfs_streq(str, online_type_to_str[i]))
-> +                       return i;
-> +       }
-> +       return -EINVAL;
-> +}
-> +
->  #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
->
->  static int sections_per_block;
-> @@ -236,26 +254,17 @@ static int memory_subsys_offline(struct device *dev)
->  static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->                            const char *buf, size_t count)
+>  static int __init setup_memhp_default_state(char *str)
 >  {
-> +       const int online_type = memhp_online_type_from_str(buf);
->         struct memory_block *mem = to_memory_block(dev);
-> -       int ret, online_type;
-> +       int ret;
-> +
-> +       if (online_type < 0)
-> +               return -EINVAL;
->
->         ret = lock_device_hotplug_sysfs();
->         if (ret)
->                 return ret;
->
-> -       if (sysfs_streq(buf, "online_kernel"))
-> -               online_type = MMOP_ONLINE_KERNEL;
-> -       else if (sysfs_streq(buf, "online_movable"))
-> -               online_type = MMOP_ONLINE_MOVABLE;
-> -       else if (sysfs_streq(buf, "online"))
-> -               online_type = MMOP_ONLINE;
-> -       else if (sysfs_streq(buf, "offline"))
-> -               online_type = MMOP_OFFLINE;
-> -       else {
-> -               ret = -EINVAL;
-> -               goto err;
-> -       }
-> -
->         switch (online_type) {
->         case MMOP_ONLINE_KERNEL:
->         case MMOP_ONLINE_MOVABLE:
-> @@ -271,7 +280,6 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->                 ret = -EINVAL; /* should never happen */
->         }
->
-> -err:
->         unlock_device_hotplug();
->
->         if (ret < 0)
 > --
-
-Nice cleanup patch.
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-
 > 2.24.1
+
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 >
 >
