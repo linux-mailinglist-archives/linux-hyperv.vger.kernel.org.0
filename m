@@ -2,52 +2,46 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3047A18B8A9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 15:08:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD20418BA59
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Mar 2020 16:07:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgCSOIQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 Mar 2020 10:08:16 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:33852 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgCSOIQ (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:08:16 -0400
-Received: by mail-pj1-f67.google.com with SMTP id q16so2355121pje.1;
-        Thu, 19 Mar 2020 07:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=O7Q51zmRS7g4gxwj7MQtP4qiQBx0T9QoIdivgK4vLVI=;
-        b=JRl6HA2/zf7Vvf60cE21OWI9S0qRbhP70JRWPmuedNCx8LrcCrszbNh4+ftzFYTmiI
-         u5qM7hDwCykZmR4fwobtn0fOIN13LN3lBb71h9cICv3eUixaJFZwhjXjuomMhppv6Woz
-         ddR4Gmd3UmY9wg2zTq+PrcuF64C2ZP/51WzGe/413gChPM7GHzC4AtOYQ6kCXzHOabex
-         Sh+4TbPDJTkEWkgU30FR4mDdy05ZN6Us0fokChT6CY0ZqbzJWH9fXgAMtT6yvynQkiMF
-         EsFbg4yrkS+sxTYH6J+zydRLLb4/Lfs+Jj1yCmEwgjbhH9UoXdBzuSznM8L3Rm0a/MRc
-         tQaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O7Q51zmRS7g4gxwj7MQtP4qiQBx0T9QoIdivgK4vLVI=;
-        b=igbPDBvUn6MeGTIiKTy+waY4/6MGdILJeJCI5LqfuQiXnblbZ3J6Zgv4z1HeivXlCg
-         qD+xXhAbDveGjsKKgGuVcltg+zyGS9Ee+O8GZmuWrkFrf1lgdQ4xTMNq8xyTg1v8TkFR
-         LUT/sDKpk8Rkne238GZuBN1+hqS6UIS7zUPPbD9vCaj/fS1Ptk5Dhxc3lk949ch5Yjnz
-         pyMCdrtd1E5jgUKTwdBKOcPV4mimHm2AojcdcdsNQiU9vNpYSGhYV0Hmed+K3Lf8smot
-         BHgHX4ur73lvOLLAFs5L0g8jysn+sxGoh/8gulH9mVEvcWf0q3Jo3Yk2mbFcUdM31omZ
-         Ea2A==
-X-Gm-Message-State: ANhLgQ0hDLH8Q4PYMsdp+A2QRLwiRbPnpBSCD6utSugtv34+sCuEicOn
-        0eFbPvxB+KAOkLVu6Aq3XD0=
-X-Google-Smtp-Source: ADFU+vt3Uom3z61eXimWi6EYH31AV5srNGn4SND8daBCtBbNg5Si/yyHZbXUD35dwdCBvZjiBbe1KQ==
-X-Received: by 2002:a17:902:82c2:: with SMTP id u2mr3682951plz.125.1584626894899;
-        Thu, 19 Mar 2020 07:08:14 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
-        by smtp.gmail.com with ESMTPSA id l11sm2434715pjy.44.2020.03.19.07.08.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 07:08:14 -0700 (PDT)
-Subject: Re: [PATCH 0/4] x86/Hyper-V: Panic code path fixes
-To:     Michael Kelley <mikelley@microsoft.com>,
+        id S1727916AbgCSPGi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 Mar 2020 11:06:38 -0400
+Received: from mail-mw2nam10on2117.outbound.protection.outlook.com ([40.107.94.117]:48032
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727858AbgCSPGh (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:06:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R8NuPuJvrMcVr01sEYMaIYqkNUdrn2ySH2ebDLmVXkOU9DkRhneJOgeS/emrUEE+2b2SZjJEqkfc0sQ4Q1K9KD579nSLFJX+nsRNy3r9BYpkRIBnsfidYht+D0mWxp1WECmCjbrD8aX18XeqV1mw0eJy9G1HVwxOBJMLmXcZicRDvfV8nkMt0Zwre6kXacbEhueCYuT9c4mai3S6U2A94HslyiuTZYXZPS6WOvAh7zBgIOSnFK+p5pxLdJE2Y9v2A6E6DwdZrYkz8iYjNabpj41qL3ifSZWH7c2XfhW9Em1paeE0vKzZ3vKmZLKMHvZ7JDe5nRkPFFGX216qbRkKKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v6Er4kLWhx0NOeAcfresGXNuHMQOMKv74GDcSH0xmzY=;
+ b=dbhKNYLy2ebtAHC8whhvlX6EfrNcwywq7/UqdO6b5DwXBQqQxScDEeii86waOssQY/UQLsuvzi5SgNxJ7rh0+9yEjLfSVuxTEwxqrVL2x+DjAgaPHViSp7cMlc1mtgQDUdVvR1F7b9Abhk91oSXXXHNfP+9Q8APufjvVZIhT6Uuv5/qSBNYp9CmBPF8CPUcoW63l/4kH64REwYxoAlVxro2eV12GgIcP0+oD8vXLiIuSouPK9Pdj/WD0oAxJBz5cVepdAzbk7nS1RqFzrJ6O/QWrpWriS+ukIzAwkXQWVUPaf233ClAnryhnxHIEDqxmkkmml0tYnNLvRuYhzAmZhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v6Er4kLWhx0NOeAcfresGXNuHMQOMKv74GDcSH0xmzY=;
+ b=LN3McfeZsXy9l2LebLS1MyYi+oMjyfQKwOB7Cyg33xCszToZVIRqIxKhq8pIYQ9ZNY5Oe/vqRHldElmjf9640ciJ34L97RBsJVTcbOfUJlNeLBMJB8I/JDJx7xjz2QLpdfqqfUiGIkuehFY8ugt9XirnMZ+TxwsJvJuBil8yFaI=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1081.namprd21.prod.outlook.com (2603:10b6:302:a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.12; Thu, 19 Mar
+ 2020 15:06:35 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%10]) with mapi id 15.20.2856.003; Thu, 19 Mar 2020
+ 15:06:35 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>,
+        "ltykernel@gmail.com" <ltykernel@gmail.com>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -56,86 +50,108 @@ To:     Michael Kelley <mikelley@microsoft.com>,
         "mingo@redhat.com" <mingo@redhat.com>,
         "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
         "x86@kernel.org" <x86@kernel.org>
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH 0/4] x86/Hyper-V: Unload vmbus channel in hv panic
+ callback
+Thread-Topic: [PATCH 0/4] x86/Hyper-V: Unload vmbus channel in hv panic
+ callback
+Thread-Index: AQHV/F+NpF+arxPCF0mdiFS5UJm0vqhOg1uAgACKLMCAAIObgIAAdb7w
+Date:   Thu, 19 Mar 2020 15:06:35 +0000
+Message-ID: <MW2PR2101MB10522D2935F49CB9AF138E02D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
 References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <MW2PR2101MB1052F185AF4134EB2BB9ECBFD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <1d1bc90c-7fbe-6123-eeea-5f9a5aad77e4@gmail.com>
-Date:   Thu, 19 Mar 2020 22:08:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <MW2PR2101MB1052F185AF4134EB2BB9ECBFD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
+ <871rpp3ba8.fsf@vitty.brq.redhat.com>
+ <MW2PR2101MB10529A60AF5185BBD7B02E04D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <87mu8c22ky.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87mu8c22ky.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-19T15:06:33.6535463Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e3602d56-2684-45f6-9486-9b060ca11974;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ce379de3-0271-44ed-a36b-08d7cc171de5
+x-ms-traffictypediagnostic: MW2PR2101MB1081:|MW2PR2101MB1081:|MW2PR2101MB1081:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB1081CD22156F42A593BE1689D7F40@MW2PR2101MB1081.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0347410860
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(346002)(376002)(39860400002)(396003)(199004)(33656002)(81166006)(478600001)(10290500003)(8936002)(81156014)(8676002)(9686003)(186003)(55016002)(4326008)(26005)(5660300002)(110136005)(316002)(76116006)(2906002)(54906003)(66476007)(66556008)(64756008)(66446008)(66946007)(52536014)(8990500004)(7696005)(86362001)(71200400001)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1081;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TEbcqDx08WKYKoeQlHASglYgrGI24B4gf1OksmhNbO65MtpQMd24MCMmurke1M9I81CIcX3e51pKf9OqPrvO1Y7V6xrIcNsUtU0gLIE5s1EnrFSgwoKqvVUYMhONOb2YqKpi15MittMq9vh+2r/IXYhMEEUupYjj24rFDIFDuswzGf0Id1j9tHXvdfSkJt3ls3FOJ3/ntjTHT+VvVfQavH6MnxjDKVXorSxksOAtTklqaJwVpHnlRsNwlumcbAn8ZaBdu9CCojcymXm9NEi28Ee4p32saKhq5P9zAzxJGq0VKttaID5lewaZV9CrG0hWe/dizDnTXjBQDgDfdsjpZPtmrMTErAfkdIUXsCQ2PyaZVWJjlv7lFMDrVJDI+4OyL3fY8bqVae61nHHsWxnsVLF9+ng93otRfyhVW0dwHMWHeKCcpZQjOW8LsQq/wLTD
+x-ms-exchange-antispam-messagedata: PCtqtUHFCau+EJ1GVMj3L7EZesJrZ0kbb4TypqjHznf4bS6faJ1zKu8WUpoMzddXjArsOteKDhPFFgWoHJmJKFw3Op31GuuEzefs9tY4pxoAj+adwMtRD55K53ULTaBAMr1Z0tZE4E41bmV+Ua41CA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce379de3-0271-44ed-a36b-08d7cc171de5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 15:06:35.2628
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gF2SxsIcvZPz/jWo8Yc8agZbmn480jrM0zJ8bOr6Bqmf6Djq3HejUjQuHfuIOFttyzyFwCdQGLaVwWxUXN4zJwHOCsUzbs8xlWJyjx2ceLw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1081
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Michael:
-      Thanks for your review.
+From: Vitaly Kuznetsov <vkuznets@redhat.com>  Sent: Thursday, March 19, 202=
+0 1:04 AM
+>=20
+> Michael Kelley <mikelley@microsoft.com> writes:
+>=20
+> >> > --- a/drivers/hv/vmbus_drv.c
+> >> > +++ b/drivers/hv/vmbus_drv.c
+> >> > @@ -53,9 +53,12 @@ static int hyperv_panic_event(struct notifier_blo=
+ck *nb,
+> unsigned
+> >> long val,
+> >> >  {
+> >> >  	struct pt_regs *regs;
+> >> >
+> >> > -	regs =3D current_pt_regs();
+> >> > +	vmbus_initiate_unload(true);
+> >> >
+> >> > -	hyperv_report_panic(regs, val);
+> >> > +	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE=
+) {
+> >>
+> >> With Michael's effors to make code in drivers/hv arch agnostic, I thin=
+k
+> >> we need a better, arch-neutral way.
+> >
+> > Vitaly -- could you elaborate on what part is not arch-neutral?  I don'=
+t see
+> > a problem.  ms_hyperv and the misc_features field exist for both the x8=
+6
+> > and ARM64 code branches.  It turns out the particular bit for
+> > GUEST_CRASH_MSR_AVAILABLE is different on the two architectures, but
+> > the compiler will do the right thing.
+> >
+>=20
+> Ah, apologies, missed the fact that we also call it
+> 'HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE' - I have to admit I was confused
+> by the 'MSR' part. We can probably rename this to something like
+> HV_FEATURE_GUEST_CRASH_REGS_AVAILABLE - but not as part of the series.
+>=20
 
-On 3/19/2020 8:57 AM, Michael Kelley wrote:
-> From: ltykernel@gmail.com <ltykernel@gmail.com> Sent: Tuesday, March 17, 2020 6:25 AM
->>
->> This patchset fixes some issues in the Hyper-V panic code path.
->> Patch 1 resolves issue that panic system still responses network
->> packets.
->> Patch 2-3 resolves crash enlightenment issues.
->> Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
->> VM in order to report crash data or kmsg to host before running
->> kdump kernel.
-> 
-> I still see an issue that isn't addressed by these patches.  The VMbus
-> driver registers a "die notifier" and a "panic notifier".   But die() will
-> eventually call panic() if panic_on_oops is set (which I think it typically
-> is).  If the CRASH_NOTIFY_MSG option is *not* enabled, then
-> hyperv_report_panic() could get called by the die notifier, and then
-> again by the panic notifier.
-> 
-> Do we even need the "die notifier"?  If it was removed, there would
-> not be any notification to Hyper-V via the die() path unless panic_on_oops
-> is set, which I think is actually the correct behavior.  I'm not
-> completely clear on what is supposed to happen in general to the
-> Linux kernel if panic_on_oops is not set. Does it try to continue to run?
-> If so, then we should not be notifying Hyper-V if panic_on_oops is not
-> set, and removing the die notifier is the right thing to do.
-> 
+Good point.  Agreed.
 
-hyperv_report_panic() has re-enter check inside and so kernel only 
-reports crash register data once during die(). From comment in the
-hyperv_report_panic(), register value reported in die chain is more
-exact than value in panic chain. The register value in die chain is
-passed by die() caller. Register value reported in panic chain
-is collected in the hyperv_panic_event().
-
-
-If panic_on_oops is not set, the task should be killed and kernel
-still runs. In this case, we may not trigger crash enlightenment.
-
-
-
-> Michael
-> 
->>
->> Tianyu Lan (4):
->>    x86/Hyper-V: Unload vmbus channel in hv panic callback
->>    x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
->>    x86/Hyper-V: Trigger crash enlightenment only once during  system
->>      crash.
->>    x86/Hyper-V: Report crash register data or ksmg before running crash
->>      kernel
->>
->>   arch/x86/kernel/cpu/mshyperv.c | 10 ++++++++++
->>   drivers/hv/channel_mgmt.c      |  5 +++++
->>   drivers/hv/vmbus_drv.c         | 35 +++++++++++++++++++++++++----------
->>   3 files changed, 40 insertions(+), 10 deletions(-)
->>
->> --
->> 2.14.5
-> 
+Michael
