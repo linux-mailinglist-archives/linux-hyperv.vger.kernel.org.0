@@ -2,117 +2,91 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0140518D5CA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Mar 2020 18:29:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 606B518E2DE
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Mar 2020 17:26:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCTR27 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 20 Mar 2020 13:28:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35354 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727197AbgCTR27 (ORCPT
+        id S1727232AbgCUQ0e (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 21 Mar 2020 12:26:34 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35961 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgCUQ0e (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:28:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m3so7289552wmi.0;
-        Fri, 20 Mar 2020 10:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bF7ST+Uw4AP61YhxxvxFJK3psApCGN0GVo19aRVBb+k=;
-        b=RbkJQ8QQKdMX25KSA2Et2VsxBEOhkKWd8C0EPVQwzaiZAFN5g8J7DK9bEWXsyF7yTy
-         2tOt3nYaMcIz/ubNAvPxA/0N1a+jqG7MNrn/iJUNZcyEyTgvlQ4kktJpud4nlaBgt3Rf
-         lFOT3OCzL5KCHw5DDD9mUuxkGNeB7teAZ0UnkgZ6MpqtEI5o+jp1ltJOzwSGFBFz0zGx
-         EqXgy06s9AXVzxxze3adyYR7MJLR72LZL3V0tzAPXtMTR2nCdCnk0kYR5mEmmuxY75NJ
-         JejKiF89e3IOu/1ibgewwR2KfpR/B32rn5V6bbtcX4Hbh1u7SJXLgJAY/oVSujkZR8/Q
-         JSMg==
+        Sat, 21 Mar 2020 12:26:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g62so9764732wme.1;
+        Sat, 21 Mar 2020 09:26:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bF7ST+Uw4AP61YhxxvxFJK3psApCGN0GVo19aRVBb+k=;
-        b=AbXBoOJ9YJuKh+Wej9mMnlmlRVu6HUiHBOgwUubkOjEDL6QlBVfCBAhVtORrP33kkR
-         +kiXVcPRpjINiMYTnCIZ3wtQm/L+9Deb5hjjO4uyepvYj3BntuA7HjTqhm3wuY3S68OM
-         C2/JlxW+cvTxLgF9JHkfUYPqRPu/EkJaElH4rdQIWuuYkPU9UPulfYRMXQ+ZMOXpTZDQ
-         d0T6D4a61PJdP9f8z9NIznXSaAQ9i9aN8JhFHuqwWZYTgmYpx9LXxjJzpgzT0g/fJuVy
-         4RnZMsJmFB16AmWTvuyu1Qioy9TB8OlT8dq0bA/vJIEkSiVyZV2Fq5ulq43Ce5osFGzZ
-         mQvA==
-X-Gm-Message-State: ANhLgQ15BPXmjlzjV3mV7tApoIPvv98tsNAcmvL70uZvMnDMc2B5C/NN
-        8Ji2vuGsrwZH38BY25DRy+Vyw+uYcc4=
-X-Google-Smtp-Source: ADFU+vuPRAkCXWQGqIt8DiRO6X0wzcHXMyKhfH4/qINz4oo0MU24Q2dX5qcB01+Hl39yU6ChI4eoZA==
-X-Received: by 2002:a1c:25c5:: with SMTP id l188mr12027372wml.105.1584725335196;
-        Fri, 20 Mar 2020 10:28:55 -0700 (PDT)
-Received: from jondnuc.lan (IGLD-84-229-155-229.inter.net.il. [84.229.155.229])
-        by smtp.gmail.com with ESMTPSA id q4sm11028333wmj.1.2020.03.20.10.28.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GuIqERTR3t0coAsUD7Xv8E642UJWezc6SO06+7Y9t9o=;
+        b=kBYU9f2G3g2T05In+0I+Te8Q0+FaYib/Z08p4nUB7pLQD+R+0st1OFUW3ONUq837X0
+         +M18jnFYJwAPgS7tz9OReKH8iZQ9D+4zv+a/xZ7DvZZVkdFNZzyVd9o3bAVftqY+Hvvc
+         AXjyLVS6zN6E7otr4vMwBe+cyrBRpVckcKcOMA8RZf302ypED0xOCpbzhk/oyOI7rPrX
+         A6jX3O5OTvwKCudfiHn0DYJgaMJmBwuuvZ8fn2QEiGvi2/MJPoqkecK+P0jpvJVtACQ+
+         9Bcs88zVsSzRfwpdb4OHYLHOGV/H8bFAPvfviRaZnLr+aFRcON4VcA/C6S38UlgosqPL
+         hdnw==
+X-Gm-Message-State: ANhLgQ1J0i0hqtMvNj//zMRuftg1g9nQ8Jwtu4R4AXCt9H7zys/u7yLy
+        +eji8kfv/g/e+AGSfov6c/g=
+X-Google-Smtp-Source: ADFU+vs81+eZkmrFoTsfi0dcYyhe3fjahZ2bTDKZ83PS6zZ/DARksABcXdX7c3rjONYB7NFJpllvRQ==
+X-Received: by 2002:a1c:5604:: with SMTP id k4mr16262801wmb.57.1584807991960;
+        Sat, 21 Mar 2020 09:26:31 -0700 (PDT)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id g14sm13584389wme.32.2020.03.21.09.26.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 10:28:54 -0700 (PDT)
-From:   Jon Doron <arilou@gmail.com>
-To:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     vkuznets@redhat.com, Jon Doron <arilou@gmail.com>
-Subject: [PATCH v9 6/6] x86/kvm/hyper-v: Add support for synthetic debugger via hypercalls
-Date:   Fri, 20 Mar 2020 19:28:39 +0200
-Message-Id: <20200320172839.1144395-7-arilou@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200320172839.1144395-1-arilou@gmail.com>
-References: <20200320172839.1144395-1-arilou@gmail.com>
+        Sat, 21 Mar 2020 09:26:31 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 16:26:29 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] hv: hyperv_vmbus.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200321162629.xjlpnw2oxx6r4yzg@debian>
+References: <20200319213226.GA9536@embeddedor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319213226.GA9536@embeddedor.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-There is another mode for the synthetic debugger which uses hypercalls
-to send/recv network data instead of the MSR interface.
+On Thu, Mar 19, 2020 at 04:32:26PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-This interface is much slower and less recommended since you might get
-a lot of VMExits while KDVM polling for new packets to recv, rather
-than simply checking the pending page to see if there is data avialble
-and then request.
+Queued, thanks.
 
-Signed-off-by: Jon Doron <arilou@gmail.com>
----
- arch/x86/kvm/hyperv.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index c130a386f4c1..f17156d36419 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1829,6 +1829,34 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 		}
- 		ret = kvm_hv_send_ipi(vcpu, ingpa, outgpa, true, false);
- 		break;
-+	case HVCALL_POST_DEBUG_DATA:
-+	case HVCALL_RETRIEVE_DEBUG_DATA:
-+		if (unlikely(fast)) {
-+			ret = HV_STATUS_INVALID_PARAMETER;
-+			break;
-+		}
-+		fallthrough;
-+	case HVCALL_RESET_DEBUG_SESSION: {
-+		struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
-+
-+		if (!syndbg->active) {
-+			ret = HV_STATUS_INVALID_HYPERCALL_CODE;
-+			break;
-+		}
-+
-+		if (!(syndbg->options & HV_X64_SYNDBG_OPTION_USE_HCALLS)) {
-+			ret = HV_STATUS_OPERATION_DENIED;
-+			break;
-+		}
-+		vcpu->run->exit_reason = KVM_EXIT_HYPERV;
-+		vcpu->run->hyperv.type = KVM_EXIT_HYPERV_HCALL;
-+		vcpu->run->hyperv.u.hcall.input = param;
-+		vcpu->run->hyperv.u.hcall.params[0] = ingpa;
-+		vcpu->run->hyperv.u.hcall.params[1] = outgpa;
-+		vcpu->arch.complete_userspace_io =
-+				kvm_hv_hypercall_complete_userspace;
-+		return 0;
-+	}
- 	default:
- 		ret = HV_STATUS_INVALID_HYPERCALL_CODE;
- 		break;
--- 
-2.24.1
-
+Wei.
