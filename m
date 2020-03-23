@@ -2,688 +2,91 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 576D018F2E9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2020 11:36:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C8A218F548
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2020 14:09:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgCWKgW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 23 Mar 2020 06:36:22 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:56414 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727898AbgCWKgV (ORCPT
+        id S1728307AbgCWNJj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 Mar 2020 09:09:39 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:53398 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728275AbgCWNJj (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 23 Mar 2020 06:36:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584959780;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IoLPdCL/ZoJabMu/DNFfz6QUzqJwkSBnf/XifKtjoh0=;
-        b=SDiigmo5VJ9csz1LCNbrwkNg6myo0KymTorjkgZJMIlECMxMjVx0B4IBbzMy86Y/9orIiJ
-        W77wf18fhNYV6jo9mIfvKt1002b8bwB/t4VIz9j5iFneF6nIdyRnWM6RR0cnzR5wF5p+Oz
-        v5NbRv7YEYpq5pbLVfEH1TnuV+3rwOo=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-3vTilj3fM6OiMI_-VRDk4g-1; Mon, 23 Mar 2020 06:36:19 -0400
-X-MC-Unique: 3vTilj3fM6OiMI_-VRDk4g-1
-Received: by mail-wr1-f70.google.com with SMTP id d17so7110336wrs.7
-        for <linux-hyperv@vger.kernel.org>; Mon, 23 Mar 2020 03:36:18 -0700 (PDT)
+        Mon, 23 Mar 2020 09:09:39 -0400
+Received: by mail-pj1-f68.google.com with SMTP id l36so6157015pjb.3;
+        Mon, 23 Mar 2020 06:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UVUZSZmN0wfjBDMswnzLJO1IiNBLG8FZGAX4PW0SLkk=;
+        b=e4nrWQdDZ5NyXWFxrTJOR86i5pZIZr/nwpPzSIUUS7OfQg0vG0p999rLCaZ4syxvqj
+         rYTQkwVIfQvvsAibJBaJSw11yNn2RaV4LftQcZjYQihRm9SNXN5GYzLD3atDe1OuhCaa
+         SBYpQFWc71X451bz9yKrmR0eTz9R0bFMPWVdY9Go6j+db3T30hfCiMvbR1zaUUuem0tD
+         PZIO7xJtBsIc7PSLncYHnwHERLXXHTOB9I51bXpiP0CxGmJREOG6sWYpYj/qj/zYYeW7
+         mDSPMFrSOklfZq+si3TziJ9x3inTq8V/k5204MGzOqCA9F2B6t0eSQSx3i7Hkm+IdPy4
+         wjzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=IoLPdCL/ZoJabMu/DNFfz6QUzqJwkSBnf/XifKtjoh0=;
-        b=UupgUsfjUo0HjriifM5LM8UhmaFqevJFuZruIuR+dia25zX8XFyEa0G5PGHG8Dy+/5
-         dJVZ5MdsjMSccHvhVA1PbySkOKKX4kJYuRKhkYfNtMmDtFQje2SjqRQxFSfdiFHrseJb
-         KzH9l5OxH8/uh5tICmZ0EtxXbeM4vOdYVDfm7TT4ENDgvg6H/FzcInzNGqhSBAX5hN1J
-         qwOrHusT8+/Hc5+WpAHNCBI1Hc4mpyBF/nKUj8o5CwfCXH8lUlWVqpFuIxFy0D8Jwkvk
-         1V82yFo6aMGKAYm52WqOWZBEQPaCsuSkj+TaOIF8/6t8xlgmOCV+qer3lIwLXoRnBHGs
-         04Bg==
-X-Gm-Message-State: ANhLgQ2NAlW1Ia+nniSuccSgw4LAW4OLVGJ/pyHDJ/EZ3d93/zejzes/
-        rnGgyux0z5vj57wOGMq6Olt6KX1+0mUM2nIvS/dMON7ejTpoLtVmnNr/jOTnGezze+oZwcqD0pT
-        7dRnhe9bDn8PX3AzLjIIuDaaq
-X-Received: by 2002:adf:a49b:: with SMTP id g27mr28726904wrb.113.1584959777105;
-        Mon, 23 Mar 2020 03:36:17 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vt0nTXvQ2mg3Batc+i3UrtYFz2joZxiKtpK1KtPhrmV5p5YCOOJhTrWb4nwtB33wpPB5AySEw==
-X-Received: by 2002:adf:a49b:: with SMTP id g27mr28726862wrb.113.1584959776689;
-        Mon, 23 Mar 2020 03:36:16 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id v21sm15963201wmj.8.2020.03.23.03.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 03:36:16 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Jon Doron <arilou@gmail.com>
-Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v9 4/6] x86/kvm/hyper-v: Add support for synthetic debugger capability
-In-Reply-To: <20200320172839.1144395-5-arilou@gmail.com>
-References: <20200320172839.1144395-1-arilou@gmail.com> <20200320172839.1144395-5-arilou@gmail.com>
-Date:   Mon, 23 Mar 2020 11:36:14 +0100
-Message-ID: <87pnd39x41.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UVUZSZmN0wfjBDMswnzLJO1IiNBLG8FZGAX4PW0SLkk=;
+        b=onxp7FADVsujDym7A+NZEQmuKQ99/bFT1OgFXIxPCVUcwGOg5Xl8om9iaJ0HMbsQ8M
+         aPihbZ41M+KCPGJUBD1pdWgpEXrFLpiLg3JOhOvr1nTbSVqbd33m7Qma8XBt8UQhjBAY
+         Np7mq0Ek7lr1iO477Xu+m2aRN5sElVN8fTsu2saRVx8/nVqgmCHTbIW+lo9cGDSQ+mBX
+         AAcxLDhczaSFHKqSUdIETShUEqfFiOBP+AXV2t/gxy8h/3y4Ic/BrDzUXmiacJzXkXGm
+         04bDy3Q3OuBYrtEBX2pM3fCetKKG9lELwFELHNyWSHFtMnoI40xFno6t6Qv/gnsNBbW8
+         BPpA==
+X-Gm-Message-State: ANhLgQ03ImGn6uljcFtlPtAddlR2KX6e+rj0Qf2oeBBsl6kvOuToTw8Y
+        n+2SLLhS/ikois2CCQzFu4A=
+X-Google-Smtp-Source: ADFU+vtB4leTBTZjE63gAMA35Rvm5e8MjeaU9ZkT+abole1ttsY0G4cq73QxN4AY1ERoj9DLZr9ndA==
+X-Received: by 2002:a17:90b:30ca:: with SMTP id hi10mr24931835pjb.113.1584968978640;
+        Mon, 23 Mar 2020 06:09:38 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([131.107.147.210])
+        by smtp.googlemail.com with ESMTPSA id u14sm12262034pgg.67.2020.03.23.06.09.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Mar 2020 06:09:37 -0700 (PDT)
+From:   ltykernel@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: [PATCH V2 0/6] x86/Hyper-V: Panic code path fixes
+Date:   Mon, 23 Mar 2020 06:09:18 -0700
+Message-Id: <20200323130924.2968-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Jon Doron <arilou@gmail.com> writes:
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-> Add support for Hyper-V synthetic debugger (syndbg) interface.
-> The syndbg interface is using MSRs to emulate a way to send/recv packets
-> data.
->
-> The debug transport dll (kdvm/kdnet) will identify if Hyper-V is enabled
-> and if it supports the synthetic debugger interface it will attempt to
-> use it, instead of trying to initialize a network adapter.
->
+This patchset fixes some issues in the Hyper-V panic code path.
+Patch 1 resolves issue that panic system still responses network
+packets.
+Patch 2-3,5-6 resolves crash enlightenment issues.
+Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
+VM in order to report crash data or kmsg to host before running
+kdump kernel.
 
-This commit seem to break tests, e.g. 
+Tianyu Lan (6):
+  x86/Hyper-V: Unload vmbus channel in hv panic callback
+  x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+  x86/Hyper-V: Trigger crash enlightenment only once during  system
+    crash.
+  x86/Hyper-V: Report crash register data or ksmg before  running crash
+    kernel
+  x86/Hyper-V: Report crash register data when sysctl_record_panic_msg
+    is not set
+  x86/Hyper-V: Report crash data in die() when panic_on_oops is set
 
-# ./tools/testing/selftests/kvm/x86_64/state_test 
-==== Test Assertion Failure ====
-  lib/x86_64/processor.c:1023: r == nmsrs
-  pid=26436 tid=26436 - Argument list too long
-     1	0x000000000040a87f: vcpu_save_state at processor.c:1022 (discriminator 3)
-     2	0x00000000004011b3: main at state_test.c:171 (discriminator 4)
-     3	0x00007f0315cc63d4: ?? ??:0
-     4	0x0000000000401357: _start at ??:?
-  Unexpected result from KVM_GET_MSRS, r: 60 (failed MSR was 0x400000ff)
-
-The problem is that the newly introduced MSRs don't allow
-reading/writing by the host when KVM_CAP_HYPERV_SYNDBG is disabled, I
-think we'll need to relax the requirement and allow at reading/writing by
-the host. Something like
-
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index f17156d36419..ca1f10498705 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -301,11 +301,11 @@ static void syndbg_exit(struct kvm_vcpu *vcpu, u32 msr)
- 	kvm_make_request(KVM_REQ_HV_EXIT, vcpu);
- }
- 
--static int syndbg_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data)
-+static int syndbg_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
- {
- 	struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
- 
--	if (!syndbg->active)
-+	if (!syndbg->active && !host)
- 		return 1;
- 
- 	trace_kvm_hv_syndbg_set_msr(vcpu->vcpu_id,
-@@ -313,7 +313,8 @@ static int syndbg_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data)
- 	switch (msr) {
- 	case HV_X64_MSR_SYNDBG_CONTROL:
- 		syndbg->control.control = data;
--		syndbg_exit(vcpu, msr);
-+		if (!host)
-+			syndbg_exit(vcpu, msr);
- 		break;
- 	case HV_X64_MSR_SYNDBG_STATUS:
- 		syndbg->control.status = data;
-@@ -326,7 +327,8 @@ static int syndbg_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data)
- 		break;
- 	case HV_X64_MSR_SYNDBG_PENDING_BUFFER:
- 		syndbg->control.pending_page = data;
--		syndbg_exit(vcpu, msr);
-+		if (!host)
-+			syndbg_exit(vcpu, msr);
- 		break;
- 	case HV_X64_MSR_SYNDBG_OPTIONS:
- 		syndbg->options = data;
-@@ -338,11 +340,11 @@ static int syndbg_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data)
- 	return 0;
- }
- 
--static int syndbg_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata)
-+static int syndbg_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata, bool host)
- {
- 	struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
- 
--	if (!syndbg->active)
-+	if (!syndbg->active && !host)
- 		return 1;
- 
- 	switch (msr) {
-@@ -1174,7 +1176,7 @@ static int kvm_hv_set_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 data,
- 		break;
- 	case HV_X64_MSR_SYNDBG_OPTIONS:
- 	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
--		return syndbg_set_msr(vcpu, msr, data);
-+		return syndbg_set_msr(vcpu, msr, data, host);
- 	default:
- 		vcpu_unimpl(vcpu, "Hyper-V unhandled wrmsr: 0x%x data 0x%llx\n",
- 			    msr, data);
-@@ -1304,7 +1306,7 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
- 	return 0;
- }
- 
--static int kvm_hv_get_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata)
-+static int kvm_hv_get_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata, bool host)
- {
- 	u64 data = 0;
- 	struct kvm *kvm = vcpu->kvm;
-@@ -1343,7 +1345,7 @@ static int kvm_hv_get_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata)
- 		break;
- 	case HV_X64_MSR_SYNDBG_OPTIONS:
- 	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
--		return syndbg_get_msr(vcpu, msr, pdata);
-+		return syndbg_get_msr(vcpu, msr, pdata, host);
- 	default:
- 		vcpu_unimpl(vcpu, "Hyper-V unhandled rdmsr: 0x%x\n", msr);
- 		return 1;
-@@ -1433,7 +1435,7 @@ int kvm_hv_get_msr_common(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata, bool host)
- 		int r;
- 
- 		mutex_lock(&vcpu->kvm->arch.hyperv.hv_lock);
--		r = kvm_hv_get_msr_pw(vcpu, msr, pdata);
-+		r = kvm_hv_get_msr_pw(vcpu, msr, pdata, host);
- 		mutex_unlock(&vcpu->kvm->arch.hyperv.hv_lock);
- 		return r;
- 	} else
-
-Note that I also omit syndbg_exit() when
-HV_X64_MSR_SYNDBG_PENDING_BUFFER/HV_X64_MSR_SYNDBG_CONTROL are
-written by the host to not get a self-induced exit to userspace, this is
-likely not what we want on e.g. migration. Without it, we will fail
-again:
-
-==== Test Assertion Failure ====
-  x86_64/state_test.c:151: run->exit_reason == KVM_EXIT_IO
-  pid=7827 tid=7827 - Argument list too long
-     1	0x0000000000401109: main at state_test.c:148
-     2	0x00007ff5308d63d4: ?? ??:0
-     3	0x0000000000401357: _start at ??:?
-  Stage 2: unexpected exit reason: 27 (Unknown),
-
-Alternatively, we may introduce a way to hide unsupported MSRs from
-KVM_GET_MSRS but we don't do it for existing Hyper-V MSRs as of yet.
-
-> Signed-off-by: Jon Doron <arilou@gmail.com>
-> ---
->  Documentation/virt/kvm/api.rst  |  16 ++++
->  arch/x86/include/asm/kvm_host.h |  14 +++
->  arch/x86/kvm/hyperv.c           | 158 +++++++++++++++++++++++++++++++-
->  arch/x86/kvm/hyperv.h           |   6 ++
->  arch/x86/kvm/trace.h            |  51 +++++++++++
->  arch/x86/kvm/x86.c              |  13 +++
->  include/uapi/linux/kvm.h        |  11 +++
->  7 files changed, 268 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 4872c47bbcff..fe992dcf4f93 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -5024,6 +5024,7 @@ EOI was received.
->  		struct kvm_hyperv_exit {
->    #define KVM_EXIT_HYPERV_SYNIC          1
->    #define KVM_EXIT_HYPERV_HCALL          2
-> +  #define KVM_EXIT_HYPERV_SYNDBG         3
->  			__u32 type;
->  			__u32 pad1;
->  			union {
-> @@ -5039,6 +5040,15 @@ EOI was received.
->  					__u64 result;
->  					__u64 params[2];
->  				} hcall;
-> +				struct {
-> +					__u32 msr;
-> +					__u32 pad2;
-> +					__u64 control;
-> +					__u64 status;
-> +					__u64 send_page;
-> +					__u64 recv_page;
-> +					__u64 pending_page;
-> +				} syndbg;
->  			} u;
->  		};
->  		/* KVM_EXIT_HYPERV */
-> @@ -5055,6 +5065,12 @@ Hyper-V SynIC state change. Notification is used to remap SynIC
->  event/message pages and to enable/disable SynIC messages/events processing
->  in userspace.
->  
-> +	- KVM_EXIT_HYPERV_SYNDBG -- synchronously notify user-space about
-> +
-> +Hyper-V Synthetic debugger state change. Notification is used to either update
-> +the pending_page location or to send a control command (send the buffer located
-> +in send_page or recv a buffer to recv_page).
-> +
->  ::
->  
->  		/* KVM_EXIT_ARM_NISV */
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 98959e8cd448..c09fa7401b13 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -854,6 +854,19 @@ struct kvm_apic_map {
->  	struct kvm_lapic *phys_map[];
->  };
->  
-> +/* Hyper-V synthetic debugger (SynDbg)*/
-> +struct kvm_hv_syndbg {
-> +	struct {
-> +		u64 control;
-> +		u64 status;
-> +		u64 send_page;
-> +		u64 recv_page;
-> +		u64 pending_page;
-> +	} control;
-> +	u64 options;
-> +	bool active;
-> +};
-> +
->  /* Hyper-V emulation context */
->  struct kvm_hv {
->  	struct mutex hv_lock;
-> @@ -877,6 +890,7 @@ struct kvm_hv {
->  	atomic_t num_mismatched_vp_indexes;
->  
->  	struct hv_partition_assist_pg *hv_pa_pg;
-> +	struct kvm_hv_syndbg hv_syndbg;
->  };
->  
->  enum kvm_irqchip_mode {
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index 7383c7e7d4af..cd8d0142a841 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -266,6 +266,115 @@ static int synic_set_msr(struct kvm_vcpu_hv_synic *synic,
->  	return ret;
->  }
->  
-> +void kvm_hv_activate_syndbg(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
-> +
-> +	syndbg->active = true;
-> +}
-> +
-> +static int kvm_hv_syndbg_complete_userspace(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm *kvm = vcpu->kvm;
-> +	struct kvm_hv *hv = &kvm->arch.hyperv;
-> +
-> +	if (vcpu->run->hyperv.u.syndbg.msr == HV_X64_MSR_SYNDBG_CONTROL)
-> +		hv->hv_syndbg.control.status =
-> +			vcpu->run->hyperv.u.syndbg.status;
-> +	return 1;
-> +}
-> +
-> +static void syndbg_exit(struct kvm_vcpu *vcpu, u32 msr)
-> +{
-> +	struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
-> +	struct kvm_vcpu_hv *hv_vcpu = &vcpu->arch.hyperv;
-> +
-> +	hv_vcpu->exit.type = KVM_EXIT_HYPERV_SYNDBG;
-> +	hv_vcpu->exit.u.syndbg.msr = msr;
-> +	hv_vcpu->exit.u.syndbg.control = syndbg->control.control;
-> +	hv_vcpu->exit.u.syndbg.send_page = syndbg->control.send_page;
-> +	hv_vcpu->exit.u.syndbg.recv_page = syndbg->control.recv_page;
-> +	hv_vcpu->exit.u.syndbg.pending_page = syndbg->control.pending_page;
-> +	vcpu->arch.complete_userspace_io =
-> +			kvm_hv_syndbg_complete_userspace;
-> +
-> +	kvm_make_request(KVM_REQ_HV_EXIT, vcpu);
-> +}
-> +
-> +static int syndbg_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data)
-> +{
-> +	struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
-> +
-> +	if (!syndbg->active)
-> +		return 1;
-> +
-> +	trace_kvm_hv_syndbg_set_msr(vcpu->vcpu_id,
-> +				    vcpu_to_hv_vcpu(vcpu)->vp_index, msr, data);
-> +	switch (msr) {
-> +	case HV_X64_MSR_SYNDBG_CONTROL:
-> +		syndbg->control.control = data;
-> +		syndbg_exit(vcpu, msr);
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_STATUS:
-> +		syndbg->control.status = data;
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_SEND_BUFFER:
-> +		syndbg->control.send_page = data;
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_RECV_BUFFER:
-> +		syndbg->control.recv_page = data;
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_PENDING_BUFFER:
-> +		syndbg->control.pending_page = data;
-> +		syndbg_exit(vcpu, msr);
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_OPTIONS:
-> +		syndbg->options = data;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int syndbg_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata)
-> +{
-> +	struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
-> +
-> +	if (!syndbg->active)
-> +		return 1;
-> +
-> +	switch (msr) {
-> +	case HV_X64_MSR_SYNDBG_CONTROL:
-> +		*pdata = syndbg->control.control;
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_STATUS:
-> +		*pdata = syndbg->control.status;
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_SEND_BUFFER:
-> +		*pdata = syndbg->control.send_page;
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_RECV_BUFFER:
-> +		*pdata = syndbg->control.recv_page;
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_PENDING_BUFFER:
-> +		*pdata = syndbg->control.pending_page;
-> +		break;
-> +	case HV_X64_MSR_SYNDBG_OPTIONS:
-> +		*pdata = syndbg->options;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	trace_kvm_hv_syndbg_get_msr(vcpu->vcpu_id,
-> +				    vcpu_to_hv_vcpu(vcpu)->vp_index, msr,
-> +				    *pdata);
-> +
-> +	return 0;
-> +}
-> +
->  static int synic_get_msr(struct kvm_vcpu_hv_synic *synic, u32 msr, u64 *pdata,
->  			 bool host)
->  {
-> @@ -800,6 +909,8 @@ static bool kvm_hv_msr_partition_wide(u32 msr)
->  	case HV_X64_MSR_REENLIGHTENMENT_CONTROL:
->  	case HV_X64_MSR_TSC_EMULATION_CONTROL:
->  	case HV_X64_MSR_TSC_EMULATION_STATUS:
-> +	case HV_X64_MSR_SYNDBG_OPTIONS:
-> +	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
->  		r = true;
->  		break;
->  	}
-> @@ -1061,6 +1172,9 @@ static int kvm_hv_set_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 data,
->  		if (!host)
->  			return 1;
->  		break;
-> +	case HV_X64_MSR_SYNDBG_OPTIONS:
-> +	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
-> +		return syndbg_set_msr(vcpu, msr, data);
->  	default:
->  		vcpu_unimpl(vcpu, "Hyper-V unhandled wrmsr: 0x%x data 0x%llx\n",
->  			    msr, data);
-> @@ -1227,6 +1341,9 @@ static int kvm_hv_get_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata)
->  	case HV_X64_MSR_TSC_EMULATION_STATUS:
->  		data = hv->hv_tsc_emulation_status;
->  		break;
-> +	case HV_X64_MSR_SYNDBG_OPTIONS:
-> +	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
-> +		return syndbg_get_msr(vcpu, msr, pdata);
->  	default:
->  		vcpu_unimpl(vcpu, "Hyper-V unhandled rdmsr: 0x%x\n", msr);
->  		return 1;
-> @@ -1799,9 +1916,16 @@ static struct kvm_cpuid_entry2 evmcs_cpuid_entries[] = {
->  	{ .function = HYPERV_CPUID_NESTED_FEATURES },
->  };
->  
-> +static struct kvm_cpuid_entry2 syndbg_cpuid_entries[] = {
-> +	{ .function = HYPERV_CPUID_SYNDBG_VENDOR_AND_MAX_FUNCTIONS },
-> +	{ .function = HYPERV_CPUID_SYNDBG_INTERFACE },
-> +	{ .function = HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES	},
-> +};
-> +
->  #define HV_MAX_CPUID_ENTRIES \
->  	ARRAY_SIZE(core_cpuid_entries) +\
-> -	ARRAY_SIZE(evmcs_cpuid_entries)
-> +	ARRAY_SIZE(evmcs_cpuid_entries) +\
-> +	ARRAY_SIZE(syndbg_cpuid_entries)
->  
->  int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  				struct kvm_cpuid_entry2 __user *entries)
-> @@ -1809,6 +1933,7 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  	uint16_t evmcs_ver = 0;
->  	struct kvm_cpuid_entry2 cpuid_entries[HV_MAX_CPUID_ENTRIES];
->  	int i, nent = 0;
-> +	struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
->  
->  	/* Set the core cpuid entries required for Hyper-V */
->  	memcpy(&cpuid_entries[nent], &core_cpuid_entries,
-> @@ -1825,6 +1950,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  		nent += ARRAY_SIZE(evmcs_cpuid_entries);
->  	}
->  
-> +	if (syndbg->active) {
-> +		/* Syndbg is enabled, add the required Syndbg CPUID leafs */
-> +		memcpy(&cpuid_entries[nent], &syndbg_cpuid_entries,
-> +		       sizeof(syndbg_cpuid_entries));
-> +		nent += ARRAY_SIZE(syndbg_cpuid_entries);
-> +	}
-> +
->  	if (cpuid->nent < nent)
->  		return -E2BIG;
->  
-> @@ -1878,6 +2010,12 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
->  			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
->  
-> +			if (syndbg->active) {
-> +				ent->ebx |= HV_X64_DEBUGGING;
-> +				ent->edx |= HV_X64_GUEST_DEBUGGING_AVAILABLE;
-> +				ent->edx |= HV_FEATURE_DEBUG_MSRS_AVAILABLE;
-> +			}
-> +
->  			/*
->  			 * Direct Synthetic timers only make sense with in-kernel
->  			 * LAPIC
-> @@ -1921,6 +2059,24 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  
->  			break;
->  
-> +		case HYPERV_CPUID_SYNDBG_VENDOR_AND_MAX_FUNCTIONS:
-> +			memcpy(signature, "Linux KVM Hv", 12);
-> +
-> +			ent->eax = 0;
-> +			ent->ebx = signature[0];
-> +			ent->ecx = signature[1];
-> +			ent->edx = signature[2];
-> +			break;
-> +
-> +		case HYPERV_CPUID_SYNDBG_INTERFACE:
-> +			memcpy(signature, "VS#1\0\0\0\0\0\0\0\0", 12);
-> +			ent->eax = signature[0];
-> +			break;
-> +
-> +		case HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES:
-> +			ent->eax |= HV_X64_SYNDBG_CAP_ALLOW_KERNEL_DEBUGGING;
-> +			break;
-> +
->  		default:
->  			break;
->  		}
-> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
-> index 5e4780bf6dd7..45aaaf08bf15 100644
-> --- a/arch/x86/kvm/hyperv.h
-> +++ b/arch/x86/kvm/hyperv.h
-> @@ -73,6 +73,11 @@ static inline struct kvm_vcpu *synic_to_vcpu(struct kvm_vcpu_hv_synic *synic)
->  	return hv_vcpu_to_vcpu(container_of(synic, struct kvm_vcpu_hv, synic));
->  }
->  
-> +static inline struct kvm_hv_syndbg *vcpu_to_hv_syndbg(struct kvm_vcpu *vcpu)
-> +{
-> +	return &vcpu->kvm->arch.hyperv.hv_syndbg;
-> +}
-> +
->  int kvm_hv_set_msr_common(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host);
->  int kvm_hv_get_msr_common(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata, bool host);
->  
-> @@ -83,6 +88,7 @@ void kvm_hv_irq_routing_update(struct kvm *kvm);
->  int kvm_hv_synic_set_irq(struct kvm *kvm, u32 vcpu_id, u32 sint);
->  void kvm_hv_synic_send_eoi(struct kvm_vcpu *vcpu, int vector);
->  int kvm_hv_activate_synic(struct kvm_vcpu *vcpu, bool dont_zero_synic_pages);
-> +void kvm_hv_activate_syndbg(struct kvm_vcpu *vcpu);
->  
->  void kvm_hv_vcpu_init(struct kvm_vcpu *vcpu);
->  void kvm_hv_vcpu_postcreate(struct kvm_vcpu *vcpu);
-> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-> index f194dd058470..bf6c3852868d 100644
-> --- a/arch/x86/kvm/trace.h
-> +++ b/arch/x86/kvm/trace.h
-> @@ -1515,6 +1515,57 @@ TRACE_EVENT(kvm_nested_vmenter_failed,
->  		__print_symbolic(__entry->err, VMX_VMENTER_INSTRUCTION_ERRORS))
->  );
->  
-> +/*
-> + * Tracepoint for syndbg_set_msr.
-> + */
-> +TRACE_EVENT(kvm_hv_syndbg_set_msr,
-> +	TP_PROTO(int vcpu_id, u32 vp_index, u32 msr, u64 data),
-> +	TP_ARGS(vcpu_id, vp_index, msr, data),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(int, vcpu_id)
-> +		__field(u32, vp_index)
-> +		__field(u32, msr)
-> +		__field(u64, data)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->vcpu_id = vcpu_id;
-> +		__entry->vp_index = vp_index;
-> +		__entry->msr = msr;
-> +		__entry->data = data;
-> +	),
-> +
-> +	TP_printk("vcpu_id %d vp_index %u msr 0x%x data 0x%llx",
-> +		  __entry->vcpu_id, __entry->vp_index, __entry->msr,
-> +		  __entry->data)
-> +);
-> +
-> +/*
-> + * Tracepoint for syndbg_get_msr.
-> + */
-> +TRACE_EVENT(kvm_hv_syndbg_get_msr,
-> +	TP_PROTO(int vcpu_id, u32 vp_index, u32 msr, u64 data),
-> +	TP_ARGS(vcpu_id, vp_index, msr, data),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(int, vcpu_id)
-> +		__field(u32, vp_index)
-> +		__field(u32, msr)
-> +		__field(u64, data)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->vcpu_id = vcpu_id;
-> +		__entry->vp_index = vp_index;
-> +		__entry->msr = msr;
-> +		__entry->data = data;
-> +	),
-> +
-> +	TP_printk("vcpu_id %d vp_index %u msr 0x%x data 0x%llx",
-> +		  __entry->vcpu_id, __entry->vp_index, __entry->msr,
-> +		  __entry->data)
-> +);
->  #endif /* _TRACE_KVM_H */
->  
->  #undef TRACE_INCLUDE_PATH
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 3156e25b0774..7bfa30d7a525 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1214,6 +1214,10 @@ static const u32 emulated_msrs_all[] = {
->  	HV_X64_MSR_VP_ASSIST_PAGE,
->  	HV_X64_MSR_REENLIGHTENMENT_CONTROL, HV_X64_MSR_TSC_EMULATION_CONTROL,
->  	HV_X64_MSR_TSC_EMULATION_STATUS,
-> +	HV_X64_MSR_SYNDBG_OPTIONS,
-> +	HV_X64_MSR_SYNDBG_CONTROL, HV_X64_MSR_SYNDBG_STATUS,
-> +	HV_X64_MSR_SYNDBG_SEND_BUFFER, HV_X64_MSR_SYNDBG_RECV_BUFFER,
-> +	HV_X64_MSR_SYNDBG_PENDING_BUFFER,
->  
->  	MSR_KVM_ASYNC_PF_EN, MSR_KVM_STEAL_TIME,
->  	MSR_KVM_PV_EOI_EN,
-> @@ -2906,6 +2910,8 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		 */
->  		break;
->  	case HV_X64_MSR_GUEST_OS_ID ... HV_X64_MSR_SINT15:
-> +	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
-> +	case HV_X64_MSR_SYNDBG_OPTIONS:
->  	case HV_X64_MSR_CRASH_P0 ... HV_X64_MSR_CRASH_P4:
->  	case HV_X64_MSR_CRASH_CTL:
->  	case HV_X64_MSR_STIMER0_CONFIG ... HV_X64_MSR_STIMER3_COUNT:
-> @@ -3151,6 +3157,8 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		msr_info->data = 0x20000000;
->  		break;
->  	case HV_X64_MSR_GUEST_OS_ID ... HV_X64_MSR_SINT15:
-> +	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
-> +	case HV_X64_MSR_SYNDBG_OPTIONS:
->  	case HV_X64_MSR_CRASH_P0 ... HV_X64_MSR_CRASH_P4:
->  	case HV_X64_MSR_CRASH_CTL:
->  	case HV_X64_MSR_STIMER0_CONFIG ... HV_X64_MSR_STIMER3_COUNT:
-> @@ -3323,6 +3331,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->  	case KVM_CAP_HYPERV_TLBFLUSH:
->  	case KVM_CAP_HYPERV_SEND_IPI:
->  	case KVM_CAP_HYPERV_CPUID:
-> +	case KVM_CAP_HYPERV_SYNDBG:
->  	case KVM_CAP_PCI_SEGMENT:
->  	case KVM_CAP_DEBUGREGS:
->  	case KVM_CAP_X86_ROBUST_SINGLESTEP:
-> @@ -4178,6 +4187,10 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
->  		return -EINVAL;
->  
->  	switch (cap->cap) {
-> +	case KVM_CAP_HYPERV_SYNDBG:
-> +		kvm_hv_activate_syndbg(vcpu);
-> +		return 0;
-> +
->  	case KVM_CAP_HYPERV_SYNIC2:
->  		if (cap->args[0])
->  			return -EINVAL;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 7ee0ddc4c457..0b573e1155c8 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -188,6 +188,7 @@ struct kvm_s390_cmma_log {
->  struct kvm_hyperv_exit {
->  #define KVM_EXIT_HYPERV_SYNIC          1
->  #define KVM_EXIT_HYPERV_HCALL          2
-> +#define KVM_EXIT_HYPERV_SYNDBG         3
->  	__u32 type;
->  	__u32 pad1;
->  	union {
-> @@ -203,6 +204,15 @@ struct kvm_hyperv_exit {
->  			__u64 result;
->  			__u64 params[2];
->  		} hcall;
-> +		struct {
-> +			__u32 msr;
-> +			__u32 pad2;
-> +			__u64 control;
-> +			__u64 status;
-> +			__u64 send_page;
-> +			__u64 recv_page;
-> +			__u64 pending_page;
-> +		} syndbg;
->  	} u;
->  };
->  
-> @@ -1012,6 +1022,7 @@ struct kvm_ppc_resize_hpt {
->  #define KVM_CAP_ARM_NISV_TO_USER 177
->  #define KVM_CAP_ARM_INJECT_EXT_DABT 178
->  #define KVM_CAP_S390_VCPU_RESETS 179
-> +#define KVM_CAP_HYPERV_SYNDBG 180
->  
->  #ifdef KVM_CAP_IRQ_ROUTING
+ arch/x86/kernel/cpu/mshyperv.c | 10 ++++++++
+ drivers/hv/channel_mgmt.c      |  3 +++
+ drivers/hv/vmbus_drv.c         | 55 ++++++++++++++++++++++++++++--------------
+ 3 files changed, 50 insertions(+), 18 deletions(-)
 
 -- 
-Vitaly
+2.14.5
 
