@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE7ED18F22E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2020 10:53:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1313618F289
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2020 11:16:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbgCWJx0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 23 Mar 2020 05:53:26 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:30477 "EHLO
+        id S1727829AbgCWKQr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 Mar 2020 06:16:47 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:25502 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727738AbgCWJxZ (ORCPT
+        by vger.kernel.org with ESMTP id S1727842AbgCWKQr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:53:25 -0400
+        Mon, 23 Mar 2020 06:16:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584957204;
+        s=mimecast20190719; t=1584958605;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=VPD/Jl19hS8LZpj/pgb6n0uGZoGyOvZALf7c52VQrx0=;
-        b=M8Qc5BB2PNsvHbRy7T+7eBpesAJkyc6nSktbwho/j8RqzQsH5WlDaRU5Nl2Z0oNWGSEhbI
-        NrceOWRW8Ntx1rJtk6kmeHTh+nSHa0sW0IlPJMMTX5d2shZF2y2E3JrzckmtsmtD4dDvcI
-        bLLaQ8l8yesDTXEBGWGYqjugNlxFSDw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-GvtjfxdINnOWBVr3WOZujA-1; Mon, 23 Mar 2020 05:53:23 -0400
-X-MC-Unique: GvtjfxdINnOWBVr3WOZujA-1
-Received: by mail-wm1-f69.google.com with SMTP id w9so727560wmi.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 23 Mar 2020 02:53:22 -0700 (PDT)
+        bh=DHX3G/HAJrIPBm/kQCkLNNm+40k06i4E5QNgUcCEDS4=;
+        b=Fs7NJlQCfq/aPTIV+oAQdyc5cxyxgeZMeamo+YbUnTGEUdhoj29zLvNXK53aSXmAcZ3NCn
+        GxAxR5bmXDRe8UkuWqih0A8GVorTMkNz1TfmR51Ni1AU//nvoWNbeGPel62LsMCsEGhVaK
+        3H0IF8BaHNZhF31MqRpgRFcy+s8DO44=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-201-rCZrNJXNNZC_eiOVnbfQCA-1; Mon, 23 Mar 2020 06:16:43 -0400
+X-MC-Unique: rCZrNJXNNZC_eiOVnbfQCA-1
+Received: by mail-wr1-f70.google.com with SMTP id i18so7108110wrx.17
+        for <linux-hyperv@vger.kernel.org>; Mon, 23 Mar 2020 03:16:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=VPD/Jl19hS8LZpj/pgb6n0uGZoGyOvZALf7c52VQrx0=;
-        b=j74yA9M3Z6Us35gDoDEzlG+JZREbUR7hSzJI1sRaX4ltRt0bFAAF/61KzEgjmxP1/M
-         h3QsT2+OSNahPuXAycnzqyYRMbH8aO5M12C2gAgwu2d0bBQSH29QWBzyitauR47/U5Zr
-         Nn22IMP5zttEH4NuK6YpD4OAoTHzSj8htFNmoSGLulzlPsxDGI+HvYTE3kvr7InHIpec
-         5Lx4fq1WZfhsJkMs1QkqaDIn9YdWuFb0ht3WwchHoxfh1oh/ltWGxzp1J1kwxhsebSFY
-         F4zRsBsFUBX3tRSCt6EmPDxMZf6NtTwWo4M0sp9AW3aEFgL2hrWT5ePLzzcXEHJ5VKAs
-         hsdg==
-X-Gm-Message-State: ANhLgQ3re9as5NAH8VDi6Q4Y9SwkbX0WWPgWq3GfZyQiAmyCxGUngxaO
-        LlS5N0HcGe092hc5AFqcwSofZRdGQ6HwuFKZ7Do9bhZsieJb/wVZqArTOi7nLaDU0gKPZNlzhTX
-        2wFouF8mV0jL+SUgnk+1H+Ax0
-X-Received: by 2002:a1c:3241:: with SMTP id y62mr27598458wmy.66.1584957201449;
-        Mon, 23 Mar 2020 02:53:21 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtwCAOGgPAR0vwL4cDhzymGqUrzBFlAq+C1qd3tAwY4wzCvAxHsdZwLP/SPzxu8jkejeHa20A==
-X-Received: by 2002:a1c:3241:: with SMTP id y62mr27598435wmy.66.1584957201245;
-        Mon, 23 Mar 2020 02:53:21 -0700 (PDT)
+        bh=DHX3G/HAJrIPBm/kQCkLNNm+40k06i4E5QNgUcCEDS4=;
+        b=QCfPAAJYVubKlFXYmTf2oy8Fd6IKKRL8zru7KKMKQwoF3MVlBzPC4KJi7jcqWWvW9S
+         1Tp3sHbBQ2dvluzjqC2/NOED63nMirly3U2cq6v7PKJfb5yrMoMozVZ5PEKJ7jpwnP1d
+         iYjnpcQJsU2XEIfCkwgq1MxhtD2daAjxtFJW5OMi1IbXsfXEvlhIYMj3QZYXUPE0pNdK
+         tfxw0W2YS300D8DRvLmuTZ7BjgVuY8zQtmdswS9UaAcS18NGD3NuAlInoITOeKZ6emjg
+         BDje5jrjo+uXwF/IH1AieDBTBoBw51AzaiB0hARBsm0YiPnUFf9N4/LSuHXV12K1skGk
+         Oi+A==
+X-Gm-Message-State: ANhLgQ2lN+h6RejEG3WzP8DMRUIEyJk2mpZxaGQTkQA1su3YLkl3cTpU
+        8aeA3V06UYVlrn/4+O0eDPu0gYVqZDn51n7hqdHJywpS4otEwxV+VFQv0a6JrguW3Ufw+d9PyzI
+        QcpHOkpwleYORBe7CkArMYl+O
+X-Received: by 2002:a1c:4486:: with SMTP id r128mr24718309wma.32.1584958602089;
+        Mon, 23 Mar 2020 03:16:42 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuJITYZqrWvgDgsRVuualAmEYTKCOGhQ9kmRfo0Nn5X36UgOsGqcqcIf9m9XhMHrf4L5zgKcg==
+X-Received: by 2002:a1c:4486:: with SMTP id r128mr24718208wma.32.1584958600836;
+        Mon, 23 Mar 2020 03:16:40 -0700 (PDT)
 Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id v7sm21926822wml.18.2020.03.23.02.53.20
+        by smtp.gmail.com with ESMTPSA id k204sm7418938wma.17.2020.03.23.03.16.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 02:53:20 -0700 (PDT)
+        Mon, 23 Mar 2020 03:16:40 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Jon Doron <arilou@gmail.com>
 Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v9 1/6] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
-In-Reply-To: <20200320172839.1144395-2-arilou@gmail.com>
-References: <20200320172839.1144395-1-arilou@gmail.com> <20200320172839.1144395-2-arilou@gmail.com>
-Date:   Mon, 23 Mar 2020 10:53:19 +0100
-Message-ID: <87zhc79z3k.fsf@vitty.brq.redhat.com>
+Subject: Re: [PATCH v9 2/6] x86/kvm/hyper-v: Simplify addition for custom cpuid leafs
+In-Reply-To: <20200320172839.1144395-3-arilou@gmail.com>
+References: <20200320172839.1144395-1-arilou@gmail.com> <20200320172839.1144395-3-arilou@gmail.com>
+Date:   Mon, 23 Mar 2020 11:16:39 +0100
+Message-ID: <87wo7b9y0o.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
@@ -67,66 +67,103 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Jon Doron <arilou@gmail.com> writes:
 
-> The problem the patch is trying to address is the fact that 'struct
-> kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
-> modes.
+> Simlify the code to define a new cpuid leaf group by enabled feature.
 >
-> In 64-bit mode the default alignment boundary is 64 bits thus
-> forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
-> boundary is at 32 bits thus no extra gaps.
+> This also fixes a bug in which the max cpuid leaf was always set to
+> HYPERV_CPUID_NESTED_FEATURES regardless if nesting is supported or not.
 >
-> This is an issue as even when the kernel is 64 bit, the userspace using
-> the interface can be both 32 and 64 bit but the same 32 bit userspace has
-> to work with 32 bit kernel.
->
-> The issue is fixed by forcing the 64 bit layout, this leads to ABI
-> change for 32 bit builds and while we are obviously breaking '32 bit
-> userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
-> with 64 bit kernel' one.
->
-> As the interface has no (known) users and 32 bit KVM is rather baroque
-> nowadays, this seems like a reasonable decision.
+> Any new CPUID group needs to consider the max leaf and be added in the
+> correct order, in this method there are two rules:
+> 1. Each cpuid leaf group must be order in an ascending order
+> 2. The appending for the cpuid leafs by features also needs to happen by
+>    ascending order.
 >
 > Signed-off-by: Jon Doron <arilou@gmail.com>
 > ---
->  Documentation/virt/kvm/api.rst | 2 ++
->  include/uapi/linux/kvm.h       | 2 ++
->  2 files changed, 4 insertions(+)
+>  arch/x86/kvm/hyperv.c | 46 ++++++++++++++++++++++++++++++-------------
+>  1 file changed, 32 insertions(+), 14 deletions(-)
 >
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index ebd383fba939..4872c47bbcff 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -5025,9 +5025,11 @@ EOI was received.
->    #define KVM_EXIT_HYPERV_SYNIC          1
->    #define KVM_EXIT_HYPERV_HCALL          2
->  			__u32 type;
-> +			__u32 pad1;
->  			union {
->  				struct {
->  					__u32 msr;
-> +					__u32 pad2;
->  					__u64 control;
->  					__u64 evt_page;
->  					__u64 msg_page;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 4b95f9a31a2f..7ee0ddc4c457 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
->  #define KVM_EXIT_HYPERV_SYNIC          1
->  #define KVM_EXIT_HYPERV_HCALL          2
->  	__u32 type;
-> +	__u32 pad1;
->  	union {
->  		struct {
->  			__u32 msr;
-> +			__u32 pad2;
->  			__u64 control;
->  			__u64 evt_page;
->  			__u64 msg_page;
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index a86fda7a1d03..7383c7e7d4af 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1785,27 +1785,45 @@ int kvm_vm_ioctl_hv_eventfd(struct kvm *kvm, struct kvm_hyperv_eventfd *args)
+>  	return kvm_hv_eventfd_assign(kvm, args->conn_id, args->fd);
+>  }
+>  
+> +// Must be sorted in ascending order by function
 
-Already said that on v8 but the tag got lost,
+scripts/checkpatch.pl should've complained here, kernel coding style
+always requires /* */ 
+
+> +static struct kvm_cpuid_entry2 core_cpuid_entries[] = {
+> +	{ .function = HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS },
+> +	{ .function = HYPERV_CPUID_INTERFACE },
+> +	{ .function = HYPERV_CPUID_VERSION },
+> +	{ .function = HYPERV_CPUID_FEATURES },
+> +	{ .function = HYPERV_CPUID_ENLIGHTMENT_INFO },
+> +	{ .function = HYPERV_CPUID_IMPLEMENT_LIMITS },
+> +};
+> +
+> +static struct kvm_cpuid_entry2 evmcs_cpuid_entries[] = {
+> +	{ .function = HYPERV_CPUID_NESTED_FEATURES },
+> +};
+> +
+> +#define HV_MAX_CPUID_ENTRIES \
+> +	ARRAY_SIZE(core_cpuid_entries) +\
+> +	ARRAY_SIZE(evmcs_cpuid_entries)
+> +
+>  int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>  				struct kvm_cpuid_entry2 __user *entries)
+>  {
+>  	uint16_t evmcs_ver = 0;
+> -	struct kvm_cpuid_entry2 cpuid_entries[] = {
+> -		{ .function = HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS },
+> -		{ .function = HYPERV_CPUID_INTERFACE },
+> -		{ .function = HYPERV_CPUID_VERSION },
+> -		{ .function = HYPERV_CPUID_FEATURES },
+> -		{ .function = HYPERV_CPUID_ENLIGHTMENT_INFO },
+> -		{ .function = HYPERV_CPUID_IMPLEMENT_LIMITS },
+> -		{ .function = HYPERV_CPUID_NESTED_FEATURES },
+> -	};
+> -	int i, nent = ARRAY_SIZE(cpuid_entries);
+> +	struct kvm_cpuid_entry2 cpuid_entries[HV_MAX_CPUID_ENTRIES];
+> +	int i, nent = 0;
+> +
+> +	/* Set the core cpuid entries required for Hyper-V */
+> +	memcpy(&cpuid_entries[nent], &core_cpuid_entries,
+> +	       sizeof(core_cpuid_entries));
+> +	nent += ARRAY_SIZE(core_cpuid_entries);
+
+Strictly speaking "+=" is not needed here as nent is zero.
+
+>  
+>  	if (kvm_x86_ops->nested_get_evmcs_version)
+>  		evmcs_ver = kvm_x86_ops->nested_get_evmcs_version(vcpu);
+>  
+> -	/* Skip NESTED_FEATURES if eVMCS is not supported */
+> -	if (!evmcs_ver)
+> -		--nent;
+> +	if (evmcs_ver) {
+> +		/* EVMCS is enabled, add the required EVMCS CPUID leafs */
+> +		memcpy(&cpuid_entries[nent], &evmcs_cpuid_entries,
+> +		       sizeof(evmcs_cpuid_entries));
+> +		nent += ARRAY_SIZE(evmcs_cpuid_entries);
+> +	}
+>  
+>  	if (cpuid->nent < nent)
+>  		return -E2BIG;
+> @@ -1821,7 +1839,7 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>  		case HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS:
+>  			memcpy(signature, "Linux KVM Hv", 12);
+>  
+> -			ent->eax = HYPERV_CPUID_NESTED_FEATURES;
+> +			ent->eax = cpuid_entries[nent - 1].function;
+>  			ent->ebx = signature[0];
+>  			ent->ecx = signature[1];
+>  			ent->edx = signature[2];
+
+With the nitpicks mentioned above:
 
 Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
