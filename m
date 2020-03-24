@@ -2,189 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D975718FB47
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Mar 2020 18:20:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60DF2190679
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Mar 2020 08:44:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbgCWRUP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 23 Mar 2020 13:20:15 -0400
-Received: from mail-eopbgr700130.outbound.protection.outlook.com ([40.107.70.130]:31073
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727798AbgCWRUO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:20:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oRw0EEaxLWOe24U3RW3Eyp/hRKioZ2X7zBTZrQgUcBGC2yIwAd+P+yVmoNtEo3ekRJoEaaO0dMUYkousxZHg6cCF7trpbxxzHCuv76u56CctMp6FIQIyDw7uGBGzTBl9SFWEmhKYIObmdXIBLALPqqg5NyEqR3+YHZEzOEjt1GMbRbJf8qXJ8d6MF+OA7IwxhaqCXP104OVOM5ty/Zk/E2zI5W+rZUcwuTo89MJmhefTSg1KzzCjbRy2aVwEE3/ALtV9tqmmtTyr3pCU3CGy7BwMtNPN9t0fmuOiRHeTT2wYozKhWm41hbD1idrisw8WWPp3DKI3nOtieq7wmhhdIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lEplDzGh4T7u0JH16MNhdqmyUuIclrkKCy0E33UACGE=;
- b=FnH3/GNurx/989W0+EqmVm1o73Ow6E5p3YQKqzZ/P25bNBJEZemhuXcX0QenXRZUhLJI6N/pOB1VQY1Ot22fqPh0qCSqd0MQYULYU2YJTPf1g2VtDeEkW1Oe45tl3KX+tgeLUnqzA7g4icFEZlv4ElogxEiteCRyKyvKKTE6Cinq/lDqMzNY7b2KhEooSfrRZ7b8c5J3kRdIfahIqFDhQiLUKaLlasHzoXOSA1y7WbKmBiXwsluUKvC2Cd2SjwTT3UM7wyTLXaV6DvJo1ErglkGvD+miVLH66iqeb6Ad6zaBd52wtZqXp8iP5x1JberGxIjlTHHSiMaq1Ie7LRJ1jw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lEplDzGh4T7u0JH16MNhdqmyUuIclrkKCy0E33UACGE=;
- b=fBNm+ZFbCVmVmIwBarf5mVccBnYtp2kA6buzsvbO3J7Y+q7nAvrIjjX//X/pvnP0v8aWJ2zQ6n8FLwiZiqWNzNPwNqxnGKVJxJL3XzgMErfq5EN5xiip08bSJfNCvtPOTecBMhrg3yPRE99xsvbQh7rojIEqqXEJhbs++bxp8GI=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1082.namprd21.prod.outlook.com (2603:10b6:302:a::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.3; Mon, 23 Mar
- 2020 17:20:11 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.000; Mon, 23 Mar 2020
- 17:20:11 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH V2 5/6] x86/Hyper-V: Report crash register data when
- sysctl_record_panic_msg is not set
-Thread-Topic: [PATCH V2 5/6] x86/Hyper-V: Report crash register data when
- sysctl_record_panic_msg is not set
-Thread-Index: AQHWARRUrrwMia1OG0mfkGulskmHi6hWa8Mw
-Date:   Mon, 23 Mar 2020 17:20:11 +0000
-Message-ID: <MW2PR2101MB105226EC2D8216C68069BA62D7F00@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200323130924.2968-1-Tianyu.Lan@microsoft.com>
- <20200323130924.2968-6-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200323130924.2968-6-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-23T17:20:09.5277337Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=37656e74-dec3-4610-a186-1ed9d1ab9a36;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 553935cb-f37d-4674-2d50-08d7cf4e71b8
-x-ms-traffictypediagnostic: MW2PR2101MB1082:|MW2PR2101MB1082:|MW2PR2101MB1082:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB1082693A4670D48B25DFB467D7F00@MW2PR2101MB1082.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 0351D213B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(199004)(66446008)(54906003)(5660300002)(71200400001)(10290500003)(110136005)(186003)(26005)(2906002)(8990500004)(8936002)(52536014)(316002)(4326008)(478600001)(81166006)(81156014)(66946007)(76116006)(33656002)(6506007)(66556008)(6636002)(66476007)(8676002)(64756008)(7696005)(9686003)(55016002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1082;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YlBmqkpel9JHvs/WyOf4AQ5nbAftD5liasPM3BmxzMEhTrTO3cRosHJAbvUIIbV8RHk46hgOhil5V/4wJpHCpr5PBk0mxOAbbClQ9zdGBXrtnxisZsa8ZDHqfhtU7oNTRBhS9Uz13V/Kz4t8pH1wIq4EY2FV7kcS3om5Lo/TzaUxMV4dDjBnXYvPEUsFJHy71Fik+m/Lmn9G0c17KfrBHVA9R5XO5B2GVbrUgBEgS8hAaDmzGiDdlG7bHMmwg55Kad+CxoKEvgo8gpARw9VI9CJER0k2YIgRxfmMsksJcbXRubgYt63yn/n3WbVqdW33Q2yJX9osxpD5/W2K0aunUwPtCj9x0K4KLkRMn0U2EvkW8897II7U1NWgrMVrFy3qR5M6YtDOBwxYoUmL+y86le4GwfNQJd8KMHK/zUUd0xpWSi7ir7vud9zuVN9Lc07+
-x-ms-exchange-antispam-messagedata: JGHvemFtt2X5QMIxw72nabDHDxDRF4+ERxRppQt073XVMOqxUZ3ims5GAwcz1651BOSVgbQ8pkzUYjpkvtLQjY9gPRxBMDUFjOL+JuFdxTMaST0fPhbG0ii6mYJVuunZVLesjYzkvNMHNGjVn5NwIw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725923AbgCXHoA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 24 Mar 2020 03:44:00 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37247 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727291AbgCXHn7 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 24 Mar 2020 03:43:59 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d1so2310735wmb.2;
+        Tue, 24 Mar 2020 00:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x83RKqJB2n+t2r4ylEIrnwFiRIR5HK76vMGn1RDuu7o=;
+        b=XynFwbRUPKgZuXP41JonwGOogmnAma+S9VOj5HINOPYCNrMNteFbUrS7b6Jg15Mtfi
+         DYDA1ENVBivYbMky3PV7SqTquxjJTV25rvQnxi4yLEv9s4MYrRj8RZJq2v40jONwxzPm
+         OAzO7CCIHPXTtUJ0xj3lZKiUkQoyrXepE2HzTqzYbJlaBBvis5P4wQadOX3CBjHBsESN
+         Xee54oYy4+4MbSqoZUKuDKAD9Ldb82gLtwS2yNA7DMT9cTU0StC6zwahzMCx3jclqxaJ
+         kH40jDs/iN7cq/l6U1Byu1DEB1RIyF+oB4dy1QSLzdiQJkRjMEEoQVB0D7BuoiutytHU
+         DLgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x83RKqJB2n+t2r4ylEIrnwFiRIR5HK76vMGn1RDuu7o=;
+        b=Jl0mre1uIaa2BqNx4oFt6erBiEC6/QDUsi9jvrtEXIRGhCOPqXIz9MSE+53OgET0ae
+         PlEk6B1tIXoC8AeLkrsaQDfCif4VFBv8366/eKlFTxB7+Ez6defSkXQcnZTrldAEd4Kp
+         SKhn0cnZhrKGt0TXsADRAlIKqQZggG+6MT6UZS521girsSN+xjhoTtZuHfKhmxs87mcQ
+         kWhYMvP0Oc2Yojqo2iAWA5O2m0Uj5cv5aadKZTxfsGdUaf1nqfgSDfKD98DG3jhY4xlT
+         3SprxrqLm5noCVDiH91oDYIAVe3OGxVmFqRF100JtmGy+2Z1HKJ+qb9iBjk4zpoZyqVI
+         lL4A==
+X-Gm-Message-State: ANhLgQ39BRIDB4gcXGpa5OMvOKN1WNFJZl2CIaddRVDpEuvmZjb3DlVw
+        lirAtGnxKarpsndUpEKFACL04T0mtYU=
+X-Google-Smtp-Source: ADFU+vuoTuJk1O6fps0iDtVnZm53HrP55jyibUyS6XqsTR2zqW67EDU6IZhQFJOlPL3XTsh0o9Qt0Q==
+X-Received: by 2002:a7b:c8cc:: with SMTP id f12mr3543254wml.172.1585035837456;
+        Tue, 24 Mar 2020 00:43:57 -0700 (PDT)
+Received: from jondnuc.lan (IGLD-84-229-155-229.inter.net.il. [84.229.155.229])
+        by smtp.gmail.com with ESMTPSA id r15sm22066122wra.19.2020.03.24.00.43.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 00:43:56 -0700 (PDT)
+From:   Jon Doron <arilou@gmail.com>
+To:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     vkuznets@redhat.com, Jon Doron <arilou@gmail.com>
+Subject: [PATCH v10 0/7] x86/kvm/hyper-v: add support for synthetic debugger
+Date:   Tue, 24 Mar 2020 09:43:34 +0200
+Message-Id: <20200324074341.1770081-1-arilou@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 553935cb-f37d-4674-2d50-08d7cf4e71b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2020 17:20:11.6350
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r80ay12O4gyzFvRsdXZ8gYeFqnyfH+/zz7KgKG+GgxmWp8xkFKhMxv+epC8FsqSmr8k2XNj9VXy7JWQUqlw/YxNdyf8b88yXArJ9lCDPYdQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1082
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Monday, March 23, 2020 6:=
-09 AM
->=20
-> When sysctl_record_panic_msg is not set, kmsg will
-> not be reported to Hyper-V. Crash register data should
-> be reported via hyperv_report_panic() in such case.
+Add support for the synthetic debugger interface of hyper-v, the
+synthetic debugger has 2 modes.
+1. Use a set of MSRs to send/recv information (undocumented so it's not
+   going to the hyperv-tlfs.h)
+2. Use hypercalls
 
-Tweaking the wording:
+The first mode is based the following MSRs:
+1. Control/Status MSRs which either asks for a send/recv .
+2. Send/Recv MSRs each holds GPA where the send/recv buffers are.
+3. Pending MSR, holds a GPA to a PAGE that simply has a boolean that
+   indicates if there is data pending to issue a recv VMEXIT.
 
-When sysctl_record_panic_msg is not set, the panic will
-not be reported to Hyper-V via hyperv_report_panic_msg().
-So the crash should be reported via hyperv_report_panic().
+The first mode implementation is to simply exit to user-space when
+either the control MSR or the pending MSR are being set.
+Then it's up-to userspace to implement the rest of the logic of sending/recving.
 
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index d73fa8aa00a3..00447175c040 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -48,6 +48,18 @@ static int hyperv_cpuhp_online;
->=20
->  static void *hv_panic_page;
->=20
-> +/*
-> + * Boolean to control whether to report panic messages over Hyper-V.
-> + *
-> + * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
-> + */
-> +static int sysctl_record_panic_msg =3D 1;
-> +
-> +static int hyperv_report_reg(void)
-> +{
-> +	return !sysctl_record_panic_msg || !hv_panic_page;
-> +}
-> +
->  static int hyperv_panic_event(struct notifier_block *nb, unsigned long v=
-al,
->  			      void *args)
->  {
-> @@ -60,7 +72,7 @@ static int hyperv_panic_event(struct notifier_block *nb=
-, unsigned long
-> val,
->  	 * message is available, just report kmsg to crash buffer.
->  	 */
->  	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
-> -	    && !hv_panic_page) {
-> +	    && hyperv_report_reg()) {
->  		regs =3D current_pt_regs();
->  		hyperv_report_panic(regs, val);
->  	}
-> @@ -77,7 +89,7 @@ static int hyperv_die_event(struct notifier_block *nb, =
-unsigned long
-> val,
->  	 * Crash notify only can be triggered once. If crash notify
->  	 * message is available, just report kmsg to crash buffer.
->  	 */
-> -	if (!hv_panic_page)
-> +	if (hyperv_report_reg())
->  		hyperv_report_panic(regs, val);
->  	return NOTIFY_DONE;
->  }
-> @@ -1265,13 +1277,6 @@ static void vmbus_isr(void)
->  	add_interrupt_randomness(HYPERVISOR_CALLBACK_VECTOR, 0);
->  }
->=20
-> -/*
-> - * Boolean to control whether to report panic messages over Hyper-V.
-> - *
-> - * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
-> - */
-> -static int sysctl_record_panic_msg =3D 1;
-> -
->  /*
->   * Callback from kmsg_dump. Grab as much as possible from the end of the=
- kmsg
->   * buffer and call into Hyper-V to transfer the data.
-> --
-> 2.14.5
+In the second mode instead of using MSRs KNet will simply issue
+Hypercalls with the information to send/recv, in this mode the data
+being transferred is UDP encapsulated, unlike in the previous mode in
+which you get just the data to send.
+
+The new hypercalls will exit to userspace which will be incharge of
+re-encapsulating if needed the UDP packets to be sent.
+
+There is an issue though in which KDNet does not respect the hypercall
+page and simply issues vmcall/vmmcall instructions depending on the cpu
+type expecting them to be handled as it a real hypercall was issued.
+
+It's important to note that part of this feature has been subject to be
+removed in future versions of Windows, which is why some of the
+defintions will not be present the the TLFS but in the kvm hyperv header
+instead.
+
+Jon Doron (6):
+  x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
+  x86/kvm/hyper-v: Simplify addition for custom cpuid leafs
+  x86/hyper-v: Add synthetic debugger definitions
+  x86/kvm/hyper-v: Add support for synthetic debugger capability
+  x86/kvm/hyper-v: enable hypercalls without hypercall page with syndbg
+  x86/kvm/hyper-v: Add support for synthetic debugger via hypercalls
+
+Vitaly Kuznetsov (1):
+  KVM: selftests: update hyperv_cpuid with SynDBG tests
+
+ Documentation/virt/kvm/api.rst                |  18 ++
+ arch/x86/include/asm/hyperv-tlfs.h            |   6 +
+ arch/x86/include/asm/kvm_host.h               |  14 +
+ arch/x86/kvm/hyperv.c                         | 242 ++++++++++++++++--
+ arch/x86/kvm/hyperv.h                         |  33 +++
+ arch/x86/kvm/trace.h                          |  51 ++++
+ arch/x86/kvm/x86.c                            |  13 +
+ include/uapi/linux/kvm.h                      |  13 +
+ .../selftests/kvm/x86_64/hyperv_cpuid.c       | 139 ++++++----
+ 9 files changed, 469 insertions(+), 60 deletions(-)
+
+-- 
+2.24.1
 
