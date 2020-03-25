@@ -2,49 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3F7C1933F6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2020 23:57:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E4781933F9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2020 23:57:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgCYW4g (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Mar 2020 18:56:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56154 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbgCYW4f (ORCPT
+        id S1727406AbgCYW4j (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Mar 2020 18:56:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35403 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727697AbgCYW4i (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:56:35 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z5so4614199wml.5;
-        Wed, 25 Mar 2020 15:56:34 -0700 (PDT)
+        Wed, 25 Mar 2020 18:56:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d5so5637833wrn.2;
+        Wed, 25 Mar 2020 15:56:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ohAWFBJQsgkoA1nFpeh6U+WJa1ZEf4/+VDN1X50qyIM=;
-        b=oVbQTDqTgZY2HGawhmaH1+TiMveSbwgOVwkxKpq/04rig9hVLUrBksr6kHeDkuvQtV
-         EOof3lFD7j67Aid+jw1LLYgCBoeBwl0E17cOnKlwKAEyJ2bFuxffskWwDVTK6BYkw+XH
-         dHJUo4jKmLAg+OUWabf0ONig8kruE6AuhVoB+h7HrarLgdJb/RUVvpi40d4ayJiyGRqT
-         ZKHDFtvq8njmk2kC74Ub2bflo8fLjxwRIaNkoTRTrXzbLnj9OolpUCzVh4/qTPXCM/Qy
-         bZ34g/7Sgr8GWATaaXiYHMKDfmRA1AaMuggQUIUJhb9m7PZO1uOx/0j35eoe9c45aheE
-         CX+Q==
+        bh=Jlb744j2w7u2ywLc5KHbzcT2pUNmcNIuqeG5ekKAtx8=;
+        b=AUly8PIvhWjtE2l0wV1QPLQnt657O6G0eElEYwR02WnCThOwx95zp18LyfEZOsOBh5
+         JGo0zWWlsBD84citXhbo+2ipbNO/LrDdIjPLU2AZpw3kDT5H/091F6Hj0ALozou5el0n
+         YHQUGXejMOwBUF2CDjxdJjcBZZuVfqVDXWKmRxydxqWEjEgl4T+s6n93HwYeOrS5wxS4
+         X6HtICpO+L4Z6rpo2j9abIZY8AzrKWvIdCPHx+ffYZeOj7zUBjutlDBKIcmJFdlz9PAS
+         BdbKziJHRsUsQyuViypIiSwkDEPTU4AQVL1uT8QHTHDI7A6skA39+4SJFCKCTpVv8Ssa
+         wJQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ohAWFBJQsgkoA1nFpeh6U+WJa1ZEf4/+VDN1X50qyIM=;
-        b=qUzbXnfuMegK68DNEr+U6NQpR39VV8zD9Z3IRf7Mw/vkHGgxG7UfdvZmVCzvi2lJ4b
-         WCWZg9AmHRE5Z3e1N5/VGzfbq/nuQ8lpaRod87in9fFAVZ5ZwhU0QR4Y4wT+NxGzw+ga
-         o1OCEilCHZ8+rvhVHJVK8DbGoQqqauvkl5G9Zq18U+kSLNhI6NSrZ39O0OswCXPmV1Hm
-         l6MYkD+RmCJ+DOTZsjDNxPQZSHYf86On6QfyyPGDHo8ynqP244DPYQCQ4ydyCcaL+nOe
-         kZpriOOLmacul7tgP5e934ZpPppEHCtATUVEep/4y6co6oAzDsnwqI8Q/Fd8KM/ue1qc
-         3bNQ==
-X-Gm-Message-State: ANhLgQ2RfshJexs0kmFKRFi6r5ZeBD7IhAaAFGeqrAsUYZ/9zdPrKtDV
-        AZ4tQAcadvn7/BKpDEEoUsIg6WSPL4ebMW9k
-X-Google-Smtp-Source: ADFU+vudwAqUs7wYNGydB7CgfxRB2fT5ujoFDhG1I6FHb7TW1PrKOv+UJrt7necVm6QgGZMmz4JZTg==
-X-Received: by 2002:a1c:721a:: with SMTP id n26mr5788219wmc.25.1585176993094;
-        Wed, 25 Mar 2020 15:56:33 -0700 (PDT)
+        bh=Jlb744j2w7u2ywLc5KHbzcT2pUNmcNIuqeG5ekKAtx8=;
+        b=IeT4LpEreitfOvGIUUpmAoVTB7JWvRayLENPnnqUkM6k8BKlnJ/Z3Fvoag75KwyrIy
+         5TW/lwlPM9IsGmx2Bgb6zAacdO1OTzdihNTQ8LMxMlLe12z8cf0mRZGmspi+x0WoCV8T
+         Ma5pLWCiyEFG/0iwvIZ9glTax5/AcxqzRS4tUQC1h5JCgLzobuZej2yOMv68h9RVc/vr
+         zloyOsCsqxHu0ZRH3VFwwZF/zCsAFxBrseGbQbCx2LHdheavlXpOWTk+4VMBhJWaLOxz
+         KQcTZItNftw1PG1X3KXGfhO0UJwE1v7YL6R5QBaljd77/+89Z9wgaQyCfjykfE2QQUbo
+         HOYA==
+X-Gm-Message-State: ANhLgQ2x8Y2EabR9aBvhmwURuHPz7QSc8+8rJO6YqgjEauCAhfNvGeTW
+        Rb9qMInwJiKlXMMqasTApFzdiOJTMBEeNfyw
+X-Google-Smtp-Source: ADFU+vvCKKWp/Le9zvNpGN2UiufUZrzdbC2FjPNBMmtlK8XAAmFG+9xOImKkR5d8jjHzOiFnlW9cMA==
+X-Received: by 2002:a5d:6082:: with SMTP id w2mr5862380wrt.300.1585176996120;
+        Wed, 25 Mar 2020 15:56:36 -0700 (PDT)
 Received: from andrea.corp.microsoft.com ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id q72sm790278wme.31.2020.03.25.15.56.32
+        by smtp.gmail.com with ESMTPSA id q72sm790278wme.31.2020.03.25.15.56.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 15:56:32 -0700 (PDT)
+        Wed, 25 Mar 2020 15:56:35 -0700 (PDT)
 From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
@@ -55,10 +55,13 @@ Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Dexuan Cui <decui@microsoft.com>,
         Boqun Feng <boqun.feng@gmail.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [RFC PATCH 06/11] Drivers: hv: vmbus: Use a spin lock for synchronizing channel scheduling vs. channel removal
-Date:   Wed, 25 Mar 2020 23:55:00 +0100
-Message-Id: <20200325225505.23998-7-parri.andrea@gmail.com>
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [RFC PATCH 07/11] PCI: hv: Prepare hv_compose_msi_msg() for the VMBus-channel-interrupt-to-vCPU reassignment functionality
+Date:   Wed, 25 Mar 2020 23:55:01 +0100
+Message-Id: <20200325225505.23998-8-parri.andrea@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200325225505.23998-1-parri.andrea@gmail.com>
 References: <20200325225505.23998-1-parri.andrea@gmail.com>
@@ -69,172 +72,137 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Since vmbus_chan_sched() dereferences the ring buffer pointer, we have
-to make sure that the ring buffer data structures don't get freed while
-such dereferencing is happening.  Current code does this by sending an
-IPI to the CPU that is allowed to access that ring buffer from interrupt
-level, cf., vmbus_reset_channel_cb().  But with the new functionality
-to allow changing the CPU that a channel will interrupt, we can't be
-sure what CPU will be running the vmbus_chan_sched() function for a
-particular channel, so the current IPI mechanism is infeasible.
+The current implementation of hv_compose_msi_msg() is incompatible with
+the new functionality that allows changing the vCPU a VMBus channel will
+interrupt: if this function always calls hv_pci_onchannelcallback() in
+the polling loop, the interrupt going to a different CPU could cause
+hv_pci_onchannelcallback() to be running simultaneously in a tasklet,
+which will break.  The current code also has a problem in that it is not
+synchronized with vmbus_reset_channel_cb(): hv_compose_msi_msg() could
+be accessing the ring buffer via the call of hv_pci_onchannelcallback()
+well after the time that vmbus_reset_channel_cb() has finished.
 
-Instead synchronize vmbus_chan_sched() and vmbus_reset_channel_cb() by
-using the (newly introduced) per-channel spin lock "sched_lock".  Move
-the test for onchannel_callback being NULL before the "switch" control
-statement in vmbus_chan_sched(), in order to not access the ring buffer
-if the vmbus_reset_channel_cb() has been completed on the channel.
+Fix these issues as follows.  Disable the channel tasklet before
+entering the polling loop in hv_compose_msi_msg() and re-enable it when
+done.  This will prevent hv_pci_onchannelcallback() from running in a
+tasklet on a different CPU.  Moreover, poll by always calling
+hv_pci_onchannelcallback(), but check the channel callback function for
+NULL and invoke the callback within a sched_lock critical section.  This
+will prevent hv_compose_msi_msg() from accessing the ring buffer after
+vmbus_reset_channel_cb() has acquired the sched_lock spinlock.
 
 Suggested-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: <linux-pci@vger.kernel.org>
 ---
- drivers/hv/channel.c      | 24 +++++++-----------------
- drivers/hv/channel_mgmt.c |  1 +
- drivers/hv/vmbus_drv.c    | 30 +++++++++++++++++-------------
- include/linux/hyperv.h    |  6 ++++++
- 4 files changed, 31 insertions(+), 30 deletions(-)
+ drivers/pci/controller/pci-hyperv.c | 44 ++++++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 256ee90c74460..132e476f87b2e 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -594,15 +594,10 @@ int vmbus_teardown_gpadl(struct vmbus_channel *channel, u32 gpadl_handle)
- }
- EXPORT_SYMBOL_GPL(vmbus_teardown_gpadl);
- 
--static void reset_channel_cb(void *arg)
--{
--	struct vmbus_channel *channel = arg;
--
--	channel->onchannel_callback = NULL;
--}
--
- void vmbus_reset_channel_cb(struct vmbus_channel *channel)
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 9977abff92fc5..e6020480a28b1 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1350,11 +1350,11 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
  {
-+	unsigned long flags;
+ 	struct irq_cfg *cfg = irqd_cfg(data);
+ 	struct hv_pcibus_device *hbus;
++	struct vmbus_channel *channel;
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_bus *pbus;
+ 	struct pci_dev *pdev;
+ 	struct cpumask *dest;
+-	unsigned long flags;
+ 	struct compose_comp_ctxt comp;
+ 	struct tran_int_desc *int_desc;
+ 	struct {
+@@ -1372,6 +1372,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	dest = irq_data_get_effective_affinity_mask(data);
+ 	pbus = pdev->bus;
+ 	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
++	channel = hbus->hdev->channel;
+ 	hpdev = get_pcichild_wslot(hbus, devfn_to_wslot(pdev->devfn));
+ 	if (!hpdev)
+ 		goto return_null_message;
+@@ -1428,43 +1429,52 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		goto free_int_desc;
+ 	}
+ 
++	/*
++	 * Prevents hv_pci_onchannelcallback() from running concurrently
++	 * in the tasklet.
++	 */
++	tasklet_disable(&channel->callback_event);
 +
  	/*
- 	 * vmbus_on_event(), running in the per-channel tasklet, can race
- 	 * with vmbus_close_internal() in the case of SMP guest, e.g., when
-@@ -618,17 +613,12 @@ void vmbus_reset_channel_cb(struct vmbus_channel *channel)
+ 	 * Since this function is called with IRQ locks held, can't
+ 	 * do normal wait for completion; instead poll.
  	 */
- 	tasklet_disable(&channel->callback_event);
+ 	while (!try_wait_for_completion(&comp.comp_pkt.host_event)) {
++		unsigned long flags;
++
+ 		/* 0xFFFF means an invalid PCI VENDOR ID. */
+ 		if (hv_pcifront_get_vendor_id(hpdev) == 0xFFFF) {
+ 			dev_err_once(&hbus->hdev->device,
+ 				     "the device has gone\n");
+-			goto free_int_desc;
++			goto enable_tasklet;
+ 		}
  
--	channel->sc_creation_callback = NULL;
-+	/* See the inline comments in vmbus_chan_sched(). */
-+	spin_lock_irqsave(&channel->sched_lock, flags);
-+	channel->onchannel_callback = NULL;
-+	spin_unlock_irqrestore(&channel->sched_lock, flags);
- 
--	/* Stop the callback asap */
--	if (channel->target_cpu != get_cpu()) {
--		put_cpu();
--		smp_call_function_single(channel->target_cpu, reset_channel_cb,
--					 channel, true);
--	} else {
--		reset_channel_cb(channel);
--		put_cpu();
--	}
-+	channel->sc_creation_callback = NULL;
- 
- 	/* Re-enable tasklet for use on re-open */
- 	tasklet_enable(&channel->callback_event);
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 9b1449c839575..c53f58ba06dcf 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -315,6 +315,7 @@ static struct vmbus_channel *alloc_channel(void)
- 	if (!channel)
- 		return NULL;
- 
-+	spin_lock_init(&channel->sched_lock);
- 	spin_lock_init(&channel->lock);
- 	init_completion(&channel->rescind_event);
- 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 301e3f484bb1a..ebe2716f583d2 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1147,18 +1147,6 @@ static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
- }
- #endif /* CONFIG_PM_SLEEP */
- 
--/*
-- * Direct callback for channels using other deferred processing
-- */
--static void vmbus_channel_isr(struct vmbus_channel *channel)
--{
--	void (*callback_fn)(void *);
--
--	callback_fn = READ_ONCE(channel->onchannel_callback);
--	if (likely(callback_fn != NULL))
--		(*callback_fn)(channel->channel_callback_context);
--}
--
- /*
-  * Schedule all channels with events pending
-  */
-@@ -1189,6 +1177,7 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
- 		return;
- 
- 	for_each_set_bit(relid, recv_int_page, maxbits) {
-+		void (*callback_fn)(void *context);
- 		struct vmbus_channel *channel;
- 
- 		if (!sync_test_and_clear_bit(relid, recv_int_page))
-@@ -1214,13 +1203,26 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
- 		if (channel->rescind)
- 			goto sched_unlock_rcu;
- 
-+		/*
+ 		/*
+-		 * When the higher level interrupt code calls us with
+-		 * interrupt disabled, we must poll the channel by calling
+-		 * the channel callback directly when channel->target_cpu is
+-		 * the current CPU. When the higher level interrupt code
+-		 * calls us with interrupt enabled, let's add the
+-		 * local_irq_save()/restore() to avoid race:
+-		 * hv_pci_onchannelcallback() can also run in tasklet.
 +		 * Make sure that the ring buffer data structure doesn't get
 +		 * freed while we dereference the ring buffer pointer.  Test
 +		 * for the channel's onchannel_callback being NULL within a
 +		 * sched_lock critical section.  See also the inline comments
 +		 * in vmbus_reset_channel_cb().
-+		 */
-+		spin_lock(&channel->sched_lock);
-+
-+		callback_fn = channel->onchannel_callback;
-+		if (unlikely(callback_fn == NULL))
-+			goto sched_unlock;
-+
- 		trace_vmbus_chan_sched(channel);
+ 		 */
+-		local_irq_save(flags);
+-
+-		if (hbus->hdev->channel->target_cpu == smp_processor_id())
+-			hv_pci_onchannelcallback(hbus);
+-
+-		local_irq_restore(flags);
++		spin_lock_irqsave(&channel->sched_lock, flags);
++		if (unlikely(channel->onchannel_callback == NULL)) {
++			spin_unlock_irqrestore(&channel->sched_lock, flags);
++			goto enable_tasklet;
++		}
++		hv_pci_onchannelcallback(hbus);
++		spin_unlock_irqrestore(&channel->sched_lock, flags);
  
- 		++channel->interrupts;
- 
- 		switch (channel->callback_mode) {
- 		case HV_CALL_ISR:
--			vmbus_channel_isr(channel);
-+			(*callback_fn)(channel->channel_callback_context);
- 			break;
- 
- 		case HV_CALL_BATCHED:
-@@ -1230,6 +1232,8 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
- 			tasklet_schedule(&channel->callback_event);
+ 		if (hpdev->state == hv_pcichild_ejecting) {
+ 			dev_err_once(&hbus->hdev->device,
+ 				     "the device is being ejected\n");
+-			goto free_int_desc;
++			goto enable_tasklet;
  		}
  
-+sched_unlock:
-+		spin_unlock(&channel->sched_lock);
- sched_unlock_rcu:
- 		rcu_read_unlock();
+ 		udelay(100);
  	}
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 6c794fd5c903e..ce32ab186192f 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -771,6 +771,12 @@ struct vmbus_channel {
- 	void (*onchannel_callback)(void *context);
- 	void *channel_callback_context;
  
-+	/*
-+	 * Synchronize channel scheduling and channel removal; see the inline
-+	 * comments in vmbus_chan_sched() and vmbus_reset_channel_cb().
-+	 */
-+	spinlock_t sched_lock;
++	tasklet_enable(&channel->callback_event);
 +
- 	/*
- 	 * A channel can be marked for one of three modes of reading:
- 	 *   BATCHED - callback called from taslket and should read
+ 	if (comp.comp_pkt.completion_status < 0) {
+ 		dev_err(&hbus->hdev->device,
+ 			"Request for interrupt failed: 0x%x",
+@@ -1488,6 +1498,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	put_pcichild(hpdev);
+ 	return;
+ 
++enable_tasklet:
++	tasklet_enable(&channel->callback_event);
+ free_int_desc:
+ 	kfree(int_desc);
+ drop_reference:
 -- 
 2.24.0
 
