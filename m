@@ -2,49 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 460331933F3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2020 23:57:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 334B91933F5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Mar 2020 23:57:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgCYW4a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Mar 2020 18:56:30 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51163 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgCYW43 (ORCPT
+        id S1727652AbgCYW4d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Mar 2020 18:56:33 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34565 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbgCYW4d (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:56:29 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d198so4657617wmd.0;
-        Wed, 25 Mar 2020 15:56:28 -0700 (PDT)
+        Wed, 25 Mar 2020 18:56:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 65so5643158wrl.1;
+        Wed, 25 Mar 2020 15:56:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gqq+iEQk0lZVQyUXxEQnFYPnI64DfK+xOeis6VQTmuE=;
-        b=q4VR61dCxBgohYEPkKRCQOIM9njZ7WHwbPCxRAzfHhBpBUwJvoouQnsnHnlpivflUH
-         UvaCYiPst365lEI/vTZ/iVKSmoGIPVjYVZwuTgMsbELnmfgyfPV2/8hi2+O45RG6PkSs
-         1ylQkyHfV3KbwL8Oh/N588A4fImAjiUnysKUj2WvlCuhsWkriCXlN4wrg6g9F2ToV25j
-         FhrWOkXUolrL9Ef7dxReJ88WGh18RCb4Iv7vpa9p9+hhrmtkjo8isnOEhb4X1VcCEf6n
-         kzknugsQsCon/JS3p5FT5HJjLaKfdgxAOjx8+oM+WZB7k7EFl3iCTSepHoQNiny396do
-         kqHg==
+        bh=STF+myRLvSklth1zGxjEGvZIDu7LBm45ZrQEkt2K5mo=;
+        b=qDNV2Go+Rh81SktAZfMei8oG+Ak88qULfReq0euWC7FcvFwjVEm1D1VgP1x96xOAg2
+         CJ+fOsnNqDJqHWJbBVpwtlz96Fg/Hj4g0AsgkdutDESlWU6xUme3Yls1a2DQkAKotZ3E
+         TxzuT77rXfVgvOAt8VYlxWl9bCyDKo03/xKzvN9MxfejxlqADldkC9RzIJ6t7sd+r0oT
+         AMb+z2VooZ0jxFuyskw43aZvD9t6212kT96FwbF0noge+QyDormnJPBen5TWTtDhs8Q/
+         dpupFOVXARhn73XfqV7yS3q3aIKDH/qD1fj5HwswTHZnarWiL+1ltjRyNge104WBYJ1j
+         9FWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gqq+iEQk0lZVQyUXxEQnFYPnI64DfK+xOeis6VQTmuE=;
-        b=IoKXomok/whtNFZ8sAHTgdW57GcCpl1VNDNXRIl/ciO25AWNOOq5iIk15mrBS1vB7a
-         U7VwWIRm4R1h1Es2GIk1e6CWFzQy1UjkPESQ0gdQuvQcT0l3ySvRtWP4AjaXnX3wcoIc
-         6fnWeW00er/Y0CI+YxslxsoCr8Eosiz6fOl8ocNHjl6sAWCIh18OOymmjoYvbD4O5uUp
-         R4VYhoSGjcwf2rhhHmLtJnlJ2DRj8uPqxq3OKHvW9Dc2TsnfDGlXHL62yG24/hICoWR0
-         mz8JtIWRqRwkSKQSU8mapn7QSz1HQXNUwjgqXSwLe6KjzsN1b+PpgQsTsMAepCdeyJr4
-         F5mA==
-X-Gm-Message-State: ANhLgQ3tt5d/+0s/vEGyFqIEYdEYZLhVt5oblVvKBOHJQ5NyDEBigJRV
-        yvEhwf6+eHjPIryCsGr5bCMKp+EVFVrvokHD
-X-Google-Smtp-Source: ADFU+vtWjgigRKaSwV3tAObFzQRLpgzZ00p3EIXLCXztBbzhVBlaaRYvJU8tYjngTITdXxv6Y7XUZw==
-X-Received: by 2002:a7b:c14d:: with SMTP id z13mr5583008wmi.94.1585176987072;
-        Wed, 25 Mar 2020 15:56:27 -0700 (PDT)
+        bh=STF+myRLvSklth1zGxjEGvZIDu7LBm45ZrQEkt2K5mo=;
+        b=ZQBwXAqNzDZAUjyIAuHRyuCKeSMZvBxJZneuPzHdyGhFUw7Mua72235C7H+5Ok78aR
+         oUabXatxvFcq7p640oSMhxBjoAJjr6jyX8xiQQT82UNxDXjcCliHb0hBSD/P5ZkBCjkc
+         OC3KtyhcFt3aO9i6wDz1V8u4WvbSNmg8i7q+dH85Hn+wfA9wpgHQjIe5QYwSf2JwmR3Y
+         WDU4TdtnaLapsEP0E9589Xt8OX36RzFR648A/t51NL0/MUDiJjeabonN9fc8sje55Mb3
+         w15apafd3lO7dFYrR+3cs6MWjMKz7e7GoOgv4rfVrGh9nq17Tk4kKRL/g+vwmuSAsnNc
+         Jv1g==
+X-Gm-Message-State: ANhLgQ0QaaOFkmnjvf2fdm7YJlAfnI246XxlyM88n91Y64/JTaJoaIGi
+        0ETRS/cEECITt0QmOwhQYkAhfYioZaUWMVwm
+X-Google-Smtp-Source: ADFU+vvVOPi3PA+74IhM+oTcYjcGWYajfhcjZIu0iMPv/+PUFCAYV4G8aSwNSqs/zMql4+YbT7W5sA==
+X-Received: by 2002:adf:8b5c:: with SMTP id v28mr5479675wra.98.1585176990917;
+        Wed, 25 Mar 2020 15:56:30 -0700 (PDT)
 Received: from andrea.corp.microsoft.com ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id q72sm790278wme.31.2020.03.25.15.56.25
+        by smtp.gmail.com with ESMTPSA id q72sm790278wme.31.2020.03.25.15.56.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 15:56:26 -0700 (PDT)
+        Wed, 25 Mar 2020 15:56:30 -0700 (PDT)
 From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
@@ -55,11 +55,10 @@ Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Dexuan Cui <decui@microsoft.com>,
         Boqun Feng <boqun.feng@gmail.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [RFC PATCH 04/11] hv_netvsc: Disable NAPI before closing the VMBus channel
-Date:   Wed, 25 Mar 2020 23:54:58 +0100
-Message-Id: <20200325225505.23998-5-parri.andrea@gmail.com>
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [RFC PATCH 05/11] hv_utils: Always execute the fcopy and vss callbacks in a tasklet
+Date:   Wed, 25 Mar 2020 23:54:59 +0100
+Message-Id: <20200325225505.23998-6-parri.andrea@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200325225505.23998-1-parri.andrea@gmail.com>
 References: <20200325225505.23998-1-parri.andrea@gmail.com>
@@ -70,58 +69,71 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-vmbus_chan_sched() might call the netvsc driver callback function that
-ends up scheduling NAPI work.  This "work" can access the channel ring
-buffer, so we must ensure that any such work is completed and that the
-ring buffer is no longer being accessed before freeing the ring buffer
-data structure in the channel closure path.  To this end, disable NAPI
-before calling vmbus_close() in netvsc_device_remove().
+The fcopy and vss callback functions could be running in a tasklet
+at the same time they are called in hv_poll_channel().  Current code
+serializes the invocations of these functions, and their accesses to
+the channel ring buffer, by sending an IPI to the CPU that is allowed
+to access the ring buffer, cf. hv_poll_channel().  This IPI mechanism
+becomes infeasible if we allow changing the CPU that a channel will
+interrupt.  Instead modify the callback wrappers to always execute
+the fcopy and vss callbacks in a tasklet, thus mirroring the solution
+for the kvp callback functions adopted since commit a3ade8cc474d8
+("HV: properly delay KVP packets when negotiation is in progress").
+This will ensure that the callback function can't run on two CPUs at
+the same time.
 
 Suggested-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: <netdev@vger.kernel.org>
 ---
- drivers/hv/channel.c        | 6 ++++++
- drivers/net/hyperv/netvsc.c | 7 +++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/hv/hv_fcopy.c     | 2 +-
+ drivers/hv/hv_snapshot.c  | 2 +-
+ drivers/hv/hyperv_vmbus.h | 7 +------
+ 3 files changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 23f358cb7f494..256ee90c74460 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -609,6 +609,12 @@ void vmbus_reset_channel_cb(struct vmbus_channel *channel)
- 	 * the former is accessing channel->inbound.ring_buffer, the latter
- 	 * could be freeing the ring_buffer pages, so here we must stop it
- 	 * first.
-+	 *
-+	 * vmbus_chan_sched() might call the netvsc driver callback function
-+	 * that ends up scheduling NAPI work that accesses the ring buffer.
-+	 * At this point, we have to ensure that any such work is completed
-+	 * and that the channel ring buffer is no longer being accessed, cf.
-+	 * the calls to napi_disable() in netvsc_device_remove().
- 	 */
- 	tasklet_disable(&channel->callback_event);
+diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
+index bb9ba3f7c7949..5040d7e0cd9e9 100644
+--- a/drivers/hv/hv_fcopy.c
++++ b/drivers/hv/hv_fcopy.c
+@@ -71,7 +71,7 @@ static void fcopy_poll_wrapper(void *channel)
+ {
+ 	/* Transaction is finished, reset the state here to avoid races. */
+ 	fcopy_transaction.state = HVUTIL_READY;
+-	hv_fcopy_onchannelcallback(channel);
++	tasklet_schedule(&((struct vmbus_channel *)channel)->callback_event);
+ }
  
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 1b320bcf150a4..806cc85d10033 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -635,9 +635,12 @@ void netvsc_device_remove(struct hv_device *device)
+ static void fcopy_timeout_func(struct work_struct *dummy)
+diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
+index 1c75b38f0d6da..783779e4cc1a5 100644
+--- a/drivers/hv/hv_snapshot.c
++++ b/drivers/hv/hv_snapshot.c
+@@ -80,7 +80,7 @@ static void vss_poll_wrapper(void *channel)
+ {
+ 	/* Transaction is finished, reset the state here to avoid races. */
+ 	vss_transaction.state = HVUTIL_READY;
+-	hv_vss_onchannelcallback(channel);
++	tasklet_schedule(&((struct vmbus_channel *)channel)->callback_event);
+ }
  
- 	RCU_INIT_POINTER(net_device_ctx->nvdev, NULL);
+ /*
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 2216cd5e8e8bf..ff187cf5896b9 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -377,12 +377,7 @@ static inline void hv_poll_channel(struct vmbus_channel *channel,
+ {
+ 	if (!channel)
+ 		return;
+-
+-	if (in_interrupt() && (channel->target_cpu == smp_processor_id())) {
+-		cb(channel);
+-		return;
+-	}
+-	smp_call_function_single(channel->target_cpu, cb, channel, true);
++	cb(channel);
+ }
  
--	/* And disassociate NAPI context from device */
--	for (i = 0; i < net_device->num_chn; i++)
-+	/* Disable NAPI and disassociate its context from the device. */
-+	for (i = 0; i < net_device->num_chn; i++) {
-+		/* See also vmbus_reset_channel_cb(). */
-+		napi_disable(&net_device->chan_table[i].napi);
- 		netif_napi_del(&net_device->chan_table[i].napi);
-+	}
- 
- 	/*
- 	 * At this point, no one should be accessing net_device
+ enum hvutil_device_state {
 -- 
 2.24.0
 
