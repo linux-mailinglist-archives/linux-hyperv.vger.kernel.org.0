@@ -2,229 +2,191 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11979194379
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2020 16:47:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA7DD194505
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2020 18:05:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgCZPrV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 26 Mar 2020 11:47:21 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36870 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgCZPrV (ORCPT
+        id S1726971AbgCZRF2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 26 Mar 2020 13:05:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41265 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgCZRF1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:47:21 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d1so7567925wmb.2;
-        Thu, 26 Mar 2020 08:47:19 -0700 (PDT)
+        Thu, 26 Mar 2020 13:05:27 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h9so8731787wrc.8;
+        Thu, 26 Mar 2020 10:05:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=C/W7LVOxuIAj1ER56s2leccpId2Ht2qn0VoQEUKWhDc=;
-        b=Bb6BQd/ZNUhEmnv3AtflSKj4OfihPbclmbZ/1FZokh5SqQNvDt7zgzly5Uv02kTi0a
-         M/uKGghTfgt/lYJh7JTtp1uvFxu/VEm6WApHq3Ggr+0GR1kD3eRDINzgUeO2ZLKOHNVC
-         DHfgDkrJC1ykQpr/ufnOqRhe2BwDg1xB4S9LZbk11EMjUDgduTkSRkT95/GHAGxdHSbS
-         hytgzjpiiPw+fUeWApU0UfgKvl0qpeSpPMKKAZ8SDHa/JIjDxlfeiA6dH5ZpOn5KOnU9
-         owVABBqBy9mGiZHoZ6q/nNcOEShVTBHiVPZL8B45Bd+1nvcd7S8snRB5Hb5d55uxh8Xu
-         Uwfg==
+        bh=/SwPVZPHnsnHsjMmVKbjcflPz+h1SoF07T1yIdW0tjk=;
+        b=BolFconVuR8kKU7pZSf5B2FXry7FPPFhSF8LOywidHC7WuNSwOAVblUZPlX67eMcKa
+         fi11YKZ2E27OPO2SjK9xeDEox2ek0tmfO1oSBqLzxnRSceRP/ZMm/OScgiHPXKEf/mmH
+         CvmZJlKjOIEVnw/EAeYq7JT4xyX0XVjqmK0kIjMS2ZsiBNP0bCn5kFK+1BZVmuz3Cy1Z
+         akMBT86QyM2X8qNiFJGADXH7+lrQH9gch3BklQM5LRDXV85N7eJd4lsOUOPrkouiv/Di
+         o7hEa57KFHG6Xq0E3LBVBdKzKwKYKvJ5QRY1bvU6MY/B91Dqk9VcPBBf1AW4vOLs4QZN
+         dw1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C/W7LVOxuIAj1ER56s2leccpId2Ht2qn0VoQEUKWhDc=;
-        b=nOtN6jXuz9EJ2k+kmoEL+dWLoBcFkWX8Utt3M7WicD8rYJu7hmgKRuy+7Z9woxmY/J
-         V5qFqBjdknLpfvveEOeDBMG2TIA3g/pgg8tBzq2VKbBpeTFbyvwwAZCBt0mo83xccFuw
-         8ZWb0mLJnvsTOrcpDqSdfv/aJoUEWMy8RhcMQ06oqMyEl+lFw9xXbXhku+65Lbkr99hk
-         /KIhq+nYos2QB1dqqbjWW/h8nVHQdQUvEqz0oK++D2KvjJF6KEecjSopXeTEUhQtwAls
-         mJ5PGyumUKDun+NnN4GWzfR8i7vT+VIqVXrJTMrWgXGUajbeZxca0dSgytxSLal8chds
-         iK/g==
-X-Gm-Message-State: ANhLgQ0+cvsWuBVr5spXt4oGsC0h+mAMQaxpuG5M0h0ckZa2K10Q047s
-        44uiaGz8gc2FMp9uGnxPI90=
-X-Google-Smtp-Source: ADFU+vuXneQPDtcsOWN0u7MbgkVB3IIz+HrnWmycZKgpGrK8pcOI4MPn8FsUlhVHoTm+0K+OZRsAqg==
-X-Received: by 2002:a7b:c74d:: with SMTP id w13mr559648wmk.189.1585237638345;
-        Thu, 26 Mar 2020 08:47:18 -0700 (PDT)
+        bh=/SwPVZPHnsnHsjMmVKbjcflPz+h1SoF07T1yIdW0tjk=;
+        b=nU9Syz1wskuWIKlOhe70m8dPbXeqMqAdY2IsIT4YcR6oh+ZFDOoL869HyVk0MImUbe
+         DiSdAL6GW0o9xw+DDXTZ+TPF+n3UlK6sIvmESozXZSgrIYHwbkwZxe0+ruaStvSbQ0H0
+         otEsMuGiCT7BLc1byNIY+7xlbcK7/3My599MLoQHbECyxN9s+wVY4ubZltyP2fiR+OV0
+         XCg4PDvbyABkEr68u3++WDlc6NZuhERLaafp6JW0VQ8M+K+6jqnYSI4233wtJoRmgr7R
+         qQrmnabTe6IF54rAExDanTa0oiVStCMO5uFjbNlY0cEYkk1SWKo3icLuzRJE/z0P/oXY
+         FtxQ==
+X-Gm-Message-State: ANhLgQ258P3+rORfI6AS8FvlDX6TF4rQBAtij6F3+B5JjoG0SkUIoo5h
+        tH1acAfZadS5u/7qoBEG80lFxG45hLvRnpfP
+X-Google-Smtp-Source: ADFU+vtZf+Rru0HdqckcezlKcjYIY+mDjzCxKZNmaVnzmQHiwUybydBAAYpK9IZAXgxvNYPQ79j+fw==
+X-Received: by 2002:adf:9b9d:: with SMTP id d29mr10274434wrc.294.1585242324532;
+        Thu, 26 Mar 2020 10:05:24 -0700 (PDT)
 Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id v10sm3679158wml.44.2020.03.26.08.47.16
+        by smtp.gmail.com with ESMTPSA id o9sm4484102wrx.48.2020.03.26.10.05.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 08:47:17 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 16:47:10 +0100
+        Thu, 26 Mar 2020 10:05:24 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:05:18 +0100
 From:   Andrea Parri <parri.andrea@gmail.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
+Cc:     linux-kernel@vger.kernel.org,
         "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
         Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 02/11] Drivers: hv: vmbus: Don't bind the
- offer&rescind works to a specific CPU
-Message-ID: <20200326154710.GA13711@andrea>
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU
+ channel lists with a global array of channels
+Message-ID: <20200326170518.GA14314@andrea>
 References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-3-parri.andrea@gmail.com>
- <871rpf5hhm.fsf@vitty.brq.redhat.com>
+ <20200325225505.23998-4-parri.andrea@gmail.com>
+ <87y2rn4287.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <871rpf5hhm.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87y2rn4287.fsf@vitty.brq.redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:16:21PM +0100, Vitaly Kuznetsov wrote:
+On Thu, Mar 26, 2020 at 03:31:20PM +0100, Vitaly Kuznetsov wrote:
 > "Andrea Parri (Microsoft)" <parri.andrea@gmail.com> writes:
 > 
-> > The offer and rescind works are currently scheduled on the so called
-> > "connect CPU".  However, this is not really needed: we can synchronize
-> > the works by relying on the usage of the offer_in_progress counter and
-> > of the channel_mutex mutex.  This synchronization is already in place.
-> > So, remove this unnecessary "bind to the connect CPU" constraint and
-> > update the inline comments accordingly.
+> > When Hyper-V sends an interrupt to the guest, the guest has to figure
+> > out which channel the interrupt is associated with.  Hyper-V sets a bit
+> > in a memory page that is shared with the guest, indicating a particular
+> > "relid" that the interrupt is associated with.  The current Linux code
+> > then uses a set of per-CPU linked lists to map a given "relid" to a
+> > pointer to a channel structure.
 > >
-> > Suggested-by: Dexuan Cui <decui@microsoft.com>
+> > This design introduces a synchronization problem if the CPU that Hyper-V
+> > will interrupt for a certain channel is changed.  If the interrupt comes
+> > on the "old CPU" and the channel was already moved to the per-CPU list
+> > of the "new CPU", then the relid -> channel mapping will fail and the
+> > interrupt is dropped.  Similarly, if the interrupt comes on the new CPU
+> > but the channel was not moved to the per-CPU list of the new CPU, then
+> > the mapping will fail and the interrupt is dropped.
+> >
+> > Relids are integers ranging from 0 to 2047.  The mapping from relids to
+> > channel structures can be done by setting up an array with 2048 entries,
+> > each entry being a pointer to a channel structure (hence total size ~16K
+> > bytes, which is not a problem).  The array is global, so there are no
+> > per-CPU linked lists to update.   The array can be searched and updated
+> > by simply loading and storing the array at the specified index.  With no
+> > per-CPU data structures, the above mentioned synchronization problem is
+> > avoided and the relid2channel() function gets simpler.
+> >
+> > Suggested-by: Michael Kelley <mikelley@microsoft.com>
 > > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > > ---
-> >  drivers/hv/channel_mgmt.c | 21 ++++++++++++++++-----
-> >  drivers/hv/vmbus_drv.c    | 39 ++++++++++++++++++++++++++++-----------
-> >  2 files changed, 44 insertions(+), 16 deletions(-)
+> >  drivers/hv/channel_mgmt.c | 158 ++++++++++++++++++++++----------------
+> >  drivers/hv/connection.c   |  38 +++------
+> >  drivers/hv/hv.c           |   2 -
+> >  drivers/hv/hyperv_vmbus.h |  14 ++--
+> >  drivers/hv/vmbus_drv.c    |  48 +++++++-----
+> >  include/linux/hyperv.h    |   5 --
+> >  6 files changed, 139 insertions(+), 126 deletions(-)
 > >
 > > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> > index 0370364169c4e..1191f3d76d111 100644
+> > index 1191f3d76d111..9b1449c839575 100644
 > > --- a/drivers/hv/channel_mgmt.c
 > > +++ b/drivers/hv/channel_mgmt.c
-> > @@ -1025,11 +1025,22 @@ static void vmbus_onoffer_rescind(struct vmbus_channel_message_header *hdr)
-> >  	 * offer comes in first and then the rescind.
-> >  	 * Since we process these events in work elements,
-> >  	 * and with preemption, we may end up processing
-> > -	 * the events out of order. Given that we handle these
-> > -	 * work elements on the same CPU, this is possible only
-> > -	 * in the case of preemption. In any case wait here
-> > -	 * until the offer processing has moved beyond the
-> > -	 * point where the channel is discoverable.
-> > +	 * the events out of order.  We rely on the synchronization
-> > +	 * provided by offer_in_progress and by channel_mutex for
-> > +	 * ordering these events:
-> > +	 *
-> > +	 * { Initially: offer_in_progress = 1 }
-> > +	 *
-> > +	 * CPU1				CPU2
-> > +	 *
-> > +	 * [vmbus_process_offer()]	[vmbus_onoffer_rescind()]
-> > +	 *
-> > +	 * LOCK channel_mutex		WAIT_ON offer_in_progress == 0
-> > +	 * DECREMENT offer_in_progress	LOCK channel_mutex
-> > +	 * INSERT chn_list		SEARCH chn_list
-> > +	 * UNLOCK channel_mutex		UNLOCK channel_mutex
-> > +	 *
-> > +	 * Forbids: CPU2's SEARCH from *not* seeing CPU1's INSERT
+> > @@ -319,7 +319,6 @@ static struct vmbus_channel *alloc_channel(void)
+> >  	init_completion(&channel->rescind_event);
+> >  
+> >  	INIT_LIST_HEAD(&channel->sc_list);
+> > -	INIT_LIST_HEAD(&channel->percpu_list);
+> >  
+> >  	tasklet_init(&channel->callback_event,
+> >  		     vmbus_on_event, (unsigned long)channel);
+> > @@ -340,23 +339,28 @@ static void free_channel(struct vmbus_channel *channel)
+> >  	kobject_put(&channel->kobj);
+> >  }
+> >  
+> > -static void percpu_channel_enq(void *arg)
+> > +void vmbus_channel_map_relid(struct vmbus_channel *channel)
+> >  {
+> > -	struct vmbus_channel *channel = arg;
+> > -	struct hv_per_cpu_context *hv_cpu
+> > -		= this_cpu_ptr(hv_context.cpu_context);
+> > -
+> > -	list_add_tail_rcu(&channel->percpu_list, &hv_cpu->chan_list);
+> > +	if (WARN_ON(channel->offermsg.child_relid >= MAX_CHANNEL_RELIDS))
+> > +		return;
+> > +	/*
+> > +	 * Pairs with the READ_ONCE() in vmbus_chan_sched().  Guarantees
+> > +	 * that vmbus_chan_sched() will find up-to-date data.
+> > +	 */
+> > +	smp_store_release(
+> > +		&vmbus_connection.channels[channel->offermsg.child_relid],
+> > +		channel);
+> >  }
+> >  
+> > -static void percpu_channel_deq(void *arg)
+> > +void vmbus_channel_unmap_relid(struct vmbus_channel *channel)
+> >  {
+> > -	struct vmbus_channel *channel = arg;
+> > -
+> > -	list_del_rcu(&channel->percpu_list);
+> > +	if (WARN_ON(channel->offermsg.child_relid >= MAX_CHANNEL_RELIDS))
+> > +		return;
+> > +	WRITE_ONCE(
+> > +		vmbus_connection.channels[channel->offermsg.child_relid],
+> > +		NULL);
 > 
-> WAIT_ON offer_in_progress == 0
-> LOCK channel_mutex
+> I don't think this smp_store_release()/WRITE_ONCE() fanciness gives you
+> anything. Basically, without proper synchronization with a lock there is
+> no such constructions which will give you any additional guarantee on
+> top of just doing X=1. E.g. smp_store_release() is just 
+>   barrier();
+>   *p = v;
+> if I'm not mistaken. Nobody tells you when *some other CPU* will see the
+> update - 'eventually' is your best guess. Here, you're only setting one
+> pointer.
 > 
-> seems to be racy: what happens if offer_in_progress increments after we
-> read it but before we managed to aquire channel_mutex?
+> Percpu structures have an advantage: we (almost) never access them from
+> different CPUs so just doing updates atomically (and writing 64bit
+> pointer on x86_64 is atomic) is OK.
+> 
+> I haven't looked at all possible scenarios but I'd suggest protecting
+> this array with a spinlock (in case we can have simultaneous accesses
+> from different CPUs and care about the result, of course).
 
-Remark that the RESCIND work must see the increment which is performed
-"before" queueing the work in question (and the associated OFFER work),
-cf. the comment in vmbus_on_msg_dpc() below and
+The smp_store_release()+READ_ONCE() pair should guarantee that any store
+to the channel fields performed before (in program order) the "mapping"
+of the channel are visible to the CPU which observes that mapping; this
+guarantee is expected to hold for all architectures.
 
-  dbb92f88648d6 ("workqueue: Document (some) memory-ordering properties of {queue,schedule}_work()")
+Notice that this apporach follows the current/upstream code, cf. the
+rcu_assign_pointer() in list_add_tail_rcu() and notice that (both before
+and after this series) vmbus_chan_sched() accesses the channel array
+without any mutex/lock held.
 
-AFAICT, this suffices to meet the intended behavior as sketched above.
-I might be missing something of course, can you elaborate on the issue
-here?
+I'd be inclined to stick to the current code (unless more turns out to
+be required).  Thoughts?
 
 Thanks,
   Andrea
-
-
-> 
-> I think this shold be changed to
-> 
-> LOCK channel_mutex
-> CHECK offer_in_progress == 0
-> EQUAL? GOTO proceed with rescind handling
-> NOT EQUAL? 
->  WHILE offer_in_progress) != 0 {
->  UNLOCK channel_mutex 
->  MSLEEP(1)
->  LOCK channel_mutex
-> }
-> proceed with rescind handling:
-> ...
-> UNLOCK channel_mutex
-> 
-> >  	 */
-> >  
-> >  	while (atomic_read(&vmbus_connection.offer_in_progress) != 0) {
-> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > index 7600615e13754..903b1ec6a259e 100644
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -1048,8 +1048,9 @@ void vmbus_on_msg_dpc(unsigned long data)
-> >  		/*
-> >  		 * The host can generate a rescind message while we
-> >  		 * may still be handling the original offer. We deal with
-> > -		 * this condition by ensuring the processing is done on the
-> > -		 * same CPU.
-> > +		 * this condition by relying on the synchronization provided
-> > +		 * by offer_in_progress and by channel_mutex.  See also the
-> > +		 * inline comments in vmbus_onoffer_rescind().
-> >  		 */
-> >  		switch (hdr->msgtype) {
-> >  		case CHANNELMSG_RESCIND_CHANNELOFFER:
-> > @@ -1071,16 +1072,34 @@ void vmbus_on_msg_dpc(unsigned long data)
-> >  			 * work queue: the RESCIND handler can not start to
-> >  			 * run before the OFFER handler finishes.
-> >  			 */
-> > -			schedule_work_on(VMBUS_CONNECT_CPU,
-> > -					 &ctx->work);
-> > +			schedule_work(&ctx->work);
-> >  			break;
-> >  
-> >  		case CHANNELMSG_OFFERCHANNEL:
-> > +			/*
-> > +			 * The host sends the offer message of a given channel
-> > +			 * before sending the rescind message of the same
-> > +			 * channel.  These messages are sent to the guest's
-> > +			 * connect CPU; the guest then starts processing them
-> > +			 * in the tasklet handler on this CPU:
-> > +			 *
-> > +			 * VMBUS_CONNECT_CPU
-> > +			 *
-> > +			 * [vmbus_on_msg_dpc()]
-> > +			 * atomic_inc()  // CHANNELMSG_OFFERCHANNEL
-> > +			 * queue_work()
-> > +			 * ...
-> > +			 * [vmbus_on_msg_dpc()]
-> > +			 * schedule_work()  // CHANNELMSG_RESCIND_CHANNELOFFER
-> > +			 *
-> > +			 * We rely on the memory-ordering properties of the
-> > +			 * queue_work() and schedule_work() primitives, which
-> > +			 * guarantee that the atomic increment will be visible
-> > +			 * to the CPUs which will execute the offer & rescind
-> > +			 * works by the time these works will start execution.
-> > +			 */
-> >  			atomic_inc(&vmbus_connection.offer_in_progress);
-> > -			queue_work_on(VMBUS_CONNECT_CPU,
-> > -				      vmbus_connection.work_queue,
-> > -				      &ctx->work);
-> > -			break;
-> > +			fallthrough;
-> >  
-> >  		default:
-> >  			queue_work(vmbus_connection.work_queue, &ctx->work);
-> > @@ -1124,9 +1143,7 @@ static void vmbus_force_channel_rescinded(struct vmbus_channel *channel)
-> >  
-> >  	INIT_WORK(&ctx->work, vmbus_onmessage_work);
-> >  
-> > -	queue_work_on(VMBUS_CONNECT_CPU,
-> > -		      vmbus_connection.work_queue,
-> > -		      &ctx->work);
-> > +	queue_work(vmbus_connection.work_queue, &ctx->work);
-> >  }
-> >  #endif /* CONFIG_PM_SLEEP */
-> 
-> -- 
-> Vitaly
-> 
