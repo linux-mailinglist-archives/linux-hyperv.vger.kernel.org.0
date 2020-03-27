@@ -2,106 +2,105 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DFFCE1945E6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Mar 2020 18:55:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99357194ECE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 Mar 2020 03:12:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgCZRzp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 26 Mar 2020 13:55:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54377 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZRzp (ORCPT
+        id S1727612AbgC0CMN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 26 Mar 2020 22:12:13 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34196 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgC0CMN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:55:45 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c81so7494480wmd.4;
-        Thu, 26 Mar 2020 10:55:43 -0700 (PDT)
+        Thu, 26 Mar 2020 22:12:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 23so3772808pfj.1;
+        Thu, 26 Mar 2020 19:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8l2oRnDlBMb0gXsLvGjz4aRGCAhqoB1hZgrGjPsa2To=;
-        b=RhQmfK7zxsQz9efFQMf3Mgar0VVI4KEnYZVN24ZrLsHIMhWb+dRvc8+mZqQmF1LwqO
-         DpYAPanXRGJSF+ymGAJZAyu+H1jY+mVs1Ste/CgMEux+jM8JmvEikda59HDUR8CVpYTy
-         q2J9IQh2HJAGqgxWU1EVZ+CRu1rMtU3TiNFOdjeDfwuqMYY+JebAU3yd+x2APX8aeGwK
-         Kn0jY19MNPeLE3h9aLAxZMYOHZMBwUMSOJq9q3lDooQtyaQ5VxqCFHwGwjFEn/IO7WRM
-         qPJgDo5buaIoEj4MUshrYNO2xbk469eB83cRM35NUwBLbzT0t6iA6lx41Z7XBjuFdNGI
-         Ymqw==
+        h=from:to:cc:subject:date:message-id;
+        bh=FOm6MV3EMePJN0FuLWiMdiV/GLEXaRUsnceHfNcS4rI=;
+        b=dJEPY5dPpm7vUNfoirSoxG9vs6rh1upSUPocJViZ9qUJB56uMUc3xZ+GaVnH9Kd6ia
+         yU36LekPM9Rs+hIGO9OfPGD9CeZroyCQJkbEgF7gKDiMHnROVofESe+yCdPWUzMt+Vq+
+         soIrVlHmdntzH5PC8REyn+2OJxZLuZUHRhuMmrT4Gn8IGB/MnpYYC2eTnF6bdX8DeUQz
+         qaXVcbMdxKsQzokDH1AH50jXmnHKcNlJkbJVqSNVhIZgkkYA8RcIU0oko3DOiXlxZLcD
+         Zcjd3L/wujq57anjnFWP0pk2EcBKbs9TVtAs4P7t7WxaJXmjsWvpOOH0kJ/eD7ROrd3j
+         g0vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8l2oRnDlBMb0gXsLvGjz4aRGCAhqoB1hZgrGjPsa2To=;
-        b=JEO64nfeATFcSLk2q5aIk/QGRyKqobSuF3J29u/H5vQ+OQjye2ra6jCIyoDDcNBFLJ
-         JKtAjTMOJj2JfgCIuXlmeAdnhXq1aflptYACJ7x4LlDX4pkBb/GJKQssmFfaOZjsn6Fb
-         3powiKcS7gb1SSF8ic0A4XJen+O4cENKFCQ/3W3EloLQ9CMHUBGSSpdtzllvOlQM+8Qr
-         X7r/7PUuaQE+84xbM40XzX7Ywe0lZm1AD/x4hcB0bMqmHfih2rbasDVwwUQiSHo4L+RW
-         Jbg+zp1i4qPtHLNXt0XRv9Vj0PdDvJXjRDZfOz8+d4d9OC17YHHveRdG2Wvc53u0+pd7
-         857Q==
-X-Gm-Message-State: ANhLgQ3kS6DJXvqIIzU9kPQWAckQDJYfqhrtoHvwAnM2CY1xD0+gfKnH
-        I3449745MP1fnJL3xcOw9i4=
-X-Google-Smtp-Source: ADFU+vvQYAns/H4naOtzD0AQEl0lguuS8ZgJ+3MxwcxBvnyytUVJtfuzo3jqR3eODXmd0fraia5JTA==
-X-Received: by 2002:a7b:c1da:: with SMTP id a26mr1177478wmj.91.1585245342367;
-        Thu, 26 Mar 2020 10:55:42 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id w9sm5014104wrk.18.2020.03.26.10.55.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 10:55:41 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:55:31 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 04/11] hv_netvsc: Disable NAPI before closing the
- VMBus channel
-Message-ID: <20200326175531.GA20523@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-5-parri.andrea@gmail.com>
- <20200326082636.1d777921@hermes.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326082636.1d777921@hermes.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FOm6MV3EMePJN0FuLWiMdiV/GLEXaRUsnceHfNcS4rI=;
+        b=TDkSKRkErB5u0xtTsXwOdPJq9waCwOVHfjKfEDSoyuD54eHLwg+sWh6iPaPmoes6St
+         58sGI+/TSKn5aX4JJXfIUchQlpXVwCX+4pRlcWHdQ8wa+6VnksqqInL37IKrpBCigBFB
+         0u6f84YD6gL/RiX9TY/VqQfJG7IxNiD/hMtAR666FWYcLeLHm0AgFy64XuNorYdf/igN
+         XYtK4Go1GuoGANJPvCY6n6Jz40Mbi8xsz4XPeZWz3/nmZKgIXZunAPQwDw+CgbClhcYF
+         TFcwbnqXAFUddjtRwP/IRhAO/8vtXDexlu26okzi0+4UpkIJ3xOlngdFuuoWYUMBXkQd
+         +Hmg==
+X-Gm-Message-State: ANhLgQ3cHzConVQPAsh8U1QecJVI5FDEdKbf38m+WLi9HQJyPOwb9O4x
+        8bggZ4ZWd/ECoKIN2oar2ahDgVTJIWU=
+X-Google-Smtp-Source: ADFU+vuBkEqnRm6ngW5777xbhAVueA0Lix6mvtGr3oV7fkUyr7/2zLlP6r/i6whCO2U0s2oQYzfI8w==
+X-Received: by 2002:a63:5859:: with SMTP id i25mr11245278pgm.74.1585275132126;
+        Thu, 26 Mar 2020 19:12:12 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([131.107.160.210])
+        by smtp.googlemail.com with ESMTPSA id w31sm2673844pgl.84.2020.03.26.19.12.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 26 Mar 2020 19:12:11 -0700 (PDT)
+From:   Tianyu Lan <ltykernel@gmail.com>
+X-Google-Original-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, stable@vger.kernel.org,
+        Yubo Xie <yuboxie@microsoft.com>
+Subject: [PATCH V2] x86/Hyper-V: Fix hv sched clock function return wrong time unit
+Date:   Thu, 26 Mar 2020 19:11:59 -0700
+Message-Id: <20200327021159.31429-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 08:26:36AM -0700, Stephen Hemminger wrote:
-> On Wed, 25 Mar 2020 23:54:58 +0100
-> "Andrea Parri (Microsoft)" <parri.andrea@gmail.com> wrote:
-> 
-> > vmbus_chan_sched() might call the netvsc driver callback function that
-> > ends up scheduling NAPI work.  This "work" can access the channel ring
-> > buffer, so we must ensure that any such work is completed and that the
-> > ring buffer is no longer being accessed before freeing the ring buffer
-> > data structure in the channel closure path.  To this end, disable NAPI
-> > before calling vmbus_close() in netvsc_device_remove().
-> > 
-> > Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: <netdev@vger.kernel.org>
-> 
-> Do you have a test that reproduces this issue?
+From: Yubo Xie <yuboxie@microsoft.com>
 
-I don't (or I'm not aware of such a test).
+sched clock callback should return time with nano second as unit
+but current hv callback returns time with 100ns. Fix it.
 
+Cc: stable@vger.kernel.org
+Signed-off-by: Yubo Xie <yuboxie@microsoft.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V specific sched clock function")
+---
+Change since v1:
+	Update fix commit number in change log. 
+---
+ drivers/clocksource/hyperv_timer.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> 
-> The netvsc device is somewhat unique in that it needs NAPI
-> enabled on the primary channel to interact with the host.
-> Therefore it can't call napi_disable in the normal dev->stop() place.
-> 
-> Acked-by: Stephen Hemminger <stephen@networkplumber.org>
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 9d808d595ca8..662ed978fa24 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -343,7 +343,8 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
+ 
+ static u64 read_hv_sched_clock_tsc(void)
+ {
+-	return read_hv_clock_tsc() - hv_sched_clock_offset;
++	return (read_hv_clock_tsc() - hv_sched_clock_offset)
++		* (NSEC_PER_SEC / HV_CLOCK_HZ);
+ }
+ 
+ static void suspend_hv_clock_tsc(struct clocksource *arg)
+@@ -398,7 +399,8 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+ 
+ static u64 read_hv_sched_clock_msr(void)
+ {
+-	return read_hv_clock_msr() - hv_sched_clock_offset;
++	return (read_hv_clock_msr() - hv_sched_clock_offset)
++		* (NSEC_PER_SEC / HV_CLOCK_HZ);
+ }
+ 
+ static struct clocksource hyperv_cs_msr = {
+-- 
+2.14.5
 
-Thanks!
-
-  Andrea
