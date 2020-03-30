@@ -2,70 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F8D9197BBF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2020 14:24:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B075197C2E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2020 14:46:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbgC3MYX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 30 Mar 2020 08:24:23 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:60303 "EHLO
+        id S1729705AbgC3MqD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 30 Mar 2020 08:46:03 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:56643 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729927AbgC3MYW (ORCPT
+        by vger.kernel.org with ESMTP id S1729927AbgC3MqA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:24:22 -0400
+        Mon, 30 Mar 2020 08:46:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585571061;
+        s=mimecast20190719; t=1585572359;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=/ygALAJVOjqUJKfasvnnjImKIeALHsYUPdnk+AuUynM=;
-        b=IkzJhIHRIyM6gElBVfZ8Tj5lSWRZsj1W6NdsiOxVKl1GQq6esEarejIORyEFGdWd7XDrQZ
-        REeH52zPRJMpaTiw2FMiKHJVWCC+l4u4lV/VBFfIiQnxbVUBAXbEOVaX6jSGODk3zXUKiD
-        yfoG+pDPHbLzSPQ/H6/87hpz+K6gfO8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-50-uhNa_4oKMje1egkUU6VvCQ-1; Mon, 30 Mar 2020 08:24:19 -0400
-X-MC-Unique: uhNa_4oKMje1egkUU6VvCQ-1
-Received: by mail-wr1-f69.google.com with SMTP id j12so11130899wrr.18
-        for <linux-hyperv@vger.kernel.org>; Mon, 30 Mar 2020 05:24:19 -0700 (PDT)
+        bh=IN/OaDKC0LjXsIMM1cx8gNUwIenmpuygcOhi4qxSuJo=;
+        b=dPRzmJRHIT7j1yrCm3vnUPYpUWtlIzOjHXEhAawgvncPXvCCJ/bae24tx4OwAVkx3C87ud
+        iFBAAtnMB2ezIyFqti39I1QA75qnQmuD52guHp6F2SWxuKmOeI5UqyDe8fzvJKHJDQls37
+        OtmrXjCPReTWsBAK6vK5w5bmLYW/jko=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-kZBR4ehnPrGHELr9xWX_Xg-1; Mon, 30 Mar 2020 08:45:57 -0400
+X-MC-Unique: kZBR4ehnPrGHELr9xWX_Xg-1
+Received: by mail-wm1-f72.google.com with SMTP id n188so8721422wmf.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 30 Mar 2020 05:45:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=/ygALAJVOjqUJKfasvnnjImKIeALHsYUPdnk+AuUynM=;
-        b=XZ2xRiNVHZD1Y/lZs9JqIzYNUsO+KA2Swb557LNwD2u5xBnP6T21nL33k2Gql7y93O
-         e5Kg7Dk7yBm7BZGZovsLxzSjF5du2RJzRCnwO9ctrF/jMOHtyY6wyFBVsgkA06T3UNEP
-         ni4HLraWzRaAgIuvl44TMSU8zhc36HLHHwHT6gVGoim9BPNx7lpoHxuFXqmt5ecX8NlB
-         LmxPpvGzzkAkqHCXkWta0S92hrdaPg7+mVpQqTT8rsEfiddCJTA+eqqU6exjs8TCloZ7
-         A7tfbl8YKUxadxsy/E1j5m0SSoUetB7/rF7COqf1IjTBHYkROqy9uvHXnoPUOr7VVM9f
-         Kc3w==
-X-Gm-Message-State: ANhLgQ1DXiiD0mprsiGgF08+nLfo8JDVBfyd6pb8PWfXtjBTLfWP5+bP
-        eWQWWn6nXhYpm+lVauE7YHm//uD9OY/K37TfW19erx+6iFykWJo6bUqM08CDzYq/E83SYbi8fLp
-        AA7gk2gAA9lMFtYC55f8wA5GD
-X-Received: by 2002:adf:ec02:: with SMTP id x2mr14564033wrn.365.1585571058691;
-        Mon, 30 Mar 2020 05:24:18 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs4+0mKL6LvY3oLktG34cbkfsvaDlgrbw2AYD/ENCNEbfbZ1AiL6eM0zhcnkf9XQGgVEbaibw==
-X-Received: by 2002:adf:ec02:: with SMTP id x2mr14564012wrn.365.1585571058374;
-        Mon, 30 Mar 2020 05:24:18 -0700 (PDT)
+        bh=IN/OaDKC0LjXsIMM1cx8gNUwIenmpuygcOhi4qxSuJo=;
+        b=PdW6RcpvJk0/ouTctpZk1E2e8XaxnU0A2/PZ/ky7qIhvDvZHtpfx6Az400SiIQP6d4
+         jMRD50mij17JsYd9cTbmD3BWnAJEKwWWSnwiimHic28dl7jjxu7PV8IF3NcvVHBNnZk+
+         nENUHMOqyy6AnXhSZQzsdQZZk967m/NtLocNtz3DyU40mJY4GJ6o+M4sfvmF10AGyksx
+         DDm5HQkZ4gKYc9mvuxfuacdbE9KcGLfmWTKybcKH8UJ3MGNRmzImsCJHLrlQmHn08TCg
+         pQhK7YBZi8mXNDgFYyiKP4NfU94EGAi6XV7E1UvLgEsc08Jfq+93lpnLTIpLh/LQZ7J1
+         9vXw==
+X-Gm-Message-State: ANhLgQ1gkbs1HKLRpXuTHFAhNJsppQk2iNppFRh+dkqUijimI/PXK/15
+        E2rZrguJ1Fq4zKFcopBQ/KdZWIgiqBrpxdzXslsLS+2vZS2jYGLimyBPALTQsMuQhrS7EbBUakS
+        3uWZUmNYEwtV4rG5q9nXC+ZPW
+X-Received: by 2002:a05:600c:295e:: with SMTP id n30mr12658353wmd.78.1585572356290;
+        Mon, 30 Mar 2020 05:45:56 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vucbwK27VyyHyAZ67C5eVMYHadGG5at8YOXS2WVi1ktXO7LBeGPB3n+NxSQdpBjNypyupwuqA==
+X-Received: by 2002:a05:600c:295e:: with SMTP id n30mr12658327wmd.78.1585572356025;
+        Mon, 30 Mar 2020 05:45:56 -0700 (PDT)
 Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 9sm20168122wmm.6.2020.03.30.05.24.17
+        by smtp.gmail.com with ESMTPSA id c189sm22014054wmd.12.2020.03.30.05.45.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 05:24:17 -0700 (PDT)
+        Mon, 30 Mar 2020 05:45:55 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 02/11] Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific CPU
-In-Reply-To: <MW2PR2101MB1052A2E44557B29C191F557DD7CA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200325225505.23998-1-parri.andrea@gmail.com> <20200325225505.23998-3-parri.andrea@gmail.com> <871rpf5hhm.fsf@vitty.brq.redhat.com> <20200326154710.GA13711@andrea> <87sghv3u4a.fsf@vitty.brq.redhat.com> <20200328170833.GA10153@andrea> <MW2PR2101MB1052A2E44557B29C191F557DD7CA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-Date:   Mon, 30 Mar 2020 14:24:16 +0200
-Message-ID: <87o8se2fpr.fsf@vitty.brq.redhat.com>
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU channel lists with a global array of channels
+In-Reply-To: <20200328182148.GA11210@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com> <20200325225505.23998-4-parri.andrea@gmail.com> <87y2rn4287.fsf@vitty.brq.redhat.com> <20200326170518.GA14314@andrea> <87pncz3tcn.fsf@vitty.brq.redhat.com> <20200328182148.GA11210@andrea>
+Date:   Mon, 30 Mar 2020 14:45:54 +0200
+Message-ID: <87imim2epp.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
@@ -73,70 +72,46 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
+Andrea Parri <parri.andrea@gmail.com> writes:
 
-> From: Andrea Parri <parri.andrea@gmail.com> Sent: Saturday, March 28, 2020 10:09 AM
->> 
->> > In case we believe that OFFER -> RESCINF sequence is always ordered
->> > by the host AND we don't care about other offers in the queue the
->> > suggested locking is OK: we're guaranteed to process RESCIND after we
->> > finished processing OFFER for the same channel. However, waiting for
->> > 'offer_in_progress == 0' looks fishy so I'd suggest we at least add a
->> > comment explaining that the wait is only needed to serialize us with
->> > possible OFFER for the same channel - and nothing else. I'd personally
->> > still slightly prefer the algorythm I suggested as it guarantees we take
->> > channel_mutex with offer_in_progress == 0 -- even if there are no issues
->> > we can think of today (not strongly though).
->> 
->> Does it?  offer_in_progress is incremented without channel_mutex...
->> 
-
-No, it does not, you're right, by itself the change is insufficient.
-
->> IAC, I have no objections to apply the changes you suggested.  To avoid
->> misunderstandings: vmbus_bus_suspend() presents a similar usage...  Are
->> you suggesting that I apply similar changes there?
->> 
->> Alternatively:  FWIW, the comment in vmbus_onoffer_rescind() does refer
->> to "The offer msg and the corresponding rescind msg...".  I am all ears
->> if you have any concrete suggestions to improve these comments.
->> 
+>> Correct me if I'm wrong, but currently vmbus_chan_sched() accesses
+>> per-cpu list of channels on the same CPU so we don't need a spinlock to
+>> guarantee that during an interrupt we'll be able to see the update if it
+>> happened before the interrupt (in chronological order). With a global
+>> list of relids, who guarantees that an interrupt handler on another CPU
+>> will actually see the modified list? 
 >
-> Given that waiting for 'offer_in_progress == 0' is the current code, I think
-> there's an argument to made for not changing it if the change isn't strictly
-> necessary.  This patch set introduces enough change that *is* necessary. :-)
+> Thanks for pointing this out!
 >
+> The offer/resume path presents implicit full memory barriers, program
+> -order after the array store which should guarantee the visibility of
+> the store to *all* CPUs before the offer/resume can complete (c.f.,
+>
+>   tools/memory-model/Documentation/explanation.txt, Sect. #13
+>
+> and assuming that the offer/resume for a channel must complete before
+> the corresponding handler, which seems to be the case considered that
+> some essential channel fields are initialized only later...)
+>
+> IIUC, the spin lock approach you suggested will work and be "simpler";
+> an obvious side effect would be, well, a global synchronization point
+> in vmbus_chan_sched()...
+>
+> Thoughts?
 
-Sure. I was thinking a bit more about this and it seems that over years
-we've made the synchronization of channels code too complex (every time
-for a good reason but still). Now (before this series) we have at least:
+This is, of course, very theoretical as if we're seeing an interrupt for
+a channel at the same time we're writing its relid we're already in
+trouble. I can, however, try to suggest one tiny improvement:
 
-vmbus_connection.channel_mutex
-vmbus_connection.offer_in_progress
-channel.probe_done
-channel.rescind
-Workqueues (vmbus_connection.work_queue,
- queue_work_on(vmbus_connection.connect_cpu),...)
-channel.lock spinlock (the least of the problems)
+vmbus_chan_sched() now clean the bit in the event page and then searches
+for a channel with this relid; in case we allow the search to
+(temporary) fail we can reverse the logic: search for the channel and
+clean the bit only if we succeed. In case we fail, next time (next IRQ)
+we'll try again and likely succeed. The only purpose is to make sure no
+interrupts are ever lost.  This may be an overkill, we may want to try
+to count how many times (if ever) this happens. 
 
-Maybe there's room for improvement? Out of top of my head I'd suggest a
-state machine for each channel (e.g something like
-OFFERED->OPENING->OPEN->RESCIND_REQ->RESCINDED->CLOSED) + refcounting
-(subchannels, open/rescind/... requests in progress, ...) + non-blocking
-request handling like "Can we handle this rescind offer now? No,
-refcount is too big. OK, rescheduling the work". Maybe not the best
-design ever and I'd gladly support any other which improves the
-readability of the code and makes all state changes and synchronization
-between them more obvious.
-
-Note, VMBus channel handling driven my messages (unlike events for ring
-buffer) is not performance critical, we just need to ensure completeness
-(all requests are handled correctly) with forward progress guarantees
-(no deadlocks).
-
-I understand the absence of 'hot' issues in the current code is what can
-make the virtue of redesign questionable and sorry for hijacking the
-series which doesn't seem to make things worse :-)
+Just a thought though.
 
 -- 
 Vitaly
