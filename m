@@ -2,84 +2,117 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F82D19789C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2020 12:13:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D789197931
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Mar 2020 12:22:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgC3KNh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 30 Mar 2020 06:13:37 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54631 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgC3KNg (ORCPT
+        id S1729913AbgC3KWH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 30 Mar 2020 06:22:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40074 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729249AbgC3KWG (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:13:36 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c81so19295330wmd.4;
-        Mon, 30 Mar 2020 03:13:35 -0700 (PDT)
+        Mon, 30 Mar 2020 06:22:06 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a81so21253753wmf.5;
+        Mon, 30 Mar 2020 03:22:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=etNRfQXSTquo6SrTToC0ZDG3tsM3oRH7bak2nuOj9kc=;
-        b=XoELc/LLXnZ8xFCflQqxeKvMu7ldJfcZYDKsztN1rvaAGMaM6IhRzHZ7wUWHHGNYN6
-         nYoPqtwrtDl49yWz0zth/4YNKAJtiGoJxo6aortb/vqfIlBIci7l5AduGnAI7ue+kjJ7
-         8FwptMBAXbPxIEIPIJC8HrRpJmxbvEYqfbHX+NbnWtWdP76vll6q8qdC4Yk6by9LcY2r
-         o9YcwrGuajB7ic/wKAZI7PSVbPKzglwfaZKOnqKSM5Jc0aKPwGGew55SHhTsekNswUpN
-         s2kZceJSE716YrDUHZFY9s/xBd0FSUUMDW4KyY5c163O8wu0OvSZbXjuMsJdBrXqzm8X
-         M5Gg==
-X-Gm-Message-State: ANhLgQ3HGf0ORLkUkKGwK3oOWEfL2zlE/zPliPsKLOB4U744M6/yuP3K
-        HizZXNYq0aRLGeUsSHojmyk=
-X-Google-Smtp-Source: ADFU+vt2FVxAIyS5YUdgBwUhS6YMoWQIE/YsEKA0AOhmRG0GEtKmB0X0UOqqN4OC7wZ/vUSbYtCHiQ==
-X-Received: by 2002:a1c:9e16:: with SMTP id h22mr4682635wme.27.1585563214463;
-        Mon, 30 Mar 2020 03:13:34 -0700 (PDT)
+        bh=4vIQEBciMld0vCiDFU9TfH/0TDdbnuRcouDz7FT+Dao=;
+        b=fsu+c4P/6tAyRUitocVZp9kKKEf6AMJhKGDMC8AcCM0SLJnHTp6Vkuo+CbciFHwI6O
+         8b5YYjEVg1p7uesi3fBhQiD9EFV0RMTZD+XbK98vRqVhJME6U8250HKlzukT6EWfIPSP
+         aMq0QnRba9AtGeI7sleKPcXgqzOGkqwQO8LWgRj01yCEArGHZaHDAwmDNAjxheigoqoq
+         6IepDnkxmRIosvbJWX9TD20zwOaaA7t7Gl0Tot+CPN3KNS+QknxKlhkyfsHk+Nc0l1qq
+         AfsVvqbzy5kF1C2vUHLJSz7r42OD8ZqJXN4tWa47lb3X4xQVC1EZJEBBc+/CBCLP2lRT
+         B4Qw==
+X-Gm-Message-State: ANhLgQ3GQcYidWHrL5Qd6IoPT8ozmnkh8RuW03dDPCAVUudzdQg2Lbbk
+        nehW2G9zBpaAm2uEfFqbTJo=
+X-Google-Smtp-Source: ADFU+vuFweYk6OhehoyQZbg793z94p/aKZfJExcaGXCIEngab5qdWnPGnlE59M917AKIDjvsSPRFTQ==
+X-Received: by 2002:a05:600c:4410:: with SMTP id u16mr12292810wmn.161.1585563724488;
+        Mon, 30 Mar 2020 03:22:04 -0700 (PDT)
 Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id o67sm21140400wmo.5.2020.03.30.03.13.33
+        by smtp.gmail.com with ESMTPSA id x11sm14972395wru.62.2020.03.30.03.22.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 03:13:33 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 11:13:31 +0100
+        Mon, 30 Mar 2020 03:22:03 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 11:22:01 +0100
 From:   Wei Liu <wei.liu@kernel.org>
-To:     ltykernel@gmail.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com,
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Tianyu Lan <ltykernel@gmail.com>,
         Tianyu Lan <Tianyu.Lan@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH V3 0/6] x86/Hyper-V: Panic code path fixes
-Message-ID: <20200330101331.v4yahaqszgbo27km@debian>
-References: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
+        stable@vger.kernel.org, Yubo Xie <yuboxie@microsoft.com>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        michael.h.kelley@microsoft.com, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH V2] x86/Hyper-V: Fix hv sched clock function return wrong
+ time unit
+Message-ID: <20200330102201.qs2ty22zxx2n53h3@debian>
+References: <20200327021159.31429-1-Tianyu.Lan@microsoft.com>
+ <87k13641rg.fsf@vitty.brq.redhat.com>
+ <20200330100502.hh2yygyxctsmwd6o@debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20200330100502.hh2yygyxctsmwd6o@debian>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 12:57:14AM -0700, ltykernel@gmail.com wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Mon, Mar 30, 2020 at 11:05:02AM +0100, Wei Liu wrote:
+> On Fri, Mar 27, 2020 at 09:53:39AM +0100, Vitaly Kuznetsov wrote:
+> > Tianyu Lan <ltykernel@gmail.com> writes:
+> > 
+> > > From: Yubo Xie <yuboxie@microsoft.com>
+> > >
+> > > sched clock callback should return time with nano second as unit
+> > > but current hv callback returns time with 100ns. Fix it.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Yubo Xie <yuboxie@microsoft.com>
+> > > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > > Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V specific sched clock function")
+> > > ---
+> > > Change since v1:
+> > > 	Update fix commit number in change log. 
+> > > ---
+> > >  drivers/clocksource/hyperv_timer.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> > > index 9d808d595ca8..662ed978fa24 100644
+> > > --- a/drivers/clocksource/hyperv_timer.c
+> > > +++ b/drivers/clocksource/hyperv_timer.c
+> > > @@ -343,7 +343,8 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
+> > >  
+> > >  static u64 read_hv_sched_clock_tsc(void)
+> > >  {
+> > > -	return read_hv_clock_tsc() - hv_sched_clock_offset;
+> > > +	return (read_hv_clock_tsc() - hv_sched_clock_offset)
+> > > +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
+> > >  }
+> > >  
+> > >  static void suspend_hv_clock_tsc(struct clocksource *arg)
+> > > @@ -398,7 +399,8 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+> > >  
+> > >  static u64 read_hv_sched_clock_msr(void)
+> > >  {
+> > > -	return read_hv_clock_msr() - hv_sched_clock_offset;
+> > > +	return (read_hv_clock_msr() - hv_sched_clock_offset)
+> > > +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
+> > >  }
+> > >  
+> > >  static struct clocksource hyperv_cs_msr = {
+> > 
+> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > 
-> This patchset fixes some issues in the Hyper-V panic code path.
-> Patch 1 resolves issue that panic system still responses network
-> packets.
-> Patch 2-3,5-6 resolves crash enlightenment issues.
-> Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
-> VM in order to report crash data or kmsg to host before running
-> kdump kernel.
-> 
-> Tianyu Lan (6):
->   x86/Hyper-V: Unload vmbus channel in hv panic callback
->   x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
->   x86/Hyper-V: Trigger crash enlightenment only once during  system
->     crash.
->   x86/Hyper-V: Report crash register data or ksmg before  running crash
->     kernel
->   x86/Hyper-V: Report crash register data when sysctl_record_panic_msg
->     is not set
->   x86/Hyper-V: Report crash data in die() when panic_on_oops is set
-> 
+> Queued for hyperv-fixes. Thank you both.
 
-Queued to hyperv-next. Thanks.
+It appears Thomas already sent this to Linus, so I will drop this from
+my branch.
 
 Wei.
+
+> 
+> Wei.
