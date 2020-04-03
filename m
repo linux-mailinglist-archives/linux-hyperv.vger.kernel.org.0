@@ -2,157 +2,134 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EB5F19D64D
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 14:05:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CAA219D69C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 14:21:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgDCMFH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 3 Apr 2020 08:05:07 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32870 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbgDCMFH (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:05:07 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z14so1955797wmf.0;
-        Fri, 03 Apr 2020 05:05:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WQUCZCTE/wfncIspo6/ZNTbBsoILMFYafkiG6+ey3Cs=;
-        b=pSnNFTtM5YI501cqh/ryyVPeJmwEBSBsuN2y8qewOXNz9FUCav3FxR7hgueViunHlP
-         eSgYKCq62fNIZkpXZH6Ynq6mOouR3Lzfqx1EL2OHN3NNCHiBzgnLHZAwqHNOXODzI+FI
-         N2d8eNIZHC5DOCQ0+JsnrNMs+Mkq7m2FOiyvxcvwdeKAgg0/FL8ySPYBDajQeI19YXlU
-         xLbTshBiZaanbVwjw74GHiyh97iZNY1ZB2lkur1RBAX2SixuJBJt7ZGIKW/3aSUON1YU
-         BSPLDAj5XfOrQahMquJdw5w4vG3EEcoBq3o9CcJdguLrQ6c2M6i2Y6lQJZWEvp3t67AZ
-         ohBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WQUCZCTE/wfncIspo6/ZNTbBsoILMFYafkiG6+ey3Cs=;
-        b=K3BESkzgDMc5qLnuEYEQCphWd8LLDYKZTHjv2lF1W2PEdq5aIL9erPWFH7fpvoe6sK
-         b76lkZk6UiDOcBuaTnSM/wkHt3LWtl5FkWkWoiSrADZIO5BlGx7jI8JioFq9l0rgUXD/
-         5hianovxYxhpEhRadu+bwgU2MZQFme9Oce+FyLLwGIEf2Su7ysw+CEXZ3IUadAgwdlJM
-         psW+IHYIYPS9BUZimwM3vygR6YFQhhM6fmJwjlbp6tS+UgGMonxOGuSdnveUdZJSTaVL
-         2q1h8EY/A5X1NGBH9twhkspYTRr+4YSf/mmBetvO7ytXE3Z4fZILMdS4kOGCWWual7uL
-         nHUA==
-X-Gm-Message-State: AGi0PuaLJ3lm9fVjY3kinSeIJG3HxrHmuD5x6MUGsU5VVWJXCalWD4n7
-        6M39KPa5mVXLldzs9OX4ABc=
-X-Google-Smtp-Source: APiQypLYe9nuAdZ+EQw0NRG5/kOXlwhnrfOqBhgn/M0rfit03aaXiVbHcGJqCCFDr6nd0PhGZuldvg==
-X-Received: by 2002:a1c:2506:: with SMTP id l6mr8104627wml.44.1585915504593;
-        Fri, 03 Apr 2020 05:05:04 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id f25sm11024914wml.11.2020.04.03.05.05.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 05:05:04 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 14:04:56 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
+        id S2390924AbgDCMVx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 3 Apr 2020 08:21:53 -0400
+Received: from mail-bn8nam12on2124.outbound.protection.outlook.com ([40.107.237.124]:39041
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728140AbgDCMVx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 3 Apr 2020 08:21:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KX5E3bo+ZSNCxi/WSIK25DuGmd2jk62LmGNdueegLK3u8WjafQjkh22aDDGFObnwKYjGq3M4yi+2CpRbW8A5Z9w0wTznS4aWOxdzN+BRqdX8Wf7HjyxnLAVWokMsaXq2KMcRlQ9+7ZYR144uylHmlry8gImE+2BBikc/BAWKFEmRrNez2IW6VBDfT/gFNeujas4eP6ESleA75ShEI/9BdOntbM3aUQ3p0H25wIshEKabDexGeIy++Eng3Qi+7LbX442q8aqiv9vCpGYO1XK67Udrda6gIhUtTrJSTfFKs1rNKEAHbx5Q+Y5ndSsIlLXzDEJLQb042QZwIKgBeaQFug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LnU9SZ7p/LUsAewRE/akMglyvqmV5W7DpOIi/770cWM=;
+ b=RP8R1dNhTyBKeTLIALPOlaTtlGDgfgkb3mo06nCiWvSQCdGk4/FTAuqX2R+eCjO9zN2AMoQNqzwQ3GgLh7lupCZjtUnBqb1WQ/Ju1CZYAo4x3TV2G69e6hcF4l0oZdS5aATU7XTfHdVIYRljpMwXjLQ+ilddyefPHqeok7ap0j9gCmergae3EUq2oH03KLfUq7gx20n4ShiWj4PXRIxTE3ACYipytXQ9gjhHz8GcMrt5XmRRdhITiF/CIf0/qu0m8P9INXEU6yUTPkMvOo7Rdka3U5jw2Em8pYMmfpEsmEW+HyXMKy7+70jyWUdObUnb6XUTaVdcV2CLlen2q22YUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LnU9SZ7p/LUsAewRE/akMglyvqmV5W7DpOIi/770cWM=;
+ b=DvDrzamu3VdOQnMADdsckkkEQB/MiDsA08hki/Kl33yOUEXmojaiHC1w0aT+7MoHrjJ2Ec7X1e677wIFQmgxddleYbLG8i0QmjlZgeE/xR7Xv1fGrwW3dBzxibQBavSddvfWsTIkwBjY8dbKgoqcIETv3n4Ry2cB3dEo+rQCgcg=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB0924.namprd21.prod.outlook.com (2603:10b6:302:10::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.4; Fri, 3 Apr
+ 2020 12:21:47 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Fri, 3 Apr 2020
+ 12:21:47 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 02/11] Drivers: hv: vmbus: Don't bind the
- offer&rescind works to a specific CPU
-Message-ID: <20200403120456.GA24298@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-3-parri.andrea@gmail.com>
- <871rpf5hhm.fsf@vitty.brq.redhat.com>
- <20200326154710.GA13711@andrea>
- <87sghv3u4a.fsf@vitty.brq.redhat.com>
- <20200328170833.GA10153@andrea>
- <MW2PR2101MB1052A2E44557B29C191F557DD7CA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <87o8se2fpr.fsf@vitty.brq.redhat.com>
+Subject: RE: [PATCH -next] hv_debugfs: Make hv_debug_root static
+Thread-Topic: [PATCH -next] hv_debugfs: Make hv_debug_root static
+Thread-Index: AQHWCZIjVQU/P4vQBEiV/n4KA05cSKhnUWGg
+Date:   Fri, 3 Apr 2020 12:21:47 +0000
+Message-ID: <MW2PR2101MB105222D949FB4944EE647F2FD7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200403082845.22740-1-yuehaibing@huawei.com>
+In-Reply-To: <20200403082845.22740-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-03T12:21:45.3772385Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=700a9e34-20b5-4557-beda-d128ec16fa16;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 78662916-1c05-4bf8-826a-08d7d7c99443
+x-ms-traffictypediagnostic: MW2PR2101MB0924:|MW2PR2101MB0924:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB0924A66FEA2ABCE62C397A8AD7C70@MW2PR2101MB0924.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:287;
+x-forefront-prvs: 0362BF9FDB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(346002)(376002)(136003)(26005)(5660300002)(2906002)(4744005)(186003)(9686003)(71200400001)(316002)(7696005)(81166006)(82950400001)(8676002)(86362001)(82960400001)(66556008)(55016002)(54906003)(66476007)(478600001)(4326008)(6506007)(110136005)(81156014)(66946007)(66446008)(8936002)(64756008)(52536014)(10290500003)(8990500004)(33656002)(76116006);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LFJw2eJ4yowwt/iniOIMTqxaVoMIGvUUxLg6eBZ3SSJfRCqIluj7+5t+SdrMdWEN9Fxm3u8naKQjmS86InMBS9Fquu8PwrUFrLDIUU5MRDR9yFN0k5+Nef8ebUyArPtCSVIY+hE61uNlujs3saJKzKYG8SmXREg3N3ClS7hOWtmWwqbdXsRlJWeuPjTMrMX3XV4UxCt1cDzDBfQsUQu/vCuOOSOJaHA+PHInXYN7Hdc2+UgTh67tZqXVASjzMPk6nGGcyJ64lYEGLk+dVTcvGFn/YlD/gk+ZDF4BKioTA8IzBrhfBb3jnEnLe5ZW1TPec1umsMBrvqQbdYllBSZ7qXUuADHJ78jvpn8/oXAsbnq7nfTZJ8FWldW82I7C+5Cl0WVs/XzYXJunv4UfdECOBdt6OEj57/T56IhCyDEkGDzF2vAsPjYyGodfGe3DFDkY
+x-ms-exchange-antispam-messagedata: Ofz+rywIRxQOsHRXjGON5CeRNdlybvPUprYAi3eDgl9/V7OnT0gXesJVsDFvIL1MdfP3eJsTh5hQ4zkzZK81i4/IiH/VXuWCQxF0WZo/CxCeWMwAGwjO9KFMcMFEbm743zaXGg57tkYxF/BRObBiOg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8se2fpr.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78662916-1c05-4bf8-826a-08d7d7c99443
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 12:21:47.1355
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M7wjdFRqZN0k6IhQADFsY1eyCyiRKqHWBA4Is1Bk44vHDez2HzNeM7kCyl0Y/GpCa6yAjxA9NmTJnHxKJdQLQ0fHm3bmThqi6GkJAZsPKdU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0924
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 02:24:16PM +0200, Vitaly Kuznetsov wrote:
-> Michael Kelley <mikelley@microsoft.com> writes:
-> 
-> > From: Andrea Parri <parri.andrea@gmail.com> Sent: Saturday, March 28, 2020 10:09 AM
-> >> 
-> >> > In case we believe that OFFER -> RESCINF sequence is always ordered
-> >> > by the host AND we don't care about other offers in the queue the
-> >> > suggested locking is OK: we're guaranteed to process RESCIND after we
-> >> > finished processing OFFER for the same channel. However, waiting for
-> >> > 'offer_in_progress == 0' looks fishy so I'd suggest we at least add a
-> >> > comment explaining that the wait is only needed to serialize us with
-> >> > possible OFFER for the same channel - and nothing else. I'd personally
-> >> > still slightly prefer the algorythm I suggested as it guarantees we take
-> >> > channel_mutex with offer_in_progress == 0 -- even if there are no issues
-> >> > we can think of today (not strongly though).
-> >> 
-> >> Does it?  offer_in_progress is incremented without channel_mutex...
-> >> 
-> 
-> No, it does not, you're right, by itself the change is insufficient.
-> 
-> >> IAC, I have no objections to apply the changes you suggested.  To avoid
-> >> misunderstandings: vmbus_bus_suspend() presents a similar usage...  Are
-> >> you suggesting that I apply similar changes there?
-> >> 
-> >> Alternatively:  FWIW, the comment in vmbus_onoffer_rescind() does refer
-> >> to "The offer msg and the corresponding rescind msg...".  I am all ears
-> >> if you have any concrete suggestions to improve these comments.
-> >> 
-> >
-> > Given that waiting for 'offer_in_progress == 0' is the current code, I think
-> > there's an argument to made for not changing it if the change isn't strictly
-> > necessary.  This patch set introduces enough change that *is* necessary. :-)
-> >
-> 
-> Sure. I was thinking a bit more about this and it seems that over years
-> we've made the synchronization of channels code too complex (every time
-> for a good reason but still). Now (before this series) we have at least:
-> 
-> vmbus_connection.channel_mutex
-> vmbus_connection.offer_in_progress
-> channel.probe_done
-> channel.rescind
-> Workqueues (vmbus_connection.work_queue,
->  queue_work_on(vmbus_connection.connect_cpu),...)
-> channel.lock spinlock (the least of the problems)
-> 
-> Maybe there's room for improvement? Out of top of my head I'd suggest a
-> state machine for each channel (e.g something like
-> OFFERED->OPENING->OPEN->RESCIND_REQ->RESCINDED->CLOSED) + refcounting
-> (subchannels, open/rescind/... requests in progress, ...) + non-blocking
-> request handling like "Can we handle this rescind offer now? No,
-> refcount is too big. OK, rescheduling the work". Maybe not the best
-> design ever and I'd gladly support any other which improves the
-> readability of the code and makes all state changes and synchronization
-> between them more obvious.
-> 
-> Note, VMBus channel handling driven my messages (unlike events for ring
-> buffer) is not performance critical, we just need to ensure completeness
-> (all requests are handled correctly) with forward progress guarantees
-> (no deadlocks).
-> 
-> I understand the absence of 'hot' issues in the current code is what can
-> make the virtue of redesign questionable and sorry for hijacking the
-> series which doesn't seem to make things worse :-)
+From: YueHaibing <yuehaibing@huawei.com> Sent: Friday, April 3, 2020 1:29 A=
+M
+>=20
+> Fix sparse warning:
+>=20
+> drivers/hv/hv_debugfs.c:14:15: warning: symbol 'hv_debug_root' was not de=
+clared. Should
+> it be static?
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/hv/hv_debugfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hv/hv_debugfs.c b/drivers/hv/hv_debugfs.c
+> index 8a2878573582..ccf752b6659a 100644
+> --- a/drivers/hv/hv_debugfs.c
+> +++ b/drivers/hv/hv_debugfs.c
+> @@ -11,7 +11,7 @@
+>=20
+>  #include "hyperv_vmbus.h"
+>=20
+> -struct dentry *hv_debug_root;
+> +static struct dentry *hv_debug_root;
+>=20
+>  static int hv_debugfs_delay_get(void *data, u64 *val)
+>  {
+> --
+> 2.17.1
+>=20
 
-(Back here...  Sorry for the delay.)
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
 
-FWIW, what you wrote above makes sense to me; and *yes*, the series in
-question was not intended as "let us undertake such a redesign" (quite
-the opposite in fact...)
-
-With regard to this specific patch, it seems to me that we've reached
-a certain consensus or, at least, I don't see complaints  ;-).  Please
-let me know if I misunderstood.
-
-Thanks,
-  Andrea
