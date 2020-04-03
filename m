@@ -2,94 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 258F319D994
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 16:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26F8919D999
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 16:56:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404110AbgDCO4D (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 3 Apr 2020 10:56:03 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35649 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404013AbgDCO4D (ORCPT
+        id S2404007AbgDCO4t (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 3 Apr 2020 10:56:49 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35457 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2403971AbgDCO4t (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:56:03 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i19so8067778wmb.0;
-        Fri, 03 Apr 2020 07:56:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xd2wdVuetpDXEk2PfqeNvx9TKWdzd+iderl1V/no1rk=;
-        b=gzhPhWDMUJiPbQzetxHKg3B2DLbg58B5GmFYjdUT1AIlXXm+gz6k3AVtTsahrIkxsH
-         8DO0zClHNS0Ave2j7H0mz7PSjGcWmi9BWILTWjRXCzaqn+zCLvyFe8kzQqOrTAUKbepE
-         MeCeGhiu31wH9lx7fko++SK8dflLLQDr0af30yP3WNCwXXCblWM6N6vgIhkmzUTbZtNz
-         f3p+kKFbA9YU9W4ZY0IU9K9LbvXJrNPMTxTK35TgeMCQRFx7nb8Qezu+gp3u+UtEBlsn
-         kHus1bTOS2iFB0SgoRACqmmqe0Fx8KLZm6lhj8KpQIBtPkfEjtwCsKrejSD9asSqPX2b
-         IDxg==
+        Fri, 3 Apr 2020 10:56:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585925808;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=loH0Iyc8DztXgdE0IC0vivynYULzbS4RKiT0U2Rn5EM=;
+        b=iFsOYKi5cabq8pgibtmgo1maTft6vIvSQQaMR8fxjs+/HqCn0ohItDy5TzJN8T69504VLA
+        edwXwL5xHafly4IUDBnMkfrBPhqLCX7aypAHngCLTFAhyRzZ2ODQ9mAHqsLqMLaHy78M0+
+        QgwxToYSqGOzTbbpFhGODo9TIKQYGqY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-35-roaLTZj8Ng2QIGA3xbaFbg-1; Fri, 03 Apr 2020 10:56:46 -0400
+X-MC-Unique: roaLTZj8Ng2QIGA3xbaFbg-1
+Received: by mail-wr1-f71.google.com with SMTP id r15so3162302wrm.22
+        for <linux-hyperv@vger.kernel.org>; Fri, 03 Apr 2020 07:56:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xd2wdVuetpDXEk2PfqeNvx9TKWdzd+iderl1V/no1rk=;
-        b=r0xwKTufvT4pisvLb9P2aJYkXSZNtJ2yTZfphb2hdI7GHzga7BAE49pB8FGtDB2zUx
-         s2lwvNZuk65p7sOrKupPqiqpKdSkXCNwCVfnHCvYOHEjN0dntJxdhwg+fqPm1mRJ28ZV
-         OnoCSqICbPy1gzk/7F1gHP8DllIug03X+dDEM/wM+OLvdUJFgM2dT+g8R8rnk7WMQdjm
-         yv1lWLG/cqrw6QZlC9PgXKwiqG5WouABOT5tRSK2nEjA+fpHCoC4/OTZJSphHfr7Fu3E
-         SdpQXh/i6Jbr9+1uUipnBrRtfoHjVgEwWW9u4ItCuOyP5bFBBTdi1SKw/HlYMXVJwH+L
-         8v+g==
-X-Gm-Message-State: AGi0PuaaAUNC/ayI6WaJdRtWNciwvCHbervGc7+YRk9uB8OJv62K9SWN
-        6wYcwMeK1G8iTe68Xeeltz4=
-X-Google-Smtp-Source: APiQypJudNVwFVtHeBX1+GEmZvJQyHXnuQqrcZUGVYDG3MPtBlvdos8jOclywHtAUNKANWwsEzU9zA==
-X-Received: by 2002:a1c:7301:: with SMTP id d1mr9532306wmb.26.1585925760669;
-        Fri, 03 Apr 2020 07:56:00 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id a15sm11562914wme.17.2020.04.03.07.55.59
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=loH0Iyc8DztXgdE0IC0vivynYULzbS4RKiT0U2Rn5EM=;
+        b=aU/pKQhTjhZL7HihqnbEvM7PHCwF7E/7PMfomQ7l+YJRfaTTZCsLzxDiTI8ZStf775
+         baOmTcRDXqnKgALiIaJxE1GNlPR+PPCCUOrg4pJaY+1n1XFY8ij0yh2qjj5CGkpGmKYH
+         KbzJYKDIYTTpXegpkdi+wQRQUXnzZa8dd9d/1JlDarSPYEUuXZQ0paCydES1Zd9IbdLO
+         iQ/lKT11o5KwP2mxMQweeLo64AuXcmbgY0G/f79+usQfo2YqZx/4NRit4KrwhQzb56+a
+         evjFVdnP64d+o8keS1RyuSpwGrws5Bz/JdtFbMI2r7QLPFrm0aEdvY4fbNa8J3siaDox
+         88Og==
+X-Gm-Message-State: AGi0PuZq8m0DFG/pv45XGV+XYpcveQpbj7IdpVDnhUrYcXCcyS5r6a+l
+        z/AcWYMv61C/nPhr+HIL4olxd/nwdCxBS4+MXLKZcQwTZTKpZjmBl5IBZ0Z5lGobG7sCWG+phrV
+        EqB0adGGX+Cp34oVPyiOX9V2i
+X-Received: by 2002:a5d:484b:: with SMTP id n11mr285272wrs.110.1585925805553;
+        Fri, 03 Apr 2020 07:56:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLl4t8+RAIQho3Ho0qyn5QfOhB6yEWA3y5ASECeRQQOMztrN2sciZlYtWlkW2IjLS9OOwFfIQ==
+X-Received: by 2002:a5d:484b:: with SMTP id n11mr285255wrs.110.1585925805311;
+        Fri, 03 Apr 2020 07:56:45 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id o129sm3783691wma.20.2020.04.03.07.56.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 07:56:00 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 16:55:53 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+        Fri, 03 Apr 2020 07:56:44 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
         "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [RFC PATCH 10/11] Drivers: hv: vmbus: Introduce the
- CHANNELMSG_MODIFYCHANNEL message type
-Message-ID: <20200403145533.GA26675@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-11-parri.andrea@gmail.com>
- <87v9mr41j4.fsf@vitty.brq.redhat.com>
- <20200328184821.GA12184@andrea>
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU channel lists with a global array of channels
+In-Reply-To: <20200403133826.GA25401@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com> <20200325225505.23998-4-parri.andrea@gmail.com> <87y2rn4287.fsf@vitty.brq.redhat.com> <20200326170518.GA14314@andrea> <87pncz3tcn.fsf@vitty.brq.redhat.com> <20200328182148.GA11210@andrea> <87imim2epp.fsf@vitty.brq.redhat.com> <20200403133826.GA25401@andrea>
+Date:   Fri, 03 Apr 2020 16:56:43 +0200
+Message-ID: <87wo6wy5w4.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200328184821.GA12184@andrea>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> > I can only think of a 'lazy' approach to setting channel CPU affinity:
-> > we actually re-assign it to the target CPU when we receive first
-> > interrupt there - but it's not very different from re-assigning it there
-> > but still handling interrupts on the old CPU like you do.
-> 
-> Interesting!  I'm wondering whether it'd make sense to use a similar
-> approach to (lazily) "unblock" the "old" CPUs; let me think more...
+Andrea Parri <parri.andrea@gmail.com> writes:
 
-So, I spent some more time thinking about this...  AFAICT, one main
-issue with this approach (besides the fact that we'd need to "save"
-the "old" CPUs...) is that we might be blocking that CPU for "too
-long" (depending on the channel/device usage); also, this approach
-seemed to make the handling of target_cpu a bit more involved, and
-this is a concern considered that (as mentioned before) we'd like to
-keep the target_cpu of *all* channels in the system balanced.
+> On Mon, Mar 30, 2020 at 02:45:54PM +0200, Vitaly Kuznetsov wrote:
+>> Andrea Parri <parri.andrea@gmail.com> writes:
+>> 
+>> >> Correct me if I'm wrong, but currently vmbus_chan_sched() accesses
+>> >> per-cpu list of channels on the same CPU so we don't need a spinlock to
+>> >> guarantee that during an interrupt we'll be able to see the update if it
+>> >> happened before the interrupt (in chronological order). With a global
+>> >> list of relids, who guarantees that an interrupt handler on another CPU
+>> >> will actually see the modified list? 
+>> >
+>> > Thanks for pointing this out!
+>> >
+>> > The offer/resume path presents implicit full memory barriers, program
+>> > -order after the array store which should guarantee the visibility of
+>> > the store to *all* CPUs before the offer/resume can complete (c.f.,
+>> >
+>> >   tools/memory-model/Documentation/explanation.txt, Sect. #13
+>> >
+>> > and assuming that the offer/resume for a channel must complete before
+>> > the corresponding handler, which seems to be the case considered that
+>> > some essential channel fields are initialized only later...)
+>> >
+>> > IIUC, the spin lock approach you suggested will work and be "simpler";
+>> > an obvious side effect would be, well, a global synchronization point
+>> > in vmbus_chan_sched()...
+>> >
+>> > Thoughts?
+>> 
+>> This is, of course, very theoretical as if we're seeing an interrupt for
+>> a channel at the same time we're writing its relid we're already in
+>> trouble. I can, however, try to suggest one tiny improvement:
+>
+> Indeed.  I think the idea (still quite informal) is that:
+>
+>   1) the mapping of the channel relid is propagated to (visible from)
+>      all CPUs before add_channel_work is queued (full barrier in
+>      queue_work()),
+>
+>   2) add_channel_work is queued before the channel is opened (aka,
+>      before the channel ring buffer is allocate/initalized and the
+>      OPENCHANNEL msg is sent and acked from Hyper-V, cf. OPEN_STATE),
+>
+>   3) the channel is opened before Hyper-V can start sending interrupts
+>      for the channel, and hence before vmbus_chan_sched() can find the
+>      channel relid in recv_int_page set,
+>
+>   4) vmbus_chan_sched() finds the channel's relid in recv_int_page
+>      set before it search/load from the channel array (full barrier
+>      in sync_test_and_clear_bit()).
+>
+> This is for the "normal"/not resuming from hibernation case; for the
+> latter, notice that:
+>
+>   a) vmbus_isr() (and vmbus_chan_sched()) can not run until when
+>      vmbus_bus_resume() has finished (@resume_noirq callback),
+>
+>   b) vmbus_bus_resume() can not complete before nr_chan_fixup_on_resume
+>      equals 0 in check_ready_for_resume_event().
+>      
+> (and check_ready_for_resume_event() does also provides a full barrier).
+>
+> If makes sense to you, I'll try to add some of the above in comments.
+>
 
-I'm sticking to the approach implemented here for now: I'm planning
-to send a new version of the series with minor changes soon.
+It does, thank you!
 
-Thanks,
-  Andrea
+-- 
+Vitaly
+
