@@ -2,143 +2,156 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AA7819CE75
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 04:00:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E041819D0BF
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 09:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389507AbgDCCAn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 2 Apr 2020 22:00:43 -0400
-Received: from mail-mw2nam10on2134.outbound.protection.outlook.com ([40.107.94.134]:45558
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389366AbgDCCAn (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 2 Apr 2020 22:00:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S99pxtl/AggvLBlJvllEHfWG7A0m+win5Gtp0/cvosAnS80xRjuksRTyuuAvVYrOPucaXeOF3vU8J6tR5dGMUcdOs9dajfg9BE9ZEqviL51/tkx8SAiZ3XEVmsCx334tdmwcJ2JkTjowS8vUw28VPIgVZgqXKS4FngDvpX5DgAIN4LhSgu8mulcRvzakEsCjKIeofTa/C4YEx5Eo0jjyJk8mbRbF+ryFSVdV6n6Yg2Wa+aHMR8Rcls16NePr3Hk5G/rYy97Oveurm4p6H76GdGdyesIfP8fgQ+VtNgpW15NYcb9n0zxMkYNBRFWVFItlR4rrgIkYKLkRT++JMmCI7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i95rcy8FzpaASpHAeghdFvS3+WNICawHJ1s+51xb4RI=;
- b=G9bYYq0UG0IJlNWWvX2pSP6ysIbyJOw3eC2MN2WVTdsvpw6qhwAb3kJNwZQlD2ycG7FLf3qL9VhguUg6x8iXUl/0rHZB1NXBPzM/zRCde/DdmXXFtUx8hTEf6Hc3ZL9BAZdAXH5CgvBlvC3zO2enOfFVriQiX2wZPlq3EW1VCzK5rVJRcH5sqvCnoWvS+S7mc5Bnu608EslhW/oLSd/us7iyj8R+AFBiS7e5txr+qLnIGQXcf9xiyLXfwcF5amPCj6yJBiwon09lBNSpvWFx32F7sjqy8n86qLPT8Ql36SdgrqtU7n62IKNcJ3cXjzeO/WiVDjtumb7Dxf2cjt/xaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i95rcy8FzpaASpHAeghdFvS3+WNICawHJ1s+51xb4RI=;
- b=SpVhdvSElPmPzoaUJJCNqsWNilHD2Av1ilNetlsIAZGUr8xuIioJVVH5MiZjoJtvnE+uFDhYJYrpNCppYYD+EGAz8fXMu5Gzj3DM9lXXNNDEpLQZtmoimU7lvJgU16HAvzYKIPG0uzmnCON2k71OQ2PTMbVDGEL1Rwq90sFCVCA=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0938.namprd21.prod.outlook.com (2603:10b6:302:4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.2; Fri, 3 Apr
- 2020 02:00:02 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Fri, 3 Apr 2020
- 02:00:02 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        id S2389723AbgDCHDf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 3 Apr 2020 03:03:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59456 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730550AbgDCHDf (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 3 Apr 2020 03:03:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585897413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f1qqB1lJcxaOIJdybFP2nmQlGVmtCZINAz0JQfogkUI=;
+        b=EVz3WfpEF0gnPvhk9FdxWq1ABPA8mDm/fUqIMitLu0RerevJQJxvPR/CoTR2i8slrqY5Z/
+        CqjUhjpoOpE/bxz+plgK9eljZWVZysw/Iu3bQE6iiW7gzVAlVCCznu2ltAdjlx9ruFD96F
+        Zb8oARh1vLteUTNpzg7dNoPnx/jcy7I=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-tbhmMix7OJiJz2uWhkzsMQ-1; Fri, 03 Apr 2020 03:03:30 -0400
+X-MC-Unique: tbhmMix7OJiJz2uWhkzsMQ-1
+Received: by mail-wm1-f72.google.com with SMTP id u6so1681507wmm.6
+        for <linux-hyperv@vger.kernel.org>; Fri, 03 Apr 2020 00:03:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=f1qqB1lJcxaOIJdybFP2nmQlGVmtCZINAz0JQfogkUI=;
+        b=hCyy4mxVo3Y/f2X8Ne41SUJ6BtssvW2rFyyH9+62ht/JD2a/6bAzjgdfb9Xj9Tch7o
+         P8P8BTPAJ9Ag5GMyoZ7AU7IW6MUntFuj9sNdUMlkjO05r+vmeNM+1JKKmCMW5fy8OSbf
+         ucJBTb+r8IZWYgBrkZh772zCTDYIY2S4O3WkN5eGYBmAQOXuaLw25Va3FPTOUdpo3qLi
+         kF28jxJUpyh1CLof3bGVgMAqlmp6pJsAwNrhKXjalhhdUXys1MXcrozQu6rOL4ovF/Nw
+         Kz6nbBOv57YtGIjdmmOcTLyODcF+H8XNBx6etTQH31h/HDY3RB0AaaFOuiN5yiWSDg5D
+         leGg==
+X-Gm-Message-State: AGi0PuaPrILRZMZ14pO03S9PKhrksciMQBqNVGTYr3r5VhXA963QfFdQ
+        IYurCCOwyjnIH/z6V91qX43myY/+QxO9+RoIPswgC0NqrEJc1Ekv+dBNoUSMHaVpXGOCQubdnJt
+        OhCJ6CtwedhBmtok62vgUtyQs
+X-Received: by 2002:adf:9168:: with SMTP id j95mr7050289wrj.145.1585897409145;
+        Fri, 03 Apr 2020 00:03:29 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI9ApfdigOp/bpV3TSNlmrxc6hlVZfZJsgIPls3WO5f8QCC1uQMAwtm+TFeAzJrg1He2meKww==
+X-Received: by 2002:adf:9168:: with SMTP id j95mr7050260wrj.145.1585897408903;
+        Fri, 03 Apr 2020 00:03:28 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 9sm10024793wmm.6.2020.04.03.00.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 00:03:28 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Wei Liu <wei.liu@kernel.org>,
         Tianyu Lan <Tianyu.Lan@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: RE: [PATCH 5/5] Drivers: hv: check VMBus messages lengths
-Thread-Topic: [PATCH 5/5] Drivers: hv: check VMBus messages lengths
-Thread-Index: AQHWCBGsObmTW9nyeEOZJAD7Y+XV+ahmpgTA
-Date:   Fri, 3 Apr 2020 02:00:02 +0000
-Message-ID: <MW2PR2101MB1052E7B2458F489E0123C1D9D7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200401103638.1406431-1-vkuznets@redhat.com>
- <20200401103816.1406642-1-vkuznets@redhat.com>
- <20200401103816.1406642-2-vkuznets@redhat.com>
-In-Reply-To: <20200401103816.1406642-2-vkuznets@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-03T02:00:00.6095388Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e471e7da-d48a-4361-bfd5-9a032b461263;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5cb0b8d1-4aee-4a9b-1c4b-08d7d772b8e6
-x-ms-traffictypediagnostic: MW2PR2101MB0938:|MW2PR2101MB0938:|MW2PR2101MB0938:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB09386C9FFE340B3E2D8DB9AED7C70@MW2PR2101MB0938.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(6506007)(10290500003)(110136005)(15650500001)(54906003)(82960400001)(33656002)(7696005)(316002)(478600001)(8936002)(82950400001)(81156014)(55016002)(8676002)(81166006)(66946007)(186003)(9686003)(4326008)(66556008)(66476007)(64756008)(71200400001)(8990500004)(76116006)(26005)(86362001)(2906002)(52536014)(5660300002)(66446008);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: w7VlTTz5IWdWlGKfO3ry83/FS+6hoq9CJtWl8SvjGmDIGh1lGjOsSk+i31eyYM5K5Tsh+12JPD0DBZ/XEMUYYWucUrRVCMfKvuD6Hxg7J9H5gthDv1I8jkfKH4KmoNVVbG72+xJQ5ToAJFTw4zb6AnPSJsKHEg3IZkHPzvhmGdhvVtaJQNOpsVorQyOvMAqmVxEjTGmEeTqSI4KiYVGjaEp1DJbNfJWfbTUn977t4kKeueWVjIaqgFj5swAzV1G3CnXdgbu4jLLVoHiGCQQDWTtDgreBbeAFhbtndjFxAjy2fETDn7oHRNJmmgP8UW1gx5Ta2U+8QeNn5FbakS1l9dTOsnQrPY7SJTAcIrXb61Ejs+gZ+UMK4cJZId79RFWlky9nCesol3NfmLQ8zSPg04glXkOyA6zUdYIiUZpMK0nlfQknMSGy9+UaUj4v2j5k
-x-ms-exchange-antispam-messagedata: d+1r8Ykk7awDYXC2s/S7BAZNjdhDF7FtpSIzmTCUI5h49lbl5ZvkZJpVMOqvyN0u7fZUEmGa0OKqf1vlKev1A1As1p6D0ws7LYlPI69iy5TwBD5dlDNOVvTDmWj/MjHCS8ZPcr4ur3/jb/f3M24yvA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "Andrea Parri \(Microsoft\)" <parri.andrea@gmail.com>,
+        163 <freedomsky1986@163.com>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: [EXTERNAL] [PATCH 1/5] Drivers: hv: copy from message page only what's needed
+In-Reply-To: <MW2PR2101MB1052836B9357770FBE0C3825D7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200401103638.1406431-1-vkuznets@redhat.com> <20200401103638.1406431-2-vkuznets@redhat.com> <3ed15a02-0b86-0ec1-6daf-df94f8fc6ba5@163.com> <87a73tzwdv.fsf@vitty.brq.redhat.com> <MW2PR2101MB1052836B9357770FBE0C3825D7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Date:   Fri, 03 Apr 2020 09:03:26 +0200
+Message-ID: <875zehyrsx.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cb0b8d1-4aee-4a9b-1c4b-08d7d772b8e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 02:00:02.1448
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hxn1OaGukmUwSiLMYVkqZ0N6qjCiKdOZDYD9GuhZvDeOSrtc///oJrLpneGmHIg1WQmEHykG0S22jJuHSL/aO5FCQ+6tM1U++Q1+8fuJ2Wo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>  Sent: Wednesday, April 1, 202=
-0 3:38 AM
->=20
-> VMBus message handlers (channel_message_table) receive a pointer to
-> 'struct vmbus_channel_message_header' and cast it to a structure of their
-> choice, which is sometimes longer than the header. We, however, don't che=
-ck
-> that the message is long enough so in case hypervisor screws up we'll be
-> accessing memory beyond what was allocated for temporary buffer.
->=20
-> Previously, we used to always allocate and copy 256 bytes from message pa=
-ge
-> to temporary buffer but this is hardly better: in case the message is
-> shorter than we expect we'll be trying to consume garbage as some real
-> data and no memory guarding technique will be able to identify an issue.
->=20
-> Introduce 'min_payload_len' to 'struct vmbus_channel_message_table_entry'
-> and check against it in vmbus_on_msg_dpc(). Note, we can't require the
-> exact length as new hypervisor versions may add extra fields to messages,
-> we only check that the message is not shorter than we expect.
+Michael Kelley <mikelley@microsoft.com> writes:
 
-This assumes that the current structure definitions don't already
-include extra fields that were added in newer versions of Hyper-V.  If they=
- did,
-the minimum length test could fail on older versions of Hyper-V.  But I
-looked through the structure definitions and don't see any indication that
-such extra fields have been added, so this should be OK.
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>  Sent: Thursday, April 2, 2020 9:27 AM
+>> 
+>> 163 <freedomsky1986@163.com> writes:
+>> 
+>> > On 4/1/2020 6:36 PM, Vitaly Kuznetsov wrote:
+>> >> Hyper-V Interrupt Message Page (SIMP) has 16 256-byte slots for
+>> >> messages. Each message comes with a header (16 bytes) which specifies the
+>> >> payload length (up to 240 bytes). vmbus_on_msg_dpc(), however, doesn't
+>> >> look at the real message length and copies the whole slot to a temporary
+>> >> buffer before passing it to message handlers. This is potentially dangerous
+>> >> as hypervisor doesn't have to clean the whole slot when putting a new
+>> >> message there and a message handler can get access to some data which
+>> >> belongs to a previous message.
+>> >>
+>> >> Note, this is not currently a problem because all message handlers are
+>> >> in-kernel but eventually we may e.g. get this exported to userspace.
+>> >>
+>> >> Note also, that this is not a performance critical path: messages (unlike
+>> >> events) represent rare events so it doesn't really matter (from performance
+>> >> point of view) if we copy too much.
+>> >>
+>> >> Fix the issue by taking into account the real message length. The temporary
+>> >> buffer allocated by vmbus_on_msg_dpc() remains fixed size for now.
+>> >>
+>> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> >> ---
+>> >>   drivers/hv/vmbus_drv.c | 3 ++-
+>> >>   1 file changed, 2 insertions(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> >> index 029378c27421..2b5572146358 100644
+>> >> --- a/drivers/hv/vmbus_drv.c
+>> >> +++ b/drivers/hv/vmbus_drv.c
+>> >> @@ -1043,7 +1043,8 @@ void vmbus_on_msg_dpc(unsigned long data)
+>> >>   			return;
+>> >>
+>> >>   		INIT_WORK(&ctx->work, vmbus_onmessage_work);
+>> >> -		memcpy(&ctx->msg, msg, sizeof(*msg));
+>> >> +		memcpy(&ctx->msg, msg, sizeof(msg->header) +
+>> >> +		       msg->header.payload_size);
+>> >>
+>> >
+>> > Hi Vitaly:
+>> >       I think we still need to check whether the payload_size passed from
+>> > Hyper-V is valid or not here to avoid cross-border issue before doing
+>> > copying.
+>> 
+>> Sure,
+>> 
+>> the header.payload_size must be 0 <= header.payload_size <= 240
+>> 
+>> I'll add the check.
+>> 
+>
+> With this change,
+>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>
+> FWIW, all of this VMbus code, as well as the drivers for the VMbus
+> synthetic devices, make the fundamental assumption that Hyper-V
+> is trustworthy and doesn't send any malformed messages.  However,
+> starting this summer we will be submitting changes to "harden" all
+> of the interactions with Hyper-V to no longer make that assumption.
+> All relevant fields will be checked before being used so that incorrect
+> memory references aren't made.  This patch is one small step in that
+> direction. :-)
 
->=20
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  drivers/hv/channel_mgmt.c | 54 ++++++++++++++++++++++-----------------
->  drivers/hv/hyperv_vmbus.h |  1 +
->  drivers/hv/vmbus_drv.c    |  6 +++++
->  3 files changed, 37 insertions(+), 24 deletions(-)
->=20
+What about 'alternetive' Hyper-V implementations? :-)
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+On a more serious note, my understanding is: if your hypervisor
+misbehaves it's 'game over' for you (as a guest), the only question is
+how hard is it going to be to figure out what happened. In this
+particular case if hypervisor send us garbase we probably want to fail
+immediately and not try to handle it as a valid message.
+
+Thank you for your review!
+
+-- 
+Vitaly
+
