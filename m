@@ -2,134 +2,158 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CAA219D69C
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 14:21:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2BED19D7C3
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 15:38:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390924AbgDCMVx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 3 Apr 2020 08:21:53 -0400
-Received: from mail-bn8nam12on2124.outbound.protection.outlook.com ([40.107.237.124]:39041
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728140AbgDCMVx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:21:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KX5E3bo+ZSNCxi/WSIK25DuGmd2jk62LmGNdueegLK3u8WjafQjkh22aDDGFObnwKYjGq3M4yi+2CpRbW8A5Z9w0wTznS4aWOxdzN+BRqdX8Wf7HjyxnLAVWokMsaXq2KMcRlQ9+7ZYR144uylHmlry8gImE+2BBikc/BAWKFEmRrNez2IW6VBDfT/gFNeujas4eP6ESleA75ShEI/9BdOntbM3aUQ3p0H25wIshEKabDexGeIy++Eng3Qi+7LbX442q8aqiv9vCpGYO1XK67Udrda6gIhUtTrJSTfFKs1rNKEAHbx5Q+Y5ndSsIlLXzDEJLQb042QZwIKgBeaQFug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LnU9SZ7p/LUsAewRE/akMglyvqmV5W7DpOIi/770cWM=;
- b=RP8R1dNhTyBKeTLIALPOlaTtlGDgfgkb3mo06nCiWvSQCdGk4/FTAuqX2R+eCjO9zN2AMoQNqzwQ3GgLh7lupCZjtUnBqb1WQ/Ju1CZYAo4x3TV2G69e6hcF4l0oZdS5aATU7XTfHdVIYRljpMwXjLQ+ilddyefPHqeok7ap0j9gCmergae3EUq2oH03KLfUq7gx20n4ShiWj4PXRIxTE3ACYipytXQ9gjhHz8GcMrt5XmRRdhITiF/CIf0/qu0m8P9INXEU6yUTPkMvOo7Rdka3U5jw2Em8pYMmfpEsmEW+HyXMKy7+70jyWUdObUnb6XUTaVdcV2CLlen2q22YUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LnU9SZ7p/LUsAewRE/akMglyvqmV5W7DpOIi/770cWM=;
- b=DvDrzamu3VdOQnMADdsckkkEQB/MiDsA08hki/Kl33yOUEXmojaiHC1w0aT+7MoHrjJ2Ec7X1e677wIFQmgxddleYbLG8i0QmjlZgeE/xR7Xv1fGrwW3dBzxibQBavSddvfWsTIkwBjY8dbKgoqcIETv3n4Ry2cB3dEo+rQCgcg=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0924.namprd21.prod.outlook.com (2603:10b6:302:10::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.4; Fri, 3 Apr
- 2020 12:21:47 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Fri, 3 Apr 2020
- 12:21:47 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     YueHaibing <yuehaibing@huawei.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1728175AbgDCNif (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 3 Apr 2020 09:38:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42290 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390770AbgDCNif (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 3 Apr 2020 09:38:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h15so8553510wrx.9;
+        Fri, 03 Apr 2020 06:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ngUgjvZBWhVhOxFEXIDkx6xzsKtQ5zuVaNcA064tn4Q=;
+        b=ci8KXxcRJrNNYah2UU5gFhowpYCli5deBpIuCq29PgGWbVIrzvr9Jp9fLNC9N11zp/
+         Sekfzn4vN4zcV54Id7tDFZT9462/7sdKQrn90ctsv3n+87yO65ywf5UYEPbs465wjrCk
+         4mBIXFyPmFF5/48Rd8JynP6WF9zVNdQBKS8eFm5QEE4WbmO2nZDqspCs7kWI0RxZdGD9
+         kNJokcnssdL+AMtROKC2m75bOhN8gq5BjzKgUJrh3AG3uZST1crrTGfSXBkpeZ3hSbKv
+         6LuRe4Zgn4qBqHx7hKS9oNU788MTPyDcBUxJJ+ZbNf6gN5qSuZnrvLjhMt2iXd9AqHyR
+         RUcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ngUgjvZBWhVhOxFEXIDkx6xzsKtQ5zuVaNcA064tn4Q=;
+        b=ZUD3T5jgBPphT7Ni8adY+oJPj8tPFlkp5i0LBVq652M405eMX1vPdbxYVz0eW/VuvH
+         sQvF1sogQiNZILw23upTQgtcdm/QiLxGQp9gm4Hwf2dMDLAdHI3hSZcRsx9rSms1WSIY
+         rd2AxM5VHclfSmXrj6Kgrsq0CQJx+lMCA1BuR9RoWmqClu3l9ZnJx8TA4tnUwXZC5jvA
+         fEzVvMt5Ac6aCZ/4N1NBpsvN2VdWGrQaGJ1lKVS2DkVBDUd22sWRmWqzv4/CKlVd21Mt
+         LPIG+JpKh9AgkAmDX71W0v/urGVqHL0Tjr3WCnZv9SHHMSTxUscr1uJcz4JRPKjW/iEF
+         u9HQ==
+X-Gm-Message-State: AGi0PuYXSFJvEbqhlFQKY3aMQ2QDnQQxMJuRNe9b9GcTtcvBdjOuJJPI
+        g70lR0qxSqn1ZJqzFn7RZuM=
+X-Google-Smtp-Source: APiQypKlE8pDWi7VTwPr/NlgbiNOyuGhYIfDBVKNVEc0vFBtC9rRsjhB2dwwteMQ+izNzqMhj4vV8w==
+X-Received: by 2002:adf:bc4a:: with SMTP id a10mr9036370wrh.7.1585921112598;
+        Fri, 03 Apr 2020 06:38:32 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id s11sm11837516wrw.58.2020.04.03.06.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 06:38:32 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 15:38:26 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next] hv_debugfs: Make hv_debug_root static
-Thread-Topic: [PATCH -next] hv_debugfs: Make hv_debug_root static
-Thread-Index: AQHWCZIjVQU/P4vQBEiV/n4KA05cSKhnUWGg
-Date:   Fri, 3 Apr 2020 12:21:47 +0000
-Message-ID: <MW2PR2101MB105222D949FB4944EE647F2FD7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200403082845.22740-1-yuehaibing@huawei.com>
-In-Reply-To: <20200403082845.22740-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-03T12:21:45.3772385Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=700a9e34-20b5-4557-beda-d128ec16fa16;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 78662916-1c05-4bf8-826a-08d7d7c99443
-x-ms-traffictypediagnostic: MW2PR2101MB0924:|MW2PR2101MB0924:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB0924A66FEA2ABCE62C397A8AD7C70@MW2PR2101MB0924.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:287;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(346002)(376002)(136003)(26005)(5660300002)(2906002)(4744005)(186003)(9686003)(71200400001)(316002)(7696005)(81166006)(82950400001)(8676002)(86362001)(82960400001)(66556008)(55016002)(54906003)(66476007)(478600001)(4326008)(6506007)(110136005)(81156014)(66946007)(66446008)(8936002)(64756008)(52536014)(10290500003)(8990500004)(33656002)(76116006);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LFJw2eJ4yowwt/iniOIMTqxaVoMIGvUUxLg6eBZ3SSJfRCqIluj7+5t+SdrMdWEN9Fxm3u8naKQjmS86InMBS9Fquu8PwrUFrLDIUU5MRDR9yFN0k5+Nef8ebUyArPtCSVIY+hE61uNlujs3saJKzKYG8SmXREg3N3ClS7hOWtmWwqbdXsRlJWeuPjTMrMX3XV4UxCt1cDzDBfQsUQu/vCuOOSOJaHA+PHInXYN7Hdc2+UgTh67tZqXVASjzMPk6nGGcyJ64lYEGLk+dVTcvGFn/YlD/gk+ZDF4BKioTA8IzBrhfBb3jnEnLe5ZW1TPec1umsMBrvqQbdYllBSZ7qXUuADHJ78jvpn8/oXAsbnq7nfTZJ8FWldW82I7C+5Cl0WVs/XzYXJunv4UfdECOBdt6OEj57/T56IhCyDEkGDzF2vAsPjYyGodfGe3DFDkY
-x-ms-exchange-antispam-messagedata: Ofz+rywIRxQOsHRXjGON5CeRNdlybvPUprYAi3eDgl9/V7OnT0gXesJVsDFvIL1MdfP3eJsTh5hQ4zkzZK81i4/IiH/VXuWCQxF0WZo/CxCeWMwAGwjO9KFMcMFEbm743zaXGg57tkYxF/BRObBiOg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU
+ channel lists with a global array of channels
+Message-ID: <20200403133826.GA25401@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-4-parri.andrea@gmail.com>
+ <87y2rn4287.fsf@vitty.brq.redhat.com>
+ <20200326170518.GA14314@andrea>
+ <87pncz3tcn.fsf@vitty.brq.redhat.com>
+ <20200328182148.GA11210@andrea>
+ <87imim2epp.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78662916-1c05-4bf8-826a-08d7d7c99443
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 12:21:47.1355
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M7wjdFRqZN0k6IhQADFsY1eyCyiRKqHWBA4Is1Bk44vHDez2HzNeM7kCyl0Y/GpCa6yAjxA9NmTJnHxKJdQLQ0fHm3bmThqi6GkJAZsPKdU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0924
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imim2epp.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com> Sent: Friday, April 3, 2020 1:29 A=
-M
->=20
-> Fix sparse warning:
->=20
-> drivers/hv/hv_debugfs.c:14:15: warning: symbol 'hv_debug_root' was not de=
-clared. Should
-> it be static?
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/hv/hv_debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/hv_debugfs.c b/drivers/hv/hv_debugfs.c
-> index 8a2878573582..ccf752b6659a 100644
-> --- a/drivers/hv/hv_debugfs.c
-> +++ b/drivers/hv/hv_debugfs.c
-> @@ -11,7 +11,7 @@
->=20
->  #include "hyperv_vmbus.h"
->=20
-> -struct dentry *hv_debug_root;
-> +static struct dentry *hv_debug_root;
->=20
->  static int hv_debugfs_delay_get(void *data, u64 *val)
->  {
-> --
-> 2.17.1
->=20
+On Mon, Mar 30, 2020 at 02:45:54PM +0200, Vitaly Kuznetsov wrote:
+> Andrea Parri <parri.andrea@gmail.com> writes:
+> 
+> >> Correct me if I'm wrong, but currently vmbus_chan_sched() accesses
+> >> per-cpu list of channels on the same CPU so we don't need a spinlock to
+> >> guarantee that during an interrupt we'll be able to see the update if it
+> >> happened before the interrupt (in chronological order). With a global
+> >> list of relids, who guarantees that an interrupt handler on another CPU
+> >> will actually see the modified list? 
+> >
+> > Thanks for pointing this out!
+> >
+> > The offer/resume path presents implicit full memory barriers, program
+> > -order after the array store which should guarantee the visibility of
+> > the store to *all* CPUs before the offer/resume can complete (c.f.,
+> >
+> >   tools/memory-model/Documentation/explanation.txt, Sect. #13
+> >
+> > and assuming that the offer/resume for a channel must complete before
+> > the corresponding handler, which seems to be the case considered that
+> > some essential channel fields are initialized only later...)
+> >
+> > IIUC, the spin lock approach you suggested will work and be "simpler";
+> > an obvious side effect would be, well, a global synchronization point
+> > in vmbus_chan_sched()...
+> >
+> > Thoughts?
+> 
+> This is, of course, very theoretical as if we're seeing an interrupt for
+> a channel at the same time we're writing its relid we're already in
+> trouble. I can, however, try to suggest one tiny improvement:
 
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Indeed.  I think the idea (still quite informal) is that:
 
+  1) the mapping of the channel relid is propagated to (visible from)
+     all CPUs before add_channel_work is queued (full barrier in
+     queue_work()),
+
+  2) add_channel_work is queued before the channel is opened (aka,
+     before the channel ring buffer is allocate/initalized and the
+     OPENCHANNEL msg is sent and acked from Hyper-V, cf. OPEN_STATE),
+
+  3) the channel is opened before Hyper-V can start sending interrupts
+     for the channel, and hence before vmbus_chan_sched() can find the
+     channel relid in recv_int_page set,
+
+  4) vmbus_chan_sched() finds the channel's relid in recv_int_page
+     set before it search/load from the channel array (full barrier
+     in sync_test_and_clear_bit()).
+
+This is for the "normal"/not resuming from hibernation case; for the
+latter, notice that:
+
+  a) vmbus_isr() (and vmbus_chan_sched()) can not run until when
+     vmbus_bus_resume() has finished (@resume_noirq callback),
+
+  b) vmbus_bus_resume() can not complete before nr_chan_fixup_on_resume
+     equals 0 in check_ready_for_resume_event().
+     
+(and check_ready_for_resume_event() does also provides a full barrier).
+
+If makes sense to you, I'll try to add some of the above in comments.
+
+Thanks,
+  Andrea
+
+
+> 
+> vmbus_chan_sched() now clean the bit in the event page and then searches
+> for a channel with this relid; in case we allow the search to
+> (temporary) fail we can reverse the logic: search for the channel and
+> clean the bit only if we succeed. In case we fail, next time (next IRQ)
+> we'll try again and likely succeed. The only purpose is to make sure no
+> interrupts are ever lost.  This may be an overkill, we may want to try
+> to count how many times (if ever) this happens. 
+> 
+> Just a thought though.
+> 
+> -- 
+> Vitaly
+> 
