@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0415319CE62
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 03:54:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4294019CE64
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Apr 2020 03:55:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389507AbgDCByg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 2 Apr 2020 21:54:36 -0400
-Received: from mail-mw2nam10on2092.outbound.protection.outlook.com ([40.107.94.92]:23431
+        id S2389422AbgDCBzc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 2 Apr 2020 21:55:32 -0400
+Received: from mail-mw2nam10on2137.outbound.protection.outlook.com ([40.107.94.137]:1217
         "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389422AbgDCByg (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 2 Apr 2020 21:54:36 -0400
+        id S2389366AbgDCBzc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 2 Apr 2020 21:55:32 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gy2sg4z/gx26D7n3NKSqMvLPBKoPmpc6H5KTOLIwRcqO1MP0BMr8BfkAkNsI42ckeGlX7cr1mI57baDWTKgve1f1086iIK0ZDfKhTSQQ3bhX1Yn7o1D4Tr1tl1Q+khONVHWx952JqNermpL5r95Zf9ie+am4hlOlyB8KxkYYKzJap3+Uv4oc75OUKX4RxuDBGTHV7Bpiz4OQ5QOr0Qn3q8oWaa6R16tH2axVyNIttjXWfnzeslc2iVVWkI9FFbB4PgfQxJD1+ilBm4AKzjMOoUAyb16eMOLR/xGZjnFZwwmxX1g47Q5aysEr/mnEIO7BCkDlRl351qnIkS4JF83fhw==
+ b=Dw29KjGWR+WEr+eBWHnLnSEa84fCxttl4CHFQZy64TXY1HVOyxhQU2ITyyiT/l4dh4an41RFnRDcdztwlPpXsaPKT4JKzIc7ICsCihaBFjDWdvyVvJvX2z9omsbr0ZtpiME9c4dCcaKW4iV6lBfIbzzL1yqe9M16Tm/0wiQ8dq09zZRqse+plgrQWH+AL4LdNUn1kn+MMtdkTsz4C3gfP5KWyTg7kpI4UGaydpPiNF0dSdoWQalijQAJP/skS6XFfVIPJMzADqjKdIHenqqL9tmEV5WvxYwUhcw8he5hzKOJqrr4RUz+4P5b2ivsaR2GQH4ktnBUtxRQlVjBw7zKrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ztK4imSfL5fxR8ZpYYcRfEDRF/VU685WVXbueYYGrU0=;
- b=cOE9SldoPbXzZ0Sq5SflgSotRW4D0EimebIs5WOJP/3qGj5HhIsZpDFNfyw7R3EIDhitNEQLsxubRAA4sASdrAdy7iGW9a+8vJnsTrvkEwBgVcI+V31G4/j2Y2QxCS96kCRizIsHU/QprelR1mMCzS4paw5+UdZtDij/zjtp8EA/r3ALu2PFJXl4yyMV9gSkod3lRs+ZNEoEf6iBfggFZAYFmw9k0jLiCN07yFc1/9rzHitYptQTN+SwsOxvxquunfI5zfmZkXcA1MahILydDu3n1Pm6H846k4k2BHz3QwGCBEWe72Xn9zAcSunJA3YI25bSGWQ30TDriidiLfThdA==
+ bh=SYf/L87+E0N5zuIvpP7xw75ESyC7IRnqChwV7OSqnrg=;
+ b=eVz1qKriUoxB9uTIaL1Sifi+c1TmJycx8EAYl22iOsF1cFqPi/tPbpJP2yciEFLQptALwpzL4HlT2CHHFKwVe4/Gyp3udWVqlXqwdAPyzImPzKKFjc3uHyhG9AbJ1gbKRbcUAM8YKCxnwo8FRZH5W1WQk7LK4MRHF7dU9GiW8L/oLN2ji649aygpFcQDKjRiwSwAM9Ozyku9H5VptMYVNius1OlxZ2AKL+SeUkJjg8MsYNDcxiQwMo7ydZ0K5PrFx20Xd2/QuBDjPK5g4M4s/IY2CfhBo/+QeMNbjICKv52PJFe7pneiQ1Uh1+4oQnwNn6Mw1l8lAS/jYFYU2r5jkA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ztK4imSfL5fxR8ZpYYcRfEDRF/VU685WVXbueYYGrU0=;
- b=jPiqDaosuZI++rYQKD2ZJDOxtnNcmwBnoLFPKhyILv4vhqysuu7JQFiJRbCEFFUC0TJHy7hNLRrVLQ2GoYk69L6A8ch2ZNYLza45mdjvbDu/j69bRyWukfkqymd25gxKbx2wTouVmPeqsaargt396CFcw8Ra8BrUqRaroq64VO0=
+ bh=SYf/L87+E0N5zuIvpP7xw75ESyC7IRnqChwV7OSqnrg=;
+ b=S6v7X1s5ellILME7I4syylE9b918T8PvvOQ5ySoJXoBde5coQ5z0xHfn/q52ITvx9D/8E3by2Srre9SeUy9Lo/DRWliYu2/a6ue7BGp9SB0xboyh6gxnCwASJM+i7D3qe2Qix7TpF80tunGi4ou8+b7HzDr7/c4SjtLxp2uyKAc=
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
  by MW2PR2101MB0938.namprd21.prod.outlook.com (2603:10b6:302:4::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.2; Fri, 3 Apr
- 2020 01:54:33 +0000
+ 2020 01:55:29 +0000
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Fri, 3 Apr 2020
- 01:54:33 +0000
+ 01:55:29 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     vkuznets <vkuznets@redhat.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
@@ -46,16 +46,16 @@ CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: RE: [PATCH 2/5] Drivers: hv: allocate the exact needed memory for
- messages
-Thread-Topic: [PATCH 2/5] Drivers: hv: allocate the exact needed memory for
- messages
-Thread-Index: AQHWCBFysj6RQ5ogm06yjYOd1hNLT6hmpQ8w
-Date:   Fri, 3 Apr 2020 01:54:33 +0000
-Message-ID: <MW2PR2101MB1052E10419C37D704303D91ED7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Subject: RE: [PATCH 3/5] Drivers: hv: avoid passing opaque pointer to
+ vmbus_onmessage()
+Thread-Topic: [PATCH 3/5] Drivers: hv: avoid passing opaque pointer to
+ vmbus_onmessage()
+Thread-Index: AQHWCBF0Npd6U19I9kuORoYBGUToP6hmpYmA
+Date:   Fri, 3 Apr 2020 01:55:29 +0000
+Message-ID: <MW2PR2101MB1052B1805E931D5A504596AFD7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
 References: <20200401103638.1406431-1-vkuznets@redhat.com>
- <20200401103638.1406431-3-vkuznets@redhat.com>
-In-Reply-To: <20200401103638.1406431-3-vkuznets@redhat.com>
+ <20200401103638.1406431-4-vkuznets@redhat.com>
+In-Reply-To: <20200401103638.1406431-4-vkuznets@redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -63,61 +63,61 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-03T01:54:31.6251410Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-03T01:55:27.7254738Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2d13e951-5255-403e-b64b-6ddc3b3ecf42;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=637db6d4-7b5a-43ba-9a9a-1825b98f3bc3;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=mikelley@microsoft.com; 
 x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f1e653db-dcf5-46ab-7f1f-08d7d771f4b7
+x-ms-office365-filtering-correlation-id: 726ab9ff-67c9-4ccd-b090-08d7d7721639
 x-ms-traffictypediagnostic: MW2PR2101MB0938:|MW2PR2101MB0938:|MW2PR2101MB0938:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB09389B0D7A090C5D3650F76CD7C70@MW2PR2101MB0938.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-microsoft-antispam-prvs: <MW2PR2101MB09382DC9B15CD975B5A9E804D7C70@MW2PR2101MB0938.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:741;
 x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(136003)(366004)(396003)(39860400002)(346002)(4326008)(66946007)(9686003)(186003)(2906002)(52536014)(26005)(86362001)(66446008)(5660300002)(66556008)(4744005)(8990500004)(76116006)(71200400001)(66476007)(64756008)(15650500001)(82960400001)(54906003)(6506007)(10290500003)(110136005)(81156014)(55016002)(8676002)(81166006)(7696005)(33656002)(316002)(82950400001)(478600001)(8936002);DIR:OUT;SFP:1102;
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(6506007)(10290500003)(110136005)(54906003)(82960400001)(33656002)(7696005)(316002)(478600001)(8936002)(82950400001)(81156014)(55016002)(8676002)(81166006)(66946007)(186003)(9686003)(4326008)(4744005)(66556008)(66476007)(64756008)(71200400001)(8990500004)(76116006)(26005)(86362001)(2906002)(52536014)(5660300002)(66446008);DIR:OUT;SFP:1102;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: S83bWUwpKu7DhR1tEKPq6n5rD9taCG7+OuUSrQzYbFgbvrzRP62zN+rxbSIuT7m/co7w2r4UGVkgfAU6EPxpm8/YxlX3S1Za5+2iu5WEDmeDfZFGg9CNn3oeSYYtK7EkH95Cn+eIVoOh6a4+1kYzVYy3OgOjHf0R+RP42XbD7xOD9ri/FeHnvcrJteuI4rjmTrdvjseHY6Qn4tTrZi51lYTeH24a1DnqntZwbfxnW4nMW7+bfoo3PgA8x7kmiXANx1qtGHuHhSpaNBg2imf+VenpZjj6T0Lb7KxMatj41rKg2OZCNnd6TnNYxLYdtJnKqJ8DlmRoyek/d7zzpQaRtOvYwZw8PQYL7/s3BxHa8/DG0pmyKxpGw2QpgjPMiIgt3Cu/IGd44SyhKw/3d9DfbW8Jy6Nnitl8rEkMPWpvaC96N06eRqxp03cmHR5Z+XUv
-x-ms-exchange-antispam-messagedata: ux1PzlPXCdd9qkBVpA0C+q2Xvv6fCpzFgQwW0Ez8Fek4rBSY6UbAWo2jL3aATV8Tp3HJDKghtw4J85u1x/njmr1mLIKlEk5Lz3J6/Nw0gRqwSfLun7sqlFpCjCcfwuK/s9C8wyM1ObCE1hw22mnSeg==
+x-microsoft-antispam-message-info: mkj4M7Eck9OQv6ljRujwVilyyWFV/t1i7TL6Y9vGHdg9/yU6JEMRJqE/Zk+xxZNfgiToj9z+mH4ZJbXtP9yxnx1Ax3M2TSZejzrKIlgboeVuw9DNMr0/56u/8/nWjdcqyuWHKoA4OnBaK+Nvap57edSgaWUA0L+XSb9/jSbVT8zk1qwz0QgUTYKDZvuySQ+OoVH/965x04/Q7EnwRksKNAxOPYGX4VPQWLOxl6AeL3OxC57g6sbefUlTqsVX7oj7cIZ4QUW3crm4dotgezC3a8UPadkaWZ0Ju/095GbjkPmi66SVvtPhlyd5C/bnmtEM+j5rDGQmNVfTZRbIKt/g4aUHUbddmfbf2c5c+l8DPDziVYcGb+zS/Szi5FCa1w6cBBHC8k7S4VNN1UD/W8mUWZ2razOjxXG3C8BlNi5dONkTzP8MDTpMsoVbGOsGEuFS
+x-ms-exchange-antispam-messagedata: uicP2R2h7fMXsqqtOLPkS+mXMfs4YHgnFGGJJkQw7+Z5zwViyRwn5INFhduUoBwjgF4bSPL0t1+HJGp07TaiS14GrOpP4oq2/s3ZLgAfSv7BTjhQCQPrK6l1M7ElIHYo8bkDLdZK5/2HhPqiixPepA==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1e653db-dcf5-46ab-7f1f-08d7d771f4b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 01:54:33.1837
+X-MS-Exchange-CrossTenant-Network-Message-Id: 726ab9ff-67c9-4ccd-b090-08d7d7721639
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 01:55:29.3268
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8oyfqZDspGiMXUgO6xvAHQQKN/idnOgznz8e0nFXmgTIIHNoYoQ92HfsD0qlW6nr3XqH5Vq0Hu7I5WUQ38f1y5RjJBKKGM6HfLIuN6S3RU0=
+X-MS-Exchange-CrossTenant-userprincipalname: C6p8qWcI1gk7NDUSrX5hxX3JB0rSL5RHWDElWgUhs3oIT8GFMWVvlexOaF4jxKB6G9HRLGbMlEx8d1pcQmQ9HwWRi/l7/waV9LRlwLbsd8k=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Wednesday, April 1, 2020=
- 3:37 AM
+From: Vitaly Kuznetsov <vkuznets@redhat.com>  Sent: Wednesday, April 1, 202=
+0 3:37 AM
 >=20
-> When we need to pass a buffer with Hyper-V message we don't need to alway=
-s
-> allocate 256 bytes for the message: the real message length is known from
-> the header. Change 'struct onmessage_work_context' to make it possible to
-> not over-allocate.
+> vmbus_onmessage() doesn't need the header of the message, it only
+> uses it to get to the payload, we can pass the pointer to the
+> payload directly.
 >=20
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  drivers/hv/vmbus_drv.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
+>  drivers/hv/channel_mgmt.c | 7 +------
+>  drivers/hv/vmbus_drv.c    | 3 ++-
+>  include/linux/hyperv.h    | 2 +-
+>  3 files changed, 4 insertions(+), 8 deletions(-)
 >=20
 
 Reviewed-by: Michael Kelley <mikelley@microsoft.com>
