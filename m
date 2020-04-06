@@ -2,195 +2,93 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BC1E19F3BD
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Apr 2020 12:43:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5289919F931
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Apr 2020 17:53:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbgDFKne (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Apr 2020 06:43:34 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53372 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727226AbgDFKne (ORCPT
+        id S1729010AbgDFPxg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 6 Apr 2020 11:53:36 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37659 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbgDFPxg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:43:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586169812;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MOoW9499EvJVij0307Is5KB/srLre3Eb87DAHnH4ats=;
-        b=Cozv58TpD+8sVyog6PTa04WsDU2bLN10kc86FzHzV8A66s4ueTeVkW9tyIe7hhdD7punIc
-        NtkbfmCZj6QTStOVkUdTZNsSjOerelgAXL0Zrb655/kC7J9B5Gc9Z6rbul8XIkDQUhAoVn
-        ktiDO/c9iAexIuayWiTA5nUKv/+fxnw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-376-bd_wn4nkMwCoMb_6uw-7pQ-1; Mon, 06 Apr 2020 06:43:31 -0400
-X-MC-Unique: bd_wn4nkMwCoMb_6uw-7pQ-1
-Received: by mail-wr1-f72.google.com with SMTP id u16so8195557wrp.14
-        for <linux-hyperv@vger.kernel.org>; Mon, 06 Apr 2020 03:43:31 -0700 (PDT)
+        Mon, 6 Apr 2020 11:53:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u65so7723565pfb.4;
+        Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PvwW/9sQV91GxFUMxx/QXPp3Z+S4dWs0vj3Jf2cw5SI=;
+        b=dTtf3LcuHq9DVSUmTHwwFyk0GqNwJ8mmft/rvyPrytkiB+AE7if1Ewt4ZChTfA9cwa
+         urTa9BVMKk/fjtxmdlXnZ+UrSYyLSK9CBgax/QDFF/cOGdoy2EHOTcNkjmQ/LbTLsPeE
+         XyXvdVn8Sd2KiANJECpKl2aO3BCUkqtIp93IZb9M/sK7VrEqBM4RBHwotf52k+tAgh89
+         /BARescvH5q+Jid5Y7T4jb/+mktcyTP7C3A9yRplOJXKMJ9Ib28xpnew2k1qr2LdkUbF
+         rdeUy1niAO9oA27ZDtaVtz5bi7oyUWH5atxERg7CSNPJTp9S4AeBVsaHkmwfJ9hxcP1k
+         m73g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MOoW9499EvJVij0307Is5KB/srLre3Eb87DAHnH4ats=;
-        b=Nq8DX5NoGVAQPlYjcwoKUhMOVcn8wt1XI+xHQ/zTm91jHp+WUVmsgw6JlusNe/xlcf
-         NXU77HIObRC/8STwTjhsxQtsjZvpbidYMj2Lc7iptnfzjO+d9IBLJNNrYaMxaJ/W3K40
-         6Vw9kpESVnJ4UcUeQsHBmACcvcPkQs3M3ptx1TkHyAeEylUXYeAIYXRtq1MgdYqgr3Jz
-         1Lvd3W91KRex+P3UZXL3hRsV+n2hFtaP3LRcxE+q6OE4P0V4KBTp7ZAvBUd4pMGJ0Ezs
-         +GaFkO3hUZiCt4kZ9djci2lEvO02TrRD/NNVv850g14JCCQve8FornLDw8emo7qxs8k/
-         moRQ==
-X-Gm-Message-State: AGi0PuauZiucB1stn6ijbSqAEWlH5N0xJIiZPwnE81QXkH6aQnN4ZpVe
-        pGvKV/RCMyMzND0TEQ5AUY8verKcMH/B52+APz4rvBiq7EDEBktjx6UaKJ3Q4iJU1YVZwvQmRtI
-        Y6wynllU6J17yRbiabX6wUh1m
-X-Received: by 2002:a7b:c050:: with SMTP id u16mr23634746wmc.68.1586169809021;
-        Mon, 06 Apr 2020 03:43:29 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIvdXbdHDNxdM9vCZ47FkUkV3BXmQ41VqT7ZmCSc+rF/xbW8UtoFYMmmzhlMj1eE4dFibGriw==
-X-Received: by 2002:a7b:c050:: with SMTP id u16mr23634720wmc.68.1586169808789;
-        Mon, 06 Apr 2020 03:43:28 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id g2sm25443360wrs.42.2020.04.06.03.43.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 03:43:28 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH v2 5/5] Drivers: hv: check VMBus messages lengths
-Date:   Mon,  6 Apr 2020 12:43:26 +0200
-Message-Id: <20200406104326.45361-1-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200406104154.45010-1-vkuznets@redhat.com>
-References: <20200406104154.45010-1-vkuznets@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PvwW/9sQV91GxFUMxx/QXPp3Z+S4dWs0vj3Jf2cw5SI=;
+        b=c8MMQo3l/+Gi5QdD9IDbFqVLPOXJgGEZ6gpbJSxjWuCNG9tI0kufCsRaGseZKgOWJ5
+         D+DagIJkwQ1x4KSFJIJXJJA/GLWsyWzzG/BjBUfG2Z/O22+HVf/LfeHrylAg5ISxodch
+         OOBF3tQqvC/kib8E6WT9kE1Y1zEEQx3h1+4k1fCzwFNm/MWkFv/p4ncQZ7TBD4+55R/2
+         URy4iRK9ij5b4GuITjkooSkeSUrCIRiMhCsp1/Ii7Z/wuLA96PbbN0d4aWfoaEy9/uRH
+         CZsLbMJKxpyW6y356gScWRg1mu+aCxWubvkEYiVtXejh0n7JKxWvWfwOU3r3VJMHqUPt
+         OBOw==
+X-Gm-Message-State: AGi0PuYkqCK5Ei2kmEEwf4S1eMSQ/lNCdALoONGimY4yuAfDsPkaf2Al
+        +6/J/6HGA1eZvzm+h2yHvxj1d9+b
+X-Google-Smtp-Source: APiQypLlXZ9/q2dQeTVcu9eqF5ReVI3oGbpaCb79uKaT6u+hpkBbBGhfqjEIbl7GsUqZMbAn53jo+Q==
+X-Received: by 2002:aa7:9f12:: with SMTP id g18mr120263pfr.262.1586188415045;
+        Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([131.107.160.210])
+        by smtp.googlemail.com with ESMTPSA id 79sm11823275pfz.23.2020.04.06.08.53.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 08:53:34 -0700 (PDT)
+From:   ltykernel@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, arnd@arndb.de,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: [PATCH V4 0/6] x86/Hyper-V: Panic code path fixes
+Date:   Mon,  6 Apr 2020 08:53:25 -0700
+Message-Id: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-VMBus message handlers (channel_message_table) receive a pointer to
-'struct vmbus_channel_message_header' and cast it to a structure of their
-choice, which is sometimes longer than the header. We, however, don't check
-that the message is long enough so in case hypervisor screws up we'll be
-accessing memory beyond what was allocated for temporary buffer.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Previously, we used to always allocate and copy 256 bytes from message page
-to temporary buffer but this is hardly better: in case the message is
-shorter than we expect we'll be trying to consume garbage as some real
-data and no memory guarding technique will be able to identify an issue.
+This patchset fixes some issues in the Hyper-V panic code path.
+Patch 1 resolves issue that panic system still responses network
+packets.
+Patch 2-3,5-6 resolves crash enlightenment issues.
+Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
+VM in order to report crash data or kmsg to host before running
+kdump kernel.
 
-Introduce 'min_payload_len' to 'struct vmbus_channel_message_table_entry'
-and check against it in vmbus_on_msg_dpc(). Note, we can't require the
-exact length as new hypervisor versions may add extra fields to messages,
-we only check that the message is not shorter than we expect.
+Tianyu Lan (6):
+  x86/Hyper-V: Unload vmbus channel in hv panic callback
+  x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+  x86/Hyper-V: Trigger crash enlightenment only once during
+    0;136;0c0;136;0c system crash.
+  x86/Hyper-V: Report crash register data or kmsg before  running crash
+    kernel
+  x86/Hyper-V: Report crash register data when sysctl_record_panic_msg
+    is not set
+  x86/Hyper-V: Report crash data in die() when panic_on_oops is set
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/hv/channel_mgmt.c | 54 ++++++++++++++++++++++-----------------
- drivers/hv/hyperv_vmbus.h |  1 +
- drivers/hv/vmbus_drv.c    |  6 +++++
- 3 files changed, 37 insertions(+), 24 deletions(-)
+ arch/x86/hyperv/hv_init.c      |  6 +++-
+ arch/x86/kernel/cpu/mshyperv.c | 10 +++++++
+ drivers/hv/channel_mgmt.c      |  3 ++
+ drivers/hv/vmbus_drv.c         | 62 ++++++++++++++++++++++++++++++------------
+ include/asm-generic/mshyperv.h |  2 +-
+ 5 files changed, 63 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index c6bcfee6ac99..d4ccc9b203fa 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -1329,30 +1329,36 @@ static void vmbus_onversion_response(
- /* Channel message dispatch table */
- const struct vmbus_channel_message_table_entry
- channel_message_table[CHANNELMSG_COUNT] = {
--	{ CHANNELMSG_INVALID,			0, NULL },
--	{ CHANNELMSG_OFFERCHANNEL,		0, vmbus_onoffer },
--	{ CHANNELMSG_RESCIND_CHANNELOFFER,	0, vmbus_onoffer_rescind },
--	{ CHANNELMSG_REQUESTOFFERS,		0, NULL },
--	{ CHANNELMSG_ALLOFFERS_DELIVERED,	1, vmbus_onoffers_delivered },
--	{ CHANNELMSG_OPENCHANNEL,		0, NULL },
--	{ CHANNELMSG_OPENCHANNEL_RESULT,	1, vmbus_onopen_result },
--	{ CHANNELMSG_CLOSECHANNEL,		0, NULL },
--	{ CHANNELMSG_GPADL_HEADER,		0, NULL },
--	{ CHANNELMSG_GPADL_BODY,		0, NULL },
--	{ CHANNELMSG_GPADL_CREATED,		1, vmbus_ongpadl_created },
--	{ CHANNELMSG_GPADL_TEARDOWN,		0, NULL },
--	{ CHANNELMSG_GPADL_TORNDOWN,		1, vmbus_ongpadl_torndown },
--	{ CHANNELMSG_RELID_RELEASED,		0, NULL },
--	{ CHANNELMSG_INITIATE_CONTACT,		0, NULL },
--	{ CHANNELMSG_VERSION_RESPONSE,		1, vmbus_onversion_response },
--	{ CHANNELMSG_UNLOAD,			0, NULL },
--	{ CHANNELMSG_UNLOAD_RESPONSE,		1, vmbus_unload_response },
--	{ CHANNELMSG_18,			0, NULL },
--	{ CHANNELMSG_19,			0, NULL },
--	{ CHANNELMSG_20,			0, NULL },
--	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL },
--	{ CHANNELMSG_22,			0, NULL },
--	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL },
-+	{ CHANNELMSG_INVALID,			0, NULL, 0},
-+	{ CHANNELMSG_OFFERCHANNEL,		0, vmbus_onoffer,
-+		sizeof(struct vmbus_channel_offer_channel)},
-+	{ CHANNELMSG_RESCIND_CHANNELOFFER,	0, vmbus_onoffer_rescind,
-+		sizeof(struct vmbus_channel_rescind_offer) },
-+	{ CHANNELMSG_REQUESTOFFERS,		0, NULL, 0},
-+	{ CHANNELMSG_ALLOFFERS_DELIVERED,	1, vmbus_onoffers_delivered, 0},
-+	{ CHANNELMSG_OPENCHANNEL,		0, NULL, 0},
-+	{ CHANNELMSG_OPENCHANNEL_RESULT,	1, vmbus_onopen_result,
-+		sizeof(struct vmbus_channel_open_result)},
-+	{ CHANNELMSG_CLOSECHANNEL,		0, NULL, 0},
-+	{ CHANNELMSG_GPADL_HEADER,		0, NULL, 0},
-+	{ CHANNELMSG_GPADL_BODY,		0, NULL, 0},
-+	{ CHANNELMSG_GPADL_CREATED,		1, vmbus_ongpadl_created,
-+		sizeof(struct vmbus_channel_gpadl_created)},
-+	{ CHANNELMSG_GPADL_TEARDOWN,		0, NULL, 0},
-+	{ CHANNELMSG_GPADL_TORNDOWN,		1, vmbus_ongpadl_torndown,
-+		sizeof(struct vmbus_channel_gpadl_torndown) },
-+	{ CHANNELMSG_RELID_RELEASED,		0, NULL, 0},
-+	{ CHANNELMSG_INITIATE_CONTACT,		0, NULL, 0},
-+	{ CHANNELMSG_VERSION_RESPONSE,		1, vmbus_onversion_response,
-+		sizeof(struct vmbus_channel_version_response)},
-+	{ CHANNELMSG_UNLOAD,			0, NULL, 0},
-+	{ CHANNELMSG_UNLOAD_RESPONSE,		1, vmbus_unload_response, 0},
-+	{ CHANNELMSG_18,			0, NULL, 0},
-+	{ CHANNELMSG_19,			0, NULL, 0},
-+	{ CHANNELMSG_20,			0, NULL, 0},
-+	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL, 0},
-+	{ CHANNELMSG_22,			0, NULL, 0},
-+	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL, 0},
- };
- 
- /*
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index f5fa3b3c9baf..7fd66a4e2951 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -317,6 +317,7 @@ struct vmbus_channel_message_table_entry {
- 	enum vmbus_channel_message_type message_type;
- 	enum vmbus_message_handler_type handler_type;
- 	void (*message_handler)(struct vmbus_channel_message_header *msg);
-+	u32 min_payload_len;
- };
- 
- extern const struct vmbus_channel_message_table_entry
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 94c02433827d..d770a2582dd0 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1054,6 +1054,12 @@ void vmbus_on_msg_dpc(unsigned long data)
- 	if (!entry->message_handler)
- 		goto msg_handled;
- 
-+	if (msg->header.payload_size < entry->min_payload_len) {
-+		WARN_ONCE(1, "message too short: msgtype=%d len=%d\n",
-+			  hdr->msgtype, msg->header.payload_size);
-+		goto msg_handled;
-+	}
-+
- 	if (entry->handler_type	== VMHT_BLOCKING) {
- 		ctx = kmalloc(sizeof(*ctx) + msg->header.payload_size,
- 			      GFP_ATOMIC);
 -- 
-2.25.1
+2.14.5
 
