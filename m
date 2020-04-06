@@ -2,54 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0A9919F3B1
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Apr 2020 12:42:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFB8619F3B4
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Apr 2020 12:42:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgDFKmC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Apr 2020 06:42:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47594 "EHLO
+        id S1726883AbgDFKmF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 6 Apr 2020 06:42:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52681 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726926AbgDFKmB (ORCPT
+        with ESMTP id S1727081AbgDFKmE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:42:01 -0400
+        Mon, 6 Apr 2020 06:42:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586169720;
+        s=mimecast20190719; t=1586169722;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=FqGYEjIImdWTgee2fIf/zfTRdiurl1mO572U3AitAp0=;
-        b=QH8n09btlsvNIiBo8OYun0AOV70jz1uFFTPafaZzw8sYLdHTe+W+OJdu1Mga0JDnqnWhuG
-        lTOBku2gb29MU/EjbDUIWjKMIvYXaJf8qDJgwGVtMuWYngZDnZ7mBPCjAykE8VWFnxIgfx
-        uVfzQrhOmyW4jLwCppwqhbg3Ftw0C2s=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-95-k2X3gRLGMJOSGA8yVoaxOA-1; Mon, 06 Apr 2020 06:41:58 -0400
-X-MC-Unique: k2X3gRLGMJOSGA8yVoaxOA-1
-Received: by mail-wm1-f72.google.com with SMTP id d134so1152280wmd.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 06 Apr 2020 03:41:58 -0700 (PDT)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IbIlbCAOndT/p1zcHoZ374KLh6U88poeeD1HrBvG9E4=;
+        b=LPWwbOXfrollBY3avjTdFWYFC33DZRK2QkPfDWUYpXTElO+3sfLDvB6Qpjgu5VWYaWoHbD
+        ahpFBQa+7qd0ZI74yADNLdXOvtzKTBcBidXOnovcdxd7xXs3uOQ4Wl2uloU40dAb51NZXh
+        es+5q/BjUURvG9atF0yTx6Ist6H1Mig=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-7HtG9gAGOgC0XKVaxjlRAQ-1; Mon, 06 Apr 2020 06:42:00 -0400
+X-MC-Unique: 7HtG9gAGOgC0XKVaxjlRAQ-1
+Received: by mail-wr1-f72.google.com with SMTP id u16so8193911wrp.14
+        for <linux-hyperv@vger.kernel.org>; Mon, 06 Apr 2020 03:42:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FqGYEjIImdWTgee2fIf/zfTRdiurl1mO572U3AitAp0=;
-        b=AOvMOu+UIQsdC0HLp2I4znzAhKNyIv34ZqcJljc03u3PheyxymWqMXNRTarH77QGnh
-         qUrXone//YgeaEbihe8KzmQVqhUi7P6WGpdeoEBPmdqlqSq1RIZP59f5xpP50aSI59i8
-         AU4ioAXPR5ToGECb4rRxWO4XlSxKHh0OmEg1iS6AVpktqbGzcCE2KIpV25R1UmQwK91x
-         ZNng4+ebzbBOhN0/9dSW0hYmvl4GcUjTN5RSEvEUAsiDFoWw79oZlCFEm2SKSRI+1ukC
-         o2z3aockyOtqTi+5p5BuLjZbee54iumShsHTEK+OMz+0WaeXFLLneAmqC3dw0SSvq2TP
-         JHlg==
-X-Gm-Message-State: AGi0Pubk8+foVbFIZfYTi9jbvG4AXVbPjaaI8sH8ZivtvKLvtRjXqDex
-        0Kd3cr6CGhOXkRi+sl5kMnkqQ7M+VXZit3BEc8Ykd3XPXLPHgiil802BKpWosA9b6TmrdlGhw0P
-        1nNh/Stj+UkD+VXdSrbUHIqyr
-X-Received: by 2002:a05:600c:2910:: with SMTP id i16mr21518941wmd.43.1586169717440;
-        Mon, 06 Apr 2020 03:41:57 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJPzINmfQ385QW26xQbfnWPsO2PkLIbN8craOWxA1Q9iUGl6xZlmMVJwWqmHJOQT0x2ogPi1A==
-X-Received: by 2002:a05:600c:2910:: with SMTP id i16mr21518922wmd.43.1586169717258;
-        Mon, 06 Apr 2020 03:41:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IbIlbCAOndT/p1zcHoZ374KLh6U88poeeD1HrBvG9E4=;
+        b=QjsMSLikybNYbqSGkAbe1AOt0kdqdPWFvqq3fLs2bHp84TQs47jhojFTLzdfBVhzGi
+         u3zrNLwNq9IJ2WIkSF8Uu/nrNnCJgF41Jj9ZF0UzPQtEHU8T+0/1W8uEMDdIR4sLRVI9
+         +BXyWpQbaZLUvd+wmtPPSGuIqs+802BtEy2JL2hj+lgItDyGCjuuZJnNm1yD/Ve2DvoR
+         t4DzJdq4/E1loeTl/O0UEE4DDVE4LiZw+Rvi6GiZ7IkLwJgG7rjsgewYiknYdyhZg3tY
+         NpvSu0HPVwtlI/HohyksD1G9UzgO4BWEai9Ej6Lqv81/UvKuH1LkFDNMkFwFQIjOTzor
+         dU2A==
+X-Gm-Message-State: AGi0PubXbXzOKNKA9cD8Esypz6S1rUXsjGc6sdBnykPDXMCBsuxrIDEx
+        4dnB1BSRYxMuuSoCpO63pcg7YD5p5qLW1cc2CaXoIQDPlNR4tBeeikUbzDugTgqXXxXZb9HsNQG
+        cH04h1Vm3LPTqOdpUwb2RJES9
+X-Received: by 2002:adf:df8a:: with SMTP id z10mr22265708wrl.278.1586169718867;
+        Mon, 06 Apr 2020 03:41:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJ8Kwp2LMDv2jWv5I1+owW1KhVa8HnP1k5r/OndJsHc/EXWEVpdq3UeZBeqhWQrXxT9poQ/CA==
+X-Received: by 2002:adf:df8a:: with SMTP id z10mr22265687wrl.278.1586169718558;
+        Mon, 06 Apr 2020 03:41:58 -0700 (PDT)
 Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id a2sm17305337wra.71.2020.04.06.03.41.55
+        by smtp.gmail.com with ESMTPSA id a2sm17305337wra.71.2020.04.06.03.41.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 03:41:56 -0700 (PDT)
+        Mon, 06 Apr 2020 03:41:58 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     linux-hyperv@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
@@ -59,10 +60,12 @@ Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH v2 0/5] Drivers: hv: cleanup VMBus messages handling
-Date:   Mon,  6 Apr 2020 12:41:49 +0200
-Message-Id: <20200406104154.45010-1-vkuznets@redhat.com>
+Subject: [PATCH v2 1/5] Drivers: hv: copy from message page only what's needed
+Date:   Mon,  6 Apr 2020 12:41:50 +0200
+Message-Id: <20200406104154.45010-2-vkuznets@redhat.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200406104154.45010-1-vkuznets@redhat.com>
+References: <20200406104154.45010-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
@@ -70,30 +73,59 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-A small cleanup series mostly aimed at sanitizing memory we pass to
-message handlers: not passing garbage/lefrtovers from other messages
-and making sure we fail early when hypervisor misbehaves.
+Hyper-V Interrupt Message Page (SIMP) has 16 256-byte slots for
+messages. Each message comes with a header (16 bytes) which specifies the
+payload length (up to 240 bytes). vmbus_on_msg_dpc(), however, doesn't
+look at the real message length and copies the whole slot to a temporary
+buffer before passing it to message handlers. This is potentially dangerous
+as hypervisor doesn't have to clean the whole slot when putting a new
+message there and a message handler can get access to some data which
+belongs to a previous message.
 
-No (real) functional change intended.
+Note, this is not currently a problem because all message handlers are
+in-kernel but eventually we may e.g. get this exported to userspace.
 
-Changes since v1:
-- Check that the payload size specified by the host is <= 240 bytes
-- Add Michael's R-b tags.
+Note also, that this is not a performance critical path: messages (unlike
+events) represent rare events so it doesn't really matter (from performance
+point of view) if we copy too much.
 
-Vitaly Kuznetsov (5):
-  Drivers: hv: copy from message page only what's needed
-  Drivers: hv: allocate the exact needed memory for messages
-  Drivers: hv: avoid passing opaque pointer to vmbus_onmessage()
-  Drivers: hv: make sure that 'struct vmbus_channel_message_header'
-    compiles correctly
-  Drivers: hv: check VMBus messages lengths
+Fix the issue by taking into account the real message length. The temporary
+buffer allocated by vmbus_on_msg_dpc() remains fixed size for now. Also,
+check that the supplied payload length is valid (<= 240 bytes).
 
- drivers/hv/channel_mgmt.c | 61 ++++++++++++++++++++-------------------
- drivers/hv/hyperv_vmbus.h |  1 +
- drivers/hv/vmbus_drv.c    | 40 ++++++++++++++++++++-----
- include/linux/hyperv.h    |  2 +-
- 4 files changed, 66 insertions(+), 38 deletions(-)
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
+ drivers/hv/vmbus_drv.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 029378c27421..943b23beb992 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1032,6 +1032,12 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 		goto msg_handled;
+ 	}
+ 
++	if (msg->header.payload_size > HV_MESSAGE_PAYLOAD_BYTE_COUNT) {
++		WARN_ONCE(1, "payload size is too large (%d)\n",
++			  msg->header.payload_size);
++		goto msg_handled;
++	}
++
+ 	entry = &channel_message_table[hdr->msgtype];
+ 
+ 	if (!entry->message_handler)
+@@ -1043,7 +1049,8 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 			return;
+ 
+ 		INIT_WORK(&ctx->work, vmbus_onmessage_work);
+-		memcpy(&ctx->msg, msg, sizeof(*msg));
++		memcpy(&ctx->msg, msg, sizeof(msg->header) +
++		       msg->header.payload_size);
+ 
+ 		/*
+ 		 * The host can generate a rescind message while we
 -- 
 2.25.1
 
