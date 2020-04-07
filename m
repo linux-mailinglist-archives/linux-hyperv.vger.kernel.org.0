@@ -2,97 +2,169 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82ABF1A1719
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Apr 2020 23:01:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA431A17A4
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2020 00:02:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgDGVBd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Apr 2020 17:01:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40776 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgDGVBc (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:01:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c20so1360410pfi.7
-        for <linux-hyperv@vger.kernel.org>; Tue, 07 Apr 2020 14:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=xOIs/aYyoEYRxoIMxQO5osoz1PpwH/skvHRPL3334M4=;
-        b=CHeRs6j021xT8bWjLDrrWBLWK9V8VLw7f2UsAFSw4lxOjoEHyaaYyP0dEPfbOIBjEK
-         i+3negRDUjEyBG/x3o4tokMia9jkInKAhBMrUg76qlHucqxULZtrH9GbO/YDs6Z4Iuzw
-         YljopLtG59nXQWQNMYvAnK4Ma6cee3yKmOysIU7vjNWVKlFJs7BYlDmb8ZD1m0GE7bO0
-         5T9BLY3mHFo4YPmGm8Yfl41kNcHw/73lrl3ElU3HwsZp0/yN2AZRVS/1potj2lFmOp8u
-         9/B1YW8ZqIRo3REH+7pZHa5oi4+umorNiZTyWfngg+I8izGlK1GxPIVSrJoiiKkDy91Y
-         jNQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=xOIs/aYyoEYRxoIMxQO5osoz1PpwH/skvHRPL3334M4=;
-        b=hyTP2tH3I2j87VnSWDEDTVIu96XCmcCmSGEWZz+qlmR5O9IkWBp67yrKx+6y4yUBLn
-         8uMvG4gmF3R2oZ525/vo8Es1QXqsmH+9dyzA+CdwB9Qut7YIMbv5Hg+L3KR/qTPxuGwR
-         xAAd68qICXkCSGlCTq3PC5A47g6A5SxLfv1X5On3/rXbTALFg8Km5BEHQxPrRC+6bO0X
-         615jfimeMXby51R8ACvw+ZKpOsiL0SGTClmUzxyMdQIVatCCB3WazBIVngs4U/XFvPje
-         lm3mv1T2GVvZcr05JH0MpSEZ9goExUeCvFL/bCosLQ6o2W62rAxQFgvf3FbtJQPTS7BZ
-         g0IA==
-X-Gm-Message-State: AGi0PuaCm3dRiQPYfYUypnt0URX6iCnJ41ou8Q6B2Zvrv+qUuMOIh78U
-        /1AbBP5U5EO4Q0GnlxcMP9dmWw==
-X-Google-Smtp-Source: APiQypJVl+kUONdeDY7nQlJiv7QwGFUK9xO5VnrEKlgUhPzyv4hciH9FG0pjCOC1NTF8uV8IAPdVKA==
-X-Received: by 2002:a63:6e06:: with SMTP id j6mr3882546pgc.167.1586293290368;
-        Tue, 07 Apr 2020 14:01:30 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:34fd:1e6:3333:93da? ([2601:646:c200:1ef2:34fd:1e6:3333:93da])
-        by smtp.gmail.com with ESMTPSA id e26sm3037092pff.167.2020.04.07.14.01.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 14:01:29 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: hv_hypercall_pg page permissios
-Date:   Tue, 7 Apr 2020 14:01:25 -0700
-Message-Id: <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net>
-References: <20200407073830.GA29279@lst.de>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-In-Reply-To: <20200407073830.GA29279@lst.de>
-To:     Christoph Hellwig <hch@lst.de>
-X-Mailer: iPhone Mail (17E255)
+        id S1726395AbgDGWCY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Apr 2020 18:02:24 -0400
+Received: from mail-dm6nam10on2125.outbound.protection.outlook.com ([40.107.93.125]:64608
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726393AbgDGWCY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 7 Apr 2020 18:02:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d9Opdko9NLGQ8PqgZ6jvERpsx6eGzfPVIXvF1l3cQmxXADjWCYXm5IRyaRDOUy7OhKfGjSvfg5A5PTGAhGpQFyUwCCs9bzKQ/ee6Tb0T9sp86Qak6tBfyfdLEXb00EbU+Onw/p1egqgyJGlqpIMldBArOaNbtFKM6dUsgbgfutYG7qis2mjRx4W6i8eIg3qfU4N6mdPn4ayrKr5IyxLAyDVp16TDCFw18OWxQQ3/VHdKPaXIn0ln8CNjJgaW3eZLYCVKKvxKDNtIan0jXDEj4eLcT2bl6ZKfZIre2FqskFJurjAt/qGhdZnGGZkm4AA3muPyE4OyVp/fOlQUXzXtsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PbdcxXwOXL0nVGyeok9m22g2TilFPUjw5QCZwWcj+aE=;
+ b=i+zLnIZsxdr+uBUcdQIJPNvCkS23ZILjf/EA9pqBImHMcfTyl0KRSHf45by1rupg6+xfZa9FE+wWZ29y4wKXMYFdF6+0RUex7vrKrCuNgKreBzYVblkpAcPGzQQwlwnZhL1UJ7UQskt9y4L6/45kIvXdGOT/79KC3XDusJJ+OA38X5Hu0asx1IUOp7HrCnR1AWkwhjwX/38jgVs2n4M8yy/6bR8caMoXbuP5S5Yr3pyTB/RsZ7p9sJr+OSb4r8O64wXj/F6u96H1mCIUifAilxOv5ivIKZzqa84JSiV4F4iXdCMC0jNpuFgCWfJFf2jWjZ/8f4J1zUeMwLhzJ3LoFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PbdcxXwOXL0nVGyeok9m22g2TilFPUjw5QCZwWcj+aE=;
+ b=TcL/sCTaNhnji9mbWGV7DFXS2NnDg8RglhK5X2Qy+WYTpWUwa6tEClTvsgyacorW6tB7IEUkGZDQd/562BGRuDsfkn2AWKWADeHt/3Zm01cKmc20CA3lybYeHB0bvYLmLNiqJ5qBtMWNTntXGZ8RWiRDI/Of05hDF9R8iR23Kpo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
+ by BN8PR21MB1187.namprd21.prod.outlook.com (2603:10b6:408:75::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.4; Tue, 7 Apr
+ 2020 22:02:21 +0000
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b5da:34dd:f205:560b]) by BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b5da:34dd:f205:560b%4]) with mapi id 15.20.2900.010; Tue, 7 Apr 2020
+ 22:02:20 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        vkuznets@redhat.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] Drivers: hv: vmbus: Disallow the freeze PM operation
+Date:   Tue,  7 Apr 2020 15:01:47 -0700
+Message-Id: <1586296907-53744-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR18CA0033.namprd18.prod.outlook.com
+ (2603:10b6:320:31::19) To BN8PR21MB1139.namprd21.prod.outlook.com
+ (2603:10b6:408:72::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR18CA0033.namprd18.prod.outlook.com (2603:10b6:320:31::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Tue, 7 Apr 2020 22:02:19 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0fbbfea9-d3dd-4434-1553-08d7db3f57f8
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1187:|BN8PR21MB1187:|BN8PR21MB1187:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <BN8PR21MB11877A7866968607CD260EF3BFC30@BN8PR21MB1187.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 036614DD9C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1139.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(346002)(376002)(136003)(39860400002)(366004)(82950400001)(5660300002)(2616005)(10290500003)(186003)(107886003)(956004)(6666004)(26005)(8676002)(82960400001)(8936002)(81156014)(6512007)(81166006)(36756003)(66946007)(316002)(66476007)(2906002)(52116002)(478600001)(3450700001)(66556008)(86362001)(6506007)(6486002)(16526019)(4326008);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0JBTJXCwhe2DM7bzlvuxHccA1Gl90jS2TTANA6rouUMf75IFmZ0Zb+fg3Uox993T2daugclhpow4EEiVgMvgxWWu3WdGb1q3pccMVHB3ssFq/yTTXD1DQ+5ONRpgYPACbOpSPY5brBx++NhaFIj/oB8QnciLF4juoHnDXcU9b2ZS0Y+IonTEDcp9qY7wAN6qc9uIT8glnoWxd8DLJJVfM2i2OexMfF0m32ot25TKft2BFUBlGRhuPUlEjvdxX3BEznqsNoqY+BSmAoPIejPvqsxSHOWnwTMHUia3XG9nOKC1Cqq6N6QT28HJ2YxvctsOHBwyPmFmsqb39L+rhuZ88Lf9QfwHVW+rF7nq9FibCzo8HPp/j9z6o5Bee0h05a6pGyBwFSHBIgvOqgp40Lhlp/vsdgjFKGfxtTOn2NndytTGZlDQcmQNGUoGfqa3C+5a
+X-MS-Exchange-AntiSpam-MessageData: 0xSRjifgMf925bdY9diu1/+mLY40TsbDJ1hZ9AN+l+TzrBHBp5MXFT6t4ct71Acv3V1IXBLSioU2vK9r0KScxZWxT/rJFrLZGZ5P9V5vijs6hW9ETs34HIwP6AWi7ruKKjQjo7nGuVGoAF00nccyFg==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fbbfea9-d3dd-4434-1553-08d7db3f57f8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 22:02:20.6840
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4RN2JsBvhC0j83hHCzHEUIH/VNwmK+KeLJQxK/V6ad9QOVUYIv9Kfojvaq6fz2SQoNJZKOUo+d65XOKW5RL49Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1187
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Before the hibernation patchset (e.g. f53335e3289f), a Linux VM on Hyper-V
+can run "echo freeze > /sys/power/state" (or "systemctl suspend")
+to freeze the system. The user can press the keyboard or move the mouse
+to wake up the VM. Note: the two aforementioned commands are equivalent
+here, because Hyper-V doesn't support the guest ACPI S3 state.
 
-> On Apr 7, 2020, at 12:38 AM, Christoph Hellwig <hch@lst.de> wrote:
->=20
-> =EF=BB=BFOn Tue, Apr 07, 2020 at 09:28:01AM +0200, Vitaly Kuznetsov wrote:=
+With the hibernation patchset, a Linux VM on Hyper-V can hibernate to disk
+and resume back; however, the 'freeze' operation is broken for Hyper-V
+Generation-2 VM (which doesn't have a legacy keyboard/mouse): when the
+vmbus devices are suspended, the VM can not receive any interrupt from
+the synthetic keyboard/mouse devices, so there is no way to wake up the
+VM. This is not an issue for Generaton-1 VM, because it looks the legacy
+keyboard/mouse devices can still be used to wake up the VM in my test.
 
->> Christoph Hellwig <hch@lst.de> writes:
->>=20
->>> Hi all,
->>>=20
->>> The x86 Hyper-V hypercall page (hv_hypercall_pg) is the only allocation
->>> in the kernel using __vmalloc with exectutable persmissions, and the
->>> only user of PAGE_KERNEL_RX.  Is there any good reason it needs to
->>> be readable?  Otherwise we could use vmalloc_exec and kill off
->>> PAGE_KERNEL_RX.  Note that before 372b1e91343e6 ("drivers: hv: Turn off
->>> write permission on the hypercall page") it was even mapped writable..
->>=20
->> [There is nothing secret in the hypercall page, by reading it you can
->> figure out if you're running on Intel or AMD (VMCALL/VMMCALL) but it's
->> likely not the only possible way :-)]
->>=20
->> I see no reason for hv_hypercall_pg to remain readable. I just
->> smoke-tested
->=20
-> Thanks, I have the same in my WIP tree, but just wanted to confirm this
-> makes sense.
+IMO 'freeze' in a Linux VM on Hyper-V is not really useful in practice,
+so let's disallow the operation for both Gen-1 and Gen-2 VMs, even if
+it's not an issue for Gen-1 VMs.
 
-Just to make sure we=E2=80=99re all on the same page: x86 doesn=E2=80=99t no=
-rmally have an execute-only mode. Executable memory in the kernel is readabl=
-e unless you are using fancy hypervisor-based XO support.=
+Fixes: f53335e3289f ("Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/hv/vmbus_drv.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 029378c..82a4327 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -28,6 +28,7 @@
+ #include <linux/notifier.h>
+ #include <linux/ptrace.h>
+ #include <linux/screen_info.h>
++#include <linux/suspend.h>
+ #include <linux/kdebug.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
+@@ -2357,6 +2358,23 @@ static void hv_synic_resume(void)
+ 	.resume = hv_synic_resume,
+ };
+ 
++/*
++ * Note: "freeze/suspend" here means "systemctl suspend".
++ * "systemctl hibernate" is still supported.
++ */
++static int hv_pm_notify(struct notifier_block *nb,
++			unsigned long val, void *ign)
++{
++	if (val == PM_SUSPEND_PREPARE) {
++		pr_info("freeze/suspend is not supported\n");
++		return NOTIFY_BAD;
++	}
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block hv_pm_nb;
++
+ static int __init hv_acpi_init(void)
+ {
+ 	int ret, t;
+@@ -2389,6 +2407,8 @@ static int __init hv_acpi_init(void)
+ 	hv_setup_crash_handler(hv_crash_handler);
+ 
+ 	register_syscore_ops(&hv_synic_syscore_ops);
++	hv_pm_nb.notifier_call = hv_pm_notify;
++	register_pm_notifier(&hv_pm_nb);
+ 
+ 	return 0;
+ 
+@@ -2402,6 +2422,7 @@ static void __exit vmbus_exit(void)
+ {
+ 	int cpu;
+ 
++	unregister_pm_notifier(&hv_pm_nb);
+ 	unregister_syscore_ops(&hv_synic_syscore_ops);
+ 
+ 	hv_remove_kexec_handler();
+-- 
+1.8.3.1
+
