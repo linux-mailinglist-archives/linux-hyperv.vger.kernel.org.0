@@ -2,136 +2,135 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2465D1A2974
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2020 21:42:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD5921A2A3E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Apr 2020 22:19:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgDHTme (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Apr 2020 15:42:34 -0400
-Received: from mail-eopbgr1300090.outbound.protection.outlook.com ([40.107.130.90]:36615
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1727941AbgDHUTw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 8 Apr 2020 16:19:52 -0400
+Received: from mail-dm6nam12on2121.outbound.protection.outlook.com ([40.107.243.121]:35425
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729090AbgDHTme (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:42:34 -0400
+        id S1726891AbgDHUTv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 8 Apr 2020 16:19:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jlJA5Jl1/G7gLP7WEp1qBLdmW5DRDjc9NnSCfXcDamQkCGNHPlsnNcQcYJaCae3mdrGyJt6zfOjf3wej2B2XGvTvvNOlU2Uolj+pZsTNdC5xQoz/FkwXVoON3F7hQdMEhS9l0XXVLQ0z2qf7OgW9zlJpDHV+ma6HVkkCeulEriOcpjG4tGKuwGGmeRsKJ1/3Vg46qYaTfzAuvooQHuLnoqcEgYZYZkhojbNG2FkKKMQoi5z8KrTJf+HfAht6VvfiLYjOBzPJcrRBxW20JmliJZmjYw+3j919oZos6jl6uDUA77nTXrD3ew/mlD+4HN35vy31v+QUZu9+xRJW7qniOQ==
+ b=K0zXQZ8IIY8lQ2+SmlqgKN6XqyG0bzqyoO1V71rUWKDVQD8LDNmguCKZ+J6lc3CXwaxPUOAH0cwEsV1eKPwq0OBqfeFR56GwtG8LNuoFF3QnEyM8blvEFU3dDijKCueWmvwh3A/ouEYtvrK2COEidxGGA8eGE6F2Hcy29HeuIUuSeLVxpJmsGYsiAEImp9P1LXld7TbHKXsY+LKva9Bbo1NxYSKBtKpoMn74xnEC7X3KCCqBHCGLdUTTGiP3g8NpJiQ12LCRrCTnI1AXl1UgD2J+i4Ct3Y/jy9yLNvNhuwx66BUiBVGK+cigEESncA9SZZy4SZ79naBKLZ6YS5YQ9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BdeKSAM3vTx65pJX8H3SHBfSgA/3yRVA7crIXWDpNkA=;
- b=JOY+mlIIyNIrFpj5WdzkLp9EEePVuoE9p1cnyxP/ieaHt/6fhFL8rCa51us25tCx3P7cWjDUzdBQJDfy+iZZRFdESXtp9ETHkGj3f0COiVbvD2erPKoyuB1QoL7Lfn6CiOKndh/aSHby5F9MSDJd6aD9QEG5S7zazVjnJJbswBvGVcZ5unFA1gojG1a4J2OTW0//zhskj8Z7A+4SGhq8wZp4F0oLtcWMGUuwyi8Vq4sfoVq2bzvyOkuZxbRDBgms9UqjvleMFEz6kVPQpMA7/V9Fhzi+M4U62qK8xzsLK/RkBdKOEFIR01gFguOtDz4W6AdSkJQgfrsaYJn6JwiHsA==
+ bh=vqX0uOBUZZq1mMBJZG/TsuyKJXLWyKd3Z47NmKnK7LU=;
+ b=gTtUn5/YP1q7jTK9R/9MEiVPWlMPUeT6uYwQ8u/aPYqkwkGOKyuiQ5bf0cJCP/EypPPKyPG/+bsiBrWbs36LMcxcXu0z0KsKLZuzQFAJuIDXDysZe79zslm73PZ5AHfkR8aVGAVcZXzxSAxM0P43/vtG3rAoWowb7+KEFbDgzqJ53Ois1Vg6Q/wjcrVGbtLotuMkJ2LkbO9ufkVfjtXTL3ppSIhmAW3YIUyBkg7OyMlqVjxykfrQPrS/vdwXulru5DH+v3fA/12qmQnvrUvjOG6n5L/opmiAH6t5rrw5Mf5ogkndXhT8wU0g/rIBH0129dJdfAxZsw8BI8SiDoEqYg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BdeKSAM3vTx65pJX8H3SHBfSgA/3yRVA7crIXWDpNkA=;
- b=MCFkqAr2N2i9vt4WrDW4df45HtfPf44X42f2FhTW33ZU09F3HLevydsA4jcIwW3bgpNlWRCAw5qbjOuruw1uh47AYZRdihxJhGSqMtv/U3SbHrvzOQbed2n5+R/YK7dVrqVPdVetVMi6zfnJmhmjYh4PUtNUcXXNiTfAkRFjq10=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (52.132.236.76) by
- HK0P153MB0193.APCP153.PROD.OUTLOOK.COM (52.133.212.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.4; Wed, 8 Apr 2020 19:42:28 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2921.009; Wed, 8 Apr 2020
- 19:42:28 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
+ bh=vqX0uOBUZZq1mMBJZG/TsuyKJXLWyKd3Z47NmKnK7LU=;
+ b=XZpUByJWt5KJAAPnGO6Hpke7oQd8p9HUWhhKSTJ4v+4Y7Eglz0eTuyp+3hLzZPgTgG7JZkawQnYuQeUEdEwbVpvr7zTkIfGEp8yg6wICl39u6tvH9/8SRaJeNjyVOcNoAb6NztsSxfjAiziuBC7uII6sxkHTupf48A/4DIZTTEY=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB0921.namprd21.prod.outlook.com (2603:10b6:302:10::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.9; Wed, 8 Apr
+ 2020 20:19:47 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.012; Wed, 8 Apr 2020
+ 20:19:47 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Wei Liu <liuwe@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] Drivers: hv: vmbus: Disallow the freeze PM operation
-Thread-Topic: [PATCH] Drivers: hv: vmbus: Disallow the freeze PM operation
-Thread-Index: AQHWDb0CzRPAkatwXES7XuIgEFDFbKhvenBAgAAgogCAAALaEA==
-Date:   Wed, 8 Apr 2020 19:42:27 +0000
-Message-ID: <HK0P153MB0273FCBBEF151A3B3A4AB7F6BFC00@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-References: <1586296907-53744-1-git-send-email-decui@microsoft.com>
- <877dyq2d4p.fsf@vitty.brq.redhat.com>
- <HK0P153MB02732CCBDFA879FCE5CA48C7BFC00@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
- <87v9m9233b.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87v9m9233b.fsf@vitty.brq.redhat.com>
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
+ panic_on_oops is set
+Thread-Topic: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
+ panic_on_oops is set
+Thread-Index: AQHWDCuMQ3aW2IzR1UuBUYCKtr2r9ahvrWpQ
+Date:   Wed, 8 Apr 2020 20:19:47 +0000
+Message-ID: <MW2PR2101MB10524CB8CBF3FE49C2EDAA8DD7C00@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
+ <20200406155331.2105-7-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20200406155331.2105-7-Tianyu.Lan@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-08T19:42:26.1558811Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-08T20:19:45.6671367Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e7928239-b5ff-4f4d-86a6-a849f7e5c7ff;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=73197f4a-2e50-4b6b-b494-c5b7595feb6f;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:25f2:87c1:762f:53ac]
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5404c3d7-5789-47b4-53a2-08d7dbf4f886
-x-ms-traffictypediagnostic: HK0P153MB0193:|HK0P153MB0193:|HK0P153MB0193:
+x-ms-office365-filtering-correlation-id: 2069d018-3cd5-4b1b-f9f9-08d7dbfa2f4d
+x-ms-traffictypediagnostic: MW2PR2101MB0921:|MW2PR2101MB0921:|MW2PR2101MB0921:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB0193A53F54B83CF121CBC699BFC00@HK0P153MB0193.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <MW2PR2101MB09218BE4B31DF3FD8D6A9730D7C00@MW2PR2101MB0921.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:277;
 x-forefront-prvs: 0367A50BB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(396003)(39860400002)(376002)(366004)(136003)(8990500004)(76116006)(71200400001)(66556008)(66446008)(64756008)(33656002)(66946007)(66476007)(7696005)(9686003)(6916009)(53546011)(6506007)(55016002)(10290500003)(5660300002)(186003)(81156014)(54906003)(52536014)(4326008)(81166007)(478600001)(86362001)(107886003)(8936002)(316002)(2906002)(82950400001)(8676002)(82960400001);DIR:OUT;SFP:1102;
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(366004)(396003)(376002)(136003)(39860400002)(66446008)(478600001)(8936002)(8676002)(64756008)(66556008)(81156014)(8990500004)(76116006)(5660300002)(81166007)(4744005)(10290500003)(66946007)(7416002)(7696005)(52536014)(33656002)(71200400001)(110136005)(6506007)(54906003)(86362001)(66476007)(4326008)(316002)(82950400001)(2906002)(186003)(82960400001)(9686003)(55016002)(26005)(921003)(1121003);DIR:OUT;SFP:1102;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uTboEo50wrWjysTtuLnanPZDsmDD9V8sxIkhv79i2JBLjK63DyeQPTdZhqEXho9kemV/KDRFrDRVWdrcW4mIpuB2R4R1zjqNWm8gpZYLFKvTvqz1rkeU7Z0xmVPJU7ZsWA5QF93kklvVKRIRFNvaByRY0Y1NKVWd6yGD/zeHpXTjMXARBA07qTadZdi6bY7inDFL+nOdJMzkUh0tTNmFUaPH/wEhXy/EgHCqIF9p3I/e+lBkwhrItwPhrVoj1aKWj97U1AtqZuLsvx/agvSfiCCE4Wr2QxQqrEQwffirT1FwFxl4ghRQnIgQafDEdXXyVxEHUXV6dM2zez+x5g1Vl8aUfUeS65qx2/1TqbTPd1dDrD/tN0TMv19cSJq4y0U4PKYifSeB7d2uT7E3jaWlWJlV3B2rs2dO7LeyS/NsWFGfq2jNldFVCdLLlWVUlwei
-x-ms-exchange-antispam-messagedata: vInF+FwQ3ZXIFqHI4zlI7ffPUxZm8LVlLNCG8qNmwHeUBAk0lHAG9YN6gJZWsxwqJxzdDCLf7V3hW3oz0ABB4Da+f6o9IinFbEa6sDee5IzGbsgoV+qY/oOuOVNROM9OKRzRf1vJbjqWG5Pqk1SDLRAZYxjLCXmTa+/LV9bunHXZafw5wodoNsW3y/FGQI1pX9+QlqIAaQ0xV4Ry33t/zQ==
+x-microsoft-antispam-message-info: JHNG894KAE/rFoUAte4/6X42aDFXRvCXpzPUkqy7Lx6Qd9V8lc7hL8G4HaUtk7HHmH30KKpVdEZ24FfanMiE/Wvjn42js/XBCW1/pHi9NMVTQg++pxGJg78S2ZtwFPFQlVDF9kcEUcR3ILyb+L+yJEoQHT5J3Nvw2IiqG1R7SZiO1GUr8IiyNjsZTceITHrVZjhxD2Ks+LWIgNJ+yQL3KFSIjPJoVBi7KS2HvuUlF+gJAVZelyLJtsPf4wPRbMEAa0G5IPcPcGIlljQ9FNF/rnb07vk09heAa080wRKygJ4tzvDhq8Ereo1aEG74T/SBVzEMzxo3388dw7EqSNgp++Xom0LeRAYPfErk8JWrA9wNbilpw+RFsZgxCiHS7sgqPYEo3mH/JDM7BcncSzlZAEnVpH0NAluD+SWjx8EucD8ZQ+QX8QQeIHPA2pJi5ExbIcGB6rNKqJp+C+MKNwIAzbjXiRJAuNRyMPq4tB4uHEZn72im7UdZgHTkUv2M11bZ
+x-ms-exchange-antispam-messagedata: 0Ekn5c52LtJ2Kui1X6cgdqyx0+P5sfYzeqX++yFLOFpT0XX8zC7tM9jP1CG0Uso95RImCpGng5y8fs6nopNesaO+ifX1GmpLXxVw/RsGqozDk31pO7InjbVi/3Z+ZVk1JEXuI8P04PQbvVhTJCBCmw==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5404c3d7-5789-47b4-53a2-08d7dbf4f886
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 19:42:27.9673
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2069d018-3cd5-4b1b-f9f9-08d7dbfa2f4d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 20:19:47.6391
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4NPhuoGu2UWKCilf8vF/v0bSaGn1bM1rRrZg8YoK9vV6jZJ8O57Yd5Rgu85lmdnJ7BB8tvVB7Jneyd0LZ6fyKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0193
+X-MS-Exchange-CrossTenant-userprincipalname: thMmeVQWNE56XlDRYqlH+YrvK8rkHZVdEmVoAtzSKfghuExHbBsopc9yOQsOP+01ExmKMZkUXsU69gpAl2uCkLl2RfIjEK/tz5H0b2BL+e4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0921
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Sent: Wednesday, April 8, 2020 12:24 PM
-> To: Dexuan Cui <decui@microsoft.com>
-> > ...
-> > This should be doable but IMO this is not a very trivial
-> > effort, and I'm trying to avoid it since IMO Suspend-to-idle is not rea=
-lly
-> > useful in practice for a Linux VM on Hyper-V. :-)
+From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Monday, April 6, 2020 8:5=
+4 AM
 >=20
-> Well, to me it's equally (not) useful in all other cases :-) I think we
-> should Cc: linux-pm@vger.kernel.org and someone will describe a real
-> world usecase to educate us, we'll then see if there is any Hyper-V
-> specifics.
-Maybe I should support Suspend-to-idle, anyway. :-)
-
-> >> In particular, why do we need to do
-> >> anything when we are not hibernating?
-> >
-> > Are you suggesting hv_vmbus should not suspend the vmbus devices at all
-> > in the case of Suspend-to-idle?
+> When oops happens with panic_on_oops unset, the oops
+> thread is killed by die() and system continues to run.
+> In such case, guest should not report crash register
+> data to host since system still runs. Check panic_on_oops
+> and return directly in hyperv_report_panic() when the function
+> is called in the die() and panic_on_oops is unset. Fix it.
 >=20
-> That what we were doing prior to the hibernation series, right? AFAIU
-Yes.
+> Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more=
+ useful")
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+> Change since v3:
+> 	- Fix compile error.
+>         - Add fix commit in the change log
+> ---
+>  arch/x86/hyperv/hv_init.c      | 6 +++++-
+>  drivers/hv/vmbus_drv.c         | 5 +++--
+>  include/asm-generic/mshyperv.h | 2 +-
+>  3 files changed, 9 insertions(+), 4 deletions(-)
 
-> suspend-to-idle is basically 'no processes are scheduled' mode but we
-> don't really need to do anything with devices.
-Got it. Let me try to make a patch to revert to the old behavior for=20
-Suspend-to-idle.
-
-Thanks,
--- Dexuan
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
