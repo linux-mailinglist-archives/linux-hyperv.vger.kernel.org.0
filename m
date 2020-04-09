@@ -2,81 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80EED1A3830
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2020 18:43:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD7811A3844
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2020 18:51:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDIQnd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 9 Apr 2020 12:43:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35890 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgDIQnd (ORCPT
+        id S1727180AbgDIQvA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Apr 2020 12:51:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40948 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgDIQvA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 9 Apr 2020 12:43:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d202so444905wmd.1;
-        Thu, 09 Apr 2020 09:43:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GqsW4NplX15N8qX+8fVspcv31iYa9ZYqvFm21P/uzwY=;
-        b=IxSi3nKjpYfYIZLIeYjg1JAcS/ySWj2Y+xAT5KsrMrzDsWAVToiuImAibwTXDzi1eX
-         LkXO7IWdsbQ0jbXxQSVThCPWOdNIzDbpekF6KE4h8TtCmZ3piKUYKne8buozPH9jphUv
-         G8euP7RR12C/qyxFDS9Xv3He63tusu3mQ+S2z0PBRUjoiR55wZ8U3/e5sdhAJsUvU+7g
-         xPWzpdCtT3xHgvCIVQR7QuVOW2dJw5BkY7WlXtyKFwXIl9Eouf8sngNCW+pL+cr11xV3
-         nYe6x+loB2FXgXEkXwe7Kc5p4pzyBChmWlSC5YgJozPMg1llfgv1Ft8HGMeeajf9ikgp
-         e60A==
-X-Gm-Message-State: AGi0PuZVZIVJT1i3lKdhKfkg8GVjrwqjsPRm+nbczdrGiclWRtwE/bWU
-        4/ZOBnaTYqxEUY/exTqxK4A=
-X-Google-Smtp-Source: APiQypI0XKG4vTskNbZYqy+3guwd9G+vGhZsx3YHrh6ec78LRBC87cZaW5haKsZ2Z5ug+a0JJbAaig==
-X-Received: by 2002:a05:600c:210c:: with SMTP id u12mr759394wml.135.1586450610513;
-        Thu, 09 Apr 2020 09:43:30 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id v9sm31279066wrv.18.2020.04.09.09.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 09:43:29 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 17:43:28 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wei Liu <wei.liu@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+        Thu, 9 Apr 2020 12:51:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PkxaeFIVCfsrSeEEx8LVvo4pS30j4LAzfUOxmZwXge8=; b=GGka1vwlLS5MYPkTsGxdsFzTuS
+        DS3rDOfcUb9HLd/6b5SzwWrTADDVOx+0LMT07aKgtVPr0kLJtgCbA+XGpR2mfVKdM0lLjJkIQgK4y
+        JJeb53TiZpO2ZclH17Kurq5SVEpz5LXzF1wWUnNNKS1WGzPcvxRb9wmHrQyxFtRy+uyqP24cIe0KY
+        pOG0lsOHBWcprrx3Gv3iiQRWTZ33466s6rwrhNnc3MB6T0ncOjpk58lBhF98CB6EkIqA1yDHRsSWh
+        wWIOFqpiUn8qqReI/bzkBn05Ww7Pt2yi1wt87V0Jos7AemDE3ibOYANc7V5Qh5so5rDdLtn63Ocq5
+        lv9xW10Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMaNt-0003gC-0y; Thu, 09 Apr 2020 16:50:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B26BC3012D8;
+        Thu,  9 Apr 2020 18:50:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 962822BA1D82B; Thu,  9 Apr 2020 18:50:30 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 18:50:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: Re: [PATCH v2 0/5] Drivers: hv: cleanup VMBus messages handling
-Message-ID: <20200409164328.qy4aqvgzayhorzjp@debian>
-References: <20200406104154.45010-1-vkuznets@redhat.com>
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sergey.senozhatsky@gmail.com
+Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
+ zsmalloc
+Message-ID: <20200409165030.GG20713@hirez.programming.kicks-ass.net>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-11-hch@lst.de>
+ <20200409160826.GC247701@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200406104154.45010-1-vkuznets@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200409160826.GC247701@google.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 12:41:49PM +0200, Vitaly Kuznetsov wrote:
-> A small cleanup series mostly aimed at sanitizing memory we pass to
-> message handlers: not passing garbage/lefrtovers from other messages
-> and making sure we fail early when hypervisor misbehaves.
+On Thu, Apr 09, 2020 at 09:08:26AM -0700, Minchan Kim wrote:
+> On Wed, Apr 08, 2020 at 01:59:08PM +0200, Christoph Hellwig wrote:
+> > This allows to unexport map_vm_area and unmap_kernel_range, which are
+> > rather deep internal and should not be available to modules.
 > 
-> No (real) functional change intended.
-> 
-> Changes since v1:
-> - Check that the payload size specified by the host is <= 240 bytes
-> - Add Michael's R-b tags.
-> 
-> Vitaly Kuznetsov (5):
->   Drivers: hv: copy from message page only what's needed
->   Drivers: hv: allocate the exact needed memory for messages
->   Drivers: hv: avoid passing opaque pointer to vmbus_onmessage()
->   Drivers: hv: make sure that 'struct vmbus_channel_message_header'
->     compiles correctly
->   Drivers: hv: check VMBus messages lengths
+> Even though I don't know how many usecase we have using zsmalloc as
+> module(I heard only once by dumb reason), it could affect existing
+> users. Thus, please include concrete explanation in the patch to
+> justify when the complain occurs.
 
-Queued. Thanks.
+The justification is 'we can unexport functions that have no sane reason
+of being exported in the first place'.
 
-Wei.
+The Changelog pretty much says that.
