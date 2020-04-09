@@ -2,51 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53B471A2CF4
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2020 02:41:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C106C1A318A
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2020 11:09:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDIAly (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Apr 2020 20:41:54 -0400
-Received: from sonic308-37.consmr.mail.ne1.yahoo.com ([66.163.187.60]:33881
-        "EHLO sonic308-37.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726555AbgDIAlx (ORCPT
+        id S1726082AbgDIJJF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Apr 2020 05:09:05 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:42184 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgDIJJF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Apr 2020 20:41:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1586392912; bh=/6EYCRlfa2umBwyf6HMqnS88iYA4EIXadLKaqqSMGXc=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=Nw9PSYl5kPo55rK57kdK+1rouIyZmFH49XmlmNnt+EPGCmzv5/R562708lCkK9bcS1996WRvY6AWWRgP5phZau+eJxoQmqe+LtCwNJEbiYUjQhQT/OXacraRjiO5WRZ8qsSlVAMXGIKXGWVMix1s+I5tt6JSaqGsGWqa8zr1hJE6ZyAxPEoEYv5ZFlm/QM4zwfuDMMiG5yQiMafwtotoMJIbhnQ91EvX2WyiEWFjhDLOt5DLpnzrXKB58PBcZ/9RDKamP6jFx1FoPm8nUGivG9s/e+4lgHMoB8j5kGsRyJMdGA9c8cLBXg+peTceR8BZpBB9DLsp3YkeaGOsTusoSA==
-X-YMail-OSG: Kjs_hFQVM1mYR3Bbv__auOf2fhoaIk9dbexLkMUvZvDcgibPrEIH2uN_nb7TSk.
- AjTVDttprz38pf2agkDENCO9OlpstM6AKa5fqJSzz9g9BDnD9cEKZ6Kcqg9CatwzLNYThMuSUeYX
- 2yEgN2U8e5xgtZHtWmAFsIbznPJD_UPhljYJl2r_EoL5qqrqeJu9Nnd9Y.Ff.0cQ6SO_SlnVXMbj
- JYEgiFEkwq6TWViREF0oZDh5a7V1WTHk_fQL7mKo.zfkeUUkf9r2PC3YbrlM36YDrBNE7Vu_H_23
- 7SUm_oYUdCkn.imVzOSTsbg1UKej12C_c6DVKmb2bShJF7ckagBec7h.F7Pz2jADVU.RAf_SzeRw
- jnXQU.OYwZs7DtYvRPtgjcVfmgAxeq8RUp0VPoOeRchdyRoGHKkYEH1l0ufQv3CAgRqC9S3zsOd9
- fnhObZjDMfX58eXYxHjcxjHRReqFOhx5Hz6aq8FIq7jw8y8OEbWPMrjaCpR4FKEn_bozdR4qyDFm
- 4sbsu66FrZifwa3kj9UeUr.wGSL5S042VmSyGfETFpHOTRvx51GHTkDHF4kqnnRQjnt9cOY_TXoy
- 6ikjZzl8Rym8MnuDSY3t2UEnyXfrQM8zmKcZMaBXZA.1JruNMW__SZDUsuarZwJACQIZFjYaEYcB
- 6Fx2cC_OXlNG7d102FBbLxbbWE51eCCn6.Ao3BUdftIqkSfQqE8AmEChvpnb3Hjczsgr87hSe_ZY
- FNPGuabtMxRjTV5vOhJN9EVsFZjNMIpNdxApHaOp9BBa0mK8Hd4Y8_sLLzgFE_OX._p_ww8OgQCS
- _PZw5TJANZTRxfmtlnIT9WY8nJxFEz0ZzkRbyJrD7lBRVCuL2qRMMrbnVCU.d3atpGGNT71.FMTl
- XJp9kOjDwdiPhEHaNTf0wy9.286eHx9hDHZx13ycI4lCw.BNZVla9tTflJZSkBR622oDAvju0pYi
- chnjA_f0d_Rs3Y.w_0UWDDtsiqrp7Nd.ENOvnjBk3WtBBjbeqzYHxInpU0ICw.akO5xUiF4HXGRD
- NGu7bFyqgIPHiVSYVkpfC.PnR3fZmrfgYy1Ktc5D_y5Xh2Z7vFADl5LC6uRiCqJ9Y4yLuHo1ATrn
- PxNppKa486Nn86yT5d.pKQ3q49VQAxNEB7EGZ_QmK0uyT9X6oF2qpuwBBPhXWKUMiK3EbPuATGVw
- L.4MdTecfHCHslUWJtwrtw2v46CslPDJY3TtzPBEF3b6hKOBHSxZ.8CqTxF3S2_xcA64udxpFdja
- 9c_vKNU82cTswpLxDeBimIz._J7Xaum1i6dZEwCbc.uspehQ3L04kL45bX0fhpi7dDoUJat5aE3S
- p_Fl8AHbSq3P.bkBJGmoklW4vRdsCXSUz4v5SYoPxJ86d1eVDsQ0qrpylWpfgRvkXgRw467FBrzC
- _ECRk3ijYTNyDsC7idxPty4i4XJSa9KM2uH5RWvaV.R8phY0hHU.lO54DG8mygB9TxdZscMBwbtP
- JqFlYvAh9BGSO_QyxpGrs
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Thu, 9 Apr 2020 00:41:52 +0000
-Received: by smtp412.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 07bc1f76d2033b5244ea2e327c66bf87;
-          Thu, 09 Apr 2020 00:39:51 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 08:39:35 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Christoph Hellwig <hch@lst.de>
+        Thu, 9 Apr 2020 05:09:05 -0400
+X-Greylist: delayed 767 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Apr 2020 05:09:04 EDT
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 0398s3us004063
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 9 Apr 2020 03:54:07 -0500
+Message-ID: <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
+Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in
+ drm_legacy_sg_alloc
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Daniel Vetter <daniel@ffwll.ch>, Christoph Hellwig <hch@lst.de>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
         Laura Abbott <labbott@redhat.com>,
         Sumit Semwal <sumit.semwal@linaro.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -61,36 +43,80 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 17/28] mm: remove the prot argument from vm_map_ram
-Message-ID: <20200409003931.GA8418@hsiangkao-HP-ZHAN-66-Pro-G1>
+Date:   Thu, 09 Apr 2020 18:54:01 +1000
+In-Reply-To: <20200408122504.GO3456981@phenom.ffwll.local>
 References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-18-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408115926.1467567-18-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Mailer: WebService/1.1.15620 hermes Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+         <20200408115926.1467567-20-hch@lst.de>
+         <20200408122504.GO3456981@phenom.ffwll.local>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 01:59:15PM +0200, Christoph Hellwig wrote:
-> This is always GFP_KERNEL - for long term mappings with other properties
-> vmap should be used.
+On Wed, 2020-04-08 at 14:25 +0200, Daniel Vetter wrote:
+> On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
+> > If this code was broken for non-coherent caches a crude powerpc hack
+> > isn't going to help anyone else.  Remove the hack as it is the last
+> > user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c   | 2 +-
->  drivers/media/common/videobuf2/videobuf2-dma-sg.c  | 3 +--
->  drivers/media/common/videobuf2/videobuf2-vmalloc.c | 3 +--
->  fs/erofs/decompressor.c                            | 2 +-
+> Well Ben added this to make stuff work on ppc, ofc the home grown dma
+> layer in drm from back then isn't going to work in other places. I guess
+> should have at least an ack from him, in case anyone still cares about
+> this on ppc. Adding Ben to cc.
 
-For EROFS part,
+This was due to some drivers (radeon ?) trying to use vmalloc pages for
+coherent DMA, which means on those 4xx powerpc's need to be non-cached.
 
-Acked-by: Gao Xiang <xiang@kernel.org>
+There were machines using that (440 based iirc), though I honestly
+can't tell if anybody still uses any of it.
 
-Thanks,
-Gao Xiang
+Cheers,
+Ben.
+
+> -Daniel
+> 
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  drivers/gpu/drm/drm_scatter.c | 11 +----------
+> >  1 file changed, 1 insertion(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
+> > index ca520028b2cb..f4e6184d1877 100644
+> > --- a/drivers/gpu/drm/drm_scatter.c
+> > +++ b/drivers/gpu/drm/drm_scatter.c
+> > @@ -43,15 +43,6 @@
+> >  
+> >  #define DEBUG_SCATTER 0
+> >  
+> > -static inline void *drm_vmalloc_dma(unsigned long size)
+> > -{
+> > -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
+> > -	return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
+> > -#else
+> > -	return vmalloc_32(size);
+> > -#endif
+> > -}
+> > -
+> >  static void drm_sg_cleanup(struct drm_sg_mem * entry)
+> >  {
+> >  	struct page *page;
+> > @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
+> >  		return -ENOMEM;
+> >  	}
+> >  
+> > -	entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
+> > +	entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
+> >  	if (!entry->virtual) {
+> >  		kfree(entry->busaddr);
+> >  		kfree(entry->pagelist);
+> > -- 
+> > 2.25.1
+> > 
+> 
+> 
 
