@@ -2,120 +2,97 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DAAA01A37F1
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2020 18:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED3BE1A3821
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2020 18:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgDIQ0n (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 9 Apr 2020 12:26:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37659 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgDIQ0n (ORCPT
+        id S1726961AbgDIQiD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Apr 2020 12:38:03 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:45126 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbgDIQiD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 9 Apr 2020 12:26:43 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so12636440wrm.4;
-        Thu, 09 Apr 2020 09:26:42 -0700 (PDT)
+        Thu, 9 Apr 2020 12:38:03 -0400
+Received: by mail-wr1-f45.google.com with SMTP id v5so12635084wrp.12;
+        Thu, 09 Apr 2020 09:38:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4AVcBDvhexR6mBdaQRyvT90vU+CQBIsl+K2COSOrYtw=;
+        b=Pu1D2EHmyzcO/fceKBaMG8H2e5Wke+nExGr58gOz3gL1VCXd2kHRJUlHwmG30idKq4
+         Msev0hZ72tccRypTtonEje+v4tLDOwUlArXFv757tqPLIJj4lZS7QktYEyyXdi+HnohG
+         HF93IYNB0ifQR2rwJCuHni8uGvbT1qfSqnF1mUcbskihk7TYDWih5XItXZq6OtnkqB2d
+         Nc2wrxauVwUxQKJ7Dg87E41z6f0rIA6cLQZQ3k1izJ0l44UAKD5YygSX9AjiTtRjG0u7
+         ZntL6zH30Z+HlKbDqevKXMe4QCX9eFtZ4cKkhSigTaSw6rHbCIOt8Epj8EKEizzq+Q7m
+         v4aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GD/oklGtk/+8gnrCm1T4EQmedNZZcJ/kYUIWVwvwJbI=;
-        b=ciWTq/eOSuM/zXCsthUw/IsF0d5STlA4PlibTBJhIA698y/UNO54mY02ryNE0axFtF
-         ime6dutlkip5YxYqGET2T47leWkfb1TexkPHBfNsL8ElijIShGGAkscfIfxXw2iCPv/n
-         pHLx+0LHnMtK5ecGPiGHEBiVv59x45UXcMTK9LtSL71qzA30NsRBk0KkNJw6cqx9W/i2
-         07K5E7hsP+YiMQpfxZakRRlqXUXT3Ka18JRbGmxDuTHNg5lQT5TbksxW5NOLq0ov+JRq
-         BUq+xmjfIJs6Z48d8uaKrKOdixGLAajhnTVEmeyhqHr/q2vyP3ygIeYVnU86+hwJ4tBg
-         OF6w==
-X-Gm-Message-State: AGi0PuazLjn2+2XoHlwSwsgww6QUIkDYdqK2F1cS3gfa8pbdXuPrl+qG
-        TCc6BwViWfg4qyD8aNbGsetZUM36xnY=
-X-Google-Smtp-Source: APiQypJIlaJ2ukaIbeO0I51ccQuZ+EjYxNmqV52bwIsPNgnA3QgyA2/AJ6WcFtR2RAeOn8QReuThTA==
-X-Received: by 2002:adf:ee12:: with SMTP id y18mr14291029wrn.289.1586449602377;
-        Thu, 09 Apr 2020 09:26:42 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id f3sm4578067wmj.24.2020.04.09.09.26.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4AVcBDvhexR6mBdaQRyvT90vU+CQBIsl+K2COSOrYtw=;
+        b=d1rillUwoiofFsvUl3NKhURyzM312n8hKFDaLlB2XPbYp8iPCxBySzA2gycStHhUKQ
+         ThWIao/L4gRmQsDVCeUbzzMHgO3KwwrcLHovpZZYoT8enKwRqU6L8dx5EW8M8ZuWNXtS
+         OpiWCTxE1LDxlneTxEuerhl17/YNtUNA49jR9HGpGXuFegiyNGqJO154kVl5WaNEdHWx
+         UhVf+HLS+PfAxqKrfjA6nKb2Xog8f+QgzrM9c7zYDQns9gtcMQsWY+xApMyG5wnzvnoI
+         mLBgq7PHVt3EfMQr0n3SDE94LLhxJy0fz1KAuOpRlUiiIIJEeBD8hD+cbVdyAG99bVMv
+         7fzw==
+X-Gm-Message-State: AGi0PuZKTYsX8w3Whoj6dguP2OFUSqAktGghr8KOtLKxpyk3O3ZK0Qvc
+        AfF9jmA6RS85pxU1VHtA+tgK+XeI1ZpyLQ==
+X-Google-Smtp-Source: APiQypL7HW3KK+VyLASTjR2EDm47BhJ5WgxYBASliRtC0CvhqdVbf4AWEZNPJdFhKJQDme6e3ydUgQ==
+X-Received: by 2002:adf:fa4f:: with SMTP id y15mr44534wrr.118.1586450281881;
+        Thu, 09 Apr 2020 09:38:01 -0700 (PDT)
+Received: from jondnuc.lan (IGLD-84-229-155-55.inter.net.il. [84.229.155.55])
+        by smtp.gmail.com with ESMTPSA id f16sm4239240wmc.37.2020.04.09.09.38.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 09:26:41 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 17:26:39 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Olaf Hering <olaf@aepfle.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH v1] x86: hyperv: report value of misc_features
-Message-ID: <20200409162639.x7vlj2z7h7wt5d4q@debian>
-References: <20200407172739.31371-1-olaf@aepfle.de>
- <874ktu2csk.fsf@vitty.brq.redhat.com>
+        Thu, 09 Apr 2020 09:38:01 -0700 (PDT)
+From:   Jon Doron <arilou@gmail.com>
+To:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     vkuznets@redhat.com, Jon Doron <arilou@gmail.com>
+Subject: [PATCH v1 0/1] x86/kvm/hyper-v: Add support to SYNIC exit on EOM
+Date:   Thu,  9 Apr 2020 19:37:44 +0300
+Message-Id: <20200409163745.573547-1-arilou@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874ktu2csk.fsf@vitty.brq.redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 05:54:35PM +0200, Vitaly Kuznetsov wrote:
-> Olaf Hering <olaf@aepfle.de> writes:
-> 
-> > A few kernel features depend on ms_hyperv.misc_features, but unlike its
-> > siblings ->features and ->hints, the value was never reported during boot.
-> >
-> > Signed-off-by: Olaf Hering <olaf@aepfle.de>
-> > ---
-> >  arch/x86/kernel/cpu/mshyperv.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> > index caa032ce3fe3..53706fb56433 100644
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -227,8 +227,8 @@ static void __init ms_hyperv_init_platform(void)
-> >  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
-> >  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
-> >  
-> > -	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
-> > -		ms_hyperv.features, ms_hyperv.hints);
-> > +	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
-> > +		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
-> 
-> Several spare thoughts:
-> 
-> I'm always struggling to remember what is what here as these names don't
-> correspond to TLFS, could we maybe come up with better naming, e.g.
-> 
-> "Features.EAX", "Features.EDX", "Recommendations.EAX",...
-> 
-> On the other hand, there is more, e.g. nested virtualization
-> features. How is it useful for all users to see this in dmesg every
-> time? If we need it for development purposes, we can always run 'cpuid'
-> so maybe let's drop this altogether or print only with pr_debug? 
-> 
-> (Honestly: no strong opinion here, deferring to Microsoft folks).
+According to the TLFS:
+"A write to the end of message (EOM) register by the guest causes the
+hypervisor to scan the internal message buffer queue(s) associated with
+the virtual processor.
 
-I think making them closer to TLFS is a good idea.
+If a message buffer queue contains a queued message buffer, the hypervisor
+attempts to deliver the message.
 
-Leaving them always printed is not a big concern to me. Sometimes you
-don't get to run `cpuid` if the kernel crashes early.
+Message delivery succeeds if the SIM page is enabled and the message slot
+corresponding to the SINTx is empty (that is, the message type in the
+header is set to HvMessageTypeNone).
+If a message is successfully delivered, its corresponding internal message
+buffer is dequeued and marked free.
+If the corresponding SINTx is not masked, an edge-triggered interrupt is
+delivered (that is, the corresponding bit in the IRR is set).
 
-Olaf's patch is fine as-is. I'm happy to take this patch (if not already
-taken by x86 maintainers) given it makes at least one developer's life
-easier.
+This register can be used by guests to poll for messages. It can also be
+used as a way to drain the message queue for a SINTx that has
+been disabled (that is, masked)."
 
-Wei.
+So basically this means that we need to exit on EOM so the hypervisor
+will have a chance to send all the pending messages regardless of the
+SCONTROL mechnaisim.
 
-> 
-> >  
-> >  	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
-> >  	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
-> >
-> 
-> -- 
-> Vitaly
-> 
+Jon Doron (1):
+  x86/kvm/hyper-v: Add support to SYNIC exit on EOM
+
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/hyperv.c           | 65 +++++++++++++++++++++++++++++----
+ arch/x86/kvm/hyperv.h           |  1 +
+ arch/x86/kvm/x86.c              |  5 +++
+ include/uapi/linux/kvm.h        |  1 +
+ 5 files changed, 65 insertions(+), 8 deletions(-)
+
+-- 
+2.24.1
+
