@@ -2,32 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C106C1A318A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2020 11:09:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D03A11A31FD
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Apr 2020 11:41:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgDIJJF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 9 Apr 2020 05:09:05 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:42184 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgDIJJF (ORCPT
+        id S1726741AbgDIJlf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Apr 2020 05:41:35 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38542 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgDIJle (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:09:05 -0400
-X-Greylist: delayed 767 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Apr 2020 05:09:04 EDT
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 0398s3us004063
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 9 Apr 2020 03:54:07 -0500
-Message-ID: <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
-Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in
- drm_legacy_sg_alloc
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Daniel Vetter <daniel@ffwll.ch>, Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Thu, 9 Apr 2020 05:41:34 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t28so9865369ott.5
+        for <linux-hyperv@vger.kernel.org>; Thu, 09 Apr 2020 02:41:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AAmPcakirZ+49aStGKItq0c+j+VEsXqfcBH/BMyGspk=;
+        b=WXfJC2xvujS1NMEJmo8auNqU+zz3KoHNnFI/ZwIoQGqsenIlj1/rLp7i8g0wrHhNMA
+         tB4UaPYqL8fo1FBLJD1QspR85zqLl/OHQQ2XW2wZhxbVmnvXaj4OEg2HGRtpK4xkfIA5
+         QryyOXVdb1eBXsQfmBlDoe7W6QRuDag4YOw+c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AAmPcakirZ+49aStGKItq0c+j+VEsXqfcBH/BMyGspk=;
+        b=ac5Y83FhwaJGqjfKtVknqT85r/pfe8btt/bmuR2C7kDnBBh9xrKHkQetOaU30IR/E4
+         6uStNLelTu7KdydFTdrHSTMgN3VQ5B7dcUTB4t8iqvuhaSbjCEAgSYnln5E0H7FcK+a2
+         23zL5iRlVQm8tWKOWrcUF6uohqgATmlPUhgn5wnV9X0gRUgIsZU9r73UiItpV3MeoP5h
+         Lml0hhEuwqBTfL3PXMig9lMqF/sJSfhlTJG5EMFq23J+CawT29mhxUf8y25WTZV6Pkt4
+         sVF/ezN36Vp6tAUrE36oDTK3ShVjFLs/AzA8HJCnFfXf/Cg5kcKphmtX/aiiZQHO0tvo
+         CDtw==
+X-Gm-Message-State: AGi0PualsmvPxuR8UpA8IQ/r2Xb/ZDzJwU4fgWQyz6MvklP1Oc5PtwQt
+        7fWxIusYWXb87AViv8bdO+vjr1gXeIkM2Ov7db2Wkw==
+X-Google-Smtp-Source: APiQypLHBVJAv55CZxyRjUHHZPFErxI7m2EAB+edMw28HekqHKAMU8pcbynFySqYUgFQY0OpR/l48dylQu4jTtXwGxw=
+X-Received: by 2002:a4a:4190:: with SMTP id x138mr9186341ooa.35.1586425291875;
+ Thu, 09 Apr 2020 02:41:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-20-hch@lst.de>
+ <20200408122504.GO3456981@phenom.ffwll.local> <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
+In-Reply-To: <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Thu, 9 Apr 2020 11:41:20 +0200
+Message-ID: <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com>
+Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        Wei Liu <wei.liu@kernel.org>, X86 ML <x86@kernel.org>,
         David Airlie <airlied@linux.ie>,
         Laura Abbott <labbott@redhat.com>,
         Sumit Semwal <sumit.semwal@linaro.org>,
@@ -37,86 +62,106 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Robin Murphy <robin.murphy@arm.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>,
         Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 09 Apr 2020 18:54:01 +1000
-In-Reply-To: <20200408122504.GO3456981@phenom.ffwll.local>
-References: <20200408115926.1467567-1-hch@lst.de>
-         <20200408115926.1467567-20-hch@lst.de>
-         <20200408122504.GO3456981@phenom.ffwll.local>
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-hyperv@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        "open list:GENERIC INCLUDE/A..." <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-s390@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 2020-04-08 at 14:25 +0200, Daniel Vetter wrote:
-> On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
-> > If this code was broken for non-coherent caches a crude powerpc hack
-> > isn't going to help anyone else.  Remove the hack as it is the last
-> > user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
-> 
-> Well Ben added this to make stuff work on ppc, ofc the home grown dma
-> layer in drm from back then isn't going to work in other places. I guess
-> should have at least an ack from him, in case anyone still cares about
-> this on ppc. Adding Ben to cc.
+On Thu, Apr 9, 2020 at 10:54 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Wed, 2020-04-08 at 14:25 +0200, Daniel Vetter wrote:
+> > On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
+> > > If this code was broken for non-coherent caches a crude powerpc hack
+> > > isn't going to help anyone else.  Remove the hack as it is the last
+> > > user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
+> >
+> > Well Ben added this to make stuff work on ppc, ofc the home grown dma
+> > layer in drm from back then isn't going to work in other places. I guess
+> > should have at least an ack from him, in case anyone still cares about
+> > this on ppc. Adding Ben to cc.
+>
+> This was due to some drivers (radeon ?) trying to use vmalloc pages for
+> coherent DMA, which means on those 4xx powerpc's need to be non-cached.
+>
+> There were machines using that (440 based iirc), though I honestly
+> can't tell if anybody still uses any of it.
 
-This was due to some drivers (radeon ?) trying to use vmalloc pages for
-coherent DMA, which means on those 4xx powerpc's need to be non-cached.
+agp subsystem still seems to happily do that (vmalloc memory for
+device access), never having been ported to dma apis (or well
+converted to iommu drivers, which they kinda are really). So I think
+this all still works exactly as back then, even with the kms radeon
+drivers. Question really is whether we have users left, and I have no
+clue about that either.
 
-There were machines using that (440 based iirc), though I honestly
-can't tell if anybody still uses any of it.
+Now if these boxes didn't ever have agp then I think we can get away
+with deleting this, since we've already deleted the legacy radeon
+driver. And that one used vmalloc for everything. The new kms one does
+use the dma-api if the gpu isn't connected through agp.
+-Daniel
 
-Cheers,
-Ben.
+> Cheers,
+> Ben.
+>
+> > -Daniel
+> >
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >  drivers/gpu/drm/drm_scatter.c | 11 +----------
+> > >  1 file changed, 1 insertion(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
+> > > index ca520028b2cb..f4e6184d1877 100644
+> > > --- a/drivers/gpu/drm/drm_scatter.c
+> > > +++ b/drivers/gpu/drm/drm_scatter.c
+> > > @@ -43,15 +43,6 @@
+> > >
+> > >  #define DEBUG_SCATTER 0
+> > >
+> > > -static inline void *drm_vmalloc_dma(unsigned long size)
+> > > -{
+> > > -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
+> > > -   return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
+> > > -#else
+> > > -   return vmalloc_32(size);
+> > > -#endif
+> > > -}
+> > > -
+> > >  static void drm_sg_cleanup(struct drm_sg_mem * entry)
+> > >  {
+> > >     struct page *page;
+> > > @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
+> > >             return -ENOMEM;
+> > >     }
+> > >
+> > > -   entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
+> > > +   entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
+> > >     if (!entry->virtual) {
+> > >             kfree(entry->busaddr);
+> > >             kfree(entry->pagelist);
+> > > --
+> > > 2.25.1
+> > >
+> >
+> >
+>
 
-> -Daniel
-> 
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  drivers/gpu/drm/drm_scatter.c | 11 +----------
-> >  1 file changed, 1 insertion(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
-> > index ca520028b2cb..f4e6184d1877 100644
-> > --- a/drivers/gpu/drm/drm_scatter.c
-> > +++ b/drivers/gpu/drm/drm_scatter.c
-> > @@ -43,15 +43,6 @@
-> >  
-> >  #define DEBUG_SCATTER 0
-> >  
-> > -static inline void *drm_vmalloc_dma(unsigned long size)
-> > -{
-> > -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
-> > -	return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
-> > -#else
-> > -	return vmalloc_32(size);
-> > -#endif
-> > -}
-> > -
-> >  static void drm_sg_cleanup(struct drm_sg_mem * entry)
-> >  {
-> >  	struct page *page;
-> > @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
-> >  		return -ENOMEM;
-> >  	}
-> >  
-> > -	entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
-> > +	entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
-> >  	if (!entry->virtual) {
-> >  		kfree(entry->busaddr);
-> >  		kfree(entry->pagelist);
-> > -- 
-> > 2.25.1
-> > 
-> 
-> 
 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
