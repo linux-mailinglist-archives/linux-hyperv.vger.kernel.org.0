@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 615391A5A41
-	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Apr 2020 01:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A975B1A5519
+	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Apr 2020 01:09:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgDKXGi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 11 Apr 2020 19:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42118 "EHLO mail.kernel.org"
+        id S1729204AbgDKXJV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 11 Apr 2020 19:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728462AbgDKXGh (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:37 -0400
+        id S1729194AbgDKXJU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03AF2214D8;
-        Sat, 11 Apr 2020 23:06:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCE93217D8;
+        Sat, 11 Apr 2020 23:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646397;
+        s=default; t=1586646560;
         bh=OpFbVyvYnIHYbXaql1M7ib78tJ4gNMyNDUmLjzivcGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vWVlA58lktUHHnOy583PmAaQnEb/Ed7OHvfRQCSpdu76E0f2Kb4FodWiLUoG6UJRx
-         oOPydRZmUa6gpjDA7eAPGqo1OJzeRkuFULmhoRLLk5rP2s/oNjPeZ1c8YlIYm2154V
-         K7w0BKpQKIbp/R8FF+PRXOepvLg7qNnVj+IN83Uc=
+        b=BHL7gsDWqmD375hPreg7Oxp8szWklB4m0kU8kkoqnjEnK1bbyyPpMStHfd77SZuUn
+         yKbltWhaNJIKMUhx/+S86Ye9BjGvvs1/eaIrN76E+V1+Vrl6uvcOGAPr6wAFrMXAin
+         MH2L1ULkZAkS5BZZ3+tE/yOo+w8KI/dd0V4FhUqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dexuan Cui <decui@microsoft.com>,
@@ -30,12 +30,12 @@ Cc:     Dexuan Cui <decui@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 135/149] PCI: hv: Add missing kfree(hbus) in hv_pci_probe()'s error handling path
-Date:   Sat, 11 Apr 2020 19:03:32 -0400
-Message-Id: <20200411230347.22371-135-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 109/121] PCI: hv: Add missing kfree(hbus) in hv_pci_probe()'s error handling path
+Date:   Sat, 11 Apr 2020 19:06:54 -0400
+Message-Id: <20200411230706.23855-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
-References: <20200411230347.22371-1-sashal@kernel.org>
+In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
+References: <20200411230706.23855-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
