@@ -2,102 +2,90 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84DD41A7859
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Apr 2020 12:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EC221A7E93
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Apr 2020 15:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438295AbgDNKYS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 14 Apr 2020 06:24:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45635 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438287AbgDNKVV (ORCPT
+        id S2502668AbgDNNOZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Apr 2020 09:14:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502664AbgDNNON (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:21:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t14so435278wrw.12;
-        Tue, 14 Apr 2020 03:21:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=EYaPeiECDQ5ZXShj8p9XCOhGGkLuneAOUv8e9e/QTQQ=;
-        b=BXtTxS6Nh9AGjbv+xl5m6pltKvjPF5MhpJyV1UeseGEI/3AHg1SbjFEAJPQkYpH/e+
-         BpVlbG7cEeX/35AMpXYA0cXNHEcpp31zKtJJOrlFVhYYNB3gJoknc2whOpbMj1MYkboM
-         46nFM2olpVR8VbTH8/LfUQDxDhSW7/p8DIYkO191Jhvbjx/jGxD8E3ADjVWsLN3VbB0L
-         +e1VU9+4OU+CFpfgN35AWFitjrjgEIPP6ShTFolWQQtNbqXAr+J+3F27WOWnP6KLaWBq
-         SZ41OVXt2S/3+rrmSfKR2Azdxh2Ao5UsQZ2ZlCZ4x5iShADVesNsmVmM2XxgfQmn8ZSH
-         FWXA==
-X-Gm-Message-State: AGi0PuYqkrFEOMhwiA4h3McYK0tM57tlSLOH0syLHo/SZ/Qscq3ntRhy
-        OW1f/n/0Z/F9anFIMi4xVfg=
-X-Google-Smtp-Source: APiQypJfL641U3oiX9dTXxf/ghp8OKYDWYbORn6FwzR3xNZYsyAebrfet+aQW3p3qkLc/MCFbrsuHA==
-X-Received: by 2002:a5d:6584:: with SMTP id q4mr11223043wru.403.1586859664926;
-        Tue, 14 Apr 2020 03:21:04 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id t16sm17621540wmi.27.2020.04.14.03.21.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 03:21:04 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 11:21:02 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        haiyangz@microsoft.com
-Subject: [GIT PULL] Hyper-V fixes for 5.7-rc1
-Message-ID: <20200414102102.7jci4pzsp5tdoifr@debian>
+        Tue, 14 Apr 2020 09:14:13 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F5BC061A0C;
+        Tue, 14 Apr 2020 06:14:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=s9wO1kktwKhWfxkNKBlR4BadnfNxuXVCWsOuMusKhWU=; b=rg2UNX+oDOoOmlIrOoATZfvHJo
+        yXYLxsNWr2T1nJZrGxGk5Lv5RIM+MPtFqTLpUBL+OtQmXF3dvx+r/E34dM9LM/msmhlhCadHxgEIS
+        pWLlsjvDOXkWGefwhB3ab1TbSjUnXSZ4O+DhmchdWfxHMd4ltbCqfxvArHED4bAzh+LrU5N0g8RQ/
+        sMGiG1d5h+8y+YZLDA1ZDHHjyY6lnNQFIUnXfoqPK7R0pAFuXPpCBcPa9tHT3OZrp88howxBXTV4j
+        g8suig+TIKVixAxTM0KrW7filVEfIW9iQoItZ9Ea9AdgUOMqiNFBCHWAFRBbLBwX140HeueDrEM53
+        qriivVXQ==;
+Received: from [2001:4bb8:180:384b:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOLNu-0006Fe-Le; Tue, 14 Apr 2020 13:13:54 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: decruft the vmalloc API v2
+Date:   Tue, 14 Apr 2020 15:13:19 +0200
+Message-Id: <20200414131348.444715-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus,
+Hi all,
 
-Please pull from the tag hyperv-fixes-signed for the first batch of
-Hyper-V fixes for 5.7-rc.
+Peter noticed that with some dumb luck you can toast the kernel address
+space with exported vmalloc symbols.
 
-The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
+I used this as an opportunity to decruft the vmalloc.c API and make it
+much more systematic.  This also removes any chance to create vmalloc
+mappings outside the designated areas or using executable permissions
+from modules.  Besides that it removes more than 300 lines of code.
 
-  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+A git tree is also available here:
 
-are available in the Git repository at:
+    git://git.infradead.org/users/hch/misc.git sanitize-vmalloc-api.2
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+Gitweb:
 
-for you to fetch changes up to f3a99e761efa616028b255b4de58e9b5b87c5545:
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/sanitize-vmalloc-api.2
 
-  x86/Hyper-V: Report crash data in die() when panic_on_oops is set (2020-04-11 17:19:07 +0100)
-
-----------------------------------------------------------------
-hyperv-fixes for 5.7-rc1
-
-  - Patch series from Tianyu Lan to fix crash reporting on Hyper-V
-  - Three miscellaneous cleanup patches
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      hv: hyperv_vmbus.h: Replace zero-length array with flexible-array member
-
-Olaf Hering (1):
-      x86: hyperv: report value of misc_features
-
-Tianyu Lan (6):
-      x86/Hyper-V: Unload vmbus channel in hv panic callback
-      x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
-      x86/Hyper-V: Trigger crash enlightenment only once during system crash.
-      x86/Hyper-V: Report crash register data or kmsg before running crash kernel
-      x86/Hyper-V: Report crash register data when sysctl_record_panic_msg is not set
-      x86/Hyper-V: Report crash data in die() when panic_on_oops is set
-
-YueHaibing (1):
-      hv_debugfs: Make hv_debug_root static
-
- arch/x86/hyperv/hv_init.c      |  6 +++-
- arch/x86/kernel/cpu/mshyperv.c | 14 ++++++++--
- drivers/hv/channel_mgmt.c      |  3 ++
- drivers/hv/hv_debugfs.c        |  2 +-
- drivers/hv/hyperv_vmbus.h      |  2 +-
- drivers/hv/vmbus_drv.c         | 62 ++++++++++++++++++++++++++++++------------
- include/asm-generic/mshyperv.h |  2 +-
- 7 files changed, 67 insertions(+), 24 deletions(-)
+Changes since v1:
+ - implement pgprot_nx for arm64 (Mark Rutland)
+ - fix a patch description
+ - properly pass pgprot to vmap in ion
+ - add a new patch to fix vmap() API misuse
+ - fix a vmap argument in x86
+ - two more vmalloc cleanups
+ - cleanup use of the unmap_kernel_range API
+ - rename ioremap_pbh to ioremap_phb
