@@ -2,77 +2,96 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E274D1A8C51
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Apr 2020 22:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF9DB1A8C69
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Apr 2020 22:27:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632986AbgDNUSq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 14 Apr 2020 16:18:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35893 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632995AbgDNUSm (ORCPT
+        id S2633063AbgDNUYS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Apr 2020 16:24:18 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33793 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633040AbgDNUYQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:18:42 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u13so15570952wrp.3;
-        Tue, 14 Apr 2020 13:18:40 -0700 (PDT)
+        Tue, 14 Apr 2020 16:24:16 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c195so13324050wme.1;
+        Tue, 14 Apr 2020 13:24:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VJK0Vudxo6/y/Xzt9pmWLOReg2AXAw6WAxsb6cK2B/Y=;
-        b=ItJshrp3HoaZSpcfEuqFDRomRVtr+s3oUL1iG52vnhdTofihJpNg2reeyvbIqHE+HY
-         ozsPvx7FTNL+ab4FEHtIkhphJjEVOltgZUk4hQS65FE/hOgA1Zv0akk6Pk9FgmMB3JgS
-         tj9/1UHtNYspUea5DKvyB7D2ZgU2r2KuVmd81el+bGCmL1wxgP6IhA9rSiSjhiEB41hW
-         QMJB1uyGs9qdWDKDOsvwNvdRgRj3Dkjxq3pNEnRiU9T5Ptq3iUepHrYd0ggb2NbN4aFh
-         TTKV/H11EcK26BDg1IrP0Ll+T4tlqB7L5EUkf2mwy+w+TCKO83GfhO9wClwqka/VO57/
-         dk2g==
-X-Gm-Message-State: AGi0PuY+xkFfs+P74PgPpw7Nuz8XFThs2zF6bql05oMjD/qX9TyyYmhn
-        i1GtEcnlWKXkx3c61mR2xqs=
-X-Google-Smtp-Source: APiQypI2wicuVpNhjwF5+CR27bkQ8vTSDr5qPsWXW74pMMzNU0KX7GDOUgj1ALCYmwp6aRY+m7xobQ==
-X-Received: by 2002:adf:fe03:: with SMTP id n3mr24655532wrr.315.1586895520195;
-        Tue, 14 Apr 2020 13:18:40 -0700 (PDT)
+        bh=8foj8DrysV33p4mme5GdEjxA5CWGWkeyAu6FZ3U4eS0=;
+        b=IF1f8RElmawcrPYoRSgrPir9kIXdHCdU6Meve1ekN4grhbEqXhRTNo9tpVhJQ5yueb
+         XABFBIRRjKMeqMinSFW5YIoDhFnVcCIir7KJIEzCC8mNOh+wIBA4WL+Kac6cJbaNRgiI
+         FPGosUoC2s90URZAgopAYV9/HTqoabvN9ioQEQKnwwf28LesrX8r21wc0l0Xi7Ma3itJ
+         SCoMUeO8Nu4SLgV/jAPwhDuoYyT7BFDnPoEj5FmbB4AyCzqT2bJb96tJcOUR3zx1Br1A
+         BVOrT7y7aF++KRbbTL1rihlwVkU850LUmc2mw3jfpKdBT5k8C3yFfmlvB7qsUWixzIjK
+         DofA==
+X-Gm-Message-State: AGi0PuZ0Ti9rD5vuV0jnGwlxVEsnYbjzKAkLIaEWss+4etQ00ZGTB+L2
+        Ox5Nhak3IzhraM+k0Qb5ErA=
+X-Google-Smtp-Source: APiQypKNDiBsb0VoeE7xhlyPlc3j5YSKwr2IMwWp7yUDNrjRzO29ekzSD3mV+sqz2oB1ca/p8BMjlA==
+X-Received: by 2002:a1c:9891:: with SMTP id a139mr1688487wme.129.1586895854749;
+        Tue, 14 Apr 2020 13:24:14 -0700 (PDT)
 Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id w11sm19415437wmi.32.2020.04.14.13.18.38
+        by smtp.gmail.com with ESMTPSA id y5sm21213391wru.15.2020.04.14.13.24.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:18:39 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 21:18:37 +0100
+        Tue, 14 Apr 2020 13:24:14 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 21:24:12 +0100
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        vkuznets@redhat.com, stable@vger.kernel.org
-Subject: Re: [PATCH v3] Drivers: hv: vmbus: Fix Suspend-to-Idle for
- Generation-2 VM
-Message-ID: <20200414201837.yvmrz5nl5gxgjmqt@debian>
-References: <1586663435-36243-1-git-send-email-decui@microsoft.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] drivers: hv: remove redundant assignment to
+ pointer primary_channel
+Message-ID: <20200414202412.op5kxcqc7k4bce6z@debian>
+References: <20200414152343.243166-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586663435-36243-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <20200414152343.243166-1-colin.king@canonical.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Apr 11, 2020 at 08:50:35PM -0700, Dexuan Cui wrote:
-> Before the hibernation patchset (e.g. f53335e3289f), in a Generation-2
-> Linux VM on Hyper-V, the user can run "echo freeze > /sys/power/state" to
-> freeze the system, i.e. Suspend-to-Idle. The user can press the keyboard
-> or move the mouse to wake up the VM.
+On Tue, Apr 14, 2020 at 04:23:43PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> With the hibernation patchset, Linux VM on Hyper-V can hibernate to disk,
-> but Suspend-to-Idle is broken: when the synthetic keyboard/mouse are
-> suspended, there is no way to wake up the VM.
+> The pointer primary_channel is being assigned with a value that is never,
+> The assignment is redundant and can be removed.
 > 
-> Fix the issue by not suspending and resuming the vmbus devices upon
-> Suspend-to-Idle.
-> 
-> Fixes: f53335e3289f ("Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Applied to hyperv-fixes. Thanks.
+Thanks.
+
+Now that the only user of primary_channel is within the else branch, we
+can go one step further to move the definition of primary_channel there.
+
+I can make the adjustment while committing this patch, as well as
+updating the commit message.
 
 Wei.
+
+> ---
+>  drivers/hv/channel_mgmt.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> index ffd7fffa5f83..f7bbb8dc4b0f 100644
+> --- a/drivers/hv/channel_mgmt.c
+> +++ b/drivers/hv/channel_mgmt.c
+> @@ -425,8 +425,6 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
+>  
+>  	if (channel->primary_channel == NULL) {
+>  		list_del(&channel->listentry);
+> -
+> -		primary_channel = channel;
+>  	} else {
+>  		primary_channel = channel->primary_channel;
+>  		spin_lock_irqsave(&primary_channel->lock, flags);
+> -- 
+> 2.25.1
+> 
