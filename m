@@ -2,107 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9C3E1A6CED
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Apr 2020 22:03:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84DD41A7859
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Apr 2020 12:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388205AbgDMUDL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Apr 2020 16:03:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388201AbgDMUDK (ORCPT
+        id S2438295AbgDNKYS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Apr 2020 06:24:18 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45635 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438287AbgDNKVV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Apr 2020 16:03:10 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25576C008769
-        for <linux-hyperv@vger.kernel.org>; Mon, 13 Apr 2020 13:03:10 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c63so10865286qke.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 13 Apr 2020 13:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OEtNtfUfCfknsSkfuodbs8GxJYII1GNua8MgFwL7K04=;
-        b=juG10l2QIUDc0d5n1SeOUdB0siwuJQOGCU6pnQRUaf/usairEJnMWI4NCHxVUL2frR
-         HT8Dj0G2KFCEAuDZkPEiGVv3NLV5ooo7kJcA7V4T4xV81925vc++8cQ5KHVSBI1+By+5
-         +/+66XSDZZW/XkKLCzanTlv78m+KRuVYwmVlKC0N09gqxCMtKrGm1srU2i7+Kw1dkX5x
-         DPoyq7kDqoEsqgMu8qGEr3vtIBlmiQWaBKBOz/tbp3ah+kvBa7aU6x3A1gaLlMlwJUeg
-         hUM97swfra3YIkYNCDFX0ZcS8Au+7KacD3c88l4X9gBMGqiNfPjeT92Va5NYJ5lvz0rD
-         aygw==
+        Tue, 14 Apr 2020 06:21:21 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t14so435278wrw.12;
+        Tue, 14 Apr 2020 03:21:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OEtNtfUfCfknsSkfuodbs8GxJYII1GNua8MgFwL7K04=;
-        b=DhHtTSQod+cQVbv/fkAunMc5f1CbGQ4jNGCbyI4hpDBR5yTxb6hBoyaUJg/MNIv+/Z
-         jAkv5L/kPr3doHnEXRG9wRiNxBeIO7+LDsWdCyqeaUdrJK9qCTrUb9Dzo6QE5od34I5T
-         WqdvTUXTAIT0XmcdZ8NLyrqvAJ6mHEyTo5hzzZfVW+3McmEj4XDBwYj1jQYGS9tDD1Ax
-         JKzljM/EpzXYkxOXPIoKAHB9A7govvkzSdepSeOXERCcP/GQtDRe2LCDOT17gz8gU68E
-         f8BskZZBJvj8YorRHICKAA5Vj91ENUTLkM6/rZA1PQOabkJP+3QXfMyNI+1W2gT6qirr
-         NxZA==
-X-Gm-Message-State: AGi0PuaKKUly7D0jjfMb8cQgnRwrG5AdKplvvgXeL5045zKSwP0UTPgD
-        xnhOIytDicFf2MKWJnSf3BclWw==
-X-Google-Smtp-Source: APiQypJVwvSR1oEkK4bhCoeIIw8batoCJN92/jh4PNjnx+deBvO5XKiPj+RRAmN7IK2twvZnNWUNMA==
-X-Received: by 2002:a37:d93:: with SMTP id 141mr7293908qkn.32.1586808188246;
-        Mon, 13 Apr 2020 13:03:08 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id x66sm9119423qka.121.2020.04.13.13.03.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=EYaPeiECDQ5ZXShj8p9XCOhGGkLuneAOUv8e9e/QTQQ=;
+        b=BXtTxS6Nh9AGjbv+xl5m6pltKvjPF5MhpJyV1UeseGEI/3AHg1SbjFEAJPQkYpH/e+
+         BpVlbG7cEeX/35AMpXYA0cXNHEcpp31zKtJJOrlFVhYYNB3gJoknc2whOpbMj1MYkboM
+         46nFM2olpVR8VbTH8/LfUQDxDhSW7/p8DIYkO191Jhvbjx/jGxD8E3ADjVWsLN3VbB0L
+         +e1VU9+4OU+CFpfgN35AWFitjrjgEIPP6ShTFolWQQtNbqXAr+J+3F27WOWnP6KLaWBq
+         SZ41OVXt2S/3+rrmSfKR2Azdxh2Ao5UsQZ2ZlCZ4x5iShADVesNsmVmM2XxgfQmn8ZSH
+         FWXA==
+X-Gm-Message-State: AGi0PuYqkrFEOMhwiA4h3McYK0tM57tlSLOH0syLHo/SZ/Qscq3ntRhy
+        OW1f/n/0Z/F9anFIMi4xVfg=
+X-Google-Smtp-Source: APiQypJfL641U3oiX9dTXxf/ghp8OKYDWYbORn6FwzR3xNZYsyAebrfet+aQW3p3qkLc/MCFbrsuHA==
+X-Received: by 2002:a5d:6584:: with SMTP id q4mr11223043wru.403.1586859664926;
+        Tue, 14 Apr 2020 03:21:04 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id t16sm17621540wmi.27.2020.04.14.03.21.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 13:03:07 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 16:03:06 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 25/28] mm: remove vmalloc_user_node_flags
-Message-ID: <20200413200306.GC99267@cmpxchg.org>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-26-hch@lst.de>
- <CAEf4BzZOC2tLrqt_Km=WQb=9xiya2e31i6K3oJuzgYQt6wp1LQ@mail.gmail.com>
+        Tue, 14 Apr 2020 03:21:04 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 11:21:02 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+        haiyangz@microsoft.com
+Subject: [GIT PULL] Hyper-V fixes for 5.7-rc1
+Message-ID: <20200414102102.7jci4pzsp5tdoifr@debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzZOC2tLrqt_Km=WQb=9xiya2e31i6K3oJuzgYQt6wp1LQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 03:25:03PM -0700, Andrii Nakryiko wrote:
-> cc Johannes who suggested this API call originally
+Hi Linus,
 
-I forgot why we did it this way - probably just cruft begetting more
-cruft. Either way, Christoph's cleanup makes this look a lot better.
+Please pull from the tag hyperv-fixes-signed for the first batch of
+Hyper-V fixes for 5.7-rc.
 
-> On Wed, Apr 8, 2020 at 5:03 AM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > Open code it in __bpf_map_area_alloc, which is the only caller.  Also
-> > clean up __bpf_map_area_alloc to have a single vmalloc call with
-> > slightly different flags instead of the current two different calls.
-> >
-> > For this to compile for the nommu case add a __vmalloc_node_range stub
-> > to nommu.c.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+
+for you to fetch changes up to f3a99e761efa616028b255b4de58e9b5b87c5545:
+
+  x86/Hyper-V: Report crash data in die() when panic_on_oops is set (2020-04-11 17:19:07 +0100)
+
+----------------------------------------------------------------
+hyperv-fixes for 5.7-rc1
+
+  - Patch series from Tianyu Lan to fix crash reporting on Hyper-V
+  - Three miscellaneous cleanup patches
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      hv: hyperv_vmbus.h: Replace zero-length array with flexible-array member
+
+Olaf Hering (1):
+      x86: hyperv: report value of misc_features
+
+Tianyu Lan (6):
+      x86/Hyper-V: Unload vmbus channel in hv panic callback
+      x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+      x86/Hyper-V: Trigger crash enlightenment only once during system crash.
+      x86/Hyper-V: Report crash register data or kmsg before running crash kernel
+      x86/Hyper-V: Report crash register data when sysctl_record_panic_msg is not set
+      x86/Hyper-V: Report crash data in die() when panic_on_oops is set
+
+YueHaibing (1):
+      hv_debugfs: Make hv_debug_root static
+
+ arch/x86/hyperv/hv_init.c      |  6 +++-
+ arch/x86/kernel/cpu/mshyperv.c | 14 ++++++++--
+ drivers/hv/channel_mgmt.c      |  3 ++
+ drivers/hv/hv_debugfs.c        |  2 +-
+ drivers/hv/hyperv_vmbus.h      |  2 +-
+ drivers/hv/vmbus_drv.c         | 62 ++++++++++++++++++++++++++++++------------
+ include/asm-generic/mshyperv.h |  2 +-
+ 7 files changed, 67 insertions(+), 24 deletions(-)
