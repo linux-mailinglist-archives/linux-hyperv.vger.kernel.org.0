@@ -2,249 +2,95 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FEAA1ABC38
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Apr 2020 11:11:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BFB21ABD83
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Apr 2020 12:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502689AbgDPIjL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Apr 2020 04:39:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502682AbgDPIjF (ORCPT
+        id S2504601AbgDPKFV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Apr 2020 06:05:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44560 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504310AbgDPKFS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:39:05 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98DF4C061A10;
-        Thu, 16 Apr 2020 01:39:04 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k11so3820502wrp.5;
-        Thu, 16 Apr 2020 01:39:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PkvJMl1gqjbqsZHs+qV+I97naXMp6apsvSAWhtAhZ1U=;
-        b=Us5R3I5nXYZ/qD4V87LVi5rjfklLkNZJPGc1m/boLL6nmQoSwEmWJXz/ZYIinnCMsp
-         C8wqvCQxkRXFrgmYGkZdIPTO1UCOIHnTuV97OWUzSWVl7ll0CvjQ6IN+kPq76sXXUUpj
-         Vbi5Q3iVbVYYpeHqC7EDerGtiu7vmtsxq1KmVQhRAmzE1YPPyEfdpFIREvUfXbB84jg1
-         73+0U50AS/wVu4qR089bG+eVc/ptnAys70Rt56hZy5i/Sv/1UL3gYIoquJllqaPyP+kJ
-         +9gxelePEjcgFxDHgqHMw2t7hwo6zCCgtM5X9wA3CHzwvRHZRjwPBWjkibg1k+5YGw0Y
-         CqNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PkvJMl1gqjbqsZHs+qV+I97naXMp6apsvSAWhtAhZ1U=;
-        b=fa1nu7odWMFnINTfF80ERmeHqNnUmdC1/XW7YmstkZD4H+vvX7DzDw9eK3aDu0mfm/
-         hNh5UdwV/6AeFpLsbnxB0Um2qfTJ+QprzZJJVYPodzOggQ3nNHW3XumA54S4MC2zd/y1
-         Hj0AiId5fltsyeYfdMSzYJwGQrQb6e6w2Zs8M2rJsN1tuY/d7UtqCSxl/nfpcX0mgulc
-         YpQwsWZP4mqFhqj9k6REaV2XAmr1SX8xIq9x4J2A0b6VtpHGcGhJjU1gqs0BkurZqndm
-         q2nBi2n69xx/uTdJqjswP5YFxeLEZ+i9SIaeFbfcJkDt/+IhcaXvKV/keeZP9xndUxzu
-         rASQ==
-X-Gm-Message-State: AGi0PubwGoVrNle46nf1/zwy8bI+8Dtos5CdGGNt7spAPOQEX3Vbq7Nr
-        u/nBK+j4zFvM5LvsENVmufbwsIX2NW986w==
-X-Google-Smtp-Source: APiQypJKsd9oyZg3ySBMjY8FH2RQyTioVfnAsmkgeOFQTYRHKx0dtq8hnwkidMNNEulteSXbN3wzRA==
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr32017503wrs.22.1587026342989;
-        Thu, 16 Apr 2020 01:39:02 -0700 (PDT)
-Received: from jondnuc.lan (IGLD-84-229-155-55.inter.net.il. [84.229.155.55])
-        by smtp.gmail.com with ESMTPSA id s12sm1256358wmc.7.2020.04.16.01.39.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 01:39:02 -0700 (PDT)
-From:   Jon Doron <arilou@gmail.com>
-To:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     vkuznets@redhat.com, rvkagan@yandex-team.ru,
-        Jon Doron <arilou@gmail.com>
-Subject: [PATCH v2 1/1] x86/kvm/hyper-v: Add support to SYNIC exit on EOM
-Date:   Thu, 16 Apr 2020 11:38:47 +0300
-Message-Id: <20200416083847.1776387-2-arilou@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200416083847.1776387-1-arilou@gmail.com>
-References: <20200416083847.1776387-1-arilou@gmail.com>
+        Thu, 16 Apr 2020 06:05:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GA3t0N058854;
+        Thu, 16 Apr 2020 10:05:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=za4AVK/k+Uk/xp/mb5oy2jiuIMPpSLqLYxS4y/rP7RI=;
+ b=zNSu5gGBQZG2ZHS9VftxnWNm1cNTfb8vl+2zgIZiW36CEOxTNZfSAM2xXJVjFiKMVvhZ
+ EimN3olqdChKtACSzW8YW1HP/6ljcbGNjqOt0mrjz7oAEo3IhPWRPI0zy08aiF9XqGjI
+ CbZj9iDBrR1yPjCvD+6mo7JU6HIqgFazliO/yrT8AWdG8mfe3cGRn9L6HvZwGUdY86cF
+ AfB/CEeNsBYZyWRLDFBITGHGkSL4pM35v8mOEHDL2Azwv0C1g6nlClWBkI8fMtXyIIh2
+ qea0T9PxoQNTWhoViITGYnUAY6pOAiydqttDixmFx2i/zmk0A2S0hE/WZreTWPD3rNbh hg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30emejg829-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 10:05:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03GA26sa063645;
+        Thu, 16 Apr 2020 10:03:07 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30dn9exfch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 10:03:07 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03GA36Xm002520;
+        Thu, 16 Apr 2020 10:03:06 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Apr 2020 03:03:05 -0700
+Date:   Thu, 16 Apr 2020 13:02:54 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH][next] drivers: hv: remove redundant assignment to
+ pointer primary_channel
+Message-ID: <20200416100253.GN1163@kadam>
+References: <20200414152343.243166-1-colin.king@canonical.com>
+ <87d08axb7k.fsf@vitty.brq.redhat.com>
+ <606c442c-1923-77d4-c350-e06878172c44@canonical.com>
+ <87wo6hvxkz.fsf@vitty.brq.redhat.com>
+ <20200415143752.cm3xbesiuksfdbzm@debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415143752.cm3xbesiuksfdbzm@debian>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
+ spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160069
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9592 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ mlxscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 adultscore=0 phishscore=0 clxscore=1011 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160069
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-According to the TLFS a write to the EOM register by the guest
-causes the hypervisor to scan for any pending messages and if there
-are any it will try to deliver them.
+We have this discussion over and over.  I always say it helps to have
+the commit mentioned in the commit message but it's not a Fixes tag.
+So I think that the commit message should say something like
+"commit 1234234 ("blah blah") removed some code so this variable isn't
+used any more".  I think it helps the review process.  But then if we
+mention the commit everyone says to use the Fixes tag.
 
-To do this we must exit so any pending messages can be written.
+It turns out if you leave out the commit entirely then people still
+complain but a lot less frequently.  It shouldn't work that way but
+reviewers are illogical.
 
-Signed-off-by: Jon Doron <arilou@gmail.com>
----
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/hyperv.c           | 67 +++++++++++++++++++++++++++++----
- arch/x86/kvm/hyperv.h           |  1 +
- arch/x86/kvm/x86.c              |  5 +++
- include/uapi/linux/kvm.h        |  1 +
- 5 files changed, 67 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 42a2d0d3984a..048a1db488e2 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -548,6 +548,7 @@ struct kvm_vcpu_hv_synic {
- 	DECLARE_BITMAP(vec_bitmap, 256);
- 	bool active;
- 	bool dont_zero_synic_pages;
-+	bool enable_eom_exit;
- };
- 
- /* Hyper-V per vcpu emulation context */
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index bcefa9d4e57e..4bf35452ae5c 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -186,6 +186,51 @@ static void kvm_hv_notify_acked_sint(struct kvm_vcpu *vcpu, u32 sint)
- 	srcu_read_unlock(&kvm->irq_srcu, idx);
- }
- 
-+static int synic_read_msg_hdr(struct kvm_vcpu_hv_synic *synic, u32 sint,
-+			      struct hv_message_header *msg)
-+{
-+	struct kvm_vcpu *vcpu = synic_to_vcpu(synic);
-+	int msg_off = offsetof(struct hv_message_page, sint_message[sint]);
-+	gfn_t msg_page_gfn;
-+	int r;
-+
-+	if (!(synic->msg_page & HV_SYNIC_SIMP_ENABLE))
-+		return -ENOENT;
-+
-+	msg_page_gfn = synic->msg_page >> PAGE_SHIFT;
-+
-+	r = kvm_vcpu_read_guest_page(vcpu, msg_page_gfn, msg, msg_off,
-+				     sizeof(*msg));
-+	if (r < 0)
-+		return r;
-+
-+	return 0;
-+}
-+
-+static bool synic_should_exit_on_eom(struct kvm_vcpu_hv_synic *synic)
-+{
-+	int i;
-+
-+	if (!synic->enable_eom_exit)
-+		return false;
-+
-+	for (i = 0; i < ARRAY_SIZE(synic->sint); i++) {
-+		struct hv_message_header hv_hdr;
-+		/*
-+		 * If we failed to read from the msg slot then we treat this
-+		 * msg slot as free
-+		 */
-+		if (synic_read_msg_hdr(synic, i, &hv_hdr) < 0)
-+			continue;
-+
-+		/* See if this msg slot has a pending message */
-+		if (hv_hdr.message_flags.msg_pending == 1)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static void synic_exit(struct kvm_vcpu_hv_synic *synic, u32 msr)
- {
- 	struct kvm_vcpu *vcpu = synic_to_vcpu(synic);
-@@ -254,6 +299,9 @@ static int synic_set_msr(struct kvm_vcpu_hv_synic *synic,
- 
- 		for (i = 0; i < ARRAY_SIZE(synic->sint); i++)
- 			kvm_hv_notify_acked_sint(vcpu, i);
-+
-+		if (!host && synic_should_exit_on_eom(synic))
-+			synic_exit(synic, msr);
- 		break;
- 	}
- 	case HV_X64_MSR_SINT0 ... HV_X64_MSR_SINT15:
-@@ -571,8 +619,9 @@ static int synic_deliver_msg(struct kvm_vcpu_hv_synic *synic, u32 sint,
- 	struct hv_message_header hv_hdr;
- 	int r;
- 
--	if (!(synic->msg_page & HV_SYNIC_SIMP_ENABLE))
--		return -ENOENT;
-+	r = synic_read_msg_hdr(synic, sint, &hv_hdr);
-+	if (r < 0)
-+		return r;
- 
- 	msg_page_gfn = synic->msg_page >> PAGE_SHIFT;
- 
-@@ -582,12 +631,6 @@ static int synic_deliver_msg(struct kvm_vcpu_hv_synic *synic, u32 sint,
- 	 * is only called in vcpu context so the entire update is atomic from
- 	 * guest POV and thus the exact order here doesn't matter.
- 	 */
--	r = kvm_vcpu_read_guest_page(vcpu, msg_page_gfn, &hv_hdr.message_type,
--				     msg_off + offsetof(struct hv_message,
--							header.message_type),
--				     sizeof(hv_hdr.message_type));
--	if (r < 0)
--		return r;
- 
- 	if (hv_hdr.message_type != HVMSG_NONE) {
- 		if (no_retry)
-@@ -785,6 +828,14 @@ int kvm_hv_activate_synic(struct kvm_vcpu *vcpu, bool dont_zero_synic_pages)
- 	return 0;
- }
- 
-+int kvm_hv_synic_enable_eom(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_vcpu_hv_synic *synic = vcpu_to_synic(vcpu);
-+
-+	synic->enable_eom_exit = true;
-+	return 0;
-+}
-+
- static bool kvm_hv_msr_partition_wide(u32 msr)
- {
- 	bool r = false;
-diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
-index 757cb578101c..ff89f0ff103c 100644
---- a/arch/x86/kvm/hyperv.h
-+++ b/arch/x86/kvm/hyperv.h
-@@ -56,6 +56,7 @@ void kvm_hv_irq_routing_update(struct kvm *kvm);
- int kvm_hv_synic_set_irq(struct kvm *kvm, u32 vcpu_id, u32 sint);
- void kvm_hv_synic_send_eoi(struct kvm_vcpu *vcpu, int vector);
- int kvm_hv_activate_synic(struct kvm_vcpu *vcpu, bool dont_zero_synic_pages);
-+int kvm_hv_synic_enable_eom(struct kvm_vcpu *vcpu);
- 
- void kvm_hv_vcpu_init(struct kvm_vcpu *vcpu);
- void kvm_hv_vcpu_postcreate(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 3bf2ecafd027..1615be238806 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3350,6 +3350,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_HYPERV_SPIN:
- 	case KVM_CAP_HYPERV_SYNIC:
- 	case KVM_CAP_HYPERV_SYNIC2:
-+	case KVM_CAP_HYPERV_SYNIC_EOM:
- 	case KVM_CAP_HYPERV_VP_INDEX:
- 	case KVM_CAP_HYPERV_EVENTFD:
- 	case KVM_CAP_HYPERV_TLBFLUSH:
-@@ -4209,6 +4210,10 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 
- 	switch (cap->cap) {
-+	case KVM_CAP_HYPERV_SYNIC_EOM:
-+		kvm_hv_synic_enable_eom(vcpu);
-+		return 0;
-+
- 	case KVM_CAP_HYPERV_SYNIC2:
- 		if (cap->args[0])
- 			return -EINVAL;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 428c7dde6b4b..78172ad156d8 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1017,6 +1017,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_S390_VCPU_RESETS 179
- #define KVM_CAP_S390_PROTECTED 180
- #define KVM_CAP_PPC_SECURE_GUEST 181
-+#define KVM_CAP_HYPERV_SYNIC_EOM 182
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
--- 
-2.24.1
+regards,
+dan carpenter
 
