@@ -2,91 +2,133 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6AAB1ADAAA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2020 12:03:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D68D1ADB4B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2020 12:42:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgDQKD0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Apr 2020 06:03:26 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52701 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725830AbgDQKDZ (ORCPT
+        id S1729417AbgDQKm5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Apr 2020 06:42:57 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:43130 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728868AbgDQKm4 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:03:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587117804;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5ElYTrTrSJKdE2tYQriD77Ds10y+cL36iV21AUMPYK8=;
-        b=WJ6FedXCjSxzHXR2Ym+0z1zXq7vuDaHcx3/n7he8xfb+zNnFspb5y2Ezq/R54s252jDtIB
-        4QMIlVOgXjSuh/U1rXOy0ukLCZOZ8iRp8GhEGFBd64jabGU9O4Iad01EGn9obxD2N5Bqbx
-        zmJu60jCA71qdNa8m+k0pmhX3lmMZVI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-175-m-Kl9QT3MAmqqUqmoIgO3w-1; Fri, 17 Apr 2020 06:03:22 -0400
-X-MC-Unique: m-Kl9QT3MAmqqUqmoIgO3w-1
-Received: by mail-wr1-f69.google.com with SMTP id m15so758754wrb.0
-        for <linux-hyperv@vger.kernel.org>; Fri, 17 Apr 2020 03:03:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=5ElYTrTrSJKdE2tYQriD77Ds10y+cL36iV21AUMPYK8=;
-        b=ETTA+Am6iCRMGmV5Jniz+J9Y7JApNi2iyoUeSYvs0MFWtwCNG22gxItXUJVueccT4p
-         pH0wlJYRzUJ0XHgULGELWm3BxUISoUKHxsvVAmYq+8QuBXp6QLFRFXjT/7/RwYjY1QAu
-         GfQVgyXGYpMiadBYh7n6JZDKubhg3jsTrYHCaQCl26N5I1ISz2hpuxac60Cor0NOsw2h
-         SZVWZ4UsrFrgTrOZCDaxG6moWesiw9v2kl+gAXem+iyE9xwqTOHH39DzrDhLV6Yd+wyL
-         +4ner/LajGMI2LL6h5h5cWXhy2dGvnQXw0cPi13oscmtPK5GssZym5mjk2yimIpyyaEh
-         Zj8w==
-X-Gm-Message-State: AGi0PuZoCCSYdz9getxpNVYP9lCqcXisraDDD/pLC9lxi3t0NDjuU5Sg
-        HxWxYj8fmRC7wn/EuGiCFCV8J1N3aMafqvzv/o3NpXz7H8CWxpUfJI03m0EeLekLI5S3LhfVw7F
-        XdqaCBR1dFNK69u2vdvjHOoXm
-X-Received: by 2002:adf:97cc:: with SMTP id t12mr2964677wrb.261.1587117801267;
-        Fri, 17 Apr 2020 03:03:21 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKYH+JBn8/yn3IYbL7Qlc8+A7kS9lt5b8RYcDiZb5T6r+5ekluPE9YgLZGiyQIkvKPQZtVJZg==
-X-Received: by 2002:adf:97cc:: with SMTP id t12mr2964656wrb.261.1587117801045;
-        Fri, 17 Apr 2020 03:03:21 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id s8sm1178080wru.38.2020.04.17.03.03.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 03:03:20 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     bp@alien8.de, haiyangz@microsoft.com, hpa@zytor.com,
-        kys@microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        sthemmin@microsoft.com, tglx@linutronix.de, x86@kernel.org,
-        mikelley@microsoft.com, wei.liu@kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] x86/hyperv: Suspend/resume the VP assist page for hibernation
-In-Reply-To: <1587104999-28927-1-git-send-email-decui@microsoft.com>
-References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
-Date:   Fri, 17 Apr 2020 12:03:18 +0200
-Message-ID: <87blnqv389.fsf@vitty.brq.redhat.com>
+        Fri, 17 Apr 2020 06:42:56 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id C0A522E14C6;
+        Fri, 17 Apr 2020 13:42:53 +0300 (MSK)
+Received: from iva8-88b7aa9dc799.qloud-c.yandex.net (iva8-88b7aa9dc799.qloud-c.yandex.net [2a02:6b8:c0c:77a0:0:640:88b7:aa9d])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id ZOHCWnLkUy-gqMaIPp5;
+        Fri, 17 Apr 2020 13:42:53 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1587120173; bh=I3spl25KIZuGs6Q3DOXzL/L4Ol8/St09dJxXsFCnQ7s=;
+        h=In-Reply-To:Message-ID:Subject:To:From:References:Date:Cc;
+        b=Lx7QSXU54GcI5/49VTJMywp5xS0bBtUlAMmPzN3iTi9gfEgh+nAPHyAwm3/kw22DA
+         jehFCNheJkNdY+U0NHiaf0W5ewIFGzn01SAxLH8Xv3xZuSlEVnyDQuD2YkGJK5862D
+         I6BK5UEv9u5GixU1u9UZg50c9hsjvBr7+YCMpvAI=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:9404::1:f])
+        by iva8-88b7aa9dc799.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id HIC3fwETCJ-gqWa0j4v;
+        Fri, 17 Apr 2020 13:42:52 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Date:   Fri, 17 Apr 2020 13:42:51 +0300
+From:   Roman Kagan <rvkagan@yandex-team.ru>
+To:     Jon Doron <arilou@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: Re: [PATCH v2 0/1] x86/kvm/hyper-v: Add support to SYNIC exit on EOM
+Message-ID: <20200417104251.GA3009@rvkaganb>
+Mail-Followup-To: Roman Kagan <rvkagan@yandex-team.ru>,
+        Jon Doron <arilou@gmail.com>, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, vkuznets@redhat.com
+References: <20200416083847.1776387-1-arilou@gmail.com>
+ <20200416120040.GA3745197@rvkaganb>
+ <20200416125430.GL7606@jondnuc>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416125430.GL7606@jondnuc>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dexuan Cui <decui@microsoft.com> writes:
+On Thu, Apr 16, 2020 at 03:54:30PM +0300, Jon Doron wrote:
+> On 16/04/2020, Roman Kagan wrote:
+> > On Thu, Apr 16, 2020 at 11:38:46AM +0300, Jon Doron wrote:
+> > > According to the TLFS:
+> > > "A write to the end of message (EOM) register by the guest causes the
+> > > hypervisor to scan the internal message buffer queue(s) associated with
+> > > the virtual processor.
+> > > 
+> > > If a message buffer queue contains a queued message buffer, the hypervisor
+> > > attempts to deliver the message.
+> > > 
+> > > Message delivery succeeds if the SIM page is enabled and the message slot
+> > > corresponding to the SINTx is empty (that is, the message type in the
+> > > header is set to HvMessageTypeNone).
+> > > If a message is successfully delivered, its corresponding internal message
+> > > buffer is dequeued and marked free.
+> > > If the corresponding SINTx is not masked, an edge-triggered interrupt is
+> > > delivered (that is, the corresponding bit in the IRR is set).
+> > > 
+> > > This register can be used by guests to poll for messages. It can also be
+> > > used as a way to drain the message queue for a SINTx that has
+> > > been disabled (that is, masked)."
+> > 
+> > Doesn't this work already?
+> > 
+> 
+> Well if you dont have SCONTROL and a GSI associated with the SINT then it
+> does not...
 
-> Unlike the other CPUs, CPU0 is never offlined during hibernation. So in the
-> resume path, the "new" kernel's VP assist page is not suspended (i.e.
-> disabled), and later when we jump to the "old" kernel, the page is not
-> properly re-enabled for CPU0 with the allocated page from the old kernel.
->
-> So far, the VP assist page is only used by hv_apic_eoi_write().
+Yes you do need both of these.
 
-No, not only for that ('git grep hv_get_vp_assist_page')
+> > > So basically this means that we need to exit on EOM so the hypervisor
+> > > will have a chance to send all the pending messages regardless of the
+> > > SCONTROL mechnaisim.
+> > 
+> > I might be misinterpreting the spec, but my understanding is that
+> > SCONTROL {en,dis}ables the message queueing completely.  What the quoted
+> > part means is that a write to EOM should trigger the message source to
+> > push a new message into the slot, regardless of whether the SINT was
+> > masked or not.
+> > 
+> > And this (I think, haven't tested) should already work.  The userspace
+> > just keeps using the SINT route as it normally does, posting
+> > notifications to the corresponding irqfd when posting a message, and
+> > waiting on the resamplerfd for the message slot to become free.  If the
+> > SINT is masked KVM will skip injecting the interrupt, that's it.
+> > 
+> > Roman.
+> 
+> That's what I was thinking originally as well, but then i noticed KDNET as a
+> VMBus client (and it basically runs before anything else) is working in this
+> polling mode, where SCONTROL is disabled and it just loops, and if it saw
+> there is a PENDING message flag it will issue an EOM to indicate it has free
+> the slot.
 
-KVM on Hyper-V also needs VP assist page to use Enlightened VMCS. In
-particular, Enlightened VMPTR is written there.
+Who sets up the message page then?  Doesn't it enabe SCONTROL as well?
 
-This makes me wonder: how does hibernation work with KVM in case we use
-Enlightened VMCS and we have VMs running? We need to make sure VP Assist
-page content is preserved.
+Note that, even if you don't see it being enabled by Windows, it can be
+enabled by the firmware and/or by the bootloader.
 
--- 
-Vitaly
+Can you perhaps try with the SeaBIOS from
+https://src.openvz.org/projects/UP/repos/seabios branch hv-scsi?  It
+enables SCONTROL and leaves it that way.
 
+I'd also suggest tracing kvm_msr events (both reads and writes) for
+SCONTROL and SIMP msrs, to better understand the picture.
+
+So far the change you propose appears too heavy to work around the
+problem of disabled SCONTROL.  You seem to be better off just making
+sure it's enabled (either by the firmware or slighly violating the spec
+and initializing to enabled from the start), and sticking to the
+existing infrastructure for posting messages.
+
+> (There are a bunch of patches i sent on the QEMU mailing list as well  where
+> i CCed you, I will probably revise it a bit but was hoping to get  KVM
+> sorted out first).
+
+I'll look through the archive, should be there, thanks.
+
+Roman.
