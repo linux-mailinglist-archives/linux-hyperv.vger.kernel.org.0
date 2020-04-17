@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6DDA1AE85E
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Apr 2020 00:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45EDE1AE880
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Apr 2020 01:07:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgDQWpE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Apr 2020 18:45:04 -0400
-Received: from mail-eopbgr1300101.outbound.protection.outlook.com ([40.107.130.101]:42570
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1726167AbgDQXHm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Apr 2020 19:07:42 -0400
+Received: from mail-eopbgr1310113.outbound.protection.outlook.com ([40.107.131.113]:32457
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728482AbgDQWpD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Apr 2020 18:45:03 -0400
+        id S1726036AbgDQXHl (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 17 Apr 2020 19:07:41 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=acxgRq0dahnOQuhHBXeAsFRUrjOZfTG7+KVaGsetEFQ1emJajlyw8Dhar57fl3bydfR85dmp9ImKiIIfolZKvUc344am3r8msMWyyiFqf2WWhAWWHiwdruo8zPVmmnyknVuwjbvSa4Cne3q3F+lB/IHGYQlU9x4KqUpVDz+ONEuyvM3glSp6arGhYbeYUM4DPcp9jtwpkzOnofIvPfAR0hiKm6FmxgFhCdMPDEaHPyVOc/FzXP1WyE6l+UflQ8fLGBQf1WdKTe9t0j08nDe6nKXnTTIeZ0ci6/BaMbvBubas9Jw/XkBsWCWkjeSvYqCl2IlLzWfi0HeV4YyFEelhGQ==
+ b=W8nY51giSedU8SPZdpnGqNlXiPKqflf78OHm06UFenkkR0vx42y5+Tr81E3RoxXB1oXvUSm2MeGpOoD6Osz68/AGNSf++YP80Op9VblQo9V8ubszIWsuaq9p94Og2HRRhig8IVIMcClM/G2Z0tQ4aSgol4x/iMTGSnSt7a6lrZ0Z0WkqV3VDqkjNpEM4rO910hSbc4tVwoYDgkpwI/pvDlVAn3UZGRGItCD/bf1QLkiDebJESyReofhFFSNO11HUitiaeeli447ni4okKTgny3od8YPJqxFEW34S8T/9KwEgdPzePCf6p9JUkBJafK23hf921pHNd5RV+h9zjMLHnQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jRo9cNd8X0MZrxBtPbVzGf0xk7XSRaNn2De4naZ6UGs=;
- b=U7XP+/tgb72C3ffj0ztMHYJKtCmaSh5tZHRPXn9g5IFBBCvH4TfxXkQiXRzaYZPLftLFTxgNAbhbNcZZNsM/Wd1igsfqvCK7ekxno1FguKObgljW2WrniXrXL0/jmrWjjGhY4tRiZiX9oOf4ng5ZE8JhB4vot8iHEudjNAHz0SLzJRwj9JA+Ivky9AparWSUD6lC15pKuaaie/4v27xcvWudPo2HHFn3/NYDZ/55cqTRD1o7t4/Wpb+ZsjT2dD23IER0UCBXmJmdYbXU9L/NlPQxDI+VwrpbwrRs2JubZdgAjUR0RWzcrLjMya9gMShkJ7eGKzQwF/3/Q3k1y96mfQ==
+ bh=DUvK8PhqN5D0DVkkiaZkVPw+btV96IcFhSRz2qAvs18=;
+ b=UP6LioA0AchA8J50zk5Yk2Nv2p6RWxi7b4th6hCOyJlVW9Gkk1+YB/GLtj/wFOav4SS1Vi2syTzyB0JxalmudFwc87KvTglkF90kxWFVTnJviFUqpagQkwySgAHJkVPlhLb7ZkDmnQdIbSbHfjlcs5O/8blTHjIdK4flQYKBOr2wf3l3pinEUAJz26/BbWZBCuGuy6I9tLqSatf2cQxhZtjs5sX4F3zDE2IEplqkKJyi6rmjmF56jZfuyhuA0pVHu6IapZ8B8thkmo+kCBTHGb7Lvxz9J/aHqlZJRaIpbdWaDIMouT9FQNmQgpbo6+W1LAB7O3ttS4nLbGuVGL1JCA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jRo9cNd8X0MZrxBtPbVzGf0xk7XSRaNn2De4naZ6UGs=;
- b=UfUOU6dsJ8imR+JQEVLkw80FCeckafQdB5GEShfWaA0ht8y7OdZXBOum1kNLMjPSzqP5S9v6APP/v8xhkwIKKExOikfwJDYHaM4L/GFoKETjGXdf0JWdUAi6cguk3jCE3QINNL0iWoyLylhTmlsAD0kFS2kEqgI88wMxvGvQsMU=
+ bh=DUvK8PhqN5D0DVkkiaZkVPw+btV96IcFhSRz2qAvs18=;
+ b=JSL84TXrZ1eeA8ur00EgQMj4BuG35P/XDzVH+A5ko699AmXOcfD78PRHrgq1WeFVcD+yjcAsT62eZa/+YssYLH6cv7UzWXBkfc4FjTM3v19nwF66z+qR3M+j+jZCZJaDlEW+BQqzQvvk6droTbZ6AVCzAYuT+JxBEP51M/HkJu8=
 Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
- by HK0P153MB0257.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b1::10) with
+ by HK0P153MB0131.APCP153.PROD.OUTLOOK.COM (2603:1096:203:19::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.4; Fri, 17 Apr
- 2020 22:44:39 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.3; Fri, 17 Apr
+ 2020 23:07:08 +0000
 Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
  ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
  ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2937.007; Fri, 17 Apr 2020
- 22:44:39 +0000
+ 23:07:08 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>
+To:     vkuznets <vkuznets@redhat.com>, Wei Liu <wei.liu@kernel.org>
 CC:     "bp@alien8.de" <bp@alien8.de>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
@@ -48,17 +48,20 @@ CC:     "bp@alien8.de" <bp@alien8.de>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
         "x86@kernel.org" <x86@kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Subject: RE: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
  hibernation
 Thread-Topic: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
  hibernation
-Thread-Index: AQHWFJewaoKQdpfmdUy/nWpslHqeNah96V2g
-Date:   Fri, 17 Apr 2020 22:44:39 +0000
-Message-ID: <HK0P153MB0273F49C7C59012A6BE0B304BFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+Thread-Index: AQHWFLBBfBcacZSsfESBcN86F1My4ah97Qsg
+Date:   Fri, 17 Apr 2020 23:07:08 +0000
+Message-ID: <HK0P153MB02736C41200574F4196283CABFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
 References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
- <20200417090748.r2c45se5paqz5766@debian>
-In-Reply-To: <20200417090748.r2c45se5paqz5766@debian>
+ <87blnqv389.fsf@vitty.brq.redhat.com>
+ <20200417105558.2jkqq2lih6vvoip2@debian>
+ <87wo6etj39.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87wo6etj39.fsf@vitty.brq.redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -66,70 +69,106 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-17T22:44:35.1962023Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-17T23:07:06.4996719Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7d610e83-46e3-4c5e-8879-6a54a0f3001c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8b000693-a052-4d43-922c-3da48af3830c;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=decui@microsoft.com; 
 x-originating-ip: [2601:600:a280:7f70:6de6:6792:4d71:47c3]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3de2226e-a329-41df-4ce1-08d7e320e9ae
-x-ms-traffictypediagnostic: HK0P153MB0257:|HK0P153MB0257:|HK0P153MB0257:
+x-ms-office365-filtering-correlation-id: 1da9ccb9-b1db-4386-34d2-08d7e3240dc9
+x-ms-traffictypediagnostic: HK0P153MB0131:|HK0P153MB0131:|HK0P153MB0131:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB0257DA691D4C98CD34DFABF3BFD90@HK0P153MB0257.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <HK0P153MB01311B038A9A0B0383BFFBE9BFD90@HK0P153MB0131.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
 x-forefront-prvs: 0376ECF4DD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(346002)(396003)(366004)(478600001)(186003)(76116006)(66476007)(10290500003)(64756008)(71200400001)(66556008)(66446008)(66946007)(8936002)(81156014)(8676002)(2906002)(52536014)(82960400001)(82950400001)(86362001)(6506007)(7696005)(9686003)(8990500004)(55016002)(4326008)(4744005)(5660300002)(316002)(6916009)(54906003)(33656002);DIR:OUT;SFP:1102;
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(2906002)(10290500003)(5660300002)(71200400001)(478600001)(186003)(82950400001)(82960400001)(66556008)(54906003)(52536014)(76116006)(4326008)(8990500004)(64756008)(7416002)(66946007)(86362001)(66446008)(8676002)(81156014)(7696005)(6506007)(9686003)(53546011)(15650500001)(33656002)(316002)(55016002)(8936002)(66476007)(110136005);DIR:OUT;SFP:1102;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dmaSLNJRERY0Bzy6zMxLbdU49kmO8HC9f8wGe0h2kAiV+O1yt/aLZgZeYbu5jwIltanaXSHYWTKDboFdoSg2XXPAGn35sSXN4K+gMtMCLUxWgjYx7dRl+cHpEgC2lfGboPFsIpB0CFrX42GGzOSTPuhMkXePPuvp0R1WNyj3Q1VHSIcm1WHBjgQjbzUURGMUFWyw0JGL+OPCkBBm6IpRr0VxPO0y25joL9NSQ7oUSK6AN6v/rlqNffWb++8qPSEjjyIhUiWaQ0pHgLdABIJPStGmrc4GJGb5K47bUiDPSye/MBEeIyScSMe0Zt53j4BNbWiNjTHa6lD2z4XwQr5kcTf0jNspMk8LVpXV0fItBqdztSlaJSSZmAVGy5sMbXwoywIAwKqbog6qt4C6+NSUzWeqWsHOMvx+kMVr/FDBP2A74Cg2aYLLDys3zai6bNj/
-x-ms-exchange-antispam-messagedata: xP2nc1AT9/8eNdL54t48ruYxL+2faTSYtOkM/17zEay5T5t5QNist7apPCLfm7xdYaXZZwR1OWIsxlyGc6rH4Aad1Q7OIEX8iBQe82FjnGP49ona0qpkpA73j9FkZsXOT4et2XbvUb8ww/eStAFFlvUd3Vn//7jvK/bAfQ1FCMJl8DqqTwQZp2e27OOxmyA4cneHt8YmGlHgjp1Ro5T4KkyexYdQV/KCl5gXAY1oKLRPYIdeWrsK8/ZudurmKBsjnVjtsyuStZ2Tco3X+zMo7XUWKj2wjN4FXX3D5nXH0EzxhlQHeq9a0KGqEDeO+3XZfSyeIaHVs7aE7mHxcq8ld4RHuJbfq8fUt9yfheRbItckTZWpW5tAmDhI50E74MdBN0NPlBVYkoTkRLwVtQfOVTdb65YZiJ/CJQ8px78C013ZCys1RHcelaxLyQVsJWYmET2lcVSnpMSQ6Qf6+Lj0hZQnRS07qRU8fyl6d2q/yIuDs638HixRpZFoEY3iMEAA61NtKabArESxuHBQrUuJn/+XMbw5PST2V7rxJl0/ME9TxgzBdfLYtfPRu7KcizhqsjB2WB20VWzM05T+XCH9ldmhf1v/Aerafjbm0RxZ90cwUYcataKhsIt4SPs+MBREsHbfRP6TBQDmCtSv2EJ0HSm0X48qmTFks818vPsAtgT7bjwBsN8yrfZqgqNGEHamSL6erThbwb/rdsY16EjtKqnvJzP+jxUruki0VLBevCTPV0l2Prt9SwkTbecknKIwEiWmTveb3xjzvowQ+Gx02KkAR71C/eqst5dmeaOzFhnHdJMXuGtFuzA28cWA/NK0VQCENpJwReykI2PXJ5CjQJhbZ328bKnR4XT695mPsng=
+x-microsoft-antispam-message-info: MYEIRTPWm7Ao3qcZVwd3f115e90ghDsPjltblx5iA0yHqI4YQ06ymtIrnLEaEVvFmHWKo6iBnO3+Gc3NHnnKBxBSgSe486KXZCyV1kTe1ypdR+ORO2MwrGqo8qKqFTiWIzD49pRuO54DxMv8dVF2/RHplgbfv/GWipUmGpZFp8TyEl+kisNH0G4yWIbQ04xMKaQ2cy4Ci1rygLjyLQvbh/8m5+Mv5o6SHIaRhctsGO7f1psoej8UjQ4hD8yIhW+R/jRfD5rUGB9y+cI8yONXtRm+dNBU70HX3//dS0a7iRMjW/G/YxGp7H4z43baBvJHEr5AxcHU/fZPeo/DjgXdJ4ysAiq08R4wIjJJ8r+fBXmSxVF4k1DNw5MTxq2gPXZ4b+DgURqMHpfkuRFjowuhFKA8nbi5kjo5gDO/UsVeEyX/ad1UwHFMAXbpbqx6JHLs
+x-ms-exchange-antispam-messagedata: ZxZKn3Be7/CVSk/D3qGkxttxBRTQlpkYCohfwY4GV/gTq3fCwTvpYYHJr4eH2D9fkdOHnQkfcEmPIJ0lGNycTeGnol5ENaMhHOtoydA9E/6NwURxV5tTCPRpYOs3RN03xbSwsCxZGsnYTu9qsqU0vV85/0/ILz8c8vTtSTlWlryLN5vR9X+NAl7lEwpWg0csw6ePKv8wm34GcEnnOT5C7HFuhGGszP4evb+D0MfM02EIWdOZqn8hu+nLbSyNYKD52aVa/2xWBa9y5rplHFuvf0x2Hxb9MwugOrqfcAM1rr3n6H+ZpMc43/Ebek3KUu5pKhaS3gOiX22f+yJDiZ85ZDNQAoYUkLx/OrhK7EcI4J0KYFRNdhZlIboa9l2hMIkXvjAh0IsESt8tRto1cscabKVoxp/NTLw4PZ7m9RJRLVeX7JiSGwWkm6S7TGu36Fijanf/3m+q+CwF1ljJTR4t/e7ASqdiAJcVSuIA5BrxdTbNwG/Jqolct7rUiJ6iZ+kH93rLDRDcuskdzOjO6a+alUBnKqhMYjUKCYxe8EKIDDH3jfxcXPABsgtzhtm8l912NTC/AHAmcIFQrNRB8oeoLpiHpUCbdmykV5UaorXT2cBYVCqMAHhXhZ3OkDjH4dCgR1P1TGFR9U+EqI1H1CftM/o4t34EBrXJN8p33PW8U7aMa6FhenZ2+EjEtiT6IiFZKnh4uZx/R06p6N2pM4ga9Q3dzq6zxKDIR3LhynRv1/sx6G2YQoeYBgX+N88ZSN7xAxRLZQPoIM42PadSIq23MducYLhwhL0jZEL4XFLrBbSrVolzW0PPKUKChSq7L4HiOAbqY7mymZYGNxMOlm1ZqwOwGNWGDK8KJOVoEgDtvp0=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3de2226e-a329-41df-4ce1-08d7e320e9ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 22:44:39.1159
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1da9ccb9-b1db-4386-34d2-08d7e3240dc9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 23:07:08.1275
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oWt0d/8R1cuQ6QVyomB8s7gbAwKaM3s2ggODSa0iC6m3sAsvW1tBraePWr9iOcgfWJavFALCoBhnYgbA4UmDYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0257
+X-MS-Exchange-CrossTenant-userprincipalname: qw0WJDYQayeuHoLwMtOC8eVBoNY1g38MXFAeWf629XO0o4Jeszc+Jj5S7MBItuG1nsyHRI8sK9cMWsUDzPPDhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0131
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Wei Liu <wei.liu@kernel.org>
-> Sent: Friday, April 17, 2020 2:08 AM
-> > @@ -72,7 +72,8 @@ static int hv_cpu_init(unsigned int cpu)
-> >  	struct page *pg;
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Sent: Friday, April 17, 2020 5:04 AM
+> To: Wei Liu <wei.liu@kernel.org>
+>=20
+> Wei Liu <wei.liu@kernel.org> writes:
+>=20
+> > On Fri, Apr 17, 2020 at 12:03:18PM +0200, Vitaly Kuznetsov wrote:
+> >> Dexuan Cui <decui@microsoft.com> writes:
+> >>
+> >> > Unlike the other CPUs, CPU0 is never offlined during hibernation. So=
+ in the
+> >> > resume path, the "new" kernel's VP assist page is not suspended (i.e=
+.
+> >> > disabled), and later when we jump to the "old" kernel, the page is n=
+ot
+> >> > properly re-enabled for CPU0 with the allocated page from the old ke=
+rnel.
+> >> >
+> >> > So far, the VP assist page is only used by hv_apic_eoi_write().
+> >>
+> >> No, not only for that ('git grep hv_get_vp_assist_page')
+
+Sorry, I unintentionally ignored that, as I have few knowledge about the
+optimization for nested virtualization. :-)
+
+> >> KVM on Hyper-V also needs VP assist page to use Enlightened VMCS. In
+> >> particular, Enlightened VMPTR is written there.
+> >>
+> >> This makes me wonder: how does hibernation work with KVM in case we
+> use
+> >> Enlightened VMCS and we have VMs running? We need to make sure VP
+> Assist
+> >> page content is preserved.
 > >
-> >  	input_arg =3D (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> > -	pg =3D alloc_page(GFP_KERNEL);
-> > +	/* hv_cpu_init() can be called with IRQs disabled from hv_resume() */
-> > +	pg =3D alloc_page(GFP_ATOMIC);
+> > The page itself is preserved, isn't it?
+> >
 >=20
-> IMHO it would be better to  only tap into the reserve pool if so
-> required, e.g.
+> Right, unlike hyperv_pcpu_input_arg is is not freed.
 >=20
->         pg =3D alloc_page(irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL);
+> > hv_cpu_die never frees the vp_assit page. It merely disables it.
+> > hv_cpu_init only allocates a new page if necessary.
 >=20
-> Wei.
+> I'm not really sure that Hyper-V will like us when we disable VP Assist
+> page and have an active L2 guest using Enlightened VMCS, who knows what
+> it caches and when. I'll try to at least test if/how it works.
+>=20
+> This all is not really related to Dexuan's patch)
+> --
+> Vitaly
 
-Ok, I'll follow the suggestion.
+It looks you imply that: if there is no active L2 guests, it should be safe=
+ to=20
+disable/reenable the assist page upon hibernation?
 
-BTW, there are indeed some usages like this, but not a lot:
-grep irqs_disabled drivers/acpi include/acpi drivers/trace -nr |grep GFP_AT=
-OMIC | grep GFP_KERNEL
+Can you please write a patch for KVM (when KVM runs on Hyper-V) to abort
+the hibernation request if there is any active L2 guest? The pm_notifier ca=
+n=20
+be used for this.
 
 Thanks,
 -- Dexuan
