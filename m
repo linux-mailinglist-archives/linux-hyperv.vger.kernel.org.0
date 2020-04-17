@@ -2,108 +2,84 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 172A81ADE01
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2020 15:08:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87CD91AE7B7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Apr 2020 23:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgDQNIJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Apr 2020 09:08:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46647 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729799AbgDQNIJ (ORCPT
+        id S1728236AbgDQVn1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Apr 2020 17:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727889AbgDQVnZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:08:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f13so2927887wrm.13;
-        Fri, 17 Apr 2020 06:08:07 -0700 (PDT)
+        Fri, 17 Apr 2020 17:43:25 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A44C061A0F
+        for <linux-hyperv@vger.kernel.org>; Fri, 17 Apr 2020 14:43:24 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id a2so2658376ejx.5
+        for <linux-hyperv@vger.kernel.org>; Fri, 17 Apr 2020 14:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=iaSk7QT7VbOqhOhLUZepYHAoOArYZNRFJyLZSaahZm8=;
+        b=Jg2cIeLrTBBFjAtQSQQSGe4Pbko1693294lncsg/XoSPCX+RFcyOnpCuDyvJ6p9Vr3
+         wg6ZmgMmm37U+ORXWwwVeVL05p1ogwwRDiPDHPb7hG7GXx1JcgJyRm673iHxP8rhPQ+d
+         9LPd9R22IfWEFA5VczzuxYF61g8bFAiUO38kiehriWuPq0taIvthV3+4Y2dNf9emQF8A
+         /xzgkaoeOG3FntNIHakQnCoF8F2Jveb4NpUuR4fo3noS/3IBac02cRV7HXA4a1p8spSD
+         rC7WHxVgVjD/Jdy1a6Qk5g59V2hN5l3r0d7oQC8l2eHQpQsupW3I9hKcCasEVG3zyLnu
+         ghTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0xitfCt44NpX/zHg++7+cxiDZSUTq6AViagZQ7XxH/s=;
-        b=pr9CMS5OwOqhVyHaSZUkRHuEtNa8enP6P9K8IhmKFc1K75ZSMGx8i2hIkW6+Gd5CWZ
-         fr6OAA20RMnKlQWqG0rsqEvQYV66SQ4LhW0Wf2bhxI/5sLOuizcTIN1qroj09Y1bCC8p
-         8Trve533y6o+9FTNBFXFsjtWoli8i6qd8skjozY7KwmMPy2wzYjCH0qcIV2lj8HiwOzM
-         0MqWpW4YtqcWoC69TYdxJSpR3ghZ/HBwmKD44Xg9LFzNxKeOY2Ilzu4tvUcMO6URVA2m
-         1mTqhcdNUHZL93jnVKs0IGIXecEBg2fwkajS31ioOAhURZAsNpIXhxB1VAe/SbFc2Itz
-         l3SA==
-X-Gm-Message-State: AGi0PuYUZDPFYvBfqnbebgMbGRYj6toOMbMCzG5xcaREkny2CNAQBKPs
-        mktCALCOsRqCubri7pAVb/ZCochg
-X-Google-Smtp-Source: APiQypIti7bfzNiuiDl5ZIOJ90yq2LCbDxv2TSX7eAGxppwiDKE+l+L9K/O8MI3/qNMS9Ht1k90zzw==
-X-Received: by 2002:adf:f5c4:: with SMTP id k4mr3832796wrp.294.1587128886968;
-        Fri, 17 Apr 2020 06:08:06 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id a7sm15244713wrs.61.2020.04.17.06.08.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 06:08:06 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 14:08:03 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        bp@alien8.de, haiyangz@microsoft.com, hpa@zytor.com,
-        kys@microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        sthemmin@microsoft.com, tglx@linutronix.de, x86@kernel.org,
-        mikelley@microsoft.com, kvm@vger.kernel.org
-Subject: Re: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
- hibernation
-Message-ID: <20200417130803.ci2orezcrb64z64m@debian>
-References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
- <87blnqv389.fsf@vitty.brq.redhat.com>
- <20200417105558.2jkqq2lih6vvoip2@debian>
- <87wo6etj39.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=iaSk7QT7VbOqhOhLUZepYHAoOArYZNRFJyLZSaahZm8=;
+        b=Kp2mM2g5DnmhM6d6GxoYxI1h7Jr9LJiogYS2FHY9NW0gPadBgYg2Tfn1tlmeEMSob+
+         InQ9Y5Wvx1Q50bCGGBx2UXVSioG1O4JpCWJbFKbb22IrRCqcUk8QBWBM6azpxfMLJwnF
+         m1Pn0VbUsVmsF3tqn3N4poq1x01uRzKOP3pRit8hXD+zqhfD/9npPsHuoR9UC3s+cZh8
+         PAPprOKFGSW0WEPZhk2J03OZGDOM/SfC9HVW5oF6LXbsBDR86BWWl+11oczycz2jg4As
+         vv3NiZOZDtZZkKiO6NbnjF+0e/qfkJkYFIhv/08/OHBGBP68MRzuvVHKNFsyQsGypTTe
+         oFgw==
+X-Gm-Message-State: AGi0PuZc1opFChCbBQvsxZbBTZWcrLst1X/EzlBnkdzvyz9Nzxvs+glJ
+        7yZ/h8ojBDbO2sQzpiBMAv9fbxvqdikh2Ckrxg==
+X-Google-Smtp-Source: APiQypKLAFsAFte5/eno3SPMCXVf1FTZz3l9qjcDybURKM0dO0w+5MWmGtsAeAZvxT7mxH5BwE9QkAZD+5jqqAhJph0=
+X-Received: by 2002:a17:906:160f:: with SMTP id m15mr4898607ejd.367.1587159803352;
+ Fri, 17 Apr 2020 14:43:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wo6etj39.fsf@vitty.brq.redhat.com>
-User-Agent: NeoMutt/20180716
+Received: by 2002:ab4:9bca:0:0:0:0:0 with HTTP; Fri, 17 Apr 2020 14:43:23
+ -0700 (PDT)
+Reply-To: arthuradam01@hotmail.com
+From:   "Mr.Arthur Adam " <mohammedyacouba03@gmail.com>
+Date:   Fri, 17 Apr 2020 14:43:23 -0700
+Message-ID: <CAAG15+d5kOPV5VpGsNEHk2mCZKRZk_9j_U0g0cZbp0hg7_owmw@mail.gmail.com>
+Subject: With due respect
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 02:03:38PM +0200, Vitaly Kuznetsov wrote:
-> Wei Liu <wei.liu@kernel.org> writes:
-> 
-> > On Fri, Apr 17, 2020 at 12:03:18PM +0200, Vitaly Kuznetsov wrote:
-> >> Dexuan Cui <decui@microsoft.com> writes:
-> >> 
-> >> > Unlike the other CPUs, CPU0 is never offlined during hibernation. So in the
-> >> > resume path, the "new" kernel's VP assist page is not suspended (i.e.
-> >> > disabled), and later when we jump to the "old" kernel, the page is not
-> >> > properly re-enabled for CPU0 with the allocated page from the old kernel.
-> >> >
-> >> > So far, the VP assist page is only used by hv_apic_eoi_write().
-> >> 
-> >> No, not only for that ('git grep hv_get_vp_assist_page')
-> >> 
-> >> KVM on Hyper-V also needs VP assist page to use Enlightened VMCS. In
-> >> particular, Enlightened VMPTR is written there.
-> >> 
-> >> This makes me wonder: how does hibernation work with KVM in case we use
-> >> Enlightened VMCS and we have VMs running? We need to make sure VP Assist
-> >> page content is preserved.
-> >
-> > The page itself is preserved, isn't it?
-> >
-> 
-> Right, unlike hyperv_pcpu_input_arg is is not freed.
-> 
-> > hv_cpu_die never frees the vp_assit page. It merely disables it.
-> > hv_cpu_init only allocates a new page if necessary.
-> 
-> I'm not really sure that Hyper-V will like us when we disable VP Assist
-> page and have an active L2 guest using Enlightened VMCS, who knows what
-> it caches and when. I'll try to at least test if/how it works.
-> 
+My Dear
 
-I'm curious to know that as well. :-)
+I hope that you are well today. I am the Accounting Manager of BOA,
+With due respect, I decided to contact you over this business
+financial transaction worth the sum of $30 Million dollars in other to
+entrust this fund into your bank account.
 
-> This all is not really related to Dexuan's patch)
+You should note that this is an abandoned fund that belongs to one of
+our customer from Indonesian who died along with his entire family on
+a plane crash disaster with Lion Airline on October 29, 2018. I was
+very fortune to meet the deceased file when i was arranging the old
+and abandoned customer's files in other to submit to the management
+accordingly for documentation purposes.
 
-Right.
+If you are interested, please forward the following information to me as below:
+=======================
+{1} Your full Names and address,
+{2} Your telephone or mobile numbers..
+=======================
 
-Wei.
+Waiting for your urgent reply or confidentially call me on mobile
+number: Tel: 00226 64144256
 
-> 
-> -- 
-> Vitaly
-> 
+Yours faithfully,
+Mr.Arthur Adam
