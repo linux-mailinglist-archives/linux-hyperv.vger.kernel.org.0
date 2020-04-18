@@ -2,193 +2,247 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 233F31AE8B1
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Apr 2020 01:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 322AD1AEA3E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Apr 2020 08:41:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgDQXrx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Apr 2020 19:47:53 -0400
-Received: from mail-eopbgr1320093.outbound.protection.outlook.com ([40.107.132.93]:21811
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726036AbgDQXrw (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Apr 2020 19:47:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D2KKHat2tcjJgChp8RvZTAdvQfVUjJ6O7zwGjQvZMVThK/q8YUwGZ3zQbERKs9K341FDenMhcugJ9iHTg+VYJ6a5AcvvL6lw7R3CHu7k+GH2Iob4pGwgRQLoVIoLUfIuq3OZrdjfSwAjdyAr6sbYGCUWAaceQcr8mAWG99XEdlNtos0fGDT0LF3HgngoWSARyphIUaenxb4GcBSHQJ2JYH8ociWPf3l13gssXdaamJeSJVYUt+ZseY/v+0nxazPfOUIyf7mLlr2ckMnOWI08ZNiKi/TQJUvrJH0xRohEwx/wpdKqa95c72Og+Ai72YR1SEra8soZjFrBDqjnKtrlJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7du3dsBit6gpKRKdQ1Xqzs3L/R02H1ieS+Q3fPbuKHk=;
- b=mzyUM+uw/SIUqFW99RgmrVcn+eDDkZbfQkvIg2YnkdgYJLi9dlK6hkB8VaCyiAaDcJTb+Vmd2W5WUorder9VC0EsAg6CRAp+XSXvOu9VwCXK9R6X1+l9nt83+vE82Q2CfYXweNMe6skGaDRhFN+car78sAOC3tSu63mgxhTXKMlbJp90SuTISQGYX7UWZnynbsomkJsacxYsf/dS6pbBRRWcbOtd/HXG3En33gX6KWKNUrKV3AXqndrXk1/0OUmFwPIyxl1Sp5kOBxPzvV2RCTu4NwIMiyufCiMwylAxcrWXTzhDUSN+MLDZKQ8UOlv85RIV986o9YjralhvDhUvzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7du3dsBit6gpKRKdQ1Xqzs3L/R02H1ieS+Q3fPbuKHk=;
- b=A/On80byDvlPYW4OHWNlzhHSYSifIK2fe2fEMvUm9bdBLBjwwx2+WhXMhlnAdUYy+eRPG0TpsEZQAyV7SixRngPDm3v0obo0y2I5k03Al3QCvNT9OpktQlhgKQi1YP5K/+J6qg16G/zsHDJPWrmMLFF5I50ATQpE6iFtNvv+kTI=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
- by HK0P153MB0179.APCP153.PROD.OUTLOOK.COM (2603:1096:203:29::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.3; Fri, 17 Apr
- 2020 23:47:42 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2937.007; Fri, 17 Apr 2020
- 23:47:42 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
- hibernation
-Thread-Topic: [PATCH] x86/hyperv: Suspend/resume the VP assist page for
- hibernation
-Thread-Index: AQHWFRKUfBcacZSsfESBcN86F1My4Q==
-Date:   Fri, 17 Apr 2020 23:47:41 +0000
-Message-ID: <HK0P153MB0273A04F0585524883C46B0FBFD90@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-References: <1587104999-28927-1-git-send-email-decui@microsoft.com>
- <20200417110007.uzfo6musx2x2suw7@debian>
-In-Reply-To: <20200417110007.uzfo6musx2x2suw7@debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-17T23:47:38.2490791Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9425f78a-9b51-488f-bae6-3c0ee39fca53;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:6de6:6792:4d71:47c3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 565586ff-d6a7-4a5e-2118-08d7e329b839
-x-ms-traffictypediagnostic: HK0P153MB0179:|HK0P153MB0179:|HK0P153MB0179:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB01799215F5B69E51E4D00B37BFD90@HK0P153MB0179.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0376ECF4DD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(346002)(376002)(396003)(136003)(66946007)(6916009)(66476007)(64756008)(52536014)(2906002)(66556008)(8990500004)(66446008)(33656002)(76116006)(82950400001)(5660300002)(86362001)(82960400001)(8676002)(4326008)(8936002)(7696005)(53546011)(186003)(6506007)(54906003)(81156014)(10290500003)(15650500001)(9686003)(55016002)(478600001)(71200400001)(316002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9s2EAeEW/0SvmuZnNBVPaB0IXHegCulMxrM5ZLzly+bmkzbvyEGKSu2J9gm1f0RFE5Ft+awQB1DnHDifUBK0P68ygQ06LJaGVgMSfdVJqmMGYeY/PwKojShhBg/LuhpPyr7yRlwVHFknzLsQr0PTAroRFmTWyb8g5Fm4lARVDTt56h9p0WldQ5/q6lOueBrWK6sX4oHjZG+4TgtcA0ZVfa4B0mPYZpxtwLhNT0d/6Gb++DRynKkRBsYq3W7B/10WVt38CZMIeKtxqQXX6EXPyTSYcARsNJK5Yeh1B7h/71Mx7pOonvXIIXc020XDIwtO5tfiLEP0OYQAIp49yqigdxeeboUdaCQFoB0q0CwaffNRMJEMK7QJ4BzePmiblTVw0koU9bgl5DIcA/jRpzvJfWp7j83mrmx1B/WCkEXVEH4EPdNwqaNXieMmyhO4T6Vw
-x-ms-exchange-antispam-messagedata: CUXzUVh4EG0bgOLE5Vin/DEos0OJSH/GU1YmHtwd1bHjzwNWOtMVlUEHjafuziQTYhFbMt+LY6rfdVd+eSSxS9stee2pB1qLEYx1bBsjZUHlKNdqoFjTpsBKqSK5VfSyinb+Q0dxKTyRYN2EVGJkmTge1uu4LcoVa4hdMA3twWydpbHvrX/frBpvLWfV+zEjgp9y9JSofV0dW/D+uOJTE9bOdI8SoNZI+/hfWdhwrJIUXP41N7AyxpLudKGGUL1tcNlnASHG9RjgV36dE7f91swC+LIYYX0nqJocdIi+WdBdsvE1jAoAkhqHyLY9r9EgeBsCA/ck8GeEfsZ/Y0bywb6xHGfQWkL5vnTsofV8PdwyRkX9RuDn9k2DEqbY+ubmJTsF3gL83C23/KWWjOeJGQOAZ5UN+DTTw9hLhoc1YQwRwkfcw+6cxi/qGmcCPTUg3ofdVR8VX5Tza6Elm/WaDhLlv/LZtARTV2SiANFlH2BhaBZBGoTKXA55vP0xmZ5PPs9x/NJlXVp99zXT9czqAWiyxHdXlcLaOgiIEzV9CVpvXQ2IUkFv7jb6pp6nCigOTUbaIkplwKh0sLpIDXOVrypG7aYiB+MvmaS98n5+aTvtFnqOgMrd6yLx4KrozA2m0Ks/tOVfMwcYXpH/55qPbIg2fNpR4XnqYqZOyfHsU8Mv9YvdsNzd/3SOVdw9N1SXQ8We8/l8Xcx9hvfzw6C9WUoDly7AlkicW5izyU/aqJyGJ+6kf1+eveQpzfibn+NX9mcfpqGAfU1OcdYqy9cvJb6yNBQWeGGpv0/tA9+j4FZwQ5nONoZm0mamxUlXaqnFK9ke8IzP1jrTvdWSjqOYEjw9UMQaCAu7WXkeWjy5cq4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726144AbgDRGlc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 18 Apr 2020 02:41:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbgDRGlc (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 18 Apr 2020 02:41:32 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25F6C061A0C;
+        Fri, 17 Apr 2020 23:41:31 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z6so5185150wml.2;
+        Fri, 17 Apr 2020 23:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=RmVpyVm4tvMIRqBwICzWZmFyQ8dvMOobXgPmm9CFolw=;
+        b=SeEQ97pwDDS2QG18YxpVPoshyHL7hEdORYYYNTVUMDNt+ne561pzFLM+erblFHvUr8
+         YNMa+4UEj/gfAGhAVWlnYuQpSho8LHOX6knIHVXfMusuP6clHPpOTbae/NIHLIc+j7ge
+         zX0tumx2Vf3zpb4g40yQobkatc8cCThQdlXqOD3pk0vWGl5cg2mOSVvQeB77kzhkDOnO
+         ARo5mHQgdOfWFYwyzr1vkETvcyOrZa1WZ14L/eWHENOK+pctdDDL3k7YhuENQWGLG+ih
+         qvFNBfM1KNcxbR3BvDLVKxxkZd2Th1zUjiRUN3+lEUfxrcCS0L97vmlIG8ggjC5I0uYp
+         +r7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=RmVpyVm4tvMIRqBwICzWZmFyQ8dvMOobXgPmm9CFolw=;
+        b=K31X6QaJaEe3t938MBynEsNuEjw0E5DK0Rgjje1v4eH1upFgyGekK1AxeUucOLQuhT
+         m9Cb0LIc279f91/HeoTGA7mUGbJ0KDnaL6+IEwi8TAIcqM5ftCcMYXS8YctgPHm/4HnO
+         XmMNx47anbyn2OeZwTH3WDpbnPU7rxbYT2wo3EkVuy5v0C4UbyZHbQh6FWmGOF05k8Wa
+         3w+Ex9XYuyAB0yHcET442IcVlkQSHXowB7E2SchLztI1tEfyMdrdvJGvUc3CUq4HinU2
+         x/6bHZYdY+O+R6vi3goInKO3e6DgL9oM5NhPmWJtguf5iqD1/BzY87D3QrFTMkte1xkC
+         sCEw==
+X-Gm-Message-State: AGi0PuZfGK4wWHaHMwqfevUGCKYVEw9244u1YXDkcCxi5IpOGtVJQPCV
+        DY75dq49+6YbtlbF75GyazQ=
+X-Google-Smtp-Source: APiQypJkQOBmxHegjic0tKnLgjpcEJMBGH4biKB+ewHzx6ZgBAIlNCIIxvr4qL7kzdAm+zvJPg4iKA==
+X-Received: by 2002:a7b:c74d:: with SMTP id w13mr6573652wmk.36.1587192090020;
+        Fri, 17 Apr 2020 23:41:30 -0700 (PDT)
+Received: from jondnuc (IGLD-84-229-155-55.inter.net.il. [84.229.155.55])
+        by smtp.gmail.com with ESMTPSA id p5sm37945282wrg.49.2020.04.17.23.41.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 23:41:29 -0700 (PDT)
+Date:   Sat, 18 Apr 2020 09:41:27 +0300
+From:   Jon Doron <arilou@gmail.com>
+To:     Roman Kagan <rvkagan@yandex-team.ru>, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, vkuznets@redhat.com
+Subject: Re: [PATCH v2 0/1] x86/kvm/hyper-v: Add support to SYNIC exit on EOM
+Message-ID: <20200418064127.GB1917435@jondnuc>
+References: <20200416083847.1776387-1-arilou@gmail.com>
+ <20200416120040.GA3745197@rvkaganb>
+ <20200416125430.GL7606@jondnuc>
+ <20200417104251.GA3009@rvkaganb>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 565586ff-d6a7-4a5e-2118-08d7e329b839
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 23:47:41.5603
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: za1MklIXp2t/tI6ujwOz0pq89P8D7rhyWAtQ0R4/hoRVeq7Zfx4NtSBiqMo2qO+rq/XbL4EJcSaOd86CGSm2yQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0179
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200417104251.GA3009@rvkaganb>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Wei Liu <wei.liu@kernel.org>
-> Sent: Friday, April 17, 2020 4:00 AM
-> To: Dexuan Cui <decui@microsoft.com>
->=20
-> On Thu, Apr 16, 2020 at 11:29:59PM -0700, Dexuan Cui wrote:
-> > Unlike the other CPUs, CPU0 is never offlined during hibernation. So in=
- the
-> > resume path, the "new" kernel's VP assist page is not suspended (i.e.
-> > disabled), and later when we jump to the "old" kernel, the page is not
-> > properly re-enabled for CPU0 with the allocated page from the old kerne=
-l.
-> >
-> > So far, the VP assist page is only used by hv_apic_eoi_write(). When th=
-e
-> > page is not properly re-enabled, hvp->apic_assist is always 0, so the
-> > HV_X64_MSR_EOI MSR is always written. This is not ideal with respect to
-> > performance, but Hyper-V can still correctly handle this.
-> >
-> > The issue is: the hypervisor can corrupt the old kernel memory, and hen=
-ce
-> > sometimes cause unexpected behaviors, e.g. when the old kernel's non-bo=
-ot
-> > CPUs are being onlined in the resume path, the VM can hang or be killed
-> > due to virtual triple fault.
->=20
-> I don't quite follow here.
->=20
-> The first sentence is rather alarming -- why would Hyper-V corrupt
-> guest's memory (kernel or not)?
+On 17/04/2020, Roman Kagan wrote:
+>On Thu, Apr 16, 2020 at 03:54:30PM +0300, Jon Doron wrote:
+>> On 16/04/2020, Roman Kagan wrote:
+>> > On Thu, Apr 16, 2020 at 11:38:46AM +0300, Jon Doron wrote:
+>> > > According to the TLFS:
+>> > > "A write to the end of message (EOM) register by the guest causes the
+>> > > hypervisor to scan the internal message buffer queue(s) associated with
+>> > > the virtual processor.
+>> > >
+>> > > If a message buffer queue contains a queued message buffer, the hypervisor
+>> > > attempts to deliver the message.
+>> > >
+>> > > Message delivery succeeds if the SIM page is enabled and the message slot
+>> > > corresponding to the SINTx is empty (that is, the message type in the
+>> > > header is set to HvMessageTypeNone).
+>> > > If a message is successfully delivered, its corresponding internal message
+>> > > buffer is dequeued and marked free.
+>> > > If the corresponding SINTx is not masked, an edge-triggered interrupt is
+>> > > delivered (that is, the corresponding bit in the IRR is set).
+>> > >
+>> > > This register can be used by guests to poll for messages. It can also be
+>> > > used as a way to drain the message queue for a SINTx that has
+>> > > been disabled (that is, masked)."
+>> >
+>> > Doesn't this work already?
+>> >
+>>
+>> Well if you dont have SCONTROL and a GSI associated with the SINT then it
+>> does not...
+>
+>Yes you do need both of these.
+>
+>> > > So basically this means that we need to exit on EOM so the hypervisor
+>> > > will have a chance to send all the pending messages regardless of the
+>> > > SCONTROL mechnaisim.
+>> >
+>> > I might be misinterpreting the spec, but my understanding is that
+>> > SCONTROL {en,dis}ables the message queueing completely.  What the quoted
+>> > part means is that a write to EOM should trigger the message source to
+>> > push a new message into the slot, regardless of whether the SINT was
+>> > masked or not.
+>> >
+>> > And this (I think, haven't tested) should already work.  The userspace
+>> > just keeps using the SINT route as it normally does, posting
+>> > notifications to the corresponding irqfd when posting a message, and
+>> > waiting on the resamplerfd for the message slot to become free.  If the
+>> > SINT is masked KVM will skip injecting the interrupt, that's it.
+>> >
+>> > Roman.
+>>
+>> That's what I was thinking originally as well, but then i noticed KDNET as a
+>> VMBus client (and it basically runs before anything else) is working in this
+>> polling mode, where SCONTROL is disabled and it just loops, and if it saw
+>> there is a PENDING message flag it will issue an EOM to indicate it has free
+>> the slot.
+>
+>Who sets up the message page then?  Doesn't it enabe SCONTROL as well?
+>
 
-Without this patch, after the VM resumes from hibernation, the hypervisor=20
-still thinks the assist page of vCPU0 points to the physical page allocated=
- by
-the "new" kernel (the "new" kernel started up freshly, loaded the saved sta=
-te=20
-of the "old" kernel from disk into memory, and jumped to the "old" kernel),
-but the same physical page can be allocated to store something different in
-the "old" kernel (which is the currently running kernel, since the VM resum=
-ed).
+KdNet is the one setting the SIMP and it's not setting the SCONTROL, ill 
+paste output of KVM traces for the relevant MSRs
 
-Conceptually, it looks Hyper-V writes into the assist page from time to tim=
-e,
-e.g. for the EOI optimization. This "corrupts" the page for the "old" kerne=
-l.
+>Note that, even if you don't see it being enabled by Windows, it can be
+>enabled by the firmware and/or by the bootloader.
+>
+>Can you perhaps try with the SeaBIOS from
+>https://src.openvz.org/projects/UP/repos/seabios branch hv-scsi?  It
+>enables SCONTROL and leaves it that way.
+>
+>I'd also suggest tracing kvm_msr events (both reads and writes) for
+>SCONTROL and SIMP msrs, to better understand the picture.
+>
+>So far the change you propose appears too heavy to work around the
+>problem of disabled SCONTROL.  You seem to be better off just making
+>sure it's enabled (either by the firmware or slighly violating the spec
+>and initializing to enabled from the start), and sticking to the
+>existing infrastructure for posting messages.
+>
 
-I'm not absolutely sure if this explains the strange hang issue or triple f=
-ault
-I occasionally saw in my long-haul hibernation test, but with this patch,
-I never reproduce the strange hang/triple fault issue again, so I think thi=
-s
-patch works.
+I guess there is something I'm missing here but let's say the BIOS would 
+have set the SCONTROL but the OS is not setting it, who is in charge of 
+handling the interrupts?
 
-> Secondly, code below only specifies cpu0. What does it do with non-boot
-> cpus on the resume path?
->=20
-> Wei.
+>> (There are a bunch of patches i sent on the QEMU mailing list as well  where
+>> i CCed you, I will probably revise it a bit but was hoping to get  KVM
+>> sorted out first).
+>
+>I'll look through the archive, should be there, thanks.
+>
+>Roman.
 
-hyperv_init() registers hv_cpu_init()/hv_cpu_die() to the cpuhp framework:
+I tried testing with both the SeaBIOS branch you have suggested and the 
+EDK2, unfortunately I could not get the EDK2 build to identify my VM 
+drive to boot from (not sure why)
 
-cpuhp =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/hyperv_init:online",
-                       hv_cpu_init, hv_cpu_die);
+Here is an output of KVM trace for the relevant MSRs (SCONTROL and SIMP)
 
-In the hibernation procedure, the non-boot CPUs are automatically disabled
-and reenabled, so hv_cpu_init()/hv_cpu_die() are automatically called for t=
-hem,
-e.g. in the resume path, see:
-    hibernation_restore()
-        resume_target_kernel()
-            hibernate_resume_nonboot_cpu_disable()
-                disable_nonboot_cpus()=20
-            syscore_suspend()
-                hv_cpu_die(0)  // Added by this patch
-            swsusp_arch_resume()
-                relocate_restore_code()
-                    restore_image()
-                        jump to the old kernel and we return from=20
-                        the swsusp_arch_suspend() in create_image()
-                            syscore_resume()
-                                hv_cpu_init(0) // Added by this patch.
-                            suspend_enable_secondary_cpus()
-                            dpm_resume_start()
-                            ...
+QEMU Default BIOS
+-----------------
+  qemu-system-x86-613   [000] ....  1121.080722: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x0 host 1
+  qemu-system-x86-613   [000] ....  1121.080722: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 1
+  qemu-system-x86-613   [000] .N..  1121.095592: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x0 host 1
+  qemu-system-x86-613   [000] .N..  1121.095592: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 1
+Choose Windows DebugEntry
+  qemu-system-x86-613   [001] ....  1165.185227: kvm_msr: msr_read 40000083 = 0x0
+  qemu-system-x86-613   [001] ....  1165.185255: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0xfa1001 host 0
+  qemu-system-x86-613   [001] ....  1165.185255: kvm_msr: msr_write 40000083 = 0xfa1001
+  qemu-system-x86-613   [001] ....  1165.193206: kvm_msr: msr_read 40000083 = 0xfa1001
+  qemu-system-x86-613   [001] ....  1165.193236: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0xfa1000 host 0
+  qemu-system-x86-613   [001] ....  1165.193237: kvm_msr: msr_write 40000083 = 0xfa1000
+
+
+SeaBIOS hv-scsci
+----------------
+  qemu-system-x86-656   [001] ....  1313.072714: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x0 host 1
+  qemu-system-x86-656   [001] ....  1313.072714: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 1
+  qemu-system-x86-656   [001] ....  1313.087752: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x0 host 1
+  qemu-system-x86-656   [001] ....  1313.087752: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 1
+  qemu-system-x86-656   [001] ....  1313.156675: kvm_msr: msr_read 40000083 = 0x0
+  qemu-system-x86-656   [001] ....  1313.156680: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x7fffe001 host 0
+Choose Windows DebugEntry
+  qemu-system-x86-656   [001] ....  1313.156680: kvm_msr: msr_write 40000083 = 0x7fffe001
+  qemu-system-x86-656   [001] ....  1313.162111: kvm_msr: msr_read 40000080 = 0x0
+  qemu-system-x86-656   [001] ....  1313.162118: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x1 host 0
+  qemu-system-x86-656   [001] ....  1313.162119: kvm_msr: msr_write 40000080 = 0x1
+  qemu-system-x86-656   [001] ....  1313.246758: kvm_msr: msr_read 40000083 = 0x7fffe001
+  qemu-system-x86-656   [001] ....  1313.246764: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 0
+  qemu-system-x86-656   [001] ....  1313.246764: kvm_msr: msr_write 40000083 = 0x0
+  qemu-system-x86-656   [001] ....  1348.904727: kvm_msr: msr_read 40000083 = 0x0
+  qemu-system-x86-656   [001] ....  1348.904771: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0xfa1001 host 0
+  qemu-system-x86-656   [001] ....  1348.904772: kvm_msr: msr_write 40000083 = 0xfa1001
+  qemu-system-x86-656   [001] ....  1348.919170: kvm_msr: msr_read 40000083 = 0xfa1001
+  qemu-system-x86-656   [001] ....  1348.919183: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0xfa1000 host 0
+  qemu-system-x86-656   [001] ....  1348.919183: kvm_msr: msr_write 40000083 = 0xfa1000
+
+
+  I could not get the EDK2 setup to work though
+  (https://src.openvz.org/projects/UP/repos/edk2 branch hv-scsi)
+
+It does not detect my VM hard drive not sure why (this is how i  
+configured it:
+  -drive file=./win10.qcow2,format=qcow2,if=none,id=drive_disk0 \
+  -device virtio-blk-pci,drive=drive_disk0 \
+
+(Is there something special i need to configure it order for it to 
+  work?, I tried building EDK2 with and without SMM_REQUIRE and 
+  SECURE_BOOT_ENABLE)
+
+
+But in general it sounds like there is something I dont fully 
+understand when SCONTROL is enabled, then a GSI is associated with this 
+SintRoute.
+
+Then when the guest triggers an EOI via the APIC we will trigger the GSI 
+notification, which will give us another go on trying to copy the 
+message into it's slot.
+
+So is it the OS that is in charge of setting the EOI? If so then it 
+needs to be aware of SCONTROL being enabled and just having it left set 
+by the BIOS might not be enough?
+
+Also in the TLFS (looking at v6) they mention that message queueing has 
+"3 exit conditions", which will cause the hypervisor to try and attempt 
+to deliver the additional messages.
+
+The 3 exit conditions they refer to are:
+* Another message buffer is queued.
+* The guest indicates the “end of interrupt” by writing to the APIC’s 
+   EOI register.
+* The guest indicates the “end of message” by writing to the SynIC’s EOM 
+   register.
+
+Also notice this additional exit is only if there is a pending message 
+and not for every EOM.
+
 Thanks,
--- Dexuan
+-- Jon.
