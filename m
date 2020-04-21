@@ -2,90 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AEDE1B2254
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2020 11:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91F461B22C2
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2020 11:29:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgDUJH2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 21 Apr 2020 05:07:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34601 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbgDUJH1 (ORCPT
+        id S1728414AbgDUJ3a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 21 Apr 2020 05:29:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34144 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbgDUJ3a (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:07:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j1so10137497wrt.1;
-        Tue, 21 Apr 2020 02:07:26 -0700 (PDT)
+        Tue, 21 Apr 2020 05:29:30 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j1so10216169wrt.1;
+        Tue, 21 Apr 2020 02:29:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e9M3SgY+JXKYkmqckqVYeqrbYWYRHeQQ32itAPSHGxA=;
-        b=KD+O9gPftH4hZsjHZpU5YQq2CVnqp2cb/RyeW7P06uoHwJiK6IBX+GDcP2MKiInDiK
-         BcgjIUWvdzjCRtI14thIzEM2aInA6xH2P338rfwSC0JfRVkgKnYo2nkvpL8DTKaZVzxe
-         5oCIY2Q230T9yEzbmFtiLSUORuFtv62ovJd4yotqLympaClpcIsR084yMpMMLjQ+BP0t
-         w5VEL1wYYjon6oLjxYLo/OYtIhgQ3xb2Vx4gy22c5TlV3ekdth4KQV0KBm0IcTAfzPSH
-         x0/5hje9oFVYW6SduNGe2pTOwvjpfmpVNe4wy1Ysk2S8UZtH89A0iVZArhCgG9JzCfJx
-         jEDQ==
-X-Gm-Message-State: AGi0PuZ6E7vPYKdbf2wSAnZBvx2QvUZqM/fVVLz+eINiwh91hYw+UY1S
-        JtW3cy4ToE7QlCF24cniVqg=
-X-Google-Smtp-Source: APiQypKoPztP+dsq7B7A/Dk7MfawvyuXGNJNQfCISOZ0yeL6dYxTT2lfazmmFGdciTV/sM9J2xZlFw==
-X-Received: by 2002:adf:8149:: with SMTP id 67mr25866316wrm.60.1587460046053;
-        Tue, 21 Apr 2020 02:07:26 -0700 (PDT)
+        bh=D/tISfwZ2P2IUPEnX9Ik/x1A1mBudIbHpjoDQ3zbjbU=;
+        b=aLIpYqtp1056EycBKIvtLqPb1epUAERAHaUAT2DRgCXMRLARzXR90PZNEuwGnk7qzl
+         5o7Rn9B1BjNFqQruvBmrOjtzNoLZWY9PFg8Oy9oLUdQUSPpNhFeHQ7845+3QMLNSqZ8N
+         xZIWpxkWWLyq38IfdIbfSKSSCU++ApYSZg73ELd4IsO01Hfqym6iKvfCb6aqwfUUPH8I
+         NsDj1T0nypUe/chwjqeg/Gs1tVvZV/QEvoSocauhBCYqJ9hsbKqevo+UQ8CKivgluYK0
+         9yWBMk0X0VnN09lUVcDma1afaEEWBdvna3VRkCnuursNG+T0RN+wFdAndAWprqe0woxX
+         /qvg==
+X-Gm-Message-State: AGi0PuY2uKyr2rSze11p0UHc+I+vy/DuiWsIPU4+7G07qYibFpzw2Xyd
+        Bhfwrx4qdeweuPCWB+BHaSA=
+X-Google-Smtp-Source: APiQypIBBN/uGVX/DEWvjQAOpu65oajLoYZMjKknPf3JNM3a1RJdljdDjsSgYu4F31wtMTnmwqTd9A==
+X-Received: by 2002:a5d:4712:: with SMTP id y18mr23665401wrq.306.1587461368049;
+        Tue, 21 Apr 2020 02:29:28 -0700 (PDT)
 Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id z8sm2948821wrr.40.2020.04.21.02.07.24
+        by smtp.gmail.com with ESMTPSA id s14sm2609467wmh.18.2020.04.21.02.29.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 02:07:25 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 10:07:23 +0100
+        Tue, 21 Apr 2020 02:29:27 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 10:29:25 +0100
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     bp@alien8.de, haiyangz@microsoft.com, hpa@zytor.com,
-        kys@microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        sthemmin@microsoft.com, tglx@linutronix.de, x86@kernel.org,
-        mikelley@microsoft.com, vkuznets@redhat.com, wei.liu@kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] x86/hyperv: Suspend/resume the VP assist page for
- hibernation
-Message-ID: <20200421090723.wfv24b54uvft5d4m@debian>
-References: <1587437171-2472-1-git-send-email-decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/4] KVM: x86: hyperv: Remove duplicate definitions of
+ Reference TSC Page
+Message-ID: <20200421092925.rxb72yep4paruvi6@debian>
+References: <20200420173838.24672-1-mikelley@microsoft.com>
+ <20200420173838.24672-2-mikelley@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587437171-2472-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <20200420173838.24672-2-mikelley@microsoft.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 07:46:11PM -0700, Dexuan Cui wrote:
-> Unlike the other CPUs, CPU0 is never offlined during hibernation, so in the
-> resume path, the "new" kernel's VP assist page is not suspended (i.e. not
-> disabled), and later when we jump to the "old" kernel, the page is not
-> properly re-enabled for CPU0 with the allocated page from the old kernel.
+On Mon, Apr 20, 2020 at 10:38:35AM -0700, Michael Kelley wrote:
+> The Hyper-V Reference TSC Page structure is defined twice. struct
+> ms_hyperv_tsc_page has padding out to a full 4 Kbyte page size. But
+> the padding is not needed because the declaration includes a union
+> with HV_HYP_PAGE_SIZE.  KVM uses the second definition, which is
+> struct _HV_REFERENCE_TSC_PAGE, because it does not have the padding.
 > 
-> So far, the VP assist page is used by hv_apic_eoi_write(), and is also
-> used in the case of nested virtualization (running KVM atop Hyper-V).
+> Fix the duplication by removing the padding from ms_hyperv_tsc_page.
+> Fix up the KVM code to use it. Remove the no longer used struct
+> _HV_REFERENCE_TSC_PAGE.
 > 
-> For hv_apic_eoi_write(), when the page is not properly re-enabled,
-> hvp->apic_assist is always 0, so the HV_X64_MSR_EOI MSR is always written.
-> This is not ideal with respect to performance, but Hyper-V can still
-> correctly handle this according to the Hyper-V spec; nevertheless, Linux
-> still must update the Hyper-V hypervisor with the correct VP assist page
-> to prevent Hyper-V from writing to the stale page, which causes guest
-> memory corruption and consequently may have caused the hangs and triple
-> faults seen during non-boot CPUs resume.
+> There is no functional change.
 > 
-> Fix the issue by calling hv_cpu_die()/hv_cpu_init() in the syscore ops.
-> Without the fix, hibernation can fail at a rate of 1/300 ~ 1/500.
-> With the fix, hibernation can pass a long-haul test of 2000 runs.
-> 
-> In the case of nested virtualization, disabling/reenabling the assist
-> page upon hibernation may be unsafe if there are active L2 guests.
-> It looks KVM should be enhanced to abort the hibernation request if
-> there is any active L2 guest.
-> 
-> Fixes: 05bd330a7fd8 ("x86/hyperv: Suspend/resume the hypercall page for hibernation")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 8 --------
+>  arch/x86/include/asm/kvm_host.h    | 2 +-
+>  arch/x86/kvm/hyperv.c              | 4 ++--
 
-Applied to hyperv-fixes. Thanks.
+Paolo, this patch touches KVM code. Let me know how you would like to
+handle this.
+
+Wei.
