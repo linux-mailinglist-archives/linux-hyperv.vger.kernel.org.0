@@ -2,126 +2,72 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 224631B3B25
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 11:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A306C1B45B1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 14:59:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgDVJYQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Apr 2020 05:24:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51111 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725968AbgDVJYQ (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587547454;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DMhA18q5o54p19fFpaLKF4OTjlHgtCkpRiehNkdmtk0=;
-        b=grApRieNK+OmW+Ph9h2tR9zU0uKExcWmmISzc/RrgOUdVjDeysh8DaWsu+FczjWWILTAPj
-        WIzMeEmSv0ZlCUw1vFqJ3GxVNUuoG4yjZ7fkrmNMYqjutoOIvIUTxPBxLB0L7SPmoT9jIe
-        BuntuwErSvNNbVZzI/ZjHmqtDlZ+J5g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-47-bYl2gzczORKSGHhwjavuQw-1; Wed, 22 Apr 2020 05:24:10 -0400
-X-MC-Unique: bYl2gzczORKSGHhwjavuQw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1503B8017FC;
-        Wed, 22 Apr 2020 09:24:08 +0000 (UTC)
-Received: from T590 (ovpn-8-28.pek2.redhat.com [10.72.8.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B2FFB3A8F;
-        Wed, 22 Apr 2020 09:23:56 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 17:23:51 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "hare@suse.de" <hare@suse.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+        id S1727786AbgDVM7m (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Apr 2020 08:59:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35916 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727782AbgDVM7m (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:59:42 -0400
+IronPort-SDR: irkY25Kw1sLHHGdeRXsI6GjkpRB1FlzZvTLGc4Sq4B0W/y2+dyZOMV24QyjAxUZU3adj3JcFuR
+ KDOJPhr6M3Zg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 05:59:41 -0700
+IronPort-SDR: jlfVlNmnULsQuyLfa7Ip2bm99B65CAsK/ZqY/5xZqQFBXyvAtwiPRj5cABKczPVqF1qRu2gN+5
+ U103P1jYxDUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
+   d="scan'208";a="291934739"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 22 Apr 2020 05:59:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id BB61E58F; Wed, 22 Apr 2020 15:59:38 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
-Message-ID: <20200422092351.GF299948@T590>
-References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
- <20200422012814.GB299948@T590>
- <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
- <20200422020134.GC299948@T590>
- <20200422030807.GK17661@paulmck-ThinkPad-P72>
- <20200422041629.GE299948@T590>
- <HK0P153MB0273CF2901E193C03C934A47BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] hyper-v: Use UUID API for exporting the GUID
+Date:   Wed, 22 Apr 2020 15:59:37 +0300
+Message-Id: <20200422125937.38355-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HK0P153MB0273CF2901E193C03C934A47BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:58:14AM +0000, Dexuan Cui wrote:
-> > From: Ming Lei <ming.lei@redhat.com>
-> > Sent: Tuesday, April 21, 2020 9:16 PM
-> > ...
-> > > > > When we're in storvsc_suspend(), all the userspace processes have been
-> > > > > frozen and all the file systems have been flushed, and there should not
-> > > > > be too much I/O from the kernel space, so IMO scsi_host_block() should
-> > be
-> > > > > pretty fast here.
-> > > >
-> > > > I guess it depends on RCU's implementation, so CC RCU guys.
-> > > >
-> > > > Hello Paul & Josh,
-> > > >
-> > > > Could you clarify that if sysnchronize_rcu becomes quickly during
-> > > > system suspend?
-> > >
-> > > Once you have all but one CPU offlined, it becomes extremely fast, as
-> > > in roughly a no-op (which is an idea of Josh's from back in the day).
-> > > But if there is more than one CPU online, then synchronize_rcu() still
-> > > takes on the order of several to several tens of jiffies.
-> > >
-> > > So, yes, in some portions of system suspend, synchronize_rcu() becomes
-> > > very fast indeed.
-> > 
-> > Hi Paul,
-> > 
-> > Thanks for your clarification.
-> > 
-> > In system suspend path, device is suspended before
-> > suspend_disable_secondary_cpus(),
-> > so I guess synchronize_rcu() is not quick enough even though user space
-> > processes and some kernel threads are frozen.
-> > 
-> > Thanks,
-> > Ming
-> 
-> storvsc_suspend() -> scsi_host_block() is only called in the hibernation
-> path, which is not a hot path at all, so IMHO we don't really care if it
-> takes 10ms or 100ms or even 1s. :-)  BTW, in my test, typically the
+There is export_guid() function which exports guid_t to the u8 array.
+Use it instead of open coding variant.
 
-Are you sure the 'we' can cover all users?
+This allows to hide the uuid_t internals.
 
-> scsi_host_block() here takes about 3ms in my 40-vCPU VM.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/hv/hv_trace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If more LUNs are added, the time should be increased proportionallly,
-that is why I think scsi_host_block() is bad.
-
-
-Thanks,
-Ming
+diff --git a/drivers/hv/hv_trace.h b/drivers/hv/hv_trace.h
+index a43bc76c2d5d0..579d19bdc0981 100644
+--- a/drivers/hv/hv_trace.h
++++ b/drivers/hv/hv_trace.h
+@@ -286,8 +286,8 @@ TRACE_EVENT(vmbus_send_tl_connect_request,
+ 		    __field(int, ret)
+ 		    ),
+ 	    TP_fast_assign(
+-		    memcpy(__entry->guest_id, &msg->guest_endpoint_id.b, 16);
+-		    memcpy(__entry->host_id, &msg->host_service_id.b, 16);
++		    export_guid(__entry->guest_id, &msg->guest_endpoint_id);
++		    export_guid(__entry->host_id, &msg->host_service_id);
+ 		    __entry->ret = ret;
+ 		    ),
+ 	    TP_printk("sending guest_endpoint_id %pUl, host_service_id %pUl, "
+-- 
+2.26.1
 
