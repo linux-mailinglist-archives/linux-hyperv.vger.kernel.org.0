@@ -2,116 +2,152 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCD3C1B4D7A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 21:38:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 415A31B4DC4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 21:56:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgDVTi2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Apr 2020 15:38:28 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45322 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgDVTi2 (ORCPT
+        id S1726138AbgDVT4I (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Apr 2020 15:56:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44951 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgDVT4H (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:38:28 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t14so3928912wrw.12
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Apr 2020 12:38:27 -0700 (PDT)
+        Wed, 22 Apr 2020 15:56:07 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q18so1620279pgm.11;
+        Wed, 22 Apr 2020 12:56:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EGdFkDLk0ZFA9fwlfvECbg7zO6dW7VE4ynHV4nj7nNE=;
-        b=RlW4Zfe7i6fiGqVDbkRH3nJAwHHOsXSZXPkX0GaKbdexDbv+3vQhge0aBAiI/3x6Ab
-         BQQkPul1ztFYmSFIXZc8IPfbQ3Hs3kEZq+cTAb5wbjsWoUIi5NBVk3yV+QzaPaos/VFt
-         DWbsj1wS9orOLf1t8kIfgC2CgCf1NV1CsrInwC946h4ClXsdXg3LR4wZRgFV/BidgCLR
-         R9dgSE1aRtQ3WMsVwDhPwtNd6NPxGt9TTqA8dJicHvwPRIcCmAHFwDCSYP17yD2J2YUX
-         0ME5Agg5UP2BbxNbT1wzIYmv4sJW2mN0rVqcxDh0Nq2VthpFNasXeYFutNSULP3rv6SU
-         nzhQ==
-X-Gm-Message-State: AGi0PuYmUFBaYTXkLHxDaiIEnrOpg/ekfBUqOtMakCGMUCLs5t7b8WJw
-        i7MAabk6xAqRcSnscVifvM0=
-X-Google-Smtp-Source: APiQypIAZxhEX1OO6P+R5KO/6KgmITqGqOPPGvLUDIngXHwiWr4QX2PinGyiLxFGQabGw+PY7CojWg==
-X-Received: by 2002:a5d:498d:: with SMTP id r13mr723815wrq.374.1587584306481;
-        Wed, 22 Apr 2020 12:38:26 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id j17sm278307wrb.46.2020.04.22.12.38.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 12:38:25 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 20:38:23 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=T7jv4WALSCbwCxt/WWU6VfVtrOA11iUOI8kpnNfScSA=;
+        b=o6cPFfV2k3qs+aA/TsTbbyuYico53/W5sStijcok19DAj2CklBCIUcJ4GwYyl6tSb3
+         X9dGdsSYqj+nGEu/GuSEvJrpp+u5r3/71nlG0z8XB5ErkwNsYWm6PF55Hdrit9RpKJlh
+         qFLujphPXriUfc9/cvEiEgEFdIOipssIIVNFc2vX+SSw+bfjMEYNlI9SmlGE74URLc3y
+         nJJp/cFtuardxUxkkg4+7rsyYDyZ7G5lgjfB76KcSViztzkJpuPBgiNblJS3bG3DL3EG
+         vfaeNCUfyACByUwX2rBpRnbyH/sy4CO42aEBkZHJkDzVb71ebKEkJV9h02eAsX2q+GIq
+         mNOA==
+X-Gm-Message-State: AGi0Pua5Nq/2yR+xKKW9Vfi7zhflk8qItvdyH7eN6sc/wHimNOvmYhTs
+        P40eZ9egeo74v25BzThxXjY=
+X-Google-Smtp-Source: APiQypIltU5kif74UMY4LjqqRD7zQ6tV9b/TvkWSQqeAAtnFaCwhnF30JYWUwu/x3/yNWL2aISlqRg==
+X-Received: by 2002:a62:144c:: with SMTP id 73mr166355pfu.37.1587585365922;
+        Wed, 22 Apr 2020 12:56:05 -0700 (PDT)
+Received: from [100.124.11.187] ([104.129.198.228])
+        by smtp.gmail.com with ESMTPSA id r189sm44673pgr.31.2020.04.22.12.56.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 12:56:05 -0700 (PDT)
+Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+To:     Dexuan Cui <decui@microsoft.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@lst.de" <hch@lst.de>, "hare@suse.de" <hare@suse.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        Balsundar P <Balsundar.P@microchip.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v1] hyper-v: Remove internal types from UAPI header
-Message-ID: <20200422193823.nwcjv2y4t47kghkr@debian>
-References: <20200422131818.23088-1-andriy.shevchenko@linux.intel.com>
- <20200422134127.zgsympiwgvp7hdam@debian>
- <20200422141507.GI185537@smile.fi.intel.com>
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
+ <1b6de3b0-4e0c-4b46-df1a-db531bd2c888@acm.org>
+ <HK0P153MB027395755C14233F09A8F352BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <c55d643c-c13f-70f1-7a44-608f94fbfd5f@acm.org>
+Date:   Wed, 22 Apr 2020 12:56:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422141507.GI185537@smile.fi.intel.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <HK0P153MB027395755C14233F09A8F352BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 05:15:07PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 22, 2020 at 02:41:27PM +0100, Wei Liu wrote:
-> > On Wed, Apr 22, 2020 at 04:18:18PM +0300, Andy Shevchenko wrote:
-> > > The uuid_le mistakenly comes to be an UAPI type. Since it's luckily not used by
-> > > Hyper-V APIs, we may replace with POD types, i.e. __u8 array.
-> > > 
-> > > Note, previously shared uuid_be had been removed from UAPI few releases ago.
-> > > This is a continuation of that process towards removing uuid_le one.
-> > > 
-> > > Note, there is no ABI change!
-> > > 
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > Can you clarify why guid_t is not used instead?
-> 
-> It's internal type to the kernel. The libuuid or so should provide a compatible
-> type(s) for user space.
-> 
-> > Is the plan to remove it
-> > from UAPI as well?
-> 
-> Yes.
-> 
+On 4/21/20 11:24 PM, Dexuan Cui wrote:
+> Upon suspend, I suppose the other LLDs can not accept I/O either, then
+> what do they do when some kernel thread still tries to submit I/O? Do
+> they "block" the I/O until resume, or just return an error immediately?
 
-OK. Thanks for explaining.
+This is my understanding of how other SCSI LLDs handle suspend/resume:
+- The ULP driver, e.g. the SCSI sd driver, implements power management 
+support by providing callbacks in struct scsi_driver.gendrv.pm and also 
+in scsi_bus_type.pm. The SCSI sd suspend callbacks flush the device 
+cache and send a STOP command to the device.
+- SCSI LLDs for PCIe devices optionally provide pci_driver.suspend and 
+resume callbacks. These callbacks can be used to make the PCIe device 
+enter/leave a power saving state. No new SCSI commands should be 
+submitted after pci_driver.suspend has been called.
 
-Wei.
+> I had a look at drivers/scsi/xen-scsifront.c. It looks this LLD implements
+> a mechanism of marking the device busy upon suspend, so any I/O will
+> immediately get an error SCSI_MLQUEUE_HOST_BUSY. IMO the
+> disadvantage is: the mechanism of marking the device busy looks
+> complex, and the hot path .queuecommand() has to take the
+> spinlock shost->host_lock, which should affect the performance.
 
-> > Wei.
-> > 
-> > > ---
-> > >  include/uapi/linux/hyperv.h | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/include/uapi/linux/hyperv.h b/include/uapi/linux/hyperv.h
-> > > index 991b2b7ada7a3..8f24404ad04f1 100644
-> > > --- a/include/uapi/linux/hyperv.h
-> > > +++ b/include/uapi/linux/hyperv.h
-> > > @@ -119,8 +119,8 @@ enum hv_fcopy_op {
-> > >  
-> > >  struct hv_fcopy_hdr {
-> > >  	__u32 operation;
-> > > -	uuid_le service_id0; /* currently unused */
-> > > -	uuid_le service_id1; /* currently unused */
-> > > +	__u8 service_id0[16]; /* currently unused */
-> > > +	__u8 service_id1[16]; /* currently unused */
-> > >  } __attribute__((packed));
-> > >  
-> > >  #define OVER_WRITE	0x1
-> > > -- 
-> > > 2.26.1
-> > > 
+I think the code you are referring to is the code in 
+scsifront_suspend(). A pointer to that function is stored in a struct 
+xenbus_driver instance. That's another structure than the structures 
+mentioned above.
+
+Wouldn't it be better to make sure that any hypervisor suspend 
+operations happen after it is guaranteed that no further SCSI commands 
+will be submitted such that hypervisor suspend operations do not have to 
+deal with SCSI commands submitted during or after the hypervisor suspend 
+callback?
+
+> It looks drivers/scsi/nsp32.c: nsp32_suspend() and
+> drivers/scsi/3w-9xxx.c: twa_suspend() do nothing to handle new I/O
+> after suspend. I doubt this is correct.
+
+nsp32_suspend() is a PCI suspend callback. If any SCSI commands would be 
+submitted after that callback has started that would mean that the SCSI 
+suspend and PCIe suspend operations are called in the wrong order. I do 
+not agree that code for suspending SCSI commands should be added in 
+nsp32_suspend().
+
+> So it looks to me there is no simple mechanism to handle the scenario
+> here, and I guess that's why the scsi_host_block/unblock APIs are
+> introduced, and actually there is already an user of the APIs:
+> 3d3ca53b1639 ("scsi: aacraid: use scsi_host_(block,unblock) to block I/O").
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> The aacraid patch says: "This has the advantage that the block layer will
+> stop sending I/O to the adapter instead of having the SCSI midlayer
+> requeueing I/O internally". It looks this may imply that using the new
+> APIs is encouraged?
+
+I'm fine with using these new functions in device reset handlers. Using 
+these functions in power management handlers seems wrong to me.
+
+> PS, here storvsc has to destroy and re-construct the I/O queues: the
+> I/O queues are shared memory ringbufers between the guest and the
+> host; in the resume path of the hibernation procedure, the memory
+> pages allocated by the 'new' kernel is different from that allocated by
+> the 'old' kernel, so before jumping to the 'old' kernel, the 'new' kernel
+> must destroy the mapping of the pages, and later after we jump to
+> the 'old' kernel, we'll re-create the mapping using the pages allocated
+> by the 'old' kernel. Here "create the mapping" means the guest tells
+> the host about the physical addresses of the pages.
+
+Thank you for having clarified this. This helps me to understand the HV 
+driver framework better. I think this means that the hv_driver.suspend 
+function should be called at a later time than SCSI suspend. From 
+Documentation/driver-api/device_link.rst: "By default, the driver core 
+only enforces dependencies between devices that are borne out of a 
+parent/child relationship within the device hierarchy: When suspending, 
+resuming or shutting down the system, devices are ordered based on this 
+relationship, i.e. children are always suspended before their parent, 
+and the parent is always resumed before its children." Is there a single 
+storvsc_drv instance for all SCSI devices supported by storvsc_drv? Has 
+it been considered to make storvsc_drv the parent device of all SCSI 
+devices created by the storvsc driver?
+
+Thanks,
+
+Bart.
