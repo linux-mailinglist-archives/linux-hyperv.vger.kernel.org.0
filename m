@@ -2,75 +2,93 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33A1F1B461C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 15:18:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14A821B463A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 15:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725810AbgDVNSV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Apr 2020 09:18:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24951 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgDVNSV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:18:21 -0400
-IronPort-SDR: /pT+oIyP7P6yzVTypgobrjNlIckpma6XuFx8XMiOJ5pgTk97oq0e0UDdeI5im37RygBsf3L7/a
- /ICxmc9lw+LA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 06:18:21 -0700
-IronPort-SDR: n+RUR7eSXAHV66t+lNVDa7M/e20jDbkohOoEhd7vc1tVLLcUo01D9R+rHc1yMw5NbTnaBggCMM
- 7Vzbh9HLnS9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
-   d="scan'208";a="429908486"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 22 Apr 2020 06:18:19 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 96C4D58F; Wed, 22 Apr 2020 16:18:18 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S1726023AbgDVN2P (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Apr 2020 09:28:15 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33586 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgDVN2P (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 22 Apr 2020 09:28:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v8so4961623wma.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 22 Apr 2020 06:28:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4cYGujY/qY6QL9bdTIQnjPVs04r0qN6NCp1qmsGvVP4=;
+        b=NvnHzTW7lGyk3vKR6+4pIciMPTHm4JIuOOUYUr7Z5zpnPKfzmQw3oLOisezV1F4Sak
+         HeZTLU2sOwjinLlf6bx2Qng5xN5s+3nkRhn6IU8ZCf71182sRt1xImKLHL+P/Jk/Mo/5
+         YTb8zLkUvJ0pVz2shWypHaEzPnzLE8mv6obS3za4kTrqPxwZn/wDZ92gV9nuy09oZKQr
+         xVFn6tg8IGxWnItnwjN29tN7NZvmpFqZ7CvpD/pNoygEo6O1BX7RnD1AM59be3famtfl
+         1932bgTVtFhhdrtOrBG69ydjZH/J1VOhsPYhyDjYrazU8C7vuCnLsODv+up5Z8CMgTsV
+         K/bw==
+X-Gm-Message-State: AGi0PuaWtAo1CkONXVn0i04eNOtXPTbQZMgZzWgXsrPDuCpKg2L5a08n
+        HDoGJ6ShTjAb0FQa4NrnRg8=
+X-Google-Smtp-Source: APiQypJBeaaNfQJ7at8HtsCrMN5b/IZtD9mHBD8qYsF7ZX0q9QjVLVLQ/sysD5jTN/Q9EBiKD1Z4Cg==
+X-Received: by 2002:a1c:4085:: with SMTP id n127mr11230591wma.163.1587562093322;
+        Wed, 22 Apr 2020 06:28:13 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id v10sm8556701wrq.45.2020.04.22.06.28.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 06:28:12 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 14:28:10 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] hyper-v: Remove internal types from UAPI header
-Date:   Wed, 22 Apr 2020 16:18:18 +0300
-Message-Id: <20200422131818.23088-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.26.1
+Subject: Re: [PATCH v1] hyper-v: Use UUID API for exporting the GUID
+Message-ID: <20200422132810.va2lrzjwbtcwlfpp@debian>
+References: <20200422125937.38355-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422125937.38355-1-andriy.shevchenko@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The uuid_le mistakenly comes to be an UAPI type. Since it's luckily not used by
-Hyper-V APIs, we may replace with POD types, i.e. __u8 array.
+On Wed, Apr 22, 2020 at 03:59:37PM +0300, Andy Shevchenko wrote:
+> There is export_guid() function which exports guid_t to the u8 array.
+> Use it instead of open coding variant.
+> 
+> This allows to hide the uuid_t internals.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/hv/hv_trace.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hv/hv_trace.h b/drivers/hv/hv_trace.h
+> index a43bc76c2d5d0..579d19bdc0981 100644
+> --- a/drivers/hv/hv_trace.h
+> +++ b/drivers/hv/hv_trace.h
+> @@ -286,8 +286,8 @@ TRACE_EVENT(vmbus_send_tl_connect_request,
+>  		    __field(int, ret)
+>  		    ),
+>  	    TP_fast_assign(
+> -		    memcpy(__entry->guest_id, &msg->guest_endpoint_id.b, 16);
+> -		    memcpy(__entry->host_id, &msg->host_service_id.b, 16);
+> +		    export_guid(__entry->guest_id, &msg->guest_endpoint_id);
+> +		    export_guid(__entry->host_id, &msg->host_service_id);
 
-Note, previously shared uuid_be had been removed from UAPI few releases ago.
-This is a continuation of that process towards removing uuid_le one.
+I was about to say I couldn't find this function but it seems to have
+been introduced in d01cd62400b which is currently in Linus' master
+branch. That's fine then.
 
-Note, there is no ABI change!
+I will queue this up to hyperv-fixes for 5.7.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/uapi/linux/hyperv.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Wei.
 
-diff --git a/include/uapi/linux/hyperv.h b/include/uapi/linux/hyperv.h
-index 991b2b7ada7a3..8f24404ad04f1 100644
---- a/include/uapi/linux/hyperv.h
-+++ b/include/uapi/linux/hyperv.h
-@@ -119,8 +119,8 @@ enum hv_fcopy_op {
- 
- struct hv_fcopy_hdr {
- 	__u32 operation;
--	uuid_le service_id0; /* currently unused */
--	uuid_le service_id1; /* currently unused */
-+	__u8 service_id0[16]; /* currently unused */
-+	__u8 service_id1[16]; /* currently unused */
- } __attribute__((packed));
- 
- #define OVER_WRITE	0x1
--- 
-2.26.1
-
+>  		    __entry->ret = ret;
+>  		    ),
+>  	    TP_printk("sending guest_endpoint_id %pUl, host_service_id %pUl, "
+> -- 
+> 2.26.1
+> 
