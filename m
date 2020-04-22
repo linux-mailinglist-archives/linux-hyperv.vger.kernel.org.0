@@ -2,171 +2,131 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29D261B4DDA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 21:58:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B0EF1B4DCD
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 21:58:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgDVT6y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Apr 2020 15:58:54 -0400
-Received: from mail-dm6nam11on2123.outbound.protection.outlook.com ([40.107.223.123]:64928
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726614AbgDVT6y (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:58:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fWTHfqFaBIfpBLaleRJYwXNWaANyWqX4CF/yeqX+q0BnqxCqQFrTW6M8gaFmhk3dDYg4SYd+XZW7OdTAZ7FrK5ZyNibfj2WtC+aFV6ImtukplUfPiL8UbFuH41GwDb85BqlQn+eW2S+piHzcjDiHlvK84CJyXSCVZfOz2wPrg3gKEiq0Ej/x2kxnlcT5bjhq4r45K5GmMp+Z7/RPFwqurgza51goJJI6JSNB8wMiIaIpBQFINo0LoOABHBmpg21avR6E8gP9+rHNceuR/XZnXJZlg5KgAGuCJGhF6vu48+TQXBd0kBbpOkUTAFJK1xNtXUz11gO6roBlMjG2l8CY9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eUlJw9P/OOM2qz0EBHFoCmBbRJGN+J/GvcOvVZOShqs=;
- b=YDgO7lz1vErBxnLtEV63KvDns0pNJ591iCQgxXQ6r/WYt5QBXlFk3ZV0jQGX8hmwdOsdaXIbIWNYq9vtv9AXK7tKyITXGcos/aUsM8S2dhGLQQsbEtMePQqkoKpFcmM3HT11x1xnzgKfbyD40/jWkeAiOF4M6u8nGFVJA6BBrvR2nqW5CjikvHE+GG3WHijh6wUSeMTiPSHIMResi0YoTCS8/J4wYWpm1idDL8KJpbZDGK6jn1FSIqLh4El9bwYbXfj641VY4kieCsZKTgo6FqQqJNRBKrHlkCbYrpFZPi2CykdAZlLppyFQSF4zMQ8zWjoEEt3wrorK/M56pDonxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eUlJw9P/OOM2qz0EBHFoCmBbRJGN+J/GvcOvVZOShqs=;
- b=Ga+QguCx9qVPK2sc1jzgAVCX/CmCcwHQtjZc7HSkDkW1PI+7o4y7POAWwKDroZdEXoEd487SFSDAPwldWE9nJ6Dch+ckreLf+lvymRoPrSXrgUQtHAVkFKMrrFiq5Jc5qco/NqHfsjpAmsYn8astSjfQLyF4CoKSFyzVbfVStd0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-Received: from BN6PR21MB0178.namprd21.prod.outlook.com (2603:10b6:404:94::12)
- by BN6PR21MB0148.namprd21.prod.outlook.com (2603:10b6:404:93::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2; Wed, 22 Apr
- 2020 19:58:43 +0000
-Received: from BN6PR21MB0178.namprd21.prod.outlook.com
- ([fe80::a97c:360c:9ed2:12ec]) by BN6PR21MB0178.namprd21.prod.outlook.com
- ([fe80::a97c:360c:9ed2:12ec%11]) with mapi id 15.20.2958.001; Wed, 22 Apr
- 2020 19:58:43 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Cc:     mikelley@microsoft.com
-Subject: [PATCH v2 4/4] asm-generic/hyperv: Add definitions for Get/SetVpRegister hypercalls
-Date:   Wed, 22 Apr 2020 12:57:37 -0700
-Message-Id: <20200422195737.10223-5-mikelley@microsoft.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20200422195737.10223-1-mikelley@microsoft.com>
-References: <20200422195737.10223-1-mikelley@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR19CA0078.namprd19.prod.outlook.com
- (2603:10b6:320:1f::16) To BN6PR21MB0178.namprd21.prod.outlook.com
- (2603:10b6:404:94::12)
+        id S1725779AbgDVT60 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Apr 2020 15:58:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56099 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbgDVT6Z (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 22 Apr 2020 15:58:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e26so3865992wmk.5;
+        Wed, 22 Apr 2020 12:58:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=orSoP8CVp+BTvk77nTO3bh1BFXcHR89DeR85JOv6qR4=;
+        b=HG6hOP27SdCW233BPADQRHCYdvN/ehnURoovIFxe279mn//vGxl07X59ndyCCJnN2h
+         f11rkiL0/9eEe25RbtD94fB33IOCBDptC86mNcSsc9zEHPaS+26AlrHqgQQEPAVi1aaB
+         EIIpNIZczf9b+2tS2dzVnpseSnww+/+etmelvKrdaxcx5wM5kABbeuOphkS5/pP3eqmc
+         KmzK7Av9MJ9UGbSp+l62BJn62zNTulX9h7eVp4qmpSZ3RD42jeRoRbx570LroGv41kfu
+         eG814N3kUC0CRXMwcJDnnhG3HCfDpYk7CSdlAuOK7NVHWvQn8r//9JWspZuGb4sd68ch
+         9VIQ==
+X-Gm-Message-State: AGi0PuaaFUWqgMylp/0x3hhLZRJQeJcZVJclLeBgU3nXk1jQPnJ26lz4
+        xxi3ZLkHGIbZFltBC4WwpIrLmWpEEI8=
+X-Google-Smtp-Source: APiQypKXW+YBdVGKiF7M7cphAcClN7/OcR+JzG9JNQBF+KzYUkOXhg+iusfzbOxYCGbyh5ohfBD/jg==
+X-Received: by 2002:a1c:9852:: with SMTP id a79mr130312wme.27.1587585501946;
+        Wed, 22 Apr 2020 12:58:21 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id m1sm314017wro.64.2020.04.22.12.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 12:58:21 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
+Date:   Wed, 22 Apr 2020 19:58:15 +0000
+Message-Id: <20200422195818.35489-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from MHKdev.corp.microsoft.com (167.220.2.108) by MWHPR19CA0078.namprd19.prod.outlook.com (2603:10b6:320:1f::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Wed, 22 Apr 2020 19:58:41 +0000
-X-Mailer: git-send-email 2.18.2
-X-Originating-IP: [167.220.2.108]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8ab8775a-53e2-40ab-8445-08d7e6f78f2f
-X-MS-TrafficTypeDiagnostic: BN6PR21MB0148:|BN6PR21MB0148:|BN6PR21MB0148:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN6PR21MB0148B53B3AF1C4AFB34BFEE5D7D20@BN6PR21MB0148.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:359;
-X-Forefront-PRVS: 03818C953D
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0178.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(81156014)(82960400001)(8936002)(10290500003)(4326008)(26005)(82950400001)(5660300002)(107886003)(956004)(2616005)(478600001)(66556008)(66946007)(66476007)(6486002)(1076003)(86362001)(6666004)(316002)(8676002)(2906002)(16526019)(186003)(36756003)(52116002)(7696005)(7416002)(41533002)(921003);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6rHlbaHYreG2jG5H3cuq98HvXQ/k2NH6xXYuV9tXkncKTzJdkLknQVtSkVcySeLhg10WUE0mMN0zEKb3wY71iwPUq6g1LiN3hAax7n0QfgGN0Ah0ZzaARu6Mwhi17431Nj62kNg4Cvzq/fuGmrAU5QK4tH7doXzKbalMtVshwit2WwQgBsx4zzMs5W2/2LIMAlnN1D5RvOnm/SYrsEEnGVX80y6l/h4xw7KoxJ14Nu6viyltBjTRMdJmB7YTsRcJ9a5QzXapErJPB5/WXnpF462ZNGRP6g4vUwLLfj5uqIETXfB13jBTd2RsEbB5k9Pc9RqXSCWn1aN/sRkjdOVzAwsbAZ8G9E1hEc7vP5x+9DNFS7mzQq3ouMX5are19bUC5H8eIatFjMZZjqlPP1js65U4Ovg8mHJ/UeHGFyjl3JIelA7JQzQ3UVJ8WmoGC5vHNX0S6Xss6WkctFhO4hFg1OTyRVV1PHI6ouWXmimqJHljQkU1pOtepOIXYTTzWjTC
-X-MS-Exchange-AntiSpam-MessageData: W7prDTzONe2iL1D9DGRJGOtjLU9Nq2IMIzqw+OcVheMW/IEKf+fg2cHj+7Wi8k/0fH2g0Po5OMm8SajljmCLlgMga7RCb6wERWBH85Qwy+rPKscQn/h4eqvW2Lc962u8fKnaJHLWm1MM7+yGkYpPXsoCedk2cZuPr+2AxrQAODeqQrk0pNCMyl2a8lu0CiGRmugVKQZLm7vVzG7JfZx6Znp0NvxjVAz5FAZOSQDSMqcnQNyxE6HbTqM5f/ZAoNwlKc/E0C8QHl1cncdxNtj+c8HYxoaaEpEST51fZ1o0HS6nq0y9cnfN+hzSGHSrSSiSNLPoH/cEgfjDT/IUlbpSgku0zpQfj1LL/PqBQOmVbAs3ByRjJ9TIOKdfjjB17NpsG7yO49jYLdDn7gEzLx0YmgLMCjz67bvAITbiofwJMXipnK4w+4CIaVNWQCaKDGEpkBqle6zji2xkguZ2ezIqjsMuHizuiWnXN8k8GCCcFyMZDSZ/R4RDkdWMAbxQoplA1SpHNNyrWjzJXF2z81SVZr1oD1BQuQtI0AH7b7n+JeGWixKHmFrzhX17BD96SqDBdjScvb9KNOwieCBjlO0NBDDYUnGchlL5rWNIKesFwu7ltCTRMoHS5fJ2YY4OCemnu6qXSr7U+6iaGQGZwTQdzlIyw4yoMT5NNFB+0QcjW8VF++z3fTmW025moE2Y5JVl2dv80Q7GJ0F45w+zw76L4ZuqT7Gvuyno6Iccl5jl8+aBU8BwhTqpOgONohH3GhB6UXEGr9fupS7U29P/V9z7hmadqfBtnLCKgq+Rj97k5V8=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ab8775a-53e2-40ab-8445-08d7e6f78f2f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2020 19:58:43.1160
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YGDnM3RTtbSSi5JAT1gJPbXaw5yEcEwahUOX0adgSf/stgWkJ39DCVz/UwpA63YtGvW+wW6HfuNTmdlDXw+4pQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0148
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add definitions for GetVpRegister and SetVpRegister hypercalls, which
-are implemented for both x86 and ARM64.
+There is a functionally identical function in pci-hyperv.c. Drop it and
+use pci_msi_get_hwirq instead.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
+
+No functional change intended.
+
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 ---
- include/asm-generic/hyperv-tlfs.h | 51 +++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ arch/x86/include/asm/msi.h          | 4 ++++
+ arch/x86/kernel/apic/msi.c          | 5 +++--
+ drivers/pci/controller/pci-hyperv.c | 8 +-------
+ 3 files changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 1f92ef92eb56..262fae9526b1 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -141,6 +141,8 @@ struct ms_hyperv_tsc_page {
- #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
- #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX	0x0014
- #define HVCALL_SEND_IPI_EX			0x0015
-+#define HVCALL_GET_VP_REGISTERS			0x0050
-+#define HVCALL_SET_VP_REGISTERS			0x0051
- #define HVCALL_POST_MESSAGE			0x005c
- #define HVCALL_SIGNAL_EVENT			0x005d
- #define HVCALL_RETARGET_INTERRUPT		0x007e
-@@ -439,4 +441,53 @@ struct hv_retarget_device_interrupt {
- 	struct hv_device_interrupt_target int_target;
- } __packed __aligned(8);
+diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+index 25ddd0916bb2..353b80122b2e 100644
+--- a/arch/x86/include/asm/msi.h
++++ b/arch/x86/include/asm/msi.h
+@@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
  
+ void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+ 
++struct msi_domain_info;
++irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
++				  msi_alloc_info_t *arg);
 +
-+/* HvGetVpRegisters hypercall input with variable size reg name list*/
-+struct hv_get_vp_registers_input {
-+	struct {
-+		u64 partitionid;
-+		u32 vpindex;
-+		u8  inputvtl;
-+		u8  padding[3];
-+	} header;
-+	struct input {
-+		u32 name0;
-+		u32 name1;
-+	} element[];
-+} __packed;
-+
-+
-+/* HvGetVpRegisters returns an array of these output elements */
-+struct hv_get_vp_registers_output {
-+	union {
-+		struct {
-+			u32 a;
-+			u32 b;
-+			u32 c;
-+			u32 d;
-+		} as32 __packed;
-+		struct {
-+			u64 low;
-+			u64 high;
-+		} as64 __packed;
-+	};
-+};
-+
-+/* HvSetVpRegisters hypercall with variable size reg name/value list*/
-+struct hv_set_vp_registers_input {
-+	struct {
-+		u64 partitionid;
-+		u32 vpindex;
-+		u8  inputvtl;
-+		u8  padding[3];
-+	} header;
-+	struct {
-+		u32 name;
-+		u32 padding1;
-+		u64 padding2;
-+		u64 valuelow;
-+		u64 valuehigh;
-+	} element[];
-+} __packed;
-+
- #endif
+ #endif /* _ASM_X86_MSI_H */
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 159bd0cb8548..56dcdd912564 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -204,11 +204,12 @@ void native_teardown_msi_irq(unsigned int irq)
+ 	irq_domain_free_irqs(irq, 1);
+ }
+ 
+-static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+-					 msi_alloc_info_t *arg)
++irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
++				  msi_alloc_info_t *arg)
+ {
+ 	return arg->msi_hwirq;
+ }
++EXPORT_SYMBOL_GPL(pci_msi_get_hwirq);
+ 
+ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 		    msi_alloc_info_t *arg)
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e6020480a28b..2b4a6452095f 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1520,14 +1520,8 @@ static struct irq_chip hv_msi_irq_chip = {
+ 	.irq_unmask		= hv_irq_unmask,
+ };
+ 
+-static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+-						   msi_alloc_info_t *arg)
+-{
+-	return arg->msi_hwirq;
+-}
+-
+ static struct msi_domain_ops hv_msi_ops = {
+-	.get_hwirq	= hv_msi_domain_ops_get_hwirq,
++	.get_hwirq	= pci_msi_get_hwirq,
+ 	.msi_prepare	= pci_msi_prepare,
+ 	.set_desc	= pci_msi_set_desc,
+ 	.msi_free	= hv_msi_free,
 -- 
-2.18.2
+2.20.1
 
