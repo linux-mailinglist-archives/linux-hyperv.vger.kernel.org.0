@@ -2,236 +2,147 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D5011B2B8F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Apr 2020 17:50:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1E3C1B33E0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Apr 2020 02:18:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDUPuU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 21 Apr 2020 11:50:20 -0400
-Received: from mail-eopbgr750124.outbound.protection.outlook.com ([40.107.75.124]:59527
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        id S1726055AbgDVASD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 21 Apr 2020 20:18:03 -0400
+Received: from mail-dm6nam10on2133.outbound.protection.outlook.com ([40.107.93.133]:6881
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725613AbgDUPuS (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:50:18 -0400
+        id S1726039AbgDVASC (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:18:02 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oVactB9aZb+dWv/jZlZgFy5nGKJrkGd85/sF35aX3lvHMEP23VooIpzEF5//E1ScTAln6KVMKshjsQoEcftk+o/oksNha0WpMeLh+BQ1PdA+hMZgCN9awdkNOZxkP/RI0NI3Dl+IYDny0O7fsM6H3hQALXV4Ww/V3HKtPpnC7AOvo+CBMPo6h80mHLOcpE3aC3x+g5BPsezDaDwVZxobn8LHfZW5PcZKQop9+H7dbm/FYQHS01glYYJtK9c4ENWhVtgZkS21mLDOJBXfTPrWDAoNW9r9l71LV++AMFdB/iZ1vf2T1H6KOIJXZcBkP8LcIMNzdwxLQiN98K/l2OLisQ==
+ b=mFoDcc7DQDzJzNWArBiNmmAKmQ0+0T8BM7DO9UhCzZW5aNfnW6e3M/NSNBUBndJrtlQFnYvoiU1oMImD8Wjt2kn4+VgJQAm26iAJsKZCOVIzE6NOn2Km7Ssi0Ickg/BQhggZJ2tB+z7okIQg/Y4CisZux0pUnDG8jgoFeb9hRnFixzwASgq/sNMHQHV9hr48ouJ4oTAwjmXUjYOecBCst5Ilannre4iTdrGiXKF8mBFZztSAa5XEpQzYiyQ9Gh1x29RU6QqstMlAJOuyHxLUHE9r5xEzi6ys5rIZxIGhZTl65N8I1ePqgE0WgBFWMn3+l4p8ei/qQRsl82zGW0HGfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AeD5JYaE2Q6wgoygoe/f0imLOAhpj/llq3cOJSrta4s=;
- b=cWsktVOhh4F/x9+5GnlQNoJzXDY8U9663IaGkz3RpE/7PWY0tQpXrZbCXMwP0nZNcViAnTa07vx525gdnY0VaBFql9e+g7tQft23mARjeq+QeGP+rF8nblWr8nM0FNwHZfjXm+oEQaSxHPfSzueo90owNiZlTgzHOIb5rrTGfPiSep9v02pDklc4GW8pltGcm2D4xYBIvDpBqqbjc1iePpgxLiNHdu/EbyiAwnbZObV6S+yUEPxnZ0Yw40Dqf7PXme9iqYbcLiETeayEuqgPQQl6+5Xzv2raqV1LKTw0kQDy5fiKpeESkNh2gE9AYZmCCcyhiJNQM2FgD53FJ3l2Dw==
+ bh=E4caw7Xgo2COSQKj4uL05+8SqQMchdBV2Ke6WgO2PPA=;
+ b=PdYk2z8mosJINY4fF6PfYDwUGQS2eS31xY7DeMdVaDbFi7uXucJxOoEaduchmO/dk1e07w7TzqteMbO/Kq4e5cBtro34djvtVp0cpsrRluq8QjLqzKIhd6hAxTYlGMpu/Jqk2C0DShkVriBFaTIEGfUB8z7eg/l0+mp94QQcLqsyehriiJeBjyyASbj7FjSDLG8IUSagTZK5SlmvvQAn5O6qaSnYNm80iYgcj2fftPN296VivWRQzEDfEgGS9ABVlIPV8m9Q4pASUW1eGLRHFb3M6kF0QH6AGuCFUDAgz3hvCu7Mi9lNeEabUZUH5+unujmnt4tAzKQr6WA9hqX0JQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AeD5JYaE2Q6wgoygoe/f0imLOAhpj/llq3cOJSrta4s=;
- b=KgK3aV938AW0sUzxkAd58L6LKLoJpUfUtFCz2yHIamZYYdZGllUObnKI2Opp4evrC814oh+l21uPL5VCM9zaPuLVzUgHDKuIoSRiS5Dib5YIki90JxAYU4hcuCreZ/Y5G1RX3FxlW7bduLcxF+e6Gi+ACzL43dtV8NXD/7Zhcvk=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0921.namprd21.prod.outlook.com (2603:10b6:302:10::29) with
+ bh=E4caw7Xgo2COSQKj4uL05+8SqQMchdBV2Ke6WgO2PPA=;
+ b=iYrM4AFhpvfGTQEYU5OgY4wSxnGFYT8BlZsGeLkSuvNK3GePxDLZ7+gzLJ1KKrJgwT1S11LMhmD9fTAUWmmfgcc9H95p+DK9eWb/bbu6i8pPeFpXTDdU8A18inUb7Gkgr5rTip4h3vkQcNDl1YXAvV7YGqlDrj80mgOWTi06png=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN6PR21MB0161.namprd21.prod.outlook.com (2603:10b6:404:94::7)
+ by BN6PR21MB0849.namprd21.prod.outlook.com (2603:10b6:404:9e::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2; Tue, 21 Apr
- 2020 15:50:12 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2958.001; Tue, 21 Apr 2020
- 15:50:12 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH 4/4] asm-generic/hyperv: Add definitions for
- Get/SetVpRegister hypercalls
-Thread-Topic: [PATCH 4/4] asm-generic/hyperv: Add definitions for
- Get/SetVpRegister hypercalls
-Thread-Index: AQHWFzqo2MJXKNqRb0OpB2C/Ixhrm6iDi9EAgAAtKyA=
-Date:   Tue, 21 Apr 2020 15:50:12 +0000
-Message-ID: <MW2PR2101MB1052EF4972CDCF9BF2B0356AD7D50@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200420173838.24672-1-mikelley@microsoft.com>
- <20200420173838.24672-5-mikelley@microsoft.com>
- <87y2qpq9e7.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87y2qpq9e7.fsf@vitty.brq.redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-21T15:50:10.7293324Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=12920825-1c00-49d2-bb48-99a21bd11be8;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a880323d-b986-48c1-96d1-08d7e60bad88
-x-ms-traffictypediagnostic: MW2PR2101MB0921:|MW2PR2101MB0921:|MW2PR2101MB0921:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB092142E8B38E5ED6528B8B0AD7D50@MW2PR2101MB0921.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 038002787A
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(346002)(136003)(366004)(39860400002)(396003)(376002)(71200400001)(186003)(26005)(82960400001)(64756008)(66446008)(66476007)(52536014)(66556008)(66946007)(8676002)(5660300002)(6916009)(9686003)(55016002)(33656002)(81156014)(2906002)(76116006)(10290500003)(478600001)(54906003)(86362001)(316002)(7696005)(4326008)(8936002)(82950400001)(6506007)(7416002)(8990500004)(41533002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gmrcMAXF60ZJAdZv06F2GNG3RGYWYv0aqnipoMxCYe+p3I+vkoibNGNEHLT/P42vThFh0foKWftync3O8UNSmBbVRMmSzPHwvW8OTLceLsp+HpE/cgrzTIeqel8I6N31iQvEPRDQP/TIBCchvkMPVZK83DY76GHDybl3aOY2SPWyG1PR+QJAqWMrAiPJlRvy5g1JeawRxWee6cyR8I/2Tt6/+0i/7GrcHQXCAR0v0hPExIS5vxYoi9Fq8m9VzlGEEnN5DJ7HYHGkEuw7FfvpVcvlvdF1vbwsG4lOnfda4sSY8Ba7vQubiE0LjhDOho5bD5+BYp3fT78toYKBRz3YbWdjrMECH+dHKbLGHDZ1CDbl8mgJAOE5Ay33PRDAcYZc0jQv8VIPtJSBPnX7tH9qZ9/Rfk1T2mw2n4V1SWAlUkC7HzJ9Hvr3KEuhDMMIeLnWS9bOnrKZZJposBU90rZmX0U4kQpRXhJhTXjtQbc6JMH8MPyEgh48PFSAyCH5KDZ0
-x-ms-exchange-antispam-messagedata: j+9EeiqeaRrcck86tnhQKtxxiXNTFyMsmk0PZEkr0k1i3wazMfXULWmZxIxMHWlWKWT9klI1kXQrfvf2K+UVW/DLdn6wbeGCn48Tjzy+hT00X4KEkuhGM60F7shrBHujHasjcPI3qWJ0e0iiaDOvoVjPEx8luDkDd368aG0jh9/z9koIYJfolziMLqlBOMmxDJa0izNlKMJ0pidVONRJ3S4XczPy7tNQCSP9Y/RRdXCcNfO1bfMlcL6aF1w24aFnQusX92tUYWqm1Fe91iPQ+hWjiipyJFr7ucGCbTcaHdsBib/1jyTopqNCHq/LaUkZ2mKYO1BE1FNQVs1FsdrKVtam4zgFYcIER5/6g4NPO7g9Iqru8E9Y1RCyWDor3WmFAZTFc92IhVV7vM+IQwK6egxMIFmdmFSu4ew/keuCkX27lxipPM04oOEP8pGzbYy397E96OLrC8Sz1I0hKXIOF032z8920qSJHNqMhnL85uw3vcUgHVFzs/XDAAwxU6LIrtQKXWIxgKijmM2QmGLpHfS0EpRYh3zmjR8iQb+92A76zQny7BPX5Fz/rlesllGimhPFEBj0za23UXvFS3bAiLLLwWdUFn2fjMJMBD/3XGd3yWIrfzWf97g2mOuM7TocVcLuMp0qosCqkiqC1hj3yLtluUQxKdIbajxhb87SqWZdIgi777TrkVUbWWaZnEis//6Jb2s8gTsISWBd7Q1NWrGMSdBvRijCdnSp16R/9NADgLG1ef7SQMb57ksNCRynJvERAABdxpZoE8OKq9YnahkUM5OKFgr0QjEVc+fkK4E=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.3; Wed, 22 Apr
+ 2020 00:17:59 +0000
+Received: from BN6PR21MB0161.namprd21.prod.outlook.com
+ ([fe80::171:e82f:b9f2:3a68]) by BN6PR21MB0161.namprd21.prod.outlook.com
+ ([fe80::171:e82f:b9f2:3a68%13]) with mapi id 15.20.2958.001; Wed, 22 Apr 2020
+ 00:17:59 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, bvanassche@acm.org, hare@suse.de,
+        mikelley@microsoft.com, longli@microsoft.com, ming.lei@redhat.com
+Cc:     linux-hyperv@vger.kernel.org, wei.liu@kernel.org,
+        sthemmin@microsoft.com, haiyangz@microsoft.com, kys@microsoft.com,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+Date:   Tue, 21 Apr 2020 17:17:24 -0700
+Message-Id: <1587514644-47058-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR03CA0015.namprd03.prod.outlook.com
+ (2603:10b6:300:117::25) To BN6PR21MB0161.namprd21.prod.outlook.com
+ (2603:10b6:404:94::7)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR03CA0015.namprd03.prod.outlook.com (2603:10b6:300:117::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Wed, 22 Apr 2020 00:17:57 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8fa28811-c28d-42cf-d9e4-08d7e6529ca2
+X-MS-TrafficTypeDiagnostic: BN6PR21MB0849:|BN6PR21MB0849:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR21MB0849E96B26A84333FCFDC13CBFD20@BN6PR21MB0849.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 03818C953D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0161.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(966005)(8676002)(107886003)(956004)(2616005)(2906002)(16526019)(81156014)(8936002)(186003)(26005)(6486002)(5660300002)(478600001)(6506007)(52116002)(6512007)(316002)(10290500003)(7416002)(6666004)(66556008)(86362001)(3450700001)(66476007)(36756003)(66946007)(82950400001)(82960400001)(4326008)(921003);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2ZgYcfz9929uv7+8xzbBpV+16JywUNYH8rMjdV/b4RcEKlHtjXN8yWkt55uYO+PhajEL1tiY9XvwAZ4rvBNhU/Ue8qLRHOTOzldooj4RbM+nmaaUYA+t33T7FWfeumK4TEfVTqw0Mgfqs4OkGdn/D1kohvjcWXK6O1gpqR028AG7X3d11IHTM6nKffOthLV4FahmWfctLrNjfLEeHVG91N4WE0A2/964NUDIENoySHi0olnlxi29FbidXrNWsJ9XHFHXPgAlMWCUoN3F0ISG9AZ2STTCsDgLjsq/VtjTAOWasc00mKhTTs4ZfL0WBN3ynAiSYQkStLheIWnh4kYRRZlS7+zreQmcO4cCFcUQXSi3mMRIjG/FX3eIBmb44uK+0/rW3u7TQGYuS+5BcwODvm/QnRB5TlYplZzJYmO1757h/EFJ6T+erTnu4kzQmAEKI0pru2QnUMGbbW7ezRhQ+M5QLGqJ++/IeE/nWG3gIXo1XJDEA8l+sMYjIjP5tuj0N1Cj4vjFusdQz105fwzVczafgjkw6y0EKMbVjEx+IC/SUEGG3yKyjd7fcnZUAuYu
+X-MS-Exchange-AntiSpam-MessageData: kQV/kEjx9fe/dEJjC7zZyAp4s29ymf+liRUNj7xaS8tUFk7nUcG20iZPV/9jUUezSjOlChp0LxqQjIK1JyIiLGnomfzj93oMJPv6PPxiL5VxEr+7Ip9zeWb12c/LiZ/J7fEeUSjOdxA5tdT0dDvccydoBIQB/FiagBGQU3vVFaHvBZlv6EdXMNR/Oqx32cjJVPoXuKvGbv4bUKModlSyN+8tSnPFmkAhxXwZufavySyE0hbAEpNy4PHG4xytzdkwXyhoO+zFQBXcZUfkaFLWQgmY3oQ0DrNyV0carub8E8QeBxOj+3+3oEGdn0MYdGVz0QhbpXP8BJoUi5/qf+rFCDCLHxzZ3xVsQs9bsrP+p1DElkltniDhdtWONZKprITWUBqoATJeDiDtD3Otw2d79XI9sMPWQCiBIdCR67EGN7WlhnB648NzrY8xSlyCyQXQruR9ujCU5EAU+NZ/CRkpvN5QLYa12nrG8IFhzmD+bMwX6/4/9XXC3Gc7yBO2l1lhFYAyetlTyBQwSKd+hdK600VwbTrw+7pQQjapJhLT61epupam2b+NDeDvX8MrPPcFzDxfIcjoVkWzGFyZYdOTH34YTcoXpQT45klfOi2vJGXgmHyRYMGF3AvYkD+qN1GFnKFk0ibOUmMxtyX/YkMjAQGo8O9960byhseJ2fSQp0/vOYbmXw2/lfVNSuFWuNCOo7qeM07Z67c63ShjpvBN8zRFzwHEvZGgnWaOsgmm3yBu3H2HGv9zL8PtdqIvjM219mAKo47VA1BXxuKicUUGQH5q5NJhtNQEe7y2PdRaIGo=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a880323d-b986-48c1-96d1-08d7e60bad88
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2020 15:50:12.5193
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fa28811-c28d-42cf-d9e4-08d7e6529ca2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2020 00:17:59.1437
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WefsAt77eN0gNjAPFU2MV9JJgrtuTdIExhO5g12n2ZCqvra3djkX/yLWu7zeuyaQgJ1i06KK02G4uuMw3gudX+OMxb+KtL/aIJxvrBMOUm4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0921
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WyYNYErjZBpFSJXChEtxLe8xBSHSgljRnWEEBoMIdRmIlDos4kQiF1sxmyGXzbSrHQHItmVfrNtcXUEvPltN7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0849
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Tuesday, April 21, 2020 =
-6:03 AM
->=20
-> Michael Kelley <mikelley@microsoft.com> writes:
->=20
-> > Add definitions for GetVpRegister and SetVpRegister hypercalls, which
-> > are implemented for both x86 and ARM64.
-> >
-> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> > ---
-> >  include/asm-generic/hyperv-tlfs.h | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >
-> > diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hy=
-perv-tlfs.h
-> > index 1f92ef92eb56..29b60f5b6323 100644
-> > --- a/include/asm-generic/hyperv-tlfs.h
-> > +++ b/include/asm-generic/hyperv-tlfs.h
-> > @@ -141,6 +141,8 @@ struct ms_hyperv_tsc_page {
-> >  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
-> >  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX	0x0014
-> >  #define HVCALL_SEND_IPI_EX			0x0015
-> > +#define HVCALL_GET_VP_REGISTERS			0x0050
-> > +#define HVCALL_SET_VP_REGISTERS			0x0051
-> >  #define HVCALL_POST_MESSAGE			0x005c
-> >  #define HVCALL_SIGNAL_EVENT			0x005d
-> >  #define HVCALL_RETARGET_INTERRUPT		0x007e
-> > @@ -439,4 +441,30 @@ struct hv_retarget_device_interrupt {
-> >  	struct hv_device_interrupt_target int_target;
-> >  } __packed __aligned(8);
-> >
-> > +
-> > +/* HvGetVPRegister hypercall */
->=20
-> Nit: 'HvGetVpRegisters' in TLFS
->=20
-> > +struct hv_get_vp_register_input {
->=20
-> Nit: I would also to name it 'hv_get_vp_registers_input' (plural, like
-> the hypercall).
->=20
-> > +	u64 partitionid;
-> > +	u32 vpindex;
-> > +	u8  inputvtl;
-> > +	u8  padding[3];
-> > +	u32 name0;
-> > +	u32 name1;
-> > +} __packed;
->=20
-> Isn't it a REP hypercall where we can we can pass a list? In that case
-> this should look like
->=20
-> struct hv_get_vp_registers_input {
-> 	struct {
-> 		u64 partitionid;
-> 		u32 vpindex;
-> 		u8  inputvtl;
-> 		u8  padding[3];
->         } header;
-> 	struct {
-> 		u32 name0;
-> 		u32 name1;
->         } elem[];
-> } __packed;
->=20
-> > +
-> > +struct hv_get_vp_register_output {
->=20
-> Ditto.
->=20
-> > +	union {
-> > +		struct {
-> > +			u32 a;
-> > +			u32 b;
->  > +			u32 c;
-> > +			u32 d;
-> > +		} as32 __packed;
-> > +		struct {
-> > +			u64 low;
-> > +			u64 high;
-> > +		} as64 __packed;
-> > +	};
-> > +};
->=20
-> I'm wondering why you define both
-> HVCALL_GET_VP_REGISTERS/HVCALL_SET_VP_REGISTERS but only add 'struct
-> hv_get_vp_register_input' and not 'struct hv_set_vp_register_input'.
->=20
-> The later should look similar, AFAIU it is:
->=20
-> struct hv_set_vp_registers_input {
-> 	struct {
-> 		u64 partitionid;
-> 		u32 vpindex;
-> 		u8  inputvtl;
-> 		u8  padding[3];
->         } header;
-> 	struct {
-> 		u32 name;
-> 		u32 padding1;
-> 		u64 padding2; //not sure this is not a mistake in TLFS
->             	u64 regvallow;
->             	u64 regvalhigh;
-> 	} elem[];
-> } __packed;
->=20
-> > +
-> >  #endif
->=20
-> --
-> Vitaly
+During hibernation, the sdevs are suspended automatically in
+drivers/scsi/scsi_pm.c before storvsc_suspend(), so after
+storvsc_suspend(), there is no disk I/O from the file systems, but there
+can still be disk I/O from the kernel space, e.g. disk_check_events() ->
+sr_block_check_events() -> cdrom_check_events() can still submit I/O
+to the storvsc driver, which causes a paic of NULL pointer dereference,
+since storvsc has closed the vmbus channel in storvsc_suspend(): refer
+to the below links for more info:
+  https://lkml.org/lkml/2020/4/10/47
+  https://lkml.org/lkml/2020/4/17/1103
 
-Thanks.  I'll make these changes.  I was being a bit lazy since
-the ARM64 code only gets/sets a single register at a time.  Also
-HvSetVpRegisters works very nicely as a fast hypercall when setting
-a single register, so I didn't define the in-memory data structure.
-But for completeness, I shouldn't take these shortcuts, so I'll do
-an update.
+Fix the panic by blocking/unblocking all the I/O queues properly.
 
-Michael
+Note: this patch depends on another patch "scsi: core: Allow the state
+change from SDEV_QUIESCE to SDEV_BLOCK" (refer to the second link above).
+
+Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/scsi/storvsc_drv.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index fb41636519ee..fd51d2f03778 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1948,6 +1948,11 @@ static int storvsc_suspend(struct hv_device *hv_dev)
+ 	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
+ 	struct Scsi_Host *host = stor_device->host;
+ 	struct hv_host_device *host_dev = shost_priv(host);
++	int ret;
++
++	ret = scsi_host_block(host);
++	if (ret)
++		return ret;
+ 
+ 	storvsc_wait_to_drain(stor_device);
+ 
+@@ -1968,10 +1973,15 @@ static int storvsc_suspend(struct hv_device *hv_dev)
+ 
+ static int storvsc_resume(struct hv_device *hv_dev)
+ {
++	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
++	struct Scsi_Host *host = stor_device->host;
+ 	int ret;
+ 
+ 	ret = storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
+ 				     hv_dev_is_fc(hv_dev));
++	if (!ret)
++		ret = scsi_host_unblock(host, SDEV_RUNNING);
++
+ 	return ret;
+ }
+ 
+-- 
+2.19.1
 
