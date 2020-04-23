@@ -2,101 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F2D01B5C74
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2020 15:23:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41CDE1B5CD0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Apr 2020 15:45:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgDWNWO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 23 Apr 2020 09:22:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44125 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbgDWNWN (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:22:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d17so6800453wrg.11;
-        Thu, 23 Apr 2020 06:22:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iuq6pBRpV7QPrN7TD8s7GlKdVuT8Rr6JcPkVbP2MpI0=;
-        b=lV4MAxxosL9zDQLgP9WYOiOj2gaOdh3izALQKSMs61nHjt8K+sjKA1UZxQD+DpuEoC
-         7SHfvHmRGkeXrkxOOLe2hMDf+62IhAsefH2U/DeZHGauCDNKKDtRbhnZ/ar5itsZ7vE+
-         gKpgzm2ocdhyZKQnjFurGMUO8CPnOp1HqqpUwMcJQqSZFScdmppObN9RKVFqyYfd/OvQ
-         zW5G7bXT96AFhMTZ6C7b4sq8cGcQnCG+fZ04VEkSH0837WA2NULq6LBWRI9rOXxZxNtJ
-         8HQUr+gjFAC5mNvYuBFZdfO7bH0ieu/y6pP3CwKVOTDEjV/eekDF38foYYr4l7w+8c/d
-         r1RA==
-X-Gm-Message-State: AGi0Pubky7IW14786yQSvY836Pynit0b/Zib/xQfVbl2UBQMOcLfhLCD
-        Olgx0gVFP5BYESzvwyY3LKw=
-X-Google-Smtp-Source: APiQypIEZxPpWwZO1dJPmZJRXbxGHGkpj0uIQN9V5WBHqfcSsT+C5L1UlHcfMdotuTpqLaVZIGAXig==
-X-Received: by 2002:a05:6000:4:: with SMTP id h4mr5088646wrx.386.1587648131443;
-        Thu, 23 Apr 2020 06:22:11 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b22sm11963106wmj.1.2020.04.23.06.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 06:22:10 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 13:22:08 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Split hyperv-tlfs.h into generic and arch
- specific files
-Message-ID: <20200423132208.i522jqpevglruhur@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200422195737.10223-1-mikelley@microsoft.com>
+        id S1728622AbgDWNpK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Apr 2020 09:45:10 -0400
+Received: from mga12.intel.com ([192.55.52.136]:40803 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728632AbgDWNpJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:45:09 -0400
+IronPort-SDR: q97AO57bf3sMLhypgtYtuCUfeFP5ThF1YubR5itwVUxnIWuB4XATkylQYbbgZk+qsKuyt3NemZ
+ +FbPwlb5VWuQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 06:45:08 -0700
+IronPort-SDR: bQqltvjo5uEHHkgON1vgqt9WAY65z8G8Cf/DL49tVBvi5sKEdbfQlRNDkhHEGOHFeR8lVfUb6/
+ 3SEbZdVFgKtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="255989300"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 23 Apr 2020 06:45:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 161EA402; Thu, 23 Apr 2020 16:45:05 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/4] hyper-v: Use UUID API for exporting the GUID (part 2)
+Date:   Thu, 23 Apr 2020 16:45:02 +0300
+Message-Id: <20200423134505.78221-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422195737.10223-1-mikelley@microsoft.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:57:33PM -0700, Michael Kelley wrote:
-> This series splits hyperv-tlfs.h into architecture independent and
-> architecture specific files so that the arch independent portion can
-> be shared between the x86/x64 and ARM64 code for Hyper-V.  While the
-> Hyper-V team has not released a version of the TLFS document that
-> clearly specifies which portions of the interface are arch independent,
-> we can make a fairly good assessment based on implementation work done
-> to support Linux guests on Hyper-V on ARM64, and on private communication
-> with the Hyper-V team.  Definitions are considered arch independent if
-> they are implemented by Hyper-V on both architectures (x86/x64 and ARM64),
-> even if they are currently needed by Linux code only on one architecture.
-> 
-> Many definitions in hyperv-tlfs.h have historically contained "X64" in the
-> name, which doesn't make sense for architecture independent definitions.
-> While many of the occurrences of "X64" have already been removed, some
-> still remain in definitions that should be arch independent. The
-> split removes the "X64" from the definitions so that the arch
-> independent hyper-tlfs.h has no occurrences of "X64". However, to
-> keep this patch set separate from a wider change in the names, aliases
-> are added in the x86/x64 specific hyperv-tlfs.h so that existing code
-> continues to compile.  The definitions can be fixed throughout the code
-> in a more incremental fashion in separate patches, and then the aliases
-> can be removed.
-> 
-> Where it is not clear if definitions are arch independent, they have been
-> kept in the x86/x64 specific file. The Hyper-V team is aiming to have a
-> version of the TLFS document covering ARM64 by the end of calendar 2020,
-> so additional definitions may be moved into the arch independent portion
-> after the new TLFS document is released.
-> 
-> The first two patches in the series clean up the existing hyperv-tlfs.h
-> file a bit by removing duplicate or unnecessary definitions so they are
-> not propagated across the split. The third patch does the split, and the
-> fourth patch adds new definitions that are needed on ARM64 but are generic.
-> 
-> These changes have no functional impact.
-> 
-> These patches are built against linux-next-20200415
+This is a follow up to the commit 1d3c9c075462
+  ("hyper-v: Use UUID API for exporting the GUID")
+which starts the conversion.
 
-Applied to hyperv-next. Thanks.
+There is export_guid() function which exports guid_t to the u8 array.
+Use it instead of open coding variant.
 
-Wei.
+This allows to hide the uuid_t internals.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/hv/hv_trace.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/hv/hv_trace.h b/drivers/hv/hv_trace.h
+index 579d19bdc0981b..6063bb21bb1371 100644
+--- a/drivers/hv/hv_trace.h
++++ b/drivers/hv/hv_trace.h
+@@ -44,10 +44,8 @@ TRACE_EVENT(vmbus_onoffer,
+ 			   __entry->monitorid = offer->monitorid;
+ 			   __entry->is_ddc_int = offer->is_dedicated_interrupt;
+ 			   __entry->connection_id = offer->connection_id;
+-			   memcpy(__entry->if_type,
+-				  &offer->offer.if_type.b, 16);
+-			   memcpy(__entry->if_instance,
+-				  &offer->offer.if_instance.b, 16);
++			   export_guid(__entry->if_type, &offer->offer.if_type);
++			   export_guid(__entry->if_instance, &offer->offer.if_instance);
+ 			   __entry->chn_flags = offer->offer.chn_flags;
+ 			   __entry->mmio_mb = offer->offer.mmio_megabytes;
+ 			   __entry->sub_idx = offer->offer.sub_channel_index;
+-- 
+2.26.1
+
