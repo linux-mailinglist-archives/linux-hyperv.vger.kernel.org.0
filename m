@@ -2,37 +2,35 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 967351B74DD
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2020 14:29:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14B371B7420
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Apr 2020 14:24:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgDXM3a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 24 Apr 2020 08:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54242 "EHLO mail.kernel.org"
+        id S1728388AbgDXMYW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 24 Apr 2020 08:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbgDXMX7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 24 Apr 2020 08:23:59 -0400
+        id S1728377AbgDXMYV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 24 Apr 2020 08:24:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B845B21707;
-        Fri, 24 Apr 2020 12:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617D121569;
+        Fri, 24 Apr 2020 12:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587731038;
-        bh=lX7GO5zZRgBAxgEabLCkym2MplVXRl3kwn5k981MtVQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QChqZ+OroKrCBLGeumwXaCArE8Egs+a+VUymVnkFbMDaHidLHTAVdg/a38IfIKWrG
-         P+xWsIYVkNtjgAbUgFEj4jeF5Vb3B6sjwadUr7yRw9jHCzqTlj9h2zMypU84CtWDsl
-         eDvBGe7oANGNJavmGns/JvCswYxTnIYaeJjmKyVg=
+        s=default; t=1587731061;
+        bh=cQVFE2oXggkz34TEBtKvHUTAk0MrHQLs86Hg/SE6S/I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=N2xjMA/7jb9BEyfQ2fySJTd5Hvpd1vinwJP6NZn/F9Wr4qOkZde2JQ5PkpmcwGKz0
+         nEoPwy8OxR9zGX9SvFYcXsenKZvjuyYqiyemveWwhOakGIAZUGRPxbpJiKoxVu+CEL
+         nak3StgrgZZDgh6DmkZBfZfepUuJcaUhyiVAm4j8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Olaf Hering <olaf@aepfle.de>, Wei Liu <wei.liu@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/18] x86: hyperv: report value of misc_features
-Date:   Fri, 24 Apr 2020 08:23:39 -0400
-Message-Id: <20200424122355.10453-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 01/21] x86: hyperv: report value of misc_features
+Date:   Fri, 24 Apr 2020 08:23:59 -0400
+Message-Id: <20200424122419.10648-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200424122355.10453-1-sashal@kernel.org>
-References: <20200424122355.10453-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,10 +56,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index fc93ae3255153..f8b0fa2dbe374 100644
+index c0201b11e9e2a..a6b323a3a6304 100644
 --- a/arch/x86/kernel/cpu/mshyperv.c
 +++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -214,8 +214,8 @@ static void __init ms_hyperv_init_platform(void)
+@@ -178,8 +178,8 @@ static void __init ms_hyperv_init_platform(void)
  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
  
@@ -70,8 +68,8 @@ index fc93ae3255153..f8b0fa2dbe374 100644
 +	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
 +		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
  
- 	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
- 	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
+ 	ms_hyperv.max_vp_index = cpuid_eax(HVCPUID_IMPLEMENTATION_LIMITS);
+ 	ms_hyperv.max_lp_index = cpuid_ebx(HVCPUID_IMPLEMENTATION_LIMITS);
 -- 
 2.20.1
 
