@@ -2,87 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 092641BA0F9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2020 12:21:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 713721BA236
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Apr 2020 13:19:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgD0KVO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 27 Apr 2020 06:21:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34865 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgD0KVI (ORCPT
+        id S1726589AbgD0LTu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 27 Apr 2020 07:19:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34448 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgD0LTu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 27 Apr 2020 06:21:08 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x18so19850266wrq.2;
-        Mon, 27 Apr 2020 03:21:06 -0700 (PDT)
+        Mon, 27 Apr 2020 07:19:50 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v4so15707721wme.1;
+        Mon, 27 Apr 2020 04:19:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+7bVFLWrQIX8JTal4r0/ZmJRvVDeqQomfNKtoU2FS3E=;
-        b=YrOZ5zWfKd0CqAbguZCn6y5ydA+zHJLYxasCh2WrTaN6p8FMRM4tF1XAhAwEKjKQPY
-         1EgIbCl+bXYRH5zPkiANzNypaEuziI2qyMdvHNRc7Mv5RHnK2j9JmatnGuBq024h7WQS
-         BzqBduNksbl5stgXNCuBF+wyC+uOu0vNvZKoMuP0Jy/V+jtkLeTsfudnAzw2Y+PunBOF
-         nYnkGkPzwDMDrYrwMcs8ii37VpXCpH2ZUvJ3m0azAaKngd3bj0VbzbPtWsEfoWDhTBLA
-         cJL7DxdEQRD44Se0nBZaSJk9JiGovgzwmzXEr08djo7Qgr458foAbT3ETRBM3IH/ZvSe
-         UK/Q==
-X-Gm-Message-State: AGi0PuZUytQDm6ACPnZDzzaTmpeYwUwisbf6vTlvMMzRmjhjpIS+4ZZX
-        DfnXC8Vd4SPJMUMsL+Zc/mFOLRZP
-X-Google-Smtp-Source: APiQypKFmkXpGVvRzHZGFEZVOY9BybBoS1EtcBDc2CSoMzoH9YHRDKgDok7WTYAp0c8U/f9qn30bcQ==
-X-Received: by 2002:adf:fd46:: with SMTP id h6mr27795565wrs.90.1587982865429;
-        Mon, 27 Apr 2020 03:21:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nxQk4cEc0aiSGCEEBf1pbnwbO1uRcVsKiwXYVrEzomM=;
+        b=TEriAgfo/JwWsqNtPYb2ZmmZgMba65g3iFLb7ElM/BX5qL4dMIixo4iGySqYDj/FNx
+         Y69PTly26+ud+bzWgovwTvGlOI4w45oqUxHI8R2CM72whn5j7oMWOk0SfDpc661kFaem
+         KnGO9j5/Fuh3kvj3r4a9NVl+VQTW9HkF7psKybzwx2nkJA+F++RSswNFPRze4E4+oXs7
+         FVhU1QqR6V9sdK9W+OVdLIweByKllH1WVI0QkmVyLzkVacUaCzq31/zlHzY1EzvpVtV0
+         f/W85Wb20igxIYNA/dIEVuVpYNAk6nmvD/o0Tm5kscR/XhrhhN557pcAXyh8ixyMWPz+
+         grnQ==
+X-Gm-Message-State: AGi0PuYEnQ+ASE1N/6J7bp6ofb8jyV+rSnW3BM6mNM/QA+tv6oIMJf93
+        OAPWqrmWW8Lru3FzfjB3frc=
+X-Google-Smtp-Source: APiQypJ3tLDw/B9cJp+h+N49181NXJK1IyEIZ0rry8f+0usSARqtE+0sepnxxtHL84+7T+2ABET+3Q==
+X-Received: by 2002:a1c:4b15:: with SMTP id y21mr25802152wma.150.1587986388306;
+        Mon, 27 Apr 2020 04:19:48 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b82sm15832648wmh.1.2020.04.27.03.21.03
+        by smtp.gmail.com with ESMTPSA id s8sm20648434wru.38.2020.04.27.04.19.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2020 03:21:04 -0700 (PDT)
-Date:   Mon, 27 Apr 2020 10:21:02 +0000
+        Mon, 27 Apr 2020 04:19:47 -0700 (PDT)
+Date:   Mon, 27 Apr 2020 11:19:45 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Wei Hu <weh@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        decui@microsoft.com, mikelley@microsoft.com
-Subject: Re: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
- attempt failed with invalid device state 0xC0000184.
-Message-ID: <20200427102102.lar6d4w3rqz3d3j4@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200426132430.1756-1-weh@microsoft.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com
+Subject: [GIT PULL] Hyper-V commits for 5.7-rc4
+Message-ID: <20200427111945.6qdvgimt3nt3ja57@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200426132430.1756-1-weh@microsoft.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 09:24:30PM +0800, Wei Hu wrote:
-> In the case of kdump, the PCI device was not cleanly shut down
-> before the kdump kernel starts. This causes the initial
-> attempt of entering D0 state in the kdump kernel to fail with
-> invalid device state 0xC0000184 returned from Hyper-V host.
-> When this happens, explicitly call PCI bus exit and retry to
-> enter the D0 state.
-> 
-> Also fix the PCI probe failure path to release the PCI device
-> resource properly.
-> 
-> Signed-off-by: Wei Hu <weh@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 34 ++++++++++++++++++++++++++++-
->  1 file changed, 33 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index e15022ff63e3..eb4781fa058d 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2736,6 +2736,10 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
->  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
->  }
->  
-> +#define STATUS_INVALID_DEVICE_STATE		0xC0000184
-> +
+Hi Linus
 
-Can you please move this along side STATUS_REVISION_MISMATCH?
+Please pull the following changes since commit
+f3a99e761efa616028b255b4de58e9b5b87c5545:
 
-Wei.
+  x86/Hyper-V: Report crash data in die() when panic_on_oops is set (2020-04-11 17:19:07 +0100)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+
+for you to fetch changes up to f081bbb3fd03f949bcdc5aed95a827d7c65e0f30:
+
+  hyper-v: Remove internal types from UAPI header (2020-04-22 21:10:05 +0100)
+
+----------------------------------------------------------------
+hyperv-fixes for 5.7-rc4
+
+ - Two patches from Dexuan fixing suspension bugs
+ - Three cleanup patches from Andy and Michael
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      hyper-v: Use UUID API for exporting the GUID
+      hyper-v: Remove internal types from UAPI header
+
+Dexuan Cui (2):
+      Drivers: hv: vmbus: Fix Suspend-to-Idle for Generation-2 VM
+      x86/hyperv: Suspend/resume the VP assist page for hibernation
+
+Michael Kelley (1):
+      Drivers: hv: Move AEOI determination to architecture dependent code
+
+ arch/x86/hyperv/hv_init.c       | 12 ++++++++++--
+ arch/x86/include/asm/mshyperv.h |  2 ++
+ drivers/hv/hv.c                 |  6 +-----
+ drivers/hv/hv_trace.h           |  4 ++--
+ drivers/hv/vmbus_drv.c          | 43 ++++++++++++++++++++++++++++++++---------
+ include/uapi/linux/hyperv.h     |  4 ++--
+ 6 files changed, 51 insertions(+), 20 deletions(-)
