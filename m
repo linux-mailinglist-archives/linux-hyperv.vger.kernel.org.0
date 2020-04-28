@@ -2,155 +2,122 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CE061BB1B1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2020 00:51:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 228D31BB4B8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Apr 2020 05:31:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgD0Wvf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 27 Apr 2020 18:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgD0Wvf (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:51:35 -0400
-Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5260020661;
-        Mon, 27 Apr 2020 22:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588027894;
-        bh=whRFNUD4BZPg0hJwHb5jAU8zt3B+MFfDdFnuCfCh21Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jbJ+hBWbFaPZLAZpJBho1x6SwnoZZdRmb11ZCOfY2HQAirKqK3Ud5K3Tc2P/CEHxq
-         YfIhwWgwPQzTeUCIK4Wz08oScj7EyiAqznu4rK0Hp9AVonP8uSBxI/HxMtjBtLKEKg
-         /QFWHJDSaVjtDIOGeZy74eppVI0aTWQr0pZCSHyU=
-Date:   Mon, 27 Apr 2020 17:51:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wei Hu <weh@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, decui@microsoft.com,
-        mikelley@microsoft.com
-Subject: Re: [PATCH] PCI: pci-hyperv: Retry PCI bus D0 entry when the first
- attempt failed with invalid device state 0xC0000184.
-Message-ID: <20200427225132.GA9339@google.com>
+        id S1726312AbgD1DbD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 27 Apr 2020 23:31:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgD1DbD (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 27 Apr 2020 23:31:03 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA78C03C1A9;
+        Mon, 27 Apr 2020 20:31:03 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g19so30226608otk.5;
+        Mon, 27 Apr 2020 20:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jm8vfJ9EYyWFOVTVK1su6QOP18i2GwWwk6iXxu1Gwqg=;
+        b=tIUU17d61/yZf3H3f7qHle7H6xFFYcz/TYc3xCwWv+zz8GQVMUYUJWtQbqOEBaXVCn
+         SHWgaqnH7BSR/SgNiZc04fix5SZOpRu+36gqtZKds2WYSDllT9DtLDGZ6VNifdw2oNL8
+         NJZOZWb6nm14vdzNMbLVzOnQRwvO3w4jdky7VqdpEZAVfKqTrKsuD1qq910GBhgbsTQS
+         k0XEDmplGZKZWut2od4qJoG64IqiQYy1OkZ2IaZ9YLH3stUnyenxmJS64wtfGNGZJ9j/
+         ZAvkELeBXiPY9GCrLI7jebBu/+ckb31IV12xOg/yjj+OHKpX4U6Xse+H5a0WJl7lV89T
+         ZUuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jm8vfJ9EYyWFOVTVK1su6QOP18i2GwWwk6iXxu1Gwqg=;
+        b=XbbHw/sk6rxTJIWIONYTzrenuFaJ99KU6bwbiO2ZeouB//QoepT22WDweGmZTNisAy
+         g1FoGuilqS16l7uTeottu82DKMMWx06THmh5x34SmsWwiFrUym6dDWx7h+XL0A4vNwfL
+         W9juxoTwJQRlX8suCkVBqGUPyhrJOQTjEok40RGGmlpMTX44QRF9+vKK5ICMtr8eG1iD
+         BmOpbWWBvJIHunAopIjhOjDwe/+h/DkL0T3uEXxd+Q4duX3ObA0kcynYinLyUhBtSrmL
+         49yGpJq5B5oArFTNtQ/q6LmAPAMMwqKok8mlfQn1aY2t+GUV8TzVv/WzuSR/KsVdQUV8
+         AxPg==
+X-Gm-Message-State: AGi0PuZhnU3U75gmRTfumAjfF/RpXYHZhRq/TzKJKWAK73FZJpj6ihtW
+        kw8uCDzwTX4Am4bFY4eC/jQ=
+X-Google-Smtp-Source: APiQypL+AkA11khZIM6HDPAXBFYXba69RckVwzoOGnXcFnSn58KdrLcc0xLwleE4RoRl5yN7hbSKfQ==
+X-Received: by 2002:a05:6830:11c6:: with SMTP id v6mr20618099otq.166.1588044662222;
+        Mon, 27 Apr 2020 20:31:02 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id q8sm1959615oij.36.2020.04.27.20.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2020 20:31:01 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] hv_netvsc: Fix netvsc_start_xmit's return type
+Date:   Mon, 27 Apr 2020 20:30:43 -0700
+Message-Id: <20200428033042.44561-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426132430.1756-1-weh@microsoft.com>
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Please pay attention to the changelog history and make yours match:
+netvsc_start_xmit is used as a callback function for the ndo_start_xmit
+function pointer. ndo_start_xmit's return type is netdev_tx_t but
+netvsc_start_xmit's return type is int.
 
-  $ git log --oneline drivers/pci/controller/pci-hyperv.c
-  1cf106d93245 ("PCI: hv: Introduce hv_msi_entry")
-  61bfd920abbf ("PCI: hv: Move retarget related structures into tlfs header")
-  b00f80fcfaa0 ("PCI: hv: Move hypercall related definitions into tlfs header")
-  067fb6c97e7e ("PCI: hv: Replace zero-length array with flexible-array member")
-  999dd956d838 ("PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2")
-  f9ad0f361cf3 ("PCI: hv: Decouple the func definition in hv_dr_state from VSP message")
-  42c3d41832ef ("PCI: hv: Add missing kfree(hbus) in hv_pci_probe()'s error handling path")
-  e658a4fea8ef ("PCI: hv: Remove unnecessary type casting from kzalloc")
+This causes a failure with Control Flow Integrity (CFI), which requires
+function pointer prototypes and callback function definitions to match
+exactly. When CFI is in enforcing, the kernel panics. When booting a
+CFI kernel with WSL 2, the VM is immediately terminated because of this:
 
-No period at end of subject.
+$ wsl.exe -d ubuntu
+The Windows Subsystem for Linux instance has terminated.
 
-On Sun, Apr 26, 2020 at 09:24:30PM +0800, Wei Hu wrote:
-> In the case of kdump, the PCI device was not cleanly shut down
-> before the kdump kernel starts. This causes the initial
-> attempt of entering D0 state in the kdump kernel to fail with
-> invalid device state 0xC0000184 returned from Hyper-V host.
-> When this happens, explicitly call PCI bus exit and retry to
-> enter the D0 state.
-> 
-> Also fix the PCI probe failure path to release the PCI device
-> resource properly.
+Avoid this by using the right return type for netvsc_start_xmit.
 
-This sounds like two separate fixes that should be in separate
-patches?
+Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1009
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
-> Signed-off-by: Wei Hu <weh@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 34 ++++++++++++++++++++++++++++-
->  1 file changed, 33 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index e15022ff63e3..eb4781fa058d 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2736,6 +2736,10 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
->  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
->  }
->  
-> +#define STATUS_INVALID_DEVICE_STATE		0xC0000184
-> +
-> +static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating);
-> +
->  /**
->   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
->   * @hdev:	VMBus's tracking struct for this root PCI bus
-> @@ -2748,8 +2752,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	struct pci_bus_d0_entry *d0_entry;
->  	struct hv_pci_compl comp_pkt;
->  	struct pci_packet *pkt;
-> +	bool retry = true;
->  	int ret;
->  
-> +enter_d0_retry:
->  	/*
->  	 * Tell the host that the bus is ready to use, and moved into the
->  	 * powered-on state.  This includes telling the host which region
-> @@ -2780,6 +2786,30 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  		dev_err(&hdev->device,
->  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
->  			comp_pkt.completion_status);
-> +
-> +		/*
-> +		 * In certain case (Kdump) the pci device of interest was
-> +		 * not cleanly shut down and resource is still held on host
-> +		 * side, the host could return STATUS_INVALID_DEVICE_STATE.
-> +		 * We need to explicitly request host to release the resource
-> +		 * and try to enter D0 again.
-> +		 */
-> +		if (comp_pkt.completion_status == STATUS_INVALID_DEVICE_STATE &&
-> +		    retry) {
-> +			ret = hv_pci_bus_exit(hdev, true);
-> +
-> +			retry = false;
-> +
-> +			if (ret == 0) {
-> +				kfree(pkt);
-> +				goto enter_d0_retry;
-> +			} else {
-> +				dev_err(&hdev->device,
-> +					"PCI bus D0 exit failed with ret %d\n",
-> +					ret);
-> +			}
-> +		}
-> +
->  		ret = -EPROTO;
->  		goto exit;
->  	}
-> @@ -3136,7 +3166,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  
->  	ret = hv_pci_allocate_bridge_windows(hbus);
->  	if (ret)
-> -		goto free_irq_domain;
-> +		goto exit_d0;
->  
->  	ret = hv_send_resources_allocated(hdev);
->  	if (ret)
-> @@ -3154,6 +3184,8 @@ static int hv_pci_probe(struct hv_device *hdev,
->  
->  free_windows:
->  	hv_pci_free_bridge_windows(hbus);
-> +exit_d0:
-> +	(void) hv_pci_bus_exit(hdev, true);
->  free_irq_domain:
->  	irq_domain_remove(hbus->irq_domain);
->  free_fwnode:
-> -- 
-> 2.20.1
-> 
+Do note that netvsc_xmit still returns int because netvsc_xmit has a
+potential return from netvsc_vf_xmit, which does not return netdev_tx_t
+because of the call to dev_queue_xmit.
+
+I am not sure if that is an oversight that was introduced by
+commit 0c195567a8f6e ("netvsc: transparent VF management") or if
+everything works properly as it is now.
+
+My patch is purely concerned with making the definition match the
+prototype so it should be NFC aside from avoiding the CFI panic.
+
+ drivers/net/hyperv/netvsc_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index d8e86bdbfba1e..ebcfbae056900 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -707,7 +707,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
+ 	goto drop;
+ }
+ 
+-static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
++				     struct net_device *ndev)
+ {
+ 	return netvsc_xmit(skb, ndev, false);
+ }
+
+base-commit: 51184ae37e0518fd90cb437a2fbc953ae558cd0d
+-- 
+2.26.2
+
