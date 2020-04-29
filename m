@@ -2,178 +2,166 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E03EE1BD92C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2020 12:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 671B51BE356
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2020 18:08:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgD2KLD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Apr 2020 06:11:03 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51484 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgD2KLC (ORCPT
+        id S1726556AbgD2QId (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Apr 2020 12:08:33 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40698 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726476AbgD2QId (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:11:02 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x4so1373168wmj.1;
-        Wed, 29 Apr 2020 03:10:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vz/g/XMqIs4+3bJj4KMsSH/NojL2z79eX4XfzIHYwvc=;
-        b=e/t6lXt0tYPWe1v4Qwl/8noBqDiAe46PSeUdM5Qz5Kh7K0vbpv/TuUFjrsagtujxR/
-         I8xBG0udt8jImYyqwKFp3dc4ZErmFb3oFfi30/IF3uj3zRvhaLscP1Z0H93+Ue5y29+o
-         vZVEXpvp5uYq81coQ6/KtkMDfO+/g0s7kupXvI1/uNQBfaJDIen/dbQN817PlOxVmPpL
-         mSTegBAuSShS1MyTkST9jez7DJjVWC3uB/75If2M/ZuROlDixxgCeDoMyoWzcsM41LYK
-         E6PUyLGGauKvKRcblBW29Q1ccwzdVNrPlDa9fd41qM3/kjZRAzKDwftKhe32sdEri65N
-         kCjw==
-X-Gm-Message-State: AGi0PuYAsaB6h6cT0lCHkc3zNgAF/gJiWlCoPTHQXywfEGt4HFJpj0ij
-        UbXqVh6ti5fyCvqY/gLISNw=
-X-Google-Smtp-Source: APiQypKx4cFy0kcsoHdBNgSlGBSmvnc8afFi1TICx+XHSXd4nelg1ctMppj6hVt9w16Aw4M+kHUqWg==
-X-Received: by 2002:a7b:c247:: with SMTP id b7mr2399071wmj.35.1588155059292;
-        Wed, 29 Apr 2020 03:10:59 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id v19sm30385573wra.57.2020.04.29.03.10.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 03:10:58 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 11:10:55 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>, davem@davemloft.net
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Wed, 29 Apr 2020 12:08:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588176511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=RqcnavPFirGVOTXHhjY5q5DM9FLFgis6bxz7RvWdVJE=;
+        b=NF6SEmoBSLh35Rr3F64TX3eRiuQXkAGm8LorPyCM5HmprmxyAAldtWA+3Sj1UyO2h+TvVv
+        iLSafCwCdbKMvRI2i0Hqzrv7uQ3RW+yhIwnLc7KFGzOxOMS+tfZjLU591tlom7QnJKafiB
+        JGqZLz+jaj54hzZwZxm7d62QrC+Rhj8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-F36vCcGRMVu93iH7TXheIg-1; Wed, 29 Apr 2020 12:08:26 -0400
+X-MC-Unique: F36vCcGRMVu93iH7TXheIg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4E0C1895A28;
+        Wed, 29 Apr 2020 16:08:21 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-55.ams2.redhat.com [10.36.114.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAF7C605FB;
+        Wed, 29 Apr 2020 16:08:07 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Len Brown <lenb@kernel.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefano Stabellini <sstabellini@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH v2] hv_netvsc: Fix netvsc_start_xmit's return type
-Message-ID: <20200429101055.rdrpchkypbkwxscj@debian>
-References: <20200428100828.aslw3pn5nhwtlsnt@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
- <20200428175455.2109973-1-natechancellor@gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH v1 0/3] mm/memory_hotplug: Make virtio-mem play nicely with kexec-tools
+Date:   Wed, 29 Apr 2020 18:08:00 +0200
+Message-Id: <20200429160803.109056-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428175455.2109973-1-natechancellor@gmail.com>
-User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-David
+This series is based on [1]:
+	[PATCH v2 00/10] virtio-mem: paravirtualized memory
+That will hopefull get picked up soon, rebased to -next.
 
-Do you want this to go through net tree? I can submit it via hyperv tree
-if that's preferred.
+The following patches were reverted from -next [2]:
+	[PATCH 0/3] kexec/memory_hotplug: Prevent removal and accidental use
+As discussed in that thread, they should be reverted from -next already.
 
-Wei.
+In theory, if people agree, we could take the first two patches via the
+-mm tree now and the last (virtio-mem) patch via MST's tree once picking =
+up
+virtio-mem. No strong feelings.
 
-On Tue, Apr 28, 2020 at 10:54:56AM -0700, Nathan Chancellor wrote:
-> netvsc_start_xmit is used as a callback function for the ndo_start_xmit
-> function pointer. ndo_start_xmit's return type is netdev_tx_t but
-> netvsc_start_xmit's return type is int.
-> 
-> This causes a failure with Control Flow Integrity (CFI), which requires
-> function pointer prototypes and callback function definitions to match
-> exactly. When CFI is in enforcing, the kernel panics. When booting a
-> CFI kernel with WSL 2, the VM is immediately terminated because of this.
-> 
-> The splat when CONFIG_CFI_PERMISSIVE is used:
-> 
-> [    5.916765] CFI failure (target: netvsc_start_xmit+0x0/0x10):
-> [    5.916771] WARNING: CPU: 8 PID: 0 at kernel/cfi.c:29 __cfi_check_fail+0x2e/0x40
-> [    5.916772] Modules linked in:
-> [    5.916774] CPU: 8 PID: 0 Comm: swapper/8 Not tainted 5.7.0-rc3-next-20200424-microsoft-cbl-00001-ged4eb37d2c69-dirty #1
-> [    5.916776] RIP: 0010:__cfi_check_fail+0x2e/0x40
-> [    5.916777] Code: 48 c7 c7 70 98 63 a9 48 c7 c6 11 db 47 a9 e8 69 55 59 00 85 c0 75 02 5b c3 48 c7 c7 73 c6 43 a9 48 89 de 31 c0 e8 12 2d f0 ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 00 cc cc 00 00 85 f6 74 25
-> [    5.916778] RSP: 0018:ffffa803c0260b78 EFLAGS: 00010246
-> [    5.916779] RAX: 712a1af25779e900 RBX: ffffffffa8cf7950 RCX: ffffffffa962cf08
-> [    5.916779] RDX: ffffffffa9c36b60 RSI: 0000000000000082 RDI: ffffffffa9c36b5c
-> [    5.916780] RBP: ffff8ffc4779c2c0 R08: 0000000000000001 R09: ffffffffa9c3c300
-> [    5.916781] R10: 0000000000000151 R11: ffffffffa9c36b60 R12: ffff8ffe39084000
-> [    5.916782] R13: ffffffffa8cf7950 R14: ffffffffa8d12cb0 R15: ffff8ffe39320140
-> [    5.916784] FS:  0000000000000000(0000) GS:ffff8ffe3bc00000(0000) knlGS:0000000000000000
-> [    5.916785] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    5.916786] CR2: 00007ffef5749408 CR3: 00000002f4f5e000 CR4: 0000000000340ea0
-> [    5.916787] Call Trace:
-> [    5.916788]  <IRQ>
-> [    5.916790]  __cfi_check+0x3ab58/0x450e0
-> [    5.916793]  ? dev_hard_start_xmit+0x11f/0x160
-> [    5.916795]  ? sch_direct_xmit+0xf2/0x230
-> [    5.916796]  ? __dev_queue_xmit.llvm.11471227737707190958+0x69d/0x8e0
-> [    5.916797]  ? neigh_resolve_output+0xdf/0x220
-> [    5.916799]  ? neigh_connected_output.cfi_jt+0x8/0x8
-> [    5.916801]  ? ip6_finish_output2+0x398/0x4c0
-> [    5.916803]  ? nf_nat_ipv6_out+0x10/0xa0
-> [    5.916804]  ? nf_hook_slow+0x84/0x100
-> [    5.916807]  ? ip6_input_finish+0x8/0x8
-> [    5.916807]  ? ip6_output+0x6f/0x110
-> [    5.916808]  ? __ip6_local_out.cfi_jt+0x8/0x8
-> [    5.916810]  ? mld_sendpack+0x28e/0x330
-> [    5.916811]  ? ip_rt_bug+0x8/0x8
-> [    5.916813]  ? mld_ifc_timer_expire+0x2db/0x400
-> [    5.916814]  ? neigh_proxy_process+0x8/0x8
-> [    5.916816]  ? call_timer_fn+0x3d/0xd0
-> [    5.916817]  ? __run_timers+0x2a9/0x300
-> [    5.916819]  ? rcu_core_si+0x8/0x8
-> [    5.916820]  ? run_timer_softirq+0x14/0x30
-> [    5.916821]  ? __do_softirq+0x154/0x262
-> [    5.916822]  ? native_x2apic_icr_write+0x8/0x8
-> [    5.916824]  ? irq_exit+0xba/0xc0
-> [    5.916825]  ? hv_stimer0_vector_handler+0x99/0xe0
-> [    5.916826]  ? hv_stimer0_callback_vector+0xf/0x20
-> [    5.916826]  </IRQ>
-> [    5.916828]  ? hv_stimer_global_cleanup.cfi_jt+0x8/0x8
-> [    5.916829]  ? raw_setsockopt+0x8/0x8
-> [    5.916830]  ? default_idle+0xe/0x10
-> [    5.916832]  ? do_idle.llvm.10446269078108580492+0xb7/0x130
-> [    5.916833]  ? raw_setsockopt+0x8/0x8
-> [    5.916833]  ? cpu_startup_entry+0x15/0x20
-> [    5.916835]  ? cpu_hotplug_enable.cfi_jt+0x8/0x8
-> [    5.916836]  ? start_secondary+0x188/0x190
-> [    5.916837]  ? secondary_startup_64+0xa5/0xb0
-> [    5.916838] ---[ end trace f2683fa869597ba5 ]---
-> 
-> Avoid this by using the right return type for netvsc_start_xmit.
-> 
-> Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1009
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
-> 
-> v1 -> v2:
-> 
-> * Move splat into commit message rather than issue.
-> 
-> Comment from previous version:
-> 
-> Do note that netvsc_xmit still returns int because netvsc_xmit has a
-> potential return from netvsc_vf_xmit, which does not return netdev_tx_t
-> because of the call to dev_queue_xmit.
-> 
-> I am not sure if that is an oversight that was introduced by
-> commit 0c195567a8f6e ("netvsc: transparent VF management") or if
-> everything works properly as it is now.
-> 
-> My patch is purely concerned with making the definition match the
-> prototype so it should be NFC aside from avoiding the CFI panic.
-> 
->  drivers/net/hyperv/netvsc_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-> index d8e86bdbfba1e..ebcfbae056900 100644
-> --- a/drivers/net/hyperv/netvsc_drv.c
-> +++ b/drivers/net/hyperv/netvsc_drv.c
-> @@ -707,7 +707,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
->  	goto drop;
->  }
->  
-> -static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> +static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-> +				     struct net_device *ndev)
->  {
->  	return netvsc_xmit(skb, ndev, false);
->  }
-> 
-> base-commit: 51184ae37e0518fd90cb437a2fbc953ae558cd0d
-> -- 
-> 2.26.2
-> 
+
+Memory added by virtio-mem is special and might contain logical holes,
+especially after memory unplug, but also when adding memory in
+sub-section size. While memory in these holes can usually be read, that
+memory should not be touched. virtio-mem managed device memory is never
+exposed via any firmware memmap (esp., e820). The device driver will
+request to plug memory from the hypervisor and add it to Linux.
+
+On a cold start, all memory is unplugged, and the guest driver will first
+request to plug memory from the hypervisor, to then add it to Linux. Afte=
+r
+a reboot, all memory will get unplugged (except in rare, special cases). =
+In
+case the device driver comes up and detects that some memory is still
+plugged after a reboot, it will manually request to unplug all memory fro=
+m
+the hypervisor first - to then request to plug memory from the hypervisor
+and add to Linux. This is essentially a defragmentation step, where all
+logical holes are removed.
+
+As the device driver is responsible for detecting, adding and managing th=
+at
+memory, also kexec should treat it like that. It is special. We need a wa=
+y
+to teach kexec-tools to not add that memory to the fixed-up firmware
+memmap, to not place kexec images onto this memory, but still allow kdump
+to dump it. Add a flag to tell memory hotplug code to
+not create /sys/firmware/memmap entries and to indicate it via
+"System RAM (driver managed)" in /proc/iomem.
+
+Before this series, kexec_file_load() already did the right thing (for
+virtio-mem) by not adding that memory to the fixed-up firmware memmap and
+letting the device driver handle it. With this series, also kexec_load() =
+-
+which relies on user space to provide a fixed up firmware memmap - does
+the right thing with virtio-mem memory.
+
+When the virtio-mem device driver(s) come up, they will request to unplug
+all memory from the hypervisor first (esp. defragment), to then request t=
+o
+plug consecutive memory ranges from the hypervisor, and add them to Linux
+- just like on a reboot where we still have memory plugged.
+
+[1] https://lore.kernel.org/r/20200311171422.10484-1-david@redhat.com/
+[2] https://lore.kernel.org/r/20200326180730.4754-1-james.morse@arm.com
+
+David Hildenbrand (3):
+  mm/memory_hotplug: Prepare passing flags to add_memory() and friends
+  mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
+  virtio-mem: Add memory with MHP_DRIVER_MANAGED
+
+ arch/powerpc/platforms/powernv/memtrace.c     |  2 +-
+ .../platforms/pseries/hotplug-memory.c        |  2 +-
+ drivers/acpi/acpi_memhotplug.c                |  2 +-
+ drivers/base/memory.c                         |  2 +-
+ drivers/dax/kmem.c                            |  2 +-
+ drivers/hv/hv_balloon.c                       |  2 +-
+ drivers/s390/char/sclp_cmd.c                  |  2 +-
+ drivers/virtio/virtio_mem.c                   |  3 +-
+ drivers/xen/balloon.c                         |  2 +-
+ include/linux/memory_hotplug.h                | 15 +++++++--
+ mm/memory_hotplug.c                           | 31 +++++++++++++------
+ 11 files changed, 44 insertions(+), 21 deletions(-)
+
+--=20
+2.25.3
+
