@@ -2,41 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6A891BE372
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2020 18:09:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDDA61BE423
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Apr 2020 18:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgD2QIw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Apr 2020 12:08:52 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31038 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726858AbgD2QIw (ORCPT
+        id S1726780AbgD2QmB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Apr 2020 12:42:01 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35340 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726493AbgD2QmA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:08:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588176530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cZEMgwn0RdunIfg2yunfCJF8r1H9z41yqLf2sGNY0wM=;
-        b=M0WbGyn9Y19J0as6sn0UpHe8NbyjD34/LSPGlzdKvj7WR00VV9+gvk4tmvIkwqCWT9U/4T
-        wcWrDIQHYBZab7OgRPUYvsSApxpciT/uXpP1HQryPqjU8Nb+B1PJZpe6xqLGi4nMBznR0Q
-        gsl9e4Zwo6FfbniZqKlhsXg5FO9KvSU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-pvtDQR0OOPCL64QlN-zLcg-1; Wed, 29 Apr 2020 12:08:46 -0400
-X-MC-Unique: pvtDQR0OOPCL64QlN-zLcg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B80BA107ACCA;
-        Wed, 29 Apr 2020 16:08:44 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-55.ams2.redhat.com [10.36.114.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D1E3605F7;
-        Wed, 29 Apr 2020 16:08:41 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        Wed, 29 Apr 2020 12:42:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r26so2765278wmh.0;
+        Wed, 29 Apr 2020 09:41:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b1NmnG+Bha+R6DCsicsXkjR18of0wt/SYtjmCqwDrqU=;
+        b=PR+6NhRs7ma3EUG96L3i8LgOEy/NDjUnLNIwxK3li0CbGM8rXzGX+vp6eF78DZ/nSM
+         QKKNjhEniYZCMrsVyoqFGrDqevTsPXmtyJvMe3kYaYe/UZPzCPf9H9f3cyxcYlVi7ma7
+         xesPgqgAFheQeKVS9kCy+VG3z6j6ybPcgFfzNgV2+aKaBM2DJErDrjs8mFKaDEEk/kfp
+         WpOxVxh1u+b0QgaVsv6Kum4Aq5GUArU7d/Gok3e4rQicnPLolDibhGNG2EfCDbMUknD6
+         ZnECIh6/ivV5WxnBvqV0ICbyIrx88Vxt7h3WtHHNCDFV3lUggPT/dAs5VlAx00g+1cWl
+         GV0Q==
+X-Gm-Message-State: AGi0PuaPD2jbx8GrkKc+at1Aw19eXwGMlU3ydOlAcU7Z/ajiTWQ6KJp+
+        B/VN+Z+qmZ8gvWrBfBu13rE=
+X-Google-Smtp-Source: APiQypK92COmCk6jtDXQuM8RbqIzlQmTZkmvIjtD7/GMtqebIJTWbJ+7ip3K+A9bRbw+AFyvMNQEDw==
+X-Received: by 2002:a1c:2383:: with SMTP id j125mr4175112wmj.6.1588178518352;
+        Wed, 29 Apr 2020 09:41:58 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id i25sm8360761wml.43.2020.04.29.09.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 09:41:57 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 16:41:55 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
         virtualization@lists.linux-foundation.org,
         linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
         linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
@@ -44,83 +46,73 @@ Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
         Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Jason Wang <jasowang@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>, Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
         Eric Biederman <ebiederm@xmission.com>
-Subject: [PATCH v1 3/3] virtio-mem: Add memory with MHP_DRIVER_MANAGED
-Date:   Wed, 29 Apr 2020 18:08:03 +0200
-Message-Id: <20200429160803.109056-4-david@redhat.com>
-In-Reply-To: <20200429160803.109056-1-david@redhat.com>
+Subject: Re: [PATCH v1 1/3] mm/memory_hotplug: Prepare passing flags to
+ add_memory() and friends
+Message-ID: <20200429164154.ctflq4ouwrwwe4wq@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
 References: <20200429160803.109056-1-david@redhat.com>
+ <20200429160803.109056-2-david@redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429160803.109056-2-david@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-We don't want /sys/firmware/memmap entries and we want to indicate
-our memory as "System RAM (driver managed)" in /proc/iomem. This is
-especially relevant for kexec-tools, which have to be updated to
-support dumping virtio-mem memory after this patch. Expected behavior in
-kexec-tools:
-- Don't use this memory when creating a fixed-up firmware memmap. Works
-  now out of the box on x86-64.
-- Don't use this memory for placing kexec segments. Works now out of the
-  box on x86-64.
-- Consider "System RAM (driver managed)" when creating the elfcorehdr
-  for kdump. This memory has to be dumped. Needs update of kexec-tools.
+On Wed, Apr 29, 2020 at 06:08:01PM +0200, David Hildenbrand wrote:
+> We soon want to pass flags - prepare for that.
+> 
+> This patch is based on a similar patch by Oscar Salvador:
+> 
+> https://lkml.kernel.org/r/20190625075227.15193-3-osalvador@suse.de
+> 
+[...]
+> ---
+>  drivers/hv/hv_balloon.c                         |  2 +-
 
-With this patch on x86-64:
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 32e3bc0aa665..0194bed1a573 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -726,7 +726,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+>  
+>  		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
+>  		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+> -				(HA_CHUNK << PAGE_SHIFT));
+> +				(HA_CHUNK << PAGE_SHIFT), 0);
+>  
+>  		if (ret) {
+>  			pr_err("hot_add memory failed error is %d\n", ret);
 
-/proc/iomem:
-	00000000-00000fff : Reserved
-	00001000-0009fbff : System RAM
-	[...]
-	fffc0000-ffffffff : Reserved
-	100000000-13fffffff : System RAM
-	140000000-147ffffff : System RAM (driver managed)
-	340000000-347ffffff : System RAM (driver managed)
-	348000000-34fffffff : System RAM (driver managed)
-	[..]
-	3280000000-32ffffffff : PCI Bus 0000:00
-
-/sys/firmware/memmap:
-	0000000000000000-000000000009fc00 (System RAM)
-	000000000009fc00-00000000000a0000 (Reserved)
-	00000000000f0000-0000000000100000 (Reserved)
-	0000000000100000-00000000bffe0000 (System RAM)
-	00000000bffe0000-00000000c0000000 (Reserved)
-	00000000feffc000-00000000ff000000 (Reserved)
-	00000000fffc0000-0000000100000000 (Reserved)
-	0000000100000000-0000000140000000 (System RAM)
-
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/virtio/virtio_mem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 3101cbf9e59d..6f658d1aeac4 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -421,7 +421,8 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, u=
-nsigned long mb_id)
- 		nid =3D memory_add_physaddr_to_nid(addr);
-=20
- 	dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
--	return add_memory(nid, addr, memory_block_size_bytes(), 0);
-+	return add_memory(nid, addr, memory_block_size_bytes(),
-+			  MHP_DRIVER_MANAGED);
- }
-=20
- /*
---=20
-2.25.3
-
+Acked-by: Wei Liu <wei.liu@kernel.org>
