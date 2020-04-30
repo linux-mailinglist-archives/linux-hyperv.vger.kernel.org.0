@@ -2,265 +2,190 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F81D1C00A3
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2020 17:43:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60AE61C00E0
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2020 17:53:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgD3PnA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 30 Apr 2020 11:43:00 -0400
-Received: from mail-co1nam11on2133.outbound.protection.outlook.com ([40.107.220.133]:45551
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726343AbgD3Pm7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:42:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CWgBHvDcnX8UnFL4WySAclcNuRivpsd/4QHzus7Rr0tv0SOx+GjpnNE6/SaFZHwzyLkZsOCYkHeGWkHkOAJ8Gxx1XFQfWjmkl4y1V7gRI/7CyZt4Td1cW8ZdbySqrIihbioVQOA5GHnEL/qMqLLdL4jQuro4kmM4wQWk7U3yL7xvxYpAdpca03oR5GglpygrjZzb5QGo59+HnTPWbADikcgfDVGbI1VB+2UVTEXcd05i+5JJ0cPAh7sN4zSWsKdh3Oh6ZCI6hj8SJlGSfvitj5ilNelYZCbd9OxgJ85xim1TUOKpgmU/ga8Mgt9ONvK/EAjSOEySLADkTjnDPUNg2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oQBdZ/fGcozTanySAideIcVdPprG4AIT8zF/vq9KAuY=;
- b=hr6Bav5y8VcQp3uHpC6knN7LF9LMm5fsMipzvzlge2yKs5fa4qHf/4MVS2sJpG0iIHwj2WpPcWb+ORBnYlSAK8sZYKMEDQS2vM5A6/wqL0rlOppSgM9xKPrDK+BI+4fBvzUENaobEJXeCzbr3TGgYsovEGkUTNB1xV7i5yVgx0G0KO7n9q/hI2FtWl+LnGsGr/y2+HJxQYVEcBnCZjFr62E4Xp7VKpSE56bNp735kaM2ReXQ+M5bP2ZDYJG4CVRkjNZCx96Xg50+mIxzkKZs6uO4/7TbUbpcW3x2UMwvPG/+YTMlujlK4K3F1wN7KTXOfxxq9NmkPPXVI98Qb23eGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oQBdZ/fGcozTanySAideIcVdPprG4AIT8zF/vq9KAuY=;
- b=ASlBt2v5SgCKWnOVShqXs61x1bSYWP1gXMwb694wc8m9YUJODy6CSp4Xtap9lDO7B6a7ax/S3btnctFp0EPwKczpRQ/Zxzu7Qk35hN29lAGK420astjlg6UQCUYz1apShl22VLY4fDkNWsL/iQdRLp8SLvgCo/i26sKTRg6VjFw=
-Received: from MN2PR21MB1437.namprd21.prod.outlook.com (2603:10b6:208:208::10)
- by MN2PR21MB1149.namprd21.prod.outlook.com (2603:10b6:208:fd::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.6; Thu, 30 Apr
- 2020 15:42:55 +0000
-Received: from MN2PR21MB1437.namprd21.prod.outlook.com
- ([fe80::453:5eca:93bd:5afa]) by MN2PR21MB1437.namprd21.prod.outlook.com
- ([fe80::453:5eca:93bd:5afa%6]) with mapi id 15.20.2979.005; Thu, 30 Apr 2020
- 15:42:55 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: RE: [PATCH v2] hv_netvsc: Fix netvsc_start_xmit's return type
-Thread-Topic: [PATCH v2] hv_netvsc: Fix netvsc_start_xmit's return type
-Thread-Index: AQHWHYZGNBVu4gM0F0qaHyJdA0wqmKiQy0CAgABjYoCAAJnwsA==
-Date:   Thu, 30 Apr 2020 15:42:55 +0000
-Message-ID: <MN2PR21MB14373FE40A4D3AD012FAEC49CAAA0@MN2PR21MB1437.namprd21.prod.outlook.com>
-References: <20200428100828.aslw3pn5nhwtlsnt@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
- <20200428175455.2109973-1-natechancellor@gmail.com>
- <MW2PR2101MB10522D4D5EBAB469FE5B4D8BD7AA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <20200430060151.GA3548130@ubuntu-s3-xlarge-x86>
-In-Reply-To: <20200430060151.GA3548130@ubuntu-s3-xlarge-x86>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-30T15:42:54.3419050Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5a6f0a0d-2bde-46e2-8635-0d6d252653b2;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [96.61.83.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 25283589-86b4-4f36-ae3c-08d7ed1d26ce
-x-ms-traffictypediagnostic: MN2PR21MB1149:|MN2PR21MB1149:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR21MB11498AAB5E6A5D80C98A6F4ACAAA0@MN2PR21MB1149.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0389EDA07F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sJQ02fUP6ojI9CpTn9va7j/XLLt46HY4MUvQmbadjIlVV7fnMJthnWGLy+Dg+bZsWAptnzKC1Yfq4Pd28TcTGRGkugZtAJBA4TDiBYXSmeBPRv0q3cqIoNnvhQb3nC3fulXULFRumnOMbnbbLFn9qDqPYbvl+SFEIWgT6RnDjyGmMNpU0XrGZszNi3lD9QL4ZS8RCXVyMaHbmfe9ik72qb+EnYPjc4a4/VbT1f4l+J5Ti5WSdm6+xDNS+XpHOh0GFpHg6eLwPbihGufzPJ46vKmyVBd4kF98LuZNk2U7NT3GfnfYwNWhOCjOQ5o+UKvUPevGyfqGItSAae12gZGOKHlywmgwoVCNAvxonDxytEsyPMNhCuZjyMzCBTN4Mp5V2L9Xn+Seq6PRuK9Trz+cQ3ysCocOOjjp32xTIih56A8Z1xoGC/Iz6YqnOvLYn1h/
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR21MB1437.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(186003)(52536014)(478600001)(4326008)(5660300002)(71200400001)(66556008)(66946007)(10290500003)(76116006)(66446008)(82950400001)(82960400001)(64756008)(6636002)(66476007)(54906003)(6506007)(55016002)(316002)(26005)(86362001)(7696005)(110136005)(33656002)(8990500004)(53546011)(8676002)(8936002)(2906002)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: WWSgXzDaGSjwNjBl+fz44967biH3cM+w6FvwqsuvsGPGm8+gGnh8ZgpU+DjA4DfAWGIQCF8aV/qdyOL2j3MLeq6ayCfBAuaBPdnRsymXG5Khc/HgpCjDXf8cUzqig6s9QZr4UvqKxNCP5fL/5VP1eJZ1JFVUCfT5bPmToca4+Cctr2cxahMEbw31I1Gh4hVNwuHwdV07+MF4OxMGL9dX08k7WZFpzyB6QSTPQqZFiT2dM4WXomDUlxN7NiRPdAdVZXSfWTPuQWi/+gPXEwan6ON3owApqGOfjy6b0PCHGKeEMxoi7yjlgoxhoehG9N1tT0xDbNaLuPivKZeW51WbyA2+RT0t6RiucWFQ+NZMNYC33o0URquQ7JumWAeUakZyTOpVSdkFkDvwG1aNgmba9RAlcVLpAGrwaYXvynRn+ccfeek7X11+ifw2EzqMa3FfO2LYMPTswKYIaoYLpYIz3+XsArbpKf4eSKwhjTN2Nyr2P+zIIj/bR9UaJ3Rve8sPqFgatoWJGkovVSL6pHVj5woQkiSR3RcwVGaD9LnTVD75Nt498u7ue93THZOYiZQwu7sR1XAGYtiFJLiYJxHKuAqienKy8+Ph4JUgfn3sdbjIEOJyqXaPN9qUweGj48MYrZGCddMjOkBvRAxAGvWVVKX3miNBRa8qhSm39crOMuVmUm3bXcA9XuL6HVUfg0rdySnHfrDtGDwN2bJa4LDWJpJ6UoVmNDNexS3X1koWjH01KOqNgP7TV8GnUSpuO5AgfsbeWtzUWx6EPd1Qvp+I436NVQHKhGKAeZC38CaRQmw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726835AbgD3Pwv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 30 Apr 2020 11:52:51 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21491 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726968AbgD3Pwu (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:52:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588261969;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=OP9zUYIno6x6iC1SiniLiH6Fo13bK6xGgljySSJVtbc=;
+        b=MaeNsOFPzUdEg5kMeH8PcGlDdG0C8jBywQqzGykS59e2DBr6Tx96PwffEykq8hljtxMbmN
+        AHqUg8Nh4p0eCjsIDiPP7ZNhoKhtZExbUa+odC/w+QiwLSl6T3qHLhdg+/y2DMBpO4nx3e
+        V/fXqjSadZp8Np8uixjih65JaqXZvJw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370-scg0K8IrNv2RPP-fweQOMw-1; Thu, 30 Apr 2020 11:52:44 -0400
+X-MC-Unique: scg0K8IrNv2RPP-fweQOMw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 694A264AD9;
+        Thu, 30 Apr 2020 15:52:42 +0000 (UTC)
+Received: from [10.36.113.172] (ovpn-113-172.ams2.redhat.com [10.36.113.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 758B8605DE;
+        Thu, 30 Apr 2020 15:52:36 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
+ MHP_NO_FIRMWARE_MEMMAP
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+References: <20200430102908.10107-1-david@redhat.com>
+ <20200430102908.10107-3-david@redhat.com>
+ <87pnbp2dcz.fsf@x220.int.ebiederm.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
+Date:   Thu, 30 Apr 2020 17:52:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25283589-86b4-4f36-ae3c-08d7ed1d26ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 15:42:55.5853
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KpHitXjOyFdQ0WNo7QBJl4d1NER1pG4tBidWhGLHP+tRuTnYxcRFxNFORpUCwHkSuYGKcJF8yjKz7T1ocKjWIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1149
+In-Reply-To: <87pnbp2dcz.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Nathan Chancellor <natechancellor@gmail.com>
-> Sent: Thursday, April 30, 2020 2:02 AM
-> To: Michael Kelley <mikelley@microsoft.com>
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; Wei Liu <wei.liu@kernel.org>; linux-
-> hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; clang-built-linux@googlegroups.com; Sami
-> Tolvanen <samitolvanen@google.com>
-> Subject: Re: [PATCH v2] hv_netvsc: Fix netvsc_start_xmit's return type
+On 30.04.20 17:38, Eric W. Biederman wrote:
+> David Hildenbrand <david@redhat.com> writes:
 >=20
-> Hi Michael,
+>> Some devices/drivers that add memory via add_memory() and friends (e.g=
+.,
+>> dax/kmem, but also virtio-mem in the future) don't want to create entr=
+ies
+>> in /sys/firmware/memmap/ - primarily to hinder kexec from adding this
+>> memory to the boot memmap of the kexec kernel.
+>>
+>> In fact, such memory is never exposed via the firmware memmap as Syste=
+m
+>> RAM (e.g., e820), so exposing this memory via /sys/firmware/memmap/ is
+>> wrong:
+>>  "kexec needs the raw firmware-provided memory map to setup the
+>>   parameter segment of the kernel that should be booted with
+>>   kexec. Also, the raw memory map is useful for debugging. For
+>>   that reason, /sys/firmware/memmap is an interface that provides
+>>   the raw memory map to userspace." [1]
+>>
+>> We don't have to worry about firmware_map_remove() on the removal path=
+.
+>> If there is no entry, it will simply return with -EINVAL.
+>>
+>> [1]
+>> https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-me=
+mmap
 >=20
-> On Thu, Apr 30, 2020 at 12:06:09AM +0000, Michael Kelley wrote:
-> > From: Nathan Chancellor <natechancellor@gmail.com> Sent: Tuesday,
-> > April 28, 2020 10:55 AM
-> > >
-> > > Do note that netvsc_xmit still returns int because netvsc_xmit has a
-> > > potential return from netvsc_vf_xmit, which does not return
-> > > netdev_tx_t because of the call to dev_queue_xmit.
-> > >
-> > > I am not sure if that is an oversight that was introduced by commit
-> > > 0c195567a8f6e ("netvsc: transparent VF management") or if everything
-> > > works properly as it is now.
-> > >
-> > > My patch is purely concerned with making the definition match the
-> > > prototype so it should be NFC aside from avoiding the CFI panic.
-> > >
-> >
-> > While it probably works correctly now, I'm not too keen on just
-> > changing the return type for netvsc_start_xmit() and assuming the
-> > 'int' that is returned from netvsc_xmit() will be correctly mapped to
-> > the netdev_tx_t enum type.  While that mapping probably happens
-> > correctly at the moment, this really should have a more holistic fix.
 >=20
-> While it might work correctly, I am not sure that the mapping is correct,
-> hence that comment.
+> You know what this justification is rubbish, and I have previously
+> explained why it is rubbish.
+
+Actually, no, I don't think it is rubbish. See patch #3 and the cover
+letter why this is the right thing to do *for special memory*, *not
+ordinary DIMMs*.
+
+And to be quite honest, I think your response is a little harsh. I don't
+recall you replying to my virtio-mem-related comments.
+
 >=20
-> netdev_tx_t is an enum with two acceptable types, 0x00 and 0x10. Up until
-> commit 0c195567a8f6e ("netvsc: transparent VF management"), netvsc_xmit
-> was guaranteed to return something of type netdev_tx_t.
+> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 >=20
-> However, after said commit, we could return anything from netvsc_vf_xmit,
-> which in turn calls dev_queue_xmit then __dev_queue_xmit which will
-> return either an error code (-ENOMEM or
-> -ENETDOWN) or something from __dev_xmit_skb, which appears to be
-> NET_XMIT_SUCCESS, NET_XMIT_DROP, or NET_XMIT_CN.
+> This needs to be based on weather the added memory is ultimately normal
+> ram or is something special.
+
+Yes, that's what the caller are expected to decide, see patch #3.
+
+kexec should try to be as closely as possible to a real reboot - IMHO.
+
 >=20
-> It does not look like netvsc_xmit or netvsc_vf_xmit try to convert those
-> returns to netdev_tx_t in some way; netvsc_vf_xmit just passes the return
-> value up to netvsc_xmit, which is the part that I am unsure about...
+> At least when we are talking memory resources.  Keeping it out of the
+> firmware map that is fine.
 >=20
-> > Nathan -- are you willing to look at doing the more holistic fix?  Or
-> > should we see about asking Haiyang Zhang to do it?
+> If the hotplugged memory is the result of plugging a stick of ram
+> into the kernel and can and should used be like any other memory
+> it should be treated like any normal memory.
 >=20
-> I would be fine trying to look at a more holistic fix but I know basicall=
-y nothing
-> about this subsystem. I am unsure if something like this would be accepta=
-ble
-> or if something else needs to happen.
-> Otherwise, I'd be fine with you guys taking a look and just giving me
-> reported-by credit.
+> If the hotplugged memory is something special it should be treated as
+> something special.
 
-Here is more info regarding Linux network subsystem:
+I am really sorry, I can't make sense of what you are trying to say here.
 
-As said in "include/linux/netdevice.h", drivers are allowed to return any c=
-odes=20
-from the three different namespaces.
-And hv_netvsc needs to support "transparent VF", and calls netvsc_vf_xmit >=
 >=20
-dev_queue_xmit which returns qdisc return codes, and errnos like -ENOMEM,=20
-etc. These are compliant with the guideline below:
+> Justifying behavior by documentation that does not consider memory
+> hotplug is bad thinking.
 
-  79 /*
-  80  * Transmit return codes: transmit return codes originate from three d=
-ifferent
-  81  * namespaces:
-  82  *
-  83  * - qdisc return codes
-  84  * - driver transmit return codes
-  85  * - errno values
-  86  *
-  87  * Drivers are allowed to return any one of those in their hard_start_=
-xmit()
+Are you maybe confusing this patch series with the arm64 approach? This
+is not about ordinary hotplugged DIMMs.
 
-Also, ndo_start_xmit function pointer is used by upper layer functions whic=
-h can=20
-handles three types of the return codes.=20
-For example, in the calling stack: ndo_start_xmit << netdev_start_xmit <<=20
-xmit_one << dev_hard_start_xmit():
-The function dev_hard_start_xmit() uses dev_xmit_complete() to handle the=20
-return codes. It handles three types of the return codes correctly.
+I'd love to get Dan's, Dave's and Michal's opinion.
 
- 3483 struct sk_buff *dev_hard_start_xmit(struct sk_buff *first, struct net=
-_device *dev,
- 3484                                     struct netdev_queue *txq, int *re=
-t)
- 3485 {
- 3486         struct sk_buff *skb =3D first;
- 3487         int rc =3D NETDEV_TX_OK;
- 3488
- 3489         while (skb) {
- 3490                 struct sk_buff *next =3D skb->next;
- 3491
- 3492                 skb_mark_not_on_list(skb);
- 3493                 rc =3D xmit_one(skb, dev, txq, next !=3D NULL);
- 3494                 if (unlikely(!dev_xmit_complete(rc))) {
- 3495                         skb->next =3D next;
- 3496                         goto out;
- 3497                 }
- 3498
- 3499                 skb =3D next;
- 3500                 if (netif_tx_queue_stopped(txq) && skb) {
- 3501                         rc =3D NETDEV_TX_BUSY;
- 3502                         break;
- 3503                 }
- 3504         }
- 3505
- 3506 out:
- 3507         *ret =3D rc;
- 3508         return skb;
- 3509 }
-
-
- 118 /*
- 119  * Current order: NETDEV_TX_MASK > NET_XMIT_MASK >=3D 0 is significant=
-;
- 120  * hard_start_xmit() return < NET_XMIT_MASK means skb was consumed.
- 121  */
- 122 static inline bool dev_xmit_complete(int rc)
- 123 {
- 124         /*
- 125          * Positive cases with an skb consumed by a driver:
- 126          * - successful transmission (rc =3D=3D NETDEV_TX_OK)
- 127          * - error while transmitting (rc < 0)
- 128          * - error while queueing to a different device (rc & NET_XMIT=
-_MASK)
- 129          */
- 130         if (likely(rc < NET_XMIT_MASK))
- 131                 return true;
- 132
- 133         return false;
- 134 }
-
-Regarding "a more holistic fix", I believe the return type of ndo_start_xmi=
-t should be=20
-int, because of three namespaces of the return codes. This means to change =
-all network=20
-drivers. I'm not proposing to do this big change right now.
-
-So I have no objection of your patch.
-
+--=20
 Thanks,
-- Haiyang
 
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+David / dhildenb
 
