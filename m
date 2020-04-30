@@ -2,167 +2,262 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1BF61BEFF8
-	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2020 08:01:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A3D41BF12C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Apr 2020 09:19:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgD3GBz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 30 Apr 2020 02:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbgD3GBy (ORCPT
+        id S1726531AbgD3HTo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 30 Apr 2020 03:19:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30752 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726337AbgD3HTo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:01:54 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B3BC035494;
-        Wed, 29 Apr 2020 23:01:54 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 72so3991864otu.1;
-        Wed, 29 Apr 2020 23:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Aa3UitXCFbuTJBux4KS46nQWRa1PCa2MQgyHix6wDug=;
-        b=kZgnKradh+4gpoJwCp1MJ3tB7TuolRMw9SwiW7nibfo44Tv9PAsB2xns1+L2Wny7VP
-         U5ohBtK306N5Qr5pbHNRlQzHfZL6sCjqd8WS+IkMeKkYuEGEjd9zyWZW8LTb9quPYAg+
-         H+Qd3eXvxn5midIIHrT5Du22c9gxboErvMUtsuybABTXCuYN6phvJr20LkfUmUE3IpAS
-         56qpB7x4OHUkj4bd1iC1UvVpGfiY1OwB1i/BjYLTP7owSrOmey+7fB7wqMKo0TB6v5iw
-         /YFQyqD2pkVBxaVhzxjvOtb2Fqpkl9rWv6h+sX8Ha5exq3nNv47MYsme3sPzrKdqO9Fe
-         +B0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Aa3UitXCFbuTJBux4KS46nQWRa1PCa2MQgyHix6wDug=;
-        b=VSY3jiF/X8fgHYfmca8X3SPsOHi3W++wfFuy2xSe7N8xVDEJfTHhn5p6oaDUg36Rmr
-         9UVW1QKHhy5HI6/udVi9qB+q/MNJ6nFejIYyx4KnCQWYQ5PCD0WlWPyvGiIeyG17fnOa
-         W//TPuFuDb3ZW9MhNzyuxHMt24WrmV8lw35Urkh6qkqO5GftLzsy4uk1mlw4q/hv2Sye
-         zTeHXzR/BjPCZPMWaeXRTcv/rtFIWHG5AZTelRfciL9WDUuhRf0RTEWJ4TFkiZYJsxSz
-         WDkS5+XoaYOqLq7noNOJ6tqo3nkf6N4TXz/1wJ/p6mwMCl54NNUbk9W+ZBiMZfG27+Z3
-         AGvQ==
-X-Gm-Message-State: AGi0PuaqrWupxMeCLw4TPlQgLYSc0duzrgXQOQATA5gNKQ5Pf+jLXs2Y
-        HJrR/f8Tyc2p4pzZL3am4cw=
-X-Google-Smtp-Source: APiQypJA8lwMHREZR1z8guvVKGBGiHBDYRIAPZ3As+ejNU4wSQHxBl8S78vLQZNAcJrVqvEK+o6ZGA==
-X-Received: by 2002:a9d:6391:: with SMTP id w17mr1276881otk.325.1588226513591;
-        Wed, 29 Apr 2020 23:01:53 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 10sm993958oto.80.2020.04.29.23.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 23:01:53 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 23:01:51 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH v2] hv_netvsc: Fix netvsc_start_xmit's return type
-Message-ID: <20200430060151.GA3548130@ubuntu-s3-xlarge-x86>
-References: <20200428100828.aslw3pn5nhwtlsnt@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
- <20200428175455.2109973-1-natechancellor@gmail.com>
- <MW2PR2101MB10522D4D5EBAB469FE5B4D8BD7AA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Thu, 30 Apr 2020 03:19:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588231181;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=1ZVQP21/gRpjdQaiA5iEEwLdE4gKxXG18sO+uoyk77w=;
+        b=ileq5ABB/K7L1S2Ty5wugwGj2HPFWrlN+YFzd7/ncICcIYW1vY4wVOtb2/zlcB2BXQkN04
+        MDeY+r2ooaQqkDT+g/2XYrvkAHraaEGX9Wz79ouhGPpct4jTlhXRyOLF6gzG8zOcz/QKv9
+        qC+nhp02UGk90ICV+nvqib0R/h+7E9g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-rM1ylhAbMHiuxvT_teIprA-1; Thu, 30 Apr 2020 03:19:37 -0400
+X-MC-Unique: rM1ylhAbMHiuxvT_teIprA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16BAAEC1A7;
+        Thu, 30 Apr 2020 07:19:35 +0000 (UTC)
+Received: from [10.36.113.172] (ovpn-113-172.ams2.redhat.com [10.36.113.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B9F7360BF4;
+        Thu, 30 Apr 2020 07:19:27 +0000 (UTC)
+Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <20200429160803.109056-1-david@redhat.com>
+ <20200429160803.109056-3-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com>
+Date:   Thu, 30 Apr 2020 09:19:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB10522D4D5EBAB469FE5B4D8BD7AA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <20200429160803.109056-3-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Michael,
+On 29.04.20 18:08, David Hildenbrand wrote:
+> Some paravirtualized devices that add memory via add_memory() and
+> friends (esp. virtio-mem) don't want to create entries in
+> /sys/firmware/memmap/ - primarily to hinder kexec from adding this
+> memory to the boot memmap of the kexec kernel.
+>=20
+> In fact, such memory is never exposed via the firmware (e.g., e820), bu=
+t
+> only via the device, so exposing this memory via /sys/firmware/memmap/ =
+is
+> wrong:
+>  "kexec needs the raw firmware-provided memory map to setup the
+>   parameter segment of the kernel that should be booted with
+>   kexec. Also, the raw memory map is useful for debugging. For
+>   that reason, /sys/firmware/memmap is an interface that provides
+>   the raw memory map to userspace." [1]
+>=20
+> We want to let user space know that memory which is always detected,
+> added, and managed via a (device) driver - like memory managed by
+> virtio-mem - is special. It cannot be used for placing kexec segments
+> and the (device) driver is responsible for re-adding memory that
+> (eventually shrunk/grown/defragmented) memory after a reboot/kexec. It
+> should e.g., not be added to a fixed up firmware memmap. However, it sh=
+ould
+> be dumped by kdump.
+>=20
+> Also, such memory could behave differently than an ordinary DIMM - e.g.=
+,
+> memory managed by virtio-mem can have holes inside added memory resourc=
+e,
+> which should not be touched, especially for writing.
+>=20
+> Let's expose that memory as "System RAM (driver managed)" e.g., via
+> /pro/iomem.
+>=20
+> We don't have to worry about firmware_map_remove() on the removal path.
+> If there is no entry, it will simply return with -EINVAL.
+>=20
+> [1] https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware=
+-memmap
+>=20
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  include/linux/memory_hotplug.h |  8 ++++++++
+>  mm/memory_hotplug.c            | 20 ++++++++++++++++----
+>  2 files changed, 24 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotp=
+lug.h
+> index bf0e3edb8688..cc538584b39e 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -68,6 +68,14 @@ struct mhp_params {
+>  	pgprot_t pgprot;
+>  };
+> =20
+> +/* Flags used for add_memory() and friends. */
+> +
+> +/*
+> + * Don't create entries in /sys/firmware/memmap/ and expose memory as
+> + * "System RAM (driver managed)" in e.g., /proc/iomem
+> + */
+> +#define MHP_DRIVER_MANAGED		1
+> +
+>  /*
+>   * Zone resizing functions
+>   *
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index ebdf6541d074..cfa0721280aa 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -98,11 +98,11 @@ void mem_hotplug_done(void)
+>  u64 max_mem_size =3D U64_MAX;
+> =20
+>  /* add this memory to iomem resource */
+> -static struct resource *register_memory_resource(u64 start, u64 size)
+> +static struct resource *register_memory_resource(u64 start, u64 size,
+> +						 const char *resource_name)
+>  {
+>  	struct resource *res;
+>  	unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> -	char *resource_name =3D "System RAM";
+> =20
+>  	/*
+>  	 * Make sure value parsed from 'mem=3D' only restricts memory adding
+> @@ -1058,7 +1058,8 @@ int __ref add_memory_resource(int nid, struct res=
+ource *res,
+>  	BUG_ON(ret);
+> =20
+>  	/* create new memmap entry */
+> -	firmware_map_add_hotplug(start, start + size, "System RAM");
+> +	if (!(flags & MHP_DRIVER_MANAGED))
+> +		firmware_map_add_hotplug(start, start + size, "System RAM");
+> =20
+>  	/* device_online() will take the lock when calling online_pages() */
+>  	mem_hotplug_done();
+> @@ -1081,10 +1082,21 @@ int __ref add_memory_resource(int nid, struct r=
+esource *res,
+>  /* requires device_hotplug_lock, see add_memory_resource() */
+>  int __ref __add_memory(int nid, u64 start, u64 size, unsigned long fla=
+gs)
+>  {
+> +	const char *resource_name =3D "System RAM";
+>  	struct resource *res;
+>  	int ret;
+> =20
+> -	res =3D register_memory_resource(start, size);
+> +	/*
+> +	 * Indicate that memory managed by a driver is special. It's always
+> +	 * detected and added via a driver, should not be given to the kexec
+> +	 * kernel for booting when manually crafting the firmware memmap, and
+> +	 * no kexec segments should be placed on it. However, kdump should
+> +	 * dump this memory.
+> +	 */
+> +	if (flags & MHP_DRIVER_MANAGED)
+> +		resource_name =3D "System RAM (driver managed)";
+> +
+> +	res =3D register_memory_resource(start, size, resource_name);
+>  	if (IS_ERR(res))
+>  		return PTR_ERR(res);
+> =20
+>=20
 
-On Thu, Apr 30, 2020 at 12:06:09AM +0000, Michael Kelley wrote:
-> From: Nathan Chancellor <natechancellor@gmail.com> Sent: Tuesday, April 28, 2020 10:55 AM
-> > 
-> > Do note that netvsc_xmit still returns int because netvsc_xmit has a
-> > potential return from netvsc_vf_xmit, which does not return netdev_tx_t
-> > because of the call to dev_queue_xmit.
-> > 
-> > I am not sure if that is an oversight that was introduced by
-> > commit 0c195567a8f6e ("netvsc: transparent VF management") or if
-> > everything works properly as it is now.
-> > 
-> > My patch is purely concerned with making the definition match the
-> > prototype so it should be NFC aside from avoiding the CFI panic.
-> > 
-> 
-> While it probably works correctly now, I'm not too keen on just
-> changing the return type for netvsc_start_xmit() and assuming the
-> 'int' that is returned from netvsc_xmit() will be correctly mapped to
-> the netdev_tx_t enum type.  While that mapping probably happens
-> correctly at the moment, this really should have a more holistic fix.
+BTW, I was wondering if this is actually also something that
+drivers/dax/kmem.c wants to use for adding memory.
 
-While it might work correctly, I am not sure that the mapping is
-correct, hence that comment.
+Just because we decided to use some DAX memory in the current kernel as
+system ram, doesn't mean we should make that decision for the kexec
+kernel (e.g., using it as initial memory, placing kexec binaries onto
+it, etc.). This is also not what we would observe during a real reboot.
 
-netdev_tx_t is an enum with two acceptable types, 0x00 and 0x10. Up
-until commit 0c195567a8f6e ("netvsc: transparent VF management"),
-netvsc_xmit was guaranteed to return something of type netdev_tx_t.
+I can see that the "System RAM" resource will show up as child resource
+under the device e.g., in /proc/iomem.
 
-However, after said commit, we could return anything from
-netvsc_vf_xmit, which in turn calls dev_queue_xmit then
-__dev_queue_xmit which will return either an error code (-ENOMEM or
--ENETDOWN) or something from __dev_xmit_skb, which appears to be
-NET_XMIT_SUCCESS, NET_XMIT_DROP, or NET_XMIT_CN.
+However, entries in /sys/firmware/memmap/ are created as "System RAM".
 
-It does not look like netvsc_xmit or netvsc_vf_xmit try to convert those
-returns to netdev_tx_t in some way; netvsc_vf_xmit just passes the
-return value up to netvsc_xmit, which is the part that I am unsure
-about...
+--=20
+Thanks,
 
-> Nathan -- are you willing to look at doing the more holistic fix?  Or
-> should we see about asking Haiyang Zhang to do it?
+David / dhildenb
 
-I would be fine trying to look at a more holistic fix but I know
-basically nothing about this subsystem. I am unsure if something like
-this would be acceptable or if something else needs to happen.
-Otherwise, I'd be fine with you guys taking a look and just giving me
-reported-by credit.
-
-Cheers,
-Nathan
-
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index d8e86bdbfba1e..a39480cfb8fa7 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -520,7 +520,8 @@ static int netvsc_vf_xmit(struct net_device *net, struct net_device *vf_netdev,
- 	return rc;
- }
- 
--static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
-+static netdev_tx_t netvsc_xmit(struct sk_buff *skb, struct net_device *net,
-+			       bool xdp_tx)
- {
- 	struct net_device_context *net_device_ctx = netdev_priv(net);
- 	struct hv_netvsc_packet *packet = NULL;
-@@ -537,8 +538,11 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 	 */
- 	vf_netdev = rcu_dereference_bh(net_device_ctx->vf_netdev);
- 	if (vf_netdev && netif_running(vf_netdev) &&
--	    !netpoll_tx_running(net))
--		return netvsc_vf_xmit(net, vf_netdev, skb);
-+	    !netpoll_tx_running(net)) {
-+		if (!netvsc_vf_xmit(net, vf_netdev, skb))
-+			return NETDEV_TX_OK;
-+		goto drop;
-+	}
- 
- 	/* We will atmost need two pages to describe the rndis
- 	 * header. We can only transmit MAX_PAGE_BUFFER_COUNT number
-@@ -707,7 +711,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 	goto drop;
- }
- 
--static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-+				     struct net_device *ndev)
- {
- 	return netvsc_xmit(skb, ndev, false);
- }
