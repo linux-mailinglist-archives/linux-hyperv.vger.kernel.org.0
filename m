@@ -2,31 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EA661C0DBE
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 May 2020 07:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06AC61C0DC7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 May 2020 07:37:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgEAFfG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 1 May 2020 01:35:06 -0400
-Received: from mail-mw2nam12on2093.outbound.protection.outlook.com ([40.107.244.93]:51585
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        id S1728302AbgEAFgw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 1 May 2020 01:36:52 -0400
+Received: from mail-eopbgr750111.outbound.protection.outlook.com ([40.107.75.111]:56710
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726452AbgEAFfG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 1 May 2020 01:35:06 -0400
+        id S1726452AbgEAFgw (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 1 May 2020 01:36:52 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=STA9DQGeRVHjz+p6qI/71MR52cW/jMJ2DY+Oe0GpULevyCZf6Okl0FYg9l5c6AJGC4XTAKRU6fjGPrloqr02jj29Updr68RsEHbQmMMd51X6QkuOELs0FQra1qJskNaat6G3EMLBXnKcAYUKsMik3gbfQc0Tpn1UYk3sQDbaLdcpHMjNVEiaD5j8Ul4XIfcEITvJPCTnuFvg2bKeu/fY2oqbRBmW2o7vGRokhnrd8TRmhOt7hqxdVPhOfUIJEXm5NHruH3QcetRTy/fvOTOUWU4UxM/K+Vtpt2a2JzTcChJS1NQRlu04tXBr4N4XrliqOM2+7Y3M7+Ij9oKF/dERGg==
+ b=hG/hT7PmczdRwcLtgvRXXqen5Bz94T/OTROtxVvAn6ltu1OE5mYxRllJVnvDTm+csmjEwvsuy9BLcorqUfyBvslAhfeNFdv3hf+RVsQXrBIlVhbGmwGrhu/vlt5u5YzwaxKhbtlPv0s+cr2phoiPbfeIMmrnxzxCYIdFNagw7qnicESd0OXqXWG4Hmu8MuhCmcFLEfemJNMWvq31/YzKYAwZMnt3iNIliL735KzP/J/tb/E6FCXrQB3ZuEV0C8f0nTgyupNwt3heaqPAs765+fGuaB3XQUN+ff5acQ26ZpfNrvZlHSfYoOBzKeF3Jdj/CUKosnb+ZoARdj5hWGKWFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5rh9luNE76MKdECbAXH7pNTxnmbJhEd07982l+DfWl4=;
- b=jFuw3CAHWC9PzB1q5ZROkyiXvtmH38u5r1hgMPPukdo649U+BHxP2gyUS7RUvD06Ec3WAw3b8syfuNKdSsIcZQTtgGxI2O3fR7AmGYwfivlODc/hlolv9Ar0u02MJqvOVdZ72PeG4n+dCHb37Yu5yHqgLQGyEZ2gf7jyc/lBh44XNOJpgF65dGinHF8dTx11YqAfH31o0Y3h1OOJ6EWgMO6Yq/EujIAvHrLt1rhzxBSLzX+akIRZWLXdfTgIw7+yTjjeY+2CsmWmEj3zF7BghrQDFDC7J6eoxaxItOTHiIXROIqBMzGnhHCtOX3wd00GWJdviDULKq6k72LvFiJo1g==
+ bh=9Mjmo77Z+Nw7B2iJ/oIHJZTVqv9wgBYPRFZzIsVAa7o=;
+ b=PqYNyk+hYK08Pf1fz3Oo8CyVO4WRord6ZTSYvc7DHBXX1cNi4lBwofQbsdsGHaB1W9Sz1W9XXFcjwxS/MHTDgtfMciCohHPUM/4UcJR08hYS5Z1CDpQSFDvJ5WG0w7Y0yBrpA+87QF31vOI7PttAmc5n4A99qGo+2JMDf06LyeebtSGhEk7qTw7zbjcEfiS3yTvxjhQBucwGKYCMymTlMPOjEypLkVPPo7IR7fAq13D22qMwGeZm7UbrMCC1hc7PhKa+B6DG1lCuX8oEAPDZHc/fsaIjfRC4Xf9MQPyx2/YgZacBzN0AhFALgwsGrEubg3wOSAgGV5CVvIutf6dJoA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5rh9luNE76MKdECbAXH7pNTxnmbJhEd07982l+DfWl4=;
- b=XB10f927nE0dN01Szv1BTmhxUuc9LP/2MDeeBG7xZrA5z7KaY7J11gQQ6CYOhsj8fZDcyST/SE9aFq4Wr0l9GSC8JCDe3dHT2NDqVFda/czZwKvosYggKpqBNR3+hI4TvAIg2aIQeWWebsKcYV8HL1wmTnSn02fu81v7S+Gcea8=
+ bh=9Mjmo77Z+Nw7B2iJ/oIHJZTVqv9wgBYPRFZzIsVAa7o=;
+ b=FGGULrFKUAZtE/x3edz3aAFmauEFjZJfcpah2Ekv09g14UD6c3U3cwBo+ETBzRxssoFajv/mo/XUoYPdoe2crItyMfO1lWWcY3htUhcqA4IIPaTYTYyDfEYoZx6H0dRn2oD0I5KlV4GMP8GVoCHTH9Gr8U5Mhn3XOsQA0ZDhJbU=
 Authentication-Results: microsoft.com; dkim=none (message not signed)
  header.d=none;microsoft.com; dmarc=none action=none
  header.from=microsoft.com;
@@ -34,11 +34,11 @@ Received: from SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12)
  by SN6PR2101MB0992.namprd21.prod.outlook.com (2603:10b6:805:4::33) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.4; Fri, 1 May
- 2020 05:35:03 +0000
+ 2020 05:36:48 +0000
 Received: from SN6PR2101MB1021.namprd21.prod.outlook.com
  ([fe80::a9e6:4244:f67e:c55]) by SN6PR2101MB1021.namprd21.prod.outlook.com
  ([fe80::a9e6:4244:f67e:c55%5]) with mapi id 15.20.2979.009; Fri, 1 May 2020
- 05:35:03 +0000
+ 05:36:48 +0000
 From:   Wei Hu <weh@microsoft.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
@@ -46,66 +46,140 @@ To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         decui@microsoft.com, mikelley@microsoft.com
 Cc:     Wei Hu <weh@microsoft.com>
-Subject: [PATCH v2 0/2] Fix PCI HyperV device error handling
-Date:   Fri,  1 May 2020 13:28:42 +0800
-Message-Id: <20200501052842.24620-1-weh@microsoft.com>
+Subject: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to release resource properly
+Date:   Fri,  1 May 2020 13:36:17 +0800
+Message-Id: <20200501053617.24689-1-weh@microsoft.com>
 X-Mailer: git-send-email 2.20.1
 Reply-To: weh@microsoft.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0014.apcprd02.prod.outlook.com
- (2603:1096:3:17::26) To SN6PR2101MB1021.namprd21.prod.outlook.com
+X-ClientProxiedBy: SG2PR0302CA0001.apcprd03.prod.outlook.com
+ (2603:1096:3:2::11) To SN6PR2101MB1021.namprd21.prod.outlook.com
  (2603:10b6:805:8::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.113) by SG2PR02CA0014.apcprd02.prod.outlook.com (2603:1096:3:17::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 05:34:58 +0000
+Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.49) by SG2PR0302CA0001.apcprd03.prod.outlook.com (2603:1096:3:2::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14 via Frontend Transport; Fri, 1 May 2020 05:36:44 +0000
 X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [167.220.255.113]
+X-Originating-IP: [167.220.255.49]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2f3760f0-0022-4e1f-d8fe-08d7ed91656a
+X-MS-Office365-Filtering-Correlation-Id: 41303e84-1a0c-40ac-f901-08d7ed91a488
 X-MS-TrafficTypeDiagnostic: SN6PR2101MB0992:|SN6PR2101MB0992:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR2101MB09927937598E3433D27FCA7BBBAB0@SN6PR2101MB0992.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB0992396AC613825E4B87CFF6BBAB0@SN6PR2101MB0992.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-Forefront-PRVS: 0390DB4BDA
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LXbIIqc9cI+FDIxEH4JeBBHub99WvtYUcc9qeEjUPSUmkqEckYnHuAwWc035MW68iwJRXCeUEpw7aDL0j7KwLXJ4FCca4xqZP5TspZHkjMFwPX+nVAxJxpOg4ql+9WvjONZwIRvvKIKqcp4cniUOGioLetPsTz/c84yI6ydmvvTBq7SdxZmrQMknO7IZzIKsQrkK+2+iMOaZebHRSX/K5W1i+98nyKz0jLp4STZa6dh4Ip7Gvv1L9mDf9Mg6QfrtboZYEzCxHiro52BqG9mcJkkZheSfYegpjDlR5MsN7dfOJ2GJCE4XcjQoUFrDbEOQrMvW2o14dJ6T5ptjVITsEKF/VtEA5ngBRIxCw8KjiqS25THcrdGrqZjqgv6uoqpb+TunRaYHDNq0bQ1cZ7TziStMnp468cA4E0FEk5YL9XrtYyPPwwRLVvLAkHh4LzJ40qreSuzXzECQUbMStGnpxpE9lVwbUXs5QusrGSjaVkM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1021.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(16526019)(186003)(3450700001)(8676002)(8936002)(5660300002)(26005)(6486002)(7696005)(52116002)(4744005)(107886003)(1076003)(82950400001)(86362001)(6666004)(316002)(36756003)(82960400001)(2906002)(10290500003)(2616005)(956004)(4326008)(66946007)(66476007)(66556008)(6636002)(478600001)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: /AmY8B+jpcTYzCDrsWiBNb/eulntPJPA/DvgpSJbB/gUtsNNP58b0Ny54CloySjnPydOlV3h3sH5MPOW63UxC/IeK+cpFMUOZXxdSEFzkR85X9TdBrB5Wjzi9b4HBe5Pe7Vr4c5M0ynt1p2V4N/y9mqbdTzdBXPn0ClwumvyVkzka8KYE0L4bFwOIXN5lU4eYcuHKbHTJUj2YEOKzNXezQ0t7FpCNgPY++6QEeDS4vwz+c2yZDCHV3sIr02SQwcFV/FLaXwDyCPrshQpJJyn/+YQhqRrtVOUisBXOnevCX8cmU3CwXNU1PtbSla96PnSwctfjvPI2WZAv72GqgGzB6PXZ4fmgJaYWojiZD+mieoTxFvUs0lhKlHpERzrU35A6KQTlBlJJucq9d00i9vGencOVWPltxvVvZCqong6RdYYn10THpgu6TtwKUYWc0Ct7K9plaCaF1q7hAq+ludeZdG3nzjbhBrjokIA6BOZ0zYx1D++6hlVbsYqDO2VrnYe7Mx6uJxZVBnJ8mP34ri6IJeUQ/E1OcAcCCH48Ktd1U0ZldV9onT/zO6uRUBlEPqw9n00JQ/YIcaBeXgljwKLzSfdPnUla8C0CWmTecZBcho11zG5k/1mqfqF48wDQeybKWeAjKKmIJUTMvALbsznZILHjJqqdpBs4W5HD5ypCp4RSFQdfYth6Lt5XLWm8ZZr6lDoPzeIv4wVkza1qsXB12XgjODMlD0h5h69CDgnPb5IwjkzyZPea4T5HF+X98qWq9n9vmhr6voK1/5nnkeZXNzMgInOXS0sABwJsWW04UAGf5FMrkFkHByEP24weoA3
+X-Microsoft-Antispam-Message-Info: MstNsRaM2QvQosXcqNE6L96RGsXVjr0Msn6PLt6+VdcQqKdvma23J9HSls7Ul0A8GwqcMX0phga9NBRGI3770LXEKFZnGWmQHukpeEsUAk5/We5f4idZBzpejZ/oyCPB+CVjn0AZm8EDUBW6lcN1GXtOlsh48VZWtEvr9Exqm/pptWJnUeIlX9x0IrUu4idUnnVbfRflExGoOEhoj/nXN6a2GfHwyyMEkMXxsSGKDGAl+W1ZIyt6PPgr0pK8IvHUt/RfuOkmtGPKMqEjdPHQ/SgF+xB7VHR7z5d9SzGBAl7+2R436NENQy07KNH7GjOLdpir/upajWbR7jseB7wSCvGdKbRjdWWfwQ+3YgnQhnT+FC1AbC0bx+5+CMMqWHOYdMw8aQ7FHDzU3Kt0212uxxvLDxcQF9xy6ey73clzRLXkNarBO+dqsu7qA0bu8Se305ErQYehef0odlkT1D7VZVbH6PlC/qQxuiC1Wvbb02o=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1021.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(16526019)(186003)(3450700001)(8676002)(8936002)(5660300002)(26005)(6486002)(7696005)(52116002)(107886003)(1076003)(82950400001)(86362001)(6666004)(316002)(36756003)(82960400001)(2906002)(10290500003)(2616005)(956004)(4326008)(66946007)(66476007)(66556008)(6636002)(478600001)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: i8XMj6YXSLd3uLC114Le0gEAZQWCWBBn3biEYLDfJEtX/xRy1H9FXt9eWzqGK9/0bWlfC0gi53Wu8IKEy1XhB52VGpz7PC5is83vo1BZBzmtNtFrSLJsFnuV8h1vBc+32dgwdXE2VS+Emnia5+Z5L4I8OdNnEieqp8YOb/hwCRv2u2Bvpq29+sT9voPaNZ3txYx0p69VF1+y0rx/sZgtzUOMyg+XPW7wOp2eDtGYBECKK2MQ/eBdTHOid7uaeZcqZDJdw8XsDwbXXkc+ZhiqmUQwjs3BwYySuAQWWO9uxqcgBOcxv4EdpkgY4rcHGBHVAwQyFYSPuabAijWOR4tDoQLdLfIuN5xB5Ps3AvVoL5xUoHsavvr6YfZ6DvBKAZUgPe5sFy11pTe8ltihx+ZRtaJlNLH3VBeF45bkd0AOCgw9YpkWmE6f9Fu9v9ybh1PVShuXYNpqjUBM1Z92txi2PvB0oGfgCZbZ9qvoo6mGKwwBp51YlnI4B8DZvfh8wKIhUiHHY2X8Wq8ZVPi8sM2/SfahAPgYj7Plm4veqoVx5SqtI8s3rwjutZw3Ged5nN1w4Doiz2TZl7Ejt2fZq3Jp2p9Dz2wv3Ngj+xymcMXawCpgW9RRmdFIocwb9tFNlYZ0EAD7pjQ+0sc/YFZ4clvtQfOJ3QeNAugewNqhWL1VGIlaOWa3BVuIMwr3hF4zT9L7dsYqiSmBZpWMfWeRC47iFDy8gkJMiY2aIGaX5kFwaFmVylzaH+CH+7QKsDR8RJ7RSh7B143H78dUmE/IOtr/VQFx6rpevZ5pDMET35BsytE=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f3760f0-0022-4e1f-d8fe-08d7ed91656a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 05:35:02.9673
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41303e84-1a0c-40ac-f901-08d7ed91a488
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 05:36:48.4904
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8iFM5mM4Do7wNHY/O+DlmHC7b+VvIHQW5h3XJW1WK/Xjpt04axNeuUX6o5OQudR5kFviZ+ahRNg7G5B4Hwpc3g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: P/VndH6MyHZLpJMjVgUtIP4/Sxli9sNL3pJq1WZrSp1mCIVCtiqmBVAYC19vrPzkOFDVOJs/yyoYdaS/+j2baQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0992
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This series better handles some PCI HyperV error cases in general and
-for kdump case. Some of review comments from previous individual
-patch reviews, including splitting into separate patches, have
-already been incorporated.
+Some error cases in hv_pci_probe() were not handled. Fix these error
+paths to release the resourses and clean up the state properly.
 
-Thanks,
-Wei
+Signed-off-by: Wei Hu <weh@microsoft.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-
-Wei Hu (2):
-  PCI: hv: Fix the PCI HyperV probe failure path to release resource
-    properly
-  PCI: hv: Retry PCI bus D0 entry when the first attempt failed with
-    invalid device state
-
- drivers/pci/controller/pci-hyperv.c | 60 ++++++++++++++++++++++++++---
- 1 file changed, 54 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e15022ff63e3..e6fac0187722 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -480,6 +480,9 @@ struct hv_pcibus_device {
+ 
+ 	struct workqueue_struct *wq;
+ 
++	/* Highest slot of child device with resources allocated */
++	int wslot_res_allocated;
++
+ 	/* hypercall arg, must not cross page boundary */
+ 	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+ 
+@@ -2847,7 +2850,7 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_packet *pkt;
+ 	size_t size_res;
+-	u32 wslot;
++	int wslot;
+ 	int ret;
+ 
+ 	size_res = (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2)
+@@ -2900,6 +2903,8 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+ 				comp_pkt.completion_status);
+ 			break;
+ 		}
++
++		hbus->wslot_res_allocated = wslot;
+ 	}
+ 
+ 	kfree(pkt);
+@@ -2918,10 +2923,10 @@ static int hv_send_resources_released(struct hv_device *hdev)
+ 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+ 	struct pci_child_message pkt;
+ 	struct hv_pci_dev *hpdev;
+-	u32 wslot;
++	int wslot;
+ 	int ret;
+ 
+-	for (wslot = 0; wslot < 256; wslot++) {
++	for (wslot = hbus->wslot_res_allocated; wslot >= 0; wslot--) {
+ 		hpdev = get_pcichild_wslot(hbus, wslot);
+ 		if (!hpdev)
+ 			continue;
+@@ -2936,8 +2941,12 @@ static int hv_send_resources_released(struct hv_device *hdev)
+ 				       VM_PKT_DATA_INBAND, 0);
+ 		if (ret)
+ 			return ret;
++
++		hbus->wslot_res_allocated = wslot - 1;
+ 	}
+ 
++	hbus->wslot_res_allocated = -1;
++
+ 	return 0;
+ }
+ 
+@@ -3037,6 +3046,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	if (!hbus)
+ 		return -ENOMEM;
+ 	hbus->state = hv_pcibus_init;
++	hbus->wslot_res_allocated = -1;
+ 
+ 	/*
+ 	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+@@ -3136,7 +3146,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 
+ 	ret = hv_pci_allocate_bridge_windows(hbus);
+ 	if (ret)
+-		goto free_irq_domain;
++		goto exit_d0;
+ 
+ 	ret = hv_send_resources_allocated(hdev);
+ 	if (ret)
+@@ -3154,6 +3164,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 
+ free_windows:
+ 	hv_pci_free_bridge_windows(hbus);
++exit_d0:
++	(void) hv_pci_bus_exit(hdev, true);
+ free_irq_domain:
+ 	irq_domain_remove(hbus->irq_domain);
+ free_fwnode:
 -- 
 2.20.1
 
