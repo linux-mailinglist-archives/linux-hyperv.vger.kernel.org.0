@@ -2,174 +2,231 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D86EA1C1062
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 May 2020 11:34:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95E071C1898
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 May 2020 16:57:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgEAJej (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 1 May 2020 05:34:39 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45553 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728236AbgEAJei (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 1 May 2020 05:34:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588325676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=HtdiKEBYnl+F4fKOxJyusZbV9rQDJIfKH4dG2/G+1qg=;
-        b=gSAG3Mu50fMiEPGFNm6G5Sexi8OCiZh8Wn+yemLcvBeA0NXyUAaTWII0iarHR6C5mwpb0a
-        k0z3WNG1RZIkOXswsgS6JE0zn9r+HPL1w1HkQ4jZdlFN8lDPjWlGtmPcObhfZxGZywS2lz
-        Iex0E89okpA3UL1S78G373suPv348f0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-YZZnaj37OHisW4YVqlgBvA-1; Fri, 01 May 2020 05:34:32 -0400
-X-MC-Unique: YZZnaj37OHisW4YVqlgBvA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729773AbgEAOsM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 1 May 2020 10:48:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729352AbgEAOpI (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 1 May 2020 10:45:08 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12CF21054F8B;
-        Fri,  1 May 2020 09:34:30 +0000 (UTC)
-Received: from [10.36.112.251] (ovpn-112-251.ams2.redhat.com [10.36.112.251])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86CCB6A954;
-        Fri,  1 May 2020 09:34:23 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
- MHP_NO_FIRMWARE_MEMMAP
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-References: <20200430102908.10107-1-david@redhat.com>
- <20200430102908.10107-3-david@redhat.com>
- <87pnbp2dcz.fsf@x220.int.ebiederm.org>
- <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
- <871ro52ary.fsf@x220.int.ebiederm.org>
- <373a6898-4020-4af1-5b3d-f827d705dd77@redhat.com>
- <875zdg26hp.fsf@x220.int.ebiederm.org>
- <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
- <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com>
-Date:   Fri, 1 May 2020 11:34:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 13CC324959;
+        Fri,  1 May 2020 14:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588344305;
+        bh=pgEeloihUJtDW9NEkL6jmFDK/ZInSPDNQO7niKknL3E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SVEs1VMhjyuHELBkXcF4/1fWlbsaS7MgiAohJ3ePux485XSRhFIw+LT9CMyjWvZFi
+         ihz7fPrKmb/CyIscv5iZo1ghZ6L6por1RndA5qbcxiN/hqpCEtOv80OoyKzd7LfsEg
+         e5L/qaobT9VXcglAQbs4CKkx5QoFsFVnzoG5mfmc=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jUWuT-00FCcS-77; Fri, 01 May 2020 16:45:01 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Samuel Chessman <chessman@tux.org>, netdev@vger.kernel.org,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        Zorik Machulsky <zorik@amazon.com>,
+        Sean Tranchetti <stranche@codeaurora.org>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-x25@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        linux-hyperv@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        David Ahern <dsahern@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
+        Joerg Reuter <jreuter@yaina.de>,
+        Saeed Bishara <saeedb@amazon.com>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Guy Tzalik <gtzalik@amazon.com>,
+        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        linux-wireless@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-parisc@vger.kernel.org,
+        Steffen Klassert <klassert@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stephen Hemminger <sthemmin@microsoft.com>
+Subject: [PATCH 00/37]net: manually convert files to ReST format - part 3 (final)
+Date:   Fri,  1 May 2020 16:44:22 +0200
+Message-Id: <cover.1588344146.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 01.05.20 00:24, Andrew Morton wrote:
-> On Thu, 30 Apr 2020 20:43:39 +0200 David Hildenbrand <david@redhat.com> wrote:
-> 
->>>
->>> Why does the firmware map support hotplug entries?
->>
->> I assume:
->>
->> The firmware memmap was added primarily for x86-64 kexec (and still, is
->> mostly used on x86-64 only IIRC). There, we had ACPI hotplug. When DIMMs
->> get hotplugged on real HW, they get added to e820. Same applies to
->> memory added via HyperV balloon (unless memory is unplugged via
->> ballooning and you reboot ... the the e820 is changed as well). I assume
->> we wanted to be able to reflect that, to make kexec look like a real reboot.
->>
->> This worked for a while. Then came dax/kmem. Now comes virtio-mem.
->>
->>
->> But I assume only Andrew can enlighten us.
->>
->> @Andrew, any guidance here? Should we really add all memory to the
->> firmware memmap, even if this contradicts with the existing
->> documentation? (especially, if the actual firmware memmap will *not*
->> contain that memory after a reboot)
-> 
-> For some reason that patch is misattributed - it was authored by
-> Shaohui Zheng <shaohui.zheng@intel.com>, who hasn't been heard from in
-> a decade.  I looked through the email discussion from that time and I'm
-> not seeing anything useful.  But I wasn't able to locate Dave Hansen's
-> review comments.
+That's the third part (and the final one) of my work to convert the networking
+text files into ReST. it is based on linux-next next-20200430 branch.
 
-Okay, thanks for checking. I think the documentation from 2008 is pretty
-clear what has to be done here. I will add some of these details to the
-patch description.
+The full series (including those ones) are at:
 
-Also, now that I know that esp. kexec-tools already don't consider
-dax/kmem memory properly (memory will not get dumped via kdump) and
-won't really suffer from a name change in /proc/iomem, I will go back to
-the MHP_DRIVER_MANAGED approach and
-1. Don't create firmware memmap entries
-2. Name the resource "System RAM (driver managed)"
-3. Flag the resource via something like IORESOURCE_MEM_DRIVER_MANAGED.
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=net-docs
 
-This way, kernel users and user space can figure out that this memory
-has different semantics and handle it accordingly - I think that was
-what Eric was asking for.
+The  built output documents, on html format is at:
 
-Of course, open for suggestions.
+	https://www.infradead.org/~mchehab/kernel_docs/networking/
+
+
+Mauro Carvalho Chehab (37):
+  docs: networking: convert tuntap.txt to ReST
+  docs: networking: convert udplite.txt to ReST
+  docs: networking: convert vrf.txt to ReST
+  docs: networking: convert vxlan.txt to ReST
+  docs: networking: convert x25-iface.txt to ReST
+  docs: networking: convert x25.txt to ReST
+  docs: networking: convert xfrm_device.txt to ReST
+  docs: networking: convert xfrm_proc.txt to ReST
+  docs: networking: convert xfrm_sync.txt to ReST
+  docs: networking: convert xfrm_sysctl.txt to ReST
+  docs: networking: convert z8530drv.txt to ReST
+  docs: networking: device drivers: convert 3com/3c509.txt to ReST
+  docs: networking: device drivers: convert 3com/vortex.txt to ReST
+  docs: networking: device drivers: convert amazon/ena.txt to ReST
+  docs: networking: device drivers: convert aquantia/atlantic.txt to
+    ReST
+  docs: networking: device drivers: convert chelsio/cxgb.txt to ReST
+  docs: networking: device drivers: convert cirrus/cs89x0.txt to ReST
+  docs: networking: device drivers: convert davicom/dm9000.txt to ReST
+  docs: networking: device drivers: convert dec/de4x5.txt to ReST
+  docs: networking: device drivers: convert dec/dmfe.txt to ReST
+  docs: networking: device drivers: convert dlink/dl2k.txt to ReST
+  docs: networking: device drivers: convert freescale/dpaa.txt to ReST
+  docs: networking: device drivers: convert freescale/gianfar.txt to
+    ReST
+  docs: networking: device drivers: convert intel/ipw2100.txt to ReST
+  docs: networking: device drivers: convert intel/ipw2200.txt to ReST
+  docs: networking: device drivers: convert microsoft/netvsc.txt to ReST
+  docs: networking: device drivers: convert neterion/s2io.txt to ReST
+  docs: networking: device drivers: convert neterion/vxge.txt to ReST
+  docs: networking: device drivers: convert qualcomm/rmnet.txt to ReST
+  docs: networking: device drivers: convert sb1000.txt to ReST
+  docs: networking: device drivers: convert smsc/smc9.txt to ReST
+  docs: networking: device drivers: convert ti/cpsw_switchdev.txt to
+    ReST
+  docs: networking: device drivers: convert ti/cpsw.txt to ReST
+  docs: networking: device drivers: convert ti/tlan.txt to ReST
+  docs: networking: device drivers: convert toshiba/spider_net.txt to
+    ReST
+  net: docs: add page_pool.rst to index.rst
+  docs: networking: arcnet-hardware.rst: don't duplicate chapter names
+
+ Documentation/networking/arcnet-hardware.rst  |   8 +-
+ .../3com/{3c509.txt => 3c509.rst}             | 158 +++--
+ .../3com/{vortex.txt => vortex.rst}           | 223 ++++---
+ .../amazon/{ena.txt => ena.rst}               | 142 ++--
+ .../aquantia/{atlantic.txt => atlantic.rst}   | 373 ++++++-----
+ .../chelsio/{cxgb.txt => cxgb.rst}            | 183 ++++--
+ .../cirrus/{cs89x0.txt => cs89x0.rst}         | 557 ++++++++--------
+ .../davicom/{dm9000.txt => dm9000.rst}        |  24 +-
+ .../dec/{de4x5.txt => de4x5.rst}              | 105 +--
+ .../device_drivers/dec/{dmfe.txt => dmfe.rst} |  35 +-
+ .../dlink/{dl2k.txt => dl2k.rst}              | 228 ++++---
+ .../freescale/{dpaa.txt => dpaa.rst}          | 139 ++--
+ .../freescale/{gianfar.txt => gianfar.rst}    |  21 +-
+ .../networking/device_drivers/index.rst       |  24 +
+ .../intel/{ipw2100.txt => ipw2100.rst}        | 242 ++++---
+ .../intel/{ipw2200.txt => ipw2200.rst}        | 410 +++++++-----
+ .../microsoft/{netvsc.txt => netvsc.rst}      |  57 +-
+ .../device_drivers/neterion/s2io.rst          | 196 ++++++
+ .../device_drivers/neterion/s2io.txt          | 141 ----
+ .../neterion/{vxge.txt => vxge.rst}           |  60 +-
+ .../qualcomm/{rmnet.txt => rmnet.rst}         |  43 +-
+ .../networking/device_drivers/sb1000.rst      | 222 +++++++
+ .../networking/device_drivers/sb1000.txt      | 207 ------
+ .../networking/device_drivers/smsc/smc9.rst   |  49 ++
+ .../networking/device_drivers/smsc/smc9.txt   |  42 --
+ .../networking/device_drivers/ti/cpsw.rst     | 587 +++++++++++++++++
+ .../networking/device_drivers/ti/cpsw.txt     | 541 ----------------
+ ...{cpsw_switchdev.txt => cpsw_switchdev.rst} | 239 ++++---
+ .../device_drivers/ti/{tlan.txt => tlan.rst}  |  73 ++-
+ .../{spider_net.txt => spider_net.rst}        |  58 +-
+ Documentation/networking/index.rst            |  12 +
+ .../networking/{tuntap.txt => tuntap.rst}     | 200 +++---
+ .../networking/{udplite.txt => udplite.rst}   | 175 ++---
+ Documentation/networking/vrf.rst              | 451 +++++++++++++
+ Documentation/networking/vrf.txt              | 418 ------------
+ .../networking/{vxlan.txt => vxlan.rst}       |  33 +-
+ .../{x25-iface.txt => x25-iface.rst}          |  10 +-
+ Documentation/networking/{x25.txt => x25.rst} |   4 +
+ .../{xfrm_device.txt => xfrm_device.rst}      |  33 +-
+ .../{xfrm_proc.txt => xfrm_proc.rst}          |  31 +
+ .../{xfrm_sync.txt => xfrm_sync.rst}          |  66 +-
+ .../{xfrm_sysctl.txt => xfrm_sysctl.rst}      |   7 +
+ .../networking/{z8530drv.txt => z8530drv.rst} | 609 +++++++++---------
+ MAINTAINERS                                   |  30 +-
+ drivers/net/Kconfig                           |   4 +-
+ drivers/net/ethernet/3com/3c59x.c             |   4 +-
+ drivers/net/ethernet/3com/Kconfig             |   2 +-
+ drivers/net/ethernet/chelsio/Kconfig          |   2 +-
+ drivers/net/ethernet/cirrus/Kconfig           |   2 +-
+ drivers/net/ethernet/dec/tulip/Kconfig        |   4 +-
+ drivers/net/ethernet/dlink/dl2k.c             |   2 +-
+ drivers/net/ethernet/neterion/Kconfig         |   4 +-
+ drivers/net/ethernet/smsc/Kconfig             |   4 +-
+ drivers/net/ethernet/ti/Kconfig               |   2 +-
+ drivers/net/ethernet/ti/tlan.c                |   2 +-
+ drivers/net/hamradio/Kconfig                  |   4 +-
+ drivers/net/hamradio/scc.c                    |   2 +-
+ drivers/net/wireless/intel/ipw2x00/Kconfig    |   4 +-
+ drivers/net/wireless/intel/ipw2x00/ipw2100.c  |   2 +-
+ include/uapi/linux/if_x25.h                   |   2 +-
+ net/x25/Kconfig                               |   4 +-
+ 61 files changed, 4175 insertions(+), 3341 deletions(-)
+ rename Documentation/networking/device_drivers/3com/{3c509.txt => 3c509.rst} (68%)
+ rename Documentation/networking/device_drivers/3com/{vortex.txt => vortex.rst} (72%)
+ rename Documentation/networking/device_drivers/amazon/{ena.txt => ena.rst} (86%)
+ rename Documentation/networking/device_drivers/aquantia/{atlantic.txt => atlantic.rst} (63%)
+ rename Documentation/networking/device_drivers/chelsio/{cxgb.txt => cxgb.rst} (81%)
+ rename Documentation/networking/device_drivers/cirrus/{cs89x0.txt => cs89x0.rst} (61%)
+ rename Documentation/networking/device_drivers/davicom/{dm9000.txt => dm9000.rst} (92%)
+ rename Documentation/networking/device_drivers/dec/{de4x5.txt => de4x5.rst} (78%)
+ rename Documentation/networking/device_drivers/dec/{dmfe.txt => dmfe.rst} (68%)
+ rename Documentation/networking/device_drivers/dlink/{dl2k.txt => dl2k.rst} (59%)
+ rename Documentation/networking/device_drivers/freescale/{dpaa.txt => dpaa.rst} (79%)
+ rename Documentation/networking/device_drivers/freescale/{gianfar.txt => gianfar.rst} (82%)
+ rename Documentation/networking/device_drivers/intel/{ipw2100.txt => ipw2100.rst} (70%)
+ rename Documentation/networking/device_drivers/intel/{ipw2200.txt => ipw2200.rst} (64%)
+ rename Documentation/networking/device_drivers/microsoft/{netvsc.txt => netvsc.rst} (83%)
+ create mode 100644 Documentation/networking/device_drivers/neterion/s2io.rst
+ delete mode 100644 Documentation/networking/device_drivers/neterion/s2io.txt
+ rename Documentation/networking/device_drivers/neterion/{vxge.txt => vxge.rst} (80%)
+ rename Documentation/networking/device_drivers/qualcomm/{rmnet.txt => rmnet.rst} (73%)
+ create mode 100644 Documentation/networking/device_drivers/sb1000.rst
+ delete mode 100644 Documentation/networking/device_drivers/sb1000.txt
+ create mode 100644 Documentation/networking/device_drivers/smsc/smc9.rst
+ delete mode 100644 Documentation/networking/device_drivers/smsc/smc9.txt
+ create mode 100644 Documentation/networking/device_drivers/ti/cpsw.rst
+ delete mode 100644 Documentation/networking/device_drivers/ti/cpsw.txt
+ rename Documentation/networking/device_drivers/ti/{cpsw_switchdev.txt => cpsw_switchdev.rst} (51%)
+ rename Documentation/networking/device_drivers/ti/{tlan.txt => tlan.rst} (73%)
+ rename Documentation/networking/device_drivers/toshiba/{spider_net.txt => spider_net.rst} (88%)
+ rename Documentation/networking/{tuntap.txt => tuntap.rst} (58%)
+ rename Documentation/networking/{udplite.txt => udplite.rst} (65%)
+ create mode 100644 Documentation/networking/vrf.rst
+ delete mode 100644 Documentation/networking/vrf.txt
+ rename Documentation/networking/{vxlan.txt => vxlan.rst} (73%)
+ rename Documentation/networking/{x25-iface.txt => x25-iface.rst} (96%)
+ rename Documentation/networking/{x25.txt => x25.rst} (96%)
+ rename Documentation/networking/{xfrm_device.txt => xfrm_device.rst} (92%)
+ rename Documentation/networking/{xfrm_proc.txt => xfrm_proc.rst} (95%)
+ rename Documentation/networking/{xfrm_sync.txt => xfrm_sync.rst} (82%)
+ rename Documentation/networking/{xfrm_sysctl.txt => xfrm_sysctl.rst} (52%)
+ rename Documentation/networking/{z8530drv.txt => z8530drv.rst} (57%)
 
 -- 
-Thanks,
+2.25.4
 
-David / dhildenb
 
