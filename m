@@ -2,179 +2,393 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CCEB1C2457
-	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2020 11:27:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 003021C2648
+	for <lists+linux-hyperv@lfdr.de>; Sat,  2 May 2020 16:47:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgEBJ1B (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 2 May 2020 05:27:01 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39887 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726809AbgEBJ07 (ORCPT
+        id S1728035AbgEBOrU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 2 May 2020 10:47:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728023AbgEBOrT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 2 May 2020 05:26:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588411616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=7BlBxvbDuA+9KvE9CDetQLMcWvsctxQWUvlkpoisi9Y=;
-        b=dJ+3ixDi1lTGbT7IbJh8puhuXzy54eombXibMx69XdpWziNf2zD7kWcPcv+Y+Q9r4Y7GiD
-        1P/luydqFlqaRd9AIGoxuvDj55SReUYVPJpRf4SMWhCGR5GFiiose+k5RJsjzV2AN7CsDB
-        XcrCcuQl0kaVnktJhgzmWwKew9Du7I4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-IYiQA9KcOLe61Ujso1qrMw-1; Sat, 02 May 2020 05:26:51 -0400
-X-MC-Unique: IYiQA9KcOLe61Ujso1qrMw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 409B51005510;
-        Sat,  2 May 2020 09:26:49 +0000 (UTC)
-Received: from [10.36.112.72] (ovpn-112-72.ams2.redhat.com [10.36.112.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E16B1001281;
-        Sat,  2 May 2020 09:26:41 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
- MHP_NO_FIRMWARE_MEMMAP
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20200430102908.10107-1-david@redhat.com>
- <875zdg26hp.fsf@x220.int.ebiederm.org>
- <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
- <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
- <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com>
- <CAPcyv4j=YKnr1HW4OhAmpzbuKjtfP7FdAn4-V7uA=b-Tcpfu+A@mail.gmail.com>
- <2d019c11-a478-9d70-abd5-4fd2ebf4bc1d@redhat.com>
- <CAPcyv4iOqS0Wbfa2KPfE1axQFGXoRB4mmPRP__Lmqpw6Qpr_ig@mail.gmail.com>
- <62dd4ce2-86cc-5b85-734f-ec8766528a1b@redhat.com>
- <0169e822-a6cc-1543-88ed-2a85d95ffb93@redhat.com>
- <CAPcyv4jGnR_fPtpKBC1rD2KRcT88bTkhqnTMmuwuc+f9Dwrz1g@mail.gmail.com>
- <9f3a813e-dc1d-b675-6e69-85beed3057a4@redhat.com>
- <CAPcyv4jjrxQ27rsfmz6wYPgmedevU=KG+wZ0GOm=qiE6tqa+VA@mail.gmail.com>
- <04242d48-5fa9-6da4-3e4a-991e401eb580@redhat.com>
- <CAPcyv4iXyOUDZgqhWH1KCObvATL=gP55xEr64rsRfUuJg5B+eQ@mail.gmail.com>
- <8242c0c5-2df2-fc0c-079a-3be62c113a11@redhat.com>
- <CAPcyv4h1nWjszkVJQgeXkUc=-nPv5=Me25BOGFQCpihUyFsD6w@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <467ccba3-80ac-085c-3127-d5618d77d3e0@redhat.com>
-Date:   Sat, 2 May 2020 11:26:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 2 May 2020 10:47:19 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132ACC061A0C;
+        Sat,  2 May 2020 07:47:19 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 188so3223270wmc.2;
+        Sat, 02 May 2020 07:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=DahNpcnSFQxBcoT5kqGiidS1iWOdkZNRfHykIlRRIvI=;
+        b=C89odLkXn4Odk9hCQ1/YrH+YYsCmLuVwbQBhMl+UsOf0lqtH0/hzmZY00IdAtksqDk
+         +sonUfSwtUyJLzBVKX6ZOiUQnA57naNuM/7O2ncAvIAnqroOgPDSphLbsXZrf4n6OZbv
+         9+FPirANEA7M+VVb9Nt2DsKM2AG9u11GUkR/LasBWR6SchiO8ca6VVU8dv10+Ns9Tp7H
+         qeLVYGMAEd662pcuT5hy65KFjtst1/lWZ8E3ZjbkaHvg8jLapgL7TkL13InpPc3Z/Kd8
+         Qfo3qCGAx8hAqsIIz1dtuKYRwoGxMuEQNrbx9FZJzKyrWz+NgxWnHExFFk1VfKyd4n32
+         r+rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=DahNpcnSFQxBcoT5kqGiidS1iWOdkZNRfHykIlRRIvI=;
+        b=bPZhCyZR5tvgK2r5Zs+9ky+GKtliDfR5zV6ZSlF31azw2Ncqi3UVtooPObd1j9ruGP
+         52rE90ClotbVOxEecog/wwVezhLt0MV35517otSaLL0oP0n9Uao3b8Wp2FigWUBFZQ81
+         b9MM5x/Qc0OnoggGtXddcmfPUm19oCtL2HV/Nj5ZFHNMB1nzMvrhm/WL7Grh+F6cMzt3
+         szI6KHjbrdwAut/bBX7NA1gsbTVjWkhE2b6XAfjFhdaJWCi/k3NAUXVABFQWBqJQvn89
+         DrQn2fkkb1ORscJHCYgLXW0Y3kkyQBDwqNDTOURhdTXYh8hn1EWQPQRRYsyUoeHCdfjJ
+         YJPQ==
+X-Gm-Message-State: AGi0PuYLOvJzhykVcfZtaHngscXSnOvkym3oQlgp2wuQ5oPDvIIFYkiA
+        fmLh+PgVJ4KaoA/vaPHDG6A19xZdY9A=
+X-Google-Smtp-Source: APiQypKAEIsbqR2ilXo6zhsExljgr4qg9DIz323lQIPhf7tvA+gsNupD+Pw7n88UVXOK11Z5ofIabw==
+X-Received: by 2002:a1c:5403:: with SMTP id i3mr5326006wmb.10.1588430837567;
+        Sat, 02 May 2020 07:47:17 -0700 (PDT)
+Received: from jondnuc (IGLD-84-229-154-20.inter.net.il. [84.229.154.20])
+        by smtp.gmail.com with ESMTPSA id k23sm4428287wmi.46.2020.05.02.07.47.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2020 07:47:16 -0700 (PDT)
+Date:   Sat, 2 May 2020 17:47:15 +0300
+From:   Jon Doron <arilou@gmail.com>
+To:     Roman Kagan <rvkagan@yandex-team.ru>, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, vkuznets@redhat.com
+Subject: Re: [PATCH v2 0/1] x86/kvm/hyper-v: Add support to SYNIC exit on EOM
+Message-ID: <20200502144715.GA2862@jondnuc>
+References: <20200416083847.1776387-1-arilou@gmail.com>
+ <20200416120040.GA3745197@rvkaganb>
+ <20200416125430.GL7606@jondnuc>
+ <20200417104251.GA3009@rvkaganb>
+ <20200418064127.GB1917435@jondnuc>
+ <20200424133742.GA2439920@rvkaganb>
+ <20200425061637.GF1917435@jondnuc>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4h1nWjszkVJQgeXkUc=-nPv5=Me25BOGFQCpihUyFsD6w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200425061637.GF1917435@jondnuc>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
->> Now, let's clarify what I want regarding virtio-mem:
+On 25/04/2020, Jon Doron wrote:
+>On 24/04/2020, Roman Kagan wrote:
+>>On Sat, Apr 18, 2020 at 09:41:27AM +0300, Jon Doron wrote:
+>>>On 17/04/2020, Roman Kagan wrote:
+>>>> On Thu, Apr 16, 2020 at 03:54:30PM +0300, Jon Doron wrote:
+>>>> > On 16/04/2020, Roman Kagan wrote:
+>>>> > > On Thu, Apr 16, 2020 at 11:38:46AM +0300, Jon Doron wrote:
+>>>> > > > According to the TLFS:
+>>>> > > > "A write to the end of message (EOM) register by the guest causes the
+>>>> > > > hypervisor to scan the internal message buffer queue(s) associated with
+>>>> > > > the virtual processor.
+>>>> > > >
+>>>> > > > If a message buffer queue contains a queued message buffer, the hypervisor
+>>>> > > > attempts to deliver the message.
+>>>> > > >
+>>>> > > > Message delivery succeeds if the SIM page is enabled and the message slot
+>>>> > > > corresponding to the SINTx is empty (that is, the message type in the
+>>>> > > > header is set to HvMessageTypeNone).
+>>>> > > > If a message is successfully delivered, its corresponding internal message
+>>>> > > > buffer is dequeued and marked free.
+>>>> > > > If the corresponding SINTx is not masked, an edge-triggered interrupt is
+>>>> > > > delivered (that is, the corresponding bit in the IRR is set).
+>>>> > > >
+>>>> > > > This register can be used by guests to poll for messages. It can also be
+>>>> > > > used as a way to drain the message queue for a SINTx that has
+>>>> > > > been disabled (that is, masked)."
+>>>> > >
+>>>> > > Doesn't this work already?
+>>>> > >
+>>>> >
+>>>> > Well if you dont have SCONTROL and a GSI associated with the SINT then it
+>>>> > does not...
+>>>>
+>>>> Yes you do need both of these.
+>>>>
+>>>> > > > So basically this means that we need to exit on EOM so the hypervisor
+>>>> > > > will have a chance to send all the pending messages regardless of the
+>>>> > > > SCONTROL mechnaisim.
+>>>> > >
+>>>> > > I might be misinterpreting the spec, but my understanding is that
+>>>> > > SCONTROL {en,dis}ables the message queueing completely.  What the quoted
+>>>> > > part means is that a write to EOM should trigger the message source to
+>>>> > > push a new message into the slot, regardless of whether the SINT was
+>>>> > > masked or not.
+>>>> > >
+>>>> > > And this (I think, haven't tested) should already work.  The userspace
+>>>> > > just keeps using the SINT route as it normally does, posting
+>>>> > > notifications to the corresponding irqfd when posting a message, and
+>>>> > > waiting on the resamplerfd for the message slot to become free.  If the
+>>>> > > SINT is masked KVM will skip injecting the interrupt, that's it.
+>>>> > >
+>>>> > > Roman.
+>>>> >
+>>>> > That's what I was thinking originally as well, but then i noticed KDNET as a
+>>>> > VMBus client (and it basically runs before anything else) is working in this
+>>>> > polling mode, where SCONTROL is disabled and it just loops, and if it saw
+>>>> > there is a PENDING message flag it will issue an EOM to indicate it has free
+>>>> > the slot.
+>>>>
+>>>> Who sets up the message page then?  Doesn't it enabe SCONTROL as well?
+>>>>
+>>>
+>>>KdNet is the one setting the SIMP and it's not setting the SCONTROL, ill
+>>>paste output of KVM traces for the relevant MSRs
+>>>
+>>>> Note that, even if you don't see it being enabled by Windows, it can be
+>>>> enabled by the firmware and/or by the bootloader.
+>>>>
+>>>> Can you perhaps try with the SeaBIOS from
+>>>> https://src.openvz.org/projects/UP/repos/seabios branch hv-scsi?  It
+>>>> enables SCONTROL and leaves it that way.
+>>>>
+>>>> I'd also suggest tracing kvm_msr events (both reads and writes) for
+>>>> SCONTROL and SIMP msrs, to better understand the picture.
+>>>>
+>>>> So far the change you propose appears too heavy to work around the
+>>>> problem of disabled SCONTROL.  You seem to be better off just making
+>>>> sure it's enabled (either by the firmware or slighly violating the spec
+>>>> and initializing to enabled from the start), and sticking to the
+>>>> existing infrastructure for posting messages.
+>>>>
+>>>
+>>>I guess there is something I'm missing here but let's say the BIOS would
+>>>have set the SCONTROL but the OS is not setting it, who is in charge of
+>>>handling the interrupts?
 >>
->> 1. kexec should not add virtio-mem memory to the initial firmware
->>    memmap. The driver has to be in charge as discussed.
->> 2. kexec should not place kexec images onto virtio-mem memory. That
->>    would end badly.
->> 3. kexec should still dump virtio-mem memory via kdump.
->=20
-> Ok, but then seems to say to me that dax/kmem is a different type of
-> (driver managed) than virtio-mem and it's confusing to try to apply
-> the same meaning. Why not just call your type for the distinct type it
-> is "System RAM (virtio-mem)" and let any other driver managed memory
-> follow the same "System RAM ($driver)" format if it wants?
+>>SCONTROL doesn't enable the interrupts, it enables SynIC as a whole.
+>>The interrupts are enabled via individual SINTx msrs.  This SeaBIOS
+>>branch does exactly this: it enables the SynIC via SCONTROL, and then
+>>specific SynIC functionality via SIMP/SIEFP, but doesn't activate SINTx
+>>and works in polling mode.
+>>
+>>I agree that this global SCONTROL switch seems redundant but it appears
+>>to match the spec.
+>>
+>>>> > (There are a bunch of patches i sent on the QEMU mailing list as well  where
+>>>> > i CCed you, I will probably revise it a bit but was hoping to get  KVM
+>>>> > sorted out first).
+>>>>
+>>>> I'll look through the archive, should be there, thanks.
+>>>>
+>>>> Roman.
+>>>
+>>>I tried testing with both the SeaBIOS branch you have suggested and the
+>>>EDK2, unfortunately I could not get the EDK2 build to identify my VM drive
+>>>to boot from (not sure why)
+>>>
+>>>Here is an output of KVM trace for the relevant MSRs (SCONTROL and SIMP)
+>>>
+>>>QEMU Default BIOS
+>>>-----------------
+>>> qemu-system-x86-613   [000] ....  1121.080722: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x0 host 1
+>>> qemu-system-x86-613   [000] ....  1121.080722: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 1
+>>> qemu-system-x86-613   [000] .N..  1121.095592: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x0 host 1
+>>> qemu-system-x86-613   [000] .N..  1121.095592: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 1
+>>>Choose Windows DebugEntry
+>>> qemu-system-x86-613   [001] ....  1165.185227: kvm_msr: msr_read 40000083 = 0x0
+>>> qemu-system-x86-613   [001] ....  1165.185255: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0xfa1001 host 0
+>>> qemu-system-x86-613   [001] ....  1165.185255: kvm_msr: msr_write 40000083 = 0xfa1001
+>>> qemu-system-x86-613   [001] ....  1165.193206: kvm_msr: msr_read 40000083 = 0xfa1001
+>>> qemu-system-x86-613   [001] ....  1165.193236: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0xfa1000 host 0
+>>> qemu-system-x86-613   [001] ....  1165.193237: kvm_msr: msr_write 40000083 = 0xfa1000
+>>>
+>>>
+>>>SeaBIOS hv-scsci
+>>>----------------
+>>> qemu-system-x86-656   [001] ....  1313.072714: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x0 host 1
+>>> qemu-system-x86-656   [001] ....  1313.072714: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 1
+>>> qemu-system-x86-656   [001] ....  1313.087752: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x0 host 1
+>>> qemu-system-x86-656   [001] ....  1313.087752: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 1
+>>
+>>Initialization (host == 1)
+>>
+>>> qemu-system-x86-656   [001] ....  1313.156675: kvm_msr: msr_read 40000083 = 0x0
+>>> qemu-system-x86-656   [001] ....  1313.156680: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x7fffe001 host 0
+>>>Choose Windows DebugEntry
+>>
+>>I guess this is a bit misplaced timewise, BIOS is still working here
+>>
+>>> qemu-system-x86-656   [001] ....  1313.156680: kvm_msr: msr_write 40000083 = 0x7fffe001
+>>
+>>BIOS sets up message page
+>>
+>>> qemu-system-x86-656   [001] ....  1313.162111: kvm_msr: msr_read 40000080 = 0x0
+>>> qemu-system-x86-656   [001] ....  1313.162118: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000080 data 0x1 host 0
+>>> qemu-system-x86-656   [001] ....  1313.162119: kvm_msr: msr_write 40000080 = 0x1
+>>
+>>BIOS activates SCONTROL
+>>
+>>> qemu-system-x86-656   [001] ....  1313.246758: kvm_msr: msr_read 40000083 = 0x7fffe001
+>>> qemu-system-x86-656   [001] ....  1313.246764: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0x0 host 0
+>>> qemu-system-x86-656   [001] ....  1313.246764: kvm_msr: msr_write 40000083 = 0x0
+>>
+>>BIOS clears message page (it's not needed once the VMBus device was
+>>brought up)
+>>
+>>I guess the choice of Windows DebugEntry appeared somewhere here.
+>>
+>>> qemu-system-x86-656   [001] ....  1348.904727: kvm_msr: msr_read 40000083 = 0x0
+>>> qemu-system-x86-656   [001] ....  1348.904771: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0xfa1001 host 0
+>>> qemu-system-x86-656   [001] ....  1348.904772: kvm_msr: msr_write 40000083 = 0xfa1001
+>>
+>>Bootloader (debug stub?) sets up the message page
+>>
+>>> qemu-system-x86-656   [001] ....  1348.919170: kvm_msr: msr_read 40000083 = 0xfa1001
+>>> qemu-system-x86-656   [001] ....  1348.919183: kvm_hv_synic_set_msr: vcpu_id 0 msr 0x40000083 data 0xfa1000 host 0
+>>> qemu-system-x86-656   [001] ....  1348.919183: kvm_msr: msr_write 40000083 = 0xfa1000
+>>
+>>Message page is being disabled again.
+>>
+>>I guess you only filtered SCONTROL and SIMP, skipping e.g. SVERSION,
+>>GUEST_OS_ID, HYPERCALL, etc., which are also part of the exchange here.
+>>
+>
+>Right my bad :( if you want I can re-run the test with the others as 
+>well (do you need me to?)
+>
+>>> I could not get the EDK2 setup to work though
+>>> (https://src.openvz.org/projects/UP/repos/edk2 branch hv-scsi)
+>>>
+>>>It does not detect my VM hard drive not sure why (this is how i  configured
+>>>it:
+>>> -drive file=./win10.qcow2,format=qcow2,if=none,id=drive_disk0 \
+>>> -device virtio-blk-pci,drive=drive_disk0 \
+>>>
+>>>(Is there something special i need to configure it order for it to  work?, I
+>>>tried building EDK2 with and without SMM_REQUIRE and  SECURE_BOOT_ENABLE)
+>>
+>>No special configuration I can think of.
+>>
+>>>But in general it sounds like there is something I dont fully understand
+>>>when SCONTROL is enabled, then a GSI is associated with this SintRoute.
+>>>
+>>>Then when the guest triggers an EOI via the APIC we will trigger the GSI
+>>>notification, which will give us another go on trying to copy the message
+>>>into it's slot.
+>>
+>>Right.
+>>
+>>>So is it the OS that is in charge of setting the EOI?
+>>
+>>Yes.
+>>
+>>>If so then it needs to
+>>>be aware of SCONTROL being enabled and just having it left set by the BIOS
+>>>might not be enough?
+>>
+>>Yes it needs to be aware of SCONTROL being enabled.  However, this
+>>awareness may be based on a pure assumption that the previous entity
+>>(BIOS or bootloader) did it already.
+>>
+>>>Also in the TLFS (looking at v6) they mention that message queueing has "3
+>>>exit conditions", which will cause the hypervisor to try and attempt to
+>>>deliver the additional messages.
+>>>
+>>>The 3 exit conditions they refer to are:
+>>>* Another message buffer is queued.
+>>>* The guest indicates the “end of interrupt” by writing to the APIC’s   EOI
+>>>register.
+>>>* The guest indicates the “end of message” by writing to the SynIC’s EOM
+>>>register.
+>>>
+>>>Also notice this additional exit is only if there is a pending message and
+>>>not for every EOM.
+>>
+>>This meaning of "exit" doesn't trivially correspond to what we have in
+>>KVM.  A write to an msr does cause a vmexit.  Then KVM notifies resample
+>>eventfds for all SINTs that have them set up, no matter if there's a
+>>pending message in the slot.  It may be slightly more optimal to only
+>>notify those having indicated a pending message, but I don't see the
+>>current behavior break anything or violate the spec, so, as EOMs are not
+>>used on fast paths, I woudn't bother optimizing.
+>>
+>>Roman.
+>
+>Hi Roman,
+>
+>So based on your answer I got to the following conclusions (correct if 
+>they are wrong).
+>
+>First of the one in charge of setting the SCONTROL in the 1st place is 
+>the BIOS (I dont have a real Hyper-V setup so I cannot really debug it 
+>and see, not sure which BIOS they have or if we can "rip" it out and 
+>run it through KVM and see how things look like this way).
+>
+>If the BIOS has not set the SCONTROL I would expect the OS to have 
+>something along the lines:
+>if (!(get_scontrol() & ENABLED))
+>    set_scontrol(ENABLED);
+>
+>So I started looking through the entire Windows system looking what 
+>can set SCONTROL, I believe I have found the flow to be the following:
+>
+>VMBus.sys imports winhv.sys (which is an export library) winhv.sys 
+>will set the SCONTROL prior to VMBus DriverEntry starting here is the 
+>complete flow:
+>winhv!DllInitialize -> winhv!WinHvpInitialize -> 
+>winhv!WinHvReportPresentHypervisor -> winhv!WinHvpConnectToSynic -> 
+>winhv!WinHvpEnableSynic
+>
+>Eventually WinHvpEnableSynic will simply set SCONTROL (for future 
+>reference if anyone needs to look into how HyperV register access 
+>works in Windows it seems like there is an enum representing all the 
+>HyperV registers and to access it there are helper functions to 
+>Get/Set.
+>SCONTROL value in the enum is 0x0a0010 .
+>
+>winhv.sys simply provides very simple API to access the Sints i.e 
+>(WinHvSetSint / WinHvSetEndOfMessage / WinHvSetSintOnCurrentProcessor 
+>/  WinHvGetSintMessage / etc.)
+>
+>So basically it seems like the OS does not really care if the BIOS has 
+>setup the SCONTROL or not, and does so always (if it can) 
+>unfortunately in my flow (via kdnet) VMBus is not loaded yet and so 
+>does winhv.sys so they "fallback" into this Polling mode.
+>
+>So that covers the OS part, after that I have tried looking for 
+>relevant code in bootmgr and winload (which are Windows boot loader 
+>part (like grub) and I could not find any code that might setup 
+>SCONTROL.
+>
+>From your experience with this did you see Hyper-V BIOS simply setting 
+>the SCONTROL? Perhaps if that's the case then the correct fix needs to 
+>be in the SeaBIOS and the EDK .
+>
+>I tried to see if Hyper-V supports giving it a BIOS but could not find 
+>anyway of doing this, so it just might be that Hyper-V assumes the 
+>BIOS is in charge of setting up SCONTROL for all the boot loader 
+>components.
+>
+>But in a way it sounds weird because I would expect to see KDNet 
+>working with the ACPI to trigger the GSI but I could not find any 
+>relevant code that might do that.
+>
+>As I write this I think I'm starting to get your point just to make 
+>sure I understand it:
+>
+>1. When a new SintRoute is created we associate it with a GSI
+>2. When an EOM is set, we trigger all the GSIs so QEMU will get    
+>execution time and send all pending messages if it can.
+>
+>So basically like you said everything "works" from our perspective 
+>regardless if the system has setup SCONTROL or not, because you 
+>trigger the interrupt to QEMU regardless of SCONTROL so it can clear 
+>the pending message.
+>
+>If that's indeed the case then probably the only thing needs fixing in 
+>my scenario is in QEMU where it should not really care for the 
+>SCONTROL if it's enabled or not.
+>
+>Sounds about right?
+>
+>Thanks,
+>-- Jon.
 
-I had the same idea but discarded it because it seemed to uglify the
-add_memory() interface (passing yet another parameter only relevant for
-driver managed memory). Maybe we really want a new one, because I like
-that idea:
+Hi Roman, any chance you can have a quick look at this and see if I 
+understood you correctly?
 
-/*
- * Add special, driver-managed memory to the system as system ram.
- * The resource_name is expected to have the name format "System RAM
- * ($DRIVER)", so user space (esp. kexec-tools)" can special-case it.
- *
- * For this memory, no entries in /sys/firmware/memmap are created,
- * as this memory won't be part of the raw firmware-provided memory map
- * e.g., after a reboot. Also, the created memory resource is flagged
- * with IORESOURCE_MEM_DRIVER_MANAGED, so in-kernel users can special-
- * case this memory (e.g., not place kexec images onto it).
- */
-int add_memory_driver_managed(int nid, u64 start, u64 size,
-			      const char *resource_name);
-
-
-If we'd ever have to special case it even more in the kernel, we could
-allow to specify further resource flags. While passing the driver name
-instead of the resource_name would be an option, this way we don't have
-to hand craft new resource strings for added memory resources.
-
-Thoughts?
-
---=20
 Thanks,
-
-David / dhildenb
-
+-- Jon.
