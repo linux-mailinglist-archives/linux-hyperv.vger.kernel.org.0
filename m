@@ -2,154 +2,121 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8D071C536A
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 May 2020 12:38:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 252F81C5953
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 May 2020 16:24:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgEEKiZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 5 May 2020 06:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42994 "EHLO
+        id S1729416AbgEEOYh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 5 May 2020 10:24:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728238AbgEEKiZ (ORCPT
+        by vger.kernel.org with ESMTP id S1729399AbgEEOYg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 5 May 2020 06:38:25 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD099C061A0F;
-        Tue,  5 May 2020 03:38:24 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u127so1766678wmg.1;
-        Tue, 05 May 2020 03:38:24 -0700 (PDT)
+        Tue, 5 May 2020 10:24:36 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8597EC061A10
+        for <linux-hyperv@vger.kernel.org>; Tue,  5 May 2020 07:24:35 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b188so2392769qkd.9
+        for <linux-hyperv@vger.kernel.org>; Tue, 05 May 2020 07:24:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qdvXRHV49KZiDqe+v5s5lVLMQu37AOtnKETx3EmPlpw=;
-        b=JsnoShICFFrQ+8QGcwDk46zqHVdYbrUXy1Kuqe88AnIJvMaDQS0DCTcKsxE6fhFReW
-         57z/KFzZ7ekwcmU2d8eXW1VXVgATQY3Nvb3yPL8DS36EpxlqT108jdaytJxeCZFtPPaw
-         vEe8tNqpptRhIviRvVfY/+FNvmKw32ihJOu0xytvKNX4Gec7HFKo8OAcQctF1czpUHrF
-         qwQbpXNJa+/o/sXtLTppmsJ3zS7pI3TdrFaoJZ2yD3WrCdRbx42Y/r23sE0XjZ+kzejN
-         jF/gM38m1tFxPtoVMdB00che32EOCtk0gQ5OhQFiC3PteM6+Fb9K/J2oQhlWpSBrU3fH
-         V9Lg==
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=z7jVxqc7TYDxLD35G2tT1fTPM95gzbd5Aqe8HIKsqWE=;
+        b=GPKOxTXyID7KCIVJRJo+1menSzg+R+tV1g62FhqmTgUHSM7IVkoCBY+O6Sk64a4BqZ
+         G+9NNXKGsF9XsRUTQykvp14C1HvCQP40QPp/S3dSpo+iul/4Ny4QxeMGCbR/PhfVDGyY
+         LRMm701EleKexfywr/6329rQBKCThTBEMvQKnVli5GbZzZebINQUozWnRQvax50NomSB
+         rJdlH5RLwSvu8vGHl9cbLVtfO0iYPtNY2epyStFyIJMsboF3RSEevwOcR7lXZ4+47yIK
+         V/dKJo1DcG1IX+ONR8wRA0Wn85kJckK0cHIr+vEZAoVFyTMtJwhd8ogRmToS4bjBuskM
+         k7hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qdvXRHV49KZiDqe+v5s5lVLMQu37AOtnKETx3EmPlpw=;
-        b=j7xYFiQO2VZMEuLZrUmuT9S0XLufe99EBVl8lyUCxBs+bcUVZvDMyO3hfEq5OVMCNB
-         IjxHZL3OGXEKTIzihHy/D1OnUU2lC+MDWSC6QQjE3Wa66mzolnuCtLvMPfO2qVfMVQdi
-         38dfSffG6JpTO3wVcWK4g5/uXbAhTD85H6/KtIE6sTpLC8/wCBsU34X2pHkty4sv/pAn
-         /DX2ORi65XGeQTwgBY9JxmCVha3JyqbyTBwOOdIeYg0hsAKs567Jjbo7mXck8ZZH3T1m
-         iEk7SA9IvFopvvE2N3FBB4xFmB8wkK9Aa7Jy6+9nvWyaQJLldg0hj/Uot2J+R/GtokCo
-         fbQw==
-X-Gm-Message-State: AGi0PuZJci0nmWy3A/sGqzwlWNPpiMfaQh0pqalzZFfQnvECbXF/cyOn
-        Eabcy5IsCI19FYoTrm3ggZNl2Bm6dz8=
-X-Google-Smtp-Source: APiQypKGXYuyWK4FBwaqWCWPuo5VBCJNcCtPeJ1uRgXzanGAsJ2MSY9D794RDIm0MYPfDiHcgi850g==
-X-Received: by 2002:a1c:7d04:: with SMTP id y4mr2740141wmc.10.1588675103469;
-        Tue, 05 May 2020 03:38:23 -0700 (PDT)
-Received: from jondnuc (IGLD-84-229-154-20.inter.net.il. [84.229.154.20])
-        by smtp.gmail.com with ESMTPSA id k9sm2625894wrd.17.2020.05.05.03.38.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 03:38:22 -0700 (PDT)
-Date:   Tue, 5 May 2020 13:38:21 +0300
-From:   Jon Doron <arilou@gmail.com>
-To:     Roman Kagan <rvkagan@yandex-team.ru>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 0/1] x86/kvm/hyper-v: Add support to SYNIC exit on EOM
-Message-ID: <20200505103821.GB2862@jondnuc>
-References: <20200416083847.1776387-1-arilou@gmail.com>
- <20200416120040.GA3745197@rvkaganb>
- <20200416125430.GL7606@jondnuc>
- <20200417104251.GA3009@rvkaganb>
- <20200418064127.GB1917435@jondnuc>
- <20200424133742.GA2439920@rvkaganb>
- <20200425061637.GF1917435@jondnuc>
- <20200503191900.GA389956@rvkaganb>
- <87a72nelup.fsf@vitty.brq.redhat.com>
- <20200505080158.GA400685@rvkaganb>
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=z7jVxqc7TYDxLD35G2tT1fTPM95gzbd5Aqe8HIKsqWE=;
+        b=qMB4B5JzNQRF4JYju7V3t19MqjI42LovnyDxMfn0ea+yPnazPABmoPU6xGmL6XxDyH
+         2vaCdJKqjGfGemAPhCMlPJNf6monrpE0r135k6s0yMNWw2hQMg/NeQXl+SuYUYl1Byez
+         sOyg44LNjuzAqAxRpsuTdIDWHdePZVSMockfe9FzJJLvN+Eds3rLkGx7KkJmJGRktmdr
+         67iXLBBa1NO1z3Od4GmzWKsBVpRN2lh94kukM7I1jFIfaGvw4SRXQ0iJtLQHLQGMNerJ
+         UD8lhu4w7g1PnRLbHp2OdDgkXcBbg4CtgS8CA3Q+/lySXBrAkf5BJFEnhWmWnMV4Kb/d
+         BcFQ==
+X-Gm-Message-State: AGi0PuYHnGitQe/rpR3is16kvyT6Kzz/W5SSwBgAnT0IV6ZFtzh9fUmy
+        VUt5IXnI1oX2GxEh4612gHtZ5J7oW1QTkbkTzIA=
+X-Google-Smtp-Source: APiQypIazf8D4NwTk2ba322YEOFc8KDPPPQqMUJcJX9ybQQ29Mwqp+Q7N11g5Djpq+EqG5kEG8H3sBuBCBAD6aXpxnc=
+X-Received: by 2002:a37:9a13:: with SMTP id c19mr2479150qke.51.1588688674526;
+ Tue, 05 May 2020 07:24:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200505080158.GA400685@rvkaganb>
+Received: by 2002:a0c:f689:0:0:0:0:0 with HTTP; Tue, 5 May 2020 07:24:33 -0700 (PDT)
+From:   "Mrs. vivian Ouedrago" <vivian.OuedragoBrown@gmail.com>
+Date:   Tue, 5 May 2020 07:24:33 -0700
+X-Google-Sender-Auth: CDxwzchD25jSXvSwcJaSU0v5hCU
+Message-ID: <CADSfHSgn0wcz_Lq0iGSdykZNZ5YuSA=uqagMTcGiv1Vy-4ARmA@mail.gmail.com>
+Subject: =?UTF-8?Q?D=C4=81rgais_Dieva_izredz=C4=93tais?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 05/05/2020, Roman Kagan wrote:
->On Mon, May 04, 2020 at 05:55:10PM +0200, Vitaly Kuznetsov wrote:
->> Roman Kagan <rvkagan@yandex-team.ru> writes:
->>
->> > On Sat, Apr 25, 2020 at 09:16:37AM +0300, Jon Doron wrote:
->> >
->> >> If that's indeed the case then probably the only thing needs fixing in my
->> >> scenario is in QEMU where it should not really care for the SCONTROL if it's
->> >> enabled or not.
->> >
->> > Right.  However, even this shouldn't be necessary as SeaBIOS from that
->> > branch would enable SCONTROL and leave it that way when passing the
->> > control over to the bootloader, so, unless something explicitly clears
->> > SCONTROL, it should remain set thereafter.  I'd rather try going ahead
->> > with that scheme first, because making QEMU ignore SCONTROL appears to
->> > violate the spec.
->>
->> FWIW, I just checked 'genuine' Hyper-V 2016 with
->>
->> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
->> index fd51bac11b46..c5ea759728d9 100644
->> --- a/arch/x86/hyperv/hv_init.c
->> +++ b/arch/x86/hyperv/hv_init.c
->> @@ -314,10 +314,14 @@ void __init hyperv_init(void)
->>         u64 guest_id, required_msrs;
->>         union hv_x64_msr_hypercall_contents hypercall_msr;
->>         int cpuhp, i;
->> +       u64 val;
->>
->>         if (x86_hyper_type != X86_HYPER_MS_HYPERV)
->>                 return;
->>
->> +       hv_get_synic_state(val);
->> +       printk("Hyper-V: SCONTROL state: %llx\n", val);
->> +
->>         /* Absolutely required MSRs */
->>         required_msrs = HV_X64_MSR_HYPERCALL_AVAILABLE |
->>                 HV_X64_MSR_VP_INDEX_AVAILABLE;
->
->Thanks for having done this check!
->
->> and it seems the default state of HV_X64_MSR_SCONTROL is '1', we should
->> probably do the same.
->
->This is the state the OS sees, after the firmware.  You'd see the same
->with QEMU/KVM if you used Hyper-V-aware SeaBIOS or OVMF.
->
->> Is there any reason to *not* do this in KVM when
->> KVM_CAP_HYPERV_SYNIC[,2] is enabled?
->
->Yes there is: quoting Hyper-V TLFS v6.0 11.8.1:
->
->  At virtual processor creation time and upon processor reset, the value
->  of this SCONTROL (SynIC control register) is 0x0000000000000000. Thus,
->  message queuing and event flag notifications will be disabled.
->
->And, even if we decide to violate the spec it's better done in
->userspace, loading the initial value and adjusting the synic state at
->vcpu reset.
->
->However leaving it up to the guest (firmware or OS) looks more natural
->to me.
->
->Thanks,
->Roman.
+D=C4=81rgais Dieva izredz=C4=93tais
 
-I under where you are coming from in the idea of leaving it to the OS 
-but I think in this specific case it does not make much sense, after all 
-HyperV has it's own proprietary BIOS which Windows assumes has setup 
-some of the MSRs, since we dont have that BIOS we need to "emulate" it's 
-behaviour.
+Es rakstu jums =C5=A1o v=C4=93stuli ar smag=C4=81m asar=C4=81m ac=C4=ABs un=
+ sird=C4=AB ar liel=C4=81m
+b=C4=93d=C4=81m. Mans v=C4=81rds ir vivian Ouedrago kundze, es esmu no Tuni=
+sijas un
+sazin=C4=81jos ar jums no Burkinafaso slimn=C4=ABcas, es gribu jums to pate=
+ikt,
+jo es Jums nav citas iesp=C4=93jas k=C4=81 pateikt, kad mani uzrun=C4=81ja =
+atv=C4=93rties
+jums, es apprec=C4=93jos ar Ouedrago Smitu Braunu, kur=C5=A1 devi=C5=86us g=
+adus
+str=C4=81d=C4=81ja ar Tunisijas v=C4=93stnieku Burkinafaso, pirms vi=C5=86=
+=C5=A1 nomira 2005.
+gad=C4=81. prec=C4=93jies vienpadsmit gadus bez b=C4=93rna.
 
-I also feel like the best approach should be in QEMU in case VMBus 
-device exists it will also setup the SCONTROL to ENABLED, this way you 
-are not bound to have a special BIOS in case you have decided to use 
-HyperV advanced features like VMBus.
+Vi=C5=86=C5=A1 nomira p=C4=93c =C4=ABsas slim=C4=ABbas, kas ilga tikai piec=
+as dienas. Kop=C5=A1 vi=C5=86a
+n=C4=81ves es nol=C4=93mu v=C4=93lreiz neprec=C4=93ties. Kad mans miru=C5=
+=A1ais v=C4=ABrs bija
+dz=C4=ABvs, vi=C5=86=C5=A1 noguld=C4=ABja USD 8,5 miljonus (asto=C5=86i mil=
+joni pieci simti
+t=C5=ABksto=C5=A1u dol=C4=81ru) bank=C4=81 Ouagadougou galvaspils=C4=93t=C4=
+=81 Burkina Fasoin
+rietum=C4=81frik=C4=81. =C5=A0obr=C4=ABd =C5=A1=C4=AB nauda joproj=C4=81m a=
+trodas banka. Vi=C5=86=C5=A1 padar=C4=ABja =C5=A1o
+naudu pieejamu zelta eksportam no Burkinafaso kalnr=C5=ABpniec=C4=ABbas.
 
-Cheers,
--- Jon.
+Nesen =C4=81rsts man teica, ka v=C4=93=C5=BEa probl=C4=93mas d=C4=93=C4=BC =
+es neturpin=C4=81=C5=A1os septi=C5=86us
+m=C4=93ne=C5=A1us. Tas, kas mani visvair=C4=81k trauc=C4=93, ir mana insult=
+a slim=C4=ABba.
+Uzzin=C4=81jis manu st=C4=81vokli, es nol=C4=93mu =C5=A1o naudu nodot jums,=
+ lai r=C5=ABp=C4=93tos
+par maz=C4=81k privili=C4=A3=C4=93tajiem cilv=C4=93kiem, j=C5=ABs =C5=A1o n=
+audu izlietosit t=C4=81, k=C4=81 es
+=C5=A1eit nor=C4=81d=C4=AB=C5=A1u. Es v=C4=93los, lai j=C5=ABs pa=C5=86emtu=
+ 30 procentus no kop=C4=93j=C4=81s
+naudas person=C4=ABgai lieto=C5=A1anai. Kam=C4=93r 70% naudas tiks novirz=
+=C4=ABti
+labdar=C4=ABbas "cilv=C4=93kiem uz ielas un pal=C4=ABdz=C4=ABbas snieg=C5=
+=A1anai b=C4=93rnunam=C4=81. Es
+uzaugu k=C4=81 b=C4=81renis, un man nav neviena k=C4=81 manai =C4=A3imenei.=
+ loceklis,
+tikai cen=C5=A1oties saglab=C4=81t Dieva namu. Es to daru, lai Dievs piedot=
+u
+mysins un pie=C5=86emtu manu dv=C4=93seli parad=C4=ABz=C4=93, jo =C5=A1=C4=
+=AB slim=C4=ABba mani ir tik
+=C4=BCoti cietusi.
+
+Tikl=C4=ABdz es sa=C5=86em=C5=A1u j=C5=ABsu atbildi, es jums nor=C4=81d=C4=
+=AB=C5=A1u bankas kontaktu
+Burkinafaso, k=C4=81 ar=C4=AB uzdo=C5=A1u bankas vad=C4=ABt=C4=81jam jums i=
+zsniegt pilnvaras
+v=C4=93stuli, kas jums apliecin=C4=81s pa=C5=A1reiz=C4=93jo naudas l=C4=ABd=
+zek=C4=BCu sa=C5=86=C4=93m=C4=93ju
+bank=C4=81, ti, ja j=C5=ABs nodro=C5=A1in=C4=81sit man, ka j=C5=ABs r=C4=AB=
+kosities atbilsto=C5=A1i, k=C4=81
+es =C5=A1eit nor=C4=81d=C4=ABju.
+
+No vivian Ouedrago kundzes
