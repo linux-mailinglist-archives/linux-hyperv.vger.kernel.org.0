@@ -2,95 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 142401C742E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 May 2020 17:21:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C54C1C75BA
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 May 2020 18:08:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbgEFPVe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 May 2020 11:21:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:38946 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729264AbgEFPVd (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 May 2020 11:21:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2E2CD6E;
-        Wed,  6 May 2020 08:21:32 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BA333F68F;
-        Wed,  6 May 2020 08:21:31 -0700 (PDT)
-Date:   Wed, 6 May 2020 16:21:26 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+        id S1729447AbgEFQIM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 May 2020 12:08:12 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35300 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729418AbgEFQIM (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 6 May 2020 12:08:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r26so3374464wmh.0;
+        Wed, 06 May 2020 09:08:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HG4juwLkpA3lPMHgXzAH+5UcLg1AB2lQeps7Ou5A7I4=;
+        b=hs2Eew4EbrR7fqyTeQR7qgvilYC6hKFlj84PKVvxTFd8yOSwHC/X4xCsSh9FSfX/r/
+         9vkEpIp6zV9Jou58gp71q8+eiwa8n6iYp3n2bfdX9ZcYhPTiHATOi+W7bjTKT/gsuGSi
+         T8msLpjxc1x1R2G00UVsETtsJqdSISsPT/mm3QakFxyMTqig8RfvIUJ+v+k2JIedoX/z
+         qCpqSK+8r/3vHSl02amhWL03Du2GtSejBHOsdNjgk0oJ1R2eK+oFvLdKXn+qCU2zlLLe
+         mMC8RGkJPG/gQReJViKgOftjlQowEthwqspBKxPb/80fpAMRm3QFn9CeIozpGdUtgdNw
+         EY+w==
+X-Gm-Message-State: AGi0Pubuykj06ILspGZf48tZB6zKh1br9Qja3omdfk7tuEeRfVDg7p4a
+        sw3uvb5Yn8XuqB/OB6Llb0LncwaS
+X-Google-Smtp-Source: APiQypJ9Msc2eoTwoHeh58vNZgD8yGEzKZTMjuCYxPO32gZYLSHjNsJdk1SWChD6SLVoOZODPfseYA==
+X-Received: by 2002:a7b:cb0c:: with SMTP id u12mr5648769wmj.137.1588781289856;
+        Wed, 06 May 2020 09:08:09 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id l16sm3355699wrp.91.2020.05.06.09.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 09:08:09 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
- release resource properly
-Message-ID: <20200506152126.GA2911@e121166-lin.cambridge.arm.com>
-References: <20200501053617.24689-1-weh@microsoft.com>
- <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
- <SG2P153MB02136EA9764D340F3D81DF2DBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
- <20200506110930.GA31068@e121166-lin.cambridge.arm.com>
- <SG2P153MB0213216D3C150AA4758FCBB8BBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
- <MW2PR2101MB1052F033623F91A0FF991DE4D7A40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Stephen Hemminger <sthemmin@microsoft.com>
+Subject: [PATCH] Driver: hv: vmbus: drop a no long applicable comment
+Date:   Wed,  6 May 2020 16:08:05 +0000
+Message-Id: <20200506160806.118965-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052F033623F91A0FF991DE4D7A40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:55:17PM +0000, Michael Kelley wrote:
+None of the things mentioned in the comment is initialized in hv_init.
+They've been moved elsewhere.
 
-[...]
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+ drivers/hv/vmbus_drv.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> > Hv_pci_bus_exit() calls hv_send_resources_released() to release all child resources.
-> > These child resources were allocated in hv_send_resources_allocated().
-> > Hv_send_resources_allocated() could fail in the middle, leaving some child resources
-> > allocated and rest not. Without adding this variable to record the highest slot number that
-> > resource has been successfully allocated, calling hv_send_resources_released() could
-> > cause spurious resource release requests being sent to hypervisor.
-> > 
-> > This had been fine since hv_pci_bus_exit() was never called in error path before this patch
-> > was
-> > introduced. To add this call to clean the pci state in the error path, we need to know the
-> > starting
-> > point in child device that resource has not been allocated. Hence this variable
-> > is used in hv_send_resources_allocated() to record this point and in
-> > hv_send_resource_released() to start deallocating child resources.
-> > 
-> > I can add to the commit log if you are fine with this explanation.
-> > 
-> 
-> FWIW, I think of this patch as follows:
-> 
-> In some error cases in hv_pci_probe(), allocated resources are not
-> freed.  Fix this by adding a field to keep track of the high water mark
-> for slots that have resources allocated to them.  In case of an error, this
-> high water mark is used to know which slots have resources that
-> must be released.  Since slots are numbered starting with zero, a
-> value of -1 indicates no slots have been allocated resources.  There
-> may be unused slots in the range between slot 0 and the high
-> water mark slot, but these slots are already ignored by the existing code
-> in the allocate and release loops with the call to get_pcichild_wslot().
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 3a27f6c5f3de..7efdcadc335e 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1396,7 +1396,6 @@ static int vmbus_bus_init(void)
+ {
+ 	int ret;
+ 
+-	/* Hypervisor initialization...setup hypercall page..etc */
+ 	ret = hv_init();
+ 	if (ret != 0) {
+ 		pr_err("Unable to initialize the hypervisor - 0x%x\n", ret);
+-- 
+2.20.1
 
-That's much clearer now - please add these bits of info to the commit
-log, it is essential that developers can find an explanation for a
-change like this one there IMO.
-
-Overall the code changes are fine, I am not a big fan of the (void)
-cast (I don't think error codes should be ignored) but it is acceptable,
-in this context.
-
-Thank you for taking some time to review the code together.
-
-Lorenzo
