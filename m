@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B729D1C6782
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 May 2020 07:36:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D72D91C6793
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 May 2020 07:48:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgEFFgx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 May 2020 01:36:53 -0400
-Received: from mail-eopbgr1310123.outbound.protection.outlook.com ([40.107.131.123]:6851
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        id S1726924AbgEFFr5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 May 2020 01:47:57 -0400
+Received: from mail-eopbgr1320134.outbound.protection.outlook.com ([40.107.132.134]:39168
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726778AbgEFFgx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 May 2020 01:36:53 -0400
+        id S1725771AbgEFFr4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 6 May 2020 01:47:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q/xu9GZ4W228hppDU8pub1mIZgHr9z1LDJrvz2fS9QuKgFgcqzJtIfnUD2EzWDfBnFi2MLtCwmphTnIV3zVU3xfs2JENbJpbCM2Sy4T4m5qagZaedEuGk/zjp17hQXVSmOakbYlms0Hcjjr+qTkUOhCYqOztMUuCF23ylADgaSHCP9EA7MmbVuAk/JrFq+4FiRpGPdd50lnOG31ymMKwDPpIGNKt2Dt7wzI/vd3f2elQju9DBNwOzU1RVKi3bYIIAY7fRKgKU3TUvDN6aetH4nOiEkIZ1a+Zmi6Wi8p4Av+R7hrGfg6OO9WqcHHjhcDoABDsGbForYvth1KRQL7rZg==
+ b=PJarKuKyaGxhmZeSysJNPPo7aivqWpEYKlDFB/zyHtRpvvXOiystLTuAkCYDFikBRtst6FusreX1Rn8tp22S4EzYXXn9NDarmE6EhV2wxAgz2bgottWhgepQ2hhJI3UGv+jXJT3XpRpgOP/cGLnt9RhHcMtcd9kMA7sV+Ba8nyFTlacDu+zlgWmNTFc+TZRQLcxhf3aykwBpl9/IZ2LZmdkDj2dylonM+MdNOcxAgFecQgnO/szSJKkpoClpCcxZiz1YZVVUfV+cAPMRsy/Sj4AuuywPNw8L6w68ZcOVDz4bu9qoseF0HBZF4GMva+3JozPMxzV1RQJvbqe804Duew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cqpxUu/fg5cbKDDYzX+Er/DECVBZTD42pgWYuCU/xY0=;
- b=DQDGo3+1fDhGxhwkgEPS2PZV1U9CmJhFnB5Ry3Zjs8wSXsjwWDmUwU23y8h6Ksjq4noXqapDuIZaEOaZjO1dWzhEoJZ5yv5+qb9pZCQG3u5yfR8kv+BepYByhnKabemvpeNVcHfi0oSQwQlZ62yU+BkkyFc4T+9HjnDp971NAjdZDvGKYygvBiPFhfGwGh+mIpzDG3d+LDKxnrA+EvaSxhDsDeIg5SCaTgs0d40CWBkRM90EKXRI2s0IhTkGZLHJrJmoaLwtjnxcZXr3nVrD2nRqO8ICawnTVFh58S/QvrUYF/8ilFxWx/ooDMQO002zChLOi9A7Oltny9KT5LdDZw==
+ bh=a0rj7Pk+Q0WQlL1DP3OPW+vqT1lvMeO2Aslw6P9F+4M=;
+ b=myqxQyIylI6UuiHUNdV4UgApNwY5SFeBIA6qIP/qZHvbzel8koSnBxplHgPM4uzrqnfksrwia+Dsdz/7GKP5gzkxlsKUwbMQMNLG5NO0j4QqTWaLO9MhFzfGWAISJfLXgiWCF3kqHdDpriVOIsWen7Cmm1S0yeI1dDBV+3/E8fjhRCeCnDcjehLJsYTXijkYKEDgETyZw1yRYp/QfW/+dXXxR0+tloGYmXn3zqOv3A0VPVjSQOlsIzT4TjKeRWcrAJ5I6IBvm2m8Wc0f++8fm4Bf4/qBmHDdUQkv7HJlLRpDfh24fEGmcInCctc1vcoGtScGwajs7khmxis/Z2S2dg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cqpxUu/fg5cbKDDYzX+Er/DECVBZTD42pgWYuCU/xY0=;
- b=WXveWXpGG9cXZdABN5wXHpnz9Ok9cC+zwYpvrt7CVniVhL3Fz7CQx36kIZI55+CzdgSAERovlZGPdJxA54ufDrQ+JXUB48fQ6KV686I3FoKRsv/CMLMApo9t1dJ8BAbBgat6KMmLEtENEyWxrl6gVnK2sd+0ktwoSA/B9sUTMm8=
+ bh=a0rj7Pk+Q0WQlL1DP3OPW+vqT1lvMeO2Aslw6P9F+4M=;
+ b=YlY5mK0rMCJihEjVaQaVGOk9aV2U/Q8e6jZ61bLLT+CziAK9xWsfYRhw30AsSgVvWhz+jZfLHl6dUKl7TlkaRRIpjldeAV/S9aBvAmuXLvDWvN8k2BOR913IX/hQtgCrmlB4AjUwc74ATPcznm6lrwnYaRxgfJ58ime3yjMo3rE=
 Received: from SG2P153MB0213.APCP153.PROD.OUTLOOK.COM (2603:1096:4:8c::10) by
- SG2P153MB0189.APCP153.PROD.OUTLOOK.COM (2603:1096:3:1d::22) with Microsoft
+ SG2P153MB0144.APCP153.PROD.OUTLOOK.COM (2603:1096:3:19::21) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3000.4; Wed, 6 May 2020 05:36:46 +0000
+ 15.20.3000.0; Wed, 6 May 2020 05:47:48 +0000
 Received: from SG2P153MB0213.APCP153.PROD.OUTLOOK.COM
  ([fe80::9979:a66f:c953:ce10]) by SG2P153MB0213.APCP153.PROD.OUTLOOK.COM
  ([fe80::9979:a66f:c953:ce10%6]) with mapi id 15.20.3000.011; Wed, 6 May 2020
- 05:36:46 +0000
+ 05:47:48 +0000
 From:   Wei Hu <weh@microsoft.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 CC:     KY Srinivasan <kys@microsoft.com>,
@@ -48,16 +48,16 @@ CC:     KY Srinivasan <kys@microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Dexuan Cui <decui@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
- release resource properly
-Thread-Topic: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to
- release resource properly
-Thread-Index: AQHWH3qEBLEBr0YlaECi2yeFzC7HIaiZnaWAgADcDDA=
-Date:   Wed, 6 May 2020 05:36:46 +0000
-Message-ID: <SG2P153MB02136EA9764D340F3D81DF2DBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
-References: <20200501053617.24689-1-weh@microsoft.com>
- <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200505150315.GA16228@e121166-lin.cambridge.arm.com>
+Subject: RE: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state
+Thread-Topic: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state
+Thread-Index: AQHWH3qw4MujxUY1oUuPITXoNVY1g6iZn3GAgADy9UA=
+Date:   Wed, 6 May 2020 05:47:47 +0000
+Message-ID: <SG2P153MB02138A9975FF6D57607FF21FBBA40@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
+References: <20200501053728.24740-1-weh@microsoft.com>
+ <20200505150941.GB16228@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200505150941.GB16228@e121166-lin.cambridge.arm.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -65,145 +65,143 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=weh@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-06T05:36:44.3978597Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-06T05:47:46.2967453Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=15755ebe-c76b-412b-8ad0-36d7643caf80;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a819b0dd-0e11-43c1-9982-7d1147215961;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: arm.com; dkim=none (message not signed)
  header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
 x-originating-ip: [2404:f801:9000:1a:6feb::496b]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5e7817dc-6460-4729-0ec0-08d7f17f77d2
-x-ms-traffictypediagnostic: SG2P153MB0189:
+x-ms-office365-filtering-correlation-id: e9cdb3c8-f1b7-4f86-70f1-08d7f1810208
+x-ms-traffictypediagnostic: SG2P153MB0144:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SG2P153MB018957B9F1620533ADC196E1BBA40@SG2P153MB0189.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <SG2P153MB01449D4D5F536FD5C046D9D2BBA40@SG2P153MB0144.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 03950F25EC
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uj6DYCgZXjcj1mS7OsnJ5C/RP5GT82o9gHDjLhFyoF62fGzMoMHZiRNVzvSgeYZVitMxxnPDhwmD+mWVqGnkzthRAwqPXRTCloplKjQpvRQ3A4IhiXVauy/lgHBjKD+4JSchXPzFWI4zIy1aNOIbsTtDrRTtUKYaLfBLYjHnFpAu6/2iXgbIjmqw75K1QzjiITMjr4CFYptjRYhVC9+1ARA4dSyc5tSDxYVSu/4k5GFTUwmOjzelljMBMBH0nKDI6WIpmUZZBLmUjY1F0627cehe6wG2aDFoGqfpkf6QSAIzIF1kHiJnpjOcC2UIeb82v6mmOp8mMY0c/xM7Y5AZUSpP1CqDF6RdoI3lTUiTxrUl+Lh+lJgZPFFrscR/pjTCMU8aW7qPnemLfAH6uRy+D0IDDpIBEHiCdMcOQKsgir+jCTt7IBnOlx24mTuz3v0OMqO2u+691ExRx5wxxAScrcaJlnLFPR2IJWB9SI4eWguhl7S2SR4aB5oxDgmGIzRmphosc9r3Ub1+XCU2IOdhcg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0213.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(396003)(39860400002)(366004)(33430700001)(186003)(86362001)(2906002)(10290500003)(66446008)(66556008)(66476007)(64756008)(53546011)(6506007)(107886003)(6916009)(7696005)(82950400001)(478600001)(8676002)(76116006)(82960400001)(66946007)(316002)(9686003)(5660300002)(71200400001)(54906003)(33656002)(8936002)(55016002)(33440700001)(4326008)(52536014)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: L/rc6GqzsCm8XIkYRP23812ArIsXV6DMHInOnoAulTR0ttEsLffRsK1zdeLzWIybywUp8dC++ZBaYFvu22WlQSjhd5oGt4nXSFvXePDMgJCqySf4vopgoW+gQAVHYo9fhUrGlWpAPwQ92N+aGqI9teNhjT03j87xC2s9T/5QOltkvl7/VHqND3CoD7e+q78q0g8s/eBeYbOgRqyxyQONSN5x0jmHrMCNu097ULboNdkrSilRKRVfXRx1GX4PNb78/GydCeoM3mTFof0TaKjW8czUykv3XXUoJJPNsjVwbWRCVskalmVBR4j21NIVNnWZnqSSFbrCZDtKvo80ePd64yKf2QYbQvDqEWIioQxNmcv3/YHcM3m5MkB905cssSM+5ijpIPjdCotQfY9HLX/VfIjq2W06qR+ZFYLnYTgY19HxsOOzdGdIV0JeHjLLNSO4NdE9GJETbkG33PeNKqxGu0gG+cd1+ImpmC131e6YxiroxrqKfpeX32Yytl65hhluKJogk0q45XNLJHr7QHtyOAakhhB7wEv6UPdCRRwRzbkcRUtjgWsK1p4T50G3QSQx9WiAIN9hsTNAKEimGqZYSun8k/6p60ZjwIGLdq0A31AXR/5/9HJd9scTQH7YogJ0J22DMZKARb9Ug193mr2NSTNJyAXKnwkOImvTHXTsKdVPsUeNmr9kMSCct1udWx22Z8h4GpTKdHzudfkxS0gBQGA3b1bvYTFQxQcd+6/m0WxFjcYg7Nx3cLW4QQDMoRXdol2FJD7h6diydQXrxP5UfKh+KNHfo3FSraTE6Fi7IUzhM7QHRrLiR5D42Upsq2GtnwGSCUPHZ6/AYK+3gtKILw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: 9jxri9b9UAMW6o2mny1v5WmFvrQ921wmcrngBOrsh2tEYCO2Iu4bxGVbscBUtQPhseXlggLGLdpdaX/QHSjHF3XUG6CCa/HMhREUPQxcFKfhGKpsMqdDz7fTm3M9X6+tIbV79fgNFUNByytcf+sHT30fxM54oNXJMTFo0KkUlbaMFdhuddPVsir5nMRdP7EKdsTy9SEHCLdqW+4VxShb8KnWt66sU0Wx1Sjr/GALd/08R01j1vmke21gdI3zJJwIkW7XGAz7mtEpSA9py4j0JIKv/VBTmNO6e0dDfCeKJnsSPVb+EkxBjVcvobUwPkPX6YXox0NZYzqSeyAGpoS/11MapX3JXHOJIrq5SclXOyJenPgqr05AirzYQ/yE88HI/2Vd0rwYqMgJan4lU74trsy0Nkp0iXZ1EOmAN3+wHAcHQarz/cQyEXmB4lBBUOUuqiCrhqyQT6wLg+hlJSeGUWFz3IhhjcCPpE/Mf4ek5ZJcJWdVnj6XO2/5RbpQEYPw3bQVxfZl4XRmw8Xk3u8aWA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0213.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(33430700001)(64756008)(66446008)(107886003)(76116006)(4326008)(66946007)(10290500003)(54906003)(52536014)(6916009)(82950400001)(66556008)(53546011)(8990500004)(82960400001)(2906002)(66476007)(316002)(7696005)(6506007)(71200400001)(8936002)(186003)(33440700001)(478600001)(5660300002)(8676002)(33656002)(86362001)(9686003)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: SWmyOMIQ1EKLvbX2fItvhJsBCXvdcT0emjuvIW4omPR257ybz37CJuMhMqorIA7W8R2zFQ6wEd99igfuAX+sna+hW4RE3OzO9LN4alLxNOFyMI0b5BjtWLph1DTyMJIqCcddA+Tn4VKbIH++5UVorXpnn7vX7ANj+SiBVGBemwP3hF8Ndp+zZ69FRZEZBbAYwJT9GgcTuLC23b2b7BH9qOTD5SexDe9PicysREGcNVHkBxMS6boNHzPxWWjrehoNgYYLhrI5rOYn0aHmwMBNnopwJ1ru6r2+Ne0mqX37GVJuCOOB0qiKicz7W2gjNu1qTJzgZRrbVZrX22jhKqKDComiTqNf62dhhXab11BTHayrFrN5wPVqztlnfml6X8e/muOpdyjriiP75OwqCO+9Xtr5dw7Xus7vF3ZFbjJdV1LjQZaSDBviDkYTGapQnyB7dJYXhzgBjM7sh2iggcaNnePUTL9sLUsmcxHV1PoqC/yckb5U9+8QI68zWlrjX+O/qj0tsPMtbxYLU6vxZoKG405CWZXt+qBKDmGacGka2UNmtHTBPBAsTmY76kGAFIj2p/kCat0g78HWbu9BVxGiKzvZql4HROIRp5SFp4NcQX2Tzw5XLSHxjz3HAyeIIbyFTS4iVVdQyOoc9Mxyo2OH4KnVlrmRIQUdC7RpAcGWk4Xva2vUP7wrQT4IBo9UZRfYuGdQHdExK7ytbLEWKEmuL1fYjChafuvE47q/Y5QGnCc5k00l7G0ghWW2CUC142kF3aaZktUUXpZaq9DPnBhcz/vr8hXQoUb1Iq4OazdXbF3DnPhWT27C9iwEBZq5gZafC/YFMyKI2lGbyMrfR+0otQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e7817dc-6460-4729-0ec0-08d7f17f77d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 05:36:46.5072
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9cdb3c8-f1b7-4f86-70f1-08d7f1810208
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 05:47:47.9149
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ivdpdToaFkf13plU625Ak3L7emSbHmG/uTFBae36T8N6RA+X5l/xW3jdsZr/3WSzfut7dxbBEFr0h2Wyh55Q9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0189
+X-MS-Exchange-CrossTenant-userprincipalname: POitBzVRzp0C7/tX+efWoLDjWTWMCySkNgp/LpeNiATpdHU6VmSacLlzb7OQVBNSIbuCIPDC9aoCm+kxaZh8XA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0144
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KVGhhbmtzIGZvciB5b3VyIHJldmlldy4gUGxlYXNlIHNlZSBteSBjb21t
-ZW50cyBpbmxpbmUuIA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExv
-cmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiBUdWVz
-ZGF5LCBNYXkgNSwgMjAyMCAxMTowMyBQTQ0KPiBUbzogV2VpIEh1IDx3ZWhAbWljcm9zb2Z0LmNv
-bT4NCj4gQ2M6IEtZIFNyaW5pdmFzYW4gPGt5c0BtaWNyb3NvZnQuY29tPjsgSGFpeWFuZyBaaGFu
-Zw0KPiA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IFN0ZXBoZW4gSGVtbWluZ2VyIDxzdGhlbW1p
-bkBtaWNyb3NvZnQuY29tPjsNCj4gd2VpLmxpdUBrZXJuZWwub3JnOyByb2JoQGtlcm5lbC5vcmc7
-IGJoZWxnYWFzQGdvb2dsZS5jb207IGxpbnV4LQ0KPiBoeXBlcnZAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9y
-ZzsgRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT47IE1pY2hhZWwgS2VsbGV5DQo+IDxt
-aWtlbGxleUBtaWNyb3NvZnQuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvMl0gUENJ
-OiBodjogRml4IHRoZSBQQ0kgSHlwZXJWIHByb2JlIGZhaWx1cmUgcGF0aCB0bw0KPiByZWxlYXNl
-IHJlc291cmNlIHByb3Blcmx5DQo+IA0KPiBPbiBGcmksIE1heSAwMSwgMjAyMCBhdCAwMTozNjox
-N1BNICswODAwLCBXZWkgSHUgd3JvdGU6DQo+ID4gU29tZSBlcnJvciBjYXNlcyBpbiBodl9wY2lf
-cHJvYmUoKSB3ZXJlIG5vdCBoYW5kbGVkLiBGaXggdGhlc2UgZXJyb3INCj4gPiBwYXRocyB0byBy
-ZWxlYXNlIHRoZSByZXNvdXJzZXMgYW5kIGNsZWFuIHVwIHRoZSBzdGF0ZSBwcm9wZXJseS4NCj4g
-DQo+IFRoaXMgcGF0Y2ggZG9lcyBtb3JlIHRoYW4gdGhhdC4gSXQgYWRkcyBhIHZhcmlhYmxlIHRv
-IHN0b3JlIHRoZSBudW1iZXIgb2Ygc2xvdHMNCj4gYWN0dWFsbHkgYWxsb2NhdGVkIC0gSSBwcmVz
-dW1lIHRvIGZyZWUgb25seSBhbGxvY2F0ZWQgb24gc2xvdHMgb24gdGhlIGV4aXQgcGF0aC4NCj4g
-DQo+IFR3byBwYXRjaGVzIHJlcXVpcmVkIEkgYW0gYWZyYWlkLg0KDQpXZWxsLCBhZGRpbmcgdGhp
-cyB2YXJpYWJsZSBpcyBuZWVkZWQgdG8gbWFrZSB0aGUgY2FsbCBvZiAiKHZvaWQpIGh2X3BjaV9i
-dXNfZXhpdChoZGV2LCB0cnVlKSIgDQphdCB0aGUgZW5kIHRvIHdvcmsgYW5kIGNsZWFuIHVwIHRo
-ZSBQQ0kgc3RhdGUgaW4gdGhlIGZhaWx1cmUgcGF0aC4gSnVzdCBhZGRpbmcgdGhpcyB2YXJpYWJs
-ZQ0Kd291bGQgbm90IG1ha2UgYW55IGNoYW5nZXMuIFNvIEkgdGhpbmsgaXQgbWF5IGJlIGJldHRl
-ciB0byBwdXQgdGhlbSBpbiBzaW5nbGUgcGF0Y2g/DQoNCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTog
-V2VpIEh1IDx3ZWhAbWljcm9zb2Z0LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9wY2ktaHlwZXJ2LmMgfCAyMCArKysrKysrKysrKysrKysrLS0tLQ0KPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaS1oeXBlcnYuYw0KPiA+IGIvZHJp
-dmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMNCj4gPiBpbmRleCBlMTUwMjJmZjYzZTMu
-LmU2ZmFjMDE4NzcyMiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3Bj
-aS1oeXBlcnYuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVydi5j
-DQo+ID4gQEAgLTQ4MCw2ICs0ODAsOSBAQCBzdHJ1Y3QgaHZfcGNpYnVzX2RldmljZSB7DQo+ID4N
-Cj4gPiAgCXN0cnVjdCB3b3JrcXVldWVfc3RydWN0ICp3cTsNCj4gPg0KPiA+ICsJLyogSGlnaGVz
-dCBzbG90IG9mIGNoaWxkIGRldmljZSB3aXRoIHJlc291cmNlcyBhbGxvY2F0ZWQgKi8NCj4gPiAr
-CWludCB3c2xvdF9yZXNfYWxsb2NhdGVkOw0KPiANCj4gSSBkb24ndCB1bmRlcnN0YW5kIHdoeSB5
-b3UgbmVlZCBhbiBpbnQgcmF0aGVyIHRoYW4gYSB1MzIuDQo+IA0KPiBGdXJ0aGVybW9yZSwgSSB0
-aGluayBhIGJpdG1hcCBpcyBtb3JlIGFwcHJvcHJpYXRlIGZvciB3aGF0IHRoaXMgdmFyaWFibGUg
-aXMgdXNlZA0KPiBmb3IuDQoNClNvIGl0IGNhbiB1c2UgYSBuZWdhdGl2ZSB2YWx1ZSAoLTEgaW4g
-dGhpcyBjYXNlKSB0byBpbmRpY2F0ZWQgbm9uZSBvZiBhbnkgcmVzb3VyY2VzDQpoYXMgYmVlbiBh
-bGxvY2F0ZWQuIEN1cnJlbnRseSB2YWx1ZSBiZXR3ZWVuIDAtMjU1IGluZGljYXRpbmcgc29tZSBy
-ZXNvdXJjZXMgDQpoYXZlIGJlZW4gYWxsb2NhdGVkLiBPZiBjb3Vyc2UgSSBjYW4gdXNlIDB4ZmZm
-ZmZmZmYgdG8gaW5kaWNhdGUgdGhhdCBpZiBpdCB3ZXJlIHUzMi4gQnV0DQppdCB3b3VsZG4ndCBt
-YWtlIG11Y2ggZGlmZmVyZW5jZSwgd291bGQgaXQ/DQoNCkl0IHdvdWxkIHRha2UgMzIgYnl0ZXMg
-Zm9yIHRvdGFsIDI1NiBjaGlsZCBzbG90cyBpbiBiaXRtYXAsIHdoaWxlIGl0IG9ubHkgdGFrZXMg
-NCBieXRlcyANCnVzaW5nIGludC4gSXQgaXMgbm90IGluIGNyaXRpY2FsIHBhdGggc28gc2Nhbm5p
-bmcgZnJvbSB0aGUgbG9jYXRpb24gb25lIGJ5IG9uZSBpcyBub3QgYSBiaWcNCmRlYWwuDQoNCj4g
-DQo+ID4gKw0KPiA+ICAJLyogaHlwZXJjYWxsIGFyZywgbXVzdCBub3QgY3Jvc3MgcGFnZSBib3Vu
-ZGFyeSAqLw0KPiA+ICAJc3RydWN0IGh2X3JldGFyZ2V0X2RldmljZV9pbnRlcnJ1cHQgcmV0YXJn
-ZXRfbXNpX2ludGVycnVwdF9wYXJhbXM7DQo+ID4NCj4gPiBAQCAtMjg0Nyw3ICsyODUwLDcgQEAg
-c3RhdGljIGludCBodl9zZW5kX3Jlc291cmNlc19hbGxvY2F0ZWQoc3RydWN0DQo+IGh2X2Rldmlj
-ZSAqaGRldikNCj4gPiAgCXN0cnVjdCBodl9wY2lfZGV2ICpocGRldjsNCj4gPiAgCXN0cnVjdCBw
-Y2lfcGFja2V0ICpwa3Q7DQo+ID4gIAlzaXplX3Qgc2l6ZV9yZXM7DQo+ID4gLQl1MzIgd3Nsb3Q7
-DQo+ID4gKwlpbnQgd3Nsb3Q7DQo+ID4gIAlpbnQgcmV0Ow0KPiA+DQo+ID4gIAlzaXplX3JlcyA9
-IChoYnVzLT5wcm90b2NvbF92ZXJzaW9uIDwgUENJX1BST1RPQ09MX1ZFUlNJT05fMV8yKQ0KPiBA
-QA0KPiA+IC0yOTAwLDYgKzI5MDMsOCBAQCBzdGF0aWMgaW50IGh2X3NlbmRfcmVzb3VyY2VzX2Fs
-bG9jYXRlZChzdHJ1Y3QgaHZfZGV2aWNlDQo+ICpoZGV2KQ0KPiA+ICAJCQkJY29tcF9wa3QuY29t
-cGxldGlvbl9zdGF0dXMpOw0KPiA+ICAJCQlicmVhazsNCj4gPiAgCQl9DQo+ID4gKw0KPiA+ICsJ
-CWhidXMtPndzbG90X3Jlc19hbGxvY2F0ZWQgPSB3c2xvdDsNCj4gPiAgCX0NCj4gPg0KPiA+ICAJ
-a2ZyZWUocGt0KTsNCj4gPiBAQCAtMjkxOCwxMCArMjkyMywxMCBAQCBzdGF0aWMgaW50IGh2X3Nl
-bmRfcmVzb3VyY2VzX3JlbGVhc2VkKHN0cnVjdA0KPiBodl9kZXZpY2UgKmhkZXYpDQo+ID4gIAlz
-dHJ1Y3QgaHZfcGNpYnVzX2RldmljZSAqaGJ1cyA9IGh2X2dldF9kcnZkYXRhKGhkZXYpOw0KPiA+
-ICAJc3RydWN0IHBjaV9jaGlsZF9tZXNzYWdlIHBrdDsNCj4gPiAgCXN0cnVjdCBodl9wY2lfZGV2
-ICpocGRldjsNCj4gPiAtCXUzMiB3c2xvdDsNCj4gPiArCWludCB3c2xvdDsNCj4gPiAgCWludCBy
-ZXQ7DQo+ID4NCj4gPiAtCWZvciAod3Nsb3QgPSAwOyB3c2xvdCA8IDI1Njsgd3Nsb3QrKykgew0K
-PiA+ICsJZm9yICh3c2xvdCA9IGhidXMtPndzbG90X3Jlc19hbGxvY2F0ZWQ7IHdzbG90ID49IDA7
-IHdzbG90LS0pIHsNCj4gPiAgCQlocGRldiA9IGdldF9wY2ljaGlsZF93c2xvdChoYnVzLCB3c2xv
-dCk7DQo+ID4gIAkJaWYgKCFocGRldikNCj4gPiAgCQkJY29udGludWU7DQo+ID4gQEAgLTI5MzYs
-OCArMjk0MSwxMiBAQCBzdGF0aWMgaW50IGh2X3NlbmRfcmVzb3VyY2VzX3JlbGVhc2VkKHN0cnVj
-dA0KPiBodl9kZXZpY2UgKmhkZXYpDQo+ID4gIAkJCQkgICAgICAgVk1fUEtUX0RBVEFfSU5CQU5E
-LCAwKTsNCj4gPiAgCQlpZiAocmV0KQ0KPiA+ICAJCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiAr
-CQloYnVzLT53c2xvdF9yZXNfYWxsb2NhdGVkID0gd3Nsb3QgLSAxOw0KPiANCj4gRG8geW91IHJl
-YWxseSBuZWVkIHRvIHNldCBpdCBhdCBldmVyeSBsb29wIGl0ZXJhdGlvbiA/DQo+IA0KPiBNb3Jl
-b3ZlciwgSSB0aGluayBhIGJpdG1hcCBpcyBiZXR0ZXIgc3VpdGVkIGZvciB3aGF0IHlvdSBhcmUg
-ZG9pbmcsIGdpdmVuIHRoYXQNCj4geW91IG1heSBza2lwIHNvbWUgbG9vcCBpbmRleGVzIG9uICFo
-cGRldi4NCj4NClRoZSB2YWx1ZSBpcyBzZXQgaW4gdGhlIGxvb3Agd2hlbmV2ZXIgYSByZXNvdXJj
-ZSB3YXMgc3VjY2Vzc2Z1bGx5IHJlbGVhc2VkLiBJdCBjb3VsZA0KaGFwcGVuIHRoYXQgaXQgZmFp
-bGVkIGluIHRoZSBuZXh0IGl0ZXJhdGlvbiBzbyB0aGUgbGFzdCBvbmUgd2hpY2ggaGFkIHN1Y2Nl
-ZWRlZCB3b3VsZCBiZQ0KcmVjb3JkZWQgaW4gdGhpcyB2YXJpYWJsZS4gSXQgaXMgbmVlZGVkICBh
-dCB0aGUgZW5kIG9mIGxvb3Agd2hlbiB0aGlzIA0KaXRlcmF0aW9uIHN1Y2NlZWRzLiANCg0KT25j
-ZSBhZ2FpbiBzaW5jZSBpdCBpcyBub3QgaW4gdGhlIGNyaXRpY2FsIHBhdGgsIGp1c3QgdXNpbmcg
-YW4gc2lnbmVkIGludGVnZXIgaXMgc3RyYWlnaHRmb3J3YXJkLCANCmxlc3MgZXJyb3IgcHJvbmUg
-YW5kIGEgYml0IGVhc2llciB0byBtYWludGFpbiB0aGFuIGJpdG1hcCBpbiBteSBvcGluaW9uLiDw
-n5iKDQogDQo+ID4gIAl9DQo+ID4NCj4gPiArCWhidXMtPndzbG90X3Jlc19hbGxvY2F0ZWQgPSAt
-MTsNCj4gPiArDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gQEAgLTMwMzcsNiAr
-MzA0Niw3IEBAIHN0YXRpYyBpbnQgaHZfcGNpX3Byb2JlKHN0cnVjdCBodl9kZXZpY2UgKmhkZXYs
-DQo+ID4gIAlpZiAoIWhidXMpDQo+ID4gIAkJcmV0dXJuIC1FTk9NRU07DQo+ID4gIAloYnVzLT5z
-dGF0ZSA9IGh2X3BjaWJ1c19pbml0Ow0KPiA+ICsJaGJ1cy0+d3Nsb3RfcmVzX2FsbG9jYXRlZCA9
-IC0xOw0KPiA+DQo+ID4gIAkvKg0KPiA+ICAJICogVGhlIFBDSSBidXMgImRvbWFpbiIgaXMgd2hh
-dCBpcyBjYWxsZWQgInNlZ21lbnQiIGluIEFDUEkgYW5kDQo+ID4gb3RoZXIgQEAgLTMxMzYsNyAr
-MzE0Niw3IEBAIHN0YXRpYyBpbnQgaHZfcGNpX3Byb2JlKHN0cnVjdCBodl9kZXZpY2UNCj4gPiAq
-aGRldiwNCj4gPg0KPiA+ICAJcmV0ID0gaHZfcGNpX2FsbG9jYXRlX2JyaWRnZV93aW5kb3dzKGhi
-dXMpOw0KPiA+ICAJaWYgKHJldCkNCj4gPiAtCQlnb3RvIGZyZWVfaXJxX2RvbWFpbjsNCj4gPiAr
-CQlnb3RvIGV4aXRfZDA7DQo+ID4NCj4gPiAgCXJldCA9IGh2X3NlbmRfcmVzb3VyY2VzX2FsbG9j
-YXRlZChoZGV2KTsNCj4gPiAgCWlmIChyZXQpDQo+ID4gQEAgLTMxNTQsNiArMzE2NCw4IEBAIHN0
-YXRpYyBpbnQgaHZfcGNpX3Byb2JlKHN0cnVjdCBodl9kZXZpY2UgKmhkZXYsDQo+ID4NCj4gPiAg
-ZnJlZV93aW5kb3dzOg0KPiA+ICAJaHZfcGNpX2ZyZWVfYnJpZGdlX3dpbmRvd3MoaGJ1cyk7DQo+
-ID4gK2V4aXRfZDA6DQo+ID4gKwkodm9pZCkgaHZfcGNpX2J1c19leGl0KGhkZXYsIHRydWUpOw0K
-PiANCj4gUmVtb3ZlIHRoZSAodm9pZCkgY2FzdC4NCj4gDQoNClNvbWUgdG9vbHMgKG1heWJlIGxp
-bnQ/KSBjb3VsZCBnZW5lcmF0ZSBlcnJvci93YXJuaW5nIG1lc3NhZ2VzIGFzc3VtaW5nIHRoZSBj
-b2RlIGZhaWxzIA0KdG8gY2hlY2sgdGhlIHJldHVybiB2YWx1ZSB3aXRob3V0IHN1Y2ggY2FzdC4g
-TGVhdmluZyB0aGUgY2FzdCBpbiBwbGFjZSBqdXN0IGluZGljYXRlcyB0aGF0DQp0aGUgcmV0dXJu
-IHZhbHVlIGlzIGRlbGliZXJhdGVseSBpZ25vcmVkLiAgDQoNClRoYW5rcywgDQpXZWkNCg0K
+
+> -----Original Message-----
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Sent: Tuesday, May 5, 2020 11:10 PM
+> To: Wei Hu <weh@microsoft.com>
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> wei.liu@kernel.org; robh@kernel.org; bhelgaas@google.com; linux-
+> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Dexuan Cui <decui@microsoft.com>; Michael Kelley
+> <mikelley@microsoft.com>
+> Subject: Re: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the firs=
+t
+> attempt failed with invalid device state
+>=20
+> On Fri, May 01, 2020 at 01:37:28PM +0800, Wei Hu wrote:
+> > In the case of kdump, the PCI device was not cleanly shut down before
+> > the kdump kernel starts. This causes the initial attempt of entering
+> > D0 state in the kdump kernel to fail with invalid device state
+> > returned from Hyper-V host.
+> > When this happens, explicitly call PCI bus exit and retry to enter the
+> > D0 state.
+> >
+> > Signed-off-by: Wei Hu <weh@microsoft.com>
+> > ---
+> >    v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
+> >    Bjorn Helgaas
+> >
+> >  drivers/pci/controller/pci-hyperv.c | 40
+> > +++++++++++++++++++++++++++--
+> >  1 file changed, 38 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pci-hyperv.c
+> > b/drivers/pci/controller/pci-hyperv.c
+> > index e6fac0187722..92092a47d3af 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -2739,6 +2739,8 @@ static void hv_free_config_window(struct
+> hv_pcibus_device *hbus)
+> >  	vmbus_free_mmio(hbus->mem_config->start,
+> PCI_CONFIG_MMIO_LENGTH);  }
+> >
+> > +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
+> > +
+> >  /**
+> >   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
+> >   * @hdev:	VMBus's tracking struct for this root PCI bus
+> > @@ -2751,8 +2753,10 @@ static int hv_pci_enter_d0(struct hv_device
+> *hdev)
+> >  	struct pci_bus_d0_entry *d0_entry;
+> >  	struct hv_pci_compl comp_pkt;
+> >  	struct pci_packet *pkt;
+> > +	bool retry =3D true;
+> >  	int ret;
+> >
+> > +enter_d0_retry:
+> >  	/*
+> >  	 * Tell the host that the bus is ready to use, and moved into the
+> >  	 * powered-on state.  This includes telling the host which region @@
+> > -2779,6 +2783,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+> >  	if (ret)
+> >  		goto exit;
+> >
+> > +	/*
+> > +	 * In certain case (Kdump) the pci device of interest was
+> > +	 * not cleanly shut down and resource is still held on host
+> > +	 * side, the host could return invalid device status.
+> > +	 * We need to explicitly request host to release the resource
+> > +	 * and try to enter D0 again.
+> > +	 */
+> > +	if (comp_pkt.completion_status < 0 && retry) {
+> > +		retry =3D false;
+> > +
+> > +		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> > +
+> > +		/*
+> > +		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+> > +		 * to free up resources of its child devices.
+> > +		 * In the kdump kernel we need to set the
+> > +		 * wslot_res_allocated to 255 so it scans all child
+> > +		 * devices to release resources allocated in the
+> > +		 * normal kernel before panic happened.
+> > +		 */
+> > +		hbus->wslot_res_allocated =3D 255;
+>=20
+> I'd rather write a specific function eg hv_pci_bus_shutdown() to make it =
+explicit.
+> Actually, isn't it something that should *always* be _enforced_ at host b=
+ridge
+> probe time - regardless of the kernel you are booting on ?
+>=20
+
+It is only needed in kdump kernel when the normal kernel which just crashed=
+=20
+failed to deallocate the PCI resources cleanly. All the states have been ta=
+ken
+care of in the normal kernel without needing this.=20
+
+Wei
+=20
+
