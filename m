@@ -2,124 +2,123 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FE251C7891
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 May 2020 19:49:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C2591C803C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2020 05:00:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbgEFRtK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 May 2020 13:49:10 -0400
-Received: from mail-bn8nam12on2096.outbound.protection.outlook.com ([40.107.237.96]:13793
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730086AbgEFRtI (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 May 2020 13:49:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bPZRF100BOlH88B84Isxq/s1Mi5A3RhX9bXgXxbChvxI+ZsGp6mWp7/CAZwSntBfD2GQJJsQYQE3m/xA/Uvrx4stKoT3aJZWWjlupwPuByXWMbFCzvoolXpHg6arkoooVONx/G8QZXUpDHvGane0vYqaO8/cIp5GzPGJIKDjvm3bEA/2F3SBmz3jFCGbTGCD6xiWD2UzBX5oT6G3mAixEAPnl8z4CPqK2sHuqEDc7bs3UlQkimfWqalur6C8u2ddaamhqYl3WME99RDV6aLNg6tF6ry+i5S+QCWWl27w7gf3hvepidfC7eTO8EvHyi/TYEge5D3nmzNSsYjue8JHew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aA/RO1QiGRQrx072R+/N02IPuUeey0ZRUNl7BD+XDIU=;
- b=RHPwBDbGlmSapDBIEUrfR7lg2SUXXELdrvha4zxcCX3A7uqC3MoZnACXvoCihZzDBwke/3GcHYsjnj0VYv+U4blJILua4hPfSQPXNyFeC0Bj/0DZD7gmfLoNu5+g7MSPqnovCdp/mPPsE908sH2fzBDnrwhyjzyhbnab8+lnnv/5pkAy/CGZZr7q6fQOawhyW/AoPWEiPHSN2Aw52F5N54XjduARIua20uCewU15hB9QM1tXUhvKueAbsnOIGibPUEmPDjY7rBpVP8Pr458TcwU2EjPfp2tIWTnvgb9YCxvC/oche2squ71w98rtlXS+M4SaDnpiRvruT0s0WvmtgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aA/RO1QiGRQrx072R+/N02IPuUeey0ZRUNl7BD+XDIU=;
- b=jaOdeQ9ZUBm4zw6yV3UDCoQQghS9fs0HBn1rh0fQ65JLyB5jSC5fvXrkBU/derZGZL+jd/+GNIzYOhN1LJS1vQNxK/7/6cHi9KZ9tFFi2bHPvjYM60TVgqwWy2a3FAygnywT/3z9kxszvkfn/GZl+f6fhs64nWUQtwmWqgn1a+k=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0891.namprd21.prod.outlook.com (2603:10b6:302:10::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.10; Wed, 6 May
- 2020 17:49:05 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::5a3:a5e0:1e3c:e950]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::5a3:a5e0:1e3c:e950%5]) with mapi id 15.20.3000.007; Wed, 6 May 2020
- 17:49:05 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Subject: RE: [PATCH] Driver: hv: vmbus: drop a no long applicable comment
-Thread-Topic: [PATCH] Driver: hv: vmbus: drop a no long applicable comment
-Thread-Index: AQHWI8CKerzRxJCJrUmcevNBXmtiR6ibVZnA
-Date:   Wed, 6 May 2020 17:49:05 +0000
-Message-ID: <MW2PR2101MB10521E94593C54B9E806CCBDD7A40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200506160806.118965-1-wei.liu@kernel.org>
-In-Reply-To: <20200506160806.118965-1-wei.liu@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-06T17:49:03.4277014Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7717b587-6875-4647-978e-e3c84aeb45da;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cba79f8f-341f-46a7-7465-08d7f1e5c51e
-x-ms-traffictypediagnostic: MW2PR2101MB0891:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB0891CB7544A35B0F1BB20E31D7A40@MW2PR2101MB0891.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 03950F25EC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aNz9GNG943XJh/L3oLJ9FSlA4Dd+hjMlUF0n2MBo/1zoTy/XiPF7XgZZ/ao6EHhBvzMFdbMaHDc5RRntnaOmPJzvIQOatRjwSxpti0nv9ixGJeE2Bfp0vOpYx4bANhkpQ8N7lcsxeSFJzij33YEy7fU4yWfezTtk/6xGU6eskZBJZf2clVCHkB7SF+o+kIdMCZg7NURML+9cvsaUYl6A0cOJMR3k6jrVtspEIYww77Moofa/2cBEvGrMcFoqS8dISMCLeSnplDqx3Hn4p89bp1YUKTtlCTEoOiFGw7O1SXaruovm9LfGVpm1wMmtDry5BJ/yND7qlyQ7sLQpa2pqPemwUteuW67cGlpzc7q1J7CmvOudiuiVNzpSkjk9Zl8a9OBvZro7VkzpNYm/4wOIsm9T40pcFu32hxVp9ZpuuiJLRIDmXUm2vXY7f2DL2Nm2rTYp6CouHbrYyGHD2iSbluLoZJVYLjnluHNlaWEuAPg27f1uVNhiVaMDxSdNIQaAWXYgnsIl4usDtPROTzma1w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(346002)(376002)(396003)(33430700001)(186003)(6506007)(52536014)(316002)(55016002)(26005)(2906002)(9686003)(86362001)(7696005)(71200400001)(82960400001)(33440700001)(82950400001)(110136005)(5660300002)(54906003)(10290500003)(8936002)(76116006)(8676002)(8990500004)(66946007)(33656002)(66446008)(107886003)(66476007)(66556008)(478600001)(64756008)(4326008)(4744005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: bCTs2hphCdyM6PFHsbc6Er6WyRWzoOTGjto9LPrOjKkTGMHobtfChfsdC1phkZiUWsTJ2PYGX54RExrkAlpb3pBqBvyvBM5jUb0ReofPyESYOXj2BSp18PQGCL/B05WcTv7/hfobsxZb4SdC95hJgWMmG4KqVUkHT9jH9mjZuMvLH+ozBkjzbr9siGHQ8D2oUV1uZ2HHI2ZT6R51AU0ckvnSIkPv6OSALOymyctSS9/yPSudibfQxbyZ0hIi+ZXvpZJkA40gQ3RYBmk2MD4t42NY1ZFcLAZwTZ8t8eGwZmTYDEWl8s98w17x1Cc5uSjM2Yaadw5oGgmCWiRh+Ug+uLWZLt6SChbXFSdXPjff+aPX49TgEw6qurpI0Ko9To5qaod3uEv/JTLIeRln02m+bIjllJLU5uf1Mz+yeFE3dcxpQOaX0uV10D2sXshRALahOfskD7S85sopFupT5267iwOJeb+zZo/+WUJpm2e6B8wCe8WVCw0yAjKdx4PA7ksq9QmXVAxHin0lwh2ku4Vd4qQIwPjXqaBqcl6DZC3TToT6Pg6LdZNgiQmWU9eOqklCOdNfkEXw5Zzuuai1AZC6IyfTYj3y5QjXlKjMuzYUkThw0/NE1oGUTLWRe4XD9dpaNgcOtzOnUhjpMlkQGUwdy2Kkl4p4viriJCv2qPqgSW+xmNt5Lw5vt9wyN6JfbzS3OPv/8QTCK0DVA37gZI7F83WFuXWcVteWhfiiS5qiC/CZLU0unhZr9bXfAZGOonkKMyvMA43O0JzbydaR6ngaHL4gqeOv/RnOPJxlGTIp1kU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727107AbgEGDAn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 May 2020 23:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727106AbgEGDAn (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 6 May 2020 23:00:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB58C061A0F;
+        Wed,  6 May 2020 20:00:41 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z8so4511692wrw.3;
+        Wed, 06 May 2020 20:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dFNA74RHr/B0YCNDQy2zQLL9WCg7uP2pI8pODcjJZLo=;
+        b=UlxwjTXFzumUixnRmqThlCscCI/ihO/R+RyMUmFFw2uw4nEl2xFME5/reioXVMYVkn
+         5XWIHrEii4Zi4XhL96HI6CsXMz/j28Jmpy0meWCM6LKC63o6375rgJY19asv928X76QT
+         bme/whzo9ZetNBtGc9P8Oq3dVaV9phPmIxo91HhriszxhCnjrgl/YE6IH0UHPnTonnIu
+         q14EJUv08FPw/F8gOJVPt+kMwtPT+8N0aZfBvjxxkmeXnEk5UKk/3OBOFljpzV7DU2uM
+         jSZuM+Oym3crPGMDwEPXrlvtfwjIHDdelsfnTBw8lqMzsEbov1k5ikq8y3JFDIuxQzre
+         UEXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dFNA74RHr/B0YCNDQy2zQLL9WCg7uP2pI8pODcjJZLo=;
+        b=Z0NQnobG7qpCpIi8yoKenbTz1RWW4jKlKwlVT7vVgHHhCiCl5GjNGYAbkNlNbGc49k
+         OzGJST/giYiCt329x4nq63nJH9vxdId889h2NYbX95UY6XRFP1Vzcp/AWn8pXx2aNHJz
+         4ovYUFGrclLEr115+FdEVOBmYWEhhvqOcqlwW83HxDrCq9k7RNGHH/tTlR/JQ0YnqzyP
+         QXYIEyEb2C1JTCrBAYcs0AnY3C1aHdSF3QwFGSK4YGjodwxq7hOj5Re/VevkqXyAFdt4
+         vUNMvaEUQgJQWJR6GIF2q14o1HswXB/RildTYH7XvTy89rBkWc+CRkAsNnLTNh0+z2ZU
+         3+bQ==
+X-Gm-Message-State: AGi0PuZjS1HiyJxWv/u9oLXVSCmc5rKFn9XDhV/Y1Fzv2T/7S7163bRp
+        M3RLO27Kyhpv/RFNV3nS9S0=
+X-Google-Smtp-Source: APiQypJ8ZcAF8AaoB8LwzngzBV9iAUwVjSPCJy3LJFKEGWxbq2DYqV/sWcyulbcEEL0i0zhcS+7CWg==
+X-Received: by 2002:adf:c38c:: with SMTP id p12mr13613055wrf.357.1588820439856;
+        Wed, 06 May 2020 20:00:39 -0700 (PDT)
+Received: from jondnuc (IGLD-84-229-154-20.inter.net.il. [84.229.154.20])
+        by smtp.gmail.com with ESMTPSA id s11sm5492525wrp.79.2020.05.06.20.00.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2020 20:00:39 -0700 (PDT)
+Date:   Thu, 7 May 2020 06:00:37 +0300
+From:   Jon Doron <arilou@gmail.com>
+To:     Roman Kagan <rvkagan@yandex-team.ru>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 0/1] x86/kvm/hyper-v: Add support to SYNIC exit on EOM
+Message-ID: <20200507030037.GE2862@jondnuc>
+References: <20200418064127.GB1917435@jondnuc>
+ <20200424133742.GA2439920@rvkaganb>
+ <20200425061637.GF1917435@jondnuc>
+ <20200503191900.GA389956@rvkaganb>
+ <87a72nelup.fsf@vitty.brq.redhat.com>
+ <20200505080158.GA400685@rvkaganb>
+ <20200505103821.GB2862@jondnuc>
+ <20200505200010.GB400685@rvkaganb>
+ <20200506044929.GD2862@jondnuc>
+ <20200506084615.GA32841@rvkaganb>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cba79f8f-341f-46a7-7465-08d7f1e5c51e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2020 17:49:05.1277
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: txwkPVYNqgQHtO39YAR/GpJ0yotp2qdWWRUhXgrtkeVh8vuGolY2Mad0KtcNKWfY+o1lIK6YAWrMJZCXtMe19bKujJ4Ee2ptxmJX0cyd/FE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0891
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200506084615.GA32841@rvkaganb>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Wei Liu <wei.liu@kernel.org> Sent: Wednesday, May 6, 2020 9:08 AM
->=20
-> None of the things mentioned in the comment is initialized in hv_init.
-> They've been moved elsewhere.
->=20
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
->  drivers/hv/vmbus_drv.c | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 3a27f6c5f3de..7efdcadc335e 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1396,7 +1396,6 @@ static int vmbus_bus_init(void)
->  {
->  	int ret;
->=20
-> -	/* Hypervisor initialization...setup hypercall page..etc */
->  	ret =3D hv_init();
->  	if (ret !=3D 0) {
->  		pr_err("Unable to initialize the hypervisor - 0x%x\n", ret);
-> --
-> 2.20.1
+On 06/05/2020, Roman Kagan wrote:
+>On Wed, May 06, 2020 at 07:49:29AM +0300, Jon Doron wrote:
+>> Thanks Roman, I see your point, it's important for me to get the EDK2
+>> working properly not sure why it's not working for me.
+>
+>As I wrote a good deal of that code I hope I should be able to help (and
+>I'd be interested, too).  How exactly does the "not working" look like?
+>
 
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Basically when I built the BIOS from the hv-scsi branch you pointed me 
+out to, the BIOS did not see the virtio-blk device to boot from, I 
+usually take the BIOS from (https://www.kraxel.org/repos/) but I will 
+try to build the latest EDK2 and see if it identifies the virtio-blk 
+device and boots from it, if that's the case perhaps i just need to 
+rebase your branch over the latest master of EDK2.
 
+>Also I'm a bit confused as to why UEFI is critical for the work you're
+>doing?  Can't it be made to work with BIOS first?
+>
+
+The reason I want to have the UEFI option is because I need SecureBoot 
+to turn on VBS.
+
+>> Do you know by any chance if the EDK2 hyperv patches were submitted and if
+>> they were why they were not merged in?
+>
+>I do, as I'm probably the only one who could have submitted them :)
+>
+>No they were not submitted.  Neither were the ones for SeaBIOS nor iPXE.
+>The reason was that I had found no way to use alternative firmware with
+>HyperV, so the only environment where that would be useful and testable
+>was QEMU with VMBus.  Therefore I thought it made no sense to submit
+>them until VMBus landed in QEMU.
+>
+>Thanks,
+>Roman.
+
+Heh I see, well I'm really happy that you are here helping so we can try 
+and finally add VMBus to QEMU, I realize it's a big effort but I'm 
+willing to spend the time and do the required changes...
+
+I'm working this only during my free time so things takes me longer than 
+usual (sorry for that..)
+
+I will keep update on results once I get to test with latest EDK2 :) 
+
+Thanks,
+-- Jon.
