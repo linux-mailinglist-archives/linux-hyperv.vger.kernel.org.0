@@ -2,132 +2,145 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A869B1C99BB
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2020 20:49:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC1A51C9CD5
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 May 2020 22:58:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgEGSs6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 May 2020 14:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728166AbgEGSs6 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 May 2020 14:48:58 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0170E24955;
-        Thu,  7 May 2020 18:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877337;
-        bh=DzIn/TStIR1qO0jGDRIjha7WKLj8NmPXjLYvrxu8mwU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NFBkUx9xKM0l5hkInpK+k2tkyl69LaRPmZIBXRXNlAzC1HgkPcuGLIfxFd3bBAiKg
-         Q6+didIh143imEJpECyL8j0pLJrxHR1G5BQCgoQcqpcaQRDxYRNPIwYtnYf/HFp7a2
-         uAImZJ8+xeggQZjvOr01itL+Ha0eUzyX6Vi3wqy8=
-Date:   Thu, 7 May 2020 13:53:23 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S1726518AbgEGU6g (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 May 2020 16:58:36 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:38182 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgEGU6g (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 7 May 2020 16:58:36 -0400
+Received: by mail-oo1-f65.google.com with SMTP id i9so1671875ool.5;
+        Thu, 07 May 2020 13:58:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lxk5gbj1SH/yPDCschhz+W4w8vALXa+wNd/bFZoLVl0=;
+        b=nmzny55/ZJR1POywt0YxyR96mUHPFJ1LYiPeP18aCAtwtT9oe3pd9TJENsrTi3rE8n
+         AfTTs1UZ44Eq3XM9pGdeVh0FFGPOAiiPBL2cvuujwAlF5zraEfz6yZgpmVgx0pRzP/wL
+         TK0X5w8XETaGs8m1QCbPkoDV6jfNl+ZvrgOariJwpF7sCEjkWJt/+HtHoijXkKKHLaDG
+         Efy08EfVLaseBZ0T42upyW8Q6lffROOmmuO6MZ1sYmjkRY448+qyicXF6+aWNWGQHr60
+         pqHsjO86KZsYFflwtNRwxjYz2EHLBHzVNyqVX7HZ9OA2WLgSwIHbUFEx0NWEvMPDyWuk
+         B76Q==
+X-Gm-Message-State: AGi0PuaFXPOteTwncD7nqNmmuohooHNZi2tr40jxkmceqTXEKeAwdOLQ
+        B7/DqHP8AHDtXqr6G66XYQ==
+X-Google-Smtp-Source: APiQypLifuetw0ez5PKSz9qoxtY5MpD6KduLwlCg+SknYXTPTZ6gRRj5HTrEHT0ksAh3kG0Gap+XAg==
+X-Received: by 2002:a4a:d136:: with SMTP id n22mr13431215oor.85.1588885113933;
+        Thu, 07 May 2020 13:58:33 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v9sm1650909oib.56.2020.05.07.13.58.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 13:58:33 -0700 (PDT)
+Received: (nullmailer pid 11452 invoked by uid 1000);
+        Thu, 07 May 2020 20:58:31 -0000
+Date:   Thu, 7 May 2020 15:58:31 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] vmbus: Replace zero-length array with flexible-array
-Message-ID: <20200507185323.GA14416@embeddedor>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: Re: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
+Message-ID: <20200507205831.GA30988@bogus>
+References: <20200422195818.35489-1-wei.liu@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200422195818.35489-1-wei.liu@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Wed, Apr 22, 2020 at 07:58:15PM +0000, Wei Liu wrote:
+> There is a functionally identical function in pci-hyperv.c. Drop it and
+> use pci_msi_get_hwirq instead.
+> 
+> This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+>  arch/x86/include/asm/msi.h          | 4 ++++
+>  arch/x86/kernel/apic/msi.c          | 5 +++--
+>  drivers/pci/controller/pci-hyperv.c | 8 +-------
+>  3 files changed, 8 insertions(+), 9 deletions(-)
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Would be better if done in a way to remove an x86 dependency. 
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+I guess this would do it:
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+#define pci_msi_get_hwirq NULL
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+when GENERIC_MSI_DOMAIN_OPS is enabled.
 
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/linux/hyperv.h |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 692c89ccf5df..ce2c27440e17 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -117,7 +117,7 @@ struct hv_ring_buffer {
- 	 * Ring data starts here + RingDataStartOffset
- 	 * !!! DO NOT place any fields below this !!!
- 	 */
--	u8 buffer[0];
-+	u8 buffer[];
- } __packed;
- 
- struct hv_ring_buffer_info {
-@@ -313,7 +313,7 @@ struct vmadd_remove_transfer_page_set {
- struct gpa_range {
- 	u32 byte_count;
- 	u32 byte_offset;
--	u64 pfn_array[0];
-+	u64 pfn_array[];
- };
- 
- /*
-@@ -563,7 +563,7 @@ struct vmbus_channel_gpadl_header {
- 	u32 gpadl;
- 	u16 range_buflen;
- 	u16 rangecount;
--	struct gpa_range range[0];
-+	struct gpa_range range[];
- } __packed;
- 
- /* This is the followup packet that contains more PFNs. */
-@@ -571,7 +571,7 @@ struct vmbus_channel_gpadl_body {
- 	struct vmbus_channel_message_header header;
- 	u32 msgnumber;
- 	u32 gpadl;
--	u64 pfn[0];
-+	u64 pfn[];
- } __packed;
- 
- struct vmbus_channel_gpadl_created {
-@@ -672,7 +672,7 @@ struct vmbus_channel_msginfo {
- 	 * The channel message that goes out on the "wire".
- 	 * It will contain at minimum the VMBUS_CHANNEL_MESSAGE_HEADER header
- 	 */
--	unsigned char msg[0];
-+	unsigned char msg[];
- };
- 
- struct vmbus_close_msg {
-
+> 
+> diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+> index 25ddd0916bb2..353b80122b2e 100644
+> --- a/arch/x86/include/asm/msi.h
+> +++ b/arch/x86/include/asm/msi.h
+> @@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  
+>  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+>  
+> +struct msi_domain_info;
+> +irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> +				  msi_alloc_info_t *arg);
+> +
+>  #endif /* _ASM_X86_MSI_H */
+> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+> index 159bd0cb8548..56dcdd912564 100644
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -204,11 +204,12 @@ void native_teardown_msi_irq(unsigned int irq)
+>  	irq_domain_free_irqs(irq, 1);
+>  }
+>  
+> -static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> -					 msi_alloc_info_t *arg)
+> +irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> +				  msi_alloc_info_t *arg)
+>  {
+>  	return arg->msi_hwirq;
+>  }
+> +EXPORT_SYMBOL_GPL(pci_msi_get_hwirq);
+>  
+>  int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  		    msi_alloc_info_t *arg)
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e6020480a28b..2b4a6452095f 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1520,14 +1520,8 @@ static struct irq_chip hv_msi_irq_chip = {
+>  	.irq_unmask		= hv_irq_unmask,
+>  };
+>  
+> -static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+> -						   msi_alloc_info_t *arg)
+> -{
+> -	return arg->msi_hwirq;
+> -}
+> -
+>  static struct msi_domain_ops hv_msi_ops = {
+> -	.get_hwirq	= hv_msi_domain_ops_get_hwirq,
+> +	.get_hwirq	= pci_msi_get_hwirq,
+>  	.msi_prepare	= pci_msi_prepare,
+>  	.set_desc	= pci_msi_set_desc,
+>  	.msi_free	= hv_msi_free,
+> -- 
+> 2.20.1
+> 
