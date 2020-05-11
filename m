@@ -2,76 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9878B1CDF04
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2020 17:29:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73C301CDF15
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 May 2020 17:32:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgEKP3v (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 May 2020 11:29:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728084AbgEKP3v (ORCPT
+        id S1728089AbgEKPcU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 May 2020 11:32:20 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53978 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727994AbgEKPcT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 May 2020 11:29:51 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9EBC061A0C
-        for <linux-hyperv@vger.kernel.org>; Mon, 11 May 2020 08:29:50 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id s9so8291260eju.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 11 May 2020 08:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=j2EBovtjYHzHuqz+1wm5uCdWmDSHR/d49IJX3mtpaZU=;
-        b=Stdz7+RrZ51VU+h0fnhZk5Gy2uraxyqKnQxPhWgKRwU/V/rZJh/Et00Qty37flUEB6
-         UFQqZHi3XWny/uHY7zMBDkCfiVyh+aexgD5BX+8oUY4Igl4t/BDT6XK05IwoABKmQ8Cq
-         rTzstvdcZ+/E3MB1MtXiFmRLXEMYoIGD4ts3Vr+WOEzCw05WHTbYyy1NXQP4Vc3QKzRR
-         6UjaROwAD462JusLk2wM7OEtq1/yvAKOkJ65hNGvLrypIn7f96jf3opAQq0hBfZYNXkB
-         i/qUO3EbZ61jmajFRJfdTDSNDrt2fkj9o/8fmmOCs0FqD3w1yQDhsNLIEVD3RyEmjvhG
-         AfMw==
+        Mon, 11 May 2020 11:32:19 -0400
+Received: by mail-wm1-f65.google.com with SMTP id k12so18447355wmj.3;
+        Mon, 11 May 2020 08:32:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=j2EBovtjYHzHuqz+1wm5uCdWmDSHR/d49IJX3mtpaZU=;
-        b=MSIkokPyxnRQwjxz/n1FbSqD4mDdTbS/io6YIhZIWfppVsl/65seGIAgXu3d+Rx+c2
-         ALtx7i9CmqeN2yxNI7BTCXfroAIthGnijHJB/f0B+VnRylHfh1QydZW8jj6R8cII1900
-         EBuoOBbR9Iv0B11JH21mYqTjdWYLMclKDPk9FgQPrRgwOC/tKUFDis6cg3aJF34SK+aF
-         RXvoB5ZLqJ9WptGQdl3UgUSapzuKHxXlSRwII3F2kocJedAtHERlrepsJBUh4T8n0BOP
-         ym/5N/IHOao3Ltxi/iub7KMBf63y8xewPpVR16xB+O001iNrQTHpUa3C5ZpY7Kz+D0mY
-         E36w==
-X-Gm-Message-State: AGi0PubDdXmRHr343FJFHiNj3g5/Nu2PIMjw+2UA2qLj1L1lM8ZKS7Hz
-        PCxoXd0DqDxTzWnphtRa2dyJrrahHVfwoXXyUu0=
-X-Google-Smtp-Source: APiQypKg6KvhstZSYbsEDQpuJueCatwrg6pdgSHnyF5NNyM4tSsRfJkVpV/6dHnjRcvKz35DXM6zLddidcHglhQFwVA=
-X-Received: by 2002:a17:906:4317:: with SMTP id j23mr13417900ejm.377.1589210989328;
- Mon, 11 May 2020 08:29:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4/5Nwk9mLhRZScYYCn9683XrSojxRsX8XSuLtfNRp8A=;
+        b=WGJDx612oqrb49MW8+SD+uUXyfJzvaTqDgPbb77Yl7WtLYJphJNU0/ChfaR8Q+LaNY
+         SwmkhK2s/XaJs8HhcguQQHHAwD5dd8XM3HgC48l5bqUzIB/o9yltQbzeru5BKgirMM2j
+         PLPufO8POanZakPa3Yk1HkdNEQM98hu/sT3Bcbc1ewo4QtYaAydHSE/eH4Akr6A7/dF+
+         Y6q28EETeP2m0nTO5CDaSmx2M8Tr6f0lFlbqjPc6jMtexNboYbFvgbwEfVePGe32JrMy
+         Tcet1Ks7dkPNbdOWfexVHYWpKQNSDTFJ0fngbxXcU4wMNnU9jSmlvUQVBWOsw6B7IAzT
+         YT6g==
+X-Gm-Message-State: AGi0PubbTtep7uHHrFqqcN8qbQfa/Z8ClorXAEatRHbZvSV3/tZCSOBX
+        UIB/mLLbQXPxtdnOVLz+YV6dqeC2
+X-Google-Smtp-Source: APiQypK85TB4whX36I8/SG1CyR1R9Kq/5evRMvh5tebUY7NF3E42iOhAs7jNrcK9J3lezxEIt9MiJw==
+X-Received: by 2002:a1c:770e:: with SMTP id t14mr31102935wmi.187.1589211137820;
+        Mon, 11 May 2020 08:32:17 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id 7sm20219591wra.50.2020.05.11.08.32.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 08:32:17 -0700 (PDT)
+Date:   Mon, 11 May 2020 15:32:15 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, linux-pci@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: Re: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
+Message-ID: <20200511153215.spcqylnde6p36n6j@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200422195818.35489-1-wei.liu@kernel.org>
+ <20200507205831.GA30988@bogus>
 MIME-Version: 1.0
-Reply-To: ymrzerbo@gmail.com
-Received: by 2002:a50:3a06:0:0:0:0:0 with HTTP; Mon, 11 May 2020 08:29:48
- -0700 (PDT)
-From:   "Mr.Zerbo Yameogo" <ymrzerbo@gmail.com>
-Date:   Mon, 11 May 2020 17:29:48 +0200
-X-Google-Sender-Auth: c8Z_0wp_70OAKUrXgMhR-6i-WsU
-Message-ID: <CAJTskJV-RbO+mNtQeO-hP358-8LEMJBCpTka=abr9OPUbXUh9w@mail.gmail.com>
-Subject: VERY URGENT.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507205831.GA30988@bogus>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dear Friend,
+On Thu, May 07, 2020 at 03:58:31PM -0500, Rob Herring wrote:
+> On Wed, Apr 22, 2020 at 07:58:15PM +0000, Wei Liu wrote:
+> > There is a functionally identical function in pci-hyperv.c. Drop it and
+> > use pci_msi_get_hwirq instead.
+> > 
+> > This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> > ---
+> >  arch/x86/include/asm/msi.h          | 4 ++++
+> >  arch/x86/kernel/apic/msi.c          | 5 +++--
+> >  drivers/pci/controller/pci-hyperv.c | 8 +-------
+> >  3 files changed, 8 insertions(+), 9 deletions(-)
+> 
+> Would be better if done in a way to remove an x86 dependency. 
 
-           Greetings!
+This is a good point, Rob. I will see what I can do.
 
-How are you with your family today? I hope both of you are in good
-health. Decently I know that this message might meet you in utmost
-surprise as we never know each other before. I am Mr. Zerbo Yameogo; a
-banker by profession, I need your urgent assist in transferring the
-sum of $10.5 Million U.S Dollars into your account. It is 100% risk
-free and under this achievement you are entitled to receive 40% of the
-total cash. More details will be sent to you on confirmation of your
-interest.
+Wei.
 
-Regards;
-
-Mr. Zerbo Yameogo
+> 
+> I guess this would do it:
+> 
+> #define pci_msi_get_hwirq NULL
+> 
+> when GENERIC_MSI_DOMAIN_OPS is enabled.
