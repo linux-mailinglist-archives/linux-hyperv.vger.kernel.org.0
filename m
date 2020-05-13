@@ -2,255 +2,204 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 684141D12E6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2020 14:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 773EC1D131A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2020 14:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgEMMja (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 13 May 2020 08:39:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
+        id S1728413AbgEMMtV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 13 May 2020 08:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgEMMj3 (ORCPT
+        with ESMTP id S1728313AbgEMMtU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 13 May 2020 08:39:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E3BC061A0C;
-        Wed, 13 May 2020 05:39:29 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g12so28305496wmh.3;
-        Wed, 13 May 2020 05:39:29 -0700 (PDT)
+        Wed, 13 May 2020 08:49:20 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3687BC061A0C;
+        Wed, 13 May 2020 05:49:19 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e16so20733778wra.7;
+        Wed, 13 May 2020 05:49:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=YAMZzYHc3BSk60ZKYMuYkolep9zJ19WbVFd5/fzkGEw=;
-        b=aSzmnjkt1nm4KVfoFZngKWLTaJohY2jch1RA49NsrBpP1BwpDWVbD5AxELhA8WqDtn
-         +1xoBJzIoJyWGmLf3QREao+xAe5bBjibNkoRM+rAgl6jHAD6qR4AlZwxANDR8vy/7asO
-         QXQ6+zQ5c4AQ1JWd3TRihXc6+5M9G/K6GCbO0PVowdDOgeC+5gps8hlLp8U2Kocg6ffl
-         7kGk0buPEVVG9hHvO3H99p/UtDWfC38IGncNKCaXn/HKV81spp3alP3zSsccmYLBljfB
-         ZjdDhce1gchcWhAVlgKh9eaUarx3Rhbdrk8m4DbU11/+wo4u/mZ29qiJgnZuWI48sWz6
-         0b7Q==
+        bh=iP01j1nGFSda70n3ErSleGKHSypa0Pi6uR0PO3xQfnA=;
+        b=LpaproBuZTVs/ugiIWm7Wck/niaWQtlX00MhYEdhDKkVab43pvnbtbBIyhDPsm7YeN
+         AVAtYDyK9R3j2nvBPBv++eP5iN23LQFwDGtQY2J9+VaCskNp8vVsAEDGwT4qBd5FpJem
+         iPO8+FzuD4xJnCIVUwOogmqo1Sf3HPFHzMNdAQIZi7rc1FGcXzUQH/UNcsJCJGc/s++7
+         /9W7fvdy7AoeDih8dplkVftaLW/YPyuzwucGifKXnVVjg7KuQmOJOGvLXPDe1zg2tqu/
+         imKwfixEAewrgply9X0oXjaziGRPdmhdNyboPSmttQNoRWx6qblHeCoaEwc3+YoscRWc
+         znJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YAMZzYHc3BSk60ZKYMuYkolep9zJ19WbVFd5/fzkGEw=;
-        b=Gra76264y0YUNN8UTSwpuv/Wu7Kl8zvYH76MvenLxgWjwX+Hp+tbjXrQ/F+qJIYX5w
-         MnE2di8ROZ1G9MEkcs9ThtkFe24OO/tUpOdRYHPCBXcg4pCF1SxNEBk2J/pkDclMle/S
-         2it3MBrm9+3zGPnYJxXRPfM+PKGDuPtt6nQ57wjrfh9WzHChRNRHC+YZWR2ALg6waJFr
-         hH6HF2kiSlB0Oicoh9NlmoszOLPDQBYZ7Jdynz7V2h5qSwORanK5XrZJi3H1R55ovj0l
-         5GsXV7W4jm+Yf+CwhyrydCFoji/m2fF678ItcLfu0LZTGX9lhpqZatUzLzgJddA0EcB6
-         QV7g==
-X-Gm-Message-State: AGi0Pub+7VNVyluLM+f7eTe4XtHqMT7mAWVdPNdsCqNDMQsy7l47oHkb
-        44lanuxjevD3ono/YGvi4kE=
-X-Google-Smtp-Source: APiQypKUSNj6yHRllppCwr6DtXaxXqekJe3s/XyxB4rcNCM8c2WTYaTwb/m2P0/HIkltXrZs3+vHZQ==
-X-Received: by 2002:a7b:c253:: with SMTP id b19mr22490141wmj.110.1589373567857;
-        Wed, 13 May 2020 05:39:27 -0700 (PDT)
+        bh=iP01j1nGFSda70n3ErSleGKHSypa0Pi6uR0PO3xQfnA=;
+        b=CJWJJeZI7oXR3cbIMuJzby2cbReRcQyY1/VBolJEn7gx0Prsw4Nz5PXVcvj2NLvzB8
+         0cEHua4FWetQtclsdSkRV/IRQt354FB/lg+qlaEgOH2KXE8g/P5BdHkl0slTdz4ypchH
+         yjcuECvBWU6uxj1Rgfot9Z6GYrOLgwez56ULXWcL/FMVEum03PsbforsZdJlesLGwKTe
+         NyzbhTEu43FSfriyAy6dIEBa25JbJNMPE9rbhCvTpPwwJqmp1Ws3NMNArIRmEBSahH59
+         fb50FD2VwXnyFYHMEwKl7h+RB604mf0z88V8r/HzNlq4rwEx0fikvlIU3u/8cYxy7+Lx
+         Kh/w==
+X-Gm-Message-State: AGi0PuYpPiCeGBpu7wXV1Frk/PUKZTjpKX7RBiveHZGmqdw1WjP3iDfr
+        LnZaGo0W4egYddLFwLL4WlN3fkd4nOM=
+X-Google-Smtp-Source: APiQypLVuooIz/ru7rnBf1UvsjPOxqEUPQ19VDhjW9yYEhxHZ7nfgY2KDJUWZR6SG21Swf8+zPlj7g==
+X-Received: by 2002:adf:ea90:: with SMTP id s16mr31110947wrm.19.1589374157860;
+        Wed, 13 May 2020 05:49:17 -0700 (PDT)
 Received: from jondnuc (IGLD-84-229-154-20.inter.net.il. [84.229.154.20])
-        by smtp.gmail.com with ESMTPSA id b23sm33041658wmb.26.2020.05.13.05.39.26
+        by smtp.gmail.com with ESMTPSA id v126sm7086451wmb.4.2020.05.13.05.49.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 05:39:27 -0700 (PDT)
-Date:   Wed, 13 May 2020 15:39:26 +0300
+        Wed, 13 May 2020 05:49:17 -0700 (PDT)
+Date:   Wed, 13 May 2020 15:49:15 +0300
 From:   Jon Doron <arilou@gmail.com>
 To:     Roman Kagan <rvkagan@yandex-team.ru>, kvm@vger.kernel.org,
         linux-hyperv@vger.kernel.org, vkuznets@redhat.com
-Subject: Re: [PATCH v11 6/7] x86/kvm/hyper-v: Add support for synthetic
- debugger via hypercalls
-Message-ID: <20200513123926.GL2862@jondnuc>
+Subject: Re: [PATCH v11 2/7] x86/kvm/hyper-v: Simplify addition for custom
+ cpuid leafs
+Message-ID: <20200513124915.GM2862@jondnuc>
 References: <20200424113746.3473563-1-arilou@gmail.com>
- <20200424113746.3473563-7-arilou@gmail.com>
- <20200512153353.GB9944@rvkaganb.lan>
+ <20200424113746.3473563-3-arilou@gmail.com>
+ <20200513092404.GB29650@rvkaganb.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200512153353.GB9944@rvkaganb.lan>
+In-Reply-To: <20200513092404.GB29650@rvkaganb.lan>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12/05/2020, Roman Kagan wrote:
->On Fri, Apr 24, 2020 at 02:37:45PM +0300, Jon Doron wrote:
->> There is another mode for the synthetic debugger which uses hypercalls
->> to send/recv network data instead of the MSR interface.
+On 13/05/2020, Roman Kagan wrote:
+>On Fri, Apr 24, 2020 at 02:37:41PM +0300, Jon Doron wrote:
+>> Simlify the code to define a new cpuid leaf group by enabled feature.
 >>
->> This interface is much slower and less recommended since you might get
->> a lot of VMExits while KDVM polling for new packets to recv, rather
->> than simply checking the pending page to see if there is data avialble
->> and then request.
->>
+>> This also fixes a bug in which the max cpuid leaf was always set to
+>> HYPERV_CPUID_NESTED_FEATURES regardless if nesting is supported or not.
+>
+>I'm not sure the bug is there.  My understanding is that
+>HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS is supposed to provide the range
+>of leaves that return meaningful information.
+>HYPERV_CPUID_NESTED_FEATURES *can* return meaningful information
+>regardless of whether nested virt is active.
+>
+>So I'd rather skip reducing the returned set if !evmcs_ver.  The
+>returned set is sparse in .function anyway; anything that isn't there
+>will just return zeros to the guest.
+>
+>Changing the cpuid is also guest-visible so care must be taken with
+>this.
+>
+
+To be honest from my understanding of the TLFS it states:
+"The maximum input value for hypervisor CPUID information."
+
+So we should not expose stuff we wont "answer" to, I agree you can 
+always issue CPUID to any leaf and you will get zeroes but if we try to 
+follow TLFS it sounds like this needs to be capped here.
+
+>> Any new CPUID group needs to consider the max leaf and be added in the
+>> correct order, in this method there are two rules:
+>> 1. Each cpuid leaf group must be order in an ascending order
+>> 2. The appending for the cpuid leafs by features also needs to happen by
+>>    ascending order.
+>
+>It looks like unnecessary complication.  I think all you need to do to
+>simplify adding new leaves is to add a macro to hyperv-tlfs.h, say,
+>HYPERV_CPUID_MAX_PRESENT_LEAF, define it to
+>HYPERV_CPUID_NESTED_FEATURES, and redefine once another leaf is added
+>(compat may need to be taken care of).
+>
+>Thanks,
+>Roman.
+>
+
+I suggest you will see the discussion around v8 of this patchset where I 
+simply set HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS to be the maximum 
+value, but then we noticed this issue and hence why this patch was 
+revised to current form. (I agree it could be done under the TLFS header 
+file but as I understand from other emails from Michal it's going to get 
+re-worked a bit and splitted, still have not got into the details of 
+that work).
+
+Thanks,
+-- Jon.
+
 >> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 >> Signed-off-by: Jon Doron <arilou@gmail.com>
 >> ---
->>  arch/x86/kvm/hyperv.c | 28 ++++++++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
+>>  arch/x86/kvm/hyperv.c | 46 ++++++++++++++++++++++++++++++-------------
+>>  1 file changed, 32 insertions(+), 14 deletions(-)
 >>
 >> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
->> index 524b5466a515..744bcef88c70 100644
+>> index bcefa9d4e57e..ab3e9dbcabbe 100644
 >> --- a/arch/x86/kvm/hyperv.c
 >> +++ b/arch/x86/kvm/hyperv.c
->> @@ -1832,6 +1832,34 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
->>  		}
->>  		ret = kvm_hv_send_ipi(vcpu, ingpa, outgpa, true, false);
->>  		break;
->> +	case HVCALL_POST_DEBUG_DATA:
->> +	case HVCALL_RETRIEVE_DEBUG_DATA:
->> +		if (unlikely(fast)) {
->> +			ret = HV_STATUS_INVALID_PARAMETER;
->> +			break;
->> +		}
->> +		fallthrough;
->> +	case HVCALL_RESET_DEBUG_SESSION: {
->> +		struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
+>> @@ -1785,27 +1785,45 @@ int kvm_vm_ioctl_hv_eventfd(struct kvm *kvm, struct kvm_hyperv_eventfd *args)
+>>  	return kvm_hv_eventfd_assign(kvm, args->conn_id, args->fd);
+>>  }
+>>
+>> +/* Must be sorted in ascending order by function */
+>> +static struct kvm_cpuid_entry2 core_cpuid_entries[] = {
+>> +	{ .function = HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS },
+>> +	{ .function = HYPERV_CPUID_INTERFACE },
+>> +	{ .function = HYPERV_CPUID_VERSION },
+>> +	{ .function = HYPERV_CPUID_FEATURES },
+>> +	{ .function = HYPERV_CPUID_ENLIGHTMENT_INFO },
+>> +	{ .function = HYPERV_CPUID_IMPLEMENT_LIMITS },
+>> +};
 >> +
->> +		if (!syndbg->active) {
->> +			ret = HV_STATUS_INVALID_HYPERCALL_CODE;
->> +			break;
->> +		}
+>> +static struct kvm_cpuid_entry2 evmcs_cpuid_entries[] = {
+>> +	{ .function = HYPERV_CPUID_NESTED_FEATURES },
+>> +};
 >> +
->> +		if (!(syndbg->options & HV_X64_SYNDBG_OPTION_USE_HCALLS)) {
->> +			ret = HV_STATUS_OPERATION_DENIED;
->> +			break;
->> +		}
->> +		vcpu->run->exit_reason = KVM_EXIT_HYPERV;
->> +		vcpu->run->hyperv.type = KVM_EXIT_HYPERV_HCALL;
->> +		vcpu->run->hyperv.u.hcall.input = param;
->> +		vcpu->run->hyperv.u.hcall.params[0] = ingpa;
->> +		vcpu->run->hyperv.u.hcall.params[1] = outgpa;
->> +		vcpu->arch.complete_userspace_io =
->> +				kvm_hv_hypercall_complete_userspace;
->> +		return 0;
+>> +#define HV_MAX_CPUID_ENTRIES \
+>> +	(ARRAY_SIZE(core_cpuid_entries) +\
+>> +	 ARRAY_SIZE(evmcs_cpuid_entries))
+>> +
+>>  int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>>  				struct kvm_cpuid_entry2 __user *entries)
+>>  {
+>>  	uint16_t evmcs_ver = 0;
+>> -	struct kvm_cpuid_entry2 cpuid_entries[] = {
+>> -		{ .function = HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS },
+>> -		{ .function = HYPERV_CPUID_INTERFACE },
+>> -		{ .function = HYPERV_CPUID_VERSION },
+>> -		{ .function = HYPERV_CPUID_FEATURES },
+>> -		{ .function = HYPERV_CPUID_ENLIGHTMENT_INFO },
+>> -		{ .function = HYPERV_CPUID_IMPLEMENT_LIMITS },
+>> -		{ .function = HYPERV_CPUID_NESTED_FEATURES },
+>> -	};
+>> -	int i, nent = ARRAY_SIZE(cpuid_entries);
+>> +	struct kvm_cpuid_entry2 cpuid_entries[HV_MAX_CPUID_ENTRIES];
+>> +	int i, nent = 0;
+>> +
+>> +	/* Set the core cpuid entries required for Hyper-V */
+>> +	memcpy(&cpuid_entries[nent], &core_cpuid_entries,
+>> +	       sizeof(core_cpuid_entries));
+>> +	nent = ARRAY_SIZE(core_cpuid_entries);
+>>
+>>  	if (kvm_x86_ops.nested_get_evmcs_version)
+>>  		evmcs_ver = kvm_x86_ops.nested_get_evmcs_version(vcpu);
+>>
+>> -	/* Skip NESTED_FEATURES if eVMCS is not supported */
+>> -	if (!evmcs_ver)
+>> -		--nent;
+>> +	if (evmcs_ver) {
+>> +		/* EVMCS is enabled, add the required EVMCS CPUID leafs */
+>> +		memcpy(&cpuid_entries[nent], &evmcs_cpuid_entries,
+>> +		       sizeof(evmcs_cpuid_entries));
+>> +		nent += ARRAY_SIZE(evmcs_cpuid_entries);
 >> +	}
->
->I'd personally just push every hyperv hypercall not recognized by the
->kernel to userspace.  Smth like this:
->
->diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
->index bcefa9d4e57e..f0404df0f488 100644
->--- a/arch/x86/kvm/hyperv.c
->+++ b/arch/x86/kvm/hyperv.c
->@@ -1644,6 +1644,48 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
-> 		}
-> 		kvm_vcpu_on_spin(vcpu, true);
-> 		break;
->+	case HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST:
->+		if (unlikely(fast || !rep_cnt || rep_idx)) {
->+			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->+			break;
->+		}
->+		ret = kvm_hv_flush_tlb(vcpu, ingpa, rep_cnt, false);
->+		break;
->+	case HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE:
->+		if (unlikely(fast || rep)) {
->+			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->+			break;
->+		}
->+		ret = kvm_hv_flush_tlb(vcpu, ingpa, rep_cnt, false);
->+		break;
->+	case HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX:
->+		if (unlikely(fast || !rep_cnt || rep_idx)) {
->+			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->+			break;
->+		}
->+		ret = kvm_hv_flush_tlb(vcpu, ingpa, rep_cnt, true);
->+		break;
->+	case HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX:
->+		if (unlikely(fast || rep)) {
->+			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->+			break;
->+		}
->+		ret = kvm_hv_flush_tlb(vcpu, ingpa, rep_cnt, true);
->+		break;
->+	case HVCALL_SEND_IPI:
->+		if (unlikely(rep)) {
->+			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->+			break;
->+		}
->+		ret = kvm_hv_send_ipi(vcpu, ingpa, outgpa, false, fast);
->+		break;
->+	case HVCALL_SEND_IPI_EX:
->+		if (unlikely(fast || rep)) {
->+			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->+			break;
->+		}
->+		ret = kvm_hv_send_ipi(vcpu, ingpa, outgpa, true, false);
->+		break;
-> 	case HVCALL_SIGNAL_EVENT:
-> 		if (unlikely(rep)) {
-> 			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->@@ -1653,12 +1695,8 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
-> 		if (ret != HV_STATUS_INVALID_PORT_ID)
-> 			break;
-> 		/* fall through - maybe userspace knows this conn_id. */
->-	case HVCALL_POST_MESSAGE:
->-		/* don't bother userspace if it has no way to handle it */
->-		if (unlikely(rep || !vcpu_to_synic(vcpu)->active)) {
->-			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->-			break;
->-		}
->+	default:
->+		/* forward unrecognized hypercalls to userspace */
-> 		vcpu->run->exit_reason = KVM_EXIT_HYPERV;
-> 		vcpu->run->hyperv.type = KVM_EXIT_HYPERV_HCALL;
-> 		vcpu->run->hyperv.u.hcall.input = param;
->@@ -1667,51 +1705,6 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
-> 		vcpu->arch.complete_userspace_io =
-> 				kvm_hv_hypercall_complete_userspace;
-> 		return 0;
->-	case HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST:
->-		if (unlikely(fast || !rep_cnt || rep_idx)) {
->-			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->-			break;
->-		}
->-		ret = kvm_hv_flush_tlb(vcpu, ingpa, rep_cnt, false);
->-		break;
->-	case HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE:
->-		if (unlikely(fast || rep)) {
->-			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->-			break;
->-		}
->-		ret = kvm_hv_flush_tlb(vcpu, ingpa, rep_cnt, false);
->-		break;
->-	case HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX:
->-		if (unlikely(fast || !rep_cnt || rep_idx)) {
->-			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->-			break;
->-		}
->-		ret = kvm_hv_flush_tlb(vcpu, ingpa, rep_cnt, true);
->-		break;
->-	case HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX:
->-		if (unlikely(fast || rep)) {
->-			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->-			break;
->-		}
->-		ret = kvm_hv_flush_tlb(vcpu, ingpa, rep_cnt, true);
->-		break;
->-	case HVCALL_SEND_IPI:
->-		if (unlikely(rep)) {
->-			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->-			break;
->-		}
->-		ret = kvm_hv_send_ipi(vcpu, ingpa, outgpa, false, fast);
->-		break;
->-	case HVCALL_SEND_IPI_EX:
->-		if (unlikely(fast || rep)) {
->-			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->-			break;
->-		}
->-		ret = kvm_hv_send_ipi(vcpu, ingpa, outgpa, true, false);
->-		break;
->-	default:
->-		ret = HV_STATUS_INVALID_HYPERCALL_CODE;
->-		break;
-> 	}
->
-> 	return kvm_hv_hypercall_complete(vcpu, ret);
->
->(would also need a kvm cap for that)
->
->Roman.
-
-This looks like a good idea, but I think it should be part of another 
-patchset, I could revise one once this is in and expose a new CAP, and 
-we need to make sure QEMU can handle this and wont just crash getting 
-these additional exits.
-
--- Jon.
+>>
+>>  	if (cpuid->nent < nent)
+>>  		return -E2BIG;
+>> @@ -1821,7 +1839,7 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>>  		case HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS:
+>>  			memcpy(signature, "Linux KVM Hv", 12);
+>>
+>> -			ent->eax = HYPERV_CPUID_NESTED_FEATURES;
+>> +			ent->eax = cpuid_entries[nent - 1].function;
+>>  			ent->ebx = signature[0];
+>>  			ent->ecx = signature[1];
+>>  			ent->edx = signature[2];
+>> --
+>> 2.24.1
+>>
