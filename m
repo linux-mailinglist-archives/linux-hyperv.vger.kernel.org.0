@@ -2,148 +2,137 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4615C1D1599
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2020 15:36:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 036381D178C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2020 16:26:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388623AbgEMNfn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 13 May 2020 09:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387927AbgEMNfb (ORCPT
+        id S2388981AbgEMO0a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 13 May 2020 10:26:30 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8391 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388827AbgEMO03 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 13 May 2020 09:35:31 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B6CC061A0C;
-        Wed, 13 May 2020 06:35:30 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u10so6830376pls.8;
-        Wed, 13 May 2020 06:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0BGOGNqih27OV/hxwThO6MefRy8fXlj0Bh5UXUHoSvM=;
-        b=RDEBDtHUoB1XiuAgWSyUddc44FRdseR2E78Z2zPCqCd8Z18kCEdZEGX8U2vpI0yzzA
-         u2yPqNpHUZtsoZpZmOjFllF1DBlsIz5XDxmvPXLVmQVKCvvwifTfdv2vhxD1NgzQMmnz
-         N1T/Czl/NCNGfDgTC4rx1m6afLlOJBLwgGkiPiQdaV0BM/6IUr7WpfXp65yBUaCwb2ET
-         dx8UCWSsBCyEVu7hIoYFsdvu7x+zpnp3t7U8kws9RKec49ogUfYr6QiV1kaS9G+CSQjS
-         Ao0jU/DLcKfDuCB9R7JGFBPoV5YU98EC03q4FXf01dcm6m24eDSmLsg95KzXWHPIeGJm
-         jwcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0BGOGNqih27OV/hxwThO6MefRy8fXlj0Bh5UXUHoSvM=;
-        b=IZBC0RCc0eim7ct/DWqhTa4twr5i6pWQheMKg7J/e4fgs1WK9Ws86VrqY3TugHMQA3
-         U+D7PrkbDnKc6emwCRAL3XVYBQhNLEw8x5ikjfKqEZdWcS1+NOLET2g38+Jf3TmpDt40
-         gOVvcFqfEtdWSuu+ggdI4IFXva8qO2uUiyjwEvb9879aOArPO1RkwQODeXcCjxfzHgM7
-         Tnhv+l79grrHGDi1GNQg9CXdn3TVSsgo4g8H0P35EOyKgmLcbHTCHfeNJ2b6gXVcw5aG
-         2/8U5aW7guZyY+0msxXYSr3Yom58uG6i4T6kVzTtWy7nhZy8UpSGwsFybjdDMND+E8kA
-         fHoQ==
-X-Gm-Message-State: AOAM531HWIVdkRcNth2Ab/UZj8ryNo9SxiqR5m+GjQ0FzXZSN3/tiBND
-        i2RfEfqwaeSbAUJXJLnglT8=
-X-Google-Smtp-Source: ABdhPJxHvVgkgDedkqYMSZJj59AIFKH74OH/HffWU0Oj7KNku+s6st0bccLkx8cK0rvdzp2DPZN+dw==
-X-Received: by 2002:a17:90a:7ace:: with SMTP id b14mr2252495pjl.116.1589376930438;
-        Wed, 13 May 2020 06:35:30 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:18:efed::a31c])
-        by smtp.gmail.com with ESMTPSA id g9sm13207294pgj.89.2020.05.13.06.35.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 06:35:30 -0700 (PDT)
-Subject: Re: [PATCH] x86/hyperv: Properly suspend/resume reenlightenment
- notifications
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-hyperv@vger.kernel.org
-Cc:     Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-References: <20200512160153.134467-1-vkuznets@redhat.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <3507d1b3-8d90-8d0e-c20f-a75f9f280230@gmail.com>
-Date:   Wed, 13 May 2020 21:35:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Wed, 13 May 2020 10:26:29 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebc030c0000>; Wed, 13 May 2020 07:24:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 13 May 2020 07:26:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 13 May 2020 07:26:28 -0700
+Received: from [10.40.103.138] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 May
+ 2020 14:26:19 +0000
+Subject: Re: RE: [PATCH v6 09/10] arm64: efi: Export screen_info
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
+ <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
+ <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Nikhil Mahale <nmahale@nvidia.com>
+Message-ID: <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com>
+Date:   Wed, 13 May 2020 19:56:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200512160153.134467-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589379852; bh=x1UAKVn8+/u2cz6MzDi8dZRv1jolqDgwkL4uosH9XXA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cW+1fl8Ga69Q1QXp46sGezHshzti2A6hHcqXU68jSAv0HbHLeJQvepipXJ0eSuDBo
+         51KMndVzf/sPPYlWVGm/bE21jU3XJS+EeiVEM2ruDJCnu64Jz80k49jv2OjlI7Vnjj
+         DhPtiz/99TQ94aCjvD+0pTQoBQQ/lwcbhEddYghMCPLZE9sM9eXPYXm18cFxeGfTO2
+         15ETxGo1tsLmjRLBCgkqhz7TYdryxI170K82U/Oez6e+yjci90BE8uVyGq0TXp/K63
+         ks9G06QTA88P3fNC9kzZfxZonCfJndFQz5TkuaWAKoONJmCQ+9rIQ5hxcdLWAb+Cng
+         7pKiTeecW804A==
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/13/2020 12:01 AM, Vitaly Kuznetsov wrote:
-> Errors during hibernation with reenlightenment notifications enabled were
-> reported:
+On 3/20/20 3:16 AM, Michael Kelley wrote:
+> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
+>>
+>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
+>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
+>>>>>
+>>>>> The Hyper-V frame buffer driver may be built as a module, and
+>>>>> it needs access to screen_info. So export screen_info.
+>>>>>
+>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+>>>>
+>>>> Is there any chance of using a more modern KMS based driver for the screen
+>>>> than the old fbdev subsystem? I had hoped to one day completely remove
+>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
+>>>> architectures.
+>>>>
+>>>
+>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
+>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
+>>>
+>>> I'm not knowledgeable about video/graphics drivers, but when you
+>>> say "a more modern KMS based driver", are you meaning one based on
+>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
+>>> Are there any drivers that would be a good pattern to look at?
+>>
+>> It used to be a lot harder to write a DRM driver compared to an fbdev
+>> driver, but this has changed to the opposite over the years.
+>>
+>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
+>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
+>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
+>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
+>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
+>>
 > 
->   [   51.730435] PM: hibernation entry
->   [   51.737435] PM: Syncing filesystems ...
->   ...
->   [   54.102216] Disabling non-boot CPUs ...
->   [   54.106633] smpboot: CPU 1 is now offline
->   [   54.110006] unchecked MSR access error: WRMSR to 0x40000106 (tried to
->       write 0x47c72780000100ee) at rIP: 0xffffffff90062f24
->       native_write_msr+0x4/0x20)
->   [   54.110006] Call Trace:
->   [   54.110006]  hv_cpu_die+0xd9/0xf0
->   ...
+> Thanks for the pointers, especially for the other hypervisors.
 > 
-> Normally, hv_cpu_die() just reassigns reenlightenment notifications to some
-> other CPU when the CPU receiving them goes offline. Upon hibernation, there
-> is no other CPU which is still online so cpumask_any_but(cpu_online_mask)
-> returns >= nr_cpu_ids and using it as hv_vp_index index is incorrect.
-> Disable the feature when cpumask_any_but() fails.
-> 
-> Also, as we now disable reenlightenment notifications upon hibernation we
-> need to restore them on resume. Check if hv_reenlightenment_cb was
-> previously set and restore from hv_resume().
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->   arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++--
->   1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index fd51bac11b46..acf76b466db6 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -226,10 +226,18 @@ static int hv_cpu_die(unsigned int cpu)
->   
->   	rdmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
->   	if (re_ctrl.target_vp == hv_vp_index[cpu]) {
-> -		/* Reassign to some other online CPU */
-> +		/*
-> +		 * Reassign reenlightenment notifications to some other online
-> +		 * CPU or just disable the feature if there are no online CPUs
-> +		 * left (happens on hibernation).
-> +		 */
->   		new_cpu = cpumask_any_but(cpu_online_mask, cpu);
->   
-> -		re_ctrl.target_vp = hv_vp_index[new_cpu];
-> +		if (new_cpu < nr_cpu_ids)
-> +			re_ctrl.target_vp = hv_vp_index[new_cpu];
-> +		else
-> +			re_ctrl.enabled = 0;
-> +
->   		wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
->   	}
->   
-> @@ -293,6 +301,13 @@ static void hv_resume(void)
->   
->   	hv_hypercall_pg = hv_hypercall_pg_saved;
->   	hv_hypercall_pg_saved = NULL;
-> +
-> +	/*
-> +	 * Reenlightenment notifications are disabled by hv_cpu_die(0),
-> +	 * reenable them here if hv_reenlightenment_cb was previously set.
-> +	 */
-> +	if (hv_reenlightenment_cb)
-> +		set_hv_tscchange_cb(hv_reenlightenment_cb);
->   }
->   
->   /* Note: when the ops are called, only CPU0 is online and IRQs are disabled. */
-> 
+Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
+I had configured by email client incorrectly to reply.
 
-Reviewed-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+screen_info is still useful with a modern KMS-based driver.  It exposes
+the mode parameters that the GOP driver chose.  This information is
+needed to implement seamless or glitchless boot, by both ensuring that
+the scanout parameters don't change and being able to read back the
+scanout image to populate the initial contents of the new surface.
+
+This works today on arches which implement (U)EFI and export
+screen_info, including x86 and powerpc, but doesn't work on arm or
+arm64.  As arm64 systems that implement UEFI with real GOP drivers
+become more prevalent, it would be nice to be have these features there
+as well.
+
+Thanks,
+Nikhil Mahale
+
+> Michael
+> 
