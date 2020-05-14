@@ -2,90 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F5C61D188B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 May 2020 17:02:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D156D1D3C45
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 May 2020 21:15:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389375AbgEMPB7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 13 May 2020 11:01:59 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44347 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389054AbgEMPB6 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 13 May 2020 11:01:58 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 50so20766386wrc.11;
-        Wed, 13 May 2020 08:01:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ySQYNCFJieFw49hebY3MJRxVr5zT7izYFnFzCl37LtQ=;
-        b=ukoJt9BWtiaSr+NEzfjybj9b4MErjJAgb8nUVyNDbzC8uDPL7csNpDS5DjiMPOK6r/
-         uM7+A+RMBf8nupqkzmxFOFtcyyton1BaSom4eqnWqJMo/l6PsxqMP4NIZD/J18TjLakn
-         fS4NwDlU5TXwwX5DRBA2L94a208OP1MwxWdGDxk78KG/x4cjlz0u+LmZOZZsn3ivUAA/
-         jSFQVs7AsPGz7et5kUV/tnwOEjVLzLe2LhoeWVKJEew0NPCDw4ZrOw+F5AHJgBa8GHQa
-         o011hVUFQTviWTibkrmVA9lMDBHlgMRPg15oHebaeI9urXBIiCmfbgUwvxET6CdVwqED
-         BFVw==
-X-Gm-Message-State: AGi0PuYsqTDNKAv+GGejJ0YvIn8PMN7mcuCnFbvMpj4jNGsumnSjtpNA
-        CnjB25RhodowmpbjXdPPj/U=
-X-Google-Smtp-Source: APiQypJgZBp+xJJRlLfto0u7+TAJ63AvPCwqvbP8TiD3U2a/e+i8K84AM43rOUVJ7f2Lh/Wjf6YJ1g==
-X-Received: by 2002:a5d:6841:: with SMTP id o1mr31448481wrw.412.1589382115833;
-        Wed, 13 May 2020 08:01:55 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b2sm25334319wrm.30.2020.05.13.08.01.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:01:55 -0700 (PDT)
-Date:   Wed, 13 May 2020 15:01:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: Re: [PATCH] x86/hyperv: Properly suspend/resume reenlightenment
- notifications
-Message-ID: <20200513150153.2xi4v2ekpv7zmofo@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200512160153.134467-1-vkuznets@redhat.com>
+        id S1728331AbgENSwa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 14 May 2020 14:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbgENSw0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 046F720722;
+        Thu, 14 May 2020 18:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589482345;
+        bh=KCg1yyOVD4K2OKUGu9sfernH4qKqFq5o9U83i/HgAkU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2i4blJ5i6CdBC/iFc83/xlv8bViMDHHE+Ah3C6iWWfXMYczuvxUt6co/cyd3rCqGl
+         4vWP+oI/2oqz7N4tLBV/V5wmqB5juqLV3sLVceIZRDLI6hPw5EssQG96n1yoaEgMjY
+         s7Zjo7rHDD2OvGRwuUEZpEWPrCJQkE3jtBLk35wo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.6 29/62] hv_netvsc: Fix netvsc_start_xmit's return type
+Date:   Thu, 14 May 2020 14:51:14 -0400
+Message-Id: <20200514185147.19716-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
+References: <20200514185147.19716-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512160153.134467-1-vkuznets@redhat.com>
-User-Agent: NeoMutt/20180716
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 12, 2020 at 06:01:53PM +0200, Vitaly Kuznetsov wrote:
-> Errors during hibernation with reenlightenment notifications enabled were
-> reported:
-> 
->  [   51.730435] PM: hibernation entry
->  [   51.737435] PM: Syncing filesystems ...
->  ...
->  [   54.102216] Disabling non-boot CPUs ...
->  [   54.106633] smpboot: CPU 1 is now offline
->  [   54.110006] unchecked MSR access error: WRMSR to 0x40000106 (tried to
->      write 0x47c72780000100ee) at rIP: 0xffffffff90062f24
->      native_write_msr+0x4/0x20)
->  [   54.110006] Call Trace:
->  [   54.110006]  hv_cpu_die+0xd9/0xf0
->  ...
-> 
-> Normally, hv_cpu_die() just reassigns reenlightenment notifications to some
-> other CPU when the CPU receiving them goes offline. Upon hibernation, there
-> is no other CPU which is still online so cpumask_any_but(cpu_online_mask)
-> returns >= nr_cpu_ids and using it as hv_vp_index index is incorrect.
-> Disable the feature when cpumask_any_but() fails.
-> 
-> Also, as we now disable reenlightenment notifications upon hibernation we
-> need to restore them on resume. Check if hv_reenlightenment_cb was
-> previously set and restore from hv_resume().
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-Applied to hyperv-fixes.
+[ Upstream commit 7fdc66debebc6a7170a37c8c9b0d9585a9788fb4 ]
 
-Thank you all.
+netvsc_start_xmit is used as a callback function for the ndo_start_xmit
+function pointer. ndo_start_xmit's return type is netdev_tx_t but
+netvsc_start_xmit's return type is int.
 
-Wei.
+This causes a failure with Control Flow Integrity (CFI), which requires
+function pointer prototypes and callback function definitions to match
+exactly. When CFI is in enforcing, the kernel panics. When booting a
+CFI kernel with WSL 2, the VM is immediately terminated because of this.
+
+The splat when CONFIG_CFI_PERMISSIVE is used:
+
+[    5.916765] CFI failure (target: netvsc_start_xmit+0x0/0x10):
+[    5.916771] WARNING: CPU: 8 PID: 0 at kernel/cfi.c:29 __cfi_check_fail+0x2e/0x40
+[    5.916772] Modules linked in:
+[    5.916774] CPU: 8 PID: 0 Comm: swapper/8 Not tainted 5.7.0-rc3-next-20200424-microsoft-cbl-00001-ged4eb37d2c69-dirty #1
+[    5.916776] RIP: 0010:__cfi_check_fail+0x2e/0x40
+[    5.916777] Code: 48 c7 c7 70 98 63 a9 48 c7 c6 11 db 47 a9 e8 69 55 59 00 85 c0 75 02 5b c3 48 c7 c7 73 c6 43 a9 48 89 de 31 c0 e8 12 2d f0 ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 00 cc cc 00 00 85 f6 74 25
+[    5.916778] RSP: 0018:ffffa803c0260b78 EFLAGS: 00010246
+[    5.916779] RAX: 712a1af25779e900 RBX: ffffffffa8cf7950 RCX: ffffffffa962cf08
+[    5.916779] RDX: ffffffffa9c36b60 RSI: 0000000000000082 RDI: ffffffffa9c36b5c
+[    5.916780] RBP: ffff8ffc4779c2c0 R08: 0000000000000001 R09: ffffffffa9c3c300
+[    5.916781] R10: 0000000000000151 R11: ffffffffa9c36b60 R12: ffff8ffe39084000
+[    5.916782] R13: ffffffffa8cf7950 R14: ffffffffa8d12cb0 R15: ffff8ffe39320140
+[    5.916784] FS:  0000000000000000(0000) GS:ffff8ffe3bc00000(0000) knlGS:0000000000000000
+[    5.916785] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    5.916786] CR2: 00007ffef5749408 CR3: 00000002f4f5e000 CR4: 0000000000340ea0
+[    5.916787] Call Trace:
+[    5.916788]  <IRQ>
+[    5.916790]  __cfi_check+0x3ab58/0x450e0
+[    5.916793]  ? dev_hard_start_xmit+0x11f/0x160
+[    5.916795]  ? sch_direct_xmit+0xf2/0x230
+[    5.916796]  ? __dev_queue_xmit.llvm.11471227737707190958+0x69d/0x8e0
+[    5.916797]  ? neigh_resolve_output+0xdf/0x220
+[    5.916799]  ? neigh_connected_output.cfi_jt+0x8/0x8
+[    5.916801]  ? ip6_finish_output2+0x398/0x4c0
+[    5.916803]  ? nf_nat_ipv6_out+0x10/0xa0
+[    5.916804]  ? nf_hook_slow+0x84/0x100
+[    5.916807]  ? ip6_input_finish+0x8/0x8
+[    5.916807]  ? ip6_output+0x6f/0x110
+[    5.916808]  ? __ip6_local_out.cfi_jt+0x8/0x8
+[    5.916810]  ? mld_sendpack+0x28e/0x330
+[    5.916811]  ? ip_rt_bug+0x8/0x8
+[    5.916813]  ? mld_ifc_timer_expire+0x2db/0x400
+[    5.916814]  ? neigh_proxy_process+0x8/0x8
+[    5.916816]  ? call_timer_fn+0x3d/0xd0
+[    5.916817]  ? __run_timers+0x2a9/0x300
+[    5.916819]  ? rcu_core_si+0x8/0x8
+[    5.916820]  ? run_timer_softirq+0x14/0x30
+[    5.916821]  ? __do_softirq+0x154/0x262
+[    5.916822]  ? native_x2apic_icr_write+0x8/0x8
+[    5.916824]  ? irq_exit+0xba/0xc0
+[    5.916825]  ? hv_stimer0_vector_handler+0x99/0xe0
+[    5.916826]  ? hv_stimer0_callback_vector+0xf/0x20
+[    5.916826]  </IRQ>
+[    5.916828]  ? hv_stimer_global_cleanup.cfi_jt+0x8/0x8
+[    5.916829]  ? raw_setsockopt+0x8/0x8
+[    5.916830]  ? default_idle+0xe/0x10
+[    5.916832]  ? do_idle.llvm.10446269078108580492+0xb7/0x130
+[    5.916833]  ? raw_setsockopt+0x8/0x8
+[    5.916833]  ? cpu_startup_entry+0x15/0x20
+[    5.916835]  ? cpu_hotplug_enable.cfi_jt+0x8/0x8
+[    5.916836]  ? start_secondary+0x188/0x190
+[    5.916837]  ? secondary_startup_64+0xa5/0xb0
+[    5.916838] ---[ end trace f2683fa869597ba5 ]---
+
+Avoid this by using the right return type for netvsc_start_xmit.
+
+Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1009
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/hyperv/netvsc_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 2c0a24c606fc7..28a5d46ad5266 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -710,7 +710,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
+ 	goto drop;
+ }
+ 
+-static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
++				     struct net_device *ndev)
+ {
+ 	return netvsc_xmit(skb, ndev, false);
+ }
+-- 
+2.20.1
+
