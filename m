@@ -2,144 +2,149 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D156D1D3C45
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 May 2020 21:15:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C83101D6FCA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2020 06:25:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgENSwa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 14 May 2020 14:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbgENSw0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 046F720722;
-        Thu, 14 May 2020 18:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482345;
-        bh=KCg1yyOVD4K2OKUGu9sfernH4qKqFq5o9U83i/HgAkU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2i4blJ5i6CdBC/iFc83/xlv8bViMDHHE+Ah3C6iWWfXMYczuvxUt6co/cyd3rCqGl
-         4vWP+oI/2oqz7N4tLBV/V5wmqB5juqLV3sLVceIZRDLI6hPw5EssQG96n1yoaEgMjY
-         s7Zjo7rHDD2OvGRwuUEZpEWPrCJQkE3jtBLk35wo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.6 29/62] hv_netvsc: Fix netvsc_start_xmit's return type
-Date:   Thu, 14 May 2020 14:51:14 -0400
-Message-Id: <20200514185147.19716-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
-References: <20200514185147.19716-1-sashal@kernel.org>
+        id S1726329AbgEREZf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 18 May 2020 00:25:35 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10274 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgEREZe (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 18 May 2020 00:25:34 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec20db00000>; Sun, 17 May 2020 21:23:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 17 May 2020 21:25:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 17 May 2020 21:25:33 -0700
+Received: from [10.40.100.11] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 May
+ 2020 04:25:25 +0000
+Subject: Re: [PATCH v6 09/10] arm64: efi: Export screen_info
+From:   Nikhil Mahale <nmahale@nvidia.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
+ <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
+ <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com>
+X-Nvconfidentiality: Public
+Message-ID: <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
+Date:   Mon, 18 May 2020 09:55:21 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589775792; bh=ekIXZzrCnsEE0UL348V3okhZK7T2Db9hjgnyPCpZFQo=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hnm9iVrq0+hxj9S+6CP6ONZHVycQsEsKBoV846kHFRHb/EfZmjjw1YnuEJO3PMK31
+         7Tp+RQs87fW+2hXs5HIPHryeAvOYSGRc9+UHWUBLrpullIG/JR1+KreOTaDSXJ19WR
+         JeLOJXR3gWEmPz+++aLpibN4o5szDoMAzbSEfOaRDFTz/O5xkQ0PeyApkA3P9AbQ2q
+         Ah8PsuSWn+XGG0FGIsl22iBXaOszg2/WJyQXMg2Twzrzi73HEYxTmN1cVqgTikkOak
+         J3K/0UDgQIKk+PmsmQNzZ/lXwCqBwcbsDtRdcFPBs45EevrTD027c1ngLGKycG8D4V
+         GD3lUMo+rBrHA==
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+On 5/13/20 7:56 PM, Nikhil Mahale wrote:
+> On 3/20/20 3:16 AM, Michael Kelley wrote:
+>> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
+>>>
+>>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
+>>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
+>>>>>>
+>>>>>> The Hyper-V frame buffer driver may be built as a module, and
+>>>>>> it needs access to screen_info. So export screen_info.
+>>>>>>
+>>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+>>>>>
+>>>>> Is there any chance of using a more modern KMS based driver for the screen
+>>>>> than the old fbdev subsystem? I had hoped to one day completely remove
+>>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
+>>>>> architectures.
+>>>>>
+>>>>
+>>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
+>>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
+>>>>
+>>>> I'm not knowledgeable about video/graphics drivers, but when you
+>>>> say "a more modern KMS based driver", are you meaning one based on
+>>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
+>>>> Are there any drivers that would be a good pattern to look at?
+>>>
+>>> It used to be a lot harder to write a DRM driver compared to an fbdev
+>>> driver, but this has changed to the opposite over the years.
+>>>
+>>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
+>>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
+>>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
+>>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
+>>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
+>>>
+>>
+>> Thanks for the pointers, especially for the other hypervisors.
+>>
+> Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
+> I had configured by email client incorrectly to reply.
+> 
+> screen_info is still useful with a modern KMS-based driver.  It exposes
+> the mode parameters that the GOP driver chose.  This information is
+> needed to implement seamless or glitchless boot, by both ensuring that
+> the scanout parameters don't change and being able to read back the
+> scanout image to populate the initial contents of the new surface.
+> 
+> This works today on arches which implement (U)EFI and export
+> screen_info, including x86 and powerpc, but doesn't work on arm or
+> arm64.  As arm64 systems that implement UEFI with real GOP drivers
+> become more prevalent, it would be nice to be have these features there
+> as well.
 
-[ Upstream commit 7fdc66debebc6a7170a37c8c9b0d9585a9788fb4 ]
+In addition to this, even if a driver doesn't implement a framebuffer
+console, or if it does but has an option to disable it, the driver still
+needs to know whether the EFI console is using resources on the GPU so
+it can avoid clobbering them. For example screen_info provides information
+like offset and size of EFI console, using this information driver can
+reserve memory used by console and prevent corruption on it.
 
-netvsc_start_xmit is used as a callback function for the ndo_start_xmit
-function pointer. ndo_start_xmit's return type is netdev_tx_t but
-netvsc_start_xmit's return type is int.
+I think arm64 should export screen_info.
 
-This causes a failure with Control Flow Integrity (CFI), which requires
-function pointer prototypes and callback function definitions to match
-exactly. When CFI is in enforcing, the kernel panics. When booting a
-CFI kernel with WSL 2, the VM is immediately terminated because of this.
-
-The splat when CONFIG_CFI_PERMISSIVE is used:
-
-[    5.916765] CFI failure (target: netvsc_start_xmit+0x0/0x10):
-[    5.916771] WARNING: CPU: 8 PID: 0 at kernel/cfi.c:29 __cfi_check_fail+0x2e/0x40
-[    5.916772] Modules linked in:
-[    5.916774] CPU: 8 PID: 0 Comm: swapper/8 Not tainted 5.7.0-rc3-next-20200424-microsoft-cbl-00001-ged4eb37d2c69-dirty #1
-[    5.916776] RIP: 0010:__cfi_check_fail+0x2e/0x40
-[    5.916777] Code: 48 c7 c7 70 98 63 a9 48 c7 c6 11 db 47 a9 e8 69 55 59 00 85 c0 75 02 5b c3 48 c7 c7 73 c6 43 a9 48 89 de 31 c0 e8 12 2d f0 ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 00 cc cc 00 00 85 f6 74 25
-[    5.916778] RSP: 0018:ffffa803c0260b78 EFLAGS: 00010246
-[    5.916779] RAX: 712a1af25779e900 RBX: ffffffffa8cf7950 RCX: ffffffffa962cf08
-[    5.916779] RDX: ffffffffa9c36b60 RSI: 0000000000000082 RDI: ffffffffa9c36b5c
-[    5.916780] RBP: ffff8ffc4779c2c0 R08: 0000000000000001 R09: ffffffffa9c3c300
-[    5.916781] R10: 0000000000000151 R11: ffffffffa9c36b60 R12: ffff8ffe39084000
-[    5.916782] R13: ffffffffa8cf7950 R14: ffffffffa8d12cb0 R15: ffff8ffe39320140
-[    5.916784] FS:  0000000000000000(0000) GS:ffff8ffe3bc00000(0000) knlGS:0000000000000000
-[    5.916785] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    5.916786] CR2: 00007ffef5749408 CR3: 00000002f4f5e000 CR4: 0000000000340ea0
-[    5.916787] Call Trace:
-[    5.916788]  <IRQ>
-[    5.916790]  __cfi_check+0x3ab58/0x450e0
-[    5.916793]  ? dev_hard_start_xmit+0x11f/0x160
-[    5.916795]  ? sch_direct_xmit+0xf2/0x230
-[    5.916796]  ? __dev_queue_xmit.llvm.11471227737707190958+0x69d/0x8e0
-[    5.916797]  ? neigh_resolve_output+0xdf/0x220
-[    5.916799]  ? neigh_connected_output.cfi_jt+0x8/0x8
-[    5.916801]  ? ip6_finish_output2+0x398/0x4c0
-[    5.916803]  ? nf_nat_ipv6_out+0x10/0xa0
-[    5.916804]  ? nf_hook_slow+0x84/0x100
-[    5.916807]  ? ip6_input_finish+0x8/0x8
-[    5.916807]  ? ip6_output+0x6f/0x110
-[    5.916808]  ? __ip6_local_out.cfi_jt+0x8/0x8
-[    5.916810]  ? mld_sendpack+0x28e/0x330
-[    5.916811]  ? ip_rt_bug+0x8/0x8
-[    5.916813]  ? mld_ifc_timer_expire+0x2db/0x400
-[    5.916814]  ? neigh_proxy_process+0x8/0x8
-[    5.916816]  ? call_timer_fn+0x3d/0xd0
-[    5.916817]  ? __run_timers+0x2a9/0x300
-[    5.916819]  ? rcu_core_si+0x8/0x8
-[    5.916820]  ? run_timer_softirq+0x14/0x30
-[    5.916821]  ? __do_softirq+0x154/0x262
-[    5.916822]  ? native_x2apic_icr_write+0x8/0x8
-[    5.916824]  ? irq_exit+0xba/0xc0
-[    5.916825]  ? hv_stimer0_vector_handler+0x99/0xe0
-[    5.916826]  ? hv_stimer0_callback_vector+0xf/0x20
-[    5.916826]  </IRQ>
-[    5.916828]  ? hv_stimer_global_cleanup.cfi_jt+0x8/0x8
-[    5.916829]  ? raw_setsockopt+0x8/0x8
-[    5.916830]  ? default_idle+0xe/0x10
-[    5.916832]  ? do_idle.llvm.10446269078108580492+0xb7/0x130
-[    5.916833]  ? raw_setsockopt+0x8/0x8
-[    5.916833]  ? cpu_startup_entry+0x15/0x20
-[    5.916835]  ? cpu_hotplug_enable.cfi_jt+0x8/0x8
-[    5.916836]  ? start_secondary+0x188/0x190
-[    5.916837]  ? secondary_startup_64+0xa5/0xb0
-[    5.916838] ---[ end trace f2683fa869597ba5 ]---
-
-Avoid this by using the right return type for netvsc_start_xmit.
-
-Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1009
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/hyperv/netvsc_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 2c0a24c606fc7..28a5d46ad5266 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -710,7 +710,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 	goto drop;
- }
- 
--static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-+				     struct net_device *ndev)
- {
- 	return netvsc_xmit(skb, ndev, false);
- }
--- 
-2.20.1
-
+> Thanks,
+> Nikhil Mahale
+> 
+>> Michael
+>>
