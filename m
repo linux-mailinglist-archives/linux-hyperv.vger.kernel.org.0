@@ -2,139 +2,123 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C02A1D78FA
-	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2020 14:51:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D94E1D8588
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 May 2020 20:19:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgERMvY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 18 May 2020 08:51:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgERMvY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 18 May 2020 08:51:24 -0400
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19158207D8;
-        Mon, 18 May 2020 12:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589806283;
-        bh=59VoFxWg86wvMXwZUsJGWlhU4ZYA2YVdpnEWpzS7DZE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TRlQTwf11+v0bpjUNl2t5dPXV5ZIgFjYItuEHgPDLLWI8nX/b3fI1Gf9oXF2MEkY+
-         ag3gxxuz76Dqxvfrl2+KlKkbDYuLczLDqjJr4Jr/MylKyy2pqFx2xqJ5fah7iXpxfv
-         0CUSaHum5Oyo+Swa4XBHPXOioS47ylD1QP5MYOTg=
-Received: by mail-io1-f44.google.com with SMTP id h10so10376232iob.10;
-        Mon, 18 May 2020 05:51:23 -0700 (PDT)
-X-Gm-Message-State: AOAM533kr8lVGMOlORWinukcrczWUHssUmdNBL5hHoMKBtqyNzGFur/Q
-        fdPYRdcAKX0Yo9N4/h56FVXHLNjJgB8owra7InY=
-X-Google-Smtp-Source: ABdhPJz9/6CkchQipSV8AM+pHvWaEqOIHqsO5Jiu/QyHeKgC98RsdhCrUuUpwXRVK59Pi3qeDsED7Bv2BcEqy1sJsHA=
-X-Received: by 2002:a5e:8705:: with SMTP id y5mr14514218ioj.142.1589806282417;
- Mon, 18 May 2020 05:51:22 -0700 (PDT)
+        id S1731259AbgERRyL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 18 May 2020 13:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731255AbgERRyJ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 18 May 2020 13:54:09 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0EECC061A0C
+        for <linux-hyperv@vger.kernel.org>; Mon, 18 May 2020 10:54:09 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 72so8857656otu.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 18 May 2020 10:54:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=NKxrNeMJxh/5cEKxUBmpS337N2UPrP1BgjlgBR9/u/Y=;
+        b=GvQGiQV4bd6+Iy+4j/cOiqHufSfouAxqmKoloKHAVgwKi4uIk8GXKCJIqCuKP/RbRr
+         zEvSfngGho+auoE6lq4IwU2ZVyN18ZxRyhaoqbrS3RzPkotXt/L+EqCc9RSyEM7JEaBE
+         /nSQimYFlsF+1kMi/jlDgw6Nj4YoWbRzsFqBJXhs1AlWErxsKA/5Hwl8u5jxieyLtluE
+         3COVHrNf7hGdKdi5xegqcAzgTs6A0VDQio/eUK7IkrfKhabycUlGTJ+u5MR15QGWAaBR
+         HUxHghtzrKJdw1x0DPhqn7NlZm8StkVbTiSqF0ZOGqCVFD+HqC53wSoZMkyhlk3n+Zrd
+         AwWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=NKxrNeMJxh/5cEKxUBmpS337N2UPrP1BgjlgBR9/u/Y=;
+        b=NK8nRPpx6vjxfRswcSG66linp1qF3fp5vC8mt1+DdlsdNUHpey/+XlyxJljfj4D+9H
+         G7EDZZ4rAZoFgkIV89LehDrAUjGEA8dKc4dLgBdYwrSaUlGs1j5YMIvihz8xFzUu7Qfo
+         jPEoqIE+UYeQ9Fy7hH0BDJJX97cVIijhduCtJq598Re6FF0wE0SMbZr/o8psPowXHTxQ
+         7YzQczg/ZcolNqhiuHR4xssBbF6+uIz7q4G0t3If3kXofsvtsiTkVKzoOrzkHShrQ5Jz
+         WP33k7s1QIHOCp1IJuloEfXqNHFZBaHwajLIvw3fq5+nrC5T9UAGrBzJJs1qHQCmChzp
+         9FMw==
+X-Gm-Message-State: AOAM530Rve5YRU8tpqw7zNQ9rN48sxfFggeIrPlajOlnxXiNyUOX9UhT
+        U8pgdf/BSurVIkQtV3l7IS9iGF/XwK5hWQrXjqg=
+X-Google-Smtp-Source: ABdhPJxporbEs77nO+oXPv13mOChGXwB5ydRd7hzGsrCvIBo2iLcbikbYp+/7VP9gGcTTFRPlwIKqtAy5GxFb7TDJXk=
+X-Received: by 2002:a9d:32e2:: with SMTP id u89mr13757051otb.285.1589824448941;
+ Mon, 18 May 2020 10:54:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
- <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
- <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
- <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com> <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
-In-Reply-To: <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 18 May 2020 14:51:11 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEpryfqk5eKxB5NrDcriEBRQKEHnDVZNBMfB4DY=708fw@mail.gmail.com>
-Message-ID: <CAMj1kXEpryfqk5eKxB5NrDcriEBRQKEHnDVZNBMfB4DY=708fw@mail.gmail.com>
-Subject: Re: [PATCH v6 09/10] arm64: efi: Export screen_info
-To:     Nikhil Mahale <nmahale@nvidia.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
+Received: by 2002:a05:6839:691:0:0:0:0 with HTTP; Mon, 18 May 2020 10:54:08
+ -0700 (PDT)
+Reply-To: mrdorsos@gmail.com
+From:   "Mr.Dorso Sandwidi" <gisharbiie@gmail.com>
+Date:   Mon, 18 May 2020 18:54:08 +0100
+Message-ID: <CANZkQ=SDOuyejF6jqKJ-mMy7oFNkyrRRpak2V7txk2bp9WQxFA@mail.gmail.com>
+Subject: My Dear friend I am looking forward to hear from you immediately for
+ further information you can reply to my private email address at
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, 18 May 2020 at 06:25, Nikhil Mahale <nmahale@nvidia.com> wrote:
->
-> On 5/13/20 7:56 PM, Nikhil Mahale wrote:
-> > On 3/20/20 3:16 AM, Michael Kelley wrote:
-> >> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
-> >>>
-> >>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
-> >>>> From: Arnd Bergmann <arnd@arndb.de>
-> >>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
-> >>>>>>
-> >>>>>> The Hyper-V frame buffer driver may be built as a module, and
-> >>>>>> it needs access to screen_info. So export screen_info.
-> >>>>>>
-> >>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> >>>>>
-> >>>>> Is there any chance of using a more modern KMS based driver for the screen
-> >>>>> than the old fbdev subsystem? I had hoped to one day completely remove
-> >>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
-> >>>>> architectures.
-> >>>>>
-> >>>>
-> >>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
-> >>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
-> >>>>
-> >>>> I'm not knowledgeable about video/graphics drivers, but when you
-> >>>> say "a more modern KMS based driver", are you meaning one based on
-> >>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
-> >>>> Are there any drivers that would be a good pattern to look at?
-> >>>
-> >>> It used to be a lot harder to write a DRM driver compared to an fbdev
-> >>> driver, but this has changed to the opposite over the years.
-> >>>
-> >>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
-> >>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
-> >>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
-> >>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
-> >>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
-> >>>
-> >>
-> >> Thanks for the pointers, especially for the other hypervisors.
-> >>
-> > Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
-> > I had configured by email client incorrectly to reply.
-> >
-> > screen_info is still useful with a modern KMS-based driver.  It exposes
-> > the mode parameters that the GOP driver chose.  This information is
-> > needed to implement seamless or glitchless boot, by both ensuring that
-> > the scanout parameters don't change and being able to read back the
-> > scanout image to populate the initial contents of the new surface.
-> >
-> > This works today on arches which implement (U)EFI and export
-> > screen_info, including x86 and powerpc, but doesn't work on arm or
-> > arm64.  As arm64 systems that implement UEFI with real GOP drivers
-> > become more prevalent, it would be nice to be have these features there
-> > as well.
->
-> In addition to this, even if a driver doesn't implement a framebuffer
-> console, or if it does but has an option to disable it, the driver still
-> needs to know whether the EFI console is using resources on the GPU so
-> it can avoid clobbering them. For example screen_info provides information
-> like offset and size of EFI console, using this information driver can
-> reserve memory used by console and prevent corruption on it.
->
-> I think arm64 should export screen_info.
->
+From Mr.Dorso Sandwidi
+Bank of Africa (B.O.A)
+Burkina Faso Ouagadougou
 
-If there are reasons why KMS or fbdev drivers may need to access the
-information in screen_info, it should be exported. I don't think that
-is under debate here.
+
+My Dear Friend, please I want you to read this letter very carefully
+and I must apologize for barging this message into your mail box
+without any formal introduction due to the urgency and confidential of
+this issue and I know that this message will come to you as a
+surprise. Please this is not a joke and I did not want you to joke
+with it.
+
+I am Mr.Dorso Sandwidi, Manager in Bank Of Africa (B.O.A) Ouagadougou,
+Burkina Faso. I Hoped that you will not expose or betray this trust
+and confident that I am about to establish with you for the mutual
+benefit of you and I. This fund was deposited in our bank by Mr.
+Kattan Azmal from Jordan who died in a plane crash in 2000 Tbm 700
+aircraft on 31st July with his wife and the whole crew on board.
+
+I need your urgent assistance in transferring the sum of ($15) million
+USD into your account within 14 working banking days. This money has
+been deposited for years in our Bank without claim due to the owner of
+this fund died along with his entire family in an air crash since July
+31st 2000.
+
+The reason why i contacted you is that after the bank audit in 24th of
+November, we found out that this fund has remained unclaimed since the
+death of the deceased costumer. I want our bank to release this fund
+to you as the nearest person to our deceased customer while I come
+over to your country to share this fund with you as soon as you
+confirm this fund into your account and ask me to come over. I don't
+want the money to go into our Bank treasure as an abandoned fund. So
+this is the reason why i contacted you so that our bank will release
+this money to you as the next of kin to the deceased customer. Please
+I would like you to keep this proposal as a top secret and delete it
+if you are not interesting.
+
+Upon the receipt of your reply and indication of your capability, I
+will give you full details on how the business will be executed and
+also note that you will have 50% of the above mentioned sum if you
+agree to handle this business with me while 50% be for me, Because I
+don't want anyone here in our bank to know my involvement until you
+confirm this fund into your account and ask me to come over for the
+sharing as I indicated.
+
+
+I am looking forward to hear from you immediately for further information
+
+THE REQUESTED INFORMATIONS BELOW
+==============================
+1. FULL NAME..............
+2. TELEPHONE NUMBERS/MOBILE/FAX.......
+3. YOUR AGE......
+4. YOUR SEX.........
+5. YOUR OCCUPATION........
+6. YOUR COUNTRY AND CITY......
+7. YOUR HOME ADDRESS........
+8. MARITAL STATUS............
+
+Sincerely,
+
+
+Mr.Dorso Sandwidi
