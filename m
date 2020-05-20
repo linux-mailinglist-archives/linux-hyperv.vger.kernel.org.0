@@ -2,306 +2,440 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA781DAC76
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2020 09:43:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F0C21DAE2D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2020 10:59:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgETHnA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 May 2020 03:43:00 -0400
-Received: from mail-bn8nam12on2115.outbound.protection.outlook.com ([40.107.237.115]:59713
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726403AbgETHm4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 May 2020 03:42:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WvAn4DVyRPLZL0Anw8/ur8MrZCM0jkyxVpyTaIoQ15tQ7ODk5G2XFeBmMHsrukpAwJzKsGxI/emgrXMXdh6HchJmOOucI2eSzDCYqn9qZs89JDZ4ZkiMliKmx2G7XGIZa1sFWiqG30WZ1Q45ZwEBzQ4EPc3hZbQoeSkzHE0Opt843vwDAHnxBZjjDLRulDL6QzKFfotLTC84fvGW7gQVYWZW8TrmgPSviULnBQi8ZhIKfE0id912vHy3G298z9I4gO0m4fIPsnsTz1Tu7TaQ6Zm3KWauI+1tgzo//QQ2/t1uvak1QC+cwTN1fwCUlxD4Gn12nnRCt355xOrsfzedWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+sT82quFo/G1giFTLJOtIB2+iRlMI4kXz/eXHsrlCqg=;
- b=WmyCBTh4a1QRZ3YmLqFDvg1tEF9f/+QODiOW9Bx31tZJ0PRR1HXeM0GmyGRZrTLlsg8BGr3fUyXdNp1yISNm8lLlpltopxXOmtC5mvcgl41RlXotVQ/mbfUnmsyJPfd1hFfh6uaA2kZQ5zOQA1hQbkp3uttok9eqvFZol7B5Q76S3AP/wbBAEBllDuT0TYo32UPhMDqjKZSnGWjH0Jj8DsGQ1q4/iURra3WsiVel34HgbPN3Y/VF+io1rJ6o4j9RhEih4D6tVj7fC4QJiQUkESwBy0PVxihh2IkZwIzHBVvQRyBlStV/azMh8TIX3Kx6eQvMAmhujVIf6LpzOrKkNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+sT82quFo/G1giFTLJOtIB2+iRlMI4kXz/eXHsrlCqg=;
- b=bpzr/axVB5y8s0ANFIsec/oily+AvNdGLJvd2PNPs8jlG/TS8HwGtiNYw2foB0HxPBpyxxZKmSwzGxqbQDxKSgw7Xf+/se/rj0nYQ/LL+imBbBQBiMfv7+o+fAj9r0qncZDKrfD8GBNcaEg+Lzi3EgtDcF2PKIzbWtDWwGJLpfw=
-Received: from MWHPR21MB0287.namprd21.prod.outlook.com (2603:10b6:300:7a::17)
- by MWHPR21MB0638.namprd21.prod.outlook.com (2603:10b6:300:127::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.4; Wed, 20 May
- 2020 07:42:50 +0000
-Received: from MWHPR21MB0287.namprd21.prod.outlook.com
- ([fe80::20e4:2cd4:ff71:a58f]) by MWHPR21MB0287.namprd21.prod.outlook.com
- ([fe80::20e4:2cd4:ff71:a58f%3]) with mapi id 15.20.3045.001; Wed, 20 May 2020
- 07:42:49 +0000
-From:   Steve Pronovost <spronovo@microsoft.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
-        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
-        "ville.syrjala@linux.intel.com" <ville.syrjala@linux.intel.com>,
-        "Hawking.Zhang@amd.com" <Hawking.Zhang@amd.com>,
-        "tvrtko.ursulin@intel.com" <tvrtko.ursulin@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        id S1726733AbgETI7b (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 May 2020 04:59:31 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37964 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726224AbgETI7a (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 20 May 2020 04:59:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589965168;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3K31+CkjqsWja9VmAxfy2jggT3g//RvDqRvf75ZIamg=;
+        b=i+kOztJHpza1ArtAXwgMy7cF0O2bKaM+/oxKc+Sn8lpkDVTKHKJTGPEJxmpZ4Xl9LC5fXt
+        Yy08Z9hr6m5Vbonu5IZM4yF6J8N4DEDoJp6JBw/mp0onLh8E1nylo1O3iRfAsCACbdQE3o
+        hTMDYJo1LCwTDAL3OM7HqjKePOndIvw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-V2d1HT8bO6KrkM17u2c7OA-1; Wed, 20 May 2020 04:59:26 -0400
+X-MC-Unique: V2d1HT8bO6KrkM17u2c7OA-1
+Received: by mail-wr1-f69.google.com with SMTP id z10so1134263wrs.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 20 May 2020 01:59:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=3K31+CkjqsWja9VmAxfy2jggT3g//RvDqRvf75ZIamg=;
+        b=pKEjUVsrxiYSuiw5rOV3rBc9fi7FqFhLHjEQJtcPLRS3VVJH4Xc9yI0EKzOLTnJhBY
+         Ykjn8SIaKrD1CEx1XjzQ5kUFLGBb5FCV9riojjqq69iKrLlTE6/G8EtzwmlS+p3G/y04
+         Y7dQw4VVKCS70xlwyiDUIJlSWRiP+A55Yd8iwzC8CS2bOhmrMWrynIfxtYGskkPCGSws
+         2PcrPe5m1vxzrKoDWAA/A2aYw6s7+ZgfyBE4LOXobWs1Y0YWj2D8KZ5YAkR0CmLBW7de
+         lP+g2vOaFAMfmUYB+5znJmTskgCjVU0HnYb8tXb0eZIg6IbKkCz5NQrsF5ukg1xp+X8A
+         q07A==
+X-Gm-Message-State: AOAM532lj0L0CefmXbblWBNtn9vSON7d86CQukJSddbOs108boA8eN4s
+        yu52gtqY9x7L8ZPGqMvbHWtxeaCPGuNqC1Bv9YSnB7h4RcFkzNXvKHM17OTUT+yF+9eLB4OTlMm
+        FPlo4SpcbvROpF0fBCW9Fx5zk
+X-Received: by 2002:adf:ed06:: with SMTP id a6mr3161453wro.8.1589965164670;
+        Wed, 20 May 2020 01:59:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzQNbF8H6oN3p9RIlNTE0m0OOP48hs2rXQdUo9XPRTFzxTM8zDzi9KCcVKAuKx0qAU+7wYq5A==
+X-Received: by 2002:adf:ed06:: with SMTP id a6mr3161428wro.8.1589965164321;
+        Wed, 20 May 2020 01:59:24 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id r9sm2320590wmg.47.2020.05.20.01.59.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 01:59:23 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Iouri Tarassov <iourit@microsoft.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Max McMullen <Max.McMullen@microsoft.com>
-Subject: RE: [EXTERNAL] Re: [RFC PATCH 0/4] DirectX on Linux
-Thread-Topic: [EXTERNAL] Re: [RFC PATCH 0/4] DirectX on Linux
-Thread-Index: AQHWLnXQsYF1SZQdW0SXaavkaDRZ5qiwj09Q
-Date:   Wed, 20 May 2020 07:42:49 +0000
-Message-ID: <MWHPR21MB02878FA5BB259F307082B735C7B60@MWHPR21MB0287.namprd21.prod.outlook.com>
-References: <20200519163234.226513-1-sashal@kernel.org>
- <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
-In-Reply-To: <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.de; dkim=none (message not signed)
- header.d=none;suse.de; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:600:9780:90:646e:1b45:4b42:536b]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9f602dfb-b00c-47b8-2d8b-08d7fc91657f
-x-ms-traffictypediagnostic: MWHPR21MB0638:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB0638E0823A46D92A79FB9578C7B60@MWHPR21MB0638.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 04097B7F7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UhAxCFQGUcwxL3UvUff8TfeqGiRYXiajCEoLNVLzqR3mBY0V1Hb8sbAMsd8BDGBGFr0geABCcAt/No6YG6E5OAlmn+DaoMOGJ4GMZGDNdawiSf0qZwdr7Y1mKcSqcmEX9BK0YvuSUiUON+xscorl3Z8vIQzpf3duiXDQGRXY2fjOfXXKMzg+B2gONlnudE2NgiQvcDufCTeBWUKBsHHcQjJKLqtVwFLQXYFrAKQLcl0V/Ok9dXer9ZFTvE1XeuB2p/qGz+gp8IhN7FtAV1h7j5oqvT2Zr7sD8ZjfpNczkErVd3iHgFY5XRmWr6xD+xP3tIiYpThZ34MSvuNwVrSLQ9u7I2k2e8a6AbbCzS8RKM2Q5S5K7O79vIretZ6ACS7alZJRHGQ6E3SXhjCXsHXjNg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB0287.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(396003)(346002)(136003)(376002)(66446008)(55016002)(66556008)(64756008)(66946007)(52536014)(33656002)(9686003)(5660300002)(7696005)(86362001)(186003)(10290500003)(478600001)(30864003)(6506007)(76116006)(53546011)(966005)(54906003)(8936002)(110136005)(2906002)(4326008)(7416002)(66476007)(71200400001)(8676002)(82960400001)(66574014)(107886003)(82950400001)(8990500004)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: IDwh8ZwL/yfDvnhpG54ShXkaDZkP/518HqhbAB9uMq0OiC0VJ6MHQidFo8ZsMGdNVMWPyFA27ZnblCQgTGVg/TCG8WWbWrXuzOFesCXU4pOnyylDjK+KO6QgPJF2Q2uJQz+z+DzYn955wsMGUdj1HmDLqjzQXhRMDBJMdDz53OKFVVD+inCexVbdEuE3+3DM4FQxEBVmA2zo50CesmqAkTcxf0yPOWF6In8rY/QDCH/Rnq2Iv3JdhggLx7zh2WRbQlqQxhhLMHFG7TfXl+uFKpX7Log0/AN2Q2BN0G8oxSuyjI5lfuKoLDW3iKeQHnymCT+qUqtdLfHv19IC5mKIzmSOMlGfyk0qQZv18unwtWgg1nluICXMKDB/oXR/I25iXLwcb7319J2aCctSOAmla3QBcb3w371Vuu00NYPmC1WS0783CwnZvlsPKJmnWORj1YDz5s2GnlyeJ3ey7m01fJxQfcM0/D5LTcc4sakmMmFSUFRLOdfwgYot+gGfn8TOIZW55BxXQGdksGjOWInEpkfrv8skCj4RonfBGv9FlzY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wei Liu <liuwe@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+Subject: Re: [PATCH] x86/Hyper-V: Support for free page reporting
+In-Reply-To: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
+References: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
+Date:   Wed, 20 May 2020 10:59:22 +0200
+Message-ID: <87ftbvt21h.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f602dfb-b00c-47b8-2d8b-08d7fc91657f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 07:42:49.7166
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LtYfNEU/gzxqy86B/3Obeip2dcmA7LEqK1Br11LEpsilKx2S/Jejjl53nvL32qrtJB6lg8F6Ahxgk8FaH7LC9qb1mIIQNQNE0xoPtyZZe8I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0638
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-PkVjaG9pbmcgd2hhdCBvdGhlcnMgc2FpZCwgeW91J3JlIG5vdCBtYWtpbmcgYSBEUk0gZHJpdmVy
-LiBUaGUgZHJpdmVyIHNob3VsZCBsaXZlIG91dHNpZGUgb2YgdGhlIERSTSBjb2RlLg0KDQpBZ3Jl
-ZWQsIHBsZWFzZSBzZWUgbXkgZWFybGllciByZXBseS4gV2UnbGwgYmUgbW92aW5nIHRoZSBkcml2
-ZXIgdG8gZHJpdmVycy9oeXBlcnYgbm9kZSBvciBzb21ldGhpbmcgc2ltaWxhci4gQXBvbG9neSBm
-b3IgdGhlIGNvbmZ1c2lvbiBoZXJlLg0KDQo+IEkgaGF2ZSBvbmUgcXVlc3Rpb24gYWJvdXQgdGhl
-IGRyaXZlciBBUEk6IG9uIFdpbmRvd3MsIERpcmVjdFggdmVyc2lvbnMgYXJlIGxvb3NseSB0aWVk
-IHRvIFdpbmRvd3MgcmVsZWFzZXMuIFNvIEkgZ3Vlc3MgeW91IGNhbiBjaGFuZ2UgdGhlIGtlcm5l
-bCBpbnRlcmZhY2UgYW1vbmcgRGlyZWN0WCB2ZXJzaW9ucz8NCj4gSWYgc28sIGhvdyB3b3VsZCB0
-aGlzIHdvcmsgb24gTGludXggaW4gdGhlIGxvbmcgdGVybT8gSWYgdGhlcmUgZXZlciBpcyBhIERp
-cmVjdFggMTMgb3IgMTQgd2l0aCBpbmNvbXBhdGlibGUga2VybmVsIGludGVyZmFjZXMsIGhvdyB3
-b3VsZCB5b3UgcGxhbiB0byB1cGRhdGUgdGhlIExpbnV4IGRyaXZlcj8NCg0KWW91IHNob3VsZCB0
-aGluayBvZiB0aGUgY29tbXVuaWNhdGlvbiBvdmVyIHRoZSBWTSBCdXMgZm9yIHRoZSB2R1BVIHBy
-b2plY3Rpb24gYXMgYSBzdHJvbmdseSB2ZXJzaW9uZWQgaW50ZXJmYWNlLiBXZSB3aWxsIGJlIGtl
-ZXBpbmcgY29tcGF0aWJpbGl0eSB3aXRoIG9sZGVyIHZlcnNpb24gb2YgdGhhdCBpbnRlcmZhY2Ug
-YXMgaXQgZXZvbHZlcyBvdmVyIHRpbWUgc28gd2UgY2FuIGNvbnRpbnVlIHRvIHJ1biBvbGRlciBn
-dWVzdCAod2UgYWxyZWFkeSBkbykuIFRoaXMgcHJvdG9jb2wgaXNuJ3QgYWN0dWFsbHkgdGllZCB0
-byB0aGUgRFggQVBJLiBJdCBpcyBhIGdlbmVyaWMgYWJzdHJhY3Rpb24gZm9yIHRoZSBHUFUgdGhh
-dCBjYW4gYmUgdXNlZCBmb3IgYW55IEFQSXMgKGZvciBleGFtcGxlIHRoZSBOVklESUEgQ1VEQSBk
-cml2ZXIgdGhhdCB3ZSBhbm5vdW5jZWQgaXMgZ29pbmcgb3ZlciB0aGUgc2FtZSBwcm90b2NvbCB0
-byBhY2Nlc3MgdGhlIEdQVSkuIA0KDQpOZXcgdmVyc2lvbiBvZiB1c2VyIG1vZGUgRFggY2FuIGVp
-dGhlciB0YWtlIGFkdmFudGFnZSBvciBzb21ldGltZSByZXF1aXJlIG5ldyBzZXJ2aWNlcyBmcm9t
-IHRoaXMga2VybmVsIGFic3RyYWN0aW9uLiBUaGlzIG1lYW4gdGhhdCBwdWxsaW5nIGEgbmV3IHZl
-cnNpb24gb2YgdXNlciBtb2RlIERYIGNhbiBtZWFuIGhhdmluZyB0byBhbHNvIHB1bGwgYSBuZXcg
-dmVyc2lvbiBvZiB0aGlzIHZHUFUga2VybmVsIGRyaXZlci4gRm9yIFdTTCwgdGhlc2UgZXNzZW50
-aWFsbHkgc2hpcHMgdG9nZXRoZXIuIFRoZSBrZXJuZWwgZHJpdmVyIHNoaXBzIGFzIHBhcnQgb2Yg
-b3VyIFdTTDIgTGludXggS2VybmVsIGludGVncmF0aW9uLiBVc2VyIG1vZGUgRFggYml0cyBzaGlw
-cyB3aXRoIFdpbmRvd3MuIA0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogVGhv
-bWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5uQHN1c2UuZGU+IA0KU2VudDogV2VkbmVzZGF5LCBN
-YXkgMjAsIDIwMjAgMTI6MTEgQU0NClRvOiBTYXNoYSBMZXZpbiA8c2FzaGFsQGtlcm5lbC5vcmc+
-OyBhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tOyBjaHJpc0BjaHJpcy13aWxzb24uY28udWs7IHZp
-bGxlLnN5cmphbGFAbGludXguaW50ZWwuY29tOyBIYXdraW5nLlpoYW5nQGFtZC5jb207IHR2cnRr
-by51cnN1bGluQGludGVsLmNvbQ0KQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxp
-bnV4LWh5cGVydkB2Z2VyLmtlcm5lbC5vcmc7IEtZIFNyaW5pdmFzYW4gPGt5c0BtaWNyb3NvZnQu
-Y29tPjsgSGFpeWFuZyBaaGFuZyA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IFN0ZXBoZW4gSGVt
-bWluZ2VyIDxzdGhlbW1pbkBtaWNyb3NvZnQuY29tPjsgd2VpLmxpdUBrZXJuZWwub3JnOyBTdGV2
-ZSBQcm9ub3Zvc3QgPHNwcm9ub3ZvQG1pY3Jvc29mdC5jb20+OyBJb3VyaSBUYXJhc3NvdiA8aW91
-cml0QG1pY3Jvc29mdC5jb20+OyBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBsaW51
-eC1mYmRldkB2Z2VyLmtlcm5lbC5vcmc7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnDQpTdWJq
-ZWN0OiBbRVhURVJOQUxdIFJlOiBbUkZDIFBBVENIIDAvNF0gRGlyZWN0WCBvbiBMaW51eA0KDQpI
-aQ0KDQpBbSAxOS4wNS4yMCB1bSAxODozMiBzY2hyaWViIFNhc2hhIExldmluOg0KPiBUaGVyZSBp
-cyBhIGJsb2cgcG9zdCB0aGF0IGdvZXMgaW50byBtb3JlIGRldGFpbCBhYm91dCB0aGUgYmlnZ2Vy
-IA0KPiBwaWN0dXJlLCBhbmQgd2Fsa3MgdGhyb3VnaCBhbGwgdGhlIHJlcXVpcmVkIHBpZWNlcyB0
-byBtYWtlIHRoaXMgd29yay4gDQo+IEl0IGlzIGF2YWlsYWJsZSBoZXJlOg0KPiBodHRwczovL2Rl
-dmJsb2dzLm1pY3Jvc29mdC5jb20vZGlyZWN0eC9kaXJlY3R4LWhlYXJ0LWxpbnV4IC4gVGhlIHJl
-c3QgDQo+IG9mIHRoaXMgY292ZXIgbGV0dGVyIHdpbGwgZm9jdXMgb24gdGhlIExpbnV4IEtlcm5l
-bCBiaXRzLg0KDQpUaGF0J3MgcXVpdGUgYSBzdXJwcmlzZS4gVGhhbmtzIGZvciB5b3VyIGVmZm9y
-dHMgdG8gY29udHJpYnV0ZS4NCg0KPiANCj4gT3ZlcnZpZXcNCj4gPT09PT09PT0NCj4gDQo+IFRo
-aXMgaXMgdGhlIGZpcnN0IGRyYWZ0IG9mIHRoZSBNaWNyb3NvZnQgVmlydHVhbCBHUFUgKHZHUFUp
-IGRyaXZlci4gDQo+IFRoZSBkcml2ZXIgZXhwb3NlcyBhIHBhcmF2aXJ0dWFsaXplZCBHUFUgdG8g
-dXNlciBtb2RlIGFwcGxpY2F0aW9ucyANCj4gcnVubmluZyBpbiBhIHZpcnR1YWwgbWFjaGluZSBv
-biBhIFdpbmRvd3MgaG9zdC4gVGhpcyBlbmFibGVzIGhhcmR3YXJlIA0KPiBhY2NlbGVyYXRpb24g
-aW4gZW52aXJvbm1lbnQgc3VjaCBhcyBXU0wgKFdpbmRvd3MgU3Vic3lzdGVtIGZvciBMaW51eCkg
-DQo+IHdoZXJlIHRoZSBMaW51eCB2aXJ0dWFsIG1hY2hpbmUgaXMgYWJsZSB0byBzaGFyZSB0aGUg
-R1BVIHdpdGggdGhlIA0KPiBXaW5kb3dzIGhvc3QuDQo+IA0KPiBUaGUgcHJvamVjdGlvbiBpcyBh
-Y2NvbXBsaXNoZWQgYnkgZXhwb3NpbmcgdGhlIFdERE0gKFdpbmRvd3MgRGlzcGxheSANCj4gRHJp
-dmVyIE1vZGVsKSBpbnRlcmZhY2UgYXMgYSBzZXQgb2YgSU9DVEwuIFRoaXMgYWxsb3dzIEFQSXMg
-YW5kIHVzZXIgDQo+IG1vZGUgZHJpdmVyIHdyaXR0ZW4gYWdhaW5zdCB0aGUgV0RETSBHUFUgYWJz
-dHJhY3Rpb24gb24gV2luZG93cyB0byBiZSANCj4gcG9ydGVkIHRvIHJ1biB3aXRoaW4gYSBMaW51
-eCBlbnZpcm9ubWVudC4gVGhpcyBlbmFibGVzIHRoZSBwb3J0IG9mIHRoZQ0KPiBEM0QxMiBhbmQg
-RGlyZWN0TUwgQVBJcyBhcyB3ZWxsIGFzIHRoZWlyIGFzc29jaWF0ZWQgdXNlciBtb2RlIGRyaXZl
-ciANCj4gdG8gTGludXguIFRoaXMgYWxzbyBlbmFibGVzIHRoaXJkIHBhcnR5IEFQSXMsIHN1Y2gg
-YXMgdGhlIHBvcHVsYXIgDQo+IE5WSURJQSBDdWRhIGNvbXB1dGUgQVBJLCB0byBiZSBoYXJkd2Fy
-ZSBhY2NlbGVyYXRlZCB3aXRoaW4gYSBXU0wgZW52aXJvbm1lbnQuDQo+IA0KPiBPbmx5IHRoZSBy
-ZW5kZXJpbmcvY29tcHV0ZSBhc3BlY3Qgb2YgdGhlIEdQVSBhcmUgcHJvamVjdGVkIHRvIHRoZSAN
-Cj4gdmlydHVhbCBtYWNoaW5lLCBubyBkaXNwbGF5IGZ1bmN0aW9uYWxpdHkgaXMgZXhwb3NlZC4g
-RnVydGhlciwgYXQgdGhpcyANCj4gdGltZSB0aGVyZSBhcmUgbm8gcHJlc2VudGF0aW9uIGludGVn
-cmF0aW9uLiBTbyBhbHRob3VnaCB0aGUgRDNEMTIgQVBJIA0KPiBjYW4gYmUgdXNlIHRvIHJlbmRl
-ciBncmFwaGljcyBvZmZzY3JlZW4sIHRoZXJlIGlzIG5vIHBhdGggKHlldCkgZm9yIA0KPiBwaXhl
-bCB0byBmbG93IGZyb20gdGhlIExpbnV4IGVudmlyb25tZW50IGJhY2sgb250byB0aGUgV2luZG93
-cyBob3N0IA0KPiBkZXNrdG9wLiBUaGlzIEdQVSBzdGFjayBpcyBlZmZlY3RpdmVseSBzaWRlLWJ5
-LXNpZGUgd2l0aCB0aGUgbmF0aXZlIA0KPiBMaW51eCBncmFwaGljcyBzdGFjay4NCj4gDQo+IFRo
-ZSBkcml2ZXIgY3JlYXRlcyB0aGUgL2Rldi9keGcgZGV2aWNlLCB3aGljaCBjYW4gYmUgb3BlbmVk
-IGJ5IHVzZXIgDQo+IG1vZGUgYXBwbGljYXRpb24gYW5kIGhhbmRsZXMgdGhlaXIgaW9jdGxzLiBU
-aGUgSU9DVEwgaW50ZXJmYWNlIHRvIHRoZSANCj4gZHJpdmVyIGlzIGRlZmluZWQgaW4gZHhna210
-aGsuaCAoRHhna3JubCBHcmFwaGljcyBQb3J0IERyaXZlciBpb2N0bCANCj4gZGVmaW5pdGlvbnMp
-LiBUaGUgaW50ZXJmYWNlIG1hdGNoZXMgdGhlIEQzREtNVCBpbnRlcmZhY2Ugb24gV2luZG93cy4N
-Cj4gSW9jdGxzIGFyZSBpbXBsZW1lbnRlZCBpbiBpb2N0bC5jLg0KDQpFY2hvaW5nIHdoYXQgb3Ro
-ZXJzIHNhaWQsIHlvdSdyZSBub3QgbWFraW5nIGEgRFJNIGRyaXZlci4gVGhlIGRyaXZlciBzaG91
-bGQgbGl2ZSBvdXRzaWRlIG9mIHRoZSBEUk0gY29kZS4NCg0KSSBoYXZlIG9uZSBxdWVzdGlvbiBh
-Ym91dCB0aGUgZHJpdmVyIEFQSTogb24gV2luZG93cywgRGlyZWN0WCB2ZXJzaW9ucyBhcmUgbG9v
-c2x5IHRpZWQgdG8gV2luZG93cyByZWxlYXNlcy4gU28gSSBndWVzcyB5b3UgY2FuIGNoYW5nZSB0
-aGUga2VybmVsIGludGVyZmFjZSBhbW9uZyBEaXJlY3RYIHZlcnNpb25zPw0KDQpJZiBzbywgaG93
-IHdvdWxkIHRoaXMgd29yayBvbiBMaW51eCBpbiB0aGUgbG9uZyB0ZXJtPyBJZiB0aGVyZSBldmVy
-IGlzIGEgRGlyZWN0WCAxMyBvciAxNCB3aXRoIGluY29tcGF0aWJsZSBrZXJuZWwgaW50ZXJmYWNl
-cywgaG93IHdvdWxkIHlvdSBwbGFuIHRvIHVwZGF0ZSB0aGUgTGludXggZHJpdmVyPw0KDQpCZXN0
-IHJlZ2FyZHMNClRob21hcw0KDQo+IA0KPiBXaGVuIGEgVk0gc3RhcnRzLCBoeXBlci12IG9uIHRo
-ZSBob3N0IGFkZHMgdmlydHVhbCBHUFUgZGV2aWNlcyB0byB0aGUgDQo+IFZNIHZpYSB0aGUgaHlw
-ZXItdiBkcml2ZXIuIFRoZSBob3N0IG9mZmVycyBzZXZlcmFsIFZNIGJ1cyBjaGFubmVscyB0byAN
-Cj4gdGhlDQo+IFZNOiB0aGUgZ2xvYmFsIGNoYW5uZWwgYW5kIG9uZSBjaGFubmVsIHBlciB2aXJ0
-dWFsIEdQVSwgYXNzaWduZWQgdG8gDQo+IHRoZSBWTS4NCj4gDQo+IFRoZSBkcml2ZXIgcmVnaXN0
-ZXJzIHdpdGggdGhlIGh5cGVyLXYgZHJpdmVyIChodl9kcml2ZXIpIGZvciB0aGUgDQo+IGFycml2
-YWwgb2YgVk0gYnVzIGNoYW5uZWxzLiBkeGdfcHJvYmVfZGV2aWNlIHJlY29nbml6ZXMgdGhlIHZH
-UFUgDQo+IGNoYW5uZWxzIGFuZCBjcmVhdGVzIHRoZSBjb3JyZXNwb25kaW5nIG9iamVjdHMgKGR4
-Z2FkYXB0ZXIgZm9yIHZHUFVzIA0KPiBhbmQgZHhnZ2xvYmFsIGZvciB0aGUgZ2xvYmFsIGNoYW5u
-ZWwpLg0KPiANCj4gVGhlIGRyaXZlciB1c2VzIHRoZSBoeXBlci1WIFZNIGJ1cyBpbnRlcmZhY2Ug
-dG8gY29tbXVuaWNhdGUgd2l0aCB0aGUgDQo+IGhvc3QuIGR4Z3ZtYnVzLmMgaW1wbGVtZW50cyB0
-aGUgY29tbXVuaWNhdGlvbiBpbnRlcmZhY2UuDQo+IA0KPiBUaGUgZ2xvYmFsIGNoYW5uZWwgaGFz
-IDhHQiBvZiBJTyBzcGFjZSBhc3NpZ25lZCBieSB0aGUgaG9zdC4gVGhpcyANCj4gc3BhY2UgaXMg
-bWFuYWdlZCBieSB0aGUgaG9zdCBhbmQgdXNlZCB0byBnaXZlIHRoZSBndWVzdCBkaXJlY3QgQ1BV
-IA0KPiBhY2Nlc3MgdG8gc29tZSBhbGxvY2F0aW9ucy4gVmlkZW8gbWVtb3J5IGlzIGFsbG9jYXRl
-ZCBvbiB0aGUgaG9zdCANCj4gZXhjZXB0IGluIHRoZSBjYXNlIG9mIGV4aXN0aW5nX3N5c21lbSBh
-bGxvY2F0aW9ucy4gVGhlIFdpbmRvd3MgaG9zdCANCj4gYWxsb2NhdGVzIG1lbW9yeSBmb3IgdGhl
-IEdQVSBvbiBiZWhhbGYgb2YgdGhlIGd1ZXN0LiBUaGUgTGludXggZ3Vlc3QgDQo+IGNhbiBhY2Nl
-c3MgdGhhdCBtZW1vcnkgYnkgbWFwcGluZyBHUFUgdmlydHVhbCBhZGRyZXNzIHRvIGFsbG9jYXRp
-b25zIA0KPiBhbmQgdGhlbiByZWZlcmVuY2luZyB0aG9zZSBHUFUgdmlydHVhbCBhZGRyZXNzIGZy
-b20gd2l0aGluIEdQVSBjb21tYW5kIA0KPiBidWZmZXJzIHN1Ym1pdHRlZCB0byB0aGUgR1BVLiBG
-b3IgYWxsb2NhdGlvbnMgd2hpY2ggcmVxdWlyZSBDUFUgDQo+IGFjY2VzcywgdGhlIGFsbG9jYXRp
-b24gaXMgbWFwcGVkIGJ5IHRoZSBob3N0IGludG8gYSBsb2NhdGlvbiBpbiB0aGUgDQo+IDhHQiBv
-ZiBJTyBzcGFjZSByZXNlcnZlZCBpbiB0aGUgZ3Vlc3QgZm9yIHRoYXQgcHVycG9zZS4gVGhlIFdp
-bmRvd3MgDQo+IGhvc3QgdXNlcyB0aGUgbmVzdGVkIENQVSBwYWdlIHRhYmxlIHRvIGVuc3VyZSB0
-aGF0IHRoaXMgZ3Vlc3QgSU8gc3BhY2UgDQo+IGFsd2F5cyBtYXAgdG8gdGhlIGNvcnJlY3QgbG9j
-YXRpb24gZm9yIHRoZSBhbGxvY2F0aW9uIGFzIGl0IG1heSANCj4gbWlncmF0ZSBiZXR3ZWVuIGRl
-ZGljYXRlZCBHUFUgbWVtb3J5IChlLmcuIFZSQU0sIGZpcm13YXJlIHJlc2VydmVkIA0KPiBERFIp
-IGFuZCBzaGFyZWQgc3lzdGVtIG1lbW9yeSAocmVndWxhciBERFIpIG92ZXIgaXRzIGxpZmV0aW1l
-LiBUaGUgDQo+IExpbnV4IGd1ZXN0IG1hcHMgYSB1c2VyIG1vZGUgQ1BVIHZpcnR1YWwgYWRkcmVz
-cyB0byBhbiBhbGxvY2F0aW9uIElPIA0KPiBzcGFjZSByYW5nZSBmb3IgZGlyZWN0IGFjY2VzcyBi
-eSB1c2VyIG1vZGUgQVBJcyBhbmQgZHJpdmVycy4NCj4gDQo+ICANCj4gDQo+IEltcGxlbWVudGF0
-aW9uIG9mIExYX0RYTE9DSzIgaW9jdGwNCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PQ0KPiANCj4gV2Ugd291bGQgYXBwcmVjaWF0ZSB5b3VyIGZlZWRiYWNrIG9uIHRoZSBpbXBs
-ZW1lbnRhdGlvbiBvZiB0aGUNCj4gTFhfRFhMT0NLMiBpb2N0bC4NCj4gDQo+IFRoaXMgaW9jdGwg
-aXMgdXNlZCB0byBnZXQgYSBDUFUgYWRkcmVzcyB0byBhbiBhbGxvY2F0aW9uLCB3aGljaCBpcyAN
-Cj4gcmVzaWRlbnQgaW4gdmlkZW8vc3lzdGVtIG1lbW9yeSBvbiB0aGUgaG9zdC4gVGhlIHdheSBp
-dCB3b3JrczoNCj4gDQo+IDEuIFRoZSBkcml2ZXIgc2VuZHMgdGhlIExvY2sgbWVzc2FnZSB0byB0
-aGUgaG9zdA0KPiANCj4gMi4gVGhlIGhvc3QgYWxsb2NhdGVzIHNwYWNlIGluIHRoZSBWTSBJTyBz
-cGFjZSBhbmQgbWFwcyBpdCB0byB0aGUgDQo+IGFsbG9jYXRpb24gbWVtb3J5DQo+IA0KPiAzLiBU
-aGUgaG9zdCByZXR1cm5zIHRoZSBhZGRyZXNzIGluIElPIHNwYWNlIGZvciB0aGUgbWFwcGVkIGFs
-bG9jYXRpb24NCj4gDQo+IDQuIFRoZSBkcml2ZXIgKGluIGR4Z19tYXBfaW9zcGFjZSkgYWxsb2Nh
-dGVzIGEgdXNlciBtb2RlIHZpcnR1YWwgDQo+IGFkZHJlc3MgcmFuZ2UgdXNpbmcgdm1fbW1hcCBh
-bmQgbWFwcyBpdCB0byB0aGUgSU8gc3BhY2UgdXNpbmcNCj4gaW9fcmVtYXBfb2ZuX3JhbmdlKQ0K
-PiANCj4gNS4gVGhlIFZBIGlzIHJldHVybmVkIHRvIHRoZSBhcHBsaWNhdGlvbg0KPiANCj4gIA0K
-PiANCj4gSW50ZXJuYWwgb2JqZWN0cw0KPiA9PT09PT09PT09PT09PT09DQo+IA0KPiBUaGUgZm9s
-bG93aW5nIG9iamVjdHMgYXJlIGNyZWF0ZWQgYnkgdGhlIGRyaXZlciAoZGVmaW5lZCBpbiBkeGdr
-cm5sLmgpOg0KPiANCj4gLSBkeGdhZGFwdGVyIC0gcmVwcmVzZW50cyBhIHZpcnR1YWwgR1BVDQo+
-IA0KPiAtIGR4Z3Byb2Nlc3MgLSB0cmFja3MgcGVyIHByb2Nlc3Mgc3RhdGUgKGhhbmRsZSB0YWJs
-ZSBvZiBjcmVhdGVkDQo+ICAgb2JqZWN0cywgbGlzdCBvZiBvYmplY3RzLCBldGMuKQ0KPiANCj4g
-LSBkeGdkZXZpY2UgLSBhIGNvbnRhaW5lciBmb3Igb3RoZXIgb2JqZWN0cyAoY29udGV4dHMsIHBh
-Z2luZyBxdWV1ZXMsDQo+ICAgYWxsb2NhdGlvbnMsIEdQVSBzeW5jaHJvbml6YXRpb24gb2JqZWN0
-cykNCj4gDQo+IC0gZHhnY29udGV4dCAtIHJlcHJlc2VudHMgdGhyZWFkIG9mIEdQVSBleGVjdXRp
-b24gZm9yIHBhY2tldA0KPiAgIHNjaGVkdWxpbmcuDQo+IA0KPiAtIGR4Z2h3cXVldWUgLSByZXBy
-ZXNlbnRzIHRocmVhZCBvZiBHUFUgZXhlY3V0aW9uIG9mIGhhcmR3YXJlIA0KPiBzY2hlZHVsaW5n
-DQo+IA0KPiAtIGR4Z2FsbG9jYXRpb24gLSByZXByZXNlbnRzIGEgR1BVIGFjY2Vzc2libGUgYWxs
-b2NhdGlvbg0KPiANCj4gLSBkeGdzeW5jb2JqZWN0IC0gcmVwcmVzZW50cyBhIEdQVSBzeW5jaHJv
-bml6YXRpb24gb2JqZWN0DQo+IA0KPiAtIGR4Z3Jlc291cmNlIC0gY29sbGVjdGlvbiBvZiBkeGdh
-bGxvY3Rpb24gb2JqZWN0cw0KPiANCj4gLSBkeGdzaGFyZWRyZXNvdXJjZSwgZHhnc2hhcmVkc3lu
-Y29iaiAtIGhlbHBlciBvYmplY3RzIHRvIHNoYXJlIG9iamVjdHMNCj4gICBiZXR3ZWVuIGRpZmZl
-cmVudCBkeGdkZXZpY2Ugb2JqZWN0cywgd2hpY2ggY2FuIGJlbG9uZyB0byBkaWZmZXJlbnQgDQo+
-IHByb2Nlc3Nlcw0KPiANCj4gDQo+ICANCj4gT2JqZWN0IGhhbmRsZXMNCj4gPT09PT09PT09PT09
-PT0NCj4gDQo+IEFsbCBHUFUgb2JqZWN0cywgY3JlYXRlZCBieSB0aGUgZHJpdmVyLCBhcmUgYWNj
-ZXNzaWJsZSBieSBhIGhhbmRsZSANCj4gKGQzZGttdF9oYW5kbGUpLiBFYWNoIHByb2Nlc3MgaGFz
-IGl0cyBvd24gaGFuZGxlIHRhYmxlLCB3aGljaCBpcyANCj4gaW1wbGVtZW50ZWQgaW4gaG1nci5j
-LiBGb3IgZWFjaCBBUEkgdmlzaWJsZSBvYmplY3QsIGNyZWF0ZWQgYnkgdGhlIA0KPiBkcml2ZXIs
-IHRoZXJlIGlzIGFuIG9iamVjdCwgY3JlYXRlZCBvbiB0aGUgaG9zdC4gRm9yIGV4YW1wbGUsIHRo
-ZSBpcyBhIA0KPiBkeGdwcm9jZXNzIG9iamVjdCBvbiB0aGUgaG9zdCBmb3IgZWFjaCBkeGdwcm9j
-ZXNzIG9iamVjdCBpbiB0aGUgVk0sIGV0Yy4NCj4gVGhlIG9iamVjdCBoYW5kbGVzIGhhdmUgdGhl
-IHNhbWUgdmFsdWUgaW4gdGhlIGhvc3QgYW5kIHRoZSBWTSwgd2hpY2ggDQo+IGlzIGRvbmUgdG8g
-YXZvaWQgdHJhbnNsYXRpb24gZnJvbSB0aGUgZ3Vlc3QgaGFuZGxlcyB0byB0aGUgaG9zdCBoYW5k
-bGVzLg0KPiAgDQo+IA0KPiANCj4gU2lnbmFsaW5nIENQVSBldmVudHMgYnkgdGhlIGhvc3QNCj4g
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gDQo+IFRoZSBXRERNIGludGVyZmFj
-ZSBwcm92aWRlcyBhIHdheSB0byBzaWduYWwgQ1BVIGV2ZW50IG9iamVjdHMgd2hlbiANCj4gZXhl
-Y3V0aW9uIG9mIGEgY29udGV4dCByZWFjaGVkIGNlcnRhaW4gcG9pbnQuIFRoZSB3YXkgaXQgaXMg
-aW1wbGVtZW50ZWQ6DQo+IA0KPiAtIGFwcGxpY2F0aW9uIHNlbmRzIGFuIGV2ZW50X2ZkIHZpYSBp
-b2N0bCB0byB0aGUgZHJpdmVyDQo+IA0KPiAtIGV2ZW50ZmRfY3R4X2dldCBpcyB1c2VkIHRvIGdl
-dCBhIHBvaW50ZXIgdG8gdGhlIGZpbGUgb2JqZWN0DQo+ICAgKGV2ZW50ZmRfY3R4KQ0KPiANCj4g
-LSB0aGUgcG9pbnRlciB0byBzZW50IHRoZSBob3N0IHZpYSBhIFZNIGJ1cyBtZXNzYWdlDQo+IA0K
-PiAtIHdoZW4gR1BVIGV4ZWN1dGlvbiByZWFjaGVzIGEgY2VydGFpbiBwb2ludCwgdGhlIGhvc3Qg
-c2VuZHMgYSBtZXNzYWdlDQo+ICAgdG8gdGhlIFZNIHdpdGggdGhlIGV2ZW50IHBvaW50ZXINCj4g
-DQo+IC0gc2lnbmFsX2d1ZXN0X2V2ZW50KCkgaGFuZGxlcyB0aGUgbWVzc2FnZXMgYW5kIGV2ZW50
-dWFsbHkNCj4gICBldmVudGZkX3NpZ25hbCgpIGlzIGNhbGxlZC4NCj4gDQo+IA0KPiBTYXNoYSBM
-ZXZpbiAoNCk6DQo+ICAgZ3B1OiBkeGdrcm5sOiBjb3JlIGNvZGUNCj4gICBncHU6IGR4Z2tybmw6
-IGhvb2sgdXAgZHhna3JubA0KPiAgIERyaXZlcnM6IGh2OiB2bWJ1czogaG9vayB1cCBkeGdrcm5s
-DQo+ICAgZ3B1OiBkeGdrcm5sOiBjcmVhdGUgYSBNQUlOVEFJTkVSUyBlbnRyeQ0KPiANCj4gIE1B
-SU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyArDQo+ICBkcml2ZXJzL2dwdS9N
-YWtlZmlsZSAgICAgICAgICAgICB8ICAgIDIgKy0NCj4gIGRyaXZlcnMvZ3B1L2R4Z2tybmwvS2Nv
-bmZpZyAgICAgIHwgICAxMCArDQo+ICBkcml2ZXJzL2dwdS9keGdrcm5sL01ha2VmaWxlICAgICB8
-ICAgMTIgKw0KPiAgZHJpdmVycy9ncHUvZHhna3JubC9kM2RrbXRoay5oICAgfCAxNjM1ICsrKysr
-KysrKw0KPiAgZHJpdmVycy9ncHUvZHhna3JubC9keGdhZGFwdGVyLmMgfCAxMzk5ICsrKysrKysr
-DQo+ICBkcml2ZXJzL2dwdS9keGdrcm5sL2R4Z2tybmwuaCAgICB8ICA5MTMgKysrKysrDQo+ICBk
-cml2ZXJzL2dwdS9keGdrcm5sL2R4Z21vZHVsZS5jICB8ICA2OTIgKysrKyAgDQo+IGRyaXZlcnMv
-Z3B1L2R4Z2tybmwvZHhncHJvY2Vzcy5jIHwgIDM1NSArKw0KPiAgZHJpdmVycy9ncHUvZHhna3Ju
-bC9keGd2bWJ1cy5jICAgfCAyOTU1ICsrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJzL2dwdS9k
-eGdrcm5sL2R4Z3ZtYnVzLmggICB8ICA4NTkgKysrKysNCj4gIGRyaXZlcnMvZ3B1L2R4Z2tybmwv
-aG1nci5jICAgICAgIHwgIDU5MyArKysrDQo+ICBkcml2ZXJzL2dwdS9keGdrcm5sL2htZ3IuaCAg
-ICAgICB8ICAxMDcgKw0KPiAgZHJpdmVycy9ncHUvZHhna3JubC9pb2N0bC5jICAgICAgfCA1MjY5
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgZHJpdmVycy9ncHUvZHhna3JubC9t
-aXNjLmMgICAgICAgfCAgMjgwICsrDQo+ICBkcml2ZXJzL2dwdS9keGdrcm5sL21pc2MuaCAgICAg
-ICB8ICAyODggKysNCj4gIGRyaXZlcnMvdmlkZW8vS2NvbmZpZyAgICAgICAgICAgIHwgICAgMiAr
-DQo+ICBpbmNsdWRlL2xpbnV4L2h5cGVydi5oICAgICAgICAgICB8ICAgMTYgKw0KPiAgMTggZmls
-ZXMgY2hhbmdlZCwgMTUzOTMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKSAgY3JlYXRlIG1v
-ZGUgDQo+IDEwMDY0NCBkcml2ZXJzL2dwdS9keGdrcm5sL0tjb25maWcgIGNyZWF0ZSBtb2RlIDEw
-MDY0NCANCj4gZHJpdmVycy9ncHUvZHhna3JubC9NYWtlZmlsZSAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IA0KPiBkcml2ZXJzL2dwdS9keGdrcm5sL2QzZGttdGhrLmggIGNyZWF0ZSBtb2RlIDEwMDY0NCAN
-Cj4gZHJpdmVycy9ncHUvZHhna3JubC9keGdhZGFwdGVyLmMgIGNyZWF0ZSBtb2RlIDEwMDY0NCAN
-Cj4gZHJpdmVycy9ncHUvZHhna3JubC9keGdrcm5sLmggIGNyZWF0ZSBtb2RlIDEwMDY0NCANCj4g
-ZHJpdmVycy9ncHUvZHhna3JubC9keGdtb2R1bGUuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBk
-cml2ZXJzL2dwdS9keGdrcm5sL2R4Z3Byb2Nlc3MuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBk
-cml2ZXJzL2dwdS9keGdrcm5sL2R4Z3ZtYnVzLmMgIGNyZWF0ZSBtb2RlIDEwMDY0NCANCj4gZHJp
-dmVycy9ncHUvZHhna3JubC9keGd2bWJ1cy5oICBjcmVhdGUgbW9kZSAxMDA2NDQgDQo+IGRyaXZl
-cnMvZ3B1L2R4Z2tybmwvaG1nci5jICBjcmVhdGUgbW9kZSAxMDA2NDQgDQo+IGRyaXZlcnMvZ3B1
-L2R4Z2tybmwvaG1nci5oICBjcmVhdGUgbW9kZSAxMDA2NDQgDQo+IGRyaXZlcnMvZ3B1L2R4Z2ty
-bmwvaW9jdGwuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBkcml2ZXJzL2dwdS9keGdrcm5sL21p
-c2MuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBkcml2ZXJzL2dwdS9keGdrcm5sL21pc2MuaA0K
-PiANCg0KLS0NClRob21hcyBaaW1tZXJtYW5uDQpHcmFwaGljcyBEcml2ZXIgRGV2ZWxvcGVyDQpT
-VVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdtYkgNCk1heGZlbGRzdHIuIDUsIDkwNDA5
-IE7DvHJuYmVyZywgR2VybWFueQ0KKEhSQiAzNjgwOSwgQUcgTsO8cm5iZXJnKQ0KR2VzY2jDpGZ0
-c2bDvGhyZXI6IEZlbGl4IEltZW5kw7ZyZmZlcg0KDQo=
+Sunil Muthuswamy <sunilmut@microsoft.com> writes:
+
+> Linux has support for free page reporting now (36e66c554b5c) for
+> virtualized environment. On Hyper-V when virtually backed VMs are
+> configured, Hyper-V will advertise cold memory discard capability,
+> when supported. This patch adds the support to hook into the free
+> page reporting infrastructure and leverage the Hyper-V cold memory
+> discard hint hypercall to report/free these pages back to the host.
+>
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+> First patch mail bounced backed. Sending it again with the email
+> addresses fixed.
+> ---
+>  arch/x86/hyperv/hv_init.c         | 24 ++++++++
+>  arch/x86/kernel/cpu/mshyperv.c    |  6 +-
+>  drivers/hv/hv_balloon.c           | 93 +++++++++++++++++++++++++++++++
+>  include/asm-generic/hyperv-tlfs.h | 29 ++++++++++
+>  include/asm-generic/mshyperv.h    |  2 +
+>  5 files changed, 152 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 624f5d9b0f79..925e2f7eb82c 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -506,3 +506,27 @@ bool hv_is_hibernation_supported(void)
+>  	return acpi_sleep_state_supported(ACPI_STATE_S4);
+>  }
+>  EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
+> +
+> +u64 hv_query_ext_cap(void)
+> +{
+
+As the only usage of this function looks like
+
+if (!(hv_query_ext_cap() & HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT))
+
+I would've change the interface to 
+
+bool hv_query_ext_cap(u64 cap)
+
+so the usage would look like
+
+if (!(hv_query_ext_cap(HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT))
+...
+
+> +	u64 *cap;
+> +	unsigned long flags;
+> +	u64 ext_cap = 0;
+> +
+> +	/*
+> +	 * Querying extended capabilities is an extended hypercall. Check if the
+> +	 * partition supports extended hypercall, first.
+> +	 */
+> +	if (!(ms_hyperv.b_features & HV_ENABLE_EXTENDED_HYPERCALLS))
+> +		return 0;
+> +
+> +	local_irq_save(flags);
+> +	cap = *(u64 **)this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	if (hv_do_hypercall(HV_EXT_CALL_QUERY_CAPABILITIES, NULL, cap) ==
+> +	    HV_STATUS_SUCCESS)
+> +		ext_cap = *cap;
+> +
+> +	local_irq_restore(flags);
+> +	return ext_cap;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_query_ext_cap);
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index ebf34c7bc8bc..2de3f692c8bf 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -224,11 +224,13 @@ static void __init ms_hyperv_init_platform(void)
+>  	 * Extract the features and hints
+>  	 */
+>  	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
+> +	ms_hyperv.b_features = cpuid_ebx(HYPERV_CPUID_FEATURES);
+>  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+>  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+>  
+> -	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
+> -		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+> +	pr_info("Hyper-V: features 0x%x, additional features: 0x%x, hints 0x%x, misc 0x%x\n",
+> +		ms_hyperv.features, ms_hyperv.b_features, ms_hyperv.hints,
+> +		ms_hyperv.misc_features);
+
+HYPERV_CPUID_FEATURES(0x40000003) EAX and EBX correspond to Partition
+Privilege Flags (TLFS), I'd suggest to take the opportunity and rename
+this to something like 'privilege flags low=0x%x high=0x%x'.
+
+Also, I don't quite like 'ms_hyperv.b_features' as I'll always have to
+look at what it's being assigned to understand what it holds. I'd even
+suggest to rename ms_hyperv.features to ms_hyperv.priv_low and
+ms_hyperv.b_features tp ms_hyperv.priv_high. Or maybe even better, pack
+them to the same 'u64 ms_hyperv.privileges'.
+
+>  
+>  	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
+>  	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 32e3bc0aa665..77be31094556 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/memory.h>
+>  #include <linux/notifier.h>
+>  #include <linux/percpu_counter.h>
+> +#include <linux/page_reporting.h>
+>  
+>  #include <linux/hyperv.h>
+>  #include <asm/hyperv-tlfs.h>
+> @@ -563,6 +564,10 @@ struct hv_dynmem_device {
+>  	 * The negotiated version agreed by host.
+>  	 */
+>  	__u32 version;
+> +
+> +#ifdef CONFIG_PAGE_REPORTING
+> +	struct page_reporting_dev_info pr_dev_info;
+> +#endif
+>  };
+>  
+>  static struct hv_dynmem_device dm_device;
+> @@ -1565,6 +1570,83 @@ static void balloon_onchannelcallback(void *context)
+>  
+>  }
+>  
+> +#ifdef CONFIG_PAGE_REPORTING
+> +static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+> +		    struct scatterlist *sgl, unsigned int nents)
+> +{
+> +	unsigned long flags;
+> +	struct hv_memory_hint *hint;
+> +	int i;
+> +	u64 status;
+> +	struct scatterlist *sg;
+> +
+> +	WARN_ON(nents > HV_MAX_GPA_PAGE_RANGES);
+> +	local_irq_save(flags);
+> +	hint = *(struct hv_memory_hint **)this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	if (!hint) {
+> +		local_irq_restore(flags);
+> +		return -ENOSPC;
+> +	}
+> +
+> +	hint->type = HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD;
+> +	hint->reserved = 0;
+> +	for (i = 0, sg = sgl; sg; sg = sg_next(sg), i++) {
+> +		int order;
+> +		union hv_gpa_page_range *range;
+> +
+> +		order = get_order(sg->length);
+> +		range = &hint->ranges[i];
+> +		range->address_space = 0;
+> +		range->page.largepage = 1;
+
+Why is largepage always '1'?
+
+> +		range->page.additional_pages = (1ull << (order - 9)) - 1;
+> +		range->base_large_pfn = page_to_pfn(sg_page(sg)) >> 9;
+
+What is '9'? Could you please define it through PAGE_*/HPAGE_* macro?
+
+> +	}
+> +
+> +	status = hv_do_rep_hypercall(HV_EXT_CALL_MEMORY_HEAT_HINT, nents, 0,
+> +				     hint, NULL);
+> +	local_irq_restore(flags);
+> +	status &= HV_HYPERCALL_RESULT_MASK;
+> +	if (status != HV_STATUS_SUCCESS) {
+
+Nit: you could've just used
+
+        if (status & HV_HYPERCALL_RESULT_MASK != HV_STATUS_SUCCESS) {
+        ...
+
+> +		pr_err("Cold memory discard hypercall failed with status %llx\n",
+> +			status);
+> +		return -1;
+
+-EFAULT or something like it maybe?
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int enable_page_reporting(void)
+> +{
+> +	int ret;
+> +
+> +	if (!(hv_query_ext_cap() &
+> +	      HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT)) {
+> +		pr_info("Cold memory discard hint not supported by Hyper-V\n");
+> +		return 0;
+> +	}
+> +
+> +	BUILD_BUG_ON(PAGE_REPORTING_CAPACITY > HV_MAX_GPA_PAGE_RANGES);
+> +	dm_device.pr_dev_info.report = hv_free_page_report;
+> +	ret = page_reporting_register(&dm_device.pr_dev_info);
+> +	if (ret < 0) {
+> +		dm_device.pr_dev_info.report = NULL;
+> +		pr_err("Failed to enable cold memory discard: %d\n", ret);
+> +	} else {
+> +		pr_info("Cold memory discard hint enabled\n");
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void disable_page_reporting(void)
+> +{
+> +	if (dm_device.pr_dev_info.report) {
+> +		page_reporting_unregister(&dm_device.pr_dev_info);
+> +		dm_device.pr_dev_info.report = NULL;
+> +	}
+> +}
+> +#endif //CONFIG_PAGE_REPORTING
+> +
+>  static int balloon_connect_vsp(struct hv_device *dev)
+>  {
+>  	struct dm_version_request version_req;
+> @@ -1710,6 +1792,11 @@ static int balloon_probe(struct hv_device *dev,
+>  	if (ret != 0)
+>  		return ret;
+>  
+> +#ifdef CONFIG_PAGE_REPORTING
+> +	if (enable_page_reporting() < 0)
+> +		goto probe_error;
+
+Why? The hyperv-balloon driver itself may still be functional and you
+already set dm_device.pr_dev_info.report to NULL.
+
+> +#endif
+> +
+>  	dm_device.state = DM_INITIALIZED;
+>  
+>  	dm_device.thread =
+> @@ -1728,6 +1815,9 @@ static int balloon_probe(struct hv_device *dev,
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+>  	unregister_memory_notifier(&hv_memory_nb);
+>  	restore_online_page_callback(&hv_online_page);
+> +#endif
+> +#ifdef CONFIG_PAGE_REPORTING
+> +	disable_page_reporting();
+>  #endif
+>  	return ret;
+>  }
+> @@ -1750,6 +1840,9 @@ static int balloon_remove(struct hv_device *dev)
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+>  	unregister_memory_notifier(&hv_memory_nb);
+>  	restore_online_page_callback(&hv_online_page);
+> +#endif
+> +#ifdef CONFIG_PAGE_REPORTING
+> +	disable_page_reporting();
+>  #endif
+>  	spin_lock_irqsave(&dm_device.ha_lock, flags);
+>  	list_for_each_entry_safe(has, tmp, &dm->ha_region_list, list) {
+> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+> index 262fae9526b1..75aeea0e7f9b 100644
+> --- a/include/asm-generic/hyperv-tlfs.h
+> +++ b/include/asm-generic/hyperv-tlfs.h
+> @@ -89,6 +89,7 @@
+>  #define HV_ACCESS_STATS				BIT(8)
+>  #define HV_DEBUGGING				BIT(11)
+>  #define HV_CPU_POWER_MANAGEMENT			BIT(12)
+> +#define HV_ENABLE_EXTENDED_HYPERCALLS		BIT(20)
+>  
+>  
+>  /*
+> @@ -149,11 +150,18 @@ struct ms_hyperv_tsc_page {
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
+>  
+> +/* Extended hypercalls */
+> +#define HV_EXT_CALL_QUERY_CAPABILITIES		0x8001
+> +#define HV_EXT_CALL_MEMORY_HEAT_HINT		0x8003
+> +
+>  #define HV_FLUSH_ALL_PROCESSORS			BIT(0)
+>  #define HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES	BIT(1)
+>  #define HV_FLUSH_NON_GLOBAL_MAPPINGS_ONLY	BIT(2)
+>  #define HV_FLUSH_USE_EXTENDED_RANGE_FORMAT	BIT(3)
+>  
+> +/* Extended capability bits */
+> +#define HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT BIT(8)
+> +
+>  enum HV_GENERIC_SET_FORMAT {
+>  	HV_GENERIC_SET_SPARSE_4K,
+>  	HV_GENERIC_SET_ALL,
+> @@ -371,6 +379,12 @@ union hv_gpa_page_range {
+
+There is a comment before this structure:
+
+/* HvFlushGuestPhysicalAddressList hypercall */
+
+which is now obsolete.
+
+>  		u64 largepage:1;
+>  		u64 basepfn:52;
+>  	} page;
+> +	struct {
+> +		u64:12;
+
+What is this unnamed member? Another 'reserved', 'pad'? Let's name it.
+
+> +		u64 page_size:1;
+> +		u64 reserved:8;
+> +		u64 base_large_pfn:43;
+> +	};
+
+Please name this structure in the union.
+
+>  };
+>  
+>  /*
+> @@ -490,4 +504,19 @@ struct hv_set_vp_registers_input {
+>  	} element[];
+>  } __packed;
+>  
+> +/*
+> + * The whole argument should fit in a page to be able to pass to the hypervisor
+> + * in one hypercall.
+> + */
+> +#define HV_MAX_GPA_PAGE_RANGES ((PAGE_SIZE - sizeof(u64)) / \
+> +				sizeof(union hv_gpa_page_range))
+> +
+
+The name HV_MAX_GPA_PAGE_RANGES sounds too generic and I think this is
+specific to the HvExtCallMemoryHeatHint hypercall as other hypercalls
+may have a different header length.
+
+> +/* HvExtCallMemoryHeatHint hypercall */
+> +#define HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD	2
+> +struct hv_memory_hint {
+> +	u64 type:2;
+> +	u64 reserved:62;
+> +	union hv_gpa_page_range ranges[1];
+
+Why '[1]' and not '[]'? If it was '[]' you could've used 'sizeof(struct
+hv_memory_hint)' in HV_MAX_GPA_PAGE_RANGES macro definition instead of
+'sizeof(u64)'.
+
+> +};
+> +
+>  #endif
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 1c4fd950f091..c664af4a7503 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -27,6 +27,7 @@
+>  
+>  struct ms_hyperv_info {
+>  	u32 features;
+> +	u32 b_features;
+>  	u32 misc_features;
+>  	u32 hints;
+>  	u32 nested_features;
+> @@ -169,6 +170,7 @@ bool hv_is_hyperv_initialized(void);
+>  bool hv_is_hibernation_supported(void);
+>  void hyperv_cleanup(void);
+>  void hv_setup_sched_clock(void *sched_clock);
+> +u64 hv_query_ext_cap(void);
+>  #else /* CONFIG_HYPERV */
+>  static inline bool hv_is_hyperv_initialized(void) { return false; }
+>  static inline bool hv_is_hibernation_supported(void) { return false; }
+
+-- 
+Vitaly
+
