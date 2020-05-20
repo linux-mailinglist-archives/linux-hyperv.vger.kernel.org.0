@@ -2,105 +2,360 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FECE1DAA6D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2020 08:14:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63EC11DABA7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2020 09:11:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgETGOA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 May 2020 02:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
+        id S1726425AbgETHK5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 May 2020 03:10:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48244 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbgETGOA (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 May 2020 02:14:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B44520748;
-        Wed, 20 May 2020 06:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589955239;
-        bh=JPF6FxRfXiDX6GOz4VjTFzelnl5fzmMBAKNkt5sZv7w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T85sC09yPYQ2gHtXFfMphwDGOw22fXYS+U4OSyMwOTQ/M1Fd/QkLJ+ToBzanvnOaL
-         83IIYNJT8QfCVrvWbjChw3vwT3gyOnIZqtuv8Uc4K4Ib3Om5JdXZKkSkF9SD/alRE8
-         yQKznnVZVZE3rtfP5gIKlwX42ex3ZK/aLiBElsng=
-Date:   Wed, 20 May 2020 08:13:56 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     alexander.deucher@amd.com, chris@chris-wilson.co.uk,
-        ville.syrjala@linux.intel.com, Hawking.Zhang@amd.com,
-        tvrtko.ursulin@intel.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        spronovo@microsoft.com, iourit@microsoft.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] gpu: dxgkrnl: core code
-Message-ID: <20200520061356.GA2269481@kroah.com>
+        id S1726369AbgETHK4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 20 May 2020 03:10:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 63CD7B36C;
+        Wed, 20 May 2020 07:10:56 +0000 (UTC)
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+To:     Sasha Levin <sashal@kernel.org>, alexander.deucher@amd.com,
+        chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
+        Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        gregkh@linuxfoundation.org
 References: <20200519163234.226513-1-sashal@kernel.org>
- <20200519163234.226513-2-sashal@kernel.org>
- <20200519172105.GB1101627@kroah.com>
- <20200519174553.GF33628@sasha-vm>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
+Date:   Wed, 20 May 2020 09:10:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519174553.GF33628@sasha-vm>
+In-Reply-To: <20200519163234.226513-1-sashal@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="vAo58w8SHWXRVnNzumKnOmUo9dwSAv3J1"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 19, 2020 at 01:45:53PM -0400, Sasha Levin wrote:
-> On Tue, May 19, 2020 at 07:21:05PM +0200, Greg KH wrote:
-> > On Tue, May 19, 2020 at 12:32:31PM -0400, Sasha Levin wrote:
-> > > +
-> > > +#define DXGK_MAX_LOCK_DEPTH	64
-> > > +#define W_MAX_PATH		260
-> > 
-> > We already have a max path number, why use a different one?
-> 
-> It's max path for Windows, not Linux (thus the "W_" prefix) :)
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--vAo58w8SHWXRVnNzumKnOmUo9dwSAv3J1
+Content-Type: multipart/mixed; boundary="hJMvAsFc04AoVDJM7zxnUbCWTttHUlTAT";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Sasha Levin <sashal@kernel.org>, alexander.deucher@amd.com,
+ chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
+ Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+ wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ gregkh@linuxfoundation.org
+Message-ID: <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+References: <20200519163234.226513-1-sashal@kernel.org>
+In-Reply-To: <20200519163234.226513-1-sashal@kernel.org>
 
-Ah, not obvious :)
+--hJMvAsFc04AoVDJM7zxnUbCWTttHUlTAT
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> Maybe changing it to WIN_MAX_PATH or such will make it better?
+Hi
 
-Probably.
+Am 19.05.20 um 18:32 schrieb Sasha Levin:
+> There is a blog post that goes into more detail about the bigger
+> picture, and walks through all the required pieces to make this work. I=
+t
+> is available here:
+> https://devblogs.microsoft.com/directx/directx-heart-linux . The rest o=
+f
+> this cover letter will focus on the Linux Kernel bits.
 
-> > > +#define d3dkmt_handle		u32
-> > > +#define d3dgpu_virtual_address	u64
-> > > +#define winwchar		u16
-> > > +#define winhandle		u64
-> > > +#define ntstatus		int
-> > > +#define winbool			u32
-> > > +#define d3dgpu_size_t		u64
-> > 
-> > These are all ripe for a simple search/replace in your editor before you
-> > do your next version :)
-> 
-> I've actually attempted that, and reverted that change, mostly because
-> the whole 'handle' thing became very confusing.
+That's quite a surprise. Thanks for your efforts to contribute.
 
-Yeah, "handles" in windows can be a mess, with some being pointers and
-others just integers.  Trying to make a specific typedef for it is
-usually the better way overall, that way you can get the compiler to
-check for mistakes.  These #defines will not really help with that.
+>=20
+> Overview
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> This is the first draft of the Microsoft Virtual GPU (vGPU) driver. The=
 
-But, 'ntstatus' should be ok to just make "int" everywhere, right?
+> driver exposes a paravirtualized GPU to user mode applications running
+> in a virtual machine on a Windows host. This enables hardware
+> acceleration in environment such as WSL (Windows Subsystem for Linux)
+> where the Linux virtual machine is able to share the GPU with the
+> Windows host.
+>=20
+> The projection is accomplished by exposing the WDDM (Windows Display
+> Driver Model) interface as a set of IOCTL. This allows APIs and user
+> mode driver written against the WDDM GPU abstraction on Windows to be
+> ported to run within a Linux environment. This enables the port of the
+> D3D12 and DirectML APIs as well as their associated user mode driver to=
 
-> Note that we have a few 'handles', each with a different size, and thus
-> calling get_something_something_handle() type of functions becase very
-> confusing since it's not clear what handle we're working with in that
-> case.
+> Linux. This also enables third party APIs, such as the popular NVIDIA
+> Cuda compute API, to be hardware accelerated within a WSL environment.
+>=20
+> Only the rendering/compute aspect of the GPU are projected to the
+> virtual machine, no display functionality is exposed. Further, at this
+> time there are no presentation integration. So although the D3D12 API
+> can be use to render graphics offscreen, there is no path (yet) for
+> pixel to flow from the Linux environment back onto the Windows host
+> desktop. This GPU stack is effectively side-by-side with the native
+> Linux graphics stack.
+>=20
+> The driver creates the /dev/dxg device, which can be opened by user mod=
+e
+> application and handles their ioctls. The IOCTL interface to the driver=
 
-Yeah, typedefs can help there.
+> is defined in dxgkmthk.h (Dxgkrnl Graphics Port Driver ioctl
+> definitions). The interface matches the D3DKMT interface on Windows.
+> Ioctls are implemented in ioctl.c.
 
-> With regards to the rest, I wanted to leave stuff like 'winbool' to
-> document the expected ABI between the Windows and Linux side of things.
-> Ideally it would be 'bool' or 'u8', but as you see we had to use 'u32'
-> here which I feel lessens our ability to have the code document itself.
+Echoing what others said, you're not making a DRM driver. The driver
+should live outside of the DRM code.
 
-'bool' probably will not work as I think it's compiler dependent, __u8
-is probably best.
+I have one question about the driver API: on Windows, DirectX versions
+are loosly tied to Windows releases. So I guess you can change the
+kernel interface among DirectX versions?
 
-thanks,
+If so, how would this work on Linux in the long term? If there ever is a
+DirectX 13 or 14 with incompatible kernel interfaces, how would you plan
+to update the Linux driver?
 
-greg k-h
+Best regards
+Thomas
+
+>=20
+> When a VM starts, hyper-v on the host adds virtual GPU devices to the V=
+M
+> via the hyper-v driver. The host offers several VM bus channels to the
+> VM: the global channel and one channel per virtual GPU, assigned to the=
+
+> VM.
+>=20
+> The driver registers with the hyper-v driver (hv_driver) for the arriva=
+l
+> of VM bus channels. dxg_probe_device recognizes the vGPU channels and
+> creates the corresponding objects (dxgadapter for vGPUs and dxgglobal
+> for the global channel).
+>=20
+> The driver uses the hyper-V VM bus interface to communicate with the
+> host. dxgvmbus.c implements the communication interface.
+>=20
+> The global channel has 8GB of IO space assigned by the host. This space=
+
+> is managed by the host and used to give the guest direct CPU access to
+> some allocations. Video memory is allocated on the host except in the
+> case of existing_sysmem allocations. The Windows host allocates memory
+> for the GPU on behalf of the guest. The Linux guest can access that
+> memory by mapping GPU virtual address to allocations and then
+> referencing those GPU virtual address from within GPU command buffers
+> submitted to the GPU. For allocations which require CPU access, the
+> allocation is mapped by the host into a location in the 8GB of IO space=
+
+> reserved in the guest for that purpose. The Windows host uses the neste=
+d
+> CPU page table to ensure that this guest IO space always map to the
+> correct location for the allocation as it may migrate between dedicated=
+
+> GPU memory (e.g. VRAM, firmware reserved DDR) and shared system memory
+> (regular DDR) over its lifetime. The Linux guest maps a user mode CPU
+> virtual address to an allocation IO space range for direct access by
+> user mode APIs and drivers.
+>=20
+> =20
+>=20
+> Implementation of LX_DXLOCK2 ioctl
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> We would appreciate your feedback on the implementation of the
+> LX_DXLOCK2 ioctl.
+>=20
+> This ioctl is used to get a CPU address to an allocation, which is
+> resident in video/system memory on the host. The way it works:
+>=20
+> 1. The driver sends the Lock message to the host
+>=20
+> 2. The host allocates space in the VM IO space and maps it to the
+> allocation memory
+>=20
+> 3. The host returns the address in IO space for the mapped allocation
+>=20
+> 4. The driver (in dxg_map_iospace) allocates a user mode virtual addres=
+s
+> range using vm_mmap and maps it to the IO space using
+> io_remap_ofn_range)
+>=20
+> 5. The VA is returned to the application
+>=20
+> =20
+>=20
+> Internal objects
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> The following objects are created by the driver (defined in dxgkrnl.h):=
+
+>=20
+> - dxgadapter - represents a virtual GPU
+>=20
+> - dxgprocess - tracks per process state (handle table of created
+>   objects, list of objects, etc.)
+>=20
+> - dxgdevice - a container for other objects (contexts, paging queues,
+>   allocations, GPU synchronization objects)
+>=20
+> - dxgcontext - represents thread of GPU execution for packet
+>   scheduling.
+>=20
+> - dxghwqueue - represents thread of GPU execution of hardware schedulin=
+g
+>=20
+> - dxgallocation - represents a GPU accessible allocation
+>=20
+> - dxgsyncobject - represents a GPU synchronization object
+>=20
+> - dxgresource - collection of dxgalloction objects
+>=20
+> - dxgsharedresource, dxgsharedsyncobj - helper objects to share objects=
+
+>   between different dxgdevice objects, which can belong to different
+> processes
+>=20
+>=20
+> =20
+> Object handles
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> All GPU objects, created by the driver, are accessible by a handle
+> (d3dkmt_handle). Each process has its own handle table, which is
+> implemented in hmgr.c. For each API visible object, created by the
+> driver, there is an object, created on the host. For example, the is a
+> dxgprocess object on the host for each dxgprocess object in the VM, etc=
+=2E
+> The object handles have the same value in the host and the VM, which is=
+
+> done to avoid translation from the guest handles to the host handles.
+> =20
+>=20
+>=20
+> Signaling CPU events by the host
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> The WDDM interface provides a way to signal CPU event objects when
+> execution of a context reached certain point. The way it is implemented=
+:
+>=20
+> - application sends an event_fd via ioctl to the driver
+>=20
+> - eventfd_ctx_get is used to get a pointer to the file object
+>   (eventfd_ctx)
+>=20
+> - the pointer to sent the host via a VM bus message
+>=20
+> - when GPU execution reaches a certain point, the host sends a message
+>   to the VM with the event pointer
+>=20
+> - signal_guest_event() handles the messages and eventually
+>   eventfd_signal() is called.
+>=20
+>=20
+> Sasha Levin (4):
+>   gpu: dxgkrnl: core code
+>   gpu: dxgkrnl: hook up dxgkrnl
+>   Drivers: hv: vmbus: hook up dxgkrnl
+>   gpu: dxgkrnl: create a MAINTAINERS entry
+>=20
+>  MAINTAINERS                      |    7 +
+>  drivers/gpu/Makefile             |    2 +-
+>  drivers/gpu/dxgkrnl/Kconfig      |   10 +
+>  drivers/gpu/dxgkrnl/Makefile     |   12 +
+>  drivers/gpu/dxgkrnl/d3dkmthk.h   | 1635 +++++++++
+>  drivers/gpu/dxgkrnl/dxgadapter.c | 1399 ++++++++
+>  drivers/gpu/dxgkrnl/dxgkrnl.h    |  913 ++++++
+>  drivers/gpu/dxgkrnl/dxgmodule.c  |  692 ++++
+>  drivers/gpu/dxgkrnl/dxgprocess.c |  355 ++
+>  drivers/gpu/dxgkrnl/dxgvmbus.c   | 2955 +++++++++++++++++
+>  drivers/gpu/dxgkrnl/dxgvmbus.h   |  859 +++++
+>  drivers/gpu/dxgkrnl/hmgr.c       |  593 ++++
+>  drivers/gpu/dxgkrnl/hmgr.h       |  107 +
+>  drivers/gpu/dxgkrnl/ioctl.c      | 5269 ++++++++++++++++++++++++++++++=
+
+>  drivers/gpu/dxgkrnl/misc.c       |  280 ++
+>  drivers/gpu/dxgkrnl/misc.h       |  288 ++
+>  drivers/video/Kconfig            |    2 +
+>  include/linux/hyperv.h           |   16 +
+>  18 files changed, 15393 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/gpu/dxgkrnl/Kconfig
+>  create mode 100644 drivers/gpu/dxgkrnl/Makefile
+>  create mode 100644 drivers/gpu/dxgkrnl/d3dkmthk.h
+>  create mode 100644 drivers/gpu/dxgkrnl/dxgadapter.c
+>  create mode 100644 drivers/gpu/dxgkrnl/dxgkrnl.h
+>  create mode 100644 drivers/gpu/dxgkrnl/dxgmodule.c
+>  create mode 100644 drivers/gpu/dxgkrnl/dxgprocess.c
+>  create mode 100644 drivers/gpu/dxgkrnl/dxgvmbus.c
+>  create mode 100644 drivers/gpu/dxgkrnl/dxgvmbus.h
+>  create mode 100644 drivers/gpu/dxgkrnl/hmgr.c
+>  create mode 100644 drivers/gpu/dxgkrnl/hmgr.h
+>  create mode 100644 drivers/gpu/dxgkrnl/ioctl.c
+>  create mode 100644 drivers/gpu/dxgkrnl/misc.c
+>  create mode 100644 drivers/gpu/dxgkrnl/misc.h
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--hJMvAsFc04AoVDJM7zxnUbCWTttHUlTAT--
+
+--vAo58w8SHWXRVnNzumKnOmUo9dwSAv3J1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7E1/kACgkQaA3BHVML
+eiNeVgf/bJ3sJkCimINIWeNBYqvEJN0ujoHxTiwIS/f38u215qfggRR0JNbPrUOP
+gagN5nkrDxi7Gx66VP2LpdL1o96JYhmk3ANUQoR8DmMA3viCjSVouK3QH0E8tpFn
+LppCLnGyS1pa8hOd5fk5zZJvrruQ1PFnATdkSr329FpzqjKxzadf6eCeBMa0gsuK
+V7tQlURGY/OnXG2jrlEhUPsXgJdP9bZPZT0gu2mSf/88TZ7tkz6xylWYdxuCX16q
+MCGawoK8wqbeIcO5nczSEWYvxn0OFpWFWLPaYXaxQIGgdAZL/AG7bACmuW401rzM
+dTXKSDqGUQkwKv/DG5JuYvhxHO/J9Q==
+=BFgr
+-----END PGP SIGNATURE-----
+
+--vAo58w8SHWXRVnNzumKnOmUo9dwSAv3J1--
