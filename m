@@ -2,360 +2,306 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63EC11DABA7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2020 09:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA781DAC76
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 May 2020 09:43:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgETHK5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 May 2020 03:10:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48244 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgETHK4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 May 2020 03:10:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 63CD7B36C;
-        Wed, 20 May 2020 07:10:56 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-To:     Sasha Levin <sashal@kernel.org>, alexander.deucher@amd.com,
-        chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
-        Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        gregkh@linuxfoundation.org
+        id S1726775AbgETHnA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 May 2020 03:43:00 -0400
+Received: from mail-bn8nam12on2115.outbound.protection.outlook.com ([40.107.237.115]:59713
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726403AbgETHm4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 20 May 2020 03:42:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WvAn4DVyRPLZL0Anw8/ur8MrZCM0jkyxVpyTaIoQ15tQ7ODk5G2XFeBmMHsrukpAwJzKsGxI/emgrXMXdh6HchJmOOucI2eSzDCYqn9qZs89JDZ4ZkiMliKmx2G7XGIZa1sFWiqG30WZ1Q45ZwEBzQ4EPc3hZbQoeSkzHE0Opt843vwDAHnxBZjjDLRulDL6QzKFfotLTC84fvGW7gQVYWZW8TrmgPSviULnBQi8ZhIKfE0id912vHy3G298z9I4gO0m4fIPsnsTz1Tu7TaQ6Zm3KWauI+1tgzo//QQ2/t1uvak1QC+cwTN1fwCUlxD4Gn12nnRCt355xOrsfzedWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+sT82quFo/G1giFTLJOtIB2+iRlMI4kXz/eXHsrlCqg=;
+ b=WmyCBTh4a1QRZ3YmLqFDvg1tEF9f/+QODiOW9Bx31tZJ0PRR1HXeM0GmyGRZrTLlsg8BGr3fUyXdNp1yISNm8lLlpltopxXOmtC5mvcgl41RlXotVQ/mbfUnmsyJPfd1hFfh6uaA2kZQ5zOQA1hQbkp3uttok9eqvFZol7B5Q76S3AP/wbBAEBllDuT0TYo32UPhMDqjKZSnGWjH0Jj8DsGQ1q4/iURra3WsiVel34HgbPN3Y/VF+io1rJ6o4j9RhEih4D6tVj7fC4QJiQUkESwBy0PVxihh2IkZwIzHBVvQRyBlStV/azMh8TIX3Kx6eQvMAmhujVIf6LpzOrKkNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+sT82quFo/G1giFTLJOtIB2+iRlMI4kXz/eXHsrlCqg=;
+ b=bpzr/axVB5y8s0ANFIsec/oily+AvNdGLJvd2PNPs8jlG/TS8HwGtiNYw2foB0HxPBpyxxZKmSwzGxqbQDxKSgw7Xf+/se/rj0nYQ/LL+imBbBQBiMfv7+o+fAj9r0qncZDKrfD8GBNcaEg+Lzi3EgtDcF2PKIzbWtDWwGJLpfw=
+Received: from MWHPR21MB0287.namprd21.prod.outlook.com (2603:10b6:300:7a::17)
+ by MWHPR21MB0638.namprd21.prod.outlook.com (2603:10b6:300:127::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.4; Wed, 20 May
+ 2020 07:42:50 +0000
+Received: from MWHPR21MB0287.namprd21.prod.outlook.com
+ ([fe80::20e4:2cd4:ff71:a58f]) by MWHPR21MB0287.namprd21.prod.outlook.com
+ ([fe80::20e4:2cd4:ff71:a58f%3]) with mapi id 15.20.3045.001; Wed, 20 May 2020
+ 07:42:49 +0000
+From:   Steve Pronovost <spronovo@microsoft.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
+        "ville.syrjala@linux.intel.com" <ville.syrjala@linux.intel.com>,
+        "Hawking.Zhang@amd.com" <Hawking.Zhang@amd.com>,
+        "tvrtko.ursulin@intel.com" <tvrtko.ursulin@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Iouri Tarassov <iourit@microsoft.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Max McMullen <Max.McMullen@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [RFC PATCH 0/4] DirectX on Linux
+Thread-Topic: [EXTERNAL] Re: [RFC PATCH 0/4] DirectX on Linux
+Thread-Index: AQHWLnXQsYF1SZQdW0SXaavkaDRZ5qiwj09Q
+Date:   Wed, 20 May 2020 07:42:49 +0000
+Message-ID: <MWHPR21MB02878FA5BB259F307082B735C7B60@MWHPR21MB0287.namprd21.prod.outlook.com>
 References: <20200519163234.226513-1-sashal@kernel.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
-Date:   Wed, 20 May 2020 09:10:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
+In-Reply-To: <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [2601:600:9780:90:646e:1b45:4b42:536b]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9f602dfb-b00c-47b8-2d8b-08d7fc91657f
+x-ms-traffictypediagnostic: MWHPR21MB0638:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR21MB0638E0823A46D92A79FB9578C7B60@MWHPR21MB0638.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 04097B7F7F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UhAxCFQGUcwxL3UvUff8TfeqGiRYXiajCEoLNVLzqR3mBY0V1Hb8sbAMsd8BDGBGFr0geABCcAt/No6YG6E5OAlmn+DaoMOGJ4GMZGDNdawiSf0qZwdr7Y1mKcSqcmEX9BK0YvuSUiUON+xscorl3Z8vIQzpf3duiXDQGRXY2fjOfXXKMzg+B2gONlnudE2NgiQvcDufCTeBWUKBsHHcQjJKLqtVwFLQXYFrAKQLcl0V/Ok9dXer9ZFTvE1XeuB2p/qGz+gp8IhN7FtAV1h7j5oqvT2Zr7sD8ZjfpNczkErVd3iHgFY5XRmWr6xD+xP3tIiYpThZ34MSvuNwVrSLQ9u7I2k2e8a6AbbCzS8RKM2Q5S5K7O79vIretZ6ACS7alZJRHGQ6E3SXhjCXsHXjNg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB0287.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(396003)(346002)(136003)(376002)(66446008)(55016002)(66556008)(64756008)(66946007)(52536014)(33656002)(9686003)(5660300002)(7696005)(86362001)(186003)(10290500003)(478600001)(30864003)(6506007)(76116006)(53546011)(966005)(54906003)(8936002)(110136005)(2906002)(4326008)(7416002)(66476007)(71200400001)(8676002)(82960400001)(66574014)(107886003)(82950400001)(8990500004)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: IDwh8ZwL/yfDvnhpG54ShXkaDZkP/518HqhbAB9uMq0OiC0VJ6MHQidFo8ZsMGdNVMWPyFA27ZnblCQgTGVg/TCG8WWbWrXuzOFesCXU4pOnyylDjK+KO6QgPJF2Q2uJQz+z+DzYn955wsMGUdj1HmDLqjzQXhRMDBJMdDz53OKFVVD+inCexVbdEuE3+3DM4FQxEBVmA2zo50CesmqAkTcxf0yPOWF6In8rY/QDCH/Rnq2Iv3JdhggLx7zh2WRbQlqQxhhLMHFG7TfXl+uFKpX7Log0/AN2Q2BN0G8oxSuyjI5lfuKoLDW3iKeQHnymCT+qUqtdLfHv19IC5mKIzmSOMlGfyk0qQZv18unwtWgg1nluICXMKDB/oXR/I25iXLwcb7319J2aCctSOAmla3QBcb3w371Vuu00NYPmC1WS0783CwnZvlsPKJmnWORj1YDz5s2GnlyeJ3ey7m01fJxQfcM0/D5LTcc4sakmMmFSUFRLOdfwgYot+gGfn8TOIZW55BxXQGdksGjOWInEpkfrv8skCj4RonfBGv9FlzY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200519163234.226513-1-sashal@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="vAo58w8SHWXRVnNzumKnOmUo9dwSAv3J1"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f602dfb-b00c-47b8-2d8b-08d7fc91657f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 07:42:49.7166
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LtYfNEU/gzxqy86B/3Obeip2dcmA7LEqK1Br11LEpsilKx2S/Jejjl53nvL32qrtJB6lg8F6Ahxgk8FaH7LC9qb1mIIQNQNE0xoPtyZZe8I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0638
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---vAo58w8SHWXRVnNzumKnOmUo9dwSAv3J1
-Content-Type: multipart/mixed; boundary="hJMvAsFc04AoVDJM7zxnUbCWTttHUlTAT";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Sasha Levin <sashal@kernel.org>, alexander.deucher@amd.com,
- chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
- Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
- kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
- wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- gregkh@linuxfoundation.org
-Message-ID: <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
-Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-References: <20200519163234.226513-1-sashal@kernel.org>
-In-Reply-To: <20200519163234.226513-1-sashal@kernel.org>
-
---hJMvAsFc04AoVDJM7zxnUbCWTttHUlTAT
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 19.05.20 um 18:32 schrieb Sasha Levin:
-> There is a blog post that goes into more detail about the bigger
-> picture, and walks through all the required pieces to make this work. I=
-t
-> is available here:
-> https://devblogs.microsoft.com/directx/directx-heart-linux . The rest o=
-f
-> this cover letter will focus on the Linux Kernel bits.
-
-That's quite a surprise. Thanks for your efforts to contribute.
-
->=20
-> Overview
-> =3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> This is the first draft of the Microsoft Virtual GPU (vGPU) driver. The=
-
-> driver exposes a paravirtualized GPU to user mode applications running
-> in a virtual machine on a Windows host. This enables hardware
-> acceleration in environment such as WSL (Windows Subsystem for Linux)
-> where the Linux virtual machine is able to share the GPU with the
-> Windows host.
->=20
-> The projection is accomplished by exposing the WDDM (Windows Display
-> Driver Model) interface as a set of IOCTL. This allows APIs and user
-> mode driver written against the WDDM GPU abstraction on Windows to be
-> ported to run within a Linux environment. This enables the port of the
-> D3D12 and DirectML APIs as well as their associated user mode driver to=
-
-> Linux. This also enables third party APIs, such as the popular NVIDIA
-> Cuda compute API, to be hardware accelerated within a WSL environment.
->=20
-> Only the rendering/compute aspect of the GPU are projected to the
-> virtual machine, no display functionality is exposed. Further, at this
-> time there are no presentation integration. So although the D3D12 API
-> can be use to render graphics offscreen, there is no path (yet) for
-> pixel to flow from the Linux environment back onto the Windows host
-> desktop. This GPU stack is effectively side-by-side with the native
-> Linux graphics stack.
->=20
-> The driver creates the /dev/dxg device, which can be opened by user mod=
-e
-> application and handles their ioctls. The IOCTL interface to the driver=
-
-> is defined in dxgkmthk.h (Dxgkrnl Graphics Port Driver ioctl
-> definitions). The interface matches the D3DKMT interface on Windows.
-> Ioctls are implemented in ioctl.c.
-
-Echoing what others said, you're not making a DRM driver. The driver
-should live outside of the DRM code.
-
-I have one question about the driver API: on Windows, DirectX versions
-are loosly tied to Windows releases. So I guess you can change the
-kernel interface among DirectX versions?
-
-If so, how would this work on Linux in the long term? If there ever is a
-DirectX 13 or 14 with incompatible kernel interfaces, how would you plan
-to update the Linux driver?
-
-Best regards
-Thomas
-
->=20
-> When a VM starts, hyper-v on the host adds virtual GPU devices to the V=
-M
-> via the hyper-v driver. The host offers several VM bus channels to the
-> VM: the global channel and one channel per virtual GPU, assigned to the=
-
-> VM.
->=20
-> The driver registers with the hyper-v driver (hv_driver) for the arriva=
-l
-> of VM bus channels. dxg_probe_device recognizes the vGPU channels and
-> creates the corresponding objects (dxgadapter for vGPUs and dxgglobal
-> for the global channel).
->=20
-> The driver uses the hyper-V VM bus interface to communicate with the
-> host. dxgvmbus.c implements the communication interface.
->=20
-> The global channel has 8GB of IO space assigned by the host. This space=
-
-> is managed by the host and used to give the guest direct CPU access to
-> some allocations. Video memory is allocated on the host except in the
-> case of existing_sysmem allocations. The Windows host allocates memory
-> for the GPU on behalf of the guest. The Linux guest can access that
-> memory by mapping GPU virtual address to allocations and then
-> referencing those GPU virtual address from within GPU command buffers
-> submitted to the GPU. For allocations which require CPU access, the
-> allocation is mapped by the host into a location in the 8GB of IO space=
-
-> reserved in the guest for that purpose. The Windows host uses the neste=
-d
-> CPU page table to ensure that this guest IO space always map to the
-> correct location for the allocation as it may migrate between dedicated=
-
-> GPU memory (e.g. VRAM, firmware reserved DDR) and shared system memory
-> (regular DDR) over its lifetime. The Linux guest maps a user mode CPU
-> virtual address to an allocation IO space range for direct access by
-> user mode APIs and drivers.
->=20
-> =20
->=20
-> Implementation of LX_DXLOCK2 ioctl
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> We would appreciate your feedback on the implementation of the
-> LX_DXLOCK2 ioctl.
->=20
-> This ioctl is used to get a CPU address to an allocation, which is
-> resident in video/system memory on the host. The way it works:
->=20
-> 1. The driver sends the Lock message to the host
->=20
-> 2. The host allocates space in the VM IO space and maps it to the
-> allocation memory
->=20
-> 3. The host returns the address in IO space for the mapped allocation
->=20
-> 4. The driver (in dxg_map_iospace) allocates a user mode virtual addres=
-s
-> range using vm_mmap and maps it to the IO space using
-> io_remap_ofn_range)
->=20
-> 5. The VA is returned to the application
->=20
-> =20
->=20
-> Internal objects
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> The following objects are created by the driver (defined in dxgkrnl.h):=
-
->=20
-> - dxgadapter - represents a virtual GPU
->=20
-> - dxgprocess - tracks per process state (handle table of created
->   objects, list of objects, etc.)
->=20
-> - dxgdevice - a container for other objects (contexts, paging queues,
->   allocations, GPU synchronization objects)
->=20
-> - dxgcontext - represents thread of GPU execution for packet
->   scheduling.
->=20
-> - dxghwqueue - represents thread of GPU execution of hardware schedulin=
-g
->=20
-> - dxgallocation - represents a GPU accessible allocation
->=20
-> - dxgsyncobject - represents a GPU synchronization object
->=20
-> - dxgresource - collection of dxgalloction objects
->=20
-> - dxgsharedresource, dxgsharedsyncobj - helper objects to share objects=
-
->   between different dxgdevice objects, which can belong to different
-> processes
->=20
->=20
-> =20
-> Object handles
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> All GPU objects, created by the driver, are accessible by a handle
-> (d3dkmt_handle). Each process has its own handle table, which is
-> implemented in hmgr.c. For each API visible object, created by the
-> driver, there is an object, created on the host. For example, the is a
-> dxgprocess object on the host for each dxgprocess object in the VM, etc=
-=2E
-> The object handles have the same value in the host and the VM, which is=
-
-> done to avoid translation from the guest handles to the host handles.
-> =20
->=20
->=20
-> Signaling CPU events by the host
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> The WDDM interface provides a way to signal CPU event objects when
-> execution of a context reached certain point. The way it is implemented=
-:
->=20
-> - application sends an event_fd via ioctl to the driver
->=20
-> - eventfd_ctx_get is used to get a pointer to the file object
->   (eventfd_ctx)
->=20
-> - the pointer to sent the host via a VM bus message
->=20
-> - when GPU execution reaches a certain point, the host sends a message
->   to the VM with the event pointer
->=20
-> - signal_guest_event() handles the messages and eventually
->   eventfd_signal() is called.
->=20
->=20
-> Sasha Levin (4):
->   gpu: dxgkrnl: core code
->   gpu: dxgkrnl: hook up dxgkrnl
->   Drivers: hv: vmbus: hook up dxgkrnl
->   gpu: dxgkrnl: create a MAINTAINERS entry
->=20
->  MAINTAINERS                      |    7 +
->  drivers/gpu/Makefile             |    2 +-
->  drivers/gpu/dxgkrnl/Kconfig      |   10 +
->  drivers/gpu/dxgkrnl/Makefile     |   12 +
->  drivers/gpu/dxgkrnl/d3dkmthk.h   | 1635 +++++++++
->  drivers/gpu/dxgkrnl/dxgadapter.c | 1399 ++++++++
->  drivers/gpu/dxgkrnl/dxgkrnl.h    |  913 ++++++
->  drivers/gpu/dxgkrnl/dxgmodule.c  |  692 ++++
->  drivers/gpu/dxgkrnl/dxgprocess.c |  355 ++
->  drivers/gpu/dxgkrnl/dxgvmbus.c   | 2955 +++++++++++++++++
->  drivers/gpu/dxgkrnl/dxgvmbus.h   |  859 +++++
->  drivers/gpu/dxgkrnl/hmgr.c       |  593 ++++
->  drivers/gpu/dxgkrnl/hmgr.h       |  107 +
->  drivers/gpu/dxgkrnl/ioctl.c      | 5269 ++++++++++++++++++++++++++++++=
-
->  drivers/gpu/dxgkrnl/misc.c       |  280 ++
->  drivers/gpu/dxgkrnl/misc.h       |  288 ++
->  drivers/video/Kconfig            |    2 +
->  include/linux/hyperv.h           |   16 +
->  18 files changed, 15393 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/dxgkrnl/Kconfig
->  create mode 100644 drivers/gpu/dxgkrnl/Makefile
->  create mode 100644 drivers/gpu/dxgkrnl/d3dkmthk.h
->  create mode 100644 drivers/gpu/dxgkrnl/dxgadapter.c
->  create mode 100644 drivers/gpu/dxgkrnl/dxgkrnl.h
->  create mode 100644 drivers/gpu/dxgkrnl/dxgmodule.c
->  create mode 100644 drivers/gpu/dxgkrnl/dxgprocess.c
->  create mode 100644 drivers/gpu/dxgkrnl/dxgvmbus.c
->  create mode 100644 drivers/gpu/dxgkrnl/dxgvmbus.h
->  create mode 100644 drivers/gpu/dxgkrnl/hmgr.c
->  create mode 100644 drivers/gpu/dxgkrnl/hmgr.h
->  create mode 100644 drivers/gpu/dxgkrnl/ioctl.c
->  create mode 100644 drivers/gpu/dxgkrnl/misc.c
->  create mode 100644 drivers/gpu/dxgkrnl/misc.h
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---hJMvAsFc04AoVDJM7zxnUbCWTttHUlTAT--
-
---vAo58w8SHWXRVnNzumKnOmUo9dwSAv3J1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7E1/kACgkQaA3BHVML
-eiNeVgf/bJ3sJkCimINIWeNBYqvEJN0ujoHxTiwIS/f38u215qfggRR0JNbPrUOP
-gagN5nkrDxi7Gx66VP2LpdL1o96JYhmk3ANUQoR8DmMA3viCjSVouK3QH0E8tpFn
-LppCLnGyS1pa8hOd5fk5zZJvrruQ1PFnATdkSr329FpzqjKxzadf6eCeBMa0gsuK
-V7tQlURGY/OnXG2jrlEhUPsXgJdP9bZPZT0gu2mSf/88TZ7tkz6xylWYdxuCX16q
-MCGawoK8wqbeIcO5nczSEWYvxn0OFpWFWLPaYXaxQIGgdAZL/AG7bACmuW401rzM
-dTXKSDqGUQkwKv/DG5JuYvhxHO/J9Q==
-=BFgr
------END PGP SIGNATURE-----
-
---vAo58w8SHWXRVnNzumKnOmUo9dwSAv3J1--
+PkVjaG9pbmcgd2hhdCBvdGhlcnMgc2FpZCwgeW91J3JlIG5vdCBtYWtpbmcgYSBEUk0gZHJpdmVy
+LiBUaGUgZHJpdmVyIHNob3VsZCBsaXZlIG91dHNpZGUgb2YgdGhlIERSTSBjb2RlLg0KDQpBZ3Jl
+ZWQsIHBsZWFzZSBzZWUgbXkgZWFybGllciByZXBseS4gV2UnbGwgYmUgbW92aW5nIHRoZSBkcml2
+ZXIgdG8gZHJpdmVycy9oeXBlcnYgbm9kZSBvciBzb21ldGhpbmcgc2ltaWxhci4gQXBvbG9neSBm
+b3IgdGhlIGNvbmZ1c2lvbiBoZXJlLg0KDQo+IEkgaGF2ZSBvbmUgcXVlc3Rpb24gYWJvdXQgdGhl
+IGRyaXZlciBBUEk6IG9uIFdpbmRvd3MsIERpcmVjdFggdmVyc2lvbnMgYXJlIGxvb3NseSB0aWVk
+IHRvIFdpbmRvd3MgcmVsZWFzZXMuIFNvIEkgZ3Vlc3MgeW91IGNhbiBjaGFuZ2UgdGhlIGtlcm5l
+bCBpbnRlcmZhY2UgYW1vbmcgRGlyZWN0WCB2ZXJzaW9ucz8NCj4gSWYgc28sIGhvdyB3b3VsZCB0
+aGlzIHdvcmsgb24gTGludXggaW4gdGhlIGxvbmcgdGVybT8gSWYgdGhlcmUgZXZlciBpcyBhIERp
+cmVjdFggMTMgb3IgMTQgd2l0aCBpbmNvbXBhdGlibGUga2VybmVsIGludGVyZmFjZXMsIGhvdyB3
+b3VsZCB5b3UgcGxhbiB0byB1cGRhdGUgdGhlIExpbnV4IGRyaXZlcj8NCg0KWW91IHNob3VsZCB0
+aGluayBvZiB0aGUgY29tbXVuaWNhdGlvbiBvdmVyIHRoZSBWTSBCdXMgZm9yIHRoZSB2R1BVIHBy
+b2plY3Rpb24gYXMgYSBzdHJvbmdseSB2ZXJzaW9uZWQgaW50ZXJmYWNlLiBXZSB3aWxsIGJlIGtl
+ZXBpbmcgY29tcGF0aWJpbGl0eSB3aXRoIG9sZGVyIHZlcnNpb24gb2YgdGhhdCBpbnRlcmZhY2Ug
+YXMgaXQgZXZvbHZlcyBvdmVyIHRpbWUgc28gd2UgY2FuIGNvbnRpbnVlIHRvIHJ1biBvbGRlciBn
+dWVzdCAod2UgYWxyZWFkeSBkbykuIFRoaXMgcHJvdG9jb2wgaXNuJ3QgYWN0dWFsbHkgdGllZCB0
+byB0aGUgRFggQVBJLiBJdCBpcyBhIGdlbmVyaWMgYWJzdHJhY3Rpb24gZm9yIHRoZSBHUFUgdGhh
+dCBjYW4gYmUgdXNlZCBmb3IgYW55IEFQSXMgKGZvciBleGFtcGxlIHRoZSBOVklESUEgQ1VEQSBk
+cml2ZXIgdGhhdCB3ZSBhbm5vdW5jZWQgaXMgZ29pbmcgb3ZlciB0aGUgc2FtZSBwcm90b2NvbCB0
+byBhY2Nlc3MgdGhlIEdQVSkuIA0KDQpOZXcgdmVyc2lvbiBvZiB1c2VyIG1vZGUgRFggY2FuIGVp
+dGhlciB0YWtlIGFkdmFudGFnZSBvciBzb21ldGltZSByZXF1aXJlIG5ldyBzZXJ2aWNlcyBmcm9t
+IHRoaXMga2VybmVsIGFic3RyYWN0aW9uLiBUaGlzIG1lYW4gdGhhdCBwdWxsaW5nIGEgbmV3IHZl
+cnNpb24gb2YgdXNlciBtb2RlIERYIGNhbiBtZWFuIGhhdmluZyB0byBhbHNvIHB1bGwgYSBuZXcg
+dmVyc2lvbiBvZiB0aGlzIHZHUFUga2VybmVsIGRyaXZlci4gRm9yIFdTTCwgdGhlc2UgZXNzZW50
+aWFsbHkgc2hpcHMgdG9nZXRoZXIuIFRoZSBrZXJuZWwgZHJpdmVyIHNoaXBzIGFzIHBhcnQgb2Yg
+b3VyIFdTTDIgTGludXggS2VybmVsIGludGVncmF0aW9uLiBVc2VyIG1vZGUgRFggYml0cyBzaGlw
+cyB3aXRoIFdpbmRvd3MuIA0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogVGhv
+bWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5uQHN1c2UuZGU+IA0KU2VudDogV2VkbmVzZGF5LCBN
+YXkgMjAsIDIwMjAgMTI6MTEgQU0NClRvOiBTYXNoYSBMZXZpbiA8c2FzaGFsQGtlcm5lbC5vcmc+
+OyBhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tOyBjaHJpc0BjaHJpcy13aWxzb24uY28udWs7IHZp
+bGxlLnN5cmphbGFAbGludXguaW50ZWwuY29tOyBIYXdraW5nLlpoYW5nQGFtZC5jb207IHR2cnRr
+by51cnN1bGluQGludGVsLmNvbQ0KQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWh5cGVydkB2Z2VyLmtlcm5lbC5vcmc7IEtZIFNyaW5pdmFzYW4gPGt5c0BtaWNyb3NvZnQu
+Y29tPjsgSGFpeWFuZyBaaGFuZyA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IFN0ZXBoZW4gSGVt
+bWluZ2VyIDxzdGhlbW1pbkBtaWNyb3NvZnQuY29tPjsgd2VpLmxpdUBrZXJuZWwub3JnOyBTdGV2
+ZSBQcm9ub3Zvc3QgPHNwcm9ub3ZvQG1pY3Jvc29mdC5jb20+OyBJb3VyaSBUYXJhc3NvdiA8aW91
+cml0QG1pY3Jvc29mdC5jb20+OyBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBsaW51
+eC1mYmRldkB2Z2VyLmtlcm5lbC5vcmc7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnDQpTdWJq
+ZWN0OiBbRVhURVJOQUxdIFJlOiBbUkZDIFBBVENIIDAvNF0gRGlyZWN0WCBvbiBMaW51eA0KDQpI
+aQ0KDQpBbSAxOS4wNS4yMCB1bSAxODozMiBzY2hyaWViIFNhc2hhIExldmluOg0KPiBUaGVyZSBp
+cyBhIGJsb2cgcG9zdCB0aGF0IGdvZXMgaW50byBtb3JlIGRldGFpbCBhYm91dCB0aGUgYmlnZ2Vy
+IA0KPiBwaWN0dXJlLCBhbmQgd2Fsa3MgdGhyb3VnaCBhbGwgdGhlIHJlcXVpcmVkIHBpZWNlcyB0
+byBtYWtlIHRoaXMgd29yay4gDQo+IEl0IGlzIGF2YWlsYWJsZSBoZXJlOg0KPiBodHRwczovL2Rl
+dmJsb2dzLm1pY3Jvc29mdC5jb20vZGlyZWN0eC9kaXJlY3R4LWhlYXJ0LWxpbnV4IC4gVGhlIHJl
+c3QgDQo+IG9mIHRoaXMgY292ZXIgbGV0dGVyIHdpbGwgZm9jdXMgb24gdGhlIExpbnV4IEtlcm5l
+bCBiaXRzLg0KDQpUaGF0J3MgcXVpdGUgYSBzdXJwcmlzZS4gVGhhbmtzIGZvciB5b3VyIGVmZm9y
+dHMgdG8gY29udHJpYnV0ZS4NCg0KPiANCj4gT3ZlcnZpZXcNCj4gPT09PT09PT0NCj4gDQo+IFRo
+aXMgaXMgdGhlIGZpcnN0IGRyYWZ0IG9mIHRoZSBNaWNyb3NvZnQgVmlydHVhbCBHUFUgKHZHUFUp
+IGRyaXZlci4gDQo+IFRoZSBkcml2ZXIgZXhwb3NlcyBhIHBhcmF2aXJ0dWFsaXplZCBHUFUgdG8g
+dXNlciBtb2RlIGFwcGxpY2F0aW9ucyANCj4gcnVubmluZyBpbiBhIHZpcnR1YWwgbWFjaGluZSBv
+biBhIFdpbmRvd3MgaG9zdC4gVGhpcyBlbmFibGVzIGhhcmR3YXJlIA0KPiBhY2NlbGVyYXRpb24g
+aW4gZW52aXJvbm1lbnQgc3VjaCBhcyBXU0wgKFdpbmRvd3MgU3Vic3lzdGVtIGZvciBMaW51eCkg
+DQo+IHdoZXJlIHRoZSBMaW51eCB2aXJ0dWFsIG1hY2hpbmUgaXMgYWJsZSB0byBzaGFyZSB0aGUg
+R1BVIHdpdGggdGhlIA0KPiBXaW5kb3dzIGhvc3QuDQo+IA0KPiBUaGUgcHJvamVjdGlvbiBpcyBh
+Y2NvbXBsaXNoZWQgYnkgZXhwb3NpbmcgdGhlIFdERE0gKFdpbmRvd3MgRGlzcGxheSANCj4gRHJp
+dmVyIE1vZGVsKSBpbnRlcmZhY2UgYXMgYSBzZXQgb2YgSU9DVEwuIFRoaXMgYWxsb3dzIEFQSXMg
+YW5kIHVzZXIgDQo+IG1vZGUgZHJpdmVyIHdyaXR0ZW4gYWdhaW5zdCB0aGUgV0RETSBHUFUgYWJz
+dHJhY3Rpb24gb24gV2luZG93cyB0byBiZSANCj4gcG9ydGVkIHRvIHJ1biB3aXRoaW4gYSBMaW51
+eCBlbnZpcm9ubWVudC4gVGhpcyBlbmFibGVzIHRoZSBwb3J0IG9mIHRoZQ0KPiBEM0QxMiBhbmQg
+RGlyZWN0TUwgQVBJcyBhcyB3ZWxsIGFzIHRoZWlyIGFzc29jaWF0ZWQgdXNlciBtb2RlIGRyaXZl
+ciANCj4gdG8gTGludXguIFRoaXMgYWxzbyBlbmFibGVzIHRoaXJkIHBhcnR5IEFQSXMsIHN1Y2gg
+YXMgdGhlIHBvcHVsYXIgDQo+IE5WSURJQSBDdWRhIGNvbXB1dGUgQVBJLCB0byBiZSBoYXJkd2Fy
+ZSBhY2NlbGVyYXRlZCB3aXRoaW4gYSBXU0wgZW52aXJvbm1lbnQuDQo+IA0KPiBPbmx5IHRoZSBy
+ZW5kZXJpbmcvY29tcHV0ZSBhc3BlY3Qgb2YgdGhlIEdQVSBhcmUgcHJvamVjdGVkIHRvIHRoZSAN
+Cj4gdmlydHVhbCBtYWNoaW5lLCBubyBkaXNwbGF5IGZ1bmN0aW9uYWxpdHkgaXMgZXhwb3NlZC4g
+RnVydGhlciwgYXQgdGhpcyANCj4gdGltZSB0aGVyZSBhcmUgbm8gcHJlc2VudGF0aW9uIGludGVn
+cmF0aW9uLiBTbyBhbHRob3VnaCB0aGUgRDNEMTIgQVBJIA0KPiBjYW4gYmUgdXNlIHRvIHJlbmRl
+ciBncmFwaGljcyBvZmZzY3JlZW4sIHRoZXJlIGlzIG5vIHBhdGggKHlldCkgZm9yIA0KPiBwaXhl
+bCB0byBmbG93IGZyb20gdGhlIExpbnV4IGVudmlyb25tZW50IGJhY2sgb250byB0aGUgV2luZG93
+cyBob3N0IA0KPiBkZXNrdG9wLiBUaGlzIEdQVSBzdGFjayBpcyBlZmZlY3RpdmVseSBzaWRlLWJ5
+LXNpZGUgd2l0aCB0aGUgbmF0aXZlIA0KPiBMaW51eCBncmFwaGljcyBzdGFjay4NCj4gDQo+IFRo
+ZSBkcml2ZXIgY3JlYXRlcyB0aGUgL2Rldi9keGcgZGV2aWNlLCB3aGljaCBjYW4gYmUgb3BlbmVk
+IGJ5IHVzZXIgDQo+IG1vZGUgYXBwbGljYXRpb24gYW5kIGhhbmRsZXMgdGhlaXIgaW9jdGxzLiBU
+aGUgSU9DVEwgaW50ZXJmYWNlIHRvIHRoZSANCj4gZHJpdmVyIGlzIGRlZmluZWQgaW4gZHhna210
+aGsuaCAoRHhna3JubCBHcmFwaGljcyBQb3J0IERyaXZlciBpb2N0bCANCj4gZGVmaW5pdGlvbnMp
+LiBUaGUgaW50ZXJmYWNlIG1hdGNoZXMgdGhlIEQzREtNVCBpbnRlcmZhY2Ugb24gV2luZG93cy4N
+Cj4gSW9jdGxzIGFyZSBpbXBsZW1lbnRlZCBpbiBpb2N0bC5jLg0KDQpFY2hvaW5nIHdoYXQgb3Ro
+ZXJzIHNhaWQsIHlvdSdyZSBub3QgbWFraW5nIGEgRFJNIGRyaXZlci4gVGhlIGRyaXZlciBzaG91
+bGQgbGl2ZSBvdXRzaWRlIG9mIHRoZSBEUk0gY29kZS4NCg0KSSBoYXZlIG9uZSBxdWVzdGlvbiBh
+Ym91dCB0aGUgZHJpdmVyIEFQSTogb24gV2luZG93cywgRGlyZWN0WCB2ZXJzaW9ucyBhcmUgbG9v
+c2x5IHRpZWQgdG8gV2luZG93cyByZWxlYXNlcy4gU28gSSBndWVzcyB5b3UgY2FuIGNoYW5nZSB0
+aGUga2VybmVsIGludGVyZmFjZSBhbW9uZyBEaXJlY3RYIHZlcnNpb25zPw0KDQpJZiBzbywgaG93
+IHdvdWxkIHRoaXMgd29yayBvbiBMaW51eCBpbiB0aGUgbG9uZyB0ZXJtPyBJZiB0aGVyZSBldmVy
+IGlzIGEgRGlyZWN0WCAxMyBvciAxNCB3aXRoIGluY29tcGF0aWJsZSBrZXJuZWwgaW50ZXJmYWNl
+cywgaG93IHdvdWxkIHlvdSBwbGFuIHRvIHVwZGF0ZSB0aGUgTGludXggZHJpdmVyPw0KDQpCZXN0
+IHJlZ2FyZHMNClRob21hcw0KDQo+IA0KPiBXaGVuIGEgVk0gc3RhcnRzLCBoeXBlci12IG9uIHRo
+ZSBob3N0IGFkZHMgdmlydHVhbCBHUFUgZGV2aWNlcyB0byB0aGUgDQo+IFZNIHZpYSB0aGUgaHlw
+ZXItdiBkcml2ZXIuIFRoZSBob3N0IG9mZmVycyBzZXZlcmFsIFZNIGJ1cyBjaGFubmVscyB0byAN
+Cj4gdGhlDQo+IFZNOiB0aGUgZ2xvYmFsIGNoYW5uZWwgYW5kIG9uZSBjaGFubmVsIHBlciB2aXJ0
+dWFsIEdQVSwgYXNzaWduZWQgdG8gDQo+IHRoZSBWTS4NCj4gDQo+IFRoZSBkcml2ZXIgcmVnaXN0
+ZXJzIHdpdGggdGhlIGh5cGVyLXYgZHJpdmVyIChodl9kcml2ZXIpIGZvciB0aGUgDQo+IGFycml2
+YWwgb2YgVk0gYnVzIGNoYW5uZWxzLiBkeGdfcHJvYmVfZGV2aWNlIHJlY29nbml6ZXMgdGhlIHZH
+UFUgDQo+IGNoYW5uZWxzIGFuZCBjcmVhdGVzIHRoZSBjb3JyZXNwb25kaW5nIG9iamVjdHMgKGR4
+Z2FkYXB0ZXIgZm9yIHZHUFVzIA0KPiBhbmQgZHhnZ2xvYmFsIGZvciB0aGUgZ2xvYmFsIGNoYW5u
+ZWwpLg0KPiANCj4gVGhlIGRyaXZlciB1c2VzIHRoZSBoeXBlci1WIFZNIGJ1cyBpbnRlcmZhY2Ug
+dG8gY29tbXVuaWNhdGUgd2l0aCB0aGUgDQo+IGhvc3QuIGR4Z3ZtYnVzLmMgaW1wbGVtZW50cyB0
+aGUgY29tbXVuaWNhdGlvbiBpbnRlcmZhY2UuDQo+IA0KPiBUaGUgZ2xvYmFsIGNoYW5uZWwgaGFz
+IDhHQiBvZiBJTyBzcGFjZSBhc3NpZ25lZCBieSB0aGUgaG9zdC4gVGhpcyANCj4gc3BhY2UgaXMg
+bWFuYWdlZCBieSB0aGUgaG9zdCBhbmQgdXNlZCB0byBnaXZlIHRoZSBndWVzdCBkaXJlY3QgQ1BV
+IA0KPiBhY2Nlc3MgdG8gc29tZSBhbGxvY2F0aW9ucy4gVmlkZW8gbWVtb3J5IGlzIGFsbG9jYXRl
+ZCBvbiB0aGUgaG9zdCANCj4gZXhjZXB0IGluIHRoZSBjYXNlIG9mIGV4aXN0aW5nX3N5c21lbSBh
+bGxvY2F0aW9ucy4gVGhlIFdpbmRvd3MgaG9zdCANCj4gYWxsb2NhdGVzIG1lbW9yeSBmb3IgdGhl
+IEdQVSBvbiBiZWhhbGYgb2YgdGhlIGd1ZXN0LiBUaGUgTGludXggZ3Vlc3QgDQo+IGNhbiBhY2Nl
+c3MgdGhhdCBtZW1vcnkgYnkgbWFwcGluZyBHUFUgdmlydHVhbCBhZGRyZXNzIHRvIGFsbG9jYXRp
+b25zIA0KPiBhbmQgdGhlbiByZWZlcmVuY2luZyB0aG9zZSBHUFUgdmlydHVhbCBhZGRyZXNzIGZy
+b20gd2l0aGluIEdQVSBjb21tYW5kIA0KPiBidWZmZXJzIHN1Ym1pdHRlZCB0byB0aGUgR1BVLiBG
+b3IgYWxsb2NhdGlvbnMgd2hpY2ggcmVxdWlyZSBDUFUgDQo+IGFjY2VzcywgdGhlIGFsbG9jYXRp
+b24gaXMgbWFwcGVkIGJ5IHRoZSBob3N0IGludG8gYSBsb2NhdGlvbiBpbiB0aGUgDQo+IDhHQiBv
+ZiBJTyBzcGFjZSByZXNlcnZlZCBpbiB0aGUgZ3Vlc3QgZm9yIHRoYXQgcHVycG9zZS4gVGhlIFdp
+bmRvd3MgDQo+IGhvc3QgdXNlcyB0aGUgbmVzdGVkIENQVSBwYWdlIHRhYmxlIHRvIGVuc3VyZSB0
+aGF0IHRoaXMgZ3Vlc3QgSU8gc3BhY2UgDQo+IGFsd2F5cyBtYXAgdG8gdGhlIGNvcnJlY3QgbG9j
+YXRpb24gZm9yIHRoZSBhbGxvY2F0aW9uIGFzIGl0IG1heSANCj4gbWlncmF0ZSBiZXR3ZWVuIGRl
+ZGljYXRlZCBHUFUgbWVtb3J5IChlLmcuIFZSQU0sIGZpcm13YXJlIHJlc2VydmVkIA0KPiBERFIp
+IGFuZCBzaGFyZWQgc3lzdGVtIG1lbW9yeSAocmVndWxhciBERFIpIG92ZXIgaXRzIGxpZmV0aW1l
+LiBUaGUgDQo+IExpbnV4IGd1ZXN0IG1hcHMgYSB1c2VyIG1vZGUgQ1BVIHZpcnR1YWwgYWRkcmVz
+cyB0byBhbiBhbGxvY2F0aW9uIElPIA0KPiBzcGFjZSByYW5nZSBmb3IgZGlyZWN0IGFjY2VzcyBi
+eSB1c2VyIG1vZGUgQVBJcyBhbmQgZHJpdmVycy4NCj4gDQo+ICANCj4gDQo+IEltcGxlbWVudGF0
+aW9uIG9mIExYX0RYTE9DSzIgaW9jdGwNCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PQ0KPiANCj4gV2Ugd291bGQgYXBwcmVjaWF0ZSB5b3VyIGZlZWRiYWNrIG9uIHRoZSBpbXBs
+ZW1lbnRhdGlvbiBvZiB0aGUNCj4gTFhfRFhMT0NLMiBpb2N0bC4NCj4gDQo+IFRoaXMgaW9jdGwg
+aXMgdXNlZCB0byBnZXQgYSBDUFUgYWRkcmVzcyB0byBhbiBhbGxvY2F0aW9uLCB3aGljaCBpcyAN
+Cj4gcmVzaWRlbnQgaW4gdmlkZW8vc3lzdGVtIG1lbW9yeSBvbiB0aGUgaG9zdC4gVGhlIHdheSBp
+dCB3b3JrczoNCj4gDQo+IDEuIFRoZSBkcml2ZXIgc2VuZHMgdGhlIExvY2sgbWVzc2FnZSB0byB0
+aGUgaG9zdA0KPiANCj4gMi4gVGhlIGhvc3QgYWxsb2NhdGVzIHNwYWNlIGluIHRoZSBWTSBJTyBz
+cGFjZSBhbmQgbWFwcyBpdCB0byB0aGUgDQo+IGFsbG9jYXRpb24gbWVtb3J5DQo+IA0KPiAzLiBU
+aGUgaG9zdCByZXR1cm5zIHRoZSBhZGRyZXNzIGluIElPIHNwYWNlIGZvciB0aGUgbWFwcGVkIGFs
+bG9jYXRpb24NCj4gDQo+IDQuIFRoZSBkcml2ZXIgKGluIGR4Z19tYXBfaW9zcGFjZSkgYWxsb2Nh
+dGVzIGEgdXNlciBtb2RlIHZpcnR1YWwgDQo+IGFkZHJlc3MgcmFuZ2UgdXNpbmcgdm1fbW1hcCBh
+bmQgbWFwcyBpdCB0byB0aGUgSU8gc3BhY2UgdXNpbmcNCj4gaW9fcmVtYXBfb2ZuX3JhbmdlKQ0K
+PiANCj4gNS4gVGhlIFZBIGlzIHJldHVybmVkIHRvIHRoZSBhcHBsaWNhdGlvbg0KPiANCj4gIA0K
+PiANCj4gSW50ZXJuYWwgb2JqZWN0cw0KPiA9PT09PT09PT09PT09PT09DQo+IA0KPiBUaGUgZm9s
+bG93aW5nIG9iamVjdHMgYXJlIGNyZWF0ZWQgYnkgdGhlIGRyaXZlciAoZGVmaW5lZCBpbiBkeGdr
+cm5sLmgpOg0KPiANCj4gLSBkeGdhZGFwdGVyIC0gcmVwcmVzZW50cyBhIHZpcnR1YWwgR1BVDQo+
+IA0KPiAtIGR4Z3Byb2Nlc3MgLSB0cmFja3MgcGVyIHByb2Nlc3Mgc3RhdGUgKGhhbmRsZSB0YWJs
+ZSBvZiBjcmVhdGVkDQo+ICAgb2JqZWN0cywgbGlzdCBvZiBvYmplY3RzLCBldGMuKQ0KPiANCj4g
+LSBkeGdkZXZpY2UgLSBhIGNvbnRhaW5lciBmb3Igb3RoZXIgb2JqZWN0cyAoY29udGV4dHMsIHBh
+Z2luZyBxdWV1ZXMsDQo+ICAgYWxsb2NhdGlvbnMsIEdQVSBzeW5jaHJvbml6YXRpb24gb2JqZWN0
+cykNCj4gDQo+IC0gZHhnY29udGV4dCAtIHJlcHJlc2VudHMgdGhyZWFkIG9mIEdQVSBleGVjdXRp
+b24gZm9yIHBhY2tldA0KPiAgIHNjaGVkdWxpbmcuDQo+IA0KPiAtIGR4Z2h3cXVldWUgLSByZXBy
+ZXNlbnRzIHRocmVhZCBvZiBHUFUgZXhlY3V0aW9uIG9mIGhhcmR3YXJlIA0KPiBzY2hlZHVsaW5n
+DQo+IA0KPiAtIGR4Z2FsbG9jYXRpb24gLSByZXByZXNlbnRzIGEgR1BVIGFjY2Vzc2libGUgYWxs
+b2NhdGlvbg0KPiANCj4gLSBkeGdzeW5jb2JqZWN0IC0gcmVwcmVzZW50cyBhIEdQVSBzeW5jaHJv
+bml6YXRpb24gb2JqZWN0DQo+IA0KPiAtIGR4Z3Jlc291cmNlIC0gY29sbGVjdGlvbiBvZiBkeGdh
+bGxvY3Rpb24gb2JqZWN0cw0KPiANCj4gLSBkeGdzaGFyZWRyZXNvdXJjZSwgZHhnc2hhcmVkc3lu
+Y29iaiAtIGhlbHBlciBvYmplY3RzIHRvIHNoYXJlIG9iamVjdHMNCj4gICBiZXR3ZWVuIGRpZmZl
+cmVudCBkeGdkZXZpY2Ugb2JqZWN0cywgd2hpY2ggY2FuIGJlbG9uZyB0byBkaWZmZXJlbnQgDQo+
+IHByb2Nlc3Nlcw0KPiANCj4gDQo+ICANCj4gT2JqZWN0IGhhbmRsZXMNCj4gPT09PT09PT09PT09
+PT0NCj4gDQo+IEFsbCBHUFUgb2JqZWN0cywgY3JlYXRlZCBieSB0aGUgZHJpdmVyLCBhcmUgYWNj
+ZXNzaWJsZSBieSBhIGhhbmRsZSANCj4gKGQzZGttdF9oYW5kbGUpLiBFYWNoIHByb2Nlc3MgaGFz
+IGl0cyBvd24gaGFuZGxlIHRhYmxlLCB3aGljaCBpcyANCj4gaW1wbGVtZW50ZWQgaW4gaG1nci5j
+LiBGb3IgZWFjaCBBUEkgdmlzaWJsZSBvYmplY3QsIGNyZWF0ZWQgYnkgdGhlIA0KPiBkcml2ZXIs
+IHRoZXJlIGlzIGFuIG9iamVjdCwgY3JlYXRlZCBvbiB0aGUgaG9zdC4gRm9yIGV4YW1wbGUsIHRo
+ZSBpcyBhIA0KPiBkeGdwcm9jZXNzIG9iamVjdCBvbiB0aGUgaG9zdCBmb3IgZWFjaCBkeGdwcm9j
+ZXNzIG9iamVjdCBpbiB0aGUgVk0sIGV0Yy4NCj4gVGhlIG9iamVjdCBoYW5kbGVzIGhhdmUgdGhl
+IHNhbWUgdmFsdWUgaW4gdGhlIGhvc3QgYW5kIHRoZSBWTSwgd2hpY2ggDQo+IGlzIGRvbmUgdG8g
+YXZvaWQgdHJhbnNsYXRpb24gZnJvbSB0aGUgZ3Vlc3QgaGFuZGxlcyB0byB0aGUgaG9zdCBoYW5k
+bGVzLg0KPiAgDQo+IA0KPiANCj4gU2lnbmFsaW5nIENQVSBldmVudHMgYnkgdGhlIGhvc3QNCj4g
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gDQo+IFRoZSBXRERNIGludGVyZmFj
+ZSBwcm92aWRlcyBhIHdheSB0byBzaWduYWwgQ1BVIGV2ZW50IG9iamVjdHMgd2hlbiANCj4gZXhl
+Y3V0aW9uIG9mIGEgY29udGV4dCByZWFjaGVkIGNlcnRhaW4gcG9pbnQuIFRoZSB3YXkgaXQgaXMg
+aW1wbGVtZW50ZWQ6DQo+IA0KPiAtIGFwcGxpY2F0aW9uIHNlbmRzIGFuIGV2ZW50X2ZkIHZpYSBp
+b2N0bCB0byB0aGUgZHJpdmVyDQo+IA0KPiAtIGV2ZW50ZmRfY3R4X2dldCBpcyB1c2VkIHRvIGdl
+dCBhIHBvaW50ZXIgdG8gdGhlIGZpbGUgb2JqZWN0DQo+ICAgKGV2ZW50ZmRfY3R4KQ0KPiANCj4g
+LSB0aGUgcG9pbnRlciB0byBzZW50IHRoZSBob3N0IHZpYSBhIFZNIGJ1cyBtZXNzYWdlDQo+IA0K
+PiAtIHdoZW4gR1BVIGV4ZWN1dGlvbiByZWFjaGVzIGEgY2VydGFpbiBwb2ludCwgdGhlIGhvc3Qg
+c2VuZHMgYSBtZXNzYWdlDQo+ICAgdG8gdGhlIFZNIHdpdGggdGhlIGV2ZW50IHBvaW50ZXINCj4g
+DQo+IC0gc2lnbmFsX2d1ZXN0X2V2ZW50KCkgaGFuZGxlcyB0aGUgbWVzc2FnZXMgYW5kIGV2ZW50
+dWFsbHkNCj4gICBldmVudGZkX3NpZ25hbCgpIGlzIGNhbGxlZC4NCj4gDQo+IA0KPiBTYXNoYSBM
+ZXZpbiAoNCk6DQo+ICAgZ3B1OiBkeGdrcm5sOiBjb3JlIGNvZGUNCj4gICBncHU6IGR4Z2tybmw6
+IGhvb2sgdXAgZHhna3JubA0KPiAgIERyaXZlcnM6IGh2OiB2bWJ1czogaG9vayB1cCBkeGdrcm5s
+DQo+ICAgZ3B1OiBkeGdrcm5sOiBjcmVhdGUgYSBNQUlOVEFJTkVSUyBlbnRyeQ0KPiANCj4gIE1B
+SU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyArDQo+ICBkcml2ZXJzL2dwdS9N
+YWtlZmlsZSAgICAgICAgICAgICB8ICAgIDIgKy0NCj4gIGRyaXZlcnMvZ3B1L2R4Z2tybmwvS2Nv
+bmZpZyAgICAgIHwgICAxMCArDQo+ICBkcml2ZXJzL2dwdS9keGdrcm5sL01ha2VmaWxlICAgICB8
+ICAgMTIgKw0KPiAgZHJpdmVycy9ncHUvZHhna3JubC9kM2RrbXRoay5oICAgfCAxNjM1ICsrKysr
+KysrKw0KPiAgZHJpdmVycy9ncHUvZHhna3JubC9keGdhZGFwdGVyLmMgfCAxMzk5ICsrKysrKysr
+DQo+ICBkcml2ZXJzL2dwdS9keGdrcm5sL2R4Z2tybmwuaCAgICB8ICA5MTMgKysrKysrDQo+ICBk
+cml2ZXJzL2dwdS9keGdrcm5sL2R4Z21vZHVsZS5jICB8ICA2OTIgKysrKyAgDQo+IGRyaXZlcnMv
+Z3B1L2R4Z2tybmwvZHhncHJvY2Vzcy5jIHwgIDM1NSArKw0KPiAgZHJpdmVycy9ncHUvZHhna3Ju
+bC9keGd2bWJ1cy5jICAgfCAyOTU1ICsrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJzL2dwdS9k
+eGdrcm5sL2R4Z3ZtYnVzLmggICB8ICA4NTkgKysrKysNCj4gIGRyaXZlcnMvZ3B1L2R4Z2tybmwv
+aG1nci5jICAgICAgIHwgIDU5MyArKysrDQo+ICBkcml2ZXJzL2dwdS9keGdrcm5sL2htZ3IuaCAg
+ICAgICB8ICAxMDcgKw0KPiAgZHJpdmVycy9ncHUvZHhna3JubC9pb2N0bC5jICAgICAgfCA1MjY5
+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgZHJpdmVycy9ncHUvZHhna3JubC9t
+aXNjLmMgICAgICAgfCAgMjgwICsrDQo+ICBkcml2ZXJzL2dwdS9keGdrcm5sL21pc2MuaCAgICAg
+ICB8ICAyODggKysNCj4gIGRyaXZlcnMvdmlkZW8vS2NvbmZpZyAgICAgICAgICAgIHwgICAgMiAr
+DQo+ICBpbmNsdWRlL2xpbnV4L2h5cGVydi5oICAgICAgICAgICB8ICAgMTYgKw0KPiAgMTggZmls
+ZXMgY2hhbmdlZCwgMTUzOTMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKSAgY3JlYXRlIG1v
+ZGUgDQo+IDEwMDY0NCBkcml2ZXJzL2dwdS9keGdrcm5sL0tjb25maWcgIGNyZWF0ZSBtb2RlIDEw
+MDY0NCANCj4gZHJpdmVycy9ncHUvZHhna3JubC9NYWtlZmlsZSAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IA0KPiBkcml2ZXJzL2dwdS9keGdrcm5sL2QzZGttdGhrLmggIGNyZWF0ZSBtb2RlIDEwMDY0NCAN
+Cj4gZHJpdmVycy9ncHUvZHhna3JubC9keGdhZGFwdGVyLmMgIGNyZWF0ZSBtb2RlIDEwMDY0NCAN
+Cj4gZHJpdmVycy9ncHUvZHhna3JubC9keGdrcm5sLmggIGNyZWF0ZSBtb2RlIDEwMDY0NCANCj4g
+ZHJpdmVycy9ncHUvZHhna3JubC9keGdtb2R1bGUuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBk
+cml2ZXJzL2dwdS9keGdrcm5sL2R4Z3Byb2Nlc3MuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBk
+cml2ZXJzL2dwdS9keGdrcm5sL2R4Z3ZtYnVzLmMgIGNyZWF0ZSBtb2RlIDEwMDY0NCANCj4gZHJp
+dmVycy9ncHUvZHhna3JubC9keGd2bWJ1cy5oICBjcmVhdGUgbW9kZSAxMDA2NDQgDQo+IGRyaXZl
+cnMvZ3B1L2R4Z2tybmwvaG1nci5jICBjcmVhdGUgbW9kZSAxMDA2NDQgDQo+IGRyaXZlcnMvZ3B1
+L2R4Z2tybmwvaG1nci5oICBjcmVhdGUgbW9kZSAxMDA2NDQgDQo+IGRyaXZlcnMvZ3B1L2R4Z2ty
+bmwvaW9jdGwuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBkcml2ZXJzL2dwdS9keGdrcm5sL21p
+c2MuYyAgY3JlYXRlIG1vZGUgMTAwNjQ0IA0KPiBkcml2ZXJzL2dwdS9keGdrcm5sL21pc2MuaA0K
+PiANCg0KLS0NClRob21hcyBaaW1tZXJtYW5uDQpHcmFwaGljcyBEcml2ZXIgRGV2ZWxvcGVyDQpT
+VVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdtYkgNCk1heGZlbGRzdHIuIDUsIDkwNDA5
+IE7DvHJuYmVyZywgR2VybWFueQ0KKEhSQiAzNjgwOSwgQUcgTsO8cm5iZXJnKQ0KR2VzY2jDpGZ0
+c2bDvGhyZXI6IEZlbGl4IEltZW5kw7ZyZmZlcg0KDQo=
