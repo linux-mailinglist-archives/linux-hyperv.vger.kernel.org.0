@@ -2,311 +2,129 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C173B1DEE15
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 May 2020 19:20:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D0261DEF47
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 May 2020 20:34:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbgEVRUK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 22 May 2020 13:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730306AbgEVRUJ (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 22 May 2020 13:20:09 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDFCC061A0E;
-        Fri, 22 May 2020 10:20:09 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n24so13877876ejd.0;
-        Fri, 22 May 2020 10:20:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+WWewBL9ydH6Fsx0AHmYYCMfZ5CbSII+R3IY8ej8qNA=;
-        b=lXdsGjofKzotXGIguO7nq5rfG3tXDXlHWErQJnaGvCfTc+994KreBhakZ99U80XL9T
-         62gijwja7Pb+dDVboc0SpaVcP3C/1qqmxIvRG/Yqf37X1TXmEQIoIMUUITw9bHunCuij
-         TfGav6KsZ2/0q/LM7YnU7n/I9Oft464Y518n0uzYhF2d5BdT1pjACjm7KilHITSSEbs2
-         jqnndTI6Oa1hkmIYwlfM8SUvHvX16gFkRzL2JzXnvcB61nwaBJooSvsHAWqJ8TvVYSyD
-         GdHWfN5VZXDltJfxajGsqyCkn4HC0DNHFoRPet3sTSFoky2iBbcKu7ACQcCRu5ydaY0H
-         MmRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+WWewBL9ydH6Fsx0AHmYYCMfZ5CbSII+R3IY8ej8qNA=;
-        b=ELSmEmBHYaU6pflKkTrCR2BaehlfVAm5oZ6mpUPKNb8UxWVbFovBXUgKkeJJqx/V1f
-         hmZyF/UJBeTlpNVUwtJ1RsVxr77eppedQVWLxJSHER1KSRsXLFuddpzAS0/KbxtHo1Rq
-         Ri7+GxqlgmcvPsZDRXlHiz/aKEP07tPdFsQtIrk4qgNGJsE5YHh8/4QgDEb8sppAtd5i
-         aplBny2O1U7eRXZn04SgGk3cl2OJpLS/uGpmeFbJ9MQoQHlGi8h2GqtDzy36wymd/lgf
-         Y23TqePd/55Z6zlLgGUdROzkmFM/0iukdTJEmlYApkmK8KZHgk9ubKWojq7GVjPjlUM7
-         i2eg==
-X-Gm-Message-State: AOAM530rmQGj2y56hYQ5Wo+JS6yFWEinVGxoU16zwba5uwW7im13nAmj
-        k6bDRMHA6hlKqR//+FP1m75lKgLdc+kBKks0
-X-Google-Smtp-Source: ABdhPJwoW2gTCmbRH6Zzxx135VOJH1aMtHP2nGQzlf7fy2jfLTU1qdjJ2tPxDqmsiBC9OU5xbt5G8w==
-X-Received: by 2002:a17:906:934d:: with SMTP id p13mr8793255ejw.452.1590168007104;
-        Fri, 22 May 2020 10:20:07 -0700 (PDT)
-Received: from localhost.localdomain (ip-62-245-103-65.net.upcbroadband.cz. [62.245.103.65])
-        by smtp.gmail.com with ESMTPSA id ay6sm7483094edb.29.2020.05.22.10.20.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 10:20:06 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        id S1730832AbgEVSeT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 22 May 2020 14:34:19 -0400
+Received: from mail-mw2nam10on2105.outbound.protection.outlook.com ([40.107.94.105]:11489
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730798AbgEVSeT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 22 May 2020 14:34:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BCnN0Wa2ceDhop1Flzb6IX+F0ssU9D6PtZ2+I/C6ghZIziB6hbhGtnNoHgTvHj5LaT9mkC17hPKyfz9pY8NFVz+URXgmeptUQ+cVVNyEnrwr8jY6vQv28AdeshWJ69CN3Rmwba9kl3ZSChBDGS2YEeWxgNXsIAac/gpZfg3S2GwFyo/oJHHMIj0nwVQEqEXcKRcX083BYcBfYwudfp8HcX6K7z0oaBBCSMlFoTd9W1W/T3tJO0gqO/LmH0KPlVDF78d1dMGAtSk0NzqWQNPL6a+6hil4cYC+3ewyyW1NsH+Ja+ulCeLzRmvmIA5Oo8NIY7yg9PX4bh0EBrr/TI5rUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2p/IDs+yp69yvqNsky4UCT31F4vxm3vxrcMuPvmuyHI=;
+ b=KJP/Lek/pPti98oi9R4AOHDA9dEGDy/WxVdaXKhsVa43KdjtKB5+5ppaCB73Hcu1VdJ9nZoDoo5KY2MWIMzlLyk5FaVsiIBQuSJI1hw4dYJTpyhAM2OlNvfBeA7eQvsubASESQIwzrn1nuqWDpz1xZqaQmU4/HypedhDXFqFOS4cB8jS3Ju2DWUuZi5PBc/3wOaDWE+qKz5IF6Nn3TjIKeNPYp2JkK6dppc01v3PicXucbYkClYNlWbEy3kpATRjiEiUqVjeZZMltdqffrdpeVVzU1BAJPFany7oDfYbBmct+kc6uYlJ1qtLaDl3cu8SA2sdckzOYWcb+zfI0CTpFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2p/IDs+yp69yvqNsky4UCT31F4vxm3vxrcMuPvmuyHI=;
+ b=Cb8FMdbspAxSmPj4MlEZTZnNdk+bQwicGZ0RaZvZaEh4ERRyhZT2dKung6/Of0mhVT9zDzWltPU+HMXH8bUovLEb7siw6ibFl87MQo0OiZO8WujIK6jdm9ekhtKFRAarfmvSVGvxUWaRzc5M/z1zUeqvTvQkYa+T0/m8xtLK3DU=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1034.namprd21.prod.outlook.com (2603:10b6:302:a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.6; Fri, 22 May
+ 2020 18:34:15 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::5a3:a5e0:1e3c:e950]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::5a3:a5e0:1e3c:e950%7]) with mapi id 15.20.3021.002; Fri, 22 May 2020
+ 18:34:15 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 2/2] Drivers: hv: vmbus: Resolve more races involving init_vp_index()
-Date:   Fri, 22 May 2020 19:19:01 +0200
-Message-Id: <20200522171901.204127-3-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522171901.204127-1-parri.andrea@gmail.com>
+        Wei Liu <wei.liu@kernel.org>
+Subject: RE: [PATCH 1/2] Drivers: hv: vmbus: Resolve race between
+ init_vp_index() and CPU hotplug
+Thread-Topic: [PATCH 1/2] Drivers: hv: vmbus: Resolve race between
+ init_vp_index() and CPU hotplug
+Thread-Index: AQHWMF02y64NPbAdtUulklFpuaSRq6i0bhnw
+Date:   Fri, 22 May 2020 18:34:14 +0000
+Message-ID: <MW2PR2101MB1052C380E026F86F34C19D50D7B40@MW2PR2101MB1052.namprd21.prod.outlook.com>
 References: <20200522171901.204127-1-parri.andrea@gmail.com>
+ <20200522171901.204127-2-parri.andrea@gmail.com>
+In-Reply-To: <20200522171901.204127-2-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-22T18:34:13Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c0077a71-8599-40ba-8ef9-c3b07321d214;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 93144a90-6943-4ddf-2df9-08d7fe7ebae9
+x-ms-traffictypediagnostic: MW2PR2101MB1034:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB1034D1B9026DB860E80B4FEAD7B40@MW2PR2101MB1034.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 04111BAC64
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Jqv7JxzKv7InYdIZqiVFwuY8PmmUWd8ewEkILFqglLjdLWZA4PmgBPtTKaE3rj1yCWdHbLr2LN4bNkufv58li37Xl/Jjr1q4X5rsG5cMrmDIdcHBl31OExSMjKBCW/qDXj3OzS0/6S/Fjp66FLNjKfFyeM/kyVPigVV/LNUZjVDuXqrUNQJ48KiB8ZEPgFGXicfeMxcRgiV1rMY6lMG0JwPSqIAYWQhM6cfBFRLZSKJl8c89qpQbAywxbQv8ndWG0Ajux8XgsFC3XBbrUocvNihs4scAtPAT7KeO3/Y2qgrRtC6h3G+0eVpCEygpZXCoiZiiJcY0ZojMlkAp70Hlwjrf784YMolo83Hngzb5v36TA4GXRUND9WgeNg5e4prrm/bA2KVowH0QlkQYpcNP4NTml5XRp5Ln/XCVOpmWpDHOnstake/RErLP65GCI1/V
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(26005)(478600001)(10290500003)(6506007)(8990500004)(316002)(52536014)(8936002)(55016002)(9686003)(5660300002)(186003)(66946007)(82960400001)(82950400001)(110136005)(2906002)(76116006)(8676002)(54906003)(66476007)(66556008)(66446008)(86362001)(7696005)(71200400001)(33656002)(64756008)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: a3ge9qWgzn+p+0+GFZx4NohW9MU9FpbmX0JySwAJbdT/zNvrXCF91SpCdnFq+2oYiWh7eqH/hyvP++IkeEwbG8NNy5ldkPa/V6fVvyUe7YjhIKaHuVCMIymzv79kvmDKCf7PTyeW4+T6OSV708HGeTXKMUCZ5iUwaRBFO5N7tOwt7vtByyGR9zLqt6yFn2ttMMXfXxRi+Y1LQ+6M29S4hPQR2QzgWU3XorvFsO5f07zy3UGQS4rt0ZsPdn0xCqWerqys4V0YeGW3ISEA2OLgOcuMwDt9gqzzFyUwjAv1rvOK4eCtFmx7AwmjqTSX3wcUKaWX5J5h54RkfNiAip7eawh2iXOCM+KcWbU0zwFUXxE1PscXfLPe5/f9CGAG4CKkq9PQQX61zborjQceZB4h+rmSD97fJDY6Afn/C0dqkNHpkrUkVXLp9/8k56i58HblaXnLNbiGrSLvHbs9QJNwlXDqN3bg2xmFermD9adWP2dJ+2nMmpblK84avLYDsKtC
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93144a90-6943-4ddf-2df9-08d7fe7ebae9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2020 18:34:14.6725
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ErUaITKtFn0RzT5T88L+XMleIvNtyDyr4IELPqvtribH0grZOZNNo0MJ/Dl8y8c6RO9KD6+Tbzmr51rCjExF8ucYJpq/ZAj1A1JAQmyZTQQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1034
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-init_vp_index() uses the (per-node) hv_numa_map[] masks to record the
-CPUs allocated for channel interrupts at a given time, and distribute
-the performance-critical channels across the available CPUs: in part.,
-the mask of "candidate" target CPUs in a given NUMA node, for a newly
-offered channel, is determined by XOR-ing the node's CPU mask and the
-node's hv_numa_map.  This operation/mechanism assumes that no offline
-CPUs is set in the hv_numa_map mask, an assumption that does not hold
-since such mask is currently not updated when a channel is removed or
-assigned to a different CPU.
+From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Friday, May 2=
+2, 2020 10:19 AM
+>=20
+> vmbus_process_offer() does two things (among others):
+>=20
+>  1) first, it sets the channel's target CPU with cpu_hotplug_lock;
+>  2) it then adds the channel to the channel list(s) with channel_mutex.
+>=20
+> Since cpu_hotplug_lock is released before (2), the channel's target CPU
+> (as designated in (1)) can be deemed "free" by hv_synic_cleanup() and go
+> offline before the channel is added to the list.
+>=20
+> Fix the race condition by "extending" the cpu_hotplug_lock critical
+> section to include (2) (and (1)), nesting the channel_mutex critical
+> section within the cpu_hotplug_lock critical section as done elsewhere
+> (hv_synic_cleanup(), target_cpu_store()) in the hyperv drivers code.
+>=20
+> Move even further by extending the channel_mutex critical section to
+> include (1) (and (2)): this change allows to remove (the now redundant)
+> bind_channel_to_cpu_lock, and generally simplifies the handling of the
+> target CPUs (that are now always modified with channel_mutex held).
+>=20
+> Fixes: d570aec0f2154e ("Drivers: hv: vmbus: Synchronize init_vp_index() v=
+s. CPU hotplug")
+> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> ---
+>  drivers/hv/channel_mgmt.c | 46 +++++++++++++++------------------------
+>  1 file changed, 18 insertions(+), 28 deletions(-)
 
-To address the issues described above, this adds hooks in the channel
-removal path (hv_process_channel_removal()) and in target_cpu_store()
-in order to clear, resp. to update, the hv_numa_map[] masks as needed.
-This also adds a (missed) update of the masks in init_vp_index() (cf.,
-e.g., the memory-allocation failure path in this function).
-
-Like in the case of init_vp_index(), such hooks require to determine
-if the given channel is performance critical.  init_vp_index() does
-this by parsing the channel's offer, it can not rely on the device
-data structure (device_obj) to retrieve such information because the
-device data structure has not been allocated/linked with the channel
-by the time that init_vp_index() executes.  A similar situation may
-hold in hv_is_alloced_cpu() (defined below); the adopted approach is
-to "cache" the device type of the channel, as computed by parsing the
-channel's offer, in the channel structure itself.
-
-Fixes: 7527810573436f ("Drivers: hv: vmbus: Introduce the CHANNELMSG_MODIFYCHANNEL message type")
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
----
- drivers/hv/channel_mgmt.c | 22 +++++++++++++-----
- drivers/hv/hyperv_vmbus.h | 48 +++++++++++++++++++++++++++++++++++++++
- drivers/hv/vmbus_drv.c    | 19 +++++++++++-----
- include/linux/hyperv.h    |  7 ++++++
- 4 files changed, 84 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 89eaacf069a80..417a95e5094dd 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -24,9 +24,9 @@
- 
- #include "hyperv_vmbus.h"
- 
--static void init_vp_index(struct vmbus_channel *channel, u16 dev_type);
-+static void init_vp_index(struct vmbus_channel *channel);
- 
--static const struct vmbus_device vmbus_devs[] = {
-+const struct vmbus_device vmbus_devs[] = {
- 	/* IDE */
- 	{ .dev_type = HV_IDE,
- 	  HV_IDE_GUID,
-@@ -431,6 +431,13 @@ void hv_process_channel_removal(struct vmbus_channel *channel)
- 		spin_unlock_irqrestore(&primary_channel->lock, flags);
- 	}
- 
-+	/*
-+	 * If this is a "perf" channel, updates the hv_numa_map[] masks so that
-+	 * init_vp_index() can (re-)use the CPU.
-+	 */
-+	if (hv_is_perf_channel(channel))
-+		hv_clear_alloced_cpu(channel->target_cpu);
-+
- 	/*
- 	 * Upon suspend, an in-use hv_sock channel is marked as "rescinded" and
- 	 * the relid is invalidated; after hibernation, when the user-space app
-@@ -497,7 +504,7 @@ static void vmbus_add_channel_work(struct work_struct *work)
- 	if (!newchannel->device_obj)
- 		goto err_deq_chan;
- 
--	newchannel->device_obj->device_id = hv_get_dev_type(newchannel);
-+	newchannel->device_obj->device_id = newchannel->device_id;
- 	/*
- 	 * Add the new device to the bus. This will kick off device-driver
- 	 * binding which eventually invokes the device driver's AddDevice()
-@@ -580,7 +587,7 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
- 	 */
- 	mutex_lock(&vmbus_connection.channel_mutex);
- 
--	init_vp_index(newchannel, hv_get_dev_type(newchannel));
-+	init_vp_index(newchannel);
- 
- 	/* Remember the channels that should be cleaned up upon suspend. */
- 	if (is_hvsock_channel(newchannel) || is_sub_channel(newchannel))
-@@ -676,9 +683,9 @@ static int next_numa_node_id;
-  * evenly among all the available NUMA nodes.  Once the node is assigned,
-  * we will assign the CPU based on a simple round robin scheme.
-  */
--static void init_vp_index(struct vmbus_channel *channel, u16 dev_type)
-+static void init_vp_index(struct vmbus_channel *channel)
- {
--	bool perf_chn = vmbus_devs[dev_type].perf_device;
-+	bool perf_chn = hv_is_perf_channel(channel);
- 	cpumask_var_t available_mask;
- 	struct cpumask *alloced_mask;
- 	u32 target_cpu;
-@@ -699,6 +706,8 @@ static void init_vp_index(struct vmbus_channel *channel, u16 dev_type)
- 		channel->target_cpu = VMBUS_CONNECT_CPU;
- 		channel->target_vp =
- 			hv_cpu_number_to_vp_number(VMBUS_CONNECT_CPU);
-+		if (perf_chn)
-+			hv_set_alloced_cpu(VMBUS_CONNECT_CPU);
- 		return;
- 	}
- 
-@@ -862,6 +871,7 @@ static void vmbus_setup_channel_state(struct vmbus_channel *channel,
- 	       sizeof(struct vmbus_channel_offer_channel));
- 	channel->monitor_grp = (u8)offer->monitorid / 32;
- 	channel->monitor_bit = (u8)offer->monitorid % 32;
-+	channel->device_id = hv_get_dev_type(channel);
- }
- 
- /*
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 5e5cebe5d048f..40e2b9f91163c 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -395,6 +395,54 @@ enum delay {
- 	MESSAGE_DELAY   = 1,
- };
- 
-+extern const struct vmbus_device vmbus_devs[];
-+
-+static inline bool hv_is_perf_channel(struct vmbus_channel *channel)
-+{
-+	return vmbus_devs[channel->device_id].perf_device;
-+}
-+
-+static inline bool hv_is_alloced_cpu(unsigned int cpu)
-+{
-+	struct vmbus_channel *channel, *sc;
-+
-+	lockdep_assert_held(&vmbus_connection.channel_mutex);
-+	/*
-+	 * List additions/deletions as well as updates of the target CPUs are
-+	 * protected by channel_mutex.
-+	 */
-+	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-+		if (!hv_is_perf_channel(channel))
-+			continue;
-+		if (channel->target_cpu == cpu)
-+			return true;
-+		list_for_each_entry(sc, &channel->sc_list, sc_list) {
-+			if (sc->target_cpu == cpu)
-+				return true;
-+		}
-+	}
-+	return false;
-+}
-+
-+static inline void hv_set_alloced_cpu(unsigned int cpu)
-+{
-+	cpumask_set_cpu(cpu, &hv_context.hv_numa_map[cpu_to_node(cpu)]);
-+}
-+
-+static inline void hv_clear_alloced_cpu(unsigned int cpu)
-+{
-+	if (hv_is_alloced_cpu(cpu))
-+		return;
-+	cpumask_clear_cpu(cpu, &hv_context.hv_numa_map[cpu_to_node(cpu)]);
-+}
-+
-+static inline void hv_update_alloced_cpus(unsigned int old_cpu,
-+					  unsigned int new_cpu)
-+{
-+	hv_set_alloced_cpu(new_cpu);
-+	hv_clear_alloced_cpu(old_cpu);
-+}
-+
- #ifdef CONFIG_HYPERV_TESTING
- 
- int hv_debug_add_dev_dir(struct hv_device *dev);
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index c2a4a7c0b99a0..47747755d2e1d 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1687,8 +1687,8 @@ static ssize_t target_cpu_show(struct vmbus_channel *channel, char *buf)
- static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 				const char *buf, size_t count)
- {
-+	u32 target_cpu, origin_cpu;
- 	ssize_t ret = count;
--	u32 target_cpu;
- 
- 	if (vmbus_proto_version < VERSION_WIN10_V4_1)
- 		return -EIO;
-@@ -1741,7 +1741,8 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 		goto cpu_store_unlock;
- 	}
- 
--	if (channel->target_cpu == target_cpu)
-+	origin_cpu = channel->target_cpu;
-+	if (target_cpu == origin_cpu)
- 		goto cpu_store_unlock;
- 
- 	if (vmbus_send_modifychannel(channel->offermsg.child_relid,
-@@ -1763,14 +1764,20 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 	 * in on a CPU that is different from the channel target_cpu value.
- 	 */
- 
--	if (channel->change_target_cpu_callback)
--		(*channel->change_target_cpu_callback)(channel,
--				channel->target_cpu, target_cpu);
--
- 	channel->target_cpu = target_cpu;
- 	channel->target_vp = hv_cpu_number_to_vp_number(target_cpu);
- 	channel->numa_node = cpu_to_node(target_cpu);
- 
-+	/* See init_vp_index(). */
-+	if (hv_is_perf_channel(channel))
-+		hv_update_alloced_cpus(origin_cpu, target_cpu);
-+
-+	/* Currently set only for storvsc channels. */
-+	if (channel->change_target_cpu_callback) {
-+		(*channel->change_target_cpu_callback)(channel,
-+				origin_cpu, target_cpu);
-+	}
-+
- cpu_store_unlock:
- 	mutex_unlock(&vmbus_connection.channel_mutex);
- 	cpus_read_unlock();
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index d783847d8cb46..40df3103e890b 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -901,6 +901,13 @@ struct vmbus_channel {
- 
- 	bool probe_done;
- 
-+	/*
-+	 * Cache the device ID here for easy access; this is useful, in
-+	 * particular, in situations where the channel's device_obj has
-+	 * not been allocated/initialized yet.
-+	 */
-+	u16 device_id;
-+
- 	/*
- 	 * We must offload the handling of the primary/sub channels
- 	 * from the single-threaded vmbus_connection.work_queue to
--- 
-2.25.1
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
