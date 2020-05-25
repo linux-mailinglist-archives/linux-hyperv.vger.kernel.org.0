@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA7231E175E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2020 23:51:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 380901E1761
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 May 2020 23:51:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbgEYVuN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S2389237AbgEYVuN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Mon, 25 May 2020 17:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60106 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgEYVuJ (ORCPT
+        with ESMTP id S1729177AbgEYVuL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 25 May 2020 17:50:09 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ABC9C061A0E;
-        Mon, 25 May 2020 14:50:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id k5so22128796lji.11;
-        Mon, 25 May 2020 14:50:09 -0700 (PDT)
+        Mon, 25 May 2020 17:50:11 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E30C05BD43;
+        Mon, 25 May 2020 14:50:10 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z18so22119908lji.12;
+        Mon, 25 May 2020 14:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SN+dpM083Q42WyxXGNQ6xV5UDjJbvXB3xjH8Bfi3+R4=;
-        b=iNPRVl1+0sXuFo5rG2XVtbvjpacafwwSP9/HHJnuwh78ckDWfgnyiZtoN8D79+H04L
-         lBo4mzux5NhMOXTMZ9+0mZQmU9FkdFhKDbiFSjXWOLq2XZ22HfmikY7OK67WjWgsCiwU
-         erBDnzlqYd1nNgSOwSkIYkhZNU2H1nK+/g3awgjOMwWcK7HAABBFoAuC/sJwItRZT0su
-         7z0d+hgxWhI4j4Oop9DWoPFXeNjrW3W9TW0vKmpx8sxH0ffJiSLgLTj4RI9/Xa6V8xHY
-         centR91Xm2qya/eiDtv8aPXy6SDfJVJL1x3liEYifA7kaPMKwjufG6g0jxoe2XQp4Ifb
-         006A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=e3gzvIrCtH9Df/NLmyQMD/XYXqiL8jSn2MtUonIxWb8=;
+        b=UGNcoda8+SrBWS7eulpI4+FnLj5J6/Qee9MfQ+/mv07vDKuYqIwXG98ShBDrOQze8u
+         wR3LZYyo+cv6CWB20fqbmm0i5XxQxg84cgG0STwWelmCH+AvvzlSrHryTMvNsP+GqCvO
+         sJSMKKYhR8bNrwiw3PT9zWgeG6pFhpLB3Mw6+vfIfVz6VJGqCOE0EkToek2TMphmPbcv
+         W/1OTgvsrHvlvnhB6hyLES6yYtCPZYafElc3zm1f64n/pcBEzdJ2XVwI0H9RYCpVjsTM
+         H41UnbpToNdVYqt9gD0D5tGHycJmlNxCdFbgzMtR9cy9Wtj0LNeNfOt0db2/9QDedjUQ
+         AQ4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SN+dpM083Q42WyxXGNQ6xV5UDjJbvXB3xjH8Bfi3+R4=;
-        b=dc3zByWpyotdL2aOgLu1NK69x4DV10Qo27wJclngBBs60p8sukYFBWtPEdDlZBQ5vQ
-         hvaN2xmleSEDh3SiByiqrqWybOEOSLi9Fbe/2e9/1y2W9qUbbNpzqmYO4+qfsf6W/FJ+
-         pAhMPa4uBfZQg66oN6IP5mzwrRvKQrYtiCVA3vyqxxZspbCFbuuKTDYGufH/OvDjYwpA
-         sttw3WtoLsu57Lscna5a+J4qAUN0TB3+z6V/n+FvrJmTcvd5teVthtD0AD0tgMAVloeI
-         UG7hfFQcabVNFvC/NRpACgLnAAuUPEhSXc7p1HS4IeHcm2TCZRtNepR8j1qxfmbvy3QZ
-         bOYw==
-X-Gm-Message-State: AOAM53397LZatpuhYKHDkOL/xD1yjy929aWQ/PvLsKmKMFHCSCLKU0n9
-        +vTc3vImKdKbDYgVjf2iOeo=
-X-Google-Smtp-Source: ABdhPJxnTbunGio3cdXh+qjthmCHup2QsAXievRHBLyH46bK73IEPo4+D9loPtgYWGKOYBGDBCRTMw==
-X-Received: by 2002:a2e:a318:: with SMTP id l24mr13657060lje.45.1590443407765;
-        Mon, 25 May 2020 14:50:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=e3gzvIrCtH9Df/NLmyQMD/XYXqiL8jSn2MtUonIxWb8=;
+        b=dCHbctmmyQ1IDAjQyKKYAYpgrkCREDxbjdTzTtFZRoEuRq6DQ6MRVOSU0GHnM0GQi5
+         YtXJv+fVQdE54e+Tf7NYeIELV+XEa00Uqfjx1XceF1SkuGjiOc9XX6PYgK5YqRdHnTd2
+         wQT4xDdnEPBcbWy5QPXwNU42YGa0nqnICviPxcpzQQA7untYKvYO9CEpVhy5P5ZwelAu
+         S3iBE6Q3h4hI90Khzvd4MjL21K018ovm2gPRhHQEQ5Qs9SpOYHZu6GSUYSBjVZ2+Z3Yj
+         dSeiejFrbHkyblV+lqppiy1JYfsq1NscgM8O+6mOzejw6moUEgdGabXPb8HwvHYUsLRi
+         hOVw==
+X-Gm-Message-State: AOAM530Qhut26VtUn8NzRRgRh4X2gkC3rzxpsYaJNFx8ka/AICrcWGiw
+        7DUSsF/m8tTbZJy95fm9Q3s=
+X-Google-Smtp-Source: ABdhPJx9X4aZu61ScTGP3NPyoUfBhL/rS1/qN/91Xs7Cn5s8cR7dXu4bbV3uTG/t0k31ksONuNAa/w==
+X-Received: by 2002:a05:651c:1211:: with SMTP id i17mr14646090lja.56.1590443408808;
+        Mon, 25 May 2020 14:50:08 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-22-22.NA.cust.bahnhof.se. [158.174.22.22])
-        by smtp.gmail.com with ESMTPSA id e21sm3893338ljj.86.2020.05.25.14.50.06
+        by smtp.gmail.com with ESMTPSA id e21sm3893338ljj.86.2020.05.25.14.50.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 14:50:07 -0700 (PDT)
+        Mon, 25 May 2020 14:50:08 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -55,14 +55,13 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 0/2] drivers/iommu: Constify structs
-Date:   Mon, 25 May 2020 23:49:56 +0200
-Message-Id: <20200525214958.30015-1-rikard.falkeborn@gmail.com>
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH 1/2] iommu/hyper-v: Constify hyperv_ir_domain_ops
+Date:   Mon, 25 May 2020 23:49:57 +0200
+Message-Id: <20200525214958.30015-2-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200525214958.30015-1-rikard.falkeborn@gmail.com>
+References: <20200525214958.30015-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
@@ -70,18 +69,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Constify some structs with function pointers to allow the compiler to
-put them in read-only memory. There is not dependency between the
-patches.
+The struct hyperv_ir_domain_ops is not modified and can be made const to
+allow the compiler to put it in read-only memory.
 
-Rikard Falkeborn (2):
-  iommu/hyper-v: Constify hyperv_ir_domain_ops
-  iommu/sun50i: Constify sun50i_iommu_ops
+Before:
+   text    data     bss     dec     hex filename
+   2916    1180    1120    5216    1460 drivers/iommu/hyperv-iommu.o
 
+After:
+   text    data     bss     dec     hex filename
+   3044    1052    1120    5216    1460 drivers/iommu/hyperv-iommu.o
+
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
  drivers/iommu/hyperv-iommu.c | 2 +-
- drivers/iommu/sun50i-iommu.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+index a386b83e0e34..3c0c67a99c7b 100644
+--- a/drivers/iommu/hyperv-iommu.c
++++ b/drivers/iommu/hyperv-iommu.c
+@@ -131,7 +131,7 @@ static int hyperv_irq_remapping_activate(struct irq_domain *domain,
+ 	return 0;
+ }
+ 
+-static struct irq_domain_ops hyperv_ir_domain_ops = {
++static const struct irq_domain_ops hyperv_ir_domain_ops = {
+ 	.alloc = hyperv_irq_remapping_alloc,
+ 	.free = hyperv_irq_remapping_free,
+ 	.activate = hyperv_irq_remapping_activate,
 -- 
 2.26.2
 
