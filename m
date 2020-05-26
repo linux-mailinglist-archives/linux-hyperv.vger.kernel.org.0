@@ -2,105 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB3B51E1ECB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2020 11:38:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADCE41E32A9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 May 2020 00:32:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388641AbgEZJiy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 26 May 2020 05:38:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38137 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388460AbgEZJiy (ORCPT
+        id S2391046AbgEZWcx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 26 May 2020 18:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389482AbgEZWcx (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 26 May 2020 05:38:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e1so19724897wrt.5;
-        Tue, 26 May 2020 02:38:52 -0700 (PDT)
+        Tue, 26 May 2020 18:32:53 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2A6C061A0F;
+        Tue, 26 May 2020 15:32:52 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id g9so19006841edw.10;
+        Tue, 26 May 2020 15:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJPtXY7rywWNMHGLMQRGuyruXoczA5GNP3pv72cf6Nk=;
+        b=AlSxKeJrUW6CwmH4f/Si/KnQjzte+1B+vdvUIGo4XJ7jg1WnkhqljoJgVS25wo4qXt
+         cxBNrADOX0sEm2TsE+qT4CXXCjpVdzy977lT8bzvvTNTMr5XgHXpUwi255tYUDGGEskf
+         PSGRrPubitMmeWYYBjc+iSC0Fm5SMWo0urv3X9e12nqaBh90FLjMbmvr9YDxdyuj1fzD
+         S2JpYBRhFNi3lfkvPpdlS355iR3cDnoMEZRkvqQcuoUvc/XcKDhKwAjMY5t3foOfgYLQ
+         1gdk7d2QUv3JpOtACdlgpMFmz+KRyKaO/CouJaIQawOwDCFZuDmnF5iohEnvSdvcOsOi
+         O6Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ok53FF3ob85NQ3kaOmkDOVfvfrQyMjF4yDCUjHtVYOU=;
-        b=MVqw4cpdBpWPt3uLAFe87iH4rvDwliMVgA9OKx1x3+ZIuOWXY5rK3X99Mv5Mz/xfBG
-         mC9Sk2axRxKKQb1O85Voc2bT5wZhaSLE0GdXdAlOe+BGgvoPjMlC9H6TWUjy2ZQbgu18
-         9cmEMHc+DxyVcwHjfbOx4ANhanT3AxspWAej9jikvP2tw1QZW0j4yhqnXLX4DIlvZQf2
-         1uvnUyQJnSW6z6YHhdZpQQOm4dpWN6t8ged0/W/yGJUwvXCZL7HiDq6B11AvRiowLYdi
-         1+Im300UugfQn1tjU254KEnT9HnLxiK0noVYDaum589hOKKGIvzNxBoiy2FWXl7pWRGI
-         uTeg==
-X-Gm-Message-State: AOAM530HXBN+o/klPkoqZ0xwDzMytwX4cuyPPJQH9Fmys5Frn9EpexQU
-        ER8PLuAe/EUa9M6+35N2QAjAqqEg
-X-Google-Smtp-Source: ABdhPJyx1bwlQiUXpBhsXKw9pC/WSAdrM9iOef2uVPf7AY+mlydpS0OKd3PhkTqLeC/FiDOn0YvykA==
-X-Received: by 2002:adf:a396:: with SMTP id l22mr18769444wrb.76.1590485932051;
-        Tue, 26 May 2020 02:38:52 -0700 (PDT)
-Received: from debian (82.149.115.87.dyn.plus.net. [87.115.149.82])
-        by smtp.gmail.com with ESMTPSA id w15sm142131wmk.30.2020.05.26.02.38.50
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EJPtXY7rywWNMHGLMQRGuyruXoczA5GNP3pv72cf6Nk=;
+        b=aF0xTi57FxWf+Hvfi8nTI5UOcAzpNZ0NUf7KKsSJPM6mMBbGaRPwsVQ/jc5yTnO8Ei
+         PjYY0esm4KXEyqpNfUoALdOL7XxZw4XC+Oz3IzLxrusy4PHUw+GQ5TcSrGICg2gOMsDI
+         yaF0nUSmEs8ZAUnPkQkQULeRnVDBh3r2Cg0RdvlB4fbVQD0sMLvBstufvfihLiX3Kz70
+         c3Cea27cEk2BFkdkR+RmQcIC24nXgDrXj4wCRUFjqHJUGR6gvb9Tkl3dGNmgM09JGMjy
+         5Iintu0GaY91/60b0m371nSD+LMw+2S+bWPPWhzkfjMRRpLtjSlx0VLfXaYDkoSctmtu
+         Y1rA==
+X-Gm-Message-State: AOAM533r6mxmeq5ekA3Bx09lN0jL9+FKtuJn7+MNnEq44WC1CiPOIs7a
+        /UbDn/CoTPrp3obwq/JBh+Tt0pLUjC2qug==
+X-Google-Smtp-Source: ABdhPJzjQukRhxFb1ZFRbVe0ygSWfCk4R3hqvyETUxX4IzkJtbL/oVoQ9g8bQOVXc2+L5X2P+YDZmg==
+X-Received: by 2002:a05:6402:3cd:: with SMTP id t13mr22714780edw.285.1590532370925;
+        Tue, 26 May 2020 15:32:50 -0700 (PDT)
+Received: from localhost.localdomain (ip-62-245-103-65.net.upcbroadband.cz. [62.245.103.65])
+        by smtp.gmail.com with ESMTPSA id cd17sm68288ejb.115.2020.05.26.15.32.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 02:38:51 -0700 (PDT)
-Date:   Tue, 26 May 2020 10:38:49 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Tue, 26 May 2020 15:32:50 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] PCI: hv: Use struct_size() helper
-Message-ID: <20200526093849.keva4hp775m4dzuo@debian>
-References: <20200525164319.GA13596@embeddedor>
+        Michael Kelley <mikelley@microsoft.com>,
+        Nuno Das Neves <nuno.das@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [RFC PATCH 0/2] VMBus channel interrupts re-balancing
+Date:   Wed, 27 May 2020 00:32:16 +0200
+Message-Id: <20200526223218.184057-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525164319.GA13596@embeddedor>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 25, 2020 at 11:43:19AM -0500, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct hv_dr_state {
-> 	...
->         struct hv_pcidev_description func[];
-> };
-> 
-> struct pci_bus_relations {
-> 	...
->         struct pci_function_description func[];
-> } __packed;
-> 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
-> 
-> So, replace the following forms:
-> 
-> offsetof(struct hv_dr_state, func) +
-> 	(sizeof(struct hv_pcidev_description) *
-> 	(relations->device_count))
-> 
-> offsetof(struct pci_bus_relations, func) +
-> 	(sizeof(struct pci_function_description) *
-> 	(bus_rel->device_count))
-> 
-> with:
-> 
-> struct_size(dr, func, relations->device_count)
-> 
-> and
-> 
-> struct_size(bus_rel, func, bus_rel->device_count)
-> 
-> respectively.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+The RFC introduces constructs to re-balance the channel interrupts at
+CPU hotplug and at device hotplug operations, the latter being indeed
+"closure/opening operations" to enable the re-balancing also in cases
+when the device is just being closed/re-opened (as in "ethtool -L").
 
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
+These changes originated from (and address /try to resolve) two known
+limitations of the current interrupts-to-CPUs mapping scheme, that is,
+(1) the "static" nature of this mapping scheme (that, e.g., can end up
+preventing the hot removal of certain CPUs) and (2) the lack of global
+visibility in such scheme (where devices/channels are mapped only "one
+at a time"/as they are offered, with the end result that globally the
+various interrupts are not always evenly spread across CPUs).
 
-FAOD I expect this patch to go through pci tree.
+Andrea Parri (Microsoft) (2):
+  Drivers: hv: vmbus: Re-balance channel interrupts across CPUs at CPU
+    hotplug
+  Drivers: hv: vmbus: Re-balance channel interrupts across CPUs at
+    device hotplug
+
+ drivers/hv/channel.c      |  81 ++++++++++++
+ drivers/hv/channel_mgmt.c | 263 ++++++++++++++++++++++++++++++++++++++
+ drivers/hv/connection.c   |  32 +++--
+ drivers/hv/hv.c           |  62 +++++----
+ drivers/hv/hyperv_vmbus.h |  78 +++++++++++
+ drivers/hv/vmbus_drv.c    |  45 ++-----
+ include/linux/hyperv.h    |  26 ++++
+ kernel/cpu.c              |   1 +
+ 8 files changed, 523 insertions(+), 65 deletions(-)
+
+-- 
+2.25.1
+
