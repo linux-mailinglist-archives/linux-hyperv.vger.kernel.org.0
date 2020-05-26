@@ -2,94 +2,105 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 122F11E1DF9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2020 11:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB3B51E1ECB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 May 2020 11:38:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbgEZJJG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 26 May 2020 05:09:06 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39299 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728568AbgEZJJG (ORCPT
+        id S2388641AbgEZJiy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 26 May 2020 05:38:54 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38137 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388460AbgEZJiy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 26 May 2020 05:09:06 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t18so5566095wru.6;
-        Tue, 26 May 2020 02:09:04 -0700 (PDT)
+        Tue, 26 May 2020 05:38:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e1so19724897wrt.5;
+        Tue, 26 May 2020 02:38:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mKd3JTZJplU94QhSKbd/esureWVCaIfQr3MBhsFOydU=;
-        b=JP1t2cqm2SVT1Q4DCatQdYHGn8I3e/sa2hyC5U5BhY1jtaJg44fgqGfVOUr553z7IN
-         /Mg/oIJp9bwevUY8KcfzVmIIiL1B/hV8j2AJ95GOCseSawd4qJUixZHbMsz6PYbMgJu5
-         inkgEsndHe7zSvbxd1SdqCabKqvV4MMuHGxOmOMt04DH1q48+/st1E2JpZ1LNB/O6tXS
-         McjVEqY10IkuOj8MdBa1Pw9mItt8J+bFMbtCxTQh7HDPIBCYzsksMOrVgnzv7/jHa3q5
-         9g4jWtOdSNwYgA9E71XHivBuhYQkHRgX+f/hBmqcnQGITfyl1qGzVz1bHZIlLEtw2VLd
-         KP2w==
-X-Gm-Message-State: AOAM532ux4NkS87NSDmNbQ7wxrsvBowzwO8mKy/+7AoSwUvelyExZY1v
-        BrF5H4tuU+wFZpH0ma3jKB5DhauC
-X-Google-Smtp-Source: ABdhPJzPzLK8j+Jjs7Zi3RaE1b1BwpiXzaWJ/jf4rjIE+RvGFP9AEm4LkOXcV313giaSc3ZJ2hBKvw==
-X-Received: by 2002:adf:f702:: with SMTP id r2mr19812123wrp.191.1590484144074;
-        Tue, 26 May 2020 02:09:04 -0700 (PDT)
+        bh=Ok53FF3ob85NQ3kaOmkDOVfvfrQyMjF4yDCUjHtVYOU=;
+        b=MVqw4cpdBpWPt3uLAFe87iH4rvDwliMVgA9OKx1x3+ZIuOWXY5rK3X99Mv5Mz/xfBG
+         mC9Sk2axRxKKQb1O85Voc2bT5wZhaSLE0GdXdAlOe+BGgvoPjMlC9H6TWUjy2ZQbgu18
+         9cmEMHc+DxyVcwHjfbOx4ANhanT3AxspWAej9jikvP2tw1QZW0j4yhqnXLX4DIlvZQf2
+         1uvnUyQJnSW6z6YHhdZpQQOm4dpWN6t8ged0/W/yGJUwvXCZL7HiDq6B11AvRiowLYdi
+         1+Im300UugfQn1tjU254KEnT9HnLxiK0noVYDaum589hOKKGIvzNxBoiy2FWXl7pWRGI
+         uTeg==
+X-Gm-Message-State: AOAM530HXBN+o/klPkoqZ0xwDzMytwX4cuyPPJQH9Fmys5Frn9EpexQU
+        ER8PLuAe/EUa9M6+35N2QAjAqqEg
+X-Google-Smtp-Source: ABdhPJyx1bwlQiUXpBhsXKw9pC/WSAdrM9iOef2uVPf7AY+mlydpS0OKd3PhkTqLeC/FiDOn0YvykA==
+X-Received: by 2002:adf:a396:: with SMTP id l22mr18769444wrb.76.1590485932051;
+        Tue, 26 May 2020 02:38:52 -0700 (PDT)
 Received: from debian (82.149.115.87.dyn.plus.net. [87.115.149.82])
-        by smtp.gmail.com with ESMTPSA id n17sm20446723wrr.42.2020.05.26.02.09.02
+        by smtp.gmail.com with ESMTPSA id w15sm142131wmk.30.2020.05.26.02.38.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 02:09:03 -0700 (PDT)
-Date:   Tue, 26 May 2020 10:09:01 +0100
+        Tue, 26 May 2020 02:38:51 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:38:49 +0100
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 1/2] iommu/hyper-v: Constify hyperv_ir_domain_ops
-Message-ID: <20200526090901.xuzobaw2v4lapfdc@debian>
-References: <20200525214958.30015-1-rikard.falkeborn@gmail.com>
- <20200525214958.30015-2-rikard.falkeborn@gmail.com>
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] PCI: hv: Use struct_size() helper
+Message-ID: <20200526093849.keva4hp775m4dzuo@debian>
+References: <20200525164319.GA13596@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525214958.30015-2-rikard.falkeborn@gmail.com>
+In-Reply-To: <20200525164319.GA13596@embeddedor>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 25, 2020 at 11:49:57PM +0200, Rikard Falkeborn wrote:
-> The struct hyperv_ir_domain_ops is not modified and can be made const to
-> allow the compiler to put it in read-only memory.
+On Mon, May 25, 2020 at 11:43:19AM -0500, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
 > 
-> Before:
->    text    data     bss     dec     hex filename
->    2916    1180    1120    5216    1460 drivers/iommu/hyperv-iommu.o
+> struct hv_dr_state {
+> 	...
+>         struct hv_pcidev_description func[];
+> };
 > 
-> After:
->    text    data     bss     dec     hex filename
->    3044    1052    1120    5216    1460 drivers/iommu/hyperv-iommu.o
+> struct pci_bus_relations {
+> 	...
+>         struct pci_function_description func[];
+> } __packed;
 > 
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following forms:
+> 
+> offsetof(struct hv_dr_state, func) +
+> 	(sizeof(struct hv_pcidev_description) *
+> 	(relations->device_count))
+> 
+> offsetof(struct pci_bus_relations, func) +
+> 	(sizeof(struct pci_function_description) *
+> 	(bus_rel->device_count))
+> 
+> with:
+> 
+> struct_size(dr, func, relations->device_count)
+> 
+> and
+> 
+> struct_size(bus_rel, func, bus_rel->device_count)
+> 
+> respectively.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
 
-> ---
->  drivers/iommu/hyperv-iommu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
-> index a386b83e0e34..3c0c67a99c7b 100644
-> --- a/drivers/iommu/hyperv-iommu.c
-> +++ b/drivers/iommu/hyperv-iommu.c
-> @@ -131,7 +131,7 @@ static int hyperv_irq_remapping_activate(struct irq_domain *domain,
->  	return 0;
->  }
->  
-> -static struct irq_domain_ops hyperv_ir_domain_ops = {
-> +static const struct irq_domain_ops hyperv_ir_domain_ops = {
->  	.alloc = hyperv_irq_remapping_alloc,
->  	.free = hyperv_irq_remapping_free,
->  	.activate = hyperv_irq_remapping_activate,
-> -- 
-> 2.26.2
-> 
+FAOD I expect this patch to go through pci tree.
