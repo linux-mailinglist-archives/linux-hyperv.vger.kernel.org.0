@@ -2,72 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A4921E7CFD
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2020 14:18:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B81F1E7ECE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 May 2020 15:33:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725306AbgE2MSD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 May 2020 08:18:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29347 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726282AbgE2MSC (ORCPT
+        id S1726593AbgE2NdJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 29 May 2020 09:33:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbgE2NdI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 May 2020 08:18:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590754681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZAoc7g+SypvscNqSSgFikPZ4GSUD+foVb3L3OUQy8To=;
-        b=iTdS7AYDSTW4PgSP9Ka9YDQrxRw21sNw0Hr4h3eHm0zO9UZ74aUFYhNf1lKrYl4Dc/Kyfm
-        QMlnQBFFxurg5v0INUuKzdcRO7SRlpOh73nUedXuFOHg/JHIqAx92SSPgOrRVX3MbQlHtj
-        KJZUsL++0IsQzUF6Lk+Pv0TFbD567bo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-lkTOf_ApN7iGoNTQ3UYjIw-1; Fri, 29 May 2020 08:17:59 -0400
-X-MC-Unique: lkTOf_ApN7iGoNTQ3UYjIw-1
-Received: by mail-wr1-f69.google.com with SMTP id a4so974855wrp.5
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 May 2020 05:17:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZAoc7g+SypvscNqSSgFikPZ4GSUD+foVb3L3OUQy8To=;
-        b=etmUf72hiZJfgMS1cQJJqs42vCo0SqGQsGzA6f0ualScJOaXUsFFt65I8VD69KV5p8
-         yzmbAC2Wy7OPxGXSo+7yRzn8tQ/KzULQgOZvMnZhaTuvEpIkA/xf8edxRpYcbAvkuiIo
-         wDlFaav5k9/YkLrS2M1DWe5V2MuF81wOtL0ee31MRr34kRBt0mfrcCHOAyQweh0rdYYh
-         qJJI724Pwzycy0OFqZUKYR27dAt0dCU/8hdUXb4zZjttSbkhrmeglB9LTeThvTQOaxr4
-         4Z5kLLDhPIE2RQSCBzDgT9SvcPFFiFtmq9/PuE0AjB9AEQM2B5akzVB9Gqe0B3IWzsa5
-         7kTg==
-X-Gm-Message-State: AOAM533f9hVzOK1X35PbD95VPjVqDNHFmqspqSO1c8f8lx8MhliHK8nu
-        NFKRrmPP1ODEiLXoOHp9Zr3wHQUf/aumlL9bWM+ZVq7sFDCU7Uq7kyqLbk8FCEBOp8qecQRPsWd
-        HS2/t5lmrbuAqpVPJ+cZ0XQLB
-X-Received: by 2002:a5d:40d0:: with SMTP id b16mr8328694wrq.218.1590754677646;
-        Fri, 29 May 2020 05:17:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw97y5rG2FUBughZ29PI1wmLhQfN16iF7uV9cR7qhTbrwm1W8JNTt7MLqLn+LXensqrIP30xg==
-X-Received: by 2002:a5d:40d0:: with SMTP id b16mr8328677wrq.218.1590754677377;
-        Fri, 29 May 2020 05:17:57 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.160.89])
-        by smtp.gmail.com with ESMTPSA id d5sm10036438wrb.14.2020.05.29.05.17.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 May 2020 05:17:56 -0700 (PDT)
-Subject: Re: [PATCH v11 4/7] x86/kvm/hyper-v: Add support for synthetic
- debugger capability
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Jon Doron <arilou@gmail.com>, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-References: <20200424113746.3473563-1-arilou@gmail.com>
- <20200424113746.3473563-5-arilou@gmail.com>
- <12df4348-3dc1-a4cc-aa41-4492cd42dcc8@redhat.com>
- <87ftbjhrk0.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6102aaf8-0ee0-b6cd-dce3-bb91376a1b5e@redhat.com>
-Date:   Fri, 29 May 2020 14:17:55 +0200
+        Fri, 29 May 2020 09:33:08 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7161C03E969;
+        Fri, 29 May 2020 06:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=RGL+y9NOcTeaeonO432mTywIGtAKUuDfA6X3LNU3o7s=; b=leVbbmovqVdJWzUoztoloA16Py
+        y5JqNpn2j0113oKvV1KHL85kPjmuqC9NJ+zVjxqWc7j6QAEtYDlA/wOF88O9Tmr4knbmTM2vNd0sa
+        Ry5ZPjyfNMzzgC8sczIxzEAWMUavjmAsqov5DJKP7FmF3XCoOrrIXrz5eSZr0DZzZihlrzMQQDRaH
+        rtzek78AV9xkAuMtgjuCSaQMjQ/p+SLagyOC937/RzX8j3znAmOLUQ8i2BTZrbzjRccCFbCdQwYLk
+        tEw0f5xzB/aCE/PvpCBra8VOQ60jz/a+EDF2dkLIvzU9zG1SBEBMHZumWR4ZlUFoRBUXl/3AqRrE7
+        U8/bF9MA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jef8C-0005RZ-HC; Fri, 29 May 2020 13:33:04 +0000
+Subject: Re: [PATCH] x86/apic/flat64: Add back the early_param("apic",
+ parse_apic)
+To:     Dexuan Cui <decui@microsoft.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        peterz@infradead.org, allison@lohutok.net,
+        alexios.zavras@intel.com, gregkh@linuxfoundation.org,
+        namit@vmware.com, mikelley@microsoft.com, longli@microsoft.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+References: <20200529063729.22047-1-decui@microsoft.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <928eb231-242c-d2b1-d40b-a2892c55b415@infradead.org>
+Date:   Fri, 29 May 2020 06:33:00 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <87ftbjhrk0.fsf@vitty.brq.redhat.com>
+In-Reply-To: <20200529063729.22047-1-decui@microsoft.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -76,26 +52,83 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 29/05/20 14:08, Vitaly Kuznetsov wrote:
->> On 24/04/20 13:37, Jon Doron wrote:
->>> +static int syndbg_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata, bool host)
->>> +{
->>> +	struct kvm_hv_syndbg *syndbg = vcpu_to_hv_syndbg(vcpu);
->>> +
->>> +	if (!syndbg->active && !host)
->>> +		return 1;
->>> +
->> One small thing: is the ENABLE_CAP and active field needed?  Can you
->> just check if the guest has the syndbg CPUID bits set?
->>
-> Yes, we can probably get away with a static capability (so userspace
-> knows that the interface is supported and CPUID bit can be set) and
-> check guest_cpuid_has() here but we don't have Hyper-V feature leaves
-> exposed as X86_FEATURE_* (yet). It is probably possible to implement an
-> interim solution by open coding the check with kvm_find_cpuid_entry() or
-> something like that.
+On 5/28/20 11:37 PM, Dexuan Cui wrote:
+> parse_apic() allows the user to try a different apic driver than the
+> default one that's automatically chosen. It works for x86_32, but
+> doesn't work for x86_64 becauase it was removed in 2009 for x86_64 by:
+> commit 7b38725318f4 ("x86: remove subarchitecture support code"),
+> whose changelog doesn't explicitly describe the removal for x86_64.
+> 
+> The patch adds back the functionality for x86_64. The intent is mainly
+> to work around an APIC emulation bug in Hyper-V in the case of kdump:
+> currently Hyper-V does not honor the disabled state of the local APICs,
+> and all the IOAPIC-based interrupts may not be delivered to the correct
+> virtual CPU, if the logical-mode APIC driver is used (the kdump
+> kernel usually uses the logical-mode APIC driver, since typically
+> only 1 CPU is active). Luckily the kdump issue can be worked around by
+> forcing the kdump kernel to use physical mode, before the fix to Hyper-V
+> becomes widely available.
+> 
+> IMHO the patch is safe because the current default algorithm to choose
+> the apic driver is unchanged; the patch makes a difference only when
+> the user specifies the apic= kernel parameter, e.g. "apic=physical flat".
+> 
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  arch/x86/kernel/apic/apic_flat_64.c | 27 ++++++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
 
-Yes, that would be fine if you just abstract it in its own function.
+Hi,
+Looks like you will also need to update
+Documentation/admin-guide/kernel-parameters.txt, where it says:
 
-Paolo
+			For X86-32, this can also be used to specify an APIC
+			driver name.
+
+
+> diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
+> index 7862b152a052..efbec63bb01f 100644
+> --- a/arch/x86/kernel/apic/apic_flat_64.c
+> +++ b/arch/x86/kernel/apic/apic_flat_64.c
+> @@ -23,9 +23,34 @@ static struct apic apic_flat;
+>  struct apic *apic __ro_after_init = &apic_flat;
+>  EXPORT_SYMBOL_GPL(apic);
+>  
+> +static int cmdline_apic __initdata;
+> +static int __init parse_apic(char *arg)
+> +{
+> +	struct apic **drv;
+> +
+> +	if (!arg)
+> +		return -EINVAL;
+> +
+> +	for (drv = __apicdrivers; drv < __apicdrivers_end; drv++) {
+> +		if (!strcmp((*drv)->name, arg)) {
+> +			apic = *drv;
+> +			cmdline_apic = 1;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	/* Parsed again by __setup for debug/verbose */
+> +	return 0;
+> +}
+> +early_param("apic", parse_apic);
+> +
+> +
+>  static int flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+>  {
+> -	return 1;
+> +	if (!cmdline_apic)
+> +		return 1;
+> +
+> +	return apic == &apic_flat;
+>  }
+>  
+>  /*
+> 
+
+
+-- 
+~Randy
 
