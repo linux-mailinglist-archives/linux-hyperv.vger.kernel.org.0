@@ -2,115 +2,255 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54C6A1E9451
-	for <lists+linux-hyperv@lfdr.de>; Sun, 31 May 2020 00:41:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88BAC1E990F
+	for <lists+linux-hyperv@lfdr.de>; Sun, 31 May 2020 18:49:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgE3WlG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 30 May 2020 18:41:06 -0400
-Received: from mail-eopbgr1320121.outbound.protection.outlook.com ([40.107.132.121]:4896
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        id S1727815AbgEaQte (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 31 May 2020 12:49:34 -0400
+Received: from mail-eopbgr770127.outbound.protection.outlook.com ([40.107.77.127]:49614
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729183AbgE3WlF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 30 May 2020 18:41:05 -0400
+        id S1725912AbgEaQte (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 31 May 2020 12:49:34 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WlOhNa+8wDQYHA7EIiQYaKgG2RRn3zrA3R0omg9zYwfqqGE2Ao32uvWUIQCcNChMm7xUfVyRLFQ94U83p5kYkiQNnH/gE4zhQM3KlQC1O7gTMxfrTrHQOzMdMMjF6n54ZOcWOLY08zKPc+/E/+pfs+tGbZUEyEr+gn9LHF35hWxuIRM9H9jUxWNwhQBcgWIpabZqo6nZbCJXpVrLBZ0l7RuGldIQLK8jLNS0Fv9rxHPCEhm+uh9S3diuSd0bFA4axTb9X7P6Bd75rIeiQOw1xAt2GOEA3HJgXPTEyJRJowhRXhjppEBxfH6y9+QskqSxT30/MzMXV1id9jlrKkh5Zg==
+ b=fTd9xTqlzNjK9uF2EhXKANpRXgV1taE5L0bf7uTC1wFcQ0CsUrEEfVTTZfDvPyo5PR47UxKJg+mcRQVqgGae/RiCIWKmImT9i7wV8IneaKyOUUwcW24BAa47jN9iMOml7JFwjKQSUOimAVRtZ40kR5DeA0Jcxj37+8FiWYx06eXqRu3DJ29TDWr3TqD3qUUfT6D+XmRkyVT/ESwVH32NzcGWssVcyOCkf7cw9gn+k4RNxGCRtKndz1bO9rnLq/ZTf52CBh+9jvlJfw+6cJvhdlW+XttpkSTzsRek9CPlDoygTmPruk5fxp75XWWom1yXZd3MWh6zZN5lKmBMeX7lCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MEEIAHSxw/4tpS61pnCBWbzdaY+kHdW4fBy63KlxzMs=;
- b=Kv3qNLjuiYDvt4iH11iD4ZEoqv0vzmbrJqYZplujFfkNroOsi/gt+VwY2/VcZBStpCiOyMgxmcLHJ+PaRmD6c++kCelyZtdKxQUxdcZ6ULfeMqzMqrpCRIkJHGU8CZ3z3m5IfpZAz+uChPZZ/Sg9c5K5YcBRAl8oyNxrHr41prfrcVM9wuDHoQB7QmuOytmbudO+vz3/2AF/CoRXRt7VZBNcPEdAOa1fiewbe/iJFqtKVxDzIBxLhudxB16K6KzRhUbYgmGRgL6Ud/W7OEgt0r+NlqlzkArhK5DH7eUrTYVV5qexmWF8AzYxzNTnOPvc2Icr8UgIqd+SbHP9UTEa9Q==
+ bh=3V7+FuvAc1J36JGaHwX/XIKTkGGp9Yos5BBh9gOW9kI=;
+ b=mrKlI8ieI/4TMuc1CgmecDjwhH6ZZBRkQXsJLME2HIAHnc49Tr8C2hRt5AWLJpYK4Gy6HybUU3R4J6n1xYcFboynZrGmG6SAVVarzZipGQqaTry6Okf0IV5YCsHPa4ijHUtZSVw2dqNFqHpuYpS9Q4hOiN4pKs7VxqUbbs0T+6bf/mPs5Q1PniiKHycq3zm7FpXZu46kB4ooDdqBeWFArSCHvSpzTm1QIHzvoGLrCNS4qSQkevKlvxqCcVTaiU2PQu4j9X4f27CXlV1Cqfwds8Oioxz/K8fxZwUlIBpxhSYfZUG8ntPJ6Y1NOHsHMZjjDhWvj/cXIU91fcHvKPqjnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MEEIAHSxw/4tpS61pnCBWbzdaY+kHdW4fBy63KlxzMs=;
- b=SNiHAFey8zokg60l8g4wm+ymGGLTq+El1e802vC7oCDje5lRK3XG1H9ywINobW2ZdiBq94PtdzggX5lKUY48+cxMHqQ9USLzixizKahjGnRE/XoXM07ZbC/SgZPBE5UAzzdmld7+eY9APsj95n0R0VgntGaB3CYeNcVEEeRv8F8=
-Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b5::19)
- by HK0P153MB0178.APCP153.PROD.OUTLOOK.COM (2603:1096:203:29::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.3; Sat, 30 May
- 2020 22:40:55 +0000
-Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
- ([fe80::6c4e:82cb:2bab:9f7f]) by HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
- ([fe80::6c4e:82cb:2bab:9f7f%9]) with mapi id 15.20.3066.010; Sat, 30 May 2020
- 22:40:55 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "namit@vmware.com" <namit@vmware.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH] x86/apic/flat64: Add back the early_param("apic",
- parse_apic)
-Thread-Topic: [PATCH] x86/apic/flat64: Add back the early_param("apic",
- parse_apic)
-Thread-Index: AQHWNb2zxzgWHQ3PPEakjaqT5Cd426jBOt7g
-Date:   Sat, 30 May 2020 22:40:54 +0000
-Message-ID: <HK0P153MB0322004EF1DDCECA6889A73ABF8C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
-References: <20200529063729.22047-1-decui@microsoft.com>
- <928eb231-242c-d2b1-d40b-a2892c55b415@infradead.org>
-In-Reply-To: <928eb231-242c-d2b1-d40b-a2892c55b415@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-30T22:40:52Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5d672a0a-cf14-4fda-8938-6a4c28ebe965;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none
+ bh=3V7+FuvAc1J36JGaHwX/XIKTkGGp9Yos5BBh9gOW9kI=;
+ b=XYv1lM0SmBXWPfIrenVqei1WztYOIU8YK456u3tPbt39FSpJF0U9PncZja3M0iBCZTlybYo+VZ4+NXYe67y6nGyCEiMeSQBHPIY66HvS57BFMp/ht3yDIU7n77Q8XbXw/YFfZsxQGUy9Ri/P97BKPJ28t1oRVRNVobyH/5YWZRc=
+Authentication-Results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none
  header.from=microsoft.com;
-x-originating-ip: [2601:600:a280:7f70:3c58:b8dd:df9:11e3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3cbf31bb-9701-4efe-c04d-08d804ea83bd
-x-ms-traffictypediagnostic: HK0P153MB0178:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB017837D6D447A2F05755DA38BF8C0@HK0P153MB0178.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 041963B986
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AJoq3o5uM+MXjdioGNyvVm/8pD9qGd/SF1Tb6+IIVvkMt8IbJYN4s9HK0Q+KytobW4SKz8Beq9Yu7aP+xt96ShotIt9K8eW/JoNwptBaiRl930tjokqkt/d/yxHGsHgplVJIPIYMtgYsKdBt8yj+UWFQ+4iLDPrVbokb4X6iWIRErYHkEHo/ch9dI0bUdCfpOQJamv3LNTZHlkZsL+oXWimTHhUKWTRivwZpyM6R1a5dAht248jcqlqowWfLkhzyFEDAgeglzoKpc6C5V9e4vZPCGoOm53p3CRAENAGDpS7/p7H5Kg3qoymIRBj8+XwI81OXu+RpQLMxO2mS+y6bhi2X9SQyY+Qo/6jNFL1Y5Z0jNd4rqeJL7/vTNpCnp19c
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0322.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(39860400002)(366004)(376002)(82960400001)(82950400001)(10290500003)(86362001)(478600001)(8990500004)(8676002)(8936002)(76116006)(64756008)(66556008)(66946007)(66476007)(66446008)(7416002)(52536014)(110136005)(316002)(54906003)(5660300002)(6506007)(71200400001)(4326008)(186003)(6636002)(55016002)(9686003)(2906002)(4744005)(33656002)(83380400001)(7696005)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: z2r1Hs48ybbDJvA7SyGhidLhRV2vPocDxKx06doD4of/+mYwVZTuVjp2LreQamdQW/91WswXNt82YRhwYxAAL4WliBEe2nwZfOPR5M23t5MHXrZrb+HHXZf7iZ5DrySWpdDlxk+4CYUYXVj/IPq/770Qau5eaPCuOJ0Fs6s4TL+/Zq0e7IX+wb+Hs8rnHvejsliPhLTZDSwj06BVmPQbyPdsOK3ymRh8Q4UB9MkAIhM0Yyi+jSDaKi6xaayYW7Cdk4kT33fsM1eVJEK9PHZDSMz+2vbjDXY9CHJ/ylgX/BLxO+HfGi9Uja0lPAtn7LuiRXrAu8IShb45iQ3E1/5vy5TOIB2OaX0mRVgZLy/AA606ssog7EUVnJhWDRJ6RJ8krpcdPDFVH+rv850/X1k+Uh3ob8ng3XPzAfp+q0Az8N/O0qsWPIWPxdO/fnUBXOJb3uiQ9M3cwKRfqxk44UxNnnP8xS9VK1l6XhxVlZ2bEc4p1R644EfTgCgFG48OdKZMlqnAnwhUfdnPMnjT286PUbGqgeuVpiepFgXiSBNt+fsvgm+fgt6w3xq3/YLSGtu+
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from BN7PR21MB1684.namprd21.prod.outlook.com (2603:10b6:406:af::14)
+ by BN6PR21MB0129.namprd21.prod.outlook.com (2603:10b6:404:93::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.5; Sun, 31 May
+ 2020 16:49:29 +0000
+Received: from BN7PR21MB1684.namprd21.prod.outlook.com
+ ([fe80::70e0:a986:9935:f045]) by BN7PR21MB1684.namprd21.prod.outlook.com
+ ([fe80::70e0:a986:9935:f045%7]) with mapi id 15.20.3088.000; Sun, 31 May 2020
+ 16:49:29 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     tglx@linutronix.de, mingo@redhat.com, rdunlap@infradead.org,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, peterz@infradead.org,
+        allison@lohutok.net, alexios.zavras@intel.com,
+        gregkh@linuxfoundation.org, decui@microsoft.com, namit@vmware.com,
+        mikelley@microsoft.com, longli@microsoft.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: [PATCH v3] x86/apic/flat64: Add back the early_param("apic", parse_apic)
+Date:   Sun, 31 May 2020 09:48:59 -0700
+Message-Id: <20200531164859.43903-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: CO2PR06CA0075.namprd06.prod.outlook.com
+ (2603:10b6:104:3::33) To BN7PR21MB1684.namprd21.prod.outlook.com
+ (2603:10b6:406:af::14)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:a:f442:3e50:43bd:a522) by CO2PR06CA0075.namprd06.prod.outlook.com (2603:10b6:104:3::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Sun, 31 May 2020 16:49:27 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [2001:4898:80e8:a:f442:3e50:43bd:a522]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 48842b0f-1dfd-4dcb-62c8-08d8058295dd
+X-MS-TrafficTypeDiagnostic: BN6PR21MB0129:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR21MB01295D702CBBD86791D8A0AFBF8D0@BN6PR21MB0129.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 0420213CCD
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +nkjU0dV1hTSCIvQO/xQ0Lyfbf0arQUB/Aupe+wOaAssPyquLp6uqlpCR5vIONQihxVoU+RzfKw5vbaLpGAvpDSMJKsZPoZ/HKWOM0qAXezLGzfc6cPlbA1SD0G6jExb3+8hSdjkJf9zdYo+mSZ0+X6fWsyYaEjIrVKdVEzlcGjK+duqxWVAi79+ZKcbtn9SRBpFPnYHfgcCI4e/4njCSce+U+1DdQRbq1/7dBhWHEcoeue1NheCxWUwT6qtEaJOXwET6DqujtvBh/70DAPu537fJHGZEOxhDgyai/0LBjQDDtyKU013miH9ZaN63GHnQhUOfZ2OaJ8+3vP876x4KiNoxQlVgWI4woFfQL1XFzjdLIY78cJQHQKABc0rgjMv
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR21MB1684.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(136003)(376002)(396003)(346002)(5660300002)(1076003)(8676002)(66556008)(86362001)(52116002)(7696005)(82950400001)(316002)(82960400001)(66946007)(7416002)(83380400001)(6666004)(6486002)(4326008)(2906002)(6636002)(66476007)(16526019)(36756003)(2616005)(3450700001)(8936002)(478600001)(10290500003)(186003)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: XoFe/67/wnBaSewIi3f6O9Y8iJVuz0JugzumCBFqEV3W1WJwCf+MAJLRXVwyba+0E/LwnS1CgKK5EgfrIiuJlH2JKBLmicHG/Ry/sFlNG7TBTcxrXbne7YWVAlZMO4qFph3tCazT/enlTqMBMU3HC5qBCzvMGtd39Qu3f+J5pjtKDsffwwTOIuLDAH+drB9+CXz3d4zAvNxZWHbpRZyQ4N5AtX+SZZDxQgMcuBvTkzxM+TKKVfzxsxjcANMiQ9q7T1IkOTibmAXZ/NVKP0lYH/JnfNtw/GiG6NSa+DUhbQ+BNxTUQddh9EucQmYVTUq6Mrnnr6TwptLknjuYMdhPOeQOu74MIbbr/s/3OUDKIERRLpWGdtrymAv+ar/9eF09W2SspwQVT539NyqOgJptQpMT6r3yMi04Vrix9n9ZIgO6/cjmdbcDqoSKwn+geY6WWE5avguW+aSk5mqie99pmjKwFv+Iopvj1VUDRSzl/I85FCVH3kjGYklzmj6WWVrVMFV78Q0EpWV9ul7xc9r81uMP9jPGTFYIqeJBHVed+ww=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cbf31bb-9701-4efe-c04d-08d804ea83bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2020 22:40:54.5907
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48842b0f-1dfd-4dcb-62c8-08d8058295dd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2020 16:49:29.5024
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vLU8DgEmuKQPF/VqSao2PDoaqHVIZy0VA+rl7uamuSx+NgnXazdQQ/oKZngmqsNFBbGB2k8jIfOpdUDffW225Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0178
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SKWtLIbStgcsgggzK64QQ9Fh862QT19F5H0/kw4VsuajbUZgNohlg/V2ZulNMrcqsUsZxIFOtOcf3NXO8DDJJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0129
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-PiBGcm9tOiBSYW5keSBEdW5sYXAgPHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4NCj4gU2VudDogRnJp
-ZGF5LCBNYXkgMjksIDIwMjAgNjozMyBBTQ0KPiBIaSwNCj4gTG9va3MgbGlrZSB5b3Ugd2lsbCBh
-bHNvIG5lZWQgdG8gdXBkYXRlDQo+IERvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2VybmVsLXBh
-cmFtZXRlcnMudHh0LCB3aGVyZSBpdCBzYXlzOg0KPiANCj4gCQkJRm9yIFg4Ni0zMiwgdGhpcyBj
-YW4gYWxzbyBiZSB1c2VkIHRvIHNwZWNpZnkgYW4gQVBJQw0KPiAJCQlkcml2ZXIgbmFtZS4NCj4g
-LS0NCj4gflJhbmR5DQoNCkhpIFJhbmR5LCANClRoYW5rcyBmb3IgeW91IHJlbWluZGVyISBJIGp1
-c3QgcG9zdGVkIGEgdjIgZm9yIHRoaXMgd2l0aCB5b3UgQ2MnZC4NCg0KVGhhbmtzLA0KLS0gRGV4
-dWFuDQo=
+parse_apic() allows the user to try a different APIC driver than the
+default one that's automatically chosen. It works for X86-32, but
+doesn't work for X86-64 because it was removed in 2009 for X86-64 by
+commit 7b38725318f4 ("x86: remove subarchitecture support code"),
+whose changelog doesn't explicitly describe the removal for X86-64.
+
+The patch adds back the functionality for X86-64. The intent is mainly
+to work around an APIC emulation bug in Hyper-V in the case of kdump:
+currently Hyper-V does not honor the disabled state of the local APICs,
+so all the IOAPIC-based interrupts may not be delivered to the correct
+virtual CPU, if the logical-mode APIC driver is used (the kdump
+kernel usually uses the logical-mode APIC driver, since typically
+only 1 CPU is active). Luckily the kdump issue can be worked around by
+forcing the kdump kernel to use physical mode, before the fix to Hyper-V
+becomes widely available.
+
+The current algorithm of choosing an APIC driver is:
+
+1. The global pointer "struct apic *apic" has a default value, i.e
+"apic_default" on X86-32, and "apic_flat" on X86-64.
+
+2. If the early_param "apic=" is specified, parse_apic() is called and
+the pointer "apic" is changed if a matching APIC driver is found.
+
+3. default_acpi_madt_oem_check() calls the acpi_madt_oem_check() method
+of all APIC drivers, which may override the "apic" pointer.
+
+4. default_setup_apic_routing() may override the "apic" pointer, e.g.
+by calling the probe() method of all APIC drivers. Note: refer to the
+order of the APIC drivers specified in arch/x86/kernel/apic/Makefile.
+
+The patch is safe because if the apic= early param is not specified,
+the current algorithm of choosing an APIC driver is unchanged; when the
+param is specified (e.g. on X86-64, "apic=physical flat"), the kernel
+still tries to find a "more suitable" APIC driver in the above step 3 and
+4: e.g. if the BIOS/firmware requires that apic_x2apic_phys should be used,
+the above step 4 will override the APIC driver to apic_x2apic_phys, even
+if an early_param "apic=physical flat" is specified.
+
+On Hyper-V, when a Linux VM has <= 8 virtual CPUs, if we use
+"apic=physical flat", sending IPIs to multiple vCPUs is still fast because
+Linux VM uses the para-virtualized IPI hypercalls: see hv_apic_init().
+
+The patch adds the __init tag for flat_acpi_madt_oem_check() and
+physflat_acpi_madt_oem_check() to avoid a warning seen with "make W=1":
+flat_acpi_madt_oem_check() accesses cmdline_apic, which has a __initdata
+tag.
+
+Fixes: 7b38725318f4 ("x86: remove subarchitecture support code")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+
+Changes in v2:
+  Updated Documentation/admin-guide/kernel-parameters.txt. [Randy Dunlap]
+  Changed apic_set_verbosity().
+  Enhanced the changelog.
+
+Changes in v3:
+  Added the __init tag for flat_acpi_madt_oem_check() and
+physflat_acpi_madt_oem_check() to avoid a warning seen with "make W=1".
+  (Thanks to kbuild test robot <lkp@intel.com>).
+
+  Updated the changelog for the __init tag.
+
+ .../admin-guide/kernel-parameters.txt         | 11 +++++--
+ arch/x86/kernel/apic/apic.c                   | 11 +++----
+ arch/x86/kernel/apic/apic_flat_64.c           | 31 +++++++++++++++++--
+ 3 files changed, 40 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7bc83f3d9bdf..c4503fff9348 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -341,10 +341,15 @@
+ 			Format: { quiet (default) | verbose | debug }
+ 			Change the amount of debugging information output
+ 			when initialising the APIC and IO-APIC components.
+-			For X86-32, this can also be used to specify an APIC
+-			driver name.
++			This can also be used to specify an APIC driver name.
+ 			Format: apic=driver_name
+-			Examples: apic=bigsmp
++			Examples:
++			  On X86-32:  apic=bigsmp
++			  On X86-64: "apic=physical flat"
++			  Note: the available driver names depend on the
++			  architecture and the kernel config; the setting may
++			  be overridden by the acpi_madt_oem_check() and probe()
++			  methods of other APIC drivers.
+ 
+ 	apic_extnmi=	[APIC,X86] External NMI delivery setting
+ 			Format: { bsp (default) | all | none }
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index e53dda210cd7..6f7d75b6358b 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2855,13 +2855,10 @@ static int __init apic_set_verbosity(char *arg)
+ 		apic_verbosity = APIC_DEBUG;
+ 	else if (strcmp("verbose", arg) == 0)
+ 		apic_verbosity = APIC_VERBOSE;
+-#ifdef CONFIG_X86_64
+-	else {
+-		pr_warn("APIC Verbosity level %s not recognised"
+-			" use apic=verbose or apic=debug\n", arg);
+-		return -EINVAL;
+-	}
+-#endif
++
++	/* Ignore unrecognized verbosity level setting. */
++
++	pr_info("APIC Verbosity level is %d\n", apic_verbosity);
+ 
+ 	return 0;
+ }
+diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
+index 7862b152a052..da8f3640453f 100644
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -23,9 +23,34 @@ static struct apic apic_flat;
+ struct apic *apic __ro_after_init = &apic_flat;
+ EXPORT_SYMBOL_GPL(apic);
+ 
+-static int flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
++static int cmdline_apic __initdata;
++static int __init parse_apic(char *arg)
+ {
+-	return 1;
++	struct apic **drv;
++
++	if (!arg)
++		return -EINVAL;
++
++	for (drv = __apicdrivers; drv < __apicdrivers_end; drv++) {
++		if (!strcmp((*drv)->name, arg)) {
++			apic = *drv;
++			cmdline_apic = 1;
++			return 0;
++		}
++	}
++
++	/* Parsed again by __setup for debug/verbose */
++	return 0;
++}
++early_param("apic", parse_apic);
++
++
++static int __init flat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
++{
++	if (!cmdline_apic)
++		return 1;
++
++	return apic == &apic_flat;
+ }
+ 
+ /*
+@@ -157,7 +182,7 @@ static struct apic apic_flat __ro_after_init = {
+  * We cannot use logical delivery in this case because the mask
+  * overflows, so use physical mode.
+  */
+-static int physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
++static int __init physflat_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+ {
+ #ifdef CONFIG_ACPI
+ 	/*
+-- 
+2.19.1
+
