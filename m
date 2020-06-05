@@ -2,143 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 530EC1EF2C5
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jun 2020 10:08:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 856D11EF30B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Jun 2020 10:27:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgFEIIU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 5 Jun 2020 04:08:20 -0400
-Received: from mail-eopbgr1320134.outbound.protection.outlook.com ([40.107.132.134]:33757
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726024AbgFEIIT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:08:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SrRxccQHCMWKwhwWJItiUfgzgb38mIKcWkab+V3TJILcXF1bimnn3J0880olrkgxtmt/ncSEcESnmSLDUyxivoYHsOQ6tlIbNZCx1gXhN0nO6iSyrSq88jWW0AwqQblJ20THQiJ8GxkD1/430qv4NTPJljnL94BUqzBuESNx5P4vgeVWN7EsA77YlTN95TPSlZjyJcTdvEledSXma9/KzFob+PJaNyB0N7WBYL6X/omjB6tWLJkkL3rKeDn28LeDj4GRZNQW9t+7yx93ot6tdN5cWUKXTCUAJ4raortOsYbI3Z//pDTV6E1SsqirHzJ5B8ReeQCzdtgLuFsl+MhI7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HDFMXAIl6aXHyjHTKS3V4aNdReoVw0GlhlTp7+6lAoQ=;
- b=d4LW6AHSdwow3gkLhuXMqjcKXwg4Gk89GSWLEteE5liKfRgCs8cpkNKEhbXYK/7sxLAlLO/D73V/cC6pnZiaWCorvuWpt4BHeTdSjZ2Q8D+r1rntjqbjKLAxO45aGIcqRXBgcv0kG+5nGSArFDsA4oraFe9a0kwsU8L7dhovs2sqEV7yjsj9WMwez1wxjHV5z5paX2Uh12auaDKnxiAf8a/+jmIcCjan/Yb3BFNY6rtO4Ol05DGSarNAUFVPl/eN91pdMcEgrYGEeCNfeiwKPH28BPBQ2Yub13PIVBikIy0H4rq/OrTT51qbfDRZXhFV4H9DWXRUYk3CMeajj8QjWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HDFMXAIl6aXHyjHTKS3V4aNdReoVw0GlhlTp7+6lAoQ=;
- b=MzzHx0N3LY9z7Jo60KewAoy0ptmh5q9ZB8k7B2ZOFK2kGL3jaFts7lAkRBxDbvV01faeFZuufv2qWfa26M/c2RbrJNtce5H91oAsPZU6jMw2HCRfEBQqyhvmTxw12S2rzMJLxWo18g1IuDx2d72MoosdgIWQinupkDHE0lA9cXg=
-Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b5::19)
- by HK0P153MB0179.APCP153.PROD.OUTLOOK.COM (2603:1096:203:29::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.3; Fri, 5 Jun
- 2020 08:07:56 +0000
-Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
- ([fe80::e567:3a32:6574:8983]) by HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
- ([fe80::e567:3a32:6574:8983%7]) with mapi id 15.20.3088.011; Fri, 5 Jun 2020
- 08:07:56 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Denis Efremov <efremov@linux.com>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] scsi: storvsc: Remove memset before memory freeing in
- storvsc_suspend()
-Thread-Topic: [PATCH] scsi: storvsc: Remove memset before memory freeing in
- storvsc_suspend()
-Thread-Index: AQHWOw9FnOyuSXdfiUiTPbK6Paq606jJqmCQ
-Date:   Fri, 5 Jun 2020 08:07:55 +0000
-Message-ID: <HK0P153MB03228CB6B766D5FF30FBF751BF860@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
-References: <CAA42JLat6Ern5_mztmoBX9-ONtmz=gZE3YUphY+njTa+A=efVw@mail.gmail.com>
- <20200605075934.8403-1-efremov@linux.com>
-In-Reply-To: <20200605075934.8403-1-efremov@linux.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-05T08:07:53Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=32441352-9973-4b90-8951-239ca2a9e099;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: linux.com; dkim=none (message not signed)
- header.d=none;linux.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:600:a280:7f70:e404:4689:ed94:8298]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 998a2855-04c5-49a2-4754-08d809278e00
-x-ms-traffictypediagnostic: HK0P153MB0179:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB0179DB49481F4F49BB19895CBF860@HK0P153MB0179.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-forefront-prvs: 0425A67DEF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ++0BFT54S70KM22qW1dtfJPCAou/1km57TCFP6LwPQtgAfno8RbWz6ahAbWTPqEJI7mVs5VnQ0W6N0aQfRR4dVFH92Lm6TuPON2GC+GwqBf/PY4MTxTGxHcSzVobKzuPvMrTFgS5pJ5MCWpnLQa8BN6e9WBwp/iUSazDxsMdEjHgkSbXquzjTN4vDoFxcOcuukAaLOtjsZFoRvBXPBmcjhUlCE3MSQxRBAFo+5Q+gcqQI1x/+2P6PNWEz/9AByeqlytfBexBQwqk0ng06bPauTBc9l46hFBsLSJsxPj+0v99lpP1iR9ON7k30wOalfRRqIn1yuQajrrhLa2urucavA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0322.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(52536014)(8676002)(33656002)(55016002)(83380400001)(5660300002)(9686003)(186003)(66946007)(8936002)(6636002)(76116006)(64756008)(66556008)(66476007)(66446008)(4326008)(110136005)(86362001)(478600001)(7696005)(316002)(53546011)(6506007)(82950400001)(10290500003)(54906003)(82960400001)(71200400001)(2906002)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: X4E2mZU2JVikIkir8/qpwVTTooi5Z/YbxsFbadroyuKLAvhSmGI0gd3+kmuQc1I8NcTsRJHzF1lzCKnNpFORkxV+Vgc/30apVDdR0vHvQE2DGWu5CTTqRBRPS1EVaoR0UzqCpYVT6UAtdIWtoDNZfNuUVzSbVjbdnGn9H/wp0QrBB1S/SxcnFlhvDn8nI7KsaxAEG7NnXgnF9IQJGTwjlL3KavtwKjvLr7sqO6JBIRLM6uj0y/7FuTSLl/WCrSwE/kETuHwhlBynm530AuZB/GPgjxf/FTTI7fHwFgdDXoHORXzNCPb+MAyAk6YIAfUu4SfW3JBMGL25Ots/gS1zpXctUSR3mn9Bu16X/fVURCC3OkZPW6eDytU2GTW63qd6K0QcUwMQGys9iRew/QYA6t2V4g/LymyyfCr1DE+oKsP829QPVfBJMQjbukHT+PkpPYkzfS22qF7R6YbU1UcTfRXoB5QlXAwvdL60uWDUGq7V7WayXiYXtc3b2MKVyOyTGZrpLVBJcWnz08O2DrzgfyLuKntuso0RjXc779RLCm9wEZnemds4i9fSYgKrTitW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726084AbgFEI1P (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 5 Jun 2020 04:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgFEI1P (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:27:15 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4343AC08C5C2
+        for <linux-hyperv@vger.kernel.org>; Fri,  5 Jun 2020 01:27:15 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id a13so8757390ilh.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 05 Jun 2020 01:27:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=j6bnnIKOJFoxHW/uxunwpW+CXUff1NB7COjGjJ9tRRM=;
+        b=rcYPs9B4I87CB2/Wf5ryvFZ7eOgwt3oFbhSy6XxpUtg3TuHP5X4HeYjZVmPW6+NzVO
+         iV85+rpAZpmjqpFCGNYDZzCFtmomPtXWG9Wbtfd+EDMiXefrZ9d1X9xs1oy/0TQpaEcP
+         /Clag2NpLWjw3ksIsPc7767ErLM/briDwBbZ6SdbtIZ9wvB4ywBlpUHNTAQru38o8tNk
+         RwXhCHtJksxxU3UEHiccjxYjCR2rcS6KrnYejMAskoQRMQ/esxRYSHLKKLb8dO77g8UA
+         jYG3DS9oDcZAxJMkkoMEvb5LY9+igUY1YD7pW0Jp/2Q/kPGxyFZss6CNp3QPx5E4e7IF
+         yvfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=j6bnnIKOJFoxHW/uxunwpW+CXUff1NB7COjGjJ9tRRM=;
+        b=hXEduMtdKRuNcY7B2tJFQ/bj206e9KUZfnruSJ1z4HAM8Teuz6mZE0wXF0NwTtbe3I
+         7z3PLa8jT+V/BQRo50ZR/+abpD7nX5vdYx7YJJYGOnBLClpW4B7dSl19WfoCtZwX6xPP
+         X4dS91zP+lUvR0fFjM4ILRXAuHhr32inJ7dDZ4iMtBI4kzlawDhhsk33khcl2IkbJL9t
+         gIvmp37RldGuAdZffJ6Cy3HfPi2bVinF4p6jyeNiQVopEfRVchj27dpg53jLjnGnZIUw
+         bFushFZnbR6ReQMJH2a9Fx6bjJS1yS2ruwo+vIw3EvglZDAXoMOXqmdpJUhzje8Vy1yw
+         7rGQ==
+X-Gm-Message-State: AOAM5337s51Qo8obOReKgULc2zTAKxY5sUZDXrDQb24dX9Ec9kWIMJHH
+        5PXbBxO7EpCtH6slcLa0YSenEjwp7N13RIkBs08=
+X-Google-Smtp-Source: ABdhPJwcr2tp984f+lBCOxzkdBFebV929XGLebR9UyCFzQB+dAkWZ6hhHZj0Gc9c0UNYhOQeDnZuKy2OQpDtyesl1GQ=
+X-Received: by 2002:a92:d704:: with SMTP id m4mr88065iln.248.1591345634083;
+ Fri, 05 Jun 2020 01:27:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 998a2855-04c5-49a2-4754-08d809278e00
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2020 08:07:55.9305
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oQtxlgFT16yRBwDatl5gyAZ80tA1S0STEB7diwxrLYFl37cmbrSarqI+ap5lXB80V6z7++QRqI/s16zo1+oKzw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0179
+Received: by 2002:a02:1408:0:0:0:0:0 with HTTP; Fri, 5 Jun 2020 01:27:13 -0700 (PDT)
+From:   Andy Jack Chin <andychinesq1@gmail.com>
+Date:   Fri, 5 Jun 2020 08:27:13 +0000
+Message-ID: <CAL4QAVuu40g6WAewzD0OL1C6W1PxF8hghqz-vfSa1bweyqaD3g@mail.gmail.com>
+Subject: Guten Tag, wie geht es ihnen?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Denis Efremov <efremov@linux.com>
-> Sent: Friday, June 5, 2020 1:00 AM
-> To: Dexuan Cui <decui@microsoft.com>; Michael Kelley
-> <mikelley@microsoft.com>
-> Cc: Denis Efremov <efremov@linux.com>; James E . J . Bottomley
-> <jejb@linux.ibm.com>; Martin K . Petersen <martin.petersen@oracle.com>;
-> linux-hyperv@vger.kernel.org; Linux SCSI List <linux-scsi@vger.kernel.org=
->;
-> Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-> Subject: [PATCH] scsi: storvsc: Remove memset before memory freeing in
-> storvsc_suspend()
->=20
-> Remove memset with 0 for stor_device->stor_chns in storvsc_suspend()
-> before the call to kfree() as the memory contains no sensitive informatio=
-n.
->=20
-> Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
-> Suggested-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  drivers/scsi/storvsc_drv.c | 3 ---
->  1 file changed, 3 deletions(-)
->=20
-> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> index 072ed8728657..2d90cddd8ac2 100644
-> --- a/drivers/scsi/storvsc_drv.c
-> +++ b/drivers/scsi/storvsc_drv.c
-> @@ -2035,9 +2035,6 @@ static int storvsc_suspend(struct hv_device
-> *hv_dev)
->=20
->  	vmbus_close(hv_dev->channel);
->=20
-> -	memset(stor_device->stor_chns, 0,
-> -	       num_possible_cpus() * sizeof(void *));
-> -
->  	kfree(stor_device->stor_chns);
->  	stor_device->stor_chns =3D NULL;
->=20
-> --
+Hallo mein guter Freund.
 
-Denis, thank you for fixing this!
+Guten Tag, wie geht es ihnen? Es ist zu lange her, dass ich von dir
+h=C3=B6re. Im Moment freue ich mich sehr, Sie =C3=BCber meinen Erfolg bei d=
+er
+=C3=9Cberweisung dieser Erbschaftsgelder in Zusammenarbeit mit einem neuen
+Partner aus Indien zu informieren. Er ist ein Deutscher, lebt aber in
+Indien, aber derzeit bin ich in Indien f=C3=BCr Investitionsprojekte mit
+meinem eigenen Anteil an der Gesamtsumme von Millionen Dollar. In der
+Zwischenzeit habe ich Ihre bisherigen Bem=C3=BChungen und Versuche, mich
+bei der =C3=9Cberweisung dieser Erbschaftsgelder zu unterst=C3=BCtzen, nich=
+t
+vergessen, obwohl es uns irgendwie gescheitert ist. Ich wei=C3=9F sehr gut,
+dass ich Sie in dieser Angelegenheit kontaktiert habe. Jetzt m=C3=B6chte
+ich, dass Sie meine Sekret=C3=A4rin in der Republik Lome Togo, Westafrika,
+kontaktieren. Sie hei=C3=9Ft Frau Alina Joyce Bama und wird von ihr unter
+ihrer E-Mail-Adresse ( blessedmrsalinajoycebama@outlook.com ) gebeten
+Wenden Sie sich an die Ecobank, wenn ich die Summe von 200.000,00 USD
+f=C3=BCr Ihre Entsch=C3=A4digung behalten habe. Dieser Entsch=C3=A4digungsf=
+onds ist
+f=C3=BCr alle bisherigen Bem=C3=BChungen und Versuche vorgesehen, mich bei =
+der
+abgeschlossenen Transaktion zu unterst=C3=BCtzen. Ich habe Ihre damaligen
+Bem=C3=BChungen sehr gesch=C3=A4tzt. Wenden Sie sich an meine Sekret=C3=A4r=
+in, Frau
+Alina Joyce Bama, und weisen Sie sie an, wohin die Ecobank den
+Gesamtbetrag von 200.000,00 USD =C3=BCberweisen wird.
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Bitte lassen Sie mich sofort wissen, dass die Ecobank den Fonds
+200.000,00 USD auf Ihr eigenes Bankkonto =C3=BCberweist. damit ich wei=C3=
+=9F,
+dass du auch sehr gl=C3=BCcklich mit mir bist und wir die Freude nach all
+dem Leid zu dieser Zeit teilen. Im Moment bin ich wegen der
+Investitionsprojekte, die ich mit meinem neuen Partner vor mir habe,
+zu besch=C3=A4ftigt. Denken Sie schlie=C3=9Flich daran, dass ich in Ihrem N=
+amen
+die Anweisung an meine Sekret=C3=A4rin, Frau Alina Joyce Bama,
+weitergeleitet habe, den Fonds 200.000,00 USD von der Ecobank zu
+erhalten F=C3=BChlen Sie sich frei und setzen Sie sich mit Frau Alina Joyce
+Bama, meiner Sekret=C3=A4rin, in Verbindung. Sie wird sich unverz=C3=BCglic=
+h in
+Ihrem Namen mit der Ecobank in Verbindung setzen.
 
+Freundliche Gr=C3=BC=C3=9Fe.
+Dr. Andy Jack Chin.
