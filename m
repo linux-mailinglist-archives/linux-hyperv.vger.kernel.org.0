@@ -2,94 +2,74 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64C5E1FB1E6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jun 2020 15:21:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 355EF1FB212
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jun 2020 15:28:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgFPNVd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 16 Jun 2020 09:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
+        id S1728553AbgFPN2V (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 16 Jun 2020 09:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgFPNVd (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:21:33 -0400
+        id S1726692AbgFPN2U (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 16 Jun 2020 09:28:20 -0400
 Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1472D206F1;
-        Tue, 16 Jun 2020 13:21:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B1112098B;
+        Tue, 16 Jun 2020 13:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592313692;
-        bh=NzmkbhpV6gQ0cqf7U1NrQrUNv6zLElTT90CV/gT2kXo=;
+        s=default; t=1592314100;
+        bh=o16TOGaXPe+mfeD5YOCp9VLSgp7Z61k04+2zqhJahyE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ofTlfOUw8BPhx2Iu5uPfykNaA7iGUrhxxKy/hPpiDlwfnFVJh00fKYFJlUK9WaU7g
-         wWH/Kw5fsg5b0N0Iee63zhTBNEd4mQraUaXU3u+9ASbhkS64YuHwRgqAi0NryX6IRJ
-         YgEi0dom95iZDI/5Z8TMtN4r7+AjR9G/CHQGGiOM=
-Date:   Tue, 16 Jun 2020 09:21:30 -0400
+        b=gmnWwjuC907MuTP3R+2w7BNh+0ddDUn+NqTB5TaBAoT7R2ybKpoEoWwLY0dd+TVCG
+         UduXuIMIx8j0qk8c0CJ2LoxjuS+pdutttJszGgZSDYkwQKoDV12+4BnAJuEhWkXpsz
+         YGAY/pQsAevEClH4v5C0DdhhMGZOvk8oZRgb+EdU=
+Date:   Tue, 16 Jun 2020 09:28:19 -0400
 From:   Sasha Levin <sashal@kernel.org>
 To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Ville Syrj??l?? <ville.syrjala@linux.intel.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        "Ursulin, Tvrtko" <tvrtko.ursulin@intel.com>,
-        linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        haiyangz@microsoft.com, LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        spronovo@microsoft.com, wei.liu@kernel.org,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        iourit@microsoft.com, kys@microsoft.com
+Cc:     Thomas Zimmermann <tzimmermann@suse.de>, alexander.deucher@amd.com,
+        chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
+        Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        gregkh@linuxfoundation.org
 Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-Message-ID: <20200616132130.GO1931@sasha-vm>
+Message-ID: <20200616132819.GP1931@sasha-vm>
 References: <20200519163234.226513-1-sashal@kernel.org>
- <CAPM=9txZpiCGkv3jiBC1F8pTe4A2pqWpQDyjRBXk2roFqw+0+Q@mail.gmail.com>
- <CAPM=9tx4wh-Lk6Dffsdh-7mYvXx+GX2AxhrGqFgyN8-AWJvP6A@mail.gmail.com>
- <20200616105156.GE1718@bug>
+ <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
+ <20200616105112.GC1718@bug>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200616105156.GE1718@bug>
+In-Reply-To: <20200616105112.GC1718@bug>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:51:56PM +0200, Pavel Machek wrote:
->> > Having said that, I hit one stumbling block:
->> > "Further, at this time there are no presentation integration. "
->> >
->> > If we upstream this driver as-is into some hyperv specific place, and
->> > you decide to add presentation integration this is more than likely
->> > going to mean you will want to interact with dma-bufs and dma-fences.
->> > If the driver is hidden away in a hyperv place it's likely we won't
->> > even notice that feature landing until it's too late.
->> >
->> > I would like to see a coherent plan for presentation support (not
->> > code, just an architectural diagram), because I think when you
->> > contemplate how that works it will change the picture of how this
->> > driver looks and intergrates into the rest of the Linux graphics
->> > ecosystem.
->> >
->> > As-is I'd rather this didn't land under my purview, since I don't see
->> > the value this adds to the Linux ecosystem at all, and I think it's
->> > important when putting a burden on upstream that you provide some
->> > value.
->>
->> I also have another concern from a legal standpoint I'd rather not
->> review the ioctl part of this. I'd probably request under DRI
->> developers abstain as well.
->>
->> This is a Windows kernel API being smashed into a Linux driver. I don't want to be
->> tainted by knowledge of an API that I've no idea of the legal status of derived works.
->> (it this all covered patent wise under OIN?)
+On Tue, Jun 16, 2020 at 12:51:13PM +0200, Pavel Machek wrote:
+>Hi!
 >
->If you can't look onto it, perhaps it is not suitable to merge into kernel...?
+>> > The driver creates the /dev/dxg device, which can be opened by user mode
+>> > application and handles their ioctls. The IOCTL interface to the driver
+>> > is defined in dxgkmthk.h (Dxgkrnl Graphics Port Driver ioctl
+>> > definitions). The interface matches the D3DKMT interface on Windows.
+>> > Ioctls are implemented in ioctl.c.
+>>
+>> Echoing what others said, you're not making a DRM driver. The driver should live outside
+>> of the DRM code.
+>>
 >
->What would be legal requirements so this is "safe to look at"? We should really
->require submitter to meet them...
+>Actually, this sounds to me like "this should not be merged into linux kernel". I mean,
+>we already have DRM API on Linux. We don't want another one, do we?
 
-Could you walk me through your view on what the function of the
-"Signed-off-by" tag is?
+This driver doesn't have any display functionality.
+
+>And at the very least... this misses API docs for /dev/dxg. Code can't really
+>be reviewed without that.
+
+The docs live here: https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/d3dkmthk/
 
 -- 
 Thanks,
