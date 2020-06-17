@@ -2,102 +2,112 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7473A1FB906
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Jun 2020 18:01:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 258A81FD287
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jun 2020 18:47:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732886AbgFPQAX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 16 Jun 2020 12:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732614AbgFPQAV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:00:21 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 584D620882;
-        Tue, 16 Jun 2020 16:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592323220;
-        bh=nhtRihdq0ZnRFzRQVLYSMJPsEUezpVlbdISEsa2u8F0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qwvcb5lGhEbAtTjUKYtG+m/I0Vwuvkg8ZwXwxUy/bdqyWvbARwe+nPbeVmI45HELY
-         k32Drk1lwyA1R4DgzpmrRhwMQlZjKM1yiKXnfWlV1syy8bYMgCU/PyQWMQedOAzL/O
-         SQnIfmHT3qkfUTsuJbwEYKQrubysqHO7QnSE1Kws=
-Date:   Tue, 16 Jun 2020 12:00:19 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>, alexander.deucher@amd.com,
-        chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
-        Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-Message-ID: <20200616160019.GQ1931@sasha-vm>
-References: <20200519163234.226513-1-sashal@kernel.org>
- <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
- <20200616105112.GC1718@bug>
- <20200616132819.GP1931@sasha-vm>
- <20200616144122.GA18447@duo.ucw.cz>
+        id S1726899AbgFQQrm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Jun 2020 12:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgFQQrm (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:47:42 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E316EC06174E;
+        Wed, 17 Jun 2020 09:47:41 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c71so2514744wmd.5;
+        Wed, 17 Jun 2020 09:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EzP90zRfteOPiS50AHA0iyJn5jZaMdoAKPdTATIDAk0=;
+        b=Ro/jAlAGw4M2CS3G8RW2pmQS0ola4zCJwUlkGuTXUbDBGqMbBtSiYZteSps6NttKMp
+         HkMJAlwjxnEBSRTJV2G6IBclkeXtjnXJSOoqrpgPpVXg6tTucJZeM9bUzE28ibqFnCWh
+         ezG1UHM8ATn0fUhAMrrgThRsQwTlQQY+BeqbGrGZ12LttEPvvla9u+k/SgwwhKrU8/LP
+         5sIzGTxXn6aO6LM8RDLtZnyQL+9ciyarmbpEFMvNh0URuRLjNRZM8eHwEXJy+FF7uL5e
+         mbhzsZryWAE8hFF9rf8kb3kx4RWpM9d8sBvWiuNiOSbIfR+IEBLIqv43CCixMDkAjwMB
+         ugVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EzP90zRfteOPiS50AHA0iyJn5jZaMdoAKPdTATIDAk0=;
+        b=R3hi57Kgkb0mjqiDhRpSTg08S5zcwkly11XksiFHmB5qSeBo8Bi3EyJuODDbC9hhQN
+         H0+/WPmyBQwsXucIdXVIrz7OFnHinTaSpdWztDfmZOAwAMpf6A4Gp1/3X30NcjWfDX28
+         VVi6JfH2HRAVigKAYnTKei8KTv+7kNn7yHDLrytNk+VhbdD81bR6gbbjEhTpYV+UIR1e
+         vw80rQNTXK+fDzuobbGaFUxL/ubkqd23Ghfq/+0CwXr5VFuzsGCMgQ6m1yeib5NcaW8B
+         /vRQlaVgEutbT0Bh327Zftat94rbTQzS0ZLMBm0qMPgUCnSY8uaclc2XRcWOlgrozdTw
+         xJ3A==
+X-Gm-Message-State: AOAM533j5D4StQDjqTyi01VaK14oEW4ugvnhjinxyBInujCTi/eQ7v2l
+        d6v8nf61quRQjZGbKsSAr8Y=
+X-Google-Smtp-Source: ABdhPJwz6NM2m53Nl29prWuICuKsCu4NxVmzz62srThpnPMfT5RbQ7t9ixisr3khn6OfyBYn1JD9Ng==
+X-Received: by 2002:a05:600c:21c2:: with SMTP id x2mr9532127wmj.33.1592412460358;
+        Wed, 17 Jun 2020 09:47:40 -0700 (PDT)
+Received: from localhost.localdomain (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id g3sm199165wrb.46.2020.06.17.09.47.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 09:47:39 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH 0/8] Drivers: hv: vmbus: Miscellaneous cleanups
+Date:   Wed, 17 Jun 2020 18:46:34 +0200
+Message-Id: <20200617164642.37393-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200616144122.GA18447@duo.ucw.cz>
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 04:41:22PM +0200, Pavel Machek wrote:
->On Tue 2020-06-16 09:28:19, Sasha Levin wrote:
->> On Tue, Jun 16, 2020 at 12:51:13PM +0200, Pavel Machek wrote:
->> > Hi!
->> >
->> > > > The driver creates the /dev/dxg device, which can be opened by user mode
->> > > > application and handles their ioctls. The IOCTL interface to the driver
->> > > > is defined in dxgkmthk.h (Dxgkrnl Graphics Port Driver ioctl
->> > > > definitions). The interface matches the D3DKMT interface on Windows.
->> > > > Ioctls are implemented in ioctl.c.
->> > >
->> > > Echoing what others said, you're not making a DRM driver. The driver should live outside
->> > > of the DRM code.
->> > >
->> >
->> > Actually, this sounds to me like "this should not be merged into linux kernel". I mean,
->> > we already have DRM API on Linux. We don't want another one, do we?
->>
->> This driver doesn't have any display functionality.
->
->Graphics cards without displays connected are quite common. I may be
->wrong, but I believe we normally handle them using DRM...
+Hi all,
 
-This is more similar to the accelerators that live in drivers/misc/
-right now.
+I went back to my "cleanup list" recently and I wrote these patches:
+here you can find, among other things,
 
->> > And at the very least... this misses API docs for /dev/dxg. Code can't really
->> > be reviewed without that.
->>
->> The docs live here: https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/d3dkmthk/
->
->I don't see "/dev/dxg" being metioned there. Plus, kernel API
+  1) the removal of the fields 'target_vp' and 'numa_node' from the
+     channel data structure, as suggested by Michael back in May;
 
-Right, this is because this entire codebase is just a pipe to the API
-I've linked, it doesn't implement anything new on it's own.
+  2) various cleanups for channel->lock, which is actually *removed
+     by the end of this series!  ;-)
 
->documentation should really go to Documentation, and be suitably
->licensed.
+I'm sure there is room for further "cleanups",  ;-) but let me check
+if these (relatively small) changes make sense first...
 
-While I don't mind copying the docs into Documentation, I'm concerned
-that over time they will diverge from the docs on the website. This is
-similar to how other documentation (such as the virtio spec) live out of
-tree to avoid these issues.
+Thanks,
+  Andrea
 
-w.r.t the licensing, again: this was sent under GPL2 (note the SPDX tags
-in each file), and the patches carry a S-O-B by someone who was a
-Microsoft employee at the time the patches were sent.
+Andrea Parri (Microsoft) (8):
+  Drivers: hv: vmbus: Remove the target_vp field from the vmbus_channel
+    struct
+  Drivers: hv: vmbus: Remove the numa_node field from the vmbus_channel
+    struct
+  Drivers: hv: vmbus: Replace cpumask_test_cpu(, cpu_online_mask) with
+    cpu_online()
+  Drivers: hv: vmbus: Remove unnecessary channel->lock critical sections
+    (sc_list readers)
+  Drivers: hv: vmbus: Use channel_mutex in channel_vp_mapping_show()
+  Drivers: hv: vmbus: Remove unnecessary channel->lock critical sections
+    (sc_list updaters)
+  scsi: storvsc: Introduce the per-storvsc_device spinlock
+  Drivers: hv: vmbus: Remove the lock field from the vmbus_channel
+    struct
+
+ drivers/hv/channel.c       |  9 +++------
+ drivers/hv/channel_mgmt.c  | 31 ++++++-------------------------
+ drivers/hv/hv.c            |  3 ---
+ drivers/hv/vmbus_drv.c     | 17 +++++------------
+ drivers/scsi/storvsc_drv.c | 16 +++++++++++-----
+ include/linux/hyperv.h     | 22 +++++++---------------
+ 6 files changed, 32 insertions(+), 66 deletions(-)
 
 -- 
-Thanks,
-Sasha
+2.25.1
+
