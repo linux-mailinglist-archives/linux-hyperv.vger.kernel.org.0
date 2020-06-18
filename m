@@ -2,134 +2,66 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2979C1FD2C1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Jun 2020 18:50:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D3731FEBA5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Jun 2020 08:43:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgFQQtX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Jun 2020 12:49:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
+        id S1727990AbgFRGnZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Jun 2020 02:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgFQQsJ (ORCPT
+        with ESMTP id S1727115AbgFRGnY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:48:09 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B91C0613ED;
-        Wed, 17 Jun 2020 09:48:09 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e1so3088678wrt.5;
-        Wed, 17 Jun 2020 09:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jO6YYKLcVc4zVnNFJ3vwcO4SaIx1I79j4ycIlYEFriM=;
-        b=dGPuDDIvXNEAfIMnvc6hzhIro0ysybgDo0L+ZYIyozSv6xaJx9m7uAQkGe1x+2DC0+
-         eiAABPwv27e67/k3fYv9ibRHiBjborGi+5GkyFUFaXD9CAKOmgGXw5nNMjtoRd2Scqkr
-         LBGoYPjTRBntsJCj9OmNIRRAeAwfpAMT8nxp+G4O3zp4hNCEexTbdsbhSIq1ymKpDYBN
-         VPv7d84x2hO/SBcBMgj+kiI1Ik7HSo0Km4HOuNiUHd9V24IAUT3Vp1qgTRAXdQZrEO6k
-         Uq6ceySpT6bIhxV36j3uk9imhs0UJDBjrWkqXGFeV5m2zK5A3Ygu0o/sxMTpGAVq9TI0
-         2YLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jO6YYKLcVc4zVnNFJ3vwcO4SaIx1I79j4ycIlYEFriM=;
-        b=ISP7Vm+l0GNDPazJaoc6OpR1KZk8cz8YgqaN3loS6SNwPLkDACjlCPql1b7B93xaYG
-         86aOhxxAE5GALQqhJNkUenDMTC5Zx0Gd+F5tqn5J1SGEVd20aoXXSxzkiV1Rp5tJat+g
-         lvRSVMVeUl0eSTLRyxbxeTBiZkHSP4P8Ui0mh8aWWpazRRr1BXf3UVD3WpRs6T5YVjXq
-         /8JF1oGLlNi4zjOGAncdurMai7q/7xjmPcRQvhTII/Or1ZXj2r+CboArZWw9TXCsBq5m
-         oeXuRF3csKDLdc9nHK+q1fI5/yJasTeC8yrgxO86NVRGaB53TVXqAWrZcmNJzvpbPBix
-         vQOg==
-X-Gm-Message-State: AOAM530JSMrrOP0mvfz18dsZwin1fiCWdJW89Z3fskhHX88grKrFQpj/
-        OAQnEOAQ+5kNGj4sdvFIMfxe41l7Z2BZhw==
-X-Google-Smtp-Source: ABdhPJx9FS5yJVTtenmTcnSfeuEKkEeHMt/a8Qf3ZsJoYR/a/YC2asbMiQpE/WXs3evNgivi1BbVoA==
-X-Received: by 2002:a5d:468d:: with SMTP id u13mr150370wrq.73.1592412487715;
-        Wed, 17 Jun 2020 09:48:07 -0700 (PDT)
-Received: from localhost.localdomain (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id g3sm199165wrb.46.2020.06.17.09.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:48:07 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 8/8] Drivers: hv: vmbus: Remove the lock field from the vmbus_channel struct
-Date:   Wed, 17 Jun 2020 18:46:42 +0200
-Message-Id: <20200617164642.37393-9-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200617164642.37393-1-parri.andrea@gmail.com>
-References: <20200617164642.37393-1-parri.andrea@gmail.com>
+        Thu, 18 Jun 2020 02:43:24 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DBDC0613ED;
+        Wed, 17 Jun 2020 23:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=MnNXAxpQLHOaMqStk9KRD+g+da8mFc/xMCqgIsVzzoQ=; b=ooI5Spr2GNPFCJmAN9ct2PlKo3
+        PUVMAre3WdizzapatnskE0YvKMD/jl2E7D+48mPdj+8fgkE4nGsxHaDaxqwan6OrJNH9ZPbxZTrnK
+        QbIBO13f86P3cdfNeTDkIczaP3MqoUkk12Q1bPokFEFzHbqF3/7sH/Y74RUNKylgasA5feZSUl9hG
+        BMXBEfBepXcl78GRzj+VXBmRLuP7UwADD7LUoESb74CXc9aWqylL2hnstmfu0ncNUOoW87x1SurcH
+        C5ap3uehlHPOuXkcx8JOWZv/btorO2yH8icOIe1Go+6NtcWbF4cjHBqej24X2KT6iU4VQEy+kgODF
+        QGzC3ncQ==;
+Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jloGU-0007vK-Cb; Thu, 18 Jun 2020 06:43:10 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: fix a hyperv W^X violation and remove vmalloc_exec
+Date:   Thu, 18 Jun 2020 08:43:04 +0200
+Message-Id: <20200618064307.32739-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The spinlock is (now) *not used to protect test-and-set accesses
-to attributes of the structure or sc_list operations.
+Hi all,
 
-There is, AFAICT, a distinct lack of {WRITE,READ}_ONCE()s in the
-handling of channel->state, but the changes below do not seem to
-make things "worse".  ;-)
+Dexuan reported a W^X violation due to the fact that the hyper hypercall
+page due switching it to be allocated using vmalloc_exec.  The problem
+is that PAGE_KERNEL_EXEC as used by vmalloc_exec actually sets writable
+permissions in the pte.  This series fixes the issue by switching to the
+low-level __vmalloc_node_range interface that allows specifing more
+detailed permissions instead.  It then also open codes the other two
+callers and removes the somewhat confusing vmalloc_exec interface.
 
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
----
- drivers/hv/channel.c      | 6 +-----
- drivers/hv/channel_mgmt.c | 1 -
- include/linux/hyperv.h    | 6 ------
- 3 files changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 8848d1548b3f2..3ebda7707e46a 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -129,12 +129,8 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
- 	send_pages = newchannel->ringbuffer_send_offset;
- 	recv_pages = newchannel->ringbuffer_pagecount - send_pages;
- 
--	spin_lock_irqsave(&newchannel->lock, flags);
--	if (newchannel->state != CHANNEL_OPEN_STATE) {
--		spin_unlock_irqrestore(&newchannel->lock, flags);
-+	if (newchannel->state != CHANNEL_OPEN_STATE)
- 		return -EINVAL;
--	}
--	spin_unlock_irqrestore(&newchannel->lock, flags);
- 
- 	newchannel->state = CHANNEL_OPENING_STATE;
- 	newchannel->onchannel_callback = onchannelcallback;
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 92f8bb2077a94..591106cf58fc0 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -317,7 +317,6 @@ static struct vmbus_channel *alloc_channel(void)
- 		return NULL;
- 
- 	spin_lock_init(&channel->sched_lock);
--	spin_lock_init(&channel->lock);
- 	init_completion(&channel->rescind_event);
- 
- 	INIT_LIST_HEAD(&channel->sc_list);
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 690394b79d727..38100e80360ac 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -840,12 +840,6 @@ struct vmbus_channel {
- 	 */
- 	void (*chn_rescind_callback)(struct vmbus_channel *channel);
- 
--	/*
--	 * The spinlock to protect the structure. It is being used to protect
--	 * test-and-set access to various attributes of the structure as well
--	 * as all sc_list operations.
--	 */
--	spinlock_t lock;
- 	/*
- 	 * All Sub-channels of a primary channel are linked here.
- 	 */
--- 
-2.25.1
-
+Peter noted that the hyper hypercall page allocation also has another
+long standing issue in that it shouldn't use the full vmalloc but just
+the module space.  This issue is so far theoretical as the allocation is
+done early in the boot process.  I plan to fix it with another bigger
+series for 5.9.
