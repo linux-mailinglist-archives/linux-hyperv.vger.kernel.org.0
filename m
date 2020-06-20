@@ -2,56 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D841A201531
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Jun 2020 18:22:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9382201FF7
+	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Jun 2020 04:58:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394487AbgFSQTX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Jun 2020 12:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390746AbgFSQSY (ORCPT
+        id S1732197AbgFTC6w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Jun 2020 22:58:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46258 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732074AbgFTC6w (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:18:24 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80721C0613EE;
-        Fri, 19 Jun 2020 09:18:24 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id t21so8014919edr.12;
-        Fri, 19 Jun 2020 09:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=66DS8cscbOrDDtJFLg4/sv1VZqtWg1mGwXAH3gSwi2w=;
-        b=UbD+cIfdXzYr/rZ1ERd4wfsIKJNa31io9WaMhqcq486ayiJe6jrTzIOa8ZTqLBisSd
-         O71oFljVG3Eay64l/d/sIbanCPTJaFIoCrl1bq8dG5d+itJ+cuOHhYsaMs4o7iVTQes+
-         NoslFybuA1UG8oJHUI53ftDzGHYJfJyDVVuzLXwo08spKLkJEdy+BYNgEURXCUb9B9FU
-         AXzNZPtQcjh7CKn9HzBCqt7i4HZjV/eQ8uRdrZBy8cGCauzoYTrPeRrpGM927qkldbfe
-         gZBduiPXxgKCOY2exRYSsMYn4s4QgtyMmRpDU6jpk2zV7w606zrJbbIUVvwTn6psGmoH
-         +Jsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=66DS8cscbOrDDtJFLg4/sv1VZqtWg1mGwXAH3gSwi2w=;
-        b=bOC8jvOMtpz4hGKEoh80T3jylRBi5Q1OMfqPIme3tqcP5XNIZgrPWk/SSGIlhn0a1c
-         eeHFeFH4n0wSs/+jTMTnYB30yUM/kLnl+wSbKXeZz8Qrsi969WvK5ov1Y8FY0M7yo5GG
-         6c4zxgVpxvNn1AEXeBn0p7ez/omaOmSICpHQ5wqFTURoa4ztqtL1ustY8XB3hzCCtIEf
-         TIHdathNsfDGSbltl8LzW9QGkZD++mmxvMicX5Aj+fV34c1T4At1joGcO1zaBHW9C0e6
-         4lykitI1kHqYTG/rnNK5aRFrxqYG0WuPbY6O3lxyRwK4LBZRPUtHT3425DMPPPtghDZU
-         p14A==
-X-Gm-Message-State: AOAM530LxiVGzrBBNvzzYwaoWFSlSvLYYUrhsMt3N20BUuhgm+eizaqq
-        smACdVpsDiyjvHCAVj9xGm4=
-X-Google-Smtp-Source: ABdhPJw3hCgZvXVzgIXNddGxi5BWYv8GmLBWoEx0wtBhcQNXiKk07b1OLPTwdmsMcQdazl7s0yf5xA==
-X-Received: by 2002:a50:d55c:: with SMTP id f28mr3987366edj.87.1592583502476;
-        Fri, 19 Jun 2020 09:18:22 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id jt16sm5059932ejb.57.2020.06.19.09.18.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:18:22 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 18:18:13 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Fri, 19 Jun 2020 22:58:52 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05K2w49M163863;
+        Sat, 20 Jun 2020 02:58:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=oJxOHBOfLtTRTFG6TrbaXmG/4Aimtja3g9KTsPz4fvU=;
+ b=h1sUhdeUH11Z1Tp79XWoN/Ow7sa676uCgWU9PvD9SA7dhpVZD/QnOPj73l2vfruC5gg9
+ OtpqcxpuUvZZv5adZTExEfi1rFNDg+vJkcvIZ3d3UNfe8MyhRlcn2+fTOuV2++d0JCNt
+ nUjL3KrWTuFk8XipG1QlNURrwjJuLULk2aIrcztq/3NY7F/kaogveF4POCXGB7DHa1/w
+ OUa817RYM9utjAOQ0qLYSCLOfXMGZudzT9/KhNbYmB5qVAhVChOW+YnRxh7En8sOsAb1
+ KtGuAdtjdo3C2L91OeaYyzqbUaKWu8AK6JLIolbrJ3vuZKQUyTC3B+FsTVu6kxaTNIT0 DQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31qecm7xgq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 20 Jun 2020 02:58:46 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05K2wkPI111980;
+        Sat, 20 Jun 2020 02:58:46 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 31s7jqdkyx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 20 Jun 2020 02:58:46 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05K2wgKc000471;
+        Sat, 20 Jun 2020 02:58:43 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Jun 2020 19:58:42 -0700
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -61,33 +53,43 @@ Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
         linux-scsi@vger.kernel.org
 Subject: Re: [PATCH 7/8] scsi: storvsc: Introduce the per-storvsc_device
  spinlock
-Message-ID: <20200619161813.GA1596681@andrea>
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1tuz6h29e.fsf@ca-mkp.ca.oracle.com>
 References: <20200617164642.37393-1-parri.andrea@gmail.com>
- <20200617164642.37393-8-parri.andrea@gmail.com>
- <20200619160136.2r34bdu26hxixv7l@liuwe-devbox-debian-v2>
+        <20200617164642.37393-8-parri.andrea@gmail.com>
+        <20200619160136.2r34bdu26hxixv7l@liuwe-devbox-debian-v2>
+        <20200619161813.GA1596681@andrea>
+Date:   Fri, 19 Jun 2020 22:58:40 -0400
+In-Reply-To: <20200619161813.GA1596681@andrea> (Andrea Parri's message of
+        "Fri, 19 Jun 2020 18:18:13 +0200")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619160136.2r34bdu26hxixv7l@liuwe-devbox-debian-v2>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0 mlxscore=0
+ mlxlogscore=896 phishscore=0 bulkscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006200019
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9657 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 malwarescore=0
+ clxscore=1011 adultscore=0 suspectscore=1 spamscore=0 lowpriorityscore=0
+ mlxlogscore=919 priorityscore=1501 bulkscore=0 phishscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006200019
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 04:01:36PM +0000, Wei Liu wrote:
-> Cc SCSI maintainers
-> 
-> This patch should go via the hyperv tree because a later patch is
-> dependent on it. It requires and ack from SCSI maintainers though.
 
-Right.  Sorry for the Cc: omission...  ;-/
+Andrea,
 
-SCSI maintainers, please let me know if you prefer me to send you a new
-series with this patch (7/8) and the later/dependent hyperv patch (8/8).
+>> This patch should go via the hyperv tree because a later patch is
+>> dependent on it. It requires and ack from SCSI maintainers though.
 
-(1-6/8 of this series are hyperv-specific only and have been applied to
-the hyperv tree, so this would only 7-8/8 of this series out.)
+Looks OK to me.
 
-Thanks,
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
 
-  Andrea
+-- 
+Martin K. Petersen	Oracle Linux Engineering
