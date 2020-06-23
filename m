@@ -2,66 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 730D920515C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Jun 2020 13:53:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F03C72056ED
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Jun 2020 18:17:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732477AbgFWLxw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 Jun 2020 07:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732458AbgFWLxw (ORCPT
+        id S1729562AbgFWQRw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 Jun 2020 12:17:52 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52223 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732640AbgFWQRv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:53:52 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B9FC061573
-        for <linux-hyperv@vger.kernel.org>; Tue, 23 Jun 2020 04:53:52 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id l6so19036867ilo.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 23 Jun 2020 04:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
-        b=MJXVe3j4WrUheazf4oj3hZuoEGb1QUBwfIKXI+HYQLSy2SDPPwE1kVsLuA4hFFe7Ar
-         X3qg5QuHIEtAEKtqDlxXqb51cnZCKnVdUhKGJjykUIQMypqVxJAsC8KC3/epbM6l0Axc
-         oTYcVPb51xrAQqHbnbNSleKnCa7fDXJx76GCedWwHvYYSI7G5O2QFMePH+lATNn8z+R3
-         nyFHE2WytQ8aU8GYyr3ddecny9sUyeRKm/Wt+HIqkPKyT2RmHFeWf+gbVPod31wiLzmR
-         NX0AyVAXGcqsKTNIneMp3T4IS4RWTbjW9PvSjqHlq9TLbmAo0DoqZcISmnexcNE3Klbm
-         AY5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
-        b=c6O68xbjkLBaW2GpH8hfjCWVrUKHxho5nsAk7M6W4nPqhcNSWaCM1BZIAwpVVPdM+/
-         d/Oy9gY+zEWDtMd+M8iyWuqkkZbN3rtkYR6k9QyAgh51sGqBcy+jluLjAlLZTQvrbfKl
-         60I0quEF/pa/JNn8jWQaK/uy2HTvGq2cjbE7LiX2dULPgvNYcsf9s4J7exiz4mAyb0VS
-         dQ1aE/NAPLY5ktry0+LlOC0OxtI1pk5tCZDq3ITuDY3VIu1VsyTqFQEsP1lpX3uBJC7J
-         SBVoO5ESfDrJA61a5dIS+AlCSs25/DE7z5Upujsh7nRAz+4mLBNBu0lhSq4I5uI1WsTL
-         48xw==
-X-Gm-Message-State: AOAM530RjI+MrppPkETZVKdPYC464/5VCYQoM1XsZWS+j10WFh7YYc7L
-        YM9yNf2bX1C7gEZYtLdpQKWuvuv1ouqK5olDw8Y=
-X-Google-Smtp-Source: ABdhPJwuA4xHW2G+kUKHPagKDvfPDwDGpReBrGfGHNKDMrt6U9N7GMq186QUJKG8UHwmhmcOTTkNOHsAkgb1NN6qduY=
-X-Received: by 2002:a92:9914:: with SMTP id p20mr23117530ili.273.1592913232014;
- Tue, 23 Jun 2020 04:53:52 -0700 (PDT)
+        Tue, 23 Jun 2020 12:17:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592929070;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ev9nrM16MiclfzIlla2poCCvKsAQZMXql22WZ3Is1Yo=;
+        b=VstwaOSGH6xJ9OgZzZiS/uXnsDpTt5vpNolMCkg4HbK1ZWRXkfe5jVE19mrDXyzCyEsHC2
+        AZ/PZNV+qmd70KQ8nWpTxDtImuRQLiLHlWpXD4x9r2PZG4J/w5QGOPgblL2E6GcU0a+QzD
+        S7AspVgdXS7ou+zwV1fGbrXe0YWnsds=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-nLrOfufyNa2Ppi-JKyNCBw-1; Tue, 23 Jun 2020 12:17:45 -0400
+X-MC-Unique: nLrOfufyNa2Ppi-JKyNCBw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21871106B250;
+        Tue, 23 Jun 2020 16:17:44 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-67.ams2.redhat.com [10.36.112.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AEDB178FD9;
+        Tue, 23 Jun 2020 16:17:43 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id BF7F6783B; Tue, 23 Jun 2020 18:17:42 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 18:17:42 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Deepak Rawat <drawat.floss@gmail.com>,
+        linux-hyperv@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        David Airlie <airlied@linux.ie>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, dri-devel@lists.freedesktop.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jork Loeser <jloeser@microsoft.com>,
+        Wei Hu <weh@microsoft.com>, K Y Srinivasan <kys@microsoft.com>
+Subject: Re: [RFC PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
+ video device
+Message-ID: <20200623161742.u6hnb7iodptv4s6t@sirius.home.kraxel.org>
+References: <20200622110623.113546-1-drawat.floss@gmail.com>
+ <20200622110623.113546-2-drawat.floss@gmail.com>
+ <20200622124622.yioa53bvipvd4c42@sirius.home.kraxel.org>
+ <f6923296368dc676df10e75593ebc18575efc476.camel@gmail.com>
+ <20200623094225.GJ20149@phenom.ffwll.local>
 MIME-Version: 1.0
-Received: by 2002:a92:290e:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 04:53:51
- -0700 (PDT)
-Reply-To: bektery@outlook.com
-From:   YAVUZ BEKTER <bariskims@gmail.com>
-Date:   Tue, 23 Jun 2020 04:53:51 -0700
-Message-ID: <CAC21a+oHymu+PR-1SfXizxKeEyYo0c5ibQK+_BwSDsjZ7uX7HQ@mail.gmail.com>
-Subject: Hello.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623094225.GJ20149@phenom.ffwll.local>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-I am the foreign operations director of Bank of Turkey.
-My name is Mr, Yavuz. I have a sensitive investment project to discuss
-with you, please reply now.
-________________________
-Ik ben de directeur buitenlandse activiteiten van de Bank of Turkey.
-Mijn naam is meneer Yavuz. Ik moet een gevoelig investeringsproject bespreken
-met u, antwoord dan nu.
+  Hi,
+
+> > > > +	msg->vram.user_ctx = msg->vram.vram_gpa = vram_pp;
+> > > > +	msg->vram.is_vram_gpa_specified = 1;
+> > > > +	synthvid_send(hdev, msg);
+> > > 
+> > > That suggests it is possible to define multiple framebuffers in vram,
+> > > then pageflip by setting vram.vram_gpa.  If that is the case I'm
+> > > wondering whenever vram helpers are a better fit maybe?  You don't
+> > > have
+> > > to blit each and every display update then.
+> > 
+> > Thanks for the review. Unfortunately only the first vmbus message take
+> > effect and subsequent calls are ignored. I originally implemented using
+> > vram helpers but I figured out calling this vmbus message again won't
+> > change the vram location.
+
+/me notices there also is user_ctx.  What is this?
+
+> I think that needs a very big comment. Maybe even enforce that with a
+> "vram_gpa_set" boolean in the device structure, and complain if we try to
+> do that twice.
+> 
+> Also I guess congrats to microsoft for defining things like that :-/
+
+I would be kind of surprised if the virtual device doesn't support
+pageflips.  Maybe setting vram_gpa just isn't the correct way to do
+it.  Is there a specification available?
+
+There are a number of microsoft folks in Cc:  Anyone willing to comment?
+
+thanks,
+  Gerd
+
+PS: And, yes, in case pageflips really don't work going with shmem
+    helpers + blits is reasonable.
+
