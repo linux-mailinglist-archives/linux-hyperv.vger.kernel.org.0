@@ -2,158 +2,127 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 554F72043D9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Jun 2020 00:43:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E35F20474B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Jun 2020 04:31:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbgFVWnj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Jun 2020 18:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731363AbgFVWnX (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Jun 2020 18:43:23 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A973C061573
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Jun 2020 15:43:23 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a45so369394pje.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Jun 2020 15:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=7sJlh8mTqMMVGGRGPmGdis+KAhpQkSnkGxPpFCRucz4=;
-        b=o2xCtanL8ODfPn/UTNBOWQQB+TAT2girD+UigaTEp4DeTAsmFfePy80P1nqC30ZVzj
-         oaA9t8AGW3OcSMnqr/5q4OtOXtvOwpxTxNcuaFtHU/cG56s+rljiIfhsg3G4UC/tRe62
-         GXw+nYjVmsZFIpFldfOxI4LrZwlIVe/Mk4wyTZQJ8BMEH42j7Zw1ZH15WMP1mgGHb1Rm
-         UDSA1xFGd47qvGJo1/HKlNQDow7cu5uB6amm5usNvN9zw837i3FvpncqyJs+NkI5JMUG
-         pvVS6Z3zXQeWzNO2/2UdV+yHJvdzJprBJKIj6T398ZpVTmmuQf1PcYA9UulSumkp2nph
-         QZvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=7sJlh8mTqMMVGGRGPmGdis+KAhpQkSnkGxPpFCRucz4=;
-        b=gG8eEf7uNdFElU/h5j1t+dI/hewW9Nh1NZ3uS+3HS3yplJF2C1Netp33C8Cs7/JEqn
-         SrEM8DHBCbKOZGgAzyIINzuNYWi8Ha+jJQ4IehHIp0zaWS/2mk8LGDYxizbDAgMbB13t
-         9QBZtKElo2XHgPyis36fAJCjn4ubk3jf37lm9op0ovnxjRwFPOw1MgCx30yaeMNViTIt
-         7iDae0+i8aYPeAS/e02hK08AmBRLlTaVcMO8BR3Xae8CA4xqIh+4fYJvcmfvRaWwq/ct
-         Nrj4lW4zCZaEdOpSlDE8cRuq9ci4oRRzOuRsKpbZ6JB+MhdFo25ULtSbJDi3Wd39M7ur
-         bALw==
-X-Gm-Message-State: AOAM533M8rMYB3cMq7EhlAzy5OvJamwSiw+BYXS9Om6zSaQpc1L/qADH
-        T7Uka6+c1xxE9SJfq4zp5do=
-X-Google-Smtp-Source: ABdhPJyKgbIcdaiIqEDpP8cteo6S4Uuv5X/JU2P+m1Ri/0bY1KmTfSh3ekbKQm5bkE8cTsFe9QD9yA==
-X-Received: by 2002:a17:90a:1aa2:: with SMTP id p31mr21506738pjp.227.1592865802790;
-        Mon, 22 Jun 2020 15:43:22 -0700 (PDT)
-Received: from arch ([2601:600:9500:4390::d3ee])
-        by smtp.gmail.com with ESMTPSA id n9sm508927pjj.23.2020.06.22.15.43.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 15:43:22 -0700 (PDT)
-Message-ID: <af5ebef18bcce1272ab1e02daa0b04cc4284ed9e.camel@gmail.com>
-Subject: Re: [RFC PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
- video device
-From:   Deepak Rawat <drawat.floss@gmail.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        David Airlie <airlied@linux.ie>,
+        id S1731414AbgFWCbe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Jun 2020 22:31:34 -0400
+Received: from mail-eopbgr1310117.outbound.protection.outlook.com ([40.107.131.117]:48304
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730456AbgFWCbe (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 22 Jun 2020 22:31:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RImAIeglGNT9g4V+9whaZVyptf27TlX9aTXZUinhEyEXykh+4rft5rMe0L9i3jQyhJMzmQNI2haDbzJTq8o1isq1b5T6HgddRgH8uFrZlFpUk1MuTNAsFEpKovOqaQ5+IWRj/Z48WcL+ELJ8JDAevGm1km8PTvz3XJ2lpFf0HDCl3xRAKzOLQRwv/WAZS4H89IsMcTwE1LG7wMb6qCKlG75itJGOTO2hzdLQSnjLICxNh0lCxPI1u+5BmI3By6jN1TU1jinDFzQL/jTP/kmxb5JzB41hX6Hq2YoTRyKgDP6fbms/aM/Mi+YMip0cWV3we5s1J98vBbOerNno5ijKMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gqkGtlE34Ptsn7f3+oeF0XDtYU1eppsl+F+ijpjUslg=;
+ b=ExUUQYbigidw189RG7n2QeA8qZumGMyniLp8Yl3/UrGtL54Xfo1sKVsMKNV5MYDXy6Sa0It6oUdwQP3fygsrpcCxGhlE0kHhxGmZda9pN79QrhrLUNXU1sTKnOpdlHmATCV6001TwNpUjWLk/TjdwLU8IcHTijS0mnwq9jj+T4usRdR/ZI/Ee5za49OhNcyzKAeTgaF8fCk03w7J+G9DuynHCVVwyMfQ0AiRERMhgRxwTCl3rB9Dpxr0ApHnS6Qaxgt4M018QdUIMWE9seHGvkRpPdr5az17GKM71NdJw6JGcg6vgmWTrHfP7q2tORLzYTB8pIECmpxWB5Os1XFrGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gqkGtlE34Ptsn7f3+oeF0XDtYU1eppsl+F+ijpjUslg=;
+ b=gBXJQfrZIdCxkciS98xjn+coN/Nvnyav+79XFj5VnYc0Pggny8KkCYp/v9+l9NNmRQ8+XUMtXPdqXhvRv8vQX/QtoDKj4k2TwsK8VSVGpQhcGQP2HEAUnsXQLEwiyBsbyoaIjWuMqQRZEuwQKXXiFtuja0vb41ovawj2FpvAAnI=
+Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b5::19)
+ by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (2603:1096:203:1a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.4; Tue, 23 Jun
+ 2020 02:31:21 +0000
+Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e567:3a32:6574:8983]) by HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e567:3a32:6574:8983%7]) with mapi id 15.20.3153.005; Tue, 23 Jun 2020
+ 02:31:21 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Deepak Rawat <drawat.floss@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jork Loeser <jloeser@microsoft.com>,
-        Wei Hu <weh@microsoft.com>, K Y Srinivasan <kys@microsoft.com>
-Date:   Mon, 22 Jun 2020 15:43:21 -0700
-In-Reply-To: <20200622151913.GA655276@ravnborg.org>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Wei Hu <weh@microsoft.com>,
+        Jork Loeser <Jork.Loeser@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [RFC PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
+ video device
+Thread-Topic: [RFC PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
+ video device
+Thread-Index: AQHWSIVPTyd7nwDoi0OeDECzal8UNajldhsQ
+Date:   Tue, 23 Jun 2020 02:31:20 +0000
+Message-ID: <HK0P153MB03224C17D736FF164209F6DABF940@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
 References: <20200622110623.113546-1-drawat.floss@gmail.com>
-         <20200622110623.113546-2-drawat.floss@gmail.com>
-         <20200622151913.GA655276@ravnborg.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 
+ <20200622110623.113546-2-drawat.floss@gmail.com>
+In-Reply-To: <20200622110623.113546-2-drawat.floss@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-23T02:31:19Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8c46a189-3137-43db-8b00-88ba04b4d7cd;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [2601:600:a280:7f70:ddf9:ea7a:43e2:c8ff]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 390c5fd0-0021-44f0-f2fc-08d8171d8438
+x-ms-traffictypediagnostic: HK0P153MB0148:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB0148ED564BF424A046F6B42DBF940@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 04433051BF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6DJC6W8hNMjU5hblhODxwQhEMn3qZTACr2FUDb/w5KqXABKxV//Nl0l2zZkOWiTkIEzfpe2E7AHIym7j/5GFT/PT/wf1OWsUDZW0oPnA4365/k+fDDnBbcM5WPT86f+d50FjeFa1RStkSCyc4wf1C6ogqInsj/fJ3iGcP2ghGyczEEfZRGeCMZF2/gT0dJzoVRofydzrwQrz1LVqY+DOtLidKPlIgFnF2fX8VWoyKbz2ryGWXaBlOlSz4Kc/M1NknsMetzdaTy9H0vCa9lt3PgVPCdGTXc4ZJArY87t8xQFqPCqhnee+8QPqpR90lXyBS9vkNHEkrUaFVl18EAkZWg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0322.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(396003)(376002)(346002)(136003)(107886003)(82950400001)(8676002)(86362001)(186003)(5660300002)(33656002)(82960400001)(4744005)(8990500004)(71200400001)(66946007)(76116006)(6506007)(66446008)(64756008)(7696005)(4326008)(66476007)(66556008)(2906002)(10290500003)(316002)(110136005)(9686003)(55016002)(52536014)(54906003)(478600001)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: LwPflNAd4HKx+Wepkg3tzPrWiIM5+ps5l327WJvKxA9DL1+Y6/yt11/b9gs2ViL9s3Ra4TwJKNkT+dQVDhwjhzCw1p30QXszkN/JrhROofiib2cZZUoC+OdQuMttW4nz9VqCEh+YSoz1kI8+DqObYvCDhb2GfVJumcefe0A6tSkX2ImoHbnkByDZY1p1V/PTJwEof47LcDVngzD7zZmuf7/jfjaQu1sEy9bb26AAee6k5t1pJVih7KFPBA8j7WRHTN7o8nG2gCFvPwrgOktCk6LOScRjrhwuEGW7uPuHrOUoWj34VuXdVEhATHQkfbH+04/P1W0w1+H1EYlV6lfHW8SYmHazhA8gcHdntTJWMckbRqgewfXU+jQotq754U5PE7PCfsmKNEk8MIIVz485Z/nDwCJsp8xfmChzIchiq1taHQR22MlWoUHr+Sn3hlJg+IyxrPFbal2rWgXyll2nadqA6P21yrbJZSyQVuvuA7+9zt96TpNO14mYcb8EXi6H9uqqNJwSXATmJ3dNwsFhIBBje13A3633rKpXJJnkIHHAO9PgYdTtKgdofo9HH72s
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 390c5fd0-0021-44f0-f2fc-08d8171d8438
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2020 02:31:20.8502
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aGvCoqKR9HpeoBAB8n18/v+tNcdT4zmuXb5Imp1KEVurfsOlpP8WkhH6UshOyYF2APqS2DRJ6qXc9mLV2WhAPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0148
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Deepak Rawat
+> Sent: Monday, June 22, 2020 4:06 AM
+>=20
+> DRM driver for hyperv synthetic video device, based on hyperv_fb
+> framebuffer driver. Also added config option "DRM_HYPERV" to enabled
+> this driver.
 
-> 
-> Just a buch of drive-by comments while browsing the code.
-> In general code looks good, especialyl for a v1.
-> 
-> There is a few places that triggers warnings with checkpatch --strict
-> Most looks like things that should be fixed.
-> 
-> 
+Hi Deepak,
+I had a quick look and overall the patch as v1 looks good to me.=20
 
-Thanks Sam for the review. Will take care of the suggestions in next
-iteration.
+Some quick comments:
+1. hyperv_vmbus_probe() assumes the existence of the PCI device, which
+is not true in a Hyper-V Generation-2 VM.
 
-Response inlined below:
+2. It looks some other functionality in the hyperv_fb driver has not been
+implemented in this new driver either, e.g. the handling of the
+SYNTHVID_FEATURE_CHANGE msg.
 
-
-> > +struct pipe_msg_hdr {
-> > +	u32 type;
-> > +	u32 size; /* size of message after this field */
-> > +} __packed;
-> > +
-> > +struct hvd_screen_info {
-> > +	u16 width;
-> > +	u16 height;
-> > +} __packed;
-> > +
-> > +struct synthvid_msg_hdr {
-> > +	u32 type;
-> > +	u32 size;  /* size of this header + payload after this field*/
-> Add space before closing "*/"
-> 
-> I wonder what is the difference between what is considered a message
-> and
-> what is considered payload in the above comments.
-> Maybe that just because I do not know this stuff at all and the
-> comment
-> can be ignored.
-
-message = struct pipe_msg_hdr + struct synthvid_msg_hdr + payload
-
-Will try to make it more clear.
-
-> 
-> > +} __packed;
-> > +
-> > +struct synthvid_version_req {
-> > +	u32 version;
-> > +} __packed;
-> > +
-> > +struct synthvid_version_resp {
-> > +	u32 version;
-> > +	u8 is_accepted;
-> > +	u8 max_video_outputs;
-> > +} __packed;
-> > +
-> > +struct synthvid_vram_location {
-> > +	u64 user_ctx;
-> > +	u8 is_vram_gpa_specified;
-> > +	u64 vram_gpa;
-> > +} __packed;
-> Not an alignmnet friendly layout - but I guess the layout is fixed.
-> Same goes in otther places.
-
-Yes nothing can be done for this.
-
-
-> 
-> > +static int synthvid_update_situation(struct hv_device *hdev, u8
-> > active, u32 bpp,
-> > +				     u32 w, u32 h, u32 pitch)
-> > +{
-> > +	struct synthvid_msg msg;
-> 
-> Sometimes synthvid_msg is hv->init_buf.
-> Sometimes a local variable.
-> I wonder why there is a difference.
-
-When a reply is expected, hv->init_buf should be used, though I haven't
-verified this. Just kept the same logic as in framebuffer driver.
-
-
-
+Thanks,
+-- Dexuan
