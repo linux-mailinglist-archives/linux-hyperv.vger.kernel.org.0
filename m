@@ -2,103 +2,47 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E44A20A553
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Jun 2020 20:58:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2549520AC2E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Jun 2020 08:17:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406385AbgFYS54 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 25 Jun 2020 14:57:56 -0400
-Received: from mail-mw2nam10on2113.outbound.protection.outlook.com ([40.107.94.113]:42929
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406110AbgFYS5y (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:57:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gJove7v5tmmGMn4RFJGJ4EPXw/GhEBSgABlZ6Z7G1UKrjnZboSaQ8UiBOOjmwgzt26qgMuIdxlDh4fBZeopMZR3OK6PfYfLTai7FHY51ghu1izLpLlKNJHBtvqDK+zBxc9yj2eiwZ1LoHMQe84lT5E1oWH3jv3+VuPLqTlXnbruGDvHZD6eJxENYJWkC05ZfY9L1jabdpbJJGiJwtcVk336Fe0wT6yYk8CYJEOp5WJeDVtPeg9+zGUR0h7AoS81WPXsv5S4sy4vqanvZHVePUfmqD6IhqIIrwE2yY+q+c+7k6iqtCNzGXqEUL17vTLOq3hOHPF02rLQh1fa8yS+g6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9PX8gpwdqa6XLfdsDog8IV9acID7i4CFhz3jOK+jl94=;
- b=iLfAPfBNKV0EURIuvkYvGXEF/PyyvDE8I76l1n8IU/C/3bRBjbl5vAdBmiP7WKdZhD9LB8yYOXy2Q7jCacAR/yiBZ3SsfrQoRrdgAoUQS3v2dlYh62A3AUlZTf1XU1rv/DNnVEpLxH9YkPiGG1I6JQ5NgcslZ41Sw5JVBE5jo360AmXnkS1Da7VlkfpKTetM7RTZzvu1l9I6XYSkgwf+E0iKf/S+cTcZcOQapiANWGJnRukeMcTYVxc/fx0jNeVZWeckd3w+fOECTf6lYmyq0ltd3YRoqUNF9XzB7meiHcsuIS+0o4A186UNrQm/3pIlAbAqfYiwgEf0iJOSCZ1KMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9PX8gpwdqa6XLfdsDog8IV9acID7i4CFhz3jOK+jl94=;
- b=Q0h4au9prFVmCzhC2tRR+dOAKMdCIHTCjUKOsnLU3NaoL+rhhh3zayLwNK6ngJXNPL5muNEXMOZ4I6BY0mQPvUC+XNNiTPZVDdea5oyWv6dV4hBqJb8D+kck9+6PrTNSL/BIdEMyuWJVg8ts0331hHCOF27R/QEwp94vXzBUgJw=
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- (2603:10b6:207:30::18) by BL0PR2101MB0980.namprd21.prod.outlook.com
- (2603:10b6:207:36::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.2; Thu, 25 Jun
- 2020 18:57:51 +0000
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::421:be5d:ef2e:26d2]) by BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::421:be5d:ef2e:26d2%4]) with mapi id 15.20.3153.005; Thu, 25 Jun 2020
- 18:57:51 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Andres Beltran <lkmlabelt@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Thread-Topic: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Thread-Index: AQHWSwaaylt6KwhZwEW4/H3wlYNgFqjprKTQ
-Date:   Thu, 25 Jun 2020 18:57:51 +0000
-Message-ID: <BL0PR2101MB09309FC4BB95D48026DEE99BCA920@BL0PR2101MB0930.namprd21.prod.outlook.com>
-References: <20200625153723.8428-1-lkmlabelt@gmail.com>
- <20200625153723.8428-4-lkmlabelt@gmail.com>
-In-Reply-To: <20200625153723.8428-4-lkmlabelt@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-25T18:57:49Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c0a1711f-605f-48fd-b5c0-1721e5d1d095;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [96.61.83.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 72eb1272-18c6-4b25-64d3-08d81939a8fc
-x-ms-traffictypediagnostic: BL0PR2101MB0980:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB098060C47C6BFD776D2833A5CA920@BL0PR2101MB0980.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 0445A82F82
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3nWHGcgSiPzSXGFxLpV8opm2WBTX1ZY9e7qbw9bTuLYhJRj1nVqCyu0MzwORr+l7HQnja6xSo6ovCs0q2ni/+LI/yWx2XD/PZ1+BxwHD6Y+vILMFRFaygm23P7LzGl42/N86H51OVpF791WLpCDj8HKLfqLKwMj4kCSLQrscD9IC8Uad6NOkK3i8rpjF+4fkuFzLKVsbZM0zkE+8JfOH3gPYmPBk/QcvAA4fs4gvptqpTfFAkk8X8TAWBfdxQqqV6mm7p3KDZJQLjOBpMC+6knbg+TMw6rUBdpn4TH/iQr+qQe5XMCSOaAsehDOpQrwTwg7NlPpOfl32zJZOKyo4QA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(10290500003)(82950400001)(82960400001)(71200400001)(33656002)(66476007)(316002)(66946007)(76116006)(8936002)(83380400001)(6506007)(8990500004)(186003)(53546011)(26005)(52536014)(110136005)(8676002)(2906002)(54906003)(86362001)(64756008)(66446008)(66556008)(478600001)(5660300002)(9686003)(4326008)(55016002)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: GgV6NCQO3UkSisoATN4cxzmlsNijHE0KpymkWgX6K3j0WDYlIBRXKvTsDGBUfL3g2Cpgx0tiVsy+DqoFmw0EPkAJISqwVkLv/cxaoHZJ/jJ86UeKVrpcBgheljQhcid/xOwauEpbtkZozNElN2KFvQz82snPNEpI7a/SUrFaWgOheMBK37YFIAQehu8drwzGs0hq9f37e1ON39eUEc9tS8bYnhOfNVn+GjT+rlYW4rv03+jAzeWPOijEvnyDcUYi19sKoahOGVwgU8P3P7gI/1KZCOdnO68eIT3ThZdhHpf9loTL/pCEiOS6F4VGQdW95EgTPWVJcSidPCqab1tJJyIIf4JvDt8a3laqH/lxwc54GdaLPemY0I21FLKKgbGzv85Ws9ZKZsv87iN+rE1fNPWCQ0knGOa2Bvt00VHBC7i1eYFccBPct8H/jiZkM8N5GtkNd6UO5O9Wck2+oZzDzCKPGEfV0I8cEqeydf6aTx8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728294AbgFZGRN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 26 Jun 2020 02:17:13 -0400
+Received: from sonic312-22.consmr.mail.bf2.yahoo.com ([74.6.128.84]:33426 "EHLO
+        sonic312-22.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728287AbgFZGRN (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 26 Jun 2020 02:17:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1593152232; bh=OulVYBDqCxFN0HMpT2i1Q2OUBxNivCJ6FEqc8tDI1Kg=; h=Date:From:Reply-To:Subject:References:From:Subject; b=YH8yv/W+/iI0m5sNDTJYd8pwe5zjt6ehEP17INktrkus02OuD1Yw6nil2v4dFtZsVnNIh0InJWC6/iJtXzf0uabfMy4QKYl4VeLX5B4C+97j16LYZzwP7GxcDAvx2zbXdhKPfTRyXrEr1c4F+k23/e4u5mwEIws2KLnw5b0zPgBspX1G4yfehBEV8NQTkAUJ6o/VyQEm2wKyOgsmhhLic7AmPxhcXCwXPj9SR1XGWZVb/o9TiXovL9/cR4DtxSionSe0Jdk5XGdGJJ8kXk4A/EuPEdUlrpHBFIihW8ZpgxAb+Ku6VM4I4y9ESLq/KGaTDDfQ+5Yiafnxgd2zpEKQhQ==
+X-YMail-OSG: ATWejB8VM1nDvzNUVyQpMUu5EJiYYdDrzk7.nc3_H.5JKbrvpiMAOpLnZM9sOBg
+ CAf.Tme90Ome4VeKiGtZGPNfMVWBoK9HjLQbzkcGQtBpnmJCFSm7fPBsUszgAmKuj3unzwhrfVLA
+ qtktE2xrEU.drxOGosljTIhilDAsJFPOywJDSey1TWRIzRHgkkleQLBGMddic5yApVhPn5x8qnMr
+ cBDdsr6qPNasmQTSttXupjUDC6KrdH0Z47zTFBI04stLtyC5Bqn3_YQ7qL5zNW_7uOIXoYsficK9
+ vcpGtBKc0c5NJKrDDP_sHk905peKownjP5OGrn_60W4AW_Y.eSc02AdynhAjeEkYz8gYJLNuNHXb
+ n.QmUMSlsh9W3PklYJavEw6OmntugP.FHuR35tArQFhTEbz.B45SEaO_2Cbg82asPxi5ZhWGtKSV
+ Ja2HI_a09ztV9WE0nwFAYwBqRmzCHdsyCBSeTu7L9yqQO9NCSRjkp53a3BhEJ.ezjc7l6MKehOIZ
+ zPo0JbgADtvlDGi_gHR25iuIXQkbB9m.6ee_qBNeNR3M6GBENa9Y0C3SB.mPvOQ0HUAq4NR1RnJn
+ mwYOipv0NeKnwxGxbXaxy1nQQQPeh1AnmytbOaPYsiZ3_oiSbF2yrEg9KXgFIiugAhbWCU2PnUHJ
+ MNivcIxwEbzW935ntYkX.ic_.tbDpRsOFkb8JmRkWPof0z63cRJb9iKjed.ijGuY7HHljk2xhl6k
+ lWhiyBfuEV2fNndT10IdAzxS__pqvtjennfNgv5lvxiEOdTCmYwnBVcPswbtKzLLKrzuVaeDOLh9
+ Y.z7A384_8gMjtlHL7dY3cP36F8wx3uKdmSM.aoJFcPnC.qyhyiT5OXOO5WIkGIPjscUdWthTI.6
+ IjtU94ar7NNJiTVBvITR1uiVCL_I2QH.0sE9ZsUM8isZvP07nSn2Gw6vynWHSHj5nxZfXpF.ygq5
+ Ij6yjFsAAyS1STcSI4vOfPrDfgPVjt7Dhj7czGfrCPmvac8lXUiSFZ2wMUZcqbd2UzVEK.wmkPnb
+ aK1B7c7ojTTvDabVkbOIpbjABY_HJ4UPsykDcIHmVPHiS1mr6QFTwtJoz1eF6c5A4DiDeOYbZJW2
+ TLl2MP_zGYTDjTACDyCXNIxe2L4najZKWe4zHPy9tU_ATLsK.d5WLjyHuVR7sRlrWIGOKudNAc93
+ 6kyRVrANlunW.72Gow2DtrGw34mpzDnJs4Wl_ncSjW8Zi1ds3RRmOWO6tYSP8A3bes41WPGQXpy7
+ xxRx8YVrM4lB1ZVkNVKX8TLMXdSk.w..qbGzEcqByD6DgK_S5TaAkBUe4hEu8_8uu
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.bf2.yahoo.com with HTTP; Fri, 26 Jun 2020 06:17:12 +0000
+Date:   Fri, 26 Jun 2020 06:17:09 +0000 (UTC)
+From:   FRANK <frank_nack_2020@aol.com>
+Reply-To: frank_nack_2020@yahoo.com
+Message-ID: <1513752212.2819432.1593152229939@mail.yahoo.com>
+Subject: URGENT,
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72eb1272-18c6-4b25-64d3-08d81939a8fc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2020 18:57:51.0769
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NU6++Bet83dBqMy+Ppwd+m0rA2P7bgmkpxoWf7YwqMAxUSplenxo0P4DitVZBbVyiXUXasy5Sb9TT+czumeGFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0980
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <1513752212.2819432.1593152229939.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16138 YMailNodin Mozilla/5.0 (Windows NT 5.1; rv:52.0) Gecko/20100101 Firefox/52.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
@@ -106,64 +50,27 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Andres Beltran <lkmlabelt@gmail.com>
-> Sent: Thursday, June 25, 2020 11:37 AM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> wei.liu@kernel.org
-> Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; Michael
-> Kelley <mikelley@microsoft.com>; parri.andrea@gmail.com; Andres Beltran
-> <lkmlabelt@gmail.com>; David S. Miller <davem@davemloft.net>; Jakub
-> Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
-> Subject: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate transacti=
-on
-> IDs for VMBus hardening
->=20
-> Currently, pointers to guest memory are passed to Hyper-V as
-> transaction IDs in netvsc. In the face of errors or malicious
-> behavior in Hyper-V, netvsc should not expose or trust the transaction
-> IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> use small integers generated by vmbus_requestor as requests
-> (transaction) IDs.
->=20
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> ---
->  drivers/net/hyperv/hyperv_net.h   | 10 +++++
->  drivers/net/hyperv/netvsc.c       | 75 +++++++++++++++++++++++++------
->  drivers/net/hyperv/rndis_filter.c |  1 +
->  include/linux/hyperv.h            |  1 +
->  4 files changed, 73 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_=
-net.h
-> index abda736e7c7d..14735c98e798 100644
-> --- a/drivers/net/hyperv/hyperv_net.h
-> +++ b/drivers/net/hyperv/hyperv_net.h
-> @@ -847,6 +847,16 @@ struct nvsp_message {
->=20
->  #define NETVSC_XDP_HDRM 256
->=20
-> +#define NETVSC_MIN_OUT_MSG_SIZE (sizeof(struct vmpacket_descriptor) + \
-> +				 sizeof(struct nvsp_message))
-> +#define NETVSC_MIN_IN_MSG_SIZE sizeof(struct vmpacket_descriptor)
-> +
-> +/* Estimated requestor size:
-> + * out_ring_size/min_out_msg_size + in_ring_size/min_in_msg_size
-> + */
-> +#define NETVSC_RQSTOR_SIZE (netvsc_ring_bytes /
-> NETVSC_MIN_OUT_MSG_SIZE + \
-> +			    netvsc_ring_bytes / NETVSC_MIN_IN_MSG_SIZE)
+Dear Friend,
 
-Please make the variable as the macro parameter for readability:
-#define NETVSC_RQSTOR_SIZE(ringbytes) (ringbytes / NETVSC_MIN_OUT_MSG_SIZE =
-...
+How are you today with your family, Hope fine? Please, it=E2=80=99s my grea=
+t pleasure to contact you today. I am Mr. Frank Nack a banker by profession=
+ from Burkina Faso. Please, I want our bank management to transfer an aband=
+oned sum of (US$7.5M) into your bank account. This business is 100% risk fr=
+ee.
 
-Then put the actual variable name when you use the macro.
+Your share will be 40% while 60% for me. More details will be forwarded to =
+you with copy of my bank working ID card, photos and direct phone number im=
+mediately I receive your urgent response indicating your interest to handle=
+ the business transaction with me.
 
-Thanks,
-- Haiyang
+1) Your Full Name.......................
+2) Your Private Telephone Number........
+3) Your Receiving Country............
 
+Do reply me urgent with this email address (frank_nack_2020@yahoo.com), (OR=
+ +226 51 81 51 94,) for quick spend
+
+Yours Sincerely,
+Best Regard.
+Mr. Frank Nack
+Tell; +226 51 81 51 94,
