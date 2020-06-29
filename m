@@ -2,135 +2,197 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E60920E527
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jun 2020 00:06:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E16EF20E6D8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jun 2020 00:09:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391172AbgF2VdV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 Jun 2020 17:33:21 -0400
-Received: from mail-bn8nam11on2123.outbound.protection.outlook.com ([40.107.236.123]:57921
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727104AbgF2VdS (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:33:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wzz5qr+ho1e7m8icAD9m9QxXCY2d2aT2NQPbdNkhEOFPJ0Cv+Wy4SLhdCcOB3afYexD6H4jizmN8qUusvxZqlw1Av2zCAs+Ow1dSBaKfWGcCZS9nlKHraKmz0QWcNlHHvHbgvCzjzP2OycGK6lDF+fVQJJiJDqktk6i2dOT7wXVQADpx6UAEpouCtWNU5LwNAduFlzkXCORIHJUreocqsWljNWhhFr2Jf9LCTeE6UEb1N4K4Hg4tnmYJDBRm8osVI0W8ktLUN5cNF7TBGVNc1FL2cPYGpsjDetgWH4+SyorZoOF89NAo7SqtzIAv/AINH29QXRxQ4H7ChV2zsc9nUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nYrnzxJcU8btIwH52PEAVCH0DUAGG2ywYc0GpEvYX+A=;
- b=IN6/e3uvV7AdO/rXYgyeqFH7QRDc1bp3B0zOflawR7udRNrfzq8dX0e0rssmcMxUa2wcX9x6cHZSa8axQmLuiXNzFw6JKOs3sj0uDHG2iH1pdbENcE9B/TutS76dRyMVkgIchgyI6XSxwTyL0htitE+EZLZPcbwk+CdiDfnHja0fG8SgqyeBPiyQ3YJDm3QysZngy2kL6WyDd3l8NyT98lojGTz9vO9VavI326Gdb45leEVPi7zFj+lU2bnPW+lU41o44arJviZNXnsyreO2JvpYZQ12jGZB2vI6NcA1qmZStpAVyGOwoj/Hd1yrbmN/ZT0ET+v/KHKtxf56T/xCMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nYrnzxJcU8btIwH52PEAVCH0DUAGG2ywYc0GpEvYX+A=;
- b=XyCXBNdvjlMo2vYcVgWLCRu17EEWyhbaVldDNbEpZgQUetlbKCCvnH/xT0tqclfcdGKtHScMqhhNQyDDCDshdTPXyh9ooDrjoTWUoBn3tXLRq5Ys02qFz+tmU9A3DO3+pLmRpa7JV+naY0UmwlvQHyw+hFs5W4rd6NARVuahnOI=
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- (2603:10b6:207:30::18) by MN2PR21MB1502.namprd21.prod.outlook.com
- (2603:10b6:208:20b::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.1; Mon, 29 Jun
- 2020 21:33:16 +0000
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::421:be5d:ef2e:26d2]) by BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::421:be5d:ef2e:26d2%3]) with mapi id 15.20.3174.001; Mon, 29 Jun 2020
- 21:33:15 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Andres Beltran <t-mabelt@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Thread-Topic: [PATCH v2 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Thread-Index: AQHWTlBOt5wFAhylskCGZqmzM/7PA6jwHLwg
-Date:   Mon, 29 Jun 2020 21:33:15 +0000
-Message-ID: <BL0PR2101MB0930DB73E3B5A89DD3E55481CA6E0@BL0PR2101MB0930.namprd21.prod.outlook.com>
-References: <20200629200227.1518784-1-lkmlabelt@gmail.com>
- <20200629200227.1518784-4-lkmlabelt@gmail.com>
-In-Reply-To: <20200629200227.1518784-4-lkmlabelt@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-29T21:33:14Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9edf559a-a80f-4927-b0c3-955bfc01ee57;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [96.61.83.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cce00089-f3d2-4439-d2b8-08d81c7408a2
-x-ms-traffictypediagnostic: MN2PR21MB1502:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR21MB1502B797D725F0B00A3CAE75CA6E0@MN2PR21MB1502.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1upvecUw1LzG7CfIDxqgy15QxscDOxGbbMef1tN4ZPLxtsiFoGSmBtfCWwL5RhwFAoN/FWMcvXdozGBvRzUv3jWVzE5X1HlE5UQHMOhU9sDVfJKh2xXtObNsp1T9SbqmaGSHJYvf8GxU5/UWzcphG/6ZLqftFJ40Iue6fTHS+03ekt0CyIr8QEyVHUp3kMImsbexUKsOuOliE0OKClsyyf6NqnhuK79+/YCc68AKuAKBYzGErft6S5ENZycslrdzLVQn5oKnjRN4wdu8S/o/aebCso5vZWdwol3Z7KPS3I8p+OsWgCIVKQ50LsjtYu98K7cuMbieXQUFcZbt/o/Mmw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(66946007)(9686003)(4326008)(76116006)(5660300002)(316002)(54906003)(110136005)(33656002)(4744005)(55016002)(66476007)(71200400001)(2906002)(66556008)(66446008)(64756008)(7696005)(26005)(6506007)(52536014)(8990500004)(478600001)(82960400001)(53546011)(186003)(86362001)(8676002)(10290500003)(83380400001)(8936002)(82950400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: YAUupRnuA5XO6E10eFCnln9xT/C8uPFk/9qoJPemZDK2Y4AFGJjLLO02HO/tR8VuTQGcY16FYvs9X64aDLqF8w7gKXvLb39A2ELDKDvopaNPiZd3jLq3lgJQerMXKjfREFuXXRqbMlQRnpXLMmNWXfWctTzTlwvKgS5zZs/ctUNslCJmUHBaol+Ov/bmqWRONI4F5aeaTrczYrc0RoVyJAzGSdAJcWCPkug6SwRDXVEmEr0F4GQ7eAqBRJTwpC4wEWj3DwiG4z3qdBQCIcdTPOpPvBMMlZlBtbZu8bJWhoDx95rhqneriOxDc55OA+VRaxvO/hQOKpAvtB4irTnMlsdwUJUZtXhxiwxsYXoqNPhX1V9PNwqsHXH6uthIVRe5x6XcSWTcSSo3gZ327BVTm1qDDMPHtdE7enDr6Um5OGnFEL33ZK4XUla1WxZtoR/qVUls3NCVDw3berkZCxD573TkE5uXQe/5agLUhDaSGkw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726738AbgF2VvR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 Jun 2020 17:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731828AbgF2VvP (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:51:15 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A62C061755;
+        Mon, 29 Jun 2020 14:51:15 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d4so8928454pgk.4;
+        Mon, 29 Jun 2020 14:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QD5DEy/jVvw/j5XLElSOzb3HgHrMTHj6k7kJYHldTlE=;
+        b=UmKdj7zzQGovaJHoZDjRCUfbnKZO9fy/KOV7Ye7XkNX3XRaahNF/EOOZULEPDHzNFX
+         5O/UE8pbIdcVAEKrK2oVN4z3jBU40Zy0LPNPgMRfqmA3lDNqA0IXGmds2cG/Y38iIh17
+         9psRG4xwGUi4zqt161P5yEKou3mzHuY/2f74sM3JUp1n6NIHLg5gCCOTHJ0BEP/mm16q
+         8Rj4ByGJDje8G0YaHV5Ly4P+6AlGRPkT83d+oZiG+/Leog1eiWMLN7hEZH2axlfWSplZ
+         6Y5ml8nX/hh9/8slGJwiipD0bSU+PZrleBG58YzEvG/eebD3b6Z3VlGQU1B4FKrs/mOe
+         Virw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QD5DEy/jVvw/j5XLElSOzb3HgHrMTHj6k7kJYHldTlE=;
+        b=Cx5dfIprIQkcXxm53a0Rl9Eev3W0M1MWX6qbGaNTwQaS5+SOoidGLrHojsJqIgZ5AI
+         AZZS7HKAehwWyJsAd0y+higVEz1DlgLuuJOkfSkXpTWW78N+gy6kK1ZqMOFOwOzr1mKc
+         p51duAQ3g8vfuFnI7mWHNATJ8axXisEInNG41L7Z4qnnuXdGNG4PTJYIRV0mWXc2w4BG
+         pPvD8zaE9G6TCyzUVPZVjJ/unTYuw1RsrjFCd34sCjibUh+uttyWRIY+Zji56XuT3Lel
+         94fAiw9vYCkA18YXH7GUr5RMf2nR1QtQsX111EqppEgISYlcMiQcPuRnBoX1RaSuXfB8
+         iPgg==
+X-Gm-Message-State: AOAM5334UbxLhw/GX4m7/Aazqq1UQ0Q4cQnS7XSzscpsgEo6+S4/7Y30
+        MX+PTeP4RF9zscNKZ8tSHdQruXT9feVnbMchoj0=
+X-Google-Smtp-Source: ABdhPJxxUX+SId++y236FyrS13rQ65Xb1fQ62IsrNWMa+Tu1woI6xPPfiUo2cxoKlxyk5ZP5iW+ASe43unUJBUOWGr0=
+X-Received: by 2002:a63:db18:: with SMTP id e24mr8993393pgg.192.1593467475038;
+ Mon, 29 Jun 2020 14:51:15 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cce00089-f3d2-4439-d2b8-08d81c7408a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 21:33:15.9078
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rYZmrx28L4ya1nj0K1AmyIN3Cp0iul/FFEmzx1n0uR4lxwdP/EUsuJqIHP6fQBnDuX0mRtQnwcpqqFuhlRXicg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1502
+References: <20200629200227.1518784-1-lkmlabelt@gmail.com> <20200629200227.1518784-2-lkmlabelt@gmail.com>
+ <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2>
+In-Reply-To: <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2>
+From:   Andres Beltran <lkmlabelt@gmail.com>
+Date:   Mon, 29 Jun 2020 17:51:05 -0400
+Message-ID: <CAGpZZ6sUXOnggeQyPfxkdK50=1AhTUqbvBvc2bEs4qwwk+rSPg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Andres Beltran <t-mabelt@microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Mon, Jun 29, 2020 at 4:46 PM Wei Liu <wei.liu@kernel.org> wrote:
+>
+> On Mon, Jun 29, 2020 at 04:02:25PM -0400, Andres Beltran wrote:
+> > Currently, VMbus drivers use pointers into guest memory as request IDs
+> > for interactions with Hyper-V. To be more robust in the face of errors
+> > or malicious behavior from a compromised Hyper-V, avoid exposing
+> > guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> > bad request ID that is then treated as the address of a guest data
+> > structure with no validation. Instead, encapsulate these memory
+> > addresses and provide small integers as request IDs.
+> >
+> > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> > ---
+> > Changes in v2:
+> >       - Get rid of "rqstor" variable in __vmbus_open().
+> >
+> >  drivers/hv/channel.c   | 146 +++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/hyperv.h |  21 ++++++
+> >  2 files changed, 167 insertions(+)
+> >
+> > diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> > index 3ebda7707e46..c89d57d0c2d2 100644
+> > --- a/drivers/hv/channel.c
+> > +++ b/drivers/hv/channel.c
+> > @@ -112,6 +112,70 @@ int vmbus_alloc_ring(struct vmbus_channel *newchannel,
+> >  }
+> >  EXPORT_SYMBOL_GPL(vmbus_alloc_ring);
+> >
+> > +/**
+> > + * request_arr_init - Allocates memory for the requestor array. Each slot
+> > + * keeps track of the next available slot in the array. Initially, each
+> > + * slot points to the next one (as in a Linked List). The last slot
+> > + * does not point to anything, so its value is U64_MAX by default.
+> > + * @size The size of the array
+> > + */
+> > +static u64 *request_arr_init(u32 size)
+> > +{
+> > +     int i;
+> > +     u64 *req_arr;
+> > +
+> > +     req_arr = kcalloc(size, sizeof(u64), GFP_KERNEL);
+> > +     if (!req_arr)
+> > +             return NULL;
+> > +
+> > +     for (i = 0; i < size - 1; i++)
+> > +             req_arr[i] = i + 1;
+> > +
+> > +     /* Last slot (no more available slots) */
+> > +     req_arr[i] = U64_MAX;
+> > +
+> > +     return req_arr;
+> > +}
+> > +
+> > +/*
+> > + * vmbus_alloc_requestor - Initializes @rqstor's fields.
+> > + * Slot at index 0 is the first free slot.
+> > + * @size: Size of the requestor array
+> > + */
+> > +static int vmbus_alloc_requestor(struct vmbus_requestor *rqstor, u32 size)
+> > +{
+> > +     u64 *rqst_arr;
+> > +     unsigned long *bitmap;
+> > +
+> > +     rqst_arr = request_arr_init(size);
+> > +     if (!rqst_arr)
+> > +             return -ENOMEM;
+> > +
+> > +     bitmap = bitmap_zalloc(size, GFP_KERNEL);
+> > +     if (!bitmap) {
+> > +             kfree(rqst_arr);
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     rqstor->req_arr = rqst_arr;
+> > +     rqstor->req_bitmap = bitmap;
+> > +     rqstor->size = size;
+> > +     rqstor->next_request_id = 0;
+> > +     spin_lock_init(&rqstor->req_lock);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/*
+> > + * vmbus_free_requestor - Frees memory allocated for @rqstor
+> > + * @rqstor: Pointer to the requestor struct
+> > + */
+> > +static void vmbus_free_requestor(struct vmbus_requestor *rqstor)
+> > +{
+> > +     kfree(rqstor->req_arr);
+> > +     bitmap_free(rqstor->req_bitmap);
+> > +}
+> > +
+> >  static int __vmbus_open(struct vmbus_channel *newchannel,
+> >                      void *userdata, u32 userdatalen,
+> >                      void (*onchannelcallback)(void *context), void *context)
+> > @@ -132,6 +196,12 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+> >       if (newchannel->state != CHANNEL_OPEN_STATE)
+> >               return -EINVAL;
+> >
+> > +     /* Create and init requestor */
+> > +     if (newchannel->rqstor_size) {
+> > +             if (vmbus_alloc_requestor(&newchannel->requestor, newchannel->rqstor_size))
+> > +                     return -ENOMEM;
+> > +     }
+> > +
+>
+> Sorry for not noticing this in the last round: this infrastructure is
+> initialized conditionally but used unconditionally.
+>
+> I can think of two options here:
+>
+>   1. Mandate rqstor_size to be non-zero. Always initialize this
+>      infra.
+>   2. Modify vmbus_next_request_id and vmbus_request_addr to deal with
+>      uninitialized state.
+>
+> For #2, you can simply check rqstor->size _before_ taking the lock
+> (because it may be uninitialized, and the assumption is ->size will not
+> change during the channel's lifetime, hence no lock is needed) and
+> simply return the same value to the caller.
+>
+> Wei.
 
+Right. I think option #2 would be preferable in this case, because #1 works
+if we had a default non-zero size for cases where rqstor_size has not been
+set to a non-zero value before calling vmbus_alloc_requestor(). For #2, what
+do you mean by "same value"? I think we would need to return
+VMBUS_RQST_ERROR if the size is 0, because otherwise we would be
+returning the same guest memory address which we don't want to expose.
 
-> -----Original Message-----
-> From: Andres Beltran <lkmlabelt@gmail.com>
-> Sent: Monday, June 29, 2020 4:02 PM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> wei.liu@kernel.org
-> Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; Michael
-> Kelley <mikelley@microsoft.com>; parri.andrea@gmail.com; Andres Beltran
-> <lkmlabelt@gmail.com>; David S . Miller <davem@davemloft.net>; Jakub
-> Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
-> Subject: [PATCH v2 3/3] hv_netvsc: Use vmbus_requestor to generate
-> transaction IDs for VMBus hardening
->=20
-> Currently, pointers to guest memory are passed to Hyper-V as
-> transaction IDs in netvsc. In the face of errors or malicious
-> behavior in Hyper-V, netvsc should not expose or trust the transaction
-> IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> use small integers generated by vmbus_requestor as requests
-> (transaction) IDs.
->=20
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-
-
+Andres.
