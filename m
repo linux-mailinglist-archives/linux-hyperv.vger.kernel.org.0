@@ -2,89 +2,73 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0285220D446
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jun 2020 21:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12FEE20D55C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Jun 2020 21:16:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgF2TGt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 Jun 2020 15:06:49 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39070 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbgF2TGs (ORCPT
+        id S1731555AbgF2TQV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 Jun 2020 15:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731904AbgF2TQK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:06:48 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q5so17657430wru.6;
-        Mon, 29 Jun 2020 12:06:47 -0700 (PDT)
+        Mon, 29 Jun 2020 15:16:10 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 276D1C08EACB
+        for <linux-hyperv@vger.kernel.org>; Mon, 29 Jun 2020 12:16:03 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t4so2300917iln.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 29 Jun 2020 12:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=XdfoRVGuOCD2JOxmLnJxyvoO2f5zjf1xh4i//8cGLHs=;
+        b=E57soH+fAZU9oM/uuDn4bCNx2wALmvA7rwFsDeo/VdmyR4hSt+vRDMPW0qpAcJ9V/h
+         UbYJ9fIR9BUAZrS+1TfrEzBoFSxbLFUBB/IIzj7rfy4Y1SyxPmM/cs9fEremwVWV5m5u
+         b9v38myIgTBJNjasjLIOUO/K2CJS7vPJsURIlWBEC7RA0ax+vZbkexDjvFbqaAUgNm/w
+         yj4NkgHNxXLdKOO4AZsIv5vnXx8YMl4s3e1fTXh2Hp6rhwVI9k4nzVvvlc/OSvXrfpbl
+         +6DOlsrKa8IKCRxKxdcbetpm2uz+ZUKJBnziwlMhGJ11qW6bGQPIDGjYXF06+gry04Zz
+         3NGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9kB1Yqxehc4mOOV+E+s8ly+87mL5I0qDl2+46tT33LU=;
-        b=FEd80YYsVCJ6pf74frJNQnajWBRVFV0QMHP/qy3W0W9HXQvypW8nvMlgqUbUnomnHi
-         O8YsWoOkY/0gsW1wuFENzG/2p0MVio6drckkCAWQhUX6YDslI8N05qYfTEXdmhP050ez
-         bhhL/WcbK3Get7wdtSpsPanlCdnMclxEMNQpfZM5K1TVukzTINfUA72OwM6DkmfPxH9t
-         /nSv3f411beyEx6DfQgAOSHjXwM11BzG+OadcwuOj4GrnqcsG3ZF6B8VfA3RAP+dKogT
-         E1J4xLWzGLTYfhBLP5IHDZsHCJwR02k3Inzl4qa08HVYqt+obUA97UjS6qAGnkjPz7dV
-         9u+w==
-X-Gm-Message-State: AOAM532gqGscXvj6dC9M5WbWWjQSodQTDCt6C2jhKsLmH65iLW6oWn1k
-        /XtV0uL03teTbKbOIBhaR8A=
-X-Google-Smtp-Source: ABdhPJzQcaoC3As2bwvXjFpEkhrTsir6J88mWLOgOu4Igyehnga3Bo7Tm9krH0O+TUUtcdYBw1n/EA==
-X-Received: by 2002:adf:de12:: with SMTP id b18mr19710508wrm.390.1593457606425;
-        Mon, 29 Jun 2020 12:06:46 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id e17sm728179wrr.88.2020.06.29.12.06.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:06:45 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 19:06:44 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Andres Beltran <t-mabelt@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Andres Beltran <lkmlabelt@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>
-Subject: Re: [PATCH 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Message-ID: <20200629190644.hlem6jskyx26csaj@liuwe-devbox-debian-v2>
-References: <CH2PR21MB149464F9EF20C516C6FB362A8B6E0@CH2PR21MB1494.namprd21.prod.outlook.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=XdfoRVGuOCD2JOxmLnJxyvoO2f5zjf1xh4i//8cGLHs=;
+        b=SnL8QDQsyRWtZQZ8P5fVx4keYK/IRNv3e9bLdBwprNbVlEBGjji3bAF1ijYo//NGow
+         ahfkctQ0Sc1N9JWMf4twkFRgF79vItrXbm2FxpS1H8G3n3KRDWwG0Wv/8C9eqP4MdB4s
+         yYIvbifpcYbKceW9w89pHRqNtKTU9M2Ljv9UwJYlhVFMX7uKAFsZ0LhiGXLA3UQS7e+g
+         vRdH5jQW0oGkJsvjLMQdldhjDJEJAziCTknDn/Dpv8A5cE1JxVf/VzPeFrRthCrzE70e
+         GLsAYI2JTbbeHOIzJZEq5PfBPPIivQ9Jx6javZ/bw0IYlYGDaR7/H2X/0dbSu37/N/Lv
+         Tr/Q==
+X-Gm-Message-State: AOAM532WjqOks68GeiT9salCXNHguoIVaxjqqb+h7d+pg/ANREKWYn1k
+        EZoU97n4Ei7s6D+KpbTdjLZaRu/oGYhzZpdY1Gt4ZKbSr4E=
+X-Google-Smtp-Source: ABdhPJyNR5zXZ8o09DSJzsSA3OSccnAxM/c9AxKQjYYOZlXvOMCiHs1YW/1gQi1Sa70TQ2VOPtabshfviWRkV7+ICnM=
+X-Received: by 2002:a6b:db17:: with SMTP id t23mr18236117ioc.4.1593458159284;
+ Mon, 29 Jun 2020 12:15:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PR21MB149464F9EF20C516C6FB362A8B6E0@CH2PR21MB1494.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Received: by 2002:a05:6602:1588:0:0:0:0 with HTTP; Mon, 29 Jun 2020 12:15:58
+ -0700 (PDT)
+Reply-To: mrs.victoria.alexander2@gmail.com
+From:   "mrs.victoria alexander" <markalexandermilley321@gmail.com>
+Date:   Mon, 29 Jun 2020 12:15:58 -0700
+Message-ID: <CAP7XNCwEGQ+-Q==u4yk4yvJdk1X+gsfSU6pUV_hROjmF=p-DHw@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 06:19:46PM +0000, Andres Beltran wrote:
-[...]
-> > >  EXPORT_SYMBOL_GPL(vmbus_recvpacket_raw);
-> > > +
-> > > +/*
-> > > + * vmbus_next_request_id - Returns a new request id. It is also
-> > > + * the index at which the guest memory address is stored.
-> > > + * Uses a spin lock to avoid race conditions.
-> > > + * @rqstor: Pointer to the requestor struct
-> > > + * @rqst_add: Guest memory address to be stored in the array
-> > > + */
-> > > +u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)
-> > > +{
-> > > +	unsigned long flags;
-> > > +	u64 current_id;
-> > > +
-> > > +	spin_lock_irqsave(&rqstor->req_lock, flags);
-> > 
-> > Do you really need the irqsave variant here? I.e. is there really a
-> > chance this code is reachable from an interrupt handler?
-> 
-> Other VMBus drivers will also need to use this functionality, and
-> some of them will be called with interrupts disabled. So, I think
-> we should keep the irqsave variant here.
-> 
+Dear friend,
 
-Okay. This makes sense.
 
-Wei.
+I have a business container transaction what that some of( $13million dollars)
+
+ I would like to discuss with you. If you are interested, please
+contact my email
+
+address (mrs.victoria.alexander2@gmail.com)
+
+My WhatsApp number but only message (+19293737780)
+
+Please do not reply if you are not ready
+Thanks
