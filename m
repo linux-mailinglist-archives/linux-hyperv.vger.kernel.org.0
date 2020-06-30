@@ -2,77 +2,80 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30DE720FA36
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jun 2020 19:12:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EDF920FA50
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Jun 2020 19:16:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731792AbgF3RMW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 Jun 2020 13:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50566 "EHLO
+        id S2390148AbgF3RQh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 Jun 2020 13:16:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729963AbgF3RMV (ORCPT
+        with ESMTP id S2390145AbgF3RQc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:12:21 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F143C061755;
-        Tue, 30 Jun 2020 10:12:21 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id dr13so21439137ejc.3;
-        Tue, 30 Jun 2020 10:12:21 -0700 (PDT)
+        Tue, 30 Jun 2020 13:16:32 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C286C03E97A
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Jun 2020 10:16:32 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id h22so9757601pjf.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Jun 2020 10:16:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hLjY+FiejsKCHtdjZ2X5AG1Wh8QL9+hOBzArfxVt15s=;
-        b=qBp9Bkd+bZcKlIGx6Z9Kc30AXs6nEXO8oRuh2kHPe1me1YuqwxMpQQotWwJAoWvdS8
-         a6Mrxv1/phr4YSLPV7NPqwEAA3wKuJl455FYOqK3Y9pKm+4+z1ts+0MCd579LepC7xO+
-         0pd40N8nWIiy/44TDVRRzJ2NA0CY2DvN8dYUCczzJxlpv8y7l5RCWWO07FrsN+leH/F1
-         QxE4Tf7DCfGHyvEi32QPMwoG5cbIsx1s3q+R5ejMn0kFe4A+gZbC1bFYO0aSj25kA0sO
-         1Ie5WDR/Cco30yQ/hSHaklpDnkrCo1/XoWkEHeZJNRdGvzVHjR3/VwNx2aIfxA6ghRFN
-         GlKA==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RCoSlvYpwE4xm9GGAZDoA+vu8+wYaZp5AwN6JLLP7E0=;
+        b=VER2Btoh3kFyWbOJUwuHhFAoku5RHQcrAHEgHlOk2KpdI1XvAIM5WmdjrU0AqDlWqV
+         cXRVRGgot1W90G6PZMfN5BDxuSIDQl8MTqI/8+dMZQsCcorEhBUz6nRzZGQ2w+668kLj
+         CJ5s+9A2ezgfmv8iVqwPSynrgjvnMFrooa8jq2GiXiYP4E5FaFn9rygxFAc15MSEFtit
+         UBjZ2UPOlDuvEZuD8Fo7fbwMCABJ5xvPRmOK3i3a+SBFILX4ESV1RRqyIuz8Y9tQ2kVu
+         P/mUcdGRxs7hqpTOX2H96AyTfgHEZaApf+8zBn2tFCoxE8GToE0Yay1O3vIV6hOLRh7m
+         fY0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hLjY+FiejsKCHtdjZ2X5AG1Wh8QL9+hOBzArfxVt15s=;
-        b=r4DxTuqW/0XtQQ4OaGXYkAJtSb4hdeEX46mAMJIstl5VIo6qC4p/BKAlbRWFWDMgaB
-         rAGmkITpep3MAIzusoyYd8q4DRW62oouyeVsmAMHlF4l736FVoBd6O4L7ka1BybxcHg7
-         xJmdjG13MTcHPbPxSFOLEc7Hy2UfXYzVG3EuPJNh3g0xWp99/pGXUe6XLBBjattuCEgB
-         Dp0Q6VKY3Nh0vlWjYzGs5patbp27uJyOaJRNWW55lJasZs/KCsEvN2JDVOcr6+pSfTOJ
-         Hu2KTzmftRhoiYkiiGM6jLaFAAEtvKdCCBtDT5OCQhT9H0tFFC7PxWIRuSuzPnDczSPy
-         eiqA==
-X-Gm-Message-State: AOAM533+XmDZqMGEI1L5Nbe0E7GVSEd6S6+4VHGNZxffyrmK/432/W6P
-        pXGNg9I5RemuQjoZZH1llHw=
-X-Google-Smtp-Source: ABdhPJy/WiZXMjLukD00/Pj3vPe0LoKDdDGPP1BLeXkJAELpuKNhsZYuZ/vw/t2EYG6lMRHMuhnqMQ==
-X-Received: by 2002:a17:906:178b:: with SMTP id t11mr8136eje.489.1593537140016;
-        Tue, 30 Jun 2020 10:12:20 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id g8sm3704441edk.13.2020.06.30.10.12.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RCoSlvYpwE4xm9GGAZDoA+vu8+wYaZp5AwN6JLLP7E0=;
+        b=sj3N/jmj04tnzrVey+v03w85VILdpTlYuB9H02P8ydQKNFRrkAn3bXu9O5fbh+YIBk
+         9uDoEH31ZfjH/7vdLxzLmG2ClcKLMHi0gX2wccu4tD1A2Eb0zxa1sQ6uCIH90jPxNOVz
+         6S5RBHOUyRmVX5yugvgRXAhRw0wlw32qQpE86x0a8RM3Ua3lHXwGh++lcYlaioSEQK6r
+         Pk9WxlYIAwjWARzoy6cjzcIm3P2Ixt0I2K5fgfr1NxYCnauvI0rl6fCTF5kkQ8fiaPZu
+         UYsldjW74nRwiTgsIXf6MP/G0Q5HILLHeWqbqg8xNVlUT5j3GfP29LfHC3PEFMd2KfDt
+         3wBA==
+X-Gm-Message-State: AOAM531sf3UTLS3G0fF0srRjxOSoOesTYe5QPWfGzflUWEs/M6Yy/Pz2
+        x2dHXDSJT1sAsmAffEKoiUhd2w==
+X-Google-Smtp-Source: ABdhPJwTQKG+yNabwbiBqTlw7Ts5bhbBBqIBDsA+fvfKLo/ggAj6ZDNQuOqsHxH+g9mLpbTcyYOwgw==
+X-Received: by 2002:a17:90b:11c9:: with SMTP id gv9mr6903719pjb.177.1593537391735;
+        Tue, 30 Jun 2020 10:16:31 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id q39sm2885094pja.30.2020.06.30.10.16.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 10:12:19 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 19:12:13 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     t-mabelt@microsoft.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        skarade@microsoft.com, Andres Beltran <lkmlabelt@gmail.com>,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        Tue, 30 Jun 2020 10:16:31 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 10:16:21 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Andres Beltran <lkmlabelt@gmail.com>
+Cc:     t-mabelt@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, parri.andrea@gmail.com,
+        skarade@microsoft.com, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org,
         "James E . J . Bottomley" <jejb@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         "David S . Miller" <davem@davemloft.net>
 Subject: Re: [PATCH v3 0/3] Drivers: hv: vmbus: vmbus_requestor data
  structure for VMBus hardening
-Message-ID: <20200630171213.GA12948@andrea>
+Message-ID: <20200630101621.0f4d9dba@hermes.lan>
+In-Reply-To: <20200630153200.1537105-1-lkmlabelt@gmail.com>
 References: <20200630153200.1537105-1-lkmlabelt@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630153200.1537105-1-lkmlabelt@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 11:31:57AM -0400, Andres Beltran wrote:
+On Tue, 30 Jun 2020 11:31:57 -0400
+Andres Beltran <lkmlabelt@gmail.com> wrote:
+
 > Currently, VMbus drivers use pointers into guest memory as request IDs
 > for interactions with Hyper-V. To be more robust in the face of errors
 > or malicious behavior from a compromised Hyper-V, avoid exposing
@@ -92,15 +95,6 @@ On Tue, Jun 30, 2020 at 11:31:57AM -0400, Andres Beltran wrote:
 > Andres Beltran
 > 
 > Tested-by: Andrea Parri <parri.andrea@gmail.com>
-
-Em, I don't expect the changes introduced since v1 to have any observable
-effects, but I really don't know: I should be able to complete my testing
-of this by tomorrow or so; for now, please just ignore this tag.
-
-Thanks,
-  Andrea
-
-
 > 
 > Cc: linux-scsi@vger.kernel.org
 > Cc: netdev@vger.kernel.org
@@ -124,6 +118,6 @@ Thanks,
 >  include/linux/hyperv.h            |  22 +++++
 >  6 files changed, 329 insertions(+), 25 deletions(-)
 > 
-> -- 
-> 2.25.1
-> 
+
+How does this interact with use of the vmbus in usermode by DPDK through hv_uio_generic?
+Will it still work?
