@@ -2,103 +2,96 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49968218381
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2020 11:25:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51C7D21876B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2020 14:33:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgGHJZR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Jul 2020 05:25:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33311 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGHJZQ (ORCPT
+        id S1729223AbgGHMdb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 8 Jul 2020 08:33:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbgGHMda (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:25:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f18so40028466wrs.0;
-        Wed, 08 Jul 2020 02:25:14 -0700 (PDT)
+        Wed, 8 Jul 2020 08:33:30 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBFFAC08E89D
+        for <linux-hyperv@vger.kernel.org>; Wed,  8 Jul 2020 05:33:29 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id e64so41849161iof.12
+        for <linux-hyperv@vger.kernel.org>; Wed, 08 Jul 2020 05:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
+        b=CtDA46Te1kJYGFqAkgr9Vub/YrG6WB2S+VlEURQEEM4x6m9sjli+Jz/yotFRmV/AMR
+         T/h2d+e8At09eChsFX2C+mUFLH+FsdwAy78KAtzHqTPpG69rhvmbmMUpZSALFUdgKxT3
+         rKV4TF8A0J+Za5tWsTPtObTKnCJJSeTUvLM0KCUCLapZUiUA/CE0qJguNsnmAcBYT7Bw
+         PUSSiRKtit7eL05YbTu8d4vZk3Rk52mtpEQs926eluhEg6IUrqIesfOKILheZFFzZp0P
+         0kRnPxRkSyAb2gIupk6cQmoDhkGW5ga2ONIfRh7Ui0T+vXHI9OfE4hLpnUDNkQjQgdsE
+         pxTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HHEXoSacTXtSlDKUw+15Jl9wo7TTVCqG6nV23+yAmOY=;
-        b=Kq21Rv+cNcUM9uVAoTM8ZD6HzjRyj8vTo636vyZCF7CFRZvmUS52zSeCMGKtytNzQi
-         9+Ahx1+VERT1Yqv6pBHLkkKcUsXrKKrt6HeIoVe/PeeKtn8+Hz/X3TXNr78XAZMHkFpy
-         TEH7BJwQRI0dTRSmhozndr3ybbNuA1dY7XzN6WRTSLwtSNge/v3k8XxBw3sQ3bnZc+FN
-         qU9BNxUIie9AmFzlVITpndZxHC8DGCdwrFg5ysSq/IyeVgUpMp0+Dh2dBqQH9yLJX5k/
-         ZPvEaz1oujEFJxU7O1FJkPWjnzmTibxoTPnsd9m/rR2K4/1TR02AdhRtZvaHDa7dHpDe
-         F56g==
-X-Gm-Message-State: AOAM531zx3ZB8Tk5uqssgDONu48BXPwuUSMosOdBuApCUA4qcsiU066S
-        36cnDCA4tD+EoQI5lfuEBCrNn3+X
-X-Google-Smtp-Source: ABdhPJzzs/pKIjoQFtFDc1tJJR5LO6koOXolKGudMz2NmyNrXczooElRgYoirakpBhV1oDJvMtDDAQ==
-X-Received: by 2002:adf:c185:: with SMTP id x5mr62928897wre.403.1594200314078;
-        Wed, 08 Jul 2020 02:25:14 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id k20sm5075886wmi.27.2020.07.08.02.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 02:25:13 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 09:25:12 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     t-mabelt@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, parri.andrea@gmail.com,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] scsi: storvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Message-ID: <20200708092512.muse7szgxyihazvv@liuwe-devbox-debian-v2>
-References: <20200701001221.2540-1-lkmlabelt@gmail.com>
- <20200701001221.2540-3-lkmlabelt@gmail.com>
- <20200707234700.GA218@Ryzen-9-3900X.localdomain>
- <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=/vBVbAxvijag95IA6OM26aTa2bKDnUtimRlc1mZm/7M=;
+        b=NFyE1G+cUOMjEgmbWTzMgobW4oLp3FbY3Tc11HR0SLQI5r1UeTKzcSFsAsKkE66jmq
+         yGNYdFiK0lFswnzm9RNyvAJAKrIQnI+vJMizp/c1KCHDYS03Aim+yb04mK0n5KFKlzMt
+         dqG5nHuykXlXcQHLA2DEuKCtHnPrWWOkSDq7mYgG5Zyitx2Z8pOwECY4ya268V0xtxvo
+         9pZgDjFjpoR0C76GFSvppL8G4VYhL9VQ3AynnOEfmCZ+4vEzM1HFwcJeS3S1ElEwYv9i
+         z2gST4WBOCOwFUSbk4bw7z4sLuci4EQceAPCTwCmS/NeZ9NHTXA10uxXG3H2A4oPiCFc
+         OvtA==
+X-Gm-Message-State: AOAM531vbWvAzU6kAK7DWz9hRgx4n1SL4UqnmD5JMPqE5W6sU83zKs51
+        lZX9XLiXVD8+3tSZFJeRGdseQaJbLIj5WM6Bv8Q=
+X-Google-Smtp-Source: ABdhPJy69qBRFRW2d2u+0xyGHVfmVbQRW6SQ4gKLQIvGwSNWfhZDhNcIlxNh+7AirNZFy3An0aJSkt25Q8y7juQZu8o=
+X-Received: by 2002:a05:6638:12c7:: with SMTP id v7mr64754290jas.56.1594211609022;
+ Wed, 08 Jul 2020 05:33:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
-User-Agent: NeoMutt/20180716
+Received: by 2002:a05:6602:1582:0:0:0:0 with HTTP; Wed, 8 Jul 2020 05:33:28
+ -0700 (PDT)
+Reply-To: mmsafiatou057@gmail.com
+From:   "Mrs. Safitaou Zoungrana" <richardlaurentdr@gmail.com>
+Date:   Wed, 8 Jul 2020 12:33:28 +0000
+Message-ID: <CALJAiTVXhrKZYOHVoupnx6hmXXD0i2k4MOSO6HW+mj1BAydXhA@mail.gmail.com>
+Subject: My Dear Beloved One,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 09:21:05AM +0000, Wei Liu wrote:
-[...]
-> > If I revert this commit, everything works fine:
-> > 
-> > PS C:\Users\natec> wsl --shutdown
-> > PS C:\Users\natec> wsl -d ubuntu -- /bin/bash
-> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ cat /proc/version
-> > Linux version 5.8.0-rc4-next-20200707-microsoft-standard+ (nathan@Ryzen-9-3900X) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1 SMP Tue Jul 7 16:35:06 MST 2020
-> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ git -C ~/src/linux-next lo -2
-> > 0ff017dff922 (HEAD -> master) Revert "scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening"
-> > 5b2a702f85b3 (tag: next-20200707, origin/master, origin/HEAD) Add linux-next specific files for 20200707
-> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$
-> > 
-> > The kernel was built using the following commands:
-> > 
-> > $ mkdir -p out/x86_64
-> > 
-> > $ curl -LSso out/x86_64/.config https://github.com/microsoft/WSL2-Linux-Kernel/raw/linux-msft-wsl-4.19.y/Microsoft/config-wsl
-> > 
-> > $ scripts/config --file out/x86_64/.config -d RAID6_PQ_BENCHMARK -e NET_9P_VIRTIO
-> > 
-> > $ make -skj"$(nproc)" O=out/x86_64 olddefconfig bzImage
-> > 
-> > I don't really know how to get more information than this as WSL seems
-> > rather opaque but I am happy to provide any information.
-> 
-> Linux kernel uses Hyper-V's crash reporting facility to spit out
-> information when it dies. It is said that you can see that information
-> in the "Event Viewer" program.
-> 
-> (I've never tried this though -- not using WSL2)
-> 
+My Dear Beloved One,
 
-If this doesn't work, another idea is to install a traditional VM on
-Hyper-V and replace the kernel with your own.
+I greet you in the name of God almighty the givers of all good things
+in life. Please kindly pardon me for any inconvenience this letter may
+cost you because I know it may come to you as a surprise as we have no
+previous correspondence.  I sent this mail praying for it to reach you
+in good health, since I myself are in a very critical health condition
+in which I sleep every night without knowing if I may be alive to see
+the next day.
 
-With such setup, you should be able to add an emulated serial port to
-the VM and grab more information.
+I am Mrs. Safiatou Zoungrana,  the wife of late Engineer Ralph
+Alphonso Zoungrana from Paris France but based here in Burkina Faso
+West Africa since eight years ago as a business woman dealing with
+gold exportation and Sales. We have been married for years before his
+sudden death although we were childless. I have been diagnosed with
+ovarian cancer and I have been battling with the sickness when my late
+lovely husband of a blessed memory was alive. May his soul rest in
+peace, Amen.
 
-Wei.
+My late Husband left the sum of =E2=82=AC7.900.000.00 Seven Million Nine
+Hundred Thousand Euros in a fix/suspense account in one of the prime
+bank here in Burkina Faso. Recently, my Doctor told me that I have few
+days to live due to the cancer problem. The one that disturbs me most
+is my blood pressure sickness.
+
+Having known my health condition I decided to seek for your kind
+assistance to transfer this fund into your account and you will use it
+to establish an orphanage home in my name. I will give you more
+details about the project as soon as I receive your reply in my
+private email (mmsafiatou057@gmail.com) to handle this project because
+I do not want to state all here until I see your reply, desire and
+commitment to handle this project.
+
+My Regards to your family.
+Mrs. Safiatou Zoungrana.
