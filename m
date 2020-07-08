@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95F3C218367
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2020 11:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49968218381
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Jul 2020 11:25:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgGHJVM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Jul 2020 05:21:12 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38624 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGHJVL (ORCPT
+        id S1727905AbgGHJZR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 8 Jul 2020 05:25:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33311 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGHJZQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:21:11 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z13so48074321wrw.5;
-        Wed, 08 Jul 2020 02:21:08 -0700 (PDT)
+        Wed, 8 Jul 2020 05:25:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f18so40028466wrs.0;
+        Wed, 08 Jul 2020 02:25:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rb/DISg/IR/8ZOl/IE2H8Q9xJVvB/ooWq5NRbEkO++k=;
-        b=cUduO+oiodiARdM2km/qE0t+NAYN0Df8S8aEwRfqoV56V2RqmSWZ8Pq66S6/5lwkmg
-         ogwX9EFWiVboL93iQtKZR5hSyU0Nkbg1i2a8zdX+oLQWLdgsMEJt9IdN0+VzYfD1oSjv
-         nLSXkODFyYnOCvMsOB1h8POIkd6t9foSAT9/VAGYfTD6HAOMnBeXyvLFvVBtJ/oDHWmE
-         Os1k3eh3PM1MKNJDA0n6Fxj+0MU2YlAbrWt2J02WUzvbv4myNNMIYV+dxBv1tqKQyLpC
-         qWtyV8ALQwLK8E0mtRylVUM7bk6LIsB0NSGrQL7TwPgb2MgYLyKqC5FNsfPXqk/lElew
-         n0hg==
-X-Gm-Message-State: AOAM532CfVKgc/O03G0YXuM5gEb1JAlEVLSVEcB+PxusrjsbnIo/i8kp
-        g+bX/2uycnIbUOx2WBmmRjY=
-X-Google-Smtp-Source: ABdhPJynLqDiqZcVUZmnTnK/VIflWX22q4P6W+N+0piDUj3pr5Ba4Saaj5PIoCpujsjnALWMbmobjg==
-X-Received: by 2002:adf:edc6:: with SMTP id v6mr58130575wro.413.1594200068120;
-        Wed, 08 Jul 2020 02:21:08 -0700 (PDT)
+        bh=HHEXoSacTXtSlDKUw+15Jl9wo7TTVCqG6nV23+yAmOY=;
+        b=Kq21Rv+cNcUM9uVAoTM8ZD6HzjRyj8vTo636vyZCF7CFRZvmUS52zSeCMGKtytNzQi
+         9+Ahx1+VERT1Yqv6pBHLkkKcUsXrKKrt6HeIoVe/PeeKtn8+Hz/X3TXNr78XAZMHkFpy
+         TEH7BJwQRI0dTRSmhozndr3ybbNuA1dY7XzN6WRTSLwtSNge/v3k8XxBw3sQ3bnZc+FN
+         qU9BNxUIie9AmFzlVITpndZxHC8DGCdwrFg5ysSq/IyeVgUpMp0+Dh2dBqQH9yLJX5k/
+         ZPvEaz1oujEFJxU7O1FJkPWjnzmTibxoTPnsd9m/rR2K4/1TR02AdhRtZvaHDa7dHpDe
+         F56g==
+X-Gm-Message-State: AOAM531zx3ZB8Tk5uqssgDONu48BXPwuUSMosOdBuApCUA4qcsiU066S
+        36cnDCA4tD+EoQI5lfuEBCrNn3+X
+X-Google-Smtp-Source: ABdhPJzzs/pKIjoQFtFDc1tJJR5LO6koOXolKGudMz2NmyNrXczooElRgYoirakpBhV1oDJvMtDDAQ==
+X-Received: by 2002:adf:c185:: with SMTP id x5mr62928897wre.403.1594200314078;
+        Wed, 08 Jul 2020 02:25:14 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g145sm6530197wmg.23.2020.07.08.02.21.07
+        by smtp.gmail.com with ESMTPSA id k20sm5075886wmi.27.2020.07.08.02.25.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 02:21:07 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 09:21:05 +0000
+        Wed, 08 Jul 2020 02:25:13 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 09:25:12 +0000
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Nathan Chancellor <natechancellor@gmail.com>
 Cc:     t-mabelt@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
@@ -47,322 +47,58 @@ Cc:     t-mabelt@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
         linux-scsi@vger.kernel.org
 Subject: Re: [PATCH v4 2/3] scsi: storvsc: Use vmbus_requestor to generate
  transaction IDs for VMBus hardening
-Message-ID: <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
+Message-ID: <20200708092512.muse7szgxyihazvv@liuwe-devbox-debian-v2>
 References: <20200701001221.2540-1-lkmlabelt@gmail.com>
  <20200701001221.2540-3-lkmlabelt@gmail.com>
  <20200707234700.GA218@Ryzen-9-3900X.localdomain>
+ <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200707234700.GA218@Ryzen-9-3900X.localdomain>
+In-Reply-To: <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 04:47:00PM -0700, Nathan Chancellor wrote:
-> Hi Andres,
-> 
-> On Tue, Jun 30, 2020 at 08:12:20PM -0400, Andres Beltran wrote:
-> > Currently, pointers to guest memory are passed to Hyper-V as
-> > transaction IDs in storvsc. In the face of errors or malicious
-> > behavior in Hyper-V, storvsc should not expose or trust the transaction
-> > IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> > use small integers generated by vmbus_requestor as requests
-> > (transaction) IDs.
+On Wed, Jul 08, 2020 at 09:21:05AM +0000, Wei Liu wrote:
+[...]
+> > If I revert this commit, everything works fine:
 > > 
-> > Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> > Cc: linux-scsi@vger.kernel.org
-> > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> > ---
-> > Changes in v2:
-> >         - Add casts to unsigned long to fix warnings on 32bit.
+> > PS C:\Users\natec> wsl --shutdown
+> > PS C:\Users\natec> wsl -d ubuntu -- /bin/bash
+> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ cat /proc/version
+> > Linux version 5.8.0-rc4-next-20200707-microsoft-standard+ (nathan@Ryzen-9-3900X) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1 SMP Tue Jul 7 16:35:06 MST 2020
+> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ git -C ~/src/linux-next lo -2
+> > 0ff017dff922 (HEAD -> master) Revert "scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening"
+> > 5b2a702f85b3 (tag: next-20200707, origin/master, origin/HEAD) Add linux-next specific files for 20200707
+> > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$
 > > 
-> >  drivers/scsi/storvsc_drv.c | 85 +++++++++++++++++++++++++++++++++-----
-> >  1 file changed, 74 insertions(+), 11 deletions(-)
+> > The kernel was built using the following commands:
 > > 
-> > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> > index 624467e2590a..6d2df1f0fe6d 100644
-> > --- a/drivers/scsi/storvsc_drv.c
-> > +++ b/drivers/scsi/storvsc_drv.c
-> > @@ -399,6 +399,7 @@ static int storvsc_timeout = 180;
-> >  static struct scsi_transport_template *fc_transport_template;
-> >  #endif
-> >  
-> > +static struct scsi_host_template scsi_driver;
-> >  static void storvsc_on_channel_callback(void *context);
-> >  
-> >  #define STORVSC_MAX_LUNS_PER_TARGET			255
-> > @@ -698,6 +699,12 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
-> >  
-> >  	memset(&props, 0, sizeof(struct vmstorage_channel_properties));
-> >  
-> > +	/*
-> > +	 * The size of vmbus_requestor is an upper bound on the number of requests
-> > +	 * that can be in-progress at any one time across all channels.
-> > +	 */
-> > +	new_sc->rqstor_size = scsi_driver.can_queue;
-> > +
-> >  	ret = vmbus_open(new_sc,
-> >  			 storvsc_ringbuffer_size,
-> >  			 storvsc_ringbuffer_size,
-> > @@ -726,6 +733,7 @@ static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
-> >  	struct storvsc_cmd_request *request;
-> >  	struct vstor_packet *vstor_packet;
-> >  	int ret, t;
-> > +	u64 rqst_id;
-> >  
-> >  	/*
-> >  	 * If the number of CPUs is artificially restricted, such as
-> > @@ -760,14 +768,23 @@ static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
-> >  	vstor_packet->flags = REQUEST_COMPLETION_FLAG;
-> >  	vstor_packet->sub_channel_count = num_sc;
-> >  
-> > +	rqst_id = vmbus_next_request_id(&device->channel->requestor,
-> > +					(unsigned long)request);
-> > +	if (rqst_id == VMBUS_RQST_ERROR) {
-> > +		dev_err(dev, "No request id available\n");
-> > +		return;
-> > +	}
-> > +
-> >  	ret = vmbus_sendpacket(device->channel, vstor_packet,
-> >  			       (sizeof(struct vstor_packet) -
-> >  			       vmscsi_size_delta),
-> > -			       (unsigned long)request,
-> > +			       rqst_id,
-> >  			       VM_PKT_DATA_INBAND,
-> >  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-> >  
-> >  	if (ret != 0) {
-> > +		/* Reclaim request ID to avoid leak of IDs */
-> > +		vmbus_request_addr(&device->channel->requestor, rqst_id);
-> >  		dev_err(dev, "Failed to create sub-channel: err=%d\n", ret);
-> >  		return;
-> >  	}
-> > @@ -818,20 +835,31 @@ static int storvsc_execute_vstor_op(struct hv_device *device,
-> >  {
-> >  	struct vstor_packet *vstor_packet;
-> >  	int ret, t;
-> > +	u64 rqst_id;
-> >  
-> >  	vstor_packet = &request->vstor_packet;
-> >  
-> >  	init_completion(&request->wait_event);
-> >  	vstor_packet->flags = REQUEST_COMPLETION_FLAG;
-> >  
-> > +	rqst_id = vmbus_next_request_id(&device->channel->requestor,
-> > +					(unsigned long)request);
-> > +	if (rqst_id == VMBUS_RQST_ERROR) {
-> > +		dev_err(&device->device, "No request id available\n");
-> > +		return -EAGAIN;
-> > +	}
-> > +
-> >  	ret = vmbus_sendpacket(device->channel, vstor_packet,
-> >  			       (sizeof(struct vstor_packet) -
-> >  			       vmscsi_size_delta),
-> > -			       (unsigned long)request,
-> > +			       rqst_id,
-> >  			       VM_PKT_DATA_INBAND,
-> >  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-> > -	if (ret != 0)
-> > +	if (ret != 0) {
-> > +		/* Reclaim request ID to avoid leak of IDs */
-> > +		vmbus_request_addr(&device->channel->requestor, rqst_id);
-> >  		return ret;
-> > +	}
-> >  
-> >  	t = wait_for_completion_timeout(&request->wait_event, 5*HZ);
-> >  	if (t == 0)
-> > @@ -1233,9 +1261,17 @@ static void storvsc_on_channel_callback(void *context)
-> >  	foreach_vmbus_pkt(desc, channel) {
-> >  		void *packet = hv_pkt_data(desc);
-> >  		struct storvsc_cmd_request *request;
-> > +		u64 cmd_rqst;
-> >  
-> > -		request = (struct storvsc_cmd_request *)
-> > -			((unsigned long)desc->trans_id);
-> > +		cmd_rqst = vmbus_request_addr(&channel->requestor,
-> > +					      desc->trans_id);
-> > +		if (cmd_rqst == VMBUS_RQST_ERROR) {
-> > +			dev_err(&device->device,
-> > +				"Incorrect transaction id\n");
-> > +			continue;
-> > +		}
-> > +
-> > +		request = (struct storvsc_cmd_request *)(unsigned long)cmd_rqst;
-> >  
-> >  		if (request == &stor_device->init_request ||
-> >  		    request == &stor_device->reset_request) {
-> > @@ -1256,6 +1292,12 @@ static int storvsc_connect_to_vsp(struct hv_device *device, u32 ring_size,
-> >  
-> >  	memset(&props, 0, sizeof(struct vmstorage_channel_properties));
-> >  
-> > +	/*
-> > +	 * The size of vmbus_requestor is an upper bound on the number of requests
-> > +	 * that can be in-progress at any one time across all channels.
-> > +	 */
-> > +	device->channel->rqstor_size = scsi_driver.can_queue;
-> > +
-> >  	ret = vmbus_open(device->channel,
-> >  			 ring_size,
-> >  			 ring_size,
-> > @@ -1369,6 +1411,7 @@ static int storvsc_do_io(struct hv_device *device,
-> >  	int ret = 0;
-> >  	const struct cpumask *node_mask;
-> >  	int tgt_cpu;
-> > +	u64 rqst_id;
-> >  
-> >  	vstor_packet = &request->vstor_packet;
-> >  	stor_device = get_out_stor_device(device);
-> > @@ -1463,6 +1506,13 @@ static int storvsc_do_io(struct hv_device *device,
-> >  
-> >  	vstor_packet->operation = VSTOR_OPERATION_EXECUTE_SRB;
-> >  
-> > +	rqst_id = vmbus_next_request_id(&outgoing_channel->requestor,
-> > +					(unsigned long)request);
-> > +	if (rqst_id == VMBUS_RQST_ERROR) {
-> > +		dev_err(&device->device, "No request id available\n");
-> > +		return -EAGAIN;
-> > +	}
-> > +
-> >  	if (request->payload->range.len) {
-> >  
-> >  		ret = vmbus_sendpacket_mpb_desc(outgoing_channel,
-> > @@ -1470,18 +1520,21 @@ static int storvsc_do_io(struct hv_device *device,
-> >  				vstor_packet,
-> >  				(sizeof(struct vstor_packet) -
-> >  				vmscsi_size_delta),
-> > -				(unsigned long)request);
-> > +				rqst_id);
-> >  	} else {
-> >  		ret = vmbus_sendpacket(outgoing_channel, vstor_packet,
-> >  			       (sizeof(struct vstor_packet) -
-> >  				vmscsi_size_delta),
-> > -			       (unsigned long)request,
-> > +			       rqst_id,
-> >  			       VM_PKT_DATA_INBAND,
-> >  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-> >  	}
-> >  
-> > -	if (ret != 0)
-> > +	if (ret != 0) {
-> > +		/* Reclaim request ID to avoid leak of IDs */
-> > +		vmbus_request_addr(&outgoing_channel->requestor, rqst_id);
-> >  		return ret;
-> > +	}
-> >  
-> >  	atomic_inc(&stor_device->num_outstanding_req);
-> >  
-> > @@ -1562,7 +1615,7 @@ static int storvsc_host_reset_handler(struct scsi_cmnd *scmnd)
-> >  	struct storvsc_cmd_request *request;
-> >  	struct vstor_packet *vstor_packet;
-> >  	int ret, t;
-> > -
-> > +	u64 rqst_id;
-> >  
-> >  	stor_device = get_out_stor_device(device);
-> >  	if (!stor_device)
-> > @@ -1577,14 +1630,24 @@ static int storvsc_host_reset_handler(struct scsi_cmnd *scmnd)
-> >  	vstor_packet->flags = REQUEST_COMPLETION_FLAG;
-> >  	vstor_packet->vm_srb.path_id = stor_device->path_id;
-> >  
-> > +	rqst_id = vmbus_next_request_id(&device->channel->requestor,
-> > +					(unsigned long)&stor_device->reset_request);
-> > +	if (rqst_id == VMBUS_RQST_ERROR) {
-> > +		dev_err(&device->device, "No request id available\n");
-> > +		return FAILED;
-> > +	}
-> > +
-> >  	ret = vmbus_sendpacket(device->channel, vstor_packet,
-> >  			       (sizeof(struct vstor_packet) -
-> >  				vmscsi_size_delta),
-> > -			       (unsigned long)&stor_device->reset_request,
-> > +			       rqst_id,
-> >  			       VM_PKT_DATA_INBAND,
-> >  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-> > -	if (ret != 0)
-> > +	if (ret != 0) {
-> > +		/* Reclaim request ID to avoid leak of IDs */
-> > +		vmbus_request_addr(&device->channel->requestor, rqst_id);
-> >  		return FAILED;
-> > +	}
-> >  
-> >  	t = wait_for_completion_timeout(&request->wait_event, 5*HZ);
-> >  	if (t == 0)
-> > -- 
-> > 2.25.1
+> > $ mkdir -p out/x86_64
 > > 
+> > $ curl -LSso out/x86_64/.config https://github.com/microsoft/WSL2-Linux-Kernel/raw/linux-msft-wsl-4.19.y/Microsoft/config-wsl
+> > 
+> > $ scripts/config --file out/x86_64/.config -d RAID6_PQ_BENCHMARK -e NET_9P_VIRTIO
+> > 
+> > $ make -skj"$(nproc)" O=out/x86_64 olddefconfig bzImage
+> > 
+> > I don't really know how to get more information than this as WSL seems
+> > rather opaque but I am happy to provide any information.
 > 
-> This patch has landed in linux-next as of next-20200707 and now I can no
-> longer boot the WSL2 lightweight VM.
+> Linux kernel uses Hyper-V's crash reporting facility to spit out
+> information when it dies. It is said that you can see that information
+> in the "Event Viewer" program.
 > 
-> PS C:\Users\natec> wsl -d ubuntu
-> The virtual machine or container was forcefully exited.
+> (I've never tried this though -- not using WSL2)
 > 
-> $ git bisect log
-> # bad: [5b2a702f85b3285fcde0309aadacc13a36c70fc7] Add linux-next specific files for 20200707
-> # good: [bfe91da29bfad9941d5d703d45e29f0812a20724] Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
-> git bisect start 'origin/master' 'origin/stable'
-> # good: [885913a4d03f7f5fbd2c75121ea8c42f58185cc5] Merge remote-tracking branch 'crypto/master'
-> git bisect good 885913a4d03f7f5fbd2c75121ea8c42f58185cc5
-> # good: [4a902a00a463f60b1630577a32e142800707c576] Merge remote-tracking branch 'regulator/for-next'
-> git bisect good 4a902a00a463f60b1630577a32e142800707c576
-> # good: [e48c950eb83e19d532ea49112211b01c6210377a] Merge remote-tracking branch 'thunderbolt/next'
-> git bisect good e48c950eb83e19d532ea49112211b01c6210377a
-> # good: [0a299abc3a2127d9711517904a1e5c751985b5a5] Merge remote-tracking branch 'rtc/rtc-next'
-> git bisect good 0a299abc3a2127d9711517904a1e5c751985b5a5
-> # good: [6de62f5629875029fbd8d79d7fa9c45e8dbea966] kcov: make some symbols static
-> git bisect good 6de62f5629875029fbd8d79d7fa9c45e8dbea966
-> # bad: [9103b615924bf7594a7651a9777e0cf177201dbd] Merge remote-tracking branch 'auxdisplay/auxdisplay'
-> git bisect bad 9103b615924bf7594a7651a9777e0cf177201dbd
-> # good: [ed0e825a5c0f00aec12f79e8aef4b37dbb5a94f1] Merge remote-tracking branch 'kspp/for-next/kspp'
-> git bisect good ed0e825a5c0f00aec12f79e8aef4b37dbb5a94f1
-> # good: [563bebf9d7625b579a13b79a4981fdd3097d9bce] Merge remote-tracking branch 'nvmem/for-next'
-> git bisect good 563bebf9d7625b579a13b79a4981fdd3097d9bce
-> # good: [efd8e353a542e79995681d98a4849eeeb1ce3809] Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus hardening
-> git bisect good efd8e353a542e79995681d98a4849eeeb1ce3809
-> # good: [27586ca786a729cda6c807621a1494900a56e7bc] XArray: Handle retry entries within xas_find_marked
-> git bisect good 27586ca786a729cda6c807621a1494900a56e7bc
-> # bad: [11478f56f20e3be6d11043b501f3090375af4492] hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening
-> git bisect bad 11478f56f20e3be6d11043b501f3090375af4492
-> # bad: [8e569d774e1e73afabf1fbf40d11fcb8462ddffa] scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardeninggit bisect bad 8e569d774e1e73afabf1fbf40d11fcb8462ddffa
-> # first bad commit: [8e569d774e1e73afabf1fbf40d11fcb8462ddffa] scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening
-> 
-> If I revert this commit, everything works fine:
-> 
-> PS C:\Users\natec> wsl --shutdown
-> PS C:\Users\natec> wsl -d ubuntu -- /bin/bash
-> nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ cat /proc/version
-> Linux version 5.8.0-rc4-next-20200707-microsoft-standard+ (nathan@Ryzen-9-3900X) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1 SMP Tue Jul 7 16:35:06 MST 2020
-> nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ git -C ~/src/linux-next lo -2
-> 0ff017dff922 (HEAD -> master) Revert "scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening"
-> 5b2a702f85b3 (tag: next-20200707, origin/master, origin/HEAD) Add linux-next specific files for 20200707
-> nathan@Ryzen-9-3900X:/mnt/c/Users/natec$
-> 
-> The kernel was built using the following commands:
-> 
-> $ mkdir -p out/x86_64
-> 
-> $ curl -LSso out/x86_64/.config https://github.com/microsoft/WSL2-Linux-Kernel/raw/linux-msft-wsl-4.19.y/Microsoft/config-wsl
-> 
-> $ scripts/config --file out/x86_64/.config -d RAID6_PQ_BENCHMARK -e NET_9P_VIRTIO
-> 
-> $ make -skj"$(nproc)" O=out/x86_64 olddefconfig bzImage
-> 
-> I don't really know how to get more information than this as WSL seems
-> rather opaque but I am happy to provide any information.
 
-Linux kernel uses Hyper-V's crash reporting facility to spit out
-information when it dies. It is said that you can see that information
-in the "Event Viewer" program.
+If this doesn't work, another idea is to install a traditional VM on
+Hyper-V and replace the kernel with your own.
 
-(I've never tried this though -- not using WSL2)
+With such setup, you should be able to add an emulated serial port to
+the VM and grab more information.
 
 Wei.
-
-> 
-> Cheers,
-> Nathan
