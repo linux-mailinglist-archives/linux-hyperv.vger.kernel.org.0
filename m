@@ -2,175 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B352A22399A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jul 2020 12:44:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE91D2239A9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jul 2020 12:47:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgGQKny (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Jul 2020 06:43:54 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52872 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgGQKnx (ORCPT
+        id S1725912AbgGQKqB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Jul 2020 06:46:01 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39659 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgGQKqA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:43:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q15so14172453wmj.2;
-        Fri, 17 Jul 2020 03:43:51 -0700 (PDT)
+        Fri, 17 Jul 2020 06:46:00 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w3so16348932wmi.4;
+        Fri, 17 Jul 2020 03:45:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LSE9umRH3nWIvfdFNBwmB1m+0/8khnsXtG7gUR3+lhQ=;
-        b=MTclCLxnSGTulDMf7kw9bdG5Rsenwxy0FR7VPd6FmSHhoQCGrM+Kh3ejyehZZDVROz
-         e6NVV445Ter2u3ARYoEzQwa04Aa/8On2/gF3GjB+Vd1qBbt/8tyZvb+T5MGGd3LfSyAV
-         eYCKUOo5tB1I8gYltMxENXQTvqkgEUI8phy3CMNQDvFjW93CaT1JQ9dYAOC4kWj4wvmz
-         QUPkVivj2tDHp61MplATuZTojRIFG6Dm/5TGNfqTZuDhndRaOspCT2XBH7ymD9FNgeHu
-         qvS2+sS4E+S3WmHxSiofyIPDK/2fMwnQxrswMVoH3zaUh43zyqFAu7z+9ig4rVyluYNi
-         g+yg==
-X-Gm-Message-State: AOAM530w/Jx7LKlVNvHqpDMRAM6Eof0kqjWwFlT0DlRztYu0W8G6GTp6
-        QaFpBkhvCxRpijY4fIrAZZw=
-X-Google-Smtp-Source: ABdhPJx8welwCuOA1l/xNh4E/9QDLWouXozoXt96oAhI1heXK8k2dfzmyqMAsKsdrZS8NTxZy7UyPQ==
-X-Received: by 2002:a1c:4d11:: with SMTP id o17mr8486138wmh.134.1594982630965;
-        Fri, 17 Jul 2020 03:43:50 -0700 (PDT)
+        bh=YY3ppYqGw7E84eMLDXJRCrVaF4QNTh9fLWccSr6uIiU=;
+        b=q6vAVxzxV9v9Hc1VUylqc3MpqQA/2f0ffFMvjlCtDJBseVmPgBamutlxqC1j9QUcEG
+         Pl38ceaZ3aM/+gVtIS94k2GKvOpML+BIHVZsB9VSehAeuc3Y0ifAmudu1X4xh2N7eUy7
+         Lfm4c+QopFTdS3CZQ7Gm8r6k9R1pWGRb6bYXdglBUpPgrTg5vzhWzDlcBnnVhC5I6r7s
+         qD0DkgApDdLC4NlOqF/YkWA2dJXp0OCMnWjxG0Z/wNgpb0TlhO8P+Iwl9v7AhEey8LP8
+         XYcyrKs75aZYAp+kRCcEgZXGI+5aUNQS1V1Tcfk7onOhO7Kzw9MRx1ZI8Y6qYYhZ1mt/
+         tqCA==
+X-Gm-Message-State: AOAM533a+6OdoMURg40PDcvCC0+JGHF69GobB0iPRASZBKEIpCD41i4U
+        BKWMGRYprNdUxC6sGgAoVK8=
+X-Google-Smtp-Source: ABdhPJyhkmGPpU8Pjdo+zQaFtP5F2glKmnDGK4/R8D94Ro/V3FiLZzWM3hGJtJ1M/nt5LnzZf8f/Ww==
+X-Received: by 2002:a1c:7c16:: with SMTP id x22mr8270458wmc.76.1594982758313;
+        Fri, 17 Jul 2020 03:45:58 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id w2sm13172955wrs.77.2020.07.17.03.43.50
+        by smtp.gmail.com with ESMTPSA id u2sm12011620wml.16.2020.07.17.03.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 03:43:50 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:43:48 +0000
+        Fri, 17 Jul 2020 03:45:57 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 10:45:56 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Chi Song <Song.Chi@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
- indirection table
-Message-ID: <20200717104348.epj54vr3evmullol@liuwe-devbox-debian-v2>
-References: <HK0P153MB027502644323A21B09F6DA60987C0@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     t-mabelt@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, parri.andrea@gmail.com,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] scsi: storvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Message-ID: <20200717104556.ul5s6hmtlerjpi3g@liuwe-devbox-debian-v2>
+References: <20200701001221.2540-1-lkmlabelt@gmail.com>
+ <20200701001221.2540-3-lkmlabelt@gmail.com>
+ <20200707234700.GA218@Ryzen-9-3900X.localdomain>
+ <20200708092105.7af7sf2olpaysh33@liuwe-devbox-debian-v2>
+ <20200708092512.muse7szgxyihazvv@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <HK0P153MB027502644323A21B09F6DA60987C0@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <20200708092512.muse7szgxyihazvv@liuwe-devbox-debian-v2>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Chi
+On Wed, Jul 08, 2020 at 09:25:12AM +0000, Wei Liu wrote:
+> On Wed, Jul 08, 2020 at 09:21:05AM +0000, Wei Liu wrote:
+> [...]
+> > > If I revert this commit, everything works fine:
+> > > 
+> > > PS C:\Users\natec> wsl --shutdown
+> > > PS C:\Users\natec> wsl -d ubuntu -- /bin/bash
+> > > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ cat /proc/version
+> > > Linux version 5.8.0-rc4-next-20200707-microsoft-standard+ (nathan@Ryzen-9-3900X) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1 SMP Tue Jul 7 16:35:06 MST 2020
+> > > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$ git -C ~/src/linux-next lo -2
+> > > 0ff017dff922 (HEAD -> master) Revert "scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening"
+> > > 5b2a702f85b3 (tag: next-20200707, origin/master, origin/HEAD) Add linux-next specific files for 20200707
+> > > nathan@Ryzen-9-3900X:/mnt/c/Users/natec$
+> > > 
+> > > The kernel was built using the following commands:
+> > > 
+> > > $ mkdir -p out/x86_64
+> > > 
+> > > $ curl -LSso out/x86_64/.config https://github.com/microsoft/WSL2-Linux-Kernel/raw/linux-msft-wsl-4.19.y/Microsoft/config-wsl
+> > > 
+> > > $ scripts/config --file out/x86_64/.config -d RAID6_PQ_BENCHMARK -e NET_9P_VIRTIO
+> > > 
+> > > $ make -skj"$(nproc)" O=out/x86_64 olddefconfig bzImage
+> > > 
+> > > I don't really know how to get more information than this as WSL seems
+> > > rather opaque but I am happy to provide any information.
+> > 
+> > Linux kernel uses Hyper-V's crash reporting facility to spit out
+> > information when it dies. It is said that you can see that information
+> > in the "Event Viewer" program.
+> > 
+> > (I've never tried this though -- not using WSL2)
+> > 
+> 
+> If this doesn't work, another idea is to install a traditional VM on
+> Hyper-V and replace the kernel with your own.
+> 
+> With such setup, you should be able to add an emulated serial port to
+> the VM and grab more information.
 
-Thanks for your patch. A few things need to be fixed before it can be
-accepted upstream.
+Hi Nathan, do you need more help on this?
 
-On Fri, Jul 17, 2020 at 06:04:31AM +0000, Chi Song wrote:
-> The network is observed with low performance, if TX indirection table
-> is imbalance.  But the table is in memory and set in runtime, it's
-> hard to know. Add them to attributes can help on troubleshooting.
+MSFT is also working on reproducing this internally.
 
-Missing Signed-off-by here. I assume you wrote this patch so please add
-
-    Signed-off-by: Chi Song <song.chi@microsoft.com>
-
-If there are other authors, please add their SoBs too.
-
-Please wrap the commit message to around 72 to 80 columns wide.
-
-I notice you only talked about TX table but in the code your also added
-support for RX table.
-
-I would also suggest changing the commit message a bit to:
-
-    An imbalanced TX indirection table causes netvsc to have low
-    performance. This table is created and managed during runtime. To help
-    better diagnose performance issues caused by imbalanced tables, add
-    device attributes to show the content of TX and RX indirection tables.
-
-Perhaps RX table causes low performance as well? If so, the above
-message needs further adjustment to account for that too.
-
-I will leave reviewing the code to Haiyang and Stephen.
+We're ~2 weeks away from the next merge window so it would be good if we
+can get to the bottom of this as quickly as possible.
 
 Wei.
 
-
-> ---
->  drivers/net/hyperv/netvsc_drv.c | 46 +++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
 > 
-> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-> index 6267f706e8ee..cd6fe96e10c1 100644
-> --- a/drivers/net/hyperv/netvsc_drv.c
-> +++ b/drivers/net/hyperv/netvsc_drv.c
-> @@ -2370,6 +2370,51 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
->  	return NOTIFY_OK;
->  }
->  
-> +static ssize_t tx_indirection_table_show(struct device *dev,
-> +					 struct device_attribute *dev_attr,
-> +					 char *buf)
-> +{
-> +	struct net_device *ndev = to_net_dev(dev);
-> +	struct net_device_context *ndc = netdev_priv(ndev);
-> +	int i = 0;
-> +	ssize_t offset = 0;
-> +
-> +	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
-> +		offset += sprintf(buf + offset, "%u ", ndc->tx_table[i]);
-> +	buf[offset - 1] = '\n';
-> +
-> +	return offset;
-> +}
-> +static DEVICE_ATTR_RO(tx_indirection_table);
-> +
-> +static ssize_t rx_indirection_table_show(struct device *dev,
-> +					 struct device_attribute *dev_attr,
-> +					 char *buf)
-> +{
-> +	struct net_device *ndev = to_net_dev(dev);
-> +	struct net_device_context *ndc = netdev_priv(ndev);
-> +	int i = 0;
-> +	ssize_t offset = 0;
-> +
-> +	for (i = 0; i < ITAB_NUM; i++)
-> +		offset += sprintf(buf + offset, "%u ", ndc->rx_table[i]);
-> +	buf[offset - 1] = '\n';
-> +
-> +	return offset;
-> +}
-> +static DEVICE_ATTR_RO(rx_indirection_table);
-> +
-> +static struct attribute *netvsc_dev_attrs[] = {
-> +	&dev_attr_tx_indirection_table.attr,
-> +	&dev_attr_rx_indirection_table.attr,
-> +	NULL
-> +};
-> +
-> +const struct attribute_group netvsc_dev_group = {
-> +	.name = NULL,
-> +	.attrs = netvsc_dev_attrs,
-> +};
-> +
->  static int netvsc_probe(struct hv_device *dev,
->  			const struct hv_vmbus_device_id *dev_id)
->  {
-> @@ -2410,6 +2455,7 @@ static int netvsc_probe(struct hv_device *dev,
->  
->  	net->netdev_ops = &device_ops;
->  	net->ethtool_ops = &ethtool_ops;
-> +	net->sysfs_groups[0] = &netvsc_dev_group;
->  	SET_NETDEV_DEV(net, &dev->device);
->  
->  	/* We always need headroom for rndis header */
-> -- 
-> 2.25.1
+> Wei.
