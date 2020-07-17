@@ -2,98 +2,159 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEA9C224195
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jul 2020 19:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 178DA2241D7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jul 2020 19:33:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgGQRPd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Jul 2020 13:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgGQRPc (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:15:32 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D69C0619D3
-        for <linux-hyperv@vger.kernel.org>; Fri, 17 Jul 2020 10:15:32 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u5so5718863pfn.7
-        for <linux-hyperv@vger.kernel.org>; Fri, 17 Jul 2020 10:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S5C1kGzcRMh5s/xY35azbfaECu6ziYdmjWrDYnFfJwo=;
-        b=O3U9cXdhHUGlStVnak0/NAZMRb2ktBQVCGkUKQpZK+CvTlV0dHTZ2devvh1Ckwie8a
-         78dPQ8dMBho4ThvDyK7I5Ipqz5GTIcOzB3yp1u7cyYjWbqM3wPSnU/197PJYnz8CMHrf
-         gaEsnu8SzPBrY8Syh9dkwlYsvL16rLoBN9P96aSv5cc2oE3mATK++CrDXygbfMbT2hVf
-         Lf0GdXh7QnS6WWHqz6GUgAsa/1ylTnSBW1fs2ydRokEPJuW1sx0iwlAYMGvVO/MTo2ae
-         XrCaVJjy1l8OSbLlzc//UBrNu5dkUAvWFdz7IEvVhsMULRQziBh5n7c0vHqGwd/ups59
-         paqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S5C1kGzcRMh5s/xY35azbfaECu6ziYdmjWrDYnFfJwo=;
-        b=WK2t0BTvhiF5oMVF9y/7Pv6W7XuR6OkWxmCFT//0N1eySUp+tj6GP/HkL+M3Q9rnXB
-         umSfCyGA17XTeT2YTHpxUdChwem6cILPzJPC2R/koPpCVYdJLA2wP7OxeYFtWfQynrVl
-         uhvZJZDEd/yoM8uNjKWo/0kXkDWM36EE46i1m7xxxKYHq9V+g4PdBLGMvB3QNV23dXrt
-         zka17x2lUxrVrxNSZKcMB32kFF1YDJHhZH0RpOJd5EuZ1kwT2XLXkQVi47Sj9eZRi8dM
-         W99Mi+Qc+htRMJnlcLHKWY3tWE4uqTeuVBbO0oqF8wi5vEcRZ9FuH8Dm//M6/gB6yhz7
-         S7zg==
-X-Gm-Message-State: AOAM5334OuzZtrO+oJ57igfBCl7/YLj8APh+yvzBcIFKjIYhHhdT9ZsY
-        mxgYi6C8s1Ujh+6TFAoGN6Nw3w==
-X-Google-Smtp-Source: ABdhPJyvFL0kYbKEv0lMOW8F4w+Qc9Y8qj8kBRC1EnjD51+LqQyMvBntqEKUB+MgAxFyS0wTKc/IEw==
-X-Received: by 2002:aa7:84d3:: with SMTP id x19mr9208993pfn.155.1595006131819;
-        Fri, 17 Jul 2020 10:15:31 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id nk22sm3297605pjb.51.2020.07.17.10.15.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 10:15:31 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:15:23 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     haiyangz@microsoft.com, Song.Chi@microsoft.com, kys@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org, kuba@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
+        id S1726293AbgGQRdS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Jul 2020 13:33:18 -0400
+Received: from mail-dm6nam11on2132.outbound.protection.outlook.com ([40.107.223.132]:53011
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726090AbgGQRdR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 17 Jul 2020 13:33:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hgym1Qo+1/ba/dsg9RLQFeVrk+dwaVGK8+dlWulWrCDDfmjKIyAIreZIGhlmHbulOhu5C3L5gRd2XYfvnpiTdgCS55LtuVgUBUY7Hta07gYg5Kxah6jZADDIF5Rt+p9NnLA76GxmPVTsSFO85Pe0lyRSQeXmxAHb4YJ3HWoEH4N+gq5UYONgIIBkjwryA4Z9Pn4JgBnb6ej9XypJ3fAd4BbSLqxV2NRZHGhgdf/2pTNodCXOi8ME309pHY2qw8+Kvg3Y3ijhPaLJ6XXvC/ZG8EylU+AwcINFQsEzzRaWWAcnzEdHjLFreLuXwE9g3fAJVJUcz28GrWG9UnFUDDRV9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iNMzJDxwcwAthU7J4GppMMAYF8dMWAcftzoiC2kJZ1I=;
+ b=oEADTyeB603hnTyxNjPU7QQMS1xYWpWHQ8Ln6zJ4Athvmu24iVSTQOUMyVeIdPxcio2F5BAwcxOx5cF0+PYmQVPL5owpE4FIlf89C1bx95PG0aB21Thw+0L+enZczsviNUfIZxqpusIqHkXFpwFNll+GyyF84IiZZT1fEGJZ7MZ18g/WRy4HGf2EJ8LYGAh/vD//0qkI9rMsTa55uzyGI+xNsgO/BOCHQSdRi+dBAK1H0NA8lxcr5+BTbkWfoSRP1VhH9/DV8j6iKsCq04jbRMrWpGf0Y0JVtpiOvz7PFfWECqwbigjq/0/r75IhyIC6cxKtnU3tpU7MLMqgOB993Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iNMzJDxwcwAthU7J4GppMMAYF8dMWAcftzoiC2kJZ1I=;
+ b=Mkxw5LhlcyQ3JUtN1o9ZQ1E6YpZemtW5brJAslCSYjsHvbBIXt5xJ1KkOTS+F5QQtRleLHZIN7gKBQ+zOOReSAQIBWNEECsgohDtCe37LTYcb21yAVVI1twiqhesi5VE4cP9i0No682Gjwm4h+TA08jbORfUtNnGpskOHRa4osQ=
+Received: from DM5PR2101MB0934.namprd21.prod.outlook.com (2603:10b6:4:a5::36)
+ by DM6PR21MB1225.namprd21.prod.outlook.com (2603:10b6:5:167::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.7; Fri, 17 Jul
+ 2020 17:33:15 +0000
+Received: from DM5PR2101MB0934.namprd21.prod.outlook.com
+ ([fe80::88cd:6c37:e0f5:2743]) by DM5PR2101MB0934.namprd21.prod.outlook.com
+ ([fe80::88cd:6c37:e0f5:2743%3]) with mapi id 15.20.3195.019; Fri, 17 Jul 2020
+ 17:33:15 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Stephen Hemminger <stephen@networkplumber.org>,
+        David Miller <davem@davemloft.net>
+CC:     Chi Song <Song.Chi@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "kafai@fb.com" <kafai@fb.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "yhs@fb.com" <yhs@fb.com>, "andriin@fb.com" <andriin@fb.com>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "kpsingh@chromium.org" <kpsingh@chromium.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
  indirection table
-Message-ID: <20200717101523.6573061b@hermes.lan>
-In-Reply-To: <20200717.095535.195550343235350259.davem@davemloft.net>
+Thread-Topic: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
+ indirection table
+Thread-Index: AdZb/5iAkDMuWyahRIOBehKiULg7mgATtGGAAAFgBuAAAcsygAAAsQeAAACKiOA=
+Date:   Fri, 17 Jul 2020 17:33:15 +0000
+Message-ID: <DM5PR2101MB09345765A15DC9F03AADB7B6CA7C0@DM5PR2101MB0934.namprd21.prod.outlook.com>
 References: <HK0P153MB027502644323A21B09F6DA60987C0@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
         <20200717082451.00c59b42@hermes.lan>
         <DM5PR2101MB09344BA75F08EC926E31E040CA7C0@DM5PR2101MB0934.namprd21.prod.outlook.com>
         <20200717.095535.195550343235350259.davem@davemloft.net>
+ <20200717101523.6573061b@hermes.lan>
+In-Reply-To: <20200717101523.6573061b@hermes.lan>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-17T17:33:13Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c806d5b1-7276-4183-aff1-a0e05585cc2b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: networkplumber.org; dkim=none (message not signed)
+ header.d=none;networkplumber.org; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [75.100.88.238]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 117819bf-de4f-41af-daeb-08d82a777ca4
+x-ms-traffictypediagnostic: DM6PR21MB1225:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR21MB1225BDA193D1095B038B2FCECA7C0@DM6PR21MB1225.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5AfwNNgeztAZdeI9OC4j8WwMtFV0veZGXWolbJn2vSpcj7FQKGn0NPl8HdyF9euIdeGdIz+EpK9dAAYmJ36u1n7QW00nDvF4Dc1P0m58uAn/ACgJ5Ok1by0XoS6PLEqWQfu9YUs4C84mtU+D4f237DMtzkuALrWFVM1dLVszP7Qg5SNnSrtPtstxN2XACj+2EJRjdP3QiMinpFwMpzP0dyVbghxPH180QbOZBwlRwmn7l82jQZo67ZEvZDaqm0aUs8nR6vdMbKt8OVRX6nNUQFQQ3lyIWqNL1CIttnmWkE78fz+oxOsTyu/bpks0EWjzGnegVjgYq/QPo9eS1sQFAQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB0934.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(136003)(396003)(71200400001)(76116006)(66446008)(8990500004)(66476007)(66556008)(66946007)(7696005)(6506007)(186003)(33656002)(53546011)(26005)(316002)(83380400001)(54906003)(86362001)(55016002)(7416002)(110136005)(52536014)(2906002)(82960400001)(9686003)(10290500003)(64756008)(8936002)(8676002)(82950400001)(4326008)(478600001)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ONWJ3pNHMyuoRR1iEzO/TnZ3BO3TNFkJBn8RxItzDyZ1ik1XKgrQ3z8Snt4b53S7rIUo8kssxf3FCyeP5CVSLzKSdkkXngESzUfZpFW5yfjy2EXZvp1fb7Cm3E3KPXHv42nMFStPIsw420aVn8v02QwOaxFlNWS4qHwuPrxpPQDN7K5tTEYQMTO9h8iYSe8Jl0tlIyo0990Pcc0zz/vn9kJaXk7m6qKAwf0qlm9dwSNjN1GbrB4QLY25v3O59xJ5tEjwY3NqEU8t9T+jRGHNkTDeOoe594J7c8czV1hlSQd8UNR61tPgh2NJ5DMB5snHjWk5M5x0nsHGiyH/6E3aLa6nPJvkqCp/hBHf2/zKNChjrXtCjHF0W2MpyJQeLHBCT9y6U7cGhdbCQ83evsifRo+s9eFSJQF0V56Wk3q8YyTeJlcl/OMclBKWTfXy9Csbh2KvoOCTfzozZLcaXOYx8JiYvAY9agJY4q9qtnq8RG4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB0934.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 117819bf-de4f-41af-daeb-08d82a777ca4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 17:33:15.2709
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: P8uR5xew2FFuEWkNSBfGIbpUwl8XETgOlg6uDuR7OUZbbZg7ZDb9uApEaqYrzF6+4MDUeRq3fMUpVFRTjP/i+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1225
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, 17 Jul 2020 09:55:35 -0700 (PDT)
-David Miller <davem@davemloft.net> wrote:
 
-> From: Haiyang Zhang <haiyangz@microsoft.com>
-> Date: Fri, 17 Jul 2020 16:18:11 +0000
-> 
-> > Also in some minimal installation, "ethtool" may not always be
-> > installed.  
-> 
-> This is never an argument against using the most well suited API for
-> exporting information to the user.
-> 
-> You can write "minimal" tools that just perform the ethtool netlink
-> operations you require for information retrieval, you don't have to
-> have the ethtool utility installed.
 
-Would it be better in the long term to make the transmit indirection
-table available under the new rt_netlink based API's for ethtool?
+> -----Original Message-----
+> From: Stephen Hemminger <stephen@networkplumber.org>
+> Sent: Friday, July 17, 2020 1:15 PM
+> To: David Miller <davem@davemloft.net>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>; Chi Song
+> <Song.Chi@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Stephen
+> Hemminger <sthemmin@microsoft.com>; wei.liu@kernel.org;
+> kuba@kernel.org; ast@kernel.org; daniel@iogearbox.net; kafai@fb.com;
+> songliubraving@fb.com; yhs@fb.com; andriin@fb.com;
+> john.fastabend@gmail.com; kpsingh@chromium.org; linux-
+> hyperv@vger.kernel.org; netdev@vger.kernel.org
+> Subject: Re: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
+> indirection table
+>=20
+> On Fri, 17 Jul 2020 09:55:35 -0700 (PDT) David Miller <davem@davemloft.ne=
+t>
+> wrote:
+>=20
+> > From: Haiyang Zhang <haiyangz@microsoft.com>
+> > Date: Fri, 17 Jul 2020 16:18:11 +0000
+> >
+> > > Also in some minimal installation, "ethtool" may not always be
+> > > installed.
+> >
+> > This is never an argument against using the most well suited API for
+> > exporting information to the user.
+> >
+> > You can write "minimal" tools that just perform the ethtool netlink
+> > operations you require for information retrieval, you don't have to
+> > have the ethtool utility installed.
+>=20
+> Would it be better in the long term to make the transmit indirection tabl=
+e
+> available under the new rt_netlink based API's for ethtool?
+>=20
+> I can imagine that other hardware or hypervisors might have the same kind=
+ of
+> transmit mapping.
 
-I can imagine that other hardware or hypervisors might have the
-same kind of transmit mapping.
+I think it should be a good long term plan, if going forward more NIC=20
+drivers start to use TX table in the future.
 
-Alternatively, the hyperv network driver could integrate/replace the
-indirection table with something based on current receive flow steering.
+Thanks,
+- Haiyang
