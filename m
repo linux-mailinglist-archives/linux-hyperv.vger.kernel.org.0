@@ -2,159 +2,189 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 178DA2241D7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jul 2020 19:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 285A32244EE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Jul 2020 22:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgGQRdS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Jul 2020 13:33:18 -0400
-Received: from mail-dm6nam11on2132.outbound.protection.outlook.com ([40.107.223.132]:53011
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726090AbgGQRdR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:33:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hgym1Qo+1/ba/dsg9RLQFeVrk+dwaVGK8+dlWulWrCDDfmjKIyAIreZIGhlmHbulOhu5C3L5gRd2XYfvnpiTdgCS55LtuVgUBUY7Hta07gYg5Kxah6jZADDIF5Rt+p9NnLA76GxmPVTsSFO85Pe0lyRSQeXmxAHb4YJ3HWoEH4N+gq5UYONgIIBkjwryA4Z9Pn4JgBnb6ej9XypJ3fAd4BbSLqxV2NRZHGhgdf/2pTNodCXOi8ME309pHY2qw8+Kvg3Y3ijhPaLJ6XXvC/ZG8EylU+AwcINFQsEzzRaWWAcnzEdHjLFreLuXwE9g3fAJVJUcz28GrWG9UnFUDDRV9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iNMzJDxwcwAthU7J4GppMMAYF8dMWAcftzoiC2kJZ1I=;
- b=oEADTyeB603hnTyxNjPU7QQMS1xYWpWHQ8Ln6zJ4Athvmu24iVSTQOUMyVeIdPxcio2F5BAwcxOx5cF0+PYmQVPL5owpE4FIlf89C1bx95PG0aB21Thw+0L+enZczsviNUfIZxqpusIqHkXFpwFNll+GyyF84IiZZT1fEGJZ7MZ18g/WRy4HGf2EJ8LYGAh/vD//0qkI9rMsTa55uzyGI+xNsgO/BOCHQSdRi+dBAK1H0NA8lxcr5+BTbkWfoSRP1VhH9/DV8j6iKsCq04jbRMrWpGf0Y0JVtpiOvz7PFfWECqwbigjq/0/r75IhyIC6cxKtnU3tpU7MLMqgOB993Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iNMzJDxwcwAthU7J4GppMMAYF8dMWAcftzoiC2kJZ1I=;
- b=Mkxw5LhlcyQ3JUtN1o9ZQ1E6YpZemtW5brJAslCSYjsHvbBIXt5xJ1KkOTS+F5QQtRleLHZIN7gKBQ+zOOReSAQIBWNEECsgohDtCe37LTYcb21yAVVI1twiqhesi5VE4cP9i0No682Gjwm4h+TA08jbORfUtNnGpskOHRa4osQ=
-Received: from DM5PR2101MB0934.namprd21.prod.outlook.com (2603:10b6:4:a5::36)
- by DM6PR21MB1225.namprd21.prod.outlook.com (2603:10b6:5:167::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.7; Fri, 17 Jul
- 2020 17:33:15 +0000
-Received: from DM5PR2101MB0934.namprd21.prod.outlook.com
- ([fe80::88cd:6c37:e0f5:2743]) by DM5PR2101MB0934.namprd21.prod.outlook.com
- ([fe80::88cd:6c37:e0f5:2743%3]) with mapi id 15.20.3195.019; Fri, 17 Jul 2020
- 17:33:15 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>,
-        David Miller <davem@davemloft.net>
-CC:     Chi Song <Song.Chi@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "yhs@fb.com" <yhs@fb.com>, "andriin@fb.com" <andriin@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
- indirection table
-Thread-Topic: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
- indirection table
-Thread-Index: AdZb/5iAkDMuWyahRIOBehKiULg7mgATtGGAAAFgBuAAAcsygAAAsQeAAACKiOA=
-Date:   Fri, 17 Jul 2020 17:33:15 +0000
-Message-ID: <DM5PR2101MB09345765A15DC9F03AADB7B6CA7C0@DM5PR2101MB0934.namprd21.prod.outlook.com>
-References: <HK0P153MB027502644323A21B09F6DA60987C0@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
-        <20200717082451.00c59b42@hermes.lan>
-        <DM5PR2101MB09344BA75F08EC926E31E040CA7C0@DM5PR2101MB0934.namprd21.prod.outlook.com>
-        <20200717.095535.195550343235350259.davem@davemloft.net>
- <20200717101523.6573061b@hermes.lan>
-In-Reply-To: <20200717101523.6573061b@hermes.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-17T17:33:13Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c806d5b1-7276-4183-aff1-a0e05585cc2b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: networkplumber.org; dkim=none (message not signed)
- header.d=none;networkplumber.org; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [75.100.88.238]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 117819bf-de4f-41af-daeb-08d82a777ca4
-x-ms-traffictypediagnostic: DM6PR21MB1225:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB1225BDA193D1095B038B2FCECA7C0@DM6PR21MB1225.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5AfwNNgeztAZdeI9OC4j8WwMtFV0veZGXWolbJn2vSpcj7FQKGn0NPl8HdyF9euIdeGdIz+EpK9dAAYmJ36u1n7QW00nDvF4Dc1P0m58uAn/ACgJ5Ok1by0XoS6PLEqWQfu9YUs4C84mtU+D4f237DMtzkuALrWFVM1dLVszP7Qg5SNnSrtPtstxN2XACj+2EJRjdP3QiMinpFwMpzP0dyVbghxPH180QbOZBwlRwmn7l82jQZo67ZEvZDaqm0aUs8nR6vdMbKt8OVRX6nNUQFQQ3lyIWqNL1CIttnmWkE78fz+oxOsTyu/bpks0EWjzGnegVjgYq/QPo9eS1sQFAQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB0934.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(136003)(396003)(71200400001)(76116006)(66446008)(8990500004)(66476007)(66556008)(66946007)(7696005)(6506007)(186003)(33656002)(53546011)(26005)(316002)(83380400001)(54906003)(86362001)(55016002)(7416002)(110136005)(52536014)(2906002)(82960400001)(9686003)(10290500003)(64756008)(8936002)(8676002)(82950400001)(4326008)(478600001)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ONWJ3pNHMyuoRR1iEzO/TnZ3BO3TNFkJBn8RxItzDyZ1ik1XKgrQ3z8Snt4b53S7rIUo8kssxf3FCyeP5CVSLzKSdkkXngESzUfZpFW5yfjy2EXZvp1fb7Cm3E3KPXHv42nMFStPIsw420aVn8v02QwOaxFlNWS4qHwuPrxpPQDN7K5tTEYQMTO9h8iYSe8Jl0tlIyo0990Pcc0zz/vn9kJaXk7m6qKAwf0qlm9dwSNjN1GbrB4QLY25v3O59xJ5tEjwY3NqEU8t9T+jRGHNkTDeOoe594J7c8czV1hlSQd8UNR61tPgh2NJ5DMB5snHjWk5M5x0nsHGiyH/6E3aLa6nPJvkqCp/hBHf2/zKNChjrXtCjHF0W2MpyJQeLHBCT9y6U7cGhdbCQ83evsifRo+s9eFSJQF0V56Wk3q8YyTeJlcl/OMclBKWTfXy9Csbh2KvoOCTfzozZLcaXOYx8JiYvAY9agJY4q9qtnq8RG4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728238AbgGQUL1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Jul 2020 16:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbgGQUL1 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 17 Jul 2020 16:11:27 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB95C20704;
+        Fri, 17 Jul 2020 20:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595016686;
+        bh=tfETmY2kzcabHaWuDq17jMljgiTJ65kMRX+WppyLeX4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=n8AOiC/htwoUxgp0wROuMdNc2kuVDX11SvXqRzYpqVHPk/MUu+wjOYz90wYGjTK7c
+         y0vhk5S5sJkHWea+JYaKnyCbiu/EOKpGSZYwYPyj6gVE9AziBLt2WLciH8R0kZznkC
+         gBZ3ob6reEaJZY+/wQkOlukoCqtCvoF72P8q8WEE=
+Date:   Fri, 17 Jul 2020 15:11:24 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com
+Subject: Re: [PATCH v2] PCI: hv: Fix a timing issue which causes kdump to
+ fail occasionally
+Message-ID: <20200717201124.GA767548@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB0934.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 117819bf-de4f-41af-daeb-08d82a777ca4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 17:33:15.2709
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: P8uR5xew2FFuEWkNSBfGIbpUwl8XETgOlg6uDuR7OUZbbZg7ZDb9uApEaqYrzF6+4MDUeRq3fMUpVFRTjP/i+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1225
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717025528.3093-1-weh@microsoft.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 10:55:28AM +0800, Wei Hu wrote:
+> Kdump could fail sometime on HyperV guest over Accerlated Network
+> interface. This is because the retry in hv_pci_enter_d0() relies on
+> an asynchronous host event to arrive guest before calling
+> hv_send_resources_allocated(). This fixes the problem by moving retry
+> to hv_pci_probe(), removing this dependence and making the calling
+> sequence synchronous.
 
+Lorenzo, if you apply this, can you fix this typo?
 
-> -----Original Message-----
-> From: Stephen Hemminger <stephen@networkplumber.org>
-> Sent: Friday, July 17, 2020 1:15 PM
-> To: David Miller <davem@davemloft.net>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>; Chi Song
-> <Song.Chi@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; wei.liu@kernel.org;
-> kuba@kernel.org; ast@kernel.org; daniel@iogearbox.net; kafai@fb.com;
-> songliubraving@fb.com; yhs@fb.com; andriin@fb.com;
-> john.fastabend@gmail.com; kpsingh@chromium.org; linux-
-> hyperv@vger.kernel.org; netdev@vger.kernel.org
-> Subject: Re: [PATCH net-next] net: hyperv: Add attributes to show RX/TX
-> indirection table
->=20
-> On Fri, 17 Jul 2020 09:55:35 -0700 (PDT) David Miller <davem@davemloft.ne=
-t>
-> wrote:
->=20
-> > From: Haiyang Zhang <haiyangz@microsoft.com>
-> > Date: Fri, 17 Jul 2020 16:18:11 +0000
-> >
-> > > Also in some minimal installation, "ethtool" may not always be
-> > > installed.
-> >
-> > This is never an argument against using the most well suited API for
-> > exporting information to the user.
-> >
-> > You can write "minimal" tools that just perform the ethtool netlink
-> > operations you require for information retrieval, you don't have to
-> > have the ethtool utility installed.
->=20
-> Would it be better in the long term to make the transmit indirection tabl=
-e
-> available under the new rt_netlink based API's for ethtool?
->=20
-> I can imagine that other hardware or hypervisors might have the same kind=
- of
-> transmit mapping.
+  s/Accerlated/Accelerated/
 
-I think it should be a good long term plan, if going forward more NIC=20
-drivers start to use TX table in the future.
+and maybe even
 
-Thanks,
-- Haiyang
+  s/HyperV/Hyper-V/
+  s/This fixes the problem/Fix the problem/
+  s/this dependence/this dependency/
+
+Not sure if "relies on ... event to arrive guest" means "relies on ...
+event arriving in the guest"?  Or maybe "relies on ... event arriving
+before the guest calls ..."?
+
+This would probably all make perfect sense to me if I understood more
+about Hyper-V :)
+
+> v2: Adding Fixes tag according to Michael Kelley's review comment.
+
+There's no need to include this "v2" comment in the commit log.  I
+think if you put it after a line containing only "---" (or maybe
+"--"?), it will be in the email but not in the commit log.
+
+> Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 66 ++++++++++++++---------------
+>  1 file changed, 32 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index bf40ff09c99d..738ee30f3334 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2759,10 +2759,8 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	struct pci_bus_d0_entry *d0_entry;
+>  	struct hv_pci_compl comp_pkt;
+>  	struct pci_packet *pkt;
+> -	bool retry = true;
+>  	int ret;
+>  
+> -enter_d0_retry:
+>  	/*
+>  	 * Tell the host that the bus is ready to use, and moved into the
+>  	 * powered-on state.  This includes telling the host which region
+> @@ -2789,38 +2787,6 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	if (ret)
+>  		goto exit;
+>  
+> -	/*
+> -	 * In certain case (Kdump) the pci device of interest was
+> -	 * not cleanly shut down and resource is still held on host
+> -	 * side, the host could return invalid device status.
+> -	 * We need to explicitly request host to release the resource
+> -	 * and try to enter D0 again.
+> -	 */
+> -	if (comp_pkt.completion_status < 0 && retry) {
+> -		retry = false;
+> -
+> -		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> -
+> -		/*
+> -		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+> -		 * to free up resources of its child devices.
+> -		 * In the kdump kernel we need to set the
+> -		 * wslot_res_allocated to 255 so it scans all child
+> -		 * devices to release resources allocated in the
+> -		 * normal kernel before panic happened.
+> -		 */
+> -		hbus->wslot_res_allocated = 255;
+> -
+> -		ret = hv_pci_bus_exit(hdev, true);
+> -
+> -		if (ret == 0) {
+> -			kfree(pkt);
+> -			goto enter_d0_retry;
+> -		}
+> -		dev_err(&hdev->device,
+> -			"Retrying D0 failed with ret %d\n", ret);
+> -	}
+> -
+>  	if (comp_pkt.completion_status < 0) {
+>  		dev_err(&hdev->device,
+>  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+> @@ -3058,6 +3024,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	struct hv_pcibus_device *hbus;
+>  	u16 dom_req, dom;
+>  	char *name;
+> +	bool enter_d0_retry = true;
+>  	int ret;
+>  
+>  	/*
+> @@ -3178,11 +3145,42 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	if (ret)
+>  		goto free_fwnode;
+>  
+> +retry:
+>  	ret = hv_pci_query_relations(hdev);
+>  	if (ret)
+>  		goto free_irq_domain;
+>  
+>  	ret = hv_pci_enter_d0(hdev);
+> +	/*
+> +	 * In certain case (Kdump) the pci device of interest was
+> +	 * not cleanly shut down and resource is still held on host
+> +	 * side, the host could return invalid device status.
+> +	 * We need to explicitly request host to release the resource
+> +	 * and try to enter D0 again.
+> +	 * The retry should start from hv_pci_query_relations() call.
+> +	 */
+> +	if (ret == -EPROTO && enter_d0_retry) {
+> +		enter_d0_retry = false;
+> +
+> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> +
+> +		/*
+> +		 * Hv_pci_bus_exit() calls hv_send_resources_released()
+> +		 * to free up resources of its child devices.
+> +		 * In the kdump kernel we need to set the
+> +		 * wslot_res_allocated to 255 so it scans all child
+> +		 * devices to release resources allocated in the
+> +		 * normal kernel before panic happened.
+> +		 */
+> +		hbus->wslot_res_allocated = 255;
+> +		ret = hv_pci_bus_exit(hdev, true);
+> +
+> +		if (ret == 0)
+> +			goto retry;
+> +
+> +		dev_err(&hdev->device,
+> +			"Retrying D0 failed with ret %d\n", ret);
+> +	}
+>  	if (ret)
+>  		goto free_irq_domain;
+>  
+> -- 
+> 2.20.1
+> 
