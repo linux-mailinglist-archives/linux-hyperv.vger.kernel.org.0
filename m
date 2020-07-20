@@ -2,70 +2,164 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24BD1224E5B
-	for <lists+linux-hyperv@lfdr.de>; Sun, 19 Jul 2020 02:28:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD473225839
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jul 2020 09:12:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgGSA2t (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 18 Jul 2020 20:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbgGSA2t (ORCPT
+        id S1726030AbgGTHML (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Jul 2020 03:12:11 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:40956 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgGTHML (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 18 Jul 2020 20:28:49 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE39C0619D2;
-        Sat, 18 Jul 2020 17:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=63jCr+SCeOP67cD87Ufv+yP7Y+AW/h262jPGrG3odrY=; b=YNv4rELCMJK1Zk/pg46gSXJ78R
-        uzxV0wSgCMEZX60aujeGwAJHKzRpKrfEhdLfCp22+NFicbFTMVuzPaftwwHG0v0qCS7hkFjqsQFsH
-        s8GGuoBanWsv02rWybxrNqvd0Jp58q10UxjHCijneu1s6iZOhSLw4646esovee5CmrXyGosY1D/fW
-        ExPxvNxj8gvuKm/uUW2uu9Vnn2Cuq/eCSZhF4t1fobS5AkYsmWoXY6pRH/K1Rmd/1YmjZe+gWi2Mb
-        E0LGzKvf7JHjHELfYa1oq3RhYGKtOld73AjCaL9ocxctET12V2Hen3i3x8S3yDg74O/E7oo03QJZO
-        mz+7i19A==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jwxCA-0002hT-Cc; Sun, 19 Jul 2020 00:28:46 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Mon, 20 Jul 2020 03:12:11 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1070)
+        id 2541920B4909; Mon, 20 Jul 2020 00:12:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2541920B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595229130;
+        bh=fCB4mM57CeHhDg63/nP/QH+XUmyf9zBGFqIcnNAb8e8=;
+        h=Date:From:To:cc:Subject:From;
+        b=YFjXE+OoPS3f0w9chLPvaPXRK0njBem2/vKcqOoRlZghvz0nw9zBO7dz+wAn8vyYZ
+         82UqaFqGGF059pVUCXgJJvvtYmE+O73rptxLDwJ0DyFUJMr/96r+CHjA6SXFFH7xtF
+         rCZZDoyrsLHXFFO0Kz9XRZctXguaCus1bM2TkkMA=
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id 2348F307056B;
+        Mon, 20 Jul 2020 00:12:10 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 00:12:10 -0700 (PDT)
+From:   Chi Song <chisong@linux.microsoft.com>
+X-X-Sender: chisong@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH] hyperv: hyperv.h: drop a duplicated word
-Date:   Sat, 18 Jul 2020 17:28:41 -0700
-Message-Id: <20200719002841.20369-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 net-next] net: hyperv: Add attributes to show TX indirection
+ table
+Message-ID: <alpine.LRH.2.23.451.2007192357400.30908@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Drop the repeated word "the" in a comment.
+An imbalanced TX indirection table causes netvsc to have low
+performance. This table is created and managed during runtime. To help
+better diagnose performance issues caused by imbalanced tables, add
+device attributes to show the content of TX indirection tables.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: linux-hyperv@vger.kernel.org
+Signed-off-by: Chi Song <chisong@microsoft.com>
 ---
- include/uapi/linux/hyperv.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: remove RX as it's in ethtool already, show single value in each file,
+ and update description.
 
---- linux-next-20200717.orig/include/uapi/linux/hyperv.h
-+++ linux-next-20200717/include/uapi/linux/hyperv.h
-@@ -219,7 +219,7 @@ struct hv_do_fcopy {
-  * kernel and user-level daemon communicate using a connector channel.
-  *
-  * The user mode component first registers with the
-- * the kernel component. Subsequently, the kernel component requests, data
-+ * kernel component. Subsequently, the kernel component requests, data
-  * for the specified keys. In response to this message the user mode component
-  * fills in the value corresponding to the specified key. We overload the
-  * sequence field in the cn_msg header to define our KVP message types.
+Thank you for comments. Let me know, if I miss something.
+
+---
+ drivers/net/hyperv/netvsc_drv.c | 53 +++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c
+b/drivers/net/hyperv/netvsc_drv.c
+index 6267f706e8ee..222c2fad9300 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2370,6 +2370,55 @@ static int netvsc_unregister_vf(struct net_device
+*vf_netdev)
+ 	return NOTIFY_OK;
+ }
+
++static struct device_attribute
+dev_attr_netvsc_dev_attrs[VRSS_SEND_TAB_SIZE];
++static struct attribute *netvsc_dev_attrs[VRSS_SEND_TAB_SIZE + 1];
++
++const struct attribute_group netvsc_dev_group = {
++	.name = NULL,
++	.attrs = netvsc_dev_attrs,
++};
++
++static ssize_t tx_indirection_table_show(struct device *dev,
++					 struct device_attribute
+*dev_attr,
++					 char *buf)
++{
++	struct net_device *ndev = to_net_dev(dev);
++	struct net_device_context *ndc = netdev_priv(ndev);
++	ssize_t offset = 0;
++	int index = dev_attr - dev_attr_netvsc_dev_attrs;
++
++	offset = sprintf(buf, "%u\n", ndc->tx_table[index]);
++
++	return offset;
++}
++
++static void netvsc_attrs_init(void)
++{
++	int i;
++	char buffer[32];
++
++	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++) {
++		sprintf(buffer, "tx_indirection_table_%02u", i);
++		dev_attr_netvsc_dev_attrs[i].attr.name =
++			kstrdup(buffer, GFP_KERNEL);
++		dev_attr_netvsc_dev_attrs[i].attr.mode = 0444;
++		sysfs_attr_init(&dev_attr_netvsc_dev_attrs[i].attr);
++
++		dev_attr_netvsc_dev_attrs[i].show =
+tx_indirection_table_show;
++		dev_attr_netvsc_dev_attrs[i].store = NULL;
++		netvsc_dev_attrs[i] = &dev_attr_netvsc_dev_attrs[i].attr;
++	}
++	netvsc_dev_attrs[VRSS_SEND_TAB_SIZE] = NULL;
++}
++
++static void netvsc_attrs_exit(void)
++{
++	int i;
++
++	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
++		kfree(dev_attr_netvsc_dev_attrs[i].attr.name);
++}
++
+ static int netvsc_probe(struct hv_device *dev,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+@@ -2396,6 +2445,7 @@ static int netvsc_probe(struct hv_device *dev,
+ 			   net_device_ctx->msg_enable);
+
+ 	hv_set_drvdata(dev, net);
++	netvsc_attrs_init();
+
+ 	INIT_DELAYED_WORK(&net_device_ctx->dwork, netvsc_link_change);
+
+@@ -2410,6 +2460,7 @@ static int netvsc_probe(struct hv_device *dev,
+
+ 	net->netdev_ops = &device_ops;
+ 	net->ethtool_ops = &ethtool_ops;
++	net->sysfs_groups[0] = &netvsc_dev_group;
+ 	SET_NETDEV_DEV(net, &dev->device);
+
+ 	/* We always need headroom for rndis header */
+@@ -2533,6 +2584,7 @@ static int netvsc_remove(struct hv_device *dev)
+
+ 	rtnl_unlock();
+
++	netvsc_attrs_exit();
+ 	hv_set_drvdata(dev, NULL);
+
+ 	free_percpu(ndev_ctx->vf_stats);
+@@ -2683,6 +2735,7 @@ static int __init netvsc_drv_init(void)
+ 		return ret;
+
+ 	register_netdevice_notifier(&netvsc_netdev_notifier);
++
+ 	return 0;
+ }
+
+-- 
+2.25.1
+
+
