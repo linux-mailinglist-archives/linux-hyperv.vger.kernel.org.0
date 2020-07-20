@@ -2,133 +2,142 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83B63226C77
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jul 2020 18:53:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 935C2226D0E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Jul 2020 19:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgGTQxI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Jul 2020 12:53:08 -0400
-Received: from bgl-iport-3.cisco.com ([72.163.197.27]:31296 "EHLO
-        bgl-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgGTQxI (ORCPT
+        id S1729794AbgGTRYx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Jul 2020 13:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728734AbgGTRYw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:53:08 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jul 2020 12:53:06 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=3119; q=dns/txt; s=iport;
-  t=1595263986; x=1596473586;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Vdjo6hmqo0zLm1DR6bYASgDhovS0RKIR/PWgbRmhkv4=;
-  b=QEoFIK/I8YuI50R9DKkJlKHzhCdhiFuLleoEb76hI5AxjZA3HzH1gYte
-   k0EQMb0tByBE6z3MeenfzvZ0HMOQihOraRCy9DabQxODh+ULOa/hG9poP
-   TY0Ls6StoG5hoFHDsc8/FZeu2kULw+DA52U/KcvsB75IMgv7iHINhJMaP
-   8=;
-X-IronPort-AV: E=Sophos;i="5.75,375,1589241600"; 
-   d="scan'208";a="126215549"
-Received: from vla196-nat.cisco.com (HELO bgl-core-4.cisco.com) ([72.163.197.24])
-  by bgl-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 20 Jul 2020 16:45:52 +0000
-Received: from SRIRAKR2-M-R0A8.cisco.com ([10.65.70.250])
-        by bgl-core-4.cisco.com (8.15.2/8.15.2) with ESMTP id 06KGjq3j001338;
-        Mon, 20 Jul 2020 16:45:52 GMT
-From:   Sriram Krishnan <srirakr2@cisco.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Mon, 20 Jul 2020 13:24:52 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F167C0619D4
+        for <linux-hyperv@vger.kernel.org>; Mon, 20 Jul 2020 10:24:52 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id n5so10586796pgf.7
+        for <linux-hyperv@vger.kernel.org>; Mon, 20 Jul 2020 10:24:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6tXbJd4oEVmSqiGnziAAflmb4MGrnOQpZX5+lHSdW3g=;
+        b=jNANyFXgAgqogkWNgrJoj6QtdoyB0yR54rUSu+O4nZVCVb/7hJZiOX6O4uSHF5Atso
+         ItdU4dvRixI5slgLsUGF6Z1uawSBBTJnKZgWo11KLDx8JECBDRW8nr4j9+sM0peyA8vo
+         /qfKucK6NlSY6FRrqC4W3rIolIkfF7MNoNV7GmIXgaGQZ+vB1QwC075G84MoosS5n4wS
+         OJQ8ihNqJZJFZcnWopsyZUXi0T9t6mm8xYD799vZpU14tj3GftLFIaG4pJhETMBK4OSb
+         EDenfd10pqs5KddO/+hBoHqqMxC/qyPXviQ/6TDYt7Q8FpxSSQKDQn9LEdgAgWdURRWJ
+         LCeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6tXbJd4oEVmSqiGnziAAflmb4MGrnOQpZX5+lHSdW3g=;
+        b=hnIlz1UVtpzABLT0BkQE5TDfvCVuXFvVLs2+q6bCgvjvRh/QwlHUTEf4DKFy8C9Syz
+         ZA3gXYj9tskN27a8D+LkXW3bhKL6Q6MgpHjJFuN3A9jc12YzVkXr0T+5wVngvN5nFh0H
+         ykeJcTLFxs6niuuZNmXE/j2c3aXDrUrsQoOkSUbupHEQlrJ5xMoYwxWiw9nmMqkIHHIC
+         v8P6J8Fum2+W5ARCKBJ5ygmJJ7PRxj/Z0ZE1Km38gXRHr76OblJjptbSt9ZKedm17uZD
+         8WHdG8RMfbIjkTF4Ac5MOuYi58Pc7Lu8M0NNzAY2DRaJSRTn0BCb8FLNDWRPJWrg3oYf
+         Xkcw==
+X-Gm-Message-State: AOAM530HcVv9trhfeJvXero6q4EyPH5IhcWJaUjPBm4Q8DHPfO7XSn/Q
+        2xQpQ2UqEwgt1YDwTg7M4GSgtw==
+X-Google-Smtp-Source: ABdhPJx2Og1skqUry9DiKMzcmFRiYWZ31mk7FqDM7ufVQ3k37RbqfBypuApaoSr5H7ormO+7hIXfVQ==
+X-Received: by 2002:a63:f90f:: with SMTP id h15mr19068452pgi.53.1595265891947;
+        Mon, 20 Jul 2020 10:24:51 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id z11sm17365435pfk.46.2020.07.20.10.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 10:24:51 -0700 (PDT)
+Date:   Mon, 20 Jul 2020 10:24:43 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Chi Song <chisong@linux.microsoft.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     mbumgard@cisco.com, ugm@cisco.com, nimm@cisco.com,
-        xe-linux-external@cisco.com,
+        Wei Liu <wei.liu@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
-Date:   Mon, 20 Jul 2020 22:15:51 +0530
-Message-Id: <20200720164551.14153-1-srirakr2@cisco.com>
-X-Mailer: git-send-email 2.24.0
+Subject: Re: [PATCH v2 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+Message-ID: <20200720102443.63d8ddf2@hermes.lan>
+In-Reply-To: <alpine.LRH.2.23.451.2007192357400.30908@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+References: <alpine.LRH.2.23.451.2007192357400.30908@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.65.70.250, [10.65.70.250]
-X-Outbound-Node: bgl-core-4.cisco.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Vlan tagged packets are getting dropped when used with DPDK that uses
-the AF_PACKET interface on a hyperV guest.
+On Mon, 20 Jul 2020 00:12:10 -0700 (PDT)
+Chi Song <chisong@linux.microsoft.com> wrote:
 
-The packet layer uses the tpacket interface to communicate the vlans
-information to the upper layers. On Rx path, these drivers can read the
-vlan info from the tpacket header but on the Tx path, this information
-is still within the packet frame and requires the paravirtual drivers to
-push this back into the NDIS header which is then used by the host OS to
-form the packet.
+> An imbalanced TX indirection table causes netvsc to have low
+> performance. This table is created and managed during runtime. To help
+> better diagnose performance issues caused by imbalanced tables, add
+> device attributes to show the content of TX indirection tables.
+> 
+> Signed-off-by: Chi Song <chisong@microsoft.com>
+> ---
 
-This transition from the packet frame to NDIS header is currently missing
-hence causing the host OS to drop the all vlan tagged packets sent by
-the drivers that use AF_PACKET (ETH_P_ALL) such as DPDK.
 
-Here is an overview of the changes in the vlan header in the packet path:
+> v2: remove RX as it's in ethtool already, show single value in each file,
+>  and update description.
+> 
+> Thank you for comments. Let me know, if I miss something.
+> 
+> ---
+>  drivers/net/hyperv/netvsc_drv.c | 53 +++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
+> diff --git a/drivers/net/hyperv/netvsc_drv.c
+> b/drivers/net/hyperv/netvsc_drv.c
+> index 6267f706e8ee..222c2fad9300 100644
+> --- a/drivers/net/hyperv/netvsc_drv.c
+> +++ b/drivers/net/hyperv/netvsc_drv.c
+> @@ -2370,6 +2370,55 @@ static int netvsc_unregister_vf(struct net_device
+> *vf_netdev)
+>  	return NOTIFY_OK;
+>  }
+> 
+> +static struct device_attribute
+> dev_attr_netvsc_dev_attrs[VRSS_SEND_TAB_SIZE];
+> +static struct attribute *netvsc_dev_attrs[VRSS_SEND_TAB_SIZE + 1];
+> +
+> +const struct attribute_group netvsc_dev_group = {
+> +	.name = NULL,
+> +	.attrs = netvsc_dev_attrs,
+> +};
+> +
+> +static ssize_t tx_indirection_table_show(struct device *dev,
+> +					 struct device_attribute
+> *dev_attr,
+> +					 char *buf)
+> +{
+> +	struct net_device *ndev = to_net_dev(dev);
+> +	struct net_device_context *ndc = netdev_priv(ndev);
+> +	ssize_t offset = 0;
 
-The RX path (userspace handles everything):
-  1. RX VLAN packet is stripped by HOST OS and placed in NDIS header
-  2. Guest Kernel RX hv_netvsc packets and moves VLAN info from NDIS
-     header into kernel SKB
-  3. Kernel shares packets with user space application with PACKET_MMAP.
-     The SKB VLAN info is copied to tpacket layer and indication set
-     TP_STATUS_VLAN_VALID.
-  4. The user space application will re-insert the VLAN info into the frame.
+useless initialization
 
-The TX path:
-  1. The user space application has the VLAN info in the frame.
-  2. Guest kernel gets packets from the application with PACKET_MMAP.
-  3. The kernel later sends the frame to the hv_netvsc driver. The only way
-     to send VLANs is when the SKB is setup & the VLAN is is stripped from the
-     frame.
-  4. TX VLAN is re-inserted by HOST OS based on the NDIS header. If it sees
-     a VLAN in the frame the packet is dropped.
+> +	int index = dev_attr - dev_attr_netvsc_dev_attrs;
+> +
+> +	offset = sprintf(buf, "%u\n", ndc->tx_table[index]);
+> +
+> +	return offset;
+why not just
+	return sprintf(buf, "%u\n", ndc->tx_table[index]);
+> +}
+> +
+> +static void netvsc_attrs_init(void)
+> +{
+> +	int i;
+> +	char buffer[32];
+> +
+> +	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++) {
+> +		sprintf(buffer, "tx_indirection_table_%02u", i);
 
-Cc: xe-linux-external@cisco.com
-Cc: Sriram Krishnan <srirakr2@cisco.com>
-Signed-off-by: Sriram Krishnan <srirakr2@cisco.com>
----
- drivers/net/hyperv/netvsc_drv.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 6267f706e8ee..2a25b4352369 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -605,6 +605,29 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 		*hash_info = hash;
- 	}
- 
-+	/* When using AF_PACKET we need to remove VLAN from frame
-+	 * and indicate VLAN information in SKB so HOST OS will
-+	 * transmit the VLAN frame
-+	 */
-+	if (skb->protocol == htons(ETH_P_8021Q)) {
-+		u16 vlan_tci = 0;
-+		skb_reset_mac_header(skb);
-+		if (eth_type_vlan(eth_hdr(skb)->h_proto)) {
-+			int pop_err;
-+			pop_err = __skb_vlan_pop(skb, &vlan_tci);
-+			if (likely(pop_err == 0)) {
-+				__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
-+
-+				/* Update the NDIS header pkt lengths */
-+				packet->total_data_buflen -= VLAN_HLEN;
-+				rndis_msg->msg_len = packet->total_data_buflen;
-+				rndis_msg->msg.pkt.data_len = packet->total_data_buflen;
-+
-+			} else {
-+				netdev_err(net,"Pop vlan err %x\n",pop_err);
-+			}
-+		}
-+	}
- 	if (skb_vlan_tag_present(skb)) {
- 		struct ndis_pkt_8021q_info *vlan;
- 
--- 
-2.24.0
-
+Although this has one value per file it leads to a mess.
+Why not put it in a separate directory (/sys/class/net/eth0/tx_indirection/N)?
