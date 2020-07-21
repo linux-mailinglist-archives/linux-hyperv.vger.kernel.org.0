@@ -2,185 +2,200 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F1962274C5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Jul 2020 03:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F00432275AD
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Jul 2020 04:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgGUBmO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Jul 2020 21:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbgGUBmM (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:42:12 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D3AEC0619D5;
-        Mon, 20 Jul 2020 18:42:12 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 11so8379932qkn.2;
-        Mon, 20 Jul 2020 18:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u2Atj0Wbt7mub3xfeOzi2/XzJb4taKVgA2PwyukxOzM=;
-        b=NIBrO2jI5v/1ozjUsawGijUoqYKW+gNjM1JQ6U0MUA0gi62nvdd6Eb178R1VhYoR6z
-         JCh7jTT9Xqj4xD4xdcujV6FEsN8hXx/8gWdDk4fe7kMiTkhjDeJhXPE0WZn05wBWuHUi
-         ZC3MSUTkLn4PharQOKyl3CTAVeIr1CfJBBRD08ow9Qngq2g2uiBG6qQffr9+CIR4CRO6
-         YeTOWi05katH85rWjtQY6Db90392SQ5/ly/I7rGerxGQX8iPOsUWN+kLRsIMoTNFTzYC
-         KtKcc7hCFKnh09xMoXta79S2S1ngqK+TgHwOdv7AmIE/TxO861OTGpXyDIXOeDSSTnZa
-         eFrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u2Atj0Wbt7mub3xfeOzi2/XzJb4taKVgA2PwyukxOzM=;
-        b=fjYMOwuxUKOZa3rauLAo5OCscOGBHolAcqDlHrprtfpOyGeIG4L7GQZiK4g9d59jgs
-         jlvnde8TM8uynqYyZ6bODZZszvakVYk2YHIHdeanAE15j+yKfWDMTZm2uNc43IPZ+2HJ
-         WFXeSpr0Xod0ppREln5GyaoN3n4GH9p+3UbMd1omzZUcQRAncdC2Adf6m13MkT5X722p
-         FfG6GQDNRWQyybr9Q9FyoIZFQPHZBbKHpx/Fg0T/jaOje8CvTM7eKp925fSCNalxCu/+
-         VqequQID+dst1+wvMFkYdYBOwv3x//55zzJV8MN5sdt5h1am4fEGq/sRwdV7nMxDlvEn
-         G/Xw==
-X-Gm-Message-State: AOAM533QvmTSzai9Q9X/MBrv3SXezb7X1En4kzhhPAGqho9ckl4Njvvi
-        0cmRGrDsiqAZQLcnFWm23A4=
-X-Google-Smtp-Source: ABdhPJxzLDJKSuKgbM1LhvHt9POP1m4UaCFUZ6bACPSPIEsWeHJYBeGQ2r8eP8mrZctmtDSHqnlxPA==
-X-Received: by 2002:a37:c93:: with SMTP id 141mr4480301qkm.416.1595295731591;
-        Mon, 20 Jul 2020 18:42:11 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id 19sm1232748qke.44.2020.07.20.18.42.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jul 2020 18:42:11 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 85CAE27C0054;
-        Mon, 20 Jul 2020 21:42:10 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 20 Jul 2020 21:42:10 -0400
-X-ME-Sender: <xms:8kcWX5WPtzlWhrFotGwWN9uqEvp2Vfi7nUO13ICjJwKiXfX9HvJ64Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrgeehgdegjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
-    fuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvufffkffojghfggfgsedt
-    keertdertddtnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghngh
-    esghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhephedvveetfefgiedutedtfeev
-    vddvleekjeeuffffleeguefhhfejteekieeuueelnecukfhppeehvddrudehhedrudduud
-    drjedunecuvehluhhsthgvrhfuihiivgepjeenucfrrghrrghmpehmrghilhhfrhhomhep
-    sghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtie
-    egqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhi
-    gihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:8kcWX5kcelmU8uzjUCtpPM7vowktSUHJirBNCT9eC8cXQBbZg5yLbw>
-    <xmx:8kcWX1b7G9ES8h4YuPhbmQHOYY4ps8bO5ZGBuqIUahSza3QGAS7zbA>
-    <xmx:8kcWX8Wz5Li4_01L-JSwxAGFT7a_zUDDeATZJFFSRbyDdAlcD7nNVA>
-    <xmx:8kcWX48Y1yyaNy4CBkm_1xD5l9R_PzNqyhSFDCF6tY7HSDg9NIcAzOpgmWk>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 02D33306005F;
-        Mon, 20 Jul 2020 21:42:09 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S1728117AbgGUChw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Jul 2020 22:37:52 -0400
+Received: from mail-eopbgr1310127.outbound.protection.outlook.com ([40.107.131.127]:16000
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726264AbgGUChw (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 20 Jul 2020 22:37:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hv3FyxlSf7lX6C/6YswFIq4tfvm1WpzurJ1iVwtwI7gDDPMAeMbFH/MASnAsH6ofPmNtGXLcEDtDdI2VKI4BHL91/3aba4zDqHe653RG0V2Hiwua2KKDoenFSkgKtIvNihocXoksqWBqqWj217quAMNW78DwdGl+t3DPEDPy1EfOCz6wc805GOBT11cDuDQJAGN5gnH7l185328nXzuOLpgd2ekG6t2uoCRCcLym4lhSYSDuR3Nz1U2/UAkpMgiGv8Y5GrYR4xYmbgedhnTkqJSFJA0xbvtcWiWKwgQ440PT+1/Vylwk0oWGLkg1K7i1q+ej4Bt+Uqs095vMrVJ9fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8Ur0MloEGZv72ysbErDVQp8qYR76mK7vZWGqskGft2g=;
+ b=G0n0QTProQxgF7KdNS97ZXr6MNxhdDX+m3c1mz9FgSxFWFLkzoVCq5DK6JFJIXfdd2SDCrTNpowqY/1OCVuLeiSqk2mrxKfbPQa5Tbqx28nD8XNp7gxhceOETfFdjycUutB8Cidkz/pTB0IcEkLSbcij84f/BWQXSreQYDwiGsYcMjQndudaTl0MSiuiQAPDUumgQyHgxQ4luaUcJ7EIp2dD5LtMfVTgFM0WjhnUfoE4ehNAPPJR7hb7RE4KcVwt7p3z/IyOvS1aWU15sz0V9CU2oHGRK7AFii36k1HySzdFlKA5lazeybEkx169wTuYVDQB+5iX5pQFWyumuvSswA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8Ur0MloEGZv72ysbErDVQp8qYR76mK7vZWGqskGft2g=;
+ b=UafoDTLGm852ugwElHCPyCiFvwWsiB0ukEmn//YyIjkRTphpon8HtVz4L0Po/Cip802w3dCuNR9Nn2JYPMq4ClHK7H1ZoXcB5VI9Zfn2O8TF/bMe0mR3HIRYd4y4M/8Zl2Rp5nSzasokx4pKHCPPbxVco3vOEv0M35gH0xX9l+U=
+Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::14)
+ by HK0P153MB0323.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b5::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.7; Tue, 21 Jul
+ 2020 02:37:43 +0000
+Received: from HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
+ ([fe80::b5ca:82a1:cb67:52e]) by HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
+ ([fe80::b5ca:82a1:cb67:52e%6]) with mapi id 15.20.3216.020; Tue, 21 Jul 2020
+ 02:37:43 +0000
+From:   Chi Song <Song.Chi@microsoft.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Wei Liu <wei.liu@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: [RFC 11/11] scsi: storvsc: Support PAGE_SIZE larger than 4K
-Date:   Tue, 21 Jul 2020 09:41:35 +0800
-Message-Id: <20200721014135.84140-12-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200721014135.84140-1-boqun.feng@gmail.com>
-References: <20200721014135.84140-1-boqun.feng@gmail.com>
+        Jakub Kicinski <kuba@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+Thread-Topic: [PATCH v4 net-next] net: hyperv: Add attributes to show TX
+ indirection table
+Thread-Index: AdZe+8HxuV5eYFd1QcWUIR0SG3uRnQ==
+Date:   Tue, 21 Jul 2020 02:37:42 +0000
+Message-ID: <HK0P153MB02751820DD4F8892DEFA13D098780@HK0P153MB0275.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-20T07:16:58Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=04b9772d-b507-4872-a4fc-786c63f4656c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2404:f801:8050:1:b1ce:4ac6:46d:28d5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e0affd6b-c34d-4bba-9d61-08d82d1f0b65
+x-ms-traffictypediagnostic: HK0P153MB0323:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB0323159A1E6C444B1D73AE7B98780@HK0P153MB0323.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:1417;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CF9BqsHOUfQvAjNDjLiZSqHHYBb0rwvL2t4K+yF4+FaRMzQIOghbrHil+FET6E3580TRqK6bCbajhpsjnogCOSJsD8IDzjb256xSH4DkuHvE17s8opKooxuabAnCnoGcp9Q21O3ClIU8aX/ifGgYyAZKlW+wQKxBCVGWUHHAEoM9Q0+6t3WsxOOy4BrZcfPti2Tgg1D6oTMNHODmyboXVLrQm9QWgCF7zhTnF9g0UFUKEHy1Sr4O6g8n6BImSzez+UkGKdYOFIbd5apwSKMQ7aN1VzYOsk9zSZLKbtW3NEuL4OyTSCWQfah0YubD0/K/
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0275.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(376002)(136003)(346002)(39860400002)(2906002)(66446008)(82960400001)(82950400001)(8676002)(110136005)(64756008)(66556008)(76116006)(86362001)(66946007)(66476007)(5660300002)(52536014)(10290500003)(54906003)(478600001)(33656002)(316002)(8990500004)(4326008)(8936002)(9686003)(55016002)(6506007)(7696005)(71200400001)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: HDu+s0xGjEz/3Uvc5oNQBAaS6BGFXL49TO9vfSN9Nwlxq9umbDDf/lpyysEcHy7oY9cuEppQUsw/DuP3+stJq5OtrNeLCPw6JSDewaI9CDRombWbOdxvLXmSJyAgfN5bWKRN7MKW+hI+vTuClVEmNQdGmZydXYv7SwolUVVyTOCA69T9BlrWw5VDNbwA9BcQD0MGNQKDYZGqmp2pVLfh+rbQ0wIVBn/Gnk6yeuxOharUgfoH4dBJmaPXwLuZyuCL1aT7ftXDTwfAqUF78U0Ez6PR2IdCZ22iMiVeKR/TGt7Jt1CuChVhKhVnm86nrqUqUtzZZtZ8FC29FfP8oOA3LHrybMBLN8nsFJJMPth2PghEMRy3S2Kr7PanrqHqaggVTOH/clvMv38b6MxkSubJOhOEG45o+ZVa6gPPpE/fmwfKGiWSRGx2n6+0ZDVoUFbpTlfs1yNjK+tjMl8mVadJuSncsCukbtTVSHxy0bSNXPZ8vunDUwNyZJ8ywJamr6gUpeECo6xOV/LWvcj5iGVc9r09naUWxzp0tq2il2RTcic=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK0P153MB0275.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0affd6b-c34d-4bba-9d61-08d82d1f0b65
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 02:37:42.7172
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Jrdnt7pZCCasfCHZoqQX8GCWq5IyMcCTmSGO+OwrRcN1/Dc050JkNECc4EjUjy6853dLMUnkxwq5yqOMnVlKQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0323
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hyper-V always use 4k page size (HV_HYP_PAGE_SIZE), so when
-communicating with Hyper-V, a guest should always use HV_HYP_PAGE_SIZE
-as the unit for page related data. For storvsc, the data is
-vmbus_packet_mpb_array. And since in scsi_cmnd, sglist of pages (in unit
-of PAGE_SIZE) is used, we need convert pages in the sglist of scsi_cmnd
-into Hyper-V pages in vmbus_packet_mpb_array.
+An imbalanced TX indirection table causes netvsc to have low
+performance. This table is created and managed during runtime. To help
+better diagnose performance issues caused by imbalanced tables, add
+device attributes to show the content of TX indirection tables.
 
-This patch does the conversion by dividing pages in sglist into Hyper-V
-pages, offset and indexes in vmbus_packet_mpb_array are recalculated
-accordingly.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Chi Song <chisong@microsoft.com>
 ---
- drivers/scsi/storvsc_drv.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+v4: use a separated group to organize tx_indirection better, change=20
+ location of init, exit to drve
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index fb41636519ee..c54d25f279bc 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1561,7 +1561,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	struct hv_host_device *host_dev = shost_priv(host);
- 	struct hv_device *dev = host_dev->dev;
- 	struct storvsc_cmd_request *cmd_request = scsi_cmd_priv(scmnd);
--	int i;
-+	int i, j, k;
- 	struct scatterlist *sgl;
- 	unsigned int sg_count = 0;
- 	struct vmscsi_request *vm_srb;
-@@ -1569,6 +1569,8 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	struct vmbus_packet_mpb_array  *payload;
- 	u32 payload_sz;
- 	u32 length;
-+	int subpage_idx = 0;
-+	unsigned int hvpg_count = 0;
- 
- 	if (vmstor_proto_version <= VMSTOR_PROTO_VERSION_WIN8) {
- 		/*
-@@ -1643,23 +1645,36 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	payload_sz = sizeof(cmd_request->mpb);
- 
- 	if (sg_count) {
--		if (sg_count > MAX_PAGE_BUFFER_COUNT) {
-+		hvpg_count = sg_count * (PAGE_SIZE / HV_HYP_PAGE_SIZE);
-+		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
- 
--			payload_sz = (sg_count * sizeof(u64) +
-+			payload_sz = (hvpg_count * sizeof(u64) +
- 				      sizeof(struct vmbus_packet_mpb_array));
- 			payload = kzalloc(payload_sz, GFP_ATOMIC);
- 			if (!payload)
- 				return SCSI_MLQUEUE_DEVICE_BUSY;
- 		}
- 
-+		/*
-+		 * sgl is a list of PAGEs, and payload->range.pfn_array
-+		 * expects the page number in the unit of HV_HYP_PAGE_SIZE (the
-+		 * page size that Hyper-V uses, so here we need to divide PAGEs
-+		 * into HV_HYP_PAGE in case that PAGE_SIZE > HV_HYP_PAGE_SIZE.
-+		 */
- 		payload->range.len = length;
--		payload->range.offset = sgl[0].offset;
-+		payload->range.offset = sgl[0].offset & ~HV_HYP_PAGE_MASK;
-+		subpage_idx = sgl[0].offset >> HV_HYP_PAGE_SHIFT;
- 
- 		cur_sgl = sgl;
-+		k = 0;
- 		for (i = 0; i < sg_count; i++) {
--			payload->range.pfn_array[i] =
--				page_to_pfn(sg_page((cur_sgl)));
-+			for (j = subpage_idx; j < (PAGE_SIZE / HV_HYP_PAGE_SIZE); j++) {
-+				payload->range.pfn_array[k] =
-+					page_to_hvpfn(sg_page((cur_sgl))) + j;
-+				k++;
-+			}
- 			cur_sgl = sg_next(cur_sgl);
-+			subpage_idx = 0;
- 		}
+---
+ drivers/net/hyperv/netvsc_drv.c | 49 +++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_dr=
+v.c
+index 6267f706e8ee..280de1067f40 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2370,6 +2370,51 @@ static int netvsc_unregister_vf(struct net_device *v=
+f_netdev)
+ 	return NOTIFY_OK;
+ }
+=20
++static struct device_attribute dev_attr_netvsc_dev_attrs[VRSS_SEND_TAB_SIZ=
+E];
++static struct attribute *netvsc_dev_attrs[VRSS_SEND_TAB_SIZE + 1];
++
++const struct attribute_group netvsc_dev_group =3D {
++	.name =3D "tx_indirection",
++	.attrs =3D netvsc_dev_attrs,
++};
++
++static ssize_t tx_indirection_show(struct device *dev,
++				   struct device_attribute *dev_attr, char *buf)
++{
++	struct net_device *ndev =3D to_net_dev(dev);
++	struct net_device_context *ndc =3D netdev_priv(ndev);
++	int index =3D dev_attr - dev_attr_netvsc_dev_attrs;
++
++	return sprintf(buf, "%u\n", ndc->tx_table[index]);
++}
++
++static void netvsc_attrs_init(void)
++{
++	int i;
++	char buffer[4];
++
++	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++) {
++		sprintf(buffer, "%02u", i);
++		dev_attr_netvsc_dev_attrs[i].attr.name =3D
++			kstrdup(buffer, GFP_KERNEL);
++		dev_attr_netvsc_dev_attrs[i].attr.mode =3D 0444;
++		sysfs_attr_init(&dev_attr_netvsc_dev_attrs[i].attr);
++
++		dev_attr_netvsc_dev_attrs[i].show =3D tx_indirection_show;
++		dev_attr_netvsc_dev_attrs[i].store =3D NULL;
++		netvsc_dev_attrs[i] =3D &dev_attr_netvsc_dev_attrs[i].attr;
++	}
++	netvsc_dev_attrs[VRSS_SEND_TAB_SIZE] =3D NULL;
++}
++
++static void netvsc_attrs_exit(void)
++{
++	int i;
++
++	for (i =3D 0; i < VRSS_SEND_TAB_SIZE; i++)
++		kfree(dev_attr_netvsc_dev_attrs[i].attr.name);
++}
++
+ static int netvsc_probe(struct hv_device *dev,
+ 			const struct hv_vmbus_device_id *dev_id)
+ {
+@@ -2410,6 +2455,7 @@ static int netvsc_probe(struct hv_device *dev,
+=20
+ 	net->netdev_ops =3D &device_ops;
+ 	net->ethtool_ops =3D &ethtool_ops;
++	net->sysfs_groups[0] =3D &netvsc_dev_group;
+ 	SET_NETDEV_DEV(net, &dev->device);
+=20
+ 	/* We always need headroom for rndis header */
+@@ -2665,6 +2711,7 @@ static void __exit netvsc_drv_exit(void)
+ {
+ 	unregister_netdevice_notifier(&netvsc_netdev_notifier);
+ 	vmbus_driver_unregister(&netvsc_drv);
++	netvsc_attrs_exit();
+ }
+=20
+ static int __init netvsc_drv_init(void)
+@@ -2678,6 +2725,8 @@ static int __init netvsc_drv_init(void)
  	}
- 
--- 
-2.27.0
-
+ 	netvsc_ring_bytes =3D ring_size * PAGE_SIZE;
+=20
++	netvsc_attrs_init();
++
+ 	ret =3D vmbus_driver_register(&netvsc_drv);
+ 	if (ret)
+ 		return ret;
+--=20
+2.25.1
