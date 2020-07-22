@@ -2,153 +2,153 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7420229B99
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jul 2020 17:38:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDBC7229BC2
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jul 2020 17:48:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgGVPiu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jul 2020 11:38:50 -0400
-Received: from bgl-iport-4.cisco.com ([72.163.197.28]:8140 "EHLO
-        bgl-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730382AbgGVPit (ORCPT
+        id S1726717AbgGVPss (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jul 2020 11:48:48 -0400
+Received: from rcdn-iport-9.cisco.com ([173.37.86.80]:32228 "EHLO
+        rcdn-iport-9.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732693AbgGVPsr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:38:49 -0400
+        Wed, 22 Jul 2020 11:48:47 -0400
+X-Greylist: delayed 424 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Jul 2020 11:48:46 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=4010; q=dns/txt; s=iport;
-  t=1595432328; x=1596641928;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6DfteAaujTchJ8f7UV3A2nHShelTlhrd0C5fTK5+Cx4=;
-  b=ZFgle/OBoMPRxfrMNmuxFAltm2lzxAbyvD2r+UZN4L2W321S+zeLQyaF
-   GK54Jje7B3Lym/Qs6zZWMIbOXA3bi1Xpoadfwf5bSLciHDp8sVGQYezZe
-   YfDA3QoClwo1iP9lFyBgWAhRYTiqZXKARoYOpqGwmVBb8HEoo//kSo44Z
-   U=;
+  d=cisco.com; i=@cisco.com; l=694; q=dns/txt; s=iport;
+  t=1595432926; x=1596642526;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ol4iiUhkrvBy3pEOwJ1GuwrkaIgCuPaJNyAhLe4A4C0=;
+  b=ikgFzgRCMp8HCnCPhpCUmxaMJVoWhPHz0UXdVFPixTEMHEWzfzR8esmv
+   bSUSv1FFL5yeMX/BtfqGSeL8hUxTRguNNXdTOP8kW0MIkst/JrC3uGSs9
+   kMot/pSmMAIAGTnDqfDwh3InichpDvL9KfV8fhG+QRyWYTvOwqcezT3nx
+   I=;
+IronPort-PHdr: =?us-ascii?q?9a23=3AlvokmhYT7HjevQg+MbPCqeT/LSx94ef9IxIV55?=
+ =?us-ascii?q?w7irlHbqWk+dH4MVfC4el21QaXD4bW8fRJj6zRqa+zEWAD4JPUtncEfdQMUh?=
+ =?us-ascii?q?IekswZkkQmB9LNEkz0KvPmLklYVMRPXVNo5Te3ZE5SHsutZFDIpHC2qzkIFU?=
+ =?us-ascii?q?a3OQ98PO+gHInUgoy+3Pyz/JuGZQJOiXK9bLp+IQ/wox/Ws5wdgJBpLeA6zR?=
+ =?us-ascii?q?6arw=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AfCgA0XRhf/5BdJa1gHgEBCxIMQIE?=
+ =?us-ascii?q?/C4FSUQeBRy8sCoQpg0YDjSclmF6CUwNVCwEBAQwBAS0CBAEBhEwCF4F3AiQ?=
+ =?us-ascii?q?3Bg4CAwEBCwEBBQEBAQIBBgRthVwMhXIBAQMBEhERDAEBNwEPAgEIDgwCJgI?=
+ =?us-ascii?q?CAjAVEAIEDgUigwSCTAMOHwEBonUCgTmIYXaBMoMBAQEFhSIYgg4JFHoqgmq?=
+ =?us-ascii?q?DVYYzghqBEScMEIJNPoQ9gxYzgi2BRwGQVjyieAYEgl2ZZgMegmkSiUCTFi2?=
+ =?us-ascii?q?wYAIEAgQFAg4BAQWBaSSBV3B6AXOBS1AXAg2OHoNxilZ0NwIGAQcBAQMJfI4?=
+ =?us-ascii?q?WAYEQAQE?=
 X-IronPort-AV: E=Sophos;i="5.75,383,1589241600"; 
-   d="scan'208";a="160197659"
-Received: from vla196-nat.cisco.com (HELO bgl-core-2.cisco.com) ([72.163.197.24])
-  by bgl-iport-4.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 22 Jul 2020 15:38:45 +0000
-Received: from SRIRAKR2-M-R0A8.cisco.com ([10.65.42.168])
-        by bgl-core-2.cisco.com (8.15.2/8.15.2) with ESMTP id 06MFcjDV021687;
-        Wed, 22 Jul 2020 15:38:45 GMT
-From:   Sriram Krishnan <srirakr2@cisco.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+   d="scan'208";a="710938515"
+Received: from rcdn-core-8.cisco.com ([173.37.93.144])
+  by rcdn-iport-9.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 22 Jul 2020 15:41:41 +0000
+Received: from XCH-ALN-003.cisco.com (xch-aln-003.cisco.com [173.36.7.13])
+        by rcdn-core-8.cisco.com (8.15.2/8.15.2) with ESMTPS id 06MFffl1021973
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 15:41:41 GMT
+Received: from xhs-aln-003.cisco.com (173.37.135.120) by XCH-ALN-003.cisco.com
+ (173.36.7.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 10:41:40 -0500
+Received: from xhs-rtp-002.cisco.com (64.101.210.229) by xhs-aln-003.cisco.com
+ (173.37.135.120) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 10:41:40 -0500
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (64.101.32.56) by
+ xhs-rtp-002.cisco.com (64.101.210.229) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 22 Jul 2020 11:41:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kwPmC/Vun1SJ8AYag9YgNpNprQGIAJhRI2UrPLfn0E1Zm/etZj2jO3ajpXaimHVeVvYg2YXviCzNlScThKrzMbhT1PJUuaZFm/0/hS2qXoQHrJqazRlWB/KLBjIPRJmLMmgmLRQt83DPV8tXguDBMhSlUYNR7uZqDNszIz6sMprrOdGpDI2k5iEcIB2BnXtR9OPn6j4ce+eNd6jLj/bhXqebyB1OHW6RJl96x9ACRXE8bUbrdXsyZQfk1JFyjx43YkoeSLZV9pIBfL+WePnU7OUg0AtWptmE1MWtmyrx3NYT8GDcsLk12/hNLdKzffouD5Yi8umC2fwksPInp7XuQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ol4iiUhkrvBy3pEOwJ1GuwrkaIgCuPaJNyAhLe4A4C0=;
+ b=a6R4RrV0jvQnlLvvj8vrPzKzBQ8nhJcm7sqHRqkrgmNtgkITq5AMtKvdTXgYZGIPoHGLScdeOpS+shkijNtf3JVJydO06A7qPaPdaV2SlcoPmc/fPR0Tqsdti9T9TvwBgqQvsn+OaSBDdCRho533s3iRIeN/Uwe6ZTeE5ZPSpMcNchvgUyETAeqAlpSMeAjI+k8rNVgn9oLCyxLpQCPRVO4wuLZj1bCNrZXskOzrsZNBqQ/CkyXAOJBqwJoN3i0WGz8lsc8AQ3YxhDEMmbCNzTIvOF/THFdUjVDlsSXzrZVYFR6bdQmV91hRHYcBvNc3A0C8klcxx1G3GqG4WztXeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
+ dkim=pass header.d=cisco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
+ s=selector2-cisco-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ol4iiUhkrvBy3pEOwJ1GuwrkaIgCuPaJNyAhLe4A4C0=;
+ b=NIe38779Zt6tYsyL9v2mTUjoMc7yBnUS7nBdPrh/jZv2FH12Dgbs96HiLOblY9fF25IpCUJD9BthkxC5A3aZbYB3ly0LagHdy+m/nHZPkV5jqodgw/hgb56KVlanmKAi7Mr7zRc4mNtRD2dBNS3LDkTgRYR+IeMBKN1Tzk0+VNM=
+Received: from CY4PR1101MB2101.namprd11.prod.outlook.com
+ (2603:10b6:910:24::18) by CY4PR11MB1765.namprd11.prod.outlook.com
+ (2603:10b6:903:126::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Wed, 22 Jul
+ 2020 15:41:39 +0000
+Received: from CY4PR1101MB2101.namprd11.prod.outlook.com
+ ([fe80::6c4e:645e:fcf9:f766]) by CY4PR1101MB2101.namprd11.prod.outlook.com
+ ([fe80::6c4e:645e:fcf9:f766%11]) with mapi id 15.20.3195.025; Wed, 22 Jul
+ 2020 15:41:39 +0000
+From:   "Sriram Krishnan (srirakr2)" <srirakr2@cisco.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     mbumgard@cisco.com, ugm@cisco.com, nimm@cisco.com,
-        xe-linux-external@cisco.com,
+        Wei Liu <wei.liu@kernel.org>,
+        "Malcolm Bumgardner (mbumgard)" <mbumgard@cisco.com>,
+        "Umesha G M (ugm)" <ugm@cisco.com>,
+        "Niranjan M M (nimm)" <nimm@cisco.com>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6] hv_netvsc: add support for vlans in AF_PACKET mode
-Date:   Wed, 22 Jul 2020 21:08:44 +0530
-Message-Id: <20200722153845.79946-1-srirakr2@cisco.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5] hv_netvsc: add support for vlans in AF_PACKET mode
+Thread-Topic: [PATCH v5] hv_netvsc: add support for vlans in AF_PACKET mode
+Thread-Index: AQHWYDt0UcpbuUSjfUuYsKmDjtlFy6kUGOeA
+Date:   Wed, 22 Jul 2020 15:41:39 +0000
+Message-ID: <5BFB5D28-3A27-4945-960A-9962064FC2C8@cisco.com>
+References: <20200722070809.70876-1-srirakr2@cisco.com>
+ <20200722081904.4a924917@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200722081904.4a924917@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Accept-Language: en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
 X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.65.42.168, [10.65.42.168]
-X-Outbound-Node: bgl-core-2.cisco.com
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/16.39.20071300
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=cisco.com;
+x-originating-ip: [106.51.23.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ba64a8c3-548b-4b2d-f4ae-08d82e55b9b1
+x-ms-traffictypediagnostic: CY4PR11MB1765:
+x-ld-processed: 5ae1af62-9505-4097-a69a-c1553ef7840e,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB1765E794040A55A39728E86A90790@CY4PR11MB1765.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: i2RSrxpBRApfmYV8w321lV2K7ENjRPcn5x+wPUhjrZxBSHD2ukWf0NTfDFzXUw9dm792You75Th4Gx2tYtGsGrjbtp9MjrAxnW4Ry6lNXL0qWdcv3LDtDkajz6e1N1MFTEqw9UxyMpbMThuj/wGszw7BbU+VfAIoMNc3DLlRG4TEoglKTziBDez2AQRHOkdXJz/+/IwkVJqYY3D7LrFY0c1lcLfP7+HoOvu633c8Zifu08XeeCDB+x4y/NhNeZ2tXXkldsEyvQY4kF+UqijFA/AeZ1Pwzi70UmoiOcGsCUh0CLckEEploE0Y7k3qdZbU
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1101MB2101.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(396003)(346002)(39860400002)(4326008)(2906002)(478600001)(6506007)(8676002)(6512007)(5660300002)(8936002)(83380400001)(33656002)(2616005)(4744005)(55236004)(36756003)(26005)(316002)(64756008)(66946007)(6486002)(66476007)(76116006)(91956017)(71200400001)(86362001)(186003)(6916009)(54906003)(66446008)(66556008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: vO9Ik7uUGE33fh925hKkIZxznbPG8Zgj7Gtk1i41knKiKkEFQYQs77aZEWWGlTmyuDSHoH1ucBS8CWUOwHGt7+583CLterMHZvaU/VZ92JJhsU5M6lNxbMbgx8OZ9F4/UmzEme+PqLPFySkQXopOz8TxGt1OmZSVjgHWQPmsD9naZ08Lkis+147D+AUKOixw+CMRnYTgvMdg3sDSQeansmKbfvZzkJQZQ4RWLQhgE+nFgp9zc6Xm4eWSixSWaIe+m23NHN9Bt9eKmHBsodDby6Md9EiSC9NjLzc40bv0kP/ocKk2ckL0iCRm2/oNX155ElagTPooEdDZwnclhIMjmeNvZ8chMPYTvxtI0hWxv0f4iFWoAcOZ49QMcG+Wpmbe3LbNW0cS0oeWY+UuqxNP2FAAey3A+Y/lJNNlyEtNYIL3NtIbGCn1qDOaqZj8tkKFi68PS7qndVMYfvPBeVBTMotfW9cHuTTxcHp1ieQuOXw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F6C9994F87DAA74C82BEC64C69FE6476@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR1101MB2101.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba64a8c3-548b-4b2d-f4ae-08d82e55b9b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 15:41:39.4111
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qvqQobeBtL59FNx7UXvpkMElbBcZ0f18kFNmSGQENFs+KqiERK8hD2odVBHH1ZUwd+9/cJ77K/z0/QncvI7znA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1765
+X-OriginatorOrg: cisco.com
+X-Outbound-SMTP-Client: 173.36.7.13, xch-aln-003.cisco.com
+X-Outbound-Node: rcdn-core-8.cisco.com
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Vlan tagged packets are getting dropped when used with DPDK that uses
-the AF_PACKET interface on a hyperV guest.
-
-The packet layer uses the tpacket interface to communicate the vlans
-information to the upper layers. On Rx path, these drivers can read the
-vlan info from the tpacket header but on the Tx path, this information
-is still within the packet frame and requires the paravirtual drivers to
-push this back into the NDIS header which is then used by the host OS to
-form the packet.
-
-This transition from the packet frame to NDIS header is currently missing
-hence causing the host OS to drop the all vlan tagged packets sent by
-the drivers that use AF_PACKET (ETH_P_ALL) such as DPDK.
-
-Here is an overview of the changes in the vlan header in the packet path:
-
-The RX path (userspace handles everything):
-  1. RX VLAN packet is stripped by HOST OS and placed in NDIS header
-  2. Guest Kernel RX hv_netvsc packets and moves VLAN info from NDIS
-     header into kernel SKB
-  3. Kernel shares packets with user space application with PACKET_MMAP.
-     The SKB VLAN info is copied to tpacket layer and indication set
-     TP_STATUS_VLAN_VALID.
-  4. The user space application will re-insert the VLAN info into the frame
-
-The TX path:
-  1. The user space application has the VLAN info in the frame.
-  2. Guest kernel gets packets from the application with PACKET_MMAP.
-  3. The kernel later sends the frame to the hv_netvsc driver. The only way
-     to send VLANs is when the SKB is setup & the VLAN is stripped from the
-     frame.
-  4. TX VLAN is re-inserted by HOST OS based on the NDIS header. If it sees
-     a VLAN in the frame the packet is dropped.
-
-Cc: xe-linux-external@cisco.com
-Cc: Sriram Krishnan <srirakr2@cisco.com>
-Signed-off-by: Sriram Krishnan <srirakr2@cisco.com>
----
- drivers/net/hyperv/hyperv_net.h |  1 +
- drivers/net/hyperv/netvsc_drv.c | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
-
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index abda736e7c7d..2181d4538ab7 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -897,6 +897,7 @@ struct netvsc_ethtool_stats {
- 	unsigned long rx_no_memory;
- 	unsigned long stop_queue;
- 	unsigned long wake_queue;
-+	unsigned long vlan_error;
- };
- 
- struct netvsc_ethtool_pcpu_stats {
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 6267f706e8ee..e0327b88732c 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -605,6 +605,29 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 		*hash_info = hash;
- 	}
- 
-+	/* When using AF_PACKET we need to drop VLAN header from
-+	 * the frame and update the SKB to allow the HOST OS
-+	 * to transmit the 802.1Q packet
-+	 */
-+	if (skb->protocol == htons(ETH_P_8021Q)) {
-+		u16 vlan_tci;
-+
-+		skb_reset_mac_header(skb);
-+		if (eth_type_vlan(eth_hdr(skb)->h_proto)) {
-+			if (unlikely(__skb_vlan_pop(skb, &vlan_tci) != 0)) {
-+				++net_device_ctx->eth_stats.vlan_error;
-+				goto drop;
-+			}
-+
-+			__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
-+			/* Update the NDIS header pkt lengths */
-+			packet->total_data_buflen -= VLAN_HLEN;
-+			packet->total_bytes -= VLAN_HLEN;
-+			rndis_msg->msg_len = packet->total_data_buflen;
-+			rndis_msg->msg.pkt.data_len = packet->total_data_buflen;
-+		}
-+	}
-+
- 	if (skb_vlan_tag_present(skb)) {
- 		struct ndis_pkt_8021q_info *vlan;
- 
-@@ -1427,6 +1450,7 @@ static const struct {
- 	{ "rx_no_memory", offsetof(struct netvsc_ethtool_stats, rx_no_memory) },
- 	{ "stop_queue", offsetof(struct netvsc_ethtool_stats, stop_queue) },
- 	{ "wake_queue", offsetof(struct netvsc_ethtool_stats, wake_queue) },
-+	{ "vlan_error", offsetof(struct netvsc_ethtool_stats, vlan_error) },
- }, pcpu_stats[] = {
- 	{ "cpu%u_rx_packets",
- 		offsetof(struct netvsc_ethtool_pcpu_stats, rx_packets) },
--- 
-2.24.0
-
+DQoNCu+7v09uIDIyLzA3LzIwLCA4OjQ5IFBNLCAiSmFrdWIgS2ljaW5za2kiIDxrdWJhQGtlcm5l
+bC5vcmc+IHdyb3RlOg0KDQogICAgPiBQbGVhc2UgcnVuIGNoZWNrcGF0Y2ggb24geW91ciBzdWJt
+aXNzaW9uczoNCg0KICAgID4gV0FSTklORzogTWlzc2luZyBhIGJsYW5rIGxpbmUgYWZ0ZXIgZGVj
+bGFyYXRpb25zDQogICAgPiAjNzY6IEZJTEU6IGRyaXZlcnMvbmV0L2h5cGVydi9uZXR2c2NfZHJ2
+LmM6NjE0Og0KICAgID4gKyAgICAgdTE2IHZsYW5fdGNpID0gMDsNCiAgICA+ICsgICAgIHNrYl9y
+ZXNldF9tYWNfaGVhZGVyKHNrYik7DQogDQogICAgPiBFUlJPUjogY29kZSBpbmRlbnQgc2hvdWxk
+IHVzZSB0YWJzIHdoZXJlIHBvc3NpYmxlDQogICAgPiAjODE6IEZJTEU6IGRyaXZlcnMvbmV0L2h5
+cGVydi9uZXR2c2NfZHJ2LmM6NjE5Og0KICAgID4gKyBeSV5JXkl9JA0KDQogICAgU29ycnkgYW5k
+IHRoYW5rcyBmb3IgdGhhdCwgcmVzdWJtaXR0ZWQgdjYgb2YgdGhlIHBhdGNoDQoNCg==
