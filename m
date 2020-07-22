@@ -2,148 +2,160 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A0EA22A052
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jul 2020 21:55:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36D0A22A110
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jul 2020 23:06:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgGVTzx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jul 2020 15:55:53 -0400
-Received: from mail-co1nam11on2092.outbound.protection.outlook.com ([40.107.220.92]:35745
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S1732754AbgGVVGf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jul 2020 17:06:35 -0400
+Received: from mail-bn7nam10on2134.outbound.protection.outlook.com ([40.107.92.134]:20544
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731267AbgGVTzw (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:55:52 -0400
+        id S1726447AbgGVVGf (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:06:35 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jjwPy5ORiT4NGPpC7kDlkNzzfaquFzxpiqF7TtC5jZWX7I+3zr1onJ5JIi3EGDMFBZ0gZbkf4TeHiqOeHU8ewhx5RLAXeETIILBKn+sLs3kH0RmtRH055/a5MYuDEFgEjhzbOAneAnWcsOxKCgppVXN43euKl7WvyCuEMMCTxtHN9o4PBmgU1CwjDC3S6ip/qLuCAcZmLJ2Tr3srENYFOCxqJ8NqI8TO/7OQAa9d/z+9ZPH4EspidAZu7kKZrq5xh5IpxFd4EmeT5DrI0RF5CjYwXSAMZ8sG4JfmEOKFNBc/JOBWSg1IvWnHj/trYfpUr+KOCwrfvKgtqgsF1gi1Ow==
+ b=SiAP2x5YbZHUWx6ZWrBqU4AvG8//JoVhQvsr+9CATPcXA/xD8MYzSuTwY/KtqcAtjkVSR59kjrFkjwt4fprTxOJvGByu3AqqrePTpNu9YdLjbY0V27rHvfVrniaFgYF9FxRBFIjCxfa+1pZvZeIvhmzKjiZYJ8jkWdYTLCTADuKfJsfGDvLpT3mKTrhT+ewiHVBhY298VAic7QMG4KsSGupJNR323WOTDdoJT85piPBWjO5JVYPZ6utsJrkB3Gs2QTK8L1hiJE5kCppxamrLs9NMchSIB41N6BLWsIEHIyC0zEnhVKP0ajNlP2iMW4nTG6WQXWExqbGsebiE1ow5aw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=194R8swSAwlZp2xxYC7mcTnqU2Ql6PncShvPEirZsOU=;
- b=dxVbPFRYuvC/kKsVd5MsecPibHyqbb7OUwx01CqdyQFU8tLzYbM0YEtV7aj78gC61avYKJ8y0jKpysBi+cw9BaLdm8//giMwxqskfjL8k6N6YO9ZSDjipI25h/Pz5lA7x4UjSOF3ZUNM61DsAHFduY6hpCzL0CQjEwHVQe4D+1a6d1JGz/q/xN6r3ctS4Vt1bhY3qU/WOJfvXxTFR81AltYozgndgqEg9PTWpeEMoqdCYb0Vsj6K1XoI0pDVxCoQJIVsksvKt2cj9XijK6bRexHmZ8FchTuJakbtmLmno0kh8Tlnaaj+UgZEORQ63AnCmQgeIhXN2yRrn3gQ7Yu/SQ==
+ bh=+lMasATm9m2GgcBwa5O1jLWooNgMcGvcd3hAK55w77o=;
+ b=G57n+8Y4QU91D2tRlQbAWLyBrwyNw1KEJVuNsd9XLrw1V2kixmtYfBzYv46e2NNn6bE02VB+CzFwDwYUzf2I4Yu1BNRU41iXaVMyb3P8g4yva9IZYwdmHxK6rKkwqu28ZVC9vSIb9xYUYkhPF4MYLcrM2eetvnsqQu5MGy1wiNkS2qSEzt/Jj0k8Y5tAfaku2Isc5xzMjpqPrC1l0AFe9ldhNykEq7hvgdS1x69DR8ERXpUVIP5oAf8TArAkzELrspZX8QoJc6B8JML5qxaG5F5C2VUNXUWdJ3Hs5hmz2RVLEa+7oz7AkpHqhg24rIhwBNYl1llAfPjTcWiOnzRNuQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=194R8swSAwlZp2xxYC7mcTnqU2Ql6PncShvPEirZsOU=;
- b=W3ucsLQmMa9lCPz2rHbvLqq9Uf1jOm83wTABXWk7hQ2QTLK670oiMChsXu4lYX3AwviXvj1fB4pmXOv1qfaqbvvKDwgqDKpedNRmtK7V/eo89celZOHHGicIpD0nSn5I5eqpIUR4E32IqThczk1ZJe4RdIz6m8/wqTmjG9V9myI=
-Received: from CH2PR21MB1400.namprd21.prod.outlook.com (2603:10b6:610:88::16)
- by CH2PR21MB1432.namprd21.prod.outlook.com (2603:10b6:610:84::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.3; Wed, 22 Jul
- 2020 19:55:50 +0000
-Received: from CH2PR21MB1400.namprd21.prod.outlook.com
- ([fe80::158c:9044:a546:303c]) by CH2PR21MB1400.namprd21.prod.outlook.com
- ([fe80::158c:9044:a546:303c%7]) with mapi id 15.20.3239.009; Wed, 22 Jul 2020
- 19:55:50 +0000
-From:   Andres Beltran <t-mabelt@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
+ bh=+lMasATm9m2GgcBwa5O1jLWooNgMcGvcd3hAK55w77o=;
+ b=IDLw097BtTmUItquERLqz5ee91L+7rIxGqyIhB7KFQ5EFLzwFDB3F3FbHFtMe8w5qeKX33Q7STRfUOuoo16HhFkJ5Td5qfaxtsNoi0yGlC8NdhUaITzd0VlDXozwp349R7RuCMNwlLl5iz/TXfS25+DiYuSvbnZTDCcdXfGlkrk=
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ (2603:10b6:207:30::18) by BL0PR2101MB1028.namprd21.prod.outlook.com
+ (2603:10b6:207:34::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.0; Wed, 22 Jul
+ 2020 21:06:31 +0000
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::f5a4:d43f:75c1:1b33]) by BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::f5a4:d43f:75c1:1b33%5]) with mapi id 15.20.3239.007; Wed, 22 Jul 2020
+ 21:06:31 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Sriram Krishnan <srirakr2@cisco.com>,
         KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>
-Subject: RE: [PATCH v5 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Thread-Topic: [PATCH v5 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Thread-Index: AQHWYF3SotJOOS5AfUKZubUzxn9n36kUAMKg
-Date:   Wed, 22 Jul 2020 19:55:49 +0000
-Message-ID: <CH2PR21MB14004CC8735841324CC4F5338B790@CH2PR21MB1400.namprd21.prod.outlook.com>
-References: <20200722181051.2688-1-lkmlabelt@gmail.com>
- <20200722181051.2688-2-lkmlabelt@gmail.com>
- <MW2PR2101MB105231CB8AE6BE0E8BD6A535D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB105231CB8AE6BE0E8BD6A535D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Wei Liu <wei.liu@kernel.org>
+CC:     "mbumgard@cisco.com" <mbumgard@cisco.com>,
+        "ugm@cisco.com" <ugm@cisco.com>, "nimm@cisco.com" <nimm@cisco.com>,
+        "xe-linux-external@cisco.com" <xe-linux-external@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v6] hv_netvsc: add support for vlans in AF_PACKET mode
+Thread-Topic: [PATCH v6] hv_netvsc: add support for vlans in AF_PACKET mode
+Thread-Index: AQHWYD4zMrrU71PALk6zvPLr8Box4qkUFzuw
+Date:   Wed, 22 Jul 2020 21:06:30 +0000
+Message-ID: <BL0PR2101MB09304ED1D26BD3D61EF62948CA790@BL0PR2101MB0930.namprd21.prod.outlook.com>
+References: <20200722153845.79946-1-srirakr2@cisco.com>
+In-Reply-To: <20200722153845.79946-1-srirakr2@cisco.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-22T19:25:10Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-22T21:06:29Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3351fb0d-71db-4b50-a619-e5a58c7848be;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=70356182-baba-4c36-a4df-3b2fdb1f4f5e;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [129.22.22.76]
+authentication-results: cisco.com; dkim=none (message not signed)
+ header.d=none;cisco.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [75.100.88.238]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 27b5c9e7-0680-43e5-3fae-08d82e793bb5
-x-ms-traffictypediagnostic: CH2PR21MB1432:
+x-ms-office365-filtering-correlation-id: 6f8f4a3c-f06b-4834-a9e2-08d82e831bd2
+x-ms-traffictypediagnostic: BL0PR2101MB1028:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR21MB143220AE8D6D4B71A59D1AF48B790@CH2PR21MB1432.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <BL0PR2101MB102885773035FEB0AFBF13C3CA790@BL0PR2101MB1028.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zSz+urUhXeWdEixOqJyfjVy1rf/2CyKZpL1UKlydPamfJqc+JuFe8YPvqPVZZjpEcEypRVaEJ1ZZ1R9U6jKBWxvSYZFs8/uVH08Hxi26AQFtiG82yU20IKCWP5E7XECYRJQa58/UibPHGTUH5OzxAIUMAlZU4OvbPBiwZ1FiX8+o4wtUPo4/D2uEj+a1Ye9WIc55j/iERXL6+YRw3PnK9lB7gSOaTbv56XweQNFB0cZJwFGD/y4+gDA5BE+lCa3Sr/RWGf8voMDaCj+UZSQbtW5p+j/rVek4Ew5msSqa2OoLf4tK3udd5zj8MDJDitqdLsdbzcTebcbK7ce4KDK8Dw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR21MB1400.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(86362001)(26005)(5660300002)(33656002)(9686003)(83380400001)(8936002)(4326008)(71200400001)(186003)(10290500003)(82960400001)(8676002)(76116006)(66446008)(7696005)(66556008)(66476007)(64756008)(316002)(6506007)(2906002)(66946007)(52536014)(55016002)(110136005)(82950400001)(478600001)(54906003)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: bg9dV7KHtn0Nw53mm4vC5hyx5pPz+yuTS5k7Y/YyxnExNL3MxMqk4MIVeQ7BA1+9kqqtlEb9T7rhSOfSbHF4tbmkEN0inA/gkK21I8ig8p1G4qksTQaWTNp4xFG0k0hA6sm35WBoQ2+HTC6F3EnHOe2D+dZJLdbQ4XJUKbrX+J8tIHDhNDYTkVm06EyCkLxjG0nO1s/N/TbpLVEhaCwNZl8/8Xkno01RUJUVAb6lzow+qZ35ffA4ixyv1tSfcD0HZVQlzSJ6bd580ERY6e4kzi/zX4p0OKgKd3HwOgtEs7hBSMxBbefdaI4hEwQcd58iJi/9fJrXqDieXCKriuQ2tKbheylW751VjRY27iPyo1QxmE+qj1soXlPAKdsIoKtF8Q2Bk9v5DHaIbRnEu0r6QHHvJWP4fK2PYaYLwQgaS8r4hJFTxrtS1Z5jgQDDl82KoZExZn1TBrMTfhh1NwYpDstZM0fuqy8dDQFo1KvBAViU1Yp1WYjk3uNlC3b0WdK4UofODH/LPSqW/L0cBLSmkAQVh3SJL1wDFGpaRIbIXNdp+7adlemNlssR42vU6Uz9ELGNrimdnsmPsKxKpd+xTQ==
+x-microsoft-antispam-message-info: r3hXAJe9gehAMWwnuJOJQIk2M4iDFhg8OfJqBa4xoJVhFOVDZK+lgJtDcyVbIqyGVqROPIrS5zBcz4DwmrOJ71qc4OVKsixDk0WmGrH9ESQCNqkzSH4nipt9j82fy7TH2BZQOdosZx3TjKiK9Od1dKqBJsPKa4EdS3o0FzJACg7626OVIm9s74X42xrlVBEjoJC1tRhYbxeR0zbdCrrKdPz7mmFuYFexGPpEj7iFE/g/S7Q38wNJ8o1jkOZz+GfK+LQIq1rFU6W1ZnBKJgW8du8AdEjbCxYRyfIv81icMBQYF/xcXYcbB8+iJS3HIaNk
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(366004)(346002)(396003)(8676002)(5660300002)(83380400001)(6506007)(10290500003)(9686003)(7696005)(2906002)(54906003)(186003)(86362001)(55016002)(478600001)(26005)(53546011)(110136005)(66446008)(64756008)(66556008)(66476007)(316002)(33656002)(66946007)(8936002)(76116006)(4326008)(82950400001)(82960400001)(7416002)(8990500004)(71200400001)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: HNfXYmbjw39hGOYo2qG3mJYA109YXVgcJuaLYfJ7J8/TU2RZKFoSWEqtsDFqT1KXLpY3NaQ3ZxOhO9HtuzGt4TKs67DUmBIxUndTms/2DbRcLu1u9775UupWVt9Qz5SLLtLOerHaqb+Juijnm7X8oykiquMPKa0dtPuuFPCgBXE1NZZnxG7KVZN97YkiqVCWnkkZNJbBrct4jmn26xUdNgDK3U6rKd0T2Gy5nFkxWXvFeNgihtJYJYrZckmVKWnFdMMpqmkXwHgrAhw3cXXfw4+G/xgaQOOOwCwtMVNY/qsa7Q0jhElG1ThWneDWC6l2WuHO0tt93EGlbvX0UuNWpoUAhoep4Mc5S/meiTFGkdXLtctulnMq3yX+w/F2kofKCkuZzTXXm4iTOlGouYrjneaJ4wCbrHaKPD1mj3/jzs0ETx0NMRM4QncsrCCblKuSJM4LVtVWSW6rHGLGPkU6t+5eGiqwQQ7I/jNXaVC311eqsOBjv0yqE/+BJfjAgE87sBVS+wIo750+I4VaUfwVFlYYnYvTfFlV8ur4clSSjxysGgk6MTutmHEEC0fmiUB3dXukw4vHf2DKMEPmX98bvTQlyVKEI/hhSUEOIgBMYPU6oH+uKhvojnkNeYUgiIZay5tqaVUu4FupgE3xX3ZcuQ==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR21MB1400.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27b5c9e7-0680-43e5-3fae-08d82e793bb5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 19:55:49.9633
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f8f4a3c-f06b-4834-a9e2-08d82e831bd2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 21:06:31.3710
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D/ptmxwqWrNAFvxYyP4Ryf6m9noiqXbFplDdHOSU34uTNQQ0ki9BwbmtOWBGkPsRRb36cJhUYEWexYg6hmPcXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1432
+X-MS-Exchange-CrossTenant-userprincipalname: XqBBm4ulmsin1qrcZg+qKcaqzQNYWFmwmlGv910DUpjRznCqoxM97999+RdrHDeyPIna95bqhRWdV+wfp7YtRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1028
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Michael Kelley <mikelley@microsoft.com> Sent: Wednesday, July 22, 2=
-020 3:25 PM
-> I don't think the above does what you want.  The allocated
-> array ends up as follows:
+
+
+> -----Original Message-----
+> From: Sriram Krishnan <srirakr2@cisco.com>
+> Sent: Wednesday, July 22, 2020 11:39 AM
+> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> Wei Liu <wei.liu@kernel.org>
+> Cc: mbumgard@cisco.com; ugm@cisco.com; nimm@cisco.com; xe-linux-
+> external@cisco.com; David S. Miller <davem@davemloft.net>; Jakub Kicinski
+> <kuba@kernel.org>; linux-hyperv@vger.kernel.org; netdev@vger.kernel.org;
+> linux-kernel@vger.kernel.org
+> Subject: [PATCH v6] hv_netvsc: add support for vlans in AF_PACKET mode
 >=20
-> Slot 0 contains "2"
-> Slot 1 contains "3"
-> ...
-> Slot size-2 contains size
-> Slot size-1 contains U64_MAX
+> Vlan tagged packets are getting dropped when used with DPDK that uses
+> the AF_PACKET interface on a hyperV guest.
 >=20
-> This means that allocating the next-to-last entry will go
-> awry.  I think the previous version of the slot initialization
-> code will actually work just fine.
+> The packet layer uses the tpacket interface to communicate the vlans
+> information to the upper layers. On Rx path, these drivers can read the
+> vlan info from the tpacket header but on the Tx path, this information
+> is still within the packet frame and requires the paravirtual drivers to
+> push this back into the NDIS header which is then used by the host OS to
+> form the packet.
 >=20
-
-vmbus_next_request_id() and vmbus_request_addr() check that
-the id > size, and then the array index becomes id - 1 (or size - 1 for
-the next-to-last entry, which is the last slot) , so I think this works fin=
-e.=20
-But as you suggested below, returning current_id + 1 and decrementing=20
-trans_id seems cleaner to me.
-
-> The overall scheme you are using to handle the 0 transactionID is
-> a good one.  Basically the slot array is still tracking values 0 thru
-> size-1, but what is presented to the calling VMbus driver is values
-> in the range 1 thru size.  That way you can recognize 0 as a special case=
-.
-> So take this implementation approach:
-> *  Start with the previous version of the vmbus_next_request_id()
-> and vmbus_request_addr() code.
-> *  In vmbus_next_request_id(), just return current_id+1 instead of
-> current_id.
-> * In vmbus_request_addr(), add the new code that checks trans_id
-> for 0 and returns immediately.  Otherwise, decrement trans_id by 1
-> and proceed with the existing code.
+> This transition from the packet frame to NDIS header is currently missing
+> hence causing the host OS to drop the all vlan tagged packets sent by
+> the drivers that use AF_PACKET (ETH_P_ALL) such as DPDK.
 >=20
-> With this approach, none of the initialization code needs to change.
-> Everything uses values in the range 0 to size-1, except that what is
-> presented to the VMbus drivers is shifted higher by 1.
+> Here is an overview of the changes in the vlan header in the packet path:
+>=20
+> The RX path (userspace handles everything):
+>   1. RX VLAN packet is stripped by HOST OS and placed in NDIS header
+>   2. Guest Kernel RX hv_netvsc packets and moves VLAN info from NDIS
+>      header into kernel SKB
+>   3. Kernel shares packets with user space application with PACKET_MMAP.
+>      The SKB VLAN info is copied to tpacket layer and indication set
+>      TP_STATUS_VLAN_VALID.
+>   4. The user space application will re-insert the VLAN info into the fra=
+me
+>=20
+> The TX path:
+>   1. The user space application has the VLAN info in the frame.
+>   2. Guest kernel gets packets from the application with PACKET_MMAP.
+>   3. The kernel later sends the frame to the hv_netvsc driver. The only w=
+ay
+>      to send VLANs is when the SKB is setup & the VLAN is stripped from t=
+he
+>      frame.
+>   4. TX VLAN is re-inserted by HOST OS based on the NDIS header. If it se=
+es
+>      a VLAN in the frame the packet is dropped.
+>=20
+> Cc: xe-linux-external@cisco.com
+> Cc: Sriram Krishnan <srirakr2@cisco.com>
+> Signed-off-by: Sriram Krishnan <srirakr2@cisco.com>
 
-Yes, I'll do this instead.
-
-Andres.
-
+Thanks you!
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
