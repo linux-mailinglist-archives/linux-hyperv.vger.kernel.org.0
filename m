@@ -2,104 +2,178 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB24722A92B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jul 2020 08:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7903622AD52
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jul 2020 13:14:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgGWG7K (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 23 Jul 2020 02:59:10 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:53506 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGWG7K (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:59:10 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1070)
-        id 5477C20B4908; Wed, 22 Jul 2020 23:59:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5477C20B4908
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id 523B030705AF;
-        Wed, 22 Jul 2020 23:59:09 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 23:59:09 -0700 (PDT)
-From:   Chi Song <chisong@microsoft.com>
-X-X-Sender: chisong@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 net-next] net: hyperv: dump TX indirection table to ethtool
- regs
-Message-ID: <alpine.LRH.2.23.451.2007222356070.2641@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+        id S1727828AbgGWLON (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Jul 2020 07:14:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:44004 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbgGWLON (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:14:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 413A1D6E;
+        Thu, 23 Jul 2020 04:14:12 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE4663F718;
+        Thu, 23 Jul 2020 04:14:10 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 12:14:02 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, decui@microsoft.com,
+        mikelley@microsoft.com
+Subject: Re: [PATCH v3] PCI: hv: Fix a timing issue which causes kdump to
+ fail occasionally
+Message-ID: <20200723111402.GA8120@e121166-lin.cambridge.arm.com>
+References: <20200718034752.4843-1-weh@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718034752.4843-1-weh@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-An imbalanced TX indirection table causes netvsc to have low
-performance. This table is created and managed during runtime. To help
-better diagnose performance issues caused by imbalanced tables, it needs
-make TX indirection tables visible.
+On Sat, Jul 18, 2020 at 11:47:52AM +0800, Wei Hu wrote:
+> Kdump could fail sometime on Hyper-V guest over Accelerated Network
+> interface. This is because the retry in hv_pci_enter_d0() relies on
+> an asynchronous host event arriving before the guest calls
+> hv_send_resources_allocated(). Fix the problem by moving retry
+> to hv_pci_probe(), removing this dependency and making the calling
+> sequence synchronous.
 
-Because TX indirection table is driver specified information, so
-display it via ethtool register dump.
+You have to explain why this code move fixes the problem and you
+also have to add a comment to the code so that anyone who has to
+fix it in the future can understand why the code is where you
+are moving it to and why that's a solution.
 
-Signed-off-by: Chi Song <chisong@microsoft.com>
----
-v7: move to ethtool register dump
-v6: update names to be more precise, remove useless assignment
-v5: update variable orders
-v4: use a separated group to organize tx_indirection better, change
- location of attributes init/exit to netvsc_drv_init/exit
+> Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
+> Signed-off-by: Wei Hu <weh@microsoft.com>
 
- drivers/net/hyperv/netvsc_drv.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Please carry tags and send patches -in-reply-to the previous version
+to allow threading.
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c
-b/drivers/net/hyperv/netvsc_drv.c
-index 6267f706e8ee..3288221726ea 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1934,6 +1934,23 @@ static int netvsc_set_features(struct net_device
-*ndev,
- 	return ret;
- }
+Thanks,
+Lorenzo
 
-+static int netvsc_get_regs_len(struct net_device *netdev)
-+{
-+	return VRSS_SEND_TAB_SIZE * sizeof(u32);
-+}
-+
-+static void netvsc_get_regs(struct net_device *netdev,
-+			    struct ethtool_regs *regs, void *p)
-+{
-+	struct net_device_context *ndc = netdev_priv(netdev);
-+	u32 *regs_buff = p;
-+
-+	/* increase the version, if buffer format is changed. */
-+	regs->version = 1;
-+
-+	memcpy(regs_buff, ndc->tx_table, VRSS_SEND_TAB_SIZE *
-sizeof(u32));
-+}
-+
- static u32 netvsc_get_msglevel(struct net_device *ndev)
- {
- 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
-@@ -1950,6 +1967,8 @@ static void netvsc_set_msglevel(struct net_device
-*ndev, u32 val)
-
- static const struct ethtool_ops ethtool_ops = {
- 	.get_drvinfo	= netvsc_get_drvinfo,
-+	.get_regs_len	= netvsc_get_regs_len,
-+	.get_regs	= netvsc_get_regs,
- 	.get_msglevel	= netvsc_get_msglevel,
- 	.set_msglevel	= netvsc_set_msglevel,
- 	.get_link	= ethtool_op_get_link,
--- 
-2.25.1
-
-
+> ---
+>     v2: Adding Fixes tag according to Michael Kelley's review comment.
+>     v3: Fix couple typos and reword commit message to make it clearer.
+>     Thanks the comments from Bjorn Helgaas.
+> 
+>  drivers/pci/controller/pci-hyperv.c | 66 ++++++++++++++---------------
+>  1 file changed, 32 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index bf40ff09c99d..738ee30f3334 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2759,10 +2759,8 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	struct pci_bus_d0_entry *d0_entry;
+>  	struct hv_pci_compl comp_pkt;
+>  	struct pci_packet *pkt;
+> -	bool retry = true;
+>  	int ret;
+>  
+> -enter_d0_retry:
+>  	/*
+>  	 * Tell the host that the bus is ready to use, and moved into the
+>  	 * powered-on state.  This includes telling the host which region
+> @@ -2789,38 +2787,6 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	if (ret)
+>  		goto exit;
+>  
+> -	/*
+> -	 * In certain case (Kdump) the pci device of interest was
+> -	 * not cleanly shut down and resource is still held on host
+> -	 * side, the host could return invalid device status.
+> -	 * We need to explicitly request host to release the resource
+> -	 * and try to enter D0 again.
+> -	 */
+> -	if (comp_pkt.completion_status < 0 && retry) {
+> -		retry = false;
+> -
+> -		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> -
+> -		/*
+> -		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+> -		 * to free up resources of its child devices.
+> -		 * In the kdump kernel we need to set the
+> -		 * wslot_res_allocated to 255 so it scans all child
+> -		 * devices to release resources allocated in the
+> -		 * normal kernel before panic happened.
+> -		 */
+> -		hbus->wslot_res_allocated = 255;
+> -
+> -		ret = hv_pci_bus_exit(hdev, true);
+> -
+> -		if (ret == 0) {
+> -			kfree(pkt);
+> -			goto enter_d0_retry;
+> -		}
+> -		dev_err(&hdev->device,
+> -			"Retrying D0 failed with ret %d\n", ret);
+> -	}
+> -
+>  	if (comp_pkt.completion_status < 0) {
+>  		dev_err(&hdev->device,
+>  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+> @@ -3058,6 +3024,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	struct hv_pcibus_device *hbus;
+>  	u16 dom_req, dom;
+>  	char *name;
+> +	bool enter_d0_retry = true;
+>  	int ret;
+>  
+>  	/*
+> @@ -3178,11 +3145,42 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	if (ret)
+>  		goto free_fwnode;
+>  
+> +retry:
+>  	ret = hv_pci_query_relations(hdev);
+>  	if (ret)
+>  		goto free_irq_domain;
+>  
+>  	ret = hv_pci_enter_d0(hdev);
+> +	/*
+> +	 * In certain case (Kdump) the pci device of interest was
+> +	 * not cleanly shut down and resource is still held on host
+> +	 * side, the host could return invalid device status.
+> +	 * We need to explicitly request host to release the resource
+> +	 * and try to enter D0 again.
+> +	 * The retry should start from hv_pci_query_relations() call.
+> +	 */
+> +	if (ret == -EPROTO && enter_d0_retry) {
+> +		enter_d0_retry = false;
+> +
+> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> +
+> +		/*
+> +		 * Hv_pci_bus_exit() calls hv_send_resources_released()
+> +		 * to free up resources of its child devices.
+> +		 * In the kdump kernel we need to set the
+> +		 * wslot_res_allocated to 255 so it scans all child
+> +		 * devices to release resources allocated in the
+> +		 * normal kernel before panic happened.
+> +		 */
+> +		hbus->wslot_res_allocated = 255;
+> +		ret = hv_pci_bus_exit(hdev, true);
+> +
+> +		if (ret == 0)
+> +			goto retry;
+> +
+> +		dev_err(&hdev->device,
+> +			"Retrying D0 failed with ret %d\n", ret);
+> +	}
+>  	if (ret)
+>  		goto free_irq_domain;
+>  
+> -- 
+> 2.20.1
+> 
