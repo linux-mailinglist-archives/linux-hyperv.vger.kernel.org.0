@@ -2,83 +2,106 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 201ED22B795
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jul 2020 22:22:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 100DE22BCC0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Jul 2020 06:14:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgGWUWx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 23 Jul 2020 16:22:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38746 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbgGWUWx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:22:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8326AAB55;
-        Thu, 23 Jul 2020 20:22:59 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 1D40A604C9; Thu, 23 Jul 2020 22:22:51 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 22:22:51 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Chi Song <Song.Chi@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1726503AbgGXEO1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 24 Jul 2020 00:14:27 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:50692 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgGXEO1 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 24 Jul 2020 00:14:27 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1070)
+        id 7E94E20B4908; Thu, 23 Jul 2020 21:14:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7E94E20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595564066;
+        bh=Aks2zkb0GLN2is1SIlOFjLMBbc/dujHnALytnlqRNGw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NM0Z9D+PIYcGxg/DkXDnwF5G3WpWreEBYx0Z8sw5p9EJf9QI77/q/+s4VbzO3UibU
+         mTvMgV/FZEhWbIQqZLIrMY8/pLj/rnb7c4tOrL7H35sQPQzENolmhyUqmqACTSY40l
+         ScIuCpDEtsW9qSEHdTkMm6OTXSIE8ATAxRZnHVno=
+Date:   Thu, 23 Jul 2020 21:14:26 -0700
+From:   Chi Song <chisong@linux.microsoft.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 net-next] net: hyperv: dump TX indirection table to
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 net-next] net: hyperv: dump TX indirection table to
  ethtool regs
-Message-ID: <20200723202251.vwh4xr7ogp72gcsg@lion.mk-sys.cz>
+Message-ID: <20200724041426.GB25409@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <alpine.LRH.2.23.451.2007222356070.2641@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
- <20200723193542.6vwu4cbokbihw3nh@lion.mk-sys.cz>
- <BL0PR2101MB09308AB4F78EA5B1B27B1CCBCA760@BL0PR2101MB0930.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BL0PR2101MB09308AB4F78EA5B1B27B1CCBCA760@BL0PR2101MB0930.namprd21.prod.outlook.com>
+In-Reply-To: <alpine.LRH.2.23.451.2007222356070.2641@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 07:55:20PM +0000, Haiyang Zhang wrote:
-> > -----Original Message-----
-> > From: Michal Kubecek <mkubecek@suse.cz>
-> > Sent: Thursday, July 23, 2020 3:36 PM
-> > To: Chi Song <Song.Chi@microsoft.com>
-> > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> > <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> > Wei Liu <wei.liu@kernel.org>; David S. Miller <davem@davemloft.net>; Jakub
-> > Kicinski <kuba@kernel.org>; linux-hyperv@vger.kernel.org;
-> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v7 net-next] net: hyperv: dump TX indirection table to
-> > ethtool regs
-> > 
-> > On Wed, Jul 22, 2020 at 11:59:09PM -0700, Chi Song wrote:
-> > > An imbalanced TX indirection table causes netvsc to have low
-> > > performance. This table is created and managed during runtime. To help
-> > > better diagnose performance issues caused by imbalanced tables, it needs
-> > > make TX indirection tables visible.
-> > >
-> > > Because TX indirection table is driver specified information, so
-> > > display it via ethtool register dump.
-> > 
-> > Is the Tx indirection table really unique to netvsc or can we expect
-> > other drivers to support similar feature? Also, would it make sense to
-> > allow also setting the table with ethtool? (AFAICS it can be only set
-> > from hypervisor at the moment.)
-> 
-> Currently, TX indirection table is only used by the Hyper-V synthetic NIC. I'm 
-> not aware of any other NIC planning to use this.
-> This table is created by host dynamically based on host side CPU usage, 
-> and provided to the VM periodically. Our protocol doesn't let the guest side 
-> to change it.
+An imbalanced TX indirection table causes netvsc to have low
+performance. This table is created and managed during runtime. To help
+better diagnose performance issues caused by imbalanced tables, it needs
+make TX indirection tables visible.
 
-If host is expected to rewrite the table periodically, it would indeed
-be of little use to set it on guest side. OK, let's do it as register
-dump and see if someone else comes with similar feature.
+Because TX indirection table is driver specified information, so
+display it via ethtool register dump.
 
-Michal
+Signed-off-by: Chi Song <chisong@microsoft.com>
+---
+v8: fix corrupt patch file
+v7: move to ethtool register dump
+v6: update names to be more precise, remove useless assignment
+v5: update variable orders
+v4: use a separated group to organize tx_indirection better, change 
+ location of attributes init/exit to netvsc_drv_init/exit
+
+ drivers/net/hyperv/netvsc_drv.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 6267f706e8ee..3288221726ea 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1934,6 +1934,23 @@ static int netvsc_set_features(struct net_device *ndev,
+ 	return ret;
+ }
+ 
++static int netvsc_get_regs_len(struct net_device *netdev)
++{
++	return VRSS_SEND_TAB_SIZE * sizeof(u32);
++}
++
++static void netvsc_get_regs(struct net_device *netdev,
++			    struct ethtool_regs *regs, void *p)
++{
++	struct net_device_context *ndc = netdev_priv(netdev);
++	u32 *regs_buff = p;
++
++	/* increase the version, if buffer format is changed. */
++	regs->version = 1;
++
++	memcpy(regs_buff, ndc->tx_table, VRSS_SEND_TAB_SIZE * sizeof(u32));
++}
++
+ static u32 netvsc_get_msglevel(struct net_device *ndev)
+ {
+ 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
+@@ -1950,6 +1967,8 @@ static void netvsc_set_msglevel(struct net_device *ndev, u32 val)
+ 
+ static const struct ethtool_ops ethtool_ops = {
+ 	.get_drvinfo	= netvsc_get_drvinfo,
++	.get_regs_len	= netvsc_get_regs_len,
++	.get_regs	= netvsc_get_regs,
+ 	.get_msglevel	= netvsc_get_msglevel,
+ 	.set_msglevel	= netvsc_set_msglevel,
+ 	.get_link	= ethtool_op_get_link,
+-- 
+2.25.1
