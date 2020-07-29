@@ -2,123 +2,806 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05F5E23227B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jul 2020 18:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6087F232381
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jul 2020 19:37:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgG2QWV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Jul 2020 12:22:21 -0400
-Received: from mail-eopbgr700098.outbound.protection.outlook.com ([40.107.70.98]:47456
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbgG2QWU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:22:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=djjnSaAx8ZHd8g9424XrNVk8lZtH8azm5gZuuAdLro0qyxbrqf95a9y0v8R4VRh1nbnG4LkwKe1ulRgqSkdATq8VrZn0VYCx3nCr/6qZfK5W7bZOK8nzj1WTLobZ5nXIN/J8UKGd7cbtqEMqkhvftE5Ga1ftRVHH3sRLUIjaMjuFrIxqyVSKVpmvEdRaAugrqPT1isPszSQ/urKhOleII/PhruSomWh0Y5ihyKRdeHJI5WA79qQvpr6/QxT9YblrHyxnNEpcgpJgsYzX3wsuUOVc0hs/b8gzOmcPs+cELg5BQzCEWGbNPOdyGijZuqilUpFDKVL7Z0oyE7SZSMbFbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2H8Brmggi4mWMcCuT3mtXYn8AEdI2qesKEYmLtCWkQ=;
- b=WImCFoayPIqsYuc143eKlvIiiOfi2nxR78KCCsKwaIbKuXllkdsDK7HWLKTrVM+yd0LUZj2cVZmJuVkNkIyDbfnpeR4Wj0Bb1Lf0x1TrCxOokoKX+GxubKhDK1qYppAMpW62s12YvrKfsjMNGn48cGY5Z4GMyB8oGWq53yLmQ8dcnZcxF31XYAiwpMYHijiAN6O4aXMGdZIOahODsYn3qtnNeVCb+aC8Yqr8GPRbRmfZIY0rl7fjBZ0CFdia+wbyG02bTt+ieoMOKl54Cyd+oXbUuBMeWX8p5wCXjFge82M/3LUo267hLgXUjkRXjO5kNPfSnhBaQMyiu8y2+nBx2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2H8Brmggi4mWMcCuT3mtXYn8AEdI2qesKEYmLtCWkQ=;
- b=Wi8/DT43hNU/96f/iKzFodDkGBrhMfsS2JJnRbSCMb+PP5PAI3kS2/QrxWgVnqXX2DNVZ6cZNmC1/Oa9iezWO+ir2IxW28tYeWaiPQAsCeXpT+Tz2ge2T7sYwtmAOqaDJbihD53Dw1vbNW2G5nuiwXEgIgGD5h1cK16JmEm8t+0=
-Received: from BN6PR21MB0836.namprd21.prod.outlook.com (2603:10b6:404:9e::14)
- by BN6PR21MB0771.namprd21.prod.outlook.com (2603:10b6:404:9c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9; Wed, 29 Jul
- 2020 16:22:18 +0000
-Received: from BN6PR21MB0836.namprd21.prod.outlook.com
- ([fe80::81c5:8d93:da4:ec76]) by BN6PR21MB0836.namprd21.prod.outlook.com
- ([fe80::81c5:8d93:da4:ec76%14]) with mapi id 15.20.3239.001; Wed, 29 Jul 2020
- 16:22:18 +0000
-From:   Stephen Hemminger <sthemmin@microsoft.com>
-To:     Andres Beltran <lkmlabelt@gmail.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Saruhan Karademir <skarade@microsoft.com>
-Subject: RE: [PATCH] hv_utils: Add validation for untrusted Hyper-V values
-Thread-Topic: [PATCH] hv_utils: Add validation for untrusted Hyper-V values
-Thread-Index: AQHWZR/iQ6HgFROTW0GjWwUNqZZCe6kdeuRwgAFAW4CAAAMlUA==
-Date:   Wed, 29 Jul 2020 16:22:18 +0000
-Message-ID: <BN6PR21MB083600994098D204DF141AB3CC700@BN6PR21MB0836.namprd21.prod.outlook.com>
-References: <20200728204417.23912-1-lkmlabelt@gmail.com>
- <BN6PR21MB08361CE726C8D3541E657054CC730@BN6PR21MB0836.namprd21.prod.outlook.com>
- <CAGpZZ6un6VT2ZVje0tVXbZkvH_HH+pn2Du6WPa5qeJDOz7rUmg@mail.gmail.com>
-In-Reply-To: <CAGpZZ6un6VT2ZVje0tVXbZkvH_HH+pn2Du6WPa5qeJDOz7rUmg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-29T16:22:15Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=57ced0d5-6a61-439b-ac8a-89e37fda176b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [204.195.22.127]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ac76835d-6e78-4b2f-3dbb-08d833db9039
-x-ms-traffictypediagnostic: BN6PR21MB0771:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR21MB07712C3A9946C967DF552D7DCC700@BN6PR21MB0771.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ljOF9zkcfJi+LYQC33BcG3k3qg+Ee8oM6wqbr/MD1BpEVubvDhzKGxWSsrT0fo0hkU3b9Ct5Em0OoHLxc3nx5FuNkbqBAmTpzWvfq2kQFhL2+WoAty1uRin2IGTqce+JB1GPJ+PMXpz+fX8OKBVE6mxVd029LLFLQKOio6GsQlrjuPCqniTkSkNbZkgd1RZ5svegvbXowMQ5FnI+R8Zed8a55O4RIIpAy85dVlyTdiTFHbjci3bR0KC5mB6APQlSzhMrFWIKfXi1ZpowbSanPYrLDb3IETAljJm184wgrk+ETWaJP/tNTXf95I/FOzsmGKDlUn73uitnW0GBIAVHlw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0836.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(366004)(39860400002)(136003)(5660300002)(7696005)(8936002)(316002)(86362001)(66556008)(6916009)(64756008)(66446008)(4744005)(10290500003)(107886003)(52536014)(66476007)(478600001)(82960400001)(82950400001)(2906002)(71200400001)(8676002)(4326008)(26005)(54906003)(8990500004)(9686003)(76116006)(53546011)(6506007)(66946007)(55016002)(186003)(83380400001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Dm8xUg7SJzJIU8vBurnGddAP6n2ZTwKP0rGdxairJO4lonEZ+PYhkMffN+LiiM057lO79Fj14pDfQ6tFnYsOtON+zR+/Tjm8prcF+wdxk7rfjbZte5Of6cAmXZdfxVUoq6NIt6BuZ0AaslN+sSJb3YDVzgSmO4Hly4dJ76y1f07pIYzAq8cbIVRddkjEh/LsWTX7K667lTXN6N+q/4YgSKl9dCnCq4+dFRAy0PKivJqW67bx8z9ICdmyPz/BbxgmiyEPwcWqfkqioS+AxW5iAWs/BAD42RYZfJ+xzQUwyy06uR8QEM7c5MihHIZ70WL07WtWFmFl8mWmdRkg+XX8GpEWdpOmtzkDEdNeS1jdVHBW+yR/hn5ne7DTU1xbgakZ8lkubg9B+MiVY+C+KSLyBNdVIuyhmi6FlozWS1QGChJcM3HmcpjYOJQ32RWG6ucR04yE3JO9CQqloXG4kPEmI5iV6n1qtM1SOU89tEhDnJfQBFpY595mEoFbOEQm4ZvfJiwDXONDEYl2Dle0OnDzO5EKvjAXMT0B67XXi0+5N5KpEFsUxnxN1WIaGwbBr7VlJle//xAOzrppjWzylRnJK6DI1b1AD2dSvdNGod8RvQLvMKhSEw3HI0xn6cYFlSNoGwlIB7zeo47SkI3CLHfUHQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726385AbgG2Rhk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Jul 2020 13:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgG2Rhj (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 29 Jul 2020 13:37:39 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8D6C061794;
+        Wed, 29 Jul 2020 10:37:39 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id p1so12116245pls.4;
+        Wed, 29 Jul 2020 10:37:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5eAnZ1UU9TTkK/NZFZKIdLEciDhCiVS3t95cAckSx2Y=;
+        b=cpxF7bS0O3p6OWP4Ij321779Z/ekRzdJM6S0ofQs5S0TGuRz4KBV12NM7a7CZ8NJG9
+         g5rHGVqsqENgSrRgm60945voaFKhq6z9yEXn3TloepGpmgvVU2fllyfugJ8ZSE/jwtuK
+         +/mK1bHKQYUWSxX4J7T1WY04uuXP4Zue0HK5zF8Ep2oCv7Cq7Hb4Ri0ujSJjYnq2rS1s
+         sfV+9SB40580X3hJ+gHAvdYFGkMBKStSg31YszTORJt2R50zNkUywz1PskNfSzIUbiph
+         mCugezwCyitQPh0+H3igugIoIMmZn3ema+fVQkRfV2lQKz6N9/RNMWmq5QXWDzBT0Oc4
+         ljZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5eAnZ1UU9TTkK/NZFZKIdLEciDhCiVS3t95cAckSx2Y=;
+        b=J2r2JJNii1axM76hrcpwQFNOXWUHONjiujlPi5CB8XMjCxoBkhLvV3Vy59Q3Ri9SOm
+         eNVzanewKT7OU7DhW+khjJlbWZnbJaWoe+RSL4rHADHvWg2Dgj9TWGjodD2nTzb24hGl
+         ZJLEoFrqlPEAtf+EW/r/h3pF8CuEtQzByi1icq/OdiNgZN/swzCmRc+VIylWN4lQVkjv
+         oS84YNWbGo0Yg7M16K6WsxKOg9XdzmISvkcKo17HMy5cgP8JqilvhpmhRX6L34VEc4lr
+         smI/yxC3BhZiDXHUAOlRWVx1l32TeV06hrlKOC7MKw8FNr+yfHnDdLP5Zxq8etOcABRf
+         RTrg==
+X-Gm-Message-State: AOAM533fsb790PD5DROSKmAeH9s7WO7sdsNp5z4SlpaQ2ATEtNZyKDVf
+        0lEfE/a7020qyyXrqLvbFoE=
+X-Google-Smtp-Source: ABdhPJycgNPBL48WwKRPnRmszhOS3NOfzQgsDmJjIeDnCI4wRvbKQjWU5XOFKi3VuY+vWtvkSSWtBw==
+X-Received: by 2002:a17:902:b943:: with SMTP id h3mr29589133pls.38.1596044258747;
+        Wed, 29 Jul 2020 10:37:38 -0700 (PDT)
+Received: from localhost.localdomain ([131.107.160.194])
+        by smtp.gmail.com with ESMTPSA id t29sm3050549pfq.50.2020.07.29.10.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 10:37:38 -0700 (PDT)
+From:   Andres Beltran <lkmlabelt@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, parri.andrea@gmail.com,
+        skarade@microsoft.com, Andres Beltran <lkmlabelt@gmail.com>
+Subject: [PATCH v2] hv_utils: Add validation for untrusted Hyper-V values
+Date:   Wed, 29 Jul 2020 13:37:35 -0400
+Message-Id: <20200729173735.38273-1-lkmlabelt@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR21MB0836.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac76835d-6e78-4b2f-3dbb-08d833db9039
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 16:22:18.1430
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZEGv1mpi7ESq1HTGL6nKIubZaDPhylpaazWOj1bu4UoNizO5KkU3lzHHMgVr5kSQ4fS6uiyx+9pfjvuCfXX+Vg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0771
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-T2sgYXQgbGVhc3QgdXNlIHRoZSByYXRlbGltaXQgZm9ybSBvZiBrZXJuZWwgbG9nZ2luZy4NCg0K
-TmV0ZGV2X2Vycl9yYXRlbGltaXRlZC4uLg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-RnJvbTogQW5kcmVzIEJlbHRyYW4gPGxrbWxhYmVsdEBnbWFpbC5jb20+IA0KU2VudDogV2VkbmVz
-ZGF5LCBKdWx5IDI5LCAyMDIwIDk6MTAgQU0NClRvOiBTdGVwaGVuIEhlbW1pbmdlciA8c3RoZW1t
-aW5AbWljcm9zb2Z0LmNvbT4NCkNjOiBLWSBTcmluaXZhc2FuIDxreXNAbWljcm9zb2Z0LmNvbT47
-IEhhaXlhbmcgWmhhbmcgPGhhaXlhbmd6QG1pY3Jvc29mdC5jb20+OyBXZWkgTGl1IDx3ZWkubGl1
-QGtlcm5lbC5vcmc+OyBsaW51eC1oeXBlcnZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT47
-IEFuZHJlYSBQYXJyaSA8cGFycmkuYW5kcmVhQGdtYWlsLmNvbT47IFNhcnVoYW4gS2FyYWRlbWly
-IDxza2FyYWRlQG1pY3Jvc29mdC5jb20+DQpTdWJqZWN0OiBSZTogW1BBVENIXSBodl91dGlsczog
-QWRkIHZhbGlkYXRpb24gZm9yIHVudHJ1c3RlZCBIeXBlci1WIHZhbHVlcw0KDQpPbiBUdWUsIEp1
-bCAyOCwgMjAyMCBhdCA1OjA0IFBNIFN0ZXBoZW4gSGVtbWluZ2VyDQo8c3RoZW1taW5AbWljcm9z
-b2Z0LmNvbT4gd3JvdGU6DQo+DQo+IFlvdSBtYXkgd2FudCB0byB1c2Ugb25lIG9mIHRoZSBtYWNy
-b3MgdGhhdCBwcmludHMgdGhpcyBvbmNlIG9ubHkuDQo+IFRoaXMgaXMgYSAic2hvdWxkIG5ldmVy
-IGhhcHBlbiIgdHlwZSBlcnJvciwgc28gaWYgc29tZXRoaW5nIGdvZXMgd3JvbmcgaXQgbWlnaHQg
-aGFwcGVucyBzbyBtdWNoIHRoYXQgam91cm5hbC9zeXNsb2cgd291bGQgZ2V0IG92ZXJsb2FkZWQu
-DQoNCkNlcnRhaW5seSwgcHJpbnRpbmcgZXJyb3IgbWVzc2FnZXMgb25jZSB3b3VsZCBiZSBpZGVh
-bCBpZiB3ZSB3ZXJlIG9ubHkNCmRlYWxpbmcgd2l0aCBMaW51eCBrZXJuZWwgYnVncy4gQnV0IHVu
-ZGVyIHRoZSBhc3N1bXB0aW9uIHRoYXQgSHlwZXItVg0KY2FuIHNlbmQgYm9ndXMgdmFsdWVzIGF0
-IGFueSB0aW1lLCBJIHRoaW5rIGl0IHdvdWxkIGJlIGJldHRlciB0byBwcmludA0KZXJyb3IgbWVz
-c2FnZXMgZXZlcnkgdGltZSBzbyB0aGF0IHdlIGFyZSBhd2FyZSBvZiBtYWxpY2lvdXMvZXJyb25l
-b3VzDQpkYXRhIHNlbnQgYnkgdGhlIGhvc3QuDQo=
+For additional robustness in the face of Hyper-V errors or malicious
+behavior, validate all values that originate from packets that Hyper-V
+has sent to the guest in the host-to-guest ring buffer. Ensure that
+invalid values cannot cause indexing off the end of the icversion_data
+array in vmbus_prep_negotiate_resp().
+
+Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+---
+Changes in v2:
+	-Use ratelimited form of kernel logging to print error messages.
+
+ drivers/hv/channel_mgmt.c |  17 ++-
+ drivers/hv/hv_fcopy.c     |  36 +++--
+ drivers/hv/hv_kvp.c       | 122 +++++++++--------
+ drivers/hv/hv_snapshot.c  |  89 +++++++------
+ drivers/hv/hv_util.c      | 267 +++++++++++++++++++++++---------------
+ include/linux/hyperv.h    |   9 +-
+ 6 files changed, 332 insertions(+), 208 deletions(-)
+
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 591106cf58fc..ed29f0f10f04 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -202,8 +202,8 @@ static u16 hv_get_dev_type(const struct vmbus_channel *channel)
+  * Set up and fill in default negotiate response message.
+  * Mainly used by Hyper-V drivers.
+  */
+-bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp,
+-				u8 *buf, const int *fw_version, int fw_vercnt,
++bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, u8 *buf,
++				u32 buflen, const int *fw_version, int fw_vercnt,
+ 				const int *srv_version, int srv_vercnt,
+ 				int *nego_fw_version, int *nego_srv_version)
+ {
+@@ -216,9 +216,7 @@ bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp,
+ 	struct icmsg_negotiate *negop;
+ 
+ 	icmsghdrp->icmsgsize = 0x10;
+-	negop = (struct icmsg_negotiate *)&buf[
+-		sizeof(struct vmbuspipe_hdr) +
+-		sizeof(struct icmsg_hdr)];
++	negop = (struct icmsg_negotiate *)&buf[ICMSG_HDR];
+ 
+ 	icframe_major = negop->icframe_vercnt;
+ 	icframe_minor = 0;
+@@ -226,6 +224,15 @@ bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp,
+ 	icmsg_major = negop->icmsg_vercnt;
+ 	icmsg_minor = 0;
+ 
++	/* Validate negop packet */
++	if (icframe_major > IC_VERSION_NEGOTIATION_MAX_VER_COUNT ||
++	    icmsg_major > IC_VERSION_NEGOTIATION_MAX_VER_COUNT ||
++	    ICMSG_NEGOTIATE_PKT_SIZE(icframe_major, icmsg_major) > buflen) {
++		pr_err_ratelimited("Invalid icmsg negotiate - icframe_major: %u, icmsg_major: %u",
++				   icframe_major, icmsg_major);
++		goto fw_error;
++	}
++
+ 	/*
+ 	 * Select the framework version number we will
+ 	 * support.
+diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
+index 5040d7e0cd9e..59ce85e00a02 100644
+--- a/drivers/hv/hv_fcopy.c
++++ b/drivers/hv/hv_fcopy.c
+@@ -235,15 +235,27 @@ void hv_fcopy_onchannelcallback(void *context)
+ 	if (fcopy_transaction.state > HVUTIL_READY)
+ 		return;
+ 
+-	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen,
+-			 &requestid);
+-	if (recvlen <= 0)
++	if (vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen, &requestid)) {
++		pr_err_ratelimited("Fcopy request received. Could not read into recv buf\n");
+ 		return;
++	}
++
++	if (!recvlen)
++		return;
++
++	/* Ensure recvlen is big enough to read header data */
++	if (recvlen < ICMSG_HDR) {
++		pr_err_ratelimited("Fcopy request received. Packet length too small: %d\n",
++				   recvlen);
++		return;
++	}
+ 
+ 	icmsghdr = (struct icmsg_hdr *)&recv_buffer[
+ 			sizeof(struct vmbuspipe_hdr)];
++
+ 	if (icmsghdr->icmsgtype == ICMSGTYPE_NEGOTIATE) {
+-		if (vmbus_prep_negotiate_resp(icmsghdr, recv_buffer,
++		if (vmbus_prep_negotiate_resp(icmsghdr,
++				recv_buffer, recvlen,
+ 				fw_versions, FW_VER_COUNT,
+ 				fcopy_versions, FCOPY_VER_COUNT,
+ 				NULL, &fcopy_srv_version)) {
+@@ -252,10 +264,14 @@ void hv_fcopy_onchannelcallback(void *context)
+ 				fcopy_srv_version >> 16,
+ 				fcopy_srv_version & 0xFFFF);
+ 		}
+-	} else {
+-		fcopy_msg = (struct hv_fcopy_hdr *)&recv_buffer[
+-				sizeof(struct vmbuspipe_hdr) +
+-				sizeof(struct icmsg_hdr)];
++	} else if (icmsghdr->icmsgtype == ICMSGTYPE_FCOPY) {
++		/* Ensure recvlen is big enough to contain hv_fcopy_hdr */
++		if (recvlen < ICMSG_HDR + sizeof(struct hv_fcopy_hdr)) {
++			pr_err_ratelimited("Invalid Fcopy hdr. Packet length too small: %u\n",
++					   recvlen);
++			return;
++		}
++		fcopy_msg = (struct hv_fcopy_hdr *)&recv_buffer[ICMSG_HDR];
+ 
+ 		/*
+ 		 * Stash away this global state for completing the
+@@ -280,6 +296,10 @@ void hv_fcopy_onchannelcallback(void *context)
+ 		schedule_delayed_work(&fcopy_timeout_work,
+ 				      HV_UTIL_TIMEOUT * HZ);
+ 		return;
++	} else {
++		pr_err_ratelimited("Fcopy request received. Invalid msg type: %d\n",
++				   icmsghdr->icmsgtype);
++		return;
+ 	}
+ 	icmsghdr->icflags = ICMSGHDRFLAG_TRANSACTION | ICMSGHDRFLAG_RESPONSE;
+ 	vmbus_sendpacket(channel, recv_buffer, recvlen, requestid,
+diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
+index e74b144b8f3d..46d171abb47d 100644
+--- a/drivers/hv/hv_kvp.c
++++ b/drivers/hv/hv_kvp.c
+@@ -662,71 +662,87 @@ void hv_kvp_onchannelcallback(void *context)
+ 	if (kvp_transaction.state > HVUTIL_READY)
+ 		return;
+ 
+-	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 4, &recvlen,
+-			 &requestid);
+-
+-	if (recvlen > 0) {
+-		icmsghdrp = (struct icmsg_hdr *)&recv_buffer[
+-			sizeof(struct vmbuspipe_hdr)];
+-
+-		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
+-			if (vmbus_prep_negotiate_resp(icmsghdrp,
+-				 recv_buffer, fw_versions, FW_VER_COUNT,
+-				 kvp_versions, KVP_VER_COUNT,
+-				 NULL, &kvp_srv_version)) {
+-				pr_info("KVP IC version %d.%d\n",
+-					kvp_srv_version >> 16,
+-					kvp_srv_version & 0xFFFF);
+-			}
+-		} else {
+-			kvp_msg = (struct hv_kvp_msg *)&recv_buffer[
+-				sizeof(struct vmbuspipe_hdr) +
+-				sizeof(struct icmsg_hdr)];
++	if (vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 4, &recvlen, &requestid)) {
++		pr_err_ratelimited("KVP request received. Could not read into recv buf\n");
++		return;
++	}
+ 
+-			/*
+-			 * Stash away this global state for completing the
+-			 * transaction; note transactions are serialized.
+-			 */
++	if (!recvlen)
++		return;
+ 
+-			kvp_transaction.recv_len = recvlen;
+-			kvp_transaction.recv_req_id = requestid;
+-			kvp_transaction.kvp_msg = kvp_msg;
++	/* Ensure recvlen is big enough to read header data */
++	if (recvlen < ICMSG_HDR) {
++		pr_err_ratelimited("KVP request received. Packet length too small: %d\n",
++				   recvlen);
++		return;
++	}
+ 
+-			if (kvp_transaction.state < HVUTIL_READY) {
+-				/* Userspace is not registered yet */
+-				kvp_respond_to_host(NULL, HV_E_FAIL);
+-				return;
+-			}
+-			kvp_transaction.state = HVUTIL_HOSTMSG_RECEIVED;
++	icmsghdrp = (struct icmsg_hdr *)&recv_buffer[sizeof(struct vmbuspipe_hdr)];
++
++	if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
++		if (vmbus_prep_negotiate_resp(icmsghdrp,
++				recv_buffer, recvlen,
++				fw_versions, FW_VER_COUNT,
++				kvp_versions, KVP_VER_COUNT,
++				NULL, &kvp_srv_version)) {
++			pr_info("KVP IC version %d.%d\n",
++				kvp_srv_version >> 16,
++				kvp_srv_version & 0xFFFF);
++		}
++	} else if (icmsghdrp->icmsgtype == ICMSGTYPE_KVPEXCHANGE) {
++		/*
++		 * recvlen is not checked against sizeof(struct kvp_msg) because kvp_msg contains
++		 * a union of structs and the msg type received is not known. Code using this
++		 * struct should provide validation when accessing its fields.
++		 */
++		kvp_msg = (struct hv_kvp_msg *)&recv_buffer[ICMSG_HDR];
+ 
+-			/*
+-			 * Get the information from the
+-			 * user-mode component.
+-			 * component. This transaction will be
+-			 * completed when we get the value from
+-			 * the user-mode component.
+-			 * Set a timeout to deal with
+-			 * user-mode not responding.
+-			 */
+-			schedule_work(&kvp_sendkey_work);
+-			schedule_delayed_work(&kvp_timeout_work,
+-					      HV_UTIL_TIMEOUT * HZ);
++		/*
++		 * Stash away this global state for completing the
++		 * transaction; note transactions are serialized.
++		 */
+ 
+-			return;
++		kvp_transaction.recv_len = recvlen;
++		kvp_transaction.recv_req_id = requestid;
++		kvp_transaction.kvp_msg = kvp_msg;
+ 
++		if (kvp_transaction.state < HVUTIL_READY) {
++			/* Userspace is not registered yet */
++			kvp_respond_to_host(NULL, HV_E_FAIL);
++			return;
+ 		}
++		kvp_transaction.state = HVUTIL_HOSTMSG_RECEIVED;
+ 
+-		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
+-			| ICMSGHDRFLAG_RESPONSE;
++		/*
++		 * Get the information from the
++		 * user-mode component.
++		 * component. This transaction will be
++		 * completed when we get the value from
++		 * the user-mode component.
++		 * Set a timeout to deal with
++		 * user-mode not responding.
++		 */
++		schedule_work(&kvp_sendkey_work);
++		schedule_delayed_work(&kvp_timeout_work,
++					HV_UTIL_TIMEOUT * HZ);
+ 
+-		vmbus_sendpacket(channel, recv_buffer,
+-				       recvlen, requestid,
+-				       VM_PKT_DATA_INBAND, 0);
++		return;
+ 
+-		host_negotiatied = NEGO_FINISHED;
+-		hv_poll_channel(kvp_transaction.recv_channel, kvp_poll_wrapper);
++	} else {
++		pr_err_ratelimited("KVP request received. Invalid msg type: %d\n",
++				   icmsghdrp->icmsgtype);
++		return;
+ 	}
+ 
++	icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
++		| ICMSGHDRFLAG_RESPONSE;
++
++	vmbus_sendpacket(channel, recv_buffer,
++			 recvlen, requestid,
++			 VM_PKT_DATA_INBAND, 0);
++
++	host_negotiatied = NEGO_FINISHED;
++	hv_poll_channel(kvp_transaction.recv_channel, kvp_poll_wrapper);
+ }
+ 
+ static void kvp_on_reset(void)
+diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
+index 783779e4cc1a..2267bd4c3472 100644
+--- a/drivers/hv/hv_snapshot.c
++++ b/drivers/hv/hv_snapshot.c
+@@ -298,49 +298,64 @@ void hv_vss_onchannelcallback(void *context)
+ 	if (vss_transaction.state > HVUTIL_READY)
+ 		return;
+ 
+-	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen,
+-			 &requestid);
+-
+-	if (recvlen > 0) {
+-		icmsghdrp = (struct icmsg_hdr *)&recv_buffer[
+-			sizeof(struct vmbuspipe_hdr)];
+-
+-		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
+-			if (vmbus_prep_negotiate_resp(icmsghdrp,
+-				 recv_buffer, fw_versions, FW_VER_COUNT,
+-				 vss_versions, VSS_VER_COUNT,
+-				 NULL, &vss_srv_version)) {
+-
+-				pr_info("VSS IC version %d.%d\n",
+-					vss_srv_version >> 16,
+-					vss_srv_version & 0xFFFF);
+-			}
+-		} else {
+-			vss_msg = (struct hv_vss_msg *)&recv_buffer[
+-				sizeof(struct vmbuspipe_hdr) +
+-				sizeof(struct icmsg_hdr)];
+-
+-			/*
+-			 * Stash away this global state for completing the
+-			 * transaction; note transactions are serialized.
+-			 */
+-
+-			vss_transaction.recv_len = recvlen;
+-			vss_transaction.recv_req_id = requestid;
+-			vss_transaction.msg = (struct hv_vss_msg *)vss_msg;
+-
+-			schedule_work(&vss_handle_request_work);
++	if (vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen, &requestid)) {
++		pr_err_ratelimited("VSS request received. Could not read into recv buf\n");
++		return;
++	}
++
++	if (!recvlen)
++		return;
++
++	/* Ensure recvlen is big enough to read header data */
++	if (recvlen < ICMSG_HDR) {
++		pr_err_ratelimited("VSS request received. Packet length too small: %d\n",
++				   recvlen);
++		return;
++	}
++
++	icmsghdrp = (struct icmsg_hdr *)&recv_buffer[sizeof(struct vmbuspipe_hdr)];
++
++	if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
++		if (vmbus_prep_negotiate_resp(icmsghdrp,
++				recv_buffer, recvlen,
++				fw_versions, FW_VER_COUNT,
++				vss_versions, VSS_VER_COUNT,
++				NULL, &vss_srv_version)) {
++
++			pr_info("VSS IC version %d.%d\n",
++				vss_srv_version >> 16,
++				vss_srv_version & 0xFFFF);
++		}
++	} else if (icmsghdrp->icmsgtype == ICMSGTYPE_VSS) {
++		/* Ensure recvlen is big enough to contain hv_vss_msg */
++		if (recvlen < ICMSG_HDR + sizeof(struct hv_vss_msg)) {
++			pr_err_ratelimited("Invalid VSS msg. Packet length too small: %u\n",
++					   recvlen);
+ 			return;
+ 		}
++		vss_msg = (struct hv_vss_msg *)&recv_buffer[ICMSG_HDR];
++
++		/*
++		 * Stash away this global state for completing the
++		 * transaction; note transactions are serialized.
++		 */
+ 
+-		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
+-			| ICMSGHDRFLAG_RESPONSE;
++		vss_transaction.recv_len = recvlen;
++		vss_transaction.recv_req_id = requestid;
++		vss_transaction.msg = (struct hv_vss_msg *)vss_msg;
+ 
+-		vmbus_sendpacket(channel, recv_buffer,
+-				       recvlen, requestid,
+-				       VM_PKT_DATA_INBAND, 0);
++		schedule_work(&vss_handle_request_work);
++		return;
++	} else {
++		pr_err_ratelimited("VSS request received. Invalid msg type: %d\n",
++				   icmsghdrp->icmsgtype);
++		return;
+ 	}
+ 
++	icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION |
++		ICMSGHDRFLAG_RESPONSE;
++	vmbus_sendpacket(channel, recv_buffer, recvlen, requestid,
++			 VM_PKT_DATA_INBAND, 0);
+ }
+ 
+ static void vss_on_reset(void)
+diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+index 92ee0fe4c919..f78840b98fe6 100644
+--- a/drivers/hv/hv_util.c
++++ b/drivers/hv/hv_util.c
+@@ -195,73 +195,91 @@ static void shutdown_onchannelcallback(void *context)
+ 
+ 	struct icmsg_hdr *icmsghdrp;
+ 
+-	vmbus_recvpacket(channel, shut_txf_buf,
+-			 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
++	if (vmbus_recvpacket(channel, shut_txf_buf, HV_HYP_PAGE_SIZE, &recvlen, &requestid)) {
++		pr_err_ratelimited("Shutdown request received. Could not read into shut txf buf\n");
++		return;
++	}
+ 
+-	if (recvlen > 0) {
+-		icmsghdrp = (struct icmsg_hdr *)&shut_txf_buf[
+-			sizeof(struct vmbuspipe_hdr)];
++	if (!recvlen)
++		return;
+ 
+-		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
+-			if (vmbus_prep_negotiate_resp(icmsghdrp, shut_txf_buf,
+-					fw_versions, FW_VER_COUNT,
+-					sd_versions, SD_VER_COUNT,
+-					NULL, &sd_srv_version)) {
+-				pr_info("Shutdown IC version %d.%d\n",
+-					sd_srv_version >> 16,
+-					sd_srv_version & 0xFFFF);
+-			}
+-		} else {
+-			shutdown_msg =
+-				(struct shutdown_msg_data *)&shut_txf_buf[
+-					sizeof(struct vmbuspipe_hdr) +
+-					sizeof(struct icmsg_hdr)];
++	/* Ensure recvlen is big enough to read header data */
++	if (recvlen < ICMSG_HDR) {
++		pr_err_ratelimited("Shutdown request received. Packet length too small: %d\n",
++				   recvlen);
++		return;
++	}
+ 
+-			/*
+-			 * shutdown_msg->flags can be 0(shut down), 2(reboot),
+-			 * or 4(hibernate). It may bitwise-OR 1, which means
+-			 * performing the request by force. Linux always tries
+-			 * to perform the request by force.
+-			 */
+-			switch (shutdown_msg->flags) {
+-			case 0:
+-			case 1:
+-				icmsghdrp->status = HV_S_OK;
+-				work = &shutdown_work;
+-				pr_info("Shutdown request received -"
+-					    " graceful shutdown initiated\n");
+-				break;
+-			case 2:
+-			case 3:
+-				icmsghdrp->status = HV_S_OK;
+-				work = &restart_work;
+-				pr_info("Restart request received -"
+-					    " graceful restart initiated\n");
+-				break;
+-			case 4:
+-			case 5:
+-				pr_info("Hibernation request received\n");
+-				icmsghdrp->status = hibernation_supported ?
+-					HV_S_OK : HV_E_FAIL;
+-				if (hibernation_supported)
+-					work = &hibernate_context.work;
+-				break;
+-			default:
+-				icmsghdrp->status = HV_E_FAIL;
+-				pr_info("Shutdown request received -"
+-					    " Invalid request\n");
+-				break;
+-			}
++	icmsghdrp = (struct icmsg_hdr *)&shut_txf_buf[sizeof(struct vmbuspipe_hdr)];
++
++	if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
++		if (vmbus_prep_negotiate_resp(icmsghdrp,
++				shut_txf_buf, recvlen,
++				fw_versions, FW_VER_COUNT,
++				sd_versions, SD_VER_COUNT,
++				NULL, &sd_srv_version)) {
++			pr_info("Shutdown IC version %d.%d\n",
++				sd_srv_version >> 16,
++				sd_srv_version & 0xFFFF);
++		}
++	} else if (icmsghdrp->icmsgtype == ICMSGTYPE_SHUTDOWN) {
++		/* Ensure recvlen is big enough to contain shutdown_msg_data struct */
++		if (recvlen < ICMSG_HDR + sizeof(struct shutdown_msg_data)) {
++			pr_err_ratelimited("Invalid shutdown msg data. Packet length too small: %u\n",
++					   recvlen);
++			return;
+ 		}
+ 
+-		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
+-			| ICMSGHDRFLAG_RESPONSE;
+-
+-		vmbus_sendpacket(channel, shut_txf_buf,
+-				       recvlen, requestid,
+-				       VM_PKT_DATA_INBAND, 0);
++		shutdown_msg = (struct shutdown_msg_data *)&shut_txf_buf[ICMSG_HDR];
++
++		/*
++		 * shutdown_msg->flags can be 0(shut down), 2(reboot),
++		 * or 4(hibernate). It may bitwise-OR 1, which means
++		 * performing the request by force. Linux always tries
++		 * to perform the request by force.
++		 */
++		switch (shutdown_msg->flags) {
++		case 0:
++		case 1:
++			icmsghdrp->status = HV_S_OK;
++			work = &shutdown_work;
++			pr_info("Shutdown request received -"
++					" graceful shutdown initiated\n");
++			break;
++		case 2:
++		case 3:
++			icmsghdrp->status = HV_S_OK;
++			work = &restart_work;
++			pr_info("Restart request received -"
++					" graceful restart initiated\n");
++			break;
++		case 4:
++		case 5:
++			pr_info("Hibernation request received\n");
++			icmsghdrp->status = hibernation_supported ?
++				HV_S_OK : HV_E_FAIL;
++			if (hibernation_supported)
++				work = &hibernate_context.work;
++			break;
++		default:
++			icmsghdrp->status = HV_E_FAIL;
++			pr_info("Shutdown request received -"
++					" Invalid request\n");
++			break;
++		}
++	} else {
++		icmsghdrp->status = HV_E_FAIL;
++		pr_err_ratelimited("Shutdown request received. Invalid msg type: %d\n",
++				   icmsghdrp->icmsgtype);
+ 	}
+ 
++	icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
++		| ICMSGHDRFLAG_RESPONSE;
++
++	vmbus_sendpacket(channel, shut_txf_buf,
++			 recvlen, requestid,
++			 VM_PKT_DATA_INBAND, 0);
++
+ 	if (work)
+ 		schedule_work(work);
+ }
+@@ -361,50 +379,71 @@ static void timesync_onchannelcallback(void *context)
+ 	struct ictimesync_ref_data *refdata;
+ 	u8 *time_txf_buf = util_timesynch.recv_buffer;
+ 
+-	vmbus_recvpacket(channel, time_txf_buf,
+-			 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
++	if (vmbus_recvpacket(channel, time_txf_buf, HV_HYP_PAGE_SIZE, &recvlen, &requestid)) {
++		pr_err_ratelimited("Timesync request received. Could not read into time txf buf\n");
++		return;
++	}
+ 
+-	if (recvlen > 0) {
+-		icmsghdrp = (struct icmsg_hdr *)&time_txf_buf[
+-				sizeof(struct vmbuspipe_hdr)];
++	if (!recvlen)
++		return;
+ 
+-		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
+-			if (vmbus_prep_negotiate_resp(icmsghdrp, time_txf_buf,
+-						fw_versions, FW_VER_COUNT,
+-						ts_versions, TS_VER_COUNT,
+-						NULL, &ts_srv_version)) {
+-				pr_info("TimeSync IC version %d.%d\n",
+-					ts_srv_version >> 16,
+-					ts_srv_version & 0xFFFF);
++	/* Ensure recvlen is big enough to read header data */
++	if (recvlen < ICMSG_HDR) {
++		pr_err_ratelimited("Timesync request received. Packet length too small: %d\n",
++				   recvlen);
++		return;
++	}
++
++	icmsghdrp = (struct icmsg_hdr *)&time_txf_buf[sizeof(struct vmbuspipe_hdr)];
++
++	if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
++		if (vmbus_prep_negotiate_resp(icmsghdrp,
++					time_txf_buf, recvlen,
++					fw_versions, FW_VER_COUNT,
++					ts_versions, TS_VER_COUNT,
++					NULL, &ts_srv_version)) {
++			pr_info("TimeSync IC version %d.%d\n",
++				ts_srv_version >> 16,
++				ts_srv_version & 0xFFFF);
++		}
++	} else if (icmsghdrp->icmsgtype == ICMSGTYPE_TIMESYNC) {
++		if (ts_srv_version > TS_VERSION_3) {
++			/* Ensure recvlen is big enough to read ictimesync_ref_data */
++			if (recvlen < ICMSG_HDR + sizeof(struct ictimesync_ref_data)) {
++				pr_err_ratelimited("Invalid ictimesync ref data. Length too small: %u\n",
++						   recvlen);
++				return;
+ 			}
++			refdata = (struct ictimesync_ref_data *)&time_txf_buf[ICMSG_HDR];
++
++			adj_guesttime(refdata->parenttime,
++					refdata->vmreferencetime,
++					refdata->flags);
+ 		} else {
+-			if (ts_srv_version > TS_VERSION_3) {
+-				refdata = (struct ictimesync_ref_data *)
+-					&time_txf_buf[
+-					sizeof(struct vmbuspipe_hdr) +
+-					sizeof(struct icmsg_hdr)];
+-
+-				adj_guesttime(refdata->parenttime,
+-						refdata->vmreferencetime,
+-						refdata->flags);
+-			} else {
+-				timedatap = (struct ictimesync_data *)
+-					&time_txf_buf[
+-					sizeof(struct vmbuspipe_hdr) +
+-					sizeof(struct icmsg_hdr)];
+-				adj_guesttime(timedatap->parenttime,
+-					      hv_read_reference_counter(),
+-					      timedatap->flags);
++			/* Ensure recvlen is big enough to read ictimesync_data */
++			if (recvlen < ICMSG_HDR + sizeof(struct ictimesync_data)) {
++				pr_err_ratelimited("Invalid ictimesync data. Length too small: %u\n",
++						   recvlen);
++				return;
+ 			}
++			timedatap = (struct ictimesync_data *)&time_txf_buf[ICMSG_HDR];
++
++			adj_guesttime(timedatap->parenttime,
++					hv_read_reference_counter(),
++					timedatap->flags);
+ 		}
++	} else {
++		icmsghdrp->status = HV_E_FAIL;
++		pr_err_ratelimited("Timesync request received. Invalid msg type: %d\n",
++				   icmsghdrp->icmsgtype);
++	}
+ 
+-		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
+-			| ICMSGHDRFLAG_RESPONSE;
++	icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
++		| ICMSGHDRFLAG_RESPONSE;
+ 
+-		vmbus_sendpacket(channel, time_txf_buf,
+-				recvlen, requestid,
+-				VM_PKT_DATA_INBAND, 0);
+-	}
++	vmbus_sendpacket(channel, time_txf_buf,
++			 recvlen, requestid,
++			 VM_PKT_DATA_INBAND, 0);
+ }
+ 
+ /*
+@@ -423,18 +462,28 @@ static void heartbeat_onchannelcallback(void *context)
+ 
+ 	while (1) {
+ 
+-		vmbus_recvpacket(channel, hbeat_txf_buf,
+-				 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
++		if (vmbus_recvpacket(channel, hbeat_txf_buf, HV_HYP_PAGE_SIZE,
++				     &recvlen, &requestid)) {
++			pr_err_ratelimited("Heartbeat request received. Could not read into hbeat txf buf\n");
++			return;
++		}
+ 
+ 		if (!recvlen)
+ 			break;
+ 
++		/* Ensure recvlen is big enough to read header data */
++		if (recvlen < ICMSG_HDR) {
++			pr_err_ratelimited("Hearbeat request received. Packet length too small: %d\n",
++					   recvlen);
++			break;
++		}
++
+ 		icmsghdrp = (struct icmsg_hdr *)&hbeat_txf_buf[
+ 				sizeof(struct vmbuspipe_hdr)];
+ 
+ 		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
+ 			if (vmbus_prep_negotiate_resp(icmsghdrp,
+-					hbeat_txf_buf,
++					hbeat_txf_buf, recvlen,
+ 					fw_versions, FW_VER_COUNT,
+ 					hb_versions, HB_VER_COUNT,
+ 					NULL, &hb_srv_version)) {
+@@ -443,13 +492,23 @@ static void heartbeat_onchannelcallback(void *context)
+ 					hb_srv_version >> 16,
+ 					hb_srv_version & 0xFFFF);
+ 			}
+-		} else {
+-			heartbeat_msg =
+-				(struct heartbeat_msg_data *)&hbeat_txf_buf[
+-					sizeof(struct vmbuspipe_hdr) +
+-					sizeof(struct icmsg_hdr)];
++		} else if (icmsghdrp->icmsgtype == ICMSGTYPE_HEARTBEAT) {
++			/*
++			 * Ensure recvlen is big enough to read seq_num. Reserved area is not
++			 * included in the check as the host may not fill it up entirely
++			 */
++			if (recvlen < ICMSG_HDR + sizeof(u64)) {
++				pr_err_ratelimited("Invalid heartbeat msg data. Length too small: %u\n",
++						   recvlen);
++				break;
++			}
++			heartbeat_msg = (struct heartbeat_msg_data *)&hbeat_txf_buf[ICMSG_HDR];
+ 
+ 			heartbeat_msg->seq_num += 1;
++		} else {
++			icmsghdrp->status = HV_E_FAIL;
++			pr_err_ratelimited("Heartbeat request received. Invalid msg type: %d\n",
++					   icmsghdrp->icmsgtype);
+ 		}
+ 
+ 		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index d8194924983d..3661eb2f765b 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1422,6 +1422,7 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size);
+ #define ICMSGTYPE_SHUTDOWN		3
+ #define ICMSGTYPE_TIMESYNC		4
+ #define ICMSGTYPE_VSS			5
++#define ICMSGTYPE_FCOPY			7
+ 
+ #define ICMSGHDRFLAG_TRANSACTION	1
+ #define ICMSGHDRFLAG_REQUEST		2
+@@ -1465,6 +1466,12 @@ struct icmsg_hdr {
+ 	u8 reserved[2];
+ } __packed;
+ 
++#define IC_VERSION_NEGOTIATION_MAX_VER_COUNT 100
++#define ICMSG_HDR (sizeof(struct vmbuspipe_hdr) + sizeof(struct icmsg_hdr))
++#define ICMSG_NEGOTIATE_PKT_SIZE(icframe_vercnt, icmsg_vercnt) \
++	(ICMSG_HDR + offsetof(struct icmsg_negotiate, icversion_data) + \
++	 (((icframe_vercnt) + (icmsg_vercnt)) * sizeof(struct ic_version)))
++
+ struct icmsg_negotiate {
+ 	u16 icframe_vercnt;
+ 	u16 icmsg_vercnt;
+@@ -1520,7 +1527,7 @@ struct hyperv_service_callback {
+ };
+ 
+ #define MAX_SRV_VER	0x7ffffff
+-extern bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, u8 *buf,
++extern bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, u8 *buf, u32 buflen,
+ 				const int *fw_version, int fw_vercnt,
+ 				const int *srv_version, int srv_vercnt,
+ 				int *nego_fw_version, int *nego_srv_version);
+-- 
+2.25.1
+
