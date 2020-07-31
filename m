@@ -2,66 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13DA323424D
+	by mail.lfdr.de (Postfix) with ESMTP id 813D923424E
 	for <lists+linux-hyperv@lfdr.de>; Fri, 31 Jul 2020 11:19:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732152AbgGaJTC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 31 Jul 2020 05:19:02 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51557 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732134AbgGaJTC (ORCPT
+        id S1732154AbgGaJTD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 31 Jul 2020 05:19:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38443 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732151AbgGaJTD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 31 Jul 2020 05:19:02 -0400
+        Fri, 31 Jul 2020 05:19:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596187140;
+        s=mimecast20190719; t=1596187142;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GX38+opkWxBZfD2far/R2rRkc2X2qlfoUgt4pP5SXDg=;
-        b=DeGdRjL57UT8Hkj5zbdOLVgCs0Bd2wAPakix/oJWlfYwVmkq59SmEpkoVAhTgDvKemaAcw
-        896hu160b7VvJhGwQUpqkVJBUhRNRM7f2BUnwOrFuiImOjRdp9eXpZN1RaZ38c0bRRwwZy
-        oO9ZRA1zewlMguVvkuIm0Wibircrow0=
+        bh=nOON8+ajaLpXIcBxCYJ6eMATKXtAWnIlcMGpRLJHnBo=;
+        b=QRiltVfzGivD4qZHt9S4D/64v9zrvfBmeQn5inhpvdjOOPiz75PXNbWNZRrTwfFsTTcHEL
+        0stokI47qvmJcGRsGz6BdkrvTwDtiXUczLX5gnVYkOFZwtxio+NY4Dkt56fuGTXK/nWQNT
+        BPdV2g0//64NDWSEWw1E4x/ad3xkFa8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-Z7A2oVdiNTiak_-Gh5Vfug-1; Fri, 31 Jul 2020 05:18:58 -0400
-X-MC-Unique: Z7A2oVdiNTiak_-Gh5Vfug-1
+ us-mta-14-a6wjUmLxO62-OZabls5-1w-1; Fri, 31 Jul 2020 05:18:58 -0400
+X-MC-Unique: a6wjUmLxO62-OZabls5-1w-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4358480382D;
-        Fri, 31 Jul 2020 09:18:55 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFFD618C63C0;
+        Fri, 31 Jul 2020 09:18:56 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-113-22.ams2.redhat.com [10.36.113.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D0681A835;
-        Fri, 31 Jul 2020 09:18:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 919091C92D;
+        Fri, 31 Jul 2020 09:18:55 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
         linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Julien Grall <julien@xen.org>
-Subject: [PATCH RFCv1 2/5] kernel/resource: merge_child_mem_resources() to merge memory resources after adding succeeded
-Date:   Fri, 31 Jul 2020 11:18:35 +0200
-Message-Id: <20200731091838.7490-3-david@redhat.com>
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH RFCv1 3/5] virtio-mem: try to merge "System RAM (virtio_mem)" resources
+Date:   Fri, 31 Jul 2020 11:18:36 +0200
+Message-Id: <20200731091838.7490-4-david@redhat.com>
 In-Reply-To: <20200731091838.7490-1-david@redhat.com>
 References: <20200731091838.7490-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-hyperv-owner@vger.kernel.org
@@ -69,127 +52,87 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Some add_memory*() users add memory in small, contiguous memory blocks.
-Examples include virtio-mem, hyper-v balloon, and the XEN balloon.
+virtio-mem adds memory in memory block granularity, to be able to
+remove it in the same granularity again later, and to grow slowly on
+demand. This, however, results in quite a lot of resources when
+adding a lot of memory. Resources are effectively stored in a list-based
+tree. Having a lot of resources not only wastes memory, it also makes
+traversing that tree more expensive, and makes /proc/iomem explode in
+size (e.g., requiring kexec-tools to manually merge resources later
+when e.g., trying to create a kdump header).
 
-This can quickly result in a lot of memory resources, whereby the actual
-resource boundaries are not of interest (e.g., it might be relevant for
-DIMMs, exposed via /proc/iomem to user space). We really want to merge
-added resources in this scenario where possible.
+Before this patch, we get (/proc/iomem) when hotplugging 2G via virtio-mem
+on x86-64:
+        [...]
+        100000000-13fffffff : System RAM
+        140000000-33fffffff : virtio0
+          140000000-147ffffff : System RAM (virtio_mem)
+          148000000-14fffffff : System RAM (virtio_mem)
+          150000000-157ffffff : System RAM (virtio_mem)
+          158000000-15fffffff : System RAM (virtio_mem)
+          160000000-167ffffff : System RAM (virtio_mem)
+          168000000-16fffffff : System RAM (virtio_mem)
+          170000000-177ffffff : System RAM (virtio_mem)
+          178000000-17fffffff : System RAM (virtio_mem)
+          180000000-187ffffff : System RAM (virtio_mem)
+          188000000-18fffffff : System RAM (virtio_mem)
+          190000000-197ffffff : System RAM (virtio_mem)
+          198000000-19fffffff : System RAM (virtio_mem)
+          1a0000000-1a7ffffff : System RAM (virtio_mem)
+          1a8000000-1afffffff : System RAM (virtio_mem)
+          1b0000000-1b7ffffff : System RAM (virtio_mem)
+          1b8000000-1bfffffff : System RAM (virtio_mem)
+        3280000000-32ffffffff : PCI Bus 0000:00
 
-Let's provide an interface to trigger merging of applicable child
-resources. It will be, for example, used by virtio-mem to trigger
-merging of memory resources it added (via add_memory_driver()
-managed) to its resource container.
+With this patch, we get (/proc/iomem):
+        [...]
+        fffc0000-ffffffff : Reserved
+        100000000-13fffffff : System RAM
+        140000000-33fffffff : virtio0
+          140000000-1bfffffff : System RAM (virtio_mem)
+        3280000000-32ffffffff : PCI Bus 0000:00
 
-Note: We really want to merge after the whole operation succeeded, not
-directly when adding a resource to the resource tree (it would break
-add_memory_resource() and require splitting resources again when the
-operation failed - e.g., due to -ENOMEM).
+Of course, with more hotplugged memory, it gets worse. When unplugging
+memory blocks again, try_remove_memory() (via
+offline_and_remove_memory()) will properly split the resource up again.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Roger Pau Monné <roger.pau@citrix.com>
-Cc: Julien Grall <julien@xen.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/ioport.h |  3 +++
- kernel/resource.c      | 56 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
+ drivers/virtio/virtio_mem.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 52a91f5fa1a36..743b87fe2205b 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -251,6 +251,9 @@ extern void __release_region(struct resource *, resource_size_t,
- extern void release_mem_region_adjustable(struct resource *, resource_size_t,
- 					  resource_size_t);
- #endif
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+extern void merge_child_mem_resources(struct resource *res, const char *name);
-+#endif
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index f26f5f64ae822..2396a8d67875e 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -415,6 +415,7 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, unsigned long mb_id)
+ {
+ 	const uint64_t addr = virtio_mem_mb_id_to_phys(mb_id);
+ 	int nid = vm->nid;
++	int rc;
  
- /* Wrappers for managed devices */
- struct device;
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 249c6b54014de..01ecc5b7956f5 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1360,6 +1360,62 @@ void release_mem_region_adjustable(struct resource *parent,
- }
- #endif	/* CONFIG_MEMORY_HOTREMOVE */
+ 	if (nid == NUMA_NO_NODE)
+ 		nid = memory_add_physaddr_to_nid(addr);
+@@ -431,8 +432,17 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, unsigned long mb_id)
+ 	}
  
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+static bool mem_resources_mergeable(struct resource *r1, struct resource *r2)
-+{
-+	return r1->end + 1 == r2->start &&
-+	       r1->name == r2->name &&
-+	       r1->flags == r2->flags &&
-+	       (r1->flags & IORESOURCE_MEM) &&
-+	       r1->desc == r2->desc &&
-+	       !r1->child && !r2->child;
-+}
-+
-+/*
-+ * merge_child_mem_resources - try to merge contiguous child IORESOURCE_MEM
-+ *                             resources with the given name that match all
-+ *                             other properties
-+ * @parent: parent resource descriptor
-+ * @name: name of the child resources to consider for merging
-+ *
-+ * This interface is intended for memory hotplug, whereby lots of consecutive
-+ * memory resources are added (e.g., via add_memory*()) by a driver, and the
-+ * actual resource boundaries are not of interest (e.g., it might be
-+ * relevant for DIMMs). Only immediate child resources are considered. All
-+ * applicable child resources must be immutable during the request.
-+ *
-+ * Note:
-+ * - The caller has to make sure that no pointers to resources that might
-+ *   get merged are held anymore. Callers should only trigger merging of child
-+ *   resources when they are the only one adding such resources to the parent.
-+ *   E.g., if two mechanisms could add "System RAM" immediately below the
-+ *   same parent, this function is not safe to use.
-+ * - release_mem_region_adjustable() will split on demand on memory hotunplug
-+ */
-+void merge_child_mem_resources(struct resource *parent, const char *name)
-+{
-+	struct resource *cur, *next;
-+
-+	write_lock(&resource_lock);
-+
-+	cur = parent->child;
-+	while (cur && cur->sibling) {
-+		next = cur->sibling;
-+		if (!strcmp(cur->name, name) &&
-+		    mem_resources_mergeable(cur, next)) {
-+			cur->end = next->end;
-+			cur->sibling = next->sibling;
-+			free_resource(next);
-+			next = cur->sibling;
-+		}
-+		cur = next;
+ 	dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
+-	return add_memory_driver_managed(nid, addr, memory_block_size_bytes(),
+-					 vm->resource_name);
++	rc = add_memory_driver_managed(nid, addr, memory_block_size_bytes(),
++				       vm->resource_name);
++	if (!rc) {
++		/*
++		 * Try to reduce the number of resources by merging them. The
++		 * memory removal path will properly split them up again.
++		 */
++		merge_child_mem_resources(vm->parent_resource,
++					  vm->resource_name);
 +	}
-+
-+	write_unlock(&resource_lock);
-+}
-+EXPORT_SYMBOL(merge_child_mem_resources);
-+#endif	/* CONFIG_MEMORY_HOTPLUG */
-+
++	return rc;
+ }
+ 
  /*
-  * Managed region resource
-  */
 -- 
 2.26.2
 
