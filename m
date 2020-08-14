@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFCF82449D3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Aug 2020 14:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0AA62449D8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Aug 2020 14:39:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgHNMjN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Aug 2020 08:39:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52306 "EHLO mail.kernel.org"
+        id S1728322AbgHNMjQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 Aug 2020 08:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgHNMjN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:39:13 -0400
+        id S1728309AbgHNMjO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:39:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A2BE22B49;
-        Fri, 14 Aug 2020 12:39:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1914622BEA;
+        Fri, 14 Aug 2020 12:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597408752;
-        bh=4V7/CqFsrxdA6kdFPpHDAIJXGjG47K7pqbvNTGXP7uM=;
+        s=default; t=1597408754;
+        bh=eV6iRKHvvB1DoGt+hTS0spUI3jbD+6MTs1x0BAJz1G8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cmenKQt4riv24xeraz8s7NQ6/O7Gkk+LAJW1/wrbi0jWR1Rv0PMa0bCM4hlqRf+KQ
-         h8IW2FIRqM90Bv72rQdLM4+0ZIwnFYGmKpvf+T8a1HI97JAiKRqP05/7gtG89JZGs0
-         nsdyvMNhK2+bN96wTbYO4YE7KhE/wUMn4aMtkSoU=
+        b=o3SYkgQniaZcIZXagUTbJrBO1tKFc/bfVYVfrML8m8T/BjaDwwo9mW8MXSkacsCuw
+         4yqOMCIlvm/UEvH32y0gEMQ5oavTSihgpGz9GerYKR98Xbp32lXJxpCT4GjI1Y1bzk
+         thBFTDZntPvW1H+P0WCzEzVwbK9KwLVYlMONC+Js=
 From:   Sasha Levin <sashal@kernel.org>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org
 Cc:     gregkh@linuxfoundation.org, iourit@microsoft.com,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 2/4] drivers: hv: dxgkrnl: hook up dxgkrnl
-Date:   Fri, 14 Aug 2020 08:38:54 -0400
-Message-Id: <20200814123856.3880009-3-sashal@kernel.org>
+Subject: [PATCH 3/4] drivers: hv: vmbus: hook up dxgkrnl
+Date:   Fri, 14 Aug 2020 08:38:55 -0400
+Message-Id: <20200814123856.3880009-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200814123856.3880009-1-sashal@kernel.org>
 References: <20200814123856.3880009-1-sashal@kernel.org>
@@ -42,37 +42,40 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Connect the dxgkrnl module to the drivers/hv/ makefile and Kconfig.
+Register a new device type with vmbus.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/Kconfig  | 2 ++
- drivers/hv/Makefile | 1 +
- 2 files changed, 3 insertions(+)
+ include/linux/hyperv.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 79e5356a737a..07d4e7c36e3a 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -26,4 +26,6 @@ config HYPERV_BALLOON
- 	help
- 	  Select this option to enable Hyper-V Balloon driver.
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 40df3103e890..40fff19ecde3 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1343,6 +1343,22 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size);
+ 	.guid = GUID_INIT(0xda0a7802, 0xe377, 0x4aac, 0x8e, 0x77, \
+ 			  0x05, 0x58, 0xeb, 0x10, 0x73, 0xf8)
  
-+source "drivers/hv/dxgkrnl/Kconfig"
++/*
++ * GPU paravirtualization global DXGK channel
++ * {DDE9CBC0-5060-4436-9448-EA1254A5D177}
++ */
++#define HV_GPUP_DXGK_GLOBAL_GUID \
++	.guid = GUID_INIT(0xdde9cbc0, 0x5060, 0x4436, 0x94, 0x48, \
++			  0xea, 0x12, 0x54, 0xa5, 0xd1, 0x77)
 +
- endmenu
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index 94daf8240c95..2474b70c161d 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
- obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
- obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
-+obj-$(CONFIG_DXGKRNL)		+= dxgkrnl/
- 
- CFLAGS_hv_trace.o = -I$(src)
- CFLAGS_hv_balloon.o = -I$(src)
++/*
++ * GPU paravirtualization per virtual GPU DXGK channel
++ * {6E382D18-3336-4F4B-ACC4-2B7703D4DF4A}
++ */
++#define HV_GPUP_DXGK_VGPU_GUID \
++	.guid = GUID_INIT(0x6e382d18, 0x3336, 0x4f4b, 0xac, 0xc4, \
++			  0x2b, 0x77, 0x3, 0xd4, 0xdf, 0x4a)
++
+ /*
+  * Synthetic FC GUID
+  * {2f9bcc4a-0069-4af3-b76b-6fd0be528cda}
 -- 
 2.25.1
 
