@@ -2,83 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C58F42447B1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Aug 2020 12:07:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48B5D244828
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Aug 2020 12:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgHNKHz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Aug 2020 06:07:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42103 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgHNKHy (ORCPT
+        id S1726140AbgHNKj2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 Aug 2020 06:39:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbgHNKj1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:07:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r4so7812580wrx.9;
-        Fri, 14 Aug 2020 03:07:53 -0700 (PDT)
+        Fri, 14 Aug 2020 06:39:27 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9DEC061384;
+        Fri, 14 Aug 2020 03:39:27 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id t10so9412878ejs.8;
+        Fri, 14 Aug 2020 03:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=P/IMbVVazwp69IEiF2BxdVyE/bB073q/0Zsieh45SU4=;
+        b=YEgesqFOIJssOUsE3Ax30Jh1IoNlR6jOhwvHnnpivHHNXQu109DBtK1qFXl5b0obs6
+         C5DY5jFHQMR7v15+JIsTefeqgMsCwQwMQTTLoBVUxIF95RSzkpZkzk1apQx5JqLfKnXV
+         KuasG5Y5ZNkkd1GH82aAJiBKtP/X13oGVGl3/5oCGEBvLQ7iqFuk27+MoHIOgOLPoalA
+         Ch5ikNAgfZX/GszT/+s1uha/M5i7oVf9Naxt8Rf/L0bVo/jpp/AJqVaON1l8g1n0Nxgn
+         KhqTPmSkFyRjsQDi/0mI7Va+mVASIgWQzNnh7WbpgWuA9IDVjBcVu/fLMneVxG7Tf4II
+         11jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wWMPlpEysbeh+9oHwzYIhWRMCYIYWjE6IREABOeiArU=;
-        b=IOuBBx9QXctSZrr9tpG9IiA4Pi8ucldh80uwBltf/xhz6TGhQaJ+PLL7Qy0He9YnD8
-         aR2ZjqYZDzrgooFQA4RY2UIbnEOUi0pWO0I+2W4tkB1f6DQN37a0iXYDMt8LcPGTIpj9
-         YpoiMi+HVN3J0z6hgagBuVXr7ZBMAJGFRsmRxGG/9DSFVZ5+HewxM/X3lQtJclYBAg6l
-         Xd9/sOonQItlsjASDlJmn0tbf1VV7uUUZld5LFESvOcJq99dten3zRKRmV6aTpdPNxdo
-         HklDJf5+6ABABFb0RacV1R5XDOqDfwvyLyTsggR2ecODdZsyhEjfiabKecTZneZY6wyU
-         p2Gw==
-X-Gm-Message-State: AOAM533wyoxKymoXab990mWeLPm6PdaMZRDfEUaAPzcOQCxyJ8ymXxz+
-        5zpDM4ygzUYpiP6eFRw6f4E=
-X-Google-Smtp-Source: ABdhPJzuvj4U+j94q6bEs1j/7eW78Dn92QuFxQgqHIMaRXZURUgroBp6V38HvMRvtwQGMqnHxLN3xQ==
-X-Received: by 2002:a5d:54ce:: with SMTP id x14mr2041299wrv.52.1597399673055;
-        Fri, 14 Aug 2020 03:07:53 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g16sm13131133wrs.88.2020.08.14.03.07.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P/IMbVVazwp69IEiF2BxdVyE/bB073q/0Zsieh45SU4=;
+        b=BzyZ0MUq+dX/u+v6uu80XNnmAqTi2J2B1UYuyyzBgA/j7yM0RB7ytQi6/lZi6BNF1n
+         ht7tQbFiJnk/xRyrxyNzrOInyx+w9mkr2FEq4W7IqL/KG8IzhnrS4CXozw8BJUu07AAJ
+         CMvnw6XVmUpcRim7Ihas9uefVUOW/g5W+a9crwSRdxOBVRB9I7/1yU4NReObuiZrXmJd
+         0/AkveT0RAZ6EKY7SIgln0TEygrOpzOVsd6CsaZ4RVGmG7B2FPShgjJh8sqsNs7cp+4M
+         gnfuqVGI9l/q+HIT/RR5eH0ygX+JuI496M+x3aYJsWPAHHB0TlhcIBm8oanAP1ldSuIp
+         LxXw==
+X-Gm-Message-State: AOAM532hurth9pRLwIZwXF1DwfwFSjV5kK6kBxioFnjnlygXwLeC+cjt
+        n4iVa0Cv20XpPdh0YtEFSxo=
+X-Google-Smtp-Source: ABdhPJw5ITev1EgaRJCI88O4PzjGE8Uuux2A7OMbU/mNY0Gmu8uV3kvpdkdB6849WNTExc9cU7Vfbw==
+X-Received: by 2002:a17:906:841:: with SMTP id f1mr1821223ejd.158.1597401565729;
+        Fri, 14 Aug 2020 03:39:25 -0700 (PDT)
+Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id e8sm5675092edy.68.2020.08.14.03.39.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 03:07:52 -0700 (PDT)
-Date:   Fri, 14 Aug 2020 10:07:51 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
+        Fri, 14 Aug 2020 03:39:25 -0700 (PDT)
+Date:   Fri, 14 Aug 2020 12:39:19 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Andres Beltran <lkmlabelt@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Hyper-V fixes for 5.9-rc1
-Message-ID: <20200814100751.uirns3llugywet2x@liuwe-devbox-debian-v2>
+        Saruhan Karademir <skarade@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] hv_netvsc: Add validation for untrusted Hyper-V values
+Message-ID: <20200814103919.GA12689@andrea>
+References: <20200728225321.26570-1-lkmlabelt@gmail.com>
+ <BL0PR2101MB0930BC0130F6AE5775E62604CA4C0@BL0PR2101MB0930.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <BL0PR2101MB0930BC0130F6AE5775E62604CA4C0@BL0PR2101MB0930.namprd21.prod.outlook.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus
+Hi Haiyang,
 
-Please pull the following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
+[I'm resuming this work by Andres.  Sorry for the delay.]
 
-  Linux 5.8 (2020-08-02 14:21:45 -0700)
 
-are available in the Git repository at:
+> >  	switch (nvsp_packet->hdr.msg_type) {
+> >  	case NVSP_MSG_TYPE_INIT_COMPLETE:
+> >  	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
+> >  	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
+> >  	case NVSP_MSG5_TYPE_SUBCHANNEL:
+> > +		if (msglen < sizeof(struct nvsp_message)) {
+> > +			netdev_err(ndev, "nvsp_msg5 length too small: %u\n",
+> > +				   msglen);
+> > +			return;
+> > +		}
+> 
+> struct nvsp_message includes all message types, so its length is the longest type,
+> The messages from older host version are not necessarily reaching the 
+> sizeof(struct nvsp_message).
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+I split the check above into several checks, one for each "case", using
+(what I understand are) the corresponding structures/sizeofs...
 
-for you to fetch changes up to b9d8cf2eb3ceecdee3434b87763492aee9e28845:
+> 
+> Testing on both new and older hosts are recommended, in case I didn't find out all issues
+> like this one.
 
-  x86/hyperv: Make hv_setup_sched_clock inline (2020-08-11 10:41:15 +0000)
+Sure, will do.
 
-----------------------------------------------------------------
-hyperv-fixes for 5.9-rc
-  - One patch to fix oops reporting on Hyper-V
-  - One patch to make objtool happy
-
-----------------------------------------------------------------
-Michael Kelley (2):
-      Drivers: hv: vmbus: Only notify Hyper-V for die events that are oops
-      x86/hyperv: Make hv_setup_sched_clock inline
-
- arch/x86/include/asm/mshyperv.h | 12 ++++++++++++
- arch/x86/kernel/cpu/mshyperv.c  |  7 -------
- drivers/hv/vmbus_drv.c          |  4 ++++
- include/asm-generic/mshyperv.h  |  1 -
- 4 files changed, 16 insertions(+), 8 deletions(-)
+Thanks,
+  Andrea
