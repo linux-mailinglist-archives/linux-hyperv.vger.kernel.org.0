@@ -2,35 +2,35 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92AAB244A04
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Aug 2020 14:55:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 793C0244A09
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Aug 2020 14:57:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgHNMzH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Aug 2020 08:55:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
+        id S1728347AbgHNM5J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 Aug 2020 08:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbgHNMzG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:55:06 -0400
+        id S1728224AbgHNM5J (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:57:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C622087D;
-        Fri, 14 Aug 2020 12:55:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5ED92087D;
+        Fri, 14 Aug 2020 12:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597409706;
-        bh=gw7rdxx7qRx6ls9E5NgLwr5dfYEgtMjHhpG+X4+ZMNQ=;
+        s=default; t=1597409827;
+        bh=TP+P9nfWKVvkUwmjSCx4BCEcuRAeVQe+bmzohmFGECY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zpGs7qmzEQT7OcQlDZTfqYPK9uYlu8FApfGV+1wC6vlVyojHb8266I4ZviTV45lHm
-         iL0t6iF0wj1rTjUHdJjixr4lr2HjlVnmgwgyD2CKfRouGiNqcKnEK0WxB59G8SIRkS
-         kCYzZRi4NEOOBt6LIYKMXLKTG9FhGGDigCFMZT2o=
-Date:   Fri, 14 Aug 2020 14:55:28 +0200
+        b=YaQueDJdQ8b8HIFDT4cXha3uhm5ghbDmGc4cJKFJjhIJuQ9r1L97wgehp7V0HIh6o
+         AEjrINpDTxiJo/EKDf2yIiOZTh1s1x/VotefABzO4lq3H56zIfyl2bDE+4qMUnvVxv
+         nPxlRF9X319+Dc6dSiXXUebrJJWmEtOZ7oUuQSkA=
+Date:   Fri, 14 Aug 2020 14:57:29 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, iourit@microsoft.com,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
 Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
-Message-ID: <20200814125528.GA56456@kroah.com>
+Message-ID: <20200814125729.GB56456@kroah.com>
 References: <20200814123856.3880009-1-sashal@kernel.org>
  <20200814123856.3880009-2-sashal@kernel.org>
 MIME-Version: 1.0
@@ -45,52 +45,49 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
 > Add support for a Hyper-V based vGPU implementation that exposes the
 > DirectX API to Linux userspace.
-> 
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Better, but what is this mess:
+Api questions:
 
-> +#define ISERROR(ret)					(ret < 0)
+> +struct d3dkmthandle {
+> +	union {
+> +		struct {
+> +			u32 instance	:  6;
+> +			u32 index	: 24;
+> +			u32 unique	: 2;
 
-?
+What is the endian of this?
 
-> +#define EINTERNALERROR					EINVAL
-
-And that?
-
+> +		};
+> +		u32 v;
+> +	};
+> +};
 > +
-> +#define DXGKRNL_ASSERT(exp)
-> +#define UNUSED(x) (void)(x)
-
-Ick, no, please.
-
-> +#undef pr_fmt
-
-In a .h file?
-
-> +#define pr_fmt(fmt)	"dxgk:err: " fmt
-> +#define pr_fmt1(fmt)	"dxgk: " fmt
-> +#define pr_fmt2(fmt)	"dxgk:    " fmt
-
-Why?
-
+> +extern const struct d3dkmthandle zerohandle;
 > +
-> +#define DXGKDEBUG 1
-> +/* #define USEPRINTK 1 */
+> +struct ntstatus {
+> +	union {
+> +		struct {
+> +			int code	: 16;
+> +			int facility	: 13;
+> +			int customer	: 1;
+> +			int severity	: 2;
+
+Same here.
+
+Are these things that cross the user/kernel boundry?
+
+And why int on one and u32 on the other?
+
+> +		};
+> +		int v;
+> +	};
+> +};
 > +
-> +#ifndef DXGKDEBUG
-> +#define TRACE_DEBUG(...)
-> +#define TRACE_DEFINE(...)
-> +#define TRACE_FUNC_ENTER(...)
-> +#define TRACE_FUNC_EXIT(...)
+> +struct winluid {
+> +	uint a;
+> +	uint b;
 
-No, please do not to custom "trace" printk messages, that is what ftrace
-is for, no individual driver should ever need to do that.
-
-Just use the normal dev_*() calls for error messages and the like, do
-not try to come up with a custom tracing framework for one tiny
-individual driver.  If every driver in kernel did that, we would have a
-nightmare...
+And now uint?  Come on, be consistent please :)
 
 thanks,
 
