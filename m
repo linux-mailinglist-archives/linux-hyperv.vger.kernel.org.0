@@ -2,73 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC42F2483EC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Aug 2020 13:33:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0D79248F46
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Aug 2020 22:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgHRLcd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Aug 2020 07:32:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgHRLcV (ORCPT
+        id S1726763AbgHRUAm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Aug 2020 16:00:42 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55372 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726685AbgHRUAl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:32:21 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB99FC061342;
-        Tue, 18 Aug 2020 04:32:20 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id y30so4072423ooj.3;
-        Tue, 18 Aug 2020 04:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ExSCm02y3qpUSj/p3vHeizuT1G9r/WCp9sMwgc77Xhw=;
-        b=lpcmiZRC0Itwnv8XEX0Gt0g4YzYZoFD+0cQTl/lgDNgLVzRe6IuCkiyAsMKmXxtzyS
-         DF5PMESVBKjCzoZjEI411d9Iw1L3XxuPkPVdy8WD0iLU9FEOhQt0C+gxLXxG9FwuHlLM
-         rhDESa4KirIUUOyZAMa3fGnotL1y1ZAkDn7wOqcdEugoXuPZ7SjANkcHlMg4NvyiNbht
-         ty6pszTzwEC7d8yfKI/mGHwXfZomUw3KmQy9Bjfu0tTtXYliq18/FxRxu1WvUqVtTDdI
-         K3vNrDjnKkdMwRXJXjv0FWKEbAC/2OegAiVjrrRDrIlbVqKEFhwQhGoW00TK4+pX8gAo
-         GGSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=ExSCm02y3qpUSj/p3vHeizuT1G9r/WCp9sMwgc77Xhw=;
-        b=p0El+5oHOMmKmJczNTb3dMky9nFr5uMOoMs0POP74oey22EApUumHYTaL2oRazGoB/
-         MjCGKLVKfc71tEqS+ogdXUFK5vuC0DevJWejKQgz04YIDJU1NlUETxMpLJdIRj2OkZhV
-         L60QWwyO21LiNJCiq5pLmb405ibHA8+/h+/SyMTkHIdkP1dJ/KfrgRMccu8ew921kT59
-         cjLTsw2NimglvldCUau9X23RTY5ixerpBi3uFZ5PAaslw93pHkLh9roM+rUCuRVhWukR
-         6EukWQ4GBLWkYy4Znwi58XAQaPPrOe2MsBI6BZ9RC/FDkM2zW475Jeoqb9mGg5c9bgoa
-         nfpA==
-X-Gm-Message-State: AOAM533oxYlrnM51caMj7uyFiSwWM2s3vfm4KGY8nQVTN4TAq4IADE9/
-        Nvjc2eI+v9PG2DSuX10kSw==
-X-Google-Smtp-Source: ABdhPJywdLvN8lVgc2yDfHhvIZ4/3whUvULM6gOBhid0aKLlGB5miCWrsMhpAucNStAL2zXitNZckQ==
-X-Received: by 2002:a4a:7241:: with SMTP id r1mr14426630ooe.48.1597750340029;
-        Tue, 18 Aug 2020 04:32:20 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id v35sm3862490otb.32.2020.08.18.04.32.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 04:32:18 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
-        by serve.minyard.net (Postfix) with ESMTPSA id 4AF641800D4;
-        Tue, 18 Aug 2020 11:32:17 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 06:32:16 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Allen <allen.lkml@gmail.com>
+        Tue, 18 Aug 2020 16:00:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B7B338EE183;
+        Tue, 18 Aug 2020 13:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597780837;
+        bh=E3x9MtKucMoLMHa3CyKwg7UhEGPq9DioLfkS9Z1+XGE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=QbgQa4sNQ7ioYr+ZRo2Le/RZiJPH+/p5G4sH/hAcS9I4kzZ0sD06xHGNpxi7vpvsh
+         vr2zHlcKt8Djvsye4cN/5REko80zNw1ws3Pi5/FhdhWLZr8xokhc8SqSwcUtY/N2RX
+         WalGwB8lkK7LHfsBLLdTDYFy7s65x73pT2v0cjxQ=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OhVM_virpzc7; Tue, 18 Aug 2020 13:00:37 -0700 (PDT)
+Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 49AB78EE17F;
+        Tue, 18 Aug 2020 13:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1597780837;
+        bh=E3x9MtKucMoLMHa3CyKwg7UhEGPq9DioLfkS9Z1+XGE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=QbgQa4sNQ7ioYr+ZRo2Le/RZiJPH+/p5G4sH/hAcS9I4kzZ0sD06xHGNpxi7vpvsh
+         vr2zHlcKt8Djvsye4cN/5REko80zNw1ws3Pi5/FhdhWLZr8xokhc8SqSwcUtY/N2RX
+         WalGwB8lkK7LHfsBLLdTDYFy7s65x73pT2v0cjxQ=
+Message-ID: <1597780833.3978.3.camel@HansenPartnership.com>
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Jens Axboe <axboe@kernel.dk>, Kees Cook <keescook@chromium.org>
 Cc:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
         richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
-        axboe@kernel.dk, stefanr@s5r6.in-berlin.de, airlied@linux.ie,
-        daniel@ffwll.ch, sre@kernel.org,
-        James.Bottomley@hansenpartnership.com, kys@microsoft.com,
-        deller@gmx.de, dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie, daniel@ffwll.ch,
+        sre@kernel.org, kys@microsoft.com, deller@gmx.de,
+        dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
         shawnguo@kernel.org, s.hauer@pengutronix.de,
-        maximlevitsky@gmail.com, oakad@yahoo.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        maximlevitsky@gmail.com, oakad@yahoo.com, ulf.hansson@linaro.org,
         mporter@kernel.crashing.org, alex.bou9@gmail.com,
         broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
+        mitch@sfgoth.com, davem@davemloft.net, kuba@kernel.org,
         linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
         linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -79,105 +61,75 @@ Cc:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
         linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
         linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] char: ipmi: convert tasklets to use new tasklet_setup()
- API
-Message-ID: <20200818113216.GD2842@minyard.net>
-Reply-To: minyard@acm.org
+Date:   Tue, 18 Aug 2020 13:00:33 -0700
+In-Reply-To: <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
 References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-3-allen.cryptic@gmail.com>
- <20200817121514.GE2865@minyard.net>
- <CAOMdWSJXCn5KYHen4kynH1A5Oixo+yPzs3oathsfa8gtKZGkjg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOMdWSJXCn5KYHen4kynH1A5Oixo+yPzs3oathsfa8gtKZGkjg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+         <20200817091617.28119-2-allen.cryptic@gmail.com>
+         <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+         <202008171228.29E6B3BB@keescook>
+         <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
+         <202008171246.80287CDCA@keescook>
+         <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 02:46:23PM +0530, Allen wrote:
-> > >
-> > > Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> > > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> >
-> > This looks good to me.
-> >
-> > Reviewed-by: Corey Minyard <cminyard@mvista.com>
-> >
-> > Are you planning to push this, or do you want me to take it?  If you
-> > want me to take it, what is the urgency?
+On Mon, 2020-08-17 at 13:02 -0700, Jens Axboe wrote:
+> On 8/17/20 12:48 PM, Kees Cook wrote:
+> > On Mon, Aug 17, 2020 at 12:44:34PM -0700, Jens Axboe wrote:
+> > > On 8/17/20 12:29 PM, Kees Cook wrote:
+> > > > On Mon, Aug 17, 2020 at 06:56:47AM -0700, Jens Axboe wrote:
+> > > > > On 8/17/20 2:15 AM, Allen Pais wrote:
+> > > > > > From: Allen Pais <allen.lkml@gmail.com>
+> > > > > > 
+> > > > > > In preparation for unconditionally passing the
+> > > > > > struct tasklet_struct pointer to all tasklet
+> > > > > > callbacks, switch to using the new tasklet_setup()
+> > > > > > and from_tasklet() to pass the tasklet pointer explicitly.
+> > > > > 
+> > > > > Who came up with the idea to add a macro 'from_tasklet' that
+> > > > > is just container_of? container_of in the code would be
+> > > > > _much_ more readable, and not leave anyone guessing wtf
+> > > > > from_tasklet is doing.
+> > > > > 
+> > > > > I'd fix that up now before everything else goes in...
+> > > > 
+> > > > As I mentioned in the other thread, I think this makes things
+> > > > much more readable. It's the same thing that the timer_struct
+> > > > conversion did (added a container_of wrapper) to avoid the
+> > > > ever-repeating use of typeof(), long lines, etc.
+> > > 
+> > > But then it should use a generic name, instead of each sub-system 
+> > > using some random name that makes people look up exactly what it
+> > > does. I'm not huge fan of the container_of() redundancy, but
+> > > adding private variants of this doesn't seem like the best way
+> > > forward. Let's have a generic helper that does this, and use it
+> > > everywhere.
+> > 
+> > I'm open to suggestions, but as things stand, these kinds of
+> > treewide
 > 
->  Thanks. Well, not hurry, as long as it goes into 5.9 with all other
-> changes.
+> On naming? Implementation is just as it stands, from_tasklet() is
+> totally generic which is why I objected to it. from_member()? Not
+> great with naming... But I can see this going further and then we'll
+> suddenly have tons of these. It's not good for readability.
 
-Ok, this is queued in my for-next branch.
+Since both threads seem to have petered out, let me suggest in
+kernel.h:
 
--corey
+#define cast_out(ptr, container, member) \
+	container_of(ptr, typeof(*container), member)
 
-> 
-> 
-> >
-> > -corey
-> >
-> > > ---
-> > >  drivers/char/ipmi/ipmi_msghandler.c | 13 ++++++-------
-> > >  1 file changed, 6 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> > > index 737c0b6b24ea..e1814b6a1225 100644
-> > > --- a/drivers/char/ipmi/ipmi_msghandler.c
-> > > +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> > > @@ -39,7 +39,7 @@
-> > >
-> > >  static struct ipmi_recv_msg *ipmi_alloc_recv_msg(void);
-> > >  static int ipmi_init_msghandler(void);
-> > > -static void smi_recv_tasklet(unsigned long);
-> > > +static void smi_recv_tasklet(struct tasklet_struct *t);
-> > >  static void handle_new_recv_msgs(struct ipmi_smi *intf);
-> > >  static void need_waiter(struct ipmi_smi *intf);
-> > >  static int handle_one_recv_msg(struct ipmi_smi *intf,
-> > > @@ -3430,9 +3430,8 @@ int ipmi_add_smi(struct module         *owner,
-> > >       intf->curr_seq = 0;
-> > >       spin_lock_init(&intf->waiting_rcv_msgs_lock);
-> > >       INIT_LIST_HEAD(&intf->waiting_rcv_msgs);
-> > > -     tasklet_init(&intf->recv_tasklet,
-> > > -                  smi_recv_tasklet,
-> > > -                  (unsigned long) intf);
-> > > +     tasklet_setup(&intf->recv_tasklet,
-> > > +                  smi_recv_tasklet);
-> > >       atomic_set(&intf->watchdog_pretimeouts_to_deliver, 0);
-> > >       spin_lock_init(&intf->xmit_msgs_lock);
-> > >       INIT_LIST_HEAD(&intf->xmit_msgs);
-> > > @@ -4467,10 +4466,10 @@ static void handle_new_recv_msgs(struct ipmi_smi *intf)
-> > >       }
-> > >  }
-> > >
-> > > -static void smi_recv_tasklet(unsigned long val)
-> > > +static void smi_recv_tasklet(struct tasklet_struct *t)
-> > >  {
-> > >       unsigned long flags = 0; /* keep us warning-free. */
-> > > -     struct ipmi_smi *intf = (struct ipmi_smi *) val;
-> > > +     struct ipmi_smi *intf = from_tasklet(intf, t, recv_tasklet);
-> > >       int run_to_completion = intf->run_to_completion;
-> > >       struct ipmi_smi_msg *newmsg = NULL;
-> > >
-> > > @@ -4542,7 +4541,7 @@ void ipmi_smi_msg_received(struct ipmi_smi *intf,
-> > >               spin_unlock_irqrestore(&intf->xmit_msgs_lock, flags);
-> > >
-> > >       if (run_to_completion)
-> > > -             smi_recv_tasklet((unsigned long) intf);
-> > > +             smi_recv_tasklet(&intf->recv_tasklet);
-> > >       else
-> > >               tasklet_schedule(&intf->recv_tasklet);
-> > >  }
-> > > --
-> > > 2.17.1
-> > >
-> 
-> 
-> 
-> -- 
->        - Allen
+It does what you want, the argument order is the same as container_of
+with the only difference being you name the containing structure
+instead of having to specify its type.
+
+James
+
