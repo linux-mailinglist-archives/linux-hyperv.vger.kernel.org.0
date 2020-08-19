@@ -2,82 +2,162 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57AE7249BC7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Aug 2020 13:30:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60872249EEB
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Aug 2020 15:02:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgHSLaa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 19 Aug 2020 07:30:30 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38428 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgHSLaZ (ORCPT
+        id S1728119AbgHSNCa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 19 Aug 2020 09:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728530AbgHSNBC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:30:25 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a14so21173675wra.5;
-        Wed, 19 Aug 2020 04:30:22 -0700 (PDT)
+        Wed, 19 Aug 2020 09:01:02 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082EBC061342
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Aug 2020 06:01:00 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i92so1142397pje.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Aug 2020 06:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qNJVZUa8vOnjh3Y4FbI7cu96rnOZczrpWszoc4OM35E=;
+        b=ZtDUAentzHDOfXLt1WNpX0PqLZgZi3vnfEc6anllVjv7Z89UoKoCCMUiljAdsTAGBL
+         DEVHOWuWzMZeIuJcHwUlptWZjkCaOp1ZUKAoSs/2jyyTPejnx1zCbjPUY7C9na+Ftk+x
+         wpw/pPjI4UYNDosNdy4j7LcDWUJhwNxLapyy4W7f1U00+fT6jVYw1uO8CMpHCStxGd8w
+         JLOisGYqnJmeY5ie8I+x4A4vKZtwoQ6PsaOc8UAPD7eTAFlJwORflpx8o8EPJZR8cuSG
+         1j977OWh0YEI5r2DXie/ItwJ0iuosRobp25OObO0Ld6mXVix+wRg8r73enQ5lMOcXAoG
+         tjpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ijq/eOVTt4WGVZZrPhxwtbhfjRio5pBRGbeqfm+WtYY=;
-        b=j4KOndKQ3Cf+/SMw+sOZ3IBvdiU9cGyBZP1noDIAYATbdOW1HRi8UtOsT3SAaqEn/G
-         KZ5FpsRbbi+rce33fPlA7yKXfu7mAlPLp26L0g5XX6q/ZwFMHCgX2sbPhlflfxVRy2rq
-         BFDFSAuzpMrvdHDySgHvM1KP0kCa4FYg4ZCO4NnwW+y5KkNytyVZHKrwRCySmM8PG/Qq
-         3Ov+27C5rfqWGEZ0J7lOKfdX/Qt0j8GPpzyTCJ7mobdxp8JeOhybzusQ0OKkfKJo2cDN
-         IBBuVNr0MIDSx/zaVm/bNDsEGso1FQX4/YBRcCMh2tGxks4xZAKkbg6PpfIIvcg1lYDk
-         IVmg==
-X-Gm-Message-State: AOAM533I4i9jaHEG/tBjl/klgmAbwLYQyBorjX1bMkQjJYeuWs4f+yl8
-        Z76irB5DtwBIEizjOfAv5Q8=
-X-Google-Smtp-Source: ABdhPJxxQJvyTyxK07hmiDHAD+i0FQmAlP7uWxW/JyS+RY1F4/v6Pbpg3ByTXyhZU8mUnTPjvMreFQ==
-X-Received: by 2002:a5d:4c45:: with SMTP id n5mr3723014wrt.68.1597836618075;
-        Wed, 19 Aug 2020 04:30:18 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id k15sm39349945wrp.43.2020.08.19.04.30.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 04:30:17 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 11:30:16 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Olaf Hering <olaf@aepfle.de>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH v1] tools: hv: remove cast from hyperv_die_event
-Message-ID: <20200819113016.6uz7onkfybylaxcx@liuwe-devbox-debian-v2>
-References: <20200819090510.28995-1-olaf@aepfle.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qNJVZUa8vOnjh3Y4FbI7cu96rnOZczrpWszoc4OM35E=;
+        b=UbD3iuzNO9bCC8wdz48VPL0UV1FKtEwHGmOIt79j6h1n2NPWoTI2LGppRP8sH6x2vx
+         JKVVEDv8a45J4mUTnzDHOx285r99oafe8KoV7Id91j8T+jzOszttZi7wRH+n8s9VNYE6
+         5sTvNfcH+6lEB1NG03Yp6Kil5bm2Cyy3hB7yBLkS2yCBpVFUKsJLlzHmEkycXYKVnvbd
+         r2/psT3FkR+SfjVZNeb5eZEgnmoDja4hevletBkZq8rDeUmO2U3qelJ/fW/WRFGSLXS2
+         kieAtcz4CHlfxa5+/0xguUCOEdd3FtlOe46zSvadozGADsOsuwXlJIKxT/L1yVfMUW0M
+         eCvQ==
+X-Gm-Message-State: AOAM530k6euhk41+QWSgyfSY/JrOX0TnICfQhtYbA498/bt+jH+Ny+WC
+        H2UBFNjpWCyfHTwcNmCNhDG/1A==
+X-Google-Smtp-Source: ABdhPJwcWyLwqgVIDq5QVfeKWIJZ1zweeStVncOtMpfxCFFFEuEh0sSa6pW/Ah5NefbMm4I9GwEzLw==
+X-Received: by 2002:a17:90b:285:: with SMTP id az5mr3983315pjb.118.1597842058708;
+        Wed, 19 Aug 2020 06:00:58 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id d23sm20502027pgm.11.2020.08.19.06.00.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 06:00:58 -0700 (PDT)
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie, daniel@ffwll.ch,
+        sre@kernel.org, kys@microsoft.com, deller@gmx.de,
+        dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        maximlevitsky@gmail.com, oakad@yahoo.com, ulf.hansson@linaro.org,
+        mporter@kernel.crashing.org, alex.bou9@gmail.com,
+        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
+        mitch@sfgoth.com, davem@davemloft.net, kuba@kernel.org,
+        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-2-allen.cryptic@gmail.com>
+ <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+ <202008171228.29E6B3BB@keescook>
+ <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
+ <202008171246.80287CDCA@keescook>
+ <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
+ <1597780833.3978.3.camel@HansenPartnership.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
+Date:   Wed, 19 Aug 2020 07:00:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819090510.28995-1-olaf@aepfle.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1597780833.3978.3.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 11:05:09AM +0200, Olaf Hering wrote:
-> No need to cast a void pointer.
+On 8/18/20 1:00 PM, James Bottomley wrote:
+> On Mon, 2020-08-17 at 13:02 -0700, Jens Axboe wrote:
+>> On 8/17/20 12:48 PM, Kees Cook wrote:
+>>> On Mon, Aug 17, 2020 at 12:44:34PM -0700, Jens Axboe wrote:
+>>>> On 8/17/20 12:29 PM, Kees Cook wrote:
+>>>>> On Mon, Aug 17, 2020 at 06:56:47AM -0700, Jens Axboe wrote:
+>>>>>> On 8/17/20 2:15 AM, Allen Pais wrote:
+>>>>>>> From: Allen Pais <allen.lkml@gmail.com>
+>>>>>>>
+>>>>>>> In preparation for unconditionally passing the
+>>>>>>> struct tasklet_struct pointer to all tasklet
+>>>>>>> callbacks, switch to using the new tasklet_setup()
+>>>>>>> and from_tasklet() to pass the tasklet pointer explicitly.
+>>>>>>
+>>>>>> Who came up with the idea to add a macro 'from_tasklet' that
+>>>>>> is just container_of? container_of in the code would be
+>>>>>> _much_ more readable, and not leave anyone guessing wtf
+>>>>>> from_tasklet is doing.
+>>>>>>
+>>>>>> I'd fix that up now before everything else goes in...
+>>>>>
+>>>>> As I mentioned in the other thread, I think this makes things
+>>>>> much more readable. It's the same thing that the timer_struct
+>>>>> conversion did (added a container_of wrapper) to avoid the
+>>>>> ever-repeating use of typeof(), long lines, etc.
+>>>>
+>>>> But then it should use a generic name, instead of each sub-system 
+>>>> using some random name that makes people look up exactly what it
+>>>> does. I'm not huge fan of the container_of() redundancy, but
+>>>> adding private variants of this doesn't seem like the best way
+>>>> forward. Let's have a generic helper that does this, and use it
+>>>> everywhere.
+>>>
+>>> I'm open to suggestions, but as things stand, these kinds of
+>>> treewide
+>>
+>> On naming? Implementation is just as it stands, from_tasklet() is
+>> totally generic which is why I objected to it. from_member()? Not
+>> great with naming... But I can see this going further and then we'll
+>> suddenly have tons of these. It's not good for readability.
 > 
-> Signed-off-by: Olaf Hering <olaf@aepfle.de>
-
-Applied to hyperv-next.
-
-I also changed "tools" to "drivers".
-
-> ---
->  drivers/hv/vmbus_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Since both threads seem to have petered out, let me suggest in
+> kernel.h:
 > 
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 910b6e90866c..187809977360 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -83,7 +83,7 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
->  static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
->  			    void *args)
->  {
-> -	struct die_args *die = (struct die_args *)args;
-> +	struct die_args *die = args;
->  	struct pt_regs *regs = die->regs;
->  
->  	/* Don't notify Hyper-V if the die event is other than oops */
+> #define cast_out(ptr, container, member) \
+> 	container_of(ptr, typeof(*container), member)
+> 
+> It does what you want, the argument order is the same as container_of
+> with the only difference being you name the containing structure
+> instead of having to specify its type.
+
+Not to incessantly bike shed on the naming, but I don't like cast_out,
+it's not very descriptive. And it has connotations of getting rid of
+something, which isn't really true.
+
+FWIW, I like the from_ part of the original naming, as it has some clues
+as to what is being done here. Why not just from_container()? That
+should immediately tell people what it does without having to look up
+the implementation, even before this becomes a part of the accepted
+coding norm.
+
+-- 
+Jens Axboe
+
