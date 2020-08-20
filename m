@@ -2,28 +2,28 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95D2024C738
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Aug 2020 23:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2D124C74A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Aug 2020 23:48:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHTVjO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Aug 2020 17:39:14 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:38128 "EHLO
+        id S1726666AbgHTVsT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Aug 2020 17:48:19 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:39228 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHTVjN (ORCPT
+        with ESMTP id S1725977AbgHTVsS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:39:13 -0400
+        Thu, 20 Aug 2020 17:48:18 -0400
 Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 832E320B4908;
-        Thu, 20 Aug 2020 14:39:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 832E320B4908
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2A73920B4908;
+        Thu, 20 Aug 2020 14:48:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2A73920B4908
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597959552;
-        bh=2H5J51gfYomnZO7gO0OSn0mfMlYSdm+2t/COROltWJk=;
+        s=default; t=1597960098;
+        bh=1poYvZ5PwBVampeoy9/r+Ck8lpluSiK2TwYPa0QxQy8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L8Xc757whT9VGBAlNfTbZP2IUNTBjn5l9aAU4aVMa+NrFXAlLtFNUGr18jxDkhbZa
-         x8rJ+O/011M8foZM1gay5fWqaiXh9WEa2uBRQOZld4doNSr3/+fd7KI2ubMhqspE8a
-         dPscSCUZ0+elGrfU+x9MfxmSZvcXVBpC66tXTwYY=
-Date:   Thu, 20 Aug 2020 21:39:12 +0000
+        b=C+4fabQdO2f9Gi1nCABCKRSBGNcAGeU4oo14Py/MMLDNnBNIKqj3OFQZ61+9Wg5i2
+         gaQuzc/mbeCMLWFy8RxFyWmGXC8ajz2oAuL7bJ2FhCfI4G+dRQXF9E0JNv+0Doo8rU
+         8Wq9iYUqrHsbTA1Y7Gbp/8JvM4SxZSnghiwAV3lI=
+Date:   Thu, 20 Aug 2020 21:48:17 +0000
 From:   Vineeth Pillai <viremana@linux.microsoft.com>
 To:     Michael Kelley <mikelley@microsoft.com>
 Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
@@ -32,14 +32,14 @@ Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] hv_utils: return error if host timesysnc update is stale
-Message-ID: <20200820213912.fmttvj6wcirn5sas@viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net>
-References: <20200819174527.47156-1-viremana@linux.microsoft.com>
- <MW2PR2101MB10527EAC115BF49715BF4722D75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Subject: Re: [PATCH] hv_utils: drain the timesync packets on onchannelcallback
+Message-ID: <20200820214817.ndjmzanwmdm5qfvf@viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net>
+References: <20200819174740.47291-1-viremana@linux.microsoft.com>
+ <MW2PR2101MB1052254C5ED7C587E548DB3AD75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB10527EAC115BF49715BF4722D75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB1052254C5ED7C587E548DB3AD75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 User-Agent: NeoMutt/20171215
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
@@ -49,31 +49,19 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Hi Michael,
 
-> > +const u64 HOST_TIMESYNC_DELAY_THRESH = 600 * NSEC_PER_SEC;
+> > +			pr_warn("TimeSync IC pkt recv failed (Err: %d)\n",
+> > +				ret);
 > 
-> Kernel test robot has already complained that this should be static,
-> and about the potential overflow based on the types of the constants in
-> the right side expression.  I didn't check the details, but I suspect the
-> complaint is when building in 32-bit mode.  This code does get built in
-> 32-bit mode and it's possible for run 32-bit Linux guests on Hyper-V.
+> Let's use pr_warn_once().
 > 
-NSEC_PER_SEC is defined long and it caused the warning with i386 build.
-Casting it to u64 would fix the issue. Will fix the static warning as well
-in the next iteration.
-
-> > +		pr_warn("TIMESYNC IC: Stale time stamp, %llu nsecs old\n",
-> > +			HOST_TIMESYNC_DELAY_THRESH);
+> If there's a packet at the head of the ring buffer that specifies a bogus length,
+> we could take the error path.  But the bad packet stays at the head of the ring buffer,
+> so if we end up back here again, we'll spit out the same error message.  We
+> actually should not end up here again because Hyper-V shouldn't interrupt
+> when adding a packet to a non-empty ring buffer, but who knows what might
+> happen.
 > 
-> Let's provide the timediff_adj in the message instead of the constant
-> threshold value so we know the degree of staleness. :-)
-> 
-> Also, I'm wondering if this should be pr_warn_once().  Presumably
-> chronyd or whoever is reading /dev/ptp0 will give up after getting
-> this error, but if not, it would be nice to avoid filling up the console
-> with these error messages.
-> 
-Makes sense, will fix this also.
+Valid point, will fix this in the next iteration.
 
 Thanks,
 Vineeth
-
