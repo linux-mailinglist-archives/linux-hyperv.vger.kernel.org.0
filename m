@@ -2,37 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AB9B24CA74
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 04:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C27C24CA5A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 04:18:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgHUCSw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Aug 2020 22:18:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53032 "EHLO
+        id S1727929AbgHUCRV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Aug 2020 22:17:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52880 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgHUCRI (ORCPT
+        with ESMTP id S1727899AbgHUCRK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:17:08 -0400
-Message-Id: <20200821002947.575838946@linutronix.de>
+        Thu, 20 Aug 2020 22:17:10 -0400
+Message-Id: <20200821002947.667887608@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976226;
+        s=2020; t=1597976228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=Y75c2FVJJci494EIeksaRxPMjifWJ0ThOK2FH5FONAw=;
-        b=f6q/sjt6MV1HcPa9lRMLdZeYQ0hfb23mVpk9n87dFWml+X/u456TXEL3KVxnI9CFXQFhko
-        NC8PKb93dixQU/GT2j9PYVBmX4QBP58PDRpMuFC4/CYbogcggvjiWLxJSOdErUDyBu/KPq
-        mNF4sNUNyvJO4nw/UvQN5UMiO2CDzKoZFl5XW5x92NHzAR8nfOrH9jQX7BVfAUOdrEd6je
-        dzqKVyw8XfqUj24SmoG/O7U8+lTc2fC6HzmTWwTlNkkZepcZTm8tcbB5apCi5otJaCfTng
-        43bCT4U4I3QqaaRWvEgj9R2MFib3qx1qOlIu9cQkS6iydE7TxRfJUyVWK2DeNA==
+        bh=1YWqXAQnhLaq8z2CTV2oQb1to3QrIXhgk3UQ/jt5/4s=;
+        b=T+XyenMQhcXwPIrAu6+LQdPHrNvuw6KfRX7AbWzfUKPX+hEn+5sG8IsIQ4sPd1gIZp9rS2
+        1z0os/DOeDTB8EgUHw/ZlCKmz3rqSSPuz0Yxd/0oKGizSrWuR1tfOM85EMjS2LH6svSPnK
+        9dz26OnNJBmrC4FmWysE0OFjxccQiPYTOOVA9m98VOm0dZ6zq1b2K6+vvzGBMtom5Qi3/o
+        Kauv/W6SUDvroSg/SDb5zRjrZuG6DSllS1aAK31+DAI0vJaWLzAbkr96jlVOMISyHyz9eL
+        wxGXFOb+ZUMpUpCqyqDxA1/t6dYRwnf9+ZGmSW5cBfyrdhZpWf/TFxH6TVKnfg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976226;
+        s=2020e; t=1597976228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=Y75c2FVJJci494EIeksaRxPMjifWJ0ThOK2FH5FONAw=;
-        b=l1NNy7AGh3T+fCtBtGLpx6A7jIa/X2MlC/NaAaOl4Otuq4j1ahRTgdkoqBSQ0xIkVdF7yy
-        MYAMivWyppl1DNBA==
-Date:   Fri, 21 Aug 2020 02:24:47 +0200
+        bh=1YWqXAQnhLaq8z2CTV2oQb1to3QrIXhgk3UQ/jt5/4s=;
+        b=4zx9C0E2ONuN3fSkvo8o1EUOUY+K6g22buI8VrqG0z3/BsjfzJ4sqkv9pFO3QOZ/xtSAQU
+        Vnk/lWNXZvciVGAw==
+Date:   Fri, 21 Aug 2020 02:24:48 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -64,11 +64,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch RFC 23/38] x86/xen: Rework MSI teardown
+Subject: [patch RFC 24/38] x86/xen: Consolidate XEN-MSI init
 References: <20200821002424.119492231@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline; filename=x86-xen--Rework-XEN-MSI-management.patch
+Content-Disposition: inline; filename=x86-xen--Consolidate-XEN-MSI-init.patch
 Content-transfer-encoding: 8-bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
@@ -79,83 +79,102 @@ X86 cannot store the irq domain pointer in struct device without breaking
 XEN because the irq domain pointer takes precedence over arch_*_msi_irqs()
 fallbacks.
 
-XENs MSI teardown relies on default_teardown_msi_irqs() which invokes
-arch_teardown_msi_irq(). default_teardown_msi_irqs() is a trivial iterator
-over the msi entries associated to a device.
+To achieve this XEN MSI interrupt management needs to be wrapped into an
+irq domain.
 
-Implement this loop in xen_teardown_msi_irqs() to prepare for removal of
-the fallbacks for X86.
-
-This is a preparatory step to wrap XEN MSI alloc/free into a irq domain
-which in turn allows to store the irq domain pointer in struct device and
-to use the irq domain functions directly.
+Move the x86_msi ops setup into a single function to prepare for this.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/pci/xen.c |   23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ arch/x86/pci/xen.c |   51 ++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 32 insertions(+), 19 deletions(-)
 
 --- a/arch/x86/pci/xen.c
 +++ b/arch/x86/pci/xen.c
-@@ -376,20 +376,31 @@ static void xen_initdom_restore_msi_irqs
+@@ -371,7 +371,10 @@ static void xen_initdom_restore_msi_irqs
+ 		WARN(ret && ret != -ENOSYS, "restore_msi -> %d\n", ret);
+ 	}
+ }
+-#endif
++#else /* CONFIG_XEN_DOM0 */
++#define xen_initdom_setup_msi_irqs	NULL
++#define xen_initdom_restore_msi_irqs	NULL
++#endif /* !CONFIG_XEN_DOM0 */
+ 
  static void xen_teardown_msi_irqs(struct pci_dev *dev)
  {
- 	struct msi_desc *msidesc;
-+	int i;
-+
-+	for_each_pci_msi_entry(msidesc, dev) {
-+		if (msidesc->irq) {
-+			for (i = 0; i < msidesc->nvec_used; i++)
-+				xen_destroy_irq(msidesc->irq + i);
-+		}
+@@ -403,7 +406,31 @@ static void xen_teardown_msi_irq(unsigne
+ 	WARN_ON_ONCE(1);
+ }
+ 
+-#endif
++static __init void xen_setup_pci_msi(void)
++{
++	if (xen_initial_domain()) {
++		x86_msi.setup_msi_irqs = xen_initdom_setup_msi_irqs;
++		x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
++		x86_msi.restore_msi_irqs = xen_initdom_restore_msi_irqs;
++		pci_msi_ignore_mask = 1;
++	} else if (xen_pv_domain()) {
++		x86_msi.setup_msi_irqs = xen_setup_msi_irqs;
++		x86_msi.teardown_msi_irqs = xen_pv_teardown_msi_irqs;
++		pci_msi_ignore_mask = 1;
++	} else if (xen_hvm_domain()) {
++		x86_msi.setup_msi_irqs = xen_hvm_setup_msi_irqs;
++		x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
++	} else {
++		WARN_ON_ONCE(1);
++		return;
 +	}
++
++	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
 +}
 +
-+static void xen_pv_teardown_msi_irqs(struct pci_dev *dev)
-+{
-+	struct msi_desc *msidesc = first_pci_msi_entry(dev);
++#else /* CONFIG_PCI_MSI */
++static inline void xen_setup_pci_msi(void) { }
++#endif /* CONFIG_PCI_MSI */
  
--	msidesc = first_pci_msi_entry(dev);
- 	if (msidesc->msi_attrib.is_msix)
- 		xen_pci_frontend_disable_msix(dev);
- 	else
- 		xen_pci_frontend_disable_msi(dev);
- 
--	/* Free the IRQ's and the msidesc using the generic code. */
--	default_teardown_msi_irqs(dev);
-+	xen_teardown_msi_irqs(dev);
- }
- 
- static void xen_teardown_msi_irq(unsigned int irq)
+ int __init pci_xen_init(void)
  {
--	xen_destroy_irq(irq);
-+	WARN_ON_ONCE(1);
- }
+@@ -420,12 +447,7 @@ int __init pci_xen_init(void)
+ 	/* Keep ACPI out of the picture */
+ 	acpi_noirq_set();
  
- #endif
-@@ -412,7 +423,7 @@ int __init pci_xen_init(void)
- #ifdef CONFIG_PCI_MSI
- 	x86_msi.setup_msi_irqs = xen_setup_msi_irqs;
- 	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
--	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
-+	x86_msi.teardown_msi_irqs = xen_pv_teardown_msi_irqs;
- 	pci_msi_ignore_mask = 1;
- #endif
+-#ifdef CONFIG_PCI_MSI
+-	x86_msi.setup_msi_irqs = xen_setup_msi_irqs;
+-	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
+-	x86_msi.teardown_msi_irqs = xen_pv_teardown_msi_irqs;
+-	pci_msi_ignore_mask = 1;
+-#endif
++	xen_setup_pci_msi();
  	return 0;
-@@ -436,6 +447,7 @@ static void __init xen_hvm_msi_init(void
- 	}
+ }
  
- 	x86_msi.setup_msi_irqs = xen_hvm_setup_msi_irqs;
-+	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
- 	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
+@@ -445,10 +467,7 @@ static void __init xen_hvm_msi_init(void
+ 		    ((eax & XEN_HVM_CPUID_APIC_ACCESS_VIRT) && boot_cpu_has(X86_FEATURE_APIC)))
+ 			return;
+ 	}
+-
+-	x86_msi.setup_msi_irqs = xen_hvm_setup_msi_irqs;
+-	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
+-	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
++	xen_setup_pci_msi();
  }
  #endif
-@@ -472,6 +484,7 @@ int __init pci_xen_initial_domain(void)
- #ifdef CONFIG_PCI_MSI
- 	x86_msi.setup_msi_irqs = xen_initdom_setup_msi_irqs;
- 	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
-+	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
- 	x86_msi.restore_msi_irqs = xen_initdom_restore_msi_irqs;
- 	pci_msi_ignore_mask = 1;
- #endif
+ 
+@@ -481,13 +500,7 @@ int __init pci_xen_initial_domain(void)
+ {
+ 	int irq;
+ 
+-#ifdef CONFIG_PCI_MSI
+-	x86_msi.setup_msi_irqs = xen_initdom_setup_msi_irqs;
+-	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
+-	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
+-	x86_msi.restore_msi_irqs = xen_initdom_restore_msi_irqs;
+-	pci_msi_ignore_mask = 1;
+-#endif
++	xen_setup_pci_msi();
+ 	__acpi_register_gsi = acpi_register_gsi_xen;
+ 	__acpi_unregister_gsi = NULL;
+ 	/*
 
