@@ -2,47 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 289BE24CAA6
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 04:21:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6AA924CA9C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 04:21:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgHUCUL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Aug 2020 22:20:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbgHUCQq (ORCPT
+        id S1727838AbgHUCUB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Aug 2020 22:20:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52456 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgHUCQr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:16:46 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1DE0C061386;
-        Thu, 20 Aug 2020 19:16:44 -0700 (PDT)
-Message-Id: <20200821002945.695825784@linutronix.de>
+        Thu, 20 Aug 2020 22:16:47 -0400
+Message-Id: <20200821002945.804797850@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976203;
+        s=2020; t=1597976204;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=n+9JzjgCW829xt57cBjdIpc/3IF3JudgknsVK2IiGtk=;
-        b=hduGjMZbM0/qwLquCj86fWVEcSBPc0Iv1xA1asxyvWI+3WaJk/FZv3obiS9pdKi2N4Xi55
-        g2B24e5RBCG7WKFAQnorS3FWxwuVXn4z6S30wQ9GCVD8rtp+77IWCQCGVnhsf3znLjLhSM
-        aQmZw2lG8elAmC//IGUjNVWAb+xaLL0KKz9IZ14ZS5Czuz7wC08nu5Y+pBKinVQ49JiyCU
-        CXbMGhzaoeBIvlaaHMr23nvutvRUEOUuFrM649Lo5JGWcrMEOw972tIYLaoecwN/uLHyl2
-        R6g+Wh1VCvbaQYIhXKJhJnK8aiSLIDvD0enema4nF0KLI5Yj7n1BELeKwzCgbA==
+        bh=Qu+7FKLOcLL66ZIh2kkYhCRZlvPg4izTcWMNSWqGAVg=;
+        b=AbJw0WBBJU7N+y9z9LJq0rg6joNTq9fAO/5xpYZgQmoU83d473FH3juufzFqjCxaz7kD3X
+        rGB8Yu7EG20FrtQed/17Um9CuVL73NdPKYQA+mySHdH23c3cly2oXdEW/RBVhUAMgnEpz1
+        RdtJdEaplAHJdPK3RSUUAkwfQpaWWYDePYO8SJYHT8A3d3pudH2HB8pybVwNE9Jd99biTR
+        Jhs3VB70Or9sFuZiUyr/w2+TSs+47/lRsL7txihyq9ByFmbHnWgP/jkKKFMquT0BmYMUbZ
+        YPr1qCYb+GOXohIMEtjMUsFjWptoZWnswjYruPNKsZDtCWwG/JlrroTCA9L3xw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976203;
+        s=2020e; t=1597976204;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=n+9JzjgCW829xt57cBjdIpc/3IF3JudgknsVK2IiGtk=;
-        b=54vZUbSCVLbmLl/kEHzdwLB30JzHXmmLwe5GfkEeAMeKUbcsXnsiboZQzVlzf/vQeQ28JW
-        WkKbSmHVLKTXoHDw==
-Date:   Fri, 21 Aug 2020 02:24:28 +0200
+        bh=Qu+7FKLOcLL66ZIh2kkYhCRZlvPg4izTcWMNSWqGAVg=;
+        b=1Ral7jAZ2QZLHZbmUKB/eMrJyyHwt7NibfZJnj8yCzsnH6ODz7XOB8qvm4nSfkqDQUMzIz
+        tssPLziYLTewlUDg==
+Date:   Fri, 21 Aug 2020 02:24:29 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        linux-hyperv@vger.kernel.org, iommu@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        linux-hyperv@vger.kernel.org,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
         Wei Liu <wei.liu@kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -67,126 +65,154 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch RFC 04/38] x86/irq: Add allocation type for parent domain retrieval
+Subject: [patch RFC 05/38] iommu/vt-d: Consolidate irq domain getter
 References: <20200821002424.119492231@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline;
- filename="x86-irq--Add-allocation-flag-for-domain-retrieval.patch"
+ filename="iommu-vt-d--Consolidate-irq-domain-getter.patch"
 Content-transfer-encoding: 8-bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-irq_remapping_ir_irq_domain() is used to retrieve the remapping parent
-domain for an allocation type. irq_remapping_irq_domain() is for retrieving
-the actual device domain for allocating interrupts for a device.
+The irq domain request mode is now indicated in irq_alloc_info::type.
 
-The two functions are similar and can be unified by using explicit modes
-for parent irq domain retrieval.
-
-Add X86_IRQ_ALLOC_TYPE_IOAPIC/HPET_GET_PARENT and use it in the iommu
-implementations. Drop the parent domain retrieval for PCI_MSI/X as that is
-unused.
+Consolidate the two getter functions into one.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: Joerg Roedel <joro@8bytes.org>
-Cc: x86@kernel.org
-Cc: linux-hyperv@vger.kernel.org
 Cc: iommu@lists.linux-foundation.org
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Jon Derrick <jonathan.derrick@intel.com>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
 ---
- arch/x86/include/asm/hw_irq.h       |    2 ++
- arch/x86/kernel/apic/io_apic.c      |    2 +-
- arch/x86/kernel/apic/msi.c          |    2 +-
- drivers/iommu/amd/iommu.c           |    8 ++++++++
- drivers/iommu/hyperv-iommu.c        |    2 +-
- drivers/iommu/intel/irq_remapping.c |    8 ++------
- 6 files changed, 15 insertions(+), 9 deletions(-)
+ drivers/iommu/intel/irq_remapping.c |   67 ++++++++++++------------------------
+ 1 file changed, 24 insertions(+), 43 deletions(-)
 
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -40,6 +40,8 @@ enum irq_alloc_type {
- 	X86_IRQ_ALLOC_TYPE_PCI_MSIX,
- 	X86_IRQ_ALLOC_TYPE_DMAR,
- 	X86_IRQ_ALLOC_TYPE_UV,
-+	X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT,
-+	X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT,
- };
+--- a/drivers/iommu/intel/irq_remapping.c
++++ b/drivers/iommu/intel/irq_remapping.c
+@@ -204,35 +204,40 @@ static int modify_irte(struct irq_2_iomm
+ 	return rc;
+ }
  
- struct irq_alloc_info {
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2296,7 +2296,7 @@ static int mp_irqdomain_create(int ioapi
- 		return 0;
+-static struct intel_iommu *map_hpet_to_ir(u8 hpet_id)
++static struct irq_domain *map_hpet_to_ir(u8 hpet_id)
+ {
+ 	int i;
  
- 	init_irq_alloc_info(&info, NULL);
--	info.type = X86_IRQ_ALLOC_TYPE_IOAPIC;
-+	info.type = X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT;
- 	info.ioapic_id = mpc_ioapic_id(ioapic);
- 	parent = irq_remapping_get_ir_irq_domain(&info);
- 	if (!parent)
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -476,7 +476,7 @@ struct irq_domain *hpet_create_irq_domai
- 	domain_info->data = (void *)(long)hpet_id;
+-	for (i = 0; i < MAX_HPET_TBS; i++)
++	for (i = 0; i < MAX_HPET_TBS; i++) {
+ 		if (ir_hpet[i].id == hpet_id && ir_hpet[i].iommu)
+-			return ir_hpet[i].iommu;
++			return ir_hpet[i].iommu->ir_domain;
++	}
+ 	return NULL;
+ }
  
- 	init_irq_alloc_info(&info, NULL);
--	info.type = X86_IRQ_ALLOC_TYPE_HPET;
-+	info.type = X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT;
- 	info.hpet_id = hpet_id;
- 	parent = irq_remapping_get_ir_irq_domain(&info);
- 	if (parent == NULL)
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -3534,6 +3534,14 @@ static struct irq_domain *get_ir_irq_dom
+-static struct intel_iommu *map_ioapic_to_ir(int apic)
++static struct intel_iommu *map_ioapic_to_iommu(int apic)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < MAX_IO_APICS; i++)
++	for (i = 0; i < MAX_IO_APICS; i++) {
+ 		if (ir_ioapic[i].id == apic && ir_ioapic[i].iommu)
+ 			return ir_ioapic[i].iommu;
++	}
+ 	return NULL;
+ }
+ 
+-static struct intel_iommu *map_dev_to_ir(struct pci_dev *dev)
++static struct irq_domain *map_ioapic_to_ir(int apic)
+ {
+-	struct dmar_drhd_unit *drhd;
++	struct intel_iommu *iommu = map_ioapic_to_iommu(apic);
+ 
+-	drhd = dmar_find_matched_drhd_unit(dev);
+-	if (!drhd)
+-		return NULL;
++	return iommu ? iommu->ir_domain : NULL;
++}
++
++static struct irq_domain *map_dev_to_ir(struct pci_dev *dev)
++{
++	struct dmar_drhd_unit *drhd = dmar_find_matched_drhd_unit(dev);
+ 
+-	return drhd->iommu;
++	return drhd ? drhd->iommu->ir_msi_domain : NULL;
+ }
+ 
+ static int clear_entries(struct irq_2_iommu *irq_iommu)
+@@ -996,7 +1001,7 @@ static int __init parse_ioapics_under_ir
+ 
+ 	for (ioapic_idx = 0; ioapic_idx < nr_ioapics; ioapic_idx++) {
+ 		int ioapic_id = mpc_ioapic_id(ioapic_idx);
+-		if (!map_ioapic_to_ir(ioapic_id)) {
++		if (!map_ioapic_to_iommu(ioapic_id)) {
+ 			pr_err(FW_BUG "ioapic %d has no mapping iommu, "
+ 			       "interrupt remapping will be disabled\n",
+ 			       ioapic_id);
+@@ -1101,47 +1106,23 @@ static void prepare_irte(struct irte *ir
+ 	irte->redir_hint = 1;
+ }
+ 
+-static struct irq_domain *intel_get_ir_irq_domain(struct irq_alloc_info *info)
++static struct irq_domain *intel_get_irq_domain(struct irq_alloc_info *info)
+ {
+-	struct intel_iommu *iommu = NULL;
+-
  	if (!info)
  		return NULL;
  
-+	switch (info->type) {
-+	case X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT:
-+	case X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT:
-+		break;
-+	default:
-+		return NULL;
-+	}
-+
- 	devid = get_devid(info);
- 	if (devid >= 0) {
- 		iommu = amd_iommu_rlookup_table[devid];
---- a/drivers/iommu/hyperv-iommu.c
-+++ b/drivers/iommu/hyperv-iommu.c
-@@ -184,7 +184,7 @@ static int __init hyperv_enable_irq_rema
- 
- static struct irq_domain *hyperv_get_ir_irq_domain(struct irq_alloc_info *info)
- {
--	if (info->type == X86_IRQ_ALLOC_TYPE_IOAPIC)
-+	if (info->type == X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT)
- 		return ioapic_ir_domain;
- 	else
- 		return NULL;
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -1109,16 +1109,12 @@ static struct irq_domain *intel_get_ir_i
- 		return NULL;
- 
  	switch (info->type) {
--	case X86_IRQ_ALLOC_TYPE_IOAPIC:
-+	case X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT:
- 		iommu = map_ioapic_to_ir(info->ioapic_id);
- 		break;
--	case X86_IRQ_ALLOC_TYPE_HPET:
-+	case X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT:
- 		iommu = map_hpet_to_ir(info->hpet_id);
- 		break;
--	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
--	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
--		iommu = map_dev_to_ir(info->msi_dev);
+ 	case X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT:
+-		iommu = map_ioapic_to_ir(info->ioapic_id);
 -		break;
++		return map_ioapic_to_ir(info->ioapic_id);
+ 	case X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT:
+-		iommu = map_hpet_to_ir(info->hpet_id);
+-		break;
+-	default:
+-		BUG_ON(1);
+-		break;
+-	}
+-
+-	return iommu ? iommu->ir_domain : NULL;
+-}
+-
+-static struct irq_domain *intel_get_irq_domain(struct irq_alloc_info *info)
+-{
+-	struct intel_iommu *iommu;
+-
+-	if (!info)
+-		return NULL;
+-
+-	switch (info->type) {
++		return map_hpet_to_ir(info->hpet_id);
+ 	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
+ 	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+-		iommu = map_dev_to_ir(info->msi_dev);
+-		if (iommu)
+-			return iommu->ir_msi_domain;
+-		break;
++		return map_dev_to_ir(info->msi_dev);
  	default:
- 		BUG_ON(1);
- 		break;
+-		break;
++		WARN_ON_ONCE(1);
++		return NULL;
+ 	}
+-
+-	return NULL;
+ }
+ 
+ struct irq_remap_ops intel_irq_remap_ops = {
+@@ -1150,7 +1131,7 @@ struct irq_remap_ops intel_irq_remap_ops
+ 	.disable		= disable_irq_remapping,
+ 	.reenable		= reenable_irq_remapping,
+ 	.enable_faulting	= enable_drhd_fault_handling,
+-	.get_ir_irq_domain	= intel_get_ir_irq_domain,
++	.get_ir_irq_domain	= intel_get_irq_domain,
+ 	.get_irq_domain		= intel_get_irq_domain,
+ };
+ 
 
