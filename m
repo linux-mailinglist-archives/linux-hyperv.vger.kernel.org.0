@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6F1024C9F9
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 04:16:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4123124CAA4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 04:21:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgHUCQq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Aug 2020 22:16:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43452 "EHLO
+        id S1728392AbgHUCUL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Aug 2020 22:20:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgHUCQm (ORCPT
+        with ESMTP id S1727076AbgHUCQo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:16:42 -0400
+        Thu, 20 Aug 2020 22:16:44 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF74C061386;
-        Thu, 20 Aug 2020 19:16:42 -0700 (PDT)
-Message-Id: <20200821002945.441137487@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B10C061385;
+        Thu, 20 Aug 2020 19:16:43 -0700 (PDT)
+Message-Id: <20200821002945.595723096@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976200;
+        s=2020; t=1597976202;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=+IgASHQdqPCnOTucPcGX02wYMC5pdn/nyOwg+ouAU7Y=;
-        b=Kq3VTSX8uKjpioBzzueTkN79nNBO2I0XUAh6jd71XwTySEooE4uoZ7HkYYujC26KxfiByj
-        vj/umpMZyxUbQTfEwQEQJx7Nu0JBttvca8e0D+yDHETVbvQ7Ef5eIIglB0we9V36cMBnyT
-        zCkjrT+YImdEjrxWFJshsLvIFDur7OnZtXRW8WFNyhZ5/30P/l0sWafQCCn5R6Or0tO8x1
-        G1GHFZ91C4ttID0SK06vuZMb8GKmiNN29i25BygZZJo7Ioo/h9219SPZtsE3nV23yqglAP
-        8nD7vKolbLJZ0c8QYpdewxwfG5hksiFcVSYd3eve0E8mNhSCa43lKd8UBggBWA==
+        bh=aZajyY2bgQUgD6w0Oy2gZDy5W+Nr6UhttbpOe6imkbA=;
+        b=z5Zw6T7F6WO9tHaOZCWjbBUxhqTz80VOEZ80VDKul4uGQaropOgQb6BcKPfj/9Wlvj5p+r
+        OP36RCtabudX4KoYj9f608pdj9pLU9TRu1Q3jtMOtO2cYjb9lxPGXC6A8Lyaz2v72ig0o8
+        84sWINgu7TugbF6XX7w85aAfwgzIeXnvMNqvoAI/8Eq1C3pkfYf6UrIPEz0UbebgaIlkom
+        eLiT4D2PzUU0fqRqXin5XBuzprxYDvLYrh1l2/kyVxDcs0G9GpxWgzhl5sC/gcvvvzfgGq
+        tBUculjkto8xPUOMY648x8PhGxobEoviHKsPdc7al8ctqVpYclUAG75TwMSj7Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976200;
+        s=2020e; t=1597976202;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=+IgASHQdqPCnOTucPcGX02wYMC5pdn/nyOwg+ouAU7Y=;
-        b=ASAU7xfBpU57hwXmRkSKAraaHaBXoaaWxjHGByCWVurZfPFoa1OO+VM698eeg4/bGLoGHL
-        RYRF87iRi7qicEAw==
-Date:   Fri, 21 Aug 2020 02:24:26 +0200
+        bh=aZajyY2bgQUgD6w0Oy2gZDy5W+Nr6UhttbpOe6imkbA=;
+        b=2vc2HTalu8tDHI7RloIWqmjANph7va74Zeuk1d1Pk4AqNK9Vj801oDy0Rg8AK4F2IiwyPc
+        a3lZ5AHBdtqfsYBg==
+Date:   Fri, 21 Aug 2020 02:24:27 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -67,172 +67,185 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch RFC 02/38] x86/init: Remove unused init ops
+Subject: [patch RFC 03/38] x86/irq: Rename X86_IRQ_ALLOC_TYPE_MSI* to reflect
+ PCI dependency
 References: <20200821002424.119492231@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline; filename=x86-init--Remove-unused-init-ops.patch
+Content-Disposition: inline; filename="x86-irq--Rename-X86_IRQ_ALLOC_TYPE_MSI"
 Content-transfer-encoding: 8-bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Some past platform removal forgot to get rid of this unused ballast.
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
 ---
- arch/x86/include/asm/mpspec.h   |   10 ----------
- arch/x86/include/asm/x86_init.h |   10 ----------
- arch/x86/kernel/mpparse.c       |   26 ++++----------------------
- arch/x86/kernel/x86_init.c      |    4 ----
- 4 files changed, 4 insertions(+), 46 deletions(-)
+ arch/x86/include/asm/hw_irq.h       |    4 ++--
+ arch/x86/kernel/apic/msi.c          |    6 +++---
+ drivers/iommu/amd/iommu.c           |   24 ++++++++++++------------
+ drivers/iommu/intel/irq_remapping.c |   18 +++++++++---------
+ 4 files changed, 26 insertions(+), 26 deletions(-)
 
---- a/arch/x86/include/asm/mpspec.h
-+++ b/arch/x86/include/asm/mpspec.h
-@@ -67,21 +67,11 @@ static inline void find_smp_config(void)
- #ifdef CONFIG_X86_MPPARSE
- extern void e820__memblock_alloc_reserved_mpc_new(void);
- extern int enable_update_mptable;
--extern int default_mpc_apic_id(struct mpc_cpu *m);
--extern void default_smp_read_mpc_oem(struct mpc_table *mpc);
--# ifdef CONFIG_X86_IO_APIC
--extern void default_mpc_oem_bus_info(struct mpc_bus *m, char *str);
--# else
--#  define default_mpc_oem_bus_info NULL
--# endif
- extern void default_find_smp_config(void);
- extern void default_get_smp_config(unsigned int early);
- #else
- static inline void e820__memblock_alloc_reserved_mpc_new(void) { }
- #define enable_update_mptable 0
--#define default_mpc_apic_id NULL
--#define default_smp_read_mpc_oem NULL
--#define default_mpc_oem_bus_info NULL
- #define default_find_smp_config x86_init_noop
- #define default_get_smp_config x86_init_uint_noop
- #endif
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -11,22 +11,12 @@ struct cpuinfo_x86;
- 
- /**
-  * struct x86_init_mpparse - platform specific mpparse ops
-- * @mpc_record:			platform specific mpc record accounting
-  * @setup_ioapic_ids:		platform specific ioapic id override
-- * @mpc_apic_id:		platform specific mpc apic id assignment
-- * @smp_read_mpc_oem:		platform specific oem mpc table setup
-- * @mpc_oem_pci_bus:		platform specific pci bus setup (default NULL)
-- * @mpc_oem_bus_info:		platform specific mpc bus info
-  * @find_smp_config:		find the smp configuration
-  * @get_smp_config:		get the smp configuration
-  */
- struct x86_init_mpparse {
--	void (*mpc_record)(unsigned int mode);
- 	void (*setup_ioapic_ids)(void);
--	int (*mpc_apic_id)(struct mpc_cpu *m);
--	void (*smp_read_mpc_oem)(struct mpc_table *mpc);
--	void (*mpc_oem_pci_bus)(struct mpc_bus *m);
--	void (*mpc_oem_bus_info)(struct mpc_bus *m, char *name);
- 	void (*find_smp_config)(void);
- 	void (*get_smp_config)(unsigned int early);
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -36,8 +36,8 @@ struct msi_desc;
+ enum irq_alloc_type {
+ 	X86_IRQ_ALLOC_TYPE_IOAPIC = 1,
+ 	X86_IRQ_ALLOC_TYPE_HPET,
+-	X86_IRQ_ALLOC_TYPE_MSI,
+-	X86_IRQ_ALLOC_TYPE_MSIX,
++	X86_IRQ_ALLOC_TYPE_PCI_MSI,
++	X86_IRQ_ALLOC_TYPE_PCI_MSIX,
+ 	X86_IRQ_ALLOC_TYPE_DMAR,
+ 	X86_IRQ_ALLOC_TYPE_UV,
  };
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -46,11 +46,6 @@ static int __init mpf_checksum(unsigned
- 	return sum & 0xFF;
- }
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -188,7 +188,7 @@ int native_setup_msi_irqs(struct pci_dev
+ 	struct irq_alloc_info info;
  
--int __init default_mpc_apic_id(struct mpc_cpu *m)
--{
--	return m->apicid;
--}
--
- static void __init MP_processor_info(struct mpc_cpu *m)
- {
- 	int apicid;
-@@ -61,7 +56,7 @@ static void __init MP_processor_info(str
- 		return;
+ 	init_irq_alloc_info(&info, NULL);
+-	info.type = X86_IRQ_ALLOC_TYPE_MSI;
++	info.type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
+ 	info.msi_dev = dev;
+ 
+ 	domain = irq_remapping_get_irq_domain(&info);
+@@ -220,9 +220,9 @@ int pci_msi_prepare(struct irq_domain *d
+ 	init_irq_alloc_info(arg, NULL);
+ 	arg->msi_dev = pdev;
+ 	if (desc->msi_attrib.is_msix) {
+-		arg->type = X86_IRQ_ALLOC_TYPE_MSIX;
++		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSIX;
+ 	} else {
+-		arg->type = X86_IRQ_ALLOC_TYPE_MSI;
++		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
+ 		arg->flags |= X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
  	}
  
--	apicid = x86_init.mpparse.mpc_apic_id(m);
-+	apicid = m->apicid;
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3514,8 +3514,8 @@ static int get_devid(struct irq_alloc_in
+ 	case X86_IRQ_ALLOC_TYPE_HPET:
+ 		devid     = get_hpet_devid(info->hpet_id);
+ 		break;
+-	case X86_IRQ_ALLOC_TYPE_MSI:
+-	case X86_IRQ_ALLOC_TYPE_MSIX:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+ 		devid = get_device_id(&info->msi_dev->dev);
+ 		break;
+ 	default:
+@@ -3553,8 +3553,8 @@ static struct irq_domain *get_irq_domain
+ 		return NULL;
  
- 	if (m->cpuflag & CPU_BOOTPROCESSOR) {
- 		bootup_cpu = " (Bootup-CPU)";
-@@ -73,7 +68,7 @@ static void __init MP_processor_info(str
- }
+ 	switch (info->type) {
+-	case X86_IRQ_ALLOC_TYPE_MSI:
+-	case X86_IRQ_ALLOC_TYPE_MSIX:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+ 		devid = get_device_id(&info->msi_dev->dev);
+ 		if (devid < 0)
+ 			return NULL;
+@@ -3615,8 +3615,8 @@ static void irq_remapping_prepare_irte(s
+ 		break;
  
- #ifdef CONFIG_X86_IO_APIC
--void __init default_mpc_oem_bus_info(struct mpc_bus *m, char *str)
-+static void __init mpc_oem_bus_info(struct mpc_bus *m, char *str)
- {
- 	memcpy(str, m->bustype, 6);
- 	str[6] = 0;
-@@ -84,7 +79,7 @@ static void __init MP_bus_info(struct mp
- {
- 	char str[7];
+ 	case X86_IRQ_ALLOC_TYPE_HPET:
+-	case X86_IRQ_ALLOC_TYPE_MSI:
+-	case X86_IRQ_ALLOC_TYPE_MSIX:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+ 		msg->address_hi = MSI_ADDR_BASE_HI;
+ 		msg->address_lo = MSI_ADDR_BASE_LO;
+ 		msg->data = irte_info->index;
+@@ -3660,15 +3660,15 @@ static int irq_remapping_alloc(struct ir
  
--	x86_init.mpparse.mpc_oem_bus_info(m, str);
-+	mpc_oem_bus_info(m, str);
+ 	if (!info)
+ 		return -EINVAL;
+-	if (nr_irqs > 1 && info->type != X86_IRQ_ALLOC_TYPE_MSI &&
+-	    info->type != X86_IRQ_ALLOC_TYPE_MSIX)
++	if (nr_irqs > 1 && info->type != X86_IRQ_ALLOC_TYPE_PCI_MSI &&
++	    info->type != X86_IRQ_ALLOC_TYPE_PCI_MSIX)
+ 		return -EINVAL;
  
- #if MAX_MP_BUSSES < 256
- 	if (m->busid >= MAX_MP_BUSSES) {
-@@ -100,9 +95,6 @@ static void __init MP_bus_info(struct mp
- 		mp_bus_id_to_type[m->busid] = MP_BUS_ISA;
- #endif
- 	} else if (strncmp(str, BUSTYPE_PCI, sizeof(BUSTYPE_PCI) - 1) == 0) {
--		if (x86_init.mpparse.mpc_oem_pci_bus)
--			x86_init.mpparse.mpc_oem_pci_bus(m);
--
- 		clear_bit(m->busid, mp_bus_not_pci);
- #ifdef CONFIG_EISA
- 		mp_bus_id_to_type[m->busid] = MP_BUS_PCI;
-@@ -198,8 +190,6 @@ static void __init smp_dump_mptable(stru
- 			1, mpc, mpc->length, 1);
- }
+ 	/*
+ 	 * With IRQ remapping enabled, don't need contiguous CPU vectors
+ 	 * to support multiple MSI interrupts.
+ 	 */
+-	if (info->type == X86_IRQ_ALLOC_TYPE_MSI)
++	if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI)
+ 		info->flags &= ~X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
  
--void __init default_smp_read_mpc_oem(struct mpc_table *mpc) { }
--
- static int __init smp_read_mpc(struct mpc_table *mpc, unsigned early)
- {
- 	char str[16];
-@@ -218,14 +208,7 @@ static int __init smp_read_mpc(struct mp
- 	if (early)
- 		return 1;
- 
--	if (mpc->oemptr)
--		x86_init.mpparse.smp_read_mpc_oem(mpc);
--
--	/*
--	 *      Now process the configuration blocks.
--	 */
--	x86_init.mpparse.mpc_record(0);
--
-+	/* Now process the configuration blocks. */
- 	while (count < mpc->length) {
- 		switch (*mpt) {
- 		case MP_PROCESSOR:
-@@ -256,7 +239,6 @@ static int __init smp_read_mpc(struct mp
- 			count = mpc->length;
- 			break;
+ 	devid = get_devid(info);
+@@ -3700,9 +3700,9 @@ static int irq_remapping_alloc(struct ir
+ 		} else {
+ 			index = -ENOMEM;
  		}
--		x86_init.mpparse.mpc_record(1);
- 	}
+-	} else if (info->type == X86_IRQ_ALLOC_TYPE_MSI ||
+-		   info->type == X86_IRQ_ALLOC_TYPE_MSIX) {
+-		bool align = (info->type == X86_IRQ_ALLOC_TYPE_MSI);
++	} else if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI ||
++		   info->type == X86_IRQ_ALLOC_TYPE_PCI_MSIX) {
++		bool align = (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI);
  
- 	if (!num_processors)
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -67,11 +67,7 @@ struct x86_init_ops x86_init __initdata
- 	},
+ 		index = alloc_irq_index(devid, nr_irqs, align, info->msi_dev);
+ 	} else {
+--- a/drivers/iommu/intel/irq_remapping.c
++++ b/drivers/iommu/intel/irq_remapping.c
+@@ -1115,8 +1115,8 @@ static struct irq_domain *intel_get_ir_i
+ 	case X86_IRQ_ALLOC_TYPE_HPET:
+ 		iommu = map_hpet_to_ir(info->hpet_id);
+ 		break;
+-	case X86_IRQ_ALLOC_TYPE_MSI:
+-	case X86_IRQ_ALLOC_TYPE_MSIX:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+ 		iommu = map_dev_to_ir(info->msi_dev);
+ 		break;
+ 	default:
+@@ -1135,8 +1135,8 @@ static struct irq_domain *intel_get_irq_
+ 		return NULL;
  
- 	.mpparse = {
--		.mpc_record		= x86_init_uint_noop,
- 		.setup_ioapic_ids	= x86_init_noop,
--		.mpc_apic_id		= default_mpc_apic_id,
--		.smp_read_mpc_oem	= default_smp_read_mpc_oem,
--		.mpc_oem_bus_info	= default_mpc_oem_bus_info,
- 		.find_smp_config	= default_find_smp_config,
- 		.get_smp_config		= default_get_smp_config,
- 	},
+ 	switch (info->type) {
+-	case X86_IRQ_ALLOC_TYPE_MSI:
+-	case X86_IRQ_ALLOC_TYPE_MSIX:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+ 		iommu = map_dev_to_ir(info->msi_dev);
+ 		if (iommu)
+ 			return iommu->ir_msi_domain;
+@@ -1306,8 +1306,8 @@ static void intel_irq_remapping_prepare_
+ 		break;
+ 
+ 	case X86_IRQ_ALLOC_TYPE_HPET:
+-	case X86_IRQ_ALLOC_TYPE_MSI:
+-	case X86_IRQ_ALLOC_TYPE_MSIX:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+ 		if (info->type == X86_IRQ_ALLOC_TYPE_HPET)
+ 			set_hpet_sid(irte, info->hpet_id);
+ 		else
+@@ -1362,15 +1362,15 @@ static int intel_irq_remapping_alloc(str
+ 
+ 	if (!info || !iommu)
+ 		return -EINVAL;
+-	if (nr_irqs > 1 && info->type != X86_IRQ_ALLOC_TYPE_MSI &&
+-	    info->type != X86_IRQ_ALLOC_TYPE_MSIX)
++	if (nr_irqs > 1 && info->type != X86_IRQ_ALLOC_TYPE_PCI_MSI &&
++	    info->type != X86_IRQ_ALLOC_TYPE_PCI_MSIX)
+ 		return -EINVAL;
+ 
+ 	/*
+ 	 * With IRQ remapping enabled, don't need contiguous CPU vectors
+ 	 * to support multiple MSI interrupts.
+ 	 */
+-	if (info->type == X86_IRQ_ALLOC_TYPE_MSI)
++	if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI)
+ 		info->flags &= ~X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
+ 
+ 	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
 
