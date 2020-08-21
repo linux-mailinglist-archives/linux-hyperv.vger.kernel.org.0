@@ -2,43 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E70BC24CA65
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 04:18:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66F0B24CA62
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 04:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgHUCSY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Aug 2020 22:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43554 "EHLO
+        id S1728115AbgHUCSL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Aug 2020 22:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbgHUCRR (ORCPT
+        with ESMTP id S1727924AbgHUCRT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:17:17 -0400
+        Thu, 20 Aug 2020 22:17:19 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4401C061385;
-        Thu, 20 Aug 2020 19:17:16 -0700 (PDT)
-Message-Id: <20200821002948.285988229@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9865C061386;
+        Thu, 20 Aug 2020 19:17:18 -0700 (PDT)
+Message-Id: <20200821002948.379447552@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976235;
+        s=2020; t=1597976237;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=d5usA7gDCS+QKjQgidurX7gwz02tPHrPNFlTsx8P5CI=;
-        b=RVJ7jdg6yqLy3EH2woulQ/AnGnunH5RkP7bQGtS5XdVI4K+27I8sW5KQ4bwKh7oxBPDPSq
-        PUAD2IdzXQ1/gMpjYAGgnWRBlD1ug/Nr7V4kDQsNmxx72PzHQqt0VRrzXGsgMHEHo/aEqw
-        +5fPifkdsVz8w6lRpGdG5PB9Fql0LO1o1vs8GcIV1+SDwG+UmYqCCRUcsk40XG7tyVb416
-        TjQv0KlmwkyZO0egvzwn9A695hiD80Gh8xwRU56V/Fv+L0ugIMvBKuG/bfvsYr6kKvaGy0
-        XSylhJX9fuJ9fV7CIc03ykAgm+YWeklO8G4yCLGBhLNRjd5a6/SJVV5GeynM3w==
+        bh=/s0W3ueaG6RtDzEeGUOI0RGBVruM5KofEMx/9DI9MLQ=;
+        b=lhEvEN53FVmm7WaATrlbrU5ndLFii2LKbFg5sOWGT7H+n7al6/w9HhdVruRVrDYtOIEFMv
+        JDlX8SKzQY5EyF2uM472V9qjU3IMvsqzbOWjOd6lcSAS2lis/6p6/43NObKcwJMcaROLRT
+        isNBG1VfW+VhAscmgCqMl6CbeQFaiqBUuhrbm4zGR06CHqJiGmm5tFrJul177II1iXHN6U
+        JqiLxD/1koJNOnYePuc93IRS5OQ3wiHQUabnterO5JENke8VWJNXDg7Kxk4q9L0IZdzV8Z
+        kO1OfD/dFzMjxmvoxXA6WcJ00IcS9QOm0WtLGabMefC5f/FLnv7iSqVJmJfmxA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976235;
+        s=2020e; t=1597976237;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=d5usA7gDCS+QKjQgidurX7gwz02tPHrPNFlTsx8P5CI=;
-        b=N5lZvRWFmQopSinQmJpoCZ2W17bx8ilN26GTqyVqlLtYE8S2UtjUuGKTBPXITNNvSpH5Qz
-        0bEjgomf8T1Os3BA==
-Date:   Fri, 21 Aug 2020 02:24:54 +0200
+        bh=/s0W3ueaG6RtDzEeGUOI0RGBVruM5KofEMx/9DI9MLQ=;
+        b=QHm30rz5+fz6MVN5gJxMivl2CwMWIfo/V05Ng5lEi8dMBMkPwGvNfN6ORhWZ6ka1Rkg62S
+        pVIbqqFvU832pWBw==
+Date:   Fri, 21 Aug 2020 02:24:55 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     x86@kernel.org, xen-devel@lists.xenproject.org,
         linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
         iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -50,10 +50,11 @@ Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Steve Wahl <steve.wahl@hpe.com>,
         Dimitri Sivanich <sivanich@hpe.com>,
         Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jonathan Derrick <jonathan.derrick@intel.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Juergen Gross <jgross@suse.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
@@ -67,107 +68,155 @@ Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch RFC 30/38] PCI/MSI: Allow to disable arch fallbacks
+Subject: [patch RFC 31/38] x86/irq: Cleanup the arch_*_msi_irqs() leftovers
 References: <20200821002424.119492231@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline;
- filename="PCI-MSI--Allow-to-disable-arch-fallbacks.patch"
+ filename="x86-irq--Cleanup-the-arch_msi_irqs-leftovers.patch"
 Content-transfer-encoding: 8-bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-If an architecture does not require the MSI setup/teardown fallback
-functions, then allow them to be replaced by stub functions which emit a
-warning.
+Get rid of all the gunk and enable CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: xen-devel@lists.xenproject.org
 Cc: linux-pci@vger.kernel.org
 ---
- drivers/pci/Kconfig |    3 +++
- drivers/pci/msi.c   |    3 ++-
- include/linux/msi.h |   31 ++++++++++++++++++++++++++-----
- 3 files changed, 31 insertions(+), 6 deletions(-)
+ arch/x86/Kconfig                |    1 +
+ arch/x86/include/asm/pci.h      |   11 -----------
+ arch/x86/include/asm/x86_init.h |    1 -
+ arch/x86/kernel/apic/msi.c      |   22 ----------------------
+ arch/x86/kernel/x86_init.c      |   18 ------------------
+ arch/x86/pci/xen.c              |    7 -------
+ 6 files changed, 1 insertion(+), 59 deletions(-)
 
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -56,6 +56,9 @@ config PCI_MSI_IRQ_DOMAIN
- 	depends on PCI_MSI
- 	select GENERIC_MSI_IRQ_DOMAIN
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -225,6 +225,7 @@ config X86
+ 	select NEED_SG_DMA_LENGTH
+ 	select PCI_DOMAINS			if PCI
+ 	select PCI_LOCKLESS_CONFIG		if PCI
++	select PCI_MSI_DISABLE_ARCH_FALLBACKS
+ 	select PERF_EVENTS
+ 	select RTC_LIB
+ 	select RTC_MC146818_LIB
+--- a/arch/x86/include/asm/pci.h
++++ b/arch/x86/include/asm/pci.h
+@@ -105,17 +105,6 @@ static inline void early_quirks(void) {
  
-+config PCI_MSI_DISABLE_ARCH_FALLBACKS
-+	bool
-+
- config PCI_QUIRKS
- 	default y
- 	bool "Enable PCI quirk workarounds" if EXPERT
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -58,8 +58,8 @@ static void pci_msi_teardown_msi_irqs(st
- #define pci_msi_teardown_msi_irqs	arch_teardown_msi_irqs
- #endif
+ extern void pci_iommu_alloc(void);
  
-+#ifndef CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS
- /* Arch hooks */
+-#ifdef CONFIG_PCI_MSI
+-/* implemented in arch/x86/kernel/apic/io_apic. */
+-struct msi_desc;
+-int native_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
+-void native_teardown_msi_irq(unsigned int irq);
+-void native_restore_msi_irqs(struct pci_dev *dev);
+-#else
+-#define native_setup_msi_irqs		NULL
+-#define native_teardown_msi_irq		NULL
+-#endif
 -
- int __weak arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc)
+ /* generic pci stuff */
+ #include <asm-generic/pci.h>
+ 
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -277,7 +277,6 @@ struct pci_dev;
+ 
+ struct x86_msi_ops {
+ 	int (*setup_msi_irqs)(struct pci_dev *dev, int nvec, int type);
+-	void (*teardown_msi_irq)(unsigned int irq);
+ 	void (*teardown_msi_irqs)(struct pci_dev *dev);
+ 	void (*restore_msi_irqs)(struct pci_dev *dev);
+ };
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -182,28 +182,6 @@ static struct irq_chip pci_msi_controlle
+ 	.flags			= IRQCHIP_SKIP_SET_WAKE,
+ };
+ 
+-int native_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+-{
+-	struct irq_domain *domain;
+-	struct irq_alloc_info info;
+-
+-	init_irq_alloc_info(&info, NULL);
+-	info.type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
+-
+-	domain = irq_remapping_get_irq_domain(&info);
+-	if (domain == NULL)
+-		domain = x86_pci_msi_default_domain;
+-	if (domain == NULL)
+-		return -ENOSYS;
+-
+-	return msi_domain_alloc_irqs(domain, &dev->dev, nvec);
+-}
+-
+-void native_teardown_msi_irq(unsigned int irq)
+-{
+-	irq_domain_free_irqs(irq, 1);
+-}
+-
+ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 		    msi_alloc_info_t *arg)
  {
- 	struct msi_controller *chip = dev->bus->msi;
-@@ -132,6 +132,7 @@ void __weak arch_teardown_msi_irqs(struc
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -145,28 +145,10 @@ EXPORT_SYMBOL_GPL(x86_platform);
+ 
+ #if defined(CONFIG_PCI_MSI)
+ struct x86_msi_ops x86_msi __ro_after_init = {
+-	.setup_msi_irqs		= native_setup_msi_irqs,
+-	.teardown_msi_irq	= native_teardown_msi_irq,
+-	.teardown_msi_irqs	= default_teardown_msi_irqs,
+ 	.restore_msi_irqs	= default_restore_msi_irqs,
+ };
+ 
+ /* MSI arch specific hooks */
+-int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+-{
+-	return x86_msi.setup_msi_irqs(dev, nvec, type);
+-}
+-
+-void arch_teardown_msi_irqs(struct pci_dev *dev)
+-{
+-	x86_msi.teardown_msi_irqs(dev);
+-}
+-
+-void arch_teardown_msi_irq(unsigned int irq)
+-{
+-	x86_msi.teardown_msi_irq(irq);
+-}
+-
+ void arch_restore_msi_irqs(struct pci_dev *dev)
  {
- 	return default_teardown_msi_irqs(dev);
+ 	x86_msi.restore_msi_irqs(dev);
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -401,11 +401,6 @@ static void xen_pv_teardown_msi_irqs(str
+ 	xen_teardown_msi_irqs(dev);
  }
-+#endif /* !CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS */
  
- static void default_restore_msi_irq(struct pci_dev *dev, int irq)
- {
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -193,17 +193,38 @@ void pci_msi_mask_irq(struct irq_data *d
- void pci_msi_unmask_irq(struct irq_data *data);
- 
- /*
-- * The arch hooks to setup up msi irqs. Those functions are
-- * implemented as weak symbols so that they /can/ be overriden by
-- * architecture specific code if needed.
-+ * The arch hooks to setup up msi irqs. Default functions are implemented
-+ * as weak symbols so that they /can/ be overriden by architecture specific
-+ * code if needed.
-+ *
-+ * They can be replaced by stubs with warnings via
-+ * CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS when the architecture fully
-+ * utilizes direct irqdomain based setup.
-  */
-+#ifndef CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS
- int arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc);
- void arch_teardown_msi_irq(unsigned int irq);
- int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
- void arch_teardown_msi_irqs(struct pci_dev *dev);
--void arch_restore_msi_irqs(struct pci_dev *dev);
+-static void xen_teardown_msi_irq(unsigned int irq)
+-{
+-	WARN_ON_ONCE(1);
+-}
 -
- void default_teardown_msi_irqs(struct pci_dev *dev);
-+#else
-+static inline int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
-+{
-+	WARN_ON_ONCE(1);
-+	return -ENODEV;
-+}
-+
-+static inline void arch_teardown_msi_irqs(struct pci_dev *dev)
-+{
-+	WARN_ON_ONCE(1);
-+}
-+#endif
-+
-+/*
-+ * The restore hooks are still available as they are useful even
-+ * for fully irq domain based setups. Courtesy to XEN/X86.
-+ */
-+void arch_restore_msi_irqs(struct pci_dev *dev);
- void default_restore_msi_irqs(struct pci_dev *dev);
+ static int xen_msi_domain_alloc_irqs(struct irq_domain *domain,
+ 				     struct device *dev,  int nvec)
+ {
+@@ -482,8 +477,6 @@ static __init void xen_setup_pci_msi(voi
+ 		return;
+ 	}
  
- struct msi_controller {
+-	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
+-
+ 	/*
+ 	 * Override the PCI/MSI irq domain init function. No point
+ 	 * in allocating the native domain and never use it.
 
