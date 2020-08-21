@@ -2,231 +2,326 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB35B24E1FD
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Aug 2020 22:17:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A237524E3FB
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Aug 2020 01:47:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHUURW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 21 Aug 2020 16:17:22 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12310 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgHUURV (ORCPT
+        id S1726719AbgHUXrQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 21 Aug 2020 19:47:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59422 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbgHUXrQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 21 Aug 2020 16:17:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f402b93000b>; Fri, 21 Aug 2020 13:16:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 21 Aug 2020 13:17:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 21 Aug 2020 13:17:19 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Aug
- 2020 20:17:08 +0000
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.58) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 21 Aug 2020 20:17:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IR7Xpru97F6nduJ4BtQdYjdQak2cHmXTpJh6EvJQGhWdUJoGARO+FSxAWxb3HYLUYDOS2MKy2C9YskvjsA3lQ0AlNXHbFqeVCgvc7qsNUEti8pryEeKOBiwmRQxsPYC244dgkpWhuUiFLbhUTuqN1yFzpd2DFDEE1/mvuHsN7REIZDmpyqF8Ci3/cSQSXSTBPi8L14fCj923j283pSvk9D7rNwn9Iv1sh9jscv86+krgxEWfy3wHGIXPc6trUJEy6ZjIFoKS085OT+Rkct0UNAiLA2CU+VejapPdKlTTiRNOp4xktATILSQpaThSwkJu0W+wjE8rNpWWOFBL/akqtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9FzrAeRKkTAlshpGx4nH9RAtEQFJEfpjazIyCB62c/0=;
- b=EGFtEKb2uH/g7zSIbnWTUqLe/CZBieBrlAwiXtXmyIZZsLjhWEdzlBdQ/1hGFOJXoqB/obSBP+gi0vyJtn5MZ32I72F0nH5KEXrq71/MXXLsPWD2tK3LVKS2vGC9pGqtj5JMSyVc1BAybpmZaL3jK96wQZ5eDBYuXe/5/MY6Gf6AnfKWXkdkytNNeT0IJCZGECAFmhej894r9P+ZihU8zzQPhib4JY8vDE5gq1rC2rmu2yqiuiO0OzROj72eGm+9nBrrnqvuJMRCMGRu8s5ctbGNIyoMIpYTAUhFS8YPdJxWkdfPUWdM8dw0O8Yrm5A60xciBZ4Z4VUv/KjsiFV8qg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB1657.namprd12.prod.outlook.com (2603:10b6:4:d::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3305.26; Fri, 21 Aug 2020 20:17:07 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
- 20:17:07 +0000
-Date:   Fri, 21 Aug 2020 17:17:05 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        Fri, 21 Aug 2020 19:47:16 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598053632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PbhUfi01Lj30oKJLzgR9lJa3kGd2iztxYrMT6AoLDA0=;
+        b=B3s85JH8i/R5/bUHXE+QSDKOor6uF48pkVsyK6uj4VJC6HEXSsNdHFBzoIB/jGsr8pIr0y
+        6raD4q7fb+OVjcd3qWDMvswA+1tGzMBh+pMMSl7FY9bkxZYElbiDhXVVOvmzgFyNG9Idl9
+        I/2gpZVcBspfP9gSO3oXOUqFOdp7WAFEyXcCH/dUQZiDLOpxjGSEVQ3bJjbKwDvPDEhlb0
+        Ouft7IK0e07fEbjTd6D6bIWVPKRSH4yQQxkVW54nInvJb2NmcPSCpV0bmnakgH871j00ti
+        1YkYwDzJZpQ0MhkOprW59BXX925S3UvkhCHgh3dA9b0pVCpMEPqAoBCkG7PuSQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598053632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PbhUfi01Lj30oKJLzgR9lJa3kGd2iztxYrMT6AoLDA0=;
+        b=l/FCY1KjHYxb9uLaLBxYm/x1XfpF9veS5xVLnD33XhQUxQbME9e/mk4EOSC7F3pHAbdsXE
+        pIx+JyLFa3x98ADQ==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Marc Zyngier <maz@kernel.org>, Megha Dey <megha.dey@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Alex Williamson <alex.williamson@redhat.com>,
-        "Jacob Pan" <jacob.jun.pan@intel.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "Jon Derrick" <jonathan.derrick@intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Wei Liu <wei.liu@kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         Steve Wahl <steve.wahl@hpe.com>,
-        "Dimitri Sivanich" <sivanich@hpe.com>, Russ Anderson <rja@hpe.com>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>
 Subject: Re: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
-Message-ID: <20200821201705.GA2811871@nvidia.com>
-References: <20200821002424.119492231@linutronix.de>
- <20200821002949.049867339@linutronix.de>
- <20200821124547.GY1152540@nvidia.com>
- <874kovsrvk.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <874kovsrvk.fsf@nanos.tec.linutronix.de>
-X-ClientProxiedBy: MN2PR05CA0010.namprd05.prod.outlook.com
- (2603:10b6:208:c0::23) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+In-Reply-To: <20200821201705.GA2811871@nvidia.com>
+References: <20200821002424.119492231@linutronix.de> <20200821002949.049867339@linutronix.de> <20200821124547.GY1152540@nvidia.com> <874kovsrvk.fsf@nanos.tec.linutronix.de> <20200821201705.GA2811871@nvidia.com>
+Date:   Sat, 22 Aug 2020 01:47:12 +0200
+Message-ID: <87pn7jr27z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MN2PR05CA0010.namprd05.prod.outlook.com (2603:10b6:208:c0::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Fri, 21 Aug 2020 20:17:06 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k9DTF-00BnuH-BO; Fri, 21 Aug 2020 17:17:05 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 66af5ceb-021d-40f8-09fd-08d8460f2cfc
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1657:
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1657A5DE49BB3B02838F0501C25B0@DM5PR12MB1657.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yz1JLEaIrmGLzwVK+h/BT+vZULXC4APpFsf6OWNrVJ9E79XYAcHLwrXhZ3+OLsAl3t+0KYq2mOVWGMNnvUBSYtD7us5O2DNBJN7TWXpm+IQzV8m8gJNQ0b3fdqp8b8QFi9HO7ghstekUFOqkxx4w2h0cUmu1D6DBkUDtWF5Q3nzcznjnNdOLl2q4mJ2WmEPb3zeTcyCZP5W0OMD7pPB94Dboix4CtM2EWHXchaOWtdnWtP4thIMz1pcx2oCwOfqFl+A0jvYeLSSNPvW7w45EDXmWUgIcLnln9tXPwnM1ts7luaZ9PvzAsdu+APDEy2ZtHPT0G+dWtdmbUFf8tRSt7w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(366004)(39860400002)(396003)(1076003)(9786002)(8936002)(54906003)(9746002)(33656002)(478600001)(36756003)(86362001)(83380400001)(8676002)(4326008)(7416002)(426003)(2906002)(5660300002)(6916009)(186003)(66946007)(66556008)(316002)(26005)(7406005)(2616005)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: XD65o8Ef7UIiIiSto0Mxl+9d4LqU70ECCGf/0FM1HCH8mTb3YC6xtIxC4rlM2Aa/EMnsM76Ow6I7b+fm2ptK2pCVPmRIcYkGM3/WO6UEDVsyZzF8uf4ETUwpc4c2R8AzH1UHv722xmDhN2X/CkKlw4QGdL2iN9Kbh/AJqMhhbpL5xv4JfiYm2YhgmkS5boBBBO+NyYSX6k1zOq52wBvifxX2ljhvKPXshiHHcFxqcETlEPb4TLKgXnd3n13WIokOuUHrMjiAWpIR+LFjUXdhvId21dbOP8nFSGmxpG7AwXRu6jUMdr8yyKxC6n3cwJLR30zj3rzYKr2o/FdYtK77v2xpY/GcQ6soxnElREN2SeJqTTVO128Zh8dWeQ9dZ09H4g6g+hKSB3nyZm2GpvHBvXUxRWLo2Vg6utiamZj2nRU29GihnGNXl8txeTqbDhO6j7isQCUCZCTYZL7EEreuvSjCxDvulNKy0TqdS5/tWxbaDPMw2LMl7usII1SGpiuijS8utKH3Nm4HhmxRd94pFWIEoGud7RrSljCyS8+CYzvNb3Fhb2ecLIAMuJWtDyxFg9JKvdkXPXxs/NLhIgWBfAlyCPaaWonGMu27W12ozx/4hMaLO8lOuFkhIz8ZDuAykASyZ3yi8Xj+SqV+gK68lw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66af5ceb-021d-40f8-09fd-08d8460f2cfc
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 20:17:07.0031
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rYDw504sAdZ0DXMFpkjZw0jIX5+3RS821w0xk2hPzhhNBXl7GWHKnNBk2qkJfpWZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1657
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598040979; bh=9FzrAeRKkTAlshpGx4nH9RAtEQFJEfpjazIyCB62c/0=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=TykZYf9a6DryhkIr2sWr1kQpzaPWT21NOCyj1+ineECIyAxd3Su4T/GWVcH2an0Ju
-         WAIgRYBVw5k3581TF02HX+B/0nwfbrNwdCzI9RdoWf1AwmaVkIOKnGjpgESO7kGqyh
-         OQ+vtlgWRuWGGG5dxUr/UTExgZ/8oN9fctNc9DX8FDghy2Rh4MeeYYaUzMnebGazP/
-         zmAGcitmd78GNP29zIYyrxZAEksnYWLdlywH/ao94z5Q0Qz80EWkc2FJy8noCyE3OX
-         9A905Rf7qQP9I0nEZTcYOMl+38dNL1mpNOgogrtoufRh8YbHSwdoOCO6WfBUVtJqyo
-         WCpJEJKT4HX1w==
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 09:47:43PM +0200, Thomas Gleixner wrote:
-> On Fri, Aug 21 2020 at 09:45, Jason Gunthorpe wrote:
-> > On Fri, Aug 21, 2020 at 02:25:02AM +0200, Thomas Gleixner wrote:
-> >> +static void ims_mask_irq(struct irq_data *data)
-> >> +{
-> >> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
-> >> +	struct ims_array_slot __iomem *slot = desc->device_msi.priv_iomem;
-> >> +	u32 __iomem *ctrl = &slot->ctrl;
-> >> +
-> >> +	iowrite32(ioread32(ctrl) & ~IMS_VECTOR_CTRL_UNMASK, ctrl);
-> >
-> > Just to be clear, this is exactly the sort of operation we can't do
-> > with non-MSI interrupts. For a real PCI device to execute this it
-> > would have to keep the data on die.
-> 
-> We means NVIDIA and your new device, right?
+On Fri, Aug 21 2020 at 17:17, Jason Gunthorpe wrote:
+> On Fri, Aug 21, 2020 at 09:47:43PM +0200, Thomas Gleixner wrote:
+>> So if I understand correctly then the queue memory where the MSI
+>> descriptor sits is in RAM.
+>
+> Yes, IMHO that is the whole point of this 'IMS' stuff. If devices
+> could have enough on-die memory then they could just use really big
+> MSI-X tables. Currently due to on-die memory constraints mlx5 is
+> limited to a few hundred MSI-X vectors.
 
-We'd like to use this in the current Mellanox NIC HW, eg the mlx5
-driver. (NVIDIA acquired Mellanox recently)
+Right, that's the limit of a particular device, but nothing prevents you
+to have a larger table on a new device.
 
-> So if I understand correctly then the queue memory where the MSI
-> descriptor sits is in RAM.
+The MSI-X limitation to 2048 is defined by the PCI spec and you'd need
+either some non spec compliant abuse of the reserved size bits or some
+extra config entry. So IMS is a way to work around that. But I
+understand why you want to move them to main memory, but you have to
+deal with the problems this creates upfront.
 
-Yes, IMHO that is the whole point of this 'IMS' stuff. If devices
-could have enough on-die memory then they could just use really big
-MSI-X tables. Currently due to on-die memory constraints mlx5 is
-limited to a few hundred MSI-X vectors.
+> Since MSI-X tables are exposed via MMIO they can't be 'swapped' to
+> RAM.
+>
+> Moving away from MSI-X's MMIO access model allows them to be swapped
+> to RAM. The cost is that accessing them for update is a
+> command/response operation not a MMIO operation.
+>
+> The HW is already swapping the queues causing the interrupts to RAM,
+> so adding a bit of additional data to store the MSI addr/data is
+> reasonable.
 
-Since MSI-X tables are exposed via MMIO they can't be 'swapped' to
-RAM.
+Makes sense.
 
-Moving away from MSI-X's MMIO access model allows them to be swapped
-to RAM. The cost is that accessing them for update is a
-command/response operation not a MMIO operation.
+>> How is that supposed to work if interrupt remapping is disabled?
+>
+> The best we can do is issue a command to the device and spin/sleep
+> until completion. The device will serialize everything internally.
+>
+> If the device has died the driver has code to detect and trigger a
+> PCI function reset which will definitely stop the interrupt.
 
-The HW is already swapping the queues causing the interrupts to RAM,
-so adding a bit of additional data to store the MSI addr/data is
-reasonable.
+If that interrupt is gone into storm mode for some reason then this will
+render your machine unusable before you can do that.
 
-To give some sense, a 'working set' for the NIC device in some cases
-can be hundreds of megabytes of data. System RAM is used to store
-this, and precious on-die memory holds some dynamic active set, much
-like a processor cache.
+> So, the implementation of these functions would be to push any change
+> onto a command queue, trigger the device to DMA the command, spin/sleep
+> until the device returns a response and then continue on. If the
+> device doesn't return a response in a time window then trigger a WQ to
+> do a full device reset.
 
-> How is that supposed to work if interrupt remapping is disabled?
+I really don't want to do that with the irq descriptor lock held or in
+case of affinity from the interrupt handler as we have to do with PCI
+MSI/MSI-X due to the horrors of the X86 interrupt delivery trainwreck.
+Also you cannot call into command queue code from interrupt disabled and
+interrupt descriptor lock held sections. You can try, but lockdep will
+yell at you immediately. 
 
-The best we can do is issue a command to the device and spin/sleep
-until completion. The device will serialize everything internally.
+There is also CPU hotplug where we have to force migrate an interrupt
+away from an outgoing CPU. This needs some serious thought.
 
-If the device has died the driver has code to detect and trigger a
-PCI function reset which will definitely stop the interrupt.
+One question is whether the device can see partial updates to that
+memory due to the async 'swap' of context from the device CPU.
 
-So, the implementation of these functions would be to push any change
-onto a command queue, trigger the device to DMA the command, spin/sleep
-until the device returns a response and then continue on. If the
-device doesn't return a response in a time window then trigger a WQ to
-do a full device reset.
+So we have address_lo, address_hi, data and ctrl. Each of them 32 bit.
 
-The spin/sleep is only needed if the update has to be synchronous, so
-things like rebalancing could just push the rebalancing work and
-immediately return.
+address_hi is only relevant when the number of CPUs is > 255 which
+requires X2APIC which in turn requires interrupt remapping. For all
+others the address_hi value never changes. Let's ignore that case for
+now, but see further down.
 
-> If interrupt remapping is enabled then both are trivial because then the
-> irq chip can delegate everything to the parent chip, i.e. the remapping
-> unit.
+So what's interesting is address_lo and data. If the device sees an
+partial update, i.e. address_lo is written and the device grabs the
+update before data is written then the next interrupt will end up in
+lala land. We have code for that in place in msi_set_affinity() in
+arch/x86/kernel/apic/msi.c. Get eyecancer protection glasses before
+opening that and keep beer ready to wipe out the horrors immediately
+afterwards.
 
-I did like this notion that IRQ remapping could avoid the overhead of
-spin/spleep. Most of the use cases we have for this will require the
-IOMMU anyhow.
+If the device updates the data only when a command is issued then this
+is not a problem, but it causes other problems because you still cannot
+access the command queue from that context. This makes it even worse for
+the CPU hotplug case. But see all of the reasoning on that.
 
-> > I saw the idxd driver was doing something like this, I assume it
-> > avoids trouble because it is a fake PCI device integrated with the
-> > CPU, not on a real PCI bus?
-> 
-> That's how it is implemented as far as I understood the patches. It's
-> device memory therefore iowrite32().
+If it takes whatever it sees while grabbing the state when switching to
+a different queue or at the point of actual interrupt delivery, then you
+have a problem. Not only you, I'm going to have one as well because I'm
+going to be the poor sod to come up with the workaround.
 
-I don't know anything about idxd.. Given the scale of interrupt need I
-assumed the idxd HW had some hidden swapping to RAM. 
+So we better address that _before_ you start deploying this piece of
+art. I'm not really interested in another slighly different and probably
+more horrible version of the same story. Don't blame me, it's the way
+how Intel decided to make this "work".
 
-Since it is on-die with the CPU there are a bunch of ways I could
-imagine Intel could make MMIO triggered swapping work that are not
-available to a true PCI-E device.
+There are a couple of options to ensure that the device will never see
+inconsistent state:
 
-Jason
+      1) Use a locked 16 byte wide operation (cpmxchg16) which is not
+         available on 32bit
+
+      2) Order the MSG entry differently in the queue storage:
+
+         u32 address_lo
+         u32 data
+         u32 address_hi
+         u32 ctrl
+
+         And then enforce an 8 byte store on 64 bit which is guaranteed
+         to be atomic vs. other CPUs and bus agents, i.e. DMA.
+
+         I said enforce because compilers are known to do stupid things.
+
+Both are fine for me and the only caveat is that the access does not go
+accross a cache line boundary. The restriction to 64bit shouldn't be a
+problem either. Running such a device on 32bit causes more problems than
+it solves :)
+
+> The spin/sleep is only needed if the update has to be synchronous, so
+> things like rebalancing could just push the rebalancing work and
+> immediately return.
+
+Interrupt migration is async anyway. An interrupt might have been sent
+to the old vector just before the new vector was written. That's already
+dealt with. The old vector is cleaned up when the first interrupt
+arrives on the new vector which is the most reliable indicator that it's
+done.
+
+In that case you can avoid issuing a command, but that needs some
+thought as well when the queue data is never reloaded. But you can mark
+the queue that affinity has changed and let the next operation on the
+queue (RX, TX, whatever) which needs to talk to the device anyway deal
+with it, i.e. set some command flag in the next operation which tells
+the queue to reload that message.
+
+The only exception is CPU hotplug, but I have an idea how to deal with
+that.
+
+Aside of that some stuff want's to be synchronous though. e.g. shutdown,
+startup.
+
+irq chips have already a mechanism in place to deal with stuff which
+cannot be handled from within the irq descriptor spinlock held and
+interrupt disabled section.
+
+The mechanism was invented to deal with interrupt chips which are
+connected to i2c, spi, etc.. The access to an interrupt chip control
+register has to queue stuff on the bus and wait for completion.
+Obviously not what you can do from interrupt disabled, raw spinlock held
+context either.
+
+So we have for most operations (except affinity setting) the concept of
+update on lock release. For these devices the interrupt chip which
+handles all lines on that controller on the slow bus has an additional
+lock, called bus lock. The core code does not know about that lock at
+all. It's managed at the irq chip side.
+
+The irqchip has two callbacks: irq_bus_lock() and irq_bus_sync_unlock().
+irq_bus_lock() is invoked before interrupts are disabled and the
+spinlock is taken and irq_bus_sync_unlock() after releasing the spinlock
+and reenabling interrupts. The "real" chip operations like mask, unmask
+etc. are operating on an chip internal state cache.
+
+For such devices irq_bus_lock() usually takes a sleepable lock (mutex)
+to protect the state cache and the update logic over the slow bus.
+
+irq_bus_sync_unlock() releases that lock, but before doing so it checks
+whether the operation has changed the state cache and if so it queues a
+command on the slow bus and waits for completion.
+
+That makes sure that the device state and the state cache are in sync
+before the next operation on a maybe different irq line on the same chip
+happens.
+
+Now for your case you might just not have irq_mask()/irq_unmask() callbacks or
+simple ones which just update the queue memory in RAM, but then you want
+irq_disable()/irq_enable() callbacks which manipulate state cache and
+then provide the irq_bus_lock() and irq_bus_sync_unlock() callbacks as
+well which do not necessarily need a lock underneath, but the unlock
+side implements the 'Queue command and wait for completion' part.
+
+Now coming back to affinity setting. I'd love to avoid adding the bus
+lock magic to those interfaces because until now they can be called and
+are called from atomic contexts. And obviously none of the devices which
+use the buslock magic support affinity setting because they all deliver
+a single interrupt to a demultiplex interrupt and that one is usually
+sitting at the CPU level where interrupt steering works.
+
+If we really can get away with atomically updating the message as
+outlined above and just let it happen at some point in the future then
+most problems are solved, except for the nastyness of CPU hotplug.
+
+But that's actually a non issue. Nothing prevents us from having an
+early 'migrate interrupts away from the outgoing CPU hotplug state'
+which runs in thread context and can therefore utilize the buslock
+mechanism. Actually I was thinking about that for other reasons already.
+
+That state would need some thought and consequently some minor changes
+to the affinity mask checks to prevent that the interrupt gets migrated
+back to the outgoing CPU before that CPU reaches offline state. Nothing
+fundamental though.
+
+Just to be clear: We really need to do that at the core level and not
+again in some dark place in a driver as that will cause state
+inconsistency and hard to debug wreckage.
+
+>> If interrupt remapping is enabled then both are trivial because then the
+>> irq chip can delegate everything to the parent chip, i.e. the remapping
+>> unit.
+>
+> I did like this notion that IRQ remapping could avoid the overhead of
+> spin/spleep. Most of the use cases we have for this will require the
+> IOMMU anyhow.
+
+You still need to support !remap scenarios I fear.
+
+And even for the remap case you need some of that bus lock magic to
+handle startup and teardown properly without the usual horrible hacks in
+the driver.
+
+If your hard^Wfirmware does the right thing then the only place you need
+to worry about the command queueing is startup and teardown and the
+extra bit for the early hotplug migration.
+
+Let me summarize what I think would be the sane solution for this:
+
+  1) Utilize atomic writes for either all 16 bytes or reorder the bytes
+     and update 8 bytes atomically which is sufficient as the wide
+     address is only used with irq remapping and the MSI message in the
+     device is never changed after startup.
+
+  2) No requirement for issuing a command for regular migration
+     operations as they have no requirements to be synchronous.
+
+     Eventually store some state to force a reload on the next regular
+     queue operation.
+
+  3) No requirement for issuing a command for mask and unmask operations.
+     The core code uses and handles lazy masking already. So if the
+     hardware causes the lazyness, so be it.
+
+  4) Issue commands for startup and teardown as they need to be
+     synchronous
+
+  5) Have an early migration state for CPU hotunplug which issues a
+     command from appropriate context. That would even allow to handle
+     queue shutdown for managed interrupts when the last CPU in the
+     managed affinity set goes down. Restart of such a managed interrupt
+     when the first CPU in an affinity set comes online again would only
+     need minor modifications of the existing code to make it work.
+     
+Thoughts?
+
+Thanks,
+
+        tglx
