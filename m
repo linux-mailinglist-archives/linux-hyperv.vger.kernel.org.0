@@ -2,56 +2,81 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F195D24ED21
-	for <lists+linux-hyperv@lfdr.de>; Sun, 23 Aug 2020 14:15:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D41A24F200
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Aug 2020 06:48:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgHWMPq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 23 Aug 2020 08:15:46 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40562 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHWMPp (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 23 Aug 2020 08:15:45 -0400
-Received: from [192.168.1.10] (cpe-74-75-124-136.maine.res.rr.com [74.75.124.136])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B0F5320B4908;
-        Sun, 23 Aug 2020 05:15:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B0F5320B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598184944;
-        bh=W6OdOYYk3KX/UrKHpyx/jL6lQ1p+oI5w9nfU0wBp9mM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=h5QfkoZrEHMl3gJ1brQOQewcz31P7zjXa95lhSYqKLvRkDJqKvCISAtA9kYlvFPgu
-         IAROShzcT9K1Pz4g+N4TbikFWDHLVOc+3MU6dNVeE8A9F/Etqka/IiPEfb6ULwI3Fg
-         C9kjf98gi4MdA/woNR9yOpJTq5sT3vI/artemBRw=
-Subject: Re: [PATCH v2] hv_utils: drain the timesync packets on
- onchannelcallback
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        id S1725535AbgHXEsy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 24 Aug 2020 00:48:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36320 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbgHXEsx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 24 Aug 2020 00:48:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 33352AAC7;
+        Mon, 24 Aug 2020 04:49:21 +0000 (UTC)
+Subject: Re: [patch RFC 22/38] x86/xen: Make xen_msi_init() static and rename
+ it to xen_hvm_msi_init()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-pci@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200821152849.99517-1-viremana@linux.microsoft.com>
- <20200822085504.ryowfhild67ktu57@liuwe-devbox-debian-v2>
-From:   Vineeth Pillai <viremana@linux.microsoft.com>
-Message-ID: <4780afef-76ab-d4c6-5d9f-8e49875419b4@linux.microsoft.com>
-Date:   Sun, 23 Aug 2020 08:15:41 -0400
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200821002424.119492231@linutronix.de>
+ <20200821002947.464203710@linutronix.de>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <1af3d4a2-0f73-4e58-0e23-ac667d2c9141@suse.com>
+Date:   Mon, 24 Aug 2020 06:48:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200822085504.ryowfhild67ktu57@liuwe-devbox-debian-v2>
+In-Reply-To: <20200821002947.464203710@linutronix.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On 21.08.20 02:24, Thomas Gleixner wrote:
+> The only user is in the same file and the name is too generic because this
+> function is only ever used for HVM domains.
+> 
+> Signed-off-by: Thomas Gleixner<tglx@linutronix.de>
+> Cc: Konrad Rzeszutek Wilk<konrad.wilk@oracle.com>
+> Cc:linux-pci@vger.kernel.org
+> Cc:xen-devel@lists.xenproject.org
+> Cc: Juergen Gross<jgross@suse.com>
+> Cc: Boris Ostrovsky<boris.ostrovsky@oracle.com>
+> Cc: Stefano Stabellini<sstabellini@kernel.org>
 
-> Typo "packaet".
->
-> No need to resend. I can fix this while committing this patch.
-
-Thanks Wei.
+Reviewed-by: Juergen Gross<jgross@suse.com>
 
 
+Juergen
