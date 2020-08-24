@@ -2,111 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C07325088A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Aug 2020 20:54:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 954F6250ABB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Aug 2020 23:21:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgHXSyt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 24 Aug 2020 14:54:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:44979 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgHXSys (ORCPT
+        id S1727869AbgHXVV0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 24 Aug 2020 17:21:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgHXVVX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:54:48 -0400
-Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MoNMu-1kz3l80hKq-00opYx; Mon, 24 Aug 2020 20:54:46 +0200
-Received: by mail-qt1-f173.google.com with SMTP id 92so1608532qtb.6;
-        Mon, 24 Aug 2020 11:54:45 -0700 (PDT)
-X-Gm-Message-State: AOAM530Sw9XAS6eh/6Bc/mxp3dT9jsfY8uANLPNkEbpJC6LxRYGMsNgH
-        eaACAsCqP/1pYI7ylz8TGwT+MfUN2eSga6sDrv8=
-X-Google-Smtp-Source: ABdhPJxWBKCBtJZg7nLG3vXIdZFpSx+qr8JPd8D5R08h5RqUSqbkH8qTSGrOV5rDkZoZ134R/OrQyj0lwj9Wx9vY6dY=
-X-Received: by 2002:aed:33e7:: with SMTP id v94mr5942793qtd.18.1598295284718;
- Mon, 24 Aug 2020 11:54:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com> <1598287583-71762-6-git-send-email-mikelley@microsoft.com>
-In-Reply-To: <1598287583-71762-6-git-send-email-mikelley@microsoft.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 24 Aug 2020 20:54:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1hDBVembCd+6=ENUWYFz=72JBTFMrKYZ2aFd+_Q04F+g@mail.gmail.com>
-Message-ID: <CAK8P3a1hDBVembCd+6=ENUWYFz=72JBTFMrKYZ2aFd+_Q04F+g@mail.gmail.com>
-Subject: Re: [PATCH v7 05/10] arm64: hyperv: Add interrupt handlers for VMbus
- and stimer
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, wei.liu@kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Mon, 24 Aug 2020 17:21:23 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AEFC061574;
+        Mon, 24 Aug 2020 14:21:22 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598304080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X6NJ+kPKGl5Nf3jE9xklx6hH03TKpnofr8g96HAw8Ck=;
+        b=Pv4WTzw87H6NCx71gJqPiRampyZmRAAfWJrVk0KJysnfqzFan/ccSk8LSOb7qVVuPkbB8z
+        tGoDrp+2ju8a/cTr5MMPgifcmaB8n9M75wctO+lZ606ZWdfd053SzbNlGzcK9jw30ur2mH
+        TDbLQHXk1Dh9ueKmK3Go6nRfjv8zoHatFiZuH0z15JhWa7zd1dbxSJs0yBdpWRdSBTq9V2
+        X9XEPWc+RvXUBns4bi7L9OdG3sThW5qDimMJb9E+VvYLGZjxixChT1oUzdf/dlLTqSoUaU
+        EspLZ6f4CF2x6Rx5EjvdF4GfJ2iyzgouZQbm5KkIt6/C6cpdCkAuu4GovEYy3Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598304080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X6NJ+kPKGl5Nf3jE9xklx6hH03TKpnofr8g96HAw8Ck=;
+        b=cN6eYBnyeUaRAodJ5n9Kq1Of1A3DDOOMFul6xvKSp6P4/ZL9J+JfpPUvxxWGcEA5BgckeU
+        I2Edk8IuxDhtxSCg==
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:9q/x3Ahld8KtMCc0YtDFU7o7FSwuMFmzSpqjkOeeBGCz4uhJLvj
- rIOAU8u1JrRton9OJG4K8PrJCVCmcxxLdAD53+JI9LLX344ZgQkn0l5A8RzwGc3IqFlxIY7
- ZRcKLV8DzJ9GaouXST/HIyVj2t+r0orVWqFVizQP5d8YtnU6o+I1m2BJonF20knYQTyTUis
- I0yqbkQHACw6Rut5Cre6A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f0EUG/PVpFw=:r5JmOnE1KS9QdJf9FaRLqr
- t2cv6uBFRjHM0tcA0sj3PNSgodKzc5y4agqj8piVvVzpJUgdfpaOioDu+xICSja3O7eNL8MRI
- q6qgCQbeWGgyJ2NmbPwcDSYyYJRtqLw0GzFiueubgTWPCMRD1zJUzvsydwhYCRftAPTbp7hcj
- TbSrcPOFDszW3BuNlXPDvTvOY4ZsPlT8CWDNd26NdokkBzRcuemMcAVZ4Kx48yIfbKlBJQu1s
- dgbsTOfNYm+Vc0aGD6pL8n8RTpd6KdJhBbUl0bUnrmudr/ENR/xUTiltkcknD/OyBx/sleFDU
- lmhWrYHMm8+JaY3XyzR+MSNEDGbmiPQi1xyb7MfM2LrvFL53HYxaRJdjEb92H9/8rBi4dx450
- HPAfMlQbALoVDbkBltutf4sPQ2ryFdZdEhNpOpnu54TsEOKBepj50idC4MwNuYEJDLUf8n465
- yVKZmnBA261hima0ocs+0+loUnuiEeJbB+FMx1SnidPeqtgw3IOicGlSssXbUwXll1Y/rb0cs
- sZH7B4ExpoX8x+jxgzEcrfH4DslffxZmNBzHgnKk5vX9VP7EwgUbo2llFQaEkKGioUYmNzXjW
- Z/39OyOm87aWqjKM8qHfsUWKXNAttay3XiEX6bCUUAw5vsLKQnG3f01B4vWZwZmJTBiOy0yEx
- yvKZ9nLwE253wPtuQPRyTIACQe//r9IkD4DwRE6syaRmTzBOXOg2817xqBXoMnXhKZ+DGZmsI
- B00FnBqsmnC2r+ilUz8PCDfozIPJV+tdhbU/BCuau2oit4o5mGxFNtUzk4Be1MT0S0V8LqO4H
- DSsU9fVUl4gG2a65SE7yAuZr6y8pCm9n/f5cqeSFUgMXHbRj4FlBEvJSZm1yuwK5YphzKFMbR
- RFfJaRODz8KI0L+71ehCLEU7SkCeUDrNxeSNL/Z0z6G09zAHSfuhEL93hQkCiUVWpt912cEkO
- L06Tt0AaI41RHMR1sCfDc7eA0W3WehJXkAiwmkudgf6PE6Cy/kyeN
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch RFC 24/38] x86/xen: Consolidate XEN-MSI init
+In-Reply-To: <5caec213-8f56-9f12-34db-a29de8326f95@suse.com>
+References: <20200821002424.119492231@linutronix.de> <20200821002947.667887608@linutronix.de> <5caec213-8f56-9f12-34db-a29de8326f95@suse.com>
+Date:   Mon, 24 Aug 2020 23:21:19 +0200
+Message-ID: <87tuwr68q8.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 6:46 PM Michael Kelley <mikelley@microsoft.com> wrote:
+On Mon, Aug 24 2020 at 06:59, J=C3=BCrgen Gro=C3=9F wrote:
+> On 21.08.20 02:24, Thomas Gleixner wrote:
+>> +static __init void xen_setup_pci_msi(void)
+>> +{
+>> +	if (xen_initial_domain()) {
+>> +		x86_msi.setup_msi_irqs =3D xen_initdom_setup_msi_irqs;
+>> +		x86_msi.teardown_msi_irqs =3D xen_teardown_msi_irqs;
+>> +		x86_msi.restore_msi_irqs =3D xen_initdom_restore_msi_irqs;
+>> +		pci_msi_ignore_mask =3D 1;
 >
-> Add ARM64-specific code to set up and handle the interrupts
-> generated by Hyper-V for VMbus messages and for stimer expiration.
+> This is wrong, as a PVH initial domain shouldn't do the pv settings.
 >
-> This code is architecture dependent and is mostly driven by
-> architecture independent code in the VMbus driver and the
-> Hyper-V timer clocksource driver.
+> The "if (xen_initial_domain())" should be inside the pv case, like:
 >
-> This code is built only when CONFIG_HYPERV is enabled.
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  arch/arm64/hyperv/Makefile        |   2 +-
->  arch/arm64/hyperv/mshyperv.c      | 133 ++++++++++++++++++++++++++++++++++++++
->  arch/arm64/include/asm/mshyperv.h |  70 ++++++++++++++++++++
+> if (xen_pv_domain()) {
+> 	if (xen_initial_domain()) {
+> 		...
+> 	} else {
+> 		...
+> 	}
+> } else if (xen_hvm_domain()) {
+> 	...
 
-I still have the feeling that most of the code in arch/arm64/hyperv/ is
-misplaced: the only callers are loadable modules in drivers/hv/, and the
-code is not really part of the architecture but part of the platform.
+I still think it does the right thing depending on the place it is
+called from, but even if so, it's completely unreadable gunk. I'll fix
+that proper.
 
-For the arm64 architecture, we have a rule that platform specific
-code belongs into device drivers rather than into the architecture
-code as we used to do in the linux-2.6 days for arch/arm/.
+Thanks,
 
-I don't see hyperv being virtual rather than an SoC as a differentiator
-either; it's still just one of many platforms. If you look at
-arch/arm64/xen/, you can see that they have managed to get
-to a much simpler implementation in comparison.
-
-I'm not sure what the correct solution should be, but what I'd try to
-do here is to move every function that just considers the platform
-rather than the architecture somewhere into drivers/hv where it
-can be linked into the same modules as the existing files when
-building for arm64, while trying to keep architecture specific code
-in the header file where it can be included from those modules.
-
-      Arnd
+        tglx
