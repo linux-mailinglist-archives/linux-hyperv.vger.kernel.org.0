@@ -2,44 +2,32 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4C602515B6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Aug 2020 11:52:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FDC925217E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Aug 2020 22:03:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgHYJwB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Aug 2020 05:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbgHYJwB (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:52:01 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E4AC061574;
-        Tue, 25 Aug 2020 02:52:00 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598349119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qi88rJ2mAeMyhee0eT9kDZfffU9Q0nWkBLlAEntSw8w=;
-        b=saPe2SMHs4fxaHPtIfmZINCVtmade/IUdScDTrTE56bKhbWhWWPmlrhyuwQwbPnFdv02n1
-        qRKHY6+Fao2onQFOAz/d63P6+2VnSYMbUC+pcft0s0SMwT2vV9us/1npGja2X+2tYSpscB
-        iPJsYuS2FMf/1nMuwC8vtsuYf/y0bjbBwKrk2/0oTU5egQm1Ek/7EUMyQDShnlbtAcdbLe
-        JE09lOMIrym7gVQeJa9rILtA3RsQfKKlIKniu0Z45R81ceeja+uMDPulnSnTEjTA49o3W7
-        SMaqJJyWq0AnhRrTNSiWKeKyPcK0S21cZa7G3cB+Y0b9eRpBKdLEAoz+GdDGSg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598349119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qi88rJ2mAeMyhee0eT9kDZfffU9Q0nWkBLlAEntSw8w=;
-        b=OlmbOjhDdhkNmF8xd3M7JINOojGOBGj4UhpScwvT1dHOdNPkfP2dB8Acep6NLHMEEgMoKl
-        YoToi1lJLBSp6rDQ==
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        id S1726158AbgHYUDd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 25 Aug 2020 16:03:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgHYUDb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:03:31 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADB662072D;
+        Tue, 25 Aug 2020 20:03:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598385811;
+        bh=bLQ/6Ns9xbbW32dBksiiwUFLCmw1usZgfNu6wzOIRRA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=l4bpkPmXM7023mZgcud7LiuXiDySo6mIf1kjucmaMFMfdwWuxCgjMXMMeZWTQlTNZ
+         S8ccFLX7/o+uLWvZssFvEMAlrztDO4R5uWWMK5/l+J5KEs2v6I2ftwQ6ue1mdzaRhM
+         G1nZBjJwkbjF80aF+i2KZjX8PiAMGCDb4+gafrqQ=
+Date:   Tue, 25 Aug 2020 15:03:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
         iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Jon Derrick <jonathan.derrick@intel.com>,
@@ -49,11 +37,11 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Steve Wahl <steve.wahl@hpe.com>,
         Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Russ Anderson <rja@hpe.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
@@ -67,28 +55,100 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 24/38] x86/xen: Consolidate XEN-MSI init
-In-Reply-To: <fb4e3d13-18c8-a425-19a8-975fda80d411@suse.com>
-References: <20200821002424.119492231@linutronix.de> <20200821002947.667887608@linutronix.de> <5caec213-8f56-9f12-34db-a29de8326f95@suse.com> <87tuwr68q8.fsf@nanos.tec.linutronix.de> <fb4e3d13-18c8-a425-19a8-975fda80d411@suse.com>
-Date:   Tue, 25 Aug 2020 11:51:58 +0200
-Message-ID: <87d03f59z5.fsf@nanos.tec.linutronix.de>
+Subject: Re: [patch RFC 13/38] PCI: MSI: Rework pci_msi_domain_calc_hwirq()
+Message-ID: <20200825200329.GA1923406@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821002946.594509001@linutronix.de>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 25 2020 at 06:21, J=C3=BCrgen Gro=C3=9F wrote:
-> On 24.08.20 23:21, Thomas Gleixner wrote:
->> I still think it does the right thing depending on the place it is
->> called from, but even if so, it's completely unreadable gunk. I'll fix
->> that proper.
->
-> The main issue is that xen_initial_domain() and xen_pv_domain() are
-> orthogonal to each other. So xen_initial_domain() can either be true
-> for xen_pv_domain() (the "classic" pv dom0) or for xen_hvm_domain()
-> (the new PVH dom0).
+On Fri, Aug 21, 2020 at 02:24:37AM +0200, Thomas Gleixner wrote:
+> Retrieve the PCI device from the msi descriptor instead of doing so at the
+> call sites.
 
-Fair enough. My limited XENology striked again.
+I'd like it *better* with "PCI/MSI: " in the subject (to match history
+and other patches in this series) and "MSI" here in the commit log,
+but nice cleanup and:
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Minor comments below.
+
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-pci@vger.kernel.org
+> ---
+>  arch/x86/kernel/apic/msi.c |    2 +-
+>  drivers/pci/msi.c          |   13 ++++++-------
+>  include/linux/msi.h        |    3 +--
+>  3 files changed, 8 insertions(+), 10 deletions(-)
+> 
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -232,7 +232,7 @@ EXPORT_SYMBOL_GPL(pci_msi_prepare);
+>  
+>  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+>  {
+> -	arg->msi_hwirq = pci_msi_domain_calc_hwirq(arg->msi_dev, desc);
+> +	arg->msi_hwirq = pci_msi_domain_calc_hwirq(desc);
+
+I guess it's safe to assume that "arg->msi_dev ==
+msi_desc_to_pci_dev(desc)"?  I didn't try to verify that.
+
+>  }
+>  EXPORT_SYMBOL_GPL(pci_msi_set_desc);
+>  
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -1346,17 +1346,17 @@ void pci_msi_domain_write_msg(struct irq
+>  
+>  /**
+>   * pci_msi_domain_calc_hwirq - Generate a unique ID for an MSI source
+> - * @dev:	Pointer to the PCI device
+>   * @desc:	Pointer to the MSI descriptor
+>   *
+>   * The ID number is only used within the irqdomain.
+>   */
+> -irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
+> -					  struct msi_desc *desc)
+> +irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
+>  {
+> +	struct pci_dev *pdev = msi_desc_to_pci_dev(desc);
+
+If you named this "struct pci_dev *dev" (not "pdev"), the diff would
+be a little smaller and it would match other usage in the file.
+
+>  	return (irq_hw_number_t)desc->msi_attrib.entry_nr |
+> -		pci_dev_id(dev) << 11 |
+> -		(pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
+> +		pci_dev_id(pdev) << 11 |
+> +		(pci_domain_nr(pdev->bus) & 0xFFFFFFFF) << 27;
+>  }
+>  
+>  static inline bool pci_msi_desc_is_multi_msi(struct msi_desc *desc)
+> @@ -1406,8 +1406,7 @@ static void pci_msi_domain_set_desc(msi_
+>  				    struct msi_desc *desc)
+>  {
+>  	arg->desc = desc;
+> -	arg->hwirq = pci_msi_domain_calc_hwirq(msi_desc_to_pci_dev(desc),
+> -					       desc);
+> +	arg->hwirq = pci_msi_domain_calc_hwirq(desc);
+>  }
+>  #else
+>  #define pci_msi_domain_set_desc		NULL
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -369,8 +369,7 @@ void pci_msi_domain_write_msg(struct irq
+>  struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
+>  					     struct msi_domain_info *info,
+>  					     struct irq_domain *parent);
+> -irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
+> -					  struct msi_desc *desc);
+> +irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc);
+>  int pci_msi_domain_check_cap(struct irq_domain *domain,
+>  			     struct msi_domain_info *info, struct device *dev);
+>  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+> 
