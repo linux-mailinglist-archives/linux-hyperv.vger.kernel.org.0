@@ -2,99 +2,93 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 294FE251561
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Aug 2020 11:30:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C602515B6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Aug 2020 11:52:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgHYJa0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Aug 2020 05:30:26 -0400
-Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:33956 "EHLO
-        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728543AbgHYJa0 (ORCPT
+        id S1729456AbgHYJwB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 25 Aug 2020 05:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbgHYJwB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:30:26 -0400
-X-Greylist: delayed 2596 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Aug 2020 05:30:23 EDT
-Received: from cpc98990-stkp12-2-0-cust216.10-2.cable.virginm.net ([86.26.12.217] helo=[192.168.0.10])
-        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1kAUbe-0002Te-3f; Tue, 25 Aug 2020 09:47:02 +0100
-Subject: Re: [PATCH v7 10/10] Drivers: hv: Enable Hyper-V code to be built on
- ARM64
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Tue, 25 Aug 2020 05:52:01 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E4AC061574;
+        Tue, 25 Aug 2020 02:52:00 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598349119;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qi88rJ2mAeMyhee0eT9kDZfffU9Q0nWkBLlAEntSw8w=;
+        b=saPe2SMHs4fxaHPtIfmZINCVtmade/IUdScDTrTE56bKhbWhWWPmlrhyuwQwbPnFdv02n1
+        qRKHY6+Fao2onQFOAz/d63P6+2VnSYMbUC+pcft0s0SMwT2vV9us/1npGja2X+2tYSpscB
+        iPJsYuS2FMf/1nMuwC8vtsuYf/y0bjbBwKrk2/0oTU5egQm1Ek/7EUMyQDShnlbtAcdbLe
+        JE09lOMIrym7gVQeJa9rILtA3RsQfKKlIKniu0Z45R81ceeja+uMDPulnSnTEjTA49o3W7
+        SMaqJJyWq0AnhRrTNSiWKeKyPcK0S21cZa7G3cB+Y0b9eRpBKdLEAoz+GdDGSg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598349119;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qi88rJ2mAeMyhee0eT9kDZfffU9Q0nWkBLlAEntSw8w=;
+        b=OlmbOjhDdhkNmF8xd3M7JINOojGOBGj4UhpScwvT1dHOdNPkfP2dB8Acep6NLHMEEgMoKl
+        YoToi1lJLBSp6rDQ==
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, wei.liu@kernel.org,
-        vkuznets <vkuznets@redhat.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
- <1598287583-71762-11-git-send-email-mikelley@microsoft.com>
- <CAMj1kXHKDD5+Na7t=bbkqo2OaiidmnJg+RqermV-2=exj-P77A@mail.gmail.com>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <5e8af3c3-fe08-0a56-fe05-0527a6cae0dd@codethink.co.uk>
-Date:   Tue, 25 Aug 2020 09:47:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch RFC 24/38] x86/xen: Consolidate XEN-MSI init
+In-Reply-To: <fb4e3d13-18c8-a425-19a8-975fda80d411@suse.com>
+References: <20200821002424.119492231@linutronix.de> <20200821002947.667887608@linutronix.de> <5caec213-8f56-9f12-34db-a29de8326f95@suse.com> <87tuwr68q8.fsf@nanos.tec.linutronix.de> <fb4e3d13-18c8-a425-19a8-975fda80d411@suse.com>
+Date:   Tue, 25 Aug 2020 11:51:58 +0200
+Message-ID: <87d03f59z5.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXHKDD5+Na7t=bbkqo2OaiidmnJg+RqermV-2=exj-P77A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 24/08/2020 18:24, Ard Biesheuvel wrote:
-> On Mon, 24 Aug 2020 at 18:48, Michael Kelley <mikelley@microsoft.com> wrote:
->>
->> Update drivers/hv/Kconfig so CONFIG_HYPERV can be selected on
->> ARM64, causing the Hyper-V specific code to be built.
->>
->> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
->> ---
->>   drivers/hv/Kconfig | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
->> index 79e5356..1113e49 100644
->> --- a/drivers/hv/Kconfig
->> +++ b/drivers/hv/Kconfig
->> @@ -4,7 +4,8 @@ menu "Microsoft Hyper-V guest support"
->>
->>   config HYPERV
->>          tristate "Microsoft Hyper-V client drivers"
->> -       depends on X86 && ACPI && X86_LOCAL_APIC && HYPERVISOR_GUEST
->> +       depends on ACPI && \
->> +                       ((X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) || ARM64)
->>          select PARAVIRT
->>          select X86_HV_CALLBACK_VECTOR
->>          help
-> 
-> Given the comment in a previous patch
-> 
-> +/*
-> + * All data structures defined in the TLFS that are shared between Hyper-V
-> + * and a guest VM use Little Endian byte ordering.  This matches the default
-> + * byte ordering of Linux running on ARM64, so no special handling is required.
-> + */
-> 
-> shouldn't this depend on !CONFIG_CPU_BIG_ENDIAN ?
+On Tue, Aug 25 2020 at 06:21, J=C3=BCrgen Gro=C3=9F wrote:
+> On 24.08.20 23:21, Thomas Gleixner wrote:
+>> I still think it does the right thing depending on the place it is
+>> called from, but even if so, it's completely unreadable gunk. I'll fix
+>> that proper.
+>
+> The main issue is that xen_initial_domain() and xen_pv_domain() are
+> orthogonal to each other. So xen_initial_domain() can either be true
+> for xen_pv_domain() (the "classic" pv dom0) or for xen_hvm_domain()
+> (the new PVH dom0).
 
-or mark the data __le and have the appropriate accessor functions do
-the swapping.
-
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+Fair enough. My limited XENology striked again.
