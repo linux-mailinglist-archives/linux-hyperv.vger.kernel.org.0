@@ -2,37 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8923125393D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 22:43:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2A27253951
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 22:47:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgHZUnl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Aug 2020 16:43:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33278 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbgHZUnk (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:43:40 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598474617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lj+HCAMB66c34Pt5/8qmaZU+5YodJ4K21RaNchn7Bnc=;
-        b=gcH0soDHT7m1DhfNC6QQbqPGhh4sNSGm+9HSqTNzBlS+x8Z2m9573FZdMFQ3rSMEy5TjOq
-        uU5srRzQ57ZK7h7gre4f2FSv4hNOipvH70zBr6ezrez6KIHQWB2c4Jxicem4nd/YollyTg
-        HBaSP6ZU4VhZqvC3/BQvtKZzG9KUMJ+8PmO0gFJR3LK4HH9WPJVruFTwpCEqBu4Ccpn0iU
-        J5fuAhIORUJ6LjXSEilyVzyJ0JORvLSeJT7AwOqNQvowv2+x5spObQm7K4bA8aBThzVELh
-        g+dVfbSpWNtafkPkhFcVYcuzNQ8Aw1lGxua3yd3hXafDPdkQUX9TxKBSOjfEoQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598474617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lj+HCAMB66c34Pt5/8qmaZU+5YodJ4K21RaNchn7Bnc=;
-        b=3FfX+fa7xCYcsjOKRE6odcrU12DlAns0QXGcNpm0K0uqtnqkEn+z0OyLuyyMffuAKPHcop
-        nWo4UHb9iLwwiHCw==
-To:     Marc Zyngier <maz@kernel.org>
+        id S1726940AbgHZUry (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 16:47:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726609AbgHZUrv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:47:51 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E4FD2078A;
+        Wed, 26 Aug 2020 20:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598474870;
+        bh=i8Nzg2oejYholt+EiwM1o/VjUvfdhq04DttU2sfhjNU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZQ8obdSCSBUqtvuKshu3hHdexmJgOE2MHg4ZG2kHAAH1QoTRT//POD+SQxMFAixM9
+         5sAVsrqgoulIwzX0JrKCEJkKdy0k0eRUp2IEH/3NDSF7/HMaVHW+UJxUCeM64EWpfl
+         bkl0TcDNFWpsJTHJjuy5rUu7QMbtbeuxim3T/L/A=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB2Ki-006yOu-Ey; Wed, 26 Aug 2020 21:47:48 +0100
+Date:   Wed, 26 Aug 2020 21:47:46 +0100
+Message-ID: <874kop2ky5.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Joerg Roedel <joro@8bytes.org>,
         iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
@@ -61,29 +60,61 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 19/46] x86/msi: Use generic MSI domain ops
-In-Reply-To: <878se12m5n.wl-maz@kernel.org>
-References: <20200826111628.794979401@linutronix.de> <20200826112332.564274859@linutronix.de> <878se12m5n.wl-maz@kernel.org>
-Date:   Wed, 26 Aug 2020 22:43:36 +0200
-Message-ID: <87tuwpt9xj.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [patch V2 24/46] PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
+In-Reply-To: <20200826112333.047315047@linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112333.047315047@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 26 2020 at 21:21, Marc Zyngier wrote:
-> On Wed, 26 Aug 2020 12:16:47 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> -void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
->> -{
->> -	arg->desc = desc;
->> -	arg->hwirq = pci_msi_domain_calc_hwirq(desc);
->> -}
->> -EXPORT_SYMBOL_GPL(pci_msi_set_desc);
->
-> I think that at this stage, pci_msi_domain_calc_hwirq() can be made
-> static, as it was only ever exported for this call site. Nice cleanup!
+On Wed, 26 Aug 2020 12:16:52 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> Devices on the VMD bus use their own MSI irq domain, but it is not
+> distinguishable from regular PCI/MSI irq domains. This is required
+> to exclude VMD devices from getting the irq domain pointer set by
+> interrupt remapping.
+> 
+> Override the default bus token.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/controller/vmd.c |    6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -579,6 +579,12 @@ static int vmd_enable_domain(struct vmd_
+>  		return -ENODEV;
+>  	}
+>  
+> +	/*
+> +	 * Override the irq domain bus token so the domain can be distinguished
+> +	 * from a regular PCI/MSI domain.
+> +	 */
+> +	irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
+> +
 
-Doh indeed. Let me fix that.
+One day, we'll be able to set the token at domain creation time. In
+the meantime,
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
