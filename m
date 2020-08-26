@@ -2,56 +2,298 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56689253738
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 20:34:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF6F92537D3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 21:06:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgHZSeT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Aug 2020 14:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41710 "EHLO mail.kernel.org"
+        id S1726767AbgHZTG1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 15:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbgHZSeQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:34:16 -0400
-Subject: Re: [GIT PULL] Hyper-V fixes for 5.9-rc3
+        id S1726753AbgHZTG0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:06:26 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A6742078A;
+        Wed, 26 Aug 2020 19:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598466856;
-        bh=Kn9WaOAKN7gXslPeBiPkoNqVfs7VTSHXV4/e5nBFjyI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Z9XIbgaVkfXWNe/BEoZsNeaIYzMzdqf4uZ3oD0dttVfK01Gol2aI4LW6cybrFeYin
-         8w1GsEslf6o2L+sLRDi+3UoEr+rrnCo9ByzkyEDFeo4MPgVbaGfhken3W/VM6xKkbY
-         I1xJqyu1iUMjCU4rcaGO9dnyBj+Dgs/c8C9E3LDo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200826134111.465ose3oyoyx6h7b@liuwe-devbox-debian-v2>
-References: <20200826134111.465ose3oyoyx6h7b@liuwe-devbox-debian-v2>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200826134111.465ose3oyoyx6h7b@liuwe-devbox-debian-v2>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
-X-PR-Tracked-Commit-Id: b46b4a8a57c377b72a98c7930a9f6969d2d4784e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 51c4518ab77c6d3e917675891a9a529daabfaef1
-Message-Id: <159846685643.8056.6413043000779754006.pr-tracker-bot@kernel.org>
-Date:   Wed, 26 Aug 2020 18:34:16 +0000
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
+        s=default; t=1598468785;
+        bh=n9q5XnsmwJPHoti6Hl+rb0l+Xf98BNVH6to1jUHj6yc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=opr9/0FxQBBikjSs9qvLnh5D+/RVVSvWAmLeMrEmhRxfThk2nkWkN0SDGPw6dQQmD
+         LMK1G32Usv7fmG89eb3GzLtVReTAqtth/BnKbqcBmKUq2BonHAo3mES8CWo+9RNEZ8
+         SD25iA8fMN719bNzuBoQEL/K8pjlGDnpAg95Bn/w=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB0kZ-006wum-HX; Wed, 26 Aug 2020 20:06:23 +0100
+Date:   Wed, 26 Aug 2020 20:06:17 +0100
+Message-ID: <87blix2pna.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 29/46] irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
+In-Reply-To: <20200826112333.526797548@linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112333.526797548@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The pull request you sent on Wed, 26 Aug 2020 13:41:11 +0000:
+On Wed, 26 Aug 2020 12:16:57 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> To support MSI irq domains which do not fit at all into the regular MSI
+> irqdomain scheme, like the XEN MSI interrupt management for PV/HVM/DOM0,
+> it's necessary to allow to override the alloc/free implementation.
+> 
+> This is a preperatory step to switch X86 away from arch_*_msi_irqs() and
+> store the irq domain pointer right in struct device.
+> 
+> No functional change for existing MSI irq domain users.
+> 
+> Aside of the evil XEN wrapper this is also useful for special MSI domains
+> which need to do extra alloc/free work before/after calling the generic
+> core function. Work like allocating/freeing MSI descriptors, MSI storage
+> space etc.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> ---
+>  include/linux/msi.h |   27 ++++++++++++++++++++
+>  kernel/irq/msi.c    |   70 +++++++++++++++++++++++++++++++++++-----------------
+>  2 files changed, 75 insertions(+), 22 deletions(-)
+> 
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -241,6 +241,10 @@ struct msi_domain_info;
+>   * @msi_finish:		Optional callback to finalize the allocation
+>   * @set_desc:		Set the msi descriptor for an interrupt
+>   * @handle_error:	Optional error handler if the allocation fails
+> + * @domain_alloc_irqs:	Optional function to override the default allocation
+> + *			function.
+> + * @domain_free_irqs:	Optional function to override the default free
+> + *			function.
+>   *
+>   * @get_hwirq, @msi_init and @msi_free are callbacks used by
+>   * msi_create_irq_domain() and related interfaces
+> @@ -248,6 +252,22 @@ struct msi_domain_info;
+>   * @msi_check, @msi_prepare, @msi_finish, @set_desc and @handle_error
+>   * are callbacks used by msi_domain_alloc_irqs() and related
+>   * interfaces which are based on msi_desc.
+> + *
+> + * @domain_alloc_irqs, @domain_free_irqs can be used to override the
+> + * default allocation/free functions (__msi_domain_alloc/free_irqs). This
+> + * is initially for a wrapper around XENs seperate MSI universe which can't
+> + * be wrapped into the regular irq domains concepts by mere mortals.  This
+> + * allows to universally use msi_domain_alloc/free_irqs without having to
+> + * special case XEN all over the place.
+> + *
+> + * Contrary to other operations @domain_alloc_irqs and @domain_free_irqs
+> + * are set to the default implementation if NULL and even when
+> + * MSI_FLAG_USE_DEF_DOM_OPS is not set to avoid breaking existing users and
+> + * because these callbacks are obviously mandatory.
+> + *
+> + * This is NOT meant to be abused, but it can be useful to build wrappers
+> + * for specialized MSI irq domains which need extra work before and after
+> + * calling __msi_domain_alloc_irqs()/__msi_domain_free_irqs().
+>   */
+>  struct msi_domain_ops {
+>  	irq_hw_number_t	(*get_hwirq)(struct msi_domain_info *info,
+> @@ -270,6 +290,10 @@ struct msi_domain_ops {
+>  				    struct msi_desc *desc);
+>  	int		(*handle_error)(struct irq_domain *domain,
+>  					struct msi_desc *desc, int error);
+> +	int		(*domain_alloc_irqs)(struct irq_domain *domain,
+> +					     struct device *dev, int nvec);
+> +	void		(*domain_free_irqs)(struct irq_domain *domain,
+> +					    struct device *dev);
+>  };
+>  
+>  /**
+> @@ -327,8 +351,11 @@ int msi_domain_set_affinity(struct irq_d
+>  struct irq_domain *msi_create_irq_domain(struct fwnode_handle *fwnode,
+>  					 struct msi_domain_info *info,
+>  					 struct irq_domain *parent);
+> +int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> +			    int nvec);
+>  int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>  			  int nvec);
+> +void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
+>  void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
+>  struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
+>  
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -229,11 +229,13 @@ static int msi_domain_ops_check(struct i
+>  }
+>  
+>  static struct msi_domain_ops msi_domain_ops_default = {
+> -	.get_hwirq	= msi_domain_ops_get_hwirq,
+> -	.msi_init	= msi_domain_ops_init,
+> -	.msi_check	= msi_domain_ops_check,
+> -	.msi_prepare	= msi_domain_ops_prepare,
+> -	.set_desc	= msi_domain_ops_set_desc,
+> +	.get_hwirq		= msi_domain_ops_get_hwirq,
+> +	.msi_init		= msi_domain_ops_init,
+> +	.msi_check		= msi_domain_ops_check,
+> +	.msi_prepare		= msi_domain_ops_prepare,
+> +	.set_desc		= msi_domain_ops_set_desc,
+> +	.domain_alloc_irqs	= __msi_domain_alloc_irqs,
+> +	.domain_free_irqs	= __msi_domain_free_irqs,
+>  };
+>  
+>  static void msi_domain_update_dom_ops(struct msi_domain_info *info)
+> @@ -245,6 +247,14 @@ static void msi_domain_update_dom_ops(st
+>  		return;
+>  	}
+>  
+> +	if (ops->domain_alloc_irqs == NULL)
+> +		ops->domain_alloc_irqs = msi_domain_ops_default.domain_alloc_irqs;
+> +	if (ops->domain_free_irqs == NULL)
+> +		ops->domain_free_irqs = msi_domain_ops_default.domain_free_irqs;
+> +
+> +	if (!(info->flags & MSI_FLAG_USE_DEF_DOM_OPS))
+> +		return;
+> +
+>  	if (ops->get_hwirq == NULL)
+>  		ops->get_hwirq = msi_domain_ops_default.get_hwirq;
+>  	if (ops->msi_init == NULL)
+> @@ -278,8 +288,7 @@ struct irq_domain *msi_create_irq_domain
+>  {
+>  	struct irq_domain *domain;
+>  
+> -	if (info->flags & MSI_FLAG_USE_DEF_DOM_OPS)
+> -		msi_domain_update_dom_ops(info);
+> +	msi_domain_update_dom_ops(info);
+>  	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
+>  		msi_domain_update_chip_ops(info);
+>  
+> @@ -386,17 +395,8 @@ static bool msi_check_reservation_mode(s
+>  	return desc->msi_attrib.is_msix || desc->msi_attrib.maskbit;
+>  }
+>  
+> -/**
+> - * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+> - * @domain:	The domain to allocate from
+> - * @dev:	Pointer to device struct of the device for which the interrupts
+> - *		are allocated
+> - * @nvec:	The number of interrupts to allocate
+> - *
+> - * Returns 0 on success or an error code.
+> - */
+> -int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> -			  int nvec)
+> +int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> +			    int nvec)
+>  {
+>  	struct msi_domain_info *info = domain->host_data;
+>  	struct msi_domain_ops *ops = info->ops;
+> @@ -490,12 +490,24 @@ int msi_domain_alloc_irqs(struct irq_dom
+>  }
+>  
+>  /**
+> - * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
+> - * @domain:	The domain to managing the interrupts
+> + * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+> + * @domain:	The domain to allocate from
+>   * @dev:	Pointer to device struct of the device for which the interrupts
+> - *		are free
+> + *		are allocated
+> + * @nvec:	The number of interrupts to allocate
+> + *
+> + * Returns 0 on success or an error code.
+>   */
+> -void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+> +int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> +			  int nvec)
+> +{
+> +	struct msi_domain_info *info = domain->host_data;
+> +	struct msi_domain_ops *ops = info->ops;
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+Rework leftovers, I imagine.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/51c4518ab77c6d3e917675891a9a529daabfaef1
+> +
+> +	return ops->domain_alloc_irqs(domain, dev, nvec);
+> +}
+> +
+> +void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+>  {
+>  	struct msi_desc *desc;
+>  
+> @@ -513,6 +525,20 @@ void msi_domain_free_irqs(struct irq_dom
+>  }
+>  
+>  /**
+> + * __msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
 
-Thank you!
+Spurious __.
+
+> + * @domain:	The domain to managing the interrupts
+> + * @dev:	Pointer to device struct of the device for which the interrupts
+> + *		are free
+> + */
+> +void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+> +{
+> +	struct msi_domain_info *info = domain->host_data;
+> +	struct msi_domain_ops *ops = info->ops;
+
+Same thing?
+
+> +
+> +	return ops->domain_free_irqs(domain, dev);
+> +}
+> +
+> +/**
+>   * msi_get_domain_info - Get the MSI interrupt domain info for @domain
+>   * @domain:	The interrupt domain to retrieve data from
+>   *
+
+Otherwise looks good to me:
+
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+	M.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Without deviation from the norm, progress is not possible.
