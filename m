@@ -2,40 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE804252D7F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 14:02:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7407252E2F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 14:10:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgHZMCD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Aug 2020 08:02:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729415AbgHZMBn (ORCPT
+        id S1729738AbgHZMKX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 08:10:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57670 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729405AbgHZMBg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:43 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17127C061798;
-        Wed, 26 Aug 2020 05:01:35 -0700 (PDT)
-Message-Id: <20200826112333.714566121@linutronix.de>
+        Wed, 26 Aug 2020 08:01:36 -0400
+Message-Id: <20200826112333.806328762@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443293;
+        s=2020; t=1598443294;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=lYvnoAPQWUQ+lzpgP+IiwnNeH1MqCUGgXZQosJYDQY0=;
-        b=vRQXfv327OIRrmBpatce9zJYvVSKGz9rxbKVO9yT1yZnm6MAF6kqafQ5Ay88u1vp4j2WKf
-        w1HKMPXq393uNFPMWAFwUrUnSGPfLNNupRnyNvd7TH+Fl8J9uLvWs6P/g0ycISyoIs+Tcb
-        Xt6VcPt1dmdoKxe5p3MOCjNBijQ102S2vBENRLBkHbnr1AEN02Hq+R0SIED2ZUbcUbevk9
-        v+LiIefGVV2qKYRfUnTSFxpchJDd7EsXz35rR2S2waJZLdik0ZbN4vMG1SAjwdWH/A/M2L
-        FgvDphPLESUO8O0ALaV+pVF2iWsyvxNjwOgliwpa1V8+7AboY1HO3WCFQFmepQ==
+        bh=asFOSA32T62YaRCSzrTor6aeI57DpOL3CUuGKRRZsEk=;
+        b=nW2KeZ1gqPVv2gyaRKq8TR1UkwXl0haOMGUN03QRISdwQmfCn7UJwXCHQXWSfPgpIa+WE5
+        dFV5V8IpWj0OJ5/D7iaEmAAzia9sMireqBKNTgfwBW0x32c8WcLBFqyY4C3zXLZl0pKZ9S
+        kbvZoHvciBXwqW1PY4VzXjvXqcmQjVynrEJnQe4+Vy7Tv8omIDJ2tjEuvictoUTMcGSKpF
+        bwvwqQcGDIe6TqfooJCNM+0WtHU0xfoqHLKxazezkBOMG3xzacun6q8a4wPa4LcFbmUIkZ
+        D9Eyz1ErgNGXpUdNgnbQSGl0sWAvf10vqBSj5tjVkoI6kOyIqsXE1tw+oQQTwQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443293;
+        s=2020e; t=1598443294;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=lYvnoAPQWUQ+lzpgP+IiwnNeH1MqCUGgXZQosJYDQY0=;
-        b=74Nj30mT4kacCMUvrAOn6Ir2cuRq9elzCKoOuyST4heReMM9HfcFNpttWcNgI6Q6Y5FKkP
-        jIh2F+rccKFEAbDA==
-Date:   Wed, 26 Aug 2020 13:16:59 +0200
+        bh=asFOSA32T62YaRCSzrTor6aeI57DpOL3CUuGKRRZsEk=;
+        b=rGD9yaPSSC0dyJal0i0gvsXCtRDpI7ulC+ReNWLDGiw7Ztg5ZQgzYmYvFhwrOM19cmby/R
+        4PQn9wIN97sJZqAg==
+Date:   Wed, 26 Aug 2020 13:17:00 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -66,7 +63,7 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 31/46] iommm/vt-d: Store irq domain in struct device
+Subject: [patch V2 32/46] iommm/amd: Store irq domain in struct device
 References: <20200826111628.794979401@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -78,86 +75,57 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-As a first step to make X86 utilize the direct MSI irq domain operations
+As the next step to make X86 utilize the direct MSI irq domain operations
 store the irq domain pointer in the device struct when a device is probed.
 
-This is done from dmar_pci_bus_add_dev() because it has to work even when
-DMA remapping is disabled. It only overrides the irqdomain of devices which
-are handled by a regular PCI/MSI irq domain which protects PCI devices
-behind special busses like VMD which have their own irq domain.
+It only overrides the irqdomain of devices which are handled by a regular
+PCI/MSI irq domain which protects PCI devices behind special busses like
+VMD which have their own irq domain.
 
-No functional change. It just avoids the redirection through
-arch_*_msi_irqs() and allows the PCI/MSI core to directly invoke the irq
-domain alloc/free functions instead of having to look up the irq domain for
-every single MSI interupt.
+No functional change.
+
+It just avoids the redirection through arch_*_msi_irqs() and allows the
+PCI/MSI core to directly invoke the irq domain alloc/free functions instead
+of having to look up the irq domain for every single MSI interupt.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
-V2: Add missing forward declaration
----
- drivers/iommu/intel/dmar.c          |    3 +++
- drivers/iommu/intel/irq_remapping.c |   16 ++++++++++++++++
- include/linux/intel-iommu.h         |    7 +++++++
- 3 files changed, 26 insertions(+)
 
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -316,6 +316,9 @@ static int dmar_pci_bus_add_dev(struct d
- 	if (ret < 0 && dmar_dev_scope_status == 0)
- 		dmar_dev_scope_status = ret;
- 
-+	if (ret >= 0)
-+		intel_irq_remap_add_device(info);
+---
+ drivers/iommu/amd/iommu.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -729,7 +729,21 @@ static void iommu_poll_ga_log(struct amd
+ 		}
+ 	}
+ }
+-#endif /* CONFIG_IRQ_REMAP */
 +
- 	return ret;
- }
- 
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -1086,6 +1086,22 @@ static int reenable_irq_remapping(int ei
- 	return -1;
- }
- 
-+/*
-+ * Store the MSI remapping domain pointer in the device if enabled.
-+ *
-+ * This is called from dmar_pci_bus_add_dev() so it works even when DMA
-+ * remapping is disabled. Only update the pointer if the device is not
-+ * already handled by a non default PCI/MSI interrupt domain. This protects
-+ * e.g. VMD devices.
-+ */
-+void intel_irq_remap_add_device(struct dmar_pci_notify_info *info)
++static void
++amd_iommu_set_pci_msi_domain(struct device *dev, struct amd_iommu *iommu)
 +{
-+	if (!irq_remapping_enabled || pci_dev_has_special_msi_domain(info->dev))
++	if (!irq_remapping_enabled || !dev_is_pci(dev) ||
++	    pci_dev_has_special_msi_domain(to_pci_dev(dev)))
 +		return;
 +
-+	dev_set_msi_domain(&info->dev->dev, map_dev_to_ir(info->dev));
++	dev_set_msi_domain(dev, iommu->msi_domain);
 +}
 +
- static void prepare_irte(struct irte *irte, int vector, unsigned int dest)
- {
- 	memset(irte, 0, sizeof(*irte));
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -425,6 +425,8 @@ struct q_inval {
- 	int             free_cnt;
- };
- 
-+struct dmar_pci_notify_info;
-+
- #ifdef CONFIG_IRQ_REMAP
- /* 1MB - maximum possible interrupt remapping table size */
- #define INTR_REMAP_PAGE_ORDER	8
-@@ -439,6 +441,11 @@ struct ir_table {
- 	struct irte *base;
- 	unsigned long *bitmap;
- };
-+
-+void intel_irq_remap_add_device(struct dmar_pci_notify_info *info);
-+#else
++#else /* CONFIG_IRQ_REMAP */
 +static inline void
-+intel_irq_remap_add_device(struct dmar_pci_notify_info *info) { }
- #endif
++amd_iommu_set_pci_msi_domain(struct device *dev, struct amd_iommu *iommu) { }
++#endif /* !CONFIG_IRQ_REMAP */
  
- struct iommu_flush {
+ #define AMD_IOMMU_INT_MASK	\
+ 	(MMIO_STATUS_EVT_INT_MASK | \
+@@ -2157,6 +2171,7 @@ static struct iommu_device *amd_iommu_pr
+ 		iommu_dev = ERR_PTR(ret);
+ 		iommu_ignore_device(dev);
+ 	} else {
++		amd_iommu_set_pci_msi_domain(dev, iommu);
+ 		iommu_dev = &iommu->iommu;
+ 	}
+ 
+
 
