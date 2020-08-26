@@ -2,37 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D8472539B8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 23:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 359912539CB
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 23:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHZV1q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Aug 2020 17:27:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33692 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZV1o (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:27:44 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598477262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AP/JLSo39vhE0wtYqmiGvGnDrGFkgwOpCQr0bMHNNIo=;
-        b=Ppbpj32Cn5vd1ION8eS5aNl/fj1QjIs+RkAaM6B9/j2KvPN1mwxngYrYRgiWuDvZz7tk4s
-        6s3VU0oxNXckuhydtQw2GgWp9Lfh6ODP0+s0hFgvzGCyaE7b+A+lIZaUi6gcZA/8lo5a4X
-        Euy7gPuCc91BHe8pXICVD2nCrFV9IERKZf+HfP/+i3Fiyte9xzGw/xupM0BY5OEQNdUEQg
-        FSOqYrYHEp/isAlEeyp0rD5/Tbv3MnOJpEwiIrn+8eh5SdC6QWIfsV4iOmiZxyT6TlWac6
-        8D2S8zdYEOpLjpGvQn5ZbyugrRJHkxqLX+ncTO+VdcNoBYHDOsGnw6OdV/ra8A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598477262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AP/JLSo39vhE0wtYqmiGvGnDrGFkgwOpCQr0bMHNNIo=;
-        b=g64NV1HP6nZPTwYFAmNkOJaevjoEaWBisT8u9MwS+B3AK95KBK4cxQI4t2bfE2amJBs0p0
-        WvmjR7PZtJ//chDw==
-To:     Marc Zyngier <maz@kernel.org>
+        id S1726820AbgHZVcH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 17:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgHZVcG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:32:06 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADEB620737;
+        Wed, 26 Aug 2020 21:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598477525;
+        bh=VdsE3G0WVplLGteqa6jAyZDVfUl58SftRfor4592Lhc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i9DoDgsiUX+wkkK/l5339mYtR4k1TJ5aipWvRxq1xcBpRA5BvZDTI5nWZ01nieUzS
+         44gss4r1HcSekfb8E0GDg4TUzWrb4+Qd/PQRK38Z0kl1kIPdwfbz3o/yK6F6uNmfR6
+         kBeb9yp3s6zsMTc9qxjyWjE6liTypklbtWoSbVm0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB31Y-006ytl-2b; Wed, 26 Aug 2020 22:32:04 +0100
+Date:   Wed, 26 Aug 2020 22:32:02 +0100
+Message-ID: <87zh6h14bx.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Joerg Roedel <joro@8bytes.org>,
         iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
@@ -61,31 +60,95 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks selectable
-In-Reply-To: <8736492jot.wl-maz@kernel.org>
-References: <20200826111628.794979401@linutronix.de> <20200826112333.992429909@linutronix.de> <8736492jot.wl-maz@kernel.org>
-Date:   Wed, 26 Aug 2020 23:27:41 +0200
-Message-ID: <87lfi1t7w2.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [patch V2 04/46] genirq/chip: Use the first chip in irq_chip_compose_msi_msg()
+In-Reply-To: <87o8mxt88z.fsf@nanos.tec.linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112331.047917603@linutronix.de>
+        <87a6yh2nln.wl-maz@kernel.org>
+        <87o8mxt88z.fsf@nanos.tec.linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 26 2020 at 22:14, Marc Zyngier wrote:
-> On Wed, 26 Aug 2020 12:17:02 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> @@ -103,6 +105,7 @@ config PCIE_XILINX_CPM
->>  	bool "Xilinx Versal CPM host bridge support"
->>  	depends on ARCH_ZYNQMP || COMPILE_TEST
->>  	select PCI_HOST_COMMON
->> +	select PCI_MSI_ARCH_FALLBACKS
->
-> This guy actually doesn't implement MSIs at all (it seems to delegate
-> them to an ITS present in the system, if I read the DT binding
-> correctly). However its older brother from the same silicon dealer
-> seems to need it. The patchlet below should fix it.
+On Wed, 26 Aug 2020 22:19:56 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> On Wed, Aug 26 2020 at 20:50, Marc Zyngier wrote:
+> > On Wed, 26 Aug 2020 12:16:32 +0100,
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> ---
+> >> V2: New patch. Note, that this might break other stuff which relies on the
+> >>     current behaviour, but the hierarchy composition of DT based chips is
+> >>     really hard to follow.
+> >
 
-Gah, at some point my eyes went squared and I lost track..
+[...]
 
+> What about the below?
+> 
+> Thanks,
+> 
+>         tglx
+> ---
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -473,6 +473,15 @@ static inline void irq_domain_deactivate
+>  }
+>  #endif
+>  
+> +static inline struct irq_data *irqd_get_parent_data(struct irq_data *irqd)
+> +{
+> +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+> +	return irqd->parent_data;
+> +#else
+> +	return NULL;
+> +#endif
+> +}
+> +
+
+We obviously should have had this forever.
+
+>  #ifdef CONFIG_GENERIC_IRQ_DEBUGFS
+>  #include <linux/debugfs.h>
+>  
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -1541,18 +1541,17 @@ EXPORT_SYMBOL_GPL(irq_chip_release_resou
+>   */
+>  int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+> -	struct irq_data *pos = NULL;
+> +	struct irq_data *pos;
+>  
+> -#ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+> -	for (; data; data = data->parent_data)
+> -#endif
+> +	for (pos = NULL; !pos && data; data = irqd_get_parent_data(data)) {
+>  		if (data->chip && data->chip->irq_compose_msi_msg)
+>  			pos = data;
+> +	}
+> +
+>  	if (!pos)
+>  		return -ENOSYS;
+>  
+>  	pos->chip->irq_compose_msi_msg(pos, msg);
+> -
+>  	return 0;
+>  }
+
+Perfect, ship it! ;-)
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
