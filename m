@@ -2,37 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E7FB252D82
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 14:02:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3F98252E1E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 14:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgHZMCF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Aug 2020 08:02:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57826 "EHLO
+        id S1729804AbgHZMJW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 08:09:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58254 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729417AbgHZMBp (ORCPT
+        with ESMTP id S1729418AbgHZMBr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:45 -0400
-Message-Id: <20200826112334.493642963@linutronix.de>
+        Wed, 26 Aug 2020 08:01:47 -0400
+Message-Id: <20200826112334.586607694@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443303;
+        s=2020; t=1598443304;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=Jbe7LG9G4Zvu5BS675dx2ovvPd7Zs7K+V3j/Ww3fTeI=;
-        b=H5ct7yxyfPkw9COn6I7pDw6V1ilNzNBmxLT5gZpiqG5VFJDTYIRVrKS9MvIkCv/cVCNxwb
-        9rABWH11GRrt/F1XhhSDp0w0Wy41gVFSZzn9pQiNTcHs+63DsMc+BAwMYNXNq+QlX8TbDd
-        4nuvxxC6zG54EVKX1tE1lNMYsndx6DnV51i+GGKczVfx6JZBYjHMTx3ogkXMbyFmrmgHIh
-        /Vtqytt4cTeGvYKfsbOypaBGU6hCS9jWwmQ59jHoutngqHxs7Z7hy9qB5xiKsaUmM/tmYI
-        M4N9kw88/wBcNGfGIXWdqU/EB32+w2yt5iCXEHIfU/0M3jstk1ercqpAR2sL5A==
+        bh=g7DHu3XlO4NZfG0CcnfSe2nwDNXDP3IAgVMt5hiACQA=;
+        b=PTt2WU+p6zfz7V88lwJVqTwKEg75IwWC26uLjCoB9s/z9UAd0TkEUOZ29RhZSGDO4s3LOi
+        bWPe6BJss0s4Ns1yLeFAgNOc5kWjLQw1+huLXBQRR9pOr6VS3DjkLaPR3gx695JvZFRGPN
+        En9NsVjd9FecoDtv0u4frlgP+v7D/t2xuKziRMpn9XqtIdL0sjURRpLET4mgv0udxEETYE
+        GaN+Qses8Rv474fclMJB//XWzf2HncjF0i5g/Qw7CjiFd5h0+jF8DG8xK5sIHAMdU5yrRE
+        vD0QCxdXrEKE65c7LfAR1Pxge+I/whZ4NQS8h5pH4PhABIuN8WTZGc60QxJZ2Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443303;
+        s=2020e; t=1598443304;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=Jbe7LG9G4Zvu5BS675dx2ovvPd7Zs7K+V3j/Ww3fTeI=;
-        b=IbCUcGl7XvQeZPqcjY0sMmXx+SATO7tqwsqpLLv6njqYgigJNA52AxgTU6srAQXn4Ie9po
-        9VYvOCbhOnB1xaDg==
-Date:   Wed, 26 Aug 2020 13:17:07 +0200
+        bh=g7DHu3XlO4NZfG0CcnfSe2nwDNXDP3IAgVMt5hiACQA=;
+        b=hYGth7cWR27j87vnhr4XR39L/vq8tfhYbawC3DI7EzPmHFEZUwzddGvwlgUEiukU3rRaF1
+        Tuq8dUB9v4Yo85Cw==
+Date:   Wed, 26 Aug 2020 13:17:08 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -63,7 +63,8 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 39/46] x86/irq: Add DEV_MSI allocation type
+Subject: [patch V2 40/46] x86/msi: Rename and rework pci_msi_prepare() to
+ cover non-PCI MSI
 References: <20200826111628.794979401@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,24 +76,107 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-For the upcoming device MSI support a new allocation type is
-required.
+Rename it to x86_msi_prepare() and handle the allocation type setup
+depending on the device type.
+
+Add a new arch_msi_prepare define which will be utilized by the upcoming
+device MSI support. Define it to NULL if not provided by an architecture in
+the generic MSI header.
+
+One arch specific function for MSI support is truly enough.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
 ---
- arch/x86/include/asm/hw_irq.h |    1 +
- 1 file changed, 1 insertion(+)
+V2: Polish subject line
+---
+ arch/x86/include/asm/msi.h          |    4 +++-
+ arch/x86/kernel/apic/msi.c          |   27 ++++++++++++++++++++-------
+ drivers/pci/controller/pci-hyperv.c |    2 +-
+ include/linux/msi.h                 |    4 ++++
+ 4 files changed, 28 insertions(+), 9 deletions(-)
 
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -40,6 +40,7 @@ enum irq_alloc_type {
- 	X86_IRQ_ALLOC_TYPE_PCI_MSIX,
- 	X86_IRQ_ALLOC_TYPE_DMAR,
- 	X86_IRQ_ALLOC_TYPE_UV,
-+	X86_IRQ_ALLOC_TYPE_DEV_MSI,
- 	X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT,
- 	X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT,
+--- a/arch/x86/include/asm/msi.h
++++ b/arch/x86/include/asm/msi.h
+@@ -6,7 +6,9 @@
+ 
+ typedef struct irq_alloc_info msi_alloc_info_t;
+ 
+-int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
++int x86_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 		    msi_alloc_info_t *arg);
+ 
++#define arch_msi_prepare		x86_msi_prepare
++
+ #endif /* _ASM_X86_MSI_H */
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -181,26 +181,39 @@ static struct irq_chip pci_msi_controlle
+ 	.flags			= IRQCHIP_SKIP_SET_WAKE,
  };
-
+ 
+-int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+-		    msi_alloc_info_t *arg)
++static void pci_msi_prepare(struct device *dev, msi_alloc_info_t *arg)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct msi_desc *desc = first_pci_msi_entry(pdev);
++	struct msi_desc *desc = first_msi_entry(dev);
+ 
+-	init_irq_alloc_info(arg, NULL);
+ 	if (desc->msi_attrib.is_msix) {
+ 		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSIX;
+ 	} else {
+ 		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
+ 		arg->flags |= X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
+ 	}
++}
++
++static void dev_msi_prepare(struct device *dev, msi_alloc_info_t *arg)
++{
++	arg->type = X86_IRQ_ALLOC_TYPE_DEV_MSI;
++}
++
++int x86_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
++		    msi_alloc_info_t *arg)
++{
++	init_irq_alloc_info(arg, NULL);
++
++	if (dev_is_pci(dev))
++		pci_msi_prepare(dev, arg);
++	else
++		dev_msi_prepare(dev, arg);
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_msi_prepare);
++EXPORT_SYMBOL_GPL(x86_msi_prepare);
+ 
+ static struct msi_domain_ops pci_msi_domain_ops = {
+-	.msi_prepare	= pci_msi_prepare,
++	.msi_prepare	= x86_msi_prepare,
+ };
+ 
+ static struct msi_domain_info pci_msi_domain_info = {
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1532,7 +1532,7 @@ static struct irq_chip hv_msi_irq_chip =
+ };
+ 
+ static struct msi_domain_ops hv_msi_ops = {
+-	.msi_prepare	= pci_msi_prepare,
++	.msi_prepare	= arch_msi_prepare,
+ 	.msi_free	= hv_msi_free,
+ };
+ 
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -430,4 +430,8 @@ static inline struct irq_domain *pci_msi
+ }
+ #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
+ 
++#ifndef arch_msi_prepare
++# define arch_msi_prepare	NULL
++#endif
++
+ #endif /* LINUX_MSI_H */
 
