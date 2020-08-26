@@ -2,34 +2,34 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7704B253919
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 22:24:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA92F25392F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 22:42:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHZUYi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Aug 2020 16:24:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42370 "EHLO mail.kernel.org"
+        id S1726880AbgHZUmg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 16:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgHZUYh (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:24:37 -0400
+        id S1726609AbgHZUmg (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:42:36 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF542076C;
-        Wed, 26 Aug 2020 20:24:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854AB2078A;
+        Wed, 26 Aug 2020 20:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598473477;
-        bh=auSXw+EqUonX3FBMMNkctQ6qGdUjQJ6mqBm2CfMo9pI=;
+        s=default; t=1598474555;
+        bh=jlRC0LblFWGAlwCR/La2tMi2HZWcZ4kco3I34s3mivA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QWysnGLUpOcBkmWSTf56jVPsTNPGnunGvY5Uq5rnxRguNQSD91vh1okGV+iXf31JI
-         3bfZ+oLw24XNVrEjEU2ImUWW8cB6t6PkK7nai13uIHyDhkV/XAMfSPJVT/huMLAQeE
-         UIaBJhqr/JBtQqu8cDIJq/NKBdbfxLv8kWkuirGE=
+        b=ONcdkIPjBp+d8E94IWKMDTXhW0goXo+jli8WynQR80HgaHZTxy+aJ+29IBRPAMzJX
+         CACSlXbAkc1nlVFMlvnC7iid0ew9kRNZ6UBtvkSyOfAV84NSGrqfoD6ddEmqnB4Akg
+         kyJ4kasENj6QUPmznJkuUHtqHt4tUwh/wBfiXdC0=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1kB1yF-006y7s-Ir; Wed, 26 Aug 2020 21:24:35 +0100
-Date:   Wed, 26 Aug 2020 21:24:33 +0100
-Message-ID: <877dtl2m0u.wl-maz@kernel.org>
+        id 1kB2Fd-006yJW-U0; Wed, 26 Aug 2020 21:42:34 +0100
+Date:   Wed, 26 Aug 2020 21:42:31 +0100
+Message-ID: <875z952l6w.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
@@ -60,10 +60,10 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 17/46] PCI/MSI: Rework pci_msi_domain_calc_hwirq()
-In-Reply-To: <20200826112332.352583299@linutronix.de>
+Subject: Re: [patch V2 23/46] irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
+In-Reply-To: <20200826112332.954409970@linutronix.de>
 References: <20200826111628.794979401@linutronix.de>
-        <20200826112332.352583299@linutronix.de>
+        <20200826112332.954409970@linutronix.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -78,16 +78,53 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 26 Aug 2020 12:16:45 +0100,
+On Wed, 26 Aug 2020 12:16:51 +0100,
 Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
 > From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> Retrieve the PCI device from the msi descriptor instead of doing so at the
-> call sites.
+> PCI devices behind a VMD bus are not subject to interrupt remapping, but
+> the irq domain for VMD MSI cannot be distinguished from a regular PCI/MSI
+> irq domain.
+> 
+> Add a new domain bus token and allow it in the bus token check in
+> msi_check_reservation_mode() to keep the functionality the same once VMD
+> uses this token.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> ---
+>  include/linux/irqdomain.h |    1 +
+>  kernel/irq/msi.c          |    7 ++++++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -84,6 +84,7 @@ enum irq_domain_bus_token {
+>  	DOMAIN_BUS_FSL_MC_MSI,
+>  	DOMAIN_BUS_TI_SCI_INTA_MSI,
+>  	DOMAIN_BUS_WAKEUP,
+> +	DOMAIN_BUS_VMD_MSI,
+>  };
+>  
+>  /**
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -370,8 +370,13 @@ static bool msi_check_reservation_mode(s
+>  {
+>  	struct msi_desc *desc;
+>  
+> -	if (domain->bus_token != DOMAIN_BUS_PCI_MSI)
+> +	switch(domain->bus_token) {
+> +	case DOMAIN_BUS_PCI_MSI:
+> +	case DOMAIN_BUS_VMD_MSI:
+> +		break;
+> +	default:
+>  		return false;
+> +	}
+>  
+>  	if (!(info->flags & MSI_FLAG_MUST_REACTIVATE))
+>  		return false;
 
 Acked-by: Marc Zyngier <maz@kernel.org>
 
