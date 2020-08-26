@@ -2,170 +2,173 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B85E252B02
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 12:01:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3C91252E81
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 14:14:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgHZKB2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Aug 2020 06:01:28 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33948 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgHZKBY (ORCPT
+        id S1729709AbgHZMOh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 08:14:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56968 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729363AbgHZMBC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:01:24 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9rmML110211;
-        Wed, 26 Aug 2020 09:58:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=99lx5iUfIkT1H9yGqvvBxJOhPDkHKQlkIHLEmQ8PDXw=;
- b=pHUo6T87aN4HkyoolW4yELYhdaG6ZvSavIkxfBgUOj0Org1O9z1r+ZQOuET12WJ7H5Pc
- xnVCQfyl6qFGmQNX19oW+/bFETNvgM6pF7csHfuvBHB3cwqfsUd0O1/rGIc/5OQTnnFB
- MEojeNBzUtEmGEuqP0gM6P7/G+Nn01P+JHgzxPDBnzH/evLKYOeuFaI9EUmCauKOO4Dv
- zZppw57NrWnHoxtj9wH99M6dzm4GlspA3OSB7TYDhwfTGMPmrp1Qrwutr2AFfwHTZX4W
- mmUMO7IJxJ3uJAsWGpM1c6assMY729yLXVkHlFuUfSzlq1xzAsoVwPIWis3T8JNJMC4u Ng== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 333dbryf24-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 09:58:06 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9odrR139540;
-        Wed, 26 Aug 2020 09:56:05 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 333rtywr8n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 09:56:05 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07Q9tlAJ026067;
-        Wed, 26 Aug 2020 09:55:47 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Aug 2020 02:55:46 -0700
-Date:   Wed, 26 Aug 2020 12:55:28 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Allen Pais <allen.cryptic@gmail.com>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-atm-general@lists.sourceforge.net, manohar.vanga@gmail.com,
-        airlied@linux.ie, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, sre@kernel.org,
-        anton.ivanov@cambridgegreys.com, devel@driverdev.osuosl.org,
-        linux-s390@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        maximlevitsky@gmail.com, richard@nod.at, deller@gmx.de,
-        jassisinghbrar@gmail.com, linux-spi@vger.kernel.org,
-        3chas3@gmail.com, intel-gfx@lists.freedesktop.org,
-        Jakub Kicinski <kuba@kernel.org>, mporter@kernel.crashing.org,
-        jdike@addtoit.com, Kees Cook <keescook@chromium.org>,
-        oakad@yahoo.com, s.hauer@pengutronix.de,
-        linux-input@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-block@vger.kernel.org, broonie@kernel.org,
-        openipmi-developer@lists.sourceforge.net, mitch@sfgoth.com,
-        linux-arm-kernel@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
-        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
-        martyn@welchs.me.uk, dmitry.torokhov@gmail.com,
-        linux-mmc@vger.kernel.org, Allen <allen.lkml@gmail.com>,
-        linux-kernel@vger.kernel.org, alex.bou9@gmail.com,
-        stefanr@s5r6.in-berlin.de, Daniel Vetter <daniel@ffwll.ch>,
-        linux-ntb@googlegroups.com,
-        Romain Perier <romain.perier@gmail.com>, shawnguo@kernel.org,
-        David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-Message-ID: <20200826095528.GX1793@kadam>
-References: <202008171228.29E6B3BB@keescook>
- <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook>
- <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com>
- <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
- <1597849185.3875.7.camel@HansenPartnership.com>
- <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
- <1597873172.4030.2.camel@HansenPartnership.com>
- <CAEogwTCH8qqjAnSpT0GDn+NuAps8dNbfcPVQ9h8kfOWNbzrD0w@mail.gmail.com>
+        Wed, 26 Aug 2020 08:01:02 -0400
+Message-Id: <20200826111628.794979401@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598443255;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1dVHGWlVLKe8Qbq+hsxoxDKyLgFehj4bg/2iuhvz548=;
+        b=itgEGCH2EzpbaFlCSN0K2oYg5CLEFENc6q3co7bhBruz4euEviEZAzZO5a/j+gLiSTVNYi
+        3VbpDIuO0f71j8jusJl+pz8zfoOKAPxl0ZiBSKO8hAOHE2808wxZR4DLH3Q57bnO9gbygy
+        nN6nh3CZL2WeZyV2bc6JFQXFwgcf6kQcwSbeBBFXPbKGHX/DJCyUz5PXbE+gKlr/tIKFIL
+        8YRsRO1izHB+wsCmHWwcn/mtGfRA/AVPhXtma7nQ8VDHQ3EDaHY+FrrXT6fbPBAWXingVv
+        Ybpb3NGiWx9eomJIsuWMLmcM1uG5/+DDmvRMR/InX6WcXy8QMIcaoFMTKEZyhw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598443255;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1dVHGWlVLKe8Qbq+hsxoxDKyLgFehj4bg/2iuhvz548=;
+        b=jQX1nfcbMl4rnDTp2/mDJdszSt8UAxcBp/X1rcZbQLBpuHBU67ldyCtMUmpEbCjrwlsJCm
+        LETm99a7F7lunACQ==
+Date:   Wed, 26 Aug 2020 13:16:28 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device MSI
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEogwTCH8qqjAnSpT0GDn+NuAps8dNbfcPVQ9h8kfOWNbzrD0w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260079
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 07:21:35AM +0530, Allen Pais wrote:
-> On Thu, Aug 20, 2020 at 3:09 AM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> >
-> > On Wed, 2020-08-19 at 21:54 +0530, Allen wrote:
-> > > > [...]
-> > > > > > Since both threads seem to have petered out, let me suggest in
-> > > > > > kernel.h:
-> > > > > >
-> > > > > > #define cast_out(ptr, container, member) \
-> > > > > >     container_of(ptr, typeof(*container), member)
-> > > > > >
-> > > > > > It does what you want, the argument order is the same as
-> > > > > > container_of with the only difference being you name the
-> > > > > > containing structure instead of having to specify its type.
-> > > > >
-> > > > > Not to incessantly bike shed on the naming, but I don't like
-> > > > > cast_out, it's not very descriptive. And it has connotations of
-> > > > > getting rid of something, which isn't really true.
-> > > >
-> > > > Um, I thought it was exactly descriptive: you're casting to the
-> > > > outer container.  I thought about following the C++ dynamic casting
-> > > > style, so out_cast(), but that seemed a bit pejorative.  What about
-> > > > outer_cast()?
-> > > >
-> > > > > FWIW, I like the from_ part of the original naming, as it has
-> > > > > some clues as to what is being done here. Why not just
-> > > > > from_container()? That should immediately tell people what it
-> > > > > does without having to look up the implementation, even before
-> > > > > this becomes a part of the accepted coding norm.
-> > > >
-> > > > I'm not opposed to container_from() but it seems a little less
-> > > > descriptive than outer_cast() but I don't really care.  I always
-> > > > have to look up container_of() when I'm using it so this would just
-> > > > be another macro of that type ...
-> > > >
-> > >
-> > >  So far we have a few which have been suggested as replacement
-> > > for from_tasklet()
-> > >
-> > > - out_cast() or outer_cast()
-> > > - from_member().
-> > > - container_from() or from_container()
-> > >
-> > > from_container() sounds fine, would trimming it a bit work? like
-> > > from_cont().
-> >
-> > I'm fine with container_from().  It's the same form as container_of()
-> > and I think we need urgent agreement to not stall everything else so
-> > the most innocuous name is likely to get the widest acceptance.
-> 
-> Kees,
-> 
->   Will you be  sending the newly proposed API to Linus? I have V2
-> which uses container_from()
-> ready to be sent out.
-
-I liked that James swapped the first two arguments so that it matches
-container_of().  Plus it's nice that when you have:
-
-	struct whatever *foo = container_from(ptr, foo, member);
-
-Then it means that "ptr == &foo->member".
-
-regards,
-dan carpenter
-
+VGhpcyBpcyB0aGUgc2Vjb25kIHZlcnNpb24gb2YgcHJvdmlkaW5nIGEgYmFzZSB0byBzdXBwb3J0
+IGRldmljZSBNU0kgKG5vbgpQQ0kgYmFzZWQpIGFuZCBvbiB0b3Agb2YgdGhhdCBzdXBwb3J0IGZv
+ciBJTVMgKEludGVycnVwdCBNZXNzYWdlIFN0b3JtKQpiYXNlZCBkZXZpY2VzIGluIGEgaGFsZndh
+eXMgYXJjaGl0ZWN0dXJlIGluZGVwZW5kZW50IHdheS4KClRoZSBmaXJzdCB2ZXJzaW9uIGNhbiBi
+ZSBmb3VuZCBoZXJlOgoKICAgIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyMDA4MjEwMDI0
+MjQuMTE5NDkyMjMxQGxpbnV0cm9uaXguZGUKCkl0J3Mgc3RpbGwgYSBtaXhlZCBiYWcgb2YgYnVn
+IGZpeGVzLCBjbGVhbnVwcyBhbmQgZ2VuZXJhbCBpbXByb3ZlbWVudHMKd2hpY2ggYXJlIHdvcnRo
+d2hpbGUgaW5kZXBlbmRlbnQgb2YgZGV2aWNlIE1TSS4KClRoZXJlIGFyZSBxdWl0ZSBhIGJ1bmNo
+IG9mIGlzc3VlcyB0byBzb2x2ZToKCiAgLSBYODYgZG9lcyBub3QgdXNlIHRoZSBkZXZpY2U6Om1z
+aV9kb21haW4gcG9pbnRlciBmb3IgaGlzdG9yaWNhbCByZWFzb25zCiAgICBhbmQgZHVlIHRvIFhF
+Tiwgd2hpY2ggbWFrZXMgaXQgaW1wb3NzaWJsZSB0byBjcmVhdGUgYW4gYXJjaGl0ZWN0dXJlCiAg
+ICBhZ25vc3RpYyBkZXZpY2UgTVNJIGluZnJhc3RydWN0dXJlLgoKICAtIFg4NiBoYXMgaXQncyBv
+d24gbXNpX2FsbG9jX2luZm8gZGF0YSB0eXBlIHdoaWNoIGlzIHBvaW50bGVzc2x5CiAgICBkaWZm
+ZXJlbnQgZnJvbSB0aGUgZ2VuZXJpYyB2ZXJzaW9uIGFuZCBkb2VzIG5vdCBhbGxvdyB0byBzaGFy
+ZSBjb2RlLgoKICAtIFRoZSBsb2dpYyBvZiBjb21wb3NpbmcgTVNJIG1lc3NhZ2VzIGluIGFuIGhp
+ZXJhcmNoeSBpcyBidXN0ZWQgYXQgdGhlCiAgICBjb3JlIGxldmVsIGFuZCBvZiBjb3Vyc2Ugc29t
+ZSAoeDg2KSBkcml2ZXJzIGRlcGVuZCBvbiB0aGF0LgoKICAtIEEgZmV3IG1pbm9yIHNob3J0Y29t
+aW5ncyBhcyB1c3VhbAoKVGhpcyBzZXJpZXMgYWRkcmVzc2VzIHRoYXQgaW4gc2V2ZXJhbCBzdGVw
+czoKCiAxKSBBY2NpZGVudGFsIGJ1ZyBmaXhlcwoKICAgICAgaW9tbXUvYW1kOiBQcmV2ZW50IE5V
+TEwgcG9pbnRlciBkZXJlZmVyZW5jZQoKIDIpIEphbml0b3JpbmcKCiAgICAgIHg4Ni9pbml0OiBS
+ZW1vdmUgdW51c2VkIGluaXQgb3BzCiAgICAgIFBDSTogdm1kOiBEb250IGFidXNlIHZlY3RvciBp
+cnFvbWFpbiBhcyBwYXJlbnQKICAgICAgeDg2L21zaTogUmVtb3ZlIHBvaW50bGVzcyB2Y3B1X2Fm
+ZmluaXR5IGNhbGxiYWNrCgogMykgU2FuaXRpemluZyB0aGUgY29tcG9zaXRpb24gb2YgTVNJIG1l
+c3NhZ2VzIGluIGEgaGllcmFyY2h5CiAKICAgICAgZ2VuaXJxL2NoaXA6IFVzZSB0aGUgZmlyc3Qg
+Y2hpcCBpbiBpcnFfY2hpcF9jb21wb3NlX21zaV9tc2coKQogICAgICB4ODYvbXNpOiBNb3ZlIGNv
+bXBvc2UgbWVzc2FnZSBjYWxsYmFjayB3aGVyZSBpdCBiZWxvbmdzCgogNCkgU2ltcGxpZmljYXRp
+b24gb2YgdGhlIHg4NiBzcGVjaWZpYyBpbnRlcnJ1cHQgYWxsb2NhdGlvbiBtZWNoYW5pc20KCiAg
+ICAgIHg4Ni9pcnE6IFJlbmFtZSBYODZfSVJRX0FMTE9DX1RZUEVfTVNJKiB0byByZWZsZWN0IFBD
+SSBkZXBlbmRlbmN5CiAgICAgIHg4Ni9pcnE6IEFkZCBhbGxvY2F0aW9uIHR5cGUgZm9yIHBhcmVu
+dCBkb21haW4gcmV0cmlldmFsCiAgICAgIGlvbW11L3Z0LWQ6IENvbnNvbGlkYXRlIGlycSBkb21h
+aW4gZ2V0dGVyCiAgICAgIGlvbW11L2FtZDogQ29uc29saWRhdGUgaXJxIGRvbWFpbiBnZXR0ZXIK
+ICAgICAgaW9tbXUvaXJxX3JlbWFwcGluZzogQ29uc29saWRhdGUgaXJxIGRvbWFpbiBsb29rdXAK
+CiA1KSBDb25zb2xpZGF0aW9uIG9mIHRoZSBYODYgc3BlY2lmaWMgaW50ZXJydXB0IGFsbG9jYXRp
+b24gbWVjaGFuaXNtIHRvIGJlIGFzIGNsb3NlCiAgICBhcyBwb3NzaWJsZSB0byB0aGUgZ2VuZXJp
+YyBNU0kgYWxsb2NhdGlvbiBtZWNoYW5pc20gd2hpY2ggYWxsb3dzIHRvIGdldCByaWQKICAgIG9m
+IHF1aXRlIGEgYnVuY2ggb2YgeDg2J2lzbXMgd2hpY2ggYXJlIHBvaW50bGVzcwoKICAgICAgeDg2
+L2lycTogUHJlcGFyZSBjb25zb2xpZGF0aW9uIG9mIGlycV9hbGxvY19pbmZvCiAgICAgIHg4Ni9t
+c2k6IENvbnNvbGlkYXRlIEhQRVQgYWxsb2NhdGlvbgogICAgICB4ODYvaW9hcGljOiBDb25zb2xp
+ZGF0ZSBJT0FQSUMgYWxsb2NhdGlvbgogICAgICB4ODYvaXJxOiBDb25zb2xpZGF0ZSBETUFSIGly
+cSBhbGxvY2F0aW9uCiAgICAgIHg4Ni9pcnE6IENvbnNvbGlkYXRlIFVWIGRvbWFpbiBhbGxvY2F0
+aW9uCiAgICAgIFBDSS9NU0k6IFJld29yayBwY2lfbXNpX2RvbWFpbl9jYWxjX2h3aXJxKCkKICAg
+ICAgeDg2L21zaTogQ29uc29saWRhdGUgTVNJIGFsbG9jYXRpb24KICAgICAgeDg2L21zaTogVXNl
+IGdlbmVyaWMgTVNJIGRvbWFpbiBvcHMKCiAgNikgeDg2IHNwZWNpZmljIGNsZWFudXBzIHRvIHJl
+bW92ZSB0aGUgZGVwZW5kZW5jeSBvbiBhcmNoXypfbXNpX2lycXMoKQoKICAgICAgeDg2L2lycTog
+TW92ZSBhcGljX3Bvc3RfaW5pdCgpIGludm9jYXRpb24gdG8gb25lIHBsYWNlCiAgICAgIHg4Ni9w
+Y2k6IFJlZHVjZGUgI2lmZGVmZmVyeSBpbiBQQ0kgaW5pdCBjb2RlCiAgICAgIHg4Ni9pcnE6IElu
+aXRpYWxpemUgUENJL01TSSBkb21haW4gYXQgUENJIGluaXQgdGltZQogICAgICBpcnFkb21haW4v
+bXNpOiBQcm92aWRlIERPTUFJTl9CVVNfVk1EX01TSQogICAgICBQQ0k6IHZtZDogTWFyayBWTUQg
+aXJxZG9tYWluIHdpdGggRE9NQUlOX0JVU19WTURfTVNJCiAgICAgIFBDSS9NU0k6IFByb3ZpZGUg
+cGNpX2Rldl9oYXNfc3BlY2lhbF9tc2lfZG9tYWluKCkgaGVscGVyCiAgICAgIHg4Ni94ZW46IE1h
+a2UgeGVuX21zaV9pbml0KCkgc3RhdGljIGFuZCByZW5hbWUgaXQgdG8geGVuX2h2bV9tc2lfaW5p
+dCgpCiAgICAgIHg4Ni94ZW46IFJld29yayBNU0kgdGVhcmRvd24KICAgICAgeDg2L3hlbjogQ29u
+c29saWRhdGUgWEVOLU1TSSBpbml0CiAgICAgIGlycWRvbWFpbi9tc2k6IEFsbG93IHRvIG92ZXJy
+aWRlIG1zaV9kb21haW5fYWxsb2MvZnJlZV9pcnFzKCkKICAgICAgeDg2L3hlbjogV3JhcCBYRU4g
+TVNJIG1hbmFnZW1lbnQgaW50byBpcnFkb21haW4KICAgICAgaW9tbW0vdnQtZDogU3RvcmUgaXJx
+IGRvbWFpbiBpbiBzdHJ1Y3QgZGV2aWNlCiAgICAgIGlvbW1tL2FtZDogU3RvcmUgaXJxIGRvbWFp
+biBpbiBzdHJ1Y3QgZGV2aWNlCiAgICAgIHg4Ni9wY2k6IFNldCBkZWZhdWx0IGlycSBkb21haW4g
+aW4gcGNpYmlvc19hZGRfZGV2aWNlKCkKICAgICAgUENJL01TSTogTWFrZSBhcmNoXy4qX21zaV9p
+cnFbc10gZmFsbGJhY2tzIHNlbGVjdGFibGUKICAgICAgeDg2L2lycTogQ2xlYW51cCB0aGUgYXJj
+aF8qX21zaV9pcnFzKCkgbGVmdG92ZXJzCiAgICAgIHg4Ni9pcnE6IE1ha2UgbW9zdCBNU0kgb3Bz
+IFhFTiBwcml2YXRlCiAgICAgIGlvbW11L3Z0LWQ6IFJlbW92ZSBkb21haW4gc2VhcmNoIGZvciBQ
+Q0kvTVNJW1hdCiAgICAgIGlvbW11L2FtZDogUmVtb3ZlIGRvbWFpbiBzZWFyY2ggZm9yIFBDSS9N
+U0kKCiAgNykgWDg2IHNwZWNpZmljIHByZXBhcmF0aW9uIGZvciBkZXZpY2UgTVNJCgogICAgICB4
+ODYvaXJxOiBBZGQgREVWX01TSSBhbGxvY2F0aW9uIHR5cGUKICAgICAgeDg2L21zaTogUmVuYW1l
+IGFuZCByZXdvcmsgcGNpX21zaV9wcmVwYXJlKCkgdG8gY292ZXIgbm9uLVBDSSBNU0kKCiAgOCkg
+R2VuZXJpYyBkZXZpY2UgTVNJIGluZnJhc3RydWN0dXJlCiAgICAgIHBsYXRmb3JtLW1zaTogUHJv
+dmlkZSBkZWZhdWx0IGlycV9jaGlwOjogQWNrCiAgICAgIGdlbmlycS9wcm9jOiBUYWtlIGJ1c2xv
+Y2sgb24gYWZmaW5pdHkgd3JpdGUKICAgICAgZ2VuaXJxL21zaTogUHJvdmlkZSBhbmQgdXNlIG1z
+aV9kb21haW5fc2V0X2RlZmF1bHRfaW5mb19mbGFncygpCiAgICAgIHBsYXRmb3JtLW1zaTogQWRk
+IGRldmljZSBNU0kgaW5mcmFzdHJ1Y3R1cmUKICAgICAgaXJxZG9tYWluL21zaTogUHJvdmlkZSBt
+c2lfYWxsb2MvZnJlZV9zdG9yZSgpIGNhbGxiYWNrcwoKICA5KSBQT0Mgb2YgSU1TIChJbnRlcnJ1
+cHQgTWVzc2FnZSBTdG9ybSkgaXJxIGRvbWFpbiBhbmQgaXJxY2hpcAogICAgIGltcGxlbWVudGF0
+aW9ucyBmb3IgYm90aCBkZXZpY2UgYXJyYXkgYW5kIHF1ZXVlIHN0b3JhZ2UuCgogICAgICBpcnFj
+aGlwOiBBZGQgSU1TIChJbnRlcnJ1cHQgTWVzc2FnZSBTdG9ybSkgZHJpdmVyIC0gTk9UIEZPUiBN
+RVJHSU5HCgpDaGFuZ2VzIHZzLiBWMToKCiAgIC0gQWRkcmVzc2VkIHZhcmlvdXMgcmV2aWV3IGNv
+bW1lbnRzIGFuZCBhZGRyZXNzZWQgdGhlIDBkYXkgZmFsbG91dC4KICAgICAtIENvcnJlY3RlZCB0
+aGUgWEVOIGxvZ2ljIChKw7xyZ2VuKQogICAgIC0gTWFrZSB0aGUgYXJjaCBmYWxsYmFjayBpbiBQ
+Q0kvTVNJIG9wdC1pbiBub3Qgb3B0LW91dCAoQmpvcm4pCgogICAtIEZpeGVkIHRoZSBjb21wb3Nl
+IE1TSSBtZXNzYWdlIGluY29uc2lzdGVuY3kKCiAgIC0gRW5zdXJlIHRoYXQgdGhlIG5lY2Vzc2Fy
+eSBmbGFncyBhcmUgc2V0IGZvciBkZXZpY2UgU01JCgogICAtIE1ha2UgdGhlIGlycSBidXMgbG9n
+aWMgd29yayBmb3IgYWZmaW5pdHkgc2V0dGluZyB0byBwcmVwYXJlCiAgICAgc3VwcG9ydCBmb3Ig
+SU1TIHN0b3JhZ2UgaW4gcXVldWUgbWVtb3J5LiBJdCB0dXJuZWQgb3V0IHRvIGJlCiAgICAgbGVz
+cyBzY2FyeSB0aGFuIEkgZmVhcmVkLgoKICAgLSBSZW1vdmUgbGVmdG92ZXJzIGluIGlvbW11L2lu
+dGVsfGFtZAoKICAgLSBSZXdvcmtlZCB0aGUgSU1TIFBPQyBkcml2ZXIgdG8gY292ZXIgcXVldWUg
+c3RvcmFnZSBzbyBKYXNvbiBjYW4gaGF2ZSBhCiAgICAgbG9vayB3aGV0aGVyIHRoYXQgZml0cyB0
+aGUgbmVlZHMgb2YgTUxYIGRldmljZXMuCgpUaGUgd2hvbGUgbG90IGlzIGFsc28gYXZhaWxhYmxl
+IGZyb20gZ2l0OgoKICAgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwv
+Z2l0L3RnbHgvZGV2ZWwuZ2l0IGRldmljZS1tc2kKClRoaXMgaGFzIGJlZW4gdGVzdGVkIG9uIElu
+dGVsL0FNRC9LVk0gYnV0IGxhY2tzIHRlc3Rpbmcgb246CgogICAgLSBIWVBFUlYgKC1FTk9ERVYp
+CiAgICAtIFZNRCBlbmFibGVkIHN5c3RlbXMgKC1FTk9ERVYpCiAgICAtIFhFTiAoLUVOT0NMVUUp
+CiAgICAtIElNUyAoLUVOT0RFVikKCiAgICAtIEFueSBub24tWDg2IGNvZGUgd2hpY2ggbWlnaHQg
+ZGVwZW5kIG9uIHRoZSBicm9rZW4gY29tcG9zZSBNU0kgbWVzc2FnZQogICAgICBsb2dpYy4gTWFy
+YyBleGNwZWN0cyBub3QgbXVjaCBmYWxsb3V0LCBidXQgYWdyZWVzIHRoYXQgd2UgbmVlZCB0byBm
+aXgKICAgICAgaXQgYW55d2F5LgoKIzEgLSAjMyBzaG91bGQgYmUgYXBwbGllZCB1bmNvbmRpdGlv
+bmFsbHkgZm9yIG9idmlvdXMgcmVhc29ucwojNCAtICM2IGFyZSB3b3J0d2hpbGUgY2xlYW51cHMg
+d2hpY2ggc2hvdWxkIGJlIGRvbmUgaW5kZXBlbmRlbnQgb2YgZGV2aWNlIE1TSQoKIzcgLSAjOCBs
+b29rIHByb21pc2luZyB0byBjbGVhbnVwIHRoZSBwbGF0Zm9ybSBNU0kgaW1wbGVtZW50YXRpb24K
+ICAgICAJaW5kZXBlbmRlbnQgb2YgIzgsIGJ1dCBJIG5laXRoZXIgaGFkIGN5Y2xlcyBub3IgdGhl
+IHN0b21hY2ggdG8KICAgICAJdGFja2xlIHRoYXQuCgojOQlpcyBvYnZpb3VzbHkganVzdCBmb3Ig
+dGhlIGZvbGtzIGludGVyZXN0ZWQgaW4gSU1TCgpUaGFua3MsCgoJdGdseAo=
