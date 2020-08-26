@@ -2,37 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DBBD252E86
+	by mail.lfdr.de (Postfix) with ESMTP id AC93F252E87
 	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 14:14:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgHZMOt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S1729842AbgHZMOt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Wed, 26 Aug 2020 08:14:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57052 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:57084 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729372AbgHZMBC (ORCPT
+        with ESMTP id S1729373AbgHZMBB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:02 -0400
-Message-Id: <20200826112330.806095671@linutronix.de>
+        Wed, 26 Aug 2020 08:01:01 -0400
+Message-Id: <20200826112330.928952181@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443257;
+        s=2020; t=1598443258;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=TWm8LKwbxOdbljCkicslqQNPr7yXxn0950j4VKvFXNo=;
-        b=UoGPFS/7WkvtfI0hX3punHqhBhP/UK4S88ikGD8RW/yf+AurFKJjX4P4EC3wMRQEo3XlUZ
-        LtujGPYmgVYq+2AdnyFhaPffxQeMmZLY5riQhmLkbyaNqb5/Tl2/vF8P4/flzxfoNve7Gd
-        HvMq+AchBIH/zXZpuCw50Xyw8kZUbXsTBX1z6AM0cPb4XUIN3ZT296ZxwMS9Ftls90RKIx
-        QYPHptNSZLVoIKxXnLJuhge/uZrOimnl1Bbl+174HzrumKwK3TJyXxS/LA+CUj9RLLCDum
-        tDilxjDbgeG8VP1uAjLlsZFPbkEndfzcYttDAx/NS1vPFTXjsmKgSZgpI1+3tQ==
+        bh=GJq1CEkWcaKs7Em2GYlhCtoVPP5Bukhfi2C/MO87oqU=;
+        b=dUiCUdbmQOpMkybm8iOwgllxN+rbWKXHIOv8xVx9P0CYcEvTrFfH+U510MWl4oVPJ0gtga
+        ahqCxi9ahMWxjIEsaydAa/rKy2pLoS0XfR5K4IDb4uihwE2PQKBjV4F9A8pFZYgGN7PuxQ
+        EOB1SaNvp8dPe4VJ46qh1GtqJBzaIwyAez52Agf9f+0VgyaCndFq+l56XNDg+v6HO0uzx9
+        KwoWueh6GMvJjAnouk8aSNrY7sJJRDuvX4Ynt2UCn35woH/JnJXgQKrYdLfLlaCEBkFk9c
+        Y7WVHB/k+RUE/B1QV9Xa55mz4IiFTHSC1D8o3oA/1GFewMJzkzQ+YqY5c8skRQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443257;
+        s=2020e; t=1598443258;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=TWm8LKwbxOdbljCkicslqQNPr7yXxn0950j4VKvFXNo=;
-        b=sUrBzRDj7jLvhAKHO3Jo5Tdws9M7K35CNKNa2DKprDj7HLmFAHquotUL5w484KVxZFblZx
-        8bAUtdxFXrHkzvDg==
-Date:   Wed, 26 Aug 2020 13:16:30 +0200
+        bh=GJq1CEkWcaKs7Em2GYlhCtoVPP5Bukhfi2C/MO87oqU=;
+        b=HQTmvGI7KkXeaCWVTYGHuxhaaAjsX1BJNwh3dDUbNFgWHKVDFEbHlgJXRMU0uVeDi8WgHM
+        cnjckdDSNiedpnBg==
+Date:   Wed, 26 Aug 2020 13:16:31 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -63,7 +63,7 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 02/46] x86/init: Remove unused init ops
+Subject: [patch V2 03/46] PCI: vmd: Dont abuse vector irqomain as parent
 References: <20200826111628.794979401@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -73,165 +73,40 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+VMD has it's own PCI/MSI interrupt domain which is not in any way depending
+on the x86 vector domain. PCI devices behind VMD share the VMD MSIX vector
+entries via a VMD specific message translation to the actual VMD MSIX
+vector. The VMD device interrupt handler for the VMD MSIX vectors invokes
+all interrupt handlers of the devices which share a vector.
 
-Some past platform removal forgot to get rid of this unused ballast.
+Making the x86 vector domain the actual parent of the VMD irq domain is
+pointless and actually counterproductive. When a device interrupt is
+requested then it will activate the interrupt which traverses down the
+hierarchy and consumes an interrupt vector in the vector domain which is
+never used.
+
+The domain is self contained and has no parent dependencies, so just hand
+in NULL for the parent and be done with it.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
+Cc: Jonathan Derrick <jonathan.derrick@intel.com>
+Cc: linux-pci@vger.kernel.org
 ---
- arch/x86/include/asm/mpspec.h   |   10 ----------
- arch/x86/include/asm/x86_init.h |   10 ----------
- arch/x86/kernel/mpparse.c       |   26 ++++----------------------
- arch/x86/kernel/x86_init.c      |    4 ----
- 4 files changed, 4 insertions(+), 46 deletions(-)
+V2: New patch.
+---
+ drivers/pci/controller/vmd.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/mpspec.h
-+++ b/arch/x86/include/asm/mpspec.h
-@@ -67,21 +67,11 @@ static inline void find_smp_config(void)
- #ifdef CONFIG_X86_MPPARSE
- extern void e820__memblock_alloc_reserved_mpc_new(void);
- extern int enable_update_mptable;
--extern int default_mpc_apic_id(struct mpc_cpu *m);
--extern void default_smp_read_mpc_oem(struct mpc_table *mpc);
--# ifdef CONFIG_X86_IO_APIC
--extern void default_mpc_oem_bus_info(struct mpc_bus *m, char *str);
--# else
--#  define default_mpc_oem_bus_info NULL
--# endif
- extern void default_find_smp_config(void);
- extern void default_get_smp_config(unsigned int early);
- #else
- static inline void e820__memblock_alloc_reserved_mpc_new(void) { }
- #define enable_update_mptable 0
--#define default_mpc_apic_id NULL
--#define default_smp_read_mpc_oem NULL
--#define default_mpc_oem_bus_info NULL
- #define default_find_smp_config x86_init_noop
- #define default_get_smp_config x86_init_uint_noop
- #endif
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -11,22 +11,12 @@ struct cpuinfo_x86;
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -573,7 +573,8 @@ static int vmd_enable_domain(struct vmd_
+ 		return -ENODEV;
  
- /**
-  * struct x86_init_mpparse - platform specific mpparse ops
-- * @mpc_record:			platform specific mpc record accounting
-  * @setup_ioapic_ids:		platform specific ioapic id override
-- * @mpc_apic_id:		platform specific mpc apic id assignment
-- * @smp_read_mpc_oem:		platform specific oem mpc table setup
-- * @mpc_oem_pci_bus:		platform specific pci bus setup (default NULL)
-- * @mpc_oem_bus_info:		platform specific mpc bus info
-  * @find_smp_config:		find the smp configuration
-  * @get_smp_config:		get the smp configuration
-  */
- struct x86_init_mpparse {
--	void (*mpc_record)(unsigned int mode);
- 	void (*setup_ioapic_ids)(void);
--	int (*mpc_apic_id)(struct mpc_cpu *m);
--	void (*smp_read_mpc_oem)(struct mpc_table *mpc);
--	void (*mpc_oem_pci_bus)(struct mpc_bus *m);
--	void (*mpc_oem_bus_info)(struct mpc_bus *m, char *name);
- 	void (*find_smp_config)(void);
- 	void (*get_smp_config)(unsigned int early);
- };
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -46,11 +46,6 @@ static int __init mpf_checksum(unsigned
- 	return sum & 0xFF;
- }
- 
--int __init default_mpc_apic_id(struct mpc_cpu *m)
--{
--	return m->apicid;
--}
--
- static void __init MP_processor_info(struct mpc_cpu *m)
- {
- 	int apicid;
-@@ -61,7 +56,7 @@ static void __init MP_processor_info(str
- 		return;
- 	}
- 
--	apicid = x86_init.mpparse.mpc_apic_id(m);
-+	apicid = m->apicid;
- 
- 	if (m->cpuflag & CPU_BOOTPROCESSOR) {
- 		bootup_cpu = " (Bootup-CPU)";
-@@ -73,7 +68,7 @@ static void __init MP_processor_info(str
- }
- 
- #ifdef CONFIG_X86_IO_APIC
--void __init default_mpc_oem_bus_info(struct mpc_bus *m, char *str)
-+static void __init mpc_oem_bus_info(struct mpc_bus *m, char *str)
- {
- 	memcpy(str, m->bustype, 6);
- 	str[6] = 0;
-@@ -84,7 +79,7 @@ static void __init MP_bus_info(struct mp
- {
- 	char str[7];
- 
--	x86_init.mpparse.mpc_oem_bus_info(m, str);
-+	mpc_oem_bus_info(m, str);
- 
- #if MAX_MP_BUSSES < 256
- 	if (m->busid >= MAX_MP_BUSSES) {
-@@ -100,9 +95,6 @@ static void __init MP_bus_info(struct mp
- 		mp_bus_id_to_type[m->busid] = MP_BUS_ISA;
- #endif
- 	} else if (strncmp(str, BUSTYPE_PCI, sizeof(BUSTYPE_PCI) - 1) == 0) {
--		if (x86_init.mpparse.mpc_oem_pci_bus)
--			x86_init.mpparse.mpc_oem_pci_bus(m);
--
- 		clear_bit(m->busid, mp_bus_not_pci);
- #ifdef CONFIG_EISA
- 		mp_bus_id_to_type[m->busid] = MP_BUS_PCI;
-@@ -198,8 +190,6 @@ static void __init smp_dump_mptable(stru
- 			1, mpc, mpc->length, 1);
- }
- 
--void __init default_smp_read_mpc_oem(struct mpc_table *mpc) { }
--
- static int __init smp_read_mpc(struct mpc_table *mpc, unsigned early)
- {
- 	char str[16];
-@@ -218,14 +208,7 @@ static int __init smp_read_mpc(struct mp
- 	if (early)
- 		return 1;
- 
--	if (mpc->oemptr)
--		x86_init.mpparse.smp_read_mpc_oem(mpc);
--
--	/*
--	 *      Now process the configuration blocks.
--	 */
--	x86_init.mpparse.mpc_record(0);
--
-+	/* Now process the configuration blocks. */
- 	while (count < mpc->length) {
- 		switch (*mpt) {
- 		case MP_PROCESSOR:
-@@ -256,7 +239,6 @@ static int __init smp_read_mpc(struct mp
- 			count = mpc->length;
- 			break;
- 		}
--		x86_init.mpparse.mpc_record(1);
- 	}
- 
- 	if (!num_processors)
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -67,11 +67,7 @@ struct x86_init_ops x86_init __initdata
- 	},
- 
- 	.mpparse = {
--		.mpc_record		= x86_init_uint_noop,
- 		.setup_ioapic_ids	= x86_init_noop,
--		.mpc_apic_id		= default_mpc_apic_id,
--		.smp_read_mpc_oem	= default_smp_read_mpc_oem,
--		.mpc_oem_bus_info	= default_mpc_oem_bus_info,
- 		.find_smp_config	= default_find_smp_config,
- 		.get_smp_config		= default_get_smp_config,
- 	},
-
+ 	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
+-						    x86_vector_domain);
++						    NULL);
++
+ 	if (!vmd->irq_domain) {
+ 		irq_domain_free_fwnode(fn);
+ 		return -ENODEV;
 
