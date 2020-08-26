@@ -2,146 +2,127 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 482E7252553
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 03:52:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFE6525283C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 09:15:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgHZBvu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Aug 2020 21:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgHZBvs (ORCPT
+        id S1726700AbgHZHPA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 03:15:00 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:37389 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgHZHO7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Aug 2020 21:51:48 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FDAC061574;
-        Tue, 25 Aug 2020 18:51:48 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r15so144621wrp.13;
-        Tue, 25 Aug 2020 18:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6lKBXswTrzhA0xBsr6HB8AlB5+bACM8/QHtln5EsmDM=;
-        b=rkPU8zA6FnvPI7YRdwlrF32Z+jufZRPGDhsVbublBxI+2WdfyrQZ4OMYugj2LjMgRs
-         tcBC2iVxYnWeg8Zk6YWzQfE0csZvqLsQKSxRKrpJnxvpSdJ9HVsaxBuVVCZ33a7Fy89F
-         YzL00nv71TEx1KwJewv+LaAx654GeLawZ3dB08BJtkewTW0RxdimmA59/2c32/oJxdK5
-         dSKP0GfmMvAUQJfWlO1JkSN5McliJO+sig5zbM32H0/Kuj9D+O0+2QWE9ikcOBAgMoCE
-         knF+3yVSHzD+dH7rwDtBk3Dij3c2i2NaVRbX/WHThEgypBISYgNE6EdHQjalStrd+n7R
-         ERAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6lKBXswTrzhA0xBsr6HB8AlB5+bACM8/QHtln5EsmDM=;
-        b=Smmunnpt1LjXpGp/N/t0FV0JpDIO+k456WlcUpDewg1p2nTBOA1P67S7CZhYS2eSnR
-         +OOu2WflF/myrmiKXjLyTDaOm9yWRQ/+m8rWhp4lfGRIQPptsKuzcIbQK/gfqzrsmgb2
-         BdQeToImOPECJssEo1/TBCGYzI7wfdeorUnpu7sSaErjF0BZxrIBwxej/FG4QVGmlh2X
-         1BHiv36vlSmis5BKaAtrqFc4MD1qxap9ZHiDz2gBaMW3K4hIGCY8DekMKBubBcRoWA2R
-         RBoRwxM4sCife/uTbJfjeAzX/lJkNnPNGkYKMD/Hi0cHsiYPB61eiVR70QtO+4h+3P/C
-         fPwA==
-X-Gm-Message-State: AOAM530oFG3ifVTPrO+3udsr1xhmkYJh0IEhN4H2KNWhmkrJD+j5JUa9
-        fGPsJZQ/BpxSlrw+43if6fdezIzMsx/vRGp6QYY=
-X-Google-Smtp-Source: ABdhPJyeqlKj5YPc50Em7rO4ODLMTr2DC/m+jfMJDMOpF+XoOI2kKLAaJQ+LNrc4dhPoiuNEDU0+R/Ls8lv1xf0wUss=
-X-Received: by 2002:adf:db43:: with SMTP id f3mr14164955wrj.219.1598406706678;
- Tue, 25 Aug 2020 18:51:46 -0700 (PDT)
+        Wed, 26 Aug 2020 03:14:59 -0400
+Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mk0a0-1kvBwf1TTs-00kRea; Wed, 26 Aug 2020 09:14:57 +0200
+Received: by mail-qt1-f179.google.com with SMTP id 92so718948qtb.6;
+        Wed, 26 Aug 2020 00:14:56 -0700 (PDT)
+X-Gm-Message-State: AOAM532NZ91CydDDFgF41edtRYot+cE0wnTAgd3Y3/XaQn75w/CnIHtT
+        twhhN+OsckwUc6veJjV+2eqjMFd0Yt9uKLRZqQ8=
+X-Google-Smtp-Source: ABdhPJwLuGjkmlnft754xbUklzGWtHhgTglHwx7onxQfpdw4FEOyMnyaABTTrq89Agj1YnTZDmfbHPSjkpJNT1I0q7s=
+X-Received: by 2002:ac8:688e:: with SMTP id m14mr12988809qtq.7.1598426095918;
+ Wed, 26 Aug 2020 00:14:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-2-allen.cryptic@gmail.com> <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
- <202008171228.29E6B3BB@keescook> <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook> <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com> <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
- <1597849185.3875.7.camel@HansenPartnership.com> <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
- <1597873172.4030.2.camel@HansenPartnership.com>
-In-Reply-To: <1597873172.4030.2.camel@HansenPartnership.com>
-From:   Allen Pais <allen.cryptic@gmail.com>
-Date:   Wed, 26 Aug 2020 07:21:35 +0530
-Message-ID: <CAEogwTCH8qqjAnSpT0GDn+NuAps8dNbfcPVQ9h8kfOWNbzrD0w@mail.gmail.com>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Allen <allen.lkml@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Kees Cook <keescook@chromium.org>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
-        stefanr@s5r6.in-berlin.de, airlied@linux.ie,
-        Daniel Vetter <daniel@ffwll.ch>, sre@kernel.org,
-        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
-        jassisinghbrar@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com,
-        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Romain Perier <romain.perier@gmail.com>
+References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
+ <1598287583-71762-6-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a1hDBVembCd+6=ENUWYFz=72JBTFMrKYZ2aFd+_Q04F+g@mail.gmail.com> <MW2PR2101MB105201EF9EB186AA9BF31A74D7570@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB105201EF9EB186AA9BF31A74D7570@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 26 Aug 2020 09:14:39 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0bCf7Fe5Ex=AHUM49UuvNk0KEpXJ3jgWmULa2eDOWBKA@mail.gmail.com>
+Message-ID: <CAK8P3a0bCf7Fe5Ex=AHUM49UuvNk0KEpXJ3jgWmULa2eDOWBKA@mail.gmail.com>
+Subject: Re: [PATCH v7 05/10] arm64: hyperv: Add interrupt handlers for VMbus
+ and stimer
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Mark.Rutland@arm.com" <Mark.Rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:CfQNSp9K2Sdd2RppPCh70mApHLnySRUQtQTPs+NNnr5FwrxVCng
+ AGs3F+IWIItB3FT7rCqPXYb5XyGGoFDhSK+bnnEr60dbVKDCRHARjKlBpi9MGbX9vXdpJbU
+ azeTOu7yxAaAs+27q0YE9uN75kTAtAWNeCuEW0hI9gtCn99zyIo1UbdlbrW44jnbuGDBVXK
+ MznMJZzDDYN2Qs5DfuJng==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xO0XMxW3dlA=:vjc8OvsMhX2drfQa3Dri8w
+ oq47fIAjowurvD4ZZkt++2rnBezU79/Rzrl2CPXjVZ3RvhKchD4luPVKF0RsuCsaVJ6LQva0q
+ FMy/z3NyQyst0i9tHN/MfHjMpU9mf1VBQTa7RmkhfUXTQpMuo1uP7j7itn3rCJE7ixmqjoSBy
+ SNAGr8zxtJBQoorgvrwsjYaX0FVytV6ZQBlETXDbi3+qvQKDg+gYXlulRd9niBZ+pn5rlRgG0
+ wLjz8LpwEjE1UqKkJX8X9sVaHsSURyNOe78N+KO7fwZjTY/o9UJSzHMZlYovb/eNEBE5LveLp
+ +/n+C8IrI4FUR9Da86VkJSRKqTXynBnI1Rd6nLJ6Y6iJjbSFL3FssDtesh8y3osxThKWsiESz
+ O5NpdHIhQx8YrMovHWylmbB/Iizpaj51h+RTcmYFNFcO4dwZ97+oRTTAKx80+kTPqMtueaqqa
+ a4joAYmuzbQ9/0ZTfbEHecvdeXYS0Qs7k/ejk9em39qknATRFaEK4wfFvRoHUYVEpHby/p/Eq
+ zNnYZ7z1KGc2Ti9bJCG6UFLhwQa0VvtYi4A/1qkwDECB3MjvpGKjmSwSbHztJVYnIk9sNQxXm
+ Kzw5m5i40W0U8wwsHJUm3a1Q20GNdof1knYfMX77zXRJ4GMtaC2dUSnhaEFej7+YLdOrsEDK0
+ +AbCRXHPoN/phSj6191B5V+/jUIxsXPmeD5SyMl4/l17XfjJYWw9KGZglpFmqTdf6JsDD4v1x
+ YF9JL2OX7YX0nrJCDXmpF7mJVdihvVHe6fVmAFhTAJCbAO/ew/KCOtQ8Rh1vF5vmTzrxNfOyR
+ 5OIftf6uZV5xVzlzAgOG5KJ5w8zn9McySso6Gi1tWQSTXJyaykpM+Gie0fGL2fKLPQ1HlJC
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 3:09 AM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
+On Wed, Aug 26, 2020 at 12:04 AM Michael Kelley <mikelley@microsoft.com> wrote:
+> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, August 24, 2020 11:54 AM
+
+> >
+> > I'm not sure what the correct solution should be, but what I'd try to
+> > do here is to move every function that just considers the platform
+> > rather than the architecture somewhere into drivers/hv where it
+> > can be linked into the same modules as the existing files when
+> > building for arm64, while trying to keep architecture specific code
+> > in the header file where it can be included from those modules.
 >
-> On Wed, 2020-08-19 at 21:54 +0530, Allen wrote:
-> > > [...]
-> > > > > Since both threads seem to have petered out, let me suggest in
-> > > > > kernel.h:
-> > > > >
-> > > > > #define cast_out(ptr, container, member) \
-> > > > >     container_of(ptr, typeof(*container), member)
-> > > > >
-> > > > > It does what you want, the argument order is the same as
-> > > > > container_of with the only difference being you name the
-> > > > > containing structure instead of having to specify its type.
-> > > >
-> > > > Not to incessantly bike shed on the naming, but I don't like
-> > > > cast_out, it's not very descriptive. And it has connotations of
-> > > > getting rid of something, which isn't really true.
-> > >
-> > > Um, I thought it was exactly descriptive: you're casting to the
-> > > outer container.  I thought about following the C++ dynamic casting
-> > > style, so out_cast(), but that seemed a bit pejorative.  What about
-> > > outer_cast()?
-> > >
-> > > > FWIW, I like the from_ part of the original naming, as it has
-> > > > some clues as to what is being done here. Why not just
-> > > > from_container()? That should immediately tell people what it
-> > > > does without having to look up the implementation, even before
-> > > > this becomes a part of the accepted coding norm.
-> > >
-> > > I'm not opposed to container_from() but it seems a little less
-> > > descriptive than outer_cast() but I don't really care.  I always
-> > > have to look up container_of() when I'm using it so this would just
-> > > be another macro of that type ...
-> > >
-> >
-> >  So far we have a few which have been suggested as replacement
-> > for from_tasklet()
-> >
-> > - out_cast() or outer_cast()
-> > - from_member().
-> > - container_from() or from_container()
-> >
-> > from_container() sounds fine, would trimming it a bit work? like
-> > from_cont().
+> OK.  The concept of separating platform from architecture makes
+> sense to me.  The original separation of the Hyper-V code into
+> architecture independent portions and x86-specific portions could
+> use some tweaking now that we're dealing with n=2 architectures.  With
+> that tweaking, I can reduce the amount of Hyper-V code under arch/x86
+> and under arch/arm64.
 >
-> I'm fine with container_from().  It's the same form as container_of()
-> and I think we need urgent agreement to not stall everything else so
-> the most innocuous name is likely to get the widest acceptance.
+> On the flip side, the Hyper-V implementation on x86 and ARM64 has
+> differences that are semi-related to the architecture.  For example, on
+> x86 Hyper-V uses synthetic MSRs for a lot of guest-hypervisor setup, while
+> hypercalls are required on ARM64.  So I'm assuming those differences
+> will end up in code under arch/x86 and arch/arm64.
 
-Kees,
+Yes, that absolutely makes sense.
 
-  Will you be  sending the newly proposed API to Linus? I have V2
-which uses container_from()
-ready to be sent out.
+> Arguably, I could introduce a level of indirection (such as
+> CONFIG_HYPERV_USE_MSRS vs.
+> CONFIG_HYPERV_USE_HYPERCALLS) to distinguish the two behaviors.
+> The selection would be tied to the architecture, and then code in
+> drivers/hv can #ifdef the two cases.  But I wonder if getting code out of
+> arch/x86 and arch/arm64 is worth that additional messiness.
 
-Thanks.
+No, I think that would take it a little too far, and conflicts with the
+generic rule that code under drivers/* should be written to be portable
+even if can only run on a particular target platform.
+
+> Looking at the Xen code in drivers/xen, it looks like a lot of the Xen functionality
+> is implemented in hypercalls that can be consistent across architectures,
+> though I was a bit surprised to see a dozen or so instances of #ifdef CONFIG_X86.
+> Xen also #ifdefs on PV vs. PVHVM, which may handle some architecture
+> differences implicitly.  But I'm assuming that doing #ifdef <architecture>
+> in the Hyper-V code in order to reduce code under arch/x86 or arch/arm64
+> is not the right way to go.
+
+In general that is true, adding a lot of #ifdefs makes code less readable and
+harder to test. OTOH there are cases where a single #ifdef can be useful when
+it avoids adding a larger amount of complexity elsewhere. Many subsystems
+try to restrict the #ifdef checks to header files while keeping the
+drivers/* code
+free of them.
+
+       Arnd
