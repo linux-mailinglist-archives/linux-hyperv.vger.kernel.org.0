@@ -2,78 +2,143 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C21253902
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 22:20:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16F2F25390C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Aug 2020 22:21:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHZUUZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Aug 2020 16:20:25 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:42398 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbgHZUUY (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:20:24 -0400
-Received: from [192.168.1.17] (50-47-107-221.evrt.wa.frontiernet.net [50.47.107.221])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9B05920B4908;
-        Wed, 26 Aug 2020 13:20:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B05920B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598473223;
-        bh=EX/DwFAXiHCmLBGtxTOq0U+Q9LW6/6kBb+g19ZDld40=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=bmera78MVtkF/OSr/j4ERa4NV3ikXNA5CPNgXnXmYldvTa+elh8oRvWYtcBfIeSww
-         jHp0cVUYeg8pOTEsswWJj/X+1/wWQbBdC14ccpMZhVkbmEkdrQ88seEx9M3SMYRpft
-         FZNZTwuQXpzNMBBOLxKYAJBrRnu7AUA0AEZd7lpQ=
-Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
-To:     iourit@microsoft.com, iouri_t@hotmail.com
-Cc:     haiyangz@microsoft.com, sthemmin@microsoft.com,
-        gregkh@linuxfoundation.org, iourit@microsoft.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-References: <20200814123856.3880009-1-sashal@kernel.org>
- <20200814123856.3880009-2-sashal@kernel.org>
- <20200814131839.u2vy52mtiejtuwcg@liuwe-devbox-debian-v2>
-From:   Iouri Tarassov <iourit@linux.microsoft.com>
-Message-ID: <7db18ff7-e99b-62db-508e-a6054c9ac3f9@linux.microsoft.com>
-Date:   Wed, 26 Aug 2020 13:20:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200814131839.u2vy52mtiejtuwcg@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        id S1726790AbgHZUVp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Aug 2020 16:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726241AbgHZUVo (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:21:44 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A897E2076C;
+        Wed, 26 Aug 2020 20:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598473303;
+        bh=YMfWFqC5hD4XcAvqBAU0k4rGeGVgIOGdihLkY7QIQuI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NMTbNDQwmiy1TI7fQW+JBmDTTcazSYXOKy3VJ01rf1Ap90CQohqzakM3jl9iiJ6Du
+         SP+RZY3eNF4e+puBPocRu65f+SDsiCWCqgkjpNooqC9R8TqsTM97vhGhGVPC/oD/qy
+         7abz/f4FoDiNVRC+OaPlMVmemXAtkSFDMTV+ZL3M=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB1vS-006y5k-3Z; Wed, 26 Aug 2020 21:21:42 +0100
+Date:   Wed, 26 Aug 2020 21:21:40 +0100
+Message-ID: <878se12m5n.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 19/46] x86/msi: Use generic MSI domain ops
+In-Reply-To: <20200826112332.564274859@linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112332.564274859@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Wed, 26 Aug 2020 12:16:47 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> pci_msi_get_hwirq() and pci_msi_set_desc are not longer special. Enable the
+> generic MSI domain ops in the core and PCI MSI code unconditionally and get
+> rid of the x86 specific implementations in the X86 MSI code and in the
+> hyperv PCI driver.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> ---
+>  arch/x86/include/asm/msi.h          |    2 --
+>  arch/x86/kernel/apic/msi.c          |   15 ---------------
+>  drivers/pci/controller/pci-hyperv.c |    8 --------
+>  drivers/pci/msi.c                   |    4 ----
+>  kernel/irq/msi.c                    |    6 ------
+>  5 files changed, 35 deletions(-)
+> 
+> --- a/arch/x86/include/asm/msi.h
+> +++ b/arch/x86/include/asm/msi.h
+> @@ -9,6 +9,4 @@ typedef struct irq_alloc_info msi_alloc_
+>  int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  		    msi_alloc_info_t *arg);
+>  
+> -void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+> -
+>  #endif /* _ASM_X86_MSI_H */
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -204,12 +204,6 @@ void native_teardown_msi_irq(unsigned in
+>  	irq_domain_free_irqs(irq, 1);
+>  }
+>  
+> -static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+> -					 msi_alloc_info_t *arg)
+> -{
+> -	return arg->hwirq;
+> -}
+> -
+>  int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  		    msi_alloc_info_t *arg)
+>  {
+> @@ -228,17 +222,8 @@ int pci_msi_prepare(struct irq_domain *d
+>  }
+>  EXPORT_SYMBOL_GPL(pci_msi_prepare);
+>  
+> -void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+> -{
+> -	arg->desc = desc;
+> -	arg->hwirq = pci_msi_domain_calc_hwirq(desc);
+> -}
+> -EXPORT_SYMBOL_GPL(pci_msi_set_desc);
 
-On 8/14/2020 6:18 AM, Wei Liu wrote:
-> On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
-> [...]
->> +
->> +#include "dxgkrnl.h"
->> +
->> +int dxgadapter_init(struct dxgadapter *adapter, struct hv_device *hdev)
->> +{
->> +	int ret = 0;
->> +	char s[80];
->> +
->> +	UNUSED(s);
-> If s is not used, why not just remove it?
->
-> Indeed it is not used anywhere in this function. That saves you 80 bytes
-> on stack.
->
->> +static int dxgk_destroy_hwcontext(struct dxgprocess *process,
->> +					      void *__user inargs)
->> +{
->> +	/* This is obsolete entry point */
->> +	return ENOTTY;
->> +}
->> +
-> Other places have been using negative numbers for errors. I guess you
-> want -ENOTTY here too.
->
-> Wei.
->
->
+I think that at this stage, pci_msi_domain_calc_hwirq() can be made
+static, as it was only ever exported for this call site. Nice cleanup!
+
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
