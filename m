@@ -2,20 +2,20 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D17F253F77
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Aug 2020 09:46:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AFE8253F7F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Aug 2020 09:47:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgH0Hq1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 27 Aug 2020 03:46:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49900 "EHLO mx2.suse.de"
+        id S1728021AbgH0HrZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 27 Aug 2020 03:47:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50622 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgH0Hq1 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:46:27 -0400
+        id S1726851AbgH0HrY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:47:24 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 49C1EACF2;
-        Thu, 27 Aug 2020 07:46:57 +0000 (UTC)
-Subject: Re: [patch V2 27/46] x86/xen: Rework MSI teardown
+        by mx2.suse.de (Postfix) with ESMTP id 4A2A8AC1F;
+        Thu, 27 Aug 2020 07:47:55 +0000 (UTC)
+Subject: Re: [patch V2 28/46] x86/xen: Consolidate XEN-MSI init
 To:     Thomas Gleixner <tglx@linutronix.de>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -47,14 +47,14 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
 References: <20200826111628.794979401@linutronix.de>
- <20200826112333.326841410@linutronix.de>
+ <20200826112333.420224092@linutronix.de>
 From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <5c18f793-9212-b7f0-583d-896e1957ba1a@suse.com>
-Date:   Thu, 27 Aug 2020 09:46:22 +0200
+Message-ID: <fc8d8b63-f908-2520-7cf7-42ead4aa4bd8@suse.com>
+Date:   Thu, 27 Aug 2020 09:47:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200826112333.326841410@linutronix.de>
+In-Reply-To: <20200826112333.420224092@linutronix.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,16 +70,10 @@ On 26.08.20 13:16, Thomas Gleixner wrote:
 > XEN because the irq domain pointer takes precedence over arch_*_msi_irqs()
 > fallbacks.
 > 
-> XENs MSI teardown relies on default_teardown_msi_irqs() which invokes
-> arch_teardown_msi_irq(). default_teardown_msi_irqs() is a trivial iterator
-> over the msi entries associated to a device.
+> To achieve this XEN MSI interrupt management needs to be wrapped into an
+> irq domain.
 > 
-> Implement this loop in xen_teardown_msi_irqs() to prepare for removal of
-> the fallbacks for X86.
-> 
-> This is a preparatory step to wrap XEN MSI alloc/free into a irq domain
-> which in turn allows to store the irq domain pointer in struct device and
-> to use the irq domain functions directly.
+> Move the x86_msi ops setup into a single function to prepare for this.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
