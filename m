@@ -2,131 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FBCD254CEC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Aug 2020 20:20:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AB86254E05
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Aug 2020 21:09:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgH0SUm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 27 Aug 2020 14:20:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgH0SUm (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:20:42 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A730E2087E;
-        Thu, 27 Aug 2020 18:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598552442;
-        bh=m7vhbAFnI7P7AwdKlzAn0wqD1YPTHJSRQ+ZyXNR7MXY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UkvStWoB1OiC87isw5L+RU0aRZ6Byn64sN6W7fqyqnYslW1VbyUto3Ot7HnJdzmV/
-         BpHMqJ6kR2FuX03H7NAUtZrH7Q62VQWR+Hm7VJz4TNIG5szeBamrDedrrHkWMj3Ds6
-         qwX6HCvJ0Dk2KiupyPg7/GXt0z0MFg9xlpzjsATc=
-Date:   Thu, 27 Aug 2020 13:20:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks
- selectable
-Message-ID: <20200827182040.GA2049623@bjorn-Precision-5520>
+        id S1726266AbgH0TJN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 27 Aug 2020 15:09:13 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:42384 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbgH0TJN (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:09:13 -0400
+Received: from [192.168.1.17] (50-47-107-221.evrt.wa.frontiernet.net [50.47.107.221])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B6EE220B4908;
+        Thu, 27 Aug 2020 12:09:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B6EE220B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598555352;
+        bh=rf7Bo6zzLZ1n4MEtRxGkQXPORAU0g5FXGiF/T47Xrag=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GVCfd7NDOkL0WqE9wPpPp4vR0P7+qt58pEK2g1Rd8Wv1kQj2Wp8yQWyo8AEMt3WaK
+         VGqIxHy68dUkvdZehz0zYP1jC88ZKBQD+dv8hvOVQjpQYH/1yzIeL3Xfg35rJe1wYy
+         WPiw4Xwcf4g3kpNje0Shuhgx0iwk+lOyjE2G6B0E=
+Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
+To:     Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        gregkh@linuxfoundation.org, iourit@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+References: <20200814123856.3880009-1-sashal@kernel.org>
+ <20200814123856.3880009-2-sashal@kernel.org>
+ <20200814131839.u2vy52mtiejtuwcg@liuwe-devbox-debian-v2>
+From:   Iouri Tarassov <iourit@linux.microsoft.com>
+Message-ID: <154680b4-587d-6e26-3276-d3bb0fdcee46@linux.microsoft.com>
+Date:   Thu, 27 Aug 2020 12:09:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826112333.992429909@linutronix.de>
+In-Reply-To: <20200814131839.u2vy52mtiejtuwcg@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-[+cc Rob,
-cover https://lore.kernel.org/r/20200826111628.794979401@linutronix.de/
-this  https://lore.kernel.org/r/20200826112333.992429909@linutronix.de/]
+Thank you,Wei. These issues will be fixed in the next patchset.
 
-On Wed, Aug 26, 2020 at 01:17:02PM +0200, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> The arch_.*_msi_irq[s] fallbacks are compiled in whether an architecture
-> requires them or not. Architectures which are fully utilizing hierarchical
-> irq domains should never call into that code.
-> 
-> It's not only architectures which depend on that by implementing one or
-> more of the weak functions, there is also a bunch of drivers which relies
-> on the weak functions which invoke msi_controller::setup_irq[s] and
-> msi_controller::teardown_irq.
-> 
-> Make the architectures and drivers which rely on them select them in Kconfig
-> and if not selected replace them by stub functions which emit a warning and
-> fail the PCI/MSI interrupt allocation.
+Iouri
 
-Sorry, I really don't understand this, so these are probably stupid
-questions.
-
-If CONFIG_PCI_MSI_ARCH_FALLBACKS is defined, we will supply
-implementations of:
-
-  arch_setup_msi_irq
-  arch_teardown_msi_irq
-  arch_setup_msi_irqs
-  arch_teardown_msi_irqs
-  default_teardown_msi_irqs    # non-weak
-
-You select CONFIG_PCI_MSI_ARCH_FALLBACKS for ia64, mips, powerpc,
-s390, sparc, and x86.  I see that all of those arches implement at
-least one of the functions above.  But x86 doesn't and I can't figure
-out why it needs to select CONFIG_PCI_MSI_ARCH_FALLBACKS.
-
-I assume there's a way to convert these arches to hierarchical irq
-domains so they wouldn't need this at all?  Is there a sample
-conversion to look at?
-
-And I can't figure out what's special about tegra, rcar, and xilinx
-that makes them need it as well.  Is there something I could grep for
-to identify them?  Is there a way to convert them so they don't need
-it?
-
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -193,17 +193,38 @@ void pci_msi_mask_irq(struct irq_data *d
->  void pci_msi_unmask_irq(struct irq_data *data);
->  
->  /*
-> - * The arch hooks to setup up msi irqs. Those functions are
-> - * implemented as weak symbols so that they /can/ be overriden by
-> - * architecture specific code if needed.
-> + * The arch hooks to setup up msi irqs. Default functions are implemented
-
-s/msi/MSI/ to match the one below.
-
-> + * as weak symbols so that they /can/ be overriden by architecture specific
-> + * code if needed. These hooks must be enabled by the architecture or by
-> + * drivers which depend on them via msi_controller based MSI handling.
+On 8/14/2020 6:18 AM, Wei Liu wrote:
+> On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
+> [...]
+> > +
+> > +#include "dxgkrnl.h"
+> > +
+> > +int dxgadapter_init(struct dxgadapter *adapter, struct hv_device *hdev)
+> > +{
+> > +	int ret = 0;
+> > +	char s[80];
+> > +
+> > +	UNUSED(s);
+>
+> If s is not used, why not just remove it?
+>
+> Indeed it is not used anywhere in this function. That saves you 80 bytes
+> on stack.
+>
+> > +static int dxgk_destroy_hwcontext(struct dxgprocess *process,
+> > +					      void *__user inargs)
+> > +{
+> > +	/* This is obsolete entry point */
+> > +	return ENOTTY;
+> > +}
+> > +
+>
+> Other places have been using negative numbers for errors. I guess you
+> want -ENOTTY here too.
+>
+> Wei.
+>
+>
