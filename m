@@ -2,28 +2,28 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3A3E255467
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Aug 2020 08:17:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 402F725546A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Aug 2020 08:18:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgH1GRQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 28 Aug 2020 02:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37954 "EHLO mail.kernel.org"
+        id S1726644AbgH1GSo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 28 Aug 2020 02:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgH1GRP (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:17:15 -0400
+        id S1725849AbgH1GSn (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 28 Aug 2020 02:18:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764A320707;
-        Fri, 28 Aug 2020 06:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 782C420707;
+        Fri, 28 Aug 2020 06:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598595435;
-        bh=VpecTDpZuJpFood9pl3sPXDL65hewM0IOGZZFWCt5pQ=;
+        s=default; t=1598595523;
+        bh=RhUMnQR/kXBEykVPYYpsrcg0sCqPxQDS5P3aA5+w4dA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B/T+NalL7Tue/pKAq6kwz3chnBuFDvkIt2nXyZgj5CTmszp9OfCnTJ8apR7nsPmLE
-         b4ywkgsrU1tkg+FIS5A9U8G0hzQ5KW7mQj8mgfG2C5GzhDeuHSEB1YZhw8adQBOq44
-         3xeJqYCuwtiZIn7p4O1rObxWlp7jf3k4f72sQ5KA=
-Date:   Fri, 28 Aug 2020 08:17:12 +0200
+        b=mOTc4jKc2rGw70rZ9w3sChP8+ed0thcpJYqNvXD5tzDP+L/iIyjqKSjnpFni128ij
+         dy/ahZvwCiIK/CcZtNXV7jmHheLQldRLZ1FGJO+JSoECxvuJpyOCQsDE4jApddfsSd
+         2t5bjj+Zl/q714R9+nOnDpq4g+yB5P291IoiP6lU=
+Date:   Fri, 28 Aug 2020 08:18:40 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Iouri Tarassov <iourit@linux.microsoft.com>
 Cc:     Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
@@ -31,7 +31,7 @@ Cc:     Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
         wei.liu@kernel.org, iourit@microsoft.com,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
 Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
-Message-ID: <20200828061712.GD56396@kroah.com>
+Message-ID: <20200828061840.GE56396@kroah.com>
 References: <20200814123856.3880009-1-sashal@kernel.org>
  <20200814123856.3880009-2-sashal@kernel.org>
  <20200821135340.GA4067@bug>
@@ -46,26 +46,22 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Thu, Aug 27, 2020 at 05:25:23PM -0700, Iouri Tarassov wrote:
+> > > +bool dxghwqueue_acquire_reference(struct dxghwqueue *hwqueue)
 > > > +{
-> > > +	struct dxgprocess_adapter *adapter_info = dxgmem_alloc(process,
-> > > +							       DXGMEM_PROCESS_ADAPTER,
-> > > +							       sizeof
-> > > +							       (*adapter_info));
+> > > +	return refcount_inc_not_zero(&hwqueue->refcount);
+> > > +}
 > > 
-> > We normally use kernel functions in kernel code.
-> Using a custom memory allocation function allows us to track memory
-> allocations per DXGPROCESS and catch memory leaks when a DXGPROCESS is
-> destroyed or when the driver is unloaded. It also allows to easily change
-> the memory allocation implementation if needed.
+> > Midlayers are evil.
+> I strongly agree in general, but think that in our case the layers are very
+> small. It allows to quickly find all places where a reference/dereference on
+> an object is done and addition of debug tracing to catch errors.
 
-There is only one "memory allocation implementation" in the kernel,
-please use that and not any wrapper functions.  You wouldn't want to see
-1000's of different memory allocation functions, each driver having a
-unique one, right?
+Again, no, please remove all layers like this.  They just make it
+impossible for others to review and understand the code over time.
 
-Remember, your code is becoming part of the larger kernel, so follow the
-guidelines and rules of it.  There is nothing different from your code
-and a serial port driver when it comes to these expectations.
+Also, in this specific case, it would have allowed me to easily realize
+that you are doing this type of call incorrectly and should be using a
+different data structure :)
 
 thanks,
 
