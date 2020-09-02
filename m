@@ -2,70 +2,85 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F5BA25A7AC
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Sep 2020 10:20:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B47C25A936
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Sep 2020 12:15:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgIBISl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Sep 2020 04:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39108 "EHLO mail.kernel.org"
+        id S1726140AbgIBKP3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Sep 2020 06:15:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56542 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgIBISl (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:18:41 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADA92084C;
-        Wed,  2 Sep 2020 08:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599034720;
-        bh=7+JEzktISsgTMdUzuapRscBPtX4N6Y3wMNOli4jVPQ4=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=AUuruMhNnTWN9d+oIWMoSqWA8+m8sBM+oeWPLsiObVeHFiq7BNSvIvN4IuQjBGrUN
-         k+B+5u9HrYhoRwTH/Os1qWGB1TXIiwzK1gOw6wV1fQkR0xWwE/1B4a4FZP7bKSHIC9
-         PP5dp0UkLkUuQvkHkcTKYHlSgMUgvsrGj9E2u+Z4=
-Date:   Wed, 2 Sep 2020 10:18:35 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-cc:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [RFC v2 09/11] HID: hyperv: Make ringbuffer at least take two
- pages
-In-Reply-To: <20200902030107.33380-10-boqun.feng@gmail.com>
-Message-ID: <nycvar.YFH.7.76.2009021018080.4671@cbobk.fhfr.pm>
-References: <20200902030107.33380-1-boqun.feng@gmail.com> <20200902030107.33380-10-boqun.feng@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726285AbgIBKP1 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 2 Sep 2020 06:15:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D97A3AC61;
+        Wed,  2 Sep 2020 10:15:26 +0000 (UTC)
+Subject: Re: [PATCH v1 4/5] xen/balloon: try to merge system ram resources
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        Julien Grall <julien@xen.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+References: <20200821103431.13481-1-david@redhat.com>
+ <20200821103431.13481-5-david@redhat.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <226413fc-ef25-59bd-772f-79012fda0ee3@suse.com>
+Date:   Wed, 2 Sep 2020 12:15:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200821103431.13481-5-david@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 2 Sep 2020, Boqun Feng wrote:
-
-> When PAGE_SIZE > HV_HYP_PAGE_SIZE, we need the ringbuffer size to be at
-> least 2 * PAGE_SIZE: one page for the header and at least one page of
-> the data part (because of the alignment requirement for double mapping).
+On 21.08.20 12:34, David Hildenbrand wrote:
+> Let's reuse the new mechanism to merge system ram resources below the
+> root. We are the only one hotplugging system ram (e.g., DIMMs don't apply),
+> so this is safe to be used.
 > 
-> So make sure the ringbuffer sizes to be at least 2 * PAGE_SIZE when
-> using vmbus_open() to establish the vmbus connection.
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: Roger Pau Monné <roger.pau@citrix.com>
+> Cc: Julien Grall <julien@xen.org>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>   drivers/xen/balloon.c | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+> index 37ffccda8bb87..5ec73f752b8a7 100644
+> --- a/drivers/xen/balloon.c
+> +++ b/drivers/xen/balloon.c
+> @@ -338,6 +338,10 @@ static enum bp_state reserve_additional_memory(void)
+>   	if (rc) {
+>   		pr_warn("Cannot add additional memory (%i)\n", rc);
+>   		goto err;
+> +	} else {
+> +		resource = NULL;
+> +		/* Try to reduce the number of system ram resources. */
+> +		merge_system_ram_resources(&iomem_resource);
+>   	}
 
-Acked-by: Jiri Kosina <jkosina@suse.cz>
+I don't see the need for setting resource to NULL and to use an "else"
+clause here.
 
--- 
-Jiri Kosina
-SUSE Labs
 
+Juergen
