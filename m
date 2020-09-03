@@ -2,33 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C7CC25C6FA
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Sep 2020 18:35:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F10B25C888
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Sep 2020 20:12:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgICQfV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Sep 2020 12:35:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45216 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgICQfV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:35:21 -0400
-IronPort-SDR: zJ7A4drycomACfX8t+3H0QGwvmbHvmN8ENE1T/eCp1ACLow9IR3Wpqk0LlCk9+wQ5KEsilcL4v
- SDswZI3eDxYQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="137134895"
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="137134895"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 09:35:21 -0700
-IronPort-SDR: fpm2EUkci2oTbjGtopGBquDwwKng+PMe+foZPSI3HK+bv08KmruAxr7wF/55ACFaKSLBoUxQVH
- vLRGOXY9BheA==
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="503124720"
-Received: from araj-mobl1.jf.intel.com ([10.254.124.120])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 09:35:18 -0700
-Date:   Thu, 3 Sep 2020 09:35:16 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
+        id S1728850AbgICSMM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Sep 2020 14:12:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55392 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgICSMM (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 3 Sep 2020 14:12:12 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599156730;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kNaEs04RarZatwvnCZYp8Xyjij0m0qzMj73pUrlORw4=;
+        b=yn1ERvJRi3Ap+fUwpE6YE6QEJw75JqHwztjGLfuIu5Vhx3ylMcPaeZMvt5r7IvXcWh2dAh
+        7+z/aBykT9nJNYFo4QDegWd1mhgggaPOZ01qE8hyd4uY+QT0PBl3pkiYuzKw4KK3iGrXUr
+        14y2LCk2YypciaSpx/mGkXvE0yiU5PSMcNx6TYqrk1t9NAuNFM6JknEl8Xbx7SEbi8u2zu
+        ThkvHpDONagjoyMhBYJuQeMvMbIjXzsUhAvsaYpyYEJPejQesbQQGHFRQP2bHdcIklQKao
+        rCqIVG7cJWCK1a7UyFdTjAaJOvn/BS6CkMvwnJ9pnqFjjru6qQ8dggQ04IJkjg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599156730;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kNaEs04RarZatwvnCZYp8Xyjij0m0qzMj73pUrlORw4=;
+        b=dsVN9RWDW8rGNqnULQccYNxG7P4DgVJRNir2mvhT2bTe8IjmmCK2zcbya02NGrTVlYkNdL
+        1dML9FSRvccDMDDw==
+To:     "Raj\, Ashok" <ashok.raj@intel.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Joerg Roedel <joro@8bytes.org>,
         iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
@@ -59,60 +63,47 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device
- MSI
-Message-ID: <20200903163516.GA23129@araj-mobl1.jf.intel.com>
-References: <20200826111628.794979401@linutronix.de>
+Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device MSI
+In-Reply-To: <20200903163516.GA23129@araj-mobl1.jf.intel.com>
+References: <20200826111628.794979401@linutronix.de> <20200903163516.GA23129@araj-mobl1.jf.intel.com>
+Date:   Thu, 03 Sep 2020 20:12:09 +0200
+Message-ID: <87eeniybk6.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200826111628.794979401@linutronix.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Thomas,
+Ashok,
 
-Thanks a ton for jumping in helping on straightening it for IMS!!!
+On Thu, Sep 03 2020 at 09:35, Ashok Raj wrote:
+> On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
+>> This is the second version of providing a base to support device MSI (non
+>> PCI based) and on top of that support for IMS (Interrupt Message Storm)
+>
+> s/Storm/Store
+>
+> maybe pun intended :-)
 
+Maybe? :)
 
-On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
-> This is the second version of providing a base to support device MSI (non
-> PCI based) and on top of that support for IMS (Interrupt Message Storm)
+>> based devices in a halfways architecture independent way.
+>
+> You mean "halfways" because the message addr and data follow guidelines
+> per arch (x86 or such), but the location of the storage isn't dictated
+> by architecture? or did you have something else in mind?
 
-s/Storm/Store
+Yes, the actual message adress and data format are architecture
+specific, but we also have x86 specific allocation info format which
+needs an arch callback unfortunately.
 
-maybe pun intended :-)
+>>    - Ensure that the necessary flags are set for device SMI
+>
+> is that supposed to be MSI? 
 
-> based devices in a halfways architecture independent way.
+Of course, but SMI is a better match for Message Storm :)
 
-You mean "halfways" because the message addr and data follow guidelines
-per arch (x86 or such), but the location of the storage isn't dictated
-by architecture? or did you have something else in mind? 
+Thanks,
 
-> 
-> The first version can be found here:
-> 
->     https://lore.kernel.org/r/20200821002424.119492231@linutronix.de
-> 
-
-[snip]
-
-> 
-> Changes vs. V1:
-> 
->    - Addressed various review comments and addressed the 0day fallout.
->      - Corrected the XEN logic (Jürgen)
->      - Make the arch fallback in PCI/MSI opt-in not opt-out (Bjorn)
-> 
->    - Fixed the compose MSI message inconsistency
-> 
->    - Ensure that the necessary flags are set for device SMI
-
-is that supposed to be MSI? 
-
-Cheers,
-Ashok
+        tglx
