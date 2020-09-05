@@ -2,106 +2,124 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A594325E0D7
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Sep 2020 19:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 614EB25E478
+	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Sep 2020 02:04:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgIDRaP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Sep 2020 13:30:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40713 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbgIDRaK (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:30:10 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j2so7499875wrx.7;
-        Fri, 04 Sep 2020 10:30:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wNy2hGieTjSAjcYv7kwR0BOvIQ7J3JLWd6JVvNnGJ0g=;
-        b=sZ03nkQtO3bsUjoKBy3QLm+3u9SW6Lpvfeq1irGk3xaB8UVZSgwiFfIOjAs+/gYeQ1
-         8aNDgOqAkWfXlIWn9fUfe70C5H3COjdeQ84Emxxr45a15Sl5RJOpoNgB+0bq4Wh4yscx
-         GXz14XgfuJ8nOfgUP4YuW2e5LCoqQJcueFlRFYa5BWMwNcy/UauUarfmlUO5jxvMC0XZ
-         ElGn1peCJabazZjZdDPZ/kLCmkwK+bzO01R+AQRRS3YAPT4QRU6I56z8JiXhWdAiOj3e
-         OCcuQgr1zTsWHpUV0Rj3iPB5JqGiafm3X5Ha3PCiao01tujuWrfQSALkEjcBK5JsF/3w
-         Xzlg==
-X-Gm-Message-State: AOAM533obBxxceAl1ccD5rMuXaXoqhCPMYiYwiGk2vLdqAkoT3gmEzeb
-        Wz/9RgycX3ySBYBWvOeP0vI=
-X-Google-Smtp-Source: ABdhPJy4lxSlIVmCZUYUt5G7cHc/b9vzzBbVyS5+h60xbFD5BvIaoh1SmuoljfZVF5ACmqFJVbs98w==
-X-Received: by 2002:a05:6000:100c:: with SMTP id a12mr9155928wrx.115.1599240608246;
-        Fri, 04 Sep 2020 10:30:08 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id h5sm13026654wrt.31.2020.09.04.10.30.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 10:30:07 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 17:30:06 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S1726597AbgIEAEL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Sep 2020 20:04:11 -0400
+Received: from mail-dm6nam12on2100.outbound.protection.outlook.com ([40.107.243.100]:38241
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726208AbgIEAEI (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 4 Sep 2020 20:04:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XRJhuqviCu2R+f3fxqx4TxdSEtqUqOsMTRa3ll0pHs4U10tE1+yCIZHv/4TyFMxfCbJbViqWY9DbjSesH9/pFxrLdBlsz+mHZirVuz9i9Zrz9d6RlFniMbgaDjGmVO/EXR4aoeksXPYWm69zrcfEL6YftRh/2CHqDpXJ7VUu+ybQX/fzMM3PwcOfFYRiGkdMUa+pwnb4iUeIpL63BsD26w/jei/xI6dL0CL+FlptMQOq3FppHJkf5OC3ZVF2ZdGqhZyNj09N1Ok0/AOWI0RZqYIlbusNbgFwykizeqgzv039O7XmDbhw0GmLGSTS4pNQ9/nsukTn5ldjCS9nmipLcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d/GTUNhF+3l7jIns/O6WJeB6YCP3DvPeDifTuLalKIo=;
+ b=YxWnBd0JzLITGYsy9yItMIxAsFDOGPSs7fbeBWZaoWIOlpLljf6EumJosTpkKIto7ooiqfm9++8lWgbVsHKPDlQBXpoHRtGnl96hK/BWmqVqAfYHDk/O4EvZJ8KC14cevNCUfdhGcwiSn8HdPrShDtqFsTS5Y+Csx2kQLJafB239JuakGHXUQhYyPRgYzyJC8GGsSZcPJz+xFeozyWgQpVm21oxlkC5z+Hm4THnW9Q3X/ZtJw1ezRc79NWDZlYlywdF9O254aj91QV4825ypfXJVtW4+v+WDdSFtoqv5SiP/x5S/ne6kbSwSJ9MUlV0vn0rKf59KAqXu64MwO3Ntdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d/GTUNhF+3l7jIns/O6WJeB6YCP3DvPeDifTuLalKIo=;
+ b=gsRhDIrLWzxUMOJCy3QWHnVOcdN+O8uLzxyWNhjeGQ3CA0RWXostqi7kFw331Omd8zXWISdE1SbPuF/9SPsm21fPvAbCWiOTjQk7NXSaZ4xCdwSAYWAdf41G8pjJbhFeQcOQADeWGESbyfMWLYO9N6Y8UwJNfYRAUCGBCelesEM=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1833.namprd21.prod.outlook.com (2603:10b6:302:8::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.9; Sat, 5 Sep
+ 2020 00:04:05 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d00b:3909:23b:83f1%5]) with mapi id 15.20.3370.008; Sat, 5 Sep 2020
+ 00:04:05 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Boqun Feng <boqun.feng@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v1 5/5] hv_balloon: try to merge system ram resources
-Message-ID: <20200904173006.e65qow53ietxzpne@liuwe-devbox-debian-v2>
-References: <20200821103431.13481-1-david@redhat.com>
- <20200821103431.13481-6-david@redhat.com>
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: RE: [RFC v2 02/11] Drivers: hv: vmbus: Move __vmbus_open()
+Thread-Topic: [RFC v2 02/11] Drivers: hv: vmbus: Move __vmbus_open()
+Thread-Index: AQHWgNVZDXo9hepsQkKExJs/TAQfsalZLXSg
+Date:   Sat, 5 Sep 2020 00:04:05 +0000
+Message-ID: <MW2PR2101MB1052EBD269206836141C9377D72A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200902030107.33380-1-boqun.feng@gmail.com>
+ <20200902030107.33380-3-boqun.feng@gmail.com>
+In-Reply-To: <20200902030107.33380-3-boqun.feng@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-05T00:04:04Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f076ea63-6053-43d1-af76-e2d7a80a4ff0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f9b8269a-9711-4995-0b28-08d8512f346a
+x-ms-traffictypediagnostic: MW2PR2101MB1833:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB1833B73ACD7BFF4631FDDA12D72A0@MW2PR2101MB1833.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QaptI0zyZzZIZB9o7O8jA1NYc9p8ZzuIaWXl9rf+wfQR+cfyDXa6SzVZtSvxzAKdWyDgxodZjTQ0G0J7xHDK0OuLiZMrSTyA65ddNyiGyoYa86HzgjNKd2MFSO4p/dkkxW7FJBZq3Yk7/GIlku3FVBwBl3PyGOGZKjhNtHOhCEi04froLSeF90WAsoFX6t9zM0Xz2mYMzbGOmzi084MT0qEozbeUJtQ43U+Qdy3DN07N5fO+B1HzyBoG5dqiWvJYuU3JSRyB5qBS77pSzbV4bRwOOyaVYcFL6iR0f811YT6ca+OqLA/u0onEiGfVAiLI5d+IqktiEGBAtzXcjW7mEuYLgrAGfa+iGiBLQD/6u9k71GW5YaVvPZP9HxBR6ZbL
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(7696005)(478600001)(7416002)(55016002)(66556008)(8936002)(26005)(33656002)(66446008)(316002)(9686003)(8676002)(64756008)(66476007)(5660300002)(6506007)(86362001)(8990500004)(186003)(52536014)(76116006)(54906003)(66946007)(10290500003)(82950400001)(4326008)(82960400001)(2906002)(4744005)(110136005)(71200400001)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: MBAYL3jrYp72fV4m7AqiHR5qRhJvfLU01ytUtmiyCn5I4ZFPwSJ5ygqZhdlV8Eu+bh+QN/EFucMGUH9uZirdiXjYZkuhpwEirRCVoGpWGS6+ndvL1IQ55nFGgo4xKbxktzfcXX0ai2r30gteN7fCm9kzFH/3VbwdCZnVgS5p+f/XL+kBBVCjjCoPSK7ndPaavuDxmlDh01gg4nxB0zQvXQSBCgq+1XGju38Gi3Oj1YTVWtoifZbkyLcIZmB5LvHV1f02n4n/lHPOVHaPNsgD+yEzu6pUF3Aw0zx3YvYJNhSP9V4sGJVPyF78fwl7D5BwWKrxDut0LBS9JKInBtEXVxsV9VWf6MzaChNGygColTlcSt423XFaTHdkiRtUh8oY29/M9ZMZC9tKEpe5HQRc9OR1PeU1IeyCjrNYCKX515orCgMF1ElZUTizfTnBgzNnBBw969Ga9wXrQwEez6Dok6vJGU9iY5grqMRHauVD1Mk5AWN/zGxAxu08J7GpflXkxptwI6+NM1RYz51pGicF77y0aR1wCNy/ouCdLS1KSTJU/4baJRu5SZN61+gH4pX2aVexQb5XHExaNh5BPcajqynYBtLo1/k6a7tijhezOzGMnCIaNsNWMzV6u7/5+jPFGLnyFYrmHAO2DNIwVHTmCw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821103431.13481-6-david@redhat.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9b8269a-9711-4995-0b28-08d8512f346a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2020 00:04:05.6493
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Xkb2IXo+wEzccPXi7XLHNOyo/AMAh8/FSQhdLIQ9y1Ls+e7vnDmNNWSlg/C3c/OGpXvfQ/rE/AzslvCSjAPT5G6/EHmWQ7uu/tlhjavL85o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1833
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:34:31PM +0200, David Hildenbrand wrote:
-> Let's use the new mechanism to merge system ram resources below the
-> root. We are the only one hotplugging system ram, e.g., DIMMs don't apply,
-> so this is safe to be used.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+From: Boqun Feng <boqun.feng@gmail.com> Sent: Tuesday, September 1, 2020 8:=
+01 PM
+>=20
+> Pure function movement, no functional changes. The move is made, because
+> in a later change, __vmbus_open() will rely on some static functions
+> afterwards, so we sperate the move and the modification of
+
+s/sperate/separate/
+
+> __vmbus_open() in two patches to make it easy to review.
+>=20
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> Reviewed-by: Wei Liu <wei.liu@kernel.org>
 > ---
->  drivers/hv/hv_balloon.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 32e3bc0aa665a..49a6305f0fb73 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -745,6 +745,9 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
->  			has->covered_end_pfn -=  processed_pfn;
->  			spin_unlock_irqrestore(&dm_device.ha_lock, flags);
->  			break;
-> +		} else {
-> +			/* Try to reduce the number of system ram resources. */
-> +			merge_system_ram_resources(&iomem_resource);
->  		}
-
-You don't need to put the call under the "else" branch. It will have
-broken out of the loop if ret is not zero.
-
-Wei.
-
->  
->  		/*
-> -- 
-> 2.26.2
-> 
+>  drivers/hv/channel.c | 309 ++++++++++++++++++++++---------------------
+>  1 file changed, 155 insertions(+), 154 deletions(-)
+>=20
