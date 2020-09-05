@@ -2,138 +2,288 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9688B25E528
-	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Sep 2020 04:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BAE225E84B
+	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Sep 2020 16:15:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgIEC40 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Sep 2020 22:56:26 -0400
-Received: from mail-bn8nam12on2110.outbound.protection.outlook.com ([40.107.237.110]:51457
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbgIEC4Z (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Sep 2020 22:56:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I0f+tOB/ft1+LR5n1cFfuisZprm4qHOPciZxloKi8H5we5SE2zyRzZq0QhVsjEKWu4hkq0Wo0/ie6uRP4d1vHHpniGpXXty/gwjt84jqFTbRFHEX4iTZEmIEHezWYHJYPRpOpZ1jEz6t0QwJ6OXryIY+G2lARnsd2MIFqQ7JQSB1vqUhLblMAfdnHZ7LmmpQMVfMxLdJV7ZKmfkOqhaV50gc73d+0PnOMZ9qq6pR006brxOElR1aGuGxu5PQd7UYw+hh8u5NZQ2RVaTf9klqAybGvTdtF0RJutn230BtYZsBLa/R14C6bWgxWzzLj73a8axuYdjhXBvATyAzFvn2IQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8wpymMGYpMHaQrj0Zgt9h4hGliBljBPXMpRKnbJ0rlg=;
- b=Pwp2uVBeb+S19Dg+v9abHKKzvuSjkX+ae1oFMq19LXrdt1ehGMxO09jJL5w9j5LotoTr/FUjcaucBEdF/Dfk4BgwRCfM/h/05cEpwq2BsDKFsM4Yh0Opo9SESDrarOTKT6bZUHyn+AsNpIfCqbRecekyLbqTxRbjPHMmNp9H3XlRrk/hHBcSh8kgRtj+3IfyMKZNXt7cj7Z4qdxlCi0X9pEsaKPVWzFlp36J4yfh1L614Q+MtcY0hmJ4ugINsvHUFNQtDyz5ihrsE2rsfBLOmq/7Ra+w2fV4Jzlmo52hXM3dgXJfnP4ajk2ynPZQvOYzyjsqqRjDRFg5JP9GUviQsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8wpymMGYpMHaQrj0Zgt9h4hGliBljBPXMpRKnbJ0rlg=;
- b=UGAPJ1srQHdwV0Hjgg35kUC1yw+pesROxOXWcQ92PUjho3PUmR/Hg/3SRrn7hfDg5x0z1BpKxKU5pnJosgVieCcQ4XQv/QI1o0xQwadJaJyyEJ0x71H0ulHEZ+2Lw4D2v221eMfEVyU4cmoPsZViltNjwWmqWdvnPs6ayB3S0DQ=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-Received: from BN6PR21MB0162.namprd21.prod.outlook.com (2603:10b6:404:94::8)
- by BN8PR21MB1155.namprd21.prod.outlook.com (2603:10b6:408:73::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.1; Sat, 5 Sep
- 2020 02:56:22 +0000
-Received: from BN6PR21MB0162.namprd21.prod.outlook.com
- ([fe80::85e9:34fc:95a2:1260]) by BN6PR21MB0162.namprd21.prod.outlook.com
- ([fe80::85e9:34fc:95a2:1260%14]) with mapi id 15.20.3370.014; Sat, 5 Sep 2020
- 02:56:16 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        vkuznets@redhat.com
-Cc:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] Drivers: hv: vmbus: hibernation: do not hang forever in vmbus_bus_resume()
-Date:   Fri,  4 Sep 2020 19:55:55 -0700
-Message-Id: <20200905025555.45614-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-Originating-IP: [2001:4898:80e8:f:d8d8:275a:eb59:9dcf]
-X-ClientProxiedBy: MWHPR04CA0028.namprd04.prod.outlook.com
- (2603:10b6:300:ee::14) To BN6PR21MB0162.namprd21.prod.outlook.com
- (2603:10b6:404:94::8)
+        id S1728589AbgIEOPO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 5 Sep 2020 10:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgIEOPM (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 5 Sep 2020 10:15:12 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7766C061244;
+        Sat,  5 Sep 2020 07:15:11 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id f142so9074380qke.13;
+        Sat, 05 Sep 2020 07:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xrOzHn7owdx7Uqk54xwEOBwQTc/5Zou/9tg+v3Sm5mM=;
+        b=My+gzL1dtCDjCYwsGT/4wS8pFAtxO3R60DrrBWntr1/NSvAgMoNCo0Xuatox/F4lkR
+         1iB7IHmjqtvhqCKwvGzkuC9K0wHUlLe0DqK9xeMhInyAzYLtDhauNPT9hAi0HpwAfk/g
+         Hw4KscWqZExiJr9gZVgssgm/P7ebgoWeqCZ6SXMmlR1FqfxEGeBjlUR2eS25GA+0tmDY
+         DRGkK0Hzf7Kqf+vl/rwWN8/TwixQnyXV17Deq0oQU7Z9lKc3MyQtQM9hYWyydyWRGJ2d
+         G9M5gW1ZSOopaSMlZcaDCK/FRUf+4EAOIrp+R9GgU9Ip+nPMl1/bc9TDLad7rc1Gyr/o
+         ztKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xrOzHn7owdx7Uqk54xwEOBwQTc/5Zou/9tg+v3Sm5mM=;
+        b=AIzda0G8AJwVndPMdX265TCO3eUGzrAkPzgSmfQCoeP48++zzdgA0sfmkEk8Qw9zQb
+         XXIz+AGVrhAnDjNtoNtP4EOE4xPBvt9Wxf6DzskxXWTlsgHGgud0ee+dmRBtWOqo6/VM
+         Urc75fTysK8SHdm5IKl2+wQ+tYOsiqFaO5qpgnDcKaMONSJHmLdczfdeL7NaDjy/35YC
+         m4Lddomn2YN16ykp0anBGtcwRDPOlrfioEJANc2wOjiKnKECxkH4CqD/sn8CG+4Lt5Gm
+         iUYjjLare++CY/S0hd3HnyYiw/vlHy3LJuB+SsUNNHU3i9YpsEeBve7WXUYtuxwdLSq4
+         +SEA==
+X-Gm-Message-State: AOAM530/DGZLxbXaBrlSp6wD3Ny3POm2wyouqHAhrrxCD/h2M8YT7oUn
+        OSRavKHOHgKq+j7iij/yUq4=
+X-Google-Smtp-Source: ABdhPJwfsxdbs3JPOHiHC4r6Z4olxcV3GzGLqJuHQ1rPyT7rdVeDcxNhdvzqkxj9kuS616KSDYqEnA==
+X-Received: by 2002:a37:aa4d:: with SMTP id t74mr1366942qke.222.1599315308727;
+        Sat, 05 Sep 2020 07:15:08 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id z29sm7090588qtj.79.2020.09.05.07.15.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 05 Sep 2020 07:15:07 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id F09E827C0054;
+        Sat,  5 Sep 2020 10:15:05 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 05 Sep 2020 10:15:05 -0400
+X-ME-Sender: <xms:aZ1TX5PYNMtj8B87J-MXKNFXhjboT9twHSY1T92lrKXEbEWBxmszTg>
+    <xme:aZ1TX79kjmkP3zWDBMSXYz6eKVtG2fxzy6GeZHqh1pVaMPr70xALNZjiv9HVZBJK0
+    tL1pUY994xUSXr6AQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudeghedgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
+    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
+    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
+    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:aZ1TX4TXmFnUSA7XBjjsVJ9HBrVLzCN4a3UExPk-788jSExZlt5xeA>
+    <xmx:aZ1TX1vHR-LhMYqw_oyolzs8nGiSc3JCc1x5XbFmnHKma2GCJYTA-A>
+    <xmx:aZ1TXxdo08OU905OUlSyK4Qt7qWxgKImZHDwbAPKi6CNCfPK7KCvAA>
+    <xmx:aZ1TXx9l944jXfjKKNgGKgQLvWQOOLWTgIxT0Qh6aOXe0Gn4KAe4KNDZ0Z0>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C602C3280059;
+        Sat,  5 Sep 2020 10:15:04 -0400 (EDT)
+Date:   Sat, 5 Sep 2020 22:15:03 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [RFC v2 11/11] scsi: storvsc: Support PAGE_SIZE larger than 4K
+Message-ID: <20200905141503.GD7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200902030107.33380-1-boqun.feng@gmail.com>
+ <20200902030107.33380-12-boqun.feng@gmail.com>
+ <MW2PR2101MB10523D98F77D5A80468A07CDD72A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:f:d8d8:275a:eb59:9dcf) by MWHPR04CA0028.namprd04.prod.outlook.com (2603:10b6:300:ee::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Sat, 5 Sep 2020 02:56:15 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9890f666-5f9b-484d-11cb-08d851474206
-X-MS-TrafficTypeDiagnostic: BN8PR21MB1155:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN8PR21MB1155E439C46AAEDF5E636A4DBF2A0@BN8PR21MB1155.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Mk/4vHA6HUQOMlWi0ZUsQA9QGByNvN+e1fq9/neJjHiFoZCaoMnzLsE2/j1VTJy3o+VFgKeMIKrJFocHgGnK1+QNFbejlwvhocfRi/EFtDufn77/8137wpg/T8MT2yeK7cwcQPLiVIWGMf3OCbs0MtWKQazVfAx3xDcW6MEhiclBfnPg3sPZ7P9i2Cwq0kHlIQFR96WsWuJ9qZPx/mdPO2yLgmuGG8YgKjk76i0/u75ZLCvq95H5puoscmctOu2jeJIO9o7faOigR8kd62u/ipwSRH2RwApmZoNI6OBch1jSnMFe4/hB+i0pomoDAKjOuW4Tf10006lninE5svrnJqwbbLT1Q5z8mSC68oXqyzVao3egZ3EA0zV0FiPCbUB8
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0162.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(39860400002)(396003)(136003)(376002)(2616005)(82950400001)(82960400001)(186003)(52116002)(316002)(83380400001)(8676002)(36756003)(8936002)(3450700001)(107886003)(478600001)(6486002)(66476007)(7696005)(16526019)(10290500003)(2906002)(6666004)(1076003)(86362001)(66556008)(66946007)(5660300002)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: EHCJ1akTnnZ7gOpNm82/JU0nITpjckUOna0g8EiHRLR0jk3JQ/pEhpNR6pjTrzI/HE4xO5NwPBr2gfTeHOnxe6WfSKyX8YOz+A6tDQjD2cSFeDp0+Y5dhjCM0juVnxNBZexurR8KGzndYagN7VSnBbEkofrceSFmv5VCYkhzbHopZi0Si05hLKK8hOnZR9O1K1Uw0G3moBaH/ogOAmclaZ1pDaduZfzpTxIvt6jay4sJSQ/FRJkkwzGpTpEoAehCiAHMc9e1uBpvPS+vFN7IvZpElJpJjrF6XyLEzdP5HjVi/aM4+GHZju82D+HszdfDC0tM+XnH748HaHPcEpOMyB8z3/npkZgQGiPkLbmxAsJv0okgABm05g7IN8Hp2yBeV4/erKflma9znUtK4pG0fX2iu6ydO5TIk9wQB8QhGhlFWTODM+UHr/YLLRvAKXQp4BTjfK+WCKrKCr9f95VvqmCFdBvN4T0vaGE5gqtwo87CrOz+UlwRV6S4vi4YBL3NBnf/FKBVsXzmpYH0cAbUZ2njTy915e6t7OBMYHzchhYIkxsAUzOnRstk9mM1KD+a6umjSV63HGTdnQhFNlH439ryw6B2AWAV8XgdhNNMu8XPNeMtHYqknjZs/ZlEWcDtU8yUNiPlrmsRyRm2nQvQMgt4NruF8xO8gU/RMcSVv9luSc4nlQXeOkyOH54ReTzPq8glyKsugrmbl+/SrHPZVA==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9890f666-5f9b-484d-11cb-08d851474206
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR21MB0162.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2020 02:56:16.7286
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LHPqvUkYZBA3LwF3eDVVILdWZqpNNANQn+ZPyLCOR4LOknTJuBokLvN+XTN87/FOC5qF2KRZcuRdKoA1AW6Ymg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1155
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10523D98F77D5A80468A07CDD72A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-After we Stop and later Start a VM that uses Accelerated Networking (NIC
-SR-IOV), currently the VF vmbus device's Instance GUID can change, so after
-vmbus_bus_resume() -> vmbus_request_offers(), vmbus_onoffer() can not find
-the original vmbus channel of the VF, and hence we can't complete()
-vmbus_connection.ready_for_resume_event in check_ready_for_resume_event(),
-and the VM hangs in vmbus_bus_resume() forever.
+On Sat, Sep 05, 2020 at 02:55:48AM +0000, Michael Kelley wrote:
+> From: Boqun Feng <boqun.feng@gmail.com> Sent: Tuesday, September 1, 2020 8:01 PM
+> > 
+> > Hyper-V always use 4k page size (HV_HYP_PAGE_SIZE), so when
+> > communicating with Hyper-V, a guest should always use HV_HYP_PAGE_SIZE
+> > as the unit for page related data. For storvsc, the data is
+> > vmbus_packet_mpb_array. And since in scsi_cmnd, sglist of pages (in unit
+> > of PAGE_SIZE) is used, we need convert pages in the sglist of scsi_cmnd
+> > into Hyper-V pages in vmbus_packet_mpb_array.
+> > 
+> > This patch does the conversion by dividing pages in sglist into Hyper-V
+> > pages, offset and indexes in vmbus_packet_mpb_array are recalculated
+> > accordingly.
+> > 
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> >  drivers/scsi/storvsc_drv.c | 60 ++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 54 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> > index 8f5f5dc863a4..3f6610717d4e 100644
+> > --- a/drivers/scsi/storvsc_drv.c
+> > +++ b/drivers/scsi/storvsc_drv.c
+> > @@ -1739,23 +1739,71 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct
+> > scsi_cmnd *scmnd)
+> >  	payload_sz = sizeof(cmd_request->mpb);
+> > 
+> >  	if (sg_count) {
+> > -		if (sg_count > MAX_PAGE_BUFFER_COUNT) {
+> > +		unsigned int hvpg_idx = 0;
+> > +		unsigned int j = 0;
+> > +		unsigned long hvpg_offset = sgl->offset & ~HV_HYP_PAGE_MASK;
+> > +		unsigned int hvpg_count = HVPFN_UP(hvpg_offset + length);
+> > 
+> > -			payload_sz = (sg_count * sizeof(u64) +
+> > +		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
+> > +
+> > +			payload_sz = (hvpg_count * sizeof(u64) +
+> >  				      sizeof(struct vmbus_packet_mpb_array));
+> >  			payload = kzalloc(payload_sz, GFP_ATOMIC);
+> >  			if (!payload)
+> >  				return SCSI_MLQUEUE_DEVICE_BUSY;
+> >  		}
+> > 
+> > +		/*
+> > +		 * sgl is a list of PAGEs, and payload->range.pfn_array
+> > +		 * expects the page number in the unit of HV_HYP_PAGE_SIZE (the
+> > +		 * page size that Hyper-V uses, so here we need to divide PAGEs
+> > +		 * into HV_HYP_PAGE in case that PAGE_SIZE > HV_HYP_PAGE_SIZE.
+> > +		 */
+> >  		payload->range.len = length;
+> > -		payload->range.offset = sgl[0].offset;
+> > +		payload->range.offset = sgl[0].offset & ~HV_HYP_PAGE_MASK;
+> > +		hvpg_idx = sgl[0].offset >> HV_HYP_PAGE_SHIFT;
+> > 
+> >  		cur_sgl = sgl;
+> > -		for (i = 0; i < sg_count; i++) {
+> > -			payload->range.pfn_array[i] =
+> > -				page_to_pfn(sg_page((cur_sgl)));
+> > +		for (i = 0, j = 0; i < sg_count; i++) {
+> > +			/*
+> > +			 * "PAGE_SIZE / HV_HYP_PAGE_SIZE - hvpg_idx" is the #
+> > +			 * of HV_HYP_PAGEs in the current PAGE.
+> > +			 *
+> > +			 * "hvpg_count - j" is the # of unhandled HV_HYP_PAGEs.
+> > +			 *
+> > +			 * As shown in the following, the minimal of both is
+> > +			 * the # of HV_HYP_PAGEs, we need to handle in this
+> > +			 * PAGE.
+> > +			 *
+> > +			 * |------------------ PAGE ----------------------|
+> > +			 * |   PAGE_SIZE / HV_HYP_PAGE_SIZE in total      |
+> > +			 * |hvpg|hvpg| ...                 |hvpg|... |hvpg|
+> > +			 *           ^                     ^
+> > +			 *         hvpg_idx                |
+> > +			 *           ^                     |
+> > +			 *           +---(hvpg_count - j)--+
+> > +			 *
+> > +			 * or
+> > +			 *
+> > +			 * |------------------ PAGE ----------------------|
+> > +			 * |   PAGE_SIZE / HV_HYP_PAGE_SIZE in total      |
+> > +			 * |hvpg|hvpg| ...                 |hvpg|... |hvpg|
+> > +			 *           ^                                           ^
+> > +			 *         hvpg_idx                                      |
+> > +			 *           ^                                           |
+> > +			 *           +---(hvpg_count - j)------------------------+
+> > +			 */
+> > +			unsigned int nr_hvpg = min((unsigned int)(PAGE_SIZE / HV_HYP_PAGE_SIZE) - hvpg_idx,
+> > +						   hvpg_count - j);
+> > +			unsigned int k;
+> > +
+> > +			for (k = 0; k < nr_hvpg; k++) {
+> > +				payload->range.pfn_array[j] =
+> > +					page_to_hvpfn(sg_page((cur_sgl))) + hvpg_idx + k;
+> > +				j++;
+> > +			}
+> >  			cur_sgl = sg_next(cur_sgl);
+> > +			hvpg_idx = 0;
+> >  		}
+> 
+> This code works; I don't see any errors.  But I think it can be made simpler based
+> on doing two things:
+> 1)  Rather than iterating over the sg_count, and having to calculate nr_hvpg on
+> each iteration, base the exit decision on having filled up the pfn_array[].  You've
+> already calculated the exact size of the array that is needed given the data
+> length, so it's easy to exit when the array is full.
+> 2) In the inner loop, iterate from hvpg_idx to PAGE_SIZE/HV_HYP_PAGE_SIZE
+> rather than from 0 to a calculated value.
+> 
+> Also, as an optimization, pull page_to_hvpfn(sg_page((cur_sgl)) out of the
+> inner loop.
+> 
+> I think this code does it (though I haven't tested it):
+> 
+>                 for (j = 0; ; sgl = sg_next(sgl)) {
+>                         unsigned int k;
+>                         unsigned long pfn;
+> 
+>                         pfn = page_to_hvpfn(sg_page(sgl));
+>                         for (k = hvpg_idx; k < (unsigned int)(PAGE_SIZE /HV_HYP_PAGE_SIZE); k++) {
+>                                 payload->range.pfn_array[j] = pfn + k;
+>                                 if (++j == hvpg_count)
+>                                         goto done;
+>                         }
+>                         hvpg_idx = 0;
+>                 }
+> done:
+> 
+> This approach also makes the limit of the inner loop a constant, and that
+> constant will be 1 when page size is 4K.  So the compiler should be able to
+> optimize away the loop in that case.
+> 
 
-Fix the issue by adding a timeout, so the resuming can still succeed, and
-the saved state is not lost, and according to my test, the user can disable
-Accelerated Networking and then will be able to SSH into the VM for
-further recovery. Also prevent the VM in question from suspending again.
+Good point! I like your suggestion, and after thinking a bit harder
+based on your approach, I come up with the following:
 
-The host will be fixed so in future the Instance GUID will stay the same
-across hibernation.
+#define HV_HYP_PAGES_IN_PAGE ((unsigned int)(PAGE_SIZE / HV_HYP_PAGE_SIZE))
 
-Fixes: d8bd2d442bb2 ("Drivers: hv: vmbus: Resume after fixing up old primary channels")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- drivers/hv/vmbus_drv.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+		for (j = 0; j < hvpg_count; j++) {
+			unsigned int k = (j + hvpg_idx) % HV_HYP_PAGES_IN_PAGE;
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 910b6e90866c..946d0aba101f 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2382,7 +2382,10 @@ static int vmbus_bus_suspend(struct device *dev)
- 	if (atomic_read(&vmbus_connection.nr_chan_close_on_suspend) > 0)
- 		wait_for_completion(&vmbus_connection.ready_for_suspend_event);
- 
--	WARN_ON(atomic_read(&vmbus_connection.nr_chan_fixup_on_resume) != 0);
-+	if (atomic_read(&vmbus_connection.nr_chan_fixup_on_resume) != 0) {
-+		pr_err("Can not suspend due to a previous failed resuming\n");
-+		return -EBUSY;
-+	}
- 
- 	mutex_lock(&vmbus_connection.channel_mutex);
- 
-@@ -2456,7 +2459,9 @@ static int vmbus_bus_resume(struct device *dev)
- 
- 	vmbus_request_offers();
- 
--	wait_for_completion(&vmbus_connection.ready_for_resume_event);
-+	if (wait_for_completion_timeout(
-+		&vmbus_connection.ready_for_resume_event, 10 * HZ) == 0)
-+		pr_err("Some vmbus device is missing after suspending?\n");
- 
- 	/* Reset the event for the next suspend. */
- 	reinit_completion(&vmbus_connection.ready_for_suspend_event);
--- 
-2.19.1
+			/*
+			 * Two cases that we need to fetch a page:
+			 * a) j == 0: the first step or
+			 * b) k == 0: when we reach the boundary of a
+			 * page.
+			 * 
+			if (k == 0 || j == 0) {
+				pfn = page_to_hvpfn(sg_page(cur_sgl));
+				cur_sgl = sg_next(cur_sgl);
+			}
 
+			payload->range.pfn_arrary[j] = pfn + k;
+		}
+
+, given the HV_HYP_PAGES_IN_PAGE is always a power of 2, so I think
+compilers could easily optimize the "%" into bit masking operation. And
+when HV_HYP_PAGES_IN_PAGE is 1, I think compilers can easily figure out
+k is always zero, then the if-statement can be optimized as always
+taken. And that gives us the same code as before ;-)
+
+Thoughts? I will try with a test to see if I'm missing something subtle.
+
+Thanks for looking into this!
+
+Regards,
+Boqun
+
+
+> Michael
+> 
+> 
+> 
+> 
+> 
+> 
+> >  	}
+> > 
+> > --
+> > 2.28.0
+> 
