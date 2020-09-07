@@ -2,76 +2,149 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E04F25EF1D
-	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Sep 2020 18:26:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8D4525F122
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Sep 2020 02:09:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgIFQ0Z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 6 Sep 2020 12:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgIFQ0Y (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 6 Sep 2020 12:26:24 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C0B820709;
-        Sun,  6 Sep 2020 16:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599409583;
-        bh=hJp+qATOFylIa3y0vlxW2BD+WH7p8cy8K26upvnrakI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZGYWf5GvVkRR144ONX9qVMifl9mCy4NpoNHh9qJHRJnvQ0+OdTn2omykDa9IXuQq2
-         9lC43miWxqIbIqOWwhtjLqLOUQuC1Qp5ZgrnZQdTqYjPdfwHhMeunSHUOMKUEHtpxm
-         3c42pKtZ9tOEvusFFR+kGv8Eb2CCOaUkvhjFnqDg=
-Date:   Sun, 6 Sep 2020 09:26:21 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        id S1726888AbgIGAJX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 6 Sep 2020 20:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgIGAJW (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 6 Sep 2020 20:09:22 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64589C061573;
+        Sun,  6 Sep 2020 17:09:21 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id j11so15941850ejk.0;
+        Sun, 06 Sep 2020 17:09:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=93zhO48suX6QzkH46mTIlpJ2YtXViw8tf8wpAARIdJo=;
+        b=MAuaXP8/gHKbbROVChKdLmxdhfQd+YgsNtrxAvoddxd9pYs810z7VxMVh0OBByd7px
+         nVdkeSTav3p4ro8baI9CauV5NjiyqZBLetZZFJ8eG8VFhl7BxAqhKljKEckKlFaRTuxr
+         ravHJ8/n9UHWAgbc/H/IV4s0AoTmNJLPi5CFc1fFh9z/ky9VzAYgH4QHRdZqU+yw8FYd
+         f4p+5Ucox12O9dnEfMPgdDwp4lQ0LuPhw53bYc+Ta9XxQlV0i5UjUkWQrMT8yehspxaP
+         VCwPMV0lCDqoVo6AcdHxX0A/a0xmUEhjmvBgU0u9QHU0X+RzKge5ohQ67iVT4Qsjiz7C
+         LsTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=93zhO48suX6QzkH46mTIlpJ2YtXViw8tf8wpAARIdJo=;
+        b=lV3S7ptPloZRGrzMFVO1rNskQxzJ4HN1HlxrwgEiwLWbVhdDWZ24gC9eSlmmrIT766
+         wBYWLnVZMHMrgj6IGYpXr62aGQPb20BLvO+9xo2IrNysufVgXyAKFqXpSgCCYISxjhO3
+         L7X47b4StnsVZUMrQkD0wGgqteo1gtub3a7+e7e/3D+z+/K2DV2vEic6Y5L9JgQ215jA
+         6xTFFqSbjxRlbl9nbXYXIHmhqHRFe49BqNAbEvGORaY+R+H7PCuOX5HdjR+rKKerewja
+         VD1fc3mgsxe7bgqSTQPtUrNdj2QjFPka8pLWX975uqw4mOAFnIKxo2oydkTKUfFqxehO
+         yrUA==
+X-Gm-Message-State: AOAM531Tp+2ozN6VlHOVszhjFdt++3WttRCgR5D+Pekwz/iUrvsrIxYr
+        jjEbF9MABAfbU0DmAovMdjs=
+X-Google-Smtp-Source: ABdhPJweeQ4NuQTd29lGUGxEe+zjVwQETK+Z2icG9hinmHOQfqVfRyzOItom1EPmdDSFHaBaDqtSvg==
+X-Received: by 2002:a17:906:a0c2:: with SMTP id bh2mr19227646ejb.493.1599437359957;
+        Sun, 06 Sep 2020 17:09:19 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id sd17sm13977062ejb.93.2020.09.06.17.09.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 06 Sep 2020 17:09:18 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id DE62827C0054;
+        Sun,  6 Sep 2020 20:09:15 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sun, 06 Sep 2020 20:09:15 -0400
+X-ME-Sender: <xms:KnpVX_Ch3CwVUK0KmW_gD3CLFPUiK-_U3jGIt7G5xFPQQCkvrJRRcA>
+    <xme:KnpVX1ivpASud1s-3tVmIZdTT7SRzcHgHnG5_ox9zhyaSG6DVIXiG9tY6jQwfSpa0
+    -p5tbG7XSADzE7xRA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegkedgvdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
+    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
+    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
+    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:KnpVX6kQKNwQPvrDp_3a-lIFvB20SRN_E3ZHCmpb1OlaGsvpzeHO2Q>
+    <xmx:KnpVXxxatupxLX5GJq5ves9wfrvpo0InsWQa73s6d0T2z5zoyH5-1A>
+    <xmx:KnpVX0RKrVoYlcSYg7qJJhpM1W1TLfR3TV4CtjBAfzxfUnTVyYpjnw>
+    <xmx:K3pVXxiqzy9rzAbNzKVEXt2fWFsQvcG5GZG5SOVZ7pt33Ftx7seM32rQPBI>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F393B328005D;
+        Sun,  6 Sep 2020 20:09:13 -0400 (EDT)
+Date:   Mon, 7 Sep 2020 08:09:12 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH net] hv_netvsc: Fix hibernation for mlx5 VF driver
-Message-ID: <20200906092621.72005293@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <KU1P153MB012097D6AA971EC957D854B2BF2B0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
-References: <20200905025218.45268-1-decui@microsoft.com>
-        <20200905162712.65b886a4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <KU1P153MB012097D6AA971EC957D854B2BF2B0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [RFC v2 07/11] hv_netvsc: Use HV_HYP_PAGE_SIZE for Hyper-V
+ communication
+Message-ID: <20200907000912.GF7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200902030107.33380-1-boqun.feng@gmail.com>
+ <20200902030107.33380-8-boqun.feng@gmail.com>
+ <MW2PR2101MB10521041242835B2D6E3EA0AD72A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10521041242835B2D6E3EA0AD72A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, 6 Sep 2020 03:05:48 +0000 Dexuan Cui wrote:
-> > > @@ -2635,6 +2632,10 @@ static int netvsc_resume(struct hv_device *dev)
-> > >  	netvsc_devinfo_put(device_info);
-> > >  	net_device_ctx->saved_netvsc_dev_info = NULL;
-> > >
-> > > +	vf_netdev = rtnl_dereference(net_device_ctx->vf_netdev);
-> > > +	if (vf_netdev && netvsc_vf_changed(vf_netdev) != NOTIFY_OK)
-> > > +		ret = -EINVAL;  
+On Sat, Sep 05, 2020 at 12:30:48AM +0000, Michael Kelley wrote:
+> From: Boqun Feng <boqun.feng@gmail.com> Sent: Tuesday, September 1, 2020 8:01 PM
+[...]
+> >  struct rndis_request {
+> >  	struct list_head list_ent;
+> >  	struct completion  wait_event;
+> > @@ -215,18 +215,18 @@ static int rndis_filter_send_request(struct rndis_device *dev,
+> >  	packet->page_buf_cnt = 1;
 > > 
-> > Should you perhaps remove the VF in case of the failure?  
-> IMO this failure actually should not happen since we're resuming the netvsc
-> NIC, so we're sure we have a valid pointer to the netvsc net device, and
-> netvsc_vf_changed() should be able to find the netvsc pointer and return
-> NOTIFY_OK. In case of a failure, something really bad must be happening,
-> and I'm not sure if it's safe to simply remove the VF, so I just return
-> -EINVAL for simplicity, since I believe the failure should not happen in practice.
+> >  	pb[0].pfn = virt_to_phys(&req->request_msg) >>
+> > -					PAGE_SHIFT;
+> > +					HV_HYP_PAGE_SHIFT;
+> >  	pb[0].len = req->request_msg.msg_len;
+> >  	pb[0].offset =
+> > -		(unsigned long)&req->request_msg & (PAGE_SIZE - 1);
+> > +		(unsigned long)&req->request_msg & (HV_HYP_PAGE_SIZE - 1);
+> 
+> Use offset_in_hvpage() as defined in patch 6 of the series?
+> 
 
-Okay, I see that the errors propagated by netvsc_vf_changed() aren't
-actually coming from netvsc_switch_datapath(), so you're right. The
-failures here won't be meaningful.
+Fair enough, I will use offset_in_hvpage() in the next version
 
-> I would rather keep the code as-is, but I'm OK to add a WARN_ON(1) if you
-> think that's necessary.
+Regards,
+Boqun
 
-No need, I think core will complain when resume callback fails. That
-should be sufficient.
+> > 
+> >  	/* Add one page_buf when request_msg crossing page boundary */
+> > -	if (pb[0].offset + pb[0].len > PAGE_SIZE) {
+> > +	if (pb[0].offset + pb[0].len > HV_HYP_PAGE_SIZE) {
+> >  		packet->page_buf_cnt++;
+> > -		pb[0].len = PAGE_SIZE -
+> > +		pb[0].len = HV_HYP_PAGE_SIZE -
+> >  			pb[0].offset;
+> >  		pb[1].pfn = virt_to_phys((void *)&req->request_msg
+> > -			+ pb[0].len) >> PAGE_SHIFT;
+> > +			+ pb[0].len) >> HV_HYP_PAGE_SHIFT;
+> >  		pb[1].offset = 0;
+> >  		pb[1].len = req->request_msg.msg_len -
+> >  			pb[0].len;
+> > --
+> > 2.28.0
+> 
