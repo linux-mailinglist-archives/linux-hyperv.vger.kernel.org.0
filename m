@@ -2,140 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F22FC2606BF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Sep 2020 00:02:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DE78260903
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Sep 2020 05:40:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgIGWCv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Sep 2020 18:02:51 -0400
-Received: from mail-bn8nam12on2105.outbound.protection.outlook.com ([40.107.237.105]:48325
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726446AbgIGWCt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:02:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SdK//SOE0DSbNL+fnxIVgzVYWnmfXLTMZRsuoDFKrNUUW6BOUcCNWbZGMUt5SS2OV8yHxRwGHLRTaSB5gG7I+CAC3daNLHBnjY34a5MnfXBxB1vopLmSC6JkTeBIggm0EsTm2psQg/zw3yZrd7NnXbB5+a4gxrLXpim5on92oYegZdHn/gyu9UXSTUTymxEMEi9VXJiL24TPA3Br7HmmmJ8+1JZxy0hkBq2XgmtmhX1TIWtjnCdIltNCJPDiuvCNKJIIgYOPBiz86ZZrjYpltbhaURH0EhdpXvCyWd5CjV7zXblqhhrn2tcfEjlTT+Z3J0+6C2tMXx5+jHbcvjhe2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5vTjbZ1Gb7HyOvS5IKj7j7IMEu6Jn08fWlCJVvyPclA=;
- b=nlrrjfYMwGOVfKhpi8tT5EIsywWvbZT+1v5twa6I0azx6BSWo1u315l+sEdpDGf/KFkqNWc5iGgZ0HYtrI9gBIh8rNUfBGUkitiWLlKuYjddriH2E5MdHWaHv+Cy0vjnSgQTTWh0bzlKNgpJocYHsUDI1DjAnzAjGcnjDfaVVqt5RRMQ0Ijh7ExxODZGm2Tzgol/X62da0bmyMcb2o2MKC37FroJU/WxWlwmTUSkrBhwNm7OVTpLA+f3l7RrfiPKZR3Z/v2T+cSDIgWoOaMSMZ99Tk2qMwJR2Ef89EPn3Cy7v1Br1/Po+X9v3rb63Z/TykkTpxK1v4sjxdokCWQ7aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5vTjbZ1Gb7HyOvS5IKj7j7IMEu6Jn08fWlCJVvyPclA=;
- b=Iza9ZEFibe+WawA45EEjnZBgf0hJQGkbsCd0ehyuu3fbWsZiB0wgfQsCCsN/pNz+fBCjWeIFk9UgYP2slOzFMLI78cMFjnOLtDgcXE41TpTlZ3p9r6gi6iYpz+7hbMc3H9rhgHRrGyQuavfn1UAssMAS0rOHVXcG/pcsmP+2eVk=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MWHPR21MB0190.namprd21.prod.outlook.com (2603:10b6:300:79::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.0; Mon, 7 Sep
- 2020 22:02:45 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1%5]) with mapi id 15.20.3370.015; Mon, 7 Sep 2020
- 22:02:45 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
+        id S1728430AbgIHDkX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Sep 2020 23:40:23 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:24192 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728317AbgIHDkW (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 7 Sep 2020 23:40:22 -0400
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0883aMVq002464;
+        Tue, 8 Sep 2020 03:39:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pps0720; bh=A+udrY24FFEXs0nTcdNmz7GYM1C5dz0HSK7tP/+BXaI=;
+ b=JiPCnGEd9SOLp4EP4cJa6ucsY7RvDBYxzgctn9V6k1a3zSf3vCNMHPZcYHHrSrjlYWkj
+ 8DHLbpKGNLPjpdC/pBgqp+XpX332TSU43M8KhriEqLAWC5SSnFtckELRz/988CF1Ctkd
+ ACrZKVFIRGr3poHavXO8vE2oQJRP9uxAAaTNTH1nrkvshTZkm7/7X982mVK2iLmDRcFa
+ uhfp0pn8zyJnJymJd32OZeryBNo40l7hWZq7gd+tS5hRDjDv6Z+uZPcK+nYCdj/etzt+
+ oFghpCKwnGAezLze65XCNk/WQDWo1dQqo4khY5vTwlCJDiHO4hN1T/suUScEZCMMdDne XQ== 
+Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 33cm1x736d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 03:39:40 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g9t5009.houston.hpe.com (Postfix) with ESMTP id 87D0E51;
+        Tue,  8 Sep 2020 03:39:38 +0000 (UTC)
+Received: from hpe.com (ben.americas.hpqcorp.net [10.33.153.7])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 6C95948;
+        Tue,  8 Sep 2020 03:39:36 +0000 (UTC)
+Date:   Mon, 7 Sep 2020 22:39:36 -0500
+From:   Russ Anderson <rja@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
         Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v7 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Thread-Topic: [PATCH v7 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Thread-Index: AQHWhTK7m/4rhJUWEUa9HqAKMju5XqlduqeA
-Date:   Mon, 7 Sep 2020 22:02:45 +0000
-Message-ID: <MW2PR2101MB10528D1E843B7C2972C95CF3D7280@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200907161920.71460-1-parri.andrea@gmail.com>
- <20200907161920.71460-4-parri.andrea@gmail.com>
-In-Reply-To: <20200907161920.71460-4-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-07T22:02:43Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1ea0dd16-a758-4250-82cc-d2594e992bcc;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b19f5815-71e2-443d-de8b-08d85379c01e
-x-ms-traffictypediagnostic: MWHPR21MB0190:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB01904B186BD6ABCCC001F9CFD7280@MWHPR21MB0190.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4XCDiKLD2S6MoFBh2vcqI5uigMUjxt0utswJ/g/JoH6zUDtibhX2x9hMqIMP91h2SZejL+MXNj5Lpbdc1SBetQIK1LU/fqXF1djdlSsiJb/UzlK6itq3+pOj0UlFekwjdh1hbrVDwGhK9kAaaC1qGpsGpEzbNRxSyi8x8jywgwpubVI8f0dVQyzW9zjkGwm6TxTPeeD4VhMM/nvTWg6+HecsfpVOPeg6uUjKPr/iD3f47Vsrh5XhZ/sbeRM6aUjcQA8nUnPnXsEHIfaXc2Vq1cWak7GH1HVppcaosGRlBLXHzoeqv38aUyElLL2sDtq5aFYKgQZ2EPObkXBVBB2Lli9ifdINHrHIkwNwFcAAdoK8fDrIcbr/iEaRV4JsLaMI
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(7696005)(55016002)(2906002)(8936002)(83380400001)(478600001)(6506007)(4326008)(10290500003)(9686003)(8676002)(26005)(71200400001)(33656002)(186003)(86362001)(110136005)(66556008)(316002)(5660300002)(66446008)(82950400001)(64756008)(66946007)(66476007)(52536014)(82960400001)(76116006)(54906003)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Jp3qjSche1Z/QaZFNZz+dTJIKl9pPbL7yB96zwUefqCB+q84khrupQAoSAsrzhl02ggHKIz3sU53TLhRb/KE6qdphGT2/RkQqUNfxFKcvmouDUZqCoLuePSrrPJJTVrihBcS0/j7Fih7rA0bfIYm0csmysimejzrSjeWY0OlTn1IJ0zu+d7K/7cKz1TzmE85wuNM+LOICjOxlTbKF/uHqXBF/ppiF6qK6ZULroyXldbhTM2vCtNi+eF6gqRwoVkE55L1KXFaxP04z+gf2kncTm1ra5sEzA2NIwwNsrzNfMJhIgoeRLztnXAvp602yzr23GagxTzXD++RwllqbO9AT5sZnP2UuGEU/1Wr37cyIWeXYPK7mYweKVd+023bqrljmBbfSdVWnISBnxjDgdHyOZTPqpZC+RAS01HT9japTiRanWjeNaRPNsqCzdTmlVQocGsrdsN65iJMS/vMKQk2E2PVcxC2mkx4ciBWmu6GYUVgngJoqdS/mNQ9DggDTp66lw5J1/DyYoFNjWgYIowI4HSK+rXHoP2wuv+PvrKJXPaScQA6y2u3pVtRRx1rGmPPzUe4R8d0Ezhcu862lrjpQhXjwbZxZInFvW6dk01UekGaZQ7nVV6NbYobt0VgKAHFak5hL2GU5udcI72sa6CrBg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device
+ MSI
+Message-ID: <20200908033936.sbbbjvxsavr2j3rr@hpe.com>
+Reply-To: Russ Anderson <rja@hpe.com>
+References: <20200826111628.794979401@linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b19f5815-71e2-443d-de8b-08d85379c01e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 22:02:45.1142
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: B5ivHHcrBqXTThELkKqp6s7gIhxndpRZ11lv8bcoOBGOiLz5V8ntBh1ZCvULSvOWPfsvKwx6yPN3Ahw4Qs2B7RDVTgxYuoIyMNDQyZ8MJsk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0190
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826111628.794979401@linutronix.de>
+User-Agent: NeoMutt/20170421 (1.8.2)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_02:2020-09-07,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=580
+ bulkscore=0 priorityscore=1501 adultscore=0 clxscore=1011 mlxscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080032
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Monday, Septe=
-mber 7, 2020 9:19 AM
->=20
-> From: Andres Beltran <lkmlabelt@gmail.com>
->=20
-> Currently, pointers to guest memory are passed to Hyper-V as
-> transaction IDs in netvsc. In the face of errors or malicious
-> behavior in Hyper-V, netvsc should not expose or trust the transaction
-> IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> use small integers generated by vmbus_requestor as requests
-> (transaction) IDs.
->=20
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> ---
-> Changes in v7:
-> 	- Move the allocation of the request ID after the data has been
-> 	  copied into the ring buffer (cf. 1/3).
-> Changes in v2:
->         - Add casts to unsigned long to fix warnings on 32bit.
->         - Use an inline function to get the requestor size.
->=20
->  drivers/net/hyperv/hyperv_net.h   | 13 +++++++++++++
->  drivers/net/hyperv/netvsc.c       | 22 ++++++++++++++++------
->  drivers/net/hyperv/rndis_filter.c |  1 +
->  include/linux/hyperv.h            |  1 +
->  4 files changed, 31 insertions(+), 6 deletions(-)
->=20
+On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
+> This is the second version of providing a base to support device MSI (non
+> PCI based) and on top of that support for IMS (Interrupt Message Storm)
+> based devices in a halfways architecture independent way.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Booted with quick testing on a 32 socket, 1536 CPU, 12 TB memory
+Cascade Lake system and a 8 socket, 144 CPU, 3 TB memory
+Cooper Lake system without any obvious regression.
+
+
+-- 
+Russ Anderson,  SuperDome Flex Linux Kernel Group Manager
+HPE - Hewlett Packard Enterprise (formerly SGI)  rja@hpe.com
