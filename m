@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B56972621C3
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Sep 2020 23:16:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D4AC2621F7
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Sep 2020 23:31:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbgIHVQR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 8 Sep 2020 17:16:17 -0400
-Received: from mail-co1nam11on2092.outbound.protection.outlook.com ([40.107.220.92]:1888
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S1729822AbgIHVbs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 8 Sep 2020 17:31:48 -0400
+Received: from mail-eopbgr1300128.outbound.protection.outlook.com ([40.107.130.128]:13385
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726683AbgIHVQP (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:16:15 -0400
+        id S1726369AbgIHVbq (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 8 Sep 2020 17:31:46 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d6QNtugjehCLTHeyYaZqGNA5I8QU+2S8STmObxuFtDMVU8nudMcfncime4VvYigkwoelIeuzsIPeHzUH64IJPAWeA+5z7zYrNePdjm5TFH9HKPMprZY6cKiv2ZqVzopYExxTLS+OY2hnSEnw8oZogJlLr5w2RmP68VG9++C64rjbs3gl3Zbs6kDtsA86PHwhsaucIczcDulLyDywLS758cA9celYjzvxWWtcOdz/Uz2iPocWR/V3hJYGGN393VmOuDlUHh5qmhQgWBHbPyddZjdl/AFiUSRnAyEM/PP/E5xFuG58RbsHqAmSeYTC+x6cr+lKi08NstKpvVNXgfBGYg==
+ b=ioClsiBUtNwhYK4g/5kanUSTflxRfmEgqIDd8qrPM/eydRd8wTu+RACHH5ZI/Ghz+5p4nsNUfF67XD9lNIr+UYf8/iy5ekSVgzrUUOjZokY1PSVXMQTe12b+0EN/KGxcFc24smSYVkvU+GCKLDF7NUOVm+LPrQtFuH61vnKd23foECsX9xmuxdLuxqxFGDUz4AJxbo2c1WKmwSIgQvQAKeLX6ZHxiolNsZIgNREGRa1AOHlXCLdn169T9lggAgUVPwTXGiv2b6rHV/4f853l2wZxMc4WHiJg+XtKA/xrr1sARrnzk73mW0LaABqVWm8AIYlFOJwySDf2iuRjyCdfSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vQATI4cmhC0onqvrW/Xy+h+jj50FAJ0/ZqPEW+2fuLU=;
- b=TlPVphIdz3L/EuKg3qHt2uj5YhOoPTzvuwOHLRtcMkmQSJKxAoZHoK0Ta/yoXTOm7Qw2vhFmNovbMKXdkyGHpwRRgwy+rupIT1qwkBDEctuHrLFyqSjpxJPU5SvwHHpTrvItBum8Vav9VgYRiItePT7AhjxD7UmXcXQmsTEawiMRTRyyVGdkh7WB8IlzCyc8p112k8aAWtNQkR6QsrdTDGL7lc6MNnNoCiEEwqRYWGkEJPSdVRz8cneZHhTEfxysAtV+RGS/3334E+lJEVs8C8TFcQNWXcfHoUjV/UC5xREj2peOAPXtQVf9HJ0YEueXcAn5A7giypQ4Q96rtI+sZg==
+ bh=cFaMGWkVYs1TR5LcSCobQquoZfQY3APqcvdXGBQgkjg=;
+ b=I1afKXzKBcyA3BbVEYneSmi+Q0gCOdZuZLjz5NIys1Ctm49XvcEMUOXxbrYuVbrRACOVUaRfVH6COzbnrpF5chsq/q9V7ecgbf51N0RJZQp+1AydM0X9KFaAtZy5f5vzkxkIzAwBiDDJrXAxnZm196sfhG0pwGCK4eoKXD1o1SkYk0zBNZz0r6A3uS1YQeneuppvCy7jVk4dFohxNHtsb22CvGaX0OkbJnKjawjBEzqLq1mlUIrxIVvVHpu+WpuWEHLsn0wgWhrUvbzttBwdmG6I2ErUrLwgvCRPl6c4zznEobwV07v7kg2x6P0bH1D6vugP4Bebt6yEoS5puQcMPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vQATI4cmhC0onqvrW/Xy+h+jj50FAJ0/ZqPEW+2fuLU=;
- b=budQ1p10UmXR73M5Npp9Buu7YWSjXS58czbX87g5f3pdc2R6vqPc3JiHAiXr7yz5nP0cG/FsFavky0sxqtptI+tGtBcr4TU7Y0v/TcL2nGptpYGwTqOsq7c7U3TSwIPG8BVSsUbp9XlGwfWI3FmMyCcdM0viK+v2x28Q8IDxpyM=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1002.namprd21.prod.outlook.com (2603:10b6:302:4::27) with
+ bh=cFaMGWkVYs1TR5LcSCobQquoZfQY3APqcvdXGBQgkjg=;
+ b=CqKcgJbXbUYEp/VGqfLzm532mnXMzZjri176MaPjIOahmYP5bo/SVsDjznk1y4BoBNUkHZaJYfRWWQeVzTY0RV5H7kYSGRz7R2LDUwzu2BR4fg1UswHQKArYu3oFTp6+ZCHiJxfTIB78bOdFhAe6YY396TwXXgzQBXdPeNhCcms=
+Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM (2603:1096:802:1a::17)
+ by KU1P153MB0183.APCP153.PROD.OUTLOOK.COM (2603:1096:802:20::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.3; Tue, 8 Sep
- 2020 21:16:09 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1%5]) with mapi id 15.20.3391.004; Tue, 8 Sep 2020
- 21:16:09 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
+ 2020 21:31:36 +0000
+Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+ ([fe80::800c:633d:2d74:4f61]) by KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+ ([fe80::800c:633d:2d74:4f61%5]) with mapi id 15.20.3391.004; Tue, 8 Sep 2020
+ 21:31:36 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -52,11 +52,12 @@ Subject: RE: [PATCH] PCI: hv: Fix hibernation in case interrupts are not
  re-created
 Thread-Topic: [PATCH] PCI: hv: Fix hibernation in case interrupts are not
  re-created
-Thread-Index: AQHWgzAAQgytpURzi0G46BH/yzzFMqlfQ83g
-Date:   Tue, 8 Sep 2020 21:16:09 +0000
-Message-ID: <MW2PR2101MB10525ED3B3B67E619861FB97D7290@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Thread-Index: AQHWgzAAQgytpURzi0G46BH/yzzFMqlfQ83ggAAER9A=
+Date:   Tue, 8 Sep 2020 21:31:36 +0000
+Message-ID: <KU1P153MB01202CD4E9911C68439814EBBF290@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
 References: <20200905025450.45528-1-decui@microsoft.com>
-In-Reply-To: <20200905025450.45528-1-decui@microsoft.com>
+ <MW2PR2101MB10525ED3B3B67E619861FB97D7290@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB10525ED3B3B67E619861FB97D7290@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -71,132 +72,52 @@ msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
 authentication-results: microsoft.com; dkim=none (message not signed)
  header.d=none;microsoft.com; dmarc=none action=none
  header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
+x-originating-ip: [2601:600:a280:7f70:cde3:b0bf:e4c7:806b]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 611dbfd3-aff7-42fe-73c9-08d8543c686c
-x-ms-traffictypediagnostic: MW2PR2101MB1002:
+x-ms-office365-filtering-correlation-id: aea379b1-aa1d-4392-78ac-08d8543e90a5
+x-ms-traffictypediagnostic: KU1P153MB0183:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB1002894E8EEDF2B1AD684789D7290@MW2PR2101MB1002.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-microsoft-antispam-prvs: <KU1P153MB0183FDAA57DB2943E1287B0DBF290@KU1P153MB0183.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: izQeJ4K7X9BDifysnrjALiRLl3oswH1PK0x+6gtFgOFFZjX2pghIQXH4HPmGVYbfsVEXJo06e/1YhgWCGsixIQYrbMHJbsp0M1eGu0jbBlB759hwFZbwxjBhbfgxKxALFZDcrmve8iJbN+q5fCMI0jwaxWjIKvt/qdEox36dqxuEa3CDncEu4hJq6vQY1WjroPBR7evSSqSz+ncjZKgHh2bjzeJaMbkD8o14LDGA/0COkPrwgTX75uQL1a95LIijZt8Pbr4F5KOCM4nh4U2ltdi5h7zyzCwjbju6Vp39cB9dO7c3qGliMYunB/z3shj2ZyfdMrdf/1XNyBTH2ndXwsxPCdGIGPMH6EZoa/Rmlx1ap7bzfBlk0L3jJAhyFDQHOM7iEk5lnXRfosA6ktOsQWI++U8jk2wGOfOHsMgH6Og=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(376002)(346002)(366004)(136003)(107886003)(478600001)(10290500003)(82950400001)(82960400001)(7696005)(9686003)(8990500004)(2906002)(71200400001)(316002)(4326008)(5660300002)(66446008)(64756008)(66556008)(66476007)(76116006)(66946007)(52536014)(110136005)(55016002)(33656002)(86362001)(8936002)(186003)(26005)(6506007)(83380400001)(8676002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: txnXOYtFcFV+RIJJMZWPtErMBOCkdYtTgn2p+UjjAeKML6YXGAdC7e83uukTpxxVR4Zzr8AamMa/eJQdhA1Ebko0Do960fJXklNxnUf1CCqBF5c1j6lb9OQTZl0YpCBeEDSTJLNq7iKXhI2KkNbzeboVKaFkuVANbNN/ZVWLSPJsu4FX4TyJQFRAyZpp/H0+6hxO+EhEyev5zKSHkgWve6my2/PGQuqfgRlTnB2Tpz1lXp/jHQmtsWc/aYlY083NxT+fs9uMMm9d+wPYx21TjZNaeDigDnlUi8kqT5CneB+0CXSP3NzX3fU1qlZpjyGB6DTodyNGdJXM+/JCnWqI3Nuy5m0Sq79n83aux1Daby34YUI37PF0VfLsRJtyzWdkEOtfp3T0dwDCC2uzrZr6+klh6DJ2NcucOeGwzmcM+cQ8Obti9V91c83AEpziyZiugcUMMTOa+/j3dm93vTl4R6qLxXHXQrKn2yVF2FCd781zKRXQIOpkV4fxKlgKHBAjaj9YEd6Dn65Lh4NwHNnfv3MTQUS6qnOxfFC0Kw0mXTq7ffJbH8Q1lgrRBzJediOpBTMfD0M5Oq2L+xk7R264L+AAu6zKEkAA4EgVWXdG0pMKERFzBvaL/GuyQHjrcAl6c5cTu6Dbz6uar8L/4e32DQ==
+x-microsoft-antispam-message-info: eifWjKaUvyj8KuRFrlzLiSUcU6cgEa7u6yWhgMyfqS4slzFegkx2jpLBbmzm/sepTE9vtVYAr6MspQ/mNpJcSq1fYjGwzEej9AiASorHZOEET6cBJn+O6ycndfKfEdeTF3XCU+2oUrZ3ouSYMuQB9ZeHGJZYr8qYDUuUnY0wwajVR8C2Q19JMisAE3Uvn/6LGi+14JDr1n+XOczqBILCsBQqcrmx28OEiVsuudqCG4dP1ii3S7JaHdRSCVB6TPjN8zuoScd4bu/dcg/XhjnTJK1+oP/vWciRilYWdII9VJWCKzd0Kx5MbyD3VoH5zzADHvGAATL4UBJFpcZQ7CCUDLX3eUeT//Myq0C9qYF5qnT6SBSoTYUd4gO1aMxtfDoT1wr1ASTEGql2G/nyGG7YR6asIMr8YTmEQaH+o6zI3yw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KU1P153MB0120.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(396003)(136003)(376002)(346002)(10290500003)(66556008)(64756008)(66446008)(66476007)(76116006)(66946007)(478600001)(4326008)(316002)(8676002)(107886003)(86362001)(2906002)(4744005)(71200400001)(8936002)(52536014)(7696005)(5660300002)(9686003)(6506007)(110136005)(33656002)(8990500004)(82950400001)(82960400001)(55016002)(186003)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: htWje30LKfMyAKSZZnT3YPRWivEZgq10h8ycigaBbk4tza9dhbuQBALQ32bdn9YXwwgHiPWjDHztLsovRMZSoGr2PWKgys9tg7HoinMLY+BjyAPx5i6NRttvQnuUwVQZiKHw2w7n3G4eoMG0IQdu7ZfExsLTnNq5VnQnkXjUD8dQTO30CRQ6S7HiOLZkCk91w8zcovyoucE7ZBEFfswUd+GUOasAUBPF0kLNX0erXFH9fRS3XR49VmObnMkP7Xr8JwBjVhYI90mBnuRBZtGcdoUJmEGDpFf8qtMRZ8qXSa6IjfbYZd3jLXZUgrIBY5FlV5hxb6PovpK22J+T/dIK3cjkvujt9f0aeqolMKBsA74xcfWdO4NHvJDhRyI14YAxLCsPn5tve2wHfIxMZ0PS/MYO5q1j+Gd1FmV9QzJ5ooXLZ+cQjOy2iHmmv9Pa3bNI0OtTpVxzAKmzLTCpxrqOOGhHwCK04pvC5mZn7Zu+9XKKGAs4BgaPJQiuYgVTumDdVNzRQ7oYkRKypbLueY7lZP6K3hC4yoQuGSjfB/fIh7ntVfIaFUeQtAz5CunDXqxX8D7tk3TWthvV7jemB5hWZfpyZsFszvPYb59VFnyh6LFnGx6Ann/uUCBZORIa86GpNgkaSOtw10qqPgaUYPn18723hyzs3VvBZOmfBD1go9PllE5wnphOwJ0HSJHLh8AD6TpuCM+meIQhgu3czo1qww==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 611dbfd3-aff7-42fe-73c9-08d8543c686c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 21:16:09.8105
+X-MS-Exchange-CrossTenant-AuthSource: KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: aea379b1-aa1d-4392-78ac-08d8543e90a5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 21:31:36.1285
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yEM6cYq3yRMWIvr4qVcc7CMBAzqdea5Y6kIC82oLzmvbEVsEnhcl1fqnffpbMk1wubAC0Tc4i39jOi0H9QqyFTawZ/lszHQeSkEWULJKHoI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1002
+X-MS-Exchange-CrossTenant-userprincipalname: /lGfZmkGnEiAOCK7zAgdxWO4hAd598LaxVqNx2FuGFWlIspYcpjPDpOQ9z0m74QzyTNEv4ka79Tx/7jn8T3Thw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0183
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Friday, September 4, 2020 7:55=
- PM
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Tuesday, September 8, 2020 2:16 PM
+> > @@ -1211,6 +1211,21 @@ static void hv_irq_unmask(struct irq_data *data)
+> >  	pbus =3D pdev->bus;
+> >  	hbus =3D container_of(pbus->sysdata, struct hv_pcibus_device, sysdata=
+);
+> >
+> > +	if (hbus->state =3D=3D hv_pcibus_removing) {
+> > +		/*
+> > +		 * During hibernatin, when a CPU is offlined, the kernel tries
 >=20
-> Hyper-V doesn't trap and emulate the accesses to the MSI/MSI-X registers,
-> and we must use hv_compose_msi_msg() to ask Hyper-V to create the IOMMU
-> Interrupt Remapping Table Entries. This is not an issue for a lot of
-> PCI device drivers (e.g. NVMe driver, Mellanox NIC drivers), which
-> destroy and re-create the interrupts across hibernation, so
-> hv_compose_msi_msg() is called automatically. However, some other PCI
-> device drivers (e.g. the Nvidia driver) may not destroy and re-create
-> the interrupts across hibernation, so hv_pci_resume() has to call
-> hv_compose_msi_msg(), otherwise the PCI device drivers can no longer
-> receive MSI/MSI-X interrupts after hibernation.
->=20
-> Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
-> Cc: Jake Oshins <jakeo@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 44 +++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index fc4c3a15e570..abefff9a20e1 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1211,6 +1211,21 @@ static void hv_irq_unmask(struct irq_data *data)
->  	pbus =3D pdev->bus;
->  	hbus =3D container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
->=20
-> +	if (hbus->state =3D=3D hv_pcibus_removing) {
-> +		/*
-> +		 * During hibernatin, when a CPU is offlined, the kernel tries
+> s/hiberatin/hibernation/
+Thanks! I'll post a v2 shortly with this typo fixed, and with Jake's Review=
+ed-by.
 
-s/hiberatin/hibernation/
-
-> +		 * to move the interrupt to the remaining CPUs that haven't
-> +		 * been offlined yet. In this case, the below hv_do_hypercall()
-> +		 * always fails since the vmbus channel has been closed, so we
-> +		 * should not call the hypercall, but we still need
-> +		 * pci_msi_unmask_irq() to reset the mask bit in desc->masked:
-> +		 * see cpu_disable_common() -> fixup_irqs() ->
-> +		 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
-> +		 */
-> +		pci_msi_unmask_irq(data);
-> +		return;
-> +	}
-> +
->  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
->=20
->  	params =3D &hbus->retarget_msi_interrupt_params;
-> @@ -3372,6 +3387,33 @@ static int hv_pci_suspend(struct hv_device *hdev)
->  	return 0;
->  }
->=20
-> +static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
-> +{
-> +	struct msi_desc *entry;
-> +	struct irq_data *irq_data;
-> +
-> +	for_each_pci_msi_entry(entry, pdev) {
-> +		irq_data =3D irq_get_irq_data(entry->irq);
-> +		if (WARN_ON_ONCE(!irq_data))
-> +			return -EINVAL;
-> +
-> +		hv_compose_msi_msg(irq_data, &entry->msg);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
-> + * re-writes the MSI/MSI-X registers, but since Hyper-V doesn't trap and
-> + * emulate the accesses, we have to call hv_compose_msi_msg() to ask
-> + * Hyper-V to re-create the IOMMU Interrupt Remapping Table Entries.
-> + */
-> +static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus)
-> +{
-> +	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL);
-> +}
-> +
->  static int hv_pci_resume(struct hv_device *hdev)
->  {
->  	struct hv_pcibus_device *hbus =3D hv_get_drvdata(hdev);
-> @@ -3405,6 +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
->=20
->  	prepopulate_bars(hbus);
->=20
-> +	hv_pci_restore_msi_state(hbus);
-> +
->  	hbus->state =3D hv_pcibus_installed;
->  	return 0;
->  out:
-> --
-> 2.19.1
-
+Thanks,
+-- Dexuan
