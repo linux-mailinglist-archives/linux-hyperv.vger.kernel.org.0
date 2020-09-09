@@ -2,161 +2,347 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA9A2262614
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Sep 2020 06:08:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E4D42626AB
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Sep 2020 07:18:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725826AbgIIEIg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 9 Sep 2020 00:08:36 -0400
-Received: from mail-bn8nam11on2090.outbound.protection.outlook.com ([40.107.236.90]:15745
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725300AbgIIEIf (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 9 Sep 2020 00:08:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RTTfe01AjGxEV/61d+5FsJGIdiep/KRD/CzxjTpAPORLC5fSHbShrih5JUsVjdNYG7xx0IxX+a4rhmtfe5ZgmQv/JSNWpHoaHpqHoc2cm8HF6oB70zGOUuWGoM/uz09c53pXs9FsxtF/rJB4k1Rso6fv/A4eXM6LxXE/nzyS0zAIlplaloRtzTiukwDdAaObmD8o0RXvIXX3hfo7ZGCitGmx5BxNHu3iHr5n66NdM+9idTSlr5435O604e9C6cZ4YnpMLyykAOHqOCNkndfWfLqAozlTxsWEB3XlayRMdT8m3stBc/B926sGRXcYIOP7I308lyPygTT9IXjZdWD6Ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sAZEOVX7g1a1ZcTGNjuqSfur8+qlUrOwMcXOjA5HnGU=;
- b=gOWspdFi6XUON4LuL7hpJaeA/IBvoyU3tq35WTsqC6/h0/Pn18nEhreVyimpCAnGN1EYRCn6qtH0aPKsMfAO1CKzgJBNH1s+JWEyi011/wxZtZxRXlYmGdi3iPTebAJMZox6xiZ0GuygiJ4Gz6HHi596IssN9r1/qQSvdSW13vz2W5WMs9KdBrmBPDuu/N6owCb/RBVSznqTmXB3AKzCzudd+RP/ctCW8vQdTMh6FDqED65y8s/0iMmLOXy0UrECbuIGaSBCqOEouLFsLzp0FVmO9Q0nmOhJcuGNTyO5vVBwys9AcXXlUYUimqTZLT0UwDf+Nk8cTVZB5BlI3KwzeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sAZEOVX7g1a1ZcTGNjuqSfur8+qlUrOwMcXOjA5HnGU=;
- b=RAJxkAUX8evBWTb2HiKwHPc5hQKcge2T+GaA7VPFdi+y8Un3TMShYPup/HHa2ZztgTp2OBpE7N6aJObwqGvcL0rHkXQGTP4X2sQMDCxfUczl/fkSDvsmieNhKjNwr/xEFJijResgRqRr5YxyEuINHKRdQp+j25Aq00Osm3ZDC9M=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-Received: from BN6PR21MB0162.namprd21.prod.outlook.com (10.173.200.8) by
- BN7PR21MB1618.namprd21.prod.outlook.com (52.135.254.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3391.3; Wed, 9 Sep 2020 04:08:32 +0000
-Received: from BN6PR21MB0162.namprd21.prod.outlook.com
- ([fe80::c189:fa0c:eb39:9b39]) by BN6PR21MB0162.namprd21.prod.outlook.com
- ([fe80::c189:fa0c:eb39:9b39%7]) with mapi id 15.20.3391.004; Wed, 9 Sep 2020
- 04:08:32 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kuba@kernel.org, wei.liu@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com,
-        davem@davemloft.net, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com
-Cc:     saeedm@mellanox.com, markb@mellanox.com,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH net 2/2] hv_netvsc: Cache the current data path to avoid duplicate call and message
-Date:   Tue,  8 Sep 2020 21:08:19 -0700
-Message-Id: <20200909040819.19053-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-Originating-IP: [2001:4898:80e8:1:fe14:50ca:c8bf:219c]
-X-ClientProxiedBy: MWHPR22CA0004.namprd22.prod.outlook.com
- (2603:10b6:300:ef::14) To BN6PR21MB0162.namprd21.prod.outlook.com
- (2603:10b6:404:94::8)
+        id S1725974AbgIIFSu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 9 Sep 2020 01:18:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49038 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725772AbgIIFSs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 9 Sep 2020 01:18:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 31CECAC4C;
+        Wed,  9 Sep 2020 05:18:46 +0000 (UTC)
+Subject: Re: [PATCH v2 3/7] mm/memory_hotplug: prepare passing flags to
+ add_memory() and friends
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Liu <wei.liu@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Libor Pechacek <lpechacek@suse.cz>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20200908201012.44168-1-david@redhat.com>
+ <20200908201012.44168-4-david@redhat.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <edfe936b-1178-d2c7-8427-caa7253d516b@suse.com>
+Date:   Wed, 9 Sep 2020 07:18:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:1:fe14:50ca:c8bf:219c) by MWHPR22CA0004.namprd22.prod.outlook.com (2603:10b6:300:ef::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 04:08:30 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 152cd3a0-6106-4be2-57dd-08d8547603d1
-X-MS-TrafficTypeDiagnostic: BN7PR21MB1618:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN7PR21MB16181CED55D5B6E170A2DD46BF260@BN7PR21MB1618.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:98;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WCkMNrVdniXyfEvPEra3fQenZh7vb/FSTqx8/t5xpBntnY2N8iH6GwcQS4zxEq6BwDfXyx3aBLn4TttLNmLJ4YW3PPi52JE97kCt3acfs0M6EeLBCUEZei/R1Lh3vViXQEE8TKV0kyqR+PZrFXH/O0jrj/U54hQf6bklSdp2ePkuAx9KYhCd0F9BomCNFLJYSXx9lQQ5mnwrJpsRg4DxRdyswC+zBvZ30nk5mQfY6Sa+ahzXKyEXCQ5MRM30kopaFCdKKwSlIxrxS8oFLppVSdwtWV1xo03lgmAqpJO2XzVcpyHzt1X/8ucqB5fkxs6lH5CVZCysaGi0kK17u8EbWCimTTNjxW0DiQZTTnP3K1kQF26WP9GLJmb8rkM0byYnoCa9jLISzEXFJjRnjyiUiMoUaepDMMeninUKIox6bPk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0162.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(36756003)(5660300002)(4326008)(66556008)(66476007)(66946007)(2906002)(7696005)(52116002)(6486002)(3450700001)(82950400001)(82960400001)(83380400001)(186003)(16526019)(15650500001)(107886003)(6666004)(2616005)(86362001)(8936002)(316002)(478600001)(10290500003)(8676002)(1076003)(6636002)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 1YWj4xwi6HuSoZ0zTK+tWbzQxiLpuFca1hNMH7szk6PQGy0u1JopROLv+0XnPNwlImcriCHSE5gQUJxf8wwtFMum6TFoPckS85ICTFsobhUIwXL5xTBTp8PTYmjItCdJ3a9m2BkZy0kVXRm7tzen6AsylKjYvrOMyIO/rB1uRMEbOzn7By0B8SylNpaCiz/Yku0FCL4eIgF01PFkIkeFJY+s9HWgstH8SDGiBJYTSZh5s9nCbyxdHakmIvD+YnydJG4gsUR1Svj/AOt7XBs5ZCYF+HO7oX+zU46jMjOUSC+BXv4Lp8rXBwMUA8orm6qjIJx0YmMvzyfsjyqluNQKsaHfvUyVGVDzd+HgkxwN2e9tLujfCCSXOqXoxHs+oXEtlQbl8A0ybCQpVCWMFrrSbClthDC3Ytw4qWF5dYYhmso+dd3inlxhkzAawe3LRREcwo6SYl4p81PAhX8DU7Z3EaTWTFjhYn2TDU3SlHsJEYwVRLqs/wU/iyuQ0VW1klHmd1suIOr+TdJH6P7DjuiqeOWNmilG6iNXbGhJFwp34oW0XkhDj68Zk6FbCQqHJC53JhSpjDki9EuEQT+dMysIy6H3dyTySMUK9x91qhmkuE0X/cdHsfXBwx9WAf+KzytB9IOE1VIq6pK2p/Q/ZYdbnF09e8Km2bDsbRsr/Ul8rf2NRQThXH3MeOkUHukLVZf8yUmyMw6PdkqiU0FivO5fkQ==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 152cd3a0-6106-4be2-57dd-08d8547603d1
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR21MB0162.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 04:08:32.2249
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: z5omDCj2tyUs0/D/Rd9VXhY5YEFmrtCLIOhgiZWsjM53C3ongAa2K53irVNDmebWE+BSatIGbds5CcfhjCjyWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR21MB1618
+In-Reply-To: <20200908201012.44168-4-david@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The previous change "hv_netvsc: Switch the data path at the right time
-during hibernation" adds the call of netvsc_vf_changed() upon
-NETDEV_CHANGE, so it's necessary to avoid the duplicate call and message
-when the VF is brought UP or DOWN.
+On 08.09.20 22:10, David Hildenbrand wrote:
+> We soon want to pass flags, e.g., to mark added System RAM resources.
+> mergeable. Prepare for that.
+> 
+> This patch is based on a similar patch by Oscar Salvador:
+> 
+> https://lkml.kernel.org/r/20190625075227.15193-3-osalvador@suse.de
+> 
+> Acked-by: Wei Liu <wei.liu@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> Cc: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Libor Pechacek <lpechacek@suse.cz>
+> Cc: Anton Blanchard <anton@ozlabs.org>
+> Cc: Leonardo Bras <leobras.c@gmail.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-acpi@vger.kernel.org
+> Cc: linux-nvdimm@lists.01.org
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: virtualization@lists.linux-foundation.org
+> Cc: xen-devel@lists.xenproject.org
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- drivers/net/hyperv/hyperv_net.h |  3 +++
- drivers/net/hyperv/netvsc_drv.c | 21 ++++++++++++++++++++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
+Reviewed-by: Juergen Gross <jgross@suse.com> (Xen related part)
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index 2181d4538ab7..ff33f27cdcd3 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -974,6 +974,9 @@ struct net_device_context {
- 	/* Serial number of the VF to team with */
- 	u32 vf_serial;
- 
-+	/* Is the current data path through the VF NIC? */
-+	bool  data_path_is_vf;
-+
- 	/* Used to temporarily save the config info across hibernation */
- 	struct netvsc_device_info *saved_netvsc_dev_info;
- };
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 4a25886e2346..b7db3766f5b9 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2366,7 +2366,16 @@ static int netvsc_register_vf(struct net_device *vf_netdev)
- 	return NOTIFY_OK;
- }
- 
--/* VF up/down change detected, schedule to change data path */
-+/* Change the data path when VF UP/DOWN/CHANGE are detected.
-+ *
-+ * Typically a UP or DOWN event is followed by a CHANGE event, so
-+ * net_device_ctx->data_path_is_vf is used to cache the current data path
-+ * to avoid the duplicate call of netvsc_switch_datapath() and the duplicate
-+ * message.
-+ *
-+ * During hibernation, if a VF NIC driver (e.g. mlx5) preserves the network
-+ * interface, there is only the CHANGE event and no UP or DOWN event.
-+ */
- static int netvsc_vf_changed(struct net_device *vf_netdev)
- {
- 	struct net_device_context *net_device_ctx;
-@@ -2383,6 +2392,10 @@ static int netvsc_vf_changed(struct net_device *vf_netdev)
- 	if (!netvsc_dev)
- 		return NOTIFY_DONE;
- 
-+	if (net_device_ctx->data_path_is_vf == vf_is_up)
-+		return NOTIFY_OK;
-+	net_device_ctx->data_path_is_vf = vf_is_up;
-+
- 	netvsc_switch_datapath(ndev, vf_is_up);
- 	netdev_info(ndev, "Data path switched %s VF: %s\n",
- 		    vf_is_up ? "to" : "from", vf_netdev->name);
-@@ -2624,6 +2637,12 @@ static int netvsc_resume(struct hv_device *dev)
- 	rtnl_lock();
- 
- 	net_device_ctx = netdev_priv(net);
-+
-+	/* Reset the data path to the netvsc NIC before re-opening the vmbus
-+	 * channel. Later netvsc_netdev_event() will switch the data path to
-+	 * the VF upon the UP or CHANGE event.
-+	 */
-+	net_device_ctx->data_path_is_vf = false;
- 	device_info = net_device_ctx->saved_netvsc_dev_info;
- 
- 	ret = netvsc_attach(net, device_info);
--- 
-2.19.1
+
+Juergen
+
+> ---
+>   arch/powerpc/platforms/powernv/memtrace.c       |  2 +-
+>   arch/powerpc/platforms/pseries/hotplug-memory.c |  2 +-
+>   drivers/acpi/acpi_memhotplug.c                  |  2 +-
+>   drivers/base/memory.c                           |  2 +-
+>   drivers/dax/kmem.c                              |  2 +-
+>   drivers/hv/hv_balloon.c                         |  2 +-
+>   drivers/s390/char/sclp_cmd.c                    |  2 +-
+>   drivers/virtio/virtio_mem.c                     |  2 +-
+>   drivers/xen/balloon.c                           |  2 +-
+>   include/linux/memory_hotplug.h                  | 10 ++++++----
+>   mm/memory_hotplug.c                             | 15 ++++++++-------
+>   11 files changed, 23 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
+> index 13b369d2cc454..a7475d18c671c 100644
+> --- a/arch/powerpc/platforms/powernv/memtrace.c
+> +++ b/arch/powerpc/platforms/powernv/memtrace.c
+> @@ -224,7 +224,7 @@ static int memtrace_online(void)
+>   			ent->mem = 0;
+>   		}
+>   
+> -		if (add_memory(ent->nid, ent->start, ent->size)) {
+> +		if (add_memory(ent->nid, ent->start, ent->size, 0)) {
+>   			pr_err("Failed to add trace memory to node %d\n",
+>   				ent->nid);
+>   			ret += 1;
+> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> index 5d545b78111f9..54a888ea7f751 100644
+> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> @@ -606,7 +606,7 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+>   	block_sz = memory_block_size_bytes();
+>   
+>   	/* Add the memory */
+> -	rc = __add_memory(lmb->nid, lmb->base_addr, block_sz);
+> +	rc = __add_memory(lmb->nid, lmb->base_addr, block_sz, 0);
+>   	if (rc) {
+>   		invalidate_lmb_associativity_index(lmb);
+>   		return rc;
+> diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
+> index e294f44a78504..d91b3584d4b2b 100644
+> --- a/drivers/acpi/acpi_memhotplug.c
+> +++ b/drivers/acpi/acpi_memhotplug.c
+> @@ -207,7 +207,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
+>   		if (node < 0)
+>   			node = memory_add_physaddr_to_nid(info->start_addr);
+>   
+> -		result = __add_memory(node, info->start_addr, info->length);
+> +		result = __add_memory(node, info->start_addr, info->length, 0);
+>   
+>   		/*
+>   		 * If the memory block has been used by the kernel, add_memory()
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 4db3c660de831..2287bcf86480e 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -432,7 +432,7 @@ static ssize_t probe_store(struct device *dev, struct device_attribute *attr,
+>   
+>   	nid = memory_add_physaddr_to_nid(phys_addr);
+>   	ret = __add_memory(nid, phys_addr,
+> -			   MIN_MEMORY_BLOCK_SIZE * sections_per_block);
+> +			   MIN_MEMORY_BLOCK_SIZE * sections_per_block, 0);
+>   
+>   	if (ret)
+>   		goto out;
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 7dcb2902e9b1b..8e66b28ef5bc6 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -95,7 +95,7 @@ int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>   		 * this as RAM automatically.
+>   		 */
+>   		rc = add_memory_driver_managed(numa_node, range.start,
+> -				range_len(&range), kmem_name);
+> +				range_len(&range), kmem_name, 0);
+>   
+>   		res->flags |= IORESOURCE_BUSY;
+>   		if (rc) {
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 32e3bc0aa665a..0194bed1a5736 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -726,7 +726,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+>   
+>   		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
+>   		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+> -				(HA_CHUNK << PAGE_SHIFT));
+> +				(HA_CHUNK << PAGE_SHIFT), 0);
+>   
+>   		if (ret) {
+>   			pr_err("hot_add memory failed error is %d\n", ret);
+> diff --git a/drivers/s390/char/sclp_cmd.c b/drivers/s390/char/sclp_cmd.c
+> index a864b21af602a..a6a908244c742 100644
+> --- a/drivers/s390/char/sclp_cmd.c
+> +++ b/drivers/s390/char/sclp_cmd.c
+> @@ -406,7 +406,7 @@ static void __init add_memory_merged(u16 rn)
+>   	if (!size)
+>   		goto skip_add;
+>   	for (addr = start; addr < start + size; addr += block_size)
+> -		add_memory(0, addr, block_size);
+> +		add_memory(0, addr, block_size, 0);
+>   skip_add:
+>   	first_rn = rn;
+>   	num = 1;
+> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+> index 834b7c13ef3dc..314ab753139d1 100644
+> --- a/drivers/virtio/virtio_mem.c
+> +++ b/drivers/virtio/virtio_mem.c
+> @@ -424,7 +424,7 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, unsigned long mb_id)
+>   
+>   	dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
+>   	return add_memory_driver_managed(nid, addr, memory_block_size_bytes(),
+> -					 vm->resource_name);
+> +					 vm->resource_name, 0);
+>   }
+>   
+>   /*
+> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+> index 51427c752b37b..7bac38764513d 100644
+> --- a/drivers/xen/balloon.c
+> +++ b/drivers/xen/balloon.c
+> @@ -331,7 +331,7 @@ static enum bp_state reserve_additional_memory(void)
+>   	mutex_unlock(&balloon_mutex);
+>   	/* add_memory_resource() requires the device_hotplug lock */
+>   	lock_device_hotplug();
+> -	rc = add_memory_resource(nid, resource);
+> +	rc = add_memory_resource(nid, resource, 0);
+>   	unlock_device_hotplug();
+>   	mutex_lock(&balloon_mutex);
+>   
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 51a877fec8da8..5cd48332ce119 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -345,11 +345,13 @@ extern void set_zone_contiguous(struct zone *zone);
+>   extern void clear_zone_contiguous(struct zone *zone);
+>   
+>   extern void __ref free_area_init_core_hotplug(int nid);
+> -extern int __add_memory(int nid, u64 start, u64 size);
+> -extern int add_memory(int nid, u64 start, u64 size);
+> -extern int add_memory_resource(int nid, struct resource *resource);
+> +extern int __add_memory(int nid, u64 start, u64 size, unsigned long flags);
+> +extern int add_memory(int nid, u64 start, u64 size, unsigned long flags);
+> +extern int add_memory_resource(int nid, struct resource *resource,
+> +			       unsigned long flags);
+>   extern int add_memory_driver_managed(int nid, u64 start, u64 size,
+> -				     const char *resource_name);
+> +				     const char *resource_name,
+> +				     unsigned long flags);
+>   extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+>   				   unsigned long nr_pages,
+>   				   struct vmem_altmap *altmap, int migratetype);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 8e1cd18b5cf14..64b07f006bc10 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1039,7 +1039,8 @@ static int online_memory_block(struct memory_block *mem, void *arg)
+>    *
+>    * we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG
+>    */
+> -int __ref add_memory_resource(int nid, struct resource *res)
+> +int __ref add_memory_resource(int nid, struct resource *res,
+> +			      unsigned long flags)
+>   {
+>   	struct mhp_params params = { .pgprot = PAGE_KERNEL };
+>   	u64 start, size;
+> @@ -1118,7 +1119,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
+>   }
+>   
+>   /* requires device_hotplug_lock, see add_memory_resource() */
+> -int __ref __add_memory(int nid, u64 start, u64 size)
+> +int __ref __add_memory(int nid, u64 start, u64 size, unsigned long flags)
+>   {
+>   	struct resource *res;
+>   	int ret;
+> @@ -1127,18 +1128,18 @@ int __ref __add_memory(int nid, u64 start, u64 size)
+>   	if (IS_ERR(res))
+>   		return PTR_ERR(res);
+>   
+> -	ret = add_memory_resource(nid, res);
+> +	ret = add_memory_resource(nid, res, flags);
+>   	if (ret < 0)
+>   		release_memory_resource(res);
+>   	return ret;
+>   }
+>   
+> -int add_memory(int nid, u64 start, u64 size)
+> +int add_memory(int nid, u64 start, u64 size, unsigned long flags)
+>   {
+>   	int rc;
+>   
+>   	lock_device_hotplug();
+> -	rc = __add_memory(nid, start, size);
+> +	rc = __add_memory(nid, start, size, flags);
+>   	unlock_device_hotplug();
+>   
+>   	return rc;
+> @@ -1167,7 +1168,7 @@ EXPORT_SYMBOL_GPL(add_memory);
+>    * "System RAM ($DRIVER)".
+>    */
+>   int add_memory_driver_managed(int nid, u64 start, u64 size,
+> -			      const char *resource_name)
+> +			      const char *resource_name, unsigned long flags)
+>   {
+>   	struct resource *res;
+>   	int rc;
+> @@ -1185,7 +1186,7 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
+>   		goto out_unlock;
+>   	}
+>   
+> -	rc = add_memory_resource(nid, res);
+> +	rc = add_memory_resource(nid, res, flags);
+>   	if (rc < 0)
+>   		release_memory_resource(res);
+>   
+> 
 
