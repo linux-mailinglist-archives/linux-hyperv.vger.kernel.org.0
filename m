@@ -2,89 +2,182 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA24B262E21
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Sep 2020 13:47:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6A90262E53
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Sep 2020 14:10:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIILqF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 9 Sep 2020 07:46:05 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33002 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbgIILpZ (ORCPT
+        id S1728631AbgIIMIW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 9 Sep 2020 08:08:22 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44774 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730116AbgIIMAQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:45:25 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e11so1658418wme.0;
-        Wed, 09 Sep 2020 04:45:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WXoG8q5ed4XfWQ3Dzmu5hYVDZuDpMKCum26BXIBxJ60=;
-        b=Dxgh49/fpUtpYueRVoJ53/eHoZkjHiSdzsoIwFf6J2MLCAoBQTM8tE/keaLpaXqYNQ
-         SHzXHY7sso7M4FVK23KmUAUggnYJZxIEvIyGe1iZaE5znKgK5+6NcBlZT/kxnn6bkN+i
-         YPb7ht3We1KNPrusjcIzf0f0OCFNEsu38Sdotms7OAy0HylMjztbfx3+nEkGfEbw9jkI
-         QU81ObXohN3WoMaB3lko3t/zl4VE7W2ynAepFBuleI3iHqasnPSUnk7tnOmnKGiKvAgb
-         SxmelVs1Rf3hMb3bmdNHgz2bmn1r0pD1N6KafhUC0aFA8mqNxt5FBRmyrD00E8OoD6KH
-         u+fQ==
-X-Gm-Message-State: AOAM532zgbw4p1ea0K5acka9ETS3Vn+ieneEd5BVfuHeYzclsafgM8Rc
-        ZJjM3RVD6FtnibfcQ386D2Yi3hULWkE=
-X-Google-Smtp-Source: ABdhPJwRwoXoUtaCWApFPVRqDFMXzGia8naxYrrD7VA8gMVZpqLFW7kaX7pbsSAAErAck1wAGhUKhQ==
-X-Received: by 2002:a1c:2403:: with SMTP id k3mr3029102wmk.153.1599651480007;
-        Wed, 09 Sep 2020 04:38:00 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id d3sm3720722wrr.84.2020.09.09.04.37.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 04:37:59 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 11:37:58 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        Wed, 9 Sep 2020 08:00:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599652810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=eUouh1bk+Xc6NMfj6Wwsz4gM4esEPlLXRWSoWFarQ/U=;
+        b=TbTr1CBuU3VP5gz5jU9t7UxX9SQL+skkdyBr1pcUWSiPrdkxebIppmjsAJy6TqD0cXW3xU
+        aB7nHHVAsi3Oz1NsPT2sQeUsNrngTeNI621y+3BAfsjBg+OuSwceebcC6IxpN0Kuzotkya
+        sK2qjP1XOS2tj3+syDg0bnYlCtHlVUs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-243-wAUM1KqrMFK4TOvqtacRug-1; Wed, 09 Sep 2020 07:51:58 -0400
+X-MC-Unique: wAUM1KqrMFK4TOvqtacRug-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7627710BBED2;
+        Wed,  9 Sep 2020 11:51:53 +0000 (UTC)
+Received: from [10.36.113.90] (ovpn-113-90.ams2.redhat.com [10.36.113.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 092FD60C0F;
+        Wed,  9 Sep 2020 11:51:41 +0000 (UTC)
+Subject: Re: [PATCH v2 3/7] mm/memory_hotplug: prepare passing flags to
+ add_memory() and friends
+From:   David Hildenbrand <david@redhat.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Liu <wei.liu@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: Re: [PATCH] Drivers: hv: vmbus: hibernation: do not hang forever in
- vmbus_bus_resume()
-Message-ID: <20200909113758.7ucufasongrttxdw@liuwe-devbox-debian-v2>
-References: <20200905025555.45614-1-decui@microsoft.com>
- <MW2PR2101MB1052BE3C25E87FE1CA5BA0F8D7290@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Libor Pechacek <lpechacek@suse.cz>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20200908201012.44168-1-david@redhat.com>
+ <20200908201012.44168-4-david@redhat.com> <20200909071759.GD435421@kroah.com>
+ <3bc5b464-3229-d442-714a-ec33b5728ac6@redhat.com>
+ <87eenbry5p.fsf@mpe.ellerman.id.au>
+ <5145c5c4-d9c0-85a8-7e0b-ccfa03eb0427@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <4e83103c-14a0-6cc4-ae1b-438282edaea3@redhat.com>
+Date:   Wed, 9 Sep 2020 13:51:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052BE3C25E87FE1CA5BA0F8D7290@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <5145c5c4-d9c0-85a8-7e0b-ccfa03eb0427@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 09:05:34PM +0000, Michael Kelley wrote:
-> From: Dexuan Cui <decui@microsoft.com> Sent: Friday, September 4, 2020 7:56 PM
-> > 
-> > After we Stop and later Start a VM that uses Accelerated Networking (NIC
-> > SR-IOV), currently the VF vmbus device's Instance GUID can change, so after
-> > vmbus_bus_resume() -> vmbus_request_offers(), vmbus_onoffer() can not find
-> > the original vmbus channel of the VF, and hence we can't complete()
-> > vmbus_connection.ready_for_resume_event in check_ready_for_resume_event(),
-> > and the VM hangs in vmbus_bus_resume() forever.
-> > 
-> > Fix the issue by adding a timeout, so the resuming can still succeed, and
-> > the saved state is not lost, and according to my test, the user can disable
-> > Accelerated Networking and then will be able to SSH into the VM for
-> > further recovery. Also prevent the VM in question from suspending again.
-> > 
-> > The host will be fixed so in future the Instance GUID will stay the same
-> > across hibernation.
-> > 
-> > Fixes: d8bd2d442bb2 ("Drivers: hv: vmbus: Resume after fixing up old primary channels")
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > ---
-> >  drivers/hv/vmbus_drv.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
+On 09.09.20 13:37, David Hildenbrand wrote:
+> On 09.09.20 13:24, Michael Ellerman wrote:
+>> David Hildenbrand <david@redhat.com> writes:
+>>> On 09.09.20 09:17, Greg Kroah-Hartman wrote:
+>>>> On Tue, Sep 08, 2020 at 10:10:08PM +0200, David Hildenbrand wrote:
+>>>>> We soon want to pass flags, e.g., to mark added System RAM resources.
+>>>>> mergeable. Prepare for that.
+>>>>
+>>>> What are these random "flags", and how do we know what should be passed
+>>>> to them?
+>>>>
+>>>> Why not make this an enumerated type so that we know it all works
+>>>> properly, like the GPF_* flags are?  Passing around a random unsigned
+>>>> long feels very odd/broken...
+>>>
+>>> Agreed, an enum (mhp_flags) seems to give a better hint what can
+>>> actually be passed. Thanks!
+>>
+>> You probably know this but ...
+>>
+>> Just using a C enum doesn't get you any type safety.
+>>
+>> You can get some checking via sparse by using __bitwise, which is what
+>> gfp_t does. You don't actually have to use an enum for that, it works
+>> with #defines also.
 > 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Yeah, we seem to be using different approaches. And there is always a
+> way to mess things up :)
+> 
+> gfp_t is one (extreme) example, enum memblock_flags is another example.
+> I tend to prefer an enum in this particular case, because it's simple
+> and at least tells the user which values are expected.
 > 
 
-Applied to hyperv-fixes. Thanks.
+Gave it another try, looks like mhp_t (like gfp_t) is actually nicer.
+
+-- 
+Thanks,
+
+David / dhildenb
+
