@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DB3D26289E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Sep 2020 09:28:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E8412628AB
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Sep 2020 09:29:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgIIH2j (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 9 Sep 2020 03:28:39 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44783 "EHLO
+        id S1725922AbgIIH3W (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 9 Sep 2020 03:29:22 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27000 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729960AbgIIH2g (ORCPT
+        by vger.kernel.org with ESMTP id S1727935AbgIIH3V (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:28:36 -0400
+        Wed, 9 Sep 2020 03:29:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599636514;
+        s=mimecast20190719; t=1599636559;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=RR5UIbO6OPIG0cWQoEgtqEpdKbFGlPmnHYEcqrOqPQA=;
-        b=TSCan6L+wdSRZiE04yxD+zqJ/2LbbeoeB2qLymNwXnrg+WagIoBoK9yy19LNnS1yatFylK
-        RWsBB0ONryCvkQvAvVIKKrj/Lj6gs2zt+nLh79l7/mK8BdBO6eGPPD1WkvUTw81z35JjMY
-        vvdJSsRfVmMLEvFQzywp11yx3mWRVk4=
+        bh=beBy83xvdgGqw2410AVi6O0FaFwPJmePl3FfCXvsyA4=;
+        b=RiOX7A375FRUVSLwR/mb0elSaOV/77/hL8jTTxXvcF8o+AUa5PygXOobjcdfQBGloedVUn
+        BugUfV4pdjGyXl65JxLjmVLROQo2xAq77cGThlqgR0nlsOzSJ+DOHaD/2gkeUsOXXF4urZ
+        O02gJbrhZtQIQ3yhdAwInWgmZ6y6A9E=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-wmxjCFgDOJOXtbArx4RHxQ-1; Wed, 09 Sep 2020 03:27:50 -0400
-X-MC-Unique: wmxjCFgDOJOXtbArx4RHxQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-294-tiFs_KPBN7SjhzpsHthbFg-1; Wed, 09 Sep 2020 03:29:15 -0400
+X-MC-Unique: tiFs_KPBN7SjhzpsHthbFg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAA0618B9F0C;
-        Wed,  9 Sep 2020 07:27:47 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16C2E873113;
+        Wed,  9 Sep 2020 07:29:11 +0000 (UTC)
 Received: from [10.36.113.90] (ovpn-113-90.ams2.redhat.com [10.36.113.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 29F6B1002D53;
-        Wed,  9 Sep 2020 07:27:43 +0000 (UTC)
-Subject: Re: [PATCH v2 2/7] kernel/resource: move and rename
- IORESOURCE_MEM_DRIVER_MANAGED
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2232A83564;
+        Wed,  9 Sep 2020 07:28:55 +0000 (UTC)
+Subject: Re: [PATCH v2 3/7] mm/memory_hotplug: prepare passing flags to
+ add_memory() and friends
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
@@ -43,18 +43,39 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-s390@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
+        Wei Liu <wei.liu@kernel.org>, Michal Hocko <mhocko@suse.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
         Baoquan He <bhe@redhat.com>,
         Wei Yang <richardw.yang@linux.intel.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Libor Pechacek <lpechacek@suse.cz>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org
 References: <20200908201012.44168-1-david@redhat.com>
- <20200908201012.44168-3-david@redhat.com> <20200909071646.GC435421@kroah.com>
+ <20200908201012.44168-4-david@redhat.com> <20200909071759.GD435421@kroah.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -101,82 +122,35 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <811d0506-5da0-c01f-6d5c-d902f12911c8@redhat.com>
-Date:   Wed, 9 Sep 2020 09:27:42 +0200
+Message-ID: <3bc5b464-3229-d442-714a-ec33b5728ac6@redhat.com>
+Date:   Wed, 9 Sep 2020 09:28:55 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200909071646.GC435421@kroah.com>
+In-Reply-To: <20200909071759.GD435421@kroah.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 09.09.20 09:16, Greg Kroah-Hartman wrote:
-> On Tue, Sep 08, 2020 at 10:10:07PM +0200, David Hildenbrand wrote:
->> IORESOURCE_MEM_DRIVER_MANAGED currently uses an unused PnP bit, which is
->> always set to 0 by hardware. This is far from beautiful (and confusing),
->> and the bit only applies to SYSRAM. So let's move it out of the
->> bus-specific (PnP) defined bits.
->>
->> We'll add another SYSRAM specific bit soon. If we ever need more bits for
->> other purposes, we can steal some from "desc", or reshuffle/regroup what we
->> have.
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Wei Yang <richardw.yang@linux.intel.com>
->> Cc: Eric Biederman <ebiederm@xmission.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: kexec@lists.infradead.org
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  include/linux/ioport.h | 4 +++-
->>  kernel/kexec_file.c    | 2 +-
->>  mm/memory_hotplug.c    | 4 ++--
->>  3 files changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
->> index 52a91f5fa1a36..d7620d7c941a0 100644
->> --- a/include/linux/ioport.h
->> +++ b/include/linux/ioport.h
->> @@ -58,6 +58,9 @@ struct resource {
->>  #define IORESOURCE_EXT_TYPE_BITS 0x01000000	/* Resource extended types */
->>  #define IORESOURCE_SYSRAM	0x01000000	/* System RAM (modifier) */
->>  
->> +/* IORESOURCE_SYSRAM specific bits. */
->> +#define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
->> +
+On 09.09.20 09:17, Greg Kroah-Hartman wrote:
+> On Tue, Sep 08, 2020 at 10:10:08PM +0200, David Hildenbrand wrote:
+>> We soon want to pass flags, e.g., to mark added System RAM resources.
+>> mergeable. Prepare for that.
 > 
-> Can't you use BIT() here?
-
-I could, but this will make it look different to all other IORESOURCE_*
-definitions?
-
-If so, we should change all existing definitions - however the ones
-spanning multiple bits might turn out rather ugly, like
-
-#define IORESOURCE_TYPE_BITS    0x00001f00
-
-Thoughts? Thanks
-
+> What are these random "flags", and how do we know what should be passed
+> to them?
 > 
-> thanks,
-> 
-> greg k-h
-> 
+> Why not make this an enumerated type so that we know it all works
+> properly, like the GPF_* flags are?  Passing around a random unsigned
+> long feels very odd/broken...
 
+Agreed, an enum (mhp_flags) seems to give a better hint what can
+actually be passed. Thanks!
 
 -- 
 Thanks,
