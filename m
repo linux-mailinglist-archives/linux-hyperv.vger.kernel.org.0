@@ -2,92 +2,184 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6110262842
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Sep 2020 09:17:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DB3D26289E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Sep 2020 09:28:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgIIHRw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 9 Sep 2020 03:17:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIIHRt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:17:49 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730067AbgIIH2j (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 9 Sep 2020 03:28:39 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44783 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729960AbgIIH2g (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:28:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599636514;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=RR5UIbO6OPIG0cWQoEgtqEpdKbFGlPmnHYEcqrOqPQA=;
+        b=TSCan6L+wdSRZiE04yxD+zqJ/2LbbeoeB2qLymNwXnrg+WagIoBoK9yy19LNnS1yatFylK
+        RWsBB0ONryCvkQvAvVIKKrj/Lj6gs2zt+nLh79l7/mK8BdBO6eGPPD1WkvUTw81z35JjMY
+        vvdJSsRfVmMLEvFQzywp11yx3mWRVk4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-wmxjCFgDOJOXtbArx4RHxQ-1; Wed, 09 Sep 2020 03:27:50 -0400
+X-MC-Unique: wmxjCFgDOJOXtbArx4RHxQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9DD2078E;
-        Wed,  9 Sep 2020 07:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599635869;
-        bh=HM+rzaB8jIQfL0goRXEpQy9E5vp1Tz0Xya2N8+sURa8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AvT8dnL52SNWoRsYGkEMucCNddyCJQuXVVABi6KWtNROiarVGoZIIksdgH++GXUk/
-         mfX6EAUKLeKSOnJ2qoBI3uXM/U1aG8XaU0+hDOa7Lt1OcLDpieALm74V9UfqnUSe0L
-         mSA2BCCpW8HVUTBtZhu/0DJnEr8IcSkO0W2pwNvs=
-Date:   Wed, 9 Sep 2020 09:17:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Hildenbrand <david@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAA0618B9F0C;
+        Wed,  9 Sep 2020 07:27:47 +0000 (UTC)
+Received: from [10.36.113.90] (ovpn-113-90.ams2.redhat.com [10.36.113.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 29F6B1002D53;
+        Wed,  9 Sep 2020 07:27:43 +0000 (UTC)
+Subject: Re: [PATCH v2 2/7] kernel/resource: move and rename
+ IORESOURCE_MEM_DRIVER_MANAGED
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
         linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-s390@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
         Baoquan He <bhe@redhat.com>,
         Wei Yang <richardw.yang@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Libor Pechacek <lpechacek@suse.cz>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 3/7] mm/memory_hotplug: prepare passing flags to
- add_memory() and friends
-Message-ID: <20200909071759.GD435421@kroah.com>
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
 References: <20200908201012.44168-1-david@redhat.com>
- <20200908201012.44168-4-david@redhat.com>
+ <20200908201012.44168-3-david@redhat.com> <20200909071646.GC435421@kroah.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63W5Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAjwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <811d0506-5da0-c01f-6d5c-d902f12911c8@redhat.com>
+Date:   Wed, 9 Sep 2020 09:27:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908201012.44168-4-david@redhat.com>
+In-Reply-To: <20200909071646.GC435421@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 10:10:08PM +0200, David Hildenbrand wrote:
-> We soon want to pass flags, e.g., to mark added System RAM resources.
-> mergeable. Prepare for that.
+On 09.09.20 09:16, Greg Kroah-Hartman wrote:
+> On Tue, Sep 08, 2020 at 10:10:07PM +0200, David Hildenbrand wrote:
+>> IORESOURCE_MEM_DRIVER_MANAGED currently uses an unused PnP bit, which is
+>> always set to 0 by hardware. This is far from beautiful (and confusing),
+>> and the bit only applies to SYSRAM. So let's move it out of the
+>> bus-specific (PnP) defined bits.
+>>
+>> We'll add another SYSRAM specific bit soon. If we ever need more bits for
+>> other purposes, we can steal some from "desc", or reshuffle/regroup what we
+>> have.
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Wei Yang <richardw.yang@linux.intel.com>
+>> Cc: Eric Biederman <ebiederm@xmission.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: kexec@lists.infradead.org
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  include/linux/ioport.h | 4 +++-
+>>  kernel/kexec_file.c    | 2 +-
+>>  mm/memory_hotplug.c    | 4 ++--
+>>  3 files changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>> index 52a91f5fa1a36..d7620d7c941a0 100644
+>> --- a/include/linux/ioport.h
+>> +++ b/include/linux/ioport.h
+>> @@ -58,6 +58,9 @@ struct resource {
+>>  #define IORESOURCE_EXT_TYPE_BITS 0x01000000	/* Resource extended types */
+>>  #define IORESOURCE_SYSRAM	0x01000000	/* System RAM (modifier) */
+>>  
+>> +/* IORESOURCE_SYSRAM specific bits. */
+>> +#define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
+>> +
+> 
+> Can't you use BIT() here?
 
-What are these random "flags", and how do we know what should be passed
-to them?
+I could, but this will make it look different to all other IORESOURCE_*
+definitions?
 
-Why not make this an enumerated type so that we know it all works
-properly, like the GPF_* flags are?  Passing around a random unsigned
-long feels very odd/broken...
+If so, we should change all existing definitions - however the ones
+spanning multiple bits might turn out rather ugly, like
 
-thanks,
+#define IORESOURCE_TYPE_BITS    0x00001f00
 
-greg k-h
+Thoughts? Thanks
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+
+-- 
+Thanks,
+
+David / dhildenb
+
