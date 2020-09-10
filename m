@@ -2,56 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA122264301
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Sep 2020 11:57:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5D7E264330
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Sep 2020 12:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgIJJ4p (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Sep 2020 05:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41054 "EHLO
+        id S1730150AbgIJKEF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Sep 2020 06:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730294AbgIJJyG (ORCPT
+        with ESMTP id S1729781AbgIJKD5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:54:06 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78852C061795;
-        Thu, 10 Sep 2020 02:53:18 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id h4so6395222ioe.5;
-        Thu, 10 Sep 2020 02:53:18 -0700 (PDT)
+        Thu, 10 Sep 2020 06:03:57 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330A0C061573;
+        Thu, 10 Sep 2020 03:03:57 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id r9so6437284ioa.2;
+        Thu, 10 Sep 2020 03:03:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DXhFARB7iWozLIle7rA/3dcPZ4H06GlQ94RnYK663hI=;
-        b=RaAWdlZ2lNl7nXfiYHOzYx+GfQrIjOUeMopaIK9ZBs0wDY4n9MuS2XiRV1Y/YXkmLn
-         pJuxxyIoxZUP+VIh+mMq5fznWJVa2G/6K4TBuF6L09rpsivWa9At4G4GDPd4IG0pQnzj
-         TeAWq6VScWqV2pdBEmEZOJjchvKO1LlaqoLXIJxDrMoPoi3BVXKxeIQMgw4nvf8/fYyp
-         HF3hT6ZzvVaGa1OATUDBMc8cXDdO4P4B7MbL6j6WMNFEMNtHGJXzBCDYlCO4v2DXT3vr
-         noCvIYUFB8wvMPozut1JpXMO+4tRhnMrBpC3exgA4QHs5wNRvmdnYK2/e5bJc3A/K3Jw
-         41Ew==
+        bh=Y2JcHZ6MFjyHAlvpoNmjBZx8lY6aHDHdPBn5/fOR/C0=;
+        b=SHjrnz+amdW+kH6msAJS1SjMD4qKf//Oke1bSThNY6pdCjvbQ+x27OU9YlV9B+SYEj
+         x4WGit+P6lzFULpqfB7FM8A7DBakbna0aDoBRBFhMpId+FTvnxVfdSZkL+7UBKf6R7Li
+         Qcwq03DQg64ECu81QBftLC7POFMrjdMmsyy3+USM1cM0a37HSojGGcOCLkCDzAtOUwGK
+         CIURbhZ42k7j/+YCP7SNIquHjrH+i0bOrZQqdbBLNZOfz6En+Jn7mMcXdMSqXCC+jQZD
+         lYjq+VOUPTp8EL0T/MjzHs07HO7C27K2v1VXkWq9+vJ2IE9wwkcgALGw9zQQ/fsUdMbG
+         yKEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DXhFARB7iWozLIle7rA/3dcPZ4H06GlQ94RnYK663hI=;
-        b=iIt39ytAuheKskeFsbmq/k35GmsP+vLtiV6NKXLeja2wBtrYELRTAo6Of+N/nE08Lp
-         JX9bjKmsBSo5ivp8QtAlrF0wduYW4IUsj9ug7sheNvQ2blenwutdwXfj2nDoUmRsN993
-         LrBGG4z4+b3tIFATnJvcLIetCsG/4gI7t5OJoObtAjKbePanG8IQg99lVpTWyBnqcAip
-         j89g3McWFAatgSdfKLUdNLZt5cg2xKWlLNmkpWzWHypuu/0F74igyXlqMHM5XQpe3OT6
-         1BQEhyJVqZ0WY28+kpBHO7RCkT5ZxPrSXjFReAyGEt5MD9vHReUP74YMZkxX3IT282rB
-         qdww==
-X-Gm-Message-State: AOAM532JASuR5BvaJaj1pyKgnNNUiyOaplmFyi9q2n8jj3Lo0POSbxgx
-        lAK/t/rmcru1IAw3coR2CnCx3QdOoOsdDJAJp68=
-X-Google-Smtp-Source: ABdhPJxNu1IaH8bsVzGF36h3AxQcPj3XlD1+MCBc09C/TrTSOY0getsz2Hf3tGADGGHG07rp20HjQE3K915KSmBE84o=
-X-Received: by 2002:a02:6623:: with SMTP id k35mr7996256jac.105.1599731597724;
- Thu, 10 Sep 2020 02:53:17 -0700 (PDT)
+        bh=Y2JcHZ6MFjyHAlvpoNmjBZx8lY6aHDHdPBn5/fOR/C0=;
+        b=eqkKb3q/k0KPTurrPFsz/XQHlr3eoD9uwTT91lNrSHalFDowkik302pJW3vnTzUT8z
+         yYq6o1Lm6njI9GGPCJEvpfZrDkdDIlqp60qT480a6/NOuHQUdEq1K6xoOfPZNAV7ATDs
+         +krvct4Wy8RBusCo5Dq0SlUlAIgfRpvMV+XcVQVO72e5yTseWlVrQZAACSQ8JHuw3jbo
+         t0Wd+9+00AqunpNGI2c/qWAN0sqcpWY/5+b3wOCRnpVDp95FNfj5bd2tjyqFZXajosGi
+         7Vune+DZJInZTjI/W7z1BirwMUQZaUYhmAj3/jvQsEq+H1VVHppz/BxP6MdRcRTRKkkD
+         w6ZQ==
+X-Gm-Message-State: AOAM533qR4iGZNs3/0jCRcC19D/Bv4FwnlKG1ADm0ZZIU1Yf/SwfUz4T
+        jG4fRSMyumEUuJomZNjc/hkXNeEQJ0cHP8J/fvY=
+X-Google-Smtp-Source: ABdhPJyLZcGsxd4Zx+mCdXy45ufEwo0KPMGwBXhtsOyHb64xVG7npyu9cbgFOz4UWOemWTgujXWUOhR54K4+16Md/2Y=
+X-Received: by 2002:a5d:8b4c:: with SMTP id c12mr6859868iot.167.1599732236621;
+ Thu, 10 Sep 2020 03:03:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200910091340.8654-1-david@redhat.com> <20200910091340.8654-4-david@redhat.com>
-In-Reply-To: <20200910091340.8654-4-david@redhat.com>
+References: <20200910091340.8654-1-david@redhat.com> <20200910091340.8654-5-david@redhat.com>
+In-Reply-To: <20200910091340.8654-5-david@redhat.com>
 From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 10 Sep 2020 11:53:06 +0200
-Message-ID: <CAM9Jb+gpSKtQbyTZrecNQNXO+oLahuwZ9JkE+TWe4BvB1nZy3w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] mm/memory_hotplug: prepare passing flags to
- add_memory() and friends
+Date:   Thu, 10 Sep 2020 12:03:45 +0200
+Message-ID: <CAM9Jb+j=8-Fpyg2fizM_3FenF649y2AKA8rsWaQzwCgX8Da7+g@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] mm/memory_hotplug: MEMHP_MERGE_RESOURCE to specify
+ merging of System RAM resources
 To:     David Hildenbrand <david@redhat.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         virtualization@lists.linux-foundation.org,
@@ -60,326 +60,28 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         linux-nvdimm <linux-nvdimm@lists.01.org>,
         linux-s390@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, Juergen Gross <jgross@suse.com>,
         Michal Hocko <mhocko@suse.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
+        Wei Liu <wei.liu@kernel.org>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Libor Pechacek <lpechacek@suse.cz>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
+        =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
+        Julien Grall <julien@xen.org>, Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> We soon want to pass flags, e.g., to mark added System RAM resources.
-> mergeable. Prepare for that.
->
-> This patch is based on a similar patch by Oscar Salvador:
->
-> https://lkml.kernel.org/r/20190625075227.15193-3-osalvador@suse.de
->
-> Acked-by: Wei Liu <wei.liu@kernel.org>
-> Reviewed-by: Juergen Gross <jgross@suse.com> # Xen related part
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> Cc: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Libor Pechacek <lpechacek@suse.cz>
-> Cc: Anton Blanchard <anton@ozlabs.org>
-> Cc: Leonardo Bras <leobras.c@gmail.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-acpi@vger.kernel.org
-> Cc: linux-nvdimm@lists.01.org
-> Cc: linux-hyperv@vger.kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: xen-devel@lists.xenproject.org
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/powerpc/platforms/powernv/memtrace.c       |  2 +-
->  arch/powerpc/platforms/pseries/hotplug-memory.c |  2 +-
->  drivers/acpi/acpi_memhotplug.c                  |  3 ++-
->  drivers/base/memory.c                           |  3 ++-
->  drivers/dax/kmem.c                              |  2 +-
->  drivers/hv/hv_balloon.c                         |  2 +-
->  drivers/s390/char/sclp_cmd.c                    |  2 +-
->  drivers/virtio/virtio_mem.c                     |  2 +-
->  drivers/xen/balloon.c                           |  2 +-
->  include/linux/memory_hotplug.h                  | 16 ++++++++++++----
->  mm/memory_hotplug.c                             | 14 +++++++-------
->  11 files changed, 30 insertions(+), 20 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
-> index 13b369d2cc454..6828108486f83 100644
-> --- a/arch/powerpc/platforms/powernv/memtrace.c
-> +++ b/arch/powerpc/platforms/powernv/memtrace.c
-> @@ -224,7 +224,7 @@ static int memtrace_online(void)
->                         ent->mem = 0;
->                 }
->
-> -               if (add_memory(ent->nid, ent->start, ent->size)) {
-> +               if (add_memory(ent->nid, ent->start, ent->size, MHP_NONE)) {
->                         pr_err("Failed to add trace memory to node %d\n",
->                                 ent->nid);
->                         ret += 1;
-> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> index 0ea976d1cac47..e1c9fa0d730f5 100644
-> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> @@ -615,7 +615,7 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
->         nid = memory_add_physaddr_to_nid(lmb->base_addr);
->
->         /* Add the memory */
-> -       rc = __add_memory(nid, lmb->base_addr, block_sz);
-> +       rc = __add_memory(nid, lmb->base_addr, block_sz, MHP_NONE);
->         if (rc) {
->                 invalidate_lmb_associativity_index(lmb);
->                 return rc;
-> diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
-> index e294f44a78504..2067c3bc55763 100644
-> --- a/drivers/acpi/acpi_memhotplug.c
-> +++ b/drivers/acpi/acpi_memhotplug.c
-> @@ -207,7 +207,8 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
->                 if (node < 0)
->                         node = memory_add_physaddr_to_nid(info->start_addr);
->
-> -               result = __add_memory(node, info->start_addr, info->length);
-> +               result = __add_memory(node, info->start_addr, info->length,
-> +                                     MHP_NONE);
->
->                 /*
->                  * If the memory block has been used by the kernel, add_memory()
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 4db3c660de831..b4c297dd04755 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -432,7 +432,8 @@ static ssize_t probe_store(struct device *dev, struct device_attribute *attr,
->
->         nid = memory_add_physaddr_to_nid(phys_addr);
->         ret = __add_memory(nid, phys_addr,
-> -                          MIN_MEMORY_BLOCK_SIZE * sections_per_block);
-> +                          MIN_MEMORY_BLOCK_SIZE * sections_per_block,
-> +                          MHP_NONE);
->
->         if (ret)
->                 goto out;
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index 7dcb2902e9b1b..896cb9444e727 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -95,7 +95,7 @@ int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->                  * this as RAM automatically.
->                  */
->                 rc = add_memory_driver_managed(numa_node, range.start,
-> -                               range_len(&range), kmem_name);
-> +                               range_len(&range), kmem_name, MHP_NONE);
->
->                 res->flags |= IORESOURCE_BUSY;
->                 if (rc) {
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 32e3bc0aa665a..3c0d52e244520 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -726,7 +726,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
->
->                 nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
->                 ret = add_memory(nid, PFN_PHYS((start_pfn)),
-> -                               (HA_CHUNK << PAGE_SHIFT));
-> +                               (HA_CHUNK << PAGE_SHIFT), MHP_NONE);
->
->                 if (ret) {
->                         pr_err("hot_add memory failed error is %d\n", ret);
-> diff --git a/drivers/s390/char/sclp_cmd.c b/drivers/s390/char/sclp_cmd.c
-> index a864b21af602a..f6e97f0830f64 100644
-> --- a/drivers/s390/char/sclp_cmd.c
-> +++ b/drivers/s390/char/sclp_cmd.c
-> @@ -406,7 +406,7 @@ static void __init add_memory_merged(u16 rn)
->         if (!size)
->                 goto skip_add;
->         for (addr = start; addr < start + size; addr += block_size)
-> -               add_memory(0, addr, block_size);
-> +               add_memory(0, addr, block_size, MHP_NONE);
->  skip_add:
->         first_rn = rn;
->         num = 1;
-> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-> index 834b7c13ef3dc..ed99e43354010 100644
-> --- a/drivers/virtio/virtio_mem.c
-> +++ b/drivers/virtio/virtio_mem.c
-> @@ -424,7 +424,7 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, unsigned long mb_id)
->
->         dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
->         return add_memory_driver_managed(nid, addr, memory_block_size_bytes(),
-> -                                        vm->resource_name);
-> +                                        vm->resource_name, MHP_NONE);
->  }
->
->  /*
-> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-> index 51427c752b37b..9f40a294d398d 100644
-> --- a/drivers/xen/balloon.c
-> +++ b/drivers/xen/balloon.c
-> @@ -331,7 +331,7 @@ static enum bp_state reserve_additional_memory(void)
->         mutex_unlock(&balloon_mutex);
->         /* add_memory_resource() requires the device_hotplug lock */
->         lock_device_hotplug();
-> -       rc = add_memory_resource(nid, resource);
-> +       rc = add_memory_resource(nid, resource, MHP_NONE);
->         unlock_device_hotplug();
->         mutex_lock(&balloon_mutex);
->
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 51a877fec8da8..e53d1058f3443 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -57,6 +57,12 @@ enum {
->         MMOP_ONLINE_MOVABLE,
->  };
->
-> +/* Flags for add_memory() and friends to specify memory hotplug details. */
-> +typedef int __bitwise mhp_t;
-> +
-> +/* No special request */
-> +#define MHP_NONE               ((__force mhp_t)0)
-> +
->  /*
->   * Extended parameters for memory hotplug:
->   * altmap: alternative allocator for memmap array (optional)
-> @@ -345,11 +351,13 @@ extern void set_zone_contiguous(struct zone *zone);
->  extern void clear_zone_contiguous(struct zone *zone);
->
->  extern void __ref free_area_init_core_hotplug(int nid);
-> -extern int __add_memory(int nid, u64 start, u64 size);
-> -extern int add_memory(int nid, u64 start, u64 size);
-> -extern int add_memory_resource(int nid, struct resource *resource);
-> +extern int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
-> +extern int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
-> +extern int add_memory_resource(int nid, struct resource *resource,
-> +                              mhp_t mhp_flags);
->  extern int add_memory_driver_managed(int nid, u64 start, u64 size,
-> -                                    const char *resource_name);
-> +                                    const char *resource_name,
-> +                                    mhp_t mhp_flags);
->  extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
->                                    unsigned long nr_pages,
->                                    struct vmem_altmap *altmap, int migratetype);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 8e1cd18b5cf14..8f0bd7c9a63a5 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1039,7 +1039,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
->   *
->   * we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG
->   */
-> -int __ref add_memory_resource(int nid, struct resource *res)
-> +int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
->  {
->         struct mhp_params params = { .pgprot = PAGE_KERNEL };
->         u64 start, size;
-> @@ -1118,7 +1118,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
->  }
->
->  /* requires device_hotplug_lock, see add_memory_resource() */
-> -int __ref __add_memory(int nid, u64 start, u64 size)
-> +int __ref __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags)
->  {
->         struct resource *res;
->         int ret;
-> @@ -1127,18 +1127,18 @@ int __ref __add_memory(int nid, u64 start, u64 size)
->         if (IS_ERR(res))
->                 return PTR_ERR(res);
->
-> -       ret = add_memory_resource(nid, res);
-> +       ret = add_memory_resource(nid, res, mhp_flags);
->         if (ret < 0)
->                 release_memory_resource(res);
->         return ret;
->  }
->
-> -int add_memory(int nid, u64 start, u64 size)
-> +int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags)
->  {
->         int rc;
->
->         lock_device_hotplug();
-> -       rc = __add_memory(nid, start, size);
-> +       rc = __add_memory(nid, start, size, mhp_flags);
->         unlock_device_hotplug();
->
->         return rc;
-> @@ -1167,7 +1167,7 @@ EXPORT_SYMBOL_GPL(add_memory);
->   * "System RAM ($DRIVER)".
->   */
->  int add_memory_driver_managed(int nid, u64 start, u64 size,
-> -                             const char *resource_name)
-> +                             const char *resource_name, mhp_t mhp_flags)
->  {
->         struct resource *res;
->         int rc;
-> @@ -1185,7 +1185,7 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
->                 goto out_unlock;
->         }
->
-> -       rc = add_memory_resource(nid, res);
-> +       rc = add_memory_resource(nid, res, mhp_flags);
->         if (rc < 0)
->                 release_memory_resource(res);
->
-> --
+Looks good to me.
 
 Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-
-> 2.26.2
->
