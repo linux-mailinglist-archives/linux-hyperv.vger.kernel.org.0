@@ -2,219 +2,508 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A94F265232
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Sep 2020 23:10:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A0BE265446
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Sep 2020 23:54:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgIJVKc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Sep 2020 17:10:32 -0400
-Received: from mail-eopbgr700113.outbound.protection.outlook.com ([40.107.70.113]:34657
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727122AbgIJVKT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:10:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mM/Aj8Utb0xlzApAR15JceC3BiRpmJKIEW+0loSqCVhCtOFnbw4CUxl6PYTua+TsNN1HpcEmytisrqIUUX4Yxgo03mhhIWhxppk/X1GBwYvIgQ2SPXSIBYOtkZP6xD2mUChNHF+lP/NQSkvEAWfNIa/Od/5+3RMiVaUBlbMXU5YNtzNqPWiE3tucYcDueS2CIeuq3nuEMuI8QqGkZkv+6rEx74TIc2XTVTvhA7zMu9JyZ/bpN/vPKXgrdXu6oy/szMzypEbD9d0a1SiLTMOK8I9Nt8MpNyNh+bgMcFNjCmwObRGbZTSDbY2p4+S1wzHlBL9Tp4/aE8EIkO76VjQy+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GCGjL3fKXdW7gGWwfTc732rzvBw5Z8D52EdstYJBykM=;
- b=edzqDp4YbojYXXt5oZYc6KCu60Y/r0yBNbM+0afQP5KiAsTmtv5PfSbDmxw/ZPH4Id3K75PL5gcEpbsNI8+q5O2q173H0X9k1ksScUs6UcLCxw178JfgW+/6zKhRcSDeaj2Yq1Xw+qo5umvE8zemqr4dNa8qGetfl63pDBFrGKjeejyAenrD1znJkWAmN3Lk+qzmHuH9n0OyPbceafm4WWjb45VtlgfyT4UMYWKieGCB2aE6UcUz8UAhG32kZ307VknKRPna6D/sduUT8A/tRzfYgpVDHF2N1iq/Bq3qcWE8bp194vTiU1Pu2GRn160KESrNbPV/1yezT4MAJ2Z8hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GCGjL3fKXdW7gGWwfTc732rzvBw5Z8D52EdstYJBykM=;
- b=clnfXBZq9VBCUQhTm0/m/HVTSQSZzfRUmfusxPl3Pj0RCr8IOCwZRrORCD1kR3rcxlOOxpPAQQMU8hqWGj/yhj4P6DFy17pFJiWSl3hhFlWwl8xT9+eGa2/2f2/zfezs39c781TwD0HbRoS05b57mlKFE6Sbjuqo1vvlJrlz33k=
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- (2603:10b6:207:30::18) by BL0PR2101MB0963.namprd21.prod.outlook.com
- (2603:10b6:207:30::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.6; Thu, 10 Sep
- 2020 21:10:11 +0000
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::21e4:e6b6:10c:e66f]) by BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::70b5:f505:ae8b:c773%10]) with mapi id 15.20.3391.005; Thu, 10 Sep
- 2020 21:10:11 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
+        id S1725885AbgIJVmz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Sep 2020 17:42:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730869AbgIJMsO (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:48:14 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8275DC061756;
+        Thu, 10 Sep 2020 05:48:08 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z9so5680882wmk.1;
+        Thu, 10 Sep 2020 05:48:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5Q6W+RSFkw04awmkiKuDrfjMUyXtsh70exNsHBoTblc=;
+        b=QaxJODC6DKAwj6Y7zkBAutRRU/ELJVRXCpidl0e/VpxqzqLkUWxT2s9ZEiG2vtyLw5
+         ux1ElINxDjN4aANXzlwZQqXTmTA4kqr79wMHJuT9H0a5fx3GCGcPLhNzO0PWSrJj4HIm
+         Ai3DF2DuqDPbKPFPRMsl/mEt/Egkj2rSnXkIUrwIBQrTPdpEEZoIUN456iAzJP+QcKsR
+         9q1XmDs1WbB2TOYkCbMCyn/QkQSNMggbDT3VaO9nl0XXIAFBfEfWtaGauWWd+01/Mmf1
+         ch9GbQv4JjUiRq5rnMsj0MaPjRKWqVPwrkPgqz7wR7PJ5jeuii4Pleq0ACIwQ+yQwa2/
+         ITVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5Q6W+RSFkw04awmkiKuDrfjMUyXtsh70exNsHBoTblc=;
+        b=gKGSqcsbtp4PEPTX/VyQPtyI2ZQY1vryBDp0+yH5SuO9ivLZeqMap68TIGj15EP2Ms
+         ynRp208NVxUDuY7uL9D8RNnQt4GFy9GgrRcTsEGQnwhjO5NGioyewUk25Mpyq6DPXwy3
+         t0gFsHwTnU7yZASjjJe+f+7a1COdaJS7A0gz65e5+9eLcJvUfJIfd/34Bu074PPBHJYj
+         1FXyIkCnuPTMeidD1H67YhLwCjlU9l2PTk4H3ASGTci/ceuZoBC16cf9FjBzdJC6rH4T
+         6wUdslF+sPnoqZh/U1eQVC+IlPud9lgNUlhn8sc/njKwvfF4/mPvW34om01tjQS3XQhJ
+         1zPQ==
+X-Gm-Message-State: AOAM5307FLQ8DMaBdwuXTpXZL2KTrnznStH5nvZ3bY7a5G+reSZEicQL
+        xFtP0DpeRVazWsErEzccah/3Wern5DZPO75oL8I=
+X-Google-Smtp-Source: ABdhPJyXjkazUiD6SfEFd+HJZWbRrpP3CJc/CDBeewI1NzFsuLZKkLXaYIpE+ca+fMCDU3McO2k92g==
+X-Received: by 2002:a1c:f20b:: with SMTP id s11mr8753661wmc.144.1599742086502;
+        Thu, 10 Sep 2020 05:48:06 -0700 (PDT)
+Received: from localhost.localdomain (userh459.uk.uudial.com. [194.69.102.86])
+        by smtp.gmail.com with ESMTPSA id r15sm3555089wmn.24.2020.09.10.05.48.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 05:48:05 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
         Andres Beltran <lkmlabelt@gmail.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Saruhan Karademir <skarade@microsoft.com>,
         Juan Vazquez <juvazq@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2] hv_netvsc: Add validation for untrusted Hyper-V values
-Thread-Topic: [PATCH v2] hv_netvsc: Add validation for untrusted Hyper-V
- values
-Thread-Index: AQHWh3CiaBH0lchHw06AORvXwhPeSaliXZ+Q
-Date:   Thu, 10 Sep 2020 21:10:11 +0000
-Message-ID: <BL0PR2101MB0930659825AD89FF5A8DC2C4CA270@BL0PR2101MB0930.namprd21.prod.outlook.com>
-References: <20200910124748.19217-1-parri.andrea@gmail.com>
-In-Reply-To: <20200910124748.19217-1-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d007ab8c-0d09-44a0-a78d-0a90f0f8d24e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-10T21:06:29Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [75.100.88.238]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 66123bc8-db4c-485c-7e9b-08d855cde789
-x-ms-traffictypediagnostic: BL0PR2101MB0963:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB0963C61A42B6A556C0FC8718CA270@BL0PR2101MB0963.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: v+9Hx+eMpjlHJ3KsUNamU8v/WkRzF6wcQYsICwqrcNaX5fONAD4PXVng9HNrqkBk0+Xj4Eh2O0DUbDLNtehtcEQ8Duv0K/iWKJHJqgsU3Hjlb7b82I9ztWAFzq0777Ox+dZ/snQBVGrufZboCDJx+psbDqWYRhlvF9L6i6q2kHyekqmuYNxKeOR2Suaee4QzBd629VrVlmkgREpp/pwWs/XrsI5RGv79rcNKZz8Mu/RIhVslodR753wf7JVrjj927XEuQwkbutVrWygKGkhir2axXY+Z5FghZJH5//Qq5QLg6jMc3Iq9MYb9lplmaIU+YGRKdZOLtNpCFMOHjX823Je3DZfwCAg2ORWOY6At3uw+ByKPhMYt5bgAUE4eYVIG
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(26005)(55016002)(110136005)(52536014)(66476007)(71200400001)(76116006)(54906003)(66556008)(66946007)(316002)(10290500003)(83380400001)(64756008)(478600001)(5660300002)(8936002)(86362001)(66446008)(4326008)(2906002)(82960400001)(7696005)(33656002)(82950400001)(8990500004)(6506007)(186003)(53546011)(8676002)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: uV7Hp/XFSqtODaWGsNBqnqfCrx4ol04xoSDpeOnugWeahmqpTLP84pCufdlqlCL5s/KE53GiuOpwI0vpDtLBTt2ZM3sjawu2X7Buw8tfXFJstHSH4eYzl2F0IBha8DIR3mIeKlkkl5XNHR5eEPy5rDNrQHehCOn5XEQm8XWAE3QPh4UlVl8FmruggmRXnYdRV0fVgniJgpbB25Rn2YtkVVpLMKWXPpzeEmvaVL8VBSxjFMuPKxNWLPP+9DMLucguE2xtzayXEDTfFPD460ENzQK7Z2i7aclodRTiYmQ6vdmCuLDjut/3reT0PvJvKVsGprgdO0dHPXiPoiuLAbUog8o6+81tsfFh2ThkkcD+U27Dwob7sLnDQcrZFQ+FR9X/Q6IoEK3qtPZKiZkoTKH4hDpEQaS/xaFnTPjz438EVEvwXtK+s4etKlRkf+ZZJVDEvhTcnxZryaEktsOMUr3oRyZg6PXMwj2+GmIgFIHjjfsDt40MDvUZ1m61sem61Pz073IhG3h4lbD658f4rtI5U6Nm312OjCf8jU8xz1YzDgFDvvuJyPsk7RTFucwHq8toD1JqaDjge1RzaE1WR582qzRCT1tpcPWjIeGejnfy9MuY3cTY5PG4rznuXcsQwxj9JTI2Ii9/rWHGccEW/ge+YQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH v2] hv_netvsc: Add validation for untrusted Hyper-V values
+Date:   Thu, 10 Sep 2020 14:47:48 +0200
+Message-Id: <20200910124748.19217-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66123bc8-db4c-485c-7e9b-08d855cde789
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 21:10:11.2720
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /WW651SUB33t1XZXozJqxyWlWKjPi4n8coTChCKpalJPxgSPn9eqCbcgrh4a5+FaBu4vJ0ZLS5kvxvLD1ae4Qw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0963
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+From: Andres Beltran <lkmlabelt@gmail.com>
 
+For additional robustness in the face of Hyper-V errors or malicious
+behavior, validate all values that originate from packets that Hyper-V
+has sent to the guest in the host-to-guest ring buffer. Ensure that
+invalid values cannot cause indexing off the end of an array, or
+subvert an existing validation via integer overflow. Ensure that
+outgoing packets do not have any leftover guest memory that has not
+been zeroed out.
 
-> -----Original Message-----
-> From: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Sent: Thursday, September 10, 2020 8:48 AM
-> To: linux-kernel@vger.kernel.org
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; Wei Liu <wei.liu@kernel.org>; linux-
-> hyperv@vger.kernel.org; Andres Beltran <lkmlabelt@gmail.com>; Michael
-> Kelley <mikelley@microsoft.com>; Saruhan Karademir
-> <skarade@microsoft.com>; Juan Vazquez <juvazq@microsoft.com>; Andrea
-> Parri <parri.andrea@gmail.com>; David S. Miller <davem@davemloft.net>;
-> Jakub Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
-> Subject: [PATCH v2] hv_netvsc: Add validation for untrusted Hyper-V value=
-s
->=20
-> From: Andres Beltran <lkmlabelt@gmail.com>
->=20
-> For additional robustness in the face of Hyper-V errors or malicious
-> behavior, validate all values that originate from packets that Hyper-V
-> has sent to the guest in the host-to-guest ring buffer. Ensure that
-> invalid values cannot cause indexing off the end of an array, or
-> subvert an existing validation via integer overflow. Ensure that
-> outgoing packets do not have any leftover guest memory that has not
-> been zeroed out.
->=20
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> ---
-> Changes in v2:
->   - Replace size check on struct nvsp_message with sub-checks (Haiyang)
->=20
->  drivers/net/hyperv/hyperv_net.h   |   4 +
->  drivers/net/hyperv/netvsc.c       | 120 ++++++++++++++++++++++++++----
->  drivers/net/hyperv/netvsc_drv.c   |   7 ++
->  drivers/net/hyperv/rndis_filter.c |  73 ++++++++++++++++--
->  4 files changed, 184 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/net/hyperv/hyperv_net.h
-> b/drivers/net/hyperv/hyperv_net.h
-> index 4d2b2d48ff2a1..da78bd0fb2aa2 100644
-> --- a/drivers/net/hyperv/hyperv_net.h
-> +++ b/drivers/net/hyperv/hyperv_net.h
-> @@ -860,6 +860,10 @@ static inline u32 netvsc_rqstor_size(unsigned long
-> ringbytes)
->  	       ringbytes / NETVSC_MIN_IN_MSG_SIZE;
->  }
->=20
-> +#define NETVSC_XFER_HEADER_SIZE(rng_cnt) \
-> +		(offsetof(struct vmtransfer_page_packet_header, ranges) +
-> \
-> +		(rng_cnt) * sizeof(struct vmtransfer_page_range))
-> +
->  struct multi_send_data {
->  	struct sk_buff *skb; /* skb containing the pkt */
->  	struct hv_netvsc_packet *pkt; /* netvsc pkt pending */
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index 03e93e3ddbad8..90b7a39c2dc78 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -388,6 +388,15 @@ static int netvsc_init_buf(struct hv_device *device,
->  	net_device->recv_section_size =3D resp->sections[0].sub_alloc_size;
->  	net_device->recv_section_cnt =3D resp->sections[0].num_sub_allocs;
->=20
-> +	/* Ensure buffer will not overflow */
-> +	if (net_device->recv_section_size < NETVSC_MTU_MIN ||
-> (u64)net_device->recv_section_size *
-> +	    (u64)net_device->recv_section_cnt > (u64)buf_size) {
-> +		netdev_err(ndev, "invalid recv_section_size %u\n",
-> +			   net_device->recv_section_size);
-> +		ret =3D -EINVAL;
-> +		goto cleanup;
-> +	}
-> +
->  	/* Setup receive completion ring.
->  	 * Add 1 to the recv_section_cnt because at least one entry in a
->  	 * ring buffer has to be empty.
-> @@ -460,6 +469,12 @@ static int netvsc_init_buf(struct hv_device *device,
->  	/* Parse the response */
->  	net_device->send_section_size =3D init_packet->msg.
->=20
-> 	v1_msg.send_send_buf_complete.section_size;
-> +	if (net_device->send_section_size < NETVSC_MTU_MIN) {
-> +		netdev_err(ndev, "invalid send_section_size %u\n",
-> +			   net_device->send_section_size);
-> +		ret =3D -EINVAL;
-> +		goto cleanup;
-> +	}
->=20
->  	/* Section count is simply the size divided by the section size. */
->  	net_device->send_section_cnt =3D buf_size / net_device-
-> >send_section_size;
-> @@ -740,12 +755,45 @@ static void netvsc_send_completion(struct
-> net_device *ndev,
->  				   int budget)
->  {
->  	const struct nvsp_message *nvsp_packet =3D hv_pkt_data(desc);
-> +	u32 msglen =3D hv_pkt_datalen(desc);
-> +
-> +	/* Ensure packet is big enough to read header fields */
-> +	if (msglen < sizeof(struct nvsp_message_header)) {
-> +		netdev_err(ndev, "nvsp_message length too small: %u\n",
-> msglen);
-> +		return;
-> +	}
->=20
->  	switch (nvsp_packet->hdr.msg_type) {
->  	case NVSP_MSG_TYPE_INIT_COMPLETE:
-> +		if (msglen < sizeof(struct nvsp_message_init_complete)) {
+Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org
+---
+Changes in v2:
+  - Replace size check on struct nvsp_message with sub-checks (Haiyang)
 
-This and other similar places should include header size:
-		if (msglen < sizeof(struct nvsp_message_header) + sizeof(struct nvsp_mess=
-age_init_complete)) {
+ drivers/net/hyperv/hyperv_net.h   |   4 +
+ drivers/net/hyperv/netvsc.c       | 120 ++++++++++++++++++++++++++----
+ drivers/net/hyperv/netvsc_drv.c   |   7 ++
+ drivers/net/hyperv/rndis_filter.c |  73 ++++++++++++++++--
+ 4 files changed, 184 insertions(+), 20 deletions(-)
 
-Thanks,
-- Haiyang
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index 4d2b2d48ff2a1..da78bd0fb2aa2 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -860,6 +860,10 @@ static inline u32 netvsc_rqstor_size(unsigned long ringbytes)
+ 	       ringbytes / NETVSC_MIN_IN_MSG_SIZE;
+ }
+ 
++#define NETVSC_XFER_HEADER_SIZE(rng_cnt) \
++		(offsetof(struct vmtransfer_page_packet_header, ranges) + \
++		(rng_cnt) * sizeof(struct vmtransfer_page_range))
++
+ struct multi_send_data {
+ 	struct sk_buff *skb; /* skb containing the pkt */
+ 	struct hv_netvsc_packet *pkt; /* netvsc pkt pending */
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 03e93e3ddbad8..90b7a39c2dc78 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -388,6 +388,15 @@ static int netvsc_init_buf(struct hv_device *device,
+ 	net_device->recv_section_size = resp->sections[0].sub_alloc_size;
+ 	net_device->recv_section_cnt = resp->sections[0].num_sub_allocs;
+ 
++	/* Ensure buffer will not overflow */
++	if (net_device->recv_section_size < NETVSC_MTU_MIN || (u64)net_device->recv_section_size *
++	    (u64)net_device->recv_section_cnt > (u64)buf_size) {
++		netdev_err(ndev, "invalid recv_section_size %u\n",
++			   net_device->recv_section_size);
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
+ 	/* Setup receive completion ring.
+ 	 * Add 1 to the recv_section_cnt because at least one entry in a
+ 	 * ring buffer has to be empty.
+@@ -460,6 +469,12 @@ static int netvsc_init_buf(struct hv_device *device,
+ 	/* Parse the response */
+ 	net_device->send_section_size = init_packet->msg.
+ 				v1_msg.send_send_buf_complete.section_size;
++	if (net_device->send_section_size < NETVSC_MTU_MIN) {
++		netdev_err(ndev, "invalid send_section_size %u\n",
++			   net_device->send_section_size);
++		ret = -EINVAL;
++		goto cleanup;
++	}
+ 
+ 	/* Section count is simply the size divided by the section size. */
+ 	net_device->send_section_cnt = buf_size / net_device->send_section_size;
+@@ -740,12 +755,45 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   int budget)
+ {
+ 	const struct nvsp_message *nvsp_packet = hv_pkt_data(desc);
++	u32 msglen = hv_pkt_datalen(desc);
++
++	/* Ensure packet is big enough to read header fields */
++	if (msglen < sizeof(struct nvsp_message_header)) {
++		netdev_err(ndev, "nvsp_message length too small: %u\n", msglen);
++		return;
++	}
+ 
+ 	switch (nvsp_packet->hdr.msg_type) {
+ 	case NVSP_MSG_TYPE_INIT_COMPLETE:
++		if (msglen < sizeof(struct nvsp_message_init_complete)) {
++			netdev_err(ndev, "nvsp_msg length too small: %u\n",
++				   msglen);
++			return;
++		}
++		fallthrough;
++
+ 	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
++		if (msglen < sizeof(struct nvsp_1_message_send_receive_buffer_complete)) {
++			netdev_err(ndev, "nvsp_msg1 length too small: %u\n",
++				   msglen);
++			return;
++		}
++		fallthrough;
++
+ 	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
++		if (msglen < sizeof(struct nvsp_1_message_send_send_buffer_complete)) {
++			netdev_err(ndev, "nvsp_msg1 length too small: %u\n",
++				   msglen);
++			return;
++		}
++		fallthrough;
++
+ 	case NVSP_MSG5_TYPE_SUBCHANNEL:
++		if (msglen < sizeof(struct nvsp_5_subchannel_complete)) {
++			netdev_err(ndev, "nvsp_msg5 length too small: %u\n",
++				   msglen);
++			return;
++		}
+ 		/* Copy the response back */
+ 		memcpy(&net_device->channel_init_pkt, nvsp_packet,
+ 		       sizeof(struct nvsp_message));
+@@ -1126,19 +1174,28 @@ static void enq_receive_complete(struct net_device *ndev,
+ static int netvsc_receive(struct net_device *ndev,
+ 			  struct netvsc_device *net_device,
+ 			  struct netvsc_channel *nvchan,
+-			  const struct vmpacket_descriptor *desc,
+-			  const struct nvsp_message *nvsp)
++			  const struct vmpacket_descriptor *desc)
+ {
+ 	struct net_device_context *net_device_ctx = netdev_priv(ndev);
+ 	struct vmbus_channel *channel = nvchan->channel;
+ 	const struct vmtransfer_page_packet_header *vmxferpage_packet
+ 		= container_of(desc, const struct vmtransfer_page_packet_header, d);
++	const struct nvsp_message *nvsp = hv_pkt_data(desc);
++	u32 msglen = hv_pkt_datalen(desc);
+ 	u16 q_idx = channel->offermsg.offer.sub_channel_index;
+ 	char *recv_buf = net_device->recv_buf;
+ 	u32 status = NVSP_STAT_SUCCESS;
+ 	int i;
+ 	int count = 0;
+ 
++	/* Ensure packet is big enough to read header fields */
++	if (msglen < sizeof(struct nvsp_message_header)) {
++		netif_err(net_device_ctx, rx_err, ndev,
++			  "invalid nvsp header, length too small: %u\n",
++			  msglen);
++		return 0;
++	}
++
+ 	/* Make sure this is a valid nvsp packet */
+ 	if (unlikely(nvsp->hdr.msg_type != NVSP_MSG1_TYPE_SEND_RNDIS_PKT)) {
+ 		netif_err(net_device_ctx, rx_err, ndev,
+@@ -1147,6 +1204,14 @@ static int netvsc_receive(struct net_device *ndev,
+ 		return 0;
+ 	}
+ 
++	/* Validate xfer page pkt header */
++	if ((desc->offset8 << 3) < sizeof(struct vmtransfer_page_packet_header)) {
++		netif_err(net_device_ctx, rx_err, ndev,
++			  "Invalid xfer page pkt, offset too small: %u\n",
++			  desc->offset8 << 3);
++		return 0;
++	}
++
+ 	if (unlikely(vmxferpage_packet->xfer_pageset_id != NETVSC_RECEIVE_BUFFER_ID)) {
+ 		netif_err(net_device_ctx, rx_err, ndev,
+ 			  "Invalid xfer page set id - expecting %x got %x\n",
+@@ -1157,6 +1222,14 @@ static int netvsc_receive(struct net_device *ndev,
+ 
+ 	count = vmxferpage_packet->range_cnt;
+ 
++	/* Check count for a valid value */
++	if (NETVSC_XFER_HEADER_SIZE(count) > desc->offset8 << 3) {
++		netif_err(net_device_ctx, rx_err, ndev,
++			  "Range count is not valid: %d\n",
++			  count);
++		return 0;
++	}
++
+ 	/* Each range represents 1 RNDIS pkt that contains 1 ethernet frame */
+ 	for (i = 0; i < count; i++) {
+ 		u32 offset = vmxferpage_packet->ranges[i].byte_offset;
+@@ -1164,7 +1237,8 @@ static int netvsc_receive(struct net_device *ndev,
+ 		void *data;
+ 		int ret;
+ 
+-		if (unlikely(offset + buflen > net_device->recv_buf_size)) {
++		if (unlikely(offset > net_device->recv_buf_size ||
++			     buflen > net_device->recv_buf_size - offset)) {
+ 			nvchan->rsc.cnt = 0;
+ 			status = NVSP_STAT_FAIL;
+ 			netif_err(net_device_ctx, rx_err, ndev,
+@@ -1203,6 +1277,13 @@ static void netvsc_send_table(struct net_device *ndev,
+ 	u32 count, offset, *tab;
+ 	int i;
+ 
++	/* Ensure packet is big enough to read send_table fields */
++	if (msglen < sizeof(struct nvsp_message_header) +
++		     sizeof(struct nvsp_5_send_indirect_table)) {
++		netdev_err(ndev, "nvsp_v5_msg length too small: %u\n", msglen);
++		return;
++	}
++
+ 	count = nvmsg->msg.v5_msg.send_table.count;
+ 	offset = nvmsg->msg.v5_msg.send_table.offset;
+ 
+@@ -1234,10 +1315,18 @@ static void netvsc_send_table(struct net_device *ndev,
+ }
+ 
+ static void netvsc_send_vf(struct net_device *ndev,
+-			   const struct nvsp_message *nvmsg)
++			   const struct nvsp_message *nvmsg,
++			   u32 msglen)
+ {
+ 	struct net_device_context *net_device_ctx = netdev_priv(ndev);
+ 
++	/* Ensure packet is big enough to read its fields */
++	if (msglen < sizeof(struct nvsp_message_header) +
++		     sizeof(struct nvsp_4_send_vf_association)) {
++		netdev_err(ndev, "nvsp_v4_msg length too small: %u\n", msglen);
++		return;
++	}
++
+ 	net_device_ctx->vf_alloc = nvmsg->msg.v4_msg.vf_assoc.allocated;
+ 	net_device_ctx->vf_serial = nvmsg->msg.v4_msg.vf_assoc.serial;
+ 	netdev_info(ndev, "VF slot %u %s\n",
+@@ -1247,16 +1336,24 @@ static void netvsc_send_vf(struct net_device *ndev,
+ 
+ static void netvsc_receive_inband(struct net_device *ndev,
+ 				  struct netvsc_device *nvscdev,
+-				  const struct nvsp_message *nvmsg,
+-				  u32 msglen)
++				  const struct vmpacket_descriptor *desc)
+ {
++	const struct nvsp_message *nvmsg = hv_pkt_data(desc);
++	u32 msglen = hv_pkt_datalen(desc);
++
++	/* Ensure packet is big enough to read header fields */
++	if (msglen < sizeof(struct nvsp_message_header)) {
++		netdev_err(ndev, "inband nvsp_message length too small: %u\n", msglen);
++		return;
++	}
++
+ 	switch (nvmsg->hdr.msg_type) {
+ 	case NVSP_MSG5_TYPE_SEND_INDIRECTION_TABLE:
+ 		netvsc_send_table(ndev, nvscdev, nvmsg, msglen);
+ 		break;
+ 
+ 	case NVSP_MSG4_TYPE_SEND_VF_ASSOCIATION:
+-		netvsc_send_vf(ndev, nvmsg);
++		netvsc_send_vf(ndev, nvmsg, msglen);
+ 		break;
+ 	}
+ }
+@@ -1270,23 +1367,20 @@ static int netvsc_process_raw_pkt(struct hv_device *device,
+ {
+ 	struct vmbus_channel *channel = nvchan->channel;
+ 	const struct nvsp_message *nvmsg = hv_pkt_data(desc);
+-	u32 msglen = hv_pkt_datalen(desc);
+ 
+ 	trace_nvsp_recv(ndev, channel, nvmsg);
+ 
+ 	switch (desc->type) {
+ 	case VM_PKT_COMP:
+-		netvsc_send_completion(ndev, net_device, channel,
+-				       desc, budget);
++		netvsc_send_completion(ndev, net_device, channel, desc, budget);
+ 		break;
+ 
+ 	case VM_PKT_DATA_USING_XFER_PAGES:
+-		return netvsc_receive(ndev, net_device, nvchan,
+-				      desc, nvmsg);
++		return netvsc_receive(ndev, net_device, nvchan, desc);
+ 		break;
+ 
+ 	case VM_PKT_DATA_INBAND:
+-		netvsc_receive_inband(ndev, net_device, nvmsg, msglen);
++		netvsc_receive_inband(ndev, net_device, desc);
+ 		break;
+ 
+ 	default:
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 787f17e2a9716..720a381c951f2 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -748,6 +748,13 @@ void netvsc_linkstatus_callback(struct net_device *net,
+ 	struct netvsc_reconfig *event;
+ 	unsigned long flags;
+ 
++	/* Ensure the packet is big enough to access its fields */
++	if (resp->msg_len - RNDIS_HEADER_SIZE < sizeof(struct rndis_indicate_status)) {
++		netdev_err(net, "invalid rndis_indicate_status packet, len: %u\n",
++			   resp->msg_len);
++		return;
++	}
++
+ 	/* Update the physical link speed when changing to another vSwitch */
+ 	if (indicate->status == RNDIS_STATUS_LINK_SPEED_CHANGE) {
+ 		u32 speed;
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index 10489ba44a090..fc78eac9aadec 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -275,6 +275,16 @@ static void rndis_filter_receive_response(struct net_device *ndev,
+ 		return;
+ 	}
+ 
++	/* Ensure the packet is big enough to read req_id. Req_id is the 1st
++	 * field in any request/response message, so the payload should have at
++	 * least sizeof(u32) bytes
++	 */
++	if (resp->msg_len - RNDIS_HEADER_SIZE < sizeof(u32)) {
++		netdev_err(ndev, "rndis msg_len too small: %u\n",
++			   resp->msg_len);
++		return;
++	}
++
+ 	spin_lock_irqsave(&dev->request_lock, flags);
+ 	list_for_each_entry(request, &dev->req_list, list_ent) {
+ 		/*
+@@ -331,8 +341,9 @@ static void rndis_filter_receive_response(struct net_device *ndev,
+  * Get the Per-Packet-Info with the specified type
+  * return NULL if not found.
+  */
+-static inline void *rndis_get_ppi(struct rndis_packet *rpkt,
+-				  u32 type, u8 internal)
++static inline void *rndis_get_ppi(struct net_device *ndev,
++				  struct rndis_packet *rpkt,
++				  u32 rpkt_len, u32 type, u8 internal)
+ {
+ 	struct rndis_per_packet_info *ppi;
+ 	int len;
+@@ -340,11 +351,36 @@ static inline void *rndis_get_ppi(struct rndis_packet *rpkt,
+ 	if (rpkt->per_pkt_info_offset == 0)
+ 		return NULL;
+ 
++	/* Validate info_offset and info_len */
++	if (rpkt->per_pkt_info_offset < sizeof(struct rndis_packet) ||
++	    rpkt->per_pkt_info_offset > rpkt_len) {
++		netdev_err(ndev, "Invalid per_pkt_info_offset: %u\n",
++			   rpkt->per_pkt_info_offset);
++		return NULL;
++	}
++
++	if (rpkt->per_pkt_info_len > rpkt_len - rpkt->per_pkt_info_offset) {
++		netdev_err(ndev, "Invalid per_pkt_info_len: %u\n",
++			   rpkt->per_pkt_info_len);
++		return NULL;
++	}
++
+ 	ppi = (struct rndis_per_packet_info *)((ulong)rpkt +
+ 		rpkt->per_pkt_info_offset);
+ 	len = rpkt->per_pkt_info_len;
+ 
+ 	while (len > 0) {
++		/* Validate ppi_offset and ppi_size */
++		if (ppi->size > len) {
++			netdev_err(ndev, "Invalid ppi size: %u\n", ppi->size);
++			continue;
++		}
++
++		if (ppi->ppi_offset >= ppi->size) {
++			netdev_err(ndev, "Invalid ppi_offset: %u\n", ppi->ppi_offset);
++			continue;
++		}
++
+ 		if (ppi->type == type && ppi->internal == internal)
+ 			return (void *)((ulong)ppi + ppi->ppi_offset);
+ 		len -= ppi->size;
+@@ -388,14 +424,29 @@ static int rndis_filter_receive_data(struct net_device *ndev,
+ 	const struct ndis_pkt_8021q_info *vlan;
+ 	const struct rndis_pktinfo_id *pktinfo_id;
+ 	const u32 *hash_info;
+-	u32 data_offset;
++	u32 data_offset, rpkt_len;
+ 	void *data;
+ 	bool rsc_more = false;
+ 	int ret;
+ 
++	/* Ensure data_buflen is big enough to read header fields */
++	if (data_buflen < RNDIS_HEADER_SIZE + sizeof(struct rndis_packet)) {
++		netdev_err(ndev, "invalid rndis pkt, data_buflen too small: %u\n",
++			   data_buflen);
++		return NVSP_STAT_FAIL;
++	}
++
++	/* Validate rndis_pkt offset */
++	if (rndis_pkt->data_offset >= data_buflen - RNDIS_HEADER_SIZE) {
++		netdev_err(ndev, "invalid rndis packet offset: %u\n",
++			   rndis_pkt->data_offset);
++		return NVSP_STAT_FAIL;
++	}
++
+ 	/* Remove the rndis header and pass it back up the stack */
+ 	data_offset = RNDIS_HEADER_SIZE + rndis_pkt->data_offset;
+ 
++	rpkt_len = data_buflen - RNDIS_HEADER_SIZE;
+ 	data_buflen -= data_offset;
+ 
+ 	/*
+@@ -410,13 +461,13 @@ static int rndis_filter_receive_data(struct net_device *ndev,
+ 		return NVSP_STAT_FAIL;
+ 	}
+ 
+-	vlan = rndis_get_ppi(rndis_pkt, IEEE_8021Q_INFO, 0);
++	vlan = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, IEEE_8021Q_INFO, 0);
+ 
+-	csum_info = rndis_get_ppi(rndis_pkt, TCPIP_CHKSUM_PKTINFO, 0);
++	csum_info = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, TCPIP_CHKSUM_PKTINFO, 0);
+ 
+-	hash_info = rndis_get_ppi(rndis_pkt, NBL_HASH_VALUE, 0);
++	hash_info = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, NBL_HASH_VALUE, 0);
+ 
+-	pktinfo_id = rndis_get_ppi(rndis_pkt, RNDIS_PKTINFO_ID, 1);
++	pktinfo_id = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, RNDIS_PKTINFO_ID, 1);
+ 
+ 	data = (void *)msg + data_offset;
+ 
+@@ -474,6 +525,14 @@ int rndis_filter_receive(struct net_device *ndev,
+ 	if (netif_msg_rx_status(net_device_ctx))
+ 		dump_rndis_message(ndev, rndis_msg);
+ 
++	/* Validate incoming rndis_message packet */
++	if (buflen < RNDIS_HEADER_SIZE || rndis_msg->msg_len < RNDIS_HEADER_SIZE ||
++	    buflen < rndis_msg->msg_len) {
++		netdev_err(ndev, "Invalid rndis_msg (buflen: %u, msg_len: %u)\n",
++			   buflen, rndis_msg->msg_len);
++		return NVSP_STAT_FAIL;
++	}
++
+ 	switch (rndis_msg->ndis_msg_type) {
+ 	case RNDIS_MSG_PACKET:
+ 		return rndis_filter_receive_data(ndev, net_dev, nvchan,
+-- 
+2.25.1
+
