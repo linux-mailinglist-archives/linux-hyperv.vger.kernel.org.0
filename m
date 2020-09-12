@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD24267C12
-	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Sep 2020 21:37:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61381267C18
+	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Sep 2020 21:38:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725889AbgILTha (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 12 Sep 2020 15:37:30 -0400
-Received: from mail-dm6nam12on2130.outbound.protection.outlook.com ([40.107.243.130]:5600
+        id S1725888AbgILTih (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 12 Sep 2020 15:38:37 -0400
+Received: from mail-dm6nam12on2116.outbound.protection.outlook.com ([40.107.243.116]:8028
         "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725838AbgILTh2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 12 Sep 2020 15:37:28 -0400
+        id S1725880AbgILTid (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 12 Sep 2020 15:38:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RzAGZLL6sySKc+ctr8O6tEMHvBByr5kiuIKXpkdMjsvUW7a/yzTty1LuyZG8jUcWbw4Hi7NsePtaSa3LbvUS5SZbFJUR06vPHtbMm/amq3kAs+65xZM0ikn36m/3vnvbt1yWlehi7fsLsvFKHcO/lWStvWQmrVEuBQd49hozZXx/smWzL+mGUzLbH18YhEwOTuNpSHEkiAEkpVhtaQBYECe524PGg1W4mXReljp/NCGUxJWgp9vb3kE8Rtck36i1ipbNEPbo3MAP95wRGR4hZRbrFKR4k7OsFOUYpGa1E+7QV09CjnPc8I3ftIRoE+WLxiwD8/kgUc6HghxdsofDhA==
+ b=lca1lVMbCWfsMbumWPVcoRjNHRMNaglSTvY+EjkivbePqK4n3BcR3d/IClDesB54/i5b6IRU1y32hdZOMKnUGQIL0PEk7Rz2RG56kKdfvePahzNhKjcNLW7OZd+o1Q0x7Hf9n+RfqAa3vgmAIdQ8u3Ln2bgqGGT0r7mMFplrUw8pnBhD0bbCne1v1FoXaFeWXL5TSvA8kIk2CsUO+snrsKEures1G+fLvhrfFyHp6EUdL/0yq/xpcUjO69kHpVeM0M6SAS4aJ9SEyw8qvF4UK0jmmlx81dSWEav4BVm+IGRmV/xAyAfjksyLs7mu0/CWCqgoqDYX9mdHPySpBdGc6w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fUuLmnzjvI0BG/BQNg39aJHDHOhZ/y0mNkTbYrGxEHg=;
- b=WK1u0dkEEL4OB9BCSaxXmhJ2lMsVbzW94dH56WQF8sF7GXPXnckycvhox3tkTy6t/zoDVRnXX4mDdik1f1KMksqry1NNgG/OqqGP/tcVg8AHmofte909HPV/aXAMHJ5fpW8BlVRo3mDCjFw91yBp0P5ECShJTP9QefjqYn4ZMZtm/F/qbQf3u1lRYO2gbcigmex5FNusrW6O05sfQsCA9QZObTUsPDTJkxo4XAKqK8zD85Kw3aYrLqrcFGp2TpViHYuH7PVHbWEXy5Efd+FMVf0JQZ9n0JGQ263mOlyrH7K9JOwj2wHQOuPB1S8j8R3jH3t/lp69iWQagM0Ht7cpeA==
+ bh=SrdrjvLwvCqaCh37M/cNumF4lvknpC+pbkVdcdM45Zg=;
+ b=XJDvy90jj+0XWvEpur/ybB1SLpft1nXLSUnJ1jrpkAOW3NsWgZBHV46Nvd6dEpVzLhGJPROyaYgA+m+5/217NhSBmRO+W39zg/crJp7f6ouM6uCYq4GUIaVFviUw0tKD7uAS3I+BhBigRKXiL/b7gAT9tuHf5PPmlqSajZIBIEJoXz8cbqmpeGdvZEK8LW3Jdd3UDmFf6P2OYjrF0m45DYiGwtnw1+sXABM4GCYSRvEqaY0a0jEJKsG9SXpmXQL0KPNC5KFHT0uvMk2q1RRsKFVpemP/dpBeSVPLkiRBBMkpaMrDqm3ZGK0TrT8c8CFZ7RvCOSOuhxGMds0EdaVUBA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fUuLmnzjvI0BG/BQNg39aJHDHOhZ/y0mNkTbYrGxEHg=;
- b=GRuwArJbMIv9CS43Rn0i1puUilLvbDfUpr/7RWJ+8JRrazFX24kmxpFJlB7NE9GS72GiNOqlP3NBvpJNGNciqCSPEd2CpygEMgwSYsNjfRzAbnGk4DsSqmYqRPHBBQkaiI2+RYkhU13qA1sThouGjEcU1PuBWre2F0EoEEtS4bo=
+ bh=SrdrjvLwvCqaCh37M/cNumF4lvknpC+pbkVdcdM45Zg=;
+ b=jUbEHk/CiKa+7DRbVq8tDJlI2bbzOOiWUhfpGd4Z0Bq8kW/zqDMrapFpmu6hTdzO0blx1J3EeB3UYDgJv9RDtCMiYGTf7sAyTvcwZbqbugxxKLWXSlPWk75WBfelqa330RzfZ74u99cChPe6ZW5dqKFG5HA93B8qx6lDel25tl8=
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
  by MWHPR21MB0512.namprd21.prod.outlook.com (2603:10b6:300:df::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.0; Sat, 12 Sep
- 2020 19:37:23 +0000
+ 2020 19:38:30 +0000
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::d00b:3909:23b:83f1%4]) with mapi id 15.20.3412.001; Sat, 12 Sep 2020
- 19:37:23 +0000
+ 19:38:30 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     Boqun Feng <boqun.feng@gmail.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
@@ -60,57 +60,57 @@ CC:     KY Srinivasan <kys@microsoft.com>,
         "arnd@arndb.de" <arnd@arndb.de>,
         "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
         "Mark.Rutland@arm.com" <Mark.Rutland@arm.com>,
-        "maz@kernel.org" <maz@kernel.org>
-Subject: RE: [PATCH v3 08/11] Input: hyperv-keyboard: Make ringbuffer at least
- take two pages
-Thread-Topic: [PATCH v3 08/11] Input: hyperv-keyboard: Make ringbuffer at
- least take two pages
-Thread-Index: AQHWh3+dlnyMvoM7NEmmN9vJRegPWKllaRWQ
-Date:   Sat, 12 Sep 2020 19:37:23 +0000
-Message-ID: <MW2PR2101MB1052688710B98D8C31191A8DD7250@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        "maz@kernel.org" <maz@kernel.org>, Jiri Kosina <jkosina@suse.cz>
+Subject: RE: [PATCH v3 09/11] HID: hyperv: Make ringbuffer at least take two
+ pages
+Thread-Topic: [PATCH v3 09/11] HID: hyperv: Make ringbuffer at least take two
+ pages
+Thread-Index: AQHWh3+f/4bg/Indg0e/CaDSEiSWnKllaUlA
+Date:   Sat, 12 Sep 2020 19:38:29 +0000
+Message-ID: <MW2PR2101MB105240A1A966F42DCF9B5724D7250@MW2PR2101MB1052.namprd21.prod.outlook.com>
 References: <20200910143455.109293-1-boqun.feng@gmail.com>
- <20200910143455.109293-9-boqun.feng@gmail.com>
-In-Reply-To: <20200910143455.109293-9-boqun.feng@gmail.com>
+ <20200910143455.109293-10-boqun.feng@gmail.com>
+In-Reply-To: <20200910143455.109293-10-boqun.feng@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-12T19:37:21Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-12T19:38:27Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9320e114-46de-484f-8c0a-dc74b563b882;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5368a405-9e94-4d8c-a324-51ddca67ee94;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
 authentication-results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
 x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cc7fc7b2-64d5-4f7b-6d1d-08d8575345d4
+x-ms-office365-filtering-correlation-id: c1575123-ba6e-43fd-9208-08d857536d4b
 x-ms-traffictypediagnostic: MWHPR21MB0512:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MWHPR21MB05121FFC38C41FD9F3DB05DBD7250@MWHPR21MB0512.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-microsoft-antispam-prvs: <MWHPR21MB051224C214B7119FB20A161BD7250@MWHPR21MB0512.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6mKeZ6c9AGgsvazkNOUdoKaC/M/MNV3RebnkBJuR0LOngZTNL+q9xbXCvPhlt8Z4C3890NaqF+3HXqVRLgOXJ0VblJZOf/rswFqoE+jBGXlK8vN3I0MQMYkUVgkJG+9bPmG1lik06C3nwVgKXl+oX4agY7Z4vJM0kOUDgMiWuI6dpcHa2VPxCZKo6Cf/SqaC7pC2YwnJRNKBa6BLtwLeINasx8qxPeJoFRIIYH4hB1RYgigAsZ6RcKQcGOY/KqHZWEheMn8+KNLAt8+OzkRLOrM4UtaNKerHzLGakZGQ/IlSY+qA5MT7GrJ9mGCEuFlUIk1d4Fa5NSSCDamSjAb/ewTO/NNN6rrgfd7NKS9s4Gm4yXJMUAS07qEeXuLQpXCF
+x-microsoft-antispam-message-info: sfbXxbwvW7w6r/uacq8tAIgViUW5CQKWnU667s/dKu5dw+Kz2lra3dSYCb9aU18NEuk9gBSKwBFxujKXLPhXniygsgLHJcoepx0K3Bw0NzkZ3DQU2Vi4tt0R9j3mjqkLUUOu+t3uIKDx4I/kJ9NxYKaMlIuzodlMGgzVyd2iCtwrbZ10+pY89DSiqiUyueKtstsUrtKSiSflSsQHl9/BUj62tDDAeKNjpqlxyrdDbuhH/HWkNPPoXVJbNXqYz+scKrkB/414gtAQqbINcnIHtOjg5o0n+rXiKwTXOM7uF5GljgVdsDCYPkB/tMFps35+GSOqgRZLdlBc6cfJRgMo8Md8MNFVCILNHJ953zV26lRX969/YlTK5NxmUzezHzMh
 x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(346002)(39860400002)(396003)(136003)(33656002)(83380400001)(316002)(4326008)(9686003)(10290500003)(2906002)(71200400001)(52536014)(8990500004)(86362001)(66556008)(64756008)(66446008)(66476007)(6506007)(55016002)(4744005)(82960400001)(82950400001)(186003)(5660300002)(8676002)(66946007)(26005)(110136005)(76116006)(478600001)(7696005)(54906003)(7416002)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: YBVPHIG/rXN5IrUafmFcNKQ5BN297poU4NMEPqc7djSj/3SpXk2lb9lk1fu9MJJgE2aVJ8chKWTbd2g92nA75fOb0F5HPYBXIDNZY1MloTuPB3ABM2gY220htodqAT2FN5V3INUoPEokPthbvWtTO1DpMOfus+N5VUaTn1HoS/+6b4H9bRO8qbmVKPEeUMSrXNYtQN/zMs375rjHyZutf8DlNdWSIx+v3pnfx6vHXpYprXMaBp1bckfgT//rhl1v5wO5hieGm55hOWDPKfJh71nU49KpE3d+OWqmA7mn5Meacekuyi+ygUAeVPTsd5PvtjkLPS523pSzPGEHKx7KEjoW0660fo7rMobYKvR5rJp8/kSZsiDIlYClWsWEg7Mh9W2AgPYlWXzJLkPIuSi1vFvETtIpkYsxFugyTPwZTtlbncpVk3V0z6ZpoLLiebLXr1oI/AKgUDlrwR7f8sOjQ6098fkWvIuJQSahEUigB7a6IdziCzlXCPOZVXOHq0R1CSs1eNNMwNz00VtO305zexMWK+jxnfQJ8Xz9Mfl/DRPbx4PxVQ7+JRYB6JAI4SB/z1PjwdhMx0gJ1f8S53CkMmwdBc6qzhpn+HUQnQdJ0PaXWjZBQpINDnteAjILj8Flp9+ViBqVQK+H/HN7C19CsA==
+x-ms-exchange-antispam-messagedata: mhzp1E+e5eujuVAeQyY66vh57AESWzEkgbTMqVkIvOhwAUSqZMouqeHTf+hBdQ77NG87HG2B9CMwcm+wlPGUzSlbVIlLHR7IF0YsZHzyflLczdukMjtzeCnyd8kST1JU2D69p30uvw98DYYHieEE46LvWRU9AZUkzigLxkf8BU1Q3/RI6Uqu5q4nN3XHCrOOoXgYnVSh7kdbv1ierxkHOI26vnDnqYaUkzHvs7h43QV4HmyFZfav+zrb+j2CGM8OF1XHs2fLTYYzzoONQDCCeL0XuK21lx7cGXHgXJKpuTFuvCdD9T9WVs1faRpRarGx37E7Dd3DPF41N1J4WMqXZ0WwVUB/bE3Osd2vJqe/Zw5uWGrH0hf40FWKQchg/fbxo2z81QyR/r2xQDdHGaz49HkHySLkLxv1ydoeXAFX2iTuXl4vAr8y5Acf0MbsHVSZPTc6GIW0DY+An6OUGHwoGA/ppPVmAmK+USJRNdl7j50tlr+e/onSbv9BqwwtPXCOwql6MzpexaMN9OHK3tF1FPaVlnzH0W/DW+yB70tI5nY7xzQ5r/duRmXtep+8mHUOJHn/2oUB1qJHmZs5b2RaluRVgyN895E8lKsFO0Vey7VLB7WXv2rKKCsEPNr90EyPXJxqjeMGH5qOs+b/2c6iDg==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc7fc7b2-64d5-4f7b-6d1d-08d8575345d4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2020 19:37:23.5118
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1575123-ba6e-43fd-9208-08d857536d4b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2020 19:38:29.6388
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RlF6jN0Qdl8wH7reNYkdvDbXQ/FUCgt/umhO/On+MFd1C2OvxCCWFm42anXfb37L4bMkxEUMai4J+kLU+iepWRMLfJy871JErSmzPH7uer4=
+X-MS-Exchange-CrossTenant-userprincipalname: sVvf0g4SPz/yGnZaTbsJnwF4AelPiHHIpoyQyI9N/Y1Ru9VIst7p/NtmfOjTl2tjJiZ0xIQ5UYLySGHP076AyPzNqfaeTANgyj0b0Uwh5ho=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0512
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
@@ -119,7 +119,6 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Boqun Feng <boqun.feng@gmail.com> Sent: Thursday, September 10, 2020 =
 7:35 AM
-
 >=20
 > When PAGE_SIZE > HV_HYP_PAGE_SIZE, we need the ringbuffer size to be at
 > least 2 * PAGE_SIZE: one page for the header and at least one page of
@@ -129,9 +128,16 @@ From: Boqun Feng <boqun.feng@gmail.com> Sent: Thursday, September 10, 2020 =
 > using vmbus_open() to establish the vmbus connection.
 >=20
 > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> Acked-by: Jiri Kosina <jkosina@suse.cz>
 > ---
->  drivers/input/serio/hyperv-keyboard.c | 4 ++--
+> Hi Jiri,
+>=20
+> Thanks for your acked-by. I make a small change in this version (casting
+> 2 * PAGE_SIZE into int to avoid compiler warnings), and it make no
+> functional change. If the change is inappropriate, please let me know.
+>=20
+>  drivers/hid/hid-hyperv.c | 4 ++--
 >  1 file changed, 2 insertions(+), 2 deletions(-)
 >=20
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
