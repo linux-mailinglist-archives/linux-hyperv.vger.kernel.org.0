@@ -2,126 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD102268106
-	for <lists+linux-hyperv@lfdr.de>; Sun, 13 Sep 2020 21:48:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2356826810E
+	for <lists+linux-hyperv@lfdr.de>; Sun, 13 Sep 2020 21:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725940AbgIMTsX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 13 Sep 2020 15:48:23 -0400
-Received: from mail-dm6nam11on2109.outbound.protection.outlook.com ([40.107.223.109]:17377
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        id S1725939AbgIMT4k (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 13 Sep 2020 15:56:40 -0400
+Received: from mail-eopbgr1320127.outbound.protection.outlook.com ([40.107.132.127]:10461
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725938AbgIMTsU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 13 Sep 2020 15:48:20 -0400
+        id S1725938AbgIMT4i (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 13 Sep 2020 15:56:38 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WXqfKP1d2SE/Zllzu1F/0NK5pFq5XdYjp85Euf9yKlQ2n350A4Q60SlAD3DSTT/zqOztAbcRFvC5KtZbCZrrU9RcR/WuBfbyoPsvP7sCYkqYCrJAQsURJVxUaelfCk5ECyfgK8LO6y3gLUbGAZ1MuDGmAYayei4qMOttxSBNjvHbzA7GFEgTZvrTACqVwAI5CQxFqsucVBvSOJv68pBKJFA7huUfO+RV/bWD+AjyT/O9XoB6Vp+VwNi8Dnz5i9UdxigG/7ud2sbapJ35Qfya54RGPu7zoJtrKHVeJPKOKktidvUlHkvPqSBdxVZmzGikY/zqhLEuqPkmzfxmFXtWbg==
+ b=ikuTMMycYC+i/10TXTw3xcifLfE738VKZQHl/oWn6TJ//i9k47QnXL3GdTJkW87rfJeiUAICNqTSF59aCcQ6HoJ66f6V34cAJ8woVU0H0bBrCmjRrMF05dMBxBszovNh0hBkb/LC5UrDCg/rtyYZFjK4ap06L9EGxQyp9OWRaMxLzo+PFzLtG93Qg9/dXkKIMl1lhNuM4FVq03pJGN8KLwYdc9XI95077JSAe1DLmeViqur74nKtVrT4dbZPvm89fj+STw1oQwfe3A7o1yQpVWtyM53A3jCislPKkWk3k5E9t87B2uOgetGJYybkyGmZhB4D+WPhYye2+vPjINiy+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lrI2P/WhWJAk+mLTt+QKNGZZ822rmgJBpvq10C+9iv0=;
- b=n1/NFo6DEW07kg7lHVp+YM5FK6apwFHsCfzSVNglj15/FsQXxfxn5sf+Xlza6PEtpvT/KS+PQm9baur87qaDKcHChleKDE/Wqe4qrC/N7eHiuieUPVcnplVaxjkYeTmEc7oguB+6gfEWOnOKSXFpM+OUaZZ6Cdr9LJr+ec+itG7r/MgIYDtf9Utd/+YDtcZFUnfU8lux6eEluUheTQn8kMCfpUWFCNhBllJ+58ttkbNJyxP0S8WFqKRrQA2QCthGYwiFMrL2zhy4OejlmR5c14wjj42iayCqJ8bU2OGFg9f/+AGTKxiE7ym7FUrWoGODO0lXj4Ziri2ZvaqZDCBynQ==
+ bh=7hT3cNtoMSaA+a0x7sYn8j9uPsFw+RUyJaTCLOSS78A=;
+ b=H6qdHT+Is3/t6yUwVywQRdem8to2ldKv5+twsi/NWY0cDb5rui6szbELTorH9/9WEOCIe5pTYDirjJJXkyn+xbgyI4Jg3MmKWoEJJHVaAnMmKGeaWIXyXBdJtelQonndmglaOrBBvk5McNyp1ew6J3AM7N1PqQUucIXKtSNAnH6MpQwG2o61EnkI46VTsJWf3vzXr3WeEr1vrDVfpMUAKJ910b3xAYdKemVKTvlcdohpf/+0DLxAqDCGA/96/gEffPgURUxZjxpDTwCcjMLwgX6kqcdr4ydhqYywiHcQ6tzMGhFniJhcSnxEQloZbpsLmdwKz1ufaCHk3OBWFKUx9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lrI2P/WhWJAk+mLTt+QKNGZZ822rmgJBpvq10C+9iv0=;
- b=cNnt5t9kJauqlbapsHaTfULAi65FoekAAVzG/YunGGZkIyqo2+TTR5yMr+Y28F4JzsrmRLY6rkyaWDCG+2ZXgpvXJ0INVutZh38gwdg0BUJoGomljvP+ihbW8EowBG3sclpBufgj0AIlnB0I/66UoBARBG3X12zidGjn1wPrBMs=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=microsoft.com;
-Received: from BN6PR21MB0626.namprd21.prod.outlook.com (2603:10b6:404:11a::12)
- by BN7PR21MB1620.namprd21.prod.outlook.com (2603:10b6:406:b7::27) with
+ bh=7hT3cNtoMSaA+a0x7sYn8j9uPsFw+RUyJaTCLOSS78A=;
+ b=FucbGm7a58zi1IJPVlOtB5rE3cgsCbKbbHbIbOAU+3wFr23OZXLAe69SAm/2CJ8yJVPHn6xzpfYF8MSjNYJznb7TkeZcJpF2TaHxYZX1DSXBaBR0M/n5O4J/RU7yvB42m/qdiOxYwy/GOUcQ0LxfvTI871WT4LxlP0m9KaxyKH4=
+Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM (2603:1096:802:1a::17)
+ by KL1P15301MB0053.APCP153.PROD.OUTLOOK.COM (2603:1096:802:10::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.10; Sun, 13 Sep
- 2020 19:48:18 +0000
-Received: from BN6PR21MB0626.namprd21.prod.outlook.com
- ([fe80::85bf:2234:e01f:948b]) by BN6PR21MB0626.namprd21.prod.outlook.com
- ([fe80::85bf:2234:e01f:948b%2]) with mapi id 15.20.3391.009; Sun, 13 Sep 2020
- 19:48:18 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        kys@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        linux-hyperv@vger.kernel.org
-Cc:     mikelley@microsoft.com
-Subject: [PATCH 1/1] Drivers: hv: vmbus: Add timeout to vmbus_wait_for_unload
-Date:   Sun, 13 Sep 2020 12:47:29 -0700
-Message-Id: <1600026449-23651-1-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-Originating-IP: [131.107.147.144]
-X-ClientProxiedBy: MWHPR21CA0031.namprd21.prod.outlook.com
- (2603:10b6:300:129::17) To BN6PR21MB0626.namprd21.prod.outlook.com
- (2603:10b6:404:11a::12)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.0; Sun, 13 Sep
+ 2020 19:56:30 +0000
+Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+ ([fe80::800c:633d:2d74:4f61]) by KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+ ([fe80::800c:633d:2d74:4f61%5]) with mapi id 15.20.3412.001; Sun, 13 Sep 2020
+ 19:56:30 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH 1/1] Drivers: hv: vmbus: Add timeout to
+ vmbus_wait_for_unload
+Thread-Topic: [PATCH 1/1] Drivers: hv: vmbus: Add timeout to
+ vmbus_wait_for_unload
+Thread-Index: AQHWigbafeXbzda8AEi7ju7K5u/Gl6lm+60w
+Date:   Sun, 13 Sep 2020 19:56:30 +0000
+Message-ID: <KU1P153MB01202778DC760ED16AD687F4BF220@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
+References: <1600026449-23651-1-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1600026449-23651-1-git-send-email-mikelley@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e896d210-3f59-40ea-bb99-231ff09e6f47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-13T19:55:44Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2601:600:a280:7f70:e9e5:cee6:6dbb:2664]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4dab3e36-9745-46d3-aca2-08d8581f1bec
+x-ms-traffictypediagnostic: KL1P15301MB0053:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <KL1P15301MB0053B2388FD748459240D3B7BF220@KL1P15301MB0053.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: g5Gru7nf0CTUypJrahvlKfst029og6CXozaeaFWSdyJAs/CqIqftY6fPwR3D8uG9pIoD6ZRD+s8W7SpSVvXd1O50szoNnHx7IOGqunJ66zu2l874pJBUuttKdGAnVX65qbVCSXAcGMb3NOu9QXDEY6gecOQH5tTjho4/vAU0rHvXwqo7p/afMx9+mNEacPV6WT6g2dYARr5KUtIIGlHfriveYOSzBQfLFCzEr75uZITOqJH2tb5KeJDPXzfq3PbgTwMR41+SgCHG0T14t/G2qPv1bR4MheIcA7S+788sLL+8vbi9fOwx2eZ4D9dUOqNmxH1T0oPN0pAFb/oMlzG0rjezYjn15gUmEtNuQa+d1MErSOGpsfwhY+WxxINmC3Oe
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KU1P153MB0120.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(366004)(396003)(346002)(39860400002)(8990500004)(8676002)(71200400001)(55016002)(8936002)(478600001)(2906002)(316002)(7696005)(33656002)(4744005)(83380400001)(86362001)(76116006)(10290500003)(4326008)(9686003)(5660300002)(82950400001)(82960400001)(66556008)(66476007)(64756008)(66446008)(186003)(6506007)(110136005)(52536014)(107886003)(66946007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: dCz9fslyrhb3mN49fm14RUaa6I8sVl93twre8hYp3Fbp1S+v5iAUO7df/W5BZ+FhMUzQs1/c93sg8tsZmCsce+NGpfPu9GPoTAJVDxGazUAc3+K9ytojOP9DPfui8JTzFrFSPzyHwGTFSCxJYM1YKMNBlFzfju46WqwGwHt+zZTHT/04FHVwzXXRccr7krkgZpH1Vo/hinwfqwGOQ7MAYe4UD/99SLsgGV5Fbbx5iEsPeaomfrTsgi6UxgBNjolIF90I3pLuOB7y+sdOqkIYKRJNvhdg9dMdybB0/E0PpxFQhQVg8QoNqtElaqzVS0B9laK0F15PsAXEPW1MZDuW+pR9VVqICynWpJ0eC+UH9A7MshWzJYwvnzoGPxbd/kgFVoVV3SLyAxvbAj9qpIBHvXGmrCbAp3WKeog4bYNVys/5wNKu1YEBW4/gx7BRwyUcpHTk6IKlelFGlgzXuu4ymNwzzhRvJhI9RnsfCcYFVdoJ5+/vTy+S6SY60qprNN9Qo+mw7ddMzActQn12peqNMZieFPdKM9a3JYDAyOOWI8+Xv+iQ2c3tBpwTJMmr1ukW+xM5JAhfxpG74WPYQZOztAhPsUrmfAJGu4GalnPVf6oNzTg6xxhrWju8qmbHWalEi0jaN8zx8uYMz4DrfB2mVT9vaQ4S9nJvr6qbwe+Cc37iRquOm9ni1tV6l/hLwS6nFnpfIJFxe7j8LnRQ7tQiaA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkdev.corp.microsoft.com (131.107.147.144) by MWHPR21CA0031.namprd21.prod.outlook.com (2603:10b6:300:129::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.1 via Frontend Transport; Sun, 13 Sep 2020 19:48:17 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 88cd64aa-57d7-49f3-7c9f-08d8581df600
-X-MS-TrafficTypeDiagnostic: BN7PR21MB1620:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN7PR21MB16201A0F5381F32A4FE61609D7220@BN7PR21MB1620.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: N9QHWbUYUnjZj7diOlnc+OAndsHlvox6pXw3nHglkA0cGoS7WOZxK4CKPJnfrchHpjQaCoOJRMUiVE0oK4QUcJNv7NTOBHju/zccp4oFHNyQfcbl/M6uJUSeEabANoPtJbrT1rd1F2U9ZhmgnNkrKUDGdEJnBET645bM9gWXrRmIP4Bwss/S/R46dQW/UjrYXghSHFJkMithAgvZQa06tV6SXg/eoOx03/Sj54eJYxyY17si0wWA8ShX/m4Cw87u5Fu5KwXWM19BAGheK1k2IEnj0jatocYDVQvy/X4c09FP1QVDrSF/EgljVRoixi9aXTKbENCxYluHai5LPP3qMqxHstJD2rBiOgZeyRl/UZEulr9azHEszQbB8z2sS054
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0626.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(376002)(39860400002)(366004)(396003)(107886003)(66556008)(10290500003)(66476007)(66946007)(2906002)(36756003)(316002)(478600001)(5660300002)(86362001)(82960400001)(82950400001)(26005)(6486002)(83380400001)(956004)(16526019)(8936002)(2616005)(4326008)(6666004)(52116002)(7696005)(186003)(8676002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 3Z/ivFtGahMjROWeWYcgjqPQ5AbRCg/Hd/i2Zxg1c9JzUrukC/7kdXBEnrQ+biiXeUglLeYKZRuKXufnuHF+OSXPi+vfiXWHFPCVzQS90HfB5evugu1s58NoDI3vXwwQwYNQNApwd88KZvEsPJtgvbFmw/HWlKbmaV+p2EW/sjKfcN/Nu9arZVXLXeX+L3Na9CrrZWcge6w6NE0Q+OLU6bG9bZ1PJL7NGoRgU9+ZhVa38nfoHt1IBziKscuwCCtJavmoCuoH343+Q6daihpGKi/qtEb3CAicexrQ+l3s1zvLhbPt3ocLUBT+QI7a7HDKhhswmObwZLJmWcMd7aj/jjANZhY9gOSQotnRr3wkRCBvFi/JUZQUrcWlLu/Z+6Vbnd7HkJvRSWRT38UCqEe1LBFNvMBnjc0haKafJ8rZEqa/JuHLu8a5lVpuelZjPaXqAwVeUJGrkCSqLUvWApUGyZKhzSFl2F6K1K3/beyMPElLlnTqighpmA5zisrv7z/Ormz7bV5kJHVSX821vFCvdMJoi3Z0tpT7bfzv5lqeiNrlYtwTKnBW7UpsvSBi8IxP1H1iM0p3AmRA+HWCtgQTn8MGW4qua2Y7NPvGozZR61L29baaFeuW/QeyhKfPRYsbPcf7pQOOyhuJ0aEzkvAtPg==
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88cd64aa-57d7-49f3-7c9f-08d8581df600
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR21MB0626.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2020 19:48:17.9647
+X-MS-Exchange-CrossTenant-AuthSource: KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dab3e36-9745-46d3-aca2-08d8581f1bec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2020 19:56:30.1894
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PSef4RI1DjugvhF6IieWoLz3Kyi4MFJVZMbLxVIOTVopyCzZlh2jU7vClzwmPpj4XABJSzLiIryfBkhkk5gmWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR21MB1620
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kOnxblGaYA2Ls4FKDEk49oLGV3Sk+Bn4ep7w43IlVOQbvcg8ZUpqSO760zv/3NC67FznJg7jf+vcVzNWUd6npg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0053
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-vmbus_wait_for_unload() looks for a CHANNELMSG_UNLOAD_RESPONSE message
-coming from Hyper-V.  But if the message isn't found for some reason,
-the panic path gets hung forever.  Add a timeout of 10 seconds to prevent
-this.
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Michael Kelley
+> Sent: Sunday, September 13, 2020 12:47 PM
+>=20
+> vmbus_wait_for_unload() looks for a CHANNELMSG_UNLOAD_RESPONSE
+> message
+> coming from Hyper-V.  But if the message isn't found for some reason,
+> the panic path gets hung forever.  Add a timeout of 10 seconds to prevent
+> this.
+>=20
+> Fixes: 415719160de3 ("Drivers: hv: vmbus: avoid scheduling in interrupt
+> context in vmbus_initiate_unload()")
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 
-Fixes: 415719160de3 ("Drivers: hv: vmbus: avoid scheduling in interrupt context in vmbus_initiate_unload()")
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/hv/channel_mgmt.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 591106c..1d44bb6 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -731,7 +731,7 @@ static void vmbus_wait_for_unload(void)
- 	void *page_addr;
- 	struct hv_message *msg;
- 	struct vmbus_channel_message_header *hdr;
--	u32 message_type;
-+	u32 message_type, i;
- 
- 	/*
- 	 * CHANNELMSG_UNLOAD_RESPONSE is always delivered to the CPU which was
-@@ -741,8 +741,11 @@ static void vmbus_wait_for_unload(void)
- 	 * functional and vmbus_unload_response() will complete
- 	 * vmbus_connection.unload_event. If not, the last thing we can do is
- 	 * read message pages for all CPUs directly.
-+	 *
-+	 * Wait no more than 10 seconds so that the panic path can't get
-+	 * hung forever in case the response message isn't seen.
- 	 */
--	while (1) {
-+	for (i = 0; i < 1000; i++) {
- 		if (completion_done(&vmbus_connection.unload_event))
- 			break;
- 
--- 
-1.8.3.1
-
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
