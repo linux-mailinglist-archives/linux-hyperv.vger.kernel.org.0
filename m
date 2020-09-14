@@ -2,115 +2,153 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8721C2693AF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Sep 2020 19:39:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFB252693DE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Sep 2020 19:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgINRjw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Sep 2020 13:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbgINMZt (ORCPT
+        id S1725992AbgINRoP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Sep 2020 13:44:15 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34167 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgINMFm (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Sep 2020 08:25:49 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD0EC06121E
-        for <linux-hyperv@vger.kernel.org>; Mon, 14 Sep 2020 04:57:55 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id r25so19770493ioj.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 14 Sep 2020 04:57:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gxYQz48aGorfvze6exW0FuIKKJvVhs5z+cRnEenJUaY=;
-        b=WQ25T1T8nOFRrXtOMxWvxZqQwK2s+mcHIvrJp1pQG1KToWiI+A1DWwaYqqjUnAKXOz
-         CX4bvzyA2TPHZpPT4jTdMzdfkF1jSWDqmo172bkbQ8I0ALk1BJ/hYXyx5hu/6f6lrYCf
-         Q5xkP8tma5yxuiCuHLYl3F3RKpiGo8Ro64t7EJKVbPI07CtKhACFuKYRKAGUwvrrZfNq
-         j+6X1EfVOrtVuTDTPbEoFd0MaFqTU/g9E1K6yd59qoka4KAPiuoMV58bp31Z8CKEWKF0
-         la6fp6OCyio7Y1CTKUN4jKJ8g8M6dyzUUJ/JKjyVzIXNMbBv8Nds/OoaxP5f1hRclmSL
-         M2UQ==
+        Mon, 14 Sep 2020 08:05:42 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k14so1378055edo.1;
+        Mon, 14 Sep 2020 05:04:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=gxYQz48aGorfvze6exW0FuIKKJvVhs5z+cRnEenJUaY=;
-        b=EY+sYFeW3kU/n5hn2WcEdH+rtQcVTk2wSB50HFcVosid3MKFk/HQHOVI6uQFnjdOsF
-         jYYR+elvepoMIQlrHR4EWKuHMRko2tCS22MeGg7nrM0/WtG51Iyap+ikQAv87q9fMBkm
-         RBpBv0HUSWMsriWG7JeudR0hB6invYKGQ3yoNABRmuvjNdHYKLotX1zSaYn8sn6l7EWJ
-         JhT2pR8OdRGkf7dXdegn/eh5Z4dto+jQExbBk2J2wkIQkVXbFwHi/ZwxXdxyYeu7sHea
-         wjPvNJhcfQTHYhgMQ/Lcu/Lkk3g1Wocv/wVpKOy+T9XC3epYAdOXGBIXx6gJk3kX4Vva
-         Fy9A==
-X-Gm-Message-State: AOAM531zxXEJASiTwMBRMlCC0UQUSYNpSCgA7JF2buv+OJpJ+Ucmsb+s
-        oF2PZgygPs/Tm3xqAB7DkYNkj9jy9nudzRZO48ZXDfkEut2dCQ==
-X-Google-Smtp-Source: ABdhPJwfe27VdQeBQX2+uxaUP3xI/Ig+VzkiyCgKnnbnaQgvpBo35fCm0PVcR4GveAQs1cF5lJbEaq73vXQeTsztD/Q=
-X-Received: by 2002:a05:6638:3b5:: with SMTP id z21mr12919616jap.33.1600084674004;
- Mon, 14 Sep 2020 04:57:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lt7oJ0RYkp7GOEh6jTuKHSPMhemyBNu8hytTPWvgNCo=;
+        b=lqeoMTZYZ4zIeHG8LVZcFF9rMMzJLajFDX7zt6SNPOIo55+obfbLOsqILmJHc/pSGm
+         I6PxSRY9SuodV/AvUap2WTqwdP5iEgtPXFLAWEyDwwzQjuldrE1oNusSfI+p3XCubgUI
+         v430O/zIWSQX6nQoDPB8vT4Rima0g648FUHFo98W+3z/A7I1HQj8TUlDP3F190A2rhEG
+         ngPeh3he24uGSE1Jy/ofwmpyK7cXoez7UwfZX8qvfs3RVsQOEDm64CFG2MEv4tALqrhN
+         3Tdcgq44H52WDJ9RcqqRaB3sBD5jWTIs3Tw/iSIczEI116KobX1+jNH6/Fc0IKE3y9GV
+         lGyQ==
+X-Gm-Message-State: AOAM532jOQaAZYN/JELkdntk4lP7tH1kAHxxBEyMtnzmf5vMsQlQEMD3
+        iyDTZJdnOCPYzwnosjQq7FMDM617SVk=
+X-Google-Smtp-Source: ABdhPJzbvIbAfLdh+pFghaYzDSsWI0Hfx/m0A44A95Dhb1oNGzFvSLAWCzgQL/qblUPvk8qT4FL0Xw==
+X-Received: by 2002:adf:ed12:: with SMTP id a18mr16432588wro.178.1600084778613;
+        Mon, 14 Sep 2020 04:59:38 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id c205sm18764809wmd.33.2020.09.14.04.59.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2020 04:59:38 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nudasnev@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
+        ENDPOINT DRIVERS),
+        linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES)
+Subject: [PATCH RFC v1 12/18] asm-generic/hyperv: update hv_interrupt_entry
+Date:   Mon, 14 Sep 2020 11:59:21 +0000
+Message-Id: <20200914115928.83184-4-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200914112802.80611-1-wei.liu@kernel.org>
+References: <20200914112802.80611-1-wei.liu@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:ac0:a30a:0:0:0:0:0 with HTTP; Mon, 14 Sep 2020 04:57:53
- -0700 (PDT)
-Reply-To: mrsmegwilliam6@gmail.com
-From:   Ms Mary Mcniff <diplmatemarkwilliam@gmail.com>
-Date:   Mon, 14 Sep 2020 04:57:53 -0700
-Message-ID: <CAC-KMFsY0_pkW0URQBBLwC2Wssin+DCDxr3BYifRW6KX3fG+mg@mail.gmail.com>
-Subject: Your Respond ASAP
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+We will soon use the same structure to handle IO-APIC interrupts as
+well. Introduce an enum to identify the source and a data structure for
+IO-APIC RTE.
+
+While at it, update pci-hyperv.c to use the enum.
+
+No functional change.
+
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+ drivers/pci/controller/pci-hyperv.c |  2 +-
+ include/asm-generic/hyperv-tlfs.h   | 36 +++++++++++++++++++++++++++--
+ 2 files changed, 35 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index bf40ff09c99d..b38faa04234b 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1215,7 +1215,7 @@ static void hv_irq_unmask(struct irq_data *data)
+ 	params = &hbus->retarget_msi_interrupt_params;
+ 	memset(params, 0, sizeof(*params));
+ 	params->partition_id = HV_PARTITION_ID_SELF;
+-	params->int_entry.source = 1; /* MSI(-X) */
++	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
+ 	hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
+ 	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+ 			   (hbus->hdev->dev_instance.b[4] << 16) |
+diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+index e7e80a27777b..83945ada5a50 100644
+--- a/include/asm-generic/hyperv-tlfs.h
++++ b/include/asm-generic/hyperv-tlfs.h
+@@ -469,6 +469,11 @@ struct hv_create_vp {
+ 	u64 flags;
+ };
+ 
++enum hv_interrupt_source {
++	HV_INTERRUPT_SOURCE_MSI = 1, /* MSI and MSI-X */
++	HV_INTERRUPT_SOURCE_IOAPIC,
++};
++
+ union hv_msi_address_register {
+ 	u32 as_uint32;
+ 	struct {
+@@ -502,10 +507,37 @@ union hv_msi_entry {
+ 	} __packed;
+ };
+ 
++union hv_ioapic_rte {
++	u64 as_uint64;
++
++	struct {
++		u32 vector:8;
++		u32 delivery_mode:3;
++		u32 destination_mode:1;
++		u32 delivery_status:1;
++		u32 interrupt_polarity:1;
++		u32 remote_irr:1;
++		u32 trigger_mode:1;
++		u32 interrupt_mask:1;
++		u32 reserved1:15;
++
++		u32 reserved2:24;
++		u32 destination_id:8;
++	};
++
++	struct {
++		u32 low_uint32;
++		u32 high_uint32;
++	};
++} __packed;
++
+ struct hv_interrupt_entry {
+-	u32 source;			/* 1 for MSI(-X) */
++	u32 source;
+ 	u32 reserved1;
+-	union hv_msi_entry msi_entry;
++	union {
++		union hv_msi_entry msi_entry;
++		union hv_ioapic_rte ioapic_rte;
++	};
+ } __packed;
+ 
+ /*
 -- 
-From Chief Compliance Officer, Citigroup Inc CITIBANK
-388 Greenwich St, New York, 10013, United States United.
-PAYMENT CODE: FRB010
-Swift: PTBLBXXX
-==============================================
+2.20.1
 
-Attention: Beneficiary,
-
-We write to inform you that Series of meetings have been held over the
-past 2 weeks with the Secretary General of United Nations,U.S
-Department of State and Dubai Union Organization this ended last
-week.And parcel is under our custody right now, It will deliver to you
-within 24 hours once you clear the charges which will cost you
-according to the BANKERS COURIER SERVICES that wish to deliver your
-ATM CARD card to
-you immediately.
-
-However, it is the pleasure of this office to inform you that your ATM
-CARD number; is 29741733 and it has been approved and upgraded in your
-favor .you call me for the pin code numbers. The ATM CARD value is us
-$10.5 Million only.
-
-Kindly contact the paying bank for the claim of your ATM visa card
-payment fund $10,500,000.00 through the below contact information;
-
-Contact Person:Mr Williams S Young
-Director of Financial Controller
-Bank Name: CITIBANK
-Bank address; 388 Greenwich St,
-New York City,10013, United States
-Email:mrsmegwilliam6@gmail.com
-
-Reconfirm the following information?
-
-(1)Your Full Name=============
-(2)Mobile Phone Number======
-(3)Current Home Address==== ====
-(4)Fax Number================
-(5)Passport/Drivers license ======
-
-Endeavor to keep me posted once you contacted the officer in charge
-through the above mentioned information.
-
-Your timely response is highly appreciated.To this end, you are
-required to forward your payment information as follows to enable us
-load your fund into the card with your information and deliver it to
-your door step. as the BANKERS COURIER SERVICES are in charge of the
-delivery services to your destination.
-
-Yours truly;
-
-Ms Mary Mcniff.
-Chief Compliance Officer, Citigroup Inc
-FEDERAL RESERVE SYSTEM.
-Email: marymcniff7@gmail.com.
