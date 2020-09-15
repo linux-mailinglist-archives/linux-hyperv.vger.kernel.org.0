@@ -2,21 +2,21 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 992D4269BC5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Sep 2020 04:07:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6510269BCE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Sep 2020 04:10:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgIOCHZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Sep 2020 22:07:25 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:54597 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726019AbgIOCHZ (ORCPT
+        id S1726114AbgIOCKW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Sep 2020 22:10:22 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:43652 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726034AbgIOCKS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Sep 2020 22:07:25 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U9-Pd4L_1600135638;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U9-Pd4L_1600135638)
+        Mon, 14 Sep 2020 22:10:18 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U9-PFSR_1600135812;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U9-PFSR_1600135812)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 15 Sep 2020 10:07:18 +0800
-Date:   Tue, 15 Sep 2020 10:07:18 +0800
+          Tue, 15 Sep 2020 10:10:12 +0800
+Date:   Tue, 15 Sep 2020 10:10:12 +0800
 From:   Wei Yang <richard.weiyang@linux.alibaba.com>
 To:     David Hildenbrand <david@redhat.com>
 Cc:     linux-kernel@vger.kernel.org,
@@ -34,7 +34,7 @@ Cc:     linux-kernel@vger.kernel.org,
         Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH v2 1/7] kernel/resource: make
  release_mem_region_adjustable() never fail
-Message-ID: <20200915020718.GB2007@L-31X9LVDL-1304.local>
+Message-ID: <20200915021012.GC2007@L-31X9LVDL-1304.local>
 Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
 References: <20200908201012.44168-1-david@redhat.com>
  <20200908201012.44168-2-david@redhat.com>
@@ -131,9 +131,6 @@ On Tue, Sep 08, 2020 at 10:10:06PM +0200, David Hildenbrand wrote:
 >+retry:
 >+	new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
 > 
-
-It looks like a bold change, while I don't find a reason to object it.
-
 > 	p = &parent->child;
 > 	write_lock(&resource_lock);
 >@@ -1298,7 +1305,6 @@ int release_mem_region_adjustable(struct resource *parent,
@@ -234,6 +231,11 @@ It looks like a bold change, while I don't find a reason to object it.
 >-	__release_memory_resource(start, size);
 >+	release_mem_region_adjustable(&iomem_resource, start, size);
 > 
+
+Seems the only user of release_mem_region_adjustable() is here, can we move
+iomem_resource into the function body? Actually, we don't iterate the resource
+tree from any level. We always start from the root.
+
 > 	try_offline_node(nid);
 > 
 >-- 
