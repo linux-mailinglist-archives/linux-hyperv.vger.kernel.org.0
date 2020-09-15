@@ -2,86 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A11926A488
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Sep 2020 14:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 090D726A553
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Sep 2020 14:37:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgIOMAM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 15 Sep 2020 08:00:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:32882 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgIOL7U (ORCPT
+        id S1726145AbgIOMel (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 15 Sep 2020 08:34:41 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36026 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgIOLqW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 15 Sep 2020 07:59:20 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e11so10944251wme.0;
-        Tue, 15 Sep 2020 04:59:05 -0700 (PDT)
+        Tue, 15 Sep 2020 07:46:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z9so3134715wmk.1;
+        Tue, 15 Sep 2020 04:45:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8IT9TYa324z97FaDa7D5p2wa9NqPdqT/+VgBeB+G8GM=;
-        b=ugsCZBOZzZ8gcfuBVbdqrP30xu8+BHfoOQjW7Ov3u2Jy+2Q/SAxMdQQKax8zYzcgim
-         EFQIs5Huc5uJVRc49ZpB2wInIIbdvOK1xHOPtolGhC2QStPonyB6mp6bIDYT28g9U+tz
-         dmNOyZcKsnWCivWWhKQjvHtRq/LfAJAXM4qb2LGnelQIcZm4MJPukEwjNTkaSVBZobNb
-         zO9uxN9HcDBPL/aXgXC8Z77cTq0QZOe6C1c4+vx3yIgNdsRxZN21K26au83m6NumZJR8
-         1QTeYtXtN+RoyOgIlTGuxgPAg0q5ox31hDJayR2xFG1z4xtT+BLv449hWhDjjzIXXNGC
-         diZw==
-X-Gm-Message-State: AOAM531ASuxKSfJZhZQxn6hych2ySarCOywL8EDLpVmpgj2uPwT174QO
-        JD6LWPYEdtaQMCbY1lf75rk=
-X-Google-Smtp-Source: ABdhPJz4L2F5DwXsSda6AFOngVUweOzE+YXEMob/UWofIdHjvM/6tHBywH2/ZJTKWafEAzT1do1GNw==
-X-Received: by 2002:a1c:9ecb:: with SMTP id h194mr4248660wme.140.1600171145065;
-        Tue, 15 Sep 2020 04:59:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=cjiBUhwXZk/V7w+hbRQc3+HINg0WkRcBhDhYopfJfBw=;
+        b=Q55CffxSulb+lQbIXPIaJBjM9UenhHMt9F+X5vx8xYLEnX6M4iCvoOEZu0xgiFetVs
+         glTrBXaQFPAyWmBjbrwJAimNgDPTx5ONCM3ARc4cLb8H2PASdHqCW+DhlaJfQGuHvb8c
+         vAUTTCv90XZsgiB7o4n1fJOq6dMl6m/aG5tNoIfLQ801MD2CQDrFrOJ7vj7cm0UvFo9O
+         UhFE5s8FCayQE0C9yniv0rGqv3pYlQqn6eRY3xZgUaF/QW/hlI+Y53aDKvrhK0aSTNDZ
+         uZ8E0FXUlKSoxDXx/WL09bOa4p5YvNebVUgWeb8B0XIl/NwEbl+CNJTHwhbYhCwdu0f1
+         nO7g==
+X-Gm-Message-State: AOAM532JS81VF1fq52WznJv7k7NUegqJOyIg5B00EaTEYMcSJM/sPRMO
+        DzXlNNdvJgwkYzYjErG4AhMHezUiCjw=
+X-Google-Smtp-Source: ABdhPJzppTWi5yEHalB+rNJMPVioAq9SccBMvdYsdX8FNTLGzo/GrS/HIHUkNFmTeqRx8Q+0/RbkgQ==
+X-Received: by 2002:a1c:6a14:: with SMTP id f20mr4181957wmc.81.1600170299495;
+        Tue, 15 Sep 2020 04:44:59 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id a17sm27983502wra.24.2020.09.15.04.59.04
+        by smtp.gmail.com with ESMTPSA id b18sm26970403wrn.21.2020.09.15.04.44.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2020 04:59:04 -0700 (PDT)
-Date:   Tue, 15 Sep 2020 11:59:03 +0000
+        Tue, 15 Sep 2020 04:44:59 -0700 (PDT)
+Date:   Tue, 15 Sep 2020 11:44:57 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com,
         Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nudasnev@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH RFC v1 13/18] asm-generic/hyperv: introduce hv_device_id
- and auxiliary structures
-Message-ID: <20200915115903.yxrj6ay4pvcn42vz@liuwe-devbox-debian-v2>
-References: <20200914112802.80611-1-wei.liu@kernel.org>
- <20200914115928.83184-5-wei.liu@kernel.org>
- <87k0wvjnmc.fsf@vitty.brq.redhat.com>
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Hyper-V fixes for 5.9-rc6
+Message-ID: <20200915114457.tozhtbxojblcnyow@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k0wvjnmc.fsf@vitty.brq.redhat.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 01:16:59PM +0200, Vitaly Kuznetsov wrote:
-[...]
-> > +union hv_device_id {
-> > +	u64 as_uint64;
-> > +
-> > +	struct {
-> > +		u64 :62;
-> > +		u64 device_type:2;
-> > +	};
-> > +
-> > +	// HV_DEVICE_TYPE_LOGICAL
-> 
-> Nit: please no '//' comments.
-> 
+Hi Linus
 
-Fixed. Thanks.
+Please pull the following changes since commit b46b4a8a57c377b72a98c7930a9f6969d2d4784e:
 
-Wei.
+  hv_utils: drain the timesync packets on onchannelcallback (2020-08-24 14:49:04 +0000)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+
+for you to fetch changes up to 911e1987efc8f3e6445955fbae7f54b428b92bd3:
+
+  Drivers: hv: vmbus: Add timeout to vmbus_wait_for_unload (2020-09-14 11:42:33 +0000)
+
+----------------------------------------------------------------
+hyperv-fixes for 5.9-rc6
+
+  - Two patches from Michael and Dexuan to fix vmbus hanging issues
+
+----------------------------------------------------------------
+Dexuan Cui (1):
+      Drivers: hv: vmbus: hibernation: do not hang forever in vmbus_bus_resume()
+
+Michael Kelley (1):
+      Drivers: hv: vmbus: Add timeout to vmbus_wait_for_unload
+
+ drivers/hv/channel_mgmt.c | 7 +++++--
+ drivers/hv/vmbus_drv.c    | 9 +++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
