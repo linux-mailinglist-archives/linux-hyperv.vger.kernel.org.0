@@ -2,202 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EE3326A318
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Sep 2020 12:27:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D09126A32E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Sep 2020 12:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbgIOK1Z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 15 Sep 2020 06:27:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54898 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726102AbgIOK1X (ORCPT
+        id S1726153AbgIOKcK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 15 Sep 2020 06:32:10 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34369 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgIOKcI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 15 Sep 2020 06:27:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600165641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fkoLRj4CpMUCFaAU/c0cpXEpa6XQZl3hQi3pkjeuyww=;
-        b=N4ta0p4905FLUxM52TPf34cmfw5NFMR/Kgyk6rLeTVuM3cgkYkOlIHppH4FfugeV4fNITP
-        y+g6x/f1JTBC53Nq82+4lwW7Cs2fkhVIGkdATbud7JgKSJRlGOKap5HEDTNTH/qh5JupVP
-        gP8frDOvAP4uKPjgH8FNqwR72Cgo1TI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-445-3RwYVLyyMn-WiGKp1QqlXg-1; Tue, 15 Sep 2020 06:27:19 -0400
-X-MC-Unique: 3RwYVLyyMn-WiGKp1QqlXg-1
-Received: by mail-wr1-f71.google.com with SMTP id x15so1049573wrm.7
-        for <linux-hyperv@vger.kernel.org>; Tue, 15 Sep 2020 03:27:19 -0700 (PDT)
+        Tue, 15 Sep 2020 06:32:08 -0400
+Received: by mail-wm1-f67.google.com with SMTP id l15so7777511wmh.1;
+        Tue, 15 Sep 2020 03:32:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=fkoLRj4CpMUCFaAU/c0cpXEpa6XQZl3hQi3pkjeuyww=;
-        b=HqUs06IoadeFSyxiu/fmlhPxpdaEsgXXDf3I4gLdqtPt7fW+yOoo+A/G0jfb3nnH8M
-         vyH8qasK/EkHgNwnxOZI5VehiGR//SuNMvaVmseiMMMxxQArD4qJJg0InSYXs67E3pEW
-         eYDdm9Er9kDaT/rAZH42FNnUaSwi919otZcMybgadk9orJ2c+B2Ezl0Xhhdl346W1XyQ
-         aqia0hWTG2Kg8533bgoH7PzvMVYsJtNEJW90nB8AKoNkGNgHqGk5bui7OGyq9Ynhj/Mz
-         ljRbWuNxs3xIEwWtAJGWysFB7oTwkJFoImTu/EnfC3i2Cx+vZ8DBqyI74qFZ818fjWQd
-         tbwg==
-X-Gm-Message-State: AOAM5322rw7AVSGY0g+h651gLpt7av9yoH9mIupeYgNQv5bHdcFiH3hL
-        vLcYw7wnQCYKrv3a+6tpIdGHKPEIiThFUV0oqDeeOzgzjKNQH71Gh1vmSREmqw7y1fZ9p0FCFa+
-        xwDaQdzjfGjLMzMlcj9GjV8OS
-X-Received: by 2002:a1c:7c1a:: with SMTP id x26mr4181804wmc.112.1600165638453;
-        Tue, 15 Sep 2020 03:27:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwV7+MNnmdJ7LoABeyhT5kZ24BSMQZtr2CvPEQVPzv2SqkmoR19M8GCrVTONoAPOxgeK7xVNw==
-X-Received: by 2002:a1c:7c1a:: with SMTP id x26mr4181777wmc.112.1600165638158;
-        Tue, 15 Sep 2020 03:27:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id z15sm25217526wrv.94.2020.09.15.03.27.16
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Iu1a051qw6glF2gbjBYkACqFqsFXF3vFbvUgHvXqm8s=;
+        b=CGGuXF2dk9T5CRX54TmyufVE21PuvHkBHin9OL2JKqc1jZ8b1W6QMvKNijTMKIp2Mn
+         71dZSRdkGMTkyWmGDpeRJvSmyHJiuRElIqxThKWDBkgluQEo167sggteVyIjD7kgITg+
+         m0EyRMSWx1HuATDcp0KdOWrXxNA3hIY1G+z0TfTSsni9Y1Zjd/79hdUiIDuN7cIVocEJ
+         K+Dhf5+X3/kc1iUxio/CS2x5rR7pCjAUaK7nCxAhwzBK7kqGZjwV/AhyECXoTc8KpiuB
+         LH5Rwj+iLAHNJPL+ijFVzUvSvWq/ScadzrdaQnT4L4LhVoIJXyqsgRtNSyqopde6a6yF
+         YwTQ==
+X-Gm-Message-State: AOAM532sZuq+SvE+tMCSCq/ygcpQo0E+AAsl+cDrMf7UXHW77JDa4sX6
+        vp2ae1hjzwfLuKv9GCvH5cM=
+X-Google-Smtp-Source: ABdhPJxV04RkXjfvibgWeB04D5pYNW6Px4h9t4Qs58VtzvxsijiahR4fe4QBLtC6jloVWYpUOnhgdA==
+X-Received: by 2002:a1c:7c01:: with SMTP id x1mr3800243wmc.57.1600165926455;
+        Tue, 15 Sep 2020 03:32:06 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id n21sm24208316wmi.21.2020.09.15.03.32.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2020 03:27:17 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc:     virtualization@lists.linux-foundation.org,
+        Tue, 15 Sep 2020 03:32:06 -0700 (PDT)
+Date:   Tue, 15 Sep 2020 10:32:04 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
         Linux Kernel List <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
         Vineeth Pillai <viremana@linux.microsoft.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nudasnev@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lillian Grassin-Drake <ligrassi@microsoft.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        "open list\:GENERIC INCLUDE\/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH RFC v1 07/18] x86/hyperv: extract partition ID from Microsoft Hypervisor if necessary
-In-Reply-To: <20200914112802.80611-8-wei.liu@kernel.org>
-References: <20200914112802.80611-1-wei.liu@kernel.org> <20200914112802.80611-8-wei.liu@kernel.org>
-Date:   Tue, 15 Sep 2020 12:27:16 +0200
-Message-ID: <87y2lbjpx7.fsf@vitty.brq.redhat.com>
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH RFC v1 05/18] clocksource/hyperv: use MSR-based access if
+ running as root
+Message-ID: <20200915103204.53zlqx4jq7z2hpjw@liuwe-devbox-debian-v2>
+References: <20200914112802.80611-1-wei.liu@kernel.org>
+ <20200914112802.80611-6-wei.liu@kernel.org>
+ <874knzl5ab.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874knzl5ab.fsf@vitty.brq.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Wei Liu <wei.liu@kernel.org> writes:
+On Tue, Sep 15, 2020 at 12:10:04PM +0200, Vitaly Kuznetsov wrote:
+> Wei Liu <wei.liu@kernel.org> writes:
+> 
+> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> > ---
+> >  drivers/clocksource/hyperv_timer.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> > index 09aa44cb8a91..fe96082ce85e 100644
+> > --- a/drivers/clocksource/hyperv_timer.c
+> > +++ b/drivers/clocksource/hyperv_timer.c
+> > @@ -426,6 +426,9 @@ static bool __init hv_init_tsc_clocksource(void)
+> >  	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+> >  		return false;
+> >  
+> > +	if (hv_root_partition)
+> > +		return false;
+> > +
+> 
+> Out of pure curiosity,
+> 
+> TSC page clocksource seems to be available to the root partition (as
+> HV_MSR_REFERENCE_TSC_AVAILABLE is set), why don't we use it? (I
+> understand that with TSC scaling support in modern CPUs even migration
+> is a no-issue and we can use raw TSC but this all seems to be
+> independent from root/non-root partition question).
+> 
 
-> We will need the partition ID for executing some hypercalls later.
->
-> Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> Co-Developed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
->  arch/x86/hyperv/hv_init.c         | 26 ++++++++++++++++++++++++++
->  arch/x86/include/asm/mshyperv.h   |  2 ++
->  include/asm-generic/hyperv-tlfs.h |  6 ++++++
->  3 files changed, 34 insertions(+)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index ebba4be4185d..0eec1ed32023 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -30,6 +30,9 @@
->  bool hv_root_partition;
->  EXPORT_SYMBOL_GPL(hv_root_partition);
->  
-> +u64 hv_current_partition_id;
-> +EXPORT_SYMBOL_GPL(hv_current_partition_id);
-> +
->  void *hv_hypercall_pg;
->  EXPORT_SYMBOL_GPL(hv_hypercall_pg);
->  
-> @@ -345,6 +348,26 @@ static struct syscore_ops hv_syscore_ops = {
->  	.resume		= hv_resume,
->  };
->  
-> +void __init hv_get_partition_id(void)
-> +{
-> +	struct hv_get_partition_id *output_page;
-> +	int status;
-> +	unsigned long flags;
-> +
-> +	local_irq_save(flags);
-> +	output_page = *this_cpu_ptr(hyperv_pcpu_output_arg);
-> +	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page) &
-> +		HV_HYPERCALL_RESULT_MASK;
+Yes. It is available to the root partition. An earlier version of this
+patch did use that.  With some major restructuring of the code between
+4.19 and 5.6 (splitting out the clocksource to and getting initialized
+earlier), the old code wouldn't work anymore. 
 
-Nit: in this case status is 'u16', we can define it as such (instead of
-signed int).
+The catch is that the page will have been set up by the hypervisor, so
+in the function we will need to take a different path.  And making that
+work again on 5.8 requires a bit more code churn.
 
-> +	if (status != HV_STATUS_SUCCESS)
-> +		pr_err("Failed to get partition ID: %d\n", status);
-> +	else
-> +		hv_current_partition_id = output_page->partition_id;
-> +	local_irq_restore(flags);
-> +
-> +	/* No point in proceeding if this failed */
-> +	BUG_ON(status != HV_STATUS_SUCCESS);
-> +}
-> +
->  /*
->   * This function is to be invoked early in the boot sequence after the
->   * hypervisor has been detected.
-> @@ -440,6 +463,9 @@ void __init hyperv_init(void)
->  
->  	register_syscore_ops(&hv_syscore_ops);
->  
-> +	if (hv_root_partition)
-> +		hv_get_partition_id();
+Like I said in the cover letter, this is the bare minimum to get things
+going. I try not distract people too much with less important stuff at
+this stage, but making the reference TSC work again is definitely
+something we want to look into in the future.
 
-According to TLFS, partition ID is available when AccessPartitionId
-privilege is granted. I'd suggest we check that instead of
-hv_root_partition (and we can set hv_current_partition_id to something
-like U64_MAX so we know it wasn't acuired). So the BUG_ON condition will
-move here:
+Wei.
 
-        hv_get_partition_id();
-        BUG_ON(hv_root_partition && hv_current_partition_id == U64_MAX);
-
-> +
->  	return;
->  
->  remove_cpuhp_state:
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index f5c62140f28d..4039302e0ae9 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -65,6 +65,8 @@ extern void *hv_hypercall_pg;
->  extern void  __percpu  **hyperv_pcpu_input_arg;
->  extern void  __percpu  **hyperv_pcpu_output_arg;
->  
-> +extern u64 hv_current_partition_id;
-> +
->  static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
->  {
->  	u64 input_address = input ? virt_to_phys(input) : 0;
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index e6903589a82a..87b1a79b19eb 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -141,6 +141,7 @@ struct ms_hyperv_tsc_page {
->  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
->  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX	0x0014
->  #define HVCALL_SEND_IPI_EX			0x0015
-> +#define HVCALL_GET_PARTITION_ID			0x0046
->  #define HVCALL_GET_VP_REGISTERS			0x0050
->  #define HVCALL_SET_VP_REGISTERS			0x0051
->  #define HVCALL_POST_MESSAGE			0x005c
-> @@ -407,6 +408,11 @@ struct hv_tlb_flush_ex {
->  	u64 gva_list[];
->  } __packed;
->  
-> +/* HvGetPartitionId hypercall (output only) */
-> +struct hv_get_partition_id {
-> +	u64 partition_id;
-> +} __packed;
-> +
->  /* HvRetargetDeviceInterrupt hypercall */
->  union hv_msi_entry {
->  	u64 as_uint64;
-
--- 
-Vitaly
-
+> >  	hv_read_reference_counter = read_hv_clock_tsc;
+> >  	phys_addr = virt_to_phys(hv_get_tsc_page());
+> 
+> -- 
+> Vitaly
+> 
