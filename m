@@ -2,164 +2,243 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 171A226935D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Sep 2020 19:31:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 992D4269BC5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Sep 2020 04:07:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgINRal (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Sep 2020 13:30:41 -0400
-Received: from mail-bn8nam12on2092.outbound.protection.outlook.com ([40.107.237.92]:45504
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726250AbgINR3Q (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Sep 2020 13:29:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=if7VTnrUWwiE2n/cY3JgGagft7RrVld+sqZSlN95privyzBMIJMCB10XqyKK7F2WrwA/Ix7VDa/YQgzPX9Qf8x+oLdXalxTqCCwy/Ld38VMBUouiNuoxtYHAMYMNDh3GSNhHum+J6mkXuPAgrEllf9ROZAPcwWzdYBWZDV9knwyS7SHIHmdihtPlg1sTNODuoMjIax6eitOl6ug0mgX5I0p8G1vNl5x1nil9ChmDWPnj2ri+wpkOe0yTuGcmCDgKdxGauDXI9MCyjSPe5cbC+nrdptDVIi38BDoSH30g07rhUhgd6br+IcaVHUb1xZ8q/eoVTDrxE2PAm9Kv0BKkFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZGyMofrWd/RuvOSgAUGffYYdhYlUnHJVjBHjFenv6XE=;
- b=KP9Dspmp7TCd4E7sb0fHBGfN5Zk5jA39bjk45yvD4dbtM8FM0WJC885XlYelE/Xtk9+WabWbSyny9zzuEx6LOYt+DU8IiAtPYOL/NJDqa5x7NRy4AuZFNMFLLRDmxqwbqsIs/EM0nE8Ofcdt9sFTCx/7phiUzuldQkAQo+qg10ngoyw/k2GAmAWUw9ArcYBGBj/HLXSD8tbgr7kUuB1XLztHYf76xsY6+Rvqsry7PzLO6t392xrEBh+50vxe5iy1WxWPklNT0/MBKK1f5n+OkqCw8bacsccGsUMerwCR/gCE740HmIByNWJBNXDcp16vEsL77uynqVDHsela9fWncw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZGyMofrWd/RuvOSgAUGffYYdhYlUnHJVjBHjFenv6XE=;
- b=gRHWPDKTDfP8Oi/Ps2CyLKESwivxiZ+JL8sxtyPfhw6REE977mC6Q/eOgBwEesJWUPQWU+37Ep1fpugeS/+We+FKSjnMtNQKxTvMjuktrHPCi4u2ORvPmom0VZExMZJW+3R8fEXfaL502/R9r07QQshIYT4MtwsuCXKGixvywaY=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0970.namprd21.prod.outlook.com (2603:10b6:302:4::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.6; Mon, 14 Sep
- 2020 17:29:12 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1%4]) with mapi id 15.20.3412.001; Mon, 14 Sep 2020
- 17:29:11 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>
-Subject: RE: [PATCH v7 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Thread-Topic: [PATCH v7 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Thread-Index: AQHWhTK4CcuAC1huL0WTSe45bNSLyqldtpaQgACpd4CACg3pMA==
-Date:   Mon, 14 Sep 2020 17:29:11 +0000
-Message-ID: <MW2PR2101MB1052FD464D63F86B4DD1BE7BD7230@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200907161920.71460-1-parri.andrea@gmail.com>
- <20200907161920.71460-2-parri.andrea@gmail.com>
- <MW2PR2101MB1052338B4D3B7020A2191EB7D7280@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <20200908075216.GA5638@andrea>
-In-Reply-To: <20200908075216.GA5638@andrea>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-14T17:29:10Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c639015d-7cd4-4652-9e49-ebf9b695db6e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 98425044-fd5d-4309-6c00-08d858d3b1f2
-x-ms-traffictypediagnostic: MW2PR2101MB0970:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB0970EE7CF937DC31B3E7F660D7230@MW2PR2101MB0970.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VEnLgmZ44tYa2NoodUfTqvMNvsqR+J3u5PkQ01WWjIkMFDexD3OW2e+WR6zGVIA5AQ+IJQBDI2pGqmCTkh54ewX2APJbE/7VLZsPjLk/ExjOkghcwRv57zGWyd1Ps3WM50Y02CrXZLAHRijHvZP4UnkhfL5Kc9k/lqD3lkwXZhW20ja4kFqz8f3LH20+T3OIBrXeVerEAkI3wafb/IecWH4akIOlDjT2ZaGzDWjBLaHQgVegSl91JigHExIHFWuMhieXEzrSp8x5Mv00YIPRWIWoWmU/v4rEqVXOLhJX85FV6Lif5GhO4g9CP88Amt92cNAnxSPLQalix3qF56Jh9rFoEDj0tv42LqzZrw72RfxTZ3Qz09xoS4aP9mp9yAAB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(396003)(346002)(39860400002)(136003)(55016002)(83380400001)(186003)(82960400001)(107886003)(6506007)(66446008)(66946007)(82950400001)(6916009)(66476007)(7696005)(66556008)(86362001)(64756008)(76116006)(8676002)(9686003)(478600001)(8936002)(26005)(52536014)(316002)(10290500003)(2906002)(71200400001)(5660300002)(4326008)(8990500004)(54906003)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: OhWno/CKG5gHXWsnXee6k2rNA/0HpHVfzuFLOpC4hCZsAq9/gnOm1PriofxodN0LBvOegGOXFXqH6Rb8Iwi2/cgwmSDoGy2CISqzJbC38wl/VYtxhmGxES/2QyzC53f1N0Neg26BJfvEIFUXuXVa+XajdifsEoa0tOuFCelSWixhrKZFISwklhLm56v1JsCDUZS9mEA13OkpDdRquTJyvUDR1ITbaHqMxj+O7sNfm8wINxyZYtsKS9949DuJvmMHUAhZwtT/lNpV/RHEIMh830Iw4ldYFRK7yyuaofKLoqaZikVouBC6WRnFrw/bJbezZRWfABb/0gh4e/9+3iViXKihSr1TNo4KvMOZ51zVClqxHtscO8ePxvK5US9NB+3tedI/ttbxNwYX+FMY64GhNecbvA1K9Zk4NLVywvFFBiU6YrV5HwKh+Q95hs1z8LalkjAZkMmPbCll4DbAoQF3bf/SpvEhe4t4b9+6G+C3BGVt2RsQPvcSRygpYzOc+iR4UDV35Ugy5sd+46Aq7AteYsGS/ywS4zAy5Lnc1GXWeYjQr9XuR0OVzHchW6AMLffHLNmLGMR6My+g0F+pSLFtsVUCCVJzryi+aaeKGNSPU+0utY4y7C9Zlmrt87yLxpMTkdknBi7jywm1j7I+CMFv6g==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726035AbgIOCHZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Sep 2020 22:07:25 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:54597 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726019AbgIOCHZ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 14 Sep 2020 22:07:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U9-Pd4L_1600135638;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U9-Pd4L_1600135638)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 15 Sep 2020 10:07:18 +0800
+Date:   Tue, 15 Sep 2020 10:07:18 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2 1/7] kernel/resource: make
+ release_mem_region_adjustable() never fail
+Message-ID: <20200915020718.GB2007@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200908201012.44168-1-david@redhat.com>
+ <20200908201012.44168-2-david@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98425044-fd5d-4309-6c00-08d858d3b1f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Sep 2020 17:29:11.7624
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /DT2RxAcByQATLTX61vvjeCvOJDLQA3HkOEpcjH6tbj+/KpDy+FOkOXATWrKYBa90xrihE1x6hhUwpTgerk2W58160mkhuaWdW3szoW0hi4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0970
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908201012.44168-2-david@redhat.com>
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com> Sent: Tuesday, September 8, 202=
-0 12:54 AM
->=20
-> > > @@ -300,6 +303,22 @@ int hv_ringbuffer_write(struct vmbus_channel *ch=
-annel,
-> > >  						     kv_list[i].iov_len);
-> > >  	}
-> > >
-> > > +	/*
-> > > +	 * Allocate the request ID after the data has been copied into the
-> > > +	 * ring buffer.  Once this request ID is allocated, the completion
-> > > +	 * path could find the data and free it.
-> > > +	 */
-> > > +
-> > > +	if (desc->flags =3D=3D VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED)=
- {
-> > > +		rqst_id =3D vmbus_next_request_id(&channel->requestor, requestid);
-> > > +		if (rqst_id =3D=3D VMBUS_RQST_ERROR) {
-> > > +			pr_err("No request id available\n");
-> > > +			return -EAGAIN;
-> > > +		}
-> > > +	}
-> > > +	desc =3D hv_get_ring_buffer(outring_info) + old_write;
-> > > +	desc->trans_id =3D (rqst_id =3D=3D VMBUS_NO_RQSTOR) ? requestid : r=
-qst_id;
-> > > +
-> >
-> > This is a nit, but the above would be clearer to me if written like thi=
-s:
-> >
-> > 	flags =3D desc->flags;
-> > 	if (flags =3D=3D VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED) {
-> > 		rqst_id =3D vmbus_next_request_id(&channel->requestor, requestid);
-> > 		if (rqst_id =3D=3D VMBUS_RQST_ERROR) {
-> > 			pr_err("No request id available\n");
-> > 			return -EAGAIN;
-> > 		}
-> > 	} else {
-> > 		rqst_id =3D requestid;
-> > 	}
-> > 	desc =3D hv_get_ring_buffer(outring_info) + old_write;
-> > 	desc->trans_id =3D rqst_id;
-> >
-> > The value of the flags field controls what will be used as the value fo=
-r the
-> > rqst_id.  Having another test to see which value will be used as the tr=
-ans_id
-> > somehow feels a bit redundant.  And then rqst_id doesn't have to be ini=
-tialized.
->=20
-> Agreed, will apply in the next version.
->=20
+On Tue, Sep 08, 2020 at 10:10:06PM +0200, David Hildenbrand wrote:
+>Let's make sure splitting a resource on memory hotunplug will never fail.
+>This will become more relevant once we merge selected System RAM
+>resources - then, we'll trigger that case more often on memory hotunplug.
+>
+>In general, this function is already unlikely to fail. When we remove
+>memory, we free up quite a lot of metadata (memmap, page tables, memory
+>block device, etc.). The only reason it could really fail would be when
+>injecting allocation errors.
+>
+>All other error cases inside release_mem_region_adjustable() seem to be
+>sanity checks if the function would be abused in different context -
+>let's add WARN_ON_ONCE() in these cases so we can catch them.
+>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: Dan Williams <dan.j.williams@intel.com>
+>Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>Cc: Kees Cook <keescook@chromium.org>
+>Cc: Ard Biesheuvel <ardb@kernel.org>
+>Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Wei Yang <richardw.yang@linux.intel.com>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
+>---
+> include/linux/ioport.h |  4 ++--
+> kernel/resource.c      | 49 ++++++++++++++++++++++++------------------
+> mm/memory_hotplug.c    | 22 +------------------
+> 3 files changed, 31 insertions(+), 44 deletions(-)
+>
+>diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>index 6c2b06fe8beb7..52a91f5fa1a36 100644
+>--- a/include/linux/ioport.h
+>+++ b/include/linux/ioport.h
+>@@ -248,8 +248,8 @@ extern struct resource * __request_region(struct resource *,
+> extern void __release_region(struct resource *, resource_size_t,
+> 				resource_size_t);
+> #ifdef CONFIG_MEMORY_HOTREMOVE
+>-extern int release_mem_region_adjustable(struct resource *, resource_size_t,
+>-				resource_size_t);
+>+extern void release_mem_region_adjustable(struct resource *, resource_size_t,
+>+					  resource_size_t);
+> #endif
+> 
+> /* Wrappers for managed devices */
+>diff --git a/kernel/resource.c b/kernel/resource.c
+>index f1175ce93a1d5..36b3552210120 100644
+>--- a/kernel/resource.c
+>+++ b/kernel/resource.c
+>@@ -1258,21 +1258,28 @@ EXPORT_SYMBOL(__release_region);
+>  *   assumes that all children remain in the lower address entry for
+>  *   simplicity.  Enhance this logic when necessary.
+>  */
+>-int release_mem_region_adjustable(struct resource *parent,
+>-				  resource_size_t start, resource_size_t size)
+>+void release_mem_region_adjustable(struct resource *parent,
+>+				   resource_size_t start, resource_size_t size)
+> {
+>+	struct resource *new_res = NULL;
+>+	bool alloc_nofail = false;
+> 	struct resource **p;
+> 	struct resource *res;
+>-	struct resource *new_res;
+> 	resource_size_t end;
+>-	int ret = -EINVAL;
+> 
+> 	end = start + size - 1;
+>-	if ((start < parent->start) || (end > parent->end))
+>-		return ret;
+>+	if (WARN_ON_ONCE((start < parent->start) || (end > parent->end)))
+>+		return;
+> 
+>-	/* The alloc_resource() result gets checked later */
+>-	new_res = alloc_resource(GFP_KERNEL);
+>+	/*
+>+	 * We free up quite a lot of memory on memory hotunplug (esp., memap),
+>+	 * just before releasing the region. This is highly unlikely to
+>+	 * fail - let's play save and make it never fail as the caller cannot
+>+	 * perform any error handling (e.g., trying to re-add memory will fail
+>+	 * similarly).
+>+	 */
+>+retry:
+>+	new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
+> 
 
-In an offline conversation, Andrea has pointed out that my proposed changes
-don't work.  After a second look, I'll agreed that Andrea's code is the bes=
-t that
-can be done, so my comments can be ignored.
+It looks like a bold change, while I don't find a reason to object it.
 
-Michael
+> 	p = &parent->child;
+> 	write_lock(&resource_lock);
+>@@ -1298,7 +1305,6 @@ int release_mem_region_adjustable(struct resource *parent,
+> 		 * so if we are dealing with them, let us just back off here.
+> 		 */
+> 		if (!(res->flags & IORESOURCE_SYSRAM)) {
+>-			ret = 0;
+> 			break;
+> 		}
+> 
+>@@ -1315,20 +1321,23 @@ int release_mem_region_adjustable(struct resource *parent,
+> 			/* free the whole entry */
+> 			*p = res->sibling;
+> 			free_resource(res);
+>-			ret = 0;
+> 		} else if (res->start == start && res->end != end) {
+> 			/* adjust the start */
+>-			ret = __adjust_resource(res, end + 1,
+>-						res->end - end);
+>+			WARN_ON_ONCE(__adjust_resource(res, end + 1,
+>+						       res->end - end));
+> 		} else if (res->start != start && res->end == end) {
+> 			/* adjust the end */
+>-			ret = __adjust_resource(res, res->start,
+>-						start - res->start);
+>+			WARN_ON_ONCE(__adjust_resource(res, res->start,
+>+						       start - res->start));
+> 		} else {
+>-			/* split into two entries */
+>+			/* split into two entries - we need a new resource */
+> 			if (!new_res) {
+>-				ret = -ENOMEM;
+>-				break;
+>+				new_res = alloc_resource(GFP_ATOMIC);
+>+				if (!new_res) {
+>+					alloc_nofail = true;
+>+					write_unlock(&resource_lock);
+>+					goto retry;
+>+				}
+> 			}
+> 			new_res->name = res->name;
+> 			new_res->start = end + 1;
+>@@ -1339,9 +1348,8 @@ int release_mem_region_adjustable(struct resource *parent,
+> 			new_res->sibling = res->sibling;
+> 			new_res->child = NULL;
+> 
+>-			ret = __adjust_resource(res, res->start,
+>-						start - res->start);
+>-			if (ret)
+>+			if (WARN_ON_ONCE(__adjust_resource(res, res->start,
+>+							   start - res->start)))
+> 				break;
+> 			res->sibling = new_res;
+> 			new_res = NULL;
+>@@ -1352,7 +1360,6 @@ int release_mem_region_adjustable(struct resource *parent,
+> 
+> 	write_unlock(&resource_lock);
+> 	free_resource(new_res);
+>-	return ret;
+> }
+> #endif	/* CONFIG_MEMORY_HOTREMOVE */
+> 
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index baded53b9ff92..4c47b68a9f4b5 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -1724,26 +1724,6 @@ void try_offline_node(int nid)
+> }
+> EXPORT_SYMBOL(try_offline_node);
+> 
+>-static void __release_memory_resource(resource_size_t start,
+>-				      resource_size_t size)
+>-{
+>-	int ret;
+>-
+>-	/*
+>-	 * When removing memory in the same granularity as it was added,
+>-	 * this function never fails. It might only fail if resources
+>-	 * have to be adjusted or split. We'll ignore the error, as
+>-	 * removing of memory cannot fail.
+>-	 */
+>-	ret = release_mem_region_adjustable(&iomem_resource, start, size);
+>-	if (ret) {
+>-		resource_size_t endres = start + size - 1;
+>-
+>-		pr_warn("Unable to release resource <%pa-%pa> (%d)\n",
+>-			&start, &endres, ret);
+>-	}
+>-}
+>-
+> static int __ref try_remove_memory(int nid, u64 start, u64 size)
+> {
+> 	int rc = 0;
+>@@ -1777,7 +1757,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+> 		memblock_remove(start, size);
+> 	}
+> 
+>-	__release_memory_resource(start, size);
+>+	release_mem_region_adjustable(&iomem_resource, start, size);
+> 
+> 	try_offline_node(nid);
+> 
+>-- 
+>2.26.2
+
+-- 
+Wei Yang
+Help you, Help me
