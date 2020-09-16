@@ -2,110 +2,149 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AA9326BB3A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Sep 2020 06:05:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E80F526BE02
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Sep 2020 09:31:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbgIPEFT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 16 Sep 2020 00:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgIPEFS (ORCPT
+        id S1726423AbgIPHbG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 16 Sep 2020 03:31:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30765 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726422AbgIPHa4 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 16 Sep 2020 00:05:18 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47203C06174A;
-        Tue, 15 Sep 2020 21:05:17 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d9so3201413pfd.3;
-        Tue, 15 Sep 2020 21:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=J5hBLNAeKi7sYZ3kBhjD3Odx80a8hnn7AnndRx+Ra8w=;
-        b=JI6cl06/ZTc9Eqe4z9EIUEoq8cN7ktx+bhfqFUaPKb9qD4Ftz8EmjiAa+6pJH5y3kl
-         ztEPpr9a1qYIM+MxU7OIaCWSrLAn6Hzepv3g/YbrWuHmSjKpLd8Rt5rUt6eMBjsdNONV
-         dLbulSM55aHScKGon+ECfE7K9eZe0Z73KvnepSSaL+TZGp4KbsU2uUrFbiPpBw6rfAS0
-         mBg+hUuCgaQ47Ff1pw2L6aYIG/Xo2k9pz8Ewjkt5WcQlOrzyfv/ZnD9WD/WR1z/sGosJ
-         hVEa2uaTzJs7A5PM3RoUzHdPa1FTViY0ptVCFcwXRpX0m5e7xyVcYF1DxxC7qCr5SOli
-         iwBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J5hBLNAeKi7sYZ3kBhjD3Odx80a8hnn7AnndRx+Ra8w=;
-        b=C5lPEGj0N7h+oaoNMX0HM4fqBiZj5axM/4nucMTqxslpcufKKQhGmd1+l7WlVyjWeN
-         igBORQJAZS1PrPDVw0QvZceb4Z/160OPwDTHx5T7WCcI0d+BHXckX4HRNDvyYB3lnXqm
-         jWzomRh2P6UdHC9O0tMtombzEYlmvenCFF0i4kKDB/QK52zrWAWtXMzQxDjNyLJGS0c0
-         jWyhSKT7Y2LPyQDCGi02LZ3D9rN8Ld8SdzDcXeviIiwguti+6ejfL0Xg88ef4APpUB4o
-         PchgbXgDHcgWIO7Yr0QZzTAfzLOn3Sf8hK2fHpD2TNKkG13mI59+PzUR5uqIFl8dJiAt
-         jAkQ==
-X-Gm-Message-State: AOAM532ZUPfawu5z+HRj/yP/viG/nl/po4EAawnt7d274/KDd/kJEk/O
-        bI+HsFG+dWD6YAC/2yKBv2o=
-X-Google-Smtp-Source: ABdhPJwuBQJfISTIpXKH+vrbO4W1krC4th+wfsmwkF0zsNhfMBFZefvLS0SVIQPZr+pLCQ+S2HXWGw==
-X-Received: by 2002:a63:521c:: with SMTP id g28mr10130802pgb.43.1600229114515;
-        Tue, 15 Sep 2020 21:05:14 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id d25sm7586887pgl.23.2020.09.15.21.05.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2020 21:05:13 -0700 (PDT)
-Date:   Tue, 15 Sep 2020 21:05:11 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>, will@kernel.org,
-        ardb@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
-        mark.rutland@arm.com, maz@kernel.org
-Subject: Re: [PATCH v4 08/11] Input: hyperv-keyboard: Use VMBUS_RING_SIZE()
- for ringbuffer sizes
-Message-ID: <20200916040511.GH1681290@dtor-ws>
-References: <20200916034817.30282-1-boqun.feng@gmail.com>
- <20200916034817.30282-9-boqun.feng@gmail.com>
+        Wed, 16 Sep 2020 03:30:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600241455;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wF/hDQsxWFeJttqotpNYCePCKYRYUJaa1tQ1ZRR0EAY=;
+        b=OcGt8lwcuPm9huSmn3o7TZH8l5FGWvD4OMAV3/zxWIhKCQIizQnEWuFXG+sgKjs479stwC
+        7xJsyZPFAF68ZvFKfRZaQlq+SiSPqbySUk6SNWcVqyo0X6jADcq26k53BnbdX1JFml3lo5
+        SPoulwUt1mGb6xJjuisa8hZ9ytqmMCE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-8Xm80AAoPHqeed1mdsZ8Iw-1; Wed, 16 Sep 2020 03:30:51 -0400
+X-MC-Unique: 8Xm80AAoPHqeed1mdsZ8Iw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 795B585C733;
+        Wed, 16 Sep 2020 07:30:49 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-190.ams2.redhat.com [10.36.113.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D49751000239;
+        Wed, 16 Sep 2020 07:30:42 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+Subject: [PATCH] kernel/resource: make iomem_resource implicit in release_mem_region_adjustable()
+Date:   Wed, 16 Sep 2020 09:30:41 +0200
+Message-Id: <20200916073041.10355-1-david@redhat.com>
+In-Reply-To: <20200911103459.10306-1-david@redhat.com>
+References: <20200911103459.10306-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200916034817.30282-9-boqun.feng@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-hyperv-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 11:48:14AM +0800, Boqun Feng wrote:
-> For a Hyper-V vmbus, the size of the ringbuffer has two requirements:
-> 
-> 1)	it has to take one PAGE_SIZE for the header
-> 
-> 2)	it has to be PAGE_SIZE aligned so that double-mapping can work
-> 
-> VMBUS_RING_SIZE() could calculate a correct ringbuffer size which
-> fulfills both requirements, therefore use it to make sure vmbus work
-> when PAGE_SIZE != HV_HYP_PAGE_SIZE (4K).
-> 
-> Note that since the argument for VMBUS_RING_SIZE() is the size of
-> payload (data part), so it will be minus 4k (the size of header when
-> PAGE_SIZE = 4k) than the original value to keep the ringbuffer total
-> size unchanged when PAGE_SIZE = 4k.
-> 
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Michael Kelley <mikelley@microsoft.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+"mem" in the name already indicates the root, similar to
+release_mem_region() and devm_request_mem_region(). Make it implicit.
+The only single caller always passes iomem_resource, other parents are
+not applicable.
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Suggested-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
 
-Please feel free to merge through whatever tree the rest of the patches
-will go.
+Based on next-20200915. Follow up on
+	"[PATCH v4 0/8] selective merging of system ram resources" [1]
+That's in next-20200915. As noted during review of v2 by Wei [2].
 
-Thanks.
+[1] https://lkml.kernel.org/r/20200911103459.10306-1-david@redhat.com
+[2] https://lkml.kernel.org/r/20200915021012.GC2007@L-31X9LVDL-1304.local
 
+---
+ include/linux/ioport.h | 3 +--
+ kernel/resource.c      | 5 ++---
+ mm/memory_hotplug.c    | 2 +-
+ 3 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 7e61389dcb01..5135d4b86cd6 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -251,8 +251,7 @@ extern struct resource * __request_region(struct resource *,
+ extern void __release_region(struct resource *, resource_size_t,
+ 				resource_size_t);
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+-extern void release_mem_region_adjustable(struct resource *, resource_size_t,
+-					  resource_size_t);
++extern void release_mem_region_adjustable(resource_size_t, resource_size_t);
+ #endif
+ #ifdef CONFIG_MEMORY_HOTPLUG
+ extern void merge_system_ram_resource(struct resource *res);
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 7a91b935f4c2..ca2a666e4317 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1240,7 +1240,6 @@ EXPORT_SYMBOL(__release_region);
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+ /**
+  * release_mem_region_adjustable - release a previously reserved memory region
+- * @parent: parent resource descriptor
+  * @start: resource start address
+  * @size: resource region size
+  *
+@@ -1258,9 +1257,9 @@ EXPORT_SYMBOL(__release_region);
+  *   assumes that all children remain in the lower address entry for
+  *   simplicity.  Enhance this logic when necessary.
+  */
+-void release_mem_region_adjustable(struct resource *parent,
+-				   resource_size_t start, resource_size_t size)
++void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+ {
++	struct resource *parent = &iomem_resource;
+ 	struct resource *new_res = NULL;
+ 	bool alloc_nofail = false;
+ 	struct resource **p;
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 553c718226b3..7c5e4744ac51 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1764,7 +1764,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 		memblock_remove(start, size);
+ 	}
+ 
+-	release_mem_region_adjustable(&iomem_resource, start, size);
++	release_mem_region_adjustable(start, size);
+ 
+ 	try_offline_node(nid);
+ 
 -- 
-Dmitry
+2.26.2
+
