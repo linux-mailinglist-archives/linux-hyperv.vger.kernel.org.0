@@ -2,133 +2,171 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8991026CE6C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Sep 2020 00:13:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 501B426CE9E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Sep 2020 00:23:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbgIPWNL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 16 Sep 2020 18:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48732 "EHLO
+        id S1726582AbgIPWXF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 16 Sep 2020 18:23:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgIPWM7 (ORCPT
+        with ESMTP id S1726426AbgIPWXC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 16 Sep 2020 18:12:59 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on20716.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8a::716])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC00AC061225;
-        Wed, 16 Sep 2020 14:35:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M4BRRiinITmlfbQyIdNfvCDyEdDG/XNWYMPMqb7VbcU/AlxH2TvyypJrrVgeBrdAq4nvntxpoGm5buxLiznSb9euUPUbjg8k7ZZKfBIom+CRAnKvBKzyOCV064ZZAz08gZt4TVl+7IoBaaGaWlNH3pMn0untLZdZ+FnQrJD8yoUXfwemUtKZSnPt8BCbQnS/Ko0qz1gwPHDC0+dAmeEsUYR2lv0CdT9HVUzzJ0FlvS65swGe5vpStNSHnJtECeBdYLVswzB+5Ao504Y9KZUPke5pKr1RZScX0fJpgo4ijshpZOaqz3gTjuu2mm2AoHNPFvjbLvqMv4wHrN+YrsX0og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bHTW9WJ2D2UKkNPTvRPzDcy+ewHUPYevi3aGDo4ukrs=;
- b=Zldvm1eOkCyURa1tzLgzOlVDKvjtINf2/WOyjlsIKPNVCTUGFzZDBb0nClvG83CkzkVww3sphddj5K9lnsyEI02KO3TDXQxK9vJvE9W8TEyZ5P6aSwYRdNSEtm9eFHv6PqD9w9LwnJcR/K8LwOU/+M42FnDeMJnTarGEqmTD39S7Ionoe2bvdg3xAovM/Ya1xNCvE+gvID7ea9Ft2kSbuwa0GoUc/4s3Cc2ZdsyQjnpV9VZWdlUnIxhT8FInEo8I3X4mPYPJqTlBOJ2nspecVXtKaC3LcejpEqhSg1Cmjehns7CVSqb8f1JQrjlew8//R7if0bt3QNjjo+wY9+VIzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bHTW9WJ2D2UKkNPTvRPzDcy+ewHUPYevi3aGDo4ukrs=;
- b=jf/puGxzDzX7MpWQZDm+wHcjivYX47Vr73cjUSPFruxX90o50LrCPQ+H4y08vFjQs0R/3ClGMk9Hn2JVcrWE7QwKda6lyHNj88oKY6jNgsxitCU/k7jBrmU5Q37JXYdsBMerOmJh3YPZtBdCC4WNpGO5TFeVSTZpUAfjXi0BpHk=
-Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
- (2603:10b6:803:51::33) by SN6PR2101MB1854.namprd21.prod.outlook.com
- (2603:10b6:805:9::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.1; Wed, 16 Sep
- 2020 21:34:58 +0000
-Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::b12a:e7a7:640e:8953]) by SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::b12a:e7a7:640e:8953%9]) with mapi id 15.20.3412.003; Wed, 16 Sep 2020
- 21:34:58 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>, vkuznets <vkuznets@redhat.com>
-CC:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Nuno Das Neves <Nuno.Das@microsoft.com>,
-        Lillian Grassin-Drake <Lillian.GrassinDrake@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: RE: [EXTERNAL] Re: [PATCH RFC v1 08/18] x86/hyperv: handling
- hypercall page setup for root
-Thread-Topic: [EXTERNAL] Re: [PATCH RFC v1 08/18] x86/hyperv: handling
- hypercall page setup for root
-Thread-Index: AQHWi0uJDiA8iBMLkEafMqtOkreLY6lpgb0AgAJJU9A=
-Date:   Wed, 16 Sep 2020 21:34:58 +0000
-Message-ID: <SN4PR2101MB0880AAC1B92038C7FDE3496DC0210@SN4PR2101MB0880.namprd21.prod.outlook.com>
-References: <20200914112802.80611-1-wei.liu@kernel.org>
- <20200914112802.80611-9-wei.liu@kernel.org>
- <87v9gfjpoi.fsf@vitty.brq.redhat.com>
- <20200915103710.cqmdvzh5lys4wsqo@liuwe-devbox-debian-v2>
-In-Reply-To: <20200915103710.cqmdvzh5lys4wsqo@liuwe-devbox-debian-v2>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:602:9400:570:6d60:30f5:6f33:54d9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 93eb277c-c9a3-4700-e4de-08d85a885c8e
-x-ms-traffictypediagnostic: SN6PR2101MB1854:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <SN6PR2101MB185462FA4B00539298A1C3A5C0210@SN6PR2101MB1854.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /3OeSaKuZZh/9T7vDlzFEFJ5Ba4ftJyD4rdTihrZ/YdUVKHwK332cI/K4xtss04pElJ/SaGW/OlyA3bTI+0ABGkYo2uibliGd+mXMi6ckCJobAyRj47mO7LRFgg8qGltz+LP0m25clmj68wAqIGp4Ga1ud8ZIVKlxiEDH/3StfApahySGle5P6WOPcmpokg4KpEF5HF+AnXfFvUNztSriorj2d7UXbPu9BdZAu0o0UuGtoiecq3GQctWB7pdCVfW14UhqOb0iqDGYwGk4I3aYITopKuPMlfnS97dSXApQp3KRIjN7oTfKjrMG2w1B0UTxWJM08EVYDiJTDhev7R2jkb8psZ4x2e5FcKLxMw/bDexh6+Hods5HDv8o0zwJ8dG
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR2101MB0880.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(376002)(136003)(366004)(346002)(86362001)(7696005)(5660300002)(4326008)(8936002)(82960400001)(2906002)(82950400001)(8990500004)(55016002)(54906003)(110136005)(7416002)(6506007)(76116006)(33656002)(9686003)(316002)(64756008)(8676002)(66556008)(478600001)(66476007)(10290500003)(71200400001)(4744005)(66446008)(186003)(52536014)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Nq/d/PQsCmkBbyi5Kdkcvdo4g31/5Ag+F1bW6B225MjfAqildb9/X2xKYhGY8aAbdadbRqp4RdDWvT+NuXkUGaSCur66pLkhaVDs+lqIaUTZDerpSqit4JJKx//I5al/8ft1Qlaa4cLhMhvBX4Z8A2aTINXPY5uRQZP+cbRLVzySdauN6xchukxEyakD2Y41fm/+iCAa+3NLmx77bbOhcp604IzpzBLnZZJzRm1G0GYg1ODslYKQrdGBDzaAGeprcVZbfF7ZGN/6K30GmIBYbrXw0vEJK15mE7drD+PqAKQqciVbuGQBgeOS7J3zSvr4/uTueYuFP4Q2PS7pBn2oPhBrXZ789Cn9NdcnIVM2Udu7A/Dgau+s2uVAmIoWFyXhNTiziRuGWg9d4dcVZknk7LyMvOAFrjnIZXeLUeYGLABGSpe25R4q102BLVqc03YY9xS8bvdH1AhPr1813Na9aqyQn7hmPRV74BnhkZsHUKC2/wOBfTboJhN3okLgxn0Lm7ISgf2v3K3eENv7s5v1717eF9AvVqKDcdpYt56dFMr/X8oBPFwW2bdR400WTRe8FsPOfOhEDfpmqygGdzt7XGPCfAyCBqVovnQIrZck+Mxs/Gzoy6CKkD4P9XR48hhNqQ8BDpMdxOObedXAIzBTMw4FuUwpS4UhvgK9lp1HBVFH05S3A9enBq1v8xDdC1xjMDRbTN/z9HMFbYHITWUbwQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 16 Sep 2020 18:23:02 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E36C0698CA;
+        Wed, 16 Sep 2020 14:44:26 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id r9so10037727ioa.2;
+        Wed, 16 Sep 2020 14:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/6p2UL06xRCrtfganU+UNWFu+nueRBEvuh8BmgJZ8II=;
+        b=fTJMcutrq6igd5vYMabKNTl2pV3QLLIVga8eZVWB3Qo8LD5CuAU2xBCagWdvlNfz7Y
+         SdgLDHmtx+cP77RccgrN17Zpod+wgXnVDWU4BWCp8glD8TmR0CgYjIK7sLhk3gCv4jka
+         0gbLLTASvnEGY2kVqdeZEAAj+Xc+ag6xxs2n1cu0ypLrogcOS57JfDYiPaxg0LJA89D3
+         bES/LQ47vgte8onzKDnKVVIsfe4evM0ux9J7ojZJx4ruWYRLDpiMdRs++WmWMiRluaDE
+         RkpwwSpAnZ0yEClbYo3zllxy1Ya+SnHZx3iZ/1TrKJfNpfmg6ZilGkn/hSmOuJJfnWy3
+         zo8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/6p2UL06xRCrtfganU+UNWFu+nueRBEvuh8BmgJZ8II=;
+        b=NmvgBL/tm7ZQFfkp7AtW9keatgjkfW4KrlcBvy459hJnFLLAffwbrB61ju0Sp7az6g
+         T3mSBrb4bpwl7uW6/JXpaehLFdwsCIVLzglq1N5wGPV2SgwRTuuEqRro3zvYtkBQQ8oY
+         XIF+veh2aPGZi5vJQ/kchOsFaX7B0m8aX9WtAmRQ2ciVIHsVGH3HM5pG+AO/pW528bWF
+         LD+U/XZV1mjSgjFX4CjDuL8sDsj8Bk7aARdgSJ/mYuJEc0ByJ7q/aL+2MeX+vRKWZoPd
+         9j53uiUiQuYkg3TObev2ww/gWQPeMbu53aFUGIPVhXRVjhJhrpgaVQb9Yz/vfCZ/MuJM
+         Hs1Q==
+X-Gm-Message-State: AOAM530rCXwvZnEVZpn2i0GF79HkomyxqsJpx93bQbna7ZZWXN0nKcnn
+        zRRTDZ0IJt/zt/JVzv7t4WRCuI1tBk+A4qvBSNN3f5fDDXk=
+X-Google-Smtp-Source: ABdhPJxVIty+Dfq+gHcJafZBfiUeb8mqaNsz4GMGNLyLwU88OT1JilrdN5E6o4aMmGksSrwkrnrtPtD7su/aUhaQfzw=
+X-Received: by 2002:a6b:7a41:: with SMTP id k1mr21469290iop.187.1600292665347;
+ Wed, 16 Sep 2020 14:44:25 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR2101MB0880.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93eb277c-c9a3-4700-e4de-08d85a885c8e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2020 21:34:58.6016
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EHj12QD3KuuoOmb9RGjokM24dSTx+XM9MRKV7qUQYMmYixe6Nc4TNXCEVhbdXiy2Q0b1Zy05nA7UTY7FfI3qVBvsDxZt8ZsU354aKtKd0Tk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1854
+References: <20200916183411.64756-1-david@redhat.com> <20200916183411.64756-2-david@redhat.com>
+In-Reply-To: <20200916183411.64756-2-david@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 16 Sep 2020 14:44:14 -0700
+Message-ID: <CAKgT0UfbnWoPOsaK5H_JtYbQdp-p+ngupO+6sq-_sy8Zetoanw@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/4] mm/page_alloc: convert "report" flag of
+ __free_one_page() to a proper flag
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
->=20
-> On Tue, Sep 15, 2020 at 12:32:29PM +0200, Vitaly Kuznetsov wrote:
-> > Wei Liu <wei.liu@kernel.org> writes:
-> >
-> > > When Linux is running as the root partition, the hypercall page will
-> > > have already been setup by Hyper-V. Copy the content over to the
-> > > allocated page.
-> >
-> > And we can't setup a new hypercall page by writing something different
-> > to HV_X64_MSR_HYPERCALL, right?
-> >
->=20
-> My understanding is that we can't, but Sunil can maybe correct me.
+On Wed, Sep 16, 2020 at 11:34 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> Let's prepare for additional flags and avoid long parameter lists of bools.
+> Follow-up patches will also make use of the flags in __free_pages_ok(),
+> however, I wasn't able to come up with a better name for the type - should
+> be good enough for internal purposes.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/page_alloc.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
+>
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 6b699d273d6e..91cefb8157dd 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -77,6 +77,18 @@
+>  #include "shuffle.h"
+>  #include "page_reporting.h"
+>
+> +/* Free One Page flags: for internal, non-pcp variants of free_pages(). */
+> +typedef int __bitwise fop_t;
+> +
+> +/* No special request */
+> +#define FOP_NONE               ((__force fop_t)0)
+> +
+> +/*
+> + * Skip free page reporting notification after buddy merging (will *not* mark
+> + * the page reported, only skip the notification).
+> + */
+> +#define FOP_SKIP_REPORT_NOTIFY ((__force fop_t)BIT(0))
+> +
+>  /* prevent >1 _updater_ of zone percpu pageset ->high and ->batch fields */
+>  static DEFINE_MUTEX(pcp_batch_high_lock);
+>  #define MIN_PERCPU_PAGELIST_FRACTION   (8)
+> @@ -948,10 +960,9 @@ buddy_merge_likely(unsigned long pfn, unsigned long buddy_pfn,
+>   * -- nyc
+>   */
+>
+> -static inline void __free_one_page(struct page *page,
+> -               unsigned long pfn,
+> -               struct zone *zone, unsigned int order,
+> -               int migratetype, bool report)
+> +static inline void __free_one_page(struct page *page, unsigned long pfn,
+> +                                  struct zone *zone, unsigned int order,
+> +                                  int migratetype, fop_t fop_flags)
+>  {
+>         struct capture_control *capc = task_capc(zone);
+>         unsigned long buddy_pfn;
+> @@ -1038,7 +1049,7 @@ static inline void __free_one_page(struct page *page,
+>                 add_to_free_list(page, zone, order, migratetype);
+>
+>         /* Notify page reporting subsystem of freed page */
+> -       if (report)
+> +       if (!(fop_flags & FOP_SKIP_REPORT_NOTIFY))
+>                 page_reporting_notify_free(order);
+>  }
+>
+> @@ -1368,7 +1379,7 @@ static void free_pcppages_bulk(struct zone *zone, int count,
+>                 if (unlikely(isolated_pageblocks))
+>                         mt = get_pageblock_migratetype(page);
+>
+> -               __free_one_page(page, page_to_pfn(page), zone, 0, mt, true);
+> +               __free_one_page(page, page_to_pfn(page), zone, 0, mt, FOP_NONE);
+>                 trace_mm_page_pcpu_drain(page, 0, mt);
+>         }
+>         spin_unlock(&zone->lock);
+> @@ -1384,7 +1395,7 @@ static void free_one_page(struct zone *zone,
+>                 is_migrate_isolate(migratetype))) {
+>                 migratetype = get_pfnblock_migratetype(page, pfn);
+>         }
+> -       __free_one_page(page, pfn, zone, order, migratetype, true);
+> +       __free_one_page(page, pfn, zone, order, migratetype, FOP_NONE);
+>         spin_unlock(&zone->lock);
+>  }
+>
+> @@ -3277,7 +3288,8 @@ void __putback_isolated_page(struct page *page, unsigned int order, int mt)
+>         lockdep_assert_held(&zone->lock);
+>
+>         /* Return isolated page to tail of freelist. */
+> -       __free_one_page(page, page_to_pfn(page), zone, order, mt, false);
+> +       __free_one_page(page, page_to_pfn(page), zone, order, mt,
+> +                       FOP_SKIP_REPORT_NOTIFY);
+>  }
+>
+>  /*
 
-That is correct. For root partition, the hypervisor has already allocated t=
-he
-hypercall page. The root is required to query the page, map it in its addre=
-ss
-space and wrmsr to enable it. It cannot change the location of the page. Fo=
-r
-guest, it can allocate and assign the hypercall page. This is covered a bit=
- in the
-hypervisor TLFS (section 3.13 in TLFS v6), for the guest side. The root sid=
-e is=20
-not covered there, yet.
-=20
+Seems pretty straight forward. So we are basically flipping the logic
+and replacing !report with FOP_SKIP_REPORT_NOTIFY.
+
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
