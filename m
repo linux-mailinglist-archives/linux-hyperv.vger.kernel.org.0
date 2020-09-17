@@ -2,144 +2,155 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2382626CEC4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Sep 2020 00:31:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1108226D6DB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Sep 2020 10:38:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgIPWbm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 16 Sep 2020 18:31:42 -0400
-Received: from mail-dm6nam12on2134.outbound.protection.outlook.com ([40.107.243.134]:57697
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbgIPWbl (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 16 Sep 2020 18:31:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XHq2kk4IMbnbypMHW+8EfopFhVUova5At7XyEuEQ7Z/ZU3n1riUsuMQ29PqwzRK/aV1pwW0BtdsKFtRCf5LCwsrYQimWZ9NQ3pniryqgcbWJScpuj74WzcnDVORd3mbUdJQSTQwXC+EyTIRtnXzJltgACkesMAs/Uk3Wq+BowPc0/AknLsF4liYz8t4CdVU9wSQh1SgcyuUKB6t4jIfU4445JQypcUjVG2NJT35iwZgM413XfXl1IYbt+e551THYFl0m9RTuW3nN/dNjFunXYeyEiKuPeja1CF8KKg8HRLipsEYUyCf1VOuntrg7shRmXeNdpIhF/hCWb/zApqwlpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=367piMEasM5cbEsXMhz+DffljxGSrLlnMlQvsCu18BA=;
- b=EFmWscdAl3c+c6rZ+iFd4OIvBRiWTTUDcXSoRgI86YznYV5XlaiT0+XIeSbKnx/7BLMK9RR0SlqQzcVOypvJ7uUiMkQxRtHAfBYDd2kNz/IBZZSzXJ6jOquBM1dnB3Qiwbmrz2qMOI1cf/MBkmRnk+2BeCf3zXxv18hd9T5qBuhb9jkJjBsqevLnd+dyXI4bopBqTrWRQKKUUbtfzSt8WTvn0agzQa7o+97ALebMG2T81wfBEihhKSFS5S7zL27OLQWEMNO7FJrYeAIqhR6rJOzIlsLPU/VYB7KUBcrGKaNivSwqKREmmxrAAijX2CFJ2v5b5jUGQSGSHAq79Xyh6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=367piMEasM5cbEsXMhz+DffljxGSrLlnMlQvsCu18BA=;
- b=MzpFLwJ2J6MiRUP8WqsB4sI8oKfjFUdNob7FWeY3KQUbjWuvSVq978AvnO/YTD+F5170jCdfc7YJDWcYPRcWc/jn9RP/nSCCavheJ2ktbiZBCwK3KUgcOCLUI+zND11mgP3sCOHN2rkMb6Oj7TXGIzz1zt+nA4ujdPpIHkn8n/8=
-Received: from DM5PR2101MB0934.namprd21.prod.outlook.com (2603:10b6:4:a5::36)
- by DM5PR21MB0281.namprd21.prod.outlook.com (2603:10b6:3:a7::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.1; Wed, 16 Sep
- 2020 22:31:38 +0000
-Received: from DM5PR2101MB0934.namprd21.prod.outlook.com
- ([fe80::6400:744d:ce9b:499a]) by DM5PR2101MB0934.namprd21.prod.outlook.com
- ([fe80::6400:744d:ce9b:499a%9]) with mapi id 15.20.3370.016; Wed, 16 Sep 2020
- 22:31:38 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v3] hv_netvsc: Add validation for untrusted Hyper-V values
-Thread-Topic: [PATCH v3] hv_netvsc: Add validation for untrusted Hyper-V
- values
-Thread-Index: AQHWjA5xloo3j6wqeUSXUjm/16PeWalr2cNQ
-Date:   Wed, 16 Sep 2020 22:31:38 +0000
-Message-ID: <DM5PR2101MB093495E2FCC02BF1C0291E57CA210@DM5PR2101MB0934.namprd21.prod.outlook.com>
-References: <20200916094727.46615-1-parri.andrea@gmail.com>
-In-Reply-To: <20200916094727.46615-1-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=990a1d83-a6b9-4925-a417-cc704cfc5593;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-16T22:30:11Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [75.100.88.238]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7669b01b-4c3f-40be-00c8-08d85a90471b
-x-ms-traffictypediagnostic: DM5PR21MB0281:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB0281858EECF2C379CA91F92BCA210@DM5PR21MB0281.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bPgRVPuYf6U/jKzeSUnBqaYoEZ4i8Vmr6o+1ca32fWLIlzBzUbjvO4IHKLRwh60P96romTBnzlCgN7uPV6EcGUGrcX001lIqV4nXFFiWR7E+tW6ciQ2XkkOM+PJSaQz3iAQ7D9lALNuqzytnH9Z84RGPQj/P39ZD8G/950NtatxuKrojt3c65HIpZSNQ92HjuGp3bJ110xw1hWZIxeQ13+oc6o8ANyrQOGroZWos/4jGJ7Gmtp2BA47Gv3M6p7nxfc8LRs/OhjApnjXckoJqsmwYKi8YnI0k95PjSObg7IRktak55ltIQCkv4rScHBSOcBH15xLDYvsSWCH6EwOTFzcS4JuhpI4BPUsmEqOiHisqxQe64BTOiaXEbbdeRZ9T
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB0934.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(33656002)(55016002)(4326008)(9686003)(26005)(8990500004)(110136005)(186003)(316002)(66946007)(71200400001)(66476007)(52536014)(54906003)(66446008)(5660300002)(6506007)(76116006)(66556008)(53546011)(82960400001)(82950400001)(83380400001)(64756008)(7696005)(8676002)(86362001)(2906002)(8936002)(10290500003)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: v6E/Bu0EITHzeo6UsfFzCwMkxrLGFkFSF8GTVuQlXNXwn/loybUjJM29bTdps1CvNJ+k4jMsEr77oYATSLUPB6j3mPh6Ff1EH3IZrIhuXo6rD8qs8EO+kk7ghKoEXZ1s4NUjQIW1Ew/gDAYbcfkc/2yKpI71LPC/NCx/F5z/+WNkhF8WmAayXaWfVo88FmoHCivYAj8Cyu4JwMCWb/EJMFMh4v3yq8wqTFVnqS02wnhK3l1BlF7M2Yer71f2TyYrkhByNAl/XPVVqK4FHI5R5HKfO71byZv60cBNvgrzM2uIZqg5oNHXJb8+RoXG12anmGiR7BPVg5gGxqGmI+lYqfTlmJpFKQ6sns0wPG4pVVZ2n3lGPZ5uwARxXmaG3kp9b2ue+6UNs3nAXl/fZQbnNRLZzHKepZxcw2X5QttO/Fba0k+P1J7APVVyEmUFN3UkxYYBij3YaWCK9Fan0JRa7xkXdWzUriB4pXc2qLkaN0o9lB0EqWBfo3vRFq/xyGKj7dqTNzmOuWWbGwxy13SCZTiW6ddbkfwWwlUWIwWwPQ92u3392/tCAt/uNc7U/73NVEr4y4LiOhBaLKOesllCz/yXmJvz2mqCEYs5gNrB9QyM0UO28xgzJQUN3PXtoXp+8T5VDGSHAFe7rdQTndTy0w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726334AbgIQIiY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 17 Sep 2020 04:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgIQIiW (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 17 Sep 2020 04:38:22 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C6CC06174A;
+        Thu, 17 Sep 2020 01:38:21 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id m17so1320777ioo.1;
+        Thu, 17 Sep 2020 01:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3SD5Nhn2XpQ1H9kVLH/qfgLHEz7YapANneIn1r8dtW0=;
+        b=TZSJDBlKn2juCBNKdJKkGxFA6d9tkU2NYk6fbYz/5pjucep8Xm9pIXb2u4iXyNLGO/
+         DuT9nL8k91Crr4kc/dF5KOOUQcMDcGQEkVQ6VfWjCXY9jijvwqxvOSubethpMY4/We8b
+         yoZpQLubk6ivZDbWKkce6ntZFL9xITFXNacYNtWvVN0PSX0M7m9OCbT7Lg1hV4IngvLZ
+         VY/2EKBI9VDQA1bPAEQtnve/J0t9Yo7qGAus6Eifth/VGsT3TUG/KuTIqYx0/cLFilpX
+         /ZTW7pZdgJE/kItf9BISJ/b2Giig7KKHdK5hxZ1qxbHRwOWejvpubQtrOfAdi+G8c3F4
+         eTcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3SD5Nhn2XpQ1H9kVLH/qfgLHEz7YapANneIn1r8dtW0=;
+        b=ZgHH/K/ctfrvtwtcysuDkmbyoMr/EKeg9Wsz4ZRb3ZQyzDn/dkrkCurnNv1N3FKakf
+         7cj2JjzvL5Jns1zL82iQbaCIfnZSjC5YoPpngyyUho2ATzMfBwgk6Qav5UYJukUdTpmN
+         ku0AyjoVN0/y3NHm8B3Z3LjT6KKwD77J5P05zMH4TDYyv7UFZT4n5lqYQrgC3AHf7J/W
+         LXv15VZY6slkggLknzWFo6qDqjirvaPV06J96ZxzCmOBYw9tTkjn+VREW/vptNjpLZ9h
+         QPdUhXR6Jh8TjEvfqa5CDJUvhktHaiPHL4hRVCRJxaglVm8pQ72KPjvWw54bmA1uvZkk
+         Dqqg==
+X-Gm-Message-State: AOAM533tqSZLAsyS+yZqpHVAE9N5UhabFFsEO6bU0oVnWLgmBEG8xxFI
+        CuA3bDRP9yS1XY7DMLqTUO5dPZEVFK2KUloLjYc=
+X-Google-Smtp-Source: ABdhPJye4nHQnxEram0LW7eTW/fhSjkhInwdT8WfdziuSjNH4F9ult6sspc1ZO66OShNisImaNAnVcNEu1U4CW17HQw=
+X-Received: by 2002:a5e:8707:: with SMTP id y7mr23060083ioj.49.1600331900788;
+ Thu, 17 Sep 2020 01:38:20 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB0934.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7669b01b-4c3f-40be-00c8-08d85a90471b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2020 22:31:38.6208
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tXoL+RWoegKXcTzY0riZ9ALL2f0DhVFN1HiKoxK5WS1dzp5IyFjQDinUwyuyR/pXnRvj9K47QzHx6jJ5ffqGMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0281
+References: <20200911103459.10306-1-david@redhat.com> <20200916073041.10355-1-david@redhat.com>
+In-Reply-To: <20200916073041.10355-1-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 17 Sep 2020 10:38:09 +0200
+Message-ID: <CAM9Jb+iAiBFoXL1eO0HHyhDmdiXMh0Oihnr8dMtPu+zAdC=2WQ@mail.gmail.com>
+Subject: Re: [PATCH] kernel/resource: make iomem_resource implicit in release_mem_region_adjustable()
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux MM <linux-mm@kvack.org>, linux-hyperv@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Sent: Wednesday, September 16, 2020 5:47 AM
-> To: linux-kernel@vger.kernel.org
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; Wei Liu <wei.liu@kernel.org>; linux-
-> hyperv@vger.kernel.org; Andres Beltran <lkmlabelt@gmail.com>; Michael
-> Kelley <mikelley@microsoft.com>; Saruhan Karademir
-> <skarade@microsoft.com>; Juan Vazquez <juvazq@microsoft.com>; Andrea
-> Parri <parri.andrea@gmail.com>; David S. Miller <davem@davemloft.net>;
-> Jakub Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
-> Subject: [PATCH v3] hv_netvsc: Add validation for untrusted Hyper-V value=
-s
->=20
-> From: Andres Beltran <lkmlabelt@gmail.com>
->=20
-> For additional robustness in the face of Hyper-V errors or malicious
-> behavior, validate all values that originate from packets that Hyper-V
-> has sent to the guest in the host-to-guest ring buffer. Ensure that
-> invalid values cannot cause indexing off the end of an array, or
-> subvert an existing validation via integer overflow. Ensure that
-> outgoing packets do not have any leftover guest memory that has not
-> been zeroed out.
->=20
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
+> "mem" in the name already indicates the root, similar to
+> release_mem_region() and devm_request_mem_region(). Make it implicit.
+> The only single caller always passes iomem_resource, other parents are
+> not applicable.
+>
+> Suggested-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
-> Changes in v3:
->   - Include header size in the estimate for hv_pkt_datalen (Haiyang)
-> Changes in v2:
->   - Replace size check on struct nvsp_message with sub-checks (Haiyang)
->=20
->  drivers/net/hyperv/hyperv_net.h   |   4 +
->  drivers/net/hyperv/netvsc.c       | 124 ++++++++++++++++++++++++++----
->  drivers/net/hyperv/netvsc_drv.c   |   7 ++
->  drivers/net/hyperv/rndis_filter.c |  73 ++++++++++++++++--
->  4 files changed, 188 insertions(+), 20 deletions(-)
+>
+> Based on next-20200915. Follow up on
+>         "[PATCH v4 0/8] selective merging of system ram resources" [1]
+> That's in next-20200915. As noted during review of v2 by Wei [2].
+>
+> [1] https://lkml.kernel.org/r/20200911103459.10306-1-david@redhat.com
+> [2] https://lkml.kernel.org/r/20200915021012.GC2007@L-31X9LVDL-1304.local
+>
+> ---
+>  include/linux/ioport.h | 3 +--
+>  kernel/resource.c      | 5 ++---
+>  mm/memory_hotplug.c    | 2 +-
+>  3 files changed, 4 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 7e61389dcb01..5135d4b86cd6 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -251,8 +251,7 @@ extern struct resource * __request_region(struct resource *,
+>  extern void __release_region(struct resource *, resource_size_t,
+>                                 resource_size_t);
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+> -extern void release_mem_region_adjustable(struct resource *, resource_size_t,
+> -                                         resource_size_t);
+> +extern void release_mem_region_adjustable(resource_size_t, resource_size_t);
+>  #endif
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+>  extern void merge_system_ram_resource(struct resource *res);
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 7a91b935f4c2..ca2a666e4317 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -1240,7 +1240,6 @@ EXPORT_SYMBOL(__release_region);
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+>  /**
+>   * release_mem_region_adjustable - release a previously reserved memory region
+> - * @parent: parent resource descriptor
+>   * @start: resource start address
+>   * @size: resource region size
+>   *
+> @@ -1258,9 +1257,9 @@ EXPORT_SYMBOL(__release_region);
+>   *   assumes that all children remain in the lower address entry for
+>   *   simplicity.  Enhance this logic when necessary.
+>   */
+> -void release_mem_region_adjustable(struct resource *parent,
+> -                                  resource_size_t start, resource_size_t size)
+> +void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>  {
+> +       struct resource *parent = &iomem_resource;
+>         struct resource *new_res = NULL;
+>         bool alloc_nofail = false;
+>         struct resource **p;
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 553c718226b3..7c5e4744ac51 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1764,7 +1764,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+>                 memblock_remove(start, size);
+>         }
+>
+> -       release_mem_region_adjustable(&iomem_resource, start, size);
+> +       release_mem_region_adjustable(start, size);
+>
+>         try_offline_node(nid);
+>
 
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
