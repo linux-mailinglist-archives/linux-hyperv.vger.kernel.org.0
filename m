@@ -2,155 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1108226D6DB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Sep 2020 10:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25E9026D9EC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Sep 2020 13:15:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgIQIiY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 17 Sep 2020 04:38:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgIQIiW (ORCPT
+        id S1726333AbgIQLN6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 17 Sep 2020 07:13:58 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48952 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726480AbgIQLNn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 17 Sep 2020 04:38:22 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C6CC06174A;
-        Thu, 17 Sep 2020 01:38:21 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id m17so1320777ioo.1;
-        Thu, 17 Sep 2020 01:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3SD5Nhn2XpQ1H9kVLH/qfgLHEz7YapANneIn1r8dtW0=;
-        b=TZSJDBlKn2juCBNKdJKkGxFA6d9tkU2NYk6fbYz/5pjucep8Xm9pIXb2u4iXyNLGO/
-         DuT9nL8k91Crr4kc/dF5KOOUQcMDcGQEkVQ6VfWjCXY9jijvwqxvOSubethpMY4/We8b
-         yoZpQLubk6ivZDbWKkce6ntZFL9xITFXNacYNtWvVN0PSX0M7m9OCbT7Lg1hV4IngvLZ
-         VY/2EKBI9VDQA1bPAEQtnve/J0t9Yo7qGAus6Eifth/VGsT3TUG/KuTIqYx0/cLFilpX
-         /ZTW7pZdgJE/kItf9BISJ/b2Giig7KKHdK5hxZ1qxbHRwOWejvpubQtrOfAdi+G8c3F4
-         eTcQ==
+        Thu, 17 Sep 2020 07:13:43 -0400
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 07:13:43 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600341187;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GKnhWldhLJFQr5DuJgjC2hvPEX9vnawus1q/hrcZp+0=;
+        b=P7XtXXe60RWe5DuGUDOAazKrykAnio/lccCZSjLcBEWFtPQia+xFBI/gV0VTk/et5FpyLN
+        p/6ISroMdFDw0ZSGVqDhXYKyg1jmIdzUBUVPn7fh6Wo+fqDHMKvtvmU+rRrmZ/bhiEpaa1
+        y2C395kOFoLq2NR2TCGd+Sk25iGI7KE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-555-V3p4RzN-PcWMCOT-iY_VKQ-1; Thu, 17 Sep 2020 07:06:09 -0400
+X-MC-Unique: V3p4RzN-PcWMCOT-iY_VKQ-1
+Received: by mail-wr1-f71.google.com with SMTP id 33so753309wre.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 17 Sep 2020 04:06:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3SD5Nhn2XpQ1H9kVLH/qfgLHEz7YapANneIn1r8dtW0=;
-        b=ZgHH/K/ctfrvtwtcysuDkmbyoMr/EKeg9Wsz4ZRb3ZQyzDn/dkrkCurnNv1N3FKakf
-         7cj2JjzvL5Jns1zL82iQbaCIfnZSjC5YoPpngyyUho2ATzMfBwgk6Qav5UYJukUdTpmN
-         ku0AyjoVN0/y3NHm8B3Z3LjT6KKwD77J5P05zMH4TDYyv7UFZT4n5lqYQrgC3AHf7J/W
-         LXv15VZY6slkggLknzWFo6qDqjirvaPV06J96ZxzCmOBYw9tTkjn+VREW/vptNjpLZ9h
-         QPdUhXR6Jh8TjEvfqa5CDJUvhktHaiPHL4hRVCRJxaglVm8pQ72KPjvWw54bmA1uvZkk
-         Dqqg==
-X-Gm-Message-State: AOAM533tqSZLAsyS+yZqpHVAE9N5UhabFFsEO6bU0oVnWLgmBEG8xxFI
-        CuA3bDRP9yS1XY7DMLqTUO5dPZEVFK2KUloLjYc=
-X-Google-Smtp-Source: ABdhPJye4nHQnxEram0LW7eTW/fhSjkhInwdT8WfdziuSjNH4F9ult6sspc1ZO66OShNisImaNAnVcNEu1U4CW17HQw=
-X-Received: by 2002:a5e:8707:: with SMTP id y7mr23060083ioj.49.1600331900788;
- Thu, 17 Sep 2020 01:38:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=GKnhWldhLJFQr5DuJgjC2hvPEX9vnawus1q/hrcZp+0=;
+        b=NOEEIqrZpPWrx2hzJcahhqQld/1INwFswyqVI+tGDMsbrJYtm6OFkNKJR7XZc7U0Yx
+         +JbF2aAL6IfpsW7fnHodFcx1jyQdV14H3emm5Spt1ZBQeZxU7QRxACT4qFArLI/3tsvW
+         FPpM5y4e9wM3YUcjbr54Tuqpl+1/ahVtlW1RuvOI31LpRcHXg3U/h10E2T7Ndl1zVaAx
+         kTMnUccdhCWLHANbEps7jj4h1lXMUHfSLz+fUQBYBEs+7xDyjrHE7i7KKrKK92sn/D7w
+         oUoMtyBPgfq5//Vy7fpGS5f6RCmckG1AIa9B1O8y4Z+ChGwMn5bGZV6izOIQHvxUr2hu
+         m+uA==
+X-Gm-Message-State: AOAM531OifX+4nHm1NUNOtaD9LJhsgNxgfPH0nvvhuVB03xkXwFJDP2z
+        cs4Bw3axBRvCh4BjihExBaByxFT1fhCdWxwcnOGfCPk2gmkepnrKBpgv9stkzWJbvA9Kcru8NX/
+        nl8VqLjhTrZm6Vz+eKv49VR97
+X-Received: by 2002:a1c:480a:: with SMTP id v10mr8966910wma.141.1600340768653;
+        Thu, 17 Sep 2020 04:06:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyfvk8nBFDHZbY4h5lzElLZko5UHfTtrciX4WBrNYMfc9yO+qi5h6FrEF/dqbAWoZhK7788tg==
+X-Received: by 2002:a1c:480a:: with SMTP id v10mr8966887wma.141.1600340768444;
+        Thu, 17 Sep 2020 04:06:08 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id v4sm10412112wml.46.2020.09.17.04.06.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2020 04:06:07 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        "virtualization\@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Nuno Das Neves <Nuno.Das@microsoft.com>,
+        Lillian Grassin-Drake <Lillian.GrassinDrake@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: RE: [EXTERNAL] Re: [PATCH RFC v1 08/18] x86/hyperv: handling hypercall page setup for root
+In-Reply-To: <SN4PR2101MB0880AAC1B92038C7FDE3496DC0210@SN4PR2101MB0880.namprd21.prod.outlook.com>
+References: <20200914112802.80611-1-wei.liu@kernel.org> <20200914112802.80611-9-wei.liu@kernel.org> <87v9gfjpoi.fsf@vitty.brq.redhat.com> <20200915103710.cqmdvzh5lys4wsqo@liuwe-devbox-debian-v2> <SN4PR2101MB0880AAC1B92038C7FDE3496DC0210@SN4PR2101MB0880.namprd21.prod.outlook.com>
+Date:   Thu, 17 Sep 2020 13:06:06 +0200
+Message-ID: <87o8m4hdcx.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200911103459.10306-1-david@redhat.com> <20200916073041.10355-1-david@redhat.com>
-In-Reply-To: <20200916073041.10355-1-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 17 Sep 2020 10:38:09 +0200
-Message-ID: <CAM9Jb+iAiBFoXL1eO0HHyhDmdiXMh0Oihnr8dMtPu+zAdC=2WQ@mail.gmail.com>
-Subject: Re: [PATCH] kernel/resource: make iomem_resource implicit in release_mem_region_adjustable()
-To:     David Hildenbrand <david@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux MM <linux-mm@kvack.org>, linux-hyperv@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-s390@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> "mem" in the name already indicates the root, similar to
-> release_mem_region() and devm_request_mem_region(). Make it implicit.
-> The only single caller always passes iomem_resource, other parents are
-> not applicable.
->
-> Suggested-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->
-> Based on next-20200915. Follow up on
->         "[PATCH v4 0/8] selective merging of system ram resources" [1]
-> That's in next-20200915. As noted during review of v2 by Wei [2].
->
-> [1] https://lkml.kernel.org/r/20200911103459.10306-1-david@redhat.com
-> [2] https://lkml.kernel.org/r/20200915021012.GC2007@L-31X9LVDL-1304.local
->
-> ---
->  include/linux/ioport.h | 3 +--
->  kernel/resource.c      | 5 ++---
->  mm/memory_hotplug.c    | 2 +-
->  3 files changed, 4 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index 7e61389dcb01..5135d4b86cd6 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -251,8 +251,7 @@ extern struct resource * __request_region(struct resource *,
->  extern void __release_region(struct resource *, resource_size_t,
->                                 resource_size_t);
->  #ifdef CONFIG_MEMORY_HOTREMOVE
-> -extern void release_mem_region_adjustable(struct resource *, resource_size_t,
-> -                                         resource_size_t);
-> +extern void release_mem_region_adjustable(resource_size_t, resource_size_t);
->  #endif
->  #ifdef CONFIG_MEMORY_HOTPLUG
->  extern void merge_system_ram_resource(struct resource *res);
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index 7a91b935f4c2..ca2a666e4317 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -1240,7 +1240,6 @@ EXPORT_SYMBOL(__release_region);
->  #ifdef CONFIG_MEMORY_HOTREMOVE
->  /**
->   * release_mem_region_adjustable - release a previously reserved memory region
-> - * @parent: parent resource descriptor
->   * @start: resource start address
->   * @size: resource region size
->   *
-> @@ -1258,9 +1257,9 @@ EXPORT_SYMBOL(__release_region);
->   *   assumes that all children remain in the lower address entry for
->   *   simplicity.  Enhance this logic when necessary.
->   */
-> -void release_mem_region_adjustable(struct resource *parent,
-> -                                  resource_size_t start, resource_size_t size)
-> +void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
->  {
-> +       struct resource *parent = &iomem_resource;
->         struct resource *new_res = NULL;
->         bool alloc_nofail = false;
->         struct resource **p;
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 553c718226b3..7c5e4744ac51 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1764,7 +1764,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
->                 memblock_remove(start, size);
->         }
->
-> -       release_mem_region_adjustable(&iomem_resource, start, size);
-> +       release_mem_region_adjustable(start, size);
->
->         try_offline_node(nid);
->
+Sunil Muthuswamy <sunilmut@microsoft.com> writes:
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>> 
+>> On Tue, Sep 15, 2020 at 12:32:29PM +0200, Vitaly Kuznetsov wrote:
+>> > Wei Liu <wei.liu@kernel.org> writes:
+>> >
+>> > > When Linux is running as the root partition, the hypercall page will
+>> > > have already been setup by Hyper-V. Copy the content over to the
+>> > > allocated page.
+>> >
+>> > And we can't setup a new hypercall page by writing something different
+>> > to HV_X64_MSR_HYPERCALL, right?
+>> >
+>> 
+>> My understanding is that we can't, but Sunil can maybe correct me.
+>
+> That is correct. For root partition, the hypervisor has already allocated the
+> hypercall page. The root is required to query the page, map it in its address
+> space and wrmsr to enable it. It cannot change the location of the page. For
+> guest, it can allocate and assign the hypercall page. This is covered a bit in the
+> hypervisor TLFS (section 3.13 in TLFS v6), for the guest side. The root side is 
+> not covered there, yet.
+
+Ok, so it is guaranteed that root partition doesn't have this page in
+its address space yet, otherwise it could've been used for something
+else (in case it's just normal memory from its PoV).
+
+Please add a comment about this as it is not really obvious.
+
+Thanks,
+
+-- 
+Vitaly
+
