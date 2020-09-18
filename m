@@ -2,141 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC01B26F1A7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Sep 2020 04:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A36C26EED3
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Sep 2020 04:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgIRCw5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 17 Sep 2020 22:52:57 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:50702 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728032AbgIRCID (ORCPT
+        id S1726427AbgIRCbL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 17 Sep 2020 22:31:11 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:41739 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726445AbgIRCa7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 17 Sep 2020 22:08:03 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R441e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0U9GoEaQ_1600394878;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U9GoEaQ_1600394878)
+        Thu, 17 Sep 2020 22:30:59 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U9GuiaC_1600396252;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U9GuiaC_1600396252)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 18 Sep 2020 10:07:58 +0800
-Date:   Fri, 18 Sep 2020 10:07:58 +0800
+          Fri, 18 Sep 2020 10:30:52 +0800
+Date:   Fri, 18 Sep 2020 10:30:51 +0800
 From:   Wei Yang <richard.weiyang@linux.alibaba.com>
 To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org,
+Cc:     osalvador@suse.de, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
         Dave Hansen <dave.hansen@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Oscar Salvador <osalvador@suse.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
         Mike Rapoport <rppt@kernel.org>,
         Scott Cheloha <cheloha@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH RFC 2/4] mm/page_alloc: place pages to tail in
- __putback_isolated_page()
-Message-ID: <20200918020758.GB54754@L-31X9LVDL-1304.local>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Wei Liu <wei.liu@kernel.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: Re: [PATCH RFC 0/4] mm: place pages to the freelist tail when onling
+ and undoing isolation
+Message-ID: <20200918023051.GE54754@L-31X9LVDL-1304.local>
 Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200916183411.64756-1-david@redhat.com>
- <20200916183411.64756-3-david@redhat.com>
+References: <5c0910c2cd0d9d351e509392a45552fb@suse.de>
+ <DAC9E747-BDDF-41B6-A89B-604880DD7543@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200916183411.64756-3-david@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DAC9E747-BDDF-41B6-A89B-604880DD7543@redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 08:34:09PM +0200, David Hildenbrand wrote:
->__putback_isolated_page() already documents that pages will be placed to
->the tail of the freelist - this is, however, not the case for
->"order >= MAX_ORDER - 2" (see buddy_merge_likely()) - which should be
->the case for all existing users.
+On Wed, Sep 16, 2020 at 09:31:21PM +0200, David Hildenbrand wrote:
 >
->This change affects two users:
->- free page reporting
->- page isolation, when undoing the isolation.
 >
->This behavior is desireable for pages that haven't really been touched
->lately, so exactly the two users that don't actually read/write page
->content, but rather move untouched pages.
+>> Am 16.09.2020 um 20:50 schrieb osalvador@suse.de:
+>> 
+>> ﻿On 2020-09-16 20:34, David Hildenbrand wrote:
+>>> When adding separate memory blocks via add_memory*() and onlining them
+>>> immediately, the metadata (especially the memmap) of the next block will be
+>>> placed onto one of the just added+onlined block. This creates a chain
+>>> of unmovable allocations: If the last memory block cannot get
+>>> offlined+removed() so will all dependant ones. We directly have unmovable
+>>> allocations all over the place.
+>>> This can be observed quite easily using virtio-mem, however, it can also
+>>> be observed when using DIMMs. The freshly onlined pages will usually be
+>>> placed to the head of the freelists, meaning they will be allocated next,
+>>> turning the just-added memory usually immediately un-removable. The
+>>> fresh pages are cold, prefering to allocate others (that might be hot)
+>>> also feels to be the natural thing to do.
+>>> It also applies to the hyper-v balloon xen-balloon, and ppc64 dlpar: when
+>>> adding separate, successive memory blocks, each memory block will have
+>>> unmovable allocations on them - for example gigantic pages will fail to
+>>> allocate.
+>>> While the ZONE_NORMAL doesn't provide any guarantees that memory can get
+>>> offlined+removed again (any kind of fragmentation with unmovable
+>>> allocations is possible), there are many scenarios (hotplugging a lot of
+>>> memory, running workload, hotunplug some memory/as much as possible) where
+>>> we can offline+remove quite a lot with this patchset.
+>> 
+>> Hi David,
+>> 
 >
->The new behavior is especially desirable for memory onlining, where we
->allow allocation of newly onlined pages via undo_isolate_page_range()
->in online_pages(). Right now, we always place them to the head of the
+>Hi Oscar.
+>
+>> I did not read through the patchset yet, so sorry if the question is nonsense, but is this not trying to fix the same issue the vmemmap patches did? [1]
+>
+>Not nonesense at all. It only helps to some degree, though. It solves the dependencies due to the memmap. However, it‘s not completely ideal, especially for single memory blocks.
+>
+>With single memory blocks (virtio-mem, xen-balloon, hv balloon, ppc dlpar) you still have unmovable (vmemmap chunks) all over the physical address space. Consider the gigantic page example after hotplug. You directly fragmented all hotplugged memory.
+>
+>Of course, there might be (less extreme) dependencies due page tables for the identity mapping, extended struct pages and similar.
+>
+>Having that said, there are other benefits when preferring other memory over just hotplugged memory. Think about adding+onlining memory during boot (dimms under QEMU, virtio-mem), once the system is up you will have most (all) of that memory completely untouched.
+>
+>So while vmemmap on hotplugged memory would tackle some part of the issue, there are cases where this approach is better, and there are even benefits when combining both.
 
-The code looks good, while I don't fully understand the log here.
+While everything changes with shuffle.
 
-undo_isolate_page_range() is used in __offline_pages and alloc_contig_range. I
-don't connect them with online_pages(). Do I miss something?
-
->free list, resulting in undesireable behavior: Assume we add
->individual memory chunks via add_memory() and online them right away to
->the NORMAL zone. We create a dependency chain of unmovable allocations
->e.g., via the memmap. The memmap of the next chunk will be placed onto
->previous chunks - if the last block cannot get offlined+removed, all
->dependent ones cannot get offlined+removed. While this can already be
->observed with individual DIMMs, it's more of an issue for virtio-mem
->(and I suspect also ppc DLPAR).
 >
->Note: If we observe a degradation due to the changed page isolation
->behavior (which I doubt), we can always make this configurable by the
->instance triggering undo of isolation (e.g., alloc_contig_range(),
->memory onlining, memory offlining).
+>Thanks!
 >
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->Cc: Mel Gorman <mgorman@techsingularity.net>
->Cc: Michal Hocko <mhocko@kernel.org>
->Cc: Dave Hansen <dave.hansen@intel.com>
->Cc: Vlastimil Babka <vbabka@suse.cz>
->Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: Mike Rapoport <rppt@kernel.org>
->Cc: Scott Cheloha <cheloha@linux.ibm.com>
->Cc: Michael Ellerman <mpe@ellerman.id.au>
->Signed-off-by: David Hildenbrand <david@redhat.com>
->---
-> mm/page_alloc.c | 10 +++++++++-
-> 1 file changed, 9 insertions(+), 1 deletion(-)
+>David
 >
->diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->index 91cefb8157dd..bba9a0f60c70 100644
->--- a/mm/page_alloc.c
->+++ b/mm/page_alloc.c
->@@ -89,6 +89,12 @@ typedef int __bitwise fop_t;
->  */
-> #define FOP_SKIP_REPORT_NOTIFY	((__force fop_t)BIT(0))
-> 
->+/*
->+ * Place the freed page to the tail of the freelist after buddy merging. Will
->+ * get ignored with page shuffling enabled.
->+ */
->+#define FOP_TO_TAIL		((__force fop_t)BIT(1))
->+
-> /* prevent >1 _updater_ of zone percpu pageset ->high and ->batch fields */
-> static DEFINE_MUTEX(pcp_batch_high_lock);
-> #define MIN_PERCPU_PAGELIST_FRACTION	(8)
->@@ -1040,6 +1046,8 @@ static inline void __free_one_page(struct page *page, unsigned long pfn,
-> 
-> 	if (is_shuffle_order(order))
-> 		to_tail = shuffle_pick_tail();
->+	else if (fop_flags & FOP_TO_TAIL)
->+		to_tail = true;
-> 	else
-> 		to_tail = buddy_merge_likely(pfn, buddy_pfn, page, order);
-> 
->@@ -3289,7 +3297,7 @@ void __putback_isolated_page(struct page *page, unsigned int order, int mt)
-> 
-> 	/* Return isolated page to tail of freelist. */
-> 	__free_one_page(page, page_to_pfn(page), zone, order, mt,
->-			FOP_SKIP_REPORT_NOTIFY);
->+			FOP_SKIP_REPORT_NOTIFY | FOP_TO_TAIL);
-> }
-> 
-> /*
->-- 
->2.26.2
+>> 
+>> I was about to give it a new respin now that thw hwpoison stuff has been settled.
+>> 
+>> [1] https://patchwork.kernel.org/cover/11059175/
+>> 
 
 -- 
 Wei Yang
