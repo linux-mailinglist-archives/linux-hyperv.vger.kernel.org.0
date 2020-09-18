@@ -2,57 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F39E26F70C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Sep 2020 09:32:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BACE226F715
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Sep 2020 09:34:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgIRHcM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 18 Sep 2020 03:32:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55199 "EHLO
+        id S1726199AbgIRHeE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 18 Sep 2020 03:34:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:58018 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726343AbgIRHcM (ORCPT
+        by vger.kernel.org with ESMTP id S1726040AbgIRHeD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 18 Sep 2020 03:32:12 -0400
+        Fri, 18 Sep 2020 03:34:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600414330;
+        s=mimecast20190719; t=1600414441;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=xxpC20KZLafTuUEueHutL55LQN8Qulz/P7NEuprHZb4=;
-        b=KiPvmHgVEiHlZRflVgeA51amFXPJoWp4JI2b1JaB3wWB+ENI+sXD9lMuB/9FgSVdLadcPw
-        K+aWVCxcBPo/QRFuDmJ1jO3TOjTRV5QQpQahvZnbp8iojgdX2Uim+hq0JCP4AMlTeeAYV+
-        lCxmvkanoCEpETznEhSyiI1d2HSb0F4=
+        bh=4MabJ7/yI0eY5r2Pj6y2tFpJhoLDMoN36dFYeJG6Za4=;
+        b=FitRwZleRWQolXm5wqYp9nELKcn2+etgPQgPzcE2Zuj6PEaA7Wxl9pBd9Yqqw3lghdIAVR
+        lT97K15huS7IgN87CvgJBgEfMClt4IOci/og3l++soUSGODjXTRxn4+ujcUzemtC937lpU
+        71Akt7kICK5MrW0l43D79uDonu5di3g=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-526-qWZsMCSgN4KrWJ-uIJ_D3g-1; Fri, 18 Sep 2020 03:31:02 -0400
-X-MC-Unique: qWZsMCSgN4KrWJ-uIJ_D3g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-315-YdB76Se8O6WZ-6QNmnbwhw-1; Fri, 18 Sep 2020 03:32:46 -0400
+X-MC-Unique: YdB76Se8O6WZ-6QNmnbwhw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F2D5064142;
-        Fri, 18 Sep 2020 07:30:59 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D73D10074B1;
+        Fri, 18 Sep 2020 07:32:43 +0000 (UTC)
 Received: from [10.36.114.41] (ovpn-114-41.ams2.redhat.com [10.36.114.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CA0F610F3;
-        Fri, 18 Sep 2020 07:30:54 +0000 (UTC)
-Subject: Re: [PATCH RFC 3/4] mm/page_alloc: always move pages to the tail of
- the freelist in unset_migratetype_isolate()
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 68F4F55765;
+        Fri, 18 Sep 2020 07:32:39 +0000 (UTC)
+Subject: Re: [PATCH RFC 0/4] mm: place pages to the freelist tail when onling
+ and undoing isolation
 To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org,
+Cc:     osalvador@suse.de, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
         Dave Hansen <dave.hansen@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
         Mike Rapoport <rppt@kernel.org>,
         Scott Cheloha <cheloha@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20200916183411.64756-1-david@redhat.com>
- <20200916183411.64756-4-david@redhat.com>
- <20200918022902.GD54754@L-31X9LVDL-1304.local>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Wei Liu <wei.liu@kernel.org>
+References: <5c0910c2cd0d9d351e509392a45552fb@suse.de>
+ <DAC9E747-BDDF-41B6-A89B-604880DD7543@redhat.com>
+ <20200918023051.GE54754@L-31X9LVDL-1304.local>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -99,37 +101,73 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <95b60466-bd83-e2bb-dafa-33ba0360259d@redhat.com>
-Date:   Fri, 18 Sep 2020 09:30:54 +0200
+Message-ID: <f01e9a1f-413a-6182-2c82-2cf17aeae208@redhat.com>
+Date:   Fri, 18 Sep 2020 09:32:38 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200918022902.GD54754@L-31X9LVDL-1304.local>
+In-Reply-To: <20200918023051.GE54754@L-31X9LVDL-1304.local>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 18.09.20 04:29, Wei Yang wrote:
-> On Wed, Sep 16, 2020 at 08:34:10PM +0200, David Hildenbrand wrote:
->> Page isolation doesn't actually touch the pages, it simply isolates
->> pageblocks and moves all free pages to the MIGRATE_ISOLATE freelist.
+On 18.09.20 04:30, Wei Yang wrote:
+> On Wed, Sep 16, 2020 at 09:31:21PM +0200, David Hildenbrand wrote:
 >>
->> We already place pages to the tail of the freelists when undoing
->> isolation via __putback_isolated_page(), let's do it in any case
->> (e.g., if order == pageblock_order) and document the behavior.
 >>
->> This change results in all pages getting onlined via online_pages() to
->> be placed to the tail of the freelist.
+>>> Am 16.09.2020 um 20:50 schrieb osalvador@suse.de:
+>>>
+>>> ﻿On 2020-09-16 20:34, David Hildenbrand wrote:
+>>>> When adding separate memory blocks via add_memory*() and onlining them
+>>>> immediately, the metadata (especially the memmap) of the next block will be
+>>>> placed onto one of the just added+onlined block. This creates a chain
+>>>> of unmovable allocations: If the last memory block cannot get
+>>>> offlined+removed() so will all dependant ones. We directly have unmovable
+>>>> allocations all over the place.
+>>>> This can be observed quite easily using virtio-mem, however, it can also
+>>>> be observed when using DIMMs. The freshly onlined pages will usually be
+>>>> placed to the head of the freelists, meaning they will be allocated next,
+>>>> turning the just-added memory usually immediately un-removable. The
+>>>> fresh pages are cold, prefering to allocate others (that might be hot)
+>>>> also feels to be the natural thing to do.
+>>>> It also applies to the hyper-v balloon xen-balloon, and ppc64 dlpar: when
+>>>> adding separate, successive memory blocks, each memory block will have
+>>>> unmovable allocations on them - for example gigantic pages will fail to
+>>>> allocate.
+>>>> While the ZONE_NORMAL doesn't provide any guarantees that memory can get
+>>>> offlined+removed again (any kind of fragmentation with unmovable
+>>>> allocations is possible), there are many scenarios (hotplugging a lot of
+>>>> memory, running workload, hotunplug some memory/as much as possible) where
+>>>> we can offline+remove quite a lot with this patchset.
+>>>
+>>> Hi David,
+>>>
+>>
+>> Hi Oscar.
+>>
+>>> I did not read through the patchset yet, so sorry if the question is nonsense, but is this not trying to fix the same issue the vmemmap patches did? [1]
+>>
+>> Not nonesense at all. It only helps to some degree, though. It solves the dependencies due to the memmap. However, it‘s not completely ideal, especially for single memory blocks.
+>>
+>> With single memory blocks (virtio-mem, xen-balloon, hv balloon, ppc dlpar) you still have unmovable (vmemmap chunks) all over the physical address space. Consider the gigantic page example after hotplug. You directly fragmented all hotplugged memory.
+>>
+>> Of course, there might be (less extreme) dependencies due page tables for the identity mapping, extended struct pages and similar.
+>>
+>> Having that said, there are other benefits when preferring other memory over just hotplugged memory. Think about adding+onlining memory during boot (dimms under QEMU, virtio-mem), once the system is up you will have most (all) of that memory completely untouched.
+>>
+>> So while vmemmap on hotplugged memory would tackle some part of the issue, there are cases where this approach is better, and there are even benefits when combining both.
 > 
-> I am sorry to not follow again. unset_migratetype_isolate() is used in
-> __offline_pages if my understanding is correct. How does it contribute on
-> online_pages? 
+> While everything changes with shuffle.
+> 
 
-See -next / -mm, that should make it clearer.
+Right. Shuffling would naturally try to break the dependencies.
+
+Shuffling is quite rare though, it has to be enabled explicitly on the
+cmdline and might not be of too much help in virtualized environments.
 
 -- 
 Thanks,
