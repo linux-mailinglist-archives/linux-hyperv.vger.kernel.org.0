@@ -2,95 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 352F5273661
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Sep 2020 01:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEF3C273A84
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Sep 2020 08:08:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgIUXMX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 21 Sep 2020 19:12:23 -0400
-Received: from mail.rusoil.net ([188.128.114.25]:58282 "EHLO mail.rusoil.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728741AbgIUXMV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 21 Sep 2020 19:12:21 -0400
-X-Greylist: delayed 421 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Sep 2020 19:12:11 EDT
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.rusoil.net (Postfix) with ESMTP id 9EF1840C07;
-        Tue, 22 Sep 2020 04:08:14 +0500 (YEKT)
-Received: from mail.rusoil.net ([127.0.0.1])
-        by localhost (mail.rusoil.net [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id SVpSP78GR2pZ; Tue, 22 Sep 2020 04:08:14 +0500 (YEKT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.rusoil.net (Postfix) with ESMTP id 3D89E40D78;
-        Tue, 22 Sep 2020 04:08:13 +0500 (YEKT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rusoil.net 3D89E40D78
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rusoil.net;
-        s=maildkim; t=1600729693;
-        bh=6R3BgBYiA7fkqGiiNDuwPskBnpH9JXyNAW/l3ZEA+wY=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=Vnjy6nBVnSTcINEW6kER3ugTxQ4KBYKS36YiGFr6YA3B4INc+KiGVhbak8MS9Qjs4
-         d1hbAool1vpcT5tqzIahdEndE3qiAPgBOX6jsmCcvHSMZhz19GFDJ1aQySn107enqY
-         lwxWqbZRY2a+BQ8VxoJh3Rpje7MgA+/fhr9SupmU=
-X-Virus-Scanned: amavisd-new at mail.rusoil.net
-Received: from mail.rusoil.net ([127.0.0.1])
-        by localhost (mail.rusoil.net [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id KLkCjnFIcNrK; Tue, 22 Sep 2020 04:08:12 +0500 (YEKT)
-Received: from mail.rusoil.net (mail.rusoil.net [172.16.7.34])
-        by mail.rusoil.net (Postfix) with ESMTP id 6147940C07;
-        Tue, 22 Sep 2020 04:08:10 +0500 (YEKT)
-Date:   Tue, 22 Sep 2020 04:08:09 +0500 (YEKT)
-From:   Blue Oak Mortgage and Loans <em@rusoil.net>
-Reply-To: Blue Oak Mortgage and Loans <info@bluelmtg.net>
-Message-ID: <2020026523.907101.1600729689731.JavaMail.zimbra@rusoil.net>
-Subject: Wir finanzieren Projekte und Unternehmen
+        id S1728398AbgIVGH5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 22 Sep 2020 02:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgIVGH5 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 22 Sep 2020 02:07:57 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210C7C061755;
+        Mon, 21 Sep 2020 23:07:57 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id cr8so8908585qvb.10;
+        Mon, 21 Sep 2020 23:07:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YtWt5LT1rZHUieitxqoZL94pXE9Kni8HrVa9DLq6ra8=;
+        b=iuUH7P98MAjsRlYJLK0TJlVvZeCzmYl9RV4YJokXxQqlQv7Wl7kR5ZHCp9MtlOlzKk
+         /1RP01X5p+SM3kTFYgEvk62jz44d/piRqzh8EXdfCfQmyBgRRa3jZ0xJgGBfL2TYW6tn
+         ede/YsJq2RHhP6OjTLHxVUg/RHQ1nexItE8RxNdloYtrMpaYRUzbXPWF7VnOLjpzZums
+         CY/p2InTF6IIF4O6CRVc14nFUBzT4GmCjfKIYzruKsehGb+bT4uXZzhSESh7tX6yA1Cj
+         L4hsw6xW7izWpTL7qRTsyjLb9Wnwa1exn47NZ3C9KFSk/ArtkDmN9SScS3ZUa1kEKfmM
+         R/1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YtWt5LT1rZHUieitxqoZL94pXE9Kni8HrVa9DLq6ra8=;
+        b=oGZDQWGrmItyu9iwgVTrB/b7P1W8R8ccSyLxPHDB6eGzDxyWwu6kLGvV7+m1Z2fWzB
+         ZhSJNfntZxni5jWn/EfXlUkekefEheQ4wlDTmE+JzuWWSZdLYX5IQ0VfNgDPTBpvpdcd
+         cfyPQNQQq9X6CjfdGMeqnPXeB/GtSULner2DhRsO2WTKn6wHR3chfNJ5+0POo454lt9w
+         JQLlH4fifPeIdK5FEXhODDYb+Lt+IpYUqK1D0+9wnTE9OhTQE99F7BJfnw1JSz3UnuIO
+         4mmmYRJnRE6ZTO5tNnU5dMvy4Ns+SF0pS6V+qhGUYJFAyKTWRXrepZUPjJRWRFq2dco7
+         ZNCQ==
+X-Gm-Message-State: AOAM531fUmhp3xVMW/Hvw06mxLba0JQRikiSEPSarFJlHbKAJ/xutVOL
+        MC4ltG8NrtozdsZgPyyLjTQ=
+X-Google-Smtp-Source: ABdhPJzYAkkRErXQKS5nPd9e9nFfwFnEtBGJUL1AQh/5PWzM/3iOlyBSVL9xx1MY6K5RCdOgRUtuYQ==
+X-Received: by 2002:a0c:8b02:: with SMTP id q2mr4425388qva.48.1600754876169;
+        Mon, 21 Sep 2020 23:07:56 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id x3sm12523533qta.53.2020.09.21.23.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2020 23:07:55 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     david@redhat.com
+Cc:     akpm@linux-foundation.org, ardb@kernel.org, bhe@redhat.com,
+        dan.j.williams@intel.com, jgg@ziepe.ca, keescook@chromium.org,
+        linux-acpi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-s390@vger.kernel.org,
+        mhocko@suse.com, pankaj.gupta.linux@gmail.com,
+        richardw.yang@linux.intel.com,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] kernel/resource: Fix use of ternary condition in release_mem_region_adjustable
+Date:   Mon, 21 Sep 2020 23:07:48 -0700
+Message-Id: <20200922060748.2452056-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911103459.10306-2-david@redhat.com>
+References: <20200911103459.10306-2-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.210.183.69]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF79 (Win)/8.8.12_GA_3794)
-Thread-Index: IhGK+mMcCqn+S/Et9t28g8ApaUDaLg==
-Thread-Topic: Wir finanzieren Projekte und Unternehmen
-To:     unlisted-recipients:; (no To-header on input)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Clang warns:
 
+kernel/resource.c:1281:53: warning: operator '?:' has lower precedence
+than '|'; '|' will be evaluated first
+[-Wbitwise-conditional-parentheses]
+        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+kernel/resource.c:1281:53: note: place parentheses around the '|'
+expression to silence this warning
+        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+kernel/resource.c:1281:53: note: place parentheses around the '?:'
+expression to evaluate it first
+        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
+                                                           ^
+                                              (                              )
+1 warning generated.
 
-Dies ist ein Newsletter von Blue Oak Mortgage and Loans. Bitte melden Sie s=
-ich ab, wenn Sie keine E-Mail mehr von uns erhalten m=C3=B6chten.
+Add the parentheses as it was clearly intended for the ternary condition
+to be evaluated first.
 
+Fixes: 5fd23bd0d739 ("kernel/resource: make release_mem_region_adjustable() never fail")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1159
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
-Eine kurze Einf=C3=BChrung.
+Presumably, this will be squashed but I included a fixes tag
+nonetheless. Apologies if this has already been noticed and fixed
+already, I did not find anything on LKML.
 
-Wir sind ein f=C3=BChrendes Finanzierungsunternehmen in Europa. Wir finanzi=
-eren Startups / etablierte Unternehmen, finanzieren Gro=C3=9Fprojekte (Bau,=
- Landwirtschaft, Immobilien und dergleichen) zu einem niedrigen Zinssatz vo=
-n 2% pro Jahr.
+ kernel/resource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/kernel/resource.c b/kernel/resource.c
+index ca2a666e4317..3ae2f56cc79d 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1278,7 +1278,7 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+ 	 * similarly).
+ 	 */
+ retry:
+-	new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
++	new_res = alloc_resource(GFP_KERNEL | (alloc_nofail ? __GFP_NOFAIL : 0));
+ 
+ 	p = &parent->child;
+ 	write_lock(&resource_lock);
 
-Darlehensverfahren
+base-commit: 40ee82f47bf297e31d0c47547cd8f24ede52415a
+-- 
+2.28.0
 
-1. Sie m=C3=BCssen das Online-Bewerbungsformular ausf=C3=BCllen und eine or=
-dnungsgem=C3=A4=C3=9F unterschriebene Kopie an uns zur=C3=BCcksenden.
-
-2. M=C3=B6glicherweise m=C3=BCssen Sie Finanzdokumente als unterst=C3=BCtze=
-nden Nachweis f=C3=BCr die F=C3=A4higkeit zur R=C3=BCckzahlung von Krediten=
- vorlegen.
-
-3. Wenn Ihr Darlehen genehmigt wurde, m=C3=BCssen Sie eine Versicherungsgar=
-antie f=C3=BCr die Darlehenssicherheit vorlegen. Wir empfehlen eine Versich=
-erungsgesellschaft. Sie sind allein verantwortlich f=C3=BCr die Zahlung und=
- den Erwerb der Anleihe, die als Sicherheit dienen. Die H=C3=B6he der Anlei=
-he h=C3=A4ngt von Ihrem Darlehensbetrag ab. Die Versicherungsgesellschaft w=
-ird Sie durch den Prozess f=C3=BChren. (F=C3=BCr Gro=C3=9Fprojekte)
-
-4. Ihr =C3=9Cberweisungsprozess wird eingeleitet, sobald die Versicherungsa=
-nleihe =C3=BCberpr=C3=BCft wurde. Ihr Darlehensr=C3=BCckzahlungsplan wird i=
-m NC-Darlehensvertragsformular aufgef=C3=BChrt.
-
-Wenn die Bedingungen Sie beruhigen, k=C3=B6nnen Sie uns =C3=BCber die Whats=
-App-Nummer / E-Mail kontaktieren und auch unsere Website besuchen, um weite=
-re Informationen zu erhalten. Wir freuen uns darauf, von Ihnen zu h=C3=B6re=
-n.
-
-WhatsApp: + 90-552-365-3483
-E-Mail: info@bluelmtg.net
