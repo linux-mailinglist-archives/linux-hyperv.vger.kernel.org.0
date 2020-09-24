@@ -2,203 +2,157 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21B8C2773F3
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Sep 2020 16:30:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D99022774F3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Sep 2020 17:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgIXOaG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 24 Sep 2020 10:30:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20757 "EHLO
+        id S1728357AbgIXPMH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 24 Sep 2020 11:12:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51883 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728031AbgIXOaF (ORCPT
+        by vger.kernel.org with ESMTP id S1728285AbgIXPME (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 24 Sep 2020 10:30:05 -0400
+        Thu, 24 Sep 2020 11:12:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600957803;
+        s=mimecast20190719; t=1600960323;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=nUgNg8TDFITuJNA1KsqS9wZta+tpOU3yWd79edaKWaY=;
-        b=J99kKI2pEy/mZ68Th53vDkvo3FbOmXmEZPhA2ZzCNApz+snQct8zLps+LBtwHrZiiBYq7g
-        5YcXSSDsKXHiFlpFfBQFo7H1CFqhj5PpGUiyGPq0u+6c5gPCcGcBWNCD8u8EAwg+LSwpbA
-        18jZP4xAqp6gxj1irzEMvyvSU7Zbg8I=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1sxFVM/1dZWhMlkx1dwuG+nv9DU20TzSu/4p3YNz4u8=;
+        b=jWcq8jLSzVX4fGVUHUI+KPXB7hhq7M4McIvfl6EzkcJHspogj/OaLtwDdrz2jCNl2Afcku
+        kWJkym1TFKUd7uRTD9XOhIUR9C054Z9ftE2zn2XYrMlUGqTsvT4oia53FHVrTJpEJYuJOI
+        iZm6DBhQiVrHzRxr1/c1fYZ6ZkoYoXw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-GQjLmtr-NnWz3X70DbsDCg-1; Thu, 24 Sep 2020 10:29:59 -0400
-X-MC-Unique: GQjLmtr-NnWz3X70DbsDCg-1
+ us-mta-502-3Cx1MZS1PY69Q_JKeTL5kA-1; Thu, 24 Sep 2020 11:12:01 -0400
+X-MC-Unique: 3Cx1MZS1PY69Q_JKeTL5kA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 866D880B72A;
-        Thu, 24 Sep 2020 14:29:56 +0000 (UTC)
-Received: from [10.36.114.4] (ovpn-114-4.ams2.redhat.com [10.36.114.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B91065D9D2;
-        Thu, 24 Sep 2020 14:29:51 +0000 (UTC)
-Subject: Re: [PATCH RFC 0/4] mm: place pages to the freelist tail when onling
- and undoing isolation
-To:     Vlastimil Babka <vbabka@suse.cz>, osalvador@suse.de
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Scott Cheloha <cheloha@linux.ibm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <5c0910c2cd0d9d351e509392a45552fb@suse.de>
- <DAC9E747-BDDF-41B6-A89B-604880DD7543@redhat.com>
- <67928cbd-950a-3279-bf9b-29b04c87728b@suse.cz>
- <fee562a3-9f8f-e9b4-68fe-09c5ea885b91@redhat.com>
- <3af66d9b-70b1-6c19-0073-fa33c57edcdd@suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63W5Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAjwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <5e5e92dc-3cb4-6e97-5d35-258c4cf35391@redhat.com>
-Date:   Thu, 24 Sep 2020 16:29:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07EE5188C128;
+        Thu, 24 Sep 2020 15:12:00 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-112-30.ams2.redhat.com [10.36.112.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 599175D9D2;
+        Thu, 24 Sep 2020 15:11:54 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        vkuznets@redhat.com, Tianyu.Lan@microsoft.com, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org,
+        Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH] hv: clocksource: Add notrace attribute to read_hv_sched_clock_*() functions
+Date:   Thu, 24 Sep 2020 17:11:17 +0200
+Message-Id: <20200924151117.767442-1-mgamal@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <3af66d9b-70b1-6c19-0073-fa33c57edcdd@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
->> If that would ever change, the optimization here would be lost and we
->> would have to think of something else. Nothing would actually break -
->> and it's all kept directly in page_alloc.c
-> 
-> Sure, but then it can become a pointless code churn.
+When selecting function_graph tracer with the command:
+ # echo function_graph > /sys/kernel/debug/tracing/current_tracer
 
-Indeed, and if there are valid concerns that this will happen in the
-near future (e.g., < 1 year), I agree that we should look into
-alternatives right from the start. Otherwise it's good enough until some
-of the other things I mentioned below become real (which could also take
-a while ...).
+The kernel crashes with the following stack trace:
 
-> 
->> I'd like to stress that what I propose here is both simple and powerful.
->>
->>> possible I think, such as preparing a larger MIGRATE_UNMOVABLE area in the
->>> existing memory before we allocate those long-term management structures. Or
->>> onlining a bunch of blocks as zone_movable first and only later convert to
->>> zone_normal in a controlled way when existing normal zone becomes depeted?
->>
->> I see the following (more or less complicated) alternatives
->>
->> 1) Having a larger MIGRATE_UNMOVABLE area
->>
->> a) Sizing it is difficult. I mean you would have to plan ahead for all
->> memory you might eventually hotplug later - and that could even be
-> 
-> Yeah, hence my worry about existing interfaces that work on 128MB blocks
-> individually without a larger strategy.
+[69703.122389] BUG: stack guard page was hit at 000000001056545c (stack is 00000000fa3f8fed..0000000005d39503)
+[69703.122403] kernel stack overflow (double-fault): 0000 [#1] SMP PTI
+[69703.122413] CPU: 0 PID: 16982 Comm: bash Kdump: loaded Not tainted 4.18.0-236.el8.x86_64 #1
+[69703.122420] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.0 12/17/2019
+[69703.122433] RIP: 0010repare_ftrace_return+0xa/0x110
+[69703.122458] Code: 05 00 0f 0b 48 c7 c7 10 ca 69 ae 0f b6 f0 e8 4b 52 0c 00 31 c0 eb ca 66 0f 1f 84 00 00 00 00 00 55 48 89 e5 41 56 41 55 41 54 <53> 48 83 ec 18 65 48 8b 04 25 28 00 00 00 48 89 45 d8 31 c0 48 85
+[69703.122467] RSP: 0018:ffffbd6d01118000 EFLAGS: 00010086
+[69703.122476] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000003
+[69703.122484] RDX: 0000000000000000 RSI: ffffbd6d011180d8 RDI: ffffffffadce7550
+[69703.122491] RBP: ffffbd6d01118018 R08: 0000000000000000 R09: ffff9d4b09266000
+[69703.122498] R10: ffff9d4b0fc04540 R11: ffff9d4b0fc20a00 R12: ffff9d4b6e42aa90
+[69703.122506] R13: ffff9d4b0fc20ab8 R14: 00000000000003e8 R15: ffffbd6d0111837c
+[69703.122514] FS:  00007fd5f2588740(0000) GS:ffff9d4b6e400000(0000) knlGS:0000000000000000
+[69703.122521] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[69703.122528] CR2: ffffbd6d01117ff8 CR3: 00000000565d8001 CR4: 00000000003606f0
+[69703.122538] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[69703.122545] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[69703.122552] Call Trace:
+[69703.122568]  ftrace_graph_caller+0x6b/0xa0
+[69703.122589]  ? read_hv_sched_clock_tsc+0x5/0x20
+[69703.122599]  read_hv_sched_clock_tsc+0x5/0x20
+[69703.122611]  sched_clock+0x5/0x10
+[69703.122621]  sched_clock_local+0x12/0x80
+[69703.122631]  sched_clock_cpu+0x8c/0xb0
+[69703.122644]  trace_clock_global+0x21/0x90
+[69703.122655]  ring_buffer_lock_reserve+0x100/0x3c0
+[69703.122671]  trace_buffer_lock_reserve+0x16/0x50
+[69703.122683]  __trace_graph_entry+0x28/0x90
+[69703.122695]  trace_graph_entry+0xfd/0x1a0
+[69703.122705]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.122714]  ? sched_clock+0x5/0x10
+[69703.122723]  prepare_ftrace_return+0x99/0x110
+[69703.122734]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.122743]  ? sched_clock+0x5/0x10
+[69703.122752]  ftrace_graph_caller+0x6b/0xa0
+[69703.122768]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.122777]  ? sched_clock+0x5/0x10
+[69703.122786]  ? read_hv_sched_clock_tsc+0x5/0x20
+[69703.122796]  ? ring_buffer_unlock_commit+0x1d/0xa0
+[69703.122805]  read_hv_sched_clock_tsc+0x5/0x20
+[69703.122814]  ftrace_graph_caller+0xa0/0xa0
+[69703.122823]  ? trace_clock_local+0x5/0x10
+[69703.122831]  ? ftrace_push_return_trace+0x5d/0x120
+[69703.122842]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.122850]  ? sched_clock+0x5/0x10
+[69703.122860]  ? prepare_ftrace_return+0xd5/0x110
+[69703.122871]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.122879]  ? sched_clock+0x5/0x10
+[69703.122889]  ? ftrace_graph_caller+0x6b/0xa0
+[69703.122904]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.122912]  ? sched_clock+0x5/0x10
+[69703.122922]  ? read_hv_sched_clock_tsc+0x5/0x20
+[69703.122931]  ? ring_buffer_unlock_commit+0x1d/0xa0
+[69703.122940]  ? read_hv_sched_clock_tsc+0x5/0x20
+[69703.122966]  ? ftrace_graph_caller+0xa0/0xa0
+[69703.122975]  ? trace_clock_local+0x5/0x10
+[69703.122984]  ? ftrace_push_return_trace+0x5d/0x120
+[69703.122995]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.123006]  ? sched_clock+0x5/0x10
+[69703.123016]  ? prepare_ftrace_return+0xd5/0x110
+[69703.123026]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.123035]  ? sched_clock+0x5/0x10
+[69703.123044]  ? ftrace_graph_caller+0x6b/0xa0
+[69703.123059]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.123068]  ? sched_clock+0x5/0x10
 
-Yes, in the works :)
+Setting the notrace attribute for read_hv_sched_clock_msr() and
+read_hv_sched_clock_tsc() fixes it
 
-> 
->> impossible if you hotplug quite a lot of memory to a smaller machine.
->> (I've seen people in the vm/container world trying to hotplug 128GB
->> DIMMs to 2GB VMs ... and failing for obvious reasons)
-> 
-> Some planning should still be possible to maximize the contiguous area without
-> unmovable allocations.
+Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V specific
+sched clock function")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+---
+ drivers/clocksource/hyperv_timer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Indeed, optimizing that is very high on my list of things to look into ...
-
->>
->> we would, once again, never be able to allocate a gigantic page because
->> all [N] would contain a memmap.
-> 
-> The second approach should work, if you know how much you are going to online,
-> and plan the size the N group accordingly, and if the onlined amount is several
-> gigabytes, then only the first one (or first X) will be unusable for a gigantic
-> page, but the rest would be? Can't get much better than that.
-
-Indeed, it's the optimal case (assuming one can come up with a safe zone
-balance - which is usually possible, but unfortunately, there are
-exceptions one at least has to identify).
-
-[...]
-
-> 
-> I've reviewed the series and I won't block it - yes it's an optimistic approach
-> that can break and leave us with code churn. But at least it's not that much
-
-Thanks.
-
-I'll try to document somewhere that the behavior of FOP_TO_TAIL is a
-pure optimization and might change in the future - along with the case
-it tried to optimize (so people know what the use case was).
-
-> code and the extra test in  __free_one_page() shouldn't make this hotpath too
-
-I assume the compiler is able to completely propagate constants and
-optimize that out - I haven't checked, though.
-
-> worse. But I still hope we can achieve a more robust solution one day.
-
-I definitely agree. I'd also prefer some kind of guarantees, but I
-learned that things always sound easier than they actually are when it
-comes to memory management in Linux ... and they take a lot of time (for
-example, Michal's/Oscar's attempts to implement vmemmap on hotadded memory).
-
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 09aa44cb8a91d..ba04cb381cd3f 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -341,7 +341,7 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
+ 	return read_hv_clock_tsc();
+ }
+ 
+-static u64 read_hv_sched_clock_tsc(void)
++static u64 notrace read_hv_sched_clock_tsc(void)
+ {
+ 	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
+ 		(NSEC_PER_SEC / HV_CLOCK_HZ);
+@@ -404,7 +404,7 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+ 	return read_hv_clock_msr();
+ }
+ 
+-static u64 read_hv_sched_clock_msr(void)
++static u64 notrace read_hv_sched_clock_msr(void)
+ {
+ 	return (read_hv_clock_msr() - hv_sched_clock_offset) *
+ 		(NSEC_PER_SEC / HV_CLOCK_HZ);
 -- 
-Thanks,
-
-David / dhildenb
+2.26.2
 
