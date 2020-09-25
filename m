@@ -2,112 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7336E279491
-	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Sep 2020 01:14:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35AA827950B
+	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Sep 2020 01:48:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgIYXOV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 25 Sep 2020 19:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgIYXOV (ORCPT
+        id S1729710AbgIYXsJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 25 Sep 2020 19:48:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41800 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729549AbgIYXr5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 25 Sep 2020 19:14:21 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 230BEC0613CE;
-        Fri, 25 Sep 2020 16:14:21 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1601075659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5hfCJknL7vN5FQ7E5rBJUvr3Ui/JGPGdNK+KMG+iROA=;
-        b=O8WigxqARtdurkJ3wZLtFlOVp/IJYLWjDmhmQmul4Jh1+/tu2tcAC1TQqLvZ7X6XtgAJUn
-        eOxJOrPLqDp0AFlhrf9ICCES57zKrQJtWeBw+enhlvFsmhVrk/PIHUraubnLUB8YFVD3EU
-        aO+sAe/6qmqsJ4/w9ay6UGJ7n4LbTG7vauQWZ+EMoZO0h8etOCXCfxiQH5btgeOiQSreV3
-        mVGp6pGYXUixpnIECzjY39qztquc0ZKZJGi+8R9bz6K81QFII/mn3LRxC2GMX7eONSPEt0
-        XqZWoOf+IOa80v+JeOxpuuaVtH3FZsqK9XZ5peTSl+Dt7ASOi02SLO6a+QW6sw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1601075659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5hfCJknL7vN5FQ7E5rBJUvr3Ui/JGPGdNK+KMG+iROA=;
-        b=qe4V7bKcqNpxkkupSUaXGl+NgWRwWilYYeYK3x3W8R47Rqr4/aCDpm5Xt3BubAKjEHc4Tr
-        Du8N8X29kfg+K2Ag==
-To:     Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-next@vger.kernel.org, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Fri, 25 Sep 2020 19:47:57 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y17so4599099lfa.8;
+        Fri, 25 Sep 2020 16:47:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=66bypUmih1JiEGjHtw9M23S4MfR794g05kwseF1xQyY=;
+        b=B2DFMiCSECF7MHk46ssboGP5N/WrApJhs3ioXV3EMy3nKXTwSTbVPZ5/cmyBbUSKZc
+         TNnqoKWdaG2gDZRu3z0u4ZXLW6GQUf5/GPnkxb49dWsLPa84ry/XUrah9h4Eu67CWCYj
+         0K98kIK92+gCGqu9brX3qJeeV0UG/qlxGV4Q5eYHjEWrTCEo4e0uT91WgrkTL5/h8iz3
+         kEfL+ytofopQhFEpB1rFR+i72qC26LB9j6npyv66LQdakdYvrmuEV8b0vkOSTh84jbeB
+         XfTmGvlNIHzbwzJmZEadFsmJqsBVJcK2g+ef32r/kSZ4Nn1P/mlioscYYbqadVT18Qq9
+         KCgQ==
+X-Gm-Message-State: AOAM533EpFJEvcZvzgGJVR52uJ5LcK0vklWnMRSQiukGW925EYEOduU0
+        NZ3q1Ukytp0GY9vUXIzVIWQ=
+X-Google-Smtp-Source: ABdhPJyWeqBa3lvDurrhgEYjjcDV2F1CFpmMBZ1kf2SE3EX9twMQP9mphmB36AfqmNWqEI//JBWNNQ==
+X-Received: by 2002:a19:614b:: with SMTP id m11mr433037lfk.6.1601077675489;
+        Fri, 25 Sep 2020 16:47:55 -0700 (PDT)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id l188sm420751lfd.127.2020.09.25.16.47.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Sep 2020 16:47:54 -0700 (PDT)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device MSI
-In-Reply-To: <20200925154937.GL29142@worktop.programming.kicks-ass.net>
-References: <20200826111628.794979401@linutronix.de> <3c12bdec2c4ecdabcccd9ece3d495d792e9fc231.camel@redhat.com> <20200925154937.GL29142@worktop.programming.kicks-ass.net>
-Date:   Sat, 26 Sep 2020 01:14:18 +0200
-Message-ID: <87tuvltpo5.fsf@nanos.tec.linutronix.de>
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: hv: Document missing hv_pci_protocol_negotiation() parameter
+Date:   Fri, 25 Sep 2020 23:47:53 +0000
+Message-Id: <20200925234753.1767227-1-kw@linux.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Sep 25 2020 at 17:49, Peter Zijlstra wrote:
-> Here it looks like this:
->
-> [    1.830276] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> [    1.838043] #PF: supervisor instruction fetch in kernel mode
-> [    1.844357] #PF: error_code(0x0010) - not-present page
-> [    1.850090] PGD 0 P4D 0
-> [    1.852915] Oops: 0010 [#1] SMP
-> [    1.856419] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc6-00700-g0248dedd12d4 #419
-> [    1.865447] Hardware name: Intel Corporation S2600GZ/S2600GZ, BIOS SE5C600.86B.02.02.0002.122320131210 12/23/2013
-> [    1.876902] RIP: 0010:0x0
-> [    1.879824] Code: Bad RIP value.
-> [    1.883423] RSP: 0000:ffffffff82803da0 EFLAGS: 00010282
-> [    1.889251] RAX: 0000000000000000 RBX: ffffffff8282b980 RCX: ffffffff82803e40
-> [    1.897241] RDX: 0000000000000001 RSI: ffffffff82803e40 RDI: ffffffff8282b980
-> [    1.905201] RBP: ffff88842f331000 R08: 00000000ffffffff R09: 0000000000000001
-> [    1.913162] R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000048
-> [    1.921123] R13: ffffffff82803e40 R14: ffffffff8282b9c0 R15: 0000000000000000
-> [    1.929085] FS:  0000000000000000(0000) GS:ffff88842f400000(0000) knlGS:0000000000000000
-> [    1.938113] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    1.944524] CR2: ffffffffffffffd6 CR3: 0000000002811001 CR4: 00000000000606b0
-> [    1.952484] Call Trace:
-> [    1.955214]  msi_domain_alloc+0x36/0x130
+Add missing documentation for the parameter "version" and "num_version"
+of the hv_pci_protocol_negotiation() function and resolve build time
+kernel-doc warnings:
 
-Hrm. That looks like a not initialized mandatory callback. Confused.
+  drivers/pci/controller/pci-hyperv.c:2535: warning: Function parameter
+  or member 'version' not described in 'hv_pci_protocol_negotiation'
 
-Is this on -next and if so, does this happen on tip:x86/irq as well?
+  drivers/pci/controller/pci-hyperv.c:2535: warning: Function parameter
+  or member 'num_version' not described in 'hv_pci_protocol_negotiation'
 
-Can you provide yoru config please?
+No change to functionality intended.
 
-Thanks,
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-        tglx
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index fc4c3a15e570..6102330e27e1 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2515,7 +2515,10 @@ static void hv_pci_onchannelcallback(void *context)
+ 
+ /**
+  * hv_pci_protocol_negotiation() - Set up protocol
+- * @hdev:	VMBus's tracking struct for this root PCI bus
++ * @hdev:		VMBus's tracking struct for this root PCI bus.
++ * @version:		Array of supported channel protocol versions in
++ *			the order of probing - highest go first.
++ * @num_version:	Number of elements in the version array.
+  *
+  * This driver is intended to support running on Windows 10
+  * (server) and later versions. It will not run on earlier
+-- 
+2.28.0
+
