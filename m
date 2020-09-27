@@ -2,223 +2,177 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44B6E279A19
-	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Sep 2020 16:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2800279D10
+	for <lists+linux-hyperv@lfdr.de>; Sun, 27 Sep 2020 02:10:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgIZO0e (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 26 Sep 2020 10:26:34 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:43092 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725208AbgIZO0e (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 26 Sep 2020 10:26:34 -0400
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 347CC20B7178;
-        Sat, 26 Sep 2020 07:26:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 347CC20B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1601130392;
-        bh=/Ho0fecMukZFT9gjtpJSysWsHe+ug17qsYo3c7Eyiho=;
-        h=From:To:Cc:Subject:Date:Reply-To:From;
-        b=kri/E4EYtmmQeK++SIJoElmKjdhVpEg30Ru+vHH+1Vj8hs6CbemJUzh+vXFcDBrIB
-         XHD48wses7C0B6RzWtDDwn2zad6PK4KBBppvGZpXeNd0/bc7m/Nwjy+iQt8UmY+C80
-         c+9cQvdueVV9xF/Qghn+vDN11lp2g2HRlQMB4yjo=
-From:   Joseph Salisbury <jsalisbury@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, mikelley@microsoft.com,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] x86/hyperv: Remove aliases with X64 in their name
-Date:   Sat, 26 Sep 2020 07:26:26 -0700
-Message-Id: <1601130386-11111-1-git-send-email-jsalisbury@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: joseph.salisbury@microsoft.com
+        id S1726426AbgI0AKx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 26 Sep 2020 20:10:53 -0400
+Received: from mail-eopbgr750128.outbound.protection.outlook.com ([40.107.75.128]:18042
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726382AbgI0AKw (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 26 Sep 2020 20:10:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nHoyLuMcS8LdR9PllZ1+tHV6GH9Ka6nPF67+wFBD83DWEGLb9YImjJ5CaG6qT2a2kGWJXIduuTn7jnI/5ms81b/8WFwrpURGGAdzXuHQfHxlAefwOvwePYNNZmG9WrCG+dWQTdqq2tkLH3HGN4kqbc2xLNSH/ua+cfS3wuWCEqTtMjuzBJrZUammCAoIU/hjQGD4Np/b5EHnk/e+MMJkLamZSBwiUZhneTMhJegFrMevPqrZyOGZhbnV59ZJhU6hMIBbydPhPka4zrDFWLHv/RcvpAJwgie4uQ36dx6NRaQRnK8bYsQYR8ME2pYyhY8ifTbobibC9Qqj054xOU9LfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b2n2ro/ZnahhmqvTCp+7mpMyunYhXxDlNAWQDQCnCJY=;
+ b=VosL7DkVcpPBL8Di2YxSG2dETuAixeaMqrFk7FU9CRwr5sl1jcKhz/ncNrTwftK0bIrGxlI5zATcZ+WMXoJOBAjxG+CI3msUx7wfgAiplI8Gz88fALI2NiDHWSVEWjHR0xlOXvIxxTFBTGEsmNYmhwo2njMjFYaFemjKgG3uJkxliiZiXqePFj1bppeCZv4zE/NFaFUnMyvhQdsZZYNafji9gO827Z4fq+MqlBBhhZRdbZsM5VMSpMeYMWx70WNd8n6j0g8R6ReTbzACAJzyVYa/XtbTLYgeDvvXN8dFIJrWxsr1GC9w1Mx56Ihs++F6bzTi9TyjX2x7Q5hcqYgNKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b2n2ro/ZnahhmqvTCp+7mpMyunYhXxDlNAWQDQCnCJY=;
+ b=hQ8fEQqmvwfeHl9f+EiaKQ52oGmlWv7isM7E7F0l1WcgEH1sZFm1WdSUEK5MFRjhRKZGJUf9PzhhFzlnIzAl1FOmVe0YtmiNmCqMqERcaauNHa3ML1c5uObC/IsqwMCy57Y/zYotDuQXraZITqK3xb7EEqHUXX2u2Utt3jlHURw=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB0892.namprd21.prod.outlook.com (2603:10b6:302:10::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.7; Sun, 27 Sep
+ 2020 00:10:47 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d00b:3909:23b:83f1%4]) with mapi id 15.20.3412.028; Sun, 27 Sep 2020
+ 00:10:47 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Boqun Feng <boqun.feng@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "Mark.Rutland@arm.com" <Mark.Rutland@arm.com>,
+        "maz@kernel.org" <maz@kernel.org>
+Subject: RE: [PATCH v4 08/11] Input: hyperv-keyboard: Use VMBUS_RING_SIZE()
+ for ringbuffer sizes
+Thread-Topic: [PATCH v4 08/11] Input: hyperv-keyboard: Use VMBUS_RING_SIZE()
+ for ringbuffer sizes
+Thread-Index: AQHWi9xgXwrIsiJPAUmuyIEnmBPQ+ql7rSJg
+Date:   Sun, 27 Sep 2020 00:10:47 +0000
+Message-ID: <MW2PR2101MB105277B76109C6C25654E077D7340@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200916034817.30282-1-boqun.feng@gmail.com>
+ <20200916034817.30282-9-boqun.feng@gmail.com>
+In-Reply-To: <20200916034817.30282-9-boqun.feng@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-27T00:10:45Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d8474ca5-0737-456b-b901-55bd3b42cb3b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5c6c1ee6-5e39-4f0e-849e-08d86279c921
+x-ms-traffictypediagnostic: MW2PR2101MB0892:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB0892918A4EF9CEA614A8DF5DD7340@MW2PR2101MB0892.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: z1vz5cAqtcwM5bWUoDx7ydeYqWfECasw4lz0F6BHoYGfiABohezEl1N/Eomogn16GHKAPXRthKdtbZC4KZ8oA8V1RRxMJKy++APlvcSEVQWx7dC70cZtmbq+BmL60/4VqfRUWNTNRXumjhVfeHCTEFSfK0kIhW5tnPy/xAT5na6aHlTlisukN5NWdFIoSYdEr0rhyIBaEeQW72dchoovPeP+/jqAvDdqgvhjNzaQpx0HRE6A1R8OqbDow4VM2UYy8I8YSAvyZEj5KE0OFXtjml9MboH51As/gnSVn8c+8aB52B9NZkrup/R9r+4rqwiaGFtnJPgd8K8+nkmkH/MLY4BKILZLlPcscM/RmBeeE32gJYPe4+WjaHUJnsBQHwRppC++CeE3o9xeXDWduzgfrQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(7696005)(110136005)(82950400001)(186003)(7416002)(6506007)(8936002)(478600001)(26005)(8676002)(966005)(54906003)(10290500003)(9686003)(8990500004)(55016002)(2906002)(4326008)(66446008)(316002)(52536014)(86362001)(33656002)(5660300002)(76116006)(71200400001)(66946007)(83380400001)(66556008)(82960400001)(64756008)(83080400001)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: +Wm0Jsb4BBsOws+osESQIuhmug808eJQ3W3Qa3jxydWZXxrH/ZTDhh7Q1g3ehXoNpAX7creyCCwtQNBYMRQX6Ts772QQllKd0LRVdUoEOo5ARGIoEt0wgyXZFCGIkF14xrCsP12kvuFbhOaddsa6GQmMxGWvjCfcW7gmoeESL26b8o87kX+0ApTuAHrGbYJdFLGBvq0x/JUFNti3Rd5FhLeClVt9b9BSJ0bSUEix3JGQwmV0YOFBmIRDULL1HrhF98Dx5gsMNPH6Cz+RQOb8fmWY5XsZcR2eg5nb86ujXH6CjXWvpu7Tl9+n04YbeZDovfN4FniHQSX32BWEW35VVO5zEJWSkW2FLoExKx7/E2zcVwjtzDV6VuowHO2vwA7S444JMNMuFPq9sQF0qBWaE3/AWb3gJ7oFQMf9lgc4GkR0/YJmARh5uUb0G+oXsf0CSl7x1iyv12Ud5EWuq50ekJ8b1ng6milFUMvJMNLYuwVVAceYCZqG5CRYacQWfDb6AMlk0dGOgRGW9Sp2SQqBOrL8rJcrS7ujCacqTgqR4QydOdv3nD3vXNr/R25DB23STRqqrFgzccENiimL9SXNGqubleQWA12OGoN0Onti1+6GhyU/VEPahaBnMJxRC9vxbDIyl1juIVdeahPOfo8e3Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c6c1ee6-5e39-4f0e-849e-08d86279c921
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2020 00:10:47.7017
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EjagVTP458dWQk2I5/crZvHAUrsPE7WLKz9ZxJAH3uLvSF4FttBskyqAkBg3udxOMjq2ohVHn9ZKg743vappswrTdnVUZHJw5ZJ/70mGFCw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0892
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Joseph Salisbury <joseph.salisbury@microsoft.com>
+From: Boqun Feng <boqun.feng@gmail.com> Sent: Tuesday, September 15, 2020 8=
+:48 PM
+>=20
+> For a Hyper-V vmbus, the size of the ringbuffer has two requirements:
+>=20
+> 1)	it has to take one PAGE_SIZE for the header
+>=20
+> 2)	it has to be PAGE_SIZE aligned so that double-mapping can work
+>=20
+> VMBUS_RING_SIZE() could calculate a correct ringbuffer size which
+> fulfills both requirements, therefore use it to make sure vmbus work
+> when PAGE_SIZE !=3D HV_HYP_PAGE_SIZE (4K).
+>=20
+> Note that since the argument for VMBUS_RING_SIZE() is the size of
+> payload (data part), so it will be minus 4k (the size of header when
+> PAGE_SIZE =3D 4k) than the original value to keep the ringbuffer total
+> size unchanged when PAGE_SIZE =3D 4k.
+>=20
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Michael Kelley <mikelley@microsoft.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+> Michael and Dmitry,
+>=20
+> I change the code because of a problem I found:
+>=20
+> 	https://lore.kernel.org/lkml/20200914084600.GA45838@debian-boqun.qqnc3lr=
+jykvubdpftowmye0fmh.lx.internal.cloudapp.net/
+>=20
+> , so I drop your Reviewed-by or Acked-by tag. If the update version
+> looks good to you, may I add your tag again? Thanks in advance, and
+> apologies for the inconvenience.
+>=20
+> Regards,
+> Boqun
+>=20
+>  drivers/input/serio/hyperv-keyboard.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/=
+hyperv-keyboard.c
+> index df4e9f6f4529..1a7b72a9016d 100644
+> --- a/drivers/input/serio/hyperv-keyboard.c
+> +++ b/drivers/input/serio/hyperv-keyboard.c
+> @@ -75,8 +75,8 @@ struct synth_kbd_keystroke {
+>=20
+>  #define HK_MAXIMUM_MESSAGE_SIZE 256
+>=20
+> -#define KBD_VSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
+> -#define KBD_VSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
+> +#define KBD_VSC_SEND_RING_BUFFER_SIZE	VMBUS_RING_SIZE(36 * 1024)
+> +#define KBD_VSC_RECV_RING_BUFFER_SIZE	VMBUS_RING_SIZE(36 * 1024)
+>=20
+>  #define XTKBD_EMUL0     0xe0
+>  #define XTKBD_EMUL1     0xe1
+> --
+> 2.28.0
 
-In the architecture independent version of hyperv-tlfs.h, commit c55a844f46f958b
-removed the "X64" in the symbol names so they would make sense for both x86 and
-ARM64.  That commit added aliases with the "X64" in the x86 version of hyperv-tlfs.h 
-so that existing x86 code would continue to compile.
-
-As a cleanup, update the x86 code to use the symbols without the "X64", then remove 
-the aliases.  There's no functional change.
-
-Signed-off-by: Joseph Salisbury <joseph.salisbury@microsoft.com>
----
- arch/x86/hyperv/hv_init.c          |  8 ++++----
- arch/x86/hyperv/hv_spinlock.c      |  2 +-
- arch/x86/include/asm/hyperv-tlfs.h | 33 ------------------------------
- arch/x86/kernel/cpu/mshyperv.c     |  8 ++++----
- arch/x86/kvm/hyperv.c              | 20 +++++++++---------
- 5 files changed, 19 insertions(+), 52 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 6035df1b49e1..e04d90af4c27 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -148,9 +148,9 @@ static inline bool hv_reenlightenment_available(void)
- 	 * Check for required features and priviliges to make TSC frequency
- 	 * change notifications work.
- 	 */
--	return ms_hyperv.features & HV_X64_ACCESS_FREQUENCY_MSRS &&
-+	return ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
- 		ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE &&
--		ms_hyperv.features & HV_X64_ACCESS_REENLIGHTENMENT;
-+		ms_hyperv.features & HV_ACCESS_REENLIGHTENMENT;
- }
- 
- DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_reenlightenment)
-@@ -330,8 +330,8 @@ void __init hyperv_init(void)
- 		return;
- 
- 	/* Absolutely required MSRs */
--	required_msrs = HV_X64_MSR_HYPERCALL_AVAILABLE |
--		HV_X64_MSR_VP_INDEX_AVAILABLE;
-+	required_msrs = HV_MSR_HYPERCALL_AVAILABLE |
-+		HV_MSR_VP_INDEX_AVAILABLE;
- 
- 	if ((ms_hyperv.features & required_msrs) != required_msrs)
- 		return;
-diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-index 07f21a06392f..f3270c1fc48c 100644
---- a/arch/x86/hyperv/hv_spinlock.c
-+++ b/arch/x86/hyperv/hv_spinlock.c
-@@ -66,7 +66,7 @@ void __init hv_init_spinlocks(void)
- {
- 	if (!hv_pvspin || !apic ||
- 	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
--	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
-+	    !(ms_hyperv.features & HV_MSR_GUEST_IDLE_AVAILABLE)) {
- 		pr_info("PV spinlocks disabled\n");
- 		return;
- 	}
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index 7a4d2062385c..0ed20e8bba9e 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -27,39 +27,6 @@
- #define HYPERV_CPUID_MIN			0x40000005
- #define HYPERV_CPUID_MAX			0x4000ffff
- 
--/*
-- * Aliases for Group A features that have X64 in the name.
-- * On x86/x64 these are HYPERV_CPUID_FEATURES.EAX bits.
-- */
--
--#define HV_X64_MSR_VP_RUNTIME_AVAILABLE		\
--		HV_MSR_VP_RUNTIME_AVAILABLE
--#define HV_X64_MSR_SYNIC_AVAILABLE		\
--		HV_MSR_SYNIC_AVAILABLE
--#define HV_X64_MSR_APIC_ACCESS_AVAILABLE	\
--		HV_MSR_APIC_ACCESS_AVAILABLE
--#define HV_X64_MSR_HYPERCALL_AVAILABLE		\
--		HV_MSR_HYPERCALL_AVAILABLE
--#define HV_X64_MSR_VP_INDEX_AVAILABLE		\
--		HV_MSR_VP_INDEX_AVAILABLE
--#define HV_X64_MSR_RESET_AVAILABLE		\
--		HV_MSR_RESET_AVAILABLE
--#define HV_X64_MSR_GUEST_IDLE_AVAILABLE		\
--		HV_MSR_GUEST_IDLE_AVAILABLE
--#define HV_X64_ACCESS_FREQUENCY_MSRS		\
--		HV_ACCESS_FREQUENCY_MSRS
--#define HV_X64_ACCESS_REENLIGHTENMENT		\
--		HV_ACCESS_REENLIGHTENMENT
--#define HV_X64_ACCESS_TSC_INVARIANT		\
--		HV_ACCESS_TSC_INVARIANT
--
--/*
-- * Aliases for Group B features that have X64 in the name.
-- * On x86/x64 these are HYPERV_CPUID_FEATURES.EBX bits.
-- */
--#define HV_X64_POST_MESSAGES		HV_POST_MESSAGES
--#define HV_X64_SIGNAL_EVENTS		HV_SIGNAL_EVENTS
--
- /*
-  * Group D Features.  The bit assignments are custom to each architecture.
-  * On x86/x64 these are HYPERV_CPUID_FEATURES.EDX bits.
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 31125448b174..9834a43cd0fa 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -248,7 +248,7 @@ static void __init ms_hyperv_init_platform(void)
- 			hv_host_info_edx >> 24, hv_host_info_edx & 0xFFFFFF);
- 	}
- 
--	if (ms_hyperv.features & HV_X64_ACCESS_FREQUENCY_MSRS &&
-+	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
- 	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
- 		x86_platform.calibrate_tsc = hv_get_tsc_khz;
- 		x86_platform.calibrate_cpu = hv_get_tsc_khz;
-@@ -270,7 +270,7 @@ static void __init ms_hyperv_init_platform(void)
- 		crash_kexec_post_notifiers = true;
- 
- #ifdef CONFIG_X86_LOCAL_APIC
--	if (ms_hyperv.features & HV_X64_ACCESS_FREQUENCY_MSRS &&
-+	if (ms_hyperv.features & HV_ACCESS_FREQUENCY_MSRS &&
- 	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
- 		/*
- 		 * Get the APIC frequency.
-@@ -296,7 +296,7 @@ static void __init ms_hyperv_init_platform(void)
- 	machine_ops.shutdown = hv_machine_shutdown;
- 	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
- #endif
--	if (ms_hyperv.features & HV_X64_ACCESS_TSC_INVARIANT) {
-+	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
- 		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x1);
- 		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
- 	} else {
-@@ -330,7 +330,7 @@ static void __init ms_hyperv_init_platform(void)
- 	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, asm_sysvec_hyperv_callback);
- 
- 	/* Setup the IDT for reenlightenment notifications */
--	if (ms_hyperv.features & HV_X64_ACCESS_REENLIGHTENMENT) {
-+	if (ms_hyperv.features & HV_ACCESS_REENLIGHTENMENT) {
- 		alloc_intr_gate(HYPERV_REENLIGHTENMENT_VECTOR,
- 				asm_sysvec_hyperv_reenlightenment);
- 	}
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 1d330564eed8..8c1e8334eff0 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -2000,20 +2000,20 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
- 			break;
- 
- 		case HYPERV_CPUID_FEATURES:
--			ent->eax |= HV_X64_MSR_VP_RUNTIME_AVAILABLE;
-+			ent->eax |= HV_MSR_VP_RUNTIME_AVAILABLE;
- 			ent->eax |= HV_MSR_TIME_REF_COUNT_AVAILABLE;
--			ent->eax |= HV_X64_MSR_SYNIC_AVAILABLE;
-+			ent->eax |= HV_MSR_SYNIC_AVAILABLE;
- 			ent->eax |= HV_MSR_SYNTIMER_AVAILABLE;
--			ent->eax |= HV_X64_MSR_APIC_ACCESS_AVAILABLE;
--			ent->eax |= HV_X64_MSR_HYPERCALL_AVAILABLE;
--			ent->eax |= HV_X64_MSR_VP_INDEX_AVAILABLE;
--			ent->eax |= HV_X64_MSR_RESET_AVAILABLE;
-+			ent->eax |= HV_MSR_APIC_ACCESS_AVAILABLE;
-+			ent->eax |= HV_MSR_HYPERCALL_AVAILABLE;
-+			ent->eax |= HV_MSR_VP_INDEX_AVAILABLE;
-+			ent->eax |= HV_MSR_RESET_AVAILABLE;
- 			ent->eax |= HV_MSR_REFERENCE_TSC_AVAILABLE;
--			ent->eax |= HV_X64_ACCESS_FREQUENCY_MSRS;
--			ent->eax |= HV_X64_ACCESS_REENLIGHTENMENT;
-+			ent->eax |= HV_ACCESS_FREQUENCY_MSRS;
-+			ent->eax |= HV_ACCESS_REENLIGHTENMENT;
- 
--			ent->ebx |= HV_X64_POST_MESSAGES;
--			ent->ebx |= HV_X64_SIGNAL_EVENTS;
-+			ent->ebx |= HV_POST_MESSAGES;
-+			ent->ebx |= HV_SIGNAL_EVENTS;
- 
- 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
- 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
--- 
-2.17.1
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
 
