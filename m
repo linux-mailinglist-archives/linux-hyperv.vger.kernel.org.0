@@ -2,150 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 881F127AC20
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Sep 2020 12:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B01D727AE49
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Sep 2020 14:54:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgI1KnR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 28 Sep 2020 06:43:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:49148 "EHLO foss.arm.com"
+        id S1726697AbgI1Mx4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 28 Sep 2020 08:53:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60790 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbgI1KnR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 28 Sep 2020 06:43:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7427C1063;
-        Mon, 28 Sep 2020 03:43:16 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E33693F6CF;
-        Mon, 28 Sep 2020 03:43:14 -0700 (PDT)
-Date:   Mon, 28 Sep 2020 11:43:09 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        jakeo@microsoft.com, maz@kernel.org
-Subject: Re: [PATCH v2] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Message-ID: <20200928104309.GA12565@e121166-lin.cambridge.arm.com>
-References: <20200908231759.13336-1-decui@microsoft.com>
+        id S1726466AbgI1Mx4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 28 Sep 2020 08:53:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 12751AC24;
+        Mon, 28 Sep 2020 12:53:55 +0000 (UTC)
+Date:   Mon, 28 Sep 2020 14:53:51 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH RFC 4/4] mm/page_alloc: place pages to tail in
+ __free_pages_core()
+Message-ID: <20200928125346.GA7703@linux>
+References: <20200916183411.64756-1-david@redhat.com>
+ <20200916183411.64756-5-david@redhat.com>
+ <20200928075820.GA4082@linux>
+ <a18327c0-b86a-df00-e984-27c26468caf7@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908231759.13336-1-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a18327c0-b86a-df00-e984-27c26468caf7@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-[+MarcZ - this patch needs IRQ maintainers vetting]
+On Mon, Sep 28, 2020 at 10:36:00AM +0200, David Hildenbrand wrote:
+> Hi Oscar!
 
-On Tue, Sep 08, 2020 at 04:17:59PM -0700, Dexuan Cui wrote:
-> Hyper-V doesn't trap and emulate the accesses to the MSI/MSI-X registers,
-> and we must use hv_compose_msi_msg() to ask Hyper-V to create the IOMMU
-> Interrupt Remapping Table Entries. This is not an issue for a lot of
-> PCI device drivers (e.g. NVMe driver, Mellanox NIC drivers), which
-> destroy and re-create the interrupts across hibernation, so
-> hv_compose_msi_msg() is called automatically. However, some other PCI
-> device drivers (e.g. the Nvidia driver) may not destroy and re-create
-> the interrupts across hibernation, so hv_pci_resume() has to call
-> hv_compose_msi_msg(), otherwise the PCI device drivers can no longer
-> receive MSI/MSI-X interrupts after hibernation.
+Hi David :-)
 
-This looks like drivers bugs and I don't think the HV controller
-driver is where you should fix them. Regardless, this commit log
-does not provide the information that it should.
-
-> Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Jake Oshins <jakeo@microsoft.com>
 > 
-> ---
+> Old code:
 > 
-> Changes in v2:
->     Fixed a typo in the comment in hv_irq_unmask. Thanks to Michael!
->     Added Jake's Reviewed-by.
+> set_page_refcounted(): sets the refcount to 1.
+> __free_pages()
+>   -> put_page_testzero(): sets it to 0
+>   -> free_the_page()->__free_pages_ok()
 > 
->  drivers/pci/controller/pci-hyperv.c | 44 +++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+> New code:
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index fc4c3a15e570..dd21afb5d62b 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1211,6 +1211,21 @@ static void hv_irq_unmask(struct irq_data *data)
->  	pbus = pdev->bus;
->  	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
->  
-> +	if (hbus->state == hv_pcibus_removing) {
-> +		/*
-> +		 * During hibernation, when a CPU is offlined, the kernel tries
-> +		 * to move the interrupt to the remaining CPUs that haven't
-> +		 * been offlined yet. In this case, the below hv_do_hypercall()
-> +		 * always fails since the vmbus channel has been closed, so we
-> +		 * should not call the hypercall, but we still need
-> +		 * pci_msi_unmask_irq() to reset the mask bit in desc->masked:
-> +		 * see cpu_disable_common() -> fixup_irqs() ->
-> +		 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
-> +		 */
-> +		pci_msi_unmask_irq(data);
+> set_page_refcounted(): sets the refcount to 1.
+> page_ref_dec(page): sets it to 0
+> __free_pages_ok():
 
-This is not appropriate - it looks like a plaster to paper over an
-issue with hyper-V hibernation code sequence. Fix that issue instead
-of papering over it here.
+bleh, I misread the patch, somehow I managed to not see that you replaced
+__free_pages with __free_pages_ok.
 
-Thanks,
-Lorenzo
+To be honest, now that we do not need the page's refcount to be 1 for the
+put_page_testzero to trigger (and since you are decrementing it anyways),
+I think it would be much clear for those two to be gone.
 
-> +		return;
-> +	}
-> +
->  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
->  
->  	params = &hbus->retarget_msi_interrupt_params;
-> @@ -3372,6 +3387,33 @@ static int hv_pci_suspend(struct hv_device *hdev)
->  	return 0;
->  }
->  
-> +static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
-> +{
-> +	struct msi_desc *entry;
-> +	struct irq_data *irq_data;
-> +
-> +	for_each_pci_msi_entry(entry, pdev) {
-> +		irq_data = irq_get_irq_data(entry->irq);
-> +		if (WARN_ON_ONCE(!irq_data))
-> +			return -EINVAL;
-> +
-> +		hv_compose_msi_msg(irq_data, &entry->msg);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
-> + * re-writes the MSI/MSI-X registers, but since Hyper-V doesn't trap and
-> + * emulate the accesses, we have to call hv_compose_msi_msg() to ask
-> + * Hyper-V to re-create the IOMMU Interrupt Remapping Table Entries.
-> + */
-> +static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus)
-> +{
-> +	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL);
-> +}
-> +
->  static int hv_pci_resume(struct hv_device *hdev)
->  {
->  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> @@ -3405,6 +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
->  
->  	prepopulate_bars(hbus);
->  
-> +	hv_pci_restore_msi_state(hbus);
-> +
->  	hbus->state = hv_pcibus_installed;
->  	return 0;
->  out:
-> -- 
-> 2.19.1
-> 
+But not strong, so:
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+-- 
+Oscar Salvador
+SUSE L3
