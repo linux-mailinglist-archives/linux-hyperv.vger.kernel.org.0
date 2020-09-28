@@ -2,85 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5309227AA37
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Sep 2020 11:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0EBF27AB8E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Sep 2020 12:11:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgI1JHq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 28 Sep 2020 05:07:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34694 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbgI1JHq (ORCPT
+        id S1726576AbgI1KLp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 28 Sep 2020 06:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgI1KLp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 28 Sep 2020 05:07:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t10so391283wrv.1;
-        Mon, 28 Sep 2020 02:07:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qzvbdMgwoVoLCV4C+38jPCHClAMjCEBSggnue6sORug=;
-        b=CXoWIYXJCUGgRGvc61My65MN40cDDV65ZJ8NWyJKvFiZln7U4QyMv3RBmTG8aYMQpA
-         U8QANLTQPqcNtZfNQjUdMGJW7SMjoMnszWRM1iQgT0IfV/tl2RiyJTcyq90pPhhKoAjl
-         jRv6qZyYOvaM8DlRaF2oGsHo3IQylPXflxRgUbxTpOQaVQ4PYDndb/8HL+I6UvR/eNOl
-         M24yJm/o1M/9KqYqL+eo6o5gM/yLx+RoLob6snHhv3b3hfGwDaErwufLvqDRJc0FUTUm
-         7RdZv/82/95wjToClTwfpq/TE3ZO4rkynfSJP4PoN8+EP8lW4Py4ih+6c3E3fo0LsjOR
-         zCTw==
-X-Gm-Message-State: AOAM532X2F3YLLd9/6VXomEhExCHTez/kGp/8HElsv2LBKkw7KobpiJi
-        ef9cBS6Vs97d/57CRHZcH64=
-X-Google-Smtp-Source: ABdhPJwuE5MWb+vye6CbihbqmpOf7xcESu4nA0YyqVV2RIVNqBiUHLXruYiTrkKZ106KtoFELoxoVA==
-X-Received: by 2002:adf:fa02:: with SMTP id m2mr505869wrr.273.1601284064447;
-        Mon, 28 Sep 2020 02:07:44 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id a5sm603877wrp.37.2020.09.28.02.07.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2020 02:07:44 -0700 (PDT)
-Date:   Mon, 28 Sep 2020 09:07:42 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Mohammed Gamal <mgamal@redhat.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Tianyu.Lan@microsoft.com, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org
-Subject: Re: [PATCH] hv: clocksource: Add notrace attribute to
- read_hv_sched_clock_*() functions
-Message-ID: <20200928090742.6qrpon2cbb5dz7rc@liuwe-devbox-debian-v2>
-References: <20200924151117.767442-1-mgamal@redhat.com>
- <87pn6bchkc.fsf@vitty.brq.redhat.com>
+        Mon, 28 Sep 2020 06:11:45 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E97C061755;
+        Mon, 28 Sep 2020 03:11:44 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1601287900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/LEbaJHkdEDSvABDEX0Mpwgs63YbqlMHeZ5/FcFgS7c=;
+        b=WscWB2qjowVUKNzXJ7iKsyolZUkjDBztcYFbIgHrMUrtAEvquCam4/K52jcCtRQM+yKytr
+        URMI6z640lbxw7hkIOVx1TRLHMdhaWzx98lhVnLFqthWanJFHVHxlo2eOWubHBSTBu9GDF
+        7G67OuYSeZNyWEttoblh+kzL4D7QpchbFTWBx+ikU8exuLt8q5pjxfqcBdHoB6zPbCD8mH
+        lZQfvtFRw5BX5n7PSkSM/ugl/cb4XGqprClPnO9RlJUYEx0yP1D0OFHRQNoIV4NB6Tbt2s
+        hzKesgmvohZEey59MwUSx2qdsQEH+kkd6efSVXhIbahzs/eEUDUMLSXdq82ySg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1601287900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/LEbaJHkdEDSvABDEX0Mpwgs63YbqlMHeZ5/FcFgS7c=;
+        b=gKFUKgJag7QuixgLnPA+ShsJ5WL+xoFovrXQai1julVEgAI8XcH7X6h36NY9HKTW9eWOPq
+        ZWPyJFpE9hRbkzAA==
+To:     Vasily Gorbik <gor@linux.ibm.com>, Qian Cai <cai@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-next@vger.kernel.org, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks selectable
+In-Reply-To: <your-ad-here.call-01601123933-ext-6476@work.hours>
+References: <20200826111628.794979401@linutronix.de> <20200826112333.992429909@linutronix.de> <cdfd63305caa57785b0925dd24c0711ea02c8527.camel@redhat.com> <your-ad-here.call-01601123933-ext-6476@work.hours>
+Date:   Mon, 28 Sep 2020 12:11:40 +0200
+Message-ID: <87eemmky77.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pn6bchkc.fsf@vitty.brq.redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 05:36:51PM +0200, Vitaly Kuznetsov wrote:
-> Mohammed Gamal <mgamal@redhat.com> writes:
-> 
-[...]
-> 
-> Obviously we're seeing a recursion, we can trim this log a bit.
+On Sat, Sep 26 2020 at 14:38, Vasily Gorbik wrote:
+> On Fri, Sep 25, 2020 at 09:54:52AM -0400, Qian Cai wrote:
+> Yes, as well as on mips and sparc which also don't FORCE_PCI.
+> This seems to work for s390:
+>
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index b0b7acf07eb8..41136fbe909b 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -192,3 +192,3 @@ config S390
+>         select PCI_MSI                  if PCI
+> -       select PCI_MSI_ARCH_FALLBACKS
+> +       select PCI_MSI_ARCH_FALLBACKS   if PCI
+>         select SET_FS
 
-I've trimmed the stack trace a bit.
-
-> 
-> >
-> > Setting the notrace attribute for read_hv_sched_clock_msr() and
-> > read_hv_sched_clock_tsc() fixes it
-
-Also added a period at the end.
-
-> >
-> > Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V specific
-> > sched clock function")
-> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> 
-> Rather 'Suggested-by:' but not a big deal.
-> 
-
-And changed this too.
-
-This patch is now in hyperv-next. Thanks.
-
-Wei.
+lemme fix that for all of them ...
