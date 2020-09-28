@@ -2,62 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4805127B675
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Sep 2020 22:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24E1127B6BB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Sep 2020 22:55:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgI1Uir (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 28 Sep 2020 16:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40704 "EHLO
+        id S1726558AbgI1Uzc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 28 Sep 2020 16:55:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgI1Uir (ORCPT
+        with ESMTP id S1726466AbgI1Uzc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 28 Sep 2020 16:38:47 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C39AC061755;
-        Mon, 28 Sep 2020 13:38:47 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id f15so2681538ilj.2;
-        Mon, 28 Sep 2020 13:38:47 -0700 (PDT)
+        Mon, 28 Sep 2020 16:55:32 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDAAC061755;
+        Mon, 28 Sep 2020 13:55:32 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id y13so2617476iow.4;
+        Mon, 28 Sep 2020 13:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RnUzbIia0NAX7YNu6xY/oNMBx/xFLPCcfbG+81kQ5mc=;
-        b=tltR1aMUodF5nkRM8cyDLmsi5fQHfl76MM63tnAbzplkLz2jke4mHz9iRqztBbf4Ql
-         /e5kTXBINdPQATmHN0Z4FBWAQHIfEw4EXZZwvDs39YGN8a9VbK6MWAp9AICxG9CWb1ao
-         JDCGZNqFhxL9QysVKyMsEk2CwMcGPGrmWKEwNvuGmQh0K9y7HV8YAm0RlTnmSiAZ6aaE
-         nmR9Oy9AxXmKKqxqEQVU6DX8SoI32LkxfxQuUFZmhZQjqLGHNMbCUndxogM7/vRaij2t
-         Mkei1km9STaHB548our4mbfW6rcj9zVY8AgBcW7+yRwpqxhbODOMlvLhSo4ZlGJM58l3
-         iu4g==
+        bh=NsOk9OxZ8BNHdO4gKcSiVJH3+dCN3ajjMks7Ch1CdgY=;
+        b=XS1xdg6NT8OQ7wObkko0CO3DAnJdXMIYcxLuNNXzxXmiKU/h6iVE32bIfexrd38iQy
+         fKhrUkvUd0fJlDeWjVc2tF1aMI2hDCk+I3vzx755NSl597+/MP9e6DU41DioGCFP6e0D
+         9/fDBNjbkkUEfs9oG1ef4WCIBBZ6t0RioO2g0EVTokJZFOT6HGwQ3TlEAMJUQjtn5miY
+         FagIBMFhOa8P+iPy/I3Ts7p+TQItIg5sIo8rhwsQgHfxXZDgqhVLZkztzFshCKj1LmyI
+         S81Msyw5gN1f9F2qeYX33fR7Ig9Ug9tKLjUVkQEEyD+TlySfdx5I70ytXeMyAaNg78qH
+         LgIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RnUzbIia0NAX7YNu6xY/oNMBx/xFLPCcfbG+81kQ5mc=;
-        b=FNg6k2TGXyONSqF9FD7BpRJm5FI3/PPv4Ip8vxUmgh746Mod0MbyjDdr73IgRWsFmt
-         g31Ou1sQUTArqEmTTqG9jw9SQjJyzRHa7QXfIWEPcpEcOLEEDdngf354Hfitv5wnOsi+
-         A21MmJeAaM4xp6NNcUrX70LyrwetABF10Pp38P9ZqEVUPS976j7mbFNl31XT1k1limBE
-         EHyphETc7bRQVl3F0b6mFlbyssOtJQ8N1NL3V9EGvwjiDeHmAT6Hgewbm3N6OhFgJKNW
-         +izxk1DaIcaG3cx1Pc0lPYzoKEA+VOwMkOqoT/y5B8cLUlqMGwbGDPSDkrEJ/kPrb2tZ
-         DOsA==
-X-Gm-Message-State: AOAM531Pxm5GRNtaogkxp2MNzuPZF/0oGWWJ4SZYtHDKFGuDCMM1y2Uo
-        OTQQ1qtx9N3PuHKDnMo8ACZvq3Nrpj1VCnINf1Y=
-X-Google-Smtp-Source: ABdhPJxjWOlMUtAx0Ie/fRo/uIuKgbTIfNY7SlCP+erH5Zk2azwfxXaEKbUxjnZFYoXuMDQaYHzKc8VClp8ne+ZnXf8=
-X-Received: by 2002:a92:9ec7:: with SMTP id s68mr150414ilk.143.1601325526429;
- Mon, 28 Sep 2020 13:38:46 -0700 (PDT)
+        bh=NsOk9OxZ8BNHdO4gKcSiVJH3+dCN3ajjMks7Ch1CdgY=;
+        b=XNM3JtnJQc+Fx+vWiuIKsLu7iOjDg9ABv5Ovz7trSoU0pKY/wRnKMUFoc/YYcb/FvC
+         6dfKmTBoBev+5/E8Bv/lrKOW/ey0FFZl53wGwLV/CtlbIJ79mmjOSV9DY5hNjCgiAKP/
+         oct3oDEiZLeGZ1ZEoPF+b4LCfnc5X9WoI2HW34Cz/E1hqSLaUXEjbLM3fpg9yPEVmv8m
+         naGtFMMDnaiPiCBoHxkTetm08s8R3Gbv8BxTdHtWIi6RK6uRS31DLLeV2jGyvy8YZ17X
+         Cy5zTakfG1cVRGLuGh4F5L2+nO5ZMOAcmAOv95zd+hpfZrhLEl45z9eNNyUnYVmPwqL3
+         xscw==
+X-Gm-Message-State: AOAM531pWpkpExAKpo6iMxM/YpTOD1hDnZso5VLb7iFYLDpU/thaTqs1
+        6y+K06LgEpEBElrJEiDun4vrmP8qY04f/JAsRPseM82VnYZvZA==
+X-Google-Smtp-Source: ABdhPJwM5FZ6WjvylJKh9Nru0zE0JHULWglj2CMB4AABZBYCjK41GCYZ11YnhubB9OhxRZy5SgxcTsc2DYatZ22HNgI=
+X-Received: by 2002:a05:6638:1607:: with SMTP id x7mr400149jas.109.1601326531395;
+ Mon, 28 Sep 2020 13:55:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200928182110.7050-1-david@redhat.com> <20200928182110.7050-3-david@redhat.com>
-In-Reply-To: <20200928182110.7050-3-david@redhat.com>
+References: <20200928182110.7050-1-david@redhat.com> <20200928182110.7050-4-david@redhat.com>
+In-Reply-To: <20200928182110.7050-4-david@redhat.com>
 From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Mon, 28 Sep 2020 22:38:35 +0200
-Message-ID: <CAM9Jb+iitZzZeF5b8eCWoR7fD=D3t76YDRaYsBC1o8nx-2jEYA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] mm/page_alloc: place pages to tail in __putback_isolated_page()
+Date:   Mon, 28 Sep 2020 22:55:19 +0200
+Message-ID: <CAM9Jb+jYKPOcrDT7nfy=ZnSNGuTHE_M+AxG3G4kHcjT_UDnQ3w@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] mm/page_alloc: always move pages to the tail of
+ the freelist in unset_migratetype_isolate()
 To:     David Hildenbrand <david@redhat.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
         linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-acpi@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Oscar Salvador <osalvador@suse.de>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Mel Gorman <mgorman@techsingularity.net>,
         Michal Hocko <mhocko@kernel.org>,
         Dave Hansen <dave.hansen@intel.com>,
@@ -71,45 +72,19 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> __putback_isolated_page() already documents that pages will be placed to
-> the tail of the freelist - this is, however, not the case for
-> "order >= MAX_ORDER - 2" (see buddy_merge_likely()) - which should be
-> the case for all existing users.
+> Page isolation doesn't actually touch the pages, it simply isolates
+> pageblocks and moves all free pages to the MIGRATE_ISOLATE freelist.
 >
-> This change affects two users:
-> - free page reporting
-> - page isolation, when undoing the isolation (including memory onlining).
+> We already place pages to the tail of the freelists when undoing
+> isolation via __putback_isolated_page(), let's do it in any case
+> (e.g., if order <= pageblock_order) and document the behavior.
 >
-> This behavior is desireable for pages that haven't really been touched
-> lately, so exactly the two users that don't actually read/write page
-> content, but rather move untouched pages.
+> Add a "to_tail" parameter to move_freepages_block() but introduce a
+> a new move_to_free_list_tail() - similar to add_to_free_list_tail().
 >
-> The new behavior is especially desirable for memory onlining, where we
-> allow allocation of newly onlined pages via undo_isolate_page_range()
-> in online_pages(). Right now, we always place them to the head of the
-> free list, resulting in undesireable behavior: Assume we add
-> individual memory chunks via add_memory() and online them right away to
-> the NORMAL zone. We create a dependency chain of unmovable allocations
-> e.g., via the memmap. The memmap of the next chunk will be placed onto
-> previous chunks - if the last block cannot get offlined+removed, all
-> dependent ones cannot get offlined+removed. While this can already be
-> observed with individual DIMMs, it's more of an issue for virtio-mem
-> (and I suspect also ppc DLPAR).
+> This change results in all pages getting onlined via online_pages() to
+> be placed to the tail of the freelist.
 >
-> Document that this should only be used for optimizations, and no code
-> should realy on this for correction (if the order of freepage lists
-> ever changes).
->
-> We won't care about page shuffling: memory onlining already properly
-> shuffles after onlining. free page reporting doesn't care about
-> physically contiguous ranges, and there are already cases where page
-> isolation will simply move (physically close) free pages to (currently)
-> the head of the freelists via move_freepages_block() instead of
-> shuffling. If this becomes ever relevant, we should shuffle the whole
-> zone when undoing isolation of larger ranges, and after
-> free_contig_range().
->
-> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > Reviewed-by: Oscar Salvador <osalvador@suse.de>
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
@@ -124,49 +99,159 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 > Cc: Michael Ellerman <mpe@ellerman.id.au>
 > Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  mm/page_alloc.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
+>  include/linux/page-isolation.h |  4 ++--
+>  mm/page_alloc.c                | 35 +++++++++++++++++++++++-----------
+>  mm/page_isolation.c            | 12 +++++++++---
+>  3 files changed, 35 insertions(+), 16 deletions(-)
 >
+> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+> index 572458016331..3eca9b3c5305 100644
+> --- a/include/linux/page-isolation.h
+> +++ b/include/linux/page-isolation.h
+> @@ -36,8 +36,8 @@ static inline bool is_migrate_isolate(int migratetype)
+>  struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>                                  int migratetype, int flags);
+>  void set_pageblock_migratetype(struct page *page, int migratetype);
+> -int move_freepages_block(struct zone *zone, struct page *page,
+> -                               int migratetype, int *num_movable);
+> +int move_freepages_block(struct zone *zone, struct page *page, int migratetype,
+> +                        bool to_tail, int *num_movable);
+>
+>  /*
+>   * Changes migrate type in [start_pfn, end_pfn) to be MIGRATE_ISOLATE.
 > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index daab90e960fe..9e3ed4a6f69a 100644
+> index 9e3ed4a6f69a..d5a5f528b8ca 100644
 > --- a/mm/page_alloc.c
 > +++ b/mm/page_alloc.c
-> @@ -89,6 +89,18 @@ typedef int __bitwise fop_t;
->   */
->  #define FOP_SKIP_REPORT_NOTIFY ((__force fop_t)BIT(0))
->
-> +/*
-> + * Place the (possibly merged) page to the tail of the freelist. Will ignore
-> + * page shuffling (relevant code - e.g., memory onlining - is expected to
-> + * shuffle the whole zone).
-> + *
-> + * Note: No code should rely onto this flag for correctness - it's purely
-> + *       to allow for optimizations when handing back either fresh pages
-> + *       (memory onlining) or untouched pages (page isolation, free page
-> + *       reporting).
-> + */
-> +#define FOP_TO_TAIL            ((__force fop_t)BIT(1))
-> +
->  /* prevent >1 _updater_ of zone percpu pageset ->high and ->batch fields */
->  static DEFINE_MUTEX(pcp_batch_high_lock);
->  #define MIN_PERCPU_PAGELIST_FRACTION   (8)
-> @@ -1038,7 +1050,9 @@ static inline void __free_one_page(struct page *page, unsigned long pfn,
->  done_merging:
->         set_page_order(page, order);
->
-> -       if (is_shuffle_order(order))
-> +       if (fop_flags & FOP_TO_TAIL)
-> +               to_tail = true;
-> +       else if (is_shuffle_order(order))
->                 to_tail = shuffle_pick_tail();
->         else
->                 to_tail = buddy_merge_likely(pfn, buddy_pfn, page, order);
-> @@ -3300,7 +3314,7 @@ void __putback_isolated_page(struct page *page, unsigned int order, int mt)
->
->         /* Return isolated page to tail of freelist. */
->         __free_one_page(page, page_to_pfn(page), zone, order, mt,
-> -                       FOP_SKIP_REPORT_NOTIFY);
-> +                       FOP_SKIP_REPORT_NOTIFY | FOP_TO_TAIL);
+> @@ -905,6 +905,15 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
+>         list_move(&page->lru, &area->free_list[migratetype]);
 >  }
+>
+> +/* Used for pages which are on another list */
+> +static inline void move_to_free_list_tail(struct page *page, struct zone *zone,
+> +                                         unsigned int order, int migratetype)
+> +{
+> +       struct free_area *area = &zone->free_area[order];
+> +
+> +       list_move_tail(&page->lru, &area->free_list[migratetype]);
+> +}
+> +
+>  static inline void del_page_from_free_list(struct page *page, struct zone *zone,
+>                                            unsigned int order)
+>  {
+> @@ -2338,9 +2347,9 @@ static inline struct page *__rmqueue_cma_fallback(struct zone *zone,
+>   * Note that start_page and end_pages are not aligned on a pageblock
+>   * boundary. If alignment is required, use move_freepages_block()
+>   */
+> -static int move_freepages(struct zone *zone,
+> -                         struct page *start_page, struct page *end_page,
+> -                         int migratetype, int *num_movable)
+> +static int move_freepages(struct zone *zone, struct page *start_page,
+> +                         struct page *end_page, int migratetype,
+> +                         bool to_tail, int *num_movable)
+>  {
+>         struct page *page;
+>         unsigned int order;
+> @@ -2371,7 +2380,10 @@ static int move_freepages(struct zone *zone,
+>                 VM_BUG_ON_PAGE(page_zone(page) != zone, page);
+>
+>                 order = page_order(page);
+> -               move_to_free_list(page, zone, order, migratetype);
+> +               if (to_tail)
+> +                       move_to_free_list_tail(page, zone, order, migratetype);
+> +               else
+> +                       move_to_free_list(page, zone, order, migratetype);
+>                 page += 1 << order;
+>                 pages_moved += 1 << order;
+>         }
+> @@ -2379,8 +2391,8 @@ static int move_freepages(struct zone *zone,
+>         return pages_moved;
+>  }
+>
+> -int move_freepages_block(struct zone *zone, struct page *page,
+> -                               int migratetype, int *num_movable)
+> +int move_freepages_block(struct zone *zone, struct page *page, int migratetype,
+> +                        bool to_tail, int *num_movable)
+>  {
+>         unsigned long start_pfn, end_pfn;
+>         struct page *start_page, *end_page;
+> @@ -2401,7 +2413,7 @@ int move_freepages_block(struct zone *zone, struct page *page,
+>                 return 0;
+>
+>         return move_freepages(zone, start_page, end_page, migratetype,
+> -                                                               num_movable);
+> +                             to_tail, num_movable);
+>  }
+>
+>  static void change_pageblock_range(struct page *pageblock_page,
+> @@ -2526,8 +2538,8 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
+>         if (!whole_block)
+>                 goto single_page;
+>
+> -       free_pages = move_freepages_block(zone, page, start_type,
+> -                                               &movable_pages);
+> +       free_pages = move_freepages_block(zone, page, start_type, false,
+> +                                         &movable_pages);
+>         /*
+>          * Determine how many pages are compatible with our allocation.
+>          * For movable allocation, it's the number of movable pages which
+> @@ -2635,7 +2647,8 @@ static void reserve_highatomic_pageblock(struct page *page, struct zone *zone,
+>             && !is_migrate_cma(mt)) {
+>                 zone->nr_reserved_highatomic += pageblock_nr_pages;
+>                 set_pageblock_migratetype(page, MIGRATE_HIGHATOMIC);
+> -               move_freepages_block(zone, page, MIGRATE_HIGHATOMIC, NULL);
+> +               move_freepages_block(zone, page, MIGRATE_HIGHATOMIC, false,
+> +                                    NULL);
+>         }
+>
+>  out_unlock:
+> @@ -2711,7 +2724,7 @@ static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
+>                          */
+>                         set_pageblock_migratetype(page, ac->migratetype);
+>                         ret = move_freepages_block(zone, page, ac->migratetype,
+> -                                                                       NULL);
+> +                                                  false, NULL);
+>                         if (ret) {
+>                                 spin_unlock_irqrestore(&zone->lock, flags);
+>                                 return ret;
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index abfe26ad59fd..de44e1329706 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -45,7 +45,7 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+>                 set_pageblock_migratetype(page, MIGRATE_ISOLATE);
+>                 zone->nr_isolate_pageblock++;
+>                 nr_pages = move_freepages_block(zone, page, MIGRATE_ISOLATE,
+> -                                                                       NULL);
+> +                                               false, NULL);
+>
+>                 __mod_zone_freepage_state(zone, -nr_pages, mt);
+>                 spin_unlock_irqrestore(&zone->lock, flags);
+> @@ -83,7 +83,7 @@ static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
+>          * Because freepage with more than pageblock_order on isolated
+>          * pageblock is restricted to merge due to freepage counting problem,
+>          * it is possible that there is free buddy page.
+> -        * move_freepages_block() doesn't care of merge so we need other
+> +        * move_freepages_block() don't care about merging, so we need another
+>          * approach in order to merge them. Isolation and free will make
+>          * these pages to be merged.
+>          */
+> @@ -106,9 +106,15 @@ static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
+>          * If we isolate freepage with more than pageblock_order, there
+>          * should be no freepage in the range, so we could avoid costly
+>          * pageblock scanning for freepage moving.
+> +        *
+> +        * We didn't actually touch any of the isolated pages, so place them
+> +        * to the tail of the freelist. This is an optimization for memory
+> +        * onlining - just onlined memory won't immediately be considered for
+> +        * allocation.
+>          */
+>         if (!isolated_page) {
+> -               nr_pages = move_freepages_block(zone, page, migratetype, NULL);
+> +               nr_pages = move_freepages_block(zone, page, migratetype, true,
+> +                                               NULL);
+>                 __mod_zone_freepage_state(zone, nr_pages, migratetype);
+>         }
+>         set_pageblock_migratetype(page, migratetype);
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
