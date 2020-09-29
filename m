@@ -2,57 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFF3127C21E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Sep 2020 12:12:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5FF527C224
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Sep 2020 12:14:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgI2KM2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 29 Sep 2020 06:12:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43855 "EHLO
+        id S1727468AbgI2KO5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 29 Sep 2020 06:14:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:26352 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbgI2KM2 (ORCPT
+        by vger.kernel.org with ESMTP id S1725355AbgI2KO4 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 29 Sep 2020 06:12:28 -0400
+        Tue, 29 Sep 2020 06:14:56 -0400
 Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601374346;
+        s=mimecast20190719; t=1601374494;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=oNpNGw6f3mwY/0wvKuOlb5MrueeGzLomccukDb9LE1o=;
-        b=DAYtG7sSQ6kHYJL3VPGmzQFb29Ifwijfe8inV/s7ko54XwMskvQrhhi/x1nrYZapjqI8VS
-        hdDJJPw4tZi70NJmGVmcaSzqeBahojiOrKwdx42AajlixJsYIKDZsjJ6vddOd93CyeUy9c
-        KIng5hacaYhXA1E7KGeW2zmzmc/irD0=
+        bh=Qn75nCoqQgcl7F6rl9ofPOkbBShN1UveLnzcyqfdsaw=;
+        b=HpaDK+IzpwYkmL8fQptFBtDJxFF75JITMn4PHIp2Jw4BibCbhl+YtBxaJZCNrQiPJBJHgO
+        r3Aav2Ig5kJqYF2Z7a4l6b4Zj3IuIC8AdDsX2Xz4FI8RwlYVi2I/qKEqbPUYLczgZzcXPV
+        xxExVBuGaAMR1Y7KHvvmQA/5qwHn0ds=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-594-T1dUa26qPwWeARzi7KwelQ-1; Tue, 29 Sep 2020 06:12:22 -0400
-X-MC-Unique: T1dUa26qPwWeARzi7KwelQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-372-feZXzKz0OVioZCndwW4sww-1; Tue, 29 Sep 2020 06:14:50 -0400
+X-MC-Unique: feZXzKz0OVioZCndwW4sww-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B708D8015DB;
-        Tue, 29 Sep 2020 10:12:19 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30C081019629;
+        Tue, 29 Sep 2020 10:14:48 +0000 (UTC)
 Received: from [10.36.112.157] (ovpn-112-157.ams2.redhat.com [10.36.112.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D006B7A431;
-        Tue, 29 Sep 2020 10:12:15 +0000 (UTC)
-Subject: Re: [PATCH v1 3/5] mm/page_alloc: always move pages to the tail of
- the freelist in unset_migratetype_isolate()
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD5FC5C1C4;
+        Tue, 29 Sep 2020 10:14:43 +0000 (UTC)
+Subject: Re: [PATCH v1 4/5] mm/page_alloc: place pages to tail in
+ __free_pages_core()
 To:     Wei Yang <richard.weiyang@linux.alibaba.com>
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-acpi@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Oscar Salvador <osalvador@suse.de>,
         Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Mel Gorman <mgorman@techsingularity.net>,
         Michal Hocko <mhocko@kernel.org>,
         Dave Hansen <dave.hansen@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
         Mike Rapoport <rppt@kernel.org>,
-        Scott Cheloha <cheloha@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
 References: <20200928182110.7050-1-david@redhat.com>
- <20200928182110.7050-4-david@redhat.com>
- <20200929091803.GB36904@L-31X9LVDL-1304.local>
+ <20200928182110.7050-5-david@redhat.com>
+ <20200929093650.GC36904@L-31X9LVDL-1304.local>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -99,38 +101,53 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <21d9ea16-863b-19fe-e5b7-841bb4228c6d@redhat.com>
-Date:   Tue, 29 Sep 2020 12:12:14 +0200
+Message-ID: <2a21e515-6cae-5aa1-783b-696d93d348fd@redhat.com>
+Date:   Tue, 29 Sep 2020 12:14:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200929091803.GB36904@L-31X9LVDL-1304.local>
+In-Reply-To: <20200929093650.GC36904@L-31X9LVDL-1304.local>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 29.09.20 11:18, Wei Yang wrote:
-> On Mon, Sep 28, 2020 at 08:21:08PM +0200, David Hildenbrand wrote:
->> Page isolation doesn't actually touch the pages, it simply isolates
->> pageblocks and moves all free pages to the MIGRATE_ISOLATE freelist.
+On 29.09.20 11:36, Wei Yang wrote:
+> On Mon, Sep 28, 2020 at 08:21:09PM +0200, David Hildenbrand wrote:
+>> __free_pages_core() is used when exposing fresh memory to the buddy
+>> during system boot and when onlining memory in generic_online_page().
 >>
->> We already place pages to the tail of the freelists when undoing
->> isolation via __putback_isolated_page(), let's do it in any case
->> (e.g., if order <= pageblock_order) and document the behavior.
+>> generic_online_page() is used in two cases:
 >>
->> Add a "to_tail" parameter to move_freepages_block() but introduce a
->> a new move_to_free_list_tail() - similar to add_to_free_list_tail().
-
-s/a a/a/
-
+>> 1. Direct memory onlining in online_pages().
+>> 2. Deferred memory onlining in memory-ballooning-like mechanisms (HyperV
+>>   balloon and virtio-mem), when parts of a section are kept
+>>   fake-offline to be fake-onlined later on.
 >>
->> This change results in all pages getting onlined via online_pages() to
->> be placed to the tail of the freelist.
+>> In 1, we already place pages to the tail of the freelist. Pages will be
+>> freed to MIGRATE_ISOLATE lists first and moved to the tail of the freelists
+>> via undo_isolate_page_range().
 >>
+>> In 2, we currently don't implement a proper rule. In case of virtio-mem,
+>> where we currently always online MAX_ORDER - 1 pages, the pages will be
+>> placed to the HEAD of the freelist - undesireable. While the hyper-v
+>> balloon calls generic_online_page() with single pages, usually it will
+>> call it on successive single pages in a larger block.
+>>
+>> The pages are fresh, so place them to the tail of the freelists and avoid
+>> the PCP. In __free_pages_core(), remove the now superflouos call to
+>> set_page_refcounted() and add a comment regarding page initialization and
+>> the refcount.
+>>
+>> Note: In 2. we currently don't shuffle. If ever relevant (page shuffling
+>> is usually of limited use in virtualized environments), we might want to
+>> shuffle after a sequence of generic_online_page() calls in the
+>> relevant callers.
+>>
+>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 >> Reviewed-by: Oscar Salvador <osalvador@suse.de>
 >> Cc: Andrew Morton <akpm@linux-foundation.org>
 >> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
@@ -141,57 +158,95 @@ s/a a/a/
 >> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
 >> Cc: Oscar Salvador <osalvador@suse.de>
 >> Cc: Mike Rapoport <rppt@kernel.org>
->> Cc: Scott Cheloha <cheloha@linux.ibm.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>> Cc: Wei Liu <wei.liu@kernel.org>
 >> Signed-off-by: David Hildenbrand <david@redhat.com>
 >> ---
->> include/linux/page-isolation.h |  4 ++--
->> mm/page_alloc.c                | 35 +++++++++++++++++++++++-----------
->> mm/page_isolation.c            | 12 +++++++++---
->> 3 files changed, 35 insertions(+), 16 deletions(-)
+>> mm/page_alloc.c | 37 ++++++++++++++++++++++++-------------
+>> 1 file changed, 24 insertions(+), 13 deletions(-)
 >>
->> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
->> index 572458016331..3eca9b3c5305 100644
->> --- a/include/linux/page-isolation.h
->> +++ b/include/linux/page-isolation.h
->> @@ -36,8 +36,8 @@ static inline bool is_migrate_isolate(int migratetype)
->> struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->> 				 int migratetype, int flags);
->> void set_pageblock_migratetype(struct page *page, int migratetype);
->> -int move_freepages_block(struct zone *zone, struct page *page,
->> -				int migratetype, int *num_movable);
->> +int move_freepages_block(struct zone *zone, struct page *page, int migratetype,
->> +			 bool to_tail, int *num_movable);
->>
->> /*
->>  * Changes migrate type in [start_pfn, end_pfn) to be MIGRATE_ISOLATE.
 >> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index 9e3ed4a6f69a..d5a5f528b8ca 100644
+>> index d5a5f528b8ca..8a2134fe9947 100644
 >> --- a/mm/page_alloc.c
 >> +++ b/mm/page_alloc.c
->> @@ -905,6 +905,15 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
->> 	list_move(&page->lru, &area->free_list[migratetype]);
+>> @@ -270,7 +270,8 @@ bool pm_suspended_storage(void)
+>> unsigned int pageblock_order __read_mostly;
+>> #endif
+>>
+>> -static void __free_pages_ok(struct page *page, unsigned int order);
+>> +static void __free_pages_ok(struct page *page, unsigned int order,
+>> +			    fop_t fop_flags);
+>>
+>> /*
+>>  * results with 256, 32 in the lowmem_reserve sysctl:
+>> @@ -682,7 +683,7 @@ static void bad_page(struct page *page, const char *reason)
+>> void free_compound_page(struct page *page)
+>> {
+>> 	mem_cgroup_uncharge(page);
+>> -	__free_pages_ok(page, compound_order(page));
+>> +	__free_pages_ok(page, compound_order(page), FOP_NONE);
 >> }
 >>
->> +/* Used for pages which are on another list */
->> +static inline void move_to_free_list_tail(struct page *page, struct zone *zone,
->> +					  unsigned int order, int migratetype)
->> +{
->> +	struct free_area *area = &zone->free_area[order];
->> +
->> +	list_move_tail(&page->lru, &area->free_list[migratetype]);
->> +}
->> +
+>> void prep_compound_page(struct page *page, unsigned int order)
+>> @@ -1419,17 +1420,15 @@ static void free_pcppages_bulk(struct zone *zone, int count,
+>> 	spin_unlock(&zone->lock);
+>> }
+>>
+>> -static void free_one_page(struct zone *zone,
+>> -				struct page *page, unsigned long pfn,
+>> -				unsigned int order,
+>> -				int migratetype)
+>> +static void free_one_page(struct zone *zone, struct page *page, unsigned long pfn,
+>> +			  unsigned int order, int migratetype, fop_t fop_flags)
+>> {
+>> 	spin_lock(&zone->lock);
+>> 	if (unlikely(has_isolate_pageblock(zone) ||
+>> 		is_migrate_isolate(migratetype))) {
+>> 		migratetype = get_pfnblock_migratetype(page, pfn);
+>> 	}
+>> -	__free_one_page(page, pfn, zone, order, migratetype, FOP_NONE);
+>> +	__free_one_page(page, pfn, zone, order, migratetype, fop_flags);
+>> 	spin_unlock(&zone->lock);
+>> }
+>>
+>> @@ -1507,7 +1506,8 @@ void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
+>> 	}
+>> }
+>>
+>> -static void __free_pages_ok(struct page *page, unsigned int order)
+>> +static void __free_pages_ok(struct page *page, unsigned int order,
+>> +			    fop_t fop_flags)
+>> {
+>> 	unsigned long flags;
+>> 	int migratetype;
+>> @@ -1519,7 +1519,8 @@ static void __free_pages_ok(struct page *page, unsigned int order)
+>> 	migratetype = get_pfnblock_migratetype(page, pfn);
+>> 	local_irq_save(flags);
+>> 	__count_vm_events(PGFREE, 1 << order);
+>> -	free_one_page(page_zone(page), page, pfn, order, migratetype);
+>> +	free_one_page(page_zone(page), page, pfn, order, migratetype,
+>> +		      fop_flags);
+>> 	local_irq_restore(flags);
+>> }
+>>
+>> @@ -1529,6 +1530,11 @@ void __free_pages_core(struct page *page, unsigned int order)
+>> 	struct page *p = page;
+>> 	unsigned int loop;
+>>
+>> +	/*
+>> +	 * When initializing the memmap, init_single_page() sets the refcount
 > 
-> Would it be better to pass the *to_tail* to move_to_free_list(), so we won't
-> have a new function?
+> If my code is the latest version.
+> 
+> s/init_single_page/__init_single_page/
 
-Hi,
+Indeed - thanks!
 
-thanks for the review!
 
-See discussion in RFC + cover letter:
+-- 
+Thanks,
 
-"Add a "to_tail" parameter to move_freepages_block() but introduce a new
-move_to_free_list_tail() - similar to add_to_free_list_tail()."
+David / dhildenb
 
