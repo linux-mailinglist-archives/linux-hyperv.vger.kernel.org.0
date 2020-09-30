@@ -2,131 +2,137 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B4A627E7CA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Sep 2020 13:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75A5427E8C4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Sep 2020 14:45:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgI3LnV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 30 Sep 2020 07:43:21 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:24311 "EHLO nat-hk.nvidia.com"
+        id S1729747AbgI3Mph (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 30 Sep 2020 08:45:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:26145 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgI3LnU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 30 Sep 2020 07:43:20 -0400
-Received: from HKMAIL101.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f746f550000>; Wed, 30 Sep 2020 19:43:17 +0800
-Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL101.nvidia.com
- (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 30 Sep
- 2020 11:43:05 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
- by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 30 Sep 2020 11:43:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JAHVpach2WYpBrX7bBNfX2SGGy1+cnUCSq0QPfO8RqEJnTo2B6aBwe+MSQ57TGv/981kRQojIBOoMt7yuMguw2Kp5woH1njWSncI8oDfknTIJwdqH2jRA7+wTCkP2+AQVZFwNCFDvCEj1IRJK7vP/GDgwCBNJnVdSdASsdxzPcB8HCqDxR+SLRetk5qcZiPK1nhaTg67XQO/dnLp1eUj8A8ErX0r8Z1kMGv0rd26MZZnTe1hl1UwuTpVA0Tvr23leGuf19KOjyx4ZsaJcJ2DT13mzmLSkXOc1Wkv2vOcA/qNFoGKrFBVmybOi4hngZMvkglRI8qybsbWfn2RFsHGjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ifDjfXqbQdEToOzcs0qsNuogLb2HLWyKHTQc87/3Ewc=;
- b=GeC4vJWbfjTvUobe+GD7bOGykQaBOHH9lRECgxQuxmBz12RecnpK0daGWL/nq+UA1YjrfFHbvdi+geu9xiLDM2UFIseLWBWZYeg7EYre4CKvrFEJc/Jk0id23iLCbkpwZYjdydGccgoFaSWHhmQZekjrIUnXC6eA0yjnt5fIBL44pomxvYhSNTjTaU3GfCsB/VE3U6YoQ8JWlrPiQ9QxZC0NPmH308QDm1m2EkXgszZiBEFC/nbVG6lDlrUsipDlyAsmxlgi8wPzaI3NKn5QcGELBMWyX+7KDU2Xp7Jjn9IQWbfhb+rrutv5oJ0DZpRhhjf6na7Yl8Tjoo0tYcpwjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4546.namprd12.prod.outlook.com (2603:10b6:5:2ae::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.32; Wed, 30 Sep
- 2020 11:43:02 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3433.032; Wed, 30 Sep 2020
- 11:43:02 +0000
-Date:   Wed, 30 Sep 2020 08:43:01 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     "Dey, Megha" <megha.dey@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        "Russ Anderson" <rja@hpe.com>, <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        "Kevin Tian" <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <ravi.v.shankar@intel.com>
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device
- MSI
-Message-ID: <20200930114301.GD816047@nvidia.com>
+        id S1728043AbgI3Mph (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 30 Sep 2020 08:45:37 -0400
+IronPort-SDR: 8OHDvIjFuD7atQWyPXdDAQbjOL25xdLNAaKcDUpN7hQ9UzKrDB5wxndMu+oIufGUTmnhGuV9V4
+ 28AhQHxJgO6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9759"; a="159822159"
+X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
+   d="scan'208";a="159822159"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 05:45:36 -0700
+IronPort-SDR: eCF4X5a/gfpkch1z+Gghm8I69LMoYqlXRHSy3U79/H0p9P+ssLwnq/P9qK4gAmUKusgR7QnBwT
+ 59rJ3VZLCcBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
+   d="scan'208";a="294597999"
+Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Sep 2020 05:45:36 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 30 Sep 2020 05:45:36 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 30 Sep 2020 05:45:35 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
+ Wed, 30 Sep 2020 05:45:30 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jgg@nvidia.com" <jgg@nvidia.com>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "sivanich@hpe.com" <sivanich@hpe.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Lu, Baolu" <baolu.lu@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "steve.wahl@hpe.com" <steve.wahl@hpe.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rja@hpe.com" <rja@hpe.com>, "joro@8bytes.org" <joro@8bytes.org>,
+        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: Re: [patch V2 24/46] PCI: vmd: Mark VMD irqdomain with
+ DOMAIN_BUS_VMD_MSI
+Thread-Topic: [patch V2 24/46] PCI: vmd: Mark VMD irqdomain with
+ DOMAIN_BUS_VMD_MSI
+Thread-Index: AQHWe6Ci+RtSrJb+okaPJR2eu/FJZalSxzQAgC8GCIA=
+Date:   Wed, 30 Sep 2020 12:45:30 +0000
+Message-ID: <1d284a478d4e5bf4a247ee83afa1b8b45f9e1b3f.camel@intel.com>
 References: <20200826111628.794979401@linutronix.de>
- <10b5d933-f104-7699-341a-0afb16640d54@intel.com>
- <87v9fvix5f.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87v9fvix5f.fsf@nanos.tec.linutronix.de>
-X-ClientProxiedBy: BL0PR02CA0003.namprd02.prod.outlook.com
- (2603:10b6:207:3c::16) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+         <20200826112333.047315047@linutronix.de>
+         <20200831143940.GA1152540@nvidia.com>
+In-Reply-To: <20200831143940.GA1152540@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <90C7529B4211014189DA743BA8288574@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR02CA0003.namprd02.prod.outlook.com (2603:10b6:207:3c::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.34 via Frontend Transport; Wed, 30 Sep 2020 11:43:02 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kNaVh-003vDf-1s; Wed, 30 Sep 2020 08:43:01 -0300
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1601466197; bh=ifDjfXqbQdEToOzcs0qsNuogLb2HLWyKHTQc87/3Ewc=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=kXLhM/c+6HLgKm+6ble3lfNqOcCNe2qhFpXxYQ9VNpltIzypeid1VYh+BMxlOLlye
-         0+6VDWOyOvDf07+xZGAec4Wvn8k5WI3aiZoShq7j1qgKIq7qgusR0iXtwcLQk/xdjz
-         +v2330h6r9nb93xOefwM7I/qvuhlV7upcanj1FwilxBqKMT7QRH5pMZ7ET2aXWd8p8
-         pK/mYHKsauGX6pIvk6Q2HPDPYGpXdDmMnGHCOc+5/StKJ5sjO489/p+d/uJSwbbRw0
-         QSJd7JK+1Rwde8F4fsYoj/S1iGRvpbBC/PZ0KlECf5FCeVBwjrsxHssfpqgfmeqxU4
-         fyKeGy0g3j+zQ==
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 08:41:48AM +0200, Thomas Gleixner wrote:
-> On Tue, Sep 29 2020 at 16:03, Megha Dey wrote:
-> > On 8/26/2020 4:16 AM, Thomas Gleixner wrote:
-> >> #9	is obviously just for the folks interested in IMS
-> >>
-> >
-> > I see that the tip tree (as of 9/29) has most of these patches but 
-> > notice that the DEV_MSI related patches
-> >
-> > haven't made it. I have tested the tip tree(x86/irq branch) with your
-> > DEV_MSI infra patches and our IMS patches with the IDXD driver and was
-> 
-> Your IMS patches? Why do you need something special again?
-> 
-> > wondering if we should push out those patches as part of our patchset?
-> 
-> As I don't have any hardware to test that, I was waiting for you and
-> Jason to confirm that this actually works for the two different IMS
-> implementations.
-
-How urgently do you need this? The code looked good from what I
-understood. It will be a while before we have all the parts to send an
-actual patch though.
-
-We might be able to put together a mockup just to prove it
-
-Jason
+SGkgSmFzb24NCg0KT24gTW9uLCAyMDIwLTA4LTMxIGF0IDExOjM5IC0wMzAwLCBKYXNvbiBHdW50
+aG9ycGUgd3JvdGU6DQo+IE9uIFdlZCwgQXVnIDI2LCAyMDIwIGF0IDAxOjE2OjUyUE0gKzAyMDAs
+IFRob21hcyBHbGVpeG5lciB3cm90ZToNCj4gPiBGcm9tOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhA
+bGludXRyb25peC5kZT4NCj4gPiANCj4gPiBEZXZpY2VzIG9uIHRoZSBWTUQgYnVzIHVzZSB0aGVp
+ciBvd24gTVNJIGlycSBkb21haW4sIGJ1dCBpdCBpcyBub3QNCj4gPiBkaXN0aW5ndWlzaGFibGUg
+ZnJvbSByZWd1bGFyIFBDSS9NU0kgaXJxIGRvbWFpbnMuIFRoaXMgaXMgcmVxdWlyZWQNCj4gPiB0
+byBleGNsdWRlIFZNRCBkZXZpY2VzIGZyb20gZ2V0dGluZyB0aGUgaXJxIGRvbWFpbiBwb2ludGVy
+IHNldCBieQ0KPiA+IGludGVycnVwdCByZW1hcHBpbmcuDQo+ID4gDQo+ID4gT3ZlcnJpZGUgdGhl
+IGRlZmF1bHQgYnVzIHRva2VuLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFRob21hcyBHbGVp
+eG5lciA8dGdseEBsaW51dHJvbml4LmRlPg0KPiA+IEFja2VkLWJ5OiBCam9ybiBIZWxnYWFzIDxi
+aGVsZ2Fhc0Bnb29nbGUuY29tPg0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIHwg
+ICAgNiArKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPiA+IA0K
+PiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMNCj4gPiBAQCAtNTc5LDYgKzU3
+OSwxMiBAQCBzdGF0aWMgaW50IHZtZF9lbmFibGVfZG9tYWluKHN0cnVjdCB2bWRfDQo+ID4gIAkJ
+cmV0dXJuIC1FTk9ERVY7DQo+ID4gIAl9DQo+ID4gIA0KPiA+ICsJLyoNCj4gPiArCSAqIE92ZXJy
+aWRlIHRoZSBpcnEgZG9tYWluIGJ1cyB0b2tlbiBzbyB0aGUgZG9tYWluIGNhbiBiZSBkaXN0aW5n
+dWlzaGVkDQo+ID4gKwkgKiBmcm9tIGEgcmVndWxhciBQQ0kvTVNJIGRvbWFpbi4NCj4gPiArCSAq
+Lw0KPiA+ICsJaXJxX2RvbWFpbl91cGRhdGVfYnVzX3Rva2VuKHZtZC0+aXJxX2RvbWFpbiwgRE9N
+QUlOX0JVU19WTURfTVNJKTsNCj4gPiArDQo+IA0KPiBIYXZpbmcgdGhlIG5vbi10cmFuc3BhcmVu
+dC1icmlkZ2UgaG9sZCBhIE1TSSB0YWJsZSBhbmQNCj4gbXVsdGlwbGV4L2RlLW11bHRpcGxleCBJ
+UlFzIGxvb2tzIGxpa2UgYW5vdGhlciBnb29kIHVzZSBjYXNlIGZvcg0KPiBzb21ldGhpbmcgY2xv
+c2UgdG8gcGNpX3N1YmRldmljZV9tc2lfY3JlYXRlX2lycV9kb21haW4oKT8NCj4gDQo+IElmIGVh
+Y2ggZGV2aWNlIGNvdWxkIGhhdmUgaXRzIG93biBpbnRlcm5hbCBNU0ktWCB0YWJsZSBwcm9ncmFt
+bWVkDQo+IHByb3Blcmx5IHRoaW5ncyB3b3VsZCB3b3JrIGFsb3QgYmV0dGVyLiBEaXNhYmxlIGNh
+cHR1cmUvcmVtYXAgb2YgdGhlDQo+IE1TSSByYW5nZSBpbiB0aGUgTlRCLg0KV2UgY2FuIGRpc2Fi
+bGUgdGhlIGNhcHR1cmUgYW5kIHJlbWFwIGluIG5ld2VyIGRldmljZXMgc28gd2UgZG9uJ3QgZXZl
+bg0KbmVlZCB0aGUgaXJxIGRvbWFpbi4gTGVnYWN5IFZNRCB3aWxsIGF1dG9tYXRpY2FsbHkgcmVt
+YXAgYmFzZWQgb24gdGhlDQpBUElDIGRlc3QgYml0cyBpbiB0aGUgTVNJIGFkZHJlc3MuDQoNCkkg
+d291bGQgaG93ZXZlciBsaWtlIHRvIGRldGVybWluZSBpZiB0aGUgTVNJIGRhdGEgYml0cyBjb3Vs
+ZCBiZSB1c2VkDQpmb3IgaW5kaXZpZHVhbCBkZXZpY2VzIHRvIGhhdmUgdGhlIElSUSBkb21haW4g
+c3Vic3lzdGVtIGRlbXVsdGlwbGV4IHRoZQ0KdmlycSBmcm9tIHRoYXQgYW5kIGVsaW1pbmF0ZSB0
+aGUgSVJRIGxpc3QgaXRlcmF0aW9uLg0KDQpBIGNvbmNlcm4gSSBoYXZlIGFib3V0IHRoYXQgc2No
+ZW1lIGlzIHZpcnR1YWxpemF0aW9uIGFzIEkgdGhpbmsgdGhvc2UNCmJpdHMgYXJlIHVzZWQgdG8g
+cm91dGUgdG8gdGhlIHZpcnR1YWwgdmVjdG9yLg0KDQo+IA0KPiBUaGVuIGVhY2ggZGV2aWNlIGNv
+dWxkIGhhdmUgYSBwcm9wZXIgbm9uLW11bHRpcGxleGVkIGludGVycnVwdA0KPiBkZWxpdmVyZWQg
+dG8gdGhlIENQVS4uIEFmZmluaXR5IHdvdWxkIHdvcmsgcHJvcGVybHksIG5vIG5lZWQgdG8gc2hh
+cmUNCj4gSVJRcyAoZWcgdm1kX2lycSgpIGdvZXMgYXdheSkvZXRjLg0KPiANCj4gU29tZXRoaW5n
+IGZvciB0aGUgVk1EIG1haW50YWluZXJzIHRvIHRoaW5rIGFib3V0IGF0IGxlYXN0Lg0KPiANCj4g
+QXMgSSBoZWFyIG1vcmUgYWJvdXQgTlRCIHRoZXNlIGRheXMgYSBmdWxsIE1TSSBzY2hlbWUgZm9y
+IE5UQiBzZWVtcw0KPiBpbnRlcmVzdGluZyB0byBoYXZlIGluIHRoZSBQQ0ktRSBjb3JlIGNvZGUu
+Lg0KPiANCj4gSmFzb24NCg0KDQo=
