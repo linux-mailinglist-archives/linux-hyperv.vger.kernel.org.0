@@ -2,96 +2,140 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD7527E165
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Sep 2020 08:41:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 770C027E2E0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Sep 2020 09:48:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725320AbgI3Glv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 30 Sep 2020 02:41:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54218 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgI3Glv (ORCPT
+        id S1725908AbgI3HsX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 30 Sep 2020 03:48:23 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:53677 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725440AbgI3HsX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 30 Sep 2020 02:41:51 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1601448108;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EJKrDPg1zMcLHTJ9psmGJPskafubkx5uuA4rv00RWvE=;
-        b=3b6vWZ3FYwgK0uGd/jHNKkzf932WR9YVcHqnMSL9hHtR4FHsBZC07JwnVnqMJT9Jed2laM
-        sOmj+DtePTxNt1wmjH5DZ6o2s5opDsc8D9ifXyqbFVzXOdAfouLp4tTZLVGyMM1xzNgVNF
-        SiFdV8l6tmYAgTktBPpm/Iadr8yO4O7oHnUbbnOIztDfkFXFDnrym1ArBAMUmD2E46aShM
-        CD+CVsD5I4NZ1O1jmOVTRGe6+5R2FDp5MP/BP/FjqJPOUfRmKvz3lfIp+HuQ1y5Tb6Yo6V
-        QtpSVxjdk4qgFUFhEUdh5DLZfdeQVjrBT9YrrBtUq7PiKVvMzZoW945MxWorVA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1601448108;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EJKrDPg1zMcLHTJ9psmGJPskafubkx5uuA4rv00RWvE=;
-        b=4oScqGVN58GGowfuDE4TlRtr/G0yJIGU+gi/diGlZDZu0wervLchyWESUEEFxWNHdARjHI
-        QIrbJgszY1bnCuAA==
-To:     "Dey\, Megha" <megha.dey@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
-        ravi.v.shankar@intel.com
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device MSI
-In-Reply-To: <10b5d933-f104-7699-341a-0afb16640d54@intel.com>
-References: <20200826111628.794979401@linutronix.de> <10b5d933-f104-7699-341a-0afb16640d54@intel.com>
-Date:   Wed, 30 Sep 2020 08:41:48 +0200
-Message-ID: <87v9fvix5f.fsf@nanos.tec.linutronix.de>
+        Wed, 30 Sep 2020 03:48:23 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0UAYdEKG_1601452096;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0UAYdEKG_1601452096)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 30 Sep 2020 15:48:16 +0800
+Date:   Wed, 30 Sep 2020 15:48:16 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@kernel.org>,
+        Scott Cheloha <cheloha@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v1 3/5] mm/page_alloc: always move pages to the tail of
+ the freelist in unset_migratetype_isolate()
+Message-ID: <20200930074816.GA40431@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200928182110.7050-1-david@redhat.com>
+ <20200928182110.7050-4-david@redhat.com>
+ <20200929091803.GB36904@L-31X9LVDL-1304.local>
+ <21d9ea16-863b-19fe-e5b7-841bb4228c6d@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21d9ea16-863b-19fe-e5b7-841bb4228c6d@redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Sep 29 2020 at 16:03, Megha Dey wrote:
-> On 8/26/2020 4:16 AM, Thomas Gleixner wrote:
->> #9	is obviously just for the folks interested in IMS
->>
+On Tue, Sep 29, 2020 at 12:12:14PM +0200, David Hildenbrand wrote:
+>On 29.09.20 11:18, Wei Yang wrote:
+>> On Mon, Sep 28, 2020 at 08:21:08PM +0200, David Hildenbrand wrote:
+>>> Page isolation doesn't actually touch the pages, it simply isolates
+>>> pageblocks and moves all free pages to the MIGRATE_ISOLATE freelist.
+>>>
+>>> We already place pages to the tail of the freelists when undoing
+>>> isolation via __putback_isolated_page(), let's do it in any case
+>>> (e.g., if order <= pageblock_order) and document the behavior.
+>>>
+>>> Add a "to_tail" parameter to move_freepages_block() but introduce a
+>>> a new move_to_free_list_tail() - similar to add_to_free_list_tail().
 >
-> I see that the tip tree (as of 9/29) has most of these patches but 
-> notice that the DEV_MSI related patches
+>s/a a/a/
 >
-> haven't made it. I have tested the tip tree(x86/irq branch) with your
-> DEV_MSI infra patches and our IMS patches with the IDXD driver and was
+>>>
+>>> This change results in all pages getting onlined via online_pages() to
+>>> be placed to the tail of the freelist.
+>>>
+>>> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>>> Cc: Michal Hocko <mhocko@kernel.org>
+>>> Cc: Dave Hansen <dave.hansen@intel.com>
+>>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>>> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+>>> Cc: Oscar Salvador <osalvador@suse.de>
+>>> Cc: Mike Rapoport <rppt@kernel.org>
+>>> Cc: Scott Cheloha <cheloha@linux.ibm.com>
+>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>> include/linux/page-isolation.h |  4 ++--
+>>> mm/page_alloc.c                | 35 +++++++++++++++++++++++-----------
+>>> mm/page_isolation.c            | 12 +++++++++---
+>>> 3 files changed, 35 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+>>> index 572458016331..3eca9b3c5305 100644
+>>> --- a/include/linux/page-isolation.h
+>>> +++ b/include/linux/page-isolation.h
+>>> @@ -36,8 +36,8 @@ static inline bool is_migrate_isolate(int migratetype)
+>>> struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>>> 				 int migratetype, int flags);
+>>> void set_pageblock_migratetype(struct page *page, int migratetype);
+>>> -int move_freepages_block(struct zone *zone, struct page *page,
+>>> -				int migratetype, int *num_movable);
+>>> +int move_freepages_block(struct zone *zone, struct page *page, int migratetype,
+>>> +			 bool to_tail, int *num_movable);
+>>>
+>>> /*
+>>>  * Changes migrate type in [start_pfn, end_pfn) to be MIGRATE_ISOLATE.
+>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>> index 9e3ed4a6f69a..d5a5f528b8ca 100644
+>>> --- a/mm/page_alloc.c
+>>> +++ b/mm/page_alloc.c
+>>> @@ -905,6 +905,15 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
+>>> 	list_move(&page->lru, &area->free_list[migratetype]);
+>>> }
+>>>
+>>> +/* Used for pages which are on another list */
+>>> +static inline void move_to_free_list_tail(struct page *page, struct zone *zone,
+>>> +					  unsigned int order, int migratetype)
+>>> +{
+>>> +	struct free_area *area = &zone->free_area[order];
+>>> +
+>>> +	list_move_tail(&page->lru, &area->free_list[migratetype]);
+>>> +}
+>>> +
+>> 
+>> Would it be better to pass the *to_tail* to move_to_free_list(), so we won't
+>> have a new function?
+>
+>Hi,
+>
+>thanks for the review!
+>
+>See discussion in RFC + cover letter:
+>
+>"Add a "to_tail" parameter to move_freepages_block() but introduce a new
+>move_to_free_list_tail() - similar to add_to_free_list_tail()."
 
-Your IMS patches? Why do you need something special again?
+Hmm, sounds reasonable.
 
-> wondering if we should push out those patches as part of our patchset?
+Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 
-As I don't have any hardware to test that, I was waiting for you and
-Jason to confirm that this actually works for the two different IMS
-implementations.
-
-Thanks,
-
-        tglx
+-- 
+Wei Yang
+Help you, Help me
