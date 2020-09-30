@@ -2,140 +2,131 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 770C027E2E0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Sep 2020 09:48:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B4A627E7CA
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Sep 2020 13:43:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725908AbgI3HsX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 30 Sep 2020 03:48:23 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:53677 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725440AbgI3HsX (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 30 Sep 2020 03:48:23 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0UAYdEKG_1601452096;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0UAYdEKG_1601452096)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 30 Sep 2020 15:48:16 +0800
-Date:   Wed, 30 Sep 2020 15:48:16 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mike Rapoport <rppt@kernel.org>,
-        Scott Cheloha <cheloha@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v1 3/5] mm/page_alloc: always move pages to the tail of
- the freelist in unset_migratetype_isolate()
-Message-ID: <20200930074816.GA40431@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200928182110.7050-1-david@redhat.com>
- <20200928182110.7050-4-david@redhat.com>
- <20200929091803.GB36904@L-31X9LVDL-1304.local>
- <21d9ea16-863b-19fe-e5b7-841bb4228c6d@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        id S1729477AbgI3LnV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 30 Sep 2020 07:43:21 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:24311 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727997AbgI3LnU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 30 Sep 2020 07:43:20 -0400
+Received: from HKMAIL101.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f746f550000>; Wed, 30 Sep 2020 19:43:17 +0800
+Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL101.nvidia.com
+ (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 30 Sep
+ 2020 11:43:05 +0000
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
+ by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 30 Sep 2020 11:43:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JAHVpach2WYpBrX7bBNfX2SGGy1+cnUCSq0QPfO8RqEJnTo2B6aBwe+MSQ57TGv/981kRQojIBOoMt7yuMguw2Kp5woH1njWSncI8oDfknTIJwdqH2jRA7+wTCkP2+AQVZFwNCFDvCEj1IRJK7vP/GDgwCBNJnVdSdASsdxzPcB8HCqDxR+SLRetk5qcZiPK1nhaTg67XQO/dnLp1eUj8A8ErX0r8Z1kMGv0rd26MZZnTe1hl1UwuTpVA0Tvr23leGuf19KOjyx4ZsaJcJ2DT13mzmLSkXOc1Wkv2vOcA/qNFoGKrFBVmybOi4hngZMvkglRI8qybsbWfn2RFsHGjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ifDjfXqbQdEToOzcs0qsNuogLb2HLWyKHTQc87/3Ewc=;
+ b=GeC4vJWbfjTvUobe+GD7bOGykQaBOHH9lRECgxQuxmBz12RecnpK0daGWL/nq+UA1YjrfFHbvdi+geu9xiLDM2UFIseLWBWZYeg7EYre4CKvrFEJc/Jk0id23iLCbkpwZYjdydGccgoFaSWHhmQZekjrIUnXC6eA0yjnt5fIBL44pomxvYhSNTjTaU3GfCsB/VE3U6YoQ8JWlrPiQ9QxZC0NPmH308QDm1m2EkXgszZiBEFC/nbVG6lDlrUsipDlyAsmxlgi8wPzaI3NKn5QcGELBMWyX+7KDU2Xp7Jjn9IQWbfhb+rrutv5oJ0DZpRhhjf6na7Yl8Tjoo0tYcpwjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB4546.namprd12.prod.outlook.com (2603:10b6:5:2ae::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.32; Wed, 30 Sep
+ 2020 11:43:02 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3433.032; Wed, 30 Sep 2020
+ 11:43:02 +0000
+Date:   Wed, 30 Sep 2020 08:43:01 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     "Dey, Megha" <megha.dey@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        "Russ Anderson" <rja@hpe.com>, <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
+        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        "Kevin Tian" <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <ravi.v.shankar@intel.com>
+Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device
+ MSI
+Message-ID: <20200930114301.GD816047@nvidia.com>
+References: <20200826111628.794979401@linutronix.de>
+ <10b5d933-f104-7699-341a-0afb16640d54@intel.com>
+ <87v9fvix5f.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <21d9ea16-863b-19fe-e5b7-841bb4228c6d@redhat.com>
+In-Reply-To: <87v9fvix5f.fsf@nanos.tec.linutronix.de>
+X-ClientProxiedBy: BL0PR02CA0003.namprd02.prod.outlook.com
+ (2603:10b6:207:3c::16) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR02CA0003.namprd02.prod.outlook.com (2603:10b6:207:3c::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.34 via Frontend Transport; Wed, 30 Sep 2020 11:43:02 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kNaVh-003vDf-1s; Wed, 30 Sep 2020 08:43:01 -0300
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1601466197; bh=ifDjfXqbQdEToOzcs0qsNuogLb2HLWyKHTQc87/3Ewc=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
+        b=kXLhM/c+6HLgKm+6ble3lfNqOcCNe2qhFpXxYQ9VNpltIzypeid1VYh+BMxlOLlye
+         0+6VDWOyOvDf07+xZGAec4Wvn8k5WI3aiZoShq7j1qgKIq7qgusR0iXtwcLQk/xdjz
+         +v2330h6r9nb93xOefwM7I/qvuhlV7upcanj1FwilxBqKMT7QRH5pMZ7ET2aXWd8p8
+         pK/mYHKsauGX6pIvk6Q2HPDPYGpXdDmMnGHCOc+5/StKJ5sjO489/p+d/uJSwbbRw0
+         QSJd7JK+1Rwde8F4fsYoj/S1iGRvpbBC/PZ0KlECf5FCeVBwjrsxHssfpqgfmeqxU4
+         fyKeGy0g3j+zQ==
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Sep 29, 2020 at 12:12:14PM +0200, David Hildenbrand wrote:
->On 29.09.20 11:18, Wei Yang wrote:
->> On Mon, Sep 28, 2020 at 08:21:08PM +0200, David Hildenbrand wrote:
->>> Page isolation doesn't actually touch the pages, it simply isolates
->>> pageblocks and moves all free pages to the MIGRATE_ISOLATE freelist.
->>>
->>> We already place pages to the tail of the freelists when undoing
->>> isolation via __putback_isolated_page(), let's do it in any case
->>> (e.g., if order <= pageblock_order) and document the behavior.
->>>
->>> Add a "to_tail" parameter to move_freepages_block() but introduce a
->>> a new move_to_free_list_tail() - similar to add_to_free_list_tail().
->
->s/a a/a/
->
->>>
->>> This change results in all pages getting onlined via online_pages() to
->>> be placed to the tail of the freelist.
->>>
->>> Reviewed-by: Oscar Salvador <osalvador@suse.de>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->>> Cc: Mel Gorman <mgorman@techsingularity.net>
->>> Cc: Michal Hocko <mhocko@kernel.org>
->>> Cc: Dave Hansen <dave.hansen@intel.com>
->>> Cc: Vlastimil Babka <vbabka@suse.cz>
->>> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
->>> Cc: Oscar Salvador <osalvador@suse.de>
->>> Cc: Mike Rapoport <rppt@kernel.org>
->>> Cc: Scott Cheloha <cheloha@linux.ibm.com>
->>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>> include/linux/page-isolation.h |  4 ++--
->>> mm/page_alloc.c                | 35 +++++++++++++++++++++++-----------
->>> mm/page_isolation.c            | 12 +++++++++---
->>> 3 files changed, 35 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
->>> index 572458016331..3eca9b3c5305 100644
->>> --- a/include/linux/page-isolation.h
->>> +++ b/include/linux/page-isolation.h
->>> @@ -36,8 +36,8 @@ static inline bool is_migrate_isolate(int migratetype)
->>> struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->>> 				 int migratetype, int flags);
->>> void set_pageblock_migratetype(struct page *page, int migratetype);
->>> -int move_freepages_block(struct zone *zone, struct page *page,
->>> -				int migratetype, int *num_movable);
->>> +int move_freepages_block(struct zone *zone, struct page *page, int migratetype,
->>> +			 bool to_tail, int *num_movable);
->>>
->>> /*
->>>  * Changes migrate type in [start_pfn, end_pfn) to be MIGRATE_ISOLATE.
->>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>> index 9e3ed4a6f69a..d5a5f528b8ca 100644
->>> --- a/mm/page_alloc.c
->>> +++ b/mm/page_alloc.c
->>> @@ -905,6 +905,15 @@ static inline void move_to_free_list(struct page *page, struct zone *zone,
->>> 	list_move(&page->lru, &area->free_list[migratetype]);
->>> }
->>>
->>> +/* Used for pages which are on another list */
->>> +static inline void move_to_free_list_tail(struct page *page, struct zone *zone,
->>> +					  unsigned int order, int migratetype)
->>> +{
->>> +	struct free_area *area = &zone->free_area[order];
->>> +
->>> +	list_move_tail(&page->lru, &area->free_list[migratetype]);
->>> +}
->>> +
->> 
->> Would it be better to pass the *to_tail* to move_to_free_list(), so we won't
->> have a new function?
->
->Hi,
->
->thanks for the review!
->
->See discussion in RFC + cover letter:
->
->"Add a "to_tail" parameter to move_freepages_block() but introduce a new
->move_to_free_list_tail() - similar to add_to_free_list_tail()."
+On Wed, Sep 30, 2020 at 08:41:48AM +0200, Thomas Gleixner wrote:
+> On Tue, Sep 29 2020 at 16:03, Megha Dey wrote:
+> > On 8/26/2020 4:16 AM, Thomas Gleixner wrote:
+> >> #9	is obviously just for the folks interested in IMS
+> >>
+> >
+> > I see that the tip tree (as of 9/29) has most of these patches but 
+> > notice that the DEV_MSI related patches
+> >
+> > haven't made it. I have tested the tip tree(x86/irq branch) with your
+> > DEV_MSI infra patches and our IMS patches with the IDXD driver and was
+> 
+> Your IMS patches? Why do you need something special again?
+> 
+> > wondering if we should push out those patches as part of our patchset?
+> 
+> As I don't have any hardware to test that, I was waiting for you and
+> Jason to confirm that this actually works for the two different IMS
+> implementations.
 
-Hmm, sounds reasonable.
+How urgently do you need this? The code looked good from what I
+understood. It will be a while before we have all the parts to send an
+actual patch though.
 
-Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+We might be able to put together a mockup just to prove it
 
--- 
-Wei Yang
-Help you, Help me
+Jason
