@@ -2,296 +2,137 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46A4327FD01
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Oct 2020 12:13:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 693A527FEAD
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Oct 2020 13:54:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbgJAKN3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Oct 2020 06:13:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:57994 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731131AbgJAKN3 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Oct 2020 06:13:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86802D6E;
-        Thu,  1 Oct 2020 03:13:28 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00A823F70D;
-        Thu,  1 Oct 2020 03:13:26 -0700 (PDT)
-Date:   Thu, 1 Oct 2020 11:13:24 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "maz@kernel.org" <maz@kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jake Oshins <jakeo@microsoft.com>
-Subject: Re: [PATCH v2] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Message-ID: <20201001101324.GB5142@e121166-lin.cambridge.arm.com>
-References: <20200908231759.13336-1-decui@microsoft.com>
- <20200928104309.GA12565@e121166-lin.cambridge.arm.com>
- <KU1P153MB01201EEC711EC37D30687940BF330@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
+        id S1731921AbgJALyH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 1 Oct 2020 07:54:07 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35197 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731767AbgJALyE (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 1 Oct 2020 07:54:04 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e16so5363908wrm.2;
+        Thu, 01 Oct 2020 04:54:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QjEMtQV4+mKov3RyEvL2p8vci/KPjj4gyXV5HFr4bPc=;
+        b=b4h+AThi7lMNfqipaCF70dryQ7rghrc3kGH1kfJ6QRJ6sbselZbvESFc7c2r9ARXrS
+         hvd/f09+8mFbKTppTX0Gp8WpI0fOqZ+AtHIfqe+qZzbYwWgZmsai1K1qpJMwgu4zokES
+         7WWHvJ1GCbsFsJsI9v/qyfS9IsdtIF6u87ltsj7BbNHfBPeDnyknNcdvmHXi4Vg4j33I
+         gNrdWb6PU6pLFZeIgu5hFxFvq3qc9s3T/vKiL5QEIh4tlU3wcOO4CvPSsg5Qkj2JTjKb
+         51qvgS3DyXSkPYqP+HJKGMx+X4d3CmNv4ZCd74dTFfnQaeNRq00ilKV8cTM+Rnmgkl68
+         /TMQ==
+X-Gm-Message-State: AOAM530PBmLvpo1qCWXc+J4RhnhKQpRLRldKN2dJooS6H6olKBy89CKY
+        L7NVomr+j6zXnFs21cWRpIw=
+X-Google-Smtp-Source: ABdhPJzfEPCoC4dSc6yo8yiwrjfjgNGFM6Ov812hYIpeuIQMHakZq8GmSq7lhhZTC7m73NSlbg0kRA==
+X-Received: by 2002:a5d:6404:: with SMTP id z4mr8995115wru.423.1601553241933;
+        Thu, 01 Oct 2020 04:54:01 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id s19sm5286587wmc.0.2020.10.01.04.54.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Oct 2020 04:54:01 -0700 (PDT)
+Date:   Thu, 1 Oct 2020 11:53:59 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Sasha Levin <sashal@kernel.org>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        mikelley@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org
+Subject: Re: [PATCH] x86/hyper-v: guard against cpu mask changes in
+ hyperv_flush_tlb_others()
+Message-ID: <20201001115359.6jhhrybemnhizgok@liuwe-devbox-debian-v2>
+References: <20201001013814.2435935-1-sashal@kernel.org>
+ <87o8lm9te3.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <KU1P153MB01201EEC711EC37D30687940BF330@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87o8lm9te3.fsf@vitty.brq.redhat.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 12:38:04AM +0000, Dexuan Cui wrote:
-> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Sent: Monday, September 28, 2020 3:43 AM
+On Thu, Oct 01, 2020 at 11:40:04AM +0200, Vitaly Kuznetsov wrote:
+> Sasha Levin <sashal@kernel.org> writes:
+> 
+> > cpumask can change underneath us, which is generally safe except when we
+> > call into hv_cpu_number_to_vp_number(): if cpumask ends up empty we pass
+> > num_cpu_possible() into hv_cpu_number_to_vp_number(), causing it to read
+> > garbage. As reported by KASAN:
 > >
-> > [+MarcZ - this patch needs IRQ maintainers vetting]
-> 
-> Sure. Hi MarkZ, please also review the patch. Thanks!
-> 
-> > On Tue, Sep 08, 2020 at 04:17:59PM -0700, Dexuan Cui wrote:
-> > > Hyper-V doesn't trap and emulate the accesses to the MSI/MSI-X
-> > > registers, and we must use hv_compose_msi_msg() to ask Hyper-V to
-> > > create the IOMMU Interrupt Remapping Table Entries. This is not an issue
-> > > for a lot of PCI device drivers (e.g. NVMe driver, Mellanox NIC drivers),
-> > > which destroy and re-create the interrupts across hibernation, so
-> > > hv_compose_msi_msg() is called automatically. However, some other
-> > > PCI device drivers (e.g. the Nvidia driver) may not destroy and re-create
-> > > the interrupts across hibernation, so hv_pci_resume() has to call
-> > > hv_compose_msi_msg(), otherwise the PCI device drivers can no longer
-> > > receive MSI/MSI-X interrupts after hibernation.
+> > [   83.504763] BUG: KASAN: slab-out-of-bounds in hyperv_flush_tlb_others (include/asm-generic/mshyperv.h:128 arch/x86/hyperv/mmu.c:112)
+> > [   83.908636] Read of size 4 at addr ffff888267c01370 by task kworker/u8:2/106
+> > [   84.196669] CPU: 0 PID: 106 Comm: kworker/u8:2 Tainted: G        W         5.4.60 #1
+> > [   84.196669] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
+> > [   84.196669] Workqueue: writeback wb_workfn (flush-8:0)
+> > [   84.196669] Call Trace:
+> > [   84.196669] dump_stack (lib/dump_stack.c:120)
+> > [   84.196669] print_address_description.constprop.0 (mm/kasan/report.c:375)
+> > [   84.196669] __kasan_report.cold (mm/kasan/report.c:507)
+> > [   84.196669] kasan_report (arch/x86/include/asm/smap.h:71 mm/kasan/common.c:635)
+> > [   84.196669] hyperv_flush_tlb_others (include/asm-generic/mshyperv.h:128 arch/x86/hyperv/mmu.c:112)
+> > [   84.196669] flush_tlb_mm_range (arch/x86/include/asm/paravirt.h:68 arch/x86/mm/tlb.c:798)
+> > [   84.196669] ptep_clear_flush (arch/x86/include/asm/tlbflush.h:586 mm/pgtable-generic.c:88)
 > >
-> > This looks like drivers bugs and I don't think the HV controller
-> > driver is where you should fix them.
-> 
-> IMHO this is not a PCI device driver bug, because I think a PCI device driver
-> is allowed to keep and re-use the MSI/MSI-X interrupts across hibernation,
-> otherwise we would not have pci_restore_msi_state() in pci_restore_state().
-> 
-> The in-tree open-source Nvidia GPU driver drivers/gpu/drm/nouveau is such
-> a PCI device driver that re-uses the MSI-X interrupts across hibernation.
-> The out-of-tree proprietary Nvidia GPU driver also does the same thing.
-> It looks some other in-tree PCI device drivers also do the same thing, though
-> I don't remember their names offhand.
-> 
-> IMO it's much better to change the pci-hyperv driver once and for all, than
-> to change every such existing (and future?) PCI device driver.
-> 
-> pci_restore_msi_state() directly writes the MSI/MSI-X related registers
-> in __pci_write_msi_msg() and msix_mask_irq(). On a physical machine, this
-> works perfectly, but for a Linux VM running on a hypervisor, which typically
-> enables IOMMU interrupt remapping, the hypervisor usually should trap and
-> emulate the write accesses to the MSI/MSI-X registers, so the hypervisor
-> is able to create the necessary interrupt remapping table entries in the
-> IOMMU, and the MSI/MSI-X interrupts can work in the VM. Hyper-V is different
-> from other hypervisors in that it does not trap and emulate the write
-> accesses, and instead it uses a para-virtualized method, which requires
-> the VM to call hv_compose_msi_msg() to notify the hypervisor of the info
-> that would be passed to the hypervisor in the case of the trap-and-emulate
-> method.
-> 
-> I mean this is a Hyper-V specific problem, so IMO we should fix the pci-hyperv
-> driver rather than change the PCI device drivers, which work perfectly on a
-> physical machine and on other hypervisors. Also it can be difficult or 
-> impossible to ask the authors of the aforementioned PCI device drivers to
-> destry and re-create MSI/MSI-X acorss hibernation, especially for the
-> out-of-tree driver(s).
-
-Good, so why did you mention PCI drivers in the commit log if they
-are not related to the problem you are fixing ?
-
-> > Regardless, this commit log does not provide the information that
-> > it should.
-> 
-> Hi Lozenzo, I'm happy to add more info. Can you please let me know
-> what extra info I should provide?
-
-s/Lozenzo/Lorenzo
-
-The info you describe properly below, namely what the _actual_ problem
-is.
-
-> > > Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
-> > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > > Reviewed-by: Jake Oshins <jakeo@microsoft.com>
-> > >
-> > > ---
-> > >
-> > > Changes in v2:
-> > >     Fixed a typo in the comment in hv_irq_unmask. Thanks to Michael!
-> > >     Added Jake's Reviewed-by.
-> > >
-> > >  drivers/pci/controller/pci-hyperv.c | 44 +++++++++++++++++++++++++++++
-> > >  1 file changed, 44 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-hyperv.c
-> > b/drivers/pci/controller/pci-hyperv.c
-> > > index fc4c3a15e570..dd21afb5d62b 100644
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -1211,6 +1211,21 @@ static void hv_irq_unmask(struct irq_data *data)
-> > >  	pbus = pdev->bus;
-> > >  	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
-> > >
-> > > +	if (hbus->state == hv_pcibus_removing) {
-> > > +		/*
-> > > +		 * During hibernation, when a CPU is offlined, the kernel tries
-> > > +		 * to move the interrupt to the remaining CPUs that haven't
-> > > +		 * been offlined yet. In this case, the below hv_do_hypercall()
-> > > +		 * always fails since the vmbus channel has been closed, so we
-> > > +		 * should not call the hypercall, but we still need
-> > > +		 * pci_msi_unmask_irq() to reset the mask bit in desc->masked:
-> > > +		 * see cpu_disable_common() -> fixup_irqs() ->
-> > > +		 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
-> > > +		 */
-> > > +		pci_msi_unmask_irqpci_msi_unmask_irq(data);
+> > Fixes: 0e4c88f37693 ("x86/hyper-v: Use cheaper HVCALL_FLUSH_VIRTUAL_ADDRESS_{LIST,SPACE} hypercalls when possible")
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Cc: stable@kernel.org
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  arch/x86/hyperv/mmu.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
 > >
-> > This is not appropriate - it looks like a plaster to paper over an
-> > issue with hyper-V hibernation code sequence. Fix that issue instead
-> > of papering over it here.
-> >
-> > Thanks,
-> > Lorenzo
+> > diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+> > index 5208ba49c89a9..b1d6afc5fc4a3 100644
+> > --- a/arch/x86/hyperv/mmu.c
+> > +++ b/arch/x86/hyperv/mmu.c
+> > @@ -109,7 +109,9 @@ static void hyperv_flush_tlb_others(const struct cpumask *cpus,
+> >  		 * must. We will also check all VP numbers when walking the
+> >  		 * supplied CPU set to remain correct in all cases.
+> >  		 */
+> > -		if (hv_cpu_number_to_vp_number(cpumask_last(cpus)) >= 64)
+> > +		int last = cpumask_last(cpus);
+> > +
+> > +		if (last < num_possible_cpus() && hv_cpu_number_to_vp_number(last) >= 64)
+> >  			goto do_ex_hypercall;
 > 
-> IMO this patch is fixing this Hyper-V specific problem. :-)
-> The probem is unique to Hyper-V because chip->irq_unmask() may fail in a
-> Linux VM running on Hyper-V. 
+> In case 'cpus' can end up being empty (I'm genuinely suprised it can)
+> the check is mandatory indeed. I would, however, just return directly in
+> this case:
 > 
-> chip->irq_unmask() can not fail on a physical machine. I guess this is why 
-> the return value of irq_unmask() is defined as "void" in include/linux/irq.h:
-> struct irq_chip {
-> ...
->         void            (*irq_mask)(struct irq_data *data);
->         void            (*irq_unmask)(struct irq_data *data);
-> 
-> As I described in the comment, in a VM on Hyper-V, chip->irq_unmask()
-> fails during the suspending phase of hibernation because it's called
-> when the non-boot CPUs are being offlined, and at this time all the devices,
-> including Hyper-V VMBus devices, have been "frozen" -- this is part of
-> the standard Linux hibernation workflow. Since Hyper-V thinks the VM has
-> frozen the pci-hyperv VMBus device at this moment (i.e. closed the VMBus
-> channel of the VMBus device), it fails chip->irq_unmask(), i.e.
-> hv_irq_unmask() -> hv_do_hypercall().
-> 
-> On a physical machine, unmasking an MSI/MSI-X register just means an MMIO
-> write, which I think can not fail here.
-> 
-> So I think this patch is the correct fix, considering Hyper-V's unique
-> implementation of the MSI "chip" (i.e. Hyper-V does not trap and emulate
-> the MSI/MSI-X register accesses, and uses a para-virtualized method as I
-> explained above), and the fact that I shouldn't and can't change the
-> standard Linux hibernation workflow.
-> 
-> In hv_irq_unmask(), when I skip the hypercall in the case of
-> hbus->state == hv_pcibus_removing, I still need the pci_msi_unmask_irq(),
-> because of the sequences in kernel/irq/cpuhotplug.c:
-> 
-> static bool migrate_one_irq(struct irq_desc *desc)
-> {
-> ...
->         if (maskchip && chip->irq_mask)
->                 chip->irq_mask(d);
-> ...
->         err = irq_do_set_affinity(d, affinity, false);
-> ...
->         if (maskchip && chip->irq_unmask)
->                 chip->irq_unmask(d);
-> 
-> Here if hv_irq_unmask does not call pci_msi_unmask_irq(), the desc->masked
-> remains "true", so later after hibernation, the MSI interrupt line always
-> reamins masked, which is incorrect.
-> 
-> Here the slient failure of hv_irq_unmask() does not matter since all the
-> non-boot CPUs are being offlined (meaning all the devices have been
-> frozen). Note: the correct affinity info is still updated into the
-> irqdata data structure in migrate_one_irq() -> irq_do_set_affinity() ->
-> hv_set_affinity(), so when the VM resumes, hv_pci_resume() ->
-> hv_pci_restore_msi_state() is able to correctly restore the irqs with
-> the correct affinity.
-> 
-> I hope the explanation can help clarify things. I understand this is
-> not as natual as tht case that Linux runs on a physical machine, but
-> due to the unique PCI pass-through implementation of Hyper-V, IMO this
-> is the only viable fix for the problem here. BTW, this patch is only
-> confined to the pci-hyperv driver and I believe it can no cause any
-> regression.
+> if (last < num_possible_cpus())
+> 	return;
 
-Understood, write this in the commit log and I won't nag you any further.
+I think you want 
 
-Side note: this issue is there because the hypcall failure triggers
-an early return from hv_irq_unmask(). Is that early return really
-correct ? Another possibility is just logging the error and let
-hv_irq_unmask() continue and call pci_msi_unmask_irq() in the exit
-path.
+   last >= num_possible_cpus()
 
-Is there a hypcall return value that you can use to detect fatal vs
-non-fatal (ie hibernation) hypcall failures ?
+here?
 
-I was confused by reading the patch since it seemed that you call
-pci_msi_unmask_irq() _only_ while hibernating, which was certainly
-a bug.
+A more important question is, if the mask can change willy-nilly, what
+is stopping it from changing between these checks? I.e. is there still a
+windows that hv_cpu_number_to_vp_number(last) can return garbage?
 
-Thank you for explaining.
+Wei.
 
-Lorenzo
-
-> Thanks,
-> -- Dexuan
 > 
+> if (hv_cpu_number_to_vp_number(last) >= 64)
+> 	goto do_ex_hypercall;
 > 
-> > > +		return;
-> > > +	}
-> > > +
-> > >  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
-> > >
-> > >  	params = &hbus->retarget_msi_interrupt_params;
-> > > @@ -3372,6 +3387,33 @@ static int hv_pci_suspend(struct hv_device
-> > *hdev)
-> > >  	return 0;
-> > >  }
-> > >
-> > > +static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
-> > > +{
-> > > +	struct msi_desc *entry;
-> > > +	struct irq_data *irq_data;
-> > > +
-> > > +	for_each_pci_msi_entry(entry, pdev) {
-> > > +		irq_data = irq_get_irq_data(entry->irq);
-> > > +		if (WARN_ON_ONCE(!irq_data))
-> > > +			return -EINVAL;
-> > > +
-> > > +		hv_compose_msi_msg(irq_data, &entry->msg);
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +/*
-> > > + * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
-> > > + * re-writes the MSI/MSI-X registers, but since Hyper-V doesn't trap and
-> > > + * emulate the accesses, we have to call hv_compose_msi_msg() to ask
-> > > + * Hyper-V to re-create the IOMMU Interrupt Remapping Table Entries.
-> > > + */
-> > > +static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus)
-> > > +{
-> > > +	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL);
-> > > +}
-> > > +
-> > >  static int hv_pci_resume(struct hv_device *hdev)
-> > >  {
-> > >  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> > > @@ -3405,6 +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
-> > >
-> > >  	prepopulate_bars(hbus);
-> > >
-> > > +	hv_pci_restore_msi_state(hbus);
-> > > +
-> > >  	hbus->state = hv_pcibus_installed;
-> > >  	return 0;
-> > >  out:
+> as there's nothing to flush, no need to call into
+> hyperv_flush_tlb_others_ex().
+> 
+> Anyway, the fix seems to be correct, so
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> >  
+> >  		for_each_cpu(cpu, cpus) {
+> 
+> -- 
+> Vitaly
 > 
