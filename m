@@ -2,70 +2,84 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62DDF280082
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Oct 2020 15:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC45B280155
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Oct 2020 16:33:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732169AbgJANxJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Oct 2020 09:53:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732018AbgJANxJ (ORCPT
+        id S1732444AbgJAOdb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 1 Oct 2020 10:33:31 -0400
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:41740 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732020AbgJAOdb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Oct 2020 09:53:09 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE20FC0613D0;
-        Thu,  1 Oct 2020 06:53:08 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1601560387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8QlmQU4U707WUFGOJ0XG+Q1YjhMDkPVgYfkVUA/WoFc=;
-        b=jDpfVmtaeTkDdW/IvYOq5JTlvoEDvMPuXHKdBkqxDhj9NtP6sTCT7g/kMy5ECqhZUGy2+4
-        ++hAJ4Lf+UXj9X848nWTQXsWOUQwa0nSp8X6CBBBUzXU5W59I9y+JhIX+EAI1RusI4giOx
-        WoE//JGbOJ/9aovK5UwQd1DPj/14mcwlcfKH5BL9ZmpEPYc59kRKDsf6dp6TQ7Zewxpo4q
-        yL8kwmNhWt7cTao5A/py29YkkltUhHrvrLanp3xl0L310qxEaveU9Sh4MqjbrIFJvjOInj
-        eMAYvmm8xoIqfs4bQEuXBHHNbgDKRhrRhhHHt1xe5fMSTnynEXYGFUqVvcIPNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1601560387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8QlmQU4U707WUFGOJ0XG+Q1YjhMDkPVgYfkVUA/WoFc=;
-        b=VUPBvkhvJ43I0rw6XwXLBzv6cBppoaj+or1uLt5D2g6BaWB0D6BqJUpq/u8iIurpo4fr5G
-        aeKaeW8Pag4Xo9Bg==
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: Boot crash due to "x86/msi: Consolidate MSI allocation"
-In-Reply-To: <2F4EC354-C0BB-44BD-86A5-07F321590C31@nvidia.com>
-References: <A838FF2B-11FC-42B9-87D7-A76CF46E0575@nvidia.com> <874knegxtg.fsf@nanos.tec.linutronix.de> <2F4EC354-C0BB-44BD-86A5-07F321590C31@nvidia.com>
-Date:   Thu, 01 Oct 2020 15:53:07 +0200
-Message-ID: <87h7ref3y4.fsf@nanos.tec.linutronix.de>
+        Thu, 1 Oct 2020 10:33:31 -0400
+Received: by mail-oo1-f68.google.com with SMTP id t3so1519427ook.8;
+        Thu, 01 Oct 2020 07:33:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NklUCDIMExUICy4FN/gh63Vm3SmGzKI/5Dwr1ozJ1xo=;
+        b=Uye2+7mYqgX89ErfbrN19Ywi5H8ep5QlB475QIIkeLx+4MtiZnluCT8Ayj5oMDuah/
+         X3VI3p/1xoRqc90ue14+uRGHnU5T+CSbBpMNCSFUONviMRdPluG6VhyZ6t0ziOVpQWf5
+         5qCqbSFAajrV5sYt0fdIrqEMgWlg4/MjNQmuL64DscaMXWLG3LY+K0QN2ALwTqxXrvqy
+         GCoRbjPuzRTBi4AYoed1PjP6LlxxLSB+ML80CitU301Z2aeickSJi3B6oQf6v4euVWP5
+         SkhFJMXhoRNuSlZ5MdR9ZBkO768iwigMNOj0Vh1UBc+6Auk0tdurJFS9V1RyzA7gvUNm
+         BP5Q==
+X-Gm-Message-State: AOAM533Hwl06GCV8x1+z+TBM6dt/UsBDrObdk66WFuJF8qPyGRaf2r67
+        A05UQ3DCgg1cCo29Sksj4ewRms3+EF2z
+X-Google-Smtp-Source: ABdhPJwtom5klA/Ap8NrMcL34dnJEga9NT+pmkNy471CG5ehIqBT2YW5RiioY1ZL73r4Gt8Hdb3wCQ==
+X-Received: by 2002:a4a:95f1:: with SMTP id p46mr5633028ooi.93.1601562808922;
+        Thu, 01 Oct 2020 07:33:28 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g7sm1204483otk.56.2020.10.01.07.33.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Oct 2020 07:33:28 -0700 (PDT)
+Received: (nullmailer pid 695955 invoked by uid 1000);
+        Thu, 01 Oct 2020 14:33:22 -0000
+Date:   Thu, 1 Oct 2020 09:33:22 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        virtualization@lists.linux-foundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Nuno Das Neves <nudasnev@microsoft.com>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>
+Subject: Re: [PATCH RFC v1 12/18] asm-generic/hyperv: update
+ hv_interrupt_entry
+Message-ID: <20201001143322.GA695896@bogus>
+References: <20200914112802.80611-1-wei.liu@kernel.org>
+ <20200914115928.83184-4-wei.liu@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200914115928.83184-4-wei.liu@kernel.org>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Yan,
+On Mon, 14 Sep 2020 11:59:21 +0000, Wei Liu wrote:
+> We will soon use the same structure to handle IO-APIC interrupts as
+> well. Introduce an enum to identify the source and a data structure for
+> IO-APIC RTE.
+> 
+> While at it, update pci-hyperv.c to use the enum.
+> 
+> No functional change.
+> 
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+>  drivers/pci/controller/pci-hyperv.c |  2 +-
+>  include/asm-generic/hyperv-tlfs.h   | 36 +++++++++++++++++++++++++++--
+>  2 files changed, 35 insertions(+), 3 deletions(-)
+> 
 
-On Thu, Oct 01 2020 at 09:39, Zi Yan wrote:
-> On 1 Oct 2020, at 4:22, Thomas Gleixner wrote:
->> Can you please test:
->>
->>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/irq
->>
->> which contains fixes and if it still crashes provide the dmesg of it.
->
-> My system boots without any problem using this tree. Thanks.
-
-linux-next of today contains these fixes, so that should work now as
-well.
-
-Thanks,
-
-        tglx
+Acked-by: Rob Herring <robh@kernel.org>
