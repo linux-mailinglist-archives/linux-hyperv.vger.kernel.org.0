@@ -2,193 +2,162 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88313281152
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Oct 2020 13:38:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A61162813E1
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Oct 2020 15:17:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387765AbgJBLiX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 2 Oct 2020 07:38:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:33194 "EHLO foss.arm.com"
+        id S1726090AbgJBNRr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Oct 2020 09:17:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57034 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgJBLiX (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 2 Oct 2020 07:38:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 050C31063;
-        Fri,  2 Oct 2020 04:38:22 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68DB53F73B;
-        Fri,  2 Oct 2020 04:38:20 -0700 (PDT)
-Date:   Fri, 2 Oct 2020 12:38:15 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     maz@kernel.org, bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, wei.liu@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, jakeo@microsoft.com
-Subject: Re: [PATCH v3] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Message-ID: <20201002113814.GA23526@e121166-lin.cambridge.arm.com>
-References: <20201002085158.9168-1-decui@microsoft.com>
+        id S1733260AbgJBNRq (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 2 Oct 2020 09:17:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1601644665;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CU5N1SfvQtRpkg+8Zog93ExPg0p+BzvwAJwHCdS+2JY=;
+        b=FiceQ6Kkjz7QkfPSMSOPtuyU7GKljTHYOsd1o/wNW28hnm2YsFn/XKHbTzs7kr+fWv9n8d
+        Oq4lBN4dyXC+WH92QTQt0Mm9h1WVkRPZovHwQIkeec1BNFgADdysKCnh2T56obsi8aM666
+        OfC+ku5GWdMUWqNHGo+M0w1MMBJ+bas=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 09108ACAD;
+        Fri,  2 Oct 2020 13:17:45 +0000 (UTC)
+Date:   Fri, 2 Oct 2020 15:17:43 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v1 1/5] mm/page_alloc: convert "report" flag of
+ __free_one_page() to a proper flag
+Message-ID: <20201002131743.GG4555@dhcp22.suse.cz>
+References: <20200928182110.7050-1-david@redhat.com>
+ <20200928182110.7050-2-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201002085158.9168-1-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200928182110.7050-2-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Oct 02, 2020 at 01:51:58AM -0700, Dexuan Cui wrote:
-> pci_restore_msi_state() directly writes the MSI/MSI-X related registers
-> via MMIO. On a physical machine, this works perfectly; for a Linux VM
-> running on a hypervisor, which typically enables IOMMU interrupt remapping,
-> the hypervisor usually should trap and emulate the MMIO accesses in order
-> to re-create the necessary interrupt remapping table entries in the IOMMU,
-> otherwise the interrupts can not work in the VM after hibernation.
+On Mon 28-09-20 20:21:06, David Hildenbrand wrote:
+> Let's prepare for additional flags and avoid long parameter lists of bools.
+> Follow-up patches will also make use of the flags in __free_pages_ok(),
+> however, I wasn't able to come up with a better name for the type - should
+> be good enough for internal purposes.
 > 
-> Hyper-V is different from other hypervisors in that it does not trap and
-> emulate the MMIO accesses, and instead it uses a para-virtualized method,
-> which requires the VM to call hv_compose_msi_msg() to notify the hypervisor
-> of the info that would be passed to the hypervisor in the case of the
-> trap-and-emulate method. This is not an issue to a lot of PCI device
-> drivers, which destroy and re-create the interrupts across hibernation, so
-> hv_compose_msi_msg() is called automatically. However, some PCI device
-> drivers (e.g. the in-tree GPU driver nouveau and the out-of-tree Nvidia
-> proprietary GPU driver) do not destroy and re-create MSI/MSI-X interrupts
-> across hibernation, so hv_pci_resume() has to call hv_compose_msi_msg(),
-> otherwise the PCI device drivers can no longer receive interrupts after
-> the VM resumes from hibernation.
-> 
-> Hyper-V is also different in that chip->irq_unmask() may fail in a
-> Linux VM running on Hyper-V (on a physical machine, chip->irq_unmask()
-> can not fail because unmasking an MSI/MSI-X register just means an MMIO
-> write): during hibernation, when a CPU is offlined, the kernel tries
-> to move the interrupt to the remaining CPUs that haven't been offlined
-> yet. In this case, hv_irq_unmask() -> hv_do_hypercall() always fails
-> because the vmbus channel has been closed: here the early "return" in
-> hv_irq_unmask() means the pci_msi_unmask_irq() is not called, i.e. the
-> desc->masked remains "true", so later after hibernation, the MSI interrupt
-> always remains masked, which is incorrect. Refer to cpu_disable_common()
-> -> fixup_irqs() -> irq_migrate_all_off_this_cpu() -> migrate_one_irq():
-> 
-> static bool migrate_one_irq(struct irq_desc *desc)
-> {
-> ...
->         if (maskchip && chip->irq_mask)
->                 chip->irq_mask(d);
-> ...
->         err = irq_do_set_affinity(d, affinity, false);
-> ...
->         if (maskchip && chip->irq_unmask)
->                 chip->irq_unmask(d);
-> 
-> Fix the issue by calling pci_msi_unmask_irq() unconditionally in
-> hv_irq_unmask(). Also suppress the error message for hibernation because
-> the hypercall failure during hibernation does not matter (at this time
-> all the devices have been frozen). Note: the correct affinity info is
-> still updated into the irqdata data structure in migrate_one_irq() ->
-> irq_do_set_affinity() -> hv_set_affinity(), so later when the VM
-> resumes, hv_pci_restore_msi_state() is able to correctly restore
-> the interrupt with the correct affinity.
-> 
-> Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
-> Reviewed-by: Jake Oshins <jakeo@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Hopefully this will not wrack the generated code. But considering we
+would need another parameter there is not much choice left.
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
 > ---
+>  mm/page_alloc.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
 > 
-> Changes in v2:
->     Fixed a typo in the comment in hv_irq_unmask. Thanks to Michael!
->     Added Jake's Reviewed-by.
-> 
-> Changes in v3:
->     Improved the commit log.
->     Improved the comments.
->     Improved the change in hv_irq_unmask(): removed the early "return"
->         and call pci_msi_unmask_irq() unconditionally.
-> 
->  drivers/pci/controller/pci-hyperv.c | 50 +++++++++++++++++++++++++++--
->  1 file changed, 47 insertions(+), 3 deletions(-)
-
-Applied to pci/hv, thanks !
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index fc4c3a15e570..a9df492fbffa 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1276,11 +1276,25 @@ static void hv_irq_unmask(struct irq_data *data)
->  exit_unlock:
->  	spin_unlock_irqrestore(&hbus->retarget_msi_interrupt_lock, flags);
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index df90e3654f97..daab90e960fe 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -77,6 +77,18 @@
+>  #include "shuffle.h"
+>  #include "page_reporting.h"
 >  
-> -	if (res) {
-> +	/*
-> +	 * During hibernation, when a CPU is offlined, the kernel tries
-> +	 * to move the interrupt to the remaining CPUs that haven't
-> +	 * been offlined yet. In this case, the below hv_do_hypercall()
-> +	 * always fails since the vmbus channel has been closed:
-> +	 * refer to cpu_disable_common() -> fixup_irqs() ->
-> +	 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
-> +	 *
-> +	 * Suppress the error message for hibernation because the failure
-> +	 * during hibernation does not matter (at this time all the devices
-> +	 * have been frozen). Note: the correct affinity info is still updated
-> +	 * into the irqdata data structure in migrate_one_irq() ->
-> +	 * irq_do_set_affinity() -> hv_set_affinity(), so later when the VM
-> +	 * resumes, hv_pci_restore_msi_state() is able to correctly restore
-> +	 * the interrupt with the correct affinity.
-> +	 */
-> +	if (res && hbus->state != hv_pcibus_removing)
->  		dev_err(&hbus->hdev->device,
->  			"%s() failed: %#llx", __func__, res);
-> -		return;
-> -	}
->  
->  	pci_msi_unmask_irq(data);
->  }
-> @@ -3372,6 +3386,34 @@ static int hv_pci_suspend(struct hv_device *hdev)
->  	return 0;
->  }
->  
-> +static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
-> +{
-> +	struct msi_desc *entry;
-> +	struct irq_data *irq_data;
+> +/* Free One Page flags: for internal, non-pcp variants of free_pages(). */
+> +typedef int __bitwise fop_t;
 > +
-> +	for_each_pci_msi_entry(entry, pdev) {
-> +		irq_data = irq_get_irq_data(entry->irq);
-> +		if (WARN_ON_ONCE(!irq_data))
-> +			return -EINVAL;
-> +
-> +		hv_compose_msi_msg(irq_data, &entry->msg);
-> +	}
-> +
-> +	return 0;
-> +}
+> +/* No special request */
+> +#define FOP_NONE		((__force fop_t)0)
 > +
 > +/*
-> + * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
-> + * directly writes the MSI/MSI-X registers via MMIO, but since Hyper-V
-> + * doesn't trap and emulate the MMIO accesses, here hv_compose_msi_msg()
-> + * must be used to ask Hyper-V to re-create the IOMMU Interrupt Remapping
-> + * Table entries.
+> + * Skip free page reporting notification for the (possibly merged) page. (will
+> + * *not* mark the page reported, only skip the notification).
 > + */
-> +static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus)
-> +{
-> +	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL);
-> +}
+> +#define FOP_SKIP_REPORT_NOTIFY	((__force fop_t)BIT(0))
 > +
->  static int hv_pci_resume(struct hv_device *hdev)
+>  /* prevent >1 _updater_ of zone percpu pageset ->high and ->batch fields */
+>  static DEFINE_MUTEX(pcp_batch_high_lock);
+>  #define MIN_PERCPU_PAGELIST_FRACTION	(8)
+> @@ -948,10 +960,9 @@ buddy_merge_likely(unsigned long pfn, unsigned long buddy_pfn,
+>   * -- nyc
+>   */
+>  
+> -static inline void __free_one_page(struct page *page,
+> -		unsigned long pfn,
+> -		struct zone *zone, unsigned int order,
+> -		int migratetype, bool report)
+> +static inline void __free_one_page(struct page *page, unsigned long pfn,
+> +				   struct zone *zone, unsigned int order,
+> +				   int migratetype, fop_t fop_flags)
 >  {
->  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> @@ -3405,6 +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
+>  	struct capture_control *capc = task_capc(zone);
+>  	unsigned long buddy_pfn;
+> @@ -1038,7 +1049,7 @@ static inline void __free_one_page(struct page *page,
+>  		add_to_free_list(page, zone, order, migratetype);
 >  
->  	prepopulate_bars(hbus);
+>  	/* Notify page reporting subsystem of freed page */
+> -	if (report)
+> +	if (!(fop_flags & FOP_SKIP_REPORT_NOTIFY))
+>  		page_reporting_notify_free(order);
+>  }
 >  
-> +	hv_pci_restore_msi_state(hbus);
-> +
->  	hbus->state = hv_pcibus_installed;
->  	return 0;
->  out:
+> @@ -1379,7 +1390,7 @@ static void free_pcppages_bulk(struct zone *zone, int count,
+>  		if (unlikely(isolated_pageblocks))
+>  			mt = get_pageblock_migratetype(page);
+>  
+> -		__free_one_page(page, page_to_pfn(page), zone, 0, mt, true);
+> +		__free_one_page(page, page_to_pfn(page), zone, 0, mt, FOP_NONE);
+>  		trace_mm_page_pcpu_drain(page, 0, mt);
+>  	}
+>  	spin_unlock(&zone->lock);
+> @@ -1395,7 +1406,7 @@ static void free_one_page(struct zone *zone,
+>  		is_migrate_isolate(migratetype))) {
+>  		migratetype = get_pfnblock_migratetype(page, pfn);
+>  	}
+> -	__free_one_page(page, pfn, zone, order, migratetype, true);
+> +	__free_one_page(page, pfn, zone, order, migratetype, FOP_NONE);
+>  	spin_unlock(&zone->lock);
+>  }
+>  
+> @@ -3288,7 +3299,8 @@ void __putback_isolated_page(struct page *page, unsigned int order, int mt)
+>  	lockdep_assert_held(&zone->lock);
+>  
+>  	/* Return isolated page to tail of freelist. */
+> -	__free_one_page(page, page_to_pfn(page), zone, order, mt, false);
+> +	__free_one_page(page, page_to_pfn(page), zone, order, mt,
+> +			FOP_SKIP_REPORT_NOTIFY);
+>  }
+>  
+>  /*
 > -- 
-> 2.19.1
-> 
+> 2.26.2
+
+-- 
+Michal Hocko
+SUSE Labs
