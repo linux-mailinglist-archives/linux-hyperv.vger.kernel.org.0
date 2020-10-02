@@ -2,59 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55C02281635
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Oct 2020 17:10:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 938AE28166E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Oct 2020 17:20:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbgJBPKT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 2 Oct 2020 11:10:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:58979 "EHLO
+        id S2388002AbgJBPU3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Oct 2020 11:20:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54413 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387939AbgJBPKQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726017AbgJBPUW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 2 Oct 2020 11:10:16 -0400
+        Fri, 2 Oct 2020 11:20:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601651414;
+        s=mimecast20190719; t=1601652021;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=qA3VtU+ihW5kV76AISqiMz521DoBLG66Fqr4dX/AO88=;
-        b=PMkRZLpoEJU/LDTzHAMxCSw0BpRAxFXg3J97MAnbskwbZrXxS13wAFAEQvzx1c2xSZ/H0Q
-        7b5kBhILP7qMcg5NOdZ+rPRcyG5VVLO28W2EPSMR6Gn2hjcBElDbZssjBd0A7I5RfCp2lp
-        4gr/U1y2oSnTQAj6pT7XHbFm8dgJLt8=
+        bh=tLF6ZatCZ5zrVPBFeigNCXJI7/8w0ttDqPTuxtDX8zs=;
+        b=Jg+oWXGzxnkPLOKoihHRwxS/LtWf2eIlADJ33zOzwRsWwt3oUuCoTzYXp4iqtvSgB1QXv8
+        SgFgvTeKvWRbmGX32Kx8HdhCNGkeQCOl4jYxCA3qRBOcNqbsUTEVVqegMQ9ekzmJQamKYY
+        Wrw6dpZ8d3Ksd+4RL5Tx23ZyOK/rh2U=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-S07uizV9Mt-88Er9MY70BA-1; Fri, 02 Oct 2020 11:10:10 -0400
-X-MC-Unique: S07uizV9Mt-88Er9MY70BA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-272-w6qMtHLYOdqGZmEqgP1rMQ-1; Fri, 02 Oct 2020 11:20:16 -0400
+X-MC-Unique: w6qMtHLYOdqGZmEqgP1rMQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C9F42188C122;
-        Fri,  2 Oct 2020 15:10:07 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C928D109106D;
+        Fri,  2 Oct 2020 15:20:13 +0000 (UTC)
 Received: from [10.36.113.228] (ovpn-113-228.ams2.redhat.com [10.36.113.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F12A75C22E;
-        Fri,  2 Oct 2020 15:10:03 +0000 (UTC)
-Subject: Re: [PATCH v1 4/5] mm/page_alloc: place pages to tail in
- __free_pages_core()
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 593875D9E4;
+        Fri,  2 Oct 2020 15:20:10 +0000 (UTC)
+Subject: Re: [PATCH v1 3/5] mm/page_alloc: always move pages to the tail of
+ the freelist in unset_migratetype_isolate()
 To:     Michal Hocko <mhocko@suse.com>
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
         linux-acpi@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
         Oscar Salvador <osalvador@suse.de>,
         Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Mel Gorman <mgorman@techsingularity.net>,
         Dave Hansen <dave.hansen@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Wei Yang <richard.weiyang@linux.alibaba.com>,
         Mike Rapoport <rppt@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
+        Scott Cheloha <cheloha@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
 References: <20200928182110.7050-1-david@redhat.com>
- <20200928182110.7050-5-david@redhat.com>
- <20201002134115.GJ4555@dhcp22.suse.cz>
+ <20200928182110.7050-4-david@redhat.com>
+ <20201002132404.GI4555@dhcp22.suse.cz>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -101,65 +99,54 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <7bf5d426-1fdd-4525-25da-a68d92b6c11d@redhat.com>
-Date:   Fri, 2 Oct 2020 17:10:03 +0200
+Message-ID: <df0c45bf-223f-1f0b-ce3d-f2b2e05626bd@redhat.com>
+Date:   Fri, 2 Oct 2020 17:20:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20201002134115.GJ4555@dhcp22.suse.cz>
+In-Reply-To: <20201002132404.GI4555@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 02.10.20 15:41, Michal Hocko wrote:
-> On Mon 28-09-20 20:21:09, David Hildenbrand wrote:
->> __free_pages_core() is used when exposing fresh memory to the buddy
->> during system boot and when onlining memory in generic_online_page().
+On 02.10.20 15:24, Michal Hocko wrote:
+> On Mon 28-09-20 20:21:08, David Hildenbrand wrote:
+>> Page isolation doesn't actually touch the pages, it simply isolates
+>> pageblocks and moves all free pages to the MIGRATE_ISOLATE freelist.
 >>
->> generic_online_page() is used in two cases:
+>> We already place pages to the tail of the freelists when undoing
+>> isolation via __putback_isolated_page(), let's do it in any case
+>> (e.g., if order <= pageblock_order) and document the behavior.
 >>
->> 1. Direct memory onlining in online_pages().
->> 2. Deferred memory onlining in memory-ballooning-like mechanisms (HyperV
->>    balloon and virtio-mem), when parts of a section are kept
->>    fake-offline to be fake-onlined later on.
+>> Add a "to_tail" parameter to move_freepages_block() but introduce a
+>> a new move_to_free_list_tail() - similar to add_to_free_list_tail().
 >>
->> In 1, we already place pages to the tail of the freelist. Pages will be
->> freed to MIGRATE_ISOLATE lists first and moved to the tail of the freelists
->> via undo_isolate_page_range().
->>
->> In 2, we currently don't implement a proper rule. In case of virtio-mem,
->> where we currently always online MAX_ORDER - 1 pages, the pages will be
->> placed to the HEAD of the freelist - undesireable. While the hyper-v
->> balloon calls generic_online_page() with single pages, usually it will
->> call it on successive single pages in a larger block.
->>
->> The pages are fresh, so place them to the tail of the freelists and avoid
->> the PCP. In __free_pages_core(), remove the now superflouos call to
->> set_page_refcounted() and add a comment regarding page initialization and
->> the refcount.
->>
->> Note: In 2. we currently don't shuffle. If ever relevant (page shuffling
->> is usually of limited use in virtualized environments), we might want to
->> shuffle after a sequence of generic_online_page() calls in the
->> relevant callers.
+>> This change results in all pages getting onlined via online_pages() to
+>> be placed to the tail of the freelist.
 > 
-> It took some time to get through all the freeing paths with subtle
-> differences but this looks reasonable. You are mentioning that this
-> influences a boot time free memory ordering as well but only very
-> briefly. I do not expect this to make a huge difference but who knows.
-> It makes some sense to add pages in the order they show up in the
-> physical address ordering.
+> Is there anything preventing to do this unconditionally? Or in other
+> words is any of the existing callers of move_freepages_block benefiting
+> from adding to the head?
 
-I think boot memory is mostly exposed in the physical address ordering.
-In that case, higher addresses will now be used less likely immediately
-after this patch. I also don't think it's an issue - if we still detect
-it's an issue it's fairly easy to change again.
+1. mm/page_isolation.c:set_migratetype_isolate()
 
-Thanks!
+We move stuff to the MIGRATE_ISOLATE list, we don't care about the order
+there.
+
+2. steal_suitable_fallback():
+
+I don't think we care too much about the order when already stealing
+pageblocks ... and the freelist is empty I guess?
+
+3. reserve_highatomic_pageblock()/unreserve_highatomic_pageblock()
+
+Not sure if we really care.
+
+Good question, I tried to be careful of what I touch. Thoughts?
 
 -- 
 Thanks,
