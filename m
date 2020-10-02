@@ -2,207 +2,236 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A7072808D6
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Oct 2020 22:53:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B95C280F48
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Oct 2020 10:52:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgJAUxP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Oct 2020 16:53:15 -0400
-Received: from mail-eopbgr1300105.outbound.protection.outlook.com ([40.107.130.105]:14623
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        id S1726351AbgJBIwg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Oct 2020 04:52:36 -0400
+Received: from mail-co1nam11on2123.outbound.protection.outlook.com ([40.107.220.123]:20961
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726515AbgJAUxP (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Oct 2020 16:53:15 -0400
+        id S1725993AbgJBIwg (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 2 Oct 2020 04:52:36 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rqg+lz1Bq6AV0EL38wEudqiDcBlKhwVjmXesf6fgIeHfC2ImuzRj/ZjPWn0eTIPMFKghvnSZiEjFOJz0vsIlZSLmemfx64UKMrCq5muGuyV0jHmD6IsKoSq3/TYDiU3/X4nxW5c76q7TBzr2t5xmG5hLFQSIXFcONKI9GE5BoGs4rhe6MktXjFSSJzdF68NVUGSyzMlbTg8gvH69Nfc8h3+aIqq0iYvU0KYAteoDDCJyN9o8F2amfdNHDNlUuQj4V0CHkWDsi3N/8tL/aOtGnmf3xHtZgY9GD0ij4CpWAVB/2agsfYsMMlDw2SEEOB/ofOpjDEJU0stOuu54fJPo5w==
+ b=Ww54InFsvQfHBUSmokl6WRowrbtPmgZvdB53BVAygR77lAOmZMaq6hVe4j/WX7JpX5RjEC1EATlsQwAKvf6J+OcY2jDqNOo+x209v8k6rjmxEfMUZk/w3RHIlIeOtf5tt+clOgw9Q/Ah8FH44KZKDYyWtK3n/M0dmPAr+waR8+Mhz7y1WGZi7wAMyD4yXJi3JO2gXSAhmx5AXYvpkdF7LquwsmBeshjYypPU9k2WA6FXsXzL+F6FXslXR6oCJk6TbD/FhZbHIe68jd0WoZN0q+XZrg1/BqOOXDb2FJh4POzCDR7CYI25Riq/6tGaGObgnf9xOXFIzWraMYa3aiFtww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tAsDU3KdhS7AGT/L/jTBSxh/tgTn7AcmKpoTyA7p9Cs=;
- b=Nef44jqoq/Xj7NMa77g7WHysHKBZ34tsmMHJQ8KHFc/goWPahohsTuQrt6owbFhq/r3CCuj8Rcc8WDs+MIbu2d4vU9TMKSsN4CHxN7ESSmSYakp1d+bhm+0vhPhzEVHyxTULaEPf/WhC+tKxHFxy1C9bXoR6554pTTP7rkfx3sPwQz6rPGmgkHRxS2nbYKziALmdeEJx6PVM76KLZ6XZwFp9QkjKWJKEyTDDa3j+yNmW8m1RX0mVkIBKaLN+fDbiCe/bWg9C59uLyHE+DPsCdcujYgTQFIHJ5T8Bb5h6rs95aGoE7ngJmVCoo5aP5nQ5Yy7atA70W/hrCk7dWn2RnA==
+ bh=MUDVMjMJB+tyjHwy000qc7sCSzh1hsxorwEshSA2OCQ=;
+ b=HU/TOqafwpItHk/70ZRXikcBgECb9fIE+RZRAcY5sx/esQKoc8Fvsrh+WbZnfO78OI090q8c9QpBj7j/+ZjdZi8ac31Q58OEspJADQOvB+0Hn00hBj+3kqVM3lr6EZRF7Z4iJeAVYL7mMITdCMYBUVG2K6YV68Shvz0/j/ueXun1zWEswd3TPpj0Hh6CQfpFzpQ5+sRsC8qgThhzDaCpTn6deX6XXEYzWACySs6Pk9j2C9ens12T2V+jMEenABHwbKXIArcRAhckjOGSebknP+6wCljRQpQjH09E79X3U2wurNeIcTfwceMR56wqxFs92qYgim43DsSDbB+kabJ+Cg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tAsDU3KdhS7AGT/L/jTBSxh/tgTn7AcmKpoTyA7p9Cs=;
- b=Q61KXWDGoPlFIYQarw6QQQy1ei+P0sa46J9VkCsA7DPOgr9U0ca9UDEs7L0B2Z7B3XLeqB9sPDFRSJtPmOJ7jowQfdhpOu+HBLoSClQA8rG9kLUX3LmDw3DkOkQrx8M1xqQXrG0XEo6uQrWQYjGlUF4c+bJ5/dmOSa2NmiAmq5I=
-Received: from SG2P153MB0128.APCP153.PROD.OUTLOOK.COM (2603:1096:3:19::17) by
- SG2P153MB0215.APCP153.PROD.OUTLOOK.COM (2603:1096:4:8c::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3455.9; Thu, 1 Oct 2020 20:53:05 +0000
-Received: from SG2P153MB0128.APCP153.PROD.OUTLOOK.COM
- ([fe80::19aa:f6a:9e85:17e7]) by SG2P153MB0128.APCP153.PROD.OUTLOOK.COM
- ([fe80::19aa:f6a:9e85:17e7%3]) with mapi id 15.20.3455.013; Thu, 1 Oct 2020
- 20:53:05 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "maz@kernel.org" <maz@kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jake Oshins <jakeo@microsoft.com>
-Subject: RE: [PATCH v2] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Thread-Topic: [PATCH v2] PCI: hv: Fix hibernation in case interrupts are not
- re-created
-Thread-Index: AQHWlYQn2ALom6ybqEW4kSyfVSvz+Kl/Kh1ggANh2ACAAKNvIA==
-Date:   Thu, 1 Oct 2020 20:53:04 +0000
-Message-ID: <SG2P153MB012888AF8F53861162E18B05BF300@SG2P153MB0128.APCP153.PROD.OUTLOOK.COM>
-References: <20200908231759.13336-1-decui@microsoft.com>
- <20200928104309.GA12565@e121166-lin.cambridge.arm.com>
- <KU1P153MB01201EEC711EC37D30687940BF330@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
- <20201001101324.GB5142@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20201001101324.GB5142@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1fab85d4-a075-45bc-9e1c-9e38f707c812;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-10-01T19:58:22Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: arm.com; dkim=none (message not signed)
+ bh=MUDVMjMJB+tyjHwy000qc7sCSzh1hsxorwEshSA2OCQ=;
+ b=i3n6i+o9dG7iopP/HAALPD+x2mnncodHaThVw0EWhITAv4sJ0RAKG2RedRZPIRY274CYkMTXNcXBrlqUaDVRu6vUTqeqTXT/FL29A2bAGqHbSAtU15ww+ywlXKCxkdupxyB3xICVz4Hc/0CGguEPGG16doNoGOmbf3bS+Lnia70=
+Authentication-Results: arm.com; dkim=none (message not signed)
  header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:600:a280:7f70:fc2f:eb09:d6c5:a14f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 305110d6-906d-4a8b-72e4-08d8664bfe76
-x-ms-traffictypediagnostic: SG2P153MB0215:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SG2P153MB02150F4A01826EE47FFC9ACABF300@SG2P153MB0215.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vGQ71whVbEidJzmfqphEkZHdeLkAxpPLq3AFMWyYBd/5Mz2bJEA+fxdSxyM1I8vydYADA6GDS81YC9G7HsXRLd5fLHEFPCb6udvsdM81aeLJ7EmyGbVQzouUsYRcct0gdfBtA9SPk8peaCFiC85d3tGZbWzkoBtK6wkr60P9sbvHXbqyn/rFodM+y0XXtDcA3L1t0Vf2SedbO89c7TW4jYPf5sxmKmXk6sqq/N2FU6OQFZjpF3n4qcS9l/DfW1kTqCTsp+s6hQkSoZXZC+CWheQgG9eSZnZvP2q6HZpF0cZBgjzORxnKjT/6QRskyYzj7WbZSCDe+QVexhPG6BshxHFGmelxbWtTezRSvXGzQvI0Sjjh9bt+2Hip7GTindf0JowkCW9AgJVpA5xVmpvJ3Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0128.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(33656002)(52536014)(316002)(54906003)(107886003)(8676002)(6506007)(66946007)(66476007)(76116006)(66556008)(7696005)(66446008)(64756008)(83080400001)(82960400001)(86362001)(83380400001)(82950400001)(6916009)(8936002)(10290500003)(186003)(4326008)(2906002)(8990500004)(9686003)(5660300002)(966005)(55016002)(478600001)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: YlwQpnnzPrMPlpOvJk0LThA9nqyu045jZZ5SZ/1an/zk52EFm554H8EBHrFDC4NwR5zL0/R/jql1bXhDXuZHSMn9wgu8zXxhwUo8rVEt0UhEuqwA9+I/1KRTLjI0YgpoZ80nlXdEl+9vjrqw5euDunytf87CD8c4tep8dJtoTPx03BQQEn98MKM9li3K7P7t/U2eLKhGPEBnJfelg45T2/68V4g5jwtDMoUe7RLx4BoTfxMhMDF5HxVjXKekgh913+2Tw5LRdrxaASSljWVkwfDjPx1u/ABWp3UGd+mueolGMk9pPITaqWy2OzKhUSOCYVS8uzq/N13iAbpR7VwH9msOM3xCydsGzc67LRu9tB6EBwx/q36J+O2l7pbhSZE92DI+K9ycjoGK16hnbEw8k2M3qLbgfZ/cN3Gs6Vx1g+/qswBcXR4c1w1he2uYBLKOBK6TWZrWyRGw9tyhEINrnUhEascva0QB+85aXTk25P39NlFo9cOh9CXzBq0bE6jSA0hQoOTdKWMgCISRUnr3erTHAbBUjaj8yzMm27w6YJQB838A+IAMBt2eLAF7neG35z6Eq135/JuHmrtMuATRyxtMjp4Dz1ZDvcg8Sdt3guU4T6z0qf2HaaWJ3ItDpfnWSw263NIEIJ8I9nQZFXMPCfwE8uk/bjdkc6sVJGLtN+ijb0+IOO7O4hpuuVh/ixy53vUSceKa0Gzy79ct0UgqkQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from BN6PR21MB0162.namprd21.prod.outlook.com (2603:10b6:404:94::8)
+ by BN6PR21MB0129.namprd21.prod.outlook.com (2603:10b6:404:93::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.14; Fri, 2 Oct
+ 2020 08:52:32 +0000
+Received: from BN6PR21MB0162.namprd21.prod.outlook.com
+ ([fe80::641a:3e30:395a:38d6]) by BN6PR21MB0162.namprd21.prod.outlook.com
+ ([fe80::641a:3e30:395a:38d6%13]) with mapi id 15.20.3455.015; Fri, 2 Oct 2020
+ 08:52:32 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     lorenzo.pieralisi@arm.com, maz@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com
+Cc:     jakeo@microsoft.com, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v3] PCI: hv: Fix hibernation in case interrupts are not re-created
+Date:   Fri,  2 Oct 2020 01:51:58 -0700
+Message-Id: <20201002085158.9168-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-Originating-IP: [2001:4898:80e8:a:784f:8b8b:1755:1e09]
+X-ClientProxiedBy: MWHPR22CA0057.namprd22.prod.outlook.com
+ (2603:10b6:300:12a::19) To BN6PR21MB0162.namprd21.prod.outlook.com
+ (2603:10b6:404:94::8)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:a:784f:8b8b:1755:1e09) by MWHPR22CA0057.namprd22.prod.outlook.com (2603:10b6:300:12a::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20 via Frontend Transport; Fri, 2 Oct 2020 08:52:30 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ce65d66f-75bc-437e-a9b8-08d866b07ffd
+X-MS-TrafficTypeDiagnostic: BN6PR21MB0129:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR21MB0129089E3F226C451B728F15BF310@BN6PR21MB0129.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: keK5/s3mx+/jZZAraPeG12gIMNOyGFTWaJewOXu3mcuSWnM2AXQK5+SZOOd3RASArfreGA5P/v3sf9pDGcp6eSPlx9MSmJtp9CJINMd/ZtK2MCq5HdQtvzfVt5eafnUfoc0h6fwUxNBn0H1efTHS1QwKaj8A5+7SKnkGYXQp7ahs4zW6rxOF7T1DeY6s0YFTZ+h+kYpS8g7cIGV5s3l5ebB3s8dNBL92nV0HuC80t3GaA5yywS9T//PqIQeazPjjd3Q1c4Sc9IGNkSPibPoTvgv+WP3/8NW7UEd7jpYQXWtDztAYDnBUH+GHjQl4OMET1weidaeCbUS0vHXpjXKux5c53DWjw/66fVl1YjlxZJCI3r1qGDh0nPLCeip+i2u9
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0162.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(346002)(396003)(366004)(136003)(7696005)(2616005)(8936002)(66556008)(82950400001)(6486002)(66476007)(107886003)(36756003)(2906002)(1076003)(186003)(86362001)(82960400001)(5660300002)(10290500003)(16526019)(8676002)(478600001)(3450700001)(83380400001)(4326008)(316002)(66946007)(6636002)(6666004)(52116002)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 93wR+IaARiS979uI+DqJzaho3wBh5xnfKqpHrAi68mzqlNKydYTTAy+m3kL0nWmMxCrBGGs+tYOiXm+F3iOjy3OGBpBqM+/b9WOmMmweUs9qxuYg9d6vOOTmG+l3LDxfwHxrvhPsQubF5hSLtk+UQVdHoKiJkf/fqpqdq8Zze0o5YBZqzDFnfECCFwNFNMlaF7RxltZDDmmXuC4pb3h01mzizdLfM5iMKgchStI0cI9tNYfUNADeuKOPMj9twI9rVyVZABa5Zxsz091TtsVa+eARtt350sR1Z9Vh6vkGw7ef+dbEhbsNINvMAVzxgc6r2b0DzyFBMO9caub0mxmaSNIBEZnNil4TD9OP6TJd2FD5TiYYSCc+zajMduMemrPZ0StY51gNvBen3jKpBfdJxOFDW4LXLvvCip+OhX7QYSPXwwaGGd7gs7h786quAiaIxxLkYw224sW7gQxBuQF371BrGmokq34M06YR6hdLvgDgthlNyGUtUfJtGzw5ymp3vjcLYgIn7K9s1VgJJ2Qaw1iVt1deC6KYWGbgGxr3Kf2AySz/WwsSDranOgxzlza4vXIhCKXj+gM8JGhyCk8SI647Tt6oVsgzFW//EaHUv3StpwPkSaL02AX1vH07Gonrj0+eoqV8ZzWicf1QddOLZS0aQOjXe1vFYSm8Fbr/B4K+BwivV7mkdil/Ox3R3ocpNeV38vChIifKC5wWzRZb5A==
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce65d66f-75bc-437e-a9b8-08d866b07ffd
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR21MB0162.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SG2P153MB0128.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 305110d6-906d-4a8b-72e4-08d8664bfe76
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2020 20:53:04.4034
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2020 08:52:32.4401
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ix/877fg5gvAi3KUWZBILIUBdaiMLYNw1iQWBZ8GoPtr6ncvjqjRTbnl6twyszViZ4ePfi+iX/bJlhFF97Lqmg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0215
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ul1RylfZ+Z33nKKprt65KwwXSCSCAhngImeVq+v/yzwTWcjPZb8GY9eEldChp/wIyd4y/Cvf0iUcVyPoJarRhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0129
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Thursday, October 1, 2020 3:13 AM
-> > ...
-> > I mean this is a Hyper-V specific problem, so IMO we should fix the
-> > pci-hyperv driver rather than change the PCI device drivers, which=20
-> > work perfectly on a physical machine and on other hypervisors.=20
-> > Also it can be difficult or impossible to ask the authors of the=20
-> > aforementioned PCI device drivers to destroy and re-create=20
-> > MSI/MSI-X across hibernation, especially for the out-of-tree driver(s).
->=20
-> Good, so why did you mention PCI drivers in the commit log if they
-> are not related to the problem you are fixing ?
+pci_restore_msi_state() directly writes the MSI/MSI-X related registers
+via MMIO. On a physical machine, this works perfectly; for a Linux VM
+running on a hypervisor, which typically enables IOMMU interrupt remapping,
+the hypervisor usually should trap and emulate the MMIO accesses in order
+to re-create the necessary interrupt remapping table entries in the IOMMU,
+otherwise the interrupts can not work in the VM after hibernation.
 
-I mentioned the names of the PCI device drivers because IMO people
-want to know how the issue can reproduce (i.e. which PCI devices
-are affected and which are not), so they know how to test this patch.
+Hyper-V is different from other hypervisors in that it does not trap and
+emulate the MMIO accesses, and instead it uses a para-virtualized method,
+which requires the VM to call hv_compose_msi_msg() to notify the hypervisor
+of the info that would be passed to the hypervisor in the case of the
+trap-and-emulate method. This is not an issue to a lot of PCI device
+drivers, which destroy and re-create the interrupts across hibernation, so
+hv_compose_msi_msg() is called automatically. However, some PCI device
+drivers (e.g. the in-tree GPU driver nouveau and the out-of-tree Nvidia
+proprietary GPU driver) do not destroy and re-create MSI/MSI-X interrupts
+across hibernation, so hv_pci_resume() has to call hv_compose_msi_msg(),
+otherwise the PCI device drivers can no longer receive interrupts after
+the VM resumes from hibernation.
 
-I'll remove the names of the unaffected PCI device drivers from the=20
-commit log, and only keep the name of the Nvidia GPU drivers (which
-are so far the only drivers I have identified that are affected, when
-Linux VM runs on Hyper-V and hibernates).
-=20
-> > > Regardless, this commit log does not provide the information that
-> > > it should.
-> >
-> > Hi Lozenzo, I'm happy to add more info. Can you please let me know
-> > what extra info I should provide?
->=20
-> s/Lozenzo/Lorenzo
-Sorry! Will fix the typo.
-=20
-> The info you describe properly below, namely what the _actual_ problem
-> is.
+Hyper-V is also different in that chip->irq_unmask() may fail in a
+Linux VM running on Hyper-V (on a physical machine, chip->irq_unmask()
+can not fail because unmasking an MSI/MSI-X register just means an MMIO
+write): during hibernation, when a CPU is offlined, the kernel tries
+to move the interrupt to the remaining CPUs that haven't been offlined
+yet. In this case, hv_irq_unmask() -> hv_do_hypercall() always fails
+because the vmbus channel has been closed: here the early "return" in
+hv_irq_unmask() means the pci_msi_unmask_irq() is not called, i.e. the
+desc->masked remains "true", so later after hibernation, the MSI interrupt
+always remains masked, which is incorrect. Refer to cpu_disable_common()
+-> fixup_irqs() -> irq_migrate_all_off_this_cpu() -> migrate_one_irq():
 
-I will send v3 with the below info.
-=20
-> > Here if hv_irq_unmask does not call pci_msi_unmask_irq(), the
-> > desc->masked remains "true", so later after hibernation, the MSI
-> > interrupt line always reamins masked, which is incorrect.
-> >
-> > Here the slient failure of hv_irq_unmask() does not matter since all th=
-e
-> > non-boot CPUs are being offlined (meaning all the devices have been
-> > frozen). Note: the correct affinity info is still updated into the
-> > irqdata data structure in migrate_one_irq() -> irq_do_set_affinity() ->
-> > hv_set_affinity(), so when the VM resumes, hv_pci_resume() ->
-> > hv_pci_restore_msi_state() is able to correctly restore the irqs with
-> > the correct affinity.
-> >
-> > I hope the explanation can help clarify things. I understand this is
-> > not as natual as tht case that Linux runs on a physical machine, but
-> > due to the unique PCI pass-through implementation of Hyper-V, IMO this
-> > is the only viable fix for the problem here. BTW, this patch is only
-> > confined to the pci-hyperv driver and I believe it can no cause any
-> > regression.
->=20
-> Understood, write this in the commit log and I won't nag you any further.
+static bool migrate_one_irq(struct irq_desc *desc)
+{
+...
+        if (maskchip && chip->irq_mask)
+                chip->irq_mask(d);
+...
+        err = irq_do_set_affinity(d, affinity, false);
+...
+        if (maskchip && chip->irq_unmask)
+                chip->irq_unmask(d);
 
-Ok. I treat it as an opportunity to practise and improve my writing :-)
-=20
-> Side note: this issue is there because the hypcall failure triggers
-> an early return from hv_irq_unmask().=20
+Fix the issue by calling pci_msi_unmask_irq() unconditionally in
+hv_irq_unmask(). Also suppress the error message for hibernation because
+the hypercall failure during hibernation does not matter (at this time
+all the devices have been frozen). Note: the correct affinity info is
+still updated into the irqdata data structure in migrate_one_irq() ->
+irq_do_set_affinity() -> hv_set_affinity(), so later when the VM
+resumes, hv_pci_restore_msi_state() is able to correctly restore
+the interrupt with the correct affinity.
 
-Yes.
+Fixes: ac82fc832708 ("PCI: hv: Add hibernation support")
+Reviewed-by: Jake Oshins <jakeo@microsoft.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
 
-> Is that early return really correct ?=20
+Changes in v2:
+    Fixed a typo in the comment in hv_irq_unmask. Thanks to Michael!
+    Added Jake's Reviewed-by.
 
-Good question. IMO it's incorrect, because hv_irq_unmask() is called=20
-when the interrupt is activated for the first time, and when the interrupt'=
-s
-affinity is being changed. In these cases, we may as well call
-pci_msi_unmask_irq() unconditionally, even if the hypercall fails.
+Changes in v3:
+    Improved the commit log.
+    Improved the comments.
+    Improved the change in hv_irq_unmask(): removed the early "return"
+        and call pci_msi_unmask_irq() unconditionally.
 
-BTW, AFAIK, in practice the hypercall only fails in 2 cases:
-1. The device is removed when Linux VM has not finished the device's
-initialization.
-2. In hibernation, the device has been disabled while the generic
-hibernation code tries to migrate the interrupt, as I explained.
+ drivers/pci/controller/pci-hyperv.c | 50 +++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 3 deletions(-)
 
-In the 2 cases, the hypercall returns the same error code
-HV_STATUS_INVALID_PARAMETER(0x5).
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index fc4c3a15e570..a9df492fbffa 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1276,11 +1276,25 @@ static void hv_irq_unmask(struct irq_data *data)
+ exit_unlock:
+ 	spin_unlock_irqrestore(&hbus->retarget_msi_interrupt_lock, flags);
+ 
+-	if (res) {
++	/*
++	 * During hibernation, when a CPU is offlined, the kernel tries
++	 * to move the interrupt to the remaining CPUs that haven't
++	 * been offlined yet. In this case, the below hv_do_hypercall()
++	 * always fails since the vmbus channel has been closed:
++	 * refer to cpu_disable_common() -> fixup_irqs() ->
++	 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
++	 *
++	 * Suppress the error message for hibernation because the failure
++	 * during hibernation does not matter (at this time all the devices
++	 * have been frozen). Note: the correct affinity info is still updated
++	 * into the irqdata data structure in migrate_one_irq() ->
++	 * irq_do_set_affinity() -> hv_set_affinity(), so later when the VM
++	 * resumes, hv_pci_restore_msi_state() is able to correctly restore
++	 * the interrupt with the correct affinity.
++	 */
++	if (res && hbus->state != hv_pcibus_removing)
+ 		dev_err(&hbus->hdev->device,
+ 			"%s() failed: %#llx", __func__, res);
+-		return;
+-	}
+ 
+ 	pci_msi_unmask_irq(data);
+ }
+@@ -3372,6 +3386,34 @@ static int hv_pci_suspend(struct hv_device *hdev)
+ 	return 0;
+ }
+ 
++static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
++{
++	struct msi_desc *entry;
++	struct irq_data *irq_data;
++
++	for_each_pci_msi_entry(entry, pdev) {
++		irq_data = irq_get_irq_data(entry->irq);
++		if (WARN_ON_ONCE(!irq_data))
++			return -EINVAL;
++
++		hv_compose_msi_msg(irq_data, &entry->msg);
++	}
++
++	return 0;
++}
++
++/*
++ * Upon resume, pci_restore_msi_state() -> ... ->  __pci_write_msi_msg()
++ * directly writes the MSI/MSI-X registers via MMIO, but since Hyper-V
++ * doesn't trap and emulate the MMIO accesses, here hv_compose_msi_msg()
++ * must be used to ask Hyper-V to re-create the IOMMU Interrupt Remapping
++ * Table entries.
++ */
++static void hv_pci_restore_msi_state(struct hv_pcibus_device *hbus)
++{
++	pci_walk_bus(hbus->pci_bus, hv_pci_restore_msi_msg, NULL);
++}
++
+ static int hv_pci_resume(struct hv_device *hdev)
+ {
+ 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+@@ -3405,6 +3447,8 @@ static int hv_pci_resume(struct hv_device *hdev)
+ 
+ 	prepopulate_bars(hbus);
+ 
++	hv_pci_restore_msi_state(hbus);
++
+ 	hbus->state = hv_pcibus_installed;
+ 	return 0;
+ out:
+-- 
+2.19.1
 
-> Another possibility is just logging the error and let
-> hv_irq_unmask() continue and call pci_msi_unmask_irq() in the exit
-> path.
-
-This is a good idea. I'll make this change in v3.
-=20
-> Is there a hypcall return value that you can use to detect fatal vs
-> non-fatal (ie hibernation) hypcall failures ?
-
-Unluckily IMO there is not. The spec (v6.0b)'s section 10.5.4 (page 106)
-https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/referenc=
-e/tlfs
-does define some return values, but IMO they're not applicable here.
-
-> I was confused by reading the patch since it seemed that you call
-> pci_msi_unmask_irq() _only_ while hibernating, which was certainly
-> a bug.
->=20
-> Thank you for explaining.
->=20
-> Lorenzo
-
-Thanks for reviewing! I'll post v3. Looking forward to your new comments!
-
-Thanks,
--- Dexuan
