@@ -2,156 +2,170 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5DA42836A3
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Oct 2020 15:35:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEEFF283892
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Oct 2020 16:58:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgJENf0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Oct 2020 09:35:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40191 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725936AbgJENfY (ORCPT
+        id S1725960AbgJEO65 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Oct 2020 10:58:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40182 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgJEO64 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Oct 2020 09:35:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601904922;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PTyrTW/rfYTR/tFQvyZHwiAowe5Cs00kgxEdQai11UE=;
-        b=gAn99OdxgrjzbJl9fc94nA/RBU+qBMyB15w2vsoK8aSxSAiYvz8b833umHxPJXinBLq7PN
-        rRktIqftMMU6YcFGPbc6DdQS9nNfFZmUcMT4QzRv3uuXWLdx7BNdon87FEUeWPRfhmmZ73
-        eN5zmGcFCmXA7A3UJr8V7lUZ1ynOBlk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-YgYiAY_1OSSrsEVotbWR2w-1; Mon, 05 Oct 2020 09:35:18 -0400
-X-MC-Unique: YgYiAY_1OSSrsEVotbWR2w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD0D364145;
-        Mon,  5 Oct 2020 13:35:16 +0000 (UTC)
-Received: from ovpn-115-41.ams2.redhat.com (ovpn-115-41.ams2.redhat.com [10.36.115.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 200D11002382;
-        Mon,  5 Oct 2020 13:35:14 +0000 (UTC)
-Message-ID: <117b43d337e07c7491bee735cfce3ecc703d3f81.camel@redhat.com>
-Subject: Re: [PATCH RESEND] hv: clocksource: Add notrace attribute to
- read_hv_sched_clock_*() functions
-From:   Mohammed Gamal <mgamal@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        vkuznets@redhat.com, Tianyu.Lan@microsoft.com, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org
-Date:   Mon, 05 Oct 2020 15:35:13 +0200
-In-Reply-To: <20201005114744.1149630-1-mgamal@redhat.com>
-References: <20201005114744.1149630-1-mgamal@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Mon, 5 Oct 2020 10:58:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j2so9959587wrx.7;
+        Mon, 05 Oct 2020 07:58:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=arf4WDavo4mH+NimIUSRraS6XCsUtA2SCJsUc8RhY20=;
+        b=lSk5q0B9Ef+s7sW2sGAkfZ6mHMVcJkTJts3bZlIhNwpE5vdyn0dxqpgLYe0FN6zvRf
+         H/p0St/fKzqyDkiLURnXXrIzPmqy4z0I6PHJWt0DMrOuW5SAlJLUA0SmjRximKe9a3Mq
+         OON5R2z5dfB+KnJg7PhE5LTF5ZxSvLHFn8icT3JBmRUW7uktOGvRWdpC8KfZtoffIJie
+         +ICStHwCQxxJIAcehyTdHTNmjQjSUvMOPUiE3vEhi12W6qxSiUvN9N0J0IE/RIZWCScQ
+         E9KGx9xnPzws1iEDnGtHEhF0y4foHK5Qu2iUKr0FOTvK7WX1nPEzkNs3sXDsx81jqBzp
+         fAcA==
+X-Gm-Message-State: AOAM532Uorhy52nbt3zM7n9wwS3FGN5QiILfH7wgRCJFELRfCcrJPSMo
+        oaNr2eWo+lvahrOZwlw+l4KVuAxGc9E=
+X-Google-Smtp-Source: ABdhPJwsmYfIdZo5A7MWOv7wthty+N7BmpngScIGBIplUKSh8CDx3xU7kBEDNGlby8jxVEiqswcdew==
+X-Received: by 2002:adf:f44d:: with SMTP id f13mr17984801wrp.224.1601909933711;
+        Mon, 05 Oct 2020 07:58:53 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id t16sm2961wmi.18.2020.10.05.07.58.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2020 07:58:53 -0700 (PDT)
+Date:   Mon, 5 Oct 2020 14:58:51 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Sasha Levin <sashal@kernel.org>, Wei Liu <wei.liu@kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>
+Subject: Re: [PATCH] x86/hyper-v: guard against cpu mask changes in
+ hyperv_flush_tlb_others()
+Message-ID: <20201005145851.hdyaeqo3celt2wtr@liuwe-devbox-debian-v2>
+References: <20201001013814.2435935-1-sashal@kernel.org>
+ <87o8lm9te3.fsf@vitty.brq.redhat.com>
+ <20201001115359.6jhhrybemnhizgok@liuwe-devbox-debian-v2>
+ <20201001130400.GE2415204@sasha-vm>
+ <MW2PR2101MB105242653A8D5C7DD9DF1062D70E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB105242653A8D5C7DD9DF1062D70E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, 2020-10-05 at 13:47 +0200, Mohammed Gamal wrote:
-> When selecting function_graph tracer with the command:
->  # echo function_graph > /sys/kernel/debug/tracing/current_tracer
+On Sat, Oct 03, 2020 at 05:40:15PM +0000, Michael Kelley wrote:
+> From: Sasha Levin <sashal@kernel.org>  Sent: Thursday, October 1, 2020 6:04 AM
+> > 
+> > On Thu, Oct 01, 2020 at 11:53:59AM +0000, Wei Liu wrote:
+> > >On Thu, Oct 01, 2020 at 11:40:04AM +0200, Vitaly Kuznetsov wrote:
+> > >> Sasha Levin <sashal@kernel.org> writes:
+> > >>
+> > >> > cpumask can change underneath us, which is generally safe except when we
+> > >> > call into hv_cpu_number_to_vp_number(): if cpumask ends up empty we pass
+> > >> > num_cpu_possible() into hv_cpu_number_to_vp_number(), causing it to read
+> > >> > garbage. As reported by KASAN:
+> > >> >
+> > >> > [   83.504763] BUG: KASAN: slab-out-of-bounds in hyperv_flush_tlb_others
+> > (include/asm-generic/mshyperv.h:128 arch/x86/hyperv/mmu.c:112)
+> > >> > [   83.908636] Read of size 4 at addr ffff888267c01370 by task kworker/u8:2/106
+> > >> > [   84.196669] CPU: 0 PID: 106 Comm: kworker/u8:2 Tainted: G        W         5.4.60 #1
+> > >> > [   84.196669] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine,
+> > BIOS 090008  12/07/2018
+> > >> > [   84.196669] Workqueue: writeback wb_workfn (flush-8:0)
+> > >> > [   84.196669] Call Trace:
+> > >> > [   84.196669] dump_stack (lib/dump_stack.c:120)
+> > >> > [   84.196669] print_address_description.constprop.0 (mm/kasan/report.c:375)
+> > >> > [   84.196669] __kasan_report.cold (mm/kasan/report.c:507)
+> > >> > [   84.196669] kasan_report (arch/x86/include/asm/smap.h:71
+> > mm/kasan/common.c:635)
+> > >> > [   84.196669] hyperv_flush_tlb_others (include/asm-generic/mshyperv.h:128
+> > arch/x86/hyperv/mmu.c:112)
+> > >> > [   84.196669] flush_tlb_mm_range (arch/x86/include/asm/paravirt.h:68
+> > arch/x86/mm/tlb.c:798)
+> > >> > [   84.196669] ptep_clear_flush (arch/x86/include/asm/tlbflush.h:586 mm/pgtable-
+> > generic.c:88)
+> > >> >
+> > >> > Fixes: 0e4c88f37693 ("x86/hyper-v: Use cheaper
+> > HVCALL_FLUSH_VIRTUAL_ADDRESS_{LIST,SPACE} hypercalls when possible")
+> > >> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > >> > Cc: stable@kernel.org
+> > >> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > >> > ---
+> > >> >  arch/x86/hyperv/mmu.c | 4 +++-
+> > >> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >> >
+> > >> > diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+> > >> > index 5208ba49c89a9..b1d6afc5fc4a3 100644
+> > >> > --- a/arch/x86/hyperv/mmu.c
+> > >> > +++ b/arch/x86/hyperv/mmu.c
+> > >> > @@ -109,7 +109,9 @@ static void hyperv_flush_tlb_others(const struct cpumask
+> > *cpus,
+> > >> >  		 * must. We will also check all VP numbers when walking the
+> > >> >  		 * supplied CPU set to remain correct in all cases.
+> > >> >  		 */
+> > >> > -		if (hv_cpu_number_to_vp_number(cpumask_last(cpus)) >= 64)
+> > >> > +		int last = cpumask_last(cpus);
+> > >> > +
+> > >> > +		if (last < num_possible_cpus() && hv_cpu_number_to_vp_number(last) >=
+> > 64)
+> > >> >  			goto do_ex_hypercall;
+> > >>
+> > >> In case 'cpus' can end up being empty (I'm genuinely suprised it can)
+> > 
+> > I was just as surprised as you and spent the good part of a day
+> > debugging this. However, a:
+> > 
+> > 	WARN_ON(cpumask_empty(cpus));
+> > 
+> > triggers at that line of code even though we check for cpumask_empty()
+> > at the entry of the function.
 > 
-> The kernel crashes with the following stack trace:
+> What does the call stack look like when this triggers?  I'm curious about
+> the path where the 'cpus' could be changing while the flush call is in
+> progress.
 > 
-> [69703.122389] BUG: stack guard page was hit at 000000001056545c
-> (stack is 00000000fa3f8fed..0000000005d39503)
-> [69703.122403] kernel stack overflow (double-fault): 0000 [#1] SMP
-> PTI
-> [69703.122413] CPU: 0 PID: 16982 Comm: bash Kdump: loaded Not tainted
-> 4.18.0-236.el8.x86_64 #1
-> [69703.122420] Hardware name: Microsoft Corporation Virtual
-> Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.0 12/17/2019
-> [69703.122433] RIP: 0010repare_ftrace_return+0xa/0x110
-> [69703.122458] Code: 05 00 0f 0b 48 c7 c7 10 ca 69 ae 0f b6 f0 e8 4b
-> 52 0c 00 31 c0 eb ca 66 0f 1f 84 00 00 00 00 00 55 48 89 e5 41 56 41
-> 55 41 54 <53> 48 83 ec 18 65 48 8b 04 25 28 00 00 00 48 89 45 d8 31
-> c0 48 85
-> [69703.122467] RSP: 0018:ffffbd6d01118000 EFLAGS: 00010086
-> [69703.122476] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
-> 0000000000000003
-> [69703.122484] RDX: 0000000000000000 RSI: ffffbd6d011180d8 RDI:
-> ffffffffadce7550
-> [69703.122491] RBP: ffffbd6d01118018 R08: 0000000000000000 R09:
-> ffff9d4b09266000
-> [69703.122498] R10: ffff9d4b0fc04540 R11: ffff9d4b0fc20a00 R12:
-> ffff9d4b6e42aa90
-> [69703.122506] R13: ffff9d4b0fc20ab8 R14: 00000000000003e8 R15:
-> ffffbd6d0111837c
-> [69703.122514] FS:  00007fd5f2588740(0000) GS:ffff9d4b6e400000(0000)
-> knlGS:0000000000000000
-> [69703.122521] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [69703.122528] CR2: ffffbd6d01117ff8 CR3: 00000000565d8001 CR4:
-> 00000000003606f0
-> [69703.122538] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [69703.122545] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [69703.122552] Call Trace:
-> [69703.122568]  ftrace_graph_caller+0x6b/0xa0
-> [69703.122589]  ? read_hv_sched_clock_tsc+0x5/0x20
-> [69703.122599]  read_hv_sched_clock_tsc+0x5/0x20
-> [69703.122611]  sched_clock+0x5/0x10
-> [69703.122621]  sched_clock_local+0x12/0x80
-> [69703.122631]  sched_clock_cpu+0x8c/0xb0
-> [69703.122644]  trace_clock_global+0x21/0x90
-> [69703.122655]  ring_buffer_lock_reserve+0x100/0x3c0
-> [69703.122671]  trace_buffer_lock_reserve+0x16/0x50
-> [69703.122683]  __trace_graph_entry+0x28/0x90
-> [69703.122695]  trace_graph_entry+0xfd/0x1a0
-> [69703.122705]  ? read_hv_clock_tsc_cs+0x10/0x10
-> [69703.122714]  ? sched_clock+0x5/0x10
-> [69703.122723]  prepare_ftrace_return+0x99/0x110
-> [69703.122734]  ? read_hv_clock_tsc_cs+0x10/0x10
-> [69703.122743]  ? sched_clock+0x5/0x10
-> [...]
+> I wonder if CPUs could ever be added to the mask?  Removing CPUs can
+> be handled with some care because an unnecessary flush doesn't hurt
+> anything.   But adding CPUs has serious correctness problems.
 > 
-> Setting the notrace attribute for read_hv_sched_clock_msr() and
-> read_hv_sched_clock_tsc() fixes it
-> 
-> Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V
-> specific
-> sched clock function")
-> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
-> ---
->  drivers/clocksource/hyperv_timer.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clocksource/hyperv_timer.c
-> b/drivers/clocksource/hyperv_timer.c
-> index 09aa44cb8a91d..ba04cb381cd3f 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -341,7 +341,7 @@ static u64 notrace read_hv_clock_tsc_cs(struct
-> clocksource *arg)
->  	return read_hv_clock_tsc();
->  }
->  
-> -static u64 read_hv_sched_clock_tsc(void)
-> +static u64 notrace read_hv_sched_clock_tsc(void)
->  {
->  	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
->  		(NSEC_PER_SEC / HV_CLOCK_HZ);
-> @@ -404,7 +404,7 @@ static u64 notrace read_hv_clock_msr_cs(struct
-> clocksource *arg)
->  	return read_hv_clock_msr();
->  }
->  
-> -static u64 read_hv_sched_clock_msr(void)
-> +static u64 notrace read_hv_sched_clock_msr(void)
->  {
->  	return (read_hv_clock_msr() - hv_sched_clock_offset) *
->  		(NSEC_PER_SEC / HV_CLOCK_HZ);
 
-Please ignore the patch. Somehow I missed Wei's reply on it. It's
-already applied to hyperv-next.
+The cpumask_empty check is done before disabling irq. Is it possible
+the mask is modified by an interrupt?
 
-Thanks
+If there is a reliable way to trigger this bug, we may be able to test
+the following patch.
+
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index 5208ba49c89a..23fa08d24c1a 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -66,11 +66,13 @@ static void hyperv_flush_tlb_others(const struct cpumask *cpus,
+        if (!hv_hypercall_pg)
+                goto do_native;
+
+-       if (cpumask_empty(cpus))
+-               return;
+-
+        local_irq_save(flags);
+
++       if (cpumask_empty(cpus)) {
++               local_irq_restore(flags);
++               return;
++       }
++
+        flush_pcpu = (struct hv_tlb_flush **)
+                     this_cpu_ptr(hyperv_pcpu_input_arg);
 
