@@ -2,112 +2,156 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F11F2835B2
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Oct 2020 14:17:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5DA42836A3
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Oct 2020 15:35:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgJEMQ6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Oct 2020 08:16:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32946 "EHLO
+        id S1725914AbgJENf0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Oct 2020 09:35:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40191 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726329AbgJEMQu (ORCPT
+        by vger.kernel.org with ESMTP id S1725936AbgJENfY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Oct 2020 08:16:50 -0400
+        Mon, 5 Oct 2020 09:35:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601900209;
+        s=mimecast20190719; t=1601904922;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0AsZOi2g9AlkyekUiDSDSjeyhdmKjvuUsI97IJKTuTs=;
-        b=ic+D7sC4ZfZuNEKbtQv8oeu8IIy37KaR3P49BBhgbeAb1izamQ96ydf5IN7P+HF2h0Yi1U
-        YpsIfSCyeKtKWPPL29HKNoM239QISArroBWsyMHU5JhCItKUPl3Hw3rNckzGdnZF7+01GW
-        w5rM/BsDliBg6j4nriLC1X00qZt5xRQ=
+        bh=PTyrTW/rfYTR/tFQvyZHwiAowe5Cs00kgxEdQai11UE=;
+        b=gAn99OdxgrjzbJl9fc94nA/RBU+qBMyB15w2vsoK8aSxSAiYvz8b833umHxPJXinBLq7PN
+        rRktIqftMMU6YcFGPbc6DdQS9nNfFZmUcMT4QzRv3uuXWLdx7BNdon87FEUeWPRfhmmZ73
+        eN5zmGcFCmXA7A3UJr8V7lUZ1ynOBlk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-7gZGHkSGNu2LzffQTpddTg-1; Mon, 05 Oct 2020 08:16:45 -0400
-X-MC-Unique: 7gZGHkSGNu2LzffQTpddTg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-370-YgYiAY_1OSSrsEVotbWR2w-1; Mon, 05 Oct 2020 09:35:18 -0400
+X-MC-Unique: YgYiAY_1OSSrsEVotbWR2w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 887B4801AB1;
-        Mon,  5 Oct 2020 12:16:43 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-222.ams2.redhat.com [10.36.114.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A40231A8EC;
-        Mon,  5 Oct 2020 12:16:36 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Subject: [PATCH v2 5/5] mm/memory_hotplug: update comment regarding zone shuffling
-Date:   Mon,  5 Oct 2020 14:15:34 +0200
-Message-Id: <20201005121534.15649-6-david@redhat.com>
-In-Reply-To: <20201005121534.15649-1-david@redhat.com>
-References: <20201005121534.15649-1-david@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD0D364145;
+        Mon,  5 Oct 2020 13:35:16 +0000 (UTC)
+Received: from ovpn-115-41.ams2.redhat.com (ovpn-115-41.ams2.redhat.com [10.36.115.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 200D11002382;
+        Mon,  5 Oct 2020 13:35:14 +0000 (UTC)
+Message-ID: <117b43d337e07c7491bee735cfce3ecc703d3f81.camel@redhat.com>
+Subject: Re: [PATCH RESEND] hv: clocksource: Add notrace attribute to
+ read_hv_sched_clock_*() functions
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        vkuznets@redhat.com, Tianyu.Lan@microsoft.com, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org
+Date:   Mon, 05 Oct 2020 15:35:13 +0200
+In-Reply-To: <20201005114744.1149630-1-mgamal@redhat.com>
+References: <20201005114744.1149630-1-mgamal@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-As we no longer shuffle via generic_online_page() and when undoing
-isolation, we can simplify the comment.
+On Mon, 2020-10-05 at 13:47 +0200, Mohammed Gamal wrote:
+> When selecting function_graph tracer with the command:
+>  # echo function_graph > /sys/kernel/debug/tracing/current_tracer
+> 
+> The kernel crashes with the following stack trace:
+> 
+> [69703.122389] BUG: stack guard page was hit at 000000001056545c
+> (stack is 00000000fa3f8fed..0000000005d39503)
+> [69703.122403] kernel stack overflow (double-fault): 0000 [#1] SMP
+> PTI
+> [69703.122413] CPU: 0 PID: 16982 Comm: bash Kdump: loaded Not tainted
+> 4.18.0-236.el8.x86_64 #1
+> [69703.122420] Hardware name: Microsoft Corporation Virtual
+> Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.0 12/17/2019
+> [69703.122433] RIP: 0010repare_ftrace_return+0xa/0x110
+> [69703.122458] Code: 05 00 0f 0b 48 c7 c7 10 ca 69 ae 0f b6 f0 e8 4b
+> 52 0c 00 31 c0 eb ca 66 0f 1f 84 00 00 00 00 00 55 48 89 e5 41 56 41
+> 55 41 54 <53> 48 83 ec 18 65 48 8b 04 25 28 00 00 00 48 89 45 d8 31
+> c0 48 85
+> [69703.122467] RSP: 0018:ffffbd6d01118000 EFLAGS: 00010086
+> [69703.122476] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
+> 0000000000000003
+> [69703.122484] RDX: 0000000000000000 RSI: ffffbd6d011180d8 RDI:
+> ffffffffadce7550
+> [69703.122491] RBP: ffffbd6d01118018 R08: 0000000000000000 R09:
+> ffff9d4b09266000
+> [69703.122498] R10: ffff9d4b0fc04540 R11: ffff9d4b0fc20a00 R12:
+> ffff9d4b6e42aa90
+> [69703.122506] R13: ffff9d4b0fc20ab8 R14: 00000000000003e8 R15:
+> ffffbd6d0111837c
+> [69703.122514] FS:  00007fd5f2588740(0000) GS:ffff9d4b6e400000(0000)
+> knlGS:0000000000000000
+> [69703.122521] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [69703.122528] CR2: ffffbd6d01117ff8 CR3: 00000000565d8001 CR4:
+> 00000000003606f0
+> [69703.122538] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> 0000000000000000
+> [69703.122545] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> 0000000000000400
+> [69703.122552] Call Trace:
+> [69703.122568]  ftrace_graph_caller+0x6b/0xa0
+> [69703.122589]  ? read_hv_sched_clock_tsc+0x5/0x20
+> [69703.122599]  read_hv_sched_clock_tsc+0x5/0x20
+> [69703.122611]  sched_clock+0x5/0x10
+> [69703.122621]  sched_clock_local+0x12/0x80
+> [69703.122631]  sched_clock_cpu+0x8c/0xb0
+> [69703.122644]  trace_clock_global+0x21/0x90
+> [69703.122655]  ring_buffer_lock_reserve+0x100/0x3c0
+> [69703.122671]  trace_buffer_lock_reserve+0x16/0x50
+> [69703.122683]  __trace_graph_entry+0x28/0x90
+> [69703.122695]  trace_graph_entry+0xfd/0x1a0
+> [69703.122705]  ? read_hv_clock_tsc_cs+0x10/0x10
+> [69703.122714]  ? sched_clock+0x5/0x10
+> [69703.122723]  prepare_ftrace_return+0x99/0x110
+> [69703.122734]  ? read_hv_clock_tsc_cs+0x10/0x10
+> [69703.122743]  ? sched_clock+0x5/0x10
+> [...]
+> 
+> Setting the notrace attribute for read_hv_sched_clock_msr() and
+> read_hv_sched_clock_tsc() fixes it
+> 
+> Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V
+> specific
+> sched clock function")
+> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+> ---
+>  drivers/clocksource/hyperv_timer.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clocksource/hyperv_timer.c
+> b/drivers/clocksource/hyperv_timer.c
+> index 09aa44cb8a91d..ba04cb381cd3f 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -341,7 +341,7 @@ static u64 notrace read_hv_clock_tsc_cs(struct
+> clocksource *arg)
+>  	return read_hv_clock_tsc();
+>  }
+>  
+> -static u64 read_hv_sched_clock_tsc(void)
+> +static u64 notrace read_hv_sched_clock_tsc(void)
+>  {
+>  	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
+>  		(NSEC_PER_SEC / HV_CLOCK_HZ);
+> @@ -404,7 +404,7 @@ static u64 notrace read_hv_clock_msr_cs(struct
+> clocksource *arg)
+>  	return read_hv_clock_msr();
+>  }
+>  
+> -static u64 read_hv_sched_clock_msr(void)
+> +static u64 notrace read_hv_sched_clock_msr(void)
+>  {
+>  	return (read_hv_clock_msr() - hv_sched_clock_offset) *
+>  		(NSEC_PER_SEC / HV_CLOCK_HZ);
 
-We now effectively shuffle only once (properly) when onlining new
-memory.
+Please ignore the patch. Somehow I missed Wei's reply on it. It's
+already applied to hyperv-next.
 
-Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory_hotplug.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 03a00cb68bf7..b44d4c7ba73b 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -858,13 +858,10 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
- 	undo_isolate_page_range(pfn, pfn + nr_pages, MIGRATE_MOVABLE);
- 
- 	/*
--	 * When exposing larger, physically contiguous memory areas to the
--	 * buddy, shuffling in the buddy (when freeing onlined pages, putting
--	 * them either to the head or the tail of the freelist) is only helpful
--	 * for maintaining the shuffle, but not for creating the initial
--	 * shuffle. Shuffle the whole zone to make sure the just onlined pages
--	 * are properly distributed across the whole freelist. Make sure to
--	 * shuffle once pageblocks are no longer isolated.
-+	 * Freshly onlined pages aren't shuffled (e.g., all pages are placed to
-+	 * the tail of the freelist when undoing isolation). Shuffle the whole
-+	 * zone to make sure the just onlined pages are properly distributed
-+	 * across the whole freelist - to create an initial shuffle.
- 	 */
- 	shuffle_zone(zone);
- 
--- 
-2.26.2
+Thanks
 
