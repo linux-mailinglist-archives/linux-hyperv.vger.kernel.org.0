@@ -2,171 +2,127 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E93F2832CE
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Oct 2020 11:12:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68C5E283524
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Oct 2020 13:48:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgJEJMO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Oct 2020 05:12:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40607 "EHLO
+        id S1725932AbgJELsI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Oct 2020 07:48:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52872 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725885AbgJEJMN (ORCPT
+        by vger.kernel.org with ESMTP id S1725891AbgJELsI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Oct 2020 05:12:13 -0400
+        Mon, 5 Oct 2020 07:48:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601889132;
+        s=mimecast20190719; t=1601898485;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=NXwve0WxqZeoBW32EWOjz60HzfWSOgOTQAftpXofwqM=;
-        b=Vz8KQleqFOYNvn6hQ2AJdms3vAdVE/U0Mxxp8Z8TAXOM5CM+X6ml2VypAWvLN8aA1ZA3lc
-        JabO7yxnWq3K6NazVxvjZnzJ+LIECL69YhguASJqcOwWUIc8Sw1YrjnvyQOi06TzqnzYcr
-        oMim0zQrtq62EKlPMn2jFZiAZYJUkfw=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AD/nE9PKmOMsBgMmJ0SSv5yafe9PfgDunkARCL4humU=;
+        b=MMJrVoPJVRPp59D4xSan+zCO0pqX8LhOqlRHV8QE/Iu4/FjEo0ESw1O2BKsY2jKorISUUE
+        SDDsZjttlc/5kHQeVwIOW9eIFzANwtfZwvheXTx+GASAGgHINJnXloDvl0uS4cLgY+efjo
+        t9cctzAsmoTU2G3KEm4vQc3a2cQI0Tc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-YxpvOLN6NPWKnYXBtXMdiw-1; Mon, 05 Oct 2020 05:12:08 -0400
-X-MC-Unique: YxpvOLN6NPWKnYXBtXMdiw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-235-QtlBZf7BOVCIUTgOh1sBSw-1; Mon, 05 Oct 2020 07:48:03 -0400
+X-MC-Unique: QtlBZf7BOVCIUTgOh1sBSw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC8451084D94;
-        Mon,  5 Oct 2020 09:11:15 +0000 (UTC)
-Received: from [10.36.114.222] (ovpn-114-222.ams2.redhat.com [10.36.114.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F0E060BFA;
-        Mon,  5 Oct 2020 09:11:08 +0000 (UTC)
-Subject: Re: [PATCH v1 3/5] mm/page_alloc: always move pages to the tail of
- the freelist in unset_migratetype_isolate()
-To:     Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Scott Cheloha <cheloha@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20200928182110.7050-1-david@redhat.com>
- <20200928182110.7050-4-david@redhat.com>
- <20201002132404.GI4555@dhcp22.suse.cz>
- <df0c45bf-223f-1f0b-ce3d-f2b2e05626bd@redhat.com>
- <20201005065648.GO4555@dhcp22.suse.cz>
- <20201005082049.GI3227@techsingularity.net>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <d466322e-054c-9303-5eb3-833dce410651@redhat.com>
-Date:   Mon, 5 Oct 2020 11:11:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12E3710866AB;
+        Mon,  5 Oct 2020 11:48:02 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-115-185.ams2.redhat.com [10.36.115.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A6627747B0;
+        Mon,  5 Oct 2020 11:47:54 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        vkuznets@redhat.com, Tianyu.Lan@microsoft.com, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org,
+        Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH RESEND] hv: clocksource: Add notrace attribute to read_hv_sched_clock_*() functions
+Date:   Mon,  5 Oct 2020 13:47:44 +0200
+Message-Id: <20201005114744.1149630-1-mgamal@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20201005082049.GI3227@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 05.10.20 10:20, Mel Gorman wrote:
-> On Mon, Oct 05, 2020 at 08:56:48AM +0200, Michal Hocko wrote:
->> On Fri 02-10-20 17:20:09, David Hildenbrand wrote:
->>> On 02.10.20 15:24, Michal Hocko wrote:
->>>> On Mon 28-09-20 20:21:08, David Hildenbrand wrote:
->>>>> Page isolation doesn't actually touch the pages, it simply isolates
->>>>> pageblocks and moves all free pages to the MIGRATE_ISOLATE freelist.
->>>>>
->>>>> We already place pages to the tail of the freelists when undoing
->>>>> isolation via __putback_isolated_page(), let's do it in any case
->>>>> (e.g., if order <= pageblock_order) and document the behavior.
->>>>>
->>>>> Add a "to_tail" parameter to move_freepages_block() but introduce a
->>>>> a new move_to_free_list_tail() - similar to add_to_free_list_tail().
->>>>>
->>>>> This change results in all pages getting onlined via online_pages() to
->>>>> be placed to the tail of the freelist.
->>>>
->>>> Is there anything preventing to do this unconditionally? Or in other
->>>> words is any of the existing callers of move_freepages_block benefiting
->>>> from adding to the head?
->>>
->>> 1. mm/page_isolation.c:set_migratetype_isolate()
->>>
->>> We move stuff to the MIGRATE_ISOLATE list, we don't care about the order
->>> there.
->>>
->>> 2. steal_suitable_fallback():
->>>
->>> I don't think we care too much about the order when already stealing
->>> pageblocks ... and the freelist is empty I guess?
->>>
->>> 3. reserve_highatomic_pageblock()/unreserve_highatomic_pageblock()
->>>
->>> Not sure if we really care.
->>
->> Honestly, I have no idea. I can imagine that some atomic high order
->> workloads (e.g. in net) might benefit from cache line hot pages but I am
->> not sure this is really observable.
-> 
-> The highatomic reserve is more concerned that about the allocation
-> succeeding than it is about cache hotness.
-> 
+When selecting function_graph tracer with the command:
+ # echo function_graph > /sys/kernel/debug/tracing/current_tracer
 
-Thanks Mel and Michal. I'll simplify this patch then - and if it turns
-out to be an actual problem, we can change that one instance, adding a
-proper comment.
+The kernel crashes with the following stack trace:
 
-Thanks!
+[69703.122389] BUG: stack guard page was hit at 000000001056545c (stack is 00000000fa3f8fed..0000000005d39503)
+[69703.122403] kernel stack overflow (double-fault): 0000 [#1] SMP PTI
+[69703.122413] CPU: 0 PID: 16982 Comm: bash Kdump: loaded Not tainted 4.18.0-236.el8.x86_64 #1
+[69703.122420] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.0 12/17/2019
+[69703.122433] RIP: 0010repare_ftrace_return+0xa/0x110
+[69703.122458] Code: 05 00 0f 0b 48 c7 c7 10 ca 69 ae 0f b6 f0 e8 4b 52 0c 00 31 c0 eb ca 66 0f 1f 84 00 00 00 00 00 55 48 89 e5 41 56 41 55 41 54 <53> 48 83 ec 18 65 48 8b 04 25 28 00 00 00 48 89 45 d8 31 c0 48 85
+[69703.122467] RSP: 0018:ffffbd6d01118000 EFLAGS: 00010086
+[69703.122476] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000003
+[69703.122484] RDX: 0000000000000000 RSI: ffffbd6d011180d8 RDI: ffffffffadce7550
+[69703.122491] RBP: ffffbd6d01118018 R08: 0000000000000000 R09: ffff9d4b09266000
+[69703.122498] R10: ffff9d4b0fc04540 R11: ffff9d4b0fc20a00 R12: ffff9d4b6e42aa90
+[69703.122506] R13: ffff9d4b0fc20ab8 R14: 00000000000003e8 R15: ffffbd6d0111837c
+[69703.122514] FS:  00007fd5f2588740(0000) GS:ffff9d4b6e400000(0000) knlGS:0000000000000000
+[69703.122521] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[69703.122528] CR2: ffffbd6d01117ff8 CR3: 00000000565d8001 CR4: 00000000003606f0
+[69703.122538] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[69703.122545] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[69703.122552] Call Trace:
+[69703.122568]  ftrace_graph_caller+0x6b/0xa0
+[69703.122589]  ? read_hv_sched_clock_tsc+0x5/0x20
+[69703.122599]  read_hv_sched_clock_tsc+0x5/0x20
+[69703.122611]  sched_clock+0x5/0x10
+[69703.122621]  sched_clock_local+0x12/0x80
+[69703.122631]  sched_clock_cpu+0x8c/0xb0
+[69703.122644]  trace_clock_global+0x21/0x90
+[69703.122655]  ring_buffer_lock_reserve+0x100/0x3c0
+[69703.122671]  trace_buffer_lock_reserve+0x16/0x50
+[69703.122683]  __trace_graph_entry+0x28/0x90
+[69703.122695]  trace_graph_entry+0xfd/0x1a0
+[69703.122705]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.122714]  ? sched_clock+0x5/0x10
+[69703.122723]  prepare_ftrace_return+0x99/0x110
+[69703.122734]  ? read_hv_clock_tsc_cs+0x10/0x10
+[69703.122743]  ? sched_clock+0x5/0x10
+[...]
 
+Setting the notrace attribute for read_hv_sched_clock_msr() and
+read_hv_sched_clock_tsc() fixes it
+
+Fixes: bd00cd52d5be ("clocksource/drivers/hyperv: Add Hyper-V specific
+sched clock function")
+Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+---
+ drivers/clocksource/hyperv_timer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 09aa44cb8a91d..ba04cb381cd3f 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -341,7 +341,7 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
+ 	return read_hv_clock_tsc();
+ }
+ 
+-static u64 read_hv_sched_clock_tsc(void)
++static u64 notrace read_hv_sched_clock_tsc(void)
+ {
+ 	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
+ 		(NSEC_PER_SEC / HV_CLOCK_HZ);
+@@ -404,7 +404,7 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+ 	return read_hv_clock_msr();
+ }
+ 
+-static u64 read_hv_sched_clock_msr(void)
++static u64 notrace read_hv_sched_clock_msr(void)
+ {
+ 	return (read_hv_clock_msr() - hv_sched_clock_offset) *
+ 		(NSEC_PER_SEC / HV_CLOCK_HZ);
 -- 
-Thanks,
-
-David / dhildenb
+2.26.2
 
