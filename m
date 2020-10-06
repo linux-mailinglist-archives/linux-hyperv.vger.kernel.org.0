@@ -2,90 +2,116 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9B2228539E
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Oct 2020 23:07:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A8452853D9
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Oct 2020 23:26:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbgJFVHf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Oct 2020 17:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40648 "EHLO
+        id S1727443AbgJFV0Y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Oct 2020 17:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727176AbgJFVHf (ORCPT
+        with ESMTP id S1727334AbgJFV0Y (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Oct 2020 17:07:35 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0705AC061755;
-        Tue,  6 Oct 2020 14:07:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Message-ID:From:CC:To:Subject:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
-        Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=raBJSUw2Pij7PT/rmhEwVTTdaxcjc+zHVTOGifxTEq0=; b=gyjSY0FpzhPBu92z/xXp6in+HW
-        CNRn7wm1Ue5GnjypviGr/n6WwXPtKA3mLrAhl629I0lDHj1gOQmdh7AnTFiM4uyVr8g+zBAobtiw1
-        oMNcsgyuAAnLIN1FJpsr5D55fQc+neHiaDLDlOQ6B61p8AG5Lu2/5XVNcgFR9yR38ISnSR2NX9iV2
-        A0Bk+bwYFEWaZOe+2W2ZGokjAqbVYgTscw8RfHWrWTLpV+1Tc5VNC12DC0GGKPYh5u1sZ+3Ir9I+X
-        WaA9qVsjoNSA713IFdYBe01Qli0aJShZkySZFpr/eB1fNxyW/hRM5E/aJpQ3G16bttEqpKW+0cPe/
-        hbi0nacA==;
-Received: from [2001:8b0:10b:1:ad95:471b:fe64:9cc3]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kPuBF-0003ga-DY; Tue, 06 Oct 2020 21:07:29 +0000
-Date:   Tue, 06 Oct 2020 22:07:26 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <87r1qb5ash.fsf@nanos.tec.linutronix.de>
-References: <77e64f977f559412f62b467fd062d051ea288f14.camel@infradead.org> <20201005152856.974112-1-dwmw2@infradead.org> <20201005152856.974112-5-dwmw2@infradead.org> <87r1qb5ash.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 05/13] genirq: Prepare for default affinity to be passed to __irq_alloc_descs()
-To:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-CC:     iommu <iommu@lists.linux-foundation.org>,
+        Tue, 6 Oct 2020 17:26:24 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41FFBC061755;
+        Tue,  6 Oct 2020 14:26:24 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1602019582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9tgJmD3H+kQvwmmqg/DvlciSq+QY0pyLjKsrBXUuu/A=;
+        b=cFZqIT7fnWiav7/ztiQ2eAZrNezy6ROUKWOKBglQIHXDFoiq3KUUqCJCc5Wp39X9/Eg/h+
+        6DlYgVyjN9FUH/Z/swKRJ1r9WHK9/Wat8PDyz7jVThsRanPge08+fbZnY5oRymbD0eP6LT
+        GsTabN4RzNPO0qgLhRxj8CmGRqE9UfFtO/PefUZd0Zis2ykaWtmw7jeg/rJEisMmQ726XB
+        wHaOtOeTMSTZZD/TiVsJZGOGS8qcn/VaFUWw7A1ns2jX5CHxYeLPonhKtSMFIbgTUSP4fZ
+        FTk2JISn0dEb5Ni3gQJz9230XCZuzW8A21AOyPT5rCiS+K4ngwGaMp28rWdfCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1602019582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9tgJmD3H+kQvwmmqg/DvlciSq+QY0pyLjKsrBXUuu/A=;
+        b=icOFZZbqoBxXqalrREJjpN5TJ4yXrK7d43bToBL6O7AO9brurovFGjOxPaxYzqSMXBxJMR
+        QbIvBKtz5ojRUsBQ==
+To:     David Woodhouse <dwmw2@infradead.org>, x86@kernel.org
+Cc:     iommu <iommu@lists.linux-foundation.org>,
         kvm <kvm@vger.kernel.org>, linux-hyperv@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>
-From:   David Woodhouse <dwmw2@infradead.org>
-Message-ID: <BC75F5DC-BA63-46D6-B273-E30EEAA3D989@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
+Subject: Re: [PATCH 07/13] irqdomain: Add max_affinity argument to irq_domain_alloc_descs()
+In-Reply-To: <20201005152856.974112-7-dwmw2@infradead.org>
+References: <77e64f977f559412f62b467fd062d051ea288f14.camel@infradead.org> <20201005152856.974112-1-dwmw2@infradead.org> <20201005152856.974112-7-dwmw2@infradead.org>
+Date:   Tue, 06 Oct 2020 23:26:22 +0200
+Message-ID: <87lfgj59mp.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-On 6 October 2020 22:01:18 BST, Thomas Gleixner <tglx@linutronix=2Ede> wro=
-te:
->On Mon, Oct 05 2020 at 16:28, David Woodhouse wrote:
->> =20
->>  #else /* CONFIG_SMP */
->> =20
->> +#define irq_default_affinity (NULL)
+On Mon, Oct 05 2020 at 16:28, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
 >
->=2E=2E=2E
->
->>  static int alloc_descs(unsigned int start, unsigned int cnt, int
->node,
->>  		       const struct irq_affinity_desc *affinity,
->> +		       const struct cpumask *default_affinity,
->>  		       struct module *owner)
->>  {
->>  	struct irq_desc *desc;
->>  	int i;
->> =20
->>  	/* Validate affinity mask(s) */
->> +	if (!default_affinity || cpumask_empty(default_affinity))
->> +		return -EINVAL;
->
->How is that supposed to work on UP?
+> This is the maximum possible set of CPUs which can be used. Use it
+> to calculate the default affinity requested from __irq_alloc_descs()
+> by first attempting to find the intersection with irq_default_affinity,
+> or falling back to using just the max_affinity if the intersection
+> would be empty.
 
-Hm, good point=2E
+And why do we need that as yet another argument?
 
->Aside of that I really hate to have yet another argument just
->because=2E
+This is an optional property of the irq domain, really and no caller has
+any business with that. 
 
-Yeah, I was trying to avoid having to allocate a whole array of irq_affini=
-ty_desc just to fill them all in with the same default=2E
+>  int irq_domain_alloc_descs(int virq, unsigned int cnt, irq_hw_number_t hwirq,
+> -			   int node, const struct irq_affinity_desc *affinity)
+> +			   int node, const struct irq_affinity_desc *affinity,
+> +			   const struct cpumask *max_affinity)
+>  {
+> +	cpumask_var_t default_affinity;
+>  	unsigned int hint;
+> +	int i;
+> +
+> +	/* Check requested per-IRQ affinities are in the possible range */
+> +	if (affinity && max_affinity) {
+> +		for (i = 0; i < cnt; i++)
+> +			if (!cpumask_subset(&affinity[i].mask, max_affinity))
+> +				return -EINVAL;
 
-But perhaps I need to treat the "affinity_max" like we do cpu_online_mask,=
- and allow affinity to be set even to offline/unreachable CPUs at this poin=
-t=2E Then we can be more relaxed about the default affinities=2E
+https://lore.kernel.org/r/alpine.DEB.2.20.1701171956290.3645@nanos
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+What is preventing the affinity spreading code from spreading the masks
+out to unusable CPUs? The changelog is silent about that part.
+
+> +	/*
+> +	 * Generate default affinity. Either the possible subset of
+> +	 * irq_default_affinity if such a subset is non-empty, or fall
+> +	 * back to the provided max_affinity if there is no intersection.
+..
+> +	 * And just a copy of irq_default_affinity in the
+> +	 * !CONFIG_CPUMASK_OFFSTACK case.
+
+We know that already...
+
+> +	 */
+> +	memset(&default_affinity, 0, sizeof(default_affinity));
+
+Right, memset() before allocating is useful.
+
+> +	if ((max_affinity &&
+> +	     !cpumask_subset(irq_default_affinity, max_affinity))) {
+> +		if (!alloc_cpumask_var(&default_affinity, GFP_KERNEL))
+> +			return -ENOMEM;
+> +		cpumask_and(default_affinity, max_affinity,
+> +			    irq_default_affinity);
+> +		if (cpumask_empty(default_affinity))
+> +			cpumask_copy(default_affinity, max_affinity);
+> +	} else if (cpumask_available(default_affinity))
+> +		cpumask_copy(default_affinity, irq_default_affinity);
+
+That's garbage and unreadable.
+
+Thanks,
+
+        tglx
