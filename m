@@ -2,33 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ED0C286127
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Oct 2020 16:24:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 202592861C7
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Oct 2020 17:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgJGOYB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Oct 2020 10:24:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
+        id S1726388AbgJGPFo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Oct 2020 11:05:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbgJGOYA (ORCPT
+        with ESMTP id S1726100AbgJGPFo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Oct 2020 10:24:00 -0400
+        Wed, 7 Oct 2020 11:05:44 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B840BC061755;
-        Wed,  7 Oct 2020 07:24:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8218FC061755;
+        Wed,  7 Oct 2020 08:05:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
         In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=iGa3fvjef5Q+s/OFumvi/FNW5w/Xq4roYcwSo3au2uk=; b=uVCNsg8Go88yugrNEjTpVn/YdV
-        +QTa1oKDIWIzRzvCm6fBOC5DMFgOUUbZpStrEYeJc4178T8c31DlPdHLERLCjYGb0OAzSB9OWOvxb
-        g6gyYf2H4qHhxPKbnb3O3lQ8ykPQutGI31TCPwxUazqV++GwbdtJoUBcpqT00v5y3l3ZGTtmgdyJN
-        wYOMco1ST6wqHSnFbE7lpWRH3sHvK67flcTbVCHoOvmm1x/yyTnzAKa3hvayIP1pdnNr33bVYTJFU
-        Ibf39fwMB89w3MKNWSOilUP6aWE7w8JHwJ/TqIS4Npw4fYlvUULjw8KY+ShonadBnbfFShFjBILs3
-        FsG+p5pw==;
-Received: from [54.239.6.187] (helo=freeip.amazon.com)
+        bh=zKWQA2yAGaqmOghYt+avcm6yMnvKPMDscc2xQM1eST0=; b=ssPgUyWxRLnNHQbQHmXgBuUXPW
+        Hb0jhsa+zkRx1CfKdHpHAem0MJrqUzthEebC9llCzhdclaNn9ww1em0AmyQwZVHvCrqZSeQPrQml4
+        kUqEvWGl4i869KNcV7hkPdxbtjOALY4F3pgmf70U5ecga8+y/aRmY7bRAYU+ILv1ulYkxJmicx4a5
+        AIIR3vCFaev0m8FQh9H46SChZwSgZnTyCDVmLtYrB3mKK3YEiIPcAMODeO8k7Eld9ZYKWeitC2UbP
+        gvS9ebMxU6qsdwcRm5oiWIyf3JH2JpFFNSPleiRSpIRT6nbmZISNChhmhO95D9dx80AiAK2Ia+jV8
+        0NFHnLqg==;
+Received: from [54.239.6.186] (helo=freeip.amazon.com)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kQAMH-0003g0-1Q; Wed, 07 Oct 2020 14:23:57 +0000
-Message-ID: <1b1fda3079627748e1f5084ddae8a686258c78d9.camel@infradead.org>
+        id 1kQB0d-0001KO-BQ; Wed, 07 Oct 2020 15:05:39 +0000
+Message-ID: <f73340328712558c3329e11b75e32c364d01edf6.camel@infradead.org>
 Subject: Re: [PATCH 10/13] x86/irq: Limit IOAPIC and MSI domains' affinity
  without IR
 From:   David Woodhouse <dwmw2@infradead.org>
@@ -36,7 +36,7 @@ To:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
 Cc:     iommu <iommu@lists.linux-foundation.org>,
         kvm <kvm@vger.kernel.org>, linux-hyperv@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>
-Date:   Wed, 07 Oct 2020 15:23:54 +0100
+Date:   Wed, 07 Oct 2020 16:05:37 +0100
 In-Reply-To: <87imbm3zdq.fsf@nanos.tec.linutronix.de>
 References: <77e64f977f559412f62b467fd062d051ea288f14.camel@infradead.org>
          <20201005152856.974112-1-dwmw2@infradead.org>
@@ -48,7 +48,7 @@ References: <77e64f977f559412f62b467fd062d051ea288f14.camel@infradead.org>
          <87imbm3zdq.fsf@nanos.tec.linutronix.de>
 Content-Type: multipart/signed; micalg="sha-256";
         protocol="application/x-pkcs7-signature";
-        boundary="=-x4/WWVJcTTdunN9okLGz"
+        boundary="=-aoPIaLB26Ua2Cx3xlBo2"
 X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 Mime-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
@@ -57,45 +57,52 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
---=-x4/WWVJcTTdunN9okLGz
+--=-aoPIaLB26Ua2Cx3xlBo2
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Wed, 2020-10-07 at 16:05 +0200, Thomas Gleixner wrote:
-> On Wed, Oct 07 2020 at 14:08, David Woodhouse wrote:
-> > On 7 October 2020 13:59:00 BST, Thomas Gleixner <tglx@linutronix.de> wr=
-ote:
-> > > On Wed, Oct 07 2020 at 08:48, David Woodhouse wrote:
-> > > > To fix *that* case, we really do need the whole series giving us pe=
-r-
-> > > > domain restricted affinity, and to use it for those MSIs/IOAPICs th=
-at
-> > > > the IRQ remapping doesn't cover.
-> > >=20
-> > > Which do not exist today.
+> > > The information has to property of the relevant irq domains and the
+> > > hierarchy allows you nicely to retrieve it from there instead of
+> > > sprinkling this all over the place.
 > >=20
-> > Sure. But at patch 10/13 into this particular patch series, it *does*
-> > exist.
+> > No. This is not a property of the parent domain per se. Especially if
+> > you're thinking that we could inherit the affinity mask from the
+> > parent, then twice no.
+> >=20
+> > This is a property of the MSI domain itself, and how many bits of
+> > destination ID the hardware at *this* level can interpret and pass on
+> > to the parent domain.
 >=20
-> As I told you before: Your ordering is wrong. We do not introduce bugs
-> first and then fix them later ....
+> Errm what?
+>=20
+> The MSI domain does not know anything about what the underlying domain
+> can handle and it shouldn't.
+>=20
+> If MSI is on top of remapping then the remapping domain defines what the
+> MSI domain can do and not the other way round. Ditto for the non
+> remapped case in which the vector domain decides.
+>=20
+> The top most MSI irq chip does not even have a compose function, neither
+> for the remap nor for the vector case. The composition is done by the
+> parent domain from the data which the parent domain constructed. Same
+> for the IO/APIC just less clearly separated.
+>=20
+> The top most chip just takes what the underlying domain constructed and
+> writes it to the message store, because that's what the top most chip
+> controls. It does not control the content.
 
-I didn't introduce that bug; it's been there for years. Fixing it
-properly requires per-irqdomain affinity limits.
+Sure, whatever. The way we arrange the IRQ domain hierarchy in x86
+Linux doesn't really match my understanding of the real hardware, or
+how qemu emulates it either. But it is at least internally self-
+consistent, and in this model it probably does make some sense to claim
+the 8-bit limit on x86_vector_domain itself, and *remove* that limit in
+the remapping irqdomain.
 
-There's a cute little TODO at least in the Intel irq-remapping driver,
-noting that we should probably check if there are any IOAPICs that
-aren't in the scope of any DRHD at all. But that's all.
-
-If it happens, I think we'll end up doing the right thing and
-instantiating a non-IR IOAPIC domain for it, and if we *don't* have any
-CPU with an APIC ID above... (checks notes)... 7 ... then it'll just
-about work out. Over 7 and we're screwed (because logical mode; see
-also https://git.infradead.org/users/dwmw2/linux.git/commit/429f0c33f
-for a straw man but that's getting even further down the rabbit hole)
+Not really the important part to deal with right now, either way.
 
 
---=-x4/WWVJcTTdunN9okLGz
+--=-aoPIaLB26Ua2Cx3xlBo2
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -178,20 +185,20 @@ BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
 BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
 ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
 ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAx
-MDA3MTQyMzU1WjAvBgkqhkiG9w0BCQQxIgQgD/sgs2c5pqCJLtciwXt6DurJ3xObhSLk0lAUtwCd
-Dzcwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+MDA3MTUwNTM3WjAvBgkqhkiG9w0BCQQxIgQg83GwLhSC6H6Btk7iDQw4EPFEETUYI8YZibvnTBsn
+/bcwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
 TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
 PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
 aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
 A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
 bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAFTOwV2cAEXpV/vL6ZQiC5BvQ0z9J8HUL4VOnZK2tiqmp17shRP80c/fyVHMJKw7
-kp7sJ1ccFNmERPpFPlD8eYfKQj66/0DGiV4UzScc9aaemVjsAV+XRdB5RQfVqQk9C/cZcS8aWMU8
-2ZzuDVOTMIa/8ABvd32N+Lj25LH0l4tNZQEYsw4+m7kK4Cl/IJteF9nlQaYf49RHv1QVQYTqIL/a
-YTu8BU+DNoCS/zlXWCXrHddZ3CY876niv5SsGYEjMGl/jyxM0E4zGdH/vDC5Xv70CPKHBZwnOuIO
-DxD3tyqGiUqJ8ruoAJnQ+zzGieJlYJQ8k3T0a+pGne/ouDNAGaYAAAAAAAA=
+DQEBAQUABIIBADiL91klf9gDtDEahrplJlX0R7UJsbIjs5xNjKCjbtNzSbNHSom4j5X/JqaG/sSy
+nAw5v73vZX6BkS3i7B/QXogMJd20nAsNL4UG8KtI3vcM/qwwgRylTlrU90OHzrpySspQqsGZmWtv
+6DJDApwwPPgADMTnQ57X7zabPcHJPTcXvVU/6zt3r+bytGHhX+Ec/wBdoxFmL4jm03e7DQjCYuq6
+sKxrsqThbTzCyVuvX3pnMgb4IjWS0+KNPy0fk+gOfvpBk/DSneiJy0m4xqP/MWCX0L4Y4vMh57Ua
+tdUrfAGUkAfTq5mc482QppFYhC2r+ZsPuSqbUJYPHW1wyqFeb40AAAAAAAA=
 
 
---=-x4/WWVJcTTdunN9okLGz--
+--=-aoPIaLB26Ua2Cx3xlBo2--
 
