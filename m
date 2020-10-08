@@ -2,74 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B09D286F1A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Oct 2020 09:18:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2AAE286F1C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Oct 2020 09:19:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgJHHSb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 8 Oct 2020 03:18:31 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:18827 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbgJHHSb (ORCPT
+        id S1725890AbgJHHTC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 8 Oct 2020 03:19:02 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:19148 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgJHHTC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 8 Oct 2020 03:18:31 -0400
-X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Oct 2020 03:18:30 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1602141509;
+        Thu, 8 Oct 2020 03:19:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1602141540;
         s=strato-dkim-0002; d=aepfle.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=L4CzWZOQiQW3zMHeD3EapvKb0btqyWUXDOgi93wCfiw=;
-        b=VMfLHPx3noZRHceW1Foa7CvY4+O1LLXyhXAGbOEOYs9SY/GhnKRgtHiBacygSuh/0H
-        JTmHDoCXpvlRgA2SO+lBZEf2CmHFQPvgAjiuDfViq7CotpCjBtDH8z36Ks/vBGVv8pfV
-        sCaYLwTkMiaodwunPTi2/hta4Kqt+uq/DDDjpI/Pt9TMrvRCvF6mX0dgefG0keMhbf4s
-        cRLWgRdq4seoi5Xce9nFDlekWg/CNbz+MLNu3srSIjJ1cBHd+p9fUKnXY1vWPmII1nTS
-        21HlH6V8kltWx4dH2+KU8RVLL0OpWR/2J3iKeE1z3Iex8CF5/Ri2CXlDFdkc/tQ7MOmA
-        P71Q==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS3G5Jjw=="
+        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Z+n3AY33dhZpyf9B3oZ5nlhFzBDQUR+iBwatVYu9Trc=;
+        b=lDIOjyLKg014fDD5m9WFZP8FdBERHc0pPOtUMfaVpc/3nqOJbkEH4FfnEZoAfL+e+0
+        S5SWCDlrjptRL7qLaN0bM+6rM8p1p/wGdMriYBcFRz7ZcYAU37kufZ9SoJphMYeQ/yKi
+        cbO6Pn7JfDCN3EN643GaFs6axTxdSh4ef2NvI4TyXPgPNs2rNmlnAO1VdPlWfvp1ajqj
+        l2K4WZOegAN2bteCHd0CNXsx4NBDXkw4e/3VJ+D19dFizE5Q6vjUQuZD4+43nEe/z0nU
+        TFL7ldBJ59roGnaIzCb92ap6h1gCV9IbQD9n1rnzXjXSOcGfY4xMOzmQTcXMv+zOgWX5
+        8jlA==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDXdoX8l8pYAcz5OTW+n+/A=="
 X-RZG-CLASS-ID: mo00
 Received: from sender
         by smtp.strato.de (RZmta 47.2.1 DYNA|AUTH)
-        with ESMTPSA id e003b5w987CLP0s
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256 bits))
+        with ESMTPSA id e003b5w987FrP2K
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Thu, 8 Oct 2020 09:12:21 +0200 (CEST)
+        Thu, 8 Oct 2020 09:15:53 +0200 (CEST)
+Date:   Thu, 8 Oct 2020 09:15:39 +0200
 From:   Olaf Hering <olaf@aepfle.de>
 To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Olaf Hering <olaf@aepfle.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH v1] hv_balloon: disable warning when floor reached
-Date:   Thu,  8 Oct 2020 09:12:15 +0200
-Message-Id: <20201008071216.16554-1-olaf@aepfle.de>
-X-Mailer: git-send-email 2.26.2
+Subject: Re: [PATCH v1] hv_balloon: disable warning when floor reached
+Message-ID: <20201008091539.060c79c3.olaf@aepfle.de>
+In-Reply-To: <20201008071216.16554-1-olaf@aepfle.de>
+References: <20201008071216.16554-1-olaf@aepfle.de>
+X-Mailer: Claws Mail 2020.08.19 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/AR4/U/CcDsqOR7cE50tlqh3"; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-It is not an error if a the host requests to balloon down, but the VM
-refuses to do so. Without this change a warning is logged in dmesg
-every five minutes.
+--Sig_/AR4/U/CcDsqOR7cE50tlqh3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes commit b3bb97b8a49f3
+Am Thu,  8 Oct 2020 09:12:15 +0200
+schrieb Olaf Hering <olaf@aepfle.de>:
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
----
- drivers/hv/hv_balloon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> warning is logged in dmesg
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 32e3bc0aa665..0f50295d0214 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -1275,7 +1275,7 @@ static void balloon_up(struct work_struct *dummy)
- 
- 	/* Refuse to balloon below the floor. */
- 	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
--		pr_warn("Balloon request will be partially fulfilled. %s\n",
-+		pr_info("Balloon request will be partially fulfilled. %s\n",
- 			avail_pages < num_pages ? "Not enough memory." :
- 			"Balloon floor reached.");
- 
+Actually it is logged on the system console, depending on how logging is co=
+nfigured.
+
+
+Olaf
+
+--Sig_/AR4/U/CcDsqOR7cE50tlqh3
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl9+vJsACgkQ86SN7mm1
+DoC45Q//Uk2BW8kBogrqZCAgZCenmgqv3xINZVNsjSJYhmlgyyScq8ra9IPCgMP0
+ssS+ESxHLYfmCj1BNjiwSf0KfJpQ9oOvfTYU3CO+OqBT/ZHqbXmmQh+gYUB24ZU/
+HOQZliNnZFE3lmgLzt6wur1pVcZdIXAIobj2LokCj5+SAUzS+1KFVpPzfLRdZfSr
+zfs0uWh3ExjsQ9+kSfg26wlg1bmXJt0Krm21EIGAVWm84jxxWa/ygT6EI0ryzHuy
+2fMUlQiDZJF4Uo4uiyjm/LKi4qwYNFzfddTklTN4VG+vhIuBgOr79TJ1JiQ1Lfet
+lbUWKKYUtthh6G1i0pMHsufJI9TvLm1Nt91YS/OxY/jEr8Ml5TPXv8lTTGWu17Hp
+Fr4ZaMbN2CnasP31+ii53N8M8u8epLdHb/m/QvTo3W5f1s4KGL6epNf3T4lztM45
+AHJcDa9Nqw7RWt/XhE362N3fy9qh6+8OIKd13WrFPcxrFMnGx1uwGeCTAp/FfYYM
+G/PA9xmg64hrdEKraFKLf0QCzDfD34MDsfoalubSSsWWx2Y2poUOlWTbevUAooui
+/TnufxMPZSddFA9iqCCfbzEoCKMlPXCEMHvh+dPQw1NJCrz66mxE4fcycaI9osGh
+Icakb2I1eWPcfjHZOykJlgtjcONqxTyU82/buYvxnkwa4j66wOc=
+=j0Sn
+-----END PGP SIGNATURE-----
+
+--Sig_/AR4/U/CcDsqOR7cE50tlqh3--
