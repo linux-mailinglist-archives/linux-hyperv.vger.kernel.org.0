@@ -2,89 +2,74 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E44CE286968
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Oct 2020 22:53:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B09D286F1A
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Oct 2020 09:18:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgJGUxW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Oct 2020 16:53:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgJGUxW (ORCPT
+        id S1726055AbgJHHSb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 8 Oct 2020 03:18:31 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:18827 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbgJHHSb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Oct 2020 16:53:22 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB39C061755;
-        Wed,  7 Oct 2020 13:53:21 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1602103997;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vtcDCCITF2nkZPQBpg36c9Atf4ukHGwLOFXCwRKCklg=;
-        b=AVOpOeOwTC7C9yDmwrVPcB9C1aPMvhP/5PdP/qru4UkSe/Tg4pCe1Ov9uEYmh05Pn0Q0O1
-        njUkv+k7Hbf3l2DqWYdLQP4gb2+2Hpo0MffsYbxrvGzTW1kryRFPNq7DuLRZs4RnfEUJAL
-        Ce5FKKgPccq9WUrVPutCxus8e4M2PRseZsfw/COTCVvsKrngI7uYglaFkoxmV8aaFczyhx
-        4fZzfBjBSiF/RTkCxSVFeXV9U9TAXodE1e+4d/p7A8eD8EmICmC+2FDDJBTaJwix0w0xga
-        u8+31OmCuh8cj5+eKe28oQ6NiW5YG4AvVQ35FRelSHvkwColN93pjwFEjzbJRA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1602103997;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vtcDCCITF2nkZPQBpg36c9Atf4ukHGwLOFXCwRKCklg=;
-        b=uUXdWeB5iUUDQ1glmjUlfVx7FfzR42lEIjygybtN2704wXPeHGr8n5iedwh+Gwwo5mRYe/
-        FbUVKijLxJK86VBA==
-To:     David Woodhouse <dwmw2@infradead.org>, x86@kernel.org
-Cc:     iommu <iommu@lists.linux-foundation.org>,
-        kvm <kvm@vger.kernel.org>, linux-hyperv@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 07/13] irqdomain: Add max_affinity argument to irq_domain_alloc_descs()
-In-Reply-To: <7FA24FCF-E197-4502-BC89-0902E4053554@infradead.org>
-References: <77e64f977f559412f62b467fd062d051ea288f14.camel@infradead.org> <20201005152856.974112-1-dwmw2@infradead.org> <20201005152856.974112-7-dwmw2@infradead.org> <87lfgj59mp.fsf@nanos.tec.linutronix.de> <75d79c50d586c18f0b1509423ed673670fc76431.camel@infradead.org> <87tuv640nw.fsf@nanos.tec.linutronix.de> <336029ca32524147a61b6fa1eb734debc9d51a00.camel@infradead.org> <87a6wy3u6n.fsf@nanos.tec.linutronix.de> <7FA24FCF-E197-4502-BC89-0902E4053554@infradead.org>
-Date:   Wed, 07 Oct 2020 22:53:17 +0200
-Message-ID: <87tuv53ghu.fsf@nanos.tec.linutronix.de>
+        Thu, 8 Oct 2020 03:18:31 -0400
+X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Oct 2020 03:18:30 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1602141509;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=L4CzWZOQiQW3zMHeD3EapvKb0btqyWUXDOgi93wCfiw=;
+        b=VMfLHPx3noZRHceW1Foa7CvY4+O1LLXyhXAGbOEOYs9SY/GhnKRgtHiBacygSuh/0H
+        JTmHDoCXpvlRgA2SO+lBZEf2CmHFQPvgAjiuDfViq7CotpCjBtDH8z36Ks/vBGVv8pfV
+        sCaYLwTkMiaodwunPTi2/hta4Kqt+uq/DDDjpI/Pt9TMrvRCvF6mX0dgefG0keMhbf4s
+        cRLWgRdq4seoi5Xce9nFDlekWg/CNbz+MLNu3srSIjJ1cBHd+p9fUKnXY1vWPmII1nTS
+        21HlH6V8kltWx4dH2+KU8RVLL0OpWR/2J3iKeE1z3Iex8CF5/Ri2CXlDFdkc/tQ7MOmA
+        P71Q==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS3G5Jjw=="
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 47.2.1 DYNA|AUTH)
+        with ESMTPSA id e003b5w987CLP0s
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 8 Oct 2020 09:12:21 +0200 (CEST)
+From:   Olaf Hering <olaf@aepfle.de>
+To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Olaf Hering <olaf@aepfle.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH v1] hv_balloon: disable warning when floor reached
+Date:   Thu,  8 Oct 2020 09:12:15 +0200
+Message-Id: <20201008071216.16554-1-olaf@aepfle.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Oct 07 2020 at 17:11, David Woodhouse wrote:
-> On 7 October 2020 16:57:36 BST, Thomas Gleixner <tglx@linutronix.de> wrote:
->>There is not lot's of nastiness.
->
-> OK, but I think we do have to cope with the fact that the limit is
-> dynamic, and a CPU might be added which widens the mask. I think
-> that's fundamental and not x86-specific.
+It is not an error if a the host requests to balloon down, but the VM
+refuses to do so. Without this change a warning is logged in dmesg
+every five minutes.
 
-Yes, but it needs some thoughts vs. serialization against CPU hotplug.
+Fixes commit b3bb97b8a49f3
 
-The stability of that cpumask is architecture specific if the calling
-context cannot serialize against CPU hotplug. The hot-unplug case is
-less interesting because the mask does not shrink, it only get's wider.
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
+---
+ drivers/hv/hv_balloon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That's why I want a callback instead of a pointer assignment and that
-callback cannot return a pointer to something which can be modified
-concurrently, it needs to update a caller provided mask so that the
-result is at least consistent in itself.
-
-It just occured to me that there is something which needs some more
-thought vs. CPU hotunplug as well:
-
-  Right now we just check whether there are enough vectors available on
-  the remaining online CPUs so that the interrupts which have an
-  effective affinity directed to the outgoing CPU can be migrated away
-  (modulo the managed ones).
-
-  That check obviously needs to take the target CPU restrictions into
-  account to prevent that devices end up with no target at the end.
-
-I bet there are some other interesting bits and pieces which need
-some care...
-
-Thanks,
-
-        tglx
-
-
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 32e3bc0aa665..0f50295d0214 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1275,7 +1275,7 @@ static void balloon_up(struct work_struct *dummy)
+ 
+ 	/* Refuse to balloon below the floor. */
+ 	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+-		pr_warn("Balloon request will be partially fulfilled. %s\n",
++		pr_info("Balloon request will be partially fulfilled. %s\n",
+ 			avail_pages < num_pages ? "Not enough memory." :
+ 			"Balloon floor reached.");
+ 
