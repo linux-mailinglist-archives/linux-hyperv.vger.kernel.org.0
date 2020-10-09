@@ -2,101 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FA662885E8
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Oct 2020 11:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73DF0288745
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Oct 2020 12:47:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733080AbgJIJYj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Oct 2020 05:24:39 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:59963 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731262AbgJIJYi (ORCPT
+        id S2387794AbgJIKq1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Oct 2020 06:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387783AbgJIKq0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Oct 2020 05:24:38 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0UBQ5Qni_1602235473;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0UBQ5Qni_1602235473)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 09 Oct 2020 17:24:34 +0800
-Date:   Fri, 9 Oct 2020 17:24:33 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     david@redhat.com, akpm@linux-foundation.org, ardb@kernel.org,
-        bhe@redhat.com, dan.j.williams@intel.com, jgg@ziepe.ca,
-        keescook@chromium.org, linux-acpi@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        linux-s390@vger.kernel.org, mhocko@suse.com,
-        pankaj.gupta.linux@gmail.com, richardw.yang@linux.intel.com,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] kernel/resource: Fix use of ternary condition in
- release_mem_region_adjustable
-Message-ID: <20201009092433.GA56924@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200911103459.10306-2-david@redhat.com>
- <20200922060748.2452056-1-natechancellor@gmail.com>
+        Fri, 9 Oct 2020 06:46:26 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA989C0613D2;
+        Fri,  9 Oct 2020 03:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Sender:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description;
+        bh=oifcmCxgengDm0xlwPlx0P/sTS4kOs7GnADWSNebHiM=; b=NcGFYa2qfSUwdH8mcITnks74J5
+        EnDN910UORGykfR//CV5V5ibG5pfQ2Csav9qhmBWIDZ0dVZV3g/KHu16nm3SmADXEr25/oURzSh6V
+        08n+YT8VuEwzVrWR0vkBE0PaIFdGemU3fYj/uBasz0CBl0KveLTPo3LqaSyHfanhIt3BrOjMUoJUJ
+        RKGhZeIeOIEEqumnsPmzYPOr2qcEkkDGakVyFCdVHG295FzjZNaOpLh/OHV6rH+dzKQXLlW+Dxbif
+        4KMtOfcH2qU46yr3aIv2Zx8LxPZcuJqyLpOq5242xyuoXmTqk3uiAuPbVrngiHcR4QhxYmdgZ6c50
+        OZB9COXw==;
+Received: from i7.infradead.org ([2001:8b0:10b:1:21e:67ff:fecb:7a92])
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kQpuq-00050S-13; Fri, 09 Oct 2020 10:46:24 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1kQpup-005W3r-0K; Fri, 09 Oct 2020 11:46:23 +0100
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     x86@kernel.org
+Cc:     kvm <kvm@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH v2 0/8] Fix x2apic enablement and allow up to 32768 CPUs without IR where supported
+Date:   Fri,  9 Oct 2020 11:46:08 +0100
+Message-Id: <20201009104616.1314746-1-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <803bb6b2212e65c568c84ff6882c2aa8a0ee03d5.camel@infradead.org>
+References: <803bb6b2212e65c568c84ff6882c2aa8a0ee03d5.camel@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200922060748.2452056-1-natechancellor@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 11:07:48PM -0700, Nathan Chancellor wrote:
->Clang warns:
->
->kernel/resource.c:1281:53: warning: operator '?:' has lower precedence
->than '|'; '|' will be evaluated first
->[-Wbitwise-conditional-parentheses]
->        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
->                                 ~~~~~~~~~~~~~~~~~~~~~~~~~ ^
->kernel/resource.c:1281:53: note: place parentheses around the '|'
->expression to silence this warning
->        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
->                                 ~~~~~~~~~~~~~~~~~~~~~~~~~ ^
->kernel/resource.c:1281:53: note: place parentheses around the '?:'
->expression to evaluate it first
->        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
->                                                           ^
->                                              (                              )
->1 warning generated.
->
->Add the parentheses as it was clearly intended for the ternary condition
->to be evaluated first.
->
->Fixes: 5fd23bd0d739 ("kernel/resource: make release_mem_region_adjustable() never fail")
->Link: https://github.com/ClangBuiltLinux/linux/issues/1159
->Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+Fix the conditions for enabling x2apic on guests without interrupt 
+remapping, and support 15-bit Extended Destination ID to allow 32768 
+CPUs without IR on hypervisors that support it.
 
->---
->
->Presumably, this will be squashed but I included a fixes tag
->nonetheless. Apologies if this has already been noticed and fixed
->already, I did not find anything on LKML.
->
-> kernel/resource.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/kernel/resource.c b/kernel/resource.c
->index ca2a666e4317..3ae2f56cc79d 100644
->--- a/kernel/resource.c
->+++ b/kernel/resource.c
->@@ -1278,7 +1278,7 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
-> 	 * similarly).
-> 	 */
-> retry:
->-	new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
->+	new_res = alloc_resource(GFP_KERNEL | (alloc_nofail ? __GFP_NOFAIL : 0));
-> 
-> 	p = &parent->child;
-> 	write_lock(&resource_lock);
->
->base-commit: 40ee82f47bf297e31d0c47547cd8f24ede52415a
->-- 
->2.28.0
+The last patch in the series now makes io_apic.c generate its RTE from 
+the MSI message created by the parent irqchip, and removes all the nasty 
+hackery where IRQ remapping drivers would frob I/OAPIC RTEs for 
+themselves directly. It's last because I'd quite like to see it tested 
+especially with Hyper-V and it doesn't actually eliminate the need for 
+io_apic.c to know about the 15-bit extension anyway.
 
--- 
-Wei Yang
-Help you, Help me
+v2:
+ • Minor cleanups.
+ • Move __irq_msi_compose_msg() to apic.c, make virt_ext_dest_id static.
+ • Generate I/OAPIC RTE directly from parent irqchip's MSI messages.
+ • Clean up HPET MSI support into hpet.c now that we can.
+
+David Woodhouse (8):
+      x86/apic: Fix x2apic enablement without interrupt remapping
+      x86/msi: Only use high bits of MSI address for DMAR unit
+      x86/apic: Always provide irq_compose_msi_msg() method for vector domain
+      x86/ioapic: Handle Extended Destination ID field in RTE
+      x86/apic: Support 15 bits of APIC ID in MSI where available
+      x86/kvm: Add KVM_FEATURE_MSI_EXT_DEST_ID
+      x86/hpet: Move MSI support into hpet.c
+      x86/ioapic: Generate RTE directly from parent irqchip's MSI message
+
+ Documentation/virt/kvm/cpuid.rst     |   4 +
+ arch/x86/include/asm/apic.h          |   9 +--
+ arch/x86/include/asm/hpet.h          |  11 ---
+ arch/x86/include/asm/hw_irq.h        |  11 ++-
+ arch/x86/include/asm/io_apic.h       |   3 +-
+ arch/x86/include/asm/msidef.h        |   2 +
+ arch/x86/include/asm/x86_init.h      |   2 +
+ arch/x86/include/uapi/asm/kvm_para.h |   1 +
+ arch/x86/kernel/apic/apic.c          |  68 ++++++++++++++--
+ arch/x86/kernel/apic/io_apic.c       |  66 +++++++++------
+ arch/x86/kernel/apic/msi.c           | 152 +++--------------------------------
+ arch/x86/kernel/apic/vector.c        |   6 ++
+ arch/x86/kernel/apic/x2apic_phys.c   |   9 +++
+ arch/x86/kernel/hpet.c               | 116 ++++++++++++++++++++++++--
+ arch/x86/kernel/kvm.c                |   6 ++
+ arch/x86/kernel/x86_init.c           |   1 +
+ drivers/iommu/amd/iommu.c            |  14 ----
+ drivers/iommu/hyperv-iommu.c         |  31 -------
+ drivers/iommu/intel/irq_remapping.c  |  19 ++---
+ 19 files changed, 276 insertions(+), 255 deletions(-)
+
