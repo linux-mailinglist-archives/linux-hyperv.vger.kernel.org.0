@@ -2,90 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 327B328CAE2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Oct 2020 11:19:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA49328CAEE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Oct 2020 11:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390802AbgJMJTn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Oct 2020 05:19:43 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:26557 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389649AbgJMJTn (ORCPT
+        id S2389030AbgJMJZ3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Oct 2020 05:25:29 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39946 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729391AbgJMJZ3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Oct 2020 05:19:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1602580779;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ZtAeMDqbZpLa3zP7F3G23ADVxJP7A7hhBmjV6JexgB8=;
-        b=BcvUNg+BLtiQU4kPfCgN7tzOWUdPWOHQ8hhuYB2eBw16NSDx8cadTaLKQ9Wi+X6NNT
-        WU/5Yf6uu4H4u+pB5LmAd0+PZMn9V3aibTPCUNuEvmMdekjJ4wn3lKN4sHBE0UbY4r8C
-        0qQ56H351Gm6LZW0sRguliEXtmEYZJ0mJhHc4GRDxascao75pTmczQIhWdBKKdl+uXHS
-        z/sP/BggrjZmNsfbtFJYsejvYR9+qVosSN+Qj/x/MT6VJ632wVubhZJGz5w6c/E3kYl6
-        2OgWt0Y2L5AFSOoXCW8HZSidqv+Q0nht4UDyoPx2sJuPR3MO5PZrf7BMTUSPt/2XY9Ck
-        i1ug==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDXmEVBDI4vdCIAd4eCQfPA=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 47.2.1 SBL|AUTH)
-        with ESMTPSA id e003b5w9D9JViAp
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 13 Oct 2020 11:19:31 +0200 (CEST)
-Date:   Tue, 13 Oct 2020 11:19:21 +0200
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Subject: Re: [PATCH v1] hv_balloon: disable warning when floor reached
-Message-ID: <20201013111921.2fa4608c.olaf@aepfle.de>
-In-Reply-To: <20201013091717.q24ypswqgmednofr@liuwe-devbox-debian-v2>
-References: <20201008071216.16554-1-olaf@aepfle.de>
-        <20201008091539.060c79c3.olaf@aepfle.de>
-        <20201013091717.q24ypswqgmednofr@liuwe-devbox-debian-v2>
-X-Mailer: Claws Mail 2020.08.19 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Tue, 13 Oct 2020 05:25:29 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h5so13051438wrv.7;
+        Tue, 13 Oct 2020 02:25:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ujasMN43CkN2/roKSf/OFVPM4luboaqc0FmVeOIrG0=;
+        b=TadbwUK/k4AOFdIC8YLRdgRm8l6eYxT1p8qtyOvJmI8EvNXG2tG71O3ir7iPiu4J4c
+         uZE4b6fHHEVYa5D00KqlILonUDXN7jArYlXGWRubOcdUa3yvD7sWpT/8kuWn+m3MvVWS
+         +fyCaVFSR532dVaXH6abCJH/nG4a50orR2tu59c0Bar6QQxFUKLbQkRFjgf4GtsJO5zs
+         S731WTrid9oUbA4wkHtAxlH3mCB5y2WGZx5MzBZe26GNw9DYTi351erBrHZc7WDXrrXt
+         oiOEZpCRaB77xaYjmLjRmGy65Vf670Yu0tY8s7KrJpCD3mIa8YS4erWRDRPLt9gWlfaU
+         yNtA==
+X-Gm-Message-State: AOAM531Jv9UBXR+wABBISTnD4PTgsKgUDQiNAuUnIuLNAe9cJnQhsjUW
+        S/4tYSBQH47+8WPhOoEIK+g=
+X-Google-Smtp-Source: ABdhPJyhV0kvMoeS7S0kfvdKJbQIWW0fxf0LvIibkHR0S2QWG0Wmy5h7WqQWqymZK9sfYOVV16BeyA==
+X-Received: by 2002:a5d:448b:: with SMTP id j11mr19786577wrq.129.1602581127306;
+        Tue, 13 Oct 2020 02:25:27 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v3sm29403029wre.17.2020.10.13.02.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2020 02:25:26 -0700 (PDT)
+Date:   Tue, 13 Oct 2020 09:25:25 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, vkuznets@redhat.com,
+        mikelley@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH v2 1/2] x86/hyper-v: guard against cpu mask changes in
+ hyperv_flush_tlb_others()
+Message-ID: <20201013092525.4po4glgjn2vodytf@liuwe-devbox-debian-v2>
+References: <20201005233739.2560641-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/GjANj41aXE9=73fqIqVTbCp"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201005233739.2560641-1-sashal@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---Sig_/GjANj41aXE9=73fqIqVTbCp
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Oct 05, 2020 at 07:37:38PM -0400, Sasha Levin wrote:
+> cpumask can change underneath us, which is generally safe except when we
+> call into hv_cpu_number_to_vp_number(): if cpumask ends up empty we pass
+> num_cpu_possible() into hv_cpu_number_to_vp_number(), causing it to read
+> garbage. As reported by KASAN:
+> 
+> [   83.504763] BUG: KASAN: slab-out-of-bounds in hyperv_flush_tlb_others (include/asm-generic/mshyperv.h:128 arch/x86/hyperv/mmu.c:112)
+> [   83.908636] Read of size 4 at addr ffff888267c01370 by task kworker/u8:2/106
+> [   84.196669] CPU: 0 PID: 106 Comm: kworker/u8:2 Tainted: G        W         5.4.60 #1
+> [   84.196669] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
+> [   84.196669] Workqueue: writeback wb_workfn (flush-8:0)
+> [   84.196669] Call Trace:
+> [   84.196669] dump_stack (lib/dump_stack.c:120)
+> [   84.196669] print_address_description.constprop.0 (mm/kasan/report.c:375)
+> [   84.196669] __kasan_report.cold (mm/kasan/report.c:507)
+> [   84.196669] kasan_report (arch/x86/include/asm/smap.h:71 mm/kasan/common.c:635)
+> [   84.196669] hyperv_flush_tlb_others (include/asm-generic/mshyperv.h:128 arch/x86/hyperv/mmu.c:112)
+> [   84.196669] flush_tlb_mm_range (arch/x86/include/asm/paravirt.h:68 arch/x86/mm/tlb.c:798)
+> [   84.196669] ptep_clear_flush (arch/x86/include/asm/tlbflush.h:586 mm/pgtable-generic.c:88)
+> 
 
-Am Tue, 13 Oct 2020 09:17:17 +0000
-schrieb Wei Liu <wei.liu@kernel.org>:
+What is the easiest way to reproduce this? Just enable KASAN in the
+guest and run it normally? I want to have a chance to verify my earlier
+reply.
 
-> So ... this patch is not needed anymore?
-
-Why? A message is generated every 5 minutes. Unclear why this remained unno=
-ticed since at least v5.3. I have added debug to my distro kernel to see wh=
-at the involved variable values are. More info later today.
-
-Olaf
-
---Sig_/GjANj41aXE9=73fqIqVTbCp
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl+FcRkACgkQ86SN7mm1
-DoDYLxAAgY2+ORnYw0Ylmf/9bbZ0f2OE+Bb+dTzFcJC6DEd+tEY4duRKJxju0S+d
-kVZETBS4BbtuhNdpK5tBCdMaoO9C4Px9qpewun4L90D4zUSukmzAFQa8/avmlS1R
-ZBOrkJSURqRRalZQOVF3fvXnI+oQB1dTZvlB+OIja4CiFjNjvNTAQHb1CxkIt8Am
-9PvciQoM/zOYDQ3UwGV32pbtw5tmNVmIwYHdLfxOoVVC6L+mY09QOPhxJYW18ss1
-eQvW4u6SpH2EGMxjG3ImkfcqHZyvoEsn+SnAQQZDjo7hFZunHr6b9kQ9Stx+1wqi
-YsQQMp4WBNTrRF33zRY/rZuAJBC3c8JvxrneCuPHF0850AnyNlk4DAgGB+v0vyAA
-eP3hvZPwpGJwni9f8UGWKgwl1qniqQUcRA3FwDsIbatTZUwenE0IKkPtVtaiOdIV
-V3P8Hgz0fWTlsE772B0H8W1+swNqmZHXCBWJ7AE5jgSJf73+OUE4bUi6QK5W5xnO
-BvcJ0Tc2TEW0bgn3KpRtd+yXkwfkIBKANO1LF2LEIzuDm5+6rZJb5VXsydW/IUm7
-l8Pl32TvNHQiTt++NsUUZte6/jxkuLy7tpZFcySbaZvRKCdiKPEXmVcVyfR2ioph
-FjsGbAxaB780gk1J/Jb41Kc3yQ/xRGHz/HZnEd6jKdCcUoxOjVI=
-=MMNn
------END PGP SIGNATURE-----
-
---Sig_/GjANj41aXE9=73fqIqVTbCp--
+Thanks,
+Wei.
