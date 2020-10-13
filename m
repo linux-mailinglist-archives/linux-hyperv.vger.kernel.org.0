@@ -2,143 +2,119 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 041AE28CDBA
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Oct 2020 14:02:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F21428CEF7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Oct 2020 15:12:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgJMMCW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Oct 2020 08:02:22 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.23]:10262 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730189AbgJMMCI (ORCPT
+        id S1728552AbgJMNMV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Oct 2020 09:12:21 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38574 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728558AbgJMNMV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Oct 2020 08:02:08 -0400
-X-Greylist: delayed 354 seconds by postgrey-1.27 at vger.kernel.org; Tue, 13 Oct 2020 08:02:06 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1602590525;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=DB5nKPru7XVklO9ceTjFWRheKxqV87qvETnsV9UVBjU=;
-        b=NifKg7y4N686D5kL2KSWZPopUbxvel+KJgeJH8QFRapfIPEdgjSQaH5GJcOfDn+lKW
-        py/5iTkLlY67KLY7ZEID6x633jKYP8EthrgMCWJO2ePsSIYrWoNBwQHsHvdoc/RSqtsN
-        hyn7j2dv8ryprgovKQ8rUSeEN6lvDMsqEGgRyrmp6Pls7OZuheub7F7qnXvpyee2zEWW
-        aQdZK/Pyo8EqLUcqBjZ2o2TqVryiMJfsFRNlabuLmdo1pM32DZZAGjlhzmi+LOwhYzYH
-        TJ1bwHM1WetSNyoJi6uxsVpqFgHQFIeyWhD1m9G81AVedCY+30KKBYYLq115IaKH8/Wc
-        y5Zw==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDXmEVBDI4vdCIAd4eCQfPA=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 47.2.1 SBL|AUTH)
-        with ESMTPSA id e003b5w9DBu1j3P
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 13 Oct 2020 13:56:01 +0200 (CEST)
-Date:   Tue, 13 Oct 2020 13:55:46 +0200
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Subject: Re: [PATCH v1] hv_balloon: disable warning when floor reached
-Message-ID: <20201013135546.3c5b7feb.olaf@aepfle.de>
-In-Reply-To: <20201013111921.2fa4608c.olaf@aepfle.de>
-References: <20201008071216.16554-1-olaf@aepfle.de>
-        <20201008091539.060c79c3.olaf@aepfle.de>
-        <20201013091717.q24ypswqgmednofr@liuwe-devbox-debian-v2>
-        <20201013111921.2fa4608c.olaf@aepfle.de>
-X-Mailer: Claws Mail 2020.08.19 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Tue, 13 Oct 2020 09:12:21 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n18so23997333wrs.5;
+        Tue, 13 Oct 2020 06:12:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=xwiQxdIni+OoOgjyTcFMAfcFR0s4rkAhFvFMhOPoExM=;
+        b=TJtWLbJaZHAlQxWnuW4+9aJ85pCm3CBl2GKP3NmDKRLgX/pYwrDn2Q/iI7gW8PDs4D
+         900HsmYKN6VDi5YGEnPBbDW4I8dlEU6SpEP8F7T1r7EN0PixlJVTf1Ct6P5L3Hy7vJSy
+         uQOQcrZgEO5OvsQE3o/TCqR4hPbiFd1H+gZGwRJtl3RJ+20mNHQEl+kjdJ3dRZq02hxb
+         R4Jfjasgd9cGe4ZVz6Ud+ohpnvtCqX277cLzMjmFT4EfXod49S1+/Eo+LcqOgTL6rnkF
+         dtixV0YKwvycfx5GeZ/w2Du6v17rpwMTo5NvtrRIV9dpVbri/TWQmAwZTz13BHRes5RQ
+         y4Ew==
+X-Gm-Message-State: AOAM532j9wHffOB0+hOMffHHSmDrJLz3j6X+EhzVutaG6WJMfuHhSrtI
+        A6gOMoAfOGy/Hl0THQy+TU8DxgIqGxU=
+X-Google-Smtp-Source: ABdhPJydF+OkFkTjToGwDY4RqfrKdQfRwK+5w+ay+jROLpCMHJd9hwvt4Qa7bE5tYh2vy/3am/3HSw==
+X-Received: by 2002:adf:a415:: with SMTP id d21mr26256079wra.408.1602594737034;
+        Tue, 13 Oct 2020 06:12:17 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id u195sm4860219wmu.18.2020.10.13.06.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2020 06:12:15 -0700 (PDT)
+Date:   Tue, 13 Oct 2020 13:12:14 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com,
+        Michael Kelley <mikelley@microsoft.com>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Hyper-V commits for 5.10
+Message-ID: <20201013131214.ej4ek5expi5dywer@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/58I9z82b3mdGOqVUji+3aMv"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---Sig_/58I9z82b3mdGOqVUji+3aMv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
-Am Tue, 13 Oct 2020 11:19:21 +0200
-schrieb Olaf Hering <olaf@aepfle.de>:
+Please pull the following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
 
-> A message is generated every 5 minutes. Unclear why this remained unnotic=
-ed since at least v5.3. I have added debug to my distro kernel to see what =
-the involved variable values are. More info later today.
+  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
 
-The actual values for avail_pages, num_pages and floor are shown below.
-The VM has min 512M, startup 1024M. If I interpret it correctly, the host r=
-equests to balloon down 83MB, while the VM has ~596MB assigned according to=
- the GUI. free still reports 878MB.
+are available in the Git repository at:
 
-Olaf
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
 
-[   66.917948] hv_balloon: Max. dynamic memory size: 2222 MB
-[  331.839393] hv_balloon: Balloon request will be partially fulfilled. (65=
-875 32768 54728) Balloon floor reached.
-[  331.847451] hv_balloon: Balloon request will be partially fulfilled. (54=
-745 21621 54728) Balloon floor reached.
-[  331.848480] hv_balloon: Balloon request will be partially fulfilled. (54=
-745 21604 54728) Balloon floor reached.
-[  331.849465] hv_balloon: Balloon request will be partially fulfilled. (54=
-745 21587 54728) Balloon floor reached.
-[  331.850463] hv_balloon: Balloon request will be partially fulfilled. (54=
-745 21570 54728) Balloon floor reached.
-[  331.851393] hv_balloon: Balloon request will be partially fulfilled. (54=
-682 21553 54728) Balloon floor reached.
-[  631.814538] hv_balloon: Balloon request will be partially fulfilled. (54=
-801 21553 54728) Balloon floor reached.
-[  631.819084] hv_balloon: Balloon request will be partially fulfilled. (54=
-801 21480 54728) Balloon floor reached.
-[  631.823487] hv_balloon: Balloon request will be partially fulfilled. (54=
-738 21407 54728) Balloon floor reached.
-[  631.825832] hv_balloon: Balloon request will be partially fulfilled. (54=
-738 21397 54728) Balloon floor reached.
-[  631.827988] hv_balloon: Balloon request will be partially fulfilled. (54=
-738 21387 54728) Balloon floor reached.
-[  631.830111] hv_balloon: Balloon request will be partially fulfilled. (54=
-738 21377 54728) Balloon floor reached.
-[  931.814649] hv_balloon: Balloon request will be partially fulfilled. (54=
-406 21367 54728) Balloon floor reached.
-[ 1231.829087] hv_balloon: Balloon request will be partially fulfilled. (54=
-408 21367 54728) Balloon floor reached.
-[ 1531.859374] hv_balloon: Balloon request will be partially fulfilled. (54=
-416 21367 54728) Balloon floor reached.
-[ 1831.874813] hv_balloon: Balloon request will be partially fulfilled. (54=
-408 21367 54728) Balloon floor reached.
-[ 2131.878262] hv_balloon: Balloon request will be partially fulfilled. (54=
-672 21367 54728) Balloon floor reached.
-[ 2431.895144] hv_balloon: Balloon request will be partially fulfilled. (54=
-532 21367 54728) Balloon floor reached.
-[ 2731.916792] hv_balloon: Balloon request will be partially fulfilled. (54=
-609 21367 54728) Balloon floor reached.
-[ 3031.922862] hv_balloon: Balloon request will be partially fulfilled. (54=
-597 21367 54728) Balloon floor reached.
-[ 3331.949145] hv_balloon: Balloon request will be partially fulfilled. (54=
-615 21367 54728) Balloon floor reached.
-[ 3631.957564] hv_balloon: Balloon request will be partially fulfilled. (54=
-540 21367 54728) Balloon floor reached.
-[ 3931.969477] hv_balloon: Balloon request will be partially fulfilled. (53=
-057 21367 54728) Balloon floor reached.
+for you to fetch changes up to 1f3aed01473c41c9f896fbf4c30d330655e8aa7c:
 
---Sig_/58I9z82b3mdGOqVUji+3aMv
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
+  hv: clocksource: Add notrace attribute to read_hv_sched_clock_*() functions (2020-09-28 09:04:48 +0000)
 
------BEGIN PGP SIGNATURE-----
+----------------------------------------------------------------
+hyperv-next for 5.10
 
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl+FlcIACgkQ86SN7mm1
-DoCaUxAAkbDbD842M0QWng9KwNyveXgyjfC4xKISgJr4rU/6uu+/eSGdWnyYE+g7
-XTzB62kJ6waDqloDR+Qud0lJdzvnZVaqUjpMwkzpwgZipS+8JYH+49IBb2WymylC
-P/QdTdggKgALCCw9G42Tenyhd/cuTEMvgziDb7CEOFQy8AQlX6/eIBwqlIls85jc
-nK67jc6nkiwQ6gnbYn8MEdSeatscLFw5FgBjKGLX8EmIlHWdj4QPCxt3x5dQ316n
-zgg/s3SbP5jeSKsYt5dl7i/CYdgaGQVuyEvNFeG1ZlcVH7ukmwFqRtqn5Kd94J+3
-t/18pJ2GvD6DtANUWVubslV7yQOo0KU/WEfDFJ4A1ldqzF2ayOqVlnZ8x+w46H1E
-67n08nI4yOJ6PznYsFJUTSKWIw11TDPZ6ciKczfj+jPzPt9sP+a6phN2DR0vUye3
-vqU/d/sVyP4ECsyJtd63hI20Uq5an28TmfRD05GPEdF9cjg3hu6NpiG22r4LnbW2
-w4+YqLgxEAzu698T1BxQ3yEqabzbXaI57bAKoynZsNCYkPJz6cCbfM+B50+NvNJU
-h5Uewk5kkd2DYaRQEqHRiInMEWTV0dFH9nY4ULwpsGMug7OaGJJSL5AvwHK4gWQM
-HI67kwZ0LDwb9dRxOYetzHPUrzeqKRK63nDTQzCS/2hfxAO5m88=
-=3Bmh
------END PGP SIGNATURE-----
+ - A patch series from Boqun Feng to support page size larger than 4K
+ - A few miscellaneous clean-up patches
 
---Sig_/58I9z82b3mdGOqVUji+3aMv--
+----------------------------------------------------------------
+Boqun Feng (11):
+      Drivers: hv: vmbus: Always use HV_HYP_PAGE_SIZE for gpadl
+      Drivers: hv: vmbus: Move __vmbus_open()
+      Drivers: hv: vmbus: Introduce types of GPADL
+      Drivers: hv: Use HV_HYP_PAGE in hv_synic_enable_regs()
+      Drivers: hv: vmbus: Move virt_to_hvpfn() to hyperv header
+      hv: hyperv.h: Introduce some hvpfn helper functions
+      hv_netvsc: Use HV_HYP_PAGE_SIZE for Hyper-V communication
+      Input: hyperv-keyboard: Use VMBUS_RING_SIZE() for ringbuffer sizes
+      HID: hyperv: Use VMBUS_RING_SIZE() for ringbuffer sizes
+      Driver: hv: util: Use VMBUS_RING_SIZE() for ringbuffer sizes
+      scsi: storvsc: Support PAGE_SIZE larger than 4K
+
+Joseph Salisbury (1):
+      x86/hyperv: Remove aliases with X64 in their name
+
+Krzysztof Wilczyński (1):
+      PCI: hv: Document missing hv_pci_protocol_negotiation() parameter
+
+Mohammed Gamal (1):
+      hv: clocksource: Add notrace attribute to read_hv_sched_clock_*() functions
+
+Olaf Hering (1):
+      drivers: hv: remove cast from hyperv_die_event
+
+ arch/x86/hyperv/hv_init.c             |   8 +-
+ arch/x86/hyperv/hv_spinlock.c         |   2 +-
+ arch/x86/include/asm/hyperv-tlfs.h    |  33 ---
+ arch/x86/kernel/cpu/mshyperv.c        |   8 +-
+ arch/x86/kvm/hyperv.c                 |  20 +-
+ drivers/clocksource/hyperv_timer.c    |   4 +-
+ drivers/hid/hid-hyperv.c              |   4 +-
+ drivers/hv/channel.c                  | 461 +++++++++++++++++++++-------------
+ drivers/hv/hv.c                       |   4 +-
+ drivers/hv/hv_util.c                  |  11 +-
+ drivers/hv/vmbus_drv.c                |   2 +-
+ drivers/input/serio/hyperv-keyboard.c |   4 +-
+ drivers/net/hyperv/netvsc.c           |   2 +-
+ drivers/net/hyperv/netvsc_drv.c       |  46 ++--
+ drivers/net/hyperv/rndis_filter.c     |  13 +-
+ drivers/pci/controller/pci-hyperv.c   |   5 +-
+ drivers/scsi/storvsc_drv.c            |  56 ++++-
+ include/linux/hyperv.h                |  68 ++++-
+ 18 files changed, 468 insertions(+), 283 deletions(-)
