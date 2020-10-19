@@ -2,115 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C1D8292350
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Oct 2020 10:04:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9470E292869
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Oct 2020 15:42:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgJSIEA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Oct 2020 04:04:00 -0400
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:44146 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbgJSIEA (ORCPT
+        id S1727796AbgJSNmM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Oct 2020 09:42:12 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34931 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727297AbgJSNmM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Oct 2020 04:04:00 -0400
-X-Greylist: delayed 1456 seconds by postgrey-1.27 at vger.kernel.org; Mon, 19 Oct 2020 04:03:58 EDT
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1kUPl5-0003bi-LB; Mon, 19 Oct 2020 07:39:07 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1kUPl3-00080t-CR; Mon, 19 Oct 2020 08:39:07 +0100
-Subject: Re: [PATCH] arch: um: convert tasklets to use new tasklet_setup() API
-To:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
-        richard@nod.at, 3chas3@gmail.com, axboe@kernel.dk,
-        stefanr@s5r6.in-berlin.de, airlied@linux.ie, daniel@ffwll.ch,
-        sre@kernel.org, James.Bottomley@HansenPartnership.com,
-        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
-        jassisinghbrar@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
-        ulf.hansson@linaro.org, mporter@kernel.crashing.org,
-        alex.bou9@gmail.com, broonie@kernel.org, martyn@welchs.me.uk,
-        manohar.vanga@gmail.com, mitch@sfgoth.com, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org,
-        Romain Perier <romain.perier@gmail.com>, keescook@chromium.org,
-        linux-parisc@vger.kernel.org, linux-ntb@googlegroups.com,
-        netdev@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-atm-general@lists.sourceforge.net,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-spi@vger.kernel.org,
-        linux-block@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <3359192b-8f02-feb4-a9a7-a13b5d876998@cambridgegreys.com>
-Date:   Mon, 19 Oct 2020 08:39:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        Mon, 19 Oct 2020 09:42:12 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q5so12936128wmq.0;
+        Mon, 19 Oct 2020 06:42:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wSpB2OFgBLfQuSAeovcxEvz3XNecpxTvXJc2PkeLsE4=;
+        b=GpyzoYYtQ52mAoPEgrG0fPsWbNCyRvY7DHPipAQnU721AIA9dHOlE3GArA4eoiZDYE
+         WRdQ5WXNZA4Q6cPp/Di09z9pzbctN53erhBV95p+gesSS2w7KFMrxPtjSZ9kVskDk3AM
+         Ujme+GqdDzo/vSGBFOmTNVYSASYjPH0XsxkBB7w8dIIMZvxEHAFSJmu14aDwHQruMCA0
+         8QjsbeHiPSo94AhkMZRO5G91B3/l2yD/eGl7eZea2XhrV+YCQ6ZTEcsumFM2afpxwlVf
+         WNaKcQqCXi68LpscNrOQhY/2M5lKCzkaYo/ZAFk7lamuMeYaYCLrtOCy0pL1J9iYLfyP
+         NmxQ==
+X-Gm-Message-State: AOAM5338Ev1CMscXok3d8YlwAGCCDm2689IC9zDoxDmYIDBkTkiBCnze
+        k3zwNYtvPxl/1dnYS79yPl02lgVqKwg=
+X-Google-Smtp-Source: ABdhPJyCvWUlYnVSgUusnxlmxtwtPBKYm9FsVfRurKRmwiPCqlhvjRkR3X4+gaFV0+37kiywaHzTtg==
+X-Received: by 2002:a1c:c906:: with SMTP id f6mr18528123wmb.9.1603114931205;
+        Mon, 19 Oct 2020 06:42:11 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id g83sm81381wmf.15.2020.10.19.06.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2020 06:42:10 -0700 (PDT)
+Date:   Mon, 19 Oct 2020 13:42:09 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Olaf Hering <olaf@aepfle.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH v1] hv_balloon: disable warning when floor reached
+Message-ID: <20201019134209.fgjlip52k5xayr2w@liuwe-devbox-debian-v2>
+References: <20201008071216.16554-1-olaf@aepfle.de>
+ <MW2PR2101MB1052BA9AB5DB8C11D7F9CE33D71E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200817091617.28119-1-allen.cryptic@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -1.0
-X-Spam-Score: -1.0
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB1052BA9AB5DB8C11D7F9CE33D71E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-On 17/08/2020 10:15, Allen Pais wrote:
-> From: Allen Pais <allen.lkml@gmail.com>
+On Mon, Oct 19, 2020 at 03:02:22AM +0000, Michael Kelley wrote:
+> From: Olaf Hering <olaf@aepfle.de> Sent: Thursday, October 8, 2020 12:12 AM
+> > 
+> > It is not an error if a the host requests to balloon down, but the VM
 > 
-> In preparation for unconditionally passing the
-> struct tasklet_struct pointer to all tasklet
-> callbacks, switch to using the new tasklet_setup()
-> and from_tasklet() to pass the tasklet pointer explicitly.
+> Spurious word "a"
 > 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> ---
->   arch/um/drivers/vector_kern.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+> > refuses to do so. Without this change a warning is logged in dmesg
+> > every five minutes.
+> > 
+> > Fixes commit b3bb97b8a49f3
 > 
-> diff --git a/arch/um/drivers/vector_kern.c b/arch/um/drivers/vector_kern.c
-> index 8735c468230a..06980870ae23 100644
-> --- a/arch/um/drivers/vector_kern.c
-> +++ b/arch/um/drivers/vector_kern.c
-> @@ -1196,9 +1196,9 @@ static int vector_net_close(struct net_device *dev)
->   
->   /* TX tasklet */
->   
-> -static void vector_tx_poll(unsigned long data)
-> +static void vector_tx_poll(struct tasklet_struct *t)
->   {
-> -	struct vector_private *vp = (struct vector_private *)data;
-> +	struct vector_private *vp = from_tasklet(vp, t, tx_poll);
->   
->   	vp->estats.tx_kicks++;
->   	vector_send(vp->tx_queue);
-> @@ -1629,7 +1629,7 @@ static void vector_eth_configure(
->   	});
->   
->   	dev->features = dev->hw_features = (NETIF_F_SG | NETIF_F_FRAGLIST);
-> -	tasklet_init(&vp->tx_poll, vector_tx_poll, (unsigned long)vp);
-> +	tasklet_setup(&vp->tx_poll, vector_tx_poll);
->   	INIT_WORK(&vp->reset_tx, vector_reset_tx);
->   
->   	timer_setup(&vp->tl, vector_timer_expire, 0);
+> This "Fixes" line isn't formatted correctly.  Should be:
 > 
+> Fixes:  b3bb97b8a49f3 ("Drivers: hv: balloon: Add logging for dynamic memory operations")
+> 
+> > 
+> > Signed-off-by: Olaf Hering <olaf@aepfle.de>
+> > ---
+> >  drivers/hv/hv_balloon.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> > index 32e3bc0aa665..0f50295d0214 100644
+> > --- a/drivers/hv/hv_balloon.c
+> > +++ b/drivers/hv/hv_balloon.c
+> > @@ -1275,7 +1275,7 @@ static void balloon_up(struct work_struct *dummy)
+> > 
+> >  	/* Refuse to balloon below the floor. */
+> >  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+> > -		pr_warn("Balloon request will be partially fulfilled. %s\n",
+> > +		pr_info("Balloon request will be partially fulfilled. %s\n",
+> >  			avail_pages < num_pages ? "Not enough memory." :
+> >  			"Balloon floor reached.");
+> > 
+> 
+> Above nits notwithstanding,
+> 
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Thanks. I see one for and no against so far.
 
--- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+I've applied this patch to hyperv-fixes. I also fixed those nits
+while at it.
+
+Wei.
