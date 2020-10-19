@@ -2,96 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25E862922B2
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Oct 2020 08:57:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C1D8292350
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Oct 2020 10:04:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgJSG5A (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Oct 2020 02:57:00 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:18867 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbgJSG5A (ORCPT
+        id S1728345AbgJSIEA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Oct 2020 04:04:00 -0400
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:44146 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbgJSIEA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Oct 2020 02:57:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1603090618;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=60lTu+SIFl3Z+SiTLMIIM/Rscx77GBIuUnPDMFu+m7E=;
-        b=Cx+dZ2VYyVYR7diTrB9Zg8Yb6xD2/7OOwycIAypQ0PVi88CLnCGDBsmDpXEcffuEd0
-        npQf4VrCl+GcmdjVD0xENotfu31E/cf4sHE5TzJaZfTL1Y8Mjxkrsv8tQ3r3sQ5WoMq4
-        SgjOmSQdwdG3qZpTIzdMq0RqTWsytf+51Rs0fnf3N8g6odX9b1aAYkXamw4S9bLsbR8n
-        t+67PeMK2yzk0JnZ8iICA3068lUL5YV9LX1vtxkYUSrG1azejMABjzb8izx/RY74k3N2
-        rA3LnFOY0fPWgAuzoh/Me6DhrEW/pMyaBvnSou9HQThCQVtce9jgkf4/3RMJ0IGIH1/v
-        Q3Wg==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDXdoX8l8pYAcz5OTW+r+/A=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 47.2.1 DYNA|AUTH)
-        with ESMTPSA id e003b5w9J6uo5Yd
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 19 Oct 2020 08:56:50 +0200 (CEST)
-Date:   Mon, 19 Oct 2020 08:56:23 +0200
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Subject: Re: [PATCH v1] hv_balloon: disable warning when floor reached
-Message-ID: <20201019085623.2cffe580.olaf@aepfle.de>
-In-Reply-To: <MW2PR2101MB1052AAC9DE9A4829F53BB493D71E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20201008071216.16554-1-olaf@aepfle.de>
-        <20201008091539.060c79c3.olaf@aepfle.de>
-        <20201013091717.q24ypswqgmednofr@liuwe-devbox-debian-v2>
-        <20201013111921.2fa4608c.olaf@aepfle.de>
-        <20201013094017.brwjdzoo2nxsaon5@liuwe-devbox-debian-v2>
-        <MW2PR2101MB1052AAC9DE9A4829F53BB493D71E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-X-Mailer: Claws Mail 2020.08.19 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 19 Oct 2020 04:04:00 -0400
+X-Greylist: delayed 1456 seconds by postgrey-1.27 at vger.kernel.org; Mon, 19 Oct 2020 04:03:58 EDT
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1kUPl5-0003bi-LB; Mon, 19 Oct 2020 07:39:07 +0000
+Received: from jain.kot-begemot.co.uk ([192.168.3.3])
+        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1kUPl3-00080t-CR; Mon, 19 Oct 2020 08:39:07 +0100
+Subject: Re: [PATCH] arch: um: convert tasklets to use new tasklet_setup() API
+To:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, 3chas3@gmail.com, axboe@kernel.dk,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie, daniel@ffwll.ch,
+        sre@kernel.org, James.Bottomley@HansenPartnership.com,
+        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
+        jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
+        ulf.hansson@linaro.org, mporter@kernel.crashing.org,
+        alex.bou9@gmail.com, broonie@kernel.org, martyn@welchs.me.uk,
+        manohar.vanga@gmail.com, mitch@sfgoth.com, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        Romain Perier <romain.perier@gmail.com>, keescook@chromium.org,
+        linux-parisc@vger.kernel.org, linux-ntb@googlegroups.com,
+        netdev@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-atm-general@lists.sourceforge.net,
+        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-spi@vger.kernel.org,
+        linux-block@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Message-ID: <3359192b-8f02-feb4-a9a7-a13b5d876998@cambridgegreys.com>
+Date:   Mon, 19 Oct 2020 08:39:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Y4jgRNWCKTwCArZ7R3N1v+c"; protocol="application/pgp-signature"
+In-Reply-To: <20200817091617.28119-1-allen.cryptic@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -1.0
+X-Spam-Score: -1.0
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---Sig_/Y4jgRNWCKTwCArZ7R3N1v+c
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Am Mon, 19 Oct 2020 02:58:08 +0000
-schrieb Michael Kelley <mikelley@microsoft.com>:
 
-> I think we should take the patch.
+On 17/08/2020 10:15, Allen Pais wrote:
+> From: Allen Pais <allen.lkml@gmail.com>
+> 
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> ---
+>   arch/um/drivers/vector_kern.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/um/drivers/vector_kern.c b/arch/um/drivers/vector_kern.c
+> index 8735c468230a..06980870ae23 100644
+> --- a/arch/um/drivers/vector_kern.c
+> +++ b/arch/um/drivers/vector_kern.c
+> @@ -1196,9 +1196,9 @@ static int vector_net_close(struct net_device *dev)
+>   
+>   /* TX tasklet */
+>   
+> -static void vector_tx_poll(unsigned long data)
+> +static void vector_tx_poll(struct tasklet_struct *t)
+>   {
+> -	struct vector_private *vp = (struct vector_private *)data;
+> +	struct vector_private *vp = from_tasklet(vp, t, tx_poll);
+>   
+>   	vp->estats.tx_kicks++;
+>   	vector_send(vp->tx_queue);
+> @@ -1629,7 +1629,7 @@ static void vector_eth_configure(
+>   	});
+>   
+>   	dev->features = dev->hw_features = (NETIF_F_SG | NETIF_F_FRAGLIST);
+> -	tasklet_init(&vp->tx_poll, vector_tx_poll, (unsigned long)vp);
+> +	tasklet_setup(&vp->tx_poll, vector_tx_poll);
+>   	INIT_WORK(&vp->reset_tx, vector_reset_tx);
+>   
+>   	timer_setup(&vp->tl, vector_timer_expire, 0);
+> 
 
-Thanks. I just briefly looked at the code, did not understand much of it. B=
-ut it feels like the math uses the wrong input. I think its is not the 'pr_=
-warn' that needs changing, the 'Fixes' tag would also be incorrect because =
-a 4.12+backports kernel does not show the warning.
+Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-Olaf
-
---Sig_/Y4jgRNWCKTwCArZ7R3N1v+c
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl+NOJcACgkQ86SN7mm1
-DoA7fQ/+Kc851egDG2Hbk6LNSAKP1wqNfVlvwa3LF9h5Z7hmVyQRgmsLN5OSXoVV
-lx4uFLDO8YwIPdM0fCtBz/2CMx89FxGTG5jRXOdUSsntVQJLOOfzK4nJJvA9c2oM
-beSOMngxEx4s9Ds4/UJhi6/DyLUKrTAkPWa/cyQF3e/cb6OnZ0oKsqR4N6ePnB/k
-eVIIhiJ6IgFSOtSEMpVSLOl0qD+2fSlSmLGIEO2Jir/csDg8BbEQGxZY1xxOl/9y
-hkib50Qe9RaXhjVV7SPWEQn9e7XKGozc6cyObya8AJy4kHQ3z7APdoKinFSOJo4D
-DWdudheIM52ZpyK5B7gyaH1n4gA4T80rzCNtC8wwZt4PpINnCpxORAGKS5lF0Llu
-80qPK6k9nEATqU+x0E8WCJBDWrLQHbaDlqq/+Z9RArQIri6WZDQauXmMayE3v9GN
-EBlS8vMKhse0B2thgO23u5aemK5DW6skoEai6CVpv94NiCLrh+pax2CDr8qIwp1B
-T3OGqmUgAydhax7b1k2o8uRWzRsAhhVOAwHd7oSvQ6Su1CuHMkWNe0k6UUdFV+Vx
-6Zelz8RUrXrNmsm/qJWke+faauolkusxXHAr1YkvPzAQjm7dJDJO5npKWzD0zw/U
-8+BK8voyUzaDTaJ/FyJ6cn7yG6znyhfnMooUK6XaOW5vYSs79OY=
-=Cskk
------END PGP SIGNATURE-----
-
---Sig_/Y4jgRNWCKTwCArZ7R3N1v+c--
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
