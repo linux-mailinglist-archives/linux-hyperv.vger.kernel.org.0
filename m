@@ -2,104 +2,96 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9470E292869
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Oct 2020 15:42:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BCD229413E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Oct 2020 19:18:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgJSNmM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Oct 2020 09:42:12 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34931 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbgJSNmM (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Oct 2020 09:42:12 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q5so12936128wmq.0;
-        Mon, 19 Oct 2020 06:42:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wSpB2OFgBLfQuSAeovcxEvz3XNecpxTvXJc2PkeLsE4=;
-        b=GpyzoYYtQ52mAoPEgrG0fPsWbNCyRvY7DHPipAQnU721AIA9dHOlE3GArA4eoiZDYE
-         WRdQ5WXNZA4Q6cPp/Di09z9pzbctN53erhBV95p+gesSS2w7KFMrxPtjSZ9kVskDk3AM
-         Ujme+GqdDzo/vSGBFOmTNVYSASYjPH0XsxkBB7w8dIIMZvxEHAFSJmu14aDwHQruMCA0
-         8QjsbeHiPSo94AhkMZRO5G91B3/l2yD/eGl7eZea2XhrV+YCQ6ZTEcsumFM2afpxwlVf
-         WNaKcQqCXi68LpscNrOQhY/2M5lKCzkaYo/ZAFk7lamuMeYaYCLrtOCy0pL1J9iYLfyP
-         NmxQ==
-X-Gm-Message-State: AOAM5338Ev1CMscXok3d8YlwAGCCDm2689IC9zDoxDmYIDBkTkiBCnze
-        k3zwNYtvPxl/1dnYS79yPl02lgVqKwg=
-X-Google-Smtp-Source: ABdhPJyCvWUlYnVSgUusnxlmxtwtPBKYm9FsVfRurKRmwiPCqlhvjRkR3X4+gaFV0+37kiywaHzTtg==
-X-Received: by 2002:a1c:c906:: with SMTP id f6mr18528123wmb.9.1603114931205;
-        Mon, 19 Oct 2020 06:42:11 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g83sm81381wmf.15.2020.10.19.06.42.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2020 06:42:10 -0700 (PDT)
-Date:   Mon, 19 Oct 2020 13:42:09 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Olaf Hering <olaf@aepfle.de>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH v1] hv_balloon: disable warning when floor reached
-Message-ID: <20201019134209.fgjlip52k5xayr2w@liuwe-devbox-debian-v2>
-References: <20201008071216.16554-1-olaf@aepfle.de>
- <MW2PR2101MB1052BA9AB5DB8C11D7F9CE33D71E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        id S2390616AbgJTRSE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Oct 2020 13:18:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52454 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390588AbgJTRSD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 20 Oct 2020 13:18:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 456F0AD85;
+        Tue, 20 Oct 2020 17:18:02 +0000 (UTC)
+Subject: Re: [PATCH v2 2/5] mm/page_alloc: place pages to tail in
+ __putback_isolated_page()
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Scott Cheloha <cheloha@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20201005121534.15649-1-david@redhat.com>
+ <20201005121534.15649-3-david@redhat.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <ddeba755-eed5-d412-ffa0-4d1a6a4bc297@suse.cz>
+Date:   Tue, 20 Oct 2020 19:18:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052BA9AB5DB8C11D7F9CE33D71E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20201005121534.15649-3-david@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 03:02:22AM +0000, Michael Kelley wrote:
-> From: Olaf Hering <olaf@aepfle.de> Sent: Thursday, October 8, 2020 12:12 AM
-> > 
-> > It is not an error if a the host requests to balloon down, but the VM
+On 10/5/20 2:15 PM, David Hildenbrand wrote:
+> __putback_isolated_page() already documents that pages will be placed to
+> the tail of the freelist - this is, however, not the case for
+> "order >= MAX_ORDER - 2" (see buddy_merge_likely()) - which should be
+> the case for all existing users.
 > 
-> Spurious word "a"
+> This change affects two users:
+> - free page reporting
+> - page isolation, when undoing the isolation (including memory onlining).
 > 
-> > refuses to do so. Without this change a warning is logged in dmesg
-> > every five minutes.
-> > 
-> > Fixes commit b3bb97b8a49f3
+> This behavior is desireable for pages that haven't really been touched
+> lately, so exactly the two users that don't actually read/write page
+> content, but rather move untouched pages.
 > 
-> This "Fixes" line isn't formatted correctly.  Should be:
+> The new behavior is especially desirable for memory onlining, where we
+> allow allocation of newly onlined pages via undo_isolate_page_range()
+> in online_pages(). Right now, we always place them to the head of the
+> freelist, resulting in undesireable behavior: Assume we add
+> individual memory chunks via add_memory() and online them right away to
+> the NORMAL zone. We create a dependency chain of unmovable allocations
+> e.g., via the memmap. The memmap of the next chunk will be placed onto
+> previous chunks - if the last block cannot get offlined+removed, all
+> dependent ones cannot get offlined+removed. While this can already be
+> observed with individual DIMMs, it's more of an issue for virtio-mem
+> (and I suspect also ppc DLPAR).
 > 
-> Fixes:  b3bb97b8a49f3 ("Drivers: hv: balloon: Add logging for dynamic memory operations")
+> Document that this should only be used for optimizations, and no code
+> should rely on this behavior for correction (if the order of the
+> freelists ever changes).
 > 
-> > 
-> > Signed-off-by: Olaf Hering <olaf@aepfle.de>
-> > ---
-> >  drivers/hv/hv_balloon.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> > index 32e3bc0aa665..0f50295d0214 100644
-> > --- a/drivers/hv/hv_balloon.c
-> > +++ b/drivers/hv/hv_balloon.c
-> > @@ -1275,7 +1275,7 @@ static void balloon_up(struct work_struct *dummy)
-> > 
-> >  	/* Refuse to balloon below the floor. */
-> >  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
-> > -		pr_warn("Balloon request will be partially fulfilled. %s\n",
-> > +		pr_info("Balloon request will be partially fulfilled. %s\n",
-> >  			avail_pages < num_pages ? "Not enough memory." :
-> >  			"Balloon floor reached.");
-> > 
+> We won't care about page shuffling: memory onlining already properly
+> shuffles after onlining. free page reporting doesn't care about
+> physically contiguous ranges, and there are already cases where page
+> isolation will simply move (physically close) free pages to (currently)
+> the head of the freelists via move_freepages_block() instead of
+> shuffling. If this becomes ever relevant, we should shuffle the whole
+> zone when undoing isolation of larger ranges, and after
+> free_contig_range().
 > 
-> Above nits notwithstanding,
-> 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-Thanks. I see one for and no against so far.
-
-I've applied this patch to hyperv-fixes. I also fixed those nits
-while at it.
-
-Wei.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
