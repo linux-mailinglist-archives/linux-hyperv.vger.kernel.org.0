@@ -2,119 +2,93 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5220294B92
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Oct 2020 12:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE9572966BE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Oct 2020 23:43:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439228AbgJUK66 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Oct 2020 06:58:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
+        id S372433AbgJVVnz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Oct 2020 17:43:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439214AbgJUK65 (ORCPT
+        with ESMTP id S372432AbgJVVnz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Oct 2020 06:58:57 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61359C0613CE;
-        Wed, 21 Oct 2020 03:58:57 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id z5so2690223iob.1;
-        Wed, 21 Oct 2020 03:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GICSwgN3sNFkPLzb9ZiuRIa+ZIKU5hbtJb9zZM8PdNs=;
-        b=ENzNLNVw380JSauwEXTsNIwfSS+Pfic6wIwk3mcDkx2ZI8vSJTG9T4To95nV5K++3S
-         wXrPtza7/nKOZyWO6GUYg/19vJCSiI3irHrOtUq4HfvmyEmN9+Er/0f8hl5JC3NY9rCU
-         4VXyirx16ZxcwPrFkWNc5+fdgPzJzwoqh23QZ4siuTOAmG7kAyniMqDNFkdjAyBLV9KU
-         6xUTE1fU2WS7Y2iHpg238szVhAOmVhcjtjhCua1z7pgont9fb1+CXR9apRekKvjEBXQ4
-         Mjsvsuixy9gpE8FbEhU64igpCUNBdcJC/8ogPwXvQvXYuRk8lqRCeWNgGrCpzH1AQQOC
-         Q+4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GICSwgN3sNFkPLzb9ZiuRIa+ZIKU5hbtJb9zZM8PdNs=;
-        b=rLdhoZC9O9WwK5sULKry9MxuKsBFwmj9Xvpx5eNnh0TUL52qhTWqIAmV5ktSsh8oX9
-         rTKg3aPda7RA41CbrrCPx38QuMVwRbNW1kWfTLycxfiPYLUpvr0JGq6KvpjJ3NynJiCF
-         D3tJuv5Q6fPtnZFAiss5pl7srYiW0q+jT3vrgsULvlGPPM5cZhdEJnlcaDGEl8JfA4GI
-         Q+IRS4qYqBc0fD2GVbIBxiCc6zuvRMMO0jObum7sjiHhi5edOoakqP4dg4/8JMBEmUv7
-         HnOixyI07cygGk2UPqYJDIpyzKa6bcfik13MSV+Fz1LedAsSAnGweJDLelGg4lTFy+lQ
-         hMWA==
-X-Gm-Message-State: AOAM533wbJ1uunInniEBCFniJfy+siDzOqLuS5EhnA3ojkMeUpBYVfTk
-        tM7HSmuxTz94tGpIZ9xwZboyOI73d8nBr0ZQvvY=
-X-Google-Smtp-Source: ABdhPJxVGoa8oGWf7NMjH5r135bL5msWqxriS77JIexiAMhTvnG4ddTh5FYX+VcY2vpk3tlFdrFb/MgirSrWDhsBaEo=
-X-Received: by 2002:a5d:87c7:: with SMTP id q7mr2174472ios.162.1603277936222;
- Wed, 21 Oct 2020 03:58:56 -0700 (PDT)
+        Thu, 22 Oct 2020 17:43:55 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244AFC0613CE;
+        Thu, 22 Oct 2020 14:43:55 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1603403033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=c32SKqD2QPPmQRkKDG5IckFogmrBjrqnOlEPJ34GffQ=;
+        b=djSQMJvu88coa4ZnaK9g69LibWRWkd0bVkrazf5TGY3ku/NnliEgV5RIYQqddSS5O41bSB
+        8MVMUf50eEzJTpgoHepJz9F05yw/FfLg5J6YFUzWf0Px/R8Az29hFA6lo9qCJPMyNZdntF
+        rhlqunO69v/B/SaawC/2YQEiAW7qyQfxu5aG/cspUC8Vads5EXLlBP6Xlj/XwecshHQWzq
+        eIo4vfglKAsQyQO9nRvSyMrLHptLFF3Fxm2J5NIFHc9xKQlSWp8lEH5ew/t3TvmpI+rK5P
+        lT3kN4bVzZefwVb2oLeI4u2DytHlyA5FVxGxLMp1TAzuCE+tgzrs1ff5v2hwcw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1603403033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=c32SKqD2QPPmQRkKDG5IckFogmrBjrqnOlEPJ34GffQ=;
+        b=xlNKFG/FRxX90888QEwo+jxnoVhskeS5SmseJy0OSOtvwYdaHTEmVrfehSvAP8GHBdt9E9
+        1CouFj602bGhAPDg==
+To:     David Woodhouse <dwmw2@infradead.org>, x86@kernel.org
+Cc:     kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] x86/ioapic: Generate RTE directly from parent irqchip's MSI message
+In-Reply-To: <20201009104616.1314746-9-dwmw2@infradead.org>
+Date:   Thu, 22 Oct 2020 23:43:52 +0200
+Message-ID: <87y2jy542v.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20201005121534.15649-1-david@redhat.com> <20201005121534.15649-6-david@redhat.com>
-In-Reply-To: <20201005121534.15649-6-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Wed, 21 Oct 2020 12:58:45 +0200
-Message-ID: <CAM9Jb+jXR6iPvSxExaEJvm90mqRozh1wcJ6ukEmDy_pqc-37oQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] mm/memory_hotplug: update comment regarding zone shuffling
-To:     David Hildenbrand <david@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> As we no longer shuffle via generic_online_page() and when undoing
-> isolation, we can simplify the comment.
->
-> We now effectively shuffle only once (properly) when onlining new
-> memory.
->
-> Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/memory_hotplug.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
->
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 03a00cb68bf7..b44d4c7ba73b 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -858,13 +858,10 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
->         undo_isolate_page_range(pfn, pfn + nr_pages, MIGRATE_MOVABLE);
->
->         /*
-> -        * When exposing larger, physically contiguous memory areas to the
-> -        * buddy, shuffling in the buddy (when freeing onlined pages, putting
-> -        * them either to the head or the tail of the freelist) is only helpful
-> -        * for maintaining the shuffle, but not for creating the initial
-> -        * shuffle. Shuffle the whole zone to make sure the just onlined pages
-> -        * are properly distributed across the whole freelist. Make sure to
-> -        * shuffle once pageblocks are no longer isolated.
-> +        * Freshly onlined pages aren't shuffled (e.g., all pages are placed to
-> +        * the tail of the freelist when undoing isolation). Shuffle the whole
-> +        * zone to make sure the just onlined pages are properly distributed
-> +        * across the whole freelist - to create an initial shuffle.
->          */
->         shuffle_zone(zone);
->
+On Fri, Oct 09 2020 at 11:46, David Woodhouse wrote:
 
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+@@ -45,12 +45,11 @@ enum irq_alloc_type {
+ };
+
+> +static void mp_swizzle_msi_dest_bits(struct irq_data *irq_data, void *_entry)
+> +{
+> +	struct msi_msg msg;
+> +	u32 *entry = _entry;
+
+Why is this a void * argument and then converting it to a u32 *? Just to
+make that function completely unreadable?
+
+> +
+> +	irq_chip_compose_msi_msg(irq_data, &msg);
+
+Lacks a comment. Also mp_swizzle... is a misnomer as this invokes the
+msi compose function which is not what the function name suggests.
+
+> +	/*
+> +	 * They're in a bit of a random order for historical reasons, but
+> +	 * the IO/APIC is just a device for turning interrupt lines into
+> +	 * MSIs, and various bits of the MSI addr/data are just swizzled
+> +	 * into/from the bits of Redirection Table Entry.
+> +	 */
+> +	entry[0] &= 0xfffff000;
+> +	entry[0] |= (msg.data & (MSI_DATA_DELIVERY_MODE_MASK |
+> +				 MSI_DATA_VECTOR_MASK));
+> +	entry[0] |= (msg.address_lo & MSI_ADDR_DEST_MODE_MASK) << 9;
+> +
+> +	entry[1] &= 0xffff;
+> +	entry[1] |= (msg.address_lo & MSI_ADDR_DEST_ID_MASK) << 12;
+
+Sorry, but this is unreviewable gunk. The whole msi_msg setup sucks with
+this unholy macro maze. I have a half finished series which allows
+architectures to provide shadow members for data, address_* so this can
+be done proper with bitfields.
+
+Aside of that it works magically because polarity,trigger and mask bit
+have been set up before. But of course a comment about this is
+completely overrated.
+
+Thanks,
+
+        tglx
