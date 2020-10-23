@@ -2,84 +2,136 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49EC2296702
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Oct 2020 00:10:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6497F296C81
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Oct 2020 12:10:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S372731AbgJVWKi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Oct 2020 18:10:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49994 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S370028AbgJVWKh (ORCPT
+        id S461924AbgJWKKs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 23 Oct 2020 06:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S461865AbgJWKKs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Oct 2020 18:10:37 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1603404635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MvN0PZcC1LUdr+xhWQX/PywlAVCnw/qFd8HerpuaJjU=;
-        b=KdmmgfEMYQPX3gnHsmGI0RFxcGG45vVDNq6dm1XXwwyYp05viid6K68JmwV3LO7dzeFezv
-        ZWyF7Ge+U9J+rK4GEcd0tFwYleqEJhBzfzC74riy16r0Bu3gZj0bYf2n5E1YjrFFb873r6
-        GnrVJ2KkD5QXzZ6X/G8bs9q0Nz1vE7imO/Ss09B8fdwL1UXCqu/T7sSCezoiCi4lUtM8d5
-        K0XHP2fXnFrV0Pmhoa1oS4GglSzbqPCk2Hao2nI539QPDnTN9wO+iYxmxXFXLKdIGJcQ7Y
-        +5UG0gBvoydbyiERX9Sh0DoQDJvZ2fPC4FScIjAU+fD7BA2I17SJ636bUTDeqA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1603404635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MvN0PZcC1LUdr+xhWQX/PywlAVCnw/qFd8HerpuaJjU=;
-        b=3e4TbHegA5nWCISA9Baz7hJnQ+ZqGUL6K/dux7vuU/UBKa2eizznt8BtrgtCGwcHneSjMA
-        PRF6BfgQjtaihxDQ==
-To:     David Woodhouse <dwmw2@infradead.org>, x86@kernel.org
-Cc:     kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] x86/ioapic: Generate RTE directly from parent irqchip's MSI message
+        Fri, 23 Oct 2020 06:10:48 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4926BC0613CE;
+        Fri, 23 Oct 2020 03:10:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Message-ID:From:CC:To:Subject:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
+        Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=jXQnc7Q33alBw5s5WLWKGYdqKsDW1KG+Q/3M71QxBdI=; b=uqI3gMVHxYqEhYiFk20HpC0ulk
+        5pp39b//mVScB2AHwEKx2ff1S7I/ml2Sd0HCXLiP49xnQXhi191xTawF13hrJKNSzoyhfL/CIMR6I
+        w6GoSq8vF0eAt6nETjr3O0sN0FolBYB0sJrJzVdvuASdtjpFk1FZR2+4FIpSGTBtgxQswGXncOlHq
+        q9P5hCEikbyEBSq7fB9hUZrd2Iv/TYYOuGFXDbxFtVojF8eOKMv5L2oIIymSsYWMQrQ5dHXp/wxld
+        VKOmPzgCgDQCpGOFKj4Rcu3FbGKgyG+R75E8XgbinDoaMZEwb4HBfc62yKYh1FvH/ddRtvlWMMXZe
+        QDuGUcbw==;
+Received: from [2a01:4c8:1094:6472:254e:1156:1596:d8f5]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kVu1z-0001DG-KG; Fri, 23 Oct 2020 10:10:44 +0000
+Date:   Fri, 23 Oct 2020 11:10:39 +0100
+User-Agent: K-9 Mail for Android
 In-Reply-To: <87y2jy542v.fsf@nanos.tec.linutronix.de>
 References: <87y2jy542v.fsf@nanos.tec.linutronix.de>
-Date:   Fri, 23 Oct 2020 00:10:35 +0200
-Message-ID: <87sga56hes.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 8/8] x86/ioapic: Generate RTE directly from parent irqchip's MSI message
+To:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+CC:     kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org
+From:   David Woodhouse <dwmw2@infradead.org>
+Message-ID: <C53CAD52-38F8-47D7-A5BE-4F470532EF20@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 22 2020 at 23:43, Thomas Gleixner wrote:
-> On Fri, Oct 09 2020 at 11:46, David Woodhouse wrote:
-> Aside of that it works magically because polarity,trigger and mask bit
-> have been set up before. But of course a comment about this is
-> completely overrated.
 
-Also this part:
 
-> -static void mp_setup_entry(struct irq_cfg *cfg, struct mp_chip_data *data,
-> -			   struct IO_APIC_route_entry *entry)
-> +static void mp_setup_entry(struct irq_data *irq_data, struct mp_chip_data *data)
->  {
-> +	struct IO_APIC_route_entry *entry = &data->entry;
-> +
->  	memset(entry, 0, sizeof(*entry));
-> -	entry->delivery_mode = apic->irq_delivery_mode;
-> -	entry->dest_mode     = apic->irq_dest_mode;
-> -	entry->dest	     = cfg->dest_apicid & 0xff;
-> -	entry->virt_ext_dest = cfg->dest_apicid >> 8;
-> -	entry->vector	     = cfg->vector;
-> +
-> +	mp_swizzle_msi_dest_bits(irq_data, entry);
-> +
->  	entry->trigger	     = data->trigger;
->  	entry->polarity	     = data->polarity;
->  	/*
+On 22 October 2020 22:43:52 BST, Thomas Gleixner <tglx@linutronix=2Ede> wr=
+ote:
+>On Fri, Oct 09 2020 at 11:46, David Woodhouse wrote:
+>
+>@@ -45,12 +45,11 @@ enum irq_alloc_type {
+> };
+>
+>> +static void mp_swizzle_msi_dest_bits(struct irq_data *irq_data, void
+>*_entry)
+>> +{
+>> +	struct msi_msg msg;
+>> +	u32 *entry =3D _entry;
+>
+>Why is this a void * argument and then converting it to a u32 *? Just
+>to
+>make that function completely unreadable?
 
-does not make sense. It did not make sense before either, but now it
-does even make less sense.
+It makes the callers slightly more readable, not having to cast to uint32_=
+t* from the struct=2E
 
-During allocation this only needs to setup the I/O-APIC specific bits
-(trigger, polarity, mask). The rest is filled in when the actual
-activation happens. Nothing writes that entry _before_ activation.
+I did ponder defining a new struct with bitfields named along the lines of=
+ 'msi_addr_bits_19_to_4', but that seemed like overkill=2E
 
-/me goes to mop up more
+>> +
+>> +	irq_chip_compose_msi_msg(irq_data, &msg);
+>
+>Lacks a comment=2E Also mp_swizzle=2E=2E=2E is a misnomer as this invokes=
+ the
+>msi compose function which is not what the function name suggests=2E
 
+It's got a four-line comment right there after it as we use the bits we go=
+t from it=2E
+
+>> +	/*
+>> +	 * They're in a bit of a random order for historical reasons, but
+>> +	 * the IO/APIC is just a device for turning interrupt lines into
+>> +	 * MSIs, and various bits of the MSI addr/data are just swizzled
+>> +	 * into/from the bits of Redirection Table Entry=2E
+>> +	 */
+>> +	entry[0] &=3D 0xfffff000;
+>> +	entry[0] |=3D (msg=2Edata & (MSI_DATA_DELIVERY_MODE_MASK |
+>> +				 MSI_DATA_VECTOR_MASK));
+>> +	entry[0] |=3D (msg=2Eaddress_lo & MSI_ADDR_DEST_MODE_MASK) << 9;
+>> +
+>> +	entry[1] &=3D 0xffff;
+>> +	entry[1] |=3D (msg=2Eaddress_lo & MSI_ADDR_DEST_ID_MASK) << 12;
+>
+>Sorry, but this is unreviewable gunk=2E
+
+Crap=2E Sure, want to look at the I/OAPIC and MSI documentation and observ=
+e that it's just shifting bits around and "these bits go there, those bits =
+go here=2E=2E=2E" but there's no magic which will make that go away=2E At s=
+ome point you end up swizzling bits around with seemingly random bitmasks a=
+nd shifts which you have to have worked out from the docs=2E
+
+Now that I killed off the various IOMMU bits which also horrifically touch=
+ the RTE directly, perhaps there is more scope for faffing around with it d=
+ifferently, but it won't really change much=2E It's just urinating into the=
+ atmospheric disturbance=2E
+
+
+>Aside of that it works magically because polarity,trigger and mask bit
+>have been set up before=2E But of course a comment about this is
+>completely overrated=2E
+
+Well yes, there's a lot about the I/OAPIC code which is a bit horrid but t=
+his patch is doing just one thing: making the bits get from e=2Eg=2E cfg->d=
+est_apicid and cfg->vector into the RTE in a generic fashion which does the=
+ right thing for IR too=2E Other cleanups are somewhat orthogonal, but yes =
+it's a good spot that one of these was somewhat redundant in the first plac=
+e=2E We could fix that up in a separate patch which comes first perhaps=2E
+
+If we're starting to clean up I/OAPIC code I'd like to take a long hard lo=
+ok at the level ack code paths, and the fact that we have separate ack_apic=
+_irq and apic_ack_irq functions (or something like that; on phone now) whic=
+h do different things=2E Perhaps the order (or the capitals on APIC which o=
+ne of them has) makes it sane and meaningful for them both to exist and do =
+different things?
+
+I also note the Hyper-V "remapping" takes the IR code path and I'm not sur=
+e that's OK=2E Because of the complete lack of overall documentation on wha=
+t it's all doing and why=2E
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
