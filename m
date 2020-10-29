@@ -2,70 +2,81 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 916E329F04E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Oct 2020 16:43:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A2F29F184
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Oct 2020 17:31:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgJ2PnQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Oct 2020 11:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727842AbgJ2PnP (ORCPT
+        id S1726105AbgJ2Qbq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Oct 2020 12:31:46 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:31038 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727087AbgJ2Qa0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Oct 2020 11:43:15 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F59DC0613D2
-        for <linux-hyperv@vger.kernel.org>; Thu, 29 Oct 2020 08:43:15 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id i6so3934981lfd.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 29 Oct 2020 08:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=8uw4i9rXzkFC23wVU482VBEsS/XAWU23iJOHs6iAOw4=;
-        b=VQjFZwM+tStTObZQpTM1TKQGhWNvns/CUj2H0Io+Sa93qC83LP5ltEPh+edoEycESu
-         4bjOVdDBoE2kKr+wxS+ZiVbS8Poxi6AywERdLf0hsx5NZyco2kcoj+792/tp9lNCzsyH
-         bLsORmw9G0NUqIDP479zIQTs+LdpvvqOqxsgYOFepI1+udD192isK3D06BxyvCGpq6W+
-         1V57gSVIkRn91ZilNvCDwQhlgSYAnAM/37inWtM7o5g1KXgTP/aByuHwI9Y21m8y95r3
-         PZ7y0SgS88yX5JLs0VJ+Lzs+O3OuCsuYRUx3uGUOMAEjiZQEg6ELX8j3VPZJ6oK3+n+s
-         8sog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=8uw4i9rXzkFC23wVU482VBEsS/XAWU23iJOHs6iAOw4=;
-        b=KByH8X/OYQGKzQQWyvLrI7HVb79lvus0miBXqDgb28frC17ft8aupdMlnz4uDuDJHV
-         CenyK4kXB+6qoqHr+SFBzpwkNg8bgmyi3ai/4xSOOyCVuGWHfiF8P2cTrsqDuV8l9vb1
-         3R55JXp+PeURv+6eTH5juIGx/GZiqrpUt3W1M6H/43dw4arjVnxwCVk3iC726rw0izXq
-         5aaRLx1+CnOLSqRifLO2u7tS23XCxdb/M57vZalzrQrdrGW2Onjg0SOmvMV+2y+ZVRHi
-         I2VOpKs1Og8HeoYsg174T2leOdIvJTvu35xgVFn/9siji+xAQWQB0wkJod380hziAbg8
-         WcQA==
-X-Gm-Message-State: AOAM532g2DjZVi/FQMYTsO9ERDg5pIO7yRUVidGvLvyayD6eL6dh4t4N
-        jmm4ZXOEKJIsoRzSQu5cLBK+7DNkEwXb9x61m50=
-X-Google-Smtp-Source: ABdhPJyJE9WWml5g6d1tqPrpJeQdqvpwty+kZEF5ED4KEs24mVr871LtgH+65yQCkyu6vzlOhXkJMBSc3t36TwWswLU=
-X-Received: by 2002:a19:5c2:: with SMTP id 185mr1997341lff.15.1603986193918;
- Thu, 29 Oct 2020 08:43:13 -0700 (PDT)
+        Thu, 29 Oct 2020 12:30:26 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-97-MKHylt3TN2qOdBALyCARbQ-1; Thu, 29 Oct 2020 16:30:20 +0000
+X-MC-Unique: MKHylt3TN2qOdBALyCARbQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 29 Oct 2020 16:30:19 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 29 Oct 2020 16:30:19 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Arnd Bergmann' <arnd@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Wanpeng Li" <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "Platform Driver" <platform-driver-x86@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>
+Subject: RE: [PATCH] [v2] x86: apic: avoid -Wshadow warning in header
+Thread-Topic: [PATCH] [v2] x86: apic: avoid -Wshadow warning in header
+Thread-Index: AQHWrdqfIpyThHXm90WmqPrnIVTaQ6muxUWQ
+Date:   Thu, 29 Oct 2020 16:30:19 +0000
+Message-ID: <2a85eaf7d2e54a278493588bae41b06a@AcuMS.aculab.com>
+References: <20201028212417.3715575-1-arnd@kernel.org>
+ <ea34f1d3-ed54-a2de-79d9-5cc8decc0ab3@redhat.com>
+ <CAK8P3a0e0YAkh_9S1ZG5FW3QozZnp1CwXUfWx9VHWkY=h+FVxw@mail.gmail.com>
+In-Reply-To: <CAK8P3a0e0YAkh_9S1ZG5FW3QozZnp1CwXUfWx9VHWkY=h+FVxw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Reply-To: mrshenritapieres1@gmail.com
-Sender: josephkabore10000@gmail.com
-Received: by 2002:a19:506:0:0:0:0:0 with HTTP; Thu, 29 Oct 2020 08:43:13 -0700 (PDT)
-From:   Henrita Pieres <piereshenrita61@gmail.com>
-Date:   Thu, 29 Oct 2020 15:43:13 +0000
-X-Google-Sender-Auth: eeIIvz2x6a9YI_ZlaEfACQocyro
-Message-ID: <CAEhvJqqshcrXxTwWDwHBo=g+XbitT3jQQAyaxT3CMy4E-i4rEQ@mail.gmail.com>
-Subject: Hello.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello.
-I am Mrs. Henrita Pieres 64 years old located in France.but baser in
-Burkina Faso. Let me trust and believe you can handle this project...I
-have been diagnosed with Esophageal cancer. i want to invest in
-humanitarian & Charity in your country with sum of $4.5 Million. Reply
-me for more details
+RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAyOSBPY3RvYmVyIDIwMjAgMDk6NTENCi4uLg0K
+PiBJIHRoaW5rIGlkZWFsbHkgdGhlcmUgd291bGQgYmUgbm8gZ2xvYmFsIHZhcmlhYmxlLCB3aXRo
+YWxsIGFjY2Vzc2VzDQo+IGVuY2Fwc3VsYXRlZCBpbiBmdW5jdGlvbiBjYWxscywgcG9zc2libHkg
+dXNpbmcgc3RhdGljX2NhbGwoKSBvcHRpbWl6YXRpb25zDQo+IGlmIGFueSBvZiB0aGVtIGFyZSBw
+ZXJmb3JtYW5jZSBjcml0aWNhbC4NCg0KVGhlcmUgaXNuJ3QgcmVhbGx5IGEgbWFzc2l2ZSBkaWZm
+ZXJlbmNlIGJldHdlZW4gZ2xvYmFsIHZhcmlhYmxlcw0KYW5kIGdsb2JhbCBhY2Nlc3MgZnVuY3Rp
+b25zLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5
+IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRp
+b24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-Hope to hear from you soon.
-
-Yours Faithfully,
-Mrs. Henrita Pieres
