@@ -2,83 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 804782A08E4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Oct 2020 16:01:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E18B2A09B2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Oct 2020 16:24:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgJ3PAa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 30 Oct 2020 11:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgJ3PAa (ORCPT
+        id S1726319AbgJ3PY0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 30 Oct 2020 11:24:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32249 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725844AbgJ3PY0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 30 Oct 2020 11:00:30 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B771DC0613DE
-        for <linux-hyperv@vger.kernel.org>; Fri, 30 Oct 2020 07:59:35 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l24so6958150edj.8
-        for <linux-hyperv@vger.kernel.org>; Fri, 30 Oct 2020 07:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
-        b=TjZDjTDUyG5IOPAjtKhDz6bJNm6DqwPh3GYjQnJOtk58Qe+VS+LrjG9D+UJTL89L5a
-         hPszd6YttBU2gVDN4Hgd0nVvKmUsgBGa0RfR9y4dU1VG6wqrOSeXXlqa/jT4b2a91QjD
-         sT+ma7QKBtdbME0ZKxl0kc6DEI2BSZsRxuMkNkQsvOWxO6URWAKkh65L3Tk879AJ4LqG
-         Bj9eXYFDUcjXqha9S32esb82rsLCjf9rEdFYrDoZfWxC18Um3HNxqbzetSufrWkdrmWB
-         Hgfuw2XlX0g8ZkLr3paRT5DvZbKL3ccSJq24BaLzNsiQWn1tArC4uUyPSHMQ3hVqPZo6
-         Sb9g==
+        Fri, 30 Oct 2020 11:24:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604071464;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wDeHKm34zve+2LwoR+7mEkyC1+h5TyYSYeSuFZNavsY=;
+        b=QNCi/3xDP0MxUmIxDfTVmRtuQK8TRM57xUXYniwR6pLPH9JlVrlXqYi879LWjJzOoNc+C/
+        vxTdOWJ6e9K7vOjjJ9TKbauLTwudhO/xIRxH2hoVButRaSC3xtwiBNO+0aQiM2Vom4O4wG
+        PhalZtc3ZF15zAG9AHNbpFjolaCzQ2I=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-495-MNWIlTaOPpKf5zQMlsfN8g-1; Fri, 30 Oct 2020 11:24:22 -0400
+X-MC-Unique: MNWIlTaOPpKf5zQMlsfN8g-1
+Received: by mail-ej1-f70.google.com with SMTP id mm21so2537407ejb.18
+        for <linux-hyperv@vger.kernel.org>; Fri, 30 Oct 2020 08:24:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
-        b=LXXsz9yK+EDz9Fh0hP2x6rUlg5p59B7ewnNuwIyEqv+pp9J3/ct3jDjIOEp+yjJ8HD
-         oOXnvTTa9ADpoFuRsr6YUJMF3fDk0LLS67cOl2zkonEHBut/Q/fQEXJ74EG+2B24sYbJ
-         dCg++LciavVMbOgPCPyE2rb+ndz9H+u4vMgFEBfXy3Ct/75XTneX9TMRVwz0Mq8Gkkmu
-         0PbaAd6KdRQlQyWhMPlc7KVG0MksG6d3g1TwRWuyqDGUWhshx2NIixNDxGrnPI7YrAX7
-         aiFhJR+5aax3S88TO8uxZAXufchVhIKdqgk8Zyqqpjg3ZBLxZVYciEVS/egFGE2woMNO
-         WD5w==
-X-Gm-Message-State: AOAM532xzntWjzEQeZ65kYRHYRQOBUVowfXBwhEO1yTJwn9Z4peXVBJi
-        CtWoyJd2o5Wmv+x+c1gVQJCJr8isXnz7doO+dw==
-X-Google-Smtp-Source: ABdhPJz0XXuJnPS5g3+lbBiW+XXmkDUqYoNBDu76t3os6QvlPQSI6Onyl30CWs+Md1o+E0r28qs03HXLpOQosKz8YWo=
-X-Received: by 2002:a50:f307:: with SMTP id p7mr2761574edm.235.1604069974505;
- Fri, 30 Oct 2020 07:59:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=wDeHKm34zve+2LwoR+7mEkyC1+h5TyYSYeSuFZNavsY=;
+        b=AD/B3dFDzNkqmbf5AtEVawOCOnG9UnAlUvuSC9TiIHTZYVqfAZWXscDmx2PpbnjB/Q
+         oKso2bA8mZ8IoSvbHXyNELejOhCqK9+wKYq8t6AQtmXnspE5Ri2ShGdB1ZZGlcmDAlP1
+         u1xQ1ukmm3NZHDfrJg7rnofCty/u1r/vWF+xrK4mbheV1BPopbfXs0+fMVwaCZ9qiwOE
+         eta05H7gdMWkgsoGlNstCIRR+OWxUBXtbrsFl4J/Vl3hEPDJCsrLuQpz4w8f2cpP2PO/
+         uYbaEa3N+aH+5XdE5XVqAzHKNTZU/6gGdnMQRUTbc6Oo05AIHrXic9q6L2br66V7EOIV
+         q/Lg==
+X-Gm-Message-State: AOAM532UdUWeG/3cccxbShHctWCWhGrbx4a4G8nSc4d/NnYn6zz0WGKF
+        3gZqOUhWv9zfCktclHn6b6K9q+qFCjP3SkkF+Hqm9sPZf8RoFH7xFbOh4IOhSau3DQSUdGHhBqb
+        UZEwD4DHLdBwLbVTyIplf6CPR
+X-Received: by 2002:a17:906:4816:: with SMTP id w22mr3170205ejq.458.1604071460710;
+        Fri, 30 Oct 2020 08:24:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwEVkDy+HSfBs1jrEzMB6Hwe8D7gH9UX5XDZGN+GggyfNycbKYlnkipY+MXcz2Yfmk1EcrInQ==
+X-Received: by 2002:a17:906:4816:: with SMTP id w22mr3170188ejq.458.1604071460513;
+        Fri, 30 Oct 2020 08:24:20 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id t15sm3086498ejs.3.2020.10.30.08.24.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Oct 2020 08:24:19 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Subject: Re: Field names inside ms_hyperv_info
+In-Reply-To: <20201028150323.tz5wamibt42dgx7f@liuwe-devbox-debian-v2>
+References: <20201028150323.tz5wamibt42dgx7f@liuwe-devbox-debian-v2>
+Date:   Fri, 30 Oct 2020 16:24:18 +0100
+Message-ID: <87lffnzqhp.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a50:f14c:0:0:0:0:0 with HTTP; Fri, 30 Oct 2020 07:59:34
- -0700 (PDT)
-Reply-To: li.anable85@gmail.com
-From:   Liliane Abel <k.griest04@gmail.com>
-Date:   Fri, 30 Oct 2020 15:59:34 +0100
-Message-ID: <CABAZL7=b-NWks3DKb=fdDjnu_xt_-CcJCqf-F5s0yQCFVH73-A@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dearest
+Wei Liu <wei.liu@kernel.org> writes:
 
-Greeting my dear, I am Liliane Abel by name, The only daughter of late
-Mr.Benson Abel. My father is one of the top Politician in our country
-and my mother is a farmers and cocoa merchant when they were both
-alive. After the death of my mother, long ago, my father was
-controlling their business until he was poisoned by his business
-associates which he suffered and died.
+> Hi all
+>
+> During my work to make Linux boot as root partition on MSHV, I found out
+> that a privilege mask was not collected in ms_hyperv_info.
+>
+> Looking at the code, the field names of ms_hyperv_info are not
+> consistent with the names defined in TLFS. That makes it difficult to
+> choose a name for the field that stores the privilege mask.
+>
+> I've got a local patch to make the existing fields closer to TLFS. The
+> suffix "_a" means the value comes from EAX.
+>
+> Given that this structure is also used on ARM, so having x86 suffix is
+> probably not the best idea. Do people care?
+>
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index c57799684170..913af5e93cce 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -26,9 +26,9 @@
+>  #include <asm/hyperv-tlfs.h>
+>
+>  struct ms_hyperv_info {
+> -       u32 features;
+> -       u32 misc_features;
+> -       u32 hints;
+> +       u32 features_a;
+> +       u32 features_d;
+> +       u32 recommendations;
+>         u32 nested_features;
+>         u32 max_vp_index;
+>         u32 max_lp_index;
+>
+> Any comment on this? I'm normally bad at naming things so any suggestion
+> is welcomed.
 
-Before the death of my father, He told me about (two million five
-hundred thousand united states dollars) which he deposited in the bank
-in Lome-Togo, It was the money he intended to transfer overseas for
-investment before he was poisoned. He also instructed me that I should
-seek for foreign partners in any country of my choice who will assist
-me transfer this money in overseas account where the money will be
-wisely invested.
-I am seeking for your kind assistance in the following ways:  (1) to
-provide a safe bank account into where the money will be transferred
-for investment. (2) To serve as a guardian of this fund since I am a
-girl of 19 years old. (3) To make arrangement for me to come over to
-your country to further my education. This is my reason for writing to
-you. Please if you are willing to assist me I will offer you 25% of
-the total money. Reply if  you are interested
-Best regards.
-Liliane Abel.
+My take: let's avoid ambiguous '_a', '_d' and use full register names,
+it's only three letters after all. Let's also avoid suffix-less names as
+eventually we'll need to add non-eax parts. That is:
+
+       u32 features_eax;
+       u32 features_edx;
+       u32 recommendations_eax;
+       u32 nested_features_eax;
+...
+
+I would also feel comfortable with these names sortened,
+
+       u32 feat_eax;
+       u32 feat_edx;
+       u32 recomm_eax;
+       u32 nested_feat_eax;
+...
+
+-- 
+Vitaly
+
