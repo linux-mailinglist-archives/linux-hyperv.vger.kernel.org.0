@@ -2,48 +2,73 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E000F2A12A1
-	for <lists+linux-hyperv@lfdr.de>; Sat, 31 Oct 2020 02:27:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C6762A20C1
+	for <lists+linux-hyperv@lfdr.de>; Sun,  1 Nov 2020 19:19:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbgJaB1R (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 30 Oct 2020 21:27:17 -0400
-Received: from 93804.cloudwaysapps.com ([178.62.255.238]:56716 "EHLO
-        93804.cloudwaysapps.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbgJaB1P (ORCPT
+        id S1727180AbgKASTl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 1 Nov 2020 13:19:41 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41759 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgKASTl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 30 Oct 2020 21:27:15 -0400
-X-Greylist: delayed 12185 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 21:27:03 EDT
-Received: from 127.0.0.1 (93804.cloudwaysapps.com [127.0.0.1])
-        by 93804.cloudwaysapps.com (Postfix) with SMTP id C0065220DE;
-        Fri, 30 Oct 2020 19:28:41 +0000 (UTC)
-Received: from [10.92.248.238] by 127.0.0.1 with ESMTP id <744952-75524> for <linux-acpi@vger.kernel.org>; Sat, 31 Oct 2020 02:20:53 +0600
-Message-ID: <dic5wasb-2c8kb$78@lu916y>
-From:   "JOHN PHIL" <gerradfinancialplanning@gmail.com>
-Reply-To: "JOHN PHIL" <gerradfinancialplanning@gmail.com>
-To:     linux-acpi@vger.kernel.org
-Subject: November Equity Investment 20-20 
-Date:   Sat, 31 Oct 20 02:20:53 GMT
-X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
+        Sun, 1 Nov 2020 13:19:41 -0500
+Received: by mail-wr1-f68.google.com with SMTP id s9so12004181wro.8
+        for <linux-hyperv@vger.kernel.org>; Sun, 01 Nov 2020 10:19:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kqeKZc9YhvQhPgkIKRPGX1ZSHU2pR7Pe6QYenXPMwOs=;
+        b=LGcvdVNktjcP+Wt8WgNWIto05UTnWDNKVT7ZjRubrRVNfsNEqokkhwkjVHHPipV6EQ
+         pXTn3f8cCHxGgo1tuS9MbMLJGZrRJXG/088SpIQ8czO37/zrWEiml0/OKIpvqpFjDrsJ
+         Rrv/Vs30Y9O1dMUH7Rd6Q5Xqt/VuEOU6b6ofseXBIMsTqRSz69/h86Ksuqv2nCAvR31Y
+         sPr4Qm6mG1Pmc13NThuzpc++lpqQKZpmwUR3Wgka/VwCFKZru5hJkS27qkbjo/Gt0f0s
+         0uAM5Qe8PbJuZEhJuwO8g18n8xciFOzmlpICmwlwGWvDGs0ybFvimo5lg1HOC8WIU8q+
+         wLeQ==
+X-Gm-Message-State: AOAM532saze3LCzT0iTL0uz9kb/IAvtnSkjVclMm+G77/BjajW1j/WbZ
+        8QgEyNKio5GVu3CZrB0PgOw=
+X-Google-Smtp-Source: ABdhPJzsvg2zJI4/OdwLHHu4ppQkis+cygLjk/by2x1sY2kpP0QpPnRf1b9DBra4Vv0ivEnHMEr4kQ==
+X-Received: by 2002:adf:a195:: with SMTP id u21mr8541796wru.132.1604254779715;
+        Sun, 01 Nov 2020 10:19:39 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id x21sm20973272wmi.3.2020.11.01.10.19.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Nov 2020 10:19:39 -0800 (PST)
+Date:   Sun, 1 Nov 2020 18:19:37 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Subject: Re: ** POTENTIAL FRAUD ALERT - RED HAT ** RE: Field names inside
+ ms_hyperv_info
+Message-ID: <20201101181937.332bmmqnwlju5my4@liuwe-devbox-debian-v2>
+References: <20201028150323.tz5wamibt42dgx7f@liuwe-devbox-debian-v2>
+ <87lffnzqhp.fsf@vitty.brq.redhat.com>
+ <MW2PR2101MB10520A20D4ADB1CE6B6AD559D7150@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <87imarzllm.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="07B_9ED_4_"
-X-Priority: 1
-X-MSMail-Priority: High
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imarzllm.fsf@vitty.brq.redhat.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Fri, Oct 30, 2020 at 06:09:57PM +0100, Vitaly Kuznetsov wrote:
+[...]
+> > We don't have a TLFS for ARM64 (should be coming soon).  Might
+> > be worth seeing what naming, if any, will be used there.
+> 
+> In that case we should probably wait untill the naming there is clear as
+> I'm afraid we'll be renaming again.
+> 
 
---07B_9ED_4_
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+Sure. I'm fine with this too.
 
-How are you doing today I have a proposal which i think may interest you a=
-nd benefit you.I will like to give you full details of this via email:  ge=
-rradfinancialplanning@gmail.com
-Thanks.
+Wei.
 
-John PHIL
-
---07B_9ED_4_--
-
+> -- 
+> Vitaly
+> 
