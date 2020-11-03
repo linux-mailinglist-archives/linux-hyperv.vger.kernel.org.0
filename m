@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1D292A39D4
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Nov 2020 02:28:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45FB92A3891
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Nov 2020 02:20:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgKCB2S (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 2 Nov 2020 20:28:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60316 "EHLO mail.kernel.org"
+        id S1727852AbgKCBTl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 2 Nov 2020 20:19:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbgKCBSv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 2 Nov 2020 20:18:51 -0500
+        id S1727836AbgKCBTj (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 2 Nov 2020 20:19:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D5E122243;
-        Tue,  3 Nov 2020 01:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D2022409;
+        Tue,  3 Nov 2020 01:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604366330;
-        bh=p8CcsK59HrgvsonMBNa8Vf9L18kH0ZWkC9V7dQBVWYI=;
+        s=default; t=1604366378;
+        bh=D+wgFMn4tlK0bm7tvRQma4fuh9IrlVKzo6Q9ar8FvAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IYOpetrqVFuyRPe5y1MiXTZHmm95JsyLXC9E/I09ljktre9r8fOwdwSzU74hUogrV
-         oO+SBWku4uuTW+yzTZIzVwyIouVQcpReCjtdMLxpbo4D3ASjp1Al5bx3svT391HfGu
-         3hE7jXAYQa+PLMjp1xxP9zelmFaY7/bc0bbVJpVE=
+        b=ujAelctSTZ9vdI3XW+zTYz9rLrWoza6TpM+f3NikZCRxkJKQgj6EZpqe7c8ASZEB+
+         aGOOPsWG7rTVlbyADJZPAzrAHudgyXt4eytyBx6XW5di9zfK8tV7430QR5x8nqkvZj
+         dSeJkTMoHUFr8KRhwZbHn0Ff1iqjWh9YTXxYltSg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kairui Song <kasong@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -33,12 +33,12 @@ Cc:     Kairui Song <kasong@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 07/35] hyperv_fb: Update screen_info after removing old framebuffer
-Date:   Mon,  2 Nov 2020 20:18:12 -0500
-Message-Id: <20201103011840.182814-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 07/29] hyperv_fb: Update screen_info after removing old framebuffer
+Date:   Mon,  2 Nov 2020 20:19:06 -0500
+Message-Id: <20201103011928.183145-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201103011840.182814-1-sashal@kernel.org>
-References: <20201103011840.182814-1-sashal@kernel.org>
+In-Reply-To: <20201103011928.183145-1-sashal@kernel.org>
+References: <20201103011928.183145-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -75,7 +75,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-index 02411d89cb462..e36fb1a0ecdbd 100644
+index e4c3c8b65da44..4235ea7a6c40c 100644
 --- a/drivers/video/fbdev/hyperv_fb.c
 +++ b/drivers/video/fbdev/hyperv_fb.c
 @@ -1114,8 +1114,15 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
