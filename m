@@ -2,57 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAD732A7614
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Nov 2020 04:33:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69C922A7F01
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Nov 2020 13:51:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388594AbgKEDdJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 Nov 2020 22:33:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55226 "EHLO
+        id S1727275AbgKEMvw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Nov 2020 07:51:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728511AbgKEDdJ (ORCPT
+        with ESMTP id S1726874AbgKEMvw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 Nov 2020 22:33:09 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F988C0613CF;
-        Wed,  4 Nov 2020 19:33:08 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id za3so528307ejb.5;
-        Wed, 04 Nov 2020 19:33:08 -0800 (PST)
+        Thu, 5 Nov 2020 07:51:52 -0500
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0233CC0613CF;
+        Thu,  5 Nov 2020 04:51:52 -0800 (PST)
+Received: by mail-wm1-x343.google.com with SMTP id 23so1055832wmg.1;
+        Thu, 05 Nov 2020 04:51:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=2QtdhLn6dbQgBdJcNj2XZy1nXB4zinTDtHIxteWe2Ok=;
-        b=lekAQ+Vs/f1h1OIgWwz9UDPTUe8NXyK8/7tmffXxLp/lB7jC3Zj1n1UGEnvyQrRzYS
-         MOh/pTyY1ylDqIdyeQNIzj/7k1nvZ0DE619EG7fU6GJ4mKBHrCm13lHLeVPoOAtLEwk1
-         p0v8klJ+jGnr+/HP5CYX1oGXvrCiKmlf5Jgme5q4fSLfvXtQvrDrSWimMi9637HHAEKN
-         WRQbsS6JEwzzs1oycmHxxlZBSCWrrBEtJ0hFllLaoVpaYB1diIhPShHBLat7VINQ4jSQ
-         xaU943CCmAhii1WjYWRevNxwIEyVyl1056y89u9Up8GjPjeixL+bxyyS0uXZ/D9Hmcbb
-         KZZw==
+        bh=21tQgACA2MlFk2eFW9R6MtzILXqxGUisi7N1EoyxkIQ=;
+        b=K96680qm4O/M6l+aWKJNu+ZJ9qiYiGvXmUdXeJkmlO2Ypsq397j9+hLmeE0HhwoONS
+         dR+e7K8bHhd9afInT0CPDgOW+WnhQxVnFL0efmyUhKjIlVSqseq6hVvzqHbYnB28Lj2S
+         hf0xmtmx5YH6ZjfPifKQug+eC+kPnb/jroq06bCjGxg7dFRzEqUvwL2ez4feO27xnWlH
+         58cMnHokwJSCKZQ9nr6t7unOXpHYPXlPDx5OF2w8Oav0V2bZYDKa5KCEo1oRHrZGD6AI
+         zyIMHjVtjrok2SUZgYcOyYvyTSB+9b/kmLPVXjAswpaSIl8DDzwuvWXFdFsKJbpGqvBD
+         ZjEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=2QtdhLn6dbQgBdJcNj2XZy1nXB4zinTDtHIxteWe2Ok=;
-        b=OLzzNiMEAzEecZL145OMhHE3D9c0Z0eNxOEbpLHDA+UK19rl2elSOZ3mroYLB7Xt4S
-         CWLFrwd5ornI3urJgTMqwInAzLodgWkW0TQv2bMN/rSbb4IQkxqUjz/SDA1jSnCPs7uN
-         2NsL9EjWIEjZlpEb08WwaJFU81HaWZYJFZn4CGe/2QvdiEp2oUn+yGtwNo1fMo9oC2aA
-         +vzq0b+qkiKt5vwpauCo+LzDFyDCB/iPrUL0hW8wRExk9QOyidfE/kMXE96XgY907alB
-         /s26SjOH5iD65pumx4R5M5IJQAgESQ2vm5Cx1yZOwZHo7mhPPyD9hTFQYw9Ns7wOLvtn
-         ZPDw==
-X-Gm-Message-State: AOAM532udaf8Q13w4JO7EOFMVBzkHwmbEMaE6VdLfiKt1uqn//UcdDct
-        wyfEvv8tbCj0etdTGJTtx+8=
-X-Google-Smtp-Source: ABdhPJz33zUbd7p88ljjIkMQymD5KG2hCMCIWaIJbp3CfYs48WqFdFha53Paf0Napi+obr0g0qFg1Q==
-X-Received: by 2002:a17:906:74c6:: with SMTP id z6mr378220ejl.448.1604547187200;
-        Wed, 04 Nov 2020 19:33:07 -0800 (PST)
+        bh=21tQgACA2MlFk2eFW9R6MtzILXqxGUisi7N1EoyxkIQ=;
+        b=j2/Jwq/tTK3f7WgxS3BvQvWvRzDTvahqlUeqxZSFEGYitTJXcCPbWzrKTQqtxZhwwZ
+         MyqfAi5cyjgBqmfnYARhfmjIxpZ8hrU8FxPjYygoskpQ27mHE7p2LyHdkKfOtprBlfrW
+         dsuEs1rNb+vFUqaitPbJ/VntKuzGevjmbs6vs/uEFdho4/lV/bf+9p7ZYX74nn9v9BR2
+         J8HXp38vhhQ1RxH+gMYcXqZJGtMKfQ1dvF0xIQkCQOBVKUpNF5Ad0NOgNAJb/NMCXL8u
+         ZQNkOL+CC6s7BtxDK58OUFW3AZcRRgQbkPevHcFHg3gwDNwsmJShP/G62hjXXNMrBoHb
+         /OrA==
+X-Gm-Message-State: AOAM531KByDjzxdyHzwAz4rnB2j8JV44sZzlfgCgx2Qtw0CTkkSfo8Sa
+        4+ldtUQrh/jJWAtGuNindnYuYYZWtUn8FYcI
+X-Google-Smtp-Source: ABdhPJyWTeQ6y6xMAOGUTk5rY+inL6ySSMprZBBjwbibLmAiJ4eaSRMesCMXdKqZDK4J/PcHOmHe7g==
+X-Received: by 2002:a1c:1f05:: with SMTP id f5mr2505758wmf.98.1604580710395;
+        Thu, 05 Nov 2020 04:51:50 -0800 (PST)
 Received: from andrea (host-87-7-71-164.retail.telecomitalia.it. [87.7.71.164])
-        by smtp.gmail.com with ESMTPSA id k11sm101717edh.72.2020.11.04.19.33.05
+        by smtp.gmail.com with ESMTPSA id l16sm2373963wrx.5.2020.11.05.04.51.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 19:33:06 -0800 (PST)
-Date:   Thu, 5 Nov 2020 04:32:58 +0100
+        Thu, 05 Nov 2020 04:51:49 -0800 (PST)
+Date:   Thu, 5 Nov 2020 13:51:41 +0100
 From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
+To:     linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
@@ -60,64 +59,38 @@ Cc:     linux-kernel@vger.kernel.org,
         Michael Kelley <mikelley@microsoft.com>,
         Saruhan Karademir <skarade@microsoft.com>,
         Juan Vazquez <juvazq@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH v8 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Message-ID: <20201105033258.GA3079@andrea>
+        Dan Carpenter <dan.carpenter@oracle.com>, lkp@intel.com
+Subject: Re: [PATCH v8 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Message-ID: <20201105125141.GA353914@andrea>
 References: <20201104154027.319432-1-parri.andrea@gmail.com>
- <20201104154027.319432-4-parri.andrea@gmail.com>
- <20201104134348.39feba74@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20201104134505.44d8c4d7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20201104154027.319432-2-parri.andrea@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201104134505.44d8c4d7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20201104154027.319432-2-parri.andrea@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 01:45:05PM -0800, Jakub Kicinski wrote:
-> On Wed, 4 Nov 2020 13:43:48 -0800 Jakub Kicinski wrote:
-> > On Wed,  4 Nov 2020 16:40:27 +0100 Andrea Parri (Microsoft) wrote:
-> > > From: Andres Beltran <lkmlabelt@gmail.com>
-> > > 
-> > > Currently, pointers to guest memory are passed to Hyper-V as
-> > > transaction IDs in netvsc. In the face of errors or malicious
-> > > behavior in Hyper-V, netvsc should not expose or trust the transaction
-> > > IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> > > use small integers generated by vmbus_requestor as requests
-> > > (transaction) IDs.
-> > > 
-> > > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> > > Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>  
-> > 
-> > I'm assuming this is targeting net-next? If so could you please tag it
-> > as [PATCH net-next vN]?
-> 
-> Ah, you don't 'cause you only sent us the third patch. In that case with
-> the nit below addressed:
-> 
-> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> @@ -300,6 +303,22 @@ int hv_ringbuffer_write(struct vmbus_channel *channel,
+>  						     kv_list[i].iov_len);
+>  	}
+>  
+> +	/*
+> +	 * Allocate the request ID after the data has been copied into the
+> +	 * ring buffer.  Once this request ID is allocated, the completion
+> +	 * path could find the data and free it.
+> +	 */
+> +
+> +	if (desc->flags == VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED) {
+> +		rqst_id = vmbus_next_request_id(&channel->requestor, requestid);
+> +		if (rqst_id == VMBUS_RQST_ERROR) {
+> +			pr_err("No request id available\n");
+> +			return -EAGAIN;
 
-I fixed the declarations locally.  Thank you for the review, Jakub.
+FYI, the lkp kernel test robot reported a missing call to
+spin_unlock_irqrestore(&outring_info->ring_lock, flags) before the
+above 'return': I'll address this in the next submission.
 
-(Yes, FWIW, I was imaging the series to go via hyperv-next...)
-
-Thanks,
   Andrea
-
-
-> 
-> > > @@ -695,10 +695,19 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
-> > >  				    const struct vmpacket_descriptor *desc,
-> > >  				    int budget)
-> > >  {
-> > > -	struct sk_buff *skb = (struct sk_buff *)(unsigned long)desc->trans_id;
-> > > +	struct sk_buff *skb;
-> > >  	struct net_device_context *ndev_ctx = netdev_priv(ndev);  
-> > 
-> > Swap these two lines please to keep the variables declaration lines
-> > longest to shortest.
-> 
