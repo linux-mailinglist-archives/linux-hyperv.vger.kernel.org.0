@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF7E52A842A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Nov 2020 17:58:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBE572A8451
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Nov 2020 17:59:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731518AbgKEQ6Z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 Nov 2020 11:58:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35821 "EHLO
+        id S1731677AbgKEQ71 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Nov 2020 11:59:27 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45974 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731654AbgKEQ6Y (ORCPT
+        with ESMTP id S1731579AbgKEQ6Y (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Thu, 5 Nov 2020 11:58:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n15so2605109wrq.2;
+Received: by mail-wr1-f66.google.com with SMTP id p1so2576170wrf.12;
         Thu, 05 Nov 2020 08:58:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bh2EFPnmcn/x+bLcSdCEHI4hoqXZxmYUy4JjOwlCick=;
-        b=Zst5k6LKhFFRyiyTPPMkyWD2odiAVL/zloARX2x4YWuietCHrh0PgGEx8ij8kjG8zy
-         bcXLOZ56wRy8kqbz5EuugPO5g7feWuO5ZSrjL8QVq+eSRxvZ64om+OEEssyjmRggQYHP
-         F+IWkPGcE4kOcdbCzdiZfr7D7Q87WXZ/eAoqf84w7ZszCn7Eib2iKJscf5S+R4Hxa22B
-         ExGMRuqSj7/XLCb72UDL6unlm+GfvAEwOrC4PtKMKVoftpFJi/Ijw3NfwiLGkKbjJ9cy
-         wTVf6dugSLcQE5cfwfj/UhKCxs3ZOewirk3PBzIGmUOI4EwRBqmty3TJVlZcDYf3+FBJ
-         WR/w==
-X-Gm-Message-State: AOAM533cnJ7DQSfm6OxCyKPzsAYMPtndgp8btTEU10MHDMXzvRFFdpQV
-        JKV+YIzzmtZjn3mSAoEU0h+rKwGDIRA=
-X-Google-Smtp-Source: ABdhPJwhViVved3GTCeWnOtr+DREAkL3iuMzaCD27vVobs1AMx4FxSw+xOpyOddCpw8z2HuMwtVW4Q==
-X-Received: by 2002:adf:e447:: with SMTP id t7mr4024862wrm.384.1604595501442;
-        Thu, 05 Nov 2020 08:58:21 -0800 (PST)
+        bh=W4IasveCaJ+y+23uuqqTJDxprJLeTqvGVHfo3rkumMU=;
+        b=kyH92wUaud5clfdd7ZCNECm42Q4HuG+Zt8KNZaizCnTf3cp2sgzxAy5glwO22FZojw
+         6wOnnM+M3PzV+T4dK8oiNhOVSeRKkxjWg14byp0fRBWx+xVc8VDQ/+e8oM68Vyp6wszX
+         UQ//ejhujOeV2qYjdtf81O+f42VNpWoCpJb6VfATGVl2uOivoi//SMCO9Kvmc51IkV/O
+         01vsFH/xMS9QE4QqMnXWY84s9fmtCnLhgw3+s2xbpOjP1Uah+NYj60M3o77ABgz+eyH7
+         KLKGOpqjLkdn3YZCWDoYPYzXas83x5Gvz3uLrsDfP1/bR3XeTaJ8eoUfwBbd+S8C1Q31
+         kbPw==
+X-Gm-Message-State: AOAM5308kp8ujoqVHm2xT7/j0iQVL5qh5mtGYwD9apw1YoF8dxOxTxQz
+        +2oWhwCFoU/VjB7UiLZe0IQD1inu9Rw=
+X-Google-Smtp-Source: ABdhPJwWipEmUJ5fsk3VQywgsSTzQEXTctGLoJldGYDy2YttRYX/viUD5JwYWKbjznXWZZ3anIuvbw==
+X-Received: by 2002:adf:de12:: with SMTP id b18mr4214757wrm.187.1604595502222;
+        Thu, 05 Nov 2020 08:58:22 -0800 (PST)
 Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id z5sm3350729wrw.87.2020.11.05.08.58.20
+        by smtp.gmail.com with ESMTPSA id z5sm3350729wrw.87.2020.11.05.08.58.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 08:58:20 -0800 (PST)
+        Thu, 05 Nov 2020 08:58:21 -0800 (PST)
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
 Cc:     virtualization@lists.linux-foundation.org,
@@ -42,15 +42,15 @@ Cc:     virtualization@lists.linux-foundation.org,
         Vineeth Pillai <viremana@linux.microsoft.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        Wei Liu <wei.liu@kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS)
-Subject: [PATCH v2 04/17] iommu/hyperv: don't setup IRQ remapping when running as root
-Date:   Thu,  5 Nov 2020 16:58:01 +0000
-Message-Id: <20201105165814.29233-5-wei.liu@kernel.org>
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 05/17] clocksource/hyperv: use MSR-based access if running as root
+Date:   Thu,  5 Nov 2020 16:58:02 +0000
+Message-Id: <20201105165814.29233-6-wei.liu@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20201105165814.29233-1-wei.liu@kernel.org>
 References: <20201105165814.29233-1-wei.liu@kernel.org>
@@ -60,36 +60,25 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The IOMMU code needs more work. We're sure for now the IRQ remapping
-hooks are not applicable when Linux is the root.
-
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Acked-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/hyperv-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clocksource/hyperv_timer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
-index e09e2d734c57..8d3ce3add57d 100644
---- a/drivers/iommu/hyperv-iommu.c
-+++ b/drivers/iommu/hyperv-iommu.c
-@@ -20,6 +20,7 @@
- #include <asm/io_apic.h>
- #include <asm/irq_remapping.h>
- #include <asm/hypervisor.h>
-+#include <asm/mshyperv.h>
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index ba04cb381cd3..269a691bd2c4 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -426,6 +426,9 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+ 		return false;
  
- #include "irq_remapping.h"
++	if (hv_root_partition)
++		return false;
++
+ 	hv_read_reference_counter = read_hv_clock_tsc;
+ 	phys_addr = virt_to_phys(hv_get_tsc_page());
  
-@@ -143,7 +144,7 @@ static int __init hyperv_prepare_irq_remapping(void)
- 	int i;
- 
- 	if (!hypervisor_is_type(X86_HYPER_MS_HYPERV) ||
--	    !x2apic_supported())
-+	    !x2apic_supported() || hv_root_partition)
- 		return -ENODEV;
- 
- 	fn = irq_domain_alloc_named_id_fwnode("HYPERV-IR", 0);
 -- 
 2.20.1
 
