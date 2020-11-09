@@ -2,58 +2,122 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6600D2AB1B1
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Nov 2020 08:21:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FC192AB451
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Nov 2020 11:04:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgKIHVa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 9 Nov 2020 02:21:30 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:51770 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgKIHVa (ORCPT
+        id S1729060AbgKIKEW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 9 Nov 2020 05:04:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgKIKEW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 9 Nov 2020 02:21:30 -0500
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 1D01780538;
-        Mon,  9 Nov 2020 08:21:26 +0100 (CET)
-Date:   Mon, 9 Nov 2020 08:21:25 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Olaf Hering <olaf@aepfle.de>
-Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Mon, 9 Nov 2020 05:04:22 -0500
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A82C0613CF;
+        Mon,  9 Nov 2020 02:04:22 -0800 (PST)
+Received: by mail-wm1-x343.google.com with SMTP id p19so5110414wmg.0;
+        Mon, 09 Nov 2020 02:04:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r4nJVMcVXyeSNGliK+OKnPS1DW/M6pE2tauCbHrhVNg=;
+        b=sv8VDD99EDQKRUHHYWhNzmvr29ToOfjGdwAkmf45K7JwkiCC4hz/umidSte2zIE46g
+         imH8ms3hAFSjABW11LgmgAzg0k/2BAEc+8lefRQa1mdrC6HLXhpfFY1m/IVOeVyXQC3+
+         mg2jfbgyrolcY02WmhBtAABl8P/jvm9NCywhjwCCnyF1Wt8bhvH8tz8T77ujSx9nOSjc
+         MZBbmmwr10lzn+SPK7vK9G1MfiV5uzDsBacdF1W7SOzlUJYl1xAmFquS8HjMMs3PT7JX
+         c14Mt+0tImqEfvvYGkMcVrZbpPp46hzleSYCql+q0cmNI02yOzP4FGSkXtX+2lBTF070
+         OZ/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r4nJVMcVXyeSNGliK+OKnPS1DW/M6pE2tauCbHrhVNg=;
+        b=t15Hrdbd33AR4+D82zYPzvNgTj/s4qm1khvjjxfoJO8HjjDOZH56RHPCK+RKd71fuF
+         /aIPFrO7w994LpHm+NBBPr1DqXYT8FGonaMgC4AzKowM9BoVtSctmtCrr7OMzc4n1g+i
+         c341NP5MYpvDSVNtr945IM9dnCi/EAxVU5ImWRY0XiBQMgDJayJyOZQyhdW3cKDDTKVX
+         XbNJAfbaSVKcqIvt4I7tUiPeKOszzYMfFNkOQM0dduMuSuP2l8NokjA6Ejr5ZqmEjtEx
+         HVZpSEPFE+WhvniPquqFKLCmoZXChS3UJcH8VTV1KAJu/JoerF99d+5a/Ockz0sa1Vus
+         yg/g==
+X-Gm-Message-State: AOAM531pjh5+wK/MJHp09Fvvg7mJCS+E4Ct+joNe9BLuVHu1MgGZpABa
+        N+qlz3JM8TRGGO4LvnDMa1V+7t7UeoRSxg==
+X-Google-Smtp-Source: ABdhPJylkCLm47ZABGOmnUFDl+mj6x3wCSK8hVbNgoKK/Su8yYiWSfdWD+UkSyp4HGAsa7gUh6Qm0A==
+X-Received: by 2002:a1c:9950:: with SMTP id b77mr13601643wme.123.1604916260448;
+        Mon, 09 Nov 2020 02:04:20 -0800 (PST)
+Received: from localhost.localdomain (host-95-245-157-54.retail.telecomitalia.it. [95.245.157.54])
+        by smtp.gmail.com with ESMTPSA id 71sm13117885wrm.20.2020.11.09.02.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2020 02:04:19 -0800 (PST)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>
-Subject: Re: [PATCH v1] video: hyperv_fb: include vmalloc.h
-Message-ID: <20201109072125.GB1715181@ravnborg.org>
-References: <20201106183941.9751-1-olaf@aepfle.de>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        Juan Vazquez <juvazq@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v9 0/3] Drivers: hv: vmbus: vmbus_requestor data structure for VMBus hardening
+Date:   Mon,  9 Nov 2020 11:03:59 +0100
+Message-Id: <20201109100402.8946-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201106183941.9751-1-olaf@aepfle.de>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VafZwmh9 c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=gAzNO5xu912kzqTqD5cA:9 a=CjuIK1q_8ugA:10
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Olaf.
+Currently, VMbus drivers use pointers into guest memory as request IDs
+for interactions with Hyper-V. To be more robust in the face of errors
+or malicious behavior from a compromised Hyper-V, avoid exposing
+guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+bad request ID that is then treated as the address of a guest data
+structure with no validation. Instead, encapsulate these memory
+addresses and provide small integers as request IDs.
 
-On Fri, Nov 06, 2020 at 07:39:41PM +0100, Olaf Hering wrote:
-> hvfb_getmem uses vzalloc, therefore vmalloc.h should be included.
-> 
-> Fixes commit d21987d709e807ba7bbf47044deb56a3c02e8be4 ("video: hyperv:
-> hyperv_fb: Support deferred IO for Hyper-V frame buffer driver")
-> 
-> Signed-off-by: Olaf Hering <olaf@aepfle.de>
+The first patch creates the definitions for the data structure, provides
+helper methods to generate new IDs and retrieve data, and
+allocates/frees the memory needed for vmbus_requestor.
 
-Thanks.
-Applied to drm-misc-fixes - as it smells like a build fix in some
-configurations.
+The second and third patches make use of vmbus_requestor to send request
+IDs to Hyper-V in storvsc and netvsc respectively.
 
-	Sam
+The series is based on 5.10-rc3.  Changelog in the actual patches.
+
+  Andrea
+
+Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-scsi@vger.kernel.org
+Cc: netdev@vger.kernel.org
+
+Andres Beltran (3):
+  Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
+    hardening
+  scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
+    VMBus hardening
+  hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
+    hardening
+
+ drivers/hv/channel.c              | 174 ++++++++++++++++++++++++++++--
+ drivers/hv/hyperv_vmbus.h         |   3 +-
+ drivers/hv/ring_buffer.c          |  29 ++++-
+ drivers/net/hyperv/hyperv_net.h   |  13 +++
+ drivers/net/hyperv/netvsc.c       |  22 ++--
+ drivers/net/hyperv/rndis_filter.c |   1 +
+ drivers/scsi/storvsc_drv.c        |  26 ++++-
+ include/linux/hyperv.h            |  23 ++++
+ 8 files changed, 273 insertions(+), 18 deletions(-)
+
+-- 
+2.25.1
+
