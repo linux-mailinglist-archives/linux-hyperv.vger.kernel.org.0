@@ -2,148 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB3BA2B7A46
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 10:23:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 539A72B7AD3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 10:57:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725879AbgKRJXm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 Nov 2020 04:23:42 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35709 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgKRJXm (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 Nov 2020 04:23:42 -0500
-Received: by mail-wm1-f66.google.com with SMTP id w24so2019444wmi.0;
-        Wed, 18 Nov 2020 01:23:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2nsnjnOqDV6WPzahzgOv8VDTMdt+UU18h3NLzAQiSpA=;
-        b=X5DWRRpLxLa2YwmpnxCDdJ9m2LJqPGahM/mvYxyBmEzouI6woOAdiclOXCRDK+/Ckv
-         g/fBPyVpajhQ/8IdIVgnrq2DkTHQLbIltySYpK6SNrsi4rL6urTRYnF58ovnu9W8kRhP
-         5akmkcElDDpyjwbI9iBQTZtvQmtpSY5GTLTYxd358utefNb+N4+JvC1ModI61825yr6r
-         yeEzcwaSbeiE47oHOoMU72yrUMm28l1Knyt62GCkhyQbqI+mObM+8Spu4fCi++gy3UU5
-         7dDmvcPMyd/pKdWXmMaB645OohHZcXNV9JMVkxYwVPaZPkgzxfkqRfNxTo3Oe6bhkZmw
-         69OA==
-X-Gm-Message-State: AOAM532xzEUwHnoW/fAmZyRrL/eotorSELX22CYYGbjdJeljfqmNYXxG
-        BEMtHHfP9zpYeP54o6hxKZVL3tBGSGk=
-X-Google-Smtp-Source: ABdhPJxckaDRo8U42uknkQAN3d1oqdfUPR8JMwF4vNreh318c5rq4YB0kqkTqeFa5f4PE6gRlLM59w==
-X-Received: by 2002:a7b:c2ef:: with SMTP id e15mr3585111wmk.180.1605691419662;
-        Wed, 18 Nov 2020 01:23:39 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g4sm32723173wrp.0.2020.11.18.01.23.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 01:23:39 -0800 (PST)
-Date:   Wed, 18 Nov 2020 09:23:37 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dmitry.torokhov@gmail.com, derek.kiernan@xilinx.com,
-        dragan.cvetic@xilinx.com, richardcochran@gmail.com,
-        linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH 2/2] x86: make hyperv support optional
-Message-ID: <20201118092337.k4inzcaqxygrnqc3@liuwe-devbox-debian-v2>
-References: <20201117202308.7568-1-info@metux.net>
- <20201117202308.7568-2-info@metux.net>
+        id S1725772AbgKRJ4s convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-hyperv@lfdr.de>); Wed, 18 Nov 2020 04:56:48 -0500
+Received: from tigeramira.ro ([88.158.78.30]:50632 "EHLO mail.tigeramira.ro"
+        rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbgKRJ4s (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 18 Nov 2020 04:56:48 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.tigeramira.ro (Postfix) with ESMTP id 01407C0CCCA
+        for <linux-hyperv@vger.kernel.org>; Sat, 14 Nov 2020 18:47:17 +0200 (EET)
+Received: from mail.tigeramira.ro ([127.0.0.1])
+        by localhost (mail.tigeramira.ro [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id v9ggTeZdyES5 for <linux-hyperv@vger.kernel.org>;
+        Sat, 14 Nov 2020 18:47:16 +0200 (EET)
+Received: from mail.tigeramira.ro (localhost [127.0.0.1])
+        by mail.tigeramira.ro (Postfix) with ESMTP id EE45384FC93
+        for <linux-hyperv@vger.kernel.org>; Thu, 12 Nov 2020 18:20:01 +0200 (EET)
+Received: from [156.96.44.214] (unknown [192.168.12.254])
+        by mail.tigeramira.ro (Postfix) with ESMTP id D9F86D3FE91
+        for <linux-hyperv@vger.kernel.org>; Tue, 10 Nov 2020 17:09:59 +0200 (EET)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201117202308.7568-2-info@metux.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Corporate and Personal Loan/
+To:     linux-hyperv@vger.kernel.org
+From:   "Investment  Corporate" <financialcapability6@gmail.com>
+Date:   Tue, 10 Nov 2020 06:10:28 -0800
+Reply-To: hmurrah39@gmail.com
+Message-Id: <20201110150959.D9F86D3FE91@mail.tigeramira.ro>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 09:23:08PM +0100, Enrico Weigelt, metux IT consult wrote:
-> Make it possible to opt-out from hyperv support.
-> 
+Hello linux-hyperv@vger.kernel.org
 
-"Hyper-V support".
 
-Have you tested this patch? If so, how?
+We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  arch/x86/Kconfig                 | 7 +++++++
->  arch/x86/kernel/cpu/Makefile     | 4 ++--
->  arch/x86/kernel/cpu/hypervisor.c | 2 ++
->  drivers/hv/Kconfig               | 2 +-
->  4 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index c227c1fa0091..60aab344d6ab 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -808,6 +808,13 @@ config VMWARE_GUEST
->  	  This option enables several optimizations for running under the
->  	  VMware hypervisor.
->  
-> +config HYPERV_GUEST
-> +	bool "HyperV Guest support"
 
-Hyper-V here.
+We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
 
-> +	default y
-> +	help
-> +	  This option enables several optimizations for running under the
-> +	  HyperV hypervisor.
-> +
 
-"for running under Hyper-V".
+Please get back to me if you are interested for more
 
->  config KVM_GUEST
->  	bool "KVM Guest support (including kvmclock)"
->  	depends on PARAVIRT
-> diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-> index a615b0152bf0..5536b801cb44 100644
-> --- a/arch/x86/kernel/cpu/Makefile
-> +++ b/arch/x86/kernel/cpu/Makefile
-> @@ -51,9 +51,9 @@ obj-$(CONFIG_X86_CPU_RESCTRL)		+= resctrl/
->  
->  obj-$(CONFIG_X86_LOCAL_APIC)		+= perfctr-watchdog.o
->  
-> -obj-$(CONFIG_HYPERVISOR_GUEST)		+= hypervisor.o mshyperv.o
-> +obj-$(CONFIG_HYPERVISOR_GUEST)		+= hypervisor.o
->  obj-$(CONFIG_VMWARE_GUEST)		+= vmware.o
-> -
-> +obj-$(CONFIG_HYPERV_GUEST)		+= mshyperv.o
->  obj-$(CONFIG_ACRN_GUEST)		+= acrn.o
->  
->  ifdef CONFIG_X86_FEATURE_NAMES
-> diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
-> index c0e770a224aa..32d6b2084d05 100644
-> --- a/arch/x86/kernel/cpu/hypervisor.c
-> +++ b/arch/x86/kernel/cpu/hypervisor.c
-> @@ -37,7 +37,9 @@ static const __initconst struct hypervisor_x86 * const hypervisors[] =
->  #ifdef CONFIG_VMWARE_GUEST
->  	&x86_hyper_vmware,
->  #endif
-> +#ifdef CONFIG_HYPERV_GUEST
->  	&x86_hyper_ms_hyperv,
-> +#endif
->  #ifdef CONFIG_KVM_GUEST
->  	&x86_hyper_kvm,
->  #endif
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 79e5356a737a..7b3094c59a81 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -4,7 +4,7 @@ menu "Microsoft Hyper-V guest support"
->  
->  config HYPERV
->  	tristate "Microsoft Hyper-V client drivers"
-> -	depends on X86 && ACPI && X86_LOCAL_APIC && HYPERVISOR_GUEST
-> +	depends on X86 && ACPI && X86_LOCAL_APIC && HYPERV_GUEST
->  	select PARAVIRT
->  	select X86_HV_CALLBACK_VECTOR
->  	help
+details.
 
-Maybe that one should be moved to x86/Kconfig and used instead?
 
-Wei.
+Yours faithfully,
 
-> -- 
-> 2.11.0
-> 
+Hashim Murrah
