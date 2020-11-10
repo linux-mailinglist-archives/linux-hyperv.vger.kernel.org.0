@@ -2,99 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C73212ADC23
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Nov 2020 17:26:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A6C52ADF03
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Nov 2020 20:02:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbgKJQ0Z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 10 Nov 2020 11:26:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgKJQ0Z (ORCPT
+        id S1726706AbgKJTCd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 10 Nov 2020 14:02:33 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:35100 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgKJTCd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 10 Nov 2020 11:26:25 -0500
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD2A3C0613CF;
-        Tue, 10 Nov 2020 08:26:24 -0800 (PST)
-Received: by mail-ed1-x544.google.com with SMTP id o20so13393439eds.3;
-        Tue, 10 Nov 2020 08:26:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2NcAsVTPsYA/NoTEYktfl6/AwcvS1dbUOsrpH4IcvMo=;
-        b=m4+3CV7fPBedSyDJNc3NrHQ+qEZyL//4m+o1MBQ1SyAd3as1QYsZ0A+sxlrZs+uIBn
-         yXNI4cZL68ADq/I0ZyxXYVCK2gb0McEZkv4gKqsjCydl8dU+mlJMWRyABu/nd9KTCdBZ
-         MUJt5PGaJYpyiCWdjnuVMpGp7qDIAF0RZrA2F6eKU+V1OeeEIYStcp3tyWmrRKr85gdk
-         4eOEFGPkX9HCdfDO/lKXjvgNb+rVCYlwxq5GL7cXg6/gANObk+NZkUbEiTZcAFAfd0aT
-         L5myAHFx41BljRl6tWYRQiiiACg9WQWHFlN/yHaxOStPSDwV/KZzcIUQM6MzVt0Tc+SR
-         RXKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2NcAsVTPsYA/NoTEYktfl6/AwcvS1dbUOsrpH4IcvMo=;
-        b=se4zvmiXDtaJ3UVuPRWqnW4Nx15o4wN3QmuZjWGpKNf2SBAQ3DX8aCfcUJ2BxkWvIY
-         4fipuCJyjCzrnhqC+2Y2PJVTgvJv/uBOByN2eEyYsxs+u5IKQRdvMca2kEdXgKoLNTZJ
-         HU1rHPdDnUL6wIOZZ200dGgz0tCO6yoP0gyLSotStgbi+rKtHU7PiKUpAb58ZwnOlI1e
-         MtaAyRIFfX+bolN1DsUrcrR9dkcBZMTObXForN7zW7f917JuN+RUHTFaVDuLqkk7h9X0
-         I6DjjRyO0zEjIKLY1XVe9Lzd8kcjvTEBz4lxBXM8GmUZhjqRQQYFjYYIrC9bhYLYUg+p
-         ZhyA==
-X-Gm-Message-State: AOAM531cF+3uD6n5pBbc1inp825Ufyl561Ow2y0h+It8C16nAo8AT+CA
-        CatwoG0wWnGtXSCNw7255O6O8dWOUy8=
-X-Google-Smtp-Source: ABdhPJwuSP6VnkfK3b2egRw4V5auLe2FLUmM5/5ZMiBr4Avs7VrFlqlnVw0CmhEpsMDOWn3cUuiyhw==
-X-Received: by 2002:aa7:c704:: with SMTP id i4mr93729edq.51.1605025583211;
-        Tue, 10 Nov 2020 08:26:23 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
-        by smtp.googlemail.com with ESMTPSA id q15sm11048192edt.95.2020.11.10.08.26.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Nov 2020 08:26:22 -0800 (PST)
-Sender: Paolo Bonzini <paolo.bonzini@gmail.com>
-Subject: Re: [PATCH v3 19/35] x86/io_apic: Cleanup trigger/polarity helpers
-To:     David Woodhouse <dwmw2@infradead.org>, Qian Cai <cai@redhat.com>,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Tom Murphy <murphyt7@tcd.ie>
-Cc:     kvm <kvm@vger.kernel.org>, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org, maz@misterjones.org,
-        Dexuan Cui <decui@microsoft.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <e6601ff691afb3266e365a91e8b221179daf22c2.camel@infradead.org>
- <20201024213535.443185-1-dwmw2@infradead.org>
- <20201024213535.443185-20-dwmw2@infradead.org>
- <085029af45f045dcf5b7fb2173d560421b00b44d.camel@redhat.com>
- <23e0a29faad5a9cc43582ba7d40a3073f2fb8c87.camel@infradead.org>
-From:   Paolo Bonzini <bonzini@gnu.org>
-Message-ID: <e213d85f-b29b-e663-29db-10d987feb8d7@gnu.org>
-Date:   Tue, 10 Nov 2020 17:26:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
-MIME-Version: 1.0
-In-Reply-To: <23e0a29faad5a9cc43582ba7d40a3073f2fb8c87.camel@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 10 Nov 2020 14:02:33 -0500
+Received: from localhost.localdomain (c-71-231-190-134.hsd1.wa.comcast.net [71.231.190.134])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C887F20C27C5;
+        Tue, 10 Nov 2020 11:02:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C887F20C27C5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1605034953;
+        bh=0+7JgM+4vm1ixk2Q3YFgtJOVqHKLd386H8RppwZJm0M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tDMCrs93uCqojL0gwwUy4jZ1FpoVuRSAtpeX7zXx1t2RL5FH+9hL7QBL4ZBq5D7/K
+         tBPTR1UndEWHBfdFjfDGP18s3kTWTQ+EzhPMG8hAALdNRdz/PQYBwKXvwd6yq9vaoE
+         ZVcj2sE7DBqVF5GIvV7ywZIGRKavcpioSlsr6rdA=
+From:   Chris Co <chrco@linux.microsoft.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, chrco@microsoft.com, mikelley@microsoft.com,
+        andrea.parri@microsoft.com, parri.andrea@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Drivers: hv: vmbus: Allow cleanup of VMBUS_CONNECT_CPU if disconnected
+Date:   Tue, 10 Nov 2020 19:01:18 +0000
+Message-Id: <20201110190118.15596-1-chrco@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 10/11/20 09:59, David Woodhouse wrote:
-> Hm, attempting to reproduce this shows something else. Ever since
-> commit be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the dma-
-> iommu api") in 5.5 the following stops working for me:
-> 
-> $ qemu-system-x86_64 -serial mon:stdio -kernel bzImage  -machine q35,accel=kvm,kernel-irqchip=split -m 2G -device amd-iommu,intremap=off -append "console=ttyS0 apic=verbose debug" -display none
-> 
-> It hasn't got a hard drive but I can watch the SATA interrupts fail as
-> it probes the CD-ROM:
-> 
-> [    7.403327] ata3.00: qc timeout (cmd 0xa1)
-> [    7.405980] ata3.00: failed to IDENTIFY (I/O error, err_mask=0x4)
-> 
-> Adding 'iommu=off' to the kernel command line makes it work again, in
-> that it correctly panics at the lack of a root file system, quickly.
+From: Chris Co <chrco@microsoft.com>
 
-That might well be a QEMU bug though, AMD emulation is kinda experimental.
+When invoking kexec() on a Linux guest running on a Hyper-V host, the
+kernel panics.
 
-Paolo
+    RIP: 0010:cpuhp_issue_call+0x137/0x140
+    Call Trace:
+    __cpuhp_remove_state_cpuslocked+0x99/0x100
+    __cpuhp_remove_state+0x1c/0x30
+    hv_kexec_handler+0x23/0x30 [hv_vmbus]
+    hv_machine_shutdown+0x1e/0x30
+    machine_shutdown+0x10/0x20
+    kernel_kexec+0x6d/0x96
+    __do_sys_reboot+0x1ef/0x230
+    __x64_sys_reboot+0x1d/0x20
+    do_syscall_64+0x6b/0x3d8
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This was due to hv_synic_cleanup() callback returning -EBUSY to
+cpuhp_issue_call() when tearing down the VMBUS_CONNECT_CPU, even
+if the vmbus_connection.conn_state = DISCONNECTED. hv_synic_cleanup()
+should succeed in the case where vmbus_connection.conn_state
+is DISCONNECTED.
+
+Fix is to add an extra condition to test for
+vmbus_connection.conn_state == CONNECTED on the VMBUS_CONNECT_CPU and
+only return early if true. This way the kexec() path can still shut
+everything down while preserving the initial behavior of preventing
+CPU offlining on the VMBUS_CONNECT_CPU while the VM is running.
+
+Fixes: 8a857c55420f29 ("Drivers: hv: vmbus: Always handle the VMBus messages on CPU0")
+Signed-off-by: Chris Co <chrco@microsoft.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/hv/hv.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 0cde10fe0e71..f202ac7f4b3d 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -244,9 +244,13 @@ int hv_synic_cleanup(unsigned int cpu)
+ 
+ 	/*
+ 	 * Hyper-V does not provide a way to change the connect CPU once
+-	 * it is set; we must prevent the connect CPU from going offline.
++	 * it is set; we must prevent the connect CPU from going offline
++	 * while the VM is running normally. But in the panic or kexec()
++	 * path where the vmbus is already disconnected, the CPU must be
++	 * allowed to shut down.
+ 	 */
+-	if (cpu == VMBUS_CONNECT_CPU)
++	if (cpu == VMBUS_CONNECT_CPU &&
++	    vmbus_connection.conn_state == CONNECTED)
+ 		return -EBUSY;
+ 
+ 	/*
+-- 
+2.17.1
+
