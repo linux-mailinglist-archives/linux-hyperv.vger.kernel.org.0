@@ -2,97 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D27962AEF0F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Nov 2020 11:59:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2EF62B0253
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Nov 2020 10:56:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgKKK7W (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 11 Nov 2020 05:59:22 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46455 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgKKK7W (ORCPT
+        id S1726969AbgKLJ4V (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 12 Nov 2020 04:56:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbgKLJ4U (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 11 Nov 2020 05:59:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id d12so2048930wrr.13;
-        Wed, 11 Nov 2020 02:59:21 -0800 (PST)
+        Thu, 12 Nov 2020 04:56:20 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B0EC0613D1
+        for <linux-hyperv@vger.kernel.org>; Thu, 12 Nov 2020 01:56:20 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id b6so5318108wrt.4
+        for <linux-hyperv@vger.kernel.org>; Thu, 12 Nov 2020 01:56:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cxDZR78f1uAjoaTSqfFbkuzSwbFVGDkZXidPHX71G9c=;
+        b=YJ0+2ZMBF11Z542eqUsAqitgHb1xPMZ9lech+gtY3w1F7OShr8zrOCrXG/V2z/Vf9D
+         HvJMT0pS3sKdFvG56bx1LvN6uF/lhDOzA1YfuOcJrkfOS77zNBxHMGj8IusEA8/Evn9n
+         vEUDFgaNl0eXFe71Zx5ivyXt/FVmjekvELTABnl8IThNTg4mQZES6Ls1Sj+/CCnAaW8s
+         D/poUG+CS3XKDKNfiUrnWUKSQX2FNYipld7UOIAeSpgaQ152qnUGHktwJPgARaTmEEWL
+         eZN+kAZ3YTV4KiBAUS62tIvHl3nYE2Ii0u3zoEFmkOd5nNkEQTgKsjtihGwlp/GcxvrL
+         G9xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6XQWFODdSo0naMCVtSFLByNNU8KoljLbxE0JRj0+kP0=;
-        b=QJ7TEBdQE++HS3CzcfyoOEVtiGxS4f1Z1T70p2oeeSGmZo5737LcE1o2WjuY3kw/2V
-         AnzyvBCiH8UZdfgnRNBk9avAbyA4pWqQzrsh8Ct8MDkYq/hW4Q+TLzVEaU6VASECSs8W
-         /GOgI9QD1IIPDfJ1As4a/Be1y8Fe3vraEAQf+OwI7/hzCCoTmJDEyIob5x9ZE53WFcEK
-         HNIYJoemk0mwNpYLHh8ZfKuFH0HqlnAXrav375wRMkxt1BihMe9ZFSU6Pj3id7ebmkQx
-         aP1ZEMJa+MeBW/loRsmrXfHfDopX0kmfDXxWwPcKLQHXN6lJQFSGtiyvYMP0fAXSival
-         zcCg==
-X-Gm-Message-State: AOAM531AvjAVOysMOFDqH8iW8v3XUj+0sfPPnJyuDIzDydU4cWUzq+uV
-        wpUwidK2noHwxx4D1e2W5WA=
-X-Google-Smtp-Source: ABdhPJzoi/sAZSisCC2lzzxVfkKW9O459uLpFso26a/Pre6ON0DsT99UH0YpEcc+G8QNgZfASpyIXg==
-X-Received: by 2002:adf:8143:: with SMTP id 61mr21154700wrm.318.1605092360414;
-        Wed, 11 Nov 2020 02:59:20 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id c62sm2140186wme.22.2020.11.11.02.59.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 02:59:19 -0800 (PST)
-Date:   Wed, 11 Nov 2020 10:59:18 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Chris Co <chrco@linux.microsoft.com>, linux-hyperv@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, chrco@microsoft.com, mikelley@microsoft.com,
-        andrea.parri@microsoft.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Allow cleanup of VMBUS_CONNECT_CPU
- if disconnected
-Message-ID: <20201111105918.veq42r7oj45hhjv3@liuwe-devbox-debian-v2>
-References: <20201110190118.15596-1-chrco@linux.microsoft.com>
- <20201110201833.GA3550@andrea>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cxDZR78f1uAjoaTSqfFbkuzSwbFVGDkZXidPHX71G9c=;
+        b=L2QMUX/BewdXftPG0b0fG2vSrMf2hTEhY71XCzXB4lsVGhW2bCKCtbpbbTvEpCN/Lw
+         6dD51TEt03rFTr8J5/7073gGZoKlW0BzBgGUeFLipHPcRKrgcNmXZQivxDBDNrF3C1iC
+         SCBF5vCcHkO9ZzGSnJCarfOSlIwxyIvspTpA3FrFK9c0fgP0HeVpPDwXKbymV9HBnR2t
+         AVxMemIcDs2SB9ttDlft1nzkoJPpgqEitinWOogrY6mAROThFKqZI+ryQ2iHVrc5tB3a
+         UeB5IlKLgmj2hsjpPsyJwPW41TYrWUSgbu3hUUCxlSNUUIppyC2Fq4lvJGt4WFffNayo
+         A4Yg==
+X-Gm-Message-State: AOAM530AxxdK7rgOYPifg+yHGbExgXaeMVp5mzua5NOhHygFsJ8nRcHB
+        70s/BTdbVVnTOIiR5xYHrUsOyw==
+X-Google-Smtp-Source: ABdhPJwZ8/k2DYgb9fv+4YPP3KOxKbE1pra7CozavXciwAz8421GIRgYfLL5qZ+6yrj+dSeMgUX0Pw==
+X-Received: by 2002:adf:9d44:: with SMTP id o4mr36796016wre.229.1605174979204;
+        Thu, 12 Nov 2020 01:56:19 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:6971:b700:3764:fa96? ([2a01:e34:ed2f:f020:6971:b700:3764:fa96])
+        by smtp.googlemail.com with ESMTPSA id m126sm5866401wmm.0.2020.11.12.01.56.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Nov 2020 01:56:18 -0800 (PST)
+Subject: Re: [PATCH v2 05/17] clocksource/hyperv: use MSR-based access if
+ running as root
+To:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20201105165814.29233-1-wei.liu@kernel.org>
+ <20201105165814.29233-6-wei.liu@kernel.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <3527e98a-faab-2360-f521-aa04bbe92edf@linaro.org>
+Date:   Thu, 12 Nov 2020 10:56:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201110201833.GA3550@andrea>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20201105165814.29233-6-wei.liu@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 09:18:33PM +0100, Andrea Parri wrote:
-> On Tue, Nov 10, 2020 at 07:01:18PM +0000, Chris Co wrote:
-> > From: Chris Co <chrco@microsoft.com>
-> > 
-> > When invoking kexec() on a Linux guest running on a Hyper-V host, the
-> > kernel panics.
-> > 
-> >     RIP: 0010:cpuhp_issue_call+0x137/0x140
-> >     Call Trace:
-> >     __cpuhp_remove_state_cpuslocked+0x99/0x100
-> >     __cpuhp_remove_state+0x1c/0x30
-> >     hv_kexec_handler+0x23/0x30 [hv_vmbus]
-> >     hv_machine_shutdown+0x1e/0x30
-> >     machine_shutdown+0x10/0x20
-> >     kernel_kexec+0x6d/0x96
-> >     __do_sys_reboot+0x1ef/0x230
-> >     __x64_sys_reboot+0x1d/0x20
-> >     do_syscall_64+0x6b/0x3d8
-> >     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > This was due to hv_synic_cleanup() callback returning -EBUSY to
-> > cpuhp_issue_call() when tearing down the VMBUS_CONNECT_CPU, even
-> > if the vmbus_connection.conn_state = DISCONNECTED. hv_synic_cleanup()
-> > should succeed in the case where vmbus_connection.conn_state
-> > is DISCONNECTED.
-> > 
-> > Fix is to add an extra condition to test for
-> > vmbus_connection.conn_state == CONNECTED on the VMBUS_CONNECT_CPU and
-> > only return early if true. This way the kexec() path can still shut
-> > everything down while preserving the initial behavior of preventing
-> > CPU offlining on the VMBUS_CONNECT_CPU while the VM is running.
-> > 
-> > Fixes: 8a857c55420f29 ("Drivers: hv: vmbus: Always handle the VMBus messages on CPU0")
-> > Signed-off-by: Chris Co <chrco@microsoft.com>
-> > Cc: stable@vger.kernel.org
+On 05/11/2020 17:58, Wei Liu wrote:
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+
+I would like to apply this patch but the changelog is too short (one line).
+
+Please add a small paragraph (no need to resend just answer here, I will
+amend the log myself.
+
+>  drivers/clocksource/hyperv_timer.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Reviewed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index ba04cb381cd3..269a691bd2c4 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -426,6 +426,9 @@ static bool __init hv_init_tsc_clocksource(void)
+>  	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+>  		return false;
+>  
+> +	if (hv_root_partition)
+> +		return false;
+> +
+>  	hv_read_reference_counter = read_hv_clock_tsc;
+>  	phys_addr = virt_to_phys(hv_get_tsc_page());
+>  
+> 
 
-Applied to hyperv-fixes. Thanks Chris and Andrea.
 
-Wei.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
