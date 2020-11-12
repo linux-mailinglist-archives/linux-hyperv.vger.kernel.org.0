@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DAD72B043E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Nov 2020 12:47:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CB562B0475
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Nov 2020 12:55:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgKLLq7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 Nov 2020 06:46:59 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:47024 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbgKLLqp (ORCPT
+        id S1728312AbgKLLzA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 12 Nov 2020 06:55:00 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33282 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbgKLLyh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 Nov 2020 06:46:45 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d12so5629855wrr.13;
-        Thu, 12 Nov 2020 03:46:44 -0800 (PST)
+        Thu, 12 Nov 2020 06:54:37 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b8so5724988wrn.0;
+        Thu, 12 Nov 2020 03:54:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9jL9FUqxLDIX1r+bLqA4BxTMQd6KKBsm8f4f5MhHfBo=;
-        b=r79Bd+dhAVO9cPqvIcR+jSaTnZDb7o0eYb66U8V1I7dzvwOpsIFnbnINwWWKwFVreP
-         cE8WOmsr5H6+hlo/Vwr9YMsp+n4dolkuqTFl2QqbXgqOrjPEPDNH/FmgIhY5ipwkagNQ
-         aWzFZr2a7/6F/bi/X+NLZSxZlKngi2aqau1cV2drQ5zN0ES9w5pK+7pAyFU6+cBXLgZi
-         XAm/haJYhqLPC3Qkd/E1RfJN3vllWg3nfhTUjETAITaGOpTgjNqfmgI2IAET0nvHBRS7
-         BikVwAycEmTv9IG/WV1Tdx626UuFfylWJ8o5oVve8mtwxIBX/6HZlOlZP4EgCF9rCCq/
-         hfaA==
-X-Gm-Message-State: AOAM531A6YRKh+BtFnmDGGTnQdeiedLSfEorf6pp8OUGBTGEEfb8nDXh
-        hLgNA059JPR5XuocewjMFdieaAIRHr4=
-X-Google-Smtp-Source: ABdhPJzwcVtzji8/dSn8xXDo7eMvY9+n/MPB9taxXXmbXA8Fk4exE+jlCHts3xuDQMcVvE5V0SXwCw==
-X-Received: by 2002:adf:e541:: with SMTP id z1mr7057091wrm.389.1605181603454;
-        Thu, 12 Nov 2020 03:46:43 -0800 (PST)
+        bh=YMky5SUDB3o1VN706BTn/4cBuTwsTWBcLyKW+mG88xw=;
+        b=MVmrWDi1izHolbblEx/pXLLIhQ28JPwoCH1x4afU1oyOWq8IcIfTF/S2SuFzNLE7rG
+         KTrLjUqbb7UEggkhmwPDFdGBAhzRBZGZP5A+AZHOEJfcwwrLpM9CDbCExb0Xx0pc6sNl
+         xZDXsyjY3DLTCmr3TGCb2FlXfeZ5XYsPFHuMvo6g1ztH63cUcToEMKkcxaPJMIvH/dl8
+         jJH5y1M4gWfku4rlIDEq5Dd5NCuJCEgiKnlqUoNbpaWKYOJJSmt8rrx2yKdJbglOFj6T
+         E+2T0sRr2wx7RR3sz57j0iBQnOndpBl7NHNZH8vrFux+epBbE8k6iIz1ha1lP4j34spD
+         Sr7w==
+X-Gm-Message-State: AOAM531MsHLgKrr3IP307G09WcOdtaV4jjAZ8xZZ0MqN2mgdIEWu0y8L
+        QJj1Vk1/9OqeRKYRDmrZ2BA=
+X-Google-Smtp-Source: ABdhPJy+shNfhSBtNsKTiassxubwWmTTQROgyAvJFDIyXXsjGHiPKcLvk8oTktdaMIhooUlZhv54NQ==
+X-Received: by 2002:adf:ead1:: with SMTP id o17mr35456869wrn.396.1605182075765;
+        Thu, 12 Nov 2020 03:54:35 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id 34sm6405320wrq.27.2020.11.12.03.46.42
+        by smtp.gmail.com with ESMTPSA id d10sm6536236wro.89.2020.11.12.03.54.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2020 03:46:42 -0800 (PST)
-Date:   Thu, 12 Nov 2020 11:46:41 +0000
+        Thu, 12 Nov 2020 03:54:35 -0800 (PST)
+Date:   Thu, 12 Nov 2020 11:54:34 +0000
 From:   Wei Liu <wei.liu@kernel.org>
 To:     kernel test robot <lkp@intel.com>
 Cc:     Wei Liu <wei.liu@kernel.org>,
@@ -45,43 +45,55 @@ Cc:     Wei Liu <wei.liu@kernel.org>,
         Vineeth Pillai <viremana@linux.microsoft.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>
-Subject: Re: [PATCH v2 02/17] x86/hyperv: detect if Linux is the root
- partition
-Message-ID: <20201112114641.fstyteqqsic7h6xh@liuwe-devbox-debian-v2>
-References: <20201105165814.29233-3-wei.liu@kernel.org>
- <202011060303.LvuPfl7N-lkp@intel.com>
- <20201112114215.kytfavkneta6n4qj@liuwe-devbox-debian-v2>
+        Lillian Grassin-Drake <ligrassi@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>
+Subject: Re: [PATCH v2 07/17] x86/hyperv: extract partition ID from Microsoft
+ Hypervisor if necessary
+Message-ID: <20201112115433.ecdaq3pomgtswzpl@liuwe-devbox-debian-v2>
+References: <20201105165814.29233-8-wei.liu@kernel.org>
+ <202011060401.AnOzSVE1-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201112114215.kytfavkneta6n4qj@liuwe-devbox-debian-v2>
+In-Reply-To: <202011060401.AnOzSVE1-lkp@intel.com>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 11:42:15AM +0000, Wei Liu wrote:
-> On Fri, Nov 06, 2020 at 03:16:07AM +0800, kernel test robot wrote:
-> > Hi Wei,
-> > 
-> > I love your patch! Yet something to improve:
-> > 
-> > [auto build test ERROR on tip/x86/core]
-> > [also build test ERROR on asm-generic/master iommu/next tip/timers/core pci/next linus/master v5.10-rc2 next-20201105]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch]
-> > 
+On Fri, Nov 06, 2020 at 04:07:33AM +0800, kernel test robot wrote:
+> Hi Wei,
 > 
-> This report is incorrect.
+> I love your patch! Perhaps something to improve:
 > 
-> The bot seems to have only picked up this one patch but not the whole
-> series. While the patch can apply cleanly to all those trees, it has a
-> dependency on an earlier patch in this series.
+> [auto build test WARNING on tip/x86/core]
+> [also build test WARNING on asm-generic/master iommu/next tip/timers/core pci/next linus/master v5.10-rc2 next-20201105]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Wei-Liu/Introducing-Linux-root-partition-support-for-Microsoft-Hypervisor/20201106-010058
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 238c91115cd05c71447ea071624a4c9fe661f970
+> config: i386-randconfig-r002-20201104 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
+> reproduce (this is a W=1 build):
+>         # https://github.com/0day-ci/linux/commit/83c03b4e30e729a77688b8c0ffeffa2a555dcce7
+>         git remote add linux-review https://github.com/0day-ci/linux
+>         git fetch --no-tags linux-review Wei-Liu/Introducing-Linux-root-partition-support-for-Microsoft-Hypervisor/20201106-010058
+>         git checkout 83c03b4e30e729a77688b8c0ffeffa2a555dcce7
+>         # save the attached .config to linux build tree
+>         make W=1 ARCH=i386 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+> >> arch/x86/hyperv/hv_init.c:341:13: warning: no previous prototype for 'hv_get_partition_id' [-Wmissing-prototypes]
+>      341 | void __init hv_get_partition_id(void)
+>          |             ^~~~~~~~~~~~~~~~~~~
 
-I misread this report and I'm confused now. Let me fetch the config and
-try locally first.
+This function can be made static since the only user is in the same
+file.
 
 Wei.
