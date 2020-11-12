@@ -2,65 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C2A72B08E6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Nov 2020 16:51:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 343662B08EB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Nov 2020 16:51:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgKLPvR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 Nov 2020 10:51:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34447 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728032AbgKLPvR (ORCPT
+        id S1728184AbgKLPva (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 12 Nov 2020 10:51:30 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38203 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728519AbgKLPva (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 Nov 2020 10:51:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605196275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QL/CTH82iZSekxz8n80Vq7IhnT/Ojwm8sJF1/GEIh+M=;
-        b=WoiAvrD2HLMHnt+HKj5p1htJaCfnqGooR98Jkj5woG5FLlo0iIeFrlYOpp1QrdDI03/fyz
-        dWvH2HiB2nCCCRJ4cPRY7TGsLlOniTzKMuhAtZgoq9Socn/L+YFBAY9ALU5SiXBUFMGC3t
-        3RCfdHOpQieqwh+vV7JJvEdk04vsH34=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-486-rzib5iAYNj6xDzcNSe8aBw-1; Thu, 12 Nov 2020 10:51:13 -0500
-X-MC-Unique: rzib5iAYNj6xDzcNSe8aBw-1
-Received: by mail-wm1-f69.google.com with SMTP id e15so1895856wme.4
-        for <linux-hyperv@vger.kernel.org>; Thu, 12 Nov 2020 07:51:13 -0800 (PST)
+        Thu, 12 Nov 2020 10:51:30 -0500
+Received: by mail-wr1-f66.google.com with SMTP id p8so6512486wrx.5;
+        Thu, 12 Nov 2020 07:51:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=QL/CTH82iZSekxz8n80Vq7IhnT/Ojwm8sJF1/GEIh+M=;
-        b=ADhkxJQE8LHN1CZLk9+L7NQl8F3p8j2kUI6iDwUaLOWPb6h4Fc/OaI2Fd3Mh8S7XxO
-         /0WROLdGUeZjWIM0xOTA0wIN1ZeJn2A3vL+ypt7jVZgWPM+lAyy9MvEygpmKTdU20FJ7
-         HvGAoLcBEYQbBzrV0ys/r1BMhcLxZ1g6b9EL4uLuwstH/N7MNxS+hA+1FR+rHqWSgibI
-         IxWYUN2KcA6BTKPYLgzBmlU1hFVRoSTKXD6I7eUnK4M0+Vcg6AH4mT8Ox2J3mFvJ5uNt
-         akKlDu2qgQSmLrYaYFe3QDa/9aZ9r/lCwnWE5YwzwzP69mCkIYBpsz5FWrSs3V7hAmH6
-         Mo2g==
-X-Gm-Message-State: AOAM533km5vDRV5e+AHx7BTiwFmlHS+at/SeDIAfkBu3bKmGpUvdLZYd
-        ubnvte1ZCfNIFvsMoCDdt6LyzM+NZjxnNBN5Quyw5lfizyfNC6oYFy3oKVDa5mBMpW8UTqm6GLE
-        9X7+LDd3VNTFXQ72Jtygjogbj
-X-Received: by 2002:adf:92e7:: with SMTP id 94mr150205wrn.271.1605196272240;
-        Thu, 12 Nov 2020 07:51:12 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwIkgCQ/CEFnm6mgolj9Md8yhKfvt/BSxAV3t4aQvN6BbPAwQHEcFa7uwCHjrI24Bq+wVN5dg==
-X-Received: by 2002:adf:92e7:: with SMTP id 94mr150145wrn.271.1605196271920;
-        Thu, 12 Nov 2020 07:51:11 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id a15sm7482066wrn.75.2020.11.12.07.51.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZgjLmQmxgEDr2mbUWpkwRYMxwIwNvNfHIb6zZGhdyzM=;
+        b=Bi0j/SUFlEZ8wem/BmtSdWvlHMZafg4omoQNpgPfdO9mk1bjJYkAu40GPcDO0gN+gG
+         HI6yIkRaYm9670pbad4GtyZs5TMwD3vCGCgCUgkHpqUrRNpl6NcOTNfd0Ah/mr4c9oHK
+         VKSQkeIc+KwcmQIqGNC5O6KNCpWG8H8Jx11WHT1xC5NnFQZjhokTA0aNhaIJw9Ckq5Ar
+         6lLxRHKJUNww1zXRcVeJD4D+ot/IcyPfBQmZ6Y0fR2A7Mx4JrS7LeaBPXQ3w7nAbA0sa
+         L5H8dnYpvnraSVMGHXS72PQHfk8PuNfzsIKFenbEEQ+vs8TMU7ylMgi/4wHRMtL4DD1I
+         f2kg==
+X-Gm-Message-State: AOAM531tXkYrlpbp8peusAeFDSAfEd0p9cCKwfvK9qtIspFd96p9NdOJ
+        2u6qubBUYVd9+GTyaDMJvwObZYhB4Wg=
+X-Google-Smtp-Source: ABdhPJyJENa1caPZP06hbJhvCooPcNeFXa3qQBwOxqU6qrDSyKfCeFFJJRxn4Ajz3u+aViELuJAr/Q==
+X-Received: by 2002:a5d:5146:: with SMTP id u6mr254027wrt.66.1605196286237;
+        Thu, 12 Nov 2020 07:51:26 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id g186sm14984945wma.1.2020.11.12.07.51.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2020 07:51:11 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc:     virtualization@lists.linux-foundation.org,
+        Thu, 12 Nov 2020 07:51:25 -0800 (PST)
+Date:   Thu, 12 Nov 2020 15:51:24 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
         Linux Kernel List <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
         Vineeth Pillai <viremana@linux.microsoft.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lillian Grassin-Drake <ligrassi@microsoft.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -68,97 +52,70 @@ Cc:     virtualization@lists.linux-foundation.org,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
         "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 08/17] x86/hyperv: handling hypercall page setup for
- root
-In-Reply-To: <20201105165814.29233-9-wei.liu@kernel.org>
+Subject: Re: [PATCH v2 02/17] x86/hyperv: detect if Linux is the root
+ partition
+Message-ID: <20201112155124.x35q2rg2k53mc7to@liuwe-devbox-debian-v2>
 References: <20201105165814.29233-1-wei.liu@kernel.org>
- <20201105165814.29233-9-wei.liu@kernel.org>
-Date:   Thu, 12 Nov 2020 16:51:09 +0100
-Message-ID: <874kluy3o2.fsf@vitty.brq.redhat.com>
+ <20201105165814.29233-3-wei.liu@kernel.org>
+ <87lff6y59t.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lff6y59t.fsf@vitty.brq.redhat.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Wei Liu <wei.liu@kernel.org> writes:
+On Thu, Nov 12, 2020 at 04:16:30PM +0100, Vitaly Kuznetsov wrote:
+[...]
+> >  /*
+> >   * Virtual processor will never share a physical core with another virtual
+> >   * processor, except for virtual processors that are reported as sibling SMT
+> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> > index ffc289992d1b..ac2b0d110f03 100644
+> > --- a/arch/x86/include/asm/mshyperv.h
+> > +++ b/arch/x86/include/asm/mshyperv.h
+> > @@ -237,6 +237,8 @@ int hyperv_fill_flush_guest_mapping_list(
+> >  		struct hv_guest_mapping_flush_list *flush,
+> >  		u64 start_gfn, u64 end_gfn);
+> >  
+> > +extern bool hv_root_partition;
+> 
+> Eventually this is not going to be an x86 only thing I believe?
 
-> When Linux is running as the root partition, the hypercall page will
-> have already been setup by Hyper-V. Copy the content over to the
-> allocated page.
->
-> The suspend, resume and cleanup paths remain untouched because they are
-> not supported in this setup yet.
+I hope so. :-)
 
-What about adding BUG_ONs there then?
+> 
+> > +
+> >  #ifdef CONFIG_X86_64
+> >  void hv_apic_init(void);
+> >  void __init hv_init_spinlocks(void);
+> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> > index 05ef1f4550cb..f7633e1e4c82 100644
+> > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > @@ -237,6 +237,22 @@ static void __init ms_hyperv_init_platform(void)
+> >  	pr_debug("Hyper-V: max %u virtual processors, %u logical processors\n",
+> >  		 ms_hyperv.max_vp_index, ms_hyperv.max_lp_index);
+> >  
+> > +	/*
+> > +	 * Check CPU management privilege.
+> > +	 *
+> > +	 * To mirror what Windows does we should extract CPU management
+> > +	 * features and use the ReservedIdentityBit to detect if Linux is the
+> > +	 * root partition. But that requires negotiating CPU management
+> > +	 * interface (a process to be finalized).
+> > +	 *
+> > +	 * For now, use the privilege flag as the indicator for running as
+> > +	 * root.
+> > +	 */
+> > +	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_CPU_MANAGEMENT) {
+> 
+> We may want to cache cpuid_ebx(HYPERV_CPUID_FEATURES) somewhere but we
+> already had a discussion regading naming for these caches and decided to
+> wait until TLFS for ARM is out so we don't need to rename again.
 
->
-> Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> Co-Developed-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> Co-Developed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Co-Developed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
->  arch/x86/hyperv/hv_init.c | 32 ++++++++++++++++++++++++++++++--
->  1 file changed, 30 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index 73b0fb851f76..9fcaf741be99 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -25,6 +25,7 @@
->  #include <linux/cpuhotplug.h>
->  #include <linux/syscore_ops.h>
->  #include <clocksource/hyperv_timer.h>
-> +#include <linux/highmem.h>
->  
->  /* Is Linux running as the root partition? */
->  bool hv_root_partition;
-> @@ -438,8 +439,35 @@ void __init hyperv_init(void)
->  
->  	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->  	hypercall_msr.enable = 1;
-> -	hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
-> -	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> +
-> +	if (hv_root_partition) {
-> +		struct page *pg;
-> +		void *src, *dst;
-> +
-> +		/*
-> +		 * For the root partition, the hypervisor will set up its
-> +		 * hypercall page. The hypervisor guarantees it will not show
-> +		 * up in the root's address space. The root can't change the
-> +		 * location of the hypercall page.
-> +		 *
-> +		 * Order is important here. We must enable the hypercall page
-> +		 * so it is populated with code, then copy the code to an
-> +		 * executable page.
-> +		 */
-> +		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> +
-> +		pg = vmalloc_to_page(hv_hypercall_pg);
-> +		dst = kmap(pg);
-> +		src = memremap(hypercall_msr.guest_physical_address << PAGE_SHIFT, PAGE_SIZE,
-> +				MEMREMAP_WB);
-> +		BUG_ON(!(src && dst));
-> +		memcpy(dst, src, PAGE_SIZE);
+Exactly.
 
-Super-nit: while on x86 PAGE_SIZE always matches HV_HYP_PAGE_SIZE, would
-it be more accurate to use the later here?
-
-> +		memunmap(src);
-> +		kunmap(pg);
-> +	} else {
-> +		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
-> +		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> +	}
->  
->  	/*
->  	 * Ignore any errors in setting up stimer clockevents
-
--- 
-Vitaly
-
+Wei.
