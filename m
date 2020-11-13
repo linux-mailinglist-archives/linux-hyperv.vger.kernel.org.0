@@ -2,54 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B38F52B1FD4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 17:14:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C058C2B1FE9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 17:16:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgKMQOB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 13 Nov 2020 11:14:01 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44603 "EHLO
+        id S1725866AbgKMQQa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Nov 2020 11:16:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:42324 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726648AbgKMQOA (ORCPT
+        by vger.kernel.org with ESMTP id S1726397AbgKMQQ3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 13 Nov 2020 11:14:00 -0500
+        Fri, 13 Nov 2020 11:16:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605284039;
+        s=mimecast20190719; t=1605284188;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=lPjThI4CN4zNtchIWv2ayPLPXQ5dzA6VBedvQBJvswQ=;
-        b=W9A6l0AIkxPh6tKgD+0gzY7oa8WdQFUdEKvuyAl6LGwUvhUvFU2Mu6FmzPOoPTGxulLKWQ
-        qZZj115Af8gCG826hjfjj+w8GkVv+wRMBE+i3+bhB64oyG4tNra8MMwGvHBZr0b5zNVtjy
-        Eu3AatCyLkU4RNSrkGibn98iw4bgZFA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-488-pQyrAZMkM0iVtKRDTg_6XQ-1; Fri, 13 Nov 2020 11:13:57 -0500
-X-MC-Unique: pQyrAZMkM0iVtKRDTg_6XQ-1
-Received: by mail-wr1-f71.google.com with SMTP id w6so4091409wrk.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 13 Nov 2020 08:13:57 -0800 (PST)
+        bh=jyN+DRRhVWX4G1okBIOdr3MH4mQtZ4BI+4XoCFZkPBY=;
+        b=DkSY0DTSRvCu9IEGbFLizm3K3eX+8p/hlAzzpVZB1Tif0/nmhsnTN3bvZRcbJcPChsXv/B
+        QCD9EsXKVMLG5jV7yPi2VVHFO7SdbNRVsHzdNhRyO9dszKd7sy2yb+9I2Kw1JIw232dFrX
+        XfmqR2KfZpvPROxFY4M3xkusL23sJyg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-552-OLmgPEyDO3KSWvfA9LRmaw-1; Fri, 13 Nov 2020 11:16:26 -0500
+X-MC-Unique: OLmgPEyDO3KSWvfA9LRmaw-1
+Received: by mail-wm1-f69.google.com with SMTP id 14so4195863wmg.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 13 Nov 2020 08:16:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=lPjThI4CN4zNtchIWv2ayPLPXQ5dzA6VBedvQBJvswQ=;
-        b=BpO74l7kOErSsO5u/eSJCmCyfs1ViRJbc/ugF9UMyM1aAlWFkiQMQD/UzMoiz9k1T7
-         PtMh0C9lk9IbNjujbtBQ4LaFRUw/2RoIiTEBjNf+vxQ7lu1Ufa9lnHtG0pMHhTQYxk27
-         2pbcsxNAIASEpHpmlo45jvW4wErfGfJiD4kHQfO3y3r0nUwNOtvGZ3aQ5wO1MtfOUwT0
-         Ov81ikT8Wmm5teOogLc31Zh/Macq4t43kC4AYlnG5fsiPmRbtWVCNH+dgR0Ub0dTTvVU
-         nyst2jyuspH9AQyLyBexmn7pKmTQgcd3O3dwcvcX5Njzmku2GIhzV7YzlBjJd0ONZvBs
-         jKMw==
-X-Gm-Message-State: AOAM532Drix9T8JtA7c76/kwsJGDAaa7fFr/yQUdrynBO/C/ZVZ7YmDg
-        gJYlNw2BmFTKNhZi2FSfk+n08jjYkCugx27gQxfHYTtHUBE57E6L+FY7gtYcmFVETv2tSBAbnY1
-        Sks//g340EBpfMkUinVj2LDzV
-X-Received: by 2002:a1c:6508:: with SMTP id z8mr3330857wmb.80.1605284031507;
-        Fri, 13 Nov 2020 08:13:51 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwEiuKnDYBv81x66rrPhoiQlzwCLdD8os2zSbokQH7OHbb6WTSUyo1RRJZXPMJ4FUH64NtzPg==
-X-Received: by 2002:a1c:6508:: with SMTP id z8mr3330501wmb.80.1605284026289;
-        Fri, 13 Nov 2020 08:13:46 -0800 (PST)
+        bh=jyN+DRRhVWX4G1okBIOdr3MH4mQtZ4BI+4XoCFZkPBY=;
+        b=pBhIRNnEkWZXjVRDG5uuWTksGCSpUP0KS1U6OilL4y7ZBZiHKmc1onklU66robvwNg
+         bgs9GzU6evNhIGSmqTJQ+RSvO45X4O62vSBY5gwtcv40hsdTvG1Sti9Ye1ST2WMKBL55
+         8gyWkYu4N+ZPHKSPhcMpTJcOptxsvhT5Ji/JBdiKRGktZZ35F6xWAd51GsWPlNH78mD1
+         Sdh3z7zMcQj8oYXToQvc4cO3kctaoCLHiI76GHjOX8oTcMWWlC9cy6h0/XMyDIKCBRip
+         IKDbippVE2kN0wWKy2mTiJN2ajONxbcpnP1vmUgYIDM0pfIyg1KYfVgdRnQVPmVMGSPW
+         CLKQ==
+X-Gm-Message-State: AOAM531MKqtk/5NXcpGzLjaJet0ysSq++iAuE2YODlVI9AcsXZQo+pQC
+        JWzBa5J9m+IHYj2aSoks0uae+MBAzOFc67EiEqkg1XoVTmpOmP9JH7YVRvK1hAdOY91jqNU+v2W
+        JcLSEqNu7At0a85jlzk+hGDMC
+X-Received: by 2002:a05:600c:210:: with SMTP id 16mr3226515wmi.122.1605284180499;
+        Fri, 13 Nov 2020 08:16:20 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJw6qc4C468qlMkz/BkAoW2zg7V66Dzr5nIEzyPk8ex6nToKTomKk7QfUb8pi/ZNVqMxbgaPow==
+X-Received: by 2002:a05:600c:210:: with SMTP id 16mr3226167wmi.122.1605284175430;
+        Fri, 13 Nov 2020 08:16:15 -0800 (PST)
 Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id u6sm10587225wmj.40.2020.11.13.08.13.44
+        by smtp.gmail.com with ESMTPSA id a131sm10530265wmh.30.2020.11.13.08.16.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 08:13:45 -0800 (PST)
+        Fri, 13 Nov 2020 08:16:14 -0800 (PST)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Wei Liu <wei.liu@kernel.org>
 Cc:     Wei Liu <wei.liu@kernel.org>,
@@ -67,17 +67,17 @@ Cc:     Wei Liu <wei.liu@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v2 09/17] x86/hyperv: provide a bunch of helper functions
-In-Reply-To: <20201113155111.fcruk7dlsp6ohoq5@liuwe-devbox-debian-v2>
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v2 08/17] x86/hyperv: handling hypercall page setup for
+ root
+In-Reply-To: <20201113160907.rwgpge3zo53fcgvo@liuwe-devbox-debian-v2>
 References: <20201105165814.29233-1-wei.liu@kernel.org>
- <20201105165814.29233-10-wei.liu@kernel.org>
- <871rgyy3d1.fsf@vitty.brq.redhat.com>
- <20201113155111.fcruk7dlsp6ohoq5@liuwe-devbox-debian-v2>
-Date:   Fri, 13 Nov 2020 17:13:44 +0100
-Message-ID: <87zh3lutdz.fsf@vitty.brq.redhat.com>
+ <20201105165814.29233-9-wei.liu@kernel.org>
+ <874kluy3o2.fsf@vitty.brq.redhat.com>
+ <20201113153333.yt54enp5dbqjj5nu@liuwe-devbox-debian-v2>
+ <20201113160907.rwgpge3zo53fcgvo@liuwe-devbox-debian-v2>
+Date:   Fri, 13 Nov 2020 17:16:13 +0100
+Message-ID: <87wnyput9u.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -86,42 +86,38 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Wei Liu <wei.liu@kernel.org> writes:
 
-> On Thu, Nov 12, 2020 at 04:57:46PM +0100, Vitaly Kuznetsov wrote:
->> Wei Liu <wei.liu@kernel.org> writes:
-> [...]
->> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
->> > index 67f5d35a73d3..4e590a167160 100644
->> > --- a/arch/x86/include/asm/mshyperv.h
->> > +++ b/arch/x86/include/asm/mshyperv.h
->> > @@ -80,6 +80,10 @@ extern void  __percpu  **hyperv_pcpu_output_arg;
->> >  
->> >  extern u64 hv_current_partition_id;
->> >  
->> > +int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
->> > +int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
->> > +int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
+> On Fri, Nov 13, 2020 at 03:33:33PM +0000, Wei Liu wrote:
+>> On Thu, Nov 12, 2020 at 04:51:09PM +0100, Vitaly Kuznetsov wrote:
+>> > Wei Liu <wei.liu@kernel.org> writes:
+>> > 
+>> > > When Linux is running as the root partition, the hypercall page will
+>> > > have already been setup by Hyper-V. Copy the content over to the
+>> > > allocated page.
+>> > >
+>> > > The suspend, resume and cleanup paths remain untouched because they are
+>> > > not supported in this setup yet.
+>> > 
+>> > What about adding BUG_ONs there then?
 >> 
->> You seem to be only doing EXPORT_SYMBOL_GPL() for
->> hv_call_deposit_pages() and hv_call_create_vp() but not for
->> hv_call_add_logical_proc() - is this intended? Also, I don't see
->> hv_call_create_vp()/hv_call_add_logical_proc() usage outside of
->> arch/x86/kernel/cpu/mshyperv.c so maybe we don't need to export them at all?
+>> I generally avoid cluttering code if I'm sure it definitely does not
+>> work.
 >> 
+>> In any case, adding BUG_ONs is not the right answer. Both hv_suspend and
+>> hv_resume can return an error code. I would rather just do
+>> 
+>>    if (hv_root_partition)
+>>        return -EPERM;
+>> 
+>> in both places.
 >
-> hv_call_deposit_pages and hv_call_create_vp will be needed by /dev/mshv,
-> which can be built as a module.
+> Correction: hv_resume is void, so I won't add that code snippet. But we
+> should still be fine because hv_suspend will have already failed in the
+> first place.
 >
 
-I'd suggest to move EXPORT_SYMBOL_GPL() to the series adding '/dev/mshv'
-then. Dangling exported symbols with no users tend to be removed. No
-strong opinion, just a suggestion.
-
-> hv_call_add_logical_proc is only needed by mshyperv.c and not exported
-> in the first place.
->
-> This code is fine.
-
-Thanks for the confirmation!
+Works for me. I just very much prefer to get reports like "system
+doesn't go to sleep" instead of "something crashes when I put my system
+to sleep")
 
 -- 
 Vitaly
