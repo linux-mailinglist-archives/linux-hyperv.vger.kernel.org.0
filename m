@@ -2,379 +2,179 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 242C62B0ACD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 Nov 2020 17:56:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B743D2B19C2
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 12:14:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgKLQ4z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 Nov 2020 11:56:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45433 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728692AbgKLQ4w (ORCPT
+        id S1726279AbgKMLOh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Nov 2020 06:14:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbgKMLGJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 Nov 2020 11:56:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605200210;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wYP9Gq+ts7pzjErccComK+H3r9U6J/KV+gx7+NzTNxw=;
-        b=LHVv5fNsPFT48crBfIrlgDW2BYtA3E/8Rk7HdzpBgy98HtklXwZRugAy7YHzkc0GL7TBmw
-        MUt+hy9in+E3D/U/sNGp8nVQHnGKKcF6tdL2eFv0LHcTrXEZj/+vNdmKwgRNZ3FvZWTehq
-        rN1niKl6mleppgFx3zsk6r0AGYt+LbQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-526-WZwRF_QjOd6dEmjo0Aajog-1; Thu, 12 Nov 2020 11:56:45 -0500
-X-MC-Unique: WZwRF_QjOd6dEmjo0Aajog-1
-Received: by mail-wr1-f72.google.com with SMTP id y2so2220467wrl.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 12 Nov 2020 08:56:44 -0800 (PST)
+        Fri, 13 Nov 2020 06:06:09 -0500
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026FDC061A47;
+        Fri, 13 Nov 2020 03:05:23 -0800 (PST)
+Received: by mail-il1-x143.google.com with SMTP id e17so8118634ili.5;
+        Fri, 13 Nov 2020 03:05:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v5G16OMow2JB9kURMNUxc0v/8xFwWUF3aZE0lmTUl3s=;
+        b=tGDJUfwEE7Yy2xiFOTlpelEP/mXaRqrYCg8kEBroxrB6QHLhiTjkXg75+5ir2IHxWB
+         GTRFn/5TFG7w40jkoIuhds8uw1dQbkxORwdpJHxhfRc6Ov/M68kA5Al3nCqbhUAKws3H
+         ZYAy67kztMYhvyA0q0/0PhB0ulWSZnl7aIhj/DJwRt+HT2Y0EVKSHCHRL2gXqiNz8i1Y
+         PAi8hlravGvUOWfSI6nHL7SWWqZXL6DDPlHobTFi53B3Du+clxmKSa+miLP4dqJi71HJ
+         0V9NA8tbQeoM0XUsZ3uPO3G6lSLV7Kgj6ob8HtcUCmIU9VYFa5F7mVABGrNh97/XRxPu
+         6f2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=wYP9Gq+ts7pzjErccComK+H3r9U6J/KV+gx7+NzTNxw=;
-        b=OVTQxMymzYtum5m8cd2k41f+PplysKs2gWMDU/MqkyX4J1dthrS8Vq2+CWTuN7Xbvk
-         ygxqrixXltOAzm4idG2BjNyg21+TGOU7bwHF7MUjcAA8g8WtlO1NfzuTytGhayQtCv/E
-         88k3rSJzjSW2zM+CPDYtEd80gn4Uq+l69TD/lLrbp1w4xymScebNbXHdW7OI/X2u1wnm
-         mwqWIA6GLALCijCpUvyRR5sqlc8mE4TF+1p4FORUQzGnkLIkY8ThnPSmNqUCBSKemK/P
-         VsAmK++8Vxlv0D+RGFRh8MAQDxmSQyICYEeGhAg23bt21Q0UY6yx+tur4crbJLuuIIoA
-         7Y8w==
-X-Gm-Message-State: AOAM531/FQPSbZZiolLdnuoZ7+AOquQfFpr7cOh8KTSGjgLf5t2oEiZ6
-        vxCdD7WQYmzGg92WxyMBmSHp2HRu0arbmftitB34R6r7eWjR5guVmDVgR+QPcCzqnS3+2ACKtcx
-        Z44MNf7yqC9kAmxVvifAq9t5m
-X-Received: by 2002:adf:c443:: with SMTP id a3mr510015wrg.249.1605200203903;
-        Thu, 12 Nov 2020 08:56:43 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx6zhpK0qox59X6e8JQyr5bppOI0Wy0lYHwipyzYIWWWvgR2UM9kbCVk5xgd/kpNhNWxHp2QQ==
-X-Received: by 2002:adf:c443:: with SMTP id a3mr509971wrg.249.1605200203625;
-        Thu, 12 Nov 2020 08:56:43 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id g131sm7418395wma.35.2020.11.12.08.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2020 08:56:42 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc:     virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v5G16OMow2JB9kURMNUxc0v/8xFwWUF3aZE0lmTUl3s=;
+        b=txZFq377wRyRnBckT+MyyiAf2REb/0GAFi84o58Hu+gzuQ2MXOwbXJb69q7oFsX2A+
+         4nH97AvkmGGavRGDQrkK+Xvq1eygiPXzKGQEK3RJWwnNnTvyd2Py2sypjOvqIBPVdJ1W
+         EVV89LN7OGiHTSYRCkPYtuNLJIKl72/OSkaTw0KBD0BzRM3MNj/CKknZlBxD2C39kpzD
+         um5QBnuJuuwgDrgWNtv7q5zc++62FB7ViCT1qiYm3pqRN2M17oP3qVB0ZVOhJXHw7Fsh
+         xEISBZwy0mdL7K3KMBVv+88YsQIp8C/x2ys6C8hasra9gBzFGfRhlbllU7FpON7nwcGe
+         nCxg==
+X-Gm-Message-State: AOAM531/I4kOWnwnJRWa/NzlG3za9oEngC/XXoHqURNeohj6u6kfTtlC
+        aTmP0ZEghOQ4xP6bBqf7V4c=
+X-Google-Smtp-Source: ABdhPJxsF/yhI/BjekUZSQ7dOiQBNwvxLyi/lC7tx52WfHtixxfKT7YrSlV+ZBb8oZxhC/mHT3xsuQ==
+X-Received: by 2002:a92:b653:: with SMTP id s80mr1526161ili.73.1605265522291;
+        Fri, 13 Nov 2020 03:05:22 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id k20sm4888609ilr.28.2020.11.13.03.05.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Nov 2020 03:05:21 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 2C72E27C0054;
+        Fri, 13 Nov 2020 06:05:20 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 13 Nov 2020 06:05:20 -0500
+X-ME-Sender: <xms:b2iuX0R_Vq57JgxGaZclWcQ4VB7hlGEMUAX1kYvRofvmrMx4L7uCLw>
+    <xme:b2iuXxxk0YMrtZsr9HcZAKEG8jKttkpjvEy1qycxQSGkOYrB_AC6t-SWl56Vd4Mtl
+    J3lR3Nl1GvjoNjJhg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedruddvhedgvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhepieejhfelvddtgeduhfffueegteevleeugfekvefhueduuedugfevvefhtedvuedv
+    necukfhppeduieejrddvvddtrddvrdduvdeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhs
+    ohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnh
+    hgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:b2iuXx0gSclahg0GE35r5Um7JT9bOFy3pXQfPuixgJ5UhSA8m6-qEw>
+    <xmx:b2iuX4AmnGyL29OTnhski8BIeTLKmlV4Rl27h2wCmw01i-Rw0WjiIQ>
+    <xmx:b2iuX9goV0MOahAJR8aQ2Bk8FLPH6gjMJdc9k-l6KxJpz7mbbJH3eg>
+    <xmx:cGiuX4rJVzL2j404WJB3EXUEz7Ott4mDcfra9p01S5ZfYCZ0xj9aCUdb1sY>
+Received: from localhost (unknown [167.220.2.126])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0498C3280059;
+        Fri, 13 Nov 2020 06:05:18 -0500 (EST)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 17/17] x86/hyperv: handle IO-APIC when running as root
-In-Reply-To: <20201105165814.29233-18-wei.liu@kernel.org>
-References: <20201105165814.29233-1-wei.liu@kernel.org>
- <20201105165814.29233-18-wei.liu@kernel.org>
-Date:   Thu, 12 Nov 2020 17:56:41 +0100
-Message-ID: <87v9eawm2e.fsf@vitty.brq.redhat.com>
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: [RFC] lockdep: Put graph lock/unlock under lock_recursion protection
+Date:   Fri, 13 Nov 2020 19:05:03 +0800
+Message-Id: <20201113110512.1056501-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Wei Liu <wei.liu@kernel.org> writes:
+A warning was hit when running xfstests/generic/068 in a Hyper-V guest:
 
-> Just like MSI/MSI-X, IO-APIC interrupts are remapped by Microsoft
-> Hypervisor when Linux runs as the root partition. Implement an IRQ chip
-> to handle mapping and unmapping of IO-APIC interrupts.
->
-> Use custom functions for mapping and unmapping ACPI GSIs. They will
-> issue Microsoft Hypervisor specific hypercalls on top of the native
-> routines.
->
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Co-Developed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
->  arch/x86/hyperv/hv_init.c   |  13 +++
->  arch/x86/hyperv/irqdomain.c | 226 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 239 insertions(+)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index a46b817b5b2a..2c2189832da7 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -267,10 +267,23 @@ static int hv_cpu_die(unsigned int cpu)
->  	return 0;
->  }
->  
-> +int hv_acpi_register_gsi(struct device *dev, u32 gsi, int trigger, int polarity);
-> +void hv_acpi_unregister_gsi(u32 gsi);
-> +
-> +extern int (*native_acpi_register_gsi)(struct device *dev, u32 gsi, int trigger, int polarity);
-> +extern void (*native_acpi_unregister_gsi)(u32 gsi);
-> +
->  static int __init hv_pci_init(void)
->  {
->  	int gen2vm = efi_enabled(EFI_BOOT);
->  
-> +	if (hv_root_partition) {
-> +		native_acpi_register_gsi = __acpi_register_gsi;
-> +		native_acpi_unregister_gsi = __acpi_unregister_gsi;
-> +		__acpi_register_gsi = hv_acpi_register_gsi;
-> +		__acpi_unregister_gsi = hv_acpi_unregister_gsi;
-> +	}
-> +
->  	/*
->  	 * For Generation-2 VM, we exit from pci_arch_init() by returning 0.
->  	 * The purpose is to suppress the harmless warning:
-> diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-> index 80109e3cbf8f..ae9a728589a4 100644
-> --- a/arch/x86/hyperv/irqdomain.c
-> +++ b/arch/x86/hyperv/irqdomain.c
-> @@ -9,6 +9,8 @@
->  #include <linux/pci.h>
->  #include <linux/irq.h>
->  #include <asm/mshyperv.h>
-> +#include <asm/apic.h>
-> +#include <asm/io_apic.h>
->  
->  struct rid_data {
->  	struct pci_dev *bridge;
-> @@ -328,3 +330,227 @@ struct irq_domain * __init hv_create_pci_msi_domain(void)
->  	return d;
->  }
->  
-> +/* Copied from io_apic.c */
-> +union entry_union {
-> +	struct { u32 w1, w2; };
-> +	struct IO_APIC_route_entry entry;
-> +};
-> +
-> +static int hv_unmap_ioapic_interrupt(int gsi)
-> +{
-> +	union hv_device_id device_id;
-> +	int ioapic, ioapic_id;
-> +	u8 ioapic_pin;
-> +	struct IO_APIC_route_entry ire;
-> +	union entry_union eu;
-> +	struct hv_interrupt_entry entry;
-> +
-> +	ioapic = mp_find_ioapic(gsi);
-> +	ioapic_pin = mp_find_ioapic_pin(ioapic, gsi);
-> +	ioapic_id = mpc_ioapic_id(ioapic);
-> +	ire = ioapic_read_entry(ioapic, ioapic_pin);
-> +
-> +	eu.entry = ire;
-> +
-> +	/*
-> +	 * Polarity may have been set by us, but Hyper-V expects the exact same
-> +	 * entry. See the mapping routine.
-> +	 */
-> +	eu.entry.polarity = 0;
-> +
-> +	memset(&entry, 0, sizeof(entry));
-> +	entry.source = HV_INTERRUPT_SOURCE_IOAPIC;
-> +	entry.ioapic_rte.low_uint32 = eu.w1;
-> +	entry.ioapic_rte.high_uint32 = eu.w2;
-> +
-> +	device_id.as_uint64 = 0;
-> +	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
-> +	device_id.ioapic.ioapic_id = (u8)ioapic_id;
-> +
-> +	return hv_unmap_interrupt(device_id.as_uint64, &entry) & HV_HYPERCALL_RESULT_MASK;
-> +}
-> +
-> +static int hv_map_ioapic_interrupt(int ioapic_id, int trigger, int vcpu, int vector,
-> +		struct hv_interrupt_entry *out_entry)
-> +{
-> +	unsigned long flags;
-> +	struct hv_input_map_device_interrupt *input;
-> +	struct hv_output_map_device_interrupt *output;
-> +	union hv_device_id device_id;
-> +	struct hv_device_interrupt_descriptor *intr_desc;
-> +	u16 status;
-> +
-> +	device_id.as_uint64 = 0;
-> +	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
-> +	device_id.ioapic.ioapic_id = (u8)ioapic_id;
-> +
-> +	local_irq_save(flags);
-> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-> +	memset(input, 0, sizeof(*input));
-> +	intr_desc = &input->interrupt_descriptor;
-> +	input->partition_id = hv_current_partition_id;
-> +	input->device_id = device_id.as_uint64;
-> +	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
-> +	intr_desc->target.vector = vector;
-> +	intr_desc->vector_count = 1;
-> +
-> +	if (trigger)
-> +		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_LEVEL;
-> +	else
-> +		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_EDGE;
-> +
-> +	__set_bit(vcpu, (unsigned long *)&intr_desc->target.vp_mask);
-> +
-> +	status = hv_do_rep_hypercall(HVCALL_MAP_DEVICE_INTERRUPT, 0, 0, input, output) &
-> +			 HV_HYPERCALL_RESULT_MASK;
-> +	local_irq_restore(flags);
-> +
-> +	*out_entry = output->interrupt_entry;
-> +
-> +	return status;
-> +}
-> +
-> +static unsigned int hv_ioapic_startup_irq(struct irq_data *data)
-> +{
-> +	u16 status;
-> +	struct IO_APIC_route_entry ire;
-> +	u32 vector;
-> +	struct irq_cfg *cfg;
-> +	int ioapic;
-> +	u8 ioapic_pin;
-> +	int ioapic_id;
-> +	int gsi;
-> +	union entry_union eu;
-> +	struct cpumask *affinity;
-> +	int cpu, vcpu;
-> +	struct hv_interrupt_entry entry;
-> +	struct mp_chip_data *mp_data = data->chip_data;
-> +
-> +	gsi = data->irq;
-> +	cfg = irqd_cfg(data);
-> +	affinity = irq_data_get_effective_affinity_mask(data);
-> +	cpu = cpumask_first_and(affinity, cpu_online_mask);
-> +	vcpu = hv_cpu_number_to_vp_number(cpu);
-> +
-> +	vector = cfg->vector;
-> +
-> +	ioapic = mp_find_ioapic(gsi);
-> +	ioapic_pin = mp_find_ioapic_pin(ioapic, gsi);
-> +	ioapic_id = mpc_ioapic_id(ioapic);
-> +	ire = ioapic_read_entry(ioapic, ioapic_pin);
-> +
-> +	/*
-> +	 * Always try unmapping. We do not have visibility into which whether
-> +	 * an IO-APIC has been mapped or not. We can't use chip_data because it
-> +	 * already points to mp_data.
-> +	 *
-> +	 * We don't use retarget interrupt hypercalls here because Hyper-V
-> +	 * doens't allow root to change the vector or specify VPs outside of
-> +	 * the set that is initially used during mapping.
-> +	 */
-> +	status = hv_unmap_ioapic_interrupt(gsi);
-> +
-> +	if (!(status == HV_STATUS_SUCCESS || status == HV_STATUS_INVALID_PARAMETER)) {
-> +		pr_debug("%s: unexpected unmap status %d\n", __func__, status);
-> +		return -1;
+[...] ------------[ cut here ]------------
+[...] DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
+[...] WARNING: CPU: 2 PID: 1350 at kernel/locking/lockdep.c:5280 check_flags.part.0+0x165/0x170
+[...] ...
+[...] Workqueue: events pwq_unbound_release_workfn
+[...] RIP: 0010:check_flags.part.0+0x165/0x170
+[...] ...
+[...] Call Trace:
+[...]  lock_is_held_type+0x72/0x150
+[...]  ? lock_acquire+0x16e/0x4a0
+[...]  rcu_read_lock_sched_held+0x3f/0x80
+[...]  __send_ipi_one+0x14d/0x1b0
+[...]  hv_send_ipi+0x12/0x30
+[...]  __pv_queued_spin_unlock_slowpath+0xd1/0x110
+[...]  __raw_callee_save___pv_queued_spin_unlock_slowpath+0x11/0x20
+[...]  .slowpath+0x9/0xe
+[...]  lockdep_unregister_key+0x128/0x180
+[...]  pwq_unbound_release_workfn+0xbb/0xf0
+[...]  process_one_work+0x227/0x5c0
+[...]  worker_thread+0x55/0x3c0
+[...]  ? process_one_work+0x5c0/0x5c0
+[...]  kthread+0x153/0x170
+[...]  ? __kthread_bind_mask+0x60/0x60
+[...]  ret_from_fork+0x1f/0x30
 
-Nit: the function returns 'unsigned int' but I see other 'irq_startup'
-routines return negative values too, however, they tend to returd
-'-ESOMETHING' so maybe -EFAULT here?
+The cause of the problem is we have call chain lockdep_unregister_key()
+-> <irq disabled by raw_local_irq_save()> lockdep_unlock() ->
+arch_spin_unlock() -> __pv_queued_spin_unlock_slowpath() -> pv_kick() ->
+__send_ipi_one() -> trace_hyperv_send_ipi_one().
 
-> +	}
-> +
-> +	status = hv_map_ioapic_interrupt(ioapic_id, ire.trigger, vcpu, vector, &entry);
-> +
-> +	if (status != HV_STATUS_SUCCESS) {
-> +		pr_err("%s: map hypercall failed, status %d\n", __func__, status);
-> +		return -1;
+Although this particular warning is triggered because Hyper-V has a
+trace point in ipi sending, but in general arch_spin_unlock() may call
+another function having a trace point in it, so put the arch_spin_lock()
+and arch_spin_unlock() after lock_recursion protection to fix this
+problem and avoid similiar problems.
 
-and here.
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ kernel/locking/lockdep.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> +	}
-> +
-> +	/* Update the entry in mp_chip_data. It is used in other places. */
-> +	mp_data->entry = *(struct IO_APIC_route_entry *)&entry.ioapic_rte;
-> +
-> +	/* Sync polarity -- Hyper-V's returned polarity is always 0... */
-> +	mp_data->entry.polarity = ire.polarity;
-> +
-> +	eu.w1 = entry.ioapic_rte.low_uint32;
-> +	eu.w2 = entry.ioapic_rte.high_uint32;
-> +	ioapic_write_entry(ioapic, ioapic_pin, eu.entry);
-> +
-> +	return 0;
-> +}
-> +
-> +static void hv_ioapic_mask_irq(struct irq_data *data)
-> +{
-> +	mask_ioapic_irq(data);
-> +}
-> +
-> +static void hv_ioapic_unmask_irq(struct irq_data *data)
-> +{
-> +	unmask_ioapic_irq(data);
-> +}
-> +
-> +static int hv_ioapic_set_affinity(struct irq_data *data,
-> +			       const struct cpumask *mask, bool force)
-> +{
-> +	/*
-> +	 * We only update the affinity mask here. Programming the hardware is
-> +	 * done in irq_startup.
-> +	 */
-> +	return ioapic_set_affinity(data, mask, force);
-> +}
-> +
-> +void hv_ioapic_ack_level(struct irq_data *irq_data)
-> +{
-> +	/*
-> +	 * Per email exchange with Hyper-V team, all is needed is write to
-> +	 * LAPIC's EOI register. They don't support directed EOI to IO-APIC.
-> +	 * Hyper-V handles it for us.
-> +	 */
-> +	apic_ack_irq(irq_data);
-> +}
-> +
-> +struct irq_chip hv_ioapic_chip __read_mostly = {
-> +	.name			= "HV-IO-APIC",
-> +	.irq_startup		= hv_ioapic_startup_irq,
-> +	.irq_mask		= hv_ioapic_mask_irq,
-> +	.irq_unmask		= hv_ioapic_unmask_irq,
-> +	.irq_ack		= irq_chip_ack_parent,
-> +	.irq_eoi		= hv_ioapic_ack_level,
-> +	.irq_set_affinity	= hv_ioapic_set_affinity,
-> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-> +	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
-> +	.flags			= IRQCHIP_SKIP_SET_WAKE,
-> +};
-> +
-> +
-> +int (*native_acpi_register_gsi)(struct device *dev, u32 gsi, int trigger, int polarity);
-> +void (*native_acpi_unregister_gsi)(u32 gsi);
-> +
-> +int hv_acpi_register_gsi(struct device *dev, u32 gsi, int trigger, int polarity)
-> +{
-> +	int irq = gsi;
-> +
-> +#ifdef CONFIG_X86_IO_APIC
-> +	irq = native_acpi_register_gsi(dev, gsi, trigger, polarity);
-> +	if (irq < 0) {
-> +		pr_err("native_acpi_register_gsi failed %d\n", irq);
-> +		return irq;
-> +	}
-> +
-> +	if (trigger) {
-> +		irq_set_status_flags(irq, IRQ_LEVEL);
-> +		irq_set_chip_and_handler_name(irq, &hv_ioapic_chip,
-> +			handle_fasteoi_irq, "ioapic-fasteoi");
-> +	} else {
-> +		irq_clear_status_flags(irq, IRQ_LEVEL);
-> +		irq_set_chip_and_handler_name(irq, &hv_ioapic_chip,
-> +			handle_edge_irq, "ioapic-edge");
-> +	}
-> +#endif
-> +	return irq;
-> +}
-> +
-> +void hv_acpi_unregister_gsi(u32 gsi)
-> +{
-> +#ifdef CONFIG_X86_IO_APIC
-> +	(void)hv_unmap_ioapic_interrupt(gsi);
-> +	native_acpi_unregister_gsi(gsi);
-> +#endif
-> +}
-
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index b71ad8d9f1c9..b98e44f88c6a 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -108,19 +108,21 @@ static inline void lockdep_lock(void)
+ {
+ 	DEBUG_LOCKS_WARN_ON(!irqs_disabled());
+ 
++	__this_cpu_inc(lockdep_recursion);
+ 	arch_spin_lock(&__lock);
+ 	__owner = current;
+-	__this_cpu_inc(lockdep_recursion);
+ }
+ 
+ static inline void lockdep_unlock(void)
+ {
++	DEBUG_LOCKS_WARN_ON(!irqs_disabled());
++
+ 	if (debug_locks && DEBUG_LOCKS_WARN_ON(__owner != current))
+ 		return;
+ 
+-	__this_cpu_dec(lockdep_recursion);
+ 	__owner = NULL;
+ 	arch_spin_unlock(&__lock);
++	__this_cpu_dec(lockdep_recursion);
+ }
+ 
+ static inline bool lockdep_assert_locked(void)
 -- 
-Vitaly
+2.29.2
 
