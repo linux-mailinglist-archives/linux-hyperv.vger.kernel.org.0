@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71B022B1F50
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 16:56:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B98D2B1F76
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 17:02:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgKMP4j (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 13 Nov 2020 10:56:39 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56299 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726503AbgKMP4i (ORCPT
+        id S1726439AbgKMQCI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Nov 2020 11:02:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44905 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgKMQCI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 13 Nov 2020 10:56:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c9so8527280wml.5;
-        Fri, 13 Nov 2020 07:56:37 -0800 (PST)
+        Fri, 13 Nov 2020 11:02:08 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c17so10413113wrc.11;
+        Fri, 13 Nov 2020 08:02:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s6hyMVEFfMlo0q95MNqmUfjlLkrSXFwE1LaCrXDrf1U=;
-        b=T7GlhVgQg1AiqMBL5AxD8kXFbzWQbAmSuPZCfSo0A8EkuVLrlJ0ifWX652KFtdMPAc
-         5uRrKQhTQ2rQ1Oy7zIQvyD6H6eIwNVhrW2HIu4tFMCE7HzwPEOuFa50oJmgy36GxHa4K
-         B1Xgn0mhxHJmO4re6AGPMZl1CSoUFq50/yahdNG908uC2In/piy8H21Cxy7LUpe60BKM
-         49UzKynUQXiCFabc7wmgXXm6uHkxIMFmSjP+koGasjsMIN/RcL+7DXMvVbJJPmO3UXZB
-         uTGB3/V3hAvapO1ym9TxyxU/2kZXOVOBFhdjH3oxYqf5Tfd907vuXzwJeIa9ZrbLdBeS
-         6EyQ==
-X-Gm-Message-State: AOAM531aY59mXvySawSFjRp+tZFqo4xe2QmOzHd84n8LTSbAD26hOdRC
-        Ek1E8jJGz+yAlPEFrMtJeNA=
-X-Google-Smtp-Source: ABdhPJwxmDHIqC3YZFsvlTECTSLwSAi65CsT4dZPk+I9eWtnFzWgSXA34nI1Jw+q43SYi23eyToExQ==
-X-Received: by 2002:a1c:2643:: with SMTP id m64mr3286089wmm.28.1605282992030;
-        Fri, 13 Nov 2020 07:56:32 -0800 (PST)
+        bh=SOFgbtEKT08GIsaRlGdHEBhLrv7nMLKYi0Qeedgqdrw=;
+        b=hIVRxdck4hge8b2rg+r15sgZkwLK1JfLNPaqRw+PbSLZUrka5E3cDMA0PkN7qYZJqx
+         y5pkefxPSYgK7yMUP91GiCpAmjtGpC3EJwIRh0GxsQxSoWc26IlfObOqgivLVa90yNqC
+         TLEAGdW0r1J60RvlEyk9S461PaNf1uMIf5QWOhr5J/xVd3DMafvv+EuTpQpjbUpLJ5hs
+         W9dZxJalxbHGmRXGCpBU5OOdn4JOJzumWg1JF/BcfRFJPzTLlhPhYbGJpo3a5EygyxLo
+         sS4pzNPa60w1OGBvuRzXt6yVoile6IUYtyx32Z3lJd+bjnOMU1CzQNqHFsJyJcFzrdNj
+         8wrw==
+X-Gm-Message-State: AOAM533tpHJbQTJ3fnAEVC38WBloGKpchHvt1jZOMccRoV2DjeDA9JRk
+        sMAIDTA+ej1TVsJL7srK69k=
+X-Google-Smtp-Source: ABdhPJxLGVaamLIC1LlMIWls9KiB13YFjHlZOHL4e1EkWFYtknKo5xd/tBWWvVBzADv1/VsEhGIP9w==
+X-Received: by 2002:adf:ffc3:: with SMTP id x3mr4326029wrs.32.1605283320928;
+        Fri, 13 Nov 2020 08:02:00 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id m18sm9567357wru.37.2020.11.13.07.56.30
+        by smtp.gmail.com with ESMTPSA id s4sm11648636wro.10.2020.11.13.08.01.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 07:56:31 -0800 (PST)
-Date:   Fri, 13 Nov 2020 15:56:29 +0000
+        Fri, 13 Nov 2020 08:02:00 -0800 (PST)
+Date:   Fri, 13 Nov 2020 16:01:58 +0000
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     Wei Liu <wei.liu@kernel.org>,
@@ -45,7 +45,6 @@ Cc:     Wei Liu <wei.liu@kernel.org>,
         Vineeth Pillai <viremana@linux.microsoft.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Lillian Grassin-Drake <ligrassi@microsoft.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -53,75 +52,183 @@ Cc:     Wei Liu <wei.liu@kernel.org>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
         "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 10/17] x86/hyperv: implement and use
- hv_smp_prepare_cpus
-Message-ID: <20201113155629.bkw45kcuqhr6puck@liuwe-devbox-debian-v2>
+Subject: Re: [PATCH v2 17/17] x86/hyperv: handle IO-APIC when running as root
+Message-ID: <20201113160158.idndhuygfgenxyhm@liuwe-devbox-debian-v2>
 References: <20201105165814.29233-1-wei.liu@kernel.org>
- <20201105165814.29233-11-wei.liu@kernel.org>
- <87y2j6wmm7.fsf@vitty.brq.redhat.com>
+ <20201105165814.29233-18-wei.liu@kernel.org>
+ <87v9eawm2e.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87y2j6wmm7.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87v9eawm2e.fsf@vitty.brq.redhat.com>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 05:44:48PM +0100, Vitaly Kuznetsov wrote:
-> Wei Liu <wei.liu@kernel.org> writes:
-> 
-> > Microsoft Hypervisor requires the root partition to make a few
-> > hypercalls to setup application processors before they can be used.
-> >
-> > Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> > Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> > Co-Developed-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> > Co-Developed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> > ---
-> > CPU hotplug and unplug is not yet supported in this setup, so those
-> > paths remain untouched.
-> > ---
-> >  arch/x86/kernel/cpu/mshyperv.c | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> > index f7633e1e4c82..4795e54550e6 100644
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -31,6 +31,7 @@
-> >  #include <asm/reboot.h>
-> >  #include <asm/nmi.h>
-> >  #include <clocksource/hyperv_timer.h>
-> > +#include <asm/numa.h>
-> >  
-> >  struct ms_hyperv_info ms_hyperv;
-> >  EXPORT_SYMBOL_GPL(ms_hyperv);
-> > @@ -208,6 +209,30 @@ static void __init hv_smp_prepare_boot_cpu(void)
-> >  	hv_init_spinlocks();
-> >  #endif
-> >  }
-> > +
-> > +static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
+On Thu, Nov 12, 2020 at 05:56:41PM +0100, Vitaly Kuznetsov wrote:
+[...]
+> > +static unsigned int hv_ioapic_startup_irq(struct irq_data *data)
 > > +{
-> > +#if defined(CONFIG_X86_64)
-> 
-> '#ifdef CONFIG_X86_64' is equally good as you can't compile x86_64
-> support as a module :-)
-> 
-> > +	int i;
-> > +	int ret;
+> > +	u16 status;
+> > +	struct IO_APIC_route_entry ire;
+> > +	u32 vector;
+> > +	struct irq_cfg *cfg;
+> > +	int ioapic;
+> > +	u8 ioapic_pin;
+> > +	int ioapic_id;
+> > +	int gsi;
+> > +	union entry_union eu;
+> > +	struct cpumask *affinity;
+> > +	int cpu, vcpu;
+> > +	struct hv_interrupt_entry entry;
+> > +	struct mp_chip_data *mp_data = data->chip_data;
 > > +
-> > +	native_smp_prepare_cpus(max_cpus);
+> > +	gsi = data->irq;
+> > +	cfg = irqd_cfg(data);
+> > +	affinity = irq_data_get_effective_affinity_mask(data);
+> > +	cpu = cpumask_first_and(affinity, cpu_online_mask);
+> > +	vcpu = hv_cpu_number_to_vp_number(cpu);
 > > +
+> > +	vector = cfg->vector;
+> > +
+> > +	ioapic = mp_find_ioapic(gsi);
+> > +	ioapic_pin = mp_find_ioapic_pin(ioapic, gsi);
+> > +	ioapic_id = mpc_ioapic_id(ioapic);
+> > +	ire = ioapic_read_entry(ioapic, ioapic_pin);
+> > +
+> > +	/*
+> > +	 * Always try unmapping. We do not have visibility into which whether
+> > +	 * an IO-APIC has been mapped or not. We can't use chip_data because it
+> > +	 * already points to mp_data.
+> > +	 *
+> > +	 * We don't use retarget interrupt hypercalls here because Hyper-V
+> > +	 * doens't allow root to change the vector or specify VPs outside of
+> > +	 * the set that is initially used during mapping.
+> > +	 */
+> > +	status = hv_unmap_ioapic_interrupt(gsi);
+> > +
+> > +	if (!(status == HV_STATUS_SUCCESS || status == HV_STATUS_INVALID_PARAMETER)) {
+> > +		pr_debug("%s: unexpected unmap status %d\n", __func__, status);
+> > +		return -1;
 > 
-> So hypotetically, if hv_root_partition is true but 'ifdef CONFIG_X86_64'
-> is false, we won't even be doing native_smp_prepare_cpus()? This doesn't
-> sound right. Either move it outside of #ifdef or put the #ifdef around
-> 'smp_ops.smp_prepare_cpus' assignment too.
+> Nit: the function returns 'unsigned int' but I see other 'irq_startup'
+> routines return negative values too, however, they tend to returd
+> '-ESOMETHING' so maybe -EFAULT here?
 > 
 
-Fixed. Thanks.
+The return type should've been int instead. That's what the function
+signature in struct irq_chip looks like.
+
+> > +	}
+> > +
+> > +	status = hv_map_ioapic_interrupt(ioapic_id, ire.trigger, vcpu, vector, &entry);
+> > +
+> > +	if (status != HV_STATUS_SUCCESS) {
+> > +		pr_err("%s: map hypercall failed, status %d\n", __func__, status);
+> > +		return -1;
+> 
+> and here.
+> 
+
+-EINVAL would be more appropriate in both cases.
 
 Wei.
+
+> > +	}
+> > +
+> > +	/* Update the entry in mp_chip_data. It is used in other places. */
+> > +	mp_data->entry = *(struct IO_APIC_route_entry *)&entry.ioapic_rte;
+> > +
+> > +	/* Sync polarity -- Hyper-V's returned polarity is always 0... */
+> > +	mp_data->entry.polarity = ire.polarity;
+> > +
+> > +	eu.w1 = entry.ioapic_rte.low_uint32;
+> > +	eu.w2 = entry.ioapic_rte.high_uint32;
+> > +	ioapic_write_entry(ioapic, ioapic_pin, eu.entry);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void hv_ioapic_mask_irq(struct irq_data *data)
+> > +{
+> > +	mask_ioapic_irq(data);
+> > +}
+> > +
+> > +static void hv_ioapic_unmask_irq(struct irq_data *data)
+> > +{
+> > +	unmask_ioapic_irq(data);
+> > +}
+> > +
+> > +static int hv_ioapic_set_affinity(struct irq_data *data,
+> > +			       const struct cpumask *mask, bool force)
+> > +{
+> > +	/*
+> > +	 * We only update the affinity mask here. Programming the hardware is
+> > +	 * done in irq_startup.
+> > +	 */
+> > +	return ioapic_set_affinity(data, mask, force);
+> > +}
+> > +
+> > +void hv_ioapic_ack_level(struct irq_data *irq_data)
+> > +{
+> > +	/*
+> > +	 * Per email exchange with Hyper-V team, all is needed is write to
+> > +	 * LAPIC's EOI register. They don't support directed EOI to IO-APIC.
+> > +	 * Hyper-V handles it for us.
+> > +	 */
+> > +	apic_ack_irq(irq_data);
+> > +}
+> > +
+> > +struct irq_chip hv_ioapic_chip __read_mostly = {
+> > +	.name			= "HV-IO-APIC",
+> > +	.irq_startup		= hv_ioapic_startup_irq,
+> > +	.irq_mask		= hv_ioapic_mask_irq,
+> > +	.irq_unmask		= hv_ioapic_unmask_irq,
+> > +	.irq_ack		= irq_chip_ack_parent,
+> > +	.irq_eoi		= hv_ioapic_ack_level,
+> > +	.irq_set_affinity	= hv_ioapic_set_affinity,
+> > +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+> > +	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
+> > +	.flags			= IRQCHIP_SKIP_SET_WAKE,
+> > +};
+> > +
+> > +
+> > +int (*native_acpi_register_gsi)(struct device *dev, u32 gsi, int trigger, int polarity);
+> > +void (*native_acpi_unregister_gsi)(u32 gsi);
+> > +
+> > +int hv_acpi_register_gsi(struct device *dev, u32 gsi, int trigger, int polarity)
+> > +{
+> > +	int irq = gsi;
+> > +
+> > +#ifdef CONFIG_X86_IO_APIC
+> > +	irq = native_acpi_register_gsi(dev, gsi, trigger, polarity);
+> > +	if (irq < 0) {
+> > +		pr_err("native_acpi_register_gsi failed %d\n", irq);
+> > +		return irq;
+> > +	}
+> > +
+> > +	if (trigger) {
+> > +		irq_set_status_flags(irq, IRQ_LEVEL);
+> > +		irq_set_chip_and_handler_name(irq, &hv_ioapic_chip,
+> > +			handle_fasteoi_irq, "ioapic-fasteoi");
+> > +	} else {
+> > +		irq_clear_status_flags(irq, IRQ_LEVEL);
+> > +		irq_set_chip_and_handler_name(irq, &hv_ioapic_chip,
+> > +			handle_edge_irq, "ioapic-edge");
+> > +	}
+> > +#endif
+> > +	return irq;
+> > +}
+> > +
+> > +void hv_acpi_unregister_gsi(u32 gsi)
+> > +{
+> > +#ifdef CONFIG_X86_IO_APIC
+> > +	(void)hv_unmap_ioapic_interrupt(gsi);
+> > +	native_acpi_unregister_gsi(gsi);
+> > +#endif
+> > +}
+> 
+> -- 
+> Vitaly
+> 
