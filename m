@@ -2,123 +2,90 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C058C2B1FE9
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 17:16:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3CF92B2416
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 19:54:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725866AbgKMQQa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 13 Nov 2020 11:16:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:42324 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726397AbgKMQQ3 (ORCPT
+        id S1726189AbgKMSy3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Nov 2020 13:54:29 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54081 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgKMSy2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 13 Nov 2020 11:16:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605284188;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jyN+DRRhVWX4G1okBIOdr3MH4mQtZ4BI+4XoCFZkPBY=;
-        b=DkSY0DTSRvCu9IEGbFLizm3K3eX+8p/hlAzzpVZB1Tif0/nmhsnTN3bvZRcbJcPChsXv/B
-        QCD9EsXKVMLG5jV7yPi2VVHFO7SdbNRVsHzdNhRyO9dszKd7sy2yb+9I2Kw1JIw232dFrX
-        XfmqR2KfZpvPROxFY4M3xkusL23sJyg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-552-OLmgPEyDO3KSWvfA9LRmaw-1; Fri, 13 Nov 2020 11:16:26 -0500
-X-MC-Unique: OLmgPEyDO3KSWvfA9LRmaw-1
-Received: by mail-wm1-f69.google.com with SMTP id 14so4195863wmg.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 13 Nov 2020 08:16:26 -0800 (PST)
+        Fri, 13 Nov 2020 13:54:28 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p22so9594820wmg.3;
+        Fri, 13 Nov 2020 10:54:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=jyN+DRRhVWX4G1okBIOdr3MH4mQtZ4BI+4XoCFZkPBY=;
-        b=pBhIRNnEkWZXjVRDG5uuWTksGCSpUP0KS1U6OilL4y7ZBZiHKmc1onklU66robvwNg
-         bgs9GzU6evNhIGSmqTJQ+RSvO45X4O62vSBY5gwtcv40hsdTvG1Sti9Ye1ST2WMKBL55
-         8gyWkYu4N+ZPHKSPhcMpTJcOptxsvhT5Ji/JBdiKRGktZZ35F6xWAd51GsWPlNH78mD1
-         Sdh3z7zMcQj8oYXToQvc4cO3kctaoCLHiI76GHjOX8oTcMWWlC9cy6h0/XMyDIKCBRip
-         IKDbippVE2kN0wWKy2mTiJN2ajONxbcpnP1vmUgYIDM0pfIyg1KYfVgdRnQVPmVMGSPW
-         CLKQ==
-X-Gm-Message-State: AOAM531MKqtk/5NXcpGzLjaJet0ysSq++iAuE2YODlVI9AcsXZQo+pQC
-        JWzBa5J9m+IHYj2aSoks0uae+MBAzOFc67EiEqkg1XoVTmpOmP9JH7YVRvK1hAdOY91jqNU+v2W
-        JcLSEqNu7At0a85jlzk+hGDMC
-X-Received: by 2002:a05:600c:210:: with SMTP id 16mr3226515wmi.122.1605284180499;
-        Fri, 13 Nov 2020 08:16:20 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw6qc4C468qlMkz/BkAoW2zg7V66Dzr5nIEzyPk8ex6nToKTomKk7QfUb8pi/ZNVqMxbgaPow==
-X-Received: by 2002:a05:600c:210:: with SMTP id 16mr3226167wmi.122.1605284175430;
-        Fri, 13 Nov 2020 08:16:15 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id a131sm10530265wmh.30.2020.11.13.08.16.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tzL14T6rCTSN4RsuVPtTnWJiOyUZXc1z2gXeQlm5kq8=;
+        b=gCvOupb3ISWmYY9xXbqcFv5BfoEfp9v+Q5AKWACfOj7Dx+ta7muduPNtC0Zn0KQeBy
+         cYefoRUp3xnm1ou7naolKgLP0MjOcIhJ2JzQXDtVRlwn3GYi7JfPr7+sCitTaTKC4RVd
+         2dSknXtk1ac4FpPdRal04vGFR4BuXKYlg1B51qREVqTwqoSgNOgLUnTSp5FrK68xbcCZ
+         PPeb2DXt8muR+LrCiKEYaOsxwQRggxFDDApb8nmbBtEzOwYYu2mG9hCS1wP8zS25HRVb
+         VZTO59F/Y4yJlqQ7+fM6Ye5wIb0tBySvhDd+Bvd4jqyDTNEjVywZPei/xiE8+zSMaDuS
+         Gv/A==
+X-Gm-Message-State: AOAM532LqRgi4YI7Im4QJBqxxH5Z/RViIG5kcU9je5nabhM/jLWUNSBJ
+        T/8MH1Pq0LUmAJHoMZ9qO7s=
+X-Google-Smtp-Source: ABdhPJwZPyvPPpg2JGbFWoSxXPFRAFGFLuAl484xnZIUH09JJJ8ZkGkOxsNN8/LkABhANC6ma/BPcA==
+X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr889104wml.174.1605293666845;
+        Fri, 13 Nov 2020 10:54:26 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id u5sm7158222wro.56.2020.11.13.10.54.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 08:16:14 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Lillian Grassin-Drake <ligrassi@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Fri, 13 Nov 2020 10:54:26 -0800 (PST)
+Date:   Fri, 13 Nov 2020 18:54:24 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 08/17] x86/hyperv: handling hypercall page setup for
- root
-In-Reply-To: <20201113160907.rwgpge3zo53fcgvo@liuwe-devbox-debian-v2>
-References: <20201105165814.29233-1-wei.liu@kernel.org>
- <20201105165814.29233-9-wei.liu@kernel.org>
- <874kluy3o2.fsf@vitty.brq.redhat.com>
- <20201113153333.yt54enp5dbqjj5nu@liuwe-devbox-debian-v2>
- <20201113160907.rwgpge3zo53fcgvo@liuwe-devbox-debian-v2>
-Date:   Fri, 13 Nov 2020 17:16:13 +0100
-Message-ID: <87wnyput9u.fsf@vitty.brq.redhat.com>
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        Juan Vazquez <juvazq@microsoft.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v9 2/3] scsi: storvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Message-ID: <20201113185424.ujdfx6ot7siqr5qh@liuwe-devbox-debian-v2>
+References: <20201109100402.8946-1-parri.andrea@gmail.com>
+ <20201109100402.8946-3-parri.andrea@gmail.com>
+ <20201113113327.dmium67e32iadqbz@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201113113327.dmium67e32iadqbz@liuwe-devbox-debian-v2>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Wei Liu <wei.liu@kernel.org> writes:
+On Fri, Nov 13, 2020 at 11:33:27AM +0000, Wei Liu wrote:
+> On Mon, Nov 09, 2020 at 11:04:01AM +0100, Andrea Parri (Microsoft) wrote:
+> > From: Andres Beltran <lkmlabelt@gmail.com>
+> > 
+> > Currently, pointers to guest memory are passed to Hyper-V as
+> > transaction IDs in storvsc. In the face of errors or malicious
+> > behavior in Hyper-V, storvsc should not expose or trust the transaction
+> > IDs returned by Hyper-V to be valid guest memory addresses. Instead,
+> > use small integers generated by vmbus_requestor as requests
+> > (transaction) IDs.
+> > 
+> > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> > Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> > Cc: linux-scsi@vger.kernel.org
+> 
+> Reviewed-by: Wei Liu <wl@xen.org>
 
-> On Fri, Nov 13, 2020 at 03:33:33PM +0000, Wei Liu wrote:
->> On Thu, Nov 12, 2020 at 04:51:09PM +0100, Vitaly Kuznetsov wrote:
->> > Wei Liu <wei.liu@kernel.org> writes:
->> > 
->> > > When Linux is running as the root partition, the hypercall page will
->> > > have already been setup by Hyper-V. Copy the content over to the
->> > > allocated page.
->> > >
->> > > The suspend, resume and cleanup paths remain untouched because they are
->> > > not supported in this setup yet.
->> > 
->> > What about adding BUG_ONs there then?
->> 
->> I generally avoid cluttering code if I'm sure it definitely does not
->> work.
->> 
->> In any case, adding BUG_ONs is not the right answer. Both hv_suspend and
->> hv_resume can return an error code. I would rather just do
->> 
->>    if (hv_root_partition)
->>        return -EPERM;
->> 
->> in both places.
->
-> Correction: hv_resume is void, so I won't add that code snippet. But we
-> should still be fine because hv_suspend will have already failed in the
-> first place.
->
+Martin already gave his ack back in July. I guess nothing substantial
+changed so it should have been carried over?
 
-Works for me. I just very much prefer to get reports like "system
-doesn't go to sleep" instead of "something crashes when I put my system
-to sleep")
-
--- 
-Vitaly
-
+Wei.
