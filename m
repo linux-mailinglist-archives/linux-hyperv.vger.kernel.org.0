@@ -2,112 +2,193 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 382562B2734
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 22:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2DFA2B295F
+	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Nov 2020 00:55:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgKMVjp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 13 Nov 2020 16:39:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42554 "EHLO
+        id S1726156AbgKMXy5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Nov 2020 18:54:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbgKMVjo (ORCPT
+        with ESMTP id S1725866AbgKMXy5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 13 Nov 2020 16:39:44 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA065C0613D1;
-        Fri, 13 Nov 2020 13:39:42 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id v22so12454080edt.9;
-        Fri, 13 Nov 2020 13:39:42 -0800 (PST)
+        Fri, 13 Nov 2020 18:54:57 -0500
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF674C0613D1;
+        Fri, 13 Nov 2020 15:54:56 -0800 (PST)
+Received: by mail-qv1-xf41.google.com with SMTP id x13so5693772qvk.8;
+        Fri, 13 Nov 2020 15:54:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=GY3sxkg3pkqNwc0wL90fxKYZ45EqrlmAu69mRryF7BM=;
-        b=QsOQMrz4ShhUlES7isqspW1o38dZdZLYZ3bnw/pYncm8p7NSiCAur8hXoz+MgjoiuC
-         oUETvqL8Opp+A5mRL77tkDmyeoUJNPzhRbwP6sXK/suo4a30oJdLx9sJeV/3wK4idJTP
-         JWktnT9+kU1yb9FdiQ/6HgFNF9DgVoDBa7gNEMmUojuVjHGxxC4GinQVDn682o7A6doU
-         9HDipvWp0f8ln8xzFQsMcUyd+GdzzOBg6okpdp3D6gkxDVaD0AOEeSGzPgyS0+PK7z9i
-         z6o6KrTmsKKq/6t5c+vWvRpnBrCbo1pzb9ZmO3VXiQIddCjjIxW4yiu+iaU0/Wh0veSb
-         ZhBQ==
+        bh=xKlWX5sJu4sZOoZ9K5CyZiFGJMGh7jY2PGRdiy6fiqQ=;
+        b=PLMW2b5Dur5YVJJjAt4mxJuWZZJ7UtsxLfuWcKkKc/XI+gUX4MGNKcNw75W7ocwYBu
+         W3ca2Qsm3LdXD05q8akIEtfLWLAq9vLwBppeibNxF7nevcY3tXaO9UzCG1SDZJkyBH2q
+         yJBTNzX7br+KLDsEwEv2vFUEu2Ds6QgdLm5Lji9TtPh7c4AwGe3qKSf2dzkhtIPGw9RG
+         gZjbMQOWSUlAs9C1iIs3gmql4iZdgLQAJE67tbarVbstbuD72/gub8lRUfH63Y4ktEsJ
+         omGxwEORG/mpeXeph5s6apaSzCLQgeSRY6J8Y7+7A2NkNoHfUEFEmuw3ofOcdUrezuBG
+         XyLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=GY3sxkg3pkqNwc0wL90fxKYZ45EqrlmAu69mRryF7BM=;
-        b=sfSHKQldyK/Yx1/IokCI+jLf5SsgleKXhcFYLU6nzDHCr8po7JtRO3XaV6L1XOTTgS
-         a6piG2rIwtfYrqud/gm7EbRiD6KI1EKbN8A2Nv+rjDP5aYFJoBqO5ibh+FIBi4C2KZJa
-         B9fEKtIj3p24/cjeeMmrYApqLYnRos6gpa+7yXeHt+ynq3dIdxwA7d/t6GTmqWNL3Qjz
-         yNcTi/XLwp6DsEhV+VDIMHc/r/sZDHU0HUZcbkuPZdg1gNqGBC/vVtoqrPbVq1B37e8m
-         8sNYExgfkYe1Yt2A55D28WQomzTdlFdjZyrqndCmxzfNn5Jk0+r3K9Gwy1Nni2vXaQKR
-         I3Sg==
-X-Gm-Message-State: AOAM532p7tplJdcHBt7IZRt2IKxt2Tl3yOT7blRDRuo+spxH2V0bn4pd
-        jcZrh5AMliszDg+IcucqiW8=
-X-Google-Smtp-Source: ABdhPJxvP333YF/+k+Gwi+3JjsWYJs7f8n+Vq0nNrbugFBnqg0LfQdeG/4azufOrmOGtRssqLNnT9Q==
-X-Received: by 2002:a50:f392:: with SMTP id g18mr4798636edm.140.1605303581324;
-        Fri, 13 Nov 2020 13:39:41 -0800 (PST)
-Received: from andrea (host-82-51-6-75.retail.telecomitalia.it. [82.51.6.75])
-        by smtp.gmail.com with ESMTPSA id p26sm3095853eja.13.2020.11.13.13.39.39
+        bh=xKlWX5sJu4sZOoZ9K5CyZiFGJMGh7jY2PGRdiy6fiqQ=;
+        b=UwVSmiOsp9tjKvN0Llv+znXTvYAAd3qNWA0rwURWTUeHvblifZ3/QxG2OVQ+aMvvE3
+         iaeB1gkWQ0fNZoqdy/I0fGvewI69f4A4hOaLONZhXho5qWkU6DPbBq2oKJk52XReWEui
+         cAr0PvxqdDwvzXmJM581wz6BQaqytMJ80wcEEpqMqC5UO1K5VRw54s+G3gtiyat5RHkT
+         e9S19n60ub6Fv/Wr+hlf07aU6udJlCBkBQSbDRFFg1E1BnM6NDMseer3QRiqfm7AMUKy
+         KLd604HMH62cxXDkfgH0y4pI78wilQmOBcuqPOV9/5nqKWuzwgxv4j673k5Wweq/b+ra
+         rwUQ==
+X-Gm-Message-State: AOAM533xyNeghKyYaesw6OyZMnB5T6rFdDoloZQhNCJrl1YR8nvDt8mh
+        YFD2QdBx/VVGpeIbAUrhQkI8CEzrlIZwLQ==
+X-Google-Smtp-Source: ABdhPJzAtn3Kf7aYFaBD+N5MeiVashIxbrIrgPLnVylphEuD+GN98DTqOJ8Rsk0ILYfSoJW70Yo8rg==
+X-Received: by 2002:ad4:45e6:: with SMTP id q6mr5163804qvu.28.1605311696001;
+        Fri, 13 Nov 2020 15:54:56 -0800 (PST)
+Received: from ubuntu-m3-large-x86 ([2604:1380:45f1:1d00::1])
+        by smtp.gmail.com with ESMTPSA id g19sm6416914qkl.86.2020.11.13.15.54.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 13:39:40 -0800 (PST)
-Date:   Fri, 13 Nov 2020 22:39:33 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-hyperv@vger.kernel.org, Andres Beltran <lkmlabelt@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v9 2/3] scsi: storvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Message-ID: <20201113213933.GA4937@andrea>
-References: <20201109100402.8946-1-parri.andrea@gmail.com>
- <20201109100402.8946-3-parri.andrea@gmail.com>
- <20201113113327.dmium67e32iadqbz@liuwe-devbox-debian-v2>
- <20201113185424.ujdfx6ot7siqr5qh@liuwe-devbox-debian-v2>
+        Fri, 13 Nov 2020 15:54:54 -0800 (PST)
+Date:   Fri, 13 Nov 2020 16:54:53 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/6] seq_file: add seq_read_iter
+Message-ID: <20201113235453.GA227700@ubuntu-m3-large-x86>
+References: <20201104082738.1054792-1-hch@lst.de>
+ <20201104082738.1054792-2-hch@lst.de>
+ <20201110213253.GV3576660@ZenIV.linux.org.uk>
+ <20201110213511.GW3576660@ZenIV.linux.org.uk>
+ <20201110232028.GX3576660@ZenIV.linux.org.uk>
+ <CAHk-=whTqr4Lp0NYR6k3yc2EbiF0RR17=TJPa4JBQATMR__XqA@mail.gmail.com>
+ <20201111215220.GA3576660@ZenIV.linux.org.uk>
+ <20201111222116.GA919131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201113185424.ujdfx6ot7siqr5qh@liuwe-devbox-debian-v2>
+In-Reply-To: <20201111222116.GA919131@ZenIV.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Nov 13, 2020 at 06:54:24PM +0000, Wei Liu wrote:
-> On Fri, Nov 13, 2020 at 11:33:27AM +0000, Wei Liu wrote:
-> > On Mon, Nov 09, 2020 at 11:04:01AM +0100, Andrea Parri (Microsoft) wrote:
-> > > From: Andres Beltran <lkmlabelt@gmail.com>
-> > > 
-> > > Currently, pointers to guest memory are passed to Hyper-V as
-> > > transaction IDs in storvsc. In the face of errors or malicious
-> > > behavior in Hyper-V, storvsc should not expose or trust the transaction
-> > > IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> > > use small integers generated by vmbus_requestor as requests
-> > > (transaction) IDs.
-> > > 
-> > > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> > > Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> > > Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> > > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> > > Cc: linux-scsi@vger.kernel.org
-> > 
-> > Reviewed-by: Wei Liu <wl@xen.org>
+Hi Al,
+
+On Wed, Nov 11, 2020 at 10:21:16PM +0000, Al Viro wrote:
+> On Wed, Nov 11, 2020 at 09:52:20PM +0000, Al Viro wrote:
 > 
-> Martin already gave his ack back in July. I guess nothing substantial
-> changed so it should have been carried over?
+> > That can be done, but I would rather go with
+> > 		n = copy_to_iter(m->buf + m->from, m->count, iter);
+> > 		m->count -= n;
+> > 		m->from += n;
+> >                 copied += n;
+> >                 if (!size)
+> >                         goto Done;
+> > 		if (m->count)
+> > 			goto Efault;
+> > if we do it that way.  Let me see if I can cook something
+> > reasonable along those lines...
+> 
+> Something like below (build-tested only):
+> 
+> diff --git a/fs/seq_file.c b/fs/seq_file.c
+> index 3b20e21604e7..07b33c1f34a9 100644
+> --- a/fs/seq_file.c
+> +++ b/fs/seq_file.c
+> @@ -168,7 +168,6 @@ EXPORT_SYMBOL(seq_read);
+>  ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  {
+>  	struct seq_file *m = iocb->ki_filp->private_data;
+> -	size_t size = iov_iter_count(iter);
+>  	size_t copied = 0;
+>  	size_t n;
+>  	void *p;
+> @@ -208,14 +207,11 @@ ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  	}
+>  	/* if not empty - flush it first */
+>  	if (m->count) {
+> -		n = min(m->count, size);
+> -		if (copy_to_iter(m->buf + m->from, n, iter) != n)
+> -			goto Efault;
+> +		n = copy_to_iter(m->buf + m->from, m->count, iter);
+>  		m->count -= n;
+>  		m->from += n;
+> -		size -= n;
+>  		copied += n;
+> -		if (!size)
+> +		if (!iov_iter_count(iter) || m->count)
+>  			goto Done;
+>  	}
+>  	/* we need at least one record in buffer */
+> @@ -249,6 +245,7 @@ ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  	goto Done;
+>  Fill:
+>  	/* they want more? let's try to get some more */
+> +	/* m->count is positive and there's space left in iter */
+>  	while (1) {
+>  		size_t offs = m->count;
+>  		loff_t pos = m->index;
+> @@ -263,7 +260,7 @@ ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  			err = PTR_ERR(p);
+>  			break;
+>  		}
+> -		if (m->count >= size)
+> +		if (m->count >= iov_iter_count(iter))
+>  			break;
+>  		err = m->op->show(m, p);
+>  		if (seq_has_overflowed(m) || err) {
+> @@ -273,16 +270,14 @@ ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  		}
+>  	}
+>  	m->op->stop(m, p);
+> -	n = min(m->count, size);
+> -	if (copy_to_iter(m->buf, n, iter) != n)
+> -		goto Efault;
+> +	n = copy_to_iter(m->buf, m->count, iter);
+>  	copied += n;
+>  	m->count -= n;
+>  	m->from = n;
+>  Done:
+> -	if (!copied)
+> -		copied = err;
+> -	else {
+> +	if (unlikely(!copied)) {
+> +		copied = m->count ? -EFAULT : err;
+> +	} else {
+>  		iocb->ki_pos += copied;
+>  		m->read_pos += copied;
+>  	}
+> @@ -291,9 +286,6 @@ ssize_t seq_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+>  Enomem:
+>  	err = -ENOMEM;
+>  	goto Done;
+> -Efault:
+> -	err = -EFAULT;
+> -	goto Done;
+>  }
+>  EXPORT_SYMBOL(seq_read_iter);
+>  
 
-The only change here happened in v7 and consisted in moving the
-allocation of the request IDs from the VSC code down into the core
-vmbus_sendpacket()&co functions.  As mentioned in v7 cover letter,
-this change was applied to ensure that the allocation in question
-is performed after the packet is copied into the ring buffer.  On
-a positive note, this change greatly reduced the diff of this and
-the following (NetVSC) patches.
+This patch in -next (6a9f696d1627bacc91d1cebcfb177f474484e8ba) breaks
+WSL2's interoperability feature, where Windows paths automatically get
+added to PATH on start up so that Windows binaries can be accessed from
+within Linux (such as clip.exe to pipe output to the clipboard). Before,
+I would see a bunch of Linux + Windows folders in $PATH but after, I
+only see the Linux folders (I can give you the actual PATH value if you
+care but it is really long).
 
-  Andrea
+I am not at all familiar with the semantics of this patch or how
+Microsoft would be using it to inject folders into PATH (they have some
+documentation on it here:
+https://docs.microsoft.com/en-us/windows/wsl/interop) and I am not sure
+how to go about figuring that out to see why this patch breaks something
+(unless you have an idea). I have added the Hyper-V maintainers and list
+to CC in case they know someone who could help.
+
+Cheers,
+Nathan
