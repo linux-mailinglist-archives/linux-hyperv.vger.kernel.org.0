@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF1C72B1E20
-	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 16:05:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A84D2B1E7F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 13 Nov 2020 16:22:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgKMPFs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 13 Nov 2020 10:05:48 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40943 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgKMPFs (ORCPT
+        id S1726893AbgKMPWA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 13 Nov 2020 10:22:00 -0500
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:35887 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbgKMPV7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 13 Nov 2020 10:05:48 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a3so8751627wmb.5;
-        Fri, 13 Nov 2020 07:05:47 -0800 (PST)
+        Fri, 13 Nov 2020 10:21:59 -0500
+Received: by mail-wr1-f51.google.com with SMTP id j7so10324181wrp.3;
+        Fri, 13 Nov 2020 07:21:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bVaU10leUNBpSZ8QLekWuqLmBxn7RuMG1m+hwrLuz6g=;
-        b=orWZs6ro18hpOjpeQeq74jyJDjhRWpehrf9Y5a0oNqXW23q4EFC8E4IQCxP0M3ndFw
-         P8JOrKsQEdnkt6blk6TN72nqPJKI1FyzdR/nVm5nIJxgRcVxBpk2fphLrKaVDmqJ6p/h
-         x7vzCD4HlSqxea8BivJ37LEj6cfX8WosY+tuTgKhwIg3PFvCGTdCyqANi81F0uJdLDUA
-         39Bw2locTn2YlpESC1cHoW0nmISdMND0MeJFqr9JMUxKLkR9Zzp+IDnTh0lnC2CFZ8iv
-         MaV7VYjr58xmB8e33etf/SM0S2KB7nT+3oxlYB5FOUBN0qnHrvoB9gRdMmBRprT9OkV2
-         tU9A==
-X-Gm-Message-State: AOAM533IhOohGzUw7YVB7uc5RoRLy9AiZHBqvBGSCigi1S6El8o/YXfK
-        EPoWRo5/9Qwuu+DxiG+JwWw=
-X-Google-Smtp-Source: ABdhPJyt09W3jXfPJxn0KjzPJUsp/JJ3bB4BaSGATWAC3rkRQ65MiVyRh5JtcpvI5BLhcx5njZISfw==
-X-Received: by 2002:a1c:7e8e:: with SMTP id z136mr3108670wmc.46.1605279946339;
-        Fri, 13 Nov 2020 07:05:46 -0800 (PST)
+        bh=jZZec1UP1XPcIdy5fKYFw1mzad8DvYZuIK/MWVjeSRM=;
+        b=KmL9sj03sEWqqN6nS0jNLOulUUGm4URpZlB5CxQ4r/FAlHcSKxV95Q1hVldHBxoyaG
+         2p6h5fCC2+6ihK2TYtyABFqVj278YRSEVnVdPQyMYFSeNRhXRSMNO1K9S1aK9HU/A1JH
+         3Xnzz9O2DHIO6oRPieCI0oYD1704mAHPcKyTl2UTwURhGjx2Oc9zqMN6NkNv62PbzYX6
+         o/GrY5geSuEXBiVePoPrtstgBuLBWa0v7lIMdWIGcqTxhVbIq4pDihyfgl+kWRn/IIXl
+         SSEpW6T1HJkMMutnNclfRGQKxsDSJeVzc7+RuKZY6jvM8pgUC4ABU2z4K8n9skLnCBN+
+         7lMA==
+X-Gm-Message-State: AOAM532orn0zZugeB4FMXHFVzNwIDEFO6FQnyBGEcqL1IprjamhguE5p
+        ETvSx6/xZRZFaqfH62+1P54=
+X-Google-Smtp-Source: ABdhPJzBdtuPpgt+j2Np+tFFbKUsasVLHBh68MsaUYgv2L7B+Zk/61mo73OVJC/luZPKqb4waQ5eCw==
+X-Received: by 2002:a5d:4b8f:: with SMTP id b15mr4384031wrt.38.1605280914863;
+        Fri, 13 Nov 2020 07:21:54 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id q12sm9984512wrx.86.2020.11.13.07.05.45
+        by smtp.gmail.com with ESMTPSA id m20sm13924160wrg.81.2020.11.13.07.21.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 07:05:45 -0800 (PST)
-Date:   Fri, 13 Nov 2020 15:05:44 +0000
+        Fri, 13 Nov 2020 07:21:54 -0800 (PST)
+Date:   Fri, 13 Nov 2020 15:21:52 +0000
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     Wei Liu <wei.liu@kernel.org>,
@@ -52,58 +52,85 @@ Cc:     Wei Liu <wei.liu@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 06/17] x86/hyperv: allocate output arg pages if
- required
-Message-ID: <20201113150544.drm4qk4jlchewukg@liuwe-devbox-debian-v2>
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
+        <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v2 07/17] x86/hyperv: extract partition ID from Microsoft
+ Hypervisor if necessary
+Message-ID: <20201113152152.omo6pljscvlrzpsc@liuwe-devbox-debian-v2>
 References: <20201105165814.29233-1-wei.liu@kernel.org>
- <20201105165814.29233-7-wei.liu@kernel.org>
- <87a6vmy4dn.fsf@vitty.brq.redhat.com>
+ <20201105165814.29233-8-wei.liu@kernel.org>
+ <877dqqy3yw.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a6vmy4dn.fsf@vitty.brq.redhat.com>
+In-Reply-To: <877dqqy3yw.fsf@vitty.brq.redhat.com>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 04:35:48PM +0100, Vitaly Kuznetsov wrote:
-> Wei Liu <wei.liu@kernel.org> writes:
+On Thu, Nov 12, 2020 at 04:44:39PM +0100, Vitaly Kuznetsov wrote:
 [...]
-> > @@ -209,14 +219,23 @@ static int hv_cpu_die(unsigned int cpu)
-> >  	unsigned int new_cpu;
-> >  	unsigned long flags;
-> >  	void **input_arg;
-> > -	void *input_pg = NULL;
-> > +	void *pg;
-> >  
-> >  	local_irq_save(flags);
-> >  	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> > -	input_pg = *input_arg;
-> > +	pg = *input_arg;
-> >  	*input_arg = NULL;
+> > +void __init hv_get_partition_id(void)
+> > +{
+> > +	struct hv_get_partition_id *output_page;
+> > +	u16 status;
+> > +	unsigned long flags;
 > > +
-> > +	if (hv_root_partition) {
-> > +		void **output_arg;
-> > +
-> > +		output_arg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
-> > +		*output_arg = NULL;
-> > +	}
-> > +
-> >  	local_irq_restore(flags);
-> > -	free_page((unsigned long)input_pg);
-> > +
-> > +	free_page((unsigned long)pg);
-> >  
+> > +	local_irq_save(flags);
+> > +	output_page = *this_cpu_ptr(hyperv_pcpu_output_arg);
+> > +	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page) &
+> > +		HV_HYPERCALL_RESULT_MASK;
+> > +	if (status != HV_STATUS_SUCCESS)
+> > +		pr_err("Failed to get partition ID: %d\n", status);
+> > +	else
+> > +		hv_current_partition_id = output_page->partition_id;
 > 
-> Hm, but in case we've allocated output_arg, don't we need to do
-> 	free_pages((unsigned long)pg, 1);
+> Nit: I'd suggest we simplify this to:
 > 
-> instead?
+> 	if (status != HV_STATUS_SUCCESS) {
+> 		pr_err("Failed to get partition ID: %d\n", status);
+> 		BUG();
+> 	}
+> 	hv_current_partition_id = output_page->partition_id;
+> 
+> and drop BUG_ON() below;
+> 
+> > +	local_irq_restore(flags);
+> > +
+> > +	/* No point in proceeding if this failed */
+> > +	BUG_ON(status != HV_STATUS_SUCCESS);
+> > +}
+> > +
+> >  /*
+> >   * This function is to be invoked early in the boot sequence after the
+> >   * hypervisor has been detected.
+> > @@ -430,6 +453,9 @@ void __init hyperv_init(void)
+> >  
+> >  	register_syscore_ops(&hv_syscore_ops);
+> >  
+> > +	if (hv_root_partition)
+> > +		hv_get_partition_id();
+> > +
+> 
+> 
+> We don't seem to check that the partition has AccessPartitionId
+> privilege. While I guess that root partitions always have it, I'd
+> suggest we write this as:
+> 
 
-Indeed. This has been fixed with:
+Yes. Root should always have that permission. That's my understanding.
 
-    free_pages((unsigned long)pg, hv_root_partition ? 1 : 0);
+> 	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_ACCESS_PARTITION_ID)
+> 		hv_get_partition_id();
+> 
+> 	BUG_ON(hv_root_partition && !hv_current_partition_id);
+> 
+> for correctness. Also, we need to make sure '0' is not a valid partition
+> id and use e.g. -1 otherwise.
+> 
+
+I've changed both places.
 
 Wei.
