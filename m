@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1CD12B39DC
-	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Nov 2020 23:26:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AA782B39E9
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Nov 2020 23:34:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgKOWZq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 15 Nov 2020 17:25:46 -0500
-Received: from mail-bn8nam11on2099.outbound.protection.outlook.com ([40.107.236.99]:36576
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        id S1727965AbgKOWct (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 15 Nov 2020 17:32:49 -0500
+Received: from mail-co1nam11on2108.outbound.protection.outlook.com ([40.107.220.108]:60224
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727944AbgKOWZq (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 15 Nov 2020 17:25:46 -0500
+        id S1727971AbgKOWcs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 15 Nov 2020 17:32:48 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Sek5+Wqnp204I3D5vZxpLQ4bb0yX3ylZ7YAgUo/TeUrI6kvJf04/4CSUVpUQEjN7R4gsBQ39+Daq0sUCBIcKPNWy+wuztI8G9zaCmuj7KZt7a0AgSSUp4avOZWWmL1JqOjKhaG6CeVN1Ony5OwWgLqB67zEX9HamjLD4eWkMrNPL5cIkeFeYGXiFBalbzBRZTc+0qkmTKNYIPWbYq/lVWjAiG+jq9zM4CMyT3CRGt8tdIS+H7u6pxLivIS1MupRf5oXeqRM8fWxLIZ/DxdBzuaOp7r78TCbGCBdLqy4EPCqlqczei/HdU5CY+ingFmyR5yGxkUCxeZ5ZWUF4P6vt3A==
+ b=N2mTdbxyc1lfvcD2ooS19uTRHOSe56XUYUBZQwkpnKefdrFIJzyF+LBLkCXDfFC5FuutanjPCQTiA9SGdJ+wC/9INrnQNZrj9w0mnThWx9+CEnyF8/+Or9tyQDySGN50NdAEH8+83pE7AyoBBmWN+BLXQNPTIAHqHQ707i8FRjq5IdaZzRTZRRiHktu9lmQ0hnaMLDCZnOL8jXOC544i+A1NI5/OkbJ+84HI+yXw1XKMvXW0v41UiFoKg1V4qcgN5KUBMTeh2M1sujxO6+igdRRBhYTiMqKFto0riSL+P3NssBC5GSrihy2OrfpMFCqDznr+Kqw5cKA3OI9Xj0rZfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UnjKMmhAMmTSHUosDv+bRhzijJ3l1JknxNkgfJaTzKc=;
- b=LIEt1vdyAYb9MRzin4BvHKAIQkmhdLmJTZzxsfiAlqjSXM2Wb7baX2/C2+SCyy3LkqU3i1rbYRWX8Yy6ecEsrnsij7rHUvy+smtObmhGlvKgE8ayjiTGXFDzhB91uC8pAxQQUo1CiB++sgSC0NNDsGna24qiQlvzDkBF/9sPqOTJ6IwMLI9/qS2sACEVojzUl0WLbVpQiSSc7iq+BJEP0jYdSgj0S+KVeqoT7lCXwTPEXVmjX5zKNVBLSwoNQ0JVK3b3xUTCpbOucx8ebMxvuI6+O/JVuKFVvAAiMF2AaaDdSgTSV8xpHNifPpxeIFywlFv6Ub7yR1t4jKDc7i+Exw==
+ bh=UUYgEgIPK9ttm3lP9vthk0pxDJiUkrjlvGQaF85CPxs=;
+ b=nXj+schI7HUm5GyFeFhK3crLcm/HWbRhEjIQG191TaPexXW9TIIzE0IjpH8kbC+C8W2FGPAggWQs5bgQFBQhZLqxLFLkjwBvUmy4sDBBFhtT0UFDj0BsL9kU8ZF5HnjRDSlLLhl0/ts1bQz+I3yXYgKBJcy8YvJlDZ+w4Y9WJWtCege49V9hTjKP/3m51h6MBL94ZW4hOiRbcbQQyF8GQCllpcxkfq0CmZN8hKN4+ts73X2/LzdvbI4jh2V/gilC5oK8tXFxIofvBgC1ktxLoMA7j+ut14jLB0YYxHcziTRMI1SLONZfCsr161te6R65OHuI73AVv7STvfcp6A2crQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UnjKMmhAMmTSHUosDv+bRhzijJ3l1JknxNkgfJaTzKc=;
- b=DJzWWJAP9u/jLFaXeUDMe6FRkzQbtsG2F+7jPiiFydz7qfPsJErRt/GSTrzEhRbHDm/WsCXsQrMoluQV48Xl85tzkf+NtMQ+7104aIsomXfPU6aP9qzX16Afj4SSO+CSoXBDn7ZncgaqYGCW2ZBIAoS9WONQMxoGZEOuDHCWEu0=
+ bh=UUYgEgIPK9ttm3lP9vthk0pxDJiUkrjlvGQaF85CPxs=;
+ b=I6GgS0iG2Sv1Vj1XEb+CB+4BdBYIllvCP4ZbdUpeaGFBPRe1HFrPomxj/G/WBa9+Pw9vi5nhHS6aSAUCpiO7G28IVCL9k7B6DvQzph5JMv6ECg1ON8GAzLEWGAzG8EAXWVQm0UVgFlgxnZE/3XxoMnLbMTX3Dmhy5UR8vLODgcM=
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1049.namprd21.prod.outlook.com (2603:10b6:302:a::13) with
+ by MWHPR21MB0176.namprd21.prod.outlook.com (2603:10b6:300:78::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.4; Sun, 15 Nov
- 2020 22:25:38 +0000
+ 2020 22:32:41 +0000
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::b8f6:e748:cdf2:1922]) by MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::b8f6:e748:cdf2:1922%9]) with mapi id 15.20.3564.021; Sun, 15 Nov 2020
- 22:25:37 +0000
+ 22:32:41 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     Matheus Castello <matheus@castello.eng.br>,
         KY Srinivasan <kys@microsoft.com>,
@@ -48,24 +48,24 @@ CC:     "sashal@kernel.org" <sashal@kernel.org>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 4/6] drivers: hv: vmbus: Fix checkpatch SPLIT_STRING
-Thread-Topic: [PATCH 4/6] drivers: hv: vmbus: Fix checkpatch SPLIT_STRING
-Thread-Index: AQHWu4m02H3gu/UJQUqYA2qrmrFMFanJw6GA
-Date:   Sun, 15 Nov 2020 22:25:37 +0000
-Message-ID: <MW2PR2101MB1052B329DFC5D54F4D7501E9D7E40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Subject: RE: [PATCH 6/6] drivers: hv: vmbus: Fix call msleep using < 20ms
+Thread-Topic: [PATCH 6/6] drivers: hv: vmbus: Fix call msleep using < 20ms
+Thread-Index: AQHWu4m7xzn3Sd6FIU2NfKxEb258TKnJxwIg
+Date:   Sun, 15 Nov 2020 22:32:41 +0000
+Message-ID: <MW2PR2101MB1052895CF04FE8C1593619ADD7E40@MW2PR2101MB1052.namprd21.prod.outlook.com>
 References: <20201115195734.8338-1-matheus@castello.eng.br>
- <20201115195734.8338-5-matheus@castello.eng.br>
-In-Reply-To: <20201115195734.8338-5-matheus@castello.eng.br>
+ <20201115195734.8338-7-matheus@castello.eng.br>
+In-Reply-To: <20201115195734.8338-7-matheus@castello.eng.br>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-11-15T22:25:35Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-11-15T22:32:39Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d6ac0950-a302-47d4-a6e6-983c9244fc02;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6d32d04a-8b53-4d7c-be1c-a1c99c683e81;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
 authentication-results: castello.eng.br; dkim=none (message not signed)
  header.d=none;castello.eng.br; dmarc=none action=none
@@ -73,116 +73,59 @@ authentication-results: castello.eng.br; dkim=none (message not signed)
 x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 48dfb258-b259-4891-601d-08d889b560ce
-x-ms-traffictypediagnostic: MW2PR2101MB1049:
+x-ms-office365-filtering-correlation-id: 7b3774b8-8719-4d5d-85a6-08d889b65d38
+x-ms-traffictypediagnostic: MWHPR21MB0176:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB1049470D4659AB74F09073E6D7E40@MW2PR2101MB1049.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-microsoft-antispam-prvs: <MWHPR21MB01769DF7B91B1E780C0FC968D7E40@MWHPR21MB0176.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1201;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UrOQny8dgRkMSNfchyCaBBOPfDG9QWvHXj6/mOU9qS1rddCtqujeJeJv3XSav7NqE8oxi1U9NcxWoNUh7yT6xao8vRB9fzIUva2suAFCNVW4f9DqRGwP5SZOjS94OEMOchIBbPt2fKYtjh8N6QZw7L3pGqNh7yfUMLZMhGgZ1RiyS0OSnuzAjDjCPh9sxQqGqZ7QgT9oD4NCP584Gp0e01J2mM8j5/TGfH0LrsouuHLtcdnMA/q4gNGdwvenRfDaBG/4v/MbBnMX5ZOiJrxwvu5pylsKoAwhgEoDimei04iBtGqyr/labOHVFP7mupnqc2eD965XxtmWYGQs4m/5iA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(366004)(346002)(39860400002)(136003)(186003)(316002)(54906003)(86362001)(7696005)(110136005)(8676002)(2906002)(76116006)(26005)(82960400001)(8990500004)(8936002)(9686003)(82950400001)(55016002)(6506007)(83380400001)(66476007)(5660300002)(66556008)(71200400001)(33656002)(4326008)(52536014)(10290500003)(66446008)(478600001)(64756008)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 7eKX32cVX4EzvOjKVAyA4KmF/ekp5MEsojD6AS5bnIDeofbvirM3QLWek98bmQX2ddKgPzZS+cQfrgyKNTvWPKmcda32J6hhlWzB2pFbjAvS5DcXbhql0g/Jp+qB1NehPVzF7KF/S0cNEe1lirRsfvR/XItAUZ5i5rsEvc3biY45BzUsPEe3eVfoZFSQDXt31KacD9JWaK9HV2MMDkTXW1xKY3VizQria1BVLJOTl3DeZAIatDcJO72bKSN2IaPsj9F8YztFXlF+O82Rb9oEYiezs9a1HnmX+vjMfh1fXPRwiZoHZ50bbSZBy1EGxD9dn4kZQoJ2sNfz4PObGh0d4GlNezBleJTidSeXhF8ISevAeQ92AJrK4BVn9Z0Xwk0CIvaZNm2okypKROjVoFua/UAFxZ7pF5pMNWb/vCJ7QoeAjzHCHeuj08IGzvb/s7Lxnt+T9k5VQsbgKwZJGItWGLUwJ/Rhtj82n1+/PtuaDwfa4p3e7+h59Pysk6OEq8IA9nWkx0y6NFC9MKRyRMNqRHOTmLLzYr19KA5JbWEruz4hl1eQYe8w2fkPdCseODWiyPVZALE4nh2jYAQc9n5yBfTKsPoU8PgW+/mQQiqeDlhB4sGbR08CMwjgZrYQ5josRN3CT9rVHBDUv+aCJ9UWiRTEkJlOaVf9zoOglwIxtoynW90Kg+T6VWo0FAa/HEM+ZdZCpnAi6zbsHxR4huYP/oNnEFTrcftlNh/sXi86c6WhXJKHqBRyLKp4l28LnieYX6RZhSUx48SqK3sEWvu1BdtsbxLQuGdDX7uD+20YsqxYUiQ6ATec0+qjfgggD3v4oV/PPTwENd6eHMvwN3s94UjLnvTX6PqKv5gmc45UGMf1M4lqqgdEA2Wh6b45p+lzqgW/bUa+aIfQFYXyKIzfgw==
+x-microsoft-antispam-message-info: afYTji+EL+lazNnH7/tmwqwMMLx5aAxy/hjRgGI65V+/fYOV0YrPlMOXiXZrD8fL9kP7WMYbcEXlKnIbA5S5PYBkAYuEmG1FSQlEMLbzvH/2Kbj0WwyBb6cTXEqw5IBkSWfpGZHmk9KQBOKpQtZ0DfWnpSViAPvGCHkGF4p51/yTOFvZHkNlMVx7pwWyRoC4V0kVVYrVvCUOWCwsRp6/NDda8ejXVL5MV7JVGxzOtTiGVY+oQ2eO9UM/mTPl4qBs4FSSjM0sq/b8nY+M12nId462+3esAtgE+fAa0UlMQ8B1oWHHJzht7j+4DI+5QvRBOa43NLh+dMgopo7trwLLig==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(10290500003)(478600001)(4744005)(186003)(26005)(8990500004)(83380400001)(7696005)(55016002)(52536014)(6506007)(9686003)(82960400001)(82950400001)(5660300002)(66446008)(64756008)(33656002)(2906002)(86362001)(316002)(110136005)(66946007)(8676002)(76116006)(66556008)(71200400001)(54906003)(8936002)(66476007)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: HqB8tbH9NinRK5cRBM3GXtlfOGqxwxmz1vRHu6iFAa1aUQDHcZIV4Ld2MM1GboPkAOdSu04c63/mbuuYL3mArBfD/ZQ5jSs+21IDmpybdjv9BSyxUwUDtBkVJrVN8pNmbZubG6jBSbSW2s5JG+eZRV8tKmcyPIHRSKBLbqdeKJXPYbWn5ScuLBSpzriwDB9z55SvC6oJ0tBumfTDJSxuTeWW/qnilY6+D8A5+odNJbxEFyqwHXtdsFv1YGG+ccIN+Uc+L7CC6tg8WffiY5+Ve3P2G8d78Zrp16z1lne28KQA260TLMYruuOTQSk/gK6pW9LCfRx+mSGouQCTJIG5MogXhFHvpcBHVjM9oRPf6uGY6frgnsbt+BBaCt23g3hY5noGr7eZdsxJYn1DUDpZYL7d4EDycjp0UqEO9zq1XtjHdauPRqkNAtpJn2Zmk83RjYWzEb3V9xYS37Gzpj0ETQngEdPVlm6HcoDATUc9tFzbU8cU7QBdmA/7kNISoyzdlPBA76Q3IPPXXsoFrjIUj+NRZl0PPKAMLKeiqV+PPHP+THWxlvyp78/OULMvaVVh29/hRsSKSVpyxVcvz+d/qagNhFTOsJq9L80w6sk/6DD92C2O7t9QWzMt1iL2U14SZW3MB0lIj8x9AJqzZ95Z82KjZ7MpmVV2EaSGwp9YBvoWpWyBfXKwB0uMb6fcgO2JjZTz21HRWMYX11NdA68Vc6HaNxOfqQb7gAaDEBGRnIY76LTVv/1kRJt+X09w62qbFH373MnJD1fkZANanknqWy9RlFomhLkbyYTPuV7MfcQwiUvm9HJtRNzgCLfdqP6DuQozqeubfBQKTNJpM9AdeyRtgIFX1dJC/zGv2b+DsFgXwuqSl0zid7UBDKvcCnR1XOPY6J+87jOJtV5q+lKf9g==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48dfb258-b259-4891-601d-08d889b560ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2020 22:25:37.7409
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b3774b8-8719-4d5d-85a6-08d889b65d38
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2020 22:32:41.1275
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: abaRn+br4QFghURGnvJqT8uZ3JftwydEs/awn934vB+mslpNID1M5xsQNW1mmB0ep+/azN+fK+63UgC2TyJwgubUnv9WdEKmOUfP8kBmUUQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1049
+X-MS-Exchange-CrossTenant-userprincipalname: lSXQqmDT8iQXgo8CGgHH8qAKyX9ZEGERwjqjB3rr2LYmRxcvkjt/HL2HY1lhDh+yryq7FKyOhqAsJE62/Ov/Bowdz1/cbvp/QYUgmt6uQYw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0176
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Matheus Castello <matheus@castello.eng.br> Sent: Sunday, November 15,=
- 2020 11:58 AM
+From: Matheus Castello <matheus@castello.eng.br>  Sent: Sunday, November 15=
+, 2020 11:58 AM
 >=20
-> Checkpatch emits WARNING: quoted string split across lines.
-> To keep the code clean and with the 80 column length indentation the
-> check and registration code for kmsg_dump_register has been transferred
-> to a new function hv_kmsg_dump_register.
+> Fixed checkpatch warning: MSLEEP: msleep < 20ms can sleep for up to
+> 20ms; see Documentation/timers/timers-howto.rst
 >=20
 > Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 > ---
->  drivers/hv/vmbus_drv.c | 34 +++++++++++++++++++---------------
->  1 file changed, 19 insertions(+), 15 deletions(-)
+>  drivers/hv/vmbus_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
 > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 61d28c743263..09d8236a51cf 100644
+> index 774b88dd0e15..cf49c0c01206 100644
 > --- a/drivers/hv/vmbus_drv.c
 > +++ b/drivers/hv/vmbus_drv.c
-> @@ -1387,6 +1387,23 @@ static struct kmsg_dumper hv_kmsg_dumper =3D {
->  	.dump =3D hv_kmsg_dump,
->  };
->=20
-> +static void hv_kmsg_dump_register(void)
-> +{
-> +	int ret;
-> +
-> +	hv_panic_page =3D (void *)hv_alloc_hyperv_zeroed_page();
-> +	if (hv_panic_page) {
-> +		ret =3D kmsg_dump_register(&hv_kmsg_dumper);
-> +		if (ret) {
-> +			pr_err("Hyper-V: kmsg dump register error 0x%x\n", ret);
-> +			hv_free_hyperv_page((unsigned long)hv_panic_page);
-> +			hv_panic_page =3D NULL;
-> +		}
-> +	} else {
-> +		pr_err("Hyper-V: panic message page memory allocation failed");
-> +	}
-> +}
-> +
-
-The above would be marginally better if organized as follows so that the
-main execution path isn't in an "if" clause.  Also reduces indentation.
-
-	hv_panic_page =3D (void *)hv_alloc_hyperv_zeroed_page();
-	if (!hv_panic_page) {
-		pr_err("Hyper-V: panic message page memory allocation failed");
-		return;
-	}
-	ret =3D kmsg_dump_register(&hv_kmsg_dumper);
-	if (ret) {
-		pr_err("Hyper-V: kmsg dump register error 0x%x\n", ret);
-		hv_free_hyperv_page((unsigned long)hv_panic_page);
-		hv_panic_page =3D NULL;
-	}
-
-
->  static struct ctl_table_header *hv_ctl_table_hdr;
->=20
->  /*
-> @@ -1477,21 +1494,8 @@ static int vmbus_bus_init(void)
->  		 * capability is supported by the hypervisor.
+> @@ -2382,7 +2382,7 @@ static int vmbus_bus_suspend(struct device *dev)
+>  		 * We wait here until the completion of any channel
+>  		 * offers that are currently in progress.
 >  		 */
->  		hv_get_crash_ctl(hyperv_crash_ctl);
-> -		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG) {
-> -			hv_panic_page =3D (void *)hv_alloc_hyperv_zeroed_page();
-> -			if (hv_panic_page) {
-> -				ret =3D kmsg_dump_register(&hv_kmsg_dumper);
-> -				if (ret) {
-> -					pr_err("Hyper-V: kmsg dump register "
-> -						"error 0x%x\n", ret);
-> -					hv_free_hyperv_page(
-> -					    (unsigned long)hv_panic_page);
-> -					hv_panic_page =3D NULL;
-> -				}
-> -			} else
-> -				pr_err("Hyper-V: panic message page memory "
-> -					"allocation failed");
-> -		}
-> +		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG)
-> +			hv_kmsg_dump_register();
->=20
->  		register_die_notifier(&hyperv_die_block);
+> -		msleep(1);
+> +		usleep_range(1000, 2000);
 >  	}
+>=20
+>  	mutex_lock(&vmbus_connection.channel_mutex);
 > --
 > 2.28.0
 
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
