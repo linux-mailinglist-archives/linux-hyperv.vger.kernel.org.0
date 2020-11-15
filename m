@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA072B39CC
-	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Nov 2020 23:12:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0E792B39CE
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Nov 2020 23:15:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbgKOWLk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 15 Nov 2020 17:11:40 -0500
-Received: from mail-dm6nam10on2115.outbound.protection.outlook.com ([40.107.93.115]:21534
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        id S1727667AbgKOWPS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 15 Nov 2020 17:15:18 -0500
+Received: from mail-eopbgr750111.outbound.protection.outlook.com ([40.107.75.111]:20067
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727656AbgKOWLk (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 15 Nov 2020 17:11:40 -0500
+        id S1726298AbgKOWPS (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 15 Nov 2020 17:15:18 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X+0+RgKcE86to0n1jk6uC8L1bRVUYtNCbSovjhG6OAFDJd7OdS6ZEtcwVogF+brW7GIww1anD6pP5XyVOJcfK60VlfNTOvCv/wxEjnJNdJWX5r2vF2QKZd1U4lhIZxPqNxuGRAloIHtcVPXPmGxVHXXsPRj/LEbWxzzjuS3LmNKzI2Cnpa1GQRxxAjr28GrMp1WJywobLElJEQJ+vOeQfGNj+A5yK7pAuKjSbgurIthWYeDpmMTJpHIyTwKvXVCoxs9zJGwSEmDfNQ/frQ9OGswCY8q0lP1T9D2P6xeZqB1awvHXSVu2/Yfr/iorNrNpWyifBwFbqbzGldV39acIng==
+ b=ki93NhroKj/Lv6SiiQYDgS6mzhtUnRGw1pXe6qD0meNFvP986qmlvWVtyzeY4OmULxbeWVkB33cRqb35pHrWCIMuTmf45AIjMWDWRD2DWmFjZWyYY3YvpgFpAHNAH643Iy5kdEvtld7gaxmM+9lNKGXiW6mNEd6yXokBb3rSOaSgFG2TVWsY0JUpTTVbT91vDOiCSr94fISUGECqYtLX7+K1R5pnIi1XA8KwtaBzEAR3VzfGqR6hcG/3iYJiPfJu4bW5XBeN9H1rgZeC2hMdHhcWMfjY+DNgAAbof+OyJenifzIFpfBYfIW2sWhi0relu8DZ+fam/66JIdVMkilpnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5OBNQZCTpGlTESwmTMKu5+WI+K743l/tp5JhqQav9Tg=;
- b=OrIKT0DE4albVPk+eyDOYGe9lKTC3i0W73hcWm43BYkLr/wBKg04SIUQHXl4pqd106QwKmCXcpd0LUAbc7xPPdg9Dl5hmvFvgF9y4R6ERyYN+a36E83zwDe9oQ44r31uLxkC2KQ3ekXbiRxYmdWSkQulHhqdliKpu+SU9e51fc1V6g+tYOHjBRvRtW+t9RpyOCkN+mMPMW3j2IJ+rlmsT4UVQ3bYRCj1MbMws0abQTHAiGl6kqwcKPrM5w0sqt1CqxTM+Hew1/V+Sj+q5xjz17aY+qjo8QiA9kiuTIlxetb3CDi537/N77uQSUKEzH21MjVPSrxxnWaBHsqJi6e6Gg==
+ bh=QU4oGIWraGhNGBiFhlf8DQco+6gpRCcJJvlhQL+sFPg=;
+ b=BvcvQRbTQc9+rG7QW4MazGOx2TfCoJ0FxhBup7uqyvFe4KTwLKohBZbvIB2N5VfDxQWxfXyqo2g9M6Ui4es9o/Om2PsixWtTOocn/FwjfUtPgZqhWC65pvCX25a/eJ7pCnuoT3d9bfahaTBISg57dsV48S2Dvu+cBkW3LIkFgo6cvY1ipgFHwLRRzPjIxCZym9lBr04UHPG5PWV/vxpmqzfUAgnsN3QWGR2T8HqFIBKtH0AMH0sgYgFwZTkfQqSMOiNRiRZ2i9/pkjtRmnN09H9irpiRVnbAd8CkIwJTgsFCMgjr2SgxcBP6VMpcw07lHit6/H+zb6VOLY3LtfYnyw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5OBNQZCTpGlTESwmTMKu5+WI+K743l/tp5JhqQav9Tg=;
- b=EUwJ4z7ByrJ5aBsMM+jFPR2ciiDnLFHFIbBlpL4XfMyzjLX+kI39mKWvLfIfSk0KAJuTNAQiW1JWX+6+Sy2W501yleb6M9jDJK8c7OgUmofd86ban9smFJjCAlA/5IcPAPEpwFPmdRZDRwLooWgbJ12PruEp+B/LFa4jmS8VKEU=
+ bh=QU4oGIWraGhNGBiFhlf8DQco+6gpRCcJJvlhQL+sFPg=;
+ b=Keer20It+BRIn0p3iKoJsK4k4Pc1uoW5jWTHhL2VEntoa9hTrnWEr1G/Wnnv/KkM0mEjcEtpZ2edYcFkdjly4EeagstqY4ghiz/GFx1NLf6qKueUVB6Fsup3vm50uFg7iFGJRMlzyhYhGyPlyQm2LGvzAiEJ62E71bEjsAI2Xh4=
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
  by MW2PR2101MB0890.namprd21.prod.outlook.com (2603:10b6:302:10::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.6; Sun, 15 Nov
- 2020 22:11:33 +0000
+ 2020 22:15:02 +0000
 Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::b8f6:e748:cdf2:1922]) by MW2PR2101MB1052.namprd21.prod.outlook.com
  ([fe80::b8f6:e748:cdf2:1922%9]) with mapi id 15.20.3564.021; Sun, 15 Nov 2020
- 22:11:33 +0000
+ 22:15:02 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     Matheus Castello <matheus@castello.eng.br>,
         KY Srinivasan <kys@microsoft.com>,
@@ -48,26 +48,26 @@ CC:     "sashal@kernel.org" <sashal@kernel.org>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/6] drivers: hv: Fix hyperv_record_panic_msg path on
- comment
-Thread-Topic: [PATCH 1/6] drivers: hv: Fix hyperv_record_panic_msg path on
- comment
-Thread-Index: AQHWu4mj4353Jy5R+Ey/So4Y7vDOI6nJwTIg
-Date:   Sun, 15 Nov 2020 22:11:33 +0000
-Message-ID: <MW2PR2101MB1052D49DFD8B107E82819D23D7E40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Subject: RE: [PATCH 2/6] drivers: hv: vmbus: Replace symbolic permissions by
+ octal permissions
+Thread-Topic: [PATCH 2/6] drivers: hv: vmbus: Replace symbolic permissions by
+ octal permissions
+Thread-Index: AQHWu4mpNZcOG4SEKk2k9sOyR1R2aqnJwgyA
+Date:   Sun, 15 Nov 2020 22:15:01 +0000
+Message-ID: <MW2PR2101MB1052E58FC2A195EDB723B2DDD7E40@MW2PR2101MB1052.namprd21.prod.outlook.com>
 References: <20201115195734.8338-1-matheus@castello.eng.br>
- <20201115195734.8338-2-matheus@castello.eng.br>
-In-Reply-To: <20201115195734.8338-2-matheus@castello.eng.br>
+ <20201115195734.8338-3-matheus@castello.eng.br>
+In-Reply-To: <20201115195734.8338-3-matheus@castello.eng.br>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-11-15T22:11:31Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-11-15T22:15:00Z;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=50e27f4a-5b56-49f3-9e4e-e5282f680b51;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=128fdc9f-c3ea-48d4-8b40-75a25dc956b7;
  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
 authentication-results: castello.eng.br; dkim=none (message not signed)
  header.d=none;castello.eng.br; dmarc=none action=none
@@ -75,59 +75,101 @@ authentication-results: castello.eng.br; dkim=none (message not signed)
 x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a56a6e41-8bdc-4cba-eac2-08d889b36973
+x-ms-office365-filtering-correlation-id: e023942a-5d7c-40a5-2135-08d889b3e5ce
 x-ms-traffictypediagnostic: MW2PR2101MB0890:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB08903ADD386589018AE6E788D7E40@MW2PR2101MB0890.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-microsoft-antispam-prvs: <MW2PR2101MB08905B90F9D27DF75E91370CD7E40@MW2PR2101MB0890.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:269;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NO9vra0SBM9f3nOnisPaXX0o9U2GJZAgDpnMpFtYE3EwBOCgRDDRvRPJXL4L/yR+HlzbIHAmggXtmlGnuT6SyZnlhKqJEaHrxK4QC7tNHfMRK+K9qtTbL1LQqSw0rBQUv0fv6fxQaiYyPGCJA7cMi/1DDbLnVxrRxIBuPQ5sHvwPsvO4AKJNa9yjZI9kqJgSdk4djOhrqUXjR7+RRvqGic91Ns1+mdIsO1FtcYvKTkQO+db0XSa69NRsWd2S3BVCc7kRQ6T2jy6d7x0SeJ1TZc1CvGTBB7nl3UUi6CM6g20bo+R5eCiUp5Xc5s8Ayb9ssZ+lBLxzO98MpMluRSFPlA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(136003)(39860400002)(396003)(346002)(64756008)(82950400001)(7696005)(4326008)(316002)(66476007)(82960400001)(66556008)(8990500004)(5660300002)(76116006)(9686003)(83380400001)(66446008)(186003)(478600001)(2906002)(110136005)(71200400001)(55016002)(4744005)(33656002)(54906003)(6506007)(26005)(10290500003)(8676002)(86362001)(8936002)(52536014)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: r4hAVLMkXOXqhCpTdqAGgGOxO8c0zlqJCIyFICQg9Psz+N41rQt0NaSrSb2MVUWCvd4ycj7iJFK/JE8k1WXX7Tt8ZuVLTi/OpIOSDOAaBrjgMrETAhQI/JnKhwdo9AYv8EFbDRUGtTob/bqF/F0y8EV0Z9z3fCwmxwBY7MdtX3yFB4R/49aERHQ3i9Ian+A88EU/L78OC5doOkztAsBbP0GQW2TkEQH0lN3RHayRItTRK1gHev3ysDtuCA6qGxBcekFUyWRRIlW9wvd1wY2eJGmidX0AGBZwBQLnT3/Nnt029QxWG3eaJKjFDhZl9594MDKu5MPw8Qtc6B7V+56LWeMR6GCdMW043ktPNNXNNtRQgJE5UcZ2T+hJO1CwTUzajOqMJSFgxHTZl4J0HUaLCCTk6jT93Vv7Vm5RIvfWhSN7IG1H7Bo/zq9eOzaIhCLh8EsMlJ50lEWWhoxnyJsyzSu0d7VLHNMT4LG5lZki/MtV5jODzxqyd+8KXm4PhEO56Fm/9Uu9VVd3sAnbUe7098u7V2jA1wbFOAzf5KXwZsN3XTcqPSQytACpgVgIdNFOQU530ontUNvqaHZGqQSnkIvmwE79OuJaggLVmKmrji35ER9HeX5MA8Q2Y7NBTKrxrLzUe3Bg3nRf+a01VdR2vKkx130t0T3NmNlR6vUxVnJ+9Miy7wGCFZvHgYvQLbDgLC91atcGbdaTNGs11okx7mpWs2On3QbK09NKIQyxaGxnYwuxMXJjsaNV22so9tb7cFtBgXyDbWxRAaLoEUEEMoy5A2ZPZ8rpRcu9jTEKa7738UuxarJuZPctU4qmLPJxXs3I23RrBR6It6hcKqpTqpqdugoPDN6bsfS0oLKNKVw3IL1c5QzWOrzDwHShG1e/QJWfH3aKdcqoVT6awbeU/g==
+x-microsoft-antispam-message-info: buneT61BXJ0oHuYQyvoUL1XrBvSDGTaz8EC28PRRo3nIWnPYiz3SugMA5IRaiz1OLj6abLj6Ig8eSdLfKor/4VCTf7uKiHDo0apjKFLjKggpIyUmFV7Nl/XK2HsdtolqvkyZYQQlNyn70OT29m5yBuDgkmAGwzpylaF4pUPLzpvf0/92zQkErQBCvQVLMMhjDPH2V6TuLuyElg0O5AkUXravTbH3OYjRilbhnI4qAXu/mhr+E9Q7EJbRw1kX4dVZBg9VpjtV2SdBJ/k8+WPNSb6AY9wRfGHBOkxORClMnolYcC0mPouZlKR60T4ZMsWZpHSyQpUyp1Et2ey7FKbiKA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(136003)(396003)(376002)(366004)(33656002)(6506007)(54906003)(110136005)(71200400001)(55016002)(86362001)(8936002)(66946007)(52536014)(26005)(8676002)(10290500003)(82960400001)(66476007)(316002)(8990500004)(66556008)(7696005)(64756008)(82950400001)(4326008)(478600001)(186003)(2906002)(5660300002)(76116006)(9686003)(83380400001)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: lAaT3r7HS1cZaKlHxiQoqLE7FJ9tTiGRiDpZhZgpXvLKuEZsUq0Yvd0sSUvaqpuTUWjMwJc+y9Xcv5dcq1s5fKDwRAyCPZaof5VZ7izAmEXxBIqNeNnyMUONfuM6nNdcQtgIqtC0sPImhWUnoenj9d+OrVVIa0rSR3jGvaeE55cOtx+ZWB6wp1712sjRbGNSn1VWnR16/QQMLWE418hqD7I2DUl3fVXpfxgfT8dRV9ROb2Uxtk+XG5F1KvHkRbMcce+dKtZo1Pi7ul3+m/xUzH/0OL2ZV26Dzxe7bKq7D68F8itswedxJ6PSQHtEkiNVWZsZd6yihPEYuw3eS8SlsfZVAJHYShlvCzd6vFIqYgn+yLgobsRyDqRzEJJGYt5k5AzlFHu1R7FOY2u2nexWmodYcBaVU2ZIZMjamUafV3VjsEj5p0NQBP5h810GV8nCb7g6zQSsEF2pwr/Eob+n7bJyxO+uNlDhLqvf+kHKWDGLjvysBMukbvggz8IHKux/PHPgvlP5OjomxaqYHhbRTQUm69Ap/NsfUDuESBg4Mob1R7A5+f9Vex+F1piHQTxDhaoARqPyiC1pMMksC3O4SjMfHThNPdYoXR4l9Fv0R1wPL/+OMAxvauXjgNLpPMS36khLDXdA0jIdDjU9crKQOm0gQhRJQgeWSuMpxc0dAK8JcuUDL2ue+RcVx0xazrso5+GQvC9JHKXuPyWhb+4EvCgz7ckOAJkLrDB2+Qm+1LIkVNfh7Pi8/G5BBItPwh/l8T9MAWmdRP9XWU6Eng02w8ZavKS6DniLlzzGtbU3eYfmyeAeHPc3huqlnfWm7gIzpzatlRr7Qmer2W2toB4Jdvz92pCILNO499sxZu4ZKMLoOoJZQKcxgLovzY6xSAS3CVfwSCqhOglgRJBUjNXVjA==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a56a6e41-8bdc-4cba-eac2-08d889b36973
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2020 22:11:33.1382
+X-MS-Exchange-CrossTenant-Network-Message-Id: e023942a-5d7c-40a5-2135-08d889b3e5ce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2020 22:15:01.8519
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ba2YVG9OEXxreg5vmKZjuHvlA5bXQdpyn0ZPociw8ffKswgO6NfOIEaG3B0XNyGzXLefAC8SafBBGkjh5LB8BJB9Ugk1Se2B5+fipir/WW0=
+X-MS-Exchange-CrossTenant-userprincipalname: 2Emqd8Xqcd0SnxUth4KSJWE/GgyKTmJYiPvrE6+1tRXCouQD8T3GYx/zmq2w+EuNtBgsUtbVFa+Xw5+wjqSd4C02J5HdvHC5us88IPj6uOQ=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0890
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Matheus Castello <matheus@castello.eng.br>  Sent: Sunday, November 15=
-, 2020 11:57 AM
+From: Matheus Castello <matheus@castello.eng.br> Sent: Sunday, November 15,=
+ 2020 11:58 AM
 >=20
-> Fix the kernel parameter path in the comment, in the documentation the
-> parameter is correct but if someone who is studying the code and see
-> this first can get confused and try to access the wrong path/parameter
+> This fixed the below checkpatch issue:
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred.
+> Consider using octal permissions '0444'.
 >=20
 > Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 > ---
->  drivers/hv/vmbus_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/hv/vmbus_drv.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 >=20
 > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 4fad3e6745e5..9ed7e3b1d654 100644
+> index 9ed7e3b1d654..52c1407c1849 100644
 > --- a/drivers/hv/vmbus_drv.c
 > +++ b/drivers/hv/vmbus_drv.c
-> @@ -55,7 +55,7 @@ int vmbus_interrupt;
->  /*
->   * Boolean to control whether to report panic messages over Hyper-V.
->   *
-> - * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
-> + * It can be set via /proc/sys/kernel/hyperv_record_panic_msg
->   */
->  static int sysctl_record_panic_msg =3D 1;
+> @@ -1812,7 +1812,7 @@ static ssize_t channel_pending_show(struct vmbus_ch=
+annel
+> *channel,
+>  		       channel_pending(channel,
+>  				       vmbus_connection.monitor_pages[1]));
+>  }
+> -static VMBUS_CHAN_ATTR(pending, S_IRUGO, channel_pending_show, NULL);
+> +static VMBUS_CHAN_ATTR(pending, 0444, channel_pending_show, NULL);
 >=20
+>  static ssize_t channel_latency_show(struct vmbus_channel *channel,
+>  				    char *buf)
+> @@ -1821,19 +1821,19 @@ static ssize_t channel_latency_show(struct vmbus_=
+channel
+> *channel,
+>  		       channel_latency(channel,
+>  				       vmbus_connection.monitor_pages[1]));
+>  }
+> -static VMBUS_CHAN_ATTR(latency, S_IRUGO, channel_latency_show, NULL);
+> +static VMBUS_CHAN_ATTR(latency, 0444, channel_latency_show, NULL);
+>=20
+>  static ssize_t channel_interrupts_show(struct vmbus_channel *channel, ch=
+ar *buf)
+>  {
+>  	return sprintf(buf, "%llu\n", channel->interrupts);
+>  }
+> -static VMBUS_CHAN_ATTR(interrupts, S_IRUGO, channel_interrupts_show, NUL=
+L);
+> +static VMBUS_CHAN_ATTR(interrupts, 0444, channel_interrupts_show, NULL);
+>=20
+>  static ssize_t channel_events_show(struct vmbus_channel *channel, char *=
+buf)
+>  {
+>  	return sprintf(buf, "%llu\n", channel->sig_events);
+>  }
+> -static VMBUS_CHAN_ATTR(events, S_IRUGO, channel_events_show, NULL);
+> +static VMBUS_CHAN_ATTR(events, 0444, channel_events_show, NULL);
+>=20
+>  static ssize_t channel_intr_in_full_show(struct vmbus_channel *channel,
+>  					 char *buf)
+> @@ -1872,7 +1872,7 @@ static ssize_t subchannel_monitor_id_show(struct
+> vmbus_channel *channel,
+>  {
+>  	return sprintf(buf, "%u\n", channel->offermsg.monitorid);
+>  }
+> -static VMBUS_CHAN_ATTR(monitor_id, S_IRUGO, subchannel_monitor_id_show, =
+NULL);
+> +static VMBUS_CHAN_ATTR(monitor_id, 0444, subchannel_monitor_id_show, NUL=
+L);
+>=20
+>  static ssize_t subchannel_id_show(struct vmbus_channel *channel,
+>  				  char *buf)
 > --
 > 2.28.0
 
