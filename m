@@ -2,100 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24EC02B3BD5
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Nov 2020 04:30:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6D232B4218
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Nov 2020 12:06:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgKPD3t (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 15 Nov 2020 22:29:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725969AbgKPD3t (ORCPT
+        id S1728438AbgKPLD6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 Nov 2020 06:03:58 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36012 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbgKPLD6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 15 Nov 2020 22:29:49 -0500
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B79C0613CF;
-        Sun, 15 Nov 2020 19:29:48 -0800 (PST)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1keVD4-006zpa-RU; Mon, 16 Nov 2020 03:29:43 +0000
-Date:   Mon, 16 Nov 2020 03:29:42 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 1/6] seq_file: add seq_read_iter
-Message-ID: <20201116032942.GV3576660@ZenIV.linux.org.uk>
-References: <20201114055048.GN3576660@ZenIV.linux.org.uk>
- <20201114061934.GA658@Ryzen-9-3900X.localdomain>
- <20201114070025.GO3576660@ZenIV.linux.org.uk>
- <20201114205000.GP3576660@ZenIV.linux.org.uk>
- <20201115155355.GR3576660@ZenIV.linux.org.uk>
- <20201115214125.GA317@Ryzen-9-3900X.localdomain>
- <20201115233814.GT3576660@ZenIV.linux.org.uk>
- <20201115235149.GA252@Ryzen-9-3900X.localdomain>
- <20201116002513.GU3576660@ZenIV.linux.org.uk>
- <20201116003416.GA345@Ryzen-9-3900X.localdomain>
+        Mon, 16 Nov 2020 06:03:58 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a65so23241607wme.1;
+        Mon, 16 Nov 2020 03:03:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vzbLBZlhKCzw8aWCXrtL3fgPKqSslz5XBfEd+0EuZTU=;
+        b=Nl6Y7U6D6g412Y5EyvaYTCNVZaNhDCfo/6IeUY5L73MmH1ugGTNqWUfZwNVqFPpUuE
+         3ca7JXnsSlFG6DkBD0M/W5rYqtXRofEDXF+TGC1G2q5MgiMPqNn4ZVMHnNsGF3eDMVol
+         2YT3k8VnzGI5DI2Q1i1i/Mmb2t19k1IWvBsMtovrFtcU4HYVg+MBAEnAJcFEMqVjVUYb
+         X/4KrWXSIpLt2kiVIep71sLFfz5F68xjog0jEjALedKlZ7hozjzagEFcRJGnVV616aiD
+         fuEToB58/IdcS+czQed2OlljxjugwaGWAx5JGCTtg6lroVat1YImZhURRNYl3eeN7fug
+         Saog==
+X-Gm-Message-State: AOAM530JXqUYKao7xX+4mrxemauNSkwj5o4i9fRmWF6wK9JkfgLYKfPl
+        Xppq3jVCrTEH7pK94zayoQ2w/VrrEJE=
+X-Google-Smtp-Source: ABdhPJxkE593KIIPiNQrAJmMLS9OVFuJKEQLkWmp7EhuYf4WWbZMwfZBIS8Lzv90wIsg3PY9Pwg09A==
+X-Received: by 2002:a1c:a185:: with SMTP id k127mr14596707wme.23.1605524634488;
+        Mon, 16 Nov 2020 03:03:54 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id w11sm20204620wmg.36.2020.11.16.03.03.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2020 03:03:53 -0800 (PST)
+Date:   Mon, 16 Nov 2020 11:03:52 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        linux-hyperv@vger.kernel.org, Andres Beltran <lkmlabelt@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        Juan Vazquez <juvazq@microsoft.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v9 2/3] scsi: storvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Message-ID: <20201116110352.obbqxzxw6etdq4cl@liuwe-devbox-debian-v2>
+References: <20201109100402.8946-1-parri.andrea@gmail.com>
+ <20201109100402.8946-3-parri.andrea@gmail.com>
+ <20201113113327.dmium67e32iadqbz@liuwe-devbox-debian-v2>
+ <20201113185424.ujdfx6ot7siqr5qh@liuwe-devbox-debian-v2>
+ <20201113213933.GA4937@andrea>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201116003416.GA345@Ryzen-9-3900X.localdomain>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <20201113213933.GA4937@andrea>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Nov 15, 2020 at 05:34:16PM -0700, Nathan Chancellor wrote:
- 
-> Still good.
+On Fri, Nov 13, 2020 at 10:39:33PM +0100, Andrea Parri wrote:
+> On Fri, Nov 13, 2020 at 06:54:24PM +0000, Wei Liu wrote:
+> > On Fri, Nov 13, 2020 at 11:33:27AM +0000, Wei Liu wrote:
+> > > On Mon, Nov 09, 2020 at 11:04:01AM +0100, Andrea Parri (Microsoft) wrote:
+> > > > From: Andres Beltran <lkmlabelt@gmail.com>
+> > > > 
+> > > > Currently, pointers to guest memory are passed to Hyper-V as
+> > > > transaction IDs in storvsc. In the face of errors or malicious
+> > > > behavior in Hyper-V, storvsc should not expose or trust the transaction
+> > > > IDs returned by Hyper-V to be valid guest memory addresses. Instead,
+> > > > use small integers generated by vmbus_requestor as requests
+> > > > (transaction) IDs.
+> > > > 
+> > > > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> > > > Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> > > > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> > > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > > > Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> > > > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> > > > Cc: linux-scsi@vger.kernel.org
+> > > 
+> > > Reviewed-by: Wei Liu <wl@xen.org>
+> > 
+> > Martin already gave his ack back in July. I guess nothing substantial
+> > changed so it should have been carried over?
 > 
-> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> The only change here happened in v7 and consisted in moving the
+> allocation of the request IDs from the VSC code down into the core
+> vmbus_sendpacket()&co functions.  As mentioned in v7 cover letter,
+> this change was applied to ensure that the allocation in question
+> is performed after the packet is copied into the ring buffer.  On
+> a positive note, this change greatly reduced the diff of this and
+> the following (NetVSC) patches.
 
-Pushed into #fixes
+Martin and James, are you happy with this change? I would assume you are
+because that means this patch to storvsc is leaner.
 
-> > BTW, is that call of readv() really coming from init?  And if it
-> > is, what version of init are you using?
+Please give an explicit ack if you can. Thanks.
+
+Wei.
+
 > 
-> I believe that it is but since this is WSL2, I believe that /init is a
-> proprietary Microsoft implementation, rather than systemd or another
-> init system:
-> 
-> https://wiki.ubuntu.com/WSL#Keeping_Ubuntu_Updated_in_WSL
-> 
-> So I am not sure how possible it is to see exactly what is going on or
-> getting it improved.
-
-Oh, well...  Anyway, as a regression test it's interesting:
-
-#include <sys/uio.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <errno.h>
-main()
-{
-	static char s[1024];
-	static struct iovec v[2] = {{NULL, 0}, {s, 1024}};
-
-	for(;;) {
-		ssize_t n = readv(0, v, 2), m, w;
-
-		if (n < 0) {
-			perror("readv");
-			return -1;
-		}
-		if (!n)
-			return 0;
-		for (m = 0; m < n; m += w) {
-			w = write(1, s + m, n - m);
-			if (w < 0)
-				perror("write");
-		}
-	}
-}
-
-which ought to copy stdin to stdout; with this bug it would (on sufficiently
-large seq_file-based files) fail with "readv: Bad address" (-EFAULT, that is).
+>   Andrea
