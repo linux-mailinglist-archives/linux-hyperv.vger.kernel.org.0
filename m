@@ -2,109 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6D232B4218
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Nov 2020 12:06:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B58D2B42B6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Nov 2020 12:24:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbgKPLD6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 16 Nov 2020 06:03:58 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36012 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbgKPLD6 (ORCPT
+        id S1728857AbgKPLVw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 Nov 2020 06:21:52 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38983 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbgKPLVv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 16 Nov 2020 06:03:58 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a65so23241607wme.1;
-        Mon, 16 Nov 2020 03:03:55 -0800 (PST)
+        Mon, 16 Nov 2020 06:21:51 -0500
+Received: by mail-wr1-f66.google.com with SMTP id o15so18269530wru.6;
+        Mon, 16 Nov 2020 03:21:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vzbLBZlhKCzw8aWCXrtL3fgPKqSslz5XBfEd+0EuZTU=;
-        b=Nl6Y7U6D6g412Y5EyvaYTCNVZaNhDCfo/6IeUY5L73MmH1ugGTNqWUfZwNVqFPpUuE
-         3ca7JXnsSlFG6DkBD0M/W5rYqtXRofEDXF+TGC1G2q5MgiMPqNn4ZVMHnNsGF3eDMVol
-         2YT3k8VnzGI5DI2Q1i1i/Mmb2t19k1IWvBsMtovrFtcU4HYVg+MBAEnAJcFEMqVjVUYb
-         X/4KrWXSIpLt2kiVIep71sLFfz5F68xjog0jEjALedKlZ7hozjzagEFcRJGnVV616aiD
-         fuEToB58/IdcS+czQed2OlljxjugwaGWAx5JGCTtg6lroVat1YImZhURRNYl3eeN7fug
-         Saog==
-X-Gm-Message-State: AOAM530JXqUYKao7xX+4mrxemauNSkwj5o4i9fRmWF6wK9JkfgLYKfPl
-        Xppq3jVCrTEH7pK94zayoQ2w/VrrEJE=
-X-Google-Smtp-Source: ABdhPJxkE593KIIPiNQrAJmMLS9OVFuJKEQLkWmp7EhuYf4WWbZMwfZBIS8Lzv90wIsg3PY9Pwg09A==
-X-Received: by 2002:a1c:a185:: with SMTP id k127mr14596707wme.23.1605524634488;
-        Mon, 16 Nov 2020 03:03:54 -0800 (PST)
+        bh=4otvzYMRpn5u2dT1OEQuqZOqoSrTSB+6sK/i5vken88=;
+        b=RnCcBHYpHtEsgBXymt44xatBlkg7iduGqvZ44z89rcw7mq2U836Wd89Nlq2cZJCRXp
+         h4cXIU3mpKVRFywhCvtVN4ZDdRcokYbos/Gv9RfhRXPRLw3pOTRJjIUiw6PSH/xRdY9u
+         NiA1IbOLPts8H96/YMJvn/9wzQdminIoohbVodwcZdAc4TMuemC/BqtA8hQN+LTN8fMA
+         fnZ+MU+u8dKvaHMemrlKevgZkx4VsTJoRfX32yCOLXI2lcMAvlKK+3/wfbc+rhV+VOs+
+         QXorTU4sK9Evy+rsHP7xnWbUkvo9/eNQMapHyw85dktcNwAggJzdUHwvWqthTnomgPyk
+         rBLw==
+X-Gm-Message-State: AOAM533Eq15PTNgrA1nC7efgUoU2/FpFGaUq9AikfSMRQrszGAue9ovM
+        eJ6U7XbfAzKxkRGg9AFpQpswDwVvG9g=
+X-Google-Smtp-Source: ABdhPJzQBZE1F78B52wEvpk1lDVAOhLMvV0VJ+FgXT8Mk+avsBREiHlAytaZ6ty4YqnjAz+kmGIV5Q==
+X-Received: by 2002:adf:9163:: with SMTP id j90mr17944799wrj.323.1605525709927;
+        Mon, 16 Nov 2020 03:21:49 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id w11sm20204620wmg.36.2020.11.16.03.03.53
+        by smtp.gmail.com with ESMTPSA id a14sm2518903wmj.40.2020.11.16.03.21.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2020 03:03:53 -0800 (PST)
-Date:   Mon, 16 Nov 2020 11:03:52 +0000
+        Mon, 16 Nov 2020 03:21:49 -0800 (PST)
+Date:   Mon, 16 Nov 2020 11:21:48 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-hyperv@vger.kernel.org, Andres Beltran <lkmlabelt@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v9 2/3] scsi: storvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Message-ID: <20201116110352.obbqxzxw6etdq4cl@liuwe-devbox-debian-v2>
-References: <20201109100402.8946-1-parri.andrea@gmail.com>
- <20201109100402.8946-3-parri.andrea@gmail.com>
- <20201113113327.dmium67e32iadqbz@liuwe-devbox-debian-v2>
- <20201113185424.ujdfx6ot7siqr5qh@liuwe-devbox-debian-v2>
- <20201113213933.GA4937@andrea>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, sashal@kernel.org, Tianyu.Lan@microsoft.com,
+        decui@microsoft.com, mikelley@microsoft.com,
+        sunilmut@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] drivers: hv: vmbus: Fix unnecessary OOM_MESSAGE
+Message-ID: <20201116112148.xfajvts4gtoibs65@liuwe-devbox-debian-v2>
+References: <20201115195734.8338-1-matheus@castello.eng.br>
+ <20201115195734.8338-6-matheus@castello.eng.br>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201113213933.GA4937@andrea>
+In-Reply-To: <20201115195734.8338-6-matheus@castello.eng.br>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Nov 13, 2020 at 10:39:33PM +0100, Andrea Parri wrote:
-> On Fri, Nov 13, 2020 at 06:54:24PM +0000, Wei Liu wrote:
-> > On Fri, Nov 13, 2020 at 11:33:27AM +0000, Wei Liu wrote:
-> > > On Mon, Nov 09, 2020 at 11:04:01AM +0100, Andrea Parri (Microsoft) wrote:
-> > > > From: Andres Beltran <lkmlabelt@gmail.com>
-> > > > 
-> > > > Currently, pointers to guest memory are passed to Hyper-V as
-> > > > transaction IDs in storvsc. In the face of errors or malicious
-> > > > behavior in Hyper-V, storvsc should not expose or trust the transaction
-> > > > IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> > > > use small integers generated by vmbus_requestor as requests
-> > > > (transaction) IDs.
-> > > > 
-> > > > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> > > > Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > > > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> > > > Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> > > > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> > > > Cc: linux-scsi@vger.kernel.org
-> > > 
-> > > Reviewed-by: Wei Liu <wl@xen.org>
-> > 
-> > Martin already gave his ack back in July. I guess nothing substantial
-> > changed so it should have been carried over?
+On Sun, Nov 15, 2020 at 04:57:33PM -0300, Matheus Castello wrote:
+> Fixed checkpatch warning: Possible unnecessary 'out of memory' message
+> checkpatch(OOM_MESSAGE)
 > 
-> The only change here happened in v7 and consisted in moving the
-> allocation of the request IDs from the VSC code down into the core
-> vmbus_sendpacket()&co functions.  As mentioned in v7 cover letter,
-> this change was applied to ensure that the allocation in question
-> is performed after the packet is copied into the ring buffer.  On
-> a positive note, this change greatly reduced the diff of this and
-> the following (NetVSC) patches.
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  drivers/hv/vmbus_drv.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 09d8236a51cf..774b88dd0e15 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1989,10 +1989,8 @@ struct hv_device *vmbus_device_create(const guid_t *type,
+>  	struct hv_device *child_device_obj;
+> 
+>  	child_device_obj = kzalloc(sizeof(struct hv_device), GFP_KERNEL);
+> -	if (!child_device_obj) {
+> -		pr_err("Unable to allocate device object for child device\n");
+> +	if (!child_device_obj)
 
-Martin and James, are you happy with this change? I would assume you are
-because that means this patch to storvsc is leaner.
+The generic OOM message would give you a stack dump but not as specific
+/ clear as the message you deleted.
 
-Please give an explicit ack if you can. Thanks.
+Also, the original intent of this check was to check for things like
+
+    printk("Out of memory");
+
+which was clearly redundant. The message we print here is not that.
+
+See https://lkml.org/lkml/2014/6/10/382 .
 
 Wei.
 
+>  		return NULL;
+> -	}
 > 
->   Andrea
+>  	child_device_obj->channel = channel;
+>  	guid_copy(&child_device_obj->dev_type, type);
+> --
+> 2.28.0
+> 
