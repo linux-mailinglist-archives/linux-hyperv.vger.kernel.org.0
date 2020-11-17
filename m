@@ -2,119 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 520122B6FFF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Nov 2020 21:25:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EAAF2B701C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Nov 2020 21:32:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgKQUXm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 Nov 2020 15:23:42 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:51667 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgKQUXl (ORCPT
+        id S1727653AbgKQUcG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 Nov 2020 15:32:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727629AbgKQUcF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 Nov 2020 15:23:41 -0500
-Received: from orion.localdomain ([95.118.38.12]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MPXMa-1ksvIj1mVO-00MgRQ; Tue, 17 Nov 2020 21:23:11 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, dmitry.torokhov@gmail.com, derek.kiernan@xilinx.com,
-        dragan.cvetic@xilinx.com, richardcochran@gmail.com,
-        linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH 2/2] x86: make hyperv support optional
-Date:   Tue, 17 Nov 2020 21:23:08 +0100
-Message-Id: <20201117202308.7568-2-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20201117202308.7568-1-info@metux.net>
+        Tue, 17 Nov 2020 15:32:05 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359F6C0613CF;
+        Tue, 17 Nov 2020 12:32:04 -0800 (PST)
+Received: from zn.tnic (p200300ec2f10130053cbbcbd889a5460.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:1300:53cb:bcbd:889a:5460])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 018CC1EC03CE;
+        Tue, 17 Nov 2020 21:32:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1605645123;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3C8iZQVCyNe8hkbWuwV/tblbPZQNKnK6sRC+nVZs2vs=;
+        b=i+QDHSEnYVK5bfheQXKktIj3n8699yZScn/2NCs9OhD68XNHt/PTz4m4xxcqoXPs47+YOp
+        4RRMtF6WP5zTMt0nJXguuBh6ezlTJhzfqc64pItHPlGTrV93g17OgJKd7GjeHbz+te+zvg
+        r33PwHDPgyIvTfNC7i6WLaDIAwUx+M8=
+Date:   Tue, 17 Nov 2020 21:31:55 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, hpa@zytor.com, dmitry.torokhov@gmail.com,
+        derek.kiernan@xilinx.com, dragan.cvetic@xilinx.com,
+        richardcochran@gmail.com, linux-hyperv@vger.kernel.org,
+        linux-input@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86: make vmware support optional
+Message-ID: <20201117203155.GO5719@zn.tnic>
 References: <20201117202308.7568-1-info@metux.net>
-X-Provags-ID: V03:K1:BgMdxQqz+4cbD/qdDNJN3Ul44DDzOcucX7OQQF5mExr0hrvibj3
- jlliB9hkpyWQ7fm7aEw+TiHppj4aHIRMU9L4t32Dvpl/YQX1IyijLcrspy4r6AMsNX5hSv+
- jKNM76P58FwQhs/mng8MWZsJ9jRzkL7LU++z4Ob0TSqVS9WERPnzEbSFK0HrmEaRGuLvjHd
- jFm4lD/jJpv5uxAJr8nMA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3yLVPCypgnA=:XprJRzAno0MASne4OrR4Jl
- BvlRoNricagJ8yqm1/R8KWFUNWiw5MKakpnSNICGMP3BAKPjzauaR54ikOGfNdBPwk2BXnV3O
- xQtazhVh7AQRzZOGQGbj+1GeqCizu/94x8G7to+C9PdiEDI3JyrN2t/zyqdt290qxN3G7fteX
- L3klq1bkTACe7MnxhJqbfKe1HpCo053FYrXFqWvYbdfkJ4e/lRVSdvVbIJ+ZAiLRQiuYFMeQI
- RX8CKav8e/oAd53h+thfVKcq8FY583xS7mYYI2n3vo8sgkxarUrnXNlWEQf3EFeN7QyII4UZy
- ZARR0IKd+qTKmkS35p85LOljKdpJ7gKmWRvRan3/A+yxsFlao0w7a+V9MwkthXrPbcADoyCPY
- Rf55RS6yA+eoFnonzF6AE3bZN6QI0dnRpK002FaACaLrUwxxNiGwI7CFewuWK
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20201117202308.7568-1-info@metux.net>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Make it possible to opt-out from hyperv support.
+On Tue, Nov 17, 2020 at 09:23:07PM +0100, Enrico Weigelt, metux IT consult wrote:
+> Make it possible to opt-out from vmware support
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- arch/x86/Kconfig                 | 7 +++++++
- arch/x86/kernel/cpu/Makefile     | 4 ++--
- arch/x86/kernel/cpu/hypervisor.c | 2 ++
- drivers/hv/Kconfig               | 2 +-
- 4 files changed, 12 insertions(+), 3 deletions(-)
+Why?
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index c227c1fa0091..60aab344d6ab 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -808,6 +808,13 @@ config VMWARE_GUEST
- 	  This option enables several optimizations for running under the
- 	  VMware hypervisor.
- 
-+config HYPERV_GUEST
-+	bool "HyperV Guest support"
-+	default y
-+	help
-+	  This option enables several optimizations for running under the
-+	  HyperV hypervisor.
-+
- config KVM_GUEST
- 	bool "KVM Guest support (including kvmclock)"
- 	depends on PARAVIRT
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index a615b0152bf0..5536b801cb44 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -51,9 +51,9 @@ obj-$(CONFIG_X86_CPU_RESCTRL)		+= resctrl/
- 
- obj-$(CONFIG_X86_LOCAL_APIC)		+= perfctr-watchdog.o
- 
--obj-$(CONFIG_HYPERVISOR_GUEST)		+= hypervisor.o mshyperv.o
-+obj-$(CONFIG_HYPERVISOR_GUEST)		+= hypervisor.o
- obj-$(CONFIG_VMWARE_GUEST)		+= vmware.o
--
-+obj-$(CONFIG_HYPERV_GUEST)		+= mshyperv.o
- obj-$(CONFIG_ACRN_GUEST)		+= acrn.o
- 
- ifdef CONFIG_X86_FEATURE_NAMES
-diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
-index c0e770a224aa..32d6b2084d05 100644
---- a/arch/x86/kernel/cpu/hypervisor.c
-+++ b/arch/x86/kernel/cpu/hypervisor.c
-@@ -37,7 +37,9 @@ static const __initconst struct hypervisor_x86 * const hypervisors[] =
- #ifdef CONFIG_VMWARE_GUEST
- 	&x86_hyper_vmware,
- #endif
-+#ifdef CONFIG_HYPERV_GUEST
- 	&x86_hyper_ms_hyperv,
-+#endif
- #ifdef CONFIG_KVM_GUEST
- 	&x86_hyper_kvm,
- #endif
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 79e5356a737a..7b3094c59a81 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -4,7 +4,7 @@ menu "Microsoft Hyper-V guest support"
- 
- config HYPERV
- 	tristate "Microsoft Hyper-V client drivers"
--	depends on X86 && ACPI && X86_LOCAL_APIC && HYPERVISOR_GUEST
-+	depends on X86 && ACPI && X86_LOCAL_APIC && HYPERV_GUEST
- 	select PARAVIRT
- 	select X86_HV_CALLBACK_VECTOR
- 	help
+I can think of a couple of reasons but maybe yours might not be the one
+I'm thinking of.
+
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  arch/x86/Kconfig                 | 7 +++++++
+>  arch/x86/kernel/cpu/Makefile     | 4 +++-
+>  arch/x86/kernel/cpu/hypervisor.c | 2 ++
+>  drivers/input/mouse/Kconfig      | 2 +-
+>  drivers/misc/Kconfig             | 2 +-
+>  drivers/ptp/Kconfig              | 2 +-
+>  6 files changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index f6946b81f74a..c227c1fa0091 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -801,6 +801,13 @@ config X86_HV_CALLBACK_VECTOR
+>  
+>  source "arch/x86/xen/Kconfig"
+>  
+> +config VMWARE_GUEST
+> +	bool "Vmware Guest support"
+> +	default y
+
+depends on HYPERVISOR_GUEST. The hyperv one too.
+
 -- 
-2.11.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
