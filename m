@@ -2,94 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48D3F2B7A6E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 10:35:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AC6D2B7F81
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 15:40:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbgKRJb5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 Nov 2020 04:31:57 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33183 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbgKRJb5 (ORCPT
+        id S1726489AbgKROhV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 18 Nov 2020 09:37:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgKROhV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 Nov 2020 04:31:57 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p19so3728846wmg.0;
-        Wed, 18 Nov 2020 01:31:55 -0800 (PST)
+        Wed, 18 Nov 2020 09:37:21 -0500
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC59C0613D4;
+        Wed, 18 Nov 2020 06:37:20 -0800 (PST)
+Received: by mail-wr1-x442.google.com with SMTP id 23so2406588wrc.8;
+        Wed, 18 Nov 2020 06:37:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mSNOadgDuSf0Kh14ug+1LzuE2/ssSyJri8G52JsgkEU=;
+        b=skoTceNe0Ys7CdTFmrbPMoSzxw36XxYP/OqxOMPRsGFlce7W12fndwkIttkaTHC0xt
+         eVDgpVZofJUqGP/0PehwZm4Av+CkyR7zrN0T+nVD12vutYDF60dqVIGMdktry9cOPHTL
+         LXoVQWyy6gfik0HUs4/DKl2uhw8u3Dtue7wsJwY79aUr+RUQLeH+dDR/vEcp7LLF/lYn
+         JeULTOkuIl52Bw0kK00+59899mUV2TrWRssdR6T1xUwovQmAQCdvk3wiXBZ0WTREFNYM
+         eHMS1fbL2PVJG6oU3H5r6oRzWB9uOcuzpgHwczIpv9gBbIoDy+5TkeEQXlmT4//x5EMJ
+         J6+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rIT1mFbEat++q/fOI2Mz1b9yVpWkTzwwX++pQ7a41t8=;
-        b=ExCLecBVwO+ca/4IAZDu8b6GjCMA5OE7XHAL54jof1Gp+W8/EUIw0qyCZzS/BRcSdq
-         b/Bn+su6MOcfknUG6Wr+tVQ4VCtMbO7NpWBFh78+ryZovQ5eDDthFvqghZbnCrkADSA9
-         XuegazkJZJpA6Uw7yUk8SeZ0KGVT2LxeE4cdYHwx2uFD5is+f3NZ89Yk2iLQzWMUvhDR
-         SKAJBv5YLQElKyaE4blgqmyi6IvqiKD4g7wfUecyeZkiTKWi6ZrLz5g8ikUZczHNGwLf
-         YiYlCttJ7ghC0S+D/mL6sCFLS55iQGZiGIFkewDokXx/ZIrHJWQTVK2GSjjhLEHVhniT
-         Tlfw==
-X-Gm-Message-State: AOAM530pEfjNDB70wSwL6fZwmkF6xvoxdVHpjxo8XrEiNbV6sKYCmrtF
-        /9bHTURdfcQWvV0t3sg3nlE=
-X-Google-Smtp-Source: ABdhPJx2K36WgvCbE0rT3AXDKI70J2JUbIej7Sa2W/fRnT4BajF39d19YBEBpwCnCNy0FXjSk+qGcw==
-X-Received: by 2002:a7b:c1ce:: with SMTP id a14mr3302058wmj.169.1605691915142;
-        Wed, 18 Nov 2020 01:31:55 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id d63sm2799773wmd.12.2020.11.18.01.31.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mSNOadgDuSf0Kh14ug+1LzuE2/ssSyJri8G52JsgkEU=;
+        b=J3l7J+ekftXxPu2WAldLda1Iwi9QARzkqbBK8/+s0JaUf+y7btJw8Ho/h4k/94eq3x
+         a73dCTrqiCar/RyV/gLSnd+By3ldy9zReSG6IfLg0TA76WrmFxqwJ4AYtump34111inK
+         vE4wSpNJgI8ayzeN4ZPcrXgZVquuS3xnk2vjWknSsLkjlO9EmGRVtvtwxua8cyNLHo0e
+         Ef/MZPnaSqKwD+WQ+9LlMQOy4dru+u6Lhw0nMbFlkAGH7LiioytnMS0RzUf3DSyivHaN
+         fjRoNV3qq7Sleq7mc2AE7Fc6iJtafLAlhpV96KcwsWmQWwymEwCkaHElE1jHUr9vEyOK
+         Mw4Q==
+X-Gm-Message-State: AOAM531+V/kYSao80kzXTgEXNqpl/C4VWFNyLVopJwTlZYfJFmmEXOPj
+        tmWhI4luhEoxPNbXQ/SX9f/ruUVx5jrwoQ==
+X-Google-Smtp-Source: ABdhPJxscJcibGGUE5w7byT1afNZFElBH1a4Ocqe7CuqBFC4r4gZA/9IdVWBdz1tEmGCgkst+hPgbA==
+X-Received: by 2002:a5d:4e4c:: with SMTP id r12mr5152053wrt.348.1605710234269;
+        Wed, 18 Nov 2020 06:37:14 -0800 (PST)
+Received: from localhost.localdomain (host-82-51-6-75.retail.telecomitalia.it. [82.51.6.75])
+        by smtp.gmail.com with ESMTPSA id w10sm34795307wra.34.2020.11.18.06.37.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 01:31:54 -0800 (PST)
-Date:   Wed, 18 Nov 2020 09:31:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        Wed, 18 Nov 2020 06:37:13 -0800 (PST)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Wei Hu <weh@microsoft.com>
-Subject: Re: [PATCH] video: hyperv_fb: Fix the cache type when mapping the
- VRAM
-Message-ID: <20201118093153.irs3i342nskkbuil@liuwe-devbox-debian-v2>
-References: <20201118000305.24797-1-decui@microsoft.com>
- <MW2PR2101MB105243C3AD5106B2ABEDBAB5D7E10@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Juan Vazquez <juvazq@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH 0/6] Drivers: hv: vmbus: More VMBus-hardening changes
+Date:   Wed, 18 Nov 2020 15:36:43 +0100
+Message-Id: <20201118143649.108465-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB105243C3AD5106B2ABEDBAB5D7E10@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 12:20:11AM +0000, Michael Kelley wrote:
-> From: Dexuan Cui <decui@microsoft.com> Sent: Tuesday, November 17, 2020 4:03 PM
-> > 
-> > x86 Hyper-V used to essentially always overwrite the effective cache type
-> > of guest memory accesses to WB. This was problematic in cases where there
-> > is a physical device assigned to the VM, since that often requires that
-> > the VM should have control over cache types. Thus, on newer Hyper-V since
-> > 2018, Hyper-V always honors the VM's cache type, but unexpectedly Linux VM
-> > users start to complain that Linux VM's VRAM becomes very slow, and it
-> > turns out that Linux VM should not map the VRAM uncacheable by ioremap().
-> > Fix this slowness issue by using ioremap_cache().
-> > 
-> > On ARM64, ioremap_cache() is also required as the host also maps the VRAM
-> > cacheable, otherwise VM Connect can't display properly with ioremap() or
-> > ioremap_wc().
-> > 
-> > With this change, the VRAM on new Hyper-V is as fast as regular RAM, so
-> > it's no longer necessary to use the hacks we added to mitigate the
-> > slowness, i.e. we no longer need to allocate physical memory and use
-> > it to back up the VRAM in Generation-1 VM, and we also no longer need to
-> > allocate physical memory to back up the framebuffer in a Generation-2 VM
-> > and copy the framebuffer to the real VRAM. A further big change will
-> > address these for v5.11.
-> > 
-> > Fixes: 68a2d20b79b1 ("drivers/video: add Hyper-V Synthetic Video Frame Buffer Driver")
-> > Tested-by: Boqun Feng <boqun.feng@gmail.com>
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> 
+Hi all,
 
-Applied to hyperv-fixes. Thanks.
+This set is a continuation of the work for hardening the VMBus drivers
+against an erroneous or malicious host.  This is based on hyperv-next.
+
+Thanks,
+  Andrea
+
+Andrea Parri (Microsoft) (6):
+  Drivers: hv: vmbus: Initialize memory to be sent to the host
+  Drivers: hv: vmbus: Avoid double fetch of msgtype in
+    vmbus_on_msg_dpc()
+  Drivers: hv: vmbus: Avoid double fetch of payload_size in
+    vmbus_on_msg_dpc()
+  Drivers: hv: vmbus: Avoid use-after-free in vmbus_onoffer_rescind()
+  Drivers: hv: vmbus: Resolve race condition in vmbus_onoffer_rescind()
+  Drivers: hv: vmbus: Do not allow overwriting
+    vmbus_connection.channels[]
+
+ drivers/hv/channel.c      |  4 ++--
+ drivers/hv/channel_mgmt.c | 45 +++++++++++++++++++++++++++------------
+ drivers/hv/hyperv_vmbus.h |  2 +-
+ drivers/hv/vmbus_drv.c    | 33 ++++++++++++++++------------
+ include/linux/hyperv.h    |  1 +
+ 5 files changed, 54 insertions(+), 31 deletions(-)
+
+-- 
+2.25.1
+
