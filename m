@@ -2,530 +2,165 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 587EB2B81CB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 17:27:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78C0D2B8610
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 21:57:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgKRQZX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 Nov 2020 11:25:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgKRQZX (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 Nov 2020 11:25:23 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E61C0613D4;
-        Wed, 18 Nov 2020 08:25:23 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id 1so3270827wme.3;
-        Wed, 18 Nov 2020 08:25:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H+I0lznO2daJR2tO5yr9jvVxL7XPaBElB/otg5TfHYA=;
-        b=PuDzrIdqrja+ij5hXe7T4SfYfJTrN78KZqkTF/g7m3jYSx5yW/URAI5nimRXJdK71V
-         iRTWKJVdLNDvO9ClJ3J6MGv1PU1WCBwMgMO9ZMl1saJBloMu1zTEWNBQIxR5fm+mWxvL
-         NSU5awzctwzoVKdBSeeTzwK1I3txxvIMnFpjDnnE9aP37kjoje+ULZgWfs+T+3LhLkTi
-         2gh9ned7n/iSktb2MRxKZoeTuzFrbWm7y8I9xSFgzdB5WypoHzig5HCDNFJROXjkZ21B
-         EIqJJVDvvVdQk1uKlkxkhuE4x0AY7hW3pH2pI6lx5koB6OnPRlVBbEcsbMLTeDLlgEO6
-         J1dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H+I0lznO2daJR2tO5yr9jvVxL7XPaBElB/otg5TfHYA=;
-        b=HbIdvPrBftMnFe6txG3y4rLWOvxfHZoI0TY/GvMZt+U04HPiZw9VQqryO0CIr5kaA0
-         6FZC31Y4PMBjugJqdVpWLh4aGAVX+GzL+IlVNseaVVdf0ZZXX4XMikCosphJQQ7SV7Fa
-         +0ODhhnFHIfcfN6H23SnyyHOAL5Ryeu7AWrKn7w7QGiheRHdDhnm63jZU/sBv90tU7oM
-         IEyLDDyRzb9LufBxnyMlxaxVn1jHz/IYCURYx4Pv+7djDea7W8ErQdAzDcqnmuJwQ/lF
-         C27+Wcpwyilf3fT2aAvvb/MHxrbzim0kvpprj4lQYTEXbWLaOBjmVlHTNbB8bfD8/npV
-         /CGQ==
-X-Gm-Message-State: AOAM530kF9HCbwW8qtd4XiwZVsXnrds8IFqFGcuVxqobDdJrS20G1qfs
-        vRgI9TQinTKrsRnh/fblq7IeyHjlFdKPXuj3
-X-Google-Smtp-Source: ABdhPJweIoovnQJpD+i39QknaCFrO783sabaTfSJkTiqmFPko5zbV6qevBrrJrWxmyygpClh7PWDTQ==
-X-Received: by 2002:a1c:4b18:: with SMTP id y24mr912320wma.154.1605716720891;
-        Wed, 18 Nov 2020 08:25:20 -0800 (PST)
-Received: from andrea (host-82-51-6-75.retail.telecomitalia.it. [82.51.6.75])
-        by smtp.gmail.com with ESMTPSA id w3sm2785172wma.3.2020.11.18.08.25.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 08:25:20 -0800 (PST)
-Date:   Wed, 18 Nov 2020 17:25:15 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S1726234AbgKRU5e (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 18 Nov 2020 15:57:34 -0500
+Received: from mail-bn8nam12on2119.outbound.protection.outlook.com ([40.107.237.119]:8801
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725710AbgKRU5d (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 18 Nov 2020 15:57:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lBHAL3o/8J7nrmpa9DLHwB/hHVb0G8t+IhUSSSNRB/8OAZWgXDQjdSystYkq9NQF5t7o9iearea/6Z+jRKerHJb4oADWu1sEaKfeYbcF+GmGHWrvT6vqREGckFfMZ7lQh8uZZIwBk24STxqE4CaxI7y5Nj11Eff3oFprDF7MBA8Vj1v5tyIG2hB2FD8bH/xi6zagdnLfAvICYM9Yx+8QQhgtypYi/523lXdWq2213aNj2rhSbqC/BPQtUFu9zJtlqOZrDbIUaBscheSMQUzsyCphtzygpxZ9UBsxkPlRow9ee3Kh+1anQ3Hs2d1uPm5J9ilhceowUFNiUGnl0swZyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JZroQDJI4lWK53RjHuDomagYdE4cPHwrR4XECxhcUao=;
+ b=UOzPzVKGbMsdjo/WAtBfHX320dhu7NqJ8WUNKrSqDKLFQve+ebabtFgSV1T+xdy6GD19z/V+syMd5sK+KdqhcYANXpVXYgQVxvMg+UbsBBYVAbaPrGblSt2QDK5VEybnGtO+M11J8zWrOgUBLLxFYPQJCX3fJAAnmfbebCNwM3EV1of7mCL5HKVaLoXddxuznqjLLrt3eGkroIbPugxtmvYeGMQG6bhfLd+irMn1mr/YBsZtJLaQPiBKo7MGRBNDbS5Ldx9iExpFHdVmJjz03cQFEY53KCyTeS8B7nm2TBQ3hq7k8e4Voe/ynOmEWNFKdCDHMJfNA0uiQHyittnEow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JZroQDJI4lWK53RjHuDomagYdE4cPHwrR4XECxhcUao=;
+ b=h5vFl2QSSlRQ4e/OJ+NBOQF+WO+D7H4kPkToP6F23rGnbGr3BQRaalpEzc2QYuQSNH1YFpnvuH4dKmcUkZp1YYM5IolDdEpGQ+8MwveVbAGY87HonlRQ8NQsbe9tp2L60MZtmjmN9ppnJYOow2D5nuwBUnaB0RJeSdskcG33VnQ=
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ (2603:10b6:207:30::18) by BL0PR2101MB1345.namprd21.prod.outlook.com
+ (2603:10b6:208:92::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.4; Wed, 18 Nov
+ 2020 20:57:31 +0000
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::519c:fbb2:7779:ed64]) by BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::519c:fbb2:7779:ed64%9]) with mapi id 15.20.3564.033; Wed, 18 Nov 2020
+ 20:57:31 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Andres Beltran <lkmlabelt@gmail.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
         Juan Vazquez <juvazq@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        netdev@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v2] Drivers: hv: vmbus: Copy packets sent by Hyper-V out
- of the ring buffer
-Message-ID: <20201118162515.GB240782@andrea>
-References: <20201109100727.9207-1-parri.andrea@gmail.com>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH] hv_netvsc: Validate number of allocated sub-channels
+Thread-Topic: [PATCH] hv_netvsc: Validate number of allocated sub-channels
+Thread-Index: AQHWvcArNWxyHRKSGUWS2b8oyfgey6nOXz+g
+Date:   Wed, 18 Nov 2020 20:57:31 +0000
+Message-ID: <BL0PR2101MB0930F4C569F8918BA1A144EBCAE10@BL0PR2101MB0930.namprd21.prod.outlook.com>
+References: <20201118153310.112404-1-parri.andrea@gmail.com>
+In-Reply-To: <20201118153310.112404-1-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2e4df1c7-03ed-4b60-bf3b-169652408bd5;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-11-18T20:57:07Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [75.100.88.238]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3291ff15-c98c-44d3-55fd-08d88c04910b
+x-ms-traffictypediagnostic: BL0PR2101MB1345:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR2101MB1345EC93DF4B519CC25D3103CAE10@BL0PR2101MB1345.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vcH+s9RVQ2Qd+xs9kVfO/eKD5FH/WUe0m8sqR01iE3GDMjYxzH8/vu9GLLJIodZ8YzY6bj4skkdGcMk1QCL/gZM3TQ+fM1sGD9fr2dyEmu+XRwFNORfoQTDQ40mQeAoXfVCh6j4nGLdpUkEl9j/GQKVWOIkfxubdPiqU6R69dyIM/8SCbB706C4mXpjvJuZ9OzhFTJErbcXLRN0ifpD0ESwO7Sx3++JswJJNr5iVT+B1/IyVykbIGHDcKqiQuRFH8lNHyMq+T/JC+GTNwLik1jrdJLxPnbamzz2Mo7aFyQ3PtJfQDwuM9UBWbT5dj+4+s2Pxr1uABjkbjP1HbWdX3g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(366004)(39860400002)(376002)(15650500001)(10290500003)(8676002)(9686003)(478600001)(4326008)(82960400001)(26005)(82950400001)(6506007)(53546011)(83380400001)(55016002)(8990500004)(7696005)(33656002)(54906003)(66946007)(8936002)(66476007)(71200400001)(186003)(52536014)(66556008)(316002)(76116006)(64756008)(5660300002)(2906002)(86362001)(110136005)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?V15iWsL42jMkH6aE0pi0D/z6eP3sAcMPeaTIeyCATIsvksr90dGFGUYNKwLV?=
+ =?us-ascii?Q?zR+LUYgRFXnF7ocYIFko8RNhZ5kyxoeVPnUxyYRYtBTxjxUy56PZtWYdDGwu?=
+ =?us-ascii?Q?AUQCOzl4tAeHlebFmUrowcTe4JOJTZMyE7mqwKVdSkykIxKNbdcLoz+xEX2o?=
+ =?us-ascii?Q?Tp8GAoBDB62AFc9iol1wtA3uvfKVSGRQuXvDhEW1OqZp2qFFpajJQaK2y+sS?=
+ =?us-ascii?Q?KweWXyxxko2og1xdk73hbRdZnC7/CwYQzEgRPLODBrKYWv2UiDPl6ClGn8qo?=
+ =?us-ascii?Q?I/ApPRlYPsOMKtJd4DlqiMSxYJSi5zUFCcAqWV28T8XYEQccjQIncoWSyFF9?=
+ =?us-ascii?Q?yi9uZZdWgLbqqNFudyu7sNxFkfd9f7LM5as1xgBquUZaeigi7QQ3UUc7b5C0?=
+ =?us-ascii?Q?M0dgbFVg2Wa2SnvWOJqf6Ixd0dsp0HfQ7Gd7ehphZvsfp/YBpUYMDm7csk4/?=
+ =?us-ascii?Q?RYh0B7B+n909URs+PnvcAIjnJpUMO4w81eMqKY3dUT4/QI3n6ObraTtlKXio?=
+ =?us-ascii?Q?BVvaj0ED0pS8eLRrQ3FBs8ZnAuANKKfd4D8tRPmU4+vY1NSdLB0h58C9xNcC?=
+ =?us-ascii?Q?/rcS+BapK6f+9fJnC1J4EPcNkGz0izMZcNYrPXjjR4iP7szSlh9HJE8I/eCn?=
+ =?us-ascii?Q?+EFDeOvJqY/8a9Wg873U1N7rO4JeqEWcXOr2XsyWP2SQDNd8iHuQnn7bg54J?=
+ =?us-ascii?Q?a8DJeY0B+iOGE3kG2TkfhwT1GqNL45okc/oEoV0cButh10ho6c50/Sz79P2O?=
+ =?us-ascii?Q?QUgyB6vFuzg6lIN81bQe+s2vBIbb87RvxQ+sfI8G8s1zI3wggpPooKZ4yegm?=
+ =?us-ascii?Q?vaGeAZnXuKCJXUH+UNBsKTHXXYwQy/oDxm1Hikm5mz4F/eRrYJpfcDl4Ee/h?=
+ =?us-ascii?Q?T2tD0hKCsGaCGKVgl5ih54Gqv8ucK/kDQmmfHeR3J64tvpHNpa31jqg35CA4?=
+ =?us-ascii?Q?JEzww5Rb4Tve0s7B42mweCws5nb+H5VK99scIW7jmZQ=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201109100727.9207-1-parri.andrea@gmail.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3291ff15-c98c-44d3-55fd-08d88c04910b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2020 20:57:31.1133
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: whmz89PFaMU6imC2QrB829bRZ8/JDANtfU61JTic0d4zbe+qvww1Spj5uZQcChqAxZ0ekPfJHG5Tz6W/G8w9LA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1345
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Nov 09, 2020 at 11:07:27AM +0100, Andrea Parri (Microsoft) wrote:
-> From: Andres Beltran <lkmlabelt@gmail.com>
-> 
-> Pointers to ring-buffer packets sent by Hyper-V are used within the
-> guest VM. Hyper-V can send packets with erroneous values or modify
-> packet fields after they are processed by the guest. To defend
-> against these scenarios, return a copy of the incoming VMBus packet
-> after validating its length and offset fields in hv_pkt_iter_first().
-> In this way, the packet can no longer be modified by the host.
-> 
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+
+
+> -----Original Message-----
+> From: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> Sent: Wednesday, November 18, 2020 10:33 AM
+> To: linux-kernel@vger.kernel.org
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; Wei Liu <wei.liu@kernel.org>; linux-
+> hyperv@vger.kernel.org; Michael Kelley <mikelley@microsoft.com>; Juan
+> Vazquez <juvazq@microsoft.com>; Saruhan Karademir
+> <skarade@microsoft.com>; Andrea Parri (Microsoft)
+> <parri.andrea@gmail.com>; David S. Miller <davem@davemloft.net>; Jakub
+> Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
+> Subject: [PATCH] hv_netvsc: Validate number of allocated sub-channels
+>=20
+> Lack of validation could lead to out-of-bound reads and information leaks=
+ (cf.
+> usage of nvdev->chan_table[]).  Check that the number of allocated sub-
+> channels fits into the expected range.
+>=20
+> Suggested-by: Saruhan Karademir <skarade@microsoft.com>
 > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > Cc: "David S. Miller" <davem@davemloft.net>
 > Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
 > Cc: netdev@vger.kernel.org
-> Cc: linux-scsi@vger.kernel.org
-
-Ping, other suggestions about this patch?
-
-Thanks,
-  Andrea
-
-
 > ---
-> Applies on 5.10-rc3 with the series:
->   https://lkml.kernel.org/r/20201109100402.8946-1-parri.andrea@gmail.com
-> 
->  drivers/hv/channel.c              |  9 ++--
->  drivers/hv/hv_fcopy.c             |  1 +
->  drivers/hv/hv_kvp.c               |  1 +
->  drivers/hv/hyperv_vmbus.h         |  2 +-
->  drivers/hv/ring_buffer.c          | 85 +++++++++++++++++++++++++++----
->  drivers/net/hyperv/hyperv_net.h   |  3 ++
->  drivers/net/hyperv/netvsc.c       |  2 +
->  drivers/net/hyperv/rndis_filter.c |  2 +
->  drivers/scsi/storvsc_drv.c        | 10 ++++
->  include/linux/hyperv.h            | 48 ++++++++++++++---
->  net/vmw_vsock/hyperv_transport.c  |  4 +-
->  11 files changed, 142 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index 6fb0c76bfbf81..0d63862d65518 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -597,12 +597,15 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
->  	newchannel->onchannel_callback = onchannelcallback;
->  	newchannel->channel_callback_context = context;
->  
-> -	err = hv_ringbuffer_init(&newchannel->outbound, page, send_pages);
-> +	if (!newchannel->max_pkt_size)
-> +		newchannel->max_pkt_size = VMBUS_DEFAULT_MAX_PKT_SIZE;
-> +
-> +	err = hv_ringbuffer_init(&newchannel->outbound, page, send_pages, 0);
->  	if (err)
->  		goto error_clean_ring;
->  
-> -	err = hv_ringbuffer_init(&newchannel->inbound,
-> -				 &page[send_pages], recv_pages);
-> +	err = hv_ringbuffer_init(&newchannel->inbound, &page[send_pages],
-> +				 recv_pages, newchannel->max_pkt_size);
->  	if (err)
->  		goto error_clean_ring;
->  
-> diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
-> index 59ce85e00a028..660036da74495 100644
-> --- a/drivers/hv/hv_fcopy.c
-> +++ b/drivers/hv/hv_fcopy.c
-> @@ -349,6 +349,7 @@ int hv_fcopy_init(struct hv_util_service *srv)
->  {
->  	recv_buffer = srv->recv_buffer;
->  	fcopy_transaction.recv_channel = srv->channel;
-> +	fcopy_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
->  
->  	/*
->  	 * When this driver loads, the user level daemon that
-> diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-> index b49962d312cef..c698592b83e42 100644
-> --- a/drivers/hv/hv_kvp.c
-> +++ b/drivers/hv/hv_kvp.c
-> @@ -757,6 +757,7 @@ hv_kvp_init(struct hv_util_service *srv)
->  {
->  	recv_buffer = srv->recv_buffer;
->  	kvp_transaction.recv_channel = srv->channel;
-> +	kvp_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 4;
->  
->  	/*
->  	 * When this driver loads, the user level daemon that
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 02f3e89888366..e2064bf2b557d 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -174,7 +174,7 @@ extern int hv_synic_cleanup(unsigned int cpu);
->  void hv_ringbuffer_pre_init(struct vmbus_channel *channel);
->  
->  int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
-> -		       struct page *pages, u32 pagecnt);
-> +		       struct page *pages, u32 pagecnt, u32 max_pkt_size);
->  
->  void hv_ringbuffer_cleanup(struct hv_ring_buffer_info *ring_info);
->  
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 35833d4d1a1dc..bd70b7f1ffe60 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -190,7 +190,7 @@ void hv_ringbuffer_pre_init(struct vmbus_channel *channel)
->  
->  /* Initialize the ring buffer. */
->  int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
-> -		       struct page *pages, u32 page_cnt)
-> +		       struct page *pages, u32 page_cnt, u32 max_pkt_size)
->  {
->  	int i;
->  	struct page **pages_wraparound;
-> @@ -232,6 +232,14 @@ int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
->  		sizeof(struct hv_ring_buffer);
->  	ring_info->priv_read_index = 0;
->  
-> +	/* Initialize buffer that holds copies of incoming packets */
-> +	if (max_pkt_size) {
-> +		ring_info->pkt_buffer = kzalloc(max_pkt_size, GFP_KERNEL);
-> +		if (!ring_info->pkt_buffer)
-> +			return -ENOMEM;
-> +		ring_info->pkt_buffer_size = max_pkt_size;
-> +	}
-> +
->  	spin_lock_init(&ring_info->ring_lock);
->  
->  	return 0;
-> @@ -244,6 +252,9 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info *ring_info)
->  	vunmap(ring_info->ring_buffer);
->  	ring_info->ring_buffer = NULL;
->  	mutex_unlock(&ring_info->ring_buffer_mutex);
-> +
-> +	kfree(ring_info->pkt_buffer);
-> +	ring_info->pkt_buffer_size = 0;
->  }
->  
->  /* Write to the ring buffer. */
-> @@ -385,7 +396,7 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
->  	memcpy(buffer, (const char *)desc + offset, packetlen);
->  
->  	/* Advance ring index to next packet descriptor */
-> -	__hv_pkt_iter_next(channel, desc);
-> +	__hv_pkt_iter_next(channel, desc, true);
->  
->  	/* Notify host of update */
->  	hv_pkt_iter_close(channel);
-> @@ -411,6 +422,22 @@ static u32 hv_pkt_iter_avail(const struct hv_ring_buffer_info *rbi)
->  		return (rbi->ring_datasize - priv_read_loc) + write_loc;
->  }
->  
-> +/*
-> + * Get first vmbus packet without copying it out of the ring buffer
-> + */
-> +struct vmpacket_descriptor *hv_pkt_iter_first_raw(struct vmbus_channel *channel)
-> +{
-> +	struct hv_ring_buffer_info *rbi = &channel->inbound;
-> +
-> +	hv_debug_delay_test(channel, MESSAGE_DELAY);
-> +
-> +	if (hv_pkt_iter_avail(rbi) < sizeof(struct vmpacket_descriptor))
-> +		return NULL;
-> +
-> +	return (struct vmpacket_descriptor *)(hv_get_ring_buffer(rbi) + rbi->priv_read_index);
-> +}
-> +EXPORT_SYMBOL_GPL(hv_pkt_iter_first_raw);
-> +
->  /*
->   * Get first vmbus packet from ring buffer after read_index
->   *
-> @@ -419,17 +446,52 @@ static u32 hv_pkt_iter_avail(const struct hv_ring_buffer_info *rbi)
->  struct vmpacket_descriptor *hv_pkt_iter_first(struct vmbus_channel *channel)
->  {
->  	struct hv_ring_buffer_info *rbi = &channel->inbound;
-> -	struct vmpacket_descriptor *desc;
-> +	struct vmpacket_descriptor *desc, *desc_copy;
-> +	u32 bytes_avail, pkt_len, pkt_offset;
->  
-> -	hv_debug_delay_test(channel, MESSAGE_DELAY);
-> -	if (hv_pkt_iter_avail(rbi) < sizeof(struct vmpacket_descriptor))
-> +	desc = hv_pkt_iter_first_raw(channel);
-> +	if (!desc)
->  		return NULL;
->  
-> -	desc = hv_get_ring_buffer(rbi) + rbi->priv_read_index;
-> -	if (desc)
-> -		prefetch((char *)desc + (desc->len8 << 3));
-> +	bytes_avail = hv_pkt_iter_avail(rbi);
-> +
-> +	/*
-> +	 * Ensure the compiler does not use references to incoming Hyper-V values (which
-> +	 * could change at any moment) when reading local variables later in the code
-> +	 */
-> +	pkt_len = READ_ONCE(desc->len8) << 3;
-> +	pkt_offset = READ_ONCE(desc->offset8) << 3;
-> +
-> +	/*
-> +	 * If pkt_len is invalid, set it to the smaller of hv_pkt_iter_avail() and
-> +	 * rbi->pkt_buffer_size
-> +	 */
-> +	if (rbi->pkt_buffer_size < bytes_avail)
-> +		bytes_avail = rbi->pkt_buffer_size;
-> +
-> +	if (pkt_len < sizeof(struct vmpacket_descriptor) || pkt_len > bytes_avail)
-> +		pkt_len = bytes_avail;
-> +
-> +	/*
-> +	 * If pkt_offset is invalid, arbitrarily set it to
-> +	 * the size of vmpacket_descriptor
-> +	 */
-> +	if (pkt_offset < sizeof(struct vmpacket_descriptor) || pkt_offset > pkt_len)
-> +		pkt_offset = sizeof(struct vmpacket_descriptor);
-> +
-> +	/* Copy the Hyper-V packet out of the ring buffer */
-> +	desc_copy = (struct vmpacket_descriptor *)rbi->pkt_buffer;
-> +	memcpy(desc_copy, desc, pkt_len);
-> +
-> +	/*
-> +	 * Hyper-V could still change len8 and offset8 after the earlier read.
-> +	 * Ensure that desc_copy has legal values for len8 and offset8 that
-> +	 * are consistent with the copy we just made
-> +	 */
-> +	desc_copy->len8 = pkt_len >> 3;
-> +	desc_copy->offset8 = pkt_offset >> 3;
->  
-> -	return desc;
-> +	return desc_copy;
->  }
->  EXPORT_SYMBOL_GPL(hv_pkt_iter_first);
->  
-> @@ -441,7 +503,8 @@ EXPORT_SYMBOL_GPL(hv_pkt_iter_first);
->   */
->  struct vmpacket_descriptor *
->  __hv_pkt_iter_next(struct vmbus_channel *channel,
-> -		   const struct vmpacket_descriptor *desc)
-> +		   const struct vmpacket_descriptor *desc,
-> +		   bool copy)
->  {
->  	struct hv_ring_buffer_info *rbi = &channel->inbound;
->  	u32 packetlen = desc->len8 << 3;
-> @@ -454,7 +517,7 @@ __hv_pkt_iter_next(struct vmbus_channel *channel,
->  		rbi->priv_read_index -= dsize;
->  
->  	/* more data? */
-> -	return hv_pkt_iter_first(channel);
-> +	return copy ? hv_pkt_iter_first(channel) : hv_pkt_iter_first_raw(channel);
->  }
->  EXPORT_SYMBOL_GPL(__hv_pkt_iter_next);
->  
-> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-> index 2a87cfa27ac02..7ea6936f86efa 100644
-> --- a/drivers/net/hyperv/hyperv_net.h
-> +++ b/drivers/net/hyperv/hyperv_net.h
-> @@ -860,9 +860,12 @@ static inline u32 netvsc_rqstor_size(unsigned long ringbytes)
->  		ringbytes / NETVSC_MIN_IN_MSG_SIZE;
->  }
->  
-> +#define NETVSC_MAX_XFER_PAGE_RANGES 375
->  #define NETVSC_XFER_HEADER_SIZE(rng_cnt) \
->  		(offsetof(struct vmtransfer_page_packet_header, ranges) + \
->  		(rng_cnt) * sizeof(struct vmtransfer_page_range))
-> +#define NETVSC_MAX_PKT_SIZE (NETVSC_XFER_HEADER_SIZE(NETVSC_MAX_XFER_PAGE_RANGES) + \
-> +		sizeof(struct nvsp_message) + (sizeof(u32) * VRSS_SEND_TAB_SIZE))
->  
->  struct multi_send_data {
->  	struct sk_buff *skb; /* skb containing the pkt */
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index 4dbc0055aed0e..8ace0c80f3734 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -1530,6 +1530,8 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
->  
->  	/* Open the channel */
->  	device->channel->rqstor_size = netvsc_rqstor_size(netvsc_ring_bytes);
-> +	device->channel->max_pkt_size = NETVSC_MAX_PKT_SIZE;
-> +
->  	ret = vmbus_open(device->channel, netvsc_ring_bytes,
->  			 netvsc_ring_bytes,  NULL, 0,
->  			 netvsc_channel_cb, net_device->chan_table);
-> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-> index 6ae43319ece68..3835d9bea1005 100644
+> Based on hyperv-next.
+>=20
+>  drivers/net/hyperv/rndis_filter.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/net/hyperv/rndis_filter.c
+> b/drivers/net/hyperv/rndis_filter.c
+> index 3835d9bea1005..c5a709f67870f 100644
 > --- a/drivers/net/hyperv/rndis_filter.c
 > +++ b/drivers/net/hyperv/rndis_filter.c
-> @@ -1173,6 +1173,8 @@ static void netvsc_sc_open(struct vmbus_channel *new_sc)
->  	nvchan->channel = new_sc;
->  
->  	new_sc->rqstor_size = netvsc_rqstor_size(netvsc_ring_bytes);
-> +	new_sc->max_pkt_size = NETVSC_MAX_PKT_SIZE;
-> +
->  	ret = vmbus_open(new_sc, netvsc_ring_bytes,
->  			 netvsc_ring_bytes, NULL, 0,
->  			 netvsc_channel_cb, nvchan);
-> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> index 369a6c6266729..331a33a04f1ad 100644
-> --- a/drivers/scsi/storvsc_drv.c
-> +++ b/drivers/scsi/storvsc_drv.c
-> @@ -414,6 +414,14 @@ static void storvsc_on_channel_callback(void *context);
->  #define STORVSC_IDE_MAX_TARGETS				1
->  #define STORVSC_IDE_MAX_CHANNELS			1
->  
-> +/*
-> + * Upper bound on the size of a storvsc packet. vmscsi_size_delta is not
-> + * included in the calculation because it is set after STORVSC_MAX_PKT_SIZE
-> + * is used in storvsc_connect_to_vsp
-> + */
-> +#define STORVSC_MAX_PKT_SIZE (sizeof(struct vmpacket_descriptor) +\
-> +			      sizeof(struct vstor_packet))
-> +
->  struct storvsc_cmd_request {
->  	struct scsi_cmnd *cmd;
->  
-> @@ -698,6 +706,7 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
->  		return;
->  
->  	memset(&props, 0, sizeof(struct vmstorage_channel_properties));
-> +	new_sc->max_pkt_size = STORVSC_MAX_PKT_SIZE;
->  
->  	/*
->  	 * The size of vmbus_requestor is an upper bound on the number of requests
-> @@ -1280,6 +1289,7 @@ static int storvsc_connect_to_vsp(struct hv_device *device, u32 ring_size,
->  
->  	memset(&props, 0, sizeof(struct vmstorage_channel_properties));
->  
-> +	device->channel->max_pkt_size = STORVSC_MAX_PKT_SIZE;
->  	/*
->  	 * The size of vmbus_requestor is an upper bound on the number of requests
->  	 * that can be in-progress at any one time across all channels.
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 696857aa038c0..2ea967bc17adf 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -181,6 +181,10 @@ struct hv_ring_buffer_info {
->  	 * being freed while the ring buffer is being accessed.
->  	 */
->  	struct mutex ring_buffer_mutex;
-> +
-> +	/* Buffer that holds a copy of an incoming host packet */
-> +	void *pkt_buffer;
-> +	u32 pkt_buffer_size;
->  };
->  
->  
-> @@ -787,6 +791,8 @@ struct vmbus_device {
->  	bool perf_device;
->  };
->  
-> +#define VMBUS_DEFAULT_MAX_PKT_SIZE 4096
-> +
->  struct vmbus_channel {
->  	struct list_head listentry;
->  
-> @@ -1008,6 +1014,9 @@ struct vmbus_channel {
->  	/* request/transaction ids for VMBus */
->  	struct vmbus_requestor requestor;
->  	u32 rqstor_size;
-> +
-> +	/* The max size of a packet on this channel */
-> +	u32 max_pkt_size;
->  };
->  
->  u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr);
-> @@ -1649,32 +1658,55 @@ static inline u32 hv_pkt_datalen(const struct vmpacket_descriptor *desc)
->  }
->  
->  
-> +struct vmpacket_descriptor *
-> +hv_pkt_iter_first_raw(struct vmbus_channel *channel);
-> +
->  struct vmpacket_descriptor *
->  hv_pkt_iter_first(struct vmbus_channel *channel);
->  
->  struct vmpacket_descriptor *
->  __hv_pkt_iter_next(struct vmbus_channel *channel,
-> -		   const struct vmpacket_descriptor *pkt);
-> +		   const struct vmpacket_descriptor *pkt,
-> +		   bool copy);
->  
->  void hv_pkt_iter_close(struct vmbus_channel *channel);
->  
-> -/*
-> - * Get next packet descriptor from iterator
-> - * If at end of list, return NULL and update host.
-> - */
->  static inline struct vmpacket_descriptor *
-> -hv_pkt_iter_next(struct vmbus_channel *channel,
-> -		 const struct vmpacket_descriptor *pkt)
-> +hv_pkt_iter_next_pkt(struct vmbus_channel *channel,
-> +		     const struct vmpacket_descriptor *pkt,
-> +		     bool copy)
->  {
->  	struct vmpacket_descriptor *nxt;
->  
-> -	nxt = __hv_pkt_iter_next(channel, pkt);
-> +	nxt = __hv_pkt_iter_next(channel, pkt, copy);
->  	if (!nxt)
->  		hv_pkt_iter_close(channel);
->  
->  	return nxt;
->  }
->  
-> +/*
-> + * Get next packet descriptor without copying it out of the ring buffer
-> + * If at end of list, return NULL and update host.
-> + */
-> +static inline struct vmpacket_descriptor *
-> +hv_pkt_iter_next_raw(struct vmbus_channel *channel,
-> +		     const struct vmpacket_descriptor *pkt)
-> +{
-> +	return hv_pkt_iter_next_pkt(channel, pkt, false);
-> +}
-> +
-> +/*
-> + * Get next packet descriptor from iterator
-> + * If at end of list, return NULL and update host.
-> + */
-> +static inline struct vmpacket_descriptor *
-> +hv_pkt_iter_next(struct vmbus_channel *channel,
-> +		 const struct vmpacket_descriptor *pkt)
-> +{
-> +	return hv_pkt_iter_next_pkt(channel, pkt, true);
-> +}
-> +
->  #define foreach_vmbus_pkt(pkt, channel) \
->  	for (pkt = hv_pkt_iter_first(channel); pkt; \
->  	    pkt = hv_pkt_iter_next(channel, pkt))
-> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-> index 630b851f8150f..cd8b7c1ca9f15 100644
-> --- a/net/vmw_vsock/hyperv_transport.c
-> +++ b/net/vmw_vsock/hyperv_transport.c
-> @@ -600,7 +600,7 @@ static ssize_t hvs_stream_dequeue(struct vsock_sock *vsk, struct msghdr *msg,
->  		return -EOPNOTSUPP;
->  
->  	if (need_refill) {
-> -		hvs->recv_desc = hv_pkt_iter_first(hvs->chan);
-> +		hvs->recv_desc = hv_pkt_iter_first_raw(hvs->chan);
->  		ret = hvs_update_recv_data(hvs);
->  		if (ret)
->  			return ret;
-> @@ -614,7 +614,7 @@ static ssize_t hvs_stream_dequeue(struct vsock_sock *vsk, struct msghdr *msg,
->  
->  	hvs->recv_data_len -= to_read;
->  	if (hvs->recv_data_len == 0) {
-> -		hvs->recv_desc = hv_pkt_iter_next(hvs->chan, hvs->recv_desc);
-> +		hvs->recv_desc = hv_pkt_iter_next_raw(hvs->chan, hvs->recv_desc);
->  		if (hvs->recv_desc) {
->  			ret = hvs_update_recv_data(hvs);
->  			if (ret)
-> -- 
-> 2.25.1
-> 
+> @@ -1226,6 +1226,11 @@ int rndis_set_subchannel(struct net_device *ndev,
+>  		return -EIO;
+>  	}
+>=20
+> +	/* Check that number of allocated sub channel is within the expected
+> range */
+> +	if (init_packet->msg.v5_msg.subchn_comp.num_subchannels >
+> nvdev->num_chn - 1) {
+> +		netdev_err(ndev, "invalid number of allocated sub
+> channel\n");
+> +		return -EINVAL;
+> +	}
+>  	nvdev->num_chn =3D 1 +
+>  		init_packet->msg.v5_msg.subchn_comp.num_subchannels;
+
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Thank you.
