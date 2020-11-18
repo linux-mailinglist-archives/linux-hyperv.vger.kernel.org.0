@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E45C2B7FD8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 15:56:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FFC52B8099
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 16:33:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgKROyB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 Nov 2020 09:54:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42774 "EHLO
+        id S1726219AbgKRPd3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 18 Nov 2020 10:33:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgKROyB (ORCPT
+        with ESMTP id S1725804AbgKRPd3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 Nov 2020 09:54:01 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8E9C0613D4;
-        Wed, 18 Nov 2020 06:54:01 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id r17so2540435wrw.1;
-        Wed, 18 Nov 2020 06:54:01 -0800 (PST)
+        Wed, 18 Nov 2020 10:33:29 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEDE7C0613D4;
+        Wed, 18 Nov 2020 07:33:28 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id u12so2684130wrt.0;
+        Wed, 18 Nov 2020 07:33:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=noyj//pQAVL0F3TT1GEpmdCZZctT7gUdg23e2fukuL4=;
-        b=ntCI44C4kjqgCGo1yYRBpvXVz5rJOFRbkY02AVMtdy9mPWcyC+k3PY+9uEHczo1c7v
-         28Vb2QzJL3K4jr2VMiaqlsVmyijSVZ6Ui2FoffLAIFf4n8dJYKlpVycSPFBUwUvRE4qR
-         El1eoDUfQp5/s2gbP/l7DxJ5QIzp+ElzUvv7QHZb5WJHdHU/L1Bg6gyUokp07hV7okJY
-         nj+Od9ZWnmFZaNfb0JjB9iQotnHhldsbYXb8Pc5lhoLEAcUtkbZgdXf7akq1G0/02xGb
-         FVT/E4UMFNTt6fPunBOkFLJKk8jXEKk9MpzkOs2TrzR7AhSHZ97Hs9ZSW9daafG2th9g
-         OgWQ==
+        bh=8wny3kzVC1IR5EcyDuj2RgrjJgW1k6C8oLglaDehiy8=;
+        b=c4N9dhSeYwm6VvvieK5qW8KPOFOb1Wz2H51Q7yNynXg8juBv//gERwBeLKzbwe7SYD
+         gRYs8sJUqzU4fU1K9rptXIZ3eD4PSiDudVOWVfQazs2IK9r0SIO75oNldS19wvQNsen3
+         laZGh20fuAcG5rdpYNSDFevl0ku0DWv72c798Mp5s/GQKTUX2VvPqSLNdwsb2ata6Q4M
+         +XIJk9GCoG9MK5W5+eF3WKSy8DK5YZ5r0ARcUYJc1Gn3NZ43JFYwDNKwlIvyY7PlZrzE
+         RUYYUPg9YgAQvFDo2PA9GXRNBcD1x0Wv8N9h/5pvuf3DY1Eruu/VL24OEcbIIUCAtlGs
+         U1cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=noyj//pQAVL0F3TT1GEpmdCZZctT7gUdg23e2fukuL4=;
-        b=NdBR5MLe+dAz4ORXO+gQhCvEKGtjYsBNDCPbULsNMpgn2DpT8P627Qhaa1MJSkeIW0
-         B/2ci2R2Tl3mI1EWbVZRX+GisbXQzHEmNML+TINRQtuiyH5NEpr+vvh1Df43zPLed2Bx
-         HOdRAgxaguVtD/t2DbBGUbkmm+XusKT97fDPH1ucWFrqFtmNVmyzXpZUaKpNmbu2iwvD
-         3KqtJm854OkfBGHSQlXBB4UeKx6ehbVEsTb1NurS/mASbgJgaW2u0RzOnXuavlLqGzAq
-         lW7Mku6h3NQyUHWWFg0azuojUp1pxy4OQ6JEfp0iGdisIEYHKkvxy5U2APbxz+4RDSRc
-         0H0g==
-X-Gm-Message-State: AOAM530VZXm5dZ0XDgpTSWHa0LKXRbIeZvjsHY2te2Rm/lD4jR8PHzGY
-        5HyFahJy5WyB4cIV45bZRcijBps2L8oAzdPK
-X-Google-Smtp-Source: ABdhPJz5Ixt95dpw0tbcmzoh/UimTZIfdS9pfrUy3+Ck7lRj3q7TkGYplYgsiHg0DapKjZ1X7dhkDA==
-X-Received: by 2002:adf:fd85:: with SMTP id d5mr4884502wrr.99.1605711239584;
-        Wed, 18 Nov 2020 06:53:59 -0800 (PST)
+        bh=8wny3kzVC1IR5EcyDuj2RgrjJgW1k6C8oLglaDehiy8=;
+        b=Oo0c10BkwxEHXeZRI4XVUxEv6G9PaehkXH/ENVdBmYGLRTa1k6NwWSC2M3r8SMIcSb
+         GOu1uqvAYNBFecPHVHYOYGDxS9d1CP894xPyE4DB+r8OFJSODjYPjBNBYgHidLRo01hb
+         WzrYmDEXPguopUnXwnSQtsJlO9N13vn0csag/VJPGmiVRRGQ1BW1UuT7847ACUROsuIr
+         S5YCGbqDXsYh+bNLTWdcPdoe4E7Qt3KoKVoc7AkETiHlWmg0iFm5XfJW7Gky1c4kjyAN
+         C4/iT0aM6xwEww2+AgBeXJwriI/nrsKOnxHp78ApZT2lJ563BGCv3lckhsmJflJ3iHHo
+         pBXw==
+X-Gm-Message-State: AOAM5309lG8JUDzkQzNHm3mC0hXGi7/TCHIeaS9vR4NQnxcuJvcug7JU
+        9pnW3JYMdVNwc2DwvsVO1EpeBXOULzYMIC69
+X-Google-Smtp-Source: ABdhPJz/vblUYoZh2K8DlxwaydB+cG/5byw4frw9B7T+IEsnhSzf5xXi92WJfR2i2m98L3GIwyJlQQ==
+X-Received: by 2002:a5d:6447:: with SMTP id d7mr5525080wrw.96.1605713607160;
+        Wed, 18 Nov 2020 07:33:27 -0800 (PST)
 Received: from localhost.localdomain (host-82-51-6-75.retail.telecomitalia.it. [82.51.6.75])
-        by smtp.gmail.com with ESMTPSA id o197sm3973785wme.17.2020.11.18.06.53.58
+        by smtp.gmail.com with ESMTPSA id v19sm4394146wmj.31.2020.11.18.07.33.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 06:53:58 -0800 (PST)
+        Wed, 18 Nov 2020 07:33:26 -0800 (PST)
 From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
@@ -58,12 +58,11 @@ Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Juan Vazquez <juvazq@microsoft.com>,
         Saruhan Karademir <skarade@microsoft.com>,
         "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH] scsi: storvsc: Validate length of incoming packet in storvsc_on_channel_callback()
-Date:   Wed, 18 Nov 2020 15:53:48 +0100
-Message-Id: <20201118145348.109879-1-parri.andrea@gmail.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH] hv_netvsc: Validate number of allocated sub-channels
+Date:   Wed, 18 Nov 2020 16:33:10 +0100
+Message-Id: <20201118153310.112404-1-parri.andrea@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -71,36 +70,37 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Check that the packet is of the expected size at least, don't copy
-data past the packet.
+Lack of validation could lead to out-of-bound reads and information
+leaks (cf. usage of nvdev->chan_table[]).  Check that the number of
+allocated sub-channels fits into the expected range.
 
-Reported-by: Saruhan Karademir <skarade@microsoft.com>
+Suggested-by: Saruhan Karademir <skarade@microsoft.com>
 Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org
 ---
 Based on hyperv-next.
 
- drivers/scsi/storvsc_drv.c | 5 +++++
+ drivers/net/hyperv/rndis_filter.c | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 331a33a04f1ad..629a46a0bab6e 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1270,6 +1270,11 @@ static void storvsc_on_channel_callback(void *context)
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index 3835d9bea1005..c5a709f67870f 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1226,6 +1226,11 @@ int rndis_set_subchannel(struct net_device *ndev,
+ 		return -EIO;
+ 	}
  
- 		request = (struct storvsc_cmd_request *)(unsigned long)cmd_rqst;
++	/* Check that number of allocated sub channel is within the expected range */
++	if (init_packet->msg.v5_msg.subchn_comp.num_subchannels > nvdev->num_chn - 1) {
++		netdev_err(ndev, "invalid number of allocated sub channel\n");
++		return -EINVAL;
++	}
+ 	nvdev->num_chn = 1 +
+ 		init_packet->msg.v5_msg.subchn_comp.num_subchannels;
  
-+		if (hv_pkt_datalen(desc) < sizeof(struct vstor_packet) - vmscsi_size_delta) {
-+			dev_err(&device->device, "Invalid packet len\n");
-+			continue;
-+		}
-+
- 		if (request == &stor_device->init_request ||
- 		    request == &stor_device->reset_request) {
- 			memcpy(&request->vstor_packet, packet,
 -- 
 2.25.1
 
