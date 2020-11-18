@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EDFB2B7F85
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 15:40:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47CF02B7F89
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 Nov 2020 15:40:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgKROhp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 Nov 2020 09:37:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
+        id S1727003AbgKROht (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 18 Nov 2020 09:37:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgKROhn (ORCPT
+        with ESMTP id S1725613AbgKROhs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 Nov 2020 09:37:43 -0500
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2EAC0613D4;
-        Wed, 18 Nov 2020 06:37:43 -0800 (PST)
-Received: by mail-wr1-x442.google.com with SMTP id o15so2440021wru.6;
-        Wed, 18 Nov 2020 06:37:43 -0800 (PST)
+        Wed, 18 Nov 2020 09:37:48 -0500
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 812BBC0613D4;
+        Wed, 18 Nov 2020 06:37:48 -0800 (PST)
+Received: by mail-wm1-x344.google.com with SMTP id 1so2937935wme.3;
+        Wed, 18 Nov 2020 06:37:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9Rs5tsnn1mMjgVaYOmoOMGnCxyDPBfQTj3LZ6W940/g=;
-        b=tZMVXDBeaK4gDcpZggmS6PXfxD/gqnyqSnLzPP/Yxf+cF1qJyr8R2vCuOuoMd41et7
-         MMFKKumBeSJpvv2O/TpowXRJIQnzuvTzZKQHOPrMs549LRFr7hIILHc62YmxvkfOaV0f
-         FsCIPSbAvJN9LFk1a4E3khU3VhJIOG6bz8ideNM1Gzhq/CKVh4KDgvY1TcPufJgBkvBV
-         yAlVHG+HqBTDV9zzurK2H2b/+P0cERW1el/3gCh3vQbt6xKugVTn/l1qYPgqgSFBlPBr
-         vj3pw7eV2ajGT9ddI+qKQx5siBmn2fzfjhK74xGzKETaYVZvh7W2jAS6QuMmdd3XlvTy
-         rXkw==
+        bh=oUt//bTkwsRrgK4y9pyKInt9C1fdhCh6LTSbXfNlTqo=;
+        b=jzPfMtXi3c3lf3x5WTV2VKBiyf3pBIUrqYGHGLm2s6bBxGPaCh1iYCYvnWhkAUjpU8
+         Zv8n70xpdmlaa5lm8wdSS3FKmpwU/BfbxDHm1UpZbNkccLLwaLZWFSPn8LmefP/6cQ7P
+         4x+Vq1JMNAbzDXE/O0/nmfPo8RSaZW8xSehCFifVrx3I8YLrbb9YzM1RqYtdXEWRg63b
+         WzLWsyo7jSYPTSBuEEv9G1YPU5JipHH5T2fUUoFUH2Xhg4v8tfwDmHGNt7AhfP/S4kGw
+         NiyB9PR1jnEo0NpYlbKTUAiS4SoP+qDwogpexp8w9jfFxEzREyfUFX5ji2UjO/5tNLWR
+         gi8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9Rs5tsnn1mMjgVaYOmoOMGnCxyDPBfQTj3LZ6W940/g=;
-        b=ma0lc99fXA0TgIX3wXiXmT9nCG5FKw8dZxjhuikBRAYMILeKBym5G82ttuGl53Xym0
-         6xykpZOMGy9w+/b5NFKWD9udxKKOoLXgvakYkkIEbPBMcORd3Kh1CZLRno1IlTkkGrx5
-         ERAp8yM+TjBkXTDL3yStRWIz53RIqVnxmXJAG0HtsK3tHNW5XJ4TAMB7DvlgODnt0O5m
-         88bnthwqBOD73EkQw7yHng0UM5QNgMTQX59b03GS4+b2wf8BGjwcIJMlQXD9H+XSclhM
-         Q9/iJuQeR8u06NzyDCJouubTHYmzyjs23GYoJ6fwqM4PAfyZM5QhWfkOPqrlZLcKAcJw
-         SW3Q==
-X-Gm-Message-State: AOAM531cLSls87r7cFGZ7g9m56J5Fg9qbAVjzNSJqLktH4E9PEUlpS9M
-        YVnuxfNVqRjrWQ5fdI68KEBp3C4DdyQKcw==
-X-Google-Smtp-Source: ABdhPJwpO5u8KNov5HuK5MpvAeEG/20+Fgchlmmt5ZxduVR7JKgoVFBklY0Z/e5Jv8FUeAG6YOWq5w==
-X-Received: by 2002:adf:fed1:: with SMTP id q17mr5105144wrs.393.1605710261656;
-        Wed, 18 Nov 2020 06:37:41 -0800 (PST)
+        bh=oUt//bTkwsRrgK4y9pyKInt9C1fdhCh6LTSbXfNlTqo=;
+        b=JmHKGMnEN8eXfDshFFt2vwueIWRdLomPE8LPQ9So/6eNfCgulXuJfelfWhx0HlipPV
+         E9VLPqMUc2Mc4TzFzXO+yMeUPh23HTdSqixoW6Xa1aCFPpwJwn1k8KTeWYbXuc5p8lp3
+         kDQgIIpsuoxl+NSmSdwn8XYTuuLEAzsgKNID+DCTFByDBvjhrFuBBoNe/lRsCWk6ofBE
+         sIlBhG1Efu3yruW7zApBKdR8bYYYRpARxwAqCqrikw4R8JquLOcUfh0okPOPhKhter4y
+         Ve2YcCUI99TW0foLy4Cvl/ncs/Typk3Fm0404BSY6t2U5Oc1Fug/iHYZMwq5DUgUfzHK
+         OQLQ==
+X-Gm-Message-State: AOAM531WjhKJKofYIDKC7QJ94jdCBgtMufCh0PyimM0e6gjdh8M645+s
+        5bvoZV1pqU4STT/5rYgIG5mhmDMmXFNmZQ==
+X-Google-Smtp-Source: ABdhPJz3MdZwKXcwvNF4Wy0Iq9wGRXlU0i7KJaPSSNqW5EttSHUZByXG3u7xjldMS4lInOfd/DClnA==
+X-Received: by 2002:a1c:80c3:: with SMTP id b186mr385952wmd.20.1605710263838;
+        Wed, 18 Nov 2020 06:37:43 -0800 (PST)
 Received: from localhost.localdomain (host-82-51-6-75.retail.telecomitalia.it. [82.51.6.75])
-        by smtp.gmail.com with ESMTPSA id w10sm34795307wra.34.2020.11.18.06.37.40
+        by smtp.gmail.com with ESMTPSA id w10sm34795307wra.34.2020.11.18.06.37.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2020 06:37:41 -0800 (PST)
+        Wed, 18 Nov 2020 06:37:43 -0800 (PST)
 From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
@@ -58,9 +58,9 @@ Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Juan Vazquez <juvazq@microsoft.com>,
         Saruhan Karademir <skarade@microsoft.com>,
         "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 2/6] Drivers: hv: vmbus: Avoid double fetch of msgtype in vmbus_on_msg_dpc()
-Date:   Wed, 18 Nov 2020 15:36:45 +0100
-Message-Id: <20201118143649.108465-3-parri.andrea@gmail.com>
+Subject: [PATCH 3/6] Drivers: hv: vmbus: Avoid double fetch of payload_size in vmbus_on_msg_dpc()
+Date:   Wed, 18 Nov 2020 15:36:46 +0100
+Message-Id: <20201118143649.108465-4-parri.andrea@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201118143649.108465-1-parri.andrea@gmail.com>
 References: <20201118143649.108465-1-parri.andrea@gmail.com>
@@ -70,78 +70,67 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-vmbus_on_msg_dpc() double fetches from msgtype.  The double fetch can
-lead to an out-of-bound access when accessing the channel_message_table
-array.  In turn, the use of the out-of-bound entry could lead to code
-execution primitive (entry->message_handler()).  Avoid the double fetch
-by saving the value of msgtype into a local variable.
+vmbus_on_msg_dpc() double fetches from payload_size.  The double fetch
+can lead to a buffer overflow when (mem)copying the hv_message object.
+Avoid the double fetch by saving the value of payload_size into a local
+variable.
 
 Reported-by: Juan Vazquez <juvazq@microsoft.com>
 Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 ---
- drivers/hv/vmbus_drv.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/hv/vmbus_drv.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 0a2711aa63a15..82b23baa446d7 100644
+index 82b23baa446d7..0e39f1d6182e9 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -1057,6 +1057,7 @@ void vmbus_on_msg_dpc(unsigned long data)
+@@ -1056,6 +1056,7 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 	void *page_addr = hv_cpu->synic_message_page;
  	struct hv_message *msg = (struct hv_message *)page_addr +
  				  VMBUS_MESSAGE_SINT;
++	__u8 payload_size = msg->header.payload_size;
  	struct vmbus_channel_message_header *hdr;
-+	enum vmbus_channel_message_type msgtype;
+ 	enum vmbus_channel_message_type msgtype;
  	const struct vmbus_channel_message_table_entry *entry;
- 	struct onmessage_work_context *ctx;
- 	u32 message_type = msg->header.message_type;
-@@ -1072,12 +1073,19 @@ void vmbus_on_msg_dpc(unsigned long data)
- 		/* no msg */
- 		return;
- 
-+	/*
-+	 * The hv_message object is in memory shared with the host.  The host
-+	 * could erroneously or maliciously modify such object.  Make sure to
-+	 * validate its fields and avoid double fetches whenever feasible.
-+	 */
-+
- 	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
-+	msgtype = hdr->msgtype;
- 
- 	trace_vmbus_on_msg_dpc(hdr);
- 
--	if (hdr->msgtype >= CHANNELMSG_COUNT) {
--		WARN_ONCE(1, "unknown msgtype=%d\n", hdr->msgtype);
-+	if (msgtype >= CHANNELMSG_COUNT) {
-+		WARN_ONCE(1, "unknown msgtype=%d\n", msgtype);
+@@ -1089,9 +1090,8 @@ void vmbus_on_msg_dpc(unsigned long data)
  		goto msg_handled;
  	}
  
-@@ -1087,14 +1095,14 @@ void vmbus_on_msg_dpc(unsigned long data)
+-	if (msg->header.payload_size > HV_MESSAGE_PAYLOAD_BYTE_COUNT) {
+-		WARN_ONCE(1, "payload size is too large (%d)\n",
+-			  msg->header.payload_size);
++	if (payload_size > HV_MESSAGE_PAYLOAD_BYTE_COUNT) {
++		WARN_ONCE(1, "payload size is too large (%d)\n", payload_size);
  		goto msg_handled;
  	}
  
--	entry = &channel_message_table[hdr->msgtype];
-+	entry = &channel_message_table[msgtype];
- 
+@@ -1100,21 +1100,18 @@ void vmbus_on_msg_dpc(unsigned long data)
  	if (!entry->message_handler)
  		goto msg_handled;
  
- 	if (msg->header.payload_size < entry->min_payload_len) {
- 		WARN_ONCE(1, "message too short: msgtype=%d len=%d\n",
--			  hdr->msgtype, msg->header.payload_size);
-+			  msgtype, msg->header.payload_size);
+-	if (msg->header.payload_size < entry->min_payload_len) {
+-		WARN_ONCE(1, "message too short: msgtype=%d len=%d\n",
+-			  msgtype, msg->header.payload_size);
++	if (payload_size < entry->min_payload_len) {
++		WARN_ONCE(1, "message too short: msgtype=%d len=%d\n", msgtype, payload_size);
  		goto msg_handled;
  	}
  
-@@ -1115,7 +1123,7 @@ void vmbus_on_msg_dpc(unsigned long data)
- 		 * by offer_in_progress and by channel_mutex.  See also the
- 		 * inline comments in vmbus_onoffer_rescind().
- 		 */
--		switch (hdr->msgtype) {
-+		switch (msgtype) {
- 		case CHANNELMSG_RESCIND_CHANNELOFFER:
- 			/*
- 			 * If we are handling the rescind message;
+ 	if (entry->handler_type	== VMHT_BLOCKING) {
+-		ctx = kmalloc(sizeof(*ctx) + msg->header.payload_size,
+-			      GFP_ATOMIC);
++		ctx = kmalloc(sizeof(*ctx) + payload_size, GFP_ATOMIC);
+ 		if (ctx == NULL)
+ 			return;
+ 
+ 		INIT_WORK(&ctx->work, vmbus_onmessage_work);
+-		memcpy(&ctx->msg, msg, sizeof(msg->header) +
+-		       msg->header.payload_size);
++		memcpy(&ctx->msg, msg, sizeof(msg->header) + payload_size);
+ 
+ 		/*
+ 		 * The host can generate a rescind message while we
 -- 
 2.25.1
 
