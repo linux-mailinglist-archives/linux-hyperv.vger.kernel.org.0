@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CE802BBAF0
-	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Nov 2020 01:35:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 940A22BBADD
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Nov 2020 01:31:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgKUAau (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S1728766AbgKUAau (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Fri, 20 Nov 2020 19:30:50 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:51174 "EHLO
+Received: from linux.microsoft.com ([13.77.154.182]:51182 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728341AbgKUAau (ORCPT
+        with ESMTP id S1728561AbgKUAau (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Fri, 20 Nov 2020 19:30:50 -0500
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6D81520B718A;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 82FD120B71D1;
         Fri, 20 Nov 2020 16:30:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6D81520B718A
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 82FD120B71D1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1605918649;
-        bh=6QivuWa9n3wnISAXa8kupsu+iKOKHl9h4jOBpVcX1iM=;
+        bh=MebfIyhuSjtcItZhTeTBX3QIsCHrngY2XYQqTgXCPYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cPKPvGC4CafRw6OY4eMJsKiC5J4ChtVEhb0IBpb3SgR+44q7lAwwUD309/tqwwwj1
-         PY+2vONhbzfehiz7g13hyB5OfbDpAeRmGLW3BdSsBF/ghBsQeNnvxn8qsp8NeGqBxM
-         f9XOIhGUIEkLmBOBqgeV+zCgMbZk8yktEVskxleU=
+        b=XLgYOBresYxJgoxN0DlBM9yVv0ko+Ri+Z7wYyu0wJUzajy77ENNnwrsyy+zTU2UTN
+         HofrVvFIyualY5DXVDLEEh50nU1J7ajNzq9ceFHdeJpTmqpK3JtthIREEhsMJbOg/a
+         cclk3D31Gqx67uE+z+z2q4KlWyJdD+XAbsmFQpXM=
 From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To:     linux-hyperv@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org,
@@ -30,9 +30,9 @@ Cc:     virtualization@lists.linux-foundation.org,
         viremana@linux.microsoft.com, sunilmut@microsoft.com,
         nunodasneves@linux.microsoft.com, wei.liu@kernel.org,
         ligrassi@microsoft.com, kys@microsoft.com
-Subject: [RFC PATCH 02/18] asm-generic/hyperv: convert hyperv statuses to strings
-Date:   Fri, 20 Nov 2020 16:30:21 -0800
-Message-Id: <1605918637-12192-3-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [RFC PATCH 03/18] virt/mshv: minimal mshv module (/dev/mshv/)
+Date:   Fri, 20 Nov 2020 16:30:22 -0800
+Message-Id: <1605918637-12192-4-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
@@ -40,135 +40,147 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Allow hyperv hypercall failures to be debugged more easily with dmesg.
-This will be used in the mshv module.
+Introduce a barebones module file for the mshv API.
+Introduce CONFIG_HYPERV_ROOT_API for controlling compilation of mshv.
 
+Co-developed-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
+Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 ---
- arch/x86/hyperv/hv_init.c         |  2 +-
- arch/x86/hyperv/hv_proc.c         | 10 +++---
- include/asm-generic/hyperv-tlfs.h | 60 +++++++++++++++++++------------
- 3 files changed, 44 insertions(+), 28 deletions(-)
+ arch/x86/Kconfig         |  2 ++
+ arch/x86/hyperv/Kconfig  | 22 +++++++++++++
+ arch/x86/hyperv/Makefile |  4 +++
+ virt/mshv/mshv_main.c    | 70 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 98 insertions(+)
+ create mode 100644 arch/x86/hyperv/Kconfig
+ create mode 100644 virt/mshv/mshv_main.c
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 2c2189832da7..2a8cd2cf0745 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -363,7 +363,7 @@ void __init hv_get_partition_id(void)
- 	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page) &
- 		HV_HYPERCALL_RESULT_MASK;
- 	if (status != HV_STATUS_SUCCESS)
--		pr_err("Failed to get partition ID: %d\n", status);
-+		pr_err("Failed to get partition ID: %s\n", hv_status_to_string(status));
- 	else
- 		hv_current_partition_id = output_page->partition_id;
- 	local_irq_restore(flags);
-diff --git a/arch/x86/hyperv/hv_proc.c b/arch/x86/hyperv/hv_proc.c
-index 8f86f8e86748..a88ed6873fbd 100644
---- a/arch/x86/hyperv/hv_proc.c
-+++ b/arch/x86/hyperv/hv_proc.c
-@@ -122,7 +122,7 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
- 	local_irq_restore(flags);
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index f6946b81f74a..8d3848eea358 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2901,3 +2901,5 @@ source "drivers/firmware/Kconfig"
+ source "arch/x86/kvm/Kconfig"
  
- 	if (status != HV_STATUS_SUCCESS) {
--		pr_err("Failed to deposit pages: %d\n", status);
-+		pr_err("Failed to deposit pages: %s\n", hv_status_to_string(status));
- 		ret = -hv_status_to_errno(status);
- 		goto err_free_allocations;
- 	}
-@@ -177,8 +177,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
- 
- 		if (status != HV_STATUS_INSUFFICIENT_MEMORY) {
- 			if (status != HV_STATUS_SUCCESS) {
--				pr_err("%s: cpu %u apic ID %u, %d\n", __func__,
--				       lp_index, apic_id, status);
-+				pr_err("%s: cpu %u apic ID %u, %s\n", __func__,
-+				       lp_index, apic_id, hv_status_to_string(status));
- 				ret = -hv_status_to_errno(status);
- 			}
- 			break;
-@@ -225,8 +225,8 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
- 
- 		if (status != HV_STATUS_INSUFFICIENT_MEMORY) {
- 			if (status != HV_STATUS_SUCCESS) {
--				pr_err("%s: vcpu %u, lp %u, %d\n", __func__,
--				       vp_index, flags, status);
-+				pr_err("%s: vcpu %u, lp %u, %s\n", __func__,
-+				       vp_index, flags, hv_status_to_string(status));
- 				ret = -hv_status_to_errno(status);
- 			}
- 			break;
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 445244192fa4..05b9dc9896ab 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -181,28 +181,44 @@ enum HV_GENERIC_SET_FORMAT {
- #define HV_HYPERCALL_REP_START_MASK	GENMASK_ULL(59, 48)
- 
- /* hypercall status code */
--#define HV_STATUS_SUCCESS			0x0
--#define HV_STATUS_INVALID_HYPERCALL_CODE	0x2
--#define HV_STATUS_INVALID_HYPERCALL_INPUT	0x3
--#define HV_STATUS_INVALID_ALIGNMENT		0x4
--#define HV_STATUS_INVALID_PARAMETER		0x5
--#define HV_STATUS_ACCESS_DENIED			0x6
--#define HV_STATUS_INVALID_PARTITION_STATE	0x7
--#define HV_STATUS_OPERATION_DENIED		0x8
--#define HV_STATUS_UNKNOWN_PROPERTY		0x9
--#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	0xA
--#define HV_STATUS_INSUFFICIENT_MEMORY		0xB
--#define HV_STATUS_INVALID_PARTITION_ID		0xD
--#define HV_STATUS_INVALID_VP_INDEX		0xE
--#define HV_STATUS_NOT_FOUND			0x10
--#define HV_STATUS_INVALID_PORT_ID		0x11
--#define HV_STATUS_INVALID_CONNECTION_ID		0x12
--#define HV_STATUS_INSUFFICIENT_BUFFERS		0x13
--#define HV_STATUS_NOT_ACKNOWLEDGED		0x14
--#define HV_STATUS_INVALID_VP_STATE		0x15
--#define HV_STATUS_NO_RESOURCES			0x1D
--#define HV_STATUS_INVALID_LP_INDEX		0x41
--#define HV_STATUS_INVALID_REGISTER_VALUE	0x50
-+#define __HV_STATUS_DEF(OP) \
-+	OP(HV_STATUS_SUCCESS,				0x0) \
-+	OP(HV_STATUS_INVALID_HYPERCALL_CODE,		0x2) \
-+	OP(HV_STATUS_INVALID_HYPERCALL_INPUT,		0x3) \
-+	OP(HV_STATUS_INVALID_ALIGNMENT,			0x4) \
-+	OP(HV_STATUS_INVALID_PARAMETER,			0x5) \
-+	OP(HV_STATUS_ACCESS_DENIED,			0x6) \
-+	OP(HV_STATUS_INVALID_PARTITION_STATE,		0x7) \
-+	OP(HV_STATUS_OPERATION_DENIED,			0x8) \
-+	OP(HV_STATUS_UNKNOWN_PROPERTY,			0x9) \
-+	OP(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	0xA) \
-+	OP(HV_STATUS_INSUFFICIENT_MEMORY,		0xB) \
-+	OP(HV_STATUS_INVALID_PARTITION_ID,		0xD) \
-+	OP(HV_STATUS_INVALID_VP_INDEX,			0xE) \
-+	OP(HV_STATUS_NOT_FOUND,				0x10) \
-+	OP(HV_STATUS_INVALID_PORT_ID,			0x11) \
-+	OP(HV_STATUS_INVALID_CONNECTION_ID,		0x12) \
-+	OP(HV_STATUS_INSUFFICIENT_BUFFERS,		0x13) \
-+	OP(HV_STATUS_NOT_ACKNOWLEDGED,			0x14) \
-+	OP(HV_STATUS_INVALID_VP_STATE,			0x15) \
-+	OP(HV_STATUS_NO_RESOURCES,			0x1D) \
-+	OP(HV_STATUS_INVALID_LP_INDEX,			0x41) \
-+	OP(HV_STATUS_INVALID_REGISTER_VALUE,		0x50)
+ source "arch/x86/Kconfig.assembler"
 +
-+#define __HV_MAKE_HV_STATUS_ENUM(NAME, VAL) NAME = (VAL),
-+#define __HV_MAKE_HV_STATUS_CASE(NAME, VAL) case (NAME): return (#NAME);
++source "arch/x86/hyperv/Kconfig"
+diff --git a/arch/x86/hyperv/Kconfig b/arch/x86/hyperv/Kconfig
+new file mode 100644
+index 000000000000..81e783ab3514
+--- /dev/null
++++ b/arch/x86/hyperv/Kconfig
+@@ -0,0 +1,22 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# HYPERV_ROOT_API configuration
++#
 +
-+enum hv_status {
-+	__HV_STATUS_DEF(__HV_MAKE_HV_STATUS_ENUM)
++config HYPERV_ROOT_API
++	tristate "Microsoft Hypervisor root partition interfaces: /dev/mshv"
++	depends on HYPERV
++	help
++	  Provides access to interfaces for managing guest virtual machines
++	  running under the Microsoft Hypervisor.
++
++	  These interfaces will only work when Linux is running as root
++	  partition on the Microsoft Hypervisor.
++
++	  The interfaces are provided via a device named /dev/mshv.
++
++	  To compile this as a module, choose M here: the module
++	  will be called mshv.
++
++	  If unsure, say N.
++
+diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
+index 2ebcf3969121..86f6dc1c5118 100644
+--- a/arch/x86/hyperv/Makefile
++++ b/arch/x86/hyperv/Makefile
+@@ -5,3 +5,7 @@ obj-$(CONFIG_X86_64)	+= hv_apic.o hv_proc.o irqdomain.o
+ ifdef CONFIG_X86_64
+ obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
+ endif
++
++MSHV := ../../../virt/mshv
++mshv-y                          += $(MSHV)/mshv_main.o
++obj-$(CONFIG_HYPERV_ROOT_API)   += mshv.o
+diff --git a/virt/mshv/mshv_main.c b/virt/mshv/mshv_main.c
+new file mode 100644
+index 000000000000..ecb9089761fe
+--- /dev/null
++++ b/virt/mshv/mshv_main.c
+@@ -0,0 +1,70 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, Microsoft Corporation.
++ *
++ * Authors:
++ *   Nuno Das Neves <nudasnev@microsoft.com>
++ *   Lillian Grassin-Drake <ligrassi@microsoft.com>
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/fs.h>
++#include <linux/miscdevice.h>
++
++MODULE_AUTHOR("Microsoft");
++MODULE_LICENSE("GPL");
++
++static long
++mshv_dev_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
++{
++	return -ENOTTY;
++}
++
++static int
++mshv_dev_open(struct inode *inode, struct file *filp)
++{
++	return 0;
++}
++
++static int
++mshv_dev_release(struct inode *inode, struct file *filp)
++{
++	return 0;
++}
++
++static const struct file_operations mshv_dev_fops = {
++	.owner = THIS_MODULE,
++	.open = mshv_dev_open,
++	.release = mshv_dev_release,
++	.unlocked_ioctl = mshv_dev_ioctl,
++	.llseek = noop_llseek,
 +};
 +
-+static inline const char *hv_status_to_string(enum hv_status status)
++static struct miscdevice mshv_dev = {
++	.minor = MISC_DYNAMIC_MINOR,
++	.name = "mshv",
++	.fops = &mshv_dev_fops,
++	.mode = 600,
++};
++
++static int
++__init mshv_init(void)
 +{
-+	switch (status) {
-+	__HV_STATUS_DEF(__HV_MAKE_HV_STATUS_CASE)
-+	default : return "Unknown";
-+	}
++	int r;
++
++	r = misc_register(&mshv_dev);
++	if (r)
++		pr_err("%s: misc device register failed\n", __func__);
++
++	return r;
 +}
- 
- /*
-  * The Hyper-V TimeRefCount register and the TSC
++
++static void
++__exit mshv_exit(void)
++{
++	misc_deregister(&mshv_dev);
++}
++
++module_init(mshv_init);
++module_exit(mshv_exit);
 -- 
 2.25.1
 
