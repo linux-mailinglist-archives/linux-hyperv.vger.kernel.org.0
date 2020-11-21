@@ -2,82 +2,128 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 454012BAA9A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Nov 2020 13:55:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15F2D2BBADE
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 Nov 2020 01:31:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgKTMy5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 20 Nov 2020 07:54:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgKTMy5 (ORCPT
+        id S1728807AbgKUAau (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 20 Nov 2020 19:30:50 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:51164 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728175AbgKUAau (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 20 Nov 2020 07:54:57 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111F9C0613CF;
-        Fri, 20 Nov 2020 04:54:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ARS+JFM8lp7IU5S39whnGWAR9zPTjiLED++SVe3kkDg=; b=LFnlsnKEh1oJBjqJmqWEjBMDPA
-        RhYAb819lhVkUmxOATMprP9zwrg4W8r9fnHYLaWcgSZc3ZZ+ibjAd2T+11VhwGcExv5iGdpTyCMCl
-        mu8SvfQAmTH0Vap4aaLOeQ7Yz08iwbMPlGI8DH6PpXe94p9k+F+8oAIrNh0dTW6jn/MznD4fLHthg
-        hRpx+wkXIeAkTOptyjsOsVhpg3FHxP6C9ShGQ7RFETLGfKWi3GUQcWQGmtIyrah0wRjprJzE6otgq
-        BlItKpepcV2xggTTCc5EEQRfa/Ks4Hgph9aAqxMSO+H7U1UxN0JN5JhIiYLI2O9xDoxiQKOjkmQqX
-        Ztj/Up7Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kg5v5-0000yt-TS; Fri, 20 Nov 2020 12:53:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9B3B9306BCA;
-        Fri, 20 Nov 2020 13:53:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7A8C720244CF6; Fri, 20 Nov 2020 13:53:42 +0100 (CET)
-Date:   Fri, 20 Nov 2020 13:53:42 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org, luto@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH v2 00/12] x86: major paravirt cleanup
-Message-ID: <20201120125342.GC3040@hirez.programming.kicks-ass.net>
-References: <20201120114630.13552-1-jgross@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201120114630.13552-1-jgross@suse.com>
+        Fri, 20 Nov 2020 19:30:50 -0500
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4065820B717A;
+        Fri, 20 Nov 2020 16:30:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4065820B717A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1605918649;
+        bh=qL7T6ATcePrRBnydsz5PapiFX6SEvvtzilsCG4i/l5Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=q9oq3fIrueZe29lIOTh6gn0AH3XUDhwL2d+5pH1ImHf73gDyOJVyGOjUhHhY1FUbg
+         WhHvjlyV8e4mhkbvKODnxdcl/S64e875joDzwxOmrpa3Ql3tqoHpuKlOQmEqD6i2MF
+         CqT2mqlBgRhJJ3AIPZ22mXp7WOEzK7Eou6Xkl0SY=
+From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        viremana@linux.microsoft.com, sunilmut@microsoft.com,
+        nunodasneves@linux.microsoft.com, wei.liu@kernel.org,
+        ligrassi@microsoft.com, kys@microsoft.com
+Subject: [RFC PATCH 00/18] Microsoft Hypervisor root partition ioctl interface
+Date:   Fri, 20 Nov 2020 16:30:19 -0800
+Message-Id: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 12:46:18PM +0100, Juergen Gross wrote:
->  30 files changed, 325 insertions(+), 598 deletions(-)
+This patch series provides a userspace interface for creating and running guest
+virtual machines while running on the Microsoft Hypervisor [0].
 
-Much awesome ! I'll try and get that objtool thing sorted.
+Since managing guest machines can only be done when Linux is the root partition,
+this series depends on the RFC already posted by Wei Liu:
+https://lore.kernel.org/linux-hyperv/20201105165814.29233-1-wei.liu@kernel.org/T/#t
+
+The first two patches provide some helpers for converting hypervisor status
+codes to linux error codes, and easily printing hypervisor status codes to dmesg
+for debugging.
+
+Hyper-V related headers asm-generic/hyperv-tlfs.h and x86/asm/hyperv-tlfs.h are
+split into uapi and non-uapi. The uapi versions contain structures used in both
+the ioctl interface and the kernel.
+
+The mshv API is introduced in virt/mshv/mshv_main.c. As each interface is
+introduced, documentation is added in Documentation/virt/mshv/api.rst.
+The API is file-desciptor based, like KVM. The entry point is /dev/mshv.
+
+/dev/mshv ioctls:
+MSHV_REQUEST_VERSION
+MSHV_CREATE_PARTITION
+
+Partition (vm) ioctls:
+MSHV_MAP_GUEST_MEMORY, MSHV_UNMAP_GUEST_MEMORY
+MSHV_INSTALL_INTERCEPT
+MSHV_ASSERT_INTERRUPT
+MSHV_GET_PARTITION_PROPERTY, MSHV_SET_PARTITION_PROPERTY
+MSHV_CREATE_VP
+
+Vp (vcpu) ioctls:
+MSHV_GET_VP_REGISTERS, MSHV_SET_VP_REGISTERS
+MSHV_RUN_VP
+MSHV_GET_VP_STATE, MSHV_SET_VP_STATE
+mmap() (register page)
+
+[0] Hyper-V is more well-known, but it really refers to the whole stack
+    including the hypervisor and other components that run in Windows kernel
+    and userspace.
+
+Nuno Das Neves (18):
+  x86/hyperv: convert hyperv statuses to linux error codes
+  asm-generic/hyperv: convert hyperv statuses to strings
+  virt/mshv: minimal mshv module (/dev/mshv/)
+  virt/mshv: request version ioctl
+  virt/mshv: create partition ioctl
+  virt/mshv: create, initialize, finalize, delete partition hypercalls
+  virt/mshv: withdraw memory hypercall
+  virt/mshv: map and unmap guest memory
+  virt/mshv: create vcpu ioctl
+  virt/mshv: get and set vcpu registers ioctls
+  virt/mshv: set up synic pages for intercept messages
+  virt/mshv: run vp ioctl and isr
+  virt/mshv: install intercept ioctl
+  virt/mshv: assert interrupt ioctl
+  virt/mshv: get and set vp state ioctls
+  virt/mshv: mmap vp register page
+  virt/mshv: get and set partition property ioctls
+  virt/mshv: Add enlightenment bits to create partition ioctl
+
+ .../userspace-api/ioctl/ioctl-number.rst      |    2 +
+ Documentation/virt/mshv/api.rst               |  173 ++
+ arch/x86/Kconfig                              |    2 +
+ arch/x86/hyperv/Kconfig                       |   22 +
+ arch/x86/hyperv/Makefile                      |    4 +
+ arch/x86/hyperv/hv_init.c                     |    2 +-
+ arch/x86/hyperv/hv_proc.c                     |   40 +-
+ arch/x86/include/asm/hyperv-tlfs.h            |   44 +-
+ arch/x86/include/asm/mshyperv.h               |    1 +
+ arch/x86/include/uapi/asm/hyperv-tlfs.h       | 1312 +++++++++++
+ arch/x86/kernel/cpu/mshyperv.c                |   16 +
+ include/asm-generic/hyperv-tlfs.h             |  324 ++-
+ include/asm-generic/mshyperv.h                |    3 +
+ include/linux/mshv.h                          |   61 +
+ include/uapi/asm-generic/hyperv-tlfs.h        |  160 ++
+ include/uapi/linux/mshv.h                     |  109 +
+ virt/mshv/mshv_main.c                         | 2054 +++++++++++++++++
+ 17 files changed, 4178 insertions(+), 151 deletions(-)
+ create mode 100644 Documentation/virt/mshv/api.rst
+ create mode 100644 arch/x86/hyperv/Kconfig
+ create mode 100644 arch/x86/include/uapi/asm/hyperv-tlfs.h
+ create mode 100644 include/linux/mshv.h
+ create mode 100644 include/uapi/asm-generic/hyperv-tlfs.h
+ create mode 100644 include/uapi/linux/mshv.h
+ create mode 100644 virt/mshv/mshv_main.c
+
+-- 
+2.25.1
+
