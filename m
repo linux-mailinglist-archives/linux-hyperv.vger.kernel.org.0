@@ -2,89 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2FFD2BFDCB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Nov 2020 01:54:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85F292C03C8
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Nov 2020 12:04:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgKWAyJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 22 Nov 2020 19:54:09 -0500
-Received: from smtprelay0002.hostedemail.com ([216.40.44.2]:50256 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725782AbgKWAyH (ORCPT
+        id S1728177AbgKWLB3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 Nov 2020 06:01:29 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40504 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgKWLB3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 22 Nov 2020 19:54:07 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2D37318029125;
-        Mon, 23 Nov 2020 00:54:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1540:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2828:2911:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3871:3872:4250:4321:4425:5007:6119:6691:6742:6743:7903:10004:10400:10848:11026:11232:11658:11914:12296:12297:12555:12740:12760:12895:13069:13161:13229:13311:13357:13439:14659:14721:21080:21433:21627:21740:30041:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: steam95_4513bd127361
-X-Filterd-Recvd-Size: 3177
-Received: from XPS-9350.home (unknown [47.151.128.180])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 23 Nov 2020 00:53:59 +0000 (UTC)
-Message-ID: <21826b6d513c4d9ccc795179c1edb0df2361d870.camel@perches.com>
-Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-From:   Joe Perches <joe@perches.com>
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Tom Rix <trix@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        clang-built-linux@googlegroups.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        tboot-devel@lists.sourceforge.net, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-media@vger.kernel.org,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
-        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, alsa-devel@alsa-project.org,
-        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
-Date:   Sun, 22 Nov 2020 16:53:58 -0800
-In-Reply-To: <alpine.LNX.2.23.453.2011230810210.7@nippy.intranet>
-References: <20201121165058.1644182-1-trix@redhat.com>
-                 <20201122032304.GE4327@casper.infradead.org>
-                 <ddb08a27-3ca1-fb2e-d51f-4b471f1a56a3@redhat.com>
-                 <20201122145635.GG4327@casper.infradead.org>
-                 <0819ce06-c462-d4df-d3d9-14931dc5aefc@redhat.com>
-         <751803306cd957d0e7ef6a4fc3dbf12ebceaba92.camel@HansenPartnership.com>
-         <dec07021e7fc11a02b14c98b713ae2c6e2a4ca00.camel@perches.com>
-         <alpine.LNX.2.23.453.2011230810210.7@nippy.intranet>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        Mon, 23 Nov 2020 06:01:29 -0500
+Received: by mail-wr1-f66.google.com with SMTP id m6so18127205wrg.7;
+        Mon, 23 Nov 2020 03:01:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=0qy2L1u963qQHTCpiSO9/NuKhM45RT7N67hbv22Yyus=;
+        b=EYEt6kTGcOhx2Je0/ZTFDIaevVe1tGzLxRnygJtA4mJ7Ql8cCW/q8It+NrdHfXDcgo
+         YQZCtg43syjEYa+Lf9VRLkpLvqdUgBUwGQUaK1Li4RXBz5IWZF0ffGaLqvaBM/te+WeL
+         5UcREdOBpr/+BXkXzZBCKH88rQ+pChDT4hjVnJO41hxTpu1eXYPMYc40ocuQnqqgTaLH
+         9eoYA0i+48LHmfw7PPU5rn0ozWoVhIb0DRuoSOYupJ2o9Or7dx7uh5plvDNiXts4IUOg
+         dcOP6JJ5bynroJztVwW2u2rgh6m6MgnL9DyR6wOvWoJs7SZ23tJCDXWhEHKNtfwcQzM4
+         22bg==
+X-Gm-Message-State: AOAM531XjF7DW2I7XMkEjeA6X8cRdB0QPde/drJcpD3L4Iz/+2lgUgzi
+        qUC/hvvptslHPhjDeAVAIJ1XExqSChQ=
+X-Google-Smtp-Source: ABdhPJyU3IO7SXjYHrJlaT9/3BAH25fBPDqtR9Ybg1XI4bB1XyIXWSGNQNp+wWG3MYzeLUvbXl2cCw==
+X-Received: by 2002:adf:f84e:: with SMTP id d14mr6428532wrq.390.1606129285845;
+        Mon, 23 Nov 2020 03:01:25 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id m7sm14312679wmc.22.2020.11.23.03.01.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Nov 2020 03:01:25 -0800 (PST)
+Date:   Mon, 23 Nov 2020 11:01:23 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com,
+        Michael Kelley <mikelley@microsoft.com>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Hyper-V fixes for 5.10-rc6
+Message-ID: <20201123110123.yeaovck27pc2odiq@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, 2020-11-23 at 09:33 +1100, Finn Thain wrote:
-> On Sun, 22 Nov 2020, Joe Perches wrote:
+Hi Linus,
 
-> > But provably correct conversions IMO _should_ be done and IMO churn 
-> > considerations should generally have less importance.
-[]
-> Moreover, the patch review workload for skilled humans is being generated 
-> by the automation, which is completely backwards: the machine is supposed 
-> to be helping.
+Please pull the following changes since commit 92e4dc8b05663d6539b1b8375f3b1cf7b204cfe9:
 
-Which is why the provably correct matters.
+  Drivers: hv: vmbus: Allow cleanup of VMBUS_CONNECT_CPU if disconnected (2020-11-11 10:58:09 +0000)
 
-coccinelle transforms can be, but are not necessarily, provably correct.
+are available in the Git repository at:
 
-The _show transforms done via the sysfs_emit_dev.cocci script are correct
-as in commit aa838896d87a ("drivers core: Use sysfs_emit and sysfs_emit_at
-for show(device *...) functions")
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
 
-Worthwhile?  A different question, but I think yes as it reduces the
-overall question space of the existing other sprintf overrun possibilities.
+for you to fetch changes up to 5f1251a48c17b54939d7477305e39679a565382c:
 
+  video: hyperv_fb: Fix the cache type when mapping the VRAM (2020-11-20 12:24:14 +0000)
 
+----------------------------------------------------------------
+hyperv-fixes for 5.10-rc6
+
+  - One patch from Dexuan to fix VRAM cache type in Hyper-V framebuffer
+    driver
+----------------------------------------------------------------
+Dexuan Cui (1):
+      video: hyperv_fb: Fix the cache type when mapping the VRAM
+
+ drivers/video/fbdev/hyperv_fb.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
