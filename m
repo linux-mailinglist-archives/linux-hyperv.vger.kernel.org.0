@@ -2,165 +2,150 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD3772C0FF9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Nov 2020 17:20:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A83692C117D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Nov 2020 18:08:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389731AbgKWQRO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 23 Nov 2020 11:17:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730953AbgKWQRN (ORCPT
+        id S1733104AbgKWRGQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 Nov 2020 12:06:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46188 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389886AbgKWRGN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 23 Nov 2020 11:17:13 -0500
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B58B8C0613CF;
-        Mon, 23 Nov 2020 08:17:12 -0800 (PST)
-Received: by mail-io1-xd41.google.com with SMTP id r1so18631487iob.13;
-        Mon, 23 Nov 2020 08:17:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9G9wehhbpTZzWWOvGr3rWAgWQ0geLC9Yp77M/YC6Idw=;
-        b=jzsPhOCPkH8JcubkL+ilpCqrpmJxzR/ZZhmza1K1c0eddk7+QY69lMXZ1zjj7yUobv
-         UPOat94Oznz5N+aYQtyK2tx44PHGHvaT6c5ydFaOoT5387NjxS4giDE0liSNJKSpvdGp
-         HKiV67o8ZfM+QomP6uHJNCHgME5k654Lm9OlI5uZEZV/BZyGXhrMcp4osA9RqzKjR7Ze
-         0dIcMPHMz9M6e1KbFfvtyGGjldyt3D137VsBHg9GBRp12UjhpWPsI6mtFPtV54IoaC+K
-         mSdXyd8g5UOodS4awURhueIsrAq2XHUWM9vJndBZGt3fLtR88qq6iY1NEsTPrUzb2MVL
-         n+0A==
+        Mon, 23 Nov 2020 12:06:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606151171;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ETdBmUCF01QVQJOZ+sQu9TUGQeVKu9xOEmE1E5gBvfU=;
+        b=BtEofZ03By1sp6OyH8lSI6IT4Bb/Q48OsWV2XnBXmdgQcceGh9rKSaQV86czSHO4W4CJHn
+        vUaUaH4n0l1WmtKl1NY4JjZQEtZdHR6F0okj/kLdyZp+LnqjvTzaYPmjipu9+IS6RcbTNg
+        lanzsvwsZXvmVS2IMlU/0SstZMlkjqs=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-471-g4lnUjkmMsGlF5wT-Locdg-1; Mon, 23 Nov 2020 12:06:09 -0500
+X-MC-Unique: g4lnUjkmMsGlF5wT-Locdg-1
+Received: by mail-qv1-f72.google.com with SMTP id ek3so13476019qvb.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 23 Nov 2020 09:06:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9G9wehhbpTZzWWOvGr3rWAgWQ0geLC9Yp77M/YC6Idw=;
-        b=hVitWrlh2sxeAFONKORzLus4JyvFA3rcn8QIGBQq2k3uJuVq9YUNy4fCzc2x69GM/K
-         x6rfL2APtZvmrb1QXu5TXk9V3l0N6frUY3Frbobn0kfBusqszKZr4uiJWNdpaCdv56Z/
-         wgziWxLdZgSOzR4FRX9JXiW5o4UOPn1jq8hzDGybC0oJkLOCyFUgLiLrhTnpbS+MLyEH
-         lmEqyVjNf6BTXWC7Ghnn6V46zxeDQZ7iP2c4fd9pUb+1oMUgwzcz3TL4RFIJocGkSwXl
-         TPsa+LquElSljh07DGHwR4mXXm/pXrcSuqcFIzp5JCtS1lDBTj67LON7U4ug71f5MvLC
-         sQWQ==
-X-Gm-Message-State: AOAM530K9rFD6JQ02rXi1spGVMPYez+BJ8N9wPtE6BGR/WFNVYGQ52rc
-        gi/eUmgbUZdvHll24yu2X3FTOrjU/s2OU5ec+po=
-X-Google-Smtp-Source: ABdhPJw5wxDBX8QpwE2CghMfFtPIAtnmG9XIUqmbpxXD9wxvuYGnavpxLlav0NBfuecvTCMrGKLgN0Lee5ktV7i8vQ8=
-X-Received: by 2002:a05:6602:22c7:: with SMTP id e7mr415585ioe.114.1606148231969;
- Mon, 23 Nov 2020 08:17:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20201121165058.1644182-1-trix@redhat.com> <5843ef910b0e86c00d9c0143dec20f93823b016b.camel@HansenPartnership.com>
- <87y2ism5or.fsf@intel.com>
-In-Reply-To: <87y2ism5or.fsf@intel.com>
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date:   Mon, 23 Nov 2020 17:17:00 +0100
-Message-ID: <CAKXUXMydH+VtMeuftPRgCg_PYm2iChOMkUYjO=QTG=NRM3QFiw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ETdBmUCF01QVQJOZ+sQu9TUGQeVKu9xOEmE1E5gBvfU=;
+        b=Y16dMLImFk4G0S5M5Ho1VJb+KpI9zW09WKxLZs0j3O8PN8QgOEd3dWxm+cPVwP21Rt
+         vGDLx1HG2Fg3HCUJlBCV2Kt+d5CkqemLaYZfC5v2aRhmyPe9vTeNa0Jn7hjg3RgME/L3
+         FnBjrI7Goun0kZCVg8opwO4E2lSnNH8oQD7CFqcKpcUqCS2p2nAMy9LlgGhTBErOLJ8B
+         ZsBKpY9yW/5l3HSrd54WfGsuvrlCThP166EbhQFWzfgidiNrrWK7mYIdyGeF9INfPdIT
+         pV0V7Ok+T4M+zejelTdRqmsgbRqcgAKfxNDMjX0YjHJWCT/43LPyOWXSewhhVvUjb/gd
+         ayyA==
+X-Gm-Message-State: AOAM5328nE25bD8jyFaswaz6Qx97bEhdp7/nEGLgYBcbSL8jbrv7YPEc
+        z69yysXtdZxEztlPHVk25DbFfDugNrVD3fWgHNuqPGiwHXtMcnQOBjyKixkL5AwwBNJsY2tj5d+
+        /GH2tGbn+uZFx7mi4VjIASdcE
+X-Received: by 2002:ac8:5d53:: with SMTP id g19mr70901qtx.354.1606151168896;
+        Mon, 23 Nov 2020 09:06:08 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwHR8oVpP3xv7xpCkK6lH4mawBfXgRI3GL2dEiLGp13/vfLrDKV7SBtsWnvpv2iFDtHltekRw==
+X-Received: by 2002:ac8:5d53:: with SMTP id g19mr70839qtx.354.1606151168572;
+        Mon, 23 Nov 2020 09:06:08 -0800 (PST)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id o187sm10226153qkb.120.2020.11.23.09.06.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Nov 2020 09:06:07 -0800 (PST)
 Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Tom Rix <trix@redhat.com>, Joe Perches <joe@perches.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org,
+To:     Joe Perches <joe@perches.com>, clang-built-linux@googlegroups.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org, tboot-devel@lists.sourceforge.net,
+        kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-wireless@vger.kernel.org,
         ibm-acpi-devel@lists.sourceforge.net,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, cluster-devel@redhat.com,
-        linux-acpi@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        coreteam@netfilter.org, xen-devel@lists.xenproject.org,
-        MPT-FusionLinux.pdl@broadcom.com,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        alsa-devel@alsa-project.org, intel-gfx@lists.freedesktop.org,
-        ecryptfs@vger.kernel.org, linux-omap@vger.kernel.org,
-        devel@acpica.org, linux-nfs@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-usb@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-bluetooth@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
+        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, alsa-devel@alsa-project.org,
+        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
+References: <20201121165058.1644182-1-trix@redhat.com>
+ <2105f0c05e9eae8bee8e17dcc5314474b3c0bc73.camel@perches.com>
+ <6e8c1926-4209-8f10-d0f9-72c875a85a88@redhat.com>
+ <859bae8ddae3238116824192f6ddf1c91a381913.camel@perches.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <88eeba27-ee36-df63-8cd9-3cccbe5e0850@redhat.com>
+Date:   Mon, 23 Nov 2020 09:06:03 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <859bae8ddae3238116824192f6ddf1c91a381913.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 4:52 PM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
-> On Sat, 21 Nov 2020, James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
-> > On Sat, 2020-11-21 at 08:50 -0800, trix@redhat.com wrote:
-> >> A difficult part of automating commits is composing the subsystem
-> >> preamble in the commit log.  For the ongoing effort of a fixer
-> >> producing
-> >> one or two fixes a release the use of 'treewide:' does not seem
-> >> appropriate.
-> >>
-> >> It would be better if the normal prefix was used.  Unfortunately
-> >> normal is
-> >> not consistent across the tree.
-> >>
-> >>
-> >>      D: Commit subsystem prefix
-> >>
-> >> ex/ for FPGA DFL DRIVERS
-> >>
-> >>      D: fpga: dfl:
-> >>
-> >
-> > I've got to bet this is going to cause more issues than it solves.
->
-> Agreed.
->
 
-Tom, this a problem only kernel janitors encounter; all other
-developers really do not have that issue. The time spent on creating
-the patch is much larger than the amount saved if the commit log
-header line prefix would be derived automatically. I believe Julia
-Lawall, Arnd Bergmann and Nathan Chancellor as long-term
-high-frequency janitors do have already scripted approaches to that
-issue. Maybe they simply need to share these scripts with you and you
-consolidate them and share with everyone?
+On 11/22/20 10:22 AM, Joe Perches wrote:
+> On Sun, 2020-11-22 at 08:33 -0800, Tom Rix wrote:
+>> On 11/21/20 9:10 AM, Joe Perches wrote:
+>>> On Sat, 2020-11-21 at 08:50 -0800, trix@redhat.com wrote:
+>>>> A difficult part of automating commits is composing the subsystem
+>>>> preamble in the commit log.  For the ongoing effort of a fixer producing
+>>>> one or two fixes a release the use of 'treewide:' does not seem appropriate.
+>>>>
+>>>> It would be better if the normal prefix was used.  Unfortunately normal is
+>>>> not consistent across the tree.
+>>>>
+>>>> So I am looking for comments for adding a new tag to the MAINTAINERS file
+>>>>
+>>>> 	D: Commit subsystem prefix
+>>>>
+>>>> ex/ for FPGA DFL DRIVERS
+>>>>
+>>>> 	D: fpga: dfl:
+>>> I'm all for it.  Good luck with the effort.  It's not completely trivial.
+>>>
+>>> From a decade ago:
+>>>
+>>> https://lore.kernel.org/lkml/1289919077.28741.50.camel@Joe-Laptop/
+>>>
+>>> (and that thread started with extra semicolon patches too)
+>> Reading the history, how about this.
+>>
+>> get_maintainer.pl outputs a single prefix, if multiple files have the
+>> same prefix it works, if they don't its an error.
+>>
+>> Another script 'commit_one_file.sh' does the call to get_mainainter.pl
+>> to get the prefix and be called by run-clang-tools.py to get the fixer
+>> specific message.
+> It's not whether the script used is get_maintainer or any other script,
+> the question is really if the MAINTAINERS file is the appropriate place
+> to store per-subsystem patch specific prefixes.
+>
+> It is.
+>
+> Then the question should be how are the forms described and what is the
+> inheritance priority.  My preference would be to have a default of
+> inherit the parent base and add basename(subsystem dirname).
+>
+> Commit history seems to have standardized on using colons as the separator
+> between the commit prefix and the subject.
+>
+> A good mechanism to explore how various subsystems have uses prefixes in
+> the past might be something like:
+>
+> $ git log --no-merges --pretty='%s' -<commit_count> <subsystem_path> | \
+>   perl -n -e 'print substr($_, 0, rindex($_, ":") + 1) . "\n";' | \
+>   sort | uniq -c | sort -rn
 
-Also, making clean-up patches cumbersome has a positive side as well;
-maintainers are not swamped with fully automated patch submissions.
-There have been some bad experiences with some submitters on that in
-the past...
+Thanks, I have shamelessly stolen this line and limited the commits to the maintainer.
 
-> > SCSI uses scsi: <driver>: for drivers but not every driver has a
-> > MAINTAINERS entry.  We use either scsi: or scsi: core: for mid layer
-> > things, but we're not consistent.  Block uses blk-<something>: for all
-> > of it's stuff but almost no <somtehing>s have a MAINTAINERS entry.  So
-> > the next thing you're going to cause is an explosion of suggested
-> > MAINTAINERs entries.
->
-> On the one hand, adoption of new MAINTAINERS entries has been really
-> slow. Look at B, C, or P, for instance. On the other hand, if this were
-> to get adopted, you'll potentially get conflicting prefixes for patches
-> touching multiple files. Then what?
->
-> I'm guessing a script looking at git log could come up with better
-> suggestions for prefixes via popularity contest than manually maintained
-> MAINTAINERS entries. It might not always get it right, but then human
-> outsiders aren't going to always get it right either.
->
-> Now you'll only need Someone(tm) to write the script. ;)
->
-> Something quick like this:
->
-> git log --since={1year} --pretty=format:%s -- <FILES> |\
->         grep -v "^\(Merge\|Revert\)" |\
->         sed 's/:[^:]*$//' |\
->         sort | uniq -c | sort -rn | head -5
->
-> already gives me results that really aren't worse than some of the
-> prefixes invented by drive-by contributors.
->
+I will post something once the generation of the prefixes is done.
 
-I agree I do not see the need to introduce something in MAINTAINERS;
-from my observations maintaining MAINTAINERS, there is sufficient work
-on adoption and maintenance of the existing entries already without
-such an yet another additional entry. Some entries are outdated or
-wrong and the janitor task of cleaning those up is already enough work
-for involved janitors and enough churn for involved maintainers. So a
-machine-learned approach as above is probably good enough, but if you
-think you need more complex rules try to learn them from the data at
-hand... certainly a nice task to do with machine learning on commit
-message prefixes.
+Tom
 
-Lukas
