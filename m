@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9120E2C37DB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Nov 2020 05:02:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DEFE12C3874
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Nov 2020 06:23:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbgKYEB0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 24 Nov 2020 23:01:26 -0500
-Received: from mga05.intel.com ([192.55.52.43]:11343 "EHLO mga05.intel.com"
+        id S1726025AbgKYFVd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Nov 2020 00:21:33 -0500
+Received: from mga02.intel.com ([134.134.136.20]:54505 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgKYEB0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 24 Nov 2020 23:01:26 -0500
-IronPort-SDR: rcm2Lc68cVK0XnOk1RIfQjcgwjtBRw9fE4MZYRElVY5Qaj2plgIdbFn6Rt4+LyqI10cI06yKEK
- qe7bvkfWFKDA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9815"; a="256769754"
+        id S1726049AbgKYFVc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 25 Nov 2020 00:21:32 -0500
+IronPort-SDR: LoC99JyK0WvTAImuJcfS51TukrKzPK6AxeFoBQR+XXGn0jF8Slc7Pp+7FJDPi2xHXUZIV7paN4
+ 1TndP4PshsWA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9815"; a="159112265"
 X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
-   d="gz'50?scan'50,208,50";a="256769754"
+   d="gz'50?scan'50,208,50";a="159112265"
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 20:01:24 -0800
-IronPort-SDR: KE5xoTULwX7IBCoJNu/OdkVVTNrRZouk4ozg1PsW0S+VEeosANDdYK0bc4mr63PVk9KXJ0eH9o
- tZUTLMsrS1Tw==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 21:21:30 -0800
+IronPort-SDR: VEr816Q6wbSgqHxtWEawzvM0mEYHhYt91kV3l3B1RJFBynv1cChOWHiLXFFjvePAwKeFOgMBEp
+ J7KSvH68hX3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
-   d="gz'50?scan'50,208,50";a="403140158"
+   d="gz'50?scan'50,208,50";a="536749099"
 Received: from lkp-server01.sh.intel.com (HELO d5aceba519b7) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 24 Nov 2020 20:01:20 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 24 Nov 2020 21:21:26 -0800
 Received: from kbuild by d5aceba519b7 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1khlzc-000012-Bm; Wed, 25 Nov 2020 04:01:20 +0000
-Date:   Wed, 25 Nov 2020 12:01:06 +0800
+        id 1khnAH-00002p-Jx; Wed, 25 Nov 2020 05:16:25 +0000
+Date:   Wed, 25 Nov 2020 13:16:24 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Wei Liu <wei.liu@kernel.org>,
         Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
@@ -45,21 +45,20 @@ Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
         Wei Liu <wei.liu@kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>
-Subject: Re: [PATCH v3 15/17] x86/hyperv: implement an MSI domain for root
- partition
-Message-ID: <202011251128.eOO4DsPg-lkp@intel.com>
-References: <20201124170744.112180-16-wei.liu@kernel.org>
+Subject: Re: [PATCH v3 17/17] x86/hyperv: handle IO-APIC when running as root
+Message-ID: <202011251316.PUcZIh8B-lkp@intel.com>
+References: <20201124170744.112180-18-wei.liu@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="bp/iNruPH9dso1Pn"
+Content-Type: multipart/mixed; boundary="y0ulUmNC+osPPQO6"
 Content-Disposition: inline
-In-Reply-To: <20201124170744.112180-16-wei.liu@kernel.org>
+In-Reply-To: <20201124170744.112180-18-wei.liu@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
---bp/iNruPH9dso1Pn
+--y0ulUmNC+osPPQO6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -83,10 +82,10 @@ reproduce (this is a W=1 build):
         chmod +x ~/bin/make.cross
         # install x86_64 cross compiling tool for clang build
         # apt-get install binutils-x86-64-linux-gnu
-        # https://github.com/0day-ci/linux/commit/ae7533bcd9667c0f23b545d941d3c68460f91ea2
+        # https://github.com/0day-ci/linux/commit/591ad2444b6b7d63ab24ce8f16a4e367085bbb5d
         git remote add linux-review https://github.com/0day-ci/linux
         git fetch --no-tags linux-review Wei-Liu/Introducing-Linux-root-partition-support-for-Microsoft-Hypervisor/20201125-011026
-        git checkout ae7533bcd9667c0f23b545d941d3c68460f91ea2
+        git checkout 591ad2444b6b7d63ab24ce8f16a4e367085bbb5d
         # save the attached .config to linux build tree
         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
 
@@ -95,61 +94,105 @@ Reported-by: kernel test robot <lkp@intel.com>
 
 All warnings (new ones prefixed by >>):
 
-   arch/x86/hyperv/irqdomain.c:303:3: error: field designator 'domain_free_irqs' does not refer to any field in type 'struct msi_domain_ops'
+   arch/x86/hyperv/irqdomain.c:305:3: error: field designator 'domain_free_irqs' does not refer to any field in type 'struct msi_domain_ops'
            .domain_free_irqs       = hv_msi_domain_free_irqs,
             ^
->> arch/x86/hyperv/irqdomain.c:316:28: warning: no previous prototype for function 'hv_create_pci_msi_domain' [-Wmissing-prototypes]
+   arch/x86/hyperv/irqdomain.c:318:28: warning: no previous prototype for function 'hv_create_pci_msi_domain' [-Wmissing-prototypes]
    struct irq_domain * __init hv_create_pci_msi_domain(void)
                               ^
-   arch/x86/hyperv/irqdomain.c:316:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   arch/x86/hyperv/irqdomain.c:318:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
    struct irq_domain * __init hv_create_pci_msi_domain(void)
    ^
    static 
-   1 warning and 1 error generated.
+>> arch/x86/hyperv/irqdomain.c:499:6: warning: no previous prototype for function 'hv_ioapic_ack_level' [-Wmissing-prototypes]
+   void hv_ioapic_ack_level(struct irq_data *irq_data)
+        ^
+   arch/x86/hyperv/irqdomain.c:499:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void hv_ioapic_ack_level(struct irq_data *irq_data)
+   ^
+   static 
+>> arch/x86/hyperv/irqdomain.c:526:5: warning: no previous prototype for function 'hv_acpi_register_gsi' [-Wmissing-prototypes]
+   int hv_acpi_register_gsi(struct device *dev, u32 gsi, int trigger, int polarity)
+       ^
+   arch/x86/hyperv/irqdomain.c:526:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int hv_acpi_register_gsi(struct device *dev, u32 gsi, int trigger, int polarity)
+   ^
+   static 
+>> arch/x86/hyperv/irqdomain.c:550:6: warning: no previous prototype for function 'hv_acpi_unregister_gsi' [-Wmissing-prototypes]
+   void hv_acpi_unregister_gsi(u32 gsi)
+        ^
+   arch/x86/hyperv/irqdomain.c:550:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void hv_acpi_unregister_gsi(u32 gsi)
+   ^
+   static 
+   4 warnings and 1 error generated.
 
-vim +/hv_create_pci_msi_domain +316 arch/x86/hyperv/irqdomain.c
+vim +/hv_ioapic_ack_level +499 arch/x86/hyperv/irqdomain.c
 
-   301	
-   302	static struct msi_domain_ops pci_msi_domain_ops = {
- > 303		.domain_free_irqs	= hv_msi_domain_free_irqs,
-   304		.msi_prepare		= pci_msi_prepare,
-   305	};
-   306	
-   307	static struct msi_domain_info hv_pci_msi_domain_info = {
-   308		.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-   309				  MSI_FLAG_PCI_MSIX,
-   310		.ops		= &pci_msi_domain_ops,
-   311		.chip		= &hv_pci_msi_controller,
-   312		.handler	= handle_edge_irq,
-   313		.handler_name	= "edge",
-   314	};
-   315	
- > 316	struct irq_domain * __init hv_create_pci_msi_domain(void)
-   317	{
-   318		struct irq_domain *d = NULL;
-   319		struct fwnode_handle *fn;
-   320	
-   321		fn = irq_domain_alloc_named_fwnode("HV-PCI-MSI");
-   322		if (fn)
-   323			d = pci_msi_create_irq_domain(fn, &hv_pci_msi_domain_info, x86_vector_domain);
-   324	
-   325		/* No point in going further if we can't get an irq domain */
-   326		BUG_ON(!d);
-   327	
-   328		return d;
-   329	}
-   330	
+   498	
+ > 499	void hv_ioapic_ack_level(struct irq_data *irq_data)
+   500	{
+   501		/*
+   502		 * Per email exchange with Hyper-V team, all is needed is write to
+   503		 * LAPIC's EOI register. They don't support directed EOI to IO-APIC.
+   504		 * Hyper-V handles it for us.
+   505		 */
+   506		apic_ack_irq(irq_data);
+   507	}
+   508	
+   509	struct irq_chip hv_ioapic_chip __read_mostly = {
+   510		.name			= "HV-IO-APIC",
+   511		.irq_startup		= hv_ioapic_startup_irq,
+   512		.irq_mask		= hv_ioapic_mask_irq,
+   513		.irq_unmask		= hv_ioapic_unmask_irq,
+   514		.irq_ack		= irq_chip_ack_parent,
+   515		.irq_eoi		= hv_ioapic_ack_level,
+   516		.irq_set_affinity	= hv_ioapic_set_affinity,
+   517		.irq_retrigger		= irq_chip_retrigger_hierarchy,
+   518		.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
+   519		.flags			= IRQCHIP_SKIP_SET_WAKE,
+   520	};
+   521	
+   522	
+   523	int (*native_acpi_register_gsi)(struct device *dev, u32 gsi, int trigger, int polarity);
+   524	void (*native_acpi_unregister_gsi)(u32 gsi);
+   525	
+ > 526	int hv_acpi_register_gsi(struct device *dev, u32 gsi, int trigger, int polarity)
+   527	{
+   528		int irq = gsi;
+   529	
+   530	#ifdef CONFIG_X86_IO_APIC
+   531		irq = native_acpi_register_gsi(dev, gsi, trigger, polarity);
+   532		if (irq < 0) {
+   533			pr_err("native_acpi_register_gsi failed %d\n", irq);
+   534			return irq;
+   535		}
+   536	
+   537		if (trigger) {
+   538			irq_set_status_flags(irq, IRQ_LEVEL);
+   539			irq_set_chip_and_handler_name(irq, &hv_ioapic_chip,
+   540				handle_fasteoi_irq, "ioapic-fasteoi");
+   541		} else {
+   542			irq_clear_status_flags(irq, IRQ_LEVEL);
+   543			irq_set_chip_and_handler_name(irq, &hv_ioapic_chip,
+   544				handle_edge_irq, "ioapic-edge");
+   545		}
+   546	#endif
+   547		return irq;
+   548	}
+   549	
+ > 550	void hv_acpi_unregister_gsi(u32 gsi)
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---bp/iNruPH9dso1Pn
+--y0ulUmNC+osPPQO6
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICKjHvV8AAy5jb25maWcAjFxNd9s2s973V+ikm76LprbrqOm9xwuIBCVUJMEAoD684XEc
+H4sICDzcvV8AAy5jb25maWcAjFxNd9s2s973V+ikm76LprbrqOm9xwuIBCVUJMEAoD684XEc
 JfWtY+eV7Tb593cG4AcADtV0kZqYwfdg5pnBQD/+8OOMvTw/fr55vru9ub//Nvt0eDgcb54P
 H2Yf7+4P/ztL5ayUZsZTYV4Dc3738PL1l69v5838cvbm9e+vz34+3v42Wx+OD4f7WfL48PHu
 0wvUv3t8+OHHHxJZZmLZJEmz4UoLWTaG78zVq9v7m4dPs78Pxyfgm51fvD57fTb76dPd8//8
@@ -625,4 +668,4 @@ WLnzoW02xYjVr8LSRxIL0xZJY67dpZ8q5d6aYw0cVwDcrDI184tOjb/k6ZdXVcvRnKEffZAE
 zZl5FXPnYdKqKajye2gWE3dCdxc/sQCKcujIQXDipQeOsyia4SiwB2LGVqPkUmrK2Qke5EbZ
 O1JWCK24bfh/fuNsqYCRAQA=
 
---bp/iNruPH9dso1Pn--
+--y0ulUmNC+osPPQO6--
