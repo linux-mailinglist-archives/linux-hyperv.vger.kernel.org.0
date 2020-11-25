@@ -2,100 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9133B2C3D99
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Nov 2020 11:26:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98BCB2C48A4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Nov 2020 20:42:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgKYKZY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Nov 2020 05:25:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
+        id S1728134AbgKYTmi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Nov 2020 14:42:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728560AbgKYKZX (ORCPT
+        with ESMTP id S1727251AbgKYTmh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Nov 2020 05:25:23 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC366C0613D4;
-        Wed, 25 Nov 2020 02:25:23 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id 81so2087474pgf.0;
-        Wed, 25 Nov 2020 02:25:23 -0800 (PST)
+        Wed, 25 Nov 2020 14:42:37 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CD98C0613D4;
+        Wed, 25 Nov 2020 11:42:37 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id d142so3015309wmd.4;
+        Wed, 25 Nov 2020 11:42:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l8KWwZXjo+ebfysMFihw4Nq0NqQCdpcD4ow0OUA1KW4=;
-        b=DpGjTGcbKs/0CQJBWrroVcD6FjXCf2LxZJTLiE/33p3a1xJtylQsUi/ijQKyYoSMyR
-         CX48GAFaeIUTvp+IJUMMCyiryasym19bIX8w4Q2pkkTLCAA3ej2YLz/PVdHZ4t8TSLSL
-         fXTxX4V0rnqDe0fqEDn9+2oCcCIkk0ZlhGSgxLgCO+vVWAVke8yRmsLAWgY1ZqYaTTGL
-         jV9lOIoj7DBROZZU2My468qUuPfJkCmtHS9yAv+CzuWVtlV66JLUDEnBwclu+63sRldb
-         7k7yvllj1Ie7NAtGZScSoP3eomQOAOj6h9y9LRrLe3d2BU9l5UQAxLyTHjO72m2UFE+H
-         YYfw==
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
+        b=uCsThp7zV+3KHFmKG1Nz2dUptAO0sCYoaoqIfCGE9ox+XEBmgBoJRNGU2Jb4FsQMPy
+         XiuySq2RTPl+Qz4stmAldKMPIJga7N5fYT4Ii7c+buILvQ7yqMP/11YauNovNZthjlgR
+         fNZINMxkBdv1o/bl6tgBgoXhDHtUhc3FOGSEnL5QaF5goVU/kBPvIc0LhgYS5fhFoQ0g
+         9ZBBlHenUvXrfyozDj+vyft10Lnu3aTeSwr7JF4FdfGwsGHtQmKlFuvMjRIn1awjafHM
+         auKqZHuT+VTGRoiesyBCZlc5ti1kwg45Gq/dr1JOmewyVokTcI7Tx5rcq3768K5uWDmq
+         Iiew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l8KWwZXjo+ebfysMFihw4Nq0NqQCdpcD4ow0OUA1KW4=;
-        b=K+ICHjZ3liWXIwCxFfQPaaTUG2x1Pi78+1hU8iHi8O0c205GzKnkEfcrwODkQ8PcFg
-         DqzywWxA6ISNwFbf2PlQ3jsqa6npPbpn7PloCVF6736KbT6oF0eVo1vlBfMZRCuIeU/W
-         PMrtmjTHwsxjH9NZx2rGc8RM26ZGI6IHrvEWAhUOpc6KfgwqOj1B6kg56ydYqroqF6/4
-         UtnOwXkZYq6Cwv2lki0wHcPxterCqkdiLv6OsF+OCllvB7fRtM6wMC6bH5dNW9kCyHTh
-         dRmbK36QMwTqRUpQGrO4tDiu28e/iu+eStgAIb47JCrLvuS7UK0kjjJF2hFeAcb1abmd
-         1Hxg==
-X-Gm-Message-State: AOAM533fu45svd9LS/NERui6rdf4D1fdj82Fx+R/dzu1fP5IT3oRyZiF
-        v3iOd8mbmWMGD2zBpzkLmw4pIlIf/936OmMFOQg=
-X-Google-Smtp-Source: ABdhPJztDYKFeiNJoCZRoJswecvAifKS4CNRAYgSUYCvFDnZC10zVxlGuKWwFPpkps/QTlATHUXrZ2BwVgZlAtQ9LZI=
-X-Received: by 2002:a17:90a:d90a:: with SMTP id c10mr3350899pjv.129.1606299923331;
- Wed, 25 Nov 2020 02:25:23 -0800 (PST)
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
+        b=fgVPnydAzm5mP8nol+XYg2+47xV1Mkdadiu72GZ/RzCIwdA20n+DVSMhJNJ5rw23Bf
+         G88KNIhVVeJa+9a6hShNYcbB28EqoUAcgpdvcc7z4MtsMP5ZsOjO6/W0NYRnYyFCJOB4
+         qxQBMWifz3VjbJCOpUkxPyirW+IWfTPzJO2OjY5SlWD6BU8KP6b+IL6qZOJieu+sByOF
+         9Y33cPt6lCMFG5ew6MF4VOzpVsD7j4x14rGC8pDioP0g5sAABBk5QODvUBBFmVDTD+pS
+         UJOjn3RJCnSW0OABwz7/iLSi+BsJGPwYQbsy7JBiFv65Uv+NvMs8U0wA85EeAEldo3RK
+         pDgQ==
+X-Gm-Message-State: AOAM531rQxMLbq8Bk0ZzjhVi1Aub4HSRydodHA1Juj8mifK+Xd4scKir
+        25qn6UZVMQ1CUD6Vx5+v+izZvCwFCcA=
+X-Google-Smtp-Source: ABdhPJxGIrMPq7JoBWQfMnQgqlD/ri8GYe5aj5dmXQPy/CsfZ8B8nMCIaEQ1ziAglNKmUAodrXLtJA==
+X-Received: by 2002:a1c:5a08:: with SMTP id o8mr5136007wmb.142.1606333356038;
+        Wed, 25 Nov 2020 11:42:36 -0800 (PST)
+Received: from [192.168.1.152] ([102.64.149.89])
+        by smtp.gmail.com with ESMTPSA id u129sm5090970wme.9.2020.11.25.11.42.30
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Wed, 25 Nov 2020 11:42:35 -0800 (PST)
+Message-ID: <5fbeb3ab.1c69fb81.a9b8d.bcd3@mx.google.com>
+From:   "Dailborh R." <ritundailb333@gmail.com>
+X-Google-Original-From: Dailborh R.
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-References: <20201124170744.112180-1-wei.liu@kernel.org> <20201124170744.112180-17-wei.liu@kernel.org>
-In-Reply-To: <20201124170744.112180-17-wei.liu@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Nov 2020 12:26:12 +0200
-Message-ID: <CAHp75Vew+yjUkcfSx33KjhPLriH6wrYWixAtn9mASRFqe4+c+Q@mail.gmail.com>
-Subject: Re: [PATCH v3 16/17] x86/ioapic: export a few functions and data
- structures via io_apic.h
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <jroedel@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Please reply to me
+To:     Recipients <Dailborh@vger.kernel.org>
+Date:   Wed, 25 Nov 2020 19:42:20 +0000
+Reply-To: dailrrob.83@gmail.com
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Nov 25, 2020 at 1:46 AM Wei Liu <wei.liu@kernel.org> wrote:
->
-> We are about to implement an irqchip for IO-APIC when Linux runs as root
-> on Microsoft Hypervisor. At the same time we would like to reuse
-> existing code as much as possible.
->
-> Move mp_chip_data to io_apic.h and make a few helper functions
-> non-static.
+I'm Dailborh R. from US. I picked interest in you and I would like to know
+more about you and establish relationship with you. i will wait for
+your response. thank you.
 
-> +struct mp_chip_data {
-> +       struct list_head irq_2_pin;
-> +       struct IO_APIC_route_entry entry;
-> +       int trigger;
-> +       int polarity;
-> +       u32 count;
-> +       bool isa_irq;
-> +};
-
-Since I see only this patch I am puzzled why you need to have this in
-the header?
-Maybe a couple of words in the commit message to elaborate?
-
--- 
-With Best Regards,
-Andy Shevchenko
