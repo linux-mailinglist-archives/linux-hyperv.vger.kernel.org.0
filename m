@@ -2,240 +2,489 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC0D72C4BAB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Nov 2020 00:39:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C282C5C88
+	for <lists+linux-hyperv@lfdr.de>; Thu, 26 Nov 2020 20:13:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725838AbgKYXjh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Nov 2020 18:39:37 -0500
-Received: from mail-dm6nam08on2127.outbound.protection.outlook.com ([40.107.102.127]:14067
-        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725836AbgKYXjg (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Nov 2020 18:39:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jQQSIEeKsVXk3Kxzqf7JXvL1xYWt3I4kgiw/WqI4qAbPn6SIsiUSKsyeLcNWontDSZgEjcpnzimUOD1nplDOjnSQKZu3r62YJ5+nZpKaAICkYNDh0wDHz/Ioymz9+fuyf4FITHQuClz1truv2zzXpXz2wCBIjQI0iZf9Wielimj2SrwrKtmsz41n3hP/7PeSK6MiggmHfK9c/SOv+QN/X0THQd1mDi6l9GybvW3bEusGi1aqO/pa/03qJ9rLn3EQhBOhTlb1z2IkCatUUIBCaCFIVUDQUM3oH59tmYNJOoIal0aqKZCrdNzPQz3HeBTMbhdtsXGHdJgeY76U4p8cOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rK8oImmuaKIxHHHwXIhRxfiK8sLuffk0A9YdVGgu08U=;
- b=CRunvOHPeV8xLxzOTP5o4TUL6ae9GHDv4oTHwTn97Q/6I4fzvtMFqbWziPSILkV++qRR77Vzdr5pLUfwoj8Ms7srsGB045MJzJfe++XZrT5lUGIJGoB8FjA/TWEgmyaxswQxuEQ3ic41n4vKJ/yzljQ+YHbeBhTtpjBvfrbWHLHgwBMA8uWlQ+sHfcscSiVEISfWrIYMPCXEBVCNtZTEiYHEbdzAPQgpSygda8uU3sQM8d9EP6teKIOYELnzLokPj5pzXgFk3Hmo3EMLXcba7x/KCSPHijLn6GMbg54EyOtoCwWGsBQV90OUpkSQQTcqyIgN3+iZPVstNAJcZVss2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rK8oImmuaKIxHHHwXIhRxfiK8sLuffk0A9YdVGgu08U=;
- b=Yp3KIJdkAv+lTTuH71++vPoAC9it6FzXHmRd6jL1BPLNjbykrPyiYni4H8clknHTZSdZQn2rE4c8Bhr0w/CIHYidIFfd5kXhb+s0tFEcjG/Lou8JBcx0itmy39WLCMt4eH6CrpPs2t7CdQ7QkTv9fzoxXF1ySEnD8W0ZK0fxlpQ=
-Received: from MW2PR2101MB1801.namprd21.prod.outlook.com (2603:10b6:302:5::20)
- by MWHPR2101MB0811.namprd21.prod.outlook.com (2603:10b6:301:7b::39) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.2; Wed, 25 Nov
- 2020 23:39:31 +0000
-Received: from MW2PR2101MB1801.namprd21.prod.outlook.com
- ([fe80::d8c7:7c95:5325:155a]) by MW2PR2101MB1801.namprd21.prod.outlook.com
- ([fe80::d8c7:7c95:5325:155a%4]) with mapi id 15.20.3632.008; Wed, 25 Nov 2020
- 23:39:31 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     'Kairui Song' <kasong@redhat.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-CC:     'Thomas Gleixner' <tglx@linutronix.de>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Borislav Petkov' <bp@alien8.de>,
-        'Ard Biesheuvel' <ardb@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S2405176AbgKZTMm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 26 Nov 2020 14:12:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404315AbgKZTMm (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 26 Nov 2020 14:12:42 -0500
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6396C0613D4;
+        Thu, 26 Nov 2020 11:12:41 -0800 (PST)
+Received: by mail-ej1-x643.google.com with SMTP id a16so4346585ejj.5;
+        Thu, 26 Nov 2020 11:12:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FMrud8LfXmkW9mwIIdAt7s5QAjUw/gu9L9W9jZkX4PE=;
+        b=HwlzuKT/urMNSqVFEOX3kVrGWFAcuyBrvjz2h2R+5WLX3U4QeSLY+uKSWp1uFN6tRA
+         EKcNoPnq0ZxR1KfKPTfZNwY2P/p2FtC2Lxm3XX/InQ/dLedknBP1JT3W/14JVNVxp4m8
+         EfxWxRTlUmw5oRRmadbyv+QQYhdTZlBovVix5Tu5EOE1MT0G38rWftxEJYZTSkKt6sk+
+         AZz3izf6HPvPaSdRvyXCYcYpC7l3fVq3SXe5ZI0jltbUWGrnzn6qZEViSKDhFWLZJgMZ
+         O8OY9nkWUvl70MFOAsLqTu9aG8Fu1gsy4nOTgcBjojoMtvM5KghOaZ9FNUaac88Idd3k
+         Y4nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FMrud8LfXmkW9mwIIdAt7s5QAjUw/gu9L9W9jZkX4PE=;
+        b=Kh5ndqYpLmJtYWgyOpL3jmatiyUe8dzLd1RnjQHKsvaeEasOHPOpqx6NqHPUMgiGG7
+         D0h0iategV8L7ym/s7HfzDk5R3U43K4FEolyJiH2cdpKF5BR8kcdy4HWrUfboQ+76o+2
+         ctSoPdDVvffNgm5pjhtbvVN+sICrucZHriqZKDCTVBsRtIsWNn9R8L28hSl+YRrHM4xT
+         GYzqyJ+5FKAxJEaxZH8UhYO/i539LM2l6aMA3HmNvmo2wT3jww9KncADg26fjConWgc5
+         CNP55PZ2axibUciP7rYARkU6l7VwzHt4BnTw2fQ+DglCb5HmVH3jnqVWgCeg/gEFU85H
+         1ecw==
+X-Gm-Message-State: AOAM5327yIBr2M/wlYUC0+D1uMDJEJ3mKXQY4jROHQzrP8UpzsyjFoRy
+        8t6YrxOtt2ngAbua1urI6Kzhwce/OmyTfQ==
+X-Google-Smtp-Source: ABdhPJxq31oUyd31FbvdxfpQ/P2XWaIW0lbgQX/52RbAulrQuuWj1Pp9pcDNjucZiNYmEiw4d9Joqw==
+X-Received: by 2002:a17:906:b01:: with SMTP id u1mr3897225ejg.427.1606417959971;
+        Thu, 26 Nov 2020 11:12:39 -0800 (PST)
+Received: from localhost.localdomain (host-82-51-6-75.retail.telecomitalia.it. [82.51.6.75])
+        by smtp.gmail.com with ESMTPSA id b15sm3786041edv.85.2020.11.26.11.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2020 11:12:39 -0800 (PST)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        'Wei Liu' <wei.liu@kernel.org>,
-        'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>,
-        'Dave Young' <dyoung@redhat.com>,
-        "'x86@kernel.org'" <x86@kernel.org>,
-        "'linux-hyperv@vger.kernel.org'" <linux-hyperv@vger.kernel.org>,
-        "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH 1/2] x86/kexec: Use up-to-dated screen_info copy to fill
- boot params
-Thread-Topic: [PATCH 1/2] x86/kexec: Use up-to-dated screen_info copy to fill
- boot params
-Thread-Index: AQHWogwCjQZIV623JkK79I6DLl0/K6nLvMBwgA3z0PA=
-Date:   Wed, 25 Nov 2020 23:39:30 +0000
-Message-ID: <MW2PR2101MB1801B19B018FE42150449D49BFFA1@MW2PR2101MB1801.namprd21.prod.outlook.com>
-References: <20201014092429.1415040-1-kasong@redhat.com>
- <20201014092429.1415040-2-kasong@redhat.com>
- <MWHPR21MB0861EA2C8322A7C27404258CBFE20@MWHPR21MB0861.namprd21.prod.outlook.com>
-In-Reply-To: <MWHPR21MB0861EA2C8322A7C27404258CBFE20@MWHPR21MB0861.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=aed533d9-f567-40b2-8207-f203b46f5346;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-11-17T01:24:41Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:600:a280:7f70:3027:5564:f3db:e908]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 40db5dc7-5888-46aa-41d2-08d8919b5b45
-x-ms-traffictypediagnostic: MWHPR2101MB0811:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2101MB08114F7A672D94A341900708BFFA1@MWHPR2101MB0811.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JBDeKL9Zjxlzt/MxrT2d2qvycMqUegAB+1TemtElPgnmozPTAeEEw+E8DN515X1xnRZ7gpxX6wjCSijhoNHqWACk6HPj1FfCPBNODLdBZ6hGli6O7r+KGVE/TZBnAQFk5OUr/aYCIqRzTXP5knMj5wJfDFiVoFr3qN2gOiO7Il13970cdYoE8GHsEqk3vgW2wCQ8oHvIiQ4m5qqzjAAPsR7V3W+EYV2Z29ssPcdWX8ksuv30pJUKMmpArDyLpihL1c/X6Ip0KkTm6BTw976bCQjhveMJKhpxUYE2Sig3c60u1m/aIUenHUunot4z3FVjEPd40Ngmw/HK9xSeJXz3e2LdKjccyXUWHFWeKRoN73BVzVxv6nNcCMfoiymBFkmAILBnMP2Qbg5cYr5lDBiWfS6a+f330dAd+RJtojGkZ+NxKqwCygd4RBSDSUX2YTT1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1801.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(376002)(396003)(346002)(136003)(66556008)(52536014)(64756008)(66476007)(7696005)(66946007)(66446008)(5660300002)(86362001)(186003)(6506007)(8990500004)(71200400001)(33656002)(9686003)(2906002)(316002)(55016002)(8936002)(110136005)(966005)(8676002)(4326008)(82950400001)(478600001)(83380400001)(82960400001)(10290500003)(7416002)(54906003)(76116006)(107886003)(491001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?DcF4Q0DlgBD/7ndesQWB20B9UrOhCepqtIeY4RuYTvV3FMlmjy3fJFu0IaTz?=
- =?us-ascii?Q?SZst1/4PV5+/o8IHLxxis16HwiyRWxcmuRxTTN0RUjogZGk3YvOJ/pgOVY6J?=
- =?us-ascii?Q?WCXEdMLduOVFhQ0fhkj4EPls+nbei4GN4XgUPjBKsaYSG7aeMmaBOSx/P90L?=
- =?us-ascii?Q?waZEDMrqgP1jZzm9ZgYqktnBV6TGMaLulxan4lKeEjM7h5RiGC5Cx2insZTi?=
- =?us-ascii?Q?OR/6vmnsnD1jUfBlNjxKeoai1DNJVnUxOViaeID55E5iIcDyxl1dg6Q1iwHX?=
- =?us-ascii?Q?PClxSV56RvW7pQnYhpRaW+dalKx4/PJF4BFafGvbweG9XBWpCq4jlvxax+MX?=
- =?us-ascii?Q?I2D8zOlMzEpYNa09KH7rwaWx1YZJYxEYTNgoofMdTUmVxIqFwxeETbPPr8LW?=
- =?us-ascii?Q?4zxur49ZS6KpDcJsVCb+kr/9M7oH9tCtp4RJ97EHIy2bvNSY6sWgtjPb77q2?=
- =?us-ascii?Q?NmPkZP28BCnJLRKSZyc1ylXLTEZpiqH4wbNSP5lzVjJSaD1wv3pKcuRqtYOu?=
- =?us-ascii?Q?B1lhPNXlTBhrvgufCCbhCCRiSjbl6LaKfMNZoe05LZpt0bNhMzdnWIgi5T4s?=
- =?us-ascii?Q?cm1tbhGsj33UVKKZrk/1i/ovJX+hh0OtUBwKJzsFJ8WSoDoUZi3j8Qe7f8iP?=
- =?us-ascii?Q?3j4pu7HRzBXqEsoJndRAN68QU3MAFD4MaRAfswYN07B2PObyt/uNsI0kQvGM?=
- =?us-ascii?Q?IRHD5cotUMKdNKONJcZakoBMlKFf7MTMvvAKb770khFE7kHMuVhv9naSti/K?=
- =?us-ascii?Q?3q9Swybr7Q9wdM2mY8Jr5VThWQusA3NxykbNc4/hUn82bYLy8b7dqPgGK8Bx?=
- =?us-ascii?Q?lIg/bPgyy/iba5EWD6dM/XD3+NEf7MKJcVi0Avx0xxMD3mqqkZiC2vKKRU/L?=
- =?us-ascii?Q?eiugIo6rFCIaGXwM5OQER8Yin6QaBuQzQgDSwF5EjNYvWQjeWsfto52lQ81J?=
- =?us-ascii?Q?o2yLAQqLiXNmI0SW1TzdSUXHtqgDP5z/1tarKc8p0/1WAnFYYnAPTduEFhMY?=
- =?us-ascii?Q?7uldW7FQV9gldsPAoOn9NfnMI4aUflrQk8azwJK4dxZAIUU=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH] Drivers: hv: vmbus: Introduce the CHANNELMSG_MODIFYCHANNEL_RESPONSE message type
+Date:   Thu, 26 Nov 2020 20:12:10 +0100
+Message-Id: <20201126191210.13115-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1801.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40db5dc7-5888-46aa-41d2-08d8919b5b45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Nov 2020 23:39:30.6930
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1Jjrp0QCWOz2S8l8n4/nWRd/QtrzAvKk0TZHKmPStRK5uWbTJxoZoJJK6LLj2eUcA2/iPukcAw60w0OrIDjXHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2101MB0811
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Dexuan Cui
-> Sent: Monday, November 16, 2020 7:40 PM
-> > diff --git a/arch/x86/kernel/kexec-bzimage64.c
-> > b/arch/x86/kernel/kexec-bzimage64.c
-> > index 57c2ecf43134..ce831f9448e7 100644
-> > --- a/arch/x86/kernel/kexec-bzimage64.c
-> > +++ b/arch/x86/kernel/kexec-bzimage64.c
-> > @@ -200,8 +200,7 @@ setup_boot_parameters(struct kimage *image, struct
-> > boot_params *params,
-> >  	params->hdr.hardware_subarch =3D boot_params.hdr.hardware_subarch;
-> >
-> >  	/* Copying screen_info will do? */
-> > -	memcpy(&params->screen_info, &boot_params.screen_info,
-> > -				sizeof(struct screen_info));
-> > +	memcpy(&params->screen_info, &screen_info, sizeof(struct screen_info)=
-);
-> >
-> >  	/* Fill in memsize later */
-> >  	params->screen_info.ext_mem_k =3D 0;
-> > --
->=20
-> Hi Kairui,
-> According to "man kexec", kdump/kexec can use 2 different syscalls to set=
- up
-> the
-> kdump kernel:
->=20
-> -s (--kexec-file-syscall)
->        Specify that the new KEXEC_FILE_LOAD syscall should be used
-> exclusively.
->=20
-> -c (--kexec-syscall)
->        Specify that the old KEXEC_LOAD syscall should be used exclusively
-> (the default).
->=20
-> It looks I can only reproduce the call-trace
-> (https://bugzilla.redhat.com/show_bug.cgi?id=3D1867887#c5) with
-> KEXEC_FILE_LOAD:
-> I did kdump tests in Ubuntu 20.04 VM and by default the VM used the
-> KEXEC_LOAD
-> syscall and I couldn't reproduce the call-trace; after I added the "-s" p=
-arameter
-> to use
-> the KEXEC_FILE_LOAD syscall, I could reproduce the call-trace and I can c=
-onfirm
-> your
-> patch can eliminate the call-trace because the "efifb" driver doesn't eve=
-n load
-> with
-> your patch.
->=20
-> Your patch is only for the KEXEC_FILE_LOAD syscall, and I'm sure it's not=
- used in
-> the code path of the KEXEC_LOAD syscall.
->=20
-> So, in the case of the KEXEC_LOAD syscall, do you know how the *kexec*
-> kernel's boot_params.screen_info.lfb_base is intialized? I haven't figure=
-d it=20
-> out yet.
+Quoting from commit 7527810573436f ("Drivers: hv: vmbus: Introduce
+the CHANNELMSG_MODIFYCHANNEL message type"),
 
-FYI: in the case of the KEXEC_LOAD syscall, I think the lfb_base of the kex=
-ec
-kernel is pre-setup by the kexec tool (see the function setup_linux_vesafb(=
-)):
+  "[...] Hyper-V can *not* currently ACK CHANNELMSG_MODIFYCHANNEL
+   messages with the promise that (after the ACK is sent) the
+   channel won't send any more interrupts to the "old" CPU.
 
-https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/kexe=
-c/arch/i386/x86-linux-setup.c#n126
-static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
-{
-	struct fb_fix_screeninfo fix;
-	struct fb_var_screeninfo var;
-	int fd;
+   The peculiarity of the CHANNELMSG_MODIFYCHANNEL messages is
+   problematic if the user want to take a CPU offline, since we
+   don't want to take a CPU offline (and, potentially, "lose"
+   channel interrupts on such CPU) if the host is still processing
+   a CHANNELMSG_MODIFYCHANNEL message associated to that CPU."
 
-	fd =3D open("/dev/fb0", O_RDONLY);
-	if (-1 =3D=3D fd)
-		return -1;
+Introduce the CHANNELMSG_MODIFYCHANNEL_RESPONSE(24) message type,
+which embodies the type of the CHANNELMSG_MODIFYCHANNEL ACK.
 
-	if (-1 =3D=3D ioctl(fd, FBIOGET_FSCREENINFO, &fix))
-		goto out;
-	if (-1 =3D=3D ioctl(fd, FBIOGET_VSCREENINFO, &var))
-		goto out;
-	if (0 =3D=3D strcmp(fix.id, "VESA VGA")) {
-		/* VIDEO_TYPE_VLFB */
-		real_mode->orig_video_isVGA =3D 0x23;
-	} else if (0 =3D=3D strcmp(fix.id, "EFI VGA")) {
-		/* VIDEO_TYPE_EFI */
-		real_mode->orig_video_isVGA =3D 0x70;
-	} else if (arch_options.reuse_video_type) {
-		int err;
-		off_t offset =3D offsetof(typeof(*real_mode), orig_video_isVGA);
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+---
+ drivers/hv/channel.c      | 108 ++++++++++++++++++++++++++++++++------
+ drivers/hv/channel_mgmt.c |  42 +++++++++++++++
+ drivers/hv/connection.c   |   3 +-
+ drivers/hv/hv.c           |  52 ++++++++++++++++++
+ drivers/hv/hv_trace.h     |  15 ++++++
+ drivers/hv/vmbus_drv.c    |   4 +-
+ include/linux/hyperv.h    |  13 ++++-
+ 7 files changed, 218 insertions(+), 19 deletions(-)
 
-		/* blindly try old boot time video type */
-		err =3D get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
-		if (err)
-			goto out;
-	} else {
-		real_mode->orig_video_isVGA =3D 0;
-		close(fd);
-		return 0;
-	}
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index fbdda9938039a..6801d89a20051 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -209,31 +209,107 @@ int vmbus_send_tl_connect_request(const guid_t *shv_guest_servie_id,
+ }
+ EXPORT_SYMBOL_GPL(vmbus_send_tl_connect_request);
+ 
++static int send_modifychannel_without_ack(struct vmbus_channel *channel, u32 target_vp)
++{
++	struct vmbus_channel_modifychannel msg;
++	int ret;
++
++	memset(&msg, 0, sizeof(msg));
++	msg.header.msgtype = CHANNELMSG_MODIFYCHANNEL;
++	msg.child_relid = channel->offermsg.child_relid;
++	msg.target_vp = target_vp;
++
++	ret = vmbus_post_msg(&msg, sizeof(msg), true);
++	trace_vmbus_send_modifychannel(&msg, ret);
++
++	return ret;
++}
++
++static int send_modifychannel_with_ack(struct vmbus_channel *channel, u32 target_vp)
++{
++	struct vmbus_channel_modifychannel *msg;
++	struct vmbus_channel_msginfo *info;
++	unsigned long flags;
++	int ret;
++
++	info = kzalloc(sizeof(struct vmbus_channel_msginfo) +
++				sizeof(struct vmbus_channel_modifychannel),
++		       GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	init_completion(&info->waitevent);
++	info->waiting_channel = channel;
++
++	msg = (struct vmbus_channel_modifychannel *)info->msg;
++	msg->header.msgtype = CHANNELMSG_MODIFYCHANNEL;
++	msg->child_relid = channel->offermsg.child_relid;
++	msg->target_vp = target_vp;
++
++	spin_lock_irqsave(&vmbus_connection.channelmsg_lock, flags);
++	list_add_tail(&info->msglistentry, &vmbus_connection.chn_msg_list);
++	spin_unlock_irqrestore(&vmbus_connection.channelmsg_lock, flags);
++
++	if (channel->rescind) {
++		ret = -ENODEV;
++		goto free_info;
++	}
++
++	ret = vmbus_post_msg(msg, sizeof(struct vmbus_channel_modifychannel), true);
++	trace_vmbus_send_modifychannel(msg, ret);
++	if (ret != 0)
++		goto clean_msglist;
++
++	/*
++	 * Release channel_mutex; otherwise, vmbus_onoffer_rescind() could block on
++	 * the mutex and be unable to signal the completion.
++	 */
++	mutex_unlock(&vmbus_connection.channel_mutex);
++	wait_for_completion(&info->waitevent);
++	mutex_lock(&vmbus_connection.channel_mutex);
++
++	spin_lock_irqsave(&vmbus_connection.channelmsg_lock, flags);
++	list_del(&info->msglistentry);
++	spin_unlock_irqrestore(&vmbus_connection.channelmsg_lock, flags);
++
++	if (channel->rescind) {
++		ret = -ENODEV;
++		goto free_info;
++	}
++
++	if (info->response.modify_response.status) {
++		kfree(info);
++		return -EAGAIN;
++	}
++
++	kfree(info);
++	return 0;
++
++clean_msglist:
++	spin_lock_irqsave(&vmbus_connection.channelmsg_lock, flags);
++	list_del(&info->msglistentry);
++	spin_unlock_irqrestore(&vmbus_connection.channelmsg_lock, flags);
++free_info:
++	kfree(info);
++	return ret;
++}
++
+ /*
+  * Set/change the vCPU (@target_vp) the channel (@child_relid) will interrupt.
+  *
+  * CHANNELMSG_MODIFYCHANNEL messages are aynchronous.  Also, Hyper-V does not
+- * ACK such messages.  IOW we can't know when the host will stop interrupting
+- * the "old" vCPU and start interrupting the "new" vCPU for the given channel.
++ * ACK such messages before VERSION_WIN10_V5_3.  Without ACK, we can not know
++ * when the host will stop interrupting the "old" vCPU and start interrupting
++ * the "new" vCPU for the given channel.
+  *
+  * The CHANNELMSG_MODIFYCHANNEL message type is supported since VMBus version
+  * VERSION_WIN10_V4_1.
+  */
+-int vmbus_send_modifychannel(u32 child_relid, u32 target_vp)
++int vmbus_send_modifychannel(struct vmbus_channel *channel, u32 target_vp)
+ {
+-	struct vmbus_channel_modifychannel conn_msg;
+-	int ret;
+-
+-	memset(&conn_msg, 0, sizeof(conn_msg));
+-	conn_msg.header.msgtype = CHANNELMSG_MODIFYCHANNEL;
+-	conn_msg.child_relid = child_relid;
+-	conn_msg.target_vp = target_vp;
+-
+-	ret = vmbus_post_msg(&conn_msg, sizeof(conn_msg), true);
+-
+-	trace_vmbus_send_modifychannel(&conn_msg, ret);
+-
+-	return ret;
++	if (vmbus_proto_version >= VERSION_WIN10_V5_3)
++		return send_modifychannel_with_ack(channel, target_vp);
++	return send_modifychannel_without_ack(channel, target_vp);
+ }
+ EXPORT_SYMBOL_GPL(vmbus_send_modifychannel);
+ 
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 1d44bb635bb84..8fcb66d623ba4 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -1200,6 +1200,46 @@ static void vmbus_onopen_result(struct vmbus_channel_message_header *hdr)
+ 	spin_unlock_irqrestore(&vmbus_connection.channelmsg_lock, flags);
+ }
+ 
++/*
++ * vmbus_onmodifychannel_response - Modify Channel response handler.
++ *
++ * This is invoked when we received a response to our channel modify request.
++ * Find the matching request, copy the response and signal the requesting thread.
++ */
++static void vmbus_onmodifychannel_response(struct vmbus_channel_message_header *hdr)
++{
++	struct vmbus_channel_modifychannel_response *response;
++	struct vmbus_channel_msginfo *msginfo;
++	unsigned long flags;
++
++	response = (struct vmbus_channel_modifychannel_response *)hdr;
++
++	trace_vmbus_onmodifychannel_response(response);
++
++	/*
++	 * Find the modify msg, copy the response and signal/unblock the wait event.
++	 */
++	spin_lock_irqsave(&vmbus_connection.channelmsg_lock, flags);
++
++	list_for_each_entry(msginfo, &vmbus_connection.chn_msg_list, msglistentry) {
++		struct vmbus_channel_message_header *responseheader =
++				(struct vmbus_channel_message_header *)msginfo->msg;
++
++		if (responseheader->msgtype == CHANNELMSG_MODIFYCHANNEL) {
++			struct vmbus_channel_modifychannel *modifymsg;
++
++			modifymsg = (struct vmbus_channel_modifychannel *)msginfo->msg;
++			if (modifymsg->child_relid == response->child_relid) {
++				memcpy(&msginfo->response.modify_response, response,
++				       sizeof(struct vmbus_channel_modifychannel_response));
++				complete(&msginfo->waitevent);
++				break;
++			}
++		}
++	}
++	spin_unlock_irqrestore(&vmbus_connection.channelmsg_lock, flags);
++}
++
+ /*
+  * vmbus_ongpadl_created - GPADL created handler.
+  *
+@@ -1366,6 +1406,8 @@ channel_message_table[CHANNELMSG_COUNT] = {
+ 	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL, 0},
+ 	{ CHANNELMSG_MODIFYCHANNEL,		0, NULL, 0},
+ 	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL, 0},
++	{ CHANNELMSG_MODIFYCHANNEL_RESPONSE,	1, vmbus_onmodifychannel_response,
++		sizeof(struct vmbus_channel_modifychannel_response)},
+ };
+ 
+ /*
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 11170d9a2e1a5..cdf41c504d914 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -45,6 +45,7 @@ EXPORT_SYMBOL_GPL(vmbus_proto_version);
+  * Table of VMBus versions listed from newest to oldest.
+  */
+ static __u32 vmbus_versions[] = {
++	VERSION_WIN10_V5_3,
+ 	VERSION_WIN10_V5_2,
+ 	VERSION_WIN10_V5_1,
+ 	VERSION_WIN10_V5,
+@@ -60,7 +61,7 @@ static __u32 vmbus_versions[] = {
+  * Maximal VMBus protocol version guests can negotiate.  Useful to cap the
+  * VMBus version for testing and debugging purpose.
+  */
+-static uint max_version = VERSION_WIN10_V5_2;
++static uint max_version = VERSION_WIN10_V5_3;
+ 
+ module_param(max_version, uint, S_IRUGO);
+ MODULE_PARM_DESC(max_version,
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 0cde10fe0e71f..35f240f4c833e 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -16,6 +16,7 @@
+ #include <linux/version.h>
+ #include <linux/random.h>
+ #include <linux/clockchips.h>
++#include <linux/delay.h>
+ #include <clocksource/hyperv_timer.h>
+ #include <asm/mshyperv.h>
+ #include "hyperv_vmbus.h"
+@@ -237,6 +238,40 @@ void hv_synic_disable_regs(unsigned int cpu)
+ 	hv_set_synic_state(sctrl.as_uint64);
+ }
+ 
++#define HV_MAX_TRIES 3
++/*
++ * Scan the event flags page of 'this' CPU looking for any bit that is set.  If we find one
++ * bit set, then wait for a few milliseconds.  Repeat these steps for a maximum of 3 times.
++ * Return 'true', if there is still any set bit after this operation; 'false', otherwise.
++ */
++static bool hv_synic_event_pending(void)
++{
++	struct hv_per_cpu_context *hv_cpu = this_cpu_ptr(hv_context.cpu_context);
++	union hv_synic_event_flags *event =
++		(union hv_synic_event_flags *)hv_cpu->synic_event_page + VMBUS_MESSAGE_SINT;
++	unsigned long *recv_int_page = event->flags;
++	bool pending;
++	u32 relid;
++	int tries = 0;
++
++retry:
++	pending = false;
++	for_each_set_bit(relid, recv_int_page, HV_EVENT_FLAGS_COUNT) {
++		/* Special case - VMBus channel protocol messages */
++		if (relid == 0)
++			continue;
++		if (sync_test_bit(relid, recv_int_page)) {
++			pending = true;
++			break;
++		}
++	}
++	if (pending && tries++ < HV_MAX_TRIES) {
++		usleep_range(10000, 20000);
++		goto retry;
++	}
++	return pending;
++}
++
+ int hv_synic_cleanup(unsigned int cpu)
+ {
+ 	struct vmbus_channel *channel, *sc;
+@@ -276,6 +311,23 @@ int hv_synic_cleanup(unsigned int cpu)
+ 	if (channel_found && vmbus_connection.conn_state == CONNECTED)
+ 		return -EBUSY;
+ 
++	if (vmbus_proto_version >= VERSION_WIN10_V5_3) {
++		/*
++		 * channel_found == false means that any channels that were previously
++		 * assigned to the CPU have been reassigned elsewhere.  Since we have
++		 * received a ModifyChannel ACK from Hyper-V for all such reassignments,
++		 * we know that Hyper-V won't set any new bits in the event flags page.
++		 * However, there may be existing bits set in this page that have not
++		 * been processed by vmbus_chan_sched().  We scan the event flags page
++		 * looking for any bits that are set and waiting (with a timeout) for
++		 * vmbus_chan_sched() to process such bits.  If bits are still set after
++		 * this operation (and VMBus is connected), we fail the CPU offlining
++		 * operation.
++		 */
++		if (hv_synic_event_pending() && vmbus_connection.conn_state == CONNECTED)
++			return -EBUSY;
++	}
++
+ 	hv_stimer_legacy_cleanup(cpu);
+ 
+ 	hv_synic_disable_regs(cpu);
+diff --git a/drivers/hv/hv_trace.h b/drivers/hv/hv_trace.h
+index 6063bb21bb137..3e83c24856dbe 100644
+--- a/drivers/hv/hv_trace.h
++++ b/drivers/hv/hv_trace.h
+@@ -86,6 +86,21 @@ TRACE_EVENT(vmbus_onopen_result,
+ 		    )
+ 	);
+ 
++TRACE_EVENT(vmbus_onmodifychannel_response,
++	    TP_PROTO(const struct vmbus_channel_modifychannel_response *response),
++	    TP_ARGS(response),
++	    TP_STRUCT__entry(
++		    __field(u32, child_relid)
++		    __field(u32, status)
++		    ),
++	    TP_fast_assign(__entry->child_relid = response->child_relid;
++			   __entry->status = response->status;
++		    ),
++	    TP_printk("child_relid 0x%x, status %d",
++		      __entry->child_relid,  __entry->status
++		    )
++	);
++
+ TRACE_EVENT(vmbus_ongpadl_created,
+ 	    TP_PROTO(const struct vmbus_channel_gpadl_created *gpadlcreated),
+ 	    TP_ARGS(gpadlcreated),
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 4fad3e6745e53..3e1cd5e8f769e 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1767,13 +1767,15 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 	if (target_cpu == origin_cpu)
+ 		goto cpu_store_unlock;
+ 
+-	if (vmbus_send_modifychannel(channel->offermsg.child_relid,
++	if (vmbus_send_modifychannel(channel,
+ 				     hv_cpu_number_to_vp_number(target_cpu))) {
+ 		ret = -EIO;
+ 		goto cpu_store_unlock;
+ 	}
+ 
+ 	/*
++	 * For version before VERSION_WIN10_V5_3, the following warning holds:
++	 *
+ 	 * Warning.  At this point, there is *no* guarantee that the host will
+ 	 * have successfully processed the vmbus_send_modifychannel() request.
+ 	 * See the header comment of vmbus_send_modifychannel() for more info.
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 1ce131f29f3b4..808acf4c3fe61 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -234,6 +234,7 @@ static inline u32 hv_get_avail_to_write_percent(
+  * 5 . 0  (Newer Windows 10)
+  * 5 . 1  (Windows 10 RS4)
+  * 5 . 2  (Windows Server 2019, RS5)
++ * 5 . 3  (Windows Server 2021) // FIXME: use proper version number/name
+  */
+ 
+ #define VERSION_WS2008  ((0 << 16) | (13))
+@@ -245,6 +246,7 @@ static inline u32 hv_get_avail_to_write_percent(
+ #define VERSION_WIN10_V5 ((5 << 16) | (0))
+ #define VERSION_WIN10_V5_1 ((5 << 16) | (1))
+ #define VERSION_WIN10_V5_2 ((5 << 16) | (2))
++#define VERSION_WIN10_V5_3 ((5 << 16) | (3))
+ 
+ /* Make maximum size of pipe payload of 16K */
+ #define MAX_PIPE_DATA_PAYLOAD		(sizeof(u8) * 16384)
+@@ -475,6 +477,7 @@ enum vmbus_channel_message_type {
+ 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
+ 	CHANNELMSG_MODIFYCHANNEL		= 22,
+ 	CHANNELMSG_TL_CONNECT_RESULT		= 23,
++	CHANNELMSG_MODIFYCHANNEL_RESPONSE	= 24,
+ 	CHANNELMSG_COUNT
+ };
+ 
+@@ -588,6 +591,13 @@ struct vmbus_channel_open_result {
+ 	u32 status;
+ } __packed;
+ 
++/* Modify Channel Result parameters */
++struct vmbus_channel_modifychannel_response {
++	struct vmbus_channel_message_header header;
++	u32 child_relid;
++	u32 status;
++} __packed;
++
+ /* Close channel parameters; */
+ struct vmbus_channel_close_channel {
+ 	struct vmbus_channel_message_header header;
+@@ -720,6 +730,7 @@ struct vmbus_channel_msginfo {
+ 		struct vmbus_channel_gpadl_torndown gpadl_torndown;
+ 		struct vmbus_channel_gpadl_created gpadl_created;
+ 		struct vmbus_channel_version_response version_response;
++		struct vmbus_channel_modifychannel_response modify_response;
+ 	} response;
+ 
+ 	u32 msgsize;
+@@ -1562,7 +1573,7 @@ extern __u32 vmbus_proto_version;
+ 
+ int vmbus_send_tl_connect_request(const guid_t *shv_guest_servie_id,
+ 				  const guid_t *shv_host_servie_id);
+-int vmbus_send_modifychannel(u32 child_relid, u32 target_vp);
++int vmbus_send_modifychannel(struct vmbus_channel *channel, u32 target_vp);
+ void vmbus_set_event(struct vmbus_channel *channel);
+ 
+ /* Get the start of the ring buffer. */
+-- 
+2.25.1
 
-When a Ubuntu 20.10 VM (kexec-tools-2.0.20) runs on Hyper-V, we should
-fall into the last condition, i.e. setting
-"real_mode->orig_video_isVGA =3D 0;", so the "efifb" driver does not load
-in the kdump kernel.
-
-Ubuntu 20.04 (kexec-tools-2.0.18) is a little old in that it does not have
-Kairui's patch
-https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?i=
-d=3Dfb5a8792e6e4ee7de7ae3e06d193ea5beaaececc
-, so it re-uses the VRAM location set up by the hyperv_fb driver, which
-is undesirable because the "efifb" driver doesn't know it's accessing
-an "incompatible" framebuffer -- IMO this may be just a small issue,
-but anyay I hope Ubuntu 20.04's kexec-tools will pick up your patch.
-
-So, now we should cover all the combinations if we use the latest kernel
-and the latest kexec-tools, and the "efifb" driver in the kdump kernel
-doesn't load.
-
-Thanks,
--- Dexuan
