@@ -2,102 +2,106 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9EF02CBF38
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 15:14:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76EE72CBF54
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 15:16:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgLBOLw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Dec 2020 09:11:52 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34811 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728194AbgLBOLv (ORCPT
+        id S1727245AbgLBOPY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Dec 2020 09:15:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgLBOPY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Dec 2020 09:11:51 -0500
-Received: by mail-wr1-f68.google.com with SMTP id k14so4142842wrn.1;
-        Wed, 02 Dec 2020 06:11:35 -0800 (PST)
+        Wed, 2 Dec 2020 09:15:24 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC575C0613D4;
+        Wed,  2 Dec 2020 06:14:43 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id o1so4140974wrx.7;
+        Wed, 02 Dec 2020 06:14:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Y09Yc6Gy3QraLOEdgVpi1+sbCU87xyp9KMOciYZdYPA=;
+        b=LNF0QjiPxwKDMiRR+dopQBjFpbGq4dzE9u/irqWJu5T5XzfQbwmo9n9PGB7Mo7HtCo
+         3It45M6Rm1BkVuNDDaukQ85737dlDJfVSMQT9Ofmw2rSWYZI+59dp17Zsv4Ao9UdFkCT
+         j9nMQ/LJ06ItQ0+0q0DS3siV822j3qLalfmQGki93R/JJUrIr8ayLEqOkUhRioPpjZi6
+         qdJnjtF7tAiWk3iNkEgxFYgS1BT2KVo5WUFVGFqfKdbrnovwGikOo57zfFq+1ZGBv6ZK
+         EPWO6Ql9DrcBlc4n+NhNvfKvRtR81MnHJBr7rhk5cM+agph5kRdl5Ixj332dzHz5K5aV
+         hwvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VFmvo9qAPDBPuqmhfbmjzQYI5Z9eFTcq3dsoBi3Wl9w=;
-        b=QCOmxSWOTiFtxi3oURXsJazbEgKZ6uL+LCQOY3XTsCmJOONtUSVxa39+uWo5Oi82pz
-         ZhfdNl3+XubxZGAXnzkmUkng34O1O3KkLOybvxr/BQo/5TcqlpWO59I2FI82RqveNoDZ
-         geNUDn0tn5S2VrYqYGMrvc7qgtcbVHMzzHEO/mjkh06AHfgEEFu8RHV2pDtgDZRItqkG
-         276qT5BmxhrrpmJ/H0XibbPWcZALV0WpUqLIxRD4tV6ei8bsRWy6ihWuLZ8sHwSgDHsJ
-         hfDylvt1yesGJ5uGT53RE3rM2XUz9SQfLNg8liLdxvBaq9fhuphXYtbUws4V+pG7tpyB
-         Re+Q==
-X-Gm-Message-State: AOAM531Chkm/PyeXT9QMR9WgS0Bsl3W15EKJuuGk87GAkG7Q+Kr6ehBF
-        fnCQiMKYk+LR4cQKcvCRWOU=
-X-Google-Smtp-Source: ABdhPJyjPIEmj2CHj7Ial9lkzZOaHh/npZJoOOgmYWKnG5gPqCZZMyjNJ/pf2mX44pIPPdRc5CbI6Q==
-X-Received: by 2002:a5d:6783:: with SMTP id v3mr3689699wru.45.1606918269807;
-        Wed, 02 Dec 2020 06:11:09 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id q17sm2565999wro.36.2020.12.02.06.11.08
+         :mime-version:content-disposition:in-reply-to;
+        bh=Y09Yc6Gy3QraLOEdgVpi1+sbCU87xyp9KMOciYZdYPA=;
+        b=EQCd0FlKvs6B1T+y8XBvZbCzhTns8bevogl3WTDx/o9EgoLRW0DdMByhKCoZTla13u
+         Bw5T4LRaKM4OFOBR24Vl1N00OP+f4kS/2G1bsnQEJQDaARdf6+88840gQnKNXwjJ0Mvx
+         EZ/9IXyY/a8/D5QTl0WkEbpvFU6gbSPkIOWYwd9UIqtiiUPGPQ+droH1UxocK3GhqTc8
+         oIKVz8EJh3A2GLYrgdHFaKWqmyj/QPoZrac+mAJSrnhCXYmTLnYKXOag7ncprNwr2B0Y
+         v4Sy4JN5ewD79uXteQFhTuQRJQR7FAJ4pNle7usxCw08JDekd+ShlqpHFz8AMBN6hXvY
+         MtAA==
+X-Gm-Message-State: AOAM532UHl+htfOlk5zKpFmo/V/AKRzL+oLMXvKDntpSo9ujFlv+TArO
+        OB+6tB1YhyTyKYu7mRUanIY=
+X-Google-Smtp-Source: ABdhPJzvfSW63NIYgCI5jR4y00vXV9+cKa8GVNmTDBb9hfiIlPMuaihyZaPr6TcAC+oiCi4K4g7T6Q==
+X-Received: by 2002:a05:6000:82:: with SMTP id m2mr3707931wrx.314.1606918482270;
+        Wed, 02 Dec 2020 06:14:42 -0800 (PST)
+Received: from andrea (host-95-239-64-30.retail.telecomitalia.it. [95.239.64.30])
+        by smtp.gmail.com with ESMTPSA id o2sm2247428wrq.37.2020.12.02.06.14.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Dec 2020 06:11:09 -0800 (PST)
-Date:   Wed, 2 Dec 2020 14:11:07 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Wed, 02 Dec 2020 06:14:41 -0800 (PST)
+Date:   Wed, 2 Dec 2020 15:14:33 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <jroedel@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v3 16/17] x86/ioapic: export a few functions and data
- structures via io_apic.h
-Message-ID: <20201202141107.covsx4ugipuyl6he@liuwe-devbox-debian-v2>
-References: <20201124170744.112180-1-wei.liu@kernel.org>
- <20201124170744.112180-17-wei.liu@kernel.org>
- <CAHp75Vew+yjUkcfSx33KjhPLriH6wrYWixAtn9mASRFqe4+c+Q@mail.gmail.com>
+        Juan Vazquez <juvazq@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>
+Subject: Re: [PATCH v2 2/7] Drivers: hv: vmbus: Avoid double fetch of msgtype
+ in vmbus_on_msg_dpc()
+Message-ID: <20201202141433.GA24359@andrea>
+References: <20201202092214.13520-1-parri.andrea@gmail.com>
+ <20201202092214.13520-3-parri.andrea@gmail.com>
+ <20201202122254.zjhu3cfcq3zwvmvu@liuwe-devbox-debian-v2>
+ <20201202133716.GA22763@andrea>
+ <20201202134004.5tgrbyijrhvwwmk2@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vew+yjUkcfSx33KjhPLriH6wrYWixAtn9mASRFqe4+c+Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20201202134004.5tgrbyijrhvwwmk2@liuwe-devbox-debian-v2>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Nov 25, 2020 at 12:26:12PM +0200, Andy Shevchenko wrote:
-> On Wed, Nov 25, 2020 at 1:46 AM Wei Liu <wei.liu@kernel.org> wrote:
-> >
-> > We are about to implement an irqchip for IO-APIC when Linux runs as root
-> > on Microsoft Hypervisor. At the same time we would like to reuse
-> > existing code as much as possible.
-> >
-> > Move mp_chip_data to io_apic.h and make a few helper functions
-> > non-static.
+On Wed, Dec 02, 2020 at 01:40:04PM +0000, Wei Liu wrote:
+> On Wed, Dec 02, 2020 at 02:37:16PM +0100, Andrea Parri wrote:
+> > > > @@ -1072,12 +1073,19 @@ void vmbus_on_msg_dpc(unsigned long data)
+> > > >  		/* no msg */
+> > > >  		return;
+> > > >  
+> > > > +	/*
+> > > > +	 * The hv_message object is in memory shared with the host.  The host
+> > > > +	 * could erroneously or maliciously modify such object.  Make sure to
+> > > > +	 * validate its fields and avoid double fetches whenever feasible.
+> > > > +	 */
+> > > > +
+> > > >  	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
+> > > > +	msgtype = hdr->msgtype;
+> > > 
+> > > Should READ_ONCE be used here?
+> > 
+> > I think it should.  Thank you for pointing this out.
 > 
-> > +struct mp_chip_data {
-> > +       struct list_head irq_2_pin;
-> > +       struct IO_APIC_route_entry entry;
-> > +       int trigger;
-> > +       int polarity;
-> > +       u32 count;
-> > +       bool isa_irq;
-> > +};
+> Glad I can help.
 > 
-> Since I see only this patch I am puzzled why you need to have this in
-> the header?
-> Maybe a couple of words in the commit message to elaborate?
+> The same comment applies to other patches as well, of course.
 
-Andy, does the following answer your question?
+(As discussed offline/for reference:) I can spot a similar case in
+patch #3; however, #4 is supposed to make that access 'non-shared'.
 
-"The chip_data stashed in IO-APIC's irq chip is mp_chip_data.  The
-implementation of Microsoft Hypevisor's IO-APIC irqdomain would like to
-manipulate that data structure, so move it to io_apic.h as well."
+I should probably just squash patches #3 and #4; I'll try to do so
+in v3...
 
-If that's good enough, I can add it to the commit message.
-
-Wei.
+Thanks,
+  Andrea
