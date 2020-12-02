@@ -2,100 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEB6B2CC945
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 23:00:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF9402CCA77
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Dec 2020 00:23:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgLBV7w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Dec 2020 16:59:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgLBV7v (ORCPT
+        id S1725971AbgLBXXT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Dec 2020 18:23:19 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33570 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgLBXXS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Dec 2020 16:59:51 -0500
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDB6C0617A6;
-        Wed,  2 Dec 2020 13:59:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=6ePFlyNqgVUo+qmHPHjN7o9GPIjt1fzjnVUtW7yGRt4=; b=zW8E237WE9t9laQ5Dh8iqYCxyF
-        XodExrzAdTZcdTgxOJ9583RH7qW6nEvMKlH38mlRrNbBL/AqYbxFez9tkFWj6nKGr3cOI79B89/S5
-        I9B0Mt/baLpmiAwdnn61uG6zeZ5QlyeqbTzczsatuV+unfBW6k8PVFc1mGqmWxpbjT/mDj1miuATO
-        n+RGlimuDnkDGQjY0soxJyPSnpDNib+wLnYaWST30whGHaPVn+pt1VgR68kTWPRNvdx39hLUqSaSc
-        fuG7n1riavmuATf7OKheQ2cbc4ixEZAooiavbCcBzrVRYPvE8Rp3tWjqD5SJRscANV/b+bpa8q+hd
-        7to5ezxg==;
-Received: from [2601:1c0:6280:3f0::1494]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kka9V-0002mf-9R; Wed, 02 Dec 2020 21:59:09 +0000
-Subject: Re: [PATCH v2 1/2] x86: make VMware support optional
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, dmitry.torokhov@gmail.com, derek.kiernan@xilinx.com,
-        dragan.cvetic@xilinx.com, richardcochran@gmail.com,
-        linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20201202211949.17730-1-info@metux.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <caa568a2-cd96-d74b-b2f8-40c8e2981982@infradead.org>
-Date:   Wed, 2 Dec 2020 13:59:02 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Wed, 2 Dec 2020 18:23:18 -0500
+Received: by mail-wr1-f65.google.com with SMTP id u12so6899wrt.0;
+        Wed, 02 Dec 2020 15:23:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vhazsnwkBN4W5bW7O942iWaDDf+hT2e4BRRd7kmtCxk=;
+        b=cn5d/9u0iBmN3qrU1cIgrFmALe0gWqS8hrs2Tx2XU5STLG5N0ZEdF46eHIk/ERImkh
+         9CnKUIBN1Ojd042sT5AVO1NumdDCMwbV/s3xhTEt85L8tz3muMB6zCH1lz8RHSdDnf/f
+         +F7lrJE4oF5CfNfGAyooP3PiTMNTM624nMQ6fCxX9Ze7oJXswICqSBRfOK+cbPo7AzdU
+         1m/ib3Hdqw7RQNT36CKe16l8Zy84veThPkYyuKPyIoefR7sVcveB5l4y/p3TzGHIQPbg
+         O03oXCibkGzlRUHfk6zkgTkYsgpfDpCJpOBb/qP1SX9/dFF5IxEIUnungAYEwjMypJ2a
+         Rlkw==
+X-Gm-Message-State: AOAM5334PZb0JYCi7MdnMYvH/+coMd7auVaTod9mfqXcTa7x0kYamR+5
+        vadJbpZf2BYI3ocTV5GF/bY=
+X-Google-Smtp-Source: ABdhPJwfx0KMkyXddeSfYgQzOOwxcl+ncL7oFhNmZQjEMNEOFs7rbcaWlo6BLSvWqXcN6wzzmZ4Abw==
+X-Received: by 2002:adf:a495:: with SMTP id g21mr422743wrb.213.1606951356855;
+        Wed, 02 Dec 2020 15:22:36 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id 90sm207272wrl.60.2020.12.02.15.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Dec 2020 15:22:36 -0800 (PST)
+Date:   Wed, 2 Dec 2020 23:22:34 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        sameo@linux.intel.com, robert.bradford@intel.com,
+        sebastien.boeuf@intel.com
+Subject: Re: [PATCH v3 00/17] Introducing Linux root partition support for
+ Microsoft Hypervisor
+Message-ID: <20201202232234.5buzu5wysiaro3hc@liuwe-devbox-debian-v2>
+References: <20201124170744.112180-1-wei.liu@kernel.org>
+ <227127cf-bfea-4a06-fcbc-f6c46102e9e6@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20201202211949.17730-1-info@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <227127cf-bfea-4a06-fcbc-f6c46102e9e6@metux.net>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12/2/20 1:19 PM, Enrico Weigelt, metux IT consult wrote:
-> Make it possible to opt-out from VMware support, for minimized kernels
-> that never will be run under Vmware (eg. high-density virtualization
-> or embedded systems).
+On Wed, Dec 02, 2020 at 08:51:38PM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 24.11.20 18:07, Wei Liu wrote:
 > 
-> Average distro kernel will leave it on, therefore default to y.
+> Hi,
 > 
-> Signed-off-by: Enrico Weigelt <info@metux.net>
+> > There will be a subsequent patch series to provide a
+> > device node (/dev/mshv) such that userspace programs can create and run virtual
+> > machines. 
+> 
+> Any chance of using the already existing /dev/kvm interface ?
+> 
+
+I don't follow. Do you mean reusing /dev/kvm but with a different set of
+APIs underneath? I don't think that will work.
+
+In any case, the first version of /dev/mshv was posted a few days ago
+[0].  While we've chosen to follow closely KVM's model, Microsoft
+Hypervisor has its own APIs.
+
+Wei.
+
+0: https://lore.kernel.org/linux-hyperv/1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com/
+
+> --mtx
+> 
+> -- 
 > ---
->  arch/x86/Kconfig                 | 11 +++++++++++
->  arch/x86/kernel/cpu/Makefile     |  4 +++-
->  arch/x86/kernel/cpu/hypervisor.c |  2 ++
->  drivers/input/mouse/Kconfig      |  2 +-
->  drivers/misc/Kconfig             |  2 +-
->  drivers/ptp/Kconfig              |  2 +-
->  6 files changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index f6946b81f74a..eff12460cb3c 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -801,6 +801,17 @@ config X86_HV_CALLBACK_VECTOR
->  
->  source "arch/x86/xen/Kconfig"
->  
-> +config VMWARE_GUEST
-> +	bool "VMware Guest support"
-> +	default y
-> +	help
-> +	  This option enables several optimizations for running under the
-> +	  VMware hypervisor.
-> +
-> +	  Disabling it saves a few kb, for stripped down kernels eg. in high
-
-	                           kB or KiB or even KB, but not kb
-	                                                         e.g.
-
-> +	  density virtualization or embedded systems running (para)virtualized
-> +	  workloads.
-> +
->  config KVM_GUEST
->  	bool "KVM Guest support (including kvmclock)"
->  	depends on PARAVIRT
-
-
--- 
-~Randy
-
+> Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+> werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+> GPG/PGP-Schlüssel zu.
+> ---
+> Enrico Weigelt, metux IT consult
+> Free software and Linux embedded engineering
+> info@metux.net -- +49-151-27565287
