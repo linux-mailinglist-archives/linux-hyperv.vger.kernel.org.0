@@ -2,106 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76EE72CBF54
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 15:16:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C62D2CC091
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 16:19:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbgLBOPY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Dec 2020 09:15:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgLBOPY (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Dec 2020 09:15:24 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC575C0613D4;
-        Wed,  2 Dec 2020 06:14:43 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id o1so4140974wrx.7;
-        Wed, 02 Dec 2020 06:14:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y09Yc6Gy3QraLOEdgVpi1+sbCU87xyp9KMOciYZdYPA=;
-        b=LNF0QjiPxwKDMiRR+dopQBjFpbGq4dzE9u/irqWJu5T5XzfQbwmo9n9PGB7Mo7HtCo
-         3It45M6Rm1BkVuNDDaukQ85737dlDJfVSMQT9Ofmw2rSWYZI+59dp17Zsv4Ao9UdFkCT
-         j9nMQ/LJ06ItQ0+0q0DS3siV822j3qLalfmQGki93R/JJUrIr8ayLEqOkUhRioPpjZi6
-         qdJnjtF7tAiWk3iNkEgxFYgS1BT2KVo5WUFVGFqfKdbrnovwGikOo57zfFq+1ZGBv6ZK
-         EPWO6Ql9DrcBlc4n+NhNvfKvRtR81MnHJBr7rhk5cM+agph5kRdl5Ixj332dzHz5K5aV
-         hwvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y09Yc6Gy3QraLOEdgVpi1+sbCU87xyp9KMOciYZdYPA=;
-        b=EQCd0FlKvs6B1T+y8XBvZbCzhTns8bevogl3WTDx/o9EgoLRW0DdMByhKCoZTla13u
-         Bw5T4LRaKM4OFOBR24Vl1N00OP+f4kS/2G1bsnQEJQDaARdf6+88840gQnKNXwjJ0Mvx
-         EZ/9IXyY/a8/D5QTl0WkEbpvFU6gbSPkIOWYwd9UIqtiiUPGPQ+droH1UxocK3GhqTc8
-         oIKVz8EJh3A2GLYrgdHFaKWqmyj/QPoZrac+mAJSrnhCXYmTLnYKXOag7ncprNwr2B0Y
-         v4Sy4JN5ewD79uXteQFhTuQRJQR7FAJ4pNle7usxCw08JDekd+ShlqpHFz8AMBN6hXvY
-         MtAA==
-X-Gm-Message-State: AOAM532UHl+htfOlk5zKpFmo/V/AKRzL+oLMXvKDntpSo9ujFlv+TArO
-        OB+6tB1YhyTyKYu7mRUanIY=
-X-Google-Smtp-Source: ABdhPJzvfSW63NIYgCI5jR4y00vXV9+cKa8GVNmTDBb9hfiIlPMuaihyZaPr6TcAC+oiCi4K4g7T6Q==
-X-Received: by 2002:a05:6000:82:: with SMTP id m2mr3707931wrx.314.1606918482270;
-        Wed, 02 Dec 2020 06:14:42 -0800 (PST)
-Received: from andrea (host-95-239-64-30.retail.telecomitalia.it. [95.239.64.30])
-        by smtp.gmail.com with ESMTPSA id o2sm2247428wrq.37.2020.12.02.06.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Dec 2020 06:14:41 -0800 (PST)
-Date:   Wed, 2 Dec 2020 15:14:33 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
+        id S1726342AbgLBPR5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Dec 2020 10:17:57 -0500
+Received: from mga14.intel.com ([192.55.52.115]:17872 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbgLBPR5 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 2 Dec 2020 10:17:57 -0500
+IronPort-SDR: 6ga+xZjdBOBHsuJQtaOfcu6YVPSB43Sv8CacLLYJNoe82tgo8No1HFy8BoLBmHSMoGpB0vYGio
+ YsLiHOOihIIQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9823"; a="172248150"
+X-IronPort-AV: E=Sophos;i="5.78,387,1599548400"; 
+   d="scan'208";a="172248150"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 07:17:16 -0800
+IronPort-SDR: lQjhoa4rlFFBhKMBX7uKfJeK3w1ffejEELjEVz36IdY+vd5HEezdP9lCjZSbo80pcNKKTWu79z
+ lWZYmP6Kw1Rg==
+X-IronPort-AV: E=Sophos;i="5.78,387,1599548400"; 
+   d="scan'208";a="550096338"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 07:17:01 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1kkTtK-00BXLU-L0; Wed, 02 Dec 2020 17:18:02 +0200
+Date:   Wed, 2 Dec 2020 17:18:02 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
 To:     Wei Liu <wei.liu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+Cc:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>
-Subject: Re: [PATCH v2 2/7] Drivers: hv: vmbus: Avoid double fetch of msgtype
- in vmbus_on_msg_dpc()
-Message-ID: <20201202141433.GA24359@andrea>
-References: <20201202092214.13520-1-parri.andrea@gmail.com>
- <20201202092214.13520-3-parri.andrea@gmail.com>
- <20201202122254.zjhu3cfcq3zwvmvu@liuwe-devbox-debian-v2>
- <20201202133716.GA22763@andrea>
- <20201202134004.5tgrbyijrhvwwmk2@liuwe-devbox-debian-v2>
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <jroedel@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v3 16/17] x86/ioapic: export a few functions and data
+ structures via io_apic.h
+Message-ID: <20201202151802.GI4077@smile.fi.intel.com>
+References: <20201124170744.112180-1-wei.liu@kernel.org>
+ <20201124170744.112180-17-wei.liu@kernel.org>
+ <CAHp75Vew+yjUkcfSx33KjhPLriH6wrYWixAtn9mASRFqe4+c+Q@mail.gmail.com>
+ <20201202141107.covsx4ugipuyl6he@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201202134004.5tgrbyijrhvwwmk2@liuwe-devbox-debian-v2>
+In-Reply-To: <20201202141107.covsx4ugipuyl6he@liuwe-devbox-debian-v2>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Dec 02, 2020 at 01:40:04PM +0000, Wei Liu wrote:
-> On Wed, Dec 02, 2020 at 02:37:16PM +0100, Andrea Parri wrote:
-> > > > @@ -1072,12 +1073,19 @@ void vmbus_on_msg_dpc(unsigned long data)
-> > > >  		/* no msg */
-> > > >  		return;
-> > > >  
-> > > > +	/*
-> > > > +	 * The hv_message object is in memory shared with the host.  The host
-> > > > +	 * could erroneously or maliciously modify such object.  Make sure to
-> > > > +	 * validate its fields and avoid double fetches whenever feasible.
-> > > > +	 */
-> > > > +
-> > > >  	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
-> > > > +	msgtype = hdr->msgtype;
-> > > 
-> > > Should READ_ONCE be used here?
+On Wed, Dec 02, 2020 at 02:11:07PM +0000, Wei Liu wrote:
+> On Wed, Nov 25, 2020 at 12:26:12PM +0200, Andy Shevchenko wrote:
+> > On Wed, Nov 25, 2020 at 1:46 AM Wei Liu <wei.liu@kernel.org> wrote:
+> > >
+> > > We are about to implement an irqchip for IO-APIC when Linux runs as root
+> > > on Microsoft Hypervisor. At the same time we would like to reuse
+> > > existing code as much as possible.
+> > >
+> > > Move mp_chip_data to io_apic.h and make a few helper functions
+> > > non-static.
 > > 
-> > I think it should.  Thank you for pointing this out.
+> > > +struct mp_chip_data {
+> > > +       struct list_head irq_2_pin;
+> > > +       struct IO_APIC_route_entry entry;
+> > > +       int trigger;
+> > > +       int polarity;
+> > > +       u32 count;
+> > > +       bool isa_irq;
+> > > +};
+> > 
+> > Since I see only this patch I am puzzled why you need to have this in
+> > the header?
+> > Maybe a couple of words in the commit message to elaborate?
 > 
-> Glad I can help.
+> Andy, does the following answer your question?
 > 
-> The same comment applies to other patches as well, of course.
+> "The chip_data stashed in IO-APIC's irq chip is mp_chip_data.  The
+> implementation of Microsoft Hypevisor's IO-APIC irqdomain would like to
+> manipulate that data structure, so move it to io_apic.h as well."
 
-(As discussed offline/for reference:) I can spot a similar case in
-patch #3; however, #4 is supposed to make that access 'non-shared'.
+At least it sheds some light, thanks.
 
-I should probably just squash patches #3 and #4; I'll try to do so
-in v3...
+> If that's good enough, I can add it to the commit message.
 
-Thanks,
-  Andrea
+It's good for a starter, but I think you have to wait for what Thomas and other
+related people can say.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
