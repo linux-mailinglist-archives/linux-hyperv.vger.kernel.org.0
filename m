@@ -2,72 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99D262CC681
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 20:23:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D63022CC743
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 20:59:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbgLBTXL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Dec 2020 14:23:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387909AbgLBTXL (ORCPT
+        id S1729145AbgLBTya (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Dec 2020 14:54:30 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:35391 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgLBTya (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Dec 2020 14:23:11 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082CBC0617A7;
-        Wed,  2 Dec 2020 11:22:31 -0800 (PST)
-Received: from zn.tnic (p200300ec2f161b00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f16:1b00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DDD991EC04DA;
-        Wed,  2 Dec 2020 20:22:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1606936948;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=rySJim3wBb+9W8dVG2J74HH0THuGsrX0bUYnHgpIWEU=;
-        b=JuFeCHturGfuW0en93LjGZ7Qdjt76u6ure4PvfBENNP73o/sIw2rZL2huQeOG5pYwDaQq6
-        0Z4j3BsdWrMQKuLTW9LBCrfVgYI2Aiw0fXFUf4WtCzhnRbjerjFmICRuUBgYqFRE0f+203
-        KFHl9HuaYVFCiBO/SXfF4Qduw1tLv3c=
-Date:   Wed, 2 Dec 2020 20:22:23 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, hpa@zytor.com, dmitry.torokhov@gmail.com,
-        derek.kiernan@xilinx.com, dragan.cvetic@xilinx.com,
-        richardcochran@gmail.com, linux-hyperv@vger.kernel.org,
-        linux-input@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86: make vmware support optional
-Message-ID: <20201202192223.GK2951@zn.tnic>
-References: <20201117202308.7568-1-info@metux.net>
- <20201117203155.GO5719@zn.tnic>
- <0c0480af-bcf5-d7ba-9e76-d511e60f76ec@metux.net>
+        Wed, 2 Dec 2020 14:54:30 -0500
+Received: from [192.168.1.155] ([77.7.48.174]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MWRmF-1khPtM2VP1-00XquI; Wed, 02 Dec 2020 20:51:43 +0100
+Subject: Re: [PATCH v3 00/17] Introducing Linux root partition support for
+ Microsoft Hypervisor
+To:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        sameo@linux.intel.com, robert.bradford@intel.com,
+        sebastien.boeuf@intel.com
+References: <20201124170744.112180-1-wei.liu@kernel.org>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <227127cf-bfea-4a06-fcbc-f6c46102e9e6@metux.net>
+Date:   Wed, 2 Dec 2020 20:51:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
+In-Reply-To: <20201124170744.112180-1-wei.liu@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0c0480af-bcf5-d7ba-9e76-d511e60f76ec@metux.net>
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:FDj+XlqsEiQwf6kKcNyGz6HylFiO49Ux9hA8YaPOZ1DCUh68xtn
+ fvX2e/AjS8Dg+rDhaz4qtH61rxR6oY+fxjM9Bm+4mGuAdWdGLMcfqk9n898Ls0PIBIy84Ob
+ DmUdaFVDl1Pd99tGagx21wa4AxgnElbTzF9H4IHFAAzpzsc/motLBbvakvx/XracfNf+EFq
+ lFK5aQKq7xBuyBGi+SrGg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fca7Z5IC6so=:9d2pDF6trxzpKm7G2jxhz8
+ ODnPoOHC5brmQrZH8mhMhEH7VoI55ihmTV+ucLMG5SEaxeTds1ALoevp2A7cMHpOK5OvSNCLa
+ Wdcrv/V6h3rU25ikcsvV2vg1wscc6sLBwG26ej/1/gzCEhmcUK97YxC+2R8tPr+rK3ckrCUdm
+ d5HnRN35MLxgZHyPKyhMiu/YbF7y5LXEk7LxC9JXNdogExhpGAgyejkG8DleClIL8PfkSG0QJ
+ 7WSH3xSp6mOTtQJxMfPsIPac+86JckBWpdQEaEWuBc9NV2Dmnqvac9zttZltChm5HTpC2CwgM
+ AL0XpoPZX3AccJ70BfcOwE/ueieV2rMUzK8Xhsv9/+Gk7eH5sEV5jRgmIdhttxW2EEQSyiYha
+ j58pkXm/zvPlwnSq0swOJhgkPewa76k/jFB4cqs0TcbFmsHumfHL2kmX9E5ut
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Dec 02, 2020 at 08:17:23PM +0100, Enrico Weigelt, metux IT consult wrote:
-> Reducing the kernel size. Think of very high density virtualization
-> (w/ specially stripped-down workloads) or embedded systems.
-> 
-> For example, I'm running bare minimum kernels w/ only kvm and virtio
-> (not even pci, etc) in such scenarios.
-> 
-> Of course, that's nothing for an average distro, therefore leaving
-> default y.
+On 24.11.20 18:07, Wei Liu wrote:
 
-Ok, pls put the reasoning for the change in the next revision's commit
-message along with how much KB savings we're talking about.
+Hi,
 
-Thx.
+> There will be a subsequent patch series to provide a
+> device node (/dev/mshv) such that userspace programs can create and run virtual
+> machines. 
+
+Any chance of using the already existing /dev/kvm interface ?
+
+--mtx
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
