@@ -2,127 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E8862CC8D5
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 22:23:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C0412CC93E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 22:59:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgLBVWy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Dec 2020 16:22:54 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:49579 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgLBVWy (ORCPT
+        id S1726462AbgLBV7n (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Dec 2020 16:59:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgLBV7n (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Dec 2020 16:22:54 -0500
-Received: from orion.localdomain ([77.7.48.174]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N4hBx-1k4jqp1hY7-011lWC; Wed, 02 Dec 2020 22:19:52 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
+        Wed, 2 Dec 2020 16:59:43 -0500
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F03C0613D6;
+        Wed,  2 Dec 2020 13:59:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=kb88isD6UQQ4pziP8SfHAEy2NFf6PJ4pThmNMqkixS8=; b=TZ2iztmnYBglqeDgARHeQtuI6D
+        w/4ool4sdNQUoWgs40IzXH3FWlzlME6PYj49zBlJjKcLxncikwnCK2K47Wgnq20V0gNtlPUuXXPXu
+        HRV7v9vJsoXGBAiLtXTP8zN5m4Zmq74k8a4Hphk9gt82isbMNjBVvIx4BQAfyDVtm6RPjaTxsifGT
+        PDBUqLrqyF0eRLaH9glhquxGL7b1msYMlyGKTE83ZYHq4lNJSF90BmjcaDHN6rZ0rCqcpjc2YB/5k
+        xUP5JMr8s+eX/S0MsLTHkVktRhWvC1zwA07W/Un9HDKhkipVWY9e5A6OLmIyjQcnjwtLDVG0SjCw4
+        VoEqQc7w==;
+Received: from [2601:1c0:6280:3f0::1494]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kka9K-0002lr-W9; Wed, 02 Dec 2020 21:58:59 +0000
+Subject: Re: [PATCH v2 2/2] x86: make Hyper-V support optional
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         hpa@zytor.com, dmitry.torokhov@gmail.com, derek.kiernan@xilinx.com,
         dragan.cvetic@xilinx.com, richardcochran@gmail.com,
         linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH v2 2/2] x86: make Hyper-V support optional
-Date:   Wed,  2 Dec 2020 22:19:49 +0100
-Message-Id: <20201202211949.17730-2-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20201202211949.17730-1-info@metux.net>
 References: <20201202211949.17730-1-info@metux.net>
-X-Provags-ID: V03:K1:ZYw8JALVJyM7+za0bb7JmaCzzkuqUcrysb74jSbDe7uDw14f2UV
- vdlkaMrjlMmq4uyMuGRmD9OZbCTRRKrCLuendqIOAn2gg4DNusUa+hAdknrE+ZI9jFT9u4s
- xjWldC7c477x6uphyaHewlc00iTZVx6lm7ENjYAu5nLL0yVt58pb4JI+AymvGxfp2VYszzg
- xQI/vRldWoOHMfKFk23Mw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SsW/Vx7eYCw=:zIS1LJ0NodFzrr2suQ0yaF
- j72DldIEnk06X32w5FJ1IP3lcj4G6cTYvNPUphwmT4OdwbNvac9HFiBmB8w6AwTzZyU7Ik7jY
- e30Tx/r2YicPKUGV4dShnlyGJ4ENU/J/siK3nxDXoqCqujOcxW1T0sYxq0Q49Apt075LJpdg4
- cJbDddQBqG5pG0hUwJw0DU8ohtKFuN4RWKn8hjcpNDZlstgeWqZNUEul9rFfqOZitUlQCfidH
- 4LkbOlD6J7KKT3+CSA0nLjXfrC9WGyerneO9j1K1ZSwBVtQPKTxUXI2WAysMrPOXg+aSO30eC
- sgl7t3xt7dA/smbOGwApOUsLQ/4vQ+UphimZDC74T7f2k7lrLYO/PVxbX4J4VTxwjplm1/HZ3
- n/h+68yvBjtHHhnUaMhQBEWfl5dyS5BPhuwQjmxUzQ2pzCTzkqYJXM4xv3QGK
+ <20201202211949.17730-2-info@metux.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e898aa1b-84e8-9898-c834-48c599be7ffd@infradead.org>
+Date:   Wed, 2 Dec 2020 13:58:52 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+MIME-Version: 1.0
+In-Reply-To: <20201202211949.17730-2-info@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Make it possible to opt-out from Hyper-V support, for minimized kernels
-that never will by run under Hyper-V. (eg. high-density virtualization
-or embedded systems)
+On 12/2/20 1:19 PM, Enrico Weigelt, metux IT consult wrote:
+> Make it possible to opt-out from Hyper-V support, for minimized kernels
+> that never will by run under Hyper-V. (eg. high-density virtualization
+> or embedded systems)
+> 
+> Average distro kernel will leave it on, therefore default to y.
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
+> ---
+>  arch/x86/Kconfig                 | 11 +++++++++++
+>  arch/x86/kernel/cpu/Makefile     |  4 ++--
+>  arch/x86/kernel/cpu/hypervisor.c |  2 ++
+>  drivers/hv/Kconfig               |  2 +-
+>  4 files changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index eff12460cb3c..57d20591d6ee 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -812,6 +812,17 @@ config VMWARE_GUEST
+>  	  density virtualization or embedded systems running (para)virtualized
+>  	  workloads.
+>  
+> +config HYPERV_GUEST
+> +	bool "Hyper-V Guest support"
+> +	default y
+> +	help
+> +	  This option enables several optimizations for running under the
+> +	  Hyper-V hypervisor.
+> +
+> +	  Disabling it saves a few kb, for stripped down kernels eg. in high
 
-Average distro kernel will leave it on, therefore default to y.
+	                           kB,                           e.g.
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- arch/x86/Kconfig                 | 11 +++++++++++
- arch/x86/kernel/cpu/Makefile     |  4 ++--
- arch/x86/kernel/cpu/hypervisor.c |  2 ++
- drivers/hv/Kconfig               |  2 +-
- 4 files changed, 16 insertions(+), 3 deletions(-)
+> +	  density virtualization or embedded systems running (para)virtualized
+> +	  workloads.
+> +
+>  config KVM_GUEST
+>  	bool "KVM Guest support (including kvmclock)"
+>  	depends on PARAVIRT
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index eff12460cb3c..57d20591d6ee 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -812,6 +812,17 @@ config VMWARE_GUEST
- 	  density virtualization or embedded systems running (para)virtualized
- 	  workloads.
- 
-+config HYPERV_GUEST
-+	bool "Hyper-V Guest support"
-+	default y
-+	help
-+	  This option enables several optimizations for running under the
-+	  Hyper-V hypervisor.
-+
-+	  Disabling it saves a few kb, for stripped down kernels eg. in high
-+	  density virtualization or embedded systems running (para)virtualized
-+	  workloads.
-+
- config KVM_GUEST
- 	bool "KVM Guest support (including kvmclock)"
- 	depends on PARAVIRT
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index a615b0152bf0..5536b801cb44 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -51,9 +51,9 @@ obj-$(CONFIG_X86_CPU_RESCTRL)		+= resctrl/
- 
- obj-$(CONFIG_X86_LOCAL_APIC)		+= perfctr-watchdog.o
- 
--obj-$(CONFIG_HYPERVISOR_GUEST)		+= hypervisor.o mshyperv.o
-+obj-$(CONFIG_HYPERVISOR_GUEST)		+= hypervisor.o
- obj-$(CONFIG_VMWARE_GUEST)		+= vmware.o
--
-+obj-$(CONFIG_HYPERV_GUEST)		+= mshyperv.o
- obj-$(CONFIG_ACRN_GUEST)		+= acrn.o
- 
- ifdef CONFIG_X86_FEATURE_NAMES
-diff --git a/arch/x86/kernel/cpu/hypervisor.c b/arch/x86/kernel/cpu/hypervisor.c
-index c0e770a224aa..32d6b2084d05 100644
---- a/arch/x86/kernel/cpu/hypervisor.c
-+++ b/arch/x86/kernel/cpu/hypervisor.c
-@@ -37,7 +37,9 @@ static const __initconst struct hypervisor_x86 * const hypervisors[] =
- #ifdef CONFIG_VMWARE_GUEST
- 	&x86_hyper_vmware,
- #endif
-+#ifdef CONFIG_HYPERV_GUEST
- 	&x86_hyper_ms_hyperv,
-+#endif
- #ifdef CONFIG_KVM_GUEST
- 	&x86_hyper_kvm,
- #endif
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 79e5356a737a..7b3094c59a81 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -4,7 +4,7 @@ menu "Microsoft Hyper-V guest support"
- 
- config HYPERV
- 	tristate "Microsoft Hyper-V client drivers"
--	depends on X86 && ACPI && X86_LOCAL_APIC && HYPERVISOR_GUEST
-+	depends on X86 && ACPI && X86_LOCAL_APIC && HYPERV_GUEST
- 	select PARAVIRT
- 	select X86_HV_CALLBACK_VECTOR
- 	help
+
 -- 
-2.11.0
+~Randy
 
