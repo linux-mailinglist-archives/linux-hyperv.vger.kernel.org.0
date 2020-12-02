@@ -2,94 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C1F2CB256
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 02:29:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D2F02CB8AC
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Dec 2020 10:25:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgLBB3O (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Dec 2020 20:29:14 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:10354 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727748AbgLBB3N (ORCPT
+        id S1729255AbgLBJXX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Dec 2020 04:23:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbgLBJXW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Dec 2020 20:29:13 -0500
+        Wed, 2 Dec 2020 04:23:22 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A42C0613D4;
+        Wed,  2 Dec 2020 01:22:36 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id k14so2728705wrn.1;
+        Wed, 02 Dec 2020 01:22:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1606872553; x=1638408553;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:mime-version:content-transfer-encoding:subject;
-  bh=6uQon/BDh41ppN5GvD7f9z1OblxFV9nsodeQ2f7UCM8=;
-  b=Ps+iLDMBLNv7A0TkILhrm2jqUixnXKMm5F87GTSfgEyH6/K01T4XWLNx
-   cXwIk0VWOJoxQMoxoF2n/Ep5jt0gb6VWK5ZTy+E+j/k2WX3jQ+Ir+b1T2
-   uDKEi4YxEKtCX+GwfdjD+ceTvpA/9kmyqu1rwVfODZUGVsj4Amx6fxIpH
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.78,385,1599523200"; 
-   d="scan'208";a="69920108"
-Subject: Re: [PATCH] iommu/hyper-v: Fix panic on a host without the 15-bit APIC ID
- support
-Thread-Topic: [PATCH] iommu/hyper-v: Fix panic on a host without the 15-bit APIC ID support
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 02 Dec 2020 01:28:25 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 6B7FBA02E2;
-        Wed,  2 Dec 2020 01:28:21 +0000 (UTC)
-Received: from EX13D08UEE002.ant.amazon.com (10.43.62.92) by
- EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 2 Dec 2020 01:28:20 +0000
-Received: from EX13D08UEE001.ant.amazon.com (10.43.62.126) by
- EX13D08UEE002.ant.amazon.com (10.43.62.92) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 2 Dec 2020 01:28:20 +0000
-Received: from EX13D08UEE001.ant.amazon.com ([10.43.62.126]) by
- EX13D08UEE001.ant.amazon.com ([10.43.62.126]) with mapi id 15.00.1497.006;
- Wed, 2 Dec 2020 01:28:20 +0000
-From:   "Woodhouse, David" <dwmw@amazon.co.uk>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "decui@microsoft.com" <decui@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "mikelley@microsoft.com" <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-Thread-Index: AQHWyESU8Wh/35CKPEa9TIPiCA4xtanjBEuA
-Date:   Wed, 2 Dec 2020 01:28:20 +0000
-Message-ID: <eba320d980578ff37685967f8cafa5cf3ecb48e2.camel@amazon.co.uk>
-References: <20201202004510.1818-1-decui@microsoft.com>
-In-Reply-To: <20201202004510.1818-1-decui@microsoft.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.174]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A329C9F40A52B649A5E7C2D7B41E30A1@amazon.com>
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZwrjU6762QSJwiWh0r8/mVMOyaJCyDaBwDy1dg3d6Is=;
+        b=BBa+/wYaigbPVikShx/N9TYS3+S8E6FW3coJHXiUOFz2RFdhVF+ZVIm7Htrt8//kfe
+         7+gkNYAoxad3xbeivbEuhUQZRFTrDtcps9Usn0XHPmiXxfnKvoBhEy28GSkqambtabzS
+         qKpJSqq/2pEo/P0y+X54ulGylWlb1fhitPLQeCIGMkHxg50zKk3Sx/W9+IoLR9DmD6dZ
+         l2EyNA0MExEmMAk8Rym0E89OcioCIy4ryg1ZCWZxFNi8SKP/yevuoKVLbxGlMy0rj/9r
+         LZ/UlvLS/ZMQEd/Aarl57kQujQXwQ3hDSMSTCsKM90L60PUx28WYGus1BfZdO0OZ2Q36
+         DhnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZwrjU6762QSJwiWh0r8/mVMOyaJCyDaBwDy1dg3d6Is=;
+        b=GMkr6/xWNg91WddU7mIW28NLGqLXru0Ea8oF6mIEBX62Zu6kLsZLDgwVRXIDqI1kOD
+         Bq/Dn8Ua4RGY9fYm1L313GEtNB1LUairyajkEXWJue3FLKFZSI6nI38UD9N6Tr1VJkQw
+         Qgo607ERAIdwp1uH1IjO7LYpyIkz/3fHlx+wfQIFYcH7AFNQp4r1HjiI8ifLWM5Iqcgj
+         Ny3uZaQlRlWGSlOCPziU8oc+P/84JrR2DliM0R+CFGc8Rg/KSi1h36YIelc+iEfRirUD
+         MkTLbRmtsC8R7aSnjKe+G9vG437Nehgb9qhpdJMUnUs8IQocbqIz1skoseZkaurB3MDM
+         OYPQ==
+X-Gm-Message-State: AOAM533gwEQJIz+BgQAVuR/7R/CryV3r8oHB2VWeB4KBkfuXe6blKRHw
+        VYuZ5TEOB7+4Nc72LiQwiEAX/fBAWYWmCg==
+X-Google-Smtp-Source: ABdhPJxwnwXt20YrRHzg9cLM1lQNBJ6tLPQlYKRtVv5ZPXbPVDACngcnWlB6WqxmtOuW08Mr2lggoA==
+X-Received: by 2002:adf:93e6:: with SMTP id 93mr2177456wrp.197.1606900954124;
+        Wed, 02 Dec 2020 01:22:34 -0800 (PST)
+Received: from andrea.corp.microsoft.com (host-95-239-64-30.retail.telecomitalia.it. [95.239.64.30])
+        by smtp.gmail.com with ESMTPSA id e27sm1535936wrc.9.2020.12.02.01.22.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Dec 2020 01:22:33 -0800 (PST)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Juan Vazquez <juvazq@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH v2 0/7] Drivers: hv: vmbus: More VMBus-hardening changes
+Date:   Wed,  2 Dec 2020 10:22:07 +0100
+Message-Id: <20201202092214.13520-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTEyLTAxIGF0IDE2OjQ1IC0wODAwLCBEZXh1YW4gQ3VpIHdyb3RlOg0KPiBU
-aGUgY29tbWl0IGYzNmE3NGI5MzQ1YSBpdHNlbGYgaXMgZ29vZCwgYnV0IGl0IGNhdXNlcyBhIHBh
-bmljIGluIGENCj4gTGludXggVk0gdGhhdCBydW5zIG9uIGEgSHlwZXItViBob3N0IHRoYXQgZG9l
-c24ndCBoYXZlIHRoZSAxNS1iaXQNCj4gRXh0ZW5kZWQgQVBJQyBJRCBzdXBwb3J0Og0KPiAgICAg
-a2VybmVsIEJVRyBhdCBhcmNoL3g4Ni9rZXJuZWwvYXBpYy9pb19hcGljLmM6MjQwOCENCj4gDQo+
-IFRoaXMgaGFwcGVucyBiZWNhdXNlIHRoZSBIeXBlci1WIGlvYXBpY19pcl9kb21haW4gKHdoaWNo
-IGlzIGRlZmluZWQgaW4NCj4gZHJpdmVycy9pb21tdS9oeXBlcnYtaW9tbXUuYykgY2FuIG5vdCBi
-ZSBmb3VuZC4gRml4IHRoZSBwYW5pYyBieQ0KPiBwcm9wZXJseSBjbGFpbWluZyB0aGUgb25seSBJ
-L08gQVBJQyBlbXVsYXRlZCBieSBIeXBlci1WLg0KPiANCj4gQ2M6IERhdmlkIFdvb2Rob3VzZSA8
-ZHdtd0BhbWF6b24uY28udWs+DQo+IENjOiBWaXRhbHkgS3V6bmV0c292IDx2a3V6bmV0c0ByZWRo
-YXQuY29tPg0KPiBGaXhlczogZjM2YTc0YjkzNDVhICgieDg2L2lvYXBpYzogVXNlIEkvTy1BUElD
-IElEIGZvciBmaW5kaW5nIGlycWRvbWFpbiwgbm90IGluZGV4IikNCj4gU2lnbmVkLW9mZi1ieTog
-RGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4NCg0KT29wcywgYXBvbG9naWVzIGZvciBt
-aXNzaW5nIHRoYXQuDQoNClJldmlld2VkLWJ5OiBEYXZpZCBXb29kaG91c2UgPGR3bXdAYW1hem9u
-LmNvLnVrPg0KCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRyZSAoTG9uZG9uKSBMdGQuIFJlZ2lz
-dGVyZWQgaW4gRW5nbGFuZCBhbmQgV2FsZXMgd2l0aCByZWdpc3RyYXRpb24gbnVtYmVyIDA0NTQz
-MjMyIHdpdGggaXRzIHJlZ2lzdGVyZWQgb2ZmaWNlIGF0IDEgUHJpbmNpcGFsIFBsYWNlLCBXb3Jz
-aGlwIFN0cmVldCwgTG9uZG9uIEVDMkEgMkZBLCBVbml0ZWQgS2luZ2RvbS4KCgo=
+Hi all,
+
+This is v2 of [1], integrating feedback from Juan and Wei and adding
+patch 4/7 (after Juan's suggestion).  Changelogs are in the patches.
+
+Thanks,
+  Andrea
+
+[1] https://lkml.kernel.org/r/20201118143649.108465-1-parri.andrea@gmail.com
+
+Andrea Parri (Microsoft) (7):
+  Drivers: hv: vmbus: Initialize memory to be sent to the host
+  Drivers: hv: vmbus: Avoid double fetch of msgtype in
+    vmbus_on_msg_dpc()
+  Drivers: hv: vmbus: Avoid double fetch of payload_size in
+    vmbus_on_msg_dpc()
+  Drivers: hv: vmbus: Copy the hv_message object in vmbus_on_msg_dpc()
+  Drivers: hv: vmbus: Avoid use-after-free in vmbus_onoffer_rescind()
+  Drivers: hv: vmbus: Resolve race condition in vmbus_onoffer_rescind()
+  Drivers: hv: vmbus: Do not allow overwriting
+    vmbus_connection.channels[]
+
+ drivers/hv/channel.c      |  4 +--
+ drivers/hv/channel_mgmt.c | 53 +++++++++++++++++++++++++++------------
+ drivers/hv/hyperv_vmbus.h |  2 +-
+ drivers/hv/vmbus_drv.c    | 43 ++++++++++++++++++-------------
+ include/linux/hyperv.h    |  1 +
+ 5 files changed, 67 insertions(+), 36 deletions(-)
+
+-- 
+2.25.1
 
