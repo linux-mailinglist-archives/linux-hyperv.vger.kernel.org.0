@@ -2,98 +2,105 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF9402CCA77
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Dec 2020 00:23:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B115D2CD091
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Dec 2020 08:48:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgLBXXT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Dec 2020 18:23:19 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33570 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgLBXXS (ORCPT
+        id S1729835AbgLCHrq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Dec 2020 02:47:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729389AbgLCHrq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Dec 2020 18:23:18 -0500
-Received: by mail-wr1-f65.google.com with SMTP id u12so6899wrt.0;
-        Wed, 02 Dec 2020 15:23:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vhazsnwkBN4W5bW7O942iWaDDf+hT2e4BRRd7kmtCxk=;
-        b=cn5d/9u0iBmN3qrU1cIgrFmALe0gWqS8hrs2Tx2XU5STLG5N0ZEdF46eHIk/ERImkh
-         9CnKUIBN1Ojd042sT5AVO1NumdDCMwbV/s3xhTEt85L8tz3muMB6zCH1lz8RHSdDnf/f
-         +F7lrJE4oF5CfNfGAyooP3PiTMNTM624nMQ6fCxX9Ze7oJXswICqSBRfOK+cbPo7AzdU
-         1m/ib3Hdqw7RQNT36CKe16l8Zy84veThPkYyuKPyIoefR7sVcveB5l4y/p3TzGHIQPbg
-         O03oXCibkGzlRUHfk6zkgTkYsgpfDpCJpOBb/qP1SX9/dFF5IxEIUnungAYEwjMypJ2a
-         Rlkw==
-X-Gm-Message-State: AOAM5334PZb0JYCi7MdnMYvH/+coMd7auVaTod9mfqXcTa7x0kYamR+5
-        vadJbpZf2BYI3ocTV5GF/bY=
-X-Google-Smtp-Source: ABdhPJwfx0KMkyXddeSfYgQzOOwxcl+ncL7oFhNmZQjEMNEOFs7rbcaWlo6BLSvWqXcN6wzzmZ4Abw==
-X-Received: by 2002:adf:a495:: with SMTP id g21mr422743wrb.213.1606951356855;
-        Wed, 02 Dec 2020 15:22:36 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id 90sm207272wrl.60.2020.12.02.15.22.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Dec 2020 15:22:36 -0800 (PST)
-Date:   Wed, 2 Dec 2020 23:22:34 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        sameo@linux.intel.com, robert.bradford@intel.com,
-        sebastien.boeuf@intel.com
-Subject: Re: [PATCH v3 00/17] Introducing Linux root partition support for
- Microsoft Hypervisor
-Message-ID: <20201202232234.5buzu5wysiaro3hc@liuwe-devbox-debian-v2>
-References: <20201124170744.112180-1-wei.liu@kernel.org>
- <227127cf-bfea-4a06-fcbc-f6c46102e9e6@metux.net>
+        Thu, 3 Dec 2020 02:47:46 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49BB4C061A4D;
+        Wed,  2 Dec 2020 23:47:06 -0800 (PST)
+Received: from zn.tnic (p200300ec2f0dc500db287c99eb312af4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c500:db28:7c99:eb31:2af4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BDDD61EC04DD;
+        Thu,  3 Dec 2020 08:47:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1606981624;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=GedApLaNstVc3e1C3spK8dfnCKnZJiZf08fLRjtMt2A=;
+        b=Fd2gqakHIUkjMZIpv84iCARF7D6l2nvr1+N7K02vNH9XhX6+OH4BTfHRmIN4GPL5GuZ5VE
+        owPiDdfM5QEJL4SuOBYLcv1eoqlCNLRkloYOzifN1dXLYIe3PomA2GCKgtSUCGDl4Z9yog
+        NoQT7vEwbjDu8q7G31I+62fLnJWJutc=
+Date:   Thu, 3 Dec 2020 08:46:59 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, hpa@zytor.com, dmitry.torokhov@gmail.com,
+        derek.kiernan@xilinx.com, dragan.cvetic@xilinx.com,
+        richardcochran@gmail.com, linux-hyperv@vger.kernel.org,
+        linux-input@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] x86: make VMware support optional
+Message-ID: <20201203074631.GC3059@zn.tnic>
+References: <20201202211949.17730-1-info@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <227127cf-bfea-4a06-fcbc-f6c46102e9e6@metux.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20201202211949.17730-1-info@metux.net>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Dec 02, 2020 at 08:51:38PM +0100, Enrico Weigelt, metux IT consult wrote:
-> On 24.11.20 18:07, Wei Liu wrote:
+On Wed, Dec 02, 2020 at 10:19:48PM +0100, Enrico Weigelt, metux IT consult wrote:
+> Make it possible to opt-out from VMware support, for minimized kernels
+> that never will be run under Vmware (eg. high-density virtualization
+> or embedded systems).
 > 
-> Hi,
+> Average distro kernel will leave it on, therefore default to y.
 > 
-> > There will be a subsequent patch series to provide a
-> > device node (/dev/mshv) such that userspace programs can create and run virtual
-> > machines. 
-> 
-> Any chance of using the already existing /dev/kvm interface ?
-> 
-
-I don't follow. Do you mean reusing /dev/kvm but with a different set of
-APIs underneath? I don't think that will work.
-
-In any case, the first version of /dev/mshv was posted a few days ago
-[0].  While we've chosen to follow closely KVM's model, Microsoft
-Hypervisor has its own APIs.
-
-Wei.
-
-0: https://lore.kernel.org/linux-hyperv/1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com/
-
-> --mtx
-> 
-> -- 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 > ---
-> Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-> werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-> GPG/PGP-Schlüssel zu.
-> ---
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+>  arch/x86/Kconfig                 | 11 +++++++++++
+>  arch/x86/kernel/cpu/Makefile     |  4 +++-
+>  arch/x86/kernel/cpu/hypervisor.c |  2 ++
+>  drivers/input/mouse/Kconfig      |  2 +-
+>  drivers/misc/Kconfig             |  2 +-
+>  drivers/ptp/Kconfig              |  2 +-
+>  6 files changed, 19 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index f6946b81f74a..eff12460cb3c 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -801,6 +801,17 @@ config X86_HV_CALLBACK_VECTOR
+>  
+>  source "arch/x86/xen/Kconfig"
+>  
+> +config VMWARE_GUEST
+> +	bool "VMware Guest support"
+> +	default y
+> +	help
+> +	  This option enables several optimizations for running under the
+> +	  VMware hypervisor.
+> +
+> +	  Disabling it saves a few kb, for stripped down kernels eg. in high
+
+I was actually expecting for you to do your own measurements and show data.
+Anyway, I did it for you:
+
+   text    data     bss     dec     hex filename
+15949304        127806978       36597916        180354198       abffc96 vmlinux.before
+15947650        127802430       36602012        180352092       abff45c vmlinux.after
+
+this is with my .config.
+
+How much is it with a stripped down kernel? I bet it is even less. Which
+makes this whole effort not worth it...
+
+Also, when you send a new version of your patches, please rework *all*
+review feedback you've received on the previous one.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
