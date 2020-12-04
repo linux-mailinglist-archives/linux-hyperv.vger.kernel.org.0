@@ -2,126 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CABA2CDCBA
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Dec 2020 18:51:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B29162CECA5
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Dec 2020 12:01:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgLCRvM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Dec 2020 12:51:12 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40350 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727844AbgLCRvL (ORCPT
+        id S1729829AbgLDLAG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Dec 2020 06:00:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgLDLAF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Dec 2020 12:51:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607017784;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XZBiVCU94S1OuP6ARtameblgcsjWj/5Vo7asS36mdWU=;
-        b=asFxoaN5jb2HkXOlQmdJ0WFIjFCk2ofPPuKFDfaGBxzU1006l5Gt4CwD6lPmaF931HntaB
-        +KCMBq7jlMYKE21CQe5OSKCTQwztS7uUIczjunKjGR1XsdYcJ0t4BS/kNWZbRQl2grGZiC
-        jS0aA0MgCU2Snam3ukVt/E/9daZWftc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-65-RS2WyDaZMeax9a0TOpUkoA-1; Thu, 03 Dec 2020 12:49:43 -0500
-X-MC-Unique: RS2WyDaZMeax9a0TOpUkoA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4E57612A0;
-        Thu,  3 Dec 2020 17:49:41 +0000 (UTC)
-Received: from [10.36.113.250] (ovpn-113-250.ams2.redhat.com [10.36.113.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B85960861;
-        Thu,  3 Dec 2020 17:49:39 +0000 (UTC)
-Subject: Re: [PATCH 2/2] hv_balloon: do adjust_managed_page_count() when
- ballooning/un-ballooning
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-hyperv@vger.kernel.org
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20201202161245.2406143-1-vkuznets@redhat.com>
- <20201202161245.2406143-3-vkuznets@redhat.com>
- <9202aafa-f30e-4d96-72a9-3ccd083cc58c@redhat.com>
- <871rg6ok4v.fsf@vitty.brq.redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <13524c28-dfec-dd21-8a45-216b161deb72@redhat.com>
-Date:   Thu, 3 Dec 2020 18:49:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Fri, 4 Dec 2020 06:00:05 -0500
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A914C0613D1
+        for <linux-hyperv@vger.kernel.org>; Fri,  4 Dec 2020 02:59:25 -0800 (PST)
+Received: by mail-il1-x142.google.com with SMTP id 2so1691413ilg.9
+        for <linux-hyperv@vger.kernel.org>; Fri, 04 Dec 2020 02:59:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KTX8imKrpeZUnkCQT3x5PhotuxL5M6giZ29gKkm/azk=;
+        b=i/pPePMDd+OW/02oOjodekEX0NHvpxz6kAH5Ac85/1HPKvVF+xtW5u94L0lJq1cvCy
+         rusrwBxWcTlCgCbZSWWWl+qS6OCGPUuGiNPmIh0sUkpzkzvczIil44S9dLguNvNV9Mvu
+         MSdFLEMzjnqsHp5aRDebvr1cXjQyho18furqUW+354mVd31/Q9MEqS3iFmPm3MzueD69
+         sc0HIhH96NjZ7IGl/zzYTOcQZI5+CABw2EYcwUvh26WVoHASOEQID1I6L637AgQUu6z0
+         H4wnEuJGx59q6uosQURN9NxvxBPcCaZD+exlopuA90LRBVdhhQjz3BW89DSUBqgFFTFy
+         HTAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KTX8imKrpeZUnkCQT3x5PhotuxL5M6giZ29gKkm/azk=;
+        b=acBVY694WbRvYqT1N/QnKwkUkFPAbiQ2rN8U46J0pSRwFQHQkO/oVb4xwjy8fWgRVI
+         gcixuY6SzM+bFT/sIDqNWORxVW2Q+N+xraWMA/D5B5Hvxr6zUuTvHTKHSviE1a4VTHSN
+         Qwh3NMj3TFwsgzB/NHToyDIdZJHH9GIOctI/03z8iVftRz6mAzqv3TDHXSn5kYGb8Z8t
+         p4RkhDBmWmDPHf8jCKr6mGV2LRo6eVtGRsIrja+dvAffGsYIhlodi3Youg7Ct0bIC4Yu
+         w6wJI/Pcp+Q+2rkmP/EVu00IJtPXvGyPr7hHLyvaDlU5nr1J+xBABxe0DOf7IlaPGhF9
+         5u9A==
+X-Gm-Message-State: AOAM5305cZZZP61JSXKrRgSoBn3zAcO+smxlKUCNU7S8aGEr0/XLzYAf
+        Qg5PuQVSsnLrq4vUtu3vRM7uUnVwz+YrkXtgTBQ=
+X-Google-Smtp-Source: ABdhPJzrv7f9lR6/wJ3trKUUCSjAxiS04kROVyKCthoJhSZ0NoLx2CAMnQvk+mESsI76RHvBRn4lhRXMZYz90Dr5OSQ=
+X-Received: by 2002:a05:6e02:dc2:: with SMTP id l2mr5873299ilj.2.1607079565013;
+ Fri, 04 Dec 2020 02:59:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <871rg6ok4v.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Received: by 2002:a02:e47:0:0:0:0:0 with HTTP; Fri, 4 Dec 2020 02:59:24 -0800 (PST)
+Reply-To: elizabethedward042@gmail.com
+From:   Elizabeth Edward <alimanibrahim4@gmail.com>
+Date:   Fri, 4 Dec 2020 10:59:24 +0000
+Message-ID: <CAAQ2OVwzZ9c4JmBkYQ9qyL8jEsJpd1rJGXX3sPupQTxKojk0CQ@mail.gmail.com>
+Subject: REPLY ME URGENTLY
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 03.12.20 18:49, Vitaly Kuznetsov wrote:
-> David Hildenbrand <david@redhat.com> writes:
-> 
->> On 02.12.20 17:12, Vitaly Kuznetsov wrote:
->>> Unlike virtio_balloon/virtio_mem/xen balloon drivers, Hyper-V balloon driver
->>> does not adjust managed pages count when ballooning/un-ballooning and this leads
->>> to incorrect stats being reported, e.g. unexpected 'free' output.
->>>
->>> Note, the calculation in post_status() seems to remain correct: ballooned out
->>> pages are never 'available' and we manually add dm->num_pages_ballooned to
->>> 'commited'.
->>>
->>> Suggested-by: David Hildenbrand <david@redhat.com>
->>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->>> ---
->>>  drivers/hv/hv_balloon.c | 5 ++++-
->>>  1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
->>> index da3b6bd2367c..8c471823a5af 100644
->>> --- a/drivers/hv/hv_balloon.c
->>> +++ b/drivers/hv/hv_balloon.c
->>> @@ -1198,6 +1198,7 @@ static void free_balloon_pages(struct hv_dynmem_device *dm,
->>>  		__ClearPageOffline(pg);
->>>  		__free_page(pg);
->>>  		dm->num_pages_ballooned--;
->>> +		adjust_managed_page_count(pg, 1);
->>>  	}
->>>  }
->>>  
->>> @@ -1238,8 +1239,10 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
->>>  			split_page(pg, get_order(alloc_unit << PAGE_SHIFT));
->>>  
->>>  		/* mark all pages offline */
->>> -		for (j = 0; j < alloc_unit; j++)
->>> +		for (j = 0; j < alloc_unit; j++) {
->>>  			__SetPageOffline(pg + j);
->>> +			adjust_managed_page_count(pg + j, -1);
->>> +		}
->>>  
->>>  		bl_resp->range_count++;
->>>  		bl_resp->range_array[i].finfo.start_page =
->>>
->>
->> I assume this has been properly tested such that it does not change the
->> system behavior regarding when/how HyperV decides to add/remove memory.
->>
-> 
-> I'm always reluctant to confirm 'proper testing' as no matter how small
-> and 'obvious' the change is, regressions keep happening :-) But yes,
-> this was tested on a Hyper-V host and 'stress' and I observed 'free'
-> when the balloon was both inflated and deflated, values looked sane.
+Greeting
 
-That;s what I wanted to hear ;)
+Please forgive me for stressing you with my predicaments and I sorry
+to approach you through this media it is because it serves the fastest
+means of communication. I came across your E-mail from my personal
+search and I decided to contact you believing you will be honest to
+fulfill my final wish before I die.
 
 
--- 
-Thanks,
+I am Mrs. Elizabeth Edward, 63 years, from USA, I am childless and I
+am suffering from a pro-long critical cancer, my doctors confirmed I
+may not live beyond two months from now as my ill health has defiled
+all forms of medical treatment.
 
-David / dhildenb
 
+Since my days are numbered, I have decided willingly to fulfill my
+long-time promise to donate you the sum ($5.000.000.00) million
+dollars I inherited from my late husband Mr. Edward Herbart, foreign
+bank account over years. I need a very honest person who can assist in
+transfer of this money to his or her account and use the funds for
+charities work of God while you use 50% for yourself. I want you to
+know there are no risk involved, it is 100% hitch free & safe. If you
+will be interesting to assist in getting this fund into your account
+for charity project to fulfill my promise before I die please let me
+know immediately. I will appreciate your utmost confidentiality as I
+wait for your reply.
+
+
+Best Regard,
+
+
+Mrs. Elizabeth Edward
