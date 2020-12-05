@@ -2,71 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 045652CFB4D
-	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Dec 2020 13:41:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D6392CFC4B
+	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Dec 2020 18:42:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgLEKyc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 5 Dec 2020 05:54:32 -0500
-Received: from smtprelay0063.hostedemail.com ([216.40.44.63]:44106 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728406AbgLEKxv (ORCPT
+        id S1726225AbgLERlk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 5 Dec 2020 12:41:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbgLERk2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 5 Dec 2020 05:53:51 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 6C27B18224D86;
-        Sat,  5 Dec 2020 10:51:48 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:968:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1539:1593:1594:1711:1730:1747:1777:1792:2198:2199:2393:2553:2559:2562:2828:3138:3139:3140:3141:3142:3352:3622:3865:3867:3868:3870:3871:3872:3873:4250:4321:5007:6691:6742:6743:10004:10400:10848:10967:11232:11658:11914:12297:12740:12760:12895:13019:13069:13311:13357:13439:14096:14097:14181:14659:14721:14777:14913:21080:21433:21451:21627:21819:30022:30029:30054:30079:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: edge87_1a0a959273cc
-X-Filterd-Recvd-Size: 2215
-Received: from XPS-9350.home (unknown [47.151.137.21])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  5 Dec 2020 10:51:44 +0000 (UTC)
-Message-ID: <7779f4de8d70653fe0d92fd4821c32a71b6df436.camel@perches.com>
-Subject: Re: [PATCH 1/7] net: 8021q: remove unneeded MODULE_VERSION() usage
-From:   Joe Perches <joe@perches.com>
-To:     Jakub Kicinski <kuba@kernel.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, davem@davemloft.net,
-        mareklindner@neomailbox.ch, sw@simonwunderlich.de, a@unstable.cc,
-        sven@narfation.org, marcel@holtmann.org, johan.hedberg@gmail.com,
-        roopa@nvidia.com, nikolay@nvidia.com, edumazet@google.com,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, jmaloy@redhat.com,
-        ying.xue@windriver.com, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org,
-        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
-Date:   Sat, 05 Dec 2020 02:51:43 -0800
-In-Reply-To: <20201204160924.2e170514@kicinski-fedora-pc1c0hjn.DHCP.thefacebook.com>
-References: <20201202124959.29209-1-info@metux.net>
-         <20201204160924.2e170514@kicinski-fedora-pc1c0hjn.DHCP.thefacebook.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        Sat, 5 Dec 2020 12:40:28 -0500
+Received: from faui03.informatik.uni-erlangen.de (faui03.informatik.uni-erlangen.de [IPv6:2001:638:a000:4130:131:188:30:103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A48C09425C;
+        Sat,  5 Dec 2020 09:39:48 -0800 (PST)
+Received: from cip4d0.informatik.uni-erlangen.de (cip4d0.cip.cs.fau.de [IPv6:2001:638:a000:4160:131:188:60:59])
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 22147241036;
+        Sat,  5 Dec 2020 18:27:57 +0100 (CET)
+Received: by cip4d0.informatik.uni-erlangen.de (Postfix, from userid 68457)
+        id 13663D8049E; Sat,  5 Dec 2020 18:27:57 +0100 (CET)
+From:   Stefan Eschenbacher <stefan.eschenbacher@fau.de>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Stefan Eschenbacher <stefan.eschenbacher@fau.de>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel@i4.cs.fau.de, Max Stolze <max.stolze@fau.de>
+Subject: [PATCH 0/3] drivers/hv: make max_num_channels_supported configurable
+Date:   Sat,  5 Dec 2020 18:26:47 +0100
+Message-Id: <20201205172650.2290-1-stefan.eschenbacher@fau.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, 2020-12-04 at 16:09 -0800, Jakub Kicinski wrote:
-> On Wed,  2 Dec 2020 13:49:53 +0100 Enrico Weigelt, metux IT consult
-> wrote:
-> > Remove MODULE_VERSION(), as it isn't needed at all: the only version
-> > making sense is the kernel version.
-> > 
-> > Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> 
-> Thanks for the patches. Please drop the "metux IT consult" from the
-> addresses. The from space is supposed to be for your name.
+According to the TODO comment in hyperv_vmbus.h the value in macro
+MAX_NUM_CHANNELS_SUPPORTED should be configurable. The first patch
+accomplishes that by introducting uint max_num_channels_supported as
+module parameter.
+Also macro MAX_NUM_CHANNELS_SUPPORTED_DEFAULT is introduced with
+value 256, which is the currently used macro value.
+MAX_NUM_CHANNELS_SUPPORTED was found and replaced in two locations.
 
-If you _really_ want this superfluous 'metux IT consult' content in your
-signature, and I don't think you should, use parentheses around it.
+During module initialization sanity checks are applied which will result
+in EINVAL or ERANGE if the given value is no multiple of 32 or larger than
+MAX_NUM_CHANNELS.
 
-Enrico Weigelt (metux IT consult) <info@metux.net>
+While testing, we found a misleading typo in the comment for the macro
+MAX_NUM_CHANNELS which is fixed by the second patch.
 
-Using a comma makes copy/paste into an email client think it's two addresses.
+The third patch makes the added default macro configurable by 
+introduction and use of Kconfig parameter HYPERV_VMBUS_DEFAULT_CHANNELS. 
+Default value remains at 256.
 
+Two notes on these patches:
+1) With above patches it is valid to configure max_num_channels_supported
+and MAX_NUM_CHANNELS_SUPPORTED_DEFAULT as 0. We simply don't know if that
+is a valid value. Doing so while testing still left us with a working
+Debian VM in Hyper-V on Windows 10.
+2) To set the Kconfig parameter the user currently has to divide the
+desired default number of channels by 32 and enter the result of that
+calculation. This way both known constraints we got from the comments in
+the code are enforced. It feels a bit unintuitive though. We haven't found
+Kconfig options to ensure that the value is a multiple of 32. So if you'd
+like us to fix that we'd be happy for some input on how to settle it with
+Kconfig.
 
+Signed-off-by: Stefan Eschenbacher <stefan.eschenbacher@fau.de>
+Co-developed-by: Max Stolze <max.stolze@fau.de>
+Signed-off-by: Max Stolze <max.stolze@fau.de>
+
+Stefan Eschenbacher (3):
+  drivers/hv: make max_num_channels_supported configurable
+  drivers/hv: fix misleading typo in comment
+  drivers/hv: add default number of vmbus channels to Kconfig
+
+ drivers/hv/Kconfig        | 13 +++++++++++++
+ drivers/hv/hyperv_vmbus.h |  8 ++++----
+ drivers/hv/vmbus_drv.c    | 20 +++++++++++++++++++-
+ 3 files changed, 36 insertions(+), 5 deletions(-)
+
+-- 
+2.20.1
 
