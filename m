@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40F822D066A
-	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Dec 2020 18:55:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AF6D2D0673
+	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Dec 2020 19:08:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgLFRzN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 6 Dec 2020 12:55:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48164 "EHLO
+        id S1726641AbgLFSGp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 6 Dec 2020 13:06:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgLFRzN (ORCPT
+        with ESMTP id S1726440AbgLFSGo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 6 Dec 2020 12:55:13 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF01C0613D0;
-        Sun,  6 Dec 2020 09:54:32 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id g185so11586489wmf.3;
-        Sun, 06 Dec 2020 09:54:32 -0800 (PST)
+        Sun, 6 Dec 2020 13:06:44 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C4F8C0613D0;
+        Sun,  6 Dec 2020 10:06:04 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id 91so6579739wrj.7;
+        Sun, 06 Dec 2020 10:06:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=8hPz3fXD4d18hl2wdf9fe7bSAOyqTTVMV/KSC4uywkY=;
-        b=uBK0NQxE8iF0KwU+lcMnKiKiBhUVCD1VpC8jl07R8gba9N5baU4BggiCv/J+Iaf9wT
-         7rDTbQtAzAfS6x4kiiHwUfodAHPWJVcC3dpUlO+a2P4+kOXU/0lzY/1emIZQxnUqdhge
-         yjOJovOvA8aNukFIyIICu09dTO3nQuIWHCNZc04FTedXjTJiTY8bVoP2vRz7H4aHJR1r
-         HSS6S6eZljo4E2T9PeYzJ9mM6YLtQLFlQIgBZrtSwefP4YaLmX4+fADJoy8Q684eYOi9
-         t8DdkLaCNgjvubqTj93Pf+5ezsZt1mOAa2QcJnAts9OU4gX4WOP+K4cl43E9zQGisUjk
-         vWnQ==
+        bh=2A6meXGNkVt1Fe33c9tcz09/j0hGHozY31HBfki/CMs=;
+        b=V9IhW55fK0hMQjIpf5N6276bMVNXWT3MruBo2+7U5L0ZUiiKOn3JbEPyRuE0d7ztUJ
+         3kmqEg3Zt8og/B3O1WupoFyTnVIZrGy9/2FMtnDBHkeH7P0pHLbFwLaKMMh1csF1Nklo
+         Bdqyn4lSEaKStOmzTkUOczqdaTYK/gFsLxq0b/d+NvwZFgdQy/kt0I2qu0PSIxxlNEH0
+         Xwd1krEgI44ftiEbBgDRzfSWROIuo9D9BZDo1HXrVcUzk3TKoOGUe8eU5saRzr2RLGbu
+         s0MXrUegYJN9uNYNap8yAetjbNaP3xdv2YiquUvnj3TTiYoL6y0Bhb5gbsu5/FWbKo20
+         LjFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=8hPz3fXD4d18hl2wdf9fe7bSAOyqTTVMV/KSC4uywkY=;
-        b=A2iWaSLFnfcgcHw+LNFhaswadpPEh/b0c6fPifjp67LkgZw5GCtzeGgzmbhsiYs5AZ
-         JV7aiG7FFpCh4CSFTz7g1oZJjF+lyiOtn3tffdE4yy542BYUKZu+uHW1uZHeu51gePW8
-         YAD6Z1g4EfJJt3bOSzPTziYzfjzucARIu3NPTpUqNIaFparswq8lu7+Ig5OaFUWlKmAV
-         8Yrre1+Mn00Ac/RZfwP8fosWrUDN5gJEp8UnIIfJ87jxnIlWulfHK6kwMBlU8f956wPo
-         aKDbm06MfHIGY/PY8Rj2cVDrK64MQC3CMy3DDSQ97NPauoQzTgolT6bV3IuPU/a0l9Aa
-         iLkw==
-X-Gm-Message-State: AOAM532eJ2n1XrJuHWsM/g+yzxf9PNQnFiyFoeR7oNumipqDElw8CSOW
-        wnthM4vNL56SVm9qOQ2MHhk=
-X-Google-Smtp-Source: ABdhPJwsetfYWf68hfPKK4uHA4S1B2zNJ7705A7RWG+hDh+MtcbaApWNuQsqOQR6B3SfBIYkx4ZPjw==
-X-Received: by 2002:a1c:f60b:: with SMTP id w11mr10372604wmc.180.1607277271305;
-        Sun, 06 Dec 2020 09:54:31 -0800 (PST)
+        bh=2A6meXGNkVt1Fe33c9tcz09/j0hGHozY31HBfki/CMs=;
+        b=ZRyX8m6FRcHR5w6OoC4yV+DS8+iTTHlBvnZHnGzZGlNUJQhGbvyNviJqV511w+5ldK
+         koc9Pj7diwXS3SR4mjTzK3iis2dtZbS6gzroSMg/b4kdciOq9XnN9uPpqr7iX2E9EiPz
+         UYjDMJtNtQYrw2AmV3IJ2UPak3ep72+d7nUBvPeMEUia+XOOHSPk6Qoe6mrk2BIgUt3W
+         pU0VWcDiTN5z8YNN6xYIJJuIKVrkV2fuQNiowPrRFGlGBFfyNPbSpLLPAaOOrsXX+acr
+         prcR1aVFF7lFeEtB9yPV2NC6ro0gZ+vN+VZ+ktthTUwjwp+/aIIxFLyI+VoIEGROZr9l
+         XErw==
+X-Gm-Message-State: AOAM5308NVEuLwkSEe/ta1En0a1c6SwWl/shnF+SfU1LEv8F1VkJrN0R
+        YmjptezmtNJMls6SxbHY34I=
+X-Google-Smtp-Source: ABdhPJzJlPSAdWci4KwFJiRYKUcUIUmbZDvWqx/jepJUrOA5sEumwDWzH6w5XkeHBQtbhjo7eUw+zg==
+X-Received: by 2002:adf:f085:: with SMTP id n5mr15331601wro.371.1607277962842;
+        Sun, 06 Dec 2020 10:06:02 -0800 (PST)
 Received: from andrea (host-95-239-64-30.retail.telecomitalia.it. [95.239.64.30])
-        by smtp.gmail.com with ESMTPSA id q25sm13008690wmq.37.2020.12.06.09.54.29
+        by smtp.gmail.com with ESMTPSA id y130sm11491603wmc.22.2020.12.06.10.06.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Dec 2020 09:54:30 -0800 (PST)
-Date:   Sun, 6 Dec 2020 18:54:22 +0100
+        Sun, 06 Dec 2020 10:06:02 -0800 (PST)
+Date:   Sun, 6 Dec 2020 19:05:59 +0100
 From:   Andrea Parri <parri.andrea@gmail.com>
 To:     Michael Kelley <mikelley@microsoft.com>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -59,74 +59,68 @@ Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         Juan Vazquez <juvazq@microsoft.com>,
         Saruhan Karademir <skarade@microsoft.com>
-Subject: Re: [PATCH 1/6] Drivers: hv: vmbus: Initialize memory to be sent to
- the host
-Message-ID: <20201206175422.GA3256@andrea>
+Subject: Re: [PATCH 2/6] Drivers: hv: vmbus: Avoid double fetch of msgtype in
+ vmbus_on_msg_dpc()
+Message-ID: <20201206180559.GB3256@andrea>
 References: <20201118143649.108465-1-parri.andrea@gmail.com>
- <20201118143649.108465-2-parri.andrea@gmail.com>
- <MW2PR2101MB1052B9BAFF7876427746F596D7CF1@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <20201118143649.108465-3-parri.andrea@gmail.com>
+ <MW2PR2101MB10528F278B1BD5FA060D7F5AD7CF1@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052B9BAFF7876427746F596D7CF1@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB10528F278B1BD5FA060D7F5AD7CF1@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Dec 06, 2020 at 04:59:32PM +0000, Michael Kelley wrote:
+On Sun, Dec 06, 2020 at 05:10:26PM +0000, Michael Kelley wrote:
 > From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Wednesday, November 18, 2020 6:37 AM
 > > 
-> > __vmbus_open() and vmbus_teardown_gpadl() do not inizialite the memory
-> > for the vmbus_channel_open_channel and the vmbus_channel_gpadl_teardown
-> > objects they allocate respectively.  These objects contain padding bytes
-> > and fields that are left uninitialized and that are later sent to the
-> > host, potentially leaking guest data.  Zero initialize such fields to
-> > avoid leaking sensitive information to the host.
-> > 
-> > Reported-by: Juan Vazquez <juvazq@microsoft.com>
-> > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > ---
-> >  drivers/hv/channel.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> > index 0d63862d65518..9aa789e5f22bb 100644
-> > --- a/drivers/hv/channel.c
-> > +++ b/drivers/hv/channel.c
-> > @@ -621,7 +621,7 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
-> >  		goto error_clean_ring;
-> > 
-> >  	/* Create and init the channel open message */
-> > -	open_info = kmalloc(sizeof(*open_info) +
-> > +	open_info = kzalloc(sizeof(*open_info) +
-> >  			   sizeof(struct vmbus_channel_open_channel),
-> >  			   GFP_KERNEL);
-> >  	if (!open_info) {
-> > @@ -748,7 +748,7 @@ int vmbus_teardown_gpadl(struct vmbus_channel *channel, u32
-> > gpadl_handle)
-> >  	unsigned long flags;
-> >  	int ret;
-> > 
-> > -	info = kmalloc(sizeof(*info) +
-> > +	info = kzalloc(sizeof(*info) +
-> >  		       sizeof(struct vmbus_channel_gpadl_teardown), GFP_KERNEL);
-> >  	if (!info)
-> >  		return -ENOMEM;
-> > --
-> > 2.25.1
+> > vmbus_on_msg_dpc() double fetches from msgtype.  The double fetch can
+> > lead to an out-of-bound access when accessing the channel_message_table
+> > array.  In turn, the use of the out-of-bound entry could lead to code
+> > execution primitive (entry->message_handler()).  Avoid the double fetch
+> > by saving the value of msgtype into a local variable.
 > 
-> This change is actually zero'ing more memory than is necessary.  Only the
-> 'msg' portion is sent to Hyper-V, so that's all that needs to be zero'ed.
-> But this code is not performance sensitive, and doing the tighter zero'ing
-> would add lines of code with no real value.  So,
+> The commit message is missing some context.  Why is a double fetch a
+> problem?  The comments below in the code explain why, but the why
+> should also be briefly explained in the commit message.
+
+I'll integrate the commit message as suggested.
+
+
+> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > index 0a2711aa63a15..82b23baa446d7 100644
+> > --- a/drivers/hv/vmbus_drv.c
+> > +++ b/drivers/hv/vmbus_drv.c
+> > @@ -1057,6 +1057,7 @@ void vmbus_on_msg_dpc(unsigned long data)
+> >  	struct hv_message *msg = (struct hv_message *)page_addr +
+> >  				  VMBUS_MESSAGE_SINT;
+> >  	struct vmbus_channel_message_header *hdr;
+> > +	enum vmbus_channel_message_type msgtype;
+> >  	const struct vmbus_channel_message_table_entry *entry;
+> >  	struct onmessage_work_context *ctx;
+> >  	u32 message_type = msg->header.message_type;
+> > @@ -1072,12 +1073,19 @@ void vmbus_on_msg_dpc(unsigned long data)
+> >  		/* no msg */
+> >  		return;
+> > 
+> > +	/*
+> > +	 * The hv_message object is in memory shared with the host.  The host
+> > +	 * could erroneously or maliciously modify such object.  Make sure to
+> > +	 * validate its fields and avoid double fetches whenever feasible.
 > 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> The "when feasible" phrase sounds like not doing double fetches is optional in
+> some circumstances.  But I think we always have to protect against modification
+> of memory shared with the host.  So perhaps the comment should be more
+> precise.
 
-Thank you for the review.
+I guess I was imagining situations where "avoiding the double fetch"
+could just not be the most "convenient" option and where we may want
+to instead opt for a "full re-validation" of the data at stake (say,
+fetches separated by some "complex" call chain?).  We're certainly
+in sync with the general principle of protecting the guest against
+modification of memory shared with the host/hypervisor.  ;-)  I'll
+amend the comment accordingly.
 
-Please notice that I posted a v2 of this series:
-
-  https://lkml.kernel.org/r/20201202092214.13520-1-parri.andrea@gmail.com
-
-Thanks,
   Andrea
