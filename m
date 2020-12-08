@@ -2,107 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59F3D2D2846
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Dec 2020 10:58:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 621712D2ED5
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Dec 2020 16:57:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbgLHJ4o (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 8 Dec 2020 04:56:44 -0500
-Received: from dvalin.narfation.org ([213.160.73.56]:54640 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgLHJ4o (ORCPT
+        id S1729985AbgLHP4f (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 8 Dec 2020 10:56:35 -0500
+Received: from mail-m972.mail.163.com ([123.126.97.2]:39542 "EHLO
+        mail-m972.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730004AbgLHP4e (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 8 Dec 2020 04:56:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1607421360;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NL9hsV0TeyX60QzTD/g2rg1p69Dgs1kBooBdA4Xh/Yk=;
-        b=dMXe8xj7l66jvnfkKBMdbWmk+78WOIIIctBtLnvakPh4+J0IL+AQAmFq0g8TsMJQs3q58J
-        HbCrHQnCMqsdbWiSob9frIwRB8edR+1btGVrz1xrw0c8AOtyXORhd45g36NuPbKqIjjAi9
-        N19dSIPbQdGNpk50jXOK/KTvgHEFRdY=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     linux-kernel@vger.kernel.org,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        davem@davemloft.net
-Cc:     kuba@kernel.org, mareklindner@neomailbox.ch, sw@simonwunderlich.de,
-        a@unstable.cc, marcel@holtmann.org, johan.hedberg@gmail.com,
-        roopa@nvidia.com, nikolay@nvidia.com, edumazet@google.com,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, jmaloy@redhat.com,
-        ying.xue@windriver.com, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org,
-        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        linux-hyperv@vger.kernel.org, bpf@vger.kernel.org,
-        Matthias Schiffer <mschiffer@universe-factory.net>
-Subject: Re: [PATCH 2/7] net: batman-adv: remove unneeded MODULE_VERSION() usage
-Date:   Tue, 08 Dec 2020 10:55:57 +0100
-Message-ID: <1863144.usQuhbGJ8B@ripper>
-In-Reply-To: <ca5c17a1-dea5-83eb-f9c5-a027b4135fec@metux.net>
-References: <20201202124959.29209-1-info@metux.net> <4581108.GXAFRqVoOG@sven-edge> <ca5c17a1-dea5-83eb-f9c5-a027b4135fec@metux.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3265343.QJadu78ljV"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+        Tue, 8 Dec 2020 10:56:34 -0500
+X-Greylist: delayed 8340 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Dec 2020 10:56:33 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=t2VJOPJlWsz8l5wsja
+        RBlQoKQE79rv25LpyRWLQ/ba0=; b=b2aJ7/dSbQG7CMDbVNBHIkBCvL2U6vyJ2b
+        vExmabzSzvEr357wuq/GFDu28Qr3KxTqY1GYhZhj/wEo6glJkzf40WlsAhvoVewk
+        X4AyUx0724fXwl5kISaoLyWBAOolkXoUPNTtr9C7hBxEik7MHy4uIe6dtURBmEr+
+        OGQ8qSzLw=
+Received: from localhost.localdomain (unknown [202.112.113.212])
+        by smtp2 (Coremail) with SMTP id GtxpCgC3z3pYfc9fHjmbEQ--.13268S4;
+        Tue, 08 Dec 2020 21:19:26 +0800 (CST)
+From:   Xiaohui Zhang <ruc_zhangxiaohui@163.com>
+To:     Xiaohui Zhang <ruc_zhangxiaohui@163.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] scsi: Fix possible buffer overflows in storvsc_queuecommand
+Date:   Tue,  8 Dec 2020 21:19:18 +0800
+Message-Id: <20201208131918.31534-1-ruc_zhangxiaohui@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: GtxpCgC3z3pYfc9fHjmbEQ--.13268S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtF4xZF4rAw4fXF4xJry7ZFb_yoWDAFbE9w
+        4rKr97Wry5Arn7Xr1DGFy3ua4avr4UWr1rua12v39xArWjywsav34vqrs0vr48trWUuayD
+        A3Z5Xr1Fy3W0kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRR9mRUUUUUU==
+X-Originating-IP: [202.112.113.212]
+X-CM-SenderInfo: puxfs6pkdqw5xldrx3rl6rljoofrz/1tbipR70MFUMbDH2ZAAAsp
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---nextPart3265343.QJadu78ljV
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Sven Eckelmann <sven@narfation.org>
-To: linux-kernel@vger.kernel.org, "Enrico Weigelt, metux IT consult" <info@metux.net>, davem@davemloft.net
-Cc: kuba@kernel.org, mareklindner@neomailbox.ch, sw@simonwunderlich.de, a@unstable.cc, marcel@holtmann.org, johan.hedberg@gmail.com, roopa@nvidia.com, nikolay@nvidia.com, edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, jmaloy@redhat.com, ying.xue@windriver.com, kafai@fb.com, songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org, netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org, tipc-discussion@lists.sourceforge.net, linux-hyperv@vger.kernel.org, bpf@vger.kernel.org, Matthias Schiffer <mschiffer@universe-factory.net>
-Subject: Re: [PATCH 2/7] net: batman-adv: remove unneeded MODULE_VERSION() usage
-Date: Tue, 08 Dec 2020 10:55:57 +0100
-Message-ID: <1863144.usQuhbGJ8B@ripper>
-In-Reply-To: <ca5c17a1-dea5-83eb-f9c5-a027b4135fec@metux.net>
-References: <20201202124959.29209-1-info@metux.net> <4581108.GXAFRqVoOG@sven-edge> <ca5c17a1-dea5-83eb-f9c5-a027b4135fec@metux.net>
+From: Zhang Xiaohui <ruc_zhangxiaohui@163.com>
 
-On Tuesday, 8 December 2020 08:48:56 CET Enrico Weigelt, metux IT consult wrote:
-> > Is there some explanation besides an opinion? Some kind goal which you want to 
-> > achieve with it maybe?
-> 
-> Just a cleanup. I've been under the impression that this version is just
-> an relic from oot times.
+storvsc_queuecommand() calls memcpy() without checking
+the destination size may trigger a buffer overflower,
+which a local user could use to cause denial of service
+or the execution of arbitrary code.
+Fix it by putting the length check before calling memcpy().
 
-There are various entities which are loving to use the distro kernel and 
-replace the batman-adv module with a backport from a newer kernel version. 
-Similar to what is done in OpenWrt for the wifi drivers.
+Signed-off-by: Zhang Xiaohui <ruc_zhangxiaohui@163.com>
+---
+ drivers/scsi/storvsc_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > At least for us it was an easy way to query the release cycle information via 
-> > batctl. Which made it easier for us to roughly figure out what an reporter/
-> > inquirer was using - independent of whether he is using the in-kernel version 
-> > or a backported version.
-> 
-> Is the OOT scenario still valid ?
-
-Since the backport is OOT - yes, it is still valid.
-
-Kind regards,
-	Sven
---nextPart3265343.QJadu78ljV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl/PTa0ACgkQXYcKB8Em
-e0ZQVg//a3Ctdu0iWSyVCI0o4XYb/8+K+uVZDxsGud3XPMdUr5JrAgXXJrege9Br
-3y3yZMg9GMAHnf4i3TjgSddqRRKdAEB7swYD6OSXQr0MIHtF8TQpIAHGzi3llUx1
-dilGLIb/8xxMGD5QgeCl8wx4L8CJj9jGF/6O8lGXUZV8PFrvDXfTzQ6NUHQ5U2Z4
-xXYbqsf983ze1FLVwdVEmIOjXg2ncyGm1C3kQYPIehGXHYfPDwNSnWC91yxO3J/7
-7b1JILU9Tiytc0yzTlWtYIpzg+OlY0+qHgYcV37I+OPqwpqygK4//Iqh0CzSpLjb
-RQ6+/iEK09Xq2aTD1nWs7OOE5p3d5AcfiSVaaMpyBM09simkt+w4zExee+VPifkC
-UavwdUusybvSNJix8U6Gd0QksUPJpG46KXT1vM6RLTlps3hvMWou4xD8pfC0IkgA
-+8ce8Agpex2ZvqmsQ8RBR8pgO7IuC8hQqX+nVwHVud/kUZOZiqzaz3d6fxTpQM3B
-/e+s/FsYu0G4Zmj9t3GHHrb4V4a77wLmAUJ9IH9yc5pwmkEU0rWINtR7gXs53qXR
-CNFi5/8JMW+L3UXVdLqNTCKewD9no/RYigh3JvMiei8RKTbwVNNOXF5uaXs7kQum
-eRu83EVqnKTPAd4M7plJ5+bQD4uu9Tjq31VH9o0LlcTZNbo/Xvc=
-=XSUt
------END PGP SIGNATURE-----
-
---nextPart3265343.QJadu78ljV--
-
-
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 0c65fbd41..09b60a4c0 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1729,6 +1729,8 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+ 
+ 	vm_srb->cdb_length = scmnd->cmd_len;
+ 
++	if (vm_srb->cdb_length > STORVSC_MAX_CMD_LEN)
++		vm_srb->cdb_length = STORVSC_MAX_CMD_LEN;
+ 	memcpy(vm_srb->cdb, scmnd->cmnd, vm_srb->cdb_length);
+ 
+ 	sgl = (struct scatterlist *)scsi_sglist(scmnd);
+-- 
+2.17.1
 
