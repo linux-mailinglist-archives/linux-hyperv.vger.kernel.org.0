@@ -2,82 +2,91 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DFBF2D7756
-	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Dec 2020 15:03:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F5702D7895
+	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Dec 2020 16:06:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405826AbgLKOCt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 11 Dec 2020 09:02:49 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41852 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395045AbgLKOCW (ORCPT
+        id S2406445AbgLKPA0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 11 Dec 2020 10:00:26 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:37892 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436901AbgLKPAY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 11 Dec 2020 09:02:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a12so9135176wrv.8;
-        Fri, 11 Dec 2020 06:02:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1hvkBnuTRFKVp4hIMELee8T2SRcywd+sthSvyux1z8M=;
-        b=hu263V2i2DT2JybAT5Mo8HH01HKuoiJvqQknviwfKGaj7V9drXbrzsL5sWCyzrO0M3
-         nxLIwh7IgnsXY9Rh3PL3nK7sbG6cHYAWDJqRy5wELqglUauDbZgj1qAk4x7GI/Y3PjyN
-         fXByk/yna+myR1U/wsdePUzG5wlpo/g774OpAtASBKL3eNjpdHDd0T8cTX0qiARUJ/+x
-         cXbq7zO7oXXAypcKV2O7HAWmSp0C1QmcC1BU5vSZr8BCyWgAVI3Iysul32+5zGqdhDna
-         95z1KwUJhOIgmlT5dm1mLGdk+wZ3LU/nNqLRprJ0xn/FA11Y3gPRflflPZKJkFEO7PKx
-         EcIQ==
-X-Gm-Message-State: AOAM531u6sSzRsABMknKS8AaiPldI4G1ozgpB5ImXWAuTAN5t8eNc2hM
-        gAJd6JX12gB7M7vtWUg+QsaAq9bYLZY=
-X-Google-Smtp-Source: ABdhPJy3O58hzjGzqK1POhoqM66qCWhxyO+Cg67sIdwBnZyQQiuOXv0wfTtuDF0ze3XcmxPKs1PIDw==
-X-Received: by 2002:adf:8b5a:: with SMTP id v26mr6360906wra.138.1607695300661;
-        Fri, 11 Dec 2020 06:01:40 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id c129sm14736891wma.31.2020.12.11.06.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Dec 2020 06:01:39 -0800 (PST)
-Date:   Fri, 11 Dec 2020 14:01:37 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Fri, 11 Dec 2020 10:00:24 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BBEuMWA181636;
+        Fri, 11 Dec 2020 14:59:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=4rzbePKaXv5WgRAgbzQku9hQ+epeAIFDKl+N4EYfs6s=;
+ b=yffXGhp/UZT1Ftpwe/s8TJjVHf1lcAt431cAc/ts1wRWPzpnX9HIqlj9QNaSbmtD0saa
+ fCQA10O+wRAlf4oBtPF0iqWbLItb7HB66v6YsOicwemrktTtOfv/2F6zZ7k8CuHJBJ/K
+ u1IaYz3Kw8iFGPn89SymngTy8kVp88rI3jjJ1++0ghIrdy96jXeob0det81eBtZB8UzP
+ uujGEFzjTd603dM3B3eemcQ4wSEcXDjktrtQDHmrj3+hUEDp5d46/fmiKVzJ4uynOYG7
+ bwFOrxxM6uHjvkzQCJLSxDgdBe8cxYQXAg2ch3scHQZIDsvc97NISAyvc6ogpflwsRV7 bw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 357yqcb3ks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 11 Dec 2020 14:59:38 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BBEsv0D151835;
+        Fri, 11 Dec 2020 14:59:38 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 358kstgdag-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Dec 2020 14:59:38 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BBExbhh028238;
+        Fri, 11 Dec 2020 14:59:37 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 11 Dec 2020 06:59:37 -0800
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org
 Subject: Re: [PATCH] Revert "scsi: storvsc: Validate length of incoming
  packet in storvsc_on_channel_callback()"
-Message-ID: <20201211140137.taqjndaqjjo25srj@liuwe-devbox-debian-v2>
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1pn3go0ft.fsf@ca-mkp.ca.oracle.com>
 References: <20201211131404.21359-1-parri.andrea@gmail.com>
+        <20201211140137.taqjndaqjjo25srj@liuwe-devbox-debian-v2>
+Date:   Fri, 11 Dec 2020 09:59:34 -0500
+In-Reply-To: <20201211140137.taqjndaqjjo25srj@liuwe-devbox-debian-v2> (Wei
+        Liu's message of "Fri, 11 Dec 2020 14:01:37 +0000")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201211131404.21359-1-parri.andrea@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9831 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=1
+ bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012110098
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9831 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
+ clxscore=1011 malwarescore=0 bulkscore=0 phishscore=0 adultscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012110098
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Dec 11, 2020 at 02:14:04PM +0100, Andrea Parri (Microsoft) wrote:
-> This reverts commit 3b8c72d076c42bf27284cda7b2b2b522810686f8.
-> 
-> Dexuan reported a regression where StorVSC fails to probe a device (and
-> where, consequently, the VM may fail to boot).  The root-cause analysis
-> led to a long-standing race condition that is exposed by the validation
-> /commit in question.  Let's put the new validation aside until a proper
-> solution for that race condition is in place.
-> 
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
 
-Hi Martin
+Wei,
 
-Sorry for the last minute patch. We would very like this goes into 5.10
-if possible; otherwise Linux 5.10 is going to be broken on Hyper-V.  :-(
+> Sorry for the last minute patch. We would very like this goes into
+> 5.10 if possible; otherwise Linux 5.10 is going to be broken on
+> Hyper-V.  :-(
 
-Wei.
+Applied to 5.10/scsi-fixes.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
