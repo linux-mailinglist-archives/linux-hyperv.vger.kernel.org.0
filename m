@@ -2,143 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AE282D90D6
-	for <lists+linux-hyperv@lfdr.de>; Sun, 13 Dec 2020 23:08:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1ADD2D98CC
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Dec 2020 14:32:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbgLMWHy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 13 Dec 2020 17:07:54 -0500
-Received: from mail-mw2nam12on2104.outbound.protection.outlook.com ([40.107.244.104]:41605
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729343AbgLMWHx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 13 Dec 2020 17:07:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VrZHbDnrZ2UjsXY6ULyo4hO2vgppKJqeszD5CXvuxYT5xosRxW+MmMx2eZX3XG80pof5LfCI58/53DblLfsGFtVAhUlrvHGbNXlF1C19XRICyJGTgiWVBa9TxddV9nh6A361/GScQJSWxgbDH2OaW1fRBWEgzwfEtbnvo41t6Z0dxy98k9qFp0jXCzCJ+uHudg1wOIh/+n0mH9BePFUg1bWlnmyuO8BElIqZO096+m8CtyAQpRJZEMtwmejK9K5ggQ9jmcz1KR6YPzxiHajdZGewC/YZjEy7PJ9QS+AS9N+AdtBZ06qzcD7N5anosDHS6LpuPvyD8Me6OScsox9vrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CCx5pHxVFwEVltarzA6jgHp/+s9832htoP3aM8D8szY=;
- b=ZGp95MGyLfEn3XDyPggJKBn0hWPPJDo6lP6xa4RY6myEI12T3ELJE+SIH49FyfNqQMJRO31Hwv5IWUY/bb75Lc7lWMdTdYZeN5qmKWgWOZVylmEdp2XRWcQ3oK7cNQqMGKZ59zeZjRb2sl1Xsj9kHgBUH01mjDqODC2rs0ctQKRjg8Z9E5LMpXrKANVB4LHrYKHw3IGb+OIgaNFybAA2VV+ISTIbP/DhrVb5w4zPvi4yh3O7FSRMoBdz6ofOSuQ5UuOrPmqhzSpJP9VfgNCeszh4o4j+dzNzgIpj8r/BgO7twN+z6ObZJyAmEzYQSFId59aVkk8TRV0IjSyrZxpRSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CCx5pHxVFwEVltarzA6jgHp/+s9832htoP3aM8D8szY=;
- b=CQhl6I4AXtabkmpa6OBJODNHi+f81UbopvGRAc+jQ5i66cRZPCh1CklYG5FpN4BOMBoDvBPImCXcCLvaREk7EI8R+DYGImheN5gRqNRKxEZLuoqAMjJwh8gM/2PqwJMeurEVqllVD7IrlCvZqnjXUQYNXVse0HhLF7Yc5vwdbmo=
-Received: from (2603:10b6:302:a::16) by
- MW4PR21MB1858.namprd21.prod.outlook.com (2603:10b6:303:73::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3700.1; Sun, 13 Dec 2020 22:07:06 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::b8f6:e748:cdf2:1922]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::b8f6:e748:cdf2:1922%8]) with mapi id 15.20.3700.004; Sun, 13 Dec 2020
- 22:07:06 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>
-Subject: RE: [PATCH v4] hv_utils: Add validation for untrusted Hyper-V values
-Thread-Topic: [PATCH v4] hv_utils: Add validation for untrusted Hyper-V values
-Thread-Index: AQHWtoAcDIEWdt1fOkqLya2qviZkrqn1yz0A
-Date:   Sun, 13 Dec 2020 22:07:06 +0000
-Message-ID: <MW2PR2101MB105203EB0E4889F2C716CE83D7C89@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20201109100704.9152-1-parri.andrea@gmail.com>
-In-Reply-To: <20201109100704.9152-1-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-12-13T22:07:04Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=edb22038-260e-4889-906e-4ecc6a8c388f;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 98f87a9b-56a0-4ce4-cd11-08d89fb36dfe
-x-ms-traffictypediagnostic: MW4PR21MB1858:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW4PR21MB1858F8C37E90252D762AF55FD7C89@MW4PR21MB1858.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: y5fHqQjoE+553nsgpo4DjDwUMv/kBcLbFK+wDHN3x8pHn+8h+O58DexjMBVpbN3KtXSq0TlHygS312A7OU0Ymm8x2qF/sOq5ZsVJjbwnC/g2pRrkX/gYDcVY8wySVNrbk2S5PNu740vwgKQN+b/RGWDeUkDWhNmRNQBUIr+gTxI220+f/kCm21ST7HTB67OwJpDjCZ4v/PUvJ/xvHbYI3fw2eDEDCaDEZJu/03Rk0QjN++NHfC4hhbkVquaDuXxkuSEoTo5zM1UkgzIHtBepgjfBnKXqxo4TQD89GZ+xAmXeJYTS7BqW8Q5JEUB+jdcMegqBGJnFpt/myUhRSUUq4x6q9dM9j0j+MIOovyWCSxNOS+IWcinkc1iLhwNyVSihVUTWjTJwH+xux8KrxM1/oQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(346002)(376002)(5660300002)(33656002)(86362001)(2906002)(8936002)(8990500004)(110136005)(83380400001)(10290500003)(7696005)(508600001)(9686003)(76116006)(66476007)(66946007)(54906003)(52536014)(8676002)(26005)(186003)(66446008)(64756008)(55016002)(6506007)(71200400001)(82960400001)(82950400001)(4326008)(66556008)(107886003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?uunXObMMOwLPtV/yDntodWWozmV44PicQ5ycO5tzhlajJYvE3R7UhW6s8Rfp?=
- =?us-ascii?Q?3ddDrp3//WLfldy2k08y+B/NNUofU9lhhC+1OH/CXx8SsLCrQBQlrbqHrBGp?=
- =?us-ascii?Q?KYIjDRtHzbe/2GelAxadcGrtxdw/kox3tKaprgiOSASiyi5gpbfoV2+ahalK?=
- =?us-ascii?Q?+TOYfzQt3gBs3Iknzbqb7P4y+7BOEwGwkhdM8FBNre1cSYP4chhYUrTdLsTZ?=
- =?us-ascii?Q?oeFL5QYpCdRSmZnBBRhUdLlWsv7qFzA65eXPndzfE+2b/jvUm1eKveLO44yw?=
- =?us-ascii?Q?N9BiZtDJIt4rBWoIHPAc2qu/T6GWWSQ2s/EQLEEHch+cKkCtz5QPkdRGkOGT?=
- =?us-ascii?Q?K+WHDQvasXC6g2EP1/WGdwtBYbTwijt1DRb+Iz2wvZ8IDeLKlCVhc2bmJjKa?=
- =?us-ascii?Q?uwDz/qUHZahXVedLr4jRrKN4/k+uMre0Nvdqcy47cb/+mBTvbbg7MbKTlX+P?=
- =?us-ascii?Q?XkkcgdP3nMnZuf04o/0hCZglgcyxkPbIokx4XAiSZbWAv5yEnY2HZAyUQtYX?=
- =?us-ascii?Q?1Zdb2wxBQQqGczFU1qGXVyIeEu9LhUfPFwXTeKzWpAX+FUglS8hP+0657SdT?=
- =?us-ascii?Q?0XPtaOIDPR9Mp+gokTqOHx6KGhqx4IQlJIyKyPqzPYtxbY5XMwEb25wxrH4P?=
- =?us-ascii?Q?OWiVm+Jjiq88E7p6SUhtJQ7u4z8NgYM1JepDgOulh7yaw0ZRqi4EStx9KjzF?=
- =?us-ascii?Q?fyv805aR4Z0UgcslGNUVWDPOnO2M6ffbBkghr8PKGK7ykKNonvRzlWgrTMBJ?=
- =?us-ascii?Q?O3RD8nozJTT6vebh8HY/GVQxsw+z/xooVopbUw4RbrganXprfBVv+y5agsJ/?=
- =?us-ascii?Q?9JJRNvHemTy9p5CJixxzaXl4ZA1SoJWZOyFmy5wNcwJw+kGp97R/2YGVsNCh?=
- =?us-ascii?Q?Yj3sIwpA95kkTrlv8Ok5+UIyaAdQ3TlbhgH/d9Pv3LJPIKmHYfL3Q2J1W7Km?=
- =?us-ascii?Q?9uheCnzmMfpe8z1Eqh/pKDx4WlbuQvyClKKHtiIbk74=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S2439865AbgLNN3U (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Dec 2020 08:29:20 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34551 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439794AbgLNN3R (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 14 Dec 2020 08:29:17 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q18so8888540wrn.1;
+        Mon, 14 Dec 2020 05:29:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=CSLcLSc7CiiS7b7+SSoJyzYFL1moSrI19dfbunSKTh4=;
+        b=T2OYeO5nWMQjSGPa7qAtcLMgtjs4BmZQ3LW1+opgcnq/l/6fV/jv5J6lfC/KqwEntV
+         zVjlqRmaQYjBAmUQWSUNirCRRQZ9/ICtz3Q/L87ZKL0xR6HscWkP/3u94X98Ff9zd+sC
+         DfgRmVFDxHdfmBMSW6ZjsjTr41z8wB5BGGzlxyqWAhhp0iXiYEPU7tLCQNVH0fBq8YuJ
+         /DW59niXte5Ia7rx+VqDEG7c9Fxte0f3B6/Zg8m7pcLXGzf+diuDFejozt0KuOmtml4n
+         EXj6qRcitMOT5yjpWqbmaaVUA7e57FOY5i0VWeBGid4qnkHV9n0oZ/LiMZRgWQHfHde/
+         DPCQ==
+X-Gm-Message-State: AOAM532+buiVuTJW7AqZpv/VrxGEjjNGIhC+i/CIs01dC9d5D/QfmnJI
+        +QLC3ONKnmeSHR7czHF/Uw4=
+X-Google-Smtp-Source: ABdhPJxw7J0qM0FdTD/4AUGg+xeSCh5/UoZOOnVs2GF9qzdNUI0UP8DCo79RTLI9GIZT61Wj5AzyRQ==
+X-Received: by 2002:a5d:60cb:: with SMTP id x11mr29194226wrt.0.1607952515796;
+        Mon, 14 Dec 2020 05:28:35 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id n12sm34163067wrg.76.2020.12.14.05.28.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Dec 2020 05:28:35 -0800 (PST)
+Date:   Mon, 14 Dec 2020 13:28:33 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com,
+        Michael Kelley <mikelley@microsoft.com>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Subject: [GIT PULL] Hyper-V commits for 5.11
+Message-ID: <20201214132833.vtqxw46vemhez5mb@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98f87a9b-56a0-4ce4-cd11-08d89fb36dfe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2020 22:07:06.4663
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CTUduztC41OOn4885uMZ1p170fFOGxIZ/xMgm9nyLMqDExg7sLoQA9ZalPkkRYQgiSE9ezB8U3CwUKrVpFIYjbtwe1GiZpPkmnJS7VWjrrQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1858
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Monday, Novem=
-ber 9, 2020 2:07 AM
->=20
-> For additional robustness in the face of Hyper-V errors or malicious
-> behavior, validate all values that originate from packets that Hyper-V
-> has sent to the guest in the host-to-guest ring buffer. Ensure that
-> invalid values cannot cause indexing off the end of the icversion_data
-> array in vmbus_prep_negotiate_resp().
->=20
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> ---
-> Changes in v3:
-> 	- Add size check for icframe_vercnt and icmsg_vercnt
->=20
-> Changes in v2:
-> 	- Use ratelimited form of kernel logging to print error messages
->=20
->  drivers/hv/channel_mgmt.c |  24 ++++-
->  drivers/hv/hv_fcopy.c     |  36 +++++--
->  drivers/hv/hv_kvp.c       | 122 ++++++++++++---------
->  drivers/hv/hv_snapshot.c  |  89 ++++++++-------
->  drivers/hv/hv_util.c      | 222 +++++++++++++++++++++++---------------
->  include/linux/hyperv.h    |   9 +-
->  6 files changed, 314 insertions(+), 188 deletions(-)
->=20
+Hi Linus
 
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Please pull the following changes since commit 09162bc32c880a791c6c0668ce0745cf7958f576:
+
+  Linux 5.10-rc4 (2020-11-15 16:44:31 -0800)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20201214
+
+for you to fetch changes up to d1df458cbfdb0c3384c03c7fbcb1689bc02a746c:
+
+  hv_balloon: do adjust_managed_page_count() when ballooning/un-ballooning (2020-12-13 15:06:10 +0000)
+
+----------------------------------------------------------------
+hyperv-next for 5.11
+  - Patches from Andres Beltran to harden VMBus
+  - Patches from Matheus Castello to clean up VMBus driver
+  - Patches from Vitaly Kuznetsov to fix hv_balloon reporting
+  - A patch from Andrea Parri to fix a potential OOB issue
+  - A patch from Stefan Eschenbacher to remove an obsolete TODO item
+
+----------------------------------------------------------------
+Andrea Parri (Microsoft) (1):
+      hv_netvsc: Validate number of allocated sub-channels
+
+Andres Beltran (3):
+      Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus hardening
+      scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening
+      hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening
+
+Matheus Castello (5):
+      drivers: hv: Fix hyperv_record_panic_msg path on comment
+      drivers: hv: vmbus: Replace symbolic permissions by octal permissions
+      drivers: hv: vmbus: Fix checkpatch LINE_SPACING
+      drivers: hv: vmbus: Fix call msleep using < 20ms
+      drivers: hv: vmbus: Fix checkpatch SPLIT_STRING
+
+Stefan Eschenbacher (1):
+      drivers/hv: remove obsolete TODO and fix misleading typo in comment
+
+Vitaly Kuznetsov (2):
+      hv_balloon: simplify math in alloc_balloon_pages()
+      hv_balloon: do adjust_managed_page_count() when ballooning/un-ballooning
+
+ drivers/hv/channel.c              | 174 ++++++++++++++++++++++++++++++++++++--
+ drivers/hv/hv_balloon.c           |   5 +-
+ drivers/hv/hyperv_vmbus.h         |   6 +-
+ drivers/hv/ring_buffer.c          |  29 ++++++-
+ drivers/hv/vmbus_drv.c            |  52 +++++++-----
+ drivers/net/hyperv/hyperv_net.h   |  13 +++
+ drivers/net/hyperv/netvsc.c       |  22 +++--
+ drivers/net/hyperv/rndis_filter.c |   6 ++
+ drivers/scsi/storvsc_drv.c        |  26 +++++-
+ include/linux/hyperv.h            |  23 +++++
+ 10 files changed, 313 insertions(+), 43 deletions(-)
