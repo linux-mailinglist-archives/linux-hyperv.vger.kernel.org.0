@@ -2,113 +2,146 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A17792DB1B1
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Dec 2020 17:45:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61E612DB7D9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Dec 2020 01:41:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgLOQnj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 15 Dec 2020 11:43:39 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38960 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728878AbgLOQna (ORCPT
+        id S1726107AbgLPAkd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 15 Dec 2020 19:40:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53666 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725877AbgLPAkc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 15 Dec 2020 11:43:30 -0500
-Received: by mail-wm1-f67.google.com with SMTP id 3so19131337wmg.4;
-        Tue, 15 Dec 2020 08:43:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=L1u7EdyvwjxUG6AtNBhGBQuSsNPPWKR8uMS0CeSCWPI=;
-        b=tKHDhk6Na/4Fvu356sigICGFDeEDt69aVB+b0l2DvIbd1N/24nJ32hDpklYIrqZMUN
-         x8xkSBKei+GPVjLDgN2DQmgpnTKdm619L3f81dF+1tPhIos+IeQiNUpTYgeg2pE8zgz3
-         DlGxigc6NwKPUuXDnaFBprdh2bw/6q4Da7G+OORzklmks3hsgQ5cGheIvsOKNF6cHG5U
-         VESI0mcrTlQMBaWvO8sqljFG1KgT2i281UCCcTqI6h2CZedIaysZbJV4mJcrp735n9Gm
-         GFHGsMZUP7dp7NsWrxi1WJHk4nX9/qi3/9QchG1zx0o4mbdjPeMXREBxCSPVZBbDh6ZO
-         eEow==
-X-Gm-Message-State: AOAM533LGiC1GtJFihEKoTIyS0zMhM9huDW+4tU1LQDaXXTeblal+2Pq
-        Rv7hxs0GeZgUzOXGp+puIVw=
-X-Google-Smtp-Source: ABdhPJwgY7ozOUvVEU2mB6HgEBLM+BmFB6W5nXAhhCCRGC8cO7GIumbuf96N4iTTB9cRb1PUX8fSIQ==
-X-Received: by 2002:a7b:c8da:: with SMTP id f26mr33871783wml.50.1608050567677;
-        Tue, 15 Dec 2020 08:42:47 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b13sm31680755wrt.31.2020.12.15.08.42.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Dec 2020 08:42:46 -0800 (PST)
-Date:   Tue, 15 Dec 2020 16:42:45 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Tue, 15 Dec 2020 19:40:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1608079145;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BCyr+zCzlSHQ1KjMAt3Zb/a+qisNyayFH7/e91jTxqk=;
+        b=Wc6kB00M0aX8D/pn0V4QnbkpFZmoJeLjefwnzj6H3NGm2d/YcAhHoXJTBKsfTb9fsalhIB
+        nnDVlmakQG4smw9LU4pPKD5oas3q/cfpkcpSdcNgYLGDV/lT+HuMRyO/38evLtYmyIGNqC
+        ArW85v8lKLNBaqLmX+jVbExyqqjOM3k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-wYBKR5ESPACLwIRJr6G_JA-1; Tue, 15 Dec 2020 19:39:03 -0500
+X-MC-Unique: wYBKR5ESPACLwIRJr6G_JA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B14061054F8E;
+        Wed, 16 Dec 2020 00:38:10 +0000 (UTC)
+Received: from treble (ovpn-112-170.rdu2.redhat.com [10.10.112.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 44CAF5DD87;
+        Wed, 16 Dec 2020 00:38:04 +0000 (UTC)
+Date:   Tue, 15 Dec 2020 18:38:02 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        sameo@linux.intel.com, robert.bradford@intel.com,
-        sebastien.boeuf@intel.com
-Subject: Re: [PATCH v3 00/17] Introducing Linux root partition support for
- Microsoft Hypervisor
-Message-ID: <20201215164245.yrorpipw2476w35e@liuwe-devbox-debian-v2>
-References: <20201124170744.112180-1-wei.liu@kernel.org>
- <227127cf-bfea-4a06-fcbc-f6c46102e9e6@metux.net>
- <20201202232234.5buzu5wysiaro3hc@liuwe-devbox-debian-v2>
- <87d94c39-e801-fbc6-8f7f-1f1b00fa719d@metux.net>
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org, luto@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH v2 00/12] x86: major paravirt cleanup
+Message-ID: <20201216003802.5fpklvx37yuiufrt@treble>
+References: <20201120114630.13552-1-jgross@suse.com>
+ <20201120125342.GC3040@hirez.programming.kicks-ass.net>
+ <20201123134317.GE3092@hirez.programming.kicks-ass.net>
+ <6771a12c-051d-1655-fb3a-cc45a3c82e29@suse.com>
+ <20201215141834.GG3040@hirez.programming.kicks-ass.net>
+ <20201215145408.GR3092@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87d94c39-e801-fbc6-8f7f-1f1b00fa719d@metux.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20201215145408.GR3092@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Dec 15, 2020 at 04:25:03PM +0100, Enrico Weigelt, metux IT consult wrote:
-> On 03.12.20 00:22, Wei Liu wrote:
+On Tue, Dec 15, 2020 at 03:54:08PM +0100, Peter Zijlstra wrote:
+> The problem is that a single instance of unwind information (ORC) must
+> capture and correctly unwind all alternatives. Since the trivially
+> correct mandate is out, implement the straight forward brute-force
+> approach:
 > 
-> Hi,
+>  1) generate CFI information for each alternative
 > 
-> > I don't follow. Do you mean reusing /dev/kvm but with a different set of
-> > APIs underneath? I don't think that will work.
+>  2) unwind every alternative with the merge-sort of the previously
+>     generated CFI information -- O(n^2)
 > 
-> My idea was using the same uapi for both hypervisors, so that we can use
-> the same userlands for both.
+>  3) for any possible conflict: yell.
 > 
-> Are the semantis so different that we can't provide the same API ?
+>  4) Generate ORC with merge-sort
+> 
+> Specifically for 3 there are two possible classes of conflicts:
+> 
+>  - the merge-sort itself could find conflicting CFI for the same
+>    offset.
+> 
+>  - the unwind can fail with the merged CFI.
 
-We can provide some similar APIs for ease of porting, but can't provide
-1:1 mappings. By definition KVM and MSHV are two different things. There
-is no goal to make one ABI / API compatible with the other.
+So much algorithm.  Could we make it easier by caching the shared
+per-alt-group CFI state somewhere along the way?
 
-> 
-> > In any case, the first version of /dev/mshv was posted a few days ago
-> > [0].  While we've chosen to follow closely KVM's model, Microsoft
-> > Hypervisor has its own APIs.
-> 
-> I have to admit, I don't know much about hyperv - what are the main
-> differences (from userland perspective) between hyperv and kvm ?
-> 
+For example:
 
-They have different architecture and hence different ways to deal with
-things. The difference will inevitably make its way to userland.
+struct alt_group_info {
 
-Without going into all the details, you can have a look how Xen and KVM
-differ architecturally. That will give you a pretty good idea on the
-differences.
+	/* first original insn in the group */
+	struct instruction *orig_insn;
 
-Wei.
+	/* max # of bytes in the group (cfi array size) */
+	unsigned long nbytes;
 
-> 
-> --mtx
-> 
-> -- 
-> ---
-> Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-> werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-> GPG/PGP-Schlüssel zu.
-> ---
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+	/* byte-offset-addressed array of CFI pointers */
+	struct cfi_state **cfi;
+};
+
+We could change 'insn->alt_group' to be a pointer to a shared instance
+of the above struct, so that all original and replacement instructions
+in a group have a pointer to it.
+
+Starting out, 'cfi' array is all NULLs.  Then when updating CFI, check
+'insn->alt_group.cfi[offset]'.
+
+[ 'offset' is a byte offset from the beginning of the group.  It could
+  be calculated based on 'orig_insn' or 'orig_insn->alts', depending on
+  whether 'insn' is an original or a replacement. ]
+
+If the array entry is NULL, just update it with a pointer to the CFI.
+If it's not NULL, make sure it matches the existing CFI, and WARN if it
+doesn't.
+
+Also, with this data structure, the ORC generation should also be a lot
+more straightforward, just ignore the NULL entries.
+
+Thoughts?  This is all theoretical of course, I could try to do a patch
+tomorrow.
+
+-- 
+Josh
+
