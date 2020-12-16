@@ -2,43 +2,41 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EAA42DBCD3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Dec 2020 09:43:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 794DB2DC4D0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Dec 2020 17:58:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgLPIm6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 16 Dec 2020 03:42:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgLPIm6 (ORCPT
+        id S1726865AbgLPQ5y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 16 Dec 2020 11:57:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45698 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726830AbgLPQ5y (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 16 Dec 2020 03:42:58 -0500
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A75C0613D6;
-        Wed, 16 Dec 2020 00:42:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0Vl8v+K48CQ1CpDPZyiLdlZ3QZd1xhq2vGyfDmO1QSk=; b=d0ukNEGopW7xSAvf4l6oxB/hVo
-        FRyEdkJ6gVh6WhW3HqIsdfeYXWYQ1HLOyEXl/M8OOjMOALFor8DXrwW8OkhssqBZWj2qY+dOjn3WQ
-        w+eOTFIjqNLK3/OUKiTAiR7DfaZ2tzpDvvAr4qqHg7G/gm2EllebQ0U87v/0G0msGEUvStoO64DY+
-        jRApct0VEjBdukFFaWwT/w5fpgGG2r/xGFbqZ+y+RR+1foywG9EkTHpqpIVFJmYZHyDNnwWxdOg8q
-        B4pWQSqNEGAgqHIW+S7+CgCiPXoMiutaQwIno90DVH6FICQhR2vzciTHwxWeaxxT1doUmhnq8aMrv
-        PjYDhOMw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kpSMu-0005UY-Qg; Wed, 16 Dec 2020 08:41:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AB87E307697;
-        Wed, 16 Dec 2020 09:40:59 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 967842CADD880; Wed, 16 Dec 2020 09:40:59 +0100 (CET)
-Date:   Wed, 16 Dec 2020 09:40:59 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+        Wed, 16 Dec 2020 11:57:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1608137787;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uFK8uelp0EfnpwVsJ+unzlDIADvPHcDnDcvCpIi/i5Q=;
+        b=f9ulRqQUFsUC14Oxu/JvjLS5ZdS4uyHeHQeS8gifCA1Su2Al10J99fdUdE/UP7lKwQI92d
+        htjp6Jg0Pm1RC43rEiTgWRbl7kC2se+evh/O6P4UJ9JPjZyi7NpW1ASfaeKMwiY2KRT10x
+        bQgJzJgKeRLEtlriKBppTnNn51saX4Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-crZqldqkO2O1uPxUIhu4fA-1; Wed, 16 Dec 2020 11:56:25 -0500
+X-MC-Unique: crZqldqkO2O1uPxUIhu4fA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59FF580400F;
+        Wed, 16 Dec 2020 16:56:20 +0000 (UTC)
+Received: from treble (ovpn-112-170.rdu2.redhat.com [10.10.112.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 860D160CD0;
+        Wed, 16 Dec 2020 16:56:07 +0000 (UTC)
+Date:   Wed, 16 Dec 2020 10:56:05 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
         xen-devel@lists.xenproject.org, x86@kernel.org,
         linux-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
@@ -68,7 +66,7 @@ Cc:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
         Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
         Daniel Bristot de Oliveira <bristot@redhat.com>
 Subject: Re: [PATCH v2 00/12] x86: major paravirt cleanup
-Message-ID: <20201216084059.GL3040@hirez.programming.kicks-ass.net>
+Message-ID: <20201216165605.4h5q7os5dutjgdqi@treble>
 References: <20201120114630.13552-1-jgross@suse.com>
  <20201120125342.GC3040@hirez.programming.kicks-ass.net>
  <20201123134317.GE3092@hirez.programming.kicks-ass.net>
@@ -76,73 +74,51 @@ References: <20201120114630.13552-1-jgross@suse.com>
  <20201215141834.GG3040@hirez.programming.kicks-ass.net>
  <20201215145408.GR3092@hirez.programming.kicks-ass.net>
  <20201216003802.5fpklvx37yuiufrt@treble>
+ <20201216084059.GL3040@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20201216003802.5fpklvx37yuiufrt@treble>
+In-Reply-To: <20201216084059.GL3040@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Dec 15, 2020 at 06:38:02PM -0600, Josh Poimboeuf wrote:
-> On Tue, Dec 15, 2020 at 03:54:08PM +0100, Peter Zijlstra wrote:
-> > The problem is that a single instance of unwind information (ORC) must
-> > capture and correctly unwind all alternatives. Since the trivially
-> > correct mandate is out, implement the straight forward brute-force
-> > approach:
-> > 
-> >  1) generate CFI information for each alternative
-> > 
-> >  2) unwind every alternative with the merge-sort of the previously
-> >     generated CFI information -- O(n^2)
-> > 
-> >  3) for any possible conflict: yell.
-> > 
-> >  4) Generate ORC with merge-sort
-> > 
-> > Specifically for 3 there are two possible classes of conflicts:
-> > 
-> >  - the merge-sort itself could find conflicting CFI for the same
-> >    offset.
-> > 
-> >  - the unwind can fail with the merged CFI.
+On Wed, Dec 16, 2020 at 09:40:59AM +0100, Peter Zijlstra wrote:
+> > So much algorithm.
 > 
-> So much algorithm.
-
-:-)
-
-It's not really hard, but it has a few pesky details (as always).
-
-> Could we make it easier by caching the shared
-> per-alt-group CFI state somewhere along the way?
-
-Yes, but when I tried it grew the code required. Runtime costs would be
-less, but I figured that since alternatives are typically few and small,
-that wasn't a real consideration.
-
-That is, it would basically cache the results of find_alt_unwind(), but
-you still need find_alt_unwind() to generate that data, and so you gain
-the code for filling and using the extra data structure.
-
-Yes, computing it 3 times is naf, but meh.
-
-> [ 'offset' is a byte offset from the beginning of the group.  It could
->   be calculated based on 'orig_insn' or 'orig_insn->alts', depending on
->   whether 'insn' is an original or a replacement. ]
-
-That's exactly what it already does ofcourse ;-)
-
-> If the array entry is NULL, just update it with a pointer to the CFI.
-> If it's not NULL, make sure it matches the existing CFI, and WARN if it
-> doesn't.
+> :-)
 > 
-> Also, with this data structure, the ORC generation should also be a lot
-> more straightforward, just ignore the NULL entries.
+> It's not really hard, but it has a few pesky details (as always).
 
-Yeah, I suppose it gets rid of the memcmp-prev thing.
+It really hurt my brain to look at it.
 
-> Thoughts?  This is all theoretical of course, I could try to do a patch
-> tomorrow.
+> > Could we make it easier by caching the shared
+> > per-alt-group CFI state somewhere along the way?
+> 
+> Yes, but when I tried it grew the code required. Runtime costs would be
+> less, but I figured that since alternatives are typically few and small,
+> that wasn't a real consideration.
 
-No real objection, I just didn't do it because 1) it works, and 2) even
-moar lines.
+Aren't alternatives going to be everywhere now with paravirt using them?
+
+> That is, it would basically cache the results of find_alt_unwind(), but
+> you still need find_alt_unwind() to generate that data, and so you gain
+> the code for filling and using the extra data structure.
+> 
+> Yes, computing it 3 times is naf, but meh.
+
+Haha, I loved this sentence.
+
+> > Thoughts?  This is all theoretical of course, I could try to do a patch
+> > tomorrow.
+> 
+> No real objection, I just didn't do it because 1) it works, and 2) even
+> moar lines.
+
+I'm kind of surprised it would need moar lines.  Let me play around with
+it and maybe I'll come around ;-)
+
+-- 
+Josh
+
