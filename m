@@ -2,194 +2,180 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF0632E0FEC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Dec 2020 22:48:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96CB62E10B9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Dec 2020 01:14:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgLVVpZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 22 Dec 2020 16:45:25 -0500
-Received: from mail-co1nam11on2130.outbound.protection.outlook.com ([40.107.220.130]:29921
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S1726218AbgLWANl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 22 Dec 2020 19:13:41 -0500
+Received: from mail-bn8nam12on2108.outbound.protection.outlook.com ([40.107.237.108]:26401
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728020AbgLVVpZ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 22 Dec 2020 16:45:25 -0500
+        id S1725785AbgLWANl (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 22 Dec 2020 19:13:41 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H2vL6US+xAtBcRrRYftQQ7bATtHVPQMhFZfAcyEX/cpqQ4psgTO8Hj7dzetJHr1IaoPjQlHxXkvzD1NNLscmFbZMLHF4uPIHQcEJJAbgwmBFwID3J2sRfamwciq5DiZzQfmW4p/Qxfm4OdswS7rackjgQcjOifiiMU2wMRuU8wjH+MU5pa1cIm0Wm0sw+2CxsKCMMjD+4X3m7Riw1vMb/tk6wj2nSAmTTV7nTwPyGlJPsrdDF/DcYDKgFmWtn3u46Q0u6A+aCjYIKJ0zg99lhgvCFFCW+3TKsRJQFeHw363nGD7geEIZsRzUmuYG93J+J1nRc/Aw+gMHrU02Akbl/A==
+ b=bB0R4zzFu+ayWk73yTktn4evJA6HZJYHPY1+1G1/exZe2WjZr9vHyXNQVfYq1ofyWY8zp/6R0HhjHOI2QPeyJb5ifbE7/BWdDMPhyACOfCZD+L9zC+FDUZEAmplpw7DIBfN+z8MIdOkn8dZF/9f7UqwW7UzYK7BfB7ufGaTA5ZggHcu+9PwFlrYQMtrnzdoDXwZTMsUPwyQm0ddmEg9N7H7onZTKqJ0ScL97in76x2cGcVjFVguCX+jfhzDiMvI4K36oOlrXft2BwF3y6wkCbR2moZdMUcjIC0/6TwHuVTSSxVKgSHETrfbwG7/S6psLzyyX7xL5hlMiCUdorbW8zA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V5WwUAe30zWOww0ysRjtaMicApVr9lfW9DGV9kRx4iQ=;
- b=D2OfqIR0wSdSwkbJTKoBtnnYjHZT9gjRI9MhztvCL30VqmfFHuWmTp5gxsBeeAxlH35f0jfTi8h3fZqUuOBBcLr6Z2WPNVKanVAnnRC2ADqtfW5wJXLQyqTc6t9OlD/69FosAG4A8k+zuGwX9Qlez5Ae0q0tQgRytFA8hqu3SS2haRHJAx1i+6Zfljzy48Sd6fGV+lhjoLdH85CRGJuI3C+SAeW6SgjnEiVBY0Q7PB3EzW17RO21Z1vo1i59Z3QDdeHwX/G2PGjl63MbaWKleWxN72RrS4jbcccFfK2ss7v3A8lF41tMTGq7zeiKAaKpHjxV5aQIl6j2gjlX+N+N1A==
+ bh=cjnFD9bnKV2w0dKnVj30qkcxtiDXwD0+jEIYTIHUP3A=;
+ b=evnF9MmW3Rcj0NTFeLQ9IKnAuK/pHtCgf2XR1oDe0SKbOQfVGED0DL9I+A/XilSXWtSk/1DRIC/AvdW7ISbIs+hjXb7BeS0xU05ccmiXDOJi9EHkhcRuNtZ9CfJ/stDxf0sA5sO1JZ08POLFkOT0mQDR/Hh+D+HOPitcLM9iMdyYxSok2djM9NR6LMTo7hwjQBk46MAow1eslj8mvrVZ1o4wnIe7TZR0yeaT8Ug/wy3NXWBtwBdKMefO7a21Eu8p36bdz9aodaDIxNKw366CFBUPmVALhSwREE6ufOXzNbA3lmacY7AyCiRRifw5koiQj893XQdKxIllt2UXZSCU2A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V5WwUAe30zWOww0ysRjtaMicApVr9lfW9DGV9kRx4iQ=;
- b=PE+ESb0cqG3JUFb23BTh5WsfOlBn5f5WiTSuVBh6tOWVifK9AAKFn0qzCSKyD9eqyMyT5lkmghaH7AO4bM324sxbF43LsHQ+uHUvkSyrQLQecN2LEOKCxtxfLBuvUoSpd86kkiZr+hUedxQQxs7hqUJIQCgNdFGnZ2qwN5ai5s0=
-Received: from (2603:10b6:303:74::12) by
- MWHPR21MB0638.namprd21.prod.outlook.com (2603:10b6:300:127::11) with
+ bh=cjnFD9bnKV2w0dKnVj30qkcxtiDXwD0+jEIYTIHUP3A=;
+ b=H/OBqZAJx5xxyrXCAimNF3h76fttT55VI4KioK6tVeRTHVUiV+2QjiOzPmhw+Ih2C8PAoT02DYkXT4LuheMwjCkasMFFvBSIahjlEaj2NhYVRL3R9BNW3LyH6Q7dyJcY+goTSEs6dD6fiqSgtybnr1NwYjoH5hmSmd2QGurSfkY=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+Received: from (2603:10b6:207:37::26) by
+ BL0PR2101MB0932.namprd21.prod.outlook.com (2603:10b6:207:30::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.6; Tue, 22 Dec
- 2020 21:44:37 +0000
-Received: from MW4PR21MB1857.namprd21.prod.outlook.com
- ([fe80::f133:55b5:4633:c485]) by MW4PR21MB1857.namprd21.prod.outlook.com
- ([fe80::f133:55b5:4633:c485%5]) with mapi id 15.20.3721.008; Tue, 22 Dec 2020
- 21:44:37 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.6; Wed, 23 Dec
+ 2020 00:12:53 +0000
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::adcd:42ae:1c83:369]) by BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::adcd:42ae:1c83:369%7]) with mapi id 15.20.3721.008; Wed, 23 Dec 2020
+ 00:12:53 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-CC:     "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "bristot@redhat.com" <bristot@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: v5.10: sched_cpu_dying() hits BUG_ON during hibernation: kernel
- BUG at kernel/sched/core.c:7596!
-Thread-Topic: v5.10: sched_cpu_dying() hits BUG_ON during hibernation: kernel
- BUG at kernel/sched/core.c:7596!
-Thread-Index: AdbYQq18xc9NlU57RRyWL/lF+Wmp7AAJT/qAAA389SA=
-Date:   Tue, 22 Dec 2020 21:44:37 +0000
-Message-ID: <MW4PR21MB1857209BF0AB8C074FA4A5B6BFDF9@MW4PR21MB1857.namprd21.prod.outlook.com>
-References: <MW4PR21MB1857BF96E59E75EF9CE406E2BFDF9@MW4PR21MB1857.namprd21.prod.outlook.com>
- <jhjlfdqrmc6.mognet@arm.com>
-In-Reply-To: <jhjlfdqrmc6.mognet@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fb843c89-09ad-4820-a28a-56ffa5c50622;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-12-22T20:20:24Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:600:a280:7f70:3591:4820:2a8b:862]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9be2d7c1-aa32-49b6-7bed-08d8a6c2c78c
-x-ms-traffictypediagnostic: MWHPR21MB0638:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB063828C199C123369CE9F56ABFDF9@MWHPR21MB0638.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:556;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SbC+0wNP1S55B76qnSW0rTkCnVEXnTSLCzsRsY7GZAq/HV7DziaHNw60szdkduGIZrN1+RWQBs0Toah9zDbZuuogmx8cTuCVYMy0Z5/83Acj15kPya+qR+HUrE9d/Jem8fLhAuZ23RWZAJLND5Z3zGSg4AKcI5LNoNRWevp2HRFEAo4bXUDakrHF7YU+5bI36Hn7s7PLwTPV2G6OtdGuRP0x5Kjen6vwiFETeYjPrvgHvZbu3g3Nc8WX1mstAP1VY/TMOJSEIB7PSd9esO1OUbZ/UoaDXi/Da8ZBLUR0T2Y/zemxcJ4LLUdWNvmW4jcjKNkW7IgC3sDa21Ufugxzguvygc418ql8UyOcxhn1eMEQs2dM5uFMgsXhkmUDgEfRS1kQwHhCltvlOepC8+aY8JcCDKE7ybpfskOq5C6E6q0abmqj++qPL0nZQ/UotuYElN6V0OSC44XQklHfAPD1SA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR21MB1857.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(7696005)(66446008)(76116006)(86362001)(186003)(54906003)(66556008)(6916009)(33656002)(478600001)(9686003)(4326008)(66946007)(316002)(64756008)(83380400001)(66476007)(5660300002)(7416002)(107886003)(8676002)(52536014)(2906002)(966005)(53546011)(82950400001)(8936002)(82960400001)(8990500004)(6506007)(55016002)(10290500003)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?FUsixhVWT0K7CTQvApYUXTHb4T9D/OMW3bLhzN1n2ojWZTfAj/ULuoyhJwVc?=
- =?us-ascii?Q?p82ug2nP1cajGgpHjuuTBluuutJOXSsy+sbo6++0PsxTAFGnyOqzwJDU8dsj?=
- =?us-ascii?Q?h4v60POgx1yC0uaOi5YTUUc7KHLZHm6keSNUio/9AL5XkkoMwHp/4VzCF6gi?=
- =?us-ascii?Q?S51Qg9xmyFYNlfwNqhgTE6Qiq6cs2YwWkILPV7eb71+SByVtvqePrOXKA/lV?=
- =?us-ascii?Q?sof2wFvDL9/F4rvDyVSQhkew+QUDJ5CsTjvH1mKxO2MAYt0W3Rc6kbad1Brg?=
- =?us-ascii?Q?Lkcl7LR9Re00WVfy51ZePtqRzLEFau1ETvil1oxpP4ZTOAydwzGIaU5o2Lzi?=
- =?us-ascii?Q?gotyYNa6f6BluaC+JBvs7NU4DRQguVlAFfWZLZOG+mxep0CE2wV82bbv8MNM?=
- =?us-ascii?Q?68fuByQKJUQQ+TLXMI0g1SYyjM6DWUosvePTPvd9TyioJzdPvcemovUKTGIs?=
- =?us-ascii?Q?Bb6khKf/UKoAYI4hHT4cSxezGmtACVVJ75xAy+EmzNyARPTDFatrbBlCnTOt?=
- =?us-ascii?Q?xgYHnOsxBJc5REmNseR7UbsAGYDUzAERdBmFErrPFKF3h4syq/0rlSfhgPWr?=
- =?us-ascii?Q?KfoXwgMZE4/UX6GilKL46BN4FZ+Krd5m0fqKdVFaa3GN0ZXeIHtf6/vuV4Tn?=
- =?us-ascii?Q?9Vj1a2HTWL9Rnr1RSkxAcVq0h8mvpXolkTo2dquBT8FNqX4O2c3t8Bcawmjr?=
- =?us-ascii?Q?h96x6DZk9452x6G8JA20z+s5bODqNWofhZ17njPdUzTX7nUeHd6oFpwqk3bR?=
- =?us-ascii?Q?90T0NuVLxdFsnKwX0q6/XSi2IF7D3EVAGk6BgXnaChFc6Ljgq6UXIPAzc+Lg?=
- =?us-ascii?Q?Mate4xMR2IMSLewJo3bkNCSLrkkc3xFUyA70O5eR8hKQ8EFbqiJCsTcHugb1?=
- =?us-ascii?Q?lJG2hodV7l5DutSgxJgZOIfLHemUWMROWXt4fBGmV+EQGuaFN0qZRHy0XPXb?=
- =?us-ascii?Q?u/YETT8+Qa8Ah9pYiO1BYsd1W+oW/60MtyYhV5R6mZpEVtNJ1L5DaE8s2upq?=
- =?us-ascii?Q?45rTRjlC4kKhf9QxGf/Z6mRQKfbR6m1FKI2XRS9FbKRAnjw=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+To:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        vkuznets@redhat.com, marcelo.cerri@canonical.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] Drivers: hv: vmbus: Add /sys/bus/vmbus/supported_features
+Date:   Tue, 22 Dec 2020 16:12:22 -0800
+Message-Id: <20201223001222.30242-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-Originating-IP: [2001:4898:80e8:9:6208:7fb4:4337:2292]
+X-ClientProxiedBy: MWHPR1201CA0020.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::30) To BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:9:6208:7fb4:4337:2292) by MWHPR1201CA0020.namprd12.prod.outlook.com (2603:10b6:301:4a::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3700.27 via Frontend Transport; Wed, 23 Dec 2020 00:12:52 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dc02fc5b-617a-4b31-d617-08d8a6d77df8
+X-MS-TrafficTypeDiagnostic: BL0PR2101MB0932:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <BL0PR2101MB0932A904D2BE582C203C989ABFDE9@BL0PR2101MB0932.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lkMScksywziVBb+6C+V8Jm0QyWtyXL1oMIeIzCt/pSEbg/OLN0Yhw/z499h3pcfgEB7M8MNkrjNzUocPqxJsk24TBVVsf/r6uJur6ktUiCZ9otMVoxlmre3v1s0w9nOfT5IQOY4tj0Y0OO1oT0V9vCDr7bFZY0jDyvJlSWFx1KnPKmNe5V/KLtG22GaSDDPnYAMo1Z/1XcWEV+PDhdM5A0r4EO0+KxEldSK7UkC2Z9Fv5sG69E46APNyWOUE62V9kM4uaaK23ad/5fODBtFFDUbdIZTYMjw7RlFL0IBi/v+VL0MHUhZo8fyiaT1McW7loxQ4yjPplRqfp461qou42rlPHnQ35B40iVmeiCVj86SYrFUnt7KDliH5vMKKLFyy1Rk8kEeSqk7CMoZd7y0ulujIUwVkpxVVtr2gsaRnv1xdvpW5m6CFA0QdsV9+DRIbLLunW6DF9Ebm2KpHCTnExg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(10290500003)(82960400001)(478600001)(2616005)(82950400001)(966005)(66556008)(66946007)(2906002)(1076003)(6666004)(4326008)(86362001)(66476007)(5660300002)(3450700001)(316002)(83380400001)(8936002)(186003)(107886003)(6486002)(36756003)(7696005)(8676002)(16526019)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?QLRdKMc5GLrDBjFHb8kB7rgyq1DLyVtsWDxoC9poT06tA23/B1Uk5S+gfehf?=
+ =?us-ascii?Q?YeoWAepoFT4prVxDw2PZIWjxZnpLH1yBudK0ffrFBUT34ogA1BUFP5TNt9aI?=
+ =?us-ascii?Q?oPDJ4gv+8RquWovz6YZZB1smjENnQ3hJcigdXyMJlUHtepRpByYhUp+2zKMI?=
+ =?us-ascii?Q?sRmd7JSdzPAe4J0i6Bqy2rM15K4kQFO9Oqgy9Wnad4Pq3POj0X143jQ8t5KC?=
+ =?us-ascii?Q?3BCecOO9WCt+2pgFLteVkrdZGVryJf/sSekg5qEnX1BqbGqXBXFraTgjw40H?=
+ =?us-ascii?Q?Cb3YrlUtnoihwxflulUvrJqZtUBEugqxGnmTGeRiBmOrXI4ORd2sAUIgp9dV?=
+ =?us-ascii?Q?eqPBhmzfN/aTgTqiFKcl0gd0+3OCFZrSGG3suZtI/PDpSC4Cz281zq8CM0ik?=
+ =?us-ascii?Q?eQ2xIobywvo9GfcNgUEfI7NwGiG+xBJpCtQ5I48iy9MQRuCWA88Ql/2FXxuI?=
+ =?us-ascii?Q?WfZh2Xc1jlI0vt3YIlOwbz3OVCEZ+NLapHubv1vy3FfkCM39ZBashRouC7BN?=
+ =?us-ascii?Q?5DZ/76y4yjbggTU0YMmmJ/XtW7a9Txu8CWECwRby1qLamU3bj6hqSgxbdrqA?=
+ =?us-ascii?Q?I2cGAd0e+/Lh1oFuQP/ElFjvWNdGruUBE6NtFINWAgsqNzB53bxJYUwAvd4S?=
+ =?us-ascii?Q?AfBGXw5N+Wradpdc68a8+kyu7VFZSwBDKglau39ukIXwn1zCLBSghetXdq9z?=
+ =?us-ascii?Q?Tc5XfuDY/jIeldaCre/VdUXAk1hQdoa8nc+I0oZB/CEzVh3g3tyO+348C/Me?=
+ =?us-ascii?Q?fXzT6XdY7CLWVRNJZNPKAHYTcI90wSYTpDCvs31sgcLJ+i50P0R82cz7KWRn?=
+ =?us-ascii?Q?SyG9rbPSe7ouIQToHkQT+llTft3NiS2bc247s9606pc8a1vRLZ4GcVs1Kd2H?=
+ =?us-ascii?Q?H1DR+ygscSloEk7JritofetR7gmAxheVEYTIGCwk5oLCc3FfJRMbMQKTCjZS?=
+ =?us-ascii?Q?xEhRH+hI7O+DIyUOw861A89DU1sqZWSMy/4t1B4O2QHdwBSobotcxeL37Dh/?=
+ =?us-ascii?Q?tE5mL5+JWQZZqXgYHnFrWyKI7IUAb5bm+lBHuz9zwAKyUz4=3D?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR21MB1857.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9be2d7c1-aa32-49b6-7bed-08d8a6c2c78c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Dec 2020 21:44:37.3608
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Dec 2020 00:12:53.2695
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AHnKklLLjPsjvFPJuQnSR2u+BiKecOtMQJHxcHNf1Y+q3fIptZWf9GGwnz20oRlRzOA1KhULv419QLhjZtbAew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0638
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc02fc5b-617a-4b31-d617-08d8a6d77df8
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8qB+Kg/2ZWtzc63XJhM+p3hLt/kCGcGRaNtaeV7UJaN5jY+l+VCcDCuIJrOF7RBk3BrHPDtlzB1PsdomS92Q8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0932
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Valentin Schneider <valentin.schneider@arm.com>
-> Sent: Tuesday, December 22, 2020 5:40 AM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: mingo@redhat.com; peterz@infradead.org; juri.lelli@redhat.com;
-> vincent.guittot@linaro.org; dietmar.eggemann@arm.com;
-> rostedt@goodmis.org; bsegall@google.com; mgorman@suse.de;
-> bristot@redhat.com; x86@kernel.org; linux-pm@vger.kernel.org;
-> linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.org; Michael Kelle=
-y
-> <mikelley@microsoft.com>
-> Subject: Re: v5.10: sched_cpu_dying() hits BUG_ON during hibernation: ker=
-nel
-> BUG at kernel/sched/core.c:7596!
->=20
->=20
-> Hi,
->=20
-> On 22/12/20 09:13, Dexuan Cui wrote:
-> > Hi,
-> > I'm running a Linux VM with the recent mainline (48342fc07272, 12/20/20=
-20)
-> on Hyper-V.
-> > When I test hibernation, the VM can easily hit the below BUG_ON during =
-the
-> resume
-> > procedure (I estimate this can repro about 1/5 of the time). BTW, my VM=
- has
-> 40 vCPUs.
-> >
-> > I can't repro the BUG_ON with v5.9.0, so I suspect something in v5.10.0=
- may
-> be broken?
-> >
-> > In v5.10.0, when the BUG_ON happens, rq->nr_running=3D=3D2, and
-> rq->nr_pinned=3D=3D0:
-> >
-> > 7587 int sched_cpu_dying(unsigned int cpu)
-> > 7588 {
-> > 7589         struct rq *rq =3D cpu_rq(cpu);
-> > 7590         struct rq_flags rf;
-> > 7591
-> > 7592         /* Handle pending wakeups and then migrate everything off
-> */
-> > 7593         sched_tick_stop(cpu);
-> > 7594
-> > 7595         rq_lock_irqsave(rq, &rf);
-> > 7596         BUG_ON(rq->nr_running !=3D 1 || rq_has_pinned_tasks(rq));
-> > 7597         rq_unlock_irqrestore(rq, &rf);
-> > 7598
-> > 7599         calc_load_migrate(rq);
-> > 7600         update_max_interval();
-> > 7601         nohz_balance_exit_idle(rq);
-> > 7602         hrtick_clear(rq);
-> > 7603         return 0;
-> > 7604 }
-> >
-> > The last commit that touches the BUG_ON line is the commit
-> > 3015ef4b98f5 ("sched/core: Make migrate disable and CPU hotplug
-> cooperative")
-> > but the commit looks good to me.
-> >
-> > Any idea?
-> >
->=20
-> I'd wager this extra task is a kworker; could you give this series a try?
->=20
->=20
-> https ://lore.kernel.org/lkml/20201218170919.2950-1-jiangshanlai@gmail.co=
-m/
+When a Linux VM runs on Hyper-V, if the host toolstack doesn't support
+hibernation for the VM (this happens on old Hyper-V hosts like Windows
+Server 2016, or new Hyper-V hosts if the admin or user doesn't declare
+the hibernation intent for the VM), the VM is discouraged from trying
+hibernation (because the host doesn't guarantee that the VM's virtual
+hardware configuration will remain exactly the same across hibernation),
+i.e. the VM should not try to set up the swap partition/file for
+hibernation, etc.
 
-Thanks, Valentin! It looks like the patchset can fix the BUG_ON, though I s=
-ee
-a warning, which I reported here: https://lkml.org/lkml/2020/12/22/648
+x86 Hyper-V uses the presence of the virtual ACPI S4 state as the
+indication of the host toolstack support for a VM. Currently there is
+no easy and reliable way for the userspace to detect the presence of
+the state (see https://lkml.org/lkml/2020/12/11/1097).  Add
+/sys/bus/vmbus/supported_features for this purpose.
 
-Thanks,
--- Dexuan
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ Documentation/ABI/stable/sysfs-bus-vmbus |  7 +++++++
+ drivers/hv/vmbus_drv.c                   | 20 ++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/Documentation/ABI/stable/sysfs-bus-vmbus b/Documentation/ABI/stable/sysfs-bus-vmbus
+index c27b7b89477c..3ba765ae6695 100644
+--- a/Documentation/ABI/stable/sysfs-bus-vmbus
++++ b/Documentation/ABI/stable/sysfs-bus-vmbus
+@@ -1,3 +1,10 @@
++What:		/sys/bus/vmbus/supported_features
++Date:		Dec 2020
++KernelVersion:	5.11
++Contact:	Dexuan Cui <decui@microsoft.com>
++Description:	Features specific to VMs running on Hyper-V
++Users:		Daemon that sets up swap partition/file for hibernation
++
+ What:		/sys/bus/vmbus/devices/<UUID>/id
+ Date:		Jul 2009
+ KernelVersion:	2.6.31
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index d491fdcee61f..958487a40a18 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -678,6 +678,25 @@ static const struct attribute_group vmbus_dev_group = {
+ };
+ __ATTRIBUTE_GROUPS(vmbus_dev);
+ 
++/* Set up bus attribute(s) for /sys/bus/vmbus/supported_features */
++static ssize_t supported_features_show(struct bus_type *bus, char *buf)
++{
++	bool hb = hv_is_hibernation_supported();
++
++	return sprintf(buf, "%s\n", hb ? "hibernation" : "");
++}
++
++static BUS_ATTR_RO(supported_features);
++
++static struct attribute *vmbus_bus_attrs[] = {
++	&bus_attr_supported_features.attr,
++	NULL,
++};
++static const struct attribute_group vmbus_bus_group = {
++	.attrs = vmbus_bus_attrs,
++};
++__ATTRIBUTE_GROUPS(vmbus_bus);
++
+ /*
+  * vmbus_uevent - add uevent for our device
+  *
+@@ -1024,6 +1043,7 @@ static struct bus_type  hv_bus = {
+ 	.uevent =		vmbus_uevent,
+ 	.dev_groups =		vmbus_dev_groups,
+ 	.drv_groups =		vmbus_drv_groups,
++	.bus_groups =		vmbus_bus_groups,
+ 	.pm =			&vmbus_pm,
+ };
+ 
+-- 
+2.19.1
+
