@@ -2,150 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CF482EA9EB
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Jan 2021 12:31:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CFC12EAB21
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Jan 2021 13:47:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725776AbhAELbO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 5 Jan 2021 06:31:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42958 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbhAELbN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 5 Jan 2021 06:31:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AC13AB04C;
-        Tue,  5 Jan 2021 11:30:31 +0000 (UTC)
-Subject: Re: [PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic video
- device
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, Wei Hu <weh@microsoft.com>,
-        Tang Shaofeng <shaofeng.tang@intel.com>,
+        id S1728012AbhAEMqP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 5 Jan 2021 07:46:15 -0500
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:50835 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbhAEMqP (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 5 Jan 2021 07:46:15 -0500
+Received: by mail-wm1-f41.google.com with SMTP id 190so2917398wmz.0;
+        Tue, 05 Jan 2021 04:45:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EXnUtStgTNHCYfCXvY8ndQ5zpFOfaWr6HedodEhJISw=;
+        b=CqvncFBI1odmUVtZcEfs1lg76avUWKDWIEcBFGSQp8XEzRVPy3QHSlN+ttUshaJUdQ
+         JQJC6pUmHMJ7N+NdnC8dQ1rD7MJvZ5qI1FZtcWw+0h+toPTTpey5USLlr9NfN4H36tg6
+         Pxu2qadEo2gDnaegOqJ8gaXUujRVgcL4aAXrBuiTfi6d9GAIPqhpXWO+vACDnUHC6+jf
+         yc7+GUiRYDvroSbhmJDSJROjxV5x0Nvw6Zf+7DgPif/EeeBO1Ky1eVz/BIANNELrmzsf
+         Z0MnYK8akqvZ40nsMk7J87uN2ebQs0NoBJlDMrHSwfhmpxpXAFtjRN2mbrDJS3JuZgsr
+         FPtA==
+X-Gm-Message-State: AOAM533VeeY3dqGGOj6Kege3kMeLqo9NCgP++uhjj8qvTghxV3Z+dD8L
+        nh6rK+IE+XePP37YMzMHA9c=
+X-Google-Smtp-Source: ABdhPJwMw1DpqRyFMq85jN4wJulA2jSz4eGH1rMxoFyEq7tcNaYhNhDPFypAZZK1oenHAbtuJO15nQ==
+X-Received: by 2002:a7b:cf0d:: with SMTP id l13mr3420391wmg.168.1609850732287;
+        Tue, 05 Jan 2021 04:45:32 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id y63sm4145232wmd.21.2021.01.05.04.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Jan 2021 04:45:31 -0800 (PST)
+Date:   Tue, 5 Jan 2021 12:45:30 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        dri-devel@lists.freedesktop.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Deepak Rawat <drawat.floss@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-References: <20210102060336.832866-1-drawat.floss@gmail.com>
- <2b49fcd2-38f7-dae5-2992-721a8bd142a2@suse.de>
- <4f7818f99734c0912325e1f3b6b80cb2a04df3ef.camel@gmail.com>
- <ec340e8e-6386-d582-c93b-0a35c60f9dca@suse.de>
- <20210105110438.zhy22zzqfgbnonos@sirius.home.kraxel.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <8ff4bd88-6e98-3db5-232d-98ce2c370cd1@suse.de>
-Date:   Tue, 5 Jan 2021 12:30:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Juan Vazquez <juvazq@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH v3] Drivers: hv: vmbus: Copy packets sent by Hyper-V out
+ of the ring buffer
+Message-ID: <20210105124530.kwaa6vdpdpopp2tq@liuwe-devbox-debian-v2>
+References: <20201208045311.10244-1-parri.andrea@gmail.com>
+ <MW2PR2101MB10523546B825880C298E1C64D7DF9@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20210105110438.zhy22zzqfgbnonos@sirius.home.kraxel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="Iep15CppaIkErYIVECpkDJEUZHyGuxyjQ"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10523546B825880C298E1C64D7DF9@MW2PR2101MB1052.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Iep15CppaIkErYIVECpkDJEUZHyGuxyjQ
-Content-Type: multipart/mixed; boundary="WURKEi3hSP6Hm7nRj0fQjDhhjLTvwYIxO";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: linux-hyperv@vger.kernel.org, Wei Hu <weh@microsoft.com>,
- Tang Shaofeng <shaofeng.tang@intel.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
- dri-devel@lists.freedesktop.org, Michael Kelley <mikelley@microsoft.com>,
- Deepak Rawat <drawat.floss@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-Message-ID: <8ff4bd88-6e98-3db5-232d-98ce2c370cd1@suse.de>
-Subject: Re: [PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic video
- device
-References: <20210102060336.832866-1-drawat.floss@gmail.com>
- <2b49fcd2-38f7-dae5-2992-721a8bd142a2@suse.de>
- <4f7818f99734c0912325e1f3b6b80cb2a04df3ef.camel@gmail.com>
- <ec340e8e-6386-d582-c93b-0a35c60f9dca@suse.de>
- <20210105110438.zhy22zzqfgbnonos@sirius.home.kraxel.org>
-In-Reply-To: <20210105110438.zhy22zzqfgbnonos@sirius.home.kraxel.org>
+On Tue, Dec 22, 2020 at 01:59:34PM +0000, Michael Kelley wrote:
+> From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Monday, December 7, 2020 8:53 PM
+> > 
+> > From: Andres Beltran <lkmlabelt@gmail.com>
+> > 
+> > Pointers to ring-buffer packets sent by Hyper-V are used within the
+> > guest VM. Hyper-V can send packets with erroneous values or modify
+> > packet fields after they are processed by the guest. To defend
+> > against these scenarios, return a copy of the incoming VMBus packet
+> > after validating its length and offset fields in hv_pkt_iter_first().
+> > In this way, the packet can no longer be modified by the host.
+> > 
+> > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> > Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> > Cc: netdev@vger.kernel.org
+> > Cc: linux-scsi@vger.kernel.org
+> > ---
+> >  drivers/hv/channel.c              |  9 ++--
+> >  drivers/hv/hv_fcopy.c             |  1 +
+> >  drivers/hv/hv_kvp.c               |  1 +
+> >  drivers/hv/hyperv_vmbus.h         |  2 +-
+> >  drivers/hv/ring_buffer.c          | 82 ++++++++++++++++++++++++++-----
+> >  drivers/net/hyperv/hyperv_net.h   |  3 ++
+> >  drivers/net/hyperv/netvsc.c       |  2 +
+> >  drivers/net/hyperv/rndis_filter.c |  2 +
+> >  drivers/scsi/storvsc_drv.c        | 10 ++++
+> >  include/linux/hyperv.h            | 48 +++++++++++++++---
+> >  net/vmw_vsock/hyperv_transport.c  |  4 +-
+> >  11 files changed, 139 insertions(+), 25 deletions(-)
+> > 
+> 
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
---WURKEi3hSP6Hm7nRj0fQjDhhjLTvwYIxO
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 05.01.21 um 12:04 schrieb Gerd Hoffmann:
->    Hi,
->=20
->>> It's not possible to do page flip with this virtual device. The call =
-to
->>> SYNTHVID_VRAM_LOCATION is only honoured once. So unfortunately need t=
-o
->>> use SHMEM helpers.
->>
->> I was thinking about using struct video_output_situation.vram_offset; =
-in
->> case you want to tinker with that. There's a comment in the patch that=
-
->> vram_offset should always be 0. But this comment seems incorrect for d=
-evices
->> with more than one output.
->=20
-> Where does the comment come from?  fbdev drivers support a single
-> framebuffer only so for a fbdev driver it makes sense to set the offset=
-
-> to 0 unconditionally.  With drm you probably can handle things
-> differently ...
-
-I cannot find it in hyperv_fb.c; it must have gotten introduced here.
-
-Only one display is supported by this DRM driver, so the comment is=20
-correct. In the future, having support for multiple displays might be an =
-
-option.
-
-Best regards
-Thomas
-
->=20
-> take care,
->    Gerd
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---WURKEi3hSP6Hm7nRj0fQjDhhjLTvwYIxO--
-
---Iep15CppaIkErYIVECpkDJEUZHyGuxyjQ
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAl/0TdYFAwAAAAAACgkQlh/E3EQov+BV
-FA/+Kilf2+Cz+UY/nJNcvKRGVMnTHb3FUKCYkldGpjs7VIyNJ2QpZvE1KVsLH+rKRo2sIn/JkmyG
-pwngJeoNsHxvn5PkHMFpQaRZNE5QkAuLTjK/eltn70bPuMJ9qF74ZU8YDIiLtpdkhB/tT+kkWloC
-NHGftIk2saxWL93AQnwuTPatl9trOc9Fs0NQQz6rDAvNuue/Vv87jczMeOdqwJIYI9qTnpxM3we0
-YzFXjinJUm8ML5Z7w2j0JWFXuoadrgPeaThsEsCbRK5EI9zCQj/DKGcLfz0dMzf4TI9CGqGZbsYb
-mF9PMUvMk/HFh+QPomBAzpl8V7C8XN4i/zAU8UYZZiuG727AecJqnk8F6mjTM4cxSIemzxSGnMNP
-Zq3GWjmgO6OiaztHKZo6chTs1U+H4cVMEwxq7Yt89GvfHTlVZo8ZRKkDVFijr7Jdh6YuLWasXoUr
-Dg083y6KuEOizfwWxuUVuCZHteisXhigCKMfTVI/9Y9XN5IHAHT0qLJXKvcujngyX8dCCK6mk1lu
-Qo41Rw7pLFv5VtFSwCJVsGhZCL5Salqxo1ADzFX5vAI6TCRBsgmjHCvBn7O1VX7uajA8CKN1PlTj
-12iiYcdGPRuNgsGcA4spdxbFNZ2DHdr4Zcrbwkd4LhgX/42VupzlYUo+JKb1xPLaxeSqwMPEN+pk
-kn0=
-=65VW
------END PGP SIGNATURE-----
-
---Iep15CppaIkErYIVECpkDJEUZHyGuxyjQ--
+Applied to hyperv-next.
