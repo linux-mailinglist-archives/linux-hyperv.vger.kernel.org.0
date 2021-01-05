@@ -2,244 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98BFE2EA64E
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Jan 2021 09:08:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DC8C2EA983
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Jan 2021 12:08:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727288AbhAEIII (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 5 Jan 2021 03:08:08 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49536 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727371AbhAEIIH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 5 Jan 2021 03:08:07 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 79017ACAF;
-        Tue,  5 Jan 2021 08:07:25 +0000 (UTC)
-To:     Deepak Rawat <drawat.floss@gmail.com>,
-        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Gerd Hoffmann <kraxel@redhat.com>,
+        id S1729068AbhAELGM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 5 Jan 2021 06:06:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:58294 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728175AbhAELGM (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 5 Jan 2021 06:06:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1609844686;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9l0tND+UxcCMLDlOD7Ol3zZinY+fs8qgyUo+4LEabfk=;
+        b=NuvpSWhT7Iu7Tbn2x3soeN2+Br01T1W1HCEtWx3S2egnPAk1X0WiEJuT1InECaEmMuLCp4
+        vVuuJgWOu1/K6im1bWAwnSUYuPNTRhuaTAwGksVPaDOX+TgHAn5PjK0eJFMsVWJ+ZnqGOZ
+        k0akgPIDYKFpDKHhq8hUSMLw6XNECwE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-p0Bee2lZNj-8jO8rBHNv6A-1; Tue, 05 Jan 2021 06:04:44 -0500
+X-MC-Unique: p0Bee2lZNj-8jO8rBHNv6A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05435107ACE3;
+        Tue,  5 Jan 2021 11:04:43 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-114-209.ams2.redhat.com [10.36.114.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7FA0F5D9CC;
+        Tue,  5 Jan 2021 11:04:41 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 3994A1800099; Tue,  5 Jan 2021 12:04:38 +0100 (CET)
+Date:   Tue, 5 Jan 2021 12:04:38 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Deepak Rawat <drawat.floss@gmail.com>,
+        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Daniel Vetter <daniel@ffwll.ch>,
         Sam Ravnborg <sam@ravnborg.org>,
         Dexuan Cui <decui@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Wei Hu <weh@microsoft.com>,
         Tang Shaofeng <shaofeng.tang@intel.com>,
         Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
+ video device
+Message-ID: <20210105110438.zhy22zzqfgbnonos@sirius.home.kraxel.org>
 References: <20210102060336.832866-1-drawat.floss@gmail.com>
  <2b49fcd2-38f7-dae5-2992-721a8bd142a2@suse.de>
  <4f7818f99734c0912325e1f3b6b80cb2a04df3ef.camel@gmail.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic video
- device
-Message-ID: <ec340e8e-6386-d582-c93b-0a35c60f9dca@suse.de>
-Date:   Tue, 5 Jan 2021 09:07:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+ <ec340e8e-6386-d582-c93b-0a35c60f9dca@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <4f7818f99734c0912325e1f3b6b80cb2a04df3ef.camel@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="ahwCFPSmALTDxO0DSFPC2RArzbf1jd2fz"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec340e8e-6386-d582-c93b-0a35c60f9dca@suse.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ahwCFPSmALTDxO0DSFPC2RArzbf1jd2fz
-Content-Type: multipart/mixed; boundary="lqWJRsDQUl5QzHmOmF7ZPUrqlakx578hj";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Deepak Rawat <drawat.floss@gmail.com>, linux-hyperv@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-Cc: Daniel Vetter <daniel@ffwll.ch>, Gerd Hoffmann <kraxel@redhat.com>,
- Sam Ravnborg <sam@ravnborg.org>, Dexuan Cui <decui@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Hu <weh@microsoft.com>,
- Tang Shaofeng <shaofeng.tang@intel.com>,
- Michael Kelley <mikelley@microsoft.com>
-Message-ID: <ec340e8e-6386-d582-c93b-0a35c60f9dca@suse.de>
-Subject: Re: [PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic video
- device
-References: <20210102060336.832866-1-drawat.floss@gmail.com>
- <2b49fcd2-38f7-dae5-2992-721a8bd142a2@suse.de>
- <4f7818f99734c0912325e1f3b6b80cb2a04df3ef.camel@gmail.com>
-In-Reply-To: <4f7818f99734c0912325e1f3b6b80cb2a04df3ef.camel@gmail.com>
+  Hi,
 
---lqWJRsDQUl5QzHmOmF7ZPUrqlakx578hj
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+> > It's not possible to do page flip with this virtual device. The call to
+> > SYNTHVID_VRAM_LOCATION is only honoured once. So unfortunately need to
+> > use SHMEM helpers.
+> 
+> I was thinking about using struct video_output_situation.vram_offset; in
+> case you want to tinker with that. There's a comment in the patch that
+> vram_offset should always be 0. But this comment seems incorrect for devices
+> with more than one output.
 
-Hi
+Where does the comment come from?  fbdev drivers support a single
+framebuffer only so for a fbdev driver it makes sense to set the offset
+to 0 unconditionally.  With drm you probably can handle things
+differently ...
 
-Am 05.01.21 um 03:27 schrieb Deepak Rawat:
-> On Mon, 2021-01-04 at 14:03 +0100, Thomas Zimmermann wrote:
->> Hi,
->>
->> I've been looking forward to this patchset. :) The code is really
->> nice
->> already.
->=20
-> Thanks Thomas for the review.
->=20
->=20
->>>   =20
->>> +config DRM_HYPERV
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tristate "DRM Support for =
-hyperv synthetic video device"
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0depends on DRM && PCI && M=
-MU && HYPERV
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select DRM_KMS_HELPER
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select DRM_GEM_SHMEM_HELPE=
-R
->>
->> SHMEM helpers might not be a good choice, because you need this blit
->> code, which has a memcpy.
->>
->> I guess it's easily possible to configure 16 MiB or more for the
->> guest's
->> VRAM? If so, I suggest to use VRAM helpers. Guests will be able to
->> render into VRAM directly with the driver's memcpy. The driver will
->> do
->> page flipping. The bochs driver would be an example.
->>
->> Hyperv doesn't need buffer sharing with other devices, I guess?
->>
->=20
-> It's not possible to do page flip with this virtual device. The call to=
+take care,
+  Gerd
 
-> SYNTHVID_VRAM_LOCATION is only honoured once. So unfortunately need to
-> use SHMEM helpers.
-
-I was thinking about using struct video_output_situation.vram_offset; in =
-
-case you want to tinker with that. There's a comment in the patch that=20
-vram_offset should always be 0. But this comment seems incorrect for=20
-devices with more than one output.
-
-In any case, SHMEM is good enough for now and this would not be a blocker=
-=2E
-
->=20
->>> +#define PCI_VENDOR_ID_MICROSOFT 0x1414
->>> +#define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
->>> +
->>> +struct hyperv_device {
->>
->> Could this name lead to conflicts with other hyperv drivers? I
->> suggest
->> to name it hyperv_drm_device.
->>
->>
->=20
-> Sure make sense to use hyperv_drm_device.
->=20
->>>
->>> +
->>> +struct synthvid_pointer_shape {
->>
->> Do you have plans for adding cursor support?
->>
->=20
-> Yes I have tested with a prototype and cursor works. Will attempt this
-> in future iteration.
-
-Sounds good.
-
->=20
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Negotiate the protocol =
-version with host */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0switch (vmbus_proto_versio=
-n) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case VERSION_WIN10:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case VERSION_WIN10_V5:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0ret =3D synthvid_negotiate_ver(hdev,
->>> SYNTHVID_VERSION_WIN10);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0if (!ret)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0brea=
-k;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0fallthrough;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case VERSION_WIN8:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case VERSION_WIN8_1:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0ret =3D synthvid_negotiate_ver(hdev,
->>> SYNTHVID_VERSION_WIN8);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0if (!ret)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0brea=
-k;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0fallthrough;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case VERSION_WS2008:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case VERSION_WIN7:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0ret =3D synthvid_negotiate_ver(hdev,
->>> SYNTHVID_VERSION_WIN7);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0break;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0default:
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0ret =3D synthvid_negotiate_ver(hdev,
->>> SYNTHVID_VERSION_WIN10);
->>
->> I don't get the logic of this switch statement. If the host is Win10,
->> I'd expect the graphics device to use Win10's protocol, if the host
->> is
->> Win8, the graphics device uses win8 protocols. So what's the point of
->> the fallthroughs? Can there be newer versions of vmbus_proto_version
->> that only support older devices?
->>
->>
->=20
-> This is copied as it is from hyperv_fb driver. I suppose this is just
-> to accomodate newer version.
-
-I see. I would put the default case to the top; right before the Win10=20
-case. So for newer or unknown versions, it tests Win10 and then falls=20
-through until something works.
-
-Best regards
-Thomas
-
->>
->=20
-> Deepak
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---lqWJRsDQUl5QzHmOmF7ZPUrqlakx578hj--
-
---ahwCFPSmALTDxO0DSFPC2RArzbf1jd2fz
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAl/0HjwFAwAAAAAACgkQlh/E3EQov+B/
-4xAAkDv8m+xFPc5RBbyqcPco6m4CYr+s8BDAA4J7f21Jii//UutL8AENdUyRsx0TF2fbXLVbCDgR
-qLQ17+2aJW2jHWIFnoJi1irRtw2u5O14MoXld2oQ97YgzCsYKRj+KtMRxv3mC/0BfnHY5RbfSjlc
-SGCl012FXSCiNZgAmIZvSe008spOGdQ1GSerkZw6hNZWw6tFzU5Np2e/OOgNwxlQ2kez3KDj7pLb
-JfdOc/+dzXsLEdrm76OIjEwNujrSLnlpFIBHABnWKyoqxBffMhV/eFxWKp/OX9whrwEthfZoMjls
-q1FLGlMOLyPn3BOLcGqynO9wYGyz3vcinmnpgXIptQJ7b2iy0apVqzU3h4+PH4KGSPCYBvicrpOl
-UV1c96pqTHkqbMndzXIYzxl6Gwg9eDUss8JexuYAbA1xLvYi1k+afM9qwTNVOqs4s4InDGmCqcBR
-ZQ7m9JW2qeewkL7xu9lrScI0+1/CyJzxiBmygVVfjYO5hLTFMhqD4FArau3TF2pTm9tISahy2nR2
-5NvbEV8wXKe6wacHyjjcIHM27CL8dSL9qGC4WCfcKHg2W6LlHBamJvZ+hr5sMUbSP1Pq45quD5QX
-zZLF1Izf8sexN87+YmEIgRIgsTkeNzsup5w58XFmcDFaiXaplFbws93DrU+db7hk6EfyrB+6ZK9I
-7ZA=
-=8J15
------END PGP SIGNATURE-----
-
---ahwCFPSmALTDxO0DSFPC2RArzbf1jd2fz--
