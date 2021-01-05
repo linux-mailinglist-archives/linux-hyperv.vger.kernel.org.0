@@ -2,101 +2,100 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA6592EB1CD
-	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Jan 2021 18:51:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C85B2EB1D3
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Jan 2021 18:54:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbhAERv3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 5 Jan 2021 12:51:29 -0500
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:44195 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbhAERv3 (ORCPT
+        id S1726132AbhAERyC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 5 Jan 2021 12:54:02 -0500
+Received: from mail-wm1-f49.google.com ([209.85.128.49]:36242 "EHLO
+        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbhAERyB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 5 Jan 2021 12:51:29 -0500
-Received: by mail-wr1-f43.google.com with SMTP id w5so20440wrm.11;
-        Tue, 05 Jan 2021 09:51:12 -0800 (PST)
+        Tue, 5 Jan 2021 12:54:01 -0500
+Received: by mail-wm1-f49.google.com with SMTP id y23so360022wmi.1;
+        Tue, 05 Jan 2021 09:53:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JIQuW/4RpxsmZTrmBPjCy0e3BYyOVCHG2XSMv9AGbhM=;
-        b=NxIo9zIxrafnEJ1eOpBYYdpu5RdiQffsDQuPEK1GwJ6zZH+4lnVjts415nXLuoWC8l
-         bJnWLaVzVkNXygwA180gXTw+znEEwmC2oB4LR9Rqki9Bnu04AMSmuSOsPFMx0HwPa1sl
-         CjuNHmg1r+keoZ8CIcFPXeXkfTanGo0xovhY0aLoM/6E5OccEODnSpJCwiok17kk1mk2
-         5ZDax1rg1b1RRJ/XrZrbgTE9K68CNMQSfwv8iryMx1RcXyJh4yyR+bkzwXjvLC4MXdkw
-         syCFya+CRbMZ/LUg+yj2ImzJJt/7GViDcjKrbdUqoAtCJWUFO/Df9P//SgWtD3BJRw6k
-         +I1Q==
-X-Gm-Message-State: AOAM5334TmzYu4q6b1Q0Km7YFBjkoQx2br6pPfbDjbhgU62OUrFWBLuK
-        uBa6ZDDgy2Z0X8t/SvHrcKFaHGoR4BI=
-X-Google-Smtp-Source: ABdhPJyAEkNelFFT15/GLep1blSMItUti0XTeZeTXbg2s8XQRKEC+3xjT/4ML40CtyeCmZDbHWgbFg==
-X-Received: by 2002:adf:8290:: with SMTP id 16mr670660wrc.27.1609869047148;
-        Tue, 05 Jan 2021 09:50:47 -0800 (PST)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id r20sm285596wmh.15.2021.01.05.09.50.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cb/eKs9gfJ+4Q5QjFJ08GTvJMZDgfPltkPQD+Pfflgg=;
+        b=froojAol5AVIKEo/bjq4JHDK3MLBQw2EtKygDps5+H6rk+2pyprBd/DcyXvjyxhpTF
+         nRbrPaPJ8KLCTOF2l0I2BuwsdaRBx/9YncQ6aSikGvDtWqmwx2BiP9Kl4w+Jb6HknD8X
+         cQcUXSqme7mZHWlK9R1XSNusBC9TmfrQoqtZO9JUnBK/KcBcf2/zoN2T8HiB/qh7uGn9
+         vtCvs9KEhwbvz608YVMLmf7/ytsK92fAK/cp0Yq6PoKuuWdvf+Hdrg0ueLGDp5i8srQY
+         iqDruMgSpH0XIcNnyK/tY9c/IfhD6PtygPKRNX14jIyPnF3iZts9jWHY2grcOVLWNfJs
+         /amA==
+X-Gm-Message-State: AOAM532+aEQDeCumX5MXjJE/GRkUpzoIaKdXEku/Fx6dodkEqV6j4biq
+        ZziW2drwzy21OsBaF6aotYpxF52Hhjw=
+X-Google-Smtp-Source: ABdhPJz2FyiDzdDhqETzfGGu3wXSv4L1DGEBitiil9tgo1wkkOWPNeQv6MV+N0pTm8Bu1w69PbHdtQ==
+X-Received: by 2002:a1c:c254:: with SMTP id s81mr288618wmf.132.1609869199718;
+        Tue, 05 Jan 2021 09:53:19 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id b127sm309665wmc.45.2021.01.05.09.53.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Jan 2021 09:50:46 -0800 (PST)
+        Tue, 05 Jan 2021 09:53:19 -0800 (PST)
+Date:   Tue, 5 Jan 2021 17:53:18 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, stable@kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "jwiesner@suse.com" <jwiesner@suse.com>,
+        "ohering@suse.com" <ohering@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
-        64-BIT))
-Subject: [PATCH] x86/hyperv: check cpu mask after interrupt has been disabled
-Date:   Tue,  5 Jan 2021 17:50:43 +0000
-Message-Id: <20210105175043.28325-1-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: Re: [PATCH v2] x86/hyperv: Fix kexec panic/hang issues
+Message-ID: <20210105175317.73njunfp3go5iy3c@liuwe-devbox-debian-v2>
+References: <20201222065541.24312-1-decui@microsoft.com>
+ <20210105130423.nvxpsdvgn5zier4v@liuwe-devbox-debian-v2>
+ <MWHPR21MB1593C7460B98B88BDA63CB50D7D19@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB1593C7460B98B88BDA63CB50D7D19@MWHPR21MB1593.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-We've observed crashes due to an empty cpu mask in
-hyperv_flush_tlb_others.  Obviously the cpu mask in question is changed
-between the cpumask_empty call at the beginning of the function and when
-it is actually used later.
+On Tue, Jan 05, 2021 at 04:39:38PM +0000, Michael Kelley wrote:
+> From: Wei Liu <wei.liu@kernel.org> Sent: Tuesday, January 5, 2021 5:04 AM
+> > 
+> > On Mon, Dec 21, 2020 at 10:55:41PM -0800, Dexuan Cui wrote:
+> > > Currently the kexec kernel can panic or hang due to 2 causes:
+> > >
+> > > 1) hv_cpu_die() is not called upon kexec, so the hypervisor corrupts the
+> > > old VP Assist Pages when the kexec kernel runs. The same issue is fixed
+> > > for hibernation in commit 421f090c819d ("x86/hyperv: Suspend/resume the
+> > > VP assist page for hibernation"). Now fix it for kexec.
+> > >
+> > > 2) hyperv_cleanup() is called too early. In the kexec path, the other CPUs
+> > > are stopped in hv_machine_shutdown() -> native_machine_shutdown(), so
+> > > between hv_kexec_handler() and native_machine_shutdown(), the other CPUs
+> > > can still try to access the hypercall page and cause panic. The workaround
+> > > "hv_hypercall_pg = NULL;" in hyperv_cleanup() is unreliabe. Move
+> > > hyperv_cleanup() to a better place.
+> > >
+> > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > 
+> > The code looks a bit intrusive. On the other hand, this does sound like
+> > something needs backporting for older stable kernels.
+> > 
+> > On a more practical note, I need to decide whether to take it via
+> > hyperv-fixes or hyperv-next. What do you think?
+> > 
+> 
+> I'd like to see this in hyperv-fixes and backported to older stable kernels.
+> In its current form, the kexec path in a Hyper-V guest has multiple problems
+> that make it unreliable, so the downside risk of taking these fixes is minimal
+> while the upside benefit is considerable.
 
-One theory is that an interrupt comes in between and a code path ends up
-changing the mask. Move the check after interrupt has been disabled to
-see if it fixes the issue.
+Applied to hyperv-fixes.
 
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Cc: stable@kernel.org
----
- arch/x86/hyperv/mmu.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index 5208ba49c89a..2c87350c1fb0 100644
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -66,11 +66,17 @@ static void hyperv_flush_tlb_others(const struct cpumask *cpus,
- 	if (!hv_hypercall_pg)
- 		goto do_native;
- 
--	if (cpumask_empty(cpus))
--		return;
--
- 	local_irq_save(flags);
- 
-+	/*
-+	 * Only check the mask _after_ interrupt has been disabled to avoid the
-+	 * mask changing under our feet.
-+	 */
-+	if (cpumask_empty(cpus)) {
-+		local_irq_restore(flags);
-+		return;
-+	}
-+
- 	flush_pcpu = (struct hv_tlb_flush **)
- 		     this_cpu_ptr(hyperv_pcpu_input_arg);
- 
--- 
-2.20.1
-
+Wei.
