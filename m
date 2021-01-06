@@ -2,364 +2,143 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 530E22EC50A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Jan 2021 21:35:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C52432EC558
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Jan 2021 21:49:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbhAFUfA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Jan 2021 15:35:00 -0500
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:51224 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbhAFUe7 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Jan 2021 15:34:59 -0500
-Received: by mail-wm1-f51.google.com with SMTP id v14so3451533wml.1;
-        Wed, 06 Jan 2021 12:34:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UWtWu1KsYS/sKox+22vutoiZdiG8nrd65LCIrjkIsmQ=;
-        b=alSu4RLoWoYv0DaMmO1I7dnpzQmDKRrvG1RgfgLuUvop8CwiKpVgGoXLbR304lZPtx
-         NGBdm3kjuyLMvH5eNeTGL+WJSHVjCJLdkQ7Iw2JQC5cT7eLBaflRnm5lleYmFqexspDu
-         ebcPYmOE15fQ7LFCvLU6YFdoUOQUhvQHWX69oqXUUBQIFE6Yg6HIqmIhs7hMzznzw8kD
-         WTaiB0bTejpaSfqbGfNGQp0eFqwTKFxyE0NvxKrJBFeid/pZwIFwWJ0jIgGgpu7Qz8xr
-         VJGVzzXbVIOIwG6N2XOdB3zpzZ/kTZKGGwOyV1n0U2DoU7iwpnDL9lt3hebFOtPFiK54
-         cIxg==
-X-Gm-Message-State: AOAM532id+raaXdwv8Fy9bvqwOw5LWuB/N0v3kUETNskGCXKxrQjOttE
-        m885e9VO3oAv4mOFtUUlr5x0oH0fQ5U=
-X-Google-Smtp-Source: ABdhPJyi/mk6bJEZpv4s04siFrGz4WFRslSdKzefDyuzKa6sA6Wz0fXcfCKCT+MmF7Qp4lnVkD6dkQ==
-X-Received: by 2002:a7b:c385:: with SMTP id s5mr5144514wmj.170.1609965255500;
-        Wed, 06 Jan 2021 12:34:15 -0800 (PST)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u9sm4499456wmb.32.2021.01.06.12.34.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jan 2021 12:34:15 -0800 (PST)
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc:     virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S1726762AbhAFUtT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Jan 2021 15:49:19 -0500
+Received: from mail-dm6nam11on2092.outbound.protection.outlook.com ([40.107.223.92]:9888
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726509AbhAFUtS (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 6 Jan 2021 15:49:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JeXKBgHICpUUOHBj9ArB3ADu3uOOD9r7Ug6k2QQaHgOr8n502uiAQ/GJ8B5LA8wYH/sbKyMPoPzgdkM5K0qkk0NxLddPOAXzgV6iDf4tY8UfZQKtHktpv3zvKY8G5GcNfSfZnHGTK9/pPRZ/rjz2yMqdpKRWRIby5dBA+1vguXMnrNfinZiAHekRAOA8/IDRLJp/5rUnG78Yd4rR26xMCHl6xl3bZ0M9Wp6Uz66QRuS8r8QPynlBYCyCEiLhcJqxMl56uxaPrB6J0UrnZZ16az4Pz+08UzAAqnjo3YeunH4pUGnlykRNM32VGbaUDjedWm5kCNoKaZMJ/VjYdsceMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KMXcfy8VIcSsOL7ciZPbLVKgZscpP01AWDL6BmM79ck=;
+ b=Knfnd8icdaMk7+IryS6wWPrn5WYFvObBGs0GIRzEGf2alUOjEhHRBPHYKXSlXvKEVHfEfNIKUzEPxVbYEKUay9hz6X2p5G5PKViMC5s7v32QTV8HqIDFUMhOZ0EoyAJa4X6aG8+PylZUXgJaQ04u1JzMGClRbWA/0dk6Nu2RHOSqZ7LbJqRHj2+zdh+VTOosn+9X7Yl8WbjURINycmWVOirbgRwhRktVAUWC2Ao8zq8Px6OFELiUDsJlSg8QWjvWcF7gUMnfNBdialgNmfI/2GCMUbMUHqJUKoTmmmblgqRy+EIECWbHIb2JiWAhl41C5aEGrFANBzUCnBIMUpJ0gA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KMXcfy8VIcSsOL7ciZPbLVKgZscpP01AWDL6BmM79ck=;
+ b=T9uV+O0DaRmygRDja8MUE0HyPdX8599kqXTK4dgOFdpoeToSdm9fN0NSUe9nzzWmijjyh9obcf60QxQ/JCXiTwaHG4/bCenuawX9UruELH4jPEFVRG/J4wl99ZiEJBrdH3mcIKQCc3bzkxRZFtDO3OB+CQVyCf16brW2I15EOuM=
+Received: from (2603:10b6:302:8::19) by
+ MW2PR2101MB0938.namprd21.prod.outlook.com (2603:10b6:302:4::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.0; Wed, 6 Jan
+ 2021 20:48:30 +0000
+Received: from MW2PR2101MB1819.namprd21.prod.outlook.com
+ ([fe80::5868:f11c:ae6e:8a31]) by MW2PR2101MB1819.namprd21.prod.outlook.com
+ ([fe80::5868:f11c:ae6e:8a31%8]) with mapi id 15.20.3763.002; Wed, 6 Jan 2021
+ 20:48:30 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v4 17/17] x86/hyperv: handle IO-APIC when running as root
-Date:   Wed,  6 Jan 2021 20:33:50 +0000
-Message-Id: <20210106203350.14568-18-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210106203350.14568-1-wei.liu@kernel.org>
-References: <20210106203350.14568-1-wei.liu@kernel.org>
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH] Drivers: hv: vmbus: Add /sys/bus/vmbus/supported_features
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Add
+ /sys/bus/vmbus/supported_features
+Thread-Index: AQHW42JoMmd2hzIYf0moXWkZCcjfFaoZnG+AgAEtXICAAEIz8A==
+Date:   Wed, 6 Jan 2021 20:48:30 +0000
+Message-ID: <MW2PR2101MB18198B5B161F6311B9FB4B5EBFD09@MW2PR2101MB1819.namprd21.prod.outlook.com>
+References: <20201223001222.30242-1-decui@microsoft.com>
+ <20210105125805.7yypaghcpgafsrcs@liuwe-devbox-debian-v2>
+ <MW2PR2101MB18197FBF40A9EC6313FCB5B1BFD19@MW2PR2101MB1819.namprd21.prod.outlook.com>
+ <20210106162335.apqevxx2achwsirj@liuwe-devbox-debian-v2>
+In-Reply-To: <20210106162335.apqevxx2achwsirj@liuwe-devbox-debian-v2>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=41045f02-42e9-4167-b271-65604e913e9a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-01-06T20:20:31Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [73.140.237.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9ce83252-a119-4727-5cf6-08d8b2846cb5
+x-ms-traffictypediagnostic: MW2PR2101MB0938:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB09388336FA6EB47FF745AF3DBFD09@MW2PR2101MB0938.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7SsvANOeL7qQeSxY2xRJAObpmsMzsriUIsuV2T39V5mKPA+VLlfROpqwR/3XoU0coMflgLO60UW0wPDMKYFQlfWg6BYgwuv5/M0pRSsFBJ32cXK1Uxg7zcaL2VhpleG2udfreoGjnGFR3wsAaz7TFjHmfM4zP/eTtHDUSjEN3/5wmpKxBWfMD6XkOQPF1RxWasdqKp+YSt71qeLe+csCS/O0RGwUsDHdinrj0eoRIMcEUsn2d51BSfSkMSWncu0JRFkYezcC24zkPGz8W52JhdI4WVTtqE/SrZr2sgo+p3P22/iy8rYjsoEEXyVUvQgyzWT+gRYP4c9ttZdxVh/gQHNDBEOJq+KApp1orBiKa2fBBItZMXhn3ngegGa2SyZZy8RcDEAOESiKrwCMwGio+w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1819.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(136003)(376002)(366004)(39860400002)(6506007)(8990500004)(66556008)(10290500003)(6916009)(66446008)(64756008)(66476007)(316002)(186003)(4744005)(82950400001)(76116006)(86362001)(82960400001)(33656002)(9686003)(66946007)(54906003)(7696005)(53546011)(4326008)(478600001)(55016002)(8676002)(2906002)(8936002)(71200400001)(5660300002)(26005)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?BgNvoVy8YmF2yxscpqdU1PFNd/d5pXAbiF+04AC6qUsQMSeBq6DzenBORuNZ?=
+ =?us-ascii?Q?nBNfw4s3pHtMiZ4cE2gSSedrJ7iuKoFgKeGeLYAQsDjDIVMyfmhhW7cm9jYt?=
+ =?us-ascii?Q?f5EY4QOGlS6sNglj5TLv5ljBoTwsnMVNiK2NdRBJQe/AWqJWA6ja0rQpRHU1?=
+ =?us-ascii?Q?vS0hz+BxCIsq+nIjiGez7XYop3xF74+X5HacZh0cwIEcKJEg/YoOXIvk9FSP?=
+ =?us-ascii?Q?vJT7DLU9HhTR6lnmlQIwOhzvoWTdVvjwmQO/RjxcJAuoqVN92xq30mJUUDvS?=
+ =?us-ascii?Q?GfYGrJAnolXLKjp4xNDDdbUFK76V8U8d3Ss8nsv3ZRtqfo8cMuPvDIGY44IO?=
+ =?us-ascii?Q?2fAsk6Ylhn8UXYwCb3IEqvvGmv8ZguR1tCHeVuzoJllntYpgsFEEkxFVFgZc?=
+ =?us-ascii?Q?lYSzvfloTzrKpvO6JP7m90MTq0yvKr5tx9jThVSE1qiii+M6uempweUFA7sR?=
+ =?us-ascii?Q?kHa73FIiv6NQiiS4BLi2VVgOhmpH5LN2yONc5jELs+f30VKVtYL13rpvDqAX?=
+ =?us-ascii?Q?zsRCjKA3l1TXhX8khJKze3HBWdRW4L6Um9536TSFimYf47i+w6ZTbiwaKLEg?=
+ =?us-ascii?Q?/suTQdaBNoDBfshxuoUV8ywwEze4sE5lCdZ3vtKqY0h7z/UQvcsB+GlDaCMq?=
+ =?us-ascii?Q?ATZzwzQS61LH1HAWXBxRs2UOKln5Cc5fGlPx6CGk01zhAWwx3enqiNhEHYcT?=
+ =?us-ascii?Q?n9cqib8In5jO2jhqj51PUYvJjhOUdHD4DaSdCnzU+zoFpWtKIKaifQOHYNhB?=
+ =?us-ascii?Q?ZjxJ+54wAj+/9E66F0aajNMqnOPv8HkmINxKFi+MnPAzDrJrkInk7tsdkPut?=
+ =?us-ascii?Q?rTcABvSW1/83u1+YXdjzuHRtU1IZXkrLMxPZbuMOKLskPa5FLvY4fMAms+45?=
+ =?us-ascii?Q?NuI1U0BwLsFAIaT31eIiwlLumnbHqe8BHE1rFhNodYhcmg3Un4ff6E4k6hik?=
+ =?us-ascii?Q?SBwrQljRmjbdgbNipEdMn2zX2FZYFHHEKMC0jjhDDqk=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1819.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ce83252-a119-4727-5cf6-08d8b2846cb5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2021 20:48:30.0628
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ON4estLEDSV1BBpr6xPrIgPY5d6FvSSG4OCjow7Y4mCnGIuESSm4/GAnTFu2up+CxWeI/uWAoqP5jEzoS+/xJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Just like MSI/MSI-X, IO-APIC interrupts are remapped by Microsoft
-Hypervisor when Linux runs as the root partition. Implement an IRQ chip
-to handle mapping and unmapping of IO-APIC interrupts.
+> From: Wei Liu <wei.liu@kernel.org>
+> Sent: Wednesday, January 6, 2021 8:24 AM
+> To: Dexuan Cui <decui@microsoft.com>
+> >
+> > That said, I don't know if there is any hard rule in regard of
+> > the timing here. If there is, then v5.12 is OK to me. :-)
+> >
+>=20
+> By the time you posted this (Dec 22), 5.11 was already more or less
+> "frozen". Linus wanted -next patches to be merged before Christmas.
 
-Use custom functions for mapping and unmapping ACPI GSIs. They will
-issue Microsoft Hypervisor specific hypercalls on top of the native
-routines.
+Got it. Thanks for the explanation!
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Co-Developed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
----
- arch/x86/hyperv/hv_init.c       |  10 ++
- arch/x86/hyperv/irqdomain.c     | 227 ++++++++++++++++++++++++++++++++
- arch/x86/include/asm/mshyperv.h |   3 +
- 3 files changed, 240 insertions(+)
+> The way I see it this is a new sysfs interface so I think this is
+> something new, which is for 5.12.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 56145aaa1732..d695567b7ead 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -263,10 +263,20 @@ static int hv_cpu_die(unsigned int cpu)
- 	return 0;
- }
- 
-+extern int (*native_acpi_register_gsi)(struct device *dev, u32 gsi, int trigger, int polarity);
-+extern void (*native_acpi_unregister_gsi)(u32 gsi);
-+
- static int __init hv_pci_init(void)
- {
- 	int gen2vm = efi_enabled(EFI_BOOT);
- 
-+	if (hv_root_partition) {
-+		native_acpi_register_gsi = __acpi_register_gsi;
-+		native_acpi_unregister_gsi = __acpi_unregister_gsi;
-+		__acpi_register_gsi = hv_acpi_register_gsi;
-+		__acpi_unregister_gsi = hv_acpi_unregister_gsi;
-+	}
-+
- 	/*
- 	 * For Generation-2 VM, we exit from pci_arch_init() by returning 0.
- 	 * The purpose is to suppress the harmless warning:
-diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-index 19637cd60231..18026885c796 100644
---- a/arch/x86/hyperv/irqdomain.c
-+++ b/arch/x86/hyperv/irqdomain.c
-@@ -9,6 +9,8 @@
- #include <linux/pci.h>
- #include <linux/irq.h>
- #include <asm/mshyperv.h>
-+#include <asm/apic.h>
-+#include <asm/io_apic.h>
- 
- static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *old_entry)
- {
-@@ -330,3 +332,228 @@ struct irq_domain * __init hv_create_pci_msi_domain(void)
- }
- 
- #endif /* CONFIG_PCI_MSI */
-+
-+/* Copied from io_apic.c */
-+union entry_union {
-+	struct { u32 w1, w2; };
-+	struct IO_APIC_route_entry entry;
-+};
-+
-+static int hv_unmap_ioapic_interrupt(int gsi)
-+{
-+	union hv_device_id device_id;
-+	int ioapic, ioapic_id;
-+	u8 ioapic_pin;
-+	struct IO_APIC_route_entry ire;
-+	union entry_union eu;
-+	struct hv_interrupt_entry entry;
-+
-+	ioapic = mp_find_ioapic(gsi);
-+	ioapic_pin = mp_find_ioapic_pin(ioapic, gsi);
-+	ioapic_id = mpc_ioapic_id(ioapic);
-+	ire = ioapic_read_entry(ioapic, ioapic_pin);
-+
-+	eu.entry = ire;
-+
-+	/*
-+	 * Polarity may have been set by us, but Hyper-V expects the exact same
-+	 * entry. See the mapping routine.
-+	 */
-+	eu.entry.active_low = 0;
-+
-+	memset(&entry, 0, sizeof(entry));
-+	entry.source = HV_INTERRUPT_SOURCE_IOAPIC;
-+	entry.ioapic_rte.low_uint32 = eu.w1;
-+	entry.ioapic_rte.high_uint32 = eu.w2;
-+
-+	device_id.as_uint64 = 0;
-+	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
-+	device_id.ioapic.ioapic_id = (u8)ioapic_id;
-+
-+	return hv_unmap_interrupt(device_id.as_uint64, &entry) & HV_HYPERCALL_RESULT_MASK;
-+}
-+
-+static int hv_map_ioapic_interrupt(int ioapic_id, int trigger, int vcpu, int vector,
-+		struct hv_interrupt_entry *out_entry)
-+{
-+	unsigned long flags;
-+	struct hv_input_map_device_interrupt *input;
-+	struct hv_output_map_device_interrupt *output;
-+	union hv_device_id device_id;
-+	struct hv_device_interrupt_descriptor *intr_desc;
-+	u16 status;
-+
-+	device_id.as_uint64 = 0;
-+	device_id.device_type = HV_DEVICE_TYPE_IOAPIC;
-+	device_id.ioapic.ioapic_id = (u8)ioapic_id;
-+
-+	local_irq_save(flags);
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-+	memset(input, 0, sizeof(*input));
-+	intr_desc = &input->interrupt_descriptor;
-+	input->partition_id = hv_current_partition_id;
-+	input->device_id = device_id.as_uint64;
-+	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
-+	intr_desc->target.vector = vector;
-+	intr_desc->vector_count = 1;
-+
-+	if (trigger)
-+		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_LEVEL;
-+	else
-+		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_EDGE;
-+
-+	__set_bit(vcpu, (unsigned long *)&intr_desc->target.vp_mask);
-+
-+	status = hv_do_rep_hypercall(HVCALL_MAP_DEVICE_INTERRUPT, 0, 0, input, output) &
-+			 HV_HYPERCALL_RESULT_MASK;
-+	local_irq_restore(flags);
-+
-+	*out_entry = output->interrupt_entry;
-+
-+	return status;
-+}
-+
-+static unsigned int hv_ioapic_startup_irq(struct irq_data *data)
-+{
-+	u16 status;
-+	struct IO_APIC_route_entry ire;
-+	u32 vector;
-+	struct irq_cfg *cfg;
-+	int ioapic;
-+	u8 ioapic_pin;
-+	int ioapic_id;
-+	int gsi;
-+	union entry_union eu;
-+	struct cpumask *affinity;
-+	int cpu, vcpu;
-+	struct hv_interrupt_entry entry;
-+	struct mp_chip_data *mp_data = data->chip_data;
-+
-+	gsi = data->irq;
-+	cfg = irqd_cfg(data);
-+	affinity = irq_data_get_effective_affinity_mask(data);
-+	cpu = cpumask_first_and(affinity, cpu_online_mask);
-+	vcpu = hv_cpu_number_to_vp_number(cpu);
-+
-+	vector = cfg->vector;
-+
-+	ioapic = mp_find_ioapic(gsi);
-+	ioapic_pin = mp_find_ioapic_pin(ioapic, gsi);
-+	ioapic_id = mpc_ioapic_id(ioapic);
-+	ire = ioapic_read_entry(ioapic, ioapic_pin);
-+
-+	/*
-+	 * Always try unmapping. We do not have visibility into which whether
-+	 * an IO-APIC has been mapped or not. We can't use chip_data because it
-+	 * already points to mp_data.
-+	 *
-+	 * We don't use retarget interrupt hypercalls here because Hyper-V
-+	 * doens't allow root to change the vector or specify VPs outside of
-+	 * the set that is initially used during mapping.
-+	 */
-+	status = hv_unmap_ioapic_interrupt(gsi);
-+
-+	if (!(status == HV_STATUS_SUCCESS || status == HV_STATUS_INVALID_PARAMETER)) {
-+		pr_debug("%s: unexpected unmap status %d\n", __func__, status);
-+		return -EINVAL;
-+	}
-+
-+	status = hv_map_ioapic_interrupt(ioapic_id, ire.is_level, vcpu, vector, &entry);
-+
-+	if (status != HV_STATUS_SUCCESS) {
-+		pr_err("%s: map hypercall failed, status %d\n", __func__, status);
-+		return -EINVAL;
-+	}
-+
-+	/* Update the entry in mp_chip_data. It is used in other places. */
-+	mp_data->entry = *(struct IO_APIC_route_entry *)&entry.ioapic_rte;
-+
-+	/* Sync polarity -- Hyper-V's returned polarity is always 0... */
-+	mp_data->entry.active_low = ire.active_low;
-+
-+	eu.w1 = entry.ioapic_rte.low_uint32;
-+	eu.w2 = entry.ioapic_rte.high_uint32;
-+	ioapic_write_entry(ioapic, ioapic_pin, eu.entry);
-+
-+	return 0;
-+}
-+
-+static void hv_ioapic_mask_irq(struct irq_data *data)
-+{
-+	mask_ioapic_irq(data);
-+}
-+
-+static void hv_ioapic_unmask_irq(struct irq_data *data)
-+{
-+	unmask_ioapic_irq(data);
-+}
-+
-+static int hv_ioapic_set_affinity(struct irq_data *data,
-+			       const struct cpumask *mask, bool force)
-+{
-+	/*
-+	 * We only update the affinity mask here. Programming the hardware is
-+	 * done in irq_startup.
-+	 */
-+	return ioapic_set_affinity(data, mask, force);
-+}
-+
-+static void hv_ioapic_ack_level(struct irq_data *irq_data)
-+{
-+	/*
-+	 * Per email exchange with Hyper-V team, all is needed is write to
-+	 * LAPIC's EOI register. They don't support directed EOI to IO-APIC.
-+	 * Hyper-V handles it for us.
-+	 */
-+	apic_ack_irq(irq_data);
-+}
-+
-+struct irq_chip hv_ioapic_chip __read_mostly = {
-+	.name			= "HV-IO-APIC",
-+	.irq_startup		= hv_ioapic_startup_irq,
-+	.irq_mask		= hv_ioapic_mask_irq,
-+	.irq_unmask		= hv_ioapic_unmask_irq,
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_eoi		= hv_ioapic_ack_level,
-+	.irq_set_affinity	= hv_ioapic_set_affinity,
-+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
-+	.flags			= IRQCHIP_SKIP_SET_WAKE,
-+};
-+
-+
-+int (*native_acpi_register_gsi)(struct device *dev, u32 gsi, int trigger, int polarity);
-+void (*native_acpi_unregister_gsi)(u32 gsi);
-+
-+int hv_acpi_register_gsi(struct device *dev, u32 gsi, int trigger, int polarity)
-+{
-+	int irq = gsi;
-+
-+#ifdef CONFIG_X86_IO_APIC
-+	irq = native_acpi_register_gsi(dev, gsi, trigger, polarity);
-+	if (irq < 0) {
-+		pr_err("native_acpi_register_gsi failed %d\n", irq);
-+		return irq;
-+	}
-+
-+	if (trigger) {
-+		irq_set_status_flags(irq, IRQ_LEVEL);
-+		irq_set_chip_and_handler_name(irq, &hv_ioapic_chip,
-+			handle_fasteoi_irq, "ioapic-fasteoi");
-+	} else {
-+		irq_clear_status_flags(irq, IRQ_LEVEL);
-+		irq_set_chip_and_handler_name(irq, &hv_ioapic_chip,
-+			handle_edge_irq, "ioapic-edge");
-+	}
-+#endif
-+	return irq;
-+}
-+
-+void hv_acpi_unregister_gsi(u32 gsi)
-+{
-+#ifdef CONFIG_X86_IO_APIC
-+	(void)hv_unmap_ioapic_interrupt(gsi);
-+	native_acpi_unregister_gsi(gsi);
-+#endif
-+}
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index cbee72550a12..542dd5994912 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -261,6 +261,9 @@ static inline void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
- 	msi_entry->data.as_uint32 = msi_desc->msg.data;
- }
- 
-+int hv_acpi_register_gsi(struct device *dev, u32 gsi, int trigger, int polarity);
-+void hv_acpi_unregister_gsi(u32 gsi);
-+
- #else /* CONFIG_HYPERV */
- static inline void hyperv_init(void) {}
- static inline void hyperv_setup_mmu_ops(void) {}
--- 
-2.20.1
+Ok.=20
 
+> Do you think this should be considered a bug fix?
+>=20
+> Wei.
+
+Then let's not consider it for v5.11. For now I think the userspace
+tool/daemon can check 'dmesg' for the existence of ACPI S4 state
+as a workaround. This is not ideal, but it should work reasonably
+well, assuming the tool/daemon runs early enough, so the kernel
+msg buffer is not yet filled up and overwritten. :-)
+
+Thanks,
+-- Dexuan
