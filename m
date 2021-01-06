@@ -2,451 +2,331 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE3D82EC6CF
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jan 2021 00:21:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9C4A2EC72B
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jan 2021 01:01:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbhAFXVW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Jan 2021 18:21:22 -0500
-Received: from mail-co1nam11on2138.outbound.protection.outlook.com ([40.107.220.138]:17056
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S1727429AbhAGAAl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Jan 2021 19:00:41 -0500
+Received: from mail-dm6nam12on2107.outbound.protection.outlook.com ([40.107.243.107]:12405
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726844AbhAFXVV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Jan 2021 18:21:21 -0500
+        id S1727288AbhAGAAl (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 6 Jan 2021 19:00:41 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NXbSGXKlI1W/cM9+nvHEgUWQ44qrkNGybH1PGBf6SwtH/AbgNQoe+6UqoO+uHizhv4ZZYDxclVA+RLpmkPDAqUqDb4Xsa/EC/3f3ilkz0D8hIGfaoT6OM06RdtVwqZxoqGofRH7Wac71j28IYtIOTcK0K/OuNJmMOSugBKf3KN2KVBH9m0CSZzJFKPBQVeaDb/s40uFsEjix7Fis97dUPWMJuf0JEj60bwTq0QUTuxL0aNO7HHl6pgoaTC+liYLD8fQWtLqpqohRJEkCl5kHjEwbKkKLilbgwGm9cjz2pcsVN/nYXqxNndUYBNb+e1iBJ07b5uObU0IH3GmfAhey/Q==
+ b=gZb2H1mxFWc5ZGHetNpGaaxTKYXldhBwdyfGXjvWlhe5bnINCzr90D3MpFEZ9LWq50CyMFqktnPVGi9FulzCWzs6pYZ4+1Gg7PKqlMVsBJK+Y1ZQkhDRl+gKNtyCl458aj6Mb1Y/OScrXC81k9btUcdsD1gnOSg2Ny10tVZSnMdIJSbr/da8Amth1La5scm97Lfl68VnFGk/InGrsKlDW6S5t8reVg7ux4plmRsOenQT/B3//6ag/ZrkpP9m/91H7/dYi99xvPiReVZ5Z+cOu4snSELXmmncRqtLZeuiD1jTJc4rxuED9QbdHhMnY9KUaWNLZozWUIHffzXLMBqEWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QP3p6HBLUJvWE7xFxOS59DqlwrrkDghZSJIqX6R8Muk=;
- b=jB0pVB4rZQvFjbbSqQUp31pLiGdyjL3So2WUI9Tcg72F3oBg6bqiOkHcqw1ZWu3DEPGCXjFlAUEXyPm2T5nU+HRZTJb80YorWfJAsbNen3mnqUU5KdlI4NLS80cXf1oVM0T022/XCx+3qjfV7GbyUtymtadVAht17E4OrdSLnz1VyV/NfTcnGa51YWjrNvpXuBV/k4K/QABmNiddHyu5JCPMybZH9CyhSNPRyDtP2p/snQAd9JcjM49WHxCdKD57hXZa/B0Ppr9doV8uRvkUrQ3LCAumL2ldiqidWVCOMDkOmcnumjPB4uC1cemAFDT/ZItK8o0uCSzV/t9zTol9lw==
+ bh=jqV8ymXU2hU8Zf3SIjYDF9jJSzIyvuhghz/tHeLtgmk=;
+ b=lrGV/3KxRi0WzEGW9DK+5CSSGhimu9umdzgnpTnxAk/9fCuvl0o3CbbHtZ4JSI5OrRS9SWGGxSZaAsV5NydLBx26vHIx1OeqBl6/TM3UwCF5bXEWIlMU8o+kNZcxrrhrUgHEjjvap+ZINN5whZGvWufSTHTHrKZ+QHX8mDmN/3wv0oJXYj37j5shaMULGlmma2Yd+VPGFUm3wFyDuqku7iu78V1ujJcdIIA87VMc1kRNljNV5sHtwqE/L9fqP32PBlFd4KePSTxSvZZ3/sb5rup1uTPEir/vGMSlYchtyAsx4fHFYue9AxEW1S/xiGX+AsRr4U37XK8pbOX7tPjdBQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QP3p6HBLUJvWE7xFxOS59DqlwrrkDghZSJIqX6R8Muk=;
- b=Lv30MWywF35+x/IG78qZgaafUtRfugormaPxAJMJjexXpfSI31tpvjMoyZWyzK8Z5Dqu6QMO7yBfEIYgZDIEKkRH5pakymcHi0UPkdJGAwTTE3DEh091ngyG3Pd+2irZDMmEd3Alt6y3pzEguDdZ547lD4lnwuiAR5aZicOotRs=
-Received: from (2603:10b6:803:51::33) by
- SN4PR2101MB0735.namprd21.prod.outlook.com (2603:10b6:803:51::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.0; Wed, 6 Jan
- 2021 23:20:33 +0000
-Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::18ca:96d8:8030:e4e8]) by SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::18ca:96d8:8030:e4e8%4]) with mapi id 15.20.3763.002; Wed, 6 Jan 2021
- 23:20:33 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     Matheus Castello <matheus@castello.eng.br>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ bh=jqV8ymXU2hU8Zf3SIjYDF9jJSzIyvuhghz/tHeLtgmk=;
+ b=WeDO6dBDMoGSrUDfhrTtClJ2km+DDaAuOz+5ewCK1ie4MrtP/gNpQoqEQ3TguzxaC1A36g+ryYu7XPWb7cc71hjrFTrDoYTOqDur9QCezVASQfUyvoDpAJZ24bRnG3IwxraUYTOaAqQBN5wExz8Nt2e9fBR0xU8s+5tgr1AhIb4=
+Received: from (2603:10b6:408:73::10) by
+ BN6PR21MB0753.namprd21.prod.outlook.com (2603:10b6:404:9c::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3763.2; Wed, 6 Jan 2021 23:59:52 +0000
+Received: from BN8PR21MB1155.namprd21.prod.outlook.com
+ ([fe80::e535:7045:e1e2:5e23]) by BN8PR21MB1155.namprd21.prod.outlook.com
+ ([fe80::e535:7045:e1e2:5e23%8]) with mapi id 15.20.3763.002; Wed, 6 Jan 2021
+ 23:59:52 +0000
+From:   Long Li <longli@microsoft.com>
+To:     kernel test robot <lkp@intel.com>,
+        Long Li <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, vkuznets <vkuznets@redhat.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] x86/Hyper-V: Support for free page reporting
-Thread-Topic: [PATCH v3] x86/Hyper-V: Support for free page reporting
-Thread-Index: Adbkgi7u1VztxegUSBO0uPzYUvP03g==
-Date:   Wed, 6 Jan 2021 23:20:33 +0000
-Message-ID: <SN4PR2101MB0880CA1C933184498DF1F595C0D09@SN4PR2101MB0880.namprd21.prod.outlook.com>
+CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH 2/3] hv_netvsc: Wait for completion on request
+ NVSP_MSG4_TYPE_SWITCH_DATA_PATH
+Thread-Topic: [PATCH 2/3] hv_netvsc: Wait for completion on request
+ NVSP_MSG4_TYPE_SWITCH_DATA_PATH
+Thread-Index: AQHW48mSn3A3+34fsUybSMcLXFW+XaoaAHAAgAFGYHA=
+Date:   Wed, 6 Jan 2021 23:59:52 +0000
+Message-ID: <BN8PR21MB11558420E44B211793B308F9CED09@BN8PR21MB1155.namprd21.prod.outlook.com>
+References: <1609895753-30445-2-git-send-email-longli@linuxonhyperv.com>
+ <202101061221.LKsEcWmp-lkp@intel.com>
+In-Reply-To: <202101061221.LKsEcWmp-lkp@intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: castello.eng.br; dkim=none (message not signed)
- header.d=none;castello.eng.br; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2601:602:9400:570:f11f:f773:1cef:ecfe]
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b54563ee-dea4-4a98-9576-fbf00dc118a4;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-01-06T23:53:55Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [67.168.111.68]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5f8641d7-112c-4c3e-67aa-08d8b299aaa3
-x-ms-traffictypediagnostic: SN4PR2101MB0735:
+x-ms-office365-filtering-correlation-id: cb81330f-6df2-42cd-6f16-08d8b29f28c0
+x-ms-traffictypediagnostic: BN6PR21MB0753:
 x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <SN4PR2101MB0735E0C320304C0CA5895A9AC0D09@SN4PR2101MB0735.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <BN6PR21MB0753D2532FDE4ED70A248F59CED09@BN6PR21MB0753.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:800;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UXwbgm9++F9GVNJXCwDirR0SH6T10IT2tblH8LK5UsEEmxYhfeQqMOEtctY3ClyLLcrcRb2uADS53/3Agn0wANJyWDbZQSoeBtL2tmsoyvDO2Jdib+FGorRF7mdz66FLZyUgdOKZVPMoFEyDum1kswiI0mqHB8foqjIXDWE753I/3uCkjVUtuDY2q/lhcsYCXAHZW+PgHaCevISBWdLKVSAbxSey1wt/DGSND0EAn8CoBPgOQL9LDpGMAmRvVxGzdYIbP38Logc7O0Ba7zSZzRInY11KTBhQ8Y0hB0ZEz5/ve6mkEM3O+szP2oyMApo19Qg6sTIJiu4ugWNIR1WQRjB19IgqWwEegSAjY3HpuXcI5Zp+/cL1He6v8d8PzsDqUnOAYU+jpIUIXTT8llBy4AQ6NgA3avx/BKAWd7THaKCBdF9wRjkd+vqVO2iGKL0lAmECCpnP/q5NkXe6XIP7WA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR2101MB0880.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(83380400001)(186003)(71200400001)(4326008)(478600001)(316002)(10290500003)(86362001)(54906003)(55016002)(66476007)(9686003)(76116006)(110136005)(7696005)(33656002)(64756008)(82960400001)(5660300002)(8936002)(66946007)(66446008)(2906002)(6506007)(8990500004)(82950400001)(8676002)(66556008)(52536014)(21314003)(4533004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?BUYaYo84kQ3ri4MjPu6nxsoBTwN6XP+8Ifrhet81Dn4s9ez4YonmiuaN5UPv?=
- =?us-ascii?Q?3f3VCVQTDnLKRHq2uiHswSIBirT07ndGPO47sh+UcgUgtYlYIHdkT2wueRha?=
- =?us-ascii?Q?LxgXTZmu9EiV/VrT7xsh5gqHmXuV9zjoxQstD3HZFEMQi1v6vUs17tslrHwy?=
- =?us-ascii?Q?CCitOOXedob7f8+COMq2zb8eaTc2GTKnfYMFINGt0CzPHGghRCubBGdRuJul?=
- =?us-ascii?Q?+nAgaUtZiTL0BEjIev13bgHlm3WBgLPQVzLdyZEVkwWG3r45neXASL9wGzm1?=
- =?us-ascii?Q?gvJ5QbMEADwWXajz7d9e5Qx/woIh2U3wNk1R8sEorlNxdm/72cTRWZjGW83k?=
- =?us-ascii?Q?Phds7htB+KINnGmRXlWnPIVYrd7dA8AoV6uxDO5GgBKDcky9cVpmDL06+4Rt?=
- =?us-ascii?Q?9vyV4p5ylSrXmYDe3bU+jb3v/Im9lDrLshpUhEsTQKK5/4VvNBfWGIpaF5TO?=
- =?us-ascii?Q?9Gz8MczootPr88+Av7Nc5yJL6hwaIS6GA5J7ZaDcDzr0tclSAnFa8C/3NlcQ?=
- =?us-ascii?Q?h37o3x4V36HeIxUKkwGL9OGOjn+VBN8M6YbvJN8qoOSV8sSIYwxAhTpF3jHu?=
- =?us-ascii?Q?/ep3uK07WNxZWO19a2h6aV/xeCdN33UkvkT9gqtNbuZa/mZPepqVk72Sq3WP?=
- =?us-ascii?Q?0YxteGVHiBucD5/Zcd52Q4IRsmauoo70ovfEBOqgpWHFu390XNZPzRr4Hhzc?=
- =?us-ascii?Q?R9phSgYcowTC/Rop6j0d1CJKKMSnQrzNncxS4C5BMxDDYgIH6BO62ZT5VNSM?=
- =?us-ascii?Q?VqlbQLbUgZwaTjF1IIcv7oVpRgd5Be63xFAE8t0wf6GCmPvk4X5WvIBl2Hyx?=
- =?us-ascii?Q?SD7lU4M5p4jYoiiwpDXB/2sOt19pIgEaKDImgd4tDpArmurbfpKdnXlnfEQL?=
- =?us-ascii?Q?tMZuVIFn7P6HP17B509ON94j44rz+VZK6PPJTNnJ7EQM1dmAUBfv9w++IxoC?=
- =?us-ascii?Q?c4+AGjcsxh6Vp4yjGP0QoMxvEq5HBiUmnEQx1cfLC9JpTUrzLvnx7QF5Tbvv?=
- =?us-ascii?Q?EmBU1jorPu+KyGlejEGqfgLF8OwEX2GMsYjPLWPc+maJrEg=3D?=
+x-microsoft-antispam-message-info: OAs1+n9rYpG5Uv/bXq1b6P5jGJYamYygab9pICBRq9xAR78ZBDUxPDtMfFlqubRj2kskl4EX8qxpUTGCxzgzP8KmVlJRkbhGsUZciyTfRrn+NBHXklSi81RSyHfdoGQSiKxT/VllxRJ+Pn4XQHtrMfyR6nS14Fqrm2cP2be+30hLAWGujMwd38iJnz1ZH+8HvVy7d2f/wu6tWHJVHhQkYSohc0/0NtMgOcvz7P7F5aLcnt+LHb9CS+7yi9KoV4EL7pupglU8ZZcFDgfOj8wj3tVnHxYQ+NbadWIekivrnJDr6dMPZeROsv0Jasn0rJbh/h3KaPP+gIoIGbhxrWxIVVmRlMdU0XPSSWmYyLQ3fBzspAfupmYPtGhH1ciba4hHbuGRJyxz+Dm573LlUXNkOeV918oYfVh50qXVbJ3ijuO47LUQuVcog4324VK653rD+rgmYH/wExfMiQq8yZsT9JExWSOyuIAbLIESjilycg7bxZzL9arbrtPUKmQ8wivi
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1155.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(346002)(376002)(39860400002)(64756008)(316002)(110136005)(26005)(2906002)(10290500003)(54906003)(8990500004)(8676002)(66946007)(86362001)(82950400001)(478600001)(966005)(76116006)(66446008)(33656002)(52536014)(66476007)(186003)(66556008)(7696005)(6506007)(82960400001)(8936002)(5660300002)(83380400001)(4326008)(9686003)(921005)(71200400001)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?Lrl8ctSZwNDCFufpO92H0R0wBfGpeUiPdxDjQVVbNuzDBvPGKRQAlwu9nwdJ?=
+ =?us-ascii?Q?e8i4tXK8g+25C5a8er+L1EycE6NVN+xl/TLMGJ862c9d2kd9tb9hI3shl0Ni?=
+ =?us-ascii?Q?1xMyJON5NGHX5yyoD5NwAqeuVeYMQwt6k5kkG011S4VnZ/XFKKloP2h96r9i?=
+ =?us-ascii?Q?T8wz2q7JqXiIDGXG4nHj5rGjhFpi4t1LjHjOI+c4HPDvn3+4VGpD/jXlfwPi?=
+ =?us-ascii?Q?D1DtIHHHV0EKEC7rWlQbURLtyJLWAcU3zpyw1jZuP3L9rz845e0shIDObQ09?=
+ =?us-ascii?Q?L6phaYYEg0xcSZxUl+HlVAcFwtNu6++A8gfHpG3xS2xoWKtw62n02U8PreSM?=
+ =?us-ascii?Q?HGeVFJQeyI2XhzIkrhCtZz/OvXbt7y4Z/D2WMR4GL7s7BA84RKsoFYFvCrBL?=
+ =?us-ascii?Q?REiDCyHFm+Qps+UgKt6ILq1xCtw6VMqtGvAcxeNZb+SVIH2RNVm5df+C5yCK?=
+ =?us-ascii?Q?s1u2DWy8wjReBQwrtkroUAhbwO01/JbNUj1VYbu4av7yX9pxlpy3MrKLE7yB?=
+ =?us-ascii?Q?yPUGWzcWtzciGPOOww2xiQ+UgOU2gL3JcgYFymiIx5kO5oSGY5R9gFXGIXBj?=
+ =?us-ascii?Q?zRuCBiYjF2rfs3HP0VwBHQCDcA5r689FZgiZXeeqEXnvjZTtQiS200P5lITR?=
+ =?us-ascii?Q?b5CHyIDcJL2UftDDr3JmhfbjNYI4P7jU92sIENOes96mmxbWdDAMGZ6LqLFS?=
+ =?us-ascii?Q?5Ls9A7UdkvekeOqKf3Ad9sN3Oje7nlVKYt2rumkYmSAq/BGaZDg5VS49GeyP?=
+ =?us-ascii?Q?zZHhKOmp7AOxiJNQn/2Z75PjjaMJNom40RBcVA9Jfkyt5iij7UCJjtqod7nf?=
+ =?us-ascii?Q?LeoiLBSTBXTJR/DkhcuX2wxr8V0cMSJI0ivKhlxd2ImVQ1tOvd3hEXTwp/VH?=
+ =?us-ascii?Q?yLrvFBeE2dvXegDplHXvSWX/QDZhXsB6Q6qNdzero/FAgPv7H0YQLTfJpcQD?=
+ =?us-ascii?Q?hYd+qmyoW8yfHD/KmAQwD/T637kgGugL+6LwvVA1qRM=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR2101MB0880.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f8641d7-112c-4c3e-67aa-08d8b299aaa3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2021 23:20:33.1917
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR21MB1155.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb81330f-6df2-42cd-6f16-08d8b29f28c0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2021 23:59:52.5119
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mBr4ZA5Njh0QXGOz07ZhMNPWZHaR8nPw0VDE5KURPHFcpgfmlvMf1bphuT7LRuhDecB5T5YcDGl0YVIuoibqdf3wn+dlJQXug21vp/i/lzc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR2101MB0735
+X-MS-Exchange-CrossTenant-userprincipalname: emIlabv8A1qFOewdYJhvsWSKcWmu2npZaOkvUb6cOCJeNEcAy//+YZ5WZJkf2gMoaGOKsMKRfxPavIrTOfcIWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0753
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Linux has support for free page reporting now (36e66c554b5c) for
-virtualized environment. On Hyper-V when virtually backed VMs are
-configured, Hyper-V will advertise cold memory discard capability,
-when supported. This patch adds the support to hook into the free
-page reporting infrastructure and leverage the Hyper-V cold memory
-discard hint hypercall to report/free these pages back to the host.
+> Subject: Re: [PATCH 2/3] hv_netvsc: Wait for completion on request
+> NVSP_MSG4_TYPE_SWITCH_DATA_PATH
+>=20
+> Hi Long,
+>=20
+> Thank you for the patch! Perhaps something to improve:
+>=20
+> [auto build test WARNING on linus/master] [also build test WARNING on
+> v5.11-rc2 next-20210104] [If your patch is applied to the wrong git tree,=
+ kindly
+> drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit-
+> scm.com%2Fdocs%2Fgit-format-
+> patch&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C695cf3d454eb468
+> b85fb08d8b1fb3ddd%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C6
+> 37455042608743102%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
+> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3D
+> 90AgH9HlZumRZ4UNC4uD2WIRpZ6ZEnvIdOKOfzYcXpI%3D&amp;reserved=3D0]
+>=20
+> url:
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgith
+> ub.com%2F0day-ci%2Flinux%2Fcommits%2FLong-Li%2Fhv_netvsc-Check-VF-
+> datapath-when-sending-traffic-to-VF%2F20210106-
+> 092237&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C695cf3d454eb46
+> 8b85fb08d8b1fb3ddd%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C
+> 637455042608753098%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwM
+> DAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata
+> =3DvtVJ8pXIOxIYeKdaqT9pD1%2BEuOM3wz4yqsHh8uWsGP4%3D&amp;reserv
+> ed=3D0
+> base:
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit.k
+> ernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.git&
+> amp;data=3D04%7C01%7Clongli%40microsoft.com%7C695cf3d454eb468b85fb0
+> 8d8b1fb3ddd%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C6374550
+> 42608753098%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQ
+> IjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DFXMG
+> CFODFoq3KLklxr17iVHiq%2FWmJ3c0fM7vIZRfNmc%3D&amp;reserved=3D0
+> e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62
+> config: i386-allyesconfig (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
+> reproduce (this is a W=3D1 build):
+>         #
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgith
+> ub.com%2F0day-
+> ci%2Flinux%2Fcommit%2F8c92b5574da1b0c2aee3eab7da2c4dad8d92572c&a
+> mp;data=3D04%7C01%7Clongli%40microsoft.com%7C695cf3d454eb468b85fb08
+> d8b1fb3ddd%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63745504
+> 2608753098%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIj
+> oiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DMMXkQ
+> KENGpyfW0NJs2khBSKTuBExFSZaWHgWyyIj6UU%3D&amp;reserved=3D0
+>         git remote add linux-review
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgith
+> ub.com%2F0day-
+> ci%2Flinux&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C695cf3d454e
+> b468b85fb08d8b1fb3ddd%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0
+> %7C637455042608753098%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjA
+> wMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;s
+> data=3Duge6PX2NyAe%2BjRtvgOhR5xzN2ltBctZXeZwn0hoYco0%3D&amp;reser
+> ved=3D0
+>         git fetch --no-tags linux-review Long-Li/hv_netvsc-Check-VF-datap=
+ath-
+> when-sending-traffic-to-VF/20210106-092237
+>         git checkout 8c92b5574da1b0c2aee3eab7da2c4dad8d92572c
+>         # save the attached .config to linux build tree
+>         make W=3D1 ARCH=3Di386
+>=20
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>=20
+> All warnings (new ones prefixed by >>):
+>=20
+>    drivers/net/hyperv/netvsc.c: In function 'netvsc_send_completion':
+> >> drivers/net/hyperv/netvsc.c:778:14: warning: cast to pointer from
+> >> integer of different size [-Wint-to-pointer-cast]
+>      778 |   pkt_rqst =3D (struct nvsp_message *)cmd_rqst;
+>          |              ^
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Tested-by: Matheus Castello <matheus@castello.eng.br>
----
-In V2:
-- Addressed feedback comments
-- Added page reporting config option tied to hyper-v balloon config
+I think this warning can be safely ignored.
 
-In V3:
-- Addressed feedback from Vitaly
----
- arch/x86/hyperv/hv_init.c         | 31 +++++++++++
- arch/x86/kernel/cpu/mshyperv.c    |  6 +-
- drivers/hv/Kconfig                |  1 +
- drivers/hv/hv_balloon.c           | 93 +++++++++++++++++++++++++++++++
- include/asm-generic/hyperv-tlfs.h | 32 ++++++++++-
- include/asm-generic/mshyperv.h    |  2 +
- 6 files changed, 162 insertions(+), 3 deletions(-)
+When sending packets over vmbus, the address is passed as u64 and stored in=
+ternally as u64 in vmbus_next_request_id(). Passing a 32 bit address will n=
+ot lose any data. Later the address is retrieved from vmbus_request_addr() =
+as a u64. Again, it will not lose data when casting to a 32 bit address.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index e04d90af4c27..5b610e47d091 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -528,3 +528,34 @@ bool hv_is_hibernation_supported(void)
- 	return acpi_sleep_state_supported(ACPI_STATE_S4);
- }
- EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
-+
-+/* Bit mask of the extended capability to query: see HV_EXT_CAPABILITY_xxx=
- */
-+bool hv_query_ext_cap(u64 cap_query)
-+{
-+	u64 *cap;
-+	unsigned long flags;
-+	u64 ext_cap =3D 0;
-+
-+	/*
-+	 * Querying extended capabilities is an extended hypercall. Check if the
-+	 * partition supports extended hypercall, first.
-+	 */
-+	if (!(ms_hyperv.priv_high & HV_ENABLE_EXTENDED_HYPERCALLS))
-+		return 0;
-+
-+	/*
-+	 * Repurpose the input page arg to accept output from Hyper-V for
-+	 * now because this is the only call that needs output from the
-+	 * hypervisor. It should be fixed properly by introducing an
-+	 * output arg once we have more places that require output.
-+	 */
-+	local_irq_save(flags);
-+	cap =3D *(u64 **)this_cpu_ptr(hyperv_pcpu_input_arg);
-+	if (hv_do_hypercall(HV_EXT_CALL_QUERY_CAPABILITIES, NULL, cap) =3D=3D
-+	    HV_STATUS_SUCCESS)
-+		ext_cap =3D *cap;
-+
-+	local_irq_restore(flags);
-+	return ext_cap & cap_query;
-+}
-+EXPORT_SYMBOL_GPL(hv_query_ext_cap);
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.=
-c
-index 05ef1f4550cb..f4c0d69c61ae 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -225,11 +225,13 @@ static void __init ms_hyperv_init_platform(void)
- 	 * Extract the features and hints
- 	 */
- 	ms_hyperv.features =3D cpuid_eax(HYPERV_CPUID_FEATURES);
-+	ms_hyperv.priv_high =3D cpuid_ebx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.misc_features =3D cpuid_edx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.hints    =3D cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
-=20
--	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
--		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
-+	pr_info("Hyper-V: privilege flags low:0x%x, high:0x%x, hints:0x%x, misc:0=
-x%x\n",
-+		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
-+		ms_hyperv.misc_features);
-=20
- 	ms_hyperv.max_vp_index =3D cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
- 	ms_hyperv.max_lp_index =3D cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 79e5356a737a..66c794d92391 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -23,6 +23,7 @@ config HYPERV_UTILS
- config HYPERV_BALLOON
- 	tristate "Microsoft Hyper-V Balloon driver"
- 	depends on HYPERV
-+	select PAGE_REPORTING
- 	help
- 	  Select this option to enable Hyper-V Balloon driver.
-=20
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 8c471823a5af..c0ff0a48f540 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -21,6 +21,7 @@
- #include <linux/memory.h>
- #include <linux/notifier.h>
- #include <linux/percpu_counter.h>
-+#include <linux/page_reporting.h>
-=20
- #include <linux/hyperv.h>
- #include <asm/hyperv-tlfs.h>
-@@ -563,6 +564,10 @@ struct hv_dynmem_device {
- 	 * The negotiated version agreed by host.
- 	 */
- 	__u32 version;
-+
-+#ifdef CONFIG_PAGE_REPORTING
-+	struct page_reporting_dev_info pr_dev_info;
-+#endif
- };
-=20
- static struct hv_dynmem_device dm_device;
-@@ -1568,6 +1573,84 @@ static void balloon_onchannelcallback(void *context)
-=20
- }
-=20
-+#ifdef CONFIG_PAGE_REPORTING
-+/* Hyper-V only supports reporting 2MB pages or higher */
-+#define HV_MIN_PAGE_REPORTING_ORDER	9
-+#define HV_MIN_PAGE_REPORTING_LEN (HV_HYP_PAGE_SIZE << HV_MIN_PAGE_REPORTI=
-NG_ORDER)
-+static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info=
-,
-+		    struct scatterlist *sgl, unsigned int nents)
-+{
-+	unsigned long flags;
-+	struct hv_memory_hint *hint;
-+	int i;
-+	u64 status;
-+	struct scatterlist *sg;
-+
-+	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
-+	local_irq_save(flags);
-+	hint =3D *(struct hv_memory_hint **)this_cpu_ptr(hyperv_pcpu_input_arg);
-+	if (!hint) {
-+		local_irq_restore(flags);
-+		return -ENOSPC;
-+	}
-+
-+	hint->type =3D HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD;
-+	hint->reserved =3D 0;
-+	for_each_sg(sgl, sg, nents, i) {
-+		union hv_gpa_page_range *range;
-+
-+		range =3D &hint->ranges[i];
-+		range->address_space =3D 0;
-+		/* page reportting only reports 2MB pages or higher */
-+		range->page.largepage =3D 1;
-+		range->page.additional_pages =3D
-+			(sg->length / HV_MIN_PAGE_REPORTING_LEN) - 1;
-+		range->base_large_pfn =3D
-+			page_to_pfn(sg_page(sg)) >> HV_MIN_PAGE_REPORTING_ORDER;
-+	}
-+
-+	status =3D hv_do_rep_hypercall(HV_EXT_CALL_MEMORY_HEAT_HINT, nents, 0,
-+				     hint, NULL);
-+	local_irq_restore(flags);
-+	if ((status & HV_HYPERCALL_RESULT_MASK) !=3D HV_STATUS_SUCCESS) {
-+		pr_err("Cold memory discard hypercall failed with status %llx\n",
-+			status);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void enable_page_reporting(void)
-+{
-+	int ret;
-+
-+	BUILD_BUG_ON(pageblock_order < HV_MIN_PAGE_REPORTING_ORDER);
-+	if (!hv_query_ext_cap(HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT)) {
-+		pr_debug("Cold memory discard hint not supported by Hyper-V\n");
-+		return;
-+	}
-+
-+	BUILD_BUG_ON(PAGE_REPORTING_CAPACITY > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES=
-);
-+	dm_device.pr_dev_info.report =3D hv_free_page_report;
-+	ret =3D page_reporting_register(&dm_device.pr_dev_info);
-+	if (ret < 0) {
-+		dm_device.pr_dev_info.report =3D NULL;
-+		pr_err("Failed to enable cold memory discard: %d\n", ret);
-+	} else {
-+		pr_info("Cold memory discard hint enabled\n");
-+	}
-+}
-+
-+static void disable_page_reporting(void)
-+{
-+	if (dm_device.pr_dev_info.report) {
-+		page_reporting_unregister(&dm_device.pr_dev_info);
-+		dm_device.pr_dev_info.report =3D NULL;
-+	}
-+}
-+#endif /* CONFIG_PAGE_REPORTING */
-+
- static int balloon_connect_vsp(struct hv_device *dev)
- {
- 	struct dm_version_request version_req;
-@@ -1713,6 +1796,10 @@ static int balloon_probe(struct hv_device *dev,
- 	if (ret !=3D 0)
- 		return ret;
-=20
-+#ifdef CONFIG_PAGE_REPORTING
-+	enable_page_reporting();
-+#endif
-+
- 	dm_device.state =3D DM_INITIALIZED;
-=20
- 	dm_device.thread =3D
-@@ -1731,6 +1818,9 @@ static int balloon_probe(struct hv_device *dev,
- #ifdef CONFIG_MEMORY_HOTPLUG
- 	unregister_memory_notifier(&hv_memory_nb);
- 	restore_online_page_callback(&hv_online_page);
-+#endif
-+#ifdef CONFIG_PAGE_REPORTING
-+	disable_page_reporting();
- #endif
- 	return ret;
- }
-@@ -1753,6 +1843,9 @@ static int balloon_remove(struct hv_device *dev)
- #ifdef CONFIG_MEMORY_HOTPLUG
- 	unregister_memory_notifier(&hv_memory_nb);
- 	restore_online_page_callback(&hv_online_page);
-+#endif
-+#ifdef CONFIG_PAGE_REPORTING
-+	disable_page_reporting();
- #endif
- 	spin_lock_irqsave(&dm_device.ha_lock, flags);
- 	list_for_each_entry_safe(has, tmp, &dm->ha_region_list, list) {
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv=
--tlfs.h
-index e73a11850055..75c20be2cc44 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -89,6 +89,7 @@
- #define HV_ACCESS_STATS				BIT(8)
- #define HV_DEBUGGING				BIT(11)
- #define HV_CPU_POWER_MANAGEMENT			BIT(12)
-+#define HV_ENABLE_EXTENDED_HYPERCALLS		BIT(20)
-=20
-=20
- /*
-@@ -152,11 +153,18 @@ struct ms_hyperv_tsc_page {
- #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
- #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
-=20
-+/* Extended hypercalls */
-+#define HV_EXT_CALL_QUERY_CAPABILITIES		0x8001
-+#define HV_EXT_CALL_MEMORY_HEAT_HINT		0x8003
-+
- #define HV_FLUSH_ALL_PROCESSORS			BIT(0)
- #define HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES	BIT(1)
- #define HV_FLUSH_NON_GLOBAL_MAPPINGS_ONLY	BIT(2)
- #define HV_FLUSH_USE_EXTENDED_RANGE_FORMAT	BIT(3)
-=20
-+/* Extended capability bits */
-+#define HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT BIT(8)
-+
- enum HV_GENERIC_SET_FORMAT {
- 	HV_GENERIC_SET_SPARSE_4K,
- 	HV_GENERIC_SET_ALL,
-@@ -367,7 +375,7 @@ struct hv_guest_mapping_flush {
-  */
- #define HV_MAX_FLUSH_PAGES (2048)
-=20
--/* HvFlushGuestPhysicalAddressList hypercall */
-+/* HvFlushGuestPhysicalAddressList, HvExtCallMemoryHeatHint hypercall */
- union hv_gpa_page_range {
- 	u64 address_space;
- 	struct {
-@@ -375,6 +383,12 @@ union hv_gpa_page_range {
- 		u64 largepage:1;
- 		u64 basepfn:52;
- 	} page;
-+	struct {
-+		u64 reserved:12;
-+		u64 page_size:1;
-+		u64 reserved1:8;
-+		u64 base_large_pfn:43;
-+	};
- };
-=20
- /*
-@@ -494,4 +508,20 @@ struct hv_set_vp_registers_input {
- 	} element[];
- } __packed;
-=20
-+/*
-+ * The whole argument should fit in a page to be able to pass to the hyper=
-visor
-+ * in one hypercall.
-+ */
-+#define HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES  \
-+	((PAGE_SIZE - sizeof(struct hv_memory_hint)) / \
-+		sizeof(union hv_gpa_page_range))
-+
-+/* HvExtCallMemoryHeatHint hypercall */
-+#define HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD	2
-+struct hv_memory_hint {
-+	u64 type:2;
-+	u64 reserved:62;
-+	union hv_gpa_page_range ranges[];
-+} __packed;
-+
- #endif
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.=
-h
-index c57799684170..93c1303f5e00 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -27,6 +27,7 @@
-=20
- struct ms_hyperv_info {
- 	u32 features;
-+	u32 priv_high;
- 	u32 misc_features;
- 	u32 hints;
- 	u32 nested_features;
-@@ -170,6 +171,7 @@ void hyperv_report_panic_msg(phys_addr_t pa, size_t siz=
-e);
- bool hv_is_hyperv_initialized(void);
- bool hv_is_hibernation_supported(void);
- void hyperv_cleanup(void);
-+bool hv_query_ext_cap(u64 cap_query);
- #else /* CONFIG_HYPERV */
- static inline bool hv_is_hyperv_initialized(void) { return false; }
- static inline bool hv_is_hibernation_supported(void) { return false; }
---=20
-2.17.1
+This method of storing and retrieving addresses are used throughout other h=
+yper-v drivers. If we want to not to trigger this warning, I suggest making=
+ a patch to convert all those usages in all hyper-v drivers.
 
+Thanks,
+Long
+
+>=20
+>=20
+> vim +778 drivers/net/hyperv/netvsc.c
+>=20
+>    757
+>    758	static void netvsc_send_completion(struct net_device *ndev,
+>    759					   struct netvsc_device *net_device,
+>    760					   struct vmbus_channel
+> *incoming_channel,
+>    761					   const struct vmpacket_descriptor
+> *desc,
+>    762					   int budget)
+>    763	{
+>    764		const struct nvsp_message *nvsp_packet =3D
+> hv_pkt_data(desc);
+>    765		u32 msglen =3D hv_pkt_datalen(desc);
+>    766		struct nvsp_message *pkt_rqst;
+>    767		u64 cmd_rqst;
+>    768
+>    769		/* First check if this is a VMBUS completion without data
+> payload */
+>    770		if (!msglen) {
+>    771			cmd_rqst =3D
+> vmbus_request_addr(&incoming_channel->requestor,
+>    772						      (u64)desc->trans_id);
+>    773			if (cmd_rqst =3D=3D VMBUS_RQST_ERROR) {
+>    774				netdev_err(ndev, "Invalid transaction id\n");
+>    775				return;
+>    776			}
+>    777
+>  > 778			pkt_rqst =3D (struct nvsp_message *)cmd_rqst;
+>    779			switch (pkt_rqst->hdr.msg_type) {
+>    780			case NVSP_MSG4_TYPE_SWITCH_DATA_PATH:
+>    781				complete(&net_device->channel_init_wait);
+>    782				break;
+>    783
+>    784			default:
+>    785				netdev_err(ndev, "Unexpected VMBUS
+> completion!!\n");
+>    786			}
+>    787			return;
+>    788		}
+>    789
+>    790		/* Ensure packet is big enough to read header fields */
+>    791		if (msglen < sizeof(struct nvsp_message_header)) {
+>    792			netdev_err(ndev, "nvsp_message length too
+> small: %u\n", msglen);
+>    793			return;
+>    794		}
+>    795
+>    796		switch (nvsp_packet->hdr.msg_type) {
+>    797		case NVSP_MSG_TYPE_INIT_COMPLETE:
+>    798			if (msglen < sizeof(struct nvsp_message_header) +
+>    799					sizeof(struct
+> nvsp_message_init_complete)) {
+>    800				netdev_err(ndev, "nvsp_msg length too
+> small: %u\n",
+>    801					   msglen);
+>    802				return;
+>    803			}
+>    804			fallthrough;
+>    805
+>    806		case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
+>    807			if (msglen < sizeof(struct nvsp_message_header) +
+>    808					sizeof(struct
+> nvsp_1_message_send_receive_buffer_complete)) {
+>    809				netdev_err(ndev, "nvsp_msg1 length too
+> small: %u\n",
+>    810					   msglen);
+>    811				return;
+>    812			}
+>    813			fallthrough;
+>    814
+>    815		case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
+>    816			if (msglen < sizeof(struct nvsp_message_header) +
+>    817					sizeof(struct
+> nvsp_1_message_send_send_buffer_complete)) {
+>    818				netdev_err(ndev, "nvsp_msg1 length too
+> small: %u\n",
+>    819					   msglen);
+>    820				return;
+>    821			}
+>    822			fallthrough;
+>    823
+>    824		case NVSP_MSG5_TYPE_SUBCHANNEL:
+>    825			if (msglen < sizeof(struct nvsp_message_header) +
+>    826					sizeof(struct
+> nvsp_5_subchannel_complete)) {
+>    827				netdev_err(ndev, "nvsp_msg5 length too
+> small: %u\n",
+>    828					   msglen);
+>    829				return;
+>    830			}
+>    831			/* Copy the response back */
+>    832			memcpy(&net_device->channel_init_pkt,
+> nvsp_packet,
+>    833			       sizeof(struct nvsp_message));
+>    834			complete(&net_device->channel_init_wait);
+>    835			break;
+>    836
+>    837		case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
+>    838			netvsc_send_tx_complete(ndev, net_device,
+> incoming_channel,
+>    839						desc, budget);
+>    840			break;
+>    841
+>    842		default:
+>    843			netdev_err(ndev,
+>    844				   "Unknown send completion type %d
+> received!!\n",
+>    845				   nvsp_packet->hdr.msg_type);
+>    846		}
+>    847	}
+>    848
+>=20
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flists=
+.
+> 01.org%2Fhyperkitty%2Flist%2Fkbuild-
+> all%40lists.01.org&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C695cf3
+> d454eb468b85fb08d8b1fb3ddd%7C72f988bf86f141af91ab2d7cd011db47%7C1
+> %7C0%7C637455042608753098%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC
+> 4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&
+> amp;sdata=3DAKWfmJrn1C%2BwaqX6wlu95HcPys9K0ju%2FlC%2Bu3O20jAg%3
+> D&amp;reserved=3D0
