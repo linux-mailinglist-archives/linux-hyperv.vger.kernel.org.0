@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 841B42EC4F5
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Jan 2021 21:35:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61B4C2EC51F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Jan 2021 21:37:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbhAFUeh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Jan 2021 15:34:37 -0500
-Received: from mail-wm1-f50.google.com ([209.85.128.50]:53454 "EHLO
-        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbhAFUeg (ORCPT
+        id S1727794AbhAFUfr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Jan 2021 15:35:47 -0500
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:42078 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbhAFUeh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Jan 2021 15:34:36 -0500
-Received: by mail-wm1-f50.google.com with SMTP id k10so3448379wmi.3;
-        Wed, 06 Jan 2021 12:34:19 -0800 (PST)
+        Wed, 6 Jan 2021 15:34:37 -0500
+Received: by mail-wr1-f41.google.com with SMTP id m5so3566792wrx.9;
+        Wed, 06 Jan 2021 12:34:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Mhlu1tTfXO6P+FCugagf3OwfYcUHlDCcg/eJOpRPSrE=;
-        b=mTCNT9Qj+ZJyZQnGgLwGSWsOs2IEjY7w36xTgQLuIpOlwmwvJjyIcxNrjok06e+rPK
-         EUrmAx4Jh0bugcQnyA9wZDfvTukz6SgTvSBORN6Z2NsCv3NTLskAK4uLc8tV0SC7Eg3S
-         PgfdCCgEvy/H3cpNMUe7Gc2mOzrKn6z4PNPzEa7uMwGe8uwcN9jP2amdJ789nO/kbZ04
-         aL0P8KKv8aTAU4nLOM/Kqneyt8JfgW0ufSFz7d5+32IicST7/TSn6+ArxRUb8waJhkLF
-         b+9V4+ubGASqFk0DcMUdfke+ip8mz2oyVxXawaV9h3S2tyMv+b/LlncfN2N3T1BUulgW
-         WGgA==
-X-Gm-Message-State: AOAM530OZOD61pSYyxYLWuFbflebBngG/XOm8whhX8H+X5879+7mzUyD
-        Pn5HLJiI9uQ46fqpbzjmc0O5CAhbzFY=
-X-Google-Smtp-Source: ABdhPJxJSV5vs03ACfKiggc7zSy+VVNSNbEjICgke3R+iSI0E5wXlaSM2XRRWEQI5R10Bm12ZSQXwQ==
-X-Received: by 2002:a1c:1bc6:: with SMTP id b189mr5075372wmb.71.1609965234086;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+I7gc45xFJIk2c97apTvkR8acQbtMFTm1lgQrn5j0J4=;
+        b=DiN9piZcf8gi22slHb7emMZ5JHieWBfSxDc3q91mipl7zcZjy3V1A8u+oG/TULORPj
+         dw2Iwj9Tw/VBBQMPL/yuBCX749bh/TDAUVEkmMNiogH1OhNKEsF5ggUJAGlb5tUTnDkK
+         Hqx7aZPYIOVKFgIPr/Y0sUV10hxABhfhbCZCrOR8yaZ2lcRgLT4lSyD6Y1m4mjZyfqpd
+         2YSRit34dJKGYd24vpredwdv+1k29WXDmL5nAWWVkESMoDoM1ffU44O/pWMSZ/704QoH
+         DS+wnCwQeO0fC+aZ0TTLCEVqdlHi4LHNlaWM1So5P0HVGmm/JvMr1apxWJC8ifyCghb+
+         EXtA==
+X-Gm-Message-State: AOAM533zuQqOG9/99nPW8ihMp72GRmM0N6QLZNyGYvNSv0UtIQvTGmH/
+        z592XPuelRK9iOsQLTdCn/FEQV8BGZ8=
+X-Google-Smtp-Source: ABdhPJyHPkFZq8wqygPXVhtD2e9TVYyiuVI/8OvmqjRjWPKCi1cSk0ekLxW6YgVWvQkfb3eoQzAjGQ==
+X-Received: by 2002:a05:6000:368:: with SMTP id f8mr5850439wrf.150.1609965234909;
         Wed, 06 Jan 2021 12:33:54 -0800 (PST)
 Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u9sm4499456wmb.32.2021.01.06.12.33.53
+        by smtp.gmail.com with ESMTPSA id u9sm4499456wmb.32.2021.01.06.12.33.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jan 2021 12:33:53 -0800 (PST)
+        Wed, 06 Jan 2021 12:33:54 -0800 (PST)
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
 Cc:     virtualization@lists.linux-foundation.org,
@@ -42,110 +42,46 @@ Cc:     virtualization@lists.linux-foundation.org,
         Vineeth Pillai <viremana@linux.microsoft.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, sameo@linux.intel.com,
-        robert.bradford@intel.com, sebastien.boeuf@intel.com
-Subject: [PATCH v4 00/17] Introducing Linux root partition support for Microsoft Hypervisor
-Date:   Wed,  6 Jan 2021 20:33:33 +0000
-Message-Id: <20210106203350.14568-1-wei.liu@kernel.org>
+        Wei Liu <wei.liu@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES)
+Subject: [PATCH v4 01/17] asm-generic/hyperv: change HV_CPU_POWER_MANAGEMENT to HV_CPU_MANAGEMENT
+Date:   Wed,  6 Jan 2021 20:33:34 +0000
+Message-Id: <20210106203350.14568-2-wei.liu@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20210106203350.14568-1-wei.liu@kernel.org>
+References: <20210106203350.14568-1-wei.liu@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi all
+This makes the name match Hyper-V TLFS.
 
-Here we propose this patch series to make Linux run as the root partition [0]
-on Microsoft Hypervisor [1]. There will be a subsequent patch series to provide a
-device node (/dev/mshv) such that userspace programs can create and run virtual
-machines. We've also ported Cloud Hypervisor [3] over and have been able to
-boot a Linux guest with Virtio devices since late July 2020.
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ include/asm-generic/hyperv-tlfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This series implements only the absolutely necessary components to get
-things running.  A large portion of this series consists of patches that
-augment hyperv-tlfs.h.  They should be rather uncontroversial and can be
-applied right away.
-
-A few key things other than the changes to hyperv-tlfs.h:
-
-1. Linux needs to setup existing Hyper-V facilities differently.
-2. Linux needs to make a few hypercalls to bring up APs.
-3. Interrupts are remapped by IOMMU, which is controlled by the hypervisor.
-   Linux needs to make hypercalls to map and unmap interrupts. This is
-   done by introducing a new MSI irqdomain and new irqchips.
-
-This series is now based on 5.11-rc2.
-
-Comments and suggestions are welcome.
-
-Thanks,
-Wei.
-
-[0] Just think of it like Xen's Dom0.
-[1] Hyper-V is more well-known, but it really refers to the whole stack
-    including the hypervisor and other components that run in Windows kernel
-    and userspace.
-[3] https://github.com/cloud-hypervisor/
-
-Cc: sameo@linux.intel.com
-Cc: robert.bradford@intel.com
-Cc: sebastien.boeuf@intel.com
-
-Changes since v3:
-1. Fix compilation errors.
-2. Adapt to upstream changes.
-
-Changes since v2:
-1. Address more comments from Vitaly.
-2. Fix and test 32bit build.
-
-Changes since v1:
-1. Simplify MSI IRQ domain implementation.
-2. Address Vitaly's comments.
-
-Wei Liu (17):
-  asm-generic/hyperv: change HV_CPU_POWER_MANAGEMENT to
-    HV_CPU_MANAGEMENT
-  x86/hyperv: detect if Linux is the root partition
-  Drivers: hv: vmbus: skip VMBus initialization if Linux is root
-  iommu/hyperv: don't setup IRQ remapping when running as root
-  clocksource/hyperv: use MSR-based access if running as root
-  x86/hyperv: allocate output arg pages if required
-  x86/hyperv: extract partition ID from Microsoft Hypervisor if
-    necessary
-  x86/hyperv: handling hypercall page setup for root
-  x86/hyperv: provide a bunch of helper functions
-  x86/hyperv: implement and use hv_smp_prepare_cpus
-  asm-generic/hyperv: update hv_msi_entry
-  asm-generic/hyperv: update hv_interrupt_entry
-  asm-generic/hyperv: introduce hv_device_id and auxiliary structures
-  asm-generic/hyperv: import data structures for mapping device
-    interrupts
-  x86/hyperv: implement an MSI domain for root partition
-  x86/ioapic: export a few functions and data structures via io_apic.h
-  x86/hyperv: handle IO-APIC when running as root
-
- arch/x86/hyperv/Makefile            |   4 +-
- arch/x86/hyperv/hv_init.c           | 120 +++++-
- arch/x86/hyperv/hv_proc.c           | 225 +++++++++++
- arch/x86/hyperv/irqdomain.c         | 559 ++++++++++++++++++++++++++++
- arch/x86/include/asm/hyperv-tlfs.h  |  23 ++
- arch/x86/include/asm/io_apic.h      |  22 ++
- arch/x86/include/asm/mshyperv.h     |  16 +-
- arch/x86/kernel/apic/io_apic.c      |  25 +-
- arch/x86/kernel/cpu/mshyperv.c      |  49 +++
- drivers/clocksource/hyperv_timer.c  |   3 +
- drivers/hv/vmbus_drv.c              |   3 +
- drivers/iommu/hyperv-iommu.c        |   3 +-
- drivers/pci/controller/pci-hyperv.c |   2 +-
- include/asm-generic/hyperv-tlfs.h   | 254 ++++++++++++-
- 14 files changed, 1272 insertions(+), 36 deletions(-)
- create mode 100644 arch/x86/hyperv/hv_proc.c
- create mode 100644 arch/x86/hyperv/irqdomain.c
-
-
-base-commit: e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62
+diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+index e73a11850055..e6903589a82a 100644
+--- a/include/asm-generic/hyperv-tlfs.h
++++ b/include/asm-generic/hyperv-tlfs.h
+@@ -88,7 +88,7 @@
+ #define HV_CONNECT_PORT				BIT(7)
+ #define HV_ACCESS_STATS				BIT(8)
+ #define HV_DEBUGGING				BIT(11)
+-#define HV_CPU_POWER_MANAGEMENT			BIT(12)
++#define HV_CPU_MANAGEMENT			BIT(12)
+ 
+ 
+ /*
 -- 
 2.20.1
 
