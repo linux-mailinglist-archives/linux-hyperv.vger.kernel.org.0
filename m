@@ -2,185 +2,292 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 531AC2EC7CC
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jan 2021 02:47:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 683F22EC9D1
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jan 2021 06:06:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725860AbhAGBrL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Jan 2021 20:47:11 -0500
-Received: from mail-dm6nam12on2102.outbound.protection.outlook.com ([40.107.243.102]:62913
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        id S1725821AbhAGFG0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Jan 2021 00:06:26 -0500
+Received: from mail-bn7nam10on2118.outbound.protection.outlook.com ([40.107.92.118]:10849
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725822AbhAGBrL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Jan 2021 20:47:11 -0500
+        id S1725929AbhAGFG0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 7 Jan 2021 00:06:26 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bhq2QZJ/uhbF+x060iNeJHnQI6xepv82DGytl/0ug4AwoQ0KAv6+FDZII5DHU2S31bE6bkg/zlKwF+YecLgRPEHLvLAZZOzJ2HlZ5LkmheQk7cf2dNu2W2nTnOULd+MUxYLLxA4f1OOvEULc2DMf8RYaONzGz6n8QOti4WMgQC2nIHSUhevphupnVIs66MkHN2EwyqxZ08EpRlsre2RbhFUGn25q/rHLUKet7asnxl7LJpliVJua698TaMRvy/vCu66RQ0fbsugJfiOhshlZkYRVOBPd28CiwWb1ReTGeKhZ0qmu9twv2c2LOK03xdt0ms826YGyURJD1JxLSzJX/w==
+ b=X4PPd2nTKELnXfIZ2GflM2xzxlmXZdcyjn0qLd2H6kHKH1QRtESJ3JgThcdRhO03VtcqHKjlYBfuYKIKgf2/JoJW4U+BXhCd1Y6sZ8G5KJz61V72Xck5ZpAm0RSam7gOetsIm1rs2qyFnf7CK38U23c8pTB5CBNVQGpuANHHde2k7/suwEs6IjSUlKhlMHqTCihCceTTav02Z2A8KMlB93nAvVtE91HNWV8O4uY/2Bnj+9A7thQvM3bTtSo8jbgG3nqfyJgM3a2Zpl48YGE9wsd1gdH54RjLqk3VxfZjVW5Bab1MvT2RWOk53edX4UlITk9Zf86xmlnH+dcCUC5A4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dRUi6ve3j+3dDadQ0TORDv/AbrflFw+kGN6SMtTSwRU=;
- b=VOkUHYz0+oXJDGAOrpr2yVJbyAddsI5DpjwDnZTxs2txCJ+FcfapOf2ILhuat9Y10PQQP7xl3DdcZZ6HpVXlZumlbTzXSJL7XhYuCBMg7jLX9zVVoLcmxw2wBJHEd2r5IOO7rtv950OhLndamwbLam/QIHkAHJ34jI0EHJPHyK78MpUObIpptYi0NxJHTN8blb1csh5TS2RTYZHOoqJXOiMU+iMylSmWyE3dNScD+Gg5bsxBY9D4AtlBBO+EOjx364ivxoTSygWBnLevFyU5oBS4+SxE4+hcJHkktj7iGEL9KrwoSjTNlA/i7KAWHurp8fOj3Osga60lRRO+0frMrQ==
+ bh=t9IKnXKI7nM+Rb32/24yW0ADpgXGcrTekl3zfUQrUZY=;
+ b=BImt2VuZnw/ZLUBXuT3f+AYCiUejrcWiXVGyWjMO6yP0WM25XS+j1/bZzOUuXYRWZkcFdkLC1oFtLhgDXQt0XyvXa2dbXkcZAOFAFYmSTS3QCrAYw8MaH558Dj7ZRPNQ07a6RXmgW+lvLyf+eXGyuwMYp9z4CkQ64+jX4eaSMbo0t161yH8l+ObS9q4DdJ0Myo/5E/qFx85huwPjmAZwU5PTC/FGPDQB/NNO2tQN5sDgOGnb53D4D6YVBTrYgJZOQlrdPi3UKeD/6Xr7ukWNPNdkuuuWtQ++F/UXo3Qyx5IMMsKTwm7po7FCCOzIqc34yFVKnrSyLb5R95KAHv1Xaw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dRUi6ve3j+3dDadQ0TORDv/AbrflFw+kGN6SMtTSwRU=;
- b=CaSHik79FGVzTILjYkIcdDtAenwWqv7Zteu0FL37wTvHJZur4ue0X/NEvRD97NSpBZqYSqWUq2ETsnfPHsuHkfwcSRlydNoV9G3trq1kJ7LWAjzdlIADbJ+madYUrzWZmXpjCXaVSipgTFHcs/2OL1O+DZW6ZLcdyKftqoukq7U=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-Received: from (2603:10b6:4:a2::17) by
- DM5PR2101MB0997.namprd21.prod.outlook.com (2603:10b6:4:a8::31) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3763.0; Thu, 7 Jan 2021 01:46:23 +0000
-Received: from DM5PR2101MB1095.namprd21.prod.outlook.com
- ([fe80::8848:d9d:cfb:d941]) by DM5PR2101MB1095.namprd21.prod.outlook.com
- ([fe80::8848:d9d:cfb:d941%5]) with mapi id 15.20.3763.002; Thu, 7 Jan 2021
- 01:46:23 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        vkuznets@redhat.com, marcelo.cerri@canonical.com
-Cc:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v3] Drivers: hv: vmbus: Add /sys/bus/vmbus/hibernation
-Date:   Wed,  6 Jan 2021 17:45:52 -0800
-Message-Id: <20210107014552.14234-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-Originating-IP: [2001:4898:80e8:7:585a:fb33:5490:4e5]
-X-ClientProxiedBy: CO2PR04CA0174.namprd04.prod.outlook.com
- (2603:10b6:104:4::28) To DM5PR2101MB1095.namprd21.prod.outlook.com
- (2603:10b6:4:a2::17)
+ bh=t9IKnXKI7nM+Rb32/24yW0ADpgXGcrTekl3zfUQrUZY=;
+ b=Z5BS+NBq4SxX9N5gO8dFfkYiKJGNp++FzJNmLsFM5Kug+URxeUGeBD7F8U1uT8s+cNBdZLnZs5dxun6mFpYMfEcEl9lIyG9+NpK5IFa0Gmb0BGfnXahS2hHpCy3DSTdYXiNgYynkAIpeBZct7FDJQgHSPNw7VlpGuymwDXu7Gtw=
+Received: from (2603:10b6:803:51::33) by
+ SN6PR2101MB1679.namprd21.prod.outlook.com (2603:10b6:805:59::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.0; Thu, 7 Jan
+ 2021 05:05:37 +0000
+Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
+ ([fe80::18ca:96d8:8030:e4e8]) by SN4PR2101MB0880.namprd21.prod.outlook.com
+ ([fe80::18ca:96d8:8030:e4e8%4]) with mapi id 15.20.3763.002; Thu, 7 Jan 2021
+ 05:05:37 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+CC:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "\"H. Peter Anvin\"" <hpa@zytor.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: [PATCH] Hyper-V: pci: x64: Generalize irq/msi set-up and handling
+Thread-Topic: [PATCH] Hyper-V: pci: x64: Generalize irq/msi set-up and
+ handling
+Thread-Index: Adbksm0P1pe4NiY6T8iz9IYs5m9slA==
+Date:   Thu, 7 Jan 2021 05:05:36 +0000
+Message-ID: <SN4PR2101MB08808404302E2E1AB6A27DD6C0AF9@SN4PR2101MB0880.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2601:602:9400:570:f11f:f773:1cef:ecfe]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a165ad10-bc9a-4e11-3129-08d8b2c9df13
+x-ms-traffictypediagnostic: SN6PR2101MB1679:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR2101MB1679B5A94491BF5F2BC991EEC0AF9@SN6PR2101MB1679.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DlOXH9dqUnI7WDAFQuvx0e4myZlLQxFnZCONhuwYgrMgsC4gkbKFYWrUZ7qkPmVZSEDejA2CO5jx8vmMpMJ8BYWAzQAssVoTxeDQHfN3WK0J6CDqEoCG8JM65OR8DgGSB9hyd4XZ1Bvebe7WZ9QER9wJ8Kh9edHkFE/jyjrSAXAr55NJNqoljtjRfhuxAY2USDtFe0WLybmYdW5KbwTKfqImfXNaNe2o3V9yzsscjS6ORncDDEMvsinWTlpv7KpKOs9vRpEUWkqxun0RCdFHS2nwwlo8nYmtYA8RlnF0nC8L+DR8ZgV4zITkE0FrRbxd9zT7jMm+T8jYXse7kzvoWQMmLVwSWBoHWOPlfLsLlTVak6VtW1BWaA23WrQXPckgM794qeOv7NCQJxVAOpr+ZA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR2101MB0880.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(71200400001)(9686003)(55016002)(83380400001)(54906003)(7416002)(6506007)(186003)(8936002)(8676002)(86362001)(2906002)(5660300002)(8990500004)(66946007)(33656002)(4326008)(52536014)(76116006)(10290500003)(316002)(82960400001)(66556008)(82950400001)(7696005)(478600001)(66446008)(64756008)(66476007)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?Dsb8Bafto5Zd5lsn+X0SzKaWHTho2sfRkVKwI91uYc/tfAfZtgEoesKFlyG5?=
+ =?us-ascii?Q?AZZzaVKM2weVWRaWuihUfSZyyXptYYoNkZeuzl3KZDXcEzeMJ8jemCqU/mnc?=
+ =?us-ascii?Q?Hg8Lc60zyB8GOuPR+rgpwy7hAqFrnCsR5CFSK3Ki9V8Gl08qBhHe/y7GP7zp?=
+ =?us-ascii?Q?WhJQEt0RPXhgtO64m2jgO9KbBvl/TGCF0V48ml0i25EFLWDlkmcc0+uW0oX0?=
+ =?us-ascii?Q?eeUBvmS8OKsHz0Rg1+T/DocC6Tq3NTOHJRGA7XVxlSQxscIq2UGAcD8ZDefU?=
+ =?us-ascii?Q?kdvHI//+sI3UNLwQLpK99OipSh3QKorHkaUrJl0TI757zP9yp7GCjLOGY7JJ?=
+ =?us-ascii?Q?MRdVx6nR11P7gGMtyWd72HHVUvJ5LjnBNbASfhzh2yi/jeIHd0xqgdVfEs52?=
+ =?us-ascii?Q?0qLyqYVgXKhokdYIesbviHG+tkrBGJlfibcdxPEE50sN3SKZSUXh3xhgzkxI?=
+ =?us-ascii?Q?7rbdKBeDbUTiDLNPTwnvHWo8gTVes4KrXJG3u3EBMBOmA6UKClwIILAYAovA?=
+ =?us-ascii?Q?XBxIPTUUiK8NmOvPn9kLVhhv3Y0n9anFXAowaxAWQKkXTkWif2/clxz1aHkh?=
+ =?us-ascii?Q?6Fe8ghtlJOQFIILSrBmEUtRxOcYmIA0fME5xLBTs/0JxfcaHrh55KdD7JALt?=
+ =?us-ascii?Q?RM2MzeXPTzWXXfj1lwOp8J67s3vMa4sWKh/lo1sfYf6zpDiIi8cOA8t0UHgb?=
+ =?us-ascii?Q?MaJShHb72r3aqU/LhPCQlIDeI9haOTkk4hH5lM770vj9LTL5qsOfhdQfsk0q?=
+ =?us-ascii?Q?YsnRmGRKFQd/5IxsrWG0xSImDPqE4/0rPp6+hCnGJ1UwX93lTRpDIAoSKmkY?=
+ =?us-ascii?Q?vvEr+0TsmlKXQzgyVxYpkjC8yor+KGTBWvRCT2ekbjamlZLmCamtrcPbo6it?=
+ =?us-ascii?Q?/uNEkZguC71XTzrftOmmQ7SRPu449ncEYpr6sF4BZtmUBZWBEzZPA2f3WM8R?=
+ =?us-ascii?Q?2z81J+aQbxek71hAEDvH93mTMbK2j7HG23FIXN7t/jHhcGV4jw7QICXlKEBJ?=
+ =?us-ascii?Q?dL1I4x1daA8dWUXJid2RRuMJwAsildHRpBSPRrIv/QGuVII=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:7:585a:fb33:5490:4e5) by CO2PR04CA0174.namprd04.prod.outlook.com (2603:10b6:104:4::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Thu, 7 Jan 2021 01:46:22 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3a496347-a1c9-4058-95fd-08d8b2ae0a22
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB0997:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB099720308143B33829E77054BFAF9@DM5PR2101MB0997.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C3G5WD6lOjwpEscQQB0LecWIIoVK5STzuR7jQrUWnc2kkDmTxFx7j8Vx3Pj+D9dHhJjwy5J4xa6a/I/oRRmw5srhOyX49ortrsfd3h9DHCTAfoHUStY7Gouhh/5/bIxkCNTBtIAiuqknlFNek+adEtjjGkfIAyJjVK55EWAAUPDvH38f26wCYXzvtxcq+y2YLcq5gLnEnUetiR3fCStZtW3avVRN+j3J+OHYYp91q1EIcjgx0uHGQIGZxaobyEnx2hqzgfxfVfNlfWRLfGRXoMrZUtt/w416s6S+y8itIb0q7rxcGvWB7aa/hKSxLiUj0keEu8woz7Mtg6z11gKKZ6V5D/nDo9Bhk2k019kiHLZ9Otw2dNs1fdC5cUGcnza79fjI1Qi4SXwC6AjeCcZzF2VTLTqLs6wQVLvnFdoT55en2lxLTw6q6p4igFxJD8SF3LWwpW0Qq3zPOlFePm8YYT2qv8NIRFFufdX4+cy9hFMROHd4WmyEliron/0g3cdnlmwBU8XCiDaacNQcG5L7fQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB1095.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(4326008)(478600001)(66556008)(10290500003)(5660300002)(66946007)(86362001)(6666004)(6486002)(66476007)(7696005)(107886003)(966005)(82960400001)(82950400001)(1076003)(2906002)(2616005)(186003)(3450700001)(8676002)(8936002)(83380400001)(36756003)(316002)(16526019)(52116002)(309714004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?g2/Cc420d6/K5SyxY49z+8wTe3SaFjITF873b/zge5tuskJC7Mt2kSF9ZjLl?=
- =?us-ascii?Q?wddCEXLhZgxUx8MzlQiazwm8sn6ifHAGpqfQ5fctVF/u1mgIxc2fi1DIfpov?=
- =?us-ascii?Q?98SyYZVvoxnhV2He/VrFI3wVOgjKqA2uno12pr+Jh2O6ZC13xD68iuKq/fl2?=
- =?us-ascii?Q?c8u87fL45hPWPjulA5sJl1HVUWun9/udQ+I6uyPGxnJz/RkhzaoD86HJdR00?=
- =?us-ascii?Q?vCCW1OvxEvyE1Wh6eGHrgd9CwLTtDP8p/Mn6Ya5oG6bSybrFZCPR2VpGGHLa?=
- =?us-ascii?Q?zooIQmrwpVcqtsXx3NqCay7aaZFWO0Am/gEKXUqBqvU/NF9UbuyOne+awm4w?=
- =?us-ascii?Q?SQp3hVC3qMUsD/l23sNIkvFJoWHIIR+864XsQTFPTv0+n+cOG6J2TUy8vjkX?=
- =?us-ascii?Q?ipxNLGR79uaJUl3A1hAqO2h8leIsRH4L7D/sF+dGAd2ewX7xtFbPUv6lqsK6?=
- =?us-ascii?Q?835YYMRvU6Loc+xUHFmOFoqLIaPDPw/i4A2IMDVUm2k5pcl2/BEgiiXu5WIT?=
- =?us-ascii?Q?YbuWKJtAiPiiCByBZGRMGddrZHfHgEWyFOIWUmq1EfZfdU5MdeLe7c/tkooj?=
- =?us-ascii?Q?+BTqybG7jOpzHCLqmLpE2rz0V9r/Bp64tNWse5pk+NNX/xMIXq3ORlvHmM8D?=
- =?us-ascii?Q?FClh8kq0bTtfMWVxUrVUKDPCh3YW45tbt47yJF6CZFzS6IpTbK/YKFgJo0lo?=
- =?us-ascii?Q?qyMAgDlSZW3McxgCOKzp1fwYEbRMr5vF4us3yzXOTQ9nLLu2Q4rh6QZFFqRM?=
- =?us-ascii?Q?Dyj5Vl7teyzF8X+pCa0zjTNMWt3HsLxiegEQRGwyNTvUS26RqxaT6Z3odcPy?=
- =?us-ascii?Q?YvEFCDe9RJjS5B+7hYLLw7RRGz3QgmZygEzdf9CuCILXsVHLFf3JDzcHB3fM?=
- =?us-ascii?Q?7U/9FqALgXc7r6FDy3OWCT4AIgxAqmEdulDwsCBbfjsLwJ92M39NFjk8Clq+?=
- =?us-ascii?Q?ldQHZDj0OS02prMeC/g9Uh9d/uGYMWU1QLdWcDnz1oojnNU9UJdRdkU9MEFt?=
- =?us-ascii?Q?93NWn19PD47wdVGoUIySri62P/jKBpz3Z/vL2o4UDzb7jjk=3D?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB1095.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2021 01:46:23.4549
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR2101MB0880.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a165ad10-bc9a-4e11-3129-08d8b2c9df13
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2021 05:05:37.2290
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a496347-a1c9-4058-95fd-08d8b2ae0a22
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cphPdYhZFtRaNN8w11I8IjgXU7679/7XmwxO8Cyt+O+CNYEJiLYtIPlHaCnxGkiWSt2SOQrbHj+M+N9WX1m8lA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0997
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZWX4LINyPqOTxS3nnqN8u/Ssikye9f5gwW9ciXQT3uLXjlI7qZ7lLHbQ2DnlwlPBK+jDiInHQvWwBvf0c0hAHZOKpJ6yOiBRbrtYRX0vBGc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1679
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-When a Linux VM runs on Hyper-V, if the host toolstack doesn't support
-hibernation for the VM (this happens on old Hyper-V hosts like Windows
-Server 2016, or new Hyper-V hosts if the admin or user doesn't declare
-the hibernation intent for the VM), the VM is discouraged from trying
-hibernation (because the host doesn't guarantee that the VM's virtual
-hardware configuration will remain exactly the same across hibernation),
-i.e. the VM should not try to set up the swap partition/file for
-hibernation, etc.
+Currently, operations related to irq/msi in Hyper-V vPCI are
+x86-specific code. In order to support virtual PCI on Hyper-V for
+other architectures, introduce generic interfaces to replace the
+x86-specific ones. There are no functional changes in this patch.
 
-x86 Hyper-V uses the presence of the virtual ACPI S4 state as the
-indication of the host toolstack support for a VM. Currently there is
-no easy and reliable way for the userspace to detect the presence of
-the state (see https://lkml.org/lkml/2020/12/11/1097).  Add
-/sys/bus/vmbus/hibernation for this purpose.
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
 ---
+ arch/x86/include/asm/mshyperv.h     | 24 +++++++++++++++++++++
+ drivers/pci/controller/pci-hyperv.c | 33 +++++++++++++++++------------
+ 2 files changed, 44 insertions(+), 13 deletions(-)
 
-This v3 is similar to v1, and the changes are:
-  Updated the documentation changes.
-  Updated the commit log.
-  /sys/bus/vmbus/supported_features -> /sys/bus/vmbus/hibernation
-
-The patch is targeted at the Hyper-V tree's hyperv-next branch.
-
- Documentation/ABI/stable/sysfs-bus-vmbus |  7 +++++++
- drivers/hv/vmbus_drv.c                   | 18 ++++++++++++++++++
- 2 files changed, 25 insertions(+)
-
-diff --git a/Documentation/ABI/stable/sysfs-bus-vmbus b/Documentation/ABI/stable/sysfs-bus-vmbus
-index c27b7b89477c..42599d9fa161 100644
---- a/Documentation/ABI/stable/sysfs-bus-vmbus
-+++ b/Documentation/ABI/stable/sysfs-bus-vmbus
-@@ -1,3 +1,10 @@
-+What:		/sys/bus/vmbus/hibernation
-+Date:		Jan 2021
-+KernelVersion:	5.12
-+Contact:	Dexuan Cui <decui@microsoft.com>
-+Description:	Whether the host supports hibernation for the VM.
-+Users:		Daemon that sets up swap partition/file for hibernation.
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyper=
+v.h
+index ffc289992d1b..05b32ef57e34 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -245,6 +245,30 @@ bool hv_vcpu_is_preempted(int vcpu);
+ static inline void hv_apic_init(void) {}
+ #endif
+=20
++#define hv_msi_handler		handle_edge_irq
++#define hv_msi_handler_name	"edge"
++#define hv_msi_prepare		pci_msi_prepare
 +
- What:		/sys/bus/vmbus/devices/<UUID>/id
- Date:		Jul 2009
- KernelVersion:	2.6.31
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index d491fdcee61f..4c544473b1d9 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -678,6 +678,23 @@ static const struct attribute_group vmbus_dev_group = {
- };
- __ATTRIBUTE_GROUPS(vmbus_dev);
- 
-+/* Set up the attribute for /sys/bus/vmbus/hibernation */
-+static ssize_t hibernation_show(struct bus_type *bus, char *buf)
++/* Returns the Hyper-V PCI parent MSI vector domain. */
++static inline struct irq_domain *hv_msi_parent_vector_domain(void)
 +{
-+	return sprintf(buf, "%d\n", !!hv_is_hibernation_supported());
++	return x86_vector_domain;
 +}
 +
-+static BUS_ATTR_RO(hibernation);
++/* Returns the interrupt vector mapped to the given IRQ. */
++static inline unsigned int hv_msi_get_int_vector(struct irq_data *data)
++{
++	struct irq_cfg *cfg =3D irqd_cfg(data);
 +
-+static struct attribute *vmbus_bus_attrs[] = {
-+	&bus_attr_hibernation.attr,
-+	NULL,
-+};
-+static const struct attribute_group vmbus_bus_group = {
-+	.attrs = vmbus_bus_attrs,
-+};
-+__ATTRIBUTE_GROUPS(vmbus_bus);
++	return cfg->vector;
++}
 +
++/* Get the IRQ delivery mode. */
++static inline u8 hv_msi_irq_delivery_mode(void)
++{
++	return APIC_DELIVERY_MODE_FIXED;
++}
++
+ static inline void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entr=
+y,
+ 					      struct msi_desc *msi_desc)
+ {
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
+ci-hyperv.c
+index 6db8d96a78eb..9ca740d275d7 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -43,12 +43,11 @@
+ #include <linux/delay.h>
+ #include <linux/semaphore.h>
+ #include <linux/irqdomain.h>
+-#include <asm/irqdomain.h>
+-#include <asm/apic.h>
+ #include <linux/irq.h>
+ #include <linux/msi.h>
+ #include <linux/hyperv.h>
+ #include <linux/refcount.h>
++#include <linux/pci.h>
+ #include <asm/mshyperv.h>
+=20
  /*
-  * vmbus_uevent - add uevent for our device
-  *
-@@ -1024,6 +1041,7 @@ static struct bus_type  hv_bus = {
- 	.uevent =		vmbus_uevent,
- 	.dev_groups =		vmbus_dev_groups,
- 	.drv_groups =		vmbus_drv_groups,
-+	.bus_groups =		vmbus_bus_groups,
- 	.pm =			&vmbus_pm,
+@@ -1194,7 +1193,6 @@ static void hv_irq_mask(struct irq_data *data)
+ static void hv_irq_unmask(struct irq_data *data)
+ {
+ 	struct msi_desc *msi_desc =3D irq_data_get_msi_desc(data);
+-	struct irq_cfg *cfg =3D irqd_cfg(data);
+ 	struct hv_retarget_device_interrupt *params;
+ 	struct hv_pcibus_device *hbus;
+ 	struct cpumask *dest;
+@@ -1223,7 +1221,7 @@ static void hv_irq_unmask(struct irq_data *data)
+ 			   (hbus->hdev->dev_instance.b[7] << 8) |
+ 			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
+ 			   PCI_FUNC(pdev->devfn);
+-	params->int_target.vector =3D cfg->vector;
++	params->int_target.vector =3D hv_msi_get_int_vector(data);
+=20
+ 	/*
+ 	 * Honoring apic->delivery_mode set to APIC_DELIVERY_MODE_FIXED by
+@@ -1324,7 +1322,7 @@ static u32 hv_compose_msi_req_v1(
+ 	int_pkt->wslot.slot =3D slot;
+ 	int_pkt->int_desc.vector =3D vector;
+ 	int_pkt->int_desc.vector_count =3D 1;
+-	int_pkt->int_desc.delivery_mode =3D APIC_DELIVERY_MODE_FIXED;
++	int_pkt->int_desc.delivery_mode =3D hv_msi_irq_delivery_mode();
+=20
+ 	/*
+ 	 * Create MSI w/ dummy vCPU set, overwritten by subsequent retarget in
+@@ -1345,7 +1343,7 @@ static u32 hv_compose_msi_req_v2(
+ 	int_pkt->wslot.slot =3D slot;
+ 	int_pkt->int_desc.vector =3D vector;
+ 	int_pkt->int_desc.vector_count =3D 1;
+-	int_pkt->int_desc.delivery_mode =3D APIC_DELIVERY_MODE_FIXED;
++	int_pkt->int_desc.delivery_mode =3D hv_msi_irq_delivery_mode();
+=20
+ 	/*
+ 	 * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
+@@ -1372,7 +1370,6 @@ static u32 hv_compose_msi_req_v2(
+  */
+ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+-	struct irq_cfg *cfg =3D irqd_cfg(data);
+ 	struct hv_pcibus_device *hbus;
+ 	struct vmbus_channel *channel;
+ 	struct hv_pci_dev *hpdev;
+@@ -1422,7 +1419,7 @@ static void hv_compose_msi_msg(struct irq_data *data,=
+ struct msi_msg *msg)
+ 		size =3D hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
+ 					dest,
+ 					hpdev->desc.win_slot.slot,
+-					cfg->vector);
++					hv_msi_get_int_vector(data));
+ 		break;
+=20
+ 	case PCI_PROTOCOL_VERSION_1_2:
+@@ -1430,7 +1427,7 @@ static void hv_compose_msi_msg(struct irq_data *data,=
+ struct msi_msg *msg)
+ 		size =3D hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
+ 					dest,
+ 					hpdev->desc.win_slot.slot,
+-					cfg->vector);
++					hv_msi_get_int_vector(data));
+ 		break;
+=20
+ 	default:
+@@ -1541,12 +1538,13 @@ static struct irq_chip hv_msi_irq_chip =3D {
+ 	.irq_compose_msi_msg	=3D hv_compose_msi_msg,
+ 	.irq_set_affinity	=3D hv_set_affinity,
+ 	.irq_ack		=3D irq_chip_ack_parent,
++	.irq_eoi		=3D irq_chip_eoi_parent,
+ 	.irq_mask		=3D hv_irq_mask,
+ 	.irq_unmask		=3D hv_irq_unmask,
  };
- 
--- 
-2.19.1
-
+=20
+ static struct msi_domain_ops hv_msi_ops =3D {
+-	.msi_prepare	=3D pci_msi_prepare,
++	.msi_prepare	=3D hv_msi_prepare,
+ 	.msi_free	=3D hv_msi_free,
+ };
+=20
+@@ -1565,17 +1563,26 @@ static struct msi_domain_ops hv_msi_ops =3D {
+  */
+ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+ {
++	struct irq_domain *parent_domain;
++
++	parent_domain =3D hv_msi_parent_vector_domain();
++	if (!parent_domain) {
++		dev_err(&hbus->hdev->device,
++			"Failed to get parent MSI domain\n");
++		return -ENODEV;
++	}
++
+ 	hbus->msi_info.chip =3D &hv_msi_irq_chip;
+ 	hbus->msi_info.ops =3D &hv_msi_ops;
+ 	hbus->msi_info.flags =3D (MSI_FLAG_USE_DEF_DOM_OPS |
+ 		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
+ 		MSI_FLAG_PCI_MSIX);
+-	hbus->msi_info.handler =3D handle_edge_irq;
+-	hbus->msi_info.handler_name =3D "edge";
++	hbus->msi_info.handler =3D hv_msi_handler;
++	hbus->msi_info.handler_name =3D hv_msi_handler_name;
+ 	hbus->msi_info.data =3D hbus;
+ 	hbus->irq_domain =3D pci_msi_create_irq_domain(hbus->sysdata.fwnode,
+ 						     &hbus->msi_info,
+-						     x86_vector_domain);
++						     parent_domain);
+ 	if (!hbus->irq_domain) {
+ 		dev_err(&hbus->hdev->device,
+ 			"Failed to build an MSI IRQ domain\n");
+--=20
+2.17.1
