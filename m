@@ -2,88 +2,97 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6BFF2ED32E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jan 2021 16:04:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 776D82ED339
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jan 2021 16:07:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbhAGPDA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Jan 2021 10:03:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbhAGPC7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Jan 2021 10:02:59 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AFC3B224D3;
-        Thu,  7 Jan 2021 15:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610031739;
-        bh=C/0ntKQkdPNZnm9r9k+uBHqpkoJHu0igxr4uHyjebhU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qobnh4uZ61nKfrB4EFp96Aj+I0k8pbsjsnnVgPQ+KOuL2SmiaClRWlHIUC3RR25LD
-         o5/+TJiEHwF4kBz9Hxy4kmnIEhA5haQAEJ6ZjTnP1dr1tXZ6wsQP23PyNVFmfL23nY
-         AzgFL7QsettAIyJdIiMXUUe43aPxstTHYJ1zwQDw+MfZ5/AZ2H0i+5pZDeVwbv9xNH
-         L/2oCziCPGu1r9Z1NI0vGOjiccr8gh+XPRTLcw3NUcFcMo7BUpFPYIRjGds4PnbBdn
-         RbZZojIrQRmj7dsnipVKMRyS/MmgCoSwRd2ddXhVFscncEyPY7NQhmiVcy+cpNnaOR
-         /7F/9Zr4QvxIA==
-Date:   Thu, 7 Jan 2021 09:02:16 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Boqun Feng <Boqun.Feng@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "\"H. Peter Anvin\"" <hpa@zytor.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] Hyper-V: pci: x64: Generalize irq/msi set-up and handling
-Message-ID: <20210107150216.GA1365474@bjorn-Precision-5520>
+        id S1728050AbhAGPGm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Jan 2021 10:06:42 -0500
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:50927 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbhAGPGm (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 7 Jan 2021 10:06:42 -0500
+Received: by mail-wm1-f51.google.com with SMTP id 190so5467709wmz.0;
+        Thu, 07 Jan 2021 07:06:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3Sjk0QtZfwMWY6YcWxhCnMUq7pIJd4NoiTIH0T1tqOg=;
+        b=qRgfhugHxZh5XhSRSyY70UOg/vqWrpxu49BKEmKf2rUeGQGdTrgS4GfgIAayp/tdP3
+         gsrd8SaPpzG4i61I92vWwbLbTYP3IEcC9oS4UJ7lFGGQ3sBj9Jq2cDYKrZ0fJy4vCRkQ
+         CBJM/ZSldpOsSUlSejJUj4fFGRtOwXn52B5iFZThX/h/ZdKg0xIgcGqxJuHSaNRBmqs6
+         EHAfnSd5Y5cXvY8UG77M5il82ewJcyDZZoRxb/+4eBnDgkBdDCn9wW2v83whxt4QTa3m
+         lqMTe+/1Hn1lY9VPnwM8LDZyfX2ZFG0YOk/9DDuD8gQvjZllyYeooO7c9WpegG8HeWMT
+         svcw==
+X-Gm-Message-State: AOAM531eLxmqPxruAM9eQp1JK1OPPgog67QiCEk4bay45BpwVdimJ9m2
+        SyW/groNz2TqPTtDQX56QMI=
+X-Google-Smtp-Source: ABdhPJyO/vLnHyJh1EiVUK97kLBpjzcgLxyDiYYKHCQBBWg4lePJJMW8lVaHcYhX306QvlgrJ4mR8w==
+X-Received: by 2002:a1c:b7d4:: with SMTP id h203mr8479422wmf.59.1610031959794;
+        Thu, 07 Jan 2021 07:05:59 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id f77sm7906629wmf.42.2021.01.07.07.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jan 2021 07:05:59 -0800 (PST)
+Date:   Thu, 7 Jan 2021 15:05:58 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        kbuild-all@lists.01.org, virtualization@lists.linux-foundation.org,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>
+Subject: Re: [PATCH v4 15/17] x86/hyperv: implement an MSI domain for root
+ partition
+Message-ID: <20210107150557.2pa3qsd4qbni4iaa@liuwe-devbox-debian-v2>
+References: <20210106203350.14568-16-wei.liu@kernel.org>
+ <202101070658.h9Fcg0JA-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN4PR2101MB08808404302E2E1AB6A27DD6C0AF9@SN4PR2101MB0880.namprd21.prod.outlook.com>
+In-Reply-To: <202101070658.h9Fcg0JA-lkp@intel.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-There seems to be a long tradition of dreaming up random formats for
-the subject lines of Hyper-V-related patches.  Look at all the
-different ways these are spelled, hyphenated, and capitalized:
+On Thu, Jan 07, 2021 at 06:21:24AM +0800, kernel test robot wrote:
+> Hi Wei,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Wei-Liu/Introducing-Linux-root-partition-support-for-Microsoft-Hypervisor/20210107-044149
+> base:    e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62
+> config: i386-randconfig-m021-20210106 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
+> reproduce (this is a W=1 build):
+>         # https://github.com/0day-ci/linux/commit/376aee69c6ab18dc23b0386590bee82d59555be8
+>         git remote add linux-review https://github.com/0day-ci/linux
+>         git fetch --no-tags linux-review Wei-Liu/Introducing-Linux-root-partition-support-for-Microsoft-Hypervisor/20210107-044149
+>         git checkout 376aee69c6ab18dc23b0386590bee82d59555be8
+>         # save the attached .config to linux build tree
+>         make W=1 ARCH=i386 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+> >> arch/x86/hyperv/irqdomain.c:317:28: warning: no previous prototype for 'hv_create_pci_msi_domain' [-Wmissing-prototypes]
+>      317 | struct irq_domain * __init hv_create_pci_msi_domain(void)
+>          |                            ^~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> 
+> vim +/hv_create_pci_msi_domain +317 arch/x86/hyperv/irqdomain.c
 
-  $ git log --oneline arch/x86/include/asm/mshyperv.h
-  626b901f6044 ("Drivers: hv: vmbus: Add parsing of VMbus interrupt in ACPI DSDT")
-  b9d8cf2eb3ce ("x86/hyperv: Make hv_setup_sched_clock inline")
-  a16be368dd3f ("x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC")
-  2ddddd0b4e89 ("Drivers: hv: Move AEOI determination to architecture dependent code")
-  1cf106d93245 ("PCI: hv: Introduce hv_msi_entry")
-  b95a8a27c300 ("x86/vdso: Use generic VDSO clock mode storage")
-  eec399dd8627 ("x86/vdso: Move VDSO clocksource state tracking to callback")
-  fa36dcdf8b20 ("x86: hv: Add function to allocate zeroed page for Hyper-V")
-  8c3e44bde7fd ("x86/hyperv: Add functions to allocate/deallocate page for Hyper-V")
-  765e33f5211a ("Drivers: hv: vmbus: Break out ISA independent parts of mshyperv.h")
-  dd2cb348613b ("clocksource/drivers: Continue making Hyper-V clocksource ISA agnostic")
-  cc4edae4b924 ("x86/hyper-v: Add HvFlushGuestAddressList hypercall support")
-  b42967dcac1d ("x86/hyper-v: Fix indentation in hv_do_fast_hypercall16()")
-  3a025de64bf8 ("x86/hyperv: Enable PV qspinlock for Hyper-V")
-  eb914cfe72f4 ("X86/Hyper-V: Add flush HvFlushGuestPhysicalAddressSpace hypercall support")
-  ...
+I've fixed this locally by moving the prototype to a header file --
+previously it was left in a C file.
 
-On Thu, Jan 07, 2021 at 05:05:36AM +0000, Sunil Muthuswamy wrote:
-> Currently, operations related to irq/msi in Hyper-V vPCI are
-
-In comments in the patch, you use "IRQ" and "MSI".  I don't know
-whether "vPCI" means something or is a typo.  I suppose it probably
-means "virtual PCI" as below.
-
-> x86-specific code. In order to support virtual PCI on Hyper-V for
-> other architectures, introduce generic interfaces to replace the
-> x86-specific ones. There are no functional changes in this patch.
->
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> ...
+Wei.
