@@ -2,165 +2,247 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92AC32EEDE7
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Jan 2021 08:33:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6B592EF4BF
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Jan 2021 16:24:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbhAHHci (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 8 Jan 2021 02:32:38 -0500
-Received: from mail-mw2nam12on2108.outbound.protection.outlook.com ([40.107.244.108]:24065
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725791AbhAHHci (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 8 Jan 2021 02:32:38 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kPJZrw6/HcOPD++SigxIVprdoehQuvtUAJfwLhvGUI72nf6YW/8do1KqIYzgFFj2foarUzAINt3AR10MMPQXNcFq3apwgQRmgr6nJ2TURja03wq04kL4jCe9/MtQ3d9GI4uE1hlUnJb55GNlrYZnuFulQOjwJfviXWPWsFIIclB6bdcgHMG2SHWtKKu9O54GnlO6/I7xFcI13l3MEYHG5GaNq/7bqDVaen8w/rMMN47PwF0Imod5gPFSGQsRqLZs015ynp3fqQ0O6NArZXvTRtmSO/0L6Q8OLr0R+pYG4IGGhgejum96COChph7PohSOXYoSP8B4SwrfFPnwybetvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qVTxoE1QUzwMKtwMl9XME4rEzaamZPT91LpMepGuOII=;
- b=T/e/TQkd03k6FExKPr34ydH/bzPXPCeC24uadbj5mZ27qlU7tliQnfv6JGY1XLjE2k7CLkjqpsogKBcGcm5F6KUmmmxaEdFylpF2aB31sHE3ljEdLZ3ElzIMCgeFrkO0N6DagjCMr5FemnnlWyUEDSVJXGmembI9Ba/G3Qkv2irMMzfK0CYASDz6n7+VOQN0wgCQQ/1dauUB+o5WV7jjOnErDRlkkNUkYU/cKmX52obzFUQfzY572ivxbGIGqO4h7t+uvKt5oFPUBTlF/9qngepxzeYc3z6lGG9Hdakj9l/lqt04zWkz4EemlA+7tVNoyZdTM7BYPqu6Jd6x2T1TLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qVTxoE1QUzwMKtwMl9XME4rEzaamZPT91LpMepGuOII=;
- b=jv1aZDz46vxC7hGTrouXp6JmPAFrLwVsIo1hn27vJfzwyH641hA6EEklaKgPP155hMUE8uTLTDyw/QcXka03J38tCg0/MQbVIMPngijRbgfCdYlljeN5CNrgqNiMRIpJtEBN2T3UrPt3q8Uu6VGXOEpY+5BA/6TS1I+kWqt89sM=
-Received: from (2603:10b6:803:51::33) by
- SA0PR21MB1866.namprd21.prod.outlook.com (2603:10b6:806:ed::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3763.0; Fri, 8 Jan 2021 07:31:19 +0000
-Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::18ca:96d8:8030:e4e8]) by SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::18ca:96d8:8030:e4e8%4]) with mapi id 15.20.3763.002; Fri, 8 Jan 2021
- 07:31:19 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Boqun Feng <Boqun.Feng@microsoft.com>,
+        id S1726954AbhAHPXE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 8 Jan 2021 10:23:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbhAHPXD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 8 Jan 2021 10:23:03 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 328ED2399A;
+        Fri,  8 Jan 2021 15:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610119341;
+        bh=tPW5bEpr0HqmvYnvrUcfD/JhFnM30ms0uYvuur4C/dA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TXB0d0Rg4e9denrKlcQmt1bttQK1VJX/EHrAseDYIEzW0i8f4S+cSyL+QI8C+zfWI
+         kLD+pghsys5E1NaUSHYaTTRmIgl0/FXcx/e3HZBYaZzYY2N8NuQVfRUrxzI4KkABzR
+         VGC/lkQr8aj5eN+33Z6nm9z63AKAgfW1ow78MWeNbFwh4PjUEnmeOF9WAwUTkDTcgY
+         9phTWBhCxxPwx9jRtyQfuGKE8uO1JOQlBmeA/WVkDAFoc2UrtEzByoQT0UWwdwyvWm
+         18qbmks5AcTi20wNk167tzNZk0bKuANaVnnWiIg9XWFvF49cz7AkiPhrpLuUnkhjUW
+         AdFwp1FliZPbA==
+Date:   Fri, 8 Jan 2021 10:22:20 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, vkuznets <vkuznets@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "\"H. Peter Anvin\"" <hpa@zytor.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: [PATCH v2 2/2] Hyper-V: pci: x64: Moving the MSI entry definition to
- arch specific location
-Thread-Topic: [PATCH v2 2/2] Hyper-V: pci: x64: Moving the MSI entry
- definition to arch specific location
-Thread-Index: Adblj4px1LjTTBMqRhiKACld+P9Rww==
-Date:   Fri, 8 Jan 2021 07:31:19 +0000
-Message-ID: <SN4PR2101MB08808B1AA7557C198E08EA12C0AE9@SN4PR2101MB0880.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2601:602:9400:570:916:634a:e039:b890]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a516eeff-eeae-4868-2a47-08d8b3a76411
-x-ms-traffictypediagnostic: SA0PR21MB1866:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SA0PR21MB1866F3797CCEF0C05EEE1214C0AE9@SA0PR21MB1866.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8+9MnKuwopgLZCNInH51Pp0y5baWaZ69FzyK5LEPogZE1rruowbMHi3oOnWvaiGVQfH8knUb3bS44R8BwSsKrYgqqmqac5IM8OXI3f1WTA42fvizcw1j7ZdNYUNayE0aNCwWoh8g/Y4BMlcslUZ+0KVg5UY3fGE6EZwss+9WVTKJxbR+riIbYFVRkZzTIMlNL4AeLoimVPkiVqAY0YdVq9ZQbBSTQFoiELA5aT/EZ/yZyUJlEoNK5dUAebc1+2JLAhCODrZrjziapPeYdZftr8BuT3c36gP02QCl6LCNyqeYZZEjsE6Rr/sA132sBgq28hrtjq2bGyPtfla54OK+y/hdJblDNmwic9SEGCpL1WGcw8pJFq4+xwvvLPf2OzbK3s1n6C+SS/IuZJw15EMrIQAy3oDZg6r2Wtdi62y9k1W/UfKT9daudSuV3xVfjMAR
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR2101MB0880.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(396003)(376002)(366004)(346002)(86362001)(6506007)(921005)(8936002)(7416002)(33656002)(4326008)(110136005)(316002)(54906003)(8990500004)(7696005)(8676002)(478600001)(10290500003)(71200400001)(52536014)(186003)(82960400001)(9686003)(5660300002)(76116006)(66476007)(66946007)(83380400001)(64756008)(66556008)(55016002)(82950400001)(2906002)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?QrtWd1djOG0MUH7eaNUpSxawgZhGnPVO0SA3Wg6WwUvP1FYApPbFJCEWSNTF?=
- =?us-ascii?Q?Kb/2eZIAClgHAshB+7daAED01cUCsQhUcl0jjoPS/RosT9WzOgHIkU/TpZ29?=
- =?us-ascii?Q?602x+r6mrnLHxkr30XsNaWqOwoXhkgY+f5w0OmCp1Y8s91G0dO+0D4zrYnVS?=
- =?us-ascii?Q?uCk6obhgtoyJbU+cxC82o5PfQKCfgT2nz533rs7zleP3/h1jm5pAusNrCusC?=
- =?us-ascii?Q?Aixpr88Y+/L37TZzx+dYOxTkpww988MDBpuiVidPAKPr1jZdxpVlkI+Wyqx6?=
- =?us-ascii?Q?7PsQx6eBqj433yrAjkiRx/v+nf+0ocsB4GuTYgHijxpvj5Qc/PQCiB+D5RSK?=
- =?us-ascii?Q?qU8YcoYW/21gyZv/grwMAMBum9SLTizu5n8/wdODQTSuK9OOGSmeXAehrPnc?=
- =?us-ascii?Q?IHFyUWP58iJoyKgh+RBD7EHy+lluO1cvHN3Ql5Y9VpyoV5MVPoSg1SbWG9ex?=
- =?us-ascii?Q?z/KwoijI9ti+O1CgDvRRECO1tx0cyqELlVjieYB35eTldyFTzhlXf++qz53H?=
- =?us-ascii?Q?tBAszWjeQYJolqh2w0684RM5S5uhuc26qIHAKM8ULYXUvuNqlm665dVzuwAN?=
- =?us-ascii?Q?2vjGTCXU3hUkytn7ruH13Tc3bGsYCWas5PubL5b/8BpHKnu9yy4rVOBnchDE?=
- =?us-ascii?Q?0pwI2/hTpjPAbNQzbO31fQTSKSHFdMwI9q7QANyh4qj5E+AaNDj3zD8/JCsn?=
- =?us-ascii?Q?U9VR21cJQMo1njPdmi0BoRbxqLrOV4n2LN1fSD6y5xSd81mL4kh97HqRc7Hs?=
- =?us-ascii?Q?4dyUecbtVWC4o2IN4wWvQfHAHoJyT6g8JMUIhBsmF1xVwHPJxsBDtlhrKWoy?=
- =?us-ascii?Q?JRRirQ9Ss5Os3q7KBgObwnBNz2hjxpfabysPhZ7f8OndJvujMdo6Hwyl1P7f?=
- =?us-ascii?Q?3BOio4aVEUmi55RjVFTEq7Qt1/I2Y4bc0qxf3HgRpz5qOEs0/CTcxTrnA7yX?=
- =?us-ascii?Q?u7IeRYgHBp/nRvM40wIpa0XGg+D4SbgskfU22HhIzaEOM0x2MI6TWGg88qK2?=
- =?us-ascii?Q?kJpSv+DzAvAbRpXlfbGy3nAA+gLuzpfitk8ry6OpGLfEzRA=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Stephen Hemminger <sthemmin@microsoft.com>
+Subject: Re: [PATCH] x86/hyper-v: guard against cpu mask changes in
+ hyperv_flush_tlb_others()
+Message-ID: <20210108152220.GC4035784@sasha-vm>
+References: <20201001013814.2435935-1-sashal@kernel.org>
+ <87o8lm9te3.fsf@vitty.brq.redhat.com>
+ <20201001115359.6jhhrybemnhizgok@liuwe-devbox-debian-v2>
+ <20201001130400.GE2415204@sasha-vm>
+ <MW2PR2101MB105242653A8D5C7DD9DF1062D70E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <20201005145851.hdyaeqo3celt2wtr@liuwe-devbox-debian-v2>
+ <MWHPR21MB1593B4387204C522536F80CCD7D19@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR2101MB0880.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a516eeff-eeae-4868-2a47-08d8b3a76411
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2021 07:31:19.0965
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TeDYkJgRxav/Dsjkv/QHb2yqMp3lee7D0A9iXT09OjmKVwf+e1a7zVwjELoGK+8a8WID4UmKKV/wIP9K20FqektuirUPodgWSIpzK+suBh8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1866
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB1593B4387204C522536F80CCD7D19@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The Hyper-V MSI entry is architecture specific. Currently, it is
-defined in an arch neutral location. This patch moves it to an
-arch specific location.
+On Tue, Jan 05, 2021 at 04:59:10PM +0000, Michael Kelley wrote:
+>From: Wei Liu <wei.liu@kernel.org> Sent: Monday, October 5, 2020 7:59 AM
+>>
+>> On Sat, Oct 03, 2020 at 05:40:15PM +0000, Michael Kelley wrote:
+>> > From: Sasha Levin <sashal@kernel.org>  Sent: Thursday, October 1, 2020 6:04 AM
+>> > >
+>> > > On Thu, Oct 01, 2020 at 11:53:59AM +0000, Wei Liu wrote:
+>> > > >On Thu, Oct 01, 2020 at 11:40:04AM +0200, Vitaly Kuznetsov wrote:
+>> > > >> Sasha Levin <sashal@kernel.org> writes:
+>> > > >>
+>> > > >> > cpumask can change underneath us, which is generally safe except when we
+>> > > >> > call into hv_cpu_number_to_vp_number(): if cpumask ends up empty we pass
+>> > > >> > num_cpu_possible() into hv_cpu_number_to_vp_number(), causing it to read
+>> > > >> > garbage. As reported by KASAN:
+>> > > >> >
+>> > > >> > [   83.504763] BUG: KASAN: slab-out-of-bounds in hyperv_flush_tlb_others
+>> > > (include/asm-generic/mshyperv.h:128 arch/x86/hyperv/mmu.c:112)
+>> > > >> > [   83.908636] Read of size 4 at addr ffff888267c01370 by task kworker/u8:2/106
+>> > > >> > [   84.196669] CPU: 0 PID: 106 Comm: kworker/u8:2 Tainted: G        W         5.4.60 #1
+>> > > >> > [   84.196669] Hardware name: Microsoft Corporation Virtual Machine/Virtual
+>> Machine,
+>> > > BIOS 090008  12/07/2018
+>> > > >> > [   84.196669] Workqueue: writeback wb_workfn (flush-8:0)
+>> > > >> > [   84.196669] Call Trace:
+>> > > >> > [   84.196669] dump_stack (lib/dump_stack.c:120)
+>> > > >> > [   84.196669] print_address_description.constprop.0 (mm/kasan/report.c:375)
+>> > > >> > [   84.196669] __kasan_report.cold (mm/kasan/report.c:507)
+>> > > >> > [   84.196669] kasan_report (arch/x86/include/asm/smap.h:71
+>> > > mm/kasan/common.c:635)
+>> > > >> > [   84.196669] hyperv_flush_tlb_others (include/asm-generic/mshyperv.h:128
+>> > > arch/x86/hyperv/mmu.c:112)
+>> > > >> > [   84.196669] flush_tlb_mm_range (arch/x86/include/asm/paravirt.h:68
+>> > > arch/x86/mm/tlb.c:798)
+>> > > >> > [   84.196669] ptep_clear_flush (arch/x86/include/asm/tlbflush.h:586 mm/pgtable-
+>> > > generic.c:88)
+>> > > >> >
+>> > > >> > Fixes: 0e4c88f37693 ("x86/hyper-v: Use cheaper
+>> > > HVCALL_FLUSH_VIRTUAL_ADDRESS_{LIST,SPACE} hypercalls when possible")
+>> > > >> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> > > >> > Cc: stable@kernel.org
+>> > > >> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> > > >> > ---
+>> > > >> >  arch/x86/hyperv/mmu.c | 4 +++-
+>> > > >> >  1 file changed, 3 insertions(+), 1 deletion(-)
+>> > > >> >
+>> > > >> > diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+>> > > >> > index 5208ba49c89a9..b1d6afc5fc4a3 100644
+>> > > >> > --- a/arch/x86/hyperv/mmu.c
+>> > > >> > +++ b/arch/x86/hyperv/mmu.c
+>> > > >> > @@ -109,7 +109,9 @@ static void hyperv_flush_tlb_others(const struct cpumask
+>> > > *cpus,
+>> > > >> >  		 * must. We will also check all VP numbers when walking the
+>> > > >> >  		 * supplied CPU set to remain correct in all cases.
+>> > > >> >  		 */
+>> > > >> > -		if (hv_cpu_number_to_vp_number(cpumask_last(cpus)) >= 64)
+>> > > >> > +		int last = cpumask_last(cpus);
+>> > > >> > +
+>> > > >> > +		if (last < num_possible_cpus() &&
+>> hv_cpu_number_to_vp_number(last) >=
+>> > > 64)
+>> > > >> >  			goto do_ex_hypercall;
+>> > > >>
+>> > > >> In case 'cpus' can end up being empty (I'm genuinely suprised it can)
+>> > >
+>> > > I was just as surprised as you and spent the good part of a day
+>> > > debugging this. However, a:
+>> > >
+>> > > 	WARN_ON(cpumask_empty(cpus));
+>> > >
+>> > > triggers at that line of code even though we check for cpumask_empty()
+>> > > at the entry of the function.
+>> >
+>> > What does the call stack look like when this triggers?  I'm curious about
+>> > the path where the 'cpus' could be changing while the flush call is in
+>> > progress.
+>> >
+>> > I wonder if CPUs could ever be added to the mask?  Removing CPUs can
+>> > be handled with some care because an unnecessary flush doesn't hurt
+>> > anything.   But adding CPUs has serious correctness problems.
+>> >
+>>
+>> The cpumask_empty check is done before disabling irq. Is it possible
+>> the mask is modified by an interrupt?
+>>
+>> If there is a reliable way to trigger this bug, we may be able to test
+>> the following patch.
+>>
+>> diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+>> index 5208ba49c89a..23fa08d24c1a 100644
+>> --- a/arch/x86/hyperv/mmu.c
+>> +++ b/arch/x86/hyperv/mmu.c
+>> @@ -66,11 +66,13 @@ static void hyperv_flush_tlb_others(const struct cpumask *cpus,
+>>         if (!hv_hypercall_pg)
+>>                 goto do_native;
+>>
+>> -       if (cpumask_empty(cpus))
+>> -               return;
+>> -
+>>         local_irq_save(flags);
+>>
+>> +       if (cpumask_empty(cpus)) {
+>> +               local_irq_restore(flags);
+>> +               return;
+>> +       }
+>> +
+>>         flush_pcpu = (struct hv_tlb_flush **)
+>>                      this_cpu_ptr(hyperv_pcpu_input_arg);
+>
+>This thread died out 3 months ago without any patches being taken.
+>I recently hit the problem again at random, though not in a
+>reproducible way.
+>
+>I'd like to take Wei Liu's latest proposal to check for an empty
+>cpumask *after* interrupts are disabled.   I think this will almost
+>certainly solve the problem, and in a cleaner way than Sasha's
+>proposal.  I'd also suggest adding a comment in the code to note
+>the importance of the ordering.
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
----
- arch/x86/include/asm/hyperv-tlfs.h | 7 +++++++
- include/asm-generic/hyperv-tlfs.h  | 8 --------
- 2 files changed, 7 insertions(+), 8 deletions(-)
+I found that this syzbot reproducer:
+https://syzkaller.appspot.com//bug?id=47befb59c610a69f024db20b927dea80c88fc045
+is pretty good at reproducing the issue too:
 
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hype=
-rv-tlfs.h
-index 6bf42aed387e..a15c17c7f019 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -523,6 +523,13 @@ struct hv_partition_assist_pg {
- 	u32 tlb_lock_count;
- };
-=20
-+union hv_msi_entry {
-+	u64 as_uint64;
-+	struct {
-+		u32 address;
-+		u32 data;
-+	} __packed;
-+};
-=20
- #include <asm-generic/hyperv-tlfs.h>
-=20
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv=
--tlfs.h
-index e73a11850055..6265f4494970 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -408,14 +408,6 @@ struct hv_tlb_flush_ex {
- } __packed;
-=20
- /* HvRetargetDeviceInterrupt hypercall */
--union hv_msi_entry {
--	u64 as_uint64;
--	struct {
--		u32 address;
--		u32 data;
--	} __packed;
--};
--
- struct hv_interrupt_entry {
- 	u32 source;			/* 1 for MSI(-X) */
- 	u32 reserved1;
---=20
-2.17.1
+BUG: KASAN: slab-out-of-bounds in hyperv_flush_tlb_others+0x11ea/0x17c0
+Read of size 4 at addr ffff88810005db20 by task 3.c.exe/13007
+
+CPU: 4 PID: 13007 Comm: 3.c.exe Not tainted 5.10.5 #1
+Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 06/17/2020
+Call Trace:
+  dump_stack+0xa4/0xd9
+  print_address_description.constprop.0.cold+0xd4/0x509
+  kasan_report.cold+0x20/0x37
+  __asan_report_load4_noabort+0x14/0x20
+  hyperv_flush_tlb_others+0x11ea/0x17c0
+  flush_tlb_mm_range+0x1fd/0x360
+  tlb_flush_mmu+0x1b5/0x510
+  tlb_finish_mmu+0x89/0x360
+  exit_mmap+0x24f/0x450
+  mmput+0x121/0x400
+  do_exit+0x8cf/0x2a70
+  do_group_exit+0x100/0x300
+  get_signal+0x3d7/0x1e70
+  arch_do_signal+0x8c/0x2670
+  exit_to_user_mode_prepare+0x154/0x1f0
+  syscall_exit_to_user_mode+0x42/0x280
+  do_syscall_64+0x45/0x90
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x450c2d
+Code: Unable to access opcode bytes at RIP 0x450c03.
+RSP: 002b:00007f6c81711d68 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 0000000000000000 RCX: 0000000000450c2d
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000004e0428
+RBP: 00007f6c81711d80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffeeef33d2e
+R13: 00007ffeeef33d2f R14: 00007ffeeef33dd0 R15: 00007f6c81711e80
+
+Allocated by task 0:
+  kasan_save_stack+0x23/0x50
+  __kasan_kmalloc.constprop.0+0xcf/0xe0
+  kasan_kmalloc+0x9/0x10
+  __kmalloc+0x1c8/0x3b0
+  kmalloc_array+0x12/0x14
+  hyperv_init+0xd4/0x3a0
+  apic_intr_mode_init+0xbb/0x1e8
+  x86_late_time_init+0x96/0xa7
+  start_kernel+0x317/0x3d3
+  x86_64_start_reservations+0x24/0x26
+  x86_64_start_kernel+0x7a/0x7e
+  secondary_startup_64_no_verify+0xb0/0xbb
+
+The buggy address belongs to the object at ffff88810005db00
+  which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes to the right of
+  32-byte region [ffff88810005db00, ffff88810005db20)
+The buggy address belongs to the page:
+page:0000000065310ff0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x10005d
+flags: 0x17ffffc0000200(slab)
+raw: 0017ffffc0000200 0000000000000000 0000000100000001 ffff888100043a40
+raw: 0000000000000000 0000000000400040 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88810005da00: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+  ffff88810005da80: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+>ffff88810005db00: 00 00 00 00 fc fc fc fc 00 00 00 fc fc fc fc fc
+                                ^
+  ffff88810005db80: 00 00 00 fc fc fc fc fc 00 00 00 fc fc fc fc fc
+  ffff88810005dc00: 00 00 00 fc fc fc fc fc 00 00 00 fc fc fc fc fc
+
+-- 
+Thanks,
+Sasha
