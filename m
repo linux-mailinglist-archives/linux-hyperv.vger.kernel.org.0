@@ -2,446 +2,159 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA9162EE8D9
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jan 2021 23:38:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E4B82EEC51
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Jan 2021 05:16:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbhAGWii (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Jan 2021 17:38:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbhAGWii (ORCPT
+        id S1726763AbhAHEQh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Jan 2021 23:16:37 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:49528 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbhAHEQg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Jan 2021 17:38:38 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90CF6C0612F4;
-        Thu,  7 Jan 2021 14:37:57 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id 3so6838798wmg.4;
-        Thu, 07 Jan 2021 14:37:57 -0800 (PST)
+        Thu, 7 Jan 2021 23:16:36 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1084A8WQ097419;
+        Fri, 8 Jan 2021 04:15:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2020-01-29;
+ bh=ftuaTL/lm+H6JG13d03igNmvEoOC4qgMx0ZANFMmyZ0=;
+ b=LsPXYeNOpcKgPo/uOWysUoAc5kx2M6KLf85nFBStDuI3WSxBTTZpdKIW0BAcoCZlsbiw
+ Sc6cD4L5zy8OuBJVOSan2h81EgPZnuys0sFNfDBbbPMAfLBWgihUXK6L60LpB473IhM9
+ kk8yx0xshZeX5QXJNQVtCMitbjWa2YSWu582xUxRmGLMlPvEYQx5q6KXzBOpMl2wDofD
+ Luq9CDU1AA7+/6e3uZsnINFgb4j6a+E7/4ekRF+coIzm+GGluyhou0+lEVH2TeD4B4/Q
+ l3YimJ8L+LJVD4ELEsQBJTc9SL7cXC+ECAqrPJsVODKbgEOzaBWlEcApG4asz/CfH4xP MA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 35wepmfd2h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 08 Jan 2021 04:15:49 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1084AUJe040474;
+        Fri, 8 Jan 2021 04:15:49 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2174.outbound.protection.outlook.com [104.47.56.174])
+        by userp3020.oracle.com with ESMTP id 35w3quswve-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Jan 2021 04:15:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fzi/3HYKbW6Isg9sGB7w5qWmYn+9OOozxvo5TH4BNo89pjYEx2oWp5+meguLoJ3aHH7dTlGlcwEa3eFPmPwdBO7OimzwyIr/KAyfP+DwKfNHFB/EgfVGHYkrGBH97KakzPvCMpMRfcnjDKJVUgqtC4nc6CN9Ej+EEVpkhF84OfL3560LPyCFRgaMPrr5U0PD5P7WrMIxkyN6wAIeTLVsby/RxLn/p6dw5rNj6R+rJEg4NG+ZVIHfZ/82o7VWFFQdq8jqRLgo3NcjKoRrgoDhgS0/C2nnED+WEX2XnlwPxWiETjql75mqX2hq2W8eACObBmybcKE/X1BFwqwUc8XcZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ftuaTL/lm+H6JG13d03igNmvEoOC4qgMx0ZANFMmyZ0=;
+ b=O6OJJOWsFmtC07xoeaBQwsiM2tPcbXa35UWUu7JlR07uJmsxLAeS3sveAFWQEiVX4mN3ubRb0z/JoFA4lGA1O4MX3QC8D0o0pO16XJH7LNM5VcE1ZEUNl/4nb8dQ8rbTAm7xCAPt6aAIMlbjwMlGU87sv1S5eilFtfzmOWDHoAYzhdMGCkZ7iz+pBwdFpQrcZU2J5ucvFxxIIqhkzSMEvS4T8xwfV82W5Me/sOfFWzOqK/uoAyB0OZ9Pj3U7USDxNRwYjfQO7GDUGrz3E165dlQApcbqOO2bXCKTu8E5IfRpNlkI9SKgiPfJT0uPRF+AkUP78ok1MVXop1ycU64Gfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k5NWCqyWxrgJ9mwYBzsd5FnhwT4mcrOvckByJF+b0Cw=;
-        b=QhW+pOB+MXQXTdemZ/3/ZODuIhfZiR7UgRUEExoHfpZ6O/v1f+ATphb0KkOptstotR
-         11ZUwLhOF/OMAUe8Iz+XvOtxG/D1u0ISispr2VAvTw6r6WGRGhLOFHyfKz+Jk+Hoej8u
-         B45+wKuy5ZE9M2QFA+h3DFm0K+epbnu3Fb64riR8zRtkEbm76fEinvMuAEHnDnIeI6/R
-         zmFq+TPZlWWNJuQ+u0ig2GgMHOVWzb6locmi1XwMRii1p72pRXAq5e/52mqF+pWv2Fis
-         lFHLqOZeOV8VNHOm3R3YZ6SF5oyvzWx1wmflhuUlt5xrjYrG7WdkEgxsuTty6g0xl7VJ
-         GJzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k5NWCqyWxrgJ9mwYBzsd5FnhwT4mcrOvckByJF+b0Cw=;
-        b=LXpM5cKBRJHgSRXidNsTP70eA4KlD7bfSjb6v8Q5ssFZENvevkHzuavv+bscjWaRJj
-         iB94T53r7/BDTZJ9nWdipNvv4SouJTN3JGPWKgI5UNx6khcN5EZNCkVTmvsdnTZPIKyh
-         iQF8Hjew/ABgaju3ffJMyc96Y+4DikH//aXpVElx8hTQWOmykYLb+0pSR7nO9+cfqjYV
-         ik4LToENtdu+Kx3OnfzeliDnw10ZPjgYFGYvqgQ2E8RS8UCPKlkiq6M6a/EWiBuu0z9m
-         PNvStLeC+jOCmZTwzQJcukjzb0t08UCQmYilEhRpLmEdJvFg0lWWXxjgUF08v+u7+8Bu
-         fiqw==
-X-Gm-Message-State: AOAM531oEc4Zgq87EvzTxxLFU62lOl2mU70ixmNEaadNisdB9g8CeBza
-        +PuN9WaLFAYEM6HXj2H65d1Q3JDEdtwKoey8
-X-Google-Smtp-Source: ABdhPJymJiyHBIAA4sKbf1fuAR2JxtRrXMs99NWfyR/H6W64L5tTKiHroxhHBx4rdHf+SWh4kDr80g==
-X-Received: by 2002:a1c:6a02:: with SMTP id f2mr583854wmc.36.1610059075972;
-        Thu, 07 Jan 2021 14:37:55 -0800 (PST)
-Received: from localhost.localdomain (host-80-116-1-51.retail.telecomitalia.it. [80.116.1.51])
-        by smtp.gmail.com with ESMTPSA id i9sm10836580wrs.70.2021.01.07.14.37.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jan 2021 14:37:55 -0800 (PST)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ftuaTL/lm+H6JG13d03igNmvEoOC4qgMx0ZANFMmyZ0=;
+ b=qI7J0eU0CBMqSZ4LeWNYYLvPkFNkuOeFna1ZFCKXhRGCy6X3e2Y/syc86h3R3D5cZVITUfReFMPCghRAzeNPDopVWn3jvoh1P4ehecd0iYrD/Jo4bZ5z//RdZz67Lp1YCK1/4vBpHIdN3axTLheHy1uK1Feq2jlgYwCJLbO1leg=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=oracle.com;
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by PH0PR10MB4534.namprd10.prod.outlook.com (2603:10b6:510:30::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Fri, 8 Jan
+ 2021 04:15:46 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::54f3:a8aa:a2cd:a3a4]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::54f3:a8aa:a2cd:a3a4%5]) with mapi id 15.20.3742.006; Fri, 8 Jan 2021
+ 04:15:46 +0000
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Saruhan Karademir <skarade@microsoft.com>,
         Juan Vazquez <juvazq@microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH] hv_netvsc: Add (more) validation for untrusted Hyper-V values
-Date:   Thu,  7 Jan 2021 23:37:23 +0100
-Message-Id: <20210107223723.285653-1-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 0/3] scsi: storvsc: Validate length of incoming packet
+ in storvsc_on_channel_callback() -- Take 2
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1h7nsawt5.fsf@ca-mkp.ca.oracle.com>
+References: <20201217203321.4539-1-parri.andrea@gmail.com>
+Date:   Thu, 07 Jan 2021 23:15:44 -0500
+In-Reply-To: <20201217203321.4539-1-parri.andrea@gmail.com> (Andrea Parri's
+        message of "Thu, 17 Dec 2020 21:33:18 +0100")
+Content-Type: text/plain
+X-Originating-IP: [138.3.200.58]
+X-ClientProxiedBy: BYAPR08CA0048.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::25) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ca-mkp.ca.oracle.com (138.3.200.58) by BYAPR08CA0048.namprd08.prod.outlook.com (2603:10b6:a03:117::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Fri, 8 Jan 2021 04:15:46 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: eb2cfc5d-b396-4f66-8ebb-08d8b38c12f7
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4534:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <PH0PR10MB45345E875F3D76081A51FEF98EAE0@PH0PR10MB4534.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: c9NwbSvuXH5WHXSaNuxr3d5B6DfcWWXMWSsq859ESywA/EV0EucfNCJnUvLFP/ZP8Eif00yenUACm94fwTQ8JjqEIo3GaQR5nvwuq1ktXPmJTyxZj55Yj4RptvSfhcYVvVxoqVDD3EEVkWBpUTwqC3We3wC+DytKJNZ27jEpnNpxpTT4JyyOQUopjvT1XDqls8nH2GFrnodhz48Txrr4eRAQbG5DDjEUhQFuSyWlpFqHNaJ94GwIfBQ+YTeqYLLN0oeBVJzrdnOxppiEhGeLOZzY4QIDaMdDctFe9tDjkuWXNaEn2T+4jlqNFut1VwSXmwx8lLl0Jl0PFIFwqYfyCnwa53wXs04sTEjuRApsxQGi6E2JpU9+/Jp/xTr9IBdchs6PJiNloi4Q0IKp9G/3sw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(376002)(346002)(366004)(396003)(39850400004)(186003)(4326008)(54906003)(5660300002)(55016002)(2906002)(956004)(66556008)(478600001)(16526019)(6916009)(86362001)(7416002)(26005)(52116002)(36916002)(7696005)(316002)(8676002)(4744005)(66946007)(83380400001)(8936002)(66476007)(15650500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?lZr7Eywrx9iaR0WgkHEWr1MeNcu5jqtqWYJecWOB0VjJr4DAg9rWcF+lfGF5?=
+ =?us-ascii?Q?cNxJscvVs8FjEHwwUSopdviA76N8ttroeexno1KcmdNXdUaSccG5N9m6WsdR?=
+ =?us-ascii?Q?APzKv1bS1iDh/4uj0AfhnrKd0geojEGv7gDCt9jh2D2y3ffrjHVkX+Mu8op4?=
+ =?us-ascii?Q?MCtxiW0kO8CaB5rjGgY6DtCjRMwtvyGHLh3y4txDS8+7cngL212+lPm8ASC6?=
+ =?us-ascii?Q?2/9KZR8K+ASydPLoJwFkSB0yhhCchCkh7qFAeDudtcd+5/L0kgj5I3uIZgzF?=
+ =?us-ascii?Q?PT8AqN2b8UDCR4H9DYRkKL0wW3eg/Bhbf/bB9KAyi4VH8y/jUfK06i8W/zJL?=
+ =?us-ascii?Q?xO2nrfOkBYc/DCpEeDuSLgwnFGVzcFZnsjGP6vJTaIqcdzG4JqgK5nCppmtb?=
+ =?us-ascii?Q?3IbBf2sWhpARniqHjC83SpbnJ4uiddLB8MjmniiQG7oNKyn/fre2kU0I3Iyl?=
+ =?us-ascii?Q?0wTURfl1TLc9fb+6pN77COnldCTHha9GBL2aOsG79vsl4MvGE9x9iJU0oL7O?=
+ =?us-ascii?Q?OAq6mw84VasUh6TFYxtJY4ol1SQZ7Dzuz2MwxaQ+rI4yydJ77Z4IW1VvjKIF?=
+ =?us-ascii?Q?527YjDKfy8rfJqxvgzn3AcEJiMuqIYan1ga3XIWfqzuuasDl4FNVGTgbAr6Q?=
+ =?us-ascii?Q?eAvtUCjNI+azEYxiVUqDLm4SRoXxHEpwYJg8DWCdPwzEHGXekKSEavaAgLBi?=
+ =?us-ascii?Q?gNKsdpfs0LU3QzJ0iL/a61Bx16c0DuhPqtndF8YgwUAGEuouxs1H91dokGRD?=
+ =?us-ascii?Q?bCAb4RGmfYgIbjtToOZ7V9rhESULqH+wTJz1JZVWFFKXJztWkSeINRN/ATM+?=
+ =?us-ascii?Q?eg/wPwbppVImQTM/dVQwXu9HjZPuJqQoW2mdl8x2ZjJuTPB5Mbwx1AtRhUB7?=
+ =?us-ascii?Q?54bswaGN5WUweKUBpuRVkzVAKdHK/9eo7u+NfGMPFdljunZm3hLWHB4KwpGA?=
+ =?us-ascii?Q?Vv5pYHffCe9AmTK9BAwXXrNl2GdGyADB2YZCmkQDMCo=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2021 04:15:46.7384
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb2cfc5d-b396-4f66-8ebb-08d8b38c12f7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A4HZf3Ri4/boF8OK0xKfMio7PkJMQ9CEjvLS0Q7vpfVc7+oObFiDhZ/ocJmdj+18oZAnqJYHy7ps9hMACw2pI/sXh5NMhxt7JfZ9yLQO56s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4534
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9857 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 mlxlogscore=913 phishscore=0 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101080021
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9857 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 spamscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 clxscore=1011 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101080021
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-For additional robustness in the face of Hyper-V errors or malicious
-behavior, validate all values that originate from packets that Hyper-V
-has sent to the guest.  Ensure that invalid values cannot cause indexing
-off the end of an array, or subvert an existing validation via integer
-overflow.  Ensure that outgoing packets do not have any leftover guest
-memory that has not been zeroed out.
 
-Reported-by: Juan Vazquez <juvazq@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
----
- drivers/net/hyperv/netvsc.c       |   3 +-
- drivers/net/hyperv/netvsc_bpf.c   |   6 ++
- drivers/net/hyperv/netvsc_drv.c   |  16 ++-
- drivers/net/hyperv/rndis_filter.c | 167 +++++++++++++++++++-----------
- 4 files changed, 130 insertions(+), 62 deletions(-)
+Andrea,
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 1510a236aa341..d9324961e0d64 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -887,6 +887,7 @@ static inline int netvsc_send_pkt(
- 	int ret;
- 	u32 ring_avail = hv_get_avail_to_write_percent(&out_channel->outbound);
- 
-+	memset(&nvmsg, 0, sizeof(struct nvsp_message));
- 	nvmsg.hdr.msg_type = NVSP_MSG1_TYPE_SEND_RNDIS_PKT;
- 	if (skb)
- 		rpkt->channel_type = 0;		/* 0 is RMC_DATA */
-@@ -1306,7 +1307,7 @@ static void netvsc_send_table(struct net_device *ndev,
- 			 sizeof(union nvsp_6_message_uber);
- 
- 	/* Boundary check for all versions */
--	if (offset > msglen - count * sizeof(u32)) {
-+	if (msglen < count * sizeof(u32) || offset > msglen - count * sizeof(u32)) {
- 		netdev_err(ndev, "Received send-table offset too big:%u\n",
- 			   offset);
- 		return;
-diff --git a/drivers/net/hyperv/netvsc_bpf.c b/drivers/net/hyperv/netvsc_bpf.c
-index 440486d9c999e..11f0588a88843 100644
---- a/drivers/net/hyperv/netvsc_bpf.c
-+++ b/drivers/net/hyperv/netvsc_bpf.c
-@@ -37,6 +37,12 @@ u32 netvsc_run_xdp(struct net_device *ndev, struct netvsc_channel *nvchan,
- 	if (!prog)
- 		goto out;
- 
-+	/* Ensure that the below memcpy() won't overflow the page buffer. */
-+	if (len > ndev->mtu + ETH_HLEN) {
-+		act = XDP_DROP;
-+		goto out;
-+	}
-+
- 	/* allocate page buffer for data */
- 	page = alloc_page(GFP_ATOMIC);
- 	if (!page) {
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index f32f28311d573..ef3ad66d927a8 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -760,6 +760,16 @@ void netvsc_linkstatus_callback(struct net_device *net,
- 	if (indicate->status == RNDIS_STATUS_LINK_SPEED_CHANGE) {
- 		u32 speed;
- 
-+		/* Validate status_buf_offset */
-+		if (indicate->status_buflen < sizeof(speed) ||
-+		    indicate->status_buf_offset < sizeof(*indicate) ||
-+		    resp->msg_len - RNDIS_HEADER_SIZE < indicate->status_buf_offset ||
-+		    resp->msg_len - RNDIS_HEADER_SIZE - indicate->status_buf_offset
-+				< indicate->status_buflen) {
-+			netdev_err(net, "invalid rndis_indicate_status packet\n");
-+			return;
-+		}
-+
- 		speed = *(u32 *)((void *)indicate
- 				 + indicate->status_buf_offset) / 10000;
- 		ndev_ctx->speed = speed;
-@@ -865,8 +875,12 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
- 	 */
- 	if (csum_info && csum_info->receive.ip_checksum_value_invalid &&
- 	    csum_info->receive.ip_checksum_succeeded &&
--	    skb->protocol == htons(ETH_P_IP))
-+	    skb->protocol == htons(ETH_P_IP)) {
-+		/* Check that there is enough space to hold the IP header. */
-+		if (skb_headlen(skb) < sizeof(struct iphdr))
-+			return NULL;
- 		netvsc_comp_ipcsum(skb);
-+	}
- 
- 	/* Do L4 checksum offload if enabled and present. */
- 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index 7e6dee2f02a43..99c146f6a9d6f 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -131,66 +131,84 @@ static void dump_rndis_message(struct net_device *netdev,
- {
- 	switch (rndis_msg->ndis_msg_type) {
- 	case RNDIS_MSG_PACKET:
--		netdev_dbg(netdev, "RNDIS_MSG_PACKET (len %u, "
--			   "data offset %u data len %u, # oob %u, "
--			   "oob offset %u, oob len %u, pkt offset %u, "
--			   "pkt len %u\n",
--			   rndis_msg->msg_len,
--			   rndis_msg->msg.pkt.data_offset,
--			   rndis_msg->msg.pkt.data_len,
--			   rndis_msg->msg.pkt.num_oob_data_elements,
--			   rndis_msg->msg.pkt.oob_data_offset,
--			   rndis_msg->msg.pkt.oob_data_len,
--			   rndis_msg->msg.pkt.per_pkt_info_offset,
--			   rndis_msg->msg.pkt.per_pkt_info_len);
-+		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE >= sizeof(struct rndis_packet)) {
-+			const struct rndis_packet *pkt = &rndis_msg->msg.pkt;
-+			netdev_dbg(netdev, "RNDIS_MSG_PACKET (len %u, "
-+				   "data offset %u data len %u, # oob %u, "
-+				   "oob offset %u, oob len %u, pkt offset %u, "
-+				   "pkt len %u\n",
-+				   rndis_msg->msg_len,
-+				   pkt->data_offset,
-+				   pkt->data_len,
-+				   pkt->num_oob_data_elements,
-+				   pkt->oob_data_offset,
-+				   pkt->oob_data_len,
-+				   pkt->per_pkt_info_offset,
-+				   pkt->per_pkt_info_len);
-+		}
- 		break;
- 
- 	case RNDIS_MSG_INIT_C:
--		netdev_dbg(netdev, "RNDIS_MSG_INIT_C "
--			"(len %u, id 0x%x, status 0x%x, major %d, minor %d, "
--			"device flags %d, max xfer size 0x%x, max pkts %u, "
--			"pkt aligned %u)\n",
--			rndis_msg->msg_len,
--			rndis_msg->msg.init_complete.req_id,
--			rndis_msg->msg.init_complete.status,
--			rndis_msg->msg.init_complete.major_ver,
--			rndis_msg->msg.init_complete.minor_ver,
--			rndis_msg->msg.init_complete.dev_flags,
--			rndis_msg->msg.init_complete.max_xfer_size,
--			rndis_msg->msg.init_complete.
--			   max_pkt_per_msg,
--			rndis_msg->msg.init_complete.
--			   pkt_alignment_factor);
-+		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE >=
-+				sizeof(struct rndis_initialize_complete)) {
-+			const struct rndis_initialize_complete *init_complete =
-+				&rndis_msg->msg.init_complete;
-+			netdev_dbg(netdev, "RNDIS_MSG_INIT_C "
-+				"(len %u, id 0x%x, status 0x%x, major %d, minor %d, "
-+				"device flags %d, max xfer size 0x%x, max pkts %u, "
-+				"pkt aligned %u)\n",
-+				rndis_msg->msg_len,
-+				init_complete->req_id,
-+				init_complete->status,
-+				init_complete->major_ver,
-+				init_complete->minor_ver,
-+				init_complete->dev_flags,
-+				init_complete->max_xfer_size,
-+				init_complete->max_pkt_per_msg,
-+				init_complete->pkt_alignment_factor);
-+		}
- 		break;
- 
- 	case RNDIS_MSG_QUERY_C:
--		netdev_dbg(netdev, "RNDIS_MSG_QUERY_C "
--			"(len %u, id 0x%x, status 0x%x, buf len %u, "
--			"buf offset %u)\n",
--			rndis_msg->msg_len,
--			rndis_msg->msg.query_complete.req_id,
--			rndis_msg->msg.query_complete.status,
--			rndis_msg->msg.query_complete.
--			   info_buflen,
--			rndis_msg->msg.query_complete.
--			   info_buf_offset);
-+		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE >=
-+				sizeof(struct rndis_query_complete)) {
-+			const struct rndis_query_complete *query_complete =
-+				&rndis_msg->msg.query_complete;
-+			netdev_dbg(netdev, "RNDIS_MSG_QUERY_C "
-+				"(len %u, id 0x%x, status 0x%x, buf len %u, "
-+				"buf offset %u)\n",
-+				rndis_msg->msg_len,
-+				query_complete->req_id,
-+				query_complete->status,
-+				query_complete->info_buflen,
-+				query_complete->info_buf_offset);
-+		}
- 		break;
- 
- 	case RNDIS_MSG_SET_C:
--		netdev_dbg(netdev,
--			"RNDIS_MSG_SET_C (len %u, id 0x%x, status 0x%x)\n",
--			rndis_msg->msg_len,
--			rndis_msg->msg.set_complete.req_id,
--			rndis_msg->msg.set_complete.status);
-+		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE + sizeof(struct rndis_set_complete)) {
-+			const struct rndis_set_complete *set_complete =
-+				&rndis_msg->msg.set_complete;
-+			netdev_dbg(netdev,
-+				"RNDIS_MSG_SET_C (len %u, id 0x%x, status 0x%x)\n",
-+				rndis_msg->msg_len,
-+				set_complete->req_id,
-+				set_complete->status);
-+		}
- 		break;
- 
- 	case RNDIS_MSG_INDICATE:
--		netdev_dbg(netdev, "RNDIS_MSG_INDICATE "
--			"(len %u, status 0x%x, buf len %u, buf offset %u)\n",
--			rndis_msg->msg_len,
--			rndis_msg->msg.indicate_status.status,
--			rndis_msg->msg.indicate_status.status_buflen,
--			rndis_msg->msg.indicate_status.status_buf_offset);
-+		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE >=
-+				sizeof(struct rndis_indicate_status)) {
-+			const struct rndis_indicate_status *indicate_status =
-+				&rndis_msg->msg.indicate_status;
-+			netdev_dbg(netdev, "RNDIS_MSG_INDICATE "
-+				"(len %u, status 0x%x, buf len %u, buf offset %u)\n",
-+				rndis_msg->msg_len,
-+				indicate_status->status,
-+				indicate_status->status_buflen,
-+				indicate_status->status_buf_offset);
-+		}
- 		break;
- 
- 	default:
-@@ -246,11 +264,19 @@ static void rndis_set_link_state(struct rndis_device *rdev,
- {
- 	u32 link_status;
- 	struct rndis_query_complete *query_complete;
-+	u32 msg_len = msg_len = request->response_msg.msg_len;
-+
-+	/* Ensure the packet is big enough to access its fields */
-+	if (msg_len - RNDIS_HEADER_SIZE < sizeof(struct rndis_query_complete))
-+		return;
- 
- 	query_complete = &request->response_msg.msg.query_complete;
- 
- 	if (query_complete->status == RNDIS_STATUS_SUCCESS &&
--	    query_complete->info_buflen == sizeof(u32)) {
-+	    query_complete->info_buflen >= sizeof(u32) &&
-+	    msg_len - RNDIS_HEADER_SIZE >= query_complete->info_buf_offset &&
-+	    msg_len - RNDIS_HEADER_SIZE - query_complete->info_buf_offset
-+			>= query_complete->info_buflen) {
- 		memcpy(&link_status, (void *)((unsigned long)query_complete +
- 		       query_complete->info_buf_offset), sizeof(u32));
- 		rdev->link_state = link_status != 0;
-@@ -343,7 +369,8 @@ static void rndis_filter_receive_response(struct net_device *ndev,
-  */
- static inline void *rndis_get_ppi(struct net_device *ndev,
- 				  struct rndis_packet *rpkt,
--				  u32 rpkt_len, u32 type, u8 internal)
-+				  u32 rpkt_len, u32 type, u8 internal,
-+				  u32 ppi_size)
- {
- 	struct rndis_per_packet_info *ppi;
- 	int len;
-@@ -359,7 +386,8 @@ static inline void *rndis_get_ppi(struct net_device *ndev,
- 		return NULL;
- 	}
- 
--	if (rpkt->per_pkt_info_len > rpkt_len - rpkt->per_pkt_info_offset) {
-+	if (rpkt->per_pkt_info_len < sizeof(*ppi) ||
-+	    rpkt->per_pkt_info_len > rpkt_len - rpkt->per_pkt_info_offset) {
- 		netdev_err(ndev, "Invalid per_pkt_info_len: %u\n",
- 			   rpkt->per_pkt_info_len);
- 		return NULL;
-@@ -381,8 +409,12 @@ static inline void *rndis_get_ppi(struct net_device *ndev,
- 			continue;
- 		}
- 
--		if (ppi->type == type && ppi->internal == internal)
-+		if (ppi->type == type && ppi->internal == internal) {
-+			/* ppi->size should be big enough to hold the returned object. */
-+			if (ppi->size < ppi_size)
-+				continue;
- 			return (void *)((ulong)ppi + ppi->ppi_offset);
-+		}
- 		len -= ppi->size;
- 		ppi = (struct rndis_per_packet_info *)((ulong)ppi + ppi->size);
- 	}
-@@ -461,13 +493,16 @@ static int rndis_filter_receive_data(struct net_device *ndev,
- 		return NVSP_STAT_FAIL;
- 	}
- 
--	vlan = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, IEEE_8021Q_INFO, 0);
-+	vlan = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, IEEE_8021Q_INFO, 0, sizeof(*vlan));
- 
--	csum_info = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, TCPIP_CHKSUM_PKTINFO, 0);
-+	csum_info = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, TCPIP_CHKSUM_PKTINFO, 0,
-+				  sizeof(*csum_info));
- 
--	hash_info = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, NBL_HASH_VALUE, 0);
-+	hash_info = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, NBL_HASH_VALUE, 0,
-+				  sizeof(*hash_info));
- 
--	pktinfo_id = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, RNDIS_PKTINFO_ID, 1);
-+	pktinfo_id = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, RNDIS_PKTINFO_ID, 1,
-+				   sizeof(*pktinfo_id));
- 
- 	data = (void *)msg + data_offset;
- 
-@@ -522,9 +557,6 @@ int rndis_filter_receive(struct net_device *ndev,
- 	struct net_device_context *net_device_ctx = netdev_priv(ndev);
- 	struct rndis_message *rndis_msg = data;
- 
--	if (netif_msg_rx_status(net_device_ctx))
--		dump_rndis_message(ndev, rndis_msg);
--
- 	/* Validate incoming rndis_message packet */
- 	if (buflen < RNDIS_HEADER_SIZE || rndis_msg->msg_len < RNDIS_HEADER_SIZE ||
- 	    buflen < rndis_msg->msg_len) {
-@@ -533,6 +565,9 @@ int rndis_filter_receive(struct net_device *ndev,
- 		return NVSP_STAT_FAIL;
- 	}
- 
-+	if (netif_msg_rx_status(net_device_ctx))
-+		dump_rndis_message(ndev, rndis_msg);
-+
- 	switch (rndis_msg->ndis_msg_type) {
- 	case RNDIS_MSG_PACKET:
- 		return rndis_filter_receive_data(ndev, net_dev, nvchan,
-@@ -567,6 +602,7 @@ static int rndis_filter_query_device(struct rndis_device *dev,
- 	u32 inresult_size = *result_size;
- 	struct rndis_query_request *query;
- 	struct rndis_query_complete *query_complete;
-+	u32 msg_len;
- 	int ret = 0;
- 
- 	if (!result)
-@@ -634,8 +670,19 @@ static int rndis_filter_query_device(struct rndis_device *dev,
- 
- 	/* Copy the response back */
- 	query_complete = &request->response_msg.msg.query_complete;
-+	msg_len = request->response_msg.msg_len;
-+
-+	/* Ensure the packet is big enough to access its fields */
-+	if (msg_len - RNDIS_HEADER_SIZE < sizeof(struct rndis_query_complete)) {
-+		ret = -1;
-+		goto cleanup;
-+	}
- 
--	if (query_complete->info_buflen > inresult_size) {
-+	if (query_complete->info_buflen > inresult_size ||
-+	    query_complete->info_buf_offset < sizeof(*query_complete) ||
-+	    msg_len - RNDIS_HEADER_SIZE < query_complete->info_buf_offset ||
-+	    msg_len - RNDIS_HEADER_SIZE - query_complete->info_buf_offset
-+			< query_complete->info_buflen) {
- 		ret = -1;
- 		goto cleanup;
- 	}
+> This series is to address the problems mentioned in:
+>
+>   4da3a54f5a0258 ("Revert "scsi: storvsc: Validate length of incoming packet in storvsc_on_channel_callback()"")
+>
+> (cf., in particular, patch 2/3) and to re-introduce the validation in
+> question (patch 3/3); patch 1/3 emerged from internal review of these
+> two patches and is a related fix.
+
+Applied to 5.12/scsi-staging, thanks!
+
 -- 
-2.25.1
-
+Martin K. Petersen	Oracle Linux Engineering
