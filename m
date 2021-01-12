@@ -2,63 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DF9B2F207A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Jan 2021 21:15:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A84B2F2610
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jan 2021 03:08:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391516AbhAKUPD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Jan 2021 15:15:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
+        id S1727146AbhALCH7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 Jan 2021 21:07:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390529AbhAKUPC (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Jan 2021 15:15:02 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 24E002054F;
-        Mon, 11 Jan 2021 20:14:22 +0000 (UTC)
+        id S1727071AbhALCH6 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 11 Jan 2021 21:07:58 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CF6CE22E02;
+        Tue, 12 Jan 2021 02:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610396062;
-        bh=1HebwtGXgAD4RYtBbwn+WVxKt1E+4mY10utMigoBQRY=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=DlS8AAxhViLMjRKoYv2+fl/kJ7VeB26BWHindwltJu7NrHfU9p0W4yWp4aVqkcnzE
-         uON8MGN3GEgbhyCEEj6MjHo/UdXkAtofNAfTqjteQva0wxtnGqKvrj5qNoDcvA1zcX
-         7zh1tYPLa7B7NxWlZC0yILk6xBegj8f60xQ2fgT/LtLxuR01V+l4Ub4l5QD6kwalU3
-         aVcyac+M8IE/zRqH9FdjWtINF/IoGWdzA6/E87EkABIygFcBMX6LJmrv9yTiHPtXqM
-         +Vwzpa/o+JqO2NADd73W9pNC3SPmRzdf0bIPGcwCJ5L1K0Fj51iyMWsEkcVzHTtZ3j
-         khoDwqYniUcMw==
-Received: from pdx-korg-docbuild-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-1.ci.codeaurora.org (Postfix) with ESMTP id 0ED21600E0;
-        Mon, 11 Jan 2021 20:14:22 +0000 (UTC)
-Subject: Re: [GIT PULL] Hyper-V fixes for 5.11-rc4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210111114210.zpuskk7pct6ibf6d@liuwe-devbox-debian-v2>
-References: <20210111114210.zpuskk7pct6ibf6d@liuwe-devbox-debian-v2>
-X-PR-Tracked-List-Id: <linux-hyperv.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210111114210.zpuskk7pct6ibf6d@liuwe-devbox-debian-v2>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20210111
-X-PR-Tracked-Commit-Id: ad0a6bad44758afa3b440c254a24999a0c7e35d5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f1ee3e150bd9da2dd60a210926c86cffd4a336ea
-Message-Id: <161039606198.25323.4412347117487107929.pr-tracker-bot@kernel.org>
-Date:   Mon, 11 Jan 2021 20:14:21 +0000
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
+        s=k20201202; t=1610417238;
+        bh=J4DfSHGmpNbOyayOV1RcYzVsVESx5yQNIJuVsFTbkp4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tGkRVzmGhGsBO+xVPhNr9tQy04q3WIon1e3YSJB3Fxkqbg2oS+c/5VElFQ7iagEnK
+         6g0S8QQ3mIL1lq9PNHseryWC9tYww42U+SZSGfsL3VI0Z4Mkw4zE8Q1hgFp/O3X28d
+         I4kY6Zwj63E8UfK7webPfOr4jmKCfZCiQmNlf1rblPSnHai6K8mGuuUswFjSc7twuz
+         SS0lVtxNnp8L9wQtQFtq1DpJYGCk85sGJNRhMiCBQpmTtl+wKnXSRq6FUetIRfuUx+
+         Jm3PFIHlzM4sPPeu7XH4VOM+qMBPdCjprJTCxqlD3kri4S0iJJSeVHEIr8s80dX3IZ
+         PyQ+UTJFQJ0KQ==
+Date:   Mon, 11 Jan 2021 18:07:17 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Long Li <longli@linuxonhyperv.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
+Subject: Re: [PATCH v2 0/3] hv_netvsc: Prevent packet loss during VF
+ add/remove
+Message-ID: <20210111180717.19126810@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <1610153623-17500-1-git-send-email-longli@linuxonhyperv.com>
+References: <1610153623-17500-1-git-send-email-longli@linuxonhyperv.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The pull request you sent on Mon, 11 Jan 2021 11:42:10 +0000:
+On Fri,  8 Jan 2021 16:53:40 -0800 Long Li wrote:
+> From: Long Li <longli@microsoft.com>
+> 
+> This patch set fixes issues with packet loss on VF add/remove.
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20210111
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f1ee3e150bd9da2dd60a210926c86cffd4a336ea
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+These patches are for net-next? They just optimize the amount of packet
+loss on switch, not fix bugs, right?
