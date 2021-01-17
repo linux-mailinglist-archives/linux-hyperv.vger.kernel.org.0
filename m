@@ -2,111 +2,80 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FE1D2F934C
-	for <lists+linux-hyperv@lfdr.de>; Sun, 17 Jan 2021 16:13:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 565352F9389
+	for <lists+linux-hyperv@lfdr.de>; Sun, 17 Jan 2021 16:29:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbhAQPLX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 17 Jan 2021 10:11:23 -0500
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:35653 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729494AbhAQPLR (ORCPT
+        id S1729633AbhAQPXl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 17 Jan 2021 10:23:41 -0500
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:40041 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729371AbhAQPXY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 17 Jan 2021 10:11:17 -0500
-Received: by mail-wr1-f54.google.com with SMTP id l12so8824371wry.2;
-        Sun, 17 Jan 2021 07:11:00 -0800 (PST)
+        Sun, 17 Jan 2021 10:23:24 -0500
+Received: by mail-wr1-f51.google.com with SMTP id 91so14069824wrj.7;
+        Sun, 17 Jan 2021 07:23:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yxPKYVAYGFQ1uVQM2y606vIDhx9zjoEHxHnN55EZo98=;
-        b=TUVVHDczSAED4qTERg6ScXVXG6pdSeHnM7xdHdUaGtMng5gn+2Qn/oJLIbS182hc/w
-         f7H5t9ODzo0lZ0HL4YdT84LopIZDUrICwV6Zpvtig0B6zKC7AooH/LNkbPQ7eJKx2fRy
-         k40jkgJ4L1CVQxYRaM2Jj2/U/K1TNbZ7AGO4xBTk+Xp/bcnZWv7WHpC6GpEnQCxy/9/9
-         fDt291EmWIiHN9GSTd7r9Ht6GP9ekW7Qr2vBla3xI0pjKespB4s8fLJ0bcNCO/pYZu0l
-         E55W+ZSsLlluv1OgfilcQlOg+fPv5PiJnKNvVN9BQWiZfaTTcOe/9peE+CtBfSRtHpQP
-         ALZg==
-X-Gm-Message-State: AOAM530jgMI9U6aLeGz5uL3x9oTjKyxzxpm6k0m89sQbvSqUdCwdy9PT
-        y3zFtfwOqU+wvpJtML5wzHY=
-X-Google-Smtp-Source: ABdhPJyJPGTIXOtEZuKjxF9FdiBJ+duV8o5fKkcqf2RskvssZY/hStY35yl3A3IfKiwk8yag1fbfsA==
-X-Received: by 2002:adf:ef51:: with SMTP id c17mr22353048wrp.101.1610896234710;
-        Sun, 17 Jan 2021 07:10:34 -0800 (PST)
+        bh=ZGscHCEw5N5o3xmGm70EwkaDpcwR5MuhDnNAvC0qCfc=;
+        b=ktyYHjoleFyI2Ax30UXFkMsr+U29nKaPdXbbqpOb8sO1dD6NfCV1ZS6/OQ21Q4JNPS
+         p+rB1iFuD26Q6gxTTl372khq/fh7JrJgFbUNhaWExSezWCi5x3QoHuSs8naoEx0UfaKm
+         3u1LPr5Razqy4DwyoMQ2bqgFUbORi68VYn/IElDXswaIl8IgRqxOfd/p2ISnlRKvULJe
+         l6OgvjwhfPPAaBON3Do/gjlVzGbHZpRLH51vZ8y9RFWtLt/a84G+1AkqwY+SX58Jn5fR
+         trzzAZMAeERBpCGpSu4+RNWatGzxhYeBP8ElTt0JIQeyVGbJUzsPmFKoc2jUkLB06NkX
+         2NHA==
+X-Gm-Message-State: AOAM531MkaWl4/loSnmEvzMJHuScWNGLVJyXJ0yY+lI1k+XD07cbiNaf
+        MNBtCPgkwHvxUBUNyIJFMp8=
+X-Google-Smtp-Source: ABdhPJz1s6wb3ww0xx8K/IvH8oII2tLJXBOfM+HfbIl23+qO0UXoQcxzrdTVd3cf/4RfCi36k9E5Ug==
+X-Received: by 2002:a5d:6ccb:: with SMTP id c11mr21978390wrc.224.1610896958694;
+        Sun, 17 Jan 2021 07:22:38 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g1sm24246408wrq.30.2021.01.17.07.10.33
+        by smtp.gmail.com with ESMTPSA id 94sm26084841wrq.22.2021.01.17.07.22.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Jan 2021 07:10:34 -0800 (PST)
-Date:   Sun, 17 Jan 2021 15:10:32 +0000
+        Sun, 17 Jan 2021 07:22:38 -0800 (PST)
+Date:   Sun, 17 Jan 2021 15:22:36 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
+To:     Michael Kelley <mikelley@microsoft.com>, g@liuwe-devbox-debian-v2
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2] hv_netvsc: Add (more) validation for untrusted
- Hyper-V values
-Message-ID: <20210117151032.sbhjryq2hs3ctnlx@liuwe-devbox-debian-v2>
-References: <20210114202628.119541-1-parri.andrea@gmail.com>
- <20210115203022.7005e66a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20210116130201.GA1579@anparri>
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>, vkuznets <vkuznets@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "ohering@suse.com" <ohering@suse.com>,
+        "jwiesner@suse.com" <jwiesner@suse.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: Re: [PATCH] x86/hyperv: Initialize clockevents after LAPIC is
+ initialized
+Message-ID: <20210117152236.nyoxxcs4c2hontm6@liuwe-devbox-debian-v2>
+References: <20210116223136.13892-1-decui@microsoft.com>
+ <MWHPR21MB15930BECFDF0251D36CFBB98D7A69@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210116130201.GA1579@anparri>
+In-Reply-To: <MWHPR21MB15930BECFDF0251D36CFBB98D7A69@MWHPR21MB1593.namprd21.prod.outlook.com>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Jan 16, 2021 at 02:02:01PM +0100, Andrea Parri wrote:
-> On Fri, Jan 15, 2021 at 08:30:22PM -0800, Jakub Kicinski wrote:
-> > On Thu, 14 Jan 2021 21:26:28 +0100 Andrea Parri (Microsoft) wrote:
-> > > For additional robustness in the face of Hyper-V errors or malicious
-> > > behavior, validate all values that originate from packets that Hyper-V
-> > > has sent to the guest.  Ensure that invalid values cannot cause indexing
-> > > off the end of an array, or subvert an existing validation via integer
-> > > overflow.  Ensure that outgoing packets do not have any leftover guest
-> > > memory that has not been zeroed out.
-> > > 
-> > > Reported-by: Juan Vazquez <juvazq@microsoft.com>
-> > > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> > > Cc: "David S. Miller" <davem@davemloft.net>
-> > > Cc: Jakub Kicinski <kuba@kernel.org>
-> > > Cc: Alexei Starovoitov <ast@kernel.org>
-> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > > Cc: Andrii Nakryiko <andrii@kernel.org>
-> > > Cc: Martin KaFai Lau <kafai@fb.com>
-> > > Cc: Song Liu <songliubraving@fb.com>
-> > > Cc: Yonghong Song <yhs@fb.com>
-> > > Cc: John Fastabend <john.fastabend@gmail.com>
-> > > Cc: KP Singh <kpsingh@kernel.org>
-> > > Cc: netdev@vger.kernel.org
-> > > Cc: bpf@vger.kernel.org
-> > > ---
-> > > Applies to 5.11-rc3 (and hyperv-next).
+On Sat, Jan 16, 2021 at 10:48:04PM +0000, Michael Kelley wrote:
+> From: Dexuan Cui <decui@microsoft.com> Sent: Saturday, January 16, 2021 2:32 PM
 > > 
-> > So this is for hyperv-next or should we take it via netdev trees?
+> > Fixes: 4df4cb9e99f8 ("x86/hyperv: Initialize clockevents earlier in CPU onlining")
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > ---
+> >  arch/x86/hyperv/hv_init.c | 29 ++++++++++++++++++++++++++---
+> >  1 file changed, 26 insertions(+), 3 deletions(-)
+> > 
 > 
-> No preference, either way is good for me.
+> Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
 
-To be clear: There is no dependency on any patch in hyperv-next, right?
-
-That's my understanding, but I would like to confirm it.
-
-Wei.
+Applied to hyperv-fixes. Thanks.
 
 > 
-> Thanks,
->   Andrea
