@@ -2,74 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58B8E2FAF45
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Jan 2021 05:01:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF8682FBA93
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Jan 2021 15:58:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbhASEBH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 18 Jan 2021 23:01:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728722AbhASEA6 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 18 Jan 2021 23:00:58 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 2F59A22ADF;
-        Tue, 19 Jan 2021 04:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611028809;
-        bh=dOQ6zhkwBv3m3dvXgJFPusi/j91ebRkRHmxwRp51YvM=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=i+tuV879nYnnRgu2q2QViJ5+7ko7Ziv5vwSjc4DUZ3q4jf/QOp9ay5t+qVPW0qEJK
-         MHu5N/LCmovorUEPRUvsmfBeP/9u8e8EU/7dxk4rFx1iYLFPZGdd5CPkMyJ6twfDuS
-         Ph24MoZV5VeEpsN7LCYJlqDLacBUMczA1RVaLdYWd2Qb19y3vIwo9zCHrQaNi3QEDo
-         ex8UcR/6PI9jBWhwQHxWVtLkKhxYaOBo635HBhljmwVZrkDL7RX2fL5Assc+KUMkAV
-         zDrkkOnNgBFvoXWn3JTlsrPnSPd+xPDh/tNhlSkUJJZ81fGoyeKWbI9ADcMmFIj9pJ
-         LZrZgqPiX7wbg==
-Received: from pdx-korg-docbuild-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-1.ci.codeaurora.org (Postfix) with ESMTP id 26B026036C;
-        Tue, 19 Jan 2021 04:00:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S2391544AbhASOyA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 19 Jan 2021 09:54:00 -0500
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:42269 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389574AbhASLbb (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 19 Jan 2021 06:31:31 -0500
+Received: by mail-wr1-f51.google.com with SMTP id m4so19356270wrx.9;
+        Tue, 19 Jan 2021 03:31:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=UhfaWmZsXLaTMQjB6+oOVMMKsehL/8ca0yWncg5/3jA=;
+        b=RM/H9IZttvi3H33Q+iZjRy40MID+oTS3K4tPLh1GfYp82a8mAMhpPIxoriSk27kNup
+         +ZckK3h1wWWPLvqP6iTQX7utdV/t//GFoOtGtsaXktJc9gzpWaRZcBSJltMTod08llFT
+         3jwidtCt7+dyodXhYJEjQK++poSLb1Pf7r9eS1PCbI2c0R4fZuBfhsH/041v4a/3zS/I
+         PysiKYe6P+fr9IGkGW0r3e8PURQnKjgIOfrNc9bIgmyT9rV3gW96yMRmo/XAVBtSiBa2
+         PmkQTrrABvv4djo1RMYG5othcbJZRXPPfhvO/QbP9vl75PfS8wHUHoOp4G5HNnrkGIud
+         f3vQ==
+X-Gm-Message-State: AOAM532pIi3QmFVxFb2MRLjkt2NexpiI3aoV/4NTzxlpvnj+mVJS+WqW
+        08rvSLiJVZHQNSooSYQ8qJtb1psfvME=
+X-Google-Smtp-Source: ABdhPJxrOKni4Y6K6MGLHpA1iOon4Cbuoh6zaaZY2zXekxfmar9HgSq0aQDNj7p4uw/ecFO0guFXvw==
+X-Received: by 2002:a5d:510f:: with SMTP id s15mr3864700wrt.21.1611055842269;
+        Tue, 19 Jan 2021 03:30:42 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id l1sm36079237wrq.64.2021.01.19.03.30.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Jan 2021 03:30:41 -0800 (PST)
+Date:   Tue, 19 Jan 2021 11:30:40 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com,
+        Michael Kelley <mikelley@microsoft.com>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Hyper-V fixes for 5.11-rc5
+Message-ID: <20210119113040.cy7x6hilvts56xan@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] hv_netvsc: Add (more) validation for untrusted Hyper-V
- values
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <161102880915.24762.9624432085976985112.git-patchwork-notify@kernel.org>
-Date:   Tue, 19 Jan 2021 04:00:09 +0000
-References: <20210114202628.119541-1-parri.andrea@gmail.com>
-In-Reply-To: <20210114202628.119541-1-parri.andrea@gmail.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        mikelley@microsoft.com, skarade@microsoft.com,
-        juvazq@microsoft.com, linux-hyperv@vger.kernel.org,
-        davem@davemloft.net, kuba@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-        kpsingh@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+Hi Linus,
 
-This patch was applied to netdev/net-next.git (refs/heads/master):
+The following changes since commit ad0a6bad44758afa3b440c254a24999a0c7e35d5:
 
-On Thu, 14 Jan 2021 21:26:28 +0100 you wrote:
-> For additional robustness in the face of Hyper-V errors or malicious
-> behavior, validate all values that originate from packets that Hyper-V
-> has sent to the guest.  Ensure that invalid values cannot cause indexing
-> off the end of an array, or subvert an existing validation via integer
-> overflow.  Ensure that outgoing packets do not have any leftover guest
-> memory that has not been zeroed out.
-> 
-> [...]
+  x86/hyperv: check cpu mask after interrupt has been disabled (2021-01-06 11:03:16 +0000)
 
-Here is the summary with links:
-  - [v2] hv_netvsc: Add (more) validation for untrusted Hyper-V values
-    https://git.kernel.org/netdev/net-next/c/505e3f00c3f3
+are available in the Git repository at:
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20210119
 
+for you to fetch changes up to fff7b5e6ee63c5d20406a131b260c619cdd24fd1:
 
+  x86/hyperv: Initialize clockevents after LAPIC is initialized (2021-01-17 15:20:50 +0000)
+
+----------------------------------------------------------------
+hyperv-fixes for 5.11-rc5
+  - One patch from Dexuan to fix clockevent initialization
+----------------------------------------------------------------
+Dexuan Cui (1):
+      x86/hyperv: Initialize clockevents after LAPIC is initialized
+
+ arch/x86/hyperv/hv_init.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
