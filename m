@@ -2,44 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FD602FBA65
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Jan 2021 15:56:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 306BD2FBA67
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Jan 2021 15:56:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391627AbhASOyc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 19 Jan 2021 09:54:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48526 "EHLO mx2.suse.de"
+        id S1731743AbhASOye (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 19 Jan 2021 09:54:34 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50230 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391440AbhASLeJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 19 Jan 2021 06:34:09 -0500
+        id S2391641AbhASLhZ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 19 Jan 2021 06:37:25 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1611056002; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1611056199; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=1Oa/NkrV49PPS+h6OD6dbPZXSlWnjE/uKD/EMJ1afk4=;
-        b=VCqLoREXekPKeCpTOq8vJEpFoxD1jNAufirBeB5qjm5WM7JywEcniSnht/sjfqbjaOXFXx
-        5LciXVq/HnHEzP6qVwAJi8a3d7MUwz7TmfeoXV+57JgRyfyXnX/qCs6nsUjW15Rg5CyNrh
-        ywV2LQedzIgLfbh9X5sgWtBaFjWaMXc=
+        bh=BA18z5VqrKcytidarAoSFYLY2l1omqCAkHtcL3oW9cU=;
+        b=IZSlN6U9gI1+JtiiSVu8zkNNU2tlK7ZRdW2EoEFd9h6ixl7UuPHZXraQzuwohdOvN4ZDrE
+        ZHObA3bKHX8d6dut9BCX9AHjz295xejl7J54IUYMzukPDM+8YNA0ZNEejmPE5BmlCaLVfw
+        Ipnqnj7YaeScdwwqIQIM5dgAAkHlUd4=
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0D390ADA2;
-        Tue, 19 Jan 2021 11:33:22 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 1EA44AB9F;
+        Tue, 19 Jan 2021 11:36:39 +0000 (UTC)
 Subject: Re: [PATCH v3 06/15] x86/paravirt: switch time pvops functions to use
  static_call()
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Deep Shah <sdeep@vmware.com>,
         "VMware, Inc." <pv-drivers@vmware.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -54,37 +58,42 @@ Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
         Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
         Daniel Bristot de Oliveira <bristot@redhat.com>
 References: <20201217093133.1507-1-jgross@suse.com>
- <20201217093133.1507-7-jgross@suse.com> <20210106100313.GB5729@zn.tnic>
+ <20201217093133.1507-7-jgross@suse.com>
+ <MW2PR2101MB1052877B5376112F1BAF3D93D7C49@MW2PR2101MB1052.namprd21.prod.outlook.com>
 From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <091fb630-c635-26cb-b049-aba45b1c055c@suse.com>
-Date:   Tue, 19 Jan 2021 12:33:20 +0100
+Message-ID: <5e34b263-da71-daf4-8ff6-b583427f1565@suse.com>
+Date:   Tue, 19 Jan 2021 12:36:37 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <20210106100313.GB5729@zn.tnic>
+In-Reply-To: <MW2PR2101MB1052877B5376112F1BAF3D93D7C49@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="qyFFBfHEJpDopUqsfMCbXGBAvuJWNdZSB"
+ boundary="MUpXQXJRqI9FNcl5WEQsoh0wg1RbQRaFG"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---qyFFBfHEJpDopUqsfMCbXGBAvuJWNdZSB
-Content-Type: multipart/mixed; boundary="nnzuzOZhPZcEDgKlwlPCivJcNIrZ5QO9h";
+--MUpXQXJRqI9FNcl5WEQsoh0wg1RbQRaFG
+Content-Type: multipart/mixed; boundary="QrT993NSGR0x4rfkkXRz07GavpdL5Q4yL";
  protected-headers="v1"
 From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: xen-devel@lists.xenproject.org, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>,
+To: Michael Kelley <mikelley@microsoft.com>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "virtualization@lists.linux-foundation.org"
+ <virtualization@lists.linux-foundation.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
  Stephen Hemminger <sthemmin@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
  Deep Shah <sdeep@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>,
  Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ <seanjc@google.com>, vkuznets <vkuznets@redhat.com>,
  Wanpeng Li <wanpengli@tencent.com>, Jim Mattson <jmattson@google.com>,
  Joerg Roedel <joro@8bytes.org>, Boris Ostrovsky
  <boris.ostrovsky@oracle.com>, Stefano Stabellini <sstabellini@kernel.org>,
@@ -94,25 +103,28 @@ Cc: xen-devel@lists.xenproject.org, x86@kernel.org,
  Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
  Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <091fb630-c635-26cb-b049-aba45b1c055c@suse.com>
+Message-ID: <5e34b263-da71-daf4-8ff6-b583427f1565@suse.com>
 Subject: Re: [PATCH v3 06/15] x86/paravirt: switch time pvops functions to use
  static_call()
 References: <20201217093133.1507-1-jgross@suse.com>
- <20201217093133.1507-7-jgross@suse.com> <20210106100313.GB5729@zn.tnic>
-In-Reply-To: <20210106100313.GB5729@zn.tnic>
+ <20201217093133.1507-7-jgross@suse.com>
+ <MW2PR2101MB1052877B5376112F1BAF3D93D7C49@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB1052877B5376112F1BAF3D93D7C49@MW2PR2101MB1052.namprd21.prod.outlook.com>
 
---nnzuzOZhPZcEDgKlwlPCivJcNIrZ5QO9h
+--QrT993NSGR0x4rfkkXRz07GavpdL5Q4yL
 Content-Type: multipart/mixed;
- boundary="------------2CBACA40A58C5368F7284A1F"
+ boundary="------------32C8808B241E19696785B4EC"
 Content-Language: en-US
 
 This is a multi-part message in MIME format.
---------------2CBACA40A58C5368F7284A1F
+--------------32C8808B241E19696785B4EC
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 
-On 06.01.21 11:03, Borislav Petkov wrote:
-> On Thu, Dec 17, 2020 at 10:31:24AM +0100, Juergen Gross wrote:
+On 17.12.20 18:31, Michael Kelley wrote:
+> From: Juergen Gross <jgross@suse.com> Sent: Thursday, December 17, 2020=
+ 1:31 AM
+>=20
 >> The time pvops functions are the only ones left which might be
 >> used in 32-bit mode and which return a 64-bit value.
 >>
@@ -121,17 +133,101 @@ On 06.01.21 11:03, Borislav Petkov wrote:
 >>
 >> Due to include hell this requires to split out the time interfaces
 >> into a new header file.
+>>
+>> Signed-off-by: Juergen Gross <jgross@suse.com>
+>> ---
+>>   arch/x86/Kconfig                      |  1 +
+>>   arch/x86/include/asm/mshyperv.h       | 11 --------
+>>   arch/x86/include/asm/paravirt.h       | 14 ----------
+>>   arch/x86/include/asm/paravirt_time.h  | 38 +++++++++++++++++++++++++=
+++
+>>   arch/x86/include/asm/paravirt_types.h |  6 -----
+>>   arch/x86/kernel/cpu/vmware.c          |  5 ++--
+>>   arch/x86/kernel/kvm.c                 |  3 ++-
+>>   arch/x86/kernel/kvmclock.c            |  3 ++-
+>>   arch/x86/kernel/paravirt.c            | 16 ++++++++---
+>>   arch/x86/kernel/tsc.c                 |  3 ++-
+>>   arch/x86/xen/time.c                   | 12 ++++-----
+>>   drivers/clocksource/hyperv_timer.c    |  5 ++--
+>>   drivers/xen/time.c                    |  3 ++-
+>>   kernel/sched/sched.h                  |  1 +
+>>   14 files changed, 71 insertions(+), 50 deletions(-)
+>>   create mode 100644 arch/x86/include/asm/paravirt_time.h
+>>
 >=20
-> I guess you can add Peter's patch to your set, no?
+> [snip]
+>  =20
+>> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/ms=
+hyperv.h
+>> index ffc289992d1b..45942d420626 100644
+>> --- a/arch/x86/include/asm/mshyperv.h
+>> +++ b/arch/x86/include/asm/mshyperv.h
+>> @@ -56,17 +56,6 @@ typedef int (*hyperv_fill_flush_list_func)(
+>>   #define hv_get_raw_timer() rdtsc_ordered()
+>>   #define hv_get_vector() HYPERVISOR_CALLBACK_VECTOR
+>>
+>> -/*
+>> - * Reference to pv_ops must be inline so objtool
+>> - * detection of noinstr violations can work correctly.
+>> - */
+>> -static __always_inline void hv_setup_sched_clock(void *sched_clock)
+>> -{
+>> -#ifdef CONFIG_PARAVIRT
+>> -	pv_ops.time.sched_clock =3D sched_clock;
+>> -#endif
+>> -}
+>> -
+>>   void hyperv_vector_handler(struct pt_regs *regs);
+>>
+>>   static inline void hv_enable_stimer0_percpu_irq(int irq) {}
 >=20
-> https://lkml.kernel.org/r/20201110005609.40989-3-frederic@kernel.org
+> [snip]
+>=20
+>> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/=
+hyperv_timer.c
+>> index ba04cb381cd3..1ed79993fc50 100644
+>> --- a/drivers/clocksource/hyperv_timer.c
+>> +++ b/drivers/clocksource/hyperv_timer.c
+>> @@ -21,6 +21,7 @@
+>>   #include <clocksource/hyperv_timer.h>
+>>   #include <asm/hyperv-tlfs.h>
+>>   #include <asm/mshyperv.h>
+>> +#include <asm/paravirt_time.h>
+>>
+>>   static struct clock_event_device __percpu *hv_clock_event;
+>>   static u64 hv_sched_clock_offset __ro_after_init;
+>> @@ -445,7 +446,7 @@ static bool __init hv_init_tsc_clocksource(void)
+>>   	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+>>
+>>   	hv_sched_clock_offset =3D hv_read_reference_counter();
+>> -	hv_setup_sched_clock(read_hv_sched_clock_tsc);
+>> +	paravirt_set_sched_clock(read_hv_sched_clock_tsc);
+>>
+>>   	return true;
+>>   }
+>> @@ -470,6 +471,6 @@ void __init hv_init_clocksource(void)
+>>   	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
+>>
+>>   	hv_sched_clock_offset =3D hv_read_reference_counter();
+>> -	hv_setup_sched_clock(read_hv_sched_clock_msr);
+>> +	static_call_update(pv_sched_clock, read_hv_sched_clock_msr);
+>>   }
+>>   EXPORT_SYMBOL_GPL(hv_init_clocksource);
+>=20
+> These Hyper-V changes are problematic as we want to keep hyperv_timer.c=
 
-With a slight modification, yes. :-)
+> architecture independent.  While only the code for x86/x64 is currently=
+
+> accepted upstream, code for ARM64 support is in progress.   So we need
+> to use hv_setup_sched_clock() in hyperv_timer.c, and have the per-arch
+> implementation in mshyperv.h.
+
+Okay, will switch back to old setup.
 
 
 Juergen
 
---------------2CBACA40A58C5368F7284A1F
+--------------32C8808B241E19696785B4EC
 Content-Type: application/pgp-keys;
  name="OpenPGP_0xB0DE9DD628BF132F.asc"
 Content-Transfer-Encoding: quoted-printable
@@ -222,24 +318,24 @@ ZDn8R38=3D
 =3D2wuH
 -----END PGP PUBLIC KEY BLOCK-----
 
---------------2CBACA40A58C5368F7284A1F--
+--------------32C8808B241E19696785B4EC--
 
---nnzuzOZhPZcEDgKlwlPCivJcNIrZ5QO9h--
+--QrT993NSGR0x4rfkkXRz07GavpdL5Q4yL--
 
---qyFFBfHEJpDopUqsfMCbXGBAvuJWNdZSB
+--MUpXQXJRqI9FNcl5WEQsoh0wg1RbQRaFG
 Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="OpenPGP_signature"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmAGw4AFAwAAAAAACgkQsN6d1ii/Ey8/
-hAf/YRa6e21lXqP3PtecH5kCtQ7S0VH4NshLwqEGP/JkgNRGLXk5+uAW/W0Pd3omZ0YKGA5BP7Lc
-h1GR8k27emtXXyE0p/3d1W8KH6Aj2jpZ8z+yUPolbj+UDpi3nkGyeKr+agtQpWDCV6jugx7w+Cpr
-zyR4+mYZw7GgEYI0jEcommSCaxp/xgcdJPWdzfcbdLv9nWXGxujTq68WtftqqmjSSKooRgU0lUj2
-pIQVWPNSYr3HJFrd9uMnNiCojvvJ63+bzNA/69KdxYPVDmvb6pC6IycJLTkgDcleG/P2onfp9fLu
-vlGol30o2TwcX0FRYVnGuglKQOXZVVO5SxMhknhUsw==
-=l4RO
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmAGxEUFAwAAAAAACgkQsN6d1ii/Ey/e
+Awf+O4iqom4Eij8DMvjvErPmOh0eAOIU4lUY2nIxHUNLRJWlamwLfALvTyFPgTS/rywLovXjfCgs
+a/mGEXOH2P7gXOZ/1S9cfDTogJ3SRh1UGf8Ce3mQJUVhyKNEsbnLxAr84U2xhD+JertrtiV5mbgU
+bUVHMXt84h4jwlGB5KGEZX5sgWVqXu+6Egs3w6f9FP31Md/DfZlU/eKtcOpZW5uquwglI00un1EH
+hxM9j1HhrVWPvTYmoyw6UoRS8h7PN+HanPTy4jj2UWhFLGiyd1/KJawRTaLKl2jSbxej43JFZXQu
+KRf8zj56PSIsyMujCQndphLV+bR0L39rnb4PDEeK+Q==
+=m9RS
 -----END PGP SIGNATURE-----
 
---qyFFBfHEJpDopUqsfMCbXGBAvuJWNdZSB--
+--MUpXQXJRqI9FNcl5WEQsoh0wg1RbQRaFG--
