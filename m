@@ -2,190 +2,160 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 464102FD9F9
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 20:48:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2282FDACF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 21:30:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392705AbhATTp7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Jan 2021 14:45:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392667AbhATTp5 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Jan 2021 14:45:57 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDB49C0613CF
-        for <linux-hyperv@vger.kernel.org>; Wed, 20 Jan 2021 11:45:11 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id n6so12093155edt.10
-        for <linux-hyperv@vger.kernel.org>; Wed, 20 Jan 2021 11:45:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UqXhr6U1RGBGjv0Nmx2hKPUeAH0sokB4LM4fa/b0g0Q=;
-        b=R+IWStL2+wlSzaEPF5grre/1r+Jaffw+FsSinFtR7GqGC4E2gIGppNZ48FLSAM1P7V
-         qmOSQXfMkfMvZdsjTxKcjGptYXy54nxR82l+BpQkvK4R5NMIJd7MNHbu+ZZs3+OD+aSP
-         A/aOYQcz6NfqfQoK/m5hgsDdS5u8yBivB/ibpaQimmRiM+LXerCEUiNaw1WxlXSfayCO
-         RDh9CfRYuEHhLrQI7nCm9ERtXoOuf3fAdpNPmGAHBLeqsGgN+X3hX0i3Z+vflrYKvBuv
-         6TqFt5BK8O+lYEg936dFG4VwU4JjTpoOeDwoCeHHKrfIY47nUARkbZ6uIlK3RU07mG5K
-         ThBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UqXhr6U1RGBGjv0Nmx2hKPUeAH0sokB4LM4fa/b0g0Q=;
-        b=EkdxHLzdxJSSDWHJ9CD0DCkmsU02hcxDo+AKP2pPg27szIMGOkkv70pmaq69QDNgwb
-         OliL19SZNYIOMDd+dD9s+9zRDW01NpljkMxSDfF120T+NXy6g27D74M5Ze6b0nqbxT7E
-         YrwyAWaRWUQKCIBEqtYSLHI+g4S5cZr6qmtM6LBb+iZQH215cPLMO4JYh5JTM4MYM9gr
-         QIQrfzcZ0Iu6hh0FLaOvXAhyRw6wrOOKvNl/yijZEdu6nXX6NtSY/n8gd3wuEEtrwvYY
-         2UoVN8xm/vBQHuMTJg42xWAMjx6vLcZnMcvBREZths2Oa30j9SvNFu31zeW69Dw9NVXu
-         3aHw==
-X-Gm-Message-State: AOAM530iIPOHV+F+aEz0AR3tr3hWLs57xV8zYoEs7IjCXtc9aT3qfqFd
-        iNyY6nxSsETOXWLIwySQUkdTyB8x3AL2jPg64p8KEw==
-X-Google-Smtp-Source: ABdhPJxvb1wfnaERyYy/x1se5fCDDeRdAl7RuDhoERoccNXJ6VsNibgl6cUEjC5ZVp2ZI7TxxiJV79nr+G+lpZJH5es=
-X-Received: by 2002:a50:934a:: with SMTP id n10mr8420776eda.26.1611171910694;
- Wed, 20 Jan 2021 11:45:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20210120120058.29138-1-wei.liu@kernel.org> <20210120120058.29138-7-wei.liu@kernel.org>
-In-Reply-To: <20210120120058.29138-7-wei.liu@kernel.org>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 20 Jan 2021 14:44:34 -0500
-Message-ID: <CA+CK2bDOhzx1_TcWQp2zFUb5+59ayFby=ZSoNyApNEQ0FRJUFA@mail.gmail.com>
-Subject: Re: [PATCH v5 06/16] x86/hyperv: allocate output arg pages if required
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        Lillian Grassin-Drake <ligrassi@microsoft.com>,
+        id S1733263AbhATU1I (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Jan 2021 15:27:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53890 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387570AbhATN4y (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 20 Jan 2021 08:56:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1611150960; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=+aDp550Lm+rofMztKr13LGN261/aN33kUiCXnXHZSts=;
+        b=u4mfyPjhhiICRVasCe0gx5uHwLGuJfO0Nwh5LmCImg6SvGFgunQvHFOMzVuArWuXyLPN7Q
+        4VZ3QphBnnd7lfNQ+5cqvlSCQ1z2HTK1jtA49OjLiu40GNx+iyhykAfICdGYMvGmMsI5V7
+        u7RmQtSlG0WNBRDlF79PQzqxwc1CKgo=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D8566ADD3;
+        Wed, 20 Jan 2021 13:55:59 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, virtualization@lists.linux-foundation.org,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Cc:     Juergen Gross <jgross@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wei Liu <wei.liu@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v4 00/15] x86: major paravirt cleanup
+Date:   Wed, 20 Jan 2021 14:55:40 +0100
+Message-Id: <20210120135555.32594-1-jgross@suse.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 7:01 AM Wei Liu <wei.liu@kernel.org> wrote:
->
-> When Linux runs as the root partition, it will need to make hypercalls
-> which return data from the hypervisor.
->
-> Allocate pages for storing results when Linux runs as the root
-> partition.
->
-> Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> Co-Developed-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+[Resend due to all the Cc:'s missing]
 
-Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+This is a major cleanup of the paravirt infrastructure aiming at
+eliminating all custom code patching via paravirt patching.
 
-The new warnings reported by the robot are the same as for the input argument.
+This is achieved by using ALTERNATIVE instead, leading to the ability
+to give objtool access to the patched in instructions.
 
-Pasha
+In order to remove most of the 32-bit special handling from pvops the
+time related operations are switched to use static_call() instead.
 
-> ---
-> v3: Fix hv_cpu_die to use free_pages.
-> v2: Address Vitaly's comments
-> ---
->  arch/x86/hyperv/hv_init.c       | 35 ++++++++++++++++++++++++++++-----
->  arch/x86/include/asm/mshyperv.h |  1 +
->  2 files changed, 31 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index e04d90af4c27..6f4cb40e53fe 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -41,6 +41,9 @@ EXPORT_SYMBOL_GPL(hv_vp_assist_page);
->  void  __percpu **hyperv_pcpu_input_arg;
->  EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
->
-> +void  __percpu **hyperv_pcpu_output_arg;
-> +EXPORT_SYMBOL_GPL(hyperv_pcpu_output_arg);
-> +
->  u32 hv_max_vp_index;
->  EXPORT_SYMBOL_GPL(hv_max_vp_index);
->
-> @@ -73,12 +76,19 @@ static int hv_cpu_init(unsigned int cpu)
->         void **input_arg;
->         struct page *pg;
->
-> -       input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
->         /* hv_cpu_init() can be called with IRQs disabled from hv_resume() */
-> -       pg = alloc_page(irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL);
-> +       pg = alloc_pages(irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL, hv_root_partition ? 1 : 0);
->         if (unlikely(!pg))
->                 return -ENOMEM;
-> +
-> +       input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
->         *input_arg = page_address(pg);
-> +       if (hv_root_partition) {
-> +               void **output_arg;
-> +
-> +               output_arg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
-> +               *output_arg = page_address(pg + 1);
-> +       }
->
->         hv_get_vp_index(msr_vp_index);
->
-> @@ -205,14 +215,23 @@ static int hv_cpu_die(unsigned int cpu)
->         unsigned int new_cpu;
->         unsigned long flags;
->         void **input_arg;
-> -       void *input_pg = NULL;
-> +       void *pg;
->
->         local_irq_save(flags);
->         input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> -       input_pg = *input_arg;
-> +       pg = *input_arg;
->         *input_arg = NULL;
-> +
-> +       if (hv_root_partition) {
-> +               void **output_arg;
-> +
-> +               output_arg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
-> +               *output_arg = NULL;
-> +       }
-> +
->         local_irq_restore(flags);
-> -       free_page((unsigned long)input_pg);
-> +
-> +       free_pages((unsigned long)pg, hv_root_partition ? 1 : 0);
->
->         if (hv_vp_assist_page && hv_vp_assist_page[cpu])
->                 wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
-> @@ -346,6 +365,12 @@ void __init hyperv_init(void)
->
->         BUG_ON(hyperv_pcpu_input_arg == NULL);
->
-> +       /* Allocate the per-CPU state for output arg for root */
-> +       if (hv_root_partition) {
-> +               hyperv_pcpu_output_arg = alloc_percpu(void *);
-> +               BUG_ON(hyperv_pcpu_output_arg == NULL);
-> +       }
-> +
->         /* Allocate percpu VP index */
->         hv_vp_index = kmalloc_array(num_possible_cpus(), sizeof(*hv_vp_index),
->                                     GFP_KERNEL);
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index ac2b0d110f03..62d9390f1ddf 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -76,6 +76,7 @@ static inline void hv_disable_stimer0_percpu_irq(int irq) {}
->  #if IS_ENABLED(CONFIG_HYPERV)
->  extern void *hv_hypercall_pg;
->  extern void  __percpu  **hyperv_pcpu_input_arg;
-> +extern void  __percpu  **hyperv_pcpu_output_arg;
->
->  static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
->  {
-> --
-> 2.20.1
->
+At the end of this series all paravirt patching has to do is to
+replace indirect calls with direct ones. In a further step this could
+be switched to static_call(), too, but that would require a major
+header file disentangling.
+
+For a clean build without any objtool warnings a modified objtool is
+required. Currently this is available in the "tip" tree in the
+objtool/core branch.
+
+Changes in V4:
+- fixed several build failures
+- removed objtool patch, as objtool patches are in tip now
+- added patch 1 for making usage of static_call easier
+- even more cleanup
+
+Changes in V3:
+- added patches 7 and 12
+- addressed all comments
+
+Changes in V2:
+- added patches 5-12
+
+Juergen Gross (14):
+  x86/xen: use specific Xen pv interrupt entry for MCE
+  x86/xen: use specific Xen pv interrupt entry for DF
+  x86/pv: switch SWAPGS to ALTERNATIVE
+  x86/xen: drop USERGS_SYSRET64 paravirt call
+  x86: rework arch_local_irq_restore() to not use popf
+  x86/paravirt: switch time pvops functions to use static_call()
+  x86/alternative: support "not feature" and ALTERNATIVE_TERNARY
+  x86: add new features for paravirt patching
+  x86/paravirt: remove no longer needed 32-bit pvops cruft
+  x86/paravirt: simplify paravirt macros
+  x86/paravirt: switch iret pvops to ALTERNATIVE
+  x86/paravirt: add new macros PVOP_ALT* supporting pvops in
+    ALTERNATIVEs
+  x86/paravirt: switch functions with custom code to ALTERNATIVE
+  x86/paravirt: have only one paravirt patch function
+
+Peter Zijlstra (1):
+  static_call: Pull some static_call declarations to the type headers
+
+ arch/x86/Kconfig                        |   1 +
+ arch/x86/entry/entry_32.S               |   4 +-
+ arch/x86/entry/entry_64.S               |  28 ++-
+ arch/x86/include/asm/alternative-asm.h  |   4 +
+ arch/x86/include/asm/alternative.h      |   7 +
+ arch/x86/include/asm/cpufeatures.h      |   2 +
+ arch/x86/include/asm/idtentry.h         |   6 +
+ arch/x86/include/asm/irqflags.h         |  53 ++----
+ arch/x86/include/asm/mshyperv.h         |   2 +-
+ arch/x86/include/asm/paravirt.h         | 197 ++++++++------------
+ arch/x86/include/asm/paravirt_types.h   | 227 +++++++++---------------
+ arch/x86/kernel/Makefile                |   3 +-
+ arch/x86/kernel/alternative.c           |  49 ++++-
+ arch/x86/kernel/asm-offsets.c           |   7 -
+ arch/x86/kernel/asm-offsets_64.c        |   3 -
+ arch/x86/kernel/cpu/vmware.c            |   5 +-
+ arch/x86/kernel/irqflags.S              |  11 --
+ arch/x86/kernel/kvm.c                   |   2 +-
+ arch/x86/kernel/kvmclock.c              |   2 +-
+ arch/x86/kernel/paravirt-spinlocks.c    |   9 +
+ arch/x86/kernel/paravirt.c              |  83 +++------
+ arch/x86/kernel/paravirt_patch.c        | 109 ------------
+ arch/x86/kernel/tsc.c                   |   2 +-
+ arch/x86/xen/enlighten_pv.c             |  36 ++--
+ arch/x86/xen/irq.c                      |  23 ---
+ arch/x86/xen/time.c                     |  11 +-
+ arch/x86/xen/xen-asm.S                  |  52 +-----
+ arch/x86/xen/xen-ops.h                  |   3 -
+ drivers/clocksource/hyperv_timer.c      |   5 +-
+ drivers/xen/time.c                      |   2 +-
+ include/linux/static_call.h             |  20 ---
+ include/linux/static_call_types.h       |  27 +++
+ tools/include/linux/static_call_types.h |  27 +++
+ 33 files changed, 376 insertions(+), 646 deletions(-)
+ delete mode 100644 arch/x86/kernel/paravirt_patch.c
+
+-- 
+2.26.2
+
