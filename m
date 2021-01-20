@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94A562FD19F
+	by mail.lfdr.de (Postfix) with ESMTP id 28B362FD19E
 	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 14:54:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388863AbhATM7h (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Jan 2021 07:59:37 -0500
-Received: from mail-ej1-f42.google.com ([209.85.218.42]:41140 "EHLO
-        mail-ej1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733278AbhATMMt (ORCPT
+        id S2388854AbhATM7c (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Jan 2021 07:59:32 -0500
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:45778 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727696AbhATMMM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Jan 2021 07:12:49 -0500
-Received: by mail-ej1-f42.google.com with SMTP id g12so33219073ejf.8;
-        Wed, 20 Jan 2021 04:12:30 -0800 (PST)
+        Wed, 20 Jan 2021 07:12:12 -0500
+Received: by mail-lj1-f169.google.com with SMTP id f17so25749815ljg.12;
+        Wed, 20 Jan 2021 04:11:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iQMtgq3pUcrjj3NVCdkiQSStjiewGBjHdwkFAPCFR6A=;
-        b=NjthebAkuSs6fArMRYIQbeZeoiI0WOi/p/enyzCB9a7pwX3ggTKxLrZi5YVBBVyW/L
-         4c7C6WCkZzmYJADu0ZBBil4/m8Itqf5TUeQ0z1h2gV0oErinqSeKNzv2QoCSAz00o/lf
-         YUxUmnRjbT7budrA5EyX4ws3ZiDdxs4b/yYDyJJ/0lMAD2GB7tIX8LwvtmEYZjdszPg9
-         xMqwhOCLUXO8exID966SQqUbQ9r1BaQIJylhGvFJskN8T1ROiBYd4DEgzTAi9k3QHfSO
-         nKtbiaQLjzEYbKmdcTwCzOwGorAkg3hA2ysXmXiB/CyBSMtLdn1LCqHGVER9AQCJQXRG
-         9iRg==
-X-Gm-Message-State: AOAM531MbSoy5uBGlzLB+WZhUNJMv65PEICaKN+AkDy1FrAGpyXFB5Kr
-        W87NG4S+Wkh1VPQSDKBiAsYPA3qxKUo=
-X-Google-Smtp-Source: ABdhPJz4rG0NJQ4emuqxUfLr2n1SVZFe7ESOJDiftil8vMTrjEnxmTX5UHX4Ncs5MrsulAjda8gL7g==
-X-Received: by 2002:adf:e512:: with SMTP id j18mr8953978wrm.52.1611144065620;
-        Wed, 20 Jan 2021 04:01:05 -0800 (PST)
+        bh=DAKijZroIKQByX8CE0+1w/bE11gheXfs1vD8PWKgeTU=;
+        b=izqq+IOngryMNVPFbPDGEZ1Psn77CnZaOawktAxIrePYfqmmezpcL0tayzfh+IM2mD
+         YMBDVIhIMlPoe2157SAYJW7alR06YSbrbfXSncA7OpFz+eV6cSaIsPRtHpJxrklaIwia
+         Iar0WbbJ/l4Upkun6QxzO6tqNvX8RgFWxk+EYvTgZILOGcmUZHlt1VVUbUwsa2ioxWmH
+         riNZ1T5+xfVz+FwHXC9KTmpXd3fGWk/lJ8ILu250Evu43iaf1ds5EZyOoRripHQdFaCF
+         wzdOXe3zQ2JIOl7CwJQ/z20PUiXhbJ/POfNvnzlXpaoNcliMFFjEnHc3VVBh3JVS6kfq
+         8A2g==
+X-Gm-Message-State: AOAM531gWgXqJFhGmwMZHgHxVNlhHQGt1OKabYvvOW8HJCLdVB6w7WYk
+        F1vy9SoMo81B4/4W8awWCzcs7un8VNk=
+X-Google-Smtp-Source: ABdhPJza8qpcmBvaMPBvYkE0u0mcX76hX1OL5HKNxM0HvelTfLJYuoNEIWdDE4VQnCub5W3sSCFkmQ==
+X-Received: by 2002:adf:f78e:: with SMTP id q14mr8921866wrp.320.1611144074617;
+        Wed, 20 Jan 2021 04:01:14 -0800 (PST)
 Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id x17sm3747671wro.40.2021.01.20.04.01.04
+        by smtp.gmail.com with ESMTPSA id x17sm3747671wro.40.2021.01.20.04.01.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 04:01:05 -0800 (PST)
+        Wed, 20 Jan 2021 04:01:13 -0800 (PST)
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
 Cc:     virtualization@lists.linux-foundation.org,
@@ -43,16 +43,17 @@ Cc:     virtualization@lists.linux-foundation.org,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         pasha.tatashin@soleen.com, Wei Liu <wei.liu@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS)
-Subject: [PATCH v5 04/16] iommu/hyperv: don't setup IRQ remapping when running as root
-Date:   Wed, 20 Jan 2021 12:00:46 +0000
-Message-Id: <20210120120058.29138-5-wei.liu@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES)
+Subject: [PATCH v5 11/16] asm-generic/hyperv: update hv_msi_entry
+Date:   Wed, 20 Jan 2021 12:00:53 +0000
+Message-Id: <20210120120058.29138-12-wei.liu@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210120120058.29138-1-wei.liu@kernel.org>
 References: <20210120120058.29138-1-wei.liu@kernel.org>
@@ -62,37 +63,77 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The IOMMU code needs more work. We're sure for now the IRQ remapping
-hooks are not applicable when Linux is the root partition.
+We will soon need to access fields inside the MSI address and MSI data
+fields. Introduce hv_msi_address_register and hv_msi_data_register.
+
+Fix up one user of hv_msi_entry in mshyperv.h.
+
+No functional change expected.
 
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Acked-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- drivers/iommu/hyperv-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/mshyperv.h   |  4 ++--
+ include/asm-generic/hyperv-tlfs.h | 28 ++++++++++++++++++++++++++--
+ 2 files changed, 28 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
-index 1d21a0b5f724..b7db6024e65c 100644
---- a/drivers/iommu/hyperv-iommu.c
-+++ b/drivers/iommu/hyperv-iommu.c
-@@ -20,6 +20,7 @@
- #include <asm/io_apic.h>
- #include <asm/irq_remapping.h>
- #include <asm/hypervisor.h>
-+#include <asm/mshyperv.h>
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index 4e590a167160..cbee72550a12 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -257,8 +257,8 @@ static inline void hv_apic_init(void) {}
+ static inline void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+ 					      struct msi_desc *msi_desc)
+ {
+-	msi_entry->address = msi_desc->msg.address_lo;
+-	msi_entry->data = msi_desc->msg.data;
++	msi_entry->address.as_uint32 = msi_desc->msg.address_lo;
++	msi_entry->data.as_uint32 = msi_desc->msg.data;
+ }
  
- #include "irq_remapping.h"
+ #else /* CONFIG_HYPERV */
+diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+index ec53570102f0..7e103be42799 100644
+--- a/include/asm-generic/hyperv-tlfs.h
++++ b/include/asm-generic/hyperv-tlfs.h
+@@ -480,12 +480,36 @@ struct hv_create_vp {
+ 	u64 flags;
+ } __packed;
  
-@@ -122,7 +123,7 @@ static int __init hyperv_prepare_irq_remapping(void)
++union hv_msi_address_register {
++	u32 as_uint32;
++	struct {
++		u32 reserved1:2;
++		u32 destination_mode:1;
++		u32 redirection_hint:1;
++		u32 reserved2:8;
++		u32 destination_id:8;
++		u32 msi_base:12;
++	};
++} __packed;
++
++union hv_msi_data_register {
++	u32 as_uint32;
++	struct {
++		u32 vector:8;
++		u32 delivery_mode:3;
++		u32 reserved1:3;
++		u32 level_assert:1;
++		u32 trigger_mode:1;
++		u32 reserved2:16;
++	};
++} __packed;
++
+ /* HvRetargetDeviceInterrupt hypercall */
+ union hv_msi_entry {
+ 	u64 as_uint64;
+ 	struct {
+-		u32 address;
+-		u32 data;
++		union hv_msi_address_register address;
++		union hv_msi_data_register data;
+ 	} __packed;
+ };
  
- 	if (!hypervisor_is_type(X86_HYPER_MS_HYPERV) ||
- 	    x86_init.hyper.msi_ext_dest_id() ||
--	    !x2apic_supported())
-+	    !x2apic_supported() || hv_root_partition)
- 		return -ENODEV;
- 
- 	fn = irq_domain_alloc_named_id_fwnode("HYPERV-IR", 0);
 -- 
 2.20.1
 
