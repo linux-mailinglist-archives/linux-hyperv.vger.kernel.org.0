@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18B522FD0E6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 14:00:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40F3F2FD0F0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 14:00:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388819AbhATM7B (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Jan 2021 07:59:01 -0500
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:33075 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389205AbhATMKp (ORCPT
+        id S2388001AbhATM75 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Jan 2021 07:59:57 -0500
+Received: from mail-wm1-f49.google.com ([209.85.128.49]:53482 "EHLO
+        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389146AbhATMPA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Jan 2021 07:10:45 -0500
-Received: by mail-wm1-f43.google.com with SMTP id s24so3179060wmj.0;
-        Wed, 20 Jan 2021 04:10:28 -0800 (PST)
+        Wed, 20 Jan 2021 07:15:00 -0500
+Received: by mail-wm1-f49.google.com with SMTP id j18so2660041wmi.3;
+        Wed, 20 Jan 2021 04:14:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rN/0fuFHwVfj55c/MsJ39TIimzupnKoIy4FjFz+d0q8=;
-        b=Of/09TrXX32d1adULmFOcooVT1eOAVcZ5uYiQ7m+O6CuNVHmNq9/QZ1a0SIYXDcDaH
-         5VvmFpSLsIoJWtJ1MWuEz5fnl/Za2dtaf3H07X3zS+r9psqXxzxlbHM6T5OUo+JjsIZA
-         2ZaOm/+phqLPkJD/45EWDeELn5kkg34wjwVHBr5hGtCglUe2F/04TjZqdXc8+8OPd39X
-         b2nweUfg75px9MdzZCTFlRToxcruftbi03P1XUWpMlc801he4yVOrj+aP0c8XquqqivB
-         il0JBQHpT0aoSkyPHvmj6emuWtonshaUBeZWgvWJFAEf9mAjX8FkQYyG2A1vQ3UeuGo9
-         PDhg==
-X-Gm-Message-State: AOAM531PcX7SzrKjQwqwYlby1pwOdqMfRU9i1+QZOF0iuWvx4Yki8RDj
-        N+AMCc0cESaqyfdADaRF8USNKHTo+Mo=
-X-Google-Smtp-Source: ABdhPJzD1f1f/OMBkLinjNM7+1vtozW8qRMu7hbq5PfdF4Ra+xpwv9NfO5c2ORnCl32iv5cAuQYe1Q==
-X-Received: by 2002:a1c:7e4e:: with SMTP id z75mr3999033wmc.40.1611144073152;
-        Wed, 20 Jan 2021 04:01:13 -0800 (PST)
+        bh=jgoWHWZJp95oZbUGT1gHoY/N870o7iAvx/CdWeU6WPw=;
+        b=ClGBYmkD9kwavZYkOsP9rQlPhxO5hLl7ddbt9mKjCodeUnprXhO5YCxmVjkqoBZTcH
+         QuJsR6KOHC9sqkYnUzuqh/ZCKioZtfYt0c+DGyCzJJppDe6NxSHUyTNkomFz69068gV2
+         8uQXNCIR8rOn5RpiqZzGgEKofoA5HuPGqUItrobPXN1ukx8U25s6TwQzZBUKYpYdX6db
+         Dy8FlPInTlPMatfEfQrkna1NvMLAPWoKHdE4VpkxodNHGjuQEWEBUnp+s2lX7hILyWVT
+         Qxldr8iC7HrTorFjCkShQWb/ZkMQ9E4uAHbBwjRnsxGka+J7K/Y9o/bLDuv+jov1ymQ8
+         4hVQ==
+X-Gm-Message-State: AOAM532aGgyHTU86NzGtIsGx0ki4Db7UKzWZBsOl0cN3eHwsLa0tZoFp
+        thZY/EfW+tDZOC0wDwrGjirUyi6QHUo=
+X-Google-Smtp-Source: ABdhPJwXXybGJuDqcgkz3mLUi9tCTNLF/blBEclrZWKQbzm75DdiePexF9OjweaYsGHB49KCS5zuKg==
+X-Received: by 2002:a05:600c:214d:: with SMTP id v13mr4081518wml.186.1611144075582;
+        Wed, 20 Jan 2021 04:01:15 -0800 (PST)
 Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id x17sm3747671wro.40.2021.01.20.04.01.12
+        by smtp.gmail.com with ESMTPSA id x17sm3747671wro.40.2021.01.20.04.01.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 04:01:12 -0800 (PST)
+        Wed, 20 Jan 2021 04:01:15 -0800 (PST)
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
 Cc:     virtualization@lists.linux-foundation.org,
@@ -43,17 +43,19 @@ Cc:     virtualization@lists.linux-foundation.org,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         pasha.tatashin@soleen.com, Wei Liu <wei.liu@kernel.org>,
-        Lillian Grassin-Drake <ligrassi@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v5 10/16] x86/hyperv: implement and use hv_smp_prepare_cpus
-Date:   Wed, 20 Jan 2021 12:00:52 +0000
-Message-Id: <20210120120058.29138-11-wei.liu@kernel.org>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
+        ENDPOINT DRIVERS),
+        linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES)
+Subject: [PATCH v5 12/16] asm-generic/hyperv: update hv_interrupt_entry
+Date:   Wed, 20 Jan 2021 12:00:54 +0000
+Message-Id: <20210120120058.29138-13-wei.liu@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210120120058.29138-1-wei.liu@kernel.org>
 References: <20210120120058.29138-1-wei.liu@kernel.org>
@@ -63,77 +65,90 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Microsoft Hypervisor requires the root partition to make a few
-hypercalls to setup application processors before they can be used.
+We will soon use the same structure to handle IO-APIC interrupts as
+well. Introduce an enum to identify the source and a data structure for
+IO-APIC RTE.
 
-Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Co-Developed-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-Co-Developed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+While at it, update pci-hyperv.c to use the enum.
+
+No functional change.
+
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
-CPU hotplug and unplug is not yet supported in this setup, so those
-paths remain untouched.
+ drivers/pci/controller/pci-hyperv.c |  2 +-
+ include/asm-generic/hyperv-tlfs.h   | 36 +++++++++++++++++++++++++++--
+ 2 files changed, 35 insertions(+), 3 deletions(-)
 
-v3: Always call native SMP preparation function.
----
- arch/x86/kernel/cpu/mshyperv.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index c376d191a260..13d3b6dd21a3 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -31,6 +31,7 @@
- #include <asm/reboot.h>
- #include <asm/nmi.h>
- #include <clocksource/hyperv_timer.h>
-+#include <asm/numa.h>
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 6db8d96a78eb..87aa62ee0368 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1216,7 +1216,7 @@ static void hv_irq_unmask(struct irq_data *data)
+ 	params = &hbus->retarget_msi_interrupt_params;
+ 	memset(params, 0, sizeof(*params));
+ 	params->partition_id = HV_PARTITION_ID_SELF;
+-	params->int_entry.source = 1; /* MSI(-X) */
++	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
+ 	hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
+ 	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+ 			   (hbus->hdev->dev_instance.b[4] << 16) |
+diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+index 7e103be42799..8423bf53c237 100644
+--- a/include/asm-generic/hyperv-tlfs.h
++++ b/include/asm-generic/hyperv-tlfs.h
+@@ -480,6 +480,11 @@ struct hv_create_vp {
+ 	u64 flags;
+ } __packed;
  
- /* Is Linux running as the root partition? */
- bool hv_root_partition;
-@@ -212,6 +213,32 @@ static void __init hv_smp_prepare_boot_cpu(void)
- 	hv_init_spinlocks();
- #endif
- }
++enum hv_interrupt_source {
++	HV_INTERRUPT_SOURCE_MSI = 1, /* MSI and MSI-X */
++	HV_INTERRUPT_SOURCE_IOAPIC,
++};
 +
-+static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+#ifdef CONFIG_X86_64
-+	int i;
-+	int ret;
-+#endif
-+
-+	native_smp_prepare_cpus(max_cpus);
-+
-+#ifdef CONFIG_X86_64
-+	for_each_present_cpu(i) {
-+		if (i == 0)
-+			continue;
-+		ret = hv_call_add_logical_proc(numa_cpu_node(i), i, cpu_physical_id(i));
-+		BUG_ON(ret);
-+	}
-+
-+	for_each_present_cpu(i) {
-+		if (i == 0)
-+			continue;
-+		ret = hv_call_create_vp(numa_cpu_node(i), hv_current_partition_id, i, i);
-+		BUG_ON(ret);
-+	}
-+#endif
-+}
- #endif
+ union hv_msi_address_register {
+ 	u32 as_uint32;
+ 	struct {
+@@ -513,10 +518,37 @@ union hv_msi_entry {
+ 	} __packed;
+ };
  
- static void __init ms_hyperv_init_platform(void)
-@@ -368,6 +395,8 @@ static void __init ms_hyperv_init_platform(void)
++union hv_ioapic_rte {
++	u64 as_uint64;
++
++	struct {
++		u32 vector:8;
++		u32 delivery_mode:3;
++		u32 destination_mode:1;
++		u32 delivery_status:1;
++		u32 interrupt_polarity:1;
++		u32 remote_irr:1;
++		u32 trigger_mode:1;
++		u32 interrupt_mask:1;
++		u32 reserved1:15;
++
++		u32 reserved2:24;
++		u32 destination_id:8;
++	};
++
++	struct {
++		u32 low_uint32;
++		u32 high_uint32;
++	};
++} __packed;
++
+ struct hv_interrupt_entry {
+-	u32 source;			/* 1 for MSI(-X) */
++	u32 source;
+ 	u32 reserved1;
+-	union hv_msi_entry msi_entry;
++	union {
++		union hv_msi_entry msi_entry;
++		union hv_ioapic_rte ioapic_rte;
++	};
+ } __packed;
  
- # ifdef CONFIG_SMP
- 	smp_ops.smp_prepare_boot_cpu = hv_smp_prepare_boot_cpu;
-+	if (hv_root_partition)
-+		smp_ops.smp_prepare_cpus = hv_smp_prepare_cpus;
- # endif
- 
- 	/*
+ /*
 -- 
 2.20.1
 
