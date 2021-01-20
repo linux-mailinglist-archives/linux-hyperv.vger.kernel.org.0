@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F2032FD19A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 14:54:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94A562FD19F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 14:54:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbhATM7C (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Jan 2021 07:59:02 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:37256 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389253AbhATMLQ (ORCPT
+        id S2388863AbhATM7h (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Jan 2021 07:59:37 -0500
+Received: from mail-ej1-f42.google.com ([209.85.218.42]:41140 "EHLO
+        mail-ej1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733278AbhATMMt (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Jan 2021 07:11:16 -0500
-Received: by mail-wm1-f47.google.com with SMTP id c128so2641754wme.2;
-        Wed, 20 Jan 2021 04:11:00 -0800 (PST)
+        Wed, 20 Jan 2021 07:12:49 -0500
+Received: by mail-ej1-f42.google.com with SMTP id g12so33219073ejf.8;
+        Wed, 20 Jan 2021 04:12:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RQwm66iUoba97MXwt/9h+jMIr/4uYrCLO+E1EHaeJo4=;
-        b=EsQnqungWt9sM6mditdWYxlB4iY4r4wpv8xATjlelJRelPRX6zeldXmaeO93FaFyhn
-         7ir8r61+RZHfCmnkA3QxGlD7LMEX8PYu3gEVQGKySJsA8hNWq1i3PMPnb6KdxQJqGTpe
-         8mjHautFHO3SOjIYoAksZ5R+iPt4NAT8xbp3Vdd1ZbokN3kR/+a5xs3HNjHDE34JSpg1
-         rLD66DsNwdb7Ez5ZXNVFqsARKK0U2ROe1h0zHiD65+CekkvycPYF7vZJ4+ZEE+FATxVp
-         Mg+xrL6iAawhrBgFA0am84SCmJnGc+hHhsbmCZeR66AZX2DwmhtY4BVcwKQ/nTMSM3uI
-         Edqw==
-X-Gm-Message-State: AOAM530eTU529xWSzWtSOl2aZ6cenHx9Z0kK9QZZeAeYdyyGH2kAHjPJ
-        EZ3a0G73TGw8TXoR/Cg5YtlJumtUPpU=
-X-Google-Smtp-Source: ABdhPJwvu0KkPl/OkiARRElZX6csttkks1FX48zI1Q/POT7cHBtetgWlh9wYpk58+aGi0UksO9Q7Aw==
-X-Received: by 2002:a1c:4483:: with SMTP id r125mr3937144wma.80.1611144061397;
-        Wed, 20 Jan 2021 04:01:01 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iQMtgq3pUcrjj3NVCdkiQSStjiewGBjHdwkFAPCFR6A=;
+        b=NjthebAkuSs6fArMRYIQbeZeoiI0WOi/p/enyzCB9a7pwX3ggTKxLrZi5YVBBVyW/L
+         4c7C6WCkZzmYJADu0ZBBil4/m8Itqf5TUeQ0z1h2gV0oErinqSeKNzv2QoCSAz00o/lf
+         YUxUmnRjbT7budrA5EyX4ws3ZiDdxs4b/yYDyJJ/0lMAD2GB7tIX8LwvtmEYZjdszPg9
+         xMqwhOCLUXO8exID966SQqUbQ9r1BaQIJylhGvFJskN8T1ROiBYd4DEgzTAi9k3QHfSO
+         nKtbiaQLjzEYbKmdcTwCzOwGorAkg3hA2ysXmXiB/CyBSMtLdn1LCqHGVER9AQCJQXRG
+         9iRg==
+X-Gm-Message-State: AOAM531MbSoy5uBGlzLB+WZhUNJMv65PEICaKN+AkDy1FrAGpyXFB5Kr
+        W87NG4S+Wkh1VPQSDKBiAsYPA3qxKUo=
+X-Google-Smtp-Source: ABdhPJz4rG0NJQ4emuqxUfLr2n1SVZFe7ESOJDiftil8vMTrjEnxmTX5UHX4Ncs5MrsulAjda8gL7g==
+X-Received: by 2002:adf:e512:: with SMTP id j18mr8953978wrm.52.1611144065620;
+        Wed, 20 Jan 2021 04:01:05 -0800 (PST)
 Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id x17sm3747671wro.40.2021.01.20.04.01.00
+        by smtp.gmail.com with ESMTPSA id x17sm3747671wro.40.2021.01.20.04.01.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jan 2021 04:01:00 -0800 (PST)
+        Wed, 20 Jan 2021 04:01:05 -0800 (PST)
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
 Cc:     virtualization@lists.linux-foundation.org,
@@ -43,114 +43,56 @@ Cc:     virtualization@lists.linux-foundation.org,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         pasha.tatashin@soleen.com, Wei Liu <wei.liu@kernel.org>,
-        sameo@linux.intel.com, robert.bradford@intel.com,
-        sebastien.boeuf@intel.com
-Subject: [PATCH v5 00/16] Introducing Linux root partition support for Microsoft Hypervisor
-Date:   Wed, 20 Jan 2021 12:00:42 +0000
-Message-Id: <20210120120058.29138-1-wei.liu@kernel.org>
+        Joerg Roedel <jroedel@suse.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS)
+Subject: [PATCH v5 04/16] iommu/hyperv: don't setup IRQ remapping when running as root
+Date:   Wed, 20 Jan 2021 12:00:46 +0000
+Message-Id: <20210120120058.29138-5-wei.liu@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20210120120058.29138-1-wei.liu@kernel.org>
+References: <20210120120058.29138-1-wei.liu@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi all
+The IOMMU code needs more work. We're sure for now the IRQ remapping
+hooks are not applicable when Linux is the root partition.
 
-Here we propose this patch series to make Linux run as the root partition [0]
-on Microsoft Hypervisor [1]. There will be a subsequent patch series to provide a
-device node (/dev/mshv) such that userspace programs can create and run virtual
-machines. We've also ported Cloud Hypervisor [3] over and have been able to
-boot a Linux guest with Virtio devices since late July 2020.
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Acked-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ drivers/iommu/hyperv-iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This series implements only the absolutely necessary components to get
-things running.  A large portion of this series consists of patches that
-augment hyperv-tlfs.h.  They should be rather uncontroversial and can be
-applied right away.
-
-A few key things other than the changes to hyperv-tlfs.h:
-
-1. Linux needs to setup existing Hyper-V facilities differently.
-2. Linux needs to make a few hypercalls to bring up APs.
-3. Interrupts are remapped by IOMMU, which is controlled by the hypervisor.
-   Linux needs to make hypercalls to map and unmap interrupts. This is
-   done by introducing a new MSI irqdomain and extending the remapping
-   domain in hyperv-iommu.
-
-This series is now based on 5.11-rc2.
-
-Posting v5 with the latest changes to get some testing from various
-kernel test bots, with the intention to merge this series soon.
-
-Comments and suggestions are welcome.
-
-Thanks,
-Wei.
-
-[0] Just think of it like Xen's Dom0.
-[1] Hyper-V is more well-known, but it really refers to the whole stack
-    including the hypervisor and other components that run in Windows kernel
-    and userspace.
-[3] https://github.com/cloud-hypervisor/
-
-Cc: sameo@linux.intel.com
-Cc: robert.bradford@intel.com
-Cc: sebastien.boeuf@intel.com
-
-Changes since v4:
-1. Rework IO-APIC handling.
-
-Changes since v3:
-1. Fix compilation errors.
-2. Adapt to upstream changes.
-
-Changes since v2:
-1. Address more comments from Vitaly.
-2. Fix and test 32bit build.
-
-Changes since v1:
-1. Simplify MSI IRQ domain implementation.
-2. Address Vitaly's comments.
-
-Wei Liu (16):
-  asm-generic/hyperv: change HV_CPU_POWER_MANAGEMENT to
-    HV_CPU_MANAGEMENT
-  x86/hyperv: detect if Linux is the root partition
-  Drivers: hv: vmbus: skip VMBus initialization if Linux is root
-  iommu/hyperv: don't setup IRQ remapping when running as root
-  clocksource/hyperv: use MSR-based access if running as root
-  x86/hyperv: allocate output arg pages if required
-  x86/hyperv: extract partition ID from Microsoft Hypervisor if
-    necessary
-  x86/hyperv: handling hypercall page setup for root
-  x86/hyperv: provide a bunch of helper functions
-  x86/hyperv: implement and use hv_smp_prepare_cpus
-  asm-generic/hyperv: update hv_msi_entry
-  asm-generic/hyperv: update hv_interrupt_entry
-  asm-generic/hyperv: introduce hv_device_id and auxiliary structures
-  asm-generic/hyperv: import data structures for mapping device
-    interrupts
-  x86/hyperv: implement an MSI domain for root partition
-  iommu/hyperv: setup an IO-APIC IRQ remapping domain for root partition
-
- arch/x86/hyperv/Makefile            |   4 +-
- arch/x86/hyperv/hv_init.c           | 108 +++++++-
- arch/x86/hyperv/hv_proc.c           | 225 ++++++++++++++++
- arch/x86/hyperv/irqdomain.c         | 386 ++++++++++++++++++++++++++++
- arch/x86/include/asm/hyperv-tlfs.h  |  23 ++
- arch/x86/include/asm/mshyperv.h     |  19 +-
- arch/x86/kernel/cpu/mshyperv.c      |  49 ++++
- drivers/clocksource/hyperv_timer.c  |   3 +
- drivers/hv/vmbus_drv.c              |   3 +
- drivers/iommu/hyperv-iommu.c        | 178 ++++++++++++-
- drivers/pci/controller/pci-hyperv.c |   2 +-
- include/asm-generic/hyperv-tlfs.h   | 254 +++++++++++++++++-
- 12 files changed, 1233 insertions(+), 21 deletions(-)
- create mode 100644 arch/x86/hyperv/hv_proc.c
- create mode 100644 arch/x86/hyperv/irqdomain.c
-
-
-base-commit: e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62
+diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+index 1d21a0b5f724..b7db6024e65c 100644
+--- a/drivers/iommu/hyperv-iommu.c
++++ b/drivers/iommu/hyperv-iommu.c
+@@ -20,6 +20,7 @@
+ #include <asm/io_apic.h>
+ #include <asm/irq_remapping.h>
+ #include <asm/hypervisor.h>
++#include <asm/mshyperv.h>
+ 
+ #include "irq_remapping.h"
+ 
+@@ -122,7 +123,7 @@ static int __init hyperv_prepare_irq_remapping(void)
+ 
+ 	if (!hypervisor_is_type(X86_HYPER_MS_HYPERV) ||
+ 	    x86_init.hyper.msi_ext_dest_id() ||
+-	    !x2apic_supported())
++	    !x2apic_supported() || hv_root_partition)
+ 		return -ENODEV;
+ 
+ 	fn = irq_domain_alloc_named_id_fwnode("HYPERV-IR", 0);
 -- 
 2.20.1
 
