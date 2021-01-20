@@ -2,63 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 753702FCA1D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 05:53:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5330D2FD0EB
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jan 2021 14:00:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbhATEvX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 19 Jan 2021 23:51:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbhATEvD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 19 Jan 2021 23:51:03 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 20C6B23137;
-        Wed, 20 Jan 2021 04:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611118222;
-        bh=rd3vLXIH9asFrOl/woIo1LuABsCpeFAqzuVO0FSk7I8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Tz9IpALO2cTocnGYPbvgZIv6Gc0SN1P3chDIovOz2yNsW/QpuKmzFnGuxZwqDinh2
-         KgOuZTIYsVZ5HU5mtXHdkdYcUvyYKOkyqEimW4NS6dmYftDs8LM0rlVmS5CMF3xuP0
-         IzcQujLMbHeU2RrcAwf9t1DEx4fUDgsWduONDH6/c5RmQI6NxDrIrsq3NcbrQHJLGc
-         Vs+D6E6d+3ex9613zwLUW/lF1G4N57+2CywUU0TxDu0E3LWeSQG169DDkS3msHpxIu
-         kDhfCOyveoBewHlfdgQfJs0Wf6Pg9lka/hOY0Q98ZjCFRjigm84vxtr9GRByxupvCH
-         LXMd0DmUM4Onw==
-Received: from pdx-korg-docbuild-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-1.ci.codeaurora.org (Postfix) with ESMTP id 0609F6036C;
-        Wed, 20 Jan 2021 04:50:22 +0000 (UTC)
-Subject: Re: [GIT PULL] Hyper-V fixes for 5.11-rc5
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210119113040.cy7x6hilvts56xan@liuwe-devbox-debian-v2>
-References: <20210119113040.cy7x6hilvts56xan@liuwe-devbox-debian-v2>
-X-PR-Tracked-List-Id: <linux-hyperv.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210119113040.cy7x6hilvts56xan@liuwe-devbox-debian-v2>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20210119
-X-PR-Tracked-Commit-Id: fff7b5e6ee63c5d20406a131b260c619cdd24fd1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 28df858033484b830c2ea146c03da67d2d659405
-Message-Id: <161111822195.31434.2452040472483337572.pr-tracker-bot@kernel.org>
-Date:   Wed, 20 Jan 2021 04:50:21 +0000
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
+        id S1727392AbhATM72 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Jan 2021 07:59:28 -0500
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:50874 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389312AbhATML5 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 20 Jan 2021 07:11:57 -0500
+Received: by mail-wm1-f51.google.com with SMTP id 190so2669029wmz.0;
+        Wed, 20 Jan 2021 04:11:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+I7gc45xFJIk2c97apTvkR8acQbtMFTm1lgQrn5j0J4=;
+        b=Y/9V0nY1bXWeHoa+peSU4ps3VkvRfgOObvKcq9rWpF06A/sdx4krI51A7LRFHFQI4X
+         iAApm8fiyvwNNyTtrd09TwsSyHf01ANzDYItqjZqkj7CbIWynp3X2EXMDnfBxZ/+AA1l
+         DY5sS0yu1HAcVF81EbFscdIb96YrMAYQJN9DcUmbtxlCMbTr8G68yHMgkShena7ebu+p
+         eyctDJt6T7v3N85HXmxktsOHRZrgdKAv8+3t89FFhZXVPnylmIO722VRciWoviN43SLC
+         g/XGWyIIWoRVRML0mywS5d9zlcW+/FCyR0CD5wy6AdT5ERSdlgSIvGFdhlUuf2xor3oV
+         boZw==
+X-Gm-Message-State: AOAM531Z+NvnUZ1uSvlBNPtDdQdO2M20rN1POsKAq5DfcRzYX6LDqDKk
+        HVWOEGpqvwsUKZf0oHGSLY8Qvezs8qs=
+X-Google-Smtp-Source: ABdhPJwOtLh3i30qS8UIHprE6HaVcYPLbuYLi648Wm0I8iypqUdEDDC4RmIdv2pwlCQgGE5q+8r5eQ==
+X-Received: by 2002:a7b:ce92:: with SMTP id q18mr1599037wmj.113.1611144062899;
+        Wed, 20 Jan 2021 04:01:02 -0800 (PST)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id x17sm3747671wro.40.2021.01.20.04.01.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Jan 2021 04:01:01 -0800 (PST)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        pasha.tatashin@soleen.com, Wei Liu <wei.liu@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES)
+Subject: [PATCH v5 01/16] asm-generic/hyperv: change HV_CPU_POWER_MANAGEMENT to HV_CPU_MANAGEMENT
+Date:   Wed, 20 Jan 2021 12:00:43 +0000
+Message-Id: <20210120120058.29138-2-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20210120120058.29138-1-wei.liu@kernel.org>
+References: <20210120120058.29138-1-wei.liu@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The pull request you sent on Tue, 19 Jan 2021 11:30:40 +0000:
+This makes the name match Hyper-V TLFS.
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20210119
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ include/asm-generic/hyperv-tlfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/28df858033484b830c2ea146c03da67d2d659405
-
-Thank you!
-
+diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+index e73a11850055..e6903589a82a 100644
+--- a/include/asm-generic/hyperv-tlfs.h
++++ b/include/asm-generic/hyperv-tlfs.h
+@@ -88,7 +88,7 @@
+ #define HV_CONNECT_PORT				BIT(7)
+ #define HV_ACCESS_STATS				BIT(8)
+ #define HV_DEBUGGING				BIT(11)
+-#define HV_CPU_POWER_MANAGEMENT			BIT(12)
++#define HV_CPU_MANAGEMENT			BIT(12)
+ 
+ 
+ /*
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.20.1
+
