@@ -2,182 +2,225 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC6B82FF11E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Jan 2021 17:55:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61D3C301D69
+	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Jan 2021 17:16:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387479AbhAUQzN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 21 Jan 2021 11:55:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388308AbhAUQyf (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 21 Jan 2021 11:54:35 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2FB9C0613ED;
-        Thu, 21 Jan 2021 08:53:54 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id g1so3314057edu.4;
-        Thu, 21 Jan 2021 08:53:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bcwkAyno8WqzFymWEGyp24H8TAkA0jp++RY9Bw53OdE=;
-        b=Xq/ocX+0m3kZT4umHvJyrvYKZdCpob7dfMGT9Ioy/Qd540/PZN02zLDk8x7bEz/+Xr
-         Luxh7Ab8M2/YPybpj5dnbMm+u7CcaKpPOtK9QX4kATjYpceQsnH+YI0YMHXVlQ6Reiog
-         4z83LppwNlC33VY1rSnRR4i8X7qoXwmKjrOf8ojxHle+TKCRBXTdDwkGX+zS4bXVJgwJ
-         PBcl5QpfhEklt38zzFDTqgDwAbqcnKMqQqEb81TVXp2+Tk3f4wCTN8VHvheSAeQj/INn
-         FeBYkaGRe2NYf71vdXayN66pAzLfOk8rokwztRF5VvFfTfPzURXSBmibSV3MIP+gVLl0
-         5GpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bcwkAyno8WqzFymWEGyp24H8TAkA0jp++RY9Bw53OdE=;
-        b=ox1phwOItGRy9q7JBizckUje9t1uxZcTUcN/YaQvWgablCw4s8TDgOUrbQHZNwFQYW
-         cpS26Zze2OF8/J8ypdp+OPaVBLUHVviT30J/6N9fqaE6YBC9b7JxsJmucv5Z2Oo6F2WB
-         zz6LfR8Hx9AT0WnzEFiEPuOneEtl2OkE0fPX81Jq4+RLmu5ag1Ipy/OSP7RSXOnv993d
-         n/XXIZ67xIiT2WHWuEh5B+gHIBMSrl1mRWidtDCGM1ULzoYZ+w9UoQ5dXxgRKQMQ4e4M
-         9DrtPddzPdW5EbAhc7z8OBxF1CR6yQ5nuKKXHKNtHIPDHsHSdyiZE+0/mFXidrMLYpBz
-         uTNQ==
-X-Gm-Message-State: AOAM531L6ZVZGVgaRoczJc4UVmvIt+Ef5tEbNk1zkh5t39HPNqsHZoIN
-        h1rwFJ/9b0OyOQjau/A2rgg=
-X-Google-Smtp-Source: ABdhPJytdr1Bo1bVvMiN4it9HUs9v5agv16uFdFJeqL4tqJ52C2GcLxL/fvt7r2G1VTNdztsGQoKfg==
-X-Received: by 2002:a05:6402:1914:: with SMTP id e20mr24823edz.89.1611248033317;
-        Thu, 21 Jan 2021 08:53:53 -0800 (PST)
-Received: from anparri (host-87-19-67-41.retail.telecomitalia.it. [87.19.67.41])
-        by smtp.gmail.com with ESMTPSA id r26sm3252191edc.95.2021.01.21.08.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jan 2021 08:53:52 -0800 (PST)
-Date:   Thu, 21 Jan 2021 17:53:45 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
+        id S1725831AbhAXQPq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 24 Jan 2021 11:15:46 -0500
+Received: from mail-mw2nam10on2104.outbound.protection.outlook.com ([40.107.94.104]:13088
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725268AbhAXQPp (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 24 Jan 2021 11:15:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Pnf29PYDBXAObPg12rWLOxVKkHLvFlUfB0mRangUDS1Tz49blsNR7CYK/jHmDHFwV/pAX7yRPNDNZFPur4OKwpVkcU4Th8FXISC+pP4r6GZ05Xz90WSXGkS+YvPSaRfObEVJWTTZVRNIrv1O0XOAo72RcBb2vuv10VfeFs33T5XFbRAwRefprJACMZP8xivVYcqobtlRZZnEqsbjH1evupnIHe4gav2BUheD6yNF3QHM9WdjBYdDj41ISU469+adkqqoDj9PiTgg5LiuG2wGULiB4vJ3pOcznVlqdfteY7NFi6dKdxbfoCfWuIJnN/Vf2fUgl1Nw8j1gt9vGfhquOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N6kaM3w5vMJvVuegHx0ENVTzpA5s2k6LrcBEwVm5Mlo=;
+ b=LQQ7JiBthGFimfKeFlbvYZ76b/VtYCOGBDChvzaqftW8GrfOfyspC4qT1zKoVaHU33oh2F/32TP2ubhLwSa+kcVqNz3PYTgaNyGHz/zISJaDjO+iahfeYjlgOYIvKDAgIQEfLltE0zT9pMeIk/AGW9MpXsoew3dOXZBqVKdi4giSmKDbpqFW8L8ZEeDEPp079MHFcqZWgkUifMSOp9u40QqWZEGpcFC7QUPnZMdT40jwiPw3kbACHeVswGCYDLx3HvG4cgNWWPbIcqFSfuUYSYIUAlfd17GzOMclKDlp2Y753byTqeBgMxCDweZUJk0cD2GG+Yb05xY13RhUy5bmaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N6kaM3w5vMJvVuegHx0ENVTzpA5s2k6LrcBEwVm5Mlo=;
+ b=ewGwE1S2YttbCB3WjnMELD7OWBTx2om/XXtatIQ8p91mNd1yxaWN09oG5WI2DatDm11NVoRUO8U/0P/VR5fzI14bkgOovsYMOes3W0dNzu4VFDTG3KCFm0akjlhzWPbXE3voXJFeVLZUNrjf0DDqO55vspHDddJmvmtoLyqVpzQ=
+Received: from (2603:10b6:301:7c::11) by
+ MWHPR21MB0766.namprd21.prod.outlook.com (2603:10b6:300:76::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3825.3; Sun, 24 Jan 2021 16:14:53 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3825.003; Sun, 24 Jan 2021
+ 16:14:53 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Juergen Gross <jgross@suse.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 4/4] hv_netvsc: Restrict configurations on isolated guests
-Message-ID: <20210121165345.GA2101@anparri>
-References: <20210119175841.22248-1-parri.andrea@gmail.com>
- <20210119175841.22248-5-parri.andrea@gmail.com>
- <BL0PR2101MB0930CF4297121B1BB904AA7DCAA29@BL0PR2101MB0930.namprd21.prod.outlook.com>
- <20210121040526.GA264889@anparri>
- <BL0PR2101MB0930698DBF66828F4EE4CDA8CAA19@BL0PR2101MB0930.namprd21.prod.outlook.com>
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        vkuznets <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: RE: [PATCH v4 07/15] x86/paravirt: switch time pvops functions to use
+ static_call()
+Thread-Topic: [PATCH v4 07/15] x86/paravirt: switch time pvops functions to
+ use static_call()
+Thread-Index: AQHW72lBoCJK4XcIc0e5K1+SYrbIiqo29YsA
+Date:   Sun, 24 Jan 2021 16:14:52 +0000
+Message-ID: <MWHPR21MB15930A0BC65D8A3F31C13F49D7BE9@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <20210120135555.32594-1-jgross@suse.com>
+ <20210120135555.32594-8-jgross@suse.com>
+In-Reply-To: <20210120135555.32594-8-jgross@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-01-24T16:14:50Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=819a5dc4-1861-402f-a4b0-8109384682ad;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: suse.com; dkim=none (message not signed)
+ header.d=none;suse.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [66.75.126.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: abac4818-1089-42f7-3a44-08d8c0832efa
+x-ms-traffictypediagnostic: MWHPR21MB0766:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MWHPR21MB076658EA4DDC06E93557023FD7BE9@MWHPR21MB0766.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1188+vCYRZjxXPC7Ti8SBtXV6yPsJ893MHnL7vTaiDZcKuDnC9u6ocOuPA27EpZ2OjuZ8r+PDsNHspT3Vzhe5AtGEXWBf3vrxhZ+p7RNa0gChnB3gjXB5p3PFkkwLsYhvCMBg2o5oDqwnr5gXb9bD/hAcSgcYyOnsQd5eTge45swpHxlHzEEOOCGmWxMKhj6QlFuKtfFBQu83gRc4+LoxIo9u/sR5swz7Wwa0EudacSuo9WSzv9R9tJTO0lmAT/MLOK2yQLfZomYSKbqdUYfyK8mX+5lujqBItELY7B+8pZ71Cu5kwdxr0JkYwh3rexpRjf6kK0+qer97CuE0dnaw+TTcMnUdBD/uq4vRrAElXiLO9G9RelNlwBllm0KUFNfIF/vhSLpfgej8tpLLKNVKK1gyKoNfMcUXBifKbOeoPLxLBIc6LtlJdQA5h5/tTUuwNlKFrRBkN4GMKmE0wXyghMc9yopH78J39DGV6ypnrWz+NiScz7vtadlGWh1Ghw1lFdP4CaH+9QIIJbCniaSrw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(346002)(366004)(136003)(39860400002)(8676002)(8936002)(10290500003)(86362001)(83380400001)(76116006)(66476007)(66946007)(66556008)(64756008)(316002)(66446008)(7696005)(54906003)(26005)(186003)(8990500004)(5660300002)(4326008)(110136005)(71200400001)(7416002)(9686003)(6506007)(52536014)(2906002)(82950400001)(55016002)(82960400001)(33656002)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?kz/zFCJOu4H9XEpVGhuyuo467KMOSNWslf305XmQ4FJ/tpNt32FQSs1zJa1D?=
+ =?us-ascii?Q?5MysFF/ynK4NaO5eusgIi/dJFaNlPd0z2xya1bZLlAB/Cx9V2NvjB+Ch7ntZ?=
+ =?us-ascii?Q?O+Yc8B3I0Ga9hzcpTeAhgb9yxma1ye/GLP2VXKLijH6q8o/1/NV58jPVYVyS?=
+ =?us-ascii?Q?kpErNEN+LUp0xrpujwkG84QSr1SAsuRB94BKjAycIFfXV0qzbnE0v5hBrDMT?=
+ =?us-ascii?Q?vNXQa1v8YuXasMypTjNponwsuttc7H0ToK8c0JOGDXXNlTW+M32UhmtuO39L?=
+ =?us-ascii?Q?AUBtCBZe1DnZednan8tJ8Kbp1lpvMSiE5AGQONkeBDM122AlMuROJSZH2yZ2?=
+ =?us-ascii?Q?GS0+kZIyQCkF8sZTJW1CH/69JZtVJeSQzLjP3fnORPeh3zi3ZFUmAxz68+V/?=
+ =?us-ascii?Q?z4UrsxyPcRiUiY06QyLy5JV8nX+fmGcDeA7htgKlLE6waXwP4N8tXEidg/9L?=
+ =?us-ascii?Q?vz6LGingVD9yvswJ+6Gmpx0VlS+uP41DvBUofGwTxpIJOza/kQIPqyf48DWb?=
+ =?us-ascii?Q?5UFNFdYPFFcCA+FymkZA4McibR51GMnsDuMkA9kkVZPcEshdQOiCPxw95RDG?=
+ =?us-ascii?Q?jUVz5zKXwCRWXNzza7idtVzWta8tVKSDWQmnv/rJDPyYdrn5iR2TpJsOhNl0?=
+ =?us-ascii?Q?qQRWC55jsWZXIScyb3fylHJqAdeukLQ3EfIwpYBTPs8CfrfRe8YtMBeDNEN0?=
+ =?us-ascii?Q?Hkh2XzSafosFtxk8y2yoZS11vIMuOOEMoy6sqDBQJWNGoIyt5Oy5yWJVzoIb?=
+ =?us-ascii?Q?1T5yWhduBWAxYdsoOCkyYMDjMiPLCj3EtPdMsxezJII1GNesyk+9Arx1g4sP?=
+ =?us-ascii?Q?d7qeWmgz9LglUb/PcUG8v3SrCW7LZpUZwSLRwrbee8LsSwHHT4hwAmqvDN4I?=
+ =?us-ascii?Q?B+5F1q8V5ZiEkdKP022dPwBLWMnXt/dKQ912VwhIAiWIzwELwVahwvYvqQF9?=
+ =?us-ascii?Q?EcZFJn8cl/2AmZkGBbF6aPSxjoC5wmNBSJ/hEyfrFZ3pwdO3X1SFeeTuLlOG?=
+ =?us-ascii?Q?F9WJl3RxRR49m3yBbf3Ig4KH4Jd68Bm85cthOOCbUiy4j4Soinn9E5WRloKJ?=
+ =?us-ascii?Q?LddEMjJK?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR2101MB0930698DBF66828F4EE4CDA8CAA19@BL0PR2101MB0930.namprd21.prod.outlook.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abac4818-1089-42f7-3a44-08d8c0832efa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jan 2021 16:14:52.8508
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xztFFZkAgufhIpsxNn9jfAwjKZDnihx8Hd1SovgteFrbj6RTL0YsgqffhEus7e7DkQPdHpJmj/Is8hNS/YABtAQMvY5JCgJVygxYlz+2mIs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0766
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> > > > @@ -544,7 +545,8 @@ static int negotiate_nvsp_ver(struct hv_device
-> > > > *device,
-> > > >  	init_packet->msg.v2_msg.send_ndis_config.capability.ieee8021q = 1;
-> > > >
-> > > >  	if (nvsp_ver >= NVSP_PROTOCOL_VERSION_5) {
-> > > > -		init_packet->msg.v2_msg.send_ndis_config.capability.sriov =
-> > > > 1;
-> > > > +		if (!hv_is_isolation_supported())
-> > > > +			init_packet-
-> > > > >msg.v2_msg.send_ndis_config.capability.sriov = 1;
-> > >
-> > > Please also add a log there stating we don't support sriov in this case.
-> > Otherwise,
-> > > customers will ask why vf not showing up.
-> > 
-> > IIUC, you're suggesting that I append something like:
-> > 
-> > +		else
-> > +			netdev_info(ndev, "SR-IOV not advertised: isolation
-> > supported\n");
-> > 
-> > I've added this locally; please let me know if you had something else
-> > /better in mind.
-> 
-> This message explains the failure reason better:
->   "SR-IOV not advertised by guests on the host supporting isolation"
+From: Juergen Gross <jgross@suse.com> Sent: Wednesday, January 20, 2021 5:5=
+6 AM
+>=20
+> The time pvops functions are the only ones left which might be
+> used in 32-bit mode and which return a 64-bit value.
+>=20
+> Switch them to use the static_call() mechanism instead of pvops, as
+> this allows quite some simplification of the pvops implementation.
+>=20
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+> V4:
+> - drop paravirt_time.h again
+> - don't move Hyper-V code (Michael Kelley)
+> ---
+>  arch/x86/Kconfig                      |  1 +
+>  arch/x86/include/asm/mshyperv.h       |  2 +-
+>  arch/x86/include/asm/paravirt.h       | 17 ++++++++++++++---
+>  arch/x86/include/asm/paravirt_types.h |  6 ------
+>  arch/x86/kernel/cpu/vmware.c          |  5 +++--
+>  arch/x86/kernel/kvm.c                 |  2 +-
+>  arch/x86/kernel/kvmclock.c            |  2 +-
+>  arch/x86/kernel/paravirt.c            | 16 ++++++++++++----
+>  arch/x86/kernel/tsc.c                 |  2 +-
+>  arch/x86/xen/time.c                   | 11 ++++-------
+>  drivers/clocksource/hyperv_timer.c    |  5 +++--
+>  drivers/xen/time.c                    |  2 +-
+>  12 files changed, 42 insertions(+), 29 deletions(-)
+>=20
 
-Applied.
+[snip]
 
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyp=
+erv.h
+> index 30f76b966857..b4ee331d29a7 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -63,7 +63,7 @@ typedef int (*hyperv_fill_flush_list_func)(
+>  static __always_inline void hv_setup_sched_clock(void *sched_clock)
+>  {
+>  #ifdef CONFIG_PARAVIRT
+> -	pv_ops.time.sched_clock =3D sched_clock;
+> +	paravirt_set_sched_clock(sched_clock);
+>  #endif
+>  }
+>=20
 
-> > > > @@ -579,12 +588,17 @@ static int netvsc_connect_vsp(struct hv_device
-> > > > *device,
-> > > >  	init_packet = &net_device->channel_init_pkt;
-> > > >
-> > > >  	/* Negotiate the latest NVSP protocol supported */
-> > > > -	for (i = ARRAY_SIZE(ver_list) - 1; i >= 0; i--)
-> > > > +	for (i = ARRAY_SIZE(ver_list) - 1; i >= 0; i--) {
-> > > > +		if (!nvsp_is_valid_version(ver_list[i])) {
-> > > > +			ret = -EPROTO;
-> > > > +			goto cleanup;
-> > > > +		}
-> > >
-> > > This code can catch the invalid, but cannot get the current host nvsp
-> > version.
-> > > I'd suggest move this check after version negotiation is done. So we can log
-> > what's
-> > > the current host nvsp version, and why we fail it (the expected nvsp ver).
-> > 
-> > Mmh, invalid versions are not negotiated.  How about I simply add the
-> > following logging right before the above 'ret = -EPROTO' say?
-> > 
-> > +			netdev_err(ndev, "Invalid NVSP version %x
-> > (expected >= %x): isolation supported\n",
-> > +				   ver_list[i], NVSP_PROTOCOL_VERSION_61);
-> > 
-> > (or something along these lines)
-> 
-> The negotiation process runs from the latest to oldest. If the host is 5, your code 
-> will fail before trying v6.0, and log:
-> 	"Invalid NVSP version 60000  (expected >= 60001): isolation supported"
-> This will make user think the NVSP version is 6.0.
-> 
-> Since you will let the NIC fail and cleanup, there is no harm to check the version 
-> after negotiation. And this case is unexpected from a "normal" host. So I suggest 
-> move the check after negotiation is done, then we know the actual host nvsp 
-> version that causing this issue. And we can bring the accurate info to host team 
-> for better diagnosability.
+This looks fine.
 
-Fair enough, will do.
+[snip]
 
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyp=
+erv_timer.c
+> index ba04cb381cd3..bf3bf20bc6bd 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/sched_clock.h>
+>  #include <linux/mm.h>
+>  #include <linux/cpuhotplug.h>
+> +#include <linux/static_call.h>
+>  #include <clocksource/hyperv_timer.h>
+>  #include <asm/hyperv-tlfs.h>
+>  #include <asm/mshyperv.h>
+> @@ -445,7 +446,7 @@ static bool __init hv_init_tsc_clocksource(void)
+>  	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+>=20
+>  	hv_sched_clock_offset =3D hv_read_reference_counter();
+> -	hv_setup_sched_clock(read_hv_sched_clock_tsc);
+> +	paravirt_set_sched_clock(read_hv_sched_clock_tsc);
+>=20
+>  	return true;
+>  }
+> @@ -470,6 +471,6 @@ void __init hv_init_clocksource(void)
+>  	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
+>=20
+>  	hv_sched_clock_offset =3D hv_read_reference_counter();
+> -	hv_setup_sched_clock(read_hv_sched_clock_msr);
+> +	static_call_update(pv_sched_clock, read_hv_sched_clock_msr);
+>  }
+>  EXPORT_SYMBOL_GPL(hv_init_clocksource);
 
-> Please point out this invalid version is caused by the host side, like this:
-> 	"Invalid NVSP version 0x50000  (expected >= 0x60001) from the host with isolation support"
-> Also please use "0x%x" for hexadecimal numbers.
+The changes to hyperv_timer.c aren't needed and shouldn't be
+there, so as to preserve hyperv_timer.c as architecture neutral.  With
+your update to hv_setup_sched_clock() in mshyperv.h, the original
+code works correctly.  While there are two call sites for
+hv_setup_sched_clock(), only one is called.  And once the sched clock
+function is set, it is never changed or overridden.
 
-Sure.
-
-
-> > > > @@ -1357,7 +1371,8 @@ static void netvsc_receive_inband(struct
-> > > > net_device *ndev,
-> > > >  		break;
-> > > >
-> > > >  	case NVSP_MSG4_TYPE_SEND_VF_ASSOCIATION:
-> > > > -		netvsc_send_vf(ndev, nvmsg, msglen);
-> > > > +		if (!hv_is_isolation_supported())
-> > > > +			netvsc_send_vf(ndev, nvmsg, msglen);
-> > >
-> > > When the driver doesn't advertise SRIOV, this message is not expected.
-> > > Instead of ignore silently, we should log an error.
-> > 
-> > I've appended:
-> > 
-> > +		else
-> > +			netdev_err(ndev, "Unexpected VF message:
-> > isolation supported\n");
-> 
-> Please log the msg type:
->   "Ignore VF_ASSOCIATION msg from the host supporting isolation"
-
-Applied.
-
-Thanks,
-  Andrea
+Michael
