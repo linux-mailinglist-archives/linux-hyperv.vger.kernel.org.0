@@ -2,225 +2,243 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61D3C301D69
-	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Jan 2021 17:16:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B755302C70
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Jan 2021 21:24:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725831AbhAXQPq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 24 Jan 2021 11:15:46 -0500
-Received: from mail-mw2nam10on2104.outbound.protection.outlook.com ([40.107.94.104]:13088
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725268AbhAXQPp (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 24 Jan 2021 11:15:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pnf29PYDBXAObPg12rWLOxVKkHLvFlUfB0mRangUDS1Tz49blsNR7CYK/jHmDHFwV/pAX7yRPNDNZFPur4OKwpVkcU4Th8FXISC+pP4r6GZ05Xz90WSXGkS+YvPSaRfObEVJWTTZVRNIrv1O0XOAo72RcBb2vuv10VfeFs33T5XFbRAwRefprJACMZP8xivVYcqobtlRZZnEqsbjH1evupnIHe4gav2BUheD6yNF3QHM9WdjBYdDj41ISU469+adkqqoDj9PiTgg5LiuG2wGULiB4vJ3pOcznVlqdfteY7NFi6dKdxbfoCfWuIJnN/Vf2fUgl1Nw8j1gt9vGfhquOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N6kaM3w5vMJvVuegHx0ENVTzpA5s2k6LrcBEwVm5Mlo=;
- b=LQQ7JiBthGFimfKeFlbvYZ76b/VtYCOGBDChvzaqftW8GrfOfyspC4qT1zKoVaHU33oh2F/32TP2ubhLwSa+kcVqNz3PYTgaNyGHz/zISJaDjO+iahfeYjlgOYIvKDAgIQEfLltE0zT9pMeIk/AGW9MpXsoew3dOXZBqVKdi4giSmKDbpqFW8L8ZEeDEPp079MHFcqZWgkUifMSOp9u40QqWZEGpcFC7QUPnZMdT40jwiPw3kbACHeVswGCYDLx3HvG4cgNWWPbIcqFSfuUYSYIUAlfd17GzOMclKDlp2Y753byTqeBgMxCDweZUJk0cD2GG+Yb05xY13RhUy5bmaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N6kaM3w5vMJvVuegHx0ENVTzpA5s2k6LrcBEwVm5Mlo=;
- b=ewGwE1S2YttbCB3WjnMELD7OWBTx2om/XXtatIQ8p91mNd1yxaWN09oG5WI2DatDm11NVoRUO8U/0P/VR5fzI14bkgOovsYMOes3W0dNzu4VFDTG3KCFm0akjlhzWPbXE3voXJFeVLZUNrjf0DDqO55vspHDddJmvmtoLyqVpzQ=
-Received: from (2603:10b6:301:7c::11) by
- MWHPR21MB0766.namprd21.prod.outlook.com (2603:10b6:300:76::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3825.3; Sun, 24 Jan 2021 16:14:53 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3825.003; Sun, 24 Jan 2021
- 16:14:53 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Juergen Gross <jgross@suse.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        vkuznets <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: RE: [PATCH v4 07/15] x86/paravirt: switch time pvops functions to use
- static_call()
-Thread-Topic: [PATCH v4 07/15] x86/paravirt: switch time pvops functions to
- use static_call()
-Thread-Index: AQHW72lBoCJK4XcIc0e5K1+SYrbIiqo29YsA
-Date:   Sun, 24 Jan 2021 16:14:52 +0000
-Message-ID: <MWHPR21MB15930A0BC65D8A3F31C13F49D7BE9@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <20210120135555.32594-1-jgross@suse.com>
- <20210120135555.32594-8-jgross@suse.com>
-In-Reply-To: <20210120135555.32594-8-jgross@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-01-24T16:14:50Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=819a5dc4-1861-402f-a4b0-8109384682ad;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: suse.com; dkim=none (message not signed)
- header.d=none;suse.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [66.75.126.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: abac4818-1089-42f7-3a44-08d8c0832efa
-x-ms-traffictypediagnostic: MWHPR21MB0766:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MWHPR21MB076658EA4DDC06E93557023FD7BE9@MWHPR21MB0766.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1188+vCYRZjxXPC7Ti8SBtXV6yPsJ893MHnL7vTaiDZcKuDnC9u6ocOuPA27EpZ2OjuZ8r+PDsNHspT3Vzhe5AtGEXWBf3vrxhZ+p7RNa0gChnB3gjXB5p3PFkkwLsYhvCMBg2o5oDqwnr5gXb9bD/hAcSgcYyOnsQd5eTge45swpHxlHzEEOOCGmWxMKhj6QlFuKtfFBQu83gRc4+LoxIo9u/sR5swz7Wwa0EudacSuo9WSzv9R9tJTO0lmAT/MLOK2yQLfZomYSKbqdUYfyK8mX+5lujqBItELY7B+8pZ71Cu5kwdxr0JkYwh3rexpRjf6kK0+qer97CuE0dnaw+TTcMnUdBD/uq4vRrAElXiLO9G9RelNlwBllm0KUFNfIF/vhSLpfgej8tpLLKNVKK1gyKoNfMcUXBifKbOeoPLxLBIc6LtlJdQA5h5/tTUuwNlKFrRBkN4GMKmE0wXyghMc9yopH78J39DGV6ypnrWz+NiScz7vtadlGWh1Ghw1lFdP4CaH+9QIIJbCniaSrw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(346002)(366004)(136003)(39860400002)(8676002)(8936002)(10290500003)(86362001)(83380400001)(76116006)(66476007)(66946007)(66556008)(64756008)(316002)(66446008)(7696005)(54906003)(26005)(186003)(8990500004)(5660300002)(4326008)(110136005)(71200400001)(7416002)(9686003)(6506007)(52536014)(2906002)(82950400001)(55016002)(82960400001)(33656002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?kz/zFCJOu4H9XEpVGhuyuo467KMOSNWslf305XmQ4FJ/tpNt32FQSs1zJa1D?=
- =?us-ascii?Q?5MysFF/ynK4NaO5eusgIi/dJFaNlPd0z2xya1bZLlAB/Cx9V2NvjB+Ch7ntZ?=
- =?us-ascii?Q?O+Yc8B3I0Ga9hzcpTeAhgb9yxma1ye/GLP2VXKLijH6q8o/1/NV58jPVYVyS?=
- =?us-ascii?Q?kpErNEN+LUp0xrpujwkG84QSr1SAsuRB94BKjAycIFfXV0qzbnE0v5hBrDMT?=
- =?us-ascii?Q?vNXQa1v8YuXasMypTjNponwsuttc7H0ToK8c0JOGDXXNlTW+M32UhmtuO39L?=
- =?us-ascii?Q?AUBtCBZe1DnZednan8tJ8Kbp1lpvMSiE5AGQONkeBDM122AlMuROJSZH2yZ2?=
- =?us-ascii?Q?GS0+kZIyQCkF8sZTJW1CH/69JZtVJeSQzLjP3fnORPeh3zi3ZFUmAxz68+V/?=
- =?us-ascii?Q?z4UrsxyPcRiUiY06QyLy5JV8nX+fmGcDeA7htgKlLE6waXwP4N8tXEidg/9L?=
- =?us-ascii?Q?vz6LGingVD9yvswJ+6Gmpx0VlS+uP41DvBUofGwTxpIJOza/kQIPqyf48DWb?=
- =?us-ascii?Q?5UFNFdYPFFcCA+FymkZA4McibR51GMnsDuMkA9kkVZPcEshdQOiCPxw95RDG?=
- =?us-ascii?Q?jUVz5zKXwCRWXNzza7idtVzWta8tVKSDWQmnv/rJDPyYdrn5iR2TpJsOhNl0?=
- =?us-ascii?Q?qQRWC55jsWZXIScyb3fylHJqAdeukLQ3EfIwpYBTPs8CfrfRe8YtMBeDNEN0?=
- =?us-ascii?Q?Hkh2XzSafosFtxk8y2yoZS11vIMuOOEMoy6sqDBQJWNGoIyt5Oy5yWJVzoIb?=
- =?us-ascii?Q?1T5yWhduBWAxYdsoOCkyYMDjMiPLCj3EtPdMsxezJII1GNesyk+9Arx1g4sP?=
- =?us-ascii?Q?d7qeWmgz9LglUb/PcUG8v3SrCW7LZpUZwSLRwrbee8LsSwHHT4hwAmqvDN4I?=
- =?us-ascii?Q?B+5F1q8V5ZiEkdKP022dPwBLWMnXt/dKQ912VwhIAiWIzwELwVahwvYvqQF9?=
- =?us-ascii?Q?EcZFJn8cl/2AmZkGBbF6aPSxjoC5wmNBSJ/hEyfrFZ3pwdO3X1SFeeTuLlOG?=
- =?us-ascii?Q?F9WJl3RxRR49m3yBbf3Ig4KH4Jd68Bm85cthOOCbUiy4j4Soinn9E5WRloKJ?=
- =?us-ascii?Q?LddEMjJK?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1731633AbhAYUXA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 25 Jan 2021 15:23:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732012AbhAYUUc (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 25 Jan 2021 15:20:32 -0500
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3CBC061574
+        for <linux-hyperv@vger.kernel.org>; Mon, 25 Jan 2021 12:19:52 -0800 (PST)
+Received: by mail-lj1-x234.google.com with SMTP id c18so4139415ljd.9
+        for <linux-hyperv@vger.kernel.org>; Mon, 25 Jan 2021 12:19:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=NoB95oMBEGR5sckmdInxtow+uc420MtguXF/itdZt+I=;
+        b=GuS4IHjvNzHMLYCh81wy1/3GvONJSx+use0ZutkcO+KUk0Oa6usC+hO9icZa/6fOOv
+         urYPLDqoF6W/+/0xfOJ96F6up6GtGd7Gqz/kTs2FIlzdwCjfl9YhJf9uOcRRKLj9xTMs
+         zvD/nRp8p1+/3jA6z4nEbtCyVe8VR+QG9EKjckPlJCP4Rh2JRdEytnmiUdcYal0mLsmo
+         YMk+X6ccON9v00UeZshTvIjMQY/9wVvmpIb/I0O0iXrnyaqeMShVkdMhLo84v2v4wMUl
+         ZRhGB4pySCIcPdgRpakqEDBq9E3xDSyUYqtFHxSwFi36CsvXZTi0YTXUzEolKHbhgIhG
+         FU3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=NoB95oMBEGR5sckmdInxtow+uc420MtguXF/itdZt+I=;
+        b=iYuZMWM/n7PWZHkZiyzDza2DrcCiIlowAIHlBaDvEKBt2zr4XofAX7aL4PpaC87+6d
+         rMCLP4cTAqyfx1xY4ARlyiREkUtM/7HXmce3zVkMHGKcmDiI3FwhQcdN/1xbhIFXi6N2
+         WXIbjuAFBTMdLMpMtIRmhxs4BatHtNimZaxUYyAmJo+/dPlh3gERjvW+omEu/4YqBtX9
+         PuDxTtlwsqhcSM2rF5mjj6wTbmLu1JWaspUqB+shql5obz3cm9UTzGADIjkxsp8dPOTz
+         0wN7zxor7Op34uV7KvTmTTPvsiRjisrPI0mpfHIZ8jFF4mrYFbB7lAqW1siyLdbUM2RH
+         xD4g==
+X-Gm-Message-State: AOAM533eUlarehn6GZ7b8SsrUCdCaDmHgsBim9eBML8Q2c2ZmhFOu3g7
+        8YC3c9ETSeb46M0vRNMH9YdNUKJxIZGwfSCAWbs=
+X-Google-Smtp-Source: ABdhPJwg1oUbSL7WetLnWif3okyT4hcPBDjMFV8TLA/bJnj/nPvw0U6rTHeUGKsiqZ8/G8AvAUljKeRLvFHwZDCVYcs=
+X-Received: by 2002:a2e:bc13:: with SMTP id b19mr1023924ljf.381.1611605990597;
+ Mon, 25 Jan 2021 12:19:50 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: abac4818-1089-42f7-3a44-08d8c0832efa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jan 2021 16:14:52.8508
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xztFFZkAgufhIpsxNn9jfAwjKZDnihx8Hd1SovgteFrbj6RTL0YsgqffhEus7e7DkQPdHpJmj/Is8hNS/YABtAQMvY5JCgJVygxYlz+2mIs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0766
+From:   Jon Stanley <jonstanley@gmail.com>
+Date:   Mon, 25 Jan 2021 15:19:32 -0500
+Message-ID: <CALY6xngo6fU7NoEgrmP_qtdz4OMQgKo9CiJno2uhtWie0ze3Rw@mail.gmail.com>
+Subject: hv_balloon issues??
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com> Sent: Wednesday, January 20, 2021 5:5=
-6 AM
->=20
-> The time pvops functions are the only ones left which might be
-> used in 32-bit mode and which return a 64-bit value.
->=20
-> Switch them to use the static_call() mechanism instead of pvops, as
-> this allows quite some simplification of the pvops implementation.
->=20
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> ---
-> V4:
-> - drop paravirt_time.h again
-> - don't move Hyper-V code (Michael Kelley)
-> ---
->  arch/x86/Kconfig                      |  1 +
->  arch/x86/include/asm/mshyperv.h       |  2 +-
->  arch/x86/include/asm/paravirt.h       | 17 ++++++++++++++---
->  arch/x86/include/asm/paravirt_types.h |  6 ------
->  arch/x86/kernel/cpu/vmware.c          |  5 +++--
->  arch/x86/kernel/kvm.c                 |  2 +-
->  arch/x86/kernel/kvmclock.c            |  2 +-
->  arch/x86/kernel/paravirt.c            | 16 ++++++++++++----
->  arch/x86/kernel/tsc.c                 |  2 +-
->  arch/x86/xen/time.c                   | 11 ++++-------
->  drivers/clocksource/hyperv_timer.c    |  5 +++--
->  drivers/xen/time.c                    |  2 +-
->  12 files changed, 42 insertions(+), 29 deletions(-)
->=20
+I'm working to make a method to install bare-metal machines with
+Packer images, and in testing (this isn't going to wind up in
+production on Hyper-V) I think I've found an issue in hv_balloon, but
+I'm not sure.
 
-[snip]
+Starting from a RHEL 8 live CD, I make a tmpfs filesystem and download
+a disk image to it. Despite having plenty of memory to do this (I was
+downloading a 5GB image onto a VM with 16GB of RAM), I got paid a
+visit by the OOM killer.
 
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyp=
-erv.h
-> index 30f76b966857..b4ee331d29a7 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -63,7 +63,7 @@ typedef int (*hyperv_fill_flush_list_func)(
->  static __always_inline void hv_setup_sched_clock(void *sched_clock)
->  {
->  #ifdef CONFIG_PARAVIRT
-> -	pv_ops.time.sched_clock =3D sched_clock;
-> +	paravirt_set_sched_clock(sched_clock);
->  #endif
->  }
->=20
+If I turn off dynamic memory, then things work as expected. This isn't
+100% reproducible, I tried immediately after boot and it worked,
+unmounted the tmpfs filesystem and waited for a kernel message that
+said the balloon floor was reached and tried again, and BOOM!
 
-This looks fine.
+The actual process that is filling the filesystem (curl) doesn't get
+killed (which makes sense I guess since *it* isn't taking a ton of
+memory), and also never completes presumably due to it's I/O becoming
+blocked. Does this have to do with a sudden, enormous demand for
+memory perhaps that the hypervisor is having difficulty fulfilling?
+The host has plenty of memory available (63GB right now)
 
-[snip]
+On another note, is there a way that I'm not seeing to tell the
+current status of the balloon driver - i.e. current/max allocations? A
+quick look through /proc and /sys wasn't revealing.
 
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyp=
-erv_timer.c
-> index ba04cb381cd3..bf3bf20bc6bd 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -18,6 +18,7 @@
->  #include <linux/sched_clock.h>
->  #include <linux/mm.h>
->  #include <linux/cpuhotplug.h>
-> +#include <linux/static_call.h>
->  #include <clocksource/hyperv_timer.h>
->  #include <asm/hyperv-tlfs.h>
->  #include <asm/mshyperv.h>
-> @@ -445,7 +446,7 @@ static bool __init hv_init_tsc_clocksource(void)
->  	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
->=20
->  	hv_sched_clock_offset =3D hv_read_reference_counter();
-> -	hv_setup_sched_clock(read_hv_sched_clock_tsc);
-> +	paravirt_set_sched_clock(read_hv_sched_clock_tsc);
->=20
->  	return true;
->  }
-> @@ -470,6 +471,6 @@ void __init hv_init_clocksource(void)
->  	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
->=20
->  	hv_sched_clock_offset =3D hv_read_reference_counter();
-> -	hv_setup_sched_clock(read_hv_sched_clock_msr);
-> +	static_call_update(pv_sched_clock, read_hv_sched_clock_msr);
->  }
->  EXPORT_SYMBOL_GPL(hv_init_clocksource);
+Also, sorry to be using a distro kernel instead of upstream.
 
-The changes to hyperv_timer.c aren't needed and shouldn't be
-there, so as to preserve hyperv_timer.c as architecture neutral.  With
-your update to hv_setup_sched_clock() in mshyperv.h, the original
-code works correctly.  While there are two call sites for
-hv_setup_sched_clock(), only one is called.  And once the sched clock
-function is set, it is never changed or overridden.
+-Jon
 
-Michael
+Jan 25 14:58:43 dhcp-132.rmrf.net kernel: hv_balloon: Balloon request
+will be partially fulfilled. Balloon floor reached.
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: tuned invoked oom-killer:
+gfp_mask=0x6200ca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: CPU: 0 PID: 1165 Comm: tuned
+Not tainted 4.18.0-240.10.1.el8_3.x86_64 #1
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Hardware name: Microsoft
+Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release
+v4.0 11/01/2019
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Call Trace:
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  dump_stack+0x5c/0x80
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  dump_header+0x51/0x308
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  oom_kill_process.cold.28+0xb/0x10
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  out_of_memory+0x1c1/0x4b0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  __alloc_pages_slowpath+0xc24/0xd40
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  __alloc_pages_nodemask+0x245/0x280
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  filemap_fault+0x3b8/0x840
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  ? hrtimer_cancel+0x11/0x20
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  ? futex_wait+0x19a/0x210
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  ? xas_load+0x8/0x80
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  ? xas_find+0x173/0x1b0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  ? filemap_map_pages+0x1a3/0x380
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  ext4_filemap_fault+0x2c/0x40 [ext4]
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  __do_fault+0x38/0xc0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  do_fault+0x191/0x3c0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  __handle_mm_fault+0x3e6/0x7c0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  handle_mm_fault+0xc2/0x1d0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  __do_page_fault+0x21b/0x4d0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  do_page_fault+0x32/0x110
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  ? page_fault+0x8/0x30
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:  page_fault+0x1e/0x30
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: RIP: 0033:0x7faf2f8c5df2
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Code: Bad RIP value.
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: RSP: 002b:00007faf242629a0
+EFLAGS: 00010246
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: RAX: ffffffffffffff92 RBX:
+00007faf24262a40 RCX: 00007faf2f8c5df2
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: RDX: 0000000000000000 RSI:
+0000000000000189 RDI: 00007faf1c002490
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: RBP: 00007faf1c002490 R08:
+0000000000000000 R09: 00000000ffffffff
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: R10: 00007faf24262a40 R11:
+0000000000000246 R12: 0000000000000000
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: R13: 0000000000000000 R14:
+00007faf24262a40 R15: 000000003b9aca00
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Mem-Info:
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: active_anon:18180
+inactive_anon:738744 isolated_anon:0
+                                           active_file:18
+inactive_file:337 isolated_file:32
+                                           unevictable:132114 dirty:0
+writeback:0 unstable:0
+                                           slab_reclaimable:6250
+slab_unreclaimable:5966
+                                           mapped:1626 shmem:738916
+pagetables:1396 bounce:0
+                                           free:31759 free_pcp:30 free_cma:0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 active_anon:72720kB
+inactive_anon:2954976kB active_file:72kB inactive_file:1348kB
+unevictable:528456kB isolated(anon):0kB i>
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 DMA free:15908kB
+min:64kB low:80kB high:96kB active_anon:0kB inactive_anon:0kB
+active_file:0kB inactive_file:0kB unevictabl>
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: lowmem_reserve[]: 0 3845
+15960 15960 15960
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 DMA32 free:64676kB
+min:16264kB low:20328kB high:24392kB active_anon:1424kB
+inactive_anon:2489752kB active_file:28kB inactiv>
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: lowmem_reserve[]: 0 0 12114
+12114 12114
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 Normal free:46452kB
+min:51248kB low:64060kB high:76872kB active_anon:71296kB
+inactive_anon:465224kB active_file:4kB inactiv>
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: lowmem_reserve[]: 0 0 0 0 0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 DMA: 1*4kB (U) 0*8kB
+0*16kB 1*32kB (U) 2*64kB (U) 1*128kB (U) 1*256kB (U) 0*512kB 1*1024kB
+(U) 1*2048kB (M) 3*4096kB (M) = >
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 DMA32: 29*4kB (UE)
+36*8kB (UE) 33*16kB (UME) 6*32kB (UE) 3*64kB (UME) 1*128kB (U) 3*256kB
+(UME) 2*512kB (UM) 2*1024kB (U) 3>
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 Normal: 833*4kB (UME)
+712*8kB (UME) 305*16kB (UME) 152*32kB (UME) 52*64kB (E) 28*128kB (UME)
+15*256kB (UME) 11*512kB (UME) >
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 hugepages_total=0
+hugepages_free=0 hugepages_surp=0 hugepages_size=1048576kB
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Node 0 hugepages_total=0
+hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: 871413 total pagecache pages
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: 0 pages in swap cache
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Swap cache stats: add 0,
+delete 0, find 0/0
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Free swap  = 0kB
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Total swap = 0kB
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: 4194027 pages RAM
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: 0 pages HighMem/MovableOnly
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: 91830 pages reserved
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: 0 pages hwpoisoned
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [ pid ]   uid  tgid total_vm
+     rss pgtables_bytes swapents oom_score_adj name
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  762]     0   762    27626
+    1788   290816        0             0 systemd-journal
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  816]     0   816    25338
+     353   212992        0         -1000 systemd-udevd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  819]     0   819    15287
+     152   135168        0         -1000 auditd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  860]    81   860    14087
+     213   155648        0          -900 dbus-daemon
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  875]   995   875    29968
+     111   147456        0             0 chronyd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  907]     0   907    48443
+     510   405504        0             0 sssd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  908]   997   908   404961
+    1915   331776        0             0 polkitd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  913]     0   913     1085
+      16    53248        0             0 hypervvssd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  914]   994   914    40028
+     204   208896        0             0 rngd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  921]     0   921    50484
+     659   421888        0             0 sssd_be
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  922]     0   922    53956
+     395   462848        0             0 sssd_nss
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  925]     0   925    74573
+    5478   466944        0             0 firewalld
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  926]     0   926    24290
+     252   204800        0             0 systemd-logind
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  940]     0   940   116867
+     614   389120        0             0 NetworkManager
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  958]     0   958    23072
+     224   212992        0         -1000 sshd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  968]     0   968     1778
+      30    61440        0             0 hypervkvpd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  969]     0   969   106589
+    3721   450560        0             0 tuned
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  972]     0   972     9232
+     221   106496        0             0 crond
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [  973]     0   973    10449
+     135   114688        0             0 rhsmcertd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [ 1189]     0  1189    56455
+     509   192512        0             0 rsyslogd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [ 1201]     0  1201    30749
+     215   266240        0             0 login
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [ 1206]     0  1206    23443
+     331   225280        0             0 systemd
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [ 1210]     0  1210    37531
+     648   299008        0             0 (sd-pam)
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [ 1216]     0  1216     6554
+     154    86016        0             0 bash
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: [ 1285]     0  1285    20229
+     245   196608        0             0 curl
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel:
+oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/system.slice/firewalld.service,>
+Jan 25 14:59:30 dhcp-132.rmrf.net kernel: Out of memory: Killed
+process 925 (firewalld) total-vm:298292kB, anon-rss:21912kB,
+file-rss:0kB, shmem-rss:0kB, UID:0
+Jan 25 14:59:34 dhcp-132.rmrf.net systemd[1]: firewalld.service: Main
+process exited, code=killed, status=9/KILL
+Jan 25 14:59:47 dhcp-132.rmrf.net systemd[1]: firewalld.service:
+Failed with result 'signal'.
