@@ -2,166 +2,166 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C74B3303C41
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jan 2021 12:58:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29FAE303C59
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jan 2021 13:01:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405084AbhAZL6J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 26 Jan 2021 06:58:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405106AbhAZL6G (ORCPT
+        id S2405215AbhAZMAW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 26 Jan 2021 07:00:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32151 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405216AbhAZMAO (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 26 Jan 2021 06:58:06 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB13BC061786;
-        Tue, 26 Jan 2021 03:57:24 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id a9so16152046wrt.5;
-        Tue, 26 Jan 2021 03:57:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JNyhayEQUd/VOdsUxEkVRqD5at4MpPP2YgdbCdDLx9U=;
-        b=Kb5fR7v/Y+AH1NNFt2aoAEOLTcYZHOaun+NwA7MK1HhEtOvG/JprTa+uWtFuKAaoZq
-         Y/Syws8KtWKcUa5okNXDSuug0ypcPUSS8A7YaloxHFg3lMgDfkcUXjfmDn20/U5S3xHf
-         +sBSrcuySB5UG6/rAuH/7l2sX/Qr0QMfC58vnLVIKDKt2GvjV81x/rjM+p55pOe8CslA
-         Zo3WUs/Sa3JsT829YIwiHUPeTN47NP8xJjp6KiRrCrW9eu+bhp4h+tfyO1TB61wvcCRl
-         uvE9s+Kwna649KKznGNAV1PawEBybItUK81XZUzFUuVw2SAbT8LxwcGiL3f44G61OvnP
-         UCmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JNyhayEQUd/VOdsUxEkVRqD5at4MpPP2YgdbCdDLx9U=;
-        b=Ad0/Ki4SjvXKXBpIznktGH7VZxoe3myH4JwUlcVENssSSFIEvrI1lm04xAmD9pUthk
-         MSZOZJ/e+gU+RhkG+eoS+81dCDtTL3RMI9882I2YcV9Bn70psZ/XOYnOenXwAt3wnqPl
-         KF1VZzjKd404vlIeqQnUkPES4eJjUBkzAlQIG/eS3hwdEDs2r/tmzOutJdgbZAPFttGG
-         wnuVvy1yHNq7u9/1S1dAaI2Qrn8pX6Wcqm+Uzd1AjBhkBoiv7ZiqFRvmKuPjNdPYjvMs
-         GElQCh9rZvYz22N1+y5nrpjihOyIwEX0l0q5Mt6Qq9751FstuNqyDSMWh/+vcLtF75hB
-         hCuA==
-X-Gm-Message-State: AOAM533VICw2DGffdqMRfmu5CszddvbMNBIs/HOzvo8e5C2157+p2aNp
-        haUr6W8qmUirlB1JWyTFcWc2b6mfGhARTUvJ
-X-Google-Smtp-Source: ABdhPJzvgXH5eGhJTdqrSu3O9E52aIb/HLxAUfwt4p2B0BRoQZl7tVgE+TuBfuHG+n3sBolUzc54nQ==
-X-Received: by 2002:a5d:60d0:: with SMTP id x16mr5711371wrt.269.1611662243171;
-        Tue, 26 Jan 2021 03:57:23 -0800 (PST)
-Received: from anparri.mshome.net (host-95-238-70-33.retail.telecomitalia.it. [95.238.70.33])
-        by smtp.gmail.com with ESMTPSA id z185sm3330283wmb.0.2021.01.26.03.57.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jan 2021 03:57:22 -0800 (PST)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+        Tue, 26 Jan 2021 07:00:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611662327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CXtH9iqe5CxsuS1iT0M6Cxkc2fG+D5KUD5SMADHTIIk=;
+        b=QK4is44ZFLje5JkiscK8OlL9VGr3IIAMWEE1XUMbBdv5SpfXugc6cRb2KBced9AwMNbDHX
+        qk9raT/MZp1Y557ejm1givgMUYhqWehi/IssbzEuIhshBgJHOvSRme15kcafFYqOrhSEbQ
+        f/M3xXz9GI7HbBW1yUCe6RdyB/oIexk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-446-BVQC5xv5MCqMrpZFuyFWbQ-1; Tue, 26 Jan 2021 06:58:43 -0500
+X-MC-Unique: BVQC5xv5MCqMrpZFuyFWbQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFB8E15725;
+        Tue, 26 Jan 2021 11:58:40 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-192.ams2.redhat.com [10.36.114.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C093B5D9C2;
+        Tue, 26 Jan 2021 11:58:30 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
         linux-hyperv@vger.kernel.org,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH v2 4/4] hv_netvsc: Restrict configurations on isolated guests
-Date:   Tue, 26 Jan 2021 12:56:41 +0100
-Message-Id: <20210126115641.2527-5-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210126115641.2527-1-parri.andrea@gmail.com>
-References: <20210126115641.2527-1-parri.andrea@gmail.com>
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v1] mm/memory_hotplug: MEMHP_MERGE_RESOURCE -> MHP_MERGE_RESOURCE
+Date:   Tue, 26 Jan 2021 12:58:29 +0100
+Message-Id: <20210126115829.10909-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Restrict the NVSP protocol version(s) that will be negotiated with the
-host to be NVSP_PROTOCOL_VERSION_61 or greater if the guest is running
-isolated.  Moreover, do not advertise the SR-IOV capability and ignore
-NVSP_MSG_4_TYPE_SEND_VF_ASSOCIATION messages in isolated guests, which
-are not supposed to support SR-IOV.  This reduces the footprint of the
-code that will be exercised by Confidential VMs and hence the exposure
-to bugs and vulnerabilities.
+Let's make "MEMHP_MERGE_RESOURCE" consistent with "MHP_NONE", "mhp_t" and
+"mhp_flags". As discussed recently [1], "mhp" is our internal
+acronym for memory hotplug now.
 
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Acked-by: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org
+[1] https://lore.kernel.org/linux-mm/c37de2d0-28a1-4f7d-f944-cfd7d81c334d@redhat.com/
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: xen-devel@lists.xenproject.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/net/hyperv/netvsc.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+ drivers/hv/hv_balloon.c        | 2 +-
+ drivers/virtio/virtio_mem.c    | 2 +-
+ drivers/xen/balloon.c          | 2 +-
+ include/linux/memory_hotplug.h | 2 +-
+ mm/memory_hotplug.c            | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 1510a236aa341..afd92b4aa21fe 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -22,6 +22,7 @@
- #include <linux/prefetch.h>
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 8c471823a5af..2f776d78e3c1 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -726,7 +726,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
  
- #include <asm/sync_bitops.h>
-+#include <asm/mshyperv.h>
+ 		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
+ 		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+-				(HA_CHUNK << PAGE_SHIFT), MEMHP_MERGE_RESOURCE);
++				(HA_CHUNK << PAGE_SHIFT), MHP_MERGE_RESOURCE);
  
- #include "hyperv_net.h"
- #include "netvsc_trace.h"
-@@ -544,7 +545,10 @@ static int negotiate_nvsp_ver(struct hv_device *device,
- 	init_packet->msg.v2_msg.send_ndis_config.capability.ieee8021q = 1;
+ 		if (ret) {
+ 			pr_err("hot_add memory failed error is %d\n", ret);
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index 85a272c9978e..148bea39b09a 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -623,7 +623,7 @@ static int virtio_mem_add_memory(struct virtio_mem *vm, uint64_t addr,
+ 	/* Memory might get onlined immediately. */
+ 	atomic64_add(size, &vm->offline_size);
+ 	rc = add_memory_driver_managed(vm->nid, addr, size, vm->resource_name,
+-				       MEMHP_MERGE_RESOURCE);
++				       MHP_MERGE_RESOURCE);
+ 	if (rc) {
+ 		atomic64_sub(size, &vm->offline_size);
+ 		dev_warn(&vm->vdev->dev, "adding memory failed: %d\n", rc);
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index b57b2067ecbf..671c71245a7b 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -331,7 +331,7 @@ static enum bp_state reserve_additional_memory(void)
+ 	mutex_unlock(&balloon_mutex);
+ 	/* add_memory_resource() requires the device_hotplug lock */
+ 	lock_device_hotplug();
+-	rc = add_memory_resource(nid, resource, MEMHP_MERGE_RESOURCE);
++	rc = add_memory_resource(nid, resource, MHP_MERGE_RESOURCE);
+ 	unlock_device_hotplug();
+ 	mutex_lock(&balloon_mutex);
  
- 	if (nvsp_ver >= NVSP_PROTOCOL_VERSION_5) {
--		init_packet->msg.v2_msg.send_ndis_config.capability.sriov = 1;
-+		if (!hv_is_isolation_supported())
-+			init_packet->msg.v2_msg.send_ndis_config.capability.sriov = 1;
-+		else
-+			netdev_info(ndev, "SR-IOV not advertised by guests on the host supporting isolation\n");
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 3d99de0db2dd..4b834f5d032e 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -53,7 +53,7 @@ typedef int __bitwise mhp_t;
+  * with this flag set, the resource pointer must no longer be used as it
+  * might be stale, or the resource might have changed.
+  */
+-#define MEMHP_MERGE_RESOURCE	((__force mhp_t)BIT(0))
++#define MHP_MERGE_RESOURCE	((__force mhp_t)BIT(0))
  
- 		/* Teaming bit is needed to receive link speed updates */
- 		init_packet->msg.v2_msg.send_ndis_config.capability.teaming = 1;
-@@ -563,6 +567,13 @@ static int negotiate_nvsp_ver(struct hv_device *device,
- 	return ret;
- }
+ /*
+  * Extended parameters for memory hotplug:
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 710e469fb3a1..ae497e3ff77c 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1153,7 +1153,7 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ 	 * In case we're allowed to merge the resource, flag it and trigger
+ 	 * merging now that adding succeeded.
+ 	 */
+-	if (mhp_flags & MEMHP_MERGE_RESOURCE)
++	if (mhp_flags & MHP_MERGE_RESOURCE)
+ 		merge_system_ram_resource(res);
  
-+static bool nvsp_is_valid_version(u32 version)
-+{
-+       if (hv_is_isolation_supported())
-+               return version >= NVSP_PROTOCOL_VERSION_61;
-+       return true;
-+}
-+
- static int netvsc_connect_vsp(struct hv_device *device,
- 			      struct netvsc_device *net_device,
- 			      const struct netvsc_device_info *device_info)
-@@ -579,12 +590,19 @@ static int netvsc_connect_vsp(struct hv_device *device,
- 	init_packet = &net_device->channel_init_pkt;
- 
- 	/* Negotiate the latest NVSP protocol supported */
--	for (i = ARRAY_SIZE(ver_list) - 1; i >= 0; i--)
-+	for (i = ARRAY_SIZE(ver_list) - 1; i >= 0; i--) {
- 		if (negotiate_nvsp_ver(device, net_device, init_packet,
- 				       ver_list[i])  == 0) {
-+			if (!nvsp_is_valid_version(ver_list[i])) {
-+				netdev_err(ndev, "Invalid NVSP version 0x%x (expected >= 0x%x) from the host with isolation supported\n",
-+					   ver_list[i], NVSP_PROTOCOL_VERSION_61);
-+				ret = -EPROTO;
-+				goto cleanup;
-+			}
- 			net_device->nvsp_version = ver_list[i];
- 			break;
- 		}
-+	}
- 
- 	if (i < 0) {
- 		ret = -EPROTO;
-@@ -1357,7 +1375,10 @@ static void netvsc_receive_inband(struct net_device *ndev,
- 		break;
- 
- 	case NVSP_MSG4_TYPE_SEND_VF_ASSOCIATION:
--		netvsc_send_vf(ndev, nvmsg, msglen);
-+		if (!hv_is_isolation_supported())
-+			netvsc_send_vf(ndev, nvmsg, msglen);
-+		else
-+			netdev_err(ndev, "Ignore VF_ASSOCIATION msg from the host supporting isolation\n");
- 		break;
- 	}
- }
+ 	/* online pages if requested */
 -- 
-2.25.1
+2.29.2
 
