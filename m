@@ -2,636 +2,167 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 404793046FB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jan 2021 19:48:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 228B5304A53
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jan 2021 21:42:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731299AbhAZRRc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 26 Jan 2021 12:17:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43710 "EHLO
+        id S1726249AbhAZFIZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 26 Jan 2021 00:08:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392963AbhAZQaJ (ORCPT
+        with ESMTP id S1732047AbhAZBl4 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 26 Jan 2021 11:30:09 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A12C0613D6;
-        Tue, 26 Jan 2021 08:29:28 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id l12so17123402wry.2;
-        Tue, 26 Jan 2021 08:29:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cQ4vOXxLpTQK92arq1ONu+URMeGzTUT6a0+rlDTLAfY=;
-        b=Ej6CVU29ppSukq32k/Fu9SbvSgd1ypiLhXPJgvIF4TT2S0ktG0ELc1I5uch4LgVhYb
-         PUecHrz/b7tmNzfr1o83lFL7hIfIQrvVVo0zVgvbrTJvw9x4f4HmuRpiEHmb4T997d59
-         yef3I8rzj37b8bcNYBUS5mj2ry0K/pKOYyGJr5OqzIbgIhBvqDirswLhDSQNR3juH9QH
-         4yZyqNY8/c0plOV+YerYs/YkrQ5fc3bf/sFUdBPkhP5ZDvcYo+q9ybaUSssvSznX/2mw
-         cuAbKuQ9sxht0TYdUDPPtzKTJ8hslUqAkyGPj3RE+jHrNvexwAGqTXKlviw//ZXQeDw2
-         1B6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cQ4vOXxLpTQK92arq1ONu+URMeGzTUT6a0+rlDTLAfY=;
-        b=qbLiZ6ku97x2vxHFMG4Vgxzpx/iABnSZp21sYb4fBAyG5+dUY8mmZogpKABiNyMPbp
-         t0wuy0ejzY+iccIDhaHflasr+i7FF6BqpRB9Kn707qNxkRgMiFLxqs8Vq3oazA9sGmLu
-         qd11GwveagHQyutGja56oWmyig5dMyM21Kf+dxWkhJ6ZDRb9xLt6cJBm4PcCCgWT5ijq
-         X5W9J51QDB76xJIfZGLHN01bZnMZrqDFI8axf4ctUZyJDRT4+QpZdvYP7PDe0OiUzvcP
-         opsUEuvm7aJnz329YzHGEVq9kgNWu1U2bbboT+ZY9SaMNfFRbmQtuHn7eI/0awll9d2/
-         IIGg==
-X-Gm-Message-State: AOAM533tsuzwSMJ36lwFJEGg/N3lMj1GWtUq/tqeoz3+BcEVFfSMwotd
-        4bZCZ/2y3UJiwnmiXPiB//1mCBRh6T9LSBI9
-X-Google-Smtp-Source: ABdhPJx5KAYjMcGhI/gbhHD3YWG1sbNc+g6QcPOrLSXP/OT93wRmNkaXAKT1tk6mFgnzpVCimHSkSw==
-X-Received: by 2002:a05:6000:1362:: with SMTP id q2mr6875849wrz.341.1611678567134;
-        Tue, 26 Jan 2021 08:29:27 -0800 (PST)
-Received: from anparri.mshome.net (host-95-238-70-33.retail.telecomitalia.it. [95.238.70.33])
-        by smtp.gmail.com with ESMTPSA id v6sm26622097wrx.32.2021.01.26.08.29.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jan 2021 08:29:26 -0800 (PST)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Mon, 25 Jan 2021 20:41:56 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on20716.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e88::716])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C4F3C061355;
+        Mon, 25 Jan 2021 16:39:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BF4C3UHuqFah7A199dzc8+dLfd9agxiohlPp8FANJrymcsk+3dN1ci79vr6TbQ3Y9W0HsSqgLIRkd3kP4CuLpLbW/XvhQWvaC6EVHEeipIRa8JTXdgpHAQjNuSlbi8zAd+HBDgeohQLkiBUt2bw/I5fIjm4JwuEL2krOUCIeHhETzxA9vXdL8AryiRZrR1dgk9CtIh18vXkXaLet9PYI3LQ0r+ZwOnpUdqPiCthe3TX6H/mzDRXjRmRC9EYZQscVV+GyzmCFS2xPcZgO3Q4Gwfr1JxEIdFCA3WcDhGbCTVWzQAxGCyOXvA/9Kw7ZMuYhaV+A2ZtjWssBEKM59Sg8yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VHLLC0zOIxrSO97vcNgIlkW8rZQd4dKZiAeYubKHHSw=;
+ b=kbKLqQzsNNAE/EAipx1irezzYv1X4WnaVEX0S+lOb1n7+ye65Bxr66+dCJaV1LBuvD/3LS/NMQSM+Uol2fvv3xkzBeSNk4OvVP4OTOB6icz9HXBPfDdtLBGWExPVqCSz6zMFBGhxdsCEQ+rJU1w34BlP4vybi+bQFLnPpQC/Zx9vxJLJNE0Pdpf1z9JwEdm/p7dXp0X79fM517tD3fhF4y2NPNJwWRTBKXfH97t2QtMloQcICwTidNbtaS+PWVgHhHp+Up3QHVLOoUgpgw1/thaZVt58LDi2qzufJ5nfjaTOmEUFkFDAEdPALK7FeWznasuoKda47JMtT3fK6qg6rQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VHLLC0zOIxrSO97vcNgIlkW8rZQd4dKZiAeYubKHHSw=;
+ b=NpIGoWQyrIHHhfYAZHLvLnBlqCjTTLDms/hDGRBwklnaXveqq0jCs7At80hEw1KbyDoXwenTRh/diCg/+7Q8ktFG/c1D3q0+ekbY+6ErW+P1O20ZInbDcFY4Ax4V+rQQCAf1OaqBJIL8V8ApYgfvmmXdW9ou1nCbhuHWbm5wTFE=
+Received: from (2603:10b6:301:7c::11) by
+ MWHPR21MB0862.namprd21.prod.outlook.com (2603:10b6:300:77::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3825.1; Tue, 26 Jan 2021 00:33:28 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3825.003; Tue, 26 Jan 2021
+ 00:33:28 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+CC:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
+        Joerg Roedel <jroedel@suse.de>, vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH v2 net-next] hv_netvsc: Copy packets sent by Hyper-V out of the receive buffer
-Date:   Tue, 26 Jan 2021 17:29:07 +0100
-Message-Id: <20210126162907.21056-1-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>
+Subject: RE: [PATCH v5 04/16] iommu/hyperv: don't setup IRQ remapping when
+ running as root
+Thread-Topic: [PATCH v5 04/16] iommu/hyperv: don't setup IRQ remapping when
+ running as root
+Thread-Index: AQHW7yPxJdqCn1uKJkS6fh32VfxBCao5Fz3Q
+Date:   Tue, 26 Jan 2021 00:33:28 +0000
+Message-ID: <MWHPR21MB159335A01C1DD12F021C7F21D7BC9@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <20210120120058.29138-1-wei.liu@kernel.org>
+ <20210120120058.29138-5-wei.liu@kernel.org>
+In-Reply-To: <20210120120058.29138-5-wei.liu@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-01-26T00:33:26Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=23d4087c-2144-4232-9179-dcacad4f6c3a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [66.75.126.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f2fe146a-f44a-4be9-bead-08d8c192004a
+x-ms-traffictypediagnostic: MWHPR21MB0862:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MWHPR21MB0862F5EF894F6D8C70A9FCAFD7BC9@MWHPR21MB0862.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2089;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ys3xti8yxs0Yz9VGPLLobWT9QwpHXYx/Zm4COPbEGQ7gsJKofclCP1EsA16mAouaVURMm7SGCQpxIQawOgCxR93sOj+hdiZhIMX9pyeYgXsLIWwmZBlLi49YlE296BdU1mjEr6exiLU4JqFF8uZvH6gPz1MSyO+KCefNM5HwHFDrXGBvcQZosRSGbsx0Dy5IYs12K/0IQkNeo2HVKVSxkRvu9QT53uhhIWi7k5bQm4VN/NRuCpGdODfA8uec6nyxg9akfAaPwtr+/zQT328wu9DEx1x+sx4ED7d1WcUYllU/gg31QGx47O3KOuwBUx02SR9YRl39YdPQFdlKO6jtRAjPYwsS2Ejj6y4f7ryVW41tsnbSHylMMYOaOhku/3Otq+RiCGDBuxKJAb6wl6O3XScX/OpU+CXrG8fqH07tBBuRCvS8yxwzCMyUrlzbUwH8S0RQI2reuQCmkRGiuhNJquSdQP7SCPkqZM0qnLQu+Ais8BcX1UUgGiZEmBTF2Fbd/jt7gJKh82FXAXPYCp6t9A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(396003)(346002)(376002)(83380400001)(7696005)(66556008)(76116006)(8936002)(9686003)(8676002)(66946007)(86362001)(66446008)(64756008)(82960400001)(82950400001)(66476007)(55016002)(8990500004)(10290500003)(33656002)(71200400001)(5660300002)(316002)(478600001)(4326008)(7416002)(26005)(6506007)(52536014)(2906002)(186003)(54906003)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?nhz+sShRCX+ZzAFqvcN1x7b2ztg9d9SI+MzN+SOnbbz3/D8wlGTGc42FKqm9?=
+ =?us-ascii?Q?RxzzOtzJxjzDmumW4IpR33fEqwJ4dpBzURjsvi5EkO0SH9rCGPnivXm8RTDL?=
+ =?us-ascii?Q?igPmjstVGfwa2TRVplhr3uvqhgfUyubfjnmMDgvMQs73MqoGB9lVEnk9u3z0?=
+ =?us-ascii?Q?sNtiuRPe5Lkxk7DTimEPmwzyrSdEsOhEwbTDuMHEJ6vckqA1eflacGb8hcO2?=
+ =?us-ascii?Q?BQ80CpFRjXb7Fx57Z7Z6EI7l1qmS7rdynyGsPImK8rbUaD8dmX2xWt2pPMUk?=
+ =?us-ascii?Q?o4k6YjAbBCDw57Q9NUDoZoLAz71r6KpW2sk78szuezFR0bg4GLvoOeJT7bNT?=
+ =?us-ascii?Q?Kk3xItPT8mN+DgWoIoITiPILV/nGSKMDxOfXUnliphfCNu7yQ1tThBUU1nh1?=
+ =?us-ascii?Q?Qj5rDThPh0RDrZV4vGIEZtX5FO6c8lcgxod7Ik/0QXrz/nNqFaHcyl9MyHnz?=
+ =?us-ascii?Q?H+qxpaU9aejw0Jgcw4ByBQxQqHa2iSdS6wFsSVyb7wvU2kNd4rvLJk5zr0Qk?=
+ =?us-ascii?Q?L+i355rqwS7jhzN6qhTrxzVm6jmiEqkB1ldHuyeYhZBzy4DuHFoop9Jk7Y58?=
+ =?us-ascii?Q?uFuGjaHwa/h5ofGfGy+X/KDGr+4j0W30kV+xoFKtbKzaeNW/0iUYEe61KVDW?=
+ =?us-ascii?Q?+4Czkj+0SfPojIoKfktSAFX0c0zXd0COCsVa760EYBgcuiAhWG4zt30c662P?=
+ =?us-ascii?Q?EoC9O/VEX4AsbL0Z4fGaWDN6UL6CtAxy8LaIo65Q8oHM6S7y4/v5AZmdL+zj?=
+ =?us-ascii?Q?CXUkYRm3JCD5KFN8kHRPIxWKa5DecR5Ls/Fbb/aluhBVM4WZ/GFFsVIxGg5y?=
+ =?us-ascii?Q?/wuvFncRvE0UDzS20GR1kZubS5omzp/PRhbsyO1XmREZxpo54fubBI9vj1sJ?=
+ =?us-ascii?Q?vhFvVbWrDoeAxk+95OnEe3PK9ebVwZJir4EsmRQcEsejp5FY4xgJ/YBibewz?=
+ =?us-ascii?Q?AVntwlQYUR1BWRi0jW2cAaWB6sJPcjqdG9wRtCB/MGVBDlE81PEIWzzFtipj?=
+ =?us-ascii?Q?aXaml3+R5QMz2aRMXRnnQI7T+HqDJkf5d6ocp1/9PmA6usgqfDPsvXThSTAu?=
+ =?us-ascii?Q?/+W+Tf7e?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2fe146a-f44a-4be9-bead-08d8c192004a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2021 00:33:28.5650
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MDffzNGyAFmqAsUxSxf6SL5hdp3xUJKju9NtNcGGDXmUCnxhyLWciUW6Bc1AhCl2V+NFa5slL0KLOM5vRhSsHWhztxEahQ+SkWyDPCByHSk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0862
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Pointers to receive-buffer packets sent by Hyper-V are used within the
-guest VM.  Hyper-V can send packets with erroneous values or modify
-packet fields after they are processed by the guest.  To defend against
-these scenarios, copy (sections of) the incoming packet after validating
-their length and offset fields in netvsc_filter_receive().  In this way,
-the packet can no longer be modified by the host.
+From: Wei Liu <wei.liu@kernel.org> Sent: Wednesday, January 20, 2021 4:01 A=
+M
+>=20
+> The IOMMU code needs more work. We're sure for now the IRQ remapping
+> hooks are not applicable when Linux is the root partition.
+>=20
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> Acked-by: Joerg Roedel <jroedel@suse.de>
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  drivers/iommu/hyperv-iommu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+> index 1d21a0b5f724..b7db6024e65c 100644
+> --- a/drivers/iommu/hyperv-iommu.c
+> +++ b/drivers/iommu/hyperv-iommu.c
+> @@ -20,6 +20,7 @@
+>  #include <asm/io_apic.h>
+>  #include <asm/irq_remapping.h>
+>  #include <asm/hypervisor.h>
+> +#include <asm/mshyperv.h>
+>=20
+>  #include "irq_remapping.h"
+>=20
+> @@ -122,7 +123,7 @@ static int __init hyperv_prepare_irq_remapping(void)
+>=20
+>  	if (!hypervisor_is_type(X86_HYPER_MS_HYPERV) ||
+>  	    x86_init.hyper.msi_ext_dest_id() ||
+> -	    !x2apic_supported())
+> +	    !x2apic_supported() || hv_root_partition)
+>  		return -ENODEV;
+>=20
+>  	fn =3D irq_domain_alloc_named_id_fwnode("HYPERV-IR", 0);
+> --
+> 2.20.1
 
-Reported-by: Juan Vazquez <juvazq@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org
----
-Changes since v1 [1]:
-  - copy certain PPIs into the RSC pkt
-
-[1] https://lkml.kernel.org/r/20210126113847.1676-1-parri.andrea@gmail.com
-
- drivers/net/hyperv/hyperv_net.h   | 93 +++++++++++++++--------------
- drivers/net/hyperv/netvsc.c       | 20 +++++++
- drivers/net/hyperv/netvsc_drv.c   | 24 ++++----
- drivers/net/hyperv/rndis_filter.c | 99 +++++++++++++++++++++----------
- 4 files changed, 150 insertions(+), 86 deletions(-)
-
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index 2a87cfa27ac02..e1a497d3c9ba4 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -105,9 +105,43 @@ struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
- 	u32 processor_masks_entry_size;
- };
- 
--/* Fwd declaration */
--struct ndis_tcp_ip_checksum_info;
--struct ndis_pkt_8021q_info;
-+struct ndis_tcp_ip_checksum_info {
-+	union {
-+		struct {
-+			u32 is_ipv4:1;
-+			u32 is_ipv6:1;
-+			u32 tcp_checksum:1;
-+			u32 udp_checksum:1;
-+			u32 ip_header_checksum:1;
-+			u32 reserved:11;
-+			u32 tcp_header_offset:10;
-+		} transmit;
-+		struct {
-+			u32 tcp_checksum_failed:1;
-+			u32 udp_checksum_failed:1;
-+			u32 ip_checksum_failed:1;
-+			u32 tcp_checksum_succeeded:1;
-+			u32 udp_checksum_succeeded:1;
-+			u32 ip_checksum_succeeded:1;
-+			u32 loopback:1;
-+			u32 tcp_checksum_value_invalid:1;
-+			u32 ip_checksum_value_invalid:1;
-+		} receive;
-+		u32  value;
-+	};
-+};
-+
-+struct ndis_pkt_8021q_info {
-+	union {
-+		struct {
-+			u32 pri:3; /* User Priority */
-+			u32 cfi:1; /* Canonical Format ID */
-+			u32 vlanid:12; /* VLAN ID */
-+			u32 reserved:16;
-+		};
-+		u32 value;
-+	};
-+};
- 
- /*
-  * Represent netvsc packet which contains 1 RNDIS and 1 ethernet frame
-@@ -194,7 +228,8 @@ int netvsc_send(struct net_device *net,
- 		struct sk_buff *skb,
- 		bool xdp_tx);
- void netvsc_linkstatus_callback(struct net_device *net,
--				struct rndis_message *resp);
-+				struct rndis_message *resp,
-+				void *data);
- int netvsc_recv_callback(struct net_device *net,
- 			 struct netvsc_device *nvdev,
- 			 struct netvsc_channel *nvchan);
-@@ -884,9 +919,10 @@ struct multi_recv_comp {
- #define NVSP_RSC_MAX 562 /* Max #RSC frags in a vmbus xfer page pkt */
- 
- struct nvsc_rsc {
--	const struct ndis_pkt_8021q_info *vlan;
--	const struct ndis_tcp_ip_checksum_info *csum_info;
--	const u32 *hash_info;
-+	struct ndis_pkt_8021q_info vlan;
-+	struct ndis_tcp_ip_checksum_info csum_info;
-+	u32 hash_info;
-+	u8 ppi_flags; /* valid/present bits for the above PPIs */
- 	u8 is_last; /* last RNDIS msg in a vmtransfer_page */
- 	u32 cnt; /* #fragments in an RSC packet */
- 	u32 pktlen; /* Full packet length */
-@@ -894,6 +930,10 @@ struct nvsc_rsc {
- 	u32 len[NVSP_RSC_MAX];
- };
- 
-+#define NVSC_RSC_VLAN		BIT(0)	/* valid/present bit for 'vlan' */
-+#define NVSC_RSC_CSUM_INFO	BIT(1)	/* valid/present bit for 'csum_info' */
-+#define NVSC_RSC_HASH_INFO	BIT(2)	/* valid/present bit for 'hash_info' */
-+
- struct netvsc_stats {
- 	u64 packets;
- 	u64 bytes;
-@@ -1002,6 +1042,7 @@ struct net_device_context {
- struct netvsc_channel {
- 	struct vmbus_channel *channel;
- 	struct netvsc_device *net_device;
-+	void *recv_buf; /* buffer to copy packets out from the receive buffer */
- 	const struct vmpacket_descriptor *desc;
- 	struct napi_struct napi;
- 	struct multi_send_data msd;
-@@ -1234,18 +1275,6 @@ struct rndis_pktinfo_id {
- 	u16 pkt_id;
- };
- 
--struct ndis_pkt_8021q_info {
--	union {
--		struct {
--			u32 pri:3; /* User Priority */
--			u32 cfi:1; /* Canonical Format ID */
--			u32 vlanid:12; /* VLAN ID */
--			u32 reserved:16;
--		};
--		u32 value;
--	};
--};
--
- struct ndis_object_header {
- 	u8 type;
- 	u8 revision;
-@@ -1436,32 +1465,6 @@ struct ndis_offload_params {
- 	};
- };
- 
--struct ndis_tcp_ip_checksum_info {
--	union {
--		struct {
--			u32 is_ipv4:1;
--			u32 is_ipv6:1;
--			u32 tcp_checksum:1;
--			u32 udp_checksum:1;
--			u32 ip_header_checksum:1;
--			u32 reserved:11;
--			u32 tcp_header_offset:10;
--		} transmit;
--		struct {
--			u32 tcp_checksum_failed:1;
--			u32 udp_checksum_failed:1;
--			u32 ip_checksum_failed:1;
--			u32 tcp_checksum_succeeded:1;
--			u32 udp_checksum_succeeded:1;
--			u32 ip_checksum_succeeded:1;
--			u32 loopback:1;
--			u32 tcp_checksum_value_invalid:1;
--			u32 ip_checksum_value_invalid:1;
--		} receive;
--		u32  value;
--	};
--};
--
- struct ndis_tcp_lso_info {
- 	union {
- 		struct {
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 6184e99c7f31f..0fba8257fc119 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -131,6 +131,7 @@ static void free_netvsc_device(struct rcu_head *head)
- 
- 	for (i = 0; i < VRSS_CHANNEL_MAX; i++) {
- 		xdp_rxq_info_unreg(&nvdev->chan_table[i].xdp_rxq);
-+		kfree(nvdev->chan_table[i].recv_buf);
- 		vfree(nvdev->chan_table[i].mrc.slots);
- 	}
- 
-@@ -1284,6 +1285,19 @@ static int netvsc_receive(struct net_device *ndev,
- 			continue;
- 		}
- 
-+		/* We're going to copy (sections of) the packet into nvchan->recv_buf;
-+		 * make sure that nvchan->recv_buf is large enough to hold the packet.
-+		 */
-+		if (unlikely(buflen > net_device->recv_section_size)) {
-+			nvchan->rsc.cnt = 0;
-+			status = NVSP_STAT_FAIL;
-+			netif_err(net_device_ctx, rx_err, ndev,
-+				  "Packet too big: buflen=%u recv_section_size=%u\n",
-+				  buflen, net_device->recv_section_size);
-+
-+			continue;
-+		}
-+
- 		data = recv_buf + offset;
- 
- 		nvchan->rsc.is_last = (i == count - 1);
-@@ -1535,6 +1549,12 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
- 	for (i = 0; i < VRSS_CHANNEL_MAX; i++) {
- 		struct netvsc_channel *nvchan = &net_device->chan_table[i];
- 
-+		nvchan->recv_buf = kzalloc(device_info->recv_section_size, GFP_KERNEL);
-+		if (nvchan->recv_buf == NULL) {
-+			ret = -ENOMEM;
-+			goto cleanup2;
-+		}
-+
- 		nvchan->channel = device->channel;
- 		nvchan->net_device = net_device;
- 		u64_stats_init(&nvchan->tx_stats.syncp);
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index ac20c432d4d8f..8176fa0c8b168 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -743,7 +743,8 @@ static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-  * netvsc_linkstatus_callback - Link up/down notification
-  */
- void netvsc_linkstatus_callback(struct net_device *net,
--				struct rndis_message *resp)
-+				struct rndis_message *resp,
-+				void *data)
- {
- 	struct rndis_indicate_status *indicate = &resp->msg.indicate_status;
- 	struct net_device_context *ndev_ctx = netdev_priv(net);
-@@ -757,6 +758,9 @@ void netvsc_linkstatus_callback(struct net_device *net,
- 		return;
- 	}
- 
-+	/* Copy the RNDIS indicate status into nvchan->recv_buf */
-+	memcpy(indicate, data + RNDIS_HEADER_SIZE, sizeof(*indicate));
-+
- 	/* Update the physical link speed when changing to another vSwitch */
- 	if (indicate->status == RNDIS_STATUS_LINK_SPEED_CHANGE) {
- 		u32 speed;
-@@ -771,8 +775,7 @@ void netvsc_linkstatus_callback(struct net_device *net,
- 			return;
- 		}
- 
--		speed = *(u32 *)((void *)indicate
--				 + indicate->status_buf_offset) / 10000;
-+		speed = *(u32 *)(data + RNDIS_HEADER_SIZE + indicate->status_buf_offset) / 10000;
- 		ndev_ctx->speed = speed;
- 		return;
- 	}
-@@ -827,10 +830,11 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
- 					     struct xdp_buff *xdp)
- {
- 	struct napi_struct *napi = &nvchan->napi;
--	const struct ndis_pkt_8021q_info *vlan = nvchan->rsc.vlan;
-+	const struct ndis_pkt_8021q_info *vlan = &nvchan->rsc.vlan;
- 	const struct ndis_tcp_ip_checksum_info *csum_info =
--						nvchan->rsc.csum_info;
--	const u32 *hash_info = nvchan->rsc.hash_info;
-+						&nvchan->rsc.csum_info;
-+	const u32 *hash_info = &nvchan->rsc.hash_info;
-+	u8 ppi_flags = nvchan->rsc.ppi_flags;
- 	struct sk_buff *skb;
- 	void *xbuf = xdp->data_hard_start;
- 	int i;
-@@ -874,7 +878,7 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
- 	 * We compute it here if the flags are set, because on Linux, the IP
- 	 * checksum is always checked.
- 	 */
--	if (csum_info && csum_info->receive.ip_checksum_value_invalid &&
-+	if ((ppi_flags & NVSC_RSC_CSUM_INFO) && csum_info->receive.ip_checksum_value_invalid &&
- 	    csum_info->receive.ip_checksum_succeeded &&
- 	    skb->protocol == htons(ETH_P_IP)) {
- 		/* Check that there is enough space to hold the IP header. */
-@@ -886,16 +890,16 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
- 	}
- 
- 	/* Do L4 checksum offload if enabled and present. */
--	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
-+	if ((ppi_flags & NVSC_RSC_CSUM_INFO) && (net->features & NETIF_F_RXCSUM)) {
- 		if (csum_info->receive.tcp_checksum_succeeded ||
- 		    csum_info->receive.udp_checksum_succeeded)
- 			skb->ip_summed = CHECKSUM_UNNECESSARY;
- 	}
- 
--	if (hash_info && (net->features & NETIF_F_RXHASH))
-+	if ((ppi_flags & NVSC_RSC_HASH_INFO) && (net->features & NETIF_F_RXHASH))
- 		skb_set_hash(skb, *hash_info, PKT_HASH_TYPE_L4);
- 
--	if (vlan) {
-+	if (ppi_flags & NVSC_RSC_VLAN) {
- 		u16 vlan_tci = vlan->vlanid | (vlan->pri << VLAN_PRIO_SHIFT) |
- 			(vlan->cfi ? VLAN_CFI_MASK : 0);
- 
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index c8534b6619b8d..6c48a4d627368 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -127,12 +127,13 @@ static void put_rndis_request(struct rndis_device *dev,
- }
- 
- static void dump_rndis_message(struct net_device *netdev,
--			       const struct rndis_message *rndis_msg)
-+			       const struct rndis_message *rndis_msg,
-+			       const void *data)
- {
- 	switch (rndis_msg->ndis_msg_type) {
- 	case RNDIS_MSG_PACKET:
- 		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE >= sizeof(struct rndis_packet)) {
--			const struct rndis_packet *pkt = &rndis_msg->msg.pkt;
-+			const struct rndis_packet *pkt = data + RNDIS_HEADER_SIZE;
- 			netdev_dbg(netdev, "RNDIS_MSG_PACKET (len %u, "
- 				   "data offset %u data len %u, # oob %u, "
- 				   "oob offset %u, oob len %u, pkt offset %u, "
-@@ -152,7 +153,7 @@ static void dump_rndis_message(struct net_device *netdev,
- 		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE >=
- 				sizeof(struct rndis_initialize_complete)) {
- 			const struct rndis_initialize_complete *init_complete =
--				&rndis_msg->msg.init_complete;
-+				data + RNDIS_HEADER_SIZE;
- 			netdev_dbg(netdev, "RNDIS_MSG_INIT_C "
- 				"(len %u, id 0x%x, status 0x%x, major %d, minor %d, "
- 				"device flags %d, max xfer size 0x%x, max pkts %u, "
-@@ -173,7 +174,7 @@ static void dump_rndis_message(struct net_device *netdev,
- 		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE >=
- 				sizeof(struct rndis_query_complete)) {
- 			const struct rndis_query_complete *query_complete =
--				&rndis_msg->msg.query_complete;
-+				data + RNDIS_HEADER_SIZE;
- 			netdev_dbg(netdev, "RNDIS_MSG_QUERY_C "
- 				"(len %u, id 0x%x, status 0x%x, buf len %u, "
- 				"buf offset %u)\n",
-@@ -188,7 +189,7 @@ static void dump_rndis_message(struct net_device *netdev,
- 	case RNDIS_MSG_SET_C:
- 		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE + sizeof(struct rndis_set_complete)) {
- 			const struct rndis_set_complete *set_complete =
--				&rndis_msg->msg.set_complete;
-+				data + RNDIS_HEADER_SIZE;
- 			netdev_dbg(netdev,
- 				"RNDIS_MSG_SET_C (len %u, id 0x%x, status 0x%x)\n",
- 				rndis_msg->msg_len,
-@@ -201,7 +202,7 @@ static void dump_rndis_message(struct net_device *netdev,
- 		if (rndis_msg->msg_len - RNDIS_HEADER_SIZE >=
- 				sizeof(struct rndis_indicate_status)) {
- 			const struct rndis_indicate_status *indicate_status =
--				&rndis_msg->msg.indicate_status;
-+				data + RNDIS_HEADER_SIZE;
- 			netdev_dbg(netdev, "RNDIS_MSG_INDICATE "
- 				"(len %u, status 0x%x, buf len %u, buf offset %u)\n",
- 				rndis_msg->msg_len,
-@@ -286,8 +287,10 @@ static void rndis_set_link_state(struct rndis_device *rdev,
- 
- static void rndis_filter_receive_response(struct net_device *ndev,
- 					  struct netvsc_device *nvdev,
--					  const struct rndis_message *resp)
-+					  struct rndis_message *resp,
-+					  void *data)
- {
-+	u32 *req_id = &resp->msg.init_complete.req_id;
- 	struct rndis_device *dev = nvdev->extension;
- 	struct rndis_request *request = NULL;
- 	bool found = false;
-@@ -312,14 +315,16 @@ static void rndis_filter_receive_response(struct net_device *ndev,
- 		return;
- 	}
- 
-+	/* Copy the request ID into nvchan->recv_buf */
-+	*req_id = *(u32 *)(data + RNDIS_HEADER_SIZE);
-+
- 	spin_lock_irqsave(&dev->request_lock, flags);
- 	list_for_each_entry(request, &dev->req_list, list_ent) {
- 		/*
- 		 * All request/response message contains RequestId as the 1st
- 		 * field
- 		 */
--		if (request->request_msg.msg.init_req.req_id
--		    == resp->msg.init_complete.req_id) {
-+		if (request->request_msg.msg.init_req.req_id == *req_id) {
- 			found = true;
- 			break;
- 		}
-@@ -329,8 +334,10 @@ static void rndis_filter_receive_response(struct net_device *ndev,
- 	if (found) {
- 		if (resp->msg_len <=
- 		    sizeof(struct rndis_message) + RNDIS_EXT_LEN) {
--			memcpy(&request->response_msg, resp,
--			       resp->msg_len);
-+			memcpy(&request->response_msg, resp, RNDIS_HEADER_SIZE + sizeof(*req_id));
-+			memcpy((void *)&request->response_msg + RNDIS_HEADER_SIZE + sizeof(*req_id),
-+			       data + RNDIS_HEADER_SIZE + sizeof(*req_id),
-+			       resp->msg_len - RNDIS_HEADER_SIZE - sizeof(*req_id));
- 			if (request->request_msg.ndis_msg_type ==
- 			    RNDIS_MSG_QUERY && request->request_msg.msg.
- 			    query_req.oid == RNDIS_OID_GEN_MEDIA_CONNECT_STATUS)
-@@ -359,7 +366,7 @@ static void rndis_filter_receive_response(struct net_device *ndev,
- 		netdev_err(ndev,
- 			"no rndis request found for this response "
- 			"(id 0x%x res type 0x%x)\n",
--			resp->msg.init_complete.req_id,
-+			*req_id,
- 			resp->ndis_msg_type);
- 	}
- }
-@@ -371,7 +378,7 @@ static void rndis_filter_receive_response(struct net_device *ndev,
- static inline void *rndis_get_ppi(struct net_device *ndev,
- 				  struct rndis_packet *rpkt,
- 				  u32 rpkt_len, u32 type, u8 internal,
--				  u32 ppi_size)
-+				  u32 ppi_size, void *data)
- {
- 	struct rndis_per_packet_info *ppi;
- 	int len;
-@@ -396,6 +403,8 @@ static inline void *rndis_get_ppi(struct net_device *ndev,
- 
- 	ppi = (struct rndis_per_packet_info *)((ulong)rpkt +
- 		rpkt->per_pkt_info_offset);
-+	/* Copy the PPIs into nvchan->recv_buf */
-+	memcpy(ppi, data + RNDIS_HEADER_SIZE + rpkt->per_pkt_info_offset, rpkt->per_pkt_info_len);
- 	len = rpkt->per_pkt_info_len;
- 
- 	while (len > 0) {
-@@ -438,10 +447,29 @@ void rsc_add_data(struct netvsc_channel *nvchan,
- 	if (cnt) {
- 		nvchan->rsc.pktlen += len;
- 	} else {
--		nvchan->rsc.vlan = vlan;
--		nvchan->rsc.csum_info = csum_info;
-+		/* The data/values pointed by vlan, csum_info and hash_info are shared
-+		 * across the different 'fragments' of the RSC packet; store them into
-+		 * the packet itself.
-+		 */
-+		if (vlan != NULL) {
-+			memcpy(&nvchan->rsc.vlan, vlan, sizeof(*vlan));
-+			nvchan->rsc.ppi_flags |= NVSC_RSC_VLAN;
-+		} else {
-+			nvchan->rsc.ppi_flags &= ~NVSC_RSC_VLAN;
-+		}
-+		if (csum_info != NULL) {
-+			memcpy(&nvchan->rsc.csum_info, csum_info, sizeof(*csum_info));
-+			nvchan->rsc.ppi_flags |= NVSC_RSC_CSUM_INFO;
-+		} else {
-+			nvchan->rsc.ppi_flags &= ~NVSC_RSC_CSUM_INFO;
-+		}
- 		nvchan->rsc.pktlen = len;
--		nvchan->rsc.hash_info = hash_info;
-+		if (hash_info != NULL) {
-+			nvchan->rsc.csum_info = *csum_info;
-+			nvchan->rsc.ppi_flags |= NVSC_RSC_HASH_INFO;
-+		} else {
-+			nvchan->rsc.ppi_flags &= ~NVSC_RSC_HASH_INFO;
-+		}
- 	}
- 
- 	nvchan->rsc.data[cnt] = data;
-@@ -453,7 +481,7 @@ static int rndis_filter_receive_data(struct net_device *ndev,
- 				     struct netvsc_device *nvdev,
- 				     struct netvsc_channel *nvchan,
- 				     struct rndis_message *msg,
--				     u32 data_buflen)
-+				     void *data, u32 data_buflen)
- {
- 	struct rndis_packet *rndis_pkt = &msg->msg.pkt;
- 	const struct ndis_tcp_ip_checksum_info *csum_info;
-@@ -461,7 +489,6 @@ static int rndis_filter_receive_data(struct net_device *ndev,
- 	const struct rndis_pktinfo_id *pktinfo_id;
- 	const u32 *hash_info;
- 	u32 data_offset, rpkt_len;
--	void *data;
- 	bool rsc_more = false;
- 	int ret;
- 
-@@ -472,6 +499,9 @@ static int rndis_filter_receive_data(struct net_device *ndev,
- 		return NVSP_STAT_FAIL;
- 	}
- 
-+	/* Copy the RNDIS packet into nvchan->recv_buf */
-+	memcpy(rndis_pkt, data + RNDIS_HEADER_SIZE, sizeof(*rndis_pkt));
-+
- 	/* Validate rndis_pkt offset */
- 	if (rndis_pkt->data_offset >= data_buflen - RNDIS_HEADER_SIZE) {
- 		netdev_err(ndev, "invalid rndis packet offset: %u\n",
-@@ -497,18 +527,17 @@ static int rndis_filter_receive_data(struct net_device *ndev,
- 		return NVSP_STAT_FAIL;
- 	}
- 
--	vlan = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, IEEE_8021Q_INFO, 0, sizeof(*vlan));
-+	vlan = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, IEEE_8021Q_INFO, 0, sizeof(*vlan),
-+			     data);
- 
- 	csum_info = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, TCPIP_CHKSUM_PKTINFO, 0,
--				  sizeof(*csum_info));
-+				  sizeof(*csum_info), data);
- 
- 	hash_info = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, NBL_HASH_VALUE, 0,
--				  sizeof(*hash_info));
-+				  sizeof(*hash_info), data);
- 
- 	pktinfo_id = rndis_get_ppi(ndev, rndis_pkt, rpkt_len, RNDIS_PKTINFO_ID, 1,
--				   sizeof(*pktinfo_id));
--
--	data = (void *)msg + data_offset;
-+				   sizeof(*pktinfo_id), data);
- 
- 	/* Identify RSC frags, drop erroneous packets */
- 	if (pktinfo_id && (pktinfo_id->flag & RNDIS_PKTINFO_SUBALLOC)) {
-@@ -537,7 +566,7 @@ static int rndis_filter_receive_data(struct net_device *ndev,
- 	 * the data packet to the stack, without the rndis trailer padding
- 	 */
- 	rsc_add_data(nvchan, vlan, csum_info, hash_info,
--		     data, rndis_pkt->data_len);
-+		     data + data_offset, rndis_pkt->data_len);
- 
- 	if (rsc_more)
- 		return NVSP_STAT_SUCCESS;
-@@ -559,10 +588,18 @@ int rndis_filter_receive(struct net_device *ndev,
- 			 void *data, u32 buflen)
- {
- 	struct net_device_context *net_device_ctx = netdev_priv(ndev);
--	struct rndis_message *rndis_msg = data;
-+	struct rndis_message *rndis_msg = nvchan->recv_buf;
-+
-+	if (buflen < RNDIS_HEADER_SIZE) {
-+		netdev_err(ndev, "Invalid rndis_msg (buflen: %u)\n", buflen);
-+		return NVSP_STAT_FAIL;
-+	}
-+
-+	/* Copy the RNDIS msg header into nvchan->recv_buf */
-+	memcpy(rndis_msg, data, RNDIS_HEADER_SIZE);
- 
- 	/* Validate incoming rndis_message packet */
--	if (buflen < RNDIS_HEADER_SIZE || rndis_msg->msg_len < RNDIS_HEADER_SIZE ||
-+	if (rndis_msg->msg_len < RNDIS_HEADER_SIZE ||
- 	    buflen < rndis_msg->msg_len) {
- 		netdev_err(ndev, "Invalid rndis_msg (buflen: %u, msg_len: %u)\n",
- 			   buflen, rndis_msg->msg_len);
-@@ -570,22 +607,22 @@ int rndis_filter_receive(struct net_device *ndev,
- 	}
- 
- 	if (netif_msg_rx_status(net_device_ctx))
--		dump_rndis_message(ndev, rndis_msg);
-+		dump_rndis_message(ndev, rndis_msg, data);
- 
- 	switch (rndis_msg->ndis_msg_type) {
- 	case RNDIS_MSG_PACKET:
- 		return rndis_filter_receive_data(ndev, net_dev, nvchan,
--						 rndis_msg, buflen);
-+						 rndis_msg, data, buflen);
- 	case RNDIS_MSG_INIT_C:
- 	case RNDIS_MSG_QUERY_C:
- 	case RNDIS_MSG_SET_C:
- 		/* completion msgs */
--		rndis_filter_receive_response(ndev, net_dev, rndis_msg);
-+		rndis_filter_receive_response(ndev, net_dev, rndis_msg, data);
- 		break;
- 
- 	case RNDIS_MSG_INDICATE:
- 		/* notification msgs */
--		netvsc_linkstatus_callback(ndev, rndis_msg);
-+		netvsc_linkstatus_callback(ndev, rndis_msg, data);
- 		break;
- 	default:
- 		netdev_err(ndev,
--- 
-2.25.1
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
