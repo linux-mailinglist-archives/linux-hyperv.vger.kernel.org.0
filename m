@@ -2,72 +2,90 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0E7A304CD5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jan 2021 23:57:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0805A304CD6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jan 2021 23:57:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbhAZW4d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 26 Jan 2021 17:56:33 -0500
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:54769 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729409AbhAZRMi (ORCPT
+        id S1728083AbhAZW4q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 26 Jan 2021 17:56:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392993AbhAZRm1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 26 Jan 2021 12:12:38 -0500
-Received: by mail-wm1-f54.google.com with SMTP id u14so3095602wml.4;
-        Tue, 26 Jan 2021 09:11:48 -0800 (PST)
+        Tue, 26 Jan 2021 12:42:27 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B387EC061573
+        for <linux-hyperv@vger.kernel.org>; Tue, 26 Jan 2021 09:41:46 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id e67so17519300ybc.12
+        for <linux-hyperv@vger.kernel.org>; Tue, 26 Jan 2021 09:41:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ipc8gQKVcBHLKm6BxkJ6tOPGtJOetpGvm8EbfzJ31wk=;
+        b=BEYzSOOqI17x3i3orpT5BGnQS89GWEiu2M8v0r+120RNItrzt6030VA5kkdqiPU7TR
+         /Rwp2X6ydfkLY3k6rcALrDHThsb5bXTKoQSnB74AJ76+RqpiFIu1NQ91f+hesKwDnz1a
+         GP+0ome/ks+7rFfLPZssfDk/d7riPa6lI7ckNumcbGOfT16QOXJyZzJYjaU17m0Xol74
+         f4lu6lIBWqmrvg1J33VKzipJpwbAOOJn/Agjy4hqX3hyuBpJqHxw1QuiKSVxRIVpphjM
+         AnNpmw9yYOVdFC1rFUNCYEC6MwQIF+DOtX7NpQso1DnFw5wDehpPHZXk5DTrtptfiu1K
+         opXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GLTk04HLYEc0gHiobpBa2Rf8M0brcNpNc92sIr4mWa4=;
-        b=HzFN6h7VgYDJ0GrnNgJi+1OZOJvWq8H9Kfxp9YPDRGfeCSsEtzdczhImKVlpiXFhb7
-         gw+Y/TXap4Ysli5lNZTPUn10whpDmUpKkxEKvBbh5k5rv6FYRqFVrCF4T7Si4T8XN5/1
-         ZNKOVzrKiiopU3o3h3lylou2s8pl12nk0ScnVNJQUx1s9yGsFZ9O9sXgsW4WO+ChP3hK
-         5R+RoWEgz2vJRRnEH6XC6FFgWPmAPAkhjh5A4NC7B80BRNMWuXB6bWOwg2KYyajB/B9D
-         K3c91bifbUOqoBNIPCjl58PdNVvDvYlscyKvzMIW4HzGSnFDvsSM/TXNlco3zvbql11A
-         R7hg==
-X-Gm-Message-State: AOAM5327gUrvF1t1UeH/+4EunTdgig/+E/MFyqm2ZulPbn9ZLVk+Ded2
-        hnOUAGMnQ6gRCQUM0gAvDJo=
-X-Google-Smtp-Source: ABdhPJzP4kThibk+kuyUve55nZxz6LRnRBwXuMSrFxaQQubIzNi5ZEPZmsIsGMymKQHOtSz5yUZz/w==
-X-Received: by 2002:a7b:c151:: with SMTP id z17mr623588wmi.15.1611681083373;
-        Tue, 26 Jan 2021 09:11:23 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id q7sm29859745wrx.18.2021.01.26.09.11.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jan 2021 09:11:22 -0800 (PST)
-Date:   Tue, 26 Jan 2021 17:11:21 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>
-Cc:     Matheus Castello <matheus@castello.eng.br>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, vkuznets <vkuznets@redhat.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] x86/Hyper-V: Support for free page reporting
-Message-ID: <20210126171121.ujxojhmkjhuilry6@liuwe-devbox-debian-v2>
-References: <SN4PR2101MB0880CA1C933184498DF1F595C0D09@SN4PR2101MB0880.namprd21.prod.outlook.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ipc8gQKVcBHLKm6BxkJ6tOPGtJOetpGvm8EbfzJ31wk=;
+        b=BRQZqUfw1oFk1z9RAoilRX9mif0E1/s7E/MJktRu79qq8ULdMhMB6idfmjB9bWBtIq
+         DlYP5DDUMVB55cvAD6WV7cSfUZx9VrVQPBCAUjH6HWxfwIhvvRylyM6QWbAMQaf7u936
+         O2/e38ASJUZ8kYsS6XuG04HRh1yTs5rZxImVJQW6fJI2PgcGOpFvJ1K5bnc6zw6yqg8A
+         dqGRKOIsK6F1AumaL/75UooHO1WnsTYaA3QNukP+jJ9HZmyORG0maO1Sqokv5/s4IMmN
+         VnTRgnBMBh4nc/U6MNeeZE9uUUUfAbe6U7I23oVgnBfADmZQmTtuYBT/+qFjy6GHwgqh
+         yIFw==
+X-Gm-Message-State: AOAM532XvRdaBX9OhAUsfEhKcDGZnpTewdwYMpHFcVYoSpczVMUJ09D8
+        rgrXsBTwy6W0FEQ9xBIjPI+WeKPIr0gQ7nG1n84=
+X-Google-Smtp-Source: ABdhPJyufjsLrff5BJqnIatuk53z7FDyyuplZVujBAaviFrPl4Oaoy+5SENQWJQLvvTYAxO//WvOc5QqaKNM5OA+MWQ=
+X-Received: by 2002:a25:7a44:: with SMTP id v65mr10277559ybc.0.1611682906027;
+ Tue, 26 Jan 2021 09:41:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN4PR2101MB0880CA1C933184498DF1F595C0D09@SN4PR2101MB0880.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Received: by 2002:a25:804e:0:0:0:0:0 with HTTP; Tue, 26 Jan 2021 09:41:45
+ -0800 (PST)
+Reply-To: bill.chantallawrence22@seznam.cz
+From:   "Mrs. Bill Chantal Lawrence" <victorialab2020@gmail.com>
+Date:   Tue, 26 Jan 2021 17:41:45 +0000
+Message-ID: <CAErARo35-GLsOSJvt1+gfFRsCS3_Fj529gw=puVuKD++NU7GMA@mail.gmail.com>
+Subject: Compliment of the day
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jan 06, 2021 at 11:20:33PM +0000, Sunil Muthuswamy wrote:
-> Linux has support for free page reporting now (36e66c554b5c) for
-> virtualized environment. On Hyper-V when virtually backed VMs are
-> configured, Hyper-V will advertise cold memory discard capability,
-> when supported. This patch adds the support to hook into the free
-> page reporting infrastructure and leverage the Hyper-V cold memory
-> discard hint hypercall to report/free these pages back to the host.
-> 
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Tested-by: Matheus Castello <matheus@castello.eng.br>
+Dear Friend
 
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
+We bring greetings to you in the name of the lord. This message is
+sent to you as a notification that you have been chosen to benefit
+from our charity project aimed at touching lives and helping those
+that we can across the world as God has blessed us. I won the
+Powerball lottery of $150Million on November 2, 2019 and I have
+voluntarily decided to donate the sum of $ 75 Million to charity, I
+try to reach people randomly from different sources and modes so as to
+touch lives from different angles, Hence you are getting a message
+here.
+
+
+
+You have been listed as one of the lucky recipients to receive $13.9M
+This donation is made out to you so to enable you strengthen your
+personal issues and mostly to generously help us extend hands ofgiving
+to the less privileged, orphans and charity organizations within your
+locality To verifyhttps://www.powerball.com/winner-story/150-million-powerball-ticket-claimed
+
+Get back to me on how to receive the donation through our official
+email address below You can also contact us via our my Whatsapp number
++1 971 24 581 39   and email address
+
+(bill.chantallawrence22@seznam.cz) : The earlier you contact our email
+the earlier
+
+you receieve your donation
+
+Thanks
+
+Mrs. Bill Chantal Lawrence
