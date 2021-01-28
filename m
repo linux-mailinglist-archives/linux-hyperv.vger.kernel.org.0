@@ -2,60 +2,50 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45B1C3067FA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Jan 2021 00:35:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2F3A307429
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Jan 2021 11:55:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234823AbhA0Xcq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 27 Jan 2021 18:32:46 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:49592 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231453AbhA0XcX (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 27 Jan 2021 18:32:23 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1l4uHh-00019P-Uz; Wed, 27 Jan 2021 23:31:38 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S231563AbhA1Kv5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 28 Jan 2021 05:51:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:56452 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231189AbhA1Kus (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 28 Jan 2021 05:50:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B5541FB;
+        Thu, 28 Jan 2021 02:50:00 -0800 (PST)
+Received: from e123427-lin.arm.com (unknown [10.57.46.3])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6B403F68F;
+        Thu, 28 Jan 2021 02:49:57 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Wei Liu <wei.liu@kernel.org>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] hv_utils: Fix spelling mistake "Hearbeat" -> "Heartbeat"
-Date:   Wed, 27 Jan 2021 23:31:36 +0000
-Message-Id: <20210127233136.623465-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.29.2
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: hv: Fix typo
+Date:   Thu, 28 Jan 2021 10:49:52 +0000
+Message-Id: <161183097686.9101.7957142158082327342.b4-ty@arm.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20210126213855.2923461-1-helgaas@kernel.org>
+References: <20210126213855.2923461-1-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, 26 Jan 2021 15:38:55 -0600, Bjorn Helgaas wrote:
+> Fix misspelling of "silently".
 
-There is a spelling mistake in an error message. Fix it.
+Applied to pci/misc, thanks!
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/hv/hv_util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1/1] PCI: hv: Fix typo
+      https://git.kernel.org/lpieralisi/pci/c/c77bfb5417
 
-diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index 34f3e789cc9a..e4aefeb330da 100644
---- a/drivers/hv/hv_util.c
-+++ b/drivers/hv/hv_util.c
-@@ -507,7 +507,7 @@ static void heartbeat_onchannelcallback(void *context)
- 
- 		/* Ensure recvlen is big enough to read header data */
- 		if (recvlen < ICMSG_HDR) {
--			pr_err_ratelimited("Hearbeat request received. Packet length too small: %d\n",
-+			pr_err_ratelimited("Heartbeat request received. Packet length too small: %d\n",
- 					   recvlen);
- 			break;
- 		}
--- 
-2.29.2
-
+Thanks,
+Lorenzo
