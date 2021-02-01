@@ -2,184 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E584E30B0CA
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Feb 2021 20:52:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4720130B0E2
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Feb 2021 20:56:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232124AbhBATuw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 Feb 2021 14:50:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232566AbhBATtN (ORCPT
+        id S231624AbhBATyo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 1 Feb 2021 14:54:44 -0500
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:32969 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232713AbhBATyX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 Feb 2021 14:49:13 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C5CFC06174A;
-        Mon,  1 Feb 2021 11:48:33 -0800 (PST)
-Received: from zn.tnic (p200300ec2f06fe00e55f3102cc5eb27e.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:fe00:e55f:3102:cc5e:b27e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 26BD61EC0253;
-        Mon,  1 Feb 2021 20:48:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1612208910;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lOkZrEeAn9oVnNn743NqAyVIKQ3k9/Lp3V74SDhkd64=;
-        b=EM+rZpLJ9tNc2VbuYUaopFlP03mUsRMmq8qq/pgZ3JJsI6Y/KowJvU44oGPkeeGAD2qPsa
-        j3K801BVFENduL2KRFMJ4dbHjY93xQqSdkCzV0oRKi2WduQAxPNz6//O0rJUMn7L41a83g
-        pwy9/FLLvDRay4tdxWs6a0Sjt8mlIoM=
-Date:   Mon, 1 Feb 2021 20:48:28 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 07/15] x86/paravirt: switch time pvops functions to
- use static_call()
-Message-ID: <20210201194828.GB14590@zn.tnic>
-References: <20210120135555.32594-1-jgross@suse.com>
- <20210120135555.32594-8-jgross@suse.com>
+        Mon, 1 Feb 2021 14:54:23 -0500
+Received: by mail-wr1-f48.google.com with SMTP id 7so17991980wrz.0;
+        Mon, 01 Feb 2021 11:53:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DCjhNmegL5cty51UJJiVLzoT3IZRsyqfK3odFUkK4z8=;
+        b=FIi09leopkGtYp/mCaSB3wIWcGzgubDYzeDJOUAbNMa2o8QfR/GV0TyV1UsF0Gk/st
+         PDkVAJYh6QSvYSfJI3SnupXQa5XaaOi1wt4e03hB3g89h6dvWEkhUwMW2jy8rgDSs+VW
+         lobi4qkQHLpndY6OgXFisutCfHDTCnR+yR6UyaNJnEjJ0CIRlbWteD165ijILNmVBEnd
+         6smpxioO0d9YmbAYnKhB195hP9vYaeLlLYOX+kq1hDBxn2zPF7ug3u5kzs76CS+/1N7v
+         MojKGwocRdXOxCINO5IjbDQGDBzk4k68455qvkoH97v9/xWDggMyemQe7dwJaQj1pMPT
+         826Q==
+X-Gm-Message-State: AOAM533Dwak9x3csQIywrzmUiy8lH8LVHGZNF1UVUHtiyN3IizWHIAER
+        WSVPNsOes4i84g8txbMNQ5c=
+X-Google-Smtp-Source: ABdhPJww1TvLldgLGFf0r7SZNri+3W5aYbD06nxT/kZ6LKQbZOATXExXYWTbE0ltqdgS/HE8QDXArg==
+X-Received: by 2002:adf:a11d:: with SMTP id o29mr20016981wro.45.1612209209605;
+        Mon, 01 Feb 2021 11:53:29 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id y6sm328678wma.19.2021.02.01.11.53.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Feb 2021 11:53:29 -0800 (PST)
+Date:   Mon, 1 Feb 2021 19:53:27 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     sthemmin@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        daniel.lezcano@linaro.org, arnd@arndb.de,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 10/10] clocksource/drivers/hyper-v: Move handling of
+ STIMER0 interrupts
+Message-ID: <20210201195327.2bkhu6sig53prwwg@liuwe-devbox-debian-v2>
+References: <1611779025-21503-1-git-send-email-mikelley@microsoft.com>
+ <1611779025-21503-11-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210120135555.32594-8-jgross@suse.com>
+In-Reply-To: <1611779025-21503-11-git-send-email-mikelley@microsoft.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 02:55:47PM +0100, Juergen Gross wrote:
-> The time pvops functions are the only ones left which might be
-> used in 32-bit mode and which return a 64-bit value.
-> 
-> Switch them to use the static_call() mechanism instead of pvops, as
-> this allows quite some simplification of the pvops implementation.
-> 
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> ---
-> V4:
-> - drop paravirt_time.h again
-> - don't move Hyper-V code (Michael Kelley)
-> ---
->  arch/x86/Kconfig                      |  1 +
->  arch/x86/include/asm/mshyperv.h       |  2 +-
->  arch/x86/include/asm/paravirt.h       | 17 ++++++++++++++---
->  arch/x86/include/asm/paravirt_types.h |  6 ------
->  arch/x86/kernel/cpu/vmware.c          |  5 +++--
->  arch/x86/kernel/kvm.c                 |  2 +-
->  arch/x86/kernel/kvmclock.c            |  2 +-
->  arch/x86/kernel/paravirt.c            | 16 ++++++++++++----
->  arch/x86/kernel/tsc.c                 |  2 +-
->  arch/x86/xen/time.c                   | 11 ++++-------
->  drivers/clocksource/hyperv_timer.c    |  5 +++--
->  drivers/xen/time.c                    |  2 +-
->  12 files changed, 42 insertions(+), 29 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 21f851179ff0..7ccd4a80788c 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -771,6 +771,7 @@ if HYPERVISOR_GUEST
->  
->  config PARAVIRT
->  	bool "Enable paravirtualization code"
-> +	depends on HAVE_STATIC_CALL
->  	help
->  	  This changes the kernel so it can modify itself when it is run
->  	  under a hypervisor, potentially improving performance significantly
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 30f76b966857..b4ee331d29a7 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -63,7 +63,7 @@ typedef int (*hyperv_fill_flush_list_func)(
->  static __always_inline void hv_setup_sched_clock(void *sched_clock)
->  {
->  #ifdef CONFIG_PARAVIRT
-> -	pv_ops.time.sched_clock = sched_clock;
-> +	paravirt_set_sched_clock(sched_clock);
->  #endif
->  }
->  
-> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-> index 4abf110e2243..1e45b46fae84 100644
-> --- a/arch/x86/include/asm/paravirt.h
-> +++ b/arch/x86/include/asm/paravirt.h
-> @@ -15,11 +15,22 @@
->  #include <linux/bug.h>
->  #include <linux/types.h>
->  #include <linux/cpumask.h>
-> +#include <linux/static_call_types.h>
->  #include <asm/frame.h>
->  
-> -static inline unsigned long long paravirt_sched_clock(void)
-> +u64 dummy_steal_clock(int cpu);
-> +u64 dummy_sched_clock(void);
+On Wed, Jan 27, 2021 at 12:23:45PM -0800, Michael Kelley wrote:
+[...]
+> +static int hv_setup_stimer0_irq(void)
+> +{
+> +	int ret;
 > +
-> +DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
-> +DECLARE_STATIC_CALL(pv_sched_clock, dummy_sched_clock);
+> +	ret = acpi_register_gsi(NULL, HYPERV_STIMER0_VECTOR,
+> +			ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_HIGH);
 
-Did you build this before sending?
+When IO-APIC is enabled on x86, acpi_register_gsi calls
+mp_map_gsi_to_irq. That function then calls mp_find_ioapic. Is
+HYPERV_STIMER0_VECTOR, when used as a GSI, associated with an IO-APIC?
+If not, wouldn't mp_find_ioapic return an error causing
+acpi_register_gsi to fail?
 
-I'm test-applying this on rc6 + tip/master so I probably am using a
-different tree so it looks like something has changed in the meantime.
--rc6 has a couple of Xen changes which made applying those to need some
-wiggling in...
+Ah, it appears that this function is not called on x86. I haven't
+checked how ARM handles GSI, but presumably this works for you.  It
+would be good if a comment can be added to clarify things.
 
-Maybe you should redo them ontop of tip/master. That is, *if* they're
-going to eventually go through tip. The diffstat has Xen stuff too so we
-might need some synchronization here what goes where how...
-
-./arch/x86/include/asm/paravirt.h:24:1: warning: data definition has no type or storage class
-   24 | DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
-      | ^~~~~~~~~~~~~~~~~~~
-./arch/x86/include/asm/paravirt.h:24:1: error: type defaults to ‘int’ in declaration of ‘DECLARE_STATIC_CALL’ [-Werror=implicit-int]
-./arch/x86/include/asm/paravirt.h:24:1: warning: parameter names (without types) in function declaration
-./arch/x86/include/asm/paravirt.h:25:1: warning: data definition has no type or storage class
-   25 | DECLARE_STATIC_CALL(pv_sched_clock, dummy_sched_clock);
-      | ^~~~~~~~~~~~~~~~~~~
-./arch/x86/include/asm/paravirt.h:25:1: error: type defaults to ‘int’ in declaration of ‘DECLARE_STATIC_CALL’ [-Werror=implicit-int]
-./arch/x86/include/asm/paravirt.h:25:1: warning: parameter names (without types) in function declaration
-./arch/x86/include/asm/paravirt.h: In function ‘paravirt_sched_clock’:
-./arch/x86/include/asm/paravirt.h:33:9: error: implicit declaration of function ‘static_call’ [-Werror=implicit-function-declaration]
-   33 |  return static_call(pv_sched_clock)();
-      |         ^~~~~~~~~~~
-./arch/x86/include/asm/paravirt.h:33:21: error: ‘pv_sched_clock’ undeclared (first use in this function); did you mean ‘dummy_sched_clock’?
-   33 |  return static_call(pv_sched_clock)();
-      |                     ^~~~~~~~~~~~~~
-      |                     dummy_sched_clock
-./arch/x86/include/asm/paravirt.h:33:21: note: each undeclared identifier is reported only once for each function it appears in
-./arch/x86/include/asm/paravirt.h: In function ‘paravirt_steal_clock’:
-./arch/x86/include/asm/paravirt.h:47:21: error: ‘pv_steal_clock’ undeclared (first use in this function); did you mean ‘dummy_steal_clock’?
-   47 |  return static_call(pv_steal_clock)(cpu);
-      |                     ^~~~~~~~~~~~~~
-      |                     dummy_steal_clock
-cc1: some warnings being treated as errors
-make[1]: *** [scripts/Makefile.build:117: arch/x86/kernel/asm-offsets.s] Error 1
-make: *** [Makefile:1200: prepare0] Error 2
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Wei.
