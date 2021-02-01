@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DF2330AB73
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Feb 2021 16:34:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DD2A30AB71
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Feb 2021 16:34:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbhBAPc5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 Feb 2021 10:32:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32936 "EHLO
+        id S230029AbhBAPcy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 1 Feb 2021 10:32:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbhBAOtR (ORCPT
+        with ESMTP id S229692AbhBAOtU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 Feb 2021 09:49:17 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB73C06174A;
-        Mon,  1 Feb 2021 06:48:36 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id v15so16898755wrx.4;
-        Mon, 01 Feb 2021 06:48:36 -0800 (PST)
+        Mon, 1 Feb 2021 09:49:20 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32E2C061756;
+        Mon,  1 Feb 2021 06:48:39 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id 7so16888572wrz.0;
+        Mon, 01 Feb 2021 06:48:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nbWBbNu7/Yt79pMx5iXE2do7XeNiz3bUeF//Cx/2194=;
-        b=mOrf6KIG/gSKkNkyxFg2xIIXM/MGoagfoV3LfjP++oYEpa5u94PR512Z5FilpTUzQY
-         aaWfuD7S75x4blcJc7gpLCPC5zdwlHpDQFOLa+3cXlBTWo2ofkxDKtMu6AuAQ3r3+vqZ
-         EkoSPGaLqiA2znjxCw8yRgN/BPtviXblrscon3kGNzHeWxyydwZN8cfvz3oey5uW1Jrg
-         OaGjN1mGpxKwXXrnj95ZMts44FF92apTqM22t7TFk54+S/RNZKtsygYmqcdD2TzNUE2U
-         nRaJ3U3m8nj10NBpXZIMYszyQTh8RHyASURNYiiQJ1VEDH832UJS6ytxkgWTOUj8TtUY
-         d7RA==
+        bh=MrdDGacMKCIZdKDtffCda/hf+tqcsilM2SrNSDQZFkA=;
+        b=g3m/Uefknf+Tw9gJ4gW613Mego03vwWNfleAkBtZ/JRAQE04UXjx6eV4uu8mvOLHk0
+         01AGsTOq64gm/WCT97OfggTH9oEprKCTXQZRh7BUMWOCbbGEHQZ5WgRUMHEU8uqFuI6D
+         CuJxkKELMHSuXtNwkEj/8kU0M+T8oYEDx43qQ4QaGenzVC63fO9N3g6u7JipJDaGbFv8
+         f1xlxctcv0uTwc9/s7MVGzwMNe6epLQA+N8fWTmHQwjhWlXFgAIaIcW1iobIE7rx/JQt
+         65KRmKoiRbA0gdCIqZlrLTs8EBFcYadNHuRqNd06Kzi8NFvxlAtdcKUQumJHuYZixwaw
+         EOuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nbWBbNu7/Yt79pMx5iXE2do7XeNiz3bUeF//Cx/2194=;
-        b=QKOme3T4mvHFve/iNa14IU9YBYZhP2WJaEikhlF2r7nk192QVpF3v4ZfIi9jCRo30s
-         29cFQPfj9CCWADvxIROFFfDcjd1JsfrXO70sweY1yMjU7Qv77+w9ZUGjHMVXRwElXztz
-         +fGP6EdicSWUq0JUhN4TGHXkBOxzKJoYjAX5tIA/p/0vgKmGQxhGX8wA/xaPKFhLAP/4
-         gCaiqJtt0QUbrOYu81p3/PLPYeSndZGBCqyt6l8LERX+upoPa7wB58sk2gFJsgpCznn/
-         rN+nV6WfoikEEZkl0tnYUlFVfGUkmYuFqJ+eObC/pfGFquv5jlPao7jPio3GLBGmNOmt
-         +Clw==
-X-Gm-Message-State: AOAM5316NyTJwNKcsH1rRzc6shcOpXvl19Sjzkwbh0EjPi5aU3ApUXUW
-        zx7o4kTSYmYghHa0MPI+e+tHC9dHpgF8qNGl
-X-Google-Smtp-Source: ABdhPJwvptqUw9TZZE7UgPiFEeiOi/q3oNtIvnAo7+2pZgjelM2n7CUmXsZcemRc8/aYzhZHmopXpg==
-X-Received: by 2002:adf:fe04:: with SMTP id n4mr19140921wrr.115.1612190914208;
-        Mon, 01 Feb 2021 06:48:34 -0800 (PST)
+        bh=MrdDGacMKCIZdKDtffCda/hf+tqcsilM2SrNSDQZFkA=;
+        b=DStrRp/sk4G2sPs2RemnARcoijRJrIvYLNnu0ra5wd8KiTvFcSScjWnlupVRzdkZQa
+         pu35Ts33LnKt4f2IZ09wzShSw08rFXEetHwXE/bvvNvkR0NiUhRHVO8oU/Q2jMusZaUf
+         ajsbzGfh/coAMhGwKV7rGp7PH5J4VAQ/fAmSHAll9KuXUFOhKYOmDdoqvQybvgLSnmEa
+         t0AkMHKgFz0JL0aBIwQV3eq5+3sdJzo8gxieZHGsnpoi425hVRlQF2SLfFVJemTMvjNw
+         AHonC3uLwz4kSotmirIgROZQf/D+jSnOV1vM4IQcNRO0Nj7JYCa5jUbCPjytQEOJgk8C
+         Xh5g==
+X-Gm-Message-State: AOAM531RQdhsy4UFn+a0pev9as9EQi9KSiXC2rbSchTU2GfgnOWL6Tr+
+        BsbqTNS/TQ53LlhsF5+KdUEBKEdwznKc6Ost
+X-Google-Smtp-Source: ABdhPJwOIXdjBD1hdOAkce2smiXzdtoMBZvzcHr3omy/uyXc29Zrdjd6oitBbX4kJcfezMRQVhFxiw==
+X-Received: by 2002:adf:efc2:: with SMTP id i2mr18111168wrp.422.1612190918001;
+        Mon, 01 Feb 2021 06:48:38 -0800 (PST)
 Received: from anparri.mshome.net (host-95-238-70-33.retail.telecomitalia.it. [95.238.70.33])
-        by smtp.gmail.com with ESMTPSA id c11sm26106591wrs.28.2021.02.01.06.48.32
+        by smtp.gmail.com with ESMTPSA id c11sm26106591wrs.28.2021.02.01.06.48.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Feb 2021 06:48:33 -0800 (PST)
+        Mon, 01 Feb 2021 06:48:37 -0800 (PST)
 From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
@@ -59,14 +59,10 @@ Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
         linux-hyperv@vger.kernel.org,
         Saruhan Karademir <skarade@microsoft.com>,
         Juan Vazquez <juvazq@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        x86@kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH v3 hyperv-next 1/4] x86/hyperv: Load/save the Isolation Configuration leaf
-Date:   Mon,  1 Feb 2021 15:48:11 +0100
-Message-Id: <20210201144814.2701-2-parri.andrea@gmail.com>
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH v3 hyperv-next 2/4] Drivers: hv: vmbus: Restrict vmbus_devices on isolated guests
+Date:   Mon,  1 Feb 2021 15:48:12 +0100
+Message-Id: <20210201144814.2701-3-parri.andrea@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210201144814.2701-1-parri.andrea@gmail.com>
 References: <20210201144814.2701-1-parri.andrea@gmail.com>
@@ -76,158 +72,188 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-If bit 22 of Group B Features is set, the guest has access to the
-Isolation Configuration CPUID leaf.  On x86, the first four bits
-of EAX in this leaf provide the isolation type of the partition;
-we entail three isolation types: 'SNP' (hardware-based isolation),
-'VBS' (software-based isolation), and 'NONE' (no isolation).
+Only the VSCs or ICs that have been hardened and that are critical for
+the successful adoption of Confidential VMs should be allowed if the
+guest is running isolated.  This change reduces the footprint of the
+code that will be exercised by Confidential VMs and hence the exposure
+to bugs and vulnerabilities.
 
 Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: x86@kernel.org
-Cc: linux-arch@vger.kernel.org
 ---
- arch/x86/hyperv/hv_init.c          | 15 +++++++++++++++
- arch/x86/include/asm/hyperv-tlfs.h | 15 +++++++++++++++
- arch/x86/kernel/cpu/mshyperv.c     |  9 +++++++++
- include/asm-generic/hyperv-tlfs.h  |  1 +
- include/asm-generic/mshyperv.h     |  5 +++++
- 5 files changed, 45 insertions(+)
+ drivers/hv/channel_mgmt.c | 38 ++++++++++++++++++++++++++++++++++++++
+ include/linux/hyperv.h    |  1 +
+ 2 files changed, 39 insertions(+)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index e04d90af4c27c..ccdfc6868cfc8 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -10,6 +10,7 @@
- #include <linux/acpi.h>
- #include <linux/efi.h>
- #include <linux/types.h>
-+#include <linux/bitfield.h>
- #include <asm/apic.h>
- #include <asm/desc.h>
- #include <asm/hypervisor.h>
-@@ -528,3 +529,17 @@ bool hv_is_hibernation_supported(void)
- 	return acpi_sleep_state_supported(ACPI_STATE_S4);
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 68950a1e4b638..f0ed730e2e4e4 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -31,101 +31,118 @@ const struct vmbus_device vmbus_devs[] = {
+ 	{ .dev_type = HV_IDE,
+ 	  HV_IDE_GUID,
+ 	  .perf_device = true,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* SCSI */
+ 	{ .dev_type = HV_SCSI,
+ 	  HV_SCSI_GUID,
+ 	  .perf_device = true,
++	  .allowed_in_isolated = true,
+ 	},
+ 
+ 	/* Fibre Channel */
+ 	{ .dev_type = HV_FC,
+ 	  HV_SYNTHFC_GUID,
+ 	  .perf_device = true,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* Synthetic NIC */
+ 	{ .dev_type = HV_NIC,
+ 	  HV_NIC_GUID,
+ 	  .perf_device = true,
++	  .allowed_in_isolated = true,
+ 	},
+ 
+ 	/* Network Direct */
+ 	{ .dev_type = HV_ND,
+ 	  HV_ND_GUID,
+ 	  .perf_device = true,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* PCIE */
+ 	{ .dev_type = HV_PCIE,
+ 	  HV_PCIE_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* Synthetic Frame Buffer */
+ 	{ .dev_type = HV_FB,
+ 	  HV_SYNTHVID_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* Synthetic Keyboard */
+ 	{ .dev_type = HV_KBD,
+ 	  HV_KBD_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* Synthetic MOUSE */
+ 	{ .dev_type = HV_MOUSE,
+ 	  HV_MOUSE_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* KVP */
+ 	{ .dev_type = HV_KVP,
+ 	  HV_KVP_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* Time Synch */
+ 	{ .dev_type = HV_TS,
+ 	  HV_TS_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = true,
+ 	},
+ 
+ 	/* Heartbeat */
+ 	{ .dev_type = HV_HB,
+ 	  HV_HEART_BEAT_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = true,
+ 	},
+ 
+ 	/* Shutdown */
+ 	{ .dev_type = HV_SHUTDOWN,
+ 	  HV_SHUTDOWN_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = true,
+ 	},
+ 
+ 	/* File copy */
+ 	{ .dev_type = HV_FCOPY,
+ 	  HV_FCOPY_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* Backup */
+ 	{ .dev_type = HV_BACKUP,
+ 	  HV_VSS_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* Dynamic Memory */
+ 	{ .dev_type = HV_DM,
+ 	  HV_DM_GUID,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ 
+ 	/* Unknown GUID */
+ 	{ .dev_type = HV_UNKNOWN,
+ 	  .perf_device = false,
++	  .allowed_in_isolated = false,
+ 	},
+ };
+ 
+@@ -903,6 +920,20 @@ find_primary_channel_by_offer(const struct vmbus_channel_offer_channel *offer)
+ 	return channel;
  }
- EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
-+
-+enum hv_isolation_type hv_get_isolation_type(void)
+ 
++static bool vmbus_is_valid_device(const guid_t *guid)
 +{
-+	if (!(ms_hyperv.features_b & HV_ISOLATION))
-+		return HV_ISOLATION_TYPE_NONE;
-+	return FIELD_GET(HV_ISOLATION_TYPE, ms_hyperv.isolation_config_b);
++	u16 i;
++
++	if (!hv_is_isolation_supported())
++		return true;
++
++	for (i = 0; i < ARRAY_SIZE(vmbus_devs); i++) {
++		if (guid_equal(guid, &vmbus_devs[i].guid))
++			return vmbus_devs[i].allowed_in_isolated;
++	}
++	return false;
 +}
-+EXPORT_SYMBOL_GPL(hv_get_isolation_type);
 +
-+bool hv_is_isolation_supported(void)
-+{
-+	return hv_get_isolation_type() != HV_ISOLATION_TYPE_NONE;
-+}
-+EXPORT_SYMBOL_GPL(hv_is_isolation_supported);
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index 6bf42aed387e3..6aed936e5e962 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -22,6 +22,7 @@
- #define HYPERV_CPUID_ENLIGHTMENT_INFO		0x40000004
- #define HYPERV_CPUID_IMPLEMENT_LIMITS		0x40000005
- #define HYPERV_CPUID_NESTED_FEATURES		0x4000000A
-+#define HYPERV_CPUID_ISOLATION_CONFIG		0x4000000C
+ /*
+  * vmbus_onoffer - Handler for channel offers from vmbus in parent partition.
+  *
+@@ -917,6 +948,13 @@ static void vmbus_onoffer(struct vmbus_channel_message_header *hdr)
  
- #define HYPERV_CPUID_VIRT_STACK_INTERFACE	0x40000081
- #define HYPERV_VS_INTERFACE_EAX_SIGNATURE	0x31235356  /* "VS#1" */
-@@ -122,6 +123,20 @@
- #define HV_X64_NESTED_GUEST_MAPPING_FLUSH		BIT(18)
- #define HV_X64_NESTED_MSR_BITMAP			BIT(19)
+ 	trace_vmbus_onoffer(offer);
  
-+/* HYPERV_CPUID_ISOLATION_CONFIG.EAX bits. */
-+#define HV_PARAVISOR_PRESENT				BIT(0)
-+
-+/* HYPERV_CPUID_ISOLATION_CONFIG.EBX bits. */
-+#define HV_ISOLATION_TYPE				GENMASK(3, 0)
-+#define HV_SHARED_GPA_BOUNDARY_ACTIVE			BIT(5)
-+#define HV_SHARED_GPA_BOUNDARY_BITS			GENMASK(11, 6)
-+
-+enum hv_isolation_type {
-+	HV_ISOLATION_TYPE_NONE	= 0,
-+	HV_ISOLATION_TYPE_VBS	= 1,
-+	HV_ISOLATION_TYPE_SNP	= 2
-+};
-+
- /* Hyper-V specific model specific registers (MSRs) */
- 
- /* MSR used to identify the guest OS. */
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index f628e3dc150f3..ea7bd8dff171c 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -225,6 +225,7 @@ static void __init ms_hyperv_init_platform(void)
- 	 * Extract the features and hints
- 	 */
- 	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
-+	ms_hyperv.features_b = cpuid_ebx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
- 
-@@ -259,6 +260,14 @@ static void __init ms_hyperv_init_platform(void)
- 		x86_platform.calibrate_cpu = hv_get_tsc_khz;
- 	}
- 
-+	if (ms_hyperv.features_b & HV_ISOLATION) {
-+		ms_hyperv.isolation_config_a = cpuid_eax(HYPERV_CPUID_ISOLATION_CONFIG);
-+		ms_hyperv.isolation_config_b = cpuid_ebx(HYPERV_CPUID_ISOLATION_CONFIG);
-+
-+		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
-+			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
++	if (!vmbus_is_valid_device(&offer->offer.if_type)) {
++		pr_err_ratelimited("Invalid offer %d from the host supporting isolation\n",
++				   offer->child_relid);
++		atomic_dec(&vmbus_connection.offer_in_progress);
++		return;
 +	}
 +
- 	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
- 		ms_hyperv.nested_features =
- 			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index e73a11850055c..20d3cd9502043 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -89,6 +89,7 @@
- #define HV_ACCESS_STATS				BIT(8)
- #define HV_DEBUGGING				BIT(11)
- #define HV_CPU_POWER_MANAGEMENT			BIT(12)
-+#define HV_ISOLATION				BIT(22)
+ 	oldchannel = find_primary_channel_by_offer(offer);
  
- 
- /*
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index c57799684170c..dff58a3db5d5c 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -27,11 +27,14 @@
- 
- struct ms_hyperv_info {
- 	u32 features;
-+	u32 features_b;
- 	u32 misc_features;
- 	u32 hints;
- 	u32 nested_features;
- 	u32 max_vp_index;
- 	u32 max_lp_index;
-+	u32 isolation_config_a;
-+	u32 isolation_config_b;
+ 	if (oldchannel != NULL) {
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index f0d48a368f131..e3426f8c12db9 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -789,6 +789,7 @@ struct vmbus_device {
+ 	u16  dev_type;
+ 	guid_t guid;
+ 	bool perf_device;
++	bool allowed_in_isolated;
  };
- extern struct ms_hyperv_info ms_hyperv;
  
-@@ -169,6 +172,8 @@ void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
- void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
- bool hv_is_hyperv_initialized(void);
- bool hv_is_hibernation_supported(void);
-+enum hv_isolation_type hv_get_isolation_type(void);
-+bool hv_is_isolation_supported(void);
- void hyperv_cleanup(void);
- #else /* CONFIG_HYPERV */
- static inline bool hv_is_hyperv_initialized(void) { return false; }
+ #define VMBUS_DEFAULT_MAX_PKT_SIZE 4096
 -- 
 2.25.1
 
