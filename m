@@ -2,124 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6225130DC42
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Feb 2021 15:10:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C42D30DCFC
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Feb 2021 15:38:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232630AbhBCOJw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 3 Feb 2021 09:09:52 -0500
-Received: from mail-wr1-f53.google.com ([209.85.221.53]:43054 "EHLO
-        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232499AbhBCOJu (ORCPT
+        id S232621AbhBCOir (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 3 Feb 2021 09:38:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232475AbhBCOht (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 3 Feb 2021 09:09:50 -0500
-Received: by mail-wr1-f53.google.com with SMTP id z6so24400223wrq.10;
-        Wed, 03 Feb 2021 06:09:33 -0800 (PST)
+        Wed, 3 Feb 2021 09:37:49 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D681C0613ED
+        for <linux-hyperv@vger.kernel.org>; Wed,  3 Feb 2021 06:37:09 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id g10so24601204wrx.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 03 Feb 2021 06:37:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W9o4SlQMY45XTTQ+rehlT9Bq2FFJYeLKrQoKvMrDhRM=;
+        b=JkHOLPjsBRJ7MEO+P/LaWuiuauNXCE4nP8pFwaJoeFr1XGWF0h0KeYpSkKM9dBT2QL
+         wLGiA2FsWZyTxNOMSqpdgw+RyeHmaRSEaOY26ehwkx+CTZoz3QQffntlLM9QYVY2IC5B
+         Cp6ey+FflriO0RlCzNPgdCulD5mV658Q1LCX6JKySsQDHcrLax9jO+2h+zaLA0RlcUu2
+         XRRfDU0i5uIdTEhDlRxIRvc2K990wrkeEo07nkmOv7LBjQPAXdN2dMj6EoYEzioIIRox
+         cKcbgfRN8K4GCitle9VEuvuIzAjaG+laNgz/L/uwoltZBR7xf72dNYc0RbcLHIZd4yHr
+         q5gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A7NdKPFVZmzRdCrC5SRoIaasaHnznmEayh0x0PGuBTA=;
-        b=feQF8TgmgvMWXTAgeEA74jLQatxpzclMBJve54rTcQ8V8U4IXDniVeSQSPgC9lTnc1
-         vu/Fxacmfmm2P967wzwUWxyk7vHTquMwyearpHBALpXEmRDXng/yO9VkdWXVZXKq1Jk9
-         Rw47Y0j8lRkx3rTLZOVkkBunzHzEIlPVjqGrV/4Y+ZtgoqtGfCG1l2zsKeJLOJAeMOfj
-         jLoiRTFxDJRcR+tsMkTER26lqj2rOvmGRvetQH0hfeJAg9nDcRsxvm8VqrLhH/cx0JrE
-         uWhud++8GoeHRe7sJwCssUOfBCPnFZSVtVuOXxyD3lxrx0i7hHUyCTcwm384nNRKH48B
-         6HqA==
-X-Gm-Message-State: AOAM530G7pz1R/Ouv8ID3EeK/2fH1GA0b2w5XIlx0ydHs8gc9gyc0qQu
-        sO1H1ke1IIMjYIB3prHWGsn26ZdS7wA=
-X-Google-Smtp-Source: ABdhPJy9Az99qBaTfuXfDsvznn2GuE5+jkwlgksTiOBdWpqqeZNnvtVlZ2lin2xQpct0gYlRpWksfQ==
-X-Received: by 2002:a5d:4242:: with SMTP id s2mr3809982wrr.108.1612361348006;
-        Wed, 03 Feb 2021 06:09:08 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u10sm2754907wmj.40.2021.02.03.06.09.07
+         :mime-version:content-disposition:in-reply-to;
+        bh=W9o4SlQMY45XTTQ+rehlT9Bq2FFJYeLKrQoKvMrDhRM=;
+        b=qVJvNQKCGrYojv52E0xNQGWlS1aPWExWMJlMLHw9c9whmVz6/OkjulzlCMKpBuVGb3
+         H8C0POfkGHiz6KOM0ngwKVsIVsyLhKYmdzL4A+ZkkhEuroHt7BLFYbnKMX0oY9O100e8
+         822H0AsQKgwSXjeDFqPSgKQPdVH6y94T6Kvh7ClNDv38XMFOlr0tp/vRZzfMUpRCExyF
+         gwPWUia7APxLBtI9b7PT68tnFk5w02TlaO8tdoRLsxw4RtZUvG9HnI1oQ5ONhHQXmHQl
+         XpTCCeOGX3j/U7DW4yr0YZ1tTgQEg0VXo1gZlZbefrcZXvIIkcxMCZlBoQ8d0Vxw7XDA
+         jjMw==
+X-Gm-Message-State: AOAM533hx2Sl3rv3gujYcLFn/J9YuQ9DjTZf+bd7vlzZek16yzC5aH6j
+        0OY6/E0WuTw61L19NsJZ+Ho=
+X-Google-Smtp-Source: ABdhPJyLb5Xu6GiAR46AJOZCyseluVHXy+GNUfXLVyPj/GF/B/kF3CgakhwB0Vo8KCyIgZAsyL6M1w==
+X-Received: by 2002:a5d:47a8:: with SMTP id 8mr3791017wrb.180.1612363027681;
+        Wed, 03 Feb 2021 06:37:07 -0800 (PST)
+Received: from anparri (host-95-238-70-33.retail.telecomitalia.it. [95.238.70.33])
+        by smtp.gmail.com with ESMTPSA id h1sm3984219wrr.73.2021.02.03.06.37.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Feb 2021 06:09:07 -0800 (PST)
-Date:   Wed, 3 Feb 2021 14:09:06 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v5 13/16] asm-generic/hyperv: introduce hv_device_id and
- auxiliary structures
-Message-ID: <20210203140906.g35zr7366hh7p5f3@liuwe-devbox-debian-v2>
-References: <20210120120058.29138-1-wei.liu@kernel.org>
- <20210120120058.29138-14-wei.liu@kernel.org>
- <MWHPR21MB1593959647DA60219E19C25ED7BC9@MWHPR21MB1593.namprd21.prod.outlook.com>
- <20210202170248.4hds554cyxpuayqc@liuwe-devbox-debian-v2>
- <20210203132601.ftpwgs57qtok47cg@liuwe-devbox-debian-v2>
- <CAK8P3a0m8jEij-RdP1PTcNcJW2+mXQ1dA4=s+JLXhnv+NyFiHw@mail.gmail.com>
+        Wed, 03 Feb 2021 06:37:07 -0800 (PST)
+Date:   Wed, 3 Feb 2021 15:37:00 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-hyperv@vger.kernel.org
+Subject: Re: [bug report] hv_netvsc: Copy packets sent by Hyper-V out of the
+ receive buffer
+Message-ID: <20210203143700.GA559623@anparri>
+References: <YBp2oVIdMe+G/liJ@mwanda>
+ <20210203104544.GA558156@anparri>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0m8jEij-RdP1PTcNcJW2+mXQ1dA4=s+JLXhnv+NyFiHw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20210203104544.GA558156@anparri>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Feb 03, 2021 at 02:49:53PM +0100, Arnd Bergmann wrote:
-> On Wed, Feb 3, 2021 at 2:26 PM Wei Liu <wei.liu@kernel.org> wrote:
-> > On Tue, Feb 02, 2021 at 05:02:48PM +0000, Wei Liu wrote:
-> > > On Tue, Jan 26, 2021 at 01:26:52AM +0000, Michael Kelley wrote:
-> > > > From: Wei Liu <wei.liu@kernel.org> Sent: Wednesday, January 20, 2021 4:01 AM
-> > > > > +union hv_device_id {
-> > > > > + u64 as_uint64;
-> > > > > +
-> > > > > + struct {
-> > > > > +         u64 :62;
-> > > > > +         u64 device_type:2;
-> > > > > + };
-> > > >
-> > > > Are the above 4 lines extraneous junk?
-> > > > If not, a comment would be helpful.  And we
-> > > > would normally label the 62 bit field as
-> > > > "reserved0" or something similar.
-> > > >
-> > >
-> > > No. It is not junk. I got this from a header in tree.
-> > >
-> > > I am inclined to just drop this hunk. If that breaks things, I will use
-> > > "reserved0".
-> > >
-> >
-> > It turns out adding reserved0 is required. Dropping this hunk does not
-> > work.
+On Wed, Feb 03, 2021 at 11:45:44AM +0100, Andrea Parri wrote:
+> Hi Dan,
 > 
-> Generally speaking, bitfields are not great for specifying binary interfaces,
-> as the actual bit order can differ by architecture. The normal way we get
-> around it in the kernel is to use basic integer types and define macros
-> for bit masks. Ideally, each such field should also be marked with a
-> particular endianess as __le64 or __be64, in case this is ever used with
-> an Arm guest running a big-endian kernel.
-
-Thanks for the information.
-
-I think we will need to wait until Microsoft Hypervisor clearly defines
-the endianess in its header(s) before we can make changes to the copy in
-Linux.
-
+> On Wed, Feb 03, 2021 at 01:10:41PM +0300, Dan Carpenter wrote:
+> > Hello Andrea Parri (Microsoft),
+> > 
+> > This is a semi-automatic email about new static checker warnings.
+> > 
+> > The patch 0ba35fe91ce3: "hv_netvsc: Copy packets sent by Hyper-V out
+> > of the receive buffer" from Jan 26, 2021, leads to the following
+> > Smatch complaint:
+> > 
+> >     drivers/net/hyperv/rndis_filter.c:468 rsc_add_data()
+> >     error: we previously assumed 'csum_info' could be null (see line 460)
+> > 
+> > drivers/net/hyperv/rndis_filter.c
+> >    459			}
+> >    460			if (csum_info != NULL) {
+> >                             ^^^^^^^^^^^^^^^^^
+> > "csum_info" can be NULL.
+> > 
+> >    461				memcpy(&nvchan->rsc.csum_info, csum_info, sizeof(*csum_info));
+> >    462				nvchan->rsc.ppi_flags |= NVSC_RSC_CSUM_INFO;
+> >    463			} else {
+> >    464				nvchan->rsc.ppi_flags &= ~NVSC_RSC_CSUM_INFO;
+> >    465			}
+> >    466			nvchan->rsc.pktlen = len;
+> >    467			if (hash_info != NULL) {
+> >    468				nvchan->rsc.csum_info = *csum_info;
+> >                                                         ^^^^^^^^^^^
+> > Unchecked dereference.  Plus this has "csum_info" on both sides of the
+> > assignment so maybe it is a copy and paste error?  This is equivalent to
+> > the "memcpy(&nvchan->rsc.csum_info, csum_info, sizeof(*csum_info));"
+> > in the ealier if statement but stated as an assignment instead of a
+> > memcpy().
 > 
-> That said, if you do not care about the specific order of the bits, having
-> anonymous bitfields for the reserved members is fine, I don't see a
-> reason to name it as reserved.
+> Right, I did realize about the error and I'm about to send a fix for it.
 
-Michael, let me know what you think. I'm not too fussed either way.
+For reference,
 
-Wei.
+  https://lkml.kernel.org/r/20210203113513.558864-3-parri.andrea@gmail.com/
 
-> 
->       Arnd
+  Andrea
