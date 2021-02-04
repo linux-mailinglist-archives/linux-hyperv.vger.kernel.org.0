@@ -2,44 +2,44 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A002030FA5D
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Feb 2021 18:57:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 948D730FA77
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Feb 2021 19:01:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238587AbhBDRy5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 4 Feb 2021 12:54:57 -0500
-Received: from mail-mw2nam10on2103.outbound.protection.outlook.com ([40.107.94.103]:12609
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238201AbhBDRys (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 4 Feb 2021 12:54:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dzkTqxjUGoR5kW1t64coOS5sOmoX5ToSYa6uRLcdQcn/5JeKd7IFwQph66g2RTkoCWhgjlZxsb0QYLnUEnZ1F+kxvaHwaJfzXMOTRmeSVRawTTN71baG8KPxJKgzzw3+ISDNlga64YJrc7Rlh+mws7qje02OpSeDpVdA2ZW0Csn8PojG+sGUA5FOyq+Z1XvRjyneJcDoR9hoRJ40ISyNn9UYAGK+/9iMtDAWBRsyHKjE8MXOG0YHO0bt7KvFDhKbQPHK+iQrDNcoDuYOQYfXhsIzEPulmC/SbpMGriJLyGt4NhEcD1e4gzCIohFp47/Qv/kkksiKqMAJrxzvbPi16Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8a15breN6v7/6RZ8assTbzjyUpkox5g6VCUQvJu3rxI=;
- b=Xfb8fi7XM4sk9PdswCAzVYQr2D/CwphQ8TajTGJQRvoCeAcWyIby6rqIBQDo8W8F/fk+Out6Jl/EHTBqKe0/LOEdLWRbbHnaCGm4Cc0/OP5xvgcJFhfP6c0e/oxaIU7SdxPSNkh6+YBCX0pSEENo9GRDW1xVpqcPXM+ERuf0qgz4QMGEi6J0NGrsv+Cgf3UlZZvkmJ3MBcqIWEQG5+UkE5CQ9h0sTcSOyLUYSaPLiFjCljuaFTD6Fel6Gc8fNBQhfsKNNvEJYm2cwzez5GjNuuT/Ni7CZ8W1Zd3KYxE2SH1SxI/olFXPS9zMlgJsqgmbBFbiJcW/UyelkpbIlhzhww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8a15breN6v7/6RZ8assTbzjyUpkox5g6VCUQvJu3rxI=;
- b=HAIv6KsykTy+BBqf7BWzhkOCa5jHRLFnehMCcQ+pXbDZsh5bb+BZ1hF4vk5aohgIFsTDL8oUF2/fyTy4mkdcqnOosx5LiCSG/IaYHAGSwK0koFhXB66Sr3e7eW518zxSx6sQpI+vZhpGnmIhU9iO9jLOPceoPIlTcFj/KHfjnXk=
-Received: from (2603:10b6:301:7c::11) by
- MWHPR2101MB0873.namprd21.prod.outlook.com (2603:10b6:301:7e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.6; Thu, 4 Feb
- 2021 17:53:55 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3846.006; Thu, 4 Feb 2021
- 17:53:55 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-CC:     "virtualization@lists.linux-foundation.org" 
+        id S238768AbhBDR56 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 4 Feb 2021 12:57:58 -0500
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:34435 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238234AbhBDR5Z (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 4 Feb 2021 12:57:25 -0500
+Received: by mail-wm1-f52.google.com with SMTP id o10so6407220wmc.1;
+        Thu, 04 Feb 2021 09:57:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9qa0Q6as6yv89x3GmsWvsZH1y46ZMh2uUbv+ovOA/44=;
+        b=BkypIh7P8FKFgZXM1SmFtZ81ujzw8p/QmTA0/O3Qh1rW8WlwD6nWNHrtuj+KMB6KMW
+         /jTJ3fWnuejgJX1xyIqECiQNZW0ArANemwbIZQTdSL34iyQIEJuIIIvqNifSRPB1BJ5K
+         0ndawLW1Mz7T0LAxsG96NYUxMuuoWzsSrip55IFqcT6C6O1aZgq8dG2YHsPXXHLLH1Pn
+         yf1Zb53Ju9jbp381uUwfxGYlxYiMr+LiXylG/V8Feau5/uzB1oALBoOwGJ7j0Pt0lReM
+         aNLAgJU14Z+VMC/kfmWtvB3IuVlIYizSzcrY/VBoNeFnV/lcFQkfL4EBrhzCAR17/SbQ
+         68pg==
+X-Gm-Message-State: AOAM531mgLeKjZPQTWtx9kuVgMKDuqf69bEgPSdGbF6/f57zsllL3wst
+        wxA+hlJp+jEpPe6nimmVuJw=
+X-Google-Smtp-Source: ABdhPJxtTbtDfvGZetjXqClkxgzmnR7cmouqoXEfNgjaGpEC8905RtICYozojetmaRaMNXfuogUtDw==
+X-Received: by 2002:a1c:7507:: with SMTP id o7mr289922wmc.165.1612461402824;
+        Thu, 04 Feb 2021 09:56:42 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id t18sm8945483wrr.56.2021.02.04.09.56.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Feb 2021 09:56:42 -0800 (PST)
+Date:   Thu, 4 Feb 2021 17:56:41 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
         <virtualization@lists.linux-foundation.org>,
         Linux Kernel List <linux-kernel@vger.kernel.org>,
         Vineeth Pillai <viremana@linux.microsoft.com>,
@@ -52,79 +52,119 @@ CC:     "virtualization@lists.linux-foundation.org"
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>
-Subject: RE: [PATCH v6 16/16] iommu/hyperv: setup an IO-APIC IRQ remapping
- domain for root partition
-Thread-Topic: [PATCH v6 16/16] iommu/hyperv: setup an IO-APIC IRQ remapping
- domain for root partition
-Thread-Index: AQHW+j31sX8XTKaHaEW+K0rkDWqrRapISLLw
-Date:   Thu, 4 Feb 2021 17:53:55 +0000
-Message-ID: <MWHPR21MB159329D4EA13215C208D7828D7B39@MWHPR21MB1593.namprd21.prod.outlook.com>
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v6 15/16] x86/hyperv: implement an MSI domain for root
+ partition
+Message-ID: <20210204175641.pzonxqrqlo7uvvze@liuwe-devbox-debian-v2>
 References: <20210203150435.27941-1-wei.liu@kernel.org>
- <20210203150435.27941-17-wei.liu@kernel.org>
-In-Reply-To: <20210203150435.27941-17-wei.liu@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-02-04T17:53:53Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ef2c78a6-f632-4744-a1c1-679068bd2287;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 949aa3eb-507f-490e-508e-08d8c935d74c
-x-ms-traffictypediagnostic: MWHPR2101MB0873:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2101MB087360720F5F0F8A1F0C540AD7B39@MWHPR2101MB0873.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1051;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eguCWD75ZeKlC1x8rCdqJn75BSg1oU9+ceoFGDP5Ju7lTd38Si02+u46gaQRz2ie551/P6t2rbBAN4KjWv73mXLYQCavJeWRD6+H5ODmvaovjhL56LPFCQTELuNlwJIsvgBxJKz/wupM3uDkJogXaLF7nzafJTZj/MR+QB6QNz5ov2R98Fy8FJ2UOmas1ARKuw11Ft3ec42WMbr5MNrvNUtUURRB6lHbmSdfPpqkh35NBQ5dOMxkKhmiOqPZtZxbpJ5LUwcKCYD/fmi3WUSjNode3ycf/793pFWG3ghDaPRjCVVdIi8l+gQPRbqcmnmEWX9om9mGlr+krD2bsD3CjjH2HdpdgxFG1dtGlUo9BOFjFRqzJvf81lz0f8joD59eRvgE6C2mX9Y2NNSpNzosAzCBI2Bbzvwwq8lfE5tfz9qFZwPETHJhylW8HTx+LsLtA2URJNeswke3TyCApsfFdYe1Pov9a6l8CVwXccqCex9dTeOJYtOvwFIGEtBIsKJcMiwOGBS7UwY1ttkWXvaVBQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(39860400002)(366004)(136003)(346002)(6506007)(8676002)(33656002)(66556008)(26005)(82950400001)(8990500004)(66476007)(82960400001)(186003)(86362001)(2906002)(7696005)(10290500003)(4744005)(316002)(66446008)(76116006)(4326008)(110136005)(478600001)(55016002)(52536014)(7416002)(71200400001)(8936002)(64756008)(83380400001)(54906003)(66946007)(9686003)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: z1FZG/qVdzvPmsdw0RBb+ElltqpJLNjstJNUsWY9cDuDrHPdgecDMmvQzWwbRHmjh8gTSEVzP7jOZ55k4DH/uQiucvw+Q1fD1bfnEX80ofuCli8cZcOTyaYVLp65MXaKBdRfS/R2Y9l5phQtAPoGtLIMSWHAAQT0VXOOX2TiGoAoALKJd/LsXJ4JLLXslVfV3gIOnpKNSDnsFim2jFMZGjLd5dupqNPssgjn9mlzn1Go1zWc1g3jpXkpblMYpoFAtB3OzBiz1VaipZTBxQJdrYdkXEEJFTJmvGPwgB+EAAL6+xDp6q2D+Glph1y9e0LQVk+0BX+bBhUnqUizT+Dtb43b7YCqaN3RnEk1l8d9+nie2sk02JSgjCSEqPhfPN1JmM8LcF/MhEZJu3uqECpzRdOliinX9lpA7qPNshb63orlcXNXVGN3RZCPlEBZeU4AiRFs1PzgsDsXoatfZcRfoB47Sc9ucRktctxlSbJzdVC+/Z556VI7vmRThRGmq9g+/zMASW1+Ro7HgMLle6w13ymKQOkRFsDVlLqfMuHdWoJDUOlTK6fgfh6RyEN9DXZm5ztYnH2rgUmLebGAgRyEUejB9HKWTzmHfhcbCC80kUFApzT6qE3MpjVcFtwmLy5nH3rE7on7AoW/LQb/OLkiwrp10d7knbFU59xlPcs5GAF8qzSBPId4P5kVSVaIjBSUTLAJks0mugwReKv1X3cWgTpoIT9bwc7KRTqg9MrYGVc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ <20210203150435.27941-16-wei.liu@kernel.org>
+ <MWHPR21MB15932010E9CF5975EBAD1EDAD7B39@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 949aa3eb-507f-490e-508e-08d8c935d74c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2021 17:53:55.3368
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WyxcVU5EQHqyF1Nzke/qbyUVZXNeLMmsPIkHC849qCzSS4GCVlIpHf6jYD9Ja6Fq995VazWiXmci5Ovx/ho3AY3ExV3rS1FYJN5JbFe4mkE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2101MB0873
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB15932010E9CF5975EBAD1EDAD7B39@MWHPR21MB1593.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Wei Liu <wei.liu@kernel.org> Sent: Wednesday, February 3, 2021 7:05 A=
-M
->=20
-> Just like MSI/MSI-X, IO-APIC interrupts are remapped by Microsoft
-> Hypervisor when Linux runs as the root partition. Implement an IRQ
-> domain to handle mapping and unmapping of IO-APIC interrupts.
->=20
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> ---
-> v6:
-> 1. Simplify code due to changes in a previous patch.
-> ---
->  arch/x86/hyperv/irqdomain.c     |  25 +++++
->  arch/x86/include/asm/mshyperv.h |   4 +
->  drivers/iommu/hyperv-iommu.c    | 177 +++++++++++++++++++++++++++++++-
->  3 files changed, 203 insertions(+), 3 deletions(-)
->=20
+On Thu, Feb 04, 2021 at 05:43:16PM +0000, Michael Kelley wrote:
+[...]
+> >  remove_cpuhp_state:
+> > diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+> > new file mode 100644
+> > index 000000000000..117f17e8c88a
+> > --- /dev/null
+> > +++ b/arch/x86/hyperv/irqdomain.c
+> > @@ -0,0 +1,362 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +/*
+> > + * for Linux to run as the root partition on Microsoft Hypervisor.
+> 
+> Nit:  Looks like the initial word "Irqdomain" got dropped from the above
+> comment line.  But don't respin just for this.
+> 
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+I've added it back. Thanks.
+
+> > +static int hv_map_interrupt(union hv_device_id device_id, bool level,
+> > +		int cpu, int vector, struct hv_interrupt_entry *entry)
+> > +{
+> > +	struct hv_input_map_device_interrupt *input;
+> > +	struct hv_output_map_device_interrupt *output;
+> > +	struct hv_device_interrupt_descriptor *intr_desc;
+> > +	unsigned long flags;
+> > +	u64 status;
+> > +	cpumask_t mask = CPU_MASK_NONE;
+> > +	int nr_bank, var_size;
+> > +
+> > +	local_irq_save(flags);
+> > +
+> > +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+> > +
+> > +	intr_desc = &input->interrupt_descriptor;
+> > +	memset(input, 0, sizeof(*input));
+> > +	input->partition_id = hv_current_partition_id;
+> > +	input->device_id = device_id.as_uint64;
+> > +	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
+> > +	intr_desc->vector_count = 1;
+> > +	intr_desc->target.vector = vector;
+> > +
+> > +	if (level)
+> > +		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_LEVEL;
+> > +	else
+> > +		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_EDGE;
+> > +
+> > +	cpumask_set_cpu(cpu, &mask);
+> > +	intr_desc->target.vp_set.valid_bank_mask = 0;
+> > +	intr_desc->target.vp_set.format = HV_GENERIC_SET_SPARSE_4K;
+> > +	nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), &mask);
+> 
+> There's a function get_cpu_mask() that returns a pointer to a cpumask with only
+> the specified cpu set in the mask.  It returns a const pointer to the correct entry
+> in a pre-allocated array of all such cpumasks, so it's a lot more efficient than
+> allocating and initializing a local cpumask instance on the stack.
+> 
+
+That's nice.
+
+I've got the following diff to fix both issues. If you're happy with the
+changes, can you give your Reviewed-by? That saves a round of posting.
+
+diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
+index 0cabc9aece38..fa71db798465 100644
+--- a/arch/x86/hyperv/irqdomain.c
++++ b/arch/x86/hyperv/irqdomain.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+
+ /*
+- * for Linux to run as the root partition on Microsoft Hypervisor.
++ * Irqdomain for Linux to run as the root partition on Microsoft Hypervisor.
+  *
+  * Authors:
+  *  Sunil Muthuswamy <sunilmut@microsoft.com>
+@@ -20,7 +20,7 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+        struct hv_device_interrupt_descriptor *intr_desc;
+        unsigned long flags;
+        u64 status;
+-       cpumask_t mask = CPU_MASK_NONE;
++       const cpumask_t *mask;
+        int nr_bank, var_size;
+
+        local_irq_save(flags);
+@@ -41,10 +41,10 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+        else
+                intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_EDGE;
+
+-       cpumask_set_cpu(cpu, &mask);
++       mask = cpumask_of(cpu);
+        intr_desc->target.vp_set.valid_bank_mask = 0;
+        intr_desc->target.vp_set.format = HV_GENERIC_SET_SPARSE_4K;
+-       nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), &mask);
++       nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), mask);
+        if (nr_bank < 0) {
+                local_irq_restore(flags);
+                pr_err("%s: unable to generate VP set\n", __func__);
