@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE17F310404
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Feb 2021 05:21:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23EF7310445
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Feb 2021 06:01:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbhBEEUs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 4 Feb 2021 23:20:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41868 "EHLO mail.kernel.org"
+        id S230185AbhBEFAz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 5 Feb 2021 00:00:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229518AbhBEEUr (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 4 Feb 2021 23:20:47 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 4717F64FA9;
-        Fri,  5 Feb 2021 04:20:07 +0000 (UTC)
+        id S229720AbhBEFAt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 5 Feb 2021 00:00:49 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id D6B2B64F9C;
+        Fri,  5 Feb 2021 05:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612498807;
-        bh=dZ7oBZDsHR/8Z3anSIEZghT8NDUy4ARYKhDT508Eq30=;
+        s=k20201202; t=1612501207;
+        bh=ANRXaJiGNzWVr3mfR9VypXiYgLGkuFRRJgyf3MDSJzk=;
         h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=qwTW9cG5DdwxTRucZ3dABeBWGR8rA6gILnUijkeh5rr98GSznZ/mPlI1coVVuZ9fO
-         4g7u+l9VRQ/MCmKtgAK3SbFziAMDzuupnwhJBDGCvQhcafQ/ypnyNBD9keCslyhbxC
-         gCsigabbjq4k1cjmqN33RQnrA01+GczMfVES4C6pJzCTi5hCQq5rVZrtgSe49Gtdro
-         zk5AuxzcbjzbNOcV4VWZRQk83O905anTnNAYt1A/7uBNhyCraIiiM991EZf5mUQ4P+
-         o7YzV6oPJ8L+/kJksdRCNawT0r1XFosls4tIYfj0Map7a8tmCvORN4tlLjqTQ5qrBU
-         a4a4K+qZABHlA==
+        b=dBa/cEE+TB+HadwkfkFJittt9+BTb8UQC6oUDkirDV3JLGmUmmiyjTSd6B/3rupRN
+         5g53wn/CBcWx1hzg4lJXVghYdXpsVSj2rTD+R/BVrZYg2Y1+Wt0MmMyXs0WZYDKcTN
+         Pnc1sVOIOuPxqnidg/JVvQ+kplpTgaa0VerYZzx+bokGzNhAdHRUgQHFSNF6M9xOTX
+         Z/Z37kbuRjz9HhBMyK3ygU7MqRInhQsc1wqtcsxoIeDTF58tbIUa8AHH2n6e5bafr+
+         GTCXy8OwKEIk88v6Ez6N5dGcrWZtXlk0V65CZIFD+BtmSCtn41U/JeW92YvQffT7DR
+         6xZnwRk4xdpAA==
 Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 3B351609F2;
-        Fri,  5 Feb 2021 04:20:07 +0000 (UTC)
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id BE6FE609F3;
+        Fri,  5 Feb 2021 05:00:07 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] hv_netvsc: Reset the RSC count if NVSP_STAT_FAIL in
- netvsc_receive()
+Subject: Re: [PATCH net-next 0/2] Amend "hv_netvsc: Copy packets sent by Hyper-V
+ out of the receive buffer"
 From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <161249880723.20393.1705346337998765386.git-patchwork-notify@kernel.org>
-Date:   Fri, 05 Feb 2021 04:20:07 +0000
-References: <20210203113602.558916-1-parri.andrea@gmail.com>
-In-Reply-To: <20210203113602.558916-1-parri.andrea@gmail.com>
+Message-Id: <161250120777.4551.1394354555198718660.git-patchwork-notify@kernel.org>
+Date:   Fri, 05 Feb 2021 05:00:07 +0000
+References: <20210203113513.558864-1-parri.andrea@gmail.com>
+In-Reply-To: <20210203113513.558864-1-parri.andrea@gmail.com>
 To:     Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, kys@microsoft.com,
         haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
@@ -48,27 +48,23 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net.git (refs/heads/master):
+This series was applied to netdev/net-next.git (refs/heads/master):
 
-On Wed,  3 Feb 2021 12:36:02 +0100 you wrote:
-> Commit 44144185951a0f ("hv_netvsc: Add validation for untrusted Hyper-V
-> values") added validation to rndis_filter_receive_data() (and
-> rndis_filter_receive()) which introduced NVSP_STAT_FAIL-scenarios where
-> the count is not updated/reset.  Fix this omission, and prevent similar
-> scenarios from occurring in the future.
+On Wed,  3 Feb 2021 12:35:11 +0100 you wrote:
+> Patch #2 also addresses the Smatch complaint reported here:
 > 
-> Reported-by: Juan Vazquez <juvazq@microsoft.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Fixes: 44144185951a0f ("hv_netvsc: Add validation for untrusted Hyper-V values")
+>    https://lkml.kernel.org/r/YBp2oVIdMe+G%2FliJ@mwanda/
+> 
+> Thanks,
+>   Andrea
 > 
 > [...]
 
 Here is the summary with links:
-  - [net] hv_netvsc: Reset the RSC count if NVSP_STAT_FAIL in netvsc_receive()
-    https://git.kernel.org/netdev/net/c/12bc8dfb83b5
+  - [net-next,1/2] hv_netvsc: Allocate the recv_buf buffers after NVSP_MSG1_TYPE_SEND_RECV_BUF
+    https://git.kernel.org/netdev/net-next/c/0102eeedb717
+  - [net-next,2/2] hv_netvsc: Load and store the proper (NBL_HASH_INFO) per-packet info
+    https://git.kernel.org/netdev/net-next/c/8dff9808e973
 
 You are awesome, thank you!
 --
