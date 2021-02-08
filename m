@@ -2,90 +2,133 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB92B31316F
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Feb 2021 12:54:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 412B931357B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Feb 2021 15:46:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233225AbhBHLyA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Feb 2021 06:54:00 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:39668 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233497AbhBHLv7 (ORCPT
+        id S233042AbhBHOpq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Feb 2021 09:45:46 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33928 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232931AbhBHOon (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Feb 2021 06:51:59 -0500
-Received: by mail-wr1-f41.google.com with SMTP id h12so435126wrw.6
-        for <linux-hyperv@vger.kernel.org>; Mon, 08 Feb 2021 03:51:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sRMWs0FYMXPqa9zVntWGyH0kXhuXzQDzvcNFN0yn9fQ=;
-        b=k09k0vPfJWeC8Hv1MDc2RBQ0xd9pruYo+X5HNNWtatnn4UZ75M0WHEKCjgm6MsKC3O
-         qecKG2+Wawg0cSI4/+XdZDuZQAKt6kGlzNjPpghgHHYLcre7sIbNi86mhymvKgmEihSn
-         ndJDea71DShkBvtmQqz8brpaaMHFv1KzMxHQmbmVL5BMcIqfwvElRP7Ix1evDLqGWgeZ
-         2ifb472LMdD5CRr6+hnQvTn/sbdjnn03UQ3PE/bAu9C3Dh/Q+J+cuT/HioeHBtM23Kfi
-         lVZzDPjEFVKmvtagUUMQtIQoUzK9TaompERWqr/mZguA8EyVW+5st8Z/PX+uTfpBSxap
-         4cmw==
-X-Gm-Message-State: AOAM530YB/wDoejWNn3PzQkaS28o2YSnWETns94Kd9J6e0DkBTdD3eHY
-        XKaSPAAcy38PbeEnPisMXn8=
-X-Google-Smtp-Source: ABdhPJz76IgEbznZbr88Ysct+wGRn0XmJo/vMBJxuilNcoVoswhNx4MMUGv1BsFSRdL0NtSIHZdBIg==
-X-Received: by 2002:a5d:58fb:: with SMTP id f27mr7661301wrd.119.1612785078000;
-        Mon, 08 Feb 2021 03:51:18 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id q7sm28746533wrx.18.2021.02.08.03.51.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Feb 2021 03:51:17 -0800 (PST)
-Date:   Mon, 8 Feb 2021 11:51:16 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Melanie Plageman (Microsoft)" <melanieplageman@gmail.com>
-Cc:     andres@anarazel.de, haiyangz@microsoft.com, kys@microsoft.com,
-        linux-hyperv@vger.kernel.org, sashal@kernel.org,
-        mikelley@microsoft.com, sthemmin@microsoft.com,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH 2/2] scsi: storvsc: Make max hw queues updatable
-Message-ID: <20210208115116.wpuznzvf75duifsi@liuwe-devbox-debian-v2>
-References: <20210203010904.hywx5xmwik52ccao@alap3.anarazel.de>
- <20210205212447.3327-1-melanieplageman@gmail.com>
- <20210205212447.3327-3-melanieplageman@gmail.com>
+        Mon, 8 Feb 2021 09:44:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612795397;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hJ25Ui01C1ncQ+IMfWQfND73YP38mMdrHPvtKAqidhw=;
+        b=B55X4xQqd041i1pdvyg6+KZ2QOupdw4IbgssIoJ2RmD3KBBrDJ61w5GB8FRicdOHqbglFc
+        h7k0TiHs65DHqxVO6MTFam5dNdJoVVCGTHJ75vSOIHOrto1GboRCJj5LS+TtQHj+Rhfyyi
+        BjVpKOog1HrPa9hEeYwInxwhnpTWkmo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-Ja8sH24zPYSqpZXLVrafYw-1; Mon, 08 Feb 2021 09:43:13 -0500
+X-MC-Unique: Ja8sH24zPYSqpZXLVrafYw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 564B31966322;
+        Mon,  8 Feb 2021 14:43:11 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-115-25.ams2.redhat.com [10.36.115.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 899315D9DE;
+        Mon,  8 Feb 2021 14:43:08 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     kuba@kernel.org
+Cc:     netdev@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andy King <acking@vmware.com>, Wei Liu <wei.liu@kernel.org>,
+        Dmitry Torokhov <dtor@vmware.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        George Zhang <georgezhang@vmware.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Stefano Garzarella <sgarzare@redhat.com>
+Subject: [PATCH net] vsock: fix locking in vsock_shutdown()
+Date:   Mon,  8 Feb 2021 15:43:07 +0100
+Message-Id: <20210208144307.83628-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210205212447.3327-3-melanieplageman@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Melanie
+In vsock_shutdown() we touched some socket fields without holding the
+socket lock, such as 'state' and 'sk_flags'.
 
-On Fri, Feb 05, 2021 at 09:24:47PM +0000, Melanie Plageman (Microsoft) wrote:
-> - Change name of parameter to storvsc_max_hw_queues
-> - Make the parameter updatable on a running system
-> - Change error to warning for an invalid value of the parameter at
->   driver init time
-> 
-> Signed-off-by: Melanie Plageman (Microsoft) <melanieplageman@gmail.com>
+Also, after the introduction of multi-transport, we are accessing
+'vsk->transport' in vsock_send_shutdown() without holding the lock
+and this call can be made while the connection is in progress, so
+the transport can change in the meantime.
 
-This patch contains a section which seems to be a copy&paste error from
-another email.
+To avoid issues, we hold the socket lock when we enter in
+vsock_shutdown() and release it when we leave.
 
-Also, please use get_maintainers.pl to CC the correct maintainers. You
-can configure git-sendemail such that the correct people are CC'ed
-automatically. The storvsc code normally goes via the storage
-maintainers' tree.
+Among the transports that implement the 'shutdown' callback, only
+hyperv_transport acquired the lock. Since the caller now holds it,
+we no longer take it.
 
-If you have any question about how to use the get_maintainers.pl script
-or the upstreaming process in general, let me know.
+Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ net/vmw_vsock/af_vsock.c         | 8 +++++---
+ net/vmw_vsock/hyperv_transport.c | 2 --
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Wei.
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 4ea301fc2bf0..5546710d8ac1 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -943,10 +943,12 @@ static int vsock_shutdown(struct socket *sock, int mode)
+ 	 */
+ 
+ 	sk = sock->sk;
++
++	lock_sock(sk);
+ 	if (sock->state == SS_UNCONNECTED) {
+ 		err = -ENOTCONN;
+ 		if (sk->sk_type == SOCK_STREAM)
+-			return err;
++			goto out;
+ 	} else {
+ 		sock->state = SS_DISCONNECTING;
+ 		err = 0;
+@@ -955,10 +957,8 @@ static int vsock_shutdown(struct socket *sock, int mode)
+ 	/* Receive and send shutdowns are treated alike. */
+ 	mode = mode & (RCV_SHUTDOWN | SEND_SHUTDOWN);
+ 	if (mode) {
+-		lock_sock(sk);
+ 		sk->sk_shutdown |= mode;
+ 		sk->sk_state_change(sk);
+-		release_sock(sk);
+ 
+ 		if (sk->sk_type == SOCK_STREAM) {
+ 			sock_reset_flag(sk, SOCK_DONE);
+@@ -966,6 +966,8 @@ static int vsock_shutdown(struct socket *sock, int mode)
+ 		}
+ 	}
+ 
++out:
++	release_sock(sk);
+ 	return err;
+ }
+ 
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index 630b851f8150..5a3beef73461 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -479,9 +479,7 @@ static int hvs_shutdown(struct vsock_sock *vsk, int mode)
+ 	if (!(mode & SEND_SHUTDOWN))
+ 		return 0;
+ 
+-	lock_sock(sk);
+ 	hvs_shutdown_lock_held(vsk->trans, mode);
+-	release_sock(sk);
+ 	return 0;
+ }
+ 
+-- 
+2.29.2
 
-> ---
-> 
-> Andres wrote:
-> >> On 2021-02-02 15:19:08 -0500, Melanie Plageman wrote:
-> >> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> >> index 2e4fa77445fd..d72ab6daf9ae 100644
-> >> --- a/drivers/scsi/storvsc_drv.c
-> >> +++ b/drivers/scsi/storvsc_drv.c
-> >> @@ -378,10 +378,14 @@ static u32 max_outstanding_req_per_channel;
-> >>  static int storvsc_change_queue_depth(struct scsi_device *sdev, int
-[...]
