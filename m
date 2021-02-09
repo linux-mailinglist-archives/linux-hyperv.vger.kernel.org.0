@@ -2,54 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B58EA314FC3
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Feb 2021 14:06:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7FB6314FE0
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Feb 2021 14:14:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231197AbhBINGN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 9 Feb 2021 08:06:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20756 "EHLO
+        id S230395AbhBINNR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 9 Feb 2021 08:13:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30661 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231159AbhBINF7 (ORCPT
+        by vger.kernel.org with ESMTP id S230346AbhBINNM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 9 Feb 2021 08:05:59 -0500
+        Tue, 9 Feb 2021 08:13:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612875871;
+        s=mimecast20190719; t=1612876305;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=YlDBN62QT+LjsTA/QUxGQGe58lH6AMBqtq7gFGvrAJU=;
-        b=h+zcKPaZLzfWCXivP745Kiq+Ey9uZ+SD0rxSXpkgMxG4ykzSzVGJ3l4SHOjWgiSJvRAXD7
-        VS2GfN0f8rIUQji6zEhCnlPwzYqQZiDFKlWQcrKpSdpwliFNG1b+lTPpoVeRp2HVY0bROV
-        te0Gkt7GY6vIKE+1b+SgKTmCbzi+xaw=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-5UGn4PRvMTqSJ6U8DjyqSA-1; Tue, 09 Feb 2021 08:04:30 -0500
-X-MC-Unique: 5UGn4PRvMTqSJ6U8DjyqSA-1
-Received: by mail-ed1-f70.google.com with SMTP id f21so14749533edx.10
-        for <linux-hyperv@vger.kernel.org>; Tue, 09 Feb 2021 05:04:30 -0800 (PST)
+        bh=JPV4E371pW4Hi/fRCT2lEIP2ic6FNIvRlNKRhMtd+mg=;
+        b=ICYGiUnpzGfi2GAnYALp6ZWBULxUyu/A13I+l8sfiQMFTJyOXJqL5unxPrbCt22fZNWFl/
+        M7Vf/zL4+7kptxsPdvDIkmhnk/I1Ol4U57OkgkESSoIG4vy2IPsHJaMH6cuykpAXHgUSd5
+        xh31E6vL5k8uUmIOZVQMEBZ3hDX9R8Y=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-450-G_DuT9TKN5inLzpgcPSIWg-1; Tue, 09 Feb 2021 08:11:43 -0500
+X-MC-Unique: G_DuT9TKN5inLzpgcPSIWg-1
+Received: by mail-ed1-f69.google.com with SMTP id f21so14785085edx.10
+        for <linux-hyperv@vger.kernel.org>; Tue, 09 Feb 2021 05:11:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=YlDBN62QT+LjsTA/QUxGQGe58lH6AMBqtq7gFGvrAJU=;
-        b=WqdKU55Bcuyny5a16xkdlEXS/OB2jMcHp7YNWvZ4YZ74YnsWZf7I31MU53gmh/j35M
-         Ium9thhVDexiW5d1hkjh/w1r0KACsUzXDOP5zQyBs8bs/M8HZjcAiaxY5kb/7P+n3c4H
-         g9hNUMc7XKxalcRMgvuVlcsDFg7/CY3SKP0qcVkBffL0lu/3KpdECnEDExee+96gSe7V
-         GIDQE8/x/3dJT6giTTRpBVq74VYTjDjG4wU9azuxmPNP62tX6OUVqqaYJWV6AmDKex6S
-         PkPLrGaMZ8pg4DuMyAxgCCrl5DCV8KgJR5RjxlguVfh7fkV8zMyRP3iehbvAZVY/UAkL
-         RxmA==
-X-Gm-Message-State: AOAM533SDCODqkITcKQ5jf6YaaVmpIUOerexn2+9NupbLJ1Hj402HXPK
-        RVdtmU6fvuCOvuP5uCmdvCVjC4xwS5g7GkaTng0E+xJTHVDpi0sgpmg8ntaG8dhg/7T3TuXb5as
-        ze3pL8bOsK7x5qESNY47VQ8kx
-X-Received: by 2002:a05:6402:104e:: with SMTP id e14mr23107270edu.316.1612875869257;
-        Tue, 09 Feb 2021 05:04:29 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyo4HIuR+0T9rUcQDNRaZ095+7jSeihXr6nVh2iiZp6SzMTP3xc+j9f2+Ss547tuohb9vi9EQ==
-X-Received: by 2002:a05:6402:104e:: with SMTP id e14mr23107248edu.316.1612875869035;
-        Tue, 09 Feb 2021 05:04:29 -0800 (PST)
+        bh=JPV4E371pW4Hi/fRCT2lEIP2ic6FNIvRlNKRhMtd+mg=;
+        b=bcRxiRpJhLjVyyVKv89O4mdXvbMY83YI6l023NkwOju7M7jxndyWnpLk9hIXc6v48I
+         0fHmKoCmGdeoccxdfQFiqXE0ko6qyTjVFKvc68h39cevw8DqxRCf0lqVRf9P1LdZjCiF
+         y0He5s6oeLukDJy7lkYGz4VEwSYCef9cS/4MhbhhpXcbluEdPgvp5/hV6i1CT5ETI6V/
+         MK0IOseQMLUnMfB1PByNDuPIMAxhx4T/r6NptqaJJVpek4qZ0AV3cZk27wyQyL1+DzDU
+         Hv5B+W1agRWdzNPejqhiwwGR7iiAuSiFyrTJElvbt3bHAdGEMcOe6F0xtYbHbjEz+Sas
+         LGyg==
+X-Gm-Message-State: AOAM530JnUN+8SpNlGdhfUajJIesaxCmpHrY0ajjx3Yu0Jj5gH+EnFlZ
+        Uk0oK5MGEYVHzmvhvxFW6NclvK4OZY0nlmA+3GMLwa+WNZl7EMMJ/lNJXzrYU4TRgEv4Xr6vYEU
+        5R/TDRkfUla5NwNYDmSDMoovy
+X-Received: by 2002:a05:6402:3514:: with SMTP id b20mr22296865edd.100.1612876302603;
+        Tue, 09 Feb 2021 05:11:42 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJw/WK0nGkVnh7ZMDgQv1+T8dKAGFOCX5x9yCFgm4PCWOZM5WxJzeOrgpZvsyZPtdUabdzob0w==
+X-Received: by 2002:a05:6402:3514:: with SMTP id b20mr22296839edd.100.1612876302385;
+        Tue, 09 Feb 2021 05:11:42 -0800 (PST)
 Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id a25sm11417578eds.48.2021.02.09.05.04.27
+        by smtp.gmail.com with ESMTPSA id hc13sm4831808ejc.5.2021.02.09.05.11.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 05:04:28 -0800 (PST)
+        Tue, 09 Feb 2021 05:11:41 -0800 (PST)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         linux-hyperv@vger.kernel.org
@@ -58,13 +58,12 @@ Cc:     virtualization@lists.linux-foundation.org,
         viremana@linux.microsoft.com, sunilmut@microsoft.com,
         nunodasneves@linux.microsoft.com, wei.liu@kernel.org,
         ligrassi@microsoft.com, kys@microsoft.com
-Subject: Re: [RFC PATCH 01/18] x86/hyperv: convert hyperv statuses to linux
- error codes
-In-Reply-To: <1605918637-12192-2-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: Re: [RFC PATCH 04/18] virt/mshv: request version ioctl
+In-Reply-To: <1605918637-12192-5-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1605918637-12192-2-git-send-email-nunodasneves@linux.microsoft.com>
-Date:   Tue, 09 Feb 2021 14:04:27 +0100
-Message-ID: <871rdpo0is.fsf@vitty.brq.redhat.com>
+ <1605918637-12192-5-git-send-email-nunodasneves@linux.microsoft.com>
+Date:   Tue, 09 Feb 2021 14:11:40 +0100
+Message-ID: <87y2fxmlmb.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -73,137 +72,228 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Nuno Das Neves <nunodasneves@linux.microsoft.com> writes:
 
-> Return linux-friendly error codes from hypercall wrapper functions.
-> This will be needed in the mshv module.
+> Reserve ioctl number in userpsace-api/ioctl/ioctl-number.rst
+> Introduce MSHV_REQUEST_VERSION ioctl.
+> Introduce documentation for /dev/mshv in Documentation/virt/mshv
 >
 > Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > ---
->  arch/x86/hyperv/hv_proc.c         | 30 ++++++++++++++++++++++++++---
->  arch/x86/include/asm/mshyperv.h   |  1 +
->  include/asm-generic/hyperv-tlfs.h | 32 +++++++++++++++++++++----------
->  3 files changed, 50 insertions(+), 13 deletions(-)
+>  .../userspace-api/ioctl/ioctl-number.rst      |  2 +
+>  Documentation/virt/mshv/api.rst               | 62 +++++++++++++++++++
+>  include/linux/mshv.h                          | 11 ++++
+>  include/uapi/linux/mshv.h                     | 19 ++++++
+>  virt/mshv/mshv_main.c                         | 49 +++++++++++++++
+>  5 files changed, 143 insertions(+)
+>  create mode 100644 Documentation/virt/mshv/api.rst
+>  create mode 100644 include/linux/mshv.h
+>  create mode 100644 include/uapi/linux/mshv.h
 >
-> diff --git a/arch/x86/hyperv/hv_proc.c b/arch/x86/hyperv/hv_proc.c
-> index 0fd972c9129a..8f86f8e86748 100644
-> --- a/arch/x86/hyperv/hv_proc.c
-> +++ b/arch/x86/hyperv/hv_proc.c
-> @@ -18,6 +18,30 @@
->  #define HV_DEPOSIT_MAX_ORDER (8)
->  #define HV_DEPOSIT_MAX (1 << HV_DEPOSIT_MAX_ORDER)
->  
-> +int hv_status_to_errno(int hv_status)
-> +{
-> +	switch (hv_status) {
-> +	case HV_STATUS_SUCCESS:
-> +		return 0;
-> +	case HV_STATUS_INVALID_PARAMETER:
-> +	case HV_STATUS_UNKNOWN_PROPERTY:
-> +	case HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE:
-> +	case HV_STATUS_INVALID_VP_INDEX:
-> +	case HV_STATUS_INVALID_REGISTER_VALUE:
-> +	case HV_STATUS_INVALID_LP_INDEX:
-> +		return EINVAL;
-> +	case HV_STATUS_ACCESS_DENIED:
-> +	case HV_STATUS_OPERATION_DENIED:
-> +		return EACCES;
-> +	case HV_STATUS_NOT_ACKNOWLEDGED:
-> +	case HV_STATUS_INVALID_VP_STATE:
-> +	case HV_STATUS_INVALID_PARTITION_STATE:
-> +		return EBADFD;
-> +	}
-> +	return ENOTRECOVERABLE;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_status_to_errno);
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index 55a2d9b2ce33..13a4d3ecafca 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -343,6 +343,8 @@ Code  Seq#    Include File                                           Comments
+>  0xB5  00-0F  uapi/linux/rpmsg.h                                      <mailto:linux-remoteproc@vger.kernel.org>
+>  0xB6  all    linux/fpga-dfl.h
+>  0xB7  all    uapi/linux/remoteproc_cdev.h                            <mailto:linux-remoteproc@vger.kernel.org>
+> +0xB8  all    uapi/linux/mshv.h                                       Microsoft Hypervisor root partition APIs
+> +                                                                     <mailto:linux-hyperv@vger.kernel.org>
+>  0xC0  00-0F  linux/usb/iowarrior.h
+>  0xCA  00-0F  uapi/misc/cxl.h
+>  0xCA  10-2F  uapi/misc/ocxl.h
+> diff --git a/Documentation/virt/mshv/api.rst b/Documentation/virt/mshv/api.rst
+> new file mode 100644
+> index 000000000000..82e32de48d03
+> --- /dev/null
+> +++ b/Documentation/virt/mshv/api.rst
+> @@ -0,0 +1,62 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
->  /*
->   * Deposits exact number of pages
->   * Must be called with interrupts enabled
-> @@ -99,7 +123,7 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
->  
->  	if (status != HV_STATUS_SUCCESS) {
->  		pr_err("Failed to deposit pages: %d\n", status);
-> -		ret = status;
-> +		ret = -hv_status_to_errno(status);
+> +=====================================================
+> +Microsoft Hypervisor Root Partition API Documentation
+> +=====================================================
+> +
+> +1. Overview
+> +===========
+> +
+> +This document describes APIs for creating and managing guest virtual machines
+> +when running Linux as the root partition on the Microsoft Hypervisor.
+> +
+> +This API is not yet stable.
+> +
+> +2. Glossary/Terms
+> +=================
+> +
+> +hv
+> +--
+> +Short for Hyper-V. This name is used in the kernel to describe interfaces to
+> +the Microsoft Hypervisor.
+> +
+> +mshv
+> +----
+> +Short for Microsoft Hypervisor. This is the name of the userland API module
+> +described in this document.
+> +
+> +Partition
+> +---------
+> +A virtual machine running on the Microsoft Hypervisor.
+> +
+> +Root Partition
+> +--------------
+> +The partition that is created and assumes control when the machine boots. The
+> +root partition can use mshv APIs to create guest partitions.
+> +
+> +3. API description
+> +==================
+> +
+> +The module is named mshv and can be configured with CONFIG_HYPERV_ROOT_API.
+> +
+> +Mshv is file descriptor-based, following a similar pattern to KVM.
+> +
+> +To get a handle to the mshv driver, use open("/dev/mshv").
+> +
+> +3.1 MSHV_REQUEST_VERSION
+> +------------------------
+> +:Type: /dev/mshv ioctl
+> +:Parameters: pointer to a u32
+> +:Returns: 0 on success
+> +
+> +Before issuing any other ioctls, a MSHV_REQUEST_VERSION ioctl must be called to
+> +establish the interface version with the kernel module.
+> +
+> +The caller should pass the MSHV_VERSION as an argument.
+> +
+> +The kernel module will check which interface versions it supports and return 0
+> +if one of them matches.
+> +
+> +This /dev/mshv file descriptor will remain 'locked' to that version as long as
+> +it is open - this ioctl can only be called once per open.
+> +
 
-"-hv_status_to_errno" looks weird, could we just return
-'-EINVAL'/'-EACCES'/... from hv_status_to_errno() instead?
+KVM used to have KVM_GET_API_VERSION too but this turned out to be not
+very convenient so we use capabilities (KVM_CHECK_EXTENSION/KVM_ENABLE_CAP)
+instead.
 
->  		goto err_free_allocations;
->  	}
+> diff --git a/include/linux/mshv.h b/include/linux/mshv.h
+> new file mode 100644
+> index 000000000000..a0982fe2c0b8
+> --- /dev/null
+> +++ b/include/linux/mshv.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef _LINUX_MSHV_H
+> +#define _LINUX_MSHV_H
+> +
+> +/*
+> + * Microsoft Hypervisor root partition driver for /dev/mshv
+> + */
+> +
+> +#include <uapi/linux/mshv.h>
+> +
+> +#endif
+> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+> new file mode 100644
+> index 000000000000..dd30fc2f0a80
+> --- /dev/null
+> +++ b/include/uapi/linux/mshv.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +#ifndef _UAPI_LINUX_MSHV_H
+> +#define _UAPI_LINUX_MSHV_H
+> +
+> +/*
+> + * Userspace interface for /dev/mshv
+> + * Microsoft Hypervisor root partition APIs
+> + */
+> +
+> +#include <linux/types.h>
+> +
+> +#define MSHV_VERSION	0x0
+> +
+> +#define MSHV_IOCTL 0xB8
+> +
+> +/* mshv device */
+> +#define MSHV_REQUEST_VERSION	_IOW(MSHV_IOCTL, 0x00, __u32)
+> +
+> +#endif
+> diff --git a/virt/mshv/mshv_main.c b/virt/mshv/mshv_main.c
+> index ecb9089761fe..62f631f85301 100644
+> --- a/virt/mshv/mshv_main.c
+> +++ b/virt/mshv/mshv_main.c
+> @@ -11,25 +11,74 @@
+>  #include <linux/module.h>
+>  #include <linux/fs.h>
+>  #include <linux/miscdevice.h>
+> +#include <linux/slab.h>
+> +#include <linux/mshv.h>
 >  
-> @@ -155,7 +179,7 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
->  			if (status != HV_STATUS_SUCCESS) {
->  				pr_err("%s: cpu %u apic ID %u, %d\n", __func__,
->  				       lp_index, apic_id, status);
-> -				ret = status;
-> +				ret = -hv_status_to_errno(status);
->  			}
->  			break;
->  		}
-> @@ -203,7 +227,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
->  			if (status != HV_STATUS_SUCCESS) {
->  				pr_err("%s: vcpu %u, lp %u, %d\n", __func__,
->  				       vp_index, flags, status);
-> -				ret = status;
-> +				ret = -hv_status_to_errno(status);
->  			}
->  			break;
->  		}
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index cbee72550a12..eb75faa4d4c5 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -243,6 +243,7 @@ int hyperv_flush_guest_mapping_range(u64 as,
->  int hyperv_fill_flush_guest_mapping_list(
->  		struct hv_guest_mapping_flush_list *flush,
->  		u64 start_gfn, u64 end_gfn);
-> +int hv_status_to_errno(int hv_status);
+>  MODULE_AUTHOR("Microsoft");
+>  MODULE_LICENSE("GPL");
 >  
->  extern bool hv_root_partition;
+> +#define MSHV_INVALID_VERSION	0xFFFFFFFF
+> +#define MSHV_CURRENT_VERSION	MSHV_VERSION
+> +
+> +static u32 supported_versions[] = {
+> +	MSHV_CURRENT_VERSION,
+> +};
+> +
+> +static long
+> +mshv_ioctl_request_version(u32 *version, void __user *user_arg)
+> +{
+> +	u32 arg;
+> +	int i;
+> +
+> +	if (copy_from_user(&arg, user_arg, sizeof(arg)))
+> +		return -EFAULT;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(supported_versions); ++i) {
+> +		if (supported_versions[i] == arg) {
+> +			*version = supported_versions[i];
+> +			return 0;
+> +		}
+> +	}
+> +	return -ENOTSUPP;
+> +}
+> +
+>  static long
+>  mshv_dev_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+>  {
+> +	u32 *version = (u32 *)filp->private_data;
+> +
+> +	if (ioctl == MSHV_REQUEST_VERSION) {
+> +		/* Version can only be set once */
+> +		if (*version != MSHV_INVALID_VERSION)
+> +			return -EBADFD;
+> +
+> +		return mshv_ioctl_request_version(version, (void __user *)arg);
+> +	}
+> +
+> +	/* Version must be set before other ioctls can be called */
+> +	if (*version == MSHV_INVALID_VERSION)
+> +		return -EBADFD;
+> +
+> +	/* TODO other ioctls */
+> +
+>  	return -ENOTTY;
+>  }
 >  
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index dd385c6a71b5..445244192fa4 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -181,16 +181,28 @@ enum HV_GENERIC_SET_FORMAT {
->  #define HV_HYPERCALL_REP_START_MASK	GENMASK_ULL(59, 48)
+>  static int
+>  mshv_dev_open(struct inode *inode, struct file *filp)
+>  {
+> +	filp->private_data = kmalloc(sizeof(u32), GFP_KERNEL);
+> +	if (!filp->private_data)
+> +		return -ENOMEM;
+> +	*(u32 *)filp->private_data = MSHV_INVALID_VERSION;
+> +
+>  	return 0;
+>  }
 >  
->  /* hypercall status code */
-> -#define HV_STATUS_SUCCESS			0
-> -#define HV_STATUS_INVALID_HYPERCALL_CODE	2
-> -#define HV_STATUS_INVALID_HYPERCALL_INPUT	3
-> -#define HV_STATUS_INVALID_ALIGNMENT		4
-> -#define HV_STATUS_INVALID_PARAMETER		5
-> -#define HV_STATUS_OPERATION_DENIED		8
-> -#define HV_STATUS_INSUFFICIENT_MEMORY		11
-> -#define HV_STATUS_INVALID_PORT_ID		17
-> -#define HV_STATUS_INVALID_CONNECTION_ID		18
-> -#define HV_STATUS_INSUFFICIENT_BUFFERS		19
-> +#define HV_STATUS_SUCCESS			0x0
-> +#define HV_STATUS_INVALID_HYPERCALL_CODE	0x2
-> +#define HV_STATUS_INVALID_HYPERCALL_INPUT	0x3
-> +#define HV_STATUS_INVALID_ALIGNMENT		0x4
-> +#define HV_STATUS_INVALID_PARAMETER		0x5
-> +#define HV_STATUS_ACCESS_DENIED			0x6
-> +#define HV_STATUS_INVALID_PARTITION_STATE	0x7
-> +#define HV_STATUS_OPERATION_DENIED		0x8
-> +#define HV_STATUS_UNKNOWN_PROPERTY		0x9
-> +#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	0xA
-> +#define HV_STATUS_INSUFFICIENT_MEMORY		0xB
-> +#define HV_STATUS_INVALID_PARTITION_ID		0xD
-> +#define HV_STATUS_INVALID_VP_INDEX		0xE
-> +#define HV_STATUS_NOT_FOUND			0x10
-> +#define HV_STATUS_INVALID_PORT_ID		0x11
-> +#define HV_STATUS_INVALID_CONNECTION_ID		0x12
-> +#define HV_STATUS_INSUFFICIENT_BUFFERS		0x13
-> +#define HV_STATUS_NOT_ACKNOWLEDGED		0x14
-> +#define HV_STATUS_INVALID_VP_STATE		0x15
-> +#define HV_STATUS_NO_RESOURCES			0x1D
-> +#define HV_STATUS_INVALID_LP_INDEX		0x41
-> +#define HV_STATUS_INVALID_REGISTER_VALUE	0x50
->  
->  /*
->   * The Hyper-V TimeRefCount register and the TSC
+>  static int
+>  mshv_dev_release(struct inode *inode, struct file *filp)
+>  {
+> +	kfree(filp->private_data);
+>  	return 0;
+>  }
 
 -- 
 Vitaly
