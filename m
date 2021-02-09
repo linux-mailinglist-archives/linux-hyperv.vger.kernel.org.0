@@ -2,572 +2,165 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18F75314FF2
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Feb 2021 14:18:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 682D4315321
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Feb 2021 16:47:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231249AbhBINRQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 9 Feb 2021 08:17:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27563 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230398AbhBINRM (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 9 Feb 2021 08:17:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612876545;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dGXe5gfbBWR1g71oFIRA7vxXEcCc5TjDpBoP7esDi98=;
-        b=ec0zoF4hBaXz0W8zqsQABvMgZGLf+6z9bnP0SSewxVbAHCKxSKuJA+He+g5sukDoqZjw+J
-        tka4cxAGATdnkOjAo4v0sanNUd7JKG6pdg69JfPMAvi/7H3hlAs2DXkz4eU5ufMK6bclej
-        zEIaZ7nDdUJx4CuXgUpaF6ypsPLLDBE=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-540-qpAzk9ZxPECPpJzKAlN7gQ-1; Tue, 09 Feb 2021 08:15:43 -0500
-X-MC-Unique: qpAzk9ZxPECPpJzKAlN7gQ-1
-Received: by mail-ej1-f72.google.com with SMTP id yh28so15480379ejb.11
-        for <linux-hyperv@vger.kernel.org>; Tue, 09 Feb 2021 05:15:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=dGXe5gfbBWR1g71oFIRA7vxXEcCc5TjDpBoP7esDi98=;
-        b=ZskQAVNpwVEkm1xzxhbv2fk+5E3zble9ZFTgYcT19mzilDwybGeVj0GtvOGKvDKaiU
-         L3StieJ2D4etrruc+wk91P2AXV2hFj6sguNAUjJdXz3VJnyRJ2LpBznGeagyv4PzVFaB
-         y+pdCKEF0nGWGOwYhdNZTb/AjfcdL6RTRbG9T2emBmISueqNTjiX/kDm8NHIOvumXQf2
-         Yfu3UUX7BbOV5oVsA0CpJyFkgd2MVpZNtvxbJjROf9XkazNUZo8CRdNTmVeD5EsoFLeD
-         sxP3iaED5IS4P4A4B8ZatVYUdhAO/7pBfjWcMH+AS2FZt1Byjq5K/BfYGEQ+Kq2TSjQp
-         iMOQ==
-X-Gm-Message-State: AOAM531fQMPLPsUcU6QqVPk3go7fZckomS0JJT4SWH9l9PbYdZhsaxb1
-        QH/7pe+WJ5VoIverIV1VNP+mXQIfD4DriMYTVd2HrP5GBcORuZ3TyoUCxjMCKTGQZByFK35eNQc
-        7CL2mS5DqQ7ORcFJl8zkdAmBC
-X-Received: by 2002:a50:c04d:: with SMTP id u13mr22624221edd.226.1612876542177;
-        Tue, 09 Feb 2021 05:15:42 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwoyjHqzlRpgqVe8eCPC3VMyolVgAIS9ATAXJfjgAkueLm2Hq9ITo+qbjWynvp4Yf3uSgvUjg==
-X-Received: by 2002:a50:c04d:: with SMTP id u13mr22624195edd.226.1612876541939;
-        Tue, 09 Feb 2021 05:15:41 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id f6sm11842257edk.13.2021.02.09.05.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 05:15:41 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        linux-hyperv@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        viremana@linux.microsoft.com, sunilmut@microsoft.com,
-        nunodasneves@linux.microsoft.com, wei.liu@kernel.org,
-        ligrassi@microsoft.com, kys@microsoft.com
-Subject: Re: [RFC PATCH 05/18] virt/mshv: create partition ioctl
-In-Reply-To: <1605918637-12192-6-git-send-email-nunodasneves@linux.microsoft.com>
-References: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1605918637-12192-6-git-send-email-nunodasneves@linux.microsoft.com>
-Date:   Tue, 09 Feb 2021 14:15:40 +0100
-Message-ID: <87v9b1mlfn.fsf@vitty.brq.redhat.com>
+        id S232620AbhBIPq1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 9 Feb 2021 10:46:27 -0500
+Received: from mail-dm6nam12on2111.outbound.protection.outlook.com ([40.107.243.111]:29729
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232617AbhBIPqR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 9 Feb 2021 10:46:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nE6sNuRE8YNF35ubQNYS3VW2vYWqD4hpj0CUb1xXbFCBRN6ZJ7iZziItHnv8RK5tvxVsy7GyuydLJWwtUyNUriWlPzaBCam3VbkH6OTfVlVaW6xKNwrP8Jix80Ml2TPdlgGVASii9NdkuVruh3QOPwsIjDyyNBr8AAlUhWtP9Blq17F5FqWnuFbwdKC6q75vIQd4SRUrWDK3foWd98DMQ/CEFVd3d3zkYq5QNoR9M4OGpIpEANnKjHE00SHuZsV1UMQuOhl/26f3gcsMcJK+4YnYECAPNmo+Yd9vZ23Gbo8Ns/tKjq/IqIzajWEh25z9Z7Oi6Q3wUWpJIKFtwYav7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NZo+Z5rCHA3uWU0UPEZl4FPoJ2diSM4k0M00XcxWlyo=;
+ b=dKKTI/QFdtF6mK4mc9MJkWvApox/h5NDX8VKtlfvpAGOFiujwCr/a9wsb76dXSxoSNGV+Nqg93Wb64CXIlSr5PFo8lJ15cVdsnJDHLFTdOjRMgPCLsVeOaChBgjunGrQbXnbNLkqGUAhObPr7JIJ1Itu1HnZAbRSa+/mXKqaUZ8foBcu5bfHoM0FCHt4Dj1CsosYv2vXZP/9SguDzc7ytUCjgxM7ASZbG4mFKh3QkDuxiBCLTKpaNDagbLKD3DCkpsPdQX+RrT+nrDm78Wzu1N4c63x80g8dYpMv+pyA1vCUKO5iILWMItT4REj6PpFpiaYxXGRK8gLHduOD5nPJNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NZo+Z5rCHA3uWU0UPEZl4FPoJ2diSM4k0M00XcxWlyo=;
+ b=d7SK1ulFmjatppcPJUfJJpvGj+oHAsSO+QcF10hXDId963qICAGVr3TZWOShRCVSQJKDPm7ZhJyWhx5XeUCAxAXSoFRWE/pWUFUpcoAk09M58t3zLmDd8VFzGg+rqt28HGDwSrBuBHbFQodw0fJRYr+9B84rwErSqsIV52spqG4=
+Received: from (2603:10b6:301:7c::11) by
+ MW4PR21MB1956.namprd21.prod.outlook.com (2603:10b6:303:7a::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3825.3; Tue, 9 Feb 2021 15:45:23 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3868.006; Tue, 9 Feb 2021
+ 15:45:23 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Checking Hyper-V hypercall status
+Thread-Topic: Checking Hyper-V hypercall status
+Thread-Index: Adb++n8ogyJMSMSTTsShZW27ouTAzg==
+Date:   Tue, 9 Feb 2021 15:45:23 +0000
+Message-ID: <MWHPR21MB159399C0A82E28CE9A9B93DBD78E9@MWHPR21MB1593.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-02-09T15:45:22Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f50714cf-68d9-4e50-8247-055b0d6b840c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b1bc25aa-afd6-4b86-6a15-08d8cd11b6d8
+x-ms-traffictypediagnostic: MW4PR21MB1956:
+x-microsoft-antispam-prvs: <MW4PR21MB1956470708538390E3B38402D78E9@MW4PR21MB1956.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 391SGq8TsKpZ8W8HtZKF7wziXsjnzjjIj+bDlQFq8NIEGMWSIiRQpbBDmppkqx/m5U6MWjBWm2/bYIRr/rkXhMK1EkjQccP2zgId+v9zOswDJYLOvvEBuIhHihdjw6EHrIXQJMQubd0X6/IJhUhKYsL+fS0UVBezVu3gSXIPJGCJ0SEXCP+/mTp8bXD4iIZwz8e10mOhvT/3GkOen+/vNhYTTshVpKUTSm9OCXSeY+PY9rCBKA3aI548prCu/uh0dNXV8aX5rj3aNFLz6v2fEXf3aS1t5ln+GIENXSgGB8hJjWiLp8plFKjmaUNyGJUzrEia2I9Uiglk7dpYRfV8C4zKiVep43wEJNcOktR4NQPPVoVvt67RFPzlFKD6XmyXtWprg+tJ1dqchqDTRdVAwHStqofmJ91C+UeMWw8Z5/SDEzNPIeXi2p9cHsytkOJ2nV4n0aUiD/mIbkroWxE2MIX7rwIuNvy5yknM2PU5WoNgAArGuChzKOV9L5ERU1VEU9IKqHjUpTU601uSPZdGlw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(76116006)(2906002)(5660300002)(9686003)(55016002)(10290500003)(186003)(478600001)(86362001)(6916009)(6506007)(26005)(316002)(52536014)(71200400001)(8990500004)(82950400001)(82960400001)(7696005)(66946007)(66446008)(33656002)(66476007)(8936002)(8676002)(64756008)(66556008)(3480700007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?bfBeyU3+3AR8CpRaXB7H+ZiN84d6a7t1aCJxRygsXRaiq2vZB67V6/MG4vQL?=
+ =?us-ascii?Q?+dv7jDDAn34ZdSjLCDr690Bnr7w72FaenEmdDC78xPdYN5+NdxtFC4Yo7Zml?=
+ =?us-ascii?Q?l33X1GcBk7wRMtEU8nmVov46oUoCoTV6QYdQXkthzQaMysJpj8xJx8/keF2s?=
+ =?us-ascii?Q?H3bUfCiODmO5XOYYN/M6FcaL9kdnJvfTHllyzbAg16evocvqfqpWC5RHlHLW?=
+ =?us-ascii?Q?toSdzLdlDXkHwMJfZ3Zq9T+SJhwZ7sczISuaT/CqpAfGQWCeSvV0WUHRTB2C?=
+ =?us-ascii?Q?beiww0bUSU65e8fhLqo8y5zuzYcsOBk6Qn4Ssre4dTz7WHiRhCjq6p2Fhihv?=
+ =?us-ascii?Q?RwZEXrExBgex1sZdZ3jqKVgdG2wXCdWwyASYOrGY32nKKPdXnX1EsPDaRgrl?=
+ =?us-ascii?Q?5aeUVLUFdjlBtWvL+BoTuxOCmSqISV9CLFEo8ST7kVtX/87Ymt/L643JGKva?=
+ =?us-ascii?Q?WBmCOoNjNnDnC1bmy21puhcHkHjSQc+ldSkCHE5NGYFngMt2w1z5Z7YYgmYm?=
+ =?us-ascii?Q?hS+TZn1+eKEXA44OvRRewBloq75JqsPiPBFzc2Jn9KWwMpBoosqFK5FfLv94?=
+ =?us-ascii?Q?Ef429G/eA/EjI/cEVCq6iMmUsJMIYvqaAUJrqFfncF8P2SePPIG0nrtWtzRZ?=
+ =?us-ascii?Q?SgJ99OOOSbIoEs1eAcG4fIP8b8QAcFhCNQUvY/qP8rfVLtzjLZ+ydvPdb7MQ?=
+ =?us-ascii?Q?dT2gdEZwEKa3sKvAzq0T/Oezw+MLysdaNg3/LgqUZq+lOJp4iOmlJ1TSc7Bg?=
+ =?us-ascii?Q?sbUzVOtaTu1+uYOaCzmq2qOyN4pQ63Y1B/XjUk8Tz39XoFwadp0NOuP9ZqX9?=
+ =?us-ascii?Q?tGwR5GmegoaUfPU41nEV7IdepxVbP9QbGXufi62oa9dydPCXWKXltuVyjfhW?=
+ =?us-ascii?Q?uWzZYK0XiAL+iaFi2wke/sEYkulMmRvkS/C/2IQmiujonzrDqQ/x120Z7P9S?=
+ =?us-ascii?Q?Sdmd0D1FGXbBk2JSVwzFwJTokxCgO9nRKsbyX+8lv3hESuITGLV5OEgeiYsx?=
+ =?us-ascii?Q?nR0x0q/vL/by6Qk498APVIax7dUmaNgVlxvsdmEZidPh/W/sSeRkSjq2Ahcc?=
+ =?us-ascii?Q?ybdkj4qbCS3kBhf9lKzQ1GQqUUaR+JPrQJP+ypvez4sHzNIRLTuyA0hLEft+?=
+ =?us-ascii?Q?wUD+xBmvcv4pIG9iAthM+4tBuzHPSLRtAioZ7vMVskW2QXchJGFRprTwS7oP?=
+ =?us-ascii?Q?CGuUIq6dTTPzftPAiozE7yyz9riE8gp5dgoVVelGIiVHzasu3W4u0I8ww76k?=
+ =?us-ascii?Q?nWlG1DX5yif2uS0eBWNGYJMPooEnco4in3Vg76/rzboCQG4J8gMlXMCw6/du?=
+ =?us-ascii?Q?DSpwnCl1UOZMA8WEiU8NVGJJ?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1bc25aa-afd6-4b86-6a15-08d8cd11b6d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Feb 2021 15:45:23.8119
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LAapG4MZeuThVSMh3km2sNiTmT3r4RU7gZjGrnyiWYv7XPA/+9U+hYW+GQ2pMpe5XBXHq+y/x/WexJX01hmHaGHa3z4G9NCb/GliTtjamPM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1956
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Nuno Das Neves <nunodasneves@linux.microsoft.com> writes:
+As noted in a previous email, we don't have a consistent
+pattern for checking Hyper-V hypercall status.  Existing code and
+recent new code uses a number of variants.  The variants work, but
+a consistent pattern would improve the readability of the code, and
+be more conformant to what the Hyper-V TLFS says about hypercall
+status.  In particular, the 64 bit hypercall status contains fields that
+the TLFS says should be ignored -- evidently they are not guaranteed
+to be zero (though I've never seen otherwise).
 
-> Add MSHV_CREATE_PARTITION, which creates an fd to track a new partition.
-> Partition is not yet created in the hypervisor itself.
-> Introduce header files for userspace-facing hyperv structures.
->
-> Co-developed-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> ---
->  Documentation/virt/mshv/api.rst         |  12 ++
->  arch/x86/include/asm/hyperv-tlfs.h      |   1 +
->  arch/x86/include/uapi/asm/hyperv-tlfs.h | 124 ++++++++++++++++
->  include/asm-generic/hyperv-tlfs.h       |   1 +
->  include/linux/mshv.h                    |  16 +++
->  include/uapi/asm-generic/hyperv-tlfs.h  |  14 ++
->  include/uapi/linux/mshv.h               |   7 +
->  virt/mshv/mshv_main.c                   | 179 +++++++++++++++++++++---
->  8 files changed, 338 insertions(+), 16 deletions(-)
->  create mode 100644 arch/x86/include/uapi/asm/hyperv-tlfs.h
->  create mode 100644 include/uapi/asm-generic/hyperv-tlfs.h
->
-> diff --git a/Documentation/virt/mshv/api.rst b/Documentation/virt/mshv/api.rst
-> index 82e32de48d03..ce651a1738e0 100644
-> --- a/Documentation/virt/mshv/api.rst
-> +++ b/Documentation/virt/mshv/api.rst
-> @@ -39,6 +39,9 @@ root partition can use mshv APIs to create guest partitions.
->  
->  The module is named mshv and can be configured with CONFIG_HYPERV_ROOT_API.
->  
-> +The uapi header files you need are linux/mshv.h, asm/hyperv-tlfs.h, and
-> +asm-generic/hyperv-tlfs.h.
-> +
->  Mshv is file descriptor-based, following a similar pattern to KVM.
->  
->  To get a handle to the mshv driver, use open("/dev/mshv").
-> @@ -60,3 +63,12 @@ if one of them matches.
->  This /dev/mshv file descriptor will remain 'locked' to that version as long as
->  it is open - this ioctl can only be called once per open.
->  
-> +3.2 MSHV_CREATE_PARTITION
-> +-------------------------
-> +:Type: /dev/mshv ioctl
-> +:Parameters: struct mshv_create_partition
-> +:Returns: partition file descriptor, or -1 on failure
-> +
-> +This ioctl creates a guest partition, returning a file descriptor to use as a
-> +handle for partition ioctls.
-> +
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 592c75e51e0f..4cd44ae9bffb 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -11,6 +11,7 @@
->  
->  #include <linux/types.h>
->  #include <asm/page.h>
-> +#include <uapi/asm/hyperv-tlfs.h>
->  /*
->   * The below CPUID leaves are present if VersionAndFeatures.HypervisorPresent
->   * is set by CPUID(HvCpuIdFunctionVersionAndFeatures).
-> diff --git a/arch/x86/include/uapi/asm/hyperv-tlfs.h b/arch/x86/include/uapi/asm/hyperv-tlfs.h
-> new file mode 100644
-> index 000000000000..72150c25ffe6
-> --- /dev/null
-> +++ b/arch/x86/include/uapi/asm/hyperv-tlfs.h
-> @@ -0,0 +1,124 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_ASM_X86_HYPERV_TLFS_USER_H
-> +#define _UAPI_ASM_X86_HYPERV_TLFS_USER_H
-> +
-> +#include <linux/types.h>
-> +
-> +#define HV_PARTITION_PROCESSOR_FEATURE_BANKS 2
-> +
-> +union hv_partition_processor_features {
-> +	struct {
-> +		__u64 sse3_support:1;
-> +		__u64 lahf_sahf_support:1;
-> +		__u64 ssse3_support:1;
-> +		__u64 sse4_1_support:1;
-> +		__u64 sse4_2_support:1;
-> +		__u64 sse4a_support:1;
-> +		__u64 xop_support:1;
-> +		__u64 pop_cnt_support:1;
-> +		__u64 cmpxchg16b_support:1;
-> +		__u64 altmovcr8_support:1;
-> +		__u64 lzcnt_support:1;
-> +		__u64 mis_align_sse_support:1;
-> +		__u64 mmx_ext_support:1;
-> +		__u64 amd3dnow_support:1;
-> +		__u64 extended_amd3dnow_support:1;
-> +		__u64 page_1gb_support:1;
-> +		__u64 aes_support:1;
-> +		__u64 pclmulqdq_support:1;
-> +		__u64 pcid_support:1;
-> +		__u64 fma4_support:1;
-> +		__u64 f16c_support:1;
-> +		__u64 rd_rand_support:1;
-> +		__u64 rd_wr_fs_gs_support:1;
-> +		__u64 smep_support:1;
-> +		__u64 enhanced_fast_string_support:1;
-> +		__u64 bmi1_support:1;
-> +		__u64 bmi2_support:1;
-> +		__u64 hle_support_deprecated:1;
-> +		__u64 rtm_support_deprecated:1;
-> +		__u64 movbe_support:1;
-> +		__u64 npiep1_support:1;
-> +		__u64 dep_x87_fpu_save_support:1;
-> +		__u64 rd_seed_support:1;
-> +		__u64 adx_support:1;
-> +		__u64 intel_prefetch_support:1;
-> +		__u64 smap_support:1;
-> +		__u64 hle_support:1;
-> +		__u64 rtm_support:1;
-> +		__u64 rdtscp_support:1;
-> +		__u64 clflushopt_support:1;
-> +		__u64 clwb_support:1;
-> +		__u64 sha_support:1;
-> +		__u64 x87_pointers_saved_support:1;
-> +		__u64 invpcid_support:1;
-> +		__u64 ibrs_support:1;
-> +		__u64 stibp_support:1;
-> +		__u64 ibpb_support: 1;
-> +		__u64 unrestricted_guest_support:1;
-> +		__u64 mdd_support:1;
-> +		__u64 fast_short_rep_mov_support:1;
-> +		__u64 l1dcache_flush_support:1;
-> +		__u64 rdcl_no_support:1;
-> +		__u64 ibrs_all_support:1;
-> +		__u64 skip_l1df_support:1;
-> +		__u64 ssb_no_support:1;
-> +		__u64 rsb_a_no_support:1;
-> +		__u64 virt_spec_ctrl_support:1;
-> +		__u64 rd_pid_support:1;
-> +		__u64 umip_support:1;
-> +		__u64 mbs_no_support:1;
-> +		__u64 mb_clear_support:1;
-> +		__u64 taa_no_support:1;
-> +		__u64 tsx_ctrl_support:1;
-> +		/*
-> +		 * N.B. The final processor feature bit in bank 0 is reserved to
-> +		 * simplify potential downlevel backports.
-> +		 */
-> +		__u64 reserved_bank0:1;
-> +
-> +		/* N.B. Begin bank 1 processor features. */
-> +		__u64 acount_mcount_support:1;
-> +		__u64 tsc_invariant_support:1;
-> +		__u64 cl_zero_support:1;
-> +		__u64 rdpru_support:1;
-> +		__u64 la57_support:1;
-> +		__u64 mbec_support:1;
-> +		__u64 nested_virt_support:1;
-> +		__u64 psfd_support:1;
-> +		__u64 cet_ss_support:1;
-> +		__u64 cet_ibt_support:1;
-> +		__u64 vmx_exception_inject_support:1;
-> +		__u64 enqcmd_support:1;
-> +		__u64 umwait_tpause_support:1;
-> +		__u64 movdiri_support:1;
-> +		__u64 movdir64b_support:1;
-> +		__u64 cldemote_support:1;
-> +		__u64 serialize_support:1;
-> +		__u64 tsc_deadline_tmr_support:1;
-> +		__u64 tsc_adjust_support:1;
-> +		__u64 fzlrep_movsb:1;
-> +		__u64 fsrep_stosb:1;
-> +		__u64 fsrep_cmpsb:1;
-> +		__u64 reserved_bank1:42;
-> +	};
-> +	__u64 as_uint64[HV_PARTITION_PROCESSOR_FEATURE_BANKS];
-> +};
-> +
-> +union hv_partition_processor_xsave_features {
-> +	struct {
-> +		__u64 xsave_support : 1;
-> +		__u64 xsaveopt_support : 1;
-> +		__u64 avx_support : 1;
-> +		__u64 reserved1 : 61;
-> +	};
-> +	__u64 as_uint64;
-> +};
-> +
-> +struct hv_partition_creation_properties {
-> +	union hv_partition_processor_features disabled_processor_features;
-> +	union hv_partition_processor_xsave_features
-> +		disabled_processor_xsave_features;
-> +};
-> +
-> +#endif
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index 05b9dc9896ab..2ff580780ce4 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -12,6 +12,7 @@
->  #include <linux/types.h>
->  #include <linux/bits.h>
->  #include <linux/time64.h>
-> +#include <uapi/asm-generic/hyperv-tlfs.h>
->  
->  /*
->   * While not explicitly listed in the TLFS, Hyper-V always runs with a page size
-> diff --git a/include/linux/mshv.h b/include/linux/mshv.h
-> index a0982fe2c0b8..fc4f35089b2c 100644
-> --- a/include/linux/mshv.h
-> +++ b/include/linux/mshv.h
-> @@ -6,6 +6,22 @@
->   * Microsoft Hypervisor root partition driver for /dev/mshv
->   */
->  
-> +#include <linux/spinlock.h>
->  #include <uapi/linux/mshv.h>
->  
-> +#define MSHV_MAX_PARTITIONS		128
-> +
-> +struct mshv_partition {
-> +	u64 id;
-> +	refcount_t ref_count;
-> +};
-> +
-> +struct mshv {
-> +	struct {
-> +		spinlock_t lock;
-> +		u64 count;
-> +		struct mshv_partition *array[MSHV_MAX_PARTITIONS];
-> +	} partitions;
-> +};
-> +
->  #endif
-> diff --git a/include/uapi/asm-generic/hyperv-tlfs.h b/include/uapi/asm-generic/hyperv-tlfs.h
-> new file mode 100644
-> index 000000000000..140cc0b4f98f
-> --- /dev/null
-> +++ b/include/uapi/asm-generic/hyperv-tlfs.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_ASM_GENERIC_HYPERV_TLFS_USER_H
-> +#define _UAPI_ASM_GENERIC_HYPERV_TLFS_USER_H
-> +
-> +#ifndef BIT
-> +#define BIT(X)	(1ULL << (X))
-> +#endif
-> +
-> +#define HV_PARTITION_CREATION_FLAG_SMT_ENABLED_GUEST                BIT(0)
-> +#define HV_PARTITION_CREATION_FLAG_GPA_LARGE_PAGES_DISABLED         BIT(3)
-> +#define HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED          BIT(4)
-> +#define HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED                    BIT(13)
-> +
-> +#endif
-> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
-> index dd30fc2f0a80..3788f8bc5caa 100644
-> --- a/include/uapi/linux/mshv.h
-> +++ b/include/uapi/linux/mshv.h
-> @@ -8,12 +8,19 @@
->   */
->  
->  #include <linux/types.h>
-> +#include <asm/hyperv-tlfs.h>
->  
->  #define MSHV_VERSION	0x0
->  
-> +struct mshv_create_partition {
-> +	__u64 flags;
-> +	struct hv_partition_creation_properties partition_creation_properties;
-> +};
-> +
->  #define MSHV_IOCTL 0xB8
->  
->  /* mshv device */
->  #define MSHV_REQUEST_VERSION	_IOW(MSHV_IOCTL, 0x00, __u32)
-> +#define MSHV_CREATE_PARTITION	_IOW(MSHV_IOCTL, 0x01, struct mshv_create_partition)
->  
->  #endif
-> diff --git a/virt/mshv/mshv_main.c b/virt/mshv/mshv_main.c
-> index 62f631f85301..4dcbe4907430 100644
-> --- a/virt/mshv/mshv_main.c
-> +++ b/virt/mshv/mshv_main.c
-> @@ -12,6 +12,8 @@
->  #include <linux/fs.h>
->  #include <linux/miscdevice.h>
->  #include <linux/slab.h>
-> +#include <linux/file.h>
-> +#include <linux/anon_inodes.h>
->  #include <linux/mshv.h>
->  
->  MODULE_AUTHOR("Microsoft");
-> @@ -24,6 +26,161 @@ static u32 supported_versions[] = {
->  	MSHV_CURRENT_VERSION,
->  };
->  
-> +static struct mshv mshv = {};
-> +
-> +static void mshv_partition_put(struct mshv_partition *partition);
-> +static int mshv_partition_release(struct inode *inode, struct file *filp);
-> +static long mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg);
-> +
-> +static int mshv_dev_open(struct inode *inode, struct file *filp);
-> +static int mshv_dev_release(struct inode *inode, struct file *filp);
-> +static long mshv_dev_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg);
-> +
-> +static const struct file_operations mshv_partition_fops = {
-> +	.release = mshv_partition_release,
-> +	.unlocked_ioctl = mshv_partition_ioctl,
-> +	.llseek = noop_llseek,
-> +};
-> +
-> +static const struct file_operations mshv_dev_fops = {
-> +	.owner = THIS_MODULE,
-> +	.open = mshv_dev_open,
-> +	.release = mshv_dev_release,
-> +	.unlocked_ioctl = mshv_dev_ioctl,
-> +	.llseek = noop_llseek,
-> +};
-> +
-> +static struct miscdevice mshv_dev = {
-> +	.minor = MISC_DYNAMIC_MINOR,
-> +	.name = "mshv",
-> +	.fops = &mshv_dev_fops,
-> +	.mode = 600,
-> +};
-> +
-> +static long
-> +mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
-> +{
-> +	return -ENOTTY;
-> +}
-> +
-> +static void
-> +destroy_partition(struct mshv_partition *partition)
-> +{
-> +	unsigned long flags;
-> +	int i;
-> +
-> +	/* Remove from list of partitions */
-> +	spin_lock_irqsave(&mshv.partitions.lock, flags);
-> +
-> +	for (i = 0; i < MSHV_MAX_PARTITIONS; ++i) {
-> +		if (mshv.partitions.array[i] == partition)
-> +			break;
-> +	}
-> +
-> +	if (i == MSHV_MAX_PARTITIONS) {
-> +		pr_err("%s: failed to locate partition in array\n", __func__);
-> +	} else {
-> +		mshv.partitions.count--;
-> +		mshv.partitions.array[i] = NULL;
-> +	}
-> +
-> +	spin_unlock_irqrestore(&mshv.partitions.lock, flags);
-> +
-> +	kfree(partition);
-> +}
-> +
-> +static void
-> +mshv_partition_put(struct mshv_partition *partition)
-> +{
-> +	if (refcount_dec_and_test(&partition->ref_count))
-> +		destroy_partition(partition);
-> +}
-> +
-> +static int
-> +mshv_partition_release(struct inode *inode, struct file *filp)
-> +{
-> +	struct mshv_partition *partition = filp->private_data;
-> +
-> +	mshv_partition_put(partition);
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +add_partition(struct mshv_partition *partition)
-> +{
-> +	unsigned long flags;
-> +	int i, ret = 0;
-> +
-> +	spin_lock_irqsave(&mshv.partitions.lock, flags);
-> +
-> +	if (mshv.partitions.count >= MSHV_MAX_PARTITIONS) {
-> +		pr_err("%s: too many partitions\n", __func__);
-> +		ret = -ENOSPC;
-> +		goto out_unlock;
-> +	}
-> +
-> +	for (i = 0; i < MSHV_MAX_PARTITIONS; ++i) {
-> +		if (!mshv.partitions.array[i])
-> +			break;
-> +	}
-> +
-> +	mshv.partitions.count++;
-> +	mshv.partitions.array[i] = partition;
-> +
-> +out_unlock:
-> +	spin_unlock_irqrestore(&mshv.partitions.lock, flags);
-> +
-> +	return ret;
-> +}
-> +
-> +static long
-> +mshv_ioctl_create_partition(void __user *user_arg)
-> +{
-> +	struct mshv_create_partition args;
-> +	struct mshv_partition *partition;
-> +	struct file *file;
-> +	int fd;
-> +	long ret;
-> +
-> +	if (copy_from_user(&args, user_arg, sizeof(args)))
-> +		return -EFAULT;
-> +
-> +	partition = kzalloc(sizeof(*partition), GFP_KERNEL);
-> +	if (!partition)
-> +		return -ENOMEM;
-> +
-> +	fd = get_unused_fd_flags(O_CLOEXEC);
-> +	if (fd < 0) {
-> +		ret = fd;
-> +		goto free_partition;
-> +	}
-> +
-> +	file = anon_inode_getfile("mshv_partition", &mshv_partition_fops,
-> +				  partition, O_RDWR);
-> +	if (IS_ERR(file)) {
-> +		ret = PTR_ERR(file);
-> +		goto put_fd;
-> +	}
-> +	refcount_set(&partition->ref_count, 1);
-> +
-> +	ret = add_partition(partition);
-> +	if (ret)
-> +		goto release_file;
-> +
-> +	fd_install(fd, file);
-> +
-> +	return fd;
-> +
-> +release_file:
-> +	file->f_op->release(file->f_inode, file);
-> +put_fd:
-> +	put_unused_fd(fd);
-> +free_partition:
-> +	kfree(partition);
-> +	return ret;
-> +}
-> +
->  static long
->  mshv_ioctl_request_version(u32 *version, void __user *user_arg)
->  {
-> @@ -59,7 +216,10 @@ mshv_dev_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
->  	if (*version == MSHV_INVALID_VERSION)
->  		return -EBADFD;
->  
-> -	/* TODO other ioctls */
-> +	switch (ioctl) {
-> +	case MSHV_CREATE_PARTITION:
-> +		return mshv_ioctl_create_partition((void __user *)arg);
-> +	}
->  
->  	return -ENOTTY;
->  }
-> @@ -82,21 +242,6 @@ mshv_dev_release(struct inode *inode, struct file *filp)
->  	return 0;
->  }
->  
-> -static const struct file_operations mshv_dev_fops = {
-> -	.owner = THIS_MODULE,
-> -	.open = mshv_dev_open,
-> -	.release = mshv_dev_release,
-> -	.unlocked_ioctl = mshv_dev_ioctl,
-> -	.llseek = noop_llseek,
-> -};
-> -
-> -static struct miscdevice mshv_dev = {
-> -	.minor = MISC_DYNAMIC_MINOR,
-> -	.name = "mshv",
-> -	.fops = &mshv_dev_fops,
-> -	.mode = 600,
-> -};
-> -
+I'd propose the following helper functions to go in
+asm-generic/mshyperv.h.  The function names are relatively short
+for readability:
 
-This looks like an unneeded code churn as these structs just got added a
-few patches ago. It would probably be possible to put it to the right
-place from the very beginning so you don't need to move it in this
-patch.
+static inline u64 hv_result(u64 status)
+{
+	return status & HV_HYPERCALL_RESULT_MASK;
+}
 
->  static int
->  __init mshv_init(void)
->  {
-> @@ -106,6 +251,8 @@ __init mshv_init(void)
->  	if (r)
->  		pr_err("%s: misc device register failed\n", __func__);
->  
-> +	spin_lock_init(&mshv.partitions.lock);
-> +
->  	return r;
->  }
+static inline bool hv_result_success(u64 status)
+{
+	return hv_result(status) =3D=3D HV_STATUS_SUCCESS;
+}
 
--- 
-Vitaly
+static inline unsigned int hv_repcomp(u64 status)
+{
+	return (status & HV_HYPERCALL_REP_COMP_MASK) >>
+			HV_HYPERCALL_REP_COMP_OFFSET;
+}
 
+The hv_do_hypercall() function (and its 'rep' and 'fast' variants) should
+always assign the result to a u64 local variable, which is the return
+type of the functions.  Then the above functions can act on that local
+variable.  Here are some examples:
+
+	u64		status;
+	unsigned int	completed;
+
+	status =3D hv_do_hypercall(<some args>);
+	if (!hv_result_success(status)) {
+		<handle error case>
+	}
+
+	status =3D hv_do_rep_hypercall(<some args>);
+	if (hv_result(status) =3D=3D HV_STATUS_INSUFFICIENT_MEMORY) {
+		<deposit more memory pages>
+		goto retry;
+	} else if (!hv_result_success(status)) {
+		<handle error case>
+	}
+	completed =3D hv_repcomp(status);
+
+
+Thoughts?
+
+Michael
