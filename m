@@ -2,133 +2,64 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 071B231A317
-	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Feb 2021 17:51:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A743F31B7EB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 15 Feb 2021 12:23:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbhBLQvm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 12 Feb 2021 11:51:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbhBLQvl (ORCPT
+        id S229946AbhBOLWx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 15 Feb 2021 06:22:53 -0500
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:34843 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229779AbhBOLWw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 12 Feb 2021 11:51:41 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02286C061574;
-        Fri, 12 Feb 2021 08:51:01 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id f14so231285ejc.8;
-        Fri, 12 Feb 2021 08:51:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=kuyIAN6ynILC6Lb1Ej4zOAFFZL68p0m+Z5l76VYpdI4=;
-        b=pQ6KJ66aU4m9vG+s3RKS3nIO1REYUCD/HIfeBWb/ray8H2l25s8Q6t8eeBvC81VOwj
-         JgmxhAqZFLNd9LndP8r/4EQQfM39a5bexDTvN8dhRfzNQRtrty9Ges2pArAFSN4IlMqB
-         E50vDhmSB87YjNOo9c56Ad835Zxsd2FkW/gWgIPWJQszMui8KRlOvsEPLHQGjxG2iMhZ
-         8UA8Dy4rSA4jK5+Wgfyhob65xkiJWNyWnEnw+U0b5clkgFlyrLNbkG1OrTzmQebnblOk
-         SEAl6Kg6u42jsJlDQyXMX+7qjJMdZTmpQOJAuqvSrXbEHrrQWG5GXJ6lYqQe+I7EnXqn
-         KbSA==
+        Mon, 15 Feb 2021 06:22:52 -0500
+Received: by mail-wr1-f54.google.com with SMTP id l12so8452523wry.2;
+        Mon, 15 Feb 2021 03:22:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=kuyIAN6ynILC6Lb1Ej4zOAFFZL68p0m+Z5l76VYpdI4=;
-        b=tVWu3rEGvPo7/0HcCadGdijSc5/zV+iRsDnq0lnj1THiC2Hp4a2O8ivcHN7mb3qPeg
-         hNW28Dg+1Z18dbGQERLqnMRzTPC+bhXQsLEium1uUYmmHr71dGCONw3v9rKz+0oRjewl
-         62Myijgi4ZhoTBzg99xU7aKU41aCzc3sdKNeGGO/UThpG3DawyQhHzMjh30D3KTg0Dol
-         R+Z0W9pzz7w729AYMB9YgpxFwamQQbulQJ/5AtXV48dJzKGeSkj/JkpHKnUvsKGsKCpc
-         OYooB847Aezk7dFIFkwQNrgqWI93wcrMrbKeAo3JUocctuv6itcWdAggbN4B4wxGD6R3
-         McVA==
-X-Gm-Message-State: AOAM5304xLwkuH/2GTA+jg1P1FaOyNAQEDDZ8YYRgEoc6AWRCwmgDXiS
-        nIkQvSfvaKMzLlKuYlxkgcvScza+t+Vzw/wP
-X-Google-Smtp-Source: ABdhPJw+9EQuVkXn16atquT/DdvsnrytGuk42nwp9fu3inZ/k5/jDBeVUF+gk6tK8IDbBYAMCLQMaw==
-X-Received: by 2002:a17:906:364b:: with SMTP id r11mr3850258ejb.447.1613148659299;
-        Fri, 12 Feb 2021 08:50:59 -0800 (PST)
-Received: from anparri (host-95-239-64-41.retail.telecomitalia.it. [95.239.64.41])
-        by smtp.gmail.com with ESMTPSA id lo3sm580481ejb.106.2021.02.12.08.50.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H/HSQcMjtFGIvIu1oJqCB+ca0ygjk6QUeyq3U3IQtxk=;
+        b=CeOAZKJsNN2IoHWTQw5YyeKe2msfvoVBNR60OHpRea1YnrYZU1QF/XunqUbWwHxmRn
+         0KGQdJ85xPaciK7CW8IbDjJmR3/93ezDfqKMIbBK9s6GcR7lHlxMhD+grWkTH0TYTcQW
+         u4TDPtUIpYrzgorzdxBzEMrcUHQqi6JROHOpayy+Fja/hYWuJhu0+EFdLI8XGSgdGlMp
+         Kwi1dMCPg+pDs6G18xozyLKYIEtUW1H5uSisevautJk0+6Xpbl9WqifptyaX1GOkLJ+c
+         5CGXd0F5OWZT1sgs9T3M62eqxbs6FcSqWNlkRaidVuawL4TUxN3b4PZYNnqPYtM3z2sC
+         pToA==
+X-Gm-Message-State: AOAM533LOOStorUfaW0/yfI+hZ4jZ+zgrfXJ9bD1iszs9rFITa4rgz6/
+        k9gy2KkY4UGqOsMpJhlQsKbhkTTh1bo=
+X-Google-Smtp-Source: ABdhPJyRupVeBoZBpt65+nI7oNINndMhPBKC/Ci5iSqTNaW0cIXpnFEG8TXNObG8U6+9JByW508T+w==
+X-Received: by 2002:a5d:4051:: with SMTP id w17mr18060071wrp.186.1613388130320;
+        Mon, 15 Feb 2021 03:22:10 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v6sm14735523wrw.49.2021.02.15.03.22.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Feb 2021 08:50:58 -0800 (PST)
-Date:   Fri, 12 Feb 2021 17:50:50 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, mikelley@microsoft.com, jejb@linux.ibm.com,
+        Mon, 15 Feb 2021 03:22:09 -0800 (PST)
+Date:   Mon, 15 Feb 2021 11:22:08 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        mikelley@microsoft.com, jejb@linux.ibm.com,
         martin.petersen@oracle.com, davem@davemloft.net, kuba@kernel.org,
         linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: Regressions with VMBus/VSCs hardening changes
-Message-ID: <20210212165050.GA11906@anparri>
+Subject: Re: Regressions with VMBus/VSCs hardening changes
+Message-ID: <20210215112208.jjzhtvzhemlgpvfa@liuwe-devbox-debian-v2>
+References: <20210212165050.GA11906@anparri>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20210212165050.GA11906@anparri>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi all,
+On Fri, Feb 12, 2021 at 05:50:50PM +0100, Andrea Parri wrote:
+> Hi all,
+[...]
+> 2) IIUC a8c3209998afb5 could be dropped (after rebase) without further modi-
+>    fications to hyperv-next.
 
-I'm reporting two regressions following certain VMBus/VSCs hardening changes
-we've been discussing 'recently', unfortunately the first regression already
-touched/affects mainline while the second one is in hyperv-next:
+I've reverted the said patch from hyperv-next.
 
-1) [mainline]
-
-The first regression manifests with the following message (several):
-
-  hv_vmbus: No request id available
-
-I could reliably reproduce such message/behavior by running the command:
-
-  fio --name=seqwrite --rw=read --direct=1 --ioengine=libaio --bs=32k --numjobs=4 --size=2G --runtime=60
-
-(the message is triggered when files are being created).
-
-I've bisected this regression to commit:
-
-  453de21c2b8281 ("scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening")
-
-2) [hyperv-next]
-
-The second regression manifests with various messages including:
-
-  hv_netvsc 9c5f5000-0499-4b18-b2eb-a8d5c57c8774 eth0: Unknown nvsp packet type received 51966
-
-  hv_netvsc 9c5f5000-0499-4b18-b2eb-a8d5c57c8774 eth0: unhandled packet type 0, tid 0
-
-  hv_netvsc 9c5f5000-0499-4b18-b2eb-a8d5c57c8774 eth0: Incorrect transaction id
-
-  hv_netvsc 9c5f5000-0499-4b18-b2eb-a8d5c57c8774 eth0: Invalid rndis_msg (buflen: 262, msg_len: 1728)
-
-The connection was then typically lost/reset by the peer.
-
-I could reproduce such behavior/messages by running the test:
-
-  ntttcp -r -m 8,*,<receiver IP address> # receiver
-
-  ntttcp -s -m 8,*,<receiver IP address> -ns -t 60 # sender
-
-I bisected this regression to commit:
-
-  a8c3209998afb5 ("Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer")
-
----
-I am investigating but don't have fixes for these regressions now: given the
-'timing' (-rc7 with the next merge window at the door...) I would propose to
-revert/drop the interested changes:
-
-1) 453de21c2b8281 is part of the so called 'vmbus_requestor' series that was
-   applied during the merge window for 5.11:
-
-  e8b7db38449ac5 ("Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus hardening")
-  453de21c2b8281 ("scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening")
-  4d18fcc95f5095 ("hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening")
-
-  I could prepare/submit patches to revert such commits (asap but likely not
-  before tomorrow/late Saturday - EU time).
-
-2) IIUC a8c3209998afb5 could be dropped (after rebase) without further modi-
-   fications to hyperv-next.
-
-Other suggestions/thoughts?
-
-Thanks,
-  Andrea
+Wei.
