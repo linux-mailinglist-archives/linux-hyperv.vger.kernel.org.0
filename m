@@ -2,146 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2417F31C84B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Feb 2021 10:46:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3B6E31CA69
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Feb 2021 13:12:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbhBPJqF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 16 Feb 2021 04:46:05 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:43748 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbhBPJqE (ORCPT
+        id S230131AbhBPMMg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 16 Feb 2021 07:12:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229812AbhBPMMg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 16 Feb 2021 04:46:04 -0500
-Received: by mail-wr1-f41.google.com with SMTP id n8so12122040wrm.10;
-        Tue, 16 Feb 2021 01:45:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=/j2GKgHd5lwNkWfIsEtZ0x73q6B7A1r0jP+Y9v5NQ0o=;
-        b=ZFNi5S2Z6MjqouFT1MUzpPr4HvileRFMXsjJolqxsiWEc5ze1t6lXuxt2Ltn8WGjWk
-         uwyZeWtEbUWLG2uqIhp0h5hcsyG9IFtLVZtLEG56fR/nhZ3lmQ3oJhXAy5auQYQsNr2r
-         G+x+29xiWqn7sq++mE6XhMIWvfN9a8NGYHyq4SIp4UhIq7HRUBEfychKah0t+/Jv5ba/
-         cn2vA2lC2IyiHK0zomiAI9AnHATQgP560eODWQ7xmjPwRpiReFL38gBs/rB+iSQt/MM1
-         uP6QXkoVQvuhIuCkxv3W0DHRwJqvKGQ/9yBjoAX8ulm4DNtGOihCgCetuns3rdsI/NmJ
-         pYEA==
-X-Gm-Message-State: AOAM532SZUM0p5spYg/l8zvhQTPSXmGt1mgSgrnPblAwOkJs2XfUVBUm
-        lRgejcBH/TO0zykvpSrg/Fw=
-X-Google-Smtp-Source: ABdhPJy4DGoU/XtRCf7mlgJ8hcOtb5A4QmpTDi1DcU4AoVq6jw8poZ6SOVPFXWc0nQ8GN/kfgmkQFg==
-X-Received: by 2002:a5d:5047:: with SMTP id h7mr21449412wrt.67.1613468721476;
-        Tue, 16 Feb 2021 01:45:21 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id q24sm2623789wmq.24.2021.02.16.01.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Feb 2021 01:45:21 -0800 (PST)
-Date:   Tue, 16 Feb 2021 09:45:19 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Subject: [GIT PULL] Hyper-V commits for 5.12
-Message-ID: <20210216094519.mc4o74npzdm32avt@liuwe-devbox-debian-v2>
+        Tue, 16 Feb 2021 07:12:36 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB45C061574;
+        Tue, 16 Feb 2021 04:11:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qydaGrdRobsyV5LaMgil96UsQSn4K3xiCgp4dxh0juc=; b=W1OSaSNnkgJkSGPTgy8i13Fnth
+        Q3yMBTUQI35ZC32HOj6lyR72QpKJCByW9IX627qEuospypeWxHjJGIexIeRPMxqE0ne9uQQtNhjrq
+        bpoTv7CK6Y9Cg9FFNDqGjoFa67aUgp2jyFviMRH0o/L4iQMLWden+bu1eFoSy6H1so5yKTP+0qufM
+        SbTdZckJ2IAXD57Vh/FXcxwpn5F8FXBRV1s8PxB45PtPKblZ4qOdDNxWQBJdHGBMLZWA/6dB/GbRW
+        Ryy2BGjIC60/A5VLY8h27Nsvwue8yeJOw2/C9GZKFS6+uYPlFf8abXeJ8FKrixF4vTrxoLGrcBvM1
+        rJh/I4Uw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lBzBS-00GpyS-Qf; Tue, 16 Feb 2021 12:10:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BCFB13059DD;
+        Tue, 16 Feb 2021 13:10:25 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A5D6B2B9C6CCA; Tue, 16 Feb 2021 13:10:25 +0100 (CET)
+Date:   Tue, 16 Feb 2021 13:10:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v5 4/8] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Message-ID: <YCu2MQFdV4JTrUQb@hirez.programming.kicks-ass.net>
+References: <20210209221653.614098-1-namit@vmware.com>
+ <20210209221653.614098-5-namit@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20210209221653.614098-5-namit@vmware.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus,
+On Tue, Feb 09, 2021 at 02:16:49PM -0800, Nadav Amit wrote:
+> @@ -816,8 +821,8 @@ STATIC_NOPV void native_flush_tlb_others(const struct cpumask *cpumask,
+>  	 * doing a speculative memory access.
+>  	 */
+>  	if (info->freed_tables) {
+> -		smp_call_function_many(cpumask, flush_tlb_func,
+> -			       (void *)info, 1);
+> +		on_each_cpu_cond_mask(NULL, flush_tlb_func, (void *)info, true,
+> +				      cpumask);
+>  	} else {
+>  		/*
+>  		 * Although we could have used on_each_cpu_cond_mask(),
+> @@ -844,14 +849,15 @@ STATIC_NOPV void native_flush_tlb_others(const struct cpumask *cpumask,
+>  			if (tlb_is_not_lazy(cpu))
+>  				__cpumask_set_cpu(cpu, cond_cpumask);
+>  		}
+> -		smp_call_function_many(cond_cpumask, flush_tlb_func, (void *)info, 1);
+> +		on_each_cpu_cond_mask(NULL, flush_tlb_func, (void *)info, true,
+> +				      cpumask);
+>  	}
+>  }
 
-The following changes since commit 6ee1d745b7c9fd573fba142a2efdad76a9f1cb04:
+Surely on_each_cpu_mask() is more appropriate? There the compiler can do
+the NULL propagation because it's on the same TU.
 
-  Linux 5.11-rc5 (2021-01-24 16:47:14 -0800)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20210216
-
-for you to fetch changes up to 3019270282a175defc02c8331786c73e082cd2a8:
-
-  Revert "Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer" (2021-02-15 10:49:11 +0000)
-
-----------------------------------------------------------------
-hyperv-next for 5.12
-  - VMBus hardening patches from Andrea Parri and Andres Beltran.
-  - Patches to make Linux boot as the root partition on Microsoft Hypervisor
-    from Wei Liu.
-  - One patch to add a new sysfs interface to support hibernation on Hyper-V
-    from Dexuan Cui.
-  - Two miscellaneous clean-up patches from Colin and Gustavo.
-
-----------------------------------------------------------------
-Andrea Parri (Microsoft) (9):
-      Drivers: hv: vmbus: Initialize memory to be sent to the host
-      Drivers: hv: vmbus: Reduce number of references to message in vmbus_on_msg_dpc()
-      Drivers: hv: vmbus: Copy the hv_message in vmbus_on_msg_dpc()
-      Drivers: hv: vmbus: Avoid use-after-free in vmbus_onoffer_rescind()
-      Drivers: hv: vmbus: Resolve race condition in vmbus_onoffer_rescind()
-      x86/hyperv: Load/save the Isolation Configuration leaf
-      Drivers: hv: vmbus: Restrict vmbus_devices on isolated guests
-      Drivers: hv: vmbus: Enforce 'VMBus version >= 5.2' on isolated guests
-      hv_netvsc: Restrict configurations on isolated guests
-
-Andres Beltran (2):
-      Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer
-      hv_utils: Add validation for untrusted Hyper-V values
-
-Colin Ian King (1):
-      hv_utils: Fix spelling mistake "Hearbeat" -> "Heartbeat"
-
-Dexuan Cui (1):
-      Drivers: hv: vmbus: Add /sys/bus/vmbus/hibernation
-
-Gustavo A. R. Silva (1):
-      hv: hyperv.h: Replace one-element array with flexible-array in struct icmsg_negotiate
-
-Wei Liu (17):
-      asm-generic/hyperv: change HV_CPU_POWER_MANAGEMENT to HV_CPU_MANAGEMENT
-      x86/hyperv: detect if Linux is the root partition
-      Drivers: hv: vmbus: skip VMBus initialization if Linux is root
-      clocksource/hyperv: use MSR-based access if running as root
-      x86/hyperv: allocate output arg pages if required
-      x86/hyperv: extract partition ID from Microsoft Hypervisor if necessary
-      x86/hyperv: handling hypercall page setup for root
-      ACPI / NUMA: add a stub function for node_to_pxm()
-      x86/hyperv: provide a bunch of helper functions
-      x86/hyperv: implement and use hv_smp_prepare_cpus
-      asm-generic/hyperv: update hv_msi_entry
-      asm-generic/hyperv: update hv_interrupt_entry
-      asm-generic/hyperv: introduce hv_device_id and auxiliary structures
-      asm-generic/hyperv: import data structures for mapping device interrupts
-      x86/hyperv: implement an MSI domain for root partition
-      iommu/hyperv: setup an IO-APIC IRQ remapping domain for root partition
-      Revert "Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer"
-
- Documentation/ABI/stable/sysfs-bus-vmbus |   7 +
- arch/x86/hyperv/Makefile                 |   4 +-
- arch/x86/hyperv/hv_init.c                | 122 +++++++++-
- arch/x86/hyperv/hv_proc.c                | 219 ++++++++++++++++++
- arch/x86/hyperv/irqdomain.c              | 385 +++++++++++++++++++++++++++++++
- arch/x86/include/asm/hyperv-tlfs.h       |  38 +++
- arch/x86/include/asm/mshyperv.h          |  19 +-
- arch/x86/kernel/cpu/mshyperv.c           |  58 +++++
- drivers/clocksource/hyperv_timer.c       |   3 +
- drivers/hv/channel.c                     |   4 +-
- drivers/hv/channel_mgmt.c                |  77 ++++++-
- drivers/hv/connection.c                  |   7 +
- drivers/hv/hv_fcopy.c                    |  36 ++-
- drivers/hv/hv_kvp.c                      | 122 +++++-----
- drivers/hv/hv_snapshot.c                 |  89 ++++---
- drivers/hv/hv_util.c                     | 222 +++++++++++-------
- drivers/hv/vmbus_drv.c                   |  64 +++--
- drivers/iommu/hyperv-iommu.c             | 177 +++++++++++++-
- drivers/net/hyperv/netvsc.c              |  18 +-
- drivers/pci/controller/pci-hyperv.c      |   2 +-
- include/acpi/acpi_numa.h                 |   4 +
- include/asm-generic/hyperv-tlfs.h        | 255 +++++++++++++++++++-
- include/asm-generic/mshyperv.h           |   5 +
- include/linux/hyperv.h                   |  13 +-
- 24 files changed, 1717 insertions(+), 233 deletions(-)
- create mode 100644 arch/x86/hyperv/hv_proc.c
- create mode 100644 arch/x86/hyperv/irqdomain.c
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -821,8 +821,7 @@ STATIC_NOPV void native_flush_tlb_multi(
+ 	 * doing a speculative memory access.
+ 	 */
+ 	if (info->freed_tables) {
+-		on_each_cpu_cond_mask(NULL, flush_tlb_func, (void *)info, true,
+-				      cpumask);
++		on_each_cpu_mask(cpumask, flush_tlb_func, (void *)info, true);
+ 	} else {
+ 		/*
+ 		 * Although we could have used on_each_cpu_cond_mask(),
+@@ -849,8 +848,7 @@ STATIC_NOPV void native_flush_tlb_multi(
+ 			if (tlb_is_not_lazy(cpu))
+ 				__cpumask_set_cpu(cpu, cond_cpumask);
+ 		}
+-		on_each_cpu_cond_mask(NULL, flush_tlb_func, (void *)info, true,
+-				      cpumask);
++		on_each_cpu_mask(cpumask, flush_tlb_func, (void *)info, true);
+ 	}
+ }
+ 
