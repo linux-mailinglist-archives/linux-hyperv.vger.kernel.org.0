@@ -2,68 +2,70 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 744DA31DCD9
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Feb 2021 17:03:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2F3A31DCED
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Feb 2021 17:10:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233906AbhBQQBy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Feb 2021 11:01:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39934 "EHLO
+        id S233959AbhBQQJO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Feb 2021 11:09:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233902AbhBQQBw (ORCPT
+        with ESMTP id S233989AbhBQQJM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Feb 2021 11:01:52 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDDEC061574
-        for <linux-hyperv@vger.kernel.org>; Wed, 17 Feb 2021 08:01:12 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id cl8so1726083pjb.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 17 Feb 2021 08:01:12 -0800 (PST)
+        Wed, 17 Feb 2021 11:09:12 -0500
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E0EC061574
+        for <linux-hyperv@vger.kernel.org>; Wed, 17 Feb 2021 08:08:27 -0800 (PST)
+Received: by mail-pf1-x431.google.com with SMTP id w18so8691620pfu.9
+        for <linux-hyperv@vger.kernel.org>; Wed, 17 Feb 2021 08:08:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=message-id:subject:from:to:cc:date:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=xKjt7PX4lc7b/pj0ltvsdznCQk+T9xiv1gP51OBCdxE=;
-        b=ITf8DntYRMnjJdqLfGVvkSHSOrtu08LzSFQ9X6cimz9WNL8nE1ex2UJAZt4lEOls96
-         KgPtE9jo+V9XuXN7NCBvNfoO7qfU0tooYVks6RZnBxh79nVPHBbCzIu/+BhxL5mH/RFJ
-         efrNaleoDtTLNkXTQBYhHvatkWqum2cfvWT32SiIFyeDHVkpR3ayTK+VFe9wu78prEbK
-         LYsCkXDrUNqE/jsncnQWF3q42oU8a3pCDxoTjmJkO8qrE0VsHFVmO3sphE1fvpMdv47d
-         wLizG1k/d7Gl365me9+o9gUyfwUmzO/w2KpYs5AzK0Sy+1e9tvbIOn94U+dyggjROj2v
-         /jcw==
+        bh=41wbPOqN7tIGaC5JgYnmGRS7WrEcWCo1vN/O+KRLugQ=;
+        b=IHJFaG22RBeadjx6CsB3GCJN6bM4jCTjTlJ+Gxj4EoaxeluGfgjC8s57oajN5hVJA0
+         EuFYzEH+pJWgfleBusBPb50s90ygDkamq40v+A0tNuSK3snFW2Qso7lPSeyxnwKaSwMb
+         6t0Fw4VPZF/Ptfdu9N54UcHjwpvNkB9S+e6L4mE8Q8HJkFipghA/2vXI03VNwyaqORjr
+         wivYfmi4FTWhq6CkJhIOx+xkqWmGrNNyXw/mXZro6G2odP6SMe1dSepZgzSsEN4qUmLV
+         +xvO6tsAStmyeNARAnIdmPmpSaTjNkfg1cWW6HfDQA67KBlKSkLEIO7S5YVF+ocn2+F/
+         I43A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=xKjt7PX4lc7b/pj0ltvsdznCQk+T9xiv1gP51OBCdxE=;
-        b=sc9tQf+258p8LGpD/Qa+rlWwT2llnZQFqqNAgUgNtSLfwcDY6HU/2sgLZ+w2w4pWpq
-         E1474q/fGk4GnzFAVMHjCF0gx1/R47v5V5lsYF/GmuVL07WN8bp+dT2JH/o38BuAp3P1
-         0cSRoh6tW+4auhY+CuNKKH+d8BT2NiFk1rdZhuJcyiLl+MRLo9YZrB13W9M9h5YNFKUl
-         3dpWgmFYe6Z3P9yiFLoxcI7FB5B+BU1lpttrQtF3967F1MnVKARsP2AfgzzdVo6EmHL+
-         B2qShpVmjwr/digZT2w3GCpQ+hfkAUzKoKlmaX3aFCdGtVPRvHY7x1t6DuDC9529klHr
-         ewSw==
-X-Gm-Message-State: AOAM5302u2Udxhp7YqphM4Reehm+LshLQBYxiVJB98h5GWn9VANz13Ah
-        aY391qvVi05O9tTZ4S8llko=
-X-Google-Smtp-Source: ABdhPJwFXpuCoWVfJjoKWg5fKagrOwXCjuGLw+vD6sj3WqSb/U2nbNjpzTdYQfQhBTFa5HaN/sCejg==
-X-Received: by 2002:a17:902:b115:b029:e3:1cd:a2d6 with SMTP id q21-20020a170902b115b02900e301cda2d6mr24394976plr.25.1613577670755;
-        Wed, 17 Feb 2021 08:01:10 -0800 (PST)
+        bh=41wbPOqN7tIGaC5JgYnmGRS7WrEcWCo1vN/O+KRLugQ=;
+        b=nrcsDzKT3AuKo6Tyaz/7lswoaXfHWczcziNhuSzV3j3vUc0NgIvpV006GpkXz5XPzh
+         AT3hBR1HiDh5z90+eRuqeCUD/q1HAq3bTifIZHrSJmSmfxc1GGu+XIP+GaOTAI+6kHcl
+         cedUrlZ0R6foVcnMDsFB2afEvOlK/2PNp0Z8I2U7FPEcVoJsSQtjGXfzltiiFBvlhMv0
+         6lIqV5eMhKMQ2BjZdyhzyBzaWiPx8PUe5IXnjSwFON+wq6ziZxcfZBbgxj0OQWGuWrMz
+         b8o0Kj2qkV1NQY2YYtOhKpMpnrLzXWTSjD3DDvNgPeS08uzFiwz2icB2lo8o6t6eTwnG
+         fk2w==
+X-Gm-Message-State: AOAM532jErm1tlSjM2PVVG00h2Td52+vhj/MioSjwpRa+aVxFyv0Pkvd
+        oYDBzEPBXyNdIFIPqSh7Gcs=
+X-Google-Smtp-Source: ABdhPJxMROtn2rBy4Rdvx+uRLGEa7YTkiKrPJS/9TbwKxAMSKSeCnATWn4YXzvEqZHaiQEmtAsGZxQ==
+X-Received: by 2002:a65:5a09:: with SMTP id y9mr59826pgs.243.1613578105444;
+        Wed, 17 Feb 2021 08:08:25 -0800 (PST)
 Received: from [192.168.1.8] ([50.47.106.83])
-        by smtp.gmail.com with ESMTPSA id o21sm2524255pjs.12.2021.02.17.08.01.09
+        by smtp.gmail.com with ESMTPSA id y22sm2990868pgh.19.2021.02.17.08.08.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Feb 2021 08:01:10 -0800 (PST)
-Message-ID: <4b7bba122ce6429b8448366f6642d3ed369b4baf.camel@gmail.com>
+        Wed, 17 Feb 2021 08:08:24 -0800 (PST)
+Message-ID: <20aead71c4aa3f640e19660875f807deae92f8d8.camel@gmail.com>
 Subject: Re: [PATCH v3 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
  video device
 From:   Deepak Rawat <drawat.floss@gmail.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Gerd Hoffmann <kraxel@redhat.com>,
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Gerd Hoffmann <kraxel@redhat.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         Dexuan Cui <decui@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Wei Hu <weh@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>
-Date:   Wed, 17 Feb 2021 08:01:09 -0800
-In-Reply-To: <d72cd2c5-5896-d181-cca2-d5addd1cdeae@suse.de>
+Date:   Wed, 17 Feb 2021 08:08:23 -0800
+In-Reply-To: <87k0r6kicg.fsf@vitty.brq.redhat.com>
 References: <20210216003959.802492-1-drawat.floss@gmail.com>
-         <d72cd2c5-5896-d181-cca2-d5addd1cdeae@suse.de>
+         <87k0r6kicg.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.38.4 
 MIME-Version: 1.0
@@ -72,17 +74,9 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, 2021-02-16 at 09:21 +0100, Thomas Zimmermann wrote:
-> Hi,
+On Wed, 2021-02-17 at 13:07 +0100, Vitaly Kuznetsov wrote:
+> Deepak Rawat <drawat.floss@gmail.com> writes:
 > 
-> fantastic. Thanks for sending an update. There's been a some bitrot 
-> meanwhile. Review below.
-
-Thanks Thomas for the review. Will update as per review in next
-iteration.
-
-> 
-> Am 16.02.21 um 01:39 schrieb Deepak Rawat:
 > > DRM driver for hyperv synthetic video device, based on hyperv_fb
 > > framebuffer driver. Also added config option "DRM_HYPERV" to
 > > enabled
@@ -100,29 +94,29 @@ iteration.
 > > 
 > > Signed-off-by: Deepak Rawat <drawat.floss@gmail.com>
 > > ---
-> >   drivers/gpu/drm/Kconfig                     |  12 +
-> >   drivers/gpu/drm/Makefile                    |   1 +
-> >   drivers/gpu/drm/hyperv/Makefile             |   8 +
-> >   drivers/gpu/drm/hyperv/hyperv_drm.h         |  51 ++
-> >   drivers/gpu/drm/hyperv/hyperv_drm_drv.c     | 313 +++++++++++++
-> >   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 240 ++++++++++
-> >   drivers/gpu/drm/hyperv/hyperv_drm_proto.c   | 486
+> >  drivers/gpu/drm/Kconfig                     |  12 +
+> >  drivers/gpu/drm/Makefile                    |   1 +
+> >  drivers/gpu/drm/hyperv/Makefile             |   8 +
+> >  drivers/gpu/drm/hyperv/hyperv_drm.h         |  51 ++
+> >  drivers/gpu/drm/hyperv/hyperv_drm_drv.c     | 313 +++++++++++++
+> >  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 240 ++++++++++
+> >  drivers/gpu/drm/hyperv/hyperv_drm_proto.c   | 486
 > > ++++++++++++++++++++
-> >   7 files changed, 1111 insertions(+)
-> >   create mode 100644 drivers/gpu/drm/hyperv/Makefile
-> >   create mode 100644 drivers/gpu/drm/hyperv/hyperv_drm.h
-> >   create mode 100644 drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> >   create mode 100644 drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> >   create mode 100644 drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> >  7 files changed, 1111 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/hyperv/Makefile
+> >  create mode 100644 drivers/gpu/drm/hyperv/hyperv_drm.h
+> >  create mode 100644 drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> >  create mode 100644 drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> >  create mode 100644 drivers/gpu/drm/hyperv/hyperv_drm_proto.c
 > > 
 > > diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
 > > index 8bf103de1594..c17f4e9dcd82 100644
 > > --- a/drivers/gpu/drm/Kconfig
 > > +++ b/drivers/gpu/drm/Kconfig
 > > @@ -382,6 +382,18 @@ source "drivers/gpu/drm/tidss/Kconfig"
-> >   
-> >   source "drivers/gpu/drm/xlnx/Kconfig"
-> >   
+> >  
+> >  source "drivers/gpu/drm/xlnx/Kconfig"
+> >  
 > > +config DRM_HYPERV
 > > +       tristate "DRM Support for hyperv synthetic video device"
 > > +       depends on DRM && PCI && MMU && HYPERV
@@ -137,17 +131,17 @@ iteration.
 > > +
 > > +        If M is selected the module will be called hyperv_drm.
 > > +
-> >   # Keep legacy drivers last
-> >   
-> >   menuconfig DRM_LEGACY
+> >  # Keep legacy drivers last
+> >  
+> >  menuconfig DRM_LEGACY
 > > diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
 > > index 926adef289db..294e321cd23f 100644
 > > --- a/drivers/gpu/drm/Makefile
 > > +++ b/drivers/gpu/drm/Makefile
 > > @@ -125,3 +125,4 @@ obj-$(CONFIG_DRM_ASPEED_GFX) += aspeed/
-> >   obj-$(CONFIG_DRM_MCDE) += mcde/
-> >   obj-$(CONFIG_DRM_TIDSS) += tidss/
-> >   obj-y                 += xlnx/
+> >  obj-$(CONFIG_DRM_MCDE) += mcde/
+> >  obj-$(CONFIG_DRM_TIDSS) += tidss/
+> >  obj-y                  += xlnx/
 > > +obj-$(CONFIG_DRM_HYPERV) += hyperv/
 > > diff --git a/drivers/gpu/drm/hyperv/Makefile
 > > b/drivers/gpu/drm/hyperv/Makefile
@@ -174,6 +168,15 @@ iteration.
 > > +/* SPDX-License-Identifier: GPL-2.0 */
 > > +/*
 > > + * Copyright 2012-2021 Microsoft
+> 
+> Out of pure curiosity, where does '2012' come from or what does it
+> mean?
+> 
+
+Thanks Vitaly for the review. Actually some of the code is derived from
+hyperv_fb, which has copyright 2012. Not sure if I should remove here
+or not?
+
 > > + */
 > > +
 > > +#ifndef _HYPERV_DRM_H_
@@ -224,6 +227,18 @@ iteration.
 > > +int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect
 > > *rect);
 > > +int hyperv_connect_vsp(struct hv_device *hdev);
+> 
+> As we already have
+> balloon_connect_vsp()/netvsc_connect_vsp()/synthvid_connect_vsp(),
+> could
+> we maybe rename 'hyperv_connect_vsp()' to something more DRM-
+> specific? 
+> 
+
+Since all the functions here in drm driver are prefixed with hyperv,
+same is done with connect_vsp(). Sure I think better to rename this to
+something drm specific.
+
 > > +
 > > +#endif
 > > diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
@@ -317,12 +332,6 @@ iteration.
 > > +       ret =
 > > drm_fb_helper_remove_conflicting_pci_framebuffers(pdev,
 > > "hypervdrmfb");
-> 
-> This functon is not actually related to vram, but kicks out any
-> drivers 
-> that might currently use the hardware. I'd try to do this outside  of
-> the vram mapping code. Anyway, your choice.
-> 
 > > +       if (ret) {
 > > +               drm_err(dev, "Not able to remove boot fb\n");
 > > +               return ret;
@@ -342,11 +351,6 @@ iteration.
 > > +       hv->fb_base = pci_resource_start(pdev, 0);
 > > +       hv->fb_size = pci_resource_len(pdev, 0);
 > > +       if (hv->fb_base == 0) {
-> 
-> The prefered style is
-> 
->    if (!hw->fb_base)
-> 
 > > +               drm_err(dev, "Resource not available\n");
 > > +               ret = -ENODEV;
 > > +               goto error;
@@ -376,6 +380,16 @@ iteration.
 > > +
 > > +       hv->fb_size = (unsigned long)(hv->mmio_megabytes * 1024 *
 > > 1024);
+> 
+> In case 'unsigned long' casting was needed because you're afraid
+> 'u32'
+> can overflow, it should be applied before we actually do the
+> multiplication:
+> 
+>  (unsigned long)hv->mmio_megabytes * 1024 * 1024
+> 
+> otherwise the cast seems useless fb_size is 'unsigned long'.
+> 
 > > +
 > > +       ret = vmbus_allocate_mmio(&hv->mem, hdev, 0, -1, hv-
 > > >fb_size, 0x100000,
@@ -392,8 +406,8 @@ iteration.
 > > host also maps
 > > +        * the VRAM cacheable.
 > > +        */
-> > +       hv->vram = ioremap_cache(hv->mem->start, hv->fb_size); >
-> > +      if (!hv->vram) {
+> > +       hv->vram = ioremap_cache(hv->mem->start, hv->fb_size);
+> > +       if (!hv->vram) {
 > > +               drm_err(dev, "Failed to map vram\n");
 > > +               ret = -ENOMEM;
 > > +               goto error;
@@ -411,16 +425,6 @@ iteration.
 > > +       ap->ranges[0].base = screen_info.lfb_base;
 > > +       ap->ranges[0].size = screen_info.lfb_size;
 > > +       remove_conflicting_framebuffers(ap, KBUILD_MODNAME, false);
-> 
-> You have to use drm_fb_helper_remove_conflicting_framebuffers() here.
-> remove_conflicting framebuffers() requires frambuffer support 
-> (CONFIG_FB). Not setting this option would break your driver's build.
-> 
-> Also, I'd call this as early as possible. As I said, this removes
-> other 
-> drivers. And you want to get rid of them as soon as possible to avoid
-> interference.
-> 
 > > +       kfree(ap);
 > > +
 > > +       return 0;
@@ -624,26 +628,6 @@ iteration.
 > > +               drm_dev_exit(idx);
 > > +               return ret;
 > > +       }
-> 
-> This code bitrotted. Calling vmap during the atomic scren update
-> could 
-> lead to a deadlock. So it's not actually allowed. We got away with it
-> so 
-> far, but I recently cleaned this up. Vmappings have to be 
-> established/removed in prepare_fb and cleanup_fb.
-> 
-> But there's a helper to do that. drm_gem_atomic_helper.h contains 
-> plane-state functionality for shadow-buffered planes. It provies the 
-> mapping for your code. You won't have to do aynthing.
-> 
-> It looks like you based your code on the cirrus driver? If so, have a
-> look at
-> 
->  
-> https://lore.kernel.org/dri-devel/20210204200308.24216-5-tzimmermann@suse.de/
-> 
-> so see hwo to convert to shadow-buffer helpers.
-> 
 > > +
 > > +       vmap = map.vaddr;
 > > +       drm_fb_memcpy_dstclip(hv->vram, vmap, fb, rect);
@@ -794,9 +778,6 @@ iteration.
 > > ARRAY_SIZE(hyperv_formats),
 > > +                                          NULL,
 > > +                                          &hv->connector);
-> 
-> Better return here if it fails.
-> 
 > > +
 > > +       drm_plane_enable_fb_damage_clips(&hv->pipe.plane);
 > > +
@@ -866,14 +847,6 @@ iteration.
 > > +               drm_err(dev, "Failed to initialized pipe.\n");
 > > +               return ret;
 > > +       }
-> 
-> Maybe just inline _conn_init() and _pipe_init(). These functions
-> don't 
-> seem to provide much.
-> 
-> Best regards
-> Thomas
-> 
 > > +
 > > +       drm_mode_config_reset(dev);
 > > +
@@ -1138,6 +1111,10 @@ iteration.
 > > +       if (!msg->ver_resp.is_accepted) {
 > > +               ret = -ENODEV;
 > > +               goto out;
+> 
+> Both 'out' label and 'ret' variable could be dropped here, just do
+> 'return -ETIMEDOUT/-ENODEV' directly and 'return 0' at the end.
+> 
 > > +       }
 > > +
 > > +       hv->synthvid_version = ver;
@@ -1183,6 +1160,9 @@ iteration.
 > > +
 > > +out:
 > > +       return ret;
+> 
+> same here: 'out' and 'ret' could be dropped.
+> 
 > > +}
 > > +
 > > +int hyperv_update_situation(struct hv_device *hdev, u8 active, u32
@@ -1296,6 +1276,9 @@ iteration.
 > > +
 > > +out:
 > > +       return ret;
+> 
+> And here.
+> 
 > > +}
 > > +
 > > +static void hyperv_receive_sub(struct hv_device *hdev)
@@ -1414,7 +1397,6 @@ iteration.
 > > +       vmbus_close(hdev->channel);
 > > +       return ret;
 > > +}
-> > 
 > 
 
 
