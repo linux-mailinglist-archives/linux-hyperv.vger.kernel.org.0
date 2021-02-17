@@ -2,64 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8823631DA50
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Feb 2021 14:25:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5313331DB5F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Feb 2021 15:24:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232355AbhBQNYR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Feb 2021 08:24:17 -0500
-Received: from mail2.protonmail.ch ([185.70.40.22]:62033 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232096AbhBQNXz (ORCPT
+        id S233453AbhBQOXc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Feb 2021 09:23:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233390AbhBQOX2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Feb 2021 08:23:55 -0500
-Date:   Wed, 17 Feb 2021 13:22:51 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
-        s=protonmail3; t=1613568190;
-        bh=kihUeknw7T3cBMLdji0A3QX3xelfw0VfedYTqbAucZw=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=qxAOlepGHO1QIZ0m4ucWRvCBzFopBiN7XtvMYErWQZlNAQ89Zy3YhJoXj4eKujNJ3
-         gdWC+bGpjgKhxJEmFzPM8pDv0+o53/t31rWdM+yGsV3LV1uhdS83RewrUMRmModm7C
-         r/2MQgFYIGx/MLulhRAUh7iQ/8+rJKZCgxhS709gcEMikmRJ6DHrz7mICJ/z12Odt6
-         w1irnflwwPV/E1Fouk5CYP+R9JV5B07ZaOz1FarwHfUUgt41DH5+ySqIUT1e6VsfcF
-         rDwT96ApM8okFXdP1alFL9jCRwe4XVvFTvESHSoKqBIKPvFYucgLLCkTtSbd8CweEa
-         YQadmcJ7HWeMA==
-To:     Deepak Rawat <drawat.floss@gmail.com>
-From:   Simon Ser <contact@emersion.fr>
-Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Wei Hu <weh@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>
-Reply-To: Simon Ser <contact@emersion.fr>
-Subject: Re: [PATCH v3 1/2] drm/hyperv: Add DRM driver for hyperv synthetic video device
-Message-ID: <RTH7ReroyaiuwV4na7jvXgaUVHZydoksEf6N1fD_5baGD33auW8TAqtfhOE9WquzDFooXhdGQLZfd5CxgIDRbq7OoM67dtutwHp1SrNRLVA=@emersion.fr>
-In-Reply-To: <20210216003959.802492-1-drawat.floss@gmail.com>
-References: <20210216003959.802492-1-drawat.floss@gmail.com>
+        Wed, 17 Feb 2021 09:23:28 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40836C061574;
+        Wed, 17 Feb 2021 06:22:48 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id s16so3572433plr.9;
+        Wed, 17 Feb 2021 06:22:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mFwrbBRar0ZFgwsE7uD0jgClSERbKKwZDbGmgiCI+Qg=;
+        b=YIA1iaXyAwMIthjoITDsPUAU5rRGReZnCBQQJVEOiYgABOSD0on9KIYTOYtJ5aNm+g
+         MRqyBfANOOxWGqKhT9ZycywBaT5lmPBRJuyKROLAR6aY3hzPitkJlDCSfdgwrJ5QEbmS
+         IYLW2vPDT2jylQoFwgqHpK8gSA6Y7Qr3ugdSDhlH4A9g6a3IHr7rOYRO5b9oZJq7UGcn
+         34llarg2W2OUssNqOxk1xaGMZhmdWb0GIq+SJ0HYHqj1s++ceqhwk2uibeBN+hIWg5Pz
+         393R2Dwd5etY7BsIljZP8qdnl1I1xjURvfMTGuVyDR1NAiZxbBl1D1kGxOpnlXNLGNRr
+         XTZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mFwrbBRar0ZFgwsE7uD0jgClSERbKKwZDbGmgiCI+Qg=;
+        b=UYsmJnUvVv1NA/UPhfMfNfikBdktSbUQVR9YgxdGnoC66EPaCK0YhmAGQSovEReQtb
+         t66to4qKPEtMCxJ9maWTvFTBA1XgIXe/+JM6r0UP1C/qT+C3v5ZxxdsPYSp6fs4vsOdK
+         EkCMgja9rWNy+H/QKTEJBEHLnPlqYvlslQ4u3haJKeOsagUHV15U2bN9/Pb7CaF9FShq
+         p1O7J9rGYbcnfgEoplzKwNT83n5bfO+vdWy7CaLAEkjtCIA7y0mAlYXCuRLFWFI5986c
+         U9K5SHth6IsaDLu3AjhxwvfRpv5VCzgnRu/D53ZS9Nn7IpT60/mAfhLGZPJpzOhF9Av/
+         aTiA==
+X-Gm-Message-State: AOAM5326KcDMYzW/E+F2eGocNu0aSTGvvyZWRz7rW5eCK62s9jlztPK1
+        HiugCXV/GybhkMF87DT87marqylCleDHV3xH
+X-Google-Smtp-Source: ABdhPJxW0I4jCh6NgNTDm7hSR49VVdKastG5zfs8sZ+6Ud+w50ALTuijNevGlnCjm9DB9G5lqs8DcQ==
+X-Received: by 2002:a17:90a:f2ce:: with SMTP id gt14mr9149461pjb.221.1613571767730;
+        Wed, 17 Feb 2021 06:22:47 -0800 (PST)
+Received: from localhost.localdomain ([2405:201:e01e:c062:b757:c18c:b83f:9a4])
+        by smtp.gmail.com with ESMTPSA id z22sm2865080pfa.41.2021.02.17.06.22.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Feb 2021 06:22:47 -0800 (PST)
+From:   Vasanth <vasanth3g@gmail.com>
+To:     kys@microsoft.com
+Cc:     haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasanth <vasanth3g@gmail.com>
+Subject: [PATCH] Staging: hv: channel.c: fixed a tab spaces before space       hv: connection.c fixed a "=" sign without space in code
+Date:   Wed, 17 Feb 2021 19:52:28 +0530
+Message-Id: <20210217142228.393370-1-vasanth3g@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF shortcircuit=no
-        autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-        mailout.protonmail.ch
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tuesday, February 16th, 2021 at 1:39 AM, Deepak Rawat <drawat.floss@gmai=
-l.com> wrote:
+Signed-off-by: Vasanth Mathivanan <vasanth3g@gmail.com>
+---
+ drivers/hv/channel.c    | 2 +-
+ drivers/hv/connection.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> +static int hyperv_conn_init(struct hyperv_drm_device *hv)
-> +{
-> +=09drm_connector_helper_add(&hv->connector, &hyperv_connector_helper_fun=
-cs);
-> +=09return drm_connector_init(&hv->dev, &hv->connector,
-> +=09=09=09=09  &hyperv_connector_funcs,
-> +=09=09=09=09  DRM_MODE_CONNECTOR_VGA);
-> +}
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index 6fb0c76bfbf8..587234065e37 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -385,7 +385,7 @@ static int create_gpadl_header(enum hv_gpadl_type type, void *kbuffer,
+  * @kbuffer: from kmalloc or vmalloc
+  * @size: page-size multiple
+  * @send_offset: the offset (in bytes) where the send ring buffer starts,
+- * 		 should be 0 for BUFFER type gpadl
++ *              should be 0 for BUFFER type gpadl
+  * @gpadl_handle: some funky thing
+  */
+ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 11170d9a2e1a..3760cbb6ffaf 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -28,7 +28,7 @@ struct vmbus_connection vmbus_connection = {
+ 	.conn_state		= DISCONNECTED,
+ 	.next_gpadl_handle	= ATOMIC_INIT(0xE1E10),
+ 
+-	.ready_for_suspend_event= COMPLETION_INITIALIZER(
++	.ready_for_suspend_event = COMPLETION_INITIALIZER(
+ 				  vmbus_connection.ready_for_suspend_event),
+ 	.ready_for_resume_event	= COMPLETION_INITIALIZER(
+ 				  vmbus_connection.ready_for_resume_event),
+-- 
+2.25.1
 
-Nit: shouldn't this be DRM_MODE_CONNECTOR_Virtual?
