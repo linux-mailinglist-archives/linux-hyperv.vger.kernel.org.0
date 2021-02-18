@@ -2,232 +2,276 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DA9A31F17C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Feb 2021 22:04:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CE6131F2E1
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Feb 2021 00:18:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229840AbhBRVDf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Feb 2021 16:03:35 -0500
-Received: from mail-dm6nam11on2132.outbound.protection.outlook.com ([40.107.223.132]:23072
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        id S230019AbhBRXSS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Feb 2021 18:18:18 -0500
+Received: from mail-bn8nam12on2100.outbound.protection.outlook.com ([40.107.237.100]:10081
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229671AbhBRVDJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Feb 2021 16:03:09 -0500
+        id S230021AbhBRXSQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 18 Feb 2021 18:18:16 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XvJUa7+Bg/qoKbvmPxv2rNGidKocOdpxaGsNV831DLcVSs2MfdpaGQ6+16CTms1VMb1LQEo249iVcD6i3UsGQMD01jq1VKhvamDbQJiNUUKM1wGuUVAoyepbrisqzZfvUMF4uohM2udtCpY8rT+cWvXVx/iZ4z0BvBOkg39KzNCOADN+VAmvbeciIUjUpKz68ryYj1X74qtNFRs9Xge7qnsOKjeo+qmjv/a9lwUbQF234pPAe7opTIUOHd4FGhgUGPreevpcr7vepRaliaK+V6GpcUhVlcD+QDPXG9hU/5rG2n85XgEepGEA5uEG07ouLo+QsqL6doDE58XreAm/uw==
+ b=LiK6AUVZIiKTTks5B3XaKg22FTEbFW7mOmvfhGN2+YziwAtDHf9u8NMIMZMYBoKgcRN+BxO9FxOtwcPdgOEtjUnbJVbHiUwU8nxFtfXQH/H8rqjVqSQr6UJt81Sm0f+bE99Qd4UjaWGSI3aPiC1c3CN0k3+nvr2y/Z9111J2pnzhr8JOoHOf9t+mwDVspGCsvsfwdcGJIKkUjWIGvqXOFad+N3FGsvYx5r3mtL98a27Ra8O877siSYxS9VKmsgeJKt5SingtmmN2PAMle85Q7fH5Zyca4gLeqW1NDTZneYLwLFrXqvvIK9H8NIJzFqdB22AxY9ObfJaSNLLGf/IjBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kb553JjDFfDPJo9/Pt7OBvdjOTgAfCF3uRWnDI/Q+v4=;
- b=luX4/kKLryQQBTC4jwfDPN1OyBu8xNanF7gdJpJtsSaoiSawF8fy8ePyAL/4wM4Qib3R1vrxwzC4tavl3GUHJwAnFZQyGeMTXFq5gdyfrRV2BnoJ8c8lNn9yeFW4SKa692PTM27BWyFpy2zwmK1HWgmC9wK5ns3tPJth2DBXpFTVB06OBtEBnHQ4S7/CX8c8K+LWi0xTzJYlh+2iNbBv1rZMnI6HA7Wm0QLFaltIm9TytBzrIag35pK+7M9VE6shCWkCu2CZa3FEGwMEfszRkdP3TmFCSO2ik+G+IPhhNS8YV1PiU9iHWTB7Ypjp9W7BfSXmcAut95QETn3YgWgGZQ==
+ bh=YCoGyCVrx48qh2xzerzNXZ8r9Ryot4pET1IY9hfnV38=;
+ b=EwZ7BcjX7kX4tnD4x0Y/7xEKtiiHu1kCV1diGx4RiKnMk3msCHokwPNTNAZrxxTiWOvKo7G3mb1S7fwn3suaRmzaGH+bUnrPFUR55rucxbqIeH2bYRdobW3nj2i8R6KMqbLXMCRaS5AiXlasJdfLKxwwL+XOeXEOzK94oYmD8+9kefGiSkwLnR/ZYUyZV3LJIQ4vynOFUzcY2i6qbK1l246peWjTD5u4dkkUCNj2SOLFeS1d9ihBeF/cBcJE7cZKJs2fWpaat51PfdgZdNzpopZtBRqJD6DmIayZ7cG/s5JDvmgBTu+jOZ/LYIM4wAOlpu5M2YfnGmgZlOXJ07S9hA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kb553JjDFfDPJo9/Pt7OBvdjOTgAfCF3uRWnDI/Q+v4=;
- b=b1f75KDkG48+ieXJLDHPsVYVgVi0Y4FEpQpQJ1Nb4FnLZUjBJy2QeAkkVTYQCefCLRiqXisKkhgSZmpAgbEoY77TD4Peg0YFaxmWgnRihj2DaOzUGraUG6p78jZJy4Gg5UjB/ol7o3Z9XYqYdNrKqkTs43mmJUTIFG+2DGbLCcc=
-Authentication-Results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
+ bh=YCoGyCVrx48qh2xzerzNXZ8r9Ryot4pET1IY9hfnV38=;
+ b=IvgBkxKqYY6dWrBu6raOtzf0ZJV36h4NgJWTODaCVPP9G4OOFZiUWtp7hikA6oIdMn8dBOa9yvuUxaFy1iFvrnXGCQ6bBvX+ZEkuZVK24d7gA8X++tn+e1ilI4tLtb2MtJR8unyjvFzBoH8ts+RGQ1PhBfn/shVRUy6H9uLh6s4=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
 Received: from (2603:10b6:5:22d::11) by
- DM5PR21MB1543.namprd21.prod.outlook.com (2603:10b6:4:7a::18) with Microsoft
+ DM5PR2101MB0983.namprd21.prod.outlook.com (2603:10b6:4:a8::29) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3846.3; Thu, 18 Feb 2021 21:02:21 +0000
+ 15.20.3805.1; Thu, 18 Feb 2021 23:17:26 +0000
 Received: from DM6PR21MB1514.namprd21.prod.outlook.com
  ([fe80::1c32:e52a:6a36:3ff]) by DM6PR21MB1514.namprd21.prod.outlook.com
  ([fe80::1c32:e52a:6a36:3ff%5]) with mapi id 15.20.3890.002; Thu, 18 Feb 2021
- 21:02:21 +0000
+ 23:17:26 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, martin.petersen@oracle.com,
-        longli@microsoft.com, wei.liu@kernel.org, jejb@linux.ibm.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
+To:     will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
+        arnd@arndb.de, wei.liu@kernel.org, ardb@kernel.org,
+        daniel.lezcano@linaro.org, kys@microsoft.com
 Cc:     mikelley@microsoft.com
-Subject: [PATCH 1/1] scsi: storvsc: Enable scatterlist entry lengths > 4Kbytes
-Date:   Thu, 18 Feb 2021 13:01:27 -0800
-Message-Id: <1613682087-102535-1-git-send-email-mikelley@microsoft.com>
+Subject: [PATCH v8 0/6] Enable Linux guests on Hyper-V on ARM64
+Date:   Thu, 18 Feb 2021 15:16:28 -0800
+Message-Id: <1613690194-102905-1-git-send-email-mikelley@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 Content-Type: text/plain
-X-Originating-IP: [131.107.159.144]
-X-ClientProxiedBy: MW4PR04CA0088.namprd04.prod.outlook.com
- (2603:10b6:303:6b::33) To DM6PR21MB1514.namprd21.prod.outlook.com
- (2603:10b6:5:22d::11)
+X-Originating-IP: [131.107.147.144]
+X-ClientProxiedBy: MWHPR10CA0017.namprd10.prod.outlook.com (2603:10b6:301::27)
+ To DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkdev.corp.microsoft.com (131.107.159.144) by MW4PR04CA0088.namprd04.prod.outlook.com (2603:10b6:303:6b::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend Transport; Thu, 18 Feb 2021 21:02:20 +0000
+Received: from mhkdev.corp.microsoft.com (131.107.147.144) by MWHPR10CA0017.namprd10.prod.outlook.com (2603:10b6:301::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend Transport; Thu, 18 Feb 2021 23:17:25 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2d57950e-c7fb-4d2b-7b18-08d8d4507bdb
-X-MS-TrafficTypeDiagnostic: DM5PR21MB1543:
+X-MS-Office365-Filtering-Correlation-Id: dfdd465d-1b78-4658-528e-08d8d4635aab
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB0983:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR21MB154314360F904086A13367AFD7859@DM5PR21MB1543.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB09834EF3A04CCE3D9CB53C0ED7859@DM5PR2101MB0983.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7uW697sJSaTMFy1NMmBB6y1SKV4Y5Wmpm9MsRA+ylsludr4hoQJEfD0suth8qlqDH4M6+CK4OnAky2xD6b4qY/Bd06c+5iysAKgFzLP7RwZczh/BvteqtkTUHJJ4k5N2w+SPwrY0vAKwv+p7mxBGxBOklEm19+m1YckWcgcwGXfmhSxwp+EBeQ3OZyY7FfxvpaPc1LuUYiphBzlcnXHwNrLX0wgju5B4tx1JOA0wpij1wR+yds7KH1PGGJQWiiy9aFe7KuqU5PQocHAJqJqLGsWyXXRfqtDubuPxeBldnV/vDtFAhIU7GTboNVbk7Zh3dmonN6+WKeTilasqIpP/nLYG9CWfS1c1MQwxAW5NBJqWRvXcBJskCHvw1UuQU+1iRIebC9Z15xtPJRLh//3hKXLe+7F/W2FrgG0YyjAblgASGdjNaICXa4gIcbsEMBv4A7VDlja5/RMq2a75aPvUCJHHOcLpD2s0ItvJmF2bClxzNb+dhfBsGYTXbwcYcyqxRjFyNyKntY0yez/uf87qOg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(346002)(396003)(376002)(366004)(5660300002)(6486002)(2906002)(8676002)(316002)(10290500003)(478600001)(36756003)(26005)(107886003)(66476007)(66946007)(52116002)(7696005)(82960400001)(2616005)(66556008)(82950400001)(4326008)(956004)(83380400001)(16526019)(86362001)(8936002)(186003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?/lHAcCoKvjJUqPSPRA+JUg/nIULXcR17+nAOZ2h+4rUi3qiMCSYnohMuFv5V?=
- =?us-ascii?Q?VgkTXDbbgX0vMFBBgpQXYfhrHD210QDLBtpnwRJHN21HsjneTOM6GLrgV/pO?=
- =?us-ascii?Q?+3wWxLMZ9VS9V3jjGV+BvrW5a00oKxXZbrT1dzI09/VCW6pjNzjC0RxuhAG2?=
- =?us-ascii?Q?iwRKVB1JuX/QY1UXH+ISoCIzxS5pjyJIaGPFTFR7LZcxQpmCicPbY7nDGWxr?=
- =?us-ascii?Q?dHiVEC84uf1WywtaufSj7t37zzRqCjKShYg2zt9LZXPJ2vYn4hU105awYmpg?=
- =?us-ascii?Q?PcTd+pOD35Wxm7dIfaU7cKWJrpdkUt+NfVdsRnZdOGVtvXZ7iD1IhnFs0fJe?=
- =?us-ascii?Q?p+uMP0fDgD+Px05ODTHtoY8K32NBDmWW27M+LgE27pKNwy5tJGXC0K6p7gTG?=
- =?us-ascii?Q?KoOoGlMsE7ODbWy61C8hQRLxGuXJmv/8ro9oqHFGLQfbyI+9nxo78hk8wCs3?=
- =?us-ascii?Q?BsJJ9myf5KjVqbCqYloI4e2CjDcAKxV2jaOciX/QjVAe5rvrdZ7H1e6podx2?=
- =?us-ascii?Q?wwTTCUgtXUkjw17GPHr14QjqDIQ4l+AzaiCSYeIyh6/dSl2PcOGwkoWpam5R?=
- =?us-ascii?Q?ckjZYrUiswMyPPPA4Irt+GYlQtiztwhwM3UcZC33MucfAuSOIspuScNCLbDr?=
- =?us-ascii?Q?YYmm2QjeLM7fVKzO02wcBeZa9ZE+0VML6630YI/nM0cWSVqrjovzUx2KNVBH?=
- =?us-ascii?Q?wHQ5M+GGPYDIh0cLYm1SUeZXcYSJZTOttW61D+gUHH2rePpj2oNaRJomhgDP?=
- =?us-ascii?Q?5PPEoj/fWTJkBQUzSTJrN/EObqpmhloPB1kZFLvg+9rHP7M095RkWtZiB5Hl?=
- =?us-ascii?Q?LebHTmui3Wt000VSvv3nvlCkbSxVL0e5Wg+Dc08ixak4wn0BmuRsBggzlu+r?=
- =?us-ascii?Q?0gtRJ0hn3Kc9lYYp4cBJKxYYSneWC8Au6izZT6Jqivr1bTAw4uCnnDJ18okl?=
- =?us-ascii?Q?2Hoet6vhSOFZkUjcO8ohjuE+HPhRtuuOsGS/K08Y29RGpUHttc0j5cZSPBm/?=
- =?us-ascii?Q?2xSQzIcIQPIZYWgDY/gYHoDke63Pk3Fe5WNo8kjXxF4SWrOouukS7WtelmqF?=
- =?us-ascii?Q?0G+GU4bNhiClpqZoDiEqIz0CQrSr79fFDlloLzHDKytaoOPXVf5rdocv/QFv?=
- =?us-ascii?Q?l7m9NbvytY40GK0EqUwiRP4V/Fz9obnPLrvjFbCd/Xz5glQDQ7W6kKl0nvQl?=
- =?us-ascii?Q?MsMoH0QWC3cjQbdbExPfUxI0SoI16BLxAz6b66y8rvQwk3WrX0Qlgm5/aHzU?=
- =?us-ascii?Q?M5cY6LYPtiFrOvmDwvjfIS536iyQJlceu0lA8rZW/oslmrQ3u8eV0t+5P4ey?=
- =?us-ascii?Q?4Jwy43jOd+OnTGH/Te0wtrsV?=
+X-Microsoft-Antispam-Message-Info: ivV3MJLIQt6lN6a8lRBI8CCqzBTZqZJETc0k1VtFhjPbWtdPq8JB2q2t768ecAcBUWguNkL40gnS0nSxids/wSDSg8I64iunwwPCjGgy7Ned9/TkrkpqJfnENQlbyzTwZu+olK+m9Ty2onmOTBgbWAJ861tVh4PSCVRfG61rWiQl2sbiCj34A3XkcETZBxKQW7CdFB5SBrjWQc7nyLjbA8/Gic/FOr5NFdPT/BB1Z6YTYQ1T/MKs8eBjB+Slu1jtEmAFARuBZKr2M9Xl0RqSp0Bj1PNpHDNVnRODmA06uzWuSzfkeEI462JpA2BpENBqowVfXaAEP1wuhrI3Q7ovONvVVBg5kEK2XkDiYuuSyRQsnHTvtNsNWmyIMAJM0qhnNoiXPEoEIM8K+7k1FIyYE1PbHIk3vne+3pUO0aPCJUgMmLR2gQplz/L507X1B47suBWCQWgwwyYdBPqRqJIyO709/4bKb+cOHmImdwu5QIKQPYYNaTf/YiJv+Xbfoe2ulOv/nJzoNRozNOCKDlDhp8LHKWwWgK24lIexAOGJLEGtSL8QyIpOFUHJfZhaniajqj2IAR72dHPPpvSXVW6ysninohxK3bJxyCAGOy2Yp7TnoHHgc5fBibjWv3jQHu0fwSVPAiAkF3fH9ZjtpNUSLA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(346002)(366004)(136003)(966005)(5660300002)(6486002)(921005)(107886003)(8676002)(7416002)(82950400001)(2616005)(4326008)(66476007)(478600001)(2906002)(83380400001)(36756003)(186003)(66556008)(6636002)(66946007)(86362001)(10290500003)(956004)(16526019)(26005)(82960400001)(8936002)(52116002)(7696005)(316002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?gA7t9E/NErgB6GAhUrPxXVXceyrbZ7YkOm16JPCl9076kVeMQ1T/uPMF/5AN?=
+ =?us-ascii?Q?wgsBfhiiPVxgZRIsPQ/OH1kUxovy6Io4VDg+RuZCUcPtjobXtpx3Y0kxKefj?=
+ =?us-ascii?Q?fEEkF18aeTPX9UyJpEpJh5RAGGxpddsQ+Fxph+br/R0YlT9T1vw4osFOIVEj?=
+ =?us-ascii?Q?xz7kfpRDXU+ASbaMtbpvKevuU/hsVTwZIbv/CVE9LbAe+Jv5Q5ZeEnq2SPa3?=
+ =?us-ascii?Q?7Zr3KERdq6f5p4a5QIXv0yYSsd2FuqHKs502IWiwQgm/XHDPVYkXVMgI+6rA?=
+ =?us-ascii?Q?dLeTurD31bb2Ka1czfQvdgInQHPu0g/UZoVGXTRGXIT0RDUFox8qP72adTN9?=
+ =?us-ascii?Q?oEzXCm+hNeWyxyoa7YPKBUTLs+wMCeTCxqp2I+9ObEutH5X1q2uIyT/lJ2r3?=
+ =?us-ascii?Q?UVJsC60Wk8ycbQxIow3h8q6lQPiGcIYgq1X9sT6FCX1yap50GVnxD57bE2k6?=
+ =?us-ascii?Q?Fs+mCXsqlOMQmig+YoITIvhuOS5UFPaQWJdfWq+3ne9PpEsrgkPQJqzLboNy?=
+ =?us-ascii?Q?gimKvwAeeNPmKHXE7JPIUl0foLBuWkZ790VM6add8HzzMYj5h+PKockhD481?=
+ =?us-ascii?Q?PBUnIMK7UhFlHhjJWDRBf7Upa8hU4JtPVfEix/eHnbOsM+hF6WRaDC2Ip3a/?=
+ =?us-ascii?Q?u4AkFnx5ebOQME8iCaVepJeqOKaxIpFwr7dcNRBvGiEmKw/7542oanlZh+he?=
+ =?us-ascii?Q?OFPEgxYtmE+4+iCbgZTiu4Sk1+vtRjNvUng/FVC6/nOtu3pJlL6OohL9ttFp?=
+ =?us-ascii?Q?SIX8gtM2FAxj8QTnsXAU8rjXGe583SCcjSe2jevi+7tM8W4f1KMOQKrCXaiP?=
+ =?us-ascii?Q?6DxiaP5avcsbdWTnE+rGbhVvMZjCFZ8Tmlsv0In+VwHqK6QQ0D/uVuEeCOQ1?=
+ =?us-ascii?Q?2b6Ur9+vopxWqmQfe+/tZFswbBZ6QkftHgP/neC5dK98x74BkdCwnDlaL0ta?=
+ =?us-ascii?Q?UFtNZ4YxmqO1a6/2wHL4VfHfvYmMeZKbhL6lXBIXUQ/9Iq+8+RyTbpXApJGM?=
+ =?us-ascii?Q?iNc9HIOqJjWZK1ahgejcADD7V/k6QWH+HH5PzS/DDi7FpoU0WoyWViivEjJY?=
+ =?us-ascii?Q?yZEF3gsQrUi/vrMP83JkW9yhj7YLO40vnH/N50wBxHh99wO8a8ZI6NvooV6S?=
+ =?us-ascii?Q?Py6RANKAOm3/2xvBg1+34xYGkrcgnaGV1tkJInvWqZi3HvGabkrrKsz4ZMEG?=
+ =?us-ascii?Q?KDhBFWw/jONejWFi9NQAC97joQv8xZXQFMzHGXP5IMVVarFDl4DOrUE6z40g?=
+ =?us-ascii?Q?wbJXMvWpy3N1/tXFhWy6khB5AQq93V06Eg7vQ+aX1Wxem3runS/60cAitUM9?=
+ =?us-ascii?Q?mNBX8swNKh7uMH/hWq9SPdcu?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d57950e-c7fb-4d2b-7b18-08d8d4507bdb
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfdd465d-1b78-4658-528e-08d8d4635aab
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2021 21:02:21.5111
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2021 23:17:26.4089
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cNkQgEBuI2KY6Q34llTV3gLUx8RipLaiu/yyntLiOnaGPF2EF5lKMZ/d6bRxkd173mQjLSGZrPGU8uECyJ6TmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB1543
+X-MS-Exchange-CrossTenant-UserPrincipalName: vJT2gz3afAs62nB5/7N65IaD2Z0CDs68cyDL7A9HaOUyB0yCE1ehLNCxci0OKeWVb4CV87eZXMdTLg5JefDQqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0983
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-storvsc currently sets .dma_boundary to limit scatterlist entries
-to 4 Kbytes, which is less efficient with huge pages that offer
-large chunks of contiguous physical memory. Improve the algorithm
-for creating the Hyper-V guest physical address PFN array so
-that scatterlist entries with lengths > 4Kbytes are handled.
-As a result, remove the .dma_boundary setting.
+This series enables Linux guests running on Hyper-V on ARM64
+hardware. New ARM64-specific code in arch/arm64/hyperv initializes
+Hyper-V, including its interrupts and hypercall mechanism.
+Existing architecture independent drivers for Hyper-V's VMbus and
+synthetic devices just work when built for ARM64. Hyper-V code is
+built and included in the image and modules only if CONFIG_HYPERV
+is enabled.
 
-The improved algorithm also adds support for scatterlist
-entries with offsets >= 4Kbytes, which is supported by many
-other SCSI low-level drivers.  And it retains support for
-architectures where possibly PAGE_SIZE != HV_HYP_PAGE_SIZE
-(such as ARM64).
+The six patches are organized as follows:
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/scsi/storvsc_drv.c | 63 ++++++++++++++++------------------------------
- 1 file changed, 22 insertions(+), 41 deletions(-)
+1) Add definitions and functions for making Hyper-V hypercalls
+   and getting/setting virtual processor registers provided by
+   Hyper-V
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 2e4fa77..5d06061 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1678,9 +1678,8 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	struct storvsc_cmd_request *cmd_request = scsi_cmd_priv(scmnd);
- 	int i;
- 	struct scatterlist *sgl;
--	unsigned int sg_count = 0;
-+	unsigned int sg_count;
- 	struct vmscsi_request *vm_srb;
--	struct scatterlist *cur_sgl;
- 	struct vmbus_packet_mpb_array  *payload;
- 	u32 payload_sz;
- 	u32 length;
-@@ -1759,7 +1758,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	payload_sz = sizeof(cmd_request->mpb);
- 
- 	if (sg_count) {
--		unsigned int hvpgoff = 0;
-+		unsigned int hvpgoff, sgl_size;
- 		unsigned long offset_in_hvpg = sgl->offset & ~HV_HYP_PAGE_MASK;
- 		unsigned int hvpg_count = HVPFN_UP(offset_in_hvpg + length);
- 		u64 hvpfn;
-@@ -1773,51 +1772,35 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 				return SCSI_MLQUEUE_DEVICE_BUSY;
- 		}
- 
--		/*
--		 * sgl is a list of PAGEs, and payload->range.pfn_array
--		 * expects the page number in the unit of HV_HYP_PAGE_SIZE (the
--		 * page size that Hyper-V uses, so here we need to divide PAGEs
--		 * into HV_HYP_PAGE in case that PAGE_SIZE > HV_HYP_PAGE_SIZE.
--		 * Besides, payload->range.offset should be the offset in one
--		 * HV_HYP_PAGE.
--		 */
- 		payload->range.len = length;
- 		payload->range.offset = offset_in_hvpg;
--		hvpgoff = sgl->offset >> HV_HYP_PAGE_SHIFT;
- 
--		cur_sgl = sgl;
--		for (i = 0; i < hvpg_count; i++) {
-+
-+		for (i = 0; sgl != NULL; sgl = sg_next(sgl)) {
- 			/*
--			 * 'i' is the index of hv pages in the payload and
--			 * 'hvpgoff' is the offset (in hv pages) of the first
--			 * hv page in the the first page. The relationship
--			 * between the sum of 'i' and 'hvpgoff' and the offset
--			 * (in hv pages) in a payload page ('hvpgoff_in_page')
--			 * is as follow:
--			 *
--			 * |------------------ PAGE -------------------|
--			 * |   NR_HV_HYP_PAGES_IN_PAGE hvpgs in total  |
--			 * |hvpg|hvpg| ...              |hvpg|... |hvpg|
--			 * ^         ^                                 ^                 ^
--			 * +-hvpgoff-+                                 +-hvpgoff_in_page-+
--			 *           ^                                                   |
--			 *           +--------------------- i ---------------------------+
-+			 * Init values for the current sgl entry. sgl_size
-+			 * and hvpgoff are in units of Hyper-V size pages.
-+			 * Handling the PAGE_SIZE != HV_HYP_PAGE_SIZE case
-+			 * also handles values of sgl->offset that are
-+			 * larger than PAGE_SIZE. Such offsets are handled
-+			 * even on other than the first sgl entry, provided
-+			 * they are a multiple of PAGE_SIZE.
- 			 */
--			unsigned int hvpgoff_in_page =
--				(i + hvpgoff) % NR_HV_HYP_PAGES_IN_PAGE;
-+			sgl_size = HVPFN_UP(sgl->offset + sgl->length);
-+			hvpgoff = sgl->offset >> HV_HYP_PAGE_SHIFT;
-+			hvpfn = page_to_hvpfn(sg_page(sgl));
- 
- 			/*
--			 * Two cases that we need to fetch a page:
--			 * 1) i == 0, the first step or
--			 * 2) hvpgoff_in_page == 0, when we reach the boundary
--			 *    of a page.
-+			 * Fill the next portion of the PFN array with
-+			 * sequential Hyper-V PFNs for the continguous physical
-+			 * memory described by the sgl entry. The end of the
-+			 * last sgl should be reached at the same time that
-+			 * the PFN array is filled.
- 			 */
--			if (hvpgoff_in_page == 0 || i == 0) {
--				hvpfn = page_to_hvpfn(sg_page(cur_sgl));
--				cur_sgl = sg_next(cur_sgl);
-+			while (hvpgoff != sgl_size) {
-+				payload->range.pfn_array[i++] =
-+							hvpfn + hvpgoff++;
- 			}
--
--			payload->range.pfn_array[i] = hvpfn + hvpgoff_in_page;
- 		}
- 	}
- 
-@@ -1851,8 +1834,6 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	.slave_configure =	storvsc_device_configure,
- 	.cmd_per_lun =		2048,
- 	.this_id =		-1,
--	/* Make sure we dont get a sg segment crosses a page boundary */
--	.dma_boundary =		PAGE_SIZE-1,
- 	/* Ensure there are no gaps in presented sgls */
- 	.virt_boundary_mask =	PAGE_SIZE-1,
- 	.no_write_same =	1,
+2) Add architecture specific definitions needed by the
+   architecture independent Hyper-V clocksource driver in
+   drivers/clocksource/hyperv_timer.c. Update the clocksource
+   driver to be initialized on ARM64.
+
+3) Add functions needed by the arch independent VMbus driver
+   for reporting a panic to Hyper-V and as stubs for the kexec
+   and crash handlers.
+
+4) Add Hyper-V initialization code and utility functions that
+   report Hyper-v status.
+
+5) Export screen_info so it may be used by the Hyper-V frame buffer
+   driver built as a module. It is already exported for x86,
+   powerpc, and alpha architectures.
+
+6) Make CONFIG_HYPERV selectable on ARM64 in addition to x86/x64.
+
+Hyper-V on ARM64 runs with a 4 Kbyte page size, but allows guests
+with 4K/16K/64K page size. Linux guests with this ARM64 enablement
+code work with all three supported ARM64 page sizes.
+
+The Hyper-V vPCI driver at drivers/pci/host/pci-hyperv.c has
+x86/x64-specific code and is not being built for ARM64. Fixing
+this driver to enable vPCI devices on ARM64 will be done later.
+
+In a few cases, terminology from the x86/x64 world has been carried
+over into the ARM64 code ("MSR", "TSC").  Hyper-V still uses the
+x86/x64 terminology and has not replaced it with something more
+generic, so the code uses the Hyper-V terminology.  This will be
+fixed when Hyper-V updates the usage in the TLFS.
+
+This patch set is based on the 5.11.0 code tree, plus this patch series
+https://lore.kernel.org/lkml/1611779025-21503-1-git-send-email-mikelley@microsoft.com/
+that refactors the boundary between arch independent and arch
+dependent code for Hyper-V.
+
+Changes in v8:
+* Removed a fair amount of code based on refactoring the boundary between
+  arch independent and arch dependent code for Hyper-V, per comments
+  from Arnd Bergmann. The removed code was either duplicated on
+  the x86 side, or has been folded into architecture independent
+  code as not really being architecture dependent.
+* Added config dependency on !CONFIG_CPU_BIG_ENDIAN [Arnd Bergmann]
+* Reworked the approach to Hyper-V initialization. The functionality
+  is the same, but is now structured like the Xen code with an early
+  init function called in setup_arch() and an early initcall to
+  finish the initialization. [Arnd Bergmann]
+
+Changes in v7:
+* Separately upstreamed split of hyperv-tlfs.h into arch dependent
+  and independent versions.  In this patch set, update the ARM64
+  hyperv-tlfs.h to include architecture independent definitions.
+  This approach eliminates a lot of lines of otherwise duplicated
+  code on the ARM64 side.
+* Break ARM64 mshyperv.h into smaller pieces. Have an initial
+  baseline, and add code along with patches for a particular
+  functional area. [Marc Zyngier]
+* In mshyperv.h, use static inline functions instead of #defines
+  where possible. [Arnd Bergmann]
+* Use VMbus INTID obtained from ACPI DSDT instead of hardcoding.
+  The STIMER INTID is still hardcoded because it is needed
+  before Linux has initialized the ACPI subsystem, so it can't
+  be obtained from the DSDT.  Wedging it into the GTDT seems
+  dubious, so was not done. [Marc Zyngier]
+* Update Hyper-V page size allocation functions to use
+  alloc_page() if PAGE_SIZE == HV_HYP_PAGE_SIZE [Arnd
+  Bergmann]
+* Various other minor changes based on feedback and to rebase
+  to latest linux-next [Marc Zyngier and Arnd Bergmann]
+
+Changes in v6:
+* Use SMCCC hypercall interface instead of direct invocation
+  of HVC instruction and the Hyper-V hypercall interface
+  [Marc Zyngier]
+* Reimplemented functions to alloc/free Hyper-V size pages
+  using kmalloc/kfree since kmalloc now guarantees alignment of
+  power of 2 size allocations [Marc Zyngier]
+* Export screen_info in arm64 architecture so it can be used
+  by the Hyper-V buffer driver built as a module
+* Renamed source file arch/arm64/hyperv/hv_init.c to hv_core.c
+  to better reflect its content
+* Fixed the bit position of certain feature flags presented by
+  Hyper-V to the guest.  The bit positions on ARM64 don't match
+  the position on x86 like originally thought.
+* Minor fixups to rebase to 5.6-rc5 linux-next
+
+Changes in v5:
+* Minor fixups to rebase to 5.4-rc1 linux-next
+
+Changes in v4:
+* Moved clock-related code into an architecture independent
+  Hyper-V clocksource driver that is already upstream. Clock
+  related code is removed from this patch set except for the
+  ARM64 specific interrupt handler. [Marc Zyngier]
+* Separately upstreamed the split of mshyperv.h into arch independent
+  and arch dependent portions. The arch independent portion has been
+  removed from this patch set.
+* Divided patch #2 of the series into multiple smaller patches
+  [Marc Zyngier]
+* Changed a dozen or so smaller things based on feedback
+  [Marc Zyngier, Will Deacon]
+* Added functions to alloc/free Hyper-V size pages for use by
+  drivers for Hyper-V synthetic devices when updated to not assume
+  guest page size and Hyper-v page size are the same
+
+Changes in v3:
+* Added initialization of hv_vp_index array like was recently
+  added on x86 branch [KY Srinivasan]
+* Changed Hyper-V ARM64 register symbols to be all uppercase 
+  instead of mixed case [KY Srinivasan]
+* Separated mshyperv.h into two files, one architecture
+  independent and one architecture dependent. After this code
+  is upstream, will make changes to the x86 code to use the
+  architecture independent file and remove duplication. And
+  once we have a multi-architecture Hyper-V TLFS, will do a
+  separate patch to split hyperv-tlfs.h in the same way.
+  [KY Srinivasan]
+* Minor tweaks to rebase to latest linux-next code
+
+Changes in v2:
+* Removed patch to implement slow_virt_to_phys() on ARM64.
+  Use of slow_virt_to_phys() in arch independent Hyper-V
+  drivers has been eliminated by commit 6ba34171bcbd
+  ("Drivers: hv: vmbus: Remove use of slow_virt_to_phys()")
+* Minor tweaks to rebase to latest linux-next code
+
+Michael Kelley (6):
+  arm64: hyperv: Add Hyper-V hypercall and register access utilities
+  arm64: hyperv: Add Hyper-V clocksource/clockevent support
+  arm64: hyperv: Add kexec and panic handlers
+  arm64: hyperv: Initialize hypervisor on boot
+  arm64: efi: Export screen_info
+  Drivers: hv: Enable Hyper-V code to be built on ARM64
+
+ MAINTAINERS                          |   3 +
+ arch/arm64/Kbuild                    |   1 +
+ arch/arm64/hyperv/Makefile           |   2 +
+ arch/arm64/hyperv/hv_core.c          | 220 +++++++++++++++++++++++++++++++++++
+ arch/arm64/hyperv/mshyperv.c         | 194 ++++++++++++++++++++++++++++++
+ arch/arm64/include/asm/hyperv-tlfs.h |  69 +++++++++++
+ arch/arm64/include/asm/mshyperv.h    |  73 ++++++++++++
+ arch/arm64/kernel/efi.c              |   1 +
+ arch/arm64/kernel/setup.c            |   4 +
+ drivers/clocksource/hyperv_timer.c   |  14 +++
+ drivers/hv/Kconfig                   |   3 +-
+ 11 files changed, 583 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/hyperv/Makefile
+ create mode 100644 arch/arm64/hyperv/hv_core.c
+ create mode 100644 arch/arm64/hyperv/mshyperv.c
+ create mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
+ create mode 100644 arch/arm64/include/asm/mshyperv.h
+
 -- 
 1.8.3.1
 
