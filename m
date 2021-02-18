@@ -2,143 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D72831E760
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Feb 2021 09:24:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D42331EA79
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Feb 2021 14:35:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbhBRIWW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Feb 2021 03:22:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44334 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230492AbhBRITs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Feb 2021 03:19:48 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 78705AD57;
-        Thu, 18 Feb 2021 08:18:24 +0000 (UTC)
-Subject: Re: [PATCH v3 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
- video device
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Deepak Rawat <drawat.floss@gmail.com>,
-        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Wei Hu <weh@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-References: <20210216003959.802492-1-drawat.floss@gmail.com>
- <87k0r6kicg.fsf@vitty.brq.redhat.com>
- <20aead71c4aa3f640e19660875f807deae92f8d8.camel@gmail.com>
- <87h7mak6l8.fsf@vitty.brq.redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <f606d24a-a320-01ff-8d38-d3d7f6f7f881@suse.de>
-Date:   Thu, 18 Feb 2021 09:18:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S229535AbhBRN3r (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Feb 2021 08:29:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230209AbhBRLRU (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 18 Feb 2021 06:17:20 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD57C06178C;
+        Thu, 18 Feb 2021 03:15:31 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id d15so1076854plh.4;
+        Thu, 18 Feb 2021 03:15:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zucq0iHfsDz/8P8FApo64pAJia/DuOTQ2Df8Tcdt9pU=;
+        b=ddtmcv7wWeq1AEohMJ4T1iJmSBtnUrbid+phwaB3O0n0XUAeV+Kj0GlBAicx+i3mC5
+         6hehrb2uGLn2oi1X3N8P1ozdv1LBzV82nV3puCmSmJANLgEXLX+RW+XWQoIYm/jiPuVY
+         RRoouvjXM+5NgnEZdfcg8JojZ2+THhhFlr1o1MZ8QI61eKmYACLs2j9BSRHkOpzbK3c7
+         jU6LyteeeTSgN0jgXKP3CldmjeZDq1CzOpFHG7FAeRVMAAnM55xx4s3+TkEDlE1s2cWI
+         HLP306+vXMbELijIsufiXbG/l6Dh2flC9BKkTDw679iAOH2LvlWk+B/KvDPikgpUZ2Ny
+         +clw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zucq0iHfsDz/8P8FApo64pAJia/DuOTQ2Df8Tcdt9pU=;
+        b=mDn2ZdfZ5BE1tUSBU6iqFliSnSrAkfms3giKt+rczqTZ/rtd0coKJ4947KN2bXdkt3
+         WCZqCtvokq6GeFLUVYIdPpYXJJlmSlQluR5Cv/FQEQblaOI/TISoPAfANhf7d83XjJEl
+         QKxjQgG0+EQt88Eoe+PdB9ekXAWZfZrQK4NJdi69IVR5mgXK4VSYV8Xi+WJQbYA398BQ
+         J5iGRYAMJ9wYI9BeEWdMxQNsRJHU/002A3dGJuzKfoL/sHvlnDFZmRTvGenZYeJyr2pw
+         H9SFdbR5r9HRCZULEiu2WDZnkscPr3+V7c6RTpfLq+oWgJwRH0l0JY62YmywMK2G5F4y
+         VmHQ==
+X-Gm-Message-State: AOAM531p3AI+YUmqX9fWGJBTx8TMEC2UQ7Lj+XKFUXa4eFyiTYAxPezU
+        1kk+GkCYvs4KTsMW2hp7ro2M6/pAP0i+EBI8
+X-Google-Smtp-Source: ABdhPJxyOmnXaFQznZL5h5uG88pRVLsVDLBNYB/kMeMZY3GMwS+00xDeQIwtLLFarxcnMEMfon8b6w==
+X-Received: by 2002:a17:902:d901:b029:e3:8f73:e759 with SMTP id c1-20020a170902d901b02900e38f73e759mr3905750plz.63.1613646930773;
+        Thu, 18 Feb 2021 03:15:30 -0800 (PST)
+Received: from localhost.localdomain ([2405:201:e01e:c062:6b53:27bb:36d5:ac1d])
+        by smtp.gmail.com with ESMTPSA id x8sm5149429pjf.55.2021.02.18.03.15.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Feb 2021 03:15:30 -0800 (PST)
+From:   Vasanth <vasanth3g@gmail.com>
+To:     kys@microsoft.com
+Cc:     haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasanth <vasanth3g@gmail.com>
+Subject: [PATCH] drivers: hv: channel: fixed a tab having spaces before        hv: connection: fixed required space for "=" sign before.
+Date:   Thu, 18 Feb 2021 16:45:22 +0530
+Message-Id: <20210218111522.398170-1-vasanth3g@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <87h7mak6l8.fsf@vitty.brq.redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="aATjP0exx0BrqUETajFFlFtskPKVnOoT7"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---aATjP0exx0BrqUETajFFlFtskPKVnOoT7
-Content-Type: multipart/mixed; boundary="r8U5gGPUwYOBXvp6MxBaiS7IH2ie3UHIv";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>,
- Deepak Rawat <drawat.floss@gmail.com>, linux-hyperv@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-Cc: Wei Hu <weh@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- Dexuan Cui <decui@microsoft.com>, Michael Kelley <mikelley@microsoft.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Sam Ravnborg <sam@ravnborg.org>
-Message-ID: <f606d24a-a320-01ff-8d38-d3d7f6f7f881@suse.de>
-Subject: Re: [PATCH v3 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
- video device
-References: <20210216003959.802492-1-drawat.floss@gmail.com>
- <87k0r6kicg.fsf@vitty.brq.redhat.com>
- <20aead71c4aa3f640e19660875f807deae92f8d8.camel@gmail.com>
- <87h7mak6l8.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87h7mak6l8.fsf@vitty.brq.redhat.com>
+Fixed checkpatch warning: Tab space before having normal space.
 
---r8U5gGPUwYOBXvp6MxBaiS7IH2ie3UHIv
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Fixed checkpatch error: Required space for "=" sign before.
 
-Hi
+Signed-off-by: Vasanth <vasanth3g@gmail.com>
+---
+ drivers/hv/channel.c    | 2 +-
+ drivers/hv/connection.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Am 17.02.21 um 17:21 schrieb Vitaly Kuznetsov:
-> Deepak Rawat <drawat.floss@gmail.com> writes:
->=20
->> On Wed, 2021-02-17 at 13:07 +0100, Vitaly Kuznetsov wrote:
->>>> +++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
->>>> @@ -0,0 +1,51 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>> +/*
->>>> + * Copyright 2012-2021 Microsoft
->>>
->>> Out of pure curiosity, where does '2012' come from or what does it
->>> mean?
->>>
->>
->> Thanks Vitaly for the review. Actually some of the code is derived fro=
-m
->> hyperv_fb, which has copyright 2012. Not sure if I should remove here
->> or not?
->>
->=20
-> I'm definitely not an expert (and couldn't quickly find a good
-> reference) here but I was under the impression that in such cases you
-> can just add a note like "based on 'hyperv_fb' driver" (if really
-> needed, if you just borrow a few things then it's even superfluous I
-> believe). Anyway, I was just a bit surprised to see '2012' in a new fil=
-e
-> :-)
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index 6fb0c76bfbf8..587234065e37 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -385,7 +385,7 @@ static int create_gpadl_header(enum hv_gpadl_type type, void *kbuffer,
+  * @kbuffer: from kmalloc or vmalloc
+  * @size: page-size multiple
+  * @send_offset: the offset (in bytes) where the send ring buffer starts,
+- * 		 should be 0 for BUFFER type gpadl
++ *              should be 0 for BUFFER type gpadl
+  * @gpadl_handle: some funky thing
+  */
+ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 11170d9a2e1a..3760cbb6ffaf 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -28,7 +28,7 @@ struct vmbus_connection vmbus_connection = {
+ 	.conn_state		= DISCONNECTED,
+ 	.next_gpadl_handle	= ATOMIC_INIT(0xE1E10),
+ 
+-	.ready_for_suspend_event= COMPLETION_INITIALIZER(
++	.ready_for_suspend_event = COMPLETION_INITIALIZER(
+ 				  vmbus_connection.ready_for_suspend_event),
+ 	.ready_for_resume_event	= COMPLETION_INITIALIZER(
+ 				  vmbus_connection.ready_for_resume_event),
+-- 
+2.25.1
 
-As suggested, I'd just leave a note that it's based on hyperv_fb, which=20
-is copyrighted 2012 Microsoft.
-
-If you took functions directly from hyperv_fb, you have to use the same=20
-license! hyperv_fb is GPL-2.0-only; yours is GPL-2.0.
-
-Best regards
-Thomas
-
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---r8U5gGPUwYOBXvp6MxBaiS7IH2ie3UHIv--
-
---aATjP0exx0BrqUETajFFlFtskPKVnOoT7
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmAuIs4FAwAAAAAACgkQlh/E3EQov+Az
-OA//c86twkR5oDZW5qmXMzJSMjA1SjF4bNS4lJFU/Bio84HoT+G16XDmCO/otLg66lPPp56my9tj
-LjAwGkns/Yp2xMmfxabse+R0fVqXdfAcRsSj97hq1UlBSAluHA4aSX7TTi0BxHa9s7WezMLL494B
-MpfMzX5uJYxIQJLEI7meNdqjfJ86iaOJdOmGIqcU0zDYv1gyBYOLlyhM7tbqkRZhyKP5tX5eoRnN
-3ShWMNAzLMCvKwmGdswqKO9Ae1fj2cftYNxuBr4a+K7BRkTvAVWK1+7TPmHkzuyqFbW6B7iaV0ti
-zTa7xxLvM+tsMMv+JZrdKqA1NMw6I88zRlTBIzNutzw3pTv7fISIEXbw6uDf1BA7zNgerdrBDM/F
-Ibk1Y/se4kPdn9qwmLrfjvggmDrlbu/ylVoW4+egujWh1qO80POLEo9SmUEAliBzuuXP2dfnjovw
-RMyxpoVxup+xSnH1U6cLa8HCSy0QZA1b1XcLKaxatbRj1PWBCamNkqi1FMV9denIyAQ56zFARt53
-s7bHazCw+9+pKkjZb+Def0CX9NhaAgxvxE64nSwZilwzoJJcjCDBUTnAKsXq1udDAdV8wECoqUAI
-JEATJYfb5J84zbg/MfKt+NXlcgBh2wRrpdHF4iGWV9v38gZCi7b1eRfIHC4O3tBLEJ+SKRvqqSB2
-QP4=
-=7Mj4
------END PGP SIGNATURE-----
-
---aATjP0exx0BrqUETajFFlFtskPKVnOoT7--
