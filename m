@@ -2,78 +2,143 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94E7C31E759
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Feb 2021 09:20:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D72831E760
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Feb 2021 09:24:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230241AbhBRISp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Feb 2021 03:18:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230163AbhBRIPt (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Feb 2021 03:15:49 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F1ABC061756;
-        Thu, 18 Feb 2021 00:14:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rFuCEDruQM3ANvsFui7zHQhN7ske9Q4pPXaIkjwguxg=; b=wOct5ZUuVs84BfzGoHAtevMAst
-        U+MwPU+FwceTFebaOa/YfxTXWAlE3yYBCUa2yclPtq7j9EiLnSuhfXTTIzaBsS4IG0tyY2bSG7OMf
-        ONF1GFQSMM2z4xupwsset0+VV+KUGXMmBHkkqrDidEVwMIHh3VUDJtRHUTGsm/QwoVbPCK05OvnsK
-        j5ZpZUanoMV81iB88ONksrXDTSwsSGxznYijhgkbNqo6kixSzXl4Zgbdwm/MzPkujYjFGpZHXkPgr
-        e9HRu8ZxBSaI+o5BItL6q7b87RBFmj9T8aL/hCXUHqmrnB74Tk7YDGjFbhXjugRVAVmMCqaDjHI9w
-        KeHlarkw==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lCeRs-001Pgy-9q; Thu, 18 Feb 2021 08:14:14 +0000
-Date:   Thu, 18 Feb 2021 08:14:08 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nadav Amit <nadav.amit@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH v5 4/8] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Message-ID: <20210218081408.GB335524@infradead.org>
-References: <20210209221653.614098-1-namit@vmware.com>
- <20210209221653.614098-5-namit@vmware.com>
+        id S230318AbhBRIWW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Feb 2021 03:22:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44334 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230492AbhBRITs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 18 Feb 2021 03:19:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 78705AD57;
+        Thu, 18 Feb 2021 08:18:24 +0000 (UTC)
+Subject: Re: [PATCH v3 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
+ video device
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Deepak Rawat <drawat.floss@gmail.com>,
+        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Wei Hu <weh@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+References: <20210216003959.802492-1-drawat.floss@gmail.com>
+ <87k0r6kicg.fsf@vitty.brq.redhat.com>
+ <20aead71c4aa3f640e19660875f807deae92f8d8.camel@gmail.com>
+ <87h7mak6l8.fsf@vitty.brq.redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <f606d24a-a320-01ff-8d38-d3d7f6f7f881@suse.de>
+Date:   Thu, 18 Feb 2021 09:18:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210209221653.614098-5-namit@vmware.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <87h7mak6l8.fsf@vitty.brq.redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="aATjP0exx0BrqUETajFFlFtskPKVnOoT7"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Given that the last patch killed the last previously existing
-user of on_each_cpu_cond_mask there are now the only users.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--aATjP0exx0BrqUETajFFlFtskPKVnOoT7
+Content-Type: multipart/mixed; boundary="r8U5gGPUwYOBXvp6MxBaiS7IH2ie3UHIv";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Deepak Rawat <drawat.floss@gmail.com>, linux-hyperv@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+Cc: Wei Hu <weh@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Dexuan Cui <decui@microsoft.com>, Michael Kelley <mikelley@microsoft.com>,
+ Gerd Hoffmann <kraxel@redhat.com>, Sam Ravnborg <sam@ravnborg.org>
+Message-ID: <f606d24a-a320-01ff-8d38-d3d7f6f7f881@suse.de>
+Subject: Re: [PATCH v3 1/2] drm/hyperv: Add DRM driver for hyperv synthetic
+ video device
+References: <20210216003959.802492-1-drawat.floss@gmail.com>
+ <87k0r6kicg.fsf@vitty.brq.redhat.com>
+ <20aead71c4aa3f640e19660875f807deae92f8d8.camel@gmail.com>
+ <87h7mak6l8.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87h7mak6l8.fsf@vitty.brq.redhat.com>
 
->  	if (info->freed_tables) {
-> -		smp_call_function_many(cpumask, flush_tlb_func,
-> -			       (void *)info, 1);
-> +		on_each_cpu_cond_mask(NULL, flush_tlb_func, (void *)info, true,
-> +				      cpumask);
+--r8U5gGPUwYOBXvp6MxBaiS7IH2ie3UHIv
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-.. 
+Hi
 
-> +		on_each_cpu_cond_mask(NULL, flush_tlb_func, (void *)info, true,
-> +				      cpumask);
+Am 17.02.21 um 17:21 schrieb Vitaly Kuznetsov:
+> Deepak Rawat <drawat.floss@gmail.com> writes:
+>=20
+>> On Wed, 2021-02-17 at 13:07 +0100, Vitaly Kuznetsov wrote:
+>>>> +++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
+>>>> @@ -0,0 +1,51 @@
+>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>> +/*
+>>>> + * Copyright 2012-2021 Microsoft
+>>>
+>>> Out of pure curiosity, where does '2012' come from or what does it
+>>> mean?
+>>>
+>>
+>> Thanks Vitaly for the review. Actually some of the code is derived fro=
+m
+>> hyperv_fb, which has copyright 2012. Not sure if I should remove here
+>> or not?
+>>
+>=20
+> I'm definitely not an expert (and couldn't quickly find a good
+> reference) here but I was under the impression that in such cases you
+> can just add a note like "based on 'hyperv_fb' driver" (if really
+> needed, if you just borrow a few things then it's even superfluous I
+> believe). Anyway, I was just a bit surprised to see '2012' in a new fil=
+e
+> :-)
 
-Which means the cond_func is unused, and thus on_each_cpu_cond_mask can
-go away entirely in favor of on_each_cpu_cond.
+As suggested, I'd just leave a note that it's based on hyperv_fb, which=20
+is copyrighted 2012 Microsoft.
+
+If you took functions directly from hyperv_fb, you have to use the same=20
+license! hyperv_fb is GPL-2.0-only; yours is GPL-2.0.
+
+Best regards
+Thomas
+
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--r8U5gGPUwYOBXvp6MxBaiS7IH2ie3UHIv--
+
+--aATjP0exx0BrqUETajFFlFtskPKVnOoT7
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmAuIs4FAwAAAAAACgkQlh/E3EQov+Az
+OA//c86twkR5oDZW5qmXMzJSMjA1SjF4bNS4lJFU/Bio84HoT+G16XDmCO/otLg66lPPp56my9tj
+LjAwGkns/Yp2xMmfxabse+R0fVqXdfAcRsSj97hq1UlBSAluHA4aSX7TTi0BxHa9s7WezMLL494B
+MpfMzX5uJYxIQJLEI7meNdqjfJ86iaOJdOmGIqcU0zDYv1gyBYOLlyhM7tbqkRZhyKP5tX5eoRnN
+3ShWMNAzLMCvKwmGdswqKO9Ae1fj2cftYNxuBr4a+K7BRkTvAVWK1+7TPmHkzuyqFbW6B7iaV0ti
+zTa7xxLvM+tsMMv+JZrdKqA1NMw6I88zRlTBIzNutzw3pTv7fISIEXbw6uDf1BA7zNgerdrBDM/F
+Ibk1Y/se4kPdn9qwmLrfjvggmDrlbu/ylVoW4+egujWh1qO80POLEo9SmUEAliBzuuXP2dfnjovw
+RMyxpoVxup+xSnH1U6cLa8HCSy0QZA1b1XcLKaxatbRj1PWBCamNkqi1FMV9denIyAQ56zFARt53
+s7bHazCw+9+pKkjZb+Def0CX9NhaAgxvxE64nSwZilwzoJJcjCDBUTnAKsXq1udDAdV8wECoqUAI
+JEATJYfb5J84zbg/MfKt+NXlcgBh2wRrpdHF4iGWV9v38gZCi7b1eRfIHC4O3tBLEJ+SKRvqqSB2
+QP4=
+=7Mj4
+-----END PGP SIGNATURE-----
+
+--aATjP0exx0BrqUETajFFlFtskPKVnOoT7--
