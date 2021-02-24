@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97A2A323EB8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Feb 2021 14:50:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14850323EB9
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Feb 2021 14:50:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237388AbhBXNq4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 24 Feb 2021 08:46:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58410 "EHLO mail.kernel.org"
+        id S237752AbhBXNrC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 24 Feb 2021 08:47:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235787AbhBXNGw (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 24 Feb 2021 08:06:52 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AF2B664F7D;
-        Wed, 24 Feb 2021 12:54:19 +0000 (UTC)
+        id S233136AbhBXNKj (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 24 Feb 2021 08:10:39 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DD2DD64F11;
+        Wed, 24 Feb 2021 12:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614171260;
-        bh=nKJ8bs6eZo5oG6d+iNK2SZm+nxCIR0ubWf8VjELzdZ8=;
+        s=k20201202; t=1614171302;
+        bh=8vUotaZ9PS8Rw6qxPntNdQtu1ucj2oPPA0Ltl1E0x7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BD3BoEIgeLEFYAkU70PLYHqrNC4P7B+eKLepezLTSBXoLWiaTE7sEuE0tvl1U2F2g
-         EbwPJxQ7iUey5XufcWzm2jC6DUcxs98/h9n/mjWNSdT31dD2d/6OfsujDXL5gFSopm
-         jzEtSKcg9B0ud40kQ5DNjUKdN8NOzatu1jfwu5+ZsSXT7m2VPgZnllOReZ5yfrZvQE
-         97j5HenfT1XcaHHUNCbD5mT8gWpjija4Xsr+2ZhOWVtMWHJxdcqzX7Ojfen8OJvsT6
-         uxHOnbSh3zpVpO70bI6/+sfnPf3vErtwzdNSL4OMUmLsgXg7Henfu4TdJ7+b3X09I4
-         wA56TY4Jrvh2w==
+        b=ix82ElRvHjEgkpeDWflNuItG1cxHOPihLPRJMtwfrLzqOj1HlTQ5xmQi8xR4/a9Ny
+         8RJBg7PiH77AzZdRf9Q8+6m7kl5lhcAkBAki3uF6pgnxvJSeMAkMfGCWT9xal9BHDb
+         6rcOLTrwVHIdKS4jd+FVRRSMRZiY/kllNxnUicve87roADKT1digO81P5W4gtbhslU
+         SshuyDB3YSITgoUNlU57Prmwew29z+ZFCCHPxxFoJ8lZOlJcTBoEGCBppboCV+F1pD
+         asTC6QNxL3q5la5kPbvIoA/OJpIbaIpm2QsBriKGGGiGKSLRhZBNWuNmjFQUJrMmwF
+         WlBnLEJlOdbMA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
@@ -30,12 +30,12 @@ Cc:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
         linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 30/40] Drivers: hv: vmbus: Resolve race condition in vmbus_onoffer_rescind()
-Date:   Wed, 24 Feb 2021 07:53:30 -0500
-Message-Id: <20210224125340.483162-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 21/26] Drivers: hv: vmbus: Resolve race condition in vmbus_onoffer_rescind()
+Date:   Wed, 24 Feb 2021 07:54:29 -0500
+Message-Id: <20210224125435.483539-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210224125340.483162-1-sashal@kernel.org>
-References: <20210224125340.483162-1-sashal@kernel.org>
+In-Reply-To: <20210224125435.483539-1-sashal@kernel.org>
+References: <20210224125435.483539-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 13 insertions(+)
 
 diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 452307c79e4b9..dd4e890cf1b1d 100644
+index 7920b0d7e35a7..1322e799938af 100644
 --- a/drivers/hv/channel_mgmt.c
 +++ b/drivers/hv/channel_mgmt.c
-@@ -1048,6 +1048,18 @@ static void vmbus_onoffer_rescind(struct vmbus_channel_message_header *hdr)
+@@ -954,6 +954,18 @@ static void vmbus_onoffer_rescind(struct vmbus_channel_message_header *hdr)
  
  	mutex_lock(&vmbus_connection.channel_mutex);
  	channel = relid2channel(rescind->child_relid);
@@ -91,10 +91,10 @@ index 452307c79e4b9..dd4e890cf1b1d 100644
  
  	if (channel == NULL) {
 diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 67d9b5a374600..51e2134b32a21 100644
+index 35461d49d3aee..59525fe25abde 100644
 --- a/include/linux/hyperv.h
 +++ b/include/linux/hyperv.h
-@@ -734,6 +734,7 @@ struct vmbus_channel {
+@@ -736,6 +736,7 @@ struct vmbus_channel {
  	u8 monitor_bit;
  
  	bool rescind; /* got rescind msg */
