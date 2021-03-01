@@ -2,198 +2,146 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A24443289FC
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Mar 2021 19:11:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C352328B32
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Mar 2021 19:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238760AbhCASJl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 Mar 2021 13:09:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46240 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239339AbhCASIb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 Mar 2021 13:08:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1614622064; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qp4HJtwIT4bWIf+9Fj02wgzG00aspAv7NDE1H9XsKw8=;
-        b=aH1+7x/WqqqBgwoXsxJWiMMfixqBzqQo+CHJ0FMCUdP0kn8yxVawZhEsqiOr+QSi7cVRUm
-        cH6dvttkUBHzyuxGaLPn0bQ3ilhyaCz7ZY6y77iScN5BUKhqdowr9f4TAygKPghH0VyeHu
-        hCUXGbUSrWDF6mn/T5TxstesPyTwCSg=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E550DAE3C;
-        Mon,  1 Mar 2021 18:07:43 +0000 (UTC)
-Date:   Mon, 1 Mar 2021 19:07:41 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Alistair Popple <alistair@popple.id.au>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Thomas Meyer <thomas@m3y3r.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Oleg Nesterov <oleg@redhat.com>, Wei Li <liwei391@huawei.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-um@lists.infradead.org,
-        linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: Re: [PATCH next v3 12/15] printk: introduce a kmsg_dump iterator
-Message-ID: <YD0tbVV+hZOFvWyB@alley>
-References: <20210225202438.28985-1-john.ogness@linutronix.de>
- <20210225202438.28985-13-john.ogness@linutronix.de>
+        id S239847AbhCASaa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 1 Mar 2021 13:30:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239889AbhCAS1Q (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 1 Mar 2021 13:27:16 -0500
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF48FC061356;
+        Mon,  1 Mar 2021 10:25:54 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id do6so30071599ejc.3;
+        Mon, 01 Mar 2021 10:25:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nXDchZASkXBC96smjDkqNNKMZvkZns+OV+17KBYTZfE=;
+        b=QBU1vh6RkWIWqFG/GoCkva6S/QrYcQqUyrLQ6NQ5u9hXacKYyOATCPPFkLdqx32n83
+         DTm6WThrhSIAYx5Hu3sfWUcCf4LGv8sEWEcaRXYC6Cel/CLHVGCHyciICxEp+rY0ZSNZ
+         3Ys4FrdwdHE75FV+nx9IlIzcasnaUslE2s7l5qcrE05rAFNYkylRAFg/QP+t/NyyqN0X
+         1IzDd9jxIz3FX4nZKJpUNthCPD0ZIq7aeVUFCOPCG8KW+yPZ2Pe4+QLGNnS/Ayuumkvo
+         5y9vCW+ZK/+ePN86/a4HmdNy1X7qqMWbRb9VoQHaFfTbuSarkEKKxTNGJ9c/mJHBrprb
+         LZ1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nXDchZASkXBC96smjDkqNNKMZvkZns+OV+17KBYTZfE=;
+        b=IP3hyEDbo2VrSovlzWya8rd3C1jF4JCIuRpLwzrj0T0c9Y8xYoA7Wv+Zfnng3UgV+H
+         Z9jU4NS5WmVMtCc925jMjRGkYLOzuqhbr3I4R5TcozToVcvF44A5Tf16b7hzOc78bJlR
+         T1l5Sl3fkO2kh3loPSsW9X5glHqKgTGBSyZKW7auXxeKlORfxyPS8FZQWWCLrxFNITOK
+         YjPTQY2iAxT5GEA2SWz+p1NY3smZg+PGLd8Zniltzhc0PZ+RWH1l/Ru77M7epQQz10b5
+         SWVkf5ajB1HNf5B71dVf0DBvglZtZm6g0D1ixx5eOqKlCHkYkqEJwWPUDJ75+djvYZ+f
+         4FSA==
+X-Gm-Message-State: AOAM531YcAGehw1b65X2KlPQMt5Xca/ifPwnAtvIFIDf6cJdI6bukggl
+        0j8kThaxryjG/EmSdPSP0hYKv3sXY5A79XUH
+X-Google-Smtp-Source: ABdhPJyT11MAFr+atRctrxGDFhZPppeu96ABNsRDpWeDqUQzcnwVPv6g0wxUzzzML4XzNd4YRIlM+w==
+X-Received: by 2002:a17:906:2804:: with SMTP id r4mr17127766ejc.521.1614623153232;
+        Mon, 01 Mar 2021 10:25:53 -0800 (PST)
+Received: from anparri.mshome.net (host-79-55-37-174.retail.telecomitalia.it. [79.55.37.174])
+        by smtp.gmail.com with ESMTPSA id x25sm16009245edv.65.2021.03.01.10.25.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Mar 2021 10:25:53 -0800 (PST)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH net] hv_netvsc: Fix validation in netvsc_linkstatus_callback()
+Date:   Mon,  1 Mar 2021 19:25:30 +0100
+Message-Id: <20210301182530.194775-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210225202438.28985-13-john.ogness@linutronix.de>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu 2021-02-25 21:24:35, John Ogness wrote:
-> Rather than storing the iterator information in the registered
-> kmsg_dumper structure, create a separate iterator structure. The
-> kmsg_dump_iter structure can reside on the stack of the caller, thus
-> allowing lockless use of the kmsg_dump functions.
-> 
-> This change also means that the kmsg_dumper dump() callback no
-> longer needs to pass in the kmsg_dumper as an argument. If
-> kmsg_dumpers want to access the kernel logs, they can use the new
-> iterator.
-> 
-> Update the kmsg_dumper callback prototype. Update code that accesses
-> the kernel logs using the kmsg_dumper structure to use the new
-> kmsg_dump_iter structure. For kmsg_dumpers, this also means adding a
-> call to kmsg_dump_rewind() to initialize the iterator.
-> 
-> All this is in preparation for removal of @logbuf_lock.
-> 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> ---
->  arch/powerpc/kernel/nvram_64.c             | 14 +++---
->  arch/powerpc/platforms/powernv/opal-kmsg.c |  3 +-
->  arch/powerpc/xmon/xmon.c                   |  6 +--
->  arch/um/kernel/kmsg_dump.c                 |  8 +--
->  drivers/hv/vmbus_drv.c                     |  7 +--
->  drivers/mtd/mtdoops.c                      |  8 +--
->  fs/pstore/platform.c                       |  8 +--
->  include/linux/kmsg_dump.h                  | 38 ++++++++-------
->  kernel/debug/kdb/kdb_main.c                | 10 ++--
->  kernel/printk/printk.c                     | 57 ++++++++++------------
->  10 files changed, 81 insertions(+), 78 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
-> index 532f22637783..5a64b24a91c2 100644
-> --- a/arch/powerpc/kernel/nvram_64.c
-> +++ b/arch/powerpc/kernel/nvram_64.c
-> @@ -72,8 +72,7 @@ static const char *nvram_os_partitions[] = {
->  	NULL
->  };
->  
-> -static void oops_to_nvram(struct kmsg_dumper *dumper,
-> -			  enum kmsg_dump_reason reason);
-> +static void oops_to_nvram(enum kmsg_dump_reason reason);
->  
->  static struct kmsg_dumper nvram_kmsg_dumper = {
->  	.dump = oops_to_nvram
-> @@ -642,11 +641,11 @@ void __init nvram_init_oops_partition(int rtas_partition_exists)
->   * that we think will compress sufficiently to fit in the lnx,oops-log
->   * partition.  If that's too much, go back and capture uncompressed text.
->   */
-> -static void oops_to_nvram(struct kmsg_dumper *dumper,
-> -			  enum kmsg_dump_reason reason)
-> +static void oops_to_nvram(enum kmsg_dump_reason reason)
->  {
->  	struct oops_log_info *oops_hdr = (struct oops_log_info *)oops_buf;
->  	static unsigned int oops_count = 0;
-> +	static struct kmsg_dump_iter iter;
->  	static bool panicking = false;
->  	static DEFINE_SPINLOCK(lock);
->  	unsigned long flags;
-> @@ -681,13 +680,14 @@ static void oops_to_nvram(struct kmsg_dumper *dumper,
->  		return;
->  
->  	if (big_oops_buf) {
-> -		kmsg_dump_get_buffer(dumper, false,
-> +		kmsg_dump_rewind(&iter);
+Contrary to the RNDIS protocol specification, certain (pre-Fe)
+implementations of Hyper-V's vSwitch did not account for the status
+buffer field in the length of an RNDIS packet; the bug was fixed in
+newer implementations.  Validate the status buffer fields using the
+length of the 'vmtransfer_page' packet (all implementations), that
+is known/validated to be less than or equal to the receive section
+size and not smaller than the length of the RNDIS message.
 
-It would be nice to get rid of the kmsg_dump_rewind(&iter) calls
-in all callers.
+Reported-by: Dexuan Cui <decui@microsoft.com>
+Suggested-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Fixes: 505e3f00c3f36 ("hv_netvsc: Add (more) validation for untrusted Hyper-V values")
+---
+ drivers/net/hyperv/hyperv_net.h   |  2 +-
+ drivers/net/hyperv/netvsc_drv.c   | 13 +++++++++----
+ drivers/net/hyperv/rndis_filter.c |  2 +-
+ 3 files changed, 11 insertions(+), 6 deletions(-)
 
-A solution might be to create the following in include/linux/kmsg_dump.h
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index e1a497d3c9ba4..59ac04a610adb 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -229,7 +229,7 @@ int netvsc_send(struct net_device *net,
+ 		bool xdp_tx);
+ void netvsc_linkstatus_callback(struct net_device *net,
+ 				struct rndis_message *resp,
+-				void *data);
++				void *data, u32 data_buflen);
+ int netvsc_recv_callback(struct net_device *net,
+ 			 struct netvsc_device *nvdev,
+ 			 struct netvsc_channel *nvchan);
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 8176fa0c8b168..15f262b70489e 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -744,7 +744,7 @@ static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
+  */
+ void netvsc_linkstatus_callback(struct net_device *net,
+ 				struct rndis_message *resp,
+-				void *data)
++				void *data, u32 data_buflen)
+ {
+ 	struct rndis_indicate_status *indicate = &resp->msg.indicate_status;
+ 	struct net_device_context *ndev_ctx = netdev_priv(net);
+@@ -765,11 +765,16 @@ void netvsc_linkstatus_callback(struct net_device *net,
+ 	if (indicate->status == RNDIS_STATUS_LINK_SPEED_CHANGE) {
+ 		u32 speed;
+ 
+-		/* Validate status_buf_offset */
++		/* Validate status_buf_offset and status_buflen.
++		 *
++		 * Certain (pre-Fe) implementations of Hyper-V's vSwitch didn't account
++		 * for the status buffer field in resp->msg_len; perform the validation
++		 * using data_buflen (>= resp->msg_len).
++		 */
+ 		if (indicate->status_buflen < sizeof(speed) ||
+ 		    indicate->status_buf_offset < sizeof(*indicate) ||
+-		    resp->msg_len - RNDIS_HEADER_SIZE < indicate->status_buf_offset ||
+-		    resp->msg_len - RNDIS_HEADER_SIZE - indicate->status_buf_offset
++		    data_buflen - RNDIS_HEADER_SIZE < indicate->status_buf_offset ||
++		    data_buflen - RNDIS_HEADER_SIZE - indicate->status_buf_offset
+ 				< indicate->status_buflen) {
+ 			netdev_err(net, "invalid rndis_indicate_status packet\n");
+ 			return;
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index 123cc9d25f5ed..c0e89e107d575 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -620,7 +620,7 @@ int rndis_filter_receive(struct net_device *ndev,
+ 
+ 	case RNDIS_MSG_INDICATE:
+ 		/* notification msgs */
+-		netvsc_linkstatus_callback(ndev, rndis_msg, data);
++		netvsc_linkstatus_callback(ndev, rndis_msg, data, buflen);
+ 		break;
+ 	default:
+ 		netdev_err(ndev,
+-- 
+2.25.1
 
-#define KMSG_DUMP_ITER_INIT(iter) {	\
-	.cur_seq = 0,			\
-	.next_seq = U64_MAX,		\
-	}
-
-#define DEFINE_KMSG_DUMP_ITER(iter)	\
-	struct kmsg_dump_iter iter = KMSG_DUMP_ITER_INIT(iter)
-
-Then we could do the following at the beginning of both
-kmsg_dump_get_buffer() and kmsg_dump_get_line():
-
-	u64 clear_seq = latched_seq_read_nolock(&clear_seq);
-
-	if (iter->cur_seq < clear_seq)
-		cur_seq = clear_seq;
-
-
-I am not completely sure about next_seq:
-
-   + kmsg_dump_get_buffer() will set it for the next call anyway.
-     It reads the blocks of messages from the newest.
-
-   + kmsg_dump_get_line() wants to read the entire buffer anyway.
-     But there is a small risk of an infinite loop when new messages
-     are printed when dumping each line.
-
-It might be better to avoid the infinite loop. We could do the following:
-
-static void check_and_set_iter(struct kmsg_dump_iter)
-{
-	if (iter->cur_seq == 0 && iter->next_seq == U64_MAX) {
-		kmsg_dump_rewind(iter);
-}
-
-and call this at the beginning of both kmsg_dump_get_buffer()
-and kmsg_dump_get_line()
-
-What do you think?
-
-Note that I do not resist on it. But it might make the API easier to
-use from my POV.
-
-Otherwise the patch looks good to me.
-
-Best Regards,
-Petr
