@@ -2,146 +2,197 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C352328B32
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Mar 2021 19:30:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23BC0328C4F
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Mar 2021 19:54:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239847AbhCASaa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 Mar 2021 13:30:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33946 "EHLO
+        id S240731AbhCAStP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 1 Mar 2021 13:49:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239889AbhCAS1Q (ORCPT
+        with ESMTP id S240278AbhCASp3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 Mar 2021 13:27:16 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF48FC061356;
-        Mon,  1 Mar 2021 10:25:54 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id do6so30071599ejc.3;
-        Mon, 01 Mar 2021 10:25:54 -0800 (PST)
+        Mon, 1 Mar 2021 13:45:29 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C27C06178C
+        for <linux-hyperv@vger.kernel.org>; Mon,  1 Mar 2021 10:44:43 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id u11so200696wmq.5
+        for <linux-hyperv@vger.kernel.org>; Mon, 01 Mar 2021 10:44:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nXDchZASkXBC96smjDkqNNKMZvkZns+OV+17KBYTZfE=;
-        b=QBU1vh6RkWIWqFG/GoCkva6S/QrYcQqUyrLQ6NQ5u9hXacKYyOATCPPFkLdqx32n83
-         DTm6WThrhSIAYx5Hu3sfWUcCf4LGv8sEWEcaRXYC6Cel/CLHVGCHyciICxEp+rY0ZSNZ
-         3Ys4FrdwdHE75FV+nx9IlIzcasnaUslE2s7l5qcrE05rAFNYkylRAFg/QP+t/NyyqN0X
-         1IzDd9jxIz3FX4nZKJpUNthCPD0ZIq7aeVUFCOPCG8KW+yPZ2Pe4+QLGNnS/Ayuumkvo
-         5y9vCW+ZK/+ePN86/a4HmdNy1X7qqMWbRb9VoQHaFfTbuSarkEKKxTNGJ9c/mJHBrprb
-         LZ1w==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iiJdRDjWUFbp3m7znHMOgxB7I0EJzPWYd34O1BbcPEg=;
+        b=AgPf59Bnpu82d0gde43PZP43b+zjJ6cOmOUtiBQlKXV7J8FMsvu5MJ0IB/4qhvr6+U
+         V0ytDEsg75YZ6tjJwzG/kNCj2kcYmdOojaL/iXwJmURqMbsqxQunb67gJXOOX4IkOCri
+         OI5rBl09tnYy+K/rsTR6/ioA7/2aBg1mKfu07JnDJcX6jZuQo+LwBDxZCteT2ITRGpVV
+         WqoDXixpDH6ir6NV6bWH3sdZ3StdleWjF3s5HlSY2zWynOqSaLtb8xCRIkXPDPVQ+w8L
+         fja7CFDh+GdxyYYmvbzA5TsWUJFh5HHsAjR5X8yV930vi1vlpZMoGaM55G9+TgZd+s3o
+         hc7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=nXDchZASkXBC96smjDkqNNKMZvkZns+OV+17KBYTZfE=;
-        b=IP3hyEDbo2VrSovlzWya8rd3C1jF4JCIuRpLwzrj0T0c9Y8xYoA7Wv+Zfnng3UgV+H
-         Z9jU4NS5WmVMtCc925jMjRGkYLOzuqhbr3I4R5TcozToVcvF44A5Tf16b7hzOc78bJlR
-         T1l5Sl3fkO2kh3loPSsW9X5glHqKgTGBSyZKW7auXxeKlORfxyPS8FZQWWCLrxFNITOK
-         YjPTQY2iAxT5GEA2SWz+p1NY3smZg+PGLd8Zniltzhc0PZ+RWH1l/Ru77M7epQQz10b5
-         SWVkf5ajB1HNf5B71dVf0DBvglZtZm6g0D1ixx5eOqKlCHkYkqEJwWPUDJ75+djvYZ+f
-         4FSA==
-X-Gm-Message-State: AOAM531YcAGehw1b65X2KlPQMt5Xca/ifPwnAtvIFIDf6cJdI6bukggl
-        0j8kThaxryjG/EmSdPSP0hYKv3sXY5A79XUH
-X-Google-Smtp-Source: ABdhPJyT11MAFr+atRctrxGDFhZPppeu96ABNsRDpWeDqUQzcnwVPv6g0wxUzzzML4XzNd4YRIlM+w==
-X-Received: by 2002:a17:906:2804:: with SMTP id r4mr17127766ejc.521.1614623153232;
-        Mon, 01 Mar 2021 10:25:53 -0800 (PST)
-Received: from anparri.mshome.net (host-79-55-37-174.retail.telecomitalia.it. [79.55.37.174])
-        by smtp.gmail.com with ESMTPSA id x25sm16009245edv.65.2021.03.01.10.25.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Mar 2021 10:25:53 -0800 (PST)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        decui@microsoft.com, mikelley@microsoft.com,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH net] hv_netvsc: Fix validation in netvsc_linkstatus_callback()
-Date:   Mon,  1 Mar 2021 19:25:30 +0100
-Message-Id: <20210301182530.194775-1-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        bh=iiJdRDjWUFbp3m7znHMOgxB7I0EJzPWYd34O1BbcPEg=;
+        b=gHDh7tWP7l3DQFZye3b1awwixdQi/iBiUPDlY3LnHqHCyDVPGcX6uP1ADBvP4MkLnA
+         l68OQkN1/YWd6x/tFde9RYRnZWi7mxEqWvNBteNGoAe5Aa39LPeYi1ZzPj9B86qAsS2a
+         4HYFwBJFfNFyZMkXmlnnhS6JKQ9X3KC8Bh/EFT+ciSWsE1aSPmEDHJcXXzKSPW9G1Jm/
+         Y7wI508wq0zNe8iozRMh97jSm3xZxbICw/aM5qA+cP1CBaeR7rnKeaISdnWJmaXeOMp5
+         LzsnDez1fiqy0r2U87RZtglne2ItkZDKpYViN74sLn4CjNztfN7i/6tKb6cJjZEo+5Hj
+         vhzQ==
+X-Gm-Message-State: AOAM531ceDJkbFeofGR54PkwcB+b+FolSZUpB+jzPQcUFYdRQrqwE6sq
+        XOrysmVRTzuLP/XMuL4Xn5Z3Zw==
+X-Google-Smtp-Source: ABdhPJzxOFSWK0My0Zl9EB1Bd1pzqlb0aS0lxIYWo5GQwaneUzKtXMvCBOSqeAgmwxFEJRpktg1iOw==
+X-Received: by 2002:a1c:1fc6:: with SMTP id f189mr274467wmf.68.1614624282168;
+        Mon, 01 Mar 2021 10:44:42 -0800 (PST)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-144-192.adsl.proxad.net. [82.252.144.192])
+        by smtp.googlemail.com with ESMTPSA id p16sm13286308wrt.54.2021.03.01.10.44.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Mar 2021 10:44:41 -0800 (PST)
+Subject: Re: [PATCH v2 10/10] clocksource/drivers/hyper-v: Move handling of
+ STIMER0 interrupts
+To:     Michael Kelley <mikelley@microsoft.com>, sthemmin@microsoft.com,
+        kys@microsoft.com, wei.liu@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, arnd@arndb.de,
+        linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-arch@vger.kernel.org
+References: <1614561332-2523-1-git-send-email-mikelley@microsoft.com>
+ <1614561332-2523-11-git-send-email-mikelley@microsoft.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <cb190ed5-66f3-bdf7-aa97-b1fe0c49e282@linaro.org>
+Date:   Mon, 1 Mar 2021 19:44:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <1614561332-2523-11-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Contrary to the RNDIS protocol specification, certain (pre-Fe)
-implementations of Hyper-V's vSwitch did not account for the status
-buffer field in the length of an RNDIS packet; the bug was fixed in
-newer implementations.  Validate the status buffer fields using the
-length of the 'vmtransfer_page' packet (all implementations), that
-is known/validated to be less than or equal to the receive section
-size and not smaller than the length of the RNDIS message.
+On 01/03/2021 02:15, Michael Kelley wrote:
+> STIMER0 interrupts are most naturally modeled as per-cpu IRQs. But
+> because x86/x64 doesn't have per-cpu IRQs, the core STIMER0 interrupt
+> handling machinery is done in code under arch/x86 and Linux IRQs are
+> not used. Adding support for ARM64 means adding equivalent code
+> using per-cpu IRQs under arch/arm64.
+> 
+> A better model is to treat per-cpu IRQs as the normal path (which it is
+> for modern architectures), and the x86/x64 path as the exception. Do this
+> by incorporating standard Linux per-cpu IRQ allocation into the main
+> SITMER0 driver code, and bypass it in the x86/x64 exception case. For
+> x86/x64, special case code is retained under arch/x86, but no STIMER0
+> interrupt handling code is needed under arch/arm64.
+> 
+> No functional change.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_init.c          |   2 +-
+>  arch/x86/include/asm/mshyperv.h    |   4 -
+>  arch/x86/kernel/cpu/mshyperv.c     |  10 +--
+>  drivers/clocksource/hyperv_timer.c | 180 ++++++++++++++++++++++++++-----------
+>  include/asm-generic/mshyperv.h     |   5 --
+>  include/clocksource/hyperv_timer.h |   3 +-
+>  6 files changed, 132 insertions(+), 72 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 9af4f8a..9d10025 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -327,7 +327,7 @@ static void __init hv_stimer_setup_percpu_clockev(void)
+>  	 * Ignore any errors in setting up stimer clockevents
+>  	 * as we can run with the LAPIC timer as a fallback.
+>  	 */
+> -	(void)hv_stimer_alloc();
+> +	(void)hv_stimer_alloc(false);
+>  
+>  	/*
+>  	 * Still register the LAPIC timer, because the direct-mode STIMER is
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 5433312..6d4891b 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -31,10 +31,6 @@ static inline u64 hv_get_register(unsigned int reg)
+>  
+>  void hyperv_vector_handler(struct pt_regs *regs);
+>  
+> -static inline void hv_enable_stimer0_percpu_irq(int irq) {}
+> -static inline void hv_disable_stimer0_percpu_irq(int irq) {}
+> -
+> -
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  extern int hyperv_init_cpuhp;
+>  
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 41fd84a..cebed53 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -90,21 +90,17 @@ void hv_remove_vmbus_handler(void)
+>  	set_irq_regs(old_regs);
+>  }
+>  
+> -int hv_setup_stimer0_irq(int *irq, int *vector, void (*handler)(void))
+> +/* For x86/x64, override weak placeholders in hyperv_timer.c */
+> +void hv_setup_stimer0_handler(void (*handler)(void))
+>  {
+> -	*vector = HYPERV_STIMER0_VECTOR;
+> -	*irq = -1;   /* Unused on x86/x64 */
+>  	hv_stimer0_handler = handler;
+> -	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(hv_setup_stimer0_irq);
+>  
+> -void hv_remove_stimer0_irq(int irq)
+> +void hv_remove_stimer0_handler(void)
+>  {
+>  	/* We have no way to deallocate the interrupt gate */
+>  	hv_stimer0_handler = NULL;
+>  }
+> -EXPORT_SYMBOL_GPL(hv_remove_stimer0_irq);
+>  
+>  void hv_setup_kexec_handler(void (*handler)(void))
+>  {
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index cdb8e0c..b2bf5e5 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -18,6 +18,9 @@
+>  #include <linux/sched_clock.h>
+>  #include <linux/mm.h>
+>  #include <linux/cpuhotplug.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/acpi.h>
+>  #include <clocksource/hyperv_timer.h>
+>  #include <asm/hyperv-tlfs.h>
+>  #include <asm/mshyperv.h>
+> @@ -43,14 +46,13 @@
+>   */
+>  static bool direct_mode_enabled;
+>  
+> -static int stimer0_irq;
+> -static int stimer0_vector;
+> +static int stimer0_irq = -1;
+> +static long __percpu *stimer0_evt;
 
-Reported-by: Dexuan Cui <decui@microsoft.com>
-Suggested-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Fixes: 505e3f00c3f36 ("hv_netvsc: Add (more) validation for untrusted Hyper-V values")
----
- drivers/net/hyperv/hyperv_net.h   |  2 +-
- drivers/net/hyperv/netvsc_drv.c   | 13 +++++++++----
- drivers/net/hyperv/rndis_filter.c |  2 +-
- 3 files changed, 11 insertions(+), 6 deletions(-)
+Why not
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index e1a497d3c9ba4..59ac04a610adb 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -229,7 +229,7 @@ int netvsc_send(struct net_device *net,
- 		bool xdp_tx);
- void netvsc_linkstatus_callback(struct net_device *net,
- 				struct rndis_message *resp,
--				void *data);
-+				void *data, u32 data_buflen);
- int netvsc_recv_callback(struct net_device *net,
- 			 struct netvsc_device *nvdev,
- 			 struct netvsc_channel *nvchan);
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 8176fa0c8b168..15f262b70489e 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -744,7 +744,7 @@ static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-  */
- void netvsc_linkstatus_callback(struct net_device *net,
- 				struct rndis_message *resp,
--				void *data)
-+				void *data, u32 data_buflen)
- {
- 	struct rndis_indicate_status *indicate = &resp->msg.indicate_status;
- 	struct net_device_context *ndev_ctx = netdev_priv(net);
-@@ -765,11 +765,16 @@ void netvsc_linkstatus_callback(struct net_device *net,
- 	if (indicate->status == RNDIS_STATUS_LINK_SPEED_CHANGE) {
- 		u32 speed;
- 
--		/* Validate status_buf_offset */
-+		/* Validate status_buf_offset and status_buflen.
-+		 *
-+		 * Certain (pre-Fe) implementations of Hyper-V's vSwitch didn't account
-+		 * for the status buffer field in resp->msg_len; perform the validation
-+		 * using data_buflen (>= resp->msg_len).
-+		 */
- 		if (indicate->status_buflen < sizeof(speed) ||
- 		    indicate->status_buf_offset < sizeof(*indicate) ||
--		    resp->msg_len - RNDIS_HEADER_SIZE < indicate->status_buf_offset ||
--		    resp->msg_len - RNDIS_HEADER_SIZE - indicate->status_buf_offset
-+		    data_buflen - RNDIS_HEADER_SIZE < indicate->status_buf_offset ||
-+		    data_buflen - RNDIS_HEADER_SIZE - indicate->status_buf_offset
- 				< indicate->status_buflen) {
- 			netdev_err(net, "invalid rndis_indicate_status packet\n");
- 			return;
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index 123cc9d25f5ed..c0e89e107d575 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -620,7 +620,7 @@ int rndis_filter_receive(struct net_device *ndev,
- 
- 	case RNDIS_MSG_INDICATE:
- 		/* notification msgs */
--		netvsc_linkstatus_callback(ndev, rndis_msg, data);
-+		netvsc_linkstatus_callback(ndev, rndis_msg, data, buflen);
- 		break;
- 	default:
- 		netdev_err(ndev,
+static DEFINE_PER_CPU(long, stimer0_evt);
+
+no need of allocation /free ?
+
+
+
+
+
+
 -- 
-2.25.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
