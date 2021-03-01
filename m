@@ -2,119 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17FE5327F8C
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Mar 2021 14:34:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB174327FC8
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Mar 2021 14:44:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235719AbhCANca (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 Mar 2021 08:32:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235730AbhCANcR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 Mar 2021 08:32:17 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF77864D9F;
-        Mon,  1 Mar 2021 13:31:36 +0000 (UTC)
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1lGie6-00GPaX-Od; Mon, 01 Mar 2021 13:31:34 +0000
+        id S235676AbhCANob (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 1 Mar 2021 08:44:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235506AbhCANoa (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 1 Mar 2021 08:44:30 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B432BC061756;
+        Mon,  1 Mar 2021 05:43:50 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id s7so2716170plg.5;
+        Mon, 01 Mar 2021 05:43:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qfAZvtIygNFdBK63fVviAdwDHt8uPCG5pASN7/qd2Kc=;
+        b=uQLww7m9+73xMFaqdHyrLxYjc7kc1XasgbudiD0TT7oED3m6p93rjDX3Hyq+8GWXzx
+         cf+JynprThekzYhDjCzv6mRCGVaAXzMRfANxEwG+9MnnWkRjPmJOaL1Aalbnzo6+8r5B
+         UlNznfSfqW3pWyz/VkJFEd2bOQbbSvOqZN3hDCK6Um1PuDWEUBpE4CW3MbqgqaH6D36d
+         gpNotei/kYhV3YXyhSSRHZjtWhaf0rFlwJVZuOEMJWaHTqsEJGYxH/z5fEXrDF1qpMXQ
+         +9Rw/AfX+cJUjTrtDJzP5g9nWIgOUBIgSReATuew3i2aQdXBTnamkPZjCV8ApLNDztbe
+         x6xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qfAZvtIygNFdBK63fVviAdwDHt8uPCG5pASN7/qd2Kc=;
+        b=ljbnrhn7MbkVnWZrUcSTOxXCRSBYn+rmDpfHydIqKa13e9XFLSWyiI05YKPYcZETOg
+         DlxIh+hN+qcg2iQpmsO3QeeymgZpjvDxoq/GGSAxfdhpjdp1GirVwbBgILV8lD66DhgK
+         lSMfVItufzD7g0itaoHJdIcTNCfgogeWeDeYW1M3Ht19TvAtKF0mipHQ4KGtCDQKVOYK
+         Hnb4kccin9UWQKjlOiKlWLovAqlIOiSZhvrgzypljtTvBbPIVBDDcOtvNHzMH5jg5zpO
+         6kGOOl0e4HKhWThew/qMST0MU4Y7UjjpgDUVfOBfgbOG8c3w/YW1F5AAfP4m2RBH4rkQ
+         m++A==
+X-Gm-Message-State: AOAM530zxTVOGLyj4yaArgc90iRoaeF+dxQ8pZQ4fN+dCMbEe2sbvums
+        DruNLqyft3qm69W15wmediA=
+X-Google-Smtp-Source: ABdhPJztNTO8OOssYR2Xrrgrpt5t41ko6mjdpqhOv/LpuEBeU6on3uCr23u+NUC38mKfbCt21tAzWA==
+X-Received: by 2002:a17:90a:4603:: with SMTP id w3mr17922576pjg.125.1614606230291;
+        Mon, 01 Mar 2021 05:43:50 -0800 (PST)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
+        by smtp.gmail.com with ESMTPSA id v3sm17156974pff.217.2021.03.01.05.43.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Mar 2021 05:43:49 -0800 (PST)
+Subject: Re: [RFC PATCH 12/12] HV/Storvsc: Add bounce buffer support for
+ Storvsc
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com,
+        sunilmut@microsoft.com
+References: <20210228150315.2552437-1-ltykernel@gmail.com>
+ <20210228150315.2552437-13-ltykernel@gmail.com>
+ <20210301065454.GA3669027@infradead.org>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <9a5d3809-f1e1-0f4a-8249-9ce1c6df6453@gmail.com>
+Date:   Mon, 1 Mar 2021 21:43:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20210301065454.GA3669027@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 01 Mar 2021 13:31:34 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: Aw: Re:  [PATCH 09/13] PCI: mediatek: Advertise lack of MSI
- handling
-In-Reply-To: <trinity-9fa6d24e-f9de-4741-bf44-86f6197b174d-1614600961297@3c-app-gmx-bap67>
-References: <20210225151023.3642391-1-maz@kernel.org>
- <20210225151023.3642391-10-maz@kernel.org>
- <trinity-b7e2cf18-f0e6-4d88-8a80-de6758b5a91f-1614595396771@3c-app-gmx-bap67>
- <b7721e2ff751cc9565a662cb713819e3@kernel.org>
- <trinity-9fa6d24e-f9de-4741-bf44-86f6197b174d-1614600961297@3c-app-gmx-bap67>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <5afd1d656299d87c43bdf31b8ced2d5f@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: frank-w@public-files.de, lorenzo.pieralisi@arm.com, bhelgaas@google.com, treding@nvidia.com, tglx@linutronix.de, robh@kernel.org, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, ryder.lee@mediatek.com, marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com, michal.simek@xilinx.com, paul.walmsley@sifive.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Frank,
+Hi Christoph:
+      Thanks a lot for your review. There are some reasons.
+      1) Vmbus drivers don't use DMA API now.
+      2) Hyper-V Vmbus channel ring buffer already play bounce buffer 
+role for most vmbus drivers. Just two kinds of packets from 
+netvsc/storvsc are uncovered.
+      3) In AMD SEV-SNP based Hyper-V guest, the access physical address 
+of shared memory should be bounce buffer memory physical address plus
+with a shared memory boundary(e.g, 48bit) reported Hyper-V CPUID. It's
+called virtual top of memory(vTom) in AMD spec and works as a watermark. 
+So it needs to ioremap/memremap the associated physical address above 
+the share memory boundary before accessing them. swiotlb_bounce() uses
+low end physical address to access bounce buffer and this doesn't work 
+in this senario. If something wrong, please help me correct me.
 
->> > i guess it's a bug in ath10k driver or my r64 board (it is a v1.1
->> > which has missing capacitors on tx lines).
->> 
->> No, this definitely looks like a bug in the MTK PCIe driver,
->> where the mutex is either not properly initialised, corrupted,
->> or the wrong pointer is passed.
+Thanks.
+
+
+On 3/1/2021 2:54 PM, Christoph Hellwig wrote:
+> This should be handled by the DMA mapping layer, just like for native
+> SEV support.
 > 
-> but why does it happen only with the ath10k-card and not the mt7612 in
-> same slot?
-
-Does mt7612 use MSI? What we have here is a bogus mutex in the
-MTK PCIe driver, and the only way not to get there would be
-to avoid using MSIs.
-
-> 
->> This r64 machine is supposed to have working MSIs, right?
-> 
-> imho mt7622 have working MSI
-> 
->> Do you get the same issue without this series?
-> 
-> tested 5.11.0 [1] without this series (but with your/thomas' patch
-> from discussion about my old patch) and got same trace. so this series
-> does not break anything here.
-
-Can you retest without any additional patch on top of 5.11?
-These two patches only affect platforms that do *not* have MSIs at all.
-
-> 
->> > Tried with an mt7612e, this seems to work without any errors.
->> >
->> > so for mt7622/mt7623
->> >
->> > Tested-by: Frank Wunderlich <frank-w@public-files.de>
->> 
->> We definitely need to understand the above.
-> 
-> there is a hardware-bug which may cause this...afair i saw this with
-> the card in r64 with earlier Kernel-versions where other cards work
-> (like the mt7612e).
-
-I don't think a HW bug affecting PCI would cause what we are seeing
-here, unless it results in memory corruption.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
