@@ -2,146 +2,224 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF9EB32A661
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Mar 2021 17:43:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C9D832A662
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Mar 2021 17:43:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382123AbhCBOoa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 2 Mar 2021 09:44:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:49078 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1838377AbhCBKgK (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 2 Mar 2021 05:36:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8851AED1;
-        Tue,  2 Mar 2021 02:35:24 -0800 (PST)
-Received: from [10.57.48.219] (unknown [10.57.48.219])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25EFF3F73C;
-        Tue,  2 Mar 2021 02:35:20 -0800 (PST)
-Subject: Re: Aw: Re: Re: [PATCH 09/13] PCI: mediatek: Advertise lack of MSI
- handling
-To:     Frank Wunderlich <frank-w@public-files.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Chuanjia Liu <chuanjia.liu@mediatek.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Rob Herring <robh@kernel.org>, Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <20210225151023.3642391-1-maz@kernel.org>
- <20210225151023.3642391-10-maz@kernel.org>
- <trinity-b7e2cf18-f0e6-4d88-8a80-de6758b5a91f-1614595396771@3c-app-gmx-bap67>
- <b7721e2ff751cc9565a662cb713819e3@kernel.org>
- <trinity-9fa6d24e-f9de-4741-bf44-86f6197b174d-1614600961297@3c-app-gmx-bap67>
- <5afd1d656299d87c43bdf31b8ced2d5f@kernel.org>
- <trinity-e6593a34-3e03-4154-a03c-f3aed01e33bf-1614607598428@3c-app-gmx-bap67>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8b9c013a-b5d5-9b19-f28a-4af543e47fff@arm.com>
-Date:   Tue, 2 Mar 2021 10:35:14 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S1384077AbhCBOsC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 Mar 2021 09:48:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35180 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1350867AbhCBM7H (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 2 Mar 2021 07:59:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614689824;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OEF+iB48cTNiKP+ZNMz7BjR6LuPsBJJOqmuhL+aZPXo=;
+        b=JxeY/sU0JVUw0XQWQGMgGV68V3ogYqPOHH3nouxBfmTjmXGdOhkFqTzyA1Z6eXPytSI5//
+        XTe20PwLRmig02sl5/2lUXhTv59pGtj4DrV21bLGR455JWbzo4pdekQ6a14t2Fnsrs26BE
+        WCsNmbiRaEj4PLFREw7mLOkovQLu6xY=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-544-yqVafKrCN4eenAsYfIH3XQ-1; Tue, 02 Mar 2021 07:57:03 -0500
+X-MC-Unique: yqVafKrCN4eenAsYfIH3XQ-1
+Received: by mail-ed1-f70.google.com with SMTP id i4so10326924edt.11
+        for <linux-hyperv@vger.kernel.org>; Tue, 02 Mar 2021 04:57:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=OEF+iB48cTNiKP+ZNMz7BjR6LuPsBJJOqmuhL+aZPXo=;
+        b=g21+CkVVV/GSpu7oWnRM3WWD0gNoMxtI2Z4jtZ0aHbKjjfmMGmCGbJLopORwAdBORi
+         AYLazkotRPZYRXemu/21DyXCGuxXfuZDFAaunjsE+NsxyTlz7Uo7OGsQEskwqKY+g1BW
+         8l+7lj8jVKDjT9PlHaNIm4kPF1i1JlOzfKJZ0c5UqjSn1UyL3jTUNLv+mIjVMvcRVNsd
+         ZdFwJRlHyBiOHDPMcuUUtNgz8BxTz4p7OqYPWLH/8SMuC9EzCSMdVTil7i5t6eAv5Ijg
+         M+fPU8uH7YqNpFC9QepyKOsJ3iVjZIOxCD+eGUQGw2XKl8si8YSii/YgtmKe1TaqnpVh
+         EHDA==
+X-Gm-Message-State: AOAM532WFMsasKc1VIAH/uJ0PDUhSEssCnqQ2AcPeUlPgigIaRc5Y6jz
+        EjdALnSpAdyIK7Tl8gfQfdobAVBOgEwKp1rDtr3UFgB6glk94LNThEteRUvuoJ5ZGTmtxeOmtnb
+        C/VIgleSFho4qwjQa622qedUJc/7VkJGUAJp7sUwDxWDdZxTbceVfFEPaBEUqFmxNL4wMsl/Ukr
+        cN
+X-Received: by 2002:aa7:c403:: with SMTP id j3mr20422778edq.137.1614689821948;
+        Tue, 02 Mar 2021 04:57:01 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzG88ql2RFUHF/MFuqHfbe5TvkqJOeJQQ1KRkXPoJOvtrX/awvU92pp8hadPNxU4p+haIk9Ag==
+X-Received: by 2002:aa7:c403:: with SMTP id j3mr20422757edq.137.1614689821763;
+        Tue, 02 Mar 2021 04:57:01 -0800 (PST)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id k27sm18623879eje.67.2021.03.02.04.57.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Mar 2021 04:57:01 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-arch@vger.kernel.org, sthemmin@microsoft.com,
+        kys@microsoft.com, wei.liu@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        daniel.lezcano@linaro.org, arnd@arndb.de,
+        linux-hyperv@vger.kernel.org
+Subject: Re: ** POTENTIAL FRAUD ALERT - RED HAT ** [PATCH v2 01/10] Drivers:
+ hv: vmbus: Move Hyper-V page allocator to arch neutral code
+In-Reply-To: <1614561332-2523-2-git-send-email-mikelley@microsoft.com>
+References: <1614561332-2523-1-git-send-email-mikelley@microsoft.com>
+ <1614561332-2523-2-git-send-email-mikelley@microsoft.com>
+Date:   Tue, 02 Mar 2021 13:57:00 +0100
+Message-ID: <87r1kxemsj.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <trinity-e6593a34-3e03-4154-a03c-f3aed01e33bf-1614607598428@3c-app-gmx-bap67>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2021-03-01 14:06, Frank Wunderlich wrote:
->> Gesendet: Montag, 01. März 2021 um 14:31 Uhr
->> Von: "Marc Zyngier" <maz@kernel.org>
->>
->> Frank,
->>
->>>>> i guess it's a bug in ath10k driver or my r64 board (it is a v1.1
->>>>> which has missing capacitors on tx lines).
->>>>
->>>> No, this definitely looks like a bug in the MTK PCIe driver,
->>>> where the mutex is either not properly initialised, corrupted,
->>>> or the wrong pointer is passed.
->>>
->>> but why does it happen only with the ath10k-card and not the mt7612 in
->>> same slot?
->>
->> Does mt7612 use MSI? What we have here is a bogus mutex in the
->> MTK PCIe driver, and the only way not to get there would be
->> to avoid using MSIs.
-> 
-> i guess this card/its driver does not use MSI. Did not found anything in "datasheet" [1] or driver [2] about msi
+Michael Kelley <mikelley@microsoft.com> writes:
 
-FWIW, no need to guess - `lspci -v` (as root) should tell you whether 
-the card has MSI (and/or MSI-X) capability, and whether it is enabled if so.
+> The Hyper-V page allocator functions are implemented in an architecture
+> neutral way.  Move them into the architecture neutral VMbus module so
+> a separate implementation for ARM64 is not needed.
+>
+> No functional change.
+>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  arch/x86/hyperv/hv_init.c       | 22 ----------------------
+>  arch/x86/include/asm/mshyperv.h |  5 -----
+>  drivers/hv/hv.c                 | 36 ++++++++++++++++++++++++++++++++++++
+>  include/asm-generic/mshyperv.h  |  4 ++++
+>  4 files changed, 40 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index b81047d..4bdb344 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -54,28 +54,6 @@
+>  u32 hv_max_vp_index;
+>  EXPORT_SYMBOL_GPL(hv_max_vp_index);
+>  
+> -void *hv_alloc_hyperv_page(void)
+> -{
+> -	BUILD_BUG_ON(PAGE_SIZE != HV_HYP_PAGE_SIZE);
+> -
+> -	return (void *)__get_free_page(GFP_KERNEL);
+> -}
+> -EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
+> -
+> -void *hv_alloc_hyperv_zeroed_page(void)
+> -{
+> -        BUILD_BUG_ON(PAGE_SIZE != HV_HYP_PAGE_SIZE);
+> -
+> -        return (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
+> -}
+> -EXPORT_SYMBOL_GPL(hv_alloc_hyperv_zeroed_page);
+> -
+> -void hv_free_hyperv_page(unsigned long addr)
+> -{
+> -	free_page(addr);
+> -}
+> -EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
+> -
+>  static int hv_cpu_init(unsigned int cpu)
+>  {
+>  	u64 msr_vp_index;
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index ccf60a8..ef6e968 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -233,9 +233,6 @@ static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
+>  
+>  void __init hyperv_init(void);
+>  void hyperv_setup_mmu_ops(void);
+> -void *hv_alloc_hyperv_page(void);
+> -void *hv_alloc_hyperv_zeroed_page(void);
+> -void hv_free_hyperv_page(unsigned long addr);
+>  void set_hv_tscchange_cb(void (*cb)(void));
+>  void clear_hv_tscchange_cb(void);
+>  void hyperv_stop_tsc_emulation(void);
+> @@ -272,8 +269,6 @@ int hv_map_ioapic_interrupt(int ioapic_id, bool level, int vcpu, int vector,
+>  #else /* CONFIG_HYPERV */
+>  static inline void hyperv_init(void) {}
+>  static inline void hyperv_setup_mmu_ops(void) {}
+> -static inline void *hv_alloc_hyperv_page(void) { return NULL; }
+> -static inline void hv_free_hyperv_page(unsigned long addr) {}
+>  static inline void set_hv_tscchange_cb(void (*cb)(void)) {}
+>  static inline void clear_hv_tscchange_cb(void) {}
+>  static inline void hyperv_stop_tsc_emulation(void) {};
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index f202ac7..cca8d5e 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -37,6 +37,42 @@ int hv_init(void)
+>  }
+>  
+>  /*
+> + * Functions for allocating and freeing memory with size and
+> + * alignment HV_HYP_PAGE_SIZE. These functions are needed because
+> + * the guest page size may not be the same as the Hyper-V page
+> + * size. We depend upon kmalloc() aligning power-of-two size
+> + * allocations to the allocation size boundary, so that the
+> + * allocated memory appears to Hyper-V as a page of the size
+> + * it expects.
+> + */
+> +
+> +void *hv_alloc_hyperv_page(void)
+> +{
+> +	BUILD_BUG_ON(PAGE_SIZE <  HV_HYP_PAGE_SIZE);
+> +
+> +	if (PAGE_SIZE == HV_HYP_PAGE_SIZE)
+> +		return (void *)__get_free_page(GFP_KERNEL);
+> +	else
+> +		return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
 
-Robin.
+PAGE_SIZE and HV_HYP_PAGE_SIZE are known compile-time and in case this
+won't change in the future we can probably write this as
 
->>>
->>>> This r64 machine is supposed to have working MSIs, right?
->>>
->>> imho mt7622 have working MSI
->>>
->>>> Do you get the same issue without this series?
->>>
->>> tested 5.11.0 [1] without this series (but with your/thomas' patch
->>> from discussion about my old patch) and got same trace. so this series
->>> does not break anything here.
->>
->> Can you retest without any additional patch on top of 5.11?
->> These two patches only affect platforms that do *not* have MSIs at all.
-> 
-> i can revert these 2, but still need patches for mt7622 pcie-support [3]...btw. i see that i miss these in 5.11-main...do not see traceback with them (have firmware not installed...)
-> 
-> root@bpi-r64:~# dmesg | grep ath
-> [    6.450765] ath10k_pci 0000:01:00.0: assign IRQ: got 146
-> [    6.661752] ath10k_pci 0000:01:00.0: enabling device (0000 -> 0002)
-> [    6.697811] ath10k_pci 0000:01:00.0: enabling bus mastering
-> [    6.721293] ath10k_pci 0000:01:00.0: pci irq msi oper_irq_mode 2 irq_mode 0 r
-> eset_mode 0
-> [    6.921030] ath10k_pci 0000:01:00.0: Failed to find firmware-N.bin (N between
->   2 and 6) from ath10k/QCA988X/hw2.0: -2
-> [    6.931698] ath10k_pci 0000:01:00.0: could not fetch firmware files (-2)
-> [    6.940417] ath10k_pci 0000:01:00.0: could not probe fw (-2)
-> 
-> so traceback was caused by missing changes in mtk pcie-driver not yet upstream, added Chuanjia Liu
-> 
->>>
->>>>> Tried with an mt7612e, this seems to work without any errors.
->>>>>
->>>>> so for mt7622/mt7623
->>>>>
->>>>> Tested-by: Frank Wunderlich <frank-w@public-files.de>
->>>>
->>>> We definitely need to understand the above.
->>>
->>> there is a hardware-bug which may cause this...afair i saw this with
->>> the card in r64 with earlier Kernel-versions where other cards work
->>> (like the mt7612e).
->>
->> I don't think a HW bug affecting PCI would cause what we are seeing
->> here, unless it results in memory corruption.
-> 
-> 
-> [1] https://www.asiarf.com/shop/wifi-wlan/wifi_mini_pcie/ws2433-wifi-11ac-mini-pcie-module-manufacturer/
-> [2] grep -Rni 'msi' drivers/net/wireless/mediatek/mt76/mt76x2/
-> [3] https://patchwork.kernel.org/project/linux-mediatek/list/?series=372885
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+#if PAGE_SIZE == HV_HYP_PAGE_SIZE
+       return (void *)__get_free_page(GFP_KERNEL);
+#else
+       return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+#endif
+
+(not sure if the output is going to be any different with e.g. gcc's '-O2')
+
+> +}
+> +
+> +void *hv_alloc_hyperv_zeroed_page(void)
+> +{
+> +	if (PAGE_SIZE == HV_HYP_PAGE_SIZE)
+> +		return (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
+> +	else
+> +		return kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+> +}
+> +
+> +void hv_free_hyperv_page(unsigned long addr)
+> +{
+> +	if (PAGE_SIZE == HV_HYP_PAGE_SIZE)
+> +		free_page(addr);
+> +	else
+> +		kfree((void *)addr);
+> +}
+> +
+> +/*
+>   * hv_post_message - Post a message using the hypervisor message IPC.
+>   *
+>   * This involves a hypercall.
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index dff58a3..694b5bc 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -117,6 +117,10 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+>  /* Sentinel value for an uninitialized entry in hv_vp_index array */
+>  #define VP_INVAL	U32_MAX
+>  
+> +void *hv_alloc_hyperv_page(void);
+> +void *hv_alloc_hyperv_zeroed_page(void);
+> +void hv_free_hyperv_page(unsigned long addr);
+> +
+>  /**
+>   * hv_cpu_number_to_vp_number() - Map CPU to VP.
+>   * @cpu_number: CPU number in Linux terms
+
+-- 
+Vitaly
+
