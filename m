@@ -2,252 +2,146 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D93A232A65F
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Mar 2021 17:43:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF9EB32A661
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Mar 2021 17:43:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384237AbhCBOnO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 2 Mar 2021 09:43:14 -0500
-Received: from mail-mw2nam12on2139.outbound.protection.outlook.com ([40.107.244.139]:27680
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238298AbhCBBmO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 Mar 2021 20:42:14 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U2NqP5NfegrT2tWzbjsy4YmZTEYpoIaOmOiJrdOouHF8X9BsBxuVwxVUbyKb8nXoMGJMwWMu7/Xj5TjBEBQjVHKFyqAwLXQW6zviZSnzvQNFi72hVGST8Jp13tIsA4av0xtYS5HGol+55sVsC1vekr/1PDL6USTdnP89SaSCSMt9Og7+ZZtcHUVCRbrrpfgO+gJEaDzXXN7uP4Z10VMRgc5imkIHs+Dzqr3g9i5lHm10ELBmSvtncRVQ1ibkdv3Nx44bAF34xf7SmsmSHlkea/ikg8lcCBzUeqWzocevnO7rj9t/XtjoidCokCSVVFjljay99M3wOPRgbRGlNDGGDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KqNS2x7olHvXWP1Jr1ZcMN8sklvzokYmn/Is2mOX4nM=;
- b=OX9NM7uuwMnKtx8NCSUSrpSG3MqnSQidT5VSS1rrahdGlyeppXASro/9RxXHKWPOl/AJLC2etYpbjm4f1BcYoH9b21RwKZdy1feluQpLzTSmOpgMYDvpjVwjCffFjXsEmh3fMUwYlYElBEgebf3IoLCVxEEV2aZ5+XN/MLPUCfuhIxRQguGzE9C66Io+haYWo/8obxs4J7ra0skSSS8g1ZzvcyrgDH09LAa+bpGnbm/r62NgO4rx8Jw/L/NKPuFkO0r3+T2FuRvwEEQ/xjJBYrcINvHSoOhafFyAwwippZAxzbJQlH9SK08upTVa5sVeDIQp9H/YQM0YdOFcsXtiHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KqNS2x7olHvXWP1Jr1ZcMN8sklvzokYmn/Is2mOX4nM=;
- b=WWZMvC0KiKxgIvP9Fw8TNjDrLTK9MwAogzo24zshePOYA0/yr0TXxJEQJL+804EH2TPVpNTrExfvMNfkTyHBgEsbil/Da6WvbxX7ROM+bnUxmUeaqhh5kvPnY1gZM4E7CPgNIwBIWy64cxGdUk0S9hsVjGA4W4Ogs8w3kBQHKtA=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MWHPR21MB1579.namprd21.prod.outlook.com (2603:10b6:301:81::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.2; Tue, 2 Mar
- 2021 01:40:37 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3912.016; Tue, 2 Mar 2021
- 01:40:37 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        id S1382123AbhCBOoa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 Mar 2021 09:44:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:49078 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1838377AbhCBKgK (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 2 Mar 2021 05:36:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8851AED1;
+        Tue,  2 Mar 2021 02:35:24 -0800 (PST)
+Received: from [10.57.48.219] (unknown [10.57.48.219])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25EFF3F73C;
+        Tue,  2 Mar 2021 02:35:20 -0800 (PST)
+Subject: Re: Aw: Re: Re: [PATCH 09/13] PCI: mediatek: Advertise lack of MSI
+ handling
+To:     Frank Wunderlich <frank-w@public-files.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Chuanjia Liu <chuanjia.liu@mediatek.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Rob Herring <robh@kernel.org>, Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH v2 10/10] clocksource/drivers/hyper-v: Move handling of
- STIMER0 interrupts
-Thread-Topic: [PATCH v2 10/10] clocksource/drivers/hyper-v: Move handling of
- STIMER0 interrupts
-Thread-Index: AQHXDjh3b7sfn0hZqU2r+eHOEjUhQKpveW4AgABzygA=
-Date:   Tue, 2 Mar 2021 01:40:37 +0000
-Message-ID: <MWHPR21MB1593624A8C63F3FF7240B44BD7999@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <1614561332-2523-1-git-send-email-mikelley@microsoft.com>
- <1614561332-2523-11-git-send-email-mikelley@microsoft.com>
- <cb190ed5-66f3-bdf7-aa97-b1fe0c49e282@linaro.org>
-In-Reply-To: <cb190ed5-66f3-bdf7-aa97-b1fe0c49e282@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-03-02T01:40:36Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a58234c0-cab0-43df-a0f8-f798f4825b51;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 79c67d5b-ea1d-4c83-33a0-08d8dd1c2e59
-x-ms-traffictypediagnostic: MWHPR21MB1579:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB157916DBDF96E733C92251A4D7999@MWHPR21MB1579.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: m58oiJdxXfXiMOqLqGJNaozQFufcSbPyc3wA5N/7E+jK8NEvZSS+WLP5FlfBtc5UA2ZUVKKxt9sxk16qP+pfzAtQsGJSq+0j8q+XDJGes4szX1qrSn6fkDfHekrQpC+MmaYh/ZS9NvRFhunD9qxLcGCOkv58x9AElWtYqUkGo61b9vetXAdSoe2NUrvU94leKWBAhgv2fIvHgGS6KmRNkOwnDJBtYLw1eEppsh6ztdBpunioZo50B+tS/3hbPN4kKybF3LuQnmMX7emH1gz8VojWWKPqn3Bed5YFugP01Anwvtjei5xpF0orBBXYTQmbZhNhk61ZB/MfNugqXG+c5N7Xyhq1LnfEuiemoHR5ErRA8/7DHicAHYM29RJBK0laDESxPTiCbNmv0GYDUGooqGvroYgLGm5TqBEpe7CPhXC5rBPM1EL9YXq/ikQs+fwCOSVq9TGZmmZhFIEOJ0r7flnL959K7GX4WowFHjCI2e9dDIQDy1vMmCmh5CKtyC+0P1dOOYgudgL6G7qrC8DJbTv/ElFML7cg27T/YoT/ambZJIJocu2Q3Yxd57ag8iZo
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(346002)(39860400002)(376002)(82960400001)(7416002)(64756008)(316002)(83380400001)(478600001)(66446008)(52536014)(8936002)(6506007)(26005)(5660300002)(33656002)(76116006)(71200400001)(921005)(66476007)(66556008)(2906002)(7696005)(8676002)(54906003)(9686003)(110136005)(53546011)(8990500004)(55016002)(10290500003)(66946007)(86362001)(82950400001)(4326008)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?AxtIyHULGZM3QnepBTTSy3IOOlqTUDZquggRTeq9RMzER0xch12JBl5qlKu2?=
- =?us-ascii?Q?BilQcIIOwCa3sun4BdFfYZmkxQ0qcKh/5/gett/kcyqhSZO9xqys5rWmlQaa?=
- =?us-ascii?Q?eAclpM6DMlkmx4PYTWQxswwd+xxaBoVrhM2UCsdRMql/h/pYlKZw0MVmTRay?=
- =?us-ascii?Q?chplBZPtmbtv/Pu2MYP4ghIxQhnebNAyxSkIcO3zWDlaaYmv8GQzgdfy4pAO?=
- =?us-ascii?Q?2bwvcEtD60L6PhMVz+bsmi0ArmxxwxLGY9bELjPscQGQMDsleqOPO9hkezFY?=
- =?us-ascii?Q?uu3Wy2hhlAyrwCDIsJ1fXm7PVdBzLU6FxtyMBkBHxy796sxkNJ5GDjw+ynS/?=
- =?us-ascii?Q?96YX9SIuV/TOqoy4aU6ZKrQJXZqcsn+R01I0Wiq/1Eu/PoY1PV8cAP4shlJz?=
- =?us-ascii?Q?HJPggmf47aOeEh6JTuQsr12N4Ha+BmB4nqEezMh3iSOoVFNxbegwIO9e1AVS?=
- =?us-ascii?Q?mlxEHq/qX56n35+i1qoFE5M3cmvzsPW8oXx83F8TKFqU1g35x8XWy0wGkbSS?=
- =?us-ascii?Q?vWGten0ncHKhlLU9+gAxFtvzzUZ1kARDOZ3NL4myPbN9RSJRRZvM+Z46hJgY?=
- =?us-ascii?Q?osCL66RhLyD3/SFAvJL/5wxsv849VQW1q1ySj8e+whGpKFYoHfY4HCvGlPJ+?=
- =?us-ascii?Q?DNDXSZDye+OqamvU25+9ZiWtMPvijG0R+Wt1YxsIf4mI5w5E9eJBwOGT7Z2i?=
- =?us-ascii?Q?CTnH15KLt+4kfeZBbVVbU3dkjoZZye+uArQOC3imviE8PWU4sKDZnc9CTSLJ?=
- =?us-ascii?Q?pNMv8ezuLsyNKUPPUGAJat6SBDK1Cg9N3obbX0eaQq40s/PU8nwemsR3Xl9o?=
- =?us-ascii?Q?3+QcKAVUXEVueCDcg5E+WLBslBS6mHeOccWymrw51izLlNwXF8HS3OVERc1P?=
- =?us-ascii?Q?lN7bud+mJj+lqyr3sH8CA5HDAJSlHD2MstXyJzVlecMUw5F6JRq69dtqOQbd?=
- =?us-ascii?Q?0ALOP0gmGVpGfQMSZNwhD7tEVcaNDKV6L5CCRUfqZkVx2vdT1ShiqK6Y58dv?=
- =?us-ascii?Q?dGqdiH7YkXZNf1MK820rkagBL9WRvlO6jdRu1+8Y2GdRZE7P+hr3r4/ebwhA?=
- =?us-ascii?Q?oJbmsyTlT/+WDWN0HvBC7ABgjK87sRAO1SIZQQe1Oov2krpQI8BLFzNsA/yr?=
- =?us-ascii?Q?gd74PCOzlO2lbRsZ4Q9Bp1LwydvdEpCn09Skp+2pT82gBnjpcIxOA5q2Hf0P?=
- =?us-ascii?Q?GkggiqOa5Ck4qxfSOdeByP/SnHLxhFqMS++PFPGcgmeR2dBUcDoi+TjFWX86?=
- =?us-ascii?Q?/Cy46F8D3R195EtHq0f74jRm1s+omJAgfCz8kP5k5hO3HcrRu7eHD5OOJmIV?=
- =?us-ascii?Q?Igs5yubKFDpkYYz5U/2y4XJn?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Michal Simek <michal.simek@xilinx.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20210225151023.3642391-1-maz@kernel.org>
+ <20210225151023.3642391-10-maz@kernel.org>
+ <trinity-b7e2cf18-f0e6-4d88-8a80-de6758b5a91f-1614595396771@3c-app-gmx-bap67>
+ <b7721e2ff751cc9565a662cb713819e3@kernel.org>
+ <trinity-9fa6d24e-f9de-4741-bf44-86f6197b174d-1614600961297@3c-app-gmx-bap67>
+ <5afd1d656299d87c43bdf31b8ced2d5f@kernel.org>
+ <trinity-e6593a34-3e03-4154-a03c-f3aed01e33bf-1614607598428@3c-app-gmx-bap67>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <8b9c013a-b5d5-9b19-f28a-4af543e47fff@arm.com>
+Date:   Tue, 2 Mar 2021 10:35:14 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79c67d5b-ea1d-4c83-33a0-08d8dd1c2e59
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2021 01:40:37.7676
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /Ia246mVJTCqwiE+8rsPAxn0K85LyQxMryKa/GZZ7+AJ9SRlia5nve9LYwGhpQ85oasdR/6X0rg+xkvXF1FdIk39/jwR96B7IJVIee4jazg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB1579
+In-Reply-To: <trinity-e6593a34-3e03-4154-a03c-f3aed01e33bf-1614607598428@3c-app-gmx-bap67>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Daniel Lezcano <daniel.lezcano@linaro.org> Sent: Monday, March 1, 202=
-1 10:45 AM
->=20
-> On 01/03/2021 02:15, Michael Kelley wrote:
-> > STIMER0 interrupts are most naturally modeled as per-cpu IRQs. But
-> > because x86/x64 doesn't have per-cpu IRQs, the core STIMER0 interrupt
-> > handling machinery is done in code under arch/x86 and Linux IRQs are
-> > not used. Adding support for ARM64 means adding equivalent code
-> > using per-cpu IRQs under arch/arm64.
-> >
-> > A better model is to treat per-cpu IRQs as the normal path (which it is
-> > for modern architectures), and the x86/x64 path as the exception. Do th=
-is
-> > by incorporating standard Linux per-cpu IRQ allocation into the main
-> > SITMER0 driver code, and bypass it in the x86/x64 exception case. For
-> > x86/x64, special case code is retained under arch/x86, but no STIMER0
-> > interrupt handling code is needed under arch/arm64.
-> >
-> > No functional change.
-> >
-> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> > ---
-> >  arch/x86/hyperv/hv_init.c          |   2 +-
-> >  arch/x86/include/asm/mshyperv.h    |   4 -
-> >  arch/x86/kernel/cpu/mshyperv.c     |  10 +--
-> >  drivers/clocksource/hyperv_timer.c | 180 ++++++++++++++++++++++++++---=
---------
-> >  include/asm-generic/mshyperv.h     |   5 --
-> >  include/clocksource/hyperv_timer.h |   3 +-
-> >  6 files changed, 132 insertions(+), 72 deletions(-)
-> >
-> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > index 9af4f8a..9d10025 100644
-> > --- a/arch/x86/hyperv/hv_init.c
-> > +++ b/arch/x86/hyperv/hv_init.c
-> > @@ -327,7 +327,7 @@ static void __init hv_stimer_setup_percpu_clockev(v=
-oid)
-> >  	 * Ignore any errors in setting up stimer clockevents
-> >  	 * as we can run with the LAPIC timer as a fallback.
-> >  	 */
-> > -	(void)hv_stimer_alloc();
-> > +	(void)hv_stimer_alloc(false);
-> >
-> >  	/*
-> >  	 * Still register the LAPIC timer, because the direct-mode STIMER is
-> > diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/msh=
-yperv.h
-> > index 5433312..6d4891b 100644
-> > --- a/arch/x86/include/asm/mshyperv.h
-> > +++ b/arch/x86/include/asm/mshyperv.h
-> > @@ -31,10 +31,6 @@ static inline u64 hv_get_register(unsigned int reg)
-> >
-> >  void hyperv_vector_handler(struct pt_regs *regs);
-> >
-> > -static inline void hv_enable_stimer0_percpu_irq(int irq) {}
-> > -static inline void hv_disable_stimer0_percpu_irq(int irq) {}
-> > -
-> > -
-> >  #if IS_ENABLED(CONFIG_HYPERV)
-> >  extern int hyperv_init_cpuhp;
-> >
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyp=
-erv.c
-> > index 41fd84a..cebed53 100644
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -90,21 +90,17 @@ void hv_remove_vmbus_handler(void)
-> >  	set_irq_regs(old_regs);
-> >  }
-> >
-> > -int hv_setup_stimer0_irq(int *irq, int *vector, void (*handler)(void))
-> > +/* For x86/x64, override weak placeholders in hyperv_timer.c */
-> > +void hv_setup_stimer0_handler(void (*handler)(void))
-> >  {
-> > -	*vector =3D HYPERV_STIMER0_VECTOR;
-> > -	*irq =3D -1;   /* Unused on x86/x64 */
-> >  	hv_stimer0_handler =3D handler;
-> > -	return 0;
-> >  }
-> > -EXPORT_SYMBOL_GPL(hv_setup_stimer0_irq);
-> >
-> > -void hv_remove_stimer0_irq(int irq)
-> > +void hv_remove_stimer0_handler(void)
-> >  {
-> >  	/* We have no way to deallocate the interrupt gate */
-> >  	hv_stimer0_handler =3D NULL;
-> >  }
-> > -EXPORT_SYMBOL_GPL(hv_remove_stimer0_irq);
-> >
-> >  void hv_setup_kexec_handler(void (*handler)(void))
-> >  {
-> > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/h=
-yperv_timer.c
-> > index cdb8e0c..b2bf5e5 100644
-> > --- a/drivers/clocksource/hyperv_timer.c
-> > +++ b/drivers/clocksource/hyperv_timer.c
-> > @@ -18,6 +18,9 @@
-> >  #include <linux/sched_clock.h>
-> >  #include <linux/mm.h>
-> >  #include <linux/cpuhotplug.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/acpi.h>
-> >  #include <clocksource/hyperv_timer.h>
-> >  #include <asm/hyperv-tlfs.h>
-> >  #include <asm/mshyperv.h>
-> > @@ -43,14 +46,13 @@
-> >   */
-> >  static bool direct_mode_enabled;
-> >
-> > -static int stimer0_irq;
-> > -static int stimer0_vector;
-> > +static int stimer0_irq =3D -1;
-> > +static long __percpu *stimer0_evt;
->=20
-> Why not
->=20
-> static DEFINE_PER_CPU(long, stimer0_evt);
->=20
-> no need of allocation /free ?
->=20
+On 2021-03-01 14:06, Frank Wunderlich wrote:
+>> Gesendet: Montag, 01. März 2021 um 14:31 Uhr
+>> Von: "Marc Zyngier" <maz@kernel.org>
+>>
+>> Frank,
+>>
+>>>>> i guess it's a bug in ath10k driver or my r64 board (it is a v1.1
+>>>>> which has missing capacitors on tx lines).
+>>>>
+>>>> No, this definitely looks like a bug in the MTK PCIe driver,
+>>>> where the mutex is either not properly initialised, corrupted,
+>>>> or the wrong pointer is passed.
+>>>
+>>> but why does it happen only with the ath10k-card and not the mt7612 in
+>>> same slot?
+>>
+>> Does mt7612 use MSI? What we have here is a bogus mutex in the
+>> MTK PCIe driver, and the only way not to get there would be
+>> to avoid using MSIs.
+> 
+> i guess this card/its driver does not use MSI. Did not found anything in "datasheet" [1] or driver [2] about msi
 
-Indeed!  I'll make that simplification in v3 of the patch set.
+FWIW, no need to guess - `lspci -v` (as root) should tell you whether 
+the card has MSI (and/or MSI-X) capability, and whether it is enabled if so.
 
-Michael
+Robin.
+
+>>>
+>>>> This r64 machine is supposed to have working MSIs, right?
+>>>
+>>> imho mt7622 have working MSI
+>>>
+>>>> Do you get the same issue without this series?
+>>>
+>>> tested 5.11.0 [1] without this series (but with your/thomas' patch
+>>> from discussion about my old patch) and got same trace. so this series
+>>> does not break anything here.
+>>
+>> Can you retest without any additional patch on top of 5.11?
+>> These two patches only affect platforms that do *not* have MSIs at all.
+> 
+> i can revert these 2, but still need patches for mt7622 pcie-support [3]...btw. i see that i miss these in 5.11-main...do not see traceback with them (have firmware not installed...)
+> 
+> root@bpi-r64:~# dmesg | grep ath
+> [    6.450765] ath10k_pci 0000:01:00.0: assign IRQ: got 146
+> [    6.661752] ath10k_pci 0000:01:00.0: enabling device (0000 -> 0002)
+> [    6.697811] ath10k_pci 0000:01:00.0: enabling bus mastering
+> [    6.721293] ath10k_pci 0000:01:00.0: pci irq msi oper_irq_mode 2 irq_mode 0 r
+> eset_mode 0
+> [    6.921030] ath10k_pci 0000:01:00.0: Failed to find firmware-N.bin (N between
+>   2 and 6) from ath10k/QCA988X/hw2.0: -2
+> [    6.931698] ath10k_pci 0000:01:00.0: could not fetch firmware files (-2)
+> [    6.940417] ath10k_pci 0000:01:00.0: could not probe fw (-2)
+> 
+> so traceback was caused by missing changes in mtk pcie-driver not yet upstream, added Chuanjia Liu
+> 
+>>>
+>>>>> Tried with an mt7612e, this seems to work without any errors.
+>>>>>
+>>>>> so for mt7622/mt7623
+>>>>>
+>>>>> Tested-by: Frank Wunderlich <frank-w@public-files.de>
+>>>>
+>>>> We definitely need to understand the above.
+>>>
+>>> there is a hardware-bug which may cause this...afair i saw this with
+>>> the card in r64 with earlier Kernel-versions where other cards work
+>>> (like the mt7612e).
+>>
+>> I don't think a HW bug affecting PCI would cause what we are seeing
+>> here, unless it results in memory corruption.
+> 
+> 
+> [1] https://www.asiarf.com/shop/wifi-wlan/wifi_mini_pcie/ws2433-wifi-11ac-mini-pcie-module-manufacturer/
+> [2] grep -Rni 'msi' drivers/net/wireless/mediatek/mt76/mt76x2/
+> [3] https://patchwork.kernel.org/project/linux-mediatek/list/?series=372885
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
