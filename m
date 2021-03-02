@@ -2,205 +2,187 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9787A32A666
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Mar 2021 17:44:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A93CE32A664
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Mar 2021 17:44:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384276AbhCBOzQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 2 Mar 2021 09:55:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
+        id S1384242AbhCBOxV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 Mar 2021 09:53:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351206AbhCBNgn (ORCPT
+        with ESMTP id S1351190AbhCBNfM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 2 Mar 2021 08:36:43 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18312C061221;
-        Tue,  2 Mar 2021 05:24:54 -0800 (PST)
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1614691254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wODTS94r7rT1g5V5X1sVfi31G7C1dx6AeI3koBrFuog=;
-        b=pdbP0RvjlLwhT6MGt3O7gZlZ1Q1Vzt4kvyP2jb11vAJTSkByIgWXRKROCs34fG3dE0AwTY
-        opU3gtVisKtnKDi9H9VaqI9P0bhcuxW+ktoNqViJTmLm/vR+nRGAu3kprbB/6g5+VBDeOZ
-        ISR5jMmEubi9pF4n2AWS1K7EJF6nQqOZ7mmnpB1SEorJMS5eXC6YUniwsW+o9YMWNEx/Xj
-        xPN5r8bZzOsf6A9vVjHdFrwNDVoQDh1yYdiMi7tbkNI3fa/NGcpZ+fYwM9XNXow6mIJwhV
-        c6N2wQQqBhJ0Qe4yqQIr91zIX6QAKM27rCmbJHH1uo6HBm2Z4utmX+gBS6ubiw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1614691254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wODTS94r7rT1g5V5X1sVfi31G7C1dx6AeI3koBrFuog=;
-        b=PvCf8UGzPtfD1uoD5xPlqfOPLQKMHyVSQbbcSZy98K9oXrA3licqYHQYy8osgfMblhBHAa
-        hvqSY9FaOO6n64Aw==
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        Tue, 2 Mar 2021 08:35:12 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA62C06121D
+        for <linux-hyperv@vger.kernel.org>; Tue,  2 Mar 2021 05:34:16 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id o16so2770517wmh.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 02 Mar 2021 05:34:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZdRgbB/+xhU+BLrEYW5FodZNgcXrZTzEEyZSROXdiNs=;
+        b=AYlTlq4uW3iRg29N/HN0EX4sWg7+Le02hNVo3M/Yt9O05X/IY8T6751/c1wmEoCY0L
+         biLdWKDhwHXiyra5neWncvah9XDw0cZFZJYMMmR2gsOLFy14QaWJtQ2kIHUgb8mfRkSx
+         /6LKYUXahNk7VB85kjvAsvXfx364A2h5uMQWfrZ6YMhc35f0NceLI5S+fQ1oG2z19JHa
+         O9v7dj6PPis7ILJNbQNLncYb9BLabzUFOYX1exg4oixDpugNo8v9EqICPC1JiRgX2+JI
+         VRU8jezhLwGk8aPjOVf05vtVleyBrItTHD93svBy/b403AaUGdbqIfMBVCDNNC9s8I/Q
+         3q2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZdRgbB/+xhU+BLrEYW5FodZNgcXrZTzEEyZSROXdiNs=;
+        b=V/zguWCZODI29ogJ0BXQBaqkl0bFlYydPAPwdxa8n2DqjTDtpUJPPE6/66XDLjxZkn
+         t58oLAKc/4AO54BVKuTr6kqhhWVLS5Fm1Px5rAxhwIy+11l2cn0rcvU00DDXM2/pXRrC
+         spnPCN0vShCKIJFtGnxXNSY8ULGYIFeodANEbI548KcW9F2JYvXdDpZKUVCns3l1WPp0
+         6MKqJ28clcdM2Zl0f72q6Nxk1bgiYAs/YVvw1K8usBsl/605BdxJSbN1LGjZhKTn6eW/
+         rpa1MjqtKM0zGCB4W7QY0AqmD0Xv3idLa82pFNVKxsmDV37Ptk1sEAxFD2jWJhIIdBMA
+         qGCA==
+X-Gm-Message-State: AOAM531baou8i6jY7JpjEau24VU+KJwf70S1C52ZLadVY/Uz/jn3lnMP
+        q7Wrba8OX5bGhRzkZ9S7xhIcZQ==
+X-Google-Smtp-Source: ABdhPJyD6nClABQXADENbFNrOJPev1ANCgFMGR64xibMhC4BJsr7IRE+y2o+qXFj/OTvruUkwmPhYg==
+X-Received: by 2002:a7b:cb05:: with SMTP id u5mr4092039wmj.46.1614692054679;
+        Tue, 02 Mar 2021 05:34:14 -0800 (PST)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-144-192.adsl.proxad.net. [82.252.144.192])
+        by smtp.googlemail.com with ESMTPSA id w18sm2428636wrr.7.2021.03.02.05.34.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Mar 2021 05:34:14 -0800 (PST)
+Subject: Re: [PATCH v2 08/10] clocksource/drivers/hyper-v: Handle sched_clock
+ differences inline
+To:     Michael Kelley <mikelley@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Alistair Popple <alistair@popple.id.au>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Thomas Meyer <thomas@m3y3r.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Oleg Nesterov <oleg@redhat.com>, Wei Li <liwei391@huawei.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-um@lists.infradead.org,
-        linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: Re: [PATCH next v3 12/15] printk: introduce a kmsg_dump iterator
-In-Reply-To: <YD0tbVV+hZOFvWyB@alley>
-References: <20210225202438.28985-1-john.ogness@linutronix.de> <20210225202438.28985-13-john.ogness@linutronix.de> <YD0tbVV+hZOFvWyB@alley>
-Date:   Tue, 02 Mar 2021 14:20:51 +0100
-Message-ID: <87lfb5pu8c.fsf@jogness.linutronix.de>
+        KY Srinivasan <kys@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+References: <1614561332-2523-1-git-send-email-mikelley@microsoft.com>
+ <1614561332-2523-9-git-send-email-mikelley@microsoft.com>
+ <2c320759-4e0e-752f-f3e8-7594cc1d544f@linaro.org>
+ <MWHPR21MB1593812919AF130E61C2A1CFD7999@MWHPR21MB1593.namprd21.prod.outlook.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <6c0b3487-5f99-764c-6dc7-70454916cd57@linaro.org>
+Date:   Tue, 2 Mar 2021 14:34:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <MWHPR21MB1593812919AF130E61C2A1CFD7999@MWHPR21MB1593.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2021-03-01, Petr Mladek <pmladek@suse.com> wrote:
->> diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
->> index 532f22637783..5a64b24a91c2 100644
->> --- a/arch/powerpc/kernel/nvram_64.c
->> +++ b/arch/powerpc/kernel/nvram_64.c
->> @@ -72,8 +72,7 @@ static const char *nvram_os_partitions[] = {
->>  	NULL
->>  };
->>  
->> -static void oops_to_nvram(struct kmsg_dumper *dumper,
->> -			  enum kmsg_dump_reason reason);
->> +static void oops_to_nvram(enum kmsg_dump_reason reason);
->>  
->>  static struct kmsg_dumper nvram_kmsg_dumper = {
->>  	.dump = oops_to_nvram
->> @@ -642,11 +641,11 @@ void __init nvram_init_oops_partition(int rtas_partition_exists)
->>   * that we think will compress sufficiently to fit in the lnx,oops-log
->>   * partition.  If that's too much, go back and capture uncompressed text.
->>   */
->> -static void oops_to_nvram(struct kmsg_dumper *dumper,
->> -			  enum kmsg_dump_reason reason)
->> +static void oops_to_nvram(enum kmsg_dump_reason reason)
->>  {
->>  	struct oops_log_info *oops_hdr = (struct oops_log_info *)oops_buf;
->>  	static unsigned int oops_count = 0;
->> +	static struct kmsg_dump_iter iter;
->>  	static bool panicking = false;
->>  	static DEFINE_SPINLOCK(lock);
->>  	unsigned long flags;
->> @@ -681,13 +680,14 @@ static void oops_to_nvram(struct kmsg_dumper *dumper,
->>  		return;
->>  
->>  	if (big_oops_buf) {
->> -		kmsg_dump_get_buffer(dumper, false,
->> +		kmsg_dump_rewind(&iter);
->
-> It would be nice to get rid of the kmsg_dump_rewind(&iter) calls
-> in all callers.
->
-> A solution might be to create the following in include/linux/kmsg_dump.h
->
-> #define KMSG_DUMP_ITER_INIT(iter) {	\
-> 	.cur_seq = 0,			\
-> 	.next_seq = U64_MAX,		\
-> 	}
->
-> #define DEFINE_KMSG_DUMP_ITER(iter)	\
-> 	struct kmsg_dump_iter iter = KMSG_DUMP_ITER_INIT(iter)
+On 02/03/2021 02:38, Michael Kelley wrote:
+> From: Daniel Lezcano <daniel.lezcano@linaro.org> Sent: Monday, March 1, 2021 6:25 AM
+>>
+>> On 01/03/2021 02:15, Michael Kelley wrote:
+>>> While the Hyper-V Reference TSC code is architecture neutral, the
+>>> pv_ops.time.sched_clock() function is implemented for x86/x64, but not
+>>> for ARM64. Current code calls a utility function under arch/x86 (and
+>>> coming, under arch/arm64) to handle the difference.
+>>>
+>>> Change this approach to handle the difference inline based on whether
+>>> GENERIC_SCHED_CLOCK is present.  The new approach removes code under
+>>> arch/* since the difference is tied more to the specifics of the Linux
+>>> implementation than to the architecture.
+>>>
+>>> No functional change.
+>>>
+>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+>>> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+>>> ---
+>>
+>> [ ... ]
+>>
+>>> +/*
+>>> + * Reference to pv_ops must be inline so objtool
+>>> + * detection of noinstr violations can work correctly.
+>>> + */
+>>> +static __always_inline void hv_setup_sched_clock(void *sched_clock)
+>>> +{
+>>> +#ifdef CONFIG_GENERIC_SCHED_CLOCK
+>>> +	/*
+>>> +	 * We're on an architecture with generic sched clock (not x86/x64).
+>>> +	 * The Hyper-V sched clock read function returns nanoseconds, not
+>>> +	 * the normal 100ns units of the Hyper-V synthetic clock.
+>>> +	 */
+>>> +	sched_clock_register(sched_clock, 64, NSEC_PER_SEC);
+>>> +#else
+>>> +#ifdef CONFIG_PARAVIRT
+>>> +	/* We're on x86/x64 *and* using PV ops */
+>>> +	pv_ops.time.sched_clock = sched_clock;
+>>> +#endif
+>>> +#endif
+>>> +}
+>> Please refer to:
+>>
+>> Documentation/process/coding-style.rst
+>>
+>> Section 21)
+>>
+>> [ ... ]
+>>
+>> Prefer to compile out entire functions, rather than portions of
+>> functions or portions of expressions.
+>>
+>> [ ... ]
+>>
+> 
+> OK.  I'll rework the #ifdef in v3 of the patch set.  Is the following
+> the preferred approach?
 
-For this caller (arch/powerpc/kernel/nvram_64.c) and for
-(kernel/debug/kdb/kdb_main.c), kmsg_dump_rewind() is called twice within
-the dumper. So rewind will still be used there.
+Yes but with an indentation and comment to describe the section end.
 
-> Then we could do the following at the beginning of both
-> kmsg_dump_get_buffer() and kmsg_dump_get_line():
->
-> 	u64 clear_seq = latched_seq_read_nolock(&clear_seq);
->
-> 	if (iter->cur_seq < clear_seq)
-> 		cur_seq = clear_seq;
+eg.
 
-I suppose we need to add this part anyway, if we want to enforce that
-records before @clear_seq are not to be available for dumpers.
+#ifdef A
+#else
+# ifdef B
+...
+# else
+# endif /* B */
+#endif /* A */
 
-> I am not completely sure about next_seq:
->
->    + kmsg_dump_get_buffer() will set it for the next call anyway.
->      It reads the blocks of messages from the newest.
->
->    + kmsg_dump_get_line() wants to read the entire buffer anyway.
->      But there is a small risk of an infinite loop when new messages
->      are printed when dumping each line.
->
-> It might be better to avoid the infinite loop. We could do the following:
->
-> static void check_and_set_iter(struct kmsg_dump_iter)
+> #ifdef CONFIG_GENERIC_SCHED_CLOCK
+> static __always_inline void hv_setup_sched_clock(void *sched_clock)
 > {
-> 	if (iter->cur_seq == 0 && iter->next_seq == U64_MAX) {
-> 		kmsg_dump_rewind(iter);
+> 	sched_clock_register(sched_clock, 64 NSEC_PER_SEC);
 > }
->
-> and call this at the beginning of both kmsg_dump_get_buffer()
-> and kmsg_dump_get_line()
->
-> What do you think?
+> #else
+> #ifdef CONFIG_PARAVIRT
+> static __always_inline void hv_setup_sched_clock(void *sched_clock)
+> {
+> 	pv_ops.time.sched_clock = sched_clock:
+> }
+> #else
+> static __always_inline void hv_setup_sched_clock(void *sched_clock) {}
+> #endif
+> #endif
 
-On a technical level, it does not make any difference. It is pure
-cosmetic.
+Or
 
-Personally, I prefer the rewind directly before the kmsg_dump_get calls
-because it puts the initializer directly next to the user.
+#ifdef CONFIG_GENERIC_SCHED_CLOCK
+...
+#elif defined CONFIG_PARAVIRT
+...
+#else /* !CONFIG_GENERIC_SCHED_CLOCK && !CONFIG_PARAVIRT */
+...
+#endif /* CONFIG_GENERIC_SCHED_CLOCK */
 
-As an example to illustrate my view, I prefer:
 
-    for (i = 0; i < n; i++)
-        ...;
 
-instead of:
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-    int i = 0;
-
-    ...
-
-    for (; i < n; i++)
-        ...;
-
-Also, I do not really like the special use of 0/U64_MAX to identify
-special actions of the kmsg_dump_get functions.
-
-> Note that I do not resist on it. But it might make the API easier to
-> use from my POV.
-
-Since you do not resist, I will keep the API the same for v4. But I will
-add the @clear_seq check to the kmsg_dump_get functions.
-
-John Ogness
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
