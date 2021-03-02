@@ -2,163 +2,130 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 147BD32A667
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Mar 2021 17:44:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23F2C32B747
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Mar 2021 12:06:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384245AbhCBOzw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 2 Mar 2021 09:55:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58544 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239578AbhCBN44 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 2 Mar 2021 08:56:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1614693328; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2zHzG0WPsx3xKiPqPnMCcC9JpT/COf8SAqNxgYPDcwI=;
-        b=oL4v99bE7SLyOQloEmxBm5+k/xMRvTkk4pt/OG8qvLA6b9DdiRhtxaD+0nUB4F5N4OQcsj
-        Ic/6CdYJx/OPu8rlCqsNQGpM38HYhSfsHpGptacoyamFaVFqs7/yek3tHvqyg/+qcdd+DL
-        OfjwuhDgZRqJTg+9ADLiziF6AFqEqM8=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5718AAFF5;
-        Tue,  2 Mar 2021 13:55:28 +0000 (UTC)
-Date:   Tue, 2 Mar 2021 14:55:26 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S234069AbhCCKwr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 3 Mar 2021 05:52:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1449078AbhCBQEC (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 2 Mar 2021 11:04:02 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E86C061356;
+        Tue,  2 Mar 2021 08:03:16 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id g20so12294012plo.2;
+        Tue, 02 Mar 2021 08:03:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d4SmVPMKiOaafY7J/CIyGIRDsi1j+B4Mv91x//6bmzU=;
+        b=D3uaZJ+uI8cWtUSLALwm1aenlxmUQ2LQW9fPy5EoOJY3AVlqCjj4HPn1qunaRUl9FR
+         IxwLFIkHqU99ZQLxyZA6YEqGEsp3HNd9gFQnaILPzvhYBwx8DoQPaeL2R7xz1C8cDBpr
+         UuxHpOB4ySqwVfAQS4YP3+NINJOwNsJ8bD5n+MJ0+sZQIJ19RwduJcrfNaeqlXx39MhV
+         DZh/kWL3TGbLljXX36nwCw6YK+fgzSFrQkXDniJFyYkw90FWbJu9B7B7QeTz4PeU32/v
+         iKsSgDNsBHON9zagiLXm7Z5febn2j39nX/gDpbTrKvQ9eTv6jG5jQk7Wd1kTT/qjvMBA
+         ttZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d4SmVPMKiOaafY7J/CIyGIRDsi1j+B4Mv91x//6bmzU=;
+        b=LpzI6BiAEHOqm45KM8/bBCjURtB9fSibvUtcaYC4EcLnn/GcDDPfyG5Nd3bwtfLTU0
+         KIN6K07mVYw9QnFtqLGfa/H8Qwsrmu8HsI0/PZTJPCrxzMaufse2qdd2imVE7EB0ijYl
+         XCWo1/QPYjuFTAIutDCsmb/QMX49JjHxcQOzGun2aw+hJvGS7jP8g2vEaFlMmYAqRkj+
+         A20se2Qx6kgO1K8ZXuWyTgM3Soj94quW3QbMnYjoAfrXDgsuTtT6vaLGxV44WD00tX26
+         gpa+rQctAevt1iUp1eqLx7V3o54dFxB7XKQfWq+RD4JTLD6nlZUhx/WWE8xxhOUr+g/s
+         /QzA==
+X-Gm-Message-State: AOAM530WZUVWtUrCqJKgHcnhLJr24m1EB9WsYZQDT83dlDl2j0JQdECA
+        QDMcwob2C52weTPOnCwpm64=
+X-Google-Smtp-Source: ABdhPJyBBfZPiS5stkHqGOo/Crjxg70pPquR1pYJCP4fsQGEGW+qyvr3JhHs3nhlYiRGBssLtnPkxA==
+X-Received: by 2002:a17:902:8b86:b029:e5:bef6:56b0 with SMTP id ay6-20020a1709028b86b02900e5bef656b0mr921109plb.76.1614700995852;
+        Tue, 02 Mar 2021 08:03:15 -0800 (PST)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
+        by smtp.gmail.com with ESMTPSA id d7sm11231196pfh.73.2021.03.02.08.03.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Mar 2021 08:03:14 -0800 (PST)
+Subject: Re: [EXTERNAL] Re: [RFC PATCH 12/12] HV/Storvsc: Add bounce buffer
+ support for Storvsc
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Alistair Popple <alistair@popple.id.au>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Thomas Meyer <thomas@m3y3r.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Oleg Nesterov <oleg@redhat.com>, Wei Li <liwei391@huawei.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-um@lists.infradead.org,
-        linux-hyperv@vger.kernel.org, linux-mtd@lists.infradead.org,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: Re: [PATCH next v3 12/15] printk: introduce a kmsg_dump iterator
-Message-ID: <YD5DzldNpnzuECaA@alley>
-References: <20210225202438.28985-1-john.ogness@linutronix.de>
- <20210225202438.28985-13-john.ogness@linutronix.de>
- <YD0tbVV+hZOFvWyB@alley>
- <87lfb5pu8c.fsf@jogness.linutronix.de>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>
+References: <20210228150315.2552437-1-ltykernel@gmail.com>
+ <20210228150315.2552437-13-ltykernel@gmail.com>
+ <20210301065454.GA3669027@infradead.org>
+ <9a5d3809-f1e1-0f4a-8249-9ce1c6df6453@gmail.com>
+ <SN4PR2101MB088022E836AEC0838266A8C6C09A9@SN4PR2101MB0880.namprd21.prod.outlook.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <726ac959-de27-62f8-bcd1-d194d685f16b@gmail.com>
+Date:   Wed, 3 Mar 2021 00:03:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87lfb5pu8c.fsf@jogness.linutronix.de>
+In-Reply-To: <SN4PR2101MB088022E836AEC0838266A8C6C09A9@SN4PR2101MB0880.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue 2021-03-02 14:20:51, John Ogness wrote:
-> On 2021-03-01, Petr Mladek <pmladek@suse.com> wrote:
-> >> diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
-> >> index 532f22637783..5a64b24a91c2 100644
-> >> --- a/arch/powerpc/kernel/nvram_64.c
-> >> +++ b/arch/powerpc/kernel/nvram_64.c
-> >> @@ -681,13 +680,14 @@ static void oops_to_nvram(struct kmsg_dumper *dumper,
-> >>  		return;
-> >>  
-> >>  	if (big_oops_buf) {
-> >> -		kmsg_dump_get_buffer(dumper, false,
-> >> +		kmsg_dump_rewind(&iter);
-> >
-> > It would be nice to get rid of the kmsg_dump_rewind(&iter) calls
-> > in all callers.
-> >
-> > A solution might be to create the following in include/linux/kmsg_dump.h
-> >
-> > Then we could do the following at the beginning of both
-> > kmsg_dump_get_buffer() and kmsg_dump_get_line():
-> >
-> > 	u64 clear_seq = latched_seq_read_nolock(&clear_seq);
-> >
-> > 	if (iter->cur_seq < clear_seq)
-> > 		cur_seq = clear_seq;
-> 
-> I suppose we need to add this part anyway, if we want to enforce that
-> records before @clear_seq are not to be available for dumpers.
+Hi Sunil:
+      Thanks for your review.
 
-Yup.
+On 3/2/2021 3:45 AM, Sunil Muthuswamy wrote:
+>> Hi Christoph:
+>>        Thanks a lot for your review. There are some reasons.
+>>        1) Vmbus drivers don't use DMA API now.
+> What is blocking us from making the Hyper-V drivers use the DMA API's? They
+> will be a null-op generally, when there is no bounce buffer support needed.
+> 
+>>        2) Hyper-V Vmbus channel ring buffer already play bounce buffer
+>> role for most vmbus drivers. Just two kinds of packets from
+>> netvsc/storvsc are uncovered.
+> How does this make a difference here?
+> 
+>>        3) In AMD SEV-SNP based Hyper-V guest, the access physical address
+>> of shared memory should be bounce buffer memory physical address plus
+>> with a shared memory boundary(e.g, 48bit) reported Hyper-V CPUID. It's
+>> called virtual top of memory(vTom) in AMD spec and works as a watermark.
+>> So it needs to ioremap/memremap the associated physical address above
+>> the share memory boundary before accessing them. swiotlb_bounce() uses
+>> low end physical address to access bounce buffer and this doesn't work
+>> in this senario. If something wrong, please help me correct me.
+>>
+> There are alternative implementations of swiotlb on top of the core swiotlb
+> API's. One option is to have Hyper-V specific swiotlb wrapper DMA API's with
+> the custom logic above.
 
-> > It might be better to avoid the infinite loop. We could do the following:
-> >
-> > static void check_and_set_iter(struct kmsg_dump_iter)
-> > {
-> > 	if (iter->cur_seq == 0 && iter->next_seq == U64_MAX) {
-> > 		kmsg_dump_rewind(iter);
-> > }
-> >
-> > and call this at the beginning of both kmsg_dump_get_buffer()
-> > and kmsg_dump_get_line()
-> >
-> > What do you think?
-> 
-> On a technical level, it does not make any difference. It is pure
-> cosmetic.
+Agree. Hyper-V should have its own DMA ops and put Hyper-V bounce buffer
+code in DMA API callback. For vmbus channel ring buffer, it doesn't need 
+additional bounce buffer and there are two options. 1) Not call DMA API 
+around them 2) pass a flag in DMA API to notify Hyper-V DMA callback
+and not allocate bounce buffer for them.
 
-Yup.
-
-> Personally, I prefer the rewind directly before the kmsg_dump_get calls
-> because it puts the initializer directly next to the user.
 > 
-> As an example to illustrate my view, I prefer:
+>> Thanks.
+>>
+>>
+>> On 3/1/2021 2:54 PM, Christoph Hellwig wrote:
+>>> This should be handled by the DMA mapping layer, just like for native
+>>> SEV support.
+> I agree with Christoph's comment that in principle, this should be handled using
+> the DMA API's
 > 
->     for (i = 0; i < n; i++)
->         ...;
-> 
-> instead of:
-> 
->     int i = 0;
-> 
->     ...
-> 
->     for (; i < n; i++)
->         ...;
-> 
-> Also, I do not really like the special use of 0/U64_MAX to identify
-> special actions of the kmsg_dump_get functions.
-
-Fair enough.
-
-> > Note that I do not resist on it. But it might make the API easier to
-> > use from my POV.
-> 
-> Since you do not resist, I will keep the API the same for v4. But I will
-> add the @clear_seq check to the kmsg_dump_get functions.
-
-Go for it.
-
-Best Regards,
-Petr
