@@ -2,228 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 859E132C6CC
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Mar 2021 02:08:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AAEF32C6CF
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Mar 2021 02:09:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442187AbhCDAaG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 3 Mar 2021 19:30:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24755 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1574294AbhCCRWy (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 3 Mar 2021 12:22:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614792085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CAwyU1BHNDoyV8EO5GioXHZdHdDn0xPfe1nQ/O6geG4=;
-        b=HVXR3K4JJS1sQgRk1XfmALVGaClIPicCf1B7iUma8gYuCqna9ca+/VXGWyUFo3G9gGfAr+
-        0CWMef/EHszm26Du5m/S5BoKAzEDtMkq2AdvLCoVoWC0bIAn+MXujQ7YUZJ6lgb+ltFThq
-        ZnJseAW0jt2/ifPKhtNuwfb3i7VIEn0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-528-fu-3oGKIO0-xKjDg1z9lvQ-1; Wed, 03 Mar 2021 12:21:14 -0500
-X-MC-Unique: fu-3oGKIO0-xKjDg1z9lvQ-1
-Received: by mail-ed1-f70.google.com with SMTP id u1so10604255edt.4
-        for <linux-hyperv@vger.kernel.org>; Wed, 03 Mar 2021 09:21:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=CAwyU1BHNDoyV8EO5GioXHZdHdDn0xPfe1nQ/O6geG4=;
-        b=YOffRLA42gnh/iIDau/gNNlWUI9wX8ZIdI/qO5ikX3Y9bApWuPRA3NsQPDgJI1BPce
-         g8/5imWYwJTYGerrNY2MJaH3zRhDLe1jPRWvGk+X5TQIDnZv3b1vuNv3VHTTm/PzcdAc
-         44J5DWLn41DZDQ9o3ta7XH5TW8Q8oKuYCt7jdCoBdWEqvrSJxZJ6kAVStLycMuZF71gC
-         iuuDSpGnUagoFaQpoO+MDlZipIub+HMcOm/NxBu28KPz7b649aZJYIrLSClyrSkKQvRR
-         Mpzi1v1RIql1TFm894+EYg1zyNbVTCvnC49/JMdhn5LscP+Jrhf/LzdCm8kKQNW8Yylc
-         J+/A==
-X-Gm-Message-State: AOAM531J8o0B2QKvev/74e2Us0l9xVD8wwo9mVpWff8QtdQxY86VXxIv
-        mgpUfK/g/r9NgAReYG2bXSEK/FiQTzLgFqBZx0WqhNlEp59u9wBUH301suWxn+URNTfkZPUqWwQ
-        nvmR6/oaqnJz1PCgJT8tKl6+0
-X-Received: by 2002:aa7:cd94:: with SMTP id x20mr332362edv.53.1614792073127;
-        Wed, 03 Mar 2021 09:21:13 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwty1xIzXyywNnOr8oKLUrlKOHFnVxaaKcLshQU3Al/qp0TSfgK2IbqBaBG6Pranmy85FHGOw==
-X-Received: by 2002:aa7:cd94:: with SMTP id x20mr332331edv.53.1614792072969;
-        Wed, 03 Mar 2021 09:21:12 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id o8sm22625148edj.79.2021.03.03.09.21.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Mar 2021 09:21:12 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.lendacky@amd.com, brijesh.singh@amd.com,
-        sunilmut@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com
-Subject: Re: [RFC PATCH 5/12] HV: Add ghcb hvcall support for SNP VM
-In-Reply-To: <20210228150315.2552437-6-ltykernel@gmail.com>
-References: <20210228150315.2552437-1-ltykernel@gmail.com>
- <20210228150315.2552437-6-ltykernel@gmail.com>
-Date:   Wed, 03 Mar 2021 18:21:11 +0100
-Message-ID: <87mtvkcfw8.fsf@vitty.brq.redhat.com>
+        id S1451119AbhCDAaH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 3 Mar 2021 19:30:07 -0500
+Received: from mail-mw2nam10on2124.outbound.protection.outlook.com ([40.107.94.124]:11623
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1386532AbhCCS3J (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 3 Mar 2021 13:29:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cSdGdtlQjR6JEi7ypIFN6k1AvrYT6P+JMXxXr3lGFlSU946xiMOVmdXM72a3X3NEJYgyfeut//CodKN1YgUoBd1Dvoqug3Ih3PmSys8oBadhlOahXBjycd/wYQ5gZzqOsHsNobAphngxw4dlWP+PlFVQGWS/VsKus7KoU7Ml0rfD3C5j7FYtOlKnrBd5eqltL3ZWBOk/Qck8i9ruj2CuThLIMUNzGq1enG4s6pIZadqkPwYwOZGwvPIqqKiA5ZNFayspExhAAQX3d2ZFouiP+tMkZbNgMeqUlMxHSpc1AnSP0wC0xZbO9myeqGP0eAD+emD36dEWfb16MCiSmXSsLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PCaTJYv1PGUgqsmnq3TTdSNdQwwQAp00eGMpIvWuD/4=;
+ b=DYAc6e0mhebZmu7rWFQEyayB86tL8yxgEnFN9ZLAbYSe4yXBWXtEyf7j/qOYF27qssVN4KyynFoWiPfm5IizCuwjGtn+TN6GJ/UXCq52jNRJ07XhNHWnEYedKJRVuhcx/TbLMoDdmZl5xkzit/qbVQN2Nqhk8eQiGBCXp2/kD3yutaPVYZu4lIqXuFXrK+Tht4NdtZuEm/7CS8dQeRFYyA5431XN2pCZQm24iIXOhlMnd9mjjTtMir4E9kzsRnr5hUY19yiczES7b9QHhniO7IVK8qpSCiEV8NZSuxxu63SAN+PqqhW49UhWf560I6CsNsC1toNkPCL1I5j24cPBbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PCaTJYv1PGUgqsmnq3TTdSNdQwwQAp00eGMpIvWuD/4=;
+ b=FBHnbiFbY2Z84ZS7wmiNv4kzGdFK9n6lAx7oDx5Vdxwi8OyZUMHPXTTQUPEACh2Cb+e5sr+jrvCv5UPBS0EvIYzGhJTTy9u642ZMuRrWB9tZB2+DWMM+pUMSzSXxA942A+s/V9BQwBBs2G3nUReOlFAArZLfufB04t6OvL0xJBI=
+Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
+ (2603:10b6:803:51::33) by SN6PR2101MB1664.namprd21.prod.outlook.com
+ (2603:10b6:805:62::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.4; Wed, 3 Mar
+ 2021 18:28:16 +0000
+Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
+ ([fe80::c01:cceb:3ece:dd61]) by SN4PR2101MB0880.namprd21.prod.outlook.com
+ ([fe80::c01:cceb:3ece:dd61%8]) with mapi id 15.20.3912.011; Wed, 3 Mar 2021
+ 18:28:16 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "will@kernel.org" <will@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH v8 1/6] arm64: hyperv: Add Hyper-V hypercall and register
+ access utilities
+Thread-Topic: [PATCH v8 1/6] arm64: hyperv: Add Hyper-V hypercall and register
+ access utilities
+Thread-Index: AQHXDwVm7IanFUbz6UeLdWLFekPIfapxZzMggAEuN+A=
+Date:   Wed, 3 Mar 2021 18:28:16 +0000
+Message-ID: <SN4PR2101MB0880BC201B64BF4274539951C0989@SN4PR2101MB0880.namprd21.prod.outlook.com>
+References: <1614649360-5087-1-git-send-email-mikelley@microsoft.com>
+ <1614649360-5087-2-git-send-email-mikelley@microsoft.com>
+ <SN4PR2101MB0880C47188DAC6446BF5E156C0989@SN4PR2101MB0880.namprd21.prod.outlook.com>
+In-Reply-To: <SN4PR2101MB0880C47188DAC6446BF5E156C0989@SN4PR2101MB0880.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2601:602:9400:570:3132:9d16:d3c9:b7bf]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 89f19a60-e025-4c73-1d2b-08d8de721cbb
+x-ms-traffictypediagnostic: SN6PR2101MB1664:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SN6PR2101MB1664A8FCB4087A3A79B2BCA7C0989@SN6PR2101MB1664.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: y2cFjlAptUahYzVR93P+YgX5ikbhIK4nK10hWWNrb/k8XuDfg7mxeuOJMa2r3KNG6WnKVy50aku4IOKieGZF8cgmfbe9wRGAWzg8N28wpn44jbruLbfSUhomyqCeWBAXaoTc0xeYg4H2ekDOrYLlX/cpEeFnvOKE/4xzruYtWEvLSniB4BE52RQTJKceIrOadZsoGud73Gi4SBfexj5r3qqUrCwOFkw9vVd9CU2WJQDbwIwIdIBQuAR1pyvY6uG10Yd6vD1mGDpBDoyjS/N1gmVPQF65u4mW9hsrIqwLD8n4CemrQ+8Be4GuQ3EYnu46Xp0DQNvQoWQ4jItef6gv46h5aEOnEYh5vl3AxHqY9eVDC1Qszgkcs7kZbQSByRTIjS+Lg9XOzODtiO6H0OwbSPS1SmphWWco57PD2QbcIxYhNoTVi3mhjM1aj3ky4i3NIjwTndH2VJ/17C3OddkmjNZtskrJKMNeE04+d3V67N7VFTS9fVp2jReIB6UA9kHJ2O6OhtxTwm9bqnTZsBK6lg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR2101MB0880.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(8676002)(86362001)(71200400001)(76116006)(7416002)(2940100002)(316002)(33656002)(66476007)(7696005)(9686003)(5660300002)(4326008)(66446008)(64756008)(110136005)(107886003)(55016002)(186003)(8990500004)(82950400001)(10290500003)(52536014)(4744005)(6636002)(82960400001)(478600001)(66556008)(6506007)(54906003)(66946007)(2906002)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?uQCGJNRpXkkIWGeEcnhDYyuVD5TrsWO1ZXwGn+8d3CNIJ1f4CPj/e781qvLp?=
+ =?us-ascii?Q?I6B4xsm7rXZpiIYQSe31jNmWxShHfFnIhXZVDYWrpsl1wi+mJNfY89UsurEE?=
+ =?us-ascii?Q?cMR5yLiAg0ysWQoaX88bDGTLdJiyymvnM+QgSkaWWreJ+SDJ215vSnYz1wqo?=
+ =?us-ascii?Q?IZLLWxbjQtTNVczKlG0NVuQy5PttpH8vv/kWBtRayp33jdQCwwaPj7IpdxHI?=
+ =?us-ascii?Q?1+dI3ShzbwpM6GltWqIioktThdhlWQ33pyv9eGziRU1b9M3aO6E4EEaXMSl9?=
+ =?us-ascii?Q?tVefep1WQ7hNg3yWdWHN/Yl5GtZ6xrW4CVjNUXHd9siI9MNd4qDLefsJ6mEF?=
+ =?us-ascii?Q?z46seKeSa+9Y1I4AdtlNUSRvb1AJeqdy0DnmpaoSNihJ426Xv4L+ZUHVd/vp?=
+ =?us-ascii?Q?jZ2nP5DKD2t4ByDkKyjRLPAMO+qvcVg3s47YyF/wlA5q8RwFhRDPufL8vkxf?=
+ =?us-ascii?Q?2mfRLkRoCFFsEjxFH0LBP4UDk1p5f/97WuNSBdYE00OWAjrmpK+AAlYhnRDU?=
+ =?us-ascii?Q?fupQ2UnUeNlb8/WoABfw1AhZm0te/VJt0/b2GS0p8WuMy6ptmgZPT8nyUqic?=
+ =?us-ascii?Q?8u3LfAFpBqmoblkfGKJyzvPqbLt/9GvsnBSXlfpcfd1jieVoEa6MYcHKe4r0?=
+ =?us-ascii?Q?Gjda18oI0U+j9Bv4U+S6my1EuUnYSQG3CZQV7RqH3WgL1O8ajWHDE4Qw8Vvq?=
+ =?us-ascii?Q?vpuEMPKraAEM1lyg8CIGlZtDAYlf2pJwDS11oNLuLipUYn5rx4oN/LThAOIz?=
+ =?us-ascii?Q?a/WC/3/ihGSzmUi+CADBFgTyy0OSXte3hvK5X3/+J3eojRl06eSSYrEycGCX?=
+ =?us-ascii?Q?wW2/RRG2gdpHTeZS+ghz0WjEBEx0bttAnw9A4O6hmDx//YKAgHnWn9XyvUBu?=
+ =?us-ascii?Q?pdxRCu6LsOJmT5l55fpwqSPO0ZJBSprc8RXlAkQOLr1fa7tR6PQHwumsdFoq?=
+ =?us-ascii?Q?Tt9jgfUlZww4T8EEabXW/w2zsI7wHEUda/ppOAiwF65OruHMmRDvEgS7edyh?=
+ =?us-ascii?Q?xkKAAJE1200sTFsGiDVZuefCwJTNDfWAK4tA3kQ28XIW+QjNYeQaijDcVoA+?=
+ =?us-ascii?Q?JbYyqtjoGqMhuxi1MGvzZuhxBo5ftxsLw2OklR0092ILnGyJZJHSBvPViZCM?=
+ =?us-ascii?Q?Ry+P1bPEtZPCSDOSOxQkdiuGMhtdVA4j4oUApnC7rzO+vFtwz5TAIVmG7PLe?=
+ =?us-ascii?Q?9g17Qp8grWmSJmXWbPSdf3fsN/fkxM4SQBVxNJrfAlss2LNYLBAbys+YZTcC?=
+ =?us-ascii?Q?+U6QKLYXfsg3i7dhjGzkMdpJJyWO3bDsQMRCzu/IRjfP+o/wX59sQysorrlm?=
+ =?us-ascii?Q?mQEDSXdvO2zUFKrLGhQxvftmmBgY5kCo27WJHkCFJ+GVdJaghW6TiIUcoBd6?=
+ =?us-ascii?Q?oXpqrGl4rMCvwGpCMAArzOMpCsV9?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR2101MB0880.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89f19a60-e025-4c73-1d2b-08d8de721cbb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2021 18:28:16.1748
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wNitiuIIw0D0gu7dz9HbOQp52A46aaQiqrPzo17fefdK+bJU869z/hSOd2cYJv3CJc6jPN9Q/DqGKHzrNr05zgkML9Dc4DMsR4BNG3PpyEM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1664
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Tianyu Lan <ltykernel@gmail.com> writes:
+> > +
+> > +	/*
+> > +	 * Allocate a power of 2 size so alignment to that size is
+> > +	 * guaranteed, since the hypercall input and output areas
+> > +	 * must not cross a page boundary.
+> > +	 */
+> > +	input =3D kzalloc(roundup_pow_of_two(sizeof(input->header) +
+> > +				sizeof(input->element[0])), GFP_ATOMIC);
+> > +	output =3D kmalloc(roundup_pow_of_two(sizeof(*output)), GFP_ATOMIC);
+> > +
+> Check for null from these malloc routines? Here and in other places.
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->
-> Hyper-V provides ghcb hvcall to handle VMBus
-> HVCALL_SIGNAL_EVENT and HVCALL_POST_MESSAGE
-> msg in SNP Isolation VM. Add such support.
->
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  arch/x86/hyperv/ivm.c           | 69 +++++++++++++++++++++++++++++++++
->  arch/x86/include/asm/mshyperv.h |  1 +
->  drivers/hv/connection.c         |  6 ++-
->  drivers/hv/hv.c                 |  8 +++-
->  4 files changed, 82 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> index 4332bf7aaf9b..feaabcd151f5 100644
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -14,8 +14,77 @@
->  
->  union hv_ghcb {
->  	struct ghcb ghcb;
-> +	struct {
-> +		u64 hypercalldata[509];
-> +		u64 outputgpa;
-> +		union {
-> +			union {
-> +				struct {
-> +					u32 callcode        : 16;
-> +					u32 isfast          : 1;
-> +					u32 reserved1       : 14;
-> +					u32 isnested        : 1;
-> +					u32 countofelements : 12;
-> +					u32 reserved2       : 4;
-> +					u32 repstartindex   : 12;
-> +					u32 reserved3       : 4;
-> +				};
-> +				u64 asuint64;
-> +			} hypercallinput;
-> +			union {
-> +				struct {
-> +					u16 callstatus;
-> +					u16 reserved1;
-> +					u32 elementsprocessed : 12;
-> +					u32 reserved2         : 20;
-> +				};
-> +				u64 asunit64;
-> +			} hypercalloutput;
-> +		};
-> +		u64 reserved2;
-> +	} hypercall;
->  } __packed __aligned(PAGE_SIZE);
->  
-> +u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size)
-> +{
-> +	union hv_ghcb *hv_ghcb;
-> +	void **ghcb_base;
-> +	unsigned long flags;
-> +
-> +	if (!ms_hyperv.ghcb_base)
-> +		return -EFAULT;
-> +
-> +	local_irq_save(flags);
-> +	ghcb_base = (void **)this_cpu_ptr(ms_hyperv.ghcb_base);
-> +	hv_ghcb = (union hv_ghcb *)*ghcb_base;
-> +	if (!hv_ghcb) {
-> +		local_irq_restore(flags);
-> +		return -EFAULT;
-> +	}
-> +
-> +	memset(hv_ghcb, 0x00, HV_HYP_PAGE_SIZE);
-> +	hv_ghcb->ghcb.protocol_version = 1;
-> +	hv_ghcb->ghcb.ghcb_usage = 1;
-> +
-> +	hv_ghcb->hypercall.outputgpa = (u64)output;
-> +	hv_ghcb->hypercall.hypercallinput.asuint64 = 0;
-> +	hv_ghcb->hypercall.hypercallinput.callcode = control;
-> +
-> +	if (input_size)
-> +		memcpy(hv_ghcb->hypercall.hypercalldata, input, input_size);
-> +
-> +	VMGEXIT();
-> +
-> +	hv_ghcb->ghcb.ghcb_usage = 0xffffffff;
-> +	memset(hv_ghcb->ghcb.save.valid_bitmap, 0,
-> +	       sizeof(hv_ghcb->ghcb.save.valid_bitmap));
-> +
-> +	local_irq_restore(flags);
-> +
-> +	return hv_ghcb->hypercall.hypercalloutput.callstatus;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_ghcb_hypercall);
-> +
->  void hv_ghcb_msr_write(u64 msr, u64 value)
->  {
->  	union hv_ghcb *hv_ghcb;
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index f624d72b99d3..c8f66d269e5b 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -274,6 +274,7 @@ void hv_sint_rdmsrl_ghcb(u64 msr, u64 *value);
->  void hv_signal_eom_ghcb(void);
->  void hv_ghcb_msr_write(u64 msr, u64 value);
->  void hv_ghcb_msr_read(u64 msr, u64 *value);
-> +u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size);
->  
->  #define hv_get_synint_state_ghcb(int_num, val)			\
->  	hv_sint_rdmsrl_ghcb(HV_X64_MSR_SINT0 + int_num, val)
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index c83612cddb99..79bca653dce9 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -442,6 +442,10 @@ void vmbus_set_event(struct vmbus_channel *channel)
->  
->  	++channel->sig_events;
->  
-> -	hv_do_fast_hypercall8(HVCALL_SIGNAL_EVENT, channel->sig_event);
-> +	if (hv_isolation_type_snp())
-> +		hv_ghcb_hypercall(HVCALL_SIGNAL_EVENT, &channel->sig_event,
-> +				NULL, sizeof(u64));
-> +	else
-> +		hv_do_fast_hypercall8(HVCALL_SIGNAL_EVENT, channel->sig_event);
-
-vmbus_set_event() is a hotpath so I'd suggest we introduce a static
-branch instead of checking hv_isolation_type_snp() every time.
-
->  }
->  EXPORT_SYMBOL_GPL(vmbus_set_event);
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index 28e28ccc2081..6c64a7fd1ebd 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -60,7 +60,13 @@ int hv_post_message(union hv_connection_id connection_id,
->  	aligned_msg->payload_size = payload_size;
->  	memcpy((void *)aligned_msg->payload, payload, payload_size);
->  
-> -	status = hv_do_hypercall(HVCALL_POST_MESSAGE, aligned_msg, NULL);
-> +	if (hv_isolation_type_snp())
-> +		status = hv_ghcb_hypercall(HVCALL_POST_MESSAGE,
-> +				(void *)aligned_msg, NULL,
-> +				sizeof(struct hv_input_post_message));
-> +	else
-> +		status = hv_do_hypercall(HVCALL_POST_MESSAGE,
-> +				aligned_msg, NULL);
-
-and, if we are to introduce a static branch, we could use it here
-(though it doesn't matter much for messages).
-
->  
->  	/* Preemption must remain disabled until after the hypercall
->  	 * so some other thread can't get scheduled onto this cpu and
-
--- 
-Vitaly
-
+Between, is there a plan to setup a percpu input/output page for hypercall
+input/output on ARM (like we do for x64)? I didn't check the specific size =
+requirement
+for this particular call, but, that generally will remove the need for thes=
+e
+allocations.
