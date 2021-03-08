@@ -2,92 +2,153 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B2EC32F68C
-	for <lists+linux-hyperv@lfdr.de>; Sat,  6 Mar 2021 00:23:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B822330D8E
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 13:29:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbhCEXW7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 5 Mar 2021 18:22:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229792AbhCEXWd (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 5 Mar 2021 18:22:33 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332DFC06175F;
-        Fri,  5 Mar 2021 15:22:33 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id w18so3133294pfu.9;
-        Fri, 05 Mar 2021 15:22:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fHpv+pgq3I0EDiT7Iioa9BihwLKN302mKc5e39MRmOo=;
-        b=OVae/4bOUUoCw5+7oD10N0HuOobiSZyscs0zxxcVmtfJBAHsOpB4RiqWzR10w97HPT
-         ++4FaEqk851UAQ4QUXTGzuQFlQaZ3Eb9fUUJlwblj0a1wHqQ7dGUNDWotxoTy2w9oQwZ
-         X33DyR7wGG4spwyW8+4iNUikQrgdWY68nUmfcp7BfA1dlz21aHsgKnsyLd8O46WbxRMW
-         pIcCE5Rmuaai/0pePmrzV0xzyWPSW9JhBpW0yFlO8hH4LdYKrvO9GGT03B5AeZ8i6vwK
-         kYByEXNd3tN6mLApHEKWy4tz61mKhINJThIBQHGUw+KWbv4lE6OX6VPqMs7cu8G+KGHz
-         lNyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fHpv+pgq3I0EDiT7Iioa9BihwLKN302mKc5e39MRmOo=;
-        b=CgcitS/SxC+KGT7BATeqfpfZfspxJuAM3+PnuQHzqBZclzT4AFdy9N5IJhAOCjjFPq
-         WdwoLL57j5k/aiQcU0ie0fUo80gI6h/W/VyjnsN9b85UKWDlYXMqd7Crv4JQWG8DlaWF
-         oJ4d9Z1sUpACRUPcqQqDRhJEtIv8m8AWmOcGr95ig3hz9IfcsmwZVbapl3hDUL5mx4+G
-         tMIz8hZ3NNH+oQh6+IcqRDFerbw35L2Gf6G9nPj0E0C7ZEAi3ZBfLfcaT5soA3YeOZXB
-         cNuv/UMMRIr6k2W6Q8P42c6SikJ8qtMGBKuH/od+xTYRTa8/D9jbaEPZkPX0QteQoLzX
-         J7Cg==
-X-Gm-Message-State: AOAM530DAnx9NXfOUHE3IVZ/7NY+/TehTFf6dtmur0ne00dK1F/FZz7w
-        vEFINf/SLaP9SnwCS1Ymesfc+miJOAU=
-X-Google-Smtp-Source: ABdhPJx8I70rJk+WRvA7XZgMxTpFVnhFzNaq7lDcMsfVFt5vUjt7QXrsABfv/jpz+6YiIKBz2yecyg==
-X-Received: by 2002:a63:d70e:: with SMTP id d14mr8359293pgg.291.1614986552377;
-        Fri, 05 Mar 2021 15:22:32 -0800 (PST)
-Received: from vm-123.slytdz3n204uxoeeqq2h5obquh.xx.internal.cloudapp.net ([52.151.19.72])
-        by smtp.gmail.com with ESMTPSA id a19sm3178431pjh.39.2021.03.05.15.22.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Mar 2021 15:22:31 -0800 (PST)
-From:   "Melanie Plageman (Microsoft)" <melanieplageman@gmail.com>
-To:     linux-scsi@vger.kernel.org
-Cc:     andres@anarazel.de, haiyangz@microsoft.com, jejb@linux.ibm.com,
-        kys@microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
-        mikelley@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        "Melanie Plageman (Microsoft)" <melanieplageman@gmail.com>
-Subject: [PATCH v1] scsi: storvsc: Cap cmd_per_lun at can_queue
-Date:   Fri,  5 Mar 2021 23:21:51 +0000
-Message-Id: <20210305232151.1531-1-melanieplageman@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        id S230342AbhCHM3Y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Mar 2021 07:29:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40372 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229901AbhCHM2x (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 8 Mar 2021 07:28:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1615206531; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=Pj0+lsoXMYSDviFMNu3CfGDulAqhBZd0duxurV0jt/k=;
+        b=ullbjypHk4a2OSdXRZBXV7LzXx1wRPq0P3DUkuf3g00TxnX2Kvmikn2mvZgT5yu1bK+GT9
+        Pb18L02feaPu+UmwjPoQNvBkbpJDORl8H6ArZ/XWAobYvxZmsd1kHtOeWcA3mN+bVvHI/I
+        evXt2ltyGZ054ZgETkOoGM4IjjxGEog=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EE520ADCD;
+        Mon,  8 Mar 2021 12:28:50 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     Juergen Gross <jgross@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v5 00/12] x86: major paravirt cleanup
+Date:   Mon,  8 Mar 2021 13:28:32 +0100
+Message-Id: <20210308122844.30488-1-jgross@suse.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The scsi_device->queue_depth is set to Scsi_Host->cmd_per_lun during
-allocation.
+This is a major cleanup of the paravirt infrastructure aiming at
+eliminating all custom code patching via paravirt patching.
 
-Cap cmd_per_lun at can_queue to avoid dispatch errors.
+This is achieved by using ALTERNATIVE instead, leading to the ability
+to give objtool access to the patched in instructions.
 
-Signed-off-by: Melanie Plageman (Microsoft) <melanieplageman@gmail.com>
----
- drivers/scsi/storvsc_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+In order to remove most of the 32-bit special handling from pvops the
+time related operations are switched to use static_call() instead.
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 6bc5453cea8a..d7953a6e00e6 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1946,6 +1946,8 @@ static int storvsc_probe(struct hv_device *device,
- 				(max_sub_channels + 1) *
- 				(100 - ring_avail_percent_lowater) / 100;
- 
-+	scsi_driver.cmd_per_lun = min_t(u32, scsi_driver.cmd_per_lun, scsi_driver.can_queue);
-+
- 	host = scsi_host_alloc(&scsi_driver,
- 			       sizeof(struct hv_host_device));
- 	if (!host)
+At the end of this series all paravirt patching has to do is to
+replace indirect calls with direct ones. In a further step this could
+be switched to static_call(), too.
+
+Changes in V5:
+- patches 1-5 of V4 dropped, as already applied
+- new patches 1+3
+- fixed patch 2
+- split V4 patch 8 into patches 4+5
+- use flag byte instead of negative feature bit for "not feature"
+
+Changes in V4:
+- fixed several build failures
+- removed objtool patch, as objtool patches are in tip now
+- added patch 1 for making usage of static_call easier
+- even more cleanup
+
+Changes in V3:
+- added patches 7 and 12
+- addressed all comments
+
+Changes in V2:
+- added patches 5-12
+
+Juergen Gross (12):
+  staticcall: move struct static_call_key definition to
+    static_call_types.h
+  x86/paravirt: switch time pvops functions to use static_call()
+  x86/alternative: drop feature parameter from ALTINSTR_REPLACEMENT()
+  x86/alternative: support not-feature
+  x86/alternative: support ALTERNATIVE_TERNARY
+  x86: add new features for paravirt patching
+  x86/paravirt: remove no longer needed 32-bit pvops cruft
+  x86/paravirt: simplify paravirt macros
+  x86/paravirt: switch iret pvops to ALTERNATIVE
+  x86/paravirt: add new macros PVOP_ALT* supporting pvops in
+    ALTERNATIVEs
+  x86/paravirt: switch functions with custom code to ALTERNATIVE
+  x86/paravirt: have only one paravirt patch function
+
+ arch/arm/include/asm/paravirt.h               |  14 +-
+ arch/arm/kernel/paravirt.c                    |   9 +-
+ arch/arm64/include/asm/paravirt.h             |  14 +-
+ arch/arm64/kernel/paravirt.c                  |  13 +-
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/entry/entry_32.S                     |   4 +-
+ arch/x86/entry/entry_64.S                     |   2 +-
+ arch/x86/include/asm/alternative-asm.h        |  10 +
+ arch/x86/include/asm/alternative.h            |  28 ++-
+ arch/x86/include/asm/cpufeature.h             |   2 +
+ arch/x86/include/asm/cpufeatures.h            |   2 +
+ arch/x86/include/asm/irqflags.h               |   7 +-
+ arch/x86/include/asm/mshyperv.h               |   2 +-
+ arch/x86/include/asm/paravirt.h               | 167 +++++++-------
+ arch/x86/include/asm/paravirt_types.h         | 210 +++++++-----------
+ arch/x86/kernel/Makefile                      |   3 +-
+ arch/x86/kernel/alternative.c                 |  37 ++-
+ arch/x86/kernel/asm-offsets.c                 |   7 -
+ arch/x86/kernel/cpu/vmware.c                  |   5 +-
+ arch/x86/kernel/kvm.c                         |   2 +-
+ arch/x86/kernel/kvmclock.c                    |   2 +-
+ arch/x86/kernel/paravirt-spinlocks.c          |   9 +
+ arch/x86/kernel/paravirt.c                    |  78 ++-----
+ arch/x86/kernel/paravirt_patch.c              |  99 ---------
+ arch/x86/kernel/tsc.c                         |   2 +-
+ arch/x86/xen/enlighten_pv.c                   |   4 +-
+ arch/x86/xen/time.c                           |  11 +-
+ drivers/xen/time.c                            |   3 +-
+ include/linux/static_call.h                   |  18 --
+ include/linux/static_call_types.h             |  18 ++
+ tools/include/linux/static_call_types.h       |  18 ++
+ tools/objtool/arch/x86/include/arch/special.h |   6 +-
+ 32 files changed, 339 insertions(+), 468 deletions(-)
+ delete mode 100644 arch/x86/kernel/paravirt_patch.c
+
 -- 
-2.20.1
+2.26.2
 
