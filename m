@@ -2,98 +2,72 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CEAE331378
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 17:33:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC08C3313BC
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 17:48:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230125AbhCHQdT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Mar 2021 11:33:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230078AbhCHQcw (ORCPT
+        id S229972AbhCHQsS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Mar 2021 11:48:18 -0500
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:44130 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229813AbhCHQsH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Mar 2021 11:32:52 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6ABC06174A;
-        Mon,  8 Mar 2021 08:32:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ctgZEZ6SYMXYKEHtwrX/ccObphSH4Tanp4Hu/eZWjco=; b=O6GPVLkfkFCoPo4u770nad6OVA
-        ehvFbr/4Mm4vWAjFwqwO5SUsDEau/mYHQZ2gkZ8bdv6assDl5XHprfvP70WyYSlLZqB6F19bheizF
-        nWPQ2Fl72q4it0NkKb6zdcBFPwO70OKu3vEzT2CGrnUjfYkNffqBcBu5G1k4oM0zmDsfKpRv9mKKH
-        whBUzj7rXE+Y3QCrs42HCNj7eF65Dc+sIk2yQUI7l5GArDZPP9GU2hC1IbAcptmuQ8kurX/Qn02eX
-        G65NDEmgPjiiWczczc82QFlc/DRBUkXZOonwrC3aGjytll0ncMWktJG6plrfBKKjODkeclkevvDPx
-        zKEDNnOw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lJImq-00FhSp-Nd; Mon, 08 Mar 2021 16:31:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6098301A32;
-        Mon,  8 Mar 2021 17:31:14 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AED8F23662BE6; Mon,  8 Mar 2021 17:31:14 +0100 (CET)
-Date:   Mon, 8 Mar 2021 17:31:14 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, virtualization@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Deep Shah <sdeep@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v5 00/12] x86: major paravirt cleanup
-Message-ID: <YEZRUh6sYS+8Rm+I@hirez.programming.kicks-ass.net>
-References: <20210308122844.30488-1-jgross@suse.com>
+        Mon, 8 Mar 2021 11:48:07 -0500
+Received: by mail-wr1-f45.google.com with SMTP id h98so12134713wrh.11;
+        Mon, 08 Mar 2021 08:48:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U1adqiv4BHRB40tWnfMansEdoQfQQILbbIeOdC9S6tk=;
+        b=FwXkidD3iKmwPKHnszqnr+lZfTDenzXay83XPPyVKgsuEIJM38eCyomN4Suc3Cc5/U
+         Lhj8OwlQOnoSJxYVBlt904I38FvhU6RQpMAX4hydSYWTW73xszAsT1OLgb23Xoen9CQB
+         0R75xhYB0iRYCag9KqsqTIhVCXA7EuRuhgV8PXpQW1pFiovbt7dqRs/e4QSfMI0vGwHJ
+         1+onJzqaiPl7JfzM9oB6gh3OvjulbvX9Tw0Pai4+ZLWgNzg6CB/WYz3h9EepqHqKWvO7
+         q2ukNvKW+2Mk4MX59uCvA650xPxOThaChNAPpeVaWPGRlWleKfvp43pgyspiwybAxYVH
+         ozUw==
+X-Gm-Message-State: AOAM530YjsvoNh4ymn4OFltAsSqWvt3tHUVYPr7Q+VXSp2Gp9ieiZJ7x
+        zjcPr9wzMr3jwEkDr+B958o=
+X-Google-Smtp-Source: ABdhPJwl5jsEF+UPUa+28gAA6fYemoVBWxjguS13D/KVUrDj7mt+Ui8LdJgIi90qXpb/S2MAeQOnGA==
+X-Received: by 2002:a5d:63d2:: with SMTP id c18mr23676794wrw.277.1615222085838;
+        Mon, 08 Mar 2021 08:48:05 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id a8sm15336375wmm.46.2021.03.08.08.48.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Mar 2021 08:48:05 -0800 (PST)
+Date:   Mon, 8 Mar 2021 16:48:04 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     sthemmin@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        daniel.lezcano@linaro.org, arnd@arndb.de,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v3 00/10] Refactor arch specific Hyper-V code
+Message-ID: <20210308164804.eehva2snlwxxworc@liuwe-devbox-debian-v2>
+References: <1614721102-2241-1-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210308122844.30488-1-jgross@suse.com>
+In-Reply-To: <1614721102-2241-1-git-send-email-mikelley@microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Mar 08, 2021 at 01:28:32PM +0100, Juergen Gross wrote:
-> This is a major cleanup of the paravirt infrastructure aiming at
-> eliminating all custom code patching via paravirt patching.
-> 
-> This is achieved by using ALTERNATIVE instead, leading to the ability
-> to give objtool access to the patched in instructions.
-> 
-> In order to remove most of the 32-bit special handling from pvops the
-> time related operations are switched to use static_call() instead.
-> 
-> At the end of this series all paravirt patching has to do is to
-> replace indirect calls with direct ones. In a further step this could
-> be switched to static_call(), too.
+On Tue, Mar 02, 2021 at 01:38:12PM -0800, Michael Kelley wrote:
+[...]
+> Michael Kelley (10):
+>   Drivers: hv: vmbus: Move Hyper-V page allocator to arch neutral code
+>   x86/hyper-v: Move hv_message_type to architecture neutral module
+>   Drivers: hv: Redo Hyper-V synthetic MSR get/set functions
+>   Drivers: hv: vmbus: Move hyperv_report_panic_msg to arch neutral code
+>   Drivers: hv: vmbus: Handle auto EOI quirk inline
+>   Drivers: hv: vmbus: Move handling of VMbus interrupts
+>   clocksource/drivers/hyper-v: Handle vDSO differences inline
+>   clocksource/drivers/hyper-v: Handle sched_clock differences inline
+>   clocksource/drivers/hyper-v: Set clocksource rating based on Hyper-V
+>     feature
+>   clocksource/drivers/hyper-v: Move handling of STIMER0 interrupts
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Applied to hyperv-next.
 
-I've rebased my objtool/retpoline branch on top of this, will post
-if/when this hits tip. Negative alternative works like a charm.
+Wei.
