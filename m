@@ -2,93 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1CE03311B2
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 16:10:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CEAE331378
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 17:33:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229829AbhCHPJv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Mar 2021 10:09:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44264 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231283AbhCHPJ3 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Mar 2021 10:09:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1615216168; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RHCVpD0EOCWBr4CM42VDdFRC20Sv2OvcSQKI4oBR4WQ=;
-        b=SaBGiuJH7cduvyTTcI+RG2JjQktgD14lFw9EnpYlsPN2C7K+17NrvYz5FyASkVVnIgOUYN
-        +kK0dQIfGNaN4EONLEjJGI5netP1nGsyeOX6ULd53kyHRvCliMWlQbMithU17Uqe3j5h0p
-        +r0W3a8FhYIp0uDbypux7b88gkU35xY=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 45672AE15;
-        Mon,  8 Mar 2021 15:09:28 +0000 (UTC)
-Date:   Mon, 8 Mar 2021 16:09:24 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        id S230125AbhCHQdT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Mar 2021 11:33:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230078AbhCHQcw (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 8 Mar 2021 11:32:52 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6ABC06174A;
+        Mon,  8 Mar 2021 08:32:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ctgZEZ6SYMXYKEHtwrX/ccObphSH4Tanp4Hu/eZWjco=; b=O6GPVLkfkFCoPo4u770nad6OVA
+        ehvFbr/4Mm4vWAjFwqwO5SUsDEau/mYHQZ2gkZ8bdv6assDl5XHprfvP70WyYSlLZqB6F19bheizF
+        nWPQ2Fl72q4it0NkKb6zdcBFPwO70OKu3vEzT2CGrnUjfYkNffqBcBu5G1k4oM0zmDsfKpRv9mKKH
+        whBUzj7rXE+Y3QCrs42HCNj7eF65Dc+sIk2yQUI7l5GArDZPP9GU2hC1IbAcptmuQ8kurX/Qn02eX
+        G65NDEmgPjiiWczczc82QFlc/DRBUkXZOonwrC3aGjytll0ncMWktJG6plrfBKKjODkeclkevvDPx
+        zKEDNnOw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lJImq-00FhSp-Nd; Mon, 08 Mar 2021 16:31:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6098301A32;
+        Mon,  8 Mar 2021 17:31:14 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AED8F23662BE6; Mon,  8 Mar 2021 17:31:14 +0100 (CET)
+Date:   Mon, 8 Mar 2021 17:31:14 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Juergen Gross <jgross@suse.com>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
         Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Meyer <thomas@m3y3r.de>, linux-um@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, Kees Cook <keescook@chromium.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Alistair Popple <alistair@popple.id.au>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Wei Li <liwei391@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        linuxppc-dev@lists.ozlabs.org,
-        kgdb-bugreport@lists.sourceforge.net,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: Re: [PATCH next v4 00/15] printk: remove logbuf_lock
-Message-ID: <YEY+JBoW6TByix30@alley>
-References: <20210303101528.29901-1-john.ogness@linutronix.de>
- <YD+seF3dQUoPcZP7@alley>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v5 00/12] x86: major paravirt cleanup
+Message-ID: <YEZRUh6sYS+8Rm+I@hirez.programming.kicks-ass.net>
+References: <20210308122844.30488-1-jgross@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YD+seF3dQUoPcZP7@alley>
+In-Reply-To: <20210308122844.30488-1-jgross@suse.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed 2021-03-03 16:34:19, Petr Mladek wrote:
-> On Wed 2021-03-03 11:15:13, John Ogness wrote:
-> > Hello,
-> > 
-> > Here is v4 of a series to remove @logbuf_lock, exposing the
-> > ringbuffer locklessly to both readers and writers. v3 is
-> > here [0].
+On Mon, Mar 08, 2021 at 01:28:32PM +0100, Juergen Gross wrote:
+> This is a major cleanup of the paravirt infrastructure aiming at
+> eliminating all custom code patching via paravirt patching.
 > 
-> The series look ready. I am going to push it into printk/linux.git
-> the following week unless anyone speaks against it in the meantime.
+> This is achieved by using ALTERNATIVE instead, leading to the ability
+> to give objtool access to the patched in instructions.
+> 
+> In order to remove most of the 32-bit special handling from pvops the
+> time related operations are switched to use static_call() instead.
+> 
+> At the end of this series all paravirt patching has to do is to
+> replace indirect calls with direct ones. In a further step this could
+> be switched to static_call(), too.
 
-The series is committed in printk/linux.git, branch printk-rework.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Best Regards,
-Petr
+I've rebased my objtool/retpoline branch on top of this, will post
+if/when this hits tip. Negative alternative works like a charm.
