@@ -2,31 +2,44 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4351C33170A
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 20:14:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94C5D33174B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 20:30:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbhCHTOZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Mar 2021 14:14:25 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:36510 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229972AbhCHTOP (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Mar 2021 14:14:15 -0500
-Received: from [10.0.0.178] (c-67-168-106-253.hsd1.wa.comcast.net [67.168.106.253])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6710F20B39C5;
-        Mon,  8 Mar 2021 11:14:14 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6710F20B39C5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1615230854;
-        bh=N4Dh77U8THvf4/n+VSeZX/Uz/6x8W5d9Rg7t3ycRQpU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Krqjw6c5xrrZM9a6Qg/aw8qb7yR276hQ/+l4Xaft5kroGZH0jeTJ63oiuxxy5ynUR
-         B2YXSJG/mmnpUHxP1ov9ITKPdCqLj8qAtH4TBTRzi22avCu4GerzjxsTX5VxsdIdFh
-         uzymPny+i+UxNibl4atgTv5bxTAnc2Azj54PJvqI=
-Subject: Re: [RFC PATCH 08/18] virt/mshv: map and unmap guest memory
-To:     Michael Kelley <mikelley@microsoft.com>,
+        id S229701AbhCHTaT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Mar 2021 14:30:19 -0500
+Received: from mail-dm6nam11on2133.outbound.protection.outlook.com ([40.107.223.133]:13144
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231189AbhCHTaD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 8 Mar 2021 14:30:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ctFA295ZAdLXr8jnruPagrCdKuVJp6J4EmeKwgnmwJ3VnREih4aksBVEbI8+e+m9x0ncYNQNneVclkFm5a4CKURRM554/SENoZbcGEoUq5jG5t55syuwsCnhp3jue1CoeFf9CCoT9ljU40p0EYv7eocWNzkkvkXmpKHvraIoGZ2ygVQtNFWpuC+tZ1tgMEMrhWAcpb5fzU14gYVpfy7lBxrs6zK97uPPsC9TTreRj8YESENkc+aPYXkeQRbtq7rA4jLK4JjSlyMjKklNjl7gFam69Y6Trg7XmKC9ePof7ekN+UETpO/fXcfrcnWlLvFCcugA8L08m8vJUYxZO8kDWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RlDwD6BXKnsB6s8NgtwD7MQrln557hxLP3nwn0LKIo0=;
+ b=ghR5xrHnetG7SJyJ29hdpSDhZR1+Y1vuCUaCFXbcfyNzH4zOQu448FP3iLVfdQdBbOyqbOhMChAJwFrL6yRnbp8Xw3VyjypC3m8m8aEUO5ZjP2TRcGEdvDFVbJyE1LEUlXJLWuNoVrOWwYDWhLI6vAUfUib0WQn/c60HYFIhpQEHBt+W06SzUCausgfONCQiXEXf/nj2qTaNJ+RueCNzfP1fRDdHLGzVafEsp7PTMrzOGlHyGNPUSftikDIDCcrBqFj42C4T7iFK5LJFnofdqX8HJl9k4rNmOzOFnTQT+LbyXHg5SS9YJ/+/wjbs7me80nnmw1JDn8LzAgBh2gLlXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RlDwD6BXKnsB6s8NgtwD7MQrln557hxLP3nwn0LKIo0=;
+ b=gDg+RyaANXUz24vkd6V2JMZsweLQ1rTxLYOz5f2cGKlepxNT9+QsC9q03pGgo5J22LxoCUPhHEjWsm5EMoJ1PEpjkFk4GDIXZpL1iNeK4nfENTXeeLa1wnX7qyalFABT/d8Dcmed7GVDo21PPuq6eUxXCpPmZkpO6lky+qs1jl0=
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
+ by MW2PR2101MB1770.namprd21.prod.outlook.com (2603:10b6:302:8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.16; Mon, 8 Mar
+ 2021 19:30:01 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3955.005; Mon, 8 Mar 2021
+ 19:30:01 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Cc:     "virtualization@lists.linux-foundation.org" 
+CC:     "virtualization@lists.linux-foundation.org" 
         <virtualization@lists.linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
@@ -34,694 +47,254 @@ Cc:     "virtualization@lists.linux-foundation.org"
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Lillian Grassin-Drake <Lillian.GrassinDrake@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>
+Subject: RE: [RFC PATCH 08/18] virt/mshv: map and unmap guest memory
+Thread-Topic: [RFC PATCH 08/18] virt/mshv: map and unmap guest memory
+Thread-Index: AQHWv52Toe1LRVK2KUqT7h/r2T7yX6pMTc3AgC7RaoCAAAF2UA==
+Date:   Mon, 8 Mar 2021 19:30:00 +0000
+Message-ID: <MWHPR21MB15934FDC8DBE4088E8227AAFD7939@MWHPR21MB1593.namprd21.prod.outlook.com>
 References: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
  <1605918637-12192-9-git-send-email-nunodasneves@linux.microsoft.com>
  <MWHPR21MB1593A5DAB7387BDF58B99056D78F9@MWHPR21MB1593.namprd21.prod.outlook.com>
-From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Message-ID: <d63330fa-de83-85de-c8ec-74cc90d680e3@linux.microsoft.com>
-Date:   Mon, 8 Mar 2021 11:14:13 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
-MIME-Version: 1.0
-In-Reply-To: <MWHPR21MB1593A5DAB7387BDF58B99056D78F9@MWHPR21MB1593.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+ <d63330fa-de83-85de-c8ec-74cc90d680e3@linux.microsoft.com>
+In-Reply-To: <d63330fa-de83-85de-c8ec-74cc90d680e3@linux.microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-03-08T19:29:59Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9fc2ecc7-f73d-4047-97d8-5bf7841fa740;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: linux.microsoft.com; dkim=none (message not signed)
+ header.d=none;linux.microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fa3556d9-e92c-4c26-f2fd-08d8e2689126
+x-ms-traffictypediagnostic: MW2PR2101MB1770:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB17703B6460FB137903B0B949D7939@MW2PR2101MB1770.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1013;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eGl5J88eU7AfyEN69lcjrDct54siwEMkcsThTdwqwFcqwZ06V729Z8juz2IQoNVDk6ywt4JZbdudg9ThGv9Ker+57Q5XMEjXZ9RBUFkipjEWoyHh10/394Fyk3z2pWrtCo2jUk9hSAsi78w7Va5HtD90nsVr4ygEu8i3HVplFEpzRjkDLo6Mf5WmOLC8e3QdOJBMqOX2R/JzU6Ks4XI+sTpaL91Ie5xrJe4iR0iSgiF9tTeiaPERpkReuZDm8UGCoSACriYpjDrgKCm8EnBVuD3tBjeQKeNSMPGhx1zGRNSVHAIJ2qF55RARyQUXiVJzOH3cavTKdASTPv1mDuOLeU04oRLdoBABtcQcrGtLYwwWRyZeKlXm90jLi0/EQJ4vm32C71Cg8c2Igge9PyKwd6j+pXPYj+r/MSGwWj8ndLRcQYR/GsaHWD9PDUaxBaf1wRJX/VKnzpnlZ7/y4o0t2EbrQLzMZ7iRqOCi2a8zshrGPo6YHaqSqHlcKSAWso9/rKCjT+8i29WovGyqVRZipGYkQmptADDsrbNXeQ3pDbTVuJs68b2R4MjA6nagM3N0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(396003)(366004)(346002)(83380400001)(8990500004)(55016002)(7696005)(9686003)(2906002)(54906003)(66476007)(33656002)(478600001)(82960400001)(82950400001)(107886003)(26005)(186003)(6506007)(53546011)(66446008)(64756008)(66946007)(110136005)(8676002)(8936002)(76116006)(5660300002)(316002)(86362001)(4326008)(10290500003)(66556008)(71200400001)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?dHA2Z2xIamhJODBwT2hmN0llN3pUbkFWYTVXMmgrY2FQb0dkcHBqVUJ2dFRo?=
+ =?utf-8?B?ckxIMzBCelpESk5WUGdJMWhVbXFPeFZoekVxdWtTemRPQWFaaGFMSHV6dWov?=
+ =?utf-8?B?R0RYWVBEcGh1eGltT2MxY1Nud2NQSGQ4NUkxTE1SU1g3VzNoYk80TEhwWW5z?=
+ =?utf-8?B?djA5c0hlRGpESFI5bHN2TkNvUEJpblhlRG1weFg2RmN0NUlPcUgxWWpSNnVs?=
+ =?utf-8?B?YmZTRndpWEQ2K1U1Z1pKMFBRSHI2MjArVjdUSU5zeVY4VkdpZEdiZVBGcDNV?=
+ =?utf-8?B?dkVHRlE4a044MUJNQ3F0TWc0M1pkd09CNEZJU1lOck0vNVo5cFRjQnhHTi9h?=
+ =?utf-8?B?ckhFQTB3MUpLanorN1pSdmgxV2RURm5DTkdybzdLQ2xhY05YT2Z3SHMweWRX?=
+ =?utf-8?B?KzQwUlNTVWY2MUxzUzFUUXVmNisxV3M0dkpCL0VIeXlZTkR2cU9DZVdTR3B4?=
+ =?utf-8?B?ZTBtR1pQazFoYm5kQjdQL05EQVpOcENTbnExa1F5VHhLbUE5ZlozYlJmQytq?=
+ =?utf-8?B?QTZ6bCtTTktickQ0ZGxBVFI0TE9STlFicm5kTTRLaUVFUTBiYWFXbVZldEYr?=
+ =?utf-8?B?MGFVazdTcXk3Qk04Qk12U1ZyaTIxUnVYS0JxU240ejZxazJlRjAxeGVoZm92?=
+ =?utf-8?B?V3hOek0zR3kvcDBuZVBzSlNqeEhKZVhseFphM0ZuZGV3WU9aVktjeFJFSGlG?=
+ =?utf-8?B?RDhGU2dWQmpLWDVYWThvOW9WTk8ramR0dTFVVFhjSkdWOURMWHZaVHlVbUtw?=
+ =?utf-8?B?dENHSE82WitBZ1JDa1JnS05xSFRJaHhqc2drSUJUaERpdmdhcGw4cm5lOFRj?=
+ =?utf-8?B?S3JTYm5Ba1QwSFp2Vk1PazlRZWN3RGhoNXFrVnBwcUtKZ2c1WTVnclBMQUVk?=
+ =?utf-8?B?TnpNRDBiUHNIZ2txZ2VVRkJCbWQ3L2YwMzd2Z1UrLzZZMEhBM1Y1WERlZnBT?=
+ =?utf-8?B?NHFhTU1HOENNZlQ0d2FpcTZLNXJRRzdOVndHQWR2a242cStuaUkzL09Sdlkv?=
+ =?utf-8?B?eExsbFp3ZU1LdDhaSTZSbnNLVHhLU2o4MnZ0eGU4LzNqQXJDRlM2VFZuTjNW?=
+ =?utf-8?B?blRJS3ZKMk5HRVVJOWMwM0FqYW1qU2lmMGQzNGlqZ2xJWFh0eHk0WDdVU1Qw?=
+ =?utf-8?B?WUxmU29Oa1poa0d6bWZkT09ZRnlTZ241aWJ5aHZ2T0VVWjJOYjhpcFdPTllG?=
+ =?utf-8?B?WmFqQWZmR05FU0hXRGFDcFRMcnkyYkNxdm9HUmVMVVZSUFRuVS85eWJKTmg4?=
+ =?utf-8?B?YUxHaFhIQ0U1VnJZeEQxdnV3NVFVQnhNT1VYRDlEN2VqdzFsOXpmZjZsU3Zy?=
+ =?utf-8?B?YnVZTWtZWU0xbXlsTThNZzlSc1dSUkloYWFuUXFmU1dGYVMxU3NsN2xQVGJ2?=
+ =?utf-8?B?aEVMa095cUc2K2pKeUJmNjFnYS9oRnF0VWdtb25GVzJFNlJiVlkxbmNpVjVk?=
+ =?utf-8?B?Q25RZjZZU2sxYVpDMHVJL3pucHhiYU5WVSt4S2RBem9JSWxyYnBpYUlTQXNq?=
+ =?utf-8?B?R2dVWEtZc2tYRk40Vk91bFdrNzlpSmhXRGFVVGZVS2d0RlBFVk1MZjJ6NHBQ?=
+ =?utf-8?B?SnpaZGk3UTl1Ymc1ZmZTTzJXSzVEOWo0eDIxWnkrZ1RlNGxpMjRUSmZONGFu?=
+ =?utf-8?B?SitVbEkzbzhwN24yZGpXdTVhdnFBV283eWRoeVF5REtGME5ZSTdLNkdFeGR2?=
+ =?utf-8?B?OTNSZk5md3RzZlM2RDZUd2REWnJLL2lrNzNmQ1UvTkV6S3RMVDl1ZDRwckVK?=
+ =?utf-8?Q?qNKytNp3OckaP+m2aW3A4ex5Um4tkW1N4Xh1F9n?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa3556d9-e92c-4c26-f2fd-08d8e2689126
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2021 19:30:01.1251
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Hfbx0yNGOP2zN+duv//+RjR5s2/UXfKtFz7Geax+vIOA4NauObnxDKwqjV9Qm5tkb2xLWXe8C0vJYcGHANczDhKn3laJfU1/oi/0TfudqKE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1770
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2/8/2021 11:45 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, November 20, 2020 4:30 PM
->>
->> Introduce ioctls for mapping and unmapping regions of guest memory.
->>
->> Uses a table of memory 'slots' similar to KVM, but the slot
->> number is not visible to userspace.
->>
->> For now, this simple implementation requires each new mapping to be
->> disjoint - the underlying hypercalls have no such restriction, and
->> implicitly overwrite any mappings on the pages in the specified regions.
->>
->> Co-developed-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
->> Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> ---
->>  Documentation/virt/mshv/api.rst        |  15 ++
->>  include/asm-generic/hyperv-tlfs.h      |  15 ++
->>  include/linux/mshv.h                   |  14 ++
->>  include/uapi/asm-generic/hyperv-tlfs.h |   9 +
->>  include/uapi/linux/mshv.h              |  15 ++
->>  virt/mshv/mshv_main.c                  | 322 ++++++++++++++++++++++++-
->>  6 files changed, 388 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/virt/mshv/api.rst b/Documentation/virt/mshv/api.rst
->> index ce651a1738e0..530efc29d354 100644
->> --- a/Documentation/virt/mshv/api.rst
->> +++ b/Documentation/virt/mshv/api.rst
->> @@ -72,3 +72,18 @@ it is open - this ioctl can only be called once per open.
->>  This ioctl creates a guest partition, returning a file descriptor to use as a
->>  handle for partition ioctls.
->>
->> +3.3 MSHV_MAP_GUEST_MEMORY and MSHV_UNMAP_GUEST_MEMORY
->> +-----------------------------------------------------
->> +:Type: partition ioctl
->> +:Parameters: struct mshv_user_mem_region
->> +:Returns: 0 on success
->> +
->> +Create a mapping from a region of process memory to a region of physical memory
->> +in a guest partition.
-> 
-> Just to be super explicit:
-> 
-> Create a mapping from memory in the user space of the calling process (running
-> in the root partition) to a region of guest physical memory in a guest partition.
-> 
-
-Thanks, yes this is clearer.
-
->> +
->> +Mappings must be disjoint in process address space and guest address space.
->> +
->> +Note: In the current implementation, this memory is pinned to stop the pages
->> +being moved by linux and subsequently clobbered by the hypervisor. So the region
->> +is backed by physical memory.
-> 
-> Again to be super explicit:
-> 
-> Note: In the current implementation, this memory is pinned to real physical
-> memory to stop the pages being moved by Linux in the root partition,
-> and subsequently being clobbered by the hypervisor.  So the region is backed
-> by real physical memory.
-> 
-
-Yep, I'll update this also.
-
->> +
->> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
->> index 2a49503b7396..6e5072e29897 100644
->> --- a/include/asm-generic/hyperv-tlfs.h
->> +++ b/include/asm-generic/hyperv-tlfs.h
->> @@ -149,6 +149,8 @@ struct ms_hyperv_tsc_page {
->>  #define HVCALL_GET_PARTITION_ID			0x0046
->>  #define HVCALL_DEPOSIT_MEMORY			0x0048
->>  #define HVCALL_WITHDRAW_MEMORY			0x0049
->> +#define HVCALL_MAP_GPA_PAGES			0x004b
->> +#define HVCALL_UNMAP_GPA_PAGES			0x004c
->>  #define HVCALL_CREATE_VP			0x004e
->>  #define HVCALL_GET_VP_REGISTERS			0x0050
->>  #define HVCALL_SET_VP_REGISTERS			0x0051
->> @@ -827,4 +829,17 @@ struct hv_delete_partition {
->>  	u64 partition_id;
->>  };
->>
->> +struct hv_map_gpa_pages {
->> +	u64 target_partition_id;
->> +	u64 target_gpa_base;
->> +	u32 map_flags;
-> 
-> Is there a reserved 32 bit field here?  Hyper-V always aligns
-> things on 64 bit boundaries.
-> 
-
-The hypervisor code uses implicit padding here, and I copied it directly.
-Yes, it should be 8 byte aligned. I will insert a padding field and add __packed.
-
->> +	u64 source_gpa_page_list[];
->> +};
->> +
->> +struct hv_unmap_gpa_pages {
->> +	u64 target_partition_id;
->> +	u64 target_gpa_base;
->> +	u32 unmap_flags;
-> 
-> Is there a reserved 32 bit field here?  Hyper-V always aligns
-> things on 64 bit boundaries.
-> 
-
-ditto as above.
-
->> +};
-> 
-> Add __packed to the above two structs after sorting out
-> the alignment issues.
-> 
-
-Yep.
-
->> +
->>  #endif
->> diff --git a/include/linux/mshv.h b/include/linux/mshv.h
->> index fc4f35089b2c..91a742f37440 100644
->> --- a/include/linux/mshv.h
->> +++ b/include/linux/mshv.h
->> @@ -7,13 +7,27 @@
->>   */
->>
->>  #include <linux/spinlock.h>
->> +#include <linux/mutex.h>
->>  #include <uapi/linux/mshv.h>
->>
->>  #define MSHV_MAX_PARTITIONS		128
->> +#define MSHV_MAX_MEM_REGIONS		64
->> +
->> +struct mshv_mem_region {
->> +	u64 size; /* bytes */
->> +	u64 guest_pfn;
->> +	u64 userspace_addr; /* start of the userspace allocated memory */
->> +	struct page **pages;
->> +};
->>
->>  struct mshv_partition {
->>  	u64 id;
->>  	refcount_t ref_count;
->> +	struct mutex mutex;
->> +	struct {
->> +		u32 count;
->> +		struct mshv_mem_region slots[MSHV_MAX_MEM_REGIONS];
->> +	} regions;
->>  };
->>
->>  struct mshv {
->> diff --git a/include/uapi/asm-generic/hyperv-tlfs.h b/include/uapi/asm-generic/hyperv-
->> tlfs.h
->> index 7a858226a9c5..e7b09b9f00de 100644
->> --- a/include/uapi/asm-generic/hyperv-tlfs.h
->> +++ b/include/uapi/asm-generic/hyperv-tlfs.h
->> @@ -12,4 +12,13 @@
->>  #define HV_PARTITION_CREATION_FLAG_GPA_SUPER_PAGES_ENABLED          BIT(4)
->>  #define HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED                    BIT(13)
->>
->> +/* HV Map GPA (Guest Physical Address) Flags */
->> +#define HV_MAP_GPA_PERMISSIONS_NONE     0x0
->> +#define HV_MAP_GPA_READABLE             0x1
->> +#define HV_MAP_GPA_WRITABLE             0x2
->> +#define HV_MAP_GPA_KERNEL_EXECUTABLE    0x4
->> +#define HV_MAP_GPA_USER_EXECUTABLE      0x8
->> +#define HV_MAP_GPA_EXECUTABLE           0xC
->> +#define HV_MAP_GPA_PERMISSIONS_MASK     0xF
->> +
->>  #endif
->> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
->> index 4f8da9a6fde2..47be03ef4e86 100644
->> --- a/include/uapi/linux/mshv.h
->> +++ b/include/uapi/linux/mshv.h
->> @@ -18,10 +18,25 @@ struct mshv_create_partition {
->>  	struct hv_partition_creation_properties partition_creation_properties;
->>  };
->>
->> +/*
->> + * Mappings can't overlap in GPA space or userspace
->> + * To unmap, these fields must match an existing mapping
->> + */
->> +struct mshv_user_mem_region {
->> +	__u64 size;		/* bytes */
->> +	__u64 guest_pfn;
->> +	__u64 userspace_addr;	/* start of the userspace allocated memory */
->> +	__u32 flags;		/* ignored on unmap */
->> +};
->> +
->>  #define MSHV_IOCTL 0xB8
->>
->>  /* mshv device */
->>  #define MSHV_REQUEST_VERSION	_IOW(MSHV_IOCTL, 0x00, __u32)
->>  #define MSHV_CREATE_PARTITION	_IOW(MSHV_IOCTL, 0x01, struct mshv_create_partition)
->>
->> +/* partition device */
->> +#define MSHV_MAP_GUEST_MEMORY	_IOW(MSHV_IOCTL, 0x02, struct mshv_user_mem_region)
->> +#define MSHV_UNMAP_GUEST_MEMORY	_IOW(MSHV_IOCTL, 0x03, struct mshv_user_mem_region)
->> +
->>  #endif
->> diff --git a/virt/mshv/mshv_main.c b/virt/mshv/mshv_main.c
->> index 162a1bb42a4a..ce480598e67f 100644
->> --- a/virt/mshv/mshv_main.c
->> +++ b/virt/mshv/mshv_main.c
->> @@ -60,6 +60,10 @@ static struct miscdevice mshv_dev = {
->>
->>  #define HV_WITHDRAW_BATCH_SIZE	(PAGE_SIZE / sizeof(u64))
->>  #define HV_INIT_PARTITION_DEPOSIT_PAGES 208
->> +#define HV_MAP_GPA_MASK		(0x0000000FFFFFFFFFULL)
->> +#define HV_MAP_GPA_BATCH_SIZE	\
->> +		(PAGE_SIZE / sizeof(struct hv_map_gpa_pages) / sizeof(u64))
-> 
-> Hmmm. Shouldn't this be:
-> 
-> 	((HV_HYP_PAGE_SIZE - sizeof(struct hv_map_gpa_pages))/sizeof(u64))
-> 
-> 
-
-Yes! Not sure how that happened.
-
->> +#define PIN_PAGES_BATCH_SIZE	(0x10000000 / PAGE_SIZE)
->>
->>  static int
->>  hv_call_withdraw_memory(u64 count, int node, u64 partition_id)
->> @@ -245,16 +249,318 @@ hv_call_delete_partition(u64 partition_id)
->>  	return -hv_status_to_errno(status);
->>  }
->>
->> +static int
->> +hv_call_map_gpa_pages(u64 partition_id,
->> +		      u64 gpa_target,
->> +		      u64 page_count, u32 flags,
->> +		      struct page **pages)
->> +{
->> +	struct hv_map_gpa_pages *input_page;
->> +	int status;
->> +	int i;
->> +	struct page **p;
->> +	u32 completed = 0;
->> +	u64 hypercall_status;
->> +	unsigned long remaining = page_count;
->> +	int rep_count;
->> +	unsigned long irq_flags;
->> +	int ret = 0;
->> +
->> +	while (remaining) {
->> +
->> +		rep_count = min(remaining, HV_MAP_GPA_BATCH_SIZE);
->> +
->> +		local_irq_save(irq_flags);
->> +		input_page = (struct hv_map_gpa_pages *)(*this_cpu_ptr(
->> +			hyperv_pcpu_input_arg));
->> +
->> +		input_page->target_partition_id = partition_id;
->> +		input_page->target_gpa_base = gpa_target;
->> +		input_page->map_flags = flags;
->> +
->> +		for (i = 0, p = pages; i < rep_count; i++, p++)
->> +			input_page->source_gpa_page_list[i] =
->> +				page_to_pfn(*p) & HV_MAP_GPA_MASK;
-> 
-> The masking seems a bit weird.  The mask allows for up to 64G page frames,
-> which is 256 Tbytes of total physical memory, which is probably the current
-> Hyper-V limit on memory size (48 bit physical address space, though 52 bit
-> physical address spaces are coming).  So the masking shouldn't ever be doing
-> anything.   And if it was doing something, that probably should be treated as
-> an error rather than simply dropping the high bits.
-
-Good point - It looks like the mask isn't needed.
-
-> 
-> Note that this code does not handle the case where PAGE_SIZE !=
-> HV_HYP_PAGE_SIZE.  But maybe we'll never run the root partition with a
-> page size other than 4K.
-> 
-
-For now on x86 it won't happen, but maybe on ARM?
-It shouldn't be hard to support this case, especially since
-PAGE_SIZE >= HV_HYP_PAGE_SIZE. Do you think we need it in this patch set?
-
->> +		hypercall_status = hv_do_rep_hypercall(
->> +			HVCALL_MAP_GPA_PAGES, rep_count, 0, input_page, NULL);
->> +		local_irq_restore(irq_flags);
->> +
->> +		status = hypercall_status & HV_HYPERCALL_RESULT_MASK;
->> +		completed = (hypercall_status & HV_HYPERCALL_REP_COMP_MASK) >>
->> +				HV_HYPERCALL_REP_COMP_OFFSET;
->> +
->> +		if (status == HV_STATUS_INSUFFICIENT_MEMORY) {
->> +			ret = hv_call_deposit_pages(NUMA_NO_NODE,
->> +						    partition_id, 256);
-> 
-> Why adding 256 pages?  I'm just contrasting with other places that add
-> 1 page at a time.  Maybe a comment to explain ....
-> 
-
-Empirically determined. I'll add a #define and comment.
-
->> +			if (ret)
->> +				break;
->> +		} else if (status != HV_STATUS_SUCCESS) {
->> +			pr_err("%s: completed %llu out of %llu, %s\n",
->> +			       __func__,
->> +			       page_count - remaining, page_count,
->> +			       hv_status_to_string(status));
->> +			ret = -hv_status_to_errno(status);
->> +			break;
->> +		}
->> +
->> +		pages += completed;
->> +		remaining -= completed;
->> +		gpa_target += completed;
->> +	}
->> +
->> +	if (ret && completed) {
-> 
-> Is the above the right test?  Completed could be zero from the most
-> recent iteration, but still could be partially succeeded based on a previous
-> successful iteration.   I think this needs to check whether remaining equals
-> page_count.
-> 
-
-You're right; I'll change it to (ret && remaining < page_count)
-
->> +		pr_err("%s: Partially succeeded; mapped regions may be in invalid state",
->> +		       __func__);
->> +		ret = -EBADFD;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int
->> +hv_call_unmap_gpa_pages(u64 partition_id,
->> +			u64 gpa_target,
->> +			u64 page_count, u32 flags)
->> +{
->> +	struct hv_unmap_gpa_pages *input_page;
->> +	int status;
->> +	int ret = 0;
->> +	u32 completed = 0;
->> +	u64 hypercall_status;
->> +	unsigned long remaining = page_count;
->> +	int rep_count;
->> +	unsigned long irq_flags;
->> +
->> +	local_irq_save(irq_flags);
->> +	input_page = (struct hv_unmap_gpa_pages *)(*this_cpu_ptr(
->> +		hyperv_pcpu_input_arg));
->> +
->> +	input_page->target_partition_id = partition_id;
->> +	input_page->target_gpa_base = gpa_target;
->> +	input_page->unmap_flags = flags;
->> +
->> +	while (remaining) {
->> +		rep_count = min(remaining, HV_MAP_GPA_BATCH_SIZE);
->> +		hypercall_status = hv_do_rep_hypercall(
->> +			HVCALL_UNMAP_GPA_PAGES, rep_count, 0, input_page, NULL);
-> 
-> Similarly, this code doesn't handle PAGE_SIZE != HV_HYP_PAGE_SIZE.
-> 
-
-As above - do we need this for this patch set? This won't happen on x86.
-
->> +		status = hypercall_status & HV_HYPERCALL_RESULT_MASK;
->> +		completed = (hypercall_status & HV_HYPERCALL_REP_COMP_MASK) >>
->> +				HV_HYPERCALL_REP_COMP_OFFSET;
->> +		if (status != HV_STATUS_SUCCESS) {
->> +			pr_err("%s: completed %llu out of %llu, %s\n",
->> +			       __func__,
->> +			       page_count - remaining, page_count,
->> +			       hv_status_to_string(status));
->> +			ret = -hv_status_to_errno(status);
->> +			break;
->> +		}
->> +
->> +		remaining -= completed;
->> +		gpa_target += completed;
->> +		input_page->target_gpa_base = gpa_target;
->> +	}
->> +	local_irq_restore(irq_flags);
-> 
-> I have some concern about holding interrupts disabled for this long.
-> 
-
-How about I move the interrupt enabling/disabling inside the loop? i.e.:
-        while (remaining) {
-                local_irq_save(irq_flags);
-                input_page = (struct hv_unmap_gpa_pages *)(*this_cpu_ptr(
-                        hyperv_pcpu_input_arg));
-
-                input_page->target_partition_id = partition_id;
-                input_page->target_gpa_base = gpa_target;
-                input_page->unmap_flags = flags;
-                rep_count = min(remaining, HV_MAP_GPA_BATCH_SIZE);
-                status = hv_do_rep_hypercall(
-                        HVCALL_UNMAP_GPA_PAGES, rep_count, 0, input_page, NULL);
-                local_irq_restore(irq_flags);
-
-                completed = (status & HV_HYPERCALL_REP_COMP_MASK) >>
-                                HV_HYPERCALL_REP_COMP_OFFSET;
-                status &= HV_HYPERCALL_RESULT_MASK;
-                if (status != HV_STATUS_SUCCESS) {
-                        pr_err("%s: completed %llu out of %llu, %s\n",
-                               __func__,
-                               page_count - remaining, page_count,
-                               hv_status_to_string(status));
-                        ret = hv_status_to_errno(status);
-                        break;
-                }
-
-                remaining -= completed;
-                gpa_target += completed;
-        }
-
-
->> +
->> +	if (ret && completed) {
-> 
-> Same comment as before.
-> 
-
-Ditto as above.
-
->> +		pr_err("%s: Partially succeeded; mapped regions may be in invalid state",
->> +		       __func__);
->> +		ret = -EBADFD;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static long
->> +mshv_partition_ioctl_map_memory(struct mshv_partition *partition,
->> +				struct mshv_user_mem_region __user *user_mem)
->> +{
->> +	struct mshv_user_mem_region mem;
->> +	struct mshv_mem_region *region;
->> +	int completed;
->> +	unsigned long remaining, batch_size;
->> +	int i;
->> +	struct page **pages;
->> +	u64 page_count, user_start, user_end, gpfn_start, gpfn_end;
->> +	u64 region_page_count, region_user_start, region_user_end;
->> +	u64 region_gpfn_start, region_gpfn_end;
->> +	long ret = 0;
->> +
->> +	/* Check we have enough slots*/
->> +	if (partition->regions.count == MSHV_MAX_MEM_REGIONS) {
->> +		pr_err("%s: not enough memory region slots\n", __func__);
->> +		return -ENOSPC;
->> +	}
->> +
->> +	if (copy_from_user(&mem, user_mem, sizeof(mem)))
->> +		return -EFAULT;
->> +
->> +	if (!mem.size ||
->> +	    mem.size & (PAGE_SIZE - 1) ||
->> +	    mem.userspace_addr & (PAGE_SIZE - 1) ||
-> 
-> There's a PAGE_ALIGNED macro that expresses exactly what
-> each of the previous two tests is doing.
-> 
-
-Since these need to be HV_HYP_PAGE_SIZE aligned, I will add a
-HV_HYP_PAGE_ALIGNED macro for this.
-
->> +	    !access_ok(mem.userspace_addr, mem.size))
->> +		return -EINVAL;
->> +
->> +	/* Reject overlapping regions */
->> +	page_count = mem.size >> PAGE_SHIFT;
->> +	user_start = mem.userspace_addr;
->> +	user_end = mem.userspace_addr + mem.size;
->> +	gpfn_start = mem.guest_pfn;
->> +	gpfn_end = mem.guest_pfn + page_count;
->> +	for (i = 0; i < MSHV_MAX_MEM_REGIONS; ++i) {
->> +		region = &partition->regions.slots[i];
->> +		if (!region->size)
->> +			continue;
->> +		region_page_count = region->size >> PAGE_SHIFT;
->> +		region_user_start = region->userspace_addr;
->> +		region_user_end = region->userspace_addr + region->size;
->> +		region_gpfn_start = region->guest_pfn;
->> +		region_gpfn_end = region->guest_pfn + region_page_count;
->> +
->> +		if (!(
->> +		     (user_end <= region_user_start) ||
->> +		     (region_user_end <= user_start))) {
->> +			return -EEXIST;
->> +		}
->> +		if (!(
->> +		     (gpfn_end <= region_gpfn_start) ||
->> +		     (region_gpfn_end <= gpfn_start))) {
->> +			return -EEXIST;
-> 
-> You could apply De Morgan's theorem to the conditions
-> in each "if" statement and get rid of the "!".  That might make
-> these slightly easier to understand, but I have no strong
-> preference.
-> 
-
-I agree, I think that would be a bit clearer. I will change it.
-
->> +		}
->> +	}
->> +
->> +	/* Pin the userspace pages */
->> +	pages = vzalloc(sizeof(struct page *) * page_count);
->> +	if (!pages)
->> +		return -ENOMEM;
->> +
->> +	remaining = page_count;
->> +	while (remaining) {
->> +		/*
->> +		 * We need to batch this, as pin_user_pages_fast with the
->> +		 * FOLL_LONGTERM flag does a big temporary allocation
->> +		 * of contiguous memory
->> +		 */
->> +		batch_size = min(remaining, PIN_PAGES_BATCH_SIZE);
->> +		completed = pin_user_pages_fast(
->> +				mem.userspace_addr +
->> +					(page_count - remaining) * PAGE_SIZE,
->> +				batch_size,
->> +				FOLL_WRITE | FOLL_LONGTERM,
->> +				&pages[page_count - remaining]);
->> +		if (completed < 0) {
->> +			pr_err("%s: failed to pin user pages error %i\n",
->> +			       __func__,
->> +			       completed);
->> +			ret = completed;
->> +			goto err_unpin_pages;
->> +		}
->> +		remaining -= completed;
->> +	}
->> +
->> +	/* Map the pages to GPA pages */
->> +	ret = hv_call_map_gpa_pages(partition->id, mem.guest_pfn,
->> +				    page_count, mem.flags, pages);
->> +	if (ret)
->> +		goto err_unpin_pages;
->> +
->> +	/* Install the new region */
->> +	for (i = 0; i < MSHV_MAX_MEM_REGIONS; ++i) {
->> +		if (!partition->regions.slots[i].size) {
->> +			region = &partition->regions.slots[i];
->> +			break;
->> +		}
->> +	}
->> +	region->pages = pages;
->> +	region->size = mem.size;
->> +	region->guest_pfn = mem.guest_pfn;
->> +	region->userspace_addr = mem.userspace_addr;
->> +
->> +	partition->regions.count++;
->> +
->> +	return 0;
->> +
->> +err_unpin_pages:
->> +	unpin_user_pages(pages, page_count - remaining);
->> +	vfree(pages);
->> +
->> +	return ret;
->> +}
->> +
->> +static long
->> +mshv_partition_ioctl_unmap_memory(struct mshv_partition *partition,
->> +				  struct mshv_user_mem_region __user *user_mem)
->> +{
->> +	struct mshv_user_mem_region mem;
->> +	struct mshv_mem_region *region_ptr;
->> +	int i;
->> +	u64 page_count;
->> +	long ret;
->> +
->> +	if (!partition->regions.count)
->> +		return -EINVAL;
->> +
->> +	if (copy_from_user(&mem, user_mem, sizeof(mem)))
->> +		return -EFAULT;
->> +
->> +	/* Find matching region */
->> +	for (i = 0; i < MSHV_MAX_MEM_REGIONS; ++i) {
->> +		if (!partition->regions.slots[i].size)
->> +			continue;
->> +		region_ptr = &partition->regions.slots[i];
->> +		if (region_ptr->userspace_addr == mem.userspace_addr &&
->> +		    region_ptr->size == mem.size &&
->> +		    region_ptr->guest_pfn == mem.guest_pfn)
->> +			break;
->> +	}
->> +
->> +	if (i == MSHV_MAX_MEM_REGIONS)
->> +		return -EINVAL;
->> +
->> +	page_count = region_ptr->size >> PAGE_SHIFT;
->> +	ret = hv_call_unmap_gpa_pages(partition->id, region_ptr->guest_pfn,
->> +				      page_count, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	unpin_user_pages(region_ptr->pages, page_count);
->> +	vfree(region_ptr->pages);
->> +	memset(region_ptr, 0, sizeof(*region_ptr));
->> +	partition->regions.count--;
->> +
->> +	return 0;
->> +}
->> +
->>  static long
->>  mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
->>  {
->> -	return -ENOTTY;
->> +	struct mshv_partition *partition = filp->private_data;
->> +	long ret;
->> +
->> +	if (mutex_lock_killable(&partition->mutex))
->> +		return -EINTR;
->> +
->> +	switch (ioctl) {
->> +	case MSHV_MAP_GUEST_MEMORY:
->> +		ret = mshv_partition_ioctl_map_memory(partition,
->> +							(void __user *)arg);
->> +		break;
->> +	case MSHV_UNMAP_GUEST_MEMORY:
->> +		ret = mshv_partition_ioctl_unmap_memory(partition,
->> +							(void __user *)arg);
->> +		break;
->> +	default:
->> +		ret = -ENOTTY;
->> +	}
->> +
->> +	mutex_unlock(&partition->mutex);
->> +	return ret;
->>  }
->>
->>  static void
->>  destroy_partition(struct mshv_partition *partition)
->>  {
->> -	unsigned long flags;
->> +	unsigned long flags, page_count;
->> +	struct mshv_mem_region *region;
->>  	int i;
->>
->>  	/* Remove from list of partitions */
->> @@ -286,6 +592,16 @@ destroy_partition(struct mshv_partition *partition)
->>
->>  	hv_call_delete_partition(partition->id);
->>
->> +	/* Remove regions and unpin the pages */
->> +	for (i = 0; i < MSHV_MAX_MEM_REGIONS; ++i) {
->> +		region = &partition->regions.slots[i];
->> +		if (!region->size)
->> +			continue;
->> +		page_count = region->size >> PAGE_SHIFT;
->> +		unpin_user_pages(region->pages, page_count);
->> +		vfree(region->pages);
->> +	}
->> +
->>  	kfree(partition);
->>  }
->>
->> @@ -353,6 +669,8 @@ mshv_ioctl_create_partition(void __user *user_arg)
->>  	if (!partition)
->>  		return -ENOMEM;
->>
->> +	mutex_init(&partition->mutex);
->> +
->>  	fd = get_unused_fd_flags(O_CLOEXEC);
->>  	if (fd < 0) {
->>  		ret = fd;
->> --
->> 2.25.1
+RnJvbTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPiBT
+ZW50OiBNb25kYXksIE1hcmNoIDgsIDIwMjEgMTE6MTQgQU0NCj4gDQo+IE9uIDIvOC8yMDIxIDEx
+OjQ1IEFNLCBNaWNoYWVsIEtlbGxleSB3cm90ZToNCj4gPiBGcm9tOiBOdW5vIERhcyBOZXZlcyA8
+bnVub2Rhc25ldmVzQGxpbnV4Lm1pY3Jvc29mdC5jb20+IFNlbnQ6IEZyaWRheSwgTm92ZW1iZXIN
+Cj4gMjAsIDIwMjAgNDozMCBQTQ0KPiA+Pg0KDQpbc25pcF0NCg0KPiA+PiBAQCAtMjQ1LDE2ICsy
+NDksMzE4IEBAIGh2X2NhbGxfZGVsZXRlX3BhcnRpdGlvbih1NjQgcGFydGl0aW9uX2lkKQ0KPiA+
+PiAgCXJldHVybiAtaHZfc3RhdHVzX3RvX2Vycm5vKHN0YXR1cyk7DQo+ID4+ICB9DQo+ID4+DQo+
+ID4+ICtzdGF0aWMgaW50DQo+ID4+ICtodl9jYWxsX21hcF9ncGFfcGFnZXModTY0IHBhcnRpdGlv
+bl9pZCwNCj4gPj4gKwkJICAgICAgdTY0IGdwYV90YXJnZXQsDQo+ID4+ICsJCSAgICAgIHU2NCBw
+YWdlX2NvdW50LCB1MzIgZmxhZ3MsDQo+ID4+ICsJCSAgICAgIHN0cnVjdCBwYWdlICoqcGFnZXMp
+DQo+ID4+ICt7DQo+ID4+ICsJc3RydWN0IGh2X21hcF9ncGFfcGFnZXMgKmlucHV0X3BhZ2U7DQo+
+ID4+ICsJaW50IHN0YXR1czsNCj4gPj4gKwlpbnQgaTsNCj4gPj4gKwlzdHJ1Y3QgcGFnZSAqKnA7
+DQo+ID4+ICsJdTMyIGNvbXBsZXRlZCA9IDA7DQo+ID4+ICsJdTY0IGh5cGVyY2FsbF9zdGF0dXM7
+DQo+ID4+ICsJdW5zaWduZWQgbG9uZyByZW1haW5pbmcgPSBwYWdlX2NvdW50Ow0KPiA+PiArCWlu
+dCByZXBfY291bnQ7DQo+ID4+ICsJdW5zaWduZWQgbG9uZyBpcnFfZmxhZ3M7DQo+ID4+ICsJaW50
+IHJldCA9IDA7DQo+ID4+ICsNCj4gPj4gKwl3aGlsZSAocmVtYWluaW5nKSB7DQo+ID4+ICsNCj4g
+Pj4gKwkJcmVwX2NvdW50ID0gbWluKHJlbWFpbmluZywgSFZfTUFQX0dQQV9CQVRDSF9TSVpFKTsN
+Cj4gPj4gKw0KPiA+PiArCQlsb2NhbF9pcnFfc2F2ZShpcnFfZmxhZ3MpOw0KPiA+PiArCQlpbnB1
+dF9wYWdlID0gKHN0cnVjdCBodl9tYXBfZ3BhX3BhZ2VzICopKCp0aGlzX2NwdV9wdHIoDQo+ID4+
+ICsJCQloeXBlcnZfcGNwdV9pbnB1dF9hcmcpKTsNCj4gPj4gKw0KPiA+PiArCQlpbnB1dF9wYWdl
+LT50YXJnZXRfcGFydGl0aW9uX2lkID0gcGFydGl0aW9uX2lkOw0KPiA+PiArCQlpbnB1dF9wYWdl
+LT50YXJnZXRfZ3BhX2Jhc2UgPSBncGFfdGFyZ2V0Ow0KPiA+PiArCQlpbnB1dF9wYWdlLT5tYXBf
+ZmxhZ3MgPSBmbGFnczsNCj4gPj4gKw0KPiA+PiArCQlmb3IgKGkgPSAwLCBwID0gcGFnZXM7IGkg
+PCByZXBfY291bnQ7IGkrKywgcCsrKQ0KPiA+PiArCQkJaW5wdXRfcGFnZS0+c291cmNlX2dwYV9w
+YWdlX2xpc3RbaV0gPQ0KPiA+PiArCQkJCXBhZ2VfdG9fcGZuKCpwKSAmIEhWX01BUF9HUEFfTUFT
+SzsNCj4gPg0KPiA+IFRoZSBtYXNraW5nIHNlZW1zIGEgYml0IHdlaXJkLiAgVGhlIG1hc2sgYWxs
+b3dzIGZvciB1cCB0byA2NEcgcGFnZSBmcmFtZXMsDQo+ID4gd2hpY2ggaXMgMjU2IFRieXRlcyBv
+ZiB0b3RhbCBwaHlzaWNhbCBtZW1vcnksIHdoaWNoIGlzIHByb2JhYmx5IHRoZSBjdXJyZW50DQo+
+ID4gSHlwZXItViBsaW1pdCBvbiBtZW1vcnkgc2l6ZSAoNDggYml0IHBoeXNpY2FsIGFkZHJlc3Mg
+c3BhY2UsIHRob3VnaCA1MiBiaXQNCj4gPiBwaHlzaWNhbCBhZGRyZXNzIHNwYWNlcyBhcmUgY29t
+aW5nKS4gIFNvIHRoZSBtYXNraW5nIHNob3VsZG4ndCBldmVyIGJlIGRvaW5nDQo+ID4gYW55dGhp
+bmcuICAgQW5kIGlmIGl0IHdhcyBkb2luZyBzb21ldGhpbmcsIHRoYXQgcHJvYmFibHkgc2hvdWxk
+IGJlIHRyZWF0ZWQgYXMNCj4gPiBhbiBlcnJvciByYXRoZXIgdGhhbiBzaW1wbHkgZHJvcHBpbmcg
+dGhlIGhpZ2ggYml0cy4NCj4gDQo+IEdvb2QgcG9pbnQgLSBJdCBsb29rcyBsaWtlIHRoZSBtYXNr
+IGlzbid0IG5lZWRlZC4NCj4gDQo+ID4NCj4gPiBOb3RlIHRoYXQgdGhpcyBjb2RlIGRvZXMgbm90
+IGhhbmRsZSB0aGUgY2FzZSB3aGVyZSBQQUdFX1NJWkUgIT0NCj4gPiBIVl9IWVBfUEFHRV9TSVpF
+LiAgQnV0IG1heWJlIHdlJ2xsIG5ldmVyIHJ1biB0aGUgcm9vdCBwYXJ0aXRpb24gd2l0aCBhDQo+
+ID4gcGFnZSBzaXplIG90aGVyIHRoYW4gNEsuDQo+ID4NCj4gDQo+IEZvciBub3cgb24geDg2IGl0
+IHdvbid0IGhhcHBlbiwgYnV0IG1heWJlIG9uIEFSTT8NCj4gSXQgc2hvdWxkbid0IGJlIGhhcmQg
+dG8gc3VwcG9ydCB0aGlzIGNhc2UsIGVzcGVjaWFsbHkgc2luY2UNCj4gUEFHRV9TSVpFID49IEhW
+X0hZUF9QQUdFX1NJWkUuIERvIHlvdSB0aGluayB3ZSBuZWVkIGl0IGluIHRoaXMgcGF0Y2ggc2V0
+Pw0KDQpObywgZnJvbSBteSBwZXJzcGVjdGl2ZSwgdGhpcyBjYXNlIGRvZXMgbm90IG5lZWQgdG8g
+YmUgaGFuZGxlZCBpbiANCnRoaXMgcGF0Y2ggc2V0Lg0KDQo+IA0KPiA+PiArCQloeXBlcmNhbGxf
+c3RhdHVzID0gaHZfZG9fcmVwX2h5cGVyY2FsbCgNCj4gPj4gKwkJCUhWQ0FMTF9NQVBfR1BBX1BB
+R0VTLCByZXBfY291bnQsIDAsIGlucHV0X3BhZ2UsIE5VTEwpOw0KPiA+PiArCQlsb2NhbF9pcnFf
+cmVzdG9yZShpcnFfZmxhZ3MpOw0KPiA+PiArDQo+ID4+ICsJCXN0YXR1cyA9IGh5cGVyY2FsbF9z
+dGF0dXMgJiBIVl9IWVBFUkNBTExfUkVTVUxUX01BU0s7DQo+ID4+ICsJCWNvbXBsZXRlZCA9ICho
+eXBlcmNhbGxfc3RhdHVzICYgSFZfSFlQRVJDQUxMX1JFUF9DT01QX01BU0spID4+DQo+ID4+ICsJ
+CQkJSFZfSFlQRVJDQUxMX1JFUF9DT01QX09GRlNFVDsNCj4gPj4gKw0KPiA+PiArCQlpZiAoc3Rh
+dHVzID09IEhWX1NUQVRVU19JTlNVRkZJQ0lFTlRfTUVNT1JZKSB7DQo+ID4+ICsJCQlyZXQgPSBo
+dl9jYWxsX2RlcG9zaXRfcGFnZXMoTlVNQV9OT19OT0RFLA0KPiA+PiArCQkJCQkJICAgIHBhcnRp
+dGlvbl9pZCwgMjU2KTsNCj4gPg0KPiA+IFdoeSBhZGRpbmcgMjU2IHBhZ2VzPyAgSSdtIGp1c3Qg
+Y29udHJhc3Rpbmcgd2l0aCBvdGhlciBwbGFjZXMgdGhhdCBhZGQNCj4gPiAxIHBhZ2UgYXQgYSB0
+aW1lLiAgTWF5YmUgYSBjb21tZW50IHRvIGV4cGxhaW4gLi4uLg0KPiA+DQo+IA0KPiBFbXBpcmlj
+YWxseSBkZXRlcm1pbmVkLiBJJ2xsIGFkZCBhICNkZWZpbmUgYW5kIGNvbW1lbnQuDQo+IA0KPiA+
+PiArCQkJaWYgKHJldCkNCj4gPj4gKwkJCQlicmVhazsNCj4gPj4gKwkJfSBlbHNlIGlmIChzdGF0
+dXMgIT0gSFZfU1RBVFVTX1NVQ0NFU1MpIHsNCj4gPj4gKwkJCXByX2VycigiJXM6IGNvbXBsZXRl
+ZCAlbGx1IG91dCBvZiAlbGx1LCAlc1xuIiwNCj4gPj4gKwkJCSAgICAgICBfX2Z1bmNfXywNCj4g
+Pj4gKwkJCSAgICAgICBwYWdlX2NvdW50IC0gcmVtYWluaW5nLCBwYWdlX2NvdW50LA0KPiA+PiAr
+CQkJICAgICAgIGh2X3N0YXR1c190b19zdHJpbmcoc3RhdHVzKSk7DQo+ID4+ICsJCQlyZXQgPSAt
+aHZfc3RhdHVzX3RvX2Vycm5vKHN0YXR1cyk7DQo+ID4+ICsJCQlicmVhazsNCj4gPj4gKwkJfQ0K
+PiA+PiArDQo+ID4+ICsJCXBhZ2VzICs9IGNvbXBsZXRlZDsNCj4gPj4gKwkJcmVtYWluaW5nIC09
+IGNvbXBsZXRlZDsNCj4gPj4gKwkJZ3BhX3RhcmdldCArPSBjb21wbGV0ZWQ7DQo+ID4+ICsJfQ0K
+PiA+PiArDQo+ID4+ICsJaWYgKHJldCAmJiBjb21wbGV0ZWQpIHsNCj4gPg0KPiA+IElzIHRoZSBh
+Ym92ZSB0aGUgcmlnaHQgdGVzdD8gIENvbXBsZXRlZCBjb3VsZCBiZSB6ZXJvIGZyb20gdGhlIG1v
+c3QNCj4gPiByZWNlbnQgaXRlcmF0aW9uLCBidXQgc3RpbGwgY291bGQgYmUgcGFydGlhbGx5IHN1
+Y2NlZWRlZCBiYXNlZCBvbiBhIHByZXZpb3VzDQo+ID4gc3VjY2Vzc2Z1bCBpdGVyYXRpb24uICAg
+SSB0aGluayB0aGlzIG5lZWRzIHRvIGNoZWNrIHdoZXRoZXIgcmVtYWluaW5nIGVxdWFscw0KPiA+
+IHBhZ2VfY291bnQuDQo+ID4NCj4gDQo+IFlvdSdyZSByaWdodDsgSSdsbCBjaGFuZ2UgaXQgdG8g
+KHJldCAmJiByZW1haW5pbmcgPCBwYWdlX2NvdW50KQ0KPiANCj4gPj4gKwkJcHJfZXJyKCIlczog
+UGFydGlhbGx5IHN1Y2NlZWRlZDsgbWFwcGVkIHJlZ2lvbnMgbWF5IGJlIGluIGludmFsaWQgc3Rh
+dGUiLA0KPiA+PiArCQkgICAgICAgX19mdW5jX18pOw0KPiA+PiArCQlyZXQgPSAtRUJBREZEOw0K
+PiA+PiArCX0NCj4gPj4gKw0KPiA+PiArCXJldHVybiByZXQ7DQo+ID4+ICt9DQo+ID4+ICsNCj4g
+Pj4gK3N0YXRpYyBpbnQNCj4gPj4gK2h2X2NhbGxfdW5tYXBfZ3BhX3BhZ2VzKHU2NCBwYXJ0aXRp
+b25faWQsDQo+ID4+ICsJCQl1NjQgZ3BhX3RhcmdldCwNCj4gPj4gKwkJCXU2NCBwYWdlX2NvdW50
+LCB1MzIgZmxhZ3MpDQo+ID4+ICt7DQo+ID4+ICsJc3RydWN0IGh2X3VubWFwX2dwYV9wYWdlcyAq
+aW5wdXRfcGFnZTsNCj4gPj4gKwlpbnQgc3RhdHVzOw0KPiA+PiArCWludCByZXQgPSAwOw0KPiA+
+PiArCXUzMiBjb21wbGV0ZWQgPSAwOw0KPiA+PiArCXU2NCBoeXBlcmNhbGxfc3RhdHVzOw0KPiA+
+PiArCXVuc2lnbmVkIGxvbmcgcmVtYWluaW5nID0gcGFnZV9jb3VudDsNCj4gPj4gKwlpbnQgcmVw
+X2NvdW50Ow0KPiA+PiArCXVuc2lnbmVkIGxvbmcgaXJxX2ZsYWdzOw0KPiA+PiArDQo+ID4+ICsJ
+bG9jYWxfaXJxX3NhdmUoaXJxX2ZsYWdzKTsNCj4gPj4gKwlpbnB1dF9wYWdlID0gKHN0cnVjdCBo
+dl91bm1hcF9ncGFfcGFnZXMgKikoKnRoaXNfY3B1X3B0cigNCj4gPj4gKwkJaHlwZXJ2X3BjcHVf
+aW5wdXRfYXJnKSk7DQo+ID4+ICsNCj4gPj4gKwlpbnB1dF9wYWdlLT50YXJnZXRfcGFydGl0aW9u
+X2lkID0gcGFydGl0aW9uX2lkOw0KPiA+PiArCWlucHV0X3BhZ2UtPnRhcmdldF9ncGFfYmFzZSA9
+IGdwYV90YXJnZXQ7DQo+ID4+ICsJaW5wdXRfcGFnZS0+dW5tYXBfZmxhZ3MgPSBmbGFnczsNCj4g
+Pj4gKw0KPiA+PiArCXdoaWxlIChyZW1haW5pbmcpIHsNCj4gPj4gKwkJcmVwX2NvdW50ID0gbWlu
+KHJlbWFpbmluZywgSFZfTUFQX0dQQV9CQVRDSF9TSVpFKTsNCj4gPj4gKwkJaHlwZXJjYWxsX3N0
+YXR1cyA9IGh2X2RvX3JlcF9oeXBlcmNhbGwoDQo+ID4+ICsJCQlIVkNBTExfVU5NQVBfR1BBX1BB
+R0VTLCByZXBfY291bnQsIDAsIGlucHV0X3BhZ2UsIE5VTEwpOw0KPiA+DQo+ID4gU2ltaWxhcmx5
+LCB0aGlzIGNvZGUgZG9lc24ndCBoYW5kbGUgUEFHRV9TSVpFICE9IEhWX0hZUF9QQUdFX1NJWkUu
+DQo+ID4NCj4gDQo+IEFzIGFib3ZlIC0gZG8gd2UgbmVlZCB0aGlzIGZvciB0aGlzIHBhdGNoIHNl
+dD8gVGhpcyB3b24ndCBoYXBwZW4gb24geDg2Lg0KDQpBZ2Fpbiwgbm90IG5lZWRlZCBmcm9tIG15
+IHBlcnNwZWN0aXZlLg0KDQo+IA0KPiA+PiArCQlzdGF0dXMgPSBoeXBlcmNhbGxfc3RhdHVzICYg
+SFZfSFlQRVJDQUxMX1JFU1VMVF9NQVNLOw0KPiA+PiArCQljb21wbGV0ZWQgPSAoaHlwZXJjYWxs
+X3N0YXR1cyAmIEhWX0hZUEVSQ0FMTF9SRVBfQ09NUF9NQVNLKSA+Pg0KPiA+PiArCQkJCUhWX0hZ
+UEVSQ0FMTF9SRVBfQ09NUF9PRkZTRVQ7DQo+ID4+ICsJCWlmIChzdGF0dXMgIT0gSFZfU1RBVFVT
+X1NVQ0NFU1MpIHsNCj4gPj4gKwkJCXByX2VycigiJXM6IGNvbXBsZXRlZCAlbGx1IG91dCBvZiAl
+bGx1LCAlc1xuIiwNCj4gPj4gKwkJCSAgICAgICBfX2Z1bmNfXywNCj4gPj4gKwkJCSAgICAgICBw
+YWdlX2NvdW50IC0gcmVtYWluaW5nLCBwYWdlX2NvdW50LA0KPiA+PiArCQkJICAgICAgIGh2X3N0
+YXR1c190b19zdHJpbmcoc3RhdHVzKSk7DQo+ID4+ICsJCQlyZXQgPSAtaHZfc3RhdHVzX3RvX2Vy
+cm5vKHN0YXR1cyk7DQo+ID4+ICsJCQlicmVhazsNCj4gPj4gKwkJfQ0KPiA+PiArDQo+ID4+ICsJ
+CXJlbWFpbmluZyAtPSBjb21wbGV0ZWQ7DQo+ID4+ICsJCWdwYV90YXJnZXQgKz0gY29tcGxldGVk
+Ow0KPiA+PiArCQlpbnB1dF9wYWdlLT50YXJnZXRfZ3BhX2Jhc2UgPSBncGFfdGFyZ2V0Ow0KPiA+
+PiArCX0NCj4gPj4gKwlsb2NhbF9pcnFfcmVzdG9yZShpcnFfZmxhZ3MpOw0KPiA+DQo+ID4gSSBo
+YXZlIHNvbWUgY29uY2VybiBhYm91dCBob2xkaW5nIGludGVycnVwdHMgZGlzYWJsZWQgZm9yIHRo
+aXMgbG9uZy4NCj4gPg0KPiANCj4gSG93IGFib3V0IEkgbW92ZSB0aGUgaW50ZXJydXB0IGVuYWJs
+aW5nL2Rpc2FibGluZyBpbnNpZGUgdGhlIGxvb3A/IGkuZS46DQo+ICAgICAgICAgd2hpbGUgKHJl
+bWFpbmluZykgew0KPiAgICAgICAgICAgICAgICAgbG9jYWxfaXJxX3NhdmUoaXJxX2ZsYWdzKTsN
+Cj4gICAgICAgICAgICAgICAgIGlucHV0X3BhZ2UgPSAoc3RydWN0IGh2X3VubWFwX2dwYV9wYWdl
+cyAqKSgqdGhpc19jcHVfcHRyKA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBoeXBlcnZfcGNw
+dV9pbnB1dF9hcmcpKTsNCj4gDQo+ICAgICAgICAgICAgICAgICBpbnB1dF9wYWdlLT50YXJnZXRf
+cGFydGl0aW9uX2lkID0gcGFydGl0aW9uX2lkOw0KPiAgICAgICAgICAgICAgICAgaW5wdXRfcGFn
+ZS0+dGFyZ2V0X2dwYV9iYXNlID0gZ3BhX3RhcmdldDsNCj4gICAgICAgICAgICAgICAgIGlucHV0
+X3BhZ2UtPnVubWFwX2ZsYWdzID0gZmxhZ3M7DQo+ICAgICAgICAgICAgICAgICByZXBfY291bnQg
+PSBtaW4ocmVtYWluaW5nLCBIVl9NQVBfR1BBX0JBVENIX1NJWkUpOw0KPiAgICAgICAgICAgICAg
+ICAgc3RhdHVzID0gaHZfZG9fcmVwX2h5cGVyY2FsbCgNCj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgSFZDQUxMX1VOTUFQX0dQQV9QQUdFUywgcmVwX2NvdW50LCAwLCBpbnB1dF9wYWdlLCBOVUxM
+KTsNCj4gICAgICAgICAgICAgICAgIGxvY2FsX2lycV9yZXN0b3JlKGlycV9mbGFncyk7DQo+IA0K
+PiAgICAgICAgICAgICAgICAgY29tcGxldGVkID0gKHN0YXR1cyAmIEhWX0hZUEVSQ0FMTF9SRVBf
+Q09NUF9NQVNLKSA+Pg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEhWX0hZUEVS
+Q0FMTF9SRVBfQ09NUF9PRkZTRVQ7DQo+ICAgICAgICAgICAgICAgICBzdGF0dXMgJj0gSFZfSFlQ
+RVJDQUxMX1JFU1VMVF9NQVNLOw0KPiAgICAgICAgICAgICAgICAgaWYgKHN0YXR1cyAhPSBIVl9T
+VEFUVVNfU1VDQ0VTUykgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICBwcl9lcnIoIiVzOiBj
+b21wbGV0ZWQgJWxsdSBvdXQgb2YgJWxsdSwgJXNcbiIsDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBfX2Z1bmNfXywNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBh
+Z2VfY291bnQgLSByZW1haW5pbmcsIHBhZ2VfY291bnQsDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBodl9zdGF0dXNfdG9fc3RyaW5nKHN0YXR1cykpOw0KPiAgICAgICAgICAgICAg
+ICAgICAgICAgICByZXQgPSBodl9zdGF0dXNfdG9fZXJybm8oc3RhdHVzKTsNCj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgYnJlYWs7DQo+ICAgICAgICAgICAgICAgICB9DQo+IA0KPiAgICAgICAg
+ICAgICAgICAgcmVtYWluaW5nIC09IGNvbXBsZXRlZDsNCj4gICAgICAgICAgICAgICAgIGdwYV90
+YXJnZXQgKz0gY29tcGxldGVkOw0KPiAgICAgICAgIH0NCj4gDQo+IA0KDQpZZXMsIHRoYXQgd291
+bGQgaGVscC4NCg0KPiA+PiArDQo+ID4+ICsJaWYgKHJldCAmJiBjb21wbGV0ZWQpIHsNCj4gPg0K
+PiA+IFNhbWUgY29tbWVudCBhcyBiZWZvcmUuDQo+ID4NCj4gDQo+IERpdHRvIGFzIGFib3ZlLg0K
+PiANCj4gPj4gKwkJcHJfZXJyKCIlczogUGFydGlhbGx5IHN1Y2NlZWRlZDsgbWFwcGVkIHJlZ2lv
+bnMgbWF5IGJlIGluIGludmFsaWQgc3RhdGUiLA0KPiA+PiArCQkgICAgICAgX19mdW5jX18pOw0K
+PiA+PiArCQlyZXQgPSAtRUJBREZEOw0KPiA+PiArCX0NCj4gPj4gKw0KPiA+PiArCXJldHVybiBy
+ZXQ7DQo+ID4+ICt9DQo+ID4+ICsNCj4gPj4gK3N0YXRpYyBsb25nDQo+ID4+ICttc2h2X3BhcnRp
+dGlvbl9pb2N0bF9tYXBfbWVtb3J5KHN0cnVjdCBtc2h2X3BhcnRpdGlvbiAqcGFydGl0aW9uLA0K
+PiA+PiArCQkJCXN0cnVjdCBtc2h2X3VzZXJfbWVtX3JlZ2lvbiBfX3VzZXIgKnVzZXJfbWVtKQ0K
+PiA+PiArew0KPiA+PiArCXN0cnVjdCBtc2h2X3VzZXJfbWVtX3JlZ2lvbiBtZW07DQo+ID4+ICsJ
+c3RydWN0IG1zaHZfbWVtX3JlZ2lvbiAqcmVnaW9uOw0KPiA+PiArCWludCBjb21wbGV0ZWQ7DQo+
+ID4+ICsJdW5zaWduZWQgbG9uZyByZW1haW5pbmcsIGJhdGNoX3NpemU7DQo+ID4+ICsJaW50IGk7
+DQo+ID4+ICsJc3RydWN0IHBhZ2UgKipwYWdlczsNCj4gPj4gKwl1NjQgcGFnZV9jb3VudCwgdXNl
+cl9zdGFydCwgdXNlcl9lbmQsIGdwZm5fc3RhcnQsIGdwZm5fZW5kOw0KPiA+PiArCXU2NCByZWdp
+b25fcGFnZV9jb3VudCwgcmVnaW9uX3VzZXJfc3RhcnQsIHJlZ2lvbl91c2VyX2VuZDsNCj4gPj4g
+Kwl1NjQgcmVnaW9uX2dwZm5fc3RhcnQsIHJlZ2lvbl9ncGZuX2VuZDsNCj4gPj4gKwlsb25nIHJl
+dCA9IDA7DQo+ID4+ICsNCj4gPj4gKwkvKiBDaGVjayB3ZSBoYXZlIGVub3VnaCBzbG90cyovDQo+
+ID4+ICsJaWYgKHBhcnRpdGlvbi0+cmVnaW9ucy5jb3VudCA9PSBNU0hWX01BWF9NRU1fUkVHSU9O
+Uykgew0KPiA+PiArCQlwcl9lcnIoIiVzOiBub3QgZW5vdWdoIG1lbW9yeSByZWdpb24gc2xvdHNc
+biIsIF9fZnVuY19fKTsNCj4gPj4gKwkJcmV0dXJuIC1FTk9TUEM7DQo+ID4+ICsJfQ0KPiA+PiAr
+DQo+ID4+ICsJaWYgKGNvcHlfZnJvbV91c2VyKCZtZW0sIHVzZXJfbWVtLCBzaXplb2YobWVtKSkp
+DQo+ID4+ICsJCXJldHVybiAtRUZBVUxUOw0KPiA+PiArDQo+ID4+ICsJaWYgKCFtZW0uc2l6ZSB8
+fA0KPiA+PiArCSAgICBtZW0uc2l6ZSAmIChQQUdFX1NJWkUgLSAxKSB8fA0KPiA+PiArCSAgICBt
+ZW0udXNlcnNwYWNlX2FkZHIgJiAoUEFHRV9TSVpFIC0gMSkgfHwNCj4gPg0KPiA+IFRoZXJlJ3Mg
+YSBQQUdFX0FMSUdORUQgbWFjcm8gdGhhdCBleHByZXNzZXMgZXhhY3RseSB3aGF0DQo+ID4gZWFj
+aCBvZiB0aGUgcHJldmlvdXMgdHdvIHRlc3RzIGlzIGRvaW5nLg0KPiA+DQo+IA0KPiBTaW5jZSB0
+aGVzZSBuZWVkIHRvIGJlIEhWX0hZUF9QQUdFX1NJWkUgYWxpZ25lZCwgSSB3aWxsIGFkZCBhDQo+
+IEhWX0hZUF9QQUdFX0FMSUdORUQgbWFjcm8gZm9yIHRoaXMuDQoNCkkgd2FzIHRoaW5raW5nIHRo
+YXQgUEFHRV9TSVpFIGFuZCBQQUdFX0FMSUdORUQgYXJlIGNvcnJlY3QuICAgSWYNCnRoaXMgY29k
+ZSB3ZXJlIHJ1bm5pbmcgb24gYW4gQVJNNjQgc3lzdGVtIHdpdGggYSA2NEsgcGFnZQ0Kc2l6ZSwg
+dGhlIDY0SyBhbGlnbm1lbnQgd291bGQgYmUgZmluZSBhbmQgd2lsbCBtYWtlIHNlbnNlIGZyb20N
+CnRoZSB1c2VyIHNwYWNlIHBlcnNwZWN0aXZlLiAgIFlvdSBkb24ndCB3YW50IHRvIGJlIG1hcHBp
+bmcgcGFydA0Kb2YgYSB1c2VyIHNwYWNlIHBhZ2UuICBBbmQgNjRLIGFsaWdubWVudCB3aWxsIGNl
+cnRhaW5seSBzYXRpc2Z5DQpIeXBlci1WJ3MgcmVxdWlyZW1lbnQgZm9yIDRLIGFsaWdubWVudC4g
+IFRoZSByZWFsIHJlcXVpcmVtZW50DQpmcm9tIEh5cGVyLVYncyBzdGFuZHBvaW50IGlzIHRoYXQg
+dGhlIGFsaWdubWVudCBub3QgYmUgc21hbGxlcg0KdGhhbiA0Sy4gIEJ1dCBtYXliZSBJJ20gbWlz
+dW5kZXJzdGFuZGluZy4NCg0KTWljaGFlbA0K
