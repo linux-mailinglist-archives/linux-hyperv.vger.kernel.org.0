@@ -2,299 +2,297 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C5D33174B
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 20:30:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD1593317DD
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Mar 2021 20:58:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229701AbhCHTaT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Mar 2021 14:30:19 -0500
-Received: from mail-dm6nam11on2133.outbound.protection.outlook.com ([40.107.223.133]:13144
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        id S231584AbhCHT6P (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Mar 2021 14:58:15 -0500
+Received: from mail-dm6nam12on2099.outbound.protection.outlook.com ([40.107.243.99]:39904
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231189AbhCHTaD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Mar 2021 14:30:03 -0500
+        id S231359AbhCHT6G (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 8 Mar 2021 14:58:06 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ctFA295ZAdLXr8jnruPagrCdKuVJp6J4EmeKwgnmwJ3VnREih4aksBVEbI8+e+m9x0ncYNQNneVclkFm5a4CKURRM554/SENoZbcGEoUq5jG5t55syuwsCnhp3jue1CoeFf9CCoT9ljU40p0EYv7eocWNzkkvkXmpKHvraIoGZ2ygVQtNFWpuC+tZ1tgMEMrhWAcpb5fzU14gYVpfy7lBxrs6zK97uPPsC9TTreRj8YESENkc+aPYXkeQRbtq7rA4jLK4JjSlyMjKklNjl7gFam69Y6Trg7XmKC9ePof7ekN+UETpO/fXcfrcnWlLvFCcugA8L08m8vJUYxZO8kDWw==
+ b=GUAeIa2T1B7rFDr/8I9mWxnU4rVr/04pMvZx7qcXJE3dLQCVMpLhnpBIOFUaOSHlqKPfIxAs651dFifWbfEQ5hHpjoS0a7zAHAz30kL98QJvrUdm4NG20JGoTT+DGm8TKviRi0gxx45ICmASs10fKtQ88PRHApG3D1J6LqDbsbRphApLGFZZdTVDWhDV76eb/gTgdEJ3+0ivQyMcd1USg//58rb5soF5Dt5Nngn16OkWYa8dPzmOAn5Us1YuZN5F/NerY6CL66/KIJZVmSsjuCDcPXmY4MwgYYlbcnD87AsFvX4cY2Xl+HhurKxGQ7MMrCAiBfZ8IiEgOJ0PNUSXKA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RlDwD6BXKnsB6s8NgtwD7MQrln557hxLP3nwn0LKIo0=;
- b=ghR5xrHnetG7SJyJ29hdpSDhZR1+Y1vuCUaCFXbcfyNzH4zOQu448FP3iLVfdQdBbOyqbOhMChAJwFrL6yRnbp8Xw3VyjypC3m8m8aEUO5ZjP2TRcGEdvDFVbJyE1LEUlXJLWuNoVrOWwYDWhLI6vAUfUib0WQn/c60HYFIhpQEHBt+W06SzUCausgfONCQiXEXf/nj2qTaNJ+RueCNzfP1fRDdHLGzVafEsp7PTMrzOGlHyGNPUSftikDIDCcrBqFj42C4T7iFK5LJFnofdqX8HJl9k4rNmOzOFnTQT+LbyXHg5SS9YJ/+/wjbs7me80nnmw1JDn8LzAgBh2gLlXg==
+ bh=GsdCymlMo6Yv3Lg3uRpmqqfOVAMQRfUxyARXNotR1Nk=;
+ b=cfpo4fF13szbUF0tSygzioW/+eKbaXsVS6YSAqGgJBYeM6+cR3qSD97T89RJGgHxh5lObDR6N9XkbBYXH3MKsirWKmjHj9i/jjDLbpH+W1P2a3Q2rWC2qofmYs+HY1njdNFIE+Xg9cqopJDigFeGLg+WiJoCuChHVbs1pUWwV9McsWDXsBR4meMZmgUb5JMOndyDHEtLJUmdZ998LSmr+A05WqBSzbOOjSUZAUNBgQGw/YrFoRRZKk1dZDIpa83PV38cLfCI+li73KiBKRUviDQat0uFlOHYWuxYVXQbSSpWj3fvZhKCR2qjdY9yFcrJZGBK23gcPsW30UBU1SyC9w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RlDwD6BXKnsB6s8NgtwD7MQrln557hxLP3nwn0LKIo0=;
- b=gDg+RyaANXUz24vkd6V2JMZsweLQ1rTxLYOz5f2cGKlepxNT9+QsC9q03pGgo5J22LxoCUPhHEjWsm5EMoJ1PEpjkFk4GDIXZpL1iNeK4nfENTXeeLa1wnX7qyalFABT/d8Dcmed7GVDo21PPuq6eUxXCpPmZkpO6lky+qs1jl0=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW2PR2101MB1770.namprd21.prod.outlook.com (2603:10b6:302:8::14) with
+ bh=GsdCymlMo6Yv3Lg3uRpmqqfOVAMQRfUxyARXNotR1Nk=;
+ b=iiJbBTW1JZyCGRKgRrnvNl47ezohj6+8sM/0VF2pDdDwe+V68NY1fjzQqYM4+Vw4x/A4IlmZR/wERNFhgrrxSFG4PaXJgZncRCVFGGKpBuJiHba9mKxbJcGqY4Qz+ynsbbakkozJ/YjXSUo8Di261MnGquT3smeVz0roBAv8FvU=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
+ by DM5PR21MB1797.namprd21.prod.outlook.com (2603:10b6:4:aa::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.16; Mon, 8 Mar
- 2021 19:30:01 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3955.005; Mon, 8 Mar 2021
- 19:30:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.4; Mon, 8 Mar
+ 2021 19:58:04 +0000
+Received: from DM6PR21MB1514.namprd21.prod.outlook.com
+ ([fe80::1c32:e52a:6a36:3ff]) by DM6PR21MB1514.namprd21.prod.outlook.com
+ ([fe80::1c32:e52a:6a36:3ff%4]) with mapi id 15.20.3933.025; Mon, 8 Mar 2021
+ 19:58:04 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
-To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Lillian Grassin-Drake <Lillian.GrassinDrake@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: RE: [RFC PATCH 08/18] virt/mshv: map and unmap guest memory
-Thread-Topic: [RFC PATCH 08/18] virt/mshv: map and unmap guest memory
-Thread-Index: AQHWv52Toe1LRVK2KUqT7h/r2T7yX6pMTc3AgC7RaoCAAAF2UA==
-Date:   Mon, 8 Mar 2021 19:30:00 +0000
-Message-ID: <MWHPR21MB15934FDC8DBE4088E8227AAFD7939@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1605918637-12192-9-git-send-email-nunodasneves@linux.microsoft.com>
- <MWHPR21MB1593A5DAB7387BDF58B99056D78F9@MWHPR21MB1593.namprd21.prod.outlook.com>
- <d63330fa-de83-85de-c8ec-74cc90d680e3@linux.microsoft.com>
-In-Reply-To: <d63330fa-de83-85de-c8ec-74cc90d680e3@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-03-08T19:29:59Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9fc2ecc7-f73d-4047-97d8-5bf7841fa740;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: linux.microsoft.com; dkim=none (message not signed)
- header.d=none;linux.microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fa3556d9-e92c-4c26-f2fd-08d8e2689126
-x-ms-traffictypediagnostic: MW2PR2101MB1770:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB17703B6460FB137903B0B949D7939@MW2PR2101MB1770.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1013;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eGl5J88eU7AfyEN69lcjrDct54siwEMkcsThTdwqwFcqwZ06V729Z8juz2IQoNVDk6ywt4JZbdudg9ThGv9Ker+57Q5XMEjXZ9RBUFkipjEWoyHh10/394Fyk3z2pWrtCo2jUk9hSAsi78w7Va5HtD90nsVr4ygEu8i3HVplFEpzRjkDLo6Mf5WmOLC8e3QdOJBMqOX2R/JzU6Ks4XI+sTpaL91Ie5xrJe4iR0iSgiF9tTeiaPERpkReuZDm8UGCoSACriYpjDrgKCm8EnBVuD3tBjeQKeNSMPGhx1zGRNSVHAIJ2qF55RARyQUXiVJzOH3cavTKdASTPv1mDuOLeU04oRLdoBABtcQcrGtLYwwWRyZeKlXm90jLi0/EQJ4vm32C71Cg8c2Igge9PyKwd6j+pXPYj+r/MSGwWj8ndLRcQYR/GsaHWD9PDUaxBaf1wRJX/VKnzpnlZ7/y4o0t2EbrQLzMZ7iRqOCi2a8zshrGPo6YHaqSqHlcKSAWso9/rKCjT+8i29WovGyqVRZipGYkQmptADDsrbNXeQ3pDbTVuJs68b2R4MjA6nagM3N0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(396003)(366004)(346002)(83380400001)(8990500004)(55016002)(7696005)(9686003)(2906002)(54906003)(66476007)(33656002)(478600001)(82960400001)(82950400001)(107886003)(26005)(186003)(6506007)(53546011)(66446008)(64756008)(66946007)(110136005)(8676002)(8936002)(76116006)(5660300002)(316002)(86362001)(4326008)(10290500003)(66556008)(71200400001)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?dHA2Z2xIamhJODBwT2hmN0llN3pUbkFWYTVXMmgrY2FQb0dkcHBqVUJ2dFRo?=
- =?utf-8?B?ckxIMzBCelpESk5WUGdJMWhVbXFPeFZoekVxdWtTemRPQWFaaGFMSHV6dWov?=
- =?utf-8?B?R0RYWVBEcGh1eGltT2MxY1Nud2NQSGQ4NUkxTE1SU1g3VzNoYk80TEhwWW5z?=
- =?utf-8?B?djA5c0hlRGpESFI5bHN2TkNvUEJpblhlRG1weFg2RmN0NUlPcUgxWWpSNnVs?=
- =?utf-8?B?YmZTRndpWEQ2K1U1Z1pKMFBRSHI2MjArVjdUSU5zeVY4VkdpZEdiZVBGcDNV?=
- =?utf-8?B?dkVHRlE4a044MUJNQ3F0TWc0M1pkd09CNEZJU1lOck0vNVo5cFRjQnhHTi9h?=
- =?utf-8?B?ckhFQTB3MUpLanorN1pSdmgxV2RURm5DTkdybzdLQ2xhY05YT2Z3SHMweWRX?=
- =?utf-8?B?KzQwUlNTVWY2MUxzUzFUUXVmNisxV3M0dkpCL0VIeXlZTkR2cU9DZVdTR3B4?=
- =?utf-8?B?ZTBtR1pQazFoYm5kQjdQL05EQVpOcENTbnExa1F5VHhLbUE5ZlozYlJmQytq?=
- =?utf-8?B?QTZ6bCtTTktickQ0ZGxBVFI0TE9STlFicm5kTTRLaUVFUTBiYWFXbVZldEYr?=
- =?utf-8?B?MGFVazdTcXk3Qk04Qk12U1ZyaTIxUnVYS0JxU240ejZxazJlRjAxeGVoZm92?=
- =?utf-8?B?V3hOek0zR3kvcDBuZVBzSlNqeEhKZVhseFphM0ZuZGV3WU9aVktjeFJFSGlG?=
- =?utf-8?B?RDhGU2dWQmpLWDVYWThvOW9WTk8ramR0dTFVVFhjSkdWOURMWHZaVHlVbUtw?=
- =?utf-8?B?dENHSE82WitBZ1JDa1JnS05xSFRJaHhqc2drSUJUaERpdmdhcGw4cm5lOFRj?=
- =?utf-8?B?S3JTYm5Ba1QwSFp2Vk1PazlRZWN3RGhoNXFrVnBwcUtKZ2c1WTVnclBMQUVk?=
- =?utf-8?B?TnpNRDBiUHNIZ2txZ2VVRkJCbWQ3L2YwMzd2Z1UrLzZZMEhBM1Y1WERlZnBT?=
- =?utf-8?B?NHFhTU1HOENNZlQ0d2FpcTZLNXJRRzdOVndHQWR2a242cStuaUkzL09Sdlkv?=
- =?utf-8?B?eExsbFp3ZU1LdDhaSTZSbnNLVHhLU2o4MnZ0eGU4LzNqQXJDRlM2VFZuTjNW?=
- =?utf-8?B?blRJS3ZKMk5HRVVJOWMwM0FqYW1qU2lmMGQzNGlqZ2xJWFh0eHk0WDdVU1Qw?=
- =?utf-8?B?WUxmU29Oa1poa0d6bWZkT09ZRnlTZ241aWJ5aHZ2T0VVWjJOYjhpcFdPTllG?=
- =?utf-8?B?WmFqQWZmR05FU0hXRGFDcFRMcnkyYkNxdm9HUmVMVVZSUFRuVS85eWJKTmg4?=
- =?utf-8?B?YUxHaFhIQ0U1VnJZeEQxdnV3NVFVQnhNT1VYRDlEN2VqdzFsOXpmZjZsU3Zy?=
- =?utf-8?B?YnVZTWtZWU0xbXlsTThNZzlSc1dSUkloYWFuUXFmU1dGYVMxU3NsN2xQVGJ2?=
- =?utf-8?B?aEVMa095cUc2K2pKeUJmNjFnYS9oRnF0VWdtb25GVzJFNlJiVlkxbmNpVjVk?=
- =?utf-8?B?Q25RZjZZU2sxYVpDMHVJL3pucHhiYU5WVSt4S2RBem9JSWxyYnBpYUlTQXNq?=
- =?utf-8?B?R2dVWEtZc2tYRk40Vk91bFdrNzlpSmhXRGFVVGZVS2d0RlBFVk1MZjJ6NHBQ?=
- =?utf-8?B?SnpaZGk3UTl1Ymc1ZmZTTzJXSzVEOWo0eDIxWnkrZ1RlNGxpMjRUSmZONGFu?=
- =?utf-8?B?SitVbEkzbzhwN24yZGpXdTVhdnFBV283eWRoeVF5REtGME5ZSTdLNkdFeGR2?=
- =?utf-8?B?OTNSZk5md3RzZlM2RDZUd2REWnJLL2lrNzNmQ1UvTkV6S3RMVDl1ZDRwckVK?=
- =?utf-8?Q?qNKytNp3OckaP+m2aW3A4ex5Um4tkW1N4Xh1F9n?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+To:     will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, sudeep.holla@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
+        arnd@arndb.de, wei.liu@kernel.org, ardb@kernel.org,
+        daniel.lezcano@linaro.org, kys@microsoft.com
+Cc:     mikelley@microsoft.com
+Subject: [PATCH v9 0/7] Enable Linux guests on Hyper-V on ARM64
+Date:   Mon,  8 Mar 2021 11:57:12 -0800
+Message-Id: <1615233439-23346-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-Originating-IP: [131.107.174.144]
+X-ClientProxiedBy: MW4PR03CA0161.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::16) To DM6PR21MB1514.namprd21.prod.outlook.com
+ (2603:10b6:5:22d::11)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mhkdev.corp.microsoft.com (131.107.174.144) by MW4PR03CA0161.namprd03.prod.outlook.com (2603:10b6:303:8d::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17 via Frontend Transport; Mon, 8 Mar 2021 19:58:03 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7d24951b-111f-45de-85bc-08d8e26c7c11
+X-MS-TrafficTypeDiagnostic: DM5PR21MB1797:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR21MB1797CE3A6B7C0F4CAEE23128D7939@DM5PR21MB1797.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rGCWeRkuUu9LqPn7h8+uJmX9O5zATbB/FjBU8CoEQuS/DjuIin9EcV1qSL6LOYJ//DX/Hw/bEBOhquQgr+oIhxtdQ4AuuT23B8t4+Siynqepi68JKJWmpIA5fmy4I60QB+mFZ9DCa+9JHavRBCIPX9oZe16NwAqxd9jVOOBlcAg5nWDHhrjIGrvKi3EW7a/peaEPbR695VGCQOPqlqrNWtnHlDjy/Of2LhjvFb1vdyAovfqSEi4eGHwEPPC+BrH6NpM9DfrfOPlzcJLuPUFCl86s0GUm06w/59C8iwgHfGzElVYqm/2YOynBOxlqIjyHJxbhBYyRjRu//7rOJgFzTNplx+JofDevozpY39Lz8HyeOOvwgwLhAsmYP/gWdXv0Rx2ySPFzn/XZzfDdiLscfRzb9B4Nm55r98JafQZ89dsL1EPi7jKfDz7Q3Ul5IcXXLDixxgyBJMbTiiMh53MdZOtB3y/0hUgqYjdyfzgJ/yrwsSWChwE6av/xfy716ZU/Y9gSuEBNaghozo5nFq5zN/TZ5B8CX3YdcWVZmW30sNtApL1n8heme7x2oELsCs3RYO0T702msUVW7wv0gqIBNKeC3BmrPJlIIQ9tgsxtG85uxAU0lXoo84XlKUoJ+hyKulqC3qYgOONOpAKW9QtFfXuG96eJKMzJqQHot29NJyy/3ky09desCPc+eCwZMLaf
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(376002)(346002)(396003)(366004)(66556008)(186003)(52116002)(66476007)(66946007)(10290500003)(478600001)(26005)(16526019)(966005)(5660300002)(2906002)(36756003)(8936002)(6666004)(316002)(7696005)(8676002)(6486002)(2616005)(82960400001)(4326008)(6636002)(107886003)(82950400001)(7416002)(921005)(956004)(83380400001)(86362001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?y+sTtw6snoO88HPYP+oasuudZY2RAD0GtNo9IyqaXVj6aurLIqGmvbnQtcRJ?=
+ =?us-ascii?Q?NdVjgIfAWBHTFIYV4lHqUg3x+1uMW5HzWMVMilPjK41U3STH3mxZgBKCpbSZ?=
+ =?us-ascii?Q?g3e0/YKULrznAa3nK7BcQhmB3HKx6cDyOYgh6nK3EZFb/4E1CEXub3JpPloP?=
+ =?us-ascii?Q?G6BYDLoxdoORT0TF2MrMkeQkATIM+w9e02uvSd9BLoWHF8puTrM2ujpwpSp3?=
+ =?us-ascii?Q?3OCbJH+t8t5wSXaCJffD+6uUbc+M32t3oxha+bxVhwO4PlAogCZFc6FbmvMY?=
+ =?us-ascii?Q?c2l6pTQJfVCj0WLU7I/5oYeAr1uSLuxeiVwEj05Te8kwxK49vF51x1jvSTS8?=
+ =?us-ascii?Q?Xb51fThesqKhDDv0qBPAgifxjqNkCH6M9J1CG2sJCOufazxPTWQ5bYhHvErQ?=
+ =?us-ascii?Q?CvvDsIE/YEQMUznhLzbdsttji3yoGNF1zSaQgifX1ly0XQ5BOVBkDmiPCXcW?=
+ =?us-ascii?Q?XYQKSNDGuVGjlZap7LPDhMKbV7iuYijfyDO99yLIiW22ZHDi+qMICpeOBOE/?=
+ =?us-ascii?Q?WElI763EnhB8oRAlZmTnh35UAXAi8lF+e1P5VObVJC8OSMLup9cqycQf1oTe?=
+ =?us-ascii?Q?EGsoc/1Q9e50HVb+Ep8Se/2uTaqfsMdZbYBSnwMM5jKPW0JaZCZL9Vhpv4YG?=
+ =?us-ascii?Q?umUokNrV60/0ueQrQbqGQ6OSCF75OZ5tBdWm75xE/Kl7ZzHovhsGpayw5FJC?=
+ =?us-ascii?Q?faxvOzJdu629pTF1MMieQ0xbSs/PhRHfzuDy1DfUnuuJJiqJkQzXGnn3gKN/?=
+ =?us-ascii?Q?8fS9Lrtr++KJZDAlSuNeJxm3F6EOjN0iCCGpKjNBTs47Y1k/dSQWBgzzNvC4?=
+ =?us-ascii?Q?mf+CYdFrQMQH4G+EMNOy49bXNNy8Esfzz6grPQyErcRt6wms4BNBYZsNuHKI?=
+ =?us-ascii?Q?WgwxuN73k8O0M9NCob1EUhhMiUprYaR9h0ji4DSWpWeCWphxTUYoGQfo0wkM?=
+ =?us-ascii?Q?CQCopFkm/sCab3MTrroJf6JlxX4dMuaP4sj4DJqf9+dkilEwarb4ln1I2+iL?=
+ =?us-ascii?Q?ewJtbmpQosJo1Zj+GR4N4SBArVbjOFDcW6h4hu4Oi5Usst/zEuZe+DKY6tLJ?=
+ =?us-ascii?Q?H8vVhEL+FHJplb1wZ91JOq6N3Aqv3nTPfX8L/Bm9i56dkrcEK2IdylRX7Wck?=
+ =?us-ascii?Q?lFygdhbDk/mqASUDfuq/Q1PatHjSBBYXarwogIa4CSlPQlXMFHdrvfSToADO?=
+ =?us-ascii?Q?asG5m9njipNtBb7ThMyGBmX5Rw0edlc7RtjulROsDYHOillDZqXr903VlOMM?=
+ =?us-ascii?Q?uZxXwgEmulkMSdBsnWuS2Z+rffYcet9bmHZHCobfZSgfYzyFCIEEy95yCyaB?=
+ =?us-ascii?Q?J8uBe9MJAUAqtdygcHyYLjCw?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d24951b-111f-45de-85bc-08d8e26c7c11
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa3556d9-e92c-4c26-f2fd-08d8e2689126
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2021 19:30:01.1251
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2021 19:58:04.0038
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hfbx0yNGOP2zN+duv//+RjR5s2/UXfKtFz7Geax+vIOA4NauObnxDKwqjV9Qm5tkb2xLWXe8C0vJYcGHANczDhKn3laJfU1/oi/0TfudqKE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1770
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eMgkGMkbwwqd1iPjRkPh656DS9nbIXf8DDIs0Gq8ub9+Mw6jofYXNRDcr9lMBRe06QhzH9iiEcyE5cnTgBNrEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB1797
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RnJvbTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPiBT
-ZW50OiBNb25kYXksIE1hcmNoIDgsIDIwMjEgMTE6MTQgQU0NCj4gDQo+IE9uIDIvOC8yMDIxIDEx
-OjQ1IEFNLCBNaWNoYWVsIEtlbGxleSB3cm90ZToNCj4gPiBGcm9tOiBOdW5vIERhcyBOZXZlcyA8
-bnVub2Rhc25ldmVzQGxpbnV4Lm1pY3Jvc29mdC5jb20+IFNlbnQ6IEZyaWRheSwgTm92ZW1iZXIN
-Cj4gMjAsIDIwMjAgNDozMCBQTQ0KPiA+Pg0KDQpbc25pcF0NCg0KPiA+PiBAQCAtMjQ1LDE2ICsy
-NDksMzE4IEBAIGh2X2NhbGxfZGVsZXRlX3BhcnRpdGlvbih1NjQgcGFydGl0aW9uX2lkKQ0KPiA+
-PiAgCXJldHVybiAtaHZfc3RhdHVzX3RvX2Vycm5vKHN0YXR1cyk7DQo+ID4+ICB9DQo+ID4+DQo+
-ID4+ICtzdGF0aWMgaW50DQo+ID4+ICtodl9jYWxsX21hcF9ncGFfcGFnZXModTY0IHBhcnRpdGlv
-bl9pZCwNCj4gPj4gKwkJICAgICAgdTY0IGdwYV90YXJnZXQsDQo+ID4+ICsJCSAgICAgIHU2NCBw
-YWdlX2NvdW50LCB1MzIgZmxhZ3MsDQo+ID4+ICsJCSAgICAgIHN0cnVjdCBwYWdlICoqcGFnZXMp
-DQo+ID4+ICt7DQo+ID4+ICsJc3RydWN0IGh2X21hcF9ncGFfcGFnZXMgKmlucHV0X3BhZ2U7DQo+
-ID4+ICsJaW50IHN0YXR1czsNCj4gPj4gKwlpbnQgaTsNCj4gPj4gKwlzdHJ1Y3QgcGFnZSAqKnA7
-DQo+ID4+ICsJdTMyIGNvbXBsZXRlZCA9IDA7DQo+ID4+ICsJdTY0IGh5cGVyY2FsbF9zdGF0dXM7
-DQo+ID4+ICsJdW5zaWduZWQgbG9uZyByZW1haW5pbmcgPSBwYWdlX2NvdW50Ow0KPiA+PiArCWlu
-dCByZXBfY291bnQ7DQo+ID4+ICsJdW5zaWduZWQgbG9uZyBpcnFfZmxhZ3M7DQo+ID4+ICsJaW50
-IHJldCA9IDA7DQo+ID4+ICsNCj4gPj4gKwl3aGlsZSAocmVtYWluaW5nKSB7DQo+ID4+ICsNCj4g
-Pj4gKwkJcmVwX2NvdW50ID0gbWluKHJlbWFpbmluZywgSFZfTUFQX0dQQV9CQVRDSF9TSVpFKTsN
-Cj4gPj4gKw0KPiA+PiArCQlsb2NhbF9pcnFfc2F2ZShpcnFfZmxhZ3MpOw0KPiA+PiArCQlpbnB1
-dF9wYWdlID0gKHN0cnVjdCBodl9tYXBfZ3BhX3BhZ2VzICopKCp0aGlzX2NwdV9wdHIoDQo+ID4+
-ICsJCQloeXBlcnZfcGNwdV9pbnB1dF9hcmcpKTsNCj4gPj4gKw0KPiA+PiArCQlpbnB1dF9wYWdl
-LT50YXJnZXRfcGFydGl0aW9uX2lkID0gcGFydGl0aW9uX2lkOw0KPiA+PiArCQlpbnB1dF9wYWdl
-LT50YXJnZXRfZ3BhX2Jhc2UgPSBncGFfdGFyZ2V0Ow0KPiA+PiArCQlpbnB1dF9wYWdlLT5tYXBf
-ZmxhZ3MgPSBmbGFnczsNCj4gPj4gKw0KPiA+PiArCQlmb3IgKGkgPSAwLCBwID0gcGFnZXM7IGkg
-PCByZXBfY291bnQ7IGkrKywgcCsrKQ0KPiA+PiArCQkJaW5wdXRfcGFnZS0+c291cmNlX2dwYV9w
-YWdlX2xpc3RbaV0gPQ0KPiA+PiArCQkJCXBhZ2VfdG9fcGZuKCpwKSAmIEhWX01BUF9HUEFfTUFT
-SzsNCj4gPg0KPiA+IFRoZSBtYXNraW5nIHNlZW1zIGEgYml0IHdlaXJkLiAgVGhlIG1hc2sgYWxs
-b3dzIGZvciB1cCB0byA2NEcgcGFnZSBmcmFtZXMsDQo+ID4gd2hpY2ggaXMgMjU2IFRieXRlcyBv
-ZiB0b3RhbCBwaHlzaWNhbCBtZW1vcnksIHdoaWNoIGlzIHByb2JhYmx5IHRoZSBjdXJyZW50DQo+
-ID4gSHlwZXItViBsaW1pdCBvbiBtZW1vcnkgc2l6ZSAoNDggYml0IHBoeXNpY2FsIGFkZHJlc3Mg
-c3BhY2UsIHRob3VnaCA1MiBiaXQNCj4gPiBwaHlzaWNhbCBhZGRyZXNzIHNwYWNlcyBhcmUgY29t
-aW5nKS4gIFNvIHRoZSBtYXNraW5nIHNob3VsZG4ndCBldmVyIGJlIGRvaW5nDQo+ID4gYW55dGhp
-bmcuICAgQW5kIGlmIGl0IHdhcyBkb2luZyBzb21ldGhpbmcsIHRoYXQgcHJvYmFibHkgc2hvdWxk
-IGJlIHRyZWF0ZWQgYXMNCj4gPiBhbiBlcnJvciByYXRoZXIgdGhhbiBzaW1wbHkgZHJvcHBpbmcg
-dGhlIGhpZ2ggYml0cy4NCj4gDQo+IEdvb2QgcG9pbnQgLSBJdCBsb29rcyBsaWtlIHRoZSBtYXNr
-IGlzbid0IG5lZWRlZC4NCj4gDQo+ID4NCj4gPiBOb3RlIHRoYXQgdGhpcyBjb2RlIGRvZXMgbm90
-IGhhbmRsZSB0aGUgY2FzZSB3aGVyZSBQQUdFX1NJWkUgIT0NCj4gPiBIVl9IWVBfUEFHRV9TSVpF
-LiAgQnV0IG1heWJlIHdlJ2xsIG5ldmVyIHJ1biB0aGUgcm9vdCBwYXJ0aXRpb24gd2l0aCBhDQo+
-ID4gcGFnZSBzaXplIG90aGVyIHRoYW4gNEsuDQo+ID4NCj4gDQo+IEZvciBub3cgb24geDg2IGl0
-IHdvbid0IGhhcHBlbiwgYnV0IG1heWJlIG9uIEFSTT8NCj4gSXQgc2hvdWxkbid0IGJlIGhhcmQg
-dG8gc3VwcG9ydCB0aGlzIGNhc2UsIGVzcGVjaWFsbHkgc2luY2UNCj4gUEFHRV9TSVpFID49IEhW
-X0hZUF9QQUdFX1NJWkUuIERvIHlvdSB0aGluayB3ZSBuZWVkIGl0IGluIHRoaXMgcGF0Y2ggc2V0
-Pw0KDQpObywgZnJvbSBteSBwZXJzcGVjdGl2ZSwgdGhpcyBjYXNlIGRvZXMgbm90IG5lZWQgdG8g
-YmUgaGFuZGxlZCBpbiANCnRoaXMgcGF0Y2ggc2V0Lg0KDQo+IA0KPiA+PiArCQloeXBlcmNhbGxf
-c3RhdHVzID0gaHZfZG9fcmVwX2h5cGVyY2FsbCgNCj4gPj4gKwkJCUhWQ0FMTF9NQVBfR1BBX1BB
-R0VTLCByZXBfY291bnQsIDAsIGlucHV0X3BhZ2UsIE5VTEwpOw0KPiA+PiArCQlsb2NhbF9pcnFf
-cmVzdG9yZShpcnFfZmxhZ3MpOw0KPiA+PiArDQo+ID4+ICsJCXN0YXR1cyA9IGh5cGVyY2FsbF9z
-dGF0dXMgJiBIVl9IWVBFUkNBTExfUkVTVUxUX01BU0s7DQo+ID4+ICsJCWNvbXBsZXRlZCA9ICho
-eXBlcmNhbGxfc3RhdHVzICYgSFZfSFlQRVJDQUxMX1JFUF9DT01QX01BU0spID4+DQo+ID4+ICsJ
-CQkJSFZfSFlQRVJDQUxMX1JFUF9DT01QX09GRlNFVDsNCj4gPj4gKw0KPiA+PiArCQlpZiAoc3Rh
-dHVzID09IEhWX1NUQVRVU19JTlNVRkZJQ0lFTlRfTUVNT1JZKSB7DQo+ID4+ICsJCQlyZXQgPSBo
-dl9jYWxsX2RlcG9zaXRfcGFnZXMoTlVNQV9OT19OT0RFLA0KPiA+PiArCQkJCQkJICAgIHBhcnRp
-dGlvbl9pZCwgMjU2KTsNCj4gPg0KPiA+IFdoeSBhZGRpbmcgMjU2IHBhZ2VzPyAgSSdtIGp1c3Qg
-Y29udHJhc3Rpbmcgd2l0aCBvdGhlciBwbGFjZXMgdGhhdCBhZGQNCj4gPiAxIHBhZ2UgYXQgYSB0
-aW1lLiAgTWF5YmUgYSBjb21tZW50IHRvIGV4cGxhaW4gLi4uLg0KPiA+DQo+IA0KPiBFbXBpcmlj
-YWxseSBkZXRlcm1pbmVkLiBJJ2xsIGFkZCBhICNkZWZpbmUgYW5kIGNvbW1lbnQuDQo+IA0KPiA+
-PiArCQkJaWYgKHJldCkNCj4gPj4gKwkJCQlicmVhazsNCj4gPj4gKwkJfSBlbHNlIGlmIChzdGF0
-dXMgIT0gSFZfU1RBVFVTX1NVQ0NFU1MpIHsNCj4gPj4gKwkJCXByX2VycigiJXM6IGNvbXBsZXRl
-ZCAlbGx1IG91dCBvZiAlbGx1LCAlc1xuIiwNCj4gPj4gKwkJCSAgICAgICBfX2Z1bmNfXywNCj4g
-Pj4gKwkJCSAgICAgICBwYWdlX2NvdW50IC0gcmVtYWluaW5nLCBwYWdlX2NvdW50LA0KPiA+PiAr
-CQkJICAgICAgIGh2X3N0YXR1c190b19zdHJpbmcoc3RhdHVzKSk7DQo+ID4+ICsJCQlyZXQgPSAt
-aHZfc3RhdHVzX3RvX2Vycm5vKHN0YXR1cyk7DQo+ID4+ICsJCQlicmVhazsNCj4gPj4gKwkJfQ0K
-PiA+PiArDQo+ID4+ICsJCXBhZ2VzICs9IGNvbXBsZXRlZDsNCj4gPj4gKwkJcmVtYWluaW5nIC09
-IGNvbXBsZXRlZDsNCj4gPj4gKwkJZ3BhX3RhcmdldCArPSBjb21wbGV0ZWQ7DQo+ID4+ICsJfQ0K
-PiA+PiArDQo+ID4+ICsJaWYgKHJldCAmJiBjb21wbGV0ZWQpIHsNCj4gPg0KPiA+IElzIHRoZSBh
-Ym92ZSB0aGUgcmlnaHQgdGVzdD8gIENvbXBsZXRlZCBjb3VsZCBiZSB6ZXJvIGZyb20gdGhlIG1v
-c3QNCj4gPiByZWNlbnQgaXRlcmF0aW9uLCBidXQgc3RpbGwgY291bGQgYmUgcGFydGlhbGx5IHN1
-Y2NlZWRlZCBiYXNlZCBvbiBhIHByZXZpb3VzDQo+ID4gc3VjY2Vzc2Z1bCBpdGVyYXRpb24uICAg
-SSB0aGluayB0aGlzIG5lZWRzIHRvIGNoZWNrIHdoZXRoZXIgcmVtYWluaW5nIGVxdWFscw0KPiA+
-IHBhZ2VfY291bnQuDQo+ID4NCj4gDQo+IFlvdSdyZSByaWdodDsgSSdsbCBjaGFuZ2UgaXQgdG8g
-KHJldCAmJiByZW1haW5pbmcgPCBwYWdlX2NvdW50KQ0KPiANCj4gPj4gKwkJcHJfZXJyKCIlczog
-UGFydGlhbGx5IHN1Y2NlZWRlZDsgbWFwcGVkIHJlZ2lvbnMgbWF5IGJlIGluIGludmFsaWQgc3Rh
-dGUiLA0KPiA+PiArCQkgICAgICAgX19mdW5jX18pOw0KPiA+PiArCQlyZXQgPSAtRUJBREZEOw0K
-PiA+PiArCX0NCj4gPj4gKw0KPiA+PiArCXJldHVybiByZXQ7DQo+ID4+ICt9DQo+ID4+ICsNCj4g
-Pj4gK3N0YXRpYyBpbnQNCj4gPj4gK2h2X2NhbGxfdW5tYXBfZ3BhX3BhZ2VzKHU2NCBwYXJ0aXRp
-b25faWQsDQo+ID4+ICsJCQl1NjQgZ3BhX3RhcmdldCwNCj4gPj4gKwkJCXU2NCBwYWdlX2NvdW50
-LCB1MzIgZmxhZ3MpDQo+ID4+ICt7DQo+ID4+ICsJc3RydWN0IGh2X3VubWFwX2dwYV9wYWdlcyAq
-aW5wdXRfcGFnZTsNCj4gPj4gKwlpbnQgc3RhdHVzOw0KPiA+PiArCWludCByZXQgPSAwOw0KPiA+
-PiArCXUzMiBjb21wbGV0ZWQgPSAwOw0KPiA+PiArCXU2NCBoeXBlcmNhbGxfc3RhdHVzOw0KPiA+
-PiArCXVuc2lnbmVkIGxvbmcgcmVtYWluaW5nID0gcGFnZV9jb3VudDsNCj4gPj4gKwlpbnQgcmVw
-X2NvdW50Ow0KPiA+PiArCXVuc2lnbmVkIGxvbmcgaXJxX2ZsYWdzOw0KPiA+PiArDQo+ID4+ICsJ
-bG9jYWxfaXJxX3NhdmUoaXJxX2ZsYWdzKTsNCj4gPj4gKwlpbnB1dF9wYWdlID0gKHN0cnVjdCBo
-dl91bm1hcF9ncGFfcGFnZXMgKikoKnRoaXNfY3B1X3B0cigNCj4gPj4gKwkJaHlwZXJ2X3BjcHVf
-aW5wdXRfYXJnKSk7DQo+ID4+ICsNCj4gPj4gKwlpbnB1dF9wYWdlLT50YXJnZXRfcGFydGl0aW9u
-X2lkID0gcGFydGl0aW9uX2lkOw0KPiA+PiArCWlucHV0X3BhZ2UtPnRhcmdldF9ncGFfYmFzZSA9
-IGdwYV90YXJnZXQ7DQo+ID4+ICsJaW5wdXRfcGFnZS0+dW5tYXBfZmxhZ3MgPSBmbGFnczsNCj4g
-Pj4gKw0KPiA+PiArCXdoaWxlIChyZW1haW5pbmcpIHsNCj4gPj4gKwkJcmVwX2NvdW50ID0gbWlu
-KHJlbWFpbmluZywgSFZfTUFQX0dQQV9CQVRDSF9TSVpFKTsNCj4gPj4gKwkJaHlwZXJjYWxsX3N0
-YXR1cyA9IGh2X2RvX3JlcF9oeXBlcmNhbGwoDQo+ID4+ICsJCQlIVkNBTExfVU5NQVBfR1BBX1BB
-R0VTLCByZXBfY291bnQsIDAsIGlucHV0X3BhZ2UsIE5VTEwpOw0KPiA+DQo+ID4gU2ltaWxhcmx5
-LCB0aGlzIGNvZGUgZG9lc24ndCBoYW5kbGUgUEFHRV9TSVpFICE9IEhWX0hZUF9QQUdFX1NJWkUu
-DQo+ID4NCj4gDQo+IEFzIGFib3ZlIC0gZG8gd2UgbmVlZCB0aGlzIGZvciB0aGlzIHBhdGNoIHNl
-dD8gVGhpcyB3b24ndCBoYXBwZW4gb24geDg2Lg0KDQpBZ2Fpbiwgbm90IG5lZWRlZCBmcm9tIG15
-IHBlcnNwZWN0aXZlLg0KDQo+IA0KPiA+PiArCQlzdGF0dXMgPSBoeXBlcmNhbGxfc3RhdHVzICYg
-SFZfSFlQRVJDQUxMX1JFU1VMVF9NQVNLOw0KPiA+PiArCQljb21wbGV0ZWQgPSAoaHlwZXJjYWxs
-X3N0YXR1cyAmIEhWX0hZUEVSQ0FMTF9SRVBfQ09NUF9NQVNLKSA+Pg0KPiA+PiArCQkJCUhWX0hZ
-UEVSQ0FMTF9SRVBfQ09NUF9PRkZTRVQ7DQo+ID4+ICsJCWlmIChzdGF0dXMgIT0gSFZfU1RBVFVT
-X1NVQ0NFU1MpIHsNCj4gPj4gKwkJCXByX2VycigiJXM6IGNvbXBsZXRlZCAlbGx1IG91dCBvZiAl
-bGx1LCAlc1xuIiwNCj4gPj4gKwkJCSAgICAgICBfX2Z1bmNfXywNCj4gPj4gKwkJCSAgICAgICBw
-YWdlX2NvdW50IC0gcmVtYWluaW5nLCBwYWdlX2NvdW50LA0KPiA+PiArCQkJICAgICAgIGh2X3N0
-YXR1c190b19zdHJpbmcoc3RhdHVzKSk7DQo+ID4+ICsJCQlyZXQgPSAtaHZfc3RhdHVzX3RvX2Vy
-cm5vKHN0YXR1cyk7DQo+ID4+ICsJCQlicmVhazsNCj4gPj4gKwkJfQ0KPiA+PiArDQo+ID4+ICsJ
-CXJlbWFpbmluZyAtPSBjb21wbGV0ZWQ7DQo+ID4+ICsJCWdwYV90YXJnZXQgKz0gY29tcGxldGVk
-Ow0KPiA+PiArCQlpbnB1dF9wYWdlLT50YXJnZXRfZ3BhX2Jhc2UgPSBncGFfdGFyZ2V0Ow0KPiA+
-PiArCX0NCj4gPj4gKwlsb2NhbF9pcnFfcmVzdG9yZShpcnFfZmxhZ3MpOw0KPiA+DQo+ID4gSSBo
-YXZlIHNvbWUgY29uY2VybiBhYm91dCBob2xkaW5nIGludGVycnVwdHMgZGlzYWJsZWQgZm9yIHRo
-aXMgbG9uZy4NCj4gPg0KPiANCj4gSG93IGFib3V0IEkgbW92ZSB0aGUgaW50ZXJydXB0IGVuYWJs
-aW5nL2Rpc2FibGluZyBpbnNpZGUgdGhlIGxvb3A/IGkuZS46DQo+ICAgICAgICAgd2hpbGUgKHJl
-bWFpbmluZykgew0KPiAgICAgICAgICAgICAgICAgbG9jYWxfaXJxX3NhdmUoaXJxX2ZsYWdzKTsN
-Cj4gICAgICAgICAgICAgICAgIGlucHV0X3BhZ2UgPSAoc3RydWN0IGh2X3VubWFwX2dwYV9wYWdl
-cyAqKSgqdGhpc19jcHVfcHRyKA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBoeXBlcnZfcGNw
-dV9pbnB1dF9hcmcpKTsNCj4gDQo+ICAgICAgICAgICAgICAgICBpbnB1dF9wYWdlLT50YXJnZXRf
-cGFydGl0aW9uX2lkID0gcGFydGl0aW9uX2lkOw0KPiAgICAgICAgICAgICAgICAgaW5wdXRfcGFn
-ZS0+dGFyZ2V0X2dwYV9iYXNlID0gZ3BhX3RhcmdldDsNCj4gICAgICAgICAgICAgICAgIGlucHV0
-X3BhZ2UtPnVubWFwX2ZsYWdzID0gZmxhZ3M7DQo+ICAgICAgICAgICAgICAgICByZXBfY291bnQg
-PSBtaW4ocmVtYWluaW5nLCBIVl9NQVBfR1BBX0JBVENIX1NJWkUpOw0KPiAgICAgICAgICAgICAg
-ICAgc3RhdHVzID0gaHZfZG9fcmVwX2h5cGVyY2FsbCgNCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgSFZDQUxMX1VOTUFQX0dQQV9QQUdFUywgcmVwX2NvdW50LCAwLCBpbnB1dF9wYWdlLCBOVUxM
-KTsNCj4gICAgICAgICAgICAgICAgIGxvY2FsX2lycV9yZXN0b3JlKGlycV9mbGFncyk7DQo+IA0K
-PiAgICAgICAgICAgICAgICAgY29tcGxldGVkID0gKHN0YXR1cyAmIEhWX0hZUEVSQ0FMTF9SRVBf
-Q09NUF9NQVNLKSA+Pg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEhWX0hZUEVS
-Q0FMTF9SRVBfQ09NUF9PRkZTRVQ7DQo+ICAgICAgICAgICAgICAgICBzdGF0dXMgJj0gSFZfSFlQ
-RVJDQUxMX1JFU1VMVF9NQVNLOw0KPiAgICAgICAgICAgICAgICAgaWYgKHN0YXR1cyAhPSBIVl9T
-VEFUVVNfU1VDQ0VTUykgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICBwcl9lcnIoIiVzOiBj
-b21wbGV0ZWQgJWxsdSBvdXQgb2YgJWxsdSwgJXNcbiIsDQo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBfX2Z1bmNfXywNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBh
-Z2VfY291bnQgLSByZW1haW5pbmcsIHBhZ2VfY291bnQsDQo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBodl9zdGF0dXNfdG9fc3RyaW5nKHN0YXR1cykpOw0KPiAgICAgICAgICAgICAg
-ICAgICAgICAgICByZXQgPSBodl9zdGF0dXNfdG9fZXJybm8oc3RhdHVzKTsNCj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgYnJlYWs7DQo+ICAgICAgICAgICAgICAgICB9DQo+IA0KPiAgICAgICAg
-ICAgICAgICAgcmVtYWluaW5nIC09IGNvbXBsZXRlZDsNCj4gICAgICAgICAgICAgICAgIGdwYV90
-YXJnZXQgKz0gY29tcGxldGVkOw0KPiAgICAgICAgIH0NCj4gDQo+IA0KDQpZZXMsIHRoYXQgd291
-bGQgaGVscC4NCg0KPiA+PiArDQo+ID4+ICsJaWYgKHJldCAmJiBjb21wbGV0ZWQpIHsNCj4gPg0K
-PiA+IFNhbWUgY29tbWVudCBhcyBiZWZvcmUuDQo+ID4NCj4gDQo+IERpdHRvIGFzIGFib3ZlLg0K
-PiANCj4gPj4gKwkJcHJfZXJyKCIlczogUGFydGlhbGx5IHN1Y2NlZWRlZDsgbWFwcGVkIHJlZ2lv
-bnMgbWF5IGJlIGluIGludmFsaWQgc3RhdGUiLA0KPiA+PiArCQkgICAgICAgX19mdW5jX18pOw0K
-PiA+PiArCQlyZXQgPSAtRUJBREZEOw0KPiA+PiArCX0NCj4gPj4gKw0KPiA+PiArCXJldHVybiBy
-ZXQ7DQo+ID4+ICt9DQo+ID4+ICsNCj4gPj4gK3N0YXRpYyBsb25nDQo+ID4+ICttc2h2X3BhcnRp
-dGlvbl9pb2N0bF9tYXBfbWVtb3J5KHN0cnVjdCBtc2h2X3BhcnRpdGlvbiAqcGFydGl0aW9uLA0K
-PiA+PiArCQkJCXN0cnVjdCBtc2h2X3VzZXJfbWVtX3JlZ2lvbiBfX3VzZXIgKnVzZXJfbWVtKQ0K
-PiA+PiArew0KPiA+PiArCXN0cnVjdCBtc2h2X3VzZXJfbWVtX3JlZ2lvbiBtZW07DQo+ID4+ICsJ
-c3RydWN0IG1zaHZfbWVtX3JlZ2lvbiAqcmVnaW9uOw0KPiA+PiArCWludCBjb21wbGV0ZWQ7DQo+
-ID4+ICsJdW5zaWduZWQgbG9uZyByZW1haW5pbmcsIGJhdGNoX3NpemU7DQo+ID4+ICsJaW50IGk7
-DQo+ID4+ICsJc3RydWN0IHBhZ2UgKipwYWdlczsNCj4gPj4gKwl1NjQgcGFnZV9jb3VudCwgdXNl
-cl9zdGFydCwgdXNlcl9lbmQsIGdwZm5fc3RhcnQsIGdwZm5fZW5kOw0KPiA+PiArCXU2NCByZWdp
-b25fcGFnZV9jb3VudCwgcmVnaW9uX3VzZXJfc3RhcnQsIHJlZ2lvbl91c2VyX2VuZDsNCj4gPj4g
-Kwl1NjQgcmVnaW9uX2dwZm5fc3RhcnQsIHJlZ2lvbl9ncGZuX2VuZDsNCj4gPj4gKwlsb25nIHJl
-dCA9IDA7DQo+ID4+ICsNCj4gPj4gKwkvKiBDaGVjayB3ZSBoYXZlIGVub3VnaCBzbG90cyovDQo+
-ID4+ICsJaWYgKHBhcnRpdGlvbi0+cmVnaW9ucy5jb3VudCA9PSBNU0hWX01BWF9NRU1fUkVHSU9O
-Uykgew0KPiA+PiArCQlwcl9lcnIoIiVzOiBub3QgZW5vdWdoIG1lbW9yeSByZWdpb24gc2xvdHNc
-biIsIF9fZnVuY19fKTsNCj4gPj4gKwkJcmV0dXJuIC1FTk9TUEM7DQo+ID4+ICsJfQ0KPiA+PiAr
-DQo+ID4+ICsJaWYgKGNvcHlfZnJvbV91c2VyKCZtZW0sIHVzZXJfbWVtLCBzaXplb2YobWVtKSkp
-DQo+ID4+ICsJCXJldHVybiAtRUZBVUxUOw0KPiA+PiArDQo+ID4+ICsJaWYgKCFtZW0uc2l6ZSB8
-fA0KPiA+PiArCSAgICBtZW0uc2l6ZSAmIChQQUdFX1NJWkUgLSAxKSB8fA0KPiA+PiArCSAgICBt
-ZW0udXNlcnNwYWNlX2FkZHIgJiAoUEFHRV9TSVpFIC0gMSkgfHwNCj4gPg0KPiA+IFRoZXJlJ3Mg
-YSBQQUdFX0FMSUdORUQgbWFjcm8gdGhhdCBleHByZXNzZXMgZXhhY3RseSB3aGF0DQo+ID4gZWFj
-aCBvZiB0aGUgcHJldmlvdXMgdHdvIHRlc3RzIGlzIGRvaW5nLg0KPiA+DQo+IA0KPiBTaW5jZSB0
-aGVzZSBuZWVkIHRvIGJlIEhWX0hZUF9QQUdFX1NJWkUgYWxpZ25lZCwgSSB3aWxsIGFkZCBhDQo+
-IEhWX0hZUF9QQUdFX0FMSUdORUQgbWFjcm8gZm9yIHRoaXMuDQoNCkkgd2FzIHRoaW5raW5nIHRo
-YXQgUEFHRV9TSVpFIGFuZCBQQUdFX0FMSUdORUQgYXJlIGNvcnJlY3QuICAgSWYNCnRoaXMgY29k
-ZSB3ZXJlIHJ1bm5pbmcgb24gYW4gQVJNNjQgc3lzdGVtIHdpdGggYSA2NEsgcGFnZQ0Kc2l6ZSwg
-dGhlIDY0SyBhbGlnbm1lbnQgd291bGQgYmUgZmluZSBhbmQgd2lsbCBtYWtlIHNlbnNlIGZyb20N
-CnRoZSB1c2VyIHNwYWNlIHBlcnNwZWN0aXZlLiAgIFlvdSBkb24ndCB3YW50IHRvIGJlIG1hcHBp
-bmcgcGFydA0Kb2YgYSB1c2VyIHNwYWNlIHBhZ2UuICBBbmQgNjRLIGFsaWdubWVudCB3aWxsIGNl
-cnRhaW5seSBzYXRpc2Z5DQpIeXBlci1WJ3MgcmVxdWlyZW1lbnQgZm9yIDRLIGFsaWdubWVudC4g
-IFRoZSByZWFsIHJlcXVpcmVtZW50DQpmcm9tIEh5cGVyLVYncyBzdGFuZHBvaW50IGlzIHRoYXQg
-dGhlIGFsaWdubWVudCBub3QgYmUgc21hbGxlcg0KdGhhbiA0Sy4gIEJ1dCBtYXliZSBJJ20gbWlz
-dW5kZXJzdGFuZGluZy4NCg0KTWljaGFlbA0K
+This series enables Linux guests running on Hyper-V on ARM64
+hardware. New ARM64-specific code in arch/arm64/hyperv initializes
+Hyper-V, including its interrupts and hypercall mechanism.
+Existing architecture independent drivers for Hyper-V's VMbus and
+synthetic devices just work when built for ARM64. Hyper-V code is
+built and included in the image and modules only if CONFIG_HYPERV
+is enabled.
+
+The seven patches are organized as follows:
+
+1) Update include/linux/arm-smccc.h to provide an HVC wrapper
+   variant that returns results in other than X0 thru X3
+
+2) Add definitions and functions for making Hyper-V hypercalls
+   and getting/setting virtual processor registers provided by
+   Hyper-V
+
+3) Add architecture specific definitions needed by the
+   architecture independent Hyper-V clocksource driver in
+   drivers/clocksource/hyperv_timer.c. Update the clocksource
+   driver to be initialized on ARM64.
+
+4) Add functions needed by the arch independent VMbus driver
+   for reporting a panic to Hyper-V and as stubs for the kexec
+   and crash handlers.
+
+5) Add Hyper-V initialization code and utility functions that
+   report Hyper-v status.
+
+6) Export screen_info so it may be used by the Hyper-V frame buffer
+   driver built as a module. It is already exported for x86,
+   powerpc, and alpha architectures.
+
+7) Make CONFIG_HYPERV selectable on ARM64 in addition to x86/x64.
+
+Hyper-V on ARM64 runs with a 4 Kbyte page size, but allows guests
+with 4K/16K/64K page size. Linux guests with this ARM64 enablement
+code work with all three supported ARM64 page sizes.
+
+The Hyper-V vPCI driver at drivers/pci/host/pci-hyperv.c has
+x86/x64-specific code and is not being built for ARM64. Fixing
+this driver to enable vPCI devices on ARM64 will be done later.
+
+In a few cases, terminology from the x86/x64 world has been carried
+over into the ARM64 code ("MSR", "TSC").  Hyper-V still uses the
+x86/x64 terminology and has not replaced it with something more
+generic, so the code uses the Hyper-V terminology.  This will be
+fixed when Hyper-V updates the usage in the TLFS.
+
+This patch set is based on the hyperv-next branch of the code tree
+https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/
+
+Changes in v9:
+* Added Patch 1 to enable making an SMCCC compliant hypercall
+  that returns results in other than registers X0 thru X3, per
+  version 1.2 and later of the SMCCC spec.
+* Using the ability to return results in registers X6 and X7,
+  converted hv_get_vpreg_128() to use a "fast" hypercall that
+  passes inputs and outputs in registers, and in doing so eliminated
+  a lot of memory allocation complexity.
+* Cleaned up some extra blank lines and use of spaces in aligning
+  local variables. [Sunil Muthuswamy]
+* Based on discussion about future directions, reverted the
+  population of hv_vp_index array to use a cpuhp state instead
+  of a hypercall, which is like it was in v7 and earlier.
+
+Changes in v8:
+* Removed a lot of code based on refactoring the boundary between
+  arch independent and arch dependent code for Hyper-V, per comments
+  from Arnd Bergmann. The removed code was either duplicated on
+  the x86 side, or has been folded into architecture independent
+  code as not really being architecture dependent.
+* Added config dependency on !CONFIG_CPU_BIG_ENDIAN [Arnd Bergmann]
+* Reworked the approach to Hyper-V initialization. The functionality
+  is the same, but is now structured like the Xen code with an early
+  init function called in setup_arch() and an early initcall to
+  finish the initialization. [Arnd Bergmann]
+
+Changes in v7:
+* Separately upstreamed split of hyperv-tlfs.h into arch dependent
+  and independent versions.  In this patch set, update the ARM64
+  hyperv-tlfs.h to include architecture independent definitions.
+  This approach eliminates a lot of lines of otherwise duplicated
+  code on the ARM64 side.
+* Break ARM64 mshyperv.h into smaller pieces. Have an initial
+  baseline, and add code along with patches for a particular
+  functional area. [Marc Zyngier]
+* In mshyperv.h, use static inline functions instead of #defines
+  where possible. [Arnd Bergmann]
+* Use VMbus INTID obtained from ACPI DSDT instead of hardcoding.
+  The STIMER INTID is still hardcoded because it is needed
+  before Linux has initialized the ACPI subsystem, so it can't
+  be obtained from the DSDT.  Wedging it into the GTDT seems
+  dubious, so was not done. [Marc Zyngier]
+* Update Hyper-V page size allocation functions to use
+  alloc_page() if PAGE_SIZE == HV_HYP_PAGE_SIZE [Arnd
+  Bergmann]
+* Various other minor changes based on feedback and to rebase
+  to latest linux-next [Marc Zyngier and Arnd Bergmann]
+
+Changes in v6:
+* Use SMCCC hypercall interface instead of direct invocation
+  of HVC instruction and the Hyper-V hypercall interface
+  [Marc Zyngier]
+* Reimplemented functions to alloc/free Hyper-V size pages
+  using kmalloc/kfree since kmalloc now guarantees alignment of
+  power of 2 size allocations [Marc Zyngier]
+* Export screen_info in arm64 architecture so it can be used
+  by the Hyper-V buffer driver built as a module
+* Renamed source file arch/arm64/hyperv/hv_init.c to hv_core.c
+  to better reflect its content
+* Fixed the bit position of certain feature flags presented by
+  Hyper-V to the guest.  The bit positions on ARM64 don't match
+  the position on x86 like originally thought.
+* Minor fixups to rebase to 5.6-rc5 linux-next
+
+Changes in v5:
+* Minor fixups to rebase to 5.4-rc1 linux-next
+
+Changes in v4:
+* Moved clock-related code into an architecture independent
+  Hyper-V clocksource driver that is already upstream. Clock
+  related code is removed from this patch set except for the
+  ARM64 specific interrupt handler. [Marc Zyngier]
+* Separately upstreamed the split of mshyperv.h into arch independent
+  and arch dependent portions. The arch independent portion has been
+  removed from this patch set.
+* Divided patch #2 of the series into multiple smaller patches
+  [Marc Zyngier]
+* Changed a dozen or so smaller things based on feedback
+  [Marc Zyngier, Will Deacon]
+* Added functions to alloc/free Hyper-V size pages for use by
+  drivers for Hyper-V synthetic devices when updated to not assume
+  guest page size and Hyper-v page size are the same
+
+Changes in v3:
+* Added initialization of hv_vp_index array like was recently
+  added on x86 branch [KY Srinivasan]
+* Changed Hyper-V ARM64 register symbols to be all uppercase 
+  instead of mixed case [KY Srinivasan]
+* Separated mshyperv.h into two files, one architecture
+  independent and one architecture dependent. After this code
+  is upstream, will make changes to the x86 code to use the
+  architecture independent file and remove duplication. And
+  once we have a multi-architecture Hyper-V TLFS, will do a
+  separate patch to split hyperv-tlfs.h in the same way.
+  [KY Srinivasan]
+* Minor tweaks to rebase to latest linux-next code
+
+Changes in v2:
+* Removed patch to implement slow_virt_to_phys() on ARM64.
+  Use of slow_virt_to_phys() in arch independent Hyper-V
+  drivers has been eliminated by commit 6ba34171bcbd
+  ("Drivers: hv: vmbus: Remove use of slow_virt_to_phys()")
+* Minor tweaks to rebase to latest linux-next code
+*** BLURB HERE ***
+
+Michael Kelley (7):
+  smccc: Add HVC call variant with result registers other than 0 thru 3
+  arm64: hyperv: Add Hyper-V hypercall and register access utilities
+  arm64: hyperv: Add Hyper-V clocksource/clockevent support
+  arm64: hyperv: Add kexec and panic handlers
+  arm64: hyperv: Initialize hypervisor on boot
+  arm64: efi: Export screen_info
+  Drivers: hv: Enable Hyper-V code to be built on ARM64
+
+ MAINTAINERS                          |   3 +
+ arch/arm64/Kbuild                    |   1 +
+ arch/arm64/hyperv/Makefile           |   2 +
+ arch/arm64/hyperv/hv_core.c          | 178 +++++++++++++++++++++++++++++++++++
+ arch/arm64/hyperv/mshyperv.c         | 173 ++++++++++++++++++++++++++++++++++
+ arch/arm64/include/asm/hyperv-tlfs.h |  69 ++++++++++++++
+ arch/arm64/include/asm/mshyperv.h    |  72 ++++++++++++++
+ arch/arm64/kernel/efi.c              |   1 +
+ arch/arm64/kernel/setup.c            |   4 +
+ drivers/clocksource/hyperv_timer.c   |  14 +++
+ drivers/hv/Kconfig                   |   3 +-
+ include/linux/arm-smccc.h            |  29 ++++--
+ 12 files changed, 542 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/hyperv/Makefile
+ create mode 100644 arch/arm64/hyperv/hv_core.c
+ create mode 100644 arch/arm64/hyperv/mshyperv.c
+ create mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
+ create mode 100644 arch/arm64/include/asm/mshyperv.h
+
+-- 
+1.8.3.1
+
