@@ -2,120 +2,95 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2EFA332978
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Mar 2021 16:01:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06082332A09
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Mar 2021 16:17:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230183AbhCIPBL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 9 Mar 2021 10:01:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37136 "EHLO
+        id S230449AbhCIPQo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 9 Mar 2021 10:16:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230081AbhCIPAk (ORCPT
+        with ESMTP id S231901AbhCIPQN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 9 Mar 2021 10:00:40 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5761DC06174A;
-        Tue,  9 Mar 2021 07:00:40 -0800 (PST)
-Date:   Tue, 9 Mar 2021 16:00:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1615302037;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=haCuMwx8FBtsuLInyU0TMFS1G8sa0cBWrU6Q5la2tOA=;
-        b=vH0moShtrJeVtgZbD1r78tLDx6XyHNucm18W4J8xUPHPmOCt+SaGkcqKZylD1Qa5mH12bh
-        A2+mOteZI/nNJsKT9iKJgpJ+aVtKE4tBYkQh5vJpdwdOFoiUE+UJzLs7NJgbXGRKavYn/N
-        u2ss3f1E4gTQiTD7bk9wixljV0fV/2I1hOjh9r1OgCgT/hPzvnbP0fusQY4P7UJl9s1I8B
-        4YAGxejRc6417ftT5uJHJt6DLO6/1El7SxvgnKwfB3G7RlqGqqIwbuQTcKLw2R/GXvi5eL
-        i9WMaaRTrNt1brpUNBx6gw/ITgR/5P7H6v3aOt/pY6etzq1u4bfg6TnivVfjNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1615302037;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=haCuMwx8FBtsuLInyU0TMFS1G8sa0cBWrU6Q5la2tOA=;
-        b=M+xMQLgZ+XsqwI3AcUt4aNUAkVhpNvp/fR0QYs1Y07eFdMeH0URMLccm8FWUT+O3EnE0N2
-        Yn88FQVAn7gnR4CQ==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        ath9k-devel@qca.qualcomm.com, Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, Chas Williams <3chas3@gmail.com>,
-        linux-atm-general@lists.sourceforge.net,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        linux1394-devel@lists.sourceforge.net
-Subject: Re: [patch 07/14] tasklets: Prevent tasklet_unlock_spin_wait()
- deadlock on RT
-Message-ID: <20210309150036.5rcecmmz2wbu4ypc@linutronix.de>
-References: <20210309084203.995862150@linutronix.de>
- <20210309084241.988908275@linutronix.de>
+        Tue, 9 Mar 2021 10:16:13 -0500
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0BBC06175F
+        for <linux-hyperv@vger.kernel.org>; Tue,  9 Mar 2021 07:16:12 -0800 (PST)
+Received: by mail-vk1-xa41.google.com with SMTP id j204so3074232vkj.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 09 Mar 2021 07:16:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=7Vrbe4gpVhb7cfcmpNanXi5E+OCzidx3VGMrGNR2bC4=;
+        b=E2fpQqAMoWIiCoZvWXO4YQYWxV5KOHk3w5ejvxjAEQe3fz7BPjX4/GCdxxoxQOtTZe
+         CAV9RQespH9l6GIJ2w5fxuZvhLctaxbr3MrCz3X5+yilmFtWDPtPvQ7UWJxLls2HIqdz
+         TNGSur7K6eSaQrYlmteUoVMcZq1ALDjSrnF1unUsAjN8wsj7KZPXhUzjN8yW/HvMEOHb
+         t7Dh0XzwpA/DivaFeCPOWYiO7axz5/l/WMIoxVolfFSOH099i+8Esocb6ig7P6LIenxy
+         fZqYmCWdNoqyFG6qWV5f8cow9Syf81WHJCk+pTrHXgQdSFwtb4ka10k8dSrvbYeJxSUn
+         btMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=7Vrbe4gpVhb7cfcmpNanXi5E+OCzidx3VGMrGNR2bC4=;
+        b=AhLBxNd8vRKUrpghWyzADBMtkOL+cRZ4gN8JaX5dfwkfIoeonWRnZAecd9jxBToUpO
+         MaApHVoUXH43espRtJM2Y0wiQ4d2BHo6CCKYl6B7fAHI/Twv3Hdcxc3yPoxSgtrJSr1S
+         Hv1stxz69VHuoGjrwEbfrOx3rKsysbCH51npXaB78YwizJIYokA2akLRxlNO4EeCCV63
+         M5rETAn/5uhT5JWcucpdhVeDSiJOFgNsrNyKSnIHR0bRvxJABBj4Qf02erVNC4hlvbGL
+         OpAk5Ur35t8exYRBMpYIscjrphVj56WmurTQaDfvrYMJDqkdpb99MWICUldRlcPNKgEp
+         sKww==
+X-Gm-Message-State: AOAM530VFBL1wUqV1AzbBpk9xepOYLkymMskJiNOGRZeQnLnuYXlvqVL
+        oVuk/ewnzDfDw0JyNWhCiXBclExY2iP5WNdYafU=
+X-Google-Smtp-Source: ABdhPJwZmuF+U1z+M84NgoIYe++DQxrt1/yhH3D3pD5RwUFA4HmsUtm1I7PWprLq+nGjWbihgBRFsG12VJE8sxqDq5I=
+X-Received: by 2002:a1f:3646:: with SMTP id d67mr16068221vka.12.1615302971514;
+ Tue, 09 Mar 2021 07:16:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20210309084241.988908275@linutronix.de>
+Received: by 2002:ab0:2e8f:0:0:0:0:0 with HTTP; Tue, 9 Mar 2021 07:16:10 -0800 (PST)
+Reply-To: ezbtg22@gmail.com
+From:   "Mrs.E.Glenn" <mrganuserge654@gmail.com>
+Date:   Tue, 9 Mar 2021 07:16:10 -0800
+Message-ID: <CAH16wSNPH+jQFRGJP+fCVDz9CK40N9ewAj_curpjM+ohLU31Ng@mail.gmail.com>
+Subject: From Mrs.E.Glenn
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2021-03-09 09:42:10 [+0100], Thomas Gleixner wrote:
-> tasklet_unlock_spin_wait() spin waits for the TASKLET_STATE_SCHED bit in
-> the tasklet state to be cleared. This works on !RT nicely because the
-=E2=80=A6
+-- 
+Dear Beloved,
 
-Could you please fold this:
+I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
+in a hospital bed in Israel. I am 59 years and childless; my husband
+is dead. I was diagnosed with terminal cancer. And my doctor just
+predicted that I have but very limited time to live due to damages in
+my system and as a result of that I decided to dispose my 10.5 million
+US dollars to a God-fearing one for the continuation of charitable
+work. This is why I located you.
 
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 07c7329d21aa7..1c14ccd351091 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -663,15 +663,6 @@ static inline int tasklet_trylock(struct tasklet_struc=
-t *t)
- void tasklet_unlock(struct tasklet_struct *t);
- void tasklet_unlock_wait(struct tasklet_struct *t);
-=20
--/*
-- * Do not use in new code. Waiting for tasklets from atomic contexts is
-- * error prone and should be avoided.
-- */
--static inline void tasklet_unlock_spin_wait(struct tasklet_struct *t)
--{
--	while (test_bit(TASKLET_STATE_RUN, &t->state))
--		cpu_relax();
--}
- #else
- static inline int tasklet_trylock(struct tasklet_struct *t) { return 1; }
- static inline void tasklet_unlock(struct tasklet_struct *t) { }
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index f0074f1344402..c9adc5c462485 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -830,8 +830,8 @@ EXPORT_SYMBOL(tasklet_init);
-=20
- #if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT)
- /*
-- * Do not use in new code. There is no real reason to invoke this from
-- * atomic contexts.
-+ * Do not use in new code. Waiting for tasklets from atomic contexts is
-+ * error prone and should be avoided.
-  */
- void tasklet_unlock_spin_wait(struct tasklet_struct *t)
- {
---=20
-2.30.1
+My guess about you may not be accurate because I came across your
+contact at the humanitarian calendar event of the year but I believe
+in God who divinely directed me to you for this solemn proposal of
+charitable work.
 
+Therefore I wholeheartedly wish to bequeath my fortune to you as a
+God-fearing person for the continuation of charitable work anywhere
+around the world.
+
+I shall be going in for a surgery operations soonest and desire this
+money to be transferred to you as I do not wish to leave this money in
+the bank because bankers might misuse it for their own interest after
+my death.
+
+As soon as I receive your quick reply assuring me that you will
+utilize the money as I instructed you for the benefit of the less
+privilege, I shall give you more details and also instruct my bank to
+release the money to you for the charity project. I hope you receive
+this mail in good health.
+
+Please contact me on this E-mail (ezbtg22@gmail.com) because I don t
+know what will be my situation in next minute,
+
+I am waiting for your reply.
+
+Yours sincerely,
+Mrs Elizabet Glenn.
