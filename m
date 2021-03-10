@@ -2,131 +2,154 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A32B933471B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Mar 2021 19:49:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 698443347F5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Mar 2021 20:30:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231987AbhCJSsm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 10 Mar 2021 13:48:42 -0500
-Received: from mail-mw2nam12on2091.outbound.protection.outlook.com ([40.107.244.91]:23392
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231858AbhCJSsf (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 10 Mar 2021 13:48:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rjt0U/xcXOgwf8nx2d8xIw8s0NsVAVE6CPF5wXiLe8zV18gdq9ZBs9zTRQDUYQpYrZ++5hzr4TmewRrtc6BGruwFDHzqFn1ge3THuLWkMeGJ7gEfCeEGc0SKhqmjx/CEzQxNS0bTW44WDXOeVYAzkJB6htrKNyeUCdhZaoZy25y6S61YlvJs+kL1AvaXojmuCqmyKkC1Bi51iQrr7UCY8jfcgYHkWpuQl3QJ45g8FCDkUNoxtPJpH009xyDoQDIyX5R5LJJ/BSJwj2X/bieOOaPz8Ix0RoNeVw3IPlqnVcYI5pD3N/zVAIsx1QAk9wibJYlD6ztyBFB/9epATucG4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/d9vDTyLo4ryvFtCkTH+ibCJf3gvgwyuqnpt2Y4TG0I=;
- b=QG8njU86YE2gPbiCkzOLpXHfXOxgJv2oz93/Qnk3PXoRL0/3In0+saXsUn+Fl01fcUp7dernw435/RsL2/U7IN+uHta1ygRDN+l2UaI9IU3b5z59d49CXBIktlpM3akvJ0yo4iFa6tWqJrB0ncYiddM7ZHgBqsrpCa6mFO5nwZDfds7RwmPFAtFfWn7/A71jxBSgvo0FQpmxS8TLDpNIYe0vmerxyzcSjJ7nJeyyJLASoS+/eVbJwK10MHcMUhYIaRF5uaprGqzHZUUetv+yWMOpH7Tf896tjAZc/u4dsz0PHozo9T1ksHB7ozNf/6dVFiCWKryOjcaftvfdwgaHgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/d9vDTyLo4ryvFtCkTH+ibCJf3gvgwyuqnpt2Y4TG0I=;
- b=GPbIiVKWYuF7wwg7I/L+bIYe3hNj3IK3zPrXjy9eipoLE8PJF56Fhx5/WYlamCskDUXyfyCMRr1kE16Ez3TYhD6YJYP6XwJ6PdAf7fqiaWtNEU/iy5zNdDT6Zd3PXmSEOU282NYI6iKR1XqZ21nWfb6R0Bo1CVOxzo+ZH2f5D3k=
-Authentication-Results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
- by DM6PR21MB1481.namprd21.prod.outlook.com (2603:10b6:5:22f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.14; Wed, 10 Mar
- 2021 18:48:33 +0000
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::1c32:e52a:6a36:3ff]) by DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::1c32:e52a:6a36:3ff%4]) with mapi id 15.20.3955.009; Wed, 10 Mar 2021
- 18:48:33 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     sthemmin@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
-        arnd@arndb.de, linux-hyperv@vger.kernel.org
-Cc:     mikelley@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH 1/1] asm-generic/hyperv: Add missing function prototypes per -W1 warnings
-Date:   Wed, 10 Mar 2021 10:47:49 -0800
-Message-Id: <1615402069-39462-1-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-Originating-IP: [167.220.2.16]
-X-ClientProxiedBy: MWHPR11CA0035.namprd11.prod.outlook.com
- (2603:10b6:300:115::21) To DM6PR21MB1514.namprd21.prod.outlook.com
- (2603:10b6:5:22d::11)
+        id S232874AbhCJTaI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 10 Mar 2021 14:30:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233342AbhCJTaA (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 10 Mar 2021 14:30:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0FA3F64EF6;
+        Wed, 10 Mar 2021 19:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615404600;
+        bh=e2Z2DQoJIeiblci+Xk9crwWl1In7MRqs54LMBzkItlg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OnEKcfxiVfKnmrYB3LuZNSCzCJ5RObqvWa5z7S7UYzXT41zckhszQZK3URD5ZROrS
+         mr/AK9os9EhYoQ7PyJyRNqsjKNmTWZueZLoSXevk8tn+f21HuOQRWzC1bNzJKdX9nD
+         xlDbOAIJD6HeE8dQ1olV1H+X8urrhTauCwhKyfJV7cp/WWE5k1qMKvLUm08+e568+c
+         +Yu/chwpdBMmupaC0y+yM2u2jEZuFDM8RVe1Z32xuNAghxpQwKdrVXV5hygXNaa3yy
+         Xxq3HE2lNWKLQJ0FBFojwrg61Orlx6meI5fCKFT2m5ULbr+j0awHh8vAGTAKVnTtuB
+         brXStsZQ/nJvQ==
+Date:   Wed, 10 Mar 2021 13:29:58 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 00/13] PCI: MSI: Getting rid of msi_controller, and other
+ cleanups
+Message-ID: <20210310192958.GA2032926@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkdev.corp.microsoft.com (167.220.2.16) by MWHPR11CA0035.namprd11.prod.outlook.com (2603:10b6:300:115::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17 via Frontend Transport; Wed, 10 Mar 2021 18:48:32 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2d764e30-7095-4e34-edbd-08d8e3f51af0
-X-MS-TrafficTypeDiagnostic: DM6PR21MB1481:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR21MB148189AB0FBAAB83A2A64A8AD7919@DM6PR21MB1481.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aXSyz2UhBq6vAzY4i+yLOJdwt9NbGkN4wc655jsmE8SQRp9o1eAaZtY/HbiKtEGD4KWiE0fhRVr8F4BI/jDACEZxqNebuhar1cQ7NilaVy0Ud3ee2F+Am9gguxmBRRdrCwhI/AP27+T29F4/FKLqCh/10LpviSa9SKxK7tnxDOZbErkidajVfpCenkQdzrt0c3dS/NAJvMU2BmuQeqayMDT+CkPdDwsOEMMREBtlV3fT3WNo02dgLGIgyuwZPUPwspBrJW6e7bxvJPckUTxFIr/6c/dDio6B3WyHxdORyblokLv5QO5/D3W3CvdJhmYUcPOTFTJBYDlDNYLi6HliNhBqsB5TnT5mPpDtB+2v4VogEIvoZgpDqJIl005LpfvIG5I6Cbn1M7rS0naxnk7hH1nnhOj4M4XKkc8TZAJgBJPyD6vgSX+Q5LxgY0tm5pjikc1UN8dpWvT4odMfj7CQKw5tfWDkf6WZs1KUGvd7Ya7PMeSMOfvTR2C4RW2EKFp4ZJOYUD2abBkPQ2oUla2mLR6Yo7+ZJ3Sqt4phi/bAXF/YQrFMPlh0mSaoNcX2IBA0HV/h2bu9Z69bp6tPD12bP6EUNACdGPyGRxOTJmOIpCQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(2906002)(186003)(83380400001)(8936002)(82950400001)(82960400001)(16526019)(4744005)(2616005)(66946007)(5660300002)(66556008)(6486002)(66476007)(86362001)(7696005)(52116002)(956004)(6666004)(26005)(8676002)(316002)(10290500003)(36756003)(478600001)(4326008)(41533002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?qPpZr8H3eFFLeWhTwDpzphiSfjkUfmOAP1Qv8sq/9g19glMmzp+LVjyKwlIP?=
- =?us-ascii?Q?4543QbSS5BiPyNbnUempeFGY2h9o+n1i71qam85vQMPH15GKGGFPkHGl2qpo?=
- =?us-ascii?Q?jeV1jp2L5e2rIW2TYA29/OzGAqjBPz5BbSkxxnDeE5DMHahZG01K7vROw/9G?=
- =?us-ascii?Q?vLpnx+mI42I6SlgYNGIN/H7gJ4gS80WhXCV/v+k48jYbPYIEZHicMTx6rXbV?=
- =?us-ascii?Q?GUjOARstTC5+MOS1mPfpSrDqFs/flkbp4AhyZ75z/FssLbQqJHsdASCUPF6P?=
- =?us-ascii?Q?bI5hAZ1vQTiAeQkSv2XT+/htWv/Ypqba28rWgEK5RVMIqhS/VNxUY80ytfaO?=
- =?us-ascii?Q?mvJd+L3VgZCBHBOVhqzLq8L24Hhyzh3eYEfgCIleelMplfk0w1nG69Qo8p85?=
- =?us-ascii?Q?py2dfWicxLNQNyIvBR/LbuThDKl0EBj+ZAfjSqSIMeeDsBplVuneqqlStSss?=
- =?us-ascii?Q?vmY3pgIPDlDJWen1qrVs3i5c0t+vse+bdXx91tVOl1tPCwQn5FiSV2Fr5T+G?=
- =?us-ascii?Q?WNhhHldEHvAFcvzYtZ76hNYBs+xXYCPpRTy3IGHGUCfDPN7ZQrBYsxYHLJ6L?=
- =?us-ascii?Q?FKkFU37W40GbxfhOUrRreJkeaDEnHBqUxq3ffW2zjXG11ktKM3CjTHxJGzuJ?=
- =?us-ascii?Q?OIp2lYTsB1umtqcn95Zs9P3Xdb4q8i2Tijq7TKBpWTy++s4CkPNSa3GrukPc?=
- =?us-ascii?Q?iE9CqkaxUjuc7zNN8mHHx9jaDn7XyReoZKFMoPEvAgjq4B9YpE29ZVxwn89E?=
- =?us-ascii?Q?PYxWQ/SEYw7I0JJ4zaoasEESJ7ATTUjpkI4kF8L94pUjHqeYpF7NJ3zn5XrK?=
- =?us-ascii?Q?X2CjP651Y89vyMB3aBc0EjVk39v1K7GojcmpeyaH0iGsmbpa3G1bbV7m82aj?=
- =?us-ascii?Q?UIFTm4o1a1S7KI5MDdcVow3iInX/RrDUM15W7o4w0E+WTfOiI3PSu5zQ38lf?=
- =?us-ascii?Q?2rOu8nCU95YjS58NFeVb4N6wiQT/D0KvXZwKxrGaYjU9Pdo0uwT+WJMIm/ou?=
- =?us-ascii?Q?2fP2hmgKQ2+hZt5HJItEQ8zrOITvdswNcRmWzY7CCYRFlyExWNUuIr4tL11/?=
- =?us-ascii?Q?eeeTXtMYq4W1VoNcLPHErSWk4rWZnAxvKQMTsGs4uLKrXfci6o862uju3BVy?=
- =?us-ascii?Q?t8a1G8n8+URZWK1s9yd1+11/n/V0em0OPDzKeUQwa7JHMDKaC0Nhr5bKjmvK?=
- =?us-ascii?Q?gE399MBuCcyc2m+/DJnfV1eoIe2zxkeKIjT5lxf/FwwBAuVLNEa66b9oNq+c?=
- =?us-ascii?Q?E1uNC7SGQcklYpSlB7SCsldogiPhDEf3hF+/rAkwMSM4XzEklO/mXv7OkJ74?=
- =?us-ascii?Q?V4I3N7LoD2BsG7SPcXGP+JNl?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d764e30-7095-4e34-edbd-08d8e3f51af0
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2021 18:48:33.3525
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UYJAH/vx6rJ+CwG6t2ZkQub7cN/5r/3nNJnajXPrLUuUEpHaaYoLdAWjEy5OIgS0T4wk+ar72pzGbMftAvuUUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1481
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210225151023.3642391-1-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add two function prototypes for -W1 warnings generated by the
-kernel test robot.
+On Thu, Feb 25, 2021 at 03:10:10PM +0000, Marc Zyngier wrote:
+> The msi_controller data structure was the first attempt at treating
+> MSIs like any other interrupt. We replaced it a few years ago with the
+> generic MSI framework, but as it turns out, some older drivers are
+> still using it.
+> 
+> This series aims at converting these stragglers, drop msi_controller,
+> and fix some other nits such as having ways for a host bridge to
+> advertise whether it supports MSIs or not.
+> 
+> A few notes:
+> 
+> - The Tegra patch is the result of back and forth work with Thierry: I
+>   wrote the initial patch, which didn't work (I didn't have any HW at
+>   the time). Thierry made it work, and I subsequently fixed a couple
+>   of bugs/cleanups. I'm responsible for the result, so don't blame
+>   Thierry for any of it! FWIW, I'm now running a Jetson TX2 with its
+>   root fs over NVME, and MSIs are OK.
+> 
+> - RCAR is totally untested, though Marek had a go at a previous
+>   version. More testing required.
+> 
+> - The xilinx stuff is *really* untested. Paul, if you have a RISC-V
+>   board that uses it, could you please give it a go? Michal, same
+>   thing for the stuff you have at hand...
+> 
+> - hyperv: I don't have access to such hypervisor, and no way to test
+>   it. Help welcomed.
+> 
+> - The patches dealing with the advertising of MSI handling are the
+>   result of a long discussion that took place here[1]. I took the
+>   liberty to rejig Thomas' initial patches, and add what I needed for
+>   the MSI domain stuff. Again, blame me if something is wrong, and not
+>   Thomas.
+> 
+> Feedback welcome.
+> 
+> 	M.
+> 
+> [1] https://lore.kernel.org/r/20201031140330.83768-1-linux@fw-web.de
+> 
+> Marc Zyngier (11):
+>   PCI: tegra: Convert to MSI domains
+>   PCI: rcar: Convert to MSI domains
+>   PCI: xilinx: Convert to MSI domains
+>   PCI: hyperv: Drop msi_controller structure
+>   PCI: MSI: Drop use of msi_controller from core code
+>   PCI: MSI: Kill msi_controller structure
+>   PCI: MSI: Kill default_teardown_msi_irqs()
+>   PCI: MSI: Let PCI host bridges declare their reliance on MSI domains
+>   PCI: Make pci_host_common_probe() declare its reliance on MSI domains
+>   PCI: MSI: Document the various ways of ending up with NO_MSI
+>   PCI: quirks: Refactor advertising of the NO_MSI flag
+> 
+> Thomas Gleixner (2):
+>   PCI: MSI: Let PCI host bridges declare their lack of MSI handling
+>   PCI: mediatek: Advertise lack of MSI handling
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- include/asm-generic/mshyperv.h | 2 ++
- 1 file changed, 2 insertions(+)
+All looks good to me; I'm guessing Lorenzo will want to apply it or at
+least take a look since the bulk of this is in the native host
+drivers.
 
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 69e7fe0..2d1b6cd 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -94,6 +94,8 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
- 
- void hv_setup_vmbus_handler(void (*handler)(void));
- void hv_remove_vmbus_handler(void);
-+void hv_setup_stimer0_handler(void (*handler)(void));
-+void hv_remove_stimer0_handler(void);
- 
- void hv_setup_kexec_handler(void (*handler)(void));
- void hv_remove_kexec_handler(void);
--- 
-1.8.3.1
+s|PCI: MSI:|PCI/MSI:| above (I use "PCI/<FEATURE>:" and "PCI: <driver>:")
+s|PCI: hyperv:|PCI: hv:| to match previous practice
 
+Maybe:
+
+  PCI: Refactor HT advertising of NO_MSI flag
+
+since "HT" contains more information than "quirks"?
+
+In the 03/13 commit log, s/appaling/appalling/ :)
+In the patch, it sounds like the MSI capture address change might be
+separable into its own patch?  If it were separate, it would be easier
+to see the problem/fix and watch for it elsewhere.
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+>  drivers/pci/controller/Kconfig           |   4 +-
+>  drivers/pci/controller/pci-host-common.c |   1 +
+>  drivers/pci/controller/pci-hyperv.c      |   4 -
+>  drivers/pci/controller/pci-tegra.c       | 343 ++++++++++++-----------
+>  drivers/pci/controller/pcie-mediatek.c   |   4 +
+>  drivers/pci/controller/pcie-rcar-host.c  | 342 +++++++++++-----------
+>  drivers/pci/controller/pcie-xilinx.c     | 238 +++++++---------
+>  drivers/pci/msi.c                        |  46 +--
+>  drivers/pci/probe.c                      |   4 +-
+>  drivers/pci/quirks.c                     |  15 +-
+>  include/linux/msi.h                      |  17 +-
+>  include/linux/pci.h                      |   4 +-
+>  12 files changed, 463 insertions(+), 559 deletions(-)
+> 
+> -- 
+> 2.29.2
+> 
