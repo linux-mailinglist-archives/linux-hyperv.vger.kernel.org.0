@@ -2,86 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 203B8333B7F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Mar 2021 12:35:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25EB0334012
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Mar 2021 15:15:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231201AbhCJLef (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 10 Mar 2021 06:34:35 -0500
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:52390 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230270AbhCJLeQ (ORCPT
+        id S232712AbhCJOO3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 10 Mar 2021 09:14:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232861AbhCJOOD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 10 Mar 2021 06:34:16 -0500
-Received: by mail-wm1-f48.google.com with SMTP id n22so6895307wmc.2;
-        Wed, 10 Mar 2021 03:34:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7J7s2ULlckxPGV45ObvNHeMFlnciPOBmL4sFeKxQRrY=;
-        b=f+hF+pFH0HAizt2JQ2xgYBt5+SCWy5rWFtjiPaAHluZDlhNTVAFfW3YyvrG8WtjjkE
-         gzybpQUkYL9piVr/2mU8hhKJfTZitAxv6ju4K+sFKPUm80F90AocMyXQVBJl//tG9rjA
-         JGwrnkuE7P9ZEQJHQ3koboVUHoezYIlEl8gsjKo4Gm3vZ+8R3fEGWDCxvFZZiL8xRu3E
-         JppUwYvQCEhXuqFpAKeIbupK7tFUySZgLLJV1uKiQTJj9etpe0kDz4VUHLu4o3GtwaeG
-         Rg3rfIYd5sZxtIYtCdV19hBiCEZJPJoIFClAfNsT5AWndbShOEnZtRaVblkDoLRnGKYn
-         832w==
-X-Gm-Message-State: AOAM530ywGmQCXDobx4UaQCGDsEFT/pGvcCVMahMEHRVWyB0meaU1qU0
-        pkelFlQl5+I4e6c8nsAR+Go=
-X-Google-Smtp-Source: ABdhPJykSDTXQb6rMzAJxlIEs15qvYEmGaFG3pm37E2tlVeGACX4zqvLUH6j+7SC5v6ZH9AFK3lxiA==
-X-Received: by 2002:a7b:ce19:: with SMTP id m25mr2938803wmc.74.1615376055056;
-        Wed, 10 Mar 2021 03:34:15 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id m3sm8770402wmc.48.2021.03.10.03.34.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 03:34:14 -0800 (PST)
-Date:   Wed, 10 Mar 2021 11:34:13 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Wed, 10 Mar 2021 09:14:03 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 254C4C061760;
+        Wed, 10 Mar 2021 06:14:03 -0800 (PST)
+Received: from zn.tnic (p200300ec2f0a9900452923910729ca7d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9900:4529:2391:729:ca7d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AE4BD1EC026F;
+        Wed, 10 Mar 2021 15:14:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1615385641;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TkMrmSK/gpY6OtMDP3bCzeW/KsANAPjk+GubcA0SiVk=;
+        b=E5tIxCfbxV1QtJ7+kVylOOkptdMD5POD0M28l1YoZoIW5BjvRtSO1DgTJyfsd3pCigHb73
+        FLUR0E5MOJBdgkckOwBZ5WRAvXqEU6lsD2TQRaNJRsdp9MwWTl+mpMOE9fP7avOddwZqi+
+        MMqMSC4Aom3dQrDOqhVRCmy5BqdUCF4=
+Date:   Wed, 10 Mar 2021 15:13:47 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        ath9k-devel@qca.qualcomm.com, Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, Chas Williams <3chas3@gmail.com>,
-        linux-atm-general@lists.sourceforge.net,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        linux1394-devel@lists.sourceforge.net
-Subject: Re: [patch 12/14] PCI: hv: Use tasklet_disable_in_atomic()
-Message-ID: <20210310113413.cuvmnrd3vhyhzi4c@liuwe-devbox-debian-v2>
-References: <20210309084203.995862150@linutronix.de>
- <20210309084242.516519290@linutronix.de>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v6 02/12] x86/paravirt: switch time pvops functions to
+ use static_call()
+Message-ID: <20210310141347.GF23521@zn.tnic>
+References: <20210309134813.23912-1-jgross@suse.com>
+ <20210309134813.23912-3-jgross@suse.com>
+ <20210309185737.GE699@zn.tnic>
+ <e06cc359-6300-a26b-c307-9ef8d963b0c1@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210309084242.516519290@linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e06cc359-6300-a26b-c307-9ef8d963b0c1@suse.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Mar 09, 2021 at 09:42:15AM +0100, Thomas Gleixner wrote:
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> The hv_compose_msi_msg() callback in irq_chip::irq_compose_msi_msg is
-> invoked via irq_chip_compose_msi_msg(), which itself is always invoked from
-> atomic contexts from the guts of the interrupt core code.
-> 
-> There is no way to change this w/o rewriting the whole driver, so use
-> tasklet_disable_in_atomic() which allows to make tasklet_disable()
-> sleepable once the remaining atomic users are addressed.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Wed, Mar 10, 2021 at 08:51:22AM +0100, Jürgen Groß wrote:
+> It is combining the two needed actions: update the static call and
+> set the paravirt_using_native_sched_clock boolean.
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+I actually meant what the point of using_native_sched_clock() is but put
+this comment at the wrong place, sorry.
+
+> Just had another idea: I could add a function to static_call.h for
+> querying the current function. This would avoid the double book keeping
+> and could probably be used later when switching other pv_ops calls to
+> static_call, too (e.g. pv_is_native_spin_unlock()).
+> 
+> What do you think?
+
+Yap, that makes sense. Alternatively, you could even add a bitfield to
+pv_ops which carries that info and since pv_ops is global...
+
+But yeah, the less bookkeeping the better.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
