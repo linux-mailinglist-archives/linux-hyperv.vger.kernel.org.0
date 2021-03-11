@@ -2,44 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F559337F39
-	for <lists+linux-hyperv@lfdr.de>; Thu, 11 Mar 2021 21:46:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DECB338198
+	for <lists+linux-hyperv@lfdr.de>; Fri, 12 Mar 2021 00:39:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbhCKUpu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 11 Mar 2021 15:45:50 -0500
-Received: from mail-bn7nam10on2121.outbound.protection.outlook.com ([40.107.92.121]:41025
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229490AbhCKUpc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 11 Mar 2021 15:45:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U7VKG6iN8TcW6oDFY5wo/tIysv7Q1Y1mIYullOAFDR6nK6rrpn3nQW0qDl0VLNT2TYkZq85uqpgPaKoaPSUjujDTIUAL+j990Hi+EVzKwbr9pO5XzAb/BMC+B1iaPO1PsTcM9eDfrL1sOYdlRV/5h0wSP2yGzoHOQMVipAvb8DhsJs876wl7KZrRKU9P5PA+Po5ihiNVu1i1tTZ5iSDmJusRxuQa7+qdSpmMNno/ku1TIJtGIO6CXkDh8F4VhCWHvE1F2nnSZ23i82WETx3+7f2ko5+keJt1g9GMjIdfck0/IsIfuRt5C3L0R3C1wqUqKPBTqSE8cKR55I8xXDf6rQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oq0db7WPUwYxkbr0L7U39OlwmgKR95IETNFSEJX/Eto=;
- b=odBu9eslc3hZek05nrtMyegdYW+PNSktzMnEVzkYfM1VtDC1nIk3BJqxMLp/F3FbfHhTnNAmJKa0N+2BsFbdDjR8ydkggh6LNr7xv0eIezFpkhWQ1VUC/CIII5C7h2gTj0Zp9t8xSk6TXJrrXdIPInRHiXPzUGW9G2VSGGWfX0R7RlZFUUFJ6h5kVfGTeBGNEeOVbx0LDs0unaVZaElDRxpRwYUQwYqBMM4r5ogkIhrE2mI58ngoPdkT7bqNXaYeS8lmTkuEgRXh/aduBK3oh7ztx21Wpi1OloaYffsh2Dut0xYCBZl40jyM8aHqqpDmcxcgjWl6MNv0oFOsvRhjcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oq0db7WPUwYxkbr0L7U39OlwmgKR95IETNFSEJX/Eto=;
- b=fQpJsggheGRHQfOiUV/4yObF5m7hGb9yek9Lfx0Sjei+wR6p8mHjSWAv3xzJ+AyySOQ5mL9SgvmJH7QxAuitvfpCSPVIFZBI0VpXSHJwXTGd1dwi8RLgcvqZurJ2vTjrNUzzqGK8mnYVEpjam8Lcfr8C3QP0dusJBKzLRHf+E3E=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MWHPR21MB0286.namprd21.prod.outlook.com (2603:10b6:300:7a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.11; Thu, 11 Mar
- 2021 20:45:30 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9c8:94c9:faf1:17c2%9]) with mapi id 15.20.3955.008; Thu, 11 Mar 2021
- 20:45:30 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        id S231168AbhCKXjL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 11 Mar 2021 18:39:11 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:50286 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229441AbhCKXiu (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 11 Mar 2021 18:38:50 -0500
+Received: from [10.0.0.178] (c-67-168-106-253.hsd1.wa.comcast.net [67.168.106.253])
+        by linux.microsoft.com (Postfix) with ESMTPSA id CCD47208D373;
+        Thu, 11 Mar 2021 15:38:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CCD47208D373
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1615505930;
+        bh=dJYGY4DwsprXIOB2hRULhIsSJiQPnQNWSO2wAJ4Sa/Y=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=msgedgAzRbBQJtH0B5lYoQTqsLUkoFwR2K2xKaT8n4Rcj+yRICmQtAELhr6WngGxm
+         kvzu/WFI4qowfcFT0W49z/3XZKD+s2NC6K52ORfn37KzEeyh+vd1h36Gm7KN1+rl6U
+         K4qh7tFoFnS97dEqtneCcVkFRtaSPcBOhLZf3m0c=
+Subject: Re: [RFC PATCH 15/18] virt/mshv: get and set vp state ioctls
+To:     Michael Kelley <mikelley@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "virtualization@lists.linux-foundation.org" 
+Cc:     "virtualization@lists.linux-foundation.org" 
         <virtualization@lists.linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
@@ -47,184 +34,583 @@ CC:     "virtualization@lists.linux-foundation.org"
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Lillian Grassin-Drake <Lillian.GrassinDrake@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>
-Subject: RE: [RFC PATCH 11/18] virt/mshv: set up synic pages for intercept
- messages
-Thread-Topic: [RFC PATCH 11/18] virt/mshv: set up synic pages for intercept
- messages
-Thread-Index: AQHWv52Sf16Ua5UbGEyERkZGDy8rgqpN98MAgDHk+QCAABFkcA==
-Date:   Thu, 11 Mar 2021 20:45:30 +0000
-Message-ID: <MWHPR21MB1593DACDA296E8DAC5D8BC78D7909@MWHPR21MB1593.namprd21.prod.outlook.com>
 References: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1605918637-12192-12-git-send-email-nunodasneves@linux.microsoft.com>
- <MWHPR21MB1593EC8F1ACA57299AB5016AD78F9@MWHPR21MB1593.namprd21.prod.outlook.com>
- <9e06a119-880f-5199-903b-056675331d6f@linux.microsoft.com>
-In-Reply-To: <9e06a119-880f-5199-903b-056675331d6f@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-03-11T20:45:28Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c330553d-a3fa-4b52-bafb-5d76f7bbe704;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: linux.microsoft.com; dkim=none (message not signed)
- header.d=none;linux.microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f91ef307-066e-476a-1309-08d8e4ce9bec
-x-ms-traffictypediagnostic: MWHPR21MB0286:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB028670766298858E5523159AD7909@MWHPR21MB0286.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ta3GsT1cp7Z0bEDIauYIfWD7yaN/K6bRX2kyKDaPRW4g6UuffTgikJnsW2nM8OpFA7YnPkD9ya5puOO8zpzZ5xY8di7ggcF40SHQHprnDBy6kenC6YnrD1cyYvaVZRFPuEX2HUTT9fzX1icWzVR7IEN+Oe4XinrkyXZagqYNMlWqoSh1OXhdn6R7WR7rfeV772rKGdArpUMKTQDEeVDneDvoJkeWoV8Z4lmggOyap7NCsD1Dsbmedn1t/6t7I7cMzoROtFEVWpyA0LMQ/bkzkkDyQaR4QJvpihH+R7JkNQIcPw01ylZ90SqK2J9kMp76m8UypAm0XU0aZfVAc/NII0glg4L7mtVcAYKd8a95ZxyAOq+RAFQ0PxA6h1w1q0BRzSkMfj6+2a/7qpT/RVv4ZUnqvyRIxrN8VA8fWB7GSicr4IYSMMN14rX1XD+7EcjOvTrjIR0bj6rEVPslzPl4b4cTYYUXzE2xN/JGeLB7cNbpfLejkc2sbx5X2rfcfsaIg4FOOjo4L67lTl8TNgfhDShT7xA00hS6k89L3fsdrVw/NvVbVQ5Bos9ZL1uFBVmk
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(396003)(346002)(376002)(39860400002)(107886003)(9686003)(53546011)(82950400001)(66476007)(33656002)(6506007)(76116006)(71200400001)(66446008)(7696005)(478600001)(82960400001)(64756008)(316002)(8990500004)(66556008)(10290500003)(66946007)(2906002)(86362001)(52536014)(4326008)(8676002)(8936002)(15650500001)(54906003)(5660300002)(110136005)(26005)(83380400001)(186003)(55016002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?R3FFdUtpRVF2MktqWC9lWGlwTzExVWxwdXRWYndDQnpSUUZnaUZlVEVQNUJF?=
- =?utf-8?B?YW5VTjZDYW54aW1BQ2NIZm1WaWFNRjE0ejdxblpYeXp4aHNzR1lBOUZoNWRC?=
- =?utf-8?B?MFkyS2dzUXpzU25OdVZmUkFmcStsbUl1dkR0eFI0d1QxRFhXYjgyemFPcDNZ?=
- =?utf-8?B?SHJjR1QxUkkyTG5NV05BQ2RtWWZRUVp6MkMzSGxRS05xbG1oTmJlZkRoRGJP?=
- =?utf-8?B?VHhYSXUxelUyMlpPeTFrbXQ2S3VTOVhmaXBZaUhYMTUxMk40dXg3blltVktX?=
- =?utf-8?B?MCsvcHdCZGh4eDd2SFBBd0xtWTdBaS9pcXZQYTY0OVY1RFZIaHVWczJlWUhi?=
- =?utf-8?B?eTVYRTU5VjA5dzBINmpxdXUrMVhjTVIvc0p4L2pwbTFJSmZhWUo0SHRLVGMv?=
- =?utf-8?B?Sm81diswT05oQ3Nld1NWRUhESWJuQ3RNWEg0Q3dUamdWb2svREs1b3dtU1Ra?=
- =?utf-8?B?QUZoUTVFSlhlcTVhTjgvYzJ0NDlvWUJXeHN0Yld3TVp1OVFjUG5lREN5R3Zq?=
- =?utf-8?B?NDZaTXVmRUlneDdWbThGeHBSWHlLcTVSWDI5dWVFU1d5KzkrcFFnWEhQTVBu?=
- =?utf-8?B?QlpOdStKaTMwWWkycFdib2VneUNNUTFmU3N2bHBzZWtoVEtoektFSTlHYkx5?=
- =?utf-8?B?eEU2K29hWnN4aHJteHBBRHFrdUFLNEpkUUVwaFB6Y2lBZ0k1L2FpYkEyT1Mx?=
- =?utf-8?B?eHFSa3B2d0NZTVBvdld3OUZpUjZWbStxR1JoUjcyYzZqRi9hZXFoNlprZXBI?=
- =?utf-8?B?VlZwT1I5dU9sY1dkUE5TRVEwbkVyS1NheW45ck0wMlRoVmhQNDdsbVhnY25J?=
- =?utf-8?B?Z1RwTE5sQXgwcFZhN1daWERtTEJ0d1lOdkxGZm80SVlDQTRrUzZONm02Rm02?=
- =?utf-8?B?VSt4L0lLZ3lrdnJIVlFlbDB3K0tQbFZqWU0zR3dlenFxejFBckVDUWRnQWl6?=
- =?utf-8?B?eGc0cHRudWszaFhLR0VpaUQ4a0lNbUtzS3VwN1o3VHZMSFpMdjZCd3N2RmxL?=
- =?utf-8?B?SUwxVGl5UkRTM00yendtNHB3b3ozT0NwZmpwa1ZrR0pVays2T3g2T1lDNko2?=
- =?utf-8?B?NEg1K2x6SUhoZmZZdFFIR3Y2UUFwMER3MURwMzByQ0FKR0x5Z25PZEMxdUVH?=
- =?utf-8?B?NktZQ0pkYTdMbXpvL2RseWNaOXhoVzRHdG1JeVAyNUIvTkJJL3hBZTJ2VERR?=
- =?utf-8?B?QUF4d29UZFlQaFJUMmF4dU1rbFFiRS9pQ1l0dGl3MStDMzNweFZZZlJVdWRv?=
- =?utf-8?B?Vm9rVGl6T251VVdSbjU2bVhyL0RhblpsaGlIUkl4SVJEdW93Q253b0RaVDBT?=
- =?utf-8?B?a0htRFR0b0pXQVJheVA1aW1PR3FqeEVIUm52TFJUN1ZnSlNSN2FoTnRZMmQ2?=
- =?utf-8?B?RWw1cjQ4MFNhY0o4Zk95TEMzam5Oc3FNMkRlZEgzWStrUytzMXkxQkUyVDlC?=
- =?utf-8?B?RVg4OWwyWERFWEpTOHBpbE9NdzJpU0k2bGRJcE5ENnZFMXFYUlhpZC9ON2E3?=
- =?utf-8?B?SWVGZkptbGJyTWkrYlBoUEgrZERzZDFpM2J6Z091V2YzVEFSQldEYjgvSGFD?=
- =?utf-8?B?T2NrQmUzTzVBTjY4OVNYY0ZzeEVqby9PRkxGMXR3NXpGNlloWkY2aHZ3aDdq?=
- =?utf-8?B?Mk1JZmVEWTFka2xOZnViTWlkSytmbGNWeUpkeWltUGFnajlaUWFkOTFYcHNl?=
- =?utf-8?B?SERMRmk3R3pXRU1kd2UrZVk1SS9aRUQwdElaaW1uOVdTTnRlaEtLRWlhSFRo?=
- =?utf-8?Q?P61Um/rl4ehbbt+0Vk9Kj33ye2XmzubxSzDEek0?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <1605918637-12192-16-git-send-email-nunodasneves@linux.microsoft.com>
+ <MWHPR21MB1593B7D15C0607464B9394E5D78F9@MWHPR21MB1593.namprd21.prod.outlook.com>
+From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Message-ID: <84741601-7169-ee7b-a447-800e881d7e1a@linux.microsoft.com>
+Date:   Thu, 11 Mar 2021 15:38:48 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f91ef307-066e-476a-1309-08d8e4ce9bec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2021 20:45:30.2411
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ctiuR1ivK1HF0fa9sV3JD7t5/l1n/6ac5MYYCT7PFhcXMtTjMmZWcy0lSdjKT8bn7bKm2juyMbgoJk897yP+EjXUGsBAr7e4lcpuK76gFBU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0286
+In-Reply-To: <MWHPR21MB1593B7D15C0607464B9394E5D78F9@MWHPR21MB1593.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RnJvbTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPiBT
-ZW50OiBUaHVyc2RheSwgTWFyY2ggMTEsIDIwMjEgMTE6MzggQU0NCj4gDQo+IE9uIDIvOC8yMDIx
-IDExOjQ3IEFNLCBNaWNoYWVsIEtlbGxleSB3cm90ZToNCj4gPiBGcm9tOiBOdW5vIERhcyBOZXZl
-cyA8bnVub2Rhc25ldmVzQGxpbnV4Lm1pY3Jvc29mdC5jb20+IFNlbnQ6IEZyaWRheSwgTm92ZW1i
-ZXINCj4gMjAsIDIwMjAgNDozMSBQTQ0KPiA+Pg0KPiA+PiBTYW1lIGlkZWEgYXMgc3luaWMgc2V0
-dXAgaW4gZHJpdmVycy9odi9odi5jOmh2X3N5bmljX2VuYWJsZV9yZWdzKCkNCj4gPj4gYW5kIGh2
-X3N5bmljX2Rpc2FibGVfcmVncygpLg0KPiA+PiBTZXR0aW5nIHVwIHN5bmljIHJlZ2lzdGVycyBp
-biBib3RoIHZtYnVzIGRyaXZlciBhbmQgbXNodiB3b3VsZCBjbG9iYmVyDQo+ID4+IHRoZW0sIGJ1
-dCB0aGUgdm1idXMgZHJpdmVyIHdpbGwgbm90IHJ1biBpbiB0aGUgcm9vdCBwYXJ0aXRpb24sIHNv
-IHRoaXMNCj4gPj4gaXMgc2FmZS4NCj4gPj4NCj4gPj4gQ28tZGV2ZWxvcGVkLWJ5OiBMaWxsaWFu
-IEdyYXNzaW4tRHJha2UgPGxpZ3Jhc3NpQG1pY3Jvc29mdC5jb20+DQo+ID4+IFNpZ25lZC1vZmYt
-Ynk6IExpbGxpYW4gR3Jhc3Npbi1EcmFrZSA8bGlncmFzc2lAbWljcm9zb2Z0LmNvbT4NCj4gPj4g
-U2lnbmVkLW9mZi1ieTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3Nv
-ZnQuY29tPg0KPiA+PiAtLS0NCj4gPj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2h5cGVydi10bGZz
-LmggICAgICB8ICAyOSAtLS0NCj4gPj4gIGFyY2gveDg2L2luY2x1ZGUvdWFwaS9hc20vaHlwZXJ2
-LXRsZnMuaCB8IDI2NCArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4gIGluY2x1ZGUvYXNt
-LWdlbmVyaWMvaHlwZXJ2LXRsZnMuaCAgICAgICB8ICA0NiArLS0tLQ0KPiA+PiAgaW5jbHVkZS9s
-aW51eC9tc2h2LmggICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPj4gIGluY2x1ZGUvdWFw
-aS9hc20tZ2VuZXJpYy9oeXBlcnYtdGxmcy5oICB8ICA0MyArKysrDQo+ID4+ICB2aXJ0L21zaHYv
-bXNodl9tYWluLmMgICAgICAgICAgICAgICAgICAgfCAgOTggKysrKysrKystDQo+ID4+ICA2IGZp
-bGVzIGNoYW5nZWQsIDQwNCBpbnNlcnRpb25zKCspLCA3NyBkZWxldGlvbnMoLSkNCj4gPj4NCj4g
-Pj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2h5cGVydi10bGZzLmggYi9hcmNo
-L3g4Ni9pbmNsdWRlL2FzbS9oeXBlcnYtdGxmcy5oDQo+ID4+IGluZGV4IDRjZDQ0YWU5YmZmYi4u
-YzM0YTZiYjRmNDU3IDEwMDY0NA0KPiA+PiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9oeXBl
-cnYtdGxmcy5oDQo+ID4+ICsrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2h5cGVydi10bGZzLmgN
-Cj4gPj4gQEAgLTI2NywzNSArMjY3LDYgQEAgc3RydWN0IGh2X3RzY19lbXVsYXRpb25fc3RhdHVz
-IHsNCj4gPj4gICNkZWZpbmUgSFZfWDY0X01TUl9UU0NfUkVGRVJFTkNFX0VOQUJMRQkJMHgwMDAw
-MDAwMQ0KPiA+PiAgI2RlZmluZSBIVl9YNjRfTVNSX1RTQ19SRUZFUkVOQ0VfQUREUkVTU19TSElG
-VAkxMg0KPiA+Pg0KPiA+PiAtDQo+ID4+IC0vKiBEZWZpbmUgaHlwZXJ2aXNvciBtZXNzYWdlIHR5
-cGVzLiAqLw0KPiA+PiAtZW51bSBodl9tZXNzYWdlX3R5cGUgew0KPiA+PiAtCUhWTVNHX05PTkUJ
-CQk9IDB4MDAwMDAwMDAsDQo+ID4+IC0NCj4gPj4gLQkvKiBNZW1vcnkgYWNjZXNzIG1lc3NhZ2Vz
-LiAqLw0KPiA+PiAtCUhWTVNHX1VOTUFQUEVEX0dQQQkJPSAweDgwMDAwMDAwLA0KPiA+PiAtCUhW
-TVNHX0dQQV9JTlRFUkNFUFQJCT0gMHg4MDAwMDAwMSwNCj4gPj4gLQ0KPiA+PiAtCS8qIFRpbWVy
-IG5vdGlmaWNhdGlvbiBtZXNzYWdlcy4gKi8NCj4gPj4gLQlIVk1TR19USU1FUl9FWFBJUkVECQk9
-IDB4ODAwMDAwMTAsDQo+ID4+IC0NCj4gPj4gLQkvKiBFcnJvciBtZXNzYWdlcy4gKi8NCj4gPj4g
-LQlIVk1TR19JTlZBTElEX1ZQX1JFR0lTVEVSX1ZBTFVFCT0gMHg4MDAwMDAyMCwNCj4gPj4gLQlI
-Vk1TR19VTlJFQ09WRVJBQkxFX0VYQ0VQVElPTgk9IDB4ODAwMDAwMjEsDQo+ID4+IC0JSFZNU0df
-VU5TVVBQT1JURURfRkVBVFVSRQk9IDB4ODAwMDAwMjIsDQo+ID4+IC0NCj4gPj4gLQkvKiBUcmFj
-ZSBidWZmZXIgY29tcGxldGUgbWVzc2FnZXMuICovDQo+ID4+IC0JSFZNU0dfRVZFTlRMT0dfQlVG
-RkVSQ09NUExFVEUJPSAweDgwMDAwMDQwLA0KPiA+PiAtDQo+ID4+IC0JLyogUGxhdGZvcm0tc3Bl
-Y2lmaWMgcHJvY2Vzc29yIGludGVyY2VwdCBtZXNzYWdlcy4gKi8NCj4gPj4gLQlIVk1TR19YNjRf
-SU9QT1JUX0lOVEVSQ0VQVAk9IDB4ODAwMTAwMDAsDQo+ID4+IC0JSFZNU0dfWDY0X01TUl9JTlRF
-UkNFUFQJCT0gMHg4MDAxMDAwMSwNCj4gPj4gLQlIVk1TR19YNjRfQ1BVSURfSU5URVJDRVBUCT0g
-MHg4MDAxMDAwMiwNCj4gPj4gLQlIVk1TR19YNjRfRVhDRVBUSU9OX0lOVEVSQ0VQVAk9IDB4ODAw
-MTAwMDMsDQo+ID4+IC0JSFZNU0dfWDY0X0FQSUNfRU9JCQk9IDB4ODAwMTAwMDQsDQo+ID4+IC0J
-SFZNU0dfWDY0X0xFR0FDWV9GUF9FUlJPUgk9IDB4ODAwMTAwMDUNCj4gPj4gLX07DQo+ID4+IC0N
-Cj4gPj4gIHN0cnVjdCBodl9uZXN0ZWRfZW5saWdodGVubWVudHNfY29udHJvbCB7DQo+ID4+ICAJ
-c3RydWN0IHsNCj4gPj4gIAkJX191MzIgZGlyZWN0aHlwZXJjYWxsOjE7DQo+ID4+IGRpZmYgLS1n
-aXQgYS9hcmNoL3g4Ni9pbmNsdWRlL3VhcGkvYXNtL2h5cGVydi10bGZzLmgNCj4gYi9hcmNoL3g4
-Ni9pbmNsdWRlL3VhcGkvYXNtL2h5cGVydi0NCj4gPj4gdGxmcy5oDQo+ID4+IGluZGV4IDJmZjY1
-NTk2MjczOC4uYzZhMjcwNTNmNzkxIDEwMDY0NA0KPiA+PiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRl
-L3VhcGkvYXNtL2h5cGVydi10bGZzLmgNCj4gPj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS91YXBp
-L2FzbS9oeXBlcnYtdGxmcy5oDQo+ID4+IEBAIC03MjIsNCArNzIyLDI2OCBAQCB1bmlvbiBodl9y
-ZWdpc3Rlcl92YWx1ZSB7DQo+ID4+ICAJCXBlbmRpbmdfdmlydHVhbGl6YXRpb25fZmF1bHRfZXZl
-bnQ7DQo+ID4+ICB9Ow0KPiA+Pg0KPiA+PiArLyogRGVmaW5lIGh5cGVydmlzb3IgbWVzc2FnZSB0
-eXBlcy4gKi8NCj4gPj4gK2VudW0gaHZfbWVzc2FnZV90eXBlIHsNCj4gPj4gKwlIVk1TR19OT05F
-CQkJCT0gMHgwMDAwMDAwMCwNCj4gPj4gKw0KPiA+PiArCS8qIE1lbW9yeSBhY2Nlc3MgbWVzc2Fn
-ZXMuICovDQo+ID4+ICsJSFZNU0dfVU5NQVBQRURfR1BBCQkJPSAweDgwMDAwMDAwLA0KPiA+PiAr
-CUhWTVNHX0dQQV9JTlRFUkNFUFQJCQk9IDB4ODAwMDAwMDEsDQo+ID4+ICsNCj4gPj4gKwkvKiBU
-aW1lciBub3RpZmljYXRpb24gbWVzc2FnZXMuICovDQo+ID4+ICsJSFZNU0dfVElNRVJfRVhQSVJF
-RAkJCT0gMHg4MDAwMDAxMCwNCj4gPj4gKw0KPiA+PiArCS8qIEVycm9yIG1lc3NhZ2VzLiAqLw0K
-PiA+PiArCUhWTVNHX0lOVkFMSURfVlBfUkVHSVNURVJfVkFMVUUJCT0gMHg4MDAwMDAyMCwNCj4g
-Pj4gKwlIVk1TR19VTlJFQ09WRVJBQkxFX0VYQ0VQVElPTgkJPSAweDgwMDAwMDIxLA0KPiA+PiAr
-CUhWTVNHX1VOU1VQUE9SVEVEX0ZFQVRVUkUJCT0gMHg4MDAwMDAyMiwNCj4gPj4gKw0KPiA+PiAr
-CS8qIFRyYWNlIGJ1ZmZlciBjb21wbGV0ZSBtZXNzYWdlcy4gKi8NCj4gPj4gKwlIVk1TR19FVkVO
-VExPR19CVUZGRVJDT01QTEVURQkJPSAweDgwMDAwMDQwLA0KPiA+PiArDQo+ID4+ICsJLyogUGxh
-dGZvcm0tc3BlY2lmaWMgcHJvY2Vzc29yIGludGVyY2VwdCBtZXNzYWdlcy4gKi8NCj4gPj4gKwlI
-Vk1TR19YNjRfSU9fUE9SVF9JTlRFUkNFUFQJCT0gMHg4MDAxMDAwMCwNCj4gPj4gKwlIVk1TR19Y
-NjRfTVNSX0lOVEVSQ0VQVAkJCT0gMHg4MDAxMDAwMSwNCj4gPj4gKwlIVk1TR19YNjRfQ1BVSURf
-SU5URVJDRVBUCQk9IDB4ODAwMTAwMDIsDQo+ID4+ICsJSFZNU0dfWDY0X0VYQ0VQVElPTl9JTlRF
-UkNFUFQJCT0gMHg4MDAxMDAwMywNCj4gPj4gKwlIVk1TR19YNjRfQVBJQ19FT0kJCQk9IDB4ODAw
-MTAwMDQsDQo+ID4+ICsJSFZNU0dfWDY0X0xFR0FDWV9GUF9FUlJPUgkJPSAweDgwMDEwMDA1LA0K
-PiA+PiArCUhWTVNHX1g2NF9JT01NVV9QUlEJCQk9IDB4ODAwMTAwMDYsDQo+ID4+ICsJSFZNU0df
-WDY0X0hBTFQJCQkJPSAweDgwMDEwMDA3LA0KPiA+PiArCUhWTVNHX1g2NF9JTlRFUlJVUFRJT05f
-REVMSVZFUkFCTEUJPSAweDgwMDEwMDA4LA0KPiA+PiArCUhWTVNHX1g2NF9TSVBJX0lOVEVSQ0VQ
-VAkJPSAweDgwMDEwMDA5LA0KPiA+PiArfTsNCj4gPg0KPiA+IEkgaGF2ZSBhIHNlcGFyYXRlIHBh
-dGNoIHNlcmllcyB0aGF0IG1vdmVzIHRoaXMgZW51bSB0byB0aGUNCj4gPiBhc20tZ2VuZXJpYyBw
-b3J0aW9uIG9mIGh5cGVydi10bGZzLmggYmVjYXVzZSB0aGVyZSdzIG5vdCBhIGdvb2Qgd2F5DQo+
-ID4gdG8gc2VwYXJhdGUgdGhlIGFyY2ggbmV1dHJhbCBmcm9tIGFyY2ggZGVwZW5kZW50IHZhbHVl
-cy4NCj4gPg0KPiANCj4gT2ssIGJ1dCBpdCBzaG91bGQgYWxzbyBiZSBjaGFuZ2VkIHRvICNkZWZp
-bmUgaW5zdGVhZCBvZiBhbiBlbnVtLCByaWdodD8NCj4gSSB3aWxsIGRvIHRoYXQgaW4gdGhpcyBw
-YXRjaC4NCj4gVGhpcyByZXF1aXJlcyBhIGNvdXBsZSBvZiBjaGFuZ2VzIGluIG90aGVyIGZpbGVz
-IGluIGRyaXZlcnMvaHYNCj4gd2hlcmUgdGhpcyBlbnVtIGlzIHVzZWQuDQoNCkJlY2F1c2Ugb2Yg
-dGhlIG90aGVyIHVzZXMgb2YgdGhlIGVudW0gaW4gcGxhY2VzIHRoYXQgZG9uJ3QgZGVwZW5kDQpv
-biBleGFjdCBzdHJ1Y3R1cmUgbGF5b3V0cywgSSBsZWZ0IGl0IGFzIGFuIGVudW0gd2hlbiBJIG1v
-dmVkIGl0Lg0KV2hlbiBvbmUgb2YgdGhlIGVudW0gdmFsdWVzIGlzIHBhc3NlZCB0byBIeXBlci1W
-LCB0aGUgZW51bQ0KaXMgYXNzaWduZWQgdG8gYSB1MzIgZmllbGQsIHdoaWNoIEkgdGhpbmsgaXMg
-YWNjZXB0YWJsZS4gIFlvdSBjb3VsZA0KZG8gdGhlIHNhbWUgd2l0aCB0aGUgb3RoZXIgZW51bXMg
-eW91ciBhbHJlYWR5IGhhdmUgLS0ga2VlcCB0aGUNCmNvbnN0YW50IGRlZmluaXRpb25zIGFzIG1l
-bWJlcnMgb2YgYW4gZW51bSwgYnV0IGFzc2lnbiB0byBhIHUzMg0KZmllbGQgaW4gdGhlIHN0cnVj
-dHVyZXMgdGhhdCBnZXQgcGFzc2VkIHRvIEh5cGVyLVYuICBUaGVyZSBtYXkNCmFjdHVhbGx5IGJl
-IHNvbWUgYmVuZWZpdCBpbiB0aGF0IGFwcHJvYWNoLCBwYXJ0aWN1bGFybHkgaWYgdGhlIGVudW0N
-CmlzIHBhc3NlZCBhcyBhbiBpbmRpdmlkdWFsIGFyZ3VtZW50IGludG8gc29tZSBmdW5jdGlvbihz
-KS4gDQoNCk90aGVycyBtYXkgaGF2ZSBhbiBvcGluaW9uIG9uIHRoaXMgYXBwcm9hY2ggLi4uLi4N
-Cg0KTWljaGFlbA0K
+
+On 2/8/2021 11:48 AM, Michael Kelley wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, November 20, 2020 4:31 PM
+>> To: linux-hyperv@vger.kernel.org
+>> Cc: virtualization@lists.linux-foundation.org; linux-kernel@vger.kernel.org; Michael Kelley
+>> <mikelley@microsoft.com>; viremana@linux.microsoft.com; Sunil Muthuswamy
+>> <sunilmut@microsoft.com>; nunodasneves@linux.microsoft.com; wei.liu@kernel.org;
+>> Lillian Grassin-Drake <Lillian.GrassinDrake@microsoft.com>; KY Srinivasan
+>> <kys@microsoft.com>
+>> Subject: [RFC PATCH 15/18] virt/mshv: get and set vp state ioctls
+>>
+>> Introduce ioctls for getting and setting guest vcpu emulated LAPIC
+>> state, and xsave data.
+>>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> ---
+>>  Documentation/virt/mshv/api.rst         |   8 +
+>>  arch/x86/include/uapi/asm/hyperv-tlfs.h |  59 ++++++
+>>  include/asm-generic/hyperv-tlfs.h       |  41 ++++
+>>  include/uapi/asm-generic/hyperv-tlfs.h  |  28 +++
+>>  include/uapi/linux/mshv.h               |  13 ++
+>>  virt/mshv/mshv_main.c                   | 262 ++++++++++++++++++++++++
+>>  6 files changed, 411 insertions(+)
+>>
+>> diff --git a/Documentation/virt/mshv/api.rst b/Documentation/virt/mshv/api.rst
+>> index 694f978131f9..7fd75f248eff 100644
+>> --- a/Documentation/virt/mshv/api.rst
+>> +++ b/Documentation/virt/mshv/api.rst
+>> @@ -140,4 +140,12 @@ Assert interrupts in partitions that use Microsoft Hypervisor's
+>> internal
+>>  emulated LAPIC. This must be enabled on partition creation with the flag:
+>>  HV_PARTITION_CREATION_FLAG_LAPIC_ENABLED
+>>
+>> +3.9 MSHV_GET_VP_STATE and MSHV_SET_VP_STATE
+>> +--------------------------
+>> +:Type: vp ioctl
+>> +:Parameters: struct mshv_vp_state
+>> +:Returns: 0 on success
+>> +
+>> +Get/set various vp state. Currently these can be used to get and set
+>> +emulated LAPIC state, and xsave data.
+>>
+>> diff --git a/arch/x86/include/uapi/asm/hyperv-tlfs.h b/arch/x86/include/uapi/asm/hyperv-
+>> tlfs.h
+>> index 5478d4943bfc..78758aedf23e 100644
+>> --- a/arch/x86/include/uapi/asm/hyperv-tlfs.h
+>> +++ b/arch/x86/include/uapi/asm/hyperv-tlfs.h
+>> @@ -1051,4 +1051,63 @@ union hv_interrupt_control {
+>>  	__u64 as_uint64;
+>>  };
+>>
+>> +struct hv_local_interrupt_controller_state {
+>> +	__u32 apic_id;
+>> +	__u32 apic_version;
+>> +	__u32 apic_ldr;
+>> +	__u32 apic_dfr;
+>> +	__u32 apic_spurious;
+>> +	__u32 apic_isr[8];
+>> +	__u32 apic_tmr[8];
+>> +	__u32 apic_irr[8];
+>> +	__u32 apic_esr;
+>> +	__u32 apic_icr_high;
+>> +	__u32 apic_icr_low;
+>> +	__u32 apic_lvt_timer;
+>> +	__u32 apic_lvt_thermal;
+>> +	__u32 apic_lvt_perfmon;
+>> +	__u32 apic_lvt_lint0;
+>> +	__u32 apic_lvt_lint1;
+>> +	__u32 apic_lvt_error;
+>> +	__u32 apic_lvt_cmci;
+>> +	__u32 apic_error_status;
+>> +	__u32 apic_initial_count;
+>> +	__u32 apic_counter_value;
+>> +	__u32 apic_divide_configuration;
+>> +	__u32 apic_remote_read;
+>> +};
+>> +
+>> +#define HV_XSAVE_DATA_NO_XMM_REGISTERS 1
+>> +
+>> +union hv_x64_xsave_xfem_register {
+>> +	__u64 as_uint64;
+>> +	struct {
+>> +		__u32 low_uint32;
+>> +		__u32 high_uint32;
+>> +	};
+>> +	struct {
+>> +		__u64 legacy_x87: 1;
+>> +		__u64 legacy_sse: 1;
+>> +		__u64 avx: 1;
+>> +		__u64 mpx_bndreg: 1;
+>> +		__u64 mpx_bndcsr: 1;
+>> +		__u64 avx_512_op_mask: 1;
+>> +		__u64 avx_512_zmmhi: 1;
+>> +		__u64 avx_512_zmm16_31: 1;
+>> +		__u64 rsvd8_9: 2;
+>> +		__u64 pasid: 1;
+>> +		__u64 cet_u: 1;
+>> +		__u64 cet_s: 1;
+>> +		__u64 rsvd13_16: 4;
+>> +		__u64 xtile_cfg: 1;
+>> +		__u64 xtile_data: 1;
+>> +		__u64 rsvd19_63: 45;
+>> +	};
+>> +};
+>> +
+>> +struct hv_vp_state_data_xsave {
+>> +	__u64 flags;
+>> +	union hv_x64_xsave_xfem_register states;
+>> +};
+>> +
+>>  #endif
+>> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+>> index 2cd46241c545..4bc59a0344ce 100644
+>> --- a/include/asm-generic/hyperv-tlfs.h
+>> +++ b/include/asm-generic/hyperv-tlfs.h
+>> @@ -167,6 +167,9 @@ struct ms_hyperv_tsc_page {
+>>  #define HVCALL_ASSERT_VIRTUAL_INTERRUPT		0x0094
+>>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
+>>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
+>> +#define HVCALL_MAP_VP_STATE_PAGE			0x00e1
+>> +#define HVCALL_GET_VP_STATE				0x00e3
+>> +#define HVCALL_SET_VP_STATE				0x00e4
+>>
+>>  #define HV_FLUSH_ALL_PROCESSORS			BIT(0)
+>>  #define HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES	BIT(1)
+>> @@ -796,4 +799,42 @@ struct hv_assert_virtual_interrupt {
+>>  	u16 rsvd_z1;
+>>  };
+>>
+>> +struct hv_vp_state_data {
+>> +	enum hv_get_set_vp_state_type type;
+>> +	u32 rsvd;
+>> +	struct hv_vp_state_data_xsave xsave;
+>> +
+>> +};
+>> +
+>> +struct hv_get_vp_state_in {
+>> +	u64 partition_id;
+>> +	u32 vp_index;
+>> +	u8 input_vtl;
+>> +	u8 rsvd0;
+>> +	u16 rsvd1;
+>> +	struct hv_vp_state_data state_data;
+>> +	u64 output_data_pfns[];
+>> +};
+>> +
+>> +union hv_get_vp_state_out {
+>> +	struct hv_local_interrupt_controller_state interrupt_controller_state;
+>> +	/* Not supported yet */
+>> +	/* struct hv_synthetic_timers_state synthetic_timers_state; */
+>> +};
+>> +
+>> +union hv_input_set_vp_state_data {
+>> +	u64 pfns;
+>> +	u8 bytes;
+>> +};
+>> +
+>> +struct hv_set_vp_state_in {
+>> +	u64 partition_id;
+>> +	u32 vp_index;
+>> +	u8 input_vtl;
+>> +	u8 rsvd0;
+>> +	u16 rsvd1;
+>> +	struct hv_vp_state_data state_data;
+>> +	union hv_input_set_vp_state_data data[];
+>> +};
+>> +
+>>  #endif
+>> diff --git a/include/uapi/asm-generic/hyperv-tlfs.h b/include/uapi/asm-generic/hyperv-
+>> tlfs.h
+>> index e87389054b68..b3c84c69b73f 100644
+>> --- a/include/uapi/asm-generic/hyperv-tlfs.h
+>> +++ b/include/uapi/asm-generic/hyperv-tlfs.h
+>> @@ -64,4 +64,32 @@ struct hv_message {
+>>  #define HV_MAP_GPA_EXECUTABLE           0xC
+>>  #define HV_MAP_GPA_PERMISSIONS_MASK     0xF
+>>
+>> +/*
+>> + * For getting and setting VP state, there are two options based on the state type:
+>> + *
+>> + *     1.) Data that is accessed by PFNs in the input hypercall page. This is used
+>> + *         for state which may not fit into the hypercall pages.
+>> + *     2.) Data that is accessed directly in the input\output hypercall pages.
+>> + *         This is used for state that will always fit into the hypercall pages.
+>> + *
+>> + * In the future this could be dynamic based on the size if needed.
+>> + *
+>> + * Note these hypercalls have an 8-byte aligned variable header size as per the tlfs
+>> + */
+>> +
+>> +#define HV_GET_SET_VP_STATE_TYPE_PFN	BIT(31)
+>> +
+>> +enum hv_get_set_vp_state_type {
+>> +	HV_GET_SET_VP_STATE_LOCAL_INTERRUPT_CONTROLLER_STATE = 0,
+>> +
+>> +	HV_GET_SET_VP_STATE_XSAVE		= 1 |
+>> HV_GET_SET_VP_STATE_TYPE_PFN,
+>> +	/* Synthetic message page */
+>> +	HV_GET_SET_VP_STATE_SIM_PAGE		= 2 |
+>> HV_GET_SET_VP_STATE_TYPE_PFN,
+>> +	/* Synthetic interrupt event flags page. */
+>> +	HV_GET_SET_VP_STATE_SIEF_PAGE		= 3 |
+>> HV_GET_SET_VP_STATE_TYPE_PFN,
+>> +
+>> +	/* Synthetic timers. */
+>> +	HV_GET_SET_VP_STATE_SYNTHETIC_TIMERS	= 4,
+>> +};
+>> +
+>>  #endif
+>> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+>> index faed9d065bb7..ae0bb64bbec3 100644
+>> --- a/include/uapi/linux/mshv.h
+>> +++ b/include/uapi/linux/mshv.h
+>> @@ -53,6 +53,17 @@ struct mshv_assert_interrupt {
+>>  	__u32 vector;
+>>  };
+>>
+>> +struct mshv_vp_state {
+>> +	enum hv_get_set_vp_state_type type;
+>> +	struct hv_vp_state_data_xsave xsave; /* only for xsave request */
+>> +
+>> +	__u64 buf_size; /* If xsave, must be page-aligned */
+>> +	union {
+>> +		struct hv_local_interrupt_controller_state *lapic;
+>> +		__u8 *bytes; /* Xsave data. must be page-aligned */
+>> +	} buf;
+>> +};
+>> +
+>>  #define MSHV_IOCTL 0xB8
+>>
+>>  /* mshv device */
+>> @@ -70,5 +81,7 @@ struct mshv_assert_interrupt {
+>>  #define MSHV_GET_VP_REGISTERS   _IOWR(MSHV_IOCTL, 0x05, struct
+>> mshv_vp_registers)
+>>  #define MSHV_SET_VP_REGISTERS   _IOW(MSHV_IOCTL, 0x06, struct mshv_vp_registers)
+>>  #define MSHV_RUN_VP		_IOR(MSHV_IOCTL, 0x07, struct hv_message)
+>> +#define MSHV_GET_VP_STATE	_IOWR(MSHV_IOCTL, 0x0A, struct mshv_vp_state)
+>> +#define MSHV_SET_VP_STATE	_IOWR(MSHV_IOCTL, 0x0B, struct mshv_vp_state)
+>>
+>>  #endif
+>> diff --git a/virt/mshv/mshv_main.c b/virt/mshv/mshv_main.c
+>> index 9cf236ade50a..70172d9488de 100644
+>> --- a/virt/mshv/mshv_main.c
+>> +++ b/virt/mshv/mshv_main.c
+>> @@ -864,6 +864,262 @@ mshv_vp_ioctl_set_regs(struct mshv_vp *vp, void __user
+>> *user_args)
+>>  	return ret;
+>>  }
+>>
+>> +static int
+>> +hv_call_get_vp_state(u32 vp_index,
+>> +		     u64 partition_id,
+>> +		     enum hv_get_set_vp_state_type type,
+>> +		     struct hv_vp_state_data_xsave xsave,
+>> +		    /* Choose between pages and ret_output */
+>> +		     u64 page_count,
+>> +		     struct page **pages,
+>> +		     union hv_get_vp_state_out *ret_output)
+>> +{
+>> +	struct hv_get_vp_state_in *input;
+>> +	union hv_get_vp_state_out *output;
+>> +	int status;
+>> +	int i;
+>> +	u64 control;
+>> +	unsigned long flags;
+>> +	int ret = 0;
+>> +
+>> +	if (sizeof(*input) + (page_count * sizeof(u64)) > PAGE_SIZE)
+>> +		return -EINVAL;
+> 
+> Nit:  Stylistically, you are handling this differently from the BATCH_SIZE
+> macros, which are essentially doing the same thing of calculating
+> how many entries will fit in the input page.   Note to use
+> HV_HYP_PAGE_SIZE.
+> 
+
+Hmm, I didn't notice this. I guess it's ok either way, but for consistency I will add:
+#define HV_GET_VP_STATE_BATCH_SIZE ((HV_HYP_PAGE_SIZE - sizeof(struct hv_get_vp_state_in)) / sizeof(u64))
+And change the condition to:
+if (page_count > HV_GET_VP_STATE_BATCH_SIZE)
+
+>> +
+>> +	if (!page_count && !ret_output)
+>> +		return -EINVAL;
+>> +
+>> +	do {
+>> +		local_irq_save(flags);
+>> +		input = (struct hv_get_vp_state_in *)
+>> +				(*this_cpu_ptr(hyperv_pcpu_input_arg));
+>> +		output = (union hv_get_vp_state_out *)
+>> +				(*this_cpu_ptr(hyperv_pcpu_output_arg));
+>> +		memset(input, 0, sizeof(*input));
+>> +		memset(output, 0, sizeof(*output));
+>> +
+>> +		input->partition_id = partition_id;
+>> +		input->vp_index = vp_index;
+>> +		input->state_data.type = type;
+>> +		memcpy(&input->state_data.xsave, &xsave, sizeof(xsave));
+>> +		for (i = 0; i < page_count; i++)
+>> +			input->output_data_pfns[i] =
+>> +				page_to_pfn(pages[i]) & HV_MAP_GPA_MASK;
+>> +
+>> +		control = (HVCALL_GET_VP_STATE) |
+>> +			  (page_count << HV_HYPERCALL_VARHEAD_OFFSET);
+>> +
+>> +		status = hv_do_hypercall(control, input, output) &
+>> +			 HV_HYPERCALL_RESULT_MASK;
+>> +
+>> +		if (status != HV_STATUS_INSUFFICIENT_MEMORY) {
+>> +			if (status != HV_STATUS_SUCCESS)
+>> +				pr_err("%s: %s\n", __func__,
+>> +				       hv_status_to_string(status));
+>> +			else if (ret_output)
+>> +				memcpy(ret_output, output, sizeof(*output));
+>> +
+>> +			local_irq_restore(flags);
+>> +			ret = -hv_status_to_errno(status);
+>> +			break;
+>> +		}
+>> +		local_irq_restore(flags);
+>> +
+>> +		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+>> +					    partition_id, 1);
+>> +	} while (!ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int
+>> +hv_call_set_vp_state(u32 vp_index,
+>> +		     u64 partition_id,
+>> +		     enum hv_get_set_vp_state_type type,
+>> +		     struct hv_vp_state_data_xsave xsave,
+>> +		    /* Choose between pages and bytes */
+>> +		     u64 page_count,
+>> +		     struct page **pages,
+>> +		     u32 num_bytes,
+>> +		     u8 *bytes)
+>> +{
+>> +	struct hv_set_vp_state_in *input;
+>> +	int status;
+>> +	int i;
+>> +	u64 control;
+>> +	unsigned long flags;
+>> +	int ret = 0;
+>> +	u16 varhead_sz;
+>> +
+>> +	if (sizeof(*input) + (page_count * sizeof(u64)) > PAGE_SIZE)
+> 
+> Same comment as above.
+> 
+
+I'll do the same as above.
+
+>> +		return -EINVAL;
+>> +	if (sizeof(*input) + num_bytes > PAGE_SIZE)
+> 
+> Use HV_HYP_PAGE_SIZE.
+> 
+
+Will do.
+
+>> +		return -EINVAL;
+>> +
+>> +	if (num_bytes)
+>> +		/* round up to 8 and divide by 8 */
+>> +		varhead_sz = (num_bytes + 7) >> 3;
+>> +	else if (page_count)
+>> +		varhead_sz =  page_count;
+>> +	else
+>> +		return -EINVAL;
+>> +
+>> +	do {
+>> +		local_irq_save(flags);
+>> +		input = (struct hv_set_vp_state_in *)
+>> +				(*this_cpu_ptr(hyperv_pcpu_input_arg));
+>> +		memset(input, 0, sizeof(*input));
+>> +
+>> +		input->partition_id = partition_id;
+>> +		input->vp_index = vp_index;
+>> +		input->state_data.type = type;
+>> +		memcpy(&input->state_data.xsave, &xsave, sizeof(xsave));
+>> +		if (num_bytes) {
+>> +			memcpy((u8 *)input->data, bytes, num_bytes);
+>> +		} else {
+>> +			for (i = 0; i < page_count; i++)
+>> +				input->data[i].pfns =
+>> +					page_to_pfn(pages[i]) & HV_MAP_GPA_MASK;
+> 
+> Same comment as in earlier patch about GPA_MASK.  Also, this doesn't work
+> if PAGE_SIZE != HV_HYP_PAGE_SIZE, though it may be fine to not handle that case
+> for now.
+> 
+
+Will remove the mask.
+As before, won't handle PAGE_SIZE != HV_HYP_PAGE_SIZE in this patch set.
+
+>> +		}
+>> +
+>> +		control = (HVCALL_SET_VP_STATE) |
+>> +			  (varhead_sz << HV_HYPERCALL_VARHEAD_OFFSET);
+>> +
+>> +		status = hv_do_hypercall(control, input, NULL) &
+>> +			 HV_HYPERCALL_RESULT_MASK;
+>> +
+>> +		if (status != HV_STATUS_INSUFFICIENT_MEMORY) {
+>> +			if (status != HV_STATUS_SUCCESS)
+>> +				pr_err("%s: %s\n", __func__,
+>> +				       hv_status_to_string(status));
+>> +
+>> +			local_irq_restore(flags);
+>> +			ret = -hv_status_to_errno(status);
+>> +			break;
+>> +		}
+>> +		local_irq_restore(flags);
+>> +
+>> +		ret = hv_call_deposit_pages(NUMA_NO_NODE,
+>> +					    partition_id, 1);
+>> +	} while (!ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static long
+>> +mshv_vp_ioctl_get_set_state_pfn(struct mshv_vp *vp,
+>> +				struct mshv_vp_state *args,
+>> +				bool is_set)
+>> +{
+>> +	u64 page_count, remaining;
+>> +	int completed;
+>> +	struct page **pages;
+>> +	long ret;
+>> +	unsigned long u_buf;
+>> +
+>> +	/* Buffer must be page aligned */
+>> +	if (args->buf_size & (PAGE_SIZE - 1) ||
+>> +	    (u64)args->buf.bytes & (PAGE_SIZE - 1))
+>> +		return -EINVAL;
+> 
+> Use PAGE_ALIGNED macro.
+> 
+
+Will do.
+
+>> +
+>> +	if (!access_ok(args->buf.bytes, args->buf_size))
+>> +		return -EFAULT;
+>> +
+>> +	/* Pin user pages so hypervisor can copy directly to them */
+>> +	page_count = args->buf_size >> PAGE_SHIFT;
+>> +	pages = kcalloc(page_count, sizeof(struct page *), GFP_KERNEL);
+>> +	if (!pages)
+>> +		return -ENOMEM;
+>> +
+>> +	remaining = page_count;
+>> +	u_buf = (unsigned long)args->buf.bytes;
+>> +	while (remaining) {
+>> +		completed = pin_user_pages_fast(
+>> +				u_buf,
+>> +				remaining,
+>> +				FOLL_WRITE,
+>> +				&pages[page_count - remaining]);
+>> +		if (completed < 0) {
+>> +			pr_err("%s: failed to pin user pages error %i\n",
+>> +			       __func__, completed);
+>> +			ret = completed;
+>> +			goto unpin_pages;
+>> +		}
+>> +		remaining -= completed;
+>> +		u_buf += completed * PAGE_SIZE;
+>> +	}
+>> +
+>> +	if (is_set)
+>> +		ret = hv_call_set_vp_state(vp->index,
+>> +					   vp->partition->id,
+>> +					   args->type, args->xsave,
+>> +					   page_count, pages,
+>> +					   0, NULL);
+>> +	else
+>> +		ret = hv_call_get_vp_state(vp->index,
+>> +					   vp->partition->id,
+>> +					   args->type, args->xsave,
+>> +					   page_count, pages,
+>> +					   NULL);
+>> +
+>> +unpin_pages:
+>> +	unpin_user_pages(pages, page_count - remaining);
+>> +	kfree(pages);
+>> +	return ret;
+>> +}
+>> +
+>> +static long
+>> +mshv_vp_ioctl_get_set_state(struct mshv_vp *vp, void __user *user_args, bool is_set)
+>> +{
+>> +	struct mshv_vp_state args;
+>> +	long ret = 0;
+>> +	union hv_get_vp_state_out vp_state;
+>> +
+>> +	if (copy_from_user(&args, user_args, sizeof(args)))
+>> +		return -EFAULT;
+>> +
+>> +	/* For now just support these */
+>> +	if (args.type != HV_GET_SET_VP_STATE_LOCAL_INTERRUPT_CONTROLLER_STATE &&
+>> +	    args.type != HV_GET_SET_VP_STATE_XSAVE)
+>> +		return -EINVAL;
+>> +
+>> +	/* If we need to pin pfns, delegate to helper */
+>> +	if (args.type & HV_GET_SET_VP_STATE_TYPE_PFN)
+>> +		return mshv_vp_ioctl_get_set_state_pfn(vp, &args, is_set);
+>> +
+>> +	if (args.buf_size < sizeof(vp_state))
+>> +		return -EINVAL;
+>> +
+>> +	if (is_set) {
+>> +		if (copy_from_user(
+>> +				&vp_state,
+>> +				args.buf.lapic,
+>> +				sizeof(vp_state)))
+>> +			return -EFAULT;
+>> +
+>> +		return hv_call_set_vp_state(vp->index,
+>> +					    vp->partition->id,
+>> +					    args.type, args.xsave,
+>> +					    0, NULL,
+>> +					    sizeof(vp_state),
+>> +					    (u8 *)&vp_state);
+>> +	}
+>> +
+>> +	ret = hv_call_get_vp_state(vp->index,
+>> +				   vp->partition->id,
+>> +				   args.type, args.xsave,
+>> +				   0, NULL,
+>> +				   &vp_state);
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (copy_to_user(args.buf.lapic,
+>> +			 &vp_state.interrupt_controller_state,
+>> +			 sizeof(vp_state.interrupt_controller_state)))
+>> +		return -EFAULT;
+>> +
+>> +	return 0;
+>> +}
+>>
+>>  static long
+>>  mshv_vp_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+>> @@ -884,6 +1140,12 @@ mshv_vp_ioctl(struct file *filp, unsigned int ioctl, unsigned long
+>> arg)
+>>  	case MSHV_SET_VP_REGISTERS:
+>>  		r = mshv_vp_ioctl_set_regs(vp, (void __user *)arg);
+>>  		break;
+>> +	case MSHV_GET_VP_STATE:
+>> +		r = mshv_vp_ioctl_get_set_state(vp, (void __user *)arg, false);
+>> +		break;
+>> +	case MSHV_SET_VP_STATE:
+>> +		r = mshv_vp_ioctl_get_set_state(vp, (void __user *)arg, true);
+>> +		break;
+>>  	default:
+>>  		r = -ENOTTY;
+>>  		break;
+>> --
+>> 2.25.1
