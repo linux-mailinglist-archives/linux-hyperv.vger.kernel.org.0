@@ -2,61 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B571336FA6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 11 Mar 2021 11:13:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0884533730A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 11 Mar 2021 13:51:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232160AbhCKKNQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 11 Mar 2021 05:13:16 -0500
-Received: from mail-wm1-f44.google.com ([209.85.128.44]:45647 "EHLO
-        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231639AbhCKKMz (ORCPT
+        id S232825AbhCKMuu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 11 Mar 2021 07:50:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233122AbhCKMue (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 11 Mar 2021 05:12:55 -0500
-Received: by mail-wm1-f44.google.com with SMTP id r10-20020a05600c35cab029010c946c95easo12424565wmq.4;
-        Thu, 11 Mar 2021 02:12:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AMLh8DlsD+hO1KOry0JB/y7CCm2xTd9QrD5ji28orno=;
-        b=VthDU1SJRKp4fz7/UEX87wifa9OWk6rWDesBwzm3Z5K700keXTHPKZ6kkySRLOV1V5
-         zzyT5GmKGCCnwdU3ZG8EOxAEJfy/SBt6JDO1lOW66z1v73dn+DRIFHKOIbtEk5YLXG72
-         BniNJ/vkg7tQQjtZe8xh+bC65EHjewy91BsIRba8/Az+aJAPfOhQSrku+0mKFdHhh2Rd
-         5LxuPK6ysytd6KjqrGw80G0zdrnOB2MYe9DAiXhe+qJDv9MhNyNaobo8vWMC1BHe2+mD
-         0sEmNTd6VlF5RoW1wmr/bfK2QiHkL0yPrwu3xINu9UMMBd9bUoyFZAHQvWskbKi2HIcJ
-         7pdQ==
-X-Gm-Message-State: AOAM5337KXqBKjSAL0U9LJeaSqc6+1jn4IBZF6gLSMRjYvaBHSoK0rhi
-        tMIYiR4Su3AiFE8APyM4RLK0359j86M=
-X-Google-Smtp-Source: ABdhPJzIEobDfX3TaAcuDTwWj4Xsju1XMkQxmf3HYluxmOVVS7VSIJjvG2jErQo9/3QYiswJHQqUWA==
-X-Received: by 2002:a05:600c:4f03:: with SMTP id l3mr7452641wmq.149.1615457573713;
-        Thu, 11 Mar 2021 02:12:53 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id 3sm3460392wry.72.2021.03.11.02.12.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Mar 2021 02:12:53 -0800 (PST)
-Date:   Thu, 11 Mar 2021 10:12:52 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     sthemmin@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
-        arnd@arndb.de, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH 1/1] asm-generic/hyperv: Add missing function prototypes
- per -W1 warnings
-Message-ID: <20210311101252.ksagsrb2w4eykand@liuwe-devbox-debian-v2>
-References: <1615402069-39462-1-git-send-email-mikelley@microsoft.com>
+        Thu, 11 Mar 2021 07:50:34 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B52BC061574;
+        Thu, 11 Mar 2021 04:50:34 -0800 (PST)
+Received: from zn.tnic (p200300ec2f0e1f0084acfb80b2ea2480.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:1f00:84ac:fb80:b2ea:2480])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 570341EC04C0;
+        Thu, 11 Mar 2021 13:50:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1615467030;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YQoMnM+JalduchtvnnRdDi537/sQjYe69dpZBUUIePI=;
+        b=oOGUaSre4XzUs+lxkz7FD2kSZBN8NksBkfckW/+qTHl8JbaxYlJ6NN8Mbc1R2n11m55CFf
+        P73fj+xpCfOCQDtCPXJIYK1D6MwZPiXIwvgaAfFGUGzDJZaZCXkLGAHUC5DtKeJD/Osqtp
+        IAS+CcgMs7OmmLqg6Q3uUtquB4Svgws=
+Date:   Thu, 11 Mar 2021 13:50:26 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Juergen Gross <jgross@suse.com>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v6 00/12] x86: major paravirt cleanup
+Message-ID: <20210311125026.GB5829@zn.tnic>
+References: <20210309134813.23912-1-jgross@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1615402069-39462-1-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <20210309134813.23912-1-jgross@suse.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 10:47:49AM -0800, Michael Kelley wrote:
-> Add two function prototypes for -W1 warnings generated by the
-> kernel test robot.
+On Tue, Mar 09, 2021 at 02:48:01PM +0100, Juergen Gross wrote:
+> This is a major cleanup of the paravirt infrastructure aiming at
+> eliminating all custom code patching via paravirt patching.
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> This is achieved by using ALTERNATIVE instead, leading to the ability
+> to give objtool access to the patched in instructions.
+> 
+> In order to remove most of the 32-bit special handling from pvops the
+> time related operations are switched to use static_call() instead.
+> 
+> At the end of this series all paravirt patching has to do is to
+> replace indirect calls with direct ones. In a further step this could
+> be switched to static_call(), too.
+> 
+> Changes in V6:
+> - switched back to "not" bit in feature value for "not feature"
+> - other minor comments addressed
 
-Applied to hyperv-next
+Ok, looks real good, the simplification is amazing! :)
+
+Can you please redo with the minor nits addressed ontop of the
+tip:x86/alternatives branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=x86/alternatives
+
+and move the cleanups patches 13 and 14 to the beginning of the set?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
