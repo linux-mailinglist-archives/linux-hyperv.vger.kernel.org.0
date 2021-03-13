@@ -2,182 +2,141 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01889339A21
-	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Mar 2021 00:47:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B5C7339BB8
+	for <lists+linux-hyperv@lfdr.de>; Sat, 13 Mar 2021 05:40:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235867AbhCLXqq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 12 Mar 2021 18:46:46 -0500
-Received: from mail-dm6nam10on2109.outbound.protection.outlook.com ([40.107.93.109]:52143
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        id S231597AbhCMEiP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 12 Mar 2021 23:38:15 -0500
+Received: from mail-bn8nam12on2136.outbound.protection.outlook.com ([40.107.237.136]:33441
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235874AbhCLXqW (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 12 Mar 2021 18:46:22 -0500
+        id S229968AbhCMEh5 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 12 Mar 2021 23:37:57 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EkYfcfgwgpGrgjXKNiRVpM1AL2LDC7kbCnWIiQS+wD5LnQKk94JUcSeIgfovi6WR64/3x2FvLmZ0TLNinYcTQuSBUuby0nautneBEmyZKVDWsh/EIzJSMLOcVs0R2ZibGrAMLYDvW28aJ1tK5eSVvXSoqzeSE/kFXBLodiW04mXHBbYUESl4xlioZ/1Hrn2L1RtAuA4sUSSuBRsIZQ0wowqHDo0D0aKighL96yxp0C//RTmBZBBlDnVxLxYJJOjw1j6sJMkP3zlAng/ykX03/xuowLYlrABCX2W4tvZlQ0rGCTM0bHVZl16RbvhiAevkzQ51kKv/nPYIknwkMpqIog==
+ b=df2hHE4hqLUkxH9BTbdXUefRsST/zct8RifgyKyD0HLXrySPYSR1+iMwO6s0fe88pXX1cC+Cn0eo+zOWCF3QMM6CExjF7y5ciG6G3aDaDQWWorkxyCc029Uv4qkrxo4UO35Ct15Qk0eBUr4VdpOOxkyk7V7hh01OFdlAXBpbaylCyWbIDfEFmxpK4LG3cnjnMj4RWudxHc/YDnO945lbvIT7gN915vc3wF64Fy0AHdmwA1A9WsLJ143YWujsdNptOrz2Pmw/U5zXBzdpHQ2pI0lPzi0CwYY+tM30gIs4gdu2xCoqdN7ie7bfFBnVsLA96MjL+MKCE+tgrOtGIVZuZw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=phfrcTnzkIFjtqag+p+QaWAA9aUiPxFefARrXk8slNk=;
- b=iFBhA61zq/o5n+mNLxthyHnMsgFibeNjl8mX+CxGa49MeKSZBrMY2gqB7nRctYSSefJi6x/YzG+pwIi0oewDS1IFWxUiwSZkKRYVFAellE3kdMZmDR5BpPIj7cH7F2lPjTup7MYiVzOcTIt0VE3VNG6O02Z7Ougq4AqJS2Fykvw57XzE/SBhaFojvmodiLtmCA2DDrv3CYbgZEeeWt3IsO2KRnjEDGlefPd7YwLQvkfk5PnftCTk7AXZ6+Umo5MMxmbz8SSkB86Bz1WTz7hJWXBVffF93CA3jHuKKAeRHBay8mlFYcH2WybiENhTBrkOj8z4Eh+L6pEm2wJy5UdULA==
+ bh=K0AWXnAREIjMpsLi9rYBx1E/zzb/cSOA83OQXNfpAjk=;
+ b=MjKiqlMmpu+rMsB1o/UeH2O8LRvuYujQhYW70UFBy4WmxjTBDhi1CoFn400i8eqfhD2garqApOg03ng9GuDRz0LaDgv2nRPbxl/WZNUBrS9K7jmINMF1it6yNFTK6yGjWYxjq32g9VQwu7m92NTgKSfRM0oIuaoZoUpP5XACM9rXBMuddKcPM1qedRaiKcFQ7aiF4/DFcCvt97Pd3br5yIpQEqHltX617ORD0so3WF8Afx7xHO9Ye63FFnqIO5gDTkQS5nQXmZ8YsAC4nZTSVUk/UYgw467cZXnfUIWxbHybvWb1Qfzot5avZ0OQpX2sUZgrjkeMJJ4UiOtTV+KERA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=phfrcTnzkIFjtqag+p+QaWAA9aUiPxFefARrXk8slNk=;
- b=iI6BmsOriYIovx2GDag7HVF20N0n+iQGkJljtH2X70OUkLAKXuFYtwXsFwcJxY+fR2Fc9cXvbwwfCx02aFlH7ANvGtQ7lQXg19ekF5DufqijCBEGeos883L1oebX2MYLuW53H8+GTxmJ+PLG6jIimWkI6pixkwwWZZ0cDGiC04E=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=microsoft.com;
-Received: from DM6PR21MB1340.namprd21.prod.outlook.com (2603:10b6:5:175::19)
- by DM5PR21MB1767.namprd21.prod.outlook.com (2603:10b6:4:aa::31) with
+ bh=K0AWXnAREIjMpsLi9rYBx1E/zzb/cSOA83OQXNfpAjk=;
+ b=iRfXQxyhA485A8vQfRFFCJdq60lDqhA+a2zqOMtgiwdPX713ZHD8zx6HH3aJtHKgv88AVq+ui/cjvYVim718KGhS05Z7IZTG7dRxUmtQvWrjJB+uULZeKeFkGbHXczIMsS+0qwdQlZVlnFKpAdM9dyd+IrkzAznKABkTVoGIMIo=
+Received: from MW2PR2101MB1787.namprd21.prod.outlook.com (2603:10b6:302:8::15)
+ by MW2PR2101MB1788.namprd21.prod.outlook.com (2603:10b6:302:b::25) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.8; Fri, 12 Mar
- 2021 23:46:08 +0000
-Received: from DM6PR21MB1340.namprd21.prod.outlook.com
- ([fe80::488b:9500:3b0c:e41a]) by DM6PR21MB1340.namprd21.prod.outlook.com
- ([fe80::488b:9500:3b0c:e41a%7]) with mapi id 15.20.3933.031; Fri, 12 Mar 2021
- 23:46:08 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.13; Sat, 13 Mar
+ 2021 04:37:54 +0000
+Received: from MW2PR2101MB1787.namprd21.prod.outlook.com
+ ([fe80::c9f1:a5ea:6bd9:f0de]) by MW2PR2101MB1787.namprd21.prod.outlook.com
+ ([fe80::c9f1:a5ea:6bd9:f0de%6]) with mapi id 15.20.3933.011; Sat, 13 Mar 2021
+ 04:37:54 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Shachar Raindel <shacharr@microsoft.com>
-Subject: [PATCH net-next] hv_netvsc: Add a comment clarifying batching logic
-Date:   Fri, 12 Mar 2021 15:45:27 -0800
-Message-Id: <1615592727-11140-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-Originating-IP: [13.77.154.182]
-X-ClientProxiedBy: MW4PR03CA0230.namprd03.prod.outlook.com
- (2603:10b6:303:b9::25) To DM6PR21MB1340.namprd21.prod.outlook.com
- (2603:10b6:5:175::19)
+Subject: RE: [PATCH net-next] hv_netvsc: Add a comment clarifying batching
+ logic
+Thread-Topic: [PATCH net-next] hv_netvsc: Add a comment clarifying batching
+ logic
+Thread-Index: AQHXF51M9JIEsP+J9kCivpgEZd0J/KqBVeoQ
+Date:   Sat, 13 Mar 2021 04:37:54 +0000
+Message-ID: <MW2PR2101MB1787E637DE8305957D87D0C9BF6E9@MW2PR2101MB1787.namprd21.prod.outlook.com>
+References: <1615592727-11140-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1615592727-11140-1-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c850cfb0-f776-4007-94bd-6b8f8ad960ed;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-03-13T04:37:27Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [76.104.247.152]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 982041cd-5001-4ebc-58e5-08d8e5d9c4c8
+x-ms-traffictypediagnostic: MW2PR2101MB1788:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB1788DB930EAA4F8C9CA15FD9BF6E9@MW2PR2101MB1788.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JNeSuY1N12rEuV2wzGPKfFoNPeW19uTCsVgW9/Yo/jqmhZQUo/rV9yIcSq9wPlt0PErlXF+4e+9hoEJ6388wpPuVWzFsjqbRW2kv7zgIgOEc/XDvJ/pgtvnpArsD+Itvnmi3hV+aGhIXsQ7KSUM/BO1SmTPqWnK0Ci5vMPAMEqLjexHKdw40t1wGVW2rfKPuS8Vm1oXqosmdvFDU3Puk5ApEJPtEHJJLP64EwOV4CR7cPS3s8e8u5v25j70jQZKANFoxQujJtUy3BRyiKoMOgFAm0VpknxW4excDYgSLi++iUg5u7rbTxwfGi2h5y867dLY0xEF/CBgUhUmIdLWUwutlLhmkLhCH35xO2nxnigQX+d8ifTf8B0dIYlmUZ73qMnNwm54RRvJ1vHb1rIv72jvtRzk/s1an9nD8nKjPLcHBMD8fdVjhSLWIlDXt3aZr0bQdOy7tmEoLnzmA1jPmqAvAD7pThNpSB68LbL2OOgM317r1+b5viSGckgqbI/svG/jVIkCjgmxqxfjgk7/mzbcu8ZecEzWn++joHRpIpuNOK3zjq/OcPYDuYPeE5zkY
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1787.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(376002)(39860400002)(346002)(136003)(66946007)(76116006)(10290500003)(6506007)(8990500004)(66476007)(53546011)(4326008)(2906002)(66556008)(52536014)(7696005)(110136005)(66446008)(186003)(5660300002)(107886003)(55016002)(9686003)(26005)(316002)(64756008)(4744005)(8936002)(8676002)(54906003)(71200400001)(478600001)(86362001)(82960400001)(82950400001)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?3+OtSbh7+jrquB+6ElYIBE6oSUCAoHdlXadQit7/7NDW/8OXbqtZJIVE0CIX?=
+ =?us-ascii?Q?M8AsOVjehrzFbrTFAXa2Y/CFRWwJmW91ue6uAyAaionTR2LRFhzwOC3Hh3f2?=
+ =?us-ascii?Q?RCxomWGNwG1wK16ayIaXZAVBg80QGhsbqfucDNaIOd24ystEIcd7R6idll39?=
+ =?us-ascii?Q?TVHlCliD03pbt8nMZZETECgcQhO46Jeg++X4Czouhr7//VJqzKgSYF5C7wF8?=
+ =?us-ascii?Q?3buZ/aFsbJdZYXiFZns+Fki8D8gNBHLzmje6JRtTyJknnxMaqq1J5/EatMR6?=
+ =?us-ascii?Q?iG2tTkkCcLVAy44OI6pwQbiNxiYfN99yk2EFRjAhI9xL6fFWXW/wUxu5ljSF?=
+ =?us-ascii?Q?bpfv2BtcEq9VhvOsMUdlnaSkt7JjTITc5/nr4i04wUD7nUTQajKF+7SULH4h?=
+ =?us-ascii?Q?V7+uylI+nj6Lt5Vl8Ssr9is0bAbl4mI488w4tY87J3EwfKBqcJsufTVsY1oY?=
+ =?us-ascii?Q?1rmCwGJja16qqblZRXO13/GgzZ7JHsnpE12nb842qnabVclrah+w9JobGRU2?=
+ =?us-ascii?Q?h+4FyFEH5qSGj655/XH3p1Y0CXiImqySMjrDJy4KJnzebDJNSneAv7M2IaA1?=
+ =?us-ascii?Q?lSbsjzpNXzTahGWzesmddoJTxmZ4OqFCLJkCpDmiSI5k06RHtrRC0NDxo2xH?=
+ =?us-ascii?Q?vrnN0qd+Q7dVAUr/cQuJWD4SR7r6ZBvm5jxdYOf8TtySSr5aEwkItl58IXXA?=
+ =?us-ascii?Q?ptQHYQ2opWM485z77rKcczr9xLcRaRw4R3uz0Y71AYmflrQ9bvjFOP1MPXIA?=
+ =?us-ascii?Q?B1zRgKr+g42FfKA7tSyVOnw1TILGoGI8cAbbxl0/Y9T7mFdU3LENmFipN6Ux?=
+ =?us-ascii?Q?QH4a79u1KTqeKe78lHaffkMSZzKFU2+UwfLNPZ7Lj1TSKqNXqQkiD6MWkmM5?=
+ =?us-ascii?Q?kGthpled7wnI/854D6mDKCmptPwRe185RQxq+3ATi8bbjK7k7M9cQT1YAKDh?=
+ =?us-ascii?Q?0RCXVI8zAjoGc53vJNOIQHme7zqsIqhbFa7eEnmdi4HxvtKzvWyb/3qu8otu?=
+ =?us-ascii?Q?Ljj3WqDx+z1L2lyslHKPhr/OxrOnr/Mr3ED7TJ9KzKEToZZo/QcAWIZWh8KI?=
+ =?us-ascii?Q?IdEuCPDI65/SqMvaXQMBgKIM7B2Z67ukdLLEAGEkUrHgT9EmdZlSHdNwa833?=
+ =?us-ascii?Q?JRQKrBVVeUjqnc8CTwktEbFTk1uLhZzvehkDjaUfLQV/FWTX5o/JkBA1SZQo?=
+ =?us-ascii?Q?6YyD1vvLorUsfYwSfjIJH5TTU5Tt0kabU4Vg8BovMuOGYUtBV8ayPycf/hca?=
+ =?us-ascii?Q?w9wq7UZRnIWn2IVVVuuWNRXSGu/VnKTIOgvqnAx/I6kfGN8ADIKJTEB3ugBQ?=
+ =?us-ascii?Q?TFuD5Xn4LsaV3dYJrqkQ3DPK?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MW4PR03CA0230.namprd03.prod.outlook.com (2603:10b6:303:b9::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17 via Frontend Transport; Fri, 12 Mar 2021 23:46:07 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 183f3c06-a75e-4bd7-cecd-08d8e5b10205
-X-MS-TrafficTypeDiagnostic: DM5PR21MB1767:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR21MB17671638BA930A39C42C7367AC6F9@DM5PR21MB1767.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1N6NHzX14qVy3AbC3RXXx19S+lBMafLw0sEd6jnvxKFtm62v9KFfNtZVQiVhYJORT9lktuQXFKLrfK6jMUAHVbgl7ZIBe+ggHZO7tjlkDbzmUX1TE5kAK015+eyPb9RKX0IXevtD6ojaaS+wPqhwWQEv16qxP0BE94+/izHCYiuGUMsXVRAGtjiVAaDWhDovPKgdVDVy4TC/zPRPKXiDfW3EAEvMOlCigzqGkRm1QKXvUHvoY4ZYc91ihjS5lRlTvmW5m/q0+fkSzX043AWhX6T5XUqpZoozsw+vLoX0ra4W+RztYj4u3S9yFb5FwOm49IKBmtfvVYP0zLfT1Y8rbT69+PO2QW/UZ/3HeTUQChuEdlJooezvldCD9EiLy1WWbMj02rqwgZ/LqD028j+Ch8h8jSH5a+UqeSataOZfeYdMhBn55BXp3vTLkRMA9WCbE0d8GpyRy0HhfBz05zFJoVe1hG3XhpQlHv9rBrzgA76E5xvAX+/Mie9q7dMnEGYPHdpizUDf0HagfsN4a6YO858g8xawMCxWQWSmvpshPSfUKplfvgjtqLpn2cT1LLd9
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1340.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(39860400002)(366004)(396003)(376002)(66476007)(82950400001)(2616005)(6512007)(66946007)(956004)(6486002)(6506007)(4326008)(186003)(83380400001)(82960400001)(66556008)(6666004)(2906002)(36756003)(8936002)(5660300002)(316002)(16526019)(8676002)(7846003)(26005)(478600001)(10290500003)(107886003)(52116002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?d4C3P6SivISwW+mmkjvm+Tk8ljvHKP4KlpXOIET97t8pXZmnhIaeNfd4SqtQ?=
- =?us-ascii?Q?tmsfwib6gILajaRpRhJX5+/ftCuAZnCLzkR9g20jNlreUls+Tybze7TRAcoK?=
- =?us-ascii?Q?gr/Ceoe29bReN0E6dxjFjMR8ydwBONa7iBJl3W29dXtCKMMaR3EbI52EeOcd?=
- =?us-ascii?Q?0SIvcTRyhb4RRoD5d+hjSyV8gBgL6RPqoIk0ZlxXMbLNmhje8QVytpV0BNJv?=
- =?us-ascii?Q?5QfDrSbBCOMfkW8Vp8TJyeGveHZ7LS0UogMiXQHFlDSJHko2W6czwkJgG1a/?=
- =?us-ascii?Q?fmJ3UMAp+zxzY8EBgb9N6NGoq09Ngb3a+xo3oX7ciQk1KZAFIROFCcXN+LtJ?=
- =?us-ascii?Q?p3GMKn+T+tV3qLBQZ/crr3MfqmmBA+xNYbuWTnkiSA+siILkNvNY688GoL29?=
- =?us-ascii?Q?NgprL+11eMyX72QYaWSxfDdt1EkZXuyyLX5MbccdSmVdMlX5MI1wPMf2FDKp?=
- =?us-ascii?Q?nm/esZRqbqJ2zvzTukOJB8+Uzeu8HJZQ1S0qOcJ6mIa3RrkTjaopcwUa9JQ1?=
- =?us-ascii?Q?40K0Vej15CGd2YxZOIXiRaDbQvJv99j2EbxCHmI1CCmL4/2Ol5DpBcy8wxlK?=
- =?us-ascii?Q?FubAD1xtgpLLJdshE+bXvxO8PN8lNFd2bydqQUJyEHJR0CSOgAyvUFmBPTTc?=
- =?us-ascii?Q?3XsoFAJY4e0QlEPq48njtamFQzNmwlfP+YwkJAIKulC2ScmpMtkOaV0ca+0H?=
- =?us-ascii?Q?2g7Tq5MLkY5ib0vwGvcH7pMx6nhmc+I5HEK7YK1ShhU4ltsgMDkojP2ZoED5?=
- =?us-ascii?Q?CWwXaWlnXwFLbxYCWNaEGGqVqZyN/5WA+WUjpYFFoNGq2rn3pFCzsDAq6/Zp?=
- =?us-ascii?Q?AXyzVBHGSWsJ+E11phHeCabsRCS6OBNWZX18Oj8UlZmuDH/hFrKR/++HcNfV?=
- =?us-ascii?Q?wQ5s7zshKzec6z/dlHc2PgKgnRsPX0CJSzKjqfn7/JnCkuXPdCnyrXCqQIPK?=
- =?us-ascii?Q?qxTSFgyFlIxVsE6vIFvo8Z13R3iZzzfgbvVfoOlXKe7YEIHB8Nm8jkvH6kR4?=
- =?us-ascii?Q?DA0RFzcg1AFIzu9ZlFfXaRJxnBX6Az6BMC8rqoQpGqOQiCedk8wuOG2Xu9a8?=
- =?us-ascii?Q?5lpzalU2K7w4R5oPrR9Ft9kneoggWpuJAkAw/bCT0gKapNoWzcfsOPZVq19P?=
- =?us-ascii?Q?1L3f8OiHbLArp36VMeCpQzKL5OLsa0IRWL5Egj/WT7ImxaEt6rl+NzyQW4aL?=
- =?us-ascii?Q?wDEYoDvWmdaAiEJ9uI3m6MgqQQ8sG3YfxUPmIjQvXwrZbL4vD6P509MGbBjU?=
- =?us-ascii?Q?S+DqHlqt5O8WoeoIND2PFa6OUqhjCR1SrU+smvshb/kV/VbR5xWmeZML+yxX?=
- =?us-ascii?Q?AP/rZY4DuDOPzTo/ZHMXLuNV?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 183f3c06-a75e-4bd7-cecd-08d8e5b10205
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1340.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2021 23:46:08.2874
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1787.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 982041cd-5001-4ebc-58e5-08d8e5d9c4c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2021 04:37:54.3784
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AiNfcJ1GXI0TKCLPgmL4veiXze46Jhg7LOvS3LLuyrfgl2FV/DPVOXDKYTpAEDRGSwK1ni4Vvb2UH/6bBXBdpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB1767
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jMf27XgLwveJUk5C5QeFbj7sN/kl/HC2N/PACcBXn+4TAKBgij2I8Vw5CSEtAr+2uekI9wEpdoP9BFYFYOaksQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1788
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Shachar Raindel <shacharr@microsoft.com>
+> From: LKML haiyangz <lkmlhyz@microsoft.com> On Behalf Of Haiyang Zhang
+> Sent: Friday, March 12, 2021 3:45 PM
+> To: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan
+> <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> olaf@aepfle.de; vkuznets <vkuznets@redhat.com>; davem@davemloft.net;
+> linux-kernel@vger.kernel.org; Shachar Raindel <shacharr@microsoft.com>
+> Subject: [PATCH net-next] hv_netvsc: Add a comment clarifying batching lo=
+gic
+>=20
+> From: Shachar Raindel <shacharr@microsoft.com>
+>=20
+> The batching logic in netvsc_send is non-trivial, due to
+> a combination of the Linux API and the underlying hypervisor
+> interface. Add a comment explaining why the code is written this
+> way.
+>=20
+> Signed-off-by: Shachar Raindel <shacharr@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
 
-The batching logic in netvsc_send is non-trivial, due to
-a combination of the Linux API and the underlying hypervisor
-interface. Add a comment explaining why the code is written this
-way.
-
-Signed-off-by: Shachar Raindel <shacharr@microsoft.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- .../ethernet/microsoft/netvsc.rst             | 14 ++++++++-----
- drivers/net/hyperv/netvsc.c                   | 20 +++++++++++++++++++
- 2 files changed, 29 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/networking/device_drivers/ethernet/microsoft/netvsc.rst b/Documentation/networking/device_drivers/ethernet/microsoft/netvsc.rst
-index c3f51c672a68..fc5acd427a5d 100644
---- a/Documentation/networking/device_drivers/ethernet/microsoft/netvsc.rst
-+++ b/Documentation/networking/device_drivers/ethernet/microsoft/netvsc.rst
-@@ -87,11 +87,15 @@ Receive Buffer
-   contain one or more packets. The number of receive sections may be changed
-   via ethtool Rx ring parameters.
- 
--  There is a similar send buffer which is used to aggregate packets for sending.
--  The send area is broken into chunks of 6144 bytes, each of section may
--  contain one or more packets. The send buffer is an optimization, the driver
--  will use slower method to handle very large packets or if the send buffer
--  area is exhausted.
-+  There is a similar send buffer which is used to aggregate packets
-+  for sending.  The send area is broken into chunks, typically of 6144
-+  bytes, each of section may contain one or more packets. Small
-+  packets are usually transmitted via copy to the send buffer. However,
-+  if the buffer is temporarily exhausted, or the packet to be transmitted is
-+  an LSO packet, the driver will provide the host with pointers to the data
-+  from the SKB. This attempts to achieve a balance between the overhead of
-+  data copy and the impact of remapping VM memory to be accessible by the
-+  host.
- 
- XDP support
- -----------
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index dc3f73c3b33e..dc333dceb055 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -1006,6 +1006,26 @@ static inline void move_pkt_msd(struct hv_netvsc_packet **msd_send,
- }
- 
- /* RCU already held by caller */
-+/* Batching/bouncing logic is designed to attempt to optimize
-+ * performance.
-+ *
-+ * For small, non-LSO packets we copy the packet to a send buffer
-+ * which is pre-registered with the Hyper-V side. This enables the
-+ * hypervisor to avoid remapping the aperture to access the packet
-+ * descriptor and data.
-+ *
-+ * If we already started using a buffer and the netdev is transmitting
-+ * a burst of packets, keep on copying into the buffer until it is
-+ * full or we are done collecting a burst. If there is an existing
-+ * buffer with space for the RNDIS descriptor but not the packet, copy
-+ * the RNDIS descriptor to the buffer, keeping the packet in place.
-+ *
-+ * If we do batching and send more than one packet using a single
-+ * NetVSC message, free the SKBs of the packets copied, except for the
-+ * last packet. This is done to streamline the handling of the case
-+ * where the last packet only had the RNDIS descriptor copied to the
-+ * send buffer, with the data pointers included in the NetVSC message.
-+ */
- int netvsc_send(struct net_device *ndev,
- 		struct hv_netvsc_packet *packet,
- 		struct rndis_message *rndis_msg,
--- 
-2.25.1
-
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
