@@ -2,123 +2,135 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25435342007
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Mar 2021 15:47:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B01783421AA
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Mar 2021 17:21:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbhCSOqj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Mar 2021 10:46:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58906 "EHLO
+        id S229991AbhCSQUp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Mar 2021 12:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230297AbhCSOq1 (ORCPT
+        with ESMTP id S229933AbhCSQUa (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Mar 2021 10:46:27 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:400:200::c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A3A1C06174A;
-        Fri, 19 Mar 2021 07:46:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1616165176; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=rMr6806o7Cdl9QE76yrzHiCVEWBOHQEpk3zpAmEqVZAiukbXGrMv4DSL2AdudtIVg3
-    HrWgzdFZHsBbZglimmjaCVSGHJ1dF1qhzjZGszNlm2D68hCF2nFJ+Wb/4LJbvsy7DCnT
-    aK5lf8t0pT8ahGcsxHIDQqlmB2CgKcd65V/7knMMIruZ6/iMZ2VXHntOLUN9MdmD0865
-    wAs70dN1e9p8IrVH4++nBBweFSu2Jp6A8xYNuXzE91bmrXW3kW5GNlPn7KrDK9JG4HZE
-    da3xFNVwg48nlV+EwfKkVTFaYtUMrYvNkYtwMLLanPHC0voMYnSB0gmWsmSuIPLet2hM
-    tjFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1616165176;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=0g6ivdcZkjFnRkFc2L1BIjTwwTdxzAc71cxW0S+jmO0=;
-    b=GOAa2zWTDNA6HC63RjxDIimZORdDg4oy9udHuCZvUnUOZoVOpib9Tbt3vnMw1JjIzA
-    /TEyFMoZRvDjWpn1EeP91+M8w3url/w3nETgbIpL+seOuIQWiJ8+fdPTu4vCcnYNZa7b
-    JIgS/AK7RMYhzCoFZOy7pYAyJQ/HHqCT8Qxkbv6KlXHWAWj8HM6OHczbuLJob6uDsW1f
-    FpW4sZ/5fAmMohmj5OG+reo3iLr2j1oQ9CKLNkC5lR6KdUwM3ZnBKM9Wo5jSG1OYzdUa
-    o8L+H8HnbRAkahHZYLQN8eA6cc9PLFKCLfbWKcRQptHhYGRDOcynbXOcfnB63CX/n1fQ
-    D3Ig==
-ARC-Authentication-Results: i=1; strato.com;
-    dkim=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1616165176;
-    s=strato-dkim-0002; d=aepfle.de;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=0g6ivdcZkjFnRkFc2L1BIjTwwTdxzAc71cxW0S+jmO0=;
-    b=UpOoT4DfYVY7wH4zHa5ZyKoUQo9z81hOgKa2GcwjrfG+nInCKdc/XeTwc3gl3SQv4S
-    V84iP9KSai/uzGLXnYl86ihR9NoLEY2hu/fGkyXKHzpeyHYmQQgVZ04gZM6j7i0hx7Rk
-    0A7xjcMHXKmUDyl+rTG3kPYrB/U68T9tbpsZltAMF870DRfPgo2gHVhOq9S7B/ftgVOa
-    33s/32egi8L3aamgzWabOBSSJrZ+pZlnBwiSiIvTS3MQqe3U3/7Sa2XeLBSBIJWhNEIb
-    Bmip0W+GxTtoVvfch/WGiwUqz1msNn56lfPvJdGL/7TnDijW/bKrpES/T7Pq1il6i092
-    7gsg==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDXdoX8l8pYAcz5OTWOn4/A=="
-X-RZG-CLASS-ID: mo00
-Received: from sender
-    by smtp.strato.de (RZmta 47.21.0 SBL|AUTH)
-    with ESMTPSA id k0a44fx2JEkFBBr
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Fri, 19 Mar 2021 15:46:15 +0100 (CET)
-Date:   Fri, 19 Mar 2021 15:46:07 +0100
-From:   Olaf Hering <olaf@aepfle.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Fri, 19 Mar 2021 12:20:30 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A70C061760;
+        Fri, 19 Mar 2021 09:20:30 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id c4so3438744qkg.3;
+        Fri, 19 Mar 2021 09:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YTqkIslzd3cZ3YjBiwLXA1sHZhbzdhxR9PRY9kOersA=;
+        b=XEj7xRWm32bCF4yjMzjwpA6QUw4nqoK//unFI76siTlkarCqwbUdgOu+9sRIGeIaFR
+         CpBJPZojis5xSZjzRVswDmA+bmsff91MSDWioPQU0OAiC4Z+di46w3deJDjzganWXNTb
+         /cITW1gUvdJQPwqXzNfQbtDB6G0E6Kf26TGuoMxZPnKnTGVibnM8yZ53dFrryqTINTcS
+         /Huin2H9VArXjOF1pMhLqdMcS+ydze50OT0CHq/7V5e34Z5/+hFWye8Su57wM+9GwqmU
+         veCUyEDOW2G/L0iPZF22+EZdem8PNA7GUgY9LJmyylGO4bI5ba820jBQIHqjefDbdTC8
+         dwuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YTqkIslzd3cZ3YjBiwLXA1sHZhbzdhxR9PRY9kOersA=;
+        b=o8ex7jHA+2eH5dVAVvfHeW9i5u/8Zc0wuMBVaR5YEEfSX/i3izkLfriEhqSyhSx2/N
+         JRRCwKfrg2lXTM+fiQRoIMhVjn48HBJSglhdPn8F9tYt2s0quBmmzROnn5z/OtEnOQob
+         //c3YVKXDg7oZ2r3dIL5v1HeYG9pSU8cSCmhwgzhaQfLFNJGXmGsIu6WCjNulFQk+53o
+         LwsjH+XNzHcNpXQkj3Sf+WW9P25Ha9RJcTsSJ5bzy/X3efmk+J93q3UAfw7sjv+R4l3z
+         tgFRctL9RPlh1xFOteCYyZZ5VVTtRM3AAbXCCb+VFdB1ndVa53/vRAvarQtD2T0NpM/z
+         pFKg==
+X-Gm-Message-State: AOAM530dbJxcwswK67Jd/OHubZMyr+tunBLT2EUIjhAwHItqoM3v90NJ
+        FqaHrHB4aGQ1wIYG0F8uAu4=
+X-Google-Smtp-Source: ABdhPJwOQCi4eHUF3JKAOaJ7+W1gOiAy5rQZqz7Rbbbu3aBu7rigEKpd0Od6PXSPRjxdLrQWaD6gZw==
+X-Received: by 2002:a37:9c51:: with SMTP id f78mr9994953qke.228.1616170829706;
+        Fri, 19 Mar 2021 09:20:29 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id p1sm4781938qkj.73.2021.03.19.09.20.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Mar 2021 09:20:28 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 11D1D27C0060;
+        Fri, 19 Mar 2021 12:20:27 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 19 Mar 2021 12:20:28 -0400
+X-ME-Sender: <xms:Ss9UYIrWLVsH5Pb9qe35rFDJNUwJqffa7i-B-7SGHBXUeOh4lFPxxg>
+    <xme:Ss9UYOpwcrzJbiVx2VrFSBm0_yfjwNJ63O8H5h5vwq2CkfIlS_HTgkK6LpJCj5fWt
+    PFlfactaxi15V4vAw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrudefkedgkeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhepieejhfelvddtgeduhfffueegteevleeugfekvefhueduuedugfevvefhtedvuedv
+    necukfhppedufedurddutdejrddurddvheegnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhs
+    ohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnh
+    hgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:Ss9UYNOnRAkDQTqky-LLcyIef4nLXi4CaxQQ-oxs0OgFuYvheFRDEw>
+    <xmx:Ss9UYP5yapaMfn_O_rvcDpc9c84Qb7HvFhiS-yw7qqXpDQdpmF6b5Q>
+    <xmx:Ss9UYH7uDjFBoOuyu_LtQPfQV9goQdbJZEtW4WPIGR3NMrnHqpOhdg>
+    <xmx:S89UYGS4Sub_lyPfCo561uOlJpWU64ArNHtlKjxRaTuOKfo_b5vjeoaplyd3Btij>
+Received: from localhost (unknown [131.107.1.254])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8F1E124005B;
+        Fri, 19 Mar 2021 12:20:26 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tools/hv: async name resolution in kvp_daemon
-Message-ID: <20210319154607.550198ad.olaf@aepfle.de>
-In-Reply-To: <20210319144145.4064-1-olaf@aepfle.de>
-References: <20210319144145.4064-1-olaf@aepfle.de>
-X-Mailer: Claws Mail 2021.03.05 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: [RFC 0/2] PCI: Introduce pci_ops::use_arch_sysdata
+Date:   Sat, 20 Mar 2021 00:19:54 +0800
+Message-Id: <20210319161956.2838291-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/zx4IEKm519yE9fAl5ina=vF"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---Sig_/zx4IEKm519yE9fAl5ina=vF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Bjorn,
 
-Am Fri, 19 Mar 2021 15:41:44 +0100
-schrieb Olaf Hering <olaf@aepfle.de>:
+I'm currently working on virtual PCI support for Hyper-V ARM64 guests.
+Similar to virtual PCI on x86 Hyper-V guests, the PCI root bus is not
+probed via ACPI (or of), it's probed from Hyper-V VMbus, therefore it
+doesn't have config window.
 
-> FullyQualifiedDomainName
+Since ARM64 is a CONFIG_PCI_DOMAINS_GENERIC=y, PCI core code always
+treats as the root bus has a config window. So we need to resolve this
+and want to reuse the code as much as possible. My current solution is
+introducing a pci_ops::use_arch_sysdata, and if it's true, the PCI core
+code treats the pci_bus::sysdata as an arch-specific sysdata (rather
+than pci_config_window) for CONFIG_PCI_DOMAINS_GENERIC=y architectures.
+This allows us to reuse the existing code for Hyper-V PCI controller.
 
-I think in the past I did asked MSFT what the host side really expects. May=
-be this time there will be an answer.
+This is simply a proposal, I'm open to any suggestion.
 
-Why would the host expect a FQDN from a VM? Why would it care about DNS lay=
-out of the network within the VM?
+Thanks!
 
-Basically my copy of hv_kvp_daemon just sends `uname -n` to the host. This =
-is more correct. This does not waste any network resources. This, up to now=
-, led to no complains.
-
-So, what is the purpose of this API?
+Regards,
+Boqun
 
 
-Olaf
+Boqun Feng (2):
+  arm64: PCI: Allow use arch-specific pci sysdata
+  PCI: hv: Tell PCI core arch-specific sysdata is used
 
---Sig_/zx4IEKm519yE9fAl5ina=vF
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
+ arch/arm64/include/asm/pci.h        | 29 +++++++++++++++++++++++++++++
+ arch/arm64/kernel/pci.c             | 15 ++++++++++++---
+ drivers/pci/controller/pci-hyperv.c |  3 +++
+ include/linux/pci.h                 |  3 +++
+ 4 files changed, 47 insertions(+), 3 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.30.2
 
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmBUuTEACgkQ86SN7mm1
-DoAMXg//UW9gD7vVI9LReBYKUQ/9Qo8NZdh63xk/JHI+Jx9KEA84M8t6Y5HxwEdd
-oy/SkGV2K6HLRXAYB3yjYmeXSbzsmugKfDlBortyxYewbP/dTkuMIamvcGPHaT/s
-sHyWkV/kVYhh4F6iRF7FsQTlshQHHSZoExQrKSct8QJ6rwkOrS4spn7D/Lxwj5hq
-Tkn4MQ23oOfA6vfhxRqBTSPQ/TqRrLnzx0vYxEplj5JYD8c/BryzrEY9AibjS4Ma
-c8B29ZKbZe8ppj4nLczMs9GERXeWWQYkxaaB0uj1PE31soHglIZ+wHZQbGpc2/V+
-aeHg+XQUnnwxEGCv72HOaXyQTeOfqReRM9PjsNXPglKb82ghDU2piVzDbdrgCPQk
-yeuft8CP/Z8RHJav6oXRdlzMmimMxz4Z66MMHrAgp0t380Jf+prOXL41Gx9eJ/mU
-e5Hmj8xGDmyhRK1oUfl/4+Hdjtxf6hqmaRf6kXMBCdq1mTKhOZj7AgI/54rwKfMD
-4arPwycRon/dSZd8707126rbSryz0Olly01lTgDijCPqj1X2IO2bzOVWsYgqEaSr
-InwFCf6GKdgzolYPKT4Urf5tjp6JRoP6sGInQFUgP2z+zkT5R7VrNpnTjX0/Z2bO
-c4oqou3Q7G1gAtjWqdSa61LQ+qWn51YmBvjh6Omt5rxMf7jJ8Dg=
-=osfl
------END PGP SIGNATURE-----
-
---Sig_/zx4IEKm519yE9fAl5ina=vF--
