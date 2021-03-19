@@ -2,128 +2,151 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF61A3421AB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Mar 2021 17:21:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EA2934253C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Mar 2021 19:49:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbhCSQUq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Mar 2021 12:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbhCSQUc (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Mar 2021 12:20:32 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E40E3C06175F;
-        Fri, 19 Mar 2021 09:20:31 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id s2so7109897qtx.10;
-        Fri, 19 Mar 2021 09:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hOigcolInKq2azrkaT41R7EqZELchBXlGjfdA7p16f0=;
-        b=R+VQTD45IlVeo8FZIwkbsrXHb5HdN1dGNF0wbJZot8CK1vUlZOYi5miaJxAn8T+F0W
-         tzyHBANAN3MCw8jx4+gTtPmTBp+8BCXmBgM5IZeDZcJjjZYD2wWvNh61wW8V7TdF/ZZg
-         UZ11EpMynm7tH+61CZs+hXxzW+DDl3fYuFQzSb+uUn8GflXn1f65mSv0pUYrXY7IxCDd
-         EhZvXLzYn5pdj40r6h0g8Vn9YsCpGnmD4/eM+sttRxzQUsZPmOBmH+VsxYLm5FvHhqWX
-         hVc9ibDoitEdKWpiuR2gFNoR8OOH/xflRcw/ZXFL2w9l+5o+KlORRyG7SHN1UHGHDvcR
-         gmMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hOigcolInKq2azrkaT41R7EqZELchBXlGjfdA7p16f0=;
-        b=Zpzw7NgAiNx2TrpaqPk9aQUhTwUlTp/Xj8fXGVorMmgvM4tUEXlzU8NWyYMhe3zqPv
-         8vKFG7VVWLPvA8Pw6Ew3ext3eQSVuAnaYRLYOt+3Vcnw5dMBpx5SSLY0NsiCL5XyevbJ
-         mzVuZnSZWOC+eMylmmVpRXxbt9cWGFMBm1hZro/HJf18xJ+V6/QvPt2SRqgbYsp5o17e
-         Tobgd3fqIU1Bn2Dsk541kGucM30JBxvwpIactAIi/NJUsnfYCTmV7fNO1/nbBpizfE/8
-         Y/J2PAkr2y8W6cGGhfsTs72CIuJCOqieOOvnK0Rp8qBY8nJEmrKysVLDmEvtJnnzAnqU
-         266A==
-X-Gm-Message-State: AOAM5300kH+XKNAz4IVyX50GKSf8NVYoVBRhrykCAKHo0wSdyUN/yzky
-        +Aes6TpOOBt+xfLd6Hqu38lpXa2EyoU=
-X-Google-Smtp-Source: ABdhPJw5rCfLaNS+oBUljUXMupVv+A4YSSGCfys/J74kbxSkFozJnCNbdN4NNBB4KYeSzyWZl/+M+w==
-X-Received: by 2002:ac8:7d52:: with SMTP id h18mr7143435qtb.175.1616170831225;
-        Fri, 19 Mar 2021 09:20:31 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id z14sm3929680qti.87.2021.03.19.09.20.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Mar 2021 09:20:30 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 1129427C0066;
-        Fri, 19 Mar 2021 12:20:29 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Fri, 19 Mar 2021 12:20:29 -0400
-X-ME-Sender: <xms:TM9UYKGMYp05jpSXRFFsM8RD4yBpok246P0ykwssE8qe3VR43QSXjQ>
-    <xme:TM9UYLWisBf7FSIF_7uECqbxgYvP9Yu1Hfol4zNIx0w46lfet7jib5-dxS_KSzmHG
-    Nl5bb7UcM8kPb_NcQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrudefkedgkeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
-    ueelnecukfhppedufedurddutdejrddurddvheegnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:TM9UYEI9oLSaec0y8D5MDQlBqGlIJ2E94Tl95vtxXVMWrzu3O-s_QA>
-    <xmx:TM9UYEHN_timsoyRkp1B9sf3gcT0W7E0d5L8jxuVaVqNHWbEu-aTqw>
-    <xmx:TM9UYAWPFSM6RBNOSkzbdAAgEOpEAWydwNt3FTdnY1Fh6kO0_1Sk3Q>
-    <xmx:Tc9UYBvmocUpwABN6Tv8iiUMVtMotII2FAuhluIas_7-5A7uJw_mpBPr1VjEo711>
-Received: from localhost (unknown [131.107.1.254])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A062324005D;
-        Fri, 19 Mar 2021 12:20:28 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S230347AbhCSSsj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Mar 2021 14:48:39 -0400
+Received: from mail-bn7nam10on2117.outbound.protection.outlook.com ([40.107.92.117]:34144
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230384AbhCSSsY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 19 Mar 2021 14:48:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IM/ep6UOzyLVANK2Si/WnLrh0zXdMPw56Yzqp2/2dNC79+WB/fRVxv3s8jYh4wfTtDT3Dmf670in6LbaoOZf5JflVLIF22VcpbMXmDMS3RiS6gh0W58uD+fA9ud15sQVM/qLPnBYARKoNPfxNDUdE+9LBDaJGGBqLtHKSLXSkVf5fzBJyQyl6nr1w9/oVEv97fA8Pi5c4oHfeiP13JWsCTkxEapy42xApjBNVQabxf1a8B2hulbK6gew/sKbGA7LCX5vnLoP0R9T34qiYo8HGpAU7f0+k03tIB6BZvecLR2zBZeUV+SMAltW0HgA9vcCIX7ZKBNmmPw0UQXhg6OhdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nILzfQyd1nyI2DVOHYQaRKlFP+Y/NDo/RbECf1rvEQo=;
+ b=dhaSxq/3MvECUostvpGpPY5x3nEEfzmiQkhPRoTA+VPZY5DbbkskRN8hAZSLMVavzdh1Gy3awdFUtt3IAQhx48VoENYNtEcyUKVcfGjtFziIPv0GAKKNftaE+p6rZj7+6msfh0m9OygSzDhqLh0wqfrDJx4wJGrtyxBqyVshcuDz+UjnI0v82IS/HHBPYOHP4wuCGdkIVVxiKE7SqcH+xp9W5D/1cKMo3UfoJQbhl8c1k8ye2wlkV0dmy4dcge/ceHNyqEPIUwCgUpYMB0JnPoIOH2ESKgWIHS2wl87MIzE04Rl9fTUlcsCGA0XAZdBgAuck4eB+c8Mky4g1JNRpog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nILzfQyd1nyI2DVOHYQaRKlFP+Y/NDo/RbECf1rvEQo=;
+ b=RJK6iqX9WK9v+QFs3vzNwX7YPiov6uVv+EB7dUNs9fkv03K+/LV11ux5fENkMe/d4MM3xFxwzImtHMUWmTlD7Zx8dnjYw27TzmfvnI1lutiMwGbYWB1YUmpcwYaW6wycxDbAY9HsqJYlVMIqoch5Xv2wLSU1xwXSqU/ljmCzMVU=
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
+ by MW4PR21MB1988.namprd21.prod.outlook.com (2603:10b6:303:67::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.2; Fri, 19 Mar
+ 2021 18:48:22 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::cbc:735e:a6a5:8b9c]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::cbc:735e:a6a5:8b9c%8]) with mapi id 15.20.3977.016; Fri, 19 Mar 2021
+ 18:48:21 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Xu Yihang <xuyihang@huawei.com>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>
-Subject: [RFC 2/2] PCI: hv: Tell PCI core arch-specific sysdata is used
-Date:   Sat, 20 Mar 2021 00:19:56 +0800
-Message-Id: <20210319161956.2838291-3-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210319161956.2838291-1-boqun.feng@gmail.com>
-References: <20210319161956.2838291-1-boqun.feng@gmail.com>
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH -next] x86: Fix unused variable 'msr_val' warning
+Thread-Topic: [PATCH -next] x86: Fix unused variable 'msr_val' warning
+Thread-Index: AQHXG81biLYe+YQ0KUyfclj07i5wPKqLpwXw
+Date:   Fri, 19 Mar 2021 18:48:21 +0000
+Message-ID: <MWHPR21MB1593F590A00DCA86C61A5C8CD7689@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <20210318080348.151022-1-xuyihang@huawei.com>
+In-Reply-To: <20210318080348.151022-1-xuyihang@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-03-19T18:48:20Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bfac9c68-e632-42c6-beb0-a2f0c0b1a800;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: deb51c3b-9b40-4eb5-e11d-08d8eb0791e7
+x-ms-traffictypediagnostic: MW4PR21MB1988:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW4PR21MB1988C496A4C6ECAA6D791891D7689@MW4PR21MB1988.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:901;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ptkXm0P71ah5ntxDhW+enTDt/e44r8zcvtEhU6HeweHzCb0+oY6hkCR3W+XnHN7s7x+g0qa1VZUbr2t4ENS9V8+wD6qgqDPYTKq3YQHSMfoIGJ7MgIN2t3E808bP8uhLxtvuH+0GFfAbZMpfSbTeukyKzvlh9uPuFTGIcx1X8ADL8ZFJmTHmZj99D4ym4Np3qYeIXZsvJwYEXGWS0mMOkAUxivBX91mGCDM9oipeYcQnwicz6Zjs7N0N76VlrcMR2MzBqferCWfUexFbmvpzaJUB7T17WktOIklO6i+GZWohUwIxSrCdZpLuOkHVg0NZDh+q0vpFt5C9vVom31taPP2J2T5z9kQADCUlBEcLxfoOS7m03U842kXudEirDYy0UqxVwuhtb6mHTtiqCXbwZSTBYh43AaoCyONMmoiVHn41v5vJ5ZByh0DzGcklruR0Uq6nCADwImPvVD85Af659BVuwJptjhO4Cz04wylrMacR6Fc8QIIeo8MYZveboLBJjuh8L3nyGN8YyL6l9sqQDhBLmNEWDwGolF6dpwlNfhSMB1x5Zi2DylaGnpah9J8ymxmz5dlfnVfEf2k916ozDcNiRyA3BAN2x2t9vB0BR0RrDK243xGaoiNTyJEUuk1HkL6psHPExciBVWvFNkB6dxGT8wCX0SITzc+iEnWv66Y=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(366004)(136003)(376002)(396003)(82950400001)(66946007)(7696005)(66556008)(66446008)(66476007)(6506007)(8676002)(54906003)(316002)(110136005)(8936002)(10290500003)(71200400001)(83380400001)(478600001)(52536014)(33656002)(82960400001)(64756008)(5660300002)(76116006)(86362001)(4326008)(26005)(2906002)(8990500004)(55016002)(9686003)(186003)(38100700001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?YzdyeFlEZW9hTVdFdFZXQzd0M0lvT3A3cDRDSmpMRHZITzFENHI5S3B3TDJP?=
+ =?utf-8?B?TTJmbDVJeUNoWnFNNDAxVFJjaWhDdS9Xbm1rTnpYM1RNSncyR1R1UUp2RWFM?=
+ =?utf-8?B?ZHpGWVo2VlNPRXVSZlZYdGltdWtJd1ArNTFYQk5RQm9aVDVQbHZuRGEybzFx?=
+ =?utf-8?B?YWVXaXFxQ3ZJeXdHL2pDNmZXcXFZazhYVDJlUGx6cmV2VllhRkM1anhjUnBz?=
+ =?utf-8?B?R1hNT21hTTNIaHQ4K1pSMDZ5WWlWa0FjTTJzRm1namVFdnhuQ2QyUmVEOTdI?=
+ =?utf-8?B?MWU5cGZETGhaR3lKb0toakQxR0tFbXc3K2pNUnFZYkdScTk0Uy9lZldNVDE0?=
+ =?utf-8?B?ZUNaOFE3UEkxSC8xdVRzZVpUbTRGd3JOWnBIUktDTDJJVjNEa3VuUmJqTHVW?=
+ =?utf-8?B?RS9XM1NzMXd1U3V6ZGd2RVBTamt0VXVjWUFCTlQ3ZlJmQUx5S3M0UGhRbE1p?=
+ =?utf-8?B?WVMzd1BQVEpLaEVENXpYcWlyRXo4TUlaNzBMK0l2Mlo0NFNHb1NPNS9HcXZT?=
+ =?utf-8?B?Uy9NUGtXTkdBUzlGQ2YwZGkyckdaNDV2aVBSWVg5MGJvTFd5Vk5qTEswT0g4?=
+ =?utf-8?B?RGJsaG1PVXhrbk9HVVhuK1dyT3FtNzBMcnpnUXQyWEJUaXQ4Y2RUNDVaQzNG?=
+ =?utf-8?B?QWY1bUhiYzJiWm5lQTExUjJaYTJaYzh6b3E0elR3YlEzajE3RUgxN29WTGlV?=
+ =?utf-8?B?MjdFeVozQTNYQmlzQTFhZUNOWjZ4aWhkRi9QY015dHJRcmdZYTZYY2xjSC8w?=
+ =?utf-8?B?TFM4OUUwQUl6eWhZNk1rZ25QR2VDYWp5a3RLYVk1Zk5QU096RDh4Y1lSODcz?=
+ =?utf-8?B?NnZZWU8xZDdIL1YyN3gweWl2cysyUGM0OUFVdGFyYlVpaG1pUnJ0cXFmU0do?=
+ =?utf-8?B?TUpqMlBrNUlPaTl4cjhzRmdnd0R0dU9QUVYyclJVT2JqdnJnRklZN1kvcTZv?=
+ =?utf-8?B?VHVIUnduSGUyZFkxZXIvOS9nQWNvaEpqT3g0RHpCcjlpc2lRZWx3Z0poa0ty?=
+ =?utf-8?B?YWpaRHlabzdJdnpOR0hCZTNGeW5MTi9UTFU2SmRDMzF6M2xtQUJrelRoL1pq?=
+ =?utf-8?B?YkVFS2FEeGJHWVJFeEthclJudWdHV2NCVThSQmZFZ2Q2WFJab25WNzl6QTd1?=
+ =?utf-8?B?U3Q4YXh1WjRTSzBSMTVSRCs5bkFuUWpxaUxmZXdyRkFvWXF3cTIyYVRYRXps?=
+ =?utf-8?B?cUw0VHdSS1EwVjNLaEZSNzdiVFFyNERVV0ErV0FjNVdnQyt6SThCSzFyMmJE?=
+ =?utf-8?B?MHp1SGJwWi9kT0tDZyswZDNRanJ1S01YOTYvUlhmUnJRaXg1SjVoOWc0ZlZC?=
+ =?utf-8?B?SUZPSHFVMnNrakVsQm1NZVNmTkRxYVJvekk3U25Xcnc1eDFUam1zdTIxMDBn?=
+ =?utf-8?B?M2FOTlRnZlBHeXJUQ3JHSENFa2lzY3VDSEovT1h5d20wSU1yODE3OU1jaFhu?=
+ =?utf-8?B?UG9oWkJDR2pMenphcVlnVlIyalAyWktYaVFzd3hrSTVDSGE3S3pZL2JtS1Nn?=
+ =?utf-8?B?eHBNWmhpdDhEUUF5czBieFcvdFdabnZadi8yUFVpbWhqaU1Fdk16K2pZRzEv?=
+ =?utf-8?B?VHJITDJPUDQ2ME9rVEhIQ3d0S05qak9Fa2xIM1hES0hKd01US2pacG5aL2N6?=
+ =?utf-8?B?TUN2SjV6VFV3WGM0N2dwZi9YUXJHTmtkRUo4WGh3UUFJWGV6bkZ5TFF0RTFO?=
+ =?utf-8?B?T1ZaMDlOb1UvN3BJVzZtcjExS050SEZ1NWxjRVFlaWpldjhhcmJwemdQblVJ?=
+ =?utf-8?Q?pkpXtnOcP1+BMRB9K5csZsdYm6HDaNlL32Qqb3o?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: deb51c3b-9b40-4eb5-e11d-08d8eb0791e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2021 18:48:21.6907
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c6Scc4Fw3RdRTPXQX3Pm+hCkyKSFqRYl4bsLKmbEi+GEOwEayHHq9BpVmMRFw20PrMezAOgXu8QO4lNmijkz3kuUco2A+yE66qRjdaBmCkU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1988
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Use the newly introduced ->use_arch_sysdata to tell PCI core, we still
-use the arch-specific sysdata way to set up root PCI buses on
-CONFIG_PCI_DOMAINS_GENERIC=y architectures, this is preparation fo
-Hyper-V ARM64 guest virtual PCI support.
-
-Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 27a17a1e4a7c..7cfa18d8a26e 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -859,6 +859,9 @@ static int hv_pcifront_write_config(struct pci_bus *bus, unsigned int devfn,
- static struct pci_ops hv_pcifront_ops = {
- 	.read  = hv_pcifront_read_config,
- 	.write = hv_pcifront_write_config,
-+#ifdef CONFIG_PCI_DOMAINS_GENERIC
-+	.use_arch_sysdata = 1,
-+#endif
- };
- 
- /*
--- 
-2.30.2
-
+RnJvbTogWHUgWWloYW5nIDx4dXlpaGFuZ0BodWF3ZWkuY29tPiBTZW50OiBUaHVyc2RheSwgTWFy
+Y2ggMTgsIDIwMjEgMTowNCBBTQ0KPiANCj4gRml4ZXMgdGhlIGZvbGxvd2luZyBXPTEga2VybmVs
+IGJ1aWxkIHdhcm5pbmcocyk6DQo+IGFyY2gveDg2L2h5cGVydi9odl9zcGlubG9jay5jOjI4OjE2
+OiB3YXJuaW5nOiB2YXJpYWJsZSDigJhtc3JfdmFs4oCZIHNldCBidXQgbm90IHVzZWQgWy0NCj4g
+V3VudXNlZC1idXQtc2V0LXZhcmlhYmxlXQ0KPiAgIHVuc2lnbmVkIGxvbmcgbXNyX3ZhbDsNCj4g
+DQo+IFJlcG9ydGVkLWJ5OiBIdWxrIFJvYm90IDxodWxrY2lAaHVhd2VpLmNvbT4NCj4gU2lnbmVk
+LW9mZi1ieTogWHUgWWloYW5nIDx4dXlpaGFuZ0BodWF3ZWkuY29tPg0KPiAtLS0NCj4gIGFyY2gv
+eDg2L2h5cGVydi9odl9zcGlubG9jay5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaHlw
+ZXJ2L2h2X3NwaW5sb2NrLmMgYi9hcmNoL3g4Ni9oeXBlcnYvaHZfc3BpbmxvY2suYw0KPiBpbmRl
+eCBmMzI3MGMxZmM0OGMuLjY3YmMxNWM3NzUyYSAxMDA2NDQNCj4gLS0tIGEvYXJjaC94ODYvaHlw
+ZXJ2L2h2X3NwaW5sb2NrLmMNCj4gKysrIGIvYXJjaC94ODYvaHlwZXJ2L2h2X3NwaW5sb2NrLmMN
+Cj4gQEAgLTI1LDcgKzI1LDcgQEAgc3RhdGljIHZvaWQgaHZfcWxvY2tfa2ljayhpbnQgY3B1KQ0K
+PiANCj4gIHN0YXRpYyB2b2lkIGh2X3Fsb2NrX3dhaXQodTggKmJ5dGUsIHU4IHZhbCkNCj4gIHsN
+Cj4gLQl1bnNpZ25lZCBsb25nIG1zcl92YWw7DQo+ICsJdW5zaWduZWQgbG9uZyBtc3JfdmFsIF9f
+bWF5YmVfdW51c2VkOw0KPiAgCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+IA0KPiAgCWlmIChpbl9u
+bWkoKSkNCj4gLS0NCj4gMi4xNy4xDQoNClRoaXMgaXMgb25lIG9mIHRob3NlIHNsaWdodGx5IHdl
+aXJkIGNhc2VzIHdoZXJlIHRoZSBzaWRlIA0KZWZmZWN0IG9mIHJlYWRpbmcgdGhlIHN5bnRoZXRp
+YyBNU1IgcHJvdmlkZWQgYnkgSHlwZXItVg0KaXMgd2hhdCB3ZSB3YW50LiAgVGhlIHJldHVybmVk
+IHZhbHVlIGlzIGlycmVsZXZhbnQgYW5kDQpuZXZlciB1c2VkLCBzbyB0aGUgX19tYXliZV91bnVz
+ZWQgYW5ub3RhdGlvbiBpcyBjb3JyZWN0Lg0KDQpMZXQgbWUgc3VnZ2VzdCB1cGRhdGluZyB0aGUg
+Y29tbWl0IG1lc3NhZ2UsIGFuZCBhZGRpbmcNCmEgYnJpZWYgY29tbWVudCB0byB0aGUgY29kZSB0
+byBleHBsYWluIHRoaXMuICBUaGUgc2lkZQ0KZWZmZWN0IGJlaGF2aW9yIGlzIGRlc2NyaWJlZCBp
+biB0aGUgSHlwZXItViBUTEZTLCB0aG91Z2gNCnBlcmhhcHMgbm90IGFzIGNsZWFybHkgYXMgaXQg
+c2hvdWxkIGJlLg0KDQpNaWNoYWVsDQo=
