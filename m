@@ -2,37 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E60342E2E
-	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Mar 2021 17:10:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6451342E8C
+	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Mar 2021 18:15:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbhCTQJh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 20 Mar 2021 12:09:37 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:58159 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229872AbhCTQJa (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 20 Mar 2021 12:09:30 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]) by
- mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MbS0X-1lzRxJ1k7d-00bsD0; Sat, 20 Mar 2021 17:09:28 +0100
-Received: by mail-ot1-f44.google.com with SMTP id g8-20020a9d6c480000b02901b65ca2432cso11547416otq.3;
-        Sat, 20 Mar 2021 09:09:27 -0700 (PDT)
-X-Gm-Message-State: AOAM533ZUKYOyZzGy6OPjuZ1OgQGtZnsaFkmTFVx8z3S8ML4ZksK8UXr
-        w1iT+fVqYYWlWi+Ds7ztUm4qxVRWln1w8FnmxYM=
-X-Google-Smtp-Source: ABdhPJzVJ2N60DvRV+HXUfGN7wgdYKablAq/4WybV8N0rgJq8z/pefYzkkd4Bi6D1LHZW2s/hrzhyYZqUkMU8Xg6NHw=
-X-Received: by 2002:a05:6830:14c1:: with SMTP id t1mr5332246otq.305.1616256566981;
- Sat, 20 Mar 2021 09:09:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210319161956.2838291-2-boqun.feng@gmail.com>
- <20210319211246.GA250618@bjorn-Precision-5520> <CAK8P3a3qj=9KEN=X2uGCq0TrOGpyPw1Gwipmn=Gqx4LAfqUEDQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a3qj=9KEN=X2uGCq0TrOGpyPw1Gwipmn=Gqx4LAfqUEDQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 20 Mar 2021 17:09:10 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a07wedojBU6xDKotiOsPR8k2XEXMB1SvJSRpeG++URA5Q@mail.gmail.com>
-Message-ID: <CAK8P3a07wedojBU6xDKotiOsPR8k2XEXMB1SvJSRpeG++URA5Q@mail.gmail.com>
-Subject: Re: [RFC 1/2] arm64: PCI: Allow use arch-specific pci sysdata
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        id S229772AbhCTROq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 20 Mar 2021 13:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229870AbhCTROm (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 20 Mar 2021 13:14:42 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7151361927;
+        Sat, 20 Mar 2021 17:14:42 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lNfBQ-002o45-CP; Sat, 20 Mar 2021 17:14:40 +0000
+Date:   Sat, 20 Mar 2021 17:14:34 +0000
+Message-ID: <87y2ehg32d.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -47,40 +41,62 @@ Cc:     Boqun Feng <boqun.feng@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
         Ard Biesheuvel <ardb@kernel.org>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:e5seU3cMjlkxmy+JPXSrnFT4ztNPO1iZqQeA233JbxeaFAbG1O7
- FJ9y+M7wlylI8ckUctYL2VG5GAQmHQiDlgI1eCYfVQGQHEoDz8krnzidhXx+zP4WxOjFWc2
- lRCWI5sZ4uhb81wwDRi1wLcbtr52KUSq+LWSil/95SmBbp2fg2viYkZ0KfpA4C0gAhf7XMP
- SZmtSuT1/KbCgSGw3wncQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4EZW7c1Jfts=:8PzPUEN0NNQUVT8VHQ7qpC
- p2O60nEVJjklT8Qa5pFNUavcGblWZ1vLAOkXT1S3F/WT0ZmCJdtDFw44PNmagaPxBoh4Llged
- 9gZzbO2Rk3JjsIJcmoCLZw2Mx9E4HXsPFuGNQWW5fh8v/oYHFqgIXDtN8WLR0eHxhvHWFBMSD
- r9f+SfebCrAJdTs+sK6TxuxPatT+lfSI0W/dY1QKNH2As+i9kLmgM321MEjHKNkfSeoiCts5n
- 7KwyDYQwSajOHbqhlTpubKxclfhyIo3xOyigEKp4DlcdBHKlor26eeB7u7KnhIpac+aPqq8C0
- ArIHiz2kcdaOWin07xB8OuMNn0N2GaObADAZgq39k/8gDZ54gLgSxTSJe4MG47ZYCXvGNX/Qk
- fktBuSZrv7BkSYOTrw8UCjtLCY6uHXtHpycpqkDjhcSe+N4LYpVttFIlJS1r6
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: Re: [RFC 1/2] arm64: PCI: Allow use arch-specific pci sysdata
+In-Reply-To: <CAK8P3a2qATr7qAkPqkZW4aifb3rq6CPrrsEX=8XcjTk0j5aW0A@mail.gmail.com>
+References: <20210319161956.2838291-2-boqun.feng@gmail.com>
+        <20210319211246.GA250618@bjorn-Precision-5520>
+        <87tup6gf3m.wl-maz@kernel.org>
+        <CAK8P3a1OGZsGmwGTHaVWBjpr_G4aDvO1mfUGU3o8XyLLgHqXpw@mail.gmail.com>
+        <87sg4qgdrd.wl-maz@kernel.org>
+        <CAK8P3a2qATr7qAkPqkZW4aifb3rq6CPrrsEX=8XcjTk0j5aW0A@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: arnd@arndb.de, helgaas@kernel.org, boqun.feng@gmail.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org, csbisa@amazon.com, ardb@kernel.org, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Mar 20, 2021 at 1:54 PM Arnd Bergmann <arnd@arndb.de> wrote:
->      I actually still have a (not really tested) patch series to clean up
-> the pci host bridge registration, and this should make this a lot easier
-> to add on top.
->
-> I should dig that out of my backlog and post for review.
+On Sat, 20 Mar 2021 14:24:06 +0000,
+Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+> On Sat, Mar 20, 2021 at 2:23 PM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Sat, 20 Mar 2021 13:03:13 +0000,
+> > Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > On Sat, Mar 20, 2021 at 1:54 PM Marc Zyngier <maz@kernel.org> wrote:
+> > > > On Fri, 19 Mar 2021 21:12:46 +0000,
+> > > >
+> > > > Having an optional callback to host bridges to obtain the MSI domain
+> > > > may be possible in some cases though (there might be a chicken/egg
+> > > > problem for some drivers though...).
+> > >
+> > > I would expect that the host bridge driver can find the MSI domain
+> > > at probe time and just add a pointer into the pci_host_bridge
+> > > structure.
+> >
+> > In most cases, it doesn't implement it itself, and I'd be reluctant to
+> > duplicate information that can already be retrieved from somewhere
+> > else in a generic way (i.e. no PCI specific).
+> 
+> At the moment, the information is retried through a maze of different
+> functions, and already duplicated in both the pci_host_bridge and the
+> pci_bus structures.  If we can change everything to use
+> CONFIG_GENERIC_MSI_IRQ_DOMAIN, then most of that code
+> can probably just go away, leaving only the part in the phb.
 
-I've uploaded my series to
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git
-pci-probe-rework-20210320
+Fine by me, as long as you don't assume that there is a single MSI
+domain per PHB (both OF and IORT mandate that you can segment the RID
+space to hit multiple controllers).
 
-The purpose of this series is mostly to simplify what variations of
-host probe methods exist, towards using pci_host_probe() as the
-only method. It does provide some simplifications based on that
-that, including a way to universally have access to the pci_host_bridge
-pointer during the probe function.
+	M.
 
-         Arnd
+-- 
+Without deviation from the norm, progress is not possible.
