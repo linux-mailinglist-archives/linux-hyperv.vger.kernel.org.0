@@ -2,157 +2,138 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57E783427D6
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Mar 2021 22:31:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A475342CDD
+	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Mar 2021 13:53:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230449AbhCSVbG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Mar 2021 17:31:06 -0400
-Received: from mail-mw2nam12on2103.outbound.protection.outlook.com ([40.107.244.103]:22849
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230435AbhCSVaw (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Mar 2021 17:30:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WVV0U1dSNmULd/rSyAzeD0FY8ghbb/V3IR+ZIKD+kK0RtrSBOv2UtEaj+LThPOxO33/vqQ6HR8dVvJ0MFydEsPNYpgduEoDfS1gLh/mKrmzCh+hmF87/S2vHuywlm8CNNJ55dbURVsUxXAqIHTM9eKfev4weKMYAYHHjxj92AaCymgVvh8g+qTaO6UX7DngNeIC/KQaTqtPI/Tb4pH7Y2TSUCqzZMd5ORtEebk432j0v5Fshba4fUR70jEEjZel96TnetXBXnu88+O7WMFO8rxZN8kv5R52eZ1HVq65Pvg+ILfP+l94M5pBsz5cAGTWSnwvDaLWGjF4tdShTly4DgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lWDoKMjaC1KhBwBV723U2LQC0Gd0CWE/iUHXaMM3tVE=;
- b=FKn3/Fg8UK4U96jkh9cFm4iGa3Kir4sodoLbocT7I165+dSF6FZIki8t9c9Jp5XvTZ1u9NFDQPCO4aydpc2YLtKWsXFDP5UBgM2Jqmr3OQWzhCV5r7VK2SfUyQsDnw0qQ6ntWXWlydRJWNg+E+5Ie8nSuUZnVqUTemMDYjQsgPP5HjbaeBhtRIh572q+eGF9smzsCx7FEqg0usglP4+t7uV7zqPxjZPBJzQ7+92A3QE/4HKkEpFuqqV1K3YjrLrNkI2R7Pa9l4XqsZiLeZcJbFwy1xfhIWTMSgz3Hp5empNU3HqeuhQlnFiynJq5DkYh5CG+vbiFjBJyWE07rOpK3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lWDoKMjaC1KhBwBV723U2LQC0Gd0CWE/iUHXaMM3tVE=;
- b=i6TgjIX5qnu3JlobpGTEdsHSqu27P/FknEeDOCZbFtDOp8oehiZ3T1/8aZWN65yszP1DfO8yxb1zfZ9pL2S1T22syKCZi8XTnKU24f2DKJ+rAoa02IOLPefFGj+MFMcAsn5nRpHeJ1zXeATH93mH2CTXr+crMvtdB9kB1YZgz40=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW4PR21MB1986.namprd21.prod.outlook.com (2603:10b6:303:7d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.2; Fri, 19 Mar
- 2021 21:30:50 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::cbc:735e:a6a5:8b9c]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::cbc:735e:a6a5:8b9c%8]) with mapi id 15.20.3977.016; Fri, 19 Mar 2021
- 21:30:50 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Matheus Castello <matheus@castello.eng.br>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        id S229585AbhCTMwj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 20 Mar 2021 08:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229583AbhCTMw2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 20 Mar 2021 08:52:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D5E2361975;
+        Sat, 20 Mar 2021 12:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616244747;
+        bh=FXeHEEFPZu+Z4OujvA8/CNPvD0oljphMbhJMuOs+OXM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K1bCLgGHIESUpuy8gK8SpKrBsiI4KgDJFRhoPxjusuXnUlSivdfgWm4zq4Rod8Oo3
+         7Mrm8Tb9XocWRJ587fu3susWkesvhYU7/0pfNilGD+BCA3Di2bc3LlaVYhCjqSWXuo
+         VKDsgNE5YShjld+XOx+10Wv27MNwq01zur5FVzqZKwZiARO6NILQmdoOshYy8eTqyF
+         aydtyunWmoU/vVTUKfMd57nh/J/0dZbOq4uZ9nYmpb6Z6kyA43uRwZFdR2kl1t4CSu
+         lkx8s8QwVetVwRB/O4fDD5TwfbqsRxwjaE+K/x5UxIPaTenvtQC1eWdLWJ3i/evqe8
+         P/CqJjQtlrC2A==
+Received: by mail-ot1-f53.google.com with SMTP id 31-20020a9d00220000b02901b64b9b50b1so11194869ota.9;
+        Sat, 20 Mar 2021 05:52:27 -0700 (PDT)
+X-Gm-Message-State: AOAM5307L8ewCbJ/UF8yrcHbol0KjUE1DsDCLtSZUUEshbhX+r7SvMfO
+        w5JUMNAT01bvMX3yKWhHEyy1XTlHB9aSgqa5Efc=
+X-Google-Smtp-Source: ABdhPJytWWTHbNfc/Z6ZiNhGc5dEtnzbBd5XnL42oX7cqny6BlJyDJiN6PM6uRjOYArjqYeBxwpkoKmLUKXyzx1BzqQ=
+X-Received: by 2002:a05:6830:14c1:: with SMTP id t1mr4831024otq.305.1616244747072;
+ Sat, 20 Mar 2021 05:52:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210319161956.2838291-1-boqun.feng@gmail.com> <20210319161956.2838291-2-boqun.feng@gmail.com>
+In-Reply-To: <20210319161956.2838291-2-boqun.feng@gmail.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Sat, 20 Mar 2021 13:52:10 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2HVMiqJWc3kGi9j1CNNzVT5OFaeZaXxpAY42yu8Q-hvQ@mail.gmail.com>
+Message-ID: <CAK8P3a2HVMiqJWc3kGi9j1CNNzVT5OFaeZaXxpAY42yu8Q-hvQ@mail.gmail.com>
+Subject: Re: [RFC 1/2] arm64: PCI: Allow use arch-specific pci sysdata
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, vkuznets <vkuznets@redhat.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4] x86/Hyper-V: Support for free page reporting
-Thread-Topic: [PATCH v4] x86/Hyper-V: Support for free page reporting
-Thread-Index: AdccMlTLMSKb9zjfQ5ekuWl72W2QRgAwfZZQAARAtUAAAFm5oA==
-Date:   Fri, 19 Mar 2021 21:30:50 +0000
-Message-ID: <MWHPR21MB15932DFEE4F0756419D58525D7689@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <SN4PR2101MB088069A91BC5DB6B16C8950BC0699@SN4PR2101MB0880.namprd21.prod.outlook.com>
- <MWHPR21MB1593BF61E959AC8F056CDFF5D7689@MWHPR21MB1593.namprd21.prod.outlook.com>
- <SN4PR2101MB088036B8892891C5408067BEC0689@SN4PR2101MB0880.namprd21.prod.outlook.com>
-In-Reply-To: <SN4PR2101MB088036B8892891C5408067BEC0689@SN4PR2101MB0880.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-03-19T19:21:10Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=37bbcf07-6dff-414f-9af4-6f29abdf034d;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 55d69b49-9ecb-4140-69a1-08d8eb1e44c3
-x-ms-traffictypediagnostic: MW4PR21MB1986:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW4PR21MB19861C89C701145A445F904FD7689@MW4PR21MB1986.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: l7C8oN2CUg4/uYNAWVYxByWQ540w0ss2wUSFXABKO+Z/9BYxRbqHBDgtAijpBeiuaK10SGOA8xzAybCOLBp50/H4R43O5i35s2bKxGAFI142W6xEdWoeuF34cJ66uWZPthbPaWZ0T6IJc10+NMIAURchsBjXw89wOe5PMVaJ7Zt0m+LspS9fnHAL7CQA6VMtb3v/Y+9pZaV0K8UnaEQW/EFLbvE9LDHGLNOQCWheDjnibiIu/2jYyt79ECPKVSq0sCU0SW3Rf8LAQekEm5QGDJNrFuKq4BW9kbpqgxg3QtvO5xncOtQKrRj06EcSyiLc51leGgXR+h1O4rurV/EW7YWRwik1jUyTCasNy1L/U+P+IvWuIiWkOialGNhob6LNfZoiJdm50aLUiV8VB8fmw8cFKE2kxjfPnF+6hMAsC5VQqcx+Ll7ql57y5EaE0jPAMnCIBNJ+aB2vbCFtw/U/byOUB9a6LotUa6JdKerrql0txjnKGl/mArOXmVq2tUDHCTMOHuxPmC3CyCvh22C+EhtBlamIRCBON6ekrD6aWXvb38w9T0mhiN6yJEwb6uc7qW8tHVXJbIqHxi0CWaJVG+pWrJIe6bveNipXbo5r0/SjVr4Uc/naAtBN86B/QNxHlVZXDuj2aRMudcvbPxeIys22j3/WUrs3L7ThiT7O+tmUP9YfDzpkSPide4laJooP
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(366004)(39860400002)(346002)(136003)(55016002)(66556008)(10290500003)(52536014)(33656002)(54906003)(66946007)(66476007)(26005)(8936002)(71200400001)(316002)(82950400001)(5660300002)(38100700001)(478600001)(82960400001)(64756008)(8990500004)(4326008)(2906002)(83380400001)(110136005)(66446008)(7696005)(6506007)(86362001)(76116006)(4744005)(186003)(9686003)(8676002)(4533004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?9VaCkThwvkGmO+uY0CEG20zV1piY8EpdO003WRq1B2TFZ4Sp0X3vlpZ5Dr2V?=
- =?us-ascii?Q?2OU1cWGD1deIjZbMVyRgdhDM3kLAOiTLT1EtWNfd0j32Gp86ahVwR4+rzhIr?=
- =?us-ascii?Q?h0ATMGisc3/7sDna/Tats2xrw95/WluteRlX/bYZDe7LlyNyWNROY8hwQiSN?=
- =?us-ascii?Q?fOCt1FfQYj2DiO6KBZMlWZulkFEvmhWTDZcjTcu95MswGmYgOQviCdRvpynw?=
- =?us-ascii?Q?6NNnKt2xz9LiGGiFVtlW/67TnztaTtMEeoSXPVld4GNmi4IVsMphZ44d0HLW?=
- =?us-ascii?Q?81tofR9LRfi4xMERTc1nT3ZLKrhDd7/6AQU6nvES7utJYN7Q5yaYs27kGOxQ?=
- =?us-ascii?Q?TRhu02vWSkRdViubFRLI/xY5LIXhx5EfEA66uibOlvnB05Yva88Pev5gIJet?=
- =?us-ascii?Q?KawbLljxs4YjdLl40sx8snspXDiJ7pF4i3RDwFaAIL6GKokpTo8flgqKgfBZ?=
- =?us-ascii?Q?4bYvxYZMz5bAwJ+0ls4c13ofsbrF4hxPK3Hh31v9fq7eHXklPwK5CkhNZ3Ct?=
- =?us-ascii?Q?YspQL+P6hyhA1NMFlHekOhA0H/qQ8uIeO/xHL03nODMcnZboqD8aOU9q3ORA?=
- =?us-ascii?Q?0FxEN5UfXVaOhtIaN3KENhxxM9L+UTonR0hZPdWP2v+UXVY47WxqExqgEprH?=
- =?us-ascii?Q?CRBzufHEeGWF3tpRyB7hlXc5LFW2MKsmuHZTzE81vruG1uvtDbF3pvSGZO5H?=
- =?us-ascii?Q?xwXf1ea5c+BlKMF/sk0YxXJUkaqxNlCTl24c34n6Zd/mnlyv/0fUG7Y9iIUq?=
- =?us-ascii?Q?rB8SyIQ276e7ZSRBW63dOjZ+QrlVRB99uyCxWo0yg+GbGmhg+ONI47VMjpaY?=
- =?us-ascii?Q?/qHcmQPXsgzGMcCDusQBCKeDK2bj43jSshMp0kSyacePviIgv/kI8tK3NYdb?=
- =?us-ascii?Q?/mrMQtSizZIb/RBJ9yBSBTQBsN/G+8F/osaKwrTDgWnG3n1kQVClH37D9qU3?=
- =?us-ascii?Q?ueBEFbrrLshAsKYgJv370PCBgXzG8y0Q8zOUt+TQNkFwgJtMSgtKodsyeZP8?=
- =?us-ascii?Q?xu7qEQ8oVS2ShD415wzOZ0F2mWrA5suLbo1wsCI60QnEy5g4WZrjQXnwiZEO?=
- =?us-ascii?Q?ULMjJuqWi8w1eNJmsCyfoqf2lcR3fI/X8Zg5/0u4Wj2oJPW2KXI4EyLoEjgz?=
- =?us-ascii?Q?/hH0Q+3bu859NDoZwZlxSSteP3rGXt5Pa6RKQ5XYpM17peE4VHPssQWYQM1p?=
- =?us-ascii?Q?KPEeCtmqa4IJDiqt6cMufXmQnSkj1CmVlv1EHyIki1BcSmAv2xn4E1IM+1XV?=
- =?us-ascii?Q?yYGLnOPLefgqKKMMB85ycIln6mAH2ZGqIP6UMYMFMwG4ShtPs7So8QObV4GQ?=
- =?us-ascii?Q?phMCmO8wm2RhdR4DugX66mvD?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55d69b49-9ecb-4140-69a1-08d8eb1e44c3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2021 21:30:50.6729
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UrSGKHCxFX7q6Q8YsWwweINJbyOzAbN+1qGNx/z8NO9otbMn/w5mkn2HL0nSGUgKakDn3y93U42uRPwcvJ4d2M6AAPD2zJpbj6AH5fpAyTU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1986
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Sunil Muthuswamy <sunilmut@microsoft.com>  Sent: Friday, March 19, 20=
-21 2:21 PM
->=20
-> > What's the strategy for this flag in the unlikely event that the hyperc=
-all fails?
-> > It doesn't seem right to have hv_query_ext_cap() fail, but leave the
-> > static flag set to true.  Just move that line down to after the status =
-check
-> > has succeeded?
->=20
-> That call should not fail in any normal circumstances. The current idea w=
-as to
-> avoid repeating the same call on persistent failure.=20
+On Fri, Mar 19, 2021 at 5:22 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+>
+> Currently, if an architecture selects CONFIG_PCI_DOMAINS_GENERIC, the
+> ->sysdata in bus and bridge will be treated as struct pci_config_window,
+> which is created by generic ECAM using the data from acpi.
+>
+> However, for a virtualized PCI bus, there might be no enough data in of
+> or acpi table to create a pci_config_window. This is similar to the case
+> where CONFIG_PCI_DOMAINS_GENERIC=n, IOW, architectures use their own
+> structure for sysdata, so no apci table lookup is required.
+>
+> In order to enable Hyper-V's virtual PCI (which doesn't have acpi table
+> entry for PCI) on ARM64 (which selects CONFIG_PCI_DOMAINS_GENERIC), we
+> introduce arch-specific pci sysdata (similar to the one for x86) for
+> ARM64, and allow the core PCI code to detect the type of sysdata at the
+> runtime. The latter is achieved by adding a pci_ops::use_arch_sysdata
+> field.
+>
+> Originally-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
 
-OK, I can see that as a valid strategy.  And the assumption is that a faile=
-d
-hypercall would leave hv_extended_cap unmodified and hence all zeros.
+I think this takes it in the opposite direction of where it should be going.
 
-I'm OK with this approach if you want to keep it.  But perhaps add a short
-comment about the intent so it doesn't look like a bug. :-)
+> ---
+>  arch/arm64/include/asm/pci.h | 29 +++++++++++++++++++++++++++++
+>  arch/arm64/kernel/pci.c      | 15 ++++++++++++---
+>  include/linux/pci.h          |  3 +++
+>  3 files changed, 44 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
+> index b33ca260e3c9..dade061a0658 100644
+> --- a/arch/arm64/include/asm/pci.h
+> +++ b/arch/arm64/include/asm/pci.h
+> @@ -22,6 +22,16 @@
+>
+>  extern int isa_dma_bridge_buggy;
+>
+> +struct pci_sysdata {
+> +       int domain;     /* PCI domain */
+> +       int node;       /* NUMA Node */
+> +#ifdef CONFIG_ACPI
+> +       struct acpi_device *companion;  /* ACPI companion device */
+> +#endif
+> +#ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+> +       void *fwnode;                   /* IRQ domain for MSI assignment */
+> +#endif
+> +};
 
-Michael
+I think none of these members belong into sysdata or architecture specific
+code. The fact that a pci_host_bridge belongs to a particular NUMA node
+or i associated with a firmware description is neither specific to a
+host bridge implementation nor a CPU instruction set!
 
-> But, since we don't expect
-> the query capability to be called in any kind of hot path, I am ok moving=
- this
-> down.
->=20
-> >
-> > Other than the above about the flag when the hypercall fails,
-> > everything else looks good.
-> Thanks for the review.
+Moreover, you cannot assume that all PCI host bridges on any given
+architecture can share the pci_sysdata pointer, it is purely specific to
+the bridge driver.
+
+A good start would be to move the members (one at a time) into struct
+pci_host_bridge and out of the sysdata of individual host bridge drivers.
+
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index 1006ed2d7c60..63d420d57e63 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -74,15 +74,24 @@ struct acpi_pci_generic_root_info {
+>  int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
+>  {
+>         struct pci_config_window *cfg = bus->sysdata;
+> -       struct acpi_device *adev = to_acpi_device(cfg->parent);
+> -       struct acpi_pci_root *root = acpi_driver_data(adev);
+> +       struct pci_sysdata *sd = bus->sysdata;
+> +       struct acpi_device *adev;
+> +       struct acpi_pci_root *root;
+
+There should be no reason to add even most code to this file,
+it should in fact become empty as it gets generalized more.
+
+        Arnd
