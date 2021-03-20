@@ -2,48 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A475342CDD
-	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Mar 2021 13:53:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D4B6342CE1
+	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Mar 2021 13:55:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbhCTMwj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 20 Mar 2021 08:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
+        id S229583AbhCTMyr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 20 Mar 2021 08:54:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229583AbhCTMw2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 20 Mar 2021 08:52:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D5E2361975;
-        Sat, 20 Mar 2021 12:52:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616244747;
-        bh=FXeHEEFPZu+Z4OujvA8/CNPvD0oljphMbhJMuOs+OXM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=K1bCLgGHIESUpuy8gK8SpKrBsiI4KgDJFRhoPxjusuXnUlSivdfgWm4zq4Rod8Oo3
-         7Mrm8Tb9XocWRJ587fu3susWkesvhYU7/0pfNilGD+BCA3Di2bc3LlaVYhCjqSWXuo
-         VKDsgNE5YShjld+XOx+10Wv27MNwq01zur5FVzqZKwZiARO6NILQmdoOshYy8eTqyF
-         aydtyunWmoU/vVTUKfMd57nh/J/0dZbOq4uZ9nYmpb6Z6kyA43uRwZFdR2kl1t4CSu
-         lkx8s8QwVetVwRB/O4fDD5TwfbqsRxwjaE+K/x5UxIPaTenvtQC1eWdLWJ3i/evqe8
-         P/CqJjQtlrC2A==
-Received: by mail-ot1-f53.google.com with SMTP id 31-20020a9d00220000b02901b64b9b50b1so11194869ota.9;
-        Sat, 20 Mar 2021 05:52:27 -0700 (PDT)
-X-Gm-Message-State: AOAM5307L8ewCbJ/UF8yrcHbol0KjUE1DsDCLtSZUUEshbhX+r7SvMfO
-        w5JUMNAT01bvMX3yKWhHEyy1XTlHB9aSgqa5Efc=
-X-Google-Smtp-Source: ABdhPJytWWTHbNfc/Z6ZiNhGc5dEtnzbBd5XnL42oX7cqny6BlJyDJiN6PM6uRjOYArjqYeBxwpkoKmLUKXyzx1BzqQ=
-X-Received: by 2002:a05:6830:14c1:: with SMTP id t1mr4831024otq.305.1616244747072;
- Sat, 20 Mar 2021 05:52:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210319161956.2838291-1-boqun.feng@gmail.com> <20210319161956.2838291-2-boqun.feng@gmail.com>
-In-Reply-To: <20210319161956.2838291-2-boqun.feng@gmail.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Sat, 20 Mar 2021 13:52:10 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2HVMiqJWc3kGi9j1CNNzVT5OFaeZaXxpAY42yu8Q-hvQ@mail.gmail.com>
-Message-ID: <CAK8P3a2HVMiqJWc3kGi9j1CNNzVT5OFaeZaXxpAY42yu8Q-hvQ@mail.gmail.com>
-Subject: Re: [RFC 1/2] arm64: PCI: Allow use arch-specific pci sysdata
-To:     Boqun Feng <boqun.feng@gmail.com>
+        id S229505AbhCTMyk (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 20 Mar 2021 08:54:40 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614656196A;
+        Sat, 20 Mar 2021 12:54:40 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lNb7m-002mXG-GP; Sat, 20 Mar 2021 12:54:38 +0000
+Date:   Sat, 20 Mar 2021 12:54:37 +0000
+Message-ID: <87tup6gf3m.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -53,87 +38,135 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
         Ard Biesheuvel <ardb@kernel.org>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 1/2] arm64: PCI: Allow use arch-specific pci sysdata
+In-Reply-To: <20210319211246.GA250618@bjorn-Precision-5520>
+References: <20210319161956.2838291-2-boqun.feng@gmail.com>
+        <20210319211246.GA250618@bjorn-Precision-5520>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, boqun.feng@gmail.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org, csbisa@amazon.com, ardb@kernel.org, sunilmut@microsoft.com, arnd@arndb.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 5:22 PM Boqun Feng <boqun.feng@gmail.com> wrote:
->
-> Currently, if an architecture selects CONFIG_PCI_DOMAINS_GENERIC, the
-> ->sysdata in bus and bridge will be treated as struct pci_config_window,
-> which is created by generic ECAM using the data from acpi.
->
-> However, for a virtualized PCI bus, there might be no enough data in of
-> or acpi table to create a pci_config_window. This is similar to the case
-> where CONFIG_PCI_DOMAINS_GENERIC=n, IOW, architectures use their own
-> structure for sysdata, so no apci table lookup is required.
->
-> In order to enable Hyper-V's virtual PCI (which doesn't have acpi table
-> entry for PCI) on ARM64 (which selects CONFIG_PCI_DOMAINS_GENERIC), we
-> introduce arch-specific pci sysdata (similar to the one for x86) for
-> ARM64, and allow the core PCI code to detect the type of sysdata at the
-> runtime. The latter is achieved by adding a pci_ops::use_arch_sysdata
-> field.
->
-> Originally-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+Thanks Bjorn for looping me in.
 
-I think this takes it in the opposite direction of where it should be going.
+On Fri, 19 Mar 2021 21:12:46 +0000,
+Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> [+cc Arnd (author of 37d6a0a6f470 ("PCI: Add
+> pci_register_host_bridge() interface"), which I think would make my
+> idea below possible), Marc (IRQ domains maintainer)]
+> 
+> On Sat, Mar 20, 2021 at 12:19:55AM +0800, Boqun Feng wrote:
+> > Currently, if an architecture selects CONFIG_PCI_DOMAINS_GENERIC, the
+> > ->sysdata in bus and bridge will be treated as struct pci_config_window,
+> > which is created by generic ECAM using the data from acpi.
+> 
+> It might be a mistake that we put the struct pci_config_window
+> pointer, which is really arch-independent, in the ->sysdata element,
+> which normally contains a pointer to arch- or host bridge-dependent 
+> data.
+> 
+> > However, for a virtualized PCI bus, there might be no enough data in of
+> > or acpi table to create a pci_config_window. This is similar to the case
+> > where CONFIG_PCI_DOMAINS_GENERIC=n, IOW, architectures use their own
+> > structure for sysdata, so no apci table lookup is required.
+> > 
+> > In order to enable Hyper-V's virtual PCI (which doesn't have acpi table
+> > entry for PCI) on ARM64 (which selects CONFIG_PCI_DOMAINS_GENERIC), we
+> > introduce arch-specific pci sysdata (similar to the one for x86) for
+> > ARM64, and allow the core PCI code to detect the type of sysdata at the
+> > runtime. The latter is achieved by adding a pci_ops::use_arch_sysdata
+> > field.
+> > 
+> > Originally-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> > Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+> > ---
+> >  arch/arm64/include/asm/pci.h | 29 +++++++++++++++++++++++++++++
+> >  arch/arm64/kernel/pci.c      | 15 ++++++++++++---
+> >  include/linux/pci.h          |  3 +++
+> >  3 files changed, 44 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
+> > index b33ca260e3c9..dade061a0658 100644
+> > --- a/arch/arm64/include/asm/pci.h
+> > +++ b/arch/arm64/include/asm/pci.h
+> > @@ -22,6 +22,16 @@
+> >  
+> >  extern int isa_dma_bridge_buggy;
+> >  
+> > +struct pci_sysdata {
+> > +	int domain;	/* PCI domain */
+> > +	int node;	/* NUMA Node */
+> > +#ifdef CONFIG_ACPI
+> > +	struct acpi_device *companion;	/* ACPI companion device */
+> > +#endif
+> > +#ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+> > +	void *fwnode;			/* IRQ domain for MSI assignment */
 
-> ---
->  arch/arm64/include/asm/pci.h | 29 +++++++++++++++++++++++++++++
->  arch/arm64/kernel/pci.c      | 15 ++++++++++++---
->  include/linux/pci.h          |  3 +++
->  3 files changed, 44 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-> index b33ca260e3c9..dade061a0658 100644
-> --- a/arch/arm64/include/asm/pci.h
-> +++ b/arch/arm64/include/asm/pci.h
-> @@ -22,6 +22,16 @@
->
->  extern int isa_dma_bridge_buggy;
->
-> +struct pci_sysdata {
-> +       int domain;     /* PCI domain */
-> +       int node;       /* NUMA Node */
-> +#ifdef CONFIG_ACPI
-> +       struct acpi_device *companion;  /* ACPI companion device */
-> +#endif
-> +#ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
-> +       void *fwnode;                   /* IRQ domain for MSI assignment */
-> +#endif
-> +};
+Why isn't this more strongly typed? pci_host_bridge_msi_domain()
+definitely expects this to be the real thing. And the comment is
+wrong.
 
-I think none of these members belong into sysdata or architecture specific
-code. The fact that a pci_host_bridge belongs to a particular NUMA node
-or i associated with a firmware description is neither specific to a
-host bridge implementation nor a CPU instruction set!
+[...]
 
-Moreover, you cannot assume that all PCI host bridges on any given
-architecture can share the pci_sysdata pointer, it is purely specific to
-the bridge driver.
+> > +#ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+> > +static inline void *_pci_root_bus_fwnode(struct pci_bus *bus)
+> > +{
+> > +	struct pci_sysdata *sd = bus->sysdata;
+> > +
+> > +	if (bus->ops->use_arch_sysdata)
+> > +		return sd->fwnode;
+> > +
+> > +	/*
+> > +	 * bus->sysdata is not struct pci_sysdata, fwnode should be able to
+> > +	 * be queried from of/acpi.
+> > +	 */
+> > +	return NULL;
+> > +}
+> > +#define pci_root_bus_fwnode	_pci_root_bus_fwnode
+> 
+> Ugh.  pci_root_bus_fwnode() is another callback to find the
+> irq_domain.  Only one call, from pci_host_bridge_msi_domain(), which
+> itself is only called from pci_set_bus_msi_domain().  This feels like
+> another case where we could simplify things by having the host bridge
+> driver figure out the irq_domain explicitly when it creates the
+> pci_host_bridge.  It seems like that's where we have the most
+> information about how to find the irq_domain.
 
-A good start would be to move the members (one at a time) into struct
-pci_host_bridge and out of the sysdata of individual host bridge drivers.
+Urgh. This is a perfect copy paste of the x86 horror, warts and all.
+I can't say I'm thrilled (another way to say "Gawd, Noes! Never!").
 
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index 1006ed2d7c60..63d420d57e63 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -74,15 +74,24 @@ struct acpi_pci_generic_root_info {
->  int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
->  {
->         struct pci_config_window *cfg = bus->sysdata;
-> -       struct acpi_device *adev = to_acpi_device(cfg->parent);
-> -       struct acpi_pci_root *root = acpi_driver_data(adev);
-> +       struct pci_sysdata *sd = bus->sysdata;
-> +       struct acpi_device *adev;
-> +       struct acpi_pci_root *root;
+One thing I am sure of is that I do not want to add more custom
+indirection to build the MSI topology. We barely got rid of the
+msi_controller structure, and this is the same thing by another
+name. Probably worse, actually.
 
-There should be no reason to add even most code to this file,
-it should in fact become empty as it gets generalized more.
+In this case, I don't see the point in going via a fwnode indirection
+given that there is no firmware tables the first place.
 
-        Arnd
+As for finding the irq domain from the host bridge, that's not doable
+in most cases on arm64, as it is pretty likely that the host bridge
+knows nothing about MSIs when they are implemented in the GIC (see my
+recent msi_controller removal series that has a few patches about
+that).
+
+Having an optional callback to host bridges to obtain the MSI domain
+may be possible in some cases though (there might be a chicken/egg
+problem for some drivers though...).
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
