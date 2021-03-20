@@ -2,36 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94D4B342CE3
-	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Mar 2021 13:55:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4AA0342CF3
+	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Mar 2021 14:04:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229793AbhCTMzW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 20 Mar 2021 08:55:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:49457 "EHLO
+        id S229505AbhCTNDn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 20 Mar 2021 09:03:43 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:37419 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbhCTMzK (ORCPT
+        with ESMTP id S229445AbhCTNDd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 20 Mar 2021 08:55:10 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1N6sON-1lkjHX1Upr-018KVg; Sat, 20 Mar 2021 13:55:08 +0100
-Received: by mail-ot1-f51.google.com with SMTP id l23-20020a05683004b7b02901b529d1a2fdso11205085otd.8;
-        Sat, 20 Mar 2021 05:55:07 -0700 (PDT)
-X-Gm-Message-State: AOAM533WbbEcgQWjQosCwsVh8o65iilFHytyV2IXZYZIzH+3ttM7CU5z
-        oaHHJ3h4Z14M4EPydV1999HCY/wK6tTNQsVIF/A=
-X-Google-Smtp-Source: ABdhPJxfJjFtVcXJVTzNQbZX61NIbImCp304YJaZ1bespXEDPPNSNNKZMiQFU3RpZzf8rAsn4Jwio7QzZOKXntzCFwc=
-X-Received: by 2002:a05:6830:148c:: with SMTP id s12mr4900234otq.251.1616244906923;
- Sat, 20 Mar 2021 05:55:06 -0700 (PDT)
+        Sat, 20 Mar 2021 09:03:33 -0400
+Received: from mail-ot1-f42.google.com ([209.85.210.42]) by
+ mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1Ml76o-1m6XOB1yuq-00lUPh; Sat, 20 Mar 2021 14:03:31 +0100
+Received: by mail-ot1-f42.google.com with SMTP id g8-20020a9d6c480000b02901b65ca2432cso11238121otq.3;
+        Sat, 20 Mar 2021 06:03:31 -0700 (PDT)
+X-Gm-Message-State: AOAM533eY9bSmoTrnYCktJEkRqgZS9McvdNKl39zckxoW/ys4RBdNbB+
+        77o51YYwzI+8RjjRfJU29sIR1CoCEEvd+1cSh7U=
+X-Google-Smtp-Source: ABdhPJw4zwmmsaNKkM4+UrHsd7cqgbKPxiSKwfQNVG5CgM2NbMVXP2bS8xIlYgIDSXo8OuDgdznZ0wY5TDkTqICahtg=
+X-Received: by 2002:a9d:316:: with SMTP id 22mr680626otv.210.1616245409946;
+ Sat, 20 Mar 2021 06:03:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210319161956.2838291-2-boqun.feng@gmail.com> <20210319211246.GA250618@bjorn-Precision-5520>
-In-Reply-To: <20210319211246.GA250618@bjorn-Precision-5520>
+References: <20210319161956.2838291-2-boqun.feng@gmail.com>
+ <20210319211246.GA250618@bjorn-Precision-5520> <87tup6gf3m.wl-maz@kernel.org>
+In-Reply-To: <87tup6gf3m.wl-maz@kernel.org>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 20 Mar 2021 13:54:50 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3qj=9KEN=X2uGCq0TrOGpyPw1Gwipmn=Gqx4LAfqUEDQ@mail.gmail.com>
-Message-ID: <CAK8P3a3qj=9KEN=X2uGCq0TrOGpyPw1Gwipmn=Gqx4LAfqUEDQ@mail.gmail.com>
+Date:   Sat, 20 Mar 2021 14:03:13 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1OGZsGmwGTHaVWBjpr_G4aDvO1mfUGU3o8XyLLgHqXpw@mail.gmail.com>
+Message-ID: <CAK8P3a1OGZsGmwGTHaVWBjpr_G4aDvO1mfUGU3o8XyLLgHqXpw@mail.gmail.com>
 Subject: Re: [RFC 1/2] arm64: PCI: Allow use arch-specific pci sysdata
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -46,89 +48,61 @@ Cc:     Boqun Feng <boqun.feng@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
         Ard Biesheuvel <ardb@kernel.org>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Marc Zyngier <maz@kernel.org>
+        Sunil Muthuswamy <sunilmut@microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3nBsTRjKU4DNvoz6P1XhrvpmUe2H2tSo8FW7//VtMMpKIMWFU59
- 5LvE5Rx1nrpyksyqctFc2uXS0S/OpKnNXpdurXFpAqI90/1C7+xhQ/zwmogZ+jYulAPORGD
- dNeW6LLglWNElfFjxknk0nkmpPRQ/ot9K2svvsvzKQn/yuCxAzG826H2zES5GgZyf95YYIm
- pakNjUSpBxeJ720qndNSQ==
+X-Provags-ID: V03:K1:jQkD8EZZiXJG0Ypa2SFEOUJN7IyHtWyLXTAgYl/PzevvEcaicoE
+ W1seO2Bmw/9Om+F7WZ2aPBQfHWvY3iJvlJoFh+GbbKunCrmXS9n3LMIKG+2kq1cMxxCyvfz
+ KkP4KIyXa2lwrNQQtEm1qkt/WMid2BjUAmw2KS9fgRwS9/KdiokDU+MjiEfP6P1MbqQ0aQy
+ 23p+MdVW9CgXBoQ+uSnIw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:j0FktJ2XUn0=:lJoW9JkB4eIpwg7b9EEESz
- X0lb8lWTNq/QGTiQ2WbUktkPsDiYufirJuh+wEMlvpZUm0zNvhqDhk3AKkVJQ+DkDCiDTz9x+
- mGZsJUnFIjxg8ABjCB5aR5UP+Gi0AqgOhs1yxYjczDwjFy2q+UPKWU17gn7fSW1QTfr981uZQ
- MsoGRX4GgTzPwfYYlc59Bbrhyt011UflGqfesTS2Ltp07YjUEJnVqjtcsO6AoY3yfOLx1y1Xg
- J3Wj+qRK2RSZDtjiy0HbbDVxniB9/jkLS43Vo5Dw2sAsRP/eRZH6qg8SLcIti/9zD25Kcgtw3
- RU9FCiK9ibCzm5rrNPAoz9WLVwaLpe7Mxe8t9/iLA6cAbu4YyZavZ5VpQuCOJrI1dbHe4TIsH
- 2bn42she0Cqs03K+1ZZZ4EOqsbnF0L7vl6MPXaz09hzHRUgp/mqjhViQqfA8iEy1v+iIbGnj4
- H2zWIvCrXiYjlZS7oEcbxKoDj1E9IzesUe9ia9AcssBIx79NP98lHbTbD1uBVRiwVDBuT1ku9
- hjx2UxqMn8JT79ps6BhvIBpRVIQP7MVqplXXBiVoxAQtOhK333xHJNN18ZTz7P3Yg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gPSBLDs7PeQ=:aj/UnjetFVZlShr7BPYNPB
+ RtBthhnoz35YAwpa3jg7uxBbQWZDNsybR4Yj+44jQyWHue22275kkmHQ7t7xAC4WHipS5cR14
+ jvTkM+FQz2ZjL1y+m8fW6JLooUbEEEf2JOBS6Afhs8255kE1TzTOyVOY2TPaGd/JimL1OTudF
+ 8rq2gJN+4wI3/226ug4uKT3oDDqaWNmaAhK2/Z/6iRNxvY5/gVtaz8ea+KUrBjOYkbwx/l2Q/
+ 8750UVHJOFzwsK/gRBPaPCnH0FATYLYEfPMkgycvQFCX52qn4lJX6Np29mPRBeZ3Gl9D/taM7
+ hCISmUKDGEGuV8B49HLs+Cf5tnPm5arYG3Od3+BkXwpf/PdggvfHp2jiBr0O2RJJ3CymlMd2o
+ s7E6LebuUpRjLUZVWSNNERrK4rv37oGin2gCPD731OQ0uzh/Yn+dAfohTN6DyWUdFYqRZInqk
+ hb/PzcHZQshkPVOJyFa2UtBxBlBJH8IdHiP9OUGzL1gjLKYsOQKwEr/1emdUCFYnzsiqyV0HR
+ s+iCXKX8ZgED+x6SzfIlT/pBZnxm96P/tyoSyIYyKWfc2pVmq31fOkIy6rxT3/MIg==
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 10:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > However, for a virtualized PCI bus, there might be no enough data in of
-> > or acpi table to create a pci_config_window. This is similar to the case
-> > where CONFIG_PCI_DOMAINS_GENERIC=n, IOW, architectures use their own
-> > structure for sysdata, so no apci table lookup is required.
-> >
-> > In order to enable Hyper-V's virtual PCI (which doesn't have acpi table
-> > entry for PCI) on ARM64 (which selects CONFIG_PCI_DOMAINS_GENERIC), we
-> > introduce arch-specific pci sysdata (similar to the one for x86) for
-> > ARM64, and allow the core PCI code to detect the type of sysdata at the
-> > runtime. The latter is achieved by adding a pci_ops::use_arch_sysdata
-> > field.
-> >
-> > Originally-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> > Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> > ---
-> >  arch/arm64/include/asm/pci.h | 29 +++++++++++++++++++++++++++++
-> >  arch/arm64/kernel/pci.c      | 15 ++++++++++++---
-> >  include/linux/pci.h          |  3 +++
-> >  3 files changed, 44 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-> > index b33ca260e3c9..dade061a0658 100644
-> > --- a/arch/arm64/include/asm/pci.h
-> > +++ b/arch/arm64/include/asm/pci.h
-> > @@ -22,6 +22,16 @@
-> >
-> >  extern int isa_dma_bridge_buggy;
-> >
-> > +struct pci_sysdata {
-> > +     int domain;     /* PCI domain */
-> > +     int node;       /* NUMA Node */
-> > +#ifdef CONFIG_ACPI
-> > +     struct acpi_device *companion;  /* ACPI companion device */
-> > +#endif
-> > +#ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
-> > +     void *fwnode;                   /* IRQ domain for MSI assignment */
-> > +#endif
-> > +};
->
-> Our PCI domain code is really a mess (mostly my fault) and I hate to
-> make it even more complicated by adding more switches, e.g.,
-> ->use_arch_sysdata.
->
-> I think the design problem is that PCI host bridge drivers should
-> supply the PCI domain up front instead of having callbacks to extract
-> it.
->
-> We could put "int domain_nr" in struct pci_host_bridge, and the arch
-> code or host bridge driver (pcibios_init_hw(), *_pcie_probe(), VMD,
-> HV, etc) could fill in pci_host_bridge.domain_nr before calling
-> pci_scan_root_bus_bridge() or pci_host_probe().
->
-> Then maybe we could get rid of pci_bus_find_domain_nr() and some of
-> the needlessly arch-specific implementations of pci_domain_nr().
-> I think we likely could get rid of CONFIG_PCI_DOMAINS_GENERIC, too,
-> eventually.
+On Sat, Mar 20, 2021 at 1:54 PM Marc Zyngier <maz@kernel.org> wrote:
+> On Fri, 19 Mar 2021 21:12:46 +0000,
 
-Agreed. I actually still have a (not really tested) patch series to clean up
-the pci host bridge registration, and this should make this a lot easier
-to add on top.
+> >
+> > Ugh.  pci_root_bus_fwnode() is another callback to find the
+> > irq_domain.  Only one call, from pci_host_bridge_msi_domain(), which
+> > itself is only called from pci_set_bus_msi_domain().  This feels like
+> > another case where we could simplify things by having the host bridge
+> > driver figure out the irq_domain explicitly when it creates the
+> > pci_host_bridge.  It seems like that's where we have the most
+> > information about how to find the irq_domain.
+>
+> Urgh. This is a perfect copy paste of the x86 horror, warts and all.
+> I can't say I'm thrilled (another way to say "Gawd, Noes! Never!").
+>
+> One thing I am sure of is that I do not want to add more custom
+> indirection to build the MSI topology. We barely got rid of the
+> msi_controller structure, and this is the same thing by another
+> name. Probably worse, actually.
+>
+> In this case, I don't see the point in going via a fwnode indirection
+> given that there is no firmware tables the first place.
+>
+> As for finding the irq domain from the host bridge, that's not doable
+> in most cases on arm64, as it is pretty likely that the host bridge
+> knows nothing about MSIs when they are implemented in the GIC (see my
+> recent msi_controller removal series that has a few patches about
+> that).
+>
+> Having an optional callback to host bridges to obtain the MSI domain
+> may be possible in some cases though (there might be a chicken/egg
+> problem for some drivers though...).
 
-I should dig that out of my backlog and post for review.
+I would expect that the host bridge driver can find the MSI domain
+at probe time and just add a pointer into the pci_host_bridge
+structure.
 
-         Arnd
+        Arnd
