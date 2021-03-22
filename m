@@ -2,25 +2,25 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9766344EE5
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Mar 2021 19:47:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47EDB344EEB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Mar 2021 19:47:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbhCVSqk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Mar 2021 14:46:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
+        id S232100AbhCVSqn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Mar 2021 14:46:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231332AbhCVSqb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Mar 2021 14:46:31 -0400
+        id S231384AbhCVSqc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 22 Mar 2021 14:46:32 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D2DE619A0;
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF4D619A4;
         Mon, 22 Mar 2021 18:46:31 +0000 (UTC)
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94)
         (envelope-from <maz@kernel.org>)
-        id 1lOPZN-0038p5-CH; Mon, 22 Mar 2021 18:46:29 +0000
+        id 1lOPZO-0038p5-9g; Mon, 22 Mar 2021 18:46:30 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>
@@ -44,9 +44,9 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-renesas-soc@vger.kernel.org, kernel-team@android.com
-Subject: [PATCH v2 06/15] PCI: hv: Drop msi_controller structure
-Date:   Mon, 22 Mar 2021 18:46:05 +0000
-Message-Id: <20210322184614.802565-7-maz@kernel.org>
+Subject: [PATCH v2 07/15] PCI/MSI: Drop use of msi_controller from core code
+Date:   Mon, 22 Mar 2021 18:46:06 +0000
+Message-Id: <20210322184614.802565-8-maz@kernel.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210322184614.802565-1-maz@kernel.org>
 References: <20210322184614.802565-1-maz@kernel.org>
@@ -60,42 +60,102 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The Hyper-V PCI driver still makes use of a msi_controller structure,
-but it looks more like a distant leftover than anything actually
-useful, since it is initialised to 0 and never used for anything.
+As there is no driver using msi_controller, we can now safely
+remove its use from the PCI probe code.
 
-Just remove it.
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Tested-by: Michael Kelley <mikelley@microsoft.com>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pci-hyperv.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/pci/msi.c   | 23 +----------------------
+ drivers/pci/probe.c |  2 --
+ include/linux/pci.h |  2 --
+ 3 files changed, 1 insertion(+), 26 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 27a17a1e4a7c..2c014ba7ed4b 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -473,7 +473,6 @@ struct hv_pcibus_device {
- 	struct list_head dr_list;
- 
- 	struct msi_domain_info msi_info;
--	struct msi_controller msi_chip;
- 	struct irq_domain *irq_domain;
- 
- 	spinlock_t retarget_msi_interrupt_lock;
-@@ -1866,9 +1865,6 @@ static int create_root_hv_pci_bus(struct hv_pcibus_device *hbus)
- 	if (!hbus->pci_bus)
- 		return -ENODEV;
- 
--	hbus->pci_bus->msi = &hbus->msi_chip;
--	hbus->pci_bus->msi->dev = &hbus->hdev->device;
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 3162f88fe940..79b5a995bd02 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -64,39 +64,18 @@ static void pci_msi_teardown_msi_irqs(struct pci_dev *dev)
+ /* Arch hooks */
+ int __weak arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc)
+ {
+-	struct msi_controller *chip = dev->bus->msi;
+-	int err;
 -
- 	pci_lock_rescan_remove();
- 	pci_scan_child_bus(hbus->pci_bus);
- 	hv_pci_assign_numa_node(hbus);
+-	if (!chip || !chip->setup_irq)
+-		return -EINVAL;
+-
+-	err = chip->setup_irq(chip, dev, desc);
+-	if (err < 0)
+-		return err;
+-
+-	irq_set_chip_data(desc->irq, chip);
+-
+-	return 0;
++	return -EINVAL;
+ }
+ 
+ void __weak arch_teardown_msi_irq(unsigned int irq)
+ {
+-	struct msi_controller *chip = irq_get_chip_data(irq);
+-
+-	if (!chip || !chip->teardown_irq)
+-		return;
+-
+-	chip->teardown_irq(chip, irq);
+ }
+ 
+ int __weak arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+ {
+-	struct msi_controller *chip = dev->bus->msi;
+ 	struct msi_desc *entry;
+ 	int ret;
+ 
+-	if (chip && chip->setup_irqs)
+-		return chip->setup_irqs(chip, dev, nvec, type);
+ 	/*
+ 	 * If an architecture wants to support multiple MSI, it needs to
+ 	 * override arch_setup_msi_irqs()
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 953f15abc850..fb04fc81a8bd 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -895,7 +895,6 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	/* Temporarily move resources off the list */
+ 	list_splice_init(&bridge->windows, &resources);
+ 	bus->sysdata = bridge->sysdata;
+-	bus->msi = bridge->msi;
+ 	bus->ops = bridge->ops;
+ 	bus->number = bus->busn_res.start = bridge->busnr;
+ #ifdef CONFIG_PCI_DOMAINS_GENERIC
+@@ -1053,7 +1052,6 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 		return NULL;
+ 
+ 	child->parent = parent;
+-	child->msi = parent->msi;
+ 	child->sysdata = parent->sysdata;
+ 	child->bus_flags = parent->bus_flags;
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 86c799c97b77..ebf557e59d87 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -540,7 +540,6 @@ struct pci_host_bridge {
+ 	int (*map_irq)(const struct pci_dev *, u8, u8);
+ 	void (*release_fn)(struct pci_host_bridge *);
+ 	void		*release_data;
+-	struct msi_controller *msi;
+ 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+ 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+ 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
+@@ -621,7 +620,6 @@ struct pci_bus {
+ 	struct resource busn_res;	/* Bus numbers routed to this bus */
+ 
+ 	struct pci_ops	*ops;		/* Configuration access functions */
+-	struct msi_controller *msi;	/* MSI controller */
+ 	void		*sysdata;	/* Hook for sys-specific extension */
+ 	struct proc_dir_entry *procdir;	/* Directory entry in /proc/bus/pci */
+ 
 -- 
 2.29.2
 
