@@ -2,145 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43D46345CFD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Mar 2021 12:35:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7DDC345D3D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Mar 2021 12:45:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbhCWLfF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 Mar 2021 07:35:05 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:55894 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbhCWLeb (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 Mar 2021 07:34:31 -0400
-Received: by mail-wm1-f43.google.com with SMTP id 12so10847694wmf.5;
-        Tue, 23 Mar 2021 04:34:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Sx96tZdFzleJmckps5BrYhpq4EiEUeB9mDj5nietAwc=;
-        b=VLJE43x/D6um2I2ZS3MJso1bDCY7siKL/DkaaWz3L5FFTJjKajv9qqaR32vb7ujcqm
-         Z0OerjueE7fqfATtG7g9Ho/YSM2y1kfUSfw4nyl+p3kvC+pCQxzK6ufrUX2c/OrvXNmQ
-         M38UXJtzShNGoWMuKA4Ufnb0BL3p6MUKIbyu7qex5IyeOXD5sUTOAMj3X48zeMRo98Nf
-         GJ5i59aIb87hccUrHHvRlnFcMxuslbMDfkunQ2AiS0CG1MsUrNX8kL6q+ZrDxOLjHowc
-         sjpNK6U+jmOFWUcRZmGy1ajdVyMatbzUfOEyhJrCjvwHJzqkj1lLsfMotDIqAJrG9tmN
-         HaNw==
-X-Gm-Message-State: AOAM532FNrzHX5Zc0J+ML2ic9tMqvgTnKAZY8aDjmtFlmghYnAPt7W85
-        lKE63EQqN4PJwxXELsd7BHWdwarKeU0=
-X-Google-Smtp-Source: ABdhPJw4zc1Gt3nGU1IVl568bG4fASUlM6JPACxb5i4BgPxchKFJZxXDzvbsw7VUejy+q6Kk/2V1FQ==
-X-Received: by 2002:a1c:4b15:: with SMTP id y21mr3003900wma.94.1616499270661;
-        Tue, 23 Mar 2021 04:34:30 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u17sm2226301wmq.3.2021.03.23.04.34.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Mar 2021 04:34:30 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 11:34:29 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Xu Yihang <xuyihang@huawei.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S230042AbhCWLpS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 Mar 2021 07:45:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:44578 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229728AbhCWLpN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 23 Mar 2021 07:45:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AC0211B3;
+        Tue, 23 Mar 2021 04:45:13 -0700 (PDT)
+Received: from [10.57.50.37] (unknown [10.57.50.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 217AD3F7B4;
+        Tue, 23 Mar 2021 04:45:08 -0700 (PDT)
+Subject: Re: [PATCH v2 12/15] PCI/MSI: Let PCI host bridges declare their
+ reliance on MSI domains
+To:     Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johnny.chenyi@huawei.com" <johnny.chenyi@huawei.com>,
-        "heying24@huawei.com" <heying24@huawei.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH -next] x86: Fix unused variable 'msr_val' warning
-Message-ID: <20210323113429.zj64itbfpqkruval@liuwe-devbox-debian-v2>
-References: <20210322031713.23853-1-xuyihang@huawei.com>
- <20210322210828.GA1961861@gmail.com>
- <MWHPR21MB15939242EA50C7C1728412D0D7659@MWHPR21MB1593.namprd21.prod.outlook.com>
- <20210323001303.GA3092649@gmail.com>
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
+References: <20210322184614.802565-1-maz@kernel.org>
+ <20210322184614.802565-13-maz@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6a2eaa5d-1d83-159f-69e5-c9e0a00a7b50@arm.com>
+Date:   Tue, 23 Mar 2021 11:45:02 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210323001303.GA3092649@gmail.com>
+In-Reply-To: <20210322184614.802565-13-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 01:13:03AM +0100, Ingo Molnar wrote:
+On 2021-03-22 18:46, Marc Zyngier wrote:
+> The new 'no_msi' attribute solves the problem of advertising the lack
+> of MSI capability for host bridges that know for sure that there will
+> be no MSI for their end-points.
 > 
-> * Michael Kelley <mikelley@microsoft.com> wrote:
+> However, there is a whole class of host bridges that cannot know
+> whether MSIs will be provided or not, as they rely on other blocks
+> to provide the MSI functionnality, using MSI domains.  This is
+> the case for example on systems that use the ARM GIC architecture.
 > 
-> > From: Ingo Molnar <mingo.kernel.org@gmail.com> Sent: Monday, March 22, 2021 2:08 PM
-> > > 
-> > > * Xu Yihang <xuyihang@huawei.com> wrote:
-> > > 
-> > > > Fixes the following W=1 kernel build warning(s):
-> > > > arch/x86/hyperv/hv_spinlock.c:28:16: warning: variable 'msr_val' set but not used [-
-> > > Wunused-but-set-variable]
-> > > >   unsigned long msr_val;
-> > > >
-> > > > As Hypervisor Top-Level Functional Specification states in chapter 7.5 Virtual Processor
-> > > Idle Sleep State, "A partition which possesses the AccessGuestIdleMsr privilege (refer to
-> > > section 4.2.2) may trigger entry into the virtual processor idle sleep state through a read to
-> > > the hypervisor-defined MSR HV_X64_MSR_GUEST_IDLE". That means only a read is
-> > > necessary, msr_val is not uesed, so __maybe_unused should be added.
-> > > >
-> > > > Reference:
-> > > >
-> > > > https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
-> > > >
-> > > > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > > > Signed-off-by: Xu Yihang <xuyihang@huawei.com>
-> > > > ---
-> > > >  arch/x86/hyperv/hv_spinlock.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-> > > > index f3270c1fc48c..67bc15c7752a 100644
-> > > > --- a/arch/x86/hyperv/hv_spinlock.c
-> > > > +++ b/arch/x86/hyperv/hv_spinlock.c
-> > > > @@ -25,7 +25,7 @@ static void hv_qlock_kick(int cpu)
-> > > >
-> > > >  static void hv_qlock_wait(u8 *byte, u8 val)
-> > > >  {
-> > > > -	unsigned long msr_val;
-> > > > +	unsigned long msr_val __maybe_unused;
-> > > >  	unsigned long flags;
-> > > 
-> > > Please don't add new __maybe_unused annotations to the x86 tree -
-> > > improve the flow instead to help GCC recognize the initialization
-> > > sequence better.
-> > > 
-> > > Thanks,
-> > > 
-> > > 	Ingo
-> > 
-> > Could you elaborate on the thinking here, or point to some written
-> > discussion?   I'm just curious.   In this particular case, it's not a problem
-> > with the flow or gcc detection.  This code really does read an MSR and
-> > ignore that value that is read, so it's not clear how gcc would ever
-> > figure out that's OK.
+> Introduce a new attribute ('msi_domain') indicating that implicit
+> dependency, and use this property to set the NO_MSI flag when
+> no MSI domain is found at probe time.
 > 
-> Yeah, so the canonical way to signal that the msr_val isn't used would 
-> be to rewrite this as:
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>   drivers/pci/probe.c | 2 +-
+>   include/linux/pci.h | 1 +
+>   2 files changed, 2 insertions(+), 1 deletion(-)
 > 
-> 
-> 	if (READ_ONCE(*byte) == val) {
-> 		unsigned long msr_val;
-> 
-> 		rdmsrl(HV_X64_MSR_GUEST_IDLE, msr_val);
-> 
-> 		(void)msr_val;
-> 	}
-> 
-> (Also see the patch below - untested.)
-> 
-> This makes it abundantly clear that the rdmsr() msr_val return value 
-> is not 'maybe' unused, but totally intentionally skipped.
-> 
-> Thanks,
-> 
-> 	Ingo
-> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 146bd85c037e..bac9f69a06a8 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -925,7 +925,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>   	device_enable_async_suspend(bus->bridge);
+>   	pci_set_bus_of_node(bus);
+>   	pci_set_bus_msi_domain(bus);
+> -	if (bridge->no_msi)
+> +	if (bridge->no_msi || (bridge->msi_domain && !bus->dev.msi_domain))
+>   		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
+>   
+>   	if (!parent)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 48605cca82ae..d322d00db432 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -551,6 +551,7 @@ struct pci_host_bridge {
+>   	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
+>   	unsigned int	size_windows:1;		/* Enable root bus sizing */
+>   	unsigned int	no_msi:1;		/* Bridge has no MSI support */
+> +	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
 
-Thank you for the advice, Ingo.
+Aren't these really the same thing? Either way we're saying the bridge 
+itself doesn't handle MSIs, it's just in one case we're effectively 
+encoding a platform-specific assumption that an external domain won't be 
+provided. I can't help wondering whether that distinction is really 
+necessary...
 
-Wei.
+Robin.
+
+>   
+>   	/* Resource alignment requirements */
+>   	resource_size_t (*align_resource)(struct pci_dev *dev,
+> 
