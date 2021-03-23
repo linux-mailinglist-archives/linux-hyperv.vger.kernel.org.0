@@ -2,115 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DDCF345CD5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Mar 2021 12:30:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2952345CF1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Mar 2021 12:33:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230269AbhCWL3N (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 Mar 2021 07:29:13 -0400
-Received: from mail-wm1-f41.google.com ([209.85.128.41]:36455 "EHLO
-        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230115AbhCWL2m (ORCPT
+        id S230236AbhCWLc7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 Mar 2021 07:32:59 -0400
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:33528 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229866AbhCWLcx (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 Mar 2021 07:28:42 -0400
-Received: by mail-wm1-f41.google.com with SMTP id j20-20020a05600c1914b029010f31e15a7fso4774099wmq.1;
-        Tue, 23 Mar 2021 04:28:41 -0700 (PDT)
+        Tue, 23 Mar 2021 07:32:53 -0400
+Received: by mail-wr1-f52.google.com with SMTP id o16so20411301wrn.0;
+        Tue, 23 Mar 2021 04:32:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8LbqrlY0e/I2k2EOkhIXKnRaA0GFx4v9lyKMDDc0jhM=;
-        b=f1FLlsbMCeDeRsxa58vyPQ1q8vczV9sZAbGU36ByNP6zOLe1/tB8hp38918j1ao2Yz
-         zCHqVpe5vrxkRKZmzmMhlYB+TXA2Q8cJeV6IEYqv6d/roXmlSs8MrLOiTi7qAb4YdOuL
-         b2ic/hjrCgDwqfCS7/UyRAq14Ylr0aFqvneI4MOfliDtvHubSE9tZbYFKDtEHLn2rr4G
-         bezx0Yk1w+N06FoRyBXYVLGsaawMpI3jIG0ezdOgNjv9og9su73spg7vGBipDcHzZjKm
-         RV6ugVU+lxdmxKzc4oEa6Hlx5jFHfeyjHxY9gNzR+26wDwZA1hFBZh7v0Mk7H2WD4/au
-         YtLg==
-X-Gm-Message-State: AOAM531BlwzTClCrgVvYHXDgFJLNOqjxE4J5F6d7vhR5dmYLsnaMi56F
-        6Oh5c0F+YVklt0mHf2eLX5eXPp+WRNU=
-X-Google-Smtp-Source: ABdhPJzfQNTkQtfE9Jt/vjGsMVVTfI4aNamprQvdmWk3kTbMn0ewGjrwQkPpKUx+ONN5WOO2vjw7gg==
-X-Received: by 2002:a7b:c0d1:: with SMTP id s17mr2848291wmh.153.1616498920672;
-        Tue, 23 Mar 2021 04:28:40 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wjAUQ3VJ6EHaIXZgTmJ4+pSbbBz03ZgUXwggSRQBomk=;
+        b=Nu1eLI3SKxz4cdZd5Z0pvpI94Vo9WkHUGtua99c4hAAcEMJX6fyt32m/UJ02mwBjRr
+         bakVVTzGRCGPmhmrKN2l0Uxn02Tofw7UO8QqDb8bhbMrhPvJyppFDyIaWOUI2snUVFvb
+         D8n5hKKibsBN8rjnabpDrZQ14PD0/sTUklj4UfwwCIstwWaOy8ircRrR7KEUVWvRVkhA
+         2Un+LmOtfoGd6ajDlwp3OqQkuYjqEJeNOxlte0QddNoQDUpmluB/XEBTgJKzF0o1U+vr
+         kXy7CqwD6NSmAPXbwIzdwS0SF/rgVmTKIGIe1cWAv3la9nUjJnNpElmrkxGA3t4NzjMx
+         MDEg==
+X-Gm-Message-State: AOAM531bHEoKhhknL9xLFfO3uo0XVEnMz2QRF5Ng6W3to3g1swUGdJYl
+        YOWdT8w9MZM2biRqN68hXDo=
+X-Google-Smtp-Source: ABdhPJw58wNANSqmZYOtDCW/n5beyjXu0LSUuwj86TtsZvhrgxrzhpmDsn6hcG194qUHaMcGXmVJqw==
+X-Received: by 2002:adf:ea8d:: with SMTP id s13mr3499189wrm.32.1616499172029;
+        Tue, 23 Mar 2021 04:32:52 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id t1sm23144490wry.90.2021.03.23.04.28.39
+        by smtp.gmail.com with ESMTPSA id v2sm2952871wmj.1.2021.03.23.04.32.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Mar 2021 04:28:40 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 11:28:38 +0000
+        Tue, 23 Mar 2021 04:32:51 -0700 (PDT)
+Date:   Tue, 23 Mar 2021 11:32:50 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Lv Yunlong <lyl2019@mail.ustc.edu.cn>
+To:     Xu Yihang <xuyihang@huawei.com>
 Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] video/fbdev: Fix a double free in hvfb_probe
-Message-ID: <20210323112838.xrastmol4fnxqxub@liuwe-devbox-debian-v2>
-References: <20210323073350.17697-1-lyl2019@mail.ustc.edu.cn>
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johnny.chenyi@huawei.com
+Subject: Re: [PATCH -next] x86: Fix unused variable 'hi'
+Message-ID: <20210323113250.ktsfwr2wzjycugyk@liuwe-devbox-debian-v2>
+References: <20210318074607.124663-1-xuyihang@huawei.com>
+ <20210323025013.191533-1-xuyihang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210323073350.17697-1-lyl2019@mail.ustc.edu.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210323025013.191533-1-xuyihang@huawei.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thanks for your patch.
-
-I would like to change the prefix to "video: hyperv_fb:" to be more
-specific.
-
-On Tue, Mar 23, 2021 at 12:33:50AM -0700, Lv Yunlong wrote:
-> In function hvfb_probe in hyperv_fb.c, it calls hvfb_getmem(hdev, info)
-> and return err when info->apertures is freed.
+On Tue, Mar 23, 2021 at 10:50:13AM +0800, Xu Yihang wrote:
+> Fixes the following W=1 kernel build warning(s):
+> arch/x86/hyperv/hv_apic.c:58:15: warning: variable ‘hi’ set but not used [-Wunused-but-set-variable]
 > 
-> In the error1 label of hvfb_probe, info->apertures will be freed twice
-> by framebuffer_release(info).
+> Compiled with CONFIG_HYPERV enabled:
+> make allmodconfig ARCH=x86_64 CROSS_COMPILE=x86_64-linux-gnu-
+> make W=1 arch/x86/hyperv/hv_apic.o ARCH=x86_64 CROSS_COMPILE=x86_64-linux-gnu-
 > 
-
-I would say "freed for the second time" here. What you wrote reads to me
-fraembuffer_release frees the buffer twice all by itself.
-
-> My patch sets info->apertures to NULL after it was freed to avoid
-> double free.
+> HV_X64_MSR_EOI stores on bit 31:0 and HV_X64_MSR_TPR stores in bit 7:0, which means higher
+> 32 bits are not really used, therefore  potentially cast to void in order to silent this warning.
 > 
-
-I think this approach works. I would like to give other people a chance
-to comment though.
-
-Fixes: 3a6fb6c4255c ("video: hyperv: hyperv_fb: Use physical memory for fb on HyperV Gen 1 VMs.")
-
-> Signed-off-by: Lv Yunlong <lyl2019@mail.ustc.edu.cn>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Xu Yihang <xuyihang@huawei.com>
 > ---
->  drivers/video/fbdev/hyperv_fb.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  arch/x86/hyperv/hv_apic.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-> index c8b0ae676809..2fc9b507e73a 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -1032,6 +1032,7 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
->  		if (!pdev) {
->  			pr_err("Unable to find PCI Hyper-V video\n");
->  			kfree(info->apertures);
-> +			info->apertures = NULL;
->  			return -ENODEV;
->  		}
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index 284e73661a18..a8b639498033 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -60,9 +60,11 @@ static u32 hv_apic_read(u32 reg)
+>  	switch (reg) {
+>  	case APIC_EOI:
+>  		rdmsr(HV_X64_MSR_EOI, reg_val, hi);
+> +		(void) hi;
+>  		return reg_val;
+>  	case APIC_TASKPRI:
+>  		rdmsr(HV_X64_MSR_TPR, reg_val, hi);
+> +		(void) hi;
+
+I would like to remove the space while committing this patch. There is
+no need for you to do anything.
+
+Wei.
+
+>  		return reg_val;
 >  
-> @@ -1130,6 +1131,7 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
->  		pci_dev_put(pdev);
->  	}
->  	kfree(info->apertures);
-> +	info->apertures = NULL;
->  
->  	return 0;
->  
-> @@ -1142,6 +1144,7 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
->  	if (!gen2vm)
->  		pci_dev_put(pdev);
->  	kfree(info->apertures);
-> +	info->apertures = NULL;
->  
->  	return -ENOMEM;
->  }
+>  	default:
 > -- 
-> 2.25.1
-> 
+> 2.17.1
 > 
