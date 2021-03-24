@@ -2,107 +2,71 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ED3F347649
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Mar 2021 11:38:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 765E3347754
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Mar 2021 12:28:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233084AbhCXKhy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 24 Mar 2021 06:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232877AbhCXKht (ORCPT
+        id S232686AbhCXL2Q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 24 Mar 2021 07:28:16 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:45039 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232541AbhCXL2N (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 24 Mar 2021 06:37:49 -0400
-Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1A6E9C061763;
-        Wed, 24 Mar 2021 03:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mail.ustc.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id:MIME-Version:Content-Transfer-Encoding; bh=PXF6JWSoPF
-        BH9Usr8tR+rlIy/zE3h2TbpQbzC+GbL0c=; b=S0rbtQqfTQjcT/uVujgUjkyHsG
-        subYYj47fDisdV53c8qKPSs3jf8xc7wJ59ZKECQvI2wr0r+vkcR7KhFKnFFCjQRa
-        YMDQDrBUgM4ucUFD5Za96Q7yigj14TPCaPJUMLFlWxCkzsSQuZMpKc+s4Ela9imA
-        DQT063mDD54cIyFek=
-Received: from ubuntu.localdomain (unknown [202.38.69.14])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygAXH09zFltgkvEyAA--.238S4;
-        Wed, 24 Mar 2021 18:37:39 +0800 (CST)
-From:   Lv Yunlong <lyl2019@mail.ustc.edu.cn>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lv Yunlong <lyl2019@mail.ustc.edu.cn>
-Subject: [PATCH v2] video: hyperv_fb: Fix a double free in hvfb_probe
-Date:   Wed, 24 Mar 2021 03:37:24 -0700
-Message-Id: <20210324103724.4189-1-lyl2019@mail.ustc.edu.cn>
-X-Mailer: git-send-email 2.25.1
+        Wed, 24 Mar 2021 07:28:13 -0400
+Received: by mail-wr1-f44.google.com with SMTP id c8so11156790wrq.11;
+        Wed, 24 Mar 2021 04:28:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KU6Dop6apks1kihX2YOTKvNWDKeXQ1Kugy0fdGkesUo=;
+        b=RQlvlYRLezr7U+O3czo3zDVKnUtg4dbCrFfTf/LVt+gI+FVrrjAxAzulBGkkFzOUi0
+         baCcPYu7KluymLwAWdVNOI23Qg4dcKigb3yv7tzUY4Wm4CEhg9HIU5NQknbUmNf9TSUA
+         gvtMRoUdW9Mz0gzRmwC1kLNCWdEp2ba0xlglMAytPY60QypPyrqN0E9vkiM7US562gEh
+         fj+/Yk/EKasXK5H/jp1w8H/1IMCM6n5bGbT0795rHJxcyDH9ru9ATGxdhM1RNee9p5Nb
+         A/QIwGMpaOVyF17WHRUix//DREIkFuYWqdT9fHsDMkVo4+ViZP2bLQrpxKJ5cQb/fM/8
+         dtWg==
+X-Gm-Message-State: AOAM532m51B2eZKiUD3IDoGJUs1yuzwlTxoBgVLFzvUnE0+36ivg7mDG
+        uGSrNYO+kCGP7AYxgWv7i4c=
+X-Google-Smtp-Source: ABdhPJyprfHTGT03IVPxhkqw3jBH7YUkK5fWR9U6uwyBT311htVyjfE/HL884+ZtcLB4mkY4Yyl+6g==
+X-Received: by 2002:a5d:4fca:: with SMTP id h10mr3140552wrw.70.1616585291877;
+        Wed, 24 Mar 2021 04:28:11 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id i16sm4663531wmq.3.2021.03.24.04.28.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Mar 2021 04:28:11 -0700 (PDT)
+Date:   Wed, 24 Mar 2021 11:28:10 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Xu Yihang <xuyihang@huawei.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johnny.chenyi@huawei.com, heying24@huawei.com,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH -next] x86: Fix unused variable 'msr_val' warning
+Message-ID: <20210324112810.lkeu3ffv6dv7fbab@liuwe-devbox-debian-v2>
+References: <20210322031713.23853-1-xuyihang@huawei.com>
+ <20210323024302.174434-1-xuyihang@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: LkAmygAXH09zFltgkvEyAA--.238S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7ArWUuw4rXF13Xry8Zry8uFg_yoW8GFWUpF
-        4kJayqyrW8tw109w4kAF4vyF9Y9Fs3Kr9xuFy2ka4Fya13J3yUuryrAFyI9rZ5ArW3W3WY
-        vF1Ut34rCa45uFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-        rcIFxwCY02Avz4vE14v_Gw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY
-        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-        73UjIFyTuYvjfUF0eHDUUUU
-X-CM-SenderInfo: ho1ojiyrz6zt1loo32lwfovvfxof0/
+In-Reply-To: <20210323024302.174434-1-xuyihang@huawei.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In function hvfb_probe in hyperv_fb.c, it calls hvfb_getmem(hdev, info)
-and return err when info->apertures is freed.
+On Tue, Mar 23, 2021 at 10:43:02AM +0800, Xu Yihang wrote:
+> Fixes the following W=1 kernel build warning(s):
+> arch/x86/hyperv/hv_spinlock.c:28:16: warning: variable ‘msr_val’ set but not used [-Wunused-but-set-variable]
+>   unsigned long msr_val;
+> 
+> As Hypervisor Top-Level Functional Specification states in chapter 7.5 Virtual Processor Idle Sleep State, "A partition which possesses the AccessGuestIdleMsr privilege (refer to section 4.2.2) may trigger entry into the virtual processor idle sleep state through a read to the hypervisor-defined MSR HV_X64_MSR_GUEST_IDLE". That means only a read is necessary, msr_val is not uesed, so potentially cast to void in order to silent this warning.
+> 
+> Reference:
+> https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Xu Yihang <xuyihang@huawei.com>
 
-In the error1 label of hvfb_probe, info->apertures will be freed for the
-second time in framebuffer_release(info).
-
-My patch removes all kfree(info->apertures) instead of set info->apertures
-to NULL. It is because that let framebuffer_release() handle freeing the
-memory flows the fbdev pattern, and less code overall.
-
-Signed-off-by: Lv Yunlong <lyl2019@mail.ustc.edu.cn>
----
- drivers/video/fbdev/hyperv_fb.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-index c8b0ae676809..4dc9077dd2ac 100644
---- a/drivers/video/fbdev/hyperv_fb.c
-+++ b/drivers/video/fbdev/hyperv_fb.c
-@@ -1031,7 +1031,6 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- 			PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
- 		if (!pdev) {
- 			pr_err("Unable to find PCI Hyper-V video\n");
--			kfree(info->apertures);
- 			return -ENODEV;
- 		}
- 
-@@ -1129,7 +1128,6 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- 	} else {
- 		pci_dev_put(pdev);
- 	}
--	kfree(info->apertures);
- 
- 	return 0;
- 
-@@ -1141,7 +1139,6 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- err1:
- 	if (!gen2vm)
- 		pci_dev_put(pdev);
--	kfree(info->apertures);
- 
- 	return -ENOMEM;
- }
--- 
-2.25.1
-
-
+Applied to hyperv-next. Thanks.
