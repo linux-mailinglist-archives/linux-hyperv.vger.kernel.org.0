@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90AFB3478EF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Mar 2021 13:56:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A84B34794E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 Mar 2021 14:16:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234208AbhCXMz4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 24 Mar 2021 08:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41828 "EHLO mail.kernel.org"
+        id S234802AbhCXNQC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 24 Mar 2021 09:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233835AbhCXMzo (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 24 Mar 2021 08:55:44 -0400
+        id S234750AbhCXNPn (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 24 Mar 2021 09:15:43 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A9A461A06;
-        Wed, 24 Mar 2021 12:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51C1060C3D;
+        Wed, 24 Mar 2021 13:15:42 +0000 (UTC)
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94)
         (envelope-from <maz@kernel.org>)
-        id 1lP32z-003WS0-VE; Wed, 24 Mar 2021 12:55:42 +0000
-Date:   Wed, 24 Mar 2021 12:55:40 +0000
-Message-ID: <878s6ck8xf.wl-maz@kernel.org>
+        id 1lP3MK-003Wd7-2d; Wed, 24 Mar 2021 13:15:40 +0000
+Date:   Wed, 24 Mar 2021 13:15:38 +0000
+Message-ID: <877dlwk805.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Bharat Kumar Gogada <bharatku@xilinx.com>
 Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
@@ -54,11 +54,11 @@ Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-renesas-soc@vger.kernel.org" 
         <linux-renesas-soc@vger.kernel.org>,
         "kernel-team@android.com" <kernel-team@android.com>
-Subject: Re: [PATCH v2 04/15] PCI: xilinx: Don't allocate extra memory for the MSI capture address
-In-Reply-To: <BYAPR02MB5559D4117C9096D70C5FFE76A5639@BYAPR02MB5559.namprd02.prod.outlook.com>
+Subject: Re: [PATCH v2 05/15] PCI: xilinx: Convert to MSI domains
+In-Reply-To: <BYAPR02MB5559A0B0DA88866EDC7BDFE5A5639@BYAPR02MB5559.namprd02.prod.outlook.com>
 References: <20210322184614.802565-1-maz@kernel.org>
-        <20210322184614.802565-5-maz@kernel.org>
-        <BYAPR02MB5559D4117C9096D70C5FFE76A5639@BYAPR02MB5559.namprd02.prod.outlook.com>
+        <20210322184614.802565-6-maz@kernel.org>
+        <BYAPR02MB5559A0B0DA88866EDC7BDFE5A5639@BYAPR02MB5559.namprd02.prod.outlook.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -72,43 +72,102 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 24 Mar 2021 12:35:58 +0000,
+On Wed, 24 Mar 2021 12:42:24 +0000,
 Bharat Kumar Gogada <bharatku@xilinx.com> wrote:
 > 
-> Thanks Marc for the patch.
-> > Subject: [PATCH v2 04/15] PCI: xilinx: Don't allocate extra memory for the
-> > MSI capture address
+> Hi Marc,
+> 
+> Thanks for the patch. 
+> 
+> > Subject: [PATCH v2 05/15] PCI: xilinx: Convert to MSI domains
 > > 
-> > A long cargo-culted behaviour of PCI drivers is to allocate memory to obtain
-> > an address that is fed to the controller as the MSI capture address (i.e. the
-> > MSI doorbell).
+> > In anticipation of the removal of the msi_controller structure, convert the
+> > ancient xilinx host controller driver to MSI domains.
 > > 
-> > But there is no actual requirement for this address to be RAM.
-> > All it needs to be is a suitable aligned address that will
-> > *not* be DMA'd to.
+> > We end-up with the usual two domain structure, the top one being a generic
+> > PCI/MSI domain, the bottom one being xilinx-specific and handling the
+> > actual HW interrupt allocation.
 > > 
-> > Use the physical address of the 'port' data structure as the MSI capture
-> > address.
+> > This allows us to fix some of the most appalling MSI programming, where the
+> > message programmed in the device is the virtual IRQ number instead of the
+> > allocated vector number. The allocator is also made safe with a mutex. This
+> > should allow support for MultiMSI, but I decided not to even try, since I
+> > cannot test it.
 > > 
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > > Signed-off-by: Marc Zyngier <maz@kernel.org>
 > > ---
-> >  drivers/pci/controller/pcie-xilinx.c | 18 ++++++------------
-> >  1 file changed, 6 insertions(+), 12 deletions(-)
-> 
+> >  drivers/pci/controller/Kconfig       |   2 +-
+> >  drivers/pci/controller/pcie-xilinx.c | 234 +++++++++++----------------
+> >  2 files changed, 97 insertions(+), 139 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > index 5cc07d28a3a0..60045f7aafc5 100644
 > ...
-> > -	msg.address_hi = 0;
-> > -	msg.address_lo = msg_addr;
-> > +	msg.address_hi = upper_32_bits(msg_addr);
-> > +	msg.address_lo = lower_32_bits(msg_addr);
 > 
-> The XILINX_PCIE_REG_MSIBASE2 register expects 4KB aligned address.
-> The lower 12-bits are always set to 0 in this register. So we need
-> to mask the address while programming address to
+> 
+> > +static struct irq_chip xilinx_msi_bottom_chip = {
+> > +	.name			= "Xilinx MSI",
+> > +	.irq_set_affinity 	= xilinx_msi_set_affinity,
+> > +	.irq_compose_msi_msg	= xilinx_compose_msi_msg,
+> > +};
+> > 
+> I see a crash while testing MSI in handle_edge_irq
+> [<c015bdd4>] (handle_edge_irq) from [<c0157164>] (generic_handle_irq+0x28/0x38)
+> [<c0157164>] (generic_handle_irq) from [<c03a9714>] (xilinx_pcie_intr_handler+0x17c/0x2b0)
+> [<c03a9714>] (xilinx_pcie_intr_handler) from [<c0157d94>] (__handle_irq_event_percpu+0x3c/0xc0)
+> [<c0157d94>] (__handle_irq_event_percpu) from [<c0157e44>] (handle_irq_event_percpu+0x2c/0x7c)
+> [<c0157e44>] (handle_irq_event_percpu) from [<c0157ecc>] (handle_irq_event+0x38/0x5c)
+> [<c0157ecc>] (handle_irq_event) from [<c015bc8c>] (handle_fasteoi_irq+0x9c/0x114)
 
-Thanks for the heads up, I'll fix this up. Does it work correctly once
-the address is aligned?
+Thanks for that. Can you please try the following patch and let me
+know if it helps?
+
+Thanks,
 
 	M.
+
+diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+index ad9abf405167..14001febf59a 100644
+--- a/drivers/pci/controller/pcie-xilinx.c
++++ b/drivers/pci/controller/pcie-xilinx.c
+@@ -194,8 +194,18 @@ static struct pci_ops xilinx_pcie_ops = {
+ 
+ /* MSI functions */
+ 
++static void xilinx_msi_top_irq_ack(struct irq_data *d)
++{
++	/*
++	 * xilinx_pcie_intr_handler() will have performed the Ack.
++	 * Eventually, this should be fixed and the Ack be moved in
++	 * the respective callbacks for INTx and MSI.
++	 */
++}
++
+ static struct irq_chip xilinx_msi_top_chip = {
+ 	.name		= "PCIe MSI",
++	.irq_ack	= xilinx_msi_top_irq_ack,
+ };
+ 
+ static int xilinx_msi_set_affinity(struct irq_data *d, const struct cpumask *mask, bool force)
+@@ -206,7 +216,7 @@ static int xilinx_msi_set_affinity(struct irq_data *d, const struct cpumask *mas
+ static void xilinx_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+ 	struct xilinx_pcie_port *pcie = irq_data_get_irq_chip_data(data);
+-	phys_addr_t pa = virt_to_phys(pcie);
++	phys_addr_t pa = ALIGN_DOWN(virt_to_phys(pcie), SZ_4K);
+ 
+ 	msg->address_lo = lower_32_bits(pa);
+ 	msg->address_hi = upper_32_bits(pa);
+@@ -468,7 +478,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 
+ 	/* Setup MSI */
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		phys_addr_t pa = virt_to_phys(port);
++		phys_addr_t pa = ALIGN_DOWN(virt_to_phys(port), SZ_4K);
+ 
+ 		ret = xilinx_allocate_msi_domains(port);
+ 		if (ret)
 
 -- 
 Without deviation from the norm, progress is not possible.
