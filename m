@@ -2,137 +2,252 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF7334D53E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Mar 2021 18:38:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBF5A34DC5B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Mar 2021 01:23:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbhC2QiX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 Mar 2021 12:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbhC2Qhz (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 Mar 2021 12:37:55 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:400:200::c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 144A5C061574;
-        Mon, 29 Mar 2021 09:37:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1617035846; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=kL3LkZkOr8saEjz13/Dt64M4xjwvU+y3HREcOaPNn7H4AypsJuq8xaG85rBBfysBH8
-    0gS5hglfojx6OxLf1sIU5KDuMS95YVh196a7Hzo8vx2tKSJoRznPnRsRVh3T9h7O7nwq
-    MTgas1vaCQWHMuFAJfptieq+WBas3rlqWU2wIhraKnWW+YIK1CyBuvr+PzdNVN9y6B4B
-    Cs6V2YR2MVvw4+6zz2YJdaBPsSJg5iAvciVK+UjLa0NQHsXuNWiS0MU0W26Y0gZNvfU2
-    y5lkvD/iRn9KiX02uJdY13nJ7XHFqzpE8txi3lAvsXi7QDtm86on47xgnEpxbMPDnDwR
-    7m/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1617035846;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=DoTVMU/GpjFnPo3eVvtwAXtiODdJ7fMM7tEyfQfAQPQ=;
-    b=BThepzprP/g3y741mlaffeNn9INoFTuv1JWheb9eCJOlYA2EKJMRN0hmNVKR5ruG9I
-    wGZEJJw1Hlske3k10Upodtklo5IiRjsfZjquyrpq4Vg8xHc2t5+ua3sGxqX97N+ozgGA
-    47qfqvz9I40S/Rto3X2FgmL2INGYSQ3RRKY7qDU1+u7LkNUc+xTqL5m3b4scYaKS5kgs
-    +bqtYG3hqIcMxRC4gyaTxgCnNNxG/LkCRFzVUgJkUP3zxwhcUd7Wwoezgc3YGaf8g0U+
-    vqku9BW5UQFU1zeR+s2fY75usMoA6ZjK1ji/vFG4yd9YjfXtz4ejTDbf0c5Pv/dOxF9H
-    zTRw==
-ARC-Authentication-Results: i=1; strato.com;
-    dkim=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1617035846;
-    s=strato-dkim-0002; d=aepfle.de;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=DoTVMU/GpjFnPo3eVvtwAXtiODdJ7fMM7tEyfQfAQPQ=;
-    b=nZsZ7Sq59pDmwJx9FLC+6xFv8SR+mhWBv9lbPwdT/8Oy0ulsVGlgSNMveSUx9x8GLn
-    4aecGXOtC4SZAXm/xkMyfI+t0OgT5M/1AANK5LT6Ex/pS+6C8Rz9nDhmSKhusQoOMa8r
-    +wPkuRRZKuVWHcsNYFC1JUQZkVFy2IMiopbhAhvkSYJu1byIQgEs4M+Og3z4wBPnUkBm
-    8RBswwMCHNLQLrn4XSzhKfXnrcrE9HPQEoZnxWMMjX+6UiBnA8bUeHefJYIRngvNYEuu
-    UhBHjJVCmKsIhr0w1LAXgVexk0e7Xa7m7f/peuNyimSpLdccYBId5i9KgRgRQoyYekLa
-    Rwow==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS3GRNjw=="
-X-RZG-CLASS-ID: mo00
-Received: from aepfle.de
-    by smtp.strato.de (RZmta 47.24.0 DYNA|AUTH)
-    with ESMTPSA id w0692ax2TGbP02A
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Mon, 29 Mar 2021 18:37:25 +0200 (CEST)
-Date:   Mon, 29 Mar 2021 18:37:21 +0200
-From:   Olaf Hering <olaf@aepfle.de>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 3/3] scsi: storvsc: Validate length of incoming packet in
- storvsc_on_channel_callback()
-Message-ID: <YGICQc6HaYw8+uES@aepfle.de>
-References: <20201217203321.4539-1-parri.andrea@gmail.com>
- <20201217203321.4539-4-parri.andrea@gmail.com>
+        id S229630AbhC2XWl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 Mar 2021 19:22:41 -0400
+Received: from mail-dm6nam12on2094.outbound.protection.outlook.com ([40.107.243.94]:29921
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229656AbhC2XWa (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 29 Mar 2021 19:22:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a+oHkM2ds32L9tzj6IKz1/4nBRWU3dHmUfJQTfiTs50nzifRYzzDnTg/r/brg/vQ/wWSHTUlt1S8Z7WJJKQTXsiyLkcegVnu8WAIue6aUh/+bCR6lmj9aje9IaChZ2P3OxbZbphbW1NUnXGm3RYh9D/QaYU8501uTVRlojpkuJAmFqdmDpjUXGITBRhI1IiznyNmnfxSQh4VqfvQfJ52MDfQNQYcn4+RXoHYaqsiIDNPr3n9CQxLIo11FtXnvkAqV4GYT5DM14rnb7frAXUPZHRPFQcqfKpRnBcXaOGvi6sKzvgQh5qLIoW3DccCO70niKkMfTm/daAT1SYG55eavA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z9BiTapiTcpKrXmlfpMPj0RVrbDF23+KbjtVVAamkvo=;
+ b=mIkXkiqHo+Tj0NfQV+WGgtFJqVXXfzJUWW6FZ8VHkmTW8RFP9QhctoLqDKFZJMC9wT3/2ssAVHQClaPtfJdZvCUzXi634yb0NtlW1yyBs8OcYhEwtDFGynhT7F3DnXSDZ4wDys29kW9IJsn7xuiDyaDXFOujDCVsFycLBVWKFGqo7mE1LW61L8L9eTVllLFnpc3OKHeqrix9Q1FxGIr5zMz40gNVvk94oHteosQAGFULcgb5c4glN7r/RTfWSMKyFySK8cxi2TmM9eMI/usIzyUGeKslYRFnwS3QyYCziYYxdi3TBkL8KIxFPx6kedIpNrhdhSxBL9UEXpzfGCCp1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z9BiTapiTcpKrXmlfpMPj0RVrbDF23+KbjtVVAamkvo=;
+ b=DSQC2WG3FHXLBtJMEarYEtFn8txJfbaDA/Za7Xbq02X2w2ZUhBrtJd1gkcteh5YQb/I0UB2BHXqi17Cpc0CB5HalR1lzVmqZ8HIVIJBrs7BKOLxW4ajSGaKfV8Oj5URyrSVQrSnLj4fjb/GqywxXx1esLC4m8bXPFxpLTG8Hh1Q=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=microsoft.com;
+Received: from BL0PR2101MB1331.namprd21.prod.outlook.com
+ (2603:10b6:208:92::17) by MN2PR21MB1502.namprd21.prod.outlook.com
+ (2603:10b6:208:20b::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.1; Mon, 29 Mar
+ 2021 23:22:27 +0000
+Received: from BL0PR2101MB1331.namprd21.prod.outlook.com
+ ([fe80::e594:9393:d1b8:c235]) by BL0PR2101MB1331.namprd21.prod.outlook.com
+ ([fe80::e594:9393:d1b8:c235%7]) with mapi id 15.20.3999.019; Mon, 29 Mar 2021
+ 23:22:27 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] hv_netvsc: Add error handling while switching data path
+Date:   Mon, 29 Mar 2021 16:21:35 -0700
+Message-Id: <1617060095-31582-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-Originating-IP: [13.77.154.182]
+X-ClientProxiedBy: CO2PR04CA0164.namprd04.prod.outlook.com
+ (2603:10b6:104:4::18) To BL0PR2101MB1331.namprd21.prod.outlook.com
+ (2603:10b6:208:92::17)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="XkBehx7WaGRrHSaS"
-Content-Disposition: inline
-In-Reply-To: <20201217203321.4539-4-parri.andrea@gmail.com>
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR04CA0164.namprd04.prod.outlook.com (2603:10b6:104:4::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.24 via Frontend Transport; Mon, 29 Mar 2021 23:22:25 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4a82c287-fe49-471b-2ab2-08d8f30983e0
+X-MS-TrafficTypeDiagnostic: MN2PR21MB1502:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <MN2PR21MB15028515E843CC7876D7B87BAC7E9@MN2PR21MB1502.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:519;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: L9KnY3FOad/54v9IvcwW1AP3DL/SkD4O6sNo02tbOq5WkVU9KOO7hOAvO39JOGpzTvkiuSWMMWqfHviDPzoZbqcXmShGe/1IyY4lV2TgnS7AS6sZuc1zKMxVLEuhY/4L4BjELLzi0644Mc0IUlaKzlFJDemy9IdRg+gESd3jRpzX5iIbXHXFSfhBVHBxHUgN4WRofz2sgKNVLIbkjzNfOQwEfs2p55yvRZfFeUdopgwqmf4y6EHTSGH1fBCkHk/5G1ObrWQdvllXr9453ze2L2YuPLFAWoJgf6bg5s3LHDaZ+KYxEeXTCZJfdyUq2s0TtObIN9WV4DFJALPHtBHmKllMKoK3euDZMZY2SWkrOCdqkI+64RR/2eaQt2Kz3YCTk9SsDF+lDYhaRqeSQEcQCNUa/i7aPqJI6Wq1Wz6N7DRmphgzWXMolxPKvi6OW11d51WFb1ecbQTVUEyaFKLi2RdDtLGtHv3OdeULDb8dLRIGCnF128jPPWwk6ypMuT7fd5mRzi2I/mSvZ0pU2F8L73hTp09fgiP9s/MpXws3tUbKDBpWO6vVXUWl6yrCAzZJngLoG9N22iMAE08MxlLFirrQWNoCcuxqBdDJYmvjGkL1+G6lE1y7N/hcxuN+CE9uCmHJjs1GAVZ7rnTMtRi+YA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1331.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(346002)(136003)(376002)(366004)(956004)(82960400001)(316002)(5660300002)(6512007)(6506007)(82950400001)(16526019)(52116002)(83380400001)(2616005)(6666004)(2906002)(26005)(186003)(10290500003)(66476007)(478600001)(8676002)(6486002)(66946007)(66556008)(38100700001)(36756003)(8936002)(7846003)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?vFATl4L8eRn3cOXBRpQUhMh6mkAX2wyA/EtsUQNhBFWTy+ssQEaa+aNDKRr7?=
+ =?us-ascii?Q?IsMuRvbbzpSj7kFRxbwyV1DyHm4Vl2DJoyHSIIbv2eaeQp7vGwbTBlMcNq9s?=
+ =?us-ascii?Q?cbM6NKZ4cSjsc7EomoUYCAfQLy8OFGV2Mo0zc8p8R4N4eWRIFW7VtkBoyera?=
+ =?us-ascii?Q?e33NADw6hjU4xzLfzT92GBcIzfqGXhLU3hUAIp9yutY2RvmE6czLwwjYj0M+?=
+ =?us-ascii?Q?HBhNOpzG2jA14X2m/eNYYfucz/+DW1fsB9skBSLgjNh9FbzivSV/RSm4+VIU?=
+ =?us-ascii?Q?eYqgq8wsCf2kGh2xxGrGlIwr3WwpKPEEoOshWdBhAOyVY3/j8GfnKRhqC54y?=
+ =?us-ascii?Q?uRD/wv3fN1vSN3s4EnbH3PP3cBQ4VpzoXO7Q1QLbNH0yVqy+3/tskONAETxm?=
+ =?us-ascii?Q?zrsVRu22CytuuWZicRCVsA8nmfBXxUsYPZqSAC5sTp0nrFQ4BRPAs1zX7s0d?=
+ =?us-ascii?Q?ht5IU43g0gJ8vTT8V9inUhXPxz4uWFDt814XIAq1HkWXEC8sK9KSNrl/Y6M8?=
+ =?us-ascii?Q?tP/GM8Jkgh/pypQcsATzvkdgkmYcaq0n8F7hAZx8hOawZ9pEoMMl1xeazmfJ?=
+ =?us-ascii?Q?BtbQfgvZIbUNSVaj70sSmOfEuhkhSkXPZW/WgN5ahkb6hBOdXmSkMq0WuPv0?=
+ =?us-ascii?Q?meIvngeohfETXWSJKCE9Ik7epg/zYS/16tOaU+JMnqXmbS1KoumkNxA5kqQw?=
+ =?us-ascii?Q?BbsB+UmY8vU+WvX5+g2+Ee7L+w5FTz9w+QiEreHHqNWnMH64hT/QPahvlAah?=
+ =?us-ascii?Q?pT1dfUxiKTDCV3EV5zqti6qOQxN1G3HjgWW4yv1HInDvyudsrWNN6o9RsB8g?=
+ =?us-ascii?Q?Hz7negOt7eoGY1cJgP1LCdRVnvQOdyZeAcr56wfoe3kGDOF8uHtS4f+dFwIm?=
+ =?us-ascii?Q?JTU0/DJ8Lp5cEM+T/PWt5qHqtYbnoL71a5N0TrYk0sFf4mHGeoYVFa2B2SdC?=
+ =?us-ascii?Q?y7U1xst3KEvZlKjav9J2pwkwIMzTZCPP/F+a57dE1+hBFBMkDaltgX8IcBWf?=
+ =?us-ascii?Q?eyRIVyIl8pg93kFBEgVa5OMNDyM9yEsXF6lZ5mJXQGsrhHfc2mY1OGa3a3X2?=
+ =?us-ascii?Q?SJtjeYMVvRlyf0yUFIbh/S1lP4snfHzufS0suPKHZmiNkR8UeGuM+PcWtl34?=
+ =?us-ascii?Q?PAnvmidSDCKiIE6NzPwRR+qMjqmg4O1/vqg0q/VWporj3mkz8H9G3E/C9bkb?=
+ =?us-ascii?Q?doX3OeHYE2+ZKlDMop9xLrcif+Mk0UNd675L24SXwja8GuNCYxdbuKEujm9I?=
+ =?us-ascii?Q?A20sHeDwskpo+j9EXU6XsGZCQpW6tBU4ATYWxL6+E1poEPxODoQCSSpV1pMM?=
+ =?us-ascii?Q?hMVSNS5ORqZ4vGFnudNopreG?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a82c287-fe49-471b-2ab2-08d8f30983e0
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1331.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2021 23:22:27.4846
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ys/cS3ERmv5Sb1bhtnsUUzsnOzLtKLhBUppzHnKowykAmMwHtTLP3qmQvl3exnjUk2OfAFJnUXgW50XJVBk69Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1502
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Add error handling in case of failure to send switching data path message
+to the host.
 
---XkBehx7WaGRrHSaS
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Reported-by: Shachar Raindel <shacharr@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-On Thu, Dec 17, Andrea Parri (Microsoft) wrote:
+---
+ drivers/net/hyperv/hyperv_net.h |  6 +++++-
+ drivers/net/hyperv/netvsc.c     | 35 +++++++++++++++++++++++++++++----
+ drivers/net/hyperv/netvsc_drv.c | 18 +++++++++++------
+ 3 files changed, 48 insertions(+), 11 deletions(-)
 
-> Check that the packet is of the expected size at least, don't copy data
-> past the packet.
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index 59ac04a610ad..442c520ab8f3 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -269,7 +269,7 @@ int rndis_filter_receive(struct net_device *ndev,
+ int rndis_filter_set_device_mac(struct netvsc_device *ndev,
+ 				const char *mac);
+ 
+-void netvsc_switch_datapath(struct net_device *nv_dev, bool vf);
++int netvsc_switch_datapath(struct net_device *nv_dev, bool vf);
+ 
+ #define NVSP_INVALID_PROTOCOL_VERSION	((u32)0xFFFFFFFF)
+ 
+@@ -1718,4 +1718,8 @@ struct rndis_message {
+ #define TRANSPORT_INFO_IPV6_TCP 0x10
+ #define TRANSPORT_INFO_IPV6_UDP 0x20
+ 
++#define RETRY_US_LO	5000
++#define RETRY_US_HI	10000
++#define RETRY_MAX	2000	/* >10 sec */
++
+ #endif /* _HYPERV_NET_H */
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 5bce24731502..9d07c9ce4be2 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -31,12 +31,13 @@
+  * Switch the data path from the synthetic interface to the VF
+  * interface.
+  */
+-void netvsc_switch_datapath(struct net_device *ndev, bool vf)
++int netvsc_switch_datapath(struct net_device *ndev, bool vf)
+ {
+ 	struct net_device_context *net_device_ctx = netdev_priv(ndev);
+ 	struct hv_device *dev = net_device_ctx->device_ctx;
+ 	struct netvsc_device *nv_dev = rtnl_dereference(net_device_ctx->nvdev);
+ 	struct nvsp_message *init_pkt = &nv_dev->channel_init_pkt;
++	int ret, retry = 0;
+ 
+ 	/* Block sending traffic to VF if it's about to be gone */
+ 	if (!vf)
+@@ -51,15 +52,41 @@ void netvsc_switch_datapath(struct net_device *ndev, bool vf)
+ 		init_pkt->msg.v4_msg.active_dp.active_datapath =
+ 			NVSP_DATAPATH_SYNTHETIC;
+ 
++again:
+ 	trace_nvsp_send(ndev, init_pkt);
+ 
+-	vmbus_sendpacket(dev->channel, init_pkt,
++	ret = vmbus_sendpacket(dev->channel, init_pkt,
+ 			       sizeof(struct nvsp_message),
+-			       (unsigned long)init_pkt,
+-			       VM_PKT_DATA_INBAND,
++			       (unsigned long)init_pkt, VM_PKT_DATA_INBAND,
+ 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
++
++	/* If failed to switch to/from VF, let data_path_is_vf stay false,
++	 * so we use synthetic path to send data.
++	 */
++	if (ret) {
++		if (ret != -EAGAIN) {
++			netdev_err(ndev,
++				   "Unable to send sw datapath msg, err: %d\n",
++				   ret);
++			return ret;
++		}
++
++		if (retry++ < RETRY_MAX) {
++			usleep_range(RETRY_US_LO, RETRY_US_HI);
++			goto again;
++		} else {
++			netdev_err(
++				ndev,
++				"Retry failed to send sw datapath msg, err: %d\n",
++				ret);
++			return ret;
++		}
++	}
++
+ 	wait_for_completion(&nv_dev->channel_init_wait);
+ 	net_device_ctx->data_path_is_vf = vf;
++
++	return 0;
+ }
+ 
+ /* Worker to setup sub channels on initial setup
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 97b5c9b60503..7349a70af083 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -38,9 +38,6 @@
+ #include "hyperv_net.h"
+ 
+ #define RING_SIZE_MIN	64
+-#define RETRY_US_LO	5000
+-#define RETRY_US_HI	10000
+-#define RETRY_MAX	2000	/* >10 sec */
+ 
+ #define LINKCHANGE_INT (2 * HZ)
+ #define VF_TAKEOVER_INT (HZ / 10)
+@@ -2402,6 +2399,7 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
+ 	struct netvsc_device *netvsc_dev;
+ 	struct net_device *ndev;
+ 	bool vf_is_up = false;
++	int ret;
+ 
+ 	if (event != NETDEV_GOING_DOWN)
+ 		vf_is_up = netif_running(vf_netdev);
+@@ -2418,9 +2416,17 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
+ 	if (net_device_ctx->data_path_is_vf == vf_is_up)
+ 		return NOTIFY_OK;
+ 
+-	netvsc_switch_datapath(ndev, vf_is_up);
+-	netdev_info(ndev, "Data path switched %s VF: %s\n",
+-		    vf_is_up ? "to" : "from", vf_netdev->name);
++	ret = netvsc_switch_datapath(ndev, vf_is_up);
++
++	if (ret) {
++		netdev_err(ndev,
++			   "Data path failed to switch %s VF: %s, err: %d\n",
++			   vf_is_up ? "to" : "from", vf_netdev->name, ret);
++		return NOTIFY_DONE;
++	} else {
++		netdev_info(ndev, "Data path switched %s VF: %s\n",
++			    vf_is_up ? "to" : "from", vf_netdev->name);
++	}
+ 
+ 	return NOTIFY_OK;
+ }
+-- 
+2.25.1
 
-> +		if (hv_pkt_datalen(desc) < sizeof(struct vstor_packet) -
-> +				stor_device->vmscsi_size_delta) {
-> +			dev_err(&device->device, "Invalid packet len\n");
-> +			continue;
-> +		}
-> +
-
-Sorry for being late:
-
-It might be just cosmetic, but should this check be done prior the call to vmbus_request_addr()?
-
-
-Unrelated: my copy of vmbus_request_addr() can return 0, which is apparently not handled by this loop in storvsc_on_channel_callback().
-
-
-Olaf
-
-
-
-
---XkBehx7WaGRrHSaS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmBiAjwACgkQ86SN7mm1
-DoBdxQ//bfefYJeZmm7H6Sg7GPYzy1pdu9YvnfBhuEO5K7g1jZi5I1Tvk2DpJmDo
-9dGh2I9Id1Jcp/vjq9Y/Ju/apMPeUExMWCIbgu7+O2DiJ/eeuEnywLEnoKvuP7uz
-V0el8h2RM/dZj+e6TaWRkkPPIJDfJLCSMGQRbY96COkxb9a//i6StfjV/ql+OsEr
-vzGLs7mWg46Se1n7ZuEfNtMdFPZFBygcFNuoZqgAuvK2kL69i8nHZWjHN76udTsO
-gsjNhSQveRoYwhsit7tGECr9y31Ps8HR6qSyVmwVf14+XMaIF9BFvxYwoI4UPTUB
-ed9cEJediC1DItcHai41i6Ggu3DZ3zawwhBP2z3DBDY8lgCnA39e6BqmYtvePgM2
-+vsAm77UDn+K3q0GYdk+BCcMwGnxsf9z78Gt0EGKT0ZEYFRiMlaF1J/eSPRi4jOY
-1Sm33qpV1abezDkoWxzos7B0fGRvpbNzsNXUYqa4sXg4kKtVHWU5hNktwt7RfFSx
-fGD0JlOGe7m5jOY5lsYr2nmsSumjelZ7NuUF43U5IJp/uy5Gbnk5mjbannCGSHt5
-2gMUfBhrp3bmyjafJPDlqu7P5xv3Oxx8Kf+aA2KG8RWH+PhfTYzysYc66JJbPTWG
-DcQs/DTNgoHrlukzyRySx+7IZsHH+AVyZU5tFFBbk98zc5EGMVU=
-=UXaL
------END PGP SIGNATURE-----
-
---XkBehx7WaGRrHSaS--
