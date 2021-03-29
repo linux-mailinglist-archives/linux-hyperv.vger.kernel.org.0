@@ -2,118 +2,137 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 132E334D29E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Mar 2021 16:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DF7334D53E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Mar 2021 18:38:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230520AbhC2On5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 Mar 2021 10:43:57 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:38029 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230493AbhC2Ona (ORCPT
+        id S229628AbhC2QiX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 Mar 2021 12:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229515AbhC2Qhz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 Mar 2021 10:43:30 -0400
-Received: from mail-ot1-f53.google.com ([209.85.210.53]) by
- mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1M2ON6-1lUjvz0RAs-003uUs; Mon, 29 Mar 2021 16:43:29 +0200
-Received: by mail-ot1-f53.google.com with SMTP id l12-20020a9d6a8c0000b0290238e0f9f0d8so12487477otq.8;
-        Mon, 29 Mar 2021 07:43:28 -0700 (PDT)
-X-Gm-Message-State: AOAM532uvMY8EljE21lapH2/7LldKK6uwegznfqCJeFfRcOsqfIrfai9
-        nYs6gxwuHOntfqhAMfwla034NbfxCcMuZ0SnAzc=
-X-Google-Smtp-Source: ABdhPJwDfuQ1VWw4ZjwyDlIbIK6oWZGKKq9pe4zrUVJQjeo5yIF0hBfXTzB1YBAQ6P/q5VRxHXE0N4eyuriJEuvTPrk=
-X-Received: by 2002:a05:6830:14c1:: with SMTP id t1mr23284514otq.305.1617029007643;
- Mon, 29 Mar 2021 07:43:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210319161956.2838291-2-boqun.feng@gmail.com>
- <20210319211246.GA250618@bjorn-Precision-5520> <CAK8P3a3qj=9KEN=X2uGCq0TrOGpyPw1Gwipmn=Gqx4LAfqUEDQ@mail.gmail.com>
- <CAK8P3a07wedojBU6xDKotiOsPR8k2XEXMB1SvJSRpeG++URA5Q@mail.gmail.com> <YGHlA2pXHgyu13T0@boqun-archlinux>
-In-Reply-To: <YGHlA2pXHgyu13T0@boqun-archlinux>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Mar 2021 16:43:13 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3rgu-zU=Ef_Dnmm-kB2rjb4JfRhvCmnLTH6R_ZZ6kHSQ@mail.gmail.com>
-Message-ID: <CAK8P3a3rgu-zU=Ef_Dnmm-kB2rjb4JfRhvCmnLTH6R_ZZ6kHSQ@mail.gmail.com>
-Subject: Re: [RFC 1/2] arm64: PCI: Allow use arch-specific pci sysdata
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Mon, 29 Mar 2021 12:37:55 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:400:200::c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 144A5C061574;
+        Mon, 29 Mar 2021 09:37:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1617035846; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=kL3LkZkOr8saEjz13/Dt64M4xjwvU+y3HREcOaPNn7H4AypsJuq8xaG85rBBfysBH8
+    0gS5hglfojx6OxLf1sIU5KDuMS95YVh196a7Hzo8vx2tKSJoRznPnRsRVh3T9h7O7nwq
+    MTgas1vaCQWHMuFAJfptieq+WBas3rlqWU2wIhraKnWW+YIK1CyBuvr+PzdNVN9y6B4B
+    Cs6V2YR2MVvw4+6zz2YJdaBPsSJg5iAvciVK+UjLa0NQHsXuNWiS0MU0W26Y0gZNvfU2
+    y5lkvD/iRn9KiX02uJdY13nJ7XHFqzpE8txi3lAvsXi7QDtm86on47xgnEpxbMPDnDwR
+    7m/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1617035846;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=DoTVMU/GpjFnPo3eVvtwAXtiODdJ7fMM7tEyfQfAQPQ=;
+    b=BThepzprP/g3y741mlaffeNn9INoFTuv1JWheb9eCJOlYA2EKJMRN0hmNVKR5ruG9I
+    wGZEJJw1Hlske3k10Upodtklo5IiRjsfZjquyrpq4Vg8xHc2t5+ua3sGxqX97N+ozgGA
+    47qfqvz9I40S/Rto3X2FgmL2INGYSQ3RRKY7qDU1+u7LkNUc+xTqL5m3b4scYaKS5kgs
+    +bqtYG3hqIcMxRC4gyaTxgCnNNxG/LkCRFzVUgJkUP3zxwhcUd7Wwoezgc3YGaf8g0U+
+    vqku9BW5UQFU1zeR+s2fY75usMoA6ZjK1ji/vFG4yd9YjfXtz4ejTDbf0c5Pv/dOxF9H
+    zTRw==
+ARC-Authentication-Results: i=1; strato.com;
+    dkim=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1617035846;
+    s=strato-dkim-0002; d=aepfle.de;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=DoTVMU/GpjFnPo3eVvtwAXtiODdJ7fMM7tEyfQfAQPQ=;
+    b=nZsZ7Sq59pDmwJx9FLC+6xFv8SR+mhWBv9lbPwdT/8Oy0ulsVGlgSNMveSUx9x8GLn
+    4aecGXOtC4SZAXm/xkMyfI+t0OgT5M/1AANK5LT6Ex/pS+6C8Rz9nDhmSKhusQoOMa8r
+    +wPkuRRZKuVWHcsNYFC1JUQZkVFy2IMiopbhAhvkSYJu1byIQgEs4M+Og3z4wBPnUkBm
+    8RBswwMCHNLQLrn4XSzhKfXnrcrE9HPQEoZnxWMMjX+6UiBnA8bUeHefJYIRngvNYEuu
+    UhBHjJVCmKsIhr0w1LAXgVexk0e7Xa7m7f/peuNyimSpLdccYBId5i9KgRgRQoyYekLa
+    Rwow==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS3GRNjw=="
+X-RZG-CLASS-ID: mo00
+Received: from aepfle.de
+    by smtp.strato.de (RZmta 47.24.0 DYNA|AUTH)
+    with ESMTPSA id w0692ax2TGbP02A
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Mon, 29 Mar 2021 18:37:25 +0200 (CEST)
+Date:   Mon, 29 Mar 2021 18:37:21 +0200
+From:   Olaf Hering <olaf@aepfle.de>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:5A1A5wrK/okZsusFyhca8SHl4IQCUEcTfSjTlpUyjej6pwhKNdW
- 10cCfNwEWX+2gmOsqZ+ZWZH+wLOHyVUYJA2ptiRcd/t8OHMCZJVA4i9yTQd+ORhZu2PtBf4
- c8x6bubymkTOv9onnJRCLvN++3Be2SaZdJuNptsazTeMADVeC2qUw/RDR9EW7wwu/7ZLSql
- ojQTY/3BT252KJfULtJoQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RzqnA1thXO4=:JHt4+LllJsEHbMzrL3GfDF
- bePDhE8ExdJwsmOwGZHfVsjIVnNAHmnWJ7S0A9M/d1wU6si2AQAmg0fC6m+7rw6DeVC3PYLgt
- 7WwZ07VAT+iOrQw7qF9lNcYY1g7GbERwYa6F0H4jBFA1qUYp0Kxim7EERZbtlbDT17HhMxWbN
- D/CJXXOyjUcm1iOkFhdFWBx9UIbCg6wGUPEhAJI4Xciqu8TNyYaVn7t0iVdv6fT8V8nPl7vzA
- eZwiX6dSHq5oK+r2hIqnSg1SctYWylRvkOtK2li1dcfPbalau3SHAwBg4cvIJi/Gyjvt4YVGT
- Jh5txkvy0REN71UTmaM/likkGjFjWDklL9DcB4V+Oa9R0vTfis+0JQ87eVSfX3bkcERNZnKHW
- yJIZE68XrY43sKoMrou++WpyTJAovvbnaAdYbaJTZsXKhiwQVTL8yoelj7REIK+4GW739aagK
- ALU0xS9IBcRaDPn6zr2wi6NHnlO3Dota2gx/bZ26T1t+fOOiyIDP3BvxHyupJwVY67gYt4uDc
- uwnDORgMgB951vzAtQ/JdXCOwzfsUhHBD47PxcYWWqtf0TEV/mRDKrsvyHMKHpYWKiWLiUHs3
- S6OO+6Nj7O0aGn5IxJv7mKjNGPek3Tjym9
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        Juan Vazquez <juvazq@microsoft.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 3/3] scsi: storvsc: Validate length of incoming packet in
+ storvsc_on_channel_callback()
+Message-ID: <YGICQc6HaYw8+uES@aepfle.de>
+References: <20201217203321.4539-1-parri.andrea@gmail.com>
+ <20201217203321.4539-4-parri.andrea@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XkBehx7WaGRrHSaS"
+Content-Disposition: inline
+In-Reply-To: <20201217203321.4539-4-parri.andrea@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Mar 29, 2021 at 4:32 PM Boqun Feng <boqun.feng@gmail.com> wrote:
->
-> Hi Arnd,
->
-> On Sat, Mar 20, 2021 at 05:09:10PM +0100, Arnd Bergmann wrote:
-> > On Sat, Mar 20, 2021 at 1:54 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >      I actually still have a (not really tested) patch series to clean up
-> > > the pci host bridge registration, and this should make this a lot easier
-> > > to add on top.
-> > >
-> > > I should dig that out of my backlog and post for review.
-> >
-> > I've uploaded my series to
-> > https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git
-> > pci-probe-rework-20210320
-> >
-> > The purpose of this series is mostly to simplify what variations of
-> > host probe methods exist, towards using pci_host_probe() as the
-> > only method. It does provide some simplifications based on that
-> > that, including a way to universally have access to the pci_host_bridge
-> > pointer during the probe function.
-> >
->
-> Thanks for the suggestion and code. I spend some time to catch up. Yes,
-> Bjorn and you are correct, the better way is having a 'domain_nr' in the
-> 'pci_host_bridge' and making sure every driver fill that correctly
-> before probe. I definitly will use this approach.
->
-> However, I may start small: I plan to introduce 'domain_nr' and only
-> fill the field at probe time for PCI_DOMAINS_GENERIC=y archs, and leave
-> other archs and driver alone. (honestly, I was shocked by the number of
-> pci_scan_root_bus_bridge() and pci_host_probe() that I need to adjust if
-> I really want to unify the 'domain_nr' handling for every arch and
-> driver ;-)). This will fulfil my requirement for Hyper-V PCI controller
-> on ARM64. And later on, we can switch each arch to this approach one by
-> one and keep the rest still working.
->
-> Thoughts?
 
-That sounds reasonable to me, yes. I would also suggest you look
-at my hyperv patch from the branch I mentioned [1] and try to integrate
-that first. I suspect this makes it easier to do the domain rework and
-possibly other changes on top.
+--XkBehx7WaGRrHSaS
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-       Arnd
+On Thu, Dec 17, Andrea Parri (Microsoft) wrote:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/commit/?h=pci-probe-rework-20210320&id=44db8df9d729d
+> Check that the packet is of the expected size at least, don't copy data
+> past the packet.
+
+> +		if (hv_pkt_datalen(desc) < sizeof(struct vstor_packet) -
+> +				stor_device->vmscsi_size_delta) {
+> +			dev_err(&device->device, "Invalid packet len\n");
+> +			continue;
+> +		}
+> +
+
+Sorry for being late:
+
+It might be just cosmetic, but should this check be done prior the call to vmbus_request_addr()?
+
+
+Unrelated: my copy of vmbus_request_addr() can return 0, which is apparently not handled by this loop in storvsc_on_channel_callback().
+
+
+Olaf
+
+
+
+
+--XkBehx7WaGRrHSaS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmBiAjwACgkQ86SN7mm1
+DoBdxQ//bfefYJeZmm7H6Sg7GPYzy1pdu9YvnfBhuEO5K7g1jZi5I1Tvk2DpJmDo
+9dGh2I9Id1Jcp/vjq9Y/Ju/apMPeUExMWCIbgu7+O2DiJ/eeuEnywLEnoKvuP7uz
+V0el8h2RM/dZj+e6TaWRkkPPIJDfJLCSMGQRbY96COkxb9a//i6StfjV/ql+OsEr
+vzGLs7mWg46Se1n7ZuEfNtMdFPZFBygcFNuoZqgAuvK2kL69i8nHZWjHN76udTsO
+gsjNhSQveRoYwhsit7tGECr9y31Ps8HR6qSyVmwVf14+XMaIF9BFvxYwoI4UPTUB
+ed9cEJediC1DItcHai41i6Ggu3DZ3zawwhBP2z3DBDY8lgCnA39e6BqmYtvePgM2
++vsAm77UDn+K3q0GYdk+BCcMwGnxsf9z78Gt0EGKT0ZEYFRiMlaF1J/eSPRi4jOY
+1Sm33qpV1abezDkoWxzos7B0fGRvpbNzsNXUYqa4sXg4kKtVHWU5hNktwt7RfFSx
+fGD0JlOGe7m5jOY5lsYr2nmsSumjelZ7NuUF43U5IJp/uy5Gbnk5mjbannCGSHt5
+2gMUfBhrp3bmyjafJPDlqu7P5xv3Oxx8Kf+aA2KG8RWH+PhfTYzysYc66JJbPTWG
+DcQs/DTNgoHrlukzyRySx+7IZsHH+AVyZU5tFFBbk98zc5EGMVU=
+=UXaL
+-----END PGP SIGNATURE-----
+
+--XkBehx7WaGRrHSaS--
