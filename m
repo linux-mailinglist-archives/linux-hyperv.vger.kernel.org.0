@@ -2,107 +2,230 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1664934E40A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Mar 2021 11:09:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6800D34E673
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Mar 2021 13:44:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231665AbhC3JIs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 Mar 2021 05:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231844AbhC3JI0 (ORCPT
+        id S231880AbhC3Lnj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 Mar 2021 07:43:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40588 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231797AbhC3LnO (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 Mar 2021 05:08:26 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E0EC061762;
-        Tue, 30 Mar 2021 02:08:25 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id e7so17278421edu.10;
-        Tue, 30 Mar 2021 02:08:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JopkR36qP9iYAEOIFtxNujqvc003NWZkBhmUZm75cOM=;
-        b=IWh+xP0+Cah9/2eZ5h8CB+WdAzjNJgF3LvZT/J69iyISkhndXPSsuck6jThJw1jDi4
-         94VM4rkPcS3e/GUyawO2a8/vJvx/62n0lyD8LGJVHrhnu9AzvZLWX51BB1KxBSWmyMSY
-         atfHiMRy24a/rOvymm/5vPJ1GmHja+dR8Z39wh3QVgvyWldd/Eko8iTdFvgQN/hzNAgo
-         klCSuIpXU8qReX584PrLWpYBkNdqC0R507hWxNkn1scF9VI2ATUAgAX0o6sJMy4RBDq+
-         CAC0B4QKexnRfss4wdOTY61iLhcbCJNfAXMIT5qxtN+26p2P08bUfNEU8EppKnvPYom2
-         C86Q==
+        Tue, 30 Mar 2021 07:43:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617104593;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YdResl2kuic95sH6TzZMvcjnCw/gcVH4dBotfJe6QDs=;
+        b=axQeyysP4ZKx/HnkXdarWK80op1e+VfcIX/4I2Go0XjYfLRjEA4WJjdzW8X7E5sDezIz1+
+        sTU5vDqtp445iOCMq2mjtZWJq7TJS4A4kC4jAZFaa+6pIsOkTOKu7aXYxMm40HRs6zxk3O
+        fb/NNxFlymUEkhBkROIoayFUH+/6zi8=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-TUeeOq1PMveDJWspNO2tIg-1; Tue, 30 Mar 2021 07:43:12 -0400
+X-MC-Unique: TUeeOq1PMveDJWspNO2tIg-1
+Received: by mail-ej1-f71.google.com with SMTP id a22so7009320ejx.10
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Mar 2021 04:43:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JopkR36qP9iYAEOIFtxNujqvc003NWZkBhmUZm75cOM=;
-        b=g+ZmcLwtvMvWGo6ixsLVMrE0aulbRpmjSOdzHCF6BRjgi8UVFuPgbOV/egpAsSHvBW
-         BTllppiHsqGsdpJhXZMIfEJgZGRaD9iJsKZMLx7LT3uWdj+17QEvfjFCxbhbckEhcNb6
-         VEir83YQcGhgYgO6FrXYzOsg3X/W/1hcO/FhYQAHFQqqSkgtf8IjrRvKXC1Fk5IHuxgn
-         OoMCCL5N0tfeHZTZAvF8I8J68D8uPWB7UO5P3J+XPeVV8HtUB9eYL4Xu0Rt47K35PvTC
-         DIK7PksAB8DGlOILgYiWqfzWE+T5NvTrlzVYsYV+U911uDx6zyk0sMxu81Q2spi6rR1p
-         Gsyw==
-X-Gm-Message-State: AOAM532wykFYq0tadoIlX3cN9vFLNfVOqIMHRZIgmpsjGsYLLKYCdIFM
-        Rt4noyi52UvJMUfu1pyOkUNM4qXDcF7cqQ==
-X-Google-Smtp-Source: ABdhPJzlzmpKwFgdz3z2MefSCBqgcQiLSKJVGJuycrRnBEYKxfpwiIRJ9hKB4WKLnfDCx4uGB8Zpnw==
-X-Received: by 2002:a05:6402:34d5:: with SMTP id w21mr32417401edc.14.1617095304521;
-        Tue, 30 Mar 2021 02:08:24 -0700 (PDT)
-Received: from anparri (host-95-232-15-7.retail.telecomitalia.it. [95.232.15.7])
-        by smtp.gmail.com with ESMTPSA id t6sm10362417edq.48.2021.03.30.02.08.22
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=YdResl2kuic95sH6TzZMvcjnCw/gcVH4dBotfJe6QDs=;
+        b=Htv55zk9AhbOzL3L3884fLjN+p8hL93CsPMvSlLJ3ci+UY7nB1lCOBfeImRv1weXzd
+         qvPyvD6pqopO7OqKL1mFLLpPyuHUhNgmRKdSjyBLgKRADMrejN8flDRN1eG6+eDln14A
+         XO3+3p8TNc4vmRkQDUHfBn3VIlOMipSR79QtEKedABoqKIwe3TgHbFIx88vJzzNDPFcn
+         +umB/DR4HgQlzMwjl8D+uaJf0GTvj599QpRH/ugf2Lu+7vH6vsYa8ytff0Z+6EnF0ITW
+         sQ8RypDdm51c4ZvuviuZ5QGtmZuuxrZn2f5AyRqHWAPhsym/zRH07fzUGFdrQlPcehV6
+         U+ow==
+X-Gm-Message-State: AOAM530xvmp6KlIhxDEPBQSTuDIS6pMQ3BmVgJR2N633qOVFaDI7DXD1
+        NmvJKHXTR/n4Ycf67ZLO7WXoQ5PqGJIvIEFA4zuXx+iAPI9Sv7b+C8CechiaghZ3fxkErSPp/tE
+        gVdv+uuZHF7sS/g60xMz3Dol7
+X-Received: by 2002:aa7:cd0e:: with SMTP id b14mr33934058edw.354.1617104590825;
+        Tue, 30 Mar 2021 04:43:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwDoAlTwzQHxlgfI0onMmuRddii3uOQW4heyvgibFcoZfZlHeKAUghgXQPcpnC/JNOsO8VMNA==
+X-Received: by 2002:aa7:cd0e:: with SMTP id b14mr33934042edw.354.1617104590647;
+        Tue, 30 Mar 2021 04:43:10 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id o6sm10888718edw.24.2021.03.30.04.43.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Mar 2021 02:08:24 -0700 (PDT)
-Date:   Tue, 30 Mar 2021 11:08:15 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Olaf Hering <olaf@aepfle.de>
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 3/3] scsi: storvsc: Validate length of incoming packet in
- storvsc_on_channel_callback()
-Message-ID: <20210330090815.GA1897@anparri>
-References: <20201217203321.4539-1-parri.andrea@gmail.com>
- <20201217203321.4539-4-parri.andrea@gmail.com>
- <YGICQc6HaYw8+uES@aepfle.de>
+        Tue, 30 Mar 2021 04:43:10 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, davem@davemloft.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] hv_netvsc: Add error handling while switching
+ data path
+In-Reply-To: <1617060095-31582-1-git-send-email-haiyangz@microsoft.com>
+References: <1617060095-31582-1-git-send-email-haiyangz@microsoft.com>
+Date:   Tue, 30 Mar 2021 13:43:09 +0200
+Message-ID: <87lfa4uasy.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YGICQc6HaYw8+uES@aepfle.de>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Olaf,
+Haiyang Zhang <haiyangz@microsoft.com> writes:
 
-On Mon, Mar 29, 2021 at 06:37:21PM +0200, Olaf Hering wrote:
-> On Thu, Dec 17, Andrea Parri (Microsoft) wrote:
-> 
-> > Check that the packet is of the expected size at least, don't copy data
-> > past the packet.
-> 
-> > +		if (hv_pkt_datalen(desc) < sizeof(struct vstor_packet) -
-> > +				stor_device->vmscsi_size_delta) {
-> > +			dev_err(&device->device, "Invalid packet len\n");
-> > +			continue;
-> > +		}
-> > +
-> 
-> Sorry for being late:
-> 
-> It might be just cosmetic, but should this check be done prior the call to vmbus_request_addr()?
+> Add error handling in case of failure to send switching data path message
+> to the host.
+>
+> Reported-by: Shachar Raindel <shacharr@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+>
+> ---
+>  drivers/net/hyperv/hyperv_net.h |  6 +++++-
+>  drivers/net/hyperv/netvsc.c     | 35 +++++++++++++++++++++++++++++----
+>  drivers/net/hyperv/netvsc_drv.c | 18 +++++++++++------
+>  3 files changed, 48 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+> index 59ac04a610ad..442c520ab8f3 100644
+> --- a/drivers/net/hyperv/hyperv_net.h
+> +++ b/drivers/net/hyperv/hyperv_net.h
+> @@ -269,7 +269,7 @@ int rndis_filter_receive(struct net_device *ndev,
+>  int rndis_filter_set_device_mac(struct netvsc_device *ndev,
+>  				const char *mac);
+>  
+> -void netvsc_switch_datapath(struct net_device *nv_dev, bool vf);
+> +int netvsc_switch_datapath(struct net_device *nv_dev, bool vf);
+>  
+>  #define NVSP_INVALID_PROTOCOL_VERSION	((u32)0xFFFFFFFF)
+>  
+> @@ -1718,4 +1718,8 @@ struct rndis_message {
+>  #define TRANSPORT_INFO_IPV6_TCP 0x10
+>  #define TRANSPORT_INFO_IPV6_UDP 0x20
+>  
+> +#define RETRY_US_LO	5000
+> +#define RETRY_US_HI	10000
+> +#define RETRY_MAX	2000	/* >10 sec */
+> +
+>  #endif /* _HYPERV_NET_H */
+> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+> index 5bce24731502..9d07c9ce4be2 100644
+> --- a/drivers/net/hyperv/netvsc.c
+> +++ b/drivers/net/hyperv/netvsc.c
+> @@ -31,12 +31,13 @@
+>   * Switch the data path from the synthetic interface to the VF
+>   * interface.
+>   */
+> -void netvsc_switch_datapath(struct net_device *ndev, bool vf)
+> +int netvsc_switch_datapath(struct net_device *ndev, bool vf)
+>  {
+>  	struct net_device_context *net_device_ctx = netdev_priv(ndev);
+>  	struct hv_device *dev = net_device_ctx->device_ctx;
+>  	struct netvsc_device *nv_dev = rtnl_dereference(net_device_ctx->nvdev);
+>  	struct nvsp_message *init_pkt = &nv_dev->channel_init_pkt;
+> +	int ret, retry = 0;
+>  
+>  	/* Block sending traffic to VF if it's about to be gone */
+>  	if (!vf)
+> @@ -51,15 +52,41 @@ void netvsc_switch_datapath(struct net_device *ndev, bool vf)
+>  		init_pkt->msg.v4_msg.active_dp.active_datapath =
+>  			NVSP_DATAPATH_SYNTHETIC;
+>  
+> +again:
+>  	trace_nvsp_send(ndev, init_pkt);
+>  
+> -	vmbus_sendpacket(dev->channel, init_pkt,
+> +	ret = vmbus_sendpacket(dev->channel, init_pkt,
+>  			       sizeof(struct nvsp_message),
+> -			       (unsigned long)init_pkt,
+> -			       VM_PKT_DATA_INBAND,
+> +			       (unsigned long)init_pkt, VM_PKT_DATA_INBAND,
+>  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+> +
+> +	/* If failed to switch to/from VF, let data_path_is_vf stay false,
+> +	 * so we use synthetic path to send data.
+> +	 */
+> +	if (ret) {
+> +		if (ret != -EAGAIN) {
+> +			netdev_err(ndev,
+> +				   "Unable to send sw datapath msg, err: %d\n",
+> +				   ret);
+> +			return ret;
+> +		}
+> +
+> +		if (retry++ < RETRY_MAX) {
+> +			usleep_range(RETRY_US_LO, RETRY_US_HI);
+> +			goto again;
+> +		} else {
+> +			netdev_err(
+> +				ndev,
+> +				"Retry failed to send sw datapath msg, err: %d\n",
+> +				ret);
 
-TBH, I'm not immediately seeing why it 'should'; it could make sense to move
-the check on the packet data length.
+err is always -EAGAIN here, right?
 
+> +			return ret;
+> +		}
 
-> Unrelated: my copy of vmbus_request_addr() can return 0, which is apparently not handled by this loop in storvsc_on_channel_callback().
+Nitpicking: I think we can simplify the above a bit:
 
-Indeed, IDs of 0 are reserved for so called unsolicited messages; I think we
-should check that storvsc_on_io_completion() is not called on such messages.
+	if (ret) {
+		if (ret == -EAGAIN && retry++ < RETRY_MAX) {
+			usleep_range(RETRY_US_LO, RETRY_US_HI);
+			goto again;
+		}
+		netdev_err(ndev, "Unable to send sw datapath msg, err: %d\n", ret);
+		return ret;
+	}
 
-Thanks,
-  Andrea
+> +	}
+> +
+>  	wait_for_completion(&nv_dev->channel_init_wait);
+>  	net_device_ctx->data_path_is_vf = vf;
+> +
+> +	return 0;
+>  }
+>  
+>  /* Worker to setup sub channels on initial setup
+> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+> index 97b5c9b60503..7349a70af083 100644
+> --- a/drivers/net/hyperv/netvsc_drv.c
+> +++ b/drivers/net/hyperv/netvsc_drv.c
+> @@ -38,9 +38,6 @@
+>  #include "hyperv_net.h"
+>  
+>  #define RING_SIZE_MIN	64
+> -#define RETRY_US_LO	5000
+> -#define RETRY_US_HI	10000
+> -#define RETRY_MAX	2000	/* >10 sec */
+>  
+>  #define LINKCHANGE_INT (2 * HZ)
+>  #define VF_TAKEOVER_INT (HZ / 10)
+> @@ -2402,6 +2399,7 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
+>  	struct netvsc_device *netvsc_dev;
+>  	struct net_device *ndev;
+>  	bool vf_is_up = false;
+> +	int ret;
+>  
+>  	if (event != NETDEV_GOING_DOWN)
+>  		vf_is_up = netif_running(vf_netdev);
+> @@ -2418,9 +2416,17 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
+>  	if (net_device_ctx->data_path_is_vf == vf_is_up)
+>  		return NOTIFY_OK;
+>  
+> -	netvsc_switch_datapath(ndev, vf_is_up);
+> -	netdev_info(ndev, "Data path switched %s VF: %s\n",
+> -		    vf_is_up ? "to" : "from", vf_netdev->name);
+> +	ret = netvsc_switch_datapath(ndev, vf_is_up);
+> +
+> +	if (ret) {
+> +		netdev_err(ndev,
+> +			   "Data path failed to switch %s VF: %s, err: %d\n",
+> +			   vf_is_up ? "to" : "from", vf_netdev->name, ret);
+> +		return NOTIFY_DONE;
+> +	} else {
+> +		netdev_info(ndev, "Data path switched %s VF: %s\n",
+> +			    vf_is_up ? "to" : "from", vf_netdev->name);
+> +	}
+>  
+>  	return NOTIFY_OK;
+>  }
+
+-- 
+Vitaly
+
