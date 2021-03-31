@@ -2,60 +2,47 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9D4534F885
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 Mar 2021 08:08:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A515434F9E4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 31 Mar 2021 09:30:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233693AbhCaGHw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 31 Mar 2021 02:07:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:15049 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233716AbhCaGG7 (ORCPT
+        id S234068AbhCaHaO convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-hyperv@lfdr.de>); Wed, 31 Mar 2021 03:30:14 -0400
+Received: from bizcloud-power.sawafuji.co.jp ([128.199.220.203]:46712 "EHLO
+        mta0.sawafuji.co.jp" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234074AbhCaHaH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 31 Mar 2021 02:06:59 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4F9G3h69z6zNrXH;
-        Wed, 31 Mar 2021 14:04:16 +0800 (CST)
-Received: from DESKTOP-EFRLNPK.china.huawei.com (10.174.177.129) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.498.0; Wed, 31 Mar 2021 14:06:46 +0800
-From:   Qiheng Lin <linqiheng@huawei.com>
-To:     <linqiheng@huawei.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-CC:     <linux-hyperv@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Hulk Robot" <hulkci@huawei.com>
-Subject: [PATCH -next] Drivers: hv: vmbus: Remove unused including <linux/version.h>
-Date:   Wed, 31 Mar 2021 14:06:46 +0800
-Message-ID: <20210331060646.2471-1-linqiheng@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Wed, 31 Mar 2021 03:30:07 -0400
+X-Greylist: delayed 635 seconds by postgrey-1.27 at vger.kernel.org; Wed, 31 Mar 2021 03:30:06 EDT
+From:   Albert Bourla <info@universalautomation.com.pk>
+To:     linux-hyperv@vger.kernel.org
+Subject: Bidding invitation
+Date:   31 Mar 2021 09:13:33 +0200
+Message-ID: <20210331091333.EBA8ED46125BA0DC@universalautomation.com.pk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.129]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Remove including <linux/version.h> that don't need it.
+Good Day Sir/Ms,
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
----
- drivers/hv/hv.c | 1 -
- 1 file changed, 1 deletion(-)
+We are please to invite you or your company to quote the 
+following item listed below:
+ 
+Product/Model No: A702TH FYNE PRESSURE REGULATOR
+Model Number: A702TH
+Qty. 30 units
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 917b29e873c5..3e6ff83adff4 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -13,7 +13,6 @@
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/hyperv.h>
--#include <linux/version.h>
- #include <linux/random.h>
- #include <linux/clockchips.h>
- #include <linux/interrupt.h>
 
+Compulsory,Kindly send your quotation to: 
+quotation@pfizerbvsupply.com 
+for immediate approval.
+
+Kind Regards,
+Albert Bourla
+PFIZER B.V Supply Chain Manager
+Tel: +31(0)208080 880
+ADDRESS: Rivium Westlaan 142, 2909 LD
+Capelle aan den IJssel, Netherlands
