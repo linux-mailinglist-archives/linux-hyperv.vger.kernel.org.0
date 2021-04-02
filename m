@@ -2,76 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 442ED3530ED
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Apr 2021 23:55:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF023530F6
+	for <lists+linux-hyperv@lfdr.de>; Sat,  3 Apr 2021 00:09:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231443AbhDBVzj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 2 Apr 2021 17:55:39 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:46056 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbhDBVzj (ORCPT
+        id S234526AbhDBWJX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Apr 2021 18:09:23 -0400
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:51768 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229722AbhDBWJU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 2 Apr 2021 17:55:39 -0400
-Received: by mail-wr1-f54.google.com with SMTP id j9so5714161wrx.12;
-        Fri, 02 Apr 2021 14:55:36 -0700 (PDT)
+        Fri, 2 Apr 2021 18:09:20 -0400
+Received: by mail-wm1-f42.google.com with SMTP id p19so3047899wmq.1;
+        Fri, 02 Apr 2021 15:09:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=qtj+FVbg/e9bVo/D1F6NgFjUb3C3ANtmd+GZLfq6gPQ=;
-        b=owAuOhN8qG2T4Y8uBk47zyvLoyNSJcNXQzvRvu/ykPSeQ75YQv7u8VIAMhNqBUzeu6
-         7BoSQBRenuEPLpMZ5fcfkX4khUe9NiSiu6ZFW3gmeY8EDalISceT/ydFx+f68pQdZt5X
-         lM5e69e4ZQYwPCNigfl4xWNbwjWxWlXQEitpv8s86YPEIEhQYS5m8ku7WD7stYLYpAUr
-         bebH8WJ19jXOER9Vmp+osVPjAJwDMp5WmFkSid+q33oGT4oTxCW0deC+luHJ+xw4Wmdi
-         5MkO2K/8QRlDGkCB6Cd2aKHa9N6cWp5HeDjNo0ScCjxttDgqcUSUYOWnPSnByVFW+YKA
-         LbeQ==
-X-Gm-Message-State: AOAM5317nomIE8qx8pt/XEXArQ5w9b+LZdDR+phTF+P8YbWsodSrarYV
-        B7gjqoxY56pRJtMHrj9VZ22ZG0UEguA=
-X-Google-Smtp-Source: ABdhPJxKm+jXlAQH86NTLDpmYTuigs/vfMAGM00/neX7QoEBH7IH55JI6P9waaep7rn3zcOizVKrYw==
-X-Received: by 2002:a5d:6443:: with SMTP id d3mr17299226wrw.292.1617400535585;
-        Fri, 02 Apr 2021 14:55:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c3vF3s2DjqVTCFoSvVE5phrtixECCxkjGnEGpydHZW8=;
+        b=ppJJmyMYHqe9EHW/al/xsYEznRlFSt0kTnp/KaK+gHxvU/cTq7KGYCGFnJ6uS/Te50
+         FWjbxwrqT8mOaSFt6zQqsgNDuZkgN+PiET6jHAy7XD2KgxiETWgFEQ8APzdkAvz54KBb
+         C6yFiTUfevRHCe7bxLAlC9FllVnIJCRPIaSLc6ockEnTDBt4visJKC5LA2UiU1yxGmNM
+         ibHwsj8OqBxWlePr7dqpLnBgy1GPMbAJi+R4V0iFc/NHh1lsIQpwx4pg4jGTo1LZpLm5
+         on8BTD1V7wYrJ9YgsheLg8FyFiy8AoBUiXqT51jr1g+VpYyrvexodMVIqZoE4BX73wW3
+         8+nA==
+X-Gm-Message-State: AOAM533HF9j+DTpwiVjo9HgRBPcxFX1YU3TpP7C1vr3jKVSOWcPJoC5z
+        dQE8tvfkUjghsFDEm95Y6QU=
+X-Google-Smtp-Source: ABdhPJxSHojcKDzxuaWY7J60V/BWdUbUPKzGaWM/lOxiEKPdflRphsO3pQT/Lw/sbBkZEJKTLHohqA==
+X-Received: by 2002:a1c:7fcd:: with SMTP id a196mr14636751wmd.180.1617401358177;
+        Fri, 02 Apr 2021 15:09:18 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id j123sm13661361wmb.1.2021.04.02.14.55.34
+        by smtp.gmail.com with ESMTPSA id h62sm16239143wmf.37.2021.04.02.15.09.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Apr 2021 14:55:35 -0700 (PDT)
-Date:   Fri, 2 Apr 2021 21:55:33 +0000
+        Fri, 02 Apr 2021 15:09:17 -0700 (PDT)
+Date:   Fri, 2 Apr 2021 22:09:16 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Subject: [GIT PULL] Hyper-V fixes for 5.12-rc6
-Message-ID: <20210402215533.56z6kk56s6wxannw@liuwe-devbox-debian-v2>
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-hyperv@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] x86/hyperv: remove unused including
+ <linux/version.h>
+Message-ID: <20210402220916.edhxrip5gbkw2vyc@liuwe-devbox-debian-v2>
+References: <20210326064942.3263776-1-zhengyongjun3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20210326064942.3263776-1-zhengyongjun3@huawei.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus,
+On Fri, Mar 26, 2021 at 02:49:42PM +0800, Zheng Yongjun wrote:
+> Remove including <linux/version.h> that don't need it.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Yongjun Zheng <zhengyongjun3@huawei.com>
 
-The following changes since commit fe07bfda2fb9cdef8a4d4008a409bb02f35f1bd8:
+Queued for hyperv-next with tweaks to commit message.  Thanks.
 
-  Linux 5.12-rc1 (2021-02-28 16:05:19 -0800)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20210402
-
-for you to fetch changes up to 37df9f3fedb6aeaff5564145e8162aab912c9284:
-
-  video: hyperv_fb: Fix a double free in hvfb_probe (2021-03-25 13:31:20 +0000)
-
-----------------------------------------------------------------
-hyperv-fixes for 5.12-rc6
-  - One patch from Lu Yunlong to fix a double free in hvfb_probe
-
-----------------------------------------------------------------
-Lv Yunlong (1):
-      video: hyperv_fb: Fix a double free in hvfb_probe
-
- drivers/video/fbdev/hyperv_fb.c | 3 ---
- 1 file changed, 3 deletions(-)
+Wei.
