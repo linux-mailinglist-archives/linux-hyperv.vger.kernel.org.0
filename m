@@ -2,34 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89FBD35575F
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Apr 2021 17:10:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAA3235599B
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Apr 2021 18:51:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345480AbhDFPKU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Apr 2021 11:10:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:40685 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbhDFPKT (ORCPT
+        id S238957AbhDFQvU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Apr 2021 12:51:20 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:37474 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232755AbhDFQvT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Apr 2021 11:10:19 -0400
-Received: from mail-ot1-f42.google.com ([209.85.210.42]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MQ5nE-1lGVe444tE-00M82P; Tue, 06 Apr 2021 17:10:09 +0200
-Received: by mail-ot1-f42.google.com with SMTP id y19-20020a0568301d93b02901b9f88a238eso14919233oti.11;
-        Tue, 06 Apr 2021 08:10:08 -0700 (PDT)
-X-Gm-Message-State: AOAM5339u61P3hcDQHSMv4Bb3Vc6UeOaPqfPKECpFig1uCct5fovZUts
-        XPwTqmkcSBGX/Hjod6hc9kc3/Hsfqq4PeYD4X4Y=
-X-Google-Smtp-Source: ABdhPJymivlM3E85H8Q+0NCLICsUYllvqqVKgV6xTox+xVrAvu7QQQ8spiRatNW1320IbQIk/CTiHARLx2Yc4o/NYxk=
-X-Received: by 2002:a05:6830:148c:: with SMTP id s12mr28037074otq.251.1617721807123;
- Tue, 06 Apr 2021 08:10:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 6 Apr 2021 17:09:50 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3PBvj_JEgxqSD6fg_J8kZzUz_KthZ66RdA5tF4CPPbdg@mail.gmail.com>
-Message-ID: <CAK8P3a3PBvj_JEgxqSD6fg_J8kZzUz_KthZ66RdA5tF4CPPbdg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
+        Tue, 6 Apr 2021 12:51:19 -0400
+Received: by mail-pg1-f173.google.com with SMTP id k8so10803139pgf.4;
+        Tue, 06 Apr 2021 09:51:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dUOVVdYoSYbWJM3R8BfH3yp511tJPXM9SJGSE2TL6GY=;
+        b=XzvTLzBSh6AVFmF1bhUcCakBkjYqyiM5hRmbNdk4aaKMQUrWHtM4iNWpHacQCJ3jut
+         nniz2y6tUM3GXo7Qbs/GTppYnltT2AZJz/ZLKKRWGLPLGhRNGiWffXKX0yIWWG622Ak9
+         7n5CYuHt1TCDBLXL7TIbyVffkbej+qoDPfGL6cLHOVI2gzcNvz2NMjTUg8etMVtWOWkU
+         GKipYQ8nygMkQ62qdAhi/RWoRdXaOY1yjYYZ/9QmAtHNrKZf13ki9oHznkg84thGWA5u
+         0njk2u6+kHetQeEP7PnC/3yxVvZuoKzpKib6vHXSoeEw5FZWSEwHhYjcj1HB2l3vSl/G
+         L9TA==
+X-Gm-Message-State: AOAM533o32v/QbiiS3xuqYLlWGbZG3Z29O9XITGjGHubLRO3i799FWS9
+        zea8kKFYzfSC3UrQBCgWE88=
+X-Google-Smtp-Source: ABdhPJxJPRbZ8hHR0ZfqHaRIyDYJATSlH01Zbyq90wb+DV+jR9f7adBrfQ3tFv0Oj/c/stWG4JfCFg==
+X-Received: by 2002:a63:1303:: with SMTP id i3mr27619155pgl.32.1617727870490;
+        Tue, 06 Apr 2021 09:51:10 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id p11sm3129812pjo.48.2021.04.06.09.51.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Apr 2021 09:51:09 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id AB32F40402; Tue,  6 Apr 2021 16:51:08 +0000 (UTC)
+Date:   Tue, 6 Apr 2021 16:51:08 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Michael Ellerman <mpe@ellerman.id.au>,
         Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>,
@@ -43,64 +51,62 @@ Cc:     Michael Ellerman <mpe@ellerman.id.au>,
         Vlastimil Babka <vbabka@suse.cz>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
         openipmi-developer@lists.sourceforge.net,
-        linux-remoteproc@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org, linux-arch@vger.kernel.org,
         kexec@lists.infradead.org, rcu@vger.kernel.org,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Corey Minyard <minyard@acm.org>,
         Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Eric Biederman <ebiederm@xmission.com>,
         Josh Triplett <josh@joshtriplett.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         Joel Fernandes <joel@joelfernandes.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Iurii Zaikin <yzaikin@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:j4MYXLrEq3uWqMv+X0D99JwRTObPxDHDhULsj99en1zd/J0IS/M
- 9DH+aY6RDqyTbtsxdBcUfZb+VnY8T9dkC4Ci3fV4yaKiT3GP45iRwVaY38uzag+7e1eYfKy
- q/Sp50e+En2buLkJEK/wbFqVNilXsvIYeIUaIPF0vQBDu1+1gy8WogTZT+70k09VATRurYk
- GmKsn/l8oe0Pk4pW5dtGg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GP+1VYp8m50=:bsgZllEAEV+Im6+kBThy/N
- JRso7MC3s7MZECvcG6PxvLGm48/w8u+AwOaEEM1TpolGdUeWEn/hhpdt6UWGtWJGzy0NgHb1b
- ECWpueBJLTVs7fSSrUUnujvbDiNbQeSq3j5DI0JIYFPG8qaXZquoG+NcbGehYjTJtibfwbaa4
- MhR08FPn0d9M6hcsAB8DWsEtr0KwkviFgvGkVMxMp7zB46YO9hPgBKPRtUiGdXjiY35QA422Z
- pI220xkX3UXgAJmZlsfT8lnTiwhJ6goIM5u4qGHoy1wGPTrwW0CvNzx+k8+QpKfm/nEmZcla/
- AY6TjYhY9EjBCHJ7tEnvJf+fKCFAdKwrH0GRt8ecy2tD99Z62l4JNkIlY0FoL0FqrCGA5R3Tl
- N5lgSxJoiGwhOxR1ax5wKVmJ8zCsMuMh925Jl7s4XakMqWmL5Dg62rWCzcp1sDnC/q+1gTyps
- xxdNyBrccocNyELt3aLU2Tv7JuleTWM=
+Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
+Message-ID: <20210406165108.GA4332@42.do-not-panic.com>
+References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Apr 6, 2021 at 3:31 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> kernel.h is being used as a dump for all kinds of stuff for a long time.
-> Here is the attempt to start cleaning it up by splitting out panic and
-> oops helpers.
->
-> At the same time convert users in header and lib folder to use new header.
-> Though for time being include new header back to kernel.h to avoid twisted
-> indirected includes for existing users.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Tue, Apr 06, 2021 at 04:31:58PM +0300, Andy Shevchenko wrote:
+> diff --git a/include/linux/panic_notifier.h b/include/linux/panic_notifier.h
+> new file mode 100644
+> index 000000000000..41e32483d7a7
+> --- /dev/null
+> +++ b/include/linux/panic_notifier.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_PANIC_NOTIFIERS_H
+> +#define _LINUX_PANIC_NOTIFIERS_H
+> +
+> +#include <linux/notifier.h>
+> +#include <linux/types.h>
+> +
+> +extern struct atomic_notifier_head panic_notifier_list;
+> +
+> +extern bool crash_kexec_post_notifiers;
+> +
+> +#endif	/* _LINUX_PANIC_NOTIFIERS_H */
 
-Nice!
+Why is it worth it to add another file just for this? Seems like a very
+small file.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+  Luis
