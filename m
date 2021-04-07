@@ -2,92 +2,186 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD8183571CC
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 18:10:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5792B3572BD
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 19:07:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbhDGQJy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Apr 2021 12:09:54 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57512 "EHLO mail.skyhub.de"
+        id S239083AbhDGRHb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Apr 2021 13:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1354320AbhDGQJk (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Apr 2021 12:09:40 -0400
-Received: from zn.tnic (p200300ec2f08fb00aad493ab6ea3c721.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:fb00:aad4:93ab:6ea3:c721])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3D4571EC0246;
-        Wed,  7 Apr 2021 18:09:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1617811769;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=sxVXkcApyvWgRpvz11rKwU3ny4asbFyeyFcDJmEYY4Y=;
-        b=Jti5HoimSVXTmsMwJCv2kI1KP+LX5MCLeIhCghkd+qTJfK6oP6MWmTijWFbADr1GjW+28H
-        axA+m1b0eTCX47GNLKGOpxI+iNKoNXudwQB350WlEEUfcziZXhyp388N+7voUeP62ijsS9
-        GW0RyxaI6h6HNHeX1PqQNTufuzpL4XQ=
-Date:   Wed, 7 Apr 2021 18:09:33 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Vineeth Pillai <viremana@linux.microsoft.com>
-Cc:     Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
+        id S234050AbhDGRHa (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 7 Apr 2021 13:07:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B5805610CC;
+        Wed,  7 Apr 2021 17:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617815240;
+        bh=apYFtuNjrmejYcSJrizl3qdNjlJnPQG0oaFz9y6REwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DZvZEW5aRVVrnzHzcQ0FiqmiAjJNRU5VlbA7YGgK3DD7GrjiSCMd45gWJtejdjvcj
+         eaYHtTjLo0jUi3BJF7ffPfzR9pQohHiNHACh+ZVAqtzwWNPzEA6IOJpceF8ZFV7t/e
+         AT3IyBn8iEZd/YQv7UQB9ZjtkoDpVE3YdzX9fSqQ6CXJoRHaVliv3aoXXDGUuGGoCd
+         5XfZ7itX/C/uz+Xx9m836XOPgiu2nDeyFl0mbnutaqcRTtKyt+Wffr3ZIUdsGLFQUs
+         h98B/QaGqotwO50wgB9cMRCsMQD7opmzCsp1wbd8BYRVp5hY87q1h+VPrfAQXZLyAf
+         yWJCTSVuSUOsA==
+Date:   Wed, 7 Apr 2021 20:07:16 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 1/7] hyperv: Detect Nested virtualization support for SVM
-Message-ID: <20210407160933.GI25319@zn.tnic>
-References: <cover.1617804573.git.viremana@linux.microsoft.com>
- <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Wei Liu <liuwe@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
+ Network Adapter (MANA)
+Message-ID: <YG3mxHji/JH6iFqk@unreal>
+References: <20210406232321.12104-1-decui@microsoft.com>
+ <YG1o4LXVllXfkUYO@unreal>
+ <MW2PR2101MB08923D4417E44C5750BFB964BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+ <YG2qxjPJ4ruas1dI@unreal>
+ <DM5PR2101MB09342B74ECD56BE4781431EACA759@DM5PR2101MB0934.namprd21.prod.outlook.com>
+ <YG3HxVaotTi/Xk5X@unreal>
+ <BL0PR2101MB0930CEB943EF4502932F053BCA759@BL0PR2101MB0930.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
+In-Reply-To: <BL0PR2101MB0930CEB943EF4502932F053BCA759@BL0PR2101MB0930.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 02:41:22PM +0000, Vineeth Pillai wrote:
-> Detect nested features exposed by Hyper-V if SVM is enabled.
+On Wed, Apr 07, 2021 at 03:05:26PM +0000, Haiyang Zhang wrote:
 > 
-> Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
-> ---
->  arch/x86/kernel/cpu/mshyperv.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index 3546d3e21787..4d364acfe95d 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -325,9 +325,17 @@ static void __init ms_hyperv_init_platform(void)
->  			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
->  	}
->  
-> -	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
-> +	/*
-> +	 * AMD does not need enlightened VMCS as VMCB is already a
-> +	 * datastructure in memory. We need to get the nested
-> +	 * features if SVM is enabled.
-> +	 */
-> +	if (boot_cpu_has(X86_FEATURE_SVM) ||
+> > -----Original Message-----
+> > From: Leon Romanovsky <leon@kernel.org>
+> > Sent: Wednesday, April 7, 2021 10:55 AM
+> > To: Haiyang Zhang <haiyangz@microsoft.com>
+> > Cc: Dexuan Cui <decui@microsoft.com>; davem@davemloft.net;
+> > kuba@kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
+> > <sthemmin@microsoft.com>; wei.liu@kernel.org; Wei Liu
+> > <liuwe@microsoft.com>; netdev@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
+> > Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
+> > Network Adapter (MANA)
+> > 
+> > On Wed, Apr 07, 2021 at 02:41:45PM +0000, Haiyang Zhang wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Leon Romanovsky <leon@kernel.org>
+> > > > Sent: Wednesday, April 7, 2021 8:51 AM
+> > > > To: Dexuan Cui <decui@microsoft.com>
+> > > > Cc: davem@davemloft.net; kuba@kernel.org; KY Srinivasan
+> > > > <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
+> > Stephen
+> > > > Hemminger <sthemmin@microsoft.com>; wei.liu@kernel.org; Wei Liu
+> > > > <liuwe@microsoft.com>; netdev@vger.kernel.org; linux-
+> > > > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
+> > > > Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft
+> > > > Azure Network Adapter (MANA)
+> > > >
+> > > > On Wed, Apr 07, 2021 at 08:40:13AM +0000, Dexuan Cui wrote:
+> > > > > > From: Leon Romanovsky <leon@kernel.org>
+> > > > > > Sent: Wednesday, April 7, 2021 1:10 AM
+> > > > > >
+> > > > > > <...>
+> > > > > >
+> > > > > > > +int gdma_verify_vf_version(struct pci_dev *pdev) {
+> > > > > > > +	struct gdma_context *gc = pci_get_drvdata(pdev);
+> > > > > > > +	struct gdma_verify_ver_req req = { 0 };
+> > > > > > > +	struct gdma_verify_ver_resp resp = { 0 };
+> > > > > > > +	int err;
+> > > > > > > +
+> > > > > > > +	gdma_init_req_hdr(&req.hdr,
+> > GDMA_VERIFY_VF_DRIVER_VERSION,
+> > > > > > > +			  sizeof(req), sizeof(resp));
+> > > > > > > +
+> > > > > > > +	req.protocol_ver_min = GDMA_PROTOCOL_FIRST;
+> > > > > > > +	req.protocol_ver_max = GDMA_PROTOCOL_LAST;
+> > > > > > > +
+> > > > > > > +	err = gdma_send_request(gc, sizeof(req), &req, sizeof(resp),
+> > &resp);
+> > > > > > > +	if (err || resp.hdr.status) {
+> > > > > > > +		pr_err("VfVerifyVersionOutput: %d, status=0x%x\n",
+> > err,
+> > > > > > > +		       resp.hdr.status);
+> > > > > > > +		return -EPROTO;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	return 0;
+> > > > > > > +}
+> > > > > >
+> > > > > > <...>
+> > > > > > > +	err = gdma_verify_vf_version(pdev);
+> > > > > > > +	if (err)
+> > > > > > > +		goto remove_irq;
+> > > > > >
+> > > > > > Will this VF driver be used in the guest VM? What will prevent
+> > > > > > from users
+> > > > to
+> > > > > > change it?
+> > > > > > I think that such version negotiation scheme is not allowed.
+> > > > >
+> > > > > Yes, the VF driver is expected to run in a Linux VM that runs on Azure.
+> > > > >
+> > > > > Currently gdma_verify_vf_version() just tells the PF driver that
+> > > > > the VF
+> > > > driver
+> > > > > is only able to support GDMA_PROTOCOL_V1, and want to use
+> > > > > GDMA_PROTOCOL_V1's message formats to talk to the PF driver later.
+> > > > >
+> > > > > enum {
+> > > > >         GDMA_PROTOCOL_UNDEFINED = 0,
+> > > > >         GDMA_PROTOCOL_V1 = 1,
+> > > > >         GDMA_PROTOCOL_FIRST = GDMA_PROTOCOL_V1,
+> > > > >         GDMA_PROTOCOL_LAST = GDMA_PROTOCOL_V1,
+> > > > >         GDMA_PROTOCOL_VALUE_MAX
+> > > > > };
+> > > > >
+> > > > > The PF driver is supposed to always support GDMA_PROTOCOL_V1, so I
+> > > > expect
+> > > > > here gdma_verify_vf_version() should succeed. If a user changes
+> > > > > the Linux
+> > > > VF
+> > > > > driver and try to use a protocol version not supported by the PF
+> > > > > driver,
+> > > > then
+> > > > > gdma_verify_vf_version() will fail; later, if the VF driver tries
+> > > > > to talk to the
+> > > > PF
+> > > > > driver using an unsupported message format, the PF driver will
+> > > > > return a
+> > > > failure.
+> > > >
+> > > > The worry is not for the current code, but for the future one when
+> > > > you will support v2, v3 e.t.c. First, your code will look like a
+> > > > spaghetti and second, users will try and mix vX with "unsupported"
+> > > > commands just for the fun.
+> > >
+> > > In the future, if the protocol version updated on the host side,
+> > > guests need to support different host versions because not all hosts
+> > > are updated (simultaneously). So this negotiation is necessary to know
+> > > the supported version, and decide the proper command version to use.
+> > 
+> > And how do other paravirtual drivers solve this negotiation scheme?
+> 
+> I saw some other drivers used version negotiation too, for example:
 
-Pls use:
+I see, thanks.
 
-	    cpu_feature_enabled
-
-here.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> 
+> /**
+>  *  ixgbevf_negotiate_api_version_vf - Negotiate supported API version
+>  *  @hw: pointer to the HW structure
+>  *  @api: integer containing requested API version
+>  **/
+> static int ixgbevf_negotiate_api_version_vf(struct ixgbe_hw *hw, int api)
+> {
+> 
+> Thanks,
+> - Haiyang
