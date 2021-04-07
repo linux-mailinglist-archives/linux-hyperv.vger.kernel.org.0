@@ -2,149 +2,120 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39546357740
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 23:59:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E27E3577F3
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 00:48:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234275AbhDGWAF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Apr 2021 18:00:05 -0400
-Received: from mail-mw2nam08on2110.outbound.protection.outlook.com ([40.107.101.110]:6433
-        "EHLO NAM04-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229778AbhDGWAE (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Apr 2021 18:00:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZItI1la2nfWqs1xlCErXBEYtc3K4jPi/te3YTcZDFaZPQ9Cb1R6y335jG8cm2qsBbuSySCKT4bqz9XNTY4Z//wzb1j2QzTrPKNHm0Wv6f40Owm3rFyFFwp9Yl8l0xu723ssRkMnyQnXLmyx6XGeF6Fh9wFRql7xi7KEXR0icO7XjtApEnOvlnx69eyy1xbJ/8VP/hJn6oDRcag5ejlYwAeM9WBERmczvoyzIDscwQ0i/UrFE/TFA4hwGj0h7sHjbg6PCLqqAzgNtSBmKMs+WTY+d1ZWnuZFweAXXi5+VyUvEarfk0w9fWgOSAK9RbYH6CgskqeVEvYQZErp7iHwDyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l2eYyYfoKTdC5nfVmlYbyhjnfCiwgal09SnPz1y/Qnk=;
- b=eGX2AS1NFrrPCKzF0PGF+MlvROezfMrgGO3ylMTpNTvJZ1nW4NZ1gUwkU0X3MC11RrLOeupVDITTe5cc4G++9DiCyovN+kIEGy8rFstyuMp8R9ANg92Tk5HZriU4i8RY/nchY1jC1XsoklQ7o08gGv8CZ0H0/8pPvqUOpKukCZbYZiS6oeXpCm+WGgdlY2DTEwStUI+1Z2pctklJ5CL7fH4XUDHpbyHv8r1tZ9xI7MiNKanJrTljdzjJMjukhcy93WEkVAtDFPchgBuaz8pvUbsRyrwMbpjbxXKxDmgZU/3shFDJ8DDghTlfKdoEONAV4Kt6gUY9E//Oi0fgWPZdTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l2eYyYfoKTdC5nfVmlYbyhjnfCiwgal09SnPz1y/Qnk=;
- b=WF3FpCeWVqldnpVF5YTeIzwF6dSxM1uIzdZVNibcvCrLIPbhOYye1JaKkOpG0z2xNq0yueAiSl++FsrYzoJq9drM+PfH2DzBqjT7XMMN0A/6FZX4efDOG8/ESNJmHbxztmK5bFysUGe0mMBQavU37LB6zuqAAtfnbGw6+EnIxxo=
-Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
- (2603:10b6:302:10::24) by MWHPR21MB0510.namprd21.prod.outlook.com
- (2603:10b6:300:df::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.4; Wed, 7 Apr
- 2021 21:59:53 +0000
-Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
- ([fe80::5548:cbd8:43cd:aa3d]) by MW2PR2101MB0892.namprd21.prod.outlook.com
- ([fe80::5548:cbd8:43cd:aa3d%6]) with mapi id 15.20.4042.006; Wed, 7 Apr 2021
- 21:59:53 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S229512AbhDGWs7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Apr 2021 18:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229459AbhDGWs7 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 7 Apr 2021 18:48:59 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0FFC061762
+        for <linux-hyperv@vger.kernel.org>; Wed,  7 Apr 2021 15:48:49 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id q6-20020a17090a4306b02900c42a012202so269929pjg.5
+        for <linux-hyperv@vger.kernel.org>; Wed, 07 Apr 2021 15:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DgfW8JkZp8Qfy9QcapA9CK3xFi7FRXqxeMqnc0ZjSZA=;
+        b=lozHiKGrOvSj5vWVEWU6vNBRZnSyF48TAYdOso2PswCjmyZhwZBXkZGc/ckWbhY0JD
+         5d6nx9oTvGmZaR1fiwuJJ+rSbshXtvTx9z8hzgg/6CAiiQ0ONTcUYe8fj1M9FbPlgW1p
+         /f9c2u1pmlrCDxwe7xvH5NJ0TZDSAgDPq6f+CtR4jonCuBQNyMn2heoKbKd6xdE4ROcD
+         vgqxoPtS2d6QvFq6B9ZnNKok9/O1FZFnUbBjnfgkgi8pcpHOOes8E+Ofrd8uzqDEbuqI
+         SVFEvaA+8mHedpFbwDMQqj4mUKj0axAb9KNeTGgATLr13GtXaKFg4A7Qcogb3YBGFVMG
+         QzNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DgfW8JkZp8Qfy9QcapA9CK3xFi7FRXqxeMqnc0ZjSZA=;
+        b=CcZu+FxtL44oXKFOZMKjV+2NFcRLAAMhptx/MHrOe7LT2xwic3MSvlaoElM0Yi6SDF
+         8+/n4OGvlcDy1o8ACrICFgLF+z+UuowzSZoUGZw/Xh+jB0qMEy/MSVq85MSGzdR7pGB7
+         sortzYHo40kJPVFOkJrSaP3KjStg904BoLoxMR/Q71ANfXOm5xfsSy1lGGgO8O9uEUeF
+         AOUe8daawqApYEiROj858/bEM6PayDPi3Le9Q2Jggr1Z/ZAr7KGaBhyi/DrhiE2kJsmv
+         MXnZc50tIXDfA2pd8upSArB7FFm24VzqDFgLo7PEm2LVwrqAgbJqJUKlY3/2Kr24n3ti
+         8Qbg==
+X-Gm-Message-State: AOAM533phAgYzxXAm7/8CiVL5Iysugn8+7OcNtnFgRL94zB+YFRCu0cp
+        46riEUGi3XshBykCtyKr0TGMvw==
+X-Google-Smtp-Source: ABdhPJxTmfV8L6CJgni4FoJssUPZc3Xy1SafJcbvzYbeFJWQRji+q8p4TqkNynJ54BIJozxe8EIY8A==
+X-Received: by 2002:a17:90a:5d8f:: with SMTP id t15mr5393064pji.28.1617835728485;
+        Wed, 07 Apr 2021 15:48:48 -0700 (PDT)
+Received: from google.com (240.111.247.35.bc.googleusercontent.com. [35.247.111.240])
+        by smtp.gmail.com with ESMTPSA id n16sm22358949pff.119.2021.04.07.15.48.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Apr 2021 15:48:47 -0700 (PDT)
+Date:   Wed, 7 Apr 2021 22:48:44 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Wei Liu <liuwe@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        KY Srinivasan <kys@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
- Network Adapter (MANA)
-Thread-Topic: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
- Network Adapter (MANA)
-Thread-Index: AQHXK0pqK9CYzM87fki9gwnmLmNhk6qoPxRQgAB2ooCAAAEm0IAAShIAgACZjzA=
-Date:   Wed, 7 Apr 2021 21:59:52 +0000
-Message-ID: <MW2PR2101MB0892AC106C360F2A209560A8BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
-References: <20210406232321.12104-1-decui@microsoft.com>
- <YG0F4HkslqZHtBya@lunn.ch>
- <MW2PR2101MB089237C8CCFFF0C352CA658ABF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
- <YG1qF8lULn8lLJa/@unreal>
- <MW2PR2101MB08923F19D070996429979E38BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
- <YG2pMD9eIHsRetDJ@unreal>
-In-Reply-To: <YG2pMD9eIHsRetDJ@unreal>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4f2a6277-7d0a-4b65-a483-9086d5b5f8c6;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-07T21:54:08Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:600:8b00:6b90:c866:4eae:6a31:e8a2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d11d7052-9dd8-4aab-19e2-08d8fa107915
-x-ms-traffictypediagnostic: MWHPR21MB0510:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB05100CEB280542D309977A4BBF759@MWHPR21MB0510.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +QQvJ3FpWAvuhHpGW1zEtALNy609LRLojtJU0FCXXoFbwHMVr3bo2X63m/ysCQfvDX2Z+490azaGp46uEJcsA0QeA0lmDCYnOmljeP1947FIcjdo3TIYwl1hkbcCA08O74uSoOfIrptKTwCp92ZGSzRF2q+sVPF09B8e8jQjjOvgB0Xt5WwHby99orJS/c/djJF+/RhxtCQMl21d2avlKtCWdtIxAT9leUg7TgmAOTfo/rfdOx8zEOuiS3pAmUd+wsnILGBI+xwafZsdE4HoUYNwAI/7GJmvyoKgN0tCS8xJ/Q4B2AdoBM+HQCA0UiOAk06CgBvyFv4biAT0FY73tl/yg7dFoQCXdK0Ho6qMkh46UcGEvPy7TcD8dGJGc6dnn5Ail6+RXjUxiKVKUDli6zUfkx21c6Ch1LwqaiLQNMPec0UYzsV6sbN1ZI88bo+sRw4jiDdOofub36NLmWTkOLmdMallnt3vnvRunfEKw7rJ3+/YF5qt44FRS4NzVP2S4Vun9AIbNbO0/6f/+KCgVLQg3NQ7DHgq1Sd8D56SdyrSzX+6fC+O819nRt50I4abkhGwYst3FIUDThIgE9g6ZXErDiLGV9zPFqamKmKtuHO7AxGAAoikdf9voHj4yNVKaBDT5lw4b7fKBZZ8iKmiRLVO/9pP0YvklrBKJNzsJPE=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB0892.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(136003)(376002)(39860400002)(366004)(47530400004)(52536014)(10290500003)(86362001)(54906003)(71200400001)(4744005)(2906002)(316002)(76116006)(66476007)(66556008)(64756008)(66446008)(478600001)(55016002)(9686003)(66946007)(4326008)(38100700001)(82950400001)(82960400001)(7696005)(8990500004)(33656002)(6506007)(8936002)(6916009)(186003)(8676002)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?4yauLVAjp26DpqaIRE0gYfWaQCNpODWXRKwX9YOA0sPZDxHw/kAdSeJr9l36?=
- =?us-ascii?Q?5X/q3zDJQdXfCYJ+ex9o1MpksqwfOtxGsHNorpTOoDW0U8BpClQk81uDSy2G?=
- =?us-ascii?Q?8NIevgQarzuxCB/KKBdhEo4Bk1yojcVDjqNOXVHdf/J9vEmWhx55JfwVsb4G?=
- =?us-ascii?Q?mlzooAS07P/p1Ju7cA7rK1iC15mF24334gvr4sV52RHjhvxv0f+/WzXgNDtE?=
- =?us-ascii?Q?uoQQ9tjgSBS7FnB1tZKMx+uAO58BjUZbeIthm1d6f2lcZqDhoYkH6XQAlO/C?=
- =?us-ascii?Q?ws/77D+46mKqIRyB2aUj5PkCtjndRngk4Q3omYKTw7Z/c+Sb3DB51lkyG/bA?=
- =?us-ascii?Q?aH+8HGgEbqS5oyYORfv5RFCnC5rb36TN6sAQtfhoSsMYH+EOq5Nxg5oJZL+s?=
- =?us-ascii?Q?VgWJh/CH3iI8Y9MARdi0yFAvaU4IchAItmn6wWKMBTvyzehDAdKutVV6t2Hs?=
- =?us-ascii?Q?ZwyF35EFKtaxmkDrqZDN25MVGWMn9aXYrgQjOPnEk4QnfELEs6IOqbfZ7SXl?=
- =?us-ascii?Q?oTWxnTEDc6XLPAAPTOMw0/74QS0naHCg8aPvJ5Zye5S5HR0yuk/kngTkcIh+?=
- =?us-ascii?Q?lkIY3+xJ21SeXjkS2m0n2DOXYSvWNh4HnIlm5o88W+LVpvPUPmqd3XOQsmXS?=
- =?us-ascii?Q?2p8bBoBqDWLnshXbWRgD0e1bz8YHsRPVQw2FQLHhs+TYh09J81EC/8FbFbqR?=
- =?us-ascii?Q?4IpwZd+sOOQcRBOflMu+uUlEZUbGdAbglSnC8kI0AsCgbsMBfa1LuCIstYd7?=
- =?us-ascii?Q?GLO015brvMnXeL3EoLoR5g0xO0cFttn4g/QFho22BKBcxkZqGf/gNMfs9ucN?=
- =?us-ascii?Q?q2Pe4hGcvvvbLmNkINe1EwK5UkKD6wmrlBEFqZDhEj4uuGmIVDHneL4kwtYR?=
- =?us-ascii?Q?spQ/MpQVS+qYtIql9nOKSSpbhHiH60xCbAdVI701c8BZNauITEwab6JocUyJ?=
- =?us-ascii?Q?uplGV3nec+up0Zbk17OoRcIk/qZ3WtW8SUbrZ8AdGuioly68P41Y/xl/mwYM?=
- =?us-ascii?Q?jlxKxwfFQyAhcXvkkbaa79PvZNeGdcC545W66UEC/4M0gVeKM2lGpQlZ8eaK?=
- =?us-ascii?Q?vLme1XvhaqTAC8FQ+jN5MvzSKivr2/8o/TlHUSP4jDiwnreCNfZCJ0ax0d5s?=
- =?us-ascii?Q?qGICUS51DuWowtlU01fjif+aAV/5bwi3HrXGhglGP9Uc72jA6NY7XqXM+7nV?=
- =?us-ascii?Q?9QJErpM3ARv8rFUL+qdNY5YnA+4FXwYYQl0gCpbTF/2Nn7DDoBaTSHQhkkfJ?=
- =?us-ascii?Q?kFHsRLDlM4ZNsSpeg7f6XSBB62bjOIrHF37WTvyJrRxeHN6ypd745dFiVt7B?=
- =?us-ascii?Q?80Z0OiZW35sucZoUDOx6u5EzmLOwNWk/OxGUQoomKNLkA8U0deg4A/WWP93s?=
- =?us-ascii?Q?P0B7A4kD7hhdj85hC9IiqUfRLmLN?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/7] hyperv: Detect Nested virtualization support for SVM
+Message-ID: <YG42zNYA9uCC25In@google.com>
+References: <cover.1617804573.git.viremana@linux.microsoft.com>
+ <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
+ <MWHPR21MB159327E855DAC5BEE4B8A38DD7759@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB0892.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d11d7052-9dd8-4aab-19e2-08d8fa107915
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2021 21:59:52.8743
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ef8plOUjW6e5xfTk5bWlvR74xCLq4YgjqlTwGICGGRUKZ+oO7uCK+bFp4SJAN/T+vftUBwB8IQsIXn/4bldTkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0510
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB159327E855DAC5BEE4B8A38DD7759@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Leon Romanovsky <leon@kernel.org>
-> Sent: Wednesday, April 7, 2021 5:45 AM
-> > >
-> > > BTW, you don't need to write { 0 }, the {} is enough.
-> >
-> > Thanks for the suggestion! I'll use {0} in v2.
->=20
-> You missed the point, "{ 0 }" change to be "{}" without 0.
+On Wed, Apr 07, 2021, Michael Kelley wrote:
+> From: Vineeth Pillai <viremana@linux.microsoft.com> Sent: Wednesday, April 7, 2021 7:41 AM
+> > 
+> > Detect nested features exposed by Hyper-V if SVM is enabled.
+> > 
+> > Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+> > ---
+> >  arch/x86/kernel/cpu/mshyperv.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> > index 3546d3e21787..4d364acfe95d 100644
+> > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > @@ -325,9 +325,17 @@ static void __init ms_hyperv_init_platform(void)
+> >  			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
+> >  	}
+> > 
+> > -	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
+> > +	/*
+> > +	 * AMD does not need enlightened VMCS as VMCB is already a
+> > +	 * datastructure in memory. We need to get the nested
+> > +	 * features if SVM is enabled.
+> > +	 */
+> > +	if (boot_cpu_has(X86_FEATURE_SVM) ||
+> > +	    ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
+> >  		ms_hyperv.nested_features =
+> >  			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
+> > +		pr_info("Hyper-V nested_features: 0x%x\n",
+> 
+> Nit:  Most other similar lines put the colon in a different place:
+> 
+> 		pr_info("Hyper-V: nested features 0x%x\n",
+> 
+> One of these days, I'm going to fix the ones that don't follow this
+> pattern. :-)
 
-Got it. Will make the suggested change.
-
-FWIW, {0} and { 0 } are still widely used, but it looks like
-{} is indeed more preferred:
-
-$ grep "=3D {};" drivers/net/  -nr  | wc -l
-829
-
-$ grep "=3D {0};" drivers/net/  -nr  | wc -l
-708
-
-$ grep "=3D {};" kernel/  -nr  | wc -l
-29
-
-$ grep "=3D {0};" kernel/  -nr  | wc -l
-4
+Any reason not to use pr_fmt?
