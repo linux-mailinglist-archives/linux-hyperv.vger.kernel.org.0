@@ -2,22 +2,32 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3544356BF8
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 14:19:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83387356C6E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 14:44:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352117AbhDGMTq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Apr 2021 08:19:46 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37992 "EHLO vps0.lunn.ch"
+        id S234363AbhDGMos (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Apr 2021 08:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352110AbhDGMTp (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Apr 2021 08:19:45 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1lU79a-00FIwe-Go; Wed, 07 Apr 2021 14:19:26 +0200
-Date:   Wed, 7 Apr 2021 14:19:26 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
+        id S231124AbhDGMop (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 7 Apr 2021 08:44:45 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6C8B56135D;
+        Wed,  7 Apr 2021 12:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617799476;
+        bh=gnFVVLuMw1XrbnmPwx8G5P4avuQB7mSzP86qLuRcJpI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fDHQQ7TReibjFn8nqWoRCdeBp7Hyv74wTwIPAD9uJluSwxREqP+raeQzUq5RjXSn9
+         Z7iT979kTKmAQKldAvnfc2bLBd2+xkSvz2dvkH3WgInsDtCc/vUJ6cybRu5YANGwAG
+         5OFPDjZ5i2I4SrRk1P3J1KpB8d0hcaUh10sZDdjyG56V1bKlI/dTEFOklGrVuAQdBV
+         RX54+FAg79buZ7q+xo0+Oy724te7w8g5IQn81f+yX8/HMfSP3hsb2ynBAFWTZyIOS7
+         3gdDo02ROadZvEkRPXe4nCnBaFX/tuSJpr1SNoD1nh1DzPDncKpqQbQdAHOhsWmnk8
+         usAO0dMdPfBvA==
+Date:   Wed, 7 Apr 2021 15:44:32 +0300
+From:   Leon Romanovsky <leon@kernel.org>
 To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
         "kuba@kernel.org" <kuba@kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -29,38 +39,33 @@ Cc:     "davem@davemloft.net" <davem@davemloft.net>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
 Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
  Network Adapter (MANA)
-Message-ID: <YG2jTq/Frtd9gOGO@lunn.ch>
+Message-ID: <YG2pMD9eIHsRetDJ@unreal>
 References: <20210406232321.12104-1-decui@microsoft.com>
  <YG0F4HkslqZHtBya@lunn.ch>
  <MW2PR2101MB089237C8CCFFF0C352CA658ABF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+ <YG1qF8lULn8lLJa/@unreal>
+ <MW2PR2101MB08923F19D070996429979E38BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB089237C8CCFFF0C352CA658ABF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB08923F19D070996429979E38BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> And, some variable defines can not follow the reverse christmas tree
-> style due to dependency, e.g.
-> static void hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
->                                    struct gdma_event *event) 
-> {
->         struct hw_channel_context *hwc = ctx;
->         struct gdma_dev *gd = hwc->gdma_dev;
->         struct gdma_context *gc = gdma_dev_to_context(gd);
-> 
-> I failed to find the reverse christmas tree rule in the Documentation/ 
-> folder. I knew the rule and I thought it was documented there,
-> but it looks like it's not. So my understanding is that in general we
-> should follow the style, but there can be exceptions due to
-> dependencies or logical grouping.
+On Wed, Apr 07, 2021 at 08:28:45AM +0000, Dexuan Cui wrote:
+> > From: Leon Romanovsky <leon@kernel.org>
+> > Sent: Wednesday, April 7, 2021 1:15 AM
+> > > ...
+> > > int gdma_test_eq(struct gdma_context *gc, struct gdma_queue *eq)
+> > > {
+> > >         struct gdma_generate_test_event_req req = { 0 };
+> > >         struct gdma_general_resp resp = { 0 };
+> > 
+> > BTW, you don't need to write { 0 }, the {} is enough.
+>  
+> Thanks for the suggestion! I'll use {0} in v2. 
 
-I expect DaveM will tell you to move gdma_dev_to_context(gd) into the
-body of the function. Or if you have this pattern a lot, add a macro
-gdma_ctx_to_context().
+You missed the point, "{ 0 }" change to be "{}" without 0.
 
-Reverse Christmas tree is not in the main Coding Style documentation,
-but it is expected for netdev.
-
-    Andrew
+Thanks
