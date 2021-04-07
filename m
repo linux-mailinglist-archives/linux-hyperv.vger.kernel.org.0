@@ -2,120 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E27E3577F3
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 00:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C69335789C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 01:37:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbhDGWs7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Apr 2021 18:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbhDGWs7 (ORCPT
+        id S229484AbhDGXiC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Apr 2021 19:38:02 -0400
+Received: from esgaroth.petrovitsch.at ([78.47.184.11]:43610 "EHLO
+        esgaroth.petrovitsch.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229480AbhDGXiB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Apr 2021 18:48:59 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0FFC061762
-        for <linux-hyperv@vger.kernel.org>; Wed,  7 Apr 2021 15:48:49 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id q6-20020a17090a4306b02900c42a012202so269929pjg.5
-        for <linux-hyperv@vger.kernel.org>; Wed, 07 Apr 2021 15:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DgfW8JkZp8Qfy9QcapA9CK3xFi7FRXqxeMqnc0ZjSZA=;
-        b=lozHiKGrOvSj5vWVEWU6vNBRZnSyF48TAYdOso2PswCjmyZhwZBXkZGc/ckWbhY0JD
-         5d6nx9oTvGmZaR1fiwuJJ+rSbshXtvTx9z8hzgg/6CAiiQ0ONTcUYe8fj1M9FbPlgW1p
-         /f9c2u1pmlrCDxwe7xvH5NJ0TZDSAgDPq6f+CtR4jonCuBQNyMn2heoKbKd6xdE4ROcD
-         vgqxoPtS2d6QvFq6B9ZnNKok9/O1FZFnUbBjnfgkgi8pcpHOOes8E+Ofrd8uzqDEbuqI
-         SVFEvaA+8mHedpFbwDMQqj4mUKj0axAb9KNeTGgATLr13GtXaKFg4A7Qcogb3YBGFVMG
-         QzNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DgfW8JkZp8Qfy9QcapA9CK3xFi7FRXqxeMqnc0ZjSZA=;
-        b=CcZu+FxtL44oXKFOZMKjV+2NFcRLAAMhptx/MHrOe7LT2xwic3MSvlaoElM0Yi6SDF
-         8+/n4OGvlcDy1o8ACrICFgLF+z+UuowzSZoUGZw/Xh+jB0qMEy/MSVq85MSGzdR7pGB7
-         sortzYHo40kJPVFOkJrSaP3KjStg904BoLoxMR/Q71ANfXOm5xfsSy1lGGgO8O9uEUeF
-         AOUe8daawqApYEiROj858/bEM6PayDPi3Le9Q2Jggr1Z/ZAr7KGaBhyi/DrhiE2kJsmv
-         MXnZc50tIXDfA2pd8upSArB7FFm24VzqDFgLo7PEm2LVwrqAgbJqJUKlY3/2Kr24n3ti
-         8Qbg==
-X-Gm-Message-State: AOAM533phAgYzxXAm7/8CiVL5Iysugn8+7OcNtnFgRL94zB+YFRCu0cp
-        46riEUGi3XshBykCtyKr0TGMvw==
-X-Google-Smtp-Source: ABdhPJxTmfV8L6CJgni4FoJssUPZc3Xy1SafJcbvzYbeFJWQRji+q8p4TqkNynJ54BIJozxe8EIY8A==
-X-Received: by 2002:a17:90a:5d8f:: with SMTP id t15mr5393064pji.28.1617835728485;
-        Wed, 07 Apr 2021 15:48:48 -0700 (PDT)
-Received: from google.com (240.111.247.35.bc.googleusercontent.com. [35.247.111.240])
-        by smtp.gmail.com with ESMTPSA id n16sm22358949pff.119.2021.04.07.15.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Apr 2021 15:48:47 -0700 (PDT)
-Date:   Wed, 7 Apr 2021 22:48:44 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Wed, 7 Apr 2021 19:38:01 -0400
+X-Greylist: delayed 3592 seconds by postgrey-1.27 at vger.kernel.org; Wed, 07 Apr 2021 19:38:00 EDT
+Received: from thorin.petrovitsch.priv.at (80-110-93-117.cgn.dynamic.surfer.at [80.110.93.117])
+        (authenticated bits=0)
+        by esgaroth.petrovitsch.at (8.16.1/8.16.1) with ESMTPSA id 137MbjSX2151151
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT);
+        Thu, 8 Apr 2021 00:37:47 +0200
+DKIM-Filter: OpenDKIM Filter v2.11.0 esgaroth.petrovitsch.at 137MbjSX2151151
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=petrovitsch.priv.at;
+        s=default; t=1617835069;
+        bh=sRQ/Lrm5YctprFhxVHSSckbUfrGsc6U25VUJIbk4UJU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sFdwdWcj9OdVPl+hUYQs5bYYEjLpxNKhph00ykqVUPTIsmJd4ovnE4aheyihdisgs
+         dJOqJI/cU4Y8XtPpeXlGCm2kJ8UXa3VH9R4TV8zFxdbjWb6VOIMegEtv/SqgOAHJMe
+         gt/pSEO4b8pMyxbsx9ncVr5F/kY/j7VJVG7tH9y4=
+X-Info-sendmail: I was here
+Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
+ Network Adapter (MANA)
+To:     Dexuan Cui <decui@microsoft.com>, Leon Romanovsky <leon@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Wei Liu <liuwe@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH 1/7] hyperv: Detect Nested virtualization support for SVM
-Message-ID: <YG42zNYA9uCC25In@google.com>
-References: <cover.1617804573.git.viremana@linux.microsoft.com>
- <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
- <MWHPR21MB159327E855DAC5BEE4B8A38DD7759@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <20210406232321.12104-1-decui@microsoft.com>
+ <YG0F4HkslqZHtBya@lunn.ch>
+ <MW2PR2101MB089237C8CCFFF0C352CA658ABF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+ <YG1qF8lULn8lLJa/@unreal>
+ <MW2PR2101MB08923F19D070996429979E38BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+ <YG2pMD9eIHsRetDJ@unreal>
+ <MW2PR2101MB0892AC106C360F2A209560A8BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
+Bimi-Selector: v=BIMI1; s=default
+Message-ID: <0d84ef1b-debf-8d5b-0c8d-cb83427b0435@petrovitsch.priv.at>
+Date:   Thu, 8 Apr 2021 00:37:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR21MB159327E855DAC5BEE4B8A38DD7759@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB0892AC106C360F2A209560A8BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-DCC-Etherboy-Metrics: esgaroth.petrovitsch.priv.at 1002; Body=13 Fuz1=13
+        Fuz2=13
+X-Spam-Status: No, score=-1.2 required=5.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A
+        autolearn=unavailable autolearn_force=no version=3.4.4
+X-Spam-Report: * -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 NICE_REPLY_A Looks like a legit reply (A)
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        esgaroth.petrovitsch.priv.at
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 07, 2021, Michael Kelley wrote:
-> From: Vineeth Pillai <viremana@linux.microsoft.com> Sent: Wednesday, April 7, 2021 7:41 AM
-> > 
-> > Detect nested features exposed by Hyper-V if SVM is enabled.
-> > 
-> > Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
-> > ---
-> >  arch/x86/kernel/cpu/mshyperv.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> > index 3546d3e21787..4d364acfe95d 100644
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -325,9 +325,17 @@ static void __init ms_hyperv_init_platform(void)
-> >  			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
-> >  	}
-> > 
-> > -	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
-> > +	/*
-> > +	 * AMD does not need enlightened VMCS as VMCB is already a
-> > +	 * datastructure in memory. We need to get the nested
-> > +	 * features if SVM is enabled.
-> > +	 */
-> > +	if (boot_cpu_has(X86_FEATURE_SVM) ||
-> > +	    ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
-> >  		ms_hyperv.nested_features =
-> >  			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
-> > +		pr_info("Hyper-V nested_features: 0x%x\n",
-> 
-> Nit:  Most other similar lines put the colon in a different place:
-> 
-> 		pr_info("Hyper-V: nested features 0x%x\n",
-> 
-> One of these days, I'm going to fix the ones that don't follow this
-> pattern. :-)
+Hi all!
 
-Any reason not to use pr_fmt?
+On 07/04/2021 23:59, Dexuan Cui wrote:
+[...]
+> FWIW, {0} and { 0 } are still widely used, but it looks like
+> {} is indeed more preferred:
+> 
+> $ grep "= {};" drivers/net/  -nr  | wc -l
+> 829
+
+$ egrep -nr "=[[:space:]]*{[[:space:]]*};" drivers/net/  | wc -l
+872
+
+> $ grep "= {0};" drivers/net/  -nr  | wc -l
+> 708
+
+$ egrep -nr "=[[:space:]]*{[[:space:]]*0[[:space:]]*};" drivers/net/  |
+wc -l
+1078
+
+> $ grep "= {};" kernel/  -nr  | wc -l
+> 29
+
+$ egrep -nr "=[[:space:]]*{[[:space:]]*};" kernel/  | wc -l
+45
+
+> $ grep "= {0};" kernel/  -nr  | wc -l
+> 4
+
+$ egrep -nr "=[[:space:]]*{[[:space:]]*0[[:space:]]*};" kernel  | wc -l
+8
+
+MfG,
+	Bernd
+-- 
+Bernd Petrovitsch                  Email : bernd@petrovitsch.priv.at
+     There is NO CLOUD, just other people's computers. - FSFE
+                     LUGA : http://www.luga.at
