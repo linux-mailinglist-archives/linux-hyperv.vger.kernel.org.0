@@ -2,31 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FB9C356CA3
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 14:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DE8F356CD2
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 15:02:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242428AbhDGMvd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Apr 2021 08:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230234AbhDGMvb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Apr 2021 08:51:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AB93461279;
-        Wed,  7 Apr 2021 12:51:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617799882;
-        bh=m4r6X7ZfydL60kYXm+rHrFPGoJaR2k9l7+B9drZZwHU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Eg/cjZglmOs+0VhFkHOsbQYekE4Y92vEuJBZOVSLDNZVQfAEP1v6sKbxxj2OdpXJF
-         0pZVBfLKcL6GDGHkWX+FLJ+Xr/nMDvmCJ2MUqjdOlIuDdSxbiX9+9H5gpBW0wWqc/8
-         okJfq9ghElwMauqW9owTQlMBIIG2C4oi+Fq/N26+ZHh4y2EZy7aAFTc3MOcAMTHDoV
-         SWwqaCpcAk2IxZojl2RWYV2abb6pcohUL4MVAzo8zpLvQnT7k9KYt9mZgzZtz58nuU
-         BSyTJA/Khnnm0eJmluiWbJil/6fkvj8wVQWGhM6hw21/fvp66BrKBamkWETivurx/0
-         nJY+4P1lqwslQ==
-Date:   Wed, 7 Apr 2021 15:51:18 +0300
-From:   Leon Romanovsky <leon@kernel.org>
+        id S232411AbhDGNCr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Apr 2021 09:02:47 -0400
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:41532 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232253AbhDGNCm (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 7 Apr 2021 09:02:42 -0400
+Received: by mail-wr1-f48.google.com with SMTP id a6so11888866wrw.8;
+        Wed, 07 Apr 2021 06:02:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TXqZuGdXJPW/fK3TUxeru63BFIL4FbmmIS0HzVxdfbM=;
+        b=X5lgGmvUnMRNLWpHy7Jb6gw+p79mrEfBjWHd4xO2vcxcdcmwq7CniF9mz288CoG0i5
+         f8mdrwz4E3woXsEIgNzmxlnW6Ax3F6hAPDTsydjmfWt7o40tMW+rI/zgFGR5DuuCuCR5
+         4pzCrTBF0HKJwo+/XB7hXT5g5LR+BwNbCLQS2mqHHUQFPWCq+6hAtisxn/yyfqaqP68v
+         1FGEFw4eAMYeTlm4hzmFCoKRyyCPWxZm6lUXSnVKWoki099Ojt24z7acZXlcKJt2irRq
+         377HHdGrnbz0Ay1GEmFAsWJWL4AzKOa/NGMrD+TyG3Cz5irIopShJ0lOhtU5qTSVfqFJ
+         9uBQ==
+X-Gm-Message-State: AOAM533d5fACy50zky3lR0cyA81coFYx5AUnHRwDbhIwqf68Z09xvyzv
+        bhf8J2p9OvHc+k+jZqUBa5Pnd1QwnUA=
+X-Google-Smtp-Source: ABdhPJx+FU4wwVRbC/815ENUwoRonsyYzkZ47GQ+CV42wf052MLj642jIYNSgfCL+WAfMu8b1Qz2EA==
+X-Received: by 2002:a05:6000:22f:: with SMTP id l15mr4361456wrz.364.1617800551854;
+        Wed, 07 Apr 2021 06:02:31 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id k3sm19846458wrc.67.2021.04.07.06.02.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Apr 2021 06:02:31 -0700 (PDT)
+Date:   Wed, 7 Apr 2021 13:02:30 +0000
+From:   Wei Liu <wei.liu@kernel.org>
 To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+Cc:     kernel test robot <lkp@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
         "kuba@kernel.org" <kuba@kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -34,87 +46,44 @@ Cc:     "davem@davemloft.net" <davem@davemloft.net>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Wei Liu <liuwe@microsoft.com>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
 Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
  Network Adapter (MANA)
-Message-ID: <YG2qxjPJ4ruas1dI@unreal>
+Message-ID: <20210407130230.3yszl6zhqzf4pmgm@liuwe-devbox-debian-v2>
 References: <20210406232321.12104-1-decui@microsoft.com>
- <YG1o4LXVllXfkUYO@unreal>
- <MW2PR2101MB08923D4417E44C5750BFB964BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+ <202104070929.mWRaVyO2-lkp@intel.com>
+ <MW2PR2101MB08922BFEFEBFA44744C5795BBF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB08923D4417E44C5750BFB964BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB08922BFEFEBFA44744C5795BBF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 08:40:13AM +0000, Dexuan Cui wrote:
-> > From: Leon Romanovsky <leon@kernel.org>
-> > Sent: Wednesday, April 7, 2021 1:10 AM
+On Wed, Apr 07, 2021 at 08:08:59AM +0000, Dexuan Cui wrote:
+> > From: kernel test robot <lkp@intel.com>
+> > Sent: Tuesday, April 6, 2021 6:31 PM
+> > ...
+> > Hi Dexuan, 
+> > I love your patch! Perhaps something to improve:
 > > 
-> > <...>
+> > All warnings (new ones prefixed by >>):
 > > 
-> > > +int gdma_verify_vf_version(struct pci_dev *pdev)
-> > > +{
-> > > +	struct gdma_context *gc = pci_get_drvdata(pdev);
-> > > +	struct gdma_verify_ver_req req = { 0 };
-> > > +	struct gdma_verify_ver_resp resp = { 0 };
-> > > +	int err;
-> > > +
-> > > +	gdma_init_req_hdr(&req.hdr, GDMA_VERIFY_VF_DRIVER_VERSION,
-> > > +			  sizeof(req), sizeof(resp));
-> > > +
-> > > +	req.protocol_ver_min = GDMA_PROTOCOL_FIRST;
-> > > +	req.protocol_ver_max = GDMA_PROTOCOL_LAST;
-> > > +
-> > > +	err = gdma_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
-> > > +	if (err || resp.hdr.status) {
-> > > +		pr_err("VfVerifyVersionOutput: %d, status=0x%x\n", err,
-> > > +		       resp.hdr.status);
-> > > +		return -EPROTO;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > 
-> > <...>
-> > > +	err = gdma_verify_vf_version(pdev);
-> > > +	if (err)
-> > > +		goto remove_irq;
-> > 
-> > Will this VF driver be used in the guest VM? What will prevent from users to
-> > change it?
-> > I think that such version negotiation scheme is not allowed.
+> >    drivers/pci/controller/pci-hyperv.c: In function 'hv_irq_unmask':
+> >    drivers/pci/controller/pci-hyperv.c:1220:2: error: implicit declaration of
+> > function 'hv_set_msi_entry_from_desc'
+> > [-Werror=implicit-function-declaration]
+> >     1220 |  hv_set_msi_entry_from_desc(&params->int_entry.msi_entry,
+> > msi_desc);
 > 
-> Yes, the VF driver is expected to run in a Linux VM that runs on Azure.
+> This build error looks strange, because the patch doesn't even touch the driver
+> drivers/pci/controller/pci-hyperv.c.
 > 
-> Currently gdma_verify_vf_version() just tells the PF driver that the VF driver
-> is only able to support GDMA_PROTOCOL_V1, and want to use
-> GDMA_PROTOCOL_V1's message formats to talk to the PF driver later.
-> 
-> enum {
->         GDMA_PROTOCOL_UNDEFINED = 0,
->         GDMA_PROTOCOL_V1 = 1,
->         GDMA_PROTOCOL_FIRST = GDMA_PROTOCOL_V1,
->         GDMA_PROTOCOL_LAST = GDMA_PROTOCOL_V1,
->         GDMA_PROTOCOL_VALUE_MAX
-> };
-> 
-> The PF driver is supposed to always support GDMA_PROTOCOL_V1, so I expect
-> here gdma_verify_vf_version() should succeed. If a user changes the Linux VF
-> driver and try to use a protocol version not supported by the PF driver, then
-> gdma_verify_vf_version() will fail; later, if the VF driver tries to talk to the PF
-> driver using an unsupported message format, the PF driver will return a failure.
 
-The worry is not for the current code, but for the future one when you will
-support v2, v3 e.t.c. First, your code will look like a spaghetti and
-second, users will try and mix vX with "unsupported" commands just for the
-fun.
+I think this is normal. The bot doesn't restrict itself to the changed
+code from my experience.
 
-Thanks
-
-> 
-> Thanks,
-> -- Dexuan
+Wei.
