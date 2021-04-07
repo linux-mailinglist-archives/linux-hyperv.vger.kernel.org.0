@@ -2,186 +2,170 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5792B3572BD
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 19:07:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29BF35753F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 21:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239083AbhDGRHb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Apr 2021 13:07:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234050AbhDGRHa (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Apr 2021 13:07:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B5805610CC;
-        Wed,  7 Apr 2021 17:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617815240;
-        bh=apYFtuNjrmejYcSJrizl3qdNjlJnPQG0oaFz9y6REwE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DZvZEW5aRVVrnzHzcQ0FiqmiAjJNRU5VlbA7YGgK3DD7GrjiSCMd45gWJtejdjvcj
-         eaYHtTjLo0jUi3BJF7ffPfzR9pQohHiNHACh+ZVAqtzwWNPzEA6IOJpceF8ZFV7t/e
-         AT3IyBn8iEZd/YQv7UQB9ZjtkoDpVE3YdzX9fSqQ6CXJoRHaVliv3aoXXDGUuGGoCd
-         5XfZ7itX/C/uz+Xx9m836XOPgiu2nDeyFl0mbnutaqcRTtKyt+Wffr3ZIUdsGLFQUs
-         h98B/QaGqotwO50wgB9cMRCsMQD7opmzCsp1wbd8BYRVp5hY87q1h+VPrfAQXZLyAf
-         yWJCTSVuSUOsA==
-Date:   Wed, 7 Apr 2021 20:07:16 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S1355768AbhDGTzf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Apr 2021 15:55:35 -0400
+Received: from mail-bn8nam12on2113.outbound.protection.outlook.com ([40.107.237.113]:5792
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1355767AbhDGTzc (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 7 Apr 2021 15:55:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VbfoYRqzJZ4iLY+N+ekozcgRvcYoIJx+bspST3XFRqVkpMK7T3v9RCXMFWod0Nq9kltJXye+agemPzf/3hu1JWxaq/7MLiFMBZgtA0U/EnvY6ojvHqv7sjawZnTv0kqmMyT/FLpYzaOMMWD30H2GgnIJ/ZEYHxeoCH55o5cqX97uRaPihhUweGmMb2/gih+jNUvi6AwkbsjFpO8wcwHh4ORD4BJtwoPRV6/lPLhA4nAlOcrOEuF0/VNISSEy5Gho4Av8eVfMeIwfcBa5Ry4rfWW3+GWghRXiVVBHGFGNqCxIOEw53nYLVCn33IV/yM2P/7J/Ewgub/bUJL3CVhOBvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dS3Snl0WRmCkrwthc6gbQXBTEbAwWZhdPXrF2StLGg0=;
+ b=I41x0Nt41mc2dX5O2Pgn/y7peDsDHEulL1MrNnCSFbPZBIb4uipxKcIbm60Nz5be3zkjPwUltO2OaqvUN5gdanGOge35RDH4fcDvn78gUTP+0SICaPoHGcASVJeEDQozZdvl8ozClcp9g3CYp/+7IdqvSpnu47qeOOoCQ9NsMpyFe5/mPyUUrNnjFh+YK01pg3gWBGJRyJYScyIsvU+7JNn8BJKBch8jlRukr09UvtRAWQa242nPAbjXCQMDyQd1+yec9YFejZiQY6RNzFfUUsj2YRrCYtwst7tryZVizP2P0pG80HZWvTIM5r/mcIpjgu1CTQnaBuoH6v4RygaMKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dS3Snl0WRmCkrwthc6gbQXBTEbAwWZhdPXrF2StLGg0=;
+ b=BiPuIrZamy3yfQJBCF2ObnXqs1+S7RuIUbdCC5LB5ro3KOtEQEUTCWZS3J8N+qB7S71FVktsLZJoP1nOxn661u7ABqzectT5wOwe5dY8UBhvoRBpylkFY62cYQoMh+ChuY8IKfbi+D8u7rteUV6aPKiKy9y8a0ymthRlpdF5mqE=
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
+ by MWHPR21MB0285.namprd21.prod.outlook.com (2603:10b6:300:7a::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.5; Wed, 7 Apr
+ 2021 19:55:15 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::5874:413c:8f1b:6b0b]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::5874:413c:8f1b:6b0b%3]) with mapi id 15.20.4042.004; Wed, 7 Apr 2021
+ 19:55:15 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        vkuznets <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Wei Liu <liuwe@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>
+CC:     "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        KY Srinivasan <kys@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
- Network Adapter (MANA)
-Message-ID: <YG3mxHji/JH6iFqk@unreal>
-References: <20210406232321.12104-1-decui@microsoft.com>
- <YG1o4LXVllXfkUYO@unreal>
- <MW2PR2101MB08923D4417E44C5750BFB964BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
- <YG2qxjPJ4ruas1dI@unreal>
- <DM5PR2101MB09342B74ECD56BE4781431EACA759@DM5PR2101MB0934.namprd21.prod.outlook.com>
- <YG3HxVaotTi/Xk5X@unreal>
- <BL0PR2101MB0930CEB943EF4502932F053BCA759@BL0PR2101MB0930.namprd21.prod.outlook.com>
+Subject: RE: [PATCH 1/7] hyperv: Detect Nested virtualization support for SVM
+Thread-Topic: [PATCH 1/7] hyperv: Detect Nested virtualization support for SVM
+Thread-Index: AQHXK7whxv0u/iBNREG0GmXfpyQUWaqpd0gQ
+Date:   Wed, 7 Apr 2021 19:55:15 +0000
+Message-ID: <MWHPR21MB159327E855DAC5BEE4B8A38DD7759@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <cover.1617804573.git.viremana@linux.microsoft.com>
+ <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
+In-Reply-To: <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c801a024-d991-47cd-8ff9-5a01b77ecd6c;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-07T19:51:18Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: linux.microsoft.com; dkim=none (message not signed)
+ header.d=none;linux.microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4ed8bcf5-ca3d-4268-37ac-08d8f9ff1025
+x-ms-traffictypediagnostic: MWHPR21MB0285:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MWHPR21MB0285ADBBB8C85FEF488D04E8D7759@MWHPR21MB0285.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fMU29jfGX04QJ0aDndlJQVuRsGoWn+GapG1rD7eCzRwGOGc+wG6oPHfxut5yLo/0EvCvcd2Q1EcvcHbbaQZ2WVnPZzrtBQC1Q29fHqqZRs5VmEzMt0Brpf0Y0dYD0eboX+MiLHFh0tlulRz/1+/A84AMEP4fXwNKgx6cC+DksESg0YywtaSp0+R7DBQ+T4QjPiZQSFocf8kjLzC+h6Ecr4uL7E8y67r/7RGZqQUbo+ioWCl9sEhX2cyhkpVaLGpbwflDSKMe9DU6LyA/96y1oN/qRrD5P/ZV9oT9W90cEZHY1S2F29OSEPaEHwLzDD9HE+QIpKIu78kjJGRa6How28rgpnaZgNmCrMjZnnAzRpNimakqpBTBR8EvMlcAe46WeZnDBwYaLkRVKQGxTOlVpWN1Umpl4yWuNJ/36Funpb1xdnPfPyAKJZ6Hh3PjX8GWy2aHx8wrvWfhSpGQYqRnbuOFX5Ji7rdRQgQa7rKWFakuIvM4WHf4ri3QbVbSw1dLs2rHzTkcUJkz+QdOSPOhHZ2kUf+idGLN9Hnx269HHfpx5YJ1ul292dwokQJwXbRJbAHVwKPa4qHMrB/sulr+g+sWbcP0VKpBjFBBKG4xEZzD3uI0FQoFTojDQ6NQMfkbz330TXscVeIOV7GYzrGWHPQ25NGujL3XMfnSW28AoFgVyqKRctqkN7hMkEG+Wz8c
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(110136005)(54906003)(66946007)(52536014)(2906002)(5660300002)(316002)(66476007)(66556008)(86362001)(66446008)(64756008)(76116006)(7696005)(8990500004)(8936002)(8676002)(26005)(186003)(6506007)(7416002)(6636002)(38100700001)(82960400001)(82950400001)(478600001)(71200400001)(10290500003)(4326008)(55016002)(9686003)(33656002)(921005)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?L1SWy1ByP2QgL5wIS2A48G0y+diTuTS6rHmTFS5Uur9vi3oYDpTuL4C/B5tA?=
+ =?us-ascii?Q?WFY5gSI4wXZb3aMUFVXznyCdUv80e0nQVxizBt65w5WxS1SaaeHGqWsbccXi?=
+ =?us-ascii?Q?1qHa7JCWJFHIVumKEhrNi7CdtBAh4VdE90G4k5+yygtTTk8TBCXLp78tvpMJ?=
+ =?us-ascii?Q?JoATwSjDA7+tVeZ4L19bnKA4m4HnswzP496BznemxwmKu1A9iBPCByflk4EG?=
+ =?us-ascii?Q?HkA1QVBuP8ufE/23KzonLURT4G4N638KP4YrB4FkeRZss98b2V7jY2LNe2RU?=
+ =?us-ascii?Q?85L7+SVemiK8GQaypYkhM5+mf9s8hASuEG/suNoBEIs9GIXImRIqVoyWNL1E?=
+ =?us-ascii?Q?JRJMoPS2rOmbA+oagHz9rc0OjXuyiILMK8UvnbwBC4KBwYaJKn5Itt8AVSSd?=
+ =?us-ascii?Q?9ZsqqyHxLD4rXgiDY2AB/tJueScnHd/yugESpIa2Hz8gM5nh7Ez6kAxXPw6m?=
+ =?us-ascii?Q?eWZDLDsDIrOI85CNEWAY4vebVVk8UUpI9ljJPOlopAdVA7bd3fqdzzQHNgO9?=
+ =?us-ascii?Q?PkplYyFHxO3FuK6sW/WhR17Z/2iyEKUuTCkfaxvi1VfQ0GM8VlW+wuwtm5Zx?=
+ =?us-ascii?Q?u9x5qHOIeCBWIspywhPNIrF93VHVmt3zR5H1BuvD+adA8gmcXEKOULs2ksHI?=
+ =?us-ascii?Q?Ruu+tT3whjtlhbLW1L8TjjxmO2P+qq3XtrCY1aliYWLbsWNasX9FqSOQ0g3I?=
+ =?us-ascii?Q?4Cw/PWGC61mXLK4ksI6mpy+WEvgyH46E9wXgRQ+zBQJ1fmlaUNDZSjw3pzkH?=
+ =?us-ascii?Q?OPByiGaI64OoAcT0WwTe1gE5E1czITSLmz2wtzo35QxmkJS3mmfrqR4M4ea5?=
+ =?us-ascii?Q?XRu+JY23ZCdqsV+nF+++ZkEN+SCV7UnijcJq9aZ5e7hMrrp41hUGBec398lK?=
+ =?us-ascii?Q?dZb/R+UM8d4wjw0bo+AWPCeaO9DgjdH3TvGjujn97h3K+aUdjKen8wmESvm6?=
+ =?us-ascii?Q?7tLJVeCGgX7XYhuGuc3BxXuxwCcVdnQKC5hlJaRv9pN/26MYsAAr/hJIhaP/?=
+ =?us-ascii?Q?pIZl3vdZkk4gzXE3tSidqUTM5tC6BcPfk1LttS3SqX4v782zNjwDtD6ZAZWR?=
+ =?us-ascii?Q?iVBlsS+YzgQWTV4B2jE3uR06gRPDUoYpWZpuBx8G8JMrTcRcGF3MKrpcXlNy?=
+ =?us-ascii?Q?8ujdn2ItEk9uuTFGkarbUOa/cXNCjOkDhXfMj8D+EWLlQdwzFUPkpE71g6SP?=
+ =?us-ascii?Q?vx1Lx5Ktn59z07LKXNaxxf27qLNlkFDRL2d5bRlD0wefknXLBiJPZtadG3Es?=
+ =?us-ascii?Q?lt/b+3Fa/+9bqtBdqhfsyNfpbltQLjEpuquimPrOoGF7N2UUEX2zc5YqDnjG?=
+ =?us-ascii?Q?IfqQNlTaZW5IaVmTzS+YB47g?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR2101MB0930CEB943EF4502932F053BCA759@BL0PR2101MB0930.namprd21.prod.outlook.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ed8bcf5-ca3d-4268-37ac-08d8f9ff1025
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2021 19:55:15.4617
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SuOjODKRY5lvP8K6ZNpfi6R3Umf3DmGbKwM8q5IusP/wX0MU4HEWgrfHbyWOAM698yTEnRYcOKahJAm6Yp15D2rnJdkzU8FRY6SREOT6FJA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0285
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 03:05:26PM +0000, Haiyang Zhang wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Leon Romanovsky <leon@kernel.org>
-> > Sent: Wednesday, April 7, 2021 10:55 AM
-> > To: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: Dexuan Cui <decui@microsoft.com>; davem@davemloft.net;
-> > kuba@kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
-> > <sthemmin@microsoft.com>; wei.liu@kernel.org; Wei Liu
-> > <liuwe@microsoft.com>; netdev@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
-> > Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
-> > Network Adapter (MANA)
-> > 
-> > On Wed, Apr 07, 2021 at 02:41:45PM +0000, Haiyang Zhang wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Leon Romanovsky <leon@kernel.org>
-> > > > Sent: Wednesday, April 7, 2021 8:51 AM
-> > > > To: Dexuan Cui <decui@microsoft.com>
-> > > > Cc: davem@davemloft.net; kuba@kernel.org; KY Srinivasan
-> > > > <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
-> > Stephen
-> > > > Hemminger <sthemmin@microsoft.com>; wei.liu@kernel.org; Wei Liu
-> > > > <liuwe@microsoft.com>; netdev@vger.kernel.org; linux-
-> > > > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
-> > > > Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft
-> > > > Azure Network Adapter (MANA)
-> > > >
-> > > > On Wed, Apr 07, 2021 at 08:40:13AM +0000, Dexuan Cui wrote:
-> > > > > > From: Leon Romanovsky <leon@kernel.org>
-> > > > > > Sent: Wednesday, April 7, 2021 1:10 AM
-> > > > > >
-> > > > > > <...>
-> > > > > >
-> > > > > > > +int gdma_verify_vf_version(struct pci_dev *pdev) {
-> > > > > > > +	struct gdma_context *gc = pci_get_drvdata(pdev);
-> > > > > > > +	struct gdma_verify_ver_req req = { 0 };
-> > > > > > > +	struct gdma_verify_ver_resp resp = { 0 };
-> > > > > > > +	int err;
-> > > > > > > +
-> > > > > > > +	gdma_init_req_hdr(&req.hdr,
-> > GDMA_VERIFY_VF_DRIVER_VERSION,
-> > > > > > > +			  sizeof(req), sizeof(resp));
-> > > > > > > +
-> > > > > > > +	req.protocol_ver_min = GDMA_PROTOCOL_FIRST;
-> > > > > > > +	req.protocol_ver_max = GDMA_PROTOCOL_LAST;
-> > > > > > > +
-> > > > > > > +	err = gdma_send_request(gc, sizeof(req), &req, sizeof(resp),
-> > &resp);
-> > > > > > > +	if (err || resp.hdr.status) {
-> > > > > > > +		pr_err("VfVerifyVersionOutput: %d, status=0x%x\n",
-> > err,
-> > > > > > > +		       resp.hdr.status);
-> > > > > > > +		return -EPROTO;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	return 0;
-> > > > > > > +}
-> > > > > >
-> > > > > > <...>
-> > > > > > > +	err = gdma_verify_vf_version(pdev);
-> > > > > > > +	if (err)
-> > > > > > > +		goto remove_irq;
-> > > > > >
-> > > > > > Will this VF driver be used in the guest VM? What will prevent
-> > > > > > from users
-> > > > to
-> > > > > > change it?
-> > > > > > I think that such version negotiation scheme is not allowed.
-> > > > >
-> > > > > Yes, the VF driver is expected to run in a Linux VM that runs on Azure.
-> > > > >
-> > > > > Currently gdma_verify_vf_version() just tells the PF driver that
-> > > > > the VF
-> > > > driver
-> > > > > is only able to support GDMA_PROTOCOL_V1, and want to use
-> > > > > GDMA_PROTOCOL_V1's message formats to talk to the PF driver later.
-> > > > >
-> > > > > enum {
-> > > > >         GDMA_PROTOCOL_UNDEFINED = 0,
-> > > > >         GDMA_PROTOCOL_V1 = 1,
-> > > > >         GDMA_PROTOCOL_FIRST = GDMA_PROTOCOL_V1,
-> > > > >         GDMA_PROTOCOL_LAST = GDMA_PROTOCOL_V1,
-> > > > >         GDMA_PROTOCOL_VALUE_MAX
-> > > > > };
-> > > > >
-> > > > > The PF driver is supposed to always support GDMA_PROTOCOL_V1, so I
-> > > > expect
-> > > > > here gdma_verify_vf_version() should succeed. If a user changes
-> > > > > the Linux
-> > > > VF
-> > > > > driver and try to use a protocol version not supported by the PF
-> > > > > driver,
-> > > > then
-> > > > > gdma_verify_vf_version() will fail; later, if the VF driver tries
-> > > > > to talk to the
-> > > > PF
-> > > > > driver using an unsupported message format, the PF driver will
-> > > > > return a
-> > > > failure.
-> > > >
-> > > > The worry is not for the current code, but for the future one when
-> > > > you will support v2, v3 e.t.c. First, your code will look like a
-> > > > spaghetti and second, users will try and mix vX with "unsupported"
-> > > > commands just for the fun.
-> > >
-> > > In the future, if the protocol version updated on the host side,
-> > > guests need to support different host versions because not all hosts
-> > > are updated (simultaneously). So this negotiation is necessary to know
-> > > the supported version, and decide the proper command version to use.
-> > 
-> > And how do other paravirtual drivers solve this negotiation scheme?
-> 
-> I saw some other drivers used version negotiation too, for example:
+From: Vineeth Pillai <viremana@linux.microsoft.com> Sent: Wednesday, April =
+7, 2021 7:41 AM
+>=20
+> Detect nested features exposed by Hyper-V if SVM is enabled.
+>=20
+> Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+> ---
+>  arch/x86/kernel/cpu/mshyperv.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
+v.c
+> index 3546d3e21787..4d364acfe95d 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -325,9 +325,17 @@ static void __init ms_hyperv_init_platform(void)
+>  			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
+>  	}
+>=20
+> -	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
+> +	/*
+> +	 * AMD does not need enlightened VMCS as VMCB is already a
+> +	 * datastructure in memory. We need to get the nested
+> +	 * features if SVM is enabled.
+> +	 */
+> +	if (boot_cpu_has(X86_FEATURE_SVM) ||
+> +	    ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
+>  		ms_hyperv.nested_features =3D
+>  			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
+> +		pr_info("Hyper-V nested_features: 0x%x\n",
 
-I see, thanks.
+Nit:  Most other similar lines put the colon in a different place:
 
-> 
-> /**
->  *  ixgbevf_negotiate_api_version_vf - Negotiate supported API version
->  *  @hw: pointer to the HW structure
->  *  @api: integer containing requested API version
->  **/
-> static int ixgbevf_negotiate_api_version_vf(struct ixgbe_hw *hw, int api)
-> {
-> 
-> Thanks,
-> - Haiyang
+		pr_info("Hyper-V: nested features 0x%x\n",
+
+One of these days, I'm going to fix the ones that don't follow this
+pattern. :-)
+
+> +			ms_hyperv.nested_features);
+>  	}
+>=20
+>  	/*
+> --
+> 2.25.1
+
