@@ -2,137 +2,187 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE00235654C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 09:34:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A035F35658D
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 09:38:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349446AbhDGHeL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Apr 2021 03:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349438AbhDGHeK (ORCPT
+        id S233879AbhDGHif (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Apr 2021 03:38:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59583 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233509AbhDGHif (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Apr 2021 03:34:10 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49350C06174A;
-        Wed,  7 Apr 2021 00:34:01 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id i4so376058pjk.1;
-        Wed, 07 Apr 2021 00:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QvZSBrH1kmgxKZKSD+pBe7YtJvXFi8yG9kfTKSmsc5Q=;
-        b=O2cXbe0TlOnka3Htg7a7ktCEm4u84Apnd4pxAh+QckwGH1N5XUJxAQXGojK8urTwHW
-         S6qKShLuqQpXW7czN7NSppj8uMSG1ILItUs2jRqW9KCOM0ewsGPs471AJdd9fQwkregx
-         5WJsKLnvvgP9H/rO+GMThc5QqAWIM6vJUjUihrVpN1qBZ1PZrQQurpb3jy0hrvC8q/ga
-         193Hbzqy2uMvrG2DBivJBITDOAFTPHgkYrA0xxTN2O5/SDYNzxk8E+F9Ofv4wPxpKtYd
-         OpyTo6+F49K8x0yWEkTWuqKF3gTonWd9jxsyeBFNYymfsKPd0N1ZAJ/ruwq0yRVkpYX5
-         /xXQ==
+        Wed, 7 Apr 2021 03:38:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617781105;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3F/RC/fvqCURdl1YYUj40I8I1hZvQBl3Hi/4LGAyDow=;
+        b=gx84uPm06MR9UriepQ5AFT0G8lFsIndfdd14gxMqZnVCHo6eLIyndbMoRIlp311RWR1FzS
+        bTjP1IhiRraH9q9QUghbtBD6W91WEQD/ABGRu81MXyLlvt6mwM0Yb8m2gMf4idLhZO6dB2
+        rFTZZAtve+3MqDtRd9jTHl75LBzuMm4=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-487-i8RfJ-DjPsOTLmPdF5oFeA-1; Wed, 07 Apr 2021 03:38:24 -0400
+X-MC-Unique: i8RfJ-DjPsOTLmPdF5oFeA-1
+Received: by mail-ed1-f70.google.com with SMTP id l22so305860edt.8
+        for <linux-hyperv@vger.kernel.org>; Wed, 07 Apr 2021 00:38:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QvZSBrH1kmgxKZKSD+pBe7YtJvXFi8yG9kfTKSmsc5Q=;
-        b=It3wmurtf3RzDQg5MbvIKfnNC72Wd9j3tdITngALofG7LqQTLW3OPQCtldNm0o7pfN
-         vv6qrC6BmiLflb9Y2jK8e1Tw6F6dvD6Xtb2GLk/VBPQZo76gtaVLMk8/Yl2jhR8i6JcA
-         Yupq8wnJ6MywTGqAe85FUj/riByuVr+xU4sH55ollKcjkNzKPONlw1OXXv0+pfnZ2iC2
-         vhTPcgreszCN1xGhxtPRCzfUXcUfC6yICtfAitgkGF4+T+HOwb0A9NPf9jbPalcw5SCj
-         hwv8xozO9qPdI7UeUMOvT7Jsv5e7gCF+8/NTzxcHKIkXX8YPoAEAwcMxFwWYOag9Fc3j
-         bU+g==
-X-Gm-Message-State: AOAM533NK4KGWEkiEc1OC1RcdlQTGg5Jw8Cdq/K5BEQAMNOaF47mYdvu
-        hJWvWJ4hVxY88VhiaFfAIAWd6OrjgZ86cPhgha0=
-X-Google-Smtp-Source: ABdhPJyRMoGPnuz4MO0FmGOHIM1XSyhsQpJQrKhPLw79y8VziNPPVSJYtRew3BRLtYZwwl4H1BLduTLJZdkCaUCy8qY=
-X-Received: by 2002:a17:902:a406:b029:e6:78c4:71c8 with SMTP id
- p6-20020a170902a406b02900e678c471c8mr1880447plq.17.1617780840716; Wed, 07 Apr
- 2021 00:34:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=3F/RC/fvqCURdl1YYUj40I8I1hZvQBl3Hi/4LGAyDow=;
+        b=BZBw1w8E1Nnv/o1EiP9bn/2dJqWd/U1BoyLoBZhOcThgRKEqh8K+3TvzeQ9+WOms5n
+         45TE00oiL9R9HbnD/D5krjY1VmF01ozHeoXDjzSIhuBZqBWrjgYTharXrYmVC/SlBIN4
+         yaraWHu3qQSrgFzgt3fMBJnOcpeGfVy7ti6puQudxvWucft7lIZITlrBcBKAO3xxHTKZ
+         3D/96k9xJxleHcOXjwgQsHIvNovLN8uYDbA4sv87xRMP2L3Gb+kzPgOMiHUeAACUqPyp
+         Ic5LBN7GQ32qIEO8uyTfv/tyMxTkY4AZx8CDLP3oy+YBRNkCjQBrtf0J1EuELe3CySP/
+         WEWA==
+X-Gm-Message-State: AOAM531+VcxVu4a5QoDgCHCOfxM8Bx84gzl0JJzSQUDK+/WO6HpZLUnp
+        IgP9fNiWAYPVUd54Mbeo1Al3xDmuPWisnRono9kge74TnmdXlQMcd52fwd3ursyzcW83XojMslG
+        isuD8WjbjPlsMdorsCXGWYnY+
+X-Received: by 2002:a17:907:9611:: with SMTP id gb17mr2237666ejc.325.1617781102975;
+        Wed, 07 Apr 2021 00:38:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyWJdCKOu9XXc7E7scSIAweJhXQCEIOBw2LgfiKIY6UeG+NZrHwNBKvBNLJ+ltcbeg03BcDgQ==
+X-Received: by 2002:a17:907:9611:: with SMTP id gb17mr2237651ejc.325.1617781102784;
+        Wed, 07 Apr 2021 00:38:22 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id bo19sm8418004edb.17.2021.04.07.00.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Apr 2021 00:38:22 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        linux-hyperv@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        viremana@linux.microsoft.com, sunilmut@microsoft.com,
+        wei.liu@kernel.org, ligrassi@microsoft.com, kys@microsoft.com
+Subject: Re: [RFC PATCH 04/18] virt/mshv: request version ioctl
+In-Reply-To: <fc88ba72-83ab-025e-682d-4981762ed4f6@linux.microsoft.com>
+References: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1605918637-12192-5-git-send-email-nunodasneves@linux.microsoft.com>
+ <87y2fxmlmb.fsf@vitty.brq.redhat.com>
+ <194e0dad-495e-ae94-3f51-d2c95da52139@linux.microsoft.com>
+ <87eeguc61d.fsf@vitty.brq.redhat.com>
+ <fc88ba72-83ab-025e-682d-4981762ed4f6@linux.microsoft.com>
+Date:   Wed, 07 Apr 2021 09:38:21 +0200
+Message-ID: <87eefmczo2.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com> <20210406165108.GA4332@42.do-not-panic.com>
-In-Reply-To: <20210406165108.GA4332@42.do-not-panic.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 7 Apr 2021 10:33:44 +0300
-Message-ID: <CAHp75Ve9vBQqSegM2-ch9NUN-MdevxxOs5ZdHkk1W7AacN+Wrw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-remoteproc@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        kexec@lists.infradead.org, rcu@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Corey Minyard <minyard@acm.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 7, 2021 at 10:25 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+Nuno Das Neves <nunodasneves@linux.microsoft.com> writes:
+
+> On 3/5/2021 1:18 AM, Vitaly Kuznetsov wrote:
+>> Nuno Das Neves <nunodasneves@linux.microsoft.com> writes:
+>> 
+>>> On 2/9/2021 5:11 AM, Vitaly Kuznetsov wrote:
+>>>> Nuno Das Neves <nunodasneves@linux.microsoft.com> writes:
+>>>>
+>> ...
+>>>>> +
+>>>>> +3.1 MSHV_REQUEST_VERSION
+>>>>> +------------------------
+>>>>> +:Type: /dev/mshv ioctl
+>>>>> +:Parameters: pointer to a u32
+>>>>> +:Returns: 0 on success
+>>>>> +
+>>>>> +Before issuing any other ioctls, a MSHV_REQUEST_VERSION ioctl must be called to
+>>>>> +establish the interface version with the kernel module.
+>>>>> +
+>>>>> +The caller should pass the MSHV_VERSION as an argument.
+>>>>> +
+>>>>> +The kernel module will check which interface versions it supports and return 0
+>>>>> +if one of them matches.
+>>>>> +
+>>>>> +This /dev/mshv file descriptor will remain 'locked' to that version as long as
+>>>>> +it is open - this ioctl can only be called once per open.
+>>>>> +
+>>>>
+>>>> KVM used to have KVM_GET_API_VERSION too but this turned out to be not
+>>>> very convenient so we use capabilities (KVM_CHECK_EXTENSION/KVM_ENABLE_CAP)
+>>>> instead.
+>>>>
+>>>
+>>> The goal of MSHV_REQUEST_VERSION is to support changes to APIs in the core set.
+>>> When we add new features/ioctls beyond the core we can use an extension/capability
+>>> approach like KVM.
+>>>
+>> 
+>> Driver versions is a very bad idea from distribution/stable kernel point
+>> of view as it presumes that the history is linear. It is not.
+>> 
+>> Imagine you have the following history upstream:
+>> 
+>> MSHV_REQUEST_VERSION = 1
+>> <100 commits with features/fixes>
+>> MSHV_REQUEST_VERSION = 2
+>> <another 100 commits with features/fixes>
+>> MSHV_REQUEST_VERSION = 2
+>> 
+>> Now I'm a linux distribution / stable kernel maintainer. My kernel is at
+>> MSHV_REQUEST_VERSION = 1. Now I want to backport 1 feature from between
+>> VER=1 and VER=2 and another feature from between VER=2 and VER=3. My
+>> history now looks like
+>> 
+>> MSHV_REQUEST_VERSION = 1
+>> <5 commits from between VER=1 and VER=2>
+>>    Which version should I declare here???? 
+>> <5 commits from between VER=2 and VER=3>
+>>    Which version should I declare here???? 
+>> 
+>> If I keep VER=1 then userspace will think that I don't have any extra
+>> features added and just won't use them. If I change VER to 2/3, it'll
+>> think I have *all* features from between these versions.
+>> 
+>> The only reasonable way to manage this is to attach a "capability" to
+>> every ABI change and expose this capability *in the same commit which
+>> introduces the change to the ABI*. This way userspace will now exactly
+>> which ioctls are available and what are their interfaces.
+>> 
+>> Also, trying to define "core set" is hard but you don't really need
+>> to.
+>> 
 >
-> On Tue, Apr 06, 2021 at 04:31:58PM +0300, Andy Shevchenko wrote:
-> > diff --git a/include/linux/panic_notifier.h b/include/linux/panic_notifier.h
-> > new file mode 100644
-> > index 000000000000..41e32483d7a7
-> > --- /dev/null
-> > +++ b/include/linux/panic_notifier.h
-> > @@ -0,0 +1,12 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _LINUX_PANIC_NOTIFIERS_H
-> > +#define _LINUX_PANIC_NOTIFIERS_H
-> > +
-> > +#include <linux/notifier.h>
-> > +#include <linux/types.h>
-> > +
-> > +extern struct atomic_notifier_head panic_notifier_list;
-> > +
-> > +extern bool crash_kexec_post_notifiers;
-> > +
-> > +#endif       /* _LINUX_PANIC_NOTIFIERS_H */
+> We've had some internal discussion on this.
 >
-> Why is it worth it to add another file just for this?
+> There is bound to be some iteration before this ABI is stable, since even the
+> underlying Microsoft hypervisor interfaces aren't stable just yet.
+>
+> It might make more sense to just have an IOCTL to check if the API is stable yet.
+> This would be analogous to checking if kVM_GET_API_VERSION returns 12.
+>
+> How does this sound as a proposal?
+> An MSHV_CHECK_EXTENSION ioctl to query extensions to the core /dev/mshv API.
+>
+> It takes a single argument, an integer named MSHV_CAP_* corresponding to
+> the extension to check the existence of.
+>
+> The ioctl will return 0 if the extension is unsupported, or a positive integer
+> if supported.
+>
+> We can initially include a capability called MSHV_CAP_CORE_API_STABLE.
+> If supported, the core APIs are stable.
 
-The main point is to break tons of loops that prevent having clean
-headers anymore.
+This sounds reasonable, I'd suggest you reserve MSHV_CAP_CORE_API_STABLE
+right away but don't expose it yet so it's clear the API is not yet
+stable. Test userspace you have may always assume it's running with the
+latest kernel.
 
-In this case, see bug.h, which is very important in this sense.
+Also, please be clear about the fact that /dev/mshv doesn't
+provide a stable API yet so nobody builds an application on top of
+it.
 
->  Seems like a very
-> small file.
-
-If it is an argument, it's kinda strange. We have much smaller headers.
+One more though: it is probably a good idea to introduce selftests for
+/dev/mshv (similar to KVM's selftests in
+/tools/testing/selftests/kvm). Selftests don't really need a stable ABI
+as they live in the same linux.git and can be updated in the same patch
+series which changes /dev/mshv behavior. Selftests are very useful for
+checking there are no regressions, especially in the situation when
+there's no publicly available userspace for /dev/mshv.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Vitaly
+
