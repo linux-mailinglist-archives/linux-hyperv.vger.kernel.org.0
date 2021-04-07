@@ -2,101 +2,136 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F5AE356E61
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 16:19:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E5EB356EA9
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Apr 2021 16:30:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348331AbhDGOTh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 7 Apr 2021 10:19:37 -0400
-Received: from mail-wm1-f45.google.com ([209.85.128.45]:36493 "EHLO
-        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352824AbhDGOTg (ORCPT
+        id S229546AbhDGOay (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Apr 2021 10:30:54 -0400
+Received: from mail-pj1-f46.google.com ([209.85.216.46]:42761 "EHLO
+        mail-pj1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352939AbhDGOaw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 7 Apr 2021 10:19:36 -0400
-Received: by mail-wm1-f45.google.com with SMTP id j20-20020a05600c1914b029010f31e15a7fso1248065wmq.1;
-        Wed, 07 Apr 2021 07:19:24 -0700 (PDT)
+        Wed, 7 Apr 2021 10:30:52 -0400
+Received: by mail-pj1-f46.google.com with SMTP id j6-20020a17090adc86b02900cbfe6f2c96so1415205pjv.1;
+        Wed, 07 Apr 2021 07:30:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9m75QxnXJIDFvd04jFuU+jAebNsaXnrFEZtwPGGiQ6I=;
-        b=hy/UShkRuKlEBnY4DnlQ5swvDeszqHFjvepcCLZAmOihTZkegZI05vJTSra9Cl7LXt
-         ALunM83N4x4J9NerkawCXuvhAA+dZj0Pje+RurRmY8Q6ljgLy+W5GAdkBcdADC6zcmdC
-         YeFc/pfJCGOLckZ/qnhoCvWYV/+O+DPwTlraBBosr9xdYFyATWNCYxKkRcrrUaTASmmH
-         ZkG05209AgIPH9d2iAAgtIAcbXEu4teuD/4rliA7np815eCbby1jgQ2YoRXwNB1DEkaW
-         amHcv4mdwA8xtO94Z2sWiWmTMhxVPHggRXzKU3CaY3de6AQSw/wf9jgCfLdADlXbUA8h
-         vGdg==
-X-Gm-Message-State: AOAM533mX35qyfE/b266WwubGqknzdnTD5v12466rAvSpICmPGGAo7zc
-        jYdjkTWCzyI73mEVY8ibpVU=
-X-Google-Smtp-Source: ABdhPJwBnX0Ez4uvqR15d2CNOLfxYcbZiHDxpYoR+YreH8iCinoqqpy3ifThs9C2Em96oABEhH6V4Q==
-X-Received: by 2002:a7b:c186:: with SMTP id y6mr3420630wmi.84.1617805164174;
-        Wed, 07 Apr 2021 07:19:24 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id w10sm11862981wrv.95.2021.04.07.07.19.23
+        bh=1vVuZ4MvRzeF+pr2v0xmBFFQwK6hdMJanVjlk9hErro=;
+        b=p1KK1cOkqF4vkjiGQlQyjZrd/3svw7AsHzTRVm3MhKvVkKR6Dwx4Dfm6sdCjc9Sjqs
+         e9RPRL7lF7O2aTAFYFcgFp91u55IRZM+NAVgSg3WTaHfN7rlTs3eMe0+euKVBIXgJ3j9
+         Dx7tezCIPDcT5myzik9AmqF8mNzgjQnKa2P1oH64IpJA2yYdZcHqX0zanidKaX0AiS4t
+         rhmEmvIfDKDx+m7h6PfV0SxFb7d6VhzZI1lt0LOypBaHz7Io+8kmdqx8DA71pNVQj8F4
+         jPzUAMGalLGzmQ6k7AK911TjafA0Gc3OqjWJtEV96H8Ty8DiN14TDbhUigG4+ngbU61s
+         UaRw==
+X-Gm-Message-State: AOAM531J1WRsK/PlO1ajFnlQH3WLMDcsFiNsNR0QtAUYWNmZSZZxz0uS
+        WHPuV3DT84I9B+teB69JxaU=
+X-Google-Smtp-Source: ABdhPJytaBCeu/N78G2ItU1as7w8fUmjf8wbl8aAQkobTbao0e2hHv5pq8RooRp01fzv5LCBwmpFDg==
+X-Received: by 2002:a17:90a:6343:: with SMTP id v3mr3482681pjs.153.1617805842980;
+        Wed, 07 Apr 2021 07:30:42 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id k11sm5779292pjs.1.2021.04.07.07.30.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Apr 2021 07:19:23 -0700 (PDT)
-Date:   Wed, 7 Apr 2021 14:19:22 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        viremana@linux.microsoft.com, sunilmut@microsoft.com,
-        ligrassi@microsoft.com, kys@microsoft.com
-Subject: Re: [RFC PATCH 04/18] virt/mshv: request version ioctl
-Message-ID: <20210407141922.ksxdngftdaruhnki@liuwe-devbox-debian-v2>
-References: <1605918637-12192-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1605918637-12192-5-git-send-email-nunodasneves@linux.microsoft.com>
- <87y2fxmlmb.fsf@vitty.brq.redhat.com>
- <194e0dad-495e-ae94-3f51-d2c95da52139@linux.microsoft.com>
- <87eeguc61d.fsf@vitty.brq.redhat.com>
- <fc88ba72-83ab-025e-682d-4981762ed4f6@linux.microsoft.com>
- <87eefmczo2.fsf@vitty.brq.redhat.com>
- <20210407134302.ng6n4el2km7sujfp@liuwe-devbox-debian-v2>
- <875z0ychv3.fsf@vitty.brq.redhat.com>
+        Wed, 07 Apr 2021 07:30:41 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 09D07402D7; Wed,  7 Apr 2021 14:30:41 +0000 (UTC)
+Date:   Wed, 7 Apr 2021 14:30:40 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-remoteproc@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        kexec@lists.infradead.org, rcu@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Corey Minyard <minyard@acm.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>
+Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
+Message-ID: <20210407143040.GB4332@42.do-not-panic.com>
+References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
+ <20210406165108.GA4332@42.do-not-panic.com>
+ <CAHp75Ve9vBQqSegM2-ch9NUN-MdevxxOs5ZdHkk1W7AacN+Wrw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <875z0ychv3.fsf@vitty.brq.redhat.com>
+In-Reply-To: <CAHp75Ve9vBQqSegM2-ch9NUN-MdevxxOs5ZdHkk1W7AacN+Wrw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 04:02:56PM +0200, Vitaly Kuznetsov wrote:
-> Wei Liu <wei.liu@kernel.org> writes:
-> 
-> > On Wed, Apr 07, 2021 at 09:38:21AM +0200, Vitaly Kuznetsov wrote:
+On Wed, Apr 07, 2021 at 10:33:44AM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 7, 2021 at 10:25 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
 > >
-> >> One more though: it is probably a good idea to introduce selftests for
-> >> /dev/mshv (similar to KVM's selftests in
-> >> /tools/testing/selftests/kvm). Selftests don't really need a stable ABI
-> >> as they live in the same linux.git and can be updated in the same patch
-> >> series which changes /dev/mshv behavior. Selftests are very useful for
-> >> checking there are no regressions, especially in the situation when
-> >> there's no publicly available userspace for /dev/mshv.
+> > On Tue, Apr 06, 2021 at 04:31:58PM +0300, Andy Shevchenko wrote:
+> > > diff --git a/include/linux/panic_notifier.h b/include/linux/panic_notifier.h
+> > > new file mode 100644
+> > > index 000000000000..41e32483d7a7
+> > > --- /dev/null
+> > > +++ b/include/linux/panic_notifier.h
+> > > @@ -0,0 +1,12 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +#ifndef _LINUX_PANIC_NOTIFIERS_H
+> > > +#define _LINUX_PANIC_NOTIFIERS_H
+> > > +
+> > > +#include <linux/notifier.h>
+> > > +#include <linux/types.h>
+> > > +
+> > > +extern struct atomic_notifier_head panic_notifier_list;
+> > > +
+> > > +extern bool crash_kexec_post_notifiers;
+> > > +
+> > > +#endif       /* _LINUX_PANIC_NOTIFIERS_H */
 > >
-> > I think this can wait until we merge the first implementation in tree.
-> > There are still a lot of moving parts. Our (currently limited) internal
-> > test cases need more cleaning up before they are ready. I certainly
-> > don't want to distract Nuno from getting the foundation right.
-> >
+> > Why is it worth it to add another file just for this?
 > 
-> I'm absolutely fine with this approach, selftests are a nice add-on, not
-> a requirement for the initial implementation. Also, to make them more
-> useful to mere mortals, a doc on how to run Linux as root Hyper-V
-> partition would come handy)
+> The main point is to break tons of loops that prevent having clean
+> headers anymore.
+>
+> In this case, see bug.h, which is very important in this sense.
 
-Making this system easier for others to use and consume is on our radar.
-Currently you need Windows bootloader and a not-yet-released loader to
-load the hypervisor. We're making progress in bringing in GRUB.
+OK based on the commit log this was not clear, it seemed more of moving
+panic stuff to its own file, so just cleanup.
 
-Needless to say there are technical and non-technical challenges for
-this work, so don't expect it to happen very soon. :-)
-
-Wei.
-
+> >  Seems like a very
+> > small file.
 > 
-> -- 
-> Vitaly
-> 
+> If it is an argument, it's kinda strange. We have much smaller headers.
+
+The motivation for such separate file was just not clear on the commit
+log.
+
+  Luis
