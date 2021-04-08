@@ -2,87 +2,127 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57623357D5E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 09:30:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0579B35814E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 13:07:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230239AbhDHHaY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 8 Apr 2021 03:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229996AbhDHHaX (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 8 Apr 2021 03:30:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D8D5B60FF1;
-        Thu,  8 Apr 2021 07:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617867012;
-        bh=dqWevd8TMMouKEzqODSdYkGf0l5CEKUdFbPterV++cE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pmcV+UZluXt6uUoGqr7RBAHxoOvUY3cCS7vWIzj3aQl+LUWSrJv2lYVWCXBn047Ra
-         oZlt17xRyZsSAXQlHVfyjRk754uov3ff0l22xGdPD1stwp4dqYQ2jx7mFfDqGPsG+r
-         OSQcfjf23acIhXkRm+442dkwxodrxsOWUqLLB86w+tgAo0kUq7aSqOr+O3rFQ3DC1c
-         e/69rj3LSFGPVejOXUTmH1u5KfP9u9aSnStGq/dcNKtjlsAunOg0NLQwx7tk9XdggB
-         Eb7Aj/gLYCeop9Q5kTwhhHudw7Hx/0uPq4Lojq8Dm+yvSwiOV37OnoJl6QkVmOmL+d
-         w/mKdJpA9VwTA==
-Date:   Thu, 8 Apr 2021 10:30:05 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S230506AbhDHLHK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 8 Apr 2021 07:07:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44575 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229721AbhDHLHJ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 8 Apr 2021 07:07:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617880018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uqFnFnU+W5hoDYL4hIDIXsxj0nax+65fpHN1hSzXtQU=;
+        b=i5RFaEYOoBBVxgion5/FMLabt+iHjFmzycvPHnes5VOYfGVW67/TwK3wqaFaf/bHdfqLvh
+        EHfUTdt1lZJAwO1pjJb+KIZiCUycVdwulaXah9JDiPcZSkXGfs4hLp7j/tSLRGKhr7rMrO
+        4HxXGDwWIvjgPJPVvACL+2fi7AYE+uw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-585-4JcfE1RUPzyIK8El0GfZwA-1; Thu, 08 Apr 2021 07:06:56 -0400
+X-MC-Unique: 4JcfE1RUPzyIK8El0GfZwA-1
+Received: by mail-wm1-f72.google.com with SMTP id n2so329749wmi.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 08 Apr 2021 04:06:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=uqFnFnU+W5hoDYL4hIDIXsxj0nax+65fpHN1hSzXtQU=;
+        b=AA76KTBxG8Jd6BhJN0qIi5bbRXx3+SVTwPtqUXO+Ozh98tbPKipQMkdYAepKXsZ1aQ
+         A/XI6CIIEq41s6Lp/29IhCyijgnZxsc5UKISYt9FAGcD+E8woN/LR9JW01kUJAak/uW/
+         ZSHzZGohrKkhXfmvcDJ2AqURIq9CDzJ/y2btu6dYyGVzQTKNifKzRIaY2uy9foLDyKjq
+         q8dZZ0+mQz+hKWfd8We/pXhB9+JueX7hrnfcZo/pMgQ9LGQYWu3OSDIXwhchFDkFVqTY
+         qWJqmOHBYx7fd6tfZac31xS8Fu6LgTJ7qAzI2dWh9lt7KnYVnh6g2YXIIh8ETHo2861+
+         zA8g==
+X-Gm-Message-State: AOAM530LyJsjJAfBih+LsBVjEh7hhyrgjRYN/8357WzM3MfjtmVlY6Ss
+        4hHpwRv1no7GD9mzVweT5fi3AGUjCo5PEJ32ly0TawCn/cqqG9PPwBg+SfV5HSYcUloRYDyM9e0
+        38nLWrnql7tYnloqwmb6VxYVB
+X-Received: by 2002:a1c:9dd5:: with SMTP id g204mr7810241wme.87.1617880015662;
+        Thu, 08 Apr 2021 04:06:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxhTjY0W2FDvXVXeD2w+sxa4IvR8DiEXHT/hvQBvRN5BWI+R63DZx6H7rXpPawxMiiXKC0BMw==
+X-Received: by 2002:a1c:9dd5:: with SMTP id g204mr7810214wme.87.1617880015445;
+        Thu, 08 Apr 2021 04:06:55 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id z15sm15469155wrw.38.2021.04.08.04.06.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Apr 2021 04:06:55 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vineeth Pillai <viremana@linux.microsoft.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Wei Liu <liuwe@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: mana: Add a driver for Microsoft Azure
- Network Adapter (MANA)
-Message-ID: <YG6w/eNahpBlmCgJ@unreal>
-References: <20210406232321.12104-1-decui@microsoft.com>
- <YG0F4HkslqZHtBya@lunn.ch>
- <MW2PR2101MB089237C8CCFFF0C352CA658ABF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
- <YG1qF8lULn8lLJa/@unreal>
- <MW2PR2101MB08923F19D070996429979E38BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
- <YG2pMD9eIHsRetDJ@unreal>
- <MW2PR2101MB0892AC106C360F2A209560A8BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+        Haiyang Zhang <haiyangz@microsoft.com>
+Subject: Re: [PATCH 1/7] hyperv: Detect Nested virtualization support for SVM
+In-Reply-To: <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
+References: <cover.1617804573.git.viremana@linux.microsoft.com>
+ <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
+Date:   Thu, 08 Apr 2021 13:06:53 +0200
+Message-ID: <87lf9tavci.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB0892AC106C360F2A209560A8BF759@MW2PR2101MB0892.namprd21.prod.outlook.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 07, 2021 at 09:59:52PM +0000, Dexuan Cui wrote:
-> > From: Leon Romanovsky <leon@kernel.org>
-> > Sent: Wednesday, April 7, 2021 5:45 AM
-> > > >
-> > > > BTW, you don't need to write { 0 }, the {} is enough.
-> > >
-> > > Thanks for the suggestion! I'll use {0} in v2.
-> > 
-> > You missed the point, "{ 0 }" change to be "{}" without 0.
-> 
-> Got it. Will make the suggested change.
+Vineeth Pillai <viremana@linux.microsoft.com> writes:
 
-The numbers are not important, if you are curious, read this thread, it
-talks about {}, {0}, memset(0,..) and padding :)
-https://lore.kernel.org/linux-rdma/20200730192026.110246-1-yepeilin.cs@gmail.com/
+> Detect nested features exposed by Hyper-V if SVM is enabled.
+>
+> Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+> ---
+>  arch/x86/kernel/cpu/mshyperv.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 3546d3e21787..4d364acfe95d 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -325,9 +325,17 @@ static void __init ms_hyperv_init_platform(void)
+>  			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
+>  	}
+>  
+> -	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
+> +	/*
+> +	 * AMD does not need enlightened VMCS as VMCB is already a
+> +	 * datastructure in memory. 
 
-> 
-> FWIW, {0} and { 0 } are still widely used, but it looks like
-> {} is indeed more preferred:
-> 
-> $ grep "= {};" drivers/net/  -nr  | wc -l
-> 829
-> 
-> $ grep "= {0};" drivers/net/  -nr  | wc -l
-> 708
-> 
-> $ grep "= {};" kernel/  -nr  | wc -l
-> 29
-> 
-> $ grep "= {0};" kernel/  -nr  | wc -l
-> 4
+Well, VMCS is also a structure in memory, isn't it? It's just that we
+don't have a 'clean field' concept for it and we can't use normal memory
+accesses.
+
+> 	We need to get the nested
+> +	 * features if SVM is enabled.
+> +	 */
+> +	if (boot_cpu_has(X86_FEATURE_SVM) ||
+> +	    ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
+
+Do I understand correctly that we can just look at CPUID.0x40000000.EAX
+and in case it is >= 0x4000000A we can read HYPERV_CPUID_NESTED_FEATURES
+leaf? I'd suggest we do that intead then.
+
+>  		ms_hyperv.nested_features =
+>  			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
+> +		pr_info("Hyper-V nested_features: 0x%x\n",
+> +			ms_hyperv.nested_features);
+>  	}
+>  
+>  	/*
+
+-- 
+Vitaly
+
