@@ -2,140 +2,150 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E126C3582D8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 14:06:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A46D7358388
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 14:45:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231345AbhDHMGL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 8 Apr 2021 08:06:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28383 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231451AbhDHMGJ (ORCPT
+        id S229741AbhDHMp2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 8 Apr 2021 08:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231195AbhDHMp1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 8 Apr 2021 08:06:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617883558;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eWJUzLuz50FUt+ImUQDHaMIAG0aReYXQygXZr8zlKMM=;
-        b=Gf4MPxP2O81wXemrdZ8dcGZ5G3i7l3E0B21bYUPuH4SVNqnUprRHELFLU/ZHOftSfk1Xqs
-        UUtSjUAW6l/XCSQ8TkJ7ICLwDhv5/HP1xS+VwQ8BVx6M9sFmyJgfo9UowMNhoC9vULDxtD
-        w7mLOLdgFGvDxqu3M+l6DamXlsT/7T8=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-554-urVx6TywOkyJHhMlMTuLbg-1; Thu, 08 Apr 2021 08:05:56 -0400
-X-MC-Unique: urVx6TywOkyJHhMlMTuLbg-1
-Received: by mail-ed1-f70.google.com with SMTP id b8so920012ede.5
-        for <linux-hyperv@vger.kernel.org>; Thu, 08 Apr 2021 05:05:56 -0700 (PDT)
+        Thu, 8 Apr 2021 08:45:27 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B419C061762
+        for <linux-hyperv@vger.kernel.org>; Thu,  8 Apr 2021 05:45:16 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id l4so2781128ejc.10
+        for <linux-hyperv@vger.kernel.org>; Thu, 08 Apr 2021 05:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UMuAklHy/tPt7YPBozpvIQsmWDAIa3a/la6+zoUVcdI=;
+        b=JXlbvdv6BKxL2QLt+A6EZMYCjKur7zKVGHA+SPjjhttU3LjU5J8CTsvMPL70CwGYsq
+         CUXz1jkKLkBNcttlxCmAirFDD+kjBSkQXhxTFfLF/zDE+suTqi1E02kHIf/SGivtkXXC
+         r7MEDlKMlo41vpb3rOrLkq/HnnmBY745AuXsE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=eWJUzLuz50FUt+ImUQDHaMIAG0aReYXQygXZr8zlKMM=;
-        b=Xm9A/ctJLWe0Q/rq5mFfOuLTVBTNpP6ZhVQSRibaOXbH9foxDmeUtD1MiExZ2p7KLR
-         UipoDnp3THLA1BUMJaMgsRwXlxA65hoMVZaWf48jftq9FqDCS1N7/ud/P3A0pFKtQD0u
-         juZCOI6EaPgkaRuEf3QAeMJj8oQFlqjZ08IuSr6w3+jwnm+kTBdrFWLFKPe8KasyeDr+
-         0wwjWsVichgZWqydx/Nstp7fMKriWm1ApiTJRFLXn2f85nd1Whft5Qd+CqYpQMpKYShf
-         KOrw+XVdcAjm+gwe8NA8i5D89+inw39fcmFeu9iosP8Vuc0ivjy5s8229WQQhS50CqPA
-         TIIg==
-X-Gm-Message-State: AOAM533RMG7e0hmTSBGY4ITywEoJjHi7KMnCGCuGzkr4Sngv09iLdX1h
-        3FO2+jhO+KzF00vaTNMDtyo0fBwoTx/ApsOocfdxr/WmmQhLVoNS9fiLeK2RnbMhFx+n4/Tdo9B
-        15q2KGfA0UrrxxsrxN+JqYYDg
-X-Received: by 2002:aa7:c983:: with SMTP id c3mr10931264edt.185.1617883555600;
-        Thu, 08 Apr 2021 05:05:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwhkUm5kBzngNh7+NALwEQCBHQoPbgDTqKumZWUBoMFU98rV+GaTwHrgwr7jiW8o/TjTsGC5w==
-X-Received: by 2002:aa7:c983:: with SMTP id c3mr10931236edt.185.1617883555399;
-        Thu, 08 Apr 2021 05:05:55 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id gq9sm14465571ejb.62.2021.04.08.05.05.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Apr 2021 05:05:55 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Siddharth Chandrasekaran <sidcha@amazon.de>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Evgeny Iakovlev <eyakovl@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UMuAklHy/tPt7YPBozpvIQsmWDAIa3a/la6+zoUVcdI=;
+        b=qQMgicwifgIyt5aqqn9IZJNMn4YD1HeC6/Nn20EHU4t8YA/ENvyi29w0CnwoC+ZEAB
+         PyLNbJ2tUnpJXaUmaaIWenxd6Wd7nDPcQ1AL5uiYpX372n72AG8Z3g5mCZ8c81v2hdtF
+         ka8x16UKhsP9EKoQhJuTU2jJhrMxym3e7vNB0XLU5IV3E+M3PXiFr4m4Zglb6wXDmxPS
+         21gfaTDmrmnA0gaw4GRFwP+5FZJbRaZPzqJp3mrm3IjZe8nJSHstlFW3XGE9QEyJ0P63
+         uOs7QP9ZmQKjnc4qJnqFCtUpuLhx68tUill/svOjC+edJsPENUhPjrBIhfCfAIqpFzJd
+         Ke9A==
+X-Gm-Message-State: AOAM532/z1VN2R0fR6xvLnlNjdRiYwQDvD08YhBwWPquE+Np1XF3AC9U
+        ixAJRnIUHOKCHveQxd47S8NxWw==
+X-Google-Smtp-Source: ABdhPJwq7QZNDA3D6CGhNZXcz6mj8YzK/fNHfbq7NkBvOdUqzkgcZZF3Ehka2wUefbZcZbtsp6oq8w==
+X-Received: by 2002:a17:906:1fd7:: with SMTP id e23mr400958ejt.528.1617885914623;
+        Thu, 08 Apr 2021 05:45:14 -0700 (PDT)
+Received: from [192.168.1.149] ([80.208.71.248])
+        by smtp.gmail.com with ESMTPSA id r4sm14262813ejd.125.2021.04.08.05.45.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Apr 2021 05:45:14 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-remoteproc@vger.kernel.org, linux-arch@vger.kernel.org,
+        kexec@lists.infradead.org, rcu@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 4/4] KVM: hyper-v: Advertise support for fast XMM
- hypercalls
-In-Reply-To: <20210407211954.32755-5-sidcha@amazon.de>
-References: <20210407211954.32755-1-sidcha@amazon.de>
- <20210407211954.32755-5-sidcha@amazon.de>
-Date:   Thu, 08 Apr 2021 14:05:53 +0200
-Message-ID: <87blap7zha.fsf@vitty.brq.redhat.com>
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Corey Minyard <minyard@acm.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>
+References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <03be4ed9-8e8d-e2c2-611d-ac09c61d84f9@rasmusvillemoes.dk>
+Date:   Thu, 8 Apr 2021 14:45:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+On 06/04/2021 15.31, Andy Shevchenko wrote:
+> kernel.h is being used as a dump for all kinds of stuff for a long time.
+> Here is the attempt to start cleaning it up by splitting out panic and
+> oops helpers.
 
-> Now that all extant hypercalls that can use XMM registers (based on
-> spec) for input/outputs are patched to support them, we can start
-> advertising this feature to guests.
->
-> Cc: Alexander Graf <graf@amazon.com>
-> Cc: Evgeny Iakovlev <eyakovl@amazon.de>
-> Signed-off-by: Siddharth Chandrasekaran <sidcha@amazon.de>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h | 4 ++--
->  arch/x86/kvm/hyperv.c              | 1 +
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index e6cd3fee562b..1f160ef60509 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -49,10 +49,10 @@
->  /* Support for physical CPU dynamic partitioning events is available*/
->  #define HV_X64_CPU_DYNAMIC_PARTITIONING_AVAILABLE	BIT(3)
->  /*
-> - * Support for passing hypercall input parameter block via XMM
-> + * Support for passing hypercall input and output parameter block via XMM
->   * registers is available
->   */
-> -#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE		BIT(4)
-> +#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE		BIT(4) | BIT(15)
+Yay.
 
-TLFS 6.0b states that there are two distinct bits for input and output:
+Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-CPUID Leaf 0x40000003.EDX:
-Bit 4: support for passing hypercall input via XMM registers is available.
-Bit 15: support for returning hypercall output via XMM registers is available.
+> At the same time convert users in header and lib folder to use new header.
+> Though for time being include new header back to kernel.h to avoid twisted
+> indirected includes for existing users.
 
-and HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE is not currently used
-anywhere, I'd suggest we just rename 
+I think it would be good to have some place to note that "This #include
+is just for backwards compatibility, it will go away RealSoonNow, so if
+you rely on something from linux/panic.h, include that explicitly
+yourself TYVM. And if you're looking for a janitorial task, write a
+script to check that every file that uses some identifier defined in
+panic.h actually includes that file. When all offenders are found and
+dealt with, remove the #include and this note.".
 
-HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE to HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE
-and add HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE (bit 15).
+> +
+> +struct taint_flag {
+> +	char c_true;	/* character printed when tainted */
+> +	char c_false;	/* character printed when not tainted */
+> +	bool module;	/* also show as a per-module taint flag */
+> +};
+> +
+> +extern const struct taint_flag taint_flags[TAINT_FLAGS_COUNT];
 
->  /* Support for a virtual guest idle state is available */
->  #define HV_X64_GUEST_IDLE_STATE_AVAILABLE		BIT(5)
->  /* Frequency MSRs available */
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index bf2f86f263f1..dd462c1d641d 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -2254,6 +2254,7 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  			ent->ebx |= HV_POST_MESSAGES;
->  			ent->ebx |= HV_SIGNAL_EVENTS;
->  
-> +			ent->edx |= HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE;
->  			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
->  			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+While you're doing this, nothing outside of kernel/panic.c cares about
+the definition of struct taint_flag or use the taint_flags array, so
+could you make the definition private to that file and make the array
+static? (Another patch, of course.)
 
--- 
-Vitaly
+> +enum lockdep_ok {
+> +	LOCKDEP_STILL_OK,
+> +	LOCKDEP_NOW_UNRELIABLE,
+> +};
+> +
+> +extern const char *print_tainted(void);
+> +extern void add_taint(unsigned flag, enum lockdep_ok);
+> +extern int test_taint(unsigned flag);
+> +extern unsigned long get_taint(void);
 
+I know you're just moving code, but it would be a nice opportunity to
+drop the redundant externs.
+
+Rasmus
