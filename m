@@ -2,28 +2,29 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F686358461
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 15:15:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 009F7358474
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 15:18:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231255AbhDHNQC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 8 Apr 2021 09:16:02 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:34986 "EHLO
+        id S231221AbhDHNSu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 8 Apr 2021 09:18:50 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:35392 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229741AbhDHNQB (ORCPT
+        with ESMTP id S230467AbhDHNSu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 8 Apr 2021 09:16:01 -0400
+        Thu, 8 Apr 2021 09:18:50 -0400
 Received: from [192.168.86.30] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9246420B5680;
-        Thu,  8 Apr 2021 06:15:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9246420B5680
+        by linux.microsoft.com (Postfix) with ESMTPSA id A411B20B5680;
+        Thu,  8 Apr 2021 06:18:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A411B20B5680
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1617887750;
-        bh=XZtRYq5agCaEslp2SkcIxFuSoTSHZxnoXDUN99ENL0M=;
+        s=default; t=1617887918;
+        bh=Uvq3RHp7zfj+SgleBAFg1sqKAQHQLyNq9zpMXhnErH8=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GvyHAEg4gxRRvHJLEjU1/eh6x3wmXHkOv357f0YDONPqsL6y4qMEczVbayazjH1Bv
-         Hs3/RiSDu8+uCxF3bF1/76pzWb2368cfPni8KfxPghJB9zCyZ7AfQfJ/w+bSOOpGkG
-         Acj8eJwqkHh1BXE75Z4yWcBL1OG4d/w/HZ3dWvyM=
-Subject: Re: [PATCH 1/7] hyperv: Detect Nested virtualization support for SVM
+        b=juVIgNa7Vc+ziH/Msl5xciwWFD1g6WdeZO+Nq6uKJ16YK5Si5OhGNAd/4RC27IN/L
+         pEB0SpdpoVetBRxgwjsbHAkyRNd2o2BoyNzd79dOnCXbw8+1EPCf1SheKLZzyMGPnp
+         Z8BDmRP1EvyCrpHV3b3FrgGZ8mkj63x7AReEExDc=
+Subject: Re: [PATCH 3/7] KVM: x86: hyper-v: Move the remote TLB flush logic
+ out of vmx
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -41,15 +42,15 @@ Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>
 References: <cover.1617804573.git.viremana@linux.microsoft.com>
- <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
- <87lf9tavci.fsf@vitty.brq.redhat.com>
+ <bb757810c7b7c27ebbefe344c20b99d67524ee29.1617804573.git.viremana@linux.microsoft.com>
+ <87im4xav05.fsf@vitty.brq.redhat.com>
 From:   Vineeth Pillai <viremana@linux.microsoft.com>
-Message-ID: <af87c25e-78c6-5859-e1c1-2aa07d087a25@linux.microsoft.com>
-Date:   Thu, 8 Apr 2021 09:15:47 -0400
+Message-ID: <88cf8856-6f72-9c50-6eca-4aca96419259@linux.microsoft.com>
+Date:   Thu, 8 Apr 2021 09:18:35 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <87lf9tavci.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87im4xav05.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -57,33 +58,24 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Vitaly,
 
-On 4/8/21 7:06 AM, Vitaly Kuznetsov wrote:
-> -	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
-> +	/*
-> +	 * AMD does not need enlightened VMCS as VMCB is already a
-> +	 * datastructure in memory.
-> Well, VMCS is also a structure in memory, isn't it? It's just that we
-> don't have a 'clean field' concept for it and we can't use normal memory
-> accesses.
-
-Yes, you are right. I was referring to the fact that we cant use normal
-memory accesses, but is a bit mis-worded.
-
->
->> 	We need to get the nested
->> +	 * features if SVM is enabled.
+On 4/8/21 7:14 AM, Vitaly Kuznetsov wrote:
+> + /*
+>> +	 * Two Dimensional paging CR3
+>> +	 * EPTP for Intel
+>> +	 * nCR3 for AMD
 >> +	 */
->> +	if (boot_cpu_has(X86_FEATURE_SVM) ||
->> +	    ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
-> Do I understand correctly that we can just look at CPUID.0x40000000.EAX
-> and in case it is >= 0x4000000A we can read HYPERV_CPUID_NESTED_FEATURES
-> leaf? I'd suggest we do that intead then.
-I agree, that is a better way to consolidate both the cases.
-Will change it in the next iteration. Probably the above code
-comment is not needed when we consolidate the cases here.
+>> +	u64 tdp_pointer;
+>>   };
+> 'struct kvm_vcpu_hv' is only allocated when we emulate Hyper-V in KVM
+> (run Windows/Hyper-V guests on top of KVM). Remote TLB flush is used
+> when we run KVM on Hyper-V and this is a very different beast. Let's not
+> mix these things together. I understand that some unification is needed
+> to bring the AMD specific feature but let's do it differently.
+>
+> E.g. 'ept_pointer' and friends from 'struct kvm_vmx' can just go to
+> 'struct kvm_vcpu_arch' (in case they really need to be unified).
+Ahh yes, thanks for catching this. Will fix this in the next version.
 
 Thanks,
 Vineeth
-
