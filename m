@@ -2,150 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A46D7358388
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 14:45:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F686358461
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Apr 2021 15:15:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbhDHMp2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 8 Apr 2021 08:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231195AbhDHMp1 (ORCPT
+        id S231255AbhDHNQC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 8 Apr 2021 09:16:02 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34986 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229741AbhDHNQB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 8 Apr 2021 08:45:27 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B419C061762
-        for <linux-hyperv@vger.kernel.org>; Thu,  8 Apr 2021 05:45:16 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id l4so2781128ejc.10
-        for <linux-hyperv@vger.kernel.org>; Thu, 08 Apr 2021 05:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UMuAklHy/tPt7YPBozpvIQsmWDAIa3a/la6+zoUVcdI=;
-        b=JXlbvdv6BKxL2QLt+A6EZMYCjKur7zKVGHA+SPjjhttU3LjU5J8CTsvMPL70CwGYsq
-         CUXz1jkKLkBNcttlxCmAirFDD+kjBSkQXhxTFfLF/zDE+suTqi1E02kHIf/SGivtkXXC
-         r7MEDlKMlo41vpb3rOrLkq/HnnmBY745AuXsE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UMuAklHy/tPt7YPBozpvIQsmWDAIa3a/la6+zoUVcdI=;
-        b=qQMgicwifgIyt5aqqn9IZJNMn4YD1HeC6/Nn20EHU4t8YA/ENvyi29w0CnwoC+ZEAB
-         PyLNbJ2tUnpJXaUmaaIWenxd6Wd7nDPcQ1AL5uiYpX372n72AG8Z3g5mCZ8c81v2hdtF
-         ka8x16UKhsP9EKoQhJuTU2jJhrMxym3e7vNB0XLU5IV3E+M3PXiFr4m4Zglb6wXDmxPS
-         21gfaTDmrmnA0gaw4GRFwP+5FZJbRaZPzqJp3mrm3IjZe8nJSHstlFW3XGE9QEyJ0P63
-         uOs7QP9ZmQKjnc4qJnqFCtUpuLhx68tUill/svOjC+edJsPENUhPjrBIhfCfAIqpFzJd
-         Ke9A==
-X-Gm-Message-State: AOAM532/z1VN2R0fR6xvLnlNjdRiYwQDvD08YhBwWPquE+Np1XF3AC9U
-        ixAJRnIUHOKCHveQxd47S8NxWw==
-X-Google-Smtp-Source: ABdhPJwq7QZNDA3D6CGhNZXcz6mj8YzK/fNHfbq7NkBvOdUqzkgcZZF3Ehka2wUefbZcZbtsp6oq8w==
-X-Received: by 2002:a17:906:1fd7:: with SMTP id e23mr400958ejt.528.1617885914623;
-        Thu, 08 Apr 2021 05:45:14 -0700 (PDT)
-Received: from [192.168.1.149] ([80.208.71.248])
-        by smtp.gmail.com with ESMTPSA id r4sm14262813ejd.125.2021.04.08.05.45.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Apr 2021 05:45:14 -0700 (PDT)
-Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-remoteproc@vger.kernel.org, linux-arch@vger.kernel.org,
-        kexec@lists.infradead.org, rcu@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        Thu, 8 Apr 2021 09:16:01 -0400
+Received: from [192.168.86.30] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9246420B5680;
+        Thu,  8 Apr 2021 06:15:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9246420B5680
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1617887750;
+        bh=XZtRYq5agCaEslp2SkcIxFuSoTSHZxnoXDUN99ENL0M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GvyHAEg4gxRRvHJLEjU1/eh6x3wmXHkOv357f0YDONPqsL6y4qMEczVbayazjH1Bv
+         Hs3/RiSDu8+uCxF3bF1/76pzWb2368cfPni8KfxPghJB9zCyZ7AfQfJ/w+bSOOpGkG
+         Acj8eJwqkHh1BXE75Z4yWcBL1OG4d/w/HZ3dWvyM=
+Subject: Re: [PATCH 1/7] hyperv: Detect Nested virtualization support for SVM
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Corey Minyard <minyard@acm.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>
-References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <03be4ed9-8e8d-e2c2-611d-ac09c61d84f9@rasmusvillemoes.dk>
-Date:   Thu, 8 Apr 2021 14:45:12 +0200
+        Haiyang Zhang <haiyangz@microsoft.com>
+References: <cover.1617804573.git.viremana@linux.microsoft.com>
+ <e14dac75ff1088b2c4bea361954b37e414edd03c.1617804573.git.viremana@linux.microsoft.com>
+ <87lf9tavci.fsf@vitty.brq.redhat.com>
+From:   Vineeth Pillai <viremana@linux.microsoft.com>
+Message-ID: <af87c25e-78c6-5859-e1c1-2aa07d087a25@linux.microsoft.com>
+Date:   Thu, 8 Apr 2021 09:15:47 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+In-Reply-To: <87lf9tavci.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 06/04/2021 15.31, Andy Shevchenko wrote:
-> kernel.h is being used as a dump for all kinds of stuff for a long time.
-> Here is the attempt to start cleaning it up by splitting out panic and
-> oops helpers.
+Hi Vitaly,
 
-Yay.
+On 4/8/21 7:06 AM, Vitaly Kuznetsov wrote:
+> -	if (ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
+> +	/*
+> +	 * AMD does not need enlightened VMCS as VMCB is already a
+> +	 * datastructure in memory.
+> Well, VMCS is also a structure in memory, isn't it? It's just that we
+> don't have a 'clean field' concept for it and we can't use normal memory
+> accesses.
 
-Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Yes, you are right. I was referring to the fact that we cant use normal
+memory accesses, but is a bit mis-worded.
 
-> At the same time convert users in header and lib folder to use new header.
-> Though for time being include new header back to kernel.h to avoid twisted
-> indirected includes for existing users.
+>
+>> 	We need to get the nested
+>> +	 * features if SVM is enabled.
+>> +	 */
+>> +	if (boot_cpu_has(X86_FEATURE_SVM) ||
+>> +	    ms_hyperv.hints & HV_X64_ENLIGHTENED_VMCS_RECOMMENDED) {
+> Do I understand correctly that we can just look at CPUID.0x40000000.EAX
+> and in case it is >= 0x4000000A we can read HYPERV_CPUID_NESTED_FEATURES
+> leaf? I'd suggest we do that intead then.
+I agree, that is a better way to consolidate both the cases.
+Will change it in the next iteration. Probably the above code
+comment is not needed when we consolidate the cases here.
 
-I think it would be good to have some place to note that "This #include
-is just for backwards compatibility, it will go away RealSoonNow, so if
-you rely on something from linux/panic.h, include that explicitly
-yourself TYVM. And if you're looking for a janitorial task, write a
-script to check that every file that uses some identifier defined in
-panic.h actually includes that file. When all offenders are found and
-dealt with, remove the #include and this note.".
+Thanks,
+Vineeth
 
-> +
-> +struct taint_flag {
-> +	char c_true;	/* character printed when tainted */
-> +	char c_false;	/* character printed when not tainted */
-> +	bool module;	/* also show as a per-module taint flag */
-> +};
-> +
-> +extern const struct taint_flag taint_flags[TAINT_FLAGS_COUNT];
-
-While you're doing this, nothing outside of kernel/panic.c cares about
-the definition of struct taint_flag or use the taint_flags array, so
-could you make the definition private to that file and make the array
-static? (Another patch, of course.)
-
-> +enum lockdep_ok {
-> +	LOCKDEP_STILL_OK,
-> +	LOCKDEP_NOW_UNRELIABLE,
-> +};
-> +
-> +extern const char *print_tainted(void);
-> +extern void add_taint(unsigned flag, enum lockdep_ok);
-> +extern int test_taint(unsigned flag);
-> +extern unsigned long get_taint(void);
-
-I know you're just moving code, but it would be a nice opportunity to
-drop the redundant externs.
-
-Rasmus
