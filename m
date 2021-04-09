@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0947C35A21D
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Apr 2021 17:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 105DA35A23F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Apr 2021 17:49:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233288AbhDIPia (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Apr 2021 11:38:30 -0400
-Received: from mail-dm6nam12on2138.outbound.protection.outlook.com ([40.107.243.138]:56001
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        id S233554AbhDIPtQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Apr 2021 11:49:16 -0400
+Received: from mail-mw2nam12on2123.outbound.protection.outlook.com ([40.107.244.123]:20398
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229665AbhDIPia (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Apr 2021 11:38:30 -0400
+        id S229665AbhDIPtQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 9 Apr 2021 11:49:16 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AUGYJbv6leIqtJ2o8DeP+V+fp+Cm3D3J8ispPYYVtSOYNwEh/isC9HEytrSNtsGp6QEzH46hSB3K6lN7YlwfDBAmevbHR1uav0mhRYPXxwAxnEfnFVNg0Lw6aLhCVG/u7as41iz7QidYcqb5kqVmoF9An9f+AiSpexOWP8sgO84C0nGJjEs04hNxj0HhuRvdq78xOzKO/W3DslaKw3wLsA4MfwJYmLEpO+fEQAA+KTJtFzCdoAm7C5w0p3hBA1TZau16iT+RHpvBTJuARQRq+Xw/EuIF4t25G195Gp9c2xDlZmf9rnaiPvlhGvP8dEQHrkR26n2ZcLr/BR1shQx8hQ==
+ b=eT34UCT8cfv0kqT7/QJbomNI80ijZOLei2FVy/Tm+eFmbmRJQIEbnDmrWDbPw7OmzoJbxgSLIVlA6nCU7O4e1DJU/n0vIKGT2jO5y3etolZorDlao5IHcGDftYrE8+VaKFCY+e0e+ptK8RKuu8TkR4l1vkoFm1rHKeg8zRdP2iv9oyWq4MaBosjOBNhe5vTvI8SeZSckRVqTrgK2pP4NHtjDoFlIxBhR5a/UmFcCOYtMs1+kWeqBM1Q35B8u42HvQCveExQcTE5Wt8d72Mi+ua7ukQo5Eu9RidU3Afcmj+Yt+KL43j4CtVWHDV5mKQD13L7MYCvEIAwgi7DeXq/4WA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQYsCKS6J/995lYm6yfCkevYDtpiyl92GL8gya9xnvg=;
- b=nQCncQoPabgWIjFUIyitXjzS7G6O4+8u1RN6muD8+US34hkIvhZToybmFsQJwJZQEFMC0qG6m5jqy1oIt4QPqkpYLQaJOJwZ8OyGgEn+EGkFqj2FGROAp2WtEcYZqQ7L8ah/LlsHHMMP1bfnrrFEZKYEZWGGX9SyfgPbl9ZcNHyfKVq3IidXVPHb+2AFzhjmn4awn9F6c6JHb/jPK1kufOfot9F9OwA/9ah5OYmTF9Kmim85PxytMHqhXXwKXe52oMvP9gOpASv0wSlAr/ObtG39RNHLXbRwxnXf5LJfra5LZvTJXHeanNh9yn7CG6jSrJueielFad4JAVBs9yOPMg==
+ bh=LK3THLrnDmUzeQZ66B4wVRJdWkaMpAk/EY07oKBqEvs=;
+ b=PgF1f9Oy4OIBSLU3NW8zekM045Jiv6LhnQZjRO8J6PBm5EqT/6AcGFdTzE2/ZyxarkqG6fkynX6+pJQdy0diuXL80zoBPiv6ihj0T6SLPjbZbCw3+M9POV/wyQrV3vWSo4r5x+uaOOBb+A+ptjeRCCT3S0RLcL3hoh5B9vwLC8tlkPbA+HFE6Xh3MNnkNWR9wB4QfJVPmUdDwYJt4OxLA9CfNC8Cd6k57YecrBTsu5xlMNwSpwA3dbvN/gDV9hkZ7TplGwR68P0Zr5ns2+NCPf7ZcMsaTCbHpuSZ+brgYRsCq/2sFGf/uIy1p96g/HzdRIWE4zLv3mktf083cHE3dA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQYsCKS6J/995lYm6yfCkevYDtpiyl92GL8gya9xnvg=;
- b=CSvFO+jMfU8Sr3QAVEbeOlAXlwHIbw1WvRwOJrzjU46LOyHhpjd8zk8gRvwZC2ZdI+cmVcZJHFQ3aXXL6wAE1G96VzgKFgRWMSQRmoFr1wYVdsKN9o118jEv5gAjfqr+lZqLxBd2VFycqjxuE5s2Qop1CDNDQ1CTQbLTVgFXWn0=
+ bh=LK3THLrnDmUzeQZ66B4wVRJdWkaMpAk/EY07oKBqEvs=;
+ b=OL5F/iGqxltsXbW3d3vu0z4zTt51sXAU5Ye7rP+O55fOuRR5CJKPjqkVLyWBLAN/rJBW0ckhQN9Vek89Mgm6/qizvP/WhYKLsdalUni9rUJlcJR1pqp2Ezk2NVVI1gYYa7cfI5zNSW+dXMI9iaP20Dpbaav5mH9cZ4dyY9d1Dc8=
 Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MWHPR21MB0288.namprd21.prod.outlook.com (2603:10b6:300:7a::18) with
+ by MW4PR21MB1922.namprd21.prod.outlook.com (2603:10b6:303:73::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.4; Fri, 9 Apr
- 2021 15:38:14 +0000
+ 2021 15:49:01 +0000
 Received: from MWHPR21MB1593.namprd21.prod.outlook.com
  ([fe80::3808:777c:8b25:c88d]) by MWHPR21MB1593.namprd21.prod.outlook.com
  ([fe80::3808:777c:8b25:c88d%5]) with mapi id 15.20.4042.010; Fri, 9 Apr 2021
- 15:38:14 +0000
+ 15:49:00 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -49,438 +49,557 @@ CC:     KY Srinivasan <kys@microsoft.com>,
         "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [RFC PATCH hyperv-next] scsi: storvsc: Use blk_mq_unique_tag() to
- generate requestIDs
-Thread-Topic: [RFC PATCH hyperv-next] scsi: storvsc: Use blk_mq_unique_tag()
- to generate requestIDs
-Thread-Index: AQHXLJInjsu44/p3MUKBv7H3jmwHRaqsSuaw
-Date:   Fri, 9 Apr 2021 15:38:14 +0000
-Message-ID: <MWHPR21MB15934EAD302E27983E891CF2D7739@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <20210408161315.341888-1-parri.andrea@gmail.com>
-In-Reply-To: <20210408161315.341888-1-parri.andrea@gmail.com>
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Andres Beltran <lkmlabelt@gmail.com>
+Subject: RE: [PATCH hyperv-next] Drivers: hv: vmbus: Copy packets sent by
+ Hyper-V out of the ring buffer
+Thread-Topic: [PATCH hyperv-next] Drivers: hv: vmbus: Copy packets sent by
+ Hyper-V out of the ring buffer
+Thread-Index: AQHXLJJagDKycFtcJkGpES1elshg6KqsVdzw
+Date:   Fri, 9 Apr 2021 15:49:00 +0000
+Message-ID: <MWHPR21MB1593B81DEB6428DC3FD6085ED7739@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <20210408161439.341988-1-parri.andrea@gmail.com>
+In-Reply-To: <20210408161439.341988-1-parri.andrea@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fa8955af-3697-46d3-87c3-28e210b2e0b7;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-09T15:07:13Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ce78c4d2-fdcc-4016-9b58-b1a99f6ff729;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-09T15:46:27Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
 x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 945c1992-bcba-40f8-131b-08d8fb6d7d48
-x-ms-traffictypediagnostic: MWHPR21MB0288:
+x-ms-office365-filtering-correlation-id: 26f586da-dbe4-4f29-66c9-08d8fb6efe9e
+x-ms-traffictypediagnostic: MW4PR21MB1922:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB0288B0C572C843E0991563DFD7739@MWHPR21MB0288.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-microsoft-antispam-prvs: <MW4PR21MB19220585B73E0F5411B677DFD7739@MW4PR21MB1922.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Fd0XjDN6ZW5+cxBQn9b72tAaNEHxzQtYi+CrOm9yYNDWmG52pAt/nfw1/AUceX17kuADnFlXcnVYInovS/KuFW7IWQxw+qYPRcgKEqVFMrv0MtD8DV1qmnya/LZ8CXzBl9TWm+vx90p6fCUOqe8XkvHM/lY6qlGV+/kgUl5nkD7tM74PUX1DxTAR1iBvWDOmy8Orr4TaElJe04y2nReR5znT0bQkKiUnNV92ZbtMltT+bSYDq/2Yne7itL+TcvXnEAsVOqkRwVxuQOFC/XaP6tc/4YyXnhgeTGrnU85zs1jriLQU1chrf1eliMYRQgrWE3C9kVBtR7hBMVtbbVAsR2wzuFGYavkGsxtEInPt5rCBofZb9nNMurnNGz4lv45bnbc48+i24kaw+XvaMllLeSrE5b67NNn0thOrD7EeF3ICB7ABJpimRW7SPBpyM7i+flgLUPEKYDz2BvpGRGVHk8SG3EAmQVm/OzJdiZ0yIl8JsEcOVKFCKXgFWdL1ILljgKlveI4ZO6U9wYZJ2UbtGiR8alU5ROaTyagt9lqdlKptGuMPX5vF39z7Zq7YTz7BqA8yinLKrb2Pb7w2GZGDoqEbZRdZExyGgygD/fDhtPFEksTDoYeUYh8oenODsh7DEJWEFoDWn5UzP2jB+/9MrZnN1qMtm/fi18hjs83A3eg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(55016002)(38100700001)(9686003)(64756008)(71200400001)(7416002)(30864003)(86362001)(6506007)(83380400001)(10290500003)(4326008)(82960400001)(33656002)(316002)(5660300002)(7696005)(8990500004)(186003)(26005)(8936002)(76116006)(52536014)(54906003)(66556008)(2906002)(478600001)(66446008)(66946007)(8676002)(110136005)(66476007)(82950400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?r0CPxXP8sqK1yzPmrF8c/5FIim8Xr4d/OtKaiE08KnHeg2xlpw2NO4nhOUpm?=
- =?us-ascii?Q?2e/XulhU+9YkIXIPPL3HK2lN+xOeXGjCh8+KqcLT5xWSUrcDIWjp92kvq28V?=
- =?us-ascii?Q?uv6x9BPvnnLjaYiFuA+E4XcekhiuFdtzR4BdVPx918xaO4MfK9H1xAhjxPhg?=
- =?us-ascii?Q?BC5oTEi5r97txiUXJmVaw7KtfBOL0wl5AXdrOI1J31d/jYhLG3s0HBTVoo5P?=
- =?us-ascii?Q?wfTFcx9R+WczhuvJa97Gj6AjVhyGwLZLrOfi2k7RcBV6rLKhhakh52+Kxo+y?=
- =?us-ascii?Q?aikJG53TGhsNmy35jFNm4H12hY4WdRSz/hrujjtQdz0jYrrz65Tbp8eyYE68?=
- =?us-ascii?Q?TLEFT63z++W7kixb6oVsxYdRtEkOIendwcw1bshIJHE7zh91MlAmxpAZ4E8k?=
- =?us-ascii?Q?jAOqYC71PNq+oJvSj+eRy1KNO9xuHU0/hOtbjC1oOZns11+zhk/drsykp1VZ?=
- =?us-ascii?Q?1DhStA9cDJSWZooreLpwhEUspbP8fnG7g1IfK9gjdbAczs+Z30UISicCAPIE?=
- =?us-ascii?Q?UX6mWyynZb/EAJ1jqj3Vb4pKiwS9yIMuo1TLyG2WsFWN6IIYfYBjARR9IyX4?=
- =?us-ascii?Q?W4TrNS18vL1R3fYI9YwmXXvhN5HOi/No1pZ0A0OPEIVNZOdt8TLyBPq7BcoJ?=
- =?us-ascii?Q?WliNWAkGen/KNm7Kr6lveRpy0gJXnjREzHjVBAoEEoMJqYQYLbaUCQC7RV4J?=
- =?us-ascii?Q?b0CSOp9ldgagMWxGQ+YPaw7lKSl6aLTtgtICO80wLGaHxt/vbtQbimgpN4mK?=
- =?us-ascii?Q?918vmMzNwBUfyawsbVhyDysm1+YoxAqa/Cvw8e3VD93NqPdyz8a1/zRV48Kl?=
- =?us-ascii?Q?8+oSb5mVwM/e7wWsYUspV5X1E0rCCSb3ViVrsUOsf8vcoOn54gEo8VwtdE/m?=
- =?us-ascii?Q?yGZG1ScgCuXrf4jovfLIscoGzEnvMssBg6WjZCUm/+1XmhbPrZWaCb3e0L0X?=
- =?us-ascii?Q?Wxfj1TrSuY8gCUStF5LbLpRBYOOk8yXzDJjXR1JkwE9VprIjkg2huT5balq2?=
- =?us-ascii?Q?J/L8uurAgs5I90BqHwU70lVS6ljO/ghxuGF187hAwWaJvRWDF9PWLtJ+4knm?=
- =?us-ascii?Q?ohoF7Vzb/5fSfNIyWzCB5KHQTIFWks6GSKQzBNuQiGMUwqcF/oJYMQnc4Jtf?=
- =?us-ascii?Q?5rrxbBlXHgtfGWm8dKkTF/ni/O+5lYgpKqTLE+pqsVD+prgyozTuS3Z8Mu2q?=
- =?us-ascii?Q?NYIrbxvIsCnEJgo54VIY5RCMcdgSEX+Cs3zN5Wb7TOYo9dzoO8FqyfPIsan4?=
- =?us-ascii?Q?xwj/9W6G53Ru6mzFMzxcnWctv80zfXCv3EfcNmfDy4Xq+p/AbY8V/p4ycqeu?=
- =?us-ascii?Q?b/bjOzVfPzGWG/aJxP0WTY4O?=
+x-microsoft-antispam-message-info: G94GwkIlxSxKfjjhw7bPNYkBAo9FeluQl8aKfoO71sSwZDWMJ7uLFxqmFfeW8QizR9a2outewvQbMCN86pdOBU19ft0SmejyAJPTTewylV9BQCRySqlALBgkziyQL+G6C+daqZ6fzL/IDvY8gHiJqc6pefGlLBe1U/eZ2eJm0WahGCstp/ay1JswhLgCC3if1ToRG5aQ/NZ+DClZt4bJ34TmW/CNbD4qPL5lF36Nn93C9VxEU6OdhBujk+nCEpjapP8SFZ3UqEqmCaNzhY0mXViaQryv7OC9gwAWyJq1cDFw1e6J+L9nRI347OdP/E3CGJkDfAvGPBmUaehPuwBpVDGkFvWimvH+uixOO4qs0UVpZtynRyOH/K+bHUxn9lydrLSiSstPy6zS9DFzbPhI5k6NcA3L/fugyT+U+tiC/j7tSwfmXBSu4AsMUuzEPRatUccUTmjLhL9RFVoajP+ffNCn17pnDlEmHpl8GDqPU9ndgV6PbAtpMKsicLyXdmiz8fTM0xNjtdBmEiCCqICdhW12Pvy9X6kh15/ezBbavgKyuzPofIU17Cqj+YO4Nl+Me4Fzt7qeAtmj4cGIzcZSzE8FQL7OOSV//Eu/isx6uYMSiP/M4v1SLffl055G1JgK6r+E1sGB0wRktHtrsASwDWT2JP3SD6V6Y04adrCGoyw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(376002)(346002)(39860400002)(66446008)(66946007)(64756008)(76116006)(66556008)(55016002)(66476007)(71200400001)(9686003)(5660300002)(8936002)(8676002)(316002)(4326008)(38100700001)(110136005)(54906003)(7696005)(478600001)(52536014)(7416002)(6506007)(10290500003)(2906002)(26005)(86362001)(186003)(8990500004)(30864003)(33656002)(82960400001)(83380400001)(82950400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?PcNZRcNmLe1Q8UoFCrfHuzGNJmS6eVjlXZmDAUDzrI++VJJp2OVhrDn1e3Kb?=
+ =?us-ascii?Q?EyO9omem6aGX+JWVKBtt+sGTNxCcRqCcgGF7KaohjglxqLhTjIZXnpgrtBKE?=
+ =?us-ascii?Q?IAeps/6W3LTHsGtnrFYd5XQi5XxKcgp45nUQIJxbFnLgzRNJwkQfRP67LN+2?=
+ =?us-ascii?Q?40mrwrc5ItHWespOdvqSrtmCO04rB1AzmSyBRvVGeFZty83mD1oB+WX4g88e?=
+ =?us-ascii?Q?Vgo7GbzDnhSZjCNvuzztBkdAYb9GS+grTTPDYeeR+Ww8srqG5QRTq+N77Fhu?=
+ =?us-ascii?Q?BQuoq8tU1JT/mynwxrQ5xZCen1y/ZaLR/EeiBOWotLiRjEl4ZEbLEhbYtqKU?=
+ =?us-ascii?Q?5DnSSjK2UEehztrpG2LOoi2NAjVuoND0G/1/itJh4yjDH6ZDos6S3Sj+DEy6?=
+ =?us-ascii?Q?ih6fJk27c2vkdGSewshMrbVQ6udP6TGELdnJwef7xse7gOJXCOMQTGbGNplk?=
+ =?us-ascii?Q?U7dPsYNuyZ8yL9eJWHnSOhu/xxkgpAF/0GTyNr39VVjSCCMo20+8SCJSO9XR?=
+ =?us-ascii?Q?erKqoGFen8BYPMcRfNzejeC18hjOWKUjLIBEE/DPD6eSS+Sh5xkEQGXCacxI?=
+ =?us-ascii?Q?z5gK80cf8JEhVe1G+nCCt8cGkYjmEmX2HVJFI14CB6W90/uNFfaRRUNgXLIt?=
+ =?us-ascii?Q?fUIEs+2cXAONyp4v/jxiPg8SBPfSORALjQiA/QcrkIV2Lmy+JO+nnbFSBVJP?=
+ =?us-ascii?Q?oqnblwpUyc5aqu6lAzctQO7xOUFH8sxh+eJ4k3lxFUHSZ0PpiKLpT5klpK5Y?=
+ =?us-ascii?Q?qAuXLPX205jXMj77uzsZBlpMeIxQ0W2C6F3WbnCHWFf5YLN107lAr6j4rUu5?=
+ =?us-ascii?Q?VYsQrDU9rDDKLDw1rsm0JRZJB44Rz29YKv10xYm4ZkEZ/uECydvUbV9saTUY?=
+ =?us-ascii?Q?Pb6WLqdYmsYOoD9Fvsb2Imbmq64NLefGYnxu85ujp8exxzs5VSL/YzdP/KP2?=
+ =?us-ascii?Q?30fbtL4Z/lPJC6ktK3xe47znSbjcpP5/cgkpuBUaY2qRntt6iuq62zezjVEL?=
+ =?us-ascii?Q?JcrjW6gMZ8eF1bBLxmH4e6ndCLvWaEAt/KEhtXF/DqPR0Et1sxt1M2fpWQbU?=
+ =?us-ascii?Q?WeyB5tOSi35K3G3DPKTGxJ53EnIHKIiAHhp4syhrqK+RPP8VgyRnqLcnZBRK?=
+ =?us-ascii?Q?BzFRBypQg7J0Yo2h3hS6ISMrZd4vv/Q2V/GQasGgih+Rrei8ZYCm0pYtq68w?=
+ =?us-ascii?Q?8gghVhXrmyigvMSD017KJAarKahxvyTZCRRCY8L1BpNykknrPwu4bKmQblru?=
+ =?us-ascii?Q?rqFvzEMdEzXvn/dKgcUVW6R9qqYctAtDRI718iMFWmQcjyD+jMTJDJmTIziC?=
+ =?us-ascii?Q?dGZJS6Bdvy91e+Z//e5OZR74?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 945c1992-bcba-40f8-131b-08d8fb6d7d48
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2021 15:38:14.3468
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26f586da-dbe4-4f29-66c9-08d8fb6efe9e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2021 15:49:00.8044
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Tdpj46rtErtBy4AQjvLhhvCejsAIceAeTufk0ujof6cYsSIrqDyOdof/0+5+IjOdGb15AV+a62ivebWF+CUZN0u3cvM5IxT8190rbGjn6Wg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0288
+X-MS-Exchange-CrossTenant-userprincipalname: ZYQLxH2fGru/ZnOJH2kl2dLDU/Ntei39KgkHA50+mksznZbHhVd3L79e+hYKhyFBnAtLzZHvM5kfL6Av4wigwxhoyuFKGJMjoVHRUsuwHZM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1922
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Thursday, Apr=
-il 8, 2021 9:13 AM
+il 8, 2021 9:15 AM
 >=20
-> Use blk_mq_unique_tag() to generate requestIDs for StorVSC, avoiding
-> all issues with allocating enough entries in the VMbus requestor.
+> Pointers to ring-buffer packets sent by Hyper-V are used within the
+> guest VM. Hyper-V can send packets with erroneous values or modify
+> packet fields after they are processed by the guest. To defend
+> against these scenarios, return a copy of the incoming VMBus packet
+> after validating its length and offset fields in hv_pkt_iter_first().
+> In this way, the packet can no longer be modified by the host.
 
-This looks good to me!  I'm glad to see that the idea worked without
-too much complexity.
+Andrea -- has anything changed in this version of this patch, except
+the value of NETVSC_MAX_XFER_PAGE_RANGES?  It used to be a
+fixed 375, but now is NVSP_RSC_MAX, which is 562.
 
-See a few comments inline below.
+If that's the only change, then
+
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
 >=20
-> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > ---
->  drivers/hv/channel.c              | 14 +++---
->  drivers/hv/ring_buffer.c          | 12 ++---
->  drivers/net/hyperv/netvsc.c       |  8 ++--
+>  drivers/hv/channel.c              |  9 ++--
+>  drivers/hv/hv_fcopy.c             |  1 +
+>  drivers/hv/hv_kvp.c               |  1 +
+>  drivers/hv/hyperv_vmbus.h         |  2 +-
+>  drivers/hv/ring_buffer.c          | 82 ++++++++++++++++++++++++++-----
+>  drivers/net/hyperv/hyperv_net.h   |  7 +++
+>  drivers/net/hyperv/netvsc.c       |  2 +
 >  drivers/net/hyperv/rndis_filter.c |  2 +
->  drivers/scsi/storvsc_drv.c        | 73 ++++++++++++++++++++++++++-----
->  include/linux/hyperv.h            | 13 +++++-
->  6 files changed, 92 insertions(+), 30 deletions(-)
+>  drivers/scsi/storvsc_drv.c        | 10 ++++
+>  include/linux/hyperv.h            | 48 +++++++++++++++---
+>  net/vmw_vsock/hyperv_transport.c  |  4 +-
+>  11 files changed, 143 insertions(+), 25 deletions(-)
 >=20
 > diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index db30be8f9ccea..f78e02ace51e8 100644
+> index db30be8f9ccea..b665db21e120d 100644
 > --- a/drivers/hv/channel.c
 > +++ b/drivers/hv/channel.c
-> @@ -1121,15 +1121,14 @@ EXPORT_SYMBOL_GPL(vmbus_recvpacket_raw);
->   * vmbus_next_request_id - Returns a new request id. It is also
->   * the index at which the guest memory address is stored.
->   * Uses a spin lock to avoid race conditions.
-> - * @rqstor: Pointer to the requestor struct
-> + * @channel: Pointer to the VMbus channel struct
->   * @rqst_add: Guest memory address to be stored in the array
->   */
-> -u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)
-> +u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr)
->  {
-> +	struct vmbus_requestor *rqstor =3D &channel->requestor;
->  	unsigned long flags;
->  	u64 current_id;
-> -	const struct vmbus_channel *channel =3D
-> -		container_of(rqstor, const struct vmbus_channel, requestor);
+> @@ -597,12 +597,15 @@ static int __vmbus_open(struct vmbus_channel *newch=
+annel,
+>  	newchannel->onchannel_callback =3D onchannelcallback;
+>  	newchannel->channel_callback_context =3D context;
 >=20
->  	/* Check rqstor has been initialized */
->  	if (!channel->rqstor_size)
-> @@ -1163,16 +1162,15 @@ EXPORT_SYMBOL_GPL(vmbus_next_request_id);
->  /*
->   * vmbus_request_addr - Returns the memory address stored at @trans_id
->   * in @rqstor. Uses a spin lock to avoid race conditions.
-> - * @rqstor: Pointer to the requestor struct
-> + * @channel: Pointer to the VMbus channel struct
->   * @trans_id: Request id sent back from Hyper-V. Becomes the requestor's
->   * next request id.
->   */
-> -u64 vmbus_request_addr(struct vmbus_requestor *rqstor, u64 trans_id)
-> +u64 vmbus_request_addr(struct vmbus_channel *channel, u64 trans_id)
->  {
-> +	struct vmbus_requestor *rqstor =3D &channel->requestor;
->  	unsigned long flags;
->  	u64 req_addr;
-> -	const struct vmbus_channel *channel =3D
-> -		container_of(rqstor, const struct vmbus_channel, requestor);
+> -	err =3D hv_ringbuffer_init(&newchannel->outbound, page, send_pages);
+> +	if (!newchannel->max_pkt_size)
+> +		newchannel->max_pkt_size =3D VMBUS_DEFAULT_MAX_PKT_SIZE;
+> +
+> +	err =3D hv_ringbuffer_init(&newchannel->outbound, page, send_pages, 0);
+>  	if (err)
+>  		goto error_clean_ring;
 >=20
->  	/* Check rqstor has been initialized */
->  	if (!channel->rqstor_size)
+> -	err =3D hv_ringbuffer_init(&newchannel->inbound,
+> -				 &page[send_pages], recv_pages);
+> +	err =3D hv_ringbuffer_init(&newchannel->inbound, &page[send_pages],
+> +				 recv_pages, newchannel->max_pkt_size);
+>  	if (err)
+>  		goto error_clean_ring;
+>=20
+> diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
+> index 59ce85e00a028..660036da74495 100644
+> --- a/drivers/hv/hv_fcopy.c
+> +++ b/drivers/hv/hv_fcopy.c
+> @@ -349,6 +349,7 @@ int hv_fcopy_init(struct hv_util_service *srv)
+>  {
+>  	recv_buffer =3D srv->recv_buffer;
+>  	fcopy_transaction.recv_channel =3D srv->channel;
+> +	fcopy_transaction.recv_channel->max_pkt_size =3D HV_HYP_PAGE_SIZE * 2;
+>=20
+>  	/*
+>  	 * When this driver loads, the user level daemon that
+> diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
+> index b49962d312cef..c698592b83e42 100644
+> --- a/drivers/hv/hv_kvp.c
+> +++ b/drivers/hv/hv_kvp.c
+> @@ -757,6 +757,7 @@ hv_kvp_init(struct hv_util_service *srv)
+>  {
+>  	recv_buffer =3D srv->recv_buffer;
+>  	kvp_transaction.recv_channel =3D srv->channel;
+> +	kvp_transaction.recv_channel->max_pkt_size =3D HV_HYP_PAGE_SIZE * 4;
+>=20
+>  	/*
+>  	 * When this driver loads, the user level daemon that
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index 9416e09ebd58c..42f3d9d123a12 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -174,7 +174,7 @@ extern int hv_synic_cleanup(unsigned int cpu);
+>  void hv_ringbuffer_pre_init(struct vmbus_channel *channel);
+>=20
+>  int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
+> -		       struct page *pages, u32 pagecnt);
+> +		       struct page *pages, u32 pagecnt, u32 max_pkt_size);
+>=20
+>  void hv_ringbuffer_cleanup(struct hv_ring_buffer_info *ring_info);
+>=20
 > diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index ecd82ebfd5bc4..46d8e038e4ee1 100644
+> index ecd82ebfd5bc4..848f3bba83f8b 100644
 > --- a/drivers/hv/ring_buffer.c
 > +++ b/drivers/hv/ring_buffer.c
-> @@ -310,10 +310,12 @@ int hv_ringbuffer_write(struct vmbus_channel *chann=
-el,
->  	 */
+> @@ -190,7 +190,7 @@ void hv_ringbuffer_pre_init(struct vmbus_channel *cha=
+nnel)
 >=20
->  	if (desc->flags =3D=3D VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED) {
-> -		rqst_id =3D vmbus_next_request_id(&channel->requestor, requestid);
-> -		if (rqst_id =3D=3D VMBUS_RQST_ERROR) {
-> -			spin_unlock_irqrestore(&outring_info->ring_lock, flags);
-> -			return -EAGAIN;
-> +		if (channel->next_request_id_callback !=3D NULL) {
-> +			rqst_id =3D channel->next_request_id_callback(channel, requestid);
-> +			if (rqst_id =3D=3D VMBUS_RQST_ERROR) {
-> +				spin_unlock_irqrestore(&outring_info->ring_lock, flags);
-> +				return -EAGAIN;
-> +			}
->  		}
->  	}
->  	desc =3D hv_get_ring_buffer(outring_info) + old_write;
-> @@ -341,7 +343,7 @@ int hv_ringbuffer_write(struct vmbus_channel *channel=
-,
->  	if (channel->rescind) {
->  		if (rqst_id !=3D VMBUS_NO_RQSTOR) {
->  			/* Reclaim request ID to avoid leak of IDs */
-> -			vmbus_request_addr(&channel->requestor, rqst_id);
-> +			channel->request_addr_callback(channel, rqst_id);
->  		}
->  		return -ENODEV;
->  	}
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index c64cc7639c39c..1a221ce2d6fdc 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -730,7 +730,7 @@ static void netvsc_send_tx_complete(struct net_device=
- *ndev,
->  	int queue_sends;
->  	u64 cmd_rqst;
+>  /* Initialize the ring buffer. */
+>  int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
+> -		       struct page *pages, u32 page_cnt)
+> +		       struct page *pages, u32 page_cnt, u32 max_pkt_size)
+>  {
+>  	int i;
+>  	struct page **pages_wraparound;
+> @@ -232,6 +232,14 @@ int hv_ringbuffer_init(struct hv_ring_buffer_info *r=
+ing_info,
+>  		sizeof(struct hv_ring_buffer);
+>  	ring_info->priv_read_index =3D 0;
 >=20
-> -	cmd_rqst =3D vmbus_request_addr(&channel->requestor, (u64)desc->trans_i=
-d);
-> +	cmd_rqst =3D channel->request_addr_callback(channel, (u64)desc->trans_i=
-d);
->  	if (cmd_rqst =3D=3D VMBUS_RQST_ERROR) {
->  		netdev_err(ndev, "Incorrect transaction id\n");
->  		return;
-> @@ -790,8 +790,8 @@ static void netvsc_send_completion(struct net_device =
-*ndev,
+> +	/* Initialize buffer that holds copies of incoming packets */
+> +	if (max_pkt_size) {
+> +		ring_info->pkt_buffer =3D kzalloc(max_pkt_size, GFP_KERNEL);
+> +		if (!ring_info->pkt_buffer)
+> +			return -ENOMEM;
+> +		ring_info->pkt_buffer_size =3D max_pkt_size;
+> +	}
+> +
+>  	spin_lock_init(&ring_info->ring_lock);
 >=20
->  	/* First check if this is a VMBUS completion without data payload */
->  	if (!msglen) {
-> -		cmd_rqst =3D vmbus_request_addr(&incoming_channel->requestor,
-> -					      (u64)desc->trans_id);
-> +		cmd_rqst =3D incoming_channel->request_addr_callback(incoming_channel,
-> +								   (u64)desc->trans_id);
->  		if (cmd_rqst =3D=3D VMBUS_RQST_ERROR) {
->  			netdev_err(ndev, "Invalid transaction id\n");
->  			return;
-> @@ -1602,6 +1602,8 @@ struct netvsc_device *netvsc_device_add(struct hv_d=
-evice
-> *device,
->  		       netvsc_poll, NAPI_POLL_WEIGHT);
->=20
->  	/* Open the channel */
-> +	device->channel->next_request_id_callback =3D vmbus_next_request_id;
-> +	device->channel->request_addr_callback =3D vmbus_request_addr;
->  	device->channel->rqstor_size =3D netvsc_rqstor_size(netvsc_ring_bytes);
->  	ret =3D vmbus_open(device->channel, netvsc_ring_bytes,
->  			 netvsc_ring_bytes,  NULL, 0,
-> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis=
-_filter.c
-> index 123cc9d25f5ed..ebf34bf3f9075 100644
-> --- a/drivers/net/hyperv/rndis_filter.c
-> +++ b/drivers/net/hyperv/rndis_filter.c
-> @@ -1259,6 +1259,8 @@ static void netvsc_sc_open(struct vmbus_channel *ne=
-w_sc)
->  	/* Set the channel before opening.*/
->  	nvchan->channel =3D new_sc;
->=20
-> +	new_sc->next_request_id_callback =3D vmbus_next_request_id;
-> +	new_sc->request_addr_callback =3D vmbus_request_addr;
->  	new_sc->rqstor_size =3D netvsc_rqstor_size(netvsc_ring_bytes);
->  	ret =3D vmbus_open(new_sc, netvsc_ring_bytes,
->  			 netvsc_ring_bytes, NULL, 0,
-> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> index 6bc5453cea8a7..1c05fabc06b04 100644
-> --- a/drivers/scsi/storvsc_drv.c
-> +++ b/drivers/scsi/storvsc_drv.c
-> @@ -684,6 +684,62 @@ static void storvsc_change_target_cpu(struct vmbus_c=
-hannel
-> *channel, u32 old,
->  	spin_unlock_irqrestore(&stor_device->lock, flags);
+>  	return 0;
+> @@ -244,6 +252,9 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info=
+ *ring_info)
+>  	vunmap(ring_info->ring_buffer);
+>  	ring_info->ring_buffer =3D NULL;
+>  	mutex_unlock(&ring_info->ring_buffer_mutex);
+> +
+> +	kfree(ring_info->pkt_buffer);
+> +	ring_info->pkt_buffer_size =3D 0;
 >  }
 >=20
-> +u64 storvsc_next_request_id(struct vmbus_channel *channel, u64 rqst_addr=
-)
+>  /* Write to the ring buffer. */
+> @@ -384,7 +395,7 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
+>  	memcpy(buffer, (const char *)desc + offset, packetlen);
+>=20
+>  	/* Advance ring index to next packet descriptor */
+> -	__hv_pkt_iter_next(channel, desc);
+> +	__hv_pkt_iter_next(channel, desc, true);
+>=20
+>  	/* Notify host of update */
+>  	hv_pkt_iter_close(channel);
+> @@ -410,6 +421,22 @@ static u32 hv_pkt_iter_avail(const struct hv_ring_bu=
+ffer_info *rbi)
+>  		return (rbi->ring_datasize - priv_read_loc) + write_loc;
+>  }
+>=20
+> +/*
+> + * Get first vmbus packet without copying it out of the ring buffer
+> + */
+> +struct vmpacket_descriptor *hv_pkt_iter_first_raw(struct vmbus_channel *=
+channel)
 > +{
-> +	struct storvsc_cmd_request *request =3D
-> +		(struct storvsc_cmd_request *)(unsigned long)rqst_addr;
-> +	struct storvsc_device *stor_device;
-> +	struct hv_device *device;
+> +	struct hv_ring_buffer_info *rbi =3D &channel->inbound;
 > +
-> +	device =3D (channel->primary_channel !=3D NULL) ?
-> +		channel->primary_channel->device_obj : channel->device_obj;
-> +	if (device =3D=3D NULL)
-> +		return VMBUS_RQST_ERROR;
+> +	hv_debug_delay_test(channel, MESSAGE_DELAY);
 > +
-> +	stor_device =3D get_out_stor_device(device);
-> +	if (stor_device =3D=3D NULL)
-> +		return VMBUS_RQST_ERROR;
+> +	if (hv_pkt_iter_avail(rbi) < sizeof(struct vmpacket_descriptor))
+> +		return NULL;
 > +
-> +	if (request =3D=3D &stor_device->init_request)
-> +		return VMBUS_RQST_INIT;
-> +	if (request =3D=3D &stor_device->reset_request)
-> +		return VMBUS_RQST_RESET;
-
-Having to get the device and then the stor_device in order to detect the
-init_request and reset_request special cases is unfortunate.  So here's
-an idea:  The init_request and reset_request are used in a limited number
-of specific places in the storvsc driver, and there are unique invocations
-of vmbus_sendpacket() in those places.  So rather than pass the address
-of the request as the requestID parameter to vmbus_sendpacket(), pass
-the sentinel value VMBUS_RQST_INIT or VMBUS_RQST_RESET.  Then this
-code can just detect those sentinel values as the rqst_addr input
-parameter, and return them.
-
-> +
-> +	return blk_mq_unique_tag(request->cmd->request);
+> +	return (struct vmpacket_descriptor *)(hv_get_ring_buffer(rbi) + rbi-
+> >priv_read_index);
 > +}
+> +EXPORT_SYMBOL_GPL(hv_pkt_iter_first_raw);
 > +
-> +u64 storvsc_request_addr(struct vmbus_channel *channel, u64 rqst_id)
-> +{
-> +	struct storvsc_cmd_request *request;
-> +	struct storvsc_device *stor_device;
-> +	struct hv_device *device;
-> +	struct Scsi_Host *shost;
-> +	struct scsi_cmnd *scmnd;
-> +
-> +	device =3D (channel->primary_channel !=3D NULL) ?
-> +		channel->primary_channel->device_obj : channel->device_obj;
-> +	if (device =3D=3D NULL)
-> +		return VMBUS_RQST_ERROR;
-> +
-> +	stor_device =3D get_out_stor_device(device);
-> +	if (stor_device =3D=3D NULL)
-> +		return VMBUS_RQST_ERROR;
-> +
-> +	if (rqst_id =3D=3D VMBUS_RQST_INIT)
-> +		return (unsigned long)&stor_device->init_request;
-> +	if (rqst_id =3D=3D VMBUS_RQST_RESET)
-> +		return (unsigned long)&stor_device->reset_request;
-
-Unfortunately, the same simplification doesn't work here.  And you need
-stor_device anyway to get the scsi_host.
-
-> +
-> +	shost =3D stor_device->host;
-> +
-> +	scmnd =3D scsi_host_find_tag(shost, rqst_id);
-> +	if (scmnd =3D=3D NULL)
-> +		return VMBUS_RQST_ERROR;
-> +
-> +	request =3D (struct storvsc_cmd_request *)(unsigned long)scsi_cmd_priv(=
-scmnd);
-> +	return (unsigned long)request;
-
-The casts in the above two lines seem unnecessarily complex.  'request' is =
-never
-used as a pointer.  So couldn't the last two lines just be:
-
-	return (unsigned long)scsi_cmd_priv(scmnd);
-
-> +}
-> +
->  static void handle_sc_creation(struct vmbus_channel *new_sc)
+>  /*
+>   * Get first vmbus packet from ring buffer after read_index
+>   *
+> @@ -418,17 +445,49 @@ static u32 hv_pkt_iter_avail(const struct hv_ring_b=
+uffer_info *rbi)
+>  struct vmpacket_descriptor *hv_pkt_iter_first(struct vmbus_channel *chan=
+nel)
 >  {
->  	struct hv_device *device =3D new_sc->primary_channel->device_obj;
-> @@ -698,11 +754,8 @@ static void handle_sc_creation(struct vmbus_channel =
-*new_sc)
+>  	struct hv_ring_buffer_info *rbi =3D &channel->inbound;
+> -	struct vmpacket_descriptor *desc;
+> +	struct vmpacket_descriptor *desc, *desc_copy;
+> +	u32 bytes_avail, pkt_len, pkt_offset;
+>=20
+> -	hv_debug_delay_test(channel, MESSAGE_DELAY);
+> -	if (hv_pkt_iter_avail(rbi) < sizeof(struct vmpacket_descriptor))
+> +	desc =3D hv_pkt_iter_first_raw(channel);
+> +	if (!desc)
+>  		return NULL;
+>=20
+> -	desc =3D hv_get_ring_buffer(rbi) + rbi->priv_read_index;
+> -	if (desc)
+> -		prefetch((char *)desc + (desc->len8 << 3));
+> +	bytes_avail =3D min(rbi->pkt_buffer_size, hv_pkt_iter_avail(rbi));
+> +
+> +	/*
+> +	 * Ensure the compiler does not use references to incoming Hyper-V valu=
+es (which
+> +	 * could change at any moment) when reading local variables later in th=
+e code
+> +	 */
+> +	pkt_len =3D READ_ONCE(desc->len8) << 3;
+> +	pkt_offset =3D READ_ONCE(desc->offset8) << 3;
+> +
+> +	/*
+> +	 * If pkt_len is invalid, set it to the smaller of hv_pkt_iter_avail() =
+and
+> +	 * rbi->pkt_buffer_size
+> +	 */
+> +	if (pkt_len < sizeof(struct vmpacket_descriptor) || pkt_len > bytes_ava=
+il)
+> +		pkt_len =3D bytes_avail;
+> +
+> +	/*
+> +	 * If pkt_offset is invalid, arbitrarily set it to
+> +	 * the size of vmpacket_descriptor
+> +	 */
+> +	if (pkt_offset < sizeof(struct vmpacket_descriptor) || pkt_offset > pkt=
+_len)
+> +		pkt_offset =3D sizeof(struct vmpacket_descriptor);
+> +
+> +	/* Copy the Hyper-V packet out of the ring buffer */
+> +	desc_copy =3D (struct vmpacket_descriptor *)rbi->pkt_buffer;
+> +	memcpy(desc_copy, desc, pkt_len);
+> +
+> +	/*
+> +	 * Hyper-V could still change len8 and offset8 after the earlier read.
+> +	 * Ensure that desc_copy has legal values for len8 and offset8 that
+> +	 * are consistent with the copy we just made
+> +	 */
+> +	desc_copy->len8 =3D pkt_len >> 3;
+> +	desc_copy->offset8 =3D pkt_offset >> 3;
+>=20
+> -	return desc;
+> +	return desc_copy;
+>  }
+>  EXPORT_SYMBOL_GPL(hv_pkt_iter_first);
+>=20
+> @@ -440,7 +499,8 @@ EXPORT_SYMBOL_GPL(hv_pkt_iter_first);
+>   */
+>  struct vmpacket_descriptor *
+>  __hv_pkt_iter_next(struct vmbus_channel *channel,
+> -		   const struct vmpacket_descriptor *desc)
+> +		   const struct vmpacket_descriptor *desc,
+> +		   bool copy)
+>  {
+>  	struct hv_ring_buffer_info *rbi =3D &channel->inbound;
+>  	u32 packetlen =3D desc->len8 << 3;
+> @@ -453,7 +513,7 @@ __hv_pkt_iter_next(struct vmbus_channel *channel,
+>  		rbi->priv_read_index -=3D dsize;
+>=20
+>  	/* more data? */
+> -	return hv_pkt_iter_first(channel);
+> +	return copy ? hv_pkt_iter_first(channel) : hv_pkt_iter_first_raw(channe=
+l);
+>  }
+>  EXPORT_SYMBOL_GPL(__hv_pkt_iter_next);
+>=20
+> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_=
+net.h
+> index e1a497d3c9ba4..154539b2f75ba 100644
+> --- a/drivers/net/hyperv/hyperv_net.h
+> +++ b/drivers/net/hyperv/hyperv_net.h
+> @@ -895,9 +895,16 @@ static inline u32 netvsc_rqstor_size(unsigned long r=
+ingbytes)
+>  		ringbytes / NETVSC_MIN_IN_MSG_SIZE;
+>  }
+>=20
+> +/* XFER PAGE packets can specify a maximum of 375 ranges for NDIS >=3D 6=
+.0
+> + * and a maximum of 64 ranges for NDIS < 6.0 with no RSC; with RSC, this
+> + * limit is raised to 562 (=3D NVSP_RSC_MAX).
+> + */
+> +#define NETVSC_MAX_XFER_PAGE_RANGES NVSP_RSC_MAX
+>  #define NETVSC_XFER_HEADER_SIZE(rng_cnt) \
+>  		(offsetof(struct vmtransfer_page_packet_header, ranges) + \
+>  		(rng_cnt) * sizeof(struct vmtransfer_page_range))
+> +#define NETVSC_MAX_PKT_SIZE
+> (NETVSC_XFER_HEADER_SIZE(NETVSC_MAX_XFER_PAGE_RANGES) + \
+> +		sizeof(struct nvsp_message) + (sizeof(u32) * VRSS_SEND_TAB_SIZE))
+>=20
+>  struct multi_send_data {
+>  	struct sk_buff *skb; /* skb containing the pkt */
+> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+> index c64cc7639c39c..d17ff04986f52 100644
+> --- a/drivers/net/hyperv/netvsc.c
+> +++ b/drivers/net/hyperv/netvsc.c
+> @@ -1603,6 +1603,8 @@ struct netvsc_device *netvsc_device_add(struct hv_d=
+evice
+> *device,
+>=20
+>  	/* Open the channel */
+>  	device->channel->rqstor_size =3D netvsc_rqstor_size(netvsc_ring_bytes);
+> +	device->channel->max_pkt_size =3D NETVSC_MAX_PKT_SIZE;
+> +
+>  	ret =3D vmbus_open(device->channel, netvsc_ring_bytes,
+>  			 netvsc_ring_bytes,  NULL, 0,
+>  			 netvsc_channel_cb, net_device->chan_table);
+> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis=
+_filter.c
+> index 123cc9d25f5ed..6508c4724c224 100644
+> --- a/drivers/net/hyperv/rndis_filter.c
+> +++ b/drivers/net/hyperv/rndis_filter.c
+> @@ -1260,6 +1260,8 @@ static void netvsc_sc_open(struct vmbus_channel *ne=
+w_sc)
+>  	nvchan->channel =3D new_sc;
+>=20
+>  	new_sc->rqstor_size =3D netvsc_rqstor_size(netvsc_ring_bytes);
+> +	new_sc->max_pkt_size =3D NETVSC_MAX_PKT_SIZE;
+> +
+>  	ret =3D vmbus_open(new_sc, netvsc_ring_bytes,
+>  			 netvsc_ring_bytes, NULL, 0,
+>  			 netvsc_channel_cb, nvchan);
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index 6bc5453cea8a7..bfbaebded8025 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -402,6 +402,14 @@ static void storvsc_on_channel_callback(void *contex=
+t);
+>  #define STORVSC_IDE_MAX_TARGETS				1
+>  #define STORVSC_IDE_MAX_CHANNELS			1
+>=20
+> +/*
+> + * Upper bound on the size of a storvsc packet. vmscsi_size_delta is not
+> + * included in the calculation because it is set after STORVSC_MAX_PKT_S=
+IZE
+> + * is used in storvsc_connect_to_vsp
+> + */
+> +#define STORVSC_MAX_PKT_SIZE (sizeof(struct vmpacket_descriptor) +\
+> +			      sizeof(struct vstor_packet))
+> +
+>  struct storvsc_cmd_request {
+>  	struct scsi_cmnd *cmd;
+>=20
+> @@ -697,6 +705,7 @@ static void handle_sc_creation(struct vmbus_channel *=
+new_sc)
+>  		return;
 >=20
 >  	memset(&props, 0, sizeof(struct vmstorage_channel_properties));
+> +	new_sc->max_pkt_size =3D STORVSC_MAX_PKT_SIZE;
 >=20
-> -	/*
-> -	 * The size of vmbus_requestor is an upper bound on the number of reque=
+>  	/*
+>  	 * The size of vmbus_requestor is an upper bound on the number of reque=
 sts
-> -	 * that can be in-progress at any one time across all channels.
-> -	 */
-> -	new_sc->rqstor_size =3D scsi_driver.can_queue;
-> +	new_sc->next_request_id_callback =3D storvsc_next_request_id;
-> +	new_sc->request_addr_callback =3D storvsc_request_addr;
->=20
->  	ret =3D vmbus_open(new_sc,
->  			 storvsc_ringbuffer_size,
-> @@ -1255,8 +1308,7 @@ static void storvsc_on_channel_callback(void *conte=
-xt)
->  		struct storvsc_cmd_request *request;
->  		u64 cmd_rqst;
->=20
-> -		cmd_rqst =3D vmbus_request_addr(&channel->requestor,
-> -					      desc->trans_id);
-> +		cmd_rqst =3D channel->request_addr_callback(channel, desc->trans_id);
-
-Here's another thought:  You don't really need to set the channel request_a=
-ddr_callback
-function and then indirect through it here.  You know the specific function=
- that storvsc
-is using, so could call it directly.  The other reason to set request_addr_=
-callback is so
-that at the end of hv_ringbuffer_write() you can reclaim an allocated reque=
-stID if the
-rescind flag is set.  But there's nothing allocated that needs to be reclai=
-med in the storvsc
-case, so leaving request_addr_callback as NULL is OK (but hv_ringbuffer_wri=
-te would
-have to check for the NULL).
-
-Then if you do that, the logic in storvsc_request_addr() can effectively go=
- inline in
-here.  And that logic can take advantage of the fact that stor_device is al=
-ready determined
-outside the foreach_vmbus_pkt() loop.  The scsi_host could be calculated ou=
-tside the loop
-as well, leaving the detection of init_request and reset_request, and the c=
-all to
-scsi_host_find_tag() as the only things to do.
-
-This approach is a bit asymmetrical, but it would save some processing in t=
-his interrupt
-handling code.   So something to consider.
-
->  		if (cmd_rqst =3D=3D VMBUS_RQST_ERROR) {
->  			dev_err(&device->device,
->  				"Incorrect transaction id\n");
-> @@ -1290,11 +1342,8 @@ static int storvsc_connect_to_vsp(struct hv_device=
- *device, u32
+> @@ -1290,6 +1299,7 @@ static int storvsc_connect_to_vsp(struct hv_device =
+*device, u32
 > ring_size,
 >=20
 >  	memset(&props, 0, sizeof(struct vmstorage_channel_properties));
 >=20
-> -	/*
-> -	 * The size of vmbus_requestor is an upper bound on the number of reque=
+> +	device->channel->max_pkt_size =3D STORVSC_MAX_PKT_SIZE;
+>  	/*
+>  	 * The size of vmbus_requestor is an upper bound on the number of reque=
 sts
-> -	 * that can be in-progress at any one time across all channels.
-> -	 */
-> -	device->channel->rqstor_size =3D scsi_driver.can_queue;
-> +	device->channel->next_request_id_callback =3D storvsc_next_request_id;
-> +	device->channel->request_addr_callback =3D storvsc_request_addr;
->=20
->  	ret =3D vmbus_open(device->channel,
->  			 ring_size,
+>  	 * that can be in-progress at any one time across all channels.
 > diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 2c18c8e768efe..5692ffa60e022 100644
+> index 2c18c8e768efe..7387bb41f6a37 100644
 > --- a/include/linux/hyperv.h
 > +++ b/include/linux/hyperv.h
-> @@ -779,7 +779,11 @@ struct vmbus_requestor {
->=20
->  #define VMBUS_NO_RQSTOR U64_MAX
->  #define VMBUS_RQST_ERROR (U64_MAX - 1)
-> +/* NetVSC-specific */
-
-It is netvsc specific at the moment.  But if we harden other
-drivers, they are likely to use the same generic requestID
-allocator, and hence need the same sentinel value.
-
->  #define VMBUS_RQST_ID_NO_RESPONSE (U64_MAX - 2)
-> +/* StorVSC-specific */
-> +#define VMBUS_RQST_INIT (U64_MAX - 2)
-> +#define VMBUS_RQST_RESET (U64_MAX - 3)
->=20
->  struct vmbus_device {
->  	u16  dev_type;
-> @@ -1007,13 +1011,18 @@ struct vmbus_channel {
->  	u32 fuzz_testing_interrupt_delay;
->  	u32 fuzz_testing_message_delay;
->=20
-> +	/* callback to generate a request ID from a request address */
-> +	u64 (*next_request_id_callback)(struct vmbus_channel *channel, u64 rqst=
-_addr);
-> +	/* callback to retrieve a request address from a request ID */
-> +	u64 (*request_addr_callback)(struct vmbus_channel *channel, u64 rqst_id=
-);
+> @@ -181,6 +181,10 @@ struct hv_ring_buffer_info {
+>  	 * being freed while the ring buffer is being accessed.
+>  	 */
+>  	struct mutex ring_buffer_mutex;
 > +
+> +	/* Buffer that holds a copy of an incoming host packet */
+> +	void *pkt_buffer;
+> +	u32 pkt_buffer_size;
+>  };
+>=20
+>=20
+> @@ -788,6 +792,8 @@ struct vmbus_device {
+>  	bool allowed_in_isolated;
+>  };
+>=20
+> +#define VMBUS_DEFAULT_MAX_PKT_SIZE 4096
+> +
+>  struct vmbus_channel {
+>  	struct list_head listentry;
+>=20
+> @@ -1010,6 +1016,9 @@ struct vmbus_channel {
 >  	/* request/transaction ids for VMBus */
 >  	struct vmbus_requestor requestor;
 >  	u32 rqstor_size;
+> +
+> +	/* The max size of a packet on this channel */
+> +	u32 max_pkt_size;
 >  };
 >=20
-> -u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)=
+>  u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)=
 ;
-> -u64 vmbus_request_addr(struct vmbus_requestor *rqstor, u64 trans_id);
-> +u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr);
-> +u64 vmbus_request_addr(struct vmbus_channel *channel, u64 trans_id);
+> @@ -1651,32 +1660,55 @@ static inline u32 hv_pkt_datalen(const struct
+> vmpacket_descriptor *desc)
+>  }
 >=20
->  static inline bool is_hvsock_channel(const struct vmbus_channel *c)
+>=20
+> +struct vmpacket_descriptor *
+> +hv_pkt_iter_first_raw(struct vmbus_channel *channel);
+> +
+>  struct vmpacket_descriptor *
+>  hv_pkt_iter_first(struct vmbus_channel *channel);
+>=20
+>  struct vmpacket_descriptor *
+>  __hv_pkt_iter_next(struct vmbus_channel *channel,
+> -		   const struct vmpacket_descriptor *pkt);
+> +		   const struct vmpacket_descriptor *pkt,
+> +		   bool copy);
+>=20
+>  void hv_pkt_iter_close(struct vmbus_channel *channel);
+>=20
+> -/*
+> - * Get next packet descriptor from iterator
+> - * If at end of list, return NULL and update host.
+> - */
+>  static inline struct vmpacket_descriptor *
+> -hv_pkt_iter_next(struct vmbus_channel *channel,
+> -		 const struct vmpacket_descriptor *pkt)
+> +hv_pkt_iter_next_pkt(struct vmbus_channel *channel,
+> +		     const struct vmpacket_descriptor *pkt,
+> +		     bool copy)
 >  {
+>  	struct vmpacket_descriptor *nxt;
+>=20
+> -	nxt =3D __hv_pkt_iter_next(channel, pkt);
+> +	nxt =3D __hv_pkt_iter_next(channel, pkt, copy);
+>  	if (!nxt)
+>  		hv_pkt_iter_close(channel);
+>=20
+>  	return nxt;
+>  }
+>=20
+> +/*
+> + * Get next packet descriptor without copying it out of the ring buffer
+> + * If at end of list, return NULL and update host.
+> + */
+> +static inline struct vmpacket_descriptor *
+> +hv_pkt_iter_next_raw(struct vmbus_channel *channel,
+> +		     const struct vmpacket_descriptor *pkt)
+> +{
+> +	return hv_pkt_iter_next_pkt(channel, pkt, false);
+> +}
+> +
+> +/*
+> + * Get next packet descriptor from iterator
+> + * If at end of list, return NULL and update host.
+> + */
+> +static inline struct vmpacket_descriptor *
+> +hv_pkt_iter_next(struct vmbus_channel *channel,
+> +		 const struct vmpacket_descriptor *pkt)
+> +{
+> +	return hv_pkt_iter_next_pkt(channel, pkt, true);
+> +}
+> +
+>  #define foreach_vmbus_pkt(pkt, channel) \
+>  	for (pkt =3D hv_pkt_iter_first(channel); pkt; \
+>  	    pkt =3D hv_pkt_iter_next(channel, pkt))
+> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_tran=
+sport.c
+> index cc3bae2659e79..19189cf30a72f 100644
+> --- a/net/vmw_vsock/hyperv_transport.c
+> +++ b/net/vmw_vsock/hyperv_transport.c
+> @@ -596,7 +596,7 @@ static ssize_t hvs_stream_dequeue(struct vsock_sock *=
+vsk, struct
+> msghdr *msg,
+>  		return -EOPNOTSUPP;
+>=20
+>  	if (need_refill) {
+> -		hvs->recv_desc =3D hv_pkt_iter_first(hvs->chan);
+> +		hvs->recv_desc =3D hv_pkt_iter_first_raw(hvs->chan);
+>  		ret =3D hvs_update_recv_data(hvs);
+>  		if (ret)
+>  			return ret;
+> @@ -610,7 +610,7 @@ static ssize_t hvs_stream_dequeue(struct vsock_sock *=
+vsk, struct
+> msghdr *msg,
+>=20
+>  	hvs->recv_data_len -=3D to_read;
+>  	if (hvs->recv_data_len =3D=3D 0) {
+> -		hvs->recv_desc =3D hv_pkt_iter_next(hvs->chan, hvs->recv_desc);
+> +		hvs->recv_desc =3D hv_pkt_iter_next_raw(hvs->chan, hvs->recv_desc);
+>  		if (hvs->recv_desc) {
+>  			ret =3D hvs_update_recv_data(hvs);
+>  			if (ret)
 > --
 > 2.25.1
 
