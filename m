@@ -2,122 +2,179 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7C4E359699
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Apr 2021 09:42:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50F803596EB
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Apr 2021 09:55:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231975AbhDIHm7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Apr 2021 03:42:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44367 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229545AbhDIHm7 (ORCPT
+        id S232051AbhDIH4F (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Apr 2021 03:56:05 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:15228 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231127AbhDIH4F (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Apr 2021 03:42:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617954166;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YNRAYvZEYzpqoys7GviK7KCuwJyenrXNkiKbNxZPfpU=;
-        b=CqLLGpxrvPXKVQIoSPkhXXt3ZPN2tup3m1CkbHHzk9BvotQSpOd9G5M1dE65Rs3xB8xipT
-        04WSd+DvGQiucJZByRNhJJgA9VmYMmgydINIOVl+AEVLr1/3E4qcNEGm1rk/vDDNZC7gqH
-        3J5DVZrx5+D7V7cKYKV5ujmeFBbedU0=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-526-iHXoMFggNfC7lPQipKkg1Q-1; Fri, 09 Apr 2021 03:42:44 -0400
-X-MC-Unique: iHXoMFggNfC7lPQipKkg1Q-1
-Received: by mail-ej1-f72.google.com with SMTP id gj5so1185556ejb.19
-        for <linux-hyperv@vger.kernel.org>; Fri, 09 Apr 2021 00:42:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=YNRAYvZEYzpqoys7GviK7KCuwJyenrXNkiKbNxZPfpU=;
-        b=i/AFelWRseWWbUMrjUOnDJbXSpKFpFTuZMuDycU6gvOAJXX7LX4i5DQxVlKA5ipt9T
-         MIePRCL9Xto1fJs+XO3nakgBuw/WXqa3UbJG3PJ/K/90I1lkA98QiNyVNg4BMMKpJG7e
-         UjJHDVUnVNvMqtz1WuVNiHkLHQjv7XH4j+Z/Bc55rWJ8gLB3q9qZ9WnJJ2q4udItUYfm
-         PSsTyFj6Dw0oyhJo7C5Ci4ifn8qInIA2ShGmBn8PrUcnBWuN45HnudCxgSic4VzHGQ9Y
-         oPJaMi2feeTlTYy/o6q3zOYuUSw/nvPLwTvkdz1+IbR2cEy60bkDjiC8DeMkC4jN0qNE
-         G72A==
-X-Gm-Message-State: AOAM5320Hy22OZH4CKZxEsUbH2Sc3e7lucPwcJaeygOtN6nMHVBJkFy6
-        aYtzxEBuB8t9pfzEu1C1rfxMrKymacAdSwjJp2JiLlIX4BaCyOVL29VzY/+myBK5TKs5ilmHQwX
-        YwnnxP3WnW2w796tsD8hFujhk
-X-Received: by 2002:a50:f29a:: with SMTP id f26mr16170637edm.13.1617954163350;
-        Fri, 09 Apr 2021 00:42:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw9X6LUCm/VlbxytiCCUWpZztthGe5jHm4meEp8gBOoBrkZhZ7mUGCrZnvizxVfncZD29wCmQ==
-X-Received: by 2002:a50:f29a:: with SMTP id f26mr16170612edm.13.1617954163221;
-        Fri, 09 Apr 2021 00:42:43 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id ju23sm819785ejc.17.2021.04.09.00.42.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Apr 2021 00:42:42 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Siddharth Chandrasekaran <sidcha@amazon.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, graf@amazon.com, eyakovl@amazon.de,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH 0/4] Add support for XMM fast hypercalls
-In-Reply-To: <20210408174521.GF32315@u366d62d47e3651.ant.amazon.com>
-References: <20210407212926.3016-1-sidcha@amazon.de>
- <20210408152817.k4d4hjdqu7hsjllo@liuwe-devbox-debian-v2>
- <033e7d77-d640-2c12-4918-da6b5b7f4e21@redhat.com>
- <20210408154006.GA32315@u366d62d47e3651.ant.amazon.com>
- <53200f24-bd57-1509-aee2-0723aa8a3f6f@redhat.com>
- <20210408155442.GC32315@u366d62d47e3651.ant.amazon.com>
- <20210408163018.mlr23jd2r4st54jc@liuwe-devbox-debian-v2>
- <20210408174521.GF32315@u366d62d47e3651.ant.amazon.com>
-Date:   Fri, 09 Apr 2021 09:42:41 +0200
-Message-ID: <87wntb7vke.fsf@vitty.brq.redhat.com>
+        Fri, 9 Apr 2021 03:56:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1617954953; x=1649490953;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=BJxY6uzNd1eqL/AmYQtKHlFqsRdbG/hESPW6+LfJYVU=;
+  b=W/765iYj1um90S53kp6bWWzQgpncOnxV6H9LDyVBab/zUVcJoQlVv+JA
+   1kUXm3PTWhdrslEEdMI+mhX2AFj4c76WJ4gKGyfURtGX4cy8Nanpz9+7F
+   1I1piw1GxFMr1ITE+frmZz7Ry/WMaUf2kLxs/e3JdgqYQLRWbVWS6ovmo
+   o=;
+X-IronPort-AV: E=Sophos;i="5.82,208,1613433600"; 
+   d="scan'208";a="106476224"
+Subject: Re: [PATCH 4/4] KVM: hyper-v: Advertise support for fast XMM hypercalls
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Apr 2021 07:55:46 +0000
+Received: from EX13D28EUC003.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 1317C28BCBD;
+        Fri,  9 Apr 2021 07:55:39 +0000 (UTC)
+Received: from uc8bbc9586ea454.ant.amazon.com (10.43.162.207) by
+ EX13D28EUC003.ant.amazon.com (10.43.164.43) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 9 Apr 2021 07:55:32 +0000
+Date:   Fri, 9 Apr 2021 09:55:28 +0200
+From:   Siddharth Chandrasekaran <sidcha@amazon.de>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     Alexander Graf <graf@amazon.com>,
+        Evgeny Iakovlev <eyakovl@amazon.de>,
+        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Sean Christopherson" <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "Jim Mattson" <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>
+Message-ID: <20210409075335.GA26597@uc8bbc9586ea454.ant.amazon.com>
+References: <20210407211954.32755-1-sidcha@amazon.de>
+ <20210407211954.32755-5-sidcha@amazon.de>
+ <87blap7zha.fsf@vitty.brq.redhat.com>
+ <20210408142053.GA10636@u366d62d47e3651.ant.amazon.com>
+ <8735w096pk.fsf@vitty.brq.redhat.com>
+ <20210408155220.GB32315@u366d62d47e3651.ant.amazon.com>
+ <87zgy77vs4.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87zgy77vs4.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.43.162.207]
+X-ClientProxiedBy: EX13D20UWC002.ant.amazon.com (10.43.162.163) To
+ EX13D28EUC003.ant.amazon.com (10.43.164.43)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+On Fri, Apr 09, 2021 at 09:38:03AM +0200, Vitaly Kuznetsov wrote:
+> Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+> > On Thu, Apr 08, 2021 at 04:44:23PM +0200, Vitaly Kuznetsov wrote:
+> >> Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+> >> > On Thu, Apr 08, 2021 at 02:05:53PM +0200, Vitaly Kuznetsov wrote:
+> >> >> Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+> >> >>
+> >> >> > Now that all extant hypercalls that can use XMM registers (based on
+> >> >> > spec) for input/outputs are patched to support them, we can start
+> >> >> > advertising this feature to guests.
+> >> >> >
+> >> >> > Cc: Alexander Graf <graf@amazon.com>
+> >> >> > Cc: Evgeny Iakovlev <eyakovl@amazon.de>
+> >> >> > Signed-off-by: Siddharth Chandrasekaran <sidcha@amazon.de>
+> >> >> > ---
+> >> >> >  arch/x86/include/asm/hyperv-tlfs.h | 4 ++--
+> >> >> >  arch/x86/kvm/hyperv.c              | 1 +
+> >> >> >  2 files changed, 3 insertions(+), 2 deletions(-)
+> >> >> >
+> >> >> > diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> >> >> > index e6cd3fee562b..1f160ef60509 100644
+> >> >> > --- a/arch/x86/include/asm/hyperv-tlfs.h
+> >> >> > +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> >> >> > @@ -49,10 +49,10 @@
+> >> >> >  /* Support for physical CPU dynamic partitioning events is available*/
+> >> >> >  #define HV_X64_CPU_DYNAMIC_PARTITIONING_AVAILABLE    BIT(3)
+> >> >> >  /*
+> >> >> > - * Support for passing hypercall input parameter block via XMM
+> >> >> > + * Support for passing hypercall input and output parameter block via XMM
+> >> >> >   * registers is available
+> >> >> >   */
+> >> >> > -#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE                BIT(4)
+> >> >> > +#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE                BIT(4) | BIT(15)
+> >> >>
+> >> >> TLFS 6.0b states that there are two distinct bits for input and output:
+> >> >>
+> >> >> CPUID Leaf 0x40000003.EDX:
+> >> >> Bit 4: support for passing hypercall input via XMM registers is available.
+> >> >> Bit 15: support for returning hypercall output via XMM registers is available.
+> >> >>
+> >> >> and HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE is not currently used
+> >> >> anywhere, I'd suggest we just rename
+> >> >>
+> >> >> HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE to HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE
+> >> >> and add HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE (bit 15).
+> >> >
+> >> > That is how I had it initially; but then noticed that we would never
+> >> > need to use either of them separately. So it seemed like a reasonable
+> >> > abstraction to put them together.
+> >> >
+> >>
+> >> Actually, we may. In theory, KVM userspace may decide to expose just
+> >> one of these two to the guest as it is not obliged to copy everything
+> >> from KVM_GET_SUPPORTED_HV_CPUID so we will need separate
+> >> guest_cpuid_has() checks.
+> >
+> > Makes sense. I'll split them and add the checks.
+> >
+> >> (This reminds me of something I didn't see in your series:
+> >> we need to check that XMM hypercall parameters support was actually
+> >> exposed to the guest as it is illegal for a guest to use it otherwise --
+> >> and we will likely need two checks, for input and output).
+> >
+> > We observed that Windows expects Hyper-V to support XMM params even if
+> > we don't advertise this feature but if userspace wants to hide this
+> > feature and the guest does it anyway, then it makes sense to treat it as
+> > an illegal OP.
+> >
+> 
+> Out of pure curiosity, which Windows version behaves like that? And how
+> does this work with KVM without your patches?
 
-> On Thu, Apr 08, 2021 at 04:30:18PM +0000, Wei Liu wrote:
->> On Thu, Apr 08, 2021 at 05:54:43PM +0200, Siddharth Chandrasekaran wrote:
->> > On Thu, Apr 08, 2021 at 05:48:19PM +0200, Paolo Bonzini wrote:
->> > > On 08/04/21 17:40, Siddharth Chandrasekaran wrote:
->> > > > > > > Although the Hyper-v TLFS mentions that a guest cannot use this feature
->> > > > > > > unless the hypervisor advertises support for it, some hypercalls which
->> > > > > > > we plan on upstreaming in future uses them anyway.
->> > > > > > No, please don't do this. Check the feature bit(s) before you issue
->> > > > > > hypercalls which rely on the extended interface.
->> > > > > Perhaps Siddharth should clarify this, but I read it as Hyper-V being
->> > > > > buggy and using XMM arguments unconditionally.
->> > > > The guest is at fault here as it expects Hyper-V to consume arguments
->> > > > from XMM registers for certain hypercalls (that we are working) even if
->> > > > we didn't expose the feature via CPUID bits.
->> > >
->> > > What guest is that?
->> >
->> > It is a Windows Server 2016.
->> 
->> Can you be more specific? Are you implementing some hypercalls from
->> TLFS? If so, which ones?
->
-> Yes all of them are from TLFS. We are implementing VSM and there are a
-> bunch of hypercalls that we have implemented to manage VTL switches,
-> memory protection and virtual interrupts.
+The guest is a Windows Server 2016 on which we are trying to enable VBS
+and handle it through the VSM API. When VBS is enabled on the guest, it
+starts using many other (new) hypercalls and some of them don't honor
+the CPUID bits (4, 15) that indicate the presence of XMM params support.
 
-Wow, sounds awesome! Do you plan to upstream this work?
+> Sane KVM userspaces will certainly expose both XMM input and output
+> capabilities together but having an ability to hide one or both of them
+> may come handy while debugging.
+> 
+> Also, we weren't enforcing the rule that enlightenments not exposed to
+> the guest don't work, even the whole Hyper-V emulation interface was
+> available to all guests who were smart enough to know how to enable it!
+> I don't like this for two reasons: security (large attack surface) and
+> the fact that someone 'smart' may decide to use Hyper-V emulation
+> features on KVM as 'general purpose' features saying 'they're always
+> available anyway', this risks becoming an ABI.
+> 
+> Let's at least properly check if the feature was exposed to the guest
+> for all new enlightenments.
 
-> The following 3 hypercalls that use the XMM fast hypercalls are relevant
-> to this patch set:
->
-> HvCallModifyVtlProtectionMask
-> HvGetVpRegisters 
-> HvSetVpRegisters 
+Agreed.
 
-It seems AccessVSM and AccessVpRegisters privilges have implicit
-dependency on XMM input/output. This will need to be enforced in KVM
-userspace.
+~ Sid.
 
--- 
-Vitaly
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
