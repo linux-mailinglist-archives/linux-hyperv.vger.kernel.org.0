@@ -2,76 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33DE3359E8F
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Apr 2021 14:24:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0173359FEC
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Apr 2021 15:35:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233473AbhDIMZA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Apr 2021 08:25:00 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:42622 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233019AbhDIMY4 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Apr 2021 08:24:56 -0400
-Received: from [192.168.86.30] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6CFEC20B5680;
-        Fri,  9 Apr 2021 05:24:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6CFEC20B5680
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1617971083;
-        bh=cvjSlEqzE0r8jbTTyah78wK4atQEFVQUPgjPXKTu3zo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=boTUERpFwM/5ek3yZAirRhWiEIv4atHr3NyIxPiLghR3L906gPgsOPZMTnnRzLI6Q
-         eBPVWrM6W3FUgzbon1UIyIPMdKgHXQCQxcMVQhXxr2nXopMv5oF9QX7Z2+o69HXQD0
-         h3qpKMYq6kkGejCBKExVadsJB12fEt2vmuGT2z6k=
-Subject: Re: [PATCH 4/7] KVM: SVM: hyper-v: Nested enlightenments in VMCB
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
+        id S231599AbhDINgB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Apr 2021 09:36:01 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42640 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231127AbhDINgB (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 9 Apr 2021 09:36:01 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1lUrIO-00FmRk-5c; Fri, 09 Apr 2021 15:35:36 +0200
+Date:   Fri, 9 Apr 2021 15:35:36 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, viremana@linux.microsoft.com
-References: <cover.1617804573.git.viremana@linux.microsoft.com>
- <e9de12a81ab31613fb55d5c1308ca0ca050ced4c.1617804573.git.viremana@linux.microsoft.com>
- <5927967d-c5a2-6df9-9aff-4b92c207df09@redhat.com>
-From:   Vineeth Pillai <viremana@linux.microsoft.com>
-Message-ID: <1ae328de-718c-dfa3-f5af-e765d953d841@linux.microsoft.com>
-Date:   Fri, 9 Apr 2021 08:24:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Wei Liu <liuwe@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "bernd@petrovitsch.priv.at" <bernd@petrovitsch.priv.at>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH v3 net-next] net: mana: Add a driver for Microsoft Azure
+ Network Adapter (MANA)
+Message-ID: <YHBYKGwJsX/wuYqn@lunn.ch>
+References: <20210408225840.26304-1-decui@microsoft.com>
+ <20210408.164618.597563844564989065.davem@davemloft.net>
+ <MW2PR2101MB0892B82CBCF2450D4A82DD50BF739@MW2PR2101MB0892.namprd21.prod.outlook.com>
+ <20210408.174122.1793350393067698495.davem@davemloft.net>
+ <BL0PR2101MB0930523DB18C6F1C1CA00A89CA739@BL0PR2101MB0930.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <5927967d-c5a2-6df9-9aff-4b92c207df09@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR2101MB0930523DB18C6F1C1CA00A89CA739@BL0PR2101MB0930.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+ For the structs containing variables with the same sizes, or already size aligned 
+> variables, we knew the __packed has no effect. And for these structs, it doesn't 
+> cause performance impact either, correct? 
+> 
+> But in the future, if different sized variables are added, the __packed may 
+> become necessary again. To prevent anyone accidently forget to add __packed 
+> when adding new variables to these structs, can we keep the __packed for all 
+> messages going through the "wire"?
 
-On 4/8/21 11:44 AM, Paolo Bonzini wrote:
-> On 07/04/21 16:41, Vineeth Pillai wrote:
->> +#define VMCB_ALL_CLEAN_MASK (__CLEAN_MASK | (1U << 
->> VMCB_HV_NESTED_ENLIGHTENMENTS))
->> +#else
->> +#define VMCB_ALL_CLEAN_MASK __CLEAN_MASK
->> +#endif
->
-> I think this should depend on whether KVM is running on top of 
-> Hyper-V; not on whether KVM is *compiled* with Hyper-V support.
->
-> So you should turn VMCB_ALL_CLEAN_MASK into a __read_mostly variable.
-Will do.
+It should not be a problem because anybody adding new variables should
+know packed is not liked in the kernel and will take care.
 
-Thanks,
-Vineeth
+If you want to be paranoid add a BUILD_BUG_ON(size(struct foo) != 42);
 
+   Andrew
