@@ -2,316 +2,180 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E8DD359555
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Apr 2021 08:23:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DFD6359682
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Apr 2021 09:38:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233320AbhDIGXT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Apr 2021 02:23:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229715AbhDIGXS (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Apr 2021 02:23:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B90B261057;
-        Fri,  9 Apr 2021 06:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1617949385;
-        bh=mJ2iIVENJVBOnN2uXfAcyB/K8aKm5K5QHhvwNyApuAU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=csPjYedzWhmuKBGMU155cpHTdZItXq65aNVGkrX9cDOfKgzfcWV1yVZ7+8tq01r+z
-         ODfCoIhkGumpTuUlBz+43/5MvpO/6M0D+77/eRG+VIJ27eTKjfLfS57BTaW5YITUdh
-         97swMkpU38QBpyu9C25OZZIPhXniOvfHNvdymBZE=
-Date:   Thu, 8 Apr 2021 23:23:03 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-remoteproc@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        kexec@lists.infradead.org, rcu@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S229803AbhDIHiU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Apr 2021 03:38:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35573 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229545AbhDIHiU (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 9 Apr 2021 03:38:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617953887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fkrozLMJPACVkdmHi98evbnJXUcRYylIKOGu+prd3Vg=;
+        b=AVV5gxNk0ddxwfb/hc6IA7CKtMu465VgViEyqjZ4ZZFvbM3CZoyw5SA/IHNk9yycKIY8F2
+        cvkdlWoAb0PsLQ32V8TD/bYTMYEBlK+5QT0GfpLe1IcdzZKmfhsAOp8R5OKE0R1/B2jFhP
+        Ns7NTa2nrSQt6o1NZNt+1/AdKX2nGFs=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-_HVPuMOkPiW3YKYn79d3Zg-1; Fri, 09 Apr 2021 03:38:05 -0400
+X-MC-Unique: _HVPuMOkPiW3YKYn79d3Zg-1
+Received: by mail-ed1-f72.google.com with SMTP id l11so2259611edb.2
+        for <linux-hyperv@vger.kernel.org>; Fri, 09 Apr 2021 00:38:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=fkrozLMJPACVkdmHi98evbnJXUcRYylIKOGu+prd3Vg=;
+        b=J2738JLW/qVowAO1qHRtch9U1TO/hL40tP4AMngTKGzy4ApgnkXkIpXsX+26h2nyeT
+         jbr4yamf9TFy9nwIO0QGHSvyi2BKExTlSs9p0g1QWuHEZSeU3VC4k1tFsP+2b7aJp+kC
+         BXQ89zPXrJ554EjtZQHRhZNS3zBzGwBOEM76hX+Ue5y/amB6AsABN4nykFxDqe1fqcK0
+         ZKXJjZULmCUl0M3o4Dm6i5nCp1kLF0diwGPZn4c5A7Z14PpIYwiUCgR/CyeI6KlFtvXd
+         6Vu2K/GH/wFmdtuSbUKGcHRyhjdoW1TZMHkx+FKfDYFylDnft8h5ceV/x38byp6mwZHM
+         CNjQ==
+X-Gm-Message-State: AOAM531PAHMR4GB6J48qx+xh+RQmPOzzyWZ7i7z8Rzw74tNMoKzr+Xtw
+        y19G/vtilkZje+0Bb+U7+/cOqyYl0w4sMFnET9OSLdP+eLNNNAkitk61MiN9RHWHwQPKAfc21LN
+        GfjAbm84G9Pl9bTj8XtQMSmg7
+X-Received: by 2002:a17:906:170d:: with SMTP id c13mr14557526eje.491.1617953884853;
+        Fri, 09 Apr 2021 00:38:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw0b2ZoUfqjNAa81uHiiZD1Mdm+c8bRsxSc++bCivJSOo+DhWfXVhlCJ950VqISuyzIOO5GyQ==
+X-Received: by 2002:a17:906:170d:: with SMTP id c13mr14557510eje.491.1617953884680;
+        Fri, 09 Apr 2021 00:38:04 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id q18sm920852edr.26.2021.04.09.00.38.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Apr 2021 00:38:04 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Siddharth Chandrasekaran <sidcha@amazon.de>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Evgeny Iakovlev <eyakovl@amazon.de>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Corey Minyard <minyard@acm.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>
-Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
-Message-Id: <20210408232303.453749e0e6fb0adfa8545440@linux-foundation.org>
-In-Reply-To: <CAHp75Ve+11u=dtNTO8BCohOJHGWSMJtb1nGCOrNde7bXaD4ehA@mail.gmail.com>
-References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
-        <202104061143.E11D2D0@keescook>
-        <CAHp75Ve+11u=dtNTO8BCohOJHGWSMJtb1nGCOrNde7bXaD4ehA@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 4/4] KVM: hyper-v: Advertise support for fast XMM
+ hypercalls
+In-Reply-To: <20210408155220.GB32315@u366d62d47e3651.ant.amazon.com>
+References: <20210407211954.32755-1-sidcha@amazon.de>
+ <20210407211954.32755-5-sidcha@amazon.de>
+ <87blap7zha.fsf@vitty.brq.redhat.com>
+ <20210408142053.GA10636@u366d62d47e3651.ant.amazon.com>
+ <8735w096pk.fsf@vitty.brq.redhat.com>
+ <20210408155220.GB32315@u366d62d47e3651.ant.amazon.com>
+Date:   Fri, 09 Apr 2021 09:38:03 +0200
+Message-ID: <87zgy77vs4.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 7 Apr 2021 11:46:37 +0300 Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Siddharth Chandrasekaran <sidcha@amazon.de> writes:
 
-> On Wed, Apr 7, 2021 at 11:17 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Tue, Apr 06, 2021 at 04:31:58PM +0300, Andy Shevchenko wrote:
-> > > kernel.h is being used as a dump for all kinds of stuff for a long time.
-> > > Here is the attempt to start cleaning it up by splitting out panic and
-> > > oops helpers.
-> > >
-> > > At the same time convert users in header and lib folder to use new header.
-> > > Though for time being include new header back to kernel.h to avoid twisted
-> > > indirected includes for existing users.
-> > >
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> > I like it! Do you have a multi-arch CI to do allmodconfig builds to
-> > double-check this?
-> 
-> Unfortunately no, I rely on plenty of bots that are harvesting mailing lists.
-> 
-> But I will appreciate it if somebody can run this through various build tests.
-> 
+> On Thu, Apr 08, 2021 at 04:44:23PM +0200, Vitaly Kuznetsov wrote:
+>> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+>>
+>>
+>>
+>> Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+>>
+>> > On Thu, Apr 08, 2021 at 02:05:53PM +0200, Vitaly Kuznetsov wrote:
+>> >> Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+>> >>
+>> >> > Now that all extant hypercalls that can use XMM registers (based on
+>> >> > spec) for input/outputs are patched to support them, we can start
+>> >> > advertising this feature to guests.
+>> >> >
+>> >> > Cc: Alexander Graf <graf@amazon.com>
+>> >> > Cc: Evgeny Iakovlev <eyakovl@amazon.de>
+>> >> > Signed-off-by: Siddharth Chandrasekaran <sidcha@amazon.de>
+>> >> > ---
+>> >> >  arch/x86/include/asm/hyperv-tlfs.h | 4 ++--
+>> >> >  arch/x86/kvm/hyperv.c              | 1 +
+>> >> >  2 files changed, 3 insertions(+), 2 deletions(-)
+>> >> >
+>> >> > diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+>> >> > index e6cd3fee562b..1f160ef60509 100644
+>> >> > --- a/arch/x86/include/asm/hyperv-tlfs.h
+>> >> > +++ b/arch/x86/include/asm/hyperv-tlfs.h
+>> >> > @@ -49,10 +49,10 @@
+>> >> >  /* Support for physical CPU dynamic partitioning events is available*/
+>> >> >  #define HV_X64_CPU_DYNAMIC_PARTITIONING_AVAILABLE    BIT(3)
+>> >> >  /*
+>> >> > - * Support for passing hypercall input parameter block via XMM
+>> >> > + * Support for passing hypercall input and output parameter block via XMM
+>> >> >   * registers is available
+>> >> >   */
+>> >> > -#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE                BIT(4)
+>> >> > +#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE                BIT(4) | BIT(15)
+>> >>
+>> >> TLFS 6.0b states that there are two distinct bits for input and output:
+>> >>
+>> >> CPUID Leaf 0x40000003.EDX:
+>> >> Bit 4: support for passing hypercall input via XMM registers is available.
+>> >> Bit 15: support for returning hypercall output via XMM registers is available.
+>> >>
+>> >> and HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE is not currently used
+>> >> anywhere, I'd suggest we just rename
+>> >>
+>> >> HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE to HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE
+>> >> and add HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE (bit 15).
+>> >
+>> > That is how I had it initially; but then noticed that we would never
+>> > need to use either of them separately. So it seemed like a reasonable
+>> > abstraction to put them together.
+>> >
+>>
+>> Actually, we may. In theory, KVM userspace may decide to expose just
+>> one of these two to the guest as it is not obliged to copy everything
+>> from KVM_GET_SUPPORTED_HV_CPUID so we will need separate
+>> guest_cpuid_has() checks.
+>
+> Makes sense. I'll split them and add the checks.
+>
+>> (This reminds me of something I didn't see in your series:
+>> we need to check that XMM hypercall parameters support was actually
+>> exposed to the guest as it is illegal for a guest to use it otherwise --
+>> and we will likely need two checks, for input and output).
+>
+> We observed that Windows expects Hyper-V to support XMM params even if
+> we don't advertise this feature but if userspace wants to hide this
+> feature and the guest does it anyway, then it makes sense to treat it as
+> an illegal OP.
+>
 
-um, did you try x86_64 allmodconfig?
+Out of pure curiosity, which Windows version behaves like that? And how
+does this work with KVM without your patches?
 
-I'm up to
-kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix-fix-fix.patch
-and counting.
+Sane KVM userspaces will certainly expose both XMM input and output
+capabilities together but having an ability to hide one or both of them
+may come handy while debugging.
 
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: kernelh-split-out-panic-and-oops-helpers-fix
+Also, we weren't enforcing the rule that enlightenments not exposed to
+the guest don't work, even the whole Hyper-V emulation interface was
+available to all guests who were smart enough to know how to enable it!
+I don't like this for two reasons: security (large attack surface) and
+the fact that someone 'smart' may decide to use Hyper-V emulation
+features on KVM as 'general purpose' features saying 'they're always
+available anyway', this risks becoming an ABI.
 
-more files need panic_notifier.h
+Let's at least properly check if the feature was exposed to the guest
+for all new enlightenments.
 
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
+-- 
+Vitaly
 
- arch/x86/xen/enlighten.c        |    1 +
- drivers/video/fbdev/hyperv_fb.c |    1 +
- 2 files changed, 2 insertions(+)
-
---- a/arch/x86/xen/enlighten.c~kernelh-split-out-panic-and-oops-helpers-fix
-+++ a/arch/x86/xen/enlighten.c
-@@ -6,6 +6,7 @@
- #include <linux/cpu.h>
- #include <linux/kexec.h>
- #include <linux/slab.h>
-+#include <linux/panic_notifier.h>
- 
- #include <xen/xen.h>
- #include <xen/features.h>
---- a/drivers/video/fbdev/hyperv_fb.c~kernelh-split-out-panic-and-oops-helpers-fix
-+++ a/drivers/video/fbdev/hyperv_fb.c
-@@ -52,6 +52,7 @@
- #include <linux/completion.h>
- #include <linux/fb.h>
- #include <linux/pci.h>
-+#include <linux/panic_notifier.h>
- #include <linux/efi.h>
- #include <linux/console.h>
- 
-_
-
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: kernelh-split-out-panic-and-oops-helpers-fix-fix
-
-arch/x86/purgatory/purgatory.c needs kernel.h
-
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- arch/x86/purgatory/purgatory.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/arch/x86/purgatory/purgatory.c~kernelh-split-out-panic-and-oops-helpers-fix-fix
-+++ a/arch/x86/purgatory/purgatory.c
-@@ -8,6 +8,7 @@
-  *       Vivek Goyal <vgoyal@redhat.com>
-  */
- 
-+#include <linux/kernel.h>
- #include <linux/bug.h>
- #include <crypto/sha2.h>
- #include <asm/purgatory.h>
-_
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: kernelh-split-out-panic-and-oops-helpers-fix-fix-fix
-
-drivers/clk/analogbits/wrpll-cln28hpc.c needs minmax.h, math.h and limits.h
-
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- drivers/clk/analogbits/wrpll-cln28hpc.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
---- a/drivers/clk/analogbits/wrpll-cln28hpc.c~kernelh-split-out-panic-and-oops-helpers-fix-fix-fix
-+++ a/drivers/clk/analogbits/wrpll-cln28hpc.c
-@@ -25,6 +25,10 @@
- #include <linux/err.h>
- #include <linux/log2.h>
- #include <linux/math64.h>
-+#include <linux/minmax.h>
-+#include <linux/math.h>
-+#include <linux/limits.h>
-+
- #include <linux/clk/analogbits-wrpll-cln28hpc.h>
- 
- /* MIN_INPUT_FREQ: minimum input clock frequency, in Hz (Fref_min) */
-_
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix
-
-drivers/misc/pvpanic/pvpanic.c needs panic_notifier.h
-
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- drivers/misc/pvpanic/pvpanic.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/misc/pvpanic/pvpanic.c~kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix
-+++ a/drivers/misc/pvpanic/pvpanic.c
-@@ -13,6 +13,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/panic_notifier.h>
- #include <linux/types.h>
- #include <linux/cdev.h>
- #include <linux/list.h>
-_
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix
-
-fix drivers/misc/pvpanic/pvpanic.c and drivers/net/ipa/ipa_smp2p.c
-
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- drivers/net/ipa/ipa_smp2p.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/net/ipa/ipa_smp2p.c~kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix
-+++ a/drivers/net/ipa/ipa_smp2p.c
-@@ -8,6 +8,7 @@
- #include <linux/device.h>
- #include <linux/interrupt.h>
- #include <linux/notifier.h>
-+#include <linux/panic_notifier.h>
- #include <linux/soc/qcom/smem.h>
- #include <linux/soc/qcom/smem_state.h>
- 
-_
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix-fix
-
-fix drivers/power/reset/ltc2952-poweroff.c and drivers/misc/bcm-vk/bcm_vk_dev.c
-
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- drivers/misc/bcm-vk/bcm_vk_dev.c       |    1 +
- drivers/power/reset/ltc2952-poweroff.c |    1 +
- 2 files changed, 2 insertions(+)
-
---- a/drivers/power/reset/ltc2952-poweroff.c~kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix-fix
-+++ a/drivers/power/reset/ltc2952-poweroff.c
-@@ -52,6 +52,7 @@
- #include <linux/slab.h>
- #include <linux/kmod.h>
- #include <linux/module.h>
-+#include <linux/panic_notifier.h>
- #include <linux/mod_devicetable.h>
- #include <linux/gpio/consumer.h>
- #include <linux/reboot.h>
---- a/drivers/misc/bcm-vk/bcm_vk_dev.c~kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix-fix
-+++ a/drivers/misc/bcm-vk/bcm_vk_dev.c
-@@ -9,6 +9,7 @@
- #include <linux/fs.h>
- #include <linux/idr.h>
- #include <linux/interrupt.h>
-+#include <linux/panic_notifier.h>
- #include <linux/kref.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-_
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix-fix-fix
-
-fix drivers/leds/trigger/ledtrig-panic.c and drivers/firmware/google/gsmi.c
-
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- drivers/firmware/google/gsmi.c       |    1 +
- drivers/leds/trigger/ledtrig-panic.c |    1 +
- 2 files changed, 2 insertions(+)
-
---- a/drivers/leds/trigger/ledtrig-panic.c~kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix-fix-fix
-+++ a/drivers/leds/trigger/ledtrig-panic.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/notifier.h>
-+#include <linux/panic_notifier.h>
- #include <linux/leds.h>
- #include "../leds.h"
- 
---- a/drivers/firmware/google/gsmi.c~kernelh-split-out-panic-and-oops-helpers-fix-fix-fix-fix-fix-fix-fix
-+++ a/drivers/firmware/google/gsmi.c
-@@ -19,6 +19,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/fs.h>
- #include <linux/slab.h>
-+#include <linux/panic_notifier.h>
- #include <linux/ioctl.h>
- #include <linux/acpi.h>
- #include <linux/io.h>
-_
-
-
-and.... drivers/leds/trigger/ledtrig-heartbeat.c as well.
-
-I'll drop it.
