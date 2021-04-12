@@ -2,177 +2,100 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6D2735A8DA
-	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Apr 2021 00:44:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ACED35BB25
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 09:46:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235094AbhDIWkp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Apr 2021 18:40:45 -0400
-Received: from elvis.franken.de ([193.175.24.41]:37276 "EHLO elvis.franken.de"
+        id S236940AbhDLHqp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Apr 2021 03:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234960AbhDIWko (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Apr 2021 18:40:44 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1lUznc-00038n-02; Sat, 10 Apr 2021 00:40:24 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id EDAA4C24FC; Sat, 10 Apr 2021 00:39:11 +0200 (CEST)
-Date:   Sat, 10 Apr 2021 00:39:11 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Alexander Lobakin <alobakin@pm.me>, Wei Liu <wei.liu@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        "Jason J. Herne" <jjherne@linux.ibm.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Joe Perches <joe@perches.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        Wang Wenhu <wenhu.wang@vivo.com>,
-        Marek Czerski <ma.czerski@gmail.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-clk@vger.kernel.org, linux-edac@vger.kernel.org,
-        coresight@lists.linaro.org, linux-leds@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-staging@lists.linux.dev, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-arch@vger.kernel.org,
-        kexec@lists.infradead.org, rcu@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>, Alex Elder <elder@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Jens Frederich <jfrederich@gmail.com>,
-        Daniel Drake <dsd@laptop.org>,
-        Jon Nettleton <jon.nettleton@gmail.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] kernel.h: Split out panic and oops helpers
-Message-ID: <20210409223911.GA21445@alpha.franken.de>
-References: <20210409100250.25922-1-andriy.shevchenko@linux.intel.com>
+        id S230510AbhDLHqo (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 12 Apr 2021 03:46:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8D67D600CD;
+        Mon, 12 Apr 2021 07:46:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618213587;
+        bh=bsIzX5dfgjfXmWvXk5Z9i0P2mHR4lorJDM/8OOTW4Kg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qdLo1Ru24agaLHA+qs9JBcX7lSqROCirwc8l1QrQ6Pn0yH+HfMdYbe8G2i3Ctv8Y0
+         6M0Fq6bk+0P3CZL0HBhEuldKjfIAgWcye0rBilFChQbUSWikTixWYQMa3XDFAxvJRB
+         MHPs+WEdvI5YSNcgFas/ckRJbOguIH1oyEMWyiskK6gQhns/yHrUaFGH4kFJ+5aIZf
+         R+uJASGyBVIh6teqj9GhFLpNgSGT01/H/1lD5+naeJtJdHcrNTSSOKg/jgBhMq8Aul
+         GBF9V7vfGHedi3LL+DQ5Pcm9cZN4OhsphGjN1/T6gwV+o6xRToZYwG7+RtwqIe3MYl
+         OY1avN2eJorvQ==
+Date:   Mon, 12 Apr 2021 10:45:55 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        liuwe@microsoft.com, netdev@vger.kernel.org, andrew@lunn.ch,
+        bernd@petrovitsch.priv.at, rdunlap@infradead.org,
+        shacharr@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v4 net-next] net: mana: Add a driver for Microsoft Azure
+ Network Adapter (MANA)
+Message-ID: <YHP6s2zagD67Xr0z@unreal>
+References: <20210412023455.45594-1-decui@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210409100250.25922-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210412023455.45594-1-decui@microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Apr 09, 2021 at 01:02:50PM +0300, Andy Shevchenko wrote:
-> kernel.h is being used as a dump for all kinds of stuff for a long time.
-> Here is the attempt to start cleaning it up by splitting out panic and
-> oops helpers.
+On Sun, Apr 11, 2021 at 07:34:55PM -0700, Dexuan Cui wrote:
+> Add a VF driver for Microsoft Azure Network Adapter (MANA) that will be
+> available in the future.
 > 
-> There are several purposes of doing this:
-> - dropping dependency in bug.h
-> - dropping a loop by moving out panic_notifier.h
-> - unload kernel.h from something which has its own domain
-> 
-> At the same time convert users tree-wide to use new headers, although
-> for the time being include new header back to kernel.h to avoid twisted
-> indirected includes for existing users.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Acked-by: Mike Rapoport <rppt@linux.ibm.com>
-> Acked-by: Corey Minyard <cminyard@mvista.com>
-> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Wei Liu <wei.liu@kernel.org>
-> Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Co-developed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Co-developed-by: Shachar Raindel <shacharr@microsoft.com>
+> Signed-off-by: Shachar Raindel <shacharr@microsoft.com>
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 > ---
-> v2:
->  - fixed all errors with allmodconfig on x86_64 (Andrew)
->  - checked with allyesconfig on x86_64
->  - additionally grepped source code for panic notifier list usage
->    and converted all users
->  - elaborated commit message (Luis)
->  - collected given tags (incl. Andrew's SoB, see below)
+>  MAINTAINERS                                   |    4 +-
+>  drivers/net/ethernet/Kconfig                  |    1 +
+>  drivers/net/ethernet/Makefile                 |    1 +
+>  drivers/net/ethernet/microsoft/Kconfig        |   29 +
+>  drivers/net/ethernet/microsoft/Makefile       |    5 +
+>  drivers/net/ethernet/microsoft/mana/Makefile  |    6 +
+>  drivers/net/ethernet/microsoft/mana/gdma.h    |  728 +++++++
+>  .../net/ethernet/microsoft/mana/gdma_main.c   | 1525 +++++++++++++
+>  .../net/ethernet/microsoft/mana/hw_channel.c  |  854 ++++++++
+>  .../net/ethernet/microsoft/mana/hw_channel.h  |  190 ++
+>  drivers/net/ethernet/microsoft/mana/mana.h    |  549 +++++
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 1924 +++++++++++++++++
+>  .../ethernet/microsoft/mana/mana_ethtool.c    |  252 +++
+>  .../net/ethernet/microsoft/mana/shm_channel.c |  298 +++
+>  .../net/ethernet/microsoft/mana/shm_channel.h |   21 +
+>  15 files changed, 6386 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/net/ethernet/microsoft/Kconfig
+>  create mode 100644 drivers/net/ethernet/microsoft/Makefile
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/Makefile
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/gdma.h
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/gdma_main.c
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/hw_channel.c
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/hw_channel.h
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/mana.h
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/mana_en.c
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/shm_channel.c
+>  create mode 100644 drivers/net/ethernet/microsoft/mana/shm_channel.h
 > 
-> I added Andrew's SoB since part of the fixes I took from him. Andrew,
-> feel free to amend or tell me how you want me to do.
-> 
->  arch/mips/kernel/relocate.c                   |  1 +
->  arch/mips/sgi-ip22/ip22-reset.c               |  1 +
->  arch/mips/sgi-ip32/ip32-reset.c               |  1 +
 
-Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+<...>
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> +/* Microsoft Azure Network Adapter (MANA)'s definitions
+> + *
+> + * Structures labeled with "HW DATA" are exchanged with the hardware. All of
+> + * them are naturally aligned and hence don't need __packed.
+> + */
+> +
+> +#define ANA_MAJOR_VERSION	0
+> +#define ANA_MINOR_VERSION	1
+> +#define ANA_MICRO_VERSION	1
+
+Please don't introduce drier versions.
+
+Thanks
