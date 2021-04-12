@@ -2,135 +2,123 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6AAA35CF1B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 19:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7CDB35D02A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 20:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244592AbhDLRCz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Apr 2021 13:02:55 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:47810 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244072AbhDLRCI (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Apr 2021 13:02:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1618246911; x=1649782911;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=SREwCn/7PKpxf2gVwo9+N6e1u7Bhm84NejJPWzPCEhg=;
-  b=d/UAtoXf/3A6naBSekLot1rHQPho/2PRTD4piwf47bOrAx2EBsEE2+Z3
-   s7T47csuBSk3Zw6nObrNIQ+TexFV8mdduqOTYYIG9qVsbqw8QFBjxsGiU
-   PqGlwkDKnkjEhk/YKEqAAL3bd0fPPQjj9yswqvKV6gQy6tcVRhD86c8ig
-   c=;
-X-IronPort-AV: E=Sophos;i="5.82,216,1613433600"; 
-   d="scan'208";a="101147888"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 12 Apr 2021 17:01:43 +0000
-Received: from EX13D28EUC003.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 4958EA1C65;
-        Mon, 12 Apr 2021 17:01:36 +0000 (UTC)
-Received: from uc8bbc9586ea454.ant.amazon.com (10.43.161.253) by
- EX13D28EUC003.ant.amazon.com (10.43.164.43) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 12 Apr 2021 17:01:28 +0000
-From:   Siddharth Chandrasekaran <sidcha@amazon.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Sean Christopherson" <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Joerg Roedel" <joro@8bytes.org>
-CC:     Siddharth Chandrasekaran <sidcha@amazon.de>,
-        Alexander Graf <graf@amazon.com>,
-        Evgeny Iakovlev <eyakovl@amazon.de>,
-        Liran Alon <liran@amazon.com>,
-        Ioannis Aslanidis <iaslan@amazon.de>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-Subject: [PATCH v2 4/4] KVM: hyper-v: Advertise support for fast XMM hypercalls
-Date:   Mon, 12 Apr 2021 19:00:17 +0200
-Message-ID: <5ec20918b06cad17cb43f04be212c5e21c18caea.1618244920.git.sidcha@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1618244920.git.sidcha@amazon.de>
-References: <cover.1618244920.git.sidcha@amazon.de>
+        id S243471AbhDLSVb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Apr 2021 14:21:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230336AbhDLSVb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 12 Apr 2021 14:21:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 518B061220;
+        Mon, 12 Apr 2021 18:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618251673;
+        bh=Pxinurmgz0bTNDq+FpM3BVONUcDXYcGZywCD/Ij7L4Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=N3S9s2+a09C9YKW1Xf8cZ5jKUAZEuyzU5G1NBBbaYwka3sT0f5TLm7gnVydkxeTXA
+         k86779A6BtjYVOmMsE2TXzJ/LMnD04icepcemO/bbvkxLN4pgo4OavUKpCkR52H6JB
+         OmpEd4wbih0qvqEQDh8y1b7RMXlUqr/iSg9F2KaybeSDaauqsyHvj5LCAFAWAbcazF
+         z7QdQ1nEeDuSPCJubh5c0h9RYn/tZZEH7Did9zf/H2+GQVwaADBzVUJfhPl0PTY4WH
+         5+ALUu5POwQMiIyCLZZ9LSXt2M8qn+gJYb6ogGEpPgjTq6xdSDtDr4qujVmiH5nUKE
+         MWkV7EpZYv5WQ==
+Date:   Mon, 12 Apr 2021 11:21:09 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     davem@davemloft.net, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, liuwe@microsoft.com,
+        netdev@vger.kernel.org, leon@kernel.org, andrew@lunn.ch,
+        bernd@petrovitsch.priv.at, rdunlap@infradead.org,
+        shacharr@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v4 net-next] net: mana: Add a driver for Microsoft Azure
+ Network Adapter (MANA)
+Message-ID: <20210412112109.145faac8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20210412023455.45594-1-decui@microsoft.com>
+References: <20210412023455.45594-1-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.253]
-X-ClientProxiedBy: EX13D16UWB001.ant.amazon.com (10.43.161.17) To
- EX13D28EUC003.ant.amazon.com (10.43.164.43)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Now that all extant hypercalls that can use XMM registers (based on
-spec) for input/outputs are patched to support them, we can start
-advertising this feature to guests.
+On Sun, 11 Apr 2021 19:34:55 -0700 Dexuan Cui wrote:
+> +	for (i = 0; i < ANA_INDIRECT_TABLE_SIZE; i++)
+> +		apc->indir_table[i] = i % apc->num_queues;
 
-Cc: Alexander Graf <graf@amazon.com>
-Cc: Evgeny Iakovlev <eyakovl@amazon.de>
-Signed-off-by: Siddharth Chandrasekaran <sidcha@amazon.de>
----
- arch/x86/include/asm/hyperv-tlfs.h | 7 ++++++-
- arch/x86/kvm/hyperv.c              | 2 ++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ethtool_rxfh_indir_default()
 
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index e6cd3fee562b..716f12be411e 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -52,7 +52,7 @@
-  * Support for passing hypercall input parameter block via XMM
-  * registers is available
-  */
--#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE		BIT(4)
-+#define HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE		BIT(4)
- /* Support for a virtual guest idle state is available */
- #define HV_X64_GUEST_IDLE_STATE_AVAILABLE		BIT(5)
- /* Frequency MSRs available */
-@@ -61,6 +61,11 @@
- #define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE		BIT(10)
- /* Support for debug MSRs available */
- #define HV_FEATURE_DEBUG_MSRS_AVAILABLE			BIT(11)
-+/*
-+ * Support for returning hypercall ouput block via XMM
-+ * registers is available
-+ */
-+#define HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE		BIT(15)
- /* stimer Direct Mode is available */
- #define HV_STIMER_DIRECT_MODE_AVAILABLE			BIT(19)
- 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 1f9959aba70d..55838c266bcd 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -2254,6 +2254,8 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
- 			ent->ebx |= HV_POST_MESSAGES;
- 			ent->ebx |= HV_SIGNAL_EVENTS;
- 
-+			ent->edx |= HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE;
-+			ent->edx |= HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE;
- 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
- 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
- 
--- 
-2.17.1
+> +	err = mana_cfg_vport_steering(apc, rx, true, update_hash, update_tab);
+> +	return err;
 
+return mana_...
 
+please fix everywhere.
 
+> +	netif_set_real_num_tx_queues(ndev, apc->num_queues);
+> +
+> +	err = mana_add_rx_queues(apc, ndev);
+> +	if (err)
+> +		goto destroy_vport;
+> +
+> +	apc->rss_state = apc->num_queues > 1 ? TRI_STATE_TRUE : TRI_STATE_FALSE;
+> +
+> +	netif_set_real_num_rx_queues(ndev, apc->num_queues);
 
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
+netif_set_real_num_.. can fail.
 
+> +	rtnl_lock();
+> +
+> +	netdev_lockdep_set_classes(ndev);
+> +
+> +	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
+> +	ndev->hw_features |= NETIF_F_RXCSUM;
+> +	ndev->hw_features |= NETIF_F_TSO | NETIF_F_TSO6;
+> +	ndev->hw_features |= NETIF_F_RXHASH;
+> +	ndev->features = ndev->hw_features;
+> +	ndev->vlan_features = 0;
+> +
+> +	err = register_netdevice(ndev);
+> +	if (err) {
+> +		netdev_err(ndev, "Unable to register netdev.\n");
+> +		goto destroy_vport;
+> +	}
+> +
+> +	rtnl_unlock();
+> +
+> +	return 0;
+> +destroy_vport:
+> +	rtnl_unlock();
 
+Why do you take rtnl_lock() explicitly around this code?
 
+> +static int mana_set_channels(struct net_device *ndev,
+> +			     struct ethtool_channels *channels)
+> +{
+> +	struct ana_port_context *apc = netdev_priv(ndev);
+> +	unsigned int new_count;
+> +	unsigned int old_count;
+> +	int err, err2;
+> +
+> +	new_count = channels->combined_count;
+> +	old_count = apc->num_queues;
+> +
+> +	if (new_count < 1 || new_count > apc->max_queues ||
+> +	    channels->rx_count || channels->tx_count || channels->other_count)
+
+All these checks should be done by the core already.
+
+> +		return -EINVAL;
+> +
+> +	if (new_count == old_count)
+> +		return 0;
+
+And so is this one.
+
+> +	err = mana_detach(ndev);
+> +	if (err) {
+> +		netdev_err(ndev, "mana_detach failed: %d\n", err);
+> +		return err;
+> +	}
