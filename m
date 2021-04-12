@@ -2,19 +2,19 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C49D35C602
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 14:16:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4182B35C647
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 14:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240221AbhDLMQX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Apr 2021 08:16:23 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45310 "EHLO vps0.lunn.ch"
+        id S238015AbhDLMc1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Apr 2021 08:32:27 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45340 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237283AbhDLMQW (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Apr 2021 08:16:22 -0400
+        id S239061AbhDLMc0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 12 Apr 2021 08:32:26 -0400
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
         (envelope-from <andrew@lunn.ch>)
-        id 1lVvTx-00GGCA-21; Mon, 12 Apr 2021 14:15:57 +0200
-Date:   Mon, 12 Apr 2021 14:15:57 +0200
+        id 1lVvjU-00GGID-7f; Mon, 12 Apr 2021 14:32:00 +0200
+Date:   Mon, 12 Apr 2021 14:32:00 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Dexuan Cui <decui@microsoft.com>
 Cc:     davem@davemloft.net, kuba@kernel.org, kys@microsoft.com,
@@ -25,7 +25,7 @@ Cc:     davem@davemloft.net, kuba@kernel.org, kys@microsoft.com,
         linux-hyperv@vger.kernel.org
 Subject: Re: [PATCH v4 net-next] net: mana: Add a driver for Microsoft Azure
  Network Adapter (MANA)
-Message-ID: <YHQ5/fJyvkTHzBqA@lunn.ch>
+Message-ID: <YHQ9wBFbjpRIj45k@lunn.ch>
 References: <20210412023455.45594-1-decui@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -35,46 +35,69 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> +static inline bool is_gdma_msg(const void *req)
+> +static void mana_gd_deregiser_irq(struct gdma_queue *queue)
 > +{
-> +	struct gdma_req_hdr *hdr = (struct gdma_req_hdr *)req;
+> +	struct gdma_dev *gd = queue->gdma_dev;
+> +	struct gdma_irq_context *gic;
+> +	struct gdma_context *gc;
+> +	struct gdma_resource *r;
+> +	unsigned int msix_index;
+> +	unsigned long flags;
 > +
-> +	if (hdr->req.hdr_type == GDMA_STANDARD_HEADER_TYPE &&
-> +	    hdr->resp.hdr_type == GDMA_STANDARD_HEADER_TYPE &&
-> +	    hdr->req.msg_size >= sizeof(struct gdma_req_hdr) &&
-> +	    hdr->resp.msg_size >= sizeof(struct gdma_resp_hdr) &&
-> +	    hdr->req.msg_type != 0 && hdr->resp.msg_type != 0)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static inline bool is_gdma_msg_len(const u32 req_len, const u32 resp_len,
-> +				   const void *req)
+> +	/* At most num_online_cpus() + 1 interrupts are used. */
+> +	msix_index = queue->eq.msix_index;
+> +	if (WARN_ON(msix_index > num_online_cpus()))
+> +		return;
+
+Do you handle hot{un}plug of CPUs?
+
+> +static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
+> +					struct gdma_event *event)
 > +{
-> +	struct gdma_req_hdr *hdr = (struct gdma_req_hdr *)req;
+> +	struct hw_channel_context *hwc = ctx;
+> +	struct gdma_dev *gd = hwc->gdma_dev;
+> +	union hwc_init_type_data type_data;
+> +	union hwc_init_eq_id_db eq_db;
+> +	u32 type, val;
 > +
-> +	if (req_len >= sizeof(struct gdma_req_hdr) &&
-> +	    resp_len >= sizeof(struct gdma_resp_hdr) &&
-> +	    req_len >= hdr->req.msg_size && resp_len >= hdr->resp.msg_size &&
-> +	    is_gdma_msg(req)) {
-> +		return true;
+> +	switch (event->type) {
+> +	case GDMA_EQE_HWC_INIT_EQ_ID_DB:
+> +		eq_db.as_uint32 = event->details[0];
+> +		hwc->cq->gdma_eq->id = eq_db.eq_id;
+> +		gd->doorbell = eq_db.doorbell;
+> +		break;
+> +
+> +	case GDMA_EQE_HWC_INIT_DATA:
+> +
+> +		type_data.as_uint32 = event->details[0];
+> +
+> +	case GDMA_EQE_HWC_INIT_DONE:
+> +		complete(&hwc->hwc_init_eqe_comp);
+> +		break;
+
+...
+
+> +	default:
+> +		WARN_ON(1);
+> +		break;
 > +	}
-> +
-> +	return false;
-> +}
 
-You missed adding the mana_ prefix here. There might be others.
+Are these events from the firmware? If you have newer firmware with an
+older driver, are you going to spam the kernel log with WARN_ON dumps?
 
-> +#define CQE_POLLING_BUFFER 512
-> +struct ana_eq {
-> +	struct gdma_queue *eq;
-> +	struct gdma_comp cqe_poll[CQE_POLLING_BUFFER];
-> +};
-
-> +static int ana_poll(struct napi_struct *napi, int budget)
+> +static int mana_move_wq_tail(struct gdma_queue *wq, u32 num_units)
 > +{
+> +	u32 used_space_old;
+> +	u32 used_space_new;
+> +
+> +	used_space_old = wq->head - wq->tail;
+> +	used_space_new = wq->head - (wq->tail + num_units);
+> +
+> +	if (used_space_new > used_space_old) {
+> +		WARN_ON(1);
+> +		return -ERANGE;
+> +	}
 
-You also have a few cases of ana_, not mana_. There might be others.
+You could replace the 1 by the condition. There are a couple of these.
 
     Andrew
