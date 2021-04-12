@@ -2,51 +2,51 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FAF935D214
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 22:32:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84AD435D231
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 22:44:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238814AbhDLUar (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Apr 2021 16:30:47 -0400
-Received: from mail-mw2nam10on2124.outbound.protection.outlook.com ([40.107.94.124]:7648
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        id S230454AbhDLUoO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Apr 2021 16:44:14 -0400
+Received: from mail-dm6nam10on2139.outbound.protection.outlook.com ([40.107.93.139]:52096
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238367AbhDLUar (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Apr 2021 16:30:47 -0400
+        id S238563AbhDLUoN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 12 Apr 2021 16:44:13 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bMIgRZXPcYJeQbKEdofVKO96HJETg4wN7/cVdM/E2K7Lu5203VLNygfkeXsokx4+uS+2pNybstXdDYS/btyC2JRUJurEsGq1WMNKrOUJdGNNXRzKsi4+vT80NBlS9jIGL0QyyUJzkfTgxNznHFNCqaWYvwhzb8OWz0uTgjoY+P0eiEnxmoWLID3XyajgpYYa5rMAPXPQssm9ymTxbu+TzY7iIEi2L9ZT7GZJ2FZVOa/JP1nddoe45QjF0sIqbB2Wca+QPb+dtb4uEUg8jNTspXbzgK5MLyyXqwLAP98mfEksA6zkRbS7ntXkScI1kSBxXXz3+zzh7sDSNyJUVsMxlg==
+ b=L/yPvKv/dfCLU6xFTOF4wpta+fO0zGfim+WXqkhNDb41/YDKM/BdZxeRQnyfXWcaZE+c3+dAFX5XlnnHzn8NBH7xxOoOUcCMDWlkv+2md8e+PFkrBG2/7EU7dA0CxZ76fOyiK6pG78gbbTsSYI831KRw4pYnHVJyHiCtmcUcjJF75RWE2b+B069hGU0N4BOdc0bAHTuZk5t6hbVVP1qnUKp8BNv0B70BNN9NkoGeBfTm0obZ+HG4TWEH24c5N+CXgu6CUroiCPbS8xMfBpWfr9ISyCZsKxbL6UFB6P/je+NeaQLcYz+vFOV4GChrcxBB3piGHMJvxFFLiZ47DdvHfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o8cgHDCOmoEeJaXM1EesibwNghJ5ZdKHXVGm004+5f0=;
- b=OEbxBQ6cuFvcFNpNPLuZ8kPL8wivxICJx0G/v/r9y4Phh+sjC0MwDiM9LACYCygS6372EWFZ0UAmL8OlR0ivLoxcYMCIBZoN7MDa9obBPrmO8t37GJ8awmIOeXczTnWR0OcBIlG1cd0oEM6fBz2RSaRjp5PkgbJe77L8QavVN9Lgm6YW3YjpkCOyxr0cejtoHJDcufXXuSk8EJSd7b+EFkqo9+/j0fvWEW10ME2roMncu5jn8whtLZtxxPM/fAL94AEkgoYBqzY2FcvqCd7jnAdpXbAwaTk673LjwCPSpw0+moCE2ZUlz/1wzW2+YzMj4Xqwner/0u6Z6lYYm6tr5w==
+ bh=piQ4IcIlv2gdBIcNnc1WphQXH0ptjtRXxTDm3J2WgeM=;
+ b=BdH61Y5Ky3VgrXmXBerqCEH4RT8yQiOKj4nT7Df9bE3XCFQklY4i7Fs993G2f/rTRdMgZydglkH6HIqN/hFztjU4jExGxBMogTpuZ+K1bJLo1HxrlVPgDTxfMcep27JXRm6x2sJS2k/1zIvn66vj6G12IV6wI0E0JVJskHXcj9bMl/WGJkFk5ILoIFQzmmeZVEge/2wC9+4XPui9jXZZaxs6rzL6DT64bZOC+5RjIypnFHP39axiUyEqCWae35w+uRZ2v3aZLBAzt1O0bgnItUA9D5OfqMgmKl3RI5JSYh5uE4duuCk07Hmmo+EWY3MVxoMjiL4J5NLbCRMW3TCRDQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o8cgHDCOmoEeJaXM1EesibwNghJ5ZdKHXVGm004+5f0=;
- b=Buy2lSXT9wnTFHqxODjqlGQON1nAA7pF/3bgQ2B02iz5ywAImjW/RtJB+MBxTwP0cKSYOtvOdWnnPuxM5vvIJDUuRTMDvZ2ILPucN9Y0qqjVWwa1D1u3nD5xeHSUsZe7mH5F1NkKS+1Sw7oifn/x9d4f9Rza3mNQ07m5OUaaNXI=
+ bh=piQ4IcIlv2gdBIcNnc1WphQXH0ptjtRXxTDm3J2WgeM=;
+ b=g8oac+0Qy2bFa2L0NURMRls4UKD2P/EgXTMAhZ4a81+EG7Qa8RjY+QpUgtVIrMvzyB1OWLZE74AenSfNHkIOXFcV/ATrqIyVJjQF4pBAwIA446DFM6GwlUs39/YHLoqg/Jvgi+r3D9V2/4YPQaZvP0lsWsan32DZX0gOQQ8NeZg=
 Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
- (2603:10b6:302:10::24) by MWHPR21MB0510.namprd21.prod.outlook.com
- (2603:10b6:300:df::12) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:302:10::24) by MWHPR21MB0751.namprd21.prod.outlook.com
+ (2603:10b6:300:76::13) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.2; Mon, 12 Apr
- 2021 20:30:27 +0000
+ 2021 20:43:53 +0000
 Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
  ([fe80::5548:cbd8:43cd:aa3d]) by MW2PR2101MB0892.namprd21.prod.outlook.com
  ([fe80::5548:cbd8:43cd:aa3d%6]) with mapi id 15.20.4065.005; Mon, 12 Apr 2021
- 20:30:27 +0000
+ 20:43:53 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Andrew Lunn <andrew@lunn.ch>
+To:     Jakub Kicinski <kuba@kernel.org>
 CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Wei Liu <liuwe@microsoft.com>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "leon@kernel.org" <leon@kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
         "bernd@petrovitsch.priv.at" <bernd@petrovitsch.priv.at>,
         "rdunlap@infradead.org" <rdunlap@infradead.org>,
         Shachar Raindel <shacharr@microsoft.com>,
@@ -56,143 +56,166 @@ Subject: RE: [PATCH v4 net-next] net: mana: Add a driver for Microsoft Azure
  Network Adapter (MANA)
 Thread-Topic: [PATCH v4 net-next] net: mana: Add a driver for Microsoft Azure
  Network Adapter (MANA)
-Thread-Index: AQHXL6mpok+TxRuwHk2RzEnwF60u5qqxS9kg
-Date:   Mon, 12 Apr 2021 20:30:27 +0000
-Message-ID: <MW2PR2101MB089208BBB9DA1AFCCC7229D9BF709@MW2PR2101MB0892.namprd21.prod.outlook.com>
+Thread-Index: AQHXL8icok+TxRuwHk2RzEnwF60u5qqxWR8A
+Date:   Mon, 12 Apr 2021 20:43:52 +0000
+Message-ID: <MW2PR2101MB08921AE42035E49BABB19C19BF709@MW2PR2101MB0892.namprd21.prod.outlook.com>
 References: <20210412023455.45594-1-decui@microsoft.com>
- <YHQ9wBFbjpRIj45k@lunn.ch>
- <BL0PR2101MB0930AC7E5299EF713821FC76CA709@BL0PR2101MB0930.namprd21.prod.outlook.com>
-In-Reply-To: <BL0PR2101MB0930AC7E5299EF713821FC76CA709@BL0PR2101MB0930.namprd21.prod.outlook.com>
+ <20210412112109.145faac8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20210412112109.145faac8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f9c20ac4-18ce-4841-81fa-9dee29306b51;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-12T14:31:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=53b59c0c-60e1-483f-96dd-85bcc846cf2a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-12T20:42:24Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
 x-originating-ip: [2601:600:8b00:6b90:6473:731a:ac25:3e78]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c3e16268-0cdf-46b1-0009-08d8fdf1cef4
-x-ms-traffictypediagnostic: MWHPR21MB0510:
+x-ms-office365-filtering-correlation-id: fb9e4bff-ee52-4044-12fa-08d8fdf3af2a
+x-ms-traffictypediagnostic: MWHPR21MB0751:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB05104219A78F2FE5F2D66D81BF709@MWHPR21MB0510.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-microsoft-antispam-prvs: <MWHPR21MB075106165B1246CBBDE120B8BF709@MWHPR21MB0751.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: a9ztV/+bukw2roeD/Tiov3PjFGDfKCf4LwrhN8ueQmaYtSI36/ploiTOuvb0cfexSYsv/t8GwMDAmJWXXrjdQ0wnkTFNL5uvbcbu5t4A/GvQb2ItgC8Rq4HbsMeW7g8ZaVnhqJHJgDSmKPTC8gbprsFOoLgcxRhWA7iciALApUZ71lJkgfBOoXNGAQ2ou/4m3cP85nM96TZ91lHk59+7XIHOxZ7D1hjs4EoyLoG79c1oFE+pvT5miH7KkabW66tzGJIfvDaz41QVqn9uYwkvEnU9k/wDyDwkAKb3jXuBvoYGF3gSBtN0m00lMUdGgjDC8OcFnPrFwr4fRe4Rsq2rrXiSvugXFetGLgdf+UIEPwblMwMi0FdUpG6IJp/pT3yO/lB0OMjlyj5ubZiVrkY5Oo4cbEIHxUhbmCf2FdrfzLHBAyhKijmnjlAp4XbQhOdP6NLhaXVK2m/EANCXtMohb0LEZSHv5ChSgEpcGXezXrcpalZoYDvCCG1Sbz0UB0JNOkblOFRqT7O2+aqqaPn6y0sfRRNcAJH2OA0pXachKC5Fudm0oyzotbr9462yTzxkY3uxlFqTHrz6KNudP8g1jdhoK6+TMJYEucbl/qec/Og=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB0892.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(346002)(376002)(39860400002)(396003)(47530400004)(82950400001)(478600001)(10290500003)(186003)(76116006)(52536014)(6506007)(83380400001)(4326008)(55016002)(7696005)(33656002)(86362001)(64756008)(316002)(38100700002)(66476007)(66446008)(110136005)(66556008)(8990500004)(71200400001)(8676002)(54906003)(66946007)(9686003)(5660300002)(8936002)(2906002)(7416002)(82960400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?6raczCMQ47UrAMZ4iKx+uGrazx0A3OUMEZtBucLhfMP3lEp61g2k47Cz3P0K?=
- =?us-ascii?Q?H3S84p8SVa/pfJpOQcQeX5Y7ktZFATMMvrlCheiejFxNLpiCqKXWkZBu1GlX?=
- =?us-ascii?Q?2c7YbRjLE06akPVCjr/KUeOwjyOXExwsjcMFGRAxo5f6Iot2aKr3GzGdtukk?=
- =?us-ascii?Q?25r9qdTZB5yTlbsie7I8LRMq/FbspF0bxfWdkAOLyp1VOPDqIBg4JyoQ6WgE?=
- =?us-ascii?Q?VBU2j+MPwOtRT3J4nb1KZ/jQA4wbYtYzoWY0rPvOj5pxC3tiKNbp980iVLlQ?=
- =?us-ascii?Q?A1wo1VBiFKEDA1CNV+DVSefWDZheyjzQwT43uv+LCZ2eZrDRfj5S56zGl071?=
- =?us-ascii?Q?mDWUM3pdenC4pqkwKFoBZnI8V4Zi60/iiI2Tg6lpmEXe2GTXwrqHP3S5pJ64?=
- =?us-ascii?Q?jkmkHqiAgpeoqZX7451mMd5vRu6O3ZK6l1gWtDganIzgMpDXvmsUVYeyPh89?=
- =?us-ascii?Q?v/7MfNvr0B3b6Yqbv3CkSu3tp5XFqx0XK9BVoQb8vXQ9C2j1ShVqNSBGj0k8?=
- =?us-ascii?Q?eFNJahoJnlc8WDROs0FTueNsAa+gJm9uziY1u5qfiT3gAGkPpn0Eg6dJC575?=
- =?us-ascii?Q?3w8mkUkyWISCrd/ei/QuHuRY//GN9v6KK7y1ZxS0LhKeGZq1lPSTpcdJwl6V?=
- =?us-ascii?Q?cYBhQ6C2UnFs+25ywCcdioGWdVqxhtPuf7VjJIMJV3unFlPRWJDgiUnG1ENB?=
- =?us-ascii?Q?8CCrNKCg05TAjZfqPgSbW3uwM4nvPA96fX478khCxDwzmHJtAoAOg92OXCjc?=
- =?us-ascii?Q?kEwD0PgwivGA6OlTxPR62z5puaHYeFAE6Fly8+L7ytxUz2wx2yfzTvk9Pp2w?=
- =?us-ascii?Q?FS82Q1lsJQ6FR7GG21xPJbwQcZUAN1g1CipnX7XCGKZN7ip8Wl0ISURhUbne?=
- =?us-ascii?Q?1dDBxVO73J/Cwxzed2lhiiv2uEfKDZ8EwhcD3250+Jh6QpKZ70tvb5XPvsjm?=
- =?us-ascii?Q?dOut37XznJ/x6sYCeiyba+BEXvQvLceK8D1WdMdpwWIJWPjsZB+8YTSAsefq?=
- =?us-ascii?Q?rCM6OY9FfOFkgBgm/NjK0jy165PnQ+ivf/+L+V9+5Nd9145Mor0ysd2qjk1E?=
- =?us-ascii?Q?IuGuEyomzosl3aj0BIpEF4kTs22XilXqMFpi2xS+ctfuYCUffe952tFOEDbO?=
- =?us-ascii?Q?LWQ2pS+VSOklDNegy0iSvraflU9QT2CttXwxJQXyQS6MrjKcNgEsodVaaS7W?=
- =?us-ascii?Q?bwlaDE4EwF2Y4/pXZWbxi7a6x4vmYUDlq3Ma+an0DHpRbjn7ss4cVNyJOjas?=
- =?us-ascii?Q?uT2ImKvgCs9EyIgi82Z3DsSNVI+iZv0FFwciULMQTrCsCQwHMWxj0VxN0NaD?=
- =?us-ascii?Q?CkEWFFZklBBYn/uw6G8t4z3csDVRjJY9c/7FVT/0a/NmANfXNlvEsXV+5Md/?=
- =?us-ascii?Q?egUqtm/UHOzSCVEzJ/T1/OuHf+20?=
+x-microsoft-antispam-message-info: WCxeCFqfgW8ATnTxOWDHQp2vUdmvyKGVAbpr/4Thf40Os5VPVwVov3vXKEYlkd8AH76CsZMpchhzv9y6/LSqMyvwlDoAhTabUDJT0Wh1MJJffgqa3VnSKC0NODVXan/KA1zZGdY1y87mbruUNsq47WPHONS/Sk4ZfxgNj4cDjfEe074qZHDhLG3UoMn+7QXtYC3nZT818NxzuaUKCFfhkjQOBMAIhY8yWPCWm1RBFkPee4n6i5nCH4YmZoe9IUVN0LI3LDdotq4hfrV+2727SwGhSGnaojwIQ15dPIY3usQsMF18ShyoC4aazRHAa08fIZIrZohSL53HzyIu2AMmy8iMxEGgJh5sOwxN2mofX7MOnUPxxpFNDFPCKnzXrul2mlEhhUssqdATrcBiaXl5CkNgXf+Jmo65wAvef9ZT6fKi9F7mLqnlMkxXAPKNk5plyn3NH4Y3OqUlgLH1r4rI5X6c9XkdqfA86pvOaLyBCVAuS5S1W0qzLk4atRXHUtRpRu2Hf5oA2V3pCJBSGEuEoYbD5vHFQgr5RHEH89Ytil6kT4iBTBkqzTJhxrUGz9pKU0Dmq14Rxsk2x8LEf1xbs9MJag1RcYkdf01CO7IGGsQ=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB0892.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(136003)(396003)(376002)(366004)(47530400004)(10290500003)(7416002)(83380400001)(478600001)(86362001)(8990500004)(7696005)(82950400001)(8676002)(9686003)(55016002)(82960400001)(66476007)(66946007)(54906003)(6506007)(64756008)(316002)(38100700002)(6916009)(66556008)(2906002)(5660300002)(52536014)(33656002)(66446008)(4326008)(186003)(71200400001)(76116006)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?+k+o64vN5/e9fHQ/FJ6qjaSbNH0aYkoXEvaFRF5tQq3otj6nYbldUJqFdCvp?=
+ =?us-ascii?Q?DSkcAEgrp9+sCJQXnU9pCPpnHxS660CuyCPj1OQkI6053/yr8C8Yj3CqnQWk?=
+ =?us-ascii?Q?FU0LCzca+Bi+5JZQKvGUjuHX2kyU6TZsh0XEHa/T3EPOdr/e9f5d9zUqzllO?=
+ =?us-ascii?Q?2J6JrjF0J4h1/RinU3zdLiv2lDTfWSaHHL8ajIKzXXF3DNAX73eFK7tddDoH?=
+ =?us-ascii?Q?WdpnqF0xgJjakYdmrIPlArlHGDzzwHa//igjcPxJ08GP/3ifkaLDDpt7xnRW?=
+ =?us-ascii?Q?6LkLi3gQZ24FQSLCzvAHoUyQSsCN7Y3zZCmlpZYFVgwgcFBIYNCNQdoXKB3w?=
+ =?us-ascii?Q?LuoFXEEUC4S0hu48olTdpnD67DO0OSqRAyLma47UyGq7qugEBtIXlmu/yJfv?=
+ =?us-ascii?Q?Ug+R3PaGTFaBkJRz7kSW4TK9F8aa5rvOWg/erzuyPmWxBU+OShFoFi4zfp35?=
+ =?us-ascii?Q?jrnX3bJriatQLjXFh13tfPrpO3PTx9rIyFtldVPN0LJaR7Kxs4bqybE+YpyM?=
+ =?us-ascii?Q?oK1fx6ijj8bGJMvbmLoe/PSgeV8Ml9tkJCllQsu13BbAdV3cOCsbrEN9hOUt?=
+ =?us-ascii?Q?3wShVxGbyG8CBW3gUI1rgCtC0zMOy5sfWyRIhakNhG6s8WLChe6OjBzciAnn?=
+ =?us-ascii?Q?K7dNXhQrlqKrpjQTvF0FVQ70lo3L0+vq3GMNwVn24WYoWckS9ZXGkt9eXmrV?=
+ =?us-ascii?Q?VStuMuAS76ByqzEVauSYQhTJfL3PX3ARAquPLXdvRhTvtowbQD+4cNfjqgg2?=
+ =?us-ascii?Q?JGgg7rx+HCUxFkjMuFzadnDaRzSekIam5kMvzX7xv8C98e9BTE0IfYqlb8B8?=
+ =?us-ascii?Q?UUfj9R7vZtcRVJuFO5PjeaDZChakXk+TuWHM4sBMmyheOYMCwgw59aHyxh/i?=
+ =?us-ascii?Q?648AgaS3gjvt+Y6THrmeNaDw602PEne0bltg5fLnfdXf1oaMlqRuKUH4xW1g?=
+ =?us-ascii?Q?PhzUN/AtsJMXfMbCaqTyNpDVzqi0dkHd1g3dG/VyRbyzaUIDpU8M536ZeG1N?=
+ =?us-ascii?Q?JQRzb8C/7l6CceKSTkCUzEnaKFwb69Led3XuqH9j8YdVZ70RZKQ0oGR39L4f?=
+ =?us-ascii?Q?8QdYL+vMYz8dqxnVgMNu5VoGN6PC/rOJOMk28RsKxqtcvalnz9P1oQ+tg8ew?=
+ =?us-ascii?Q?KWCPyyRBL8FeM4phXS1JscEfB3qafNJfPO3Xfv1mS883TtVmIXefRCap/Z8z?=
+ =?us-ascii?Q?l3rUM2mkx8bF0hW7T+RaNbMZ1ik7T3NuD/+vQypvsLgQo3Km2OX7OZcQJsF9?=
+ =?us-ascii?Q?ExOg7ZYaWtzR+MHmYdL2KZSCzd+ZNQbpeOnLXmUXpXYnpdKhGKzQeG2oPLnD?=
+ =?us-ascii?Q?U99FKGsrZjM5jvTLeL0i+yXY89Un7VmAXzrxz16AZ60HKzqcOeawd0i8wbrN?=
+ =?us-ascii?Q?puCBrP7Ni/Z4U+mr8tR2u7ze1UyT?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB0892.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3e16268-0cdf-46b1-0009-08d8fdf1cef4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2021 20:30:27.2818
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb9e4bff-ee52-4044-12fa-08d8fdf3af2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2021 20:43:52.9676
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M5hOkf9JgiieK3LZGhk6rDO9atMbuK0FF8dBVYJTUenth00FYoGRFmb03hoL8oipEEbDiqFe5c8jBWUUCz8iNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0510
+X-MS-Exchange-CrossTenant-userprincipalname: FG2MkIivJY7EFRiIB3WBNhOyeIz3eBc6gj6sHOQw3hNo15DKfZMsWVVz6htcyfX0s6RLN4ZlTvxvXeeFxmWjdA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0751
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Haiyang Zhang <haiyangz@microsoft.com>
-> Sent: Monday, April 12, 2021 7:40 AM
-> > From: Andrew Lunn <andrew@lunn.ch>
-> > Sent: Monday, April 12, 2021 8:32 AM
-> > > ...
-> > > +	/* At most num_online_cpus() + 1 interrupts are used. */
-> > > +	msix_index =3D queue->eq.msix_index;
-> > > +	if (WARN_ON(msix_index > num_online_cpus()))
-> > > +		return;
-> >
-> > Do you handle hot{un}plug of CPUs?
-> We don't have hot{un}plug of CPU feature yet.
+> From: Jakub Kicinski <kuba@kernel.org>
+> Sent: Monday, April 12, 2021 11:21 AM
+> ...=20
+> On Sun, 11 Apr 2021 19:34:55 -0700 Dexuan Cui wrote:
+> > +	for (i =3D 0; i < ANA_INDIRECT_TABLE_SIZE; i++)
+> > +		apc->indir_table[i] =3D i % apc->num_queues;
+>=20
+> ethtool_rxfh_indir_default()
 
-Hyper-V doesn't support vCPU hot plug/unplug for VMs running on it,
-but potentially the VM is able to offline and online its virtual CPUs,
-though this is not a typical usage at all in production system (to offline
-a vCPU, the VM also needs to unbind all the para-virtualized devices'
-vmbus channels from that vCPU, which is kind of undoable in a VM
-that has less than about 32 vCPUs, because typically all the vCPUs are
-bound to one of the vmbus channels of the NetVSC device(s) and
-StorVSC device(s), and can't be (easily) unbound.
+Will use ethtool_rxfh_indir_default().
 
-So I think the driver does need to handle cpu online/offlining properly,
-but I think we can do that in some future patch, because IMO that would
-need more careful consideration. IMO here the WARN_ON() is good as
-it at least lets us know something unexpected (if any) happens.
+> > +	err =3D mana_cfg_vport_steering(apc, rx, true, update_hash, update_ta=
+b);
+> > +	return err;
+>=20
+> return mana_...
+>=20
+> please fix everywhere.
 
-> > > +static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue
-> > *q_self,
-> > > +					struct gdma_event *event)
-> > > +{
-> > > +	struct hw_channel_context *hwc =3D ctx;
-> > > +	struct gdma_dev *gd =3D hwc->gdma_dev;
-> > > +	union hwc_init_type_data type_data;
-> > > +	union hwc_init_eq_id_db eq_db;
-> > > +	u32 type, val;
-> > > +
-> > > +	switch (event->type) {
-> > > +	case GDMA_EQE_HWC_INIT_EQ_ID_DB:
-> > > +		eq_db.as_uint32 =3D event->details[0];
-> > > +		hwc->cq->gdma_eq->id =3D eq_db.eq_id;
-> > > +		gd->doorbell =3D eq_db.doorbell;
-> > > +		break;
-> > > +
-> > > +	case GDMA_EQE_HWC_INIT_DATA:
-> > > +
-> > > +		type_data.as_uint32 =3D event->details[0];
-> > > +
-> > > +	case GDMA_EQE_HWC_INIT_DONE:
-> > > +		complete(&hwc->hwc_init_eqe_comp);
-> > > +		break;
-> >
-> > ...
-> >
-> > > +	default:
-> > > +		WARN_ON(1);
-> > > +		break;
-> > > +	}
-> >
-> > Are these events from the firmware? If you have newer firmware with an
-> > older driver, are you going to spam the kernel log with WARN_ON dumps?
-> For protocol version mismatch, the host and guest will either negotiate t=
-he
-> highest common version, or fail to probe. So this kind of warnings are no=
-t
-> expected.
+Will fix this one, and will review if there is any similar issue.
 
-I agree, but I think we'd better remove the WARN_ON(1), which was mainly
-for debugging purposem, and was added just in case.
+> > +	netif_set_real_num_tx_queues(ndev, apc->num_queues);
+> > +
+> > +	err =3D mana_add_rx_queues(apc, ndev);
+> > +	if (err)
+> > +		goto destroy_vport;
+> > +
+> > +	apc->rss_state =3D apc->num_queues > 1 ? TRI_STATE_TRUE :
+> TRI_STATE_FALSE;
+> > +
+> > +	netif_set_real_num_rx_queues(ndev, apc->num_queues);
+>=20
+> netif_set_real_num_.. can fail.
+
+Will fix the error handling.
+
+> > +	rtnl_lock();
+> > +
+> > +	netdev_lockdep_set_classes(ndev);
+> > +
+> > +	ndev->hw_features =3D NETIF_F_SG | NETIF_F_IP_CSUM |
+> NETIF_F_IPV6_CSUM;
+> > +	ndev->hw_features |=3D NETIF_F_RXCSUM;
+> > +	ndev->hw_features |=3D NETIF_F_TSO | NETIF_F_TSO6;
+> > +	ndev->hw_features |=3D NETIF_F_RXHASH;
+> > +	ndev->features =3D ndev->hw_features;
+> > +	ndev->vlan_features =3D 0;
+> > +
+> > +	err =3D register_netdevice(ndev);
+> > +	if (err) {
+> > +		netdev_err(ndev, "Unable to register netdev.\n");
+> > +		goto destroy_vport;
+> > +	}
+> > +
+> > +	rtnl_unlock();
+> > +
+> > +	return 0;
+> > +destroy_vport:
+> > +	rtnl_unlock();
+>=20
+> Why do you take rtnl_lock() explicitly around this code?
+
+It looks like there is no good reason, and I guess we just copied
+the code from netvsc_probe(), where the RTNL lock is indeed
+explicitly needed.
+
+Will change to directly use register_netdev(), which gets and
+release the RTNL lock automatically.
+
+> > +static int mana_set_channels(struct net_device *ndev,
+> > +			     struct ethtool_channels *channels)
+> > +{
+> > +	struct ana_port_context *apc =3D netdev_priv(ndev);
+> > +	unsigned int new_count;
+> > +	unsigned int old_count;
+> > +	int err, err2;
+> > +
+> > +	new_count =3D channels->combined_count;
+> > +	old_count =3D apc->num_queues;
+> > +
+> > +	if (new_count < 1 || new_count > apc->max_queues ||
+> > +	    channels->rx_count || channels->tx_count ||
+> channels->other_count)
+>=20
+> All these checks should be done by the core already.
+>=20
+> > +		return -EINVAL;
+> > +
+> > +	if (new_count =3D=3D old_count)
+> > +		return 0;
+>=20
+> And so is this one.
+
+Will change the code to avoid unnecessary checking.
 
 Thanks,
 Dexuan
