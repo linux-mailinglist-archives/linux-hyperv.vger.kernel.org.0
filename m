@@ -2,100 +2,147 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ACED35BB25
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 09:46:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1C935BBCD
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Apr 2021 10:11:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236940AbhDLHqp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Apr 2021 03:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230510AbhDLHqo (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Apr 2021 03:46:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8D67D600CD;
-        Mon, 12 Apr 2021 07:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618213587;
-        bh=bsIzX5dfgjfXmWvXk5Z9i0P2mHR4lorJDM/8OOTW4Kg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qdLo1Ru24agaLHA+qs9JBcX7lSqROCirwc8l1QrQ6Pn0yH+HfMdYbe8G2i3Ctv8Y0
-         6M0Fq6bk+0P3CZL0HBhEuldKjfIAgWcye0rBilFChQbUSWikTixWYQMa3XDFAxvJRB
-         MHPs+WEdvI5YSNcgFas/ckRJbOguIH1oyEMWyiskK6gQhns/yHrUaFGH4kFJ+5aIZf
-         R+uJASGyBVIh6teqj9GhFLpNgSGT01/H/1lD5+naeJtJdHcrNTSSOKg/jgBhMq8Aul
-         GBF9V7vfGHedi3LL+DQ5Pcm9cZN4OhsphGjN1/T6gwV+o6xRToZYwG7+RtwqIe3MYl
-         OY1avN2eJorvQ==
-Date:   Mon, 12 Apr 2021 10:45:55 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        liuwe@microsoft.com, netdev@vger.kernel.org, andrew@lunn.ch,
-        bernd@petrovitsch.priv.at, rdunlap@infradead.org,
-        shacharr@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v4 net-next] net: mana: Add a driver for Microsoft Azure
- Network Adapter (MANA)
-Message-ID: <YHP6s2zagD67Xr0z@unreal>
-References: <20210412023455.45594-1-decui@microsoft.com>
+        id S237223AbhDLIME (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Apr 2021 04:12:04 -0400
+Received: from smtp-fw-9103.amazon.com ([207.171.188.200]:1123 "EHLO
+        smtp-fw-9103.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237081AbhDLIMD (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 12 Apr 2021 04:12:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1618215106; x=1649751106;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=Ag0UTwjEcsAkBUOr08LFu5cgXurDxKREvmhQ+cYG28Q=;
+  b=J0irtF7w0kTufWJ9MT2Y3JIxzpN3NIC75GvIVwJ2FddpKMpyHnph1zXh
+   +hanShNJE86f1/JwmeT5CVIVBwEEr2l89VgbvRAc9prLJQpB6p/uq+QAC
+   yoiuZc9C1zvpEKUKhah815ShvUX/CV2kZqMOhy0Igl3uy6jZWR4FPIIFf
+   s=;
+X-IronPort-AV: E=Sophos;i="5.82,214,1613433600"; 
+   d="scan'208";a="925220198"
+Subject: Re: [PATCH 4/4] KVM: hyper-v: Advertise support for fast XMM hypercalls
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-out-9103.sea19.amazon.com with ESMTP; 12 Apr 2021 08:11:25 +0000
+Received: from EX13D28EUC003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 1623E1A07F2;
+        Mon, 12 Apr 2021 08:11:23 +0000 (UTC)
+Received: from uc8bbc9586ea454.ant.amazon.com (10.43.162.207) by
+ EX13D28EUC003.ant.amazon.com (10.43.164.43) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 12 Apr 2021 08:11:15 +0000
+Date:   Mon, 12 Apr 2021 10:11:11 +0200
+From:   Siddharth Chandrasekaran <sidcha@amazon.de>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     Alexander Graf <graf@amazon.com>,
+        Evgeny Iakovlev <eyakovl@amazon.de>,
+        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Sean Christopherson" <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "Jim Mattson" <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>
+Message-ID: <20210412081110.GA16796@uc8bbc9586ea454.ant.amazon.com>
+References: <20210407211954.32755-1-sidcha@amazon.de>
+ <20210407211954.32755-5-sidcha@amazon.de>
+ <87blap7zha.fsf@vitty.brq.redhat.com>
+ <20210408142053.GA10636@u366d62d47e3651.ant.amazon.com>
+ <8735w096pk.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20210412023455.45594-1-decui@microsoft.com>
+In-Reply-To: <8735w096pk.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.43.162.207]
+X-ClientProxiedBy: EX13D20UWA001.ant.amazon.com (10.43.160.34) To
+ EX13D28EUC003.ant.amazon.com (10.43.164.43)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Apr 11, 2021 at 07:34:55PM -0700, Dexuan Cui wrote:
-> Add a VF driver for Microsoft Azure Network Adapter (MANA) that will be
-> available in the future.
+On Thu, Apr 08, 2021 at 04:44:23PM +0200, Vitaly Kuznetsov wrote:
+> Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+> > On Thu, Apr 08, 2021 at 02:05:53PM +0200, Vitaly Kuznetsov wrote:
+> >> Siddharth Chandrasekaran <sidcha@amazon.de> writes:
+> >> > Now that all extant hypercalls that can use XMM registers (based on
+> >> > spec) for input/outputs are patched to support them, we can start
+> >> > advertising this feature to guests.
+> >> >
+> >> > Cc: Alexander Graf <graf@amazon.com>
+> >> > Cc: Evgeny Iakovlev <eyakovl@amazon.de>
+> >> > Signed-off-by: Siddharth Chandrasekaran <sidcha@amazon.de>
+> >> > ---
+> >> >  arch/x86/include/asm/hyperv-tlfs.h | 4 ++--
+> >> >  arch/x86/kvm/hyperv.c              | 1 +
+> >> >  2 files changed, 3 insertions(+), 2 deletions(-)
+> >> >
+> >> > diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> >> > index e6cd3fee562b..1f160ef60509 100644
+> >> > --- a/arch/x86/include/asm/hyperv-tlfs.h
+> >> > +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> >> > @@ -49,10 +49,10 @@
+> >> >  /* Support for physical CPU dynamic partitioning events is available*/
+> >> >  #define HV_X64_CPU_DYNAMIC_PARTITIONING_AVAILABLE    BIT(3)
+> >> >  /*
+> >> > - * Support for passing hypercall input parameter block via XMM
+> >> > + * Support for passing hypercall input and output parameter block via XMM
+> >> >   * registers is available
+> >> >   */
+> >> > -#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE                BIT(4)
+> >> > +#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE                BIT(4) | BIT(15)
+> >>
+> >> TLFS 6.0b states that there are two distinct bits for input and output:
+> >>
+> >> CPUID Leaf 0x40000003.EDX:
+> >> Bit 4: support for passing hypercall input via XMM registers is available.
+> >> Bit 15: support for returning hypercall output via XMM registers is available.
+> >>
+> >> and HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE is not currently used
+> >> anywhere, I'd suggest we just rename
+> >>
+> >> HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE to HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE
+> >> and add HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE (bit 15).
+> >
+> > That is how I had it initially; but then noticed that we would never
+> > need to use either of them separately. So it seemed like a reasonable
+> > abstraction to put them together.
+> >
 > 
-> Co-developed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Co-developed-by: Shachar Raindel <shacharr@microsoft.com>
-> Signed-off-by: Shachar Raindel <shacharr@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  MAINTAINERS                                   |    4 +-
->  drivers/net/ethernet/Kconfig                  |    1 +
->  drivers/net/ethernet/Makefile                 |    1 +
->  drivers/net/ethernet/microsoft/Kconfig        |   29 +
->  drivers/net/ethernet/microsoft/Makefile       |    5 +
->  drivers/net/ethernet/microsoft/mana/Makefile  |    6 +
->  drivers/net/ethernet/microsoft/mana/gdma.h    |  728 +++++++
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 1525 +++++++++++++
->  .../net/ethernet/microsoft/mana/hw_channel.c  |  854 ++++++++
->  .../net/ethernet/microsoft/mana/hw_channel.h  |  190 ++
->  drivers/net/ethernet/microsoft/mana/mana.h    |  549 +++++
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 1924 +++++++++++++++++
->  .../ethernet/microsoft/mana/mana_ethtool.c    |  252 +++
->  .../net/ethernet/microsoft/mana/shm_channel.c |  298 +++
->  .../net/ethernet/microsoft/mana/shm_channel.h |   21 +
->  15 files changed, 6386 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/microsoft/Kconfig
->  create mode 100644 drivers/net/ethernet/microsoft/Makefile
->  create mode 100644 drivers/net/ethernet/microsoft/mana/Makefile
->  create mode 100644 drivers/net/ethernet/microsoft/mana/gdma.h
->  create mode 100644 drivers/net/ethernet/microsoft/mana/gdma_main.c
->  create mode 100644 drivers/net/ethernet/microsoft/mana/hw_channel.c
->  create mode 100644 drivers/net/ethernet/microsoft/mana/hw_channel.h
->  create mode 100644 drivers/net/ethernet/microsoft/mana/mana.h
->  create mode 100644 drivers/net/ethernet/microsoft/mana/mana_en.c
->  create mode 100644 drivers/net/ethernet/microsoft/mana/mana_ethtool.c
->  create mode 100644 drivers/net/ethernet/microsoft/mana/shm_channel.c
->  create mode 100644 drivers/net/ethernet/microsoft/mana/shm_channel.h
-> 
+> Actually, we may. In theory, KVM userspace may decide to expose just
+> one of these two to the guest as it is not obliged to copy everything
+> from KVM_GET_SUPPORTED_HV_CPUID so we will need separate
+> guest_cpuid_has() checks.
 
-<...>
+Looks like guest_cpuid_has() check is for x86 CPU features only (if I'm
+not mistaken) and I don't see a suitable alternative that looks into
+vcpu->arch.cpuid_entries[]. So I plan to add a new method
+hv_guest_cpuid_has() in hyperv.c to have this check; does that sound
+right to you?
 
-> +/* Microsoft Azure Network Adapter (MANA)'s definitions
-> + *
-> + * Structures labeled with "HW DATA" are exchanged with the hardware. All of
-> + * them are naturally aligned and hence don't need __packed.
-> + */
-> +
-> +#define ANA_MAJOR_VERSION	0
-> +#define ANA_MINOR_VERSION	1
-> +#define ANA_MICRO_VERSION	1
+If you can give a quick go-ahead, I'll make the changes requested so
+far and send v2 this series.
 
-Please don't introduce drier versions.
+Thanks.
 
-Thanks
+~ Sid.
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
