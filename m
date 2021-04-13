@@ -2,185 +2,142 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4382435E11A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 16:15:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE2F035E15A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 16:27:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346390AbhDMOL6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Apr 2021 10:11:58 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:59883 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346388AbhDMOL6 (ORCPT
+        id S231980AbhDMO1R (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Apr 2021 10:27:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59104 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231860AbhDMO1Q (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Apr 2021 10:11:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1618323098; x=1649859098;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=IAUGQ4TQXj2AlWjeWSR488mKslVwCJVtzyjays9HN1I=;
-  b=kezeCRBwTnfHnE9VEP2BgZoZjwMvZrvufzS4h5QLrfR3qKx1HNJWmy4c
-   NQ0NivyiDRI07XPvDKsPMxefJT5et6vgyjoDKgLuuUDgtSmVu8mGBAViV
-   kWhyaNe3mck0epw4eHhME7YNc2jqlqowYeTfwjSdAWT8d608jZrkudXvk
-   s=;
-X-IronPort-AV: E=Sophos;i="5.82,219,1613433600"; 
-   d="scan'208";a="127265714"
-Subject: Re: [PATCH v2 2/4] KVM: hyper-v: Collect hypercall params into struct
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 13 Apr 2021 14:11:31 +0000
-Received: from EX13D28EUC003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 5174AA17A6;
-        Tue, 13 Apr 2021 14:11:30 +0000 (UTC)
-Received: from uc8bbc9586ea454.ant.amazon.com (10.43.160.81) by
- EX13D28EUC003.ant.amazon.com (10.43.164.43) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 13 Apr 2021 14:11:21 +0000
-Date:   Tue, 13 Apr 2021 16:11:17 +0200
-From:   Siddharth Chandrasekaran <sidcha@amazon.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-CC:     Alexander Graf <graf@amazon.com>,
+        Tue, 13 Apr 2021 10:27:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1618324016;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wBRPv3G5uNqKDsSO2MfNKj8YoTGefde97SCfUlwiDUw=;
+        b=cc3cwT2WJPhaevOi9k10cDUc91ktri8/za5CS4ofPgteOe87ABupMeA4+uO8Jlydqh3PMh
+        UYHgAVBdVtrLKo8ZEOSW482fusddBLKQ44nwOAUCcMvZeGvxoNJWHCXcOSjbqtIgzaWbKB
+        DGQJu/E89FtZr230DH3+DTDNYQgDIjE=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-uuEliFOCM8-ScnLFB3QXfQ-1; Tue, 13 Apr 2021 10:26:55 -0400
+X-MC-Unique: uuEliFOCM8-ScnLFB3QXfQ-1
+Received: by mail-ej1-f72.google.com with SMTP id cx17so2334660ejb.4
+        for <linux-hyperv@vger.kernel.org>; Tue, 13 Apr 2021 07:26:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=wBRPv3G5uNqKDsSO2MfNKj8YoTGefde97SCfUlwiDUw=;
+        b=oWXoPv4rveW8++CUEDiPnFqBC94MzD7KdLcTi0jL5KjsPeQgVK4HN0YkmiMsHKJz5U
+         zN5aQBuZYjXfMo1hArAQ6Gif7sv9QtfllP7GvZA26y+07ZTtdr2Z9Jx02i88+DzkPrKV
+         ykx4ywCqEu/j6XQh2hfsXWomEK4w6y4W0pakPlcxubxE/xMwnvCQDMDfzPUalA5Y9BdR
+         lbLCz/WhvSgpnHJE+LJLz7IOUVr94NklUMaguoBF4nQhIYYRcy4LXZ8n/uAM/RIQuUmR
+         eSV4LI9zKuWhJyLAOI+HTtmnI2ydxGC0UxcK21DGAo2cDK21p8ofp2oNTdpk8SIQoFyJ
+         y15w==
+X-Gm-Message-State: AOAM533xr66rptBsD9XwB+/55a8iOupJfa8bOqiKLCw7VKDM37W8U+zk
+        iu8vmT99UZUk0BiJcitEjHZNJhuFom1sJUpOEo303UMcY/hSbgRrEaAzJ7vW+0IxcaXJT/tCBrg
+        LlPaCjAYyrgZYgOU9SAjguvBE
+X-Received: by 2002:a05:6402:344e:: with SMTP id l14mr35655738edc.184.1618324013943;
+        Tue, 13 Apr 2021 07:26:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyl2wCg7G5ZLN6NTfXLLG6LDFnftmIdSKu81ij0nvsNsooVaOdHUB697PVzQlupmIvKSlGHzA==
+X-Received: by 2002:a05:6402:344e:: with SMTP id l14mr35655703edc.184.1618324013808;
+        Tue, 13 Apr 2021 07:26:53 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id nb29sm7767985ejc.118.2021.04.13.07.26.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Apr 2021 07:26:53 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Siddharth Chandrasekaran <sidcha@amazon.de>
+Cc:     Alexander Graf <graf@amazon.com>,
         Evgeny Iakovlev <eyakovl@amazon.de>,
         Liran Alon <liran@amazon.com>,
         Ioannis Aslanidis <iaslan@amazon.de>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
-        "Sean Christopherson" <seanjc@google.com>,
+        Sean Christopherson <seanjc@google.com>,
         Wanpeng Li <wanpengli@tencent.com>,
-        "Jim Mattson" <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>
-Message-ID: <20210413141117.GA29970@uc8bbc9586ea454.ant.amazon.com>
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v2 4/4] KVM: hyper-v: Advertise support for fast XMM
+ hypercalls
+In-Reply-To: <5ec20918b06cad17cb43f04be212c5e21c18caea.1618244920.git.sidcha@amazon.de>
 References: <cover.1618244920.git.sidcha@amazon.de>
- <2ca35d1660401780a530e4dbdf3dcd49b8390e61.1618244920.git.sidcha@amazon.de>
- <87v98q5m0y.fsf@vitty.brq.redhat.com>
+ <5ec20918b06cad17cb43f04be212c5e21c18caea.1618244920.git.sidcha@amazon.de>
+Date:   Tue, 13 Apr 2021 16:26:52 +0200
+Message-ID: <87pmyy5kgj.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87v98q5m0y.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.43.160.81]
-X-ClientProxiedBy: EX13D39UWA001.ant.amazon.com (10.43.160.54) To
- EX13D28EUC003.ant.amazon.com (10.43.164.43)
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Apr 13, 2021 at 03:53:01PM +0200, Vitaly Kuznetsov wrote:
-> Siddharth Chandrasekaran <sidcha@amazon.de> writes:
-> > As of now there are 7 parameters (and flags) that are used in various
-> > hyper-v hypercall handlers. There are 6 more input/output parameters
-> > passed from XMM registers which are to be added in an upcoming patch.
-> >
-> > To make passing arguments to the handlers more readable, capture all
-> > these parameters into a single structure.
-> >
-> > Cc: Alexander Graf <graf@amazon.com>
-> > Cc: Evgeny Iakovlev <eyakovl@amazon.de>
-> > Signed-off-by: Siddharth Chandrasekaran <sidcha@amazon.de>
-> > ---
-> >  arch/x86/kvm/hyperv.c | 147 +++++++++++++++++++++++-------------------
-> >  1 file changed, 79 insertions(+), 68 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> > index f98370a39936..8f6babd1ea0d 100644
-> > --- a/arch/x86/kvm/hyperv.c
-> > +++ b/arch/x86/kvm/hyperv.c
-> > @@ -1623,7 +1623,18 @@ static __always_inline unsigned long *sparse_set_to_vcpu_mask(
-> >       return vcpu_bitmap;
-> >  }
-> >
-> > -static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, u64 ingpa, u16 rep_cnt, bool ex)
-> > +struct kvm_hv_hcall {
-> > +     u64 param;
-> > +     u64 ingpa;
-> > +     u64 outgpa;
-> > +     u16 code;
-> > +     u16 rep_cnt;
-> > +     u16 rep_idx;
-> > +     bool fast;
-> > +     bool rep;
-> > +};
-> > +
-> > +static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc, bool ex)
-> 
-> Nitpick: Would it make sense to also pack the fact that we're dealing
-> with a hypercall using ExProcessorMasks into 'struct kvm_hv_hcall' and
-> get rid of 'bool ex' parameter for both kvm_hv_flush_tlb() and
-> kvm_hv_send_ipi()? 'struct kvm_hv_hcall' is already a synthetic
-> aggregator for input and output so adding some other information there
-> may not be that big of a stretch...
+Siddharth Chandrasekaran <sidcha@amazon.de> writes:
 
-The other members of the struct are all hypercall parameters (or flags)
-while the 'bool ex' is our way of handling ExProcessorMasks within the
-same method.
+> Now that all extant hypercalls that can use XMM registers (based on
+> spec) for input/outputs are patched to support them, we can start
+> advertising this feature to guests.
+>
+> Cc: Alexander Graf <graf@amazon.com>
+> Cc: Evgeny Iakovlev <eyakovl@amazon.de>
+> Signed-off-by: Siddharth Chandrasekaran <sidcha@amazon.de>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 7 ++++++-
+>  arch/x86/kvm/hyperv.c              | 2 ++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index e6cd3fee562b..716f12be411e 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -52,7 +52,7 @@
+>   * Support for passing hypercall input parameter block via XMM
+>   * registers is available
+>   */
+> -#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE		BIT(4)
+> +#define HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE		BIT(4)
+>  /* Support for a virtual guest idle state is available */
+>  #define HV_X64_GUEST_IDLE_STATE_AVAILABLE		BIT(5)
+>  /* Frequency MSRs available */
+> @@ -61,6 +61,11 @@
+>  #define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE		BIT(10)
+>  /* Support for debug MSRs available */
+>  #define HV_FEATURE_DEBUG_MSRS_AVAILABLE			BIT(11)
+> +/*
+> + * Support for returning hypercall ouput block via XMM
+> + * registers is available
+> + */
+> +#define HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE		BIT(15)
+>  /* stimer Direct Mode is available */
+>  #define HV_STIMER_DIRECT_MODE_AVAILABLE			BIT(19)
+>  
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 1f9959aba70d..55838c266bcd 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -2254,6 +2254,8 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>  			ent->ebx |= HV_POST_MESSAGES;
+>  			ent->ebx |= HV_SIGNAL_EVENTS;
+>  
+> +			ent->edx |= HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE;
+> +			ent->edx |= HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE;
+>  			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
+>  			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
 
-Besides, in kvm_hv_hypercall() passing it as a 3rd argument looks
-better than setting 'hc.ex = true' and than immediately calling the
-method :-).
+With 'ouput' typo fixed,
 
-> >  {
-> >       struct kvm *kvm = vcpu->kvm;
-> >       struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-> > @@ -1638,7 +1649,7 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, u64 ingpa, u16 rep_cnt, bool
-> >       bool all_cpus;
-> >
-> >       if (!ex) {
-> > -             if (unlikely(kvm_read_guest(kvm, ingpa, &flush, sizeof(flush))))
-> > +             if (unlikely(kvm_read_guest(kvm, hc->ingpa, &flush, sizeof(flush))))
-> >                       return HV_STATUS_INVALID_HYPERCALL_INPUT;
-> >
-> >               trace_kvm_hv_flush_tlb(flush.processor_mask,
-> > @@ -1657,7 +1668,7 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, u64 ingpa, u16 rep_cnt, bool
-> >               all_cpus = (flush.flags & HV_FLUSH_ALL_PROCESSORS) ||
-> >                       flush.processor_mask == 0;
-> >       } else {
-> > -             if (unlikely(kvm_read_guest(kvm, ingpa, &flush_ex,
-> > +             if (unlikely(kvm_read_guest(kvm, hc->ingpa, &flush_ex,
-> >                                           sizeof(flush_ex))))
-> >                       return HV_STATUS_INVALID_HYPERCALL_INPUT;
-> >
-> > @@ -1679,8 +1690,8 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, u64 ingpa, u16 rep_cnt, bool
-> >
-> >               if (!all_cpus &&
-> >                   kvm_read_guest(kvm,
-> > -                                ingpa + offsetof(struct hv_tlb_flush_ex,
-> > -                                                 hv_vp_set.bank_contents),
-> > +                                hc->ingpa + offsetof(struct hv_tlb_flush_ex,
-> > +                                                     hv_vp_set.bank_contents),
-> >                                  sparse_banks,
-> >                                  sparse_banks_len))
-> >                       return HV_STATUS_INVALID_HYPERCALL_INPUT;
-> > @@ -1700,9 +1711,9 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, u64 ingpa, u16 rep_cnt, bool
-> >                                   NULL, vcpu_mask, &hv_vcpu->tlb_flush);
-> >
-> >  ret_success:
-> > -     /* We always do full TLB flush, set rep_done = rep_cnt. */
-> > +     /* We always do full TLB flush, set rep_done = hc->rep_cnt. */
-> 
-> Nitpicking: I'd suggest we word it a bit differently:
-> 
-> "We always do full TLB flush, set 'Reps completed' = 'Rep Count'."
-> 
-> so it matches TLFS rather than KVM internals.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Makes sense. Changed.
-
-Thanks for your reviews.
-
-~ Sid.
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+-- 
+Vitaly
 
