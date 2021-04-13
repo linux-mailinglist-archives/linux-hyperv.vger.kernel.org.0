@@ -2,110 +2,87 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84DB435E30F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 17:42:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 601D935E354
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 17:59:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231826AbhDMPmx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Apr 2021 11:42:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231652AbhDMPmw (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Apr 2021 11:42:52 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F390C061574;
-        Tue, 13 Apr 2021 08:42:32 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id e14so26645537ejz.11;
-        Tue, 13 Apr 2021 08:42:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AHJFlkVHWqO1FHapYslC65eJ8g65HylpEtA4GsqBGy0=;
-        b=MCeMQdyjPS5cM7ZQQUlD0dVrnTvjDVPjtejlw4q0xEfCKf3ssp5xhTUKa6/B1ffP4P
-         7pS/iruAYATcL96nRfAs2e1IRqygmpm0sQDNh7xnr8jaoJjpsmP3cOB3O/y2ARvWx8Df
-         iXJwuepC6u3gpzT9+2j7OLGIApcyAxaPeSdm3MCyU/JTRxrhbI06tEugWwY4yfLvPcey
-         Ga9+uaiEMGsuEvTPuPPVC2IXRBxd4hDe/QYcJX8b37JqcrLEPws4G75rCXY9fyglrbSt
-         FqNI6fv7vBSJ5Ac3UTk0pCMgiI1Y0eBlgr9chsS/8YC1A50U/ok/8uDADkWGGsh+XPOE
-         M/yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AHJFlkVHWqO1FHapYslC65eJ8g65HylpEtA4GsqBGy0=;
-        b=AW5a5Atnz7sEpvSv7mhw7qWbhs5nlWxPEX9oWx16lR0vkdtpevW6IFA30HvJp2DqHz
-         kwyiy6YQjKwbJAkAt6kXeJA86b7B2A0kunhH17aTvVUlWMWAgabnqaZZ4w/376JY/f8K
-         DcGkAULgZ+2tNcmn63KLfkl/pPQs7d5tRCqqr2PV+8A8sDMXjqo/BBbxk1tgS9SA9m0o
-         307Go/01Lz3SVT1oOnzv26Ixn3uKg5TNQlDDWTJcpx3w4jfSTl4aQjfGSCF6ooZBO03c
-         yjywkmkEPavK9qJxPahm2qoTKMgP/oaG37G0pVFHn2P7SmbLMpm3bQ/70q7xs215Nxs7
-         X9SA==
-X-Gm-Message-State: AOAM532shiFHg+gTFUSwiMwM6CZtXf1jnMeVLBFXKuiBJ0n1aJ87msLb
-        3dTBVhHbvkaRd5bgmzFrcWkWhmqAbYPCxqGB
-X-Google-Smtp-Source: ABdhPJzy5ANQQ8Us5qvmS5XPmsu6fn52o+F19r72vm/W1oVbwUOYaUw2i+0hOUxaLzlRuTSgdACSwA==
-X-Received: by 2002:a17:906:4eda:: with SMTP id i26mr10489085ejv.301.1618328550649;
-        Tue, 13 Apr 2021 08:42:30 -0700 (PDT)
-Received: from anparri (host-95-232-15-7.retail.telecomitalia.it. [95.232.15.7])
-        by smtp.gmail.com with ESMTPSA id t14sm8088868ejc.121.2021.04.13.08.42.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 08:42:30 -0700 (PDT)
-Date:   Tue, 13 Apr 2021 17:42:21 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Use after free in __vmbus_open()
-Message-ID: <20210413154221.GA2369@anparri>
-References: <YHV3XLCot6xBS44r@mwanda>
+        id S229579AbhDMQAI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Apr 2021 12:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229492AbhDMQAH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 13 Apr 2021 12:00:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8692F60C40;
+        Tue, 13 Apr 2021 15:59:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1618329587;
+        bh=UD4aZe/qiFaq46Q+8RUJUKEgVxSzUUdRzyRPJYHtnE4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iM0DNAlrcbhLaGqtyvRQ5Yzjn4soYbYa5KRX3/n/l+a+mSAy3uZjkx88iDCAo4exI
+         VE/CQzxzxIzwmbHueB7IuuFrMHQWa/cqMMr/DdOwhNH4NdnsRbVOoxpdeilkp5sC9a
+         zUeJY2nEcKNTXGuUzhEMFsvKmBF6Ci9gn4UDoQBc=
+Date:   Tue, 13 Apr 2021 17:59:44 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, thomas.lendacky@amd.com,
+        brijesh.singh@amd.com, sunilmut@microsoft.com
+Subject: Re: [RFC V2 PATCH 8/12] UIO/Hyper-V: Not load UIO HV driver in the
+ isolation VM.
+Message-ID: <YHW/8AV5jZDjz+yP@kroah.com>
+References: <20210413152217.3386288-1-ltykernel@gmail.com>
+ <20210413152217.3386288-9-ltykernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YHV3XLCot6xBS44r@mwanda>
+In-Reply-To: <20210413152217.3386288-9-ltykernel@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Apr 13, 2021 at 01:50:04PM +0300, Dan Carpenter wrote:
-> The "open_info" variable is added to the &vmbus_connection.chn_msg_list,
-> but the error handling frees "open_info" without removing it from the
-> list.  This will result in a use after free.  First remove it from the
-> list, and then free it.
+On Tue, Apr 13, 2021 at 11:22:13AM -0400, Tianyu Lan wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > 
-> Fixes: 6f3d791f3006 ("Drivers: hv: vmbus: Fix rescind handling issues")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-I had this 'queued' in my list,
-
-Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
-
-  Andrea
-
-
+> UIO HV driver should not load in the isolation VM for security reason.
+> Return ENOTSUPP in the hv_uio_probe() in the isolation VM.
+> 
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > ---
-> From static analysis.  Untested etc.  There is almost certainly a good
-> reason to add it to the list before checking "newchannel->rescind" but I
-> don't know the code well enough to know what the reason is.
+>  drivers/uio/uio_hv_generic.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
->  drivers/hv/channel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index db30be8f9cce..1c5a418c1962 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -653,7 +653,7 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+> index 0330ba99730e..678b021d66f8 100644
+> --- a/drivers/uio/uio_hv_generic.c
+> +++ b/drivers/uio/uio_hv_generic.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/hyperv.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/slab.h>
+> +#include <asm/mshyperv.h>
+
+No driver should be having to add "asm" include files.
+
 >  
->  	if (newchannel->rescind) {
->  		err = -ENODEV;
-> -		goto error_free_info;
-> +		goto error_clean_msglist;
->  	}
+>  #include "../hv/hyperv_vmbus.h"
 >  
->  	err = vmbus_post_msg(open_msg,
+> @@ -241,6 +242,10 @@ hv_uio_probe(struct hv_device *dev,
+>  	void *ring_buffer;
+>  	int ret;
+>  
+> +	/* UIO driver should not be loaded in the isolation VM.*/
+> +	if (hv_is_isolation_supported())
+> +		return -ENOTSUPP;
+> +		
+>  	/* Communicating with host has to be via shared memory not hypercall */
+>  	if (!channel->offermsg.monitor_allocated) {
+>  		dev_err(&dev->device, "vmbus channel requires hypercall\n");
 > -- 
-> 2.30.2
+> 2.25.1
 > 
+
+Always run checkpatch.pl on your patches so you do not get grumpy
+maintainers telling you to run checkpatch.pl on your patch :(
+
+{sigh}
