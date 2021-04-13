@@ -2,104 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 424F835DDFF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 13:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 186F435DEA4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 14:26:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241941AbhDMLqy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Apr 2021 07:46:54 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:46737 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238852AbhDMLqw (ORCPT
+        id S231600AbhDMM06 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Apr 2021 08:26:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26377 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231337AbhDMM05 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Apr 2021 07:46:52 -0400
-Received: by mail-wr1-f48.google.com with SMTP id c15so7177946wro.13;
-        Tue, 13 Apr 2021 04:46:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=viU+fHMEqdW75c5aw+RUzyVT5kieLjfcDxdSRhzyk6k=;
-        b=BeWTm08FkCV7S6DNaD7QeKz6P/1J5jCJuDufJs9fJqpKLf2neQ3bRhokUvgMpP45Ow
-         5raV3HU3J8nPVk2VpBsbFBC1tE0WzBnz5ZbgzQvTTZh/uvs+iEK+8TToXP2JijabSUgZ
-         qlImlKQ26d0lqlRloUPWVW+A4K+H2xmyc4WQUK2h6eJR7AnvA8LmgHHDtLyAsLKRCiSX
-         55kndmo6ca0okjjkXrNVin3QzXhj+OahvjuTumO0cxNpfNeSMOkI+OmMLIWz67IUSdgT
-         wQA8k2+L5jh9A0GQ7piaA5N4KTynF7yILwmbeNBdiBpo6KODigYc9ucQcaWo9/ZD4fSI
-         ZnAQ==
-X-Gm-Message-State: AOAM5315MoctdN2ejRRXdCldU34/IZTAkzAQ4vsCFO97dA9cq2ZElB3B
-        pHDCPoRtt40NIOrnxfMnDrc=
-X-Google-Smtp-Source: ABdhPJw5ejgRiJXW67IP5nLKiW/DmEyAU1cwjnP7B9VkUaVVIFPuFMjWiixtasfgydOEVQ+vpATXag==
-X-Received: by 2002:a5d:4f82:: with SMTP id d2mr9977881wru.228.1618314392433;
-        Tue, 13 Apr 2021 04:46:32 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b206sm2226445wmc.15.2021.04.13.04.46.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 04:46:31 -0700 (PDT)
-Date:   Tue, 13 Apr 2021 11:46:30 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] Drivers: hv: vmbus: Use after free in __vmbus_open()
-Message-ID: <20210413114630.szpbtjxidefh566g@liuwe-devbox-debian-v2>
-References: <YHV3XLCot6xBS44r@mwanda>
+        Tue, 13 Apr 2021 08:26:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1618316797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=gHXO771pHe9zTon0JL2N9C6BipX6JwrG/i20Z7QO1yU=;
+        b=GuA6Rtthf8JXqJQFj/qpp7burMWEpjnmaWQmghpIYLFBTi2eIyag/QVldlDlzsulqwCFlb
+        wbItJAknyNXHEdulcAA5LOpaNx394ssS15qoeKg6Al0909mfgps1JzlDY1KOANPa8KmgZ/
+        LNOi4wiTsNcO48vT2ORJ2lmmO9oiSv8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-XnBuu0xjN3SGTxk9jSZ6cQ-1; Tue, 13 Apr 2021 08:26:36 -0400
+X-MC-Unique: XnBuu0xjN3SGTxk9jSZ6cQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44E488030D0;
+        Tue, 13 Apr 2021 12:26:34 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.75])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C3AB660C04;
+        Tue, 13 Apr 2021 12:26:31 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: [PATCH RFC 00/22] KVM: x86: hyper-v: Fine-grained access check to Hyper-V hypercalls and MSRs
+Date:   Tue, 13 Apr 2021 14:26:08 +0200
+Message-Id: <20210413122630.975617-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YHV3XLCot6xBS44r@mwanda>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Apr 13, 2021 at 01:50:04PM +0300, Dan Carpenter wrote:
-> The "open_info" variable is added to the &vmbus_connection.chn_msg_list,
-> but the error handling frees "open_info" without removing it from the
-> list.  This will result in a use after free.  First remove it from the
-> list, and then free it.
-> 
-> Fixes: 6f3d791f3006 ("Drivers: hv: vmbus: Fix rescind handling issues")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> From static analysis.  Untested etc.  There is almost certainly a good
-> reason to add it to the list before checking "newchannel->rescind" but I
-> don't know the code well enough to know what the reason is.
-> 
+Currently, all implemented Hyper-V features (MSRs and hypercalls) are
+available unconditionally to all Hyper-V enabled guests. This is not
+ideal as KVM userspace may decide to provide only a subset of the
+currently implemented features to emulate an older Hyper-V version,
+to reduce attack surface,... Implement checks against guest visible
+CPUIDs for all currently implemented MSRs and hypercalls.
 
-AIUI the channel management code requires the message be queued before
-posting the message to backend, because processing response is done in
-another thread, and might happen before this message is added to the
-list if the order is reversed.
+RFC part:
+- KVM has KVM_CAP_ENFORCE_PV_FEATURE_CPUID for KVM PV features. Should
+ we use it for Hyper-V as well or should we rather add a Hyper-V specific
+ CAP (or neither)?
 
->  drivers/hv/channel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index db30be8f9cce..1c5a418c1962 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -653,7 +653,7 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
->  
->  	if (newchannel->rescind) {
->  		err = -ENODEV;
-> -		goto error_free_info;
-> +		goto error_clean_msglist;
+TODO:
+- Write a selftest
+- Check with various Windows/Hyper-V versions that CPUID feature bits
+ are actually respected.
 
-Looking at similar functions in the same file I think there is indeed an
-UAF problem in the original code.
+Vitaly Kuznetsov (22):
+  asm-generic/hyperv: add HV_STATUS_ACCESS_DENIED definition
+  KVM: x86: hyper-v: Cache guest CPUID leaves determining features
+    availability
+  KVM: x86: hyper-v: Honor HV_MSR_VP_RUNTIME_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_MSR_TIME_REF_COUNT_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_MSR_HYPERCALL_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_MSR_VP_INDEX_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_MSR_RESET_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_MSR_REFERENCE_TSC_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_MSR_SYNIC_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_MSR_SYNTIMER_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_MSR_APIC_ACCESS_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_ACCESS_FREQUENCY_MSRS privilege bit
+  KVM: x86: hyper-v: Honor HV_ACCESS_REENLIGHTENMENT privilege bit
+  KVM: x86: hyper-v: Honor HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+    privilege bit
+  KVM: x86: hyper-v: Honor HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+    privilege bit
+  KVM: x86: hyper-v: Honor HV_STIMER_DIRECT_MODE_AVAILABLE privilege bit
+  KVM: x86: hyper-v: Honor HV_POST_MESSAGES privilege bit
+  KVM: x86: hyper-v: Honor HV_SIGNAL_EVENTS privilege bit
+  KVM: x86: hyper-v: Honor HV_DEBUGGING privilege bit
+  KVM: x86: hyper-v: Honor HV_X64_REMOTE_TLB_FLUSH_RECOMMENDED bit
+  KVM: x86: hyper-v: Honor HV_X64_CLUSTER_IPI_RECOMMENDED bit
+  KVM: x86: hyper-v: Check access to HVCALL_NOTIFY_LONG_SPIN_WAIT
+    hypercall
 
-I have not studied this piece of code extensively so I will wait for
-others to chime in.
+ arch/x86/include/asm/kvm_host.h   |   8 +
+ arch/x86/kvm/hyperv.c             | 305 +++++++++++++++++++++++++++---
+ include/asm-generic/hyperv-tlfs.h |   1 +
+ 3 files changed, 291 insertions(+), 23 deletions(-)
 
-Wei.
+-- 
+2.30.2
 
->  	}
->  
->  	err = vmbus_post_msg(open_msg,
-> -- 
-> 2.30.2
-> 
