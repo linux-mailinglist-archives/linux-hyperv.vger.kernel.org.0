@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9051A35DEC5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 14:31:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2D5235DEC7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 14:31:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345597AbhDMM1y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Apr 2021 08:27:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47111 "EHLO
+        id S1345621AbhDMM17 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Apr 2021 08:27:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53761 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345604AbhDMM10 (ORCPT
+        by vger.kernel.org with ESMTP id S1345563AbhDMM1b (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Apr 2021 08:27:26 -0400
+        Tue, 13 Apr 2021 08:27:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618316826;
+        s=mimecast20190719; t=1618316831;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=58yQdjmzuuFTBFxu8NFpHua93UCwx434i+t9ebr6W8o=;
-        b=iUhLzVM/4PioKSC7OykM5RL87DKlGhjAKAZsNIfdLfz2IXL26gpo7evwSnfvviY9dH2iZh
-        nyXeXJ7ZZu8KKbkPMgdIBBTntIGG9Q/cV+5FjDRH2sLgxuikswaWhpuxOdfp2XYA1s3rUR
-        OORk+95b/Le1u2RIrqU/r237OuU4RKA=
+        bh=nsDZCBTK6hj0udyAzJsfA8vs4YUhJm7ggbRLSSXn/5U=;
+        b=ahj8yVv48VOPRdpGFyynISZiR+8pWJV5EjHrVzgcBD8Ebor331G6NJt2YRn4miLJbEeOHH
+        eKM4QM3jGo5cYUu2DAHUJuf+QjZYEST8QmSoj4uAbyJBqX+R/FJejgTn69a+K248xBDpmY
+        1gWeG3Tma6lPiaLVQoRPqy2HenMRlco=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-o7xUXSozOayhW2Iw_JGcdA-1; Tue, 13 Apr 2021 08:27:02 -0400
-X-MC-Unique: o7xUXSozOayhW2Iw_JGcdA-1
+ us-mta-386-ou0UUlE0MteZq4qMdMTbnw-1; Tue, 13 Apr 2021 08:27:07 -0400
+X-MC-Unique: ou0UUlE0MteZq4qMdMTbnw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4C06A40C1;
-        Tue, 13 Apr 2021 12:27:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EBAB87A83B;
+        Tue, 13 Apr 2021 12:27:06 +0000 (UTC)
 Received: from vitty.brq.redhat.com (unknown [10.40.195.75])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DDAE460C04;
-        Tue, 13 Apr 2021 12:26:58 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4753D60C04;
+        Tue, 13 Apr 2021 12:27:01 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <seanjc@google.com>,
@@ -41,9 +41,9 @@ Cc:     Sean Christopherson <seanjc@google.com>,
         Jim Mattson <jmattson@google.com>,
         Siddharth Chandrasekaran <sidcha@amazon.de>,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: [PATCH RFC 08/22] KVM: x86: hyper-v: Honor HV_MSR_REFERENCE_TSC_AVAILABLE privilege bit
-Date:   Tue, 13 Apr 2021 14:26:16 +0200
-Message-Id: <20210413122630.975617-9-vkuznets@redhat.com>
+Subject: [PATCH RFC 09/22] KVM: x86: hyper-v: Honor HV_MSR_SYNIC_AVAILABLE privilege bit
+Date:   Tue, 13 Apr 2021 14:26:17 +0200
+Message-Id: <20210413122630.975617-10-vkuznets@redhat.com>
 In-Reply-To: <20210413122630.975617-1-vkuznets@redhat.com>
 References: <20210413122630.975617-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -53,40 +53,44 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-HV_X64_MSR_REFERENCE_TSC is only available to guest when
-HV_MSR_REFERENCE_TSC_AVAILABLE bit is exposed.
+SynIC MSRs (HV_X64_MSR_SCONTROL, HV_X64_MSR_SVERSION, HV_X64_MSR_SIEFP,
+HV_X64_MSR_SIMP, HV_X64_MSR_EOM, HV_X64_MSR_SINT0 ... HV_X64_MSR_SINT15)
+are only available to guest when HV_MSR_SYNIC_AVAILABLE bit is exposed.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/hyperv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kvm/hyperv.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 15d557ce32b5..48215ad72b6c 100644
+index 48215ad72b6c..d85c441011c4 100644
 --- a/arch/x86/kvm/hyperv.c
 +++ b/arch/x86/kvm/hyperv.c
-@@ -1257,6 +1257,10 @@ static int kvm_hv_set_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 data,
- 		break;
- 	}
- 	case HV_X64_MSR_REFERENCE_TSC:
-+		if (unlikely(!host && !(hv_vcpu->cpuid_cache.features_eax &
-+					HV_MSR_REFERENCE_TSC_AVAILABLE)))
-+			return 1;
-+
- 		hv->hv_tsc_page = data;
- 		if (hv->hv_tsc_page & HV_X64_MSR_TSC_REFERENCE_ENABLE) {
- 			if (!host)
-@@ -1478,6 +1482,10 @@ static int kvm_hv_get_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata,
- 		data = get_time_ref_counter(kvm);
- 		break;
- 	case HV_X64_MSR_REFERENCE_TSC:
-+		if (unlikely(!host && !(hv_vcpu->cpuid_cache.features_eax &
-+					HV_MSR_REFERENCE_TSC_AVAILABLE)))
-+			return 1;
-+
- 		data = hv->hv_tsc_page;
- 		break;
- 	case HV_X64_MSR_CRASH_P0 ... HV_X64_MSR_CRASH_P4:
+@@ -211,7 +211,9 @@ static int synic_set_msr(struct kvm_vcpu_hv_synic *synic,
+ 	struct kvm_vcpu *vcpu = hv_synic_to_vcpu(synic);
+ 	int ret;
+ 
+-	if (!synic->active && !host)
++	if (unlikely(!host &&
++		     (!synic->active || !(to_hv_vcpu(vcpu)->cpuid_cache.features_eax &
++					  HV_MSR_SYNIC_AVAILABLE))))
+ 		return 1;
+ 
+ 	trace_kvm_hv_synic_set_msr(vcpu->vcpu_id, msr, data, host);
+@@ -383,9 +385,12 @@ static int syndbg_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata, bool host)
+ static int synic_get_msr(struct kvm_vcpu_hv_synic *synic, u32 msr, u64 *pdata,
+ 			 bool host)
+ {
++	struct kvm_vcpu *vcpu = hv_synic_to_vcpu(synic);
+ 	int ret;
+ 
+-	if (!synic->active && !host)
++	if (unlikely(!host &&
++		     (!synic->active || !(to_hv_vcpu(vcpu)->cpuid_cache.features_eax &
++					  HV_MSR_SYNIC_AVAILABLE))))
+ 		return 1;
+ 
+ 	ret = 0;
 -- 
 2.30.2
 
