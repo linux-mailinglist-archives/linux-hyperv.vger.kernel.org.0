@@ -2,68 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B4D035F76E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Apr 2021 17:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7FB835F77F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Apr 2021 17:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350243AbhDNPQK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 14 Apr 2021 11:16:10 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:34725 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350221AbhDNPP5 (ORCPT
+        id S233662AbhDNPUq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 14 Apr 2021 11:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232358AbhDNPUp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 14 Apr 2021 11:15:57 -0400
-Received: by mail-wm1-f42.google.com with SMTP id n11-20020a05600c4f8bb029010e5cf86347so2758170wmq.1;
-        Wed, 14 Apr 2021 08:15:35 -0700 (PDT)
+        Wed, 14 Apr 2021 11:20:45 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C48FC061574;
+        Wed, 14 Apr 2021 08:20:24 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id e2so5987297plh.8;
+        Wed, 14 Apr 2021 08:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GjnyRXzQJs/ruevdN1h+ewCMUU5MROLW5faBjSTHYuk=;
+        b=r6ySV3uMl0D+g1EvD538J47qBPrk4NpMBZ08hqgf4Erzcekb/krnaZePTtMzchncG/
+         qN54me47vACgJUEe1jgJzTNhEhRKKWXbkxSYhcniON20hMC52HL82van9C0f7tNCEx0E
+         ieuQb4DM/upvYoTyCmmfj6+2zCjtjf7ySM+hThuVZjs0UDhhZZKJ53HjZluPTXgS+1JI
+         bM78EWw6rTQVw4/EhdX4EMXeS1ng4ucKJcohV95yRsghHehN0b7lA9J8dw7wY7dJxA1V
+         NhL/SVXwqiiZNiCscBNghbJDuc1ugVWjN05e9RLZW5V4k8GnhnoJS6Y8RX+uDNXUa5dY
+         1wnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mOrRpmbd/M6QwuGhrFGhWB9U/poLWrU93GphgE/wg0g=;
-        b=NWehfkUshGpFx7P/x+NjCD1L01BYpct1p3DmbP5Ao9oem/+SW061BzED9r0PkhzazS
-         PWzTeugvPC2CKk14EKtH/2xYEurRypAjst8ruhL/mzHKCXa+2+so38d4KCsYH+NNHsWr
-         sD12Ygg2rSOQy/PnAamCYzxYp39rJFkxt621z83bNjREdqQ+azC9sPDucUpash8RYtwl
-         qIRYZcHD3A3gc69jKyMl4nBR5QZ1r4VLhpKeMXRyNI3wacyL4z2UaCsC+XW4maeyjVyj
-         G2IM7AtHLNxfDomQakFfXA67UZpjVSOFMISzEhnMvA1UNSnadJ9HJcNoYc0Nio1Tyo7T
-         zKkQ==
-X-Gm-Message-State: AOAM533PNXM/FLl/GMPt2XxbbVQphh+4d9qu/Sc2DTz24mpWcury/HnL
-        65XcntPlPx1ie4h3PoZ8wFo=
-X-Google-Smtp-Source: ABdhPJwYEomqhRoCu6n9VE6NwGrAIFmUCBmoett3v6LGozFsJ0saccLO4s8Pb1t59UPGIigWRUwW+g==
-X-Received: by 2002:a1c:1bd0:: with SMTP id b199mr3421824wmb.127.1618413335116;
-        Wed, 14 Apr 2021 08:15:35 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id c2sm5457633wmr.22.2021.04.14.08.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Apr 2021 08:15:34 -0700 (PDT)
-Date:   Wed, 14 Apr 2021 15:15:33 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Drivers: hv: vmbus: remove unused function
-Message-ID: <20210414151533.zx7ciqfechv5xuwb@liuwe-devbox-debian-v2>
-References: <1618381282-119135-1-git-send-email-jiapeng.chong@linux.alibaba.com>
- <MWHPR21MB15933A7D469B6FF2E60368A6D74E9@MWHPR21MB1593.namprd21.prod.outlook.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GjnyRXzQJs/ruevdN1h+ewCMUU5MROLW5faBjSTHYuk=;
+        b=LhwuZFldjsRQF9Zc/L54mDT298sNxaGs/lLjfw1RCywfxOYh5RJdRPTjZgDO46+hyH
+         bPuvgDGZx+K4ZVhPEbnqVCOA+TzACZucdGQtT5yKYuKtnUpL7Rp08sS7lD0vRpuEyIJh
+         4tO/APACImWCN4m1+vUw7Ztfm155/K2e/WIMisI1/JYAxCbGfrr46fRvqsWJJI8Izh9d
+         NVplLf/c4d4oTxMjwGmNupC6e/6EP39L3dBpc9/XjfUBUQxJjbUj9nP4xUIRw3p4R/TV
+         1fEMMCcPrcQ5rbHkEvaX/Wqyn+mZQoKZWd/XmqQo2YSbZ1l9oZEH6Qa3/bT6m9bqLT3y
+         DNEQ==
+X-Gm-Message-State: AOAM531TomLDgGvSyVHlGlQvzVitXvS7iez8NNe8SMYgqkc/BRDmXB6X
+        5iANGvlZQF5bhLCbyQ35UDqDlnMAd8OJLPmM
+X-Google-Smtp-Source: ABdhPJwYkbx3moK6IBiDeaJUyG0vF+58FHQQ471qa5iiLWYh7LAIgbVq2JIXvpAZ7iENT8ayACk7jg==
+X-Received: by 2002:a17:90b:300f:: with SMTP id hg15mr4260680pjb.92.1618413623873;
+        Wed, 14 Apr 2021 08:20:23 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
+        by smtp.gmail.com with ESMTPSA id ir3sm5205971pjb.42.2021.04.14.08.20.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Apr 2021 08:20:23 -0700 (PDT)
+Subject: Re: [RFC V2 PATCH 8/12] UIO/Hyper-V: Not load UIO HV driver in the
+ isolation VM.
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, thomas.lendacky@amd.com,
+        brijesh.singh@amd.com, sunilmut@microsoft.com
+References: <20210413152217.3386288-1-ltykernel@gmail.com>
+ <20210413152217.3386288-9-ltykernel@gmail.com> <YHXAL+83iHPK8O/Q@kroah.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <e54446fb-f9d9-2768-f73f-01a94cf635ea@gmail.com>
+Date:   Wed, 14 Apr 2021 23:20:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR21MB15933A7D469B6FF2E60368A6D74E9@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <YHXAL+83iHPK8O/Q@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 14, 2021 at 02:48:17PM +0000, Michael Kelley wrote:
-> From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com> Sent: Tuesday, April 13, 2021 11:21 PM
-[...]
-> This function became unused as of commit 4226ff69a3df 
-> ("vmbus: simplify hv_ringbuffer_read") on 7/17/2017.
+Hi Greg:
+	Thanks for your review.
+
+On 4/14/2021 12:00 AM, Greg KH wrote:
+> On Tue, Apr 13, 2021 at 11:22:13AM -0400, Tianyu Lan wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> UIO HV driver should not load in the isolation VM for security reason.
 > 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Why?  I need a lot more excuse than that.
 
-Applied to hyperv-next. Thanks.
+The reason is that ring buffers have been marked as visible to host.
+UIO driver will expose these buffers to user space and user space
+driver hasn't done some secure check for data from host. This
+is considered as insecure in isolation VM.
 
-Wei.
+> 
+> Why would the vm allow UIO devices to bind to it if it was not possible?
+> Shouldn't the VM be handling this type of logic and not forcing all
+> individual hyperv drivers to do this?
+> 
+> This feels wrong...
+
+Hypervisor exposes network and storage devices but can't prohibit guest
+from binding these devices to UIO driver.
+
+You are right. This should not happen in the individual driver and will
+try handling this in the vmbus driver level.
+
+
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
