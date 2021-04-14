@@ -2,133 +2,64 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BC9B35E894
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Apr 2021 23:53:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5014C35ED27
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Apr 2021 08:21:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbhDMVwl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Apr 2021 17:52:41 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:39052 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239472AbhDMVwk (ORCPT
+        id S1349193AbhDNGWA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 14 Apr 2021 02:22:00 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:34361 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232405AbhDNGVv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Apr 2021 17:52:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1618350740; x=1649886740;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=ePsaVDzjf/M9yTDUALCtv7zojuRaTTF0897dU/zK9Lw=;
-  b=W28ZCOgm63uzQG0WoGrs/tYeCSFvo60Y29M7TRmn+f4C2bVhQlFqxfZ3
-   g1bG8W8j51c4T189v+6cpLxNQBv8+HZzn7juognaFeaXQTtYQRtLr31Fb
-   Dn+8ta9TpGmfd2u73xcVJFHF2bL1NeLSzXyiYjPhELcAP76ltCuCIa1xl
-   w=;
-X-IronPort-AV: E=Sophos;i="5.82,220,1613433600"; 
-   d="scan'208";a="107299146"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 13 Apr 2021 21:52:12 +0000
-Received: from EX13D28EUC003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id BA0E6A1C18;
-        Tue, 13 Apr 2021 21:52:10 +0000 (UTC)
-Received: from uc8bbc9586ea454.ant.amazon.com (10.43.161.39) by
- EX13D28EUC003.ant.amazon.com (10.43.164.43) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 13 Apr 2021 21:52:01 +0000
-From:   Siddharth Chandrasekaran <sidcha@amazon.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Sean Christopherson" <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Joerg Roedel" <joro@8bytes.org>
-CC:     Siddharth Chandrasekaran <sidcha@amazon.de>,
-        Alexander Graf <graf@amazon.com>,
-        Evgeny Iakovlev <eyakovl@amazon.de>,
-        Liran Alon <liran@amazon.com>,
-        Ioannis Aslanidis <iaslan@amazon.de>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-Subject: [PATCH v3 4/4] KVM: hyper-v: Advertise support for fast XMM hypercalls
-Date:   Tue, 13 Apr 2021 23:50:57 +0200
-Message-ID: <33a7e27046c15134667ea891feacbe3fe208f66e.1618349671.git.sidcha@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1618349671.git.sidcha@amazon.de>
-References: <cover.1618349671.git.sidcha@amazon.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.39]
-X-ClientProxiedBy: EX13D30UWC002.ant.amazon.com (10.43.162.235) To
- EX13D28EUC003.ant.amazon.com (10.43.164.43)
+        Wed, 14 Apr 2021 02:21:51 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0UVWCFKV_1618381283;
+Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0UVWCFKV_1618381283)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 14 Apr 2021 14:21:28 +0800
+From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To:     kys@microsoft.com
+Cc:     haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Subject: [PATCH] Drivers: hv: vmbus: remove unused function
+Date:   Wed, 14 Apr 2021 14:21:22 +0800
+Message-Id: <1618381282-119135-1-git-send-email-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Now that kvm_hv_flush_tlb() has been patched to support XMM hypercall
-inputs, we can start advertising this feature to guests.
+Fix the following clang warning:
 
-Cc: Alexander Graf <graf@amazon.com>
-Cc: Evgeny Iakovlev <eyakovl@amazon.de>
-Signed-off-by: Siddharth Chandrasekaran <sidcha@amazon.de>
+drivers/hv/ring_buffer.c:89:1: warning: unused function
+'hv_set_next_read_location' [-Wunused-function].
+
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- arch/x86/include/asm/hyperv-tlfs.h | 7 ++++++-
- arch/x86/kvm/hyperv.c              | 1 +
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/hv/ring_buffer.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index ee6336a54f92..597ae1142864 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -52,7 +52,7 @@
-  * Support for passing hypercall input parameter block via XMM
-  * registers is available
-  */
--#define HV_X64_HYPERCALL_PARAMS_XMM_AVAILABLE		BIT(4)
-+#define HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE		BIT(4)
- /* Support for a virtual guest idle state is available */
- #define HV_X64_GUEST_IDLE_STATE_AVAILABLE		BIT(5)
- /* Frequency MSRs available */
-@@ -61,6 +61,11 @@
- #define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE		BIT(10)
- /* Support for debug MSRs available */
- #define HV_FEATURE_DEBUG_MSRS_AVAILABLE			BIT(11)
-+/*
-+ * Support for returning hypercall output block via XMM
-+ * registers is available
-+ */
-+#define HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE		BIT(15)
- /* stimer Direct Mode is available */
- #define HV_STIMER_DIRECT_MODE_AVAILABLE			BIT(19)
+diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
+index 35833d4..78d4043 100644
+--- a/drivers/hv/ring_buffer.c
++++ b/drivers/hv/ring_buffer.c
+@@ -84,15 +84,6 @@ static void hv_signal_on_write(u32 old_write, struct vmbus_channel *channel)
+ 	ring_info->ring_buffer->write_index = next_write_location;
+ }
  
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index cd6c6f1f06a4..0f6fd7550510 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -2235,6 +2235,7 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
- 			ent->ebx |= HV_POST_MESSAGES;
- 			ent->ebx |= HV_SIGNAL_EVENTS;
- 
-+			ent->edx |= HV_X64_HYPERCALL_XMM_INPUT_AVAILABLE;
- 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
- 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
- 
+-/* Set the next read location for the specified ring buffer. */
+-static inline void
+-hv_set_next_read_location(struct hv_ring_buffer_info *ring_info,
+-		    u32 next_read_location)
+-{
+-	ring_info->ring_buffer->read_index = next_read_location;
+-	ring_info->priv_read_index = next_read_location;
+-}
+-
+ /* Get the size of the ring buffer. */
+ static inline u32
+ hv_get_ring_buffersize(const struct hv_ring_buffer_info *ring_info)
 -- 
-2.17.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+1.8.3.1
 
