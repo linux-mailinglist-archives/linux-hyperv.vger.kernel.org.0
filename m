@@ -2,66 +2,66 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6EE836128D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 20:54:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CD3D36136C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 22:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234624AbhDOSyZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 15 Apr 2021 14:54:25 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:38488 "EHLO
+        id S235387AbhDOUZg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 15 Apr 2021 16:25:36 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:59942 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234130AbhDOSyY (ORCPT
+        with ESMTP id S234748AbhDOUZg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 15 Apr 2021 14:54:24 -0400
+        Thu, 15 Apr 2021 16:25:36 -0400
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13FIZWhS100648;
-        Thu, 15 Apr 2021 18:53:13 GMT
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13FKJWbE068674;
+        Thu, 15 Apr 2021 20:24:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : content-type : in-reply-to :
  mime-version; s=corp-2020-01-29;
- bh=8Gqf0/evVWDhoGVwD8p8GrYtW57UPXn+DQqxzcdkQ6Y=;
- b=zZG/b3oYRBj7NdXGSubwptjseTxFQ9n56JOKo36RIsWGLRs3Rm0qJBdW1z2WB1LUoLga
- iGd9icHrEcOio4CBq0NU+k6oxZV3YHNYA0dWmtsbgU58282kn4PxNuJ8bMR8RsJvp7oe
- oKk75Dghh17HTTLhm9LEehh+dNplc7FHEXZYdMMqiP5koYCBUunctdUZ9W9fSR4EJn8W
- BgUZk+W4YOG8NugJp0QkafEW02JTJO4lrvx/6mRrF0lnoiRiRkjRmjw4EZVIypMbLRmx
- 3ukmf6uG3DFFkzm5n5G2tsyHnEwNqIdozPL5ePu1aGvOYMoDHFMaLyIVVwarB9CtBXRR zQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 37u1hbq20b-1
+ bh=E2eGj+h0d64mKRK+lUpCREp2sW8OWjcXgeLC7UN/nOU=;
+ b=Thb8y1/Kfk9mLEGFRwWsNMQyJjywVXw3MG4OkojBo8e69WktUPhXiZk+8Rgvhl76SvZ0
+ /8ubnb7OuJmlLaVM846FYLEv6tZSxElNDmffAcpGQVwFFGbZs42PiMJO9SZqDhnXvbHg
+ Fq5biEM4vcHEDXEpLLsoE47efeUeUMSyjGFQ+ys3QId+51s3+Qs7v5xuOmxFqBDKUm2z
+ YJhV0puMhe39vwQxjz4HHfL49Hj8bYWo496drdX0m6nZFvaQhm3gO9GNDc0qHsaivYPe
+ FLOMbUUgbl7/isPPtoCu/ABb9gC3mn4GKn0f5u0sHvByKus9CDNM3A/ZDyEBxHIjxJ90 tg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 37u1hbq9m0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Apr 2021 18:53:13 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13FIac4F115252;
-        Thu, 15 Apr 2021 18:53:12 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-        by aserp3030.oracle.com with ESMTP id 37unkt22ck-1
+        Thu, 15 Apr 2021 20:24:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13FKJeX2017600;
+        Thu, 15 Apr 2021 20:24:34 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
+        by userp3020.oracle.com with ESMTP id 37unsw55b4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Apr 2021 18:53:12 +0000
+        Thu, 15 Apr 2021 20:24:34 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=inWWlAKHUbgODtMwIZuYWV5xdeaexzFP8ZidZmrxR3OuTKw+FcWVWpnB/vikxOpBvWzd71FiHcSn5i6t7CC9Dy/AyO2l2P87gUD6gXK2v0df8rE+cyhkBr+EAqASE/AUBfcnc/kvcgbuhSq3gCiwOz0soZ9Gz6+0ko9+vpHc3NFig74JhJtuqJ8kZlByxlwhpYrcYo4H0GNhmoA1pjOtC/0y3YyVcLXcbG1/XH5iCHktZlqOfkvZGg5TpKWnUpQ6Bxkb4D3DFu1tDRU1N2moQ0U90xpeI6lBg1g1hByatAWuxmoRhVjf1Xt8s7xO5poPdjAAVyklLbQ41keKPXh6sQ==
+ b=MsDLBVdzZcE4oYXAgWz4fGTVq5jGWGgEhDs14AP/36L7yjG9qiyCocV1Xq09QKF7iudqKxmBjk9NndVciP75GKsej2Am9Bf6/bOH9L/V/Y3lxkAcQbxUmJuHCvx40+vO1uUCw5by1t8d7QFtzQdv4ENLKYaI9pDqrUDllnfrv5O8SPZeh4q5Lo+YTu8R42PY2Izk40GdiVeOG+t93mXSwAViSNMGv3rNABAI7e57HIn5t2HNhyW8CZIZZBRxMhdzWJvOC4XMYG85cVK6tmCRhgh6vRHeZPDhjNZBIQTS4Yv+y41wyzH9LLlaParqL4RLP0yvQQSDwtd6SlRkFn32nQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Gqf0/evVWDhoGVwD8p8GrYtW57UPXn+DQqxzcdkQ6Y=;
- b=nxuXqB6V9Q0xCdxTysAqNdpOD0VqNtoktFWyv3ItD0yAm93OloLv6KUo50EEBlwzw88Pyu0UCb4/iIK7OksN+G6u6kJOKCSUK6ILn3J4MIusm2NMzko3mIs5AVZ2rjFakfOubl2upsoJ2KBXRyuuz2F+kBOeWjHwcs4Put0Nk46pCjNxX2trbu2MABGvfJwNadVvTuz47H1AqIq8cjkF1nO/KByDvWUqnWT3eIWMfiItf1xBvv2vhECRz5V5LrQCRNXTEiVh3liWUfWT1xqCpd/VlTKvOG8DvbVl5VqXE1IAviDVIX7h/zbZB9mQioWh87q8C4fyETskCY1IzUHcYw==
+ bh=E2eGj+h0d64mKRK+lUpCREp2sW8OWjcXgeLC7UN/nOU=;
+ b=EWZUWcgsfVrHFw4ZKyeDi4qcQ40EcAKBoUpw1DoH9t/dk+gJHA8sX6dZAxUjlD2+BK7wGk2mqQjPstIjIVUslCMfsSMcoyAFoL6AcmcRDlfATpgiSggc2W0OT90XNSNFbeW9iVgkAJmPG++kKBB6mzX0Ql1Rf6BoPjL6wzpSWD/no1oEoRoQvilIpzWkvbHAG6NkzsOHfFT10hyZvgGc5xlnspfb03X89x9yLYS2fY9C9XkwAWeJAfTJ/57KtH5PpanpsH9XrFuR8pUV/18snNVeXkrGqXPHOs5LyQKozpj680Max4sUzXjSc5689LBXrtOoi/LPU1PxgkGrApPMgQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Gqf0/evVWDhoGVwD8p8GrYtW57UPXn+DQqxzcdkQ6Y=;
- b=H517ixnZoLooQk1ky9WVsmyiH7Da+ppJ55aMeBKozjDLHKEXGaSMKhxF4dXmVQ+0ylWDH3YjBbGjDP8dwAdjfPYzsKdMFmlvzDSp+NHKjLPbsCT74dKQoQJ3ZxPT4s4CQuVQ+myv8hsc5FQDm8P0C2j9gO+4bK2XXvYVOWoGE/g=
+ bh=E2eGj+h0d64mKRK+lUpCREp2sW8OWjcXgeLC7UN/nOU=;
+ b=Qgm0i43cS6CzFHWS9KlFuVSF/3OP3R9sxltKjDWdppsC3v17TuWQc5qMAYetF/zX+aWcJxEbwZYZZBLwvMfMYjaSCzYS3I0NVTbArKWU6AJFNBZyArlJ/vR/d4CSF4Af7ubEfcONdS5lcM+2e6jbU/5Y4Bw7wMbYUpl8gitvoJQ=
 Authentication-Results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=oracle.com;
 Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
- by BYAPR10MB2998.namprd10.prod.outlook.com (2603:10b6:a03:84::32) with
+ by SJ0PR10MB4784.namprd10.prod.outlook.com (2603:10b6:a03:2d4::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.17; Thu, 15 Apr
- 2021 18:53:10 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16; Thu, 15 Apr
+ 2021 20:24:30 +0000
 Received: from BYAPR10MB2999.namprd10.prod.outlook.com
  ([fe80::50f2:e203:1cc5:d4f7]) by BYAPR10MB2999.namprd10.prod.outlook.com
  ([fe80::50f2:e203:1cc5:d4f7%7]) with mapi id 15.20.4020.022; Thu, 15 Apr 2021
- 18:53:10 +0000
-Date:   Thu, 15 Apr 2021 14:52:58 -0400
+ 20:24:30 +0000
+Date:   Thu, 15 Apr 2021 16:24:15 -0400
 From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 To:     Tianyu Lan <ltykernel@gmail.com>
 Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
@@ -78,227 +78,285 @@ Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         netdev@vger.kernel.org, vkuznets@redhat.com,
         thomas.lendacky@amd.com, brijesh.singh@amd.com,
         sunilmut@microsoft.com
-Subject: Re: [Resend RFC PATCH V2 06/12] HV/Vmbus: Add SNP support for VMbus
- channel initiate message
-Message-ID: <YHiLiqpTEYbWjbSb@dhcp-10-154-102-149.vpn.oracle.com>
+Subject: Re: [Resend RFC PATCH V2 07/12] HV/Vmbus: Initialize VMbus ring
+ buffer for Isolation VM
+Message-ID: <YHig78Xra5tEQhMD@dhcp-10-154-102-149.vpn.oracle.com>
 References: <20210414144945.3460554-1-ltykernel@gmail.com>
- <20210414144945.3460554-7-ltykernel@gmail.com>
+ <20210414144945.3460554-8-ltykernel@gmail.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210414144945.3460554-7-ltykernel@gmail.com>
+In-Reply-To: <20210414144945.3460554-8-ltykernel@gmail.com>
 X-Originating-IP: [138.3.200.21]
-X-ClientProxiedBy: SN2PR01CA0039.prod.exchangelabs.com (2603:10b6:804:2::49)
- To BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
+X-ClientProxiedBy: SA9PR13CA0179.namprd13.prod.outlook.com
+ (2603:10b6:806:28::34) To BYAPR10MB2999.namprd10.prod.outlook.com
+ (2603:10b6:a03:85::27)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from dhcp-10-154-102-149.vpn.oracle.com (138.3.200.21) by SN2PR01CA0039.prod.exchangelabs.com (2603:10b6:804:2::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16 via Frontend Transport; Thu, 15 Apr 2021 18:53:02 +0000
+Received: from dhcp-10-154-102-149.vpn.oracle.com (138.3.200.21) by SA9PR13CA0179.namprd13.prod.outlook.com (2603:10b6:806:28::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.6 via Frontend Transport; Thu, 15 Apr 2021 20:24:19 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3ac03ad5-5f2d-4718-e756-08d9003fb68e
-X-MS-TrafficTypeDiagnostic: BYAPR10MB2998:
+X-MS-Office365-Filtering-Correlation-Id: d6caeb20-f388-48fa-5e55-08d9004c7917
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB4784:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR10MB29983A9C3F2EAE8A6F757A35894D9@BYAPR10MB2998.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
+X-Microsoft-Antispam-PRVS: <SJ0PR10MB4784F0908960C1B6B665D7FF894D9@SJ0PR10MB4784.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tJhKT3Gv9SbIGXihhMAbUFUNbalx3YVYZBgNsvu1g7tUy9ohIFnbXzskxw7mZYdoX/G5BtgVFY7hMMo6Q04tO6uKOLJqnt3rO+4ht29lobJMr4Eo5174JmCScCbKWomnQUUd7qs1ND1zLhpSvScuR//0HQvrW3mL27C3oBxyRjHappjXFPYjkD0eqcx7puYLO7+ghTa/5jo649Yu4gEcpRM/a43q+f8vKKJugyUP1qGWvESivCM2Iy0OTrUKEcsvL7HNwHE4PJDq1eQH/esf1ewum1Ks+DZx4YM5TICbx61V/qgOneiQkEzDoGHGJ8nBAh+yACYJXWW3Di0UHwhsHa6vUq2+lhKCD2FkBqj8FLCZY4KG0NMR5i7dEcNpc6W5Xhb4whTtORiWnUIDYsXhhS8sZ8hZkA5QzIEaDR2Z1XhBdUo+xp2nKL4eyMu0XLNLf9Pg0nk4uO0I1B3RuiNHXrSfH/Z2CcUtVDOXRNdEN/CTBsvB2lUvRM5hi+nCu7usE1YlXLHHveZzAQJiL5xl5u3vIO040B7NubVOCjI7JTf+WmiLwX30fU3dpf56MHEgoAh0TE6UFuT9uSgz1MRlOtqo1AIV3ZnT4F903xRDb8YCL3aLscyy8GnscfubVW+Z583pEZq5Jkk+cavcUBGOSdm4yVcQxfj0WIciDfLdfy8vYBFNibSI9aTCBwcZLahr
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(39860400002)(396003)(376002)(366004)(136003)(186003)(16526019)(26005)(5660300002)(86362001)(6666004)(55016002)(4326008)(45080400002)(38350700002)(38100700002)(478600001)(8676002)(83380400001)(956004)(8936002)(316002)(6916009)(66556008)(15650500001)(2906002)(66476007)(7406005)(7416002)(7696005)(52116002)(66946007)(102196002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?Bl6uEZEIHPgzXa1fFka4oJOCAjXHc1hBl/ic2GPosPol7D2mL4hDEmvTkJ1p?=
- =?us-ascii?Q?w7TJ2eJKJmdrlDGpYRseZ5sM7M98LRaNxzsum0KJnnbBMyPwQzJQKkS88YDB?=
- =?us-ascii?Q?ecZQFrsiegOYvEWEvpDS2ugViWk1MiQ+G8p1GOLoS9lOMSAsBPh1LWrnriNJ?=
- =?us-ascii?Q?vSs5Xslne90dty2fMEiYpXE6t45TxeaPL6pDnHPAp5G19gVUPI4QfJYlB1BG?=
- =?us-ascii?Q?R8I/LxTmg6dqF0RBoOWEA8+50MIF5txRfRgpdQ3vnpqTmfdO9a64JdUgBYfR?=
- =?us-ascii?Q?oiTLPtK6eoU41PIzNMyNESimhs5g314itYrjduONHK90NeaJUsm6LJDA9oL6?=
- =?us-ascii?Q?PFyBk//KOwdr6ZWWn3Fa4OHe2X9WBYmqTgQfmWThucIbv379efSf1pQL7i6e?=
- =?us-ascii?Q?o5km5NyujT9qlT+6FmDfFIjBJ0SuvikAdsZ0Nakl2WMownI4C1d+Dl+qSK1G?=
- =?us-ascii?Q?WZ3A0BIkJLQVUjK1d3oqXK4bAPT1lNOotYpTBNh7Keudd+prNaEOzsmQbyXe?=
- =?us-ascii?Q?gz/C5giG5JwRMa/6DxkO9f6eoB8uisD4mfgvtAKQQwi/x926dp8Mi8XLIzJF?=
- =?us-ascii?Q?IFz4OCY7pHg2/bPawj6xasjuj+crAE5fQLhjBe9WuiyHr/fgef2eEYzEVaGp?=
- =?us-ascii?Q?ZzqEpxptMjnYY6vYEElC3fQYb2cx2OHvb4QnePoWuOD5KXFYVThsT1Yx6tOC?=
- =?us-ascii?Q?X1iYNnlaZ5JeQEYIAjRiuamvrA7IsM18IeDEgItnzFrggFYXg0t4I7qxBDoL?=
- =?us-ascii?Q?oCGJDGluBavfSljA2iR//jEs4njcla0HBMuQ4wE48OqTcnKx3rvQFMDUCf38?=
- =?us-ascii?Q?p/Uhw7yyuuDPFzP9Pm+ZiahePj9Bw5f45Uv79p6rKUc+sjD/DWEB65gMoSOe?=
- =?us-ascii?Q?uB6OQSivi4qDFxpRiICYvlO1gd0Z7o13JvzIwj/9GA8HemBvdaAFzNLKNQwh?=
- =?us-ascii?Q?e01tLS1QzTmEMLC+a/yl6Q6FmhSw3VDJruXFKFO1x5N740A/bO1ZeooPyPbl?=
- =?us-ascii?Q?k24fU4fZNTDxGzEFRC2aZ/z2oyqPgtNMWFuOQh70oF6qeqXlzty2vs02SomR?=
- =?us-ascii?Q?MQ8++io2bgcc8Hwk8bNvaV94lYBZFTa27QPBWRNR9tMd7nWVbNChwpYn7K7L?=
- =?us-ascii?Q?Y4BhOgp4rK7WwpH/VQ2+GpbJJ+RGCc4nTS2Y0CPfxf6snX9raJ7fvhr6pokt?=
- =?us-ascii?Q?t6JEoiOAOiDbDT68RA5OjbMvf5dsIKXRlVkXEuCmwzJSkLxWoyDAbjos53ps?=
- =?us-ascii?Q?U7STvylsdzJ4YzS+PwVxcWjz2WyFkoRaBzTVt7+R0Xc1PpXdl9He8KBf5sfG?=
- =?us-ascii?Q?qNDqZwfABy2PWAqp5OQ29kmy?=
+X-Microsoft-Antispam-Message-Info: VfO8k15dQsbIbvUiz76RgBiaBFn2tnF2M2iX74+T6ijrJ37NymbKXxZCVuenbCN3IXHzT4W5zfJviiURtf4Qzg7ilRkPUvt6gx2PlFCLm4RSd43LDCOklD8/AuiS1aJM6STZFhwbhD5j37ZCcO6KEV8mnS0g4pQQxU04Aeg1u+TpaX1laJRX2fyUi8kVelw0YtHm0yIZd5z5WxH27hMfDiZ5heSF/JFPrqzknrB9HcyO5kQDw5UFqyxl4yGbnOh+dS6tPlc5UrjPjkfoalS8HVgpjN4pQlGrwA0wrExtNbXDVU3j1QUCmuNUBBdKWu8Rp5WTPZ7tCSD7xiTubNZ+fsg3sMI1q77VXzeQrbeUMOEOHTCbJXViXiNWg/7V50dfH2B91DuiH0IQuJr+Q4RPx9IVnruUn0WNfEYpJ3cXrzTlDoA1aWqIjwG9btVMm8NZBZSNUdVjOEUmki325opUUGo0Ks5KsC5wdzLJU+LtxkM2ZOus/kHv/Usty6vRaT8pmzebbILRvdcmpcQMLOR45errhAilljUZ7dND9I7N3YWbYYBhPyi0qjyhqWedvsDEfSZHCAhs774xOrBg4vJYwPzGy/8MpyqMFXZTDLMgy6CxkDP5dc717VtX35GUadRyUMouVWSdd+XNazrQhz80pnHCOHnGim2vkutgRmrXGiQCnZPJpqZbGhd6cwqtEPTW
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(346002)(39860400002)(366004)(376002)(5660300002)(83380400001)(66556008)(45080400002)(8676002)(66946007)(186003)(66476007)(16526019)(8936002)(86362001)(956004)(55016002)(316002)(6916009)(26005)(478600001)(52116002)(2906002)(38350700002)(7696005)(38100700002)(7416002)(4326008)(6666004)(7406005)(102196002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?qDG3XUTEmPN54Zswiys/i90sVDsM0CMpnG5V16EHfM9O+yM/HzlitEQGdedJ?=
+ =?us-ascii?Q?Xz3stI7LoH0OZkKncawFxcIopHYoIemYjUd1bLS/RwnOslnbVrR0Gs0ZKXSM?=
+ =?us-ascii?Q?jxh3c67/P9kNmFwpaZfPEnq40eUJsvpJW1JuPr4/v1pkhAuvjiCeouqW1+fL?=
+ =?us-ascii?Q?qETThvW+1EHSStaovctQPWXCAv/um9A48OkgCHIzIW9IvPtRdsPB99jiPeai?=
+ =?us-ascii?Q?3BsEXqyIXeTbrnDgMTJYm1LuYsyKCIa6JWslPfv3mcQ/H5uZPum08ceXXbN8?=
+ =?us-ascii?Q?XuEs51+yGc3pT3imCkNxt18tWrwzC4JFzSiTdaXBjyzM4mux4BtTmu/CmRLU?=
+ =?us-ascii?Q?+pV96EW4ZY2T+gJh6eusgLebxaDasK0xTcjz91MQXSIxkvzV1LT066upH2+G?=
+ =?us-ascii?Q?bBtCSSTJ+LgtZo8+//t+497LMLWvM5r57c/yrBerb+XmD0WL5WdxWwSvU+us?=
+ =?us-ascii?Q?QTW3u95xUjaeIwDcYl4f3xIAJYA5PE4OtJYbMRn/KrP2WjYZRJogjfHBHrz9?=
+ =?us-ascii?Q?sChHfQK/eGHbapQnbsDPrs2yGAV9b5+etI2CL/nvBtv32a8SYv5u443OckN9?=
+ =?us-ascii?Q?Y3pGQBlxqk5Qy7xcBd2VXolaxFDrztEL2x9iUK4v7Q+J5ercH/JE2Fs1AVWH?=
+ =?us-ascii?Q?VuBiheFFmx7DJYckxPsb6hyhRykRLy6RXphEkE5LEUyr9pnPB0/NpkndJG2c?=
+ =?us-ascii?Q?7qekA+5IQBnLzeRj+D6zUN4t19ReC1DIDxFh4/kiKHZEYOSNd07a9gMTXYUG?=
+ =?us-ascii?Q?plNwdqe0ILkKjjbHbvmVRnKpMSgViTtV6AS74I8jZR1Jp4Zq9panlrGf6JzR?=
+ =?us-ascii?Q?pamHVmCluZZbkPQfrNvQxFyM5ohhWZaYp7WHhozRFltIlTkqIEFGsCfj+tQ3?=
+ =?us-ascii?Q?dfmR7wHLcoJGnXc+K+ikWF8Qy8XjkgFVgMPG1qx+yFj5Ansf7zTmWkgcD1zB?=
+ =?us-ascii?Q?zXmnOfqmEAek2ObTBJId2tL32DvWgoj/PDnmndb8MW5jMQyX0k9jYTnn11TT?=
+ =?us-ascii?Q?EwBP9rWaAg2Hw0SbcGaxvz3u+pc75sTRRnbIOxjQ6Stzpe6ppqsFWgu6+TpI?=
+ =?us-ascii?Q?404Iga7oeHlxvWZKIDXQX0Ct7ev6PHouvvCfQTkca48Xa3j5jRjWzQn09tiO?=
+ =?us-ascii?Q?R6cvFpgJvroFvt0E5FKItl3igveAnhq+o1cEG5qQ/eTKkL1VVa0hphkVXj9G?=
+ =?us-ascii?Q?ws1ZGj/Yib1g1o7rxuw8jbCvIsWvyHcUuIEhN5Ljya79j1ufG+INXcS6/Sp9?=
+ =?us-ascii?Q?ZPpLvVtC2OG2xPLswE2kEOAJsCz5nap/0Qt/5Qv/OqMxCJIf2WQ0pKA86iQ6?=
+ =?us-ascii?Q?s7CCUALJ9sQP090pMVd8hYGx?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ac03ad5-5f2d-4718-e756-08d9003fb68e
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6caeb20-f388-48fa-5e55-08d9004c7917
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2021 18:53:09.9341
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2021 20:24:30.6000
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iHr5/W5UnjOVXfAWin+Hry1ldmgQRWgYv1rJ+zaLL6v/ed4jX2XIz/EjtBHf/+zezXFKJ34OCelWkjPUVVaFzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2998
+X-MS-Exchange-CrossTenant-UserPrincipalName: FiAJ/1RGmfZ+aPW97lumitlsqpbO7XI8+86WHnhBcaN/3XKia4fpQd2sS/AELmQP0vTpRfu3hY4QAmYdDKWOiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4784
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9955 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 phishscore=0 malwarescore=0 mlxscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104150115
-X-Proofpoint-GUID: OXRS-NEE6sUlbgy-yRHyCoVS_cUwPv-B
-X-Proofpoint-ORIG-GUID: OXRS-NEE6sUlbgy-yRHyCoVS_cUwPv-B
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104150126
+X-Proofpoint-GUID: MUtg9PECzo0uqIMayrgsO2rqnEhpICF9
+X-Proofpoint-ORIG-GUID: MUtg9PECzo0uqIMayrgsO2rqnEhpICF9
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9955 signatures=668683
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
  clxscore=1015 adultscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0
  lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
- definitions=main-2104150115
+ definitions=main-2104150126
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 14, 2021 at 10:49:39AM -0400, Tianyu Lan wrote:
+On Wed, Apr 14, 2021 at 10:49:40AM -0400, Tianyu Lan wrote:
 > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > 
-> The physical address of monitor pages in the CHANNELMSG_INITIATE_CONTACT
-> msg should be in the extra address space for SNP support and these
+> VMbus ring buffer are shared with host and it's need to
+> be accessed via extra address space of Isolation VM with
+> SNP support. This patch is to map the ring buffer
+> address in extra address space via ioremap(). HV host
 
-What is this 'extra address space'? Is that just normal virtual address
-space of the Linux kernel?
-
-> pages also should be accessed via the extra address space inside Linux
-> guest and remap the extra address by ioremap function.
-
-OK, why do you need to use ioremap on them? Why not use vmap for
-example? What is it that makes ioremap the right candidate?
+Why do you need to use ioremap()? Why not just use vmap?
 
 
+> visibility hvcall smears data in the ring buffer and
+> so reset the ring buffer memory to zero after calling
+> visibility hvcall.
 
+So you are exposing these two:
+ EXPORT_SYMBOL_GPL(get_vm_area);
+ EXPORT_SYMBOL_GPL(ioremap_page_range);
 
+But if you used vmap wouldn't you get the same thing for free?
 
 > 
 > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > ---
->  drivers/hv/connection.c   | 62 +++++++++++++++++++++++++++++++++++++++
->  drivers/hv/hyperv_vmbus.h |  1 +
->  2 files changed, 63 insertions(+)
+>  drivers/hv/channel.c      | 10 +++++
+>  drivers/hv/hyperv_vmbus.h |  2 +
+>  drivers/hv/ring_buffer.c  | 83 +++++++++++++++++++++++++++++----------
+>  mm/ioremap.c              |  1 +
+>  mm/vmalloc.c              |  1 +
+>  5 files changed, 76 insertions(+), 21 deletions(-)
 > 
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index 79bca653dce9..a0be9c11d737 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -101,6 +101,12 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
+> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> index 407b74d72f3f..4a9fb7ad4c72 100644
+> --- a/drivers/hv/channel.c
+> +++ b/drivers/hv/channel.c
+> @@ -634,6 +634,16 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+>  	if (err)
+>  		goto error_clean_ring;
 >  
->  	msg->monitor_page1 = virt_to_phys(vmbus_connection.monitor_pages[0]);
->  	msg->monitor_page2 = virt_to_phys(vmbus_connection.monitor_pages[1]);
+> +	err = hv_ringbuffer_post_init(&newchannel->outbound,
+> +				      page, send_pages);
+> +	if (err)
+> +		goto error_free_gpadl;
 > +
-> +	if (hv_isolation_type_snp()) {
-> +		msg->monitor_page1 += ms_hyperv.shared_gpa_boundary;
-> +		msg->monitor_page2 += ms_hyperv.shared_gpa_boundary;
-> +	}
+> +	err = hv_ringbuffer_post_init(&newchannel->inbound,
+> +				      &page[send_pages], recv_pages);
+> +	if (err)
+> +		goto error_free_gpadl;
 > +
->  	msg->target_vcpu = hv_cpu_number_to_vp_number(VMBUS_CONNECT_CPU);
->  
->  	/*
-> @@ -145,6 +151,29 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
->  		return -ECONNREFUSED;
->  	}
->  
-> +	if (hv_isolation_type_snp()) {
-> +		vmbus_connection.monitor_pages_va[0]
-> +			= vmbus_connection.monitor_pages[0];
-> +		vmbus_connection.monitor_pages[0]
-> +			= ioremap_cache(msg->monitor_page1, HV_HYP_PAGE_SIZE);
-> +		if (!vmbus_connection.monitor_pages[0])
-> +			return -ENOMEM;
-> +
-> +		vmbus_connection.monitor_pages_va[1]
-> +			= vmbus_connection.monitor_pages[1];
-> +		vmbus_connection.monitor_pages[1]
-> +			= ioremap_cache(msg->monitor_page2, HV_HYP_PAGE_SIZE);
-> +		if (!vmbus_connection.monitor_pages[1]) {
-> +			vunmap(vmbus_connection.monitor_pages[0]);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		memset(vmbus_connection.monitor_pages[0], 0x00,
-> +		       HV_HYP_PAGE_SIZE);
-> +		memset(vmbus_connection.monitor_pages[1], 0x00,
-> +		       HV_HYP_PAGE_SIZE);
-> +	}
-> +
->  	return ret;
->  }
->  
-> @@ -156,6 +185,7 @@ int vmbus_connect(void)
->  	struct vmbus_channel_msginfo *msginfo = NULL;
->  	int i, ret = 0;
->  	__u32 version;
-> +	u64 pfn[2];
->  
->  	/* Initialize the vmbus connection */
->  	vmbus_connection.conn_state = CONNECTING;
-> @@ -213,6 +243,16 @@ int vmbus_connect(void)
->  		goto cleanup;
->  	}
->  
-> +	if (hv_isolation_type_snp()) {
-> +		pfn[0] = virt_to_hvpfn(vmbus_connection.monitor_pages[0]);
-> +		pfn[1] = virt_to_hvpfn(vmbus_connection.monitor_pages[1]);
-> +		if (hv_mark_gpa_visibility(2, pfn,
-> +				VMBUS_PAGE_VISIBLE_READ_WRITE)) {
-> +			ret = -EFAULT;
-> +			goto cleanup;
-> +		}
-> +	}
-> +
->  	msginfo = kzalloc(sizeof(*msginfo) +
->  			  sizeof(struct vmbus_channel_initiate_contact),
->  			  GFP_KERNEL);
-> @@ -279,6 +319,8 @@ int vmbus_connect(void)
->  
->  void vmbus_disconnect(void)
->  {
-> +	u64 pfn[2];
-> +
->  	/*
->  	 * First send the unload request to the host.
->  	 */
-> @@ -298,6 +340,26 @@ void vmbus_disconnect(void)
->  		vmbus_connection.int_page = NULL;
->  	}
->  
-> +	if (hv_isolation_type_snp()) {
-> +		if (vmbus_connection.monitor_pages_va[0]) {
-> +			vunmap(vmbus_connection.monitor_pages[0]);
-> +			vmbus_connection.monitor_pages[0]
-> +				= vmbus_connection.monitor_pages_va[0];
-> +			vmbus_connection.monitor_pages_va[0] = NULL;
-> +		}
-> +
-> +		if (vmbus_connection.monitor_pages_va[1]) {
-> +			vunmap(vmbus_connection.monitor_pages[1]);
-> +			vmbus_connection.monitor_pages[1]
-> +				= vmbus_connection.monitor_pages_va[1];
-> +			vmbus_connection.monitor_pages_va[1] = NULL;
-> +		}
-> +
-> +		pfn[0] = virt_to_hvpfn(vmbus_connection.monitor_pages[0]);
-> +		pfn[1] = virt_to_hvpfn(vmbus_connection.monitor_pages[1]);
-> +		hv_mark_gpa_visibility(2, pfn, VMBUS_PAGE_NOT_VISIBLE);
-> +	}
-> +
->  	hv_free_hyperv_page((unsigned long)vmbus_connection.monitor_pages[0]);
->  	hv_free_hyperv_page((unsigned long)vmbus_connection.monitor_pages[1]);
->  	vmbus_connection.monitor_pages[0] = NULL;
+>  	/* Create and init the channel open message */
+>  	open_info = kzalloc(sizeof(*open_info) +
+>  			   sizeof(struct vmbus_channel_open_channel),
 > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 9416e09ebd58..0778add21a9c 100644
+> index 0778add21a9c..d78a04ad5490 100644
 > --- a/drivers/hv/hyperv_vmbus.h
 > +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -240,6 +240,7 @@ struct vmbus_connection {
->  	 * is child->parent notification
->  	 */
->  	struct hv_monitor_page *monitor_pages[2];
-> +	void *monitor_pages_va[2];
->  	struct list_head chn_msg_list;
->  	spinlock_t channelmsg_lock;
+> @@ -172,6 +172,8 @@ extern int hv_synic_cleanup(unsigned int cpu);
+>  /* Interface */
 >  
+>  void hv_ringbuffer_pre_init(struct vmbus_channel *channel);
+> +int hv_ringbuffer_post_init(struct hv_ring_buffer_info *ring_info,
+> +		struct page *pages, u32 page_cnt);
+>  
+>  int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
+>  		       struct page *pages, u32 pagecnt);
+> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
+> index 35833d4d1a1d..c8b0f7b45158 100644
+> --- a/drivers/hv/ring_buffer.c
+> +++ b/drivers/hv/ring_buffer.c
+> @@ -17,6 +17,8 @@
+>  #include <linux/vmalloc.h>
+>  #include <linux/slab.h>
+>  #include <linux/prefetch.h>
+> +#include <linux/io.h>
+> +#include <asm/mshyperv.h>
+>  
+>  #include "hyperv_vmbus.h"
+>  
+> @@ -188,6 +190,44 @@ void hv_ringbuffer_pre_init(struct vmbus_channel *channel)
+>  	mutex_init(&channel->outbound.ring_buffer_mutex);
+>  }
+>  
+> +int hv_ringbuffer_post_init(struct hv_ring_buffer_info *ring_info,
+> +		       struct page *pages, u32 page_cnt)
+> +{
+> +	struct vm_struct *area;
+> +	u64 physic_addr = page_to_pfn(pages) << PAGE_SHIFT;
+> +	unsigned long vaddr;
+> +	int err = 0;
+> +
+> +	if (!hv_isolation_type_snp())
+> +		return 0;
+> +
+> +	physic_addr += ms_hyperv.shared_gpa_boundary;
+> +	area = get_vm_area((2 * page_cnt - 1) * PAGE_SIZE, VM_IOREMAP);
+> +	if (!area || !area->addr)
+> +		return -EFAULT;
+> +
+> +	vaddr = (unsigned long)area->addr;
+> +	err = ioremap_page_range(vaddr, vaddr + page_cnt * PAGE_SIZE,
+> +			   physic_addr, PAGE_KERNEL_IO);
+> +	err |= ioremap_page_range(vaddr + page_cnt * PAGE_SIZE,
+> +				  vaddr + (2 * page_cnt - 1) * PAGE_SIZE,
+> +				  physic_addr + PAGE_SIZE, PAGE_KERNEL_IO);
+> +	if (err) {
+> +		vunmap((void *)vaddr);
+> +		return -EFAULT;
+> +	}
+> +
+> +	/* Clean memory after setting host visibility. */
+> +	memset((void *)vaddr, 0x00, page_cnt * PAGE_SIZE);
+> +
+> +	ring_info->ring_buffer = (struct hv_ring_buffer *)vaddr;
+> +	ring_info->ring_buffer->read_index = 0;
+> +	ring_info->ring_buffer->write_index = 0;
+> +	ring_info->ring_buffer->feature_bits.value = 1;
+> +
+> +	return 0;
+> +}
+> +
+>  /* Initialize the ring buffer. */
+>  int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
+>  		       struct page *pages, u32 page_cnt)
+> @@ -197,33 +237,34 @@ int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
+>  
+>  	BUILD_BUG_ON((sizeof(struct hv_ring_buffer) != PAGE_SIZE));
+>  
+> -	/*
+> -	 * First page holds struct hv_ring_buffer, do wraparound mapping for
+> -	 * the rest.
+> -	 */
+> -	pages_wraparound = kcalloc(page_cnt * 2 - 1, sizeof(struct page *),
+> -				   GFP_KERNEL);
+> -	if (!pages_wraparound)
+> -		return -ENOMEM;
+> -
+> -	pages_wraparound[0] = pages;
+> -	for (i = 0; i < 2 * (page_cnt - 1); i++)
+> -		pages_wraparound[i + 1] = &pages[i % (page_cnt - 1) + 1];
+> +	if (!hv_isolation_type_snp()) {
+> +		/*
+> +		 * First page holds struct hv_ring_buffer, do wraparound mapping for
+> +		 * the rest.
+> +		 */
+> +		pages_wraparound = kcalloc(page_cnt * 2 - 1, sizeof(struct page *),
+> +					   GFP_KERNEL);
+> +		if (!pages_wraparound)
+> +			return -ENOMEM;
+>  
+> -	ring_info->ring_buffer = (struct hv_ring_buffer *)
+> -		vmap(pages_wraparound, page_cnt * 2 - 1, VM_MAP, PAGE_KERNEL);
+> +		pages_wraparound[0] = pages;
+> +		for (i = 0; i < 2 * (page_cnt - 1); i++)
+> +			pages_wraparound[i + 1] = &pages[i % (page_cnt - 1) + 1];
+>  
+> -	kfree(pages_wraparound);
+> +		ring_info->ring_buffer = (struct hv_ring_buffer *)
+> +			vmap(pages_wraparound, page_cnt * 2 - 1, VM_MAP, PAGE_KERNEL);
+>  
+> +		kfree(pages_wraparound);
+>  
+> -	if (!ring_info->ring_buffer)
+> -		return -ENOMEM;
+> +		if (!ring_info->ring_buffer)
+> +			return -ENOMEM;
+>  
+> -	ring_info->ring_buffer->read_index =
+> -		ring_info->ring_buffer->write_index = 0;
+> +		ring_info->ring_buffer->read_index =
+> +			ring_info->ring_buffer->write_index = 0;
+>  
+> -	/* Set the feature bit for enabling flow control. */
+> -	ring_info->ring_buffer->feature_bits.value = 1;
+> +		/* Set the feature bit for enabling flow control. */
+> +		ring_info->ring_buffer->feature_bits.value = 1;
+> +	}
+>  
+>  	ring_info->ring_size = page_cnt << PAGE_SHIFT;
+>  	ring_info->ring_size_div10_reciprocal =
+> diff --git a/mm/ioremap.c b/mm/ioremap.c
+> index 5fa1ab41d152..d63c4ba067f9 100644
+> --- a/mm/ioremap.c
+> +++ b/mm/ioremap.c
+> @@ -248,6 +248,7 @@ int ioremap_page_range(unsigned long addr,
+>  
+>  	return err;
+>  }
+> +EXPORT_SYMBOL_GPL(ioremap_page_range);
+>  
+>  #ifdef CONFIG_GENERIC_IOREMAP
+>  void __iomem *ioremap_prot(phys_addr_t addr, size_t size, unsigned long prot)
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index e6f352bf0498..19724a8ebcb7 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2131,6 +2131,7 @@ struct vm_struct *get_vm_area(unsigned long size, unsigned long flags)
+>  				  NUMA_NO_NODE, GFP_KERNEL,
+>  				  __builtin_return_address(0));
+>  }
+> +EXPORT_SYMBOL_GPL(get_vm_area);
+>  
+>  struct vm_struct *get_vm_area_caller(unsigned long size, unsigned long flags,
+>  				const void *caller)
 > -- 
 > 2.25.1
 > 
