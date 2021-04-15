@@ -2,149 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5BDF360ADF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 15:44:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC48F360B95
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 16:14:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233405AbhDONod (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 15 Apr 2021 09:44:33 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:41628 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233408AbhDONoW (ORCPT
+        id S233216AbhDOOOa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 15 Apr 2021 10:14:30 -0400
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:53088 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233328AbhDOOO3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 15 Apr 2021 09:44:22 -0400
-Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4613120B83ED;
-        Thu, 15 Apr 2021 06:43:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4613120B83ED
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1618494238;
-        bh=RNc5oMHcI9bvJUCcO35E0Da1XRWsyWSeAPc5tNl+4rw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lv29xB9X8UrIajc75kl7TC+Zk2be2YZgJozjuHegyFnsp6U4rfNXzz2wbf1dJ+jxb
-         hLrWf4GV0rWRWspbXwd+ZGwd/Mft7sOnm7eUKx0wStrqmrCqP0rOO18YjMTaXA8aFg
-         i9sW1XUqBJARGLtO5WG+KUiQxEG1ShanCUu8Ynx8=
-From:   Vineeth Pillai <viremana@linux.microsoft.com>
-To:     Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Thu, 15 Apr 2021 10:14:29 -0400
+Received: by mail-wm1-f45.google.com with SMTP id y204so11165737wmg.2;
+        Thu, 15 Apr 2021 07:14:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hz1ZY9HWxRoofHmlH+XWpgXg6c/7rbXj8kFMXTJUiXE=;
+        b=tjLQUD2dfF+TL5y6KmArEWZx+pHJJbT1aZ3cLHWdsF0JCK6dMa4eJUSMssMK19hvc3
+         TOBGtjq9X8eFfP58y7RA5JWl7tFJU+SwDuMJckSilh6PnJMcKTrBUXGD+2CMf6oRBgA4
+         fZOEf9t161iPaIMYhEw6w/7NbUqFhsamxheUhdbfcXLAncX9KXf0GsoT6Tl99XP5HslH
+         RA5WrjjpyBoEjwNFwmDqtNZ/Ib6Y56rwmVe53fB9yjRTMd6oUV/+CFg26dsJv7TtcKg6
+         YKo7f8oJ4Dmk1ywf+s0IlGAfGF43WnW7abpaGOuazk1Lkn6a6gRmyrBfuQyIWaywM36s
+         J54w==
+X-Gm-Message-State: AOAM5323HewuuEMHcuEeNWbgFI6SMdIFckZc7mShSv4AjDMnVwEKWQOu
+        jeBXNmeRHcN+TvGmmPlXtXY=
+X-Google-Smtp-Source: ABdhPJwRJ+quRmCDl1pvKPCwx18Jq+JqjVXi9jMcrkxPA4UL5EwVUWMch3ilw837jkMX1O4b+f4iog==
+X-Received: by 2002:a7b:c195:: with SMTP id y21mr3405656wmi.178.1618496045398;
+        Thu, 15 Apr 2021 07:14:05 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v18sm2798213wmh.28.2021.04.15.07.14.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Apr 2021 07:14:04 -0700 (PDT)
+Date:   Thu, 15 Apr 2021 14:14:03 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH v2 7/7] KVM: SVM: hyper-v: Direct Virtual Flush support
-Date:   Thu, 15 Apr 2021 13:43:42 +0000
-Message-Id: <ae1a54100d838119687fe8b58da1faff92fe6219.1618492553.git.viremana@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1618492553.git.viremana@linux.microsoft.com>
-References: <cover.1618492553.git.viremana@linux.microsoft.com>
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH RFC 01/22] asm-generic/hyperv: add
+ HV_STATUS_ACCESS_DENIED definition
+Message-ID: <20210415141403.hftsza3ucrf262tq@liuwe-devbox-debian-v2>
+References: <20210413122630.975617-1-vkuznets@redhat.com>
+ <20210413122630.975617-2-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210413122630.975617-2-vkuznets@redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From Hyper-V TLFS:
- "The hypervisor exposes hypercalls (HvFlushVirtualAddressSpace,
-  HvFlushVirtualAddressSpaceEx, HvFlushVirtualAddressList, and
-  HvFlushVirtualAddressListEx) that allow operating systems to more
-  efficiently manage the virtual TLB. The L1 hypervisor can choose to
-  allow its guest to use those hypercalls and delegate the responsibility
-  to handle them to the L0 hypervisor. This requires the use of a
-  partition assist page."
+On Tue, Apr 13, 2021 at 02:26:09PM +0200, Vitaly Kuznetsov wrote:
+> From TLFSv6.0b, this status means: "The caller did not possess sufficient
+> access rights to perform the requested operation."
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Add the Direct Virtual Flush support for SVM.
+This can be applied to hyperv-next right away. Let me know what you
+think.
 
-Related VMX changes:
-commit 6f6a657c9998 ("KVM/Hyper-V/VMX: Add direct tlb flush support")
+Wei.
 
-Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
----
- arch/x86/kvm/svm/svm.c | 48 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
-
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index f59f03b5c722..cff01256c47e 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -443,6 +443,32 @@ static void svm_init_osvw(struct kvm_vcpu *vcpu)
- 		vcpu->arch.osvw.status |= 1;
- }
- 
-+#if IS_ENABLED(CONFIG_HYPERV)
-+static int hv_enable_direct_tlbflush(struct kvm_vcpu *vcpu)
-+{
-+	struct hv_enlightenments *hve;
-+	struct hv_partition_assist_pg **p_hv_pa_pg =
-+			&to_kvm_hv(vcpu->kvm)->hv_pa_pg;
-+
-+	if (!*p_hv_pa_pg)
-+		*p_hv_pa_pg = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+
-+	if (!*p_hv_pa_pg)
-+		return -ENOMEM;
-+
-+	hve = (struct hv_enlightenments *)&to_svm(vcpu)->vmcb->hv_enlightenments;
-+
-+	hve->partition_assist_page = __pa(*p_hv_pa_pg);
-+	hve->hv_vm_id = (unsigned long)vcpu->kvm;
-+	if (!hve->hv_enlightenments_control.nested_flush_hypercall) {
-+		hve->hv_enlightenments_control.nested_flush_hypercall = 1;
-+		vmcb_mark_dirty(to_svm(vcpu)->vmcb, VMCB_HV_NESTED_ENLIGHTENMENTS);
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
- static int has_svm(void)
- {
- 	const char *msg;
-@@ -1037,6 +1063,21 @@ static __init int svm_hardware_setup(void)
- 		svm_x86_ops.tlb_remote_flush_with_range =
- 				kvm_hv_remote_flush_tlb_with_range;
- 	}
-+
-+	if (ms_hyperv.nested_features & HV_X64_NESTED_DIRECT_FLUSH) {
-+		pr_info("kvm: Hyper-V Direct TLB Flush enabled\n");
-+		for_each_online_cpu(cpu) {
-+			struct hv_vp_assist_page *vp_ap =
-+				hv_get_vp_assist_page(cpu);
-+
-+			if (!vp_ap)
-+				continue;
-+
-+			vp_ap->nested_control.features.directhypercall = 1;
-+		}
-+		svm_x86_ops.enable_direct_tlbflush =
-+				hv_enable_direct_tlbflush;
-+	}
- #endif
- 
- 	if (nrips) {
-@@ -3921,6 +3962,13 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	}
- 	svm->vmcb->save.cr2 = vcpu->arch.cr2;
- 
-+#if IS_ENABLED(CONFIG_HYPERV)
-+	if (svm->vmcb->hv_enlightenments.hv_vp_id != to_hv_vcpu(vcpu)->vp_index) {
-+		svm->vmcb->hv_enlightenments.hv_vp_id = to_hv_vcpu(vcpu)->vp_index;
-+		vmcb_mark_dirty(svm->vmcb, VMCB_HV_NESTED_ENLIGHTENMENTS);
-+	}
-+#endif
-+
- 	/*
- 	 * Run with all-zero DR6 unless needed, so that we can get the exact cause
- 	 * of a #DB.
--- 
-2.25.1
-
+> ---
+>  include/asm-generic/hyperv-tlfs.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+> index 83448e837ded..e01a3bade13a 100644
+> --- a/include/asm-generic/hyperv-tlfs.h
+> +++ b/include/asm-generic/hyperv-tlfs.h
+> @@ -187,6 +187,7 @@ enum HV_GENERIC_SET_FORMAT {
+>  #define HV_STATUS_INVALID_HYPERCALL_INPUT	3
+>  #define HV_STATUS_INVALID_ALIGNMENT		4
+>  #define HV_STATUS_INVALID_PARAMETER		5
+> +#define HV_STATUS_ACCESS_DENIED			6
+>  #define HV_STATUS_OPERATION_DENIED		8
+>  #define HV_STATUS_INSUFFICIENT_MEMORY		11
+>  #define HV_STATUS_INVALID_PORT_ID		17
+> -- 
+> 2.30.2
+> 
