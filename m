@@ -2,218 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1AC53613DF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 23:09:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F5303613FF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 23:15:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235569AbhDOVJZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 15 Apr 2021 17:09:25 -0400
-Received: from mail-bn8nam11on2111.outbound.protection.outlook.com ([40.107.236.111]:21985
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234869AbhDOVJY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 15 Apr 2021 17:09:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GAhrfYrHGrLMY5792isFu/u0trUQShii7gHbLArDGLtIK14KohJHn/nW4h9xe6gdfWy+hgp2v6t3rkjC/4yrV9VT4eDpm3bds4Nc+WXP8QSzxPOrVrIR8qt2tyxnd3bHV/2BH7KuXWZPj23uLOXsMg5mhnO+xe59DNGByKlVbo8rsH/LUJlGEUhC5F7sC7zhhDgYkrUyxjlmQPTf8upDkgUjUkpwwd5a22Q6jS7O5zkPNQjOsb0bDv0a02Z/1FGeb75t0VChvkT9D/rDS/oKUMrICr3kb8NxfpvDuRizE/fwaFNAUDqLsskpGqZxmBsMdmBVBAAotA7F7C512vqgVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6iJ63PfKQ4yBAnv39u6tsElhfkXTyxf2P7sTGCvG/kw=;
- b=TsDk+y1RQmNELhcIfemNOFU3TvdKFk7YasP9i8eOkSmZweZkfYRkTbvrNsxCTX9/D3HzOom77gb5Gcb/qHFnLG4KPTgMFCduMaqF8SOu+QEVEjK+K/TPFMOp1/Uo9ntat2LfXT/hl9GpBzdmmqGRUyS1FcC6F9mbdyFChO1N7tAugOC6tI52Qm54LMFND44xGCbkXdlqUFTjRS5KqjqVSqy9Ha6tu0uwjxFjYJGggIcCLiQcroG5oMPfyTh3GXBr8s8cyRUtxkj1IkqwVOEGaJYiNMMZ/xYpEdI0SekoepT9tAlBDwYMXHPvGTxxU4TeuvDJvf8A1n/2bcBSZvecAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6iJ63PfKQ4yBAnv39u6tsElhfkXTyxf2P7sTGCvG/kw=;
- b=BUkHFCSaZzLMPkuNxO/t5SEUCzDT7QVEt+G6+avOMdisnytgvIXLPzm1NNFr7iZh9pcS2l5oPiCOd7zuio2ZcrjpV81KFp0kwP2sRrnuwMcwVEIUNCUxHaNH253Hjz9wRozEE2uxUq2EpowLpXQeSwAOozRaHJUChI7vL/rLiCE=
-Received: from MN2PR21MB1295.namprd21.prod.outlook.com (2603:10b6:208:3e::25)
- by MN2PR21MB1421.namprd21.prod.outlook.com (2603:10b6:208:1f7::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.6; Thu, 15 Apr
- 2021 21:08:59 +0000
-Received: from MN2PR21MB1295.namprd21.prod.outlook.com
- ([fe80::84fb:f29:d4a9:6c10]) by MN2PR21MB1295.namprd21.prod.outlook.com
- ([fe80::84fb:f29:d4a9:6c10%2]) with mapi id 15.20.4065.006; Thu, 15 Apr 2021
- 21:08:58 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>,
-        Dexuan Cui <decui@microsoft.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Wei Liu <liuwe@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "bernd@petrovitsch.priv.at" <bernd@petrovitsch.priv.at>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        Shachar Raindel <shacharr@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v6 net-next] net: mana: Add a driver for Microsoft Azure
+        id S235660AbhDOVP7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 15 Apr 2021 17:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235615AbhDOVP7 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 15 Apr 2021 17:15:59 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365AAC061574
+        for <linux-hyperv@vger.kernel.org>; Thu, 15 Apr 2021 14:15:34 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id t23so12779850pjy.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 15 Apr 2021 14:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=E+zzLPV6n+5kowpZE/IEJBo10o+qQ1Ks/Ky4ezSQr08=;
+        b=lBPOF7HUcnVEuaiUK1v7fYM3nLPcU8cI7Q8MC89mb0K9L4eoZWdBRTf+6kKSHke9XH
+         hLNJaim9Jw5PoXWWPIDMAOsbHLJzFzOjIcVvDVUJuIgyFqNNGZ3VDn6OFVodLDjbgRpH
+         4ZWFKMk7KvkYI6Uz/tLNGUcIXWz++rZtxdRc3P5HM56ZB4YKxtWiPCm9DGf37NNxZnb9
+         8FCkGVBTZgmhNaUdyYZVEA2ruNxoVhze7YeiZG3sWKc0BzQcHgMfGDsb49zEE4eYkuTB
+         BFGUz0rQIs81g53nIanFPkUgxMpLWh69r6/Fxapc70XQZ0XKh44DJVwGJme087pv9uw6
+         H1QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=E+zzLPV6n+5kowpZE/IEJBo10o+qQ1Ks/Ky4ezSQr08=;
+        b=HDdo5lFctfeyPtbJ02nFxiNA5B2ZNdfq2N4keDKssSc9dF7hItBuIiUXhB45wJn8jk
+         UoE9sO4ljDa01Fex91zccPMpCve2LmSnhRQ5Hv3am6iEM4xB7GR+XGWufsQ3EEnCDViM
+         +Xtfj4TKVPvRa28NtsDObtlD3zmW8XG8hetYcN55Pjjn2nP0Yorjv3DnSFs0MmMEvACj
+         3ymUwBF6mfHJy6N5ToZ6CEUe/w/21GkZOk1IbnkmLdzhYm02Pdab8sc7A3s112TsIJUi
+         dlWxzPFKMU9Y7+bdKqdxNJWjOpk47GAQM0PQrqitBqQKGMd3oWgtpNZ9oYHF65qjnGH0
+         Dhxw==
+X-Gm-Message-State: AOAM5304GnxWtqYMdJ55dE0y9//HGmjtKo1YjIz3kfV9CG97xbAm9gRN
+        g4NnwqdVO+sP9V8KntilZbbJ2A==
+X-Google-Smtp-Source: ABdhPJzboDjwMtKCULcXbojj82kIWXz6OPo28zEldC+ah1zGc+8yn3plPpmZXVbNr6sOK+w2ebG2hQ==
+X-Received: by 2002:a17:90a:488a:: with SMTP id b10mr5944052pjh.2.1618521333789;
+        Thu, 15 Apr 2021 14:15:33 -0700 (PDT)
+Received: from hermes.local (76-14-218-44.or.wavecable.com. [76.14.218.44])
+        by smtp.gmail.com with ESMTPSA id x1sm2905627pfj.209.2021.04.15.14.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Apr 2021 14:15:33 -0700 (PDT)
+Date:   Thu, 15 Apr 2021 14:15:25 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        liuwe@microsoft.com, netdev@vger.kernel.org, leon@kernel.org,
+        andrew@lunn.ch, bernd@petrovitsch.priv.at, rdunlap@infradead.org,
+        shacharr@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v6 net-next] net: mana: Add a driver for Microsoft Azure
  Network Adapter (MANA)
-Thread-Topic: [PATCH v6 net-next] net: mana: Add a driver for Microsoft Azure
- Network Adapter (MANA)
-Thread-Index: AQHXMbqnL34ZzVD9CUy17E5OCguws6q2E0cAgAAAQAA=
-Date:   Thu, 15 Apr 2021 21:08:58 +0000
-Message-ID: <MN2PR21MB129535044483127ED5B413BFCA4D9@MN2PR21MB1295.namprd21.prod.outlook.com>
+Message-ID: <20210415141525.69c12844@hermes.local>
+In-Reply-To: <20210415054519.12944-1-decui@microsoft.com>
 References: <20210415054519.12944-1-decui@microsoft.com>
- <20210415140740.7fac720e@hermes.local>
-In-Reply-To: <20210415140740.7fac720e@hermes.local>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=abeb63a1-902b-4af2-ad16-0769efafbbbf;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-15T21:08:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: networkplumber.org; dkim=none (message not signed)
- header.d=none;networkplumber.org; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [75.100.88.238]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e9856eaa-4ea2-4015-08b3-08d90052affd
-x-ms-traffictypediagnostic: MN2PR21MB1421:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR21MB14214B3A3BB478BF2B035F75CA4D9@MN2PR21MB1421.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AlIUVltR+DB5I7rz6JdSGak2VZDTacfk6NtXwWOY1OkdtbCWmOv/0xkd+zskbHzobgFnaOVXs94IIUJJ8qjq1YWhWmPcV0DIdlCR0m3OHqnmgIXvoK8usIV6zeqqDX3bmgZ9ZyfUZ5n8TS+HguaCbzj2LFEngcoHt9+Crdoi0Xuyydz8q4Moipm3T+Zal19YdkJ7T+gOO4em8mfIs0CuUdclFFuGRkEKzg4tQYXk7HTdssRRvmlvu2VaDGYFuYtX1czx2YZFpcVMK1gYTT5AYD1TPSBLRMsJ3y6ztYVHs9WstuOVU69SxStuk4J+zSk2E/Td04phRfvzCDCSpp1G6M4LLu5OVqx3Pi2PS0NFWgTUOHSDGWLiyshvzOxR6/5U3zR9TVVQCrYzcMz1i+WiHNrMy2HU+VtMqmP/ObCIIGgUU1G7kwVcP6/DnYgPF9NzdQQfpalOXagQ6whI9pFqZA/JIowjeI1XSZb2ekofR48jpFowQa5kc1tS9kiLg6Kr0N5EsNNBxj9tzj5yGhDM64qesyiCDWu5H7JHQlQqQb3xlvO96AUKkRc1V6CcEqA8uHvdLbgHnxsJcLZf3EGE3PlNDtgEFi9b326hvKoZ5jk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR21MB1295.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(136003)(376002)(346002)(396003)(47530400004)(8990500004)(66446008)(8936002)(66946007)(7696005)(86362001)(10290500003)(6636002)(66476007)(52536014)(7416002)(316002)(64756008)(54906003)(4326008)(76116006)(53546011)(66556008)(82960400001)(478600001)(186003)(71200400001)(83380400001)(38100700002)(8676002)(122000001)(82950400001)(5660300002)(9686003)(2906002)(55016002)(6506007)(26005)(110136005)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?LP/ygnvT2lXNMbhIAdpef1dr6R4AiVz3kGrzjMHRaoQmETlHbZzMghtIpU33?=
- =?us-ascii?Q?973dBtJCYsEpSBhZHkdqhUuU78Q2aj3BPRDheWaPuIWg2bI+8ye+Mpb1XZyT?=
- =?us-ascii?Q?OyHS4CnLF/lv9JwNoBn3j7l0pn9Kh2qhUVG7wGo1PLR9eUOr0oOrsb4HQZnD?=
- =?us-ascii?Q?nAi81igd5Cn8eSV81FiNX2wE/A3HPQHNyw/2yf2PBQZaqtziCbc2WXsjzuoM?=
- =?us-ascii?Q?a4ssG5Go180BcfhSjbuiDo1BnkWhZ1+ZaBB8h0xSXWOgXd0twTWF7fWZRUnZ?=
- =?us-ascii?Q?+gVINCdeImRBJ5XxYgHSMO2x/Y6/+6zv6LhzNj8m/3bhX5OeG/vDF+ZwLcH7?=
- =?us-ascii?Q?vruMuSnPDu4fhZQCmV1Ccf2t9nDPyQ5AgbXuHnEfg3suwjoHg+gzbB+BkBiv?=
- =?us-ascii?Q?sd6rDkXAyVsebenLIDcsszks42C7QLSao+zd9eFJZk92HnPGZfvpCmKKgFFS?=
- =?us-ascii?Q?rXhpIlyFBVZWgkTRX5fRwWOZWTClbOkO7/VZlK/ZawGLoRXDAh+yj1S0PtTI?=
- =?us-ascii?Q?sr07R4jX84Cm/qcZDd6Oy0vfWhxbRjZ8XYgxyVsMy/aYdy7Yg2yGKfVEN+2i?=
- =?us-ascii?Q?Poiq1AycrszEfddQi4mBLbuqdDXqX9kJquudXe/NCsLh3OTiVFLjWUqd7nDQ?=
- =?us-ascii?Q?eCmgaulYT4HDB/wv3RNzoDqL6B2Lgy48V15TlMmQ2O89AdPqFjKtpYyOGHB8?=
- =?us-ascii?Q?gJ8B84J9bRwBjxdVgFM/y6F5IoHzDTIqQW+3EslfachM/ZThQL5Mcfu2/5Sk?=
- =?us-ascii?Q?FtmeB5PZtt09gxBgtm0pyERq//ol1eOE4P71K7+0bTrrhJBcrLPf9F0Dc9T6?=
- =?us-ascii?Q?oG+e+0J4kcgfCL4afzWFuDNLaidUWMAJwa7k2nNJHW+1CoxZlxxMR3wHa8JO?=
- =?us-ascii?Q?Ut1l3//ALEMY3qCCJ7CsFTtuQ+zBu7EoBdJ/Vn6CyzpdgXOXJeaAEJ/MaFo1?=
- =?us-ascii?Q?VbOrDLFSUs+ASfrDo2OF76ZwBSDy8AKlyO65wGa4BGXjtqzuvSK6mCc0XUoU?=
- =?us-ascii?Q?XyV+P7pa75CgGGPcLGAzoFoRLG+Ql7QQ1wq4/Yhp8WZTFUdju3a7VapqxakX?=
- =?us-ascii?Q?isRCh7mMZomQeBxQ0zysRyv7cjSPnl0MGkL0RvGiUumWUa9c9m7m2nXlkvlW?=
- =?us-ascii?Q?I4Jwmxc1RwzgWwwL6BVwXmz+4HZbZfyiDRYss6nBFM/mNl58cpk68b6KkQBP?=
- =?us-ascii?Q?FxfdH79zFyp5R51MMZD6qzJDkHBbSR3hQXYma9o9CpHsotm6jrgMkVK47MGW?=
- =?us-ascii?Q?mUcfiPz7K0c8M8dByXdGjIb4sESNbfSoOePUB4lKVwnyblbW5itG3xYE9NsS?=
- =?us-ascii?Q?lEmIw3ep4a7JpfiVfjkjHzkg?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR21MB1295.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9856eaa-4ea2-4015-08b3-08d90052affd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2021 21:08:58.7830
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9CEwrW1kwdSpm8kIIckooQKjFBapPApvdJH22MObMbjqA03bfYoC2vAV7RQHfv0b7wzJ/8B0jdhJOUxtYXxsEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1421
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Wed, 14 Apr 2021 22:45:19 -0700
+Dexuan Cui <decui@microsoft.com> wrote:
 
+> +static int mana_probe_port(struct mana_context *ac, int port_idx,
+> +			   struct net_device **ndev_storage)
+> +{
+> +	struct gdma_context *gc = ac->gdma_dev->gdma_context;
+> +	struct mana_port_context *apc;
+> +	struct net_device *ndev;
+> +	int err;
+> +
+> +	ndev = alloc_etherdev_mq(sizeof(struct mana_port_context),
+> +				 gc->max_num_queues);
+> +	if (!ndev)
+> +		return -ENOMEM;
+> +
+> +	*ndev_storage = ndev;
+> +
+> +	apc = netdev_priv(ndev);
+> +	apc->ac = ac;
+> +	apc->ndev = ndev;
+> +	apc->max_queues = gc->max_num_queues;
+> +	apc->num_queues = min_t(uint, gc->max_num_queues, MANA_MAX_NUM_QUEUES);
+> +	apc->port_handle = INVALID_MANA_HANDLE;
+> +	apc->port_idx = port_idx;
+> +
+> +	ndev->netdev_ops = &mana_devops;
+> +	ndev->ethtool_ops = &mana_ethtool_ops;
+> +	ndev->mtu = ETH_DATA_LEN;
+> +	ndev->max_mtu = ndev->mtu;
+> +	ndev->min_mtu = ndev->mtu;
+> +	ndev->needed_headroom = MANA_HEADROOM;
+> +	SET_NETDEV_DEV(ndev, gc->dev);
+> +
+> +	netif_carrier_off(ndev);
+> +
+> +	get_random_bytes(apc->hashkey, MANA_HASH_KEY_SIZE);
 
-> -----Original Message-----
-> From: Stephen Hemminger <stephen@networkplumber.org>
-> Sent: Thursday, April 15, 2021 5:08 PM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: davem@davemloft.net; kuba@kernel.org; KY Srinivasan
-> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; wei.liu@kernel.org; Wei Liu
-> <liuwe@microsoft.com>; netdev@vger.kernel.org; leon@kernel.org;
-> andrew@lunn.ch; bernd@petrovitsch.priv.at; rdunlap@infradead.org;
-> Shachar Raindel <shacharr@microsoft.com>; linux-kernel@vger.kernel.org;
-> linux-hyperv@vger.kernel.org
-> Subject: Re: [PATCH v6 net-next] net: mana: Add a driver for Microsoft Az=
-ure
-> Network Adapter (MANA)
->=20
-> On Wed, 14 Apr 2021 22:45:19 -0700
-> Dexuan Cui <decui@microsoft.com> wrote:
->=20
-> > +static int mana_query_vport_cfg(struct mana_port_context *apc, u32
-> vport_index,
-> > +				u32 *max_sq, u32 *max_rq, u32
-> *num_indir_entry) {
-> > +	struct mana_query_vport_cfg_resp resp =3D {};
-> > +	struct mana_query_vport_cfg_req req =3D {};
-> > +	int err;
-> > +
-> > +	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_VPORT_CONFIG,
-> > +			     sizeof(req), sizeof(resp));
-> > +
-> > +	req.vport_index =3D vport_index;
-> > +
-> > +	err =3D mana_send_request(apc->ac, &req, sizeof(req), &resp,
-> > +				sizeof(resp));
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err =3D mana_verify_resp_hdr(&resp.hdr,
-> MANA_QUERY_VPORT_CONFIG,
-> > +				   sizeof(resp));
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	if (resp.hdr.status)
-> > +		return -EPROTO;
-> > +
-> > +	*max_sq =3D resp.max_num_sq;
-> > +	*max_rq =3D resp.max_num_rq;
-> > +	*num_indir_entry =3D resp.num_indirection_ent;
-> > +
-> > +	apc->port_handle =3D resp.vport;
-> > +	memcpy(apc->mac_addr, resp.mac_addr, ETH_ALEN);
->=20
-> You could use ether_addr_copy here.
->=20
->=20
-> > +int mana_do_attach(struct net_device *ndev, enum mana_attach_caller
-> > +caller) {
-> > +	struct mana_port_context *apc =3D netdev_priv(ndev);
-> > +	struct gdma_dev *gd =3D apc->ac->gdma_dev;
-> > +	u32 max_txq, max_rxq, max_queues;
-> > +	int port_idx =3D apc->port_idx;
-> > +	u32 num_indirect_entries;
-> > +	int err;
-> > +
-> > +	if (caller =3D=3D MANA_OPEN)
-> > +		goto start_open;
-> > +
-> > +	err =3D mana_init_port_context(apc);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err =3D mana_query_vport_cfg(apc, port_idx, &max_txq, &max_rxq,
-> > +				   &num_indirect_entries);
-> > +	if (err) {
-> > +		netdev_err(ndev, "Failed to query info for vPort 0\n");
-> > +		goto reset_apc;
-> > +	}
-> > +
-> > +	max_queues =3D min_t(u32, max_txq, max_rxq);
-> > +	if (apc->max_queues > max_queues)
-> > +		apc->max_queues =3D max_queues;
-> > +
-> > +	if (apc->num_queues > apc->max_queues)
-> > +		apc->num_queues =3D apc->max_queues;
-> > +
-> > +	memcpy(ndev->dev_addr, apc->mac_addr, ETH_ALEN);
->=20
-> And here use ether_addr_copy().
-
-Thanks, I will update these.
-
-- Haiyang
+Current practice for network drivers is to use netdev_rss_key_fill() for this.
