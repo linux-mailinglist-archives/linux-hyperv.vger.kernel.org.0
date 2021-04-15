@@ -2,68 +2,126 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0458335FD50
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Apr 2021 23:31:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9FDF3603FC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 10:13:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233152AbhDNVb1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 14 Apr 2021 17:31:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42032 "EHLO
+        id S231615AbhDOIOS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 15 Apr 2021 04:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232302AbhDNVb0 (ORCPT
+        with ESMTP id S231346AbhDOIOR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 14 Apr 2021 17:31:26 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6F11C061574;
-        Wed, 14 Apr 2021 14:31:04 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id w4so17485695wrt.5;
-        Wed, 14 Apr 2021 14:31:04 -0700 (PDT)
+        Thu, 15 Apr 2021 04:14:17 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6A2C061574;
+        Thu, 15 Apr 2021 01:13:53 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id j32so1606213pgm.6;
+        Thu, 15 Apr 2021 01:13:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=FB9ffVgv9MGEJSSW+p7l1641ZpAhJ8oP7yeu0DFe398=;
-        b=oLTFFeE2B+4cs0o0T7wNzs0XK9AkbAHwkcpBVbqfGL7VCT5OEves+B1KKdqI9Lcht8
-         N3bzjvJ5Zb8mazv25rJyCKBmp4CsVHwLCIFwGACf4Mcs2f1ByXXBQj0uoLPRoVHpp1wp
-         xXNDzLoae+eJxfslrjbE8FV/VxwRuhWs1BZravQcVusKeG7QpQLKDY7TZSWs5s1QxbQS
-         3GH+gRYIa0JuQnZliADSoAaT57RpI7XkpSnI8rSyrP1y1dtrDUM5A+V9J7waIwzmggPG
-         w4XnSoiD0FFFOxhRhTW9zmggKmD+QeKMaHqNgvNCXBG1mrWposXnNqm0HSzb4hngS/1c
-         73qA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fHEMmI0zE+vS0F59KD+p8uLBPHfbYBHWkM9/N8ompfg=;
+        b=soGoMktoPpdmcNOzFk1ITFDuDtu3Bms6GteRh5tLiO6qb0bvu2ZpKl/SQUxnJZVhIy
+         TZByoPlO2do1WWZ1mSqK2SULn034q1AHzgoZKCn8bh+JZVf3F6F6PB7g20X/Nh1WpAHF
+         rCBCP3iFqt4C1IuZLp4HVH8Pfaz9ffUilpbXSsLHdoKjMpv5l2AhgJxNUtRKf5pKGRRa
+         95wZ67Np7MfVTeLuR4irmligwiqSTYlfHtXkkfjZSOcWleOgpSFBA/fc79RIp3kM1TcP
+         PP7bCdAai6YFnjMRcKLl7cDXD/3rCBRVrWlkJt0NHB4UQEIOQQycVlS65Yq0aMOH/E/g
+         9lkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=FB9ffVgv9MGEJSSW+p7l1641ZpAhJ8oP7yeu0DFe398=;
-        b=Wl0+aakb4HQkSKh1TwdVkzR30opxkt3hX6JlmQQQiA+pn9AXwL79bObImYGyDviqUD
-         3UOLzyatR8usTrNPcly/zZ9Dp4y3EnkxrXCIeSIl8/PHLXK57HCpaIF2VkgYBfDIufj5
-         hBAOCuP0i2+xgXH3LWsYpwKR0/1EghZ0prfvocYdGjNO5jvLfKnUoj7fDuH+IDb6Vq+6
-         wpHl5w24+v47fUi5BXg0N5KTpPsfLQRs+324HBiHzL7qDWm/xUw1M0yBiZPAECWqrQ8E
-         r2eM0zhLNur7/3LuwZS78ahb2lsCX1ddElEyRE9CxBsqnzRMJ+HlAzLuKv+Zp6qtjeTN
-         Dz6Q==
-X-Gm-Message-State: AOAM530P7SFk/CVC+oBDgYBnzwSNCD0T3HllriqFTYAfV7hr89z+BIQI
-        CWiR1jHi5RxoHCN/k0r+hEE=
-X-Google-Smtp-Source: ABdhPJydMp4GcwUQSFIuWXh0BIKZY9If8hAWgj12z+xcNKuqKWew02Q573ghD4kfPaLmoHuXm42/pg==
-X-Received: by 2002:a05:6000:1acb:: with SMTP id i11mr44925575wry.68.1618435863611;
-        Wed, 14 Apr 2021 14:31:03 -0700 (PDT)
-Received: from [192.168.1.152] ([102.64.194.225])
-        by smtp.gmail.com with ESMTPSA id h1sm465062wml.38.2021.04.14.14.31.00
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 14 Apr 2021 14:31:03 -0700 (PDT)
-Message-ID: <60775f17.1c69fb81.c4346.1d53@mx.google.com>
-From:   Vanina curt <internetdtogocel444@gmail.com>
-X-Google-Original-From: Vanina curt
-Content-Type: text/plain; charset="iso-8859-1"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fHEMmI0zE+vS0F59KD+p8uLBPHfbYBHWkM9/N8ompfg=;
+        b=FWYIi25XYF9pNQbvE6JYqPCvYcyBW2WIhoaTkBnqFeC4gfItFpUxkul6hl6x+pWNiM
+         W2F56q/B6HQRC2LBkxZfH72C9nYIBZdPDTqaC0mGJxtX97YpkX8HRpduRMLNPx1VNZ7J
+         EACRXcu11BwbBN/jVB6tYZFbX1adAWZP2kJ35gmVCsdvHQgwL0t0GXt0s1Yr1UCYQAer
+         EcqiUn8BL4+Gdinv0cCJuBz1vKo4JX6w/LKxvxaRu8jwlGUmoTLxEcmW+ZYDBizUk1ZL
+         ohLE9w3PIVUlFE9/oAufAQCAJMlUDrEUQ3Bl/zjTScSVEEM5cOZbOZLl3m5/g8T27pzg
+         6VVQ==
+X-Gm-Message-State: AOAM531CtilSRly6B7g0TnnMEnRP3aPBENu+KdEmZ1G9+A7D4Orng00C
+        njv725aSciXupjh0o6tsDXw=
+X-Google-Smtp-Source: ABdhPJxO29fqU99JC5dI1dJM618j9ehjc6CzkxxJfsgiXjKmSO/GcguSS35F2oL6Ti4QORoZgkAHpg==
+X-Received: by 2002:a63:36ce:: with SMTP id d197mr2329852pga.237.1618474433176;
+        Thu, 15 Apr 2021 01:13:53 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
+        by smtp.gmail.com with ESMTPSA id u21sm771781pfm.89.2021.04.15.01.13.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Apr 2021 01:13:52 -0700 (PDT)
+Subject: Re: [Resend RFC PATCH V2 03/12] x86/Hyper-V: Add new hvcall guest
+ address host visibility support
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
+        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
+        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, joro@8bytes.org, will@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org, vkuznets@redhat.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com,
+        sunilmut@microsoft.com
+References: <20210414144945.3460554-1-ltykernel@gmail.com>
+ <20210414144945.3460554-4-ltykernel@gmail.com>
+ <20210414154028.GA32045@lst.de>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <d79e4a79-2259-6a5a-ca7d-3580f6d9dc8f@gmail.com>
+Date:   Thu, 15 Apr 2021 16:13:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Please reply to me
-To:     Recipients <Vanina@vger.kernel.org>
-Date:   Wed, 14 Apr 2021 21:30:51 +0000
-Reply-To: curtisvani9008@gmail.com
+In-Reply-To: <20210414154028.GA32045@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-How are you? I'm Vanina C. I picked interest in you and I would like to kno=
-w more about you and establish relationship with you. i will wait for your =
-response. thank you.
+Hi Christoph:
+	Thanks for your review.
+
+On 4/14/2021 11:40 PM, Christoph Hellwig wrote:
+>> +/*
+>> + * hv_set_mem_host_visibility - Set host visibility for specified memory.
+>> + */
+> 
+> I don't think this comment really clarifies anything over the function
+> name.  What is 'host visibility'
+
+OK. Will update the comment.
+
+> 
+>> +int hv_set_mem_host_visibility(void *kbuffer, u32 size, u32 visibility)
+> 
+> Should size be a size_t?
+> Should visibility be an enum of some kind?
+> 
+
+Will update.
+
+>> +int hv_mark_gpa_visibility(u16 count, const u64 pfn[], u32 visibility)
+> 
+> Not sure what this does either.
+
+Will add a comment.
+
+> 
+>> +	local_irq_save(flags);
+>> +	input_pcpu = (struct hv_input_modify_sparse_gpa_page_host_visibility **)
+> 
+> Is there a chance we could find a shorter but still descriptive
+> name for this variable?  Why do we need the cast?
+
+Sure. The cast is to avoid build error due to "incompatible-pointer-types"
+> 
+>> +#define VMBUS_PAGE_VISIBLE_READ_ONLY HV_MAP_GPA_READABLE
+>> +#define VMBUS_PAGE_VISIBLE_READ_WRITE (HV_MAP_GPA_READABLE|HV_MAP_GPA_WRITABLE)
+> 
+> pointlessly overlong line.
+> 
