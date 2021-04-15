@@ -2,96 +2,182 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA41360F0D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 17:33:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93C2536114B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 19:44:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233481AbhDOPdp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 15 Apr 2021 11:33:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34330 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233094AbhDOPdo (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 15 Apr 2021 11:33:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618500801;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PFoMUqnt3mOjMRdu3Djb36BE1EcblkSzBE9itczAV+o=;
-        b=gYvlmp6seeRBWhXOGShXgS54c3SQXyBrC2kA+iEK6GwaZzilUHo3J2cS6sT4/mqIyNFdPX
-        x/2mUHNIWt1BCxmPouIXPUqfpnhL5bEja8CeL7JbENLPRhgBquWmoBIprIlhAv5kYLr1tZ
-        ORTWxel6Tqypv7qru1SMq/Dacu55kwc=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-462-VCR5gwhFMnCVZAvW2vCSuQ-1; Thu, 15 Apr 2021 11:33:19 -0400
-X-MC-Unique: VCR5gwhFMnCVZAvW2vCSuQ-1
-Received: by mail-ej1-f69.google.com with SMTP id x21-20020a1709064bd5b029037c44cb861cso1073531ejv.4
-        for <linux-hyperv@vger.kernel.org>; Thu, 15 Apr 2021 08:33:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=PFoMUqnt3mOjMRdu3Djb36BE1EcblkSzBE9itczAV+o=;
-        b=ehYMBAu+7BZb+bQ7+P8Ma6LTeFwR1lu4sUSHCleDriyu0HtAe4j0UJT1YmnwwTc5fN
-         A5tZPEkNsYuegPZolg0N4rpbWMl0oHmJIk/angWIVBMIUpnqYGJZPK63cV3nHYoLpc5D
-         VHiXwO9KFriGJP9PRIsbWYUY6PNAcWm65B6HK2H4Lyd+Urwqo02x/myrCwEniv+baihA
-         Av319OcNATdS3dHT7F7Omf8AEqIjlGjkrz+1Sr9d2nTNE6hunX7ZtRHzXvza0GVzBwVO
-         vxu5G+hW1ByaSHqYEAI0Rkx9Ne+MzoTiXqIOFssvHEP5hwAgpUFaGMwe4cu3w7R6Ns3H
-         3Zgg==
-X-Gm-Message-State: AOAM530baDhkRHeSrVVaEhAYnrwtti8k8gSA1oQwc5/2Vz0gGuT4pHev
-        o3LPDdQz1te24fobEMt9liXX0vWDTHFm0K9RO5WX2VHY4LtWm8IQ1DK6Iyr8FHo0EXbjje2C1Ye
-        4sGdIfxsp/m3Oi2Uamj9XHEYA
-X-Received: by 2002:a05:6402:716:: with SMTP id w22mr4922496edx.206.1618500798638;
-        Thu, 15 Apr 2021 08:33:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw5dlqpKiMIeMmhJa3cFY+v+vwEa6uAJTB0yWnK6BtDfDPjvCLf8E71Hb7GL1RrJXfQ0gi+Jw==
-X-Received: by 2002:a05:6402:716:: with SMTP id w22mr4922473edx.206.1618500798440;
-        Thu, 15 Apr 2021 08:33:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id w13sm1951107edx.80.2021.04.15.08.33.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Apr 2021 08:33:17 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH RFC 01/22] asm-generic/hyperv: add
- HV_STATUS_ACCESS_DENIED definition
-In-Reply-To: <20210415141403.hftsza3ucrf262tq@liuwe-devbox-debian-v2>
-References: <20210413122630.975617-1-vkuznets@redhat.com>
- <20210413122630.975617-2-vkuznets@redhat.com>
- <20210415141403.hftsza3ucrf262tq@liuwe-devbox-debian-v2>
-Date:   Thu, 15 Apr 2021 17:33:17 +0200
-Message-ID: <877dl38sw2.fsf@vitty.brq.redhat.com>
+        id S233610AbhDORop (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 15 Apr 2021 13:44:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233134AbhDORom (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 15 Apr 2021 13:44:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 246D06115B;
+        Thu, 15 Apr 2021 17:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618508659;
+        bh=FQz0pD4kv15nu6Gh8jeOf7Ip6Z3DdOPGbJ6/uOkYSmc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fECi0I1N7U6/gNqBXmbNEU9TdnsRDZvWE680GsvE78zRk2D5aamSbkRiFxFGpMhOo
+         GzT0+4mWV4vASYHFP/1zhIKgmT3l0UCFkLCMuHbuB1m/rarLZ+aJzCwEiKR3kfXF3g
+         1TgTfl9pFvDWRcSLGJZg5Hsbj43sGlVITCHktJX0xdDL7mdle9gMJfGx8Yov9Zj9kg
+         nQW17bAZE+WJqSWCEDHkFF4mYRvwiniKKEAX5NrIJtPaCtJ4quwtofDzI9HVKdD44i
+         a2JDMZI86qYDwD4E2+qWjdlm4mGPD9NuK3OnMYvT51t1mg+leMzqGdUWl7RYKtjVE0
+         kgAhCnrSNvvKA==
+Date:   Thu, 15 Apr 2021 10:44:17 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     davem@davemloft.net, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, liuwe@microsoft.com,
+        netdev@vger.kernel.org, leon@kernel.org, andrew@lunn.ch,
+        bernd@petrovitsch.priv.at, rdunlap@infradead.org,
+        shacharr@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v6 net-next] net: mana: Add a driver for Microsoft Azure
+ Network Adapter (MANA)
+Message-ID: <20210415104417.6269cd9a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20210415054519.12944-1-decui@microsoft.com>
+References: <20210415054519.12944-1-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Wei Liu <wei.liu@kernel.org> writes:
+On Wed, 14 Apr 2021 22:45:19 -0700 Dexuan Cui wrote:
+> +	buf = dma_alloc_coherent(gmi->dev, length, &dma_handle,
+> +				 GFP_KERNEL | __GFP_ZERO);
 
-> On Tue, Apr 13, 2021 at 02:26:09PM +0200, Vitaly Kuznetsov wrote:
->> From TLFSv6.0b, this status means: "The caller did not possess sufficient
->> access rights to perform the requested operation."
->> 
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->
-> This can be applied to hyperv-next right away. Let me know what you
-> think.
->
+No need for GFP_ZERO, dma_alloc_coherent() zeroes the memory these days.
 
-In case there's no immediate need for this constant outside of KVM, I'd
-suggest you just give Paolo your 'Acked-by' so I can carry the patch in
-the series for the time being. This will eliminate the need to track
-dependencies between hyperv-next and kvm-next.
+> +static int mana_gd_register_irq(struct gdma_queue *queue,
+> +				const struct gdma_queue_spec *spec)
+> ...
+> +	struct gdma_irq_context *gic;
+> +
+> +	struct gdma_context *gc;
 
-Thanks!
+Why the empty line?
 
--- 
-Vitaly
+> +	queue = kzalloc(sizeof(*queue), GFP_KERNEL);
+> +	if (!queue)
+> +		return -ENOMEM;
+> +
+> +	gmi = &queue->mem_info;
+> +	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
+> +	if (err)
+> +		return err;
 
+Leaks the memory from 'queue'?
+
+Same code in mana_gd_create_mana_eq(), ...wq_cq(), etc.
+
+> +int mana_do_attach(struct net_device *ndev, enum mana_attach_caller caller)
+> +{
+> +	struct mana_port_context *apc = netdev_priv(ndev);
+> +	struct gdma_dev *gd = apc->ac->gdma_dev;
+> +	u32 max_txq, max_rxq, max_queues;
+> +	int port_idx = apc->port_idx;
+> +	u32 num_indirect_entries;
+> +	int err;
+> +
+> +	if (caller == MANA_OPEN)
+> +		goto start_open;
+> +
+> +	err = mana_init_port_context(apc);
+> +	if (err)
+> +		return err;
+> +
+> +	err = mana_query_vport_cfg(apc, port_idx, &max_txq, &max_rxq,
+> +				   &num_indirect_entries);
+> +	if (err) {
+> +		netdev_err(ndev, "Failed to query info for vPort 0\n");
+> +		goto reset_apc;
+> +	}
+> +
+> +	max_queues = min_t(u32, max_txq, max_rxq);
+> +	if (apc->max_queues > max_queues)
+> +		apc->max_queues = max_queues;
+> +
+> +	if (apc->num_queues > apc->max_queues)
+> +		apc->num_queues = apc->max_queues;
+> +
+> +	memcpy(ndev->dev_addr, apc->mac_addr, ETH_ALEN);
+> +
+> +	if (caller == MANA_PROBE)
+> +		return 0;
+> +
+> +start_open:
+
+Why keep this as a single function, there is no overlap between what's
+done for OPEN and PROBE, it seems.
+
+Similarly detach should probably be split into clearly distinct parts.
+
+> +	err = mana_create_eq(apc);
+> +	if (err)
+> +		goto reset_apc;
+> +
+> +	err = mana_create_vport(apc, ndev);
+> +	if (err)
+> +		goto destroy_eq;
+> +
+> +	err = netif_set_real_num_tx_queues(ndev, apc->num_queues);
+> +	if (err)
+> +		goto destroy_vport;
+> +
+> +	err = mana_add_rx_queues(apc, ndev);
+> +	if (err)
+> +		goto destroy_vport;
+> +
+> +	apc->rss_state = apc->num_queues > 1 ? TRI_STATE_TRUE : TRI_STATE_FALSE;
+> +
+> +	err = netif_set_real_num_rx_queues(ndev, apc->num_queues);
+> +	if (err)
+> +		goto destroy_vport;
+> +
+> +	mana_rss_table_init(apc);
+> +
+> +	err = mana_config_rss(apc, TRI_STATE_TRUE, true, true);
+> +	if (err)
+> +		goto destroy_vport;
+> +
+> +	return 0;
+> +
+> +destroy_vport:
+> +	mana_destroy_vport(apc);
+> +destroy_eq:
+> +	mana_destroy_eq(gd->gdma_context, apc);
+> +reset_apc:
+> +	if (caller == MANA_OPEN)
+> +		return err;
+> +	kfree(apc->rxqs);
+> +	apc->rxqs = NULL;
+> +	return err;
+> +}
+> +
+> +int mana_attach(struct net_device *ndev)
+> +{
+> +	struct mana_port_context *apc = netdev_priv(ndev);
+> +	int err;
+> +
+> +	ASSERT_RTNL();
+> +
+> +	err = mana_do_attach(ndev, MANA_ATTACH);
+> +	if (err)
+> +		return err;
+> +
+> +	netif_device_attach(ndev);
+> +
+> +	apc->port_is_up = apc->port_st_save;
+> +
+> +	/* Ensure port state updated before txq state */
+> +	smp_wmb();
+> +
+> +	if (apc->port_is_up) {
+> +		netif_carrier_on(ndev);
+> +		netif_tx_wake_all_queues(ndev);
+> +	}
+> +
+> +	return 0;
+> +}
