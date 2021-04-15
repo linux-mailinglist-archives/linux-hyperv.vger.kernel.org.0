@@ -2,212 +2,303 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 457C83611CE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 20:14:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6EE836128D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Apr 2021 20:54:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234465AbhDOSOj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 15 Apr 2021 14:14:39 -0400
-Received: from mail-bn7nam10on2119.outbound.protection.outlook.com ([40.107.92.119]:54113
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234208AbhDOSOg (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 15 Apr 2021 14:14:36 -0400
+        id S234624AbhDOSyZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 15 Apr 2021 14:54:25 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:38488 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234130AbhDOSyY (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 15 Apr 2021 14:54:24 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13FIZWhS100648;
+        Thu, 15 Apr 2021 18:53:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2020-01-29;
+ bh=8Gqf0/evVWDhoGVwD8p8GrYtW57UPXn+DQqxzcdkQ6Y=;
+ b=zZG/b3oYRBj7NdXGSubwptjseTxFQ9n56JOKo36RIsWGLRs3Rm0qJBdW1z2WB1LUoLga
+ iGd9icHrEcOio4CBq0NU+k6oxZV3YHNYA0dWmtsbgU58282kn4PxNuJ8bMR8RsJvp7oe
+ oKk75Dghh17HTTLhm9LEehh+dNplc7FHEXZYdMMqiP5koYCBUunctdUZ9W9fSR4EJn8W
+ BgUZk+W4YOG8NugJp0QkafEW02JTJO4lrvx/6mRrF0lnoiRiRkjRmjw4EZVIypMbLRmx
+ 3ukmf6uG3DFFkzm5n5G2tsyHnEwNqIdozPL5ePu1aGvOYMoDHFMaLyIVVwarB9CtBXRR zQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 37u1hbq20b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Apr 2021 18:53:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13FIac4F115252;
+        Thu, 15 Apr 2021 18:53:12 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+        by aserp3030.oracle.com with ESMTP id 37unkt22ck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Apr 2021 18:53:12 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cfg79Hq/awHnHeBcWNi1C6PWkVF/XVCRfYqbPZe+UaOUt8A2bsB+XxySHcjTT2iKKnua+7/qb3jRR/z8/dCQW6rAGtrc84XQ12v6RWbqWEXOh66A8m/HX0vqdZ0PZfN1HUVBRaLiqc1bLjF/rW6wJ8vM88J9rj5mQwPrHgFB4lNv9FkYQE8SS+8qK6Bdpn/wEyP5JZgkMTbam0LjxoiKMxzA2iApXlHorHsju5zJ244JQm5qQ6ppz/DQmABA9DMKS23KWaFqkukSz8a+vUuNXVrZ9nLiEM0LExevWSoBrSkYrYoadzpswfkd7875R8If7+OF5IaVm3zvJ+qfJ4kdSA==
+ b=inWWlAKHUbgODtMwIZuYWV5xdeaexzFP8ZidZmrxR3OuTKw+FcWVWpnB/vikxOpBvWzd71FiHcSn5i6t7CC9Dy/AyO2l2P87gUD6gXK2v0df8rE+cyhkBr+EAqASE/AUBfcnc/kvcgbuhSq3gCiwOz0soZ9Gz6+0ko9+vpHc3NFig74JhJtuqJ8kZlByxlwhpYrcYo4H0GNhmoA1pjOtC/0y3YyVcLXcbG1/XH5iCHktZlqOfkvZGg5TpKWnUpQ6Bxkb4D3DFu1tDRU1N2moQ0U90xpeI6lBg1g1hByatAWuxmoRhVjf1Xt8s7xO5poPdjAAVyklLbQ41keKPXh6sQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m7uWJ0hKdGysFzQrVKkeUtKc6fROhl+kUkFCUIueZp4=;
- b=c4kM4tTMauEFl+s6MIWK82Qw6Zi0czd6xzK0NNDGQPtHl8qGocaCycuBYcrVJTmIvFips4uEYY199hjdPH7QGa5IykVnDS+1fBTtjfPShvVNluNffu4odbOaR/WX6sDhcaiOCXeEeg0DA8nqbI8fTVdL5VenonhFX/Tmep4QXzerZPbUyEJeorhlz9WeLhhZ85x+3ybYFJZTvSukCcizkULMOhPPfhyw68q2muVIuvyGAOX8SgSgul0SJRjQgIKGMsU7bpEUVNN7euqIhW3Kn7QSczQExcVRi2OYfoAJnuDINCrRqPcQBTS6vxHZlYTfd2cGqkk4cOv2wemTUyBTLw==
+ bh=8Gqf0/evVWDhoGVwD8p8GrYtW57UPXn+DQqxzcdkQ6Y=;
+ b=nxuXqB6V9Q0xCdxTysAqNdpOD0VqNtoktFWyv3ItD0yAm93OloLv6KUo50EEBlwzw88Pyu0UCb4/iIK7OksN+G6u6kJOKCSUK6ILn3J4MIusm2NMzko3mIs5AVZ2rjFakfOubl2upsoJ2KBXRyuuz2F+kBOeWjHwcs4Put0Nk46pCjNxX2trbu2MABGvfJwNadVvTuz47H1AqIq8cjkF1nO/KByDvWUqnWT3eIWMfiItf1xBvv2vhECRz5V5LrQCRNXTEiVh3liWUfWT1xqCpd/VlTKvOG8DvbVl5VqXE1IAviDVIX7h/zbZB9mQioWh87q8C4fyETskCY1IzUHcYw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m7uWJ0hKdGysFzQrVKkeUtKc6fROhl+kUkFCUIueZp4=;
- b=GEBn08DGHM8I5ndwOybvPZT/H8oDFob2n7czGERYxyDlxqRpdquGqBGvtv9A1EH54oyWd2yNPvJ0YvrD+NUObCMl/itocLjZBajodhd2MBmB8uNDG+lAzpj8490DL4+c6yzfmz3DVDJ7b5u6uj/l3LozgAj8hner9Rjany2q7K4=
-Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
- (2603:10b6:302:10::24) by MWHPR21MB0845.namprd21.prod.outlook.com
- (2603:10b6:300:77::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.2; Thu, 15 Apr
- 2021 18:14:09 +0000
-Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
- ([fe80::5548:cbd8:43cd:aa3d]) by MW2PR2101MB0892.namprd21.prod.outlook.com
- ([fe80::5548:cbd8:43cd:aa3d%6]) with mapi id 15.20.4065.008; Thu, 15 Apr 2021
- 18:14:09 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Wei Liu <liuwe@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "bernd@petrovitsch.priv.at" <bernd@petrovitsch.priv.at>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        Shachar Raindel <shacharr@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v6 net-next] net: mana: Add a driver for Microsoft Azure
- Network Adapter (MANA)
-Thread-Topic: [PATCH v6 net-next] net: mana: Add a driver for Microsoft Azure
- Network Adapter (MANA)
-Thread-Index: AQHXMh74qz+n6heTS0m4o7oyoLHpzqq13bxw
-Date:   Thu, 15 Apr 2021 18:14:09 +0000
-Message-ID: <MW2PR2101MB0892BA3116E2C3C82BEA3D25BF4D9@MW2PR2101MB0892.namprd21.prod.outlook.com>
-References: <20210415054519.12944-1-decui@microsoft.com>
- <20210415104417.6269cd9a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20210415104417.6269cd9a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a84e3b9c-d716-432f-93c3-d4d9fd2c027e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-15T17:58:49Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:600:8b00:6b90:d56c:64b4:268d:aceb]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f301c475-d941-480a-820f-08d9003a43d7
-x-ms-traffictypediagnostic: MWHPR21MB0845:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB0845C1A964EBFFA6642F7C66BF4D9@MWHPR21MB0845.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jJPS/0pNFOq5xxT4n7sZEA9E7ZUwagPQS6J8gpeHkOE/zNs6wkr1buMNTVq57T+R6nCtM3Cl9n+TaDDJlKummFR5cvbBGEW4ilZYTFS2+U8ZAl/jbCG8ixy2eP+reWBpqySlf+2L+C5owKP60CoBEeH7K1ef1GmCJ+twc9J3OrEr3KNsSO1foD3IVWVswEfQVehD5G2uGYoLydQH68aLoYLk8nJENZJmZcFoJxkmhwfhPlgUbn7QZ9gEmglDkPILvk8jOkS+s0R19x3hK3nMgA71E+0PR2wTUjPvbOKf0ExYdvX7WNS9rUyu5LHQoBW6tEXz3RUcxiAuabyOGHTwkW4bPh8kPg0mxe6ppPfrzk38VZ28Fd8vUN0Mm8L8xXsqOdRZwea1hKNqyEgpUUDa1Dwor36KvglhrXJmk8lzsJfLx1bGfGrOKfQrcHzEy6w1VJCr/PIIcSiFvceqKNiwza4arJmBxcwEHI0NsBAsemHezHJSq44JKTsoHmEa9LZgjZXbUV3TaoS4aeQgnf3nWY3eAxUD6K1+0z2xAXMG+dLeZEzZVYm23COo1QVefksRykwJyyLYdr/WWS2XQcR31eUrR9CIWtJYjDjUOeVLMiM=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB0892.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(366004)(346002)(39860400002)(47530400004)(4326008)(33656002)(5660300002)(55016002)(7416002)(54906003)(38100700002)(52536014)(76116006)(186003)(71200400001)(122000001)(2906002)(316002)(7696005)(9686003)(66946007)(66446008)(66556008)(6916009)(64756008)(478600001)(82960400001)(10290500003)(82950400001)(8676002)(8990500004)(6506007)(8936002)(66476007)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?tR06L2hpThiTfXXOOZMVp7vOKL9ZVnYKSQ+tphmiMm6wqBewbUlTmA+N044m?=
- =?us-ascii?Q?JMqWtLMcQyY5JDNJMJI1hHedHr8fwZpDsl8iJ64JoOXfvxxJ2EoLJjIQtouJ?=
- =?us-ascii?Q?s2cl5IxgNAQYHvPFDtAbMwMpBmCEsbXpWKblNjwNC0LxZvddQ9DAtln/1bwu?=
- =?us-ascii?Q?1oMZpeEcOnh3Fe4fUHLgY4wnltRZ9DZPEm1T0tJt2ZziQOygbAsqHJvMp+13?=
- =?us-ascii?Q?+V5gnLQLU02JGm0p0NdkBeCOBeecULhMm6F4O7Lejaf6GdK+QhXXX5CRYXfA?=
- =?us-ascii?Q?ICR+GPk3Hl86ntJPC929MORhEIfI/3eJQEs4DtVFSFdsg1JwKKutUgRWH/bc?=
- =?us-ascii?Q?/tstSGwGX3N6jIIywnhToC1RQM7CwoQ5l5rM4QVMLVB0SLPWG9rEYcFDZBV1?=
- =?us-ascii?Q?pW8X/1eKe9mav6mdATeFXKdaGYfHKtoDRahEVdDyEiyFp0JympeSUFZhQ7SV?=
- =?us-ascii?Q?C1fy1hbuDetkmfwnRuuIMwQApoHBGGpBckFbnlHFnTrQb8oGf29N3TC0+Ctg?=
- =?us-ascii?Q?0qMGHlAnG5dRquJOPrrqkUtMCUDTtAjD22GXkzmGvoR5ftwXBqUXQ+uhSZf0?=
- =?us-ascii?Q?C5Lgqv078kiog9aM7D81blipmdrWID/BI+gL1fg5CHA3m9h3Ii0ysEQhejuz?=
- =?us-ascii?Q?agFPsr3Niw+/Su+ZcdivE2JlZpBB66KaeNrJBbr6rC3Vi41pT+rmyoMEtW32?=
- =?us-ascii?Q?8bAuaXkmbfkZ+UWcBj9CTYwAhCRiISnJURTEF8Gpho+D1sv80bCdNo7TdM7D?=
- =?us-ascii?Q?kd7Zf8SkElSgfP2Y9080MVBbkwwLm0nc3zPOYvU7vH7Nsw04AOYHSfmKZor7?=
- =?us-ascii?Q?6kIoiPOlsL9lpS8sDL87X4W/aEMKa0Xia+89ML6eOq0jKrqyJFxSm/RTpr/j?=
- =?us-ascii?Q?zNAIrKhTFKGmYNC+dpWUwglQwOH5MXGt0dzkA5T9vEJVX+vMSSlC0O8Ns168?=
- =?us-ascii?Q?c10vNQwdb+vLyMwlfdHsoAf9Ip+B+e17ECNCK8D8sIpyo9pPXBQHN9xAsZGF?=
- =?us-ascii?Q?nF3XKECx4vi3xzWxEzx9vngDSHDR0AAt1LjYMZRzBPlv+w6NBcd0gCXA3WcN?=
- =?us-ascii?Q?4AlGCX3tNNXnemefgxhcJTikhIouTf2WGd4awBj4Clo+Om2sVzi/9CaBnjH2?=
- =?us-ascii?Q?CC7v11rNKF0B1+KBZsvn3NmBgpkmu+iGg3ZfPZaJk6Vr5hQOmGyldacev7xe?=
- =?us-ascii?Q?Mc49weNs2HLqxHdvTyR5KLwGafYz13HMVRg0CE+A5XFE+3IPeQqaEHCe1zlJ?=
- =?us-ascii?Q?MJerxMsioMXwF4pCuQ1ooNw4TV0vLnyF9oSsjRnJAAxxOEom3jugccS1Nzpm?=
- =?us-ascii?Q?F3ra+hSlRfKzR9JP1Q2UvMZpsXkaSgfuBJ09UPlI21Y1VQD01NbUsYvFCttc?=
- =?us-ascii?Q?uy21PxITB1kVWPbdLIQtYJiguZBT?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=8Gqf0/evVWDhoGVwD8p8GrYtW57UPXn+DQqxzcdkQ6Y=;
+ b=H517ixnZoLooQk1ky9WVsmyiH7Da+ppJ55aMeBKozjDLHKEXGaSMKhxF4dXmVQ+0ylWDH3YjBbGjDP8dwAdjfPYzsKdMFmlvzDSp+NHKjLPbsCT74dKQoQJ3ZxPT4s4CQuVQ+myv8hsc5FQDm8P0C2j9gO+4bK2XXvYVOWoGE/g=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=oracle.com;
+Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
+ by BYAPR10MB2998.namprd10.prod.outlook.com (2603:10b6:a03:84::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.17; Thu, 15 Apr
+ 2021 18:53:10 +0000
+Received: from BYAPR10MB2999.namprd10.prod.outlook.com
+ ([fe80::50f2:e203:1cc5:d4f7]) by BYAPR10MB2999.namprd10.prod.outlook.com
+ ([fe80::50f2:e203:1cc5:d4f7%7]) with mapi id 15.20.4020.022; Thu, 15 Apr 2021
+ 18:53:10 +0000
+Date:   Thu, 15 Apr 2021 14:52:58 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
+        akpm@linux-foundation.org, gregkh@linuxfoundation.org, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com, joro@8bytes.org,
+        will@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org, vkuznets@redhat.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com,
+        sunilmut@microsoft.com
+Subject: Re: [Resend RFC PATCH V2 06/12] HV/Vmbus: Add SNP support for VMbus
+ channel initiate message
+Message-ID: <YHiLiqpTEYbWjbSb@dhcp-10-154-102-149.vpn.oracle.com>
+References: <20210414144945.3460554-1-ltykernel@gmail.com>
+ <20210414144945.3460554-7-ltykernel@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210414144945.3460554-7-ltykernel@gmail.com>
+X-Originating-IP: [138.3.200.21]
+X-ClientProxiedBy: SN2PR01CA0039.prod.exchangelabs.com (2603:10b6:804:2::49)
+ To BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from dhcp-10-154-102-149.vpn.oracle.com (138.3.200.21) by SN2PR01CA0039.prod.exchangelabs.com (2603:10b6:804:2::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16 via Frontend Transport; Thu, 15 Apr 2021 18:53:02 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3ac03ad5-5f2d-4718-e756-08d9003fb68e
+X-MS-TrafficTypeDiagnostic: BYAPR10MB2998:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR10MB29983A9C3F2EAE8A6F757A35894D9@BYAPR10MB2998.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tJhKT3Gv9SbIGXihhMAbUFUNbalx3YVYZBgNsvu1g7tUy9ohIFnbXzskxw7mZYdoX/G5BtgVFY7hMMo6Q04tO6uKOLJqnt3rO+4ht29lobJMr4Eo5174JmCScCbKWomnQUUd7qs1ND1zLhpSvScuR//0HQvrW3mL27C3oBxyRjHappjXFPYjkD0eqcx7puYLO7+ghTa/5jo649Yu4gEcpRM/a43q+f8vKKJugyUP1qGWvESivCM2Iy0OTrUKEcsvL7HNwHE4PJDq1eQH/esf1ewum1Ks+DZx4YM5TICbx61V/qgOneiQkEzDoGHGJ8nBAh+yACYJXWW3Di0UHwhsHa6vUq2+lhKCD2FkBqj8FLCZY4KG0NMR5i7dEcNpc6W5Xhb4whTtORiWnUIDYsXhhS8sZ8hZkA5QzIEaDR2Z1XhBdUo+xp2nKL4eyMu0XLNLf9Pg0nk4uO0I1B3RuiNHXrSfH/Z2CcUtVDOXRNdEN/CTBsvB2lUvRM5hi+nCu7usE1YlXLHHveZzAQJiL5xl5u3vIO040B7NubVOCjI7JTf+WmiLwX30fU3dpf56MHEgoAh0TE6UFuT9uSgz1MRlOtqo1AIV3ZnT4F903xRDb8YCL3aLscyy8GnscfubVW+Z583pEZq5Jkk+cavcUBGOSdm4yVcQxfj0WIciDfLdfy8vYBFNibSI9aTCBwcZLahr
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(39860400002)(396003)(376002)(366004)(136003)(186003)(16526019)(26005)(5660300002)(86362001)(6666004)(55016002)(4326008)(45080400002)(38350700002)(38100700002)(478600001)(8676002)(83380400001)(956004)(8936002)(316002)(6916009)(66556008)(15650500001)(2906002)(66476007)(7406005)(7416002)(7696005)(52116002)(66946007)(102196002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?Bl6uEZEIHPgzXa1fFka4oJOCAjXHc1hBl/ic2GPosPol7D2mL4hDEmvTkJ1p?=
+ =?us-ascii?Q?w7TJ2eJKJmdrlDGpYRseZ5sM7M98LRaNxzsum0KJnnbBMyPwQzJQKkS88YDB?=
+ =?us-ascii?Q?ecZQFrsiegOYvEWEvpDS2ugViWk1MiQ+G8p1GOLoS9lOMSAsBPh1LWrnriNJ?=
+ =?us-ascii?Q?vSs5Xslne90dty2fMEiYpXE6t45TxeaPL6pDnHPAp5G19gVUPI4QfJYlB1BG?=
+ =?us-ascii?Q?R8I/LxTmg6dqF0RBoOWEA8+50MIF5txRfRgpdQ3vnpqTmfdO9a64JdUgBYfR?=
+ =?us-ascii?Q?oiTLPtK6eoU41PIzNMyNESimhs5g314itYrjduONHK90NeaJUsm6LJDA9oL6?=
+ =?us-ascii?Q?PFyBk//KOwdr6ZWWn3Fa4OHe2X9WBYmqTgQfmWThucIbv379efSf1pQL7i6e?=
+ =?us-ascii?Q?o5km5NyujT9qlT+6FmDfFIjBJ0SuvikAdsZ0Nakl2WMownI4C1d+Dl+qSK1G?=
+ =?us-ascii?Q?WZ3A0BIkJLQVUjK1d3oqXK4bAPT1lNOotYpTBNh7Keudd+prNaEOzsmQbyXe?=
+ =?us-ascii?Q?gz/C5giG5JwRMa/6DxkO9f6eoB8uisD4mfgvtAKQQwi/x926dp8Mi8XLIzJF?=
+ =?us-ascii?Q?IFz4OCY7pHg2/bPawj6xasjuj+crAE5fQLhjBe9WuiyHr/fgef2eEYzEVaGp?=
+ =?us-ascii?Q?ZzqEpxptMjnYY6vYEElC3fQYb2cx2OHvb4QnePoWuOD5KXFYVThsT1Yx6tOC?=
+ =?us-ascii?Q?X1iYNnlaZ5JeQEYIAjRiuamvrA7IsM18IeDEgItnzFrggFYXg0t4I7qxBDoL?=
+ =?us-ascii?Q?oCGJDGluBavfSljA2iR//jEs4njcla0HBMuQ4wE48OqTcnKx3rvQFMDUCf38?=
+ =?us-ascii?Q?p/Uhw7yyuuDPFzP9Pm+ZiahePj9Bw5f45Uv79p6rKUc+sjD/DWEB65gMoSOe?=
+ =?us-ascii?Q?uB6OQSivi4qDFxpRiICYvlO1gd0Z7o13JvzIwj/9GA8HemBvdaAFzNLKNQwh?=
+ =?us-ascii?Q?e01tLS1QzTmEMLC+a/yl6Q6FmhSw3VDJruXFKFO1x5N740A/bO1ZeooPyPbl?=
+ =?us-ascii?Q?k24fU4fZNTDxGzEFRC2aZ/z2oyqPgtNMWFuOQh70oF6qeqXlzty2vs02SomR?=
+ =?us-ascii?Q?MQ8++io2bgcc8Hwk8bNvaV94lYBZFTa27QPBWRNR9tMd7nWVbNChwpYn7K7L?=
+ =?us-ascii?Q?Y4BhOgp4rK7WwpH/VQ2+GpbJJ+RGCc4nTS2Y0CPfxf6snX9raJ7fvhr6pokt?=
+ =?us-ascii?Q?t6JEoiOAOiDbDT68RA5OjbMvf5dsIKXRlVkXEuCmwzJSkLxWoyDAbjos53ps?=
+ =?us-ascii?Q?U7STvylsdzJ4YzS+PwVxcWjz2WyFkoRaBzTVt7+R0Xc1PpXdl9He8KBf5sfG?=
+ =?us-ascii?Q?qNDqZwfABy2PWAqp5OQ29kmy?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ac03ad5-5f2d-4718-e756-08d9003fb68e
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB0892.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f301c475-d941-480a-820f-08d9003a43d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2021 18:14:09.4666
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2021 18:53:09.9341
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1X3kySp73XoueUmRIOvU+YSvUTP8xPa/OFB7eOFTi6NqaTOOvOmQYpIXADqkeTJWDa0C7ZpIrxnioUrfo2R3Xw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0845
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iHr5/W5UnjOVXfAWin+Hry1ldmgQRWgYv1rJ+zaLL6v/ed4jX2XIz/EjtBHf/+zezXFKJ34OCelWkjPUVVaFzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2998
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9955 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 malwarescore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104150115
+X-Proofpoint-GUID: OXRS-NEE6sUlbgy-yRHyCoVS_cUwPv-B
+X-Proofpoint-ORIG-GUID: OXRS-NEE6sUlbgy-yRHyCoVS_cUwPv-B
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9955 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
+ clxscore=1015 adultscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
+ definitions=main-2104150115
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Jakub Kicinski <kuba@kernel.org>
-> Sent: Thursday, April 15, 2021 10:44 AM
->  ...
-> On Wed, 14 Apr 2021 22:45:19 -0700 Dexuan Cui wrote:
-> > +	buf =3D dma_alloc_coherent(gmi->dev, length, &dma_handle,
-> > +				 GFP_KERNEL | __GFP_ZERO);
->=20
-> No need for GFP_ZERO, dma_alloc_coherent() zeroes the memory these days.
+On Wed, Apr 14, 2021 at 10:49:39AM -0400, Tianyu Lan wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> The physical address of monitor pages in the CHANNELMSG_INITIATE_CONTACT
+> msg should be in the extra address space for SNP support and these
 
-Yes, indeed. Will remove __GFP_ZERO.
+What is this 'extra address space'? Is that just normal virtual address
+space of the Linux kernel?
 
->=20
-> > +static int mana_gd_register_irq(struct gdma_queue *queue,
-> > +				const struct gdma_queue_spec *spec)
-> > ...
-> > +	struct gdma_irq_context *gic;
-> > +
-> > +	struct gdma_context *gc;
->=20
-> Why the empty line?
+> pages also should be accessed via the extra address space inside Linux
+> guest and remap the extra address by ioremap function.
 
-No good reason. Will remove this line. I'll check the whole patch
-for similar issues.
+OK, why do you need to use ioremap on them? Why not use vmap for
+example? What is it that makes ioremap the right candidate?
 
->=20
-> > +	queue =3D kzalloc(sizeof(*queue), GFP_KERNEL);
-> > +	if (!queue)
-> > +		return -ENOMEM;
-> > +
-> > +	gmi =3D &queue->mem_info;
-> > +	err =3D mana_gd_alloc_memory(gc, spec->queue_size, gmi);
-> > +	if (err)
-> > +		return err;
->=20
-> Leaks the memory from 'queue'?
 
-Sorry. This should be a bug I introduced when moving arouond some code.
 
-> Same code in mana_gd_create_mana_eq(), ...wq_cq(), etc.
 
-Will fix all of them, and check for the code similar issues.
 
-> > +int mana_do_attach(struct net_device *ndev, enum mana_attach_caller
-> caller)
-> > +{
-> > +	struct mana_port_context *apc =3D netdev_priv(ndev);
-> > +	struct gdma_dev *gd =3D apc->ac->gdma_dev;
-> > +	u32 max_txq, max_rxq, max_queues;
-> > +	int port_idx =3D apc->port_idx;
-> > +	u32 num_indirect_entries;
-> > +	int err;
-> > +
-> > +	if (caller =3D=3D MANA_OPEN)
-> > +		goto start_open;
-> > +
-> > +	err =3D mana_init_port_context(apc);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err =3D mana_query_vport_cfg(apc, port_idx, &max_txq, &max_rxq,
-> > +				   &num_indirect_entries);
-> > +	if (err) {
-> > +		netdev_err(ndev, "Failed to query info for vPort 0\n");
-> > +		goto reset_apc;
-> > +	}
-> > +
-> > +	max_queues =3D min_t(u32, max_txq, max_rxq);
-> > +	if (apc->max_queues > max_queues)
-> > +		apc->max_queues =3D max_queues;
-> > +
-> > +	if (apc->num_queues > apc->max_queues)
-> > +		apc->num_queues =3D apc->max_queues;
-> > +
-> > +	memcpy(ndev->dev_addr, apc->mac_addr, ETH_ALEN);
-> > +
-> > +	if (caller =3D=3D MANA_PROBE)
-> > +		return 0;
-> > +
-> > +start_open:
->=20
-> Why keep this as a single function, there is no overlap between what's
-> done for OPEN and PROBE, it seems.
->=20
-> Similarly detach should probably be split into clearly distinct parts.
-
-Will improve the code. Thanks for the suggestion!
-
-Thanks,
-Dexuan
+> 
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>  drivers/hv/connection.c   | 62 +++++++++++++++++++++++++++++++++++++++
+>  drivers/hv/hyperv_vmbus.h |  1 +
+>  2 files changed, 63 insertions(+)
+> 
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index 79bca653dce9..a0be9c11d737 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -101,6 +101,12 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
+>  
+>  	msg->monitor_page1 = virt_to_phys(vmbus_connection.monitor_pages[0]);
+>  	msg->monitor_page2 = virt_to_phys(vmbus_connection.monitor_pages[1]);
+> +
+> +	if (hv_isolation_type_snp()) {
+> +		msg->monitor_page1 += ms_hyperv.shared_gpa_boundary;
+> +		msg->monitor_page2 += ms_hyperv.shared_gpa_boundary;
+> +	}
+> +
+>  	msg->target_vcpu = hv_cpu_number_to_vp_number(VMBUS_CONNECT_CPU);
+>  
+>  	/*
+> @@ -145,6 +151,29 @@ int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
+>  		return -ECONNREFUSED;
+>  	}
+>  
+> +	if (hv_isolation_type_snp()) {
+> +		vmbus_connection.monitor_pages_va[0]
+> +			= vmbus_connection.monitor_pages[0];
+> +		vmbus_connection.monitor_pages[0]
+> +			= ioremap_cache(msg->monitor_page1, HV_HYP_PAGE_SIZE);
+> +		if (!vmbus_connection.monitor_pages[0])
+> +			return -ENOMEM;
+> +
+> +		vmbus_connection.monitor_pages_va[1]
+> +			= vmbus_connection.monitor_pages[1];
+> +		vmbus_connection.monitor_pages[1]
+> +			= ioremap_cache(msg->monitor_page2, HV_HYP_PAGE_SIZE);
+> +		if (!vmbus_connection.monitor_pages[1]) {
+> +			vunmap(vmbus_connection.monitor_pages[0]);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		memset(vmbus_connection.monitor_pages[0], 0x00,
+> +		       HV_HYP_PAGE_SIZE);
+> +		memset(vmbus_connection.monitor_pages[1], 0x00,
+> +		       HV_HYP_PAGE_SIZE);
+> +	}
+> +
+>  	return ret;
+>  }
+>  
+> @@ -156,6 +185,7 @@ int vmbus_connect(void)
+>  	struct vmbus_channel_msginfo *msginfo = NULL;
+>  	int i, ret = 0;
+>  	__u32 version;
+> +	u64 pfn[2];
+>  
+>  	/* Initialize the vmbus connection */
+>  	vmbus_connection.conn_state = CONNECTING;
+> @@ -213,6 +243,16 @@ int vmbus_connect(void)
+>  		goto cleanup;
+>  	}
+>  
+> +	if (hv_isolation_type_snp()) {
+> +		pfn[0] = virt_to_hvpfn(vmbus_connection.monitor_pages[0]);
+> +		pfn[1] = virt_to_hvpfn(vmbus_connection.monitor_pages[1]);
+> +		if (hv_mark_gpa_visibility(2, pfn,
+> +				VMBUS_PAGE_VISIBLE_READ_WRITE)) {
+> +			ret = -EFAULT;
+> +			goto cleanup;
+> +		}
+> +	}
+> +
+>  	msginfo = kzalloc(sizeof(*msginfo) +
+>  			  sizeof(struct vmbus_channel_initiate_contact),
+>  			  GFP_KERNEL);
+> @@ -279,6 +319,8 @@ int vmbus_connect(void)
+>  
+>  void vmbus_disconnect(void)
+>  {
+> +	u64 pfn[2];
+> +
+>  	/*
+>  	 * First send the unload request to the host.
+>  	 */
+> @@ -298,6 +340,26 @@ void vmbus_disconnect(void)
+>  		vmbus_connection.int_page = NULL;
+>  	}
+>  
+> +	if (hv_isolation_type_snp()) {
+> +		if (vmbus_connection.monitor_pages_va[0]) {
+> +			vunmap(vmbus_connection.monitor_pages[0]);
+> +			vmbus_connection.monitor_pages[0]
+> +				= vmbus_connection.monitor_pages_va[0];
+> +			vmbus_connection.monitor_pages_va[0] = NULL;
+> +		}
+> +
+> +		if (vmbus_connection.monitor_pages_va[1]) {
+> +			vunmap(vmbus_connection.monitor_pages[1]);
+> +			vmbus_connection.monitor_pages[1]
+> +				= vmbus_connection.monitor_pages_va[1];
+> +			vmbus_connection.monitor_pages_va[1] = NULL;
+> +		}
+> +
+> +		pfn[0] = virt_to_hvpfn(vmbus_connection.monitor_pages[0]);
+> +		pfn[1] = virt_to_hvpfn(vmbus_connection.monitor_pages[1]);
+> +		hv_mark_gpa_visibility(2, pfn, VMBUS_PAGE_NOT_VISIBLE);
+> +	}
+> +
+>  	hv_free_hyperv_page((unsigned long)vmbus_connection.monitor_pages[0]);
+>  	hv_free_hyperv_page((unsigned long)vmbus_connection.monitor_pages[1]);
+>  	vmbus_connection.monitor_pages[0] = NULL;
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index 9416e09ebd58..0778add21a9c 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -240,6 +240,7 @@ struct vmbus_connection {
+>  	 * is child->parent notification
+>  	 */
+>  	struct hv_monitor_page *monitor_pages[2];
+> +	void *monitor_pages_va[2];
+>  	struct list_head chn_msg_list;
+>  	spinlock_t channelmsg_lock;
+>  
+> -- 
+> 2.25.1
+> 
