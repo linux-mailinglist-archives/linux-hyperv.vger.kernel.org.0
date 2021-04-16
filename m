@@ -2,79 +2,73 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83F2B361DFC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Apr 2021 12:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18343361E03
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Apr 2021 12:37:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239326AbhDPKc2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Apr 2021 06:32:28 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:39631 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238766AbhDPKc1 (ORCPT
+        id S239295AbhDPKhw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Apr 2021 06:37:52 -0400
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:37494 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235292AbhDPKhv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Apr 2021 06:32:27 -0400
-Received: by mail-wm1-f53.google.com with SMTP id i21-20020a05600c3555b029012eae2af5d4so4286440wmq.4;
-        Fri, 16 Apr 2021 03:32:01 -0700 (PDT)
+        Fri, 16 Apr 2021 06:37:51 -0400
+Received: by mail-wr1-f53.google.com with SMTP id j5so25245731wrn.4;
+        Fri, 16 Apr 2021 03:37:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=yqhNqfjZUG4eC0lkMn87qOHykQGaWRjakY07kc6mVKw=;
-        b=gVznrD3krorP8fo6hwOv4a2IeibvemExqseX8YiirgAqQuUF9WoKmHB1QGG6lEQmjP
-         ELx7kwqXjo6VT4Cg/b9NKmiPBjKmTipWKeTI2GO2eXsyo55iyRGfh3cPb2aTpC2HXCpu
-         VXAWPb07YDBgkxuB/cduWVOsTQs+OqMegHZvJQwYzwKQuUgVQBHgYZmPiaCQFbJIYQj9
-         UIBNw9EhBuPnwElShCF3nWZBNyijJ/FKB/Ei4wk7I2qM4zW362xJMsaVJeqZvZVzKyu8
-         r5PW8oCc/Dr7QofpAAPqYyf4t9Qm2b+R7/AyAgGIWxUFwUKdQAjLmySAB0103KzsWyW3
-         QFSQ==
-X-Gm-Message-State: AOAM53142kJvOubzcvso74w7/bMK0Cs/NKkTQkgz+rkfsyx0j3oIqwql
-        ctZ3tiGb8jFI5sc5zSbkjl0=
-X-Google-Smtp-Source: ABdhPJxerASWRcbPAJybWqXWONU6R+tPGuulB/fKNbyDGI3tyQ4wQNWfaWet2Kd1JYysI92oOshy9A==
-X-Received: by 2002:a05:600c:40c4:: with SMTP id m4mr7468836wmh.25.1618569120641;
-        Fri, 16 Apr 2021 03:32:00 -0700 (PDT)
+        bh=P+A7eG2xptzjgbsbSvyXQfGCX8bfwC+5K1b6fy+53iQ=;
+        b=Y6garCGQTPPG41ejLOvvlBwxXwJjtNGp9A2eI9LcX8wSDofcSNe88dS6EXSIZaycR7
+         dvb/CRIAd6N93BaiaF466cVmaHJFoZNbeAYqYn1puZNLpVdOGeO1G2fH9IyFhSn2j6uv
+         6iL2023QT+WQPWn8GpbYwy9ik6Jxse1nZROR16fA4gp71c6TSpLhADVzqVhOvCyb10ML
+         3L5nHMVSxROkoW60ditxaPTXiEsKFGCidcedkI+W1mfNqE0Z5ECx8TaNguA+13LX9wCQ
+         30mexfAnOHNnaOBowPFn0DRNSBL5diLLwyMBFfbXGSTp6qOZmNyKxpZP+3VOEMCErUP4
+         mdlQ==
+X-Gm-Message-State: AOAM532cynuRnyR/CmHkilC2DIGBV10WNjTJS4lnVIh17dr8kmjyDuT5
+        SjYHo0Wlw6xgbA8rtAwrNEHWXqzKyh4=
+X-Google-Smtp-Source: ABdhPJy4e4WGoztuHaP/Faw1E88xX/1PqKXlrwj5+H8nmp+omFyhbTiR7gcOqkpohHVCVXq/eizXtw==
+X-Received: by 2002:a5d:6c62:: with SMTP id r2mr3159155wrz.37.1618569445807;
+        Fri, 16 Apr 2021 03:37:25 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u8sm9631940wrr.42.2021.04.16.03.31.59
+        by smtp.gmail.com with ESMTPSA id g84sm8528560wmf.30.2021.04.16.03.37.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Apr 2021 03:32:00 -0700 (PDT)
-Date:   Fri, 16 Apr 2021 10:31:58 +0000
+        Fri, 16 Apr 2021 03:37:25 -0700 (PDT)
+Date:   Fri, 16 Apr 2021 10:37:24 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH RFC 01/22] asm-generic/hyperv: add
- HV_STATUS_ACCESS_DENIED definition
-Message-ID: <20210416103158.34cxzspi5idzci5g@liuwe-devbox-debian-v2>
-References: <20210413122630.975617-1-vkuznets@redhat.com>
- <20210413122630.975617-2-vkuznets@redhat.com>
- <20210415141403.hftsza3ucrf262tq@liuwe-devbox-debian-v2>
- <877dl38sw2.fsf@vitty.brq.redhat.com>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] Drivers: hv: vmbus: Use after free in __vmbus_open()
+Message-ID: <20210416103724.f3unhyu72pbp2qr3@liuwe-devbox-debian-v2>
+References: <YHV3XLCot6xBS44r@mwanda>
+ <20210413154221.GA2369@anparri>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <877dl38sw2.fsf@vitty.brq.redhat.com>
+In-Reply-To: <20210413154221.GA2369@anparri>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Apr 15, 2021 at 05:33:17PM +0200, Vitaly Kuznetsov wrote:
-> Wei Liu <wei.liu@kernel.org> writes:
+On Tue, Apr 13, 2021 at 05:42:21PM +0200, Andrea Parri wrote:
+> On Tue, Apr 13, 2021 at 01:50:04PM +0300, Dan Carpenter wrote:
+> > The "open_info" variable is added to the &vmbus_connection.chn_msg_list,
+> > but the error handling frees "open_info" without removing it from the
+> > list.  This will result in a use after free.  First remove it from the
+> > list, and then free it.
+> > 
+> > Fixes: 6f3d791f3006 ("Drivers: hv: vmbus: Fix rescind handling issues")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 > 
-> > On Tue, Apr 13, 2021 at 02:26:09PM +0200, Vitaly Kuznetsov wrote:
-> >> From TLFSv6.0b, this status means: "The caller did not possess sufficient
-> >> access rights to perform the requested operation."
-> >> 
-> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> >
-> > This can be applied to hyperv-next right away. Let me know what you
-> > think.
-> >
+> I had this 'queued' in my list,
 > 
-> In case there's no immediate need for this constant outside of KVM, I'd
-> suggest you just give Paolo your 'Acked-by' so I can carry the patch in
-> the series for the time being. This will eliminate the need to track
-> dependencies between hyperv-next and kvm-next.
+> Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Applied. Thanks.
