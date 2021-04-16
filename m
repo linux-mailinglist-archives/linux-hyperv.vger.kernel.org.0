@@ -2,29 +2,29 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85D1F36253A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Apr 2021 18:10:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A61213625CE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Apr 2021 18:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239831AbhDPQK5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Apr 2021 12:10:57 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:46378 "EHLO
+        id S235698AbhDPQja (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Apr 2021 12:39:30 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:49964 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236350AbhDPQK4 (ORCPT
+        with ESMTP id S233976AbhDPQja (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Apr 2021 12:10:56 -0400
+        Fri, 16 Apr 2021 12:39:30 -0400
 Received: from [192.168.86.23] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0378920B8001;
-        Fri, 16 Apr 2021 09:10:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0378920B8001
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7D24820B8001;
+        Fri, 16 Apr 2021 09:39:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D24820B8001
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1618589431;
-        bh=9MXNGr+OsMs3ZgwnW73MWJRCTLeAvuN7B4xa579GwLs=;
+        s=default; t=1618591145;
+        bh=3PViebWvpQki0qxQgRMJwoKxPXwLSMJuODoXwPbGsM8=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=qq63LORblOaS7ZOylg8BPaRJrxFsJH4ALhgZg4EXBBxDzyX/HiLnpZQncAH56chNV
-         gJbU+JREtUYqCHkoE/Nx2mAsemurEp4A0OlgpIrThG4eUwpscLCg7VbOX+pfh+QBzy
-         jZMk27UwZrUCqJtIvt1lbj5hRk1tiYEotgHgO+Dc=
-Subject: Re: [PATCH v2 1/7] hyperv: Detect Nested virtualization support for
- SVM
+        b=WvicHTix8W1ANGpRffj46E3m3IqgKhkPxr2GwEn4adYCxo9K3YNGtHbI6Z2lBenVk
+         xIod+ow7tRBFzOZpKxsLV8xhn3WbQMrDQ+nAVv7DL03AyDNC7fM7j4JEBt0ADBPyv4
+         cnah3hBMkCOMTntTORzoK6XzHPuiqpYwxHY9Buos=
+Subject: Re: [PATCH v2 3/7] KVM: x86: hyper-v: Move the remote TLB flush logic
+ out of vmx
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,15 +43,15 @@ Cc:     "H. Peter Anvin" <hpa@zytor.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         viremana@linux.microsoft.com
 References: <cover.1618492553.git.viremana@linux.microsoft.com>
- <9d12558549bc0c6f179b26f5b16c751bdfab3f74.1618492553.git.viremana@linux.microsoft.com>
- <871rba8wjj.fsf@vitty.brq.redhat.com>
+ <92207433d0784e123347caaa955c04fbec51eaa7.1618492553.git.viremana@linux.microsoft.com>
+ <87y2di7hiz.fsf@vitty.brq.redhat.com>
 From:   Vineeth Pillai <viremana@linux.microsoft.com>
-Message-ID: <a50e0d90-d853-7195-56ce-42b85484a55e@linux.microsoft.com>
-Date:   Fri, 16 Apr 2021 12:10:26 -0400
+Message-ID: <a01a13e4-4c11-962b-83ad-e7fc64cc3be8@linux.microsoft.com>
+Date:   Fri, 16 Apr 2021 12:39:00 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.9.1
 MIME-Version: 1.0
-In-Reply-To: <871rba8wjj.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87y2di7hiz.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -60,23 +60,44 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
-> It may make sense to expand this a bit as it is probably unclear how the
-> change is related to SVM.
+On 4/16/2021 4:36 AM, Vitaly Kuznetsov wrote:
 >
-> Something like:
+>>   struct kvm_vm_stat {
+>> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+>> index 58fa8c029867..614b4448a028 100644
+>> --- a/arch/x86/kvm/hyperv.c
+>> +++ b/arch/x86/kvm/hyperv.c
+> I still think that using arch/x86/kvm/hyperv.[ch] for KVM-on-Hyper-V is
+> misleading. Currently, these are dedicated to emulating Hyper-V
+> interface to KVM guests and this is orthogonal to nesting KVM on
+> Hyper-V. As a solution, I'd suggest you either:
+> - Put the stuff in x86.c
+> - Create a dedicated set of files, e.g. 'kvmonhyperv.[ch]' (I also
+> thought about 'hyperv_host.[ch]' but then I realized it's equally
+> misleading as one can read this as 'KVM is acting as Hyper-V host').
 >
-> HYPERV_CPUID_NESTED_FEATURES CPUID leaf can be present on both Intel and
-> AMD Hyper-V guests. Previously, the code was using
-> HV_X64_ENLIGHTENED_VMCS_RECOMMENDED feature bit to determine the
-> availability of nested features leaf and this complies to TLFS:
-> "Recommend a nested hypervisor using the enlightened VMCS interface.
-> Also indicates that additional nested enlightenments may be available
-> (see leaf 0x4000000A)". Enlightened VMCS, however, is an Intel only
-> feature so the detection method doesn't work for AMD. Use
-> HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS.EAX CPUID information ("The
-> maximum input value for hypervisor CPUID information.") instead, this
-> works for both AMD and Intel.
-Thanks for the input. Will update the commit message in next revision.
+> Personally, I'd vote for the later. Besides eliminating confusion, the
+> benefit of having dedicated files is that we can avoid compiling them
+> completely when !IS_ENABLED(CONFIG_HYPERV) (#ifdefs in C are ugly).
+Makes sense, creating new set of files looks good to me. The default 
+hyperv.c
+for hyperv emulation also seems misleading - probably we should rename it
+to hyperv_host_emul.[ch] or similar. That way, probably I can use 
+hyperv.[ch]
+for kvm on hyperv code. If you feel, thats too big of a churn, I shall use
+kvm_on_hyperv.[ch] (to avoid reading the file differently). What do you 
+think?
+
+
+>> @@ -10470,7 +10474,6 @@ void kvm_arch_free_vm(struct kvm *kvm)
+>>   	vfree(kvm);
+>>   }
+>>   
+>> -
+> Stray change?
+It was kinda leftover, but I thought I'd keep it as it removes and 
+unnecessary line.
 
 Thanks,
 Vineeth
+
