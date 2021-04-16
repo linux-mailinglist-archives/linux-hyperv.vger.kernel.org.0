@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D09DB362399
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Apr 2021 17:16:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59C303623DD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Apr 2021 17:25:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236142AbhDPPN7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Apr 2021 11:13:59 -0400
-Received: from mail-mw2nam10on2123.outbound.protection.outlook.com ([40.107.94.123]:3105
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        id S235503AbhDPPZa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Apr 2021 11:25:30 -0400
+Received: from mail-co1nam11on2108.outbound.protection.outlook.com ([40.107.220.108]:34561
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S244938AbhDPPN1 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Apr 2021 11:13:27 -0400
+        id S236098AbhDPPZ3 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 16 Apr 2021 11:25:29 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LEWYKeNBxtJLa9CJaXRNL4t+TTk3ePH7t/TjWROOmqFXHb0gJg0y5sNXwfaeHNYOWEUb6I4yEd9ia049cYjlk1T2/EBkAmVOC43VW8iaQHmbWQdXIWmz5ANvTvP/e2mI1RSwKo7uMa5aXGw2yJCQ3MtPwLeikyEq50yUOU/XBEQzQfn8mddAD9twWvSCTU43LpuduAlL0TO68ggfkWRSgKPb9G50ltzWBFVTGJgGSDhOy/egBU0FgazmTuVuI81brkR9/rw/WTniUFbsUoPd8nCb+Gqamov7/gs6+H/6+nmRaiAgQ3+7Yeknnd9s2XE9kYSw71eiWi6arpMw+Cko4A==
+ b=VhHxR75OwkmVajgJYq5h0PAjRFAy1/dQerSN1iR1XJwb0FThZO4d06FHPy9O/8GfhwdQy15TTcQjaToADocsyhmTSVLUvx0hSFYOh1pynvruPzXItaWjkM8dBjWrGNh/dZzdrYpSTCmkRLlYe7DuZyArMvUvnIWRnzl2srEgbXEmdw3C1ubWjYyVluS/h+NgMgGpPA+pZXANvqHOiu7WKmivgVCYfuQoBxKizhX84gmF/lWXKuUsTZfYaE1x4BETgmiZO1L7H/MAqoep1qa5CLUFq5KwJUT/3SYOwcmgivXbLx1KI9IdORHny0Xbc/6nPXlWq1rzQNq/mnfZ5qUz/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gM/Tfesu5FpUgzXplTedpOdB0L8K2zwxZUQQpuS86SI=;
- b=dIS7RvgQ9sDMDjTm7lCRaSDGzgkJn6uLO28sa9U7C3vQnOJfaThlGU96QqnST0ko74wng24RcNU5zguMR/eBEg3+BRhOLl+QXG4xT8QSbe9UjSlvuqYGD8Xg/+N7mI8PoD1ajjDkFF/eLKFfi/rHnscI9nwppaDDAWrdu1YlE/UimtSbUl5dSknkU7hvfd4QiNzoEjIXUR++UUqP4OvX1iwLacKVw5LfPBc1H4OFxln6KXU0KyvKtMECBn1TgV19w+Cqhcw4C9DJmQ6Y/SuUk6WYeWamKDlx/pTJTur92o8m/yO6tsHfHMiOJCAwed/CBnENQ2ZWaygEmr+XSB7THw==
+ bh=31ip0Tb0WeVgIiBkRjdd/eYFMzSB7JVk1TkVu5xytoU=;
+ b=d/CXFv83d+QsRi9PtQFHmuJeBXEYfdAjg9jbmZMKXw/bhYnxOeCkObLIAkWuE3ikHd9APyrG5PpbV5HM58rO9F5cGpaRFB7dHtCWy7j+dfYvMmVDQsZL+Et5Sh4L3XsgssvSPS5guJ8tadTY3q/Y1bliha8FerNfW2nH+/LhNu0Cip6n184UVuup6a1R7KzVtXNevmwURYCpWeop+zQGl8Lnh7M/4MkPUGXj/giOaA0YZ+BxHIK7f9pC4NSPK6821if4qczamHIq0qGqA3FPYtatuG5SmgQfbIpv7cDOIQ89y6+nyFU8oEwRfvYJg4nzgQsAF57VeoskCM1K8InocQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gM/Tfesu5FpUgzXplTedpOdB0L8K2zwxZUQQpuS86SI=;
- b=eVWd7v9F3rgaPwWIpJhPGnJ3Cgl+nS0UJpFg3G/pxAbfZGtGzcLqBw92tyCydkWEykKR5n/e/v1N2t6Kfoe8mPNReJGosJOv/YRnOw13RcwRhOy0YcQHdu2gORi1CxL9nhhlUljTCakULiFTXAzUdKDRTFmEGdmZSbX0m14RyJg=
+ bh=31ip0Tb0WeVgIiBkRjdd/eYFMzSB7JVk1TkVu5xytoU=;
+ b=KsqekMGSjKvqq8kmiPzcA92o3+hcV9NHvG5gpPZvendZupV4Bg6Cu2OPw5d/7YMwUOdDBDn2QICxrNVQqX0clDdH//4DyfdeAT7lYfW861u6qo5xeMO+VpzyEIn+tvrQR+DHa9oWP+6VvhcgFwBNOCXm9uBktcxsEqacfK3szU4=
 Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW4PR21MB1986.namprd21.prod.outlook.com (2603:10b6:303:7d::13) with
+ by MW4PR21MB1985.namprd21.prod.outlook.com (2603:10b6:303:7a::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.1; Fri, 16 Apr
- 2021 15:11:58 +0000
+ 2021 15:25:03 +0000
 Received: from MWHPR21MB1593.namprd21.prod.outlook.com
  ([fe80::3c30:6e04:401d:c31f]) by MWHPR21MB1593.namprd21.prod.outlook.com
  ([fe80::3c30:6e04:401d:c31f%4]) with mapi id 15.20.4065.010; Fri, 16 Apr 2021
- 15:11:58 +0000
+ 15:25:03 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -44,195 +44,120 @@ CC:     KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v3 3/3] Drivers: hv: vmbus: Check for pending channel
- interrupts before taking a CPU offline
-Thread-Topic: [PATCH v3 3/3] Drivers: hv: vmbus: Check for pending channel
- interrupts before taking a CPU offline
-Thread-Index: AQHXMs27vKwLrm+ylEitpqEN1ynUj6q3P3jA
-Date:   Fri, 16 Apr 2021 15:11:58 +0000
-Message-ID: <MWHPR21MB1593E004256AC14F39368D2ED74C9@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <20210416143449.16185-1-parri.andrea@gmail.com>
- <20210416143449.16185-4-parri.andrea@gmail.com>
-In-Reply-To: <20210416143449.16185-4-parri.andrea@gmail.com>
+Subject: RE: [PATCH] Drivers: hv: vmbus: Initialize unload_event statically
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Initialize unload_event statically
+Thread-Index: AQHXMs5fcfWdnqpzC0mKketBBMQwMqq3QyTw
+Date:   Fri, 16 Apr 2021 15:25:03 +0000
+Message-ID: <MWHPR21MB159389AFC33EB4D799E4D6B5D74C9@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <20210416143932.16512-1-parri.andrea@gmail.com>
+In-Reply-To: <20210416143932.16512-1-parri.andrea@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cf0aabe4-5cc5-4d0d-a713-5c65470cf90a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-16T15:09:47Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c1c980cf-e9a6-4aa3-9490-351e11637866;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-16T15:22:56Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
 x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b75d851-cdf2-4178-0056-08d900e9fada
-x-ms-traffictypediagnostic: MW4PR21MB1986:
+x-ms-office365-filtering-correlation-id: 3617d261-a7f6-431f-b01b-08d900ebce83
+x-ms-traffictypediagnostic: MW4PR21MB1985:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW4PR21MB19866A49FADBC6E6759C1C34D74C9@MW4PR21MB1986.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-microsoft-antispam-prvs: <MW4PR21MB198505F0C13456590EB8FB72D74C9@MW4PR21MB1985.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: f4fWdiobZJWXN6VGBkC59hFRhWRmWkFZQnWdPkcIPZpIA/5HOBYL8ALis1CSKUhBGT65nvMGGn8kj6fWw5bpWKoMk21za03gT8eXWNq2NN5MKzL724lz+yjYtJBbY720WoA1chlQ0NycY9qUVg0u4rKvjfG1ifFgUgicDrP2aATMbuPD3EkjltF08eerksWt870WUPQ4waP0TryL+cTMYSt3uVYZS8hm5fKGg07/5P3jEv6q9Genvo4445l3UOBKkFTxnngUgNJrT+wGqvbvRT1FqJ+z7mUcBK9Ma4e9wJxArodkINIPyZge1ATKsclv6BWKfP+xKtDExv6deaFGLU6FgMtP51YXymCJTX9cda8pTlVkuTfv5QWqz3CTsJX4fqWGCsLp9b12w3t/pjPCCVffrVn67AZK1rBrPaRDBwxrwuqiquS4zZH4+c5b5igTyPj8MhHsZciwhh9GGJqaVYH0oe3Cx2e4rPsMs1kr9IxDr5z1lxXeR97iP20nBRbiCwxIsGKzEHEWwoQDJsZxw/fNQ87T9OytMAtefcKrROnsl9gxApzgF7v1mqtpEvNjhJWmFVZRt5BS/+t0/V/oOWqSwlrzHaND7h+MvfYhzCg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(366004)(346002)(39860400002)(136003)(76116006)(71200400001)(9686003)(10290500003)(26005)(7696005)(186003)(64756008)(8936002)(66476007)(66946007)(86362001)(122000001)(33656002)(5660300002)(52536014)(66446008)(66556008)(38100700002)(2906002)(82960400001)(316002)(83380400001)(4326008)(55016002)(478600001)(82950400001)(110136005)(8676002)(8990500004)(54906003)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?3yI0z/m6gAfls5FnQDi1Sa/RgWSO5j8mo+8KrkzlhfvIX8dOEp+30qO73u61?=
- =?us-ascii?Q?nckjyHLQ4FM7dugCFdAQpTj5HHBvmWsmNCkWZEKp4To1G3giqTedd6ggHAgf?=
- =?us-ascii?Q?RqfsyUBGMaUQh3mb6EdmzG2R9fl+KKFwral2x6peFC325pnMiAP2N5Ej80UM?=
- =?us-ascii?Q?eSG+iNSAHOEIUzgLcPbC9Ix6urMfBe/iPhOW2DXC4AyJei4fl5ZfTBW5/ECN?=
- =?us-ascii?Q?gsmri4ueoKlQI+ZL8HGPW8LgrYkBzlSyP9mtbALLNaxBxTHtuGa/f0fkgS+6?=
- =?us-ascii?Q?8i6bPuR+nXZafXf3z5SNcgh0QxhUlbnbIBd2FPr4dEL/n+6Dpk9YYILT45Lg?=
- =?us-ascii?Q?7dH3V/7nSQUvrgZX+nDV2tTm5+GzPGqbUHiGhMyaxlN4BZ1MdAzJY+Qf8qTt?=
- =?us-ascii?Q?izJbQtc9bD2sfWe2psRaBt80sYznRbWGo4TPDma6MyeIjZAz/euqfdh9yZei?=
- =?us-ascii?Q?hzVPbhP2hPpeqwJTaZ4+y+DaRQAvKjt/2i6FmZyi5lPjtPjuXKufTW/JP+bO?=
- =?us-ascii?Q?+yjvej63yveZWtBt/BaIsw5TJwKUwa9bS6uzdADDhQiqab4Sy5AmgLHRWqr2?=
- =?us-ascii?Q?bYO51x3UUYxsWlDEOmTLs9Hm0LQ9spJF5NnN6pyaKtrPsuEHlOqQRBIKK4JL?=
- =?us-ascii?Q?FrEYEp9m+P95mbD4kUj1/V+JJiPdXIBqAVJ7Z8F9gzOKFxBQIixr752+oZhz?=
- =?us-ascii?Q?QyXApOD03j6d0zzQXGCmPey0iKekthpz0LxwOKalIunSUE3Jd0OPY9yuUc7W?=
- =?us-ascii?Q?EZFdxPqHhhAnIhXqtmUoXgeUo9nrdHgUagvTaxhl0Fa9tcGrMrSGn9zNgYfa?=
- =?us-ascii?Q?4g7nNrrmZ1nYGX5ktVpPzLHoWgSnMGdai8cveEJ9mM5/u3BGHHCloI5so4pZ?=
- =?us-ascii?Q?vittqnzIU28C0rzHRlFfsBVJniNy6n6BBC3mY/ArpOtt66a2+Sdx1fv5WXZz?=
- =?us-ascii?Q?KUMQUdpLDj3CCRgUEjcH2L+ioZUMzRmQ1/xsqrkuR4H1dZR5/8edcDUB94KK?=
- =?us-ascii?Q?VOE0bqerY7nQ7YIT6nm0eHrTM0Va9L8oU081wNNE7pRHQ3OVmcJ7r83Bis+4?=
- =?us-ascii?Q?EkwemoKPIxSaj2yHpne6gUjww8hP+Igj7qVJVty984RMm8m2zyYBQVgzZLtT?=
- =?us-ascii?Q?yEbkLVygkvFKLUnDFmvWwBge8fQhfXJLa3kqe46NSkhPD0UC3jp68/SXS8rQ?=
- =?us-ascii?Q?3x80e95rpsGYrW1gHaaT/HpiYQvuf+cMMW9AmC6EzhEJVmgV2IXtNnRW9LH/?=
- =?us-ascii?Q?sJ6kuXd/qyQ3Vb4o0dbLY9dJi2rifNZXsSxzrEQb6ozNWpzDxV7WFWHx+9KP?=
- =?us-ascii?Q?NYFUn7aACFo5JFnZc/r6dzQq?=
+x-microsoft-antispam-message-info: z2DhoP3KpZp0Qat0bxaon1HeghFPQrWhW8hUwa1PBhVUURktp+LEx5NRdLBw54LviWlp83JT1KPBFh8cT4KeH2xH1qY/x3bzWlPnj2seD0YYmc4rD7AeIGXjGT8KgugVnF4qIrWivD3oi65rmFXgpWv+wYJQpFIJvI5ZP4mZsCo+pCzlkG/wbXlHawadOgROCo97JdJoepWHmeDe/TFY5GaFM3SXEJRk8ejeonD8gzS7PCphjVmAIlgJx2WwMUB82oJjyrg/SB5Ob3lWKmOvp4NS9vbbWs2eA/BLO7kD6/vqcjb6BwRYff28Oy4OU9Z16sXGpF+7tkMq7xbx0NlRKtP3s/isGXzCVbbn0ipDcRLbZ1h6in22L8tp1Akxlj35mwdRjoQwxNBo/1EUfnGrOshLwybvJ+ZNgvECqxOl7ZCe+Zp8dpYIzmdZ5iviF7PngpoJQsVjdBmQipcx8NrI9OEArGGuyBXxpIdf7fuy7Mp2WJITCxwS6hG/4p8QUgBRXG3NKa6dhVTImwDyQJ6Tav3MbxHAuJ32BEdJ83UhQ/7YH9slM8ha14+AWJeyGZlz0M95D7/hDbqjuyJx0oL9h64xAc3DV6VNHzGZl3jcrYA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(66476007)(66556008)(64756008)(8990500004)(66446008)(8936002)(66946007)(7696005)(38100700002)(6506007)(8676002)(83380400001)(10290500003)(54906003)(71200400001)(82950400001)(82960400001)(316002)(9686003)(33656002)(122000001)(55016002)(110136005)(86362001)(186003)(2906002)(4326008)(76116006)(52536014)(478600001)(5660300002)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?HqPDFPfHuDidyaZTNIUoqlGbOke7fNg2CpDWy1NrVDhz+4Ijv2X73hB0faDp?=
+ =?us-ascii?Q?q9yrckAW8Ej2csaOAhmteaXcaX1l/AQR6262AfYKkcNRi/jRO7B4vbfK4gTz?=
+ =?us-ascii?Q?MuPpVJp41hIxsec2ntqCWfcjq4U85cYOXP1lUwg3Y8h7x1gr6vhYGpqzTSvj?=
+ =?us-ascii?Q?AEadhZNpEsEmqbr08w7IemFHSusQHCZaqGg/4KgE4Vmu/u505lv07Ml061Cn?=
+ =?us-ascii?Q?uPgwRBRboaAb8f8vLAnJFMmTSGr9o5WQiOFzRvXFeVfNredL8E7e/6y2+GVh?=
+ =?us-ascii?Q?BXjNrksGEB6licztAQkh9FSy2gbwgIx/JI+eqS2Y/EknHbYGH7eIylZPjCN5?=
+ =?us-ascii?Q?5qqmw4Lsu8WCW3lOVSMtnzblsQnmvUMhgfx8915YwRaT35bvrnIJkH5SZlvb?=
+ =?us-ascii?Q?rhhJ146Tykf3XkBogUAl1oy4o9qpsU1fYC2ze6gUstmNhCuVF3ukS2qoiwM6?=
+ =?us-ascii?Q?PlN3GADFmXwIoaDTEWozlbT/i6cEVnNYWUZAXaQpMlJz5BzRabVNCKyi6buX?=
+ =?us-ascii?Q?bhTZZ5xRwZeZBl6g5IUW5csC9ikcT1pTZTHR9kpgB5xfpaJv/XYIJ8D27ytV?=
+ =?us-ascii?Q?Uw1Eg1ekKMginqiKfOTyzEmO92mefgV7c2POluM8k46YZBSqjLRZA4AooZjf?=
+ =?us-ascii?Q?pilXLXWTYCJITAXNN4bivNrcs6D9+SVrmyaVOPartvIO9B5IJh2xJeFqmwH+?=
+ =?us-ascii?Q?0c6gM38KGr/i/fHc6nciLe2SZe40WNkM9V5aIsJIBXQOi6zASqOlI8SBwbPO?=
+ =?us-ascii?Q?G3g4K7Z6DqVX0VLdey5M3K/Vlb3w7MXbaktepyyG5qvJPMw6crwhBiJscGaz?=
+ =?us-ascii?Q?uToqFJH5t5iMpygsvhrmHVzA43XJt3HZbLAs9LsWKFUWSDFbpEgceOBxXeAT?=
+ =?us-ascii?Q?kxzYw8DDo/S7xBLsv3NveHqA4nYZSNZCQKTx9JTldQbvdaCneJUoclg1xA4k?=
+ =?us-ascii?Q?rLQhtIaq/UO3s0RuRL6LdHBnT29az0HAHBwNNI12pK9m3ylClp50EdoHBege?=
+ =?us-ascii?Q?y+u446B3Pt78zSFgU/pGTahYa1VYIuSNZ4PbnJ9nzqKX5lvYUWTYA+2uHnL/?=
+ =?us-ascii?Q?PA5RG2ijV1njVtgF1MFZyui/AEqG/C67Jqf3LTIkJgmnlQUaC8vcBMFcAWPW?=
+ =?us-ascii?Q?gzzkCot4iG0zmkc5ie6LmPy2Fa+6fP0tdKw3NZkshr/lCeSbDV+LXXAmQcHI?=
+ =?us-ascii?Q?u6Yy8rmrOv+jCqi3t0ZFG+NCGvkNSa0665QYMTGDs4F9ugAKUo1ggJOnFVM+?=
+ =?us-ascii?Q?uhUGlGyps90V6RD/L1aD/1k+BwwRQtohr07XXdgMaTtm8ptdBYuU4vJvPUxl?=
+ =?us-ascii?Q?jH1rN7kaPiPFF7cgJZkJnFZZ?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b75d851-cdf2-4178-0056-08d900e9fada
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2021 15:11:58.4497
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3617d261-a7f6-431f-b01b-08d900ebce83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2021 15:25:03.0527
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fRVr7akqMfG2KH5dDYnnAUKrC3tRBPn6E1Dl6k+pcT+8+vwHHXvF+3wVZohw0rCA/Q5jb2gedAp/ctaM9TZQluLD5c7QeZNgnga+PB02QPw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1986
+X-MS-Exchange-CrossTenant-userprincipalname: LK7jQk1/QvqmUFejeKmLNJYtldG8gxnzPnlCQWFqRVhquVTqza69QBZt7CHGcUAk/80jHBkCVob3bySjwD8HQ5BGWAE6Ny2uWiQqbguwFYg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1985
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Friday, April=
- 16, 2021 7:35 AM
+ 16, 2021 7:40 AM
 >=20
-> Check that enough time has passed such that the modify channel message
-> has been processed before taking a CPU offline.
+> If a malicious or compromised Hyper-V sends a spurious message of type
+> CHANNELMSG_UNLOAD_RESPONSE, the function vmbus_unload_response() will
+> call complete() on an uninitialized event, and cause an oops.
+
+Please leave a comment somewhere in the code itself that describes this
+scenario so that somebody in the future doesn't decide it's OK to "simplify=
+" the
+initialization of unload_event. :-)
+
+Michael
+
 >=20
+> Reported-by: Michael Kelley <mikelley@microsoft.com>
 > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > ---
->  drivers/hv/hv.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 53 insertions(+), 3 deletions(-)
+>  drivers/hv/channel_mgmt.c | 2 +-
+>  drivers/hv/connection.c   | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 >=20
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index 3e6ff83adff42..e0c522d143a37 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -15,6 +15,7 @@
->  #include <linux/hyperv.h>
->  #include <linux/random.h>
->  #include <linux/clockchips.h>
-> +#include <linux/delay.h>
->  #include <linux/interrupt.h>
->  #include <clocksource/hyperv_timer.h>
->  #include <asm/mshyperv.h>
-> @@ -292,12 +293,50 @@ void hv_synic_disable_regs(unsigned int cpu)
->  		disable_percpu_irq(vmbus_irq);
->  }
+> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> index f3cf4af01e102..1efb616480a64 100644
+> --- a/drivers/hv/channel_mgmt.c
+> +++ b/drivers/hv/channel_mgmt.c
+> @@ -841,7 +841,7 @@ void vmbus_initiate_unload(bool crash)
+>  	if (vmbus_proto_version < VERSION_WIN8_1)
+>  		return;
 >=20
-> +#define HV_MAX_TRIES 3
-> +/*
-> + * Scan the event flags page of 'this' CPU looking for any bit that is s=
-et.  If we find one
-> + * bit set, then wait for a few milliseconds.  Repeat these steps for a =
-maximum of 3 times.
-> + * Return 'true', if there is still any set bit after this operation; 'f=
-alse', otherwise.
-> + *
-> + * If a bit is set, that means there is a pending channel interrupt.  Th=
-e expectation is
-> + * that the normal interrupt handling mechanism will find and process th=
-e channel interrupt
-> + * "very soon", and in the process clear the bit.
-> + */
-> +static bool hv_synic_event_pending(void)
-> +{
-> +	struct hv_per_cpu_context *hv_cpu =3D this_cpu_ptr(hv_context.cpu_conte=
-xt);
-> +	union hv_synic_event_flags *event =3D
-> +		(union hv_synic_event_flags *)hv_cpu->synic_event_page + VMBUS_MESSAGE=
-_SINT;
-> +	unsigned long *recv_int_page =3D event->flags; /* assumes VMBus version=
- >=3D VERSION_WIN8 */
-> +	bool pending;
-> +	u32 relid;
-> +	int tries =3D 0;
-> +
-> +retry:
-> +	pending =3D false;
-> +	for_each_set_bit(relid, recv_int_page, HV_EVENT_FLAGS_COUNT) {
-> +		/* Special case - VMBus channel protocol messages */
-> +		if (relid =3D=3D 0)
-> +			continue;
-> +		pending =3D true;
-> +		break;
-> +	}
-> +	if (pending && tries++ < HV_MAX_TRIES) {
-> +		usleep_range(10000, 20000);
-> +		goto retry;
-> +	}
-> +	return pending;
-> +}
+> -	init_completion(&vmbus_connection.unload_event);
+> +	reinit_completion(&vmbus_connection.unload_event);
+>  	memset(&hdr, 0, sizeof(struct vmbus_channel_message_header));
+>  	hdr.msgtype =3D CHANNELMSG_UNLOAD;
+>  	vmbus_post_msg(&hdr, sizeof(struct vmbus_channel_message_header),
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index 350e8c5cafa8c..529dcc47f3e11 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -26,6 +26,8 @@
 >=20
->  int hv_synic_cleanup(unsigned int cpu)
->  {
->  	struct vmbus_channel *channel, *sc;
->  	bool channel_found =3D false;
+>  struct vmbus_connection vmbus_connection =3D {
+>  	.conn_state		=3D DISCONNECTED,
+> +	.unload_event		=3D COMPLETION_INITIALIZER(
+> +				  vmbus_connection.unload_event),
+>  	.next_gpadl_handle	=3D ATOMIC_INIT(0xE1E10),
 >=20
-> +	if (vmbus_connection.conn_state !=3D CONNECTED)
-> +		goto always_cleanup;
-> +
->  	/*
->  	 * Hyper-V does not provide a way to change the connect CPU once
->  	 * it is set; we must prevent the connect CPU from going offline
-> @@ -305,8 +344,7 @@ int hv_synic_cleanup(unsigned int cpu)
->  	 * path where the vmbus is already disconnected, the CPU must be
->  	 * allowed to shut down.
->  	 */
-> -	if (cpu =3D=3D VMBUS_CONNECT_CPU &&
-> -	    vmbus_connection.conn_state =3D=3D CONNECTED)
-> +	if (cpu =3D=3D VMBUS_CONNECT_CPU)
->  		return -EBUSY;
->=20
->  	/*
-> @@ -333,9 +371,21 @@ int hv_synic_cleanup(unsigned int cpu)
->  	}
->  	mutex_unlock(&vmbus_connection.channel_mutex);
->=20
-> -	if (channel_found && vmbus_connection.conn_state =3D=3D CONNECTED)
-> +	if (channel_found)
-> +		return -EBUSY;
-> +
-> +	/*
-> +	 * channel_found =3D=3D false means that any channels that were previou=
-sly
-> +	 * assigned to the CPU have been reassigned elsewhere with a call of
-> +	 * vmbus_send_modifychannel().  Scan the event flags page looking for
-> +	 * bits that are set and waiting with a timeout for vmbus_chan_sched()
-> +	 * to process such bits.  If bits are still set after this operation
-> +	 * and VMBus is connected, fail the CPU offlining operation.
-> +	 */
-> +	if (vmbus_proto_version >=3D VERSION_WIN10_V4_1 && hv_synic_event_pendi=
-ng())
->  		return -EBUSY;
->=20
-> +always_cleanup:
->  	hv_stimer_legacy_cleanup(cpu);
->=20
->  	hv_synic_disable_regs(cpu);
+>  	.ready_for_suspend_event =3D COMPLETION_INITIALIZER(
 > --
 > 2.25.1
 
