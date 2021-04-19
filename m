@@ -2,84 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61A2E364784
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Apr 2021 17:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4BC53648B4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Apr 2021 19:02:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233070AbhDSPzM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Apr 2021 11:55:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37172 "EHLO
+        id S231307AbhDSRCx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Apr 2021 13:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233575AbhDSPzL (ORCPT
+        with ESMTP id S230127AbhDSRCx (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Apr 2021 11:55:11 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FA1C061761
-        for <linux-hyperv@vger.kernel.org>; Mon, 19 Apr 2021 08:54:41 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id p16so13992174plf.12
-        for <linux-hyperv@vger.kernel.org>; Mon, 19 Apr 2021 08:54:41 -0700 (PDT)
+        Mon, 19 Apr 2021 13:02:53 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C37C06174A
+        for <linux-hyperv@vger.kernel.org>; Mon, 19 Apr 2021 10:02:23 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id d200-20020a1c1dd10000b02901384767d4a5so2494114wmd.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 19 Apr 2021 10:02:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=duJja9qFhlLlL4LoMtIl+yX5xYury+ylhpHbGAhwQ0E=;
-        b=G8/9mwR4HBm33TlMKNDcLg7l0iEfmhU/hK6X1LNe9e9REFm/Qi9PKIrp9oGFy9l7ux
-         vauYRNGylEbGUJ1XaZSgyEsT3T6ODaksjQ2kvcPCHZHByqbIU4mX3wU1elNBY5+JT+CZ
-         q21r1UMZZCLZ0hsT+lY1AargK9RsqF+31a6laA/tHSN9+jisRN1qEjiBAqZ9XAuF4bKD
-         Q8hBU3qppYwQ2EXRfPg0Ek8PYyijqUkploPPwtsxVY8/R7d+1uFH3yO7E4Rq6UbF1pCt
-         HFHrSpHsKgn0kZ6tEJePImDdZr/TQg+2XTgxsgpWxhmYxoVH/GUJlp2TgrwiUBxD1+o/
-         jZRg==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=EB01fzjv57+SVxR42E9TuLQcS358T5+VMxIrkp/i+Yc=;
+        b=dbyOfSO99WugT+KGDDZNn6dMX08n8z1CAtlFmCSV/FrWt2I76l3YrJt1nFg1Xx2Mfk
+         Sd8aXaEABItlzAuNUFFaoogGUsbuVLeXbeGx+t89fo4caJH1xhmISAHrA+S/96AP9en7
+         wCzELxSN96HceZ4uPeB6uLEvHDGtlOuzB557W1vZw04HeR16mK2+5ll19j9bwGfOxs1f
+         tekP7RO+BV41z1kcMGFzfXxQDx3C+2JztxqwXaz2gKMHoL2uDUHZA2DCM2fL9Bv8KDsX
+         prbvNX6p1GP1mgdilPP4ZQDu+1lcXxSgm+Sxlu0OjDqJdPTIIKRajoUwvwemJ225u92y
+         sYKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=duJja9qFhlLlL4LoMtIl+yX5xYury+ylhpHbGAhwQ0E=;
-        b=gXVK3ik5OfVbjxWXv6dKFHT5F5FnvgJFgrfIhZTqIehJFITG9Y8ZgbP/twtlGOUc7J
-         utQyKoJWpn1zkoXbCRT/XjkgE3sCRyjPRxw7eLO7a0lJyrSC7QM9y+lGEKSIwfDuVFcJ
-         6REJ6eURmQydTHbMVk8TkX5D4Ku6gCyEBZ1A/9Jc5jifz5GaawAap/+bsThNhaa32gL+
-         uk0abUL/3BFn7dYmsfk9N2ZkVgeHyFzeeSqHhiBkv11DVVvwt7BLjTkHLZ+LDo7iJFvE
-         OQu6V2PhLqyj8jzRZOKpeOePa1tdi7cWCK05Fi+kds9vijWZUWwhSiJJswYkiqVzYMgX
-         32/g==
-X-Gm-Message-State: AOAM530huGZGN4sYVDUna1KAZKTq8HkVrRiTe7trQ+wMOjdUp+VI7H4T
-        qOoP55K+fUGzUL5uDywPMxwnBg==
-X-Google-Smtp-Source: ABdhPJxavXAzGEe58BWYzw5ZEc+NmTGqB0zbhnZu7c0BbJ44Vw9Wn3xtMJZMf5MruH2tejQDyUlvhA==
-X-Received: by 2002:a17:902:e8d5:b029:e6:cabb:d07 with SMTP id v21-20020a170902e8d5b02900e6cabb0d07mr23765754plg.3.1618847680830;
-        Mon, 19 Apr 2021 08:54:40 -0700 (PDT)
-Received: from hermes.local (76-14-218-44.or.wavecable.com. [76.14.218.44])
-        by smtp.gmail.com with ESMTPSA id l22sm15346572pjc.13.2021.04.19.08.54.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Apr 2021 08:54:40 -0700 (PDT)
-Date:   Mon, 19 Apr 2021 08:54:37 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        liuwe@microsoft.com, netdev@vger.kernel.org, leon@kernel.org,
-        andrew@lunn.ch, bernd@petrovitsch.priv.at, rdunlap@infradead.org,
-        shacharr@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v8 net-next 2/2] net: mana: Add a driver for Microsoft
- Azure Network Adapter (MANA)
-Message-ID: <20210419085437.081fcffb@hermes.local>
-In-Reply-To: <20210416201159.25807-3-decui@microsoft.com>
-References: <20210416201159.25807-1-decui@microsoft.com>
-        <20210416201159.25807-3-decui@microsoft.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=EB01fzjv57+SVxR42E9TuLQcS358T5+VMxIrkp/i+Yc=;
+        b=nvO7vCiQSruz8q4ZOf3n+ECqDRe1Cg2IqnGLYYXX5W2itZ7+QyUdle65P2IIHXhR+W
+         yNNfyBYoGHa59ON1dEeQEPNiOK05C2Q/G6vUtxFO+xr/e+6YrOVzrpbNTH5z+c2Vv5zj
+         PSdmUDLR+gdwUxgPJFtXi/n/5y/4F9iX6D35ylDOKaGfVE9fGuVlCX0Ty0RyTm+pgaWP
+         TufAnHKmgDpC6adCQJPAQkbhbNqurd+0F3E+XQ2N52gO7CtBIbYRimhP7YX8ojh6Zxmj
+         jPHGfiPYN0wW7n11hmbV4QDnt1zcQ/JyZVB0OfIXH7NM0uhy05MFJl7NMtsNiKqYeOtZ
+         KNmg==
+X-Gm-Message-State: AOAM533uMnbMuBSmtueWZXtjFRAjgtTothshFwW7veDfl0m0vTPnyOFU
+        CyhGjPcp+1jJTgrw0bZSFbVsnvXoaShdAqEMz4M=
+X-Google-Smtp-Source: ABdhPJz5Iz+FDKEYZVNVG52XtWDB8FxMe7Yusocfqqg4ogm41aco8yG7/rlaZPTOBUuIkHQLIPt10glIVXDn6Y3VbrQ=
+X-Received: by 2002:a1c:6808:: with SMTP id d8mr28124wmc.147.1618851742103;
+ Mon, 19 Apr 2021 10:02:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a5d:4f8b:0:0:0:0:0 with HTTP; Mon, 19 Apr 2021 10:02:21
+ -0700 (PDT)
+Reply-To: jennifervk200@gmail.com
+From:   Jennifer Vivian Komula <jenniferkomula@gmail.com>
+Date:   Mon, 19 Apr 2021 17:02:21 +0000
+Message-ID: <CAFwA6q5+ijFsiY27Vm=4rupELVjtxnovv+Y=6i2jad7O3r+jcQ@mail.gmail.com>
+Subject: re
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, 16 Apr 2021 13:11:59 -0700
-Dexuan Cui <decui@microsoft.com> wrote:
-
-> Add a VF driver for Microsoft Azure Network Adapter (MANA) that will be
-> available in the future.
-> 
-> Co-developed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Co-developed-by: Shachar Raindel <shacharr@microsoft.com>
-> Signed-off-by: Shachar Raindel <shacharr@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-
-Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
+It's my pleasure to contact you for a business venture which I intend
+to=C2=A0 establish in your country, though I have not met with you before
+but I=C2=A0 believe one has to risk, confiding in someone to succeed
+sometimes in life.There is this huge amount of money, (US $3.500, 000)
+which I inherit=C2=A0 from my late father and is deposited in a finance
+firm here in Lome Togo=C2=A0 .Now I decided to invest this money in your
+country please contact me for=C2=A0 more details
+Thanks.
+Jennifer Vivian Komula
