@@ -2,57 +2,51 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A5B3366067
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Apr 2021 21:48:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACE75366095
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Apr 2021 22:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233725AbhDTTt0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Apr 2021 15:49:26 -0400
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:36845 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233617AbhDTTt0 (ORCPT
+        id S233544AbhDTUEv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Apr 2021 16:04:51 -0400
+Received: from smtprelay0124.hostedemail.com ([216.40.44.124]:60072 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S233541AbhDTUEt (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Apr 2021 15:49:26 -0400
-Received: by mail-wr1-f46.google.com with SMTP id m9so26189028wrx.3;
-        Tue, 20 Apr 2021 12:48:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a0ukk8PsmQlwN+Rn5D2gQhIuSsA6BZpFzPg9NcEGXp4=;
-        b=skuH+Nsnefit62ZEPE1hVhjefn/dZC+6uC3ArvyIK2QU+7oAypnUcsXa3iy65Iy7B4
-         iXbFjc1p89qFsq8Bqj5hKmEvCHTUhRhPGM8ouIL3yd3qjDkIBafTXuC+yUXdk70hYL59
-         ycEuBa0OwKVdCYwfIXMjtvHNX6+CnOqroBa49mMh5JyL5s54uPYzRITPqV9hAmgUz0QE
-         MmBTi0JLT3JCe0g9/BGomhMQMYyUDd3U6YPAg95zNLicdvLGfNKE1fuu4k39R0+L0WvY
-         iFy44r5gaOH0mb9DLvAoNvKA+R0aGauDKHw739EZ3vBAQpS3dUdtIkE/uHbRCpbenqPY
-         lPoA==
-X-Gm-Message-State: AOAM533sBprE+ejd/qxmtAoHtpGo1/FmI6TYZMboJr+h+9RdwlR+ZUfR
-        ES0hFDnnCukkjDr0bMs0Vfg=
-X-Google-Smtp-Source: ABdhPJy0ZocLxNBmT+3nxOoxl9PzGDN9xmxdB2RMLTGXFgEvNocM1baf8kWI66gQWw/s/BQ9T+mPiA==
-X-Received: by 2002:adf:e3cf:: with SMTP id k15mr22203180wrm.327.1618948131851;
-        Tue, 20 Apr 2021 12:48:51 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id d2sm10485wrs.10.2021.04.20.12.48.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Apr 2021 12:48:51 -0700 (PDT)
-Date:   Tue, 20 Apr 2021 19:48:50 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
+        Tue, 20 Apr 2021 16:04:49 -0400
+X-Greylist: delayed 326 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Apr 2021 16:04:49 EDT
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id A2798180A4912
+        for <linux-hyperv@vger.kernel.org>; Tue, 20 Apr 2021 19:58:54 +0000 (UTC)
+Received: from omf01.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 6E69C181D3030;
+        Tue, 20 Apr 2021 19:58:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf01.hostedemail.com (Postfix) with ESMTPA id F010F1727C;
+        Tue, 20 Apr 2021 19:58:49 +0000 (UTC)
+Message-ID: <c5de33a3cd1dc18688fc2bb7cf6a84aedcc5a041.camel@perches.com>
 Subject: Re: [PATCH 1/1] video: hyperv_fb: Add ratelimit on error message
-Message-ID: <20210420194850.ykxb3yy75zvzqfun@liuwe-devbox-debian-v2>
-References: <1618933459-10585-1-git-send-email-mikelley@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From:   Joe Perches <joe@perches.com>
+To:     Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Date:   Tue, 20 Apr 2021 12:58:48 -0700
 In-Reply-To: <1618933459-10585-1-git-send-email-mikelley@microsoft.com>
+References: <1618933459-10585-1-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.38.1-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: F010F1727C
+X-Spam-Status: No, score=0.10
+X-Stat-Signature: wp7o7gzq7pg8kxru5xh3thy9zy7qob7b
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19dJn8qDTGT/B7MaqDP5Xqh09MwTqzF5cI=
+X-HE-Tag: 1618948729-943129
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Apr 20, 2021 at 08:44:19AM -0700, Michael Kelley wrote:
+On Tue, 2021-04-20 at 08:44 -0700, Michael Kelley wrote:
 > Due to a full ring buffer, the driver may be unable to send updates to
 > the Hyper-V host.  But outputing the error message can make the problem
 > worse because console output is also typically written to the frame
@@ -64,25 +58,27 @@ On Tue, Apr 20, 2021 at 08:44:19AM -0700, Michael Kelley wrote:
 > 
 > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 
-Applied to hyperv-next. Thanks.
+None of the callers of this function ever check the return status.
+Why is important/useful to emit this message at all?
 
 > ---
->  drivers/video/fbdev/hyperv_fb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/video/fbdev/hyperv_fb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
 > index 4dc9077..a7e6eea 100644
 > --- a/drivers/video/fbdev/hyperv_fb.c
 > +++ b/drivers/video/fbdev/hyperv_fb.c
 > @@ -308,7 +308,7 @@ static inline int synthvid_send(struct hv_device *hdev,
->  			       VM_PKT_DATA_INBAND, 0);
->  
->  	if (ret)
+>  			       VM_PKT_DATA_INBAND, 0);
+>  
+> 
+>  	if (ret)
 > -		pr_err("Unable to send packet via vmbus\n");
 > +		pr_err_ratelimited("Unable to send packet via vmbus; error %d\n", ret);
->  
->  	return ret;
->  }
-> -- 
-> 1.8.3.1
+>  
 > 
+>  	return ret;
+>  }
+
+
