@@ -2,110 +2,132 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 048353668B3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Apr 2021 12:00:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1560E3668D3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Apr 2021 12:07:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235598AbhDUKBE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Apr 2021 06:01:04 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:39637 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234678AbhDUKBC (ORCPT
+        id S235351AbhDUKHc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Apr 2021 06:07:32 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52856 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234768AbhDUKHc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Apr 2021 06:01:02 -0400
-Received: by mail-wm1-f42.google.com with SMTP id i21-20020a05600c3555b029012eae2af5d4so931494wmq.4;
-        Wed, 21 Apr 2021 03:00:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bDvQUUz8ej1+0YImN7WeZqcWme2grbE/EnUCkHf+ALc=;
-        b=GMX/fhuUG9KcVNlBjVZMgOhRbhA37P6q1eyMm0JBV80PC4Uv4mv7hQXTE/k7aAwyCd
-         qty8AGcNBcye15i6sd0VQ562T59nlAdiPCIYKWEiaKx4w/EkiHeeLlG5cqXEbtGgfqqT
-         DgHPiYFk4ea5DiTJCrI0O62DA+0XKrKZUFlvTPkFkiGawGSIx+yAdTKlSANCcuKGjKO3
-         Pt1z5CL8tdLL4O1/Twcz0JP999iaJ9EjCDMothI4LhoGceuofRzDMANsfQzWdHWDMfUF
-         cZo2epBLGL/t7M6bdHisxazBfMZ5iJMOXGoe4cJAH8VyxbWZwxk9LeKXTEU9TcnoMH5K
-         KfSg==
-X-Gm-Message-State: AOAM531euvwR3hg0ktIIOlNUPiWFGuBWAekMQQZ3njeChT4H93Tsqtp4
-        kUPns3GZGH4thjMApmAxKm4=
-X-Google-Smtp-Source: ABdhPJxf9b7fxa5IUtu8ExJXHsiNgLCEAni5N5dBXLj6L3+vQfEL3WH/Nd7sFk5p/8IGeNCpkSFiNg==
-X-Received: by 2002:a1c:f608:: with SMTP id w8mr9098399wmc.44.1618999228362;
-        Wed, 21 Apr 2021 03:00:28 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id v7sm2534897wrs.2.2021.04.21.03.00.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Apr 2021 03:00:28 -0700 (PDT)
-Date:   Wed, 21 Apr 2021 10:00:26 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vineeth Pillai <viremana@linux.microsoft.com>
-Cc:     Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] hyperv: SVM enlightened TLB flush support flag
-Message-ID: <20210421100026.4hcgrxeri444if45@liuwe-devbox-debian-v2>
-References: <cover.1618492553.git.viremana@linux.microsoft.com>
- <3fd0cdfb9a4164a3fb90351db4dc10f52a7c4819.1618492553.git.viremana@linux.microsoft.com>
+        Wed, 21 Apr 2021 06:07:32 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13LA3v6L157206;
+        Wed, 21 Apr 2021 10:06:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=rqZx3n1O9indxVMH5aRmvPsIj4nGHrjQy7QJ+DAfUA8=;
+ b=UlEf3glD9GnQHWOabq08oRBICKH1rzlIQidEHobKGEj1WepgEOkoOJf6NW0fNfPL4byB
+ cXlfvnOwmwCCILkOtwNfMC/ZkQUpiDQBqNiu3UGWsavIa1DIdiXrVc3RAYrzqfPZ9hR5
+ BuSLwTNedYXgNIdn5OSqAyJbX759BGO5RRGawJlyjvo/LeRv8+nw77+6AvearsK17N7n
+ ykLAODgGLNqLTwFvoIII9szmKiEnwTL1hL+bzWZ9XVx6QdaOy2SWisDn3KpAIWoVKN8M
+ mmXq23yrde6eTTnCfnCAXkoIKHaHRp7bjezbp4wDIQXOPsP5+g5SXOS/ZW1759DyBZNu 3A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 38022y16mk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Apr 2021 10:06:57 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13LA4pPE066401;
+        Wed, 21 Apr 2021 10:06:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 3809m0c42v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Apr 2021 10:06:56 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 13LA6uUr072957;
+        Wed, 21 Apr 2021 10:06:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 3809m0c42g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Apr 2021 10:06:56 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 13LA6tmH003915;
+        Wed, 21 Apr 2021 10:06:55 GMT
+Received: from mwanda (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 21 Apr 2021 03:06:54 -0700
+Date:   Wed, 21 Apr 2021 13:06:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     decui@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org
+Subject: [bug report] net: mana: Add a driver for Microsoft Azure Network
+ Adapter (MANA)
+Message-ID: <YH/5OQSEbCBvH9ju@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3fd0cdfb9a4164a3fb90351db4dc10f52a7c4819.1618492553.git.viremana@linux.microsoft.com>
+X-Proofpoint-ORIG-GUID: ifrNccH_lR7m1p5MFa76ssMISi2w1P2a
+X-Proofpoint-GUID: ifrNccH_lR7m1p5MFa76ssMISi2w1P2a
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9960 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 bulkscore=0 phishscore=0 clxscore=1015 impostorscore=0
+ mlxlogscore=982 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
+ definitions=main-2104210077
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Apr 15, 2021 at 01:43:37PM +0000, Vineeth Pillai wrote:
-> Bit 22 of HYPERV_CPUID_FEATURES.EDX is specific to SVM and specifies
-> support for enlightened TLB flush. With this enlightenment enabled,
-> ASID invalidations flushes only gva->hpa entries. To flush TLB entries
-> derived from NPT, hypercalls should be used
-> (HvFlushGuestPhysicalAddressSpace or HvFlushGuestPhysicalAddressList)
-> 
-> Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 606f5cc579b2..005bf14d0449 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -133,6 +133,15 @@
->  #define HV_X64_NESTED_GUEST_MAPPING_FLUSH		BIT(18)
->  #define HV_X64_NESTED_MSR_BITMAP			BIT(19)
->  
-> +/*
-> + * This is specific to AMD and specifies that enlightened TLB flush is
-> + * supported. If guest opts in to this feature, ASID invalidations only
-> + * flushes gva -> hpa mapping entries. To flush the TLB entries derived
-> + * from NPT, hypercalls should be used (HvFlushGuestPhysicalAddressSpace
-> + * or HvFlushGuestPhysicalAddressList).
-> + */
-> +#define HV_X64_NESTED_ENLIGHTENED_TLB			BIT(22)
-> +
+Hello Dexuan Cui,
 
-This is not yet documented in TLFS, right? I can't find this bit in the
-latest edition (6.0b).
+The patch ca9c54d2d6a5: "net: mana: Add a driver for Microsoft Azure
+Network Adapter (MANA)" from Apr 16, 2021, leads to the following
+static checker warning:
 
-My first thought is the comment says this is AMD specific but the name
-is rather generic. That looks a bit odd to begin with.
+	drivers/net/ethernet/microsoft/mana/hw_channel.c:292 mana_hwc_comp_event()
+	warn: 'comp_read' unsigned <= 0
 
-Wei.
+drivers/net/ethernet/microsoft/mana/hw_channel.c
+   281  static void mana_hwc_comp_event(void *ctx, struct gdma_queue *q_self)
+   282  {
+   283          struct hwc_rx_oob comp_data = {};
+   284          struct gdma_comp *completions;
+   285          struct hwc_cq *hwc_cq = ctx;
+   286          u32 comp_read, i;
+                ^^^^^^^^^^^^^^^^^
+These should be int.  I think GCC is encouraging everyone to use u32 but
+the u32 type is really a terrible default type to use.  It causes a lot
+of bugs.  This is my second or third signedness bug to deal with today.
 
->  /* HYPERV_CPUID_ISOLATION_CONFIG.EAX bits. */
->  #define HV_PARAVISOR_PRESENT				BIT(0)
->  
-> -- 
-> 2.25.1
-> 
+Normally int is the best type to use.  In the kernel we're mostly using
+small numbers where int is fine.  In filesystems etc then we're dealing
+with huge numbers so u64 is the right type.  But it's a very narrow band
+between 2 and 4 million where u32 is appropriate.
+
+   287  
+   288          WARN_ON_ONCE(hwc_cq->gdma_cq != q_self);
+   289  
+   290          completions = hwc_cq->comp_buf;
+   291          comp_read = mana_gd_poll_cq(q_self, completions, hwc_cq->queue_depth);
+
+mana_gd_poll_cq() returns int.  It returns -1 on error.
+
+   292          WARN_ON_ONCE(comp_read <= 0 || comp_read > hwc_cq->queue_depth);
+
+comp_read can't be less than zero because it's unsigned but the warning
+for "comp_read > hwc_cq->queue_depth" will trigger.
+
+   293  
+   294          for (i = 0; i < comp_read; ++i) {
+                            ^^^^^^^^^^^^^
+If "comp_read" was declared as an int then this loop would be a harmless
+no-op but because it's UINT_MAX on error then this will crash the system.
+
+   295                  comp_data = *(struct hwc_rx_oob *)completions[i].cqe_data;
+   296  
+   297                  if (completions[i].is_sq)
+   298                          hwc_cq->tx_event_handler(hwc_cq->tx_event_ctx,
+   299                                                  completions[i].wq_num,
+   300                                                  &comp_data);
+   301                  else
+   302                          hwc_cq->rx_event_handler(hwc_cq->rx_event_ctx,
+   303                                                  completions[i].wq_num,
+   304                                                  &comp_data);
+   305          }
+   306  
+   307          mana_gd_arm_cq(q_self);
+   308  }
+
+regards,
+dan carpenter
