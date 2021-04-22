@@ -2,148 +2,151 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFD683685DC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Apr 2021 19:27:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB5563687B1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Apr 2021 22:09:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236684AbhDVR2a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Apr 2021 13:28:30 -0400
-Received: from mail-mw2nam10on2097.outbound.protection.outlook.com ([40.107.94.97]:53345
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        id S236822AbhDVUJw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Apr 2021 16:09:52 -0400
+Received: from mail-bn8nam11on2137.outbound.protection.outlook.com ([40.107.236.137]:54369
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S236058AbhDVR2a (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Apr 2021 13:28:30 -0400
+        id S236058AbhDVUJv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 22 Apr 2021 16:09:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jdJ5XKU2V7aqdgej4sO7M2mAJYeuVBEE8JDB8mB2adh5G19XPwsUJDjzQrZTu5Uk8XPwpH1tjrvrgplVZhOYFOxBmOKA8nqzy1c86dfjsuolS7o7JgeEyfktuh9eAtTlWpG/wx3+ujDHL26Rfqd3cY966TN3dXqHWTnTkH+hi3gmksY/RVRQz8yB0uKC1/fzZNaGiPIC8zH2SqST9gqr4WXKFLYPtQVcvJ68xf+0TsUpN1vPfmsXiBY/BfWH2BMvBnlAVIJoI2MHrrhsx6qvGff+P1wq0528VGn4i5/z8dMEjWdI3KYQnMCr6AXhPCIJGdGvpVBinXnkNtlkZ8dDng==
+ b=Y901rCHkoT+/pvN32IyK+1d4ipg0iie2aUiMcjbJq0uHxeclz4B7wx8c9NQCY/neIIvK2x/P6WNXT9GDTuDBrZN622An56hM/tRUm9oHGQATjXskPTIRNw4jQwpCI2fVdQM372mw87WkNF2jA9UTB+db8DVO/nOi7jICqVIfhz9e1WpTHH2mt9XXBCx1QfBqsN3NcMypLqxgJvLEiR1Yd8LrD72mo1NVgqMGFeRSdSVlm+3AaRw5T++oaHJydgobshByaElssknSBn+94rFEiffx4a5yiVjNtXVicjKSnYxs/FkCxfkaMAdg+in6kWBeptlU5msgPMt9eouHYMXaVw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MGrQTV3gTFgwhHi7CzQiMf0mbbCj9SPgO7EKdErjqac=;
- b=l5napk6doeOKCONYw5f8lwEj0rP4BxVkB9U1USuhAiqDqofSkEH7PEsWEioGiMuCUvyqQjxpeuDSvEW6aCNINbcTNVGrG+ural1/uLPfpnpOJmUbUDLquJ8gpvpquKpUz4ASX8xNLrLwBtlJUSHAnyrLvlFDvIqa60lsy7hQbEGAJQnIamfbqAQ9H0yhNkZeYt79Fmp7eqfN9+EWy2RK464G2g/NOkyZSrAIkhL1s4Vo98hwn6txOVLnnpyMg+QcOMJxNBViHycBLFdEmcUc2dR2VKuhEEtQaBcGIvCnmIiEX/rspMcmwZiq5QsPV3v+6NiXC4ZNsroLsiT8eDy4MQ==
+ bh=HW1LprGcENLM0iygFhoPSwNAKzpzg8bogE24IZgrIcY=;
+ b=bJobZnvhLsn/zHrsokTTd6LfXQAYlkacV8j5DhoMyF4glEwrrEt27kXnT61CJiQNf4ZxCl3qkDCFbXKIpw7pPurn8h1bDQrF0y1lpRFbKFSAXqCJX/zPkvBCXhF8wP8JTXLs5YovOsVIZXLr4GQAFFhto78RvNJzJBWf2Slqx1xJ74xBGUKm3tD/w+IRvfqrUN59275RIRqIIlvDtkCXeSYhurjTz1MlhFM1N56wxZ7JhE73GKw1zVCIBp+w6dS7l1+aRfZcegwSlS9ROibk9cNc1ZB03aBnbOUMjb3mqnWzChRd0cz2zUR9DPT1HWObF6ITcGrHIRXpuLtCgQGXAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MGrQTV3gTFgwhHi7CzQiMf0mbbCj9SPgO7EKdErjqac=;
- b=SQEuHLJ8jLzt4XzcZXVKOYBgIvIfaT1eluLhu/3RJF7wBBvon36rpKQH2U5VKrzgKIhYAdnpRspDCacIhTCaY+12cW4avAkNt5yFbDSURPNNpoEdop9huHb9uI9TJtyyP56jaOYj0xjGPQSR56Pa+OY6oSrPSy3MLYRoS9iXd90=
-Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
- (2603:10b6:302:10::24) by MWHPR21MB0639.namprd21.prod.outlook.com
- (2603:10b6:300:127::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.5; Thu, 22 Apr
- 2021 17:27:54 +0000
-Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
- ([fe80::5548:cbd8:43cd:aa3d]) by MW2PR2101MB0892.namprd21.prod.outlook.com
- ([fe80::5548:cbd8:43cd:aa3d%6]) with mapi id 15.20.4065.008; Thu, 22 Apr 2021
- 17:27:54 +0000
+ bh=HW1LprGcENLM0iygFhoPSwNAKzpzg8bogE24IZgrIcY=;
+ b=Vf+lGyBas9rhxxMTFjSoiaVRV84h2ZVqvY1btvJW2VYRju+rkNHXUXlbNurE/ItfTYppx/og2+HO/uIhfvhk9J4DGCy0IhJN+WlKh+PsBjCl1OXBKDqrMc55Xl2JVQBjk65eb2jT8/xbvNcq+LXzKJxBOvVK9b2OrDTcwNPrkNU=
+Authentication-Results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none
+ header.from=microsoft.com;
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26) by BL0PR2101MB1042.namprd21.prod.outlook.com
+ (2603:10b6:207:37::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.7; Thu, 22 Apr
+ 2021 20:09:14 +0000
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::6509:a15d:8847:e962]) by BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::6509:a15d:8847:e962%4]) with mapi id 15.20.4087.019; Thu, 22 Apr 2021
+ 20:09:14 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Arnd Bergmann <arnd@kernel.org>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Shachar Raindel <shacharr@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] net: mana: fix PCI_HYPERV dependency
-Thread-Topic: [PATCH] net: mana: fix PCI_HYPERV dependency
-Thread-Index: AQHXN3xJ/rfMR5JpBUSHXQTEKxwOSqrAyd+w
-Date:   Thu, 22 Apr 2021 17:27:54 +0000
-Message-ID: <MW2PR2101MB0892209BCEEE47259A7AE03BBF469@MW2PR2101MB0892.namprd21.prod.outlook.com>
-References: <20210422133444.1793327-1-arnd@kernel.org>
-In-Reply-To: <20210422133444.1793327-1-arnd@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a29a2ba8-a3e5-410d-85c3-cb51b8a26dc0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-04-22T17:24:59Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [2601:600:8b00:6b90:753d:cc43:efdd:9f99]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d939df14-4fab-49e1-c87e-08d905b3f67b
-x-ms-traffictypediagnostic: MWHPR21MB0639:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB06397040E1BE84626A0519EDBF469@MWHPR21MB0639.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: t7Tk1cwpJBHrFTgHRgd6g/V9yGZvWQhBjVlRQO44Bna0c2xvvP1+CU6Q1kmNK9XWC1yQi5xoASf7lOf2a41y0J2N+61AmLcwwWaHb75iVxQHs7Mu5U9Yk7PxcXIZE1HGoUwZfokUpRvP9SwCjWt7AgTabKEu0ClkOatW+4Z5gFLA1VGq/nTUuKwXrKpifo45pptlmtX6fhrYNg7SWIny+NS5BabBiWB7itYxNpKY7dqdAR6baZi3Vz3x2pgWvZ4SD7mtcdj7pRmmmH/vSo4PrgGIRPezYL6SVWYdE1oENhEn4nI3FJF/4z7Bz0hitvkY09dqyJs0+AGY6vADAL6rGlkZe4gPcGU0MXPZ6j2kF+zFiS4FSRZHZYfdf20dyxxAtMW7fA87IQotQmHZ/Vu845fbfhqGtfH9JTiUH7cYYICnDEX+vxOJYbyt5L+ordfsNHkjalAeQ8+nP/8IOEBMC2SUMDDdxDzTsbgO7ArC33uVmRKrW5/a3m2XdHeZrWC8LWdN6Zxc+Mxk3z8B3ls37j0pM66EiSjEPgGqjtefODCgyceAGir1IyTnA4lHXQCjafLUCsuQhJFqhr6sNwnajP+A1BeImF9wBHpc7OBqFZk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB0892.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(10290500003)(8990500004)(55016002)(9686003)(8676002)(33656002)(7696005)(86362001)(8936002)(76116006)(2906002)(66946007)(64756008)(66556008)(4326008)(5660300002)(66476007)(316002)(38100700002)(122000001)(71200400001)(82960400001)(6506007)(52536014)(82950400001)(66446008)(478600001)(186003)(83380400001)(110136005)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?0h5j+oEOoxkqYfDYTYo5CqsBGpGP92wGAauzHEDzT/sQXe361fHxCazaEv5A?=
- =?us-ascii?Q?Fc/Bu0tQNZrOeLSEWAhVXu4vVI/lSAYRsZSArx9sfyqiYe9WXH95XW03eZJt?=
- =?us-ascii?Q?r59nF/CAeEYBQZnD6Tvd5B+1OdpsWa0AGXmHIW3LFvNvHZ62SQj1GLM9vK0d?=
- =?us-ascii?Q?2QNwWkngfS5S7TFZpQoO0yxFupnQ+ns0OuV1ZWqEc1TGB8+1lNSt7i3qJ3km?=
- =?us-ascii?Q?m8ndsJVyM1IZZTc/MJaRNjXylxjtpuJRJ247sGjF9lISyzuHgCIq6qNJp2fg?=
- =?us-ascii?Q?izXfYRt22vJ8izUacyDWXfyyY+M4zNi3zBXJurJ8wW5JvTvSrvVBvLRR7Jho?=
- =?us-ascii?Q?AACqsaNtSb+TLYnRCTqF2lPPDUfSmFI35FCEkLjaEE9UsScBQJkFhCgXn5uo?=
- =?us-ascii?Q?n0NGwEZ6g38F6R8sqlEnskRXSvjBFTsX/ckS5E5K2hHd9ckPeCh/o8LUxAEW?=
- =?us-ascii?Q?jE9qV0zYDqoJJXzKkOjcrjNGC2eWyor+NwPD3yilJ6DI07mfYBPLtLLUMq5/?=
- =?us-ascii?Q?iPYJ3C0fmF0L2OHIQ2+n1L7RHax9ejvnC3Ex3RuQxwc1xTmmXUC9BKGGoPuT?=
- =?us-ascii?Q?A+r8XXqUtnCl0SvcT5fkmcuGghJhreWJj5pgZjccGkZNq5/BR30cDobnbpwO?=
- =?us-ascii?Q?XbL9Bza0PP0VBLeW6cglQ5gNmfQ8Un+S3Lduj4J6VQI5clCliNdYKjmnvZ2K?=
- =?us-ascii?Q?JExngcPYzGX/pKR8+UcYCo8M+lhUx7omK+cryJLIH9rXQCJEYSJF6vvUP5Kc?=
- =?us-ascii?Q?ITn4sCGygJsWJAZTCWcIaIKqbORDW+cuAKIIic1ibvraIWMFLXPnWcS2gzkN?=
- =?us-ascii?Q?PvV1m+SGyM16J1ettahaZLX7G2S86qH8E5fa97kRC0Iv5qjZRMnQm8WHCVk/?=
- =?us-ascii?Q?8qqyEdmkA+S2fuSSr7F8rG8DqvZ4Xu0tELHYEmpPJHXWqnj+i41I9jlXuF/U?=
- =?us-ascii?Q?XBn1A5hjzrMqgXN6kan5Si9dlO6QdKV0gGQ5rzQcXDxIY2gvbh7fcdygeNZN?=
- =?us-ascii?Q?OMkZ0IticeBABGenoNtHORqkkLQtGzuMvR9EYX0LiUTbQikV17PZURCML3rX?=
- =?us-ascii?Q?E8NBvhra5yHJi+CCR7MlonV5jXYGSrRQEItapSZim2Ia4OBxvF3EEL7uMnDh?=
- =?us-ascii?Q?UUzJQb5TqL84mROxbE1izA2OLqGC2/qmqw+WFk0BTR5mZNBQfLJfrloF7UsB?=
- =?us-ascii?Q?IEZ/VglvGGC0s6scdNU9xvL25+K+uZRNxQP6qZWkfvBe2pUMvBS2dKmT+HSx?=
- =?us-ascii?Q?gVK9ey8+X2W/ilmD2FmDvg+SiIWa5hlmH6bND/wxKGiRtF1r4UxgQuFpnkPv?=
- =?us-ascii?Q?tr62ythoWFLHpdEp0dgY7HxwE+Pm2IIeAF8w+ouenWd1BPWpg0Zn3uQe9xdD?=
- =?us-ascii?Q?kn9VOEj9wTgtQTi03EdOHvkTxRhR?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+To:     davem@davemloft.net, kuba@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, stephen@networkplumber.org,
+        sthemmin@microsoft.com, wei.liu@kernel.org, liuwe@microsoft.com,
+        netdev@vger.kernel.org, dan.carpenter@oracle.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH net-next] net: mana: Use int to check the return value of mana_gd_poll_cq()
+Date:   Thu, 22 Apr 2021 13:08:16 -0700
+Message-Id: <20210422200816.11100-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-Originating-IP: [2001:4898:80e8:35:c7fc:2a33:51a0:f7f3]
+X-ClientProxiedBy: CO2PR05CA0067.namprd05.prod.outlook.com
+ (2603:10b6:102:2::35) To BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:35:c7fc:2a33:51a0:f7f3) by CO2PR05CA0067.namprd05.prod.outlook.com (2603:10b6:102:2::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.15 via Frontend Transport; Thu, 22 Apr 2021 20:09:12 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5f595af2-ab2e-4022-a096-08d905ca8003
+X-MS-TrafficTypeDiagnostic: BL0PR2101MB1042:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL0PR2101MB1042D7CB8AE662EF30AB00B6BF469@BL0PR2101MB1042.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AGQ0lErs81OaWh/be9nKqeLQ9x5x1Id0eXtin8BDqoxG84oIEh6kswBMMMgmGAkCkCuJQzXcBa4Awu/38QeTWCTgKFXxT7p94dKb8JsUBfe9mXU50T5HIfJ1kWHWtOO6/ybC5fCcESqtI/pke+gKdMBZKJA1yAVbgkSHGuHqxCAf91vSeWAR8pY3QzwkNDWOk5fgiUuRkJzTjnlFjTZWROcPsdoiRrfvTgc+YTp1b75c6unC6XBfXGnN8FDgpGo7Cz0uqQKbo+cNmHymWGt/eK1glX2cuA+AyFD9StQSV/x8VTioR9C9eKolJfjRVGHCcwNBcDC7+aWgsP9EjbPjhTP41OURmc3tbAmFrFCCQ95MjQH2t0u7xpUyie0aJjVJE7Kcu+7AczqCIw/hPyMMDJKvjqYKZNU/28BlOsfwuRP/DoPQe5DQk1XXOGP00D98H3ZLg1iXheEmzEujP9jHX1b1FkAxS3BZCaFrLbnfy2jZgjHjLi1eZMOJgYdlUDfzdPj91IYTLT5UvQyyN3338+Ggi1jfyJPd9KX1aroLsFhBp+r2fJofhXLPFN/VIE3CM6lvPJruq08RLPILLfO1p+8cgcaRRQ5RbJDVoYrwj2EUn3sBhKwfQ0EbkYyU+v4/5V1X8phIHnzDGp8ClvEdyw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38100700002)(186003)(10290500003)(5660300002)(921005)(478600001)(16526019)(2906002)(83380400001)(8676002)(7696005)(4326008)(316002)(66946007)(1076003)(6486002)(66476007)(66556008)(3450700001)(36756003)(86362001)(107886003)(8936002)(52116002)(82960400001)(2616005)(82950400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?QSzr+4cDaYxJO4ru29LFIGjgoemjppqByrLDf3c7EKMzCHYaYMZ+2ZPBqwqK?=
+ =?us-ascii?Q?kGU2B/9byBuVweDURgEYcGoU7w6OTwCtIEfpwzl3emTrDtBGMO7TlX8K78vb?=
+ =?us-ascii?Q?4RybqmNikODoPEFcsbI3vlMphL9j33NVj6n3wMCdoO0cuMjhh3KfNhpSdygC?=
+ =?us-ascii?Q?O7503beOnFX3PvgVQJR3Jkny2kjhv3LIt+kcgzKlTWHRj6Maqi9k4Zz6ic04?=
+ =?us-ascii?Q?OR/nLftZfDxwZNIT91WQe5/UAAmMmNQlHro7JAIfU0TkjUmDV7R66WHbhBPn?=
+ =?us-ascii?Q?NChMsxSSJxg06BUCC+DpnKwyedZtoZ9pEtmuhS9RK2ACgiefUnUg8Wf3NQW8?=
+ =?us-ascii?Q?OPjCDVzYs/1QC3KY+ueHYB0y9FrQh67ouwa7tooy4ZN5uAozNMB4xtjPbRFA?=
+ =?us-ascii?Q?Qlv4FkyyLeY+luztXbd7Zfi3S/y/KklF2jUN9+SUGgshJ5NZ6DuZZsGrB2YI?=
+ =?us-ascii?Q?bxLgZgXunCG/zNO7mJBsRKw3Op6Y7qJS4hE/zeE0qS9OXJqjVM+uh4UW3xT7?=
+ =?us-ascii?Q?x/9JoQvQgtDUsrO9yWn/01/m3vHLAMR7p3Gbwe04F14QzUBH781e9lIbKhCU?=
+ =?us-ascii?Q?2sru1L3X14Up60yqyGWcjOAiy/pHmJ7e9iG+u4g/Zyo09a9noQyvjA+/2pnF?=
+ =?us-ascii?Q?0WWqgfmy1uGFSkSW9jImAS7LMdt4ZaRRHE3SGZl/S203fcJ9EeOYjDN3aA6L?=
+ =?us-ascii?Q?f3QlQUYgXLpu+ZleE/9q7Yy5QOJT7tHt2c2B9LIeSUn0/ps11bPVi/RXSzUK?=
+ =?us-ascii?Q?abrvE9PHP+oMw686cOCbWIiObdtRPCebQdnsp5G5GPmgyFVfLzyNpXsuMC/7?=
+ =?us-ascii?Q?MiILOaLiXdTASmyirMotEEL4v+Q1jJxI/D8weUbkBTcXEjkdtWWNrvmjtDRQ?=
+ =?us-ascii?Q?Lf6elhbEl3qosv6xInPMTp1hxsYjtS+OBCkBBG6VFo+HFf+K4FdP650w9JOe?=
+ =?us-ascii?Q?dVnubReWfx2LGGo4iW5RXEXyhPAr0PLH8+r3J1AvK4HTPMBx0nnqfoF+769j?=
+ =?us-ascii?Q?xN87+pZYGGp6UEolyzajhCBQ5XPgqCTZ3+Fzn+vcakNifuJdj18xFzb3TyBu?=
+ =?us-ascii?Q?RRcdXG3KM1qV5LbGSuETN0wRwBbdduH0Wryz07Pc5edREIs+QHTZN2xBKUCD?=
+ =?us-ascii?Q?D+3JZQ4WEYTYdX6PU2kN26PvI/KY37yDEYHDc8+xR5uAIfDK5NumvnaBeIOz?=
+ =?us-ascii?Q?Yd5+/rqIBa7y/2Axn4pgSxlEQKMNfmGopWd0ujWGlJpS8UbpVicQymosi3Xt?=
+ =?us-ascii?Q?Q0y7giPAcKAgO5eVORGGktyRVZlNrqu5WCb7PJztnp8xW2J+e7wLkGcQ26oJ?=
+ =?us-ascii?Q?udScS0weKsQmbD5falqVXcElGmTR1Z6Io7STm38XU0JmgvRfCwCXyj3yzWlV?=
+ =?us-ascii?Q?nXYGCTfZsvqXs/dqlwpvzWLUBPNz?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f595af2-ab2e-4022-a096-08d905ca8003
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB0892.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d939df14-4fab-49e1-c87e-08d905b3f67b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2021 17:27:54.0928
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2021 20:09:14.7165
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +rAZH2JfyjSEjXFFez8hR0GxeNJj2U0DGjdrA15V69Hr69IDMeLjCfq1QtN36u/icQfsEbtWhPUhowVM2Hvr+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0639
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LtQwxVL0idLmLaNqxySH3wtV9Tkt8H7JydbKbTxlM0cM8hUb8kG1LG3IPtPn1GnZoLCQaNzJZwGxQS6WwtrI+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1042
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Arnd Bergmann <arnd@kernel.org>
-> Sent: Thursday, April 22, 2021 6:35 AM
->  ...
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The MANA driver causes a build failure in some configurations when
-> it selects an unavailable symbol:
->=20
-> WARNING: unmet direct dependencies detected for PCI_HYPERV
->   Depends on [n]: PCI [=3Dy] && X86_64 [=3Dy] && HYPERV [=3Dn] && PCI_MSI=
- [=3Dy]
-> && PCI_MSI_IRQ_DOMAIN [=3Dy] && SYSFS [=3Dy]
->   Selected by [y]:
->   - MICROSOFT_MANA [=3Dy] && NETDEVICES [=3Dy] && ETHERNET [=3Dy] &&
-> NET_VENDOR_MICROSOFT [=3Dy] && PCI_MSI [=3Dy] && X86_64 [=3Dy]
-> drivers/pci/controller/pci-hyperv.c: In function 'hv_irq_unmask':
-> drivers/pci/controller/pci-hyperv.c:1217:9: error: implicit declaration o=
-f
-> function 'hv_set_msi_entry_from_desc'
-> [-Werror=3Dimplicit-function-declaration]
->  1217 |
-> hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> A PCI driver should never depend on a particular host bridge
-> implementation in the first place, but if we have this dependency
-> it's better to express it as a 'depends on' rather than 'select'.
->=20
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+mana_gd_poll_cq() may return -1 if an overflow error is detected (this
+should never happen unless there is a bug in the driver or the hardware).
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Fix the type of the variable "comp_read" by using int rather than u32.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/hw_channel.c | 2 +-
+ drivers/net/ethernet/microsoft/mana/mana_en.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index 0cf0322702ed..1a923fd99990 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -283,7 +283,7 @@ static void mana_hwc_comp_event(void *ctx, struct gdma_queue *q_self)
+ 	struct hwc_rx_oob comp_data = {};
+ 	struct gdma_comp *completions;
+ 	struct hwc_cq *hwc_cq = ctx;
+-	u32 comp_read, i;
++	int comp_read, i;
+ 
+ 	WARN_ON_ONCE(hwc_cq->gdma_cq != q_self);
+ 
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index a744ca0b6c19..04d067243457 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1061,7 +1061,7 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ static void mana_poll_rx_cq(struct mana_cq *cq)
+ {
+ 	struct gdma_comp *comp = cq->gdma_comp_buf;
+-	u32 comp_read, i;
++	int comp_read, i;
+ 
+ 	comp_read = mana_gd_poll_cq(cq->gdma_cq, comp, CQE_POLLING_BUFFER);
+ 	WARN_ON_ONCE(comp_read > CQE_POLLING_BUFFER);
+-- 
+2.20.1
 
