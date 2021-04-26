@@ -2,73 +2,160 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8708C36AA57
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Apr 2021 03:30:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35A9336B803
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Apr 2021 19:20:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231676AbhDZBbA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 25 Apr 2021 21:31:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231655AbhDZBa4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 25 Apr 2021 21:30:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 182EC61354;
-        Mon, 26 Apr 2021 01:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619400616;
-        bh=HSjejELuLAnios+2Vt6fh6poFSknYMXQcK5WMIfv1UU=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=fAozgIdBiU7Uc22IZ+UwQXQBAxPCcfrp1eIl71ahG2whJB8qy4GNF5KOEYxwfe5c2
-         EATPBG4deNLAul4Iq4/awq6WkgL8ODZjafBqLKBAZ43adQFiymJDxnrL4BkJ16k+dS
-         D5TPhUrSyvMRyZepvMA6Ee9KrMnA8l+mDOKVcSRK/IMzb+Syv1rHnQv317juumS/rZ
-         eIGeL8Tj2Nnt5S7gmSRo7HBcKpzjXQftwsdThF7oEtT07zkfsQNzh+KntLz2C2TtWV
-         HShpgI061pj+j0PLVx0JOr1v+YJsTIHc0SOzUwXwC3ccaJlO0l1O+yH5LvWwuIqAcL
-         51PjwMv3q9ZEw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 0D0B160CE2;
-        Mon, 26 Apr 2021 01:30:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S235079AbhDZRV1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 26 Apr 2021 13:21:27 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:39626 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235241AbhDZRV1 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 26 Apr 2021 13:21:27 -0400
+Received: by mail-wr1-f51.google.com with SMTP id q9so2532902wrs.6;
+        Mon, 26 Apr 2021 10:20:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=RcF5tPt3L7kSNuZ7O4Oz7bEH7/xm5Ci/hHwq0pRDk7s=;
+        b=sFsSgu4NEO5dwKVbH0zbObBnMCG9AnYlDRgyWDVgIcv0nkhUXn483uNuS7FdIVgxQp
+         GV1rC1ass9e9lyNyiqwSIcCCZhU16EewRIc574vgL9r7lrMA3wdT1cEmgPEVEOI9Lw+I
+         JkeCoZPBdD1rkjg2hoWxvXy+1m+ucWJ2uhc1yGPUfGJh/xKY1BHysQWXGFkXageexetl
+         OxE7LeSPa84O3pwQbx5rAE47y1j7czULNWi1uLhjX0SkjpO87lzEfVxFL8IOLC6lZ6z1
+         AtShSSpL9z0YP6pOxRo617LxOjrhlhVCEJTpEqsdjekRF3vgw1oZWc8ptPr9QE1S2wDW
+         Hdiw==
+X-Gm-Message-State: AOAM533glFBmbV2U+9HT2EKSmiQbcSQSvx4rMBPIrKyn9Z70dH0fZnDr
+        5FPJ1njH9+Dyr37MQx6S/CnEDq+BFKw=
+X-Google-Smtp-Source: ABdhPJwa8w5bUkBq+7bVJdcbLk23q5hAtNSbjItNpBXLO4KZH7lken+IG0UOZouDo6/l17WUHDhK2w==
+X-Received: by 2002:a5d:6283:: with SMTP id k3mr24529136wru.166.1619457643931;
+        Mon, 26 Apr 2021 10:20:43 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id h10sm947924wrt.40.2021.04.26.10.20.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Apr 2021 10:20:43 -0700 (PDT)
+Date:   Mon, 26 Apr 2021 17:20:42 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        kys@microsoft.com, sthemmin@microsoft.com, haiyangz@microsoft.com,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [GIT PULL] Hyper-V commits for 5.13
+Message-ID: <20210426172042.tzl7i3mdr6dc4iyp@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next][REPOST] hv_netvsc: Make netvsc/VF binding check both
- MAC and serial number
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <161940061604.7794.9498613769256285295.git-patchwork-notify@kernel.org>
-Date:   Mon, 26 Apr 2021 01:30:16 +0000
-References: <20210424011235.18721-1-decui@microsoft.com>
-In-Reply-To: <20210424011235.18721-1-decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, stephen@networkplumber.org,
-        sthemmin@microsoft.com, wei.liu@kernel.org, liuwe@microsoft.com,
-        netdev@vger.kernel.org, leon@kernel.org, andrew@lunn.ch,
-        bernd@petrovitsch.priv.at, rdunlap@infradead.org,
-        shacharr@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, Joseph.Salisbury@microsoft.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+Hi Linus,
 
-This patch was applied to netdev/net-next.git (refs/heads/master):
+The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
 
-On Fri, 23 Apr 2021 18:12:35 -0700 you wrote:
-> Currently the netvsc/VF binding logic only checks the PCI serial number.
-> 
-> The Microsoft Azure Network Adapter (MANA) supports multiple net_device
-> interfaces (each such interface is called a "vPort", and has its unique
-> MAC address) which are backed by the same VF PCI device, so the binding
-> logic should check both the MAC address and the PCI serial number.
-> 
-> [...]
+  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
 
-Here is the summary with links:
-  - [net-next,REPOST] hv_netvsc: Make netvsc/VF binding check both MAC and serial number
-    https://git.kernel.org/netdev/net-next/c/64ff412ad41f
+are available in the Git repository at:
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20210426
 
+for you to fetch changes up to 753ed9c95c37d058e50e7d42bbe296ee0bf6670d:
 
+  drivers: hv: Create a consistent pattern for checking Hyper-V hypercall status (2021-04-21 09:49:19 +0000)
+
+Please be aware that there may be a conflict with the x86 tip tree in
+arch/x86/include/asm/mshyperv.h. A resolution can be found at
+
+https://lore.kernel.org/lkml/20210315143505.35af617b@canb.auug.org.au/
+
+Thanks,
+Wei.
+
+----------------------------------------------------------------
+hyperv-next for 5.13
+  - VMBus enhancement.
+  - Free page reporting support for Hyper-V balloon driver.
+  - Some patches for running Linux as Arm64 Hyper-V guest.
+  - A few misc clean-up patches.
+----------------------------------------------------------------
+Andrea Parri (Microsoft) (5):
+      Drivers: hv: vmbus: Drop error message when 'No request id available'
+      Drivers: hv: vmbus: Introduce and negotiate VMBus protocol version 5.3
+      Drivers: hv: vmbus: Drivers: hv: vmbus: Introduce CHANNELMSG_MODIFYCHANNEL_RESPONSE
+      Drivers: hv: vmbus: Check for pending channel interrupts before taking a CPU offline
+      Drivers: hv: vmbus: Initialize unload_event statically
+
+Bhaskar Chowdhury (1):
+      hv: hyperv.h: a few mundane typo fixes
+
+Dan Carpenter (1):
+      Drivers: hv: vmbus: Use after free in __vmbus_open()
+
+Jiapeng Chong (1):
+      Drivers: hv: vmbus: remove unused function
+
+Joseph Salisbury (2):
+      x86/hyperv: Move hv_do_rep_hypercall to asm-generic
+      drivers: hv: Create a consistent pattern for checking Hyper-V hypercall status
+
+Michael Kelley (13):
+      Drivers: hv: vmbus: Move Hyper-V page allocator to arch neutral code
+      x86/hyper-v: Move hv_message_type to architecture neutral module
+      Drivers: hv: Redo Hyper-V synthetic MSR get/set functions
+      Drivers: hv: vmbus: Move hyperv_report_panic_msg to arch neutral code
+      Drivers: hv: vmbus: Handle auto EOI quirk inline
+      Drivers: hv: vmbus: Move handling of VMbus interrupts
+      clocksource/drivers/hyper-v: Handle vDSO differences inline
+      clocksource/drivers/hyper-v: Handle sched_clock differences inline
+      clocksource/drivers/hyper-v: Set clocksource rating based on Hyper-V feature
+      clocksource/drivers/hyper-v: Move handling of STIMER0 interrupts
+      asm-generic/hyperv: Add missing function prototypes per -W1 warnings
+      Drivers: hv: vmbus: Increase wait time for VMbus unload
+      video: hyperv_fb: Add ratelimit on error message
+
+Qiheng Lin (1):
+      Drivers: hv: vmbus: Remove unused linux/version.h header
+
+Sunil Muthuswamy (1):
+      x86/Hyper-V: Support for free page reporting
+
+Vasanth (2):
+      drivers: hv: Fix whitespace errors
+      drivers: hv: Fix EXPORT_SYMBOL and tab spaces issue
+
+Xu Yihang (2):
+      x86/hyperv: Fix unused variable 'msr_val' warning in hv_qlock_wait
+      x86/hyperv: Fix unused variable 'hi' warning in hv_apic_read
+
+Zheng Yongjun (1):
+      x86/hyperv: remove unused linux/version.h header
+
+ arch/x86/hyperv/hv_apic.c           |  18 ++-
+ arch/x86/hyperv/hv_init.c           | 106 +++++++--------
+ arch/x86/hyperv/hv_proc.c           |  26 ++--
+ arch/x86/hyperv/hv_spinlock.c       |   8 +-
+ arch/x86/hyperv/irqdomain.c         |   6 +-
+ arch/x86/hyperv/mmu.c               |   8 +-
+ arch/x86/hyperv/nested.c            |   8 +-
+ arch/x86/include/asm/hyperv-tlfs.h  | 131 +++++++++----------
+ arch/x86/include/asm/mshyperv.h     | 100 ++-------------
+ arch/x86/kernel/cpu/mshyperv.c      |  32 ++---
+ drivers/clocksource/hyperv_timer.c  | 249 +++++++++++++++++++++++++-----------
+ drivers/hv/Kconfig                  |   1 +
+ drivers/hv/channel.c                | 103 ++++++++++++---
+ drivers/hv/channel_mgmt.c           |  86 +++++++++++--
+ drivers/hv/connection.c             |   7 +-
+ drivers/hv/hv.c                     | 152 ++++++++++++++++++----
+ drivers/hv/hv_balloon.c             |  89 +++++++++++++
+ drivers/hv/hv_trace.h               |  15 +++
+ drivers/hv/ring_buffer.c            |  10 --
+ drivers/hv/vmbus_drv.c              |  93 ++++++++++++--
+ drivers/pci/controller/pci-hyperv.c |   2 +-
+ drivers/video/fbdev/hyperv_fb.c     |   2 +-
+ include/asm-generic/hyperv-tlfs.h   |  70 +++++++++-
+ include/asm-generic/mshyperv.h      |  72 +++++++++--
+ include/clocksource/hyperv_timer.h  |   3 +-
+ include/linux/hyperv.h              |  21 ++-
+ 26 files changed, 973 insertions(+), 445 deletions(-)
