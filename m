@@ -2,85 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 700CE36D4DE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Apr 2021 11:35:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F51436D88F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Apr 2021 15:48:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230370AbhD1JgS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 28 Apr 2021 05:36:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbhD1JgR (ORCPT
+        id S239895AbhD1NsR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 28 Apr 2021 09:48:17 -0400
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:44743 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239888AbhD1NsQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 28 Apr 2021 05:36:17 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7509C061574;
-        Wed, 28 Apr 2021 02:35:31 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id q2so11390956pfk.9;
-        Wed, 28 Apr 2021 02:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=b/2x7D1/Ub2HBQrxQiDyoGrWCjSGVAtAx2/pdoUp6P8=;
-        b=mXnjX8/gBTxl5HIKUkdwzbvFXvr2zfKCeu4Q4EvN74VXceRhptAu7MxkRDLb0wONKl
-         d7Rp7mGgBx6OARS9daCZVtmN6H67taZfKlZSSv/YqXpyVto+KyqTejVB526zKecSvfga
-         LDxGCGc+wQZGgqxvth8yKslMx4vezUmvZ98mJhPv6EtRvfbgPgGPypvDxNiClocPTal3
-         gJEB2sORJ3909UqS+iK4HX8gzjj4+JZsMCi5n0V5daOkOp7XRU2SlbcEn97bE8gWM2Vd
-         bP0c7r6Gbbv0ZuwLD+Pr7YJkwXdZbpw9fbnp+yavkwps+l1cX9ibzb8ODxBvpY/FtDta
-         q5sw==
+        Wed, 28 Apr 2021 09:48:16 -0400
+Received: by mail-wr1-f50.google.com with SMTP id h15so10888609wre.11;
+        Wed, 28 Apr 2021 06:47:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=b/2x7D1/Ub2HBQrxQiDyoGrWCjSGVAtAx2/pdoUp6P8=;
-        b=Ux+kBMd3Uu2+r4SCxpPkFeN8AKCZXUiVH/KleINvvKP4OQt4PQuiqaI1khoBdG7F76
-         spA6Ha1heqayBRz0xHQOk8iB8WoAo0WxMsz9gEdzWDCfNsbzwM+zlDyWjKDB9dUidLD6
-         0nRAyiKm8EjhOyOm0OMLPRoMbhQG4XMtEVHR2l0AICV+s7DPMS03hxZP5pYC6O/YDgAb
-         ILrYmitIKt8QVur2SAeHDubjA/EZuYvRE1U3BGguOIIQCPOprM8IcAIOI5u8NHpJsutm
-         R8aKihccknfpicFOi7gNVmiG/IH1teSKoOD9WB5e6zBRFJTODJC1Z+de7sGL4mTF+2NN
-         jMcw==
-X-Gm-Message-State: AOAM533ci8VwQsqi7vklYc6yT29a7jMdcwV6zJ/qECusxF+GmOojiMhn
-        nxVvPMSfGZQrNoG9vwEFwBw=
-X-Google-Smtp-Source: ABdhPJyb35Bba8lxBxGh6yYULWql+QOfgmw1NT1OkG3645iU5WMpK7+Laoq99znKLtA0QWw/SIVQvQ==
-X-Received: by 2002:aa7:948b:0:b029:25c:f974:e0b4 with SMTP id z11-20020aa7948b0000b029025cf974e0b4mr27229413pfk.81.1619602531242;
-        Wed, 28 Apr 2021 02:35:31 -0700 (PDT)
-Received: from localhost ([115.99.221.24])
-        by smtp.gmail.com with ESMTPSA id x9sm4116749pfd.66.2021.04.28.02.35.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iGL4C5pisQWePSYbT1yoPzAALGDCskG6Y8klDr3F6nM=;
+        b=PmRSIZxDKcE8Th/T03mo9M+jroj+CMvtCwp8KOQclXwdRAe3yZpel91m5Nqgdznp8k
+         n9JYbatuAeR0IOKTOKxkT+l2m+Qb7JhQbpQblQpKcLzYq0JfGuecMXOIxyJL251kDcFL
+         DqGz90WaKftdHliRnDnAlpc0U3kmhGGeJNWih/QU1P3MJIhauQnNyA7g8SSMqaxcRA/9
+         U44Ym30iibN9Pitdy8KVB9ioqgINpfXpwwzw+vHR1aPonDTsqFIKjT/APo6NgamaYLvO
+         HkMeFIhSuvAzm1eMKaVEJXNw+YhyVKOFSiDOV/esfH8zFm1VjD8RMdg0ZqEYm/kiGNAJ
+         UCRA==
+X-Gm-Message-State: AOAM532Z4z0zqDnoktt61k5h2cKp3bv7sOb0ezLocyJUwqm2ESCnvYXM
+        3WmUPfRgBWDD4L1WtmN3lls=
+X-Google-Smtp-Source: ABdhPJw4Dkn+Z9URbKoQsbJhddTdNOfjqh5vsI4fkVhJPc8IJJJpiLV1ZYkAWFDulJlSfBchlrrv8g==
+X-Received: by 2002:adf:de8b:: with SMTP id w11mr20658775wrl.315.1619617650238;
+        Wed, 28 Apr 2021 06:47:30 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id u9sm3674051wmc.38.2021.04.28.06.47.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Apr 2021 02:35:30 -0700 (PDT)
-Date:   Wed, 28 Apr 2021 15:05:28 +0530
-From:   Sanjana Srinidhi <sanjanasrinidhi1810@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Remove space before tabs
-Message-ID: <20210428093528.cxbaukdjhvhh6lmc@sanjana-VirtualBox>
+        Wed, 28 Apr 2021 06:47:29 -0700 (PDT)
+Date:   Wed, 28 Apr 2021 13:47:28 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vineeth Pillai <viremana@linux.microsoft.com>
+Cc:     Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] hyperv: SVM enlightened TLB flush support flag
+Message-ID: <20210428134728.jmu6bnjemhid3up7@liuwe-devbox-debian-v2>
+References: <cover.1619556430.git.viremana@linux.microsoft.com>
+ <cce3e52fde732ccdc7a34d2eb1e2d59917e4e5e0.1619556430.git.viremana@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cce3e52fde732ccdc7a34d2eb1e2d59917e4e5e0.1619556430.git.viremana@linux.microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Space before tabs is removed to maintain code uniformity.
+On Tue, Apr 27, 2021 at 08:54:51PM +0000, Vineeth Pillai wrote:
+> Bit 22 of HYPERV_CPUID_FEATURES.EDX is specific to SVM and specifies
+> support for enlightened TLB flush. With this enlightenment enabled,
+> ASID invalidations flushes only gva->hpa entries. To flush TLB entries
+> derived from NPT, hypercalls should be used
+> (HvFlushGuestPhysicalAddressSpace or HvFlushGuestPhysicalAddressList)
+> 
+> Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
 
-Signed-off-by: Sanjana Srinidhi <sanjanasrinidhi1810@gmail.com>
----
- drivers/hv/vmbus_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 10dce9f91216..f01db0837f75 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1782,7 +1782,7 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 	 * UNLOCK channel_mutex		UNLOCK channel_mutex
- 	 *
- 	 * Forbids: r1 == r2 == CHANNEL_OPENED (i.e., CPU1's LOCK precedes
--	 * 		CPU2's LOCK) && CPU2's SEND precedes CPU1's SEND
-+	 *		CPU2's LOCK) && CPU2's SEND precedes CPU1's SEND
- 	 *
- 	 * Note.  The host processes the channel messages "sequentially", in
- 	 * the order in which they are received on a per-partition basis.
--- 
-2.25.1
-
+Acked-by: Wei Liu <wei.liu@kernel.org>
