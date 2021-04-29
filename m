@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AF1C36EA52
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Apr 2021 14:25:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3B0E36EA55
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Apr 2021 14:25:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235471AbhD2M01 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Apr 2021 08:26:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32875 "EHLO
+        id S236698AbhD2M0d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Apr 2021 08:26:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25089 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236053AbhD2M0Z (ORCPT
+        by vger.kernel.org with ESMTP id S236588AbhD2M0b (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Apr 2021 08:26:25 -0400
+        Thu, 29 Apr 2021 08:26:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619699138;
+        s=mimecast20190719; t=1619699144;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rz9iAnX3OWn2JDFVlZ3RHH7TNXHQH76pK/TxsFgUd8I=;
-        b=hiSafdX0573MwQli02mJjnjRnwFevc5OTQqhLz4crMd+Ak5SPWwfN+gVJasSxdS+ZBWYIH
-        sWQOKgG/fPjpa2O7IIAO47HpO+HoR03e9xiIrI5pbTTOLNhHEjbl/zQXSo2sgMAm9Fj1Ew
-        rO0jZ+agpPq6RBDbfdg8RIx2mk1QaAQ=
+        bh=rlbUJqtDJSJXZ0talu2Z3XFcFBG+/7XBZRlbnxcqpi4=;
+        b=fJHxKypIf4zRRDAzpFmq8iag4rrlofSafrHIPKb5O51p3rS3mBzKV6bWzsGO667Tt5bQAV
+        mZNvCJPdGmYDaVdaRKT8EMauK7QiALw3T1+5vjbeURBi46BO6AFthwwXUCa7VsA6rGTgJx
+        4Q8ynqcyP8VvdPKSaHsig/0paPuo0wg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-481-cZMzDWWxMHqEdaZ8aCf0oQ-1; Thu, 29 Apr 2021 08:25:35 -0400
-X-MC-Unique: cZMzDWWxMHqEdaZ8aCf0oQ-1
+ us-mta-405-McSW6JEJMfKG2TeFwvbHRQ-1; Thu, 29 Apr 2021 08:25:41 -0400
+X-MC-Unique: McSW6JEJMfKG2TeFwvbHRQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59999803622;
-        Thu, 29 Apr 2021 12:25:32 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1D518049FF;
+        Thu, 29 Apr 2021 12:25:37 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-114-50.ams2.redhat.com [10.36.114.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD6F118796;
-        Thu, 29 Apr 2021 12:25:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A2ABF18796;
+        Thu, 29 Apr 2021 12:25:32 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     David Hildenbrand <david@redhat.com>,
@@ -57,9 +57,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         linux-hyperv@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v1 1/7] fs/proc/kcore: drop KCORE_REMAP and KCORE_OTHER
-Date:   Thu, 29 Apr 2021 14:25:13 +0200
-Message-Id: <20210429122519.15183-2-david@redhat.com>
+Subject: [PATCH v1 2/7] fs/proc/kcore: pfn_is_ram check only applies to KCORE_RAM
+Date:   Thu, 29 Apr 2021 14:25:14 +0200
+Message-Id: <20210429122519.15183-3-david@redhat.com>
 In-Reply-To: <20210429122519.15183-1-david@redhat.com>
 References: <20210429122519.15183-1-david@redhat.com>
 MIME-Version: 1.0
@@ -69,58 +69,79 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Commit db779ef67ffe ("proc/kcore: Remove unused kclist_add_remap()")
-removed the last user of KCORE_REMAP.
-
-Commit 595dd46ebfc1 ("vfs/proc/kcore, x86/mm/kcore: Fix SMAP fault when
-dumping vsyscall user page") removed the last user of KCORE_OTHER.
-
-Let's drop both types. While at it, also drop vaddr in "struct
-kcore_list", used by KCORE_REMAP only.
+Let's resturcture the code, using switch-case, and checking pfn_is_ram()
+only when we are dealing with KCORE_RAM.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- fs/proc/kcore.c       | 7 ++-----
- include/linux/kcore.h | 3 ---
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ fs/proc/kcore.c | 35 +++++++++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 8 deletions(-)
 
 diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index 4d2e64e9016c..09f77d3c6e15 100644
+index 09f77d3c6e15..ed6fbb3bd50c 100644
 --- a/fs/proc/kcore.c
 +++ b/fs/proc/kcore.c
-@@ -380,11 +380,8 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 			phdr->p_type = PT_LOAD;
- 			phdr->p_flags = PF_R | PF_W | PF_X;
- 			phdr->p_offset = kc_vaddr_to_offset(m->addr) + data_offset;
--			if (m->type == KCORE_REMAP)
--				phdr->p_vaddr = (size_t)m->vaddr;
--			else
--				phdr->p_vaddr = (size_t)m->addr;
--			if (m->type == KCORE_RAM || m->type == KCORE_REMAP)
-+			phdr->p_vaddr = (size_t)m->addr;
-+			if (m->type == KCORE_RAM)
- 				phdr->p_paddr = __pa(m->addr);
- 			else if (m->type == KCORE_TEXT)
- 				phdr->p_paddr = __pa_symbol(m->addr);
-diff --git a/include/linux/kcore.h b/include/linux/kcore.h
-index da676cdbd727..86c0f1d18998 100644
---- a/include/linux/kcore.h
-+++ b/include/linux/kcore.h
-@@ -11,14 +11,11 @@ enum kcore_type {
- 	KCORE_RAM,
- 	KCORE_VMEMMAP,
- 	KCORE_USER,
--	KCORE_OTHER,
--	KCORE_REMAP,
- };
- 
- struct kcore_list {
- 	struct list_head list;
- 	unsigned long addr;
--	unsigned long vaddr;
- 	size_t size;
- 	int type;
- };
+@@ -483,25 +483,36 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 				goto out;
+ 			}
+ 			m = NULL;	/* skip the list anchor */
+-		} else if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
+-			if (clear_user(buffer, tsz)) {
+-				ret = -EFAULT;
+-				goto out;
+-			}
+-		} else if (m->type == KCORE_VMALLOC) {
++			goto skip;
++		}
++
++		switch (m->type) {
++		case KCORE_VMALLOC:
+ 			vread(buf, (char *)start, tsz);
+ 			/* we have to zero-fill user buffer even if no read */
+ 			if (copy_to_user(buffer, buf, tsz)) {
+ 				ret = -EFAULT;
+ 				goto out;
+ 			}
+-		} else if (m->type == KCORE_USER) {
++			break;
++		case KCORE_USER:
+ 			/* User page is handled prior to normal kernel page: */
+ 			if (copy_to_user(buffer, (char *)start, tsz)) {
+ 				ret = -EFAULT;
+ 				goto out;
+ 			}
+-		} else {
++			break;
++		case KCORE_RAM:
++			if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
++				if (clear_user(buffer, tsz)) {
++					ret = -EFAULT;
++					goto out;
++				}
++				break;
++			}
++			fallthrough;
++		case KCORE_VMEMMAP:
++		case KCORE_TEXT:
+ 			if (kern_addr_valid(start)) {
+ 				/*
+ 				 * Using bounce buffer to bypass the
+@@ -525,7 +536,15 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 					goto out;
+ 				}
+ 			}
++			break;
++		default:
++			pr_warn_once("Unhandled KCORE type: %d\n", m->type);
++			if (clear_user(buffer, tsz)) {
++				ret = -EFAULT;
++				goto out;
++			}
+ 		}
++skip:
+ 		buflen -= tsz;
+ 		*fpos += tsz;
+ 		buffer += tsz;
 -- 
 2.30.2
 
