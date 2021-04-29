@@ -2,85 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF70936D929
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Apr 2021 16:04:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D581936E266
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Apr 2021 02:14:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239050AbhD1ODF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 28 Apr 2021 10:03:05 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:43624 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238380AbhD1OCo (ORCPT
+        id S231401AbhD2AOh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 28 Apr 2021 20:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231564AbhD2AOh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 28 Apr 2021 10:02:44 -0400
-Received: by mail-wr1-f47.google.com with SMTP id x7so63152674wrw.10;
-        Wed, 28 Apr 2021 07:01:59 -0700 (PDT)
+        Wed, 28 Apr 2021 20:14:37 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B16C06138D
+        for <linux-hyperv@vger.kernel.org>; Wed, 28 Apr 2021 17:13:52 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id h11so5251826pfn.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 28 Apr 2021 17:13:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=TvDH0Ufqq951p1SmGaor3zZZi0JBju1aRHwGT5Ex+6c=;
+        b=Z9wHPudx7UPB3RH0/bwjeSbaqXer4IdtTP7UxEydu2tkfM//flZaYDIYR3FgQzJ7Dl
+         PFgIf/PVlCCgPnDFR+KKl0pK8wxYPzNC1nkIQJdNGsncsxEo5Y7bNROPqtjVZFWkuDXa
+         UFmFoPKyJzOf0wWhl1YwGohS1otKKEhv2izlNOeIrLO+yzwZXVqrmkT3gyLz2dmOd+gg
+         i14wYpTgrwZPj8CvshiWavj2PwIc0XugO+tQWgjpVHD+OBc48wa9AV4xlYpX1qiRPcSZ
+         LJECQL204Ufl0gPJKw2VQ45XZIaQ5cmDsenwVkFyzbHx3+gcymki9W6RwLYGzNSuRPH7
+         /q3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Uheu8s26iW3ko1XKinftj7CiwtVhVkhr//K4W010x+g=;
-        b=MKy3Kq2BVhQG9g3ncrRkK2jYiFZKB8NepwFyhtZ7wcio0uUUosnue5H8Sqvo9DqKAQ
-         LO6tS9Bf0q3jgPz2OjQzEJ56c0TSBU8uAo867FfLjBidj0yw7SjVDyFxgATIL03w3MqL
-         ZxZMndHxq2wNHmx5N9hFn6ITqCJWV3uWcbXfaR0KssqdtHpw1BSn6FHYb52hr9Q0lwtp
-         kCzWCsIGfkfT5ismQ+1Mf7sJBC3ifXjJqAhq5+cadYtHMdi8cHrSzen3H+5UxPWlQdWD
-         TJRklLWs1IRvoomxjx1uh5AYyV8hh8804md2jfL2Pg3tTxpaHp4ilO1S2rqEs/YTWY7f
-         ownw==
-X-Gm-Message-State: AOAM532VtWf+/A6zEemLZZWpM4pnJhnHluB1XlcbOAlqIKW0yvPdv+KR
-        duBT9oeq4VB9ZBli7jl7zfA=
-X-Google-Smtp-Source: ABdhPJxivxFyQJiOiApbgYKWy7pGxc/X9ieVDkn9eHOL7wL9k5J3eH/h4E+cAhTd8gYUx4EopFk0PA==
-X-Received: by 2002:a5d:638f:: with SMTP id p15mr23588927wru.255.1619618518894;
-        Wed, 28 Apr 2021 07:01:58 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id n12sm3882943wmq.29.2021.04.28.07.01.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Apr 2021 07:01:58 -0700 (PDT)
-Date:   Wed, 28 Apr 2021 14:01:56 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vineeth Pillai <viremana@linux.microsoft.com>
-Cc:     Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] hyperv: Detect Nested virtualization support for
- SVM
-Message-ID: <20210428140156.flf5ie6r2j7os5ch@liuwe-devbox-debian-v2>
-References: <cover.1619556430.git.viremana@linux.microsoft.com>
- <8ffa88e6ceb55d283c76b4c5fd9ad0fb1a2cf667.1619556430.git.viremana@linux.microsoft.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=TvDH0Ufqq951p1SmGaor3zZZi0JBju1aRHwGT5Ex+6c=;
+        b=kt6YGgeSTmU/74VGFmrm3D5pnN3ut7XI2Pc5YicFQ25mZxXaJoSpHo1XyihdjtHPyB
+         8rgBamydKF+bmXyfd7pC8fbqs3NPu2mt/oMS54W6ClwJg1ryTOVjv2FWouY8g1w/RyFK
+         jWU22aVznU+5K6cpDgSmDPy83PFPytsH7QlR2az8h6+o4E8AsFEnxispwulPKLGV7miP
+         Mdhq2IS3Ai1++zS0uz3/GqgZNfhSEDbL4KAPQnN5X89sk6PoAnNbFtWWeb5AEMmRcN4/
+         e5gttbRTL7lvgXNL2VFW8kygjtiLkkGLsI5ykS5g/QI1Tizo8/iNOtlBmOBkt+sVaxFa
+         EBvw==
+X-Gm-Message-State: AOAM532OiRG9JMjamMbRaj7ZbrzLHti8ZDsgwkjXr5/HK12nhxLV3bCE
+        n3uU7DVBd4Y62qrvsnzfCUVTHZqTZxAHw5IiLmI=
+X-Google-Smtp-Source: ABdhPJx1mdRPcvf15OScNKSMvk+e+HbCUE3LLABwJNpMjn6R2u87Uva+XpCaU/cWSy3/tGH7ZydmrH1ooiKhIzNRO1Y=
+X-Received: by 2002:aa7:9696:0:b029:259:efef:e1e0 with SMTP id
+ f22-20020aa796960000b0290259efefe1e0mr31678402pfk.0.1619655231699; Wed, 28
+ Apr 2021 17:13:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ffa88e6ceb55d283c76b4c5fd9ad0fb1a2cf667.1619556430.git.viremana@linux.microsoft.com>
+Received: by 2002:a05:7300:6426:b029:19:764e:b00a with HTTP; Wed, 28 Apr 2021
+ 17:13:51 -0700 (PDT)
+Reply-To: bwalysam@gmail.com
+From:   Mr Kingsley Obiora <maryclove123@gmail.com>
+Date:   Thu, 29 Apr 2021 01:13:51 +0100
+Message-ID: <CAFBdPmdDfXTXyXq90V0gu3U9K88sMyVf=5E=f6dUYBw_5GakBg@mail.gmail.com>
+Subject: Hello From Dr Kingsley Obiora
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Apr 27, 2021 at 08:54:50PM +0000, Vineeth Pillai wrote:
-> Previously, to detect nested virtualization enlightenment support,
-> we were using HV_X64_ENLIGHTENED_VMCS_RECOMMENDED feature bit of
-> HYPERV_CPUID_ENLIGHTMENT_INFO.EAX CPUID as docuemented in TLFS:
->  "Bit 14: Recommend a nested hypervisor using the enlightened VMCS
->   interface. Also indicates that additional nested enlightenments
->   may be available (see leaf 0x4000000A)".
-> 
-> Enlightened VMCS, however, is an Intel only feature so the above
-> detection method doesn't work for AMD. So, use the
-> HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS.EAX CPUID information ("The
-> maximum input value for hypervisor CPUID information.") and this
-> works for both AMD and Intel.
-> 
-> Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+Dear Sir,
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+After our meeting held today based on your funds, the management want
+to bring to your notice that we are making a special arrangement to
+bring your said fund by cash through diplomatic Immunity to your
+country home. Further details of this arrangement will be given to you
+once you acknowledged this idea.
+
+Waiting for your soonest response.
+Kingsley Obiora
