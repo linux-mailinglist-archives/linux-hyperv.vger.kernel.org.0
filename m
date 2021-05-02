@@ -2,121 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F350370A86
-	for <lists+linux-hyperv@lfdr.de>; Sun,  2 May 2021 08:34:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A76D370DDC
+	for <lists+linux-hyperv@lfdr.de>; Sun,  2 May 2021 18:18:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbhEBGfO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 2 May 2021 02:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229526AbhEBGfO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 2 May 2021 02:35:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D49E61408;
-        Sun,  2 May 2021 06:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619937263;
-        bh=cByN/RcKM8xbB6KsfcBCkuoO/9VHkzKGkqsC7qrvyPM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s8Xy8pvyPi42yMVDvXg8Iv0BIywloo7o7xzc9wKr/4UrRbkY0CKZvRozbvzXENCa4
-         UUZaptLpgkRVVl3eR/YC8PbVKT6jw+SaSxYKecOHesP02+UCu+CWqXDCDmDfeK5Epg
-         TfWYkhVsqTcmoiSZqgqK4mCwfSmt5qEU0zNYzSrjKqR4WPmb2Uek8LX8JDwShqSbgd
-         Nhc5IGoeN86yH1RMJLQJtCfYHjdLHre9EZDOJ4QxJqjrVDKP400NkwXCMi9Q6Pvf4k
-         75xNE+1dK5Z9hV3/Yl+I8kGsk724zbVqOKaVmkB0ixJBwLZhxQFMsdk1UI8ZsRmifT
-         tlR+6/+IGZspg==
-Date:   Sun, 2 May 2021 09:34:11 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Steven Price <steven.price@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Aili Yao <yaoaili@kingsoft.com>, Jiri Bohac <jbohac@suse.cz>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        id S232230AbhEBQSz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 2 May 2021 12:18:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230110AbhEBQSz (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 2 May 2021 12:18:55 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217AAC06174A;
+        Sun,  2 May 2021 09:18:04 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id d10so1992289pgf.12;
+        Sun, 02 May 2021 09:18:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=G8PwBdGIDFXi8DL6S5B96fgDJSf68cMbk9MM93GuLb8=;
+        b=NGjgfhgP5Kz/zIBjKbDdRk08XqS6IRvcM3TgBu0WbQtbvXwNMJGqH71VKiS3Bg0Sp6
+         u9MwBxE8XD2W5V866Axa4yIzXNPVTMHzxuhZU/UgtGaXwtMnX4+MLE4e4K4u2PhGqG6y
+         Qmdht1wqh9MRMiskgpAvIM/lTenfxdV5dUxgWU67M3wl5KgxOs73LbCt32dyT8mV1EvJ
+         rc0R8MiyBWIeXuhfME4GF29b6kFPIFgjjBLqZzNwjh/8AdyXi/WlqxcIlY5DOWBEXzrJ
+         FG6IJCXVxMmI23wYlr72o/7IGtwSn1emo6EhVf2UueKW2CrbB8nNJgU62xJ/AQHsaekd
+         zFfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=G8PwBdGIDFXi8DL6S5B96fgDJSf68cMbk9MM93GuLb8=;
+        b=Gs7Wu12lbEe9YBV1whD1q4QinPtoUsGceGFKUEXbMNrVzVVCyJQXCAT8pBNcWFU8Dk
+         6HY5g6E3nzYm31Fjh+zX/JEALO1y2bevrsYSPWpKF3mPpy+31YPMqR3K0ygi9F6qh+Uj
+         zJd3BjmU0W4m/6hGUSL/j4nqbopf3p2S7Sgt7+J86tbrq5kGiT3TjRa3WAM/XbS3+5ho
+         M84rfL69e85LmblfSp/neutKq2/kpMhfDsk58trxPSG9LGIyi5T19yIZQ3Y0x0DiJZhX
+         pOohlyHHAqI9VbzYsUbXdu70V/qkf8Waj/U+bFNYX1sQtFFVCNvdfKxV5oXcO630WjdT
+         540A==
+X-Gm-Message-State: AOAM533KcGxYIBC8txh7J5W9Yi9839Q5wgUhrPbbBj3HRkjs9HG7k7LY
+        MEOcrdiawV72Q1ansmJ+15nv7zv4yI3RTH9r4pwdj3JG
+X-Google-Smtp-Source: ABdhPJw7TeIfztwe4iXqg3z+DF0jLO9LrSX7vnK2rcSilC0eNWhzSUUYfebfYb134+S6so67J7mvuA==
+X-Received: by 2002:a63:f258:: with SMTP id d24mr14197280pgk.174.1619972283685;
+        Sun, 02 May 2021 09:18:03 -0700 (PDT)
+Received: from fedora ([103.125.235.29])
+        by smtp.gmail.com with ESMTPSA id n8sm6688050pfu.111.2021.05.02.09.17.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 May 2021 09:18:03 -0700 (PDT)
+Date:   Sun, 2 May 2021 11:17:52 -0500
+From:   Nigel Christian <nigel.l.christian@gmail.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v1 7/7] fs/proc/kcore: use page_offline_(freeze|unfreeze)
-Message-ID: <YI5H4yV/c6ReuIDt@kernel.org>
-References: <20210429122519.15183-1-david@redhat.com>
- <20210429122519.15183-8-david@redhat.com>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] hv_balloon: remove redundant assignment
+Message-ID: <YI7QsN9cY/Z9NgW4@fedora>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210429122519.15183-8-david@redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Apr 29, 2021 at 02:25:19PM +0200, David Hildenbrand wrote:
-> Let's properly synchronize with drivers that set PageOffline(). Unfreeze
-> every now and then, so drivers that want to set PageOffline() can make
-> progress.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  fs/proc/kcore.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-> index 92ff1e4436cb..3d7531f47389 100644
-> --- a/fs/proc/kcore.c
-> +++ b/fs/proc/kcore.c
-> @@ -311,6 +311,7 @@ static void append_kcore_note(char *notes, size_t *i, const char *name,
->  static ssize_t
->  read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
->  {
-> +	size_t page_offline_frozen = 0;
->  	char *buf = file->private_data;
->  	size_t phdrs_offset, notes_offset, data_offset;
->  	size_t phdrs_len, notes_len;
-> @@ -509,6 +510,18 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
->  			pfn = __pa(start) >> PAGE_SHIFT;
->  			page = pfn_to_online_page(pfn);
+The variable region_start is being assigned a value that is
+not read. Remove it.
 
-Can't this race with page offlining for the first time we get here?
- 
-> +			/*
-> +			 * Don't race against drivers that set PageOffline()
-> +			 * and expect no further page access.
-> +			 */
-> +			if (page_offline_frozen == MAX_ORDER_NR_PAGES) {
-> +				page_offline_unfreeze();
-> +				page_offline_frozen = 0;
-> +				cond_resched();
-> +			}
-> +			if (!page_offline_frozen++)
-> +				page_offline_freeze();
-> +
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Nigel Christian <nigel.l.christian@gmail.com>
+---
+ drivers/hv/hv_balloon.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Don't we need to freeze before doing pfn_to_online_page()?
-
->  			/*
->  			 * Don't read offline sections, logically offline pages
->  			 * (e.g., inflated in a balloon), hwpoisoned pages,
-> @@ -565,6 +578,8 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
->  	}
->  
->  out:
-> +	if (page_offline_frozen)
-> +		page_offline_unfreeze();
->  	up_read(&kclist_lock);
->  	if (ret)
->  		return ret;
-> -- 
-> 2.30.2
-> 
-
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 58af84e30144..7f11ea07d698 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1010,7 +1010,6 @@ static void hot_add_req(struct work_struct *dummy)
+ 		 * that need to be hot-added while ensuring the alignment
+ 		 * and size requirements of Linux as it relates to hot-add.
+ 		 */
+-		region_start = pg_start;
+ 		region_size = (pfn_cnt / HA_CHUNK) * HA_CHUNK;
+ 		if (pfn_cnt % HA_CHUNK)
+ 			region_size += HA_CHUNK;
 -- 
-Sincerely yours,
-Mike.
+2.31.1
+
