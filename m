@@ -2,46 +2,35 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1C0836EA6A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Apr 2021 14:27:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BB80370A74
+	for <lists+linux-hyperv@lfdr.de>; Sun,  2 May 2021 08:31:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233731AbhD2M2R (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Apr 2021 08:28:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45248 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231708AbhD2M2R (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Apr 2021 08:28:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619699250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8j9mBor07Cs8M7oV014u0wi5MvoFT2r3E+Kj0uohzbw=;
-        b=Q2ueY/bfihQWmJVU0cBapVR4RsBG7nHK9D0GbgdWNkPFnsWVzglmQpyvCIqsg8RPj9pC3B
-        jFmoYxNjRIZG73BktbxPRvks+JVYeWGW0wHZ+tpFSIHo6UuamcCnL92t/6R9rRx5z0o44U
-        YY/bgFDkagGsocpfcnnprkgHWeiar7g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-mextiE51O4S-F0gnYD4sAg-1; Thu, 29 Apr 2021 08:27:26 -0400
-X-MC-Unique: mextiE51O4S-F0gnYD4sAg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 097B8108BD0C;
-        Thu, 29 Apr 2021 12:27:22 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-50.ams2.redhat.com [10.36.114.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C62B318811;
-        Thu, 29 Apr 2021 12:26:43 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
+        id S229536AbhEBGcZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 2 May 2021 02:32:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229526AbhEBGcY (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 2 May 2021 02:32:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 622FB6134F;
+        Sun,  2 May 2021 06:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619937093;
+        bh=SUTF4qHvvsvOCxRaO7XMs9cQTJeY156G3PPBU4Gks2Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SOUpNoydb/Dr01KO8+naCCL9W/VNTnBaeUOGgAEKVeY9Ki8wwSN/8gQXKYt4Eejj9
+         5ODj0fMX/fFoQnrlDWf0DIuyNGXeU1B5VzF9LMwxHZvEJ1+jVEHYmegGhZQdSqqiQT
+         2ElXY9X/fhAd0ms8gpUWE1EGsl7CF7uNmtg6MVqQFqTTLjG3BmSYNwDRoUlOQRKwsM
+         /iHufKPwlGmiUSK1jvdTa0yM/xMbUgA6M1PZCE9EDYujnE/iBkj6SsVbqbz8pbkeSe
+         +rB0HbrVWvKcCyAEeRj+m4of7Ad3w2qUphuxf/+YhkT5sygsX45ePs3e9C7cDv9Zn3
+         HCmDkz5w5Tw2A==
+Date:   Sun, 2 May 2021 09:31:21 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
         "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Oscar Salvador <osalvador@suse.de>,
         Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
@@ -57,67 +46,100 @@ Cc:     David Hildenbrand <david@redhat.com>,
         linux-hyperv@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v1 7/7] fs/proc/kcore: use page_offline_(freeze|unfreeze)
-Date:   Thu, 29 Apr 2021 14:25:19 +0200
-Message-Id: <20210429122519.15183-8-david@redhat.com>
-In-Reply-To: <20210429122519.15183-1-david@redhat.com>
+Subject: Re: [PATCH v1 2/7] fs/proc/kcore: pfn_is_ram check only applies to
+ KCORE_RAM
+Message-ID: <YI5HOad9T+752CBg@kernel.org>
 References: <20210429122519.15183-1-david@redhat.com>
+ <20210429122519.15183-3-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210429122519.15183-3-david@redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Let's properly synchronize with drivers that set PageOffline(). Unfreeze
-every now and then, so drivers that want to set PageOffline() can make
-progress.
+On Thu, Apr 29, 2021 at 02:25:14PM +0200, David Hildenbrand wrote:
+> Let's resturcture the code, using switch-case, and checking pfn_is_ram()
+> only when we are dealing with KCORE_RAM.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- fs/proc/kcore.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index 92ff1e4436cb..3d7531f47389 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -311,6 +311,7 @@ static void append_kcore_note(char *notes, size_t *i, const char *name,
- static ssize_t
- read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- {
-+	size_t page_offline_frozen = 0;
- 	char *buf = file->private_data;
- 	size_t phdrs_offset, notes_offset, data_offset;
- 	size_t phdrs_len, notes_len;
-@@ -509,6 +510,18 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 			pfn = __pa(start) >> PAGE_SHIFT;
- 			page = pfn_to_online_page(pfn);
- 
-+			/*
-+			 * Don't race against drivers that set PageOffline()
-+			 * and expect no further page access.
-+			 */
-+			if (page_offline_frozen == MAX_ORDER_NR_PAGES) {
-+				page_offline_unfreeze();
-+				page_offline_frozen = 0;
-+				cond_resched();
-+			}
-+			if (!page_offline_frozen++)
-+				page_offline_freeze();
-+
- 			/*
- 			 * Don't read offline sections, logically offline pages
- 			 * (e.g., inflated in a balloon), hwpoisoned pages,
-@@ -565,6 +578,8 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 	}
- 
- out:
-+	if (page_offline_frozen)
-+		page_offline_unfreeze();
- 	up_read(&kclist_lock);
- 	if (ret)
- 		return ret;
+> ---
+>  fs/proc/kcore.c | 35 +++++++++++++++++++++++++++--------
+>  1 file changed, 27 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+> index 09f77d3c6e15..ed6fbb3bd50c 100644
+> --- a/fs/proc/kcore.c
+> +++ b/fs/proc/kcore.c
+> @@ -483,25 +483,36 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+>  				goto out;
+>  			}
+>  			m = NULL;	/* skip the list anchor */
+> -		} else if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
+> -			if (clear_user(buffer, tsz)) {
+> -				ret = -EFAULT;
+> -				goto out;
+> -			}
+> -		} else if (m->type == KCORE_VMALLOC) {
+> +			goto skip;
+> +		}
+> +
+> +		switch (m->type) {
+> +		case KCORE_VMALLOC:
+>  			vread(buf, (char *)start, tsz);
+>  			/* we have to zero-fill user buffer even if no read */
+>  			if (copy_to_user(buffer, buf, tsz)) {
+>  				ret = -EFAULT;
+>  				goto out;
+>  			}
+> -		} else if (m->type == KCORE_USER) {
+> +			break;
+> +		case KCORE_USER:
+>  			/* User page is handled prior to normal kernel page: */
+>  			if (copy_to_user(buffer, (char *)start, tsz)) {
+>  				ret = -EFAULT;
+>  				goto out;
+>  			}
+> -		} else {
+> +			break;
+> +		case KCORE_RAM:
+> +			if (!pfn_is_ram(__pa(start) >> PAGE_SHIFT)) {
+> +				if (clear_user(buffer, tsz)) {
+> +					ret = -EFAULT;
+> +					goto out;
+> +				}
+> +				break;
+> +			}
+> +			fallthrough;
+> +		case KCORE_VMEMMAP:
+> +		case KCORE_TEXT:
+>  			if (kern_addr_valid(start)) {
+>  				/*
+>  				 * Using bounce buffer to bypass the
+> @@ -525,7 +536,15 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+>  					goto out;
+>  				}
+>  			}
+> +			break;
+> +		default:
+> +			pr_warn_once("Unhandled KCORE type: %d\n", m->type);
+> +			if (clear_user(buffer, tsz)) {
+> +				ret = -EFAULT;
+> +				goto out;
+> +			}
+>  		}
+> +skip:
+>  		buflen -= tsz;
+>  		*fpos += tsz;
+>  		buffer += tsz;
+> -- 
+> 2.30.2
+> 
+
 -- 
-2.30.2
-
+Sincerely yours,
+Mike.
