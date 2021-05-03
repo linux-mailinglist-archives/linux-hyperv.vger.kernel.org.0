@@ -2,88 +2,119 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A76D370DDC
-	for <lists+linux-hyperv@lfdr.de>; Sun,  2 May 2021 18:18:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1DF7371248
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 May 2021 10:11:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232230AbhEBQSz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 2 May 2021 12:18:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230110AbhEBQSz (ORCPT
+        id S232929AbhECIMb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 3 May 2021 04:12:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32373 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232895AbhECIM3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 2 May 2021 12:18:55 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217AAC06174A;
-        Sun,  2 May 2021 09:18:04 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id d10so1992289pgf.12;
-        Sun, 02 May 2021 09:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=G8PwBdGIDFXi8DL6S5B96fgDJSf68cMbk9MM93GuLb8=;
-        b=NGjgfhgP5Kz/zIBjKbDdRk08XqS6IRvcM3TgBu0WbQtbvXwNMJGqH71VKiS3Bg0Sp6
-         u9MwBxE8XD2W5V866Axa4yIzXNPVTMHzxuhZU/UgtGaXwtMnX4+MLE4e4K4u2PhGqG6y
-         Qmdht1wqh9MRMiskgpAvIM/lTenfxdV5dUxgWU67M3wl5KgxOs73LbCt32dyT8mV1EvJ
-         rc0R8MiyBWIeXuhfME4GF29b6kFPIFgjjBLqZzNwjh/8AdyXi/WlqxcIlY5DOWBEXzrJ
-         FG6IJCXVxMmI23wYlr72o/7IGtwSn1emo6EhVf2UueKW2CrbB8nNJgU62xJ/AQHsaekd
-         zFfw==
+        Mon, 3 May 2021 04:12:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1620029496;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vwlHSyZzbGf/1hjjeGeNUgRrxHpiQEqHNLs9/p1ggRw=;
+        b=SpnB4wOZYRjWRsZw6CbE6Mx+Vg7HJD6WzRgcfwSky3w5fpAeccqaq2UILjxONahJt3dIqY
+        I3rJqAEAihRNarxzQCsVmFZyrKXO6ks++dnv4T+m+Yfo8J5VdHUDu5L17xvNn3pQ/B/4i0
+        Xn0AOH9P/eW6AdoYxo/KBkyxXtjPimA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-etyn0Z8HOUuUjtopP7DAAA-1; Mon, 03 May 2021 04:11:32 -0400
+X-MC-Unique: etyn0Z8HOUuUjtopP7DAAA-1
+Received: by mail-ej1-f70.google.com with SMTP id qk30-20020a170906d9deb02903916754e1b6so1689552ejb.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 03 May 2021 01:11:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=G8PwBdGIDFXi8DL6S5B96fgDJSf68cMbk9MM93GuLb8=;
-        b=Gs7Wu12lbEe9YBV1whD1q4QinPtoUsGceGFKUEXbMNrVzVVCyJQXCAT8pBNcWFU8Dk
-         6HY5g6E3nzYm31Fjh+zX/JEALO1y2bevrsYSPWpKF3mPpy+31YPMqR3K0ygi9F6qh+Uj
-         zJd3BjmU0W4m/6hGUSL/j4nqbopf3p2S7Sgt7+J86tbrq5kGiT3TjRa3WAM/XbS3+5ho
-         M84rfL69e85LmblfSp/neutKq2/kpMhfDsk58trxPSG9LGIyi5T19yIZQ3Y0x0DiJZhX
-         pOohlyHHAqI9VbzYsUbXdu70V/qkf8Waj/U+bFNYX1sQtFFVCNvdfKxV5oXcO630WjdT
-         540A==
-X-Gm-Message-State: AOAM533KcGxYIBC8txh7J5W9Yi9839Q5wgUhrPbbBj3HRkjs9HG7k7LY
-        MEOcrdiawV72Q1ansmJ+15nv7zv4yI3RTH9r4pwdj3JG
-X-Google-Smtp-Source: ABdhPJw7TeIfztwe4iXqg3z+DF0jLO9LrSX7vnK2rcSilC0eNWhzSUUYfebfYb134+S6so67J7mvuA==
-X-Received: by 2002:a63:f258:: with SMTP id d24mr14197280pgk.174.1619972283685;
-        Sun, 02 May 2021 09:18:03 -0700 (PDT)
-Received: from fedora ([103.125.235.29])
-        by smtp.gmail.com with ESMTPSA id n8sm6688050pfu.111.2021.05.02.09.17.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 May 2021 09:18:03 -0700 (PDT)
-Date:   Sun, 2 May 2021 11:17:52 -0500
-From:   Nigel Christian <nigel.l.christian@gmail.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vwlHSyZzbGf/1hjjeGeNUgRrxHpiQEqHNLs9/p1ggRw=;
+        b=RbWNX+MMPZ+/ISbDO/fo5NbwzVIM9/LMcfgXtYQEUh1gl3kKm2qF9zyXfs89Bm+9Aj
+         iBi1x70yWZC4rEiOGPWpDIIIONYJFHX4/5/LWFrMxsyYzPXxzl1gxO5IAoTa0uWgFx9X
+         9iT+JerGVJjEuQw6ggAfMLd8WnTe9dpreHiqGYMVOJdOJuKH6e92FBYkJ/Q1t7muZAqZ
+         y+CYQsN+p+zMH2lPU3tN3RkTNC2lhz0cWFsGdb34s3nAMdQmPCyuwxJPIj6vFTEMccG/
+         oD123Usl4c8tBSjILnAasrR90azYI3YMOqIfYxJfQ7/qUtTK+GoKzyMDC+GcZzi0YrYG
+         FiPg==
+X-Gm-Message-State: AOAM530bM0k9F+3WNYBLltzz+ixoB65z3wzTWTbGMVCu/Df6jBRn433Y
+        TeGb3OyPDJVgArEzkavQBy4UxDrT2LNfGl8P8DtMJyLYCTRT4PqitE9f8FQT7syxUZFgAgliFIg
+        wcbHOCxdZwBwuMR2+6To+j2GL
+X-Received: by 2002:a50:eb47:: with SMTP id z7mr16986503edp.68.1620029491093;
+        Mon, 03 May 2021 01:11:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxgC+bCNFZ6IjQ+hZxVb6PiUEspf4Kwd7KdWnjG2fBIRF7s94xAa5mK0csiH8ddS3w5cQDqaA==
+X-Received: by 2002:a50:eb47:: with SMTP id z7mr16986454edp.68.1620029490784;
+        Mon, 03 May 2021 01:11:30 -0700 (PDT)
+Received: from [192.168.3.132] (p5b0c649f.dip0.t-ipconnect.de. [91.12.100.159])
+        by smtp.gmail.com with ESMTPSA id d15sm12268494edu.86.2021.05.03.01.11.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 May 2021 01:11:30 -0700 (PDT)
+Subject: Re: [PATCH v1 5/7] mm: introduce
+ page_offline_(begin|end|freeze|unfreeze) to synchronize setting PageOffline()
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Steven Price <steven.price@arm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Aili Yao <yaoaili@kingsoft.com>, Jiri Bohac <jbohac@suse.cz>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] hv_balloon: remove redundant assignment
-Message-ID: <YI7QsN9cY/Z9NgW4@fedora>
+        Wei Liu <wei.liu@kernel.org>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20210429122519.15183-1-david@redhat.com>
+ <20210429122519.15183-6-david@redhat.com> <YI5Hp49AmWgfTzNy@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Message-ID: <4aa55978-c224-7ead-f00d-df1a6c3dfda4@redhat.com>
+Date:   Mon, 3 May 2021 10:11:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <YI5Hp49AmWgfTzNy@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The variable region_start is being assigned a value that is
-not read. Remove it.
+On 02.05.21 08:33, Mike Rapoport wrote:
+> On Thu, Apr 29, 2021 at 02:25:17PM +0200, David Hildenbrand wrote:
+>> A driver might set a page logically offline -- PageOffline() -- and
+>> turn the page inaccessible in the hypervisor; after that, access to page
+>> content can be fatal. One example is virtio-mem; while unplugged memory
+>> -- marked as PageOffline() can currently be read in the hypervisor, this
+>> will no longer be the case in the future; for example, when having
+>> a virtio-mem device backed by huge pages in the hypervisor.
+>>
+>> Some special PFN walkers -- i.e., /proc/kcore -- read content of random
+>> pages after checking PageOffline(); however, these PFN walkers can race
+>> with drivers that set PageOffline().
+>>
+>> Let's introduce page_offline_(begin|end|freeze|unfreeze) for
+> 
+> Bikeshed: freeze|thaw?
+>
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Nigel Christian <nigel.l.christian@gmail.com>
----
- drivers/hv/hv_balloon.c | 1 -
- 1 file changed, 1 deletion(-)
+Sure :)
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 58af84e30144..7f11ea07d698 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -1010,7 +1010,6 @@ static void hot_add_req(struct work_struct *dummy)
- 		 * that need to be hot-added while ensuring the alignment
- 		 * and size requirements of Linux as it relates to hot-add.
- 		 */
--		region_start = pg_start;
- 		region_size = (pfn_cnt / HA_CHUNK) * HA_CHUNK;
- 		if (pfn_cnt % HA_CHUNK)
- 			region_size += HA_CHUNK;
+
 -- 
-2.31.1
+Thanks,
+
+David / dhildenb
 
