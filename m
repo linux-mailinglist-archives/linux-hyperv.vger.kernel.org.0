@@ -2,64 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 160EC371257
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 May 2021 10:16:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80729371267
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 May 2021 10:23:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232911AbhECIRD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 3 May 2021 04:17:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26727 "EHLO
+        id S231605AbhECIYr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 3 May 2021 04:24:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36113 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229817AbhECIRC (ORCPT
+        by vger.kernel.org with ESMTP id S230364AbhECIYq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 3 May 2021 04:17:02 -0400
+        Mon, 3 May 2021 04:24:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620029769;
+        s=mimecast20190719; t=1620030233;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3uB/EYYvRDIWzIKd9NUtpds132sJrn5ZaXZy/6UA0sM=;
-        b=agNuSzL4sB4nJM4a3ImhqRPGf9dsq2uqox2rNh5P5drlhWCmH6CUsJFghV9LtZzg8p0cWD
-        caMOtNW6dnCs5s/fF1f9y9yCsh/+DTo8XbP8psjPgtHzq3GkY6ilJ/68nNSfd3gxAKGXsj
-        W2/xoGK9LsmNfoen7UyuhUj7L2C2XV8=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-WmtOAyC-Nvq93jb6r9AZog-1; Mon, 03 May 2021 04:16:06 -0400
-X-MC-Unique: WmtOAyC-Nvq93jb6r9AZog-1
-Received: by mail-ed1-f70.google.com with SMTP id i2-20020a0564020542b02903875c5e7a00so4080003edx.6
-        for <linux-hyperv@vger.kernel.org>; Mon, 03 May 2021 01:16:05 -0700 (PDT)
+        bh=bPRJDN7+PYmkwRc18YCW4pqF1oNECdl7EEdKg52HHCc=;
+        b=Fqv1CKmpzWBTP+UKgI2KLnpypJ7YI1FGaAC5ceOYbBqRLt+KLhVY7PpDTytrFhbB+LDS0G
+        zNIJBmYurkTJL/Nu6SnsSK9vsPwM6sqI+wtMY4kM0hN6zQyoQhuZSO8eglHCsrdUkHtr+R
+        h/995ta/61e6INyW6UcY4lJ8PLv5+pQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-28-CZGuAf6NOZSNdCPn34spAA-1; Mon, 03 May 2021 04:23:52 -0400
+X-MC-Unique: CZGuAf6NOZSNdCPn34spAA-1
+Received: by mail-wr1-f72.google.com with SMTP id j72-20020adf914e0000b02901073cdd9d65so3514859wrj.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 03 May 2021 01:23:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3uB/EYYvRDIWzIKd9NUtpds132sJrn5ZaXZy/6UA0sM=;
-        b=oyYSyxh3Fa7nQEy1qiiDkDxk95EfUOPlXSzbP831kHUcGVqe3b4DrHfcKbVs2Ib1KU
-         XY8z/54BWWJZo5vchNwET5Qs76pZuyIvC7ntlswXsh9drdj8iM2viSAR0DA99NQBMPsi
-         b9tU72XS4o/nPGY8ddloAYcgApXDlk6WrZCCwAMQsrONXdi/VwPbaRtupRceHh81eapd
-         YLvKNmj8G+U7sZMnRikf0e5SbA3J5Nc1y0Q2zgZ1oR4NY0Df+VBnbZg3UosAyYx2HOqB
-         3kzCvPh97rnV0IrCcJ+q7W8mmUdhg4pA2xzYEzvM3Y6xf/4nyW+ZK86lzNox0WPWy+o0
-         oJ+g==
-X-Gm-Message-State: AOAM533NkaKh+VTXbDdzMrgTlWlJW50sfTHDx1ly8jEj8+ZBEeSd6D76
-        0Pet8mMoHfOMhrAcepq676A1k96WFHEIuxMRRflmjmHh2+S6fViDoWod+aphfVd0RMwgVNkqMBm
-        /cTSTdvQWRFoypuewGogDDjsq
-X-Received: by 2002:a17:906:8147:: with SMTP id z7mr11677877ejw.496.1620029764845;
-        Mon, 03 May 2021 01:16:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz5t6QJnu76x0vRJx5wjyCiN1MvkzdCqG/1DMVBAPOiuRhGpdYa0HWbVhYZGZKhNk34vPvb6A==
-X-Received: by 2002:a17:906:8147:: with SMTP id z7mr11677854ejw.496.1620029764611;
-        Mon, 03 May 2021 01:16:04 -0700 (PDT)
-Received: from [192.168.3.132] (p5b0c649f.dip0.t-ipconnect.de. [91.12.100.159])
-        by smtp.gmail.com with ESMTPSA id lr15sm4554094ejb.107.2021.05.03.01.16.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 May 2021 01:16:04 -0700 (PDT)
-Subject: Re: [PATCH v1 6/7] virtio-mem: use page_offline_(start|end) when
- setting PageOffline()
-To:     Mike Rapoport <rppt@kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bPRJDN7+PYmkwRc18YCW4pqF1oNECdl7EEdKg52HHCc=;
+        b=rdhnevUiOYDSEy+zuN7c4eW72X0jWgZPhmOxIQvHaXlm9n6JYhQvkL1frtXanukkqV
+         yxXeP9rVinG9dNgE9xwy5QPte5yYjt5mAf0pEUj9/CRmwced/GPYW6WghWWMZ2/xDdQJ
+         oDINsYep8KUBwRRBriCnxGAmIU+3e/03OJJXHHJ5Kd78DPLuE9FCc4eOett+KFzXkSm4
+         Xr8uorJKa6EHGODpLKYOb3G3M+vN+zJCnqrFdNeqX2yflnw/jAmLk0KD2JE9pA/HO5lL
+         cVf8UR7rrgbRLKXnp5C9fLSHi5JjAUx/AEBcrvFrKFS4goyLBKbYxT4c1fGlO6NnClBT
+         86Rg==
+X-Gm-Message-State: AOAM532ctQlsNlYg4ZryLApYw/GZdKvAeIOOsGYo82TjFjdx4OAOs0YK
+        IqEw8TabQ/trcnCCv3mfVtTQ2Q17Yx2UPYnWQtgF29ZgDBY0CoX7pZqlnKTRNlOSsqJFdYycSnK
+        hsRrOXQS9RbXhgUWsD5kd3IjG
+X-Received: by 2002:a05:6000:184a:: with SMTP id c10mr23619881wri.237.1620030231115;
+        Mon, 03 May 2021 01:23:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJziGxRW4ZxIY4FY2qg1KRAZv5We9hL1OQjj2LLIG4bdcedtb0gAbjIZDrDWQnD40SLdnCFbag==
+X-Received: by 2002:a05:6000:184a:: with SMTP id c10mr23619863wri.237.1620030230987;
+        Mon, 03 May 2021 01:23:50 -0700 (PDT)
+Received: from redhat.com ([2a10:800a:cdef:0:114d:2085:61e4:7b41])
+        by smtp.gmail.com with ESMTPSA id n22sm8177060wmo.12.2021.05.03.01.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 May 2021 01:23:50 -0700 (PDT)
+Date:   Mon, 3 May 2021 04:23:47 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
 Cc:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
         "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Oscar Salvador <osalvador@suse.de>,
         Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
@@ -75,71 +73,78 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 6/7] virtio-mem: use page_offline_(start|end) when
+ setting PageOffline()
+Message-ID: <20210503042220-mutt-send-email-mst@kernel.org>
 References: <20210429122519.15183-1-david@redhat.com>
- <20210429122519.15183-7-david@redhat.com> <YI5HzXN7+ZTNXtcI@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Message-ID: <98f22a46-da8b-2891-fade-09937c0ccf69@redhat.com>
-Date:   Mon, 3 May 2021 10:16:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+ <20210429122519.15183-7-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <YI5HzXN7+ZTNXtcI@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210429122519.15183-7-david@redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 02.05.21 08:33, Mike Rapoport wrote:
-> On Thu, Apr 29, 2021 at 02:25:18PM +0200, David Hildenbrand wrote:
->> Let's properly use page_offline_(start|end) to synchronize setting
->> PageOffline(), so we won't have valid page access to unplugged memory
->> regions from /proc/kcore.
->>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>   drivers/virtio/virtio_mem.c | 2 ++
->>   mm/util.c                   | 2 ++
->>   2 files changed, 4 insertions(+)
->>
->> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
->> index 10ec60d81e84..dc2a2e2b2ff8 100644
->> --- a/drivers/virtio/virtio_mem.c
->> +++ b/drivers/virtio/virtio_mem.c
->> @@ -1065,6 +1065,7 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
->>   static void virtio_mem_set_fake_offline(unsigned long pfn,
->>   					unsigned long nr_pages, bool onlined)
->>   {
->> +	page_offline_begin();
->>   	for (; nr_pages--; pfn++) {
->>   		struct page *page = pfn_to_page(pfn);
->>   
->> @@ -1075,6 +1076,7 @@ static void virtio_mem_set_fake_offline(unsigned long pfn,
->>   			ClearPageReserved(page);
->>   		}
->>   	}
->> +	page_offline_end();
+On Thu, Apr 29, 2021 at 02:25:18PM +0200, David Hildenbrand wrote:
+> Let's properly use page_offline_(start|end) to synchronize setting
+> PageOffline(), so we won't have valid page access to unplugged memory
+> regions from /proc/kcore.
 > 
-> I'm not really familiar with ballooning and memory hotplug, but is it the
-> only place that needs page_offline_{begin,end} ?
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Existing balloon implementations that I am aware of (Hyper-V, XEN, 
-virtio-balloon, vmware-balloon) usually allow reading inflated memory; 
-doing so might result in unnecessary overhead in the hypervisor, so we 
-really want to avoid it -- but it's strictly not forbidden and has been 
-working forever. So we barely care about races: if there would be a rare 
-race, we'd still be able to read that memory.
 
-For virtio-mem, it'll be different in the future when using shmem, huge 
-pages, !anonymous private mappings, ... as backing storage for a VM; 
-there will be a virtio spec extension to document that virtio-mem 
-changes that indicate the new behavior won't allow reading unplugged 
-memory and doing so will result in undefined behavior.
+the patch looks good to me as such
 
--- 
-Thanks,
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-David / dhildenb
+Feel free to merge with rest of patcgset - it seems to mostly
+live in the fs/mm space.
+
+IF you respin, maybe add the explanation you sent in response to Mike's comments
+in the commit log.
+
+
+> ---
+>  drivers/virtio/virtio_mem.c | 2 ++
+>  mm/util.c                   | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+> index 10ec60d81e84..dc2a2e2b2ff8 100644
+> --- a/drivers/virtio/virtio_mem.c
+> +++ b/drivers/virtio/virtio_mem.c
+> @@ -1065,6 +1065,7 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
+>  static void virtio_mem_set_fake_offline(unsigned long pfn,
+>  					unsigned long nr_pages, bool onlined)
+>  {
+> +	page_offline_begin();
+>  	for (; nr_pages--; pfn++) {
+>  		struct page *page = pfn_to_page(pfn);
+>  
+> @@ -1075,6 +1076,7 @@ static void virtio_mem_set_fake_offline(unsigned long pfn,
+>  			ClearPageReserved(page);
+>  		}
+>  	}
+> +	page_offline_end();
+>  }
+>  
+>  /*
+> diff --git a/mm/util.c b/mm/util.c
+> index 95395d4e4209..d0e357bd65e6 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -1046,8 +1046,10 @@ void page_offline_begin(void)
+>  {
+>  	down_write(&page_offline_rwsem);
+>  }
+> +EXPORT_SYMBOL(page_offline_begin);
+>  
+>  void page_offline_end(void)
+>  {
+>  	up_write(&page_offline_rwsem);
+>  }
+> +EXPORT_SYMBOL(page_offline_end);
+> -- 
+> 2.30.2
 
