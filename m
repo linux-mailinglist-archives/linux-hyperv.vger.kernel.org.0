@@ -2,142 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9F38372C17
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 May 2021 16:35:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE88037347C
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 May 2021 06:55:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231158AbhEDOgN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 4 May 2021 10:36:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231126AbhEDOgN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 4 May 2021 10:36:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0369B613CC;
-        Tue,  4 May 2021 14:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620138918;
-        bh=9ZtBEC0XYgFjUhKlLdRO0G8aZQVeAPm5gU3FvbURgNI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=h0KOgursxmzw4sVUAVaDfHBs66qmCEIiCjxswvd6kqY3cj2hsRNSF3WvAwJTO286S
-         qW+XBOWKnJrcwGa20y7JomKYpbrwSzEKeku4IVjJ7edBkbRDFACKjJsWE1lq1YNURh
-         jD7exZS37Q3/EbbTz6RnB+MRoGkRdcKuf/dfUoNEqQ5WBeAFOrlkpuoo4n11V80bF0
-         CV5XGbUnfdXR+3IZ5BLSQvh6IqAmsDyB3ADLYtI81EeGYXlKWHVBmSJ1VfDjjp3XAt
-         lLoSp/muYSrSTE1u++/VRVj6rAlGteww6J6cJcSTizuKaqRyDJKV1LXSHg48RVzJih
-         tJhpXKaJwm52Q==
-Received: by mail-ej1-f46.google.com with SMTP id y7so13501590ejj.9;
-        Tue, 04 May 2021 07:35:17 -0700 (PDT)
-X-Gm-Message-State: AOAM5308EBpE77TPt44FmX4dNHQVYFikal7YzAvJFeOnuRIv+aZdye0K
-        cCytKyWczM55CGnnHLuSGmAVn1+LlF1nIUP9Qw==
-X-Google-Smtp-Source: ABdhPJwrXSHJlK+c9A8BGCApjGExqZKLfC0iqptDV3LyvQikAcUut5OrhYKxptbz6VWBzAfQFR/aPczv/DY3nVrYeYY=
-X-Received: by 2002:a17:907:161e:: with SMTP id hb30mr21030769ejc.360.1620138916277;
- Tue, 04 May 2021 07:35:16 -0700 (PDT)
+        id S229653AbhEEE4K (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 May 2021 00:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231202AbhEEE4K (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 5 May 2021 00:56:10 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03D4C06174A
+        for <linux-hyperv@vger.kernel.org>; Tue,  4 May 2021 21:55:14 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id v13so474941ple.9
+        for <linux-hyperv@vger.kernel.org>; Tue, 04 May 2021 21:55:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=pTiEYj2r54xEt1IIj5fvy3/M+jpk9pmmFfPfJAbMu/4=;
+        b=NfpdfndbCKXZv7Ea6FbOx7oknYeuuDGz2NssIB6h6mHe2T3y97aeDTyiylT/v5BZQE
+         R+EvnxegdjZ1EsqeZIm7m0TgYN+LXQHr0sKKFQNj/lk4eK6NDxN8kMOIJghFLQT/wRJ7
+         YGCLp9HTaYoLNqEWxa7irjb+ZGcNfZsxmKsHZuTvoAcVKP5rMMEIRaGPUTDtX46ovbjo
+         X5u2gmry+vve145kbRzptewlWTiYkKPRsJJW4ypXet97qXMbI2wFj08Ti9ZjXLgEJN0K
+         Fdn7yoypWRZj2uTGri5SdaUWNPQQLNE04yBn/cODH0Aros50oMzLQhPtQkw9ERz6ZPWt
+         Zv0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=pTiEYj2r54xEt1IIj5fvy3/M+jpk9pmmFfPfJAbMu/4=;
+        b=LTPum9G0nJQ1PvU0VJgM35PftQl4zIW8ftJSDYVsm9H4CdiMazXnNaQtBqmhrEMLvi
+         0S/aNA+aqAnjzz6sKGrXX8Th179zXDUBocMnFtqUOaPtZx05WLB88O7/zKroTIuopB2H
+         gNesPJDBeEeSwoNrJFjWqjYlABZRZdzaAFNTf2Yka1Cq+maIxnr8bt0y2pBiu4G08RdN
+         XYsZtmXEzoPik2Cpz8nAjWB6kqee88niFgD9dPm7j1ay29LYNrvhvYi9V7h99CwLJwgS
+         DyJ+mZmU0/jpiEOYLa80aLyvHcOB2zHq5E8j9yNG3//1j14Rsnx8v0tyRnIl5sMB4EMh
+         xN3g==
+X-Gm-Message-State: AOAM531h1zJ3T8fliWUFSGbChDFB5gxeIH3yHW88pXGd+pmVq5p/D7G/
+        UE+lHcSAwQsH0tfaUJEEIbLWLjvd8hjS62KEqzo=
+X-Google-Smtp-Source: ABdhPJzXTqGkR1WxV6KfNhidbHGtN7SYqVNF6kd8H02/gkjk8SrsyWbbFBY6AGal1YtSQgdH45exiAjqlvugCJdt4HQ=
+X-Received: by 2002:a17:90a:e384:: with SMTP id b4mr9886994pjz.157.1620190514108;
+ Tue, 04 May 2021 21:55:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210503144635.2297386-1-boqun.feng@gmail.com>
- <20210503144635.2297386-2-boqun.feng@gmail.com> <YJDYrn7Nt+xyHbyr@kernel.org>
-In-Reply-To: <YJDYrn7Nt+xyHbyr@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 4 May 2021 09:34:54 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLMAyUEZgLjiKmNL2ioTYJwj-TbTWFJmEi7pynKZHXmoQ@mail.gmail.com>
-Message-ID: <CAL_JsqLMAyUEZgLjiKmNL2ioTYJwj-TbTWFJmEi7pynKZHXmoQ@mail.gmail.com>
-Subject: Re: [RFC v2 1/7] PCI: Introduce pci_host_bridge::domain_nr
-To:     Mike Rapoport <rppt@kernel.org>, Boqun Feng <boqun.feng@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
+Reply-To: drdumamusa@gmail.com
+Sender: mussaabdulai8@gmail.com
+Received: by 2002:a05:6a10:d618:0:0:0:0 with HTTP; Tue, 4 May 2021 21:55:13
+ -0700 (PDT)
+From:   Dr Duma Musa <drdumasule5@gmail.com>
+Date:   Wed, 5 May 2021 04:55:13 +0000
+X-Google-Sender-Auth: DwG36W9iYeToeSQnX5f3BEIG8Pk
+Message-ID: <CA+zeExHT4QJgNca0iZ5ipgCmGEXpK0xo1mQLgkORTkHTe_6pug@mail.gmail.com>
+Subject: With Due Respect.
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 4, 2021 at 12:16 AM Mike Rapoport <rppt@kernel.org> wrote:
->
-> On Mon, May 03, 2021 at 10:46:29PM +0800, Boqun Feng wrote:
-> > Currently we retrieve the PCI domain number of the host bridge from the
-> > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
-> > we have the information at PCI host bridge probing time, and it makes
-> > sense that we store it into pci_host_bridge. One benefit of doing so is
-> > the requirement for supporting PCI on Hyper-V for ARM64, because the
-> > host bridge of Hyper-V doesnt' have pci_config_window, whereas ARM64 is
-> > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
-> > number from pci_config_window on ARM64 Hyper-V guest.
-> >
-> > As the preparation for ARM64 Hyper-V PCI support, we introduce the
-> > domain_nr in pci_host_bridge, and set it properly at probing time, then
-> > for PCI_DOMAINS_GENERIC=y archs, bus domain numbers are set by the
-> > bridge domain_nr.
-> >
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > ---
-> >  arch/arm/kernel/bios32.c              |  2 ++
-> >  arch/arm/mach-dove/pcie.c             |  2 ++
-> >  arch/arm/mach-mv78xx0/pcie.c          |  2 ++
-> >  arch/arm/mach-orion5x/pci.c           |  2 ++
-> >  arch/arm64/kernel/pci.c               |  3 +--
-> >  arch/mips/pci/pci-legacy.c            |  2 ++
-> >  arch/mips/pci/pci-xtalk-bridge.c      |  2 ++
-> >  drivers/pci/controller/pci-ftpci100.c |  2 ++
-> >  drivers/pci/controller/pci-mvebu.c    |  2 ++
-> >  drivers/pci/pci.c                     |  4 ++--
-> >  drivers/pci/probe.c                   |  7 ++++++-
-> >  include/linux/pci.h                   | 11 ++++++++---
-> >  12 files changed, 33 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-> > index e7ef2b5bea9c..4942cd681e41 100644
-> > --- a/arch/arm/kernel/bios32.c
-> > +++ b/arch/arm/kernel/bios32.c
-> > @@ -471,6 +471,8 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
-> >                               bridge->sysdata = sys;
-> >                               bridge->busnr = sys->busnr;
-> >                               bridge->ops = hw->ops;
-> > +                             if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
-> > +                                     bridge->domain_nr = pci_bus_find_domain_nr(sys, parent);
-> >
-> >                               ret = pci_scan_root_bus_bridge(bridge);
-> >                       }
-> > diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
-> > index ee91ac6b5ebf..92eb8484b49b 100644
-> > --- a/arch/arm/mach-dove/pcie.c
-> > +++ b/arch/arm/mach-dove/pcie.c
-> > @@ -167,6 +167,8 @@ dove_pcie_scan_bus(int nr, struct pci_host_bridge *bridge)
-> >       bridge->sysdata = sys;
-> >       bridge->busnr = sys->busnr;
-> >       bridge->ops = &pcie_ops;
-> > +     if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
-> > +             bridge->domain_nr = pci_bus_find_domain_nr(sys, NULL);
->
-> The check for CONFIG_PCI_DOMAINS_GENERIC is excessive because there is a
-> stub for pci_bus_find_domain_nr().
->
-> I'm not an expert in PCI, but maybe the repeated assignment of
-> bridge->domain_nr can live in the generic code, say, in
-> pci_scan_root_bus_bridge(). E.g. it will set the domain_nr when it is zero.
+Hi friend I am a banker in ADB BANK. I want to transfer an abandoned
+$18.5Million to your Bank account. 40/percent will be your share.
+No risk involved but keep it as secret. Contact me for more details.
 
-Yes. There's zero reason h/w drivers should care what the domain_nr is.
+And also acknowledge receipt of this message in acceptance of my mutual
+business endeavor by furnishing me with the following:
 
-There's another issue with domains you should be aware of:
+1. Your Full Names and Address.
 
-https://lore.kernel.org/linux-pci/20210425152155.mstuxndsoqdbdape@pali/
+2. Direct Telephone and Fax numbers
 
-That may need to be fixed first because deferred probing could cause
-the domain to increment each time you retry probe.
+Please reply in my private email address (drdumamusa@gmail.com) for
+security and confidential reasons.
 
-Rob
+Yours
+
+Dr Duma Musa.
