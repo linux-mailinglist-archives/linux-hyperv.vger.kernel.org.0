@@ -2,77 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE88037347C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 May 2021 06:55:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34B7A373C13
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 May 2021 15:13:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbhEEE4K (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 May 2021 00:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231202AbhEEE4K (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 May 2021 00:56:10 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03D4C06174A
-        for <linux-hyperv@vger.kernel.org>; Tue,  4 May 2021 21:55:14 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id v13so474941ple.9
-        for <linux-hyperv@vger.kernel.org>; Tue, 04 May 2021 21:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=pTiEYj2r54xEt1IIj5fvy3/M+jpk9pmmFfPfJAbMu/4=;
-        b=NfpdfndbCKXZv7Ea6FbOx7oknYeuuDGz2NssIB6h6mHe2T3y97aeDTyiylT/v5BZQE
-         R+EvnxegdjZ1EsqeZIm7m0TgYN+LXQHr0sKKFQNj/lk4eK6NDxN8kMOIJghFLQT/wRJ7
-         YGCLp9HTaYoLNqEWxa7irjb+ZGcNfZsxmKsHZuTvoAcVKP5rMMEIRaGPUTDtX46ovbjo
-         X5u2gmry+vve145kbRzptewlWTiYkKPRsJJW4ypXet97qXMbI2wFj08Ti9ZjXLgEJN0K
-         Fdn7yoypWRZj2uTGri5SdaUWNPQQLNE04yBn/cODH0Aros50oMzLQhPtQkw9ERz6ZPWt
-         Zv0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=pTiEYj2r54xEt1IIj5fvy3/M+jpk9pmmFfPfJAbMu/4=;
-        b=LTPum9G0nJQ1PvU0VJgM35PftQl4zIW8ftJSDYVsm9H4CdiMazXnNaQtBqmhrEMLvi
-         0S/aNA+aqAnjzz6sKGrXX8Th179zXDUBocMnFtqUOaPtZx05WLB88O7/zKroTIuopB2H
-         gNesPJDBeEeSwoNrJFjWqjYlABZRZdzaAFNTf2Yka1Cq+maIxnr8bt0y2pBiu4G08RdN
-         XYsZtmXEzoPik2Cpz8nAjWB6kqee88niFgD9dPm7j1ay29LYNrvhvYi9V7h99CwLJwgS
-         DyJ+mZmU0/jpiEOYLa80aLyvHcOB2zHq5E8j9yNG3//1j14Rsnx8v0tyRnIl5sMB4EMh
-         xN3g==
-X-Gm-Message-State: AOAM531h1zJ3T8fliWUFSGbChDFB5gxeIH3yHW88pXGd+pmVq5p/D7G/
-        UE+lHcSAwQsH0tfaUJEEIbLWLjvd8hjS62KEqzo=
-X-Google-Smtp-Source: ABdhPJzXTqGkR1WxV6KfNhidbHGtN7SYqVNF6kd8H02/gkjk8SrsyWbbFBY6AGal1YtSQgdH45exiAjqlvugCJdt4HQ=
-X-Received: by 2002:a17:90a:e384:: with SMTP id b4mr9886994pjz.157.1620190514108;
- Tue, 04 May 2021 21:55:14 -0700 (PDT)
+        id S233357AbhEENOL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 May 2021 09:14:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40452 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233426AbhEENOL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 5 May 2021 09:14:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1620220393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=p4Gx3o25ACBJGILIG3HE+BwEcXMm6WbBPfaqpoYYUJ0=;
+        b=OBaJHXK5sCug91eAyObDotV8cPGAFyEbp7Q+f9qfJC+/K3yf7zsq79OSdiiU/KtluIicgj
+        QQkvL9pxKq8JGHLEAPJ59xvmARwRGEItvWqWlU5lQIz4GTleHBvoieJdhGkAieMekppVE4
+        kMDy5/vXg6IHmTB3u+mbnEerBLa0F8E=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5B149B199;
+        Wed,  5 May 2021 13:13:13 +0000 (UTC)
+Date:   Wed, 5 May 2021 15:13:11 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Roman Gushchin <guro@fb.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Steven Price <steven.price@arm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Aili Yao <yaoaili@kingsoft.com>, Jiri Bohac <jbohac@suse.cz>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v1 3/7] mm: rename and move page_is_poisoned()
+Message-ID: <YJKZ5yXdl18m9YSM@dhcp22.suse.cz>
+References: <20210429122519.15183-1-david@redhat.com>
+ <20210429122519.15183-4-david@redhat.com>
 MIME-Version: 1.0
-Reply-To: drdumamusa@gmail.com
-Sender: mussaabdulai8@gmail.com
-Received: by 2002:a05:6a10:d618:0:0:0:0 with HTTP; Tue, 4 May 2021 21:55:13
- -0700 (PDT)
-From:   Dr Duma Musa <drdumasule5@gmail.com>
-Date:   Wed, 5 May 2021 04:55:13 +0000
-X-Google-Sender-Auth: DwG36W9iYeToeSQnX5f3BEIG8Pk
-Message-ID: <CA+zeExHT4QJgNca0iZ5ipgCmGEXpK0xo1mQLgkORTkHTe_6pug@mail.gmail.com>
-Subject: With Due Respect.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210429122519.15183-4-david@redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi friend I am a banker in ADB BANK. I want to transfer an abandoned
-$18.5Million to your Bank account. 40/percent will be your share.
-No risk involved but keep it as secret. Contact me for more details.
+On Thu 29-04-21 14:25:15, David Hildenbrand wrote:
+> Commit d3378e86d182 ("mm/gup: check page posion status for coredump.")
+> introduced page_is_poisoned(), however, v5 [1] of the patch used
+> "page_is_hwpoison()" and something went wrong while upstreaming. Rename the
+> function and move it to page-flags.h, from where it can be used in other
+> -- kcore -- context.
+> 
+> Move the comment to the place where it belongs and simplify.
+> 
+> [1] https://lkml.kernel.org/r/20210322193318.377c9ce9@alex-virtual-machine
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-And also acknowledge receipt of this message in acceptance of my mutual
-business endeavor by furnishing me with the following:
+I do agree that being explicit about hwpoison is much better. Poisoned
+page can be also an unitialized one and I believe this is the reason why
+you are bringing that up.
 
-1. Your Full Names and Address.
+But you've made me look at d3378e86d182 and I am wondering whether this
+is really a valid patch. First of all it can leak a reference count
+AFAICS. Moreover it doesn't really fix anything because the page can be
+marked hwpoison right after the check is done. I do not think the race
+is feasible to be closed. So shouldn't we rather revert it?
 
-2. Direct Telephone and Fax numbers
-
-Please reply in my private email address (drdumamusa@gmail.com) for
-security and confidential reasons.
-
-Yours
-
-Dr Duma Musa.
+-- 
+Michal Hocko
+SUSE Labs
