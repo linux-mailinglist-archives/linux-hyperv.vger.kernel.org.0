@@ -2,140 +2,133 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A889C37511D
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 May 2021 10:52:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B92F237529F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 May 2021 12:52:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233854AbhEFIxg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 6 May 2021 04:53:36 -0400
-Received: from mail.kingsoft.com ([114.255.44.145]:24439 "EHLO
-        mail.kingsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233464AbhEFIxc (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 6 May 2021 04:53:32 -0400
-X-AuditID: 0a580157-bebff70000027901-b8-6093ae4f6513
-Received: from mail.kingsoft.com (localhost [10.88.1.79])
-        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by mail.kingsoft.com (SMG-1-NODE-87) with SMTP id 07.4C.30977.F4EA3906; Thu,  6 May 2021 16:52:31 +0800 (HKT)
-Received: from alex-virtual-machine (10.88.1.103) by KSBJMAIL4.kingsoft.cn
- (10.88.1.79) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Thu, 6 May 2021
- 16:52:29 +0800
-Date:   Thu, 6 May 2021 16:52:29 +0800
-From:   Aili Yao <yaoaili@kingsoft.com>
-To:     Michal Hocko <mhocko@suse.com>
-CC:     David Hildenbrand <david@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Roman Gushchin" <guro@fb.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Steven Price <steven.price@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Jiri Bohac <jbohac@suse.cz>,
+        id S234532AbhEFKxw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 6 May 2021 06:53:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:32996 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234508AbhEFKxv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 6 May 2021 06:53:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89FF4D6E;
+        Thu,  6 May 2021 03:52:53 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BD663F73B;
+        Thu,  6 May 2021 03:52:50 -0700 (PDT)
+Date:   Thu, 6 May 2021 11:52:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh@kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "Wei Liu" <wei.liu@kernel.org>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        <linux-hyperv@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <yaoaili126@gmail.com>
-Subject: Re: [PATCH v1 3/7] mm: rename and move page_is_poisoned()
-Message-ID: <20210506165229.320e950f@alex-virtual-machine>
-In-Reply-To: <YJOhBxiXIpaJpq+K@dhcp22.suse.cz>
-References: <20210429122519.15183-1-david@redhat.com>
-        <20210429122519.15183-4-david@redhat.com>
-        <YJKZ5yXdl18m9YSM@dhcp22.suse.cz>
-        <0710d8d5-2608-aeed-10c7-50a272604d97@redhat.com>
-        <YJKdS+Q8CgSlgmFf@dhcp22.suse.cz>
-        <20210506085611.1ec21588@alex-virtual-machine>
-        <YJOVZlFGcSG+mmIk@dhcp22.suse.cz>
-        <20210506152805.13fe775e@alex-virtual-machine>
-        <YJOhBxiXIpaJpq+K@dhcp22.suse.cz>
-Organization: kingsoft
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [RFC v2 1/7] PCI: Introduce pci_host_bridge::domain_nr
+Message-ID: <20210506105245.GA26351@lpieralisi>
+References: <20210503144635.2297386-1-boqun.feng@gmail.com>
+ <20210503144635.2297386-2-boqun.feng@gmail.com>
+ <YJDYrn7Nt+xyHbyr@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.88.1.103]
-X-ClientProxiedBy: KSBJMAIL1.kingsoft.cn (10.88.1.31) To KSBJMAIL4.kingsoft.cn
- (10.88.1.79)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRmVeSWpSXmKPExsXCFcHor+u/bnKCQddeS4vpjV4Wc9avYbNY
-        d7yL2eLr+l9AYtIFNotr2z0sll36zGRx4+BmNosnq7eyW+zZe5LFYurED2wWl3fNYbO4t+Y/
-        q8X9PgeLj/uDLf7/esVqcbHxAKPFmWlFFkfWb2eyaDzyns3i7eGDzBbLz85jszi86RaTxe8f
-        QI3PWq+yOEh6rJm3htFjYvM7do+ds+6ye2xeoeWxaVUnm8emT5PYPU7M+M3isfOhpcfkG8sZ
-        PVp3/GX3eHF1I4vHx6e3WDze77vK5rF+y1UWjzMLjgB1nq4OEIzisklJzcksSy3St0vgynj0
-        yadgimDFt09PWBsYe3m7GDk5JARMJDpnTGbuYuTiEBKYziTRs38DO4TzjFFi+q6pTF2MHBws
-        AioSJ5qVQBrYBFQldt2bxQpiiwgoSXRt3skGUs8s0Mwu0fxzAjNIQljASeL485uMIDavgJVE
-        47YORpA5nAJ6Eh+PKUDMb2eWmHDsGdggfgExid4r/8F2SQjYSzxerwjRKihxcuYTFhCbWUBH
-        4sSqY8wQtrzE9rdzwGwhAUWJw0t+sUM8Iy9x9/d0Rgg7VqLpwC22CYzCs5CMmoVk1CwkoxYw
-        Mq9iZCnOTTfcxAhJDuE7GOc1fdQ7xMjEwXiIUYKDWUmE9/SiyQlCvCmJlVWpRfnxRaU5qcWH
-        GKU5WJTEeRtnAqUE0hNLUrNTUwtSi2CyTBycUg1M3rlRn+8xObiteCq0te8lX7P/o/eTfd0O
-        nc9wqzRbvXy59vl30fGchx4ZP2c8/rSzyoNxX8FdfxtZqcXfm2/Lf30u1tERv/IMT/HC+urS
-        6l3Hl6zgz7Jx33Xr+9qA9xM1y75P48pSb1HhS7/eZay/mbt/6ZnNNa0qSyY7223ND2Bie1r6
-        xa5Q6ebnb/2sDLpZ26xX7qpfMeX/+mWWN9lua9Tx+udonzLbuKbeasakFa1zNJeeFWUXenSo
-        ebuaYph9/wbz3O1+qUI3jgjOMUrWTc//LcOjJTFFR6vksN3TD+xLy8MWnVEzXfE5bVvFMbHH
-        op7z3FsMZTLTp9WZ5F47ea/2i4Emn/bbxTGNKuuUWIozEg21mIuKEwE2i6YafQMAAA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YJDYrn7Nt+xyHbyr@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 6 May 2021 09:55:51 +0200
-Michal Hocko <mhocko@suse.com> wrote:
-
-> On Thu 06-05-21 15:28:05, Aili Yao wrote:
-> > On Thu, 6 May 2021 09:06:14 +0200
-> > Michal Hocko <mhocko@suse.com> wrote:
-> >   
-> > > On Thu 06-05-21 08:56:11, Aili Yao wrote:  
-> > > > On Wed, 5 May 2021 15:27:39 +0200
-> > > > Michal Hocko <mhocko@suse.com> wrote:  
-> [...]
-> > > > > I am not sure I follow. My point is that I fail to see any added value
-> > > > > of the check as it doesn't prevent the race (it fundamentally cannot as
-> > > > > the page can be poisoned at any time) but the failure path doesn't
-> > > > > put_page which is incorrect even for hwpoison pages.    
-> > > > 
-> > > > Sorry, I have something to say:
-> > > > 
-> > > > I have noticed the ref count leak in the previous topic ,but  I don't think
-> > > > it's a really matter. For memory recovery case for user pages, we will keep one
-> > > > reference to the poison page so the error page will not be freed to buddy allocator.
-> > > > which can be checked in memory_faulure() function.    
-> > > 
-> > > So what would happen if those pages are hwpoisoned from userspace rather
-> > > than by HW. And repeatedly so?  
+On Tue, May 04, 2021 at 08:16:30AM +0300, Mike Rapoport wrote:
+> On Mon, May 03, 2021 at 10:46:29PM +0800, Boqun Feng wrote:
+> > Currently we retrieve the PCI domain number of the host bridge from the
+> > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
+> > we have the information at PCI host bridge probing time, and it makes
+> > sense that we store it into pci_host_bridge. One benefit of doing so is
+> > the requirement for supporting PCI on Hyper-V for ARM64, because the
+> > host bridge of Hyper-V doesnt' have pci_config_window, whereas ARM64 is
+> > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
+> > number from pci_config_window on ARM64 Hyper-V guest.
 > > 
-> > Sorry, I may be not totally understand what you mean.
+> > As the preparation for ARM64 Hyper-V PCI support, we introduce the
+> > domain_nr in pci_host_bridge, and set it properly at probing time, then
+> > for PCI_DOMAINS_GENERIC=y archs, bus domain numbers are set by the
+> > bridge domain_nr.
 > > 
-> > Do you mean hard page offline from mcelog?  
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> >  arch/arm/kernel/bios32.c              |  2 ++
+> >  arch/arm/mach-dove/pcie.c             |  2 ++
+> >  arch/arm/mach-mv78xx0/pcie.c          |  2 ++
+> >  arch/arm/mach-orion5x/pci.c           |  2 ++
+> >  arch/arm64/kernel/pci.c               |  3 +--
+> >  arch/mips/pci/pci-legacy.c            |  2 ++
+> >  arch/mips/pci/pci-xtalk-bridge.c      |  2 ++
+> >  drivers/pci/controller/pci-ftpci100.c |  2 ++
+> >  drivers/pci/controller/pci-mvebu.c    |  2 ++
+> >  drivers/pci/pci.c                     |  4 ++--
+> >  drivers/pci/probe.c                   |  7 ++++++-
+> >  include/linux/pci.h                   | 11 ++++++++---
+> >  12 files changed, 33 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+> > index e7ef2b5bea9c..4942cd681e41 100644
+> > --- a/arch/arm/kernel/bios32.c
+> > +++ b/arch/arm/kernel/bios32.c
+> > @@ -471,6 +471,8 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
+> >  				bridge->sysdata = sys;
+> >  				bridge->busnr = sys->busnr;
+> >  				bridge->ops = hw->ops;
+> > +				if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> > +					bridge->domain_nr = pci_bus_find_domain_nr(sys, parent);
+> >  
+> >  				ret = pci_scan_root_bus_bridge(bridge);
+> >  			}
+> > diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
+> > index ee91ac6b5ebf..92eb8484b49b 100644
+> > --- a/arch/arm/mach-dove/pcie.c
+> > +++ b/arch/arm/mach-dove/pcie.c
+> > @@ -167,6 +167,8 @@ dove_pcie_scan_bus(int nr, struct pci_host_bridge *bridge)
+> >  	bridge->sysdata = sys;
+> >  	bridge->busnr = sys->busnr;
+> >  	bridge->ops = &pcie_ops;
+> > +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
+> > +		bridge->domain_nr = pci_bus_find_domain_nr(sys, NULL);
 > 
-> No I mean soft hwpoison from userspace (e.g. by MADV_HWPOISON but there
-> are other interfaces AFAIK).
+> The check for CONFIG_PCI_DOMAINS_GENERIC is excessive because there is a
+> stub for pci_bus_find_domain_nr().
 > 
-> And just to be explicit. All those interfaces are root only
-> (CAP_SYS_ADMIN) so I am not really worried about any malitious abuse of
-> the reference leak. I am mostly concerned that this is obviously broken
-> without a good reason. The most trivial fix would have been to put_page
-> in the return path but as I've mentioned in other email thread the fix
-> really needs a deeper thought and consider other things.
+> I'm not an expert in PCI, but maybe the repeated assignment of
+> bridge->domain_nr can live in the generic code, say, in
+> pci_scan_root_bus_bridge(). E.g. it will set the domain_nr when it is zero.
 > 
-> Hope that clarifies this some more.
+> >  
 
-Thanks, got it!
-Yes, there are some test scenarios that should be covered.
+Yes, this churn should be avoided. We need a sentinel value to detect
+whether the domain_nr is invalid (0 is a valid domain) so generic code
+(ie pci_scan_root_bus_bridge() and friends) has to call generic
+functions to get it (pci_bus_find_domain_nr()).
 
-But for test, the default SIGBUS handlers is usually replaced, and the test process
-may not hit the coredump code.
+We can implement it as a flag or function pointer in the struct
+pci_host_bridge, if the flag or function pointer is not set the
+generic pci_bus_find_domain_nr() should be called.
 
-Anyway, there is a ref leak in the normal enviorments and better to be fixed.
-
-Thanks!
-Aili Yao
+Lorenzo
