@@ -2,109 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA9B2375D29
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 May 2021 00:25:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B7A4376CA4
+	for <lists+linux-hyperv@lfdr.de>; Sat,  8 May 2021 00:26:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230299AbhEFW0c (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 6 May 2021 18:26:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230149AbhEFW0b (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 6 May 2021 18:26:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DCDCB61057;
-        Thu,  6 May 2021 22:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620339932;
-        bh=NJ1s9KsbTwMRkgcGjSh2NdaFzXd0HMKRyslD8lM2WzY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LWAvu+8wVKwzJctAgyb0KBP9FpGjbaiAGHrbf/xOuUPL6BB0y03P/zGOVzk4Pk025
-         mqDHIzAHE4eWFQm4/0iDxcv5x9Y/GpdHc3XEQc03uxPZBKiEtYXG8XfPxZn7/2W5YS
-         Z6mdJIlofH0c5Ery0WW4yLEDrMdYM4asO8IiuONBhlwzCGWJ4jFTxjV+SVCzTaFlch
-         7f7OOi95dFSrU15AV9UhdBLvQlkoLLNVkFJ0ys7u4+caYQacDfP5tmiSoKG4eAEXa7
-         0dhIeyzRhBhjQe7TN4FSABaHKOEYu/vUdfUscvGWZEAdMI5RaFlhugXJLNKI3J6N8g
-         Jtl95d53f3V8Q==
-Date:   Thu, 6 May 2021 17:25:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [RFC v2 6/7] PCI: arm64: Allow pci_config_window::parent to be
- NULL
-Message-ID: <20210506222530.GA1441653@bjorn-Precision-5520>
+        id S229831AbhEGW1h (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 7 May 2021 18:27:37 -0400
+Received: from bosmailout01.eigbox.net ([66.96.190.1]:36027 "EHLO
+        bosmailout01.eigbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229470AbhEGW1h (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 7 May 2021 18:27:37 -0400
+X-Greylist: delayed 1929 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 18:27:30 EDT
+Received: from bosmailscan09.eigbox.net ([10.20.15.9])
+        by bosmailout01.eigbox.net with esmtp (Exim)
+        id 1lf8QO-00068o-JJ; Fri, 07 May 2021 17:54:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=godsofu4.com; s=dkim; h=Sender:Content-Transfer-Encoding:Content-Type:
+        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=aM9bUFGSTpfnep8zAVAJMnojqhcwpuHDFPgQnPqW4M4=; b=bjgKomV6NO5Eg5D3qsCBps1llx
+        tj4k2teSfIdfo/duBtOSoC/FW1+C1nXiYJbrvf2JDobx8fDCsgnxHFoPWOCb5eI+OJOIgvnnfKlpl
+        ZqidIuDnjEPTMao1vFwrg6M9FUKU/cz6TT5/KN4ccsk+aQli3Wgs3G1cQz5vdbC1Y2SXULFY8Mu2t
+        1PShwmiDRn71EPzgUHUVu0GG39z6uSTEuRgOXhiNl9ekuZ5QXUAEykoocvC5/DkORRmERAA91o1HY
+        Sl76pPWw9UBVGbuFbfdVPfVcFxJM5xZDrmgt6uCf9J+dn/n7LFOSOxBaL9svxxYdhOkJwdz4uh075
+        2gI+xJSw==;
+Received: from [10.115.3.32] (helo=bosimpout12)
+        by bosmailscan09.eigbox.net with esmtp (Exim)
+        id 1lf8QO-0003aD-AI; Fri, 07 May 2021 17:54:20 -0400
+Received: from boswebmail06.eigbox.net ([10.20.16.6])
+        by bosimpout12 with 
+        id 1xuH2500407qujN01xuLVi; Fri, 07 May 2021 17:54:20 -0400
+X-EN-SP-DIR: OUT
+X-EN-SP-SQ: 1
+Received: from [127.0.0.1] (helo=homestead)
+        by boswebmail06.eigbox.net with esmtp (Exim)
+        id 1lf8QL-0006fx-UG; Fri, 07 May 2021 17:54:17 -0400
+Received: from [197.239.81.229]
+ by emailmg.homestead.com
+ with HTTP (HTTP/1.1 POST); Fri, 07 May 2021 17:54:17 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210503144635.2297386-7-boqun.feng@gmail.com>
+Date:   Fri, 07 May 2021 21:54:17 +0000
+From:   Mrs Suzara Maling Wan <fast65@godsofu4.com>
+To:     undisclosed-recipients:;
+Subject: URGENT REPLY NEEDED
+Reply-To: suzara2017malingwan@gmail.com
+Mail-Reply-To: suzara2017malingwan@gmail.com
+Message-ID: <36acfe805efde59f3f399df1324ce6b9@godsofu4.com>
+X-Sender: fast65@godsofu4.com
+User-Agent: Roundcube Webmail/1.3.14
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-EN-AuthUser: fast65@godsofu4.com
+Sender:  Mrs Suzara Maling Wan <fast65@godsofu4.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Make your subject something like this so it matches previous practice:
 
-  arm64: PCI: ...
 
-The "::" notation probably comes from C++, but doesn't really apply in
-C.  In C, we would say "cfg.parent" or "cfg->parent".
+My names are Mrs Suzara Maling Wan, I am a Nationality of the Republic
+of the Philippine presently base in West Africa B/F, dealing with
+exportation of Gold, I was diagnose of blood Causal decease, and my
+doctor have announce to me that I have few days to leave due to the
+condition of my sickness.
 
-But pci_config_window and cfg->parent are probably too low-level for
-the subject anyway.  Seems like it should mention Hyper-V, for
-instance.
+I have a desire to build an orphanage home in your country of which i
+cannot execute the project myself due to my present health condition,
+I am willing to hand over the project under your care for you to help
+me fulfill my dreams and desire of building an orphanage home in your
+country.
 
-On Mon, May 03, 2021 at 10:46:34PM +0800, Boqun Feng wrote:
-> This is purely a hack, for ARM64 Hyper-V guest, there is no
-> corresponding ACPI device for the root bridge, so the best we can
-> provide is an all-zeroed pci_config_window, and in this case make
-> pcibios_root_bridge_prepare() act as the ACPI device is NULL.
+Reply in you are will to help so that I can direct you to my bank for
+the urgent transfer of the fund/money require for the project to your
+account as I have already made the fund/money available.
 
-Why is there no ACPI device?  Is this a needless arch dependency?  Or
-is this related to using DT instead of ACPI?
-
-The cover letter hints that this might be related to
-PCI_DOMAINS_GENERIC=y, but that doesn't sound like a very convincing
-reason (and the cover letter can provide an overview, but the commit
-logs of individual patches shouldn't assume knowledge of the cover
-letter).
-
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  arch/arm64/kernel/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index e9a6eeb6a694..f159df903ccb 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -83,7 +83,7 @@ int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
->  {
->  	if (!acpi_disabled) {
->  		struct pci_config_window *cfg = bridge->bus->sysdata;
-> -		struct acpi_device *adev = to_acpi_device(cfg->parent);
-> +		struct acpi_device *adev = cfg->parent ? to_acpi_device(cfg->parent) : NULL;
->  		struct device *bus_dev = &bridge->bus->dev;
->  
->  		ACPI_COMPANION_SET(&bridge->dev, adev);
-> -- 
-> 2.30.2
-> 
+With kind regards
+Mrs Suzara Maling Wan
