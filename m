@@ -2,22 +2,22 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 902943775BD
+	by mail.lfdr.de (Postfix) with ESMTP id CABB83775BE
 	for <lists+linux-hyperv@lfdr.de>; Sun,  9 May 2021 09:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbhEIHOQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 9 May 2021 03:14:16 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:60769 "EHLO
+        id S229672AbhEIHOT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 9 May 2021 03:14:19 -0400
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:25998 "EHLO
         smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbhEIHOQ (ORCPT
+        with ESMTP id S229657AbhEIHOR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 9 May 2021 03:14:16 -0400
+        Sun, 9 May 2021 03:14:17 -0400
 Received: from localhost.localdomain ([86.243.172.93])
         by mwinf5d86 with ME
-        id 2XD52500321Fzsu03XD5xo; Sun, 09 May 2021 09:13:06 +0200
+        id 2XDD2500A21Fzsu03XDDyS; Sun, 09 May 2021 09:13:14 +0200
 X-ME-Helo: localhost.localdomain
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 09 May 2021 09:13:06 +0200
+X-ME-Date: Sun, 09 May 2021 09:13:14 +0200
 X-ME-IP: 86.243.172.93
 From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
@@ -25,66 +25,53 @@ To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
 Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 1/2] uio_hv_generic: Fix a memory leak in error handling paths
-Date:   Sun,  9 May 2021 09:13:03 +0200
-Message-Id: <4fdaff557deef6f0475d02ba7922ddbaa1ab08a6.1620544055.git.christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 2/2] uio_hv_generic: Fix another memory leak in error handling paths
+Date:   Sun,  9 May 2021 09:13:12 +0200
+Message-Id: <0d86027b8eeed8e6360bc3d52bcdb328ff9bdca1.1620544055.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <4fdaff557deef6f0475d02ba7922ddbaa1ab08a6.1620544055.git.christophe.jaillet@wanadoo.fr>
+References: <4fdaff557deef6f0475d02ba7922ddbaa1ab08a6.1620544055.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-If 'vmbus_establish_gpadl()' fails, the (recv|send)_gpadl will not be
-updated and 'hv_uio_cleanup()' in the error handling path will not be
-able to free the corresponding buffer.
+Memory allocated by 'vmbus_alloc_ring()' at the beginning of the probe
+function is never freed in the error handling path.
 
-In such a case, we need to free the buffer explicitly.
+Add the missing 'vmbus_free_ring()' call.
+
+Note that it is already freed in the .remove function.
 
 Fixes: cdfa835c6e5e ("uio_hv_generic: defer opening vmbus until first use")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
-Before commit cdfa835c6e5e, the 'vfree' were done unconditionally
-in 'hv_uio_cleanup()'.
-So, another way for fixing the potential leak is to modify
-'hv_uio_cleanup()' and revert to the previous behavior.
-
-I don't know the underlying reason for this change so I don't know which is
-the best way to fix this error handling path. Unless there is a specific
-reason, changing 'hv_uio_cleanup()' could be better because it would keep
-the error handling path of the probe cleaner, IMHO.
----
- drivers/uio/uio_hv_generic.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/uio/uio_hv_generic.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index 0330ba99730e..eebc399f2cc7 100644
+index eebc399f2cc7..652fe2547587 100644
 --- a/drivers/uio/uio_hv_generic.c
 +++ b/drivers/uio/uio_hv_generic.c
-@@ -296,8 +296,10 @@ hv_uio_probe(struct hv_device *dev,
+@@ -291,7 +291,7 @@ hv_uio_probe(struct hv_device *dev,
+ 	pdata->recv_buf = vzalloc(RECV_BUFFER_SIZE);
+ 	if (pdata->recv_buf == NULL) {
+ 		ret = -ENOMEM;
+-		goto fail_close;
++		goto fail_free_ring;
+ 	}
  
  	ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
- 				    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
--	if (ret)
-+	if (ret) {
-+		vfree(pdata->recv_buf);
- 		goto fail_close;
-+	}
+@@ -351,6 +351,8 @@ hv_uio_probe(struct hv_device *dev,
  
- 	/* put Global Physical Address Label in name */
- 	snprintf(pdata->recv_name, sizeof(pdata->recv_name),
-@@ -316,8 +318,10 @@ hv_uio_probe(struct hv_device *dev,
+ fail_close:
+ 	hv_uio_cleanup(dev, pdata);
++fail_free_ring:
++	vmbus_free_ring(dev->channel);
  
- 	ret = vmbus_establish_gpadl(channel, pdata->send_buf,
- 				    SEND_BUFFER_SIZE, &pdata->send_gpadl);
--	if (ret)
-+	if (ret) {
-+		vfree(pdata->send_buf);
- 		goto fail_close;
-+	}
- 
- 	snprintf(pdata->send_name, sizeof(pdata->send_name),
- 		 "send:%u", pdata->send_gpadl);
+ 	return ret;
+ }
 -- 
 2.30.2
 
