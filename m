@@ -2,115 +2,135 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E14337A40C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 May 2021 11:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0690C37A982
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 May 2021 16:36:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231189AbhEKJxh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 11 May 2021 05:53:37 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:50855 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbhEKJxg (ORCPT
+        id S231941AbhEKOhI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 11 May 2021 10:37:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231924AbhEKOhF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 11 May 2021 05:53:36 -0400
-Received: by mail-wm1-f52.google.com with SMTP id n84so10786448wma.0;
-        Tue, 11 May 2021 02:52:29 -0700 (PDT)
+        Tue, 11 May 2021 10:37:05 -0400
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BFFC06175F
+        for <linux-hyperv@vger.kernel.org>; Tue, 11 May 2021 07:35:57 -0700 (PDT)
+Received: by mail-oi1-x233.google.com with SMTP id d21so19179255oic.11
+        for <linux-hyperv@vger.kernel.org>; Tue, 11 May 2021 07:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ieee.org; s=google;
+        h=subject:to:references:from:cc:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ETXAFKWQdH8/eG9YgJ2MyXQqUI4w0G+a8+7kidOetNw=;
+        b=D+8UcMkB2GUwjj2F27jdDoxAVAL9rdC9MdMoJFlDBNeHzfe67XWP/sw3xSweHhjvu0
+         L7zFyh43n9/fy4cUZSlUsyNvNqDkT2TqDuEFXFN77WQ7UwdcaxgaJydbt2h0Tqt9neqT
+         2ljICDLxSDdscBg19eDiJRfFGl65YBejwUIvU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RklOnvzK32YLQfMzsNoB451WXrK3neV8tKeIMCPlix0=;
-        b=cpp13s1427dOHaeJw793idhbHOkjz8h/vt3MtQ2Wf4p9AyKNo/JW14SrhpWYkz033B
-         WVdR5Ip62eoeh48pWKAP9LTnnZepV7f2DY214HWzniXwfcn3Erd/NYCxxClR0OEUmVLO
-         xg2Lg4PuYCB9DePsiKQ+gfUZXSIaGRu4MwjE1XTZAdweTeirFi95Iky0XTqh2QjQO3XK
-         BEsuRvj0hpVc0Qa//3zYI4k7MzgWrygaoypXyYUYm5ez3rjSw2ObKrKBCYJksmYN0BAJ
-         RWMWIQCgAwBF9zGxXUbnys7sd8hhLQOk5P0ofNQ25RQdImYIYDE/VDbG6frXwxmdZDec
-         JI+g==
-X-Gm-Message-State: AOAM5311mIMZ5yeDrHTB7GaiV6Cd1vuG2KN2gJTt+RVzSJxmqqZ9h2/r
-        fa6GMCaepXuolITKzXsAGBdFJpwd9Lc=
-X-Google-Smtp-Source: ABdhPJwaQpzAMwrj3Bn/NNytP+SaiZESwQSXt90F2I2+1DtFYCcXg897cvQMnvEaKE2yOIj60GNnbA==
-X-Received: by 2002:a05:600c:3596:: with SMTP id p22mr4493909wmq.34.1620726748906;
-        Tue, 11 May 2021 02:52:28 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id l22sm2904540wmq.28.2021.05.11.02.52.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 May 2021 02:52:28 -0700 (PDT)
-Date:   Tue, 11 May 2021 09:52:27 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com,
-        gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 1/2] uio_hv_generic: Fix a memory leak in error handling
- paths
-Message-ID: <20210511095227.ggrl3z6otjanwffz@liuwe-devbox-debian-v2>
-References: <4fdaff557deef6f0475d02ba7922ddbaa1ab08a6.1620544055.git.christophe.jaillet@wanadoo.fr>
+        h=x-gm-message-state:subject:to:references:from:cc:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ETXAFKWQdH8/eG9YgJ2MyXQqUI4w0G+a8+7kidOetNw=;
+        b=g97Mvo4VB2tF8ddGQUkZLF48fJsKZiayXjKBl0BP1Z3t7l2Ovafc1Vx7OU3qFNkWVT
+         EGxFWX0zPjt/4VV34/VYMKlgjeP5TWd8NiCgWHzn+O5bQHlcb4ZfC2sxpmBzV66S5BWy
+         l736NYjZWmIxNy3v+lhG14z4a2KCihZ1oKkwi36prfPUS5suZ6phz36UUk1gB7bgibqF
+         MqVz2ZsoO/9mfCP3Drijeib3UNHi7JD3AsZlf5HcCuwqzas3+nf2gPA8jH53szT8DZrY
+         yebw2urSiw3Kece0OiGvBOGhZKE8lqSjEJk2IzvzDOF0cmJs9TJNETrapQqA0mIA0Ylt
+         yIgA==
+X-Gm-Message-State: AOAM530ujg1YPoVdJfvkY0ZNwkEVnmFoQxqN2dACq1hsqLw7wrJ3yhtY
+        VeZeA/Jq+iuTwG78FoU03GUJLw==
+X-Google-Smtp-Source: ABdhPJyvp7T0CdewBKkqMXtDA5ThSmqkKCGgPnZJ05uagz+Vq5z9FBuvh4nrA0ZkdxuooO6UIklVPg==
+X-Received: by 2002:aca:53d8:: with SMTP id h207mr3883260oib.177.1620743757147;
+        Tue, 11 May 2021 07:35:57 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id 2sm3341540ota.67.2021.05.11.07.35.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 May 2021 07:35:56 -0700 (PDT)
+Subject: Re: [PATCH v3 1/1] kernel.h: Split out panic and oops helpers
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20210511074137.33666-1-andriy.shevchenko@linux.intel.com>
+From:   Alex Elder <elder@ieee.org>
+Cc:     linux-xtensa@linux-xtensa.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-clk@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        coresight@lists.linaro.org, linux-leds@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-staging@lists.linux.dev, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-arch@vger.kernel.org,
+        kexec@lists.infradead.org, rcu@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, xen-devel@lists.xenproject.org
+Message-ID: <c6fa5d2c-84e2-2046-19f0-66cf5dd72077@ieee.org>
+Date:   Tue, 11 May 2021 09:35:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4fdaff557deef6f0475d02ba7922ddbaa1ab08a6.1620544055.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20210511074137.33666-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, May 09, 2021 at 09:13:03AM +0200, Christophe JAILLET wrote:
-> If 'vmbus_establish_gpadl()' fails, the (recv|send)_gpadl will not be
-> updated and 'hv_uio_cleanup()' in the error handling path will not be
-> able to free the corresponding buffer.
+On 5/11/21 2:41 AM, Andy Shevchenko wrote:
+> kernel.h is being used as a dump for all kinds of stuff for a long time.
+> Here is the attempt to start cleaning it up by splitting out panic and
+> oops helpers.
 > 
-> In such a case, we need to free the buffer explicitly.
+> There are several purposes of doing this:
+> - dropping dependency in bug.h
+> - dropping a loop by moving out panic_notifier.h
+> - unload kernel.h from something which has its own domain
 > 
-> Fixes: cdfa835c6e5e ("uio_hv_generic: defer opening vmbus until first use")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> At the same time convert users tree-wide to use new headers, although
+> for the time being include new header back to kernel.h to avoid twisted
+> indirected includes for existing users.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+> Acked-by: Corey Minyard <cminyard@mvista.com>
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Kees Cook <keescook@chromium.org>
+> Acked-by: Wei Liu <wei.liu@kernel.org>
+> Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Co-developed-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Acked-by: Sebastian Reichel <sre@kernel.org>
+> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Acked-by: Helge Deller <deller@gmx.de> # parisc
 > ---
-> Before commit cdfa835c6e5e, the 'vfree' were done unconditionally
-> in 'hv_uio_cleanup()'.
-> So, another way for fixing the potential leak is to modify
-> 'hv_uio_cleanup()' and revert to the previous behavior.
+> v3: rebased on top of v5.13-rc1, collected a few more tags
+> 
+> Note WRT Andrew's SoB tag above: I have added it since part of the cases
+> I took from him. Andrew, feel free to amend or tell me how you want me
+> to do.
 > 
 
-I think this is cleaner.
+Acked-by: Alex Elder <elder@kernel.org>
 
-Stephen, you authored cdfa835c6e5e. What do you think?
+. . .
 
-Christophe, OOI how did you discover these issues?
+> diff --git a/drivers/net/ipa/ipa_smp2p.c b/drivers/net/ipa/ipa_smp2p.c
+> index a5f7a79a1923..34b68dc43886 100644
+> --- a/drivers/net/ipa/ipa_smp2p.c
+> +++ b/drivers/net/ipa/ipa_smp2p.c
+> @@ -8,6 +8,7 @@
+>   #include <linux/device.h>
+>   #include <linux/interrupt.h>
+>   #include <linux/notifier.h>
+> +#include <linux/panic_notifier.h>
+>   #include <linux/soc/qcom/smem.h>
+>   #include <linux/soc/qcom/smem_state.h>
+>   
 
-> I don't know the underlying reason for this change so I don't know which is
-> the best way to fix this error handling path. Unless there is a specific
-> reason, changing 'hv_uio_cleanup()' could be better because it would keep
-> the error handling path of the probe cleaner, IMHO.
-> ---
->  drivers/uio/uio_hv_generic.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-> index 0330ba99730e..eebc399f2cc7 100644
-> --- a/drivers/uio/uio_hv_generic.c
-> +++ b/drivers/uio/uio_hv_generic.c
-> @@ -296,8 +296,10 @@ hv_uio_probe(struct hv_device *dev,
->  
->  	ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
->  				    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
-> -	if (ret)
-> +	if (ret) {
-> +		vfree(pdata->recv_buf);
->  		goto fail_close;
-> +	}
->  
->  	/* put Global Physical Address Label in name */
->  	snprintf(pdata->recv_name, sizeof(pdata->recv_name),
-> @@ -316,8 +318,10 @@ hv_uio_probe(struct hv_device *dev,
->  
->  	ret = vmbus_establish_gpadl(channel, pdata->send_buf,
->  				    SEND_BUFFER_SIZE, &pdata->send_gpadl);
-> -	if (ret)
-> +	if (ret) {
-> +		vfree(pdata->send_buf);
->  		goto fail_close;
-> +	}
->  
->  	snprintf(pdata->send_name, sizeof(pdata->send_name),
->  		 "send:%u", pdata->send_gpadl);
-> -- 
-> 2.30.2
-> 
+. . .
