@@ -2,95 +2,143 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2FAD37B856
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 May 2021 10:47:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EE2637CACF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 May 2021 18:55:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230323AbhELIsI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 May 2021 04:48:08 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59348 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231254AbhELIrt (ORCPT
+        id S236350AbhELQcT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 May 2021 12:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241766AbhELQ2A (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 May 2021 04:47:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620809201;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=o2vKHOZEryLEQCCxZtV6KAbvFC9hG/G6U3+3Dopo/KU=;
-        b=QiP3sgGx2cENwz8KGF8AxskYueXXCG1IwvNuoMQR3QYDZ/EnoDGpwfqiOq6V+87XhmXkFP
-        Pe2/zdVLeaA95YFhE7WlGZicEgq1z4/+nQfS8zAD/Y3G/Ztzv/8RQRI+4911//Gy8dUgWI
-        ro3Zebuc1oiUEv72dCpHbyLnOg1Xk/k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-85-5rYu9DHWPXSwdi5nERih_A-1; Wed, 12 May 2021 04:46:39 -0400
-X-MC-Unique: 5rYu9DHWPXSwdi5nERih_A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C1F21007467;
-        Wed, 12 May 2021 08:46:38 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.193.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 41A02BA6F;
-        Wed, 12 May 2021 08:46:32 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Mohammed Gamal <mgamal@redhat.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clocksource/drivers/hyper-v: Re-enable VDSO_CLOCKMODE_HVCLOCK on X86
-Date:   Wed, 12 May 2021 10:46:30 +0200
-Message-Id: <20210512084630.1662011-1-vkuznets@redhat.com>
+        Wed, 12 May 2021 12:28:00 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669DEC08C5E3;
+        Wed, 12 May 2021 09:01:14 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id gc22-20020a17090b3116b02901558435aec1so3545617pjb.4;
+        Wed, 12 May 2021 09:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5/MplZ6oYXtQw2JFwTKJsqNpcX+apjnkiw44w1Cqcuo=;
+        b=EQwntmF6pP3DBJ88bmhariOI9t4IKKtCPxB2phWGOC74jrMotb3ZCiTXXW16g67V0h
+         8HVeJ0GheMO0pRAFNX4jKbmzmE+Qf8EKG3s79mh2+TjoJ77eNPmt01t4bFBgCEpZMQYS
+         LtqGvaxjzI7bnbkr39ucdoF9COsZV+kpDzrwJ3LopkNaVGle3wN8WsASeqDSWcrxUXNq
+         l5Oqo36f1zOS36IgBY0vrE19xWxnxCnuQZW0ACKwM1vfnoNVDWJ5KT6c8CBkMQmT0Avv
+         j0Aoqpt+TzspMyc0v3GAvNXVY/RSbD7UNpll9CI5ElGs5Xyk4zXN78+QI0vIQtbqXWFj
+         2nGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5/MplZ6oYXtQw2JFwTKJsqNpcX+apjnkiw44w1Cqcuo=;
+        b=iTNPI9+g6uEyvSg1ZjeXqt0vqhPzmchPxSYMFRukTiAHsmoWETaA1S8X3kxLwUrqRL
+         LJjTP+s/RGkWBAe/cuaOtoKspqcZvNbG59O3wuV9bSAh/r8tYKXgENQic7gDVg+jrIbu
+         VjVLQ9QgxmME9YJm150963ttpogsvzEtWZKdT0UVsCGzkAVHeDa29Syu0nvFfKHn7Uje
+         Kh0Fpi+icBkxkJ6lP1h86pRAO434JjRP9d3cZkHSSMRvRI5VzezBREXPMQoTWFNWii9t
+         q3jXYOnnV7v52dFqng77nneWVlgZhBqemQBF6dLrQ99cRHQkJNLhvj5UtkO9z1LD5YEU
+         d3HQ==
+X-Gm-Message-State: AOAM530qYfh5IN4C5iOnHJHfstm89JzzZDccu6mAiPbNRaDTsAI7poR6
+        15wdC8Hl7bSzZa2uBeQrkPo=
+X-Google-Smtp-Source: ABdhPJxtWg7IxeHd7M+hWJJqKPqAcUV/yJEzGw/b/vFIZdhJW26Hi6Inh2Unritq+GbozDcH9ke1gw==
+X-Received: by 2002:a17:90a:7442:: with SMTP id o2mr2519021pjk.44.1620835273807;
+        Wed, 12 May 2021 09:01:13 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
+        by smtp.gmail.com with ESMTPSA id i24sm238402pfd.35.2021.05.12.09.01.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 May 2021 09:01:13 -0700 (PDT)
+Subject: Re: [Resend RFC PATCH V2 10/12] HV/IOMMU: Add Hyper-V dma ops support
+To:     Christoph Hellwig <hch@lst.de>, konrad.wilk@oracle.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
+        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
+        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, joro@8bytes.org, will@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org, vkuznets@redhat.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com,
+        sunilmut@microsoft.com
+References: <20210414144945.3460554-1-ltykernel@gmail.com>
+ <20210414144945.3460554-11-ltykernel@gmail.com>
+ <20210414154729.GD32045@lst.de>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <a316af73-2c96-f307-6285-593597e05123@gmail.com>
+Date:   Thu, 13 May 2021 00:01:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20210414154729.GD32045@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Mohammed reports (https://bugzilla.kernel.org/show_bug.cgi?id=213029)
-the commit e4ab4658f1cf ("clocksource/drivers/hyper-v: Handle vDSO
-differences inline") broke vDSO on x86. The problem appears to be that
-VDSO_CLOCKMODE_HVCLOCK is an enum value in 'enum vdso_clock_mode' and
-'#ifdef VDSO_CLOCKMODE_HVCLOCK' branch evaluates to false (it is not
-a define). Replace it with CONFIG_X86 as it is the only arch which
-has this mode currently.
+Hi Christoph and Konrad:
+      Current Swiotlb bounce buffer uses a pool for all devices. There
+is a high overhead to get or free bounce buffer during performance test.
+Swiotlb code now use a global spin lock to protect bounce buffer data.
+Several device queues try to acquire the spin lock and this introduce
+additional overhead.
 
-Reported-by: Mohammed Gamal <mgamal@redhat.com>
-Fixes: e4ab4658f1cf ("clocksource/drivers/hyper-v: Handle vDSO differences inline")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- drivers/clocksource/hyperv_timer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+For performance and security perspective, each devices should have a
+separate swiotlb bounce buffer pool and so this part needs to rework.
+I want to check this is right way to resolve performance issues with 
+swiotlb bounce buffer. If you have some other suggestions,welcome.
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 977fd05ac35f..e17421f5e47d 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -419,7 +419,7 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
- 	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
- }
- 
--#ifdef VDSO_CLOCKMODE_HVCLOCK
-+#ifdef CONFIG_X86
- static int hv_cs_enable(struct clocksource *cs)
- {
- 	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
-@@ -435,7 +435,7 @@ static struct clocksource hyperv_cs_tsc = {
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
- 	.suspend= suspend_hv_clock_tsc,
- 	.resume	= resume_hv_clock_tsc,
--#ifdef VDSO_CLOCKMODE_HVCLOCK
-+#ifdef CONFIG_X86
- 	.enable = hv_cs_enable,
- 	.vdso_clock_mode = VDSO_CLOCKMODE_HVCLOCK,
- #else
--- 
-2.31.1
+Thanks.
 
+On 4/14/2021 11:47 PM, Christoph Hellwig wrote:
+>> +static dma_addr_t hyperv_map_page(struct device *dev, struct page *page,
+>> +				  unsigned long offset, size_t size,
+>> +				  enum dma_data_direction dir,
+>> +				  unsigned long attrs)
+>> +{
+>> +	phys_addr_t map, phys = (page_to_pfn(page) << PAGE_SHIFT) + offset;
+>> +
+>> +	if (!hv_is_isolation_supported())
+>> +		return phys;
+>> +
+>> +	map = swiotlb_tbl_map_single(dev, phys, size, HV_HYP_PAGE_SIZE, dir,
+>> +				     attrs);
+>> +	if (map == (phys_addr_t)DMA_MAPPING_ERROR)
+>> +		return DMA_MAPPING_ERROR;
+>> +
+>> +	return map;
+>> +}
+> 
+> This largerly duplicates what dma-direct + swiotlb does.  Please use
+> force_dma_unencrypted to force bounce buffering and just use the generic
+> code.
+> 
+>> +	if (hv_isolation_type_snp()) {
+>> +		ret = hv_set_mem_host_visibility(
+>> +				phys_to_virt(hyperv_io_tlb_start),
+>> +				hyperv_io_tlb_size,
+>> +				VMBUS_PAGE_VISIBLE_READ_WRITE);
+>> +		if (ret)
+>> +			panic("%s: Fail to mark Hyper-v swiotlb buffer visible to host. err=%d\n",
+>> +			      __func__, ret);
+>> +
+>> +		hyperv_io_tlb_remap = ioremap_cache(hyperv_io_tlb_start
+>> +					    + ms_hyperv.shared_gpa_boundary,
+>> +						    hyperv_io_tlb_size);
+>> +		if (!hyperv_io_tlb_remap)
+>> +			panic("%s: Fail to remap io tlb.\n", __func__);
+>> +
+>> +		memset(hyperv_io_tlb_remap, 0x00, hyperv_io_tlb_size);
+>> +		swiotlb_set_bounce_remap(hyperv_io_tlb_remap);
+> 
+> And this really needs to go into a common hook where we currently just
+> call set_memory_decrypted so that all the different schemes for these
+> trusted VMs (we have about half a dozen now) can share code rather than
+> reinventing it.
+> 
