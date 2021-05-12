@@ -2,285 +2,95 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 685EC37B77E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 May 2021 10:07:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2FAD37B856
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 May 2021 10:47:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230115AbhELIIW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 May 2021 04:08:22 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51404 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbhELIIW (ORCPT
+        id S230323AbhELIsI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 May 2021 04:48:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59348 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231254AbhELIrt (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 May 2021 04:08:22 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id C18F020B7178; Wed, 12 May 2021 01:07:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C18F020B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1620806834;
-        bh=ONMUm9lGQb0L+PrjIyabqO4fxeAhk5qGinvEBfGFW50=;
-        h=From:To:Cc:Subject:Date:From;
-        b=V8O3IdMmNHNOqBI7ZYNB9Gp6GBaxst/A9k6HOUoYKz0QZOkrdJ3CjglMrYocF8LGr
-         3b0qKQrCEsX+Akyjd7idsv+oJF2w8n0RMRP0VvE60Br6JpdHR+9/mzDAxjAImjdudf
-         AkMYKifl3pDBTAOaXrP8TXOiChUP6g8nflX060gE=
-From:   longli@linuxonhyperv.com
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wed, 12 May 2021 04:47:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1620809201;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=o2vKHOZEryLEQCCxZtV6KAbvFC9hG/G6U3+3Dopo/KU=;
+        b=QiP3sgGx2cENwz8KGF8AxskYueXXCG1IwvNuoMQR3QYDZ/EnoDGpwfqiOq6V+87XhmXkFP
+        Pe2/zdVLeaA95YFhE7WlGZicEgq1z4/+nQfS8zAD/Y3G/Ztzv/8RQRI+4911//Gy8dUgWI
+        ro3Zebuc1oiUEv72dCpHbyLnOg1Xk/k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-85-5rYu9DHWPXSwdi5nERih_A-1; Wed, 12 May 2021 04:46:39 -0400
+X-MC-Unique: 5rYu9DHWPXSwdi5nERih_A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C1F21007467;
+        Wed, 12 May 2021 08:46:38 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.193.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 41A02BA6F;
+        Wed, 12 May 2021 08:46:32 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Mohammed Gamal <mgamal@redhat.com>,
         Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH] PCI: hv: Move completion variable from stack to heap in hv_compose_msi_msg()
-Date:   Wed, 12 May 2021 01:07:04 -0700
-Message-Id: <1620806824-31151-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+Subject: [PATCH] clocksource/drivers/hyper-v: Re-enable VDSO_CLOCKMODE_HVCLOCK on X86
+Date:   Wed, 12 May 2021 10:46:30 +0200
+Message-Id: <20210512084630.1662011-1-vkuznets@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+Mohammed reports (https://bugzilla.kernel.org/show_bug.cgi?id=213029)
+the commit e4ab4658f1cf ("clocksource/drivers/hyper-v: Handle vDSO
+differences inline") broke vDSO on x86. The problem appears to be that
+VDSO_CLOCKMODE_HVCLOCK is an enum value in 'enum vdso_clock_mode' and
+'#ifdef VDSO_CLOCKMODE_HVCLOCK' branch evaluates to false (it is not
+a define). Replace it with CONFIG_X86 as it is the only arch which
+has this mode currently.
 
-hv_compose_msi_msg() may be called with interrupt disabled. It calls
-wait_for_completion() in a loop and may exit the loop earlier if the device is
-being ejected or it's hitting other errors. However the VSP may send
-completion packet after the loop exit and the completion variable is no
-longer valid on the stack. This results in a kernel oops.
-
-Fix this by relocating completion variable from stack to heap, and use hbus
-to maintain a list of leftover completions for future cleanup if necessary.
-
-Signed-off-by: Long Li <longli@microsoft.com>
+Reported-by: Mohammed Gamal <mgamal@redhat.com>
+Fixes: e4ab4658f1cf ("clocksource/drivers/hyper-v: Handle vDSO differences inline")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 97 +++++++++++++++++++----------
- 1 file changed, 65 insertions(+), 32 deletions(-)
+ drivers/clocksource/hyperv_timer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9499ae3275fe..29fe26e2193c 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -473,6 +473,9 @@ struct hv_pcibus_device {
- 	struct msi_controller msi_chip;
- 	struct irq_domain *irq_domain;
- 
-+	struct list_head compose_msi_msg_ctxt_list;
-+	spinlock_t compose_msi_msg_ctxt_list_lock;
-+
- 	spinlock_t retarget_msi_interrupt_lock;
- 
- 	struct workqueue_struct *wq;
-@@ -552,6 +555,17 @@ struct hv_pci_compl {
- 	s32 completion_status;
- };
- 
-+struct compose_comp_ctxt {
-+	struct hv_pci_compl comp_pkt;
-+	struct tran_int_desc int_desc;
-+};
-+
-+struct compose_msi_msg_ctxt {
-+	struct list_head list;
-+	struct pci_packet pci_pkt;
-+	struct compose_comp_ctxt comp;
-+};
-+
- static void hv_pci_onchannelcallback(void *context);
- 
- /**
-@@ -1293,11 +1307,6 @@ static void hv_irq_unmask(struct irq_data *data)
- 	pci_msi_unmask_irq(data);
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 977fd05ac35f..e17421f5e47d 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -419,7 +419,7 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
+ 	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
  }
  
--struct compose_comp_ctxt {
--	struct hv_pci_compl comp_pkt;
--	struct tran_int_desc int_desc;
--};
--
- static void hv_pci_compose_compl(void *context, struct pci_response *resp,
- 				 int resp_packet_size)
+-#ifdef VDSO_CLOCKMODE_HVCLOCK
++#ifdef CONFIG_X86
+ static int hv_cs_enable(struct clocksource *cs)
  {
-@@ -1373,16 +1382,12 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	struct pci_bus *pbus;
- 	struct pci_dev *pdev;
- 	struct cpumask *dest;
--	struct compose_comp_ctxt comp;
- 	struct tran_int_desc *int_desc;
--	struct {
--		struct pci_packet pci_pkt;
--		union {
--			struct pci_create_interrupt v1;
--			struct pci_create_interrupt2 v2;
--		} int_pkts;
--	} __packed ctxt;
--
-+	struct compose_msi_msg_ctxt *ctxt;
-+	union {
-+		struct pci_create_interrupt v1;
-+		struct pci_create_interrupt2 v2;
-+	} int_pkts;
- 	u32 size;
- 	int ret;
- 
-@@ -1402,18 +1407,24 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		hv_int_desc_free(hpdev, int_desc);
- 	}
- 
-+	ctxt = kzalloc(sizeof(*ctxt), GFP_ATOMIC);
-+	if (!ctxt)
-+		goto drop_reference;
-+
- 	int_desc = kzalloc(sizeof(*int_desc), GFP_ATOMIC);
--	if (!int_desc)
-+	if (!int_desc) {
-+		kfree(ctxt);
- 		goto drop_reference;
-+	}
- 
--	memset(&ctxt, 0, sizeof(ctxt));
--	init_completion(&comp.comp_pkt.host_event);
--	ctxt.pci_pkt.completion_func = hv_pci_compose_compl;
--	ctxt.pci_pkt.compl_ctxt = &comp;
-+	memset(ctxt, 0, sizeof(*ctxt));
-+	init_completion(&ctxt->comp.comp_pkt.host_event);
-+	ctxt->pci_pkt.completion_func = hv_pci_compose_compl;
-+	ctxt->pci_pkt.compl_ctxt = &ctxt->comp;
- 
- 	switch (hbus->protocol_version) {
- 	case PCI_PROTOCOL_VERSION_1_1:
--		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
-+		size = hv_compose_msi_req_v1(&int_pkts.v1,
- 					dest,
- 					hpdev->desc.win_slot.slot,
- 					cfg->vector);
-@@ -1421,7 +1432,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 
- 	case PCI_PROTOCOL_VERSION_1_2:
- 	case PCI_PROTOCOL_VERSION_1_3:
--		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
-+		size = hv_compose_msi_req_v2(&int_pkts.v2,
- 					dest,
- 					hpdev->desc.win_slot.slot,
- 					cfg->vector);
-@@ -1434,17 +1445,18 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		 */
- 		dev_err(&hbus->hdev->device,
- 			"Unexpected vPCI protocol, update driver.");
-+		kfree(ctxt);
- 		goto free_int_desc;
- 	}
- 
--	ret = vmbus_sendpacket(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
--			       size, (unsigned long)&ctxt.pci_pkt,
-+	ret = vmbus_sendpacket(hpdev->hbus->hdev->channel, &int_pkts,
-+			       size, (unsigned long)&ctxt->pci_pkt,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	if (ret) {
- 		dev_err(&hbus->hdev->device,
--			"Sending request for interrupt failed: 0x%x",
--			comp.comp_pkt.completion_status);
-+			"Sending request for interrupt failed: 0x%x", ret);
-+		kfree(ctxt);
- 		goto free_int_desc;
- 	}
- 
-@@ -1458,7 +1470,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	 * Since this function is called with IRQ locks held, can't
- 	 * do normal wait for completion; instead poll.
- 	 */
--	while (!try_wait_for_completion(&comp.comp_pkt.host_event)) {
-+	while (!try_wait_for_completion(&ctxt->comp.comp_pkt.host_event)) {
- 		unsigned long flags;
- 
- 		/* 0xFFFF means an invalid PCI VENDOR ID. */
-@@ -1494,10 +1506,11 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 
- 	tasklet_enable(&channel->callback_event);
- 
--	if (comp.comp_pkt.completion_status < 0) {
-+	if (ctxt->comp.comp_pkt.completion_status < 0) {
- 		dev_err(&hbus->hdev->device,
- 			"Request for interrupt failed: 0x%x",
--			comp.comp_pkt.completion_status);
-+			ctxt->comp.comp_pkt.completion_status);
-+		kfree(ctxt);
- 		goto free_int_desc;
- 	}
- 
-@@ -1506,23 +1519,36 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	 * irq_set_chip_data() here would be appropriate, but the lock it takes
- 	 * is already held.
- 	 */
--	*int_desc = comp.int_desc;
-+	*int_desc = ctxt->comp.int_desc;
- 	data->chip_data = int_desc;
- 
- 	/* Pass up the result. */
--	msg->address_hi = comp.int_desc.address >> 32;
--	msg->address_lo = comp.int_desc.address & 0xffffffff;
--	msg->data = comp.int_desc.data;
-+	msg->address_hi = ctxt->comp.int_desc.address >> 32;
-+	msg->address_lo = ctxt->comp.int_desc.address & 0xffffffff;
-+	msg->data = ctxt->comp.int_desc.data;
- 
- 	put_pcichild(hpdev);
-+	kfree(ctxt);
- 	return;
- 
- enable_tasklet:
- 	tasklet_enable(&channel->callback_event);
-+
-+	/*
-+	 * Move uncompleted context to the leftover list.
-+	 * The host may send completion at a later time, and we ignore this
-+	 * completion but keep the memory reference valid.
-+	 */
-+	spin_lock(&hbus->compose_msi_msg_ctxt_list_lock);
-+	list_add_tail(&ctxt->list, &hbus->compose_msi_msg_ctxt_list);
-+	spin_unlock(&hbus->compose_msi_msg_ctxt_list_lock);
-+
- free_int_desc:
- 	kfree(int_desc);
-+
- drop_reference:
- 	put_pcichild(hpdev);
-+
- return_null_message:
- 	msg->address_hi = 0;
- 	msg->address_lo = 0;
-@@ -3076,9 +3102,11 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	INIT_LIST_HEAD(&hbus->children);
- 	INIT_LIST_HEAD(&hbus->dr_list);
- 	INIT_LIST_HEAD(&hbus->resources_for_children);
-+	INIT_LIST_HEAD(&hbus->compose_msi_msg_ctxt_list);
- 	spin_lock_init(&hbus->config_lock);
- 	spin_lock_init(&hbus->device_list_lock);
- 	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
-+	spin_lock_init(&hbus->compose_msi_msg_ctxt_list_lock);
- 	hbus->wq = alloc_ordered_workqueue("hv_pci_%x", 0,
- 					   hbus->sysdata.domain);
- 	if (!hbus->wq) {
-@@ -3282,6 +3310,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- static int hv_pci_remove(struct hv_device *hdev)
- {
- 	struct hv_pcibus_device *hbus;
-+	struct compose_msi_msg_ctxt *ctxt, *tmp;
- 	int ret;
- 
- 	hbus = hv_get_drvdata(hdev);
-@@ -3318,6 +3347,10 @@ static int hv_pci_remove(struct hv_device *hdev)
- 
- 	hv_put_dom_num(hbus->sysdata.domain);
- 
-+	list_for_each_entry_safe(ctxt, tmp, &hbus->compose_msi_msg_ctxt_list, list) {
-+		list_del(&ctxt->list);
-+		kfree(ctxt);
-+	}
- 	kfree(hbus);
- 	return ret;
- }
+ 	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
+@@ -435,7 +435,7 @@ static struct clocksource hyperv_cs_tsc = {
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+ 	.suspend= suspend_hv_clock_tsc,
+ 	.resume	= resume_hv_clock_tsc,
+-#ifdef VDSO_CLOCKMODE_HVCLOCK
++#ifdef CONFIG_X86
+ 	.enable = hv_cs_enable,
+ 	.vdso_clock_mode = VDSO_CLOCKMODE_HVCLOCK,
+ #else
 -- 
-2.27.0
+2.31.1
 
