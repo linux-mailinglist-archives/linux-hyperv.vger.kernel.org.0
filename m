@@ -2,26 +2,26 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3073B37B779
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 May 2021 10:06:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 685EC37B77E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 May 2021 10:07:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbhELIID (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 May 2021 04:08:03 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51312 "EHLO
+        id S230115AbhELIIW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 May 2021 04:08:22 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:51404 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230188AbhELIIA (ORCPT
+        with ESMTP id S230149AbhELIIW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 May 2021 04:08:00 -0400
+        Wed, 12 May 2021 04:08:22 -0400
 Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id E977920B7178; Wed, 12 May 2021 01:06:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E977920B7178
+        id C18F020B7178; Wed, 12 May 2021 01:07:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C18F020B7178
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1620806812;
-        bh=WLJTTpiddylx0coDo9QIv6P+OA6IRCluOS4wXCiLTio=;
+        s=default; t=1620806834;
+        bh=ONMUm9lGQb0L+PrjIyabqO4fxeAhk5qGinvEBfGFW50=;
         h=From:To:Cc:Subject:Date:From;
-        b=rD7KzrvGJM8wfdXyL2yu3OAP96tULI/mFlF2Esc7HMECeysK09ksET21Dttzksx9z
-         Qejlj/R+GGpSNqhQspB+mara7OEYySCLjUQNXZOlYAO9tXQ/q/qcCvc/lSAkESapMY
-         hkTnaHPJw3ILNKkyRB6VWqyhJ7c69PWuFcuWurjM=
+        b=V8O3IdMmNHNOqBI7ZYNB9Gp6GBaxst/A9k6HOUoYKz0QZOkrdJ3CjglMrYocF8LGr
+         3b0qKQrCEsX+Akyjd7idsv+oJF2w8n0RMRP0VvE60Br6JpdHR+9/mzDAxjAImjdudf
+         AkMYKifl3pDBTAOaXrP8TXOiChUP6g8nflX060gE=
 From:   longli@linuxonhyperv.com
 To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -33,9 +33,9 @@ To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Long Li <longli@microsoft.com>
-Subject: [Patch v3 2/2] PCI: hv: Remove unused refcount and supporting functions for handling bus device removal
-Date:   Wed, 12 May 2021 01:06:49 -0700
-Message-Id: <1620806809-31055-1-git-send-email-longli@linuxonhyperv.com>
+Subject: [PATCH] PCI: hv: Move completion variable from stack to heap in hv_compose_msi_msg()
+Date:   Wed, 12 May 2021 01:07:04 -0700
+Message-Id: <1620806824-31151-1-git-send-email-longli@linuxonhyperv.com>
 X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
@@ -43,139 +43,244 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Long Li <longli@microsoft.com>
 
-With the new method of flushing/stopping the workqueue before doing bus
-removal, the old mechanism of using refcount and wait for completion
-is no longer needed. Remove those dead code.
+hv_compose_msi_msg() may be called with interrupt disabled. It calls
+wait_for_completion() in a loop and may exit the loop earlier if the device is
+being ejected or it's hitting other errors. However the VSP may send
+completion packet after the loop exit and the completion variable is no
+longer valid on the stack. This results in a kernel oops.
+
+Fix this by relocating completion variable from stack to heap, and use hbus
+to maintain a list of leftover completions for future cleanup if necessary.
 
 Signed-off-by: Long Li <longli@microsoft.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 34 +++--------------------------
- 1 file changed, 3 insertions(+), 31 deletions(-)
+ drivers/pci/controller/pci-hyperv.c | 97 +++++++++++++++++++----------
+ 1 file changed, 65 insertions(+), 32 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index c6122a1b0c46..9499ae3275fe 100644
+index 9499ae3275fe..29fe26e2193c 100644
 --- a/drivers/pci/controller/pci-hyperv.c
 +++ b/drivers/pci/controller/pci-hyperv.c
-@@ -452,7 +452,6 @@ struct hv_pcibus_device {
- 	/* Protocol version negotiated with the host */
- 	enum pci_protocol_version_t protocol_version;
- 	enum hv_pcibus_state state;
--	refcount_t remove_lock;
- 	struct hv_device *hdev;
- 	resource_size_t low_mmio_space;
- 	resource_size_t high_mmio_space;
-@@ -460,7 +459,6 @@ struct hv_pcibus_device {
- 	struct resource *low_mmio_res;
- 	struct resource *high_mmio_res;
- 	struct completion *survey_event;
--	struct completion remove_event;
- 	struct pci_bus *pci_bus;
- 	spinlock_t config_lock;	/* Avoid two threads writing index page */
- 	spinlock_t device_list_lock;	/* Protect lists below */
-@@ -593,9 +591,6 @@ static void put_pcichild(struct hv_pci_dev *hpdev)
- 		kfree(hpdev);
- }
+@@ -473,6 +473,9 @@ struct hv_pcibus_device {
+ 	struct msi_controller msi_chip;
+ 	struct irq_domain *irq_domain;
  
--static void get_hvpcibus(struct hv_pcibus_device *hv_pcibus);
--static void put_hvpcibus(struct hv_pcibus_device *hv_pcibus);
--
- /*
-  * There is no good way to get notified from vmbus_onoffer_rescind(),
-  * so let's use polling here, since this is not a hot path.
-@@ -2067,10 +2062,8 @@ static void pci_devices_present_work(struct work_struct *work)
- 	}
- 	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
++	struct list_head compose_msi_msg_ctxt_list;
++	spinlock_t compose_msi_msg_ctxt_list_lock;
++
+ 	spinlock_t retarget_msi_interrupt_lock;
  
--	if (!dr) {
--		put_hvpcibus(hbus);
-+	if (!dr)
- 		return;
--	}
+ 	struct workqueue_struct *wq;
+@@ -552,6 +555,17 @@ struct hv_pci_compl {
+ 	s32 completion_status;
+ };
  
- 	/* First, mark all existing children as reported missing. */
- 	spin_lock_irqsave(&hbus->device_list_lock, flags);
-@@ -2153,7 +2146,6 @@ static void pci_devices_present_work(struct work_struct *work)
- 		break;
- 	}
- 
--	put_hvpcibus(hbus);
- 	kfree(dr);
- }
- 
-@@ -2194,12 +2186,10 @@ static int hv_pci_start_relations_work(struct hv_pcibus_device *hbus,
- 	list_add_tail(&dr->list_entry, &hbus->dr_list);
- 	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
- 
--	if (pending_dr) {
-+	if (pending_dr)
- 		kfree(dr_wrk);
--	} else {
--		get_hvpcibus(hbus);
-+	else
- 		queue_work(hbus->wq, &dr_wrk->wrk);
--	}
- 
- 	return 0;
- }
-@@ -2342,8 +2332,6 @@ static void hv_eject_device_work(struct work_struct *work)
- 	put_pcichild(hpdev);
- 	put_pcichild(hpdev);
- 	/* hpdev has been freed. Do not use it any more. */
--
--	put_hvpcibus(hbus);
- }
++struct compose_comp_ctxt {
++	struct hv_pci_compl comp_pkt;
++	struct tran_int_desc int_desc;
++};
++
++struct compose_msi_msg_ctxt {
++	struct list_head list;
++	struct pci_packet pci_pkt;
++	struct compose_comp_ctxt comp;
++};
++
+ static void hv_pci_onchannelcallback(void *context);
  
  /**
-@@ -2367,7 +2355,6 @@ static void hv_pci_eject_device(struct hv_pci_dev *hpdev)
- 	hpdev->state = hv_pcichild_ejecting;
- 	get_pcichild(hpdev);
- 	INIT_WORK(&hpdev->wrk, hv_eject_device_work);
--	get_hvpcibus(hbus);
- 	queue_work(hbus->wq, &hpdev->wrk);
+@@ -1293,11 +1307,6 @@ static void hv_irq_unmask(struct irq_data *data)
+ 	pci_msi_unmask_irq(data);
  }
  
-@@ -2967,17 +2954,6 @@ static int hv_send_resources_released(struct hv_device *hdev)
- 	return 0;
- }
- 
--static void get_hvpcibus(struct hv_pcibus_device *hbus)
--{
--	refcount_inc(&hbus->remove_lock);
--}
+-struct compose_comp_ctxt {
+-	struct hv_pci_compl comp_pkt;
+-	struct tran_int_desc int_desc;
+-};
 -
--static void put_hvpcibus(struct hv_pcibus_device *hbus)
--{
--	if (refcount_dec_and_test(&hbus->remove_lock))
--		complete(&hbus->remove_event);
--}
+ static void hv_pci_compose_compl(void *context, struct pci_response *resp,
+ 				 int resp_packet_size)
+ {
+@@ -1373,16 +1382,12 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	struct pci_bus *pbus;
+ 	struct pci_dev *pdev;
+ 	struct cpumask *dest;
+-	struct compose_comp_ctxt comp;
+ 	struct tran_int_desc *int_desc;
+-	struct {
+-		struct pci_packet pci_pkt;
+-		union {
+-			struct pci_create_interrupt v1;
+-			struct pci_create_interrupt2 v2;
+-		} int_pkts;
+-	} __packed ctxt;
 -
- #define HVPCI_DOM_MAP_SIZE (64 * 1024)
- static DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
++	struct compose_msi_msg_ctxt *ctxt;
++	union {
++		struct pci_create_interrupt v1;
++		struct pci_create_interrupt2 v2;
++	} int_pkts;
+ 	u32 size;
+ 	int ret;
  
-@@ -3097,14 +3073,12 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	hbus->sysdata.domain = dom;
+@@ -1402,18 +1407,24 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		hv_int_desc_free(hpdev, int_desc);
+ 	}
  
- 	hbus->hdev = hdev;
--	refcount_set(&hbus->remove_lock, 1);
++	ctxt = kzalloc(sizeof(*ctxt), GFP_ATOMIC);
++	if (!ctxt)
++		goto drop_reference;
++
+ 	int_desc = kzalloc(sizeof(*int_desc), GFP_ATOMIC);
+-	if (!int_desc)
++	if (!int_desc) {
++		kfree(ctxt);
+ 		goto drop_reference;
++	}
+ 
+-	memset(&ctxt, 0, sizeof(ctxt));
+-	init_completion(&comp.comp_pkt.host_event);
+-	ctxt.pci_pkt.completion_func = hv_pci_compose_compl;
+-	ctxt.pci_pkt.compl_ctxt = &comp;
++	memset(ctxt, 0, sizeof(*ctxt));
++	init_completion(&ctxt->comp.comp_pkt.host_event);
++	ctxt->pci_pkt.completion_func = hv_pci_compose_compl;
++	ctxt->pci_pkt.compl_ctxt = &ctxt->comp;
+ 
+ 	switch (hbus->protocol_version) {
+ 	case PCI_PROTOCOL_VERSION_1_1:
+-		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
++		size = hv_compose_msi_req_v1(&int_pkts.v1,
+ 					dest,
+ 					hpdev->desc.win_slot.slot,
+ 					cfg->vector);
+@@ -1421,7 +1432,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 
+ 	case PCI_PROTOCOL_VERSION_1_2:
+ 	case PCI_PROTOCOL_VERSION_1_3:
+-		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
++		size = hv_compose_msi_req_v2(&int_pkts.v2,
+ 					dest,
+ 					hpdev->desc.win_slot.slot,
+ 					cfg->vector);
+@@ -1434,17 +1445,18 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		 */
+ 		dev_err(&hbus->hdev->device,
+ 			"Unexpected vPCI protocol, update driver.");
++		kfree(ctxt);
+ 		goto free_int_desc;
+ 	}
+ 
+-	ret = vmbus_sendpacket(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
+-			       size, (unsigned long)&ctxt.pci_pkt,
++	ret = vmbus_sendpacket(hpdev->hbus->hdev->channel, &int_pkts,
++			       size, (unsigned long)&ctxt->pci_pkt,
+ 			       VM_PKT_DATA_INBAND,
+ 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret) {
+ 		dev_err(&hbus->hdev->device,
+-			"Sending request for interrupt failed: 0x%x",
+-			comp.comp_pkt.completion_status);
++			"Sending request for interrupt failed: 0x%x", ret);
++		kfree(ctxt);
+ 		goto free_int_desc;
+ 	}
+ 
+@@ -1458,7 +1470,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	 * Since this function is called with IRQ locks held, can't
+ 	 * do normal wait for completion; instead poll.
+ 	 */
+-	while (!try_wait_for_completion(&comp.comp_pkt.host_event)) {
++	while (!try_wait_for_completion(&ctxt->comp.comp_pkt.host_event)) {
+ 		unsigned long flags;
+ 
+ 		/* 0xFFFF means an invalid PCI VENDOR ID. */
+@@ -1494,10 +1506,11 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 
+ 	tasklet_enable(&channel->callback_event);
+ 
+-	if (comp.comp_pkt.completion_status < 0) {
++	if (ctxt->comp.comp_pkt.completion_status < 0) {
+ 		dev_err(&hbus->hdev->device,
+ 			"Request for interrupt failed: 0x%x",
+-			comp.comp_pkt.completion_status);
++			ctxt->comp.comp_pkt.completion_status);
++		kfree(ctxt);
+ 		goto free_int_desc;
+ 	}
+ 
+@@ -1506,23 +1519,36 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	 * irq_set_chip_data() here would be appropriate, but the lock it takes
+ 	 * is already held.
+ 	 */
+-	*int_desc = comp.int_desc;
++	*int_desc = ctxt->comp.int_desc;
+ 	data->chip_data = int_desc;
+ 
+ 	/* Pass up the result. */
+-	msg->address_hi = comp.int_desc.address >> 32;
+-	msg->address_lo = comp.int_desc.address & 0xffffffff;
+-	msg->data = comp.int_desc.data;
++	msg->address_hi = ctxt->comp.int_desc.address >> 32;
++	msg->address_lo = ctxt->comp.int_desc.address & 0xffffffff;
++	msg->data = ctxt->comp.int_desc.data;
+ 
+ 	put_pcichild(hpdev);
++	kfree(ctxt);
+ 	return;
+ 
+ enable_tasklet:
+ 	tasklet_enable(&channel->callback_event);
++
++	/*
++	 * Move uncompleted context to the leftover list.
++	 * The host may send completion at a later time, and we ignore this
++	 * completion but keep the memory reference valid.
++	 */
++	spin_lock(&hbus->compose_msi_msg_ctxt_list_lock);
++	list_add_tail(&ctxt->list, &hbus->compose_msi_msg_ctxt_list);
++	spin_unlock(&hbus->compose_msi_msg_ctxt_list_lock);
++
+ free_int_desc:
+ 	kfree(int_desc);
++
+ drop_reference:
+ 	put_pcichild(hpdev);
++
+ return_null_message:
+ 	msg->address_hi = 0;
+ 	msg->address_lo = 0;
+@@ -3076,9 +3102,11 @@ static int hv_pci_probe(struct hv_device *hdev,
  	INIT_LIST_HEAD(&hbus->children);
  	INIT_LIST_HEAD(&hbus->dr_list);
  	INIT_LIST_HEAD(&hbus->resources_for_children);
++	INIT_LIST_HEAD(&hbus->compose_msi_msg_ctxt_list);
  	spin_lock_init(&hbus->config_lock);
  	spin_lock_init(&hbus->device_list_lock);
  	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
--	init_completion(&hbus->remove_event);
++	spin_lock_init(&hbus->compose_msi_msg_ctxt_list_lock);
  	hbus->wq = alloc_ordered_workqueue("hv_pci_%x", 0,
  					   hbus->sysdata.domain);
  	if (!hbus->wq) {
-@@ -3341,8 +3315,6 @@ static int hv_pci_remove(struct hv_device *hdev)
- 	hv_pci_free_bridge_windows(hbus);
- 	irq_domain_remove(hbus->irq_domain);
- 	irq_domain_free_fwnode(hbus->sysdata.fwnode);
--	put_hvpcibus(hbus);
--	wait_for_completion(&hbus->remove_event);
+@@ -3282,6 +3310,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ static int hv_pci_remove(struct hv_device *hdev)
+ {
+ 	struct hv_pcibus_device *hbus;
++	struct compose_msi_msg_ctxt *ctxt, *tmp;
+ 	int ret;
+ 
+ 	hbus = hv_get_drvdata(hdev);
+@@ -3318,6 +3347,10 @@ static int hv_pci_remove(struct hv_device *hdev)
  
  	hv_put_dom_num(hbus->sysdata.domain);
  
++	list_for_each_entry_safe(ctxt, tmp, &hbus->compose_msi_msg_ctxt_list, list) {
++		list_del(&ctxt->list);
++		kfree(ctxt);
++	}
+ 	kfree(hbus);
+ 	return ret;
+ }
 -- 
 2.27.0
 
