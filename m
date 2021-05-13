@@ -2,133 +2,79 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDF6D37EE76
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 May 2021 00:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3368137F199
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 May 2021 05:20:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231311AbhELVnv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 May 2021 17:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1387260AbhELUd3 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 May 2021 16:33:29 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8359C061345;
-        Wed, 12 May 2021 13:29:32 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1620851248;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T8VGM7T2ebwxRKCm5/uITXAy1lYGXfvGxWTRjsElJlo=;
-        b=tolPteYN+1BOe/u6A1hk+xYj0vM7JQBAx1QnrNmuv4xyd1EGQv/70l3ul3vocp9hyYA1zs
-        WklamftkByCa5+e7/tOTgSQYo6JpeMsrWboXpiNtkpsyGy1U+qR773gqBbZ5tD+JNnbCD/
-        ibtkRiKfKSFRjqDMllzvVRqE1T7UHo/u6UUZ4EFjt3qHqUr/gwrhys+UhITVVWck5eqQPd
-        h/tHkvkPcjYTnMK6105DE76hrQWSdDbjUJluIo4pMvGSD0TOAlyz629ncbP/xvvx6KF/kt
-        w7zfZVs+a+309+mkLqfY/qOFcGhY8+EGBIVMtIlpz8/pZszMU2xcTjXL0IpA4Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1620851248;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T8VGM7T2ebwxRKCm5/uITXAy1lYGXfvGxWTRjsElJlo=;
-        b=EQTh/A7XSqo9mXKYkLMu0PQUecmLYJRHnb+Pm4yi3tEuGxUxVg7ubba0KNUejp7niMF6Ej
-        0w60bRAIGZVLDwCA==
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-hyperv@vger.kernel.org
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Mohammed Gamal <mgamal@redhat.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clocksource/drivers/hyper-v: Re-enable VDSO_CLOCKMODE_HVCLOCK on X86
-In-Reply-To: <20210512084630.1662011-1-vkuznets@redhat.com>
-References: <20210512084630.1662011-1-vkuznets@redhat.com>
-Date:   Wed, 12 May 2021 22:27:28 +0200
-Message-ID: <87tun766kv.ffs@nanos.tec.linutronix.de>
+        id S230501AbhEMDVe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 May 2021 23:21:34 -0400
+Received: from mga01.intel.com ([192.55.52.88]:3839 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230186AbhEMDVe (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 12 May 2021 23:21:34 -0400
+IronPort-SDR: jpcampUkN8j5ENkutHgnXttTP6UuQWbFX21OkssKz541OKdmrHjBDaIsHglOMfbgUTHtTo9wcM
+ u7frGVag81Sg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9982"; a="220844202"
+X-IronPort-AV: E=Sophos;i="5.82,296,1613462400"; 
+   d="scan'208";a="220844202"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2021 20:20:20 -0700
+IronPort-SDR: mj7EoWy5caILec4mbk32Dm0KgdMRCgdis+B5aYwjfmce1/m431ZPlq/GAXkQxk0u9LSJU6JlnK
+ f6t1SWydDh2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,296,1613462400"; 
+   d="scan'208";a="623090674"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.128]) ([10.239.159.128])
+  by fmsmga006.fm.intel.com with ESMTP; 12 May 2021 20:20:14 -0700
+Cc:     baolu.lu@linux.intel.com, linux-hyperv@vger.kernel.org,
+        brijesh.singh@amd.com, linux-mm@kvack.org, hpa@zytor.com,
+        kys@microsoft.com, will@kernel.org, sunilmut@microsoft.com,
+        linux-arch@vger.kernel.org, wei.liu@kernel.org,
+        sthemmin@microsoft.com, linux-scsi@vger.kernel.org, x86@kernel.org,
+        mingo@redhat.com, kuba@kernel.org, jejb@linux.ibm.com,
+        thomas.lendacky@amd.com, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        arnd@arndb.de, haiyangz@microsoft.com, bp@alien8.de,
+        tglx@linutronix.de, vkuznets@redhat.com,
+        martin.petersen@oracle.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, akpm@linux-foundation.org,
+        robin.murphy@arm.com, davem@davemloft.net
+Subject: Re: [Resend RFC PATCH V2 10/12] HV/IOMMU: Add Hyper-V dma ops support
+To:     Tianyu Lan <ltykernel@gmail.com>, Christoph Hellwig <hch@lst.de>,
+        konrad.wilk@oracle.com
+References: <20210414144945.3460554-1-ltykernel@gmail.com>
+ <20210414144945.3460554-11-ltykernel@gmail.com>
+ <20210414154729.GD32045@lst.de>
+ <a316af73-2c96-f307-6285-593597e05123@gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <7cda690b-adb0-1f5f-2048-b52f75c0399f@linux.intel.com>
+Date:   Thu, 13 May 2021 11:19:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <a316af73-2c96-f307-6285-593597e05123@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, May 12 2021 at 10:46, Vitaly Kuznetsov wrote:
-> Mohammed reports (https://bugzilla.kernel.org/show_bug.cgi?id=213029)
-> the commit e4ab4658f1cf ("clocksource/drivers/hyper-v: Handle vDSO
-> differences inline") broke vDSO on x86. The problem appears to be that
-> VDSO_CLOCKMODE_HVCLOCK is an enum value in 'enum vdso_clock_mode' and
-> '#ifdef VDSO_CLOCKMODE_HVCLOCK' branch evaluates to false (it is not
-> a define). Replace it with CONFIG_X86 as it is the only arch which
-> has this mode currently.
->
-> Reported-by: Mohammed Gamal <mgamal@redhat.com>
-> Fixes: e4ab4658f1cf ("clocksource/drivers/hyper-v: Handle vDSO differences inline")
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  drivers/clocksource/hyperv_timer.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> index 977fd05ac35f..e17421f5e47d 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -419,7 +419,7 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
->  	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
->  }
->  
-> -#ifdef VDSO_CLOCKMODE_HVCLOCK
-> +#ifdef CONFIG_X86
->  static int hv_cs_enable(struct clocksource *cs)
->  {
->  	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
-> @@ -435,7 +435,7 @@ static struct clocksource hyperv_cs_tsc = {
->  	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
->  	.suspend= suspend_hv_clock_tsc,
->  	.resume	= resume_hv_clock_tsc,
-> -#ifdef VDSO_CLOCKMODE_HVCLOCK
-> +#ifdef CONFIG_X86
->  	.enable = hv_cs_enable,
->  	.vdso_clock_mode = VDSO_CLOCKMODE_HVCLOCK,
->  #else
+On 5/13/21 12:01 AM, Tianyu Lan wrote:
+> Hi Christoph and Konrad:
+>       Current Swiotlb bounce buffer uses a pool for all devices. There
+> is a high overhead to get or free bounce buffer during performance test.
+> Swiotlb code now use a global spin lock to protect bounce buffer data.
+> Several device queues try to acquire the spin lock and this introduce
+> additional overhead.
+> 
+> For performance and security perspective, each devices should have a
+> separate swiotlb bounce buffer pool and so this part needs to rework.
+> I want to check this is right way to resolve performance issues with 
+> swiotlb bounce buffer. If you have some other suggestions,welcome.
 
-That's lame as it needs to be patched differently once ARM64 gains
-support. What about the below?
+Is this what you want?
 
-Thanks,
+https://lore.kernel.org/linux-iommu/20210510095026.3477496-1-tientzu@chromium.org/
 
-        tglx
----
---- a/arch/x86/include/asm/vdso/clocksource.h
-+++ b/arch/x86/include/asm/vdso/clocksource.h
-@@ -7,4 +7,6 @@
- 	VDSO_CLOCKMODE_PVCLOCK,	\
- 	VDSO_CLOCKMODE_HVCLOCK
- 
-+#define HAVE_VDSO_CLOCKMODE_HVCLOCK
-+
- #endif /* __ASM_VDSO_CLOCKSOURCE_H */
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -419,7 +419,7 @@ static void resume_hv_clock_tsc(struct c
- 	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
- }
- 
--#ifdef VDSO_CLOCKMODE_HVCLOCK
-+#ifdef HAVE_VDSO_CLOCKMODE_HVCLOCK
- static int hv_cs_enable(struct clocksource *cs)
- {
- 	vclocks_set_used(VDSO_CLOCKMODE_HVCLOCK);
-@@ -435,7 +435,7 @@ static struct clocksource hyperv_cs_tsc
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
- 	.suspend= suspend_hv_clock_tsc,
- 	.resume	= resume_hv_clock_tsc,
--#ifdef VDSO_CLOCKMODE_HVCLOCK
-+#ifdef HAVE_VDSO_CLOCKMODE_HVCLOCK
- 	.enable = hv_cs_enable,
- 	.vdso_clock_mode = VDSO_CLOCKMODE_HVCLOCK,
- #else
+Best regards,
+baolu
