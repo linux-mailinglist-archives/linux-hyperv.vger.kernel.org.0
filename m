@@ -2,101 +2,74 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E81FB37FA6C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 May 2021 17:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CDD238007E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 May 2021 00:48:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234688AbhEMPRn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 13 May 2021 11:17:43 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:41902 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234012AbhEMPRk (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 13 May 2021 11:17:40 -0400
-Received: by mail-wm1-f43.google.com with SMTP id o6-20020a05600c4fc6b029015ec06d5269so55128wmq.0;
-        Thu, 13 May 2021 08:16:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RzW3hfIwG8KNpIuYYvcN7wwNDPoH5ZcYrcAh7yRYkRA=;
-        b=RAQ0FITbYPJ3s/S0fnO2QYnqhd9zmu0tlxqH2Au+NxkrpVx86ailg40lSy74dkJGTx
-         Hg114bcs1nmHTr6CxHHdJilBe6hXvE29kB4aNyfW72WD/XYMU1lS0NwOFHASq/lMH8Fm
-         z3kJAjMqK/O7g+rn0ST4AGG9aS2BWuHlC4ImqqVySgwVZsworxwpOWqEQXOD9yq/eO1z
-         bGzCYTe3yhqt7+CLMXbJ0Ofy97gHl6cOgBgGAIWupQQhGhrMw2soI9SoahMv+Z6PgWkC
-         vPcV1oZfkPks6P0FsBNuR6lBqvUjuYdM5ewQ7UvWW8Qsp/dBvTKxpc8T3Vx6n6FcXzvV
-         dbSQ==
-X-Gm-Message-State: AOAM533WXbQD6eldlnP+bYNOts0pJE/fLu80lHlph/qHGMjvhL2jBiJs
-        J6YdeVzQw46u+yCCcd2ppuU=
-X-Google-Smtp-Source: ABdhPJyX1dK+4m59Uoq3vjk43fmBJYXqnMXrwlVKBN04PYK8JNzlDUGq18NLBqgIGq3DH6jXx9AiHg==
-X-Received: by 2002:a7b:c012:: with SMTP id c18mr4451930wmb.94.1620918988569;
-        Thu, 13 May 2021 08:16:28 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id s83sm2432436wms.16.2021.05.13.08.16.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 May 2021 08:16:27 -0700 (PDT)
-Date:   Thu, 13 May 2021 15:16:25 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, sudeep.holla@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
-        arnd@arndb.de, wei.liu@kernel.org, ardb@kernel.org,
-        daniel.lezcano@linaro.org, kys@microsoft.com
-Subject: Re: [PATCH v10 5/7] arm64: hyperv: Initialize hypervisor on boot
-Message-ID: <20210513151625.ww2cznl4myzwbvg5@liuwe-devbox-debian-v2>
-References: <1620841067-46606-1-git-send-email-mikelley@microsoft.com>
- <1620841067-46606-6-git-send-email-mikelley@microsoft.com>
+        id S230185AbhEMWts (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 13 May 2021 18:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230168AbhEMWts (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 13 May 2021 18:49:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 38FD9613CD;
+        Thu, 13 May 2021 22:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620946118;
+        bh=zjDn79+oCEcXN7/ywRSvtSC+DVZKzNYOS/1XNPve5xk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UlNmGjy+Sr9KgC8Jul/5pxK7lQ0Ewhr04wTCFE0VpWtnTelzSfXWoUgoSVRCCmtf+
+         FjcJtomzJWOJbRL22GadqACRdFcahUhlPtcKwiCNkkwACllCMz9xEf30u8ErqooM+q
+         21Pl8jDgT1Bk2cOt9uN65TeS/rT9b3jFdRDUDDMBkLSnuXC7szI4G4/KOcnNANi4cj
+         f4fPvbmR6/DvXLj1Bkl3lHknyRh3lmABpt8/Dmbzx4OUPXNB8XNkGL+hiRuWTbHTnR
+         R4FTbTtGyhyfw9bw5aC8yxC+xgItBG81ASwRWWdHMDO8o0sTICpllveNuKPTaj33YU
+         MSK2RiJYBFMLg==
+Date:   Thu, 13 May 2021 17:49:14 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] net: mana: Use struct_size() in kzalloc()
+Message-ID: <20210513224914.GA216478@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1620841067-46606-6-git-send-email-mikelley@microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, May 12, 2021 at 10:37:45AM -0700, Michael Kelley wrote:
-> Add ARM64-specific code to initialize the Hyper-V
-> hypervisor when booting as a guest VM. Provide functions
-> and data structures indicating hypervisor status that
-> are needed by VMbus driver.
-> 
-> This code is built only when CONFIG_HYPERV is enabled.
-> 
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-[...]
->  /*
->   * Declare calls to get and set Hyper-V VP register values on ARM64, which
->   * requires a hypercall.
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 61845c0..7b17d6a 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -49,6 +49,7 @@
->  #include <asm/traps.h>
->  #include <asm/efi.h>
->  #include <asm/xen/hypervisor.h>
-> +#include <asm/mshyperv.h>
->  #include <asm/mmu_context.h>
->  
->  static int num_standard_resources;
-> @@ -355,6 +356,9 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
->  	if (acpi_disabled)
->  		unflatten_device_tree();
->  
-> +	/* Do after acpi_boot_table_init() so local FADT is available */
-> +	hyperv_early_init();
-> +
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows
+that, in the worst scenario, could lead to heap overflows.
 
-Arm maintainers, this requires your attention. Thanks.
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-The rest is Hyper-V specific, feel free to skip that portion.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Wei.
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 04d067243457..46aee2c49f1b 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1387,8 +1387,7 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+ 
+ 	gc = gd->gdma_context;
+ 
+-	rxq = kzalloc(sizeof(*rxq) +
+-		      RX_BUFFERS_PER_QUEUE * sizeof(struct mana_recv_buf_oob),
++	rxq = kzalloc(struct_size(rxq, rx_oobs, RX_BUFFERS_PER_QUEUE),
+ 		      GFP_KERNEL);
+ 	if (!rxq)
+ 		return NULL;
+-- 
+2.27.0
 
->  	bootmem_init();
->  
->  	kasan_init();
-> -- 
-> 1.8.3.1
-> 
