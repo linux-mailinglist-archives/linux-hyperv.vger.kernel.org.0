@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00F1D380ED7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 May 2021 19:24:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FCA5380ED9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 May 2021 19:24:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbhENRZQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 May 2021 13:25:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49405 "EHLO
+        id S231250AbhENRZU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 May 2021 13:25:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40894 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230393AbhENRZQ (ORCPT
+        by vger.kernel.org with ESMTP id S235155AbhENRZT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 May 2021 13:25:16 -0400
+        Fri, 14 May 2021 13:25:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621013043;
+        s=mimecast20190719; t=1621013047;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5uvq7/HzHxoBsPRM6oyLa2n9DVz25WrcnXOXa28LPqo=;
-        b=hSv7EFkJELVGa3/P5dMCLGiMGaxh4QD8E4VgLexVRYQNvmORPfpZ6dBfyovzy6pndZ3Rnk
-        8Ieewhl3jqpW1iIJwODSvnrH/vHkWA6YnlDdhcX2AwMGZznYb9iParjWH4feG4z/a7aQei
-        CmAPT8bUD/SnzmuKSeBHzne8ypYzeJg=
+        bh=ulvwg2ZaPIw7oToA7TTsrb85Bhlj+6R6HqazJ1k8M40=;
+        b=iupD3UYXfvhVRHuMJ+xXQ0wfljY4JtsRCHz7Xf92Sh+eFFP03dfcoR9DKUbGDTh8lAR9pU
+        2+pWt3wmhtfpbMToDdubBR3GVmdqJK9jaFiDdga1EywU7Pmivm6lamcYmHDPsj/kI4Pvn1
+        lJtD3ow2x8UEAjxL2L5Eu9lckdRCLCc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-bmhtkxP6O3aGBDbCC145OQ-1; Fri, 14 May 2021 13:23:57 -0400
-X-MC-Unique: bmhtkxP6O3aGBDbCC145OQ-1
+ us-mta-50-OcdPAodxOoS1AkW-8Jin5A-1; Fri, 14 May 2021 13:24:06 -0400
+X-MC-Unique: OcdPAodxOoS1AkW-8Jin5A-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7731107ACE3;
-        Fri, 14 May 2021 17:23:54 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D179B8015DB;
+        Fri, 14 May 2021 17:24:03 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-114-113.ams2.redhat.com [10.36.114.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B3F61F4;
-        Fri, 14 May 2021 17:23:48 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F07801971B;
+        Fri, 14 May 2021 17:23:54 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     David Hildenbrand <david@redhat.com>,
@@ -57,9 +57,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         linux-hyperv@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v2 5/6] virtio-mem: use page_offline_(start|end) when setting PageOffline()
-Date:   Fri, 14 May 2021 19:22:46 +0200
-Message-Id: <20210514172247.176750-6-david@redhat.com>
+Subject: [PATCH v2 6/6] fs/proc/kcore: use page_offline_(freeze|thaw)
+Date:   Fri, 14 May 2021 19:22:47 +0200
+Message-Id: <20210514172247.176750-7-david@redhat.com>
 In-Reply-To: <20210514172247.176750-1-david@redhat.com>
 References: <20210514172247.176750-1-david@redhat.com>
 MIME-Version: 1.0
@@ -69,48 +69,60 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Let's properly use page_offline_(start|end) to synchronize setting
-PageOffline(), so we won't have valid page access to unplugged memory
-regions from /proc/kcore.
+Let's properly synchronize with drivers that set PageOffline().
+Unfreeze/thaw every now and then, so drivers that want to set PageOffline()
+can make progress.
 
-Existing balloon implementations usually allow reading inflated memory;
-doing so might result in unnecessary overhead in the hypervisor, which
-is currently the case with virtio-mem.
-
-For future virtio-mem use cases, it will be different when using shmem,
-huge pages, !anonymous private mappings, ... as backing storage for a VM.
-virtio-mem unplugged memory must no longer be accessed and access might
-result in undefined behavior. There will be a virtio spec extension to
-document this change, including a new feature flag indicating the
-changed behavior. We really don't want to race against PFN walkers
-reading random page content.
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/virtio/virtio_mem.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/proc/kcore.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 10ec60d81e84..dc2a2e2b2ff8 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -1065,6 +1065,7 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
- static void virtio_mem_set_fake_offline(unsigned long pfn,
- 					unsigned long nr_pages, bool onlined)
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index 92ff1e4436cb..982e694aae77 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -313,6 +313,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
  {
-+	page_offline_begin();
- 	for (; nr_pages--; pfn++) {
- 		struct page *page = pfn_to_page(pfn);
+ 	char *buf = file->private_data;
+ 	size_t phdrs_offset, notes_offset, data_offset;
++	size_t page_offline_frozen = 1;
+ 	size_t phdrs_len, notes_len;
+ 	struct kcore_list *m;
+ 	size_t tsz;
+@@ -322,6 +323,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 	int ret = 0;
  
-@@ -1075,6 +1076,7 @@ static void virtio_mem_set_fake_offline(unsigned long pfn,
- 			ClearPageReserved(page);
+ 	down_read(&kclist_lock);
++	/*
++	 * Don't race against drivers that set PageOffline() and expect no
++	 * further page access.
++	 */
++	page_offline_freeze();
+ 
+ 	get_kcore_size(&nphdr, &phdrs_len, &notes_len, &data_offset);
+ 	phdrs_offset = sizeof(struct elfhdr);
+@@ -480,6 +486,12 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 			}
  		}
- 	}
-+	page_offline_end();
- }
  
- /*
++		if (page_offline_frozen++ % MAX_ORDER_NR_PAGES == 0) {
++			page_offline_thaw();
++			cond_resched();
++			page_offline_freeze();
++		}
++
+ 		if (&m->list == &kclist_head) {
+ 			if (clear_user(buffer, tsz)) {
+ 				ret = -EFAULT;
+@@ -565,6 +577,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 	}
+ 
+ out:
++	page_offline_thaw();
+ 	up_read(&kclist_lock);
+ 	if (ret)
+ 		return ret;
 -- 
 2.31.1
 
