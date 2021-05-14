@@ -2,173 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4971838060A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 May 2021 11:19:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43C663809B5
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 May 2021 14:37:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231332AbhENJVD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 May 2021 05:21:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:45432 "EHLO foss.arm.com"
+        id S233398AbhENMi3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 May 2021 08:38:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:48980 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230000AbhENJVD (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 May 2021 05:21:03 -0400
+        id S232712AbhENMi2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 14 May 2021 08:38:28 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F09BA1480;
-        Fri, 14 May 2021 02:19:51 -0700 (PDT)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C13FB3F719;
-        Fri, 14 May 2021 02:19:48 -0700 (PDT)
-Date:   Fri, 14 May 2021 10:19:43 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20B38175D;
+        Fri, 14 May 2021 05:37:17 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.0.219])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85EBF3F73B;
+        Fri, 14 May 2021 05:37:14 -0700 (PDT)
+Date:   Fri, 14 May 2021 13:37:11 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     will@kernel.org, catalin.marinas@arm.com,
+        lorenzo.pieralisi@arm.com, sudeep.holla@arm.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [RFC v2 1/7] PCI: Introduce pci_host_bridge::domain_nr
-Message-ID: <20210514091943.GA13309@lpieralisi>
-References: <20210503144635.2297386-1-boqun.feng@gmail.com>
- <20210503144635.2297386-2-boqun.feng@gmail.com>
- <YJDYrn7Nt+xyHbyr@kernel.org>
- <20210506105245.GA26351@lpieralisi>
- <YJk4vdJnOxHvlFLT@boqun-archlinux>
+        linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
+        arnd@arndb.de, wei.liu@kernel.org, ardb@kernel.org,
+        daniel.lezcano@linaro.org, kys@microsoft.com
+Subject: Re: [PATCH v10 3/7] arm64: hyperv: Add Hyper-V
+ clocksource/clockevent support
+Message-ID: <20210514123711.GB30645@C02TD0UTHF1T.local>
+References: <1620841067-46606-1-git-send-email-mikelley@microsoft.com>
+ <1620841067-46606-4-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YJk4vdJnOxHvlFLT@boqun-archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1620841067-46606-4-git-send-email-mikelley@microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 10, 2021 at 09:44:29PM +0800, Boqun Feng wrote:
-> [Copy Rob]
-> 
-> On Thu, May 06, 2021 at 11:52:45AM +0100, Lorenzo Pieralisi wrote:
-> > On Tue, May 04, 2021 at 08:16:30AM +0300, Mike Rapoport wrote:
-> > > On Mon, May 03, 2021 at 10:46:29PM +0800, Boqun Feng wrote:
-> > > > Currently we retrieve the PCI domain number of the host bridge from the
-> > > > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
-> > > > we have the information at PCI host bridge probing time, and it makes
-> > > > sense that we store it into pci_host_bridge. One benefit of doing so is
-> > > > the requirement for supporting PCI on Hyper-V for ARM64, because the
-> > > > host bridge of Hyper-V doesnt' have pci_config_window, whereas ARM64 is
-> > > > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
-> > > > number from pci_config_window on ARM64 Hyper-V guest.
-> > > > 
-> > > > As the preparation for ARM64 Hyper-V PCI support, we introduce the
-> > > > domain_nr in pci_host_bridge, and set it properly at probing time, then
-> > > > for PCI_DOMAINS_GENERIC=y archs, bus domain numbers are set by the
-> > > > bridge domain_nr.
-> > > > 
-> > > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > > > ---
-> > > >  arch/arm/kernel/bios32.c              |  2 ++
-> > > >  arch/arm/mach-dove/pcie.c             |  2 ++
-> > > >  arch/arm/mach-mv78xx0/pcie.c          |  2 ++
-> > > >  arch/arm/mach-orion5x/pci.c           |  2 ++
-> > > >  arch/arm64/kernel/pci.c               |  3 +--
-> > > >  arch/mips/pci/pci-legacy.c            |  2 ++
-> > > >  arch/mips/pci/pci-xtalk-bridge.c      |  2 ++
-> > > >  drivers/pci/controller/pci-ftpci100.c |  2 ++
-> > > >  drivers/pci/controller/pci-mvebu.c    |  2 ++
-> > > >  drivers/pci/pci.c                     |  4 ++--
-> > > >  drivers/pci/probe.c                   |  7 ++++++-
-> > > >  include/linux/pci.h                   | 11 ++++++++---
-> > > >  12 files changed, 33 insertions(+), 8 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-> > > > index e7ef2b5bea9c..4942cd681e41 100644
-> > > > --- a/arch/arm/kernel/bios32.c
-> > > > +++ b/arch/arm/kernel/bios32.c
-> > > > @@ -471,6 +471,8 @@ static void pcibios_init_hw(struct device *parent, struct hw_pci *hw,
-> > > >  				bridge->sysdata = sys;
-> > > >  				bridge->busnr = sys->busnr;
-> > > >  				bridge->ops = hw->ops;
-> > > > +				if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
-> > > > +					bridge->domain_nr = pci_bus_find_domain_nr(sys, parent);
-> > > >  
-> > > >  				ret = pci_scan_root_bus_bridge(bridge);
-> > > >  			}
-> > > > diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
-> > > > index ee91ac6b5ebf..92eb8484b49b 100644
-> > > > --- a/arch/arm/mach-dove/pcie.c
-> > > > +++ b/arch/arm/mach-dove/pcie.c
-> > > > @@ -167,6 +167,8 @@ dove_pcie_scan_bus(int nr, struct pci_host_bridge *bridge)
-> > > >  	bridge->sysdata = sys;
-> > > >  	bridge->busnr = sys->busnr;
-> > > >  	bridge->ops = &pcie_ops;
-> > > > +	if (IS_ENABLED(CONFIG_PCI_DOMAINS_GENERIC))
-> > > > +		bridge->domain_nr = pci_bus_find_domain_nr(sys, NULL);
-> > > 
-> > > The check for CONFIG_PCI_DOMAINS_GENERIC is excessive because there is a
-> > > stub for pci_bus_find_domain_nr().
-> > > 
-> > > I'm not an expert in PCI, but maybe the repeated assignment of
-> > > bridge->domain_nr can live in the generic code, say, in
-> > > pci_scan_root_bus_bridge(). E.g. it will set the domain_nr when it is zero.
-> > > 
-> > > >  
-> > 
-> > Yes, this churn should be avoided. We need a sentinel value to detect
-> > whether the domain_nr is invalid (0 is a valid domain) so generic code
-> > (ie pci_scan_root_bus_bridge() and friends) has to call generic
-> > functions to get it (pci_bus_find_domain_nr()).
-> > 
-> 
-> Agreed. Thank you all for the inputs.
-> 
-> According to [1], "PCI Conventional" has at most 256 PCI bus segments
-> and "PCI Express" has at most 65536 "PCI Segments Groups", so any value
-> outside [0, 65536] can be used as a sentinel. I'm planning to use -1
-> like:
-> 
-> 	#define PCI_DOMAIN_NR_NOT_SET (-1)
-> 
-> 	(in pci_alloc_host_bridge())
-> 	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
-> 
-> 	(in pci_register_host_bridge())
-> 	if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
-> 		bridge->domain_nr = pci_bus_find_domain_nr(...);
+Hi Michael,
 
-It should be fine. I'd move the check
+On Wed, May 12, 2021 at 10:37:43AM -0700, Michael Kelley wrote:
+> Add architecture specific definitions and functions needed
+> by the architecture independent Hyper-V clocksource driver.
+> Update the Hyper-V clocksource driver to be initialized
+> on ARM64.
 
-if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
+Previously we've said that for a clocksource we must use the architected
+counter, since that's necessary for things like the VDSO to work
+correctly and efficiently.
 
-in pci_bus_find_domain_nr()
+Given that, I'm a bit confused that we're registering a per-cpu
+clocksource that is in part based on the architected counter. Likewise,
+I don't entirely follow why it's necessary to PV the clock_event_device.
 
-to make the logic contained in there but that's a nit.
+Are the architected counter and timer reliable without this PV
+infrastructure? Why do we need to PV either of those?
 
-Lorenzo
+Thanks,
+Mark.
 
-> Thoughts?
 > 
-> Regards,
-> Boqun
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+>  arch/arm64/include/asm/mshyperv.h  | 12 ++++++++++++
+>  drivers/clocksource/hyperv_timer.c | 14 ++++++++++++++
+>  2 files changed, 26 insertions(+)
 > 
-> [1]: https://wiki.osdev.org/PCI_Express
+> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
+> index c448704..b17299c 100644
+> --- a/arch/arm64/include/asm/mshyperv.h
+> +++ b/arch/arm64/include/asm/mshyperv.h
+> @@ -21,6 +21,7 @@
+>  #include <linux/types.h>
+>  #include <linux/arm-smccc.h>
+>  #include <asm/hyperv-tlfs.h>
+> +#include <clocksource/arm_arch_timer.h>
+>  
+>  /*
+>   * Declare calls to get and set Hyper-V VP register values on ARM64, which
+> @@ -41,6 +42,17 @@ static inline u64 hv_get_register(unsigned int reg)
+>  	return hv_get_vpreg(reg);
+>  }
+>  
+> +/* Define the interrupt ID used by STIMER0 Direct Mode interrupts. This
+> + * value can't come from ACPI tables because it is needed before the
+> + * Linux ACPI subsystem is initialized.
+> + */
+> +#define HYPERV_STIMER0_VECTOR	31
+> +
+> +static inline u64 hv_get_raw_timer(void)
+> +{
+> +	return arch_timer_read_counter();
+> +}
+> +
+>  /* SMCCC hypercall parameters */
+>  #define HV_SMCCC_FUNC_NUMBER	1
+>  #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index 977fd05..270ad9c 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -569,3 +569,17 @@ void __init hv_init_clocksource(void)
+>  	hv_setup_sched_clock(read_hv_sched_clock_msr);
+>  }
+>  EXPORT_SYMBOL_GPL(hv_init_clocksource);
+> +
+> +/* Initialize everything on ARM64 */
+> +static int __init hyperv_timer_init(struct acpi_table_header *table)
+> +{
+> +	if (!hv_is_hyperv_initialized())
+> +		return -EINVAL;
+> +
+> +	hv_init_clocksource();
+> +	if (hv_stimer_alloc(true))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +TIMER_ACPI_DECLARE(hyperv, ACPI_SIG_GTDT, hyperv_timer_init);
+> -- 
+> 1.8.3.1
 > 
-> > We can implement it as a flag or function pointer in the struct
-> > pci_host_bridge, if the flag or function pointer is not set the
-> > generic pci_bus_find_domain_nr() should be called.
-> > 
-> > Lorenzo
