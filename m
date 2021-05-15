@@ -2,127 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FCA5380ED9
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 May 2021 19:24:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 174F038199C
+	for <lists+linux-hyperv@lfdr.de>; Sat, 15 May 2021 17:43:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbhENRZU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 May 2021 13:25:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40894 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235155AbhENRZT (ORCPT
+        id S232511AbhEOPow (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 15 May 2021 11:44:52 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:34515 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232397AbhEOPov (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 May 2021 13:25:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621013047;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ulvwg2ZaPIw7oToA7TTsrb85Bhlj+6R6HqazJ1k8M40=;
-        b=iupD3UYXfvhVRHuMJ+xXQ0wfljY4JtsRCHz7Xf92Sh+eFFP03dfcoR9DKUbGDTh8lAR9pU
-        2+pWt3wmhtfpbMToDdubBR3GVmdqJK9jaFiDdga1EywU7Pmivm6lamcYmHDPsj/kI4Pvn1
-        lJtD3ow2x8UEAjxL2L5Eu9lckdRCLCc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-50-OcdPAodxOoS1AkW-8Jin5A-1; Fri, 14 May 2021 13:24:06 -0400
-X-MC-Unique: OcdPAodxOoS1AkW-8Jin5A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D179B8015DB;
-        Fri, 14 May 2021 17:24:03 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-113.ams2.redhat.com [10.36.114.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F07801971B;
-        Fri, 14 May 2021 17:23:54 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Steven Price <steven.price@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Aili Yao <yaoaili@kingsoft.com>, Jiri Bohac <jbohac@suse.cz>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sat, 15 May 2021 11:44:51 -0400
+Received: by mail-wr1-f45.google.com with SMTP id r12so2057272wrp.1;
+        Sat, 15 May 2021 08:43:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aLi+q4+fITY/9vJzQNwPaaIzGyuxiBdUvBE5MpOoWqA=;
+        b=kaCtcRJISOVi5irJyVUQ/DY48QcdMP/zJlJov8oG36lvsowTd8ByHvcrFE5b2dLUH+
+         FeyrGgrsvrV/wiU7dKe6I4iJYfdjTCZIpIK0vHx/XYghNjOnK53zAqbvgVnvnjjWiV1s
+         oMhlqQiCnsLuzZzEwA5x1BlDF+LJfFrb0zmm0FldQkDOUmdHwk4kAKjcbXAE41w+irQY
+         ZGh2F4ukdlAb9RcxQnzFlyA7bu0jO5bBIjrlnXhguGh01FX/wI610iFpgrZWYEKD5w/F
+         dSb5s5gS3kHkTH6XR7IAFXRh+W/uQo63B7otSYTTRdh9ZsmTZBge3s3zgu10WRyJjrS3
+         Cjpg==
+X-Gm-Message-State: AOAM533UcG8ttl0ia234tI6TQ5r59JkOMdd/2E3XgcsFonqPCgCxzkaU
+        vPrJDZam6oeso145IUVOkQM=
+X-Google-Smtp-Source: ABdhPJxWLARebnf0UuBVKBoovk0lZhZcIw7lSCtN63JpxQfYyi3h9ZufjT6v//lLFu93+ZFZ6V40qw==
+X-Received: by 2002:a5d:59a4:: with SMTP id p4mr9857559wrr.248.1621093417758;
+        Sat, 15 May 2021 08:43:37 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id r11sm3644090wrp.46.2021.05.15.08.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 May 2021 08:43:37 -0700 (PDT)
+Date:   Sat, 15 May 2021 15:43:35 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     vkuznets <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mohammed Gamal <mgamal@redhat.com>,
         Wei Liu <wei.liu@kernel.org>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v2 6/6] fs/proc/kcore: use page_offline_(freeze|thaw)
-Date:   Fri, 14 May 2021 19:22:47 +0200
-Message-Id: <20210514172247.176750-7-david@redhat.com>
-In-Reply-To: <20210514172247.176750-1-david@redhat.com>
-References: <20210514172247.176750-1-david@redhat.com>
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] clocksource/drivers/hyper-v: Re-enable
+ VDSO_CLOCKMODE_HVCLOCK on X86
+Message-ID: <20210515154335.lr4hrbcmt25u7m45@liuwe-devbox-debian-v2>
+References: <20210513073246.1715070-1-vkuznets@redhat.com>
+ <MWHPR21MB15932C5EC2FA75D50B268951D7519@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB15932C5EC2FA75D50B268951D7519@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Let's properly synchronize with drivers that set PageOffline().
-Unfreeze/thaw every now and then, so drivers that want to set PageOffline()
-can make progress.
+On Thu, May 13, 2021 at 01:29:12PM +0000, Michael Kelley wrote:
+> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, May 13, 2021 12:33 AM
+> > 
+> > Mohammed reports (https://bugzilla.kernel.org/show_bug.cgi?id=213029)
+> > the commit e4ab4658f1cf ("clocksource/drivers/hyper-v: Handle vDSO
+> > differences inline") broke vDSO on x86. The problem appears to be that
+> > VDSO_CLOCKMODE_HVCLOCK is an enum value in 'enum vdso_clock_mode' and
+> > '#ifdef VDSO_CLOCKMODE_HVCLOCK' branch evaluates to false (it is not
+> > a define). Use a dedicated HAVE_VDSO_CLOCKMODE_HVCLOCK define instead.
+> > 
+> > Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> > Reported-by: Mohammed Gamal <mgamal@redhat.com>
+> > Fixes: e4ab4658f1cf ("clocksource/drivers/hyper-v: Handle vDSO differences inline")
+> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+[...]
+> 
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> 
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- fs/proc/kcore.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index 92ff1e4436cb..982e694aae77 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -313,6 +313,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- {
- 	char *buf = file->private_data;
- 	size_t phdrs_offset, notes_offset, data_offset;
-+	size_t page_offline_frozen = 1;
- 	size_t phdrs_len, notes_len;
- 	struct kcore_list *m;
- 	size_t tsz;
-@@ -322,6 +323,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 	int ret = 0;
- 
- 	down_read(&kclist_lock);
-+	/*
-+	 * Don't race against drivers that set PageOffline() and expect no
-+	 * further page access.
-+	 */
-+	page_offline_freeze();
- 
- 	get_kcore_size(&nphdr, &phdrs_len, &notes_len, &data_offset);
- 	phdrs_offset = sizeof(struct elfhdr);
-@@ -480,6 +486,12 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 			}
- 		}
- 
-+		if (page_offline_frozen++ % MAX_ORDER_NR_PAGES == 0) {
-+			page_offline_thaw();
-+			cond_resched();
-+			page_offline_freeze();
-+		}
-+
- 		if (&m->list == &kclist_head) {
- 			if (clear_user(buffer, tsz)) {
- 				ret = -EFAULT;
-@@ -565,6 +577,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 	}
- 
- out:
-+	page_offline_thaw();
- 	up_read(&kclist_lock);
- 	if (ret)
- 		return ret;
--- 
-2.31.1
-
+Applied to hyperv-fixes. Thanks.
