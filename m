@@ -2,171 +2,154 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82969382DF2
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 May 2021 15:51:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2977538359C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 May 2021 17:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237608AbhEQNwc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 May 2021 09:52:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41692 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237567AbhEQNw0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 May 2021 09:52:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6077AAF11;
-        Mon, 17 May 2021 13:51:09 +0000 (UTC)
-Subject: Re: [PATCH v4 2/3] drm/hyperv: Handle feature change message from
- device
-To:     Deepak Rawat <drawat.floss@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-References: <20210517115922.8033-1-drawat.floss@gmail.com>
- <20210517115922.8033-2-drawat.floss@gmail.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <917a36ef-8db3-16c5-21f1-7bd9aa7ee706@suse.de>
-Date:   Mon, 17 May 2021 15:51:08 +0200
+        id S242563AbhEQPXX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 May 2021 11:23:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35346 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244251AbhEQPTv (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 17 May 2021 11:19:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621264714;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JBnQo/J9oz8gnM35x+7tBsgRWTaGkCDWee+DmJ5pKGg=;
+        b=N8Y5eBgPTAIroqeRUsNbC1DBfQjo20AjmjUZMdw9It/E1+icZZo+9BSttLP7/56S1ERCEf
+        1yvuJyQ9p1uBPOuTK7vJL3D8Xza6R1MyQgtlNmgQ2Sb2oCeZxNDewf3VmZHWtVywCln/rn
+        CrpuVldox98ATxXIZOM3wHq6HaGTJv4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-436-LDb9kWRZM0OkMDhje3Oqcw-1; Mon, 17 May 2021 11:18:33 -0400
+X-MC-Unique: LDb9kWRZM0OkMDhje3Oqcw-1
+Received: by mail-wr1-f72.google.com with SMTP id p11-20020adfc38b0000b0290111f48b8adfso487617wrf.7
+        for <linux-hyperv@vger.kernel.org>; Mon, 17 May 2021 08:18:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=JBnQo/J9oz8gnM35x+7tBsgRWTaGkCDWee+DmJ5pKGg=;
+        b=RbR+d0yKAkJ2STL4uRV3aVq5bF/T+bj7UOYh4+5Q0hFq9k0yzAnauwigQsc4IG5s/L
+         hMrVxiaeg11Tpd9v2he0k0yy0GxoeOd9kehX1SDc4HbI+P7fKckuhzngUODpftzYIAtd
+         yK8pYF3SzlLwqIgDQjX7hf4k+OFHBISaVhXH/V6ZdqIJf6JCyTxR8B9rQbsHUAJzP+wB
+         9n7VMgzb3CnAKTMHYegYGSH10gr6o/5IqAGBY9voZwuYTraS1xqpyE/KbiAwdLqxM1jx
+         y7sTMOdMVfi0tJoHu0rjEQqcxjCyWfdFUi0pFWXDFBgChyh/+QWQju+3Br85q/FZqTWb
+         7XzQ==
+X-Gm-Message-State: AOAM530hphvFDn9CCqc40pM2x2RpHk54k6yj0aJ65Z1+4EUJF52hK8/K
+        gkn9VbMB7t3kDCOYfRBJBGYO1HsEN+/Bt8ujcZX3fcmz8etlCf2VYZWtzNc0avgxhtcEKUPMZ9J
+        UwFFdL4runn+m4Y3r9+m6omgA
+X-Received: by 2002:a5d:5306:: with SMTP id e6mr231542wrv.324.1621264711825;
+        Mon, 17 May 2021 08:18:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz9pgHxSB1CvA6bP+5A102Vw3q+wpKkw7H+TASfr6okGY07XFAE7cdx9Tfb7WlCOrjNYsTg6Q==
+X-Received: by 2002:a5d:5306:: with SMTP id e6mr231511wrv.324.1621264711624;
+        Mon, 17 May 2021 08:18:31 -0700 (PDT)
+Received: from [192.168.3.132] (p5b0c6833.dip0.t-ipconnect.de. [91.12.104.51])
+        by smtp.gmail.com with ESMTPSA id g206sm5661736wme.16.2021.05.17.08.18.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 May 2021 08:18:31 -0700 (PDT)
+Subject: Re: [PATCH v2 4/6] mm: introduce page_offline_(begin|end|freeze|thaw)
+ to synchronize setting PageOffline()
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Steven Price <steven.price@arm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Aili Yao <yaoaili@kingsoft.com>, Jiri Bohac <jbohac@suse.cz>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20210514172247.176750-1-david@redhat.com>
+ <20210514172247.176750-5-david@redhat.com> <YKIQfCjq13dSMHOs@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Message-ID: <016e96c9-82e6-3259-7a99-8627c3be11c6@redhat.com>
+Date:   Mon, 17 May 2021 17:18:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210517115922.8033-2-drawat.floss@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="876RRYCtmUYI4TgYg1M28rTMBdnHMKzlO"
+In-Reply-To: <YKIQfCjq13dSMHOs@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---876RRYCtmUYI4TgYg1M28rTMBdnHMKzlO
-Content-Type: multipart/mixed; boundary="Snc8cqlPpJR2QKdTuMz4CBgcTrZmeYBvJ";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Deepak Rawat <drawat.floss@gmail.com>, dri-devel@lists.freedesktop.org,
- linux-hyperv@vger.kernel.org
-Cc: Dexuan Cui <decui@microsoft.com>, Michael Kelley <mikelley@microsoft.com>
-Message-ID: <917a36ef-8db3-16c5-21f1-7bd9aa7ee706@suse.de>
-Subject: Re: [PATCH v4 2/3] drm/hyperv: Handle feature change message from
- device
-References: <20210517115922.8033-1-drawat.floss@gmail.com>
- <20210517115922.8033-2-drawat.floss@gmail.com>
-In-Reply-To: <20210517115922.8033-2-drawat.floss@gmail.com>
+On 17.05.21 08:43, Mike Rapoport wrote:
+> On Fri, May 14, 2021 at 07:22:45PM +0200, David Hildenbrand wrote:
+>> A driver might set a page logically offline -- PageOffline() -- and
+>> turn the page inaccessible in the hypervisor; after that, access to page
+>> content can be fatal. One example is virtio-mem; while unplugged memory
+>> -- marked as PageOffline() can currently be read in the hypervisor, this
+>> will no longer be the case in the future; for example, when having
+>> a virtio-mem device backed by huge pages in the hypervisor.
+>>
+>> Some special PFN walkers -- i.e., /proc/kcore -- read content of random
+>> pages after checking PageOffline(); however, these PFN walkers can race
+>> with drivers that set PageOffline().
+>>
+>> Let's introduce page_offline_(begin|end|freeze|thaw) for
+>> synchronizing.
+>>
+>> page_offline_freeze()/page_offline_thaw() allows for a subsystem to
+>> synchronize with such drivers, achieving that a page cannot be set
+>> PageOffline() while frozen.
+>>
+>> page_offline_begin()/page_offline_end() is used by drivers that care about
+>> such races when setting a page PageOffline().
+>>
+>> For simplicity, use a rwsem for now; neither drivers nor users are
+>> performance sensitive.
+>>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> One nit below, otherwise
+> 
+> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> 
+>> ---
+>>   include/linux/page-flags.h | 10 ++++++++++
+>>   mm/util.c                  | 40 ++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 50 insertions(+)
+>>
+>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>> index daed82744f4b..ea2df9a247b3 100644
+>> --- a/include/linux/page-flags.h
+>> +++ b/include/linux/page-flags.h
+>> @@ -769,9 +769,19 @@ PAGE_TYPE_OPS(Buddy, buddy)
+>>    * relies on this feature is aware that re-onlining the memory block will
+>>    * require to re-set the pages PageOffline() and not giving them to the
+>>    * buddy via online_page_callback_t.
+>> + *
+>> + * There are drivers that mark a page PageOffline() and do not expect any
+> 
+> Maybe "and expect there won't be any further access"...
+> 
 
---Snc8cqlPpJR2QKdTuMz4CBgcTrZmeYBvJ
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Thanks, makes sense.
 
+I'll wait a bit before I resend.
 
+-- 
+Thanks,
 
-Am 17.05.21 um 13:59 schrieb Deepak Rawat:
-> Virtual device inform if screen update is needed or not with
-> SYNTHVID_FEATURE_CHANGE message. Handle this message to set dirt_needed=
+David / dhildenb
 
-> flag.
->=20
-> Suggested-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Deepak Rawat <drawat.floss@gmail.com>
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
->   drivers/gpu/drm/hyperv/hyperv_drm.h       | 1 +
->   drivers/gpu/drm/hyperv/hyperv_drm_drv.c   | 2 ++
->   drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 7 +++++++
->   3 files changed, 10 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm.h b/drivers/gpu/drm/hype=
-rv/hyperv_drm.h
-> index e1d1fdea96f2..886add4f9cd0 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm.h
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
-> @@ -29,6 +29,7 @@ struct hyperv_drm_device {
->   	struct completion wait;
->   	u32 synthvid_version;
->   	u32 mmio_megabytes;
-> +	bool dirt_needed;
->  =20
->   	u8 init_buf[VMBUS_MAX_PACKET_SIZE];
->   	u8 recv_buf[VMBUS_MAX_PACKET_SIZE];
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/=
-hyperv/hyperv_drm_drv.c
-> index 68a6ba91a486..8e6ff86c471a 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> @@ -201,6 +201,8 @@ static int hyperv_vmbus_probe(struct hv_device *hde=
-v,
->   	if (ret)
->   		drm_warn(dev, "Failed to update vram location.\n");
->  =20
-> +	hv->dirt_needed =3D true;
-> +
->   	ret =3D hyperv_mode_config_init(hv);
->   	if (ret)
->   		goto err_vmbus_close;
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/dr=
-m/hyperv/hyperv_drm_proto.c
-> index 700870b243fe..6fff24b40974 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> @@ -301,8 +301,12 @@ int hyperv_update_situation(struct hv_device *hdev=
-, u8 active, u32 bpp,
->  =20
->   int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect *rect)=
-
->   {
-> +	struct hyperv_drm_device *hv =3D hv_get_drvdata(hdev);
->   	struct synthvid_msg msg;
->  =20
-> +	if (!hv->dirt_needed)
-> +		return 0;
-> +
->   	memset(&msg, 0, sizeof(struct synthvid_msg));
->  =20
->   	msg.vid_hdr.type =3D SYNTHVID_DIRT;
-> @@ -387,6 +391,9 @@ static void hyperv_receive_sub(struct hv_device *hd=
-ev)
->   		complete(&hv->wait);
->   		return;
->   	}
-> +
-> +	if (msg->vid_hdr.type =3D=3D SYNTHVID_FEATURE_CHANGE)
-> +		hv->dirt_needed =3D msg->feature_chg.is_dirt_needed;
->   }
->  =20
->   static void hyperv_receive(void *ctx)
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---Snc8cqlPpJR2QKdTuMz4CBgcTrZmeYBvJ--
-
---876RRYCtmUYI4TgYg1M28rTMBdnHMKzlO
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmCidMwFAwAAAAAACgkQlh/E3EQov+DF
-FxAAidwCE+/73KSotR2dlSbhgCOM9bYwaCRf+jS6NUcBMP7WJo0ALQcPnZQXlKzB8300RIl6Fsb2
-/6euzj6aUTj0Zgf/tkfEiBiPof2AJXMseIDVpK8D/2XQ6xwFkug9WEV8M1fSMgBtEcLMgj7Oyh1m
-Bxe4llxEs1jwML+hXkSWFz2g478m7EN1t3MlSOr8g2EFndu2EbJQf7tEoH9akCXSgxhpwV8l3Sr2
-j3wuymFDtrDUK/h79pE+2f/wu50D/a+G52/22VYbYlghCDetJ9siLp6FQ2wkDO/0gvBDN1RlUECL
-dEY4Qed03FIaLxULfXABCQnBU39nGquMC5f5VWShU4dpTJrQAvEd+mXHaga09uGW2ppVa3Qj1tOQ
-FqzT7/BgAQHVrO+ezEfkvQlReEZSWy2snOgbX14Z15ftBnBwigW7EzCmTbAr4JzHRRtrfYRbieb1
-k/hcflYG5l41lnGAA4fM0Kvt1vGt/fXYkoJgL/JbfjuZdOakAxmYVGBuWyjheB4thhLdYHm2VG58
-zATm0gVqWJQEVGq3y3OvFy7EWepbT0KbiNZoMIuTFw7nISzCoYhHhDOO4dpEo5cQ9vcuJCjEoDp8
-SA5CN5prSxU/KmZvm1ueJsXEVOtIjJIi2Rz+Bn/jLo3fXqGn6nKpdNLU1Yfz6nsAj2pYpfbItYwH
-Lyw=
-=sSso
------END PGP SIGNATURE-----
-
---876RRYCtmUYI4TgYg1M28rTMBdnHMKzlO--
