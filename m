@@ -2,124 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 242923824A1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 May 2021 08:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0110382B66
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 May 2021 13:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233778AbhEQGpt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 May 2021 02:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43896 "EHLO mail.kernel.org"
+        id S229681AbhEQLqM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 May 2021 07:46:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:49076 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233763AbhEQGpt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 May 2021 02:45:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6480561241;
-        Mon, 17 May 2021 06:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621233873;
-        bh=T9ZQTSZNUgScjjscUGeUbBchpa/DhX2GQEJ7bdtNzBA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ObtoQIRNWxRguTgHnVfCVu7AKOk3Iw7wF8fqwXQR/rPc0nGO5+s6yg3D0U2vm3aT7
-         XNy69ebRGLwVhrw9OWXJc0sPi4ha8KBWwsP8N1fFaZRMnjxf53cZ73/ij16KbQsw7l
-         qZLKTKAD/Y2WbMMKFozt11phpM+mqIuImeNnmHBOt55cZXZ/9Ln9YjnZfxM0uI2IHE
-         dpF29d0QZOKhpr05D/dOT1ho7DzutPkIeIrZw0sR6BleZy18PGvtN0RG57oGn8V+uR
-         Pyn+1fmOk1a++kAEZEhqjiQGECWaRP/TYpyn+ShcWYJbNSGpgi59bEt9AD/EQ3j0cB
-         RDY5jYDTRUnqQ==
-Date:   Mon, 17 May 2021 09:44:21 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Steven Price <steven.price@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Aili Yao <yaoaili@kingsoft.com>, Jiri Bohac <jbohac@suse.cz>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 6/6] fs/proc/kcore: use page_offline_(freeze|thaw)
-Message-ID: <YKIQxXpp6AFGRUQ5@kernel.org>
-References: <20210514172247.176750-1-david@redhat.com>
- <20210514172247.176750-7-david@redhat.com>
+        id S229445AbhEQLqM (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 17 May 2021 07:46:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DD3B1042;
+        Mon, 17 May 2021 04:44:55 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.3.85])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 845F73F73D;
+        Mon, 17 May 2021 04:44:52 -0700 (PDT)
+Date:   Mon, 17 May 2021 12:44:49 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "will@kernel.org" <will@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: Re: [PATCH v10 2/7] arm64: hyperv: Add Hyper-V hypercall and
+ register access utilities
+Message-ID: <20210517114449.GB62656@C02TD0UTHF1T.local>
+References: <1620841067-46606-1-git-send-email-mikelley@microsoft.com>
+ <1620841067-46606-3-git-send-email-mikelley@microsoft.com>
+ <20210514125243.GC30645@C02TD0UTHF1T.local>
+ <MWHPR21MB1593A7625285A3E3F376B352D7509@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210514172247.176750-7-david@redhat.com>
+In-Reply-To: <MWHPR21MB1593A7625285A3E3F376B352D7509@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, May 14, 2021 at 07:22:47PM +0200, David Hildenbrand wrote:
-> Let's properly synchronize with drivers that set PageOffline().
-> Unfreeze/thaw every now and then, so drivers that want to set PageOffline()
-> can make progress.
+On Fri, May 14, 2021 at 03:14:41PM +0000, Michael Kelley wrote:
+> From: Mark Rutland <mark.rutland@arm.com> Sent: Friday, May 14, 2021 5:53 AM
+> > 
+> > On Wed, May 12, 2021 at 10:37:42AM -0700, Michael Kelley wrote:
+> > > hyperv-tlfs.h defines Hyper-V interfaces from the Hyper-V Top Level
+> > > Functional Spec (TLFS), and #includes the architecture-independent
+> > > part of hyperv-tlfs.h in include/asm-generic.  The published TLFS
+> > > is distinctly oriented to x86/x64, so the ARM64-specific
+> > > hyperv-tlfs.h includes information for ARM64 that is not yet formally
+> > > published. The TLFS is available here:
+> > >
+> > >   docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
+> > >
+> > > mshyperv.h defines Linux-specific structures and routines for
+> > > interacting with Hyper-V on ARM64, and #includes the architecture-
+> > > independent part of mshyperv.h in include/asm-generic.
+> > >
+> > > Use these definitions to provide utility functions to make
+> > > Hyper-V hypercalls and to get and set Hyper-V provided
+> > > registers associated with a virtual processor.
+> > >
+> > > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> > > Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> > > ---
+> > >  MAINTAINERS                          |   3 +
+> > >  arch/arm64/Kbuild                    |   1 +
+> > >  arch/arm64/hyperv/Makefile           |   2 +
+> > >  arch/arm64/hyperv/hv_core.c          | 130 +++++++++++++++++++++++++++++++++++
+> > >  arch/arm64/include/asm/hyperv-tlfs.h |  69 +++++++++++++++++++
+> > >  arch/arm64/include/asm/mshyperv.h    |  54 +++++++++++++++
+> > >  6 files changed, 259 insertions(+)
+> > >  create mode 100644 arch/arm64/hyperv/Makefile
+> > >  create mode 100644 arch/arm64/hyperv/hv_core.c
+> > >  create mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
+> > >  create mode 100644 arch/arm64/include/asm/mshyperv.h
+> > 
+> > > +/*
+> > > + * hv_do_hypercall- Invoke the specified hypercall
+> > > + */
+> > > +u64 hv_do_hypercall(u64 control, void *input, void *output)
+> > > +{
+> > > +	struct arm_smccc_res	res;
+> > > +	u64			input_address;
+> > > +	u64			output_address;
+> > > +
+> > > +	input_address = input ? virt_to_phys(input) : 0;
+> > > +	output_address = output ? virt_to_phys(output) : 0;
+> > 
+> > I may have asked this before, but are `input` and `output` always linear
+> > map pointers, or can they ever be vmalloc pointers?
+> > 
+> > Otherwise, this looks fine to me.
 > 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> The caller must ensure that hypercall arguments are aligned to
+> 4 Kbytes, and no larger than 4 Kbytes, since that's the page size
+> used by Hyper-V regardless of the guest page size.  A per-CPU
+> 4 Kbyte memory area (hyperv_pcpu_input_arg) meeting these
+> requirements is pre-allocated that callers can use for this purpose.
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+What I was trying to find out was how that was allocated, as vmalloc()'d
+pointers aren't legitimate to pass to virt_to_phys().
 
-> ---
->  fs/proc/kcore.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-> index 92ff1e4436cb..982e694aae77 100644
-> --- a/fs/proc/kcore.c
-> +++ b/fs/proc/kcore.c
-> @@ -313,6 +313,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
->  {
->  	char *buf = file->private_data;
->  	size_t phdrs_offset, notes_offset, data_offset;
-> +	size_t page_offline_frozen = 1;
->  	size_t phdrs_len, notes_len;
->  	struct kcore_list *m;
->  	size_t tsz;
-> @@ -322,6 +323,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
->  	int ret = 0;
->  
->  	down_read(&kclist_lock);
-> +	/*
-> +	 * Don't race against drivers that set PageOffline() and expect no
-> +	 * further page access.
-> +	 */
-> +	page_offline_freeze();
->  
->  	get_kcore_size(&nphdr, &phdrs_len, &notes_len, &data_offset);
->  	phdrs_offset = sizeof(struct elfhdr);
-> @@ -480,6 +486,12 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
->  			}
->  		}
->  
-> +		if (page_offline_frozen++ % MAX_ORDER_NR_PAGES == 0) {
-> +			page_offline_thaw();
-> +			cond_resched();
-> +			page_offline_freeze();
-> +		}
-> +
->  		if (&m->list == &kclist_head) {
->  			if (clear_user(buffer, tsz)) {
->  				ret = -EFAULT;
-> @@ -565,6 +577,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
->  	}
->  
->  out:
-> +	page_offline_thaw();
->  	up_read(&kclist_lock);
->  	if (ret)
->  		return ret;
-> -- 
-> 2.31.1
-> 
+From scanning ahead to patch 5, I see that memory comes from kmalloc(),
+and so it is legitimate to use virt_to_phys().
 
--- 
-Sincerely yours,
-Mike.
+
+I see; and from patch 5 I see that memory come from kmalloc(), and will
+therefore be part of the linear map, and so virt_to_phys() is
+legitimate.
+
+What I was asking here was how that memory was allocated. So long as
+those are the only buffers used, this looks fine to me.
+
+Thanks,
+Mark.
