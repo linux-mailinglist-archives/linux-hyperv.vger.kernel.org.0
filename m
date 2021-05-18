@@ -2,116 +2,122 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8206D3870EB
+	by mail.lfdr.de (Postfix) with ESMTP id 873153870EF
 	for <lists+linux-hyperv@lfdr.de>; Tue, 18 May 2021 07:09:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239240AbhEREaQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 May 2021 00:30:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:40698 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235926AbhEREaQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 May 2021 00:30:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AECA31B;
-        Mon, 17 May 2021 21:28:58 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 185D53F73D;
-        Mon, 17 May 2021 21:28:57 -0700 (PDT)
-Subject: Re: [PATCH v3 13/14] PCI/MSI: Document the various ways of ending up
- with NO_MSI
-To:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Thierry Reding <treding@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bharat Kumar Gogada <bharatku@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, kernel-team@android.com
-References: <20210330151145.997953-1-maz@kernel.org>
- <20210330151145.997953-14-maz@kernel.org>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <b5a5a6d8-6ffc-8c5c-c5b1-fb4f5616069f@arm.com>
-Date:   Mon, 17 May 2021 23:28:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S238609AbhEREqy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 May 2021 00:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239559AbhEREqv (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 18 May 2021 00:46:51 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45F0C061573
+        for <linux-hyperv@vger.kernel.org>; Mon, 17 May 2021 21:45:23 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d16so6489907pfn.12
+        for <linux-hyperv@vger.kernel.org>; Mon, 17 May 2021 21:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=0uTzP8bfDg5xGex7AZegUPneohvxogqMnDFj+4FfEqE=;
+        b=Uj+rH+KO3nKG0sTNvSoZfr7oAMEbLiCRfx+dI+YvS9ViwW7vMU7R/wEbCx/DAwVRbV
+         vnoJqVOlfgufisoz2PjrsiqgH3nn+6Aq0eogD+djtDgyvqlEVR7okpF/Aw1nXMmkRHyZ
+         9jmypi/wehgzQ6+VqWowcE17ZlB4N7qT8SbPvG4lAVYT+tg5uEiGG3a5jMW3XbnPiU9d
+         NVY6IU8uLIH5ovIHavoWVTl5Lp+mG0RWOrItfiLD5Cg0Z49+7JJc7B8OGkQZRtbj05kc
+         KEhMVTddJ/Vyfqi3K2sq+sqbTXA1hD3JcZntT69xc3v5khcvPg8WJpmJh7cgT69gGz0v
+         0KVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=0uTzP8bfDg5xGex7AZegUPneohvxogqMnDFj+4FfEqE=;
+        b=TyJjDHeemX9lRDWdyrN7xLdXIPSYR2PgR3Z7IhUBNKiAJT0l1afYqmmzZ5s0tZi3Ne
+         fv/5Ove3nB9CLs07t2SLYXJ+wioIBdV5kO8jq5rUwTbDnVVUJ3xCMQxgUwjXwaNXlJcO
+         cn72V9eMLAu2ZTtoJalZBxMoKIc3yYlNNzZ2eqn7LEQpoFWn1JF2GFAei7+J6EBlinPi
+         iafVjLu/3riAyyoYytOPa5mzt9Z1YHUMA1ajx8bGfDaHhPo0exNIXVgvaNgljNBUY6qP
+         O9dqqaBa/lN4SvaOHJRTmEYNSXhe7QUinJd5ApvYW5Y7SNHCakkmYtkFGYQWjJweNoYn
+         DNrA==
+X-Gm-Message-State: AOAM532uLEFoH5DkxuXGz6YHutnga4vC9FpkF2/VUq+IhbjO+i0uuSc0
+        P8yro+o57F6DaomvNwypJyQ=
+X-Google-Smtp-Source: ABdhPJxDSbqeG9WueFoP/nL0tlNMtKISInDtOmc+0gdFC6b1lAntImV5v77eugpnt0GOi+wxUrDnIg==
+X-Received: by 2002:a63:d45:: with SMTP id 5mr3147016pgn.72.1621313123515;
+        Mon, 17 May 2021 21:45:23 -0700 (PDT)
+Received: from [192.168.1.7] ([106.212.13.216])
+        by smtp.gmail.com with ESMTPSA id np1sm806576pjb.13.2021.05.17.21.45.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 May 2021 21:45:23 -0700 (PDT)
+Message-ID: <5476fe6d3ad2fd243b58778e5d9397aeb85f1a97.camel@gmail.com>
+Subject: Re: [PATCH v4 3/3] MAINTAINERS: Add maintainer for hyperv video
+ device
+From:   Deepak Rawat <drawat.floss@gmail.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        Dexuan Cui <decui@microsoft.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Michael Kelley <mikelley@microsoft.com>
+Date:   Mon, 17 May 2021 21:45:22 -0700
+In-Reply-To: <20210517172503.ytpuucwphtwhcgsi@liuwe-devbox-debian-v2>
+References: <20210517115922.8033-1-drawat.floss@gmail.com>
+         <20210517115922.8033-3-drawat.floss@gmail.com>
+         <20210517172503.ytpuucwphtwhcgsi@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.1 
 MIME-Version: 1.0
-In-Reply-To: <20210330151145.997953-14-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
-
-
-On 3/30/21 10:11 AM, Marc Zyngier wrote:
-> We have now three ways of ending up with NO_MSI being set.
-> Document them.
+On Mon, 2021-05-17 at 17:25 +0000, Wei Liu wrote:
+> On Mon, May 17, 2021 at 04:59:22AM -0700, Deepak Rawat wrote:
+> > Maintainer for hyperv synthetic video device.
+> > 
+> > Signed-off-by: Deepak Rawat <drawat.floss@gmail.com>
+> > ---
+> >  MAINTAINERS | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index bd7aff0c120f..261342551406 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -6077,6 +6077,14 @@ T:       git
+> > git://anongit.freedesktop.org/drm/drm-misc
+> >  F:     Documentation/devicetree/bindings/display/hisilicon/
+> >  F:     drivers/gpu/drm/hisilicon/
+> >  
+> > +DRM DRIVER FOR HYPERV SYNTHETIC VIDEO DEVICE
+> > +M:     Deepak Rawat <drawat.floss@gmail.com>
+> > +L:     linux-hyperv@vger.kernel.org
+> > +L:     dri-devel@lists.freedesktop.org
+> > +S:     Maintained
+> > +T:     git git://anongit.freedesktop.org/drm/drm-misc
+> > +F:     drivers/gpu/drm/hyperv
+> > +
+> >  DRM DRIVERS FOR LIMA
+> >  M:     Qiang Yu <yuq825@gmail.com>
+> >  L:     dri-devel@lists.freedesktop.org
+> > @@ -6223,6 +6231,14 @@ T:       git
+> > git://anongit.freedesktop.org/drm/drm-misc
+> >  F:     Documentation/devicetree/bindings/display/xlnx/
+> >  F:     drivers/gpu/drm/xlnx/
+> >  
+> > +DRM DRIVERS FOR ZTE ZX
+> > +M:     Shawn Guo <shawnguo@kernel.org>
+> > +L:     dri-devel@lists.freedesktop.org
+> > +S:     Maintained
+> > +T:     git git://anongit.freedesktop.org/drm/drm-misc
+> > +F:     Documentation/devicetree/bindings/display/zte,vou.txt
+> > +F:     drivers/gpu/drm/zte/
+> > +
 > 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->   drivers/pci/msi.c | 11 +++++++++--
->   1 file changed, 9 insertions(+), 2 deletions(-)
+> What is the section about? Is this a mistake?
+
+yes this is a mistake during rebase. Will send correct patch shortly.
+
 > 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index d9c73c173c14..217dc9f0231f 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -871,8 +871,15 @@ static int pci_msi_supported(struct pci_dev *dev, int nvec)
->   	 * Any bridge which does NOT route MSI transactions from its
->   	 * secondary bus to its primary bus must set NO_MSI flag on
->   	 * the secondary pci_bus.
-> -	 * We expect only arch-specific PCI host bus controller driver
-> -	 * or quirks for specific PCI bridges to be setting NO_MSI.
-> +	 *
-> +	 * The NO_MSI flag can either be set directly by:
-> +	 * - arch-specific PCI host bus controller drivers (deprecated)
-> +	 * - quirks for specific PCI bridges
-> +	 *
-> +	 * or indirectly by platform-specific PCI host bridge drivers by
-> +	 * advertising the 'msi_domain' property, which results in
-> +	 * the NO_MSI flag when no MSI domain is found for this bridge
-> +	 * at probe time.
+> Wei.
 
-I have an ACPI machine with a gicv2 (no m), and a MSI region that isn't 
-described by ACPI because its non-standard. In the past this tended to 
-work because PCIe device drivers would fall back to legacy pci intx 
-silently. But, with 5.13, it seems this series now triggers the 
-WARN_ON_ONCE() in arch_setup_msi_irq, because duh, no MSI support.
-
-Everything of course continues to work, it just gets this ugly splat on 
-bootup telling me basically the machine doesn't support MSIs. So, I 
-considered a few patches, including just basically setting nomsi if 
-gicv2 && acpi, or eek a host bridge quirk.
-
-None of these seem great, so how can this be fixed?
-
-Thanks,
-
-
-
-
->   	 */
->   	for (bus = dev->bus; bus; bus = bus->parent)
->   		if (bus->bus_flags & PCI_BUS_FLAGS_NO_MSI)
-> 
 
