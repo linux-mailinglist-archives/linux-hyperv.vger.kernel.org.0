@@ -2,96 +2,130 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8815A3893EA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 May 2021 18:38:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB78389D27
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 May 2021 07:41:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355274AbhESQj0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 19 May 2021 12:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230239AbhESQjY (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 19 May 2021 12:39:24 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F5DC06175F
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 May 2021 09:38:04 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id n6-20020a17090ac686b029015d2f7aeea8so3830474pjt.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 May 2021 09:38:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v+2QREdqW2HXIwZy26xgUhGlmKXeoRbwSm4QcONeIpU=;
-        b=pHUUvOpLxOsB9gtmQbg684yPP+rRIWe0/r/Ncbzz4fu7JNy3d5QMGVq42G+3AEAkSo
-         6vc7oKhxqvTRZ7ViOa34GHKWwI/xWro1rWaWiMcsj1eoWOaxTOU6oKed95XASr+o6A20
-         1SVk/ud52YHiDEarh8WdIwT/nPzVf9MAwei0wKmdEavIyDRdbXDGehsxI7p7ElsXzJ3O
-         aj+LcnwDdmz3a3gBhJ+t84FCltWv7ED9NQss75E/o5cN5gVd1A5cGxv1x0bA8zXKlu7i
-         FW8gw30hLc7TsERPCjAegD7/Hagetz9hwzsxiHOMXxn9YKGF0u+nMRXvQ4L+K7cuLyj3
-         Cdmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v+2QREdqW2HXIwZy26xgUhGlmKXeoRbwSm4QcONeIpU=;
-        b=iHS5oDkRPDxcUnpyQN9/kaD7euCy79om+OzQNxqBSz3SKNku1uH9KJsU8Xp1mfTjpi
-         47gr8VXMFTXtvO1IDLuIREFEEziZF2unw9OswnQMUleolAPa3lsZ+XRjhwkjHgHvCKgw
-         JH9J9EtvoXev87gVi7ncfPjGneZn9f4tgKo9hA1c7AZx7bz9bkmmm55PI0up15geMQ9P
-         /ngZlulrWHMLv+mfelhlMOBEVUBzuSjL90Sfnfoqo6D1wXj9rHP1jaLNLJWdO4LV2k2a
-         Wjx42bGUuQzPooJApI64Aa3vJOoklV7ldAAVop3RbZmWTrk+8LgXgySpcRUvMxpz0uqi
-         wbog==
-X-Gm-Message-State: AOAM530RjeyDb2j/LarFvq1oLwA6GAYeztQeoeGOrHkLWGZUEbFRp9P7
-        bJkFuDOKUE+mn544aCcj8F0=
-X-Google-Smtp-Source: ABdhPJxnB/0xdDQwHlxTqGn1NC7r4k7Qfc9yYV97bbmsiNLU9A7Z8xr/P/iKC6w4Um8yS3gR753qhA==
-X-Received: by 2002:a17:902:dacf:b029:ee:ac0e:d0fe with SMTP id q15-20020a170902dacfb02900eeac0ed0femr465178plx.30.1621442284613;
-        Wed, 19 May 2021 09:38:04 -0700 (PDT)
-Received: from arch2.localdomain ([182.68.112.122])
-        by smtp.gmail.com with ESMTPSA id y1sm1442606pfn.13.2021.05.19.09.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 09:38:04 -0700 (PDT)
-From:   Deepak Rawat <drawat.floss@gmail.com>
-To:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Deepak Rawat <drawat.floss@gmail.com>
-Subject: [PATCH v5 3/3] MAINTAINERS: Add maintainer for hyperv video device
-Date:   Wed, 19 May 2021 09:37:39 -0700
-Message-Id: <20210519163739.1312-3-drawat.floss@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210519163739.1312-1-drawat.floss@gmail.com>
+        id S229534AbhETFmX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 May 2021 01:42:23 -0400
+Received: from mail-mw2nam10on2107.outbound.protection.outlook.com ([40.107.94.107]:33505
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229526AbhETFmW (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 20 May 2021 01:42:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RJgxC0qxEILOkFA5njF6biQyii7jgJ/9dYdc8ZEKJhP+KqVBGSMI3Rmt5JeBB/soj86UzQMqviVN5Q8tDa6uYrIJ5bkk07mgAE6IjZXqbG28OgAiFaw51NYVlboUYZzh75rUJQyruJAIBLPgGLscmdQH0isMoF1WxD2UAaL53NNMvyVFaaCZPxDPmr6VFUja/zAA8JqdLFTGHR4AcdZfErnn3svXCkRMhJEKlQuC2JQCrg/MCE2FmPoOMw7Pw4CBLeTOQwrTeYTEqpyOCe2WAgAQInBLbec/NVU2aeLJ4UkVxfJ7JI8jLohwoPwxgriCLUjBTWQyMVqbpfEedyF4Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EO3Mlry7/WNESUKl9MeiH6OEBfMHqCz/Uu/Va401R8g=;
+ b=eRLAsFaQIUKCShIGeLenQqfshvc3HZQ4XtkpWNvHrKdAK+iAmOLvWwNon+Nsju8ixvcCv7hSY904BtWtp6U1/0F9fbw9Qj4XDOezltVutNuSDm1gur9cBV4fRMUiEXAZKyJzmxN33yQGXLEhbC08YHOMaOIHdxTDqCvSqrDrqbuakU0AOd0WcZ6jLxQuYjkwO84LdBJbG2x8jXqS5pxBuqQNeGDetBMPdlCYSqgIEoP6huEroV8YFSqfkS+oFS8xTkaUaPqVJfrw22muJJj/hs0Z3tY2zZXUTaRwGyNpgFWfWTvP7judTS8oYn2KpgtU1kTsW5EhLmWx+LmthxneyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EO3Mlry7/WNESUKl9MeiH6OEBfMHqCz/Uu/Va401R8g=;
+ b=Cllj6muSEJV62M3pMeLxxjQQzmMGJNLstl0xwOWBbrE4okYYS580syI00RMINfFGp002I0c5rAVzS2cuKXGMB2J6xrGfQOLa6wK0BSQ9Uz100IPLE5gpfWbVv6nulUUUOPijUE7Sfc7qKZzVMlg2hYRnYbhy9PzoRCTSgINHC8k=
+Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
+ (2603:10b6:302:10::24) by MWHPR2101MB0809.namprd21.prod.outlook.com
+ (2603:10b6:301:76::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.11; Thu, 20 May
+ 2021 05:41:00 +0000
+Received: from MW2PR2101MB0892.namprd21.prod.outlook.com
+ ([fe80::c8f7:4efa:d81a:a7f5]) by MW2PR2101MB0892.namprd21.prod.outlook.com
+ ([fe80::c8f7:4efa:d81a:a7f5%5]) with mapi id 15.20.4173.012; Thu, 20 May 2021
+ 05:41:00 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Deepak Rawat <drawat.floss@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     Thomas Zimmermann <tzimmermann@suse.de>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH v5 1/3] drm/hyperv: Add DRM driver for hyperv synthetic
+ video device
+Thread-Topic: [PATCH v5 1/3] drm/hyperv: Add DRM driver for hyperv synthetic
+ video device
+Thread-Index: AQHXTM1U5lorNEtIAUG8A6X7sQ43Iqrr2pSw
+Date:   Thu, 20 May 2021 05:41:00 +0000
+Message-ID: <MW2PR2101MB08920209B00F7692FA83BBD0BF2A9@MW2PR2101MB0892.namprd21.prod.outlook.com>
 References: <20210519163739.1312-1-drawat.floss@gmail.com>
+In-Reply-To: <20210519163739.1312-1-drawat.floss@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0a61c073-cdc3-46e3-bc79-3635bdf396b8;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-05-20T05:36:32Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [2601:600:8b00:6b90:9d8f:5c96:de46:7c93]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d7f3cf38-c237-49c6-8438-08d91b51d95b
+x-ms-traffictypediagnostic: MWHPR2101MB0809:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2101MB0809F6EDB19D747F3C08A02EBF2A9@MWHPR2101MB0809.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1247;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: w2OHtCp3kzUhAqXQspOfQDYpWCW4KgDuDzFJqqjNfQV30c6TRJyorgniVBejwLrdMDhXOqKWl5H7Gd0j/zhn2xDnhOHWeFarskudRoHrEbr1aCR+uSyIkLPrDsWLbcI+3imZEz9FLsYUBRfS0mQnTA0dnDeXW7KrelH1JIdcM5JoI0GBZW/Gl33fN/qxoDjxPb4enm0D4ho9ky3eAEdfNxIsBNCG2Z/lB+XxfOgCCECotHcStMt54ntMuhQNkhJhjH4Q1jussTljTJEJYJpqZM4zWgLHMD3xO0BiwvRUxWaT0Xoh247iBVSm++WRgVp02+2CgM3puQLHi+siXFp2UNwot9KmG5HlYk/V/XxToWnYaxBpIdRFYKdlnfbKIkbJArDvcnWpzt7h9d9bf/k0X45+wxAMQpwcrK9v99EUoCWzi33WC4Xe6d/4OhQhhlUQr1MpAv1rQS2/fOOIXerWI7NKq65gFwjl9OLcWAHc6idX6a2Yw475NciLlHgXH1aGRlDTsZRoBkDbFJxcHU21xRC1yq2C5wjKV6V/M0LWNPltAGe9eWmGC1QymCWEnlfYYpVpOKJEN3HJqjhANCfD1JCGWiNnbw1Ay/P7PJoTI4Q=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB0892.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(71200400001)(122000001)(2906002)(8676002)(82960400001)(82950400001)(38100700002)(10290500003)(4326008)(8936002)(478600001)(4744005)(5660300002)(52536014)(83380400001)(107886003)(86362001)(66446008)(76116006)(64756008)(66476007)(110136005)(66946007)(54906003)(66556008)(316002)(9686003)(186003)(55016002)(7696005)(6506007)(8990500004)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 2
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?GeQgSEidKebF7fo384Bbo1n9Y7DOlegqksn2st/6uNKJMxTiB4WbYmifRPBk?=
+ =?us-ascii?Q?olneP3zAYSaK+wOjXa486T9joNmRXx56ohVEfZt6tDmAdkXZP3R6cWmiTjuW?=
+ =?us-ascii?Q?dxeiOW1O9ipOx1OZ8enQSX3bmL5I9sS0KUt805/Jv1fY6BjEfJoH4QG9C/Pt?=
+ =?us-ascii?Q?4LR/vKeO8Ro7iKEQ4lTVCVspKQrsYmDjezBcL1IqUQzQXt41UoIgYBa4+0i5?=
+ =?us-ascii?Q?dt+YDNK1e7pjUTUwbGoSTnLhmvTYcV8nzwHTkaNt+VPpDEPdWDOMceFf/gMd?=
+ =?us-ascii?Q?6kV1AW1LkLETPQIs8+J/7DvVPePpFNo8vpz8RF3qCTtpX0KLvxqHHFL7pCYh?=
+ =?us-ascii?Q?vCbt6SE/WaLolUxZMIJufy2/SIH14PqRrguj2qOkwVAwJgTDBDMU0e9ElcZX?=
+ =?us-ascii?Q?DOH8SE2qh/nYK4YsMt7RbXuRINgVEmdWSDoYptBMxFYV4pY4Re9CJScP9gcL?=
+ =?us-ascii?Q?LUJABItbZNN/IztQ1yvxKnxh7n6EjjeXZ8Kz4N4CgA+J9F9vax/TrxcZsqnn?=
+ =?us-ascii?Q?Q8qUov4rGzRUtA9DojDo0910reEisyOX3tOPmFYPdv/VT/wi66/ZN44paJnO?=
+ =?us-ascii?Q?+sKXRbvCa9t2hpRJnjHJVEIr/65AbgrTDMbblamPPuqKahWFvMQT7BfnCnml?=
+ =?us-ascii?Q?Qajb0i58Dg6pT1UkkRedIo6BjG+KNg3RxLemOxx3x/vZkI0FEi+gz0gOEDYt?=
+ =?us-ascii?Q?kBD21P+FiqwPlJyk6d+523K9iy+vMK/xA8sIqnoxF5OUDQOZiac/Cei7gFgo?=
+ =?us-ascii?Q?aFHLYGXsyXj5p9omLILPWHAfpq/lzY2rD+9Wn84/Ex7f/3e4z173aIJbQQdE?=
+ =?us-ascii?Q?iUy9Bax0jVMpLsKk594kGh1nKGqMzdawMiB1qV+xDSNfdBTvrfbyGrusHYb/?=
+ =?us-ascii?Q?LJ3Uwwdp0ksi4IkpIYEJei15Ou2VM0pos1bEfr3n5jZAjLO31CK30ZwSbenQ?=
+ =?us-ascii?Q?D+Bx/V+0wGRgh8tY/op+JzOmedyGKBeoVlar2e6w?=
+x-ms-exchange-antispam-messagedata-1: l62AkmtbLeHi+DGbt5r4pv1f/j3Z3/EjDNIm9NsTRziweQM3OM+Uo7geNzzCJWyD/IypwCkAFONrXjvSMdWvnK0Q3eUm7DZmJCdEmCp9ujCOgu+zbLc2rJvHkFCjv3FjDy1jNxYm4Wqbo2YUQh8dJ+xgFcHxSnnzvo3V4xieOREl+iMn+XL2U2mAC45388htncFPmpj86hetX/OJ/qqhXWh2n1CI8HRF4MBOnDpJBbfhlEbjUVCp+gzhHC6OT/zKBXsbj+DsQCoEfvEjLVq7HWr8Gi951icNfJUxmY3yuKuG/IDW6uvS8Htj7rMI3pSF0rlCt+VncDZFtw2D2DXRSGSbfptWeqXU1vL4QeIk7mR4psHniYYq2Di4oL/nGMJqWOf7hpadkFvNyO5DevyqR0so
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB0892.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7f3cf38-c237-49c6-8438-08d91b51d95b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2021 05:41:00.1730
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rlaP5BRvQ2ibaBXSkyTfKwGs97P3jxs394lOWG5HRJ5DNScAg8+dYioIAxLdhM/MkzeMLDAU91oRsyA5p6vYtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2101MB0809
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Maintainer for hyperv synthetic video device.
+> From: Deepak Rawat <drawat.floss@gmail.com>
+> Sent: Wednesday, May 19, 2021 9:38 AM
+> ...
+> +static int hyperv_vmbus_suspend(struct hv_device *hdev)
+> +{
+> +	struct drm_device *dev =3D hv_get_drvdata(hdev);
+> +	int ret;
+> +
+> +	ret =3D drm_mode_config_helper_suspend(dev);
 
-Signed-off-by: Deepak Rawat <drawat.floss@gmail.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+If 'ret' is not zero, return immediately?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 41f2b2b85b6d..dbe4ed540e11 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6084,6 +6084,14 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
- F:	Documentation/devicetree/bindings/display/hisilicon/
- F:	drivers/gpu/drm/hisilicon/
- 
-+DRM DRIVER FOR HYPERV SYNTHETIC VIDEO DEVICE
-+M:	Deepak Rawat <drawat.floss@gmail.com>
-+L:	linux-hyperv@vger.kernel.org
-+L:	dri-devel@lists.freedesktop.org
-+S:	Maintained
-+T:	git git://anongit.freedesktop.org/drm/drm-misc
-+F:	drivers/gpu/drm/hyperv
-+
- DRM DRIVERS FOR LIMA
- M:	Qiang Yu <yuq825@gmail.com>
- L:	dri-devel@lists.freedesktop.org
--- 
-2.31.1
+> +
+> +	vmbus_close(hdev->channel);
+> +
+> +	return ret;
+> +}
+
+
+> +MODULE_DESCRIPTION("DRM driver for hyperv synthetic video device");
+
+s/hyperv/Hyper-V ?
 
