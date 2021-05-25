@@ -2,148 +2,129 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA31A390577
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 May 2021 17:30:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 959C2390CE3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 May 2021 01:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232544AbhEYPbz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 May 2021 11:31:55 -0400
-Received: from mail-mw2nam10on2102.outbound.protection.outlook.com ([40.107.94.102]:18497
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        id S229790AbhEYXUl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 25 May 2021 19:20:41 -0400
+Received: from mail-dm3nam07on2130.outbound.protection.outlook.com ([40.107.95.130]:31713
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230433AbhEYPbz (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 May 2021 11:31:55 -0400
+        id S229898AbhEYXUk (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 25 May 2021 19:20:40 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KdQ4bVkDS7AagEqROW3TNtbDZ0s+oEgQyp5q+3uAUSQ1TCYe3ZvUdbydxiblavg9tv4c6yMQKAnVNhKREPTLRM4t+OTjGM4T2oJe02tKPCfATQpogsR7hy0XvBTlK99zM1iGrP7/Q7Gh2Hgvfb26fBStpp2LiXDdNEfBaJ5zJ9r8WAINJbjEsagTYVtTXQNCx7MP6saGhEPwM9bS4fBkI59RLwMoSC8n5PZe5al0ec9HH3wurMhPHS8ll2U6MfGq9TwzlRTNuqAohICFLLOlL//KO8x+mQluNjqRRMz2uVd7Xqn2bfOyy4jFWCQZ2yyS9WJS7zYr4O1WBuOKFXTXEQ==
+ b=nWfobxOBCqs9xwUWD+r08PTptHY5jweYsnxJ5MuE1Z2+lpiWtf5Nmnu86OHzAR9W6NwUv+kfujY7iAneqmZ/Jtb1e0KLcE0RFl4iYnAv25AumuRE/tSct1XeAcrBqLYMUEaTp/HqDQVRQaWjogcq4omMbpx7V96p9m9qkN/Dc9kZsF5tG1f6gtTkr1qcgiuOGimpRpXTTO2YqBAyYV0NOqAMu9q4JoAu3iws6oRgq50onBNDa/QaaRRNH6OA4uF4luNm/rydF7L/U78qfKl8x/FhrYmiZEYi2wefgfEfugdzcaDtDHMaxuNcfiz+N0+tHLYc5/ro9/Uq//NcBBqVXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3VCyOnErMtOb7IZDlwR5sSsRhxriC7v5cP1B6xmkzvI=;
- b=Chm0eBe75ExH0AGnxQSQ9ZB7gW/bDPKgCinKCYqrpECwVtFMpdTPv30edm5rzN3kRYWMt36L1HqhDNDdwVGkE7USuKI6JHcnST3RI/znUlYEZaDVo31fBj8mw1i4BIVJ8YO+3It07n0OLgm+Y9CoSUbQFCcaQPu41eOxmVTKnEwP7mhNWx6aw+RaEiUNdqIhMGUX05uNZXEojzHjruUy+Eg2sbapKHoZTsjFivIAeHwuHJ7Nnp9nmE4sr3CTXt7ElIlez4b8UGO7m1gCxYIX3K0J9VuzqmXyeJLWAg1ifVkDPDFNfhjIu19EaxPZINSnYbfnv85yaYKnUmbh7y+dVw==
+ bh=svjoeYaBhHsXP0Li7OBgbi31w+7emAFmit6UsEZE7oY=;
+ b=I7CSx1SquRW7XppRvTWIbhox05DNftN7xz+JI6CNaNkama30EjmocedPiXLk1fiHOBXR6GD5T3PQsTDeNVf+T447ZaNvX4IiYFI8WT/6C7T3T1cVVr09vjzxoN/2JWyBPT+DFtbO3p/4l43HTlNPnpuGycWBk+cTXLBxh6l62jxB2N4af6mnDMRxb1AL4qCgQX5LJ1v7Uib2SdKiL65Wz9asVy4/hWb9APDtwjYWlIC/Zy3yHj5eVnjcaEDalt6RFY5ZWGwjRSk0s7qCnusJgIUbphAD+Vs4+iWlPeJGT1kA9Rs89Qt4YQOgtFxNBmzKS1Z8XmI/Bj1gx1T6NoZN/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3VCyOnErMtOb7IZDlwR5sSsRhxriC7v5cP1B6xmkzvI=;
- b=h42TrfWML54oUOXBHoGKpQeoazJ61OUwHGjIsodR0Pphjco0mKKPS5PUXi4S/jVquQy6V5SaT9dlnwezjbzEUmAHMeIIeX3VlFgtl4v8v1niPJm+oMKFc82JgbJXAAGdvJmSC4kZEc0ezLQyJPK+DW86nYQ58lQyZe+p4OZjDfY=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW2PR2101MB1017.namprd21.prod.outlook.com (2603:10b6:302:4::30) with
+ bh=svjoeYaBhHsXP0Li7OBgbi31w+7emAFmit6UsEZE7oY=;
+ b=CMGzMTTAaYFNAhK75tVHiCv4EX+msfhOOr650Fc3b2hHeZnk/q72BJtqLymgrOGnMZSQLZjN+H0OKJ5cq4X6Sw+HcT/DTZft6MN03Gz930zkHpvgoc2JhsOT/PLioNwwmkjoDOIu70gKQUhi1/T52nrRD/22InLKS/e+zYYyAUA=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1340.namprd21.prod.outlook.com (2603:10b6:5:175::19)
+ by DM5PR2101MB1110.namprd21.prod.outlook.com (2603:10b6:4:a5::39) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.2; Tue, 25 May
- 2021 15:30:24 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::47a:2e77:f07b:81b8]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::47a:2e77:f07b:81b8%8]) with mapi id 15.20.4173.018; Tue, 25 May 2021
- 15:30:24 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        KY Srinivasan <kys@microsoft.com>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] drivers: hv: Fix missing error code in vmbus_connect()
-Thread-Topic: [PATCH] drivers: hv: Fix missing error code in vmbus_connect()
-Thread-Index: AQHXUVTydTxWZp+dOECapPEQCy9fJKr0UlDA
-Date:   Tue, 25 May 2021 15:30:22 +0000
-Message-ID: <MWHPR21MB1593D8362CD8FBA6E0E3612CD7259@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <1621940321-72353-1-git-send-email-jiapeng.chong@linux.alibaba.com>
-In-Reply-To: <1621940321-72353-1-git-send-email-jiapeng.chong@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=451421a0-b8ab-41a4-935b-0d4e0a669d90;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-05-25T15:27:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: linux.alibaba.com; dkim=none (message not signed)
- header.d=none;linux.alibaba.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e78f6c7-126a-4c9a-8333-08d91f9203e1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB1017C0357C993DE7884C5916D7259@MW2PR2101MB1017.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: O+lf7MkuU63F9/cejeebAaPxB8G1G25bUj+gERewQ2YCEbRgL5Qksl1sGtjeJJVHhXcQYMTF2u02v9mGwoZkEGnhfq9Qa5jQaL1wq9oKKjGPaAsA5Zb8CovYk63IGPNYJ/Ppawx05Ed8QIlI4GcJwhJuUFVIfUnp4Phr2zQYr2RGPgi3nhMSOdiSK44npG2NzskZQP65G8AaZ/kKqKwE+AzqycObIwwM4RhNAEaXR+vIONewDaVjoMJT6f6x+RAv0yTCYJRHvBYQWZ+gNWljRlES5uXFywpFDu0aGSRx/cDZgQNiWg46BM3261LuZsCO0tZcD6XGackf8JrJxI+Nkk7z1/dgzcB3V3CJFX2VBSqI0eByN04itkareOQfsF7KVLa9oqef3X6gSlb2WTdeyYxLBKQg9mTM/nGO10Y3yqa4MxtugD7aJnGEy/UrrZFDd+WW7B6PG2ItrTJWeajpqwYhFeXo/bPa9aSqSrNKtpUv8w2yWtyiinJSb9HTCZD5AjIwuIbWlLSkucfDgZ/VVa9YxdgMaLwiR0Op4Br/yOBsd6dpVS12ybMMT4Tynm7QkGR20Z1QuC3fi2t34zvMyOUH/v+KFlvclJ6IUsT5ewY=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(26005)(6506007)(82960400001)(55016002)(82950400001)(186003)(6636002)(7696005)(54906003)(66476007)(316002)(33656002)(2906002)(52536014)(83380400001)(122000001)(478600001)(76116006)(8676002)(4326008)(8990500004)(64756008)(4744005)(8936002)(9686003)(10290500003)(71200400001)(86362001)(110136005)(38100700002)(5660300002)(66446008)(66946007)(66556008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 2
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?tWT0EhlB32RevDaALO3NWqLIedkjtjqG0s+litmh4q0kyK/MjT67tFJEEWlL?=
- =?us-ascii?Q?STOOdRrHs1I8jM1CbQespRKLC9yDi9rEKHYB3gV6KG+O4tD+zZBPD+i9l1sV?=
- =?us-ascii?Q?JxxY/YXSPgldZV7xzfzWn+mZRFxZtOOB+QsHj/oZ6P6f7LYltjP6Prs26/1j?=
- =?us-ascii?Q?J5G/mMLkobB4c5i1KeV0qicPZ6cWHD0Ntla1jCN2CAB7XV9Wu6bFu7u30fFy?=
- =?us-ascii?Q?OZHSgNgJKfK3XkbS0VMSsiXR6y8wPrvKDeQeKwu6nAvjlE5loq0mSGsQBVxs?=
- =?us-ascii?Q?0P3S0jPrkPCZeJyfi5s5RZhvoJuO0Q3zruCF1es25gMgrXSfzg5UgJn4p4Z4?=
- =?us-ascii?Q?zYmYntMR4A2/+LUQB8+VSUIYQ+/Slbk8gzeOOplPGrbRmJDbKrFdQA+yz+UQ?=
- =?us-ascii?Q?orPmj6iHbKUyO5UL8cYJiFrMFynaU1hr1ZGOSpB9KurygpT7ejiRi1OJ1pzx?=
- =?us-ascii?Q?KjPFNrYTkeB8TVsjABlXwkZaJWH/57NJgqgO7ZkZISim+82N1bZbUs+2hVoj?=
- =?us-ascii?Q?TZgvD+Zq+QEkzEmQVlVPfWRdyOQ4OIsWGXGUSIPowFazTUN3wxkrWxULjU+N?=
- =?us-ascii?Q?y3phcLtW68+pSri1xY/g+Z/09hEBmEV6sBlTOPyiGJxqNZ8hOiWeJ17RueRZ?=
- =?us-ascii?Q?HlLAlHlyQO/hJc2cvf58MT6T2exrQ4ltg16Y7VUko1M4wxDYdjyfnRjIljjJ?=
- =?us-ascii?Q?+9zP5Aissu0c58Yg/IzOe/q/g8+yBvkmulwEGZaB7qVcn8H+5+8/vxmh9Zgx?=
- =?us-ascii?Q?a8TMDlxwfCireO/r8x0w9y3e9y+jkZoVIFwJbxe+sge1yxURqjhBha4E+pY7?=
- =?us-ascii?Q?AhswgdMF3qTfJRIaAlFlmMus3cDth4tTAdGSnRJs04udJxXuWhRGEWU1gKhe?=
- =?us-ascii?Q?goQVOpzg/VgXbyuKRSZnv0vRJ4sw91PJnXeOc8n2P9Ed6J9ShaBznPZJ6ryo?=
- =?us-ascii?Q?ChAgt8ISw55eoOckDpBPrUSK9bvK4UtrHcEvOlCv?=
-x-ms-exchange-antispam-messagedata-1: zXCvGp4M2i+KA71dLNDZdqTvWXwG9sIbEpEGWT8dFhzFrO2l6tXU9UFjwqDn+Ewq8p0L3oBWiz9lmm3JOKO4VyKso07t8MF8WheFpxdn196nHb95QWkeYYsZnp0BokxBgl395fCISRNrYZm+gA6UHa6ymUg3I/05M6dl4plPBygYjP99Fztus1wv9LZULB3EQA7eThLFN1QrAA7yN6pzok51cf+TuhACEjF81wG+a6k+8zH0wysZWHGCd4S4QC7luOWoXSwKUv4EVbgzvEq5xDl+qlTvlb/kEpWd9TkM35yZKvzwPXueu8w8yd7gQ3cLmOi98xmoyIS7oVHZI4JGdhAw
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.15; Tue, 25 May
+ 2021 23:19:08 +0000
+Received: from DM6PR21MB1340.namprd21.prod.outlook.com
+ ([fe80::6410:fb1:42e6:a795]) by DM6PR21MB1340.namprd21.prod.outlook.com
+ ([fe80::6410:fb1:42e6:a795%9]) with mapi id 15.20.4195.008; Tue, 25 May 2021
+ 23:19:03 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, olaf@aepfle.de,
+        vkuznets@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] pci-hyperv: Add check for hyperv_initialized in init_hv_pci_drv()
+Date:   Tue, 25 May 2021 16:17:33 -0700
+Message-Id: <1621984653-1210-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-Originating-IP: [13.77.154.182]
+X-ClientProxiedBy: MW4PR03CA0127.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::12) To DM6PR21MB1340.namprd21.prod.outlook.com
+ (2603:10b6:5:175::19)
 MIME-Version: 1.0
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MW4PR03CA0127.namprd03.prod.outlook.com (2603:10b6:303:8c::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend Transport; Tue, 25 May 2021 23:19:02 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d556ac6d-c25b-4138-2f18-08d91fd37bec
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB1110FF713D6DB9BC74F39621AC259@DM5PR2101MB1110.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6FIXMLDEAaXD4Fj3B+RReAOBjMcwE+7jb1kl+qUqIWFsXR52VeC8+v4XXAc9+VyjMEN+ZHFppIT8mLhFk3WvX3yeEW0kOk9SbvNzkNr/zBt3jDxRaT9groSJPuHAeT7zapNgC8PRMkTUri6AVhAvWix71jYN+TSqpKoFg/SBfMwIXJT7kIOrFkV6GHu3mIkwx+tztT6cx35kLWeBIhS9iqieenIIh5Hfd2AVNZzPFl51IEZeHZQfMaqnLoc5sccImyXpRrLH1XkX3JBQAcja+HeZWTn9UHDgqvdPMWERkjU6sUa9mvGz5UFcIP9TDOVShtoJPFZ/jnqzi0mqnHFax3aEZ/MF0AvcN7OfTLtu29Xm3ORee4YynH9yjl95HG5TbQXhcHgpkmKYrPLcjv+DHfZO6k3lmy9TusLdW2ASyPIUcZ/QRtGqcozM335oim8vSQnDsj1Lls+fO+yZbDjV+rIB2EJm2pc6gOxjpKe0EwzICOncimx6zwQdTRso8yH2YScCMTj+sTw0d2falDaMBaCr2zaNN3kdfw3+Jb1ZuYh3pgCSI6OIcZLO+zAnEQeM7a61Vcr0FLGH1CnXGna/6NMJYRp5GOO8pQN7FNAnF3BmkwdSOvyZsoKt/MlkJs1gxzGNQJpp7C/blXVZiCLZIQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1340.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(52116002)(16526019)(36756003)(26005)(7846003)(6666004)(6512007)(2906002)(316002)(4744005)(6486002)(956004)(6506007)(186003)(2616005)(4326008)(38100700002)(5660300002)(66556008)(8676002)(66946007)(8936002)(10290500003)(82960400001)(82950400001)(83380400001)(66476007)(38350700002)(478600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sSkPGNzCk8Zb/dPIlk9uj2uB03yxVhvXKNObk5QCi2OQa+fq3hqOWQ75tILX?=
+ =?us-ascii?Q?nt3infQnHTIW6cpXqdO1C5dsGcJBlw1rzRaHpiKb0qI4k6WPxYzhwoPwLLGk?=
+ =?us-ascii?Q?yxJy2gtmsGXsbLOaKFzvUweR5MbQsNB6+gk8N/fB/ojqpMT0T86NhKD+kgqH?=
+ =?us-ascii?Q?E7fqO65nZicX2X/MDVpRB2zg36Gq53kxsB7ylN3cgqCu+BJzmt9TTAbog61x?=
+ =?us-ascii?Q?evbZEuoVYo1Au+iPXNgpxEXwPt/UL/mIN/ldjHl8uNankKy8Bn5Kss80SCS2?=
+ =?us-ascii?Q?wzaBzfT21oDBB/djNzA9i3GqBBsUrQsNWgOZXMtwpa4evDSWZv+YuuqmAK0a?=
+ =?us-ascii?Q?l6QkcquxKDJDaQkpN7cZbb8E3hhkoG5PFSoDdlMlCuCwrefTYnkSAJVZmU5E?=
+ =?us-ascii?Q?DakG3LRx0d1F+6r5U1oaKQkTLA2y+Ud/jLsLI3AfG2jgyhSwMuuBHYSzEPc0?=
+ =?us-ascii?Q?DeHMQdd/37ftgr9MuKJcuEdwYPjF/rXKSOPQpKkVWdGi1dZHI+qbc7aHSMVr?=
+ =?us-ascii?Q?HruxwS19QfQhFoTftUF5hY9o/pvc0yMOKocf2IB6Zmaoozn7kU17yxLmbT4z?=
+ =?us-ascii?Q?FayqJI3IeHxs632CILW/o3NZ69/XcO2RKJyPoV4OWMyFva7EwlBbxZ34zdcM?=
+ =?us-ascii?Q?IR3tt23+oD/XnjL4InGrWspmZRnb1MVeMvu2dLC0veYnEd9+FxoBsLh67nPf?=
+ =?us-ascii?Q?F6uAy5e6MH9u0i46UfSX+zhW378oojJbQ9yuSLcXT3nRJ5OvzfHMt1KjA8+n?=
+ =?us-ascii?Q?xSRNAMqMOyVbSXm6nxJ55tNiGlSHTRwNR3GoJGUT2tBhBWCeLTIDD7JwbPNS?=
+ =?us-ascii?Q?VuZJzQcadL7gl1c3V0+vgWULMtZosrao5TFfe1WvpjdLjphHwxg/mA9HWJOr?=
+ =?us-ascii?Q?w5bdWJ/fY8KydznhzZPEorqVAJveC9d7MZsAq9ks/lwyo98r797w38jFC5j3?=
+ =?us-ascii?Q?dVl/50TDWQ7q/JysAaLgqjbm4ez469DAM98bbb1s?=
+X-MS-Exchange-AntiSpam-MessageData-1: 4dColPZ6ExoNReQz/AIWBff79JOxMODl0HuYnQAI3FA0lR2d7DZH+wzp660kxi9HADyg/WDczIKbOyb6WnJlR1n/iSP72i5+aQGlhSj/MsC+jDifwzVpzedKgm+SVCiJGS0naGJFO9m9Y4jgO12fa0wQRd6d3n8D9kMVH5ayelupeLb1q5Guj90iixNJ92W0vKWT7+5i80w830q/ScvIJU4QgG9m0P4Q7gkeupDBdtOcP8YQO9TfjyOrGPDDFjnY9WvIsbtnZzbx2bD15rPfOI15IMfQY58Qdrb26OTj8v3UFlrf3hiPSZMeEv9zbAyOxXjDCD1SRaxLf2CM8SfqrZRu
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d556ac6d-c25b-4138-2f18-08d91fd37bec
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1340.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e78f6c7-126a-4c9a-8333-08d91f9203e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2021 15:30:22.4332
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2021 23:19:03.2011
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZXMdUR/BXECtDbcsAbzDN13FDyv1mDIMoRr59+hmgfxWqmFSTKPYo4T9ubeytezJ8M4TtkJTA6MTkNfgaB7L6afYP4b5Ljm8iccKbV6YvDQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1017
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kgOVIWsB18oXdAFR0QcXIk9oXaBXudF5+s1HhV7yauwfP9nepq9Lu1L3efDyxSf/k0FjD1E5HbbSgSjxWkS2gQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1110
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com> Sent: Tuesday, May 25=
-, 2021 3:59 AM
->=20
-> Eliminate the follow smatch warning:
->=20
-> drivers/hv/connection.c:236 vmbus_connect() warn: missing error code
-> 'ret'.
->=20
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> ---
->  drivers/hv/connection.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index 311cd00..5e479d5 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -232,8 +232,10 @@ int vmbus_connect(void)
->  	 */
->=20
->  	for (i =3D 0; ; i++) {
-> -		if (i =3D=3D ARRAY_SIZE(vmbus_versions))
-> +		if (i =3D=3D ARRAY_SIZE(vmbus_versions)) {
-> +			ret =3D -EDOM;
->  			goto cleanup;
-> +		}
->=20
->  		version =3D vmbus_versions[i];
->  		if (version > max_version)
-> --
-> 1.8.3.1
+Add check for hv_is_hyperv_initialized() at the top of init_hv_pci_drv(),
+so if the pci-hyperv driver is force-loaded on non Hyper-V platforms, the
+init_hv_pci_drv() will exit immediately, without any side effects, like
+assignments to hvpci_block_ops, etc.
 
-I might have used -EINVAL instead of -EDOM as the error
-return value, but it really doesn't matter, and having a=20
-return value that is unique in the function might be helpful.
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reported-and-tested-by: Mohammad Alqayeem <mohammad.alqyeem@nutanix.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 6511648271b2..bebe3eeebc4e 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3476,6 +3476,9 @@ static void __exit exit_hv_pci_drv(void)
+ 
+ static int __init init_hv_pci_drv(void)
+ {
++	if (!hv_is_hyperv_initialized())
++		return -ENODEV;
++
+ 	/* Set the invalid domain number's bit, so it will not be used */
+ 	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+ 
+-- 
+2.25.1
 
