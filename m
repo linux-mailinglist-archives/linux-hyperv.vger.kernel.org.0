@@ -2,98 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CF8C39146E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 May 2021 12:07:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3249E39147A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 May 2021 12:08:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233783AbhEZKJH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 May 2021 06:09:07 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:37608 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233767AbhEZKJF (ORCPT
+        id S233830AbhEZKJn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 May 2021 06:09:43 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:33638 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233787AbhEZKJk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 May 2021 06:09:05 -0400
-Received: by mail-wm1-f47.google.com with SMTP id f20-20020a05600c4e94b0290181f6edda88so141185wmq.2;
-        Wed, 26 May 2021 03:07:33 -0700 (PDT)
+        Wed, 26 May 2021 06:09:40 -0400
+Received: by mail-wr1-f42.google.com with SMTP id n2so540206wrm.0;
+        Wed, 26 May 2021 03:08:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Zn2ffr8JYxoteRgfDN2DPfLGmOa7PHRalgcesR+84wk=;
-        b=FBQswfXEvhcIPu6qtq1G30fehiRhU7qTR7FioWQKRPcItSITZlXr9VmE9StIWrL1uY
-         XA35HflYt3m/Un4l1hJ/gyqpLYVUvPxENyTRph0T71Ok2tP4+i6s4g6Lzrf79uyZ2vQn
-         1QGPAHk7HfSHqvktCTN/WRrGZwEvTJmhagbWOgomxEU9Ga9nKgdAo11qVNcIIjN7e4UA
-         y+/fRlm//yV072iHGa7Z7QlZKue/uReT2DTe6sOMHkQmNSnNqZRhrUO+l9QSrx/vu1FS
-         q9F0lVuvh39Fg9hIBUCNoUPiZ+ZwXIQXw6L7e8Xij4FFADk5M1AMu7EfOuk0aCGArRj/
-         StPg==
-X-Gm-Message-State: AOAM530GIoujEw1CaE4BB2tu9O1B8xQo0umP+VVF5QCVn/UOI8cJnjY1
-        WxjcAv0q/r51oTfx+akdHlM=
-X-Google-Smtp-Source: ABdhPJxPaM7KVevhYV2qeLsfVfVCCezJ/Fd6bhCABfmcYvL1i91n62q4G0bpOukUTdpNvhpJMehZTQ==
-X-Received: by 2002:a05:600c:1551:: with SMTP id f17mr2489743wmg.17.1622023653000;
-        Wed, 26 May 2021 03:07:33 -0700 (PDT)
+        bh=3bo+c3S5QKp7gdHebx8LdhAWUc/HOzQNqyiFqhVHljE=;
+        b=Nokw/GcI40kiAgn9bR+XmcEgIytbeQ9lkyqLwtknX4cImDKORZELPgR/UtDRc9a1EG
+         Zg9KH4oL+TaZn+eFctTpi9zwFbBHkYeNTE9pKaAKeNiWsikK0TL28caT4pB6Y3k0ofjr
+         LqwJIzzSknbU9YzkoLd/6mEcK3LPFIHe2EhrVNkuKDsBQv34ikQ9ZI1+zfdNSTe36mKr
+         cujmhg0vD8Og0WwVkhecaB6Lo6CVThH0CL1/D9V1r/VV+vHYsRI75KdL4zDh23kOQt8B
+         fJOIrNQXwmP10fnuBO35oxZlQMXWi7HDMxI8oNYjXjwBkO/ITzJpZcdtj1H5pcbPcSl0
+         +qVA==
+X-Gm-Message-State: AOAM530Z/WGuVFc4Isqd8D7XD520pikYayZAMi5UHFwtiSGaGMZHxlUg
+        Edw/SW9hVQ2ZXu3Gh/w0+s8=
+X-Google-Smtp-Source: ABdhPJziSRsXB9sJDjgqH8qbMWPhdLxWYa+hc6oCcPa0qqVjdQIl6Nq3piyW+u6w0WVlc1k8AMtgWw==
+X-Received: by 2002:adf:fd81:: with SMTP id d1mr32269275wrr.37.1622023687273;
+        Wed, 26 May 2021 03:08:07 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id v3sm19745861wrr.19.2021.05.26.03.07.32
+        by smtp.gmail.com with ESMTPSA id v18sm23315208wro.18.2021.05.26.03.08.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 May 2021 03:07:32 -0700 (PDT)
-Date:   Wed, 26 May 2021 10:07:30 +0000
+        Wed, 26 May 2021 03:08:06 -0700 (PDT)
+Date:   Wed, 26 May 2021 10:08:05 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drivers: hv: Fix missing error code in vmbus_connect()
-Message-ID: <20210526100730.fsk3khdqmpbbuljf@liuwe-devbox-debian-v2>
-References: <1621940321-72353-1-git-send-email-jiapeng.chong@linux.alibaba.com>
- <MWHPR21MB1593D8362CD8FBA6E0E3612CD7259@MWHPR21MB1593.namprd21.prod.outlook.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        kys@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci-hyperv: Add check for hyperv_initialized in
+ init_hv_pci_drv()
+Message-ID: <20210526100805.xpeen7td45cswqsw@liuwe-devbox-debian-v2>
+References: <1621984653-1210-1-git-send-email-haiyangz@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MWHPR21MB1593D8362CD8FBA6E0E3612CD7259@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <1621984653-1210-1-git-send-email-haiyangz@microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 25, 2021 at 03:30:22PM +0000, Michael Kelley wrote:
-> From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com> Sent: Tuesday, May 25, 2021 3:59 AM
-> > 
-> > Eliminate the follow smatch warning:
-> > 
-> > drivers/hv/connection.c:236 vmbus_connect() warn: missing error code
-> > 'ret'.
-> > 
-> > Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> > Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> > ---
-> >  drivers/hv/connection.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> > index 311cd00..5e479d5 100644
-> > --- a/drivers/hv/connection.c
-> > +++ b/drivers/hv/connection.c
-> > @@ -232,8 +232,10 @@ int vmbus_connect(void)
-> >  	 */
-> > 
-> >  	for (i = 0; ; i++) {
-> > -		if (i == ARRAY_SIZE(vmbus_versions))
-> > +		if (i == ARRAY_SIZE(vmbus_versions)) {
-> > +			ret = -EDOM;
-> >  			goto cleanup;
-> > +		}
-> > 
-> >  		version = vmbus_versions[i];
-> >  		if (version > max_version)
-> > --
-> > 1.8.3.1
+On Tue, May 25, 2021 at 04:17:33PM -0700, Haiyang Zhang wrote:
+> Add check for hv_is_hyperv_initialized() at the top of init_hv_pci_drv(),
+> so if the pci-hyperv driver is force-loaded on non Hyper-V platforms, the
+> init_hv_pci_drv() will exit immediately, without any side effects, like
+> assignments to hvpci_block_ops, etc.
 > 
-> I might have used -EINVAL instead of -EDOM as the error
-> return value, but it really doesn't matter, and having a 
-> return value that is unique in the function might be helpful.
-> 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Reported-and-tested-by: Mohammad Alqayeem <mohammad.alqyeem@nutanix.com>
 
-Applied to hyperv-fixes. Thanks.
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
+
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 6511648271b2..bebe3eeebc4e 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -3476,6 +3476,9 @@ static void __exit exit_hv_pci_drv(void)
+>  
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	if (!hv_is_hyperv_initialized())
+> +		return -ENODEV;
+> +
+>  	/* Set the invalid domain number's bit, so it will not be used */
+>  	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+>  
+> -- 
+> 2.25.1
+> 
