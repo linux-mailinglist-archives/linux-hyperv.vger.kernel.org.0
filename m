@@ -2,100 +2,163 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EFBF391365
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 May 2021 11:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02F43913B3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 May 2021 11:31:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233369AbhEZJLJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 May 2021 05:11:09 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:52747 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233240AbhEZJLJ (ORCPT
+        id S233109AbhEZJce (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 May 2021 05:32:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55599 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233419AbhEZJcd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 May 2021 05:11:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1622020179; x=1653556179;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=qbkbNRhn352fmLF1J2wDXbPVZ5g4pF7whTLHfrx7g4E=;
-  b=AxGJ6LF04D0l8J5hwuUVwbJY94hfcXbpHdOBKZGmaViKJF76qGrORrz+
-   G9PNLrwpXDeHwmJdirqZ7wMLYW1dzDxroRuUvGxE7DXv+dGw5/NJxUwO4
-   GcVXNaQpg0HkX9auwZM5ZbtZ6qmcG533igYLGLAJcuxcXXbr78Tlru3Kw
-   w=;
-X-IronPort-AV: E=Sophos;i="5.82,331,1613433600"; 
-   d="scan'208";a="136917606"
-Subject: Re: [PATCH v3 4/4] KVM: hyper-v: Advertise support for fast XMM hypercalls
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-2c-76e0922c.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP; 26 May 2021 09:09:39 +0000
-Received: from EX13D28EUC003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2c-76e0922c.us-west-2.amazon.com (Postfix) with ESMTPS id 94B5DA2BE1;
-        Wed, 26 May 2021 09:09:31 +0000 (UTC)
-Received: from uc8bbc9586ea454.ant.amazon.com (10.43.160.17) by
- EX13D28EUC003.ant.amazon.com (10.43.164.43) with Microsoft SMTP Server (TLS)
- id 15.0.1497.18; Wed, 26 May 2021 09:09:23 +0000
-Date:   Wed, 26 May 2021 11:09:19 +0200
-From:   Siddharth Chandrasekaran <sidcha@amazon.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Wed, 26 May 2021 05:32:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622021462;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=uXwHyc8YEWzgO7cvp9x09kOnIf54F6bkUKMKciKUfB0=;
+        b=iejICi/pC2L27CKIZhMyMsMOTglMu40AU47j4/cPn9iHsIoYUeba5VmOCQUDo6+X+BbRcY
+        kC4PxkzW/IrEO+5k/RZ78BNjftAMieQCaOJf0R+48KL0fW+dvMMc8hfehpQ2TxTPD3pD07
+        pOdsJVD5Llb264x9rn3Ld86jF64pnRA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-71-sT7g9JJoMvawfd5AZdW9aQ-1; Wed, 26 May 2021 05:30:58 -0400
+X-MC-Unique: sT7g9JJoMvawfd5AZdW9aQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCD0D106BB2A;
+        Wed, 26 May 2021 09:30:54 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-99.ams2.redhat.com [10.36.113.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 924105D9D3;
+        Wed, 26 May 2021 09:30:42 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Steven Price <steven.price@arm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Aili Yao <yaoaili@kingsoft.com>, Jiri Bohac <jbohac@suse.cz>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alexander Graf <graf@amazon.com>,
-        Evgeny Iakovlev <eyakovl@amazon.de>,
-        Liran Alon <liran@amazon.com>,
-        Ioannis Aslanidis <iaslan@amazon.de>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-Message-ID: <20210526090830.GA24931@uc8bbc9586ea454.ant.amazon.com>
-References: <cover.1618349671.git.sidcha@amazon.de>
- <33a7e27046c15134667ea891feacbe3fe208f66e.1618349671.git.sidcha@amazon.de>
- <17a1ab38-10db-4fdf-411e-921738cd94e1@redhat.com>
- <20210525085708.GA26335@uc8bbc9586ea454.ant.amazon.com>
- <7fb8d792-e6e5-c241-6903-2a8c66fc2268@redhat.com>
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v3 0/6] fs/proc/kcore: don't read offline sections, logically offline pages and hwpoisoned pages
+Date:   Wed, 26 May 2021 11:30:35 +0200
+Message-Id: <20210526093041.8800-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <7fb8d792-e6e5-c241-6903-2a8c66fc2268@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.43.160.17]
-X-ClientProxiedBy: EX13D41UWC003.ant.amazon.com (10.43.162.30) To
- EX13D28EUC003.ant.amazon.com (10.43.164.43)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 25, 2021 at 01:20:41PM +0200, Paolo Bonzini wrote:
-> On 25/05/21 11:00, Siddharth Chandrasekaran wrote:
-> > Have you already picked these? Or can you still wait for v4? I can send
-> > send separate patches too if it is too late to drop them. I had one
-> > minor fixup and was waiting for Vitaly's changes to get merged as he
-> > wanted me to add checks on the guest exposed cpuid bits before handling
-> > XMM args.
->
-> You can still send v4.
+Looking for places where the kernel might unconditionally read
+PageOffline() pages, I stumbled over /proc/kcore; turns out /proc/kcore
+needs some more love to not touch some other pages we really don't want to
+read -- i.e., hwpoisoned ones.
 
-Thanks, I've sent v4 with just the fixup. I'll send a separate patch for
-the guest cpuid check later.
+Examples for PageOffline() pages are pages inflated in a balloon,
+memory unplugged via virtio-mem, and partially-present sections in
+memory added by the Hyper-V balloon.
 
-~ Sid.
+When reading pages inflated in a balloon, we essentially produce
+unnecessary load in the hypervisor; holes in partially present sections in
+case of Hyper-V are not accessible and already were a problem for
+/proc/vmcore, fixed in makedumpfile by detecting PageOffline() pages. In
+the future, virtio-mem might disallow reading unplugged memory -- marked
+as PageOffline() -- in some environments, resulting in undefined behavior
+when accessed; therefore, I'm trying to identify and rework all these
+(corner) cases.
+
+With this series, there is really only access via /dev/mem, /proc/vmcore
+and kdb left after I ripped out /dev/kmem. kdb is an advanced corner-case
+use case -- we won't care for now if someone explicitly tries to do nasty
+things by reading from/writing to physical addresses we better not touch.
+/dev/mem is a use case we won't support for virtio-mem, at least for now,
+so we'll simply disallow mapping any virtio-mem memory via /dev/mem next.
+/proc/vmcore is really only a problem when dumping the old kernel via
+something that's not makedumpfile (read: basically never), however, we'll
+try sanitizing that as well in the second kernel in the future.
+
+Tested via kcore_dump:
+	https://github.com/schlafwandler/kcore_dump
+
+v2 -> v3:
+- "mm: introduce page_offline_(begin|end|freeze|thaw) to synchronize
+   setting PageOffline()"
+-- Rephrased a comment as suggested by Mike
+- Collected acks and rbs
+
+v1 -> v2:
+- Dropped "mm: rename and move page_is_poisoned()"
+- "fs/proc/kcore: don't read offline sections, logically offline pages ..."
+-- Add is_page_hwpoison() in page-flags.h along with a comment
+- "mm: introduce page_offline_(begin|end|freeze|thaw) to ..."
+-- s/unfreeze/thaw/
+-- Add a comment to PageOffline documentation in page-flags.h
+- "virtio-mem: use page_offline_(start|end) when setting PageOffline()"
+-- Extend patch description
+- "fs/proc/kcore: use page_offline_(freeze|thaw)"
+-- Simplify freeze/thaw logic
+- Collected acks/rbs
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Steven Price <steven.price@arm.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Aili Yao <yaoaili@kingsoft.com>
+Cc: Jiri Bohac <jbohac@suse.cz>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Naoya Horiguchi <naoya.horiguchi@nec.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+
+David Hildenbrand (6):
+  fs/proc/kcore: drop KCORE_REMAP and KCORE_OTHER
+  fs/proc/kcore: pfn_is_ram check only applies to KCORE_RAM
+  fs/proc/kcore: don't read offline sections, logically offline pages
+    and hwpoisoned pages
+  mm: introduce page_offline_(begin|end|freeze|thaw) to synchronize
+    setting PageOffline()
+  virtio-mem: use page_offline_(start|end) when setting PageOffline()
+  fs/proc/kcore: use page_offline_(freeze|thaw)
+
+ drivers/virtio/virtio_mem.c |  2 ++
+ fs/proc/kcore.c             | 67 ++++++++++++++++++++++++++++++-------
+ include/linux/kcore.h       |  3 --
+ include/linux/page-flags.h  | 22 ++++++++++++
+ mm/util.c                   | 40 ++++++++++++++++++++++
+ 5 files changed, 118 insertions(+), 16 deletions(-)
 
 
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+base-commit: 6efb943b8616ec53a5e444193dccf1af9ad627b5
+-- 
+2.31.1
 
