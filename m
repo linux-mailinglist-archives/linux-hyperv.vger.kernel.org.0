@@ -2,130 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 316373913CB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 May 2021 11:32:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CF8C39146E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 May 2021 12:07:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233622AbhEZJda (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 May 2021 05:33:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30755 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233593AbhEZJdY (ORCPT
+        id S233783AbhEZKJH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 May 2021 06:09:07 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:37608 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233767AbhEZKJF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 May 2021 05:33:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622021513;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UwY8egmBhFN4ttOumbwiNB+K87+iDRAp24/+Sy47AVY=;
-        b=aCQ0fgSASmHRGunkc9MmZEavCbCl72cu7/Rg8IV4DevMwxeLr06za7tZ0+N8Ap98OO993z
-        PJx7PTTWWsZThSZ5bfnUr8xZ/qxxSFA/2xNsb0d3ikca2xMSzqTM7J2DICubkn8QqCo1sY
-        +M51F/AXyI7u2FXiZdOHTOuOCc0jHOQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-sylAfsenNgmVBsWBcSkMGg-1; Wed, 26 May 2021 05:31:51 -0400
-X-MC-Unique: sylAfsenNgmVBsWBcSkMGg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 751F7107ACF6;
-        Wed, 26 May 2021 09:31:49 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-99.ams2.redhat.com [10.36.113.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B3CF25D9D3;
-        Wed, 26 May 2021 09:31:43 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Steven Price <steven.price@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Aili Yao <yaoaili@kingsoft.com>, Jiri Bohac <jbohac@suse.cz>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Wed, 26 May 2021 06:09:05 -0400
+Received: by mail-wm1-f47.google.com with SMTP id f20-20020a05600c4e94b0290181f6edda88so141185wmq.2;
+        Wed, 26 May 2021 03:07:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Zn2ffr8JYxoteRgfDN2DPfLGmOa7PHRalgcesR+84wk=;
+        b=FBQswfXEvhcIPu6qtq1G30fehiRhU7qTR7FioWQKRPcItSITZlXr9VmE9StIWrL1uY
+         XA35HflYt3m/Un4l1hJ/gyqpLYVUvPxENyTRph0T71Ok2tP4+i6s4g6Lzrf79uyZ2vQn
+         1QGPAHk7HfSHqvktCTN/WRrGZwEvTJmhagbWOgomxEU9Ga9nKgdAo11qVNcIIjN7e4UA
+         y+/fRlm//yV072iHGa7Z7QlZKue/uReT2DTe6sOMHkQmNSnNqZRhrUO+l9QSrx/vu1FS
+         q9F0lVuvh39Fg9hIBUCNoUPiZ+ZwXIQXw6L7e8Xij4FFADk5M1AMu7EfOuk0aCGArRj/
+         StPg==
+X-Gm-Message-State: AOAM530GIoujEw1CaE4BB2tu9O1B8xQo0umP+VVF5QCVn/UOI8cJnjY1
+        WxjcAv0q/r51oTfx+akdHlM=
+X-Google-Smtp-Source: ABdhPJxPaM7KVevhYV2qeLsfVfVCCezJ/Fd6bhCABfmcYvL1i91n62q4G0bpOukUTdpNvhpJMehZTQ==
+X-Received: by 2002:a05:600c:1551:: with SMTP id f17mr2489743wmg.17.1622023653000;
+        Wed, 26 May 2021 03:07:33 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v3sm19745861wrr.19.2021.05.26.03.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 May 2021 03:07:32 -0700 (PDT)
+Date:   Wed, 26 May 2021 10:07:30 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v3 6/6] fs/proc/kcore: use page_offline_(freeze|thaw)
-Date:   Wed, 26 May 2021 11:30:41 +0200
-Message-Id: <20210526093041.8800-7-david@redhat.com>
-In-Reply-To: <20210526093041.8800-1-david@redhat.com>
-References: <20210526093041.8800-1-david@redhat.com>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drivers: hv: Fix missing error code in vmbus_connect()
+Message-ID: <20210526100730.fsk3khdqmpbbuljf@liuwe-devbox-debian-v2>
+References: <1621940321-72353-1-git-send-email-jiapeng.chong@linux.alibaba.com>
+ <MWHPR21MB1593D8362CD8FBA6E0E3612CD7259@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB1593D8362CD8FBA6E0E3612CD7259@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Let's properly synchronize with drivers that set PageOffline().
-Unfreeze/thaw every now and then, so drivers that want to set PageOffline()
-can make progress.
+On Tue, May 25, 2021 at 03:30:22PM +0000, Michael Kelley wrote:
+> From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com> Sent: Tuesday, May 25, 2021 3:59 AM
+> > 
+> > Eliminate the follow smatch warning:
+> > 
+> > drivers/hv/connection.c:236 vmbus_connect() warn: missing error code
+> > 'ret'.
+> > 
+> > Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> > Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> > ---
+> >  drivers/hv/connection.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> > index 311cd00..5e479d5 100644
+> > --- a/drivers/hv/connection.c
+> > +++ b/drivers/hv/connection.c
+> > @@ -232,8 +232,10 @@ int vmbus_connect(void)
+> >  	 */
+> > 
+> >  	for (i = 0; ; i++) {
+> > -		if (i == ARRAY_SIZE(vmbus_versions))
+> > +		if (i == ARRAY_SIZE(vmbus_versions)) {
+> > +			ret = -EDOM;
+> >  			goto cleanup;
+> > +		}
+> > 
+> >  		version = vmbus_versions[i];
+> >  		if (version > max_version)
+> > --
+> > 1.8.3.1
+> 
+> I might have used -EINVAL instead of -EDOM as the error
+> return value, but it really doesn't matter, and having a 
+> return value that is unique in the function might be helpful.
+> 
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- fs/proc/kcore.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index 92ff1e4436cb..982e694aae77 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -313,6 +313,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- {
- 	char *buf = file->private_data;
- 	size_t phdrs_offset, notes_offset, data_offset;
-+	size_t page_offline_frozen = 1;
- 	size_t phdrs_len, notes_len;
- 	struct kcore_list *m;
- 	size_t tsz;
-@@ -322,6 +323,11 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 	int ret = 0;
- 
- 	down_read(&kclist_lock);
-+	/*
-+	 * Don't race against drivers that set PageOffline() and expect no
-+	 * further page access.
-+	 */
-+	page_offline_freeze();
- 
- 	get_kcore_size(&nphdr, &phdrs_len, &notes_len, &data_offset);
- 	phdrs_offset = sizeof(struct elfhdr);
-@@ -480,6 +486,12 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 			}
- 		}
- 
-+		if (page_offline_frozen++ % MAX_ORDER_NR_PAGES == 0) {
-+			page_offline_thaw();
-+			cond_resched();
-+			page_offline_freeze();
-+		}
-+
- 		if (&m->list == &kclist_head) {
- 			if (clear_user(buffer, tsz)) {
- 				ret = -EFAULT;
-@@ -565,6 +577,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 	}
- 
- out:
-+	page_offline_thaw();
- 	up_read(&kclist_lock);
- 	if (ret)
- 		return ret;
--- 
-2.31.1
-
+Applied to hyperv-fixes. Thanks.
