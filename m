@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65CD23948DC
-	for <lists+linux-hyperv@lfdr.de>; Sat, 29 May 2021 00:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E56EE3948DA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 29 May 2021 00:43:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229828AbhE1WpZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S229821AbhE1WpZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Fri, 28 May 2021 18:45:25 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55850 "EHLO
+Received: from linux.microsoft.com ([13.77.154.182]:55876 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229765AbhE1WpT (ORCPT
+        with ESMTP id S229768AbhE1WpT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Fri, 28 May 2021 18:45:19 -0400
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A200520B802F;
+        by linux.microsoft.com (Postfix) with ESMTPSA id B7A1D20B8027;
         Fri, 28 May 2021 15:43:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A200520B802F
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B7A1D20B8027
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1622241823;
-        bh=Ptyf3J6AEwn4dzVtX2LA4M2z98GB1YPekbQdQChvaEQ=;
+        bh=2BzDvbQcaLqhPooAjVGXGLBjFIafKuFwSYNSNNYTlTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJ2TJam1YfiF1XzeZ1ZXlltmGkj2UenGa+mfDC2vu+aHrIONfAnBmr4f6GjVpdwAR
-         WRYFGO34uC7ZHELxKigLzJJpx6e+HlsAgM0cqbn/jICOcxN07xu9cveybky7oXlBQT
-         8+7brR+YDx99sMfMMndexwHBIYefqSctSo6nGkO8=
+        b=MQ65CrEVqWTk+0n0jjk9U7ZOy5E7MeXahG0BQxu1EbJN1CG9vnnZvbesJUXwzVof+
+         bqdoGleKh4zR+otUsJKrJlp0bcpzz6wH9vx87Pip5ZU2bi22+e+DswhWU5K0s7DFob
+         NsprGNxxXKmVpLJQ/kMOwSKs4DIz5ctSzIAAJuDw=
 From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
         viremana@linux.microsoft.com, sunilmut@microsoft.com,
         wei.liu@kernel.org, vkuznets@redhat.com, ligrassi@microsoft.com,
         kys@microsoft.com
-Subject: [PATCH 17/19] drivers/hv: get and set partition property ioctls
-Date:   Fri, 28 May 2021 15:43:37 -0700
-Message-Id: <1622241819-21155-18-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH 18/19] drivers/hv: Add enlightenment bits to create partition ioctl
+Date:   Fri, 28 May 2021 15:43:38 -0700
+Message-Id: <1622241819-21155-19-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1622241819-21155-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1622241819-21155-1-git-send-email-nunodasneves@linux.microsoft.com>
@@ -39,315 +39,207 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Introduce ioctls for getting and setting properties of guest partitions.
+Introduce hv_partition_synthetic_processor features mask to
+MSHV_CREATE_PARTITION ioctl, which can be used to enable hypervisor
+enlightenments for exo partitions.
 
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 ---
- Documentation/virt/mshv/api.rst        |  8 ++++
- drivers/hv/hv_call.c                   | 58 +++++++++++++++++++++++++
- drivers/hv/mshv.h                      |  8 ++++
- drivers/hv/mshv_main.c                 | 47 ++++++++++++++++++++
- include/asm-generic/hyperv-tlfs.h      | 19 +++++++++
- include/uapi/asm-generic/hyperv-tlfs.h | 59 ++++++++++++++++++++++++++
- include/uapi/linux/mshv.h              |  9 ++++
- 7 files changed, 208 insertions(+)
+ Documentation/virt/mshv/api.rst         |   3 +
+ arch/x86/include/uapi/asm/hyperv-tlfs.h | 125 ++++++++++++++++++++++++
+ drivers/hv/mshv_main.c                  |   7 ++
+ include/uapi/asm-generic/hyperv-tlfs.h  |   1 +
+ include/uapi/linux/mshv.h               |   1 +
+ 5 files changed, 137 insertions(+)
 
 diff --git a/Documentation/virt/mshv/api.rst b/Documentation/virt/mshv/api.rst
-index bf3c060bd418..e660e0e6865e 100644
+index e660e0e6865e..56a6edfcfe29 100644
 --- a/Documentation/virt/mshv/api.rst
 +++ b/Documentation/virt/mshv/api.rst
-@@ -159,4 +159,12 @@ Maps a page into userspace that can be used to get and set common registers
- while the vp is suspended.
- The page is laid out in struct hv_vp_register_page in asm/hyperv-tlfs.h.
+@@ -167,4 +167,7 @@ The page is laid out in struct hv_vp_register_page in asm/hyperv-tlfs.h.
  
-+3.11 MSHV_SET_PARTITION_PROPERTY and MSHV_GET_PARTITION_PROPERTY
-+----------------------------------------------------------------
-+:Type: partition ioctl
-+:Parameters: struct mshv_partition_property
-+:Returns: 0 on success
-+
-+Can be used to get/set various properties of a partition.
+ Can be used to get/set various properties of a partition.
+ 
++Some properties can only be set at partition creation. For these, there are
++parameters in MSHV_CREATE_PARTITION.
 +
  
-diff --git a/drivers/hv/hv_call.c b/drivers/hv/hv_call.c
-index a2ae0a31706b..67167fa93851 100644
---- a/drivers/hv/hv_call.c
-+++ b/drivers/hv/hv_call.c
-@@ -640,3 +640,61 @@ int hv_call_map_vp_state_page(
- 
- 	return ret;
- }
-+
-+int hv_call_get_partition_property(
-+		u64 partition_id,
-+		u64 property_code,
-+		u64 *property_value)
-+{
-+	u64 status;
-+	unsigned long flags;
-+	struct hv_get_partition_property_in *input;
-+	struct hv_get_partition_property_out *output;
-+
-+	local_irq_save(flags);
-+	input = (struct hv_get_partition_property_in *)(*this_cpu_ptr(
-+			hyperv_pcpu_input_arg));
-+	output = (struct hv_get_partition_property_out *)(*this_cpu_ptr(
-+			hyperv_pcpu_output_arg));
-+	memset(input, 0, sizeof(*input));
-+	input->partition_id = partition_id;
-+	input->property_code = property_code;
-+	status = hv_do_hypercall(HVCALL_GET_PARTITION_PROPERTY, input,
-+			output);
-+
-+	if (!hv_result_success(status)) {
-+		pr_err("%s: %s\n", __func__, hv_status_to_string(status));
-+		local_irq_restore(flags);
-+		return hv_status_to_errno(status);
-+	}
-+	*property_value = output->property_value;
-+
-+	local_irq_restore(flags);
-+
-+	return 0;
-+}
-+
-+int hv_call_set_partition_property(
-+		u64 partition_id,
-+		u64 property_code,
-+		u64 property_value)
-+{
-+	u64 status;
-+	unsigned long flags;
-+	struct hv_set_partition_property *input;
-+
-+	local_irq_save(flags);
-+	input = (struct hv_set_partition_property *)(*this_cpu_ptr(
-+			hyperv_pcpu_input_arg));
-+	memset(input, 0, sizeof(*input));
-+	input->partition_id = partition_id;
-+	input->property_code = property_code;
-+	input->property_value = property_value;
-+	status = hv_do_hypercall(HVCALL_SET_PARTITION_PROPERTY, input, NULL);
-+	local_irq_restore(flags);
-+
-+	if (!hv_result_success(status))
-+		pr_err("%s: %s\n", __func__, hv_status_to_string(status));
-+
-+	return hv_status_to_errno(status);
-+}
-diff --git a/drivers/hv/mshv.h b/drivers/hv/mshv.h
-index a9215581be6b..8230368b4257 100644
---- a/drivers/hv/mshv.h
-+++ b/drivers/hv/mshv.h
-@@ -101,5 +101,13 @@ int hv_call_map_vp_state_page(
- 		u32 vp_index,
- 		u64 partition_id,
- 		struct page **state_page);
-+int hv_call_get_partition_property(
-+		u64 partition_id,
-+		u64 property_code,
-+		u64 *property_value);
-+int hv_call_set_partition_property(
-+		u64 partition_id,
-+		u64 property_code,
-+		u64 property_value);
- 
- #endif /* _MSHV_H */
-diff --git a/drivers/hv/mshv_main.c b/drivers/hv/mshv_main.c
-index bc1df1f6e737..9be684d56da6 100644
---- a/drivers/hv/mshv_main.c
-+++ b/drivers/hv/mshv_main.c
-@@ -565,6 +565,45 @@ mshv_partition_ioctl_create_vp(struct mshv_partition *partition,
- 	return ret;
- }
- 
-+static long
-+mshv_partition_ioctl_get_property(struct mshv_partition *partition,
-+				  void __user *user_args)
-+{
-+	struct mshv_partition_property args;
-+	long ret;
-+
-+	if (copy_from_user(&args, user_args, sizeof(args)))
-+		return -EFAULT;
-+
-+	ret = hv_call_get_partition_property(
-+					partition->id,
-+					args.property_code,
-+					&args.property_value);
-+
-+	if (ret)
-+		return ret;
-+
-+	if (copy_to_user(user_args, &args, sizeof(args)))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
-+static long
-+mshv_partition_ioctl_set_property(struct mshv_partition *partition,
-+				  void __user *user_args)
-+{
-+	struct mshv_partition_property args;
-+
-+	if (copy_from_user(&args, user_args, sizeof(args)))
-+		return -EFAULT;
-+
-+	return hv_call_set_partition_property(
-+			partition->id,
-+			args.property_code,
-+			args.property_value);
-+}
-+
- static long
- mshv_partition_ioctl_map_memory(struct mshv_partition *partition,
- 				struct mshv_user_mem_region __user *user_mem)
-@@ -784,6 +823,14 @@ mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
- 		ret = mshv_partition_ioctl_assert_interrupt(partition,
- 							(void __user *)arg);
- 		break;
-+	case MSHV_GET_PARTITION_PROPERTY:
-+		ret = mshv_partition_ioctl_get_property(partition,
-+							(void __user *)arg);
-+		break;
-+	case MSHV_SET_PARTITION_PROPERTY:
-+		ret = mshv_partition_ioctl_set_property(partition,
-+							(void __user *)arg);
-+		break;
- 	default:
- 		ret = -ENOTTY;
- 	}
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 8d4750d19c9d..2869d0300032 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -147,6 +147,8 @@ struct ms_hyperv_tsc_page {
- #define HVCALL_INITIALIZE_PARTITION		0x0041
- #define HVCALL_FINALIZE_PARTITION		0x0042
- #define HVCALL_DELETE_PARTITION			0x0043
-+#define HVCALL_GET_PARTITION_PROPERTY		0x0044
-+#define HVCALL_SET_PARTITION_PROPERTY		0x0045
- #define HVCALL_GET_PARTITION_ID			0x0046
- #define HVCALL_DEPOSIT_MEMORY			0x0048
- #define HVCALL_WITHDRAW_MEMORY			0x0049
-@@ -882,4 +884,21 @@ struct hv_map_vp_state_page_out {
- 	u64 map_location; /* page number */
+diff --git a/arch/x86/include/uapi/asm/hyperv-tlfs.h b/arch/x86/include/uapi/asm/hyperv-tlfs.h
+index 5430f3c98934..4447ef5362e9 100644
+--- a/arch/x86/include/uapi/asm/hyperv-tlfs.h
++++ b/arch/x86/include/uapi/asm/hyperv-tlfs.h
+@@ -1146,4 +1146,129 @@ struct hv_vp_register_page {
+ 	__u64 instruction_emulation_hints;
  } __packed;
  
-+struct hv_get_partition_property_in {
-+	u64 partition_id;
-+	u32 property_code; /* enum hv_partition_property_code */
-+        u32 padding;
-+} __packed;
++#define HV_PARTITION_SYNTHETIC_PROCESSOR_FEATURES_BANKS 1
 +
-+struct hv_get_partition_property_out {
-+	u64 property_value;
-+} __packed;
++union hv_partition_synthetic_processor_features {
++	__u64 as_uint64[HV_PARTITION_SYNTHETIC_PROCESSOR_FEATURES_BANKS];
 +
-+struct hv_set_partition_property {
-+	u64 partition_id;
-+	u32 property_code; /* enum hv_partition_property_code */
-+        u32 padding;
-+	u64 property_value;
-+} __packed;
++	struct {
++		/* Report a hypervisor is present. CPUID leaves
++		 * 0x40000000 and 0x40000001 are supported.
++		 */
++		__u64 hypervisor_present:1;
++
++		/*
++		 * Features associated with HV#1:
++		 */
++
++		/* Report support for Hv1 (CPUID leaves 0x40000000 - 0x40000006). */
++		__u64 hv1:1;
++
++		/* Access to HV_X64_MSR_VP_RUNTIME.
++		 * Corresponds to access_vp_run_time_reg privilege.
++		 */
++		__u64 access_vp_run_time_reg:1;
++
++		/* Access to HV_X64_MSR_TIME_REF_COUNT.
++		 * Corresponds to access_partition_reference_counter privilege.
++		 */
++		__u64 access_partition_reference_counter:1;
++
++		/* Access to SINT-related registers (HV_X64_MSR_SCONTROL through
++		 * HV_X64_MSR_EOM and HV_X64_MSR_SINT0 through HV_X64_MSR_SINT15).
++		 * Corresponds to access_synic_regs privilege.
++		 */
++		__u64 access_synic_regs:1;
++
++		/* Access to synthetic timers and associated MSRs
++		 * (HV_X64_MSR_STIMER0_CONFIG through HV_X64_MSR_STIMER3_COUNT).
++		 * Corresponds to access_synthetic_timer_regs privilege.
++		 */
++		__u64 access_synthetic_timer_regs:1;
++
++		/* Access to APIC MSRs (HV_X64_MSR_EOI, HV_X64_MSR_ICR and HV_X64_MSR_TPR)
++		 * as well as the VP assist page.
++		 * Corresponds to access_intr_ctrl_regs privilege.
++		 */
++		__u64 access_intr_ctrl_regs:1;
++
++		/* Access to registers associated with hypercalls (HV_X64_MSR_GUEST_OS_ID
++		 * and HV_X64_MSR_HYPERCALL).
++		 * Corresponds to access_hypercall_msrs privilege.
++		 */
++		__u64 access_hypercall_regs:1;
++
++		/* VP index can be queried. corresponds to access_vp_index privilege. */
++		__u64 access_vp_index:1;
++
++		/* Access to the reference TSC. Corresponds to access_partition_reference_tsc
++		 * privilege.
++		 */
++		__u64 access_partition_reference_tsc:1;
++
++		/* Partition has access to the guest idle reg. Corresponds to
++		 * access_guest_idle_reg privilege.
++		 */
++		__u64 access_guest_idle_reg:1;
++
++		/* Partition has access to frequency regs. corresponds to access_frequency_regs
++		 * privilege.
++		 */
++		__u64 access_frequency_regs:1;
++
++		__u64 reserved_z12:1; /* Reserved for access_reenlightenment_controls. */
++		__u64 reserved_z13:1; /* Reserved for access_root_scheduler_reg. */
++		__u64 reserved_z14:1; /* Reserved for access_tsc_invariant_controls. */
++
++		/* Extended GVA ranges for HvCallFlushVirtualAddressList hypercall.
++		 * Corresponds to privilege.
++		 */
++		__u64 enable_extended_gva_ranges_for_flush_virtual_address_list:1;
++
++		__u64 reserved_z16:1; /* Reserved for access_vsm. */
++		__u64 reserved_z17:1; /* Reserved for access_vp_registers. */
++
++		/* Use fast hypercall output. Corresponds to privilege. */
++		__u64 fast_hypercall_output:1;
++
++		__u64 reserved_z19:1; /* Reserved for enable_extended_hypercalls. */
++
++		/*
++		 * HvStartVirtualProcessor can be used to start virtual processors.
++		 * Corresponds to privilege.
++		 */
++		__u64 start_virtual_processor:1;
++
++		__u64 reserved_z21:1; /* Reserved for Isolation. */
++
++		/* Synthetic timers in direct mode. */
++		__u64 direct_synthetic_timers:1;
++
++		__u64 reserved_z23:1; /* Reserved for synthetic time unhalted timer */
++
++		/* Use extended processor masks. */
++		__u64 extended_processor_masks:1;
++
++		/* HvCallFlushVirtualAddressSpace / HvCallFlushVirtualAddressList are supported. */
++		__u64 tb_flush_hypercalls:1;
++
++		/* HvCallSendSyntheticClusterIpi is supported. */
++		__u64 synthetic_cluster_ipi:1;
++
++		/* HvCallNotifyLongSpinWait is supported. */
++		__u64 notify_long_spin_wait:1;
++
++		/* HvCallQueryNumaDistance is supported. */
++		__u64 query_numa_distance:1;
++
++		/* HvCallSignalEvent is supported. Corresponds to privilege. */
++		__u64 signal_events:1;
++
++		/* HvCallRetargetDeviceInterrupt is supported. */
++		__u64 retarget_device_interrupt:1;
++
++		__u64 reserved:33;
++	} __packed;
++};
 +
  #endif
+diff --git a/drivers/hv/mshv_main.c b/drivers/hv/mshv_main.c
+index 9be684d56da6..0d3ea80e11ef 100644
+--- a/drivers/hv/mshv_main.c
++++ b/drivers/hv/mshv_main.c
+@@ -990,6 +990,13 @@ mshv_ioctl_create_partition(void __user *user_arg)
+ 	if (ret)
+ 		goto put_fd;
+ 
++	ret = hv_call_set_partition_property(
++				partition->id,
++				HV_PARTITION_PROPERTY_SYNTHETIC_PROC_FEATURES,
++				args.synthetic_processor_features.as_uint64[0]);
++	if (ret)
++		goto delete_partition;
++
+ 	ret = hv_call_initialize_partition(partition->id);
+ 	if (ret)
+ 		goto delete_partition;
 diff --git a/include/uapi/asm-generic/hyperv-tlfs.h b/include/uapi/asm-generic/hyperv-tlfs.h
-index a1bc77e463dd..1e572d38234a 100644
+index 1e572d38234a..5d8d5e89f432 100644
 --- a/include/uapi/asm-generic/hyperv-tlfs.h
 +++ b/include/uapi/asm-generic/hyperv-tlfs.h
-@@ -136,4 +136,63 @@ enum hv_vp_state_page_type {
- 	HV_VP_STATE_PAGE_COUNT
- };
+@@ -139,6 +139,7 @@ enum hv_vp_state_page_type {
+ enum hv_partition_property_code {
+ 	/* Privilege properties */
+ 	HV_PARTITION_PROPERTY_PRIVILEGE_FLAGS				= 0x00010000,
++	HV_PARTITION_PROPERTY_SYNTHETIC_PROC_FEATURES			= 0x00010001,
  
-+enum hv_partition_property_code {
-+	/* Privilege properties */
-+	HV_PARTITION_PROPERTY_PRIVILEGE_FLAGS				= 0x00010000,
-+
-+	/* Scheduling properties */
-+	HV_PARTITION_PROPERTY_SUSPEND					= 0x00020000,
-+	HV_PARTITION_PROPERTY_CPU_RESERVE				= 0x00020001,
-+	HV_PARTITION_PROPERTY_CPU_CAP					= 0x00020002,
-+	HV_PARTITION_PROPERTY_CPU_WEIGHT				= 0x00020003,
-+	HV_PARTITION_PROPERTY_CPU_GROUP_ID				= 0x00020004,
-+
-+	/* Time properties */
-+	HV_PARTITION_PROPERTY_TIME_FREEZE				= 0x00030003,
-+
-+	/* Debugging properties */
-+	HV_PARTITION_PROPERTY_DEBUG_CHANNEL_ID				= 0x00040000,
-+
-+	/* Resource properties */
-+	HV_PARTITION_PROPERTY_VIRTUAL_TLB_PAGE_COUNT			= 0x00050000,
-+	HV_PARTITION_PROPERTY_VSM_CONFIG				= 0x00050001,
-+	HV_PARTITION_PROPERTY_ZERO_MEMORY_ON_RESET			= 0x00050002,
-+	HV_PARTITION_PROPERTY_PROCESSORS_PER_SOCKET			= 0x00050003,
-+	HV_PARTITION_PROPERTY_NESTED_TLB_SIZE				= 0x00050004,
-+	HV_PARTITION_PROPERTY_GPA_PAGE_ACCESS_TRACKING			= 0x00050005,
-+	HV_PARTITION_PROPERTY_VSM_PERMISSIONS_DIRTY_SINCE_LAST_QUERY	= 0x00050006,
-+	HV_PARTITION_PROPERTY_SGX_LAUNCH_CONTROL_CONFIG			= 0x00050007,
-+	HV_PARTITION_PROPERTY_DEFAULT_SGX_LAUNCH_CONTROL0		= 0x00050008,
-+	HV_PARTITION_PROPERTY_DEFAULT_SGX_LAUNCH_CONTROL1		= 0x00050009,
-+	HV_PARTITION_PROPERTY_DEFAULT_SGX_LAUNCH_CONTROL2		= 0x0005000a,
-+	HV_PARTITION_PROPERTY_DEFAULT_SGX_LAUNCH_CONTROL3		= 0x0005000b,
-+	HV_PARTITION_PROPERTY_ISOLATION_STATE				= 0x0005000c,
-+	HV_PARTITION_PROPERTY_ISOLATION_CONTROL				= 0x0005000d,
-+	HV_PARTITION_PROPERTY_RDT_L3_COS_INDEX				= 0x0005000e,
-+	HV_PARTITION_PROPERTY_RDT_RMID					= 0x0005000f,
-+	HV_PARTITION_PROPERTY_IMPLEMENTED_PHYSICAL_ADDRESS_BITS		= 0x00050010,
-+	HV_PARTITION_PROPERTY_NON_ARCHITECTURAL_CORE_SHARING		= 0x00050011,
-+	HV_PARTITION_PROPERTY_HYPERCALL_DOORBELL_PAGE			= 0x00050012,
-+
-+	/* Compatibility properties */
-+	HV_PARTITION_PROPERTY_PROCESSOR_VENDOR				= 0x00060000,
-+	HV_PARTITION_PROPERTY_PROCESSOR_FEATURES_DEPRECATED		= 0x00060001,
-+	HV_PARTITION_PROPERTY_PROCESSOR_XSAVE_FEATURES			= 0x00060002,
-+	HV_PARTITION_PROPERTY_PROCESSOR_CL_FLUSH_SIZE			= 0x00060003,
-+	HV_PARTITION_PROPERTY_ENLIGHTENMENT_MODIFICATIONS		= 0x00060004,
-+	HV_PARTITION_PROPERTY_COMPATIBILITY_VERSION			= 0x00060005,
-+	HV_PARTITION_PROPERTY_PHYSICAL_ADDRESS_WIDTH			= 0x00060006,
-+	HV_PARTITION_PROPERTY_XSAVE_STATES				= 0x00060007,
-+	HV_PARTITION_PROPERTY_MAX_XSAVE_DATA_SIZE			= 0x00060008,
-+	HV_PARTITION_PROPERTY_PROCESSOR_CLOCK_FREQUENCY			= 0x00060009,
-+	HV_PARTITION_PROPERTY_PROCESSOR_FEATURES0			= 0x0006000a,
-+	HV_PARTITION_PROPERTY_PROCESSOR_FEATURES1			= 0x0006000b,
-+
-+	/* Guest software properties */
-+	HV_PARTITION_PROPERTY_GUEST_OS_ID				= 0x00070000,
-+
-+	/* Nested virtualization properties */
-+	HV_PARTITION_PROPERTY_PROCESSOR_VIRTUALIZATION_FEATURES		= 0x00080000,
-+};
-+
- #endif
+ 	/* Scheduling properties */
+ 	HV_PARTITION_PROPERTY_SUSPEND					= 0x00020000,
 diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
-index 718a3617e1f1..1a6c22db4978 100644
+index 1a6c22db4978..ec8281712430 100644
 --- a/include/uapi/linux/mshv.h
 +++ b/include/uapi/linux/mshv.h
-@@ -66,6 +66,11 @@ struct mshv_vp_state {
- 	} buf;
+@@ -19,6 +19,7 @@
+ struct mshv_create_partition {
+ 	__u64 flags;
+ 	struct hv_partition_creation_properties partition_creation_properties;
++	union hv_partition_synthetic_processor_features synthetic_processor_features;
  };
  
-+struct mshv_partition_property {
-+	enum hv_partition_property_code property_code;
-+	__u64 property_value;
-+};
-+
- #define MSHV_IOCTL 0xB8
- 
- /* mshv device */
-@@ -78,6 +83,10 @@ struct mshv_vp_state {
- #define MSHV_CREATE_VP		_IOW(MSHV_IOCTL, 0x04, struct mshv_create_vp)
- #define MSHV_INSTALL_INTERCEPT	_IOW(MSHV_IOCTL, 0x08, struct mshv_install_intercept)
- #define MSHV_ASSERT_INTERRUPT	_IOW(MSHV_IOCTL, 0x09, struct mshv_assert_interrupt)
-+#define MSHV_SET_PARTITION_PROPERTY \
-+				_IOW(MSHV_IOCTL, 0xC, struct mshv_partition_property)
-+#define MSHV_GET_PARTITION_PROPERTY \
-+				_IOWR(MSHV_IOCTL, 0xD, struct mshv_partition_property)
- 
- /* vp device */
- #define MSHV_GET_VP_REGISTERS   _IOWR(MSHV_IOCTL, 0x05, struct mshv_vp_registers)
+ /*
 -- 
 2.25.1
 
