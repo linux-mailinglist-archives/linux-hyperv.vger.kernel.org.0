@@ -2,294 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1AF73948DD
-	for <lists+linux-hyperv@lfdr.de>; Sat, 29 May 2021 00:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D903F394968
+	for <lists+linux-hyperv@lfdr.de>; Sat, 29 May 2021 02:01:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbhE1WpZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 28 May 2021 18:45:25 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55852 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbhE1WpT (ORCPT
+        id S229541AbhE2ADb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 28 May 2021 20:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229528AbhE2ADa (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 28 May 2021 18:45:19 -0400
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CD74520B8031;
-        Fri, 28 May 2021 15:43:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CD74520B8031
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1622241823;
-        bh=618mtQI28k2jEmxPbQskRYnVcUXYPL+xab3eRrvJ2VE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IBPksS3TQCwn5mEMkEI9zDM/1j9WL9GRCyuf3FxS6yo2G99/NDRzcHpBjUCVdVNWD
-         v7NH5Raqpa6Lv4UOcRyoghEEckICTb9+Q2nPs/DQazfTCCtZTI2rKeJc7P/BwaP1yE
-         Vm4zfvoxOegB4BOF71atuIJRemsia98Wu+jUE8f4=
-From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
-To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 28 May 2021 20:03:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68574C061574;
+        Fri, 28 May 2021 17:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=wClK8t5OqOKAJXZRdJ7lK3nU0nLrVWRCjDxwfQ1YPMI=; b=oQEOU/XvSEfv8fMGMn0Ibiyl1G
+        LKUmNpGddt8Mx4Rzc2n1OXVQygVaS1Hp3LuerB4w21NGojS/f0EQXiAzFBr1Wx0TXBk0i5ANHtKRJ
+        tORl/HV+bZzjqJv3n8eqlqX5CJLFkASF/ji4lMdaKwVqP53Tjac61kBHeZKEj+N4Pu23FcC5xOn+V
+        VKRsUwZNciWxbginuPe10cDX1Zs6DbxYi+3erBw1ms7nDb0Venf7+yUudFgO3hPOUQaaubHAgAW5O
+        dVL+8ZZzNYUOxpoxQryTugtaikRc03ghdTOD+GqHfFjpcWM5edHLX/2Noj7eqktgzaSJcYUghauEZ
+        mvXFD1JQ==;
+Received: from [2601:1c0:6280:3f0::ce7d]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1lmmQF-001zoQ-B8; Sat, 29 May 2021 00:01:47 +0000
+Subject: Re: [PATCH 03/19] drivers/hv: minimal mshv module (/dev/mshv/)
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
         viremana@linux.microsoft.com, sunilmut@microsoft.com,
         wei.liu@kernel.org, vkuznets@redhat.com, ligrassi@microsoft.com,
         kys@microsoft.com
-Subject: [PATCH 19/19] drivers/hv: Translate GVA to GPA
-Date:   Fri, 28 May 2021 15:43:39 -0700
-Message-Id: <1622241819-21155-20-git-send-email-nunodasneves@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1622241819-21155-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1622241819-21155-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1622241819-21155-4-git-send-email-nunodasneves@linux.microsoft.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e161e8cc-4d08-8bfd-ab1e-363ed5a39503@infradead.org>
+Date:   Fri, 28 May 2021 17:01:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
+MIME-Version: 1.0
+In-Reply-To: <1622241819-21155-4-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Wei Liu <wei.liu@kernel.org>
+On 5/28/21 3:43 PM, Nuno Das Neves wrote:
+> Introduce a barebones module file for the mshv API.
+> Introduce CONFIG_HYPERV_ROOT_API for controlling compilation of mshv.
+> 
+> Co-developed-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
+> Signed-off-by: Lillian Grassin-Drake <ligrassi@microsoft.com>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
 
-Introduce ioctl for translating Guest Virtual Address (GVA) to Guest
-Physical Address (GPA)
+Hi,
 
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
----
- drivers/hv/hv_call.c                   | 44 ++++++++++++++++++++++++++
- drivers/hv/mshv.h                      |  7 ++++
- drivers/hv/mshv_main.c                 | 34 ++++++++++++++++++++
- include/asm-generic/hyperv-tlfs.h      | 13 ++++++++
- include/uapi/asm-generic/hyperv-tlfs.h | 43 +++++++++++++++++++++++++
- include/uapi/linux/mshv.h              |  8 +++++
- 6 files changed, 149 insertions(+)
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 66c794d92391..d618b1fab2bb 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -27,4 +27,22 @@ config HYPERV_BALLOON
+>  	help
+>  	  Select this option to enable Hyper-V Balloon driver.
+>  
+> +config HYPERV_ROOT_API
+> +	tristate "Microsoft Hypervisor root partition interfaces: /dev/mshv"
+> +	depends on HYPERV
+> +	help
+> +	  Provides access to interfaces for managing guest virtual machines
+> +	  running under the Microsoft Hypervisor.
+> +
+> +	  These interfaces will only work when Linux is running as root
+> +	  partition on the Microsoft Hypervisor.
+> +
+> +	  The interfaces are provided via a device named /dev/mshv.
+> +
+> +	  To compile this as a module, choose M here.
+> +          The module is named mshv.
 
-diff --git a/drivers/hv/hv_call.c b/drivers/hv/hv_call.c
-index 67167fa93851..025d4e2b892f 100644
---- a/drivers/hv/hv_call.c
-+++ b/drivers/hv/hv_call.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/mm.h>
-+#include <linux/hyperv.h>
- #include <asm/mshyperv.h>
- 
- #include "mshv.h"
-@@ -698,3 +699,46 @@ int hv_call_set_partition_property(
- 
- 	return hv_status_to_errno(status);
- }
-+
-+int hv_call_translate_virtual_address(
-+		u32 vp_index,
-+		u64 partition_id,
-+		u32 flags,
-+		u64 gva,
-+		u64 *gpa,
-+		union hv_translate_gva_result *result)
-+{
-+	u64 status;
-+	unsigned long irq_flags;
-+	struct hv_translate_virtual_address_in *input;
-+	struct hv_translate_virtual_address_out *output;
-+
-+	local_irq_save(irq_flags);
-+
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-+
-+	memset(input, 0, sizeof(*input));
-+	memset(output, 0, sizeof(*output));
-+
-+	input->partition_id = partition_id;
-+	input->vp_index = vp_index;
-+	input->control_flags = flags;
-+	input->gva_page = gva >> HV_HYP_PAGE_SHIFT;
-+
-+	status = hv_do_hypercall(HVCALL_TRANSLATE_VIRTUAL_ADDRESS, input, output);
-+
-+	if (!hv_result_success(status)) {
-+		pr_err("%s: %s\n", __func__, hv_status_to_string(status));
-+		goto out;
-+	}
-+
-+	*result = output->translation_result;
-+	*gpa = (output->gpa_page << HV_HYP_PAGE_SHIFT) + offset_in_hvpage(gva);
-+
-+out:
-+	local_irq_restore(irq_flags);
-+
-+	return hv_status_to_errno(status);
-+}
-+
-diff --git a/drivers/hv/mshv.h b/drivers/hv/mshv.h
-index 8230368b4257..037291a0ad45 100644
---- a/drivers/hv/mshv.h
-+++ b/drivers/hv/mshv.h
-@@ -109,5 +109,12 @@ int hv_call_set_partition_property(
- 		u64 partition_id,
- 		u64 property_code,
- 		u64 property_value);
-+int hv_call_translate_virtual_address(
-+		u32 vp_index,
-+		u64 partition_id,
-+		u32 flags,
-+		u64 gva,
-+		u64 *gpa,
-+		union hv_translate_gva_result *result);
- 
- #endif /* _MSHV_H */
-diff --git a/drivers/hv/mshv_main.c b/drivers/hv/mshv_main.c
-index 0d3ea80e11ef..fe6fb2668d36 100644
---- a/drivers/hv/mshv_main.c
-+++ b/drivers/hv/mshv_main.c
-@@ -401,6 +401,37 @@ mshv_vp_ioctl_get_set_state(struct mshv_vp *vp, void __user *user_args, bool is_
- 	return 0;
- }
- 
-+static long
-+mshv_vp_ioctl_translate_gva(struct mshv_vp *vp, void __user *user_args)
-+{
-+	long ret;
-+	struct mshv_translate_gva args;
-+	u64 gpa;
-+	union hv_translate_gva_result result;
-+
-+	if (copy_from_user(&args, user_args, sizeof(args)))
-+		return -EFAULT;
-+
-+	ret = hv_call_translate_virtual_address(
-+			vp->index,
-+			vp->partition->id,
-+			args.flags,
-+			args.gva,
-+			&gpa,
-+			&result);
-+
-+	if (ret)
-+		return ret;
-+
-+	if (copy_to_user(args.result, &result, sizeof(*args.result)))
-+		return -EFAULT;
-+
-+	if (copy_to_user(args.gpa, &gpa, sizeof(*args.gpa)))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
- static long
- mshv_vp_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
- {
-@@ -426,6 +457,9 @@ mshv_vp_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
- 	case MSHV_SET_VP_STATE:
- 		r = mshv_vp_ioctl_get_set_state(vp, (void __user *)arg, true);
- 		break;
-+	case MSHV_TRANSLATE_GVA:
-+		r = mshv_vp_ioctl_translate_gva(vp, (void __user *)arg);
-+		break;
- 	default:
- 		r = -ENOTTY;
- 		break;
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 2869d0300032..b5e4a5003b63 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -158,6 +158,7 @@ struct ms_hyperv_tsc_page {
- #define HVCALL_CREATE_VP			0x004e
- #define HVCALL_GET_VP_REGISTERS			0x0050
- #define HVCALL_SET_VP_REGISTERS			0x0051
-+#define HVCALL_TRANSLATE_VIRTUAL_ADDRESS	0x0052
- #define HVCALL_POST_MESSAGE			0x005c
- #define HVCALL_SIGNAL_EVENT			0x005d
- #define HVCALL_POST_DEBUG_DATA			0x0069
-@@ -901,4 +902,16 @@ struct hv_set_partition_property {
- 	u64 property_value;
- } __packed;
- 
-+struct hv_translate_virtual_address_in {
-+	u64 partition_id;
-+	u32 vp_index;
-+	u64 control_flags;
-+	u64 gva_page;
-+} __packed;
-+
-+struct hv_translate_virtual_address_out {
-+	union hv_translate_gva_result translation_result;
-+	u64 gpa_page;
-+} __packed;
-+
- #endif
-diff --git a/include/uapi/asm-generic/hyperv-tlfs.h b/include/uapi/asm-generic/hyperv-tlfs.h
-index 5d8d5e89f432..95020e3a67ba 100644
---- a/include/uapi/asm-generic/hyperv-tlfs.h
-+++ b/include/uapi/asm-generic/hyperv-tlfs.h
-@@ -196,4 +196,47 @@ enum hv_partition_property_code {
- 	HV_PARTITION_PROPERTY_PROCESSOR_VIRTUALIZATION_FEATURES		= 0x00080000,
- };
- 
-+enum hv_translate_gva_result_code {
-+	HV_TRANSLATE_GVA_SUCCESS			= 0,
-+
-+	/* Translation failures. */
-+	HV_TRANSLATE_GVA_PAGE_NOT_PRESENT		= 1,
-+	HV_TRANSLATE_GVA_PRIVILEGE_VIOLATION		= 2,
-+	HV_TRANSLATE_GVA_INVALIDE_PAGE_TABLE_FLAGS	= 3,
-+
-+	/* GPA access failures. */
-+	HV_TRANSLATE_GVA_GPA_UNMAPPED			= 4,
-+	HV_TRANSLATE_GVA_GPA_NO_READ_ACCESS		= 5,
-+	HV_TRANSLATE_GVA_GPA_NO_WRITE_ACCESS		= 6,
-+	HV_TRANSLATE_GVA_GPA_ILLEGAL_OVERLAY_ACCESS	= 7,
-+
-+	/*
-+	 * Intercept for memory access by either
-+	 *  - a higher VTL
-+	 *  - a nested hypervisor (due to a violation of the nested page table)
-+	 */
-+	HV_TRANSLATE_GVA_INTERCEPT			= 8,
-+
-+	HV_TRANSLATE_GVA_GPA_UNACCEPTED			= 9,
-+};
-+
-+union hv_translate_gva_result {
-+	__u64 as_uint64;
-+	struct {
-+		__u32 result_code; /* enum hv_translate_hva_result_code */
-+		__u32 cache_type : 8;
-+		__u32 overlay_page : 1;
-+		__u32 reserved : 23;
-+	} __packed;
-+};
-+
-+/* hv_translage_gva flags */
-+#define HV_TRANSLATE_GVA_VALIDATE_READ		0x0001
-+#define HV_TRANSLATE_GVA_VALIDATE_WRITE		0x0002
-+#define HV_TRANSLATE_GVA_VALIDATE_EXECUTE	0x0004
-+#define HV_TRANSLATE_GVA_PRIVILEGE_EXCEMP	0x0008
-+#define HV_TRANSLATE_GVA_SET_PAGE_TABLE_BITS	0x0010
-+#define HV_TRANSLATE_GVA_TLB_FLUSH_INHIBIT	0x0020
-+#define HV_TRANSLATE_GVA_CONTROL_MASK		0x003f
-+
- #endif
-diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
-index ec8281712430..0c46ce77cbb3 100644
---- a/include/uapi/linux/mshv.h
-+++ b/include/uapi/linux/mshv.h
-@@ -72,6 +72,13 @@ struct mshv_partition_property {
- 	__u64 property_value;
- };
- 
-+struct mshv_translate_gva {
-+	__u64 gva;
-+	__u64 flags;
-+	union hv_translate_gva_result *result;
-+	__u64 *gpa;
-+};
-+
- #define MSHV_IOCTL 0xB8
- 
- /* mshv device */
-@@ -95,6 +102,7 @@ struct mshv_partition_property {
- #define MSHV_RUN_VP		_IOR(MSHV_IOCTL, 0x07, struct hv_message)
- #define MSHV_GET_VP_STATE	_IOWR(MSHV_IOCTL, 0x0A, struct mshv_vp_state)
- #define MSHV_SET_VP_STATE	_IOWR(MSHV_IOCTL, 0x0B, struct mshv_vp_state)
-+#define MSHV_TRANSLATE_GVA	_IOWR(MSHV_IOCTL, 0x0E, struct mshv_translate_gva)
- 
- /* register page mapping example:
-  * struct hv_vp_register_page *regs = mmap(NULL,
+^^^^^^^^^^^^^
+
+Please follow coding-style for Kconfig files:
+
+(from Documentation/process/coding-style.rst, section 10):
+
+For all of the Kconfig* configuration files throughout the source tree,
+the indentation is somewhat different.  Lines under a ``config`` definition
+are indented with one tab, while help text is indented an additional two
+spaces.
+
+> +
+> +	  If unsure, say N.
+> +
+> +
+>  endmenu
+
+thanks.
 -- 
-2.25.1
+~Randy
 
