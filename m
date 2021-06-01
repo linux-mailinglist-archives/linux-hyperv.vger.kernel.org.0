@@ -2,103 +2,91 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 140B639595E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 May 2021 13:01:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50622396E6E
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Jun 2021 09:59:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230518AbhEaLDM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 31 May 2021 07:03:12 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:52466 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231124AbhEaLDH (ORCPT
+        id S233127AbhFAIBf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Jun 2021 04:01:35 -0400
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:56258 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233069AbhFAIBf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 31 May 2021 07:03:07 -0400
-Received: from [192.168.1.79] (unknown [106.201.36.115])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4979F20B7178;
-        Mon, 31 May 2021 04:01:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4979F20B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1622458887;
-        bh=cHg9rnFx1Hr6LTraeqQPRPTYr4rEZm92MuTQAUKcmZU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=pnYqze9cTbkvCCFB/cJed0KeYs9wWOS6E5On1sujrV49HkgbUVYFFPydRxjP0gnLM
-         lLasu0B3Z6m8Wr8waCInEkWF3g41bIkl/VoRIa6TaA/iOiTuTmECf9p3YXbDeUN5FV
-         F57uJXiDK3xSpWoOD3L7YwWguPXRU8cbD6UoRufw=
-Subject: Re: [PATCH] x86/hyperv: LP creation with lp_index on same CPU-id
-To:     Wei Liu <wei.liu@kernel.org>
+        Tue, 1 Jun 2021 04:01:35 -0400
+Received: by mail-wm1-f42.google.com with SMTP id g204so4309796wmf.5;
+        Tue, 01 Jun 2021 00:59:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CILQ1E8wrD9Jkbinxx/OfXZKHdfMjq3mWMgjEeM1HzA=;
+        b=NbGXncsrCFRoKuJsUL4Ji7KkegeDuCvEteEZMJM4mJrzvDyR4dlgngYtYNfOFK95/E
+         OugetM6pkDsAP8jqguHnv5s8Z2y18jwNGVcB44g7sUsUx5K4im2YIcpimcnSwCbC8SUp
+         yn4WJc4i0x9gFHFtYCBWM+sDa8qBH0r+Md5xzMxkSoFV2kFXJOIhGBME6yNRpBT+foQi
+         J0hzNYaLknoJCp4HJx+2mCScj4nC+iB66iiK7sU1xmGdrkvcPJgBhIJjufAAp+B4akxY
+         BMIpipYtpAXzqniXz4hQoQlpZ0HaONG24mUpW67BocJWclMLS+nSKVEX8x9eYk/hZ9dZ
+         SWKw==
+X-Gm-Message-State: AOAM530t5DvGiwPmN4g1b1pvprurclAhFAIeQLNHsjwx8PYYa5Mqoh21
+        OStEa9I+bQiBffRJJKANLCE=
+X-Google-Smtp-Source: ABdhPJwLtKyeA1XzzRsDVWWVRmDoWsG9VPEDykA2DI96Z+qwBn6RfxeP/dleUCPBEnMA+JD2J+ThPA==
+X-Received: by 2002:a05:600c:3545:: with SMTP id i5mr3195750wmq.43.1622534393312;
+        Tue, 01 Jun 2021 00:59:53 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id n6sm16546787wmq.34.2021.06.01.00.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jun 2021 00:59:52 -0700 (PDT)
+Date:   Tue, 1 Jun 2021 07:59:51 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>
 Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, nunodasneves@linux.microsoft.com,
+        virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
         viremana@linux.microsoft.com, sunilmut@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>
-References: <20210531074046.113452-1-kumarpraveen@linux.microsoft.com>
- <20210531105732.muzbpk4yksttsfwz@liuwe-devbox-debian-v2>
-From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Message-ID: <572da60e-714f-b207-a89e-6dc40209e2da@linux.microsoft.com>
-Date:   Mon, 31 May 2021 16:31:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
+        wei.liu@kernel.org, vkuznets@redhat.com, ligrassi@microsoft.com,
+        kys@microsoft.com
+Subject: Re: [PATCH 06/19] drivers/hv: create, initialize, finalize, delete
+ partition hypercalls
+Message-ID: <20210601075951.2ssgwaajo53x2tna@liuwe-devbox-debian-v2>
+References: <1622241819-21155-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1622241819-21155-7-git-send-email-nunodasneves@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20210531105732.muzbpk4yksttsfwz@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1622241819-21155-7-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Fri, May 28, 2021 at 03:43:26PM -0700, Nuno Das Neves wrote:
+[...]
+> diff --git a/arch/x86/include/uapi/asm/hyperv-tlfs.h b/arch/x86/include/uapi/asm/hyperv-tlfs.h
+> index 72150c25ffe6..8a5fc59bb33a 100644
+> --- a/arch/x86/include/uapi/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/uapi/asm/hyperv-tlfs.h
+> @@ -101,7 +101,7 @@ union hv_partition_processor_features {
+>  		__u64 fsrep_stosb:1;
+>  		__u64 fsrep_cmpsb:1;
+>  		__u64 reserved_bank1:42;
+> -	};
+> +	} __packed;
+>  	__u64 as_uint64[HV_PARTITION_PROCESSOR_FEATURE_BANKS];
+>  };
+>  
+> @@ -111,7 +111,7 @@ union hv_partition_processor_xsave_features {
+>  		__u64 xsaveopt_support : 1;
+>  		__u64 avx_support : 1;
+>  		__u64 reserved1 : 61;
+> -	};
+> +	} __packed;
+>  	__u64 as_uint64;
+>  };
+>  
+> @@ -119,6 +119,6 @@ struct hv_partition_creation_properties {
+>  	union hv_partition_processor_features disabled_processor_features;
+>  	union hv_partition_processor_xsave_features
+>  		disabled_processor_xsave_features;
+> -};
+> +} __packed;
 
+These hunks should have been squashed to the previous patch. They don't
+belong here.
 
-On 5/31/2021 4:27 PM, Wei Liu wrote:
-> On Mon, May 31, 2021 at 01:10:46PM +0530, Praveen Kumar wrote:
->> The hypervisor expects the lp_index to be same as cpu-id during LP creation
->> This fix correct the same, as cpu_physical_id can give different cpu-id.
-> 
-> Code looks fine to me, but the commit message can be made clearer.
-> 
-> """
-> The hypervisor expects the logical processor index to be the same as
-> CPU's id during logical processor creation. Using cpu_physical_id
-> confuses Microsoft Hypervisor's scheduler. That causes the root
-> partition not boot when core scheduler is used.
-> 
-> This patch removes the call to cpu_physical_id and uses the CPU index
-> directly for bringing up logical processor. This scheme works for both
-> classic scheduler and core scheduler.
-> 
-> Fixes: 333abaf5abb3 (x86/hyperv: implement and use hv_smp_prepare_cpus)
-> """
-> 
-> No action is required from you. If you are fine with this commit message
-> I can incorporate it and update the subject line when committing this
-> patch.
-> 
-
-Thanks Wei for your comments. I'm fine with your inputs. Please go ahead. Thanks.
-
-Regards,
-
-~Praveen.
-
->>
->> Signed-off-by: Praveen Kumar <kumarpraveen@linux.microsoft.com>
->> ---
->>  arch/x86/kernel/cpu/mshyperv.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
->> index 22f13343b5da..4fa0a4280895 100644
->> --- a/arch/x86/kernel/cpu/mshyperv.c
->> +++ b/arch/x86/kernel/cpu/mshyperv.c
->> @@ -236,7 +236,7 @@ static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
->>  	for_each_present_cpu(i) {
->>  		if (i == 0)
->>  			continue;
->> -		ret = hv_call_add_logical_proc(numa_cpu_node(i), i, cpu_physical_id(i));
->> +		ret = hv_call_add_logical_proc(numa_cpu_node(i), i, i);
->>  		BUG_ON(ret);
->>  	}
->>  
->> -- 
->> 2.25.1
->>
+Wei.
