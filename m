@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9B16399168
+	by mail.lfdr.de (Postfix) with ESMTP id B7B30399167
 	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jun 2021 19:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230520AbhFBRW5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S230422AbhFBRW5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Wed, 2 Jun 2021 13:22:57 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51158 "EHLO
+Received: from linux.microsoft.com ([13.77.154.182]:51164 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230329AbhFBRWy (ORCPT
+        with ESMTP id S230378AbhFBRWy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Wed, 2 Jun 2021 13:22:54 -0400
 Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6C1D420B8013;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 831D120B8016;
         Wed,  2 Jun 2021 10:21:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6C1D420B8013
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 831D120B8016
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1622654471;
-        bh=+TSbGngTue63bY8gIF10bzOMWI3JSQvihdSXxwQiNPY=;
+        bh=LqIAPp9b4xr0FaDrJqaVWN3iMnfFRXlJZFkyUUKF0Rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBR24jWFfgw8fp8WMoZuUAw+kEGIa4tidCvVAo6lKz+SywMvOMZyWcvh4AkgUrS7u
-         qo0x9wmFnIcAD8zcwu3dVwkCeOZQTZqV98k1c1+fmN1pzRxAphYtdPFPulQdOazsGl
-         gbbWnk8INSMd1XCHaXhj7qnNDDSFnuD23D9j+d7I=
+        b=KD89Y0w11I4iJpq6aXWTI6oDHT/ce5KxcTlggBvbLRf9TFe9WNwY8/vonxvJZcIyH
+         Ovl26R8Zs6LI2IhX/hCJtJnbY8WIk54VUDbjiFqy6mmHSdiUPBY8VNC5tEsWFayszD
+         XUeGE2IL29wdb9UmGCDAeW1yZtF4jGyHLBv62/yA=
 From:   Vineeth Pillai <viremana@linux.microsoft.com>
 To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: [PATCH 07/17] hyperv: Configure SINT for Doorbell
-Date:   Wed,  2 Jun 2021 17:20:52 +0000
-Message-Id: <f07b8f1636ecf6f7bf69c31c42f9edb57c85e4ae.1622654100.git.viremana@linux.microsoft.com>
+Subject: [PATCH 08/17] mshv: Port id management
+Date:   Wed,  2 Jun 2021 17:20:53 +0000
+Message-Id: <ddd9f9295e8dbd8aad81bf7e02a4a8076e04654a.1622654100.git.viremana@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1622654100.git.viremana@linux.microsoft.com>
 References: <cover.1622654100.git.viremana@linux.microsoft.com>
@@ -45,117 +45,175 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Doorbell is a  mechanism by which a parent partition can register for
-notification if a specified mmio address is touched by a child partition.
-Parent partition can setup the notification by specifying mmio address,
-size of the data written(1/2/4/8 bytes) and optionally the data as well.
-
-Doorbell events are delivered by a SynIC interrupt. Configure a SynIC
-interrupt source for doorbell.
+Each port in the partition should be uniquely identified by an id.
+Partition is responsible for managing the port id.
 
 Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
 ---
- drivers/hv/hv_synic.c             | 30 +++++++++++++++++++++++++-----
- include/asm-generic/hyperv-tlfs.h | 15 ++++++++++++++-
- 2 files changed, 39 insertions(+), 6 deletions(-)
+ drivers/hv/Makefile          |  2 +-
+ drivers/hv/hv_portid_table.c | 83 ++++++++++++++++++++++++++++++++++++
+ drivers/hv/mshv.h            | 35 +++++++++++++++
+ drivers/hv/mshv_main.c       |  2 +
+ 4 files changed, 121 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/hv/hv_portid_table.c
 
-diff --git a/drivers/hv/hv_synic.c b/drivers/hv/hv_synic.c
-index a2f712acca82..6a00c66edc3f 100644
---- a/drivers/hv/hv_synic.c
-+++ b/drivers/hv/hv_synic.c
-@@ -112,6 +112,15 @@ void mshv_isr(void)
- 	add_interrupt_randomness(HYPERVISOR_CALLBACK_VECTOR, 0);
- }
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index a2b698661b5e..455a2c01f52c 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -13,4 +13,4 @@ hv_vmbus-y := vmbus_drv.o \
+ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+ hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_fcopy.o hv_utils_transport.o
  
-+static inline bool hv_recommend_using_aeoi(void)
+-mshv-y                          += mshv_main.o hv_call.o hv_synic.o
++mshv-y                          += mshv_main.o hv_call.o hv_synic.o hv_portid_table.o
+diff --git a/drivers/hv/hv_portid_table.c b/drivers/hv/hv_portid_table.c
+new file mode 100644
+index 000000000000..3e8feefc3fc9
+--- /dev/null
++++ b/drivers/hv/hv_portid_table.c
+@@ -0,0 +1,83 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/types.h>
++#include <linux/version.h>
++#include <linux/mm.h>
++#include <linux/slab.h>
++#include <linux/idr.h>
++#include <asm/mshyperv.h>
++
++#include "mshv.h"
++
++/*
++ * Ports and connections are hypervisor struct used for inter-partition
++ * communication. Port represents the source and connection represents
++ * the destination. Partitions are responsible for managing the port and
++ * connection ids.
++ *
++ */
++
++#define PORTID_MIN	1
++#define PORTID_MAX	INT_MAX
++
++static DEFINE_IDR(port_table_idr);
++
++void
++hv_port_table_fini(void)
 +{
-+#ifdef HV_DEPRECATING_AEOI_RECOMMENDED
-+	return !(ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED);
-+#else
-+	return false;
-+#endif
++	struct port_table_info *port_info;
++	unsigned long i, tmp;
++
++	idr_lock(&port_table_idr);
++	if (!idr_is_empty(&port_table_idr)) {
++		idr_for_each_entry_ul(&port_table_idr, port_info, tmp, i) {
++			port_info = idr_remove(&port_table_idr, i);
++			kfree_rcu(port_info, rcu);
++		}
++	}
++	idr_unlock(&port_table_idr);
 +}
 +
- int mshv_synic_init(unsigned int cpu)
- {
- 	union hv_synic_simp simp;
-@@ -166,14 +175,19 @@ int mshv_synic_init(unsigned int cpu)
- 	sint.as_uint64 = 0;
- 	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
- 	sint.masked = false;
--#ifdef HV_DEPRECATING_AEOI_RECOMMENDED
--	sint.auto_eoi =	!(ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED);
--#else
--	sint.auto_eoi = 0;
--#endif
-+	sint.auto_eoi = hv_recommend_using_aeoi();
- 	hv_set_register(HV_REGISTER_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX,
- 			sint.as_uint64);
- 
-+	/* Doorbell SINT */
-+	sint.as_uint64 = 0;
-+	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
-+	sint.masked = false;
-+	sint.as_intercept = 1;
-+	sint.auto_eoi = hv_recommend_using_aeoi();
-+	hv_set_register(HV_REGISTER_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
-+			sint.as_uint64);
++int
++hv_portid_alloc(struct port_table_info *info)
++{
++	int ret = 0;
 +
- 	/* Enable global synic bit */
- 	sctrl.as_uint64 = hv_get_register(HV_REGISTER_SCONTROL);
- 	sctrl.enable = 1;
-@@ -221,6 +235,12 @@ int mshv_synic_cleanup(unsigned int cpu)
- 	hv_set_register(HV_REGISTER_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX,
- 			sint.as_uint64);
- 
-+	/* Disable Doorbell SINT */
-+	sint.as_uint64 = hv_get_register(HV_REGISTER_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX);
-+	sint.masked = true;
-+	hv_set_register(HV_REGISTER_SINT0 + HV_SYNIC_DOORBELL_SINT_INDEX,
-+			sint.as_uint64);
++	idr_lock(&port_table_idr);
++	ret = idr_alloc(&port_table_idr, info, PORTID_MIN,
++			PORTID_MAX, GFP_KERNEL);
++	idr_unlock(&port_table_idr);
 +
- 	/* Disable Synic's event ring page */
- 	sirbp.as_uint64 = hv_get_register(HV_REGISTER_SIRBP);
- 	sirbp.sirbp_enabled = false;
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 42e0237b0da8..3ed4f532ed57 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -262,6 +262,9 @@ enum hv_status {
- #define HV_SYNIC_HVL_SHARED_SINT_INDEX   0x00000004
- #define HV_SYNIC_FIRST_UNUSED_SINT_INDEX 0x00000005
- 
-+/* mshv assigned SINT for doorbell */
-+#define HV_SYNIC_DOORBELL_SINT_INDEX     HV_SYNIC_FIRST_UNUSED_SINT_INDEX
++	return ret;
++}
 +
- #define HV_SYNIC_CONTROL_ENABLE		(1ULL << 0)
- #define HV_SYNIC_SIMP_ENABLE		(1ULL << 0)
- #define HV_SYNIC_SIEFP_ENABLE		(1ULL << 0)
-@@ -284,6 +287,14 @@ struct hv_timer_message_payload {
- 	__u64 delivery_time;	/* When the message was delivered */
- } __packed;
++void
++hv_portid_free(int port_id)
++{
++	struct port_table_info *info;
++
++	idr_lock(&port_table_idr);
++	info = idr_remove(&port_table_idr, port_id);
++	WARN_ON(!info);
++	idr_unlock(&port_table_idr);
++
++	synchronize_rcu();
++	kfree(info);
++}
++
++int
++hv_portid_lookup(int port_id, struct port_table_info *info)
++{
++	struct port_table_info *_info;
++	int ret = -ENOENT;
++
++	rcu_read_lock();
++	_info = idr_find(&port_table_idr, port_id);
++	rcu_read_unlock();
++
++	if (_info) {
++		*info = *_info;
++		ret = 0;
++	}
++
++	return ret;
++}
+diff --git a/drivers/hv/mshv.h b/drivers/hv/mshv.h
+index e16818e977b9..ff5dc02cd8b6 100644
+--- a/drivers/hv/mshv.h
++++ b/drivers/hv/mshv.h
+@@ -39,6 +39,41 @@ void mshv_isr(void);
+ int mshv_synic_init(unsigned int cpu);
+ int mshv_synic_cleanup(unsigned int cpu);
  
 +/*
-+ * Message format for notifications delivered via
-+ * intercept message(as_intercept=1)
++ * Callback for doorbell events.
++ * NOTE: This is called in interrupt context. Callback
++ * should defer slow and sleeping logic to later.
 + */
-+struct hv_notification_message_payload {
-+	u32 sint_index;
-+} __packed;
++typedef void (*doorbell_cb_t) (void *);
 +
- /* Define the synthentic interrupt controller event ring format */
- #define HV_SYNIC_EVENT_RING_MESSAGE_COUNT 63
++/*
++ * port table information
++ */
++struct port_table_info {
++	struct rcu_head rcu;
++	enum hv_port_type port_type;
++	union {
++		struct {
++			u64 reserved[2];
++		} port_message;
++		struct {
++			u64 reserved[2];
++		} port_event;
++		struct {
++			u64 reserved[2];
++		} port_monitor;
++		struct {
++			doorbell_cb_t doorbell_cb;
++			void *data;
++		} port_doorbell;
++	};
++};
++
++void hv_port_table_fini(void);
++int hv_portid_alloc(struct port_table_info *info);
++int hv_portid_lookup(int port_id, struct port_table_info *info);
++void hv_portid_free(int port_id);
++
+ /*
+  * Hyper-V hypercalls
+  */
+diff --git a/drivers/hv/mshv_main.c b/drivers/hv/mshv_main.c
+index 2adae676dba5..ccf0971d0d39 100644
+--- a/drivers/hv/mshv_main.c
++++ b/drivers/hv/mshv_main.c
+@@ -1146,6 +1146,8 @@ __exit mshv_exit(void)
+ 	cpuhp_remove_state(mshv_cpuhp_online);
+ 	free_percpu(mshv.synic_pages);
  
-@@ -350,7 +361,9 @@ union hv_synic_sint {
- 		u64 masked:1;
- 		u64 auto_eoi:1;
- 		u64 polling:1;
--		u64 reserved2:45;
-+		u64 as_intercept: 1;
-+		u64 proxy: 1;
-+		u64 reserved2:43;
- 	} __packed;
- };
++	hv_port_table_fini();
++
+ 	misc_deregister(&mshv_dev);
+ }
  
 -- 
 2.25.1
