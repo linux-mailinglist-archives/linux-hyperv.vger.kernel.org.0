@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D995399171
+	by mail.lfdr.de (Postfix) with ESMTP id 42061399170
 	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jun 2021 19:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbhFBRXA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S230507AbhFBRXA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Wed, 2 Jun 2021 13:23:00 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51214 "EHLO
+Received: from linux.microsoft.com ([13.77.154.182]:51152 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230425AbhFBRWz (ORCPT
+        with ESMTP id S230426AbhFBRWz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Wed, 2 Jun 2021 13:22:55 -0400
 Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 48B3B20B8027;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5F1AB20B8008;
         Wed,  2 Jun 2021 10:21:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 48B3B20B8027
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F1AB20B8008
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1622654472;
-        bh=OWsnzgw6kc9j7w5nSEy/i27W92+i9kzayVieRd6mr+4=;
+        bh=apVvgarWbUiZ/0RTa1u2ZxPL9qATfom0Ft+oeOR58pI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/pbQDPHkq9E2FFTryPIp6AQ/kcAjFHrvYq61j3LQFi9XNVg5LeoFCB08NOrQ2jOx
-         drl2VEMTucVnTOHkbF8hkM4GDJRo8n/vZe/7OLNeP3aoJ6jwkoWjWRnE+xQiuYRQOf
-         VSrNzF2xvffBdnP76Fc/8SCJmOEzjFjoUZait4z8=
+        b=hwGVR3nRFvGeyJ8gFTzo3ahLSUawLFl11cPx8xtBFVgyqP/1aGFdQJ1+7qAUpwh/I
+         xEXFv2i4VPHxYTBFRNn++9qQFdlnfbXIw7vsfYlZ0fzuEawpw1IeHQwiG3fTg6bnSp
+         b8+3R14KcyLpTCZByURf/zDJacB4IVFzWMwEelio=
 From:   Vineeth Pillai <viremana@linux.microsoft.com>
 To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: [PATCH 16/17] mshv: User space controlled MSI irq routing for mshv
-Date:   Wed,  2 Jun 2021 17:21:01 +0000
-Message-Id: <40818b1c53e91732fa77025f47cbee9d40684923.1622654100.git.viremana@linux.microsoft.com>
+Subject: [PATCH 17/17] mshv: Use in kernel MSI routing for irqfd
+Date:   Wed,  2 Jun 2021 17:21:02 +0000
+Message-Id: <af580a244ed01e8695fc2d705d56714ac5c85481.1622654100.git.viremana@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1622654100.git.viremana@linux.microsoft.com>
 References: <cover.1622654100.git.viremana@linux.microsoft.com>
@@ -45,302 +45,254 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Implementation of an in-kernel MSI irq routing mechanism for mshv.
-
-Inspired from the KVM irq routing implementation but adapted
-only for MSI interrupts.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=399ec807ddc38ecccf8c06dbde04531cbdc63e11
-
-All credit goes to kvm developers.
+Use the in-kernel routing information for irqfd interrupts.
 
 Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
 ---
- drivers/hv/Makefile       |   2 +-
- drivers/hv/mshv_main.c    |  34 ++++++++++
- drivers/hv/mshv_msi.c     | 127 ++++++++++++++++++++++++++++++++++++++
- include/linux/mshv.h      |  27 ++++++++
- include/uapi/linux/mshv.h |  13 ++++
- 5 files changed, 202 insertions(+), 1 deletion(-)
- create mode 100644 drivers/hv/mshv_msi.c
+ drivers/hv/hv_eventfd.c      | 94 +++++++++++++++++++++++++++---------
+ drivers/hv/mshv_msi.c        |  1 +
+ include/linux/mshv.h         |  2 +
+ include/linux/mshv_eventfd.h | 26 +++++-----
+ include/uapi/linux/mshv.h    |  6 ---
+ 5 files changed, 87 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index 5cb738c10a2d..370d126252ef 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -14,4 +14,4 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
- hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_fcopy.o hv_utils_transport.o
- 
- mshv-y                          += mshv_main.o hv_call.o hv_synic.o hv_portid_table.o  \
--					hv_eventfd.o
-+					hv_eventfd.o mshv_msi.o
-diff --git a/drivers/hv/mshv_main.c b/drivers/hv/mshv_main.c
-index 0f083447c553..f7ca0f082b75 100644
---- a/drivers/hv/mshv_main.c
-+++ b/drivers/hv/mshv_main.c
-@@ -852,6 +852,35 @@ mshv_partition_ioctl_irqfd(struct mshv_partition *partition,
- 	return mshv_irqfd(partition, &args);
- }
- 
-+static long
-+mshv_partition_ioctl_set_msi_routing(struct mshv_partition *partition,
-+		void __user *user_args)
-+{
-+	struct mshv_msi_routing_entry *entries = NULL;
-+	struct mshv_msi_routing args;
-+	long ret;
-+
-+	if (copy_from_user(&args, user_args, sizeof(args)))
-+		return -EFAULT;
-+
-+	if (args.nr > MSHV_MAX_MSI_ROUTES)
-+		return -EINVAL;
-+
-+	if (args.nr) {
-+		struct mshv_msi_routing __user *urouting = user_args;
-+
-+		entries = vmemdup_user(urouting->entries,
-+				       array_size(sizeof(*entries),
-+					       args.nr));
-+		if (IS_ERR(entries))
-+			return PTR_ERR(entries);
-+	}
-+	ret = mshv_set_msi_routing(partition, entries, args.nr);
-+	kvfree(entries);
-+
-+	return ret;
-+}
-+
- static long
- mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+diff --git a/drivers/hv/hv_eventfd.c b/drivers/hv/hv_eventfd.c
+index 6404624b3bc6..729b5f67aa9a 100644
+--- a/drivers/hv/hv_eventfd.c
++++ b/drivers/hv/hv_eventfd.c
+@@ -88,13 +88,32 @@ irqfd_resampler_ack(struct mshv_irq_ack_notifier *mian)
+ static void
+ irqfd_inject(struct mshv_kernel_irqfd *irqfd)
  {
-@@ -898,6 +927,10 @@ mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
- 		ret = mshv_partition_ioctl_ioeventfd(partition,
- 						 (void __user *)arg);
- 		break;
-+	case MSHV_SET_MSI_ROUTING:
-+		ret = mshv_partition_ioctl_set_msi_routing(partition,
-+							   (void __user *)arg);
-+		break;
- 	default:
- 		ret = -ENOTTY;
- 	}
-@@ -965,6 +998,7 @@ destroy_partition(struct mshv_partition *partition)
- 		vfree(region->pages);
- 	}
++	struct mshv_partition *partition = irqfd->partition;
+ 	struct mshv_lapic_irq *irq = &irqfd->lapic_irq;
++	unsigned int seq;
++	int idx;
  
-+	mshv_free_msi_routing(partition);
- 	kfree(partition);
- }
- 
-diff --git a/drivers/hv/mshv_msi.c b/drivers/hv/mshv_msi.c
-new file mode 100644
-index 000000000000..ae25ed8dfef4
---- /dev/null
-+++ b/drivers/hv/mshv_msi.c
-@@ -0,0 +1,127 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020, Microsoft Corporation.
-+ *
-+ * Authors:
-+ *   Vineeth Remanan Pillai <viremana@linux.microsoft.com>
-+ */
+ 	WARN_ON(irqfd->resampler &&
+ 		!irq->control.level_triggered);
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/mshv.h>
-+#include <linux/mshv_eventfd.h>
-+#include <linux/hyperv.h>
-+#include <asm/mshyperv.h>
-+
-+#include "mshv.h"
-+
-+MODULE_AUTHOR("Microsoft");
-+MODULE_LICENSE("GPL");
-+
-+int mshv_set_msi_routing(struct mshv_partition *partition,
-+		const struct mshv_msi_routing_entry *ue,
-+		unsigned int nr)
-+{
-+	struct mshv_msi_routing_table *new = NULL, *old;
-+	u32 i, nr_rt_entries = 0;
-+	int r = 0;
-+
-+	if (nr == 0)
-+		goto swap_routes;
-+
-+	for (i = 0; i < nr; i++) {
-+		if (ue[i].gsi >= MSHV_MAX_MSI_ROUTES)
-+			return -EINVAL;
-+
-+		if (ue[i].address_hi)
-+			return -EINVAL;
-+
-+		nr_rt_entries = max(nr_rt_entries, ue[i].gsi);
-+	}
-+	nr_rt_entries += 1;
-+
-+	new = kzalloc(struct_size(new, entries, nr_rt_entries),
-+		      GFP_KERNEL_ACCOUNT);
-+	if (!new)
-+		return -ENOMEM;
-+
-+	new->nr_rt_entries = nr_rt_entries;
-+	for (i = 0; i < nr; i++) {
-+		struct mshv_kernel_msi_routing_entry *e;
-+
-+		e = &new->entries[ue[i].gsi];
-+
-+		/*
-+		 * Allow only one to one mapping between GSI and MSI routing.
-+		 */
-+		if (e->gsi != 0) {
-+			r = -EINVAL;
-+			goto out;
++	idx = srcu_read_lock(&partition->irq_srcu);
++	if (irqfd->msi_entry.gsi) {
++		if (!irqfd->msi_entry.entry_valid) {
++			pr_warn("Invalid routing info for gsi %u",
++				irqfd->msi_entry.gsi);
++			srcu_read_unlock(&partition->irq_srcu, idx);
++			return;
 +		}
 +
-+		e->gsi = ue[i].gsi;
-+		e->address_lo = ue[i].address_lo;
-+		e->address_hi = ue[i].address_hi;
-+		e->data = ue[i].data;
-+		e->entry_valid = true;
++		do {
++			seq = read_seqcount_begin(&irqfd->msi_entry_sc);
++		} while (read_seqcount_retry(&irqfd->msi_entry_sc, seq));
 +	}
 +
-+swap_routes:
-+	spin_lock(&partition->irq_lock);
-+	old = rcu_dereference_protected(partition->msi_routing, 1);
-+	rcu_assign_pointer(partition->msi_routing, new);
-+	spin_unlock(&partition->irq_lock);
-+
-+	synchronize_srcu_expedited(&partition->irq_srcu);
-+	new = old;
-+
-+out:
-+	kfree(new);
-+
-+	return r;
+ 	hv_call_assert_virtual_interrupt(irqfd->partition->id,
+ 					 irq->vector, irq->apic_id,
+ 					 irq->control);
++	srcu_read_unlock(&partition->irq_srcu, idx);
+ }
+ 
+ static void
+@@ -206,6 +225,27 @@ irqfd_wakeup(wait_queue_entry_t *wait, unsigned int mode,
+ 	return 0;
+ }
+ 
++/* Must be called under irqfds.lock */
++static void irqfd_update(struct mshv_partition *partition,
++			 struct mshv_kernel_irqfd *irqfd)
++{
++	write_seqcount_begin(&irqfd->msi_entry_sc);
++	irqfd->msi_entry = mshv_msi_map_gsi(partition, irqfd->gsi);
++	mshv_set_msi_irq(&irqfd->msi_entry, &irqfd->lapic_irq);
++	write_seqcount_end(&irqfd->msi_entry_sc);
 +}
 +
-+void mshv_free_msi_routing(struct mshv_partition *partition)
++void mshv_irqfd_routing_update(struct mshv_partition *partition)
 +{
-+	/*
-+	 * Called only during vm destruction.
-+	 * Nobody can use the pointer at this stage
-+	 */
-+	struct mshv_msi_routing_table *rt = rcu_access_pointer(partition->msi_routing);
++	struct mshv_kernel_irqfd *irqfd;
 +
-+	kfree(rt);
++	spin_lock_irq(&partition->irqfds.lock);
++	list_for_each_entry(irqfd, &partition->irqfds.items, list) {
++		irqfd_update(partition, irqfd);
++	}
++	spin_unlock_irq(&partition->irqfds.lock);
 +}
 +
-+struct mshv_kernel_msi_routing_entry
-+mshv_msi_map_gsi(struct mshv_partition *partition, u32 gsi)
-+{
-+	struct mshv_kernel_msi_routing_entry entry = { 0 };
-+	struct mshv_msi_routing_table *msi_rt;
+ static void
+ irqfd_ptable_queue_proc(struct file *file, wait_queue_head_t *wqh,
+ 			poll_table *pt)
+@@ -221,29 +261,23 @@ static int
+ mshv_irqfd_assign(struct mshv_partition *partition,
+ 		  struct mshv_irqfd *args)
+ {
++	struct eventfd_ctx *eventfd = NULL, *resamplefd = NULL;
+ 	struct mshv_kernel_irqfd *irqfd, *tmp;
++	unsigned int events;
+ 	struct fd f;
+-	struct eventfd_ctx *eventfd = NULL, *resamplefd = NULL;
+ 	int ret;
+-	unsigned int events;
++	int idx;
+ 
+ 	irqfd = kzalloc(sizeof(*irqfd), GFP_KERNEL);
+ 	if (!irqfd)
+ 		return -ENOMEM;
+ 
+-	if (args->flags & MSHV_IRQFD_FLAG_RESAMPLE &&
+-		!args->level_triggered)
+-		return -EINVAL;
+-
+ 	irqfd->partition = partition;
+ 	irqfd->gsi = args->gsi;
+-	irqfd->lapic_irq.vector = args->vector;
+-	irqfd->lapic_irq.apic_id = args->apic_id;
+-	irqfd->lapic_irq.control.interrupt_type = args->interrupt_type;
+-	irqfd->lapic_irq.control.level_triggered = args->level_triggered;
+-	irqfd->lapic_irq.control.logical_dest_mode = args->logical_dest_mode;
+ 	INIT_LIST_HEAD(&irqfd->list);
+ 	INIT_WORK(&irqfd->shutdown, irqfd_shutdown);
++	seqcount_spinlock_init(&irqfd->msi_entry_sc,
++			       &partition->irqfds.lock);
+ 
+ 	f = fdget(args->fd);
+ 	if (!f.file) {
+@@ -259,6 +293,31 @@ mshv_irqfd_assign(struct mshv_partition *partition,
+ 
+ 	irqfd->eventfd = eventfd;
+ 
 +
-+	msi_rt = srcu_dereference_check(partition->msi_routing,
-+					&partition->irq_srcu,
-+					lockdep_is_held(&partition->irq_lock));
-+	if (!msi_rt) {
-+		pr_warn("No valid routing information found for gsi: %u\n",
-+			gsi);
-+		entry.gsi = gsi;
-+		return entry;
++	spin_lock_irq(&partition->irqfds.lock);
++	idx = srcu_read_lock(&partition->irq_srcu);
++	irqfd_update(partition, irqfd);
++	srcu_read_unlock(&partition->irq_srcu, idx);
++
++	if (args->flags & MSHV_IRQFD_FLAG_RESAMPLE &&
++	    !irqfd->lapic_irq.control.level_triggered) {
++		spin_unlock_irq(&partition->irqfds.lock);
++		ret = -EINVAL;
++		goto fail;
 +	}
 +
-+	return msi_rt->entries[gsi];
-+}
++	ret = 0;
++	list_for_each_entry(tmp, &partition->irqfds.items, list) {
++		if (irqfd->eventfd != tmp->eventfd)
++			continue;
++		/* This fd is used for another irq already. */
++		ret = -EBUSY;
++		spin_unlock_irq(&partition->irqfds.lock);
++		goto fail;
++	}
++	list_add_tail(&irqfd->list, &partition->irqfds.items);
++	spin_unlock_irq(&partition->irqfds.lock);
 +
-+void mshv_set_msi_irq(struct mshv_kernel_msi_routing_entry *e,
-+		      struct mshv_lapic_irq *irq)
-+{
-+	memset(irq, 0, sizeof(*irq));
-+	if (!e || !e->entry_valid)
-+		return;
-+
-+	irq->vector = e->data & 0xFF;
-+	irq->apic_id = (e->address_lo >> 12) & 0xFF;
-+	irq->control.interrupt_type = (e->data & 0x700) >> 8;
-+	irq->control.level_triggered = (e->data >> 15) & 0x1;
-+	irq->control.logical_dest_mode = (e->address_lo >> 2) & 0x1;
-+}
+ 	if (args->flags & MSHV_IRQFD_FLAG_RESAMPLE) {
+ 		struct mshv_kernel_irqfd_resampler *resampler;
+ 
+@@ -314,19 +373,6 @@ mshv_irqfd_assign(struct mshv_partition *partition,
+ 	init_waitqueue_func_entry(&irqfd->wait, irqfd_wakeup);
+ 	init_poll_funcptr(&irqfd->pt, irqfd_ptable_queue_proc);
+ 
+-	spin_lock_irq(&partition->irqfds.lock);
+-	ret = 0;
+-	list_for_each_entry(tmp, &partition->irqfds.items, list) {
+-		if (irqfd->eventfd != tmp->eventfd)
+-			continue;
+-		/* This fd is used for another irq already. */
+-		ret = -EBUSY;
+-		spin_unlock_irq(&partition->irqfds.lock);
+-		goto fail;
+-	}
+-	list_add_tail(&irqfd->list, &partition->irqfds.items);
+-	spin_unlock_irq(&partition->irqfds.lock);
+-
+ 	/*
+ 	 * Check if there was an event already pending on the eventfd
+ 	 * before we registered, and trigger it as if we didn't miss it.
+diff --git a/drivers/hv/mshv_msi.c b/drivers/hv/mshv_msi.c
+index ae25ed8dfef4..c5dc9c6fe4d5 100644
+--- a/drivers/hv/mshv_msi.c
++++ b/drivers/hv/mshv_msi.c
+@@ -71,6 +71,7 @@ int mshv_set_msi_routing(struct mshv_partition *partition,
+ 	spin_lock(&partition->irq_lock);
+ 	old = rcu_dereference_protected(partition->msi_routing, 1);
+ 	rcu_assign_pointer(partition->msi_routing, new);
++	mshv_irqfd_routing_update(partition);
+ 	spin_unlock(&partition->irq_lock);
+ 
+ 	synchronize_srcu_expedited(&partition->irq_srcu);
 diff --git a/include/linux/mshv.h b/include/linux/mshv.h
-index 5968b49b9c27..ec349be0ba91 100644
+index ec349be0ba91..fc655b60c5cd 100644
 --- a/include/linux/mshv.h
 +++ b/include/linux/mshv.h
-@@ -69,6 +69,7 @@ struct mshv_partition {
- 		spinlock_t        lock;
- 		struct list_head items;
- 	} ioeventfds;
-+	struct mshv_msi_routing_table __rcu *msi_routing;
- };
+@@ -104,6 +104,8 @@ struct mshv_kernel_msi_routing_entry mshv_msi_map_gsi(
+ void mshv_set_msi_irq(struct mshv_kernel_msi_routing_entry *e,
+ 		      struct mshv_lapic_irq *irq);
  
- struct mshv_lapic_irq {
-@@ -77,6 +78,32 @@ struct mshv_lapic_irq {
- 	union hv_interrupt_control control;
- };
- 
-+#define MSHV_MAX_MSI_ROUTES		4096
-+
-+struct mshv_kernel_msi_routing_entry {
-+	u32 entry_valid;
-+	u32 gsi;
-+	u32 address_lo;
-+	u32 address_hi;
-+	u32 data;
-+};
-+
-+struct mshv_msi_routing_table {
-+	u32 nr_rt_entries;
-+	struct mshv_kernel_msi_routing_entry entries[];
-+};
-+
-+int mshv_set_msi_routing(struct mshv_partition *partition,
-+		const struct mshv_msi_routing_entry *entries,
-+		unsigned int nr);
-+void mshv_free_msi_routing(struct mshv_partition *partition);
-+
-+struct mshv_kernel_msi_routing_entry mshv_msi_map_gsi(
-+		struct mshv_partition *partition, u32 gsi);
-+
-+void mshv_set_msi_irq(struct mshv_kernel_msi_routing_entry *e,
-+		      struct mshv_lapic_irq *irq);
++void mshv_irqfd_routing_update(struct mshv_partition *partition);
 +
  struct hv_synic_pages {
  	struct hv_message_page *synic_message_page;
  	struct hv_synic_event_flags_page *synic_event_flags_page;
-diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
-index 008e68bde56d..ac58f2ded79c 100644
---- a/include/uapi/linux/mshv.h
-+++ b/include/uapi/linux/mshv.h
-@@ -117,6 +117,18 @@ struct mshv_ioeventfd {
- 	__u8  pad[4];
+diff --git a/include/linux/mshv_eventfd.h b/include/linux/mshv_eventfd.h
+index fa5d46d2eb85..a24ca167f3e9 100644
+--- a/include/linux/mshv_eventfd.h
++++ b/include/linux/mshv_eventfd.h
+@@ -39,20 +39,22 @@ struct mshv_kernel_irqfd_resampler {
  };
  
-+struct mshv_msi_routing_entry {
-+	__u32 gsi;
-+	__u32 address_lo;
-+	__u32 address_hi;
-+	__u32 data;
-+};
-+
-+struct mshv_msi_routing {
-+	__u32 nr;
-+	__u32 pad;
-+	struct mshv_msi_routing_entry entries[0];
-+};
+ struct mshv_kernel_irqfd {
+-	struct mshv_partition     *partition;
+-	struct eventfd_ctx        *eventfd;
+-	u32                        gsi;
+-	struct mshv_lapic_irq      lapic_irq;
+-	struct list_head           list;
+-	poll_table                 pt;
+-	wait_queue_head_t         *wqh;
+-	wait_queue_entry_t         wait;
+-	struct work_struct         shutdown;
++	struct mshv_partition                *partition;
++	struct eventfd_ctx                   *eventfd;
++	struct mshv_kernel_msi_routing_entry msi_entry;
++	seqcount_spinlock_t                  msi_entry_sc;
++	u32                                  gsi;
++	struct mshv_lapic_irq                lapic_irq;
++	struct list_head                     list;
++	poll_table                           pt;
++	wait_queue_head_t                    *wqh;
++	wait_queue_entry_t                   wait;
++	struct work_struct                   shutdown;
  
- #define MSHV_IOCTL 0xB8
+ 	/* Resampler related */
+-	struct mshv_kernel_irqfd_resampler *resampler;
+-	struct eventfd_ctx *resamplefd;
+-	struct list_head resampler_link;
++	struct mshv_kernel_irqfd_resampler   *resampler;
++	struct eventfd_ctx                   *resamplefd;
++	struct list_head                     resampler_link;
+ };
  
-@@ -136,6 +148,7 @@ struct mshv_ioeventfd {
- 				_IOWR(MSHV_IOCTL, 0xD, struct mshv_partition_property)
- #define MSHV_IRQFD		_IOW(MSHV_IOCTL, 0xE, struct mshv_irqfd)
- #define MSHV_IOEVENTFD		_IOW(MSHV_IOCTL, 0xF, struct mshv_ioeventfd)
-+#define MSHV_SET_MSI_ROUTING	_IOW(MSHV_IOCTL, 0x11, struct mshv_msi_routing)
+ int mshv_irqfd(struct mshv_partition *partition,
+diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+index ac58f2ded79c..b5826120ba7c 100644
+--- a/include/uapi/linux/mshv.h
++++ b/include/uapi/linux/mshv.h
+@@ -83,16 +83,10 @@ struct mshv_translate_gva {
+ #define MSHV_IRQFD_FLAG_RESAMPLE (1 << 1)
  
- /* vp device */
- #define MSHV_GET_VP_REGISTERS   _IOWR(MSHV_IOCTL, 0x05, struct mshv_vp_registers)
+ struct mshv_irqfd {
+-	__u64 apic_id;
+ 	__s32 fd;
+ 	__s32 resamplefd;
+ 	__u32 gsi;
+-	__u32 vector;
+-	__u32 interrupt_type;
+ 	__u32 flags;
+-	__u8  level_triggered;
+-	__u8  logical_dest_mode;
+-	__u8  pad[6];
+ };
+ 
+ enum {
 -- 
 2.25.1
 
