@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A74F0399165
+	by mail.lfdr.de (Postfix) with ESMTP id B427D399166
 	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jun 2021 19:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230514AbhFBRW5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Jun 2021 13:22:57 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51152 "EHLO
+        id S230500AbhFBRW4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Jun 2021 13:22:56 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:51150 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbhFBRWy (ORCPT
+        with ESMTP id S230265AbhFBRWy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Wed, 2 Jun 2021 13:22:54 -0400
 Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3C45120B800D;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5425520B8010;
         Wed,  2 Jun 2021 10:21:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3C45120B800D
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5425520B8010
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1622654471;
-        bh=kUB2qnEqQNHgFZw8QsVpodTAnhZ1toRX3gB0NY9UQwg=;
+        bh=M0e2Xy2qjaurngBYtOCvE1zI2shmVNeK4E1iRZ9ux3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nM0OroTeTNcwX7Atdb9ClXRh89kYGE5fOw2AY1SMnAAdGDs/RqMT4+lBGEPTOHk5D
-         YrmDTOYez7TWzMrjWLqnkA2rFx539ji+3ykEgT/7klV97leHJUrxmhhXuaCdW/KEkd
-         77MU5x7OA3GwQz7bjGLdlzeApFZHyWq6xK9qe/yg=
+        b=rBwWuQKkVkqcMOPOpwNF6xXXVzvS/Nhhi7H1kKV+phwkPyaCTQzWofRTRgabNZmNR
+         FdzQo5ZP9Ky4bEMY3EsuWrGhNIL9Mgjs5b6h1fG2CzfF23BenD4l5A7sp4HbtFeR2q
+         nOhlBEXSU4BqHmJOnrTMQQeYpbBW57tzIGj7GyMw=
 From:   Vineeth Pillai <viremana@linux.microsoft.com>
 To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: [PATCH 05/17] mshv: SynIC event ring and event flags support
-Date:   Wed,  2 Jun 2021 17:20:50 +0000
-Message-Id: <b0231e97ba26fede0d1f31acca488f5461340d74.1622654100.git.viremana@linux.microsoft.com>
+Subject: [PATCH 06/17] mshv: SynIC port and connection hypercalls
+Date:   Wed,  2 Jun 2021 17:20:51 +0000
+Message-Id: <3125953aae8e7950a6da4c311ef163b79d6fb6b3.1622654100.git.viremana@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1622654100.git.viremana@linux.microsoft.com>
 References: <cover.1622654100.git.viremana@linux.microsoft.com>
@@ -45,286 +45,405 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Doorbell is a  mechanism by which a parent partition can register for
-notification if a specified mmio address is touched by a child partition.
-Parent partition can setup the notification by specifying mmio address,
-size of the data written(1/2/4/8 bytes) and optionally the data as well.
+Hyper-V enables inter-partition communication through the port and
+connection constructs. More details about ports and connections in
+TLFS chapter 11.
 
-Hyper-V makes use of an event ring buffer to signal events. This
-buffer is implemented as a GPA overlay page. Doorbell notifications are
-delivered via this event ring buffer.
-
-Enable SynIC event ring buffer.
-
-While at it, enable SynIC event flags. It is a lightweight inter-partition
-communication mechanism to signal events between partitions or from
-hypervisor to a partition.
+Implement hypercalls related to ports and connections for enabling
+inter-partiion communication.
 
 Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
 ---
- arch/x86/include/asm/hyperv-tlfs.h |  2 +
- drivers/hv/hv_synic.c              | 81 +++++++++++++++++++++++++++---
- drivers/hv/mshv_main.c             |  6 +--
- include/asm-generic/hyperv-tlfs.h  | 29 +++++++++++
- include/linux/mshv.h               |  8 ++-
- 5 files changed, 115 insertions(+), 11 deletions(-)
+ drivers/hv/hv_call.c                   | 161 +++++++++++++++++++++++++
+ drivers/hv/mshv.h                      |  12 ++
+ include/asm-generic/hyperv-tlfs.h      |  55 +++++++++
+ include/linux/hyperv.h                 |   9 --
+ include/uapi/asm-generic/hyperv-tlfs.h |  76 ++++++++++++
+ 5 files changed, 304 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index 871f5d014ae0..e4b0eea1703e 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -189,6 +189,7 @@ enum hv_isolation_type {
- #define HV_REGISTER_SIEFP			0x40000082
- #define HV_REGISTER_SIMP			0x40000083
- #define HV_REGISTER_EOM				0x40000084
-+#define HV_REGISTER_SIRBP			0x40000085
- #define HV_REGISTER_SINT0			0x40000090
- #define HV_REGISTER_SINT1			0x40000091
- #define HV_REGISTER_SINT2			0x40000092
-@@ -252,6 +253,7 @@ enum hv_isolation_type {
- #define HV_X64_MSR_SIEFP		HV_REGISTER_SIEFP
- #define HV_X64_MSR_VP_INDEX		HV_REGISTER_VP_INDEX
- #define HV_X64_MSR_EOM			HV_REGISTER_EOM
-+#define HV_X64_MSR_SIRBP		HV_REGISTER_SIRBP
- #define HV_X64_MSR_SINT0		HV_REGISTER_SINT0
- #define HV_X64_MSR_SINT15		HV_REGISTER_SINT15
- #define HV_X64_MSR_CRASH_P0		HV_REGISTER_CRASH_P0
-diff --git a/drivers/hv/hv_synic.c b/drivers/hv/hv_synic.c
-index 9800ae6693a9..a2f712acca82 100644
---- a/drivers/hv/hv_synic.c
-+++ b/drivers/hv/hv_synic.c
-@@ -19,8 +19,8 @@
- 
- void mshv_isr(void)
- {
--	struct hv_message_page **msg_page =
--			this_cpu_ptr(mshv.synic_message_page);
-+	struct hv_synic_pages *spages = this_cpu_ptr(mshv.synic_pages);
-+	struct hv_message_page **msg_page = &spages->synic_message_page;
- 	struct hv_message *msg;
- 	u32 message_type;
- 	struct mshv_partition *partition;
-@@ -115,10 +115,16 @@ void mshv_isr(void)
- int mshv_synic_init(unsigned int cpu)
- {
- 	union hv_synic_simp simp;
-+	union hv_synic_siefp siefp;
-+	union hv_synic_sirbp sirbp;
- 	union hv_synic_sint sint;
- 	union hv_synic_scontrol sctrl;
--	struct hv_message_page **msg_page =
--			this_cpu_ptr(mshv.synic_message_page);
-+	struct hv_synic_pages *spages = this_cpu_ptr(mshv.synic_pages);
-+	struct hv_message_page **msg_page = &spages->synic_message_page;
-+	struct hv_synic_event_flags_page **event_flags_page =
-+			&spages->synic_event_flags_page;
-+	struct hv_synic_event_ring_page **event_ring_page =
-+			&spages->synic_event_ring_page;
- 
- 	/* Setup the Synic's message page */
- 	simp.as_uint64 = hv_get_register(HV_REGISTER_SIMP);
-@@ -127,11 +133,35 @@ int mshv_synic_init(unsigned int cpu)
- 			     HV_HYP_PAGE_SIZE,
-                              MEMREMAP_WB);
- 	if (!(*msg_page)) {
--		pr_err("%s: memremap failed\n", __func__);
-+		pr_err("%s: SIMP memremap failed\n", __func__);
- 		return -EFAULT;
- 	}
- 	hv_set_register(HV_REGISTER_SIMP, simp.as_uint64);
- 
-+	/* Setup the Synic's event flags page */
-+	siefp.as_uint64 = hv_get_register(HV_REGISTER_SIEFP);
-+	siefp.siefp_enabled = true;
-+	*event_flags_page = memremap(siefp.base_siefp_gpa << PAGE_SHIFT,
-+		     PAGE_SIZE, MEMREMAP_WB);
-+
-+	if (!(*event_flags_page)) {
-+		pr_err("%s: SIEFP memremap failed\n", __func__);
-+		goto cleanup;
-+	}
-+	hv_set_register(HV_REGISTER_SIEFP, siefp.as_uint64);
-+
-+	/* Setup the Synic's event ring page */
-+	sirbp.as_uint64 = hv_get_register(HV_REGISTER_SIRBP);
-+	sirbp.sirbp_enabled = true;
-+	*event_ring_page = memremap(sirbp.base_sirbp_gpa << PAGE_SHIFT,
-+		     PAGE_SIZE, MEMREMAP_WB);
-+
-+	if (!(*event_ring_page)) {
-+		pr_err("%s: SIRBP memremap failed\n", __func__);
-+		goto cleanup;
-+	}
-+	hv_set_register(HV_REGISTER_SIRBP, sirbp.as_uint64);
-+
- 	/* Enable intercepts */
- 	sint.as_uint64 = 0;
- 	sint.vector = HYPERVISOR_CALLBACK_VECTOR;
-@@ -150,15 +180,40 @@ int mshv_synic_init(unsigned int cpu)
- 	hv_set_register(HV_REGISTER_SCONTROL, sctrl.as_uint64);
- 
- 	return 0;
-+
-+cleanup:
-+	if (*event_ring_page) {
-+		sirbp.sirbp_enabled = false;
-+		hv_set_register(HV_REGISTER_SIRBP, sirbp.as_uint64);
-+		memunmap(*event_ring_page);
-+	}
-+	if (*event_flags_page) {
-+		siefp.siefp_enabled = false;
-+		hv_set_register(HV_REGISTER_SIEFP, siefp.as_uint64);
-+		memunmap(*event_flags_page);
-+	}
-+	if (*msg_page) {
-+		simp.simp_enabled = false;
-+		hv_set_register(HV_REGISTER_SIMP, simp.as_uint64);
-+		memunmap(*msg_page);
-+	}
-+
-+	return -EFAULT;
+diff --git a/drivers/hv/hv_call.c b/drivers/hv/hv_call.c
+index 025d4e2b892f..57db3a8ac94a 100644
+--- a/drivers/hv/hv_call.c
++++ b/drivers/hv/hv_call.c
+@@ -742,3 +742,164 @@ int hv_call_translate_virtual_address(
+ 	return hv_status_to_errno(status);
  }
  
- int mshv_synic_cleanup(unsigned int cpu)
- {
- 	union hv_synic_sint sint;
- 	union hv_synic_simp simp;
-+	union hv_synic_siefp siefp;
-+	union hv_synic_sirbp sirbp;
- 	union hv_synic_scontrol sctrl;
--	struct hv_message_page **msg_page =
--			this_cpu_ptr(mshv.synic_message_page);
-+	struct hv_synic_pages *spages = this_cpu_ptr(mshv.synic_pages);
-+	struct hv_message_page **msg_page = &spages->synic_message_page;
-+	struct hv_synic_event_flags_page **event_flags_page =
-+		&spages->synic_event_flags_page;
-+	struct hv_synic_event_ring_page **event_ring_page =
-+		&spages->synic_event_ring_page;
- 
- 	/* Disable the interrupt */
- 	sint.as_uint64 = hv_get_register(HV_REGISTER_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX);
-@@ -166,6 +221,18 @@ int mshv_synic_cleanup(unsigned int cpu)
- 	hv_set_register(HV_REGISTER_SINT0 + HV_SYNIC_INTERCEPTION_SINT_INDEX,
- 			sint.as_uint64);
- 
-+	/* Disable Synic's event ring page */
-+	sirbp.as_uint64 = hv_get_register(HV_REGISTER_SIRBP);
-+	sirbp.sirbp_enabled = false;
-+	hv_set_register(HV_REGISTER_SIRBP, sirbp.as_uint64);
-+	memunmap(*event_ring_page);
 +
-+	/* Disable Synic's event flags page */
-+	siefp.as_uint64 = hv_get_register(HV_REGISTER_SIEFP);
-+	siefp.siefp_enabled = false;
-+	hv_set_register(HV_REGISTER_SIEFP, siefp.as_uint64);
-+	memunmap(*event_flags_page);
++int
++hv_call_create_port(u64 port_partition_id, union hv_port_id port_id,
++		    u64 connection_partition_id,
++		    struct hv_port_info *port_info,
++		    u8 port_vtl, u8 min_connection_vtl, int node)
++{
++	struct hv_create_port *input;
++	unsigned long flags;
++	int ret = 0;
++	int status;
 +
- 	/* Disable Synic's message page */
- 	simp.as_uint64 = hv_get_register(HV_REGISTER_SIMP);
- 	simp.simp_enabled = false;
-diff --git a/drivers/hv/mshv_main.c b/drivers/hv/mshv_main.c
-index fe6fb2668d36..2adae676dba5 100644
---- a/drivers/hv/mshv_main.c
-+++ b/drivers/hv/mshv_main.c
-@@ -1118,8 +1118,8 @@ __init mshv_init(void)
- 		return ret;
- 	}
++	do {
++		local_irq_save(flags);
++		input = (struct hv_create_port *)(*this_cpu_ptr(
++				hyperv_pcpu_input_arg));
++		memset(input, 0, sizeof(*input));
++
++		input->port_partition_id = port_partition_id;
++		input->port_id = port_id;
++		input->connection_partition_id = connection_partition_id;
++		input->port_info = *port_info;
++		input->port_vtl = port_vtl;
++		input->min_connection_vtl = min_connection_vtl;
++		input->proximity_domain_info =
++			numa_node_to_proximity_domain_info(node);
++		status = hv_do_hypercall(HVCALL_CREATE_PORT, input,
++					NULL) & HV_HYPERCALL_RESULT_MASK;
++		local_irq_restore(flags);
++		if (status == HV_STATUS_SUCCESS)
++			break;
++
++		if (status != HV_STATUS_INSUFFICIENT_MEMORY) {
++			pr_err("%s: %s\n",
++			       __func__, hv_status_to_string(status));
++			ret = -hv_status_to_errno(status);
++			break;
++		}
++		ret = hv_call_deposit_pages(NUMA_NO_NODE,
++				port_partition_id, 1);
++
++	} while (!ret);
++
++	return ret;
++}
++
++int
++hv_call_delete_port(u64 port_partition_id, union hv_port_id port_id)
++{
++	union hv_delete_port input = { 0 };
++	unsigned long flags;
++	int status;
++
++	local_irq_save(flags);
++	input.port_partition_id = port_partition_id;
++	input.port_id = port_id;
++	status = hv_do_fast_hypercall16(HVCALL_DELETE_PORT,
++					input.as_uint64[0],
++					input.as_uint64[1]) &
++			HV_HYPERCALL_RESULT_MASK;
++	local_irq_restore(flags);
++
++	if (status != HV_STATUS_SUCCESS) {
++		pr_err("%s: %s\n", __func__, hv_status_to_string(status));
++		return -hv_status_to_errno(status);
++	}
++
++	return 0;
++}
++
++int
++hv_call_connect_port(u64 port_partition_id, union hv_port_id port_id,
++		     u64 connection_partition_id,
++		     union hv_connection_id connection_id,
++		     struct hv_connection_info *connection_info,
++		     u8 connection_vtl, int node)
++{
++	struct hv_connect_port *input;
++	unsigned long flags;
++	int ret = 0, status;
++
++	do {
++		local_irq_save(flags);
++		input = (struct hv_connect_port *)(*this_cpu_ptr(
++				hyperv_pcpu_input_arg));
++		memset(input, 0, sizeof(*input));
++		input->port_partition_id = port_partition_id;
++		input->port_id = port_id;
++		input->connection_partition_id = connection_partition_id;
++		input->connection_id = connection_id;
++		input->connection_info = *connection_info;
++		input->connection_vtl = connection_vtl;
++		input->proximity_domain_info =
++			numa_node_to_proximity_domain_info(node);
++		status = hv_do_hypercall(HVCALL_CONNECT_PORT, input,
++					NULL) & HV_HYPERCALL_RESULT_MASK;
++
++		local_irq_restore(flags);
++		if (status == HV_STATUS_SUCCESS)
++			break;
++
++		if (status != HV_STATUS_INSUFFICIENT_MEMORY) {
++			pr_err("%s: %s\n",
++			       __func__, hv_status_to_string(status));
++			ret = -hv_status_to_errno(status);
++			break;
++		}
++		ret = hv_call_deposit_pages(NUMA_NO_NODE,
++				connection_partition_id, 1);
++	} while (!ret);
++
++	return ret;
++}
++
++int
++hv_call_disconnect_port(u64 connection_partition_id,
++			union hv_connection_id connection_id)
++{
++	union hv_disconnect_port input = { 0 };
++	unsigned long flags;
++	int status;
++
++	local_irq_save(flags);
++	input.connection_partition_id = connection_partition_id;
++	input.connection_id = connection_id;
++	input.is_doorbell = 1;
++	status = hv_do_fast_hypercall16(HVCALL_DISCONNECT_PORT,
++					input.as_uint64[0],
++					input.as_uint64[1]) &
++			HV_HYPERCALL_RESULT_MASK;
++	local_irq_restore(flags);
++
++	if (status != HV_STATUS_SUCCESS) {
++		pr_err("%s: %s\n", __func__, hv_status_to_string(status));
++		return -hv_status_to_errno(status);
++	}
++
++	return 0;
++}
++
++int
++hv_call_notify_port_ring_empty(u32 sint_index)
++{
++	union hv_notify_port_ring_empty input = { 0 };
++	unsigned long flags;
++	int status;
++
++	local_irq_save(flags);
++	input.sint_index = sint_index;
++	status = hv_do_fast_hypercall8(HVCALL_NOTIFY_PORT_RING_EMPTY,
++					input.as_uint64) &
++			HV_HYPERCALL_RESULT_MASK;
++	local_irq_restore(flags);
++
++	if (status != HV_STATUS_SUCCESS) {
++		pr_err("%s: %s\n", __func__, hv_status_to_string(status));
++		return -hv_status_to_errno(status);
++	}
++
++	return 0;
++}
+diff --git a/drivers/hv/mshv.h b/drivers/hv/mshv.h
+index 037291a0ad45..e16818e977b9 100644
+--- a/drivers/hv/mshv.h
++++ b/drivers/hv/mshv.h
+@@ -117,4 +117,16 @@ int hv_call_translate_virtual_address(
+ 		u64 *gpa,
+ 		union hv_translate_gva_result *result);
  
--	mshv.synic_message_page = alloc_percpu(struct hv_message_page *);
--	if (!mshv.synic_message_page) {
-+	mshv.synic_pages = alloc_percpu(struct hv_synic_pages);
-+	if (!mshv.synic_pages) {
- 		pr_err("%s: failed to allocate percpu synic page\n", __func__);
- 		misc_deregister(&mshv_dev);
- 		return -ENOMEM;
-@@ -1144,7 +1144,7 @@ static void
- __exit mshv_exit(void)
- {
- 	cpuhp_remove_state(mshv_cpuhp_online);
--	free_percpu(mshv.synic_message_page);
-+	free_percpu(mshv.synic_pages);
- 
- 	misc_deregister(&mshv_dev);
- }
++int hv_call_create_port(u64 port_partition_id, union hv_port_id port_id,
++			u64 connection_partition_id, struct hv_port_info *port_info,
++			u8 port_vtl, u8 min_connection_vtl, int node);
++int hv_call_delete_port(u64 port_partition_id, union hv_port_id port_id);
++int hv_call_connect_port(u64 port_partition_id, union hv_port_id port_id,
++			 u64 connection_partition_id,
++			 union hv_connection_id connection_id,
++			 struct hv_connection_info *connection_info,
++			 u8 connection_vtl, int node);
++int hv_call_disconnect_port(u64 connection_partition_id,
++			    union hv_connection_id connection_id);
++int hv_call_notify_port_ring_empty(u32 sint_index);
+ #endif /* _MSHV_H */
 diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 8f08d0e9163d..f70391a3320f 100644
+index f70391a3320f..42e0237b0da8 100644
 --- a/include/asm-generic/hyperv-tlfs.h
 +++ b/include/asm-generic/hyperv-tlfs.h
-@@ -279,8 +279,23 @@ struct hv_timer_message_payload {
- 	__u64 delivery_time;	/* When the message was delivered */
+@@ -159,6 +159,8 @@ struct ms_hyperv_tsc_page {
+ #define HVCALL_GET_VP_REGISTERS			0x0050
+ #define HVCALL_SET_VP_REGISTERS			0x0051
+ #define HVCALL_TRANSLATE_VIRTUAL_ADDRESS	0x0052
++#define HVCALL_DELETE_PORT			0x0058
++#define HVCALL_DISCONNECT_PORT			0x005b
+ #define HVCALL_POST_MESSAGE			0x005c
+ #define HVCALL_SIGNAL_EVENT			0x005d
+ #define HVCALL_POST_DEBUG_DATA			0x0069
+@@ -168,7 +170,10 @@ struct ms_hyperv_tsc_page {
+ #define HVCALL_MAP_DEVICE_INTERRUPT		0x007c
+ #define HVCALL_UNMAP_DEVICE_INTERRUPT		0x007d
+ #define HVCALL_RETARGET_INTERRUPT		0x007e
++#define HVCALL_NOTIFY_PORT_RING_EMPTY		0x008b
+ #define HVCALL_ASSERT_VIRTUAL_INTERRUPT		0x0094
++#define HVCALL_CREATE_PORT			0x0095
++#define HVCALL_CONNECT_PORT			0x0096
+ #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
+ #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
+ #define HVCALL_MAP_VP_STATE_PAGE			0x00e1
+@@ -949,4 +954,54 @@ struct hv_translate_virtual_address_out {
+ 	u64 gpa_page;
  } __packed;
  
-+/* Define the synthentic interrupt controller event ring format */
-+#define HV_SYNIC_EVENT_RING_MESSAGE_COUNT 63
-+
-+struct hv_synic_event_ring {
-+	u8  signal_masked;
-+	u8  ring_full;
-+	u16 reserved_z;
-+	u32 data[HV_SYNIC_EVENT_RING_MESSAGE_COUNT];
++struct hv_create_port {
++	u64 port_partition_id;
++	union hv_port_id port_id;
++	u8 port_vtl;
++	u8 min_connection_vtl;
++	u16 padding;
++	u64 connection_partition_id;
++	struct hv_port_info port_info;
++	union hv_proximity_domain_info proximity_domain_info;
 +} __packed;
 +
-+struct hv_synic_event_ring_page {
-+	volatile struct hv_synic_event_ring sint_event_ring[HV_SYNIC_SINT_COUNT];
-+};
-+
- /* Define synthetic interrupt controller flag constants. */
- #define HV_EVENT_FLAGS_COUNT		(256 * 8)
-+#define HV_EVENT_FLAGS_BYTE_COUNT	(256)
- #define HV_EVENT_FLAGS_LONG_COUNT	(256 / sizeof(unsigned long))
- 
- /*
-@@ -304,9 +319,14 @@ union hv_stimer_config {
- 
- /* Define the synthetic interrupt controller event flags format. */
- union hv_synic_event_flags {
-+	unsigned char flags8[HV_EVENT_FLAGS_BYTE_COUNT];
- 	unsigned long flags[HV_EVENT_FLAGS_LONG_COUNT];
- };
- 
-+struct hv_synic_event_flags_page {
-+	volatile union hv_synic_event_flags event_flags[HV_SYNIC_SINT_COUNT];
-+};
-+
- /* Define SynIC control register. */
- union hv_synic_scontrol {
- 	u64 as_uint64;
-@@ -349,6 +369,15 @@ union hv_synic_siefp {
- 	} __packed;
- };
- 
-+union hv_synic_sirbp {
-+	u64 as_uint64;
++union hv_delete_port {
++	u64 as_uint64[2];
 +	struct {
-+		u64 sirbp_enabled:1;
-+		u64 preserved:11;
-+		u64 base_sirbp_gpa:52;
++		u64 port_partition_id;
++		union hv_port_id port_id;
++		u32 reserved;
 +	} __packed;
 +};
 +
- struct hv_vpset {
- 	u64 format;
- 	u64 valid_bank_mask;
-diff --git a/include/linux/mshv.h b/include/linux/mshv.h
-index 33f4d0cfee11..679aa3fa8cdb 100644
---- a/include/linux/mshv.h
-+++ b/include/linux/mshv.h
-@@ -49,8 +49,14 @@ struct mshv_partition {
- 	} vps;
- };
- 
-+struct hv_synic_pages {
-+	struct hv_message_page *synic_message_page;
-+	struct hv_synic_event_flags_page *synic_event_flags_page;
-+	struct hv_synic_event_ring_page *synic_event_ring_page;
++union hv_notify_port_ring_empty {
++	u64 as_uint64;
++	struct {
++		u32 sint_index;
++		u32 reserved;
++	} __packed;
 +};
 +
- struct mshv {
--	struct hv_message_page __percpu **synic_message_page;
-+	struct hv_synic_pages __percpu *synic_pages;
- 	struct {
- 		spinlock_t lock;
- 		u64 count;
++struct hv_connect_port {
++	u64 connection_partition_id;
++	union hv_connection_id connection_id;
++	u8 connection_vtl;
++	u8 rsvdz0;
++	u16 rsvdz1;
++	u64 port_partition_id;
++	union hv_port_id port_id;
++	u32 reserved2;
++	struct hv_connection_info connection_info;
++	union hv_proximity_domain_info proximity_domain_info;
++} __packed;
++
++union hv_disconnect_port {
++	u64 as_uint64[2];
++	struct {
++		u64 connection_partition_id;
++		union hv_connection_id connection_id;
++		u32 is_doorbell: 1;
++		u32 reserved: 31;
++	} __packed;
++};
+ #endif
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 2e859d2f9609..76ff26579622 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -750,15 +750,6 @@ struct vmbus_close_msg {
+ 	struct vmbus_channel_close_channel msg;
+ };
+ 
+-/* Define connection identifier type. */
+-union hv_connection_id {
+-	u32 asu32;
+-	struct {
+-		u32 id:24;
+-		u32 reserved:8;
+-	} u;
+-};
+-
+ enum vmbus_device_type {
+ 	HV_IDE = 0,
+ 	HV_SCSI,
+diff --git a/include/uapi/asm-generic/hyperv-tlfs.h b/include/uapi/asm-generic/hyperv-tlfs.h
+index 388c4eb29212..2031115c6cce 100644
+--- a/include/uapi/asm-generic/hyperv-tlfs.h
++++ b/include/uapi/asm-generic/hyperv-tlfs.h
+@@ -53,6 +53,25 @@ union hv_message_flags {
+ 	} __packed;
+ };
+ 
++enum hv_port_type {
++	HV_PORT_TYPE_MESSAGE = 1,
++	HV_PORT_TYPE_EVENT   = 2,
++	HV_PORT_TYPE_MONITOR = 3,
++	HV_PORT_TYPE_DOORBELL = 4	// Root Partition only
++};
++
++
++/*
++ * Doorbell connection_info flags.
++ */
++#define HV_DOORBELL_FLAG_TRIGGER_SIZE_MASK  0x00000007
++#define HV_DOORBELL_FLAG_TRIGGER_SIZE_ANY   0x00000000
++#define HV_DOORBELL_FLAG_TRIGGER_SIZE_BYTE  0x00000001
++#define HV_DOORBELL_FLAG_TRIGGER_SIZE_WORD  0x00000002
++#define HV_DOORBELL_FLAG_TRIGGER_SIZE_DWORD 0x00000003
++#define HV_DOORBELL_FLAG_TRIGGER_SIZE_QWORD 0x00000004
++#define HV_DOORBELL_FLAG_TRIGGER_ANY_VALUE  0x80000000
++
+ /* Define port identifier type. */
+ union hv_port_id {
+ 	__u32 asu32;
+@@ -62,6 +81,63 @@ union hv_port_id {
+ 	} __packed u;
+ };
+ 
++struct hv_port_info {
++	enum hv_port_type port_type;
++	__u32 padding;
++	union {
++		struct {
++			__u32 target_sint;
++			__u32 target_vp;
++			__u64 rsvdz;
++		} message_port_info;
++		struct {
++			__u32 target_sint;
++			__u32 target_vp;
++			__u16 base_flag_number;
++			__u16 flag_count;
++			__u32 rsvdz;
++		} event_port_info;
++		struct {
++			__u64 monitor_address;
++			__u64 rsvdz;
++		} monitor_port_info;
++		struct {
++			__u32 target_sint;
++			__u32 target_vp;
++			__u64 rsvdz;
++		} doorbell_port_info;
++	};
++};
++
++union hv_connection_id {
++	__u32 asu32;
++	struct {
++		__u32 id:24;
++		__u32 reserved:8;
++	} u;
++};
++
++struct hv_connection_info {
++	enum hv_port_type port_type;
++	__u32 padding;
++	union {
++		struct {
++			__u64 rsvdz;
++		} message_connection_info;
++		struct {
++			__u64 rsvdz;
++		} event_connection_info;
++		struct {
++			__u64 monitor_address;
++		} monitor_connection_info;
++		struct {
++			__u64 gpa;
++			__u64 trigger_value;
++			__u64 flags;
++		} doorbell_connection_info;
++	};
++};
++
+ /* Define synthetic interrupt controller message header. */
+ struct hv_message_header {
+ 	__u32 message_type;
 -- 
 2.25.1
 
