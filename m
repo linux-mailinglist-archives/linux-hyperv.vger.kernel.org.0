@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 434DB39916D
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jun 2021 19:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D995399171
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jun 2021 19:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230453AbhFBRW7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Jun 2021 13:22:59 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51206 "EHLO
+        id S230155AbhFBRXA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Jun 2021 13:23:00 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:51214 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230416AbhFBRWz (ORCPT
+        with ESMTP id S230425AbhFBRWz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Wed, 2 Jun 2021 13:22:55 -0400
 Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 31F8F20B8025;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 48B3B20B8027;
         Wed,  2 Jun 2021 10:21:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 31F8F20B8025
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 48B3B20B8027
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1622654472;
-        bh=yKIl/UK14bGXrTBWX2GOe75AYA1qgrgayUaSe7jyIqE=;
+        bh=OWsnzgw6kc9j7w5nSEy/i27W92+i9kzayVieRd6mr+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXIwv9Os+GeHjiJUOZsaiC9vVFFRQYGp+bWPkkm+SMzsrcjnTTCGFsoUP4wClLEel
-         fz0AbDHeiLXWJt7seOubqopwYT6AIhRWneME4n01n0ABhNkTYkIx9A+uCULXqBbz7f
-         1Z5noN2zFzw9fqBhp3X5FI9M/wtJch8nI2DLP+7I=
+        b=c/pbQDPHkq9E2FFTryPIp6AQ/kcAjFHrvYq61j3LQFi9XNVg5LeoFCB08NOrQ2jOx
+         drl2VEMTucVnTOHkbF8hkM4GDJRo8n/vZe/7OLNeP3aoJ6jwkoWjWRnE+xQiuYRQOf
+         VSrNzF2xvffBdnP76Fc/8SCJmOEzjFjoUZait4z8=
 From:   Vineeth Pillai <viremana@linux.microsoft.com>
 To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: [PATCH 15/17] mshv: Level-triggered interrupt support for irqfd
-Date:   Wed,  2 Jun 2021 17:21:00 +0000
-Message-Id: <2c849e3cedd8e0a2555a732d51a82545b5a42481.1622654100.git.viremana@linux.microsoft.com>
+Subject: [PATCH 16/17] mshv: User space controlled MSI irq routing for mshv
+Date:   Wed,  2 Jun 2021 17:21:01 +0000
+Message-Id: <40818b1c53e91732fa77025f47cbee9d40684923.1622654100.git.viremana@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1622654100.git.viremana@linux.microsoft.com>
 References: <cover.1622654100.git.viremana@linux.microsoft.com>
@@ -45,326 +45,302 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-To emulate level triggered interrupts, add a resample option to
-MSHV_IRQFD. When specified, a new resamplefd is provided that notifies
-the user when VM EOI a level-triggered interrupt. Also in this mode,
-posting of an interrupt through an irqfd only asserts the interrupt.
+Implementation of an in-kernel MSI irq routing mechanism for mshv.
 
-Inspired from the KVM counterpart:
-https://patchwork.kernel.org/project/kvm/patch/20120921175601.32604.63271.stgit@bling.home/
+Inspired from the KVM irq routing implementation but adapted
+only for MSI interrupts.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=399ec807ddc38ecccf8c06dbde04531cbdc63e11
+
+All credit goes to kvm developers.
 
 Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
 ---
- drivers/hv/hv_eventfd.c      | 118 ++++++++++++++++++++++++++++++++++-
- drivers/hv/mshv_main.c       |   8 +++
- include/linux/mshv.h         |   4 ++
- include/linux/mshv_eventfd.h |  22 +++++++
- include/uapi/linux/mshv.h    |   4 +-
- 5 files changed, 154 insertions(+), 2 deletions(-)
+ drivers/hv/Makefile       |   2 +-
+ drivers/hv/mshv_main.c    |  34 ++++++++++
+ drivers/hv/mshv_msi.c     | 127 ++++++++++++++++++++++++++++++++++++++
+ include/linux/mshv.h      |  27 ++++++++
+ include/uapi/linux/mshv.h |  13 ++++
+ 5 files changed, 202 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/hv/mshv_msi.c
 
-diff --git a/drivers/hv/hv_eventfd.c b/drivers/hv/hv_eventfd.c
-index 0bfb088dcb80..6404624b3bc6 100644
---- a/drivers/hv/hv_eventfd.c
-+++ b/drivers/hv/hv_eventfd.c
-@@ -60,16 +60,66 @@ mshv_notify_acked_gsi(struct mshv_partition *partition, int gsi)
- 	return acked;
- }
+diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+index 5cb738c10a2d..370d126252ef 100644
+--- a/drivers/hv/Makefile
++++ b/drivers/hv/Makefile
+@@ -14,4 +14,4 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+ hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_fcopy.o hv_utils_transport.o
  
-+static void
-+irqfd_resampler_ack(struct mshv_irq_ack_notifier *mian)
-+{
-+	struct mshv_kernel_irqfd_resampler *resampler;
-+	struct mshv_partition *partition;
-+	struct mshv_kernel_irqfd *irqfd;
-+	int idx;
-+
-+	resampler = container_of(mian,
-+			struct mshv_kernel_irqfd_resampler, notifier);
-+	partition = resampler->partition;
-+
-+	idx = srcu_read_lock(&partition->irq_srcu);
-+
-+	list_for_each_entry_rcu(irqfd, &resampler->list, resampler_link) {
-+		if (irqfd->lapic_irq.control.interrupt_type ==
-+				HV_X64_INTERRUPT_TYPE_EXTINT)
-+			hv_call_clear_virtual_interrupt(partition->id);
-+
-+		eventfd_signal(irqfd->resamplefd, 1);
-+	}
-+
-+	srcu_read_unlock(&partition->irq_srcu, idx);
-+}
-+
- static void
- irqfd_inject(struct mshv_kernel_irqfd *irqfd)
- {
- 	struct mshv_lapic_irq *irq = &irqfd->lapic_irq;
- 
-+	WARN_ON(irqfd->resampler &&
-+		!irq->control.level_triggered);
- 	hv_call_assert_virtual_interrupt(irqfd->partition->id,
- 					 irq->vector, irq->apic_id,
- 					 irq->control);
- }
- 
-+static void
-+irqfd_resampler_shutdown(struct mshv_kernel_irqfd *irqfd)
-+{
-+	struct mshv_kernel_irqfd_resampler *resampler = irqfd->resampler;
-+	struct mshv_partition *partition = resampler->partition;
-+
-+	mutex_lock(&partition->irqfds.resampler_lock);
-+
-+	list_del_rcu(&irqfd->resampler_link);
-+	synchronize_srcu(&partition->irq_srcu);
-+
-+	if (list_empty(&resampler->list)) {
-+		list_del(&resampler->link);
-+		mshv_unregister_irq_ack_notifier(partition, &resampler->notifier);
-+		kfree(resampler);
-+	}
-+
-+	mutex_unlock(&partition->irqfds.resampler_lock);
-+}
-+
-+/*
-+ * Race-free decouple logic (ordering is critical)
-+ */
- static void
- irqfd_shutdown(struct work_struct *work)
- {
-@@ -82,6 +132,11 @@ irqfd_shutdown(struct work_struct *work)
- 	 */
- 	remove_wait_queue(irqfd->wqh, &irqfd->wait);
- 
-+	if (irqfd->resampler) {
-+		irqfd_resampler_shutdown(irqfd);
-+		eventfd_ctx_put(irqfd->resamplefd);
-+	}
-+
- 	/*
- 	 * It is now safe to release the object's resources
- 	 */
-@@ -168,7 +223,7 @@ mshv_irqfd_assign(struct mshv_partition *partition,
- {
- 	struct mshv_kernel_irqfd *irqfd, *tmp;
- 	struct fd f;
--	struct eventfd_ctx *eventfd = NULL;
-+	struct eventfd_ctx *eventfd = NULL, *resamplefd = NULL;
- 	int ret;
- 	unsigned int events;
- 
-@@ -176,6 +231,10 @@ mshv_irqfd_assign(struct mshv_partition *partition,
- 	if (!irqfd)
- 		return -ENOMEM;
- 
-+	if (args->flags & MSHV_IRQFD_FLAG_RESAMPLE &&
-+		!args->level_triggered)
-+		return -EINVAL;
-+
- 	irqfd->partition = partition;
- 	irqfd->gsi = args->gsi;
- 	irqfd->lapic_irq.vector = args->vector;
-@@ -200,6 +259,54 @@ mshv_irqfd_assign(struct mshv_partition *partition,
- 
- 	irqfd->eventfd = eventfd;
- 
-+	if (args->flags & MSHV_IRQFD_FLAG_RESAMPLE) {
-+		struct mshv_kernel_irqfd_resampler *resampler;
-+
-+		resamplefd = eventfd_ctx_fdget(args->resamplefd);
-+		if (IS_ERR(resamplefd)) {
-+			ret = PTR_ERR(resamplefd);
-+			goto fail;
-+		}
-+
-+		irqfd->resamplefd = resamplefd;
-+		INIT_LIST_HEAD(&irqfd->resampler_link);
-+
-+		mutex_lock(&partition->irqfds.resampler_lock);
-+
-+		list_for_each_entry(resampler,
-+				    &partition->irqfds.resampler_list, link) {
-+			if (resampler->notifier.gsi == irqfd->gsi) {
-+				irqfd->resampler = resampler;
-+				break;
-+			}
-+		}
-+
-+		if (!irqfd->resampler) {
-+			resampler = kzalloc(sizeof(*resampler),
-+					    GFP_KERNEL_ACCOUNT);
-+			if (!resampler) {
-+				ret = -ENOMEM;
-+				mutex_unlock(&partition->irqfds.resampler_lock);
-+				goto fail;
-+			}
-+
-+			resampler->partition = partition;
-+			INIT_LIST_HEAD(&resampler->list);
-+			resampler->notifier.gsi = irqfd->gsi;
-+			resampler->notifier.irq_acked = irqfd_resampler_ack;
-+			INIT_LIST_HEAD(&resampler->link);
-+
-+			list_add(&resampler->link, &partition->irqfds.resampler_list);
-+			mshv_register_irq_ack_notifier(partition,
-+						      &resampler->notifier);
-+			irqfd->resampler = resampler;
-+		}
-+
-+		list_add_rcu(&irqfd->resampler_link, &irqfd->resampler->list);
-+
-+		mutex_unlock(&partition->irqfds.resampler_lock);
-+	}
-+
- 	/*
- 	 * Install our own custom wake-up handling so we are notified via
- 	 * a callback whenever someone signals the underlying eventfd
-@@ -238,6 +345,12 @@ mshv_irqfd_assign(struct mshv_partition *partition,
- 	return 0;
- 
- fail:
-+	if (irqfd->resampler)
-+		irqfd_resampler_shutdown(irqfd);
-+
-+	if (resamplefd && !IS_ERR(resamplefd))
-+		eventfd_ctx_put(resamplefd);
-+
- 	if (eventfd && !IS_ERR(eventfd))
- 		eventfd_ctx_put(eventfd);
- 
-@@ -541,6 +654,9 @@ mshv_eventfd_init(struct mshv_partition *partition)
- 	spin_lock_init(&partition->irqfds.lock);
- 	INIT_LIST_HEAD(&partition->irqfds.items);
- 
-+	INIT_LIST_HEAD(&partition->irqfds.resampler_list);
-+	mutex_init(&partition->irqfds.resampler_lock);
-+
- 	spin_lock_init(&partition->ioeventfds.lock);
- 	INIT_LIST_HEAD(&partition->ioeventfds.items);
- }
+ mshv-y                          += mshv_main.o hv_call.o hv_synic.o hv_portid_table.o  \
+-					hv_eventfd.o
++					hv_eventfd.o mshv_msi.o
 diff --git a/drivers/hv/mshv_main.c b/drivers/hv/mshv_main.c
-index 6f93813ad465..0f083447c553 100644
+index 0f083447c553..f7ca0f082b75 100644
 --- a/drivers/hv/mshv_main.c
 +++ b/drivers/hv/mshv_main.c
-@@ -990,6 +990,8 @@ mshv_partition_release(struct inode *inode, struct file *filp)
+@@ -852,6 +852,35 @@ mshv_partition_ioctl_irqfd(struct mshv_partition *partition,
+ 	return mshv_irqfd(partition, &args);
+ }
  
- 	mshv_eventfd_release(partition);
- 
-+	cleanup_srcu_struct(&partition->irq_srcu);
++static long
++mshv_partition_ioctl_set_msi_routing(struct mshv_partition *partition,
++		void __user *user_args)
++{
++	struct mshv_msi_routing_entry *entries = NULL;
++	struct mshv_msi_routing args;
++	long ret;
 +
- 	mshv_partition_put(partition);
- 
- 	return 0;
-@@ -1088,10 +1090,16 @@ mshv_ioctl_create_partition(void __user *user_arg)
- 
- 	fd_install(fd, file);
- 
-+	ret = init_srcu_struct(&partition->irq_srcu);
-+	if (ret)
-+		goto cleanup_irq_srcu;
++	if (copy_from_user(&args, user_args, sizeof(args)))
++		return -EFAULT;
 +
- 	mshv_eventfd_init(partition);
++	if (args.nr > MSHV_MAX_MSI_ROUTES)
++		return -EINVAL;
++
++	if (args.nr) {
++		struct mshv_msi_routing __user *urouting = user_args;
++
++		entries = vmemdup_user(urouting->entries,
++				       array_size(sizeof(*entries),
++					       args.nr));
++		if (IS_ERR(entries))
++			return PTR_ERR(entries);
++	}
++	ret = mshv_set_msi_routing(partition, entries, args.nr);
++	kvfree(entries);
++
++	return ret;
++}
++
+ static long
+ mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+ {
+@@ -898,6 +927,10 @@ mshv_partition_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
+ 		ret = mshv_partition_ioctl_ioeventfd(partition,
+ 						 (void __user *)arg);
+ 		break;
++	case MSHV_SET_MSI_ROUTING:
++		ret = mshv_partition_ioctl_set_msi_routing(partition,
++							   (void __user *)arg);
++		break;
+ 	default:
+ 		ret = -ENOTTY;
+ 	}
+@@ -965,6 +998,7 @@ destroy_partition(struct mshv_partition *partition)
+ 		vfree(region->pages);
+ 	}
  
- 	return fd;
++	mshv_free_msi_routing(partition);
+ 	kfree(partition);
+ }
  
-+cleanup_irq_srcu:
-+	cleanup_srcu_struct(&partition->irq_srcu);
- release_file:
- 	file->f_op->release(file->f_inode, file);
- finalize_partition:
+diff --git a/drivers/hv/mshv_msi.c b/drivers/hv/mshv_msi.c
+new file mode 100644
+index 000000000000..ae25ed8dfef4
+--- /dev/null
++++ b/drivers/hv/mshv_msi.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, Microsoft Corporation.
++ *
++ * Authors:
++ *   Vineeth Remanan Pillai <viremana@linux.microsoft.com>
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/mshv.h>
++#include <linux/mshv_eventfd.h>
++#include <linux/hyperv.h>
++#include <asm/mshyperv.h>
++
++#include "mshv.h"
++
++MODULE_AUTHOR("Microsoft");
++MODULE_LICENSE("GPL");
++
++int mshv_set_msi_routing(struct mshv_partition *partition,
++		const struct mshv_msi_routing_entry *ue,
++		unsigned int nr)
++{
++	struct mshv_msi_routing_table *new = NULL, *old;
++	u32 i, nr_rt_entries = 0;
++	int r = 0;
++
++	if (nr == 0)
++		goto swap_routes;
++
++	for (i = 0; i < nr; i++) {
++		if (ue[i].gsi >= MSHV_MAX_MSI_ROUTES)
++			return -EINVAL;
++
++		if (ue[i].address_hi)
++			return -EINVAL;
++
++		nr_rt_entries = max(nr_rt_entries, ue[i].gsi);
++	}
++	nr_rt_entries += 1;
++
++	new = kzalloc(struct_size(new, entries, nr_rt_entries),
++		      GFP_KERNEL_ACCOUNT);
++	if (!new)
++		return -ENOMEM;
++
++	new->nr_rt_entries = nr_rt_entries;
++	for (i = 0; i < nr; i++) {
++		struct mshv_kernel_msi_routing_entry *e;
++
++		e = &new->entries[ue[i].gsi];
++
++		/*
++		 * Allow only one to one mapping between GSI and MSI routing.
++		 */
++		if (e->gsi != 0) {
++			r = -EINVAL;
++			goto out;
++		}
++
++		e->gsi = ue[i].gsi;
++		e->address_lo = ue[i].address_lo;
++		e->address_hi = ue[i].address_hi;
++		e->data = ue[i].data;
++		e->entry_valid = true;
++	}
++
++swap_routes:
++	spin_lock(&partition->irq_lock);
++	old = rcu_dereference_protected(partition->msi_routing, 1);
++	rcu_assign_pointer(partition->msi_routing, new);
++	spin_unlock(&partition->irq_lock);
++
++	synchronize_srcu_expedited(&partition->irq_srcu);
++	new = old;
++
++out:
++	kfree(new);
++
++	return r;
++}
++
++void mshv_free_msi_routing(struct mshv_partition *partition)
++{
++	/*
++	 * Called only during vm destruction.
++	 * Nobody can use the pointer at this stage
++	 */
++	struct mshv_msi_routing_table *rt = rcu_access_pointer(partition->msi_routing);
++
++	kfree(rt);
++}
++
++struct mshv_kernel_msi_routing_entry
++mshv_msi_map_gsi(struct mshv_partition *partition, u32 gsi)
++{
++	struct mshv_kernel_msi_routing_entry entry = { 0 };
++	struct mshv_msi_routing_table *msi_rt;
++
++	msi_rt = srcu_dereference_check(partition->msi_routing,
++					&partition->irq_srcu,
++					lockdep_is_held(&partition->irq_lock));
++	if (!msi_rt) {
++		pr_warn("No valid routing information found for gsi: %u\n",
++			gsi);
++		entry.gsi = gsi;
++		return entry;
++	}
++
++	return msi_rt->entries[gsi];
++}
++
++void mshv_set_msi_irq(struct mshv_kernel_msi_routing_entry *e,
++		      struct mshv_lapic_irq *irq)
++{
++	memset(irq, 0, sizeof(*irq));
++	if (!e || !e->entry_valid)
++		return;
++
++	irq->vector = e->data & 0xFF;
++	irq->apic_id = (e->address_lo >> 12) & 0xFF;
++	irq->control.interrupt_type = (e->data & 0x700) >> 8;
++	irq->control.level_triggered = (e->data >> 15) & 0x1;
++	irq->control.logical_dest_mode = (e->address_lo >> 2) & 0x1;
++}
 diff --git a/include/linux/mshv.h b/include/linux/mshv.h
-index 2cee4832fc7f..5968b49b9c27 100644
+index 5968b49b9c27..ec349be0ba91 100644
 --- a/include/linux/mshv.h
 +++ b/include/linux/mshv.h
-@@ -10,6 +10,7 @@
- #include <linux/mutex.h>
- #include <linux/semaphore.h>
- #include <linux/sched.h>
-+#include <linux/srcu.h>
- #include <uapi/linux/mshv.h>
- 
- #define MSHV_MAX_PARTITIONS		128
-@@ -55,11 +56,14 @@ struct mshv_partition {
- 	} vps;
- 
- 	spinlock_t irq_lock;
-+	struct srcu_struct irq_srcu;
- 	struct hlist_head irq_ack_notifier_list;
- 
- 	struct {
+@@ -69,6 +69,7 @@ struct mshv_partition {
  		spinlock_t        lock;
- 		struct list_head  items;
-+		struct mutex resampler_lock;
-+		struct list_head  resampler_list;
- 	} irqfds;
- 	struct {
- 		spinlock_t        lock;
-diff --git a/include/linux/mshv_eventfd.h b/include/linux/mshv_eventfd.h
-index b4d587208294..fa5d46d2eb85 100644
---- a/include/linux/mshv_eventfd.h
-+++ b/include/linux/mshv_eventfd.h
-@@ -21,6 +21,23 @@ void mshv_unregister_irq_ack_notifier(struct mshv_partition *partition,
- 			struct mshv_irq_ack_notifier *mian);
- bool mshv_notify_acked_gsi(struct mshv_partition *partition, int gsi);
+ 		struct list_head items;
+ 	} ioeventfds;
++	struct mshv_msi_routing_table __rcu *msi_routing;
+ };
  
-+struct mshv_kernel_irqfd_resampler {
-+	struct mshv_partition *partition;
-+	/*
-+	 * List of irqfds sharing this gsi.
-+	 * Protected by irqfds.resampler_lock
-+	 * and irq_srcu.
-+	 */
-+	struct list_head list;
-+	struct mshv_irq_ack_notifier notifier;
-+	/*
-+	 * Entry in the list of partition->irqfd.resampler_list.
-+	 * Protected by irqfds.resampler_lock
-+	 *
-+	 */
-+	struct list_head link;
+ struct mshv_lapic_irq {
+@@ -77,6 +78,32 @@ struct mshv_lapic_irq {
+ 	union hv_interrupt_control control;
+ };
+ 
++#define MSHV_MAX_MSI_ROUTES		4096
++
++struct mshv_kernel_msi_routing_entry {
++	u32 entry_valid;
++	u32 gsi;
++	u32 address_lo;
++	u32 address_hi;
++	u32 data;
 +};
 +
- struct mshv_kernel_irqfd {
- 	struct mshv_partition     *partition;
- 	struct eventfd_ctx        *eventfd;
-@@ -31,6 +48,11 @@ struct mshv_kernel_irqfd {
- 	wait_queue_head_t         *wqh;
- 	wait_queue_entry_t         wait;
- 	struct work_struct         shutdown;
++struct mshv_msi_routing_table {
++	u32 nr_rt_entries;
++	struct mshv_kernel_msi_routing_entry entries[];
++};
 +
-+	/* Resampler related */
-+	struct mshv_kernel_irqfd_resampler *resampler;
-+	struct eventfd_ctx *resamplefd;
-+	struct list_head resampler_link;
- };
- 
- int mshv_irqfd(struct mshv_partition *partition,
++int mshv_set_msi_routing(struct mshv_partition *partition,
++		const struct mshv_msi_routing_entry *entries,
++		unsigned int nr);
++void mshv_free_msi_routing(struct mshv_partition *partition);
++
++struct mshv_kernel_msi_routing_entry mshv_msi_map_gsi(
++		struct mshv_partition *partition, u32 gsi);
++
++void mshv_set_msi_irq(struct mshv_kernel_msi_routing_entry *e,
++		      struct mshv_lapic_irq *irq);
++
+ struct hv_synic_pages {
+ 	struct hv_message_page *synic_message_page;
+ 	struct hv_synic_event_flags_page *synic_event_flags_page;
 diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
-index e32dee679360..008e68bde56d 100644
+index 008e68bde56d..ac58f2ded79c 100644
 --- a/include/uapi/linux/mshv.h
 +++ b/include/uapi/linux/mshv.h
-@@ -80,17 +80,19 @@ struct mshv_translate_gva {
+@@ -117,6 +117,18 @@ struct mshv_ioeventfd {
+ 	__u8  pad[4];
  };
  
- #define MSHV_IRQFD_FLAG_DEASSIGN (1 << 0)
-+#define MSHV_IRQFD_FLAG_RESAMPLE (1 << 1)
++struct mshv_msi_routing_entry {
++	__u32 gsi;
++	__u32 address_lo;
++	__u32 address_hi;
++	__u32 data;
++};
++
++struct mshv_msi_routing {
++	__u32 nr;
++	__u32 pad;
++	struct mshv_msi_routing_entry entries[0];
++};
  
- struct mshv_irqfd {
- 	__u64 apic_id;
- 	__s32 fd;
-+	__s32 resamplefd;
- 	__u32 gsi;
- 	__u32 vector;
- 	__u32 interrupt_type;
- 	__u32 flags;
- 	__u8  level_triggered;
- 	__u8  logical_dest_mode;
--	__u8  pad[2];
-+	__u8  pad[6];
- };
+ #define MSHV_IOCTL 0xB8
  
- enum {
+@@ -136,6 +148,7 @@ struct mshv_ioeventfd {
+ 				_IOWR(MSHV_IOCTL, 0xD, struct mshv_partition_property)
+ #define MSHV_IRQFD		_IOW(MSHV_IOCTL, 0xE, struct mshv_irqfd)
+ #define MSHV_IOEVENTFD		_IOW(MSHV_IOCTL, 0xF, struct mshv_ioeventfd)
++#define MSHV_SET_MSI_ROUTING	_IOW(MSHV_IOCTL, 0x11, struct mshv_msi_routing)
+ 
+ /* vp device */
+ #define MSHV_GET_VP_REGISTERS   _IOWR(MSHV_IOCTL, 0x05, struct mshv_vp_registers)
 -- 
 2.25.1
 
