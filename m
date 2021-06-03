@@ -2,224 +2,124 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6807439A426
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jun 2021 17:15:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6487739A4C0
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jun 2021 17:38:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231960AbhFCPQi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Jun 2021 11:16:38 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:45718 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231907AbhFCPQg (ORCPT
+        id S229925AbhFCPkF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Jun 2021 11:40:05 -0400
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:38543 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229881AbhFCPkF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Jun 2021 11:16:36 -0400
-Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 738EF20B8013;
-        Thu,  3 Jun 2021 08:14:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 738EF20B8013
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1622733291;
-        bh=gKrA/Ck9uLechlHVTtjZv+v8yYpnB9uIqfF0R69QZGw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MJK+2AK3uXgR3CWPNoQaoGgAtZYS1eCZQsqFNXXcrHsFWuQ4NS1KU77+XChFzUgPr
-         W/CZqiB52I3eNTNeK6y/Alw3+hU3Fd+/J5g/RUIj7TEzi1EzfMd2Qo5s6cIkp0l8XF
-         DLNHMNDtXYIej88bmjb+2uicn5HBO6lZBiGSkT80=
-From:   Vineeth Pillai <viremana@linux.microsoft.com>
-To:     Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH v5 7/7] KVM: SVM: hyper-v: Direct Virtual Flush support
-Date:   Thu,  3 Jun 2021 15:14:40 +0000
-Message-Id: <fc8d24d8eb7017266bb961e39a171b0caf298d7f.1622730232.git.viremana@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1622730232.git.viremana@linux.microsoft.com>
-References: <cover.1622730232.git.viremana@linux.microsoft.com>
+        Thu, 3 Jun 2021 11:40:05 -0400
+Received: by mail-pg1-f172.google.com with SMTP id 6so5435014pgk.5;
+        Thu, 03 Jun 2021 08:38:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BVYx1tfLGUQhuXKxLmm7FvDthvCK68hj9EtKYIRIQHQ=;
+        b=miB2ljSk1RA9tY/uYJGQ9mMwA4UDMc4OP5R2SPNH1XSMN+zppyZP3Jc++5YNxmzOby
+         kALkMRui/3t9gSuqF33Vb3xRJqf9zGMvEy1ThQuUuoC56/3xsrdMaI/j4lWWgNSF2sTJ
+         COY0x0gCbiM503+Xvvp9Nsgl9aAqJhwkWUkCuJddQ5kBPKpL6maIzV4Esr2iyVTK2nDK
+         TGTOiLPti6ZFCSfL7YPGf1T/ifO0Td+1Cseob26JVYcCljKap3dtfQjqMVk0i9iDWAeR
+         pRTkE5bQUe239zrqx8ZeVhOf2I48ijf3+Yv7Odtm6yW32eQYlYwHea3YOPPmHlNYafZU
+         cDkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BVYx1tfLGUQhuXKxLmm7FvDthvCK68hj9EtKYIRIQHQ=;
+        b=MBzkjYyU1bxPKcJPl/hmKhXY3+KqqWIVGjA76UkYWqFAz5VmhLCHAh8jYAUCBqxFWc
+         NMhkYUDJz94pq+srIlyKRCe3S4uUO23JZy+j5vP3+ft56bzsK5igOM524tCIcfAGTEdf
+         1+zZ2AMSTlmdBVGbiECAjUvXYCCbGx2trpg6ChylnIvrzIKNfh1sAUjTMqIXUOAp2H4l
+         g6NzkhNmGy/1Ung9cLmf+WjXRDZEAPUkJtdRaQxvAWqpDOy6jk5j1+sphx9ZCXmP3hPs
+         yYjGKl18URdA06g3v/yjM0NpVfkTLFA04pfkdZPNZONF7gOoUA5pDwMh43OS3ZQSWNE4
+         ogpQ==
+X-Gm-Message-State: AOAM530t5ftDZxmCRn8F+9X+Xj8RdIUZ10Bwt42oC4WuZlB2kG6eQfmb
+        6PLiJ+nsDyPjIouQhN07TwI=
+X-Google-Smtp-Source: ABdhPJyuSSLvdEikeh+Nq/zhDPHcKBsCeWjVlIXCtWnktcvNT96pyk1AlIWziUacbt3mBXpwaDz9WA==
+X-Received: by 2002:aa7:8755:0:b029:2eb:8c8f:d1f1 with SMTP id g21-20020aa787550000b02902eb8c8fd1f1mr271415pfo.11.1622734640422;
+        Thu, 03 Jun 2021 08:37:20 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:18:efec::4b1])
+        by smtp.gmail.com with ESMTPSA id r10sm3237979pga.48.2021.06.03.08.37.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Jun 2021 08:37:19 -0700 (PDT)
+Subject: Re: [RFC PATCH V3 09/11] HV/IOMMU: Enable swiotlb bounce buffer for
+ Isolation VM
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        rppt@kernel.org, hannes@cmpxchg.org, cai@lca.pw,
+        krish.sadhukhan@oracle.com, saravanand@fb.com,
+        Tianyu.Lan@microsoft.com, konrad.wilk@oracle.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com, jgross@suse.com,
+        sstabellini@kernel.org, joro@8bytes.org, will@kernel.org,
+        xen-devel@lists.xenproject.org, davem@davemloft.net,
+        kuba@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, thomas.lendacky@amd.com,
+        brijesh.singh@amd.com, sunilmut@microsoft.com
+References: <20210530150628.2063957-1-ltykernel@gmail.com>
+ <20210530150628.2063957-10-ltykernel@gmail.com>
+ <9488c114-81ad-eb67-79c0-5ed319703d3e@oracle.com>
+ <a023ee3f-ce85-b54f-79c3-146926bf3279@gmail.com>
+ <d6714e8b-dcb6-798b-59a4-5bb68f789564@oracle.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <1cdf4e6e-6499-e209-d499-7ab82992040b@gmail.com>
+Date:   Thu, 3 Jun 2021 23:37:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
+In-Reply-To: <d6714e8b-dcb6-798b-59a4-5bb68f789564@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From Hyper-V TLFS:
- "The hypervisor exposes hypercalls (HvFlushVirtualAddressSpace,
-  HvFlushVirtualAddressSpaceEx, HvFlushVirtualAddressList, and
-  HvFlushVirtualAddressListEx) that allow operating systems to more
-  efficiently manage the virtual TLB. The L1 hypervisor can choose to
-  allow its guest to use those hypercalls and delegate the responsibility
-  to handle them to the L0 hypervisor. This requires the use of a
-  partition assist page."
+On 6/3/2021 12:02 AM, Boris Ostrovsky wrote:
+> 
+> On 6/2/21 11:01 AM, Tianyu Lan wrote:
+>> Hi Boris:
+>>      Thanks for your review.
+>>
+>> On 6/2/2021 9:16 AM, Boris Ostrovsky wrote:
+>>>
+>>> On 5/30/21 11:06 AM, Tianyu Lan wrote:
+>>>> @@ -91,6 +92,6 @@ int pci_xen_swiotlb_init_late(void)
+>>>>    EXPORT_SYMBOL_GPL(pci_xen_swiotlb_init_late);
+>>>>      IOMMU_INIT_FINISH(2,
+>>>> -          NULL,
+>>>> +          hyperv_swiotlb_detect,
+>>>>              pci_xen_swiotlb_init,
+>>>>              NULL);
+>>>
+>>>
+>>> Could you explain this change?
+>>
+>> Hyper-V allocates its own swiotlb bounce buffer and the default
+>> swiotlb buffer should not be allocated. swiotlb_init() in pci_swiotlb_init() is to allocate default swiotlb buffer.
+>> To achieve this, put hyperv_swiotlb_detect() as the first entry in the iommu_table_entry list. The detect loop in the pci_iommu_alloc() will exit once hyperv_swiotlb_detect() is called in Hyper-V VM and other iommu_table_entry callback will not be called.
+> 
+> 
+> 
+> Right. But pci_xen_swiotlb_detect() will only do something for Xen PV guests, and those guests don't run on hyperV. It's either xen_pv_domain() (i.e. hypervisor_is_type(X86_HYPER_XEN_PV)) or hypervisor_is_type(X86_HYPER_MS_HYPERV) but never both. So I don't think there needs to be a dependency between the two callbacks.
 
-Add the Direct Virtual Flush support for SVM.
+Yes, the dependency is between hyperv_swiotlb_detect() and
+pci_swiotlb_detect_override()/pci_swiotlb_detect_4gb(). Now
+pci_swiotlb_detect_override() and pci_swiotlb_detect_4gb() depends on
+pci_xen_swiotlb_detect(). To keep dependency between
+hyperv_swiotlb_detect() and pci_swiotlb_detect_override/4gb(), make 
+pci_xen_swiotlb_detect() depends on hyperv_swiotlb_detect() and just to
+keep order in the IOMMU table. Current iommu_table_entry only has one
+depend callback and this is why I put xen depends on hyperv detect function.
 
-Related VMX changes:
-commit 6f6a657c9998 ("KVM/Hyper-V/VMX: Add direct tlb flush support")
-
-Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
----
- arch/x86/kvm/Makefile           |  4 ++++
- arch/x86/kvm/svm/svm.c          |  2 ++
- arch/x86/kvm/svm/svm_onhyperv.c | 41 +++++++++++++++++++++++++++++++++
- arch/x86/kvm/svm/svm_onhyperv.h | 36 +++++++++++++++++++++++++++++
- 4 files changed, 83 insertions(+)
- create mode 100644 arch/x86/kvm/svm/svm_onhyperv.c
-
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index a06745c2fef1..83331376b779 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -32,6 +32,10 @@ kvm-intel-$(CONFIG_X86_SGX_KVM)	+= vmx/sgx.o
- 
- kvm-amd-y		+= svm/svm.o svm/vmenter.o svm/pmu.o svm/nested.o svm/avic.o svm/sev.o
- 
-+ifdef CONFIG_HYPERV
-+kvm-amd-y		+= svm/svm_onhyperv.o
-+endif
-+
- obj-$(CONFIG_KVM)	+= kvm.o
- obj-$(CONFIG_KVM_INTEL)	+= kvm-intel.o
- obj-$(CONFIG_KVM_AMD)	+= kvm-amd.o
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index d2a625411059..5139cb6baadc 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3779,6 +3779,8 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	}
- 	svm->vmcb->save.cr2 = vcpu->arch.cr2;
- 
-+	svm_hv_update_vp_id(svm->vmcb, vcpu);
-+
- 	/*
- 	 * Run with all-zero DR6 unless needed, so that we can get the exact cause
- 	 * of a #DB.
-diff --git a/arch/x86/kvm/svm/svm_onhyperv.c b/arch/x86/kvm/svm/svm_onhyperv.c
-new file mode 100644
-index 000000000000..3281856ebd94
---- /dev/null
-+++ b/arch/x86/kvm/svm/svm_onhyperv.c
-@@ -0,0 +1,41 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * KVM L1 hypervisor optimizations on Hyper-V for SVM.
-+ */
-+
-+#include <linux/kvm_host.h>
-+#include "kvm_cache_regs.h"
-+
-+#include <asm/mshyperv.h>
-+
-+#include "svm.h"
-+#include "svm_ops.h"
-+
-+#include "hyperv.h"
-+#include "kvm_onhyperv.h"
-+#include "svm_onhyperv.h"
-+
-+int hv_enable_direct_tlbflush(struct kvm_vcpu *vcpu)
-+{
-+	struct hv_enlightenments *hve;
-+	struct hv_partition_assist_pg **p_hv_pa_pg =
-+			&to_kvm_hv(vcpu->kvm)->hv_pa_pg;
-+
-+	if (!*p_hv_pa_pg)
-+		*p_hv_pa_pg = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+
-+	if (!*p_hv_pa_pg)
-+		return -ENOMEM;
-+
-+	hve = (struct hv_enlightenments *)to_svm(vcpu)->vmcb->control.reserved_sw;
-+
-+	hve->partition_assist_page = __pa(*p_hv_pa_pg);
-+	hve->hv_vm_id = (unsigned long)vcpu->kvm;
-+	if (!hve->hv_enlightenments_control.nested_flush_hypercall) {
-+		hve->hv_enlightenments_control.nested_flush_hypercall = 1;
-+		vmcb_mark_dirty(to_svm(vcpu)->vmcb, VMCB_HV_NESTED_ENLIGHTENMENTS);
-+	}
-+
-+	return 0;
-+}
-+
-diff --git a/arch/x86/kvm/svm/svm_onhyperv.h b/arch/x86/kvm/svm/svm_onhyperv.h
-index 0f262460b2e6..7487052fcef8 100644
---- a/arch/x86/kvm/svm/svm_onhyperv.h
-+++ b/arch/x86/kvm/svm/svm_onhyperv.h
-@@ -36,6 +36,8 @@ struct hv_enlightenments {
-  */
- #define VMCB_HV_NESTED_ENLIGHTENMENTS VMCB_SW
- 
-+int hv_enable_direct_tlbflush(struct kvm_vcpu *vcpu);
-+
- static inline void svm_hv_init_vmcb(struct vmcb *vmcb)
- {
- 	struct hv_enlightenments *hve =
-@@ -55,6 +57,23 @@ static inline void svm_hv_hardware_setup(void)
- 		svm_x86_ops.tlb_remote_flush_with_range =
- 				hv_remote_flush_tlb_with_range;
- 	}
-+
-+	if (ms_hyperv.nested_features & HV_X64_NESTED_DIRECT_FLUSH) {
-+		int cpu;
-+
-+		pr_info("kvm: Hyper-V Direct TLB Flush enabled\n");
-+		for_each_online_cpu(cpu) {
-+			struct hv_vp_assist_page *vp_ap =
-+				hv_get_vp_assist_page(cpu);
-+
-+			if (!vp_ap)
-+				continue;
-+
-+			vp_ap->nested_control.features.directhypercall = 1;
-+		}
-+		svm_x86_ops.enable_direct_tlbflush =
-+				hv_enable_direct_tlbflush;
-+	}
- }
- 
- static inline void svm_hv_vmcb_dirty_nested_enlightenments(
-@@ -74,6 +93,18 @@ static inline void svm_hv_vmcb_dirty_nested_enlightenments(
- 	    hve->hv_enlightenments_control.msr_bitmap)
- 		vmcb_mark_dirty(vmcb, VMCB_HV_NESTED_ENLIGHTENMENTS);
- }
-+
-+static inline void svm_hv_update_vp_id(struct vmcb *vmcb,
-+		struct kvm_vcpu *vcpu)
-+{
-+	struct hv_enlightenments *hve =
-+		(struct hv_enlightenments *)vmcb->control.reserved_sw;
-+
-+	if (hve->hv_vp_id != to_hv_vcpu(vcpu)->vp_index) {
-+		hve->hv_vp_id = to_hv_vcpu(vcpu)->vp_index;
-+		vmcb_mark_dirty(vmcb, VMCB_HV_NESTED_ENLIGHTENMENTS);
-+	}
-+}
- #else
- 
- static inline void svm_hv_init_vmcb(struct vmcb *vmcb)
-@@ -88,6 +119,11 @@ static inline void svm_hv_vmcb_dirty_nested_enlightenments(
- 		struct kvm_vcpu *vcpu)
- {
- }
-+
-+static inline void svm_hv_update_vp_id(struct vmcb *vmcb,
-+		struct kvm_vcpu *vcpu)
-+{
-+}
- #endif /* CONFIG_HYPERV */
- 
- #endif /* __ARCH_X86_KVM_SVM_ONHYPERV_H__ */
--- 
-2.25.1
-
+Thanks.
