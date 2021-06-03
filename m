@@ -2,279 +2,163 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA8D8399579
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Jun 2021 23:37:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C062339977D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jun 2021 03:28:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229467AbhFBVis (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Jun 2021 17:38:48 -0400
-Received: from mail-co1nam11on2109.outbound.protection.outlook.com ([40.107.220.109]:57759
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S229626AbhFCB3y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Jun 2021 21:29:54 -0400
+Received: from mail-dm6nam12on2101.outbound.protection.outlook.com ([40.107.243.101]:23265
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229576AbhFBVis (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Jun 2021 17:38:48 -0400
+        id S229568AbhFCB3y (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 2 Jun 2021 21:29:54 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AhelD8pqajIAmY8xaw2ZkOYXh1MdLKAIvTaWwNMecM4Ud4LI7WTONggXTZzOZfQLFDgqPrGsNeoUiMdLnvyxFVsiuvDQabx8Ecmtay6GdTix1BuJqI7k8oHZiJvypTFI44Y5WU6m1312L2vDDPmqAEhZXRxqEE/LyGU4bOzCxMKwehFRYxqx6vjy7QuNwAYvSldpFMdqm/p0+wNo6/pzKDppOXSEapkrlrwr3dZ0qfJUpwM4Nw9EnvHIeegYenhXHL4qC3egCnOwmNDOd0Crlh0CUkIH/PwodHaeARGluk/8cLfBh0hPOPCExMS1DOoMIJfRncAs/z6c69qW0fhBHQ==
+ b=Aw2QR8SADwt5dKNUCouJF2qkfhFwkN0gdGfpdztfBrEL2EPPr0vWZR0MTR2c+sLyvgg4UgQKvMrh2FvfEFoStZWSGC2PM8VbSomAVQozuSfnju7IlIgRn7EAH9L6coPIF6k8XQJ5ayI9fttnHZRpSRmZPvJh161sl5Lks2MfLji/KNaX2yBlEJjGZAHBC9FNHXAF8K2y53TwwIwTOeE05b0mNfoUwfbMXWi7bqH3StvgS4lmuW5IEiYc1vFgqV2Q6XQZz5VKOZRiqnawCIFgv8P06eo7JP/ZUa7TkXF7MYZLfEsKE5rKA0enFvbOHtux6TOa+rMfHOsfN1YrTzZ50g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BTUKD/kjniKdXqtN5vvmMWazKJC+vgrmTuHH1fT1RmE=;
- b=AcVQu9vgr3UFw2NLxvhD1likkT8VqWmoLew+gz/14h4fA3RcDecZFNJKEwuLPEtEi0ltIXlKa5gmNLCocSjwV2FlckbbtxC0NuZcOl9dE9xMp02vAyOSh+1NJzel/RgizfSVy0cnvgJ0beFZ7IoAUIB1Rljvi+XVsEqbXDjUuDms88DfGPKrno4ppm/JcKRKT/NRmi8cTZwA4+lCrC9cCBRAcECNgo8QFsIKlSLDUdpBGoSaTBdl/G2UfiUVa+UQxdGykKQxDIbn/oHQl0PaE/FHZX3O3yUWnDI3Hb1IXGgieKMVuWwV8Hj3qmNQVPPZdgED2opG978EZAOdla8gkg==
+ bh=IX4nXgGk1siZU0Bf0PqqTO7mnRLXWvPrHkMU9yVwG98=;
+ b=i+dfOmVph7+RFqcjUueD26FN6ykEnPXwmwyfH4lKvKBJ2a3aIXyYnB8xttVFzacLrJ8TA1+Fxw56A10IzJtMoVrle+svgBi/KVcG8QN6iAhfds/ADE3t0ZyS4Z+Y9IQPxw0Ijp0E+FyVQlXnXRDlbRpAh5nQu27K+KCf6eGjyZnDWo2mRcFmCsWq5JnD7gwk55GcbWpHP5KwUEkV0/8PMSIqV0ogVkQg7stpfwxP7Hj/gY4KVSuQAHQxE0ztL9H6dTqnz5GtUhH2IO8IG3Zpt2WFJPfl17YWxhg1kFMrduY/Flm/S4zUGgEed12x7cQt4fZdyfoSzgaFIpwFb2ut2w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BTUKD/kjniKdXqtN5vvmMWazKJC+vgrmTuHH1fT1RmE=;
- b=I7YzyZRznSXwGvDtzRFrnJ8HVIbmN3CaVGz7NUW6h8xpRApWKrrgHuaVGkbUwwkZpMTyrsaS67XEoXFYIHpuU05RNDoZv3N6deDYyaVequRp66VxN2xaCOVow+HvWVHnC1n64PJ5dUYWYD7HiiRxBifsSEfJmMRh1770/7LG2gw=
-Authentication-Results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
- by DM5PR21MB0155.namprd21.prod.outlook.com (2603:10b6:3:a5::18) with
+ bh=IX4nXgGk1siZU0Bf0PqqTO7mnRLXWvPrHkMU9yVwG98=;
+ b=RMgkz87JeMZOCK4nROHjUlbdPG2OF5EYOuaLdfwTV+9LK3xQYtOe++wyiJEbab8y+KoiRa5JrYlBdVxt3nWSNQhdkMsABEIKMNN7Nvq8vt0Grkkeny33fgDv+4wIf0EwiC/anjGgGG9uPO202G2A6W2d2Om+1OZkXCQiNR2aMNY=
+Received: from MW4PR21MB2004.namprd21.prod.outlook.com (2603:10b6:303:68::24)
+ by MW2PR2101MB0922.namprd21.prod.outlook.com (2603:10b6:302:10::30) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.3; Wed, 2 Jun
- 2021 21:37:02 +0000
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::fdb1:c8ac:5a1f:8588]) by DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::fdb1:c8ac:5a1f:8588%6]) with mapi id 15.20.4219.010; Wed, 2 Jun 2021
- 21:37:02 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, sunilmut@microsoft.com
-Cc:     mikelley@microsoft.com
-Subject: [PATCH 1/1] Drivers: hv: Move Hyper-V extended capability check to arch neutral code
-Date:   Wed,  2 Jun 2021 14:36:44 -0700
-Message-Id: <1622669804-2016-1-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-Originating-IP: [131.107.159.144]
-X-ClientProxiedBy: MW4PR04CA0251.namprd04.prod.outlook.com
- (2603:10b6:303:88::16) To DM6PR21MB1514.namprd21.prod.outlook.com
- (2603:10b6:5:22d::11)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.3; Thu, 3 Jun
+ 2021 01:28:08 +0000
+Received: from MW4PR21MB2004.namprd21.prod.outlook.com
+ ([fe80::bd8a:c616:27d:77a2]) by MW4PR21MB2004.namprd21.prod.outlook.com
+ ([fe80::bd8a:c616:27d:77a2%8]) with mapi id 15.20.4219.010; Thu, 3 Jun 2021
+ 01:28:08 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        Lillian Grassin-Drake <Lillian.GrassinDrake@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH 03/19] drivers/hv: minimal mshv module (/dev/mshv/)
+Thread-Topic: [PATCH 03/19] drivers/hv: minimal mshv module (/dev/mshv/)
+Thread-Index: AQHXVBLqkkWi1wc3SES2ayhRv8Vib6sBXHLg
+Date:   Thu, 3 Jun 2021 01:28:08 +0000
+Message-ID: <MW4PR21MB2004EB3380731C8102DB7D16C03C9@MW4PR21MB2004.namprd21.prod.outlook.com>
+References: <1622241819-21155-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1622241819-21155-4-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <1622241819-21155-4-git-send-email-nunodasneves@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux.microsoft.com; dkim=none (message not signed)
+ header.d=none;linux.microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2601:602:9400:570:88be:327a:d038:fef5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fa92c9b8-4960-4cd5-74c3-08d9262ed818
+x-ms-traffictypediagnostic: MW2PR2101MB0922:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB0922F3441D8A416467BAA9E0C03C9@MW2PR2101MB0922.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lRObCj0I5ZbIAvw4yT3KpPsnRfkcLatJrQ3rIfjR7JG2nbmnUMe5R1cWEpbqfgT6MZAp13Ep1oRFa3d30odJKjfpisHRQtnLYKsa1av7DONtXnJX0Ovo3sk/DkliAueJ62/cp04swDTGlN/Y1n58Zc91M1Mp8V6YoQ2GN/stTWGCJLrmrpl3XFpsNn9sWOxdCXPrI68TzfxtDQzBMB5S9c9WfINgKq0HADwA11oqgvToPW9l3mkK7HN0dZNxgTDedGbJpeGX/Xd+D1gPSBqxlZ9W53sZTp7VzfwJbjzakRf0aNwYCpCPQVhMrdJI6+sndQaM3hQVh6Gz0VKDUqnKofa4tq7dMWsegiV2i+6tE5aEg7dFroFUHM7LsnYvFNJXjaVN0lk08mP5qQ4Z9UnU5n8lRatrFcNBwFLuGKVe9VqZcbWsXbWbI14VCb5nhOedwOrb3XWhvQC9ZPgRkg8FRJg45ley2WL2LZA9PoXfvqAyu60ScKh4taTC9JvpsPGPTvEaUG/OzAp1QJ1iyCfUOnGay/2uiPwFVvmbyZMemCr36yXdWQ3kqOt/lpWGelukHlVsNBV1PT2MVpTW6PEBMg52g7qUKnritgPiaQBKE8OyBMgizc+Fa43u7K8r9ltrQNzHLKfHbjvS77tPKWzE1A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR21MB2004.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8990500004)(110136005)(316002)(5660300002)(54906003)(86362001)(83380400001)(82950400001)(82960400001)(10290500003)(186003)(4326008)(478600001)(52536014)(9686003)(107886003)(38100700002)(122000001)(8936002)(7696005)(33656002)(8676002)(71200400001)(66946007)(76116006)(2906002)(55016002)(66556008)(66476007)(6506007)(66446008)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 2
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?txckjnTgZfz5mEdntOG5RXwcOy2QBrQqBdXw+sTRnRyRYUy12h2mqpO93f4x?=
+ =?us-ascii?Q?RmY+MtgOToB4CguLsamMBNIPxS9dzbZwwnWtGV9otpt633I7i/xhBMe5ILbF?=
+ =?us-ascii?Q?tsX5Edkp+YWVzDcOHuBjYG8V4qWwCWHJsAbN7f7xJw7V8h4mhw539pIArKn4?=
+ =?us-ascii?Q?ap8Dqn3yQnnj8E5DEIrE/FGORW+yDQdA5w/BubdiWD0qPd8OpJIxoo2zV28i?=
+ =?us-ascii?Q?xiQG/nB2Wbglw2o5tibo0vZlWnNchEyREN7fy6Pr1otBasGO+xgXfUWXlV4G?=
+ =?us-ascii?Q?2Uji+2hdR4phcJsYDAGS8uTNBTF/oqXD4QI5tg/KpN5i4rRaHkufF/okPgdf?=
+ =?us-ascii?Q?33HWl31R7lKaCBPvKcqdBSuUwtfqQXgko5ZcmCJUJvIblapdtqfZuEABNKbJ?=
+ =?us-ascii?Q?cRV3U5U78kly/ZGFiBNRTUmZ0jvfYf6nbdE3BlUeUl/HRto/EPokPYeK+266?=
+ =?us-ascii?Q?B5PD6zN0uZ5TTMNk10gfqwPcBZ1zNSRz9nbG1jxgBc07C8kPtO5VYvQ/Uc3y?=
+ =?us-ascii?Q?ZCoMGLecwHyl43t2Bc+eUijgWZ7U4Wpc6RalJdtLsBlQWhrbAzCYpZC+wrN6?=
+ =?us-ascii?Q?2/1nlSt5pSa8J5YwBnkj6xA44le1Xszc9YSGQyrwNmwodAEnWX7kGJykOmPS?=
+ =?us-ascii?Q?izcTCwPM1B2N3v7pNLjfu9SK9WD4BBwpyEV/pHot3WvnA0PjgIaOofAWvfQg?=
+ =?us-ascii?Q?4n8jFBXsiNTw56gkKbMyMUQH7bkqZX+bVbUXZn9TxaYqsdRMggR5QzDzYh0N?=
+ =?us-ascii?Q?do+Vx8R4GOS3Gc3MHUfBREB3sC+E4OFChRGTCPmdFlMvNrfSkhX2eZG6NLy7?=
+ =?us-ascii?Q?pQP+3QqVJlv9A3oRqGLMK4ezXcZea1K1gi4smRWQfCThK6UCvO0k39aMcu73?=
+ =?us-ascii?Q?NhB6JbEPq2ZhVZYe+jDIT5EIoWnOAO2mJsPXmpds5e1aVALrzWYs/6B+75Xd?=
+ =?us-ascii?Q?9AgQ9kHRhKX16sVVclZa2cr6ByPY343tzDQpkKbW?=
+x-ms-exchange-antispam-messagedata-1: zy5eQjynOE0IidPB/kw8Pd5v9MmmE/ZqBeqd4JzxITmVk2ysu5Jq+hF3xEpN8LFQzo2bHtcqaN229FmDQI11UgKueNKQhyPj79qj+pEhnK+R1/yFSNQ0MjChITCCyvrDhn0bvLY9XP88NTccFVjj56FOV4URI8XqcWd1v0TEYoCpZzCVLV45YajFChLNhe00GjE5d1Zfz6xZB9CKI1GgUNZfox1ddZ4r+0kACeXcWS6OZB+idXuNym3yDlWYWkWsaT4ah7jOUI/UULwJhJLuV1A1pTnl/NX1X39+MKbKBM8qXD58wscgGzwiKPa2YCYtn6DGhQG+ru+xFHVIDrpCi/0XJ8k/BtMjmbEG5EdoLg6jrVGtMyabTcS3VnqH2STXfzO3y1Y3pCrJDJytBSzJ2bKn
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkdev.corp.microsoft.com (131.107.159.144) by MW4PR04CA0251.namprd04.prod.outlook.com (2603:10b6:303:88::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.21 via Frontend Transport; Wed, 2 Jun 2021 21:37:01 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0744343d-bb42-4133-7cf2-08d9260e8f0e
-X-MS-TrafficTypeDiagnostic: DM5PR21MB0155:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR21MB0155DEAB87D5F9C66D64D46DD73D9@DM5PR21MB0155.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 752DCqT6UdKIf4ScB0/norhkYFKFRfsopQEzmXSfoXHMNpcLzl4klhvF+MrDjG/5PK4HjaIWal59RZpaLToiA8ZyinLnKYztmrZeYZY/D6u+42ji1cgKL8sPMgjSAno57ioQZyYGe0Xou0exnFenokH6+51BgH++vQcg8F3bR5vGdr0nkzYu7QMv5mBGiv5mjHwUz9f9G6dm3xh0CqCojOan9LbfkNPsGoWymAdJz3XCypLtgY/4x8trTYcWIpjNpNX0cJ82m0HXbvq2cpCd2sLyslTpx3ytrjtoi0Ez6cAe0BWBa4Qbhz9/xpvtSJXHruprwjQlwwOdAepefmcH5mv48zq5lrkd+2dT8wQYa5d4+YtQT7ta23XE6dcn4bRL1D7PQZdpmhguRuh7q/dGf6g2WBXtf+rMXT2LDmWI/2L/G32ilhDgFrnm0jjGNRYyHw3eV98Nc+x+aTCrBuwDeIqLKNupxfqP+tmuE+DHpyJ7s4WDILMfemFv3UKYH1Cqo6Gvn38qrHRlUGsXNklAQU5G77PHUmjrhWtgDZK508mDBV45L0UEMOol/0aPAY4wHqZJ7W5n4qytoWDUaDuzJ8PcSadhat7nHruwG2Ri4EFLMF3kvwV8505Rl541VUbO2y1XD/xT9MQCxFhSDVmu3gKAlTqL36fxyxgRIlIUNMy7rpH9dZbAVrML0JL6ZkkmBCpV2HKQ7VEUSZ/mngJ+XVxAs4kn5nyI+iQeGZ9w96t3Yt/UAEsRIOMtvyr7Y9CM
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(7696005)(52116002)(4326008)(8936002)(10290500003)(6486002)(66946007)(26005)(66556008)(66476007)(8676002)(2906002)(107886003)(6666004)(956004)(2616005)(5660300002)(16526019)(498600001)(6636002)(186003)(83380400001)(86362001)(36756003)(921005)(38100700002)(38350700002)(82960400001)(82950400001)(21314003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9Q8NIlTJfmZyGcbagTyoa6edKneozaGA2/d2/VoMPVQ9KZHxVfFus0Q6C4w+?=
- =?us-ascii?Q?d1xavXLimRSx/c84jukEoTtNtfNK8l8ku9i8eRySkE1vzT4/oLCZsMXtvi0c?=
- =?us-ascii?Q?fs43xfezIBeptclml6a7sUCr0uMPvWnZ+5+aHfNdqvyoo1cG6JWo1n9ebx4C?=
- =?us-ascii?Q?bROOCXFPI+F591BVeFCwXVSnIGjR7LdnOI9lF6iy4OYykFqkbCMqk71Q9fsR?=
- =?us-ascii?Q?CYOpxzV2tGPHR8rPpVBBii3XZFaYsW01I2hV53mcJ9BlE68TQELsUp2w3iAC?=
- =?us-ascii?Q?AcLeaV/ZPx1rhbwSYA0dJ6Yi/mZ77UHAjw4NWTcuuOnJbP/er8Q8IqbFMKHs?=
- =?us-ascii?Q?EyeGFzhNkIEmUuSK/55cgWHDqcp+/UdUyZ7d++5o7mbc4jlA4le5O5h0+RIo?=
- =?us-ascii?Q?MCMXW4NBqyX6WzHQXcrqXP4AlGWZPNw0t0dGsYKdiuEDjt8XFeiTW5PsbsXC?=
- =?us-ascii?Q?IepoKvz2OiTHUtO0GWBqpRWW/0YG3jDSVnO0YdUvrX/Jsrjq0EGmwnf2+pIv?=
- =?us-ascii?Q?Ihh9JEQXNDC6W1CL04/NdebM4rcKbI8kEA4CjLjOj5OKI2OMboOnLs+2pexd?=
- =?us-ascii?Q?MJksgS8Z4K6QypQkbwBUkC+ZCbqkmmyoSQUWZmb6/eXX5QlO4TnQ0KYDhLF5?=
- =?us-ascii?Q?R8OjF4k7ANo8+KiSfE2JoMazfBVVWKwwPPsb9skwkLvz0v/R51IYiymWsOWX?=
- =?us-ascii?Q?WtUZODhB46aXryLN2oIgiWH7tpjDsSnfOnAwoUcOb+eiSvohTTgeRs1O9LJR?=
- =?us-ascii?Q?DUn5UR3/0FG4+i23os9B9uw3xRx0IHckVcoouW+CIsxK1UPBbprF7qcHQ+eN?=
- =?us-ascii?Q?C27+RHO6rxHanNiUOTlb4xwGHQ2FuxbQqrBcdoWP9pTlbxCwzmuHwJ43yLeX?=
- =?us-ascii?Q?dWnamsplSsyyNRy46dVt31Yn3BQX/iQ+B6POeGfDZMjBTuSmMmuq7N1xDTBj?=
- =?us-ascii?Q?DjPVgA2/KKgBCi/3CwhooPGi9hBdNXYVCkkfOYS2?=
-X-MS-Exchange-AntiSpam-MessageData-1: /p6WxsgErLmhVPB+JFm88JoiJ22M70SCCJ615nt/gmuJxg+9GtWtku+aWDknn1U59vQenTLdK10vwxeH06rpC2+4NzifjO26608JylauG0JQ5pgqTGfr5HUqRsOe1WLp9YF5xR9TwnFkhnIQvQB+oG4YX16ubdmc6IirZNqVbsRNKGidBhEJ7fK2FDZIdlmsTYz/ppYmbiRUFI+7BLZyUv5T+VecIOTbRgnEuyjQXoTL1vJ/nEFaDesWS8Dtq6FMRwvY6dmmU1eh17p4dW+lGrePCOXcnnExyTwKkFDIUq2DAHI5X0TwvPRG67pKrsHIa2NIIgwYfZeae+kNCVA+cmGc
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0744343d-bb42-4133-7cf2-08d9260e8f0e
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2021 21:37:02.2249
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR21MB2004.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa92c9b8-4960-4cd5-74c3-08d9262ed818
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2021 01:28:08.3337
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T3Gvv0UxDmNN7fvbiV5dsqASWG8q99f6ElGosffFBHlDNpJkRW5Zipc5KNT/V93w1RhHnodSAX2Ue+DhP7vBkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0155
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mMtVC0ESQ++Er74NaXWZ2ug0M8E9UHgtj+kqB1ADT3CNgqYXBf2pyToXGyomBdKZmvTL2O1wRsFg29RbzzjXEpoNYbISvNNsoNGmUyll2Yk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0922
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The extended capability query code is currently under arch/x86, but it
-is architecture neutral, and is used by arch neutral code in the Hyper-V
-balloon driver. Hence the balloon driver fails to build on other
-architectures.
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 66c794d92391..d618b1fab2bb 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -27,4 +27,22 @@ config HYPERV_BALLOON
+>  	help
+>  	  Select this option to enable Hyper-V Balloon driver.
+>=20
+> +config HYPERV_ROOT_API
 
-Fix by moving the ext cap code out from arch/x86.  Because it is also
-called from built-in architecture specific code, it can't be in a module,
-so the Makefile treats as built-in even when CONFIG_HYPERV is "m".  Also
-drivers/Makefile is tweaked because this is the first occurrence of a
-Hyper-V file that is built-in even when CONFIG_HYPERV is "m".
+A more suitable place to put this would be under the "VIRTUALIZATION"
+config menu option, where we have the "KVM" option today.
 
-While here, update the hypercall status check to use the new helper
-function instead of open coding. No functional change.
+> +	tristate "Microsoft Hypervisor root partition interfaces: /dev/mshv"
+> +	depends on HYPERV
+> +	help
+> +	  Provides access to interfaces for managing guest virtual machines
+> +	  running under the Microsoft Hypervisor.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- arch/x86/hyperv/hv_init.c | 47 ---------------------------------
- drivers/Makefile          |  2 +-
- drivers/hv/Makefile       |  3 +++
- drivers/hv/hv_common.c    | 66 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 70 insertions(+), 48 deletions(-)
- create mode 100644 drivers/hv/hv_common.c
+These are technically not "root" interfaces. As you say it too, these are
+interfaces to manage guest VMs. Calling it "HYPERV_ROOT_API" would
+be confusing. Something along the lines of "HYPERV_VMM_API" or
+"HYPERV_VM_API" seems more appropriate to me.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index bb0ae4b..6952e21 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -614,50 +614,3 @@ bool hv_is_isolation_supported(void)
- 	return hv_get_isolation_type() != HV_ISOLATION_TYPE_NONE;
- }
- EXPORT_SYMBOL_GPL(hv_is_isolation_supported);
--
--/* Bit mask of the extended capability to query: see HV_EXT_CAPABILITY_xxx */
--bool hv_query_ext_cap(u64 cap_query)
--{
--	/*
--	 * The address of the 'hv_extended_cap' variable will be used as an
--	 * output parameter to the hypercall below and so it should be
--	 * compatible with 'virt_to_phys'. Which means, it's address should be
--	 * directly mapped. Use 'static' to keep it compatible; stack variables
--	 * can be virtually mapped, making them imcompatible with
--	 * 'virt_to_phys'.
--	 * Hypercall input/output addresses should also be 8-byte aligned.
--	 */
--	static u64 hv_extended_cap __aligned(8);
--	static bool hv_extended_cap_queried;
--	u64 status;
--
--	/*
--	 * Querying extended capabilities is an extended hypercall. Check if the
--	 * partition supports extended hypercall, first.
--	 */
--	if (!(ms_hyperv.priv_high & HV_ENABLE_EXTENDED_HYPERCALLS))
--		return false;
--
--	/* Extended capabilities do not change at runtime. */
--	if (hv_extended_cap_queried)
--		return hv_extended_cap & cap_query;
--
--	status = hv_do_hypercall(HV_EXT_CALL_QUERY_CAPABILITIES, NULL,
--				 &hv_extended_cap);
--
--	/*
--	 * The query extended capabilities hypercall should not fail under
--	 * any normal circumstances. Avoid repeatedly making the hypercall, on
--	 * error.
--	 */
--	hv_extended_cap_queried = true;
--	status &= HV_HYPERCALL_RESULT_MASK;
--	if (status != HV_STATUS_SUCCESS) {
--		pr_err("Hyper-V: Extended query capabilities hypercall failed 0x%llx\n",
--		       status);
--		return false;
--	}
--
--	return hv_extended_cap & cap_query;
--}
--EXPORT_SYMBOL_GPL(hv_query_ext_cap);
-diff --git a/drivers/Makefile b/drivers/Makefile
-index 5a6d613..1c2e1ac 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -161,7 +161,7 @@ obj-$(CONFIG_SOUNDWIRE)		+= soundwire/
- 
- # Virtualization drivers
- obj-$(CONFIG_VIRT_DRIVERS)	+= virt/
--obj-$(CONFIG_HYPERV)		+= hv/
-+obj-$(subst m,y,$(CONFIG_HYPERV))	+= hv/
- 
- obj-$(CONFIG_PM_DEVFREQ)	+= devfreq/
- obj-$(CONFIG_EXTCON)		+= extcon/
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index 94daf82..d76df5c 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -11,3 +11,6 @@ hv_vmbus-y := vmbus_drv.o \
- 		 channel_mgmt.o ring_buffer.o hv_trace.o
- hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
- hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_fcopy.o hv_utils_transport.o
-+
-+# Code that must be built-in
-+obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-new file mode 100644
-index 0000000..f0053c7
---- /dev/null
-+++ b/drivers/hv/hv_common.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Architecture neutral utility routines for interacting with
-+ * Hyper-V. This file is specifically for code that must be
-+ * built-in to the kernel image when CONFIG_HYPERV is set
-+ * (vs. being in a module) because it is called from architecture
-+ * specific code under arch/.
-+ *
-+ * Copyright (C) 2021, Microsoft, Inc.
-+ *
-+ * Author : Michael Kelley <mikelley@microsoft.com>
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/export.h>
-+#include <linux/bitfield.h>
-+#include <asm/hyperv-tlfs.h>
-+#include <asm/mshyperv.h>
-+
-+
-+/* Bit mask of the extended capability to query: see HV_EXT_CAPABILITY_xxx */
-+bool hv_query_ext_cap(u64 cap_query)
-+{
-+	/*
-+	 * The address of the 'hv_extended_cap' variable will be used as an
-+	 * output parameter to the hypercall below and so it should be
-+	 * compatible with 'virt_to_phys'. Which means, it's address should be
-+	 * directly mapped. Use 'static' to keep it compatible; stack variables
-+	 * can be virtually mapped, making them imcompatible with
-+	 * 'virt_to_phys'.
-+	 * Hypercall input/output addresses should also be 8-byte aligned.
-+	 */
-+	static u64 hv_extended_cap __aligned(8);
-+	static bool hv_extended_cap_queried;
-+	u64 status;
-+
-+	/*
-+	 * Querying extended capabilities is an extended hypercall. Check if the
-+	 * partition supports extended hypercall, first.
-+	 */
-+	if (!(ms_hyperv.priv_high & HV_ENABLE_EXTENDED_HYPERCALLS))
-+		return false;
-+
-+	/* Extended capabilities do not change at runtime. */
-+	if (hv_extended_cap_queried)
-+		return hv_extended_cap & cap_query;
-+
-+	status = hv_do_hypercall(HV_EXT_CALL_QUERY_CAPABILITIES, NULL,
-+				 &hv_extended_cap);
-+
-+	/*
-+	 * The query extended capabilities hypercall should not fail under
-+	 * any normal circumstances. Avoid repeatedly making the hypercall, on
-+	 * error.
-+	 */
-+	hv_extended_cap_queried = true;
-+	if (!hv_result_success(status)) {
-+		pr_err("Hyper-V: Extended query capabilities hypercall failed 0x%llx\n",
-+		       status);
-+		return false;
-+	}
-+
-+	return hv_extended_cap & cap_query;
-+}
-+EXPORT_SYMBOL_GPL(hv_query_ext_cap);
--- 
-1.8.3.1
+> new file mode 100644
+> index 000000000000..c68cc84fb983
+> --- /dev/null
+> +++ b/drivers/hv/mshv_main.c
+Why not in /virt/hv or something under /virt?
+
+> +static int mshv_dev_open(struct inode *inode, struct file *filp);
+> +static int mshv_dev_release(struct inode *inode, struct file *filp);
+> +static long mshv_dev_ioctl(struct file *filp, unsigned int ioctl, unsign=
+ed long arg);
+
+Do we need to have both 'mshv' & 'dev' in the name? How about just
+calling these 'mshv_xyz'? Like you have for init/exit.
+
+> +
+> +static struct miscdevice mshv_dev =3D {
+> +	.minor =3D MISC_DYNAMIC_MINOR,
+> +	.name =3D "mshv",
+> +	.fops =3D &mshv_dev_fops,
+> +	.mode =3D 600,
+> +};
+For the default mode, I think we want to keep it the same as that for 'kvm'=
+.
+
+- Sunil
 
