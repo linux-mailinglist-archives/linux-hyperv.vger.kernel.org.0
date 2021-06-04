@@ -2,52 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C3A739B9DE
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Jun 2021 15:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A20539BC30
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Jun 2021 17:47:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230122AbhFDNds (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Jun 2021 09:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbhFDNds (ORCPT
+        id S230108AbhFDPtB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Jun 2021 11:49:01 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34238 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229809AbhFDPtB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Jun 2021 09:33:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE65C0613DA;
-        Fri,  4 Jun 2021 06:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=MavlaHcrXTsmTGjPtJGrWFVh4N2RPwLd0U0sgZUv9NQ=; b=KUeV773P7iwXExqW/c26s06Ek8
-        26hm/T8cUdtDD3W1aKekCy61rT98aZ3LRe9dDcFV5bHZUPydNUGwwA8MXWCMwdBurq/vt06n+FJME
-        feuZL6fz5haQmLawDIeCflpcuMwbEx8ZkeJoEp5ltBGr3FGCTtvqXgU/J0PHjkP15TYnj2z+qddeU
-        2MK/9NLqGh6bcbrB+YJRZBB4I1Iy7ay5Nmkj8+tntWoOr16GTwnzOg5pqlKETVeVBAZzvAu57EmEF
-        Kl80ntw4SySpF/RhPLCkydEV+fxj5batZqw3urPePQV/kSymibGmEUgV7akUSXYrnLctdfkgW42oF
-        tHALoQCg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lp9vP-00DCTA-FW; Fri, 04 Jun 2021 13:31:52 +0000
-Date:   Fri, 4 Jun 2021 14:31:47 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>, wei.liu@kernel.org,
-        Dexuan Cui <decui@microsoft.com>
+        Fri, 4 Jun 2021 11:49:01 -0400
+Received: from [192.168.86.35] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
+        by linux.microsoft.com (Postfix) with ESMTPSA id AE8E520B7178;
+        Fri,  4 Jun 2021 08:47:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AE8E520B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1622821635;
+        bh=Ta7AVDVq80wxtJAhEMWvq0u4Gd9WlURarydMVI8XT1k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EvwSr33U36IyVGLo2CVg17brY69lpZrFsmUl6MgJ+yGjNKKMWS2uLcxj9J0FeLCtA
+         JP4K36MdJ9ZcHXSVXw2eK5uSuCwqdCJ6lYnPC66W1FRf8UqbxqEbEG1vfI7nxVmDCf
+         gNIn7BXiph6Hz0wJB+Qs0C71qlqG09i+yYUtgMP0=
 Subject: Re: [bug report] Commit ccf953d8f3d6 ("fb_defio: Remove custom
  address_space_operations") breaks Hyper-V FB driver
-Message-ID: <YLorQ3r4EH7aEvIV@casper.infradead.org>
+To:     Wei Liu <wei.liu@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
 References: <87v96tzujm.fsf@vitty.brq.redhat.com>
+ <20210604130014.tkeozyn4wxdsr6o2@liuwe-devbox-debian-v2>
+From:   Vineeth Pillai <viremana@linux.microsoft.com>
+Message-ID: <e5c90203-df8c-1e72-f77d-41db4ff5413f@linux.microsoft.com>
+Date:   Fri, 4 Jun 2021 11:47:13 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v96tzujm.fsf@vitty.brq.redhat.com>
+In-Reply-To: <20210604130014.tkeozyn4wxdsr6o2@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jun 04, 2021 at 02:25:01PM +0200, Vitaly Kuznetsov wrote:
-> Commit ccf953d8f3d6 ("fb_defio: Remove custom address_space_operations")
-> seems to be breaking Hyper-V framebuffer
 
-https://lore.kernel.org/linux-mm/YLZUrEjVJWBGGMxf@phenom.ffwll.local/
+On 6/4/2021 9:00 AM, Wei Liu wrote:
+> On Fri, Jun 04, 2021 at 02:25:01PM +0200, Vitaly Kuznetsov wrote:
+>> Hi,
+>>
+>> Commit ccf953d8f3d6 ("fb_defio: Remove custom address_space_operations")
+>> seems to be breaking Hyper-V framebuffer
+>> (drivers/video/fbdev/hyperv_fb.c) driver for me: Hyper-V guest boots
+>> well and plymouth even works but when I try starting Gnome, virtual
+>> screen just goes black. Reverting the above mentioned commit on top of
+>> 5.13-rc4 saves the day. The behavior is 100% reproducible. I'm using
+>> Gen2 guest runing on Hyper-V 2019. It was also reported that Gen1 guests
+>> are equally broken.
+>>
+>> Is this something known?
+>>
+> I've heard a similar report from Vineeth but we didn't get to the bottom
+> of this.
+I have just tried reverting the commit mentioned above and it solves the 
+GUI freeze
+I was also seeing. Previously, login screen was just freezing, but VM 
+was accessible
+through ssh. With the above commit reverted, I can login to Gnome.
+
+Looks like I am also experiencing the same bug mentioned here.
+
+Thanks,
+Vineeth
+
