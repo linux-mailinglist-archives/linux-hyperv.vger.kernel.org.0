@@ -2,282 +2,138 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 561D439AD29
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Jun 2021 23:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 516E439AF01
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Jun 2021 02:14:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230287AbhFCVu3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Jun 2021 17:50:29 -0400
-Received: from mail-bn8nam12on2099.outbound.protection.outlook.com ([40.107.237.99]:2432
+        id S229761AbhFDAP5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Jun 2021 20:15:57 -0400
+Received: from mail-bn8nam12on2125.outbound.protection.outlook.com ([40.107.237.125]:17582
         "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229924AbhFCVu3 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Jun 2021 17:50:29 -0400
+        id S229576AbhFDAP5 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 3 Jun 2021 20:15:57 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vs6WDj16tZoWi02poOnl1zBrSNETofitwzhk8Q9WPf1flaNprYIS8QmNxCHEHMDPosELO19zYZH4XSLBsfjU7aCsXP1w5hEMURAI/3wKP/xBv43oFKFjnCfzItqkNsspCHEGI7+tS3NaoYtcL7l0qio38t1CZ31dnymTgphM1oBqsoOzwBb2GWr7/RywkkJti/8oT12fY5g073inUdC9h/QkuAJ8AaQnejhC1dX6rAVEYXYte41TWbXM68Y8Mljdf8aZhKDQJ/wMjmqihudrXGmqHOVE7xxaYiXEy3WkJkRwFS3aFzwQtmKxktH7gvhkdCrgzL/ErDLdamQCGJNwnw==
+ b=Cj9o/+kJnT4ZgC/owOCoCeO2roZHoj4v+kwB/I/rE+QutCpd2rmvHc4L6AQzUomvqyQygQfpsguJroEmV81n0hM//UmZjVrk07sz4BkHZIxIjP3vwTZN4ZEdU9H3+bu94Zz6fr3lcGrSDNK8/z5b6BlZd54ntEdhX8EbYw9gF90fHH4Lvw8nbvI3uOKzrn2E/HfIjTZHPYtPKNik/6YiqlVKB9Z2Fxl+Vlt/APPAjOsh/ulbZkn5t1F3fjrZVoGm8JcfPhMw1/1kzidPMRatTAcqc5NHyi4joB4ASuSFZb9LU0ikSi0864/+Ys5BMgW2s0NSTQhWEHuko4hv2WNuaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tgi8TPJx2945PAudh9J94j81Reqkt94bmys6OhDg4DM=;
- b=KlCQScNDPWc0sm81625SkGN7FCYhuej+pX2ismgyeR3/NgddvF3h0vOP2BxU6MMYP2Q8GTQeLYqijqxR92HrZixzlGHfDYCvgzMub8rvqqaSsdS6mT7AgvvUWnY/Adg2dBkoVn7YpjSyEyCOqKFSdtrB+K0ziOxNQSRL1ZCvErFHGVTqYgi7dw0gJqAWFYLixSn8GX8am9Z9m7cOIMimWg29LtSdBo5woGrL+h0+ZJYr7gjWFe/eWoibcN7SE3DpHbKivXVofL/RUcKEhdkkaXsd+WkMdls2vwGiPKOj5042G4ULp9J2qAAeswMMtz+jUUD8hVnZrNgPbU9VOh1oeA==
+ bh=y76RYwsygiyFJ4E/CXBVN+OwwUwMlmRiGIOjNDKKnR4=;
+ b=Ys49y7sgLKBE60dUTRGgTGRLMLlfJyMV0evXUdlo6zgyPLcnijeYUxRz6r1ki71NDjhYEGrSXY6qC9JH+Il1hhwHqrm9QvxgNHQmVzJaIt135tmKbWysV2zg9f3v6QEWj5Jq1FmOXXHaoDr1Bc6cSmiytJJosjbWpvj2Od3ED6zx0LQfh6DZHSu01QL0TXZfKmzQS3wMjH21spcMiKwcaDQfQ8Y8USXu/rKQRvMSYd2w9lSpwMAsHzk8NAya+j8n1NwmCbVD4o/p/BxJ5ORbMg0e2fNsQfL54F8wp6oW2SWkY75sZbUqLt6e4qOUPJFtjkQH16Mf2k4io82paUbpkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tgi8TPJx2945PAudh9J94j81Reqkt94bmys6OhDg4DM=;
- b=a6ocFLSI6yJH67IJs2eWilYTBMutDfzxgs4QydKvHJ8ZVlWzyaaVmMFVz9x8m37ZivsiBoASTDh2sQp3e4Gxy39nuiLyNzIxe6rjtNRK12tuMdmNSyJ+EH3lcelgYk+oN6BUuyWX6Vwj3MNkIOffQTgUDpCBAfnhGToed7nD5HQ=
-Received: from DM6PR21MB1513.namprd21.prod.outlook.com (2603:10b6:5:25c::19)
- by DM5PR2101MB0936.namprd21.prod.outlook.com (2603:10b6:4:a5::38) with
+ bh=y76RYwsygiyFJ4E/CXBVN+OwwUwMlmRiGIOjNDKKnR4=;
+ b=Yzsp+Erh3NnvFZij0YgMaJYqPCzhAcMsKQSd0DqKihPyXDDnswbIBKmT+UBRxkn/TtoiES2Sefph2OzxNGE2m7ce+BCNPIXwmAM530fCdfqptlotBeugtw6vP9kK3WwgZWzFqmMBxxr8njpwbJTLG5S2CNKCvanYSoid53YQOJY=
+Received: from MW4PR21MB2004.namprd21.prod.outlook.com (2603:10b6:303:68::24)
+ by MW4PR21MB1860.namprd21.prod.outlook.com (2603:10b6:303:7a::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.7; Thu, 3 Jun
- 2021 21:48:41 +0000
-Received: from DM6PR21MB1513.namprd21.prod.outlook.com
- ([fe80::c1bb:3431:eedf:cd08]) by DM6PR21MB1513.namprd21.prod.outlook.com
- ([fe80::c1bb:3431:eedf:cd08%9]) with mapi id 15.20.4219.012; Thu, 3 Jun 2021
- 21:48:41 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.2; Fri, 4 Jun
+ 2021 00:14:09 +0000
+Received: from MW4PR21MB2004.namprd21.prod.outlook.com
+ ([fe80::bd8a:c616:27d:77a2]) by MW4PR21MB2004.namprd21.prod.outlook.com
+ ([fe80::bd8a:c616:27d:77a2%8]) with mapi id 15.20.4219.010; Fri, 4 Jun 2021
+ 00:14:09 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v3 2/2] PCI: hv: Remove unused refcount and supporting
- functions for handling bus device removal
-Thread-Topic: [Patch v3 2/2] PCI: hv: Remove unused refcount and supporting
- functions for handling bus device removal
-Thread-Index: AQHXRwXG9NkUayahwkmUn85HLY+evasCrWAAgABI5aA=
-Date:   Thu, 3 Jun 2021 21:48:41 +0000
-Message-ID: <DM6PR21MB1513EECF1D6FCFB36D4C1A42CE3C9@DM6PR21MB1513.namprd21.prod.outlook.com>
-References: <1620806809-31055-1-git-send-email-longli@linuxonhyperv.com>
- <20210603172713.GA20531@lpieralisi>
-In-Reply-To: <20210603172713.GA20531@lpieralisi>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: [PATCH 1/1] Drivers: hv: Move Hyper-V extended capability check
+ to arch neutral code
+Thread-Topic: [PATCH 1/1] Drivers: hv: Move Hyper-V extended capability check
+ to arch neutral code
+Thread-Index: AQHXV/dt754Yd0mslE6VHNCgKiA46KsC+4ow
+Date:   Fri, 4 Jun 2021 00:14:09 +0000
+Message-ID: <MW4PR21MB20040751A1A5AFF8D6C6FCA3C03B9@MW4PR21MB2004.namprd21.prod.outlook.com>
+References: <1622669804-2016-1-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1622669804-2016-1-git-send-email-mikelley@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=219cdfd0-3b27-41c0-a4af-11ab33e3f801;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-06-03T21:48:15Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [76.22.9.184]
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2601:602:9400:570:94c3:1b26:9ddf:659c]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e92fd2bb-2490-4df8-3bdf-08d926d95a73
-x-ms-traffictypediagnostic: DM5PR2101MB0936:
+x-ms-office365-filtering-correlation-id: e81f4c18-3fd6-408e-9266-08d926edace8
+x-ms-traffictypediagnostic: MW4PR21MB1860:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR2101MB09362E67DB38737CAE840B58CE3C9@DM5PR2101MB0936.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-microsoft-antispam-prvs: <MW4PR21MB18600C3F89807C85EDE6634FC03B9@MW4PR21MB1860.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dUFzPBD//gXzplPKcQHzSnLdryBHccuC8519mN95RU78g5+9IZn27rIgpWjGDM7LNiaEjXo/rzEI+VRjIvfZU2eWiACwn1u3u6MADoyS6R4KvzXX1TuJjNFtWOdj/yDtEmTe3vE7lOYvzR2Qu7O8q/38pP/A3K2pmtEk0jYrr0OHImSDXpm7ZZ576xKD8BpYrB+oxro/TvQ1ARt0yaeNuG3D7C4hmkTQJL436/DLhEDEFhtXy2ApGpHiTUn+SYPMUaDntnZbeHeyrPoVjMUmUhA5DINoO2n2ZztSOpRqNZo4dti/xfB3e/uWtbjroTB/FS7TtGtVVdlCiV6zecwn8JkYRjf7HYlQoTEEpq4BGfj3vOjynWHU2QkfiyHPPXsncGg4v9w0GVCFSUjUn6tXWOEAI0DntDJlJJ3n3mp7+Y/ScsSgJKgIb1IRP/aXBrTiLPCiToqlV8jpWDcKKhXSVIilkbpK4Md7mxPDgfY7/vXF1hWz4UeB7C5EvPQApM0Gd/+3LQqdDaY15gjo9oMgI6TQumtlK4Ltbj51EAqZMYKioZG4cknYQJmbAXhGm3sdZqHJ042OpD/1buVTKlVfFAFpAg5MCNYM4bnFZZjNIUmXjaNTNouHU/dUK0dMjxMGfdfUMqD3PcNJEKCpTx4teg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1513.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(64756008)(66556008)(478600001)(66446008)(52536014)(9686003)(8990500004)(83380400001)(6506007)(110136005)(316002)(54906003)(86362001)(8936002)(7696005)(10290500003)(2906002)(76116006)(66476007)(122000001)(4326008)(8676002)(66946007)(26005)(186003)(55016002)(71200400001)(82950400001)(38100700002)(33656002)(5660300002)(82960400001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: 8ZwR/KxegWQl4/PKMuMTBC5hQ4vL3+41j4lzaKP167a+QyMwn2t3o9CJWzwHTM1KHfo5dSUiCpnHp+EpSuNr9p0xxjckHOC2EcJtamj/AJWYSFBmB36VwkUWzp94WuV80WoBIyBP4OVam7Zgdkwdbron3N4KKlr+GZLMIZucTgem13ZwDsmulAkZs9xU3aKkH4aepEykR/kxjAqt8j5k+q6o2iY5RWytnTvnogJcIkAOzaDTC7IJCjtv+VRKuj/vq83Q9WnS2PJedL6IMb+lRla9yTkG5BbLjYXc3qdTOytpT8xeMBH6lPUP+YjINhN6RIlu+ZQ17BlxY4SJY7+ejXoTBfyRatxi+gzHAOYip+R0se0/GCXWq/6xgOL+wx0JrLf1aMpM1q/mxtgj0rrCoFNiE6GDU//jQ0+b+TcumzjnmohrY8IgjS7EVtlAvZmD7Jlhl8Yl16qGwqh5aymin0k3YAKAxDGkQpRP7tjzWmolGayPZKOogXKBmcU14YoxQ/C9S/2Za7oT8Cbs0x7/qmGgCuOAKisrwyzlkDrtv4YEyk0TwdG1PcwqW3zTUUg0s3RjVbLIizCb/V+RFSTe1QSaArb0Bzuz4bxj4Sycc0/7MM5j718Jip7nYUck7whYUMziKauTm9ncwPeideo+/w8/q33E2NCmiUlnd0YCwkq0vBbrbbFX0xP+lxc5x1Qy
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR21MB2004.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(186003)(6506007)(52536014)(921005)(83380400001)(9686003)(110136005)(316002)(122000001)(4744005)(71200400001)(8990500004)(33656002)(55016002)(10290500003)(82960400001)(82950400001)(2906002)(7696005)(66476007)(66556008)(64756008)(66446008)(8936002)(86362001)(5660300002)(76116006)(66946007)(8676002)(478600001)(38100700002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?AWZLn+d0UejTkis4It2jSG30TUjJWgO7UBMGVrbDi6+IaokTVmi3E0NqmuPg?=
- =?us-ascii?Q?j19PrRSVGG9dWmNlgNnIm/3WoyzJJartLwrR8iVj1WwmweLwy8EqxmhNDX82?=
- =?us-ascii?Q?z3OqprSwhRxn/hbSaYoxETQiaBD60Tje72s0I4aRui+r7wtY3xSFUKmd+Ahw?=
- =?us-ascii?Q?vWPXLMYlcuxrGvCUwuE/uojfipmJoC9Cw/DMKwannYE4Jbn0vFdbmsYIq/xz?=
- =?us-ascii?Q?ttzYPIJU/+ckIJeKvgrprdzE79I/v1CH5qJ0JRdfLYzFnXuYTyPuRNCTXH6O?=
- =?us-ascii?Q?ck4JLZEN1yxo5iEGB5NCDb4E3mP1/LmVqeUiCL0xWRfs84jKbXsFto8CMxtf?=
- =?us-ascii?Q?32XGz0v+IzY3/JsOEs3+ocyX3Hyae7YwsafkS79HgWIk86ljQnuactg/7zcT?=
- =?us-ascii?Q?YjMz1tDyAByy+UtlqQ3MZOhC5b+l/LLDmws5YXTKBX8sVK6tqLS3L3gmc7eJ?=
- =?us-ascii?Q?eQGtqhTON3Kgo/LPJJgKU2Vyl3AU2VxIQvuY1DkDlozwTQD1D8c9mLE/ZuH4?=
- =?us-ascii?Q?MhD26b0/S6VSHL0rzYTzsVGt8l2qOIdjV9ktBBgwXAEGn7ZO4q/UHgM2d/h8?=
- =?us-ascii?Q?9L6yL4TUUTBn7xyHDqRo3w4dRs0LNC/Uss+RwPFAhqSOmuFR9w8mUJwQbMek?=
- =?us-ascii?Q?kwk1LGeROk0MqTtaB8Pzmr2RrwSSRvHxHEx5sXMdNpAloPr8MA+P+cxc67Dd?=
- =?us-ascii?Q?8s7/futRyK8g0+18VyWRR6gOuNmhosjXGypJIwfFiiJlSxvWJFO3jdNO8FJc?=
- =?us-ascii?Q?wusdc9/7h7wcpoqOUFReo6mbGpQ3cbLQ3b6BVDjTa+7GUP7yVAzsyFK+8NP2?=
- =?us-ascii?Q?VtHW/RHaKInZ6PeUIJZZHVdlI9MH7t4x8OpHw9rhO+hqH/8zyaqbGHunrCsD?=
- =?us-ascii?Q?UKO5Iqoxbtpdbbh5gviU1Yy9QesQcP9VZ/UWKiXnSeX9Z6nBQClvD7zjg8aT?=
- =?us-ascii?Q?nan++gO+B0hyf+Cd5R5Afb9sTCTznEsYWOV9Cfreuw9NumXPLStcKAa33+PX?=
- =?us-ascii?Q?Rj5oO0ZwjM21U36ije6TOaUvk32RLNqgW9PeBIoTbIuUtpb+HWVIKrIl2Oz4?=
- =?us-ascii?Q?Yea0+nF4i9ZuQ9qd9TudfBicjMzy6qtBgdbl5Lay4pXY4kulBEj/ieX1tA6r?=
- =?us-ascii?Q?AhpGj09q8MEsfXfTaE5IiKPsQ0xqAgHZOBiiDvCexFkgub3k/0VwNsNAoyIY?=
- =?us-ascii?Q?gLhQ04lMCLISDqxb+a3xGs0v2ip2+SKKwnRl0DdtE4rD5mD077/Xj2Yj7wYv?=
- =?us-ascii?Q?kmLsT3JXhP/jCWFtfeSoxTDQc6ZVxqbqGyS1VxY0kalIHlhp+qCVgtqx6lBU?=
- =?us-ascii?Q?tb4=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?cnbDfTYrnlSUISPV+zA3pChNwNM7gb931vFcvNQUkwC4qfnFFEYjaNCHGzic?=
+ =?us-ascii?Q?RW7NpClgGv5DWjbob9c+AHG+kCQ41Ck3hPC+iQ9RiJKSgVeo55afkWJveXOE?=
+ =?us-ascii?Q?sco8DIiAxkiSWlD4/gXMKLjtPgJ4TZU0PL5eY//AJVwuu5oKwT16rgmBK3Y+?=
+ =?us-ascii?Q?5QZXL4vV8xM7JIs825lIDQYEKEcLZNaR3XnG4swXiMnKN6hQGzG4gbCs6P6g?=
+ =?us-ascii?Q?r72StxVNy8MirYkh6pxsu3RIENMVtLmuNrhYZFPTZwfh37wYe1+pGAxX5FaN?=
+ =?us-ascii?Q?rxml/7zE9nF32o3mQ2Jvfet1awdt7H17lzBMBxvZw8tY2JD6LZNy772hGZg4?=
+ =?us-ascii?Q?d1fmIQlMdEZiewMHOnXFqvh3gHJYrZKpcBBBSElNpaIZm5gPREM4KKbC4K0A?=
+ =?us-ascii?Q?HS7O4XUfC9navZBr0vNVHMtTANbnxZLUpJL4tUh9m0PItgiX1d11fPgujcZo?=
+ =?us-ascii?Q?V5XQcrts/W7ctKLTomPMqoExuu8Lpc80saFXHMy6W90nOJCcx1qXUR36GWjy?=
+ =?us-ascii?Q?EIQMvpdJS7eA0X3YApYjewj6O81a03diPIDbdviwaySOIsuZNAEaIOU6xBrm?=
+ =?us-ascii?Q?fwaGnZECQIVCeVxEuUgJQNQgka8AoUJrwMnw4wRQltgGbViKMo/1PYx4nH1X?=
+ =?us-ascii?Q?ryhZgEWOpd2T/VUTEhSjjQK1YZVX3vmfvAO0tXfbp6eXjZG7exBz8lcCkOGO?=
+ =?us-ascii?Q?oW9Gz9ABq3MzAn0LtzidrpByKO1k8PxrYqzol3YwVIEChKsQY31QBhhuWedx?=
+ =?us-ascii?Q?SjOn57cOBIfhVPq77GgBCDRbRgXlzQh6pPaynyvwNQ+ScJFec2NnaLHeaXiW?=
+ =?us-ascii?Q?Vvw2Nj7wYA4C1DTBhCqAwqxPUw3kjqbUHzcOMAtF9vIA80FvgE49F4W6lWo7?=
+ =?us-ascii?Q?aPQc0nMoNHKzvcMPpiUQPlHPQRD/+zU/kUTLB/qVeA8dZmIReMQnW4kWeZn5?=
+ =?us-ascii?Q?NjPva2gkPG+80FGI3tuhBrIvM8ZR7ngynybrZNTwSRS3uBa32xYSrr2Ze5Jq?=
+ =?us-ascii?Q?EImWb7dRyvUrerm0wICCRkYADcUzWkFrDeKVKXh1tB6x0afsY4beExfJNw+m?=
+ =?us-ascii?Q?8fkn7FVIYZ/37BREFpkuZHx9XHsStopXuETTWqxNJfcq2iWpYWK7om50UfXX?=
+ =?us-ascii?Q?ktstrXsuiUS9Zf0PCFeoJS5Mdiddo6mlpoC9JxvIrZisdZRJl1XRCsX6iZKX?=
+ =?us-ascii?Q?liXgirbuI+8NvBAHiUv8GqryxZIt/HInzPoCXdBm7I/Cx137Q0QwjLWpmN6j?=
+ =?us-ascii?Q?OfqKsdeuMsqMms+rC04xK4MFB3cie6kagmJ2eSH+93ZMM3QDoprs1RG8oPI/?=
+ =?us-ascii?Q?zrnqRjh7yK06KJ+8igxuzDvAWFOlYiYQYdLViXbyh3ji7ouwht+iO8J+AMUR?=
+ =?us-ascii?Q?3t1SLEVKJgKQcsS3zpR3biuDFr1f?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1513.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e92fd2bb-2490-4df8-3bdf-08d926d95a73
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2021 21:48:41.5950
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR21MB2004.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e81f4c18-3fd6-408e-9266-08d926edace8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2021 00:14:09.8588
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q1EdQbK6XtNOo4cVlYIHPE6CSgGdh5gvYQUa3AmQzqqVIi87za93ygdvSuD6kHfVW46aNhhC4FbQGIbq+3GgHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0936
+X-MS-Exchange-CrossTenant-userprincipalname: WZzYDIw8i9d3gbfNicN5xMdBs7e+2SFimDNwp4dPDbWKg+WKHcdoroy8Gitn2XIGr6spOaAkIkzeSHEzwUiUK5dwtNGiftmBm87JYdx6Crw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1860
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> Subject: Re: [Patch v3 2/2] PCI: hv: Remove unused refcount and supportin=
-g
-> functions for handling bus device removal
+> The extended capability query code is currently under arch/x86, but it
+> is architecture neutral, and is used by arch neutral code in the Hyper-V
+> balloon driver. Hence the balloon driver fails to build on other
+> architectures.
 >=20
-> On Wed, May 12, 2021 at 01:06:49AM -0700, longli@linuxonhyperv.com
-> wrote:
-> > From: Long Li <longli@microsoft.com>
-> >
-> > With the new method of flushing/stopping the workqueue before doing
-> > bus removal, the old mechanism of using refcount and wait for
-> > completion is no longer needed. Remove those dead code.
-> >
-> > Signed-off-by: Long Li <longli@microsoft.com>
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 34
-> > +++--------------------------
-> >  1 file changed, 3 insertions(+), 31 deletions(-)
+> Fix by moving the ext cap code out from arch/x86.  Because it is also
+> called from built-in architecture specific code, it can't be in a module,
+> so the Makefile treats as built-in even when CONFIG_HYPERV is "m".  Also
+> drivers/Makefile is tweaked because this is the first occurrence of a
+> Hyper-V file that is built-in even when CONFIG_HYPERV is "m".
 >=20
-> I'd be grateful if in the future you can send threaded patch series so th=
-at
-> tools like b4 can detect the thread and create the mbox accordingly.
+> While here, update the hypercall status check to use the new helper
+> function instead of open coding. No functional change.
 >=20
-> No need to resend this one (maybe I need to trim patch(2) Subject).
 
-Will do next time.  Thank you!
+Thanks for taking care of this, Michael.
 
-Long
+Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
 
->=20
-> Thanks,
-> Lorenzo
->=20
-> > diff --git a/drivers/pci/controller/pci-hyperv.c
-> > b/drivers/pci/controller/pci-hyperv.c
-> > index c6122a1b0c46..9499ae3275fe 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -452,7 +452,6 @@ struct hv_pcibus_device {
-> >  	/* Protocol version negotiated with the host */
-> >  	enum pci_protocol_version_t protocol_version;
-> >  	enum hv_pcibus_state state;
-> > -	refcount_t remove_lock;
-> >  	struct hv_device *hdev;
-> >  	resource_size_t low_mmio_space;
-> >  	resource_size_t high_mmio_space;
-> > @@ -460,7 +459,6 @@ struct hv_pcibus_device {
-> >  	struct resource *low_mmio_res;
-> >  	struct resource *high_mmio_res;
-> >  	struct completion *survey_event;
-> > -	struct completion remove_event;
-> >  	struct pci_bus *pci_bus;
-> >  	spinlock_t config_lock;	/* Avoid two threads writing index page */
-> >  	spinlock_t device_list_lock;	/* Protect lists below */
-> > @@ -593,9 +591,6 @@ static void put_pcichild(struct hv_pci_dev *hpdev)
-> >  		kfree(hpdev);
-> >  }
-> >
-> > -static void get_hvpcibus(struct hv_pcibus_device *hv_pcibus); -static
-> > void put_hvpcibus(struct hv_pcibus_device *hv_pcibus);
-> > -
-> >  /*
-> >   * There is no good way to get notified from vmbus_onoffer_rescind(),
-> >   * so let's use polling here, since this is not a hot path.
-> > @@ -2067,10 +2062,8 @@ static void pci_devices_present_work(struct
-> work_struct *work)
-> >  	}
-> >  	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
-> >
-> > -	if (!dr) {
-> > -		put_hvpcibus(hbus);
-> > +	if (!dr)
-> >  		return;
-> > -	}
-> >
-> >  	/* First, mark all existing children as reported missing. */
-> >  	spin_lock_irqsave(&hbus->device_list_lock, flags); @@ -2153,7
-> > +2146,6 @@ static void pci_devices_present_work(struct work_struct
-> *work)
-> >  		break;
-> >  	}
-> >
-> > -	put_hvpcibus(hbus);
-> >  	kfree(dr);
-> >  }
-> >
-> > @@ -2194,12 +2186,10 @@ static int hv_pci_start_relations_work(struct
-> hv_pcibus_device *hbus,
-> >  	list_add_tail(&dr->list_entry, &hbus->dr_list);
-> >  	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
-> >
-> > -	if (pending_dr) {
-> > +	if (pending_dr)
-> >  		kfree(dr_wrk);
-> > -	} else {
-> > -		get_hvpcibus(hbus);
-> > +	else
-> >  		queue_work(hbus->wq, &dr_wrk->wrk);
-> > -	}
-> >
-> >  	return 0;
-> >  }
-> > @@ -2342,8 +2332,6 @@ static void hv_eject_device_work(struct
-> work_struct *work)
-> >  	put_pcichild(hpdev);
-> >  	put_pcichild(hpdev);
-> >  	/* hpdev has been freed. Do not use it any more. */
-> > -
-> > -	put_hvpcibus(hbus);
-> >  }
-> >
-> >  /**
-> > @@ -2367,7 +2355,6 @@ static void hv_pci_eject_device(struct
-> hv_pci_dev *hpdev)
-> >  	hpdev->state =3D hv_pcichild_ejecting;
-> >  	get_pcichild(hpdev);
-> >  	INIT_WORK(&hpdev->wrk, hv_eject_device_work);
-> > -	get_hvpcibus(hbus);
-> >  	queue_work(hbus->wq, &hpdev->wrk);
-> >  }
-> >
-> > @@ -2967,17 +2954,6 @@ static int hv_send_resources_released(struct
-> hv_device *hdev)
-> >  	return 0;
-> >  }
-> >
-> > -static void get_hvpcibus(struct hv_pcibus_device *hbus) -{
-> > -	refcount_inc(&hbus->remove_lock);
-> > -}
-> > -
-> > -static void put_hvpcibus(struct hv_pcibus_device *hbus) -{
-> > -	if (refcount_dec_and_test(&hbus->remove_lock))
-> > -		complete(&hbus->remove_event);
-> > -}
-> > -
-> >  #define HVPCI_DOM_MAP_SIZE (64 * 1024)  static
-> > DECLARE_BITMAP(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
-> >
-> > @@ -3097,14 +3073,12 @@ static int hv_pci_probe(struct hv_device *hdev,
-> >  	hbus->sysdata.domain =3D dom;
-> >
-> >  	hbus->hdev =3D hdev;
-> > -	refcount_set(&hbus->remove_lock, 1);
-> >  	INIT_LIST_HEAD(&hbus->children);
-> >  	INIT_LIST_HEAD(&hbus->dr_list);
-> >  	INIT_LIST_HEAD(&hbus->resources_for_children);
-> >  	spin_lock_init(&hbus->config_lock);
-> >  	spin_lock_init(&hbus->device_list_lock);
-> >  	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
-> > -	init_completion(&hbus->remove_event);
-> >  	hbus->wq =3D alloc_ordered_workqueue("hv_pci_%x", 0,
-> >  					   hbus->sysdata.domain);
-> >  	if (!hbus->wq) {
-> > @@ -3341,8 +3315,6 @@ static int hv_pci_remove(struct hv_device *hdev)
-> >  	hv_pci_free_bridge_windows(hbus);
-> >  	irq_domain_remove(hbus->irq_domain);
-> >  	irq_domain_free_fwnode(hbus->sysdata.fwnode);
-> > -	put_hvpcibus(hbus);
-> > -	wait_for_completion(&hbus->remove_event);
-> >
-> >  	hv_put_dom_num(hbus->sysdata.domain);
-> >
-> > --
-> > 2.27.0
-> >
+
