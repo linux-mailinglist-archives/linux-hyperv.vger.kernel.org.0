@@ -2,86 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E846B39C256
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Jun 2021 23:26:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A71339C765
+	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Jun 2021 12:25:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229668AbhFDV2L (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Jun 2021 17:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229665AbhFDV2K (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Jun 2021 17:28:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 99B4261106;
-        Fri,  4 Jun 2021 21:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622841984;
-        bh=Gui3O5Hg4UntSL86u71QCTzn6Ff++kMTUZPRfpQKiyM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QNhcezxfRsjXoDrXp7aaNT5h5/R5Vxvl1wuGbFSFZn5tIOs/iLV52MbwcP8fwOBU3
-         lwD1+Xz66OIqfYdMxUyLj+svXn2fVEdZlbIlaY/VSwcvd8rqD2xpouHN163tWI6fhP
-         zkxkZ8TF9JfuCiT4fELNEQI9MrWt5U//g4i4POlhEiAGLDWXyIxH3S3xXJ3veA/Zv1
-         jYh64lRiEIL/SnMTj/QirbusH7dwRiiJRZxmKCy+wxdUWNvfpjOs1eQlFv4A3LZ1Zy
-         gQySY12V4FF/BROPFvJufoffJrLlXaHLLmDFTd23GnzbN6fJSrNlPRees3vFe0UbCR
-         VngXyuZ1RXr/w==
-Date:   Fri, 4 Jun 2021 16:26:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, kys@microsoft.com, olaf@aepfle.de,
-        vkuznets@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci-hyperv: Add check for hyperv_initialized in
- init_hv_pci_drv()
-Message-ID: <20210604212622.GA2241239@bjorn-Precision-5520>
+        id S229931AbhFEK1l (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 5 Jun 2021 06:27:41 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:43578 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229902AbhFEK1k (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 5 Jun 2021 06:27:40 -0400
+Received: by mail-wr1-f43.google.com with SMTP id u7so6296873wrs.10;
+        Sat, 05 Jun 2021 03:25:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m969ISjz0Qg2RicSIh/DLDKZX7B7gGF5mGcynT3qU5g=;
+        b=gSTQ2+tued6UiImWuu//oBlJfjpt/gwxvwg29XwT4DnYnd8egzGn/L0o2ogOHSgA6d
+         rHBeSymp/nYKxg+oWHFjfFsLqyG42L42QV44U0Fksyf4Cm2MWpuOaSKivHTKx8y4STZ3
+         ofZdcOjBjR3hFFiqnQX4kZtjsmUrDCJaF8+yijmZz9b7bmuIakoHxI564DITRTS2a9Xv
+         Bc7RrMofn24GuhzVvsF352dyD4JipymAreTUkotBQkS9XBCwyLIyelkc4WakHggRuwWm
+         nNaabpWr4/vBxVjYaV5t8RPzXoHEDGP1JPRxXQTE2kxuzC2uSpcBcGbQMXvZN44S29d0
+         luxQ==
+X-Gm-Message-State: AOAM53297uQpBZUQGmdj1B+AaKbcY1FnYun40G0w8dUQjgUb8jmYInP7
+        WsIc5NXOgIGAmNx5WEeQHZg=
+X-Google-Smtp-Source: ABdhPJyd9jZ2BL1pEkcDkHDEA9rfDfI2xuCJiemXtQRM4Pul5Z0tJojgoUhXxbGqPt1WZB4KlOCO+Q==
+X-Received: by 2002:a05:6000:2a3:: with SMTP id l3mr8155566wry.395.1622888735842;
+        Sat, 05 Jun 2021 03:25:35 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id p187sm8242731wmp.28.2021.06.05.03.25.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jun 2021 03:25:35 -0700 (PDT)
+Date:   Sat, 5 Jun 2021 10:25:33 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH 1/1] Drivers: hv: Move Hyper-V extended capability check
+ to arch neutral code
+Message-ID: <20210605102533.uzvd4l7el2afes5i@liuwe-devbox-debian-v2>
+References: <1622669804-2016-1-git-send-email-mikelley@microsoft.com>
+ <MW4PR21MB20040751A1A5AFF8D6C6FCA3C03B9@MW4PR21MB2004.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210602103206.4nx55xsl3nxqt6zj@liuwe-devbox-debian-v2>
+In-Reply-To: <MW4PR21MB20040751A1A5AFF8D6C6FCA3C03B9@MW4PR21MB2004.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 10:32:06AM +0000, Wei Liu wrote:
-> On Tue, May 25, 2021 at 04:17:33PM -0700, Haiyang Zhang wrote:
-> > Add check for hv_is_hyperv_initialized() at the top of init_hv_pci_drv(),
-> > so if the pci-hyperv driver is force-loaded on non Hyper-V platforms, the
-> > init_hv_pci_drv() will exit immediately, without any side effects, like
-> > assignments to hvpci_block_ops, etc.
+On Fri, Jun 04, 2021 at 12:14:09AM +0000, Sunil Muthuswamy wrote:
+> > The extended capability query code is currently under arch/x86, but it
+> > is architecture neutral, and is used by arch neutral code in the Hyper-V
+> > balloon driver. Hence the balloon driver fails to build on other
+> > architectures.
 > > 
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > Reported-and-tested-by: Mohammad Alqayeem <mohammad.alqyeem@nutanix.com>
+> > Fix by moving the ext cap code out from arch/x86.  Because it is also
+> > called from built-in architecture specific code, it can't be in a module,
+> > so the Makefile treats as built-in even when CONFIG_HYPERV is "m".  Also
+> > drivers/Makefile is tweaked because this is the first occurrence of a
+> > Hyper-V file that is built-in even when CONFIG_HYPERV is "m".
+> > 
+> > While here, update the hypercall status check to use the new helper
+> > function instead of open coding. No functional change.
+> > 
 > 
-> Hello PCI subsystem maintainers, are you going to take this patch or
-> shall I?
+> Thanks for taking care of this, Michael.
+> 
+> Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
 
-This was mistakenly assigned to me, so I reassigned it back to
-Lorenzo.
-
-If you *do* take this, please at least update it to follow the PCI
-commit log conventions, e.g.,
-
-  PCI: hv: Add check ...
-
-and wrap the text so it fits in 75 columns.
-
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > index 6511648271b2..bebe3eeebc4e 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -3476,6 +3476,9 @@ static void __exit exit_hv_pci_drv(void)
-> >  
-> >  static int __init init_hv_pci_drv(void)
-> >  {
-> > +	if (!hv_is_hyperv_initialized())
-> > +		return -ENODEV;
-> > +
-> >  	/* Set the invalid domain number's bit, so it will not be used */
-> >  	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
-> >  
-> > -- 
-> > 2.25.1
-> > 
+Applied to hyperv-next. Thanks.
