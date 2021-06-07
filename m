@@ -2,51 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB97B39D6DE
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jun 2021 10:16:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 762CE39DFCA
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jun 2021 16:57:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbhFGIR5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Jun 2021 04:17:57 -0400
-Received: from mail-pj1-f54.google.com ([209.85.216.54]:53199 "EHLO
-        mail-pj1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229545AbhFGIR4 (ORCPT
+        id S230237AbhFGO7F (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Jun 2021 10:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230193AbhFGO7E (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Jun 2021 04:17:56 -0400
-Received: by mail-pj1-f54.google.com with SMTP id h16so9344558pjv.2;
-        Mon, 07 Jun 2021 01:15:50 -0700 (PDT)
+        Mon, 7 Jun 2021 10:59:04 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A85F9C061766;
+        Mon,  7 Jun 2021 07:57:01 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 27so14010942pgy.3;
+        Mon, 07 Jun 2021 07:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c5tZw1PE5ja1kIfp0A9CThFtz7RTJJ96vn5JKsdn4zo=;
-        b=XoQyLvz24OoCRIOShkQNcu9DiR7bBkokC0zH2y0VsTYjxJfKw7R0siA80dncjT3YUK
-         wAQolPJ8LMP2QAHMUANfaqPmSCX0C5CGSEEQPtRRcQTl1EKUo8gRIPdRN/yizwXOvk7a
-         MyxLl0xOVUFh4CzE2lkyyns1y8zU/3BfW8wnjMepLuBa14dDIuRlcgHvnJy9KhXaOr8X
-         f1b1b3SWDcQzR8oj41QVFoJZ6XqUPNURZphda8kDAwgTk/UUkxjzRis3jA/H1Gt2YM49
-         MOGgQu1k2QTfbhGmrfPyoKrM3mYFHKWoquCiDY9UKYa1vj3gMvLKx5aFnrcD/cKhHcp4
-         J8+w==
+        bh=mkL4psSj+prMNO7AohBJyTx+Q189qdo7fgANRpB5e+4=;
+        b=lhaKoBcNOuAsXD3pTAmPwsFop0hqZ7JU5MLd+d9L1no2Uoec0Qyp3qHl7oh02shWeI
+         Jes/SZ8q3U+KfCNoq9c1Xrlmq8EXws4qXzfcpkEnMBLnTwTeOLVn57/5lNMv0IIQu936
+         eZ7O1rSFr9fTp5zpfxPADKjK5NrHWx5QoMUdi6NsRSJlWsZAOZ1xE13fUHg60coHCGz9
+         L8KTelBvvQsClf1NodL6YCelq4Ol69U2fD2Jwlp+Qg82jWdc6cKvPRG+8Dfwd10h1GXK
+         eJIB1Vu38FzkxJlUAMfqjcOa76EjkPTv6FXCcrF7OHioGvvqCsPHt0hXWXzpcsKlznTI
+         Ov6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=c5tZw1PE5ja1kIfp0A9CThFtz7RTJJ96vn5JKsdn4zo=;
-        b=U5B5//UCw1NXbo2scwqBFg38TxwRH3IiycN05CUTa6Am23xPa9mLhy3mtLnJGvNv/Q
-         s42PMnrkoWbfp7t9Ryd7RFn4aVpXpDPyvHf520aKDpkiNSL/x2OyS6CKzpxTf3Anc4zj
-         8joYLjNtX2CqCr9PmkA2D5u9Zepe5ChMRSJO/BqtlijT6+K39sUD+RTCTSET7kc44taA
-         oxwbYtndMH4dTHzRn5QfFF76fWLvJDIO25FHvtV8IrSoZASfOt94QPZjA89R0g8gWPGK
-         csXopPcXTsn7ihQwWEiPZOgMs4PxqnvEBcrgfUvrdVKUcN79twhv4Gy3vwXptmFr3X9F
-         UVzg==
-X-Gm-Message-State: AOAM531xCCSZT9paFIA/Oe0RszpZIcYjNxmBHGU3BR9sy8HQWUC3s1yC
-        0wlKPicluEu0K5glcRAQaA0=
-X-Google-Smtp-Source: ABdhPJz5DsUF3lCnv8yQA4dIwCqwn7lOEnqmDAyx9VQ48+J+hBL0/9GZGiwWD3mDm4r9zCHOflaTmA==
-X-Received: by 2002:a17:902:9a42:b029:f5:1cf7:2e52 with SMTP id x2-20020a1709029a42b02900f51cf72e52mr16701852plv.25.1623053690127;
-        Mon, 07 Jun 2021 01:14:50 -0700 (PDT)
+        bh=mkL4psSj+prMNO7AohBJyTx+Q189qdo7fgANRpB5e+4=;
+        b=FwS6i0uKIdwoGvDNri0MVo4csFd3/e/afhHykIx33QdV5oVVTlDVmnRfLXkAbR/ZOZ
+         dqlubCpcoT8p6jf3rDaFvUtM411rFOqNt3zJzHB0g44L0EOd2gn57E4JNqdEe8dCrbp3
+         Thk1HCW8OHcok4kCyCuRrfX58zZOOq+MA1pcpJ8oaraabaoDOno32/6ccb6UKTDUZCpq
+         KGJoajV9T0+0mC2QAwhLWb23ScCKklTc19wezbdyHF450EEnGoCUrWuVG2LkMbbmXG9h
+         oZwxyl7rng+Ub/CKN5EBf/QqZ/ZstlN2/JczEdBY4BohM+z8ynWmDjflRPI2DVNhS9VM
+         mFtw==
+X-Gm-Message-State: AOAM53203/RcrdZZty4YE+UJ6Aa2bSbHN3mjILh8WB9DPJ4NfRlNoYyJ
+        3yY0gvVQd4zS6Ub4hhV1Cgk=
+X-Google-Smtp-Source: ABdhPJyAa6AVd7SFvf1Ep4fkh59q91v76tY7vbke901CKM7Z5XY+dbd7TJGFiS7g5cKGjx+7iiHgJA==
+X-Received: by 2002:a65:6a51:: with SMTP id o17mr18093661pgu.170.1623077821197;
+        Mon, 07 Jun 2021 07:57:01 -0700 (PDT)
 Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
-        by smtp.gmail.com with ESMTPSA id r11sm8236573pgl.34.2021.06.07.01.14.37
+        by smtp.gmail.com with ESMTPSA id p14sm9148073pgk.6.2021.06.07.07.56.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jun 2021 01:14:49 -0700 (PDT)
-Subject: Re: [RFC PATCH V3 01/11] x86/HV: Initialize GHCB page in Isolation VM
+        Mon, 07 Jun 2021 07:57:00 -0700 (PDT)
+Subject: Re: [RFC PATCH V3 08/11] swiotlb: Add bounce buffer remap address
+ setting function
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
@@ -67,15 +71,15 @@ Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         vkuznets@redhat.com, thomas.lendacky@amd.com,
         brijesh.singh@amd.com, sunilmut@microsoft.com
 References: <20210530150628.2063957-1-ltykernel@gmail.com>
- <20210530150628.2063957-2-ltykernel@gmail.com>
- <20210607064142.GA24478@lst.de>
+ <20210530150628.2063957-9-ltykernel@gmail.com>
+ <20210607064312.GB24478@lst.de>
 From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <37260f47-bd32-08f7-b006-f75f4d3c408a@gmail.com>
-Date:   Mon, 7 Jun 2021 16:14:36 +0800
+Message-ID: <48516ce3-564c-419e-b355-0ce53794dcb1@gmail.com>
+Date:   Mon, 7 Jun 2021 22:56:47 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210607064142.GA24478@lst.de>
+In-Reply-To: <20210607064312.GB24478@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -83,60 +87,38 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Christoph:
-	Thanks for your review.
 
-On 6/7/2021 2:41 PM, Christoph Hellwig wrote:
-> On Sun, May 30, 2021 at 11:06:18AM -0400, Tianyu Lan wrote:
->> +	if (ms_hyperv.ghcb_base) {
->> +		rdmsrl(MSR_AMD64_SEV_ES_GHCB, ghcb_gpa);
->> +
->> +		ghcb_va = ioremap_cache(ghcb_gpa, HV_HYP_PAGE_SIZE);
->> +		if (!ghcb_va)
->> +			return -ENOMEM;
+On 6/7/2021 2:43 PM, Christoph Hellwig wrote:
+> On Sun, May 30, 2021 at 11:06:25AM -0400, Tianyu Lan wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> For Hyper-V isolation VM with AMD SEV SNP, the bounce buffer(shared memory)
+>> needs to be accessed via extra address space(e.g address above bit39).
+>> Hyper-V code may remap extra address space outside of swiotlb. swiotlb_
+>> bounce() needs to use remap virtual address to copy data from/to bounce
+>> buffer. Add new interface swiotlb_set_bounce_remap() to do that.
 > 
-> Can you explain this a bit more?  We've very much deprecated
-> ioremap_cache in favor of memremap.  Why yo you need a __iomem address
-> here?  Why do we need the remap here at all? >
-
-GHCB physical address is an address in extra address space which is 
-above shared gpa boundary reported by Hyper-V CPUID. The addresses below
-shared gpa boundary treated as encrypted and the one above is treated as 
-decrypted. System memory is remapped in the extra address space and it 
-starts from the boundary. The shared memory with host needs to use 
-address in the extra address(pa + shared_gpa_boundary) in Linux guest.
-
-Here is to map ghcb page for the communication operations with 
-Hypervisor(e.g, hypercall and read/write MSR) via GHCB page.
-
-memremap() will go through iomem_resource list and the address in extra 
-address space will not be in the list. So I used ioremap_cache(). I will
-memremap() instead of ioremap() here.
-
-> Does the data structure at this address not have any types that we
-> could use a struct for?
-
-The struct will be added in the following patch. I will refresh the 
-following patch and use the struct hv_ghcb for the mapped point.
+> Why can't you use the bus_dma_region ranges to remap to your preferred
+> address?
 > 
->> +
->> +		rdmsrl(MSR_AMD64_SEV_ES_GHCB, ghcb_gpa);
->> +		ghcb_va = ioremap_cache(ghcb_gpa, HV_HYP_PAGE_SIZE);
->> +		if (!ghcb_va) {
-> 
-> This seems to duplicate the above code.
 
-The above is to map ghcb for BSP and here does the same thing for APs
-Will add a new function to avoid the duplication.
+Thanks for your suggestion.
 
-> 
->> +bool hv_isolation_type_snp(void)
->> +{
->> +	return static_branch_unlikely(&isolation_type_snp);
->> +}
->> +EXPORT_SYMBOL_GPL(hv_isolation_type_snp);
-> 
-> This probably wants a kerneldoc explaining when it should be used. >
+These addresses in extra address space works as system memory mirror. 
+The shared memory with host in Isolation VM needs to be accessed via 
+extra address space which is above shared gpa boundary. During 
+initializing swiotlb bounce buffer pool, only address bellow shared gpa 
+boundary can be accepted by swiotlb API because it is treated as system 
+memory and managed by memory management. This is why Hyper-V swiotlb 
+bounce buffer pool needs to be allocated in Hyper-V code and map
+associated physical address in extra address space. The patch target is
+to add the new interface to set start virtual address of bounce buffer
+pool and let swiotlb boucne buffer copy function to use right virtual 
+address for extra address space.
 
-OK. I will add.
+bus_dma_region is to translate cpu physical address to dma address.
+It can't modify the virtual address of bounce buffer pool and let
+swiotlb code to copy data with right address. If some thing missed,
+please correct me.
 
+Thanks.
