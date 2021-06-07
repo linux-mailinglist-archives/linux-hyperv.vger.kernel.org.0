@@ -2,95 +2,157 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A210039E00D
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jun 2021 17:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E18F39E025
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Jun 2021 17:21:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbhFGPQ7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Jun 2021 11:16:59 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:33384 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230212AbhFGPQ5 (ORCPT
+        id S230286AbhFGPXZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Jun 2021 11:23:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230217AbhFGPXZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Jun 2021 11:16:57 -0400
-Received: by mail-pg1-f173.google.com with SMTP id e20so2100595pgg.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 07 Jun 2021 08:14:57 -0700 (PDT)
+        Mon, 7 Jun 2021 11:23:25 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B514C061766;
+        Mon,  7 Jun 2021 08:21:34 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id 22-20020a17090a0c16b0290164a5354ad0so12181445pjs.2;
+        Mon, 07 Jun 2021 08:21:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=w9BByRMZKAQXUpr54dyylHySYfSgHFJl9yDjRVwiTsw=;
-        b=Hw7rsDP4LFaD1nBLEus3QVXb8s+vUM3f1hEHhkpWxUra8y7exgf9odvIeuRw0wwZ9o
-         92o+J3cL58YRn6j/1ueVQBdbn5shzk516aOo1Dwje7sQ9bv7OuaBKe19uwT0To0VUXY3
-         vySJblBMagiO2tpLoFdez9waHNNWHJkhm1wwPbTVDkxF6HsfDMpXtdczVeBe30v90HyQ
-         /hx7EaNf7FuIYkjRi5I+x4Eolc0HZRiTkFtHs9+78WlvfZcZRmcimVk5oTND3lwF1pkF
-         fgvU5/u7EIOdRdloeE7cWLAlsBPUCYOKsQxRK652EPntPiEBQMbQ4qfBqljoW9dlwvvX
-         EWkw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AqJMsqQ4KNSlTkis4vnlFWwGNt3Bx7s+42JKf63F/jc=;
+        b=WsBdcRsefCiECb9IqTSuqCUv8coeVKPfrhSnmSii/c3l1gmGod3/U/htpg5pceudXy
+         aYMrb18s8dW7vOcfl+l3/JLyfgriswqTmUyfzOzd+MpR4PFDQBqNxGysTptsKMLLdnqS
+         jvqIZCDUxhyEXhn3kFG8PvvaL25gkKk9fhLU2Y6GVkr75vdb0Ve9OxPhhCsLOSZbZ46o
+         oReEyqo0bUD1A3JvfVwFOyoUdnbneVTJbIjly5SDJg+VKDoLMXo7YsQjaqCn4F5oQkI9
+         W8T56TKPKa5QxGA65hUQQsSol/AsF5UgHxkBXTE4sP50uacN6R0GzZbY+xLSbeosBWte
+         pywQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=w9BByRMZKAQXUpr54dyylHySYfSgHFJl9yDjRVwiTsw=;
-        b=Qvea7Ot3hMt9pYd1jKwvnZwh+L3AuJkfWRQpVfeis9p0MxVh3ZM0gkNnrj8JMBqow4
-         GX31Tja2cv0noGr1e48vIsZysIrFG9r1YBmYmHp/ZmqbiK/Y+C5e0VOxrOX5zHzcuDmY
-         Jdj7IYi9kpk5FawfivTxeBrhD067fGmH17dZ8pzvqDlolr+D3pcPfnbGZIvoeg2NO6Dy
-         XVDpcffzWqaGVich+gbypnhsUsQihDtfbTkMBbooE0midjwI5y1WWeGx3OZBkYOynDNP
-         bIcZluwgvrKFm7R66Ml/oRnBU6bVJ6+WVWKRb07mZ9twyIQ891CEA6aLtLz5D28eeMgs
-         Hq3g==
-X-Gm-Message-State: AOAM533P25CvMJ1vPH1aRmYtkGKFWWaZfUlb52eOSPxIBPTEeTbUF7PE
-        WyWCGeMuOkB+Qu970BgV+L8=
-X-Google-Smtp-Source: ABdhPJzkbqbn00oxDeNgrfeFkk/70y7ClxHMnfhAU+Dl/Y79tmtBMKaBZSM+u6kIDYynt7h+wgD3kw==
-X-Received: by 2002:a05:6a00:8c4:b029:2b4:8334:ed4d with SMTP id s4-20020a056a0008c4b02902b48334ed4dmr17286609pfu.36.1623078837577;
-        Mon, 07 Jun 2021 08:13:57 -0700 (PDT)
-Received: from [192.168.1.8] ([50.47.106.83])
-        by smtp.gmail.com with ESMTPSA id j4sm8150430pfj.111.2021.06.07.08.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jun 2021 08:13:57 -0700 (PDT)
-Message-ID: <2cb17f7192b93dbcfb7355d6d237c88d8e58053c.camel@gmail.com>
-Subject: Re: [PATCH v6 1/3] drm/hyperv: Add DRM driver for hyperv synthetic
- video device
-From:   Deepak Rawat <drawat.floss@gmail.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Date:   Mon, 07 Jun 2021 08:13:56 -0700
-In-Reply-To: <f58a001a-b411-78b0-bcfc-ca853b920a64@suse.de>
-References: <20210527112230.1274-1-drawat.floss@gmail.com>
-         <f58a001a-b411-78b0-bcfc-ca853b920a64@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.2 
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AqJMsqQ4KNSlTkis4vnlFWwGNt3Bx7s+42JKf63F/jc=;
+        b=MeQeU2Ir03tCyqYM3rLAHeZ1yS4sXLoA8ylkw+16k39ilc1HdG5cyR4dP1AfYW+qEz
+         HO/ry9XUmE3SrAXs4DM59W5FAM8ids/qYGilbCcnBYRO5svd3nN2hRfjZIp+7y92qUIs
+         NLHJT2bgZ/unAZXnLA8SN1NvLverYScZ5SbzehioOt/Q+n6JLFj+kNKQW0eNvllH9iJS
+         JZDEp1V+avfwXlepJZrKDbDpnTNQyM5bELprAupcP1UpYgzyVnzHa0QoraTbHm2pVrp8
+         Bbb7tSKrT5umWfYPyyno+1oXqMt16Y8a1qg9nQPYXrK506ZhcyclTcSUFXGN5i8CJMM6
+         qArg==
+X-Gm-Message-State: AOAM530fLaBlDfCNWDPHYFAAnWlcGl95qFjcwbAjPc/c92hikvRMFdZl
+        7xSA7BZKUZM5Zj6YoMENaI0=
+X-Google-Smtp-Source: ABdhPJwKT7FVRh43L9EMp25B1edDg0633yW6Rnccv/gD+CMCio9gORsvm6jnf+jqiJgT4Bx7SQrrGw==
+X-Received: by 2002:a17:90a:c68a:: with SMTP id n10mr33294547pjt.32.1623079293798;
+        Mon, 07 Jun 2021 08:21:33 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
+        by smtp.gmail.com with ESMTPSA id g63sm8507428pfb.55.2021.06.07.08.21.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jun 2021 08:21:33 -0700 (PDT)
+Subject: Re: [RFC PATCH V3 10/11] HV/Netvsc: Add Isolation VM support for
+ netvsc driver
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        arnd@arndb.de, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, rppt@kernel.org,
+        hannes@cmpxchg.org, cai@lca.pw, krish.sadhukhan@oracle.com,
+        saravanand@fb.com, Tianyu.Lan@microsoft.com,
+        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, joro@8bytes.org, will@kernel.org,
+        xen-devel@lists.xenproject.org, davem@davemloft.net,
+        kuba@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, thomas.lendacky@amd.com,
+        brijesh.singh@amd.com, sunilmut@microsoft.com
+References: <20210530150628.2063957-1-ltykernel@gmail.com>
+ <20210530150628.2063957-11-ltykernel@gmail.com>
+ <20210607065007.GE24478@lst.de>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <279cb4bf-c5b6-6db9-0f1e-9238e902c8f2@gmail.com>
+Date:   Mon, 7 Jun 2021 23:21:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210607065007.GE24478@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
 
-On Thu, 2021-05-27 at 15:35 +0200, Thomas Zimmermann wrote:
-> Hi
+On 6/7/2021 2:50 PM, Christoph Hellwig wrote:
+> On Sun, May 30, 2021 at 11:06:27AM -0400, Tianyu Lan wrote:
+>> +	if (hv_isolation_type_snp()) {
+>> +		pfns = kcalloc(buf_size / HV_HYP_PAGE_SIZE, sizeof(unsigned long),
+>> +			       GFP_KERNEL);
+>> +		for (i = 0; i < buf_size / HV_HYP_PAGE_SIZE; i++)
+>> +			pfns[i] = virt_to_hvpfn(net_device->recv_buf + i * HV_HYP_PAGE_SIZE) +
+>> +				(ms_hyperv.shared_gpa_boundary >> HV_HYP_PAGE_SHIFT);
+>> +
+>> +		vaddr = vmap_pfn(pfns, buf_size / HV_HYP_PAGE_SIZE, PAGE_KERNEL_IO);
+>> +		kfree(pfns);
+>> +		if (!vaddr)
+>> +			goto cleanup;
+>> +		net_device->recv_original_buf = net_device->recv_buf;
+>> +		net_device->recv_buf = vaddr;
+>> +	}
 > 
-> if no further comments come in, this can be moved in a few days.
-> Since 
-> you'll be the maintainer, you should request commit access to the 
-> drm-misc repository. See
+> This probably wnats a helper to make the thing more readable.  But who
+> came up with this fucked up communication protocol where the host needs
+> to map random pfns into a contigous range?  Sometime I really have to
+> wonder what crack the hyper-v people take when comparing this to the
+> relatively sane approach others take.
+
+Agree. Will add a helper function.
 > 
->  
-> https://drm.pages.freedesktop.org/maintainer-tools/commit-access.html
+>> +	for (i = 0; i < page_count; i++)
+>> +		dma_unmap_single(&hv_dev->device, packet->dma_range[i].dma,
+>> +				 packet->dma_range[i].mapping_size,
+>> +				 DMA_TO_DEVICE);
+>> +
+>> +	kfree(packet->dma_range);
 > 
-> and
+> Any reason this isn't simply using a struct scatterlist?
+
+I will have a look. Thanks to reminder scatterlist.
+
 > 
->  
-> https://drm.pages.freedesktop.org/maintainer-tools/getting-started.html
+>> +	for (i = 0; i < page_count; i++) {
+>> +		char *src = phys_to_virt((pb[i].pfn << HV_HYP_PAGE_SHIFT)
+>> +					 + pb[i].offset);
+>> +		u32 len = pb[i].len;
+>> +
+>> +		dma = dma_map_single(&hv_dev->device, src, len,
+>> +				     DMA_TO_DEVICE);
 > 
-> Best regards
-> Thomas
+> dma_map_single can only be used on page baked memory, and if this is
+> using page backed memory you wouldn't need to do thee phys_to_virt
+> tricks.  Can someone explain the mess here in more detail?
+
+Sorry. Could you elaborate the issue? These pages in the pb array are 
+not allocated by DMA API and using dma_map_single() here is to map these 
+pages' address to bounce buffer physical address.
+
 > 
+>>   	struct rndis_device *dev = nvdev->extension;
+>>   	struct rndis_request *request = NULL;
+>> +	struct hv_device *hv_dev = ((struct net_device_context *)
+>> +			netdev_priv(ndev))->device_ctx;
+> 
+> Why not use a net_device_context local variable instead of this cast
+> galore?
 > 
 
-Hi Thomas,
+OK. I will update.
 
-I have merged the patches to drm-mics-next. Thanks for your help.
 
-Deepak
-
+Thanks.
