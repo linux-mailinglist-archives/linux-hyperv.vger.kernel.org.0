@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7213F39FD10
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jun 2021 19:05:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EE0C39FDC6
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Jun 2021 19:34:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbhFHRGr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 8 Jun 2021 13:06:47 -0400
-Received: from mail-bn8nam11on2137.outbound.protection.outlook.com ([40.107.236.137]:56001
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        id S232679AbhFHRfy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 8 Jun 2021 13:35:54 -0400
+Received: from mail-mw2nam12on2139.outbound.protection.outlook.com ([40.107.244.139]:30688
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231840AbhFHRGq (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 8 Jun 2021 13:06:46 -0400
+        id S232088AbhFHRfx (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 8 Jun 2021 13:35:53 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MxvO/NsPWKyUgD+uoe27aeWWV1KEPxTyUWIWCuYALXYglQ8bN20WfleevAIAak5Lty7XyuxsgBK04O29I3Y0bLsRH5bxA5esHzPuQUC2ht18OtONhKs9GcwLiHLFTapWyROOhOnDm/fAk/EUjxVqbNF/PtQ8vwWdMHZn3xjzlm9bjolGNdLQogOiAudTrCbdvjnc0oUQQDTHp6I3ffn9W+ORDp9i9v8mrYpzBoXyqyZrBAAnY4LKmpgC/tNamaS2GCufxvAvgaHyAQE5uUNGOI4Bxk9/EXw4Jfi+r0J4e+8MqGAP5tnvA+myiF6uW3EJjk4EKcXX04grMx3DwqxfEA==
+ b=CUywvdZXns5ErjdvPFGZEGcvvB1fKPKpwJmhIFYGWWkRyMgcDAIhuDjrkDaoC1VPLr5Rl7b1ko4CNCoAma77uFmun1IaDlRvpYpVbJYwIXaaoXbVancuGKx3U+j1J1yic3VDCBzk021GHLIN+Ob1EoT4bxfImjrB0Sev8sYwi5/urAvVfZ8u2N+MzbWDin0FazfI/Z5vCDTyJO9lsP4K4MT654g7yAwouDrd+Noy+mNU1kfRdo7oLRcHkoftyYtmuZ6FXyERTCqPo9m5C2A4gZiPE+6lZ8WRX3VTykkR3QRasUJl+yZyq7Ks8O4O9wWF09j7d3jjww4Lq0UDVDchjw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/TwmRDQnlIN7CFFLTFPGc1hbtujHfYyG3y10K3rDEBM=;
- b=J2BSMW0didnn8/+3+FQ0//ELMFCfx5RxVNcN/rK7go86IsyTPFs0rDJoXhCafffLisGZvHqPbyuoMEoBB08Wkd22lnl8nNxoS3RTc/mARakhfIZuxaEr33BZsumz644S/zWO8iZK32Ht1tF98PEl+exbw5P69wRWP1K01SMX+T/7RyIK9JMhH5ao84u4fUek9ArZiDgXZat1XMZ6pP9OBqIsOaNqAL6bpocxwHtPWFv0itkcELM1RpqIzw0CqUl9We4fE2WupsYymwqNzFG0qnWTA4RCE7NNNEZqaT8jOxIxTZNoD7fNwCmbbAWIjuO7QXESOqWaNEqpiCPPZ2QilA==
+ bh=3yaGHdsDyAjYNaQ9XOD5m7Hj+IORLs6iX/PiYqdnFKg=;
+ b=LdsoX2RQhGRZeg5ZLg1DH4oOX+2jJY1GQMOCTO9LJL6sFzXfjBpMLbpenRy5cp9QEBh9b2FGnnOfYr109FHpbJXalSJd/JI6Ld3AOS9cdXwPRmU0rMBmDZRru5i2yTltJEA8+N+Cqg9P4YgjB6DazBnI0w0bQbL8gI7Al8J+jEtGwNEMS5LZI0R3qOpgk86mwcVKAvSsiLmuxUIByVAjoiJ/KuxgNjF8cBr6xTRL6680YcuNhi0BW11cVTe9T7iy+noBteZ21KMcMEofRF8NrO+1HU5BFEEdLKORjlgeI9hLhDdfi/yKrPy/GbnsnJDZuuUCiBp0ZO7RUCD36EtXbA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/TwmRDQnlIN7CFFLTFPGc1hbtujHfYyG3y10K3rDEBM=;
- b=jkdrdVNHwXRloAZFdn6iT+8FklVrH6Rptu8CqTmX/55EdIuopBq+wArMTQJ5ltYC9Mw1xubmuJYnoIV0x1JjNA6w0X2B6RKE+4VQSapJjZdJM4dN05Vf7XI1OGcSXV+lSCIVw133SgrFsn+HkE56Ym0iGKGVrObszFKr+oDepOs=
+ bh=3yaGHdsDyAjYNaQ9XOD5m7Hj+IORLs6iX/PiYqdnFKg=;
+ b=RWPGZAO+oRf6WxwQXLnkEkuFWcc+fJRA/tn/H36USIunVyvTjvhuEUnR9fgb6ANmzb/hBqDFNUiRBwjAsE1bkeaCfuEmmDEjM62dLk5ilBhkFRBp2vrIgpsjyC5EBt6zpdrIHmZzQlt9PUufPSBsF+0SA41WwcNY1l7oGwrk9o8=
 Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW2PR2101MB0906.namprd21.prod.outlook.com (2603:10b6:302:10::26) with
+ by MW4PR21MB1924.namprd21.prod.outlook.com (2603:10b6:303:7e::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.7; Tue, 8 Jun
- 2021 17:04:47 +0000
+ 2021 17:33:56 +0000
 Received: from MWHPR21MB1593.namprd21.prod.outlook.com
  ([fe80::8dbd:8360:af6:b8a2]) by MWHPR21MB1593.namprd21.prod.outlook.com
  ([fe80::8dbd:8360:af6:b8a2%9]) with mapi id 15.20.4242.007; Tue, 8 Jun 2021
- 17:04:47 +0000
+ 17:33:56 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     Vineeth Pillai <viremana@linux.microsoft.com>,
         Tianyu Lan <Tianyu.Lan@microsoft.com>,
@@ -56,71 +56,71 @@ CC:     "H. Peter Anvin" <hpa@zytor.com>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v5 2/7] hyperv: SVM enlightened TLB flush support flag
-Thread-Topic: [PATCH v5 2/7] hyperv: SVM enlightened TLB flush support flag
-Thread-Index: AQHXWIs1S0AmjDki9UyNn37L3PaB66sKXwsg
-Date:   Tue, 8 Jun 2021 17:04:47 +0000
-Message-ID: <MWHPR21MB15933E0F57E22504A4ADC2F1D7379@MWHPR21MB1593.namprd21.prod.outlook.com>
+Subject: RE: [PATCH v5 5/7] KVM: SVM: hyper-v: Remote TLB flush for SVM
+Thread-Topic: [PATCH v5 5/7] KVM: SVM: hyper-v: Remote TLB flush for SVM
+Thread-Index: AQHXWIs3nDz+pIOoDkaM+lsbJZxERasKZxnw
+Date:   Tue, 8 Jun 2021 17:33:56 +0000
+Message-ID: <MWHPR21MB1593C3483C62B7567FFE9AF1D7379@MWHPR21MB1593.namprd21.prod.outlook.com>
 References: <cover.1622730232.git.viremana@linux.microsoft.com>
- <a060f872d0df1955e52e30b877b3300485edb27c.1622730232.git.viremana@linux.microsoft.com>
-In-Reply-To: <a060f872d0df1955e52e30b877b3300485edb27c.1622730232.git.viremana@linux.microsoft.com>
+ <1ee364e397e142aed662d2920d198cd03772f1a5.1622730232.git.viremana@linux.microsoft.com>
+In-Reply-To: <1ee364e397e142aed662d2920d198cd03772f1a5.1622730232.git.viremana@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fd98210b-d15a-431d-8ba1-1c4f8f1d0c8e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-06-08T17:02:30Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4c7661b7-9680-41e8-b2ab-bde2c1bda1b0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-06-08T17:31:19Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: linux.microsoft.com; dkim=none (message not signed)
  header.d=none;linux.microsoft.com; dmarc=none action=none
  header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: efef7c32-9303-464e-eab7-08d92a9f8538
-x-ms-traffictypediagnostic: MW2PR2101MB0906:
+x-ms-office365-filtering-correlation-id: 79b4e86d-e8e6-494a-81f1-08d92aa397ca
+x-ms-traffictypediagnostic: MW4PR21MB1924:
 x-ms-exchange-transport-forked: True
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB09068E76A443BCF0D77758C9D7379@MW2PR2101MB0906.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-microsoft-antispam-prvs: <MW4PR21MB192457360252D65EDFDE8A3BD7379@MW4PR21MB1924.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: E4isbPzCuWj5xZLqCfF+AUuUVaSJj9dhcmDHD3flxkNCQFTp6lnfGiC+0cXAaus95n1A5cdZrek2IAwA2Wfu6xWWYHYrKWAoXnijNpZZF68XXaO1od1XeysfOdPby/4yyVfw8opnFCHLvPODKut0dAl74m+4TlWTMHS++c7DRFiFLNvGWJxwYjvBcaTvX39QS0tRUWIaOS7aRQy0ez03od2P2TWX7o2h9p5CENLTVWYHeyMnazdcaYFDYIJokIM1fVU+HP0KsuXcQD07PzWMTWdPfkh26HcDns7hN8nXBRWgKDkxn4xtdQXWFCre8jAWeQEdKiG77FQ8p51q5TKdd6e+aUw/YcvJU9zHAoxRRrk/2y0jUT3IfE0Xp+VEzfjAWXySq1inoFG0Vt5lzRHGs4PKRMh2zmSo5nA8VtNbiKxk8GjPTlbyWOxE3NvxUTPuNozKNfIaqFlvTIp3/unjPNvfM7IDSFirU5miqw8dW6SUPChCAOenBZDzJzV6XGwFhgAG+CrwGsK4ULFBAFrvkmkp5k1J30IpJRIoPrMM4pkwei0JZlGDb3rlooKk7shbg2phm95Ljv2/JyttDeWk4shp0Xs9MmZrx2HglF4gbXwivhDnSvvxqxtaYupNHUx/nN7b+rci4bM01gE4WIHv0nNaDtFeV+nHHbB79p/lwgI4kVANKyDTUPvIZGx6/QDeM3PWUafQMs770U/XZz4IQQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(7416002)(10290500003)(64756008)(66476007)(8676002)(66946007)(2906002)(52536014)(76116006)(54906003)(478600001)(8936002)(66446008)(6506007)(66556008)(9686003)(55016002)(5660300002)(71200400001)(186003)(26005)(122000001)(6636002)(33656002)(4326008)(7696005)(110136005)(316002)(82950400001)(82960400001)(921005)(38100700002)(8990500004)(86362001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: DMTNjkAsuodkK2bOKDk9JnKJau+ArEWNyFBobx9K61AiIGfZyPOwuHcgVDmH9tuUT5dTZkXWfcQddc0oMCiwNxN9fXXth9a/QtESA4PNrlmQNs5Lt2W5IQFMJO3Kf2JlftmLqt9XtGBX0F3530d19Xozyo36SLAB+ain39/Wh8O4zGldRbtfT5l9yt+ouVeDl5EMPCNfCP2o1pkiibnVvA+d1SF3gLVwX+fE3S/KPd+1e5zME4a4TdSsXtry36nQeH2VmRyCnW/qFenui3iolwPkZuyty727tsr7jVspCwb/P3C1x+yfnmfdcixiDHR9eDf5duDP0qm7n+wJVB2SWqYf+fJegTo5PTDb9KYVvYej+Ynz4HLge2aBxkQC46Qkf8bIMgn8unMHPnqmRDMutNL1dDAaMiCVL2Kwc6eKvDDw8MJXHrLw7dMSpYG0FBCqqoOT4srIqnqVEboGqDVQbgz8m864fDzBLZcMB6MIRS8Aqx3tj/d/lN5Sp43ge/sor4Wd2U1iMFwZzAxJ9foBa5On86D8thtLPpCPdv9D+pslBh/4qsUdNubpdxpGzRdd1mbdQOy4e3/mE5iqtp5Eewp9tdOXgwIt3Sj5NKIF3f/XkOdWNXBl6wbu4Gk02OurJVO28ZYPMxSw8XI16Ro7wFpogcztGFDGB3i7CTQDvsTsFvHpgqhtF2EndDRn7z71
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(83380400001)(55016002)(82960400001)(82950400001)(86362001)(5660300002)(478600001)(316002)(9686003)(8676002)(110136005)(2906002)(26005)(6636002)(186003)(76116006)(10290500003)(6506007)(122000001)(38100700002)(52536014)(33656002)(7696005)(8936002)(7416002)(66556008)(66476007)(66446008)(71200400001)(64756008)(4326008)(66946007)(921005)(8990500004)(54906003);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Y3cuc8tjqCvJonRdWyGhj8Qk9hxa2lgfZL4fuCDJGClMVjcazk/Sxjy7DEAT?=
- =?us-ascii?Q?8oS2jjVmJu3JEXjc3WZJ/CZXbh0a6UJJ8NMmAbxSUhKwFh/V6lZsjN6WwpNw?=
- =?us-ascii?Q?u/Hh57yyvKycXWvLf1dwdUgWGlcW45jlu+n6gMLb3FmxFexsCosG1AbGswi/?=
- =?us-ascii?Q?s5OBCzmJOwYsVB9+iBFWxXN0Y8eFHF8LHRjrVT/z4SO6A72V2YkJAfbFMNQH?=
- =?us-ascii?Q?y78FPmD4wtKG6akTW/NnqiiYBxUHWftKZJOh3dJy1AxSjI+Bz3Dk/mQdIQWa?=
- =?us-ascii?Q?PGr8U16YUDQKgPGUmayIgDUGF+wtXtMdcb1/dpKKe/JMC36Ka65xPlmXSioK?=
- =?us-ascii?Q?eL6s1XzC9yaaw8tGpCMjJD9qgF0Nhr1AeW3EzYipbmmhfmFsL/IsL7tPkyEZ?=
- =?us-ascii?Q?CYm/QlNDTwtqTUfLijyz/k2U6Bs8Uhgu5Gz4jRWmBeQXQm6+8ExvPaCTtge9?=
- =?us-ascii?Q?MOYgiWCFGWhFD1WiZxbeRdKKruOwWY4lMQ+rqwsBKpgcQDB8AqtF/08Urb0t?=
- =?us-ascii?Q?UWYimHyiC1TU2AWw+Imb0JdJIfk2FSORmZJb2PG4C/SfOQf5r80wzSuwePVT?=
- =?us-ascii?Q?liuQVYoIB4jv5mRhpGTW52aPBD/ITeURu15xXl4howg2Kxqjqf5XeBLw4m5I?=
- =?us-ascii?Q?KmuK1UmHweeGvjgn++VZMBbfFO32FIjUXitcDhstAL9J0mJU7LPnK8nd+ZRi?=
- =?us-ascii?Q?4tKd+RvpLthRLegWT0M/2grrbqMxCpAISaMXKnhnQVHwLhmDiMohmeScgGJ1?=
- =?us-ascii?Q?6v0ibeCP3o7+LHFsfoRGlAq18IP6YrjgOUpHfhoMq+ACfj5a29f1dK6Rdks0?=
- =?us-ascii?Q?Z2lSa+JMvUALqxE4Pg6sshDX0fOQPxQcQzXxXhgeFcUqwCAk4/pcsYm1RJtY?=
- =?us-ascii?Q?EKVYFmUqYJNrVSVZvvpUDOXW7fiKXbZMQA1cvNVWWJr+biFfoV8Nm+8UT0+U?=
- =?us-ascii?Q?WkIwJL3/Uh4luS0VOKCkYWwkl9gi3Yv+Axoc22iRtIbthaydJGYWEqhSjk1i?=
- =?us-ascii?Q?G6cOSAxBMXNhXXHmI23qkSL3KXPyqIdf5Qc5urGFzjnfYDVC/2K/L/4teWd3?=
- =?us-ascii?Q?pu/Qt1yg8LvTYnhI6N66FpfKXFAjLvlv+Gua4ruhXoOw3aWPmZ5GXBol38of?=
- =?us-ascii?Q?4NozKhKjyDNZKndSHdtFsOysAEWBlxhivvbLJrLVDd97Q7JxrveP1UI+FlUt?=
- =?us-ascii?Q?Y5CTzApJp6cmvm6IY0dccGGzqklajOkbZt8v10px5hYLu7gNxYjeocDxncBX?=
- =?us-ascii?Q?s60Tm0iVKEhVZvRXhR4xDwCbFORMWTzncBkIMtLQ1eG5h/q4pUbjE7mqPBHC?=
- =?us-ascii?Q?ullnNtnE9z/G0qeEGAnx+2QK?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?b6ox+8woB4sPVVYAbn8Pg0rZBADNNgquDFEwPn5J41Xc1ts/3rO7xheUADsT?=
+ =?us-ascii?Q?R3SBBJ4nZTbcDGPbgFrpD3zmzJHT+58a6W2aHhQJZvXUXV9sDSDXe0dDApWl?=
+ =?us-ascii?Q?x3oAUbQSZkjY/PdP+uJ9jRL5qatGkUJaj9jXMXunNLdogGlruM1+VY8auAmN?=
+ =?us-ascii?Q?v92VBTe8nlOdldk4hzp+M1FKgrpATzChlhFNAhdTdLR4khsbWRfIxdvPPYzq?=
+ =?us-ascii?Q?sUqA02WnoOX8QBIJBDbTT6D0E908ZumPwwZ15sadTeQTPsIojNvWwL0iyWrO?=
+ =?us-ascii?Q?rUCRtOMlxMBcmFqKBSJpgWKD3rOW/ta8uhTva8m9CD0U8521IB+/KqnKC6kU?=
+ =?us-ascii?Q?LM4uPtF+O8tDvy4MXGsm83ci72xpyAoibi46UD7TgclQpAwpVhrPdJtwF45L?=
+ =?us-ascii?Q?XE4VKNM8RIwcBnbeKGzslk2O5RrkAd85Bfhy7dmdOH9v0ny0RerzmjtoXtit?=
+ =?us-ascii?Q?WxVFZLop3KSn8chF9Mqovwbzz9ylf32oD2n8xbD2pLvplZp/+8PSnDnXQTaT?=
+ =?us-ascii?Q?ZP6yHKBr+Wu7XuimQ78ou2fbXBjA1DpGj1p4HuvxhWUfMSraFVeYWKnqBK63?=
+ =?us-ascii?Q?//GgzSzmeWPOfan+6ePK8MMsBwto9KhfNE4iLSPEqtrt61e0E4YvgsIiCaMB?=
+ =?us-ascii?Q?c0kDm8r+PFWL4osd/9kR0Sn8KrjAGv3sk9gxaIUFeYymaCC18n0EoNYGS/aw?=
+ =?us-ascii?Q?yyTsFRBfmZreTbmWtR1u3teAllCn+FtS0EEmoCsutDRz4aQXH/UwRkj9tfGR?=
+ =?us-ascii?Q?MRP9UBTKcrz9Gvr3eGRwjH6W4hz3DC8CdedOp6Va5P4rEVHXzQqzlBVD7tJ/?=
+ =?us-ascii?Q?TeQ8CUXcMm4/LH4290OVCNrln2R0EFAxI4rHRQuFbo8+qSTuo+f6fiI7b6Jx?=
+ =?us-ascii?Q?CogkmXWHdavfxlsQB+6qxPjwpXKtfj1zYe8tbCbsrisWmxqMxru8DXcviBj/?=
+ =?us-ascii?Q?dNH2W4gnMSAVAY0PYjdmt7Z4WopUSiE33ZJ5yO6I5m4iRA8Rqh2R29iJmE8o?=
+ =?us-ascii?Q?VmC9Ny5uadTxqUjIfIrB82pXv8W9ueV47yeNtDQCuJ3Uuzm3zjskj38A02dG?=
+ =?us-ascii?Q?uV8/k2kvMV9e2CcwwewN4GijtPUaQE2Ki3+nMOk/hOlEL5CoCsRn4jV0ck57?=
+ =?us-ascii?Q?RjiM8I9vd3dsPFpWO1gIoXeLkguzTELykTWuja1oqw6jTJeeLQktAZUiApxK?=
+ =?us-ascii?Q?l1GjzQm+YGvr8ASTrEzenNhuffYH+ogXfl4T6l5TL/NXjtHd5IGdlfRxyVx4?=
+ =?us-ascii?Q?cHRIzr1ULehB9rHKTUbu4OFmTTrKluwEnpvffsZmxQkfPIZUjPrAZ7HQm2po?=
+ =?us-ascii?Q?L2b+2OXhStLQzmVpbQpH3n/p?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efef7c32-9303-464e-eab7-08d92a9f8538
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2021 17:04:47.0933
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79b4e86d-e8e6-494a-81f1-08d92aa397ca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2021 17:33:56.2034
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8oP70EnOLgMAfL9erZH/3YpVbN7eTxLPWQs50gV5esMveYyhVUAjtQO5qZ7r6CX6GCgEofwZRhXCLej3KrZza4S7SkTp8IutXnw7EEsisng=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0906
+X-MS-Exchange-CrossTenant-userprincipalname: 6Wh42WbORR6/MXJx3rWf97Sh8i7oDRxvLYaZa0x2SYQN1BE6OTbxKqUAUOk5tB9zc6a+YlGf7xZP6krfdurXBHxUDAHYF1uYQvIn23gryh8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1924
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -128,48 +128,136 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 From: Vineeth Pillai <viremana@linux.microsoft.com> Sent: Thursday, June 3,=
  2021 8:15 AM
 >=20
-> Bit 22 of HYPERV_CPUID_FEATURES.EDX is specific to SVM and specifies
-> support for enlightened TLB flush. With this enlightenment enabled,
-> ASID invalidations flushes only gva->hpa entries. To flush TLB entries
-> derived from NPT, hypercalls should be used
-
-Nit:  Isn't this "must be used"?  "Should be used" sounds slightly optional=
-,
-and I don't think that's the case.
-
-> (HvFlushGuestPhysicalAddressSpace or HvFlushGuestPhysicalAddressList)
+> Enable remote TLB flush for SVM.
 >=20
 > Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
 > ---
->  arch/x86/include/asm/hyperv-tlfs.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  arch/x86/kvm/svm/svm.c          |  9 +++++
+>  arch/x86/kvm/svm/svm_onhyperv.h | 66 +++++++++++++++++++++++++++++++++
+>  2 files changed, 75 insertions(+)
+>  create mode 100644 arch/x86/kvm/svm/svm_onhyperv.h
 >=20
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hy=
-perv-tlfs.h
-> index 606f5cc579b2..005bf14d0449 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -133,6 +133,15 @@
->  #define HV_X64_NESTED_GUEST_MAPPING_FLUSH		BIT(18)
->  #define HV_X64_NESTED_MSR_BITMAP			BIT(19)
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index b649f92287a2..a39865dbc200 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -43,6 +43,9 @@
+>  #include "svm.h"
+>  #include "svm_ops.h"
 >=20
-> +/*
-> + * This is specific to AMD and specifies that enlightened TLB flush is
-> + * supported. If guest opts in to this feature, ASID invalidations only
-> + * flushes gva -> hpa mapping entries. To flush the TLB entries derived
-> + * from NPT, hypercalls should be used (HvFlushGuestPhysicalAddressSpace
-
-Same here regarding "should be used" vs. "must be used".
-
-> + * or HvFlushGuestPhysicalAddressList).
-> + */
-> +#define HV_X64_NESTED_ENLIGHTENED_TLB			BIT(22)
+> +#include "kvm_onhyperv.h"
+> +#include "svm_onhyperv.h"
 > +
->  /* HYPERV_CPUID_ISOLATION_CONFIG.EAX bits. */
->  #define HV_PARAVISOR_PRESENT				BIT(0)
+>  #define __ex(x) __kvm_handle_fault_on_reboot(x)
 >=20
+>  MODULE_AUTHOR("Qumranet");
+> @@ -992,6 +995,8 @@ static __init int svm_hardware_setup(void)
+>  	/* Note, SEV setup consumes npt_enabled. */
+>  	sev_hardware_setup();
+>=20
+> +	svm_hv_hardware_setup();
+> +
+>  	svm_adjust_mmio_mask();
+>=20
+>  	for_each_possible_cpu(cpu) {
+> @@ -1276,6 +1281,8 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+>  		}
+>  	}
+>=20
+> +	svm_hv_init_vmcb(svm->vmcb);
+> +
+>  	vmcb_mark_all_dirty(svm->vmcb);
+>=20
+>  	enable_gif(svm);
+> @@ -3884,6 +3891,8 @@ static void svm_load_mmu_pgd(struct kvm_vcpu *vcpu,=
+ hpa_t
+> root_hpa,
+>  		svm->vmcb->control.nested_cr3 =3D __sme_set(root_hpa);
+>  		vmcb_mark_dirty(svm->vmcb, VMCB_NPT);
+>=20
+> +		hv_track_root_tdp(vcpu, root_hpa);
+> +
+>  		/* Loading L2's CR3 is handled by enter_svm_guest_mode.  */
+>  		if (!test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
+>  			return;
+> diff --git a/arch/x86/kvm/svm/svm_onhyperv.h b/arch/x86/kvm/svm/svm_onhyp=
+erv.h
+> new file mode 100644
+> index 000000000000..57291e222395
+> --- /dev/null
+> +++ b/arch/x86/kvm/svm/svm_onhyperv.h
+> @@ -0,0 +1,66 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * KVM L1 hypervisor optimizations on Hyper-V for SVM.
+> + */
+> +
+> +#ifndef __ARCH_X86_KVM_SVM_ONHYPERV_H__
+> +#define __ARCH_X86_KVM_SVM_ONHYPERV_H__
+> +
+> +#if IS_ENABLED(CONFIG_HYPERV)
+> +#include <asm/mshyperv.h>
+> +
+> +#include "hyperv.h"
+> +#include "kvm_onhyperv.h"
+> +
+> +static struct kvm_x86_ops svm_x86_ops;
+> +
+> +/*
+> + * Hyper-V uses the software reserved 32 bytes in VMCB
+> + * control area to expose SVM enlightenments to guests.
+> + */
+> +struct hv_enlightenments {
+> +	struct __packed hv_enlightenments_control {
+> +		u32 nested_flush_hypercall:1;
+> +		u32 msr_bitmap:1;
+> +		u32 enlightened_npt_tlb: 1;
+> +		u32 reserved:29;
+> +	} __packed hv_enlightenments_control;
+> +	u32 hv_vp_id;
+> +	u64 hv_vm_id;
+> +	u64 partition_assist_page;
+> +	u64 reserved;
+> +} __packed;
+> +
+> +static inline void svm_hv_init_vmcb(struct vmcb *vmcb)
+> +{
+> +	struct hv_enlightenments *hve =3D
+> +		(struct hv_enlightenments *)vmcb->control.reserved_sw;
+
+Perhaps add a "BUILD_BUG_ON" to verify that struct
+hv_enlightenments fits in the space allocated for
+vmcb->control.reserved_sw?
+
+> +
+> +	if (npt_enabled &&
+> +	    ms_hyperv.nested_features & HV_X64_NESTED_ENLIGHTENED_TLB)
+> +		hve->hv_enlightenments_control.enlightened_npt_tlb =3D 1;
+> +}
+> +
+> +static inline void svm_hv_hardware_setup(void)
+> +{
+> +	if (npt_enabled &&
+> +	    ms_hyperv.nested_features & HV_X64_NESTED_ENLIGHTENED_TLB) {
+> +		pr_info("kvm: Hyper-V enlightened NPT TLB flush enabled\n");
+> +		svm_x86_ops.tlb_remote_flush =3D hv_remote_flush_tlb;
+> +		svm_x86_ops.tlb_remote_flush_with_range =3D
+> +				hv_remote_flush_tlb_with_range;
+> +	}
+> +}
+> +
+> +#else
+> +
+> +static inline void svm_hv_init_vmcb(struct vmcb *vmcb)
+> +{
+> +}
+> +
+> +static inline void svm_hv_hardware_setup(void)
+> +{
+> +}
+> +#endif /* CONFIG_HYPERV */
+> +
+> +#endif /* __ARCH_X86_KVM_SVM_ONHYPERV_H__ */
 > --
 > 2.25.1
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
