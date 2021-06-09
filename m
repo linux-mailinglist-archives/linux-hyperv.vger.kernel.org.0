@@ -2,22 +2,18 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0AF53A149A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Jun 2021 14:38:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B5963A14CD
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Jun 2021 14:46:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233075AbhFIMk3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 9 Jun 2021 08:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232932AbhFIMk2 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 9 Jun 2021 08:40:28 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC14C061574;
-        Wed,  9 Jun 2021 05:38:33 -0700 (PDT)
+        id S235418AbhFIMsd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 9 Jun 2021 08:48:33 -0400
+Received: from 8bytes.org ([81.169.241.247]:43386 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235395AbhFIMs1 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 9 Jun 2021 08:48:27 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 99A0E36A; Wed,  9 Jun 2021 14:38:30 +0200 (CEST)
-Date:   Wed, 9 Jun 2021 14:38:29 +0200
+        id C211341A; Wed,  9 Jun 2021 14:46:30 +0200 (CEST)
+Date:   Wed, 9 Jun 2021 14:46:29 +0200
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Tianyu Lan <ltykernel@gmail.com>
 Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
@@ -38,51 +34,53 @@ Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
         vkuznets@redhat.com, thomas.lendacky@amd.com,
         brijesh.singh@amd.com, sunilmut@microsoft.com
-Subject: Re: [RFC PATCH V3 01/11] x86/HV: Initialize GHCB page in Isolation VM
-Message-ID: <YMC2RSr/J1WYCvtz@8bytes.org>
+Subject: Re: [RFC PATCH V3 04/11] HV: Add Write/Read MSR registers via ghcb
+Message-ID: <YMC4JdtYO+eLDKh5@8bytes.org>
 References: <20210530150628.2063957-1-ltykernel@gmail.com>
- <20210530150628.2063957-2-ltykernel@gmail.com>
+ <20210530150628.2063957-5-ltykernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210530150628.2063957-2-ltykernel@gmail.com>
+In-Reply-To: <20210530150628.2063957-5-ltykernel@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, May 30, 2021 at 11:06:18AM -0400, Tianyu Lan wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> 
-> Hyper-V exposes GHCB page via SEV ES GHCB MSR for SNP guest
-> to communicate with hypervisor. Map GHCB page for all
-> cpus to read/write MSR register and submit hvcall request
-> via GHCB.
-> 
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  arch/x86/hyperv/hv_init.c       | 60 ++++++++++++++++++++++++++++++---
->  arch/x86/include/asm/mshyperv.h |  2 ++
->  include/asm-generic/mshyperv.h  |  2 ++
->  3 files changed, 60 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index bb0ae4b5c00f..dc74d01cb859 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -60,6 +60,9 @@ static int hv_cpu_init(unsigned int cpu)
->  	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
->  	void **input_arg;
->  	struct page *pg;
-> +	u64 ghcb_gpa;
-> +	void *ghcb_va;
+On Sun, May 30, 2021 at 11:06:21AM -0400, Tianyu Lan wrote:
+> +void hv_ghcb_msr_write(u64 msr, u64 value)
+> +{
+> +	union hv_ghcb *hv_ghcb;
 > +	void **ghcb_base;
+> +	unsigned long flags;
+> +
+> +	if (!ms_hyperv.ghcb_base)
+> +		return;
+> +
+> +	local_irq_save(flags);
+> +	ghcb_base = (void **)this_cpu_ptr(ms_hyperv.ghcb_base);
+> +	hv_ghcb = (union hv_ghcb *)*ghcb_base;
+> +	if (!hv_ghcb) {
+> +		local_irq_restore(flags);
+> +		return;
+> +	}
+> +
+> +	memset(hv_ghcb, 0x00, HV_HYP_PAGE_SIZE);
+> +
+> +	hv_ghcb->ghcb.protocol_version = 1;
+> +	hv_ghcb->ghcb.ghcb_usage = 0;
+> +
+> +	ghcb_set_sw_exit_code(&hv_ghcb->ghcb, SVM_EXIT_MSR);
+> +	ghcb_set_rcx(&hv_ghcb->ghcb, msr);
+> +	ghcb_set_rax(&hv_ghcb->ghcb, lower_32_bits(value));
+> +	ghcb_set_rdx(&hv_ghcb->ghcb, value >> 32);
+> +	ghcb_set_sw_exit_info_1(&hv_ghcb->ghcb, 1);
+> +	ghcb_set_sw_exit_info_2(&hv_ghcb->ghcb, 0);
+> +
+> +	VMGEXIT();
 
-Any reason you can't reuse the SEV-ES support code in the Linux kernel?
-It already has code to setup GHCBs for all vCPUs.
-
-I see that you don't need #VC handling in your SNP VMs because of the
-paravisor running underneath it, but just re-using the GHCB setup code
-shouldn't be too hard.
+This is not safe to use from NMI context. You need at least some
+checking or WARN_ON/assertion/whatever to catch cases where this is
+violated. Otherwise it will result in some hard to debug bug reports.
 
 Regards,
 
