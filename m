@@ -2,185 +2,95 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 534E03A2F23
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Jun 2021 17:17:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C1573A2F5A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Jun 2021 17:30:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbhFJPTG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Jun 2021 11:19:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27184 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231610AbhFJPTE (ORCPT
+        id S231669AbhFJPch (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Jun 2021 11:32:37 -0400
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:42697 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231374AbhFJPcg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Jun 2021 11:19:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623338228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/xSRrIzE81bGjheuhkYoLTnfO0+k1xVrIn8oCBsTpxY=;
-        b=Rn3djReRoY2zijzE3m5LEIOzzZzyCRipW+9a/zWdQZDnzImJicQgNJddm9NX+YDFXvsulf
-        4FyYGZhB8yIQ1in5q0NidRmntyIvBKVYoVT86GA9SjlOqEtAijg1EqEIhdcJBzXRJSMfBp
-        ddk6ZdUeKePirs3OERjL0B9PDkuOvws=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-4outOxA1PqaMCEsCkghAAQ-1; Thu, 10 Jun 2021 11:17:07 -0400
-X-MC-Unique: 4outOxA1PqaMCEsCkghAAQ-1
-Received: by mail-wm1-f69.google.com with SMTP id g14-20020a05600c4eceb02901b609849650so3481200wmq.6
-        for <linux-hyperv@vger.kernel.org>; Thu, 10 Jun 2021 08:17:06 -0700 (PDT)
+        Thu, 10 Jun 2021 11:32:36 -0400
+Received: by mail-wm1-f51.google.com with SMTP id l7-20020a05600c1d07b02901b0e2ebd6deso6692733wms.1;
+        Thu, 10 Jun 2021 08:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oaRjenhc1WwiDGK8u6oFfetNiLL2rVHkSL9XAdr5Dbw=;
+        b=mEqyHv3MzfHQY3IEH7s9P82X1gstWrwozu0jwlEbye2p47KkY8Z7Ansypatb3ZQaQr
+         et+BAW0A0lOLVnBOw8NAC58S/IUpzAMdiHgItE2Qly7Qf04OhnBUn7jzLckO7cd3h+HP
+         99IK1H6JTJn732RAxP6LmOjxCLzvEQ0ui0JQzLc+lwfi8Nwp1zRhMKrf27Grz3pRImQX
+         NE8LeM+s2KqT2GlkuQMVynZc8RaZ6Kta3dksuzPNVAm7/zGD1oxpVMJO9eKpPoUT/M8K
+         BxGoVpd0w5tUp2GSNrOW6pzL2SOBMcW6Y77qAsMVcOD67kVHHaUqUu5K5BunQq6CCuyw
+         XOoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/xSRrIzE81bGjheuhkYoLTnfO0+k1xVrIn8oCBsTpxY=;
-        b=JZKF6wNn8hdTRArgqh+w4yaDs3p1gy80zniIN2N1fOWpkCCtF6BlGqUXIEmapEW43A
-         chzmBOyDKBg9dNOBRZpZhi9B1i3npcxQxtxcjQLjXi9bAPPhPvoka4B0bS4NszV4PtLC
-         5+oCvCNAx2mYrz/jPwrmGJQF46tIDcJCxnKiOV7af0D0jh+309eC22b0aXClm0+6RcU2
-         xzr+b/8r/qygYHEW2ZDmGp7UzRYdR0yT2R/QYZJlaN/1qBUP3x+bxhm8igPiZN4TSlzT
-         am/ybYiqciPxZ/29zVaDmeFUllRqPFdywEkzU9nmWkSB+U6XClo0QBs65Kj/xny+Rlby
-         BnsA==
-X-Gm-Message-State: AOAM531d/n8wm5SPLCGOAItMj2cQ8ZsjxW+uFmbIfyjkumTIyf75V8kO
-        0sEzr4t/bLfjsFcb2JOpMoZlA9ZIG1jeNj6KIyzaM8SdaiEbxBRQhwBB4NeU3bV04Drbu1J5h4p
-        At7HzeF7AWdxS9DAjeMPlzkkdqAeaiu3r6KQc4QJoWJWfkqsSmIqU/J5VAjPfSjHp7PGqfhMRYD
-        EM
-X-Received: by 2002:a1c:770f:: with SMTP id t15mr5469027wmi.182.1623338225508;
-        Thu, 10 Jun 2021 08:17:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyniLL7r+DAEaQMlKPgbj1DYzIM+sEF3iD8sNZCqVDC2l+Oig0TrJxUUoQsUdhp7IQe4no2gA==
-X-Received: by 2002:a1c:770f:: with SMTP id t15mr5468989wmi.182.1623338225284;
-        Thu, 10 Jun 2021 08:17:05 -0700 (PDT)
-Received: from ?IPv6:2001:b07:add:ec09:c399:bc87:7b6c:fb2a? ([2001:b07:add:ec09:c399:bc87:7b6c:fb2a])
-        by smtp.gmail.com with ESMTPSA id 89sm4200534wrq.14.2021.06.10.08.17.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Jun 2021 08:17:04 -0700 (PDT)
-Subject: Re: [PATCH v5 0/7] Hyper-V nested virt enlightenments for SVM
-To:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
+        bh=oaRjenhc1WwiDGK8u6oFfetNiLL2rVHkSL9XAdr5Dbw=;
+        b=uak3ZCDPegpCRUfh/vB/t29fMpkuPBs87dGxa+sHdCe4SrA7HU0jJnVHH+oPnMmKdT
+         EP+o69QXaYsNKvdN3/ddeNdRzm/vS8zEz6Ycg2ewBqe3N2w2FosP0Bnsp53/1q7wADVA
+         9aN5ogLBsOGflAyMLFPYvc+MoU9aQQh9+G5wCD9oynYeBx/NLeOhc+ftvpuFi2Qouj/x
+         JCVnHsLo0208JlTTW53nhPQ9tKeHiVjIQ/fUj8JZ+i5UF2CyezKtXf/4FwqviqOhMFq7
+         WakcJUiN3okxdUnHxOz8L8oyqKy5OCx3l+uBTwJdVEbpI250ETL7icOzET+jphKU5q6O
+         /fyQ==
+X-Gm-Message-State: AOAM530wDmbrCBCUQAM6fsbefENsoz44o1mjBnfdTpRFqyfTP31PYtjA
+        X7PBJeh8Qxi+HgXqGMuihts=
+X-Google-Smtp-Source: ABdhPJxKAGPcfo/suMMBuNxkPEEps4X4SvaC2vR2JcINz7wzqUUgEOPjX8FGdrDDODkZ7MECDlmrvg==
+X-Received: by 2002:a1c:f30a:: with SMTP id q10mr5650158wmq.138.1623338967558;
+        Thu, 10 Jun 2021 08:29:27 -0700 (PDT)
+Received: from localhost.localdomain (190.1.93.209.dyn.plus.net. [209.93.1.190])
+        by smtp.gmail.com with ESMTPSA id b22sm3309802wmj.22.2021.06.10.08.29.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Jun 2021 08:29:27 -0700 (PDT)
+From:   Dhiraj Shah <find.dhiraj@gmail.com>
+Cc:     find.dhiraj@gmail.com, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-References: <cover.1622730232.git.viremana@linux.microsoft.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5af1ccce-a07d-5a13-107b-fc4c4553dd4d@redhat.com>
-Date:   Thu, 10 Jun 2021 17:17:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Shachar Raindel <shacharr@microsoft.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] function mana_hwc_create_wq leaks memory
+Date:   Thu, 10 Jun 2021 16:29:17 +0100
+Message-Id: <20210610152925.18145-1-find.dhiraj@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-In-Reply-To: <cover.1622730232.git.viremana@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 03/06/21 17:14, Vineeth Pillai wrote:
-> This patch series enables the nested virtualization enlightenments for
-> SVM. This is very similar to the enlightenments for VMX except for the
-> fact that there is no enlightened VMCS. For SVM, VMCB is already an
-> architectural in-memory data structure.
-> 
-> Note: v5 is just a rebase on hyperv-next(5.13-rc1) and needed a rework
-> based on the patch series: (KVM: VMX: Clean up Hyper-V PV TLB flush)
-> https://lore.kernel.org/lkml/20210305183123.3978098-1-seanjc@google.com/
-> 
-> The supported enlightenments are:
-> 
-> Enlightened TLB Flush: If this is enabled, ASID invalidations invalidate
-> only gva -> hpa entries. To flush entries derived from NPT, hyper-v
-> provided hypercalls (HvFlushGuestPhysicalAddressSpace or
-> HvFlushGuestPhysicalAddressList) should be used.
-> 
-> Enlightened MSR bitmap(TLFS 16.5.3): "When enabled, L0 hypervisor does
-> not monitor the MSR bitmaps for changes. Instead, the L1 hypervisor must
-> invalidate the corresponding clean field after making changes to one of
-> the MSR bitmaps."
-> 
-> Direct Virtual Flush(TLFS 16.8): The hypervisor exposes hypercalls
-> (HvFlushVirtualAddressSpace, HvFlushVirtualAddressSpaceEx,
-> HvFlushVirtualAddressList, and HvFlushVirtualAddressListEx) that allow
-> operating systems to more efficiently manage the virtual TLB. The L1
-> hypervisor can choose to allow its guest to use those hypercalls and
-> delegate the responsibility to handle them to the L0 hypervisor. This
-> requires the use of a partition assist page."
-> 
-> L2 Windows boot time was measured with and without the patch. Time was
-> measured from power on to the login screen and was averaged over a
-> consecutive 5 trials:
->    Without the patch: 42 seconds
->    With the patch: 29 seconds
-> --
-> 
-> Changes from v4
-> - Rebased on top of 5.13-rc1 and reworked based on the changes in the
->    patch series: (KVM: VMX: Clean up Hyper-V PV TLB flush)
->    
-> Changes from v3
-> - Included definitions for software/hypervisor reserved fields in SVM
->    architectural data structures.
-> - Consolidated Hyper-V specific code into svm_onhyperv.[ch] to reduce
->    the "ifdefs". This change applies only to SVM, VMX is not touched and
->    is not in the scope of this patch series.
-> 
-> Changes from v2:
-> - Refactored the Remote TLB Flush logic into separate hyperv specific
->    source files (kvm_onhyperv.[ch]).
-> - Reverted the VMCB Clean bits macro changes as it is no longer needed.
-> 
-> Changes from v1:
-> - Move the remote TLB flush related fields from kvm_vcpu_hv and kvm_hv
->    to kvm_vcpu_arch and kvm_arch.
-> - Modify the VMCB clean mask runtime based on whether L1 hypervisor
->    is running on Hyper-V or not.
-> - Detect Hyper-V nested enlightenments based on
->    HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS.
-> - Address other minor review comments.
-> ---
-> 
-> Vineeth Pillai (7):
->    hyperv: Detect Nested virtualization support for SVM
->    hyperv: SVM enlightened TLB flush support flag
->    KVM: x86: hyper-v: Move the remote TLB flush logic out of vmx
->    KVM: SVM: Software reserved fields
->    KVM: SVM: hyper-v: Remote TLB flush for SVM
->    KVM: SVM: hyper-v: Enlightened MSR-Bitmap support
->    KVM: SVM: hyper-v: Direct Virtual Flush support
-> 
->   arch/x86/include/asm/hyperv-tlfs.h |   9 ++
->   arch/x86/include/asm/kvm_host.h    |   9 ++
->   arch/x86/include/asm/svm.h         |   9 +-
->   arch/x86/include/uapi/asm/svm.h    |   3 +
->   arch/x86/kernel/cpu/mshyperv.c     |  10 ++-
->   arch/x86/kvm/Makefile              |   9 ++
->   arch/x86/kvm/kvm_onhyperv.c        |  93 +++++++++++++++++++++
->   arch/x86/kvm/kvm_onhyperv.h        |  32 +++++++
->   arch/x86/kvm/svm/svm.c             |  14 ++++
->   arch/x86/kvm/svm/svm.h             |  22 ++++-
->   arch/x86/kvm/svm/svm_onhyperv.c    |  41 +++++++++
->   arch/x86/kvm/svm/svm_onhyperv.h    | 129 +++++++++++++++++++++++++++++
->   arch/x86/kvm/vmx/vmx.c             | 105 +----------------------
->   arch/x86/kvm/vmx/vmx.h             |   9 --
->   arch/x86/kvm/x86.c                 |   9 ++
->   15 files changed, 384 insertions(+), 119 deletions(-)
->   create mode 100644 arch/x86/kvm/kvm_onhyperv.c
->   create mode 100644 arch/x86/kvm/kvm_onhyperv.h
->   create mode 100644 arch/x86/kvm/svm/svm_onhyperv.c
->   create mode 100644 arch/x86/kvm/svm/svm_onhyperv.h
-> 
+memory space allocated for the queue in function
+mana_gd_create_hwc_queue is not freed during error condition.
 
-Queued, thanks.
+Signed-off-by: Dhiraj Shah <find.dhiraj@gmail.com>
+---
+ drivers/net/ethernet/microsoft/mana/hw_channel.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Paolo
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index 1a923fd99990..4aa4bda518fb 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -501,8 +501,10 @@ static int mana_hwc_create_wq(struct hw_channel_context *hwc,
+ 	*hwc_wq_ptr = hwc_wq;
+ 	return 0;
+ out:
+-	if (err)
++	if (err) {
++		kfree(queue);
+ 		mana_hwc_destroy_wq(hwc, hwc_wq);
++	}
+ 	return err;
+ }
+ 
+-- 
+2.30.1 (Apple Git-130)
 
