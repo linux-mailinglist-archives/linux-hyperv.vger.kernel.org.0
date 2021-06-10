@@ -2,133 +2,116 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AD3A3A2E11
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Jun 2021 16:25:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 507B13A2EDF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Jun 2021 17:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231312AbhFJO1h (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Jun 2021 10:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbhFJO1g (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Jun 2021 10:27:36 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 867CFC061574;
-        Thu, 10 Jun 2021 07:25:24 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id k22-20020a17090aef16b0290163512accedso5574790pjz.0;
-        Thu, 10 Jun 2021 07:25:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9LfruKTSmGsaKr3T0KtsgMI2g1V5D5r+FfKoliRoTY8=;
-        b=c3W9IY55kAGRSZQMUKIse7CYjATOc/WNsezUixaF5fWDkVciqS0+iWaZcHtL2rFFUw
-         q6Af9zyVo5zJyfySRvKv8k+huR+szVR1Xb8GDyTonmbkQ3V0MoPt+EBqk/fvrUpoIhu0
-         FpoCg5T+vTYyaf/IELWrWdHqeg6MOtolC1d7jn3ifj33bWYJ1rAiXRMyOW50J2wlpwFG
-         OzCk7HbGROQ8oMztcbHmPooQ1M2yg6rOw9Gp0rsVbF3wVqRpT60yIqJM59aQu50FPywK
-         5PKEXQwlOBjWNljf/CAPll8LJKaf8zXSJtCqfJmCU42oGpqB5i4sk/wWojxWFZDHy/Ps
-         2toA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9LfruKTSmGsaKr3T0KtsgMI2g1V5D5r+FfKoliRoTY8=;
-        b=T2G4mEfYrGXXBVm8dgrZKagV13bFY1A1h5Qq4PACuqFfIl5QWe1xp4uwe4SnckpWDZ
-         OSFrJ82BHaCkdmhlYo2sK+D7VgKZU0VsSsdfH6v3owDUZcBa5pPg/5ehXFTWSu5LJOGM
-         4oC8qT1/4BvnWnVdSMsQonN4LsXOPpO2aC/ng8IPEpRJgh5a2byoSZNClYvMGnZ5ogpv
-         +GdYb8110SMZTCMI/fsWCyhVFpjNtdAaxT9Zs1jxPqhhhGg8HYWt1XjSSVcACAwzxuiK
-         tQKd+GByD1vxHJVirQIl3USitpTOWN3t16Xd830rqrDksPcdB/mMKhm3UhtxFXcbITYR
-         PhyQ==
-X-Gm-Message-State: AOAM530EL4WiVuZJrwHe6k5KGYiiGLTdFc+l0/GqHytLu9oSLQ6VjrFz
-        vHYFGzLDx4ENRmclKn5FuRE=
-X-Google-Smtp-Source: ABdhPJzdwp2MX3HMzPasMcsmUlDqisDdNAsXcZ2anZ9ouahX31714ETLaZ+TtT/Nrt8h3xRgpVym6w==
-X-Received: by 2002:a17:90a:7bce:: with SMTP id d14mr3702065pjl.38.1623335123951;
-        Thu, 10 Jun 2021 07:25:23 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
-        by smtp.gmail.com with ESMTPSA id 1sm8338487pjm.8.2021.06.10.07.25.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Jun 2021 07:25:23 -0700 (PDT)
-Subject: Re: [RFC PATCH V3 08/11] swiotlb: Add bounce buffer remap address
- setting function
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        arnd@arndb.de, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, rppt@kernel.org,
-        hannes@cmpxchg.org, cai@lca.pw, krish.sadhukhan@oracle.com,
-        saravanand@fb.com, Tianyu.Lan@microsoft.com,
-        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, joro@8bytes.org, will@kernel.org,
-        xen-devel@lists.xenproject.org, davem@davemloft.net,
-        kuba@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        vkuznets@redhat.com, thomas.lendacky@amd.com,
-        brijesh.singh@amd.com, sunilmut@microsoft.com
-References: <20210530150628.2063957-1-ltykernel@gmail.com>
- <20210530150628.2063957-9-ltykernel@gmail.com>
- <20210607064312.GB24478@lst.de>
- <48516ce3-564c-419e-b355-0ce53794dcb1@gmail.com>
-Message-ID: <9c05f7fd-6460-5d4a-aa83-08626839d18e@gmail.com>
-Date:   Thu, 10 Jun 2021 22:25:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S231451AbhFJPDS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Jun 2021 11:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230332AbhFJPDR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 10 Jun 2021 11:03:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D60C61406;
+        Thu, 10 Jun 2021 15:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623337281;
+        bh=B8YUrdGtvh1GlX9DXPYnLvrAiv1MGNWen6/6xy5xNj0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZOOKAHQiUBk7P4XwofeAx9bYWQKbqO2Y4+luqnSOASsoYUCFy7CkXg/H5OaGC1GyJ
+         yzRam3hEWbUK2dAXhmukaB+YzI9AbDvXVYANRTARIvfLKa03eXFEjyYDCtqaQjt2hl
+         0IMAjOxWnoWmIhYvh6jl5/ZvEJaMK6SNbvqNWc02vhyjPCcy35jQNSFlUQcZ2dLPqD
+         sHFPhNeBHPuo9MDNeYvAt1DziEiU8Vg199tHAZZYCDGOsP5360qwF224ioWL7UTibn
+         igH3wAqxExu+RCXjqWJkxZaswAnquByLVHSHqZCLiJ78s+gQROtrgurLGNODv817MY
+         MHXDpw4gnFctg==
+Received: by mail-oi1-f173.google.com with SMTP id r17so2422692oic.7;
+        Thu, 10 Jun 2021 08:01:21 -0700 (PDT)
+X-Gm-Message-State: AOAM533RdzuBF9F50uzpSSvex/19/SyV5W3ycw3VTDjlusx5+wR7U6b3
+        JXvEElh6h1fyeki+536XpgGBd64wcI/uNuNw3jk=
+X-Google-Smtp-Source: ABdhPJxibo6JABGA7bE+zFOtcntl98rQdpSxCh/xGWjytPaZ+l9cdgGdrTsv+YQbvAM2joKHZSGRQzNlq6GWTM6SPeM=
+X-Received: by 2002:aca:eb55:: with SMTP id j82mr3640527oih.174.1623337280475;
+ Thu, 10 Jun 2021 08:01:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <48516ce3-564c-419e-b355-0ce53794dcb1@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210609163211.3467449-1-boqun.feng@gmail.com>
+In-Reply-To: <20210609163211.3467449-1-boqun.feng@gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 10 Jun 2021 17:01:08 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGwa28T5Cr_64OC4rqE3qhwWQz+BJPwjdr54G-pVf9+pA@mail.gmail.com>
+Message-ID: <CAMj1kXGwa28T5Cr_64OC4rqE3qhwWQz+BJPwjdr54G-pVf9+pA@mail.gmail.com>
+Subject: Re: [RFC v3 0/7] PCI: hv: Support host bridge probing on ARM64
+To:     Boqun Feng <boqun.feng@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org, PCI <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, Clint Sbisa <csbisa@amazon.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Wed, 9 Jun 2021 at 18:32, Boqun Feng <boqun.feng@gmail.com> wrote:
+>
+> Hi Bjorn, Arnd and Marc,
+>
 
+Instead of cc'ing Arnd, you cc'ed me (Ard)
 
-On 6/7/2021 10:56 PM, Tianyu Lan wrote:
-> 
-> On 6/7/2021 2:43 PM, Christoph Hellwig wrote:
->> On Sun, May 30, 2021 at 11:06:25AM -0400, Tianyu Lan wrote:
->>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->>>
->>> For Hyper-V isolation VM with AMD SEV SNP, the bounce buffer(shared 
->>> memory)
->>> needs to be accessed via extra address space(e.g address above bit39).
->>> Hyper-V code may remap extra address space outside of swiotlb. swiotlb_
->>> bounce() needs to use remap virtual address to copy data from/to bounce
->>> buffer. Add new interface swiotlb_set_bounce_remap() to do that.
->>
->> Why can't you use the bus_dma_region ranges to remap to your preferred
->> address?
->>
-> 
-> Thanks for your suggestion.
-> 
-> These addresses in extra address space works as system memory mirror. 
-> The shared memory with host in Isolation VM needs to be accessed via 
-> extra address space which is above shared gpa boundary. During 
-> initializing swiotlb bounce buffer pool, only address bellow shared gpa 
-> boundary can be accepted by swiotlb API because it is treated as system 
-> memory and managed by memory management. This is why Hyper-V swiotlb 
-> bounce buffer pool needs to be allocated in Hyper-V code and map
-> associated physical address in extra address space. The patch target is
-> to add the new interface to set start virtual address of bounce buffer
-> pool and let swiotlb boucne buffer copy function to use right virtual 
-> address for extra address space.
-> 
-> bus_dma_region is to translate cpu physical address to dma address.
-> It can't modify the virtual address of bounce buffer pool and let
-> swiotlb code to copy data with right address. If some thing missed,
-> please correct me.
-> 
-
-Hi Christoph:
-	Sorry to bother you. Could you have a look at my previous reply?
-I try figuring out the right way.
-
-Thanks.
+> This is the v3 for the preparation of virtual PCI support on Hyper-V
+> ARM64. Previous versions:
+>
+> v1:     https://lore.kernel.org/lkml/20210319161956.2838291-1-boqun.feng@gmail.com/
+> v2:     https://lore.kernel.org/lkml/20210503144635.2297386-1-boqun.feng@gmail.com/
+>
+> Changes since last version:
+>
+> *       Use a sentinel value approach instead of calling
+>         pci_bus_find_domain_nr() for every CONFIG_PCI_DOMAIN_GENERIC=y
+>         arch as per suggestion from
+>
+> *       Improve the commit log and comments for patch #6.
+>
+> *       Rebase to the latest mainline.
+>
+> The basic problem we need to resolve is that ARM64 is an arch with
+> PCI_DOMAINS_GENERIC=y, so the bus sysdata is pci_config_window. However,
+> Hyper-V PCI provides a paravirtualized PCI interface, so there is no
+> actual pci_config_window for a PCI host bridge, so no information can be
+> retrieve from the pci_config_window of a Hyper-V virtual PCI bus. Also
+> there is no corresponding ACPI device for the Hyper-V PCI root bridge.
+>
+> With this patchset, we could enable the virtual PCI on Hyper-V ARM64
+> guest with other code under development.
+>
+> Comments and suggestions are welcome.
+>
+> Regards,
+> Boqun
+>
+> Arnd Bergmann (1):
+>   PCI: hv: Generify PCI probing
+>
+> Boqun Feng (6):
+>   PCI: Introduce domain_nr in pci_host_bridge
+>   PCI: Allow msi domain set-up at host probing time
+>   PCI: hv: Use pci_host_bridge::domain_nr for PCI domain
+>   PCI: hv: Set up msi domain at bridge probing time
+>   arm64: PCI: Support root bridge preparation for Hyper-V PCI
+>   PCI: hv: Turn on the host bridge probing on ARM64
+>
+>  arch/arm64/kernel/pci.c             |  7 ++-
+>  drivers/pci/controller/pci-hyperv.c | 87 +++++++++++++++++------------
+>  drivers/pci/probe.c                 |  9 ++-
+>  include/linux/pci.h                 | 10 ++++
+>  4 files changed, 73 insertions(+), 40 deletions(-)
+>
+> --
+> 2.30.2
+>
