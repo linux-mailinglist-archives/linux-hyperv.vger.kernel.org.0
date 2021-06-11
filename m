@@ -2,144 +2,191 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38E813A3475
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Jun 2021 22:03:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B80C93A3CE8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Jun 2021 09:20:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230216AbhFJUFX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Jun 2021 16:05:23 -0400
-Received: from mail-dm6nam10on2095.outbound.protection.outlook.com ([40.107.93.95]:37040
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229963AbhFJUFW (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Jun 2021 16:05:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X8um19JHtG//dA/IQz1Xjz4ywRwfdjnRwWZpKvP2cFX+oDRIAP8bzc5HAy/9c4fj8qZJ5j5IwSjq3zPVvZYyNHr0ey6UyiV+DazulGcDCWvshPGyUlBLS98d0CNGNM7pcuqAV3oxt06VkEmm3Cy/76TcaQUDuqm/Z3Z5UsOVButOn2o5mupVaS8THKQG9OsRQGKIixVdjnAGnJp84Xzi5wRNM+eijtU3b2jfYSPhd2vc787axTzsaZIKt3+lPc+zcDWgBoWUuE5N4S8UC9kqkIaJgpwfNc6IqwJK8lJcpxqdUQ+l9REnbTnEw/IU0byfeZBMJ4Ef/DbSQRXOwARQVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BShXySRTE1qiiaklmZD5QxNU2X/AaczDPzXOdhD+qpM=;
- b=JYc/a06dUb7l+eYe2ksUOGnfQAhWqI9hFZOPhmMaWae+odCsObHHYSpMQQ6KibHEGopYWB4yHln1LPNxrvta1SKPN0njWPDuCg3E06pgOXOGhvrA48p81kj4BHY0JHiyyAu7MId1hgEiZUu7EFyJTYlJPm9kp6BcIVlt8/+4Z7gFvZIxakmTV60ruxyaLYSdM5hmdj2V2m3h79Faf0ZaeD19U7Qy7PcckIkWL/tXm33mIBMzcnSPKNFQ+O1GX/sE241vaUceIymYJIjGsmpqNIrIiSOWokO0wMa8mmhHVe90JOUUIMbVJU+pEA3bz0CdxjHxusr9fvNY/J3SYy298A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BShXySRTE1qiiaklmZD5QxNU2X/AaczDPzXOdhD+qpM=;
- b=IZi2lLL6VYOING0AobtLwqzgsXzSxWPZNTOn2G33Z/h/N8kBSFZIOOW5+zQ9dF23uvfT7NEardZP37F33syFdLF/7+VrwftcZSTHgazhs1cr2q49MzyuLE20Z1LEgt+2WN1QNSSYQV/PG4co54B0jSAwGw/o7TMvMBwZ9mFbXSQ=
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
- by SJ0PR21MB1967.namprd21.prod.outlook.com (2603:10b6:a03:29e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.5; Thu, 10 Jun
- 2021 20:03:24 +0000
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::fcf8:a9d4:ac25:c7ce]) by BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::fcf8:a9d4:ac25:c7ce%3]) with mapi id 15.20.4242.012; Thu, 10 Jun 2021
- 20:03:23 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dhiraj Shah <find.dhiraj@gmail.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        id S231423AbhFKHWQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 11 Jun 2021 03:22:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28828 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231357AbhFKHWQ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 11 Jun 2021 03:22:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623396018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gYjg/yEV7PUq2GYWP2SW746eR9Kq3NCgJS7G1o1Lc6A=;
+        b=QDGLPaAFQibGR777424sOA9NEpuqmkzxI23N1S8oV1DJJ7wTSkhjt0vEhuy6JBG43ftAZi
+        RVbi50UD6OHZPgDQtnX+pxsZ2beV8nbFsmtGOxa6PJZbfDC7z0eTdoXcuKSLEREMasIYi4
+        16xO8aOpYwa3qzhJ/diJfaF/tvWn4c8=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-586-bUWTM8RnOHWgD2fZuQjJEg-1; Fri, 11 Jun 2021 03:20:15 -0400
+X-MC-Unique: bUWTM8RnOHWgD2fZuQjJEg-1
+Received: by mail-wr1-f70.google.com with SMTP id q15-20020adfc50f0000b0290111f48b865cso2204169wrf.4
+        for <linux-hyperv@vger.kernel.org>; Fri, 11 Jun 2021 00:20:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=gYjg/yEV7PUq2GYWP2SW746eR9Kq3NCgJS7G1o1Lc6A=;
+        b=Si4/+Y18n0lQTTrjFsdFOVv2g3O2+Jktfs9GkdKFjAwIcX0CNzckzq/Zk6+Pn8calG
+         3skTa3nOQ2o4AUozZDPXBNjseueTUT8Sdy5GkAaVSXB8RJg39fglVo3gsYox4r+Yhhf/
+         XcCnn01foJaTFeD69dnVbkxV81e1Gb3m5nPXQwnPAyHv+xIIStTl4/GfIntsbNp9quSj
+         d6Ywshhq1ANFU86ENa9t1qiMol4qmXhjY4YPZgAtVx24Wr73OBTy5EsNbrUWFaM0r10O
+         p3dHRnb1hcBIBL9EwwfM+Angad0zDxMQ0CoChqItmd2U7GEpEXL/nujxiEIj83aQayYR
+         0/KQ==
+X-Gm-Message-State: AOAM533mpTNTa/Mkmz1MkPT4heaxB3vXHJLQkoDFD+ujbec9X/a18ofj
+        CXli4DPWb8OV6GRk4ioHOS4OOeJaG3jul22HAAOXxbN0GTRWNY/g3vBMVPtXZq3SwIUAj1UEaEs
+        jBf+EXrn3C2cSQZxnuojahE3E
+X-Received: by 2002:a05:600c:1d1b:: with SMTP id l27mr2490774wms.62.1623396014389;
+        Fri, 11 Jun 2021 00:20:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxxHECOXihNxXks5FPLEuvHTTQDpLVvf1IgC3Th2TxpBzLVOMuJTQ6q1LPQpSSDkIJn2XS3GA==
+X-Received: by 2002:a05:600c:1d1b:: with SMTP id l27mr2490733wms.62.1623396014106;
+        Fri, 11 Jun 2021 00:20:14 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id m7sm6299020wrv.35.2021.06.11.00.20.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Jun 2021 00:20:13 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vineeth Pillai <viremana@linux.microsoft.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Shachar Raindel <shacharr@microsoft.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] function mana_hwc_create_wq leaks memory
-Thread-Topic: [PATCH] function mana_hwc_create_wq leaks memory
-Thread-Index: AQHXXg1ojJMEZe7SE0uvKv3Tzsr7JasNfBjAgAAB/jCAACpJAIAAARgA
-Date:   Thu, 10 Jun 2021 20:03:23 +0000
-Message-ID: <BYAPR21MB1270FE45040F31DC71C0F5E6BF359@BYAPR21MB1270.namprd21.prod.outlook.com>
-References: <20210610152925.18145-1-find.dhiraj@gmail.com>
- <BYAPR21MB1270FC995760BE925179F353BF359@BYAPR21MB1270.namprd21.prod.outlook.com>
- <BYAPR21MB127087B408352336E0A8BF2ABF359@BYAPR21MB1270.namprd21.prod.outlook.com>
- <98DC11D9-668E-47F2-891C-6F41E70BD5F4@gmail.com>
-In-Reply-To: <98DC11D9-668E-47F2-891C-6F41E70BD5F4@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6673e471-8dd5-43eb-a3b0-3e6cc44cea5e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-06-10T19:57:04Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e7c0eb9b-6e7e-4860-c35b-08d92c4acda4
-x-ms-traffictypediagnostic: SJ0PR21MB1967:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SJ0PR21MB19670BF8D6C5FF503B708924BF359@SJ0PR21MB1967.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ekPsuHI3y+Lf0o6nCYltW2+g80ZuCFfcWOltOHft8TLMBb62NITRD8uJy8kQxvj2lMJObKNoidSJP8wQbH2xGixgTdqaAc7xhm+LFslIDW/B6PO/dxIaHoLBPFnlBIY6oTMSlIQGX2KlYFkfC+3JxD0XmwKsbazAvF5OtormfWolX6agYBKvLCmtGMpLyeDC4kwLRRxAyy20ErMdC5zopT9m/2xK1frcc7OFeJAKGNdZMp2bOfkmLNu/uMEYYZ7RUHNeW132lqFmWB2cpALlbywUh28GnlfGpZ9bAYqLqCseLtAHN15qxbN9qTAVOf1d+HgMigGDc0TZNmliEaVg4zYs0dDU0NMp/7yrNoi/WX682LcaVyMuwd1PoJYnJOXhuf8CCb1MmV/BtqCIupr2qR/gwkI3BIEBgGZlI4CCBDfu0AP2YW6fPoBt/MI1to1L8CXmX1w2pGkyVIfILq9nUhdbJ5OWEo4ryFWj1O8b0CO0CQqbVoXQfnTjstIfP6j7pjbqhBFlsCBAhJvESoBjRiQKDiZ6j3A+PYMYluIB7+4mulyldWmkFRsq05O5UlGh9XPsAOoAVZMi4e1v9m+XlKmZ1ixbmZ42pxUJpyLwo6kYvXm5TANvYNoRfYWQ96UgSeiTRutOFcZ3sA+XuEV35w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(86362001)(9686003)(10290500003)(54906003)(5660300002)(186003)(33656002)(38100700002)(71200400001)(4744005)(8676002)(2906002)(66556008)(7696005)(6506007)(66946007)(66446008)(66476007)(478600001)(4326008)(8936002)(6916009)(55016002)(8990500004)(122000001)(64756008)(316002)(52536014)(82950400001)(82960400001)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VzZObUU0VnhMc3Zud2I1dDMwa2FQYVpJclRTemo0ZWwxcTlxYzZyZnhNVTRh?=
- =?utf-8?B?dzByV3pMYjZrNEY1RWZheDdKNm9Pemt2VXhsaEVQYTlSZXpFZDdCQ1pNUkh1?=
- =?utf-8?B?aE9FUWZWM0pzLzZUODRhc2JLb1crNlNnRmdxU0hQZkM0WkZOQkFHS3FTYTRz?=
- =?utf-8?B?bTBSU0VuUWJwU1VHajJqZjltNzVFTnVLN29xSHA3NGVCdFhlS2ZDV0NlN21y?=
- =?utf-8?B?ejhhZGdQWTkxR0gyTzFObWN3NjZ4aFh1Q0VFdnRtR0VnQTNRWG9YelpzNnM3?=
- =?utf-8?B?UGtwZXVzZEJXT041bzM3TUZqbXNDS2VETEdwMEgwcnRYNVkyaWhuMkdmZWg1?=
- =?utf-8?B?eEh5TzA5N1k5aklTK0hmN1p6RDVlN0JIYnhzaDdwMFV6Zlg0TGJ1ekpMVVVq?=
- =?utf-8?B?bkw2emsyWWw4VjY0WG8zTkpiK0FIMXpNMmFBcjhIOVIxa2NmS21HWkZmZ0lF?=
- =?utf-8?B?YlAySS8xcXFVazBBWDFtbmJIazNBcjY4LzdwZENCQVBKa2xjQ2h4RnRsKzlE?=
- =?utf-8?B?SmlrRUZWMWxyY2tlNU4rSDl0aFUwZHhMZnBqNGRnSDV6bDZTMFU5akhjYzk1?=
- =?utf-8?B?dHZ2a3UyR3JiZkxOelI4WnMyMHJLN0wrcHRmL2dSd05nT00xMDFYaEE3amtp?=
- =?utf-8?B?RGFYNVUxbjhGSHNPYmtVSTQ3VHkvMFRRbitFam9yd3JLRklZa2lVQWRBaWMz?=
- =?utf-8?B?QWN3djNTTjljb1poNTRSZ0VaRURVU3BpMmNzUUhlR2F1Z2JaQ09BM0x4dDJt?=
- =?utf-8?B?R3hHZHl3SmdNVEtWMiswMUw5S0I2YXJ2dDJUQmsrWXRDRnZDSDcvSXZqWTF0?=
- =?utf-8?B?cW0wenlWTW16TlhDemFxbGJXQzVCMGtFMk01NFhtTERzZmRQTXZLUFZpWFdy?=
- =?utf-8?B?VUU3TWxUdFFUK0htRS9CRzNScC9HcmdtYVlOTVMrZWk5ZnE1b2E0SjA2UVZm?=
- =?utf-8?B?eUd4Q1hQR0FVWXN4WGh2dTh6NWVVL1lLcTVQb1hRVkhxcWc4WmNMak9PMWxs?=
- =?utf-8?B?ZGMvMGk2MXRMMzgvbC8veHZFM1JibDRTcEg4Yi9iUWpQVVlhd1RuMExHOWFV?=
- =?utf-8?B?VnZtS0s2bUdUWCtEeDBoa3MrL1FTbFFDUUhUMjdXa1g2Z3R0LzZwZ0tZMzls?=
- =?utf-8?B?US9sK04reFh3dysrOVQyZE5lMGFTNHZpdzNZMTIrbGV1VGs2Qk1hWGczTVpa?=
- =?utf-8?B?Vks3dXlNL202WGVyTW5LZHM2bjQwNVo5Y29US3YzU1h6NGFuVUNjM0tVbitI?=
- =?utf-8?B?ZXB1Wnh1ZFRjT2Y0bitCRnFST2xrNkwxcXRxcWg0ODhrbHEyOHJmdDJKdEZG?=
- =?utf-8?B?UlhRZ29WcHp6T3JHMEc5dkxuYm5PNlE5QjBkbmtNemJ2M3FxcDc1NDJQd1BR?=
- =?utf-8?B?M0I1bjRTMDBvdTIvdHRqS3RxWmN1YzZZSy9GcTd6c0d2L1FCejMwR2M0UGR1?=
- =?utf-8?B?aHVpZlZ4aHB2Tk81VitNSGN1UFE5RWNNUlFRL1VHbXkxTnI2UWtsSS9xOUt6?=
- =?utf-8?B?Vmp4YS9zMnR3TTJwNEVsNXdudlhGZkRJU3QySmk0Tm42YUZvZS9VNi9tcWtC?=
- =?utf-8?B?TnN2WDR3U3IrTjI5bG5zdUpmWjQvWm03MlNiQWJtUk4wM0pHNk5MTDFneGV1?=
- =?utf-8?B?dDMwR2pmYVMvdXArSk9sZDVlOGNIRXg2SUNVYThCajhmU0hGT0RVVmxFcHk1?=
- =?utf-8?B?bktCSC9nQ0h5UFlCOGRXSHVGcTdQdmk3TVVyZ1dSMU5JclVuYXphUHNaMHQ5?=
- =?utf-8?B?Rkw0UzJ4ZXY2ZmJDcnhadExJK3VRT3hCN25BZ09kdDYrWm43eHRoRjFDUEIz?=
- =?utf-8?B?VGJkSDhTbnorMGYzcE84dU1JUkZ1Ym5vMEFNcnIyRC9FVE9Gb3llcjNpWng1?=
- =?utf-8?Q?N8AbOOycs+jXh?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Haiyang Zhang <haiyangz@microsoft.com>
+Subject: Re: [PATCH v5 3/7] KVM: x86: hyper-v: Move the remote TLB flush
+ logic out of vmx
+In-Reply-To: <3b74b538-0b28-7a00-0b26-0f926cd8f37e@redhat.com>
+References: <cover.1622730232.git.viremana@linux.microsoft.com>
+ <4f4e4ca19778437dae502f44363a38e99e3ef5d1.1622730232.git.viremana@linux.microsoft.com>
+ <87y2bix8y1.fsf@vitty.brq.redhat.com>
+ <3b74b538-0b28-7a00-0b26-0f926cd8f37e@redhat.com>
+Date:   Fri, 11 Jun 2021 09:20:12 +0200
+Message-ID: <87k0n0yij7.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7c0eb9b-6e7e-4860-c35b-08d92c4acda4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2021 20:03:23.7615
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rlEJeV+FIfKbihRLNpUmFBezJgC3Xb9XJm+4rqpgkc3ZhBvGijhSDHJnrUwSv2S6T0wrcZS6cue5xmmqoy974A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1967
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-PiBGcm9tOiBEaGlyYWogU2hhaCA8ZmluZC5kaGlyYWpAZ21haWwuY29tPg0KPiBTZW50OiBUaHVy
-c2RheSwgSnVuZSAxMCwgMjAyMSAxMjo1MyBQTQ0KPiAgLi4uDQo+IEhpIERleHVhbiwNCj4gDQo+
-IFRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KPiANCj4gWW91IGFyZSByaWdodCBzYXlpbmcg4oCY
-bWFuYV9od2NfZGVzdHJveV93cScgZnJlZeKAmXMgdXAgdGhlIHF1ZXVlLg0KPiANCj4gSG93ZXZl
-ciBmb3IgZXhhbXBsZSBpZiAgZnVuY3Rpb24gJ21hbmFfaHdjX2FsbG9jX2RtYV9idWYnIGZhaWxz
-IGl0IHdpbGwgZ290bw0KPiDigJhvdXQnIGFuZCBjYWxsIOKAmG1hbmFfaHdjX2Rlc3Ryb3lfd3En
-LCB0aGUgdmFsdWUgJ2h3Y193cS0+Z2RtYV93cScgaXMNCj4gc3RpbGwgbm90IGFzc2lnbmVkIGF0
-IHRoaXMgcG9pbnQuIEluIHRoZSAg4oCYbWFuYV9od2NfZGVzdHJveV93cScgZnVuY3Rpb24gaSBz
-ZWUNCg0KQXQgdGhpcyBwb2ludCwgaHdjX3dxLT5nZG1hX3dxIHN0YXlzIHdpdGggaXRzIGRlZmF1
-bHQgdmFsdWUgTlVMTC4NCg0KPiBpdCBjaGVja3MgZm9yICdod2Nfd3EtPmdkbWFfd3EnIGJlZm9y
-ZSBjYWxsaW5nLCDigJhtYW5hX2dkX2Rlc3Ryb3lfcXVldWUnLA0KPiB3aGljaCBtYWtlcyBtZSB0
-aGluayBxdWV1ZSBpcyBzdGlsbCBub3QgZnJlZWQuDQoNCklNTyB0aGUgY3VycmVudCBjb2RlIGlz
-IG5vdCBidWdneSwgdGhvdWdoIEkgYWRtaXQgaXQncyBub3QgdmVyeSByZWFkYWJsZS4gOi0pDQoN
-CklmIHlvdSdyZSBpbnRlcmVzdGVkLCB5b3UncmUgd2VsY29tZSB0byBoZWxwIG1ha2UgaXQgbW9y
-ZSByZWFkYWJsZS4gSSdsbCBhbHNvDQp0cnkgdG8gbWFrZSBzb21lIHRpbWUgb24gdGhpcy4NCg0K
-VGhhbmtzLA0KRGV4dWFuDQo=
+Paolo Bonzini <pbonzini@redhat.com> writes:
+
+> On 10/06/21 13:20, Vitaly Kuznetsov wrote:
+>
+>>> +static inline void hv_track_root_tdp(struct kvm_vcpu *vcpu, hpa_t root=
+_tdp)
+>>> +{
+>>> +	struct kvm_arch *kvm_arch =3D &vcpu->kvm->arch;
+>>> +
+>>> +	if (kvm_x86_ops.tlb_remote_flush =3D=3D hv_remote_flush_tlb) {
+>>> +		spin_lock(&kvm_arch->hv_root_tdp_lock);
+>>> +		vcpu->arch.hv_root_tdp =3D root_tdp;
+>>> +		if (root_tdp !=3D kvm_arch->hv_root_tdp)
+>>> +			kvm_arch->hv_root_tdp =3D INVALID_PAGE;
+>>> +		spin_unlock(&kvm_arch->hv_root_tdp_lock);
+>>> +	}
+>>> +}
+>>> +#else
+>>> +static inline void hv_track_root_tdp(struct kvm_vcpu *vcpu, hpa_t root=
+_tdp)
+>>> +{
+>>> +}
+>>> +#endif
+>>> +#endif
+>>=20
+>> Super-nitpick: I'd suggest adding /* __ARCH_X86_KVM_KVM_ONHYPERV_H__ */
+>> to the second '#endif' and /* IS_ENABLED(CONFIG_HYPERV) */ to '#else'
+>> and the first one: files/functions tend to grow and it becomes hard to
+>> see where the particular '#endif/#else' belongs.
+>
+> Done, thanks.  I've also changed the #if to just "#ifdef CONFIG_HYPERV",=
+=20
+> since IS_ENABLED is only needed in C statements.
+
+kvm/queue fails to compile and I blame this change:
+
+In file included from arch/x86/kvm/svm/svm_onhyperv.c:16:
+arch/x86/kvm/svm/svm_onhyperv.h: In function =E2=80=98svm_hv_hardware_setup=
+=E2=80=99:
+arch/x86/kvm/svm/svm_onhyperv.h:56:34: error: =E2=80=98hv_remote_flush_tlb=
+=E2=80=99 undeclared (first use in this function); did you mean =E2=80=98sv=
+m_flush_tlb=E2=80=99?
+   56 |   svm_x86_ops.tlb_remote_flush =3D hv_remote_flush_tlb;
+      |                                  ^~~~~~~~~~~~~~~~~~~
+      |                                  svm_flush_tlb
+arch/x86/kvm/svm/svm_onhyperv.h:56:34: note: each undeclared identifier is =
+reported only once for each function it appears in
+arch/x86/kvm/svm/svm_onhyperv.h:58:5: error: =E2=80=98hv_remote_flush_tlb_w=
+ith_range=E2=80=99 undeclared (first use in this function)
+   58 |     hv_remote_flush_tlb_with_range;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+make[2]: *** [scripts/Makefile.build:272: arch/x86/kvm/svm/svm_onhyperv.o] =
+Error 1
+make[2]: *** Waiting for unfinished jobs....
+In file included from arch/x86/kvm/svm/svm.c:47:
+arch/x86/kvm/svm/svm_onhyperv.h: In function =E2=80=98svm_hv_hardware_setup=
+=E2=80=99:
+arch/x86/kvm/svm/svm_onhyperv.h:56:34: error: =E2=80=98hv_remote_flush_tlb=
+=E2=80=99 undeclared (first use in this function); did you mean =E2=80=98sv=
+m_flush_tlb=E2=80=99?
+   56 |   svm_x86_ops.tlb_remote_flush =3D hv_remote_flush_tlb;
+      |                                  ^~~~~~~~~~~~~~~~~~~
+      |                                  svm_flush_tlb
+arch/x86/kvm/svm/svm_onhyperv.h:56:34: note: each undeclared identifier is =
+reported only once for each function it appears in
+arch/x86/kvm/svm/svm_onhyperv.h:58:5: error: =E2=80=98hv_remote_flush_tlb_w=
+ith_range=E2=80=99 undeclared (first use in this function)
+   58 |     hv_remote_flush_tlb_with_range;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+make[2]: *** [scripts/Makefile.build:272: arch/x86/kvm/svm/svm.o] Error 1
+arch/x86/kvm/vmx/vmx.c: In function =E2=80=98hardware_setup=E2=80=99:
+arch/x86/kvm/vmx/vmx.c:7752:34: error: =E2=80=98hv_remote_flush_tlb=E2=80=
+=99 undeclared (first use in this function)
+ 7752 |   vmx_x86_ops.tlb_remote_flush =3D hv_remote_flush_tlb;
+      |                                  ^~~~~~~~~~~~~~~~~~~
+arch/x86/kvm/vmx/vmx.c:7752:34: note: each undeclared identifier is reporte=
+d only once for each function it appears in
+arch/x86/kvm/vmx/vmx.c:7754:5: error: =E2=80=98hv_remote_flush_tlb_with_ran=
+ge=E2=80=99 undeclared (first use in this function)
+ 7754 |     hv_remote_flush_tlb_with_range;
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+(Note: CONFIG_HYPERV can be 'm'.)
+
+The following:
+
+index 96da53edfe83..1c67abf2eba9 100644
+--- a/arch/x86/kvm/kvm_onhyperv.h
++++ b/arch/x86/kvm/kvm_onhyperv.h
+@@ -6,7 +6,7 @@
+ #ifndef __ARCH_X86_KVM_KVM_ONHYPERV_H__
+ #define __ARCH_X86_KVM_KVM_ONHYPERV_H__
+=20
+-#ifdef CONFIG_HYPERV
++#if IS_ENABLED(CONFIG_HYPERV)
+ int hv_remote_flush_tlb_with_range(struct kvm *kvm,
+                struct kvm_tlb_range *range);
+ int hv_remote_flush_tlb(struct kvm *kvm);
+
+saves the day for me.
+
+--=20
+Vitaly
+
