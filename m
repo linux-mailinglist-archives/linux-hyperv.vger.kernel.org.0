@@ -2,112 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1222E3A68A3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Jun 2021 16:03:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C92C3A68AE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Jun 2021 16:05:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234273AbhFNOFF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Jun 2021 10:05:05 -0400
-Received: from mail-pf1-f177.google.com ([209.85.210.177]:44586 "EHLO
-        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233998AbhFNOFF (ORCPT
+        id S234476AbhFNOH0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Jun 2021 10:07:26 -0400
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:40837 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234235AbhFNOHZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Jun 2021 10:05:05 -0400
-Received: by mail-pf1-f177.google.com with SMTP id u18so10601295pfk.11;
-        Mon, 14 Jun 2021 07:03:02 -0700 (PDT)
+        Mon, 14 Jun 2021 10:07:25 -0400
+Received: by mail-pg1-f172.google.com with SMTP id m2so2003980pgk.7;
+        Mon, 14 Jun 2021 07:05:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=rxN6qots3gftmYmzarjE1MfJoAMa+HkQ1sXzj7TBE+4=;
-        b=lob5dTvi9uizmuj+tUdDynOO9jvwCr0ZDF8C0p4XA9CUWjEtUEb4iP5nx/JU49Tg6g
-         1NEuc8YpZRgt6emmX0JgxGoUCX/0QsQGKoaVhVkni76t0b07YLZyrWFLmiGsB+kmOLLg
-         4UL6Gu3vMUGV1h+1wNe9nqsGAjHmU73fzjrX0JABmg15fBfUzfRybKW1jJMHVAG1IO91
-         jri9BfiF2YfZLHo/5JC3PWFkvLFrqfyZ9D2+n+DKVdgprQhrObhku+FpfJAg627OR/bt
-         1dAsjGYImXJV1kwo+CxN5NJPF/IzD5Q4EfR8saUOdOIs5hMGSl6reCvLeVGdWDJg0KSz
-         6RWg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yJB+B/uqyT8Yj8oTe4yW/iwZF1PlGwEGbYmCRyf4VPs=;
+        b=WH301YVkd+NT/H+jeV6pcNYHdcjqtaqvIdtbpu0fkkYAmJ7rw0/VnTDAhSvIgbv4c0
+         oazbEKmF+c7M1WRPaxGMZU5xoCLTUJgtdxU9APUEzGlzXnchk40ZNp3QFWLwuNrBu83j
+         e2ylhCoSYk62pl120eNuhLwuvfMbaggtn+gXAD60VuMlb9RO9aR6yjsww4EENQAJey5G
+         2ZzxWZw9pL2yOQEQRAidkW9g0ErNbkj+wegNJA0H7wJ55BH2rzTM1HnAVz1Nh8SFyWFK
+         I7BbhU7Q2hwWxihuFlWkGm+R8myZotEgjwBltHJuCwGgHkDJ5/gTI6uquz0y/0l8g0ap
+         0ueg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=rxN6qots3gftmYmzarjE1MfJoAMa+HkQ1sXzj7TBE+4=;
-        b=E6fxsI8VYyiNZVvw+AODUso2bCml69iHOvCr62ewWpNavOJQrjGiHcz4j+2RUfv7D4
-         ZfRf0BXANSArzMUROVLyHb6cuBoxYL7UTZ6HOMA6dipMgmqhYCl9vozP7+VtoT8R1jAI
-         H1b1Y488g/WDPYTacFVtBejK2BP07/DqUVja2eBi+PqfmDjbXxPiHcMGIpE1D2VuZ1/8
-         dkaHkC0kC3HKo57uUF2CFNaCcmQJMNEFktldogw2z8G4IdY0FYYiRLowFNO0tubR/iHJ
-         6H6MNmmdj+5zvkNZItJdDJJLxfyybKQ7/VeYGuitaOCoVK/Xvgb1+nDr7CG3+EIowvIl
-         kRqw==
-X-Gm-Message-State: AOAM533EhJ8Xh74CpRYmY97Lyvg7m6pMrQg2kZOkPQT8q+jkGth+LLJc
-        snyyDiZOPoshxQ4qZOJXIQo=
-X-Google-Smtp-Source: ABdhPJyva6fsoFPamr3e/ZFu0g9Kw0nLUqIcZlXw8VINUW4Wv9YM/Ic7v/Mdt/3OQEjODPy2UTKMJQ==
-X-Received: by 2002:a63:ce4f:: with SMTP id r15mr17119844pgi.387.1623679322246;
-        Mon, 14 Jun 2021 07:02:02 -0700 (PDT)
-Received: from [192.168.1.8] ([50.47.106.83])
-        by smtp.gmail.com with ESMTPSA id h18sm13273645pgl.87.2021.06.14.07.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jun 2021 07:01:55 -0700 (PDT)
-Message-ID: <2bf51ac723cb097685dd4c89926599d939d31765.camel@gmail.com>
-Subject: Re: [PATCH -next] drm/hyperv: Remove unused variable
-From:   Deepak Rawat <drawat.floss@gmail.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
-        Pu Lehui <pulehui@huawei.com>, airlied@linux.ie,
-        daniel@ffwll.ch
-Cc:     zhangjinhao2@huawei.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Date:   Mon, 14 Jun 2021 07:01:51 -0700
-In-Reply-To: <078d9bb5-e7af-4961-f4c1-cd3ab415cff4@suse.de>
-References: <20210609024940.34933-1-pulehui@huawei.com>
-         <078d9bb5-e7af-4961-f4c1-cd3ab415cff4@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.2 
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yJB+B/uqyT8Yj8oTe4yW/iwZF1PlGwEGbYmCRyf4VPs=;
+        b=O7SsglrsisO5g9SvVXVyGOQsdgDPrGN+Z/o6DksgNz+HXxec6qxB6E5eZ5uSIxMAK/
+         hDgOrergHjYSlDA4avlmAJDSas3u8k29m7ZG6CujVv9WfbreHSG6yFU1VMMwcNE5+fRX
+         7EaiqmvjtvkT+8vP7jN33UWI0BPIh6xa2Kd421NuiUxSrhzBgPUmX51f3yjUFqnThOhX
+         fFcQ8r4jA8UCOkWLcydLpvmMvoyTudTVn02RtQHtJUi25CBAQ6b78KzHLv/zTuSEBfR6
+         Dvrt3VwDlxQRxuZHH6mHWweVx19h34MfBIHTgTLoH0mMu2M4avUkgMgLqZd+r5AmhgZN
+         I5Ug==
+X-Gm-Message-State: AOAM531prSayypQTp290EodSMoY1aDSwj3O+bnpNnPDgEU2a6wbQkqLE
+        zUAgPbpplvXgp/FTg+Hs4DY=
+X-Google-Smtp-Source: ABdhPJyxkq2bPSQ3rYusHXFwzEn3le7fAXsaXh5Rh36tAMz0+W6V1tW5a8HSqlbDYgsTNNATX2tI2A==
+X-Received: by 2002:a63:5760:: with SMTP id h32mr17200205pgm.367.1623679460361;
+        Mon, 14 Jun 2021 07:04:20 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
+        by smtp.gmail.com with ESMTPSA id x206sm12950089pfc.211.2021.06.14.07.04.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Jun 2021 07:04:20 -0700 (PDT)
+Subject: Re: [RFC PATCH V3 10/11] HV/Netvsc: Add Isolation VM support for
+ netvsc driver
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        arnd@arndb.de, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, rppt@kernel.org,
+        hannes@cmpxchg.org, cai@lca.pw, krish.sadhukhan@oracle.com,
+        saravanand@fb.com, Tianyu.Lan@microsoft.com,
+        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, joro@8bytes.org, will@kernel.org,
+        xen-devel@lists.xenproject.org, davem@davemloft.net,
+        kuba@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, thomas.lendacky@amd.com,
+        brijesh.singh@amd.com, sunilmut@microsoft.com
+References: <20210530150628.2063957-1-ltykernel@gmail.com>
+ <20210530150628.2063957-11-ltykernel@gmail.com>
+ <20210607065007.GE24478@lst.de>
+ <279cb4bf-c5b6-6db9-0f1e-9238e902c8f2@gmail.com>
+ <20210614070903.GA29976@lst.de>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <e10c2696-23c3-befe-4f4d-25e18918132f@gmail.com>
+Date:   Mon, 14 Jun 2021 22:04:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210614070903.GA29976@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 2021-06-09 at 09:46 +0200, Thomas Zimmermann wrote:
-> Hi
+
+On 6/14/2021 3:09 PM, Christoph Hellwig wrote:
+> On Mon, Jun 07, 2021 at 11:21:20PM +0800, Tianyu Lan wrote:
+>>> dma_map_single can only be used on page baked memory, and if this is
+>>> using page backed memory you wouldn't need to do thee phys_to_virt
+>>> tricks.  Can someone explain the mess here in more detail?
+>>
+>> Sorry. Could you elaborate the issue? These pages in the pb array are not
+>> allocated by DMA API and using dma_map_single() here is to map these pages'
+>> address to bounce buffer physical address.
 > 
-> Am 09.06.21 um 04:49 schrieb Pu Lehui:
-> > Fixes gcc '-Wunused-const-variable' warning:
-> >    drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:152:23: warning:
-> >      'hyperv_modifiers' defined but not used [-Wunused-const-
-> > variable=]
-> > 
-> > Signed-off-by: Pu Lehui <pulehui@huawei.com>
-> > ---
-> >   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 5 -----
-> >   1 file changed, 5 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> > b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> > index 02718e3e859e..3f83493909e6 100644
-> > --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> > +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> > @@ -149,11 +149,6 @@ static const uint32_t hyperv_formats[] = {
-> >         DRM_FORMAT_XRGB8888,
-> >   };
-> >   
-> > -static const uint64_t hyperv_modifiers[] = {
-> > -       DRM_FORMAT_MOD_LINEAR,
-> > -       DRM_FORMAT_MOD_INVALID
-> > -};
-> 
-> This constant should rather be used in the call to 
-> drm_simple_display_pipe_init(). [1]
-> 
-> Best regards
-> Thomas
-> 
-> [1] 
-> https://cgit.freedesktop.org/drm/drm-misc/tree/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c#n161
-> 
+> dma_map_single just calls dma_map_page using virt_to_page.  So this
+> can't work on addresses not in the kernel linear mapping.
 > 
 
-Hi Pu,
+The pages in the hv_page_buffer array here are in the kernel linear 
+mapping. The packet sent to host will contain an array which contains 
+transaction data. In the isolation VM, data in the these pages needs to 
+be copied to bounce buffer and so call dma_map_single() here to map 
+these data pages with bounce buffer. The vmbus has ring buffer where the 
+send/receive packets are copied to/from. The ring buffer has been 
+remapped to the extra space above shared gpa boundary/vTom during 
+probing Netvsc driver and so not call dma map function for vmbus ring
+buffer.
 
-Thanks for the patch. Is it possible to send another patch as per
-suggestion by Thomas. There is a kernel test robot failure as well.
 
-Deepak
+
 
