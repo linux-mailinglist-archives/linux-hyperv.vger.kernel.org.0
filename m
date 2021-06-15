@@ -2,62 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 165E03A6A7D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Jun 2021 17:33:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C90113A73F8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jun 2021 04:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233571AbhFNPfr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Jun 2021 11:35:47 -0400
-Received: from verein.lst.de ([213.95.11.211]:45003 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232985AbhFNPfp (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Jun 2021 11:35:45 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4E32868AFE; Mon, 14 Jun 2021 17:33:39 +0200 (CEST)
-Date:   Mon, 14 Jun 2021 17:33:39 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        rppt@kernel.org, hannes@cmpxchg.org, cai@lca.pw,
-        krish.sadhukhan@oracle.com, saravanand@fb.com,
-        Tianyu.Lan@microsoft.com, konrad.wilk@oracle.com,
-        m.szyprowski@samsung.com, robin.murphy@arm.com,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, joro@8bytes.org, will@kernel.org,
-        xen-devel@lists.xenproject.org, davem@davemloft.net,
-        kuba@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        vkuznets@redhat.com, thomas.lendacky@amd.com,
-        brijesh.singh@amd.com, sunilmut@microsoft.com
-Subject: Re: [RFC PATCH V3 10/11] HV/Netvsc: Add Isolation VM support for
- netvsc driver
-Message-ID: <20210614153339.GB1741@lst.de>
-References: <20210530150628.2063957-1-ltykernel@gmail.com> <20210530150628.2063957-11-ltykernel@gmail.com> <20210607065007.GE24478@lst.de> <279cb4bf-c5b6-6db9-0f1e-9238e902c8f2@gmail.com> <20210614070903.GA29976@lst.de> <e10c2696-23c3-befe-4f4d-25e18918132f@gmail.com>
+        id S230313AbhFOCbU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Jun 2021 22:31:20 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:10057 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230302AbhFOCbU (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 14 Jun 2021 22:31:20 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4G3sD16pGXzZdcf;
+        Tue, 15 Jun 2021 10:08:01 +0800 (CST)
+Received: from dggpemm500019.china.huawei.com (7.185.36.180) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 15 Jun 2021 10:10:56 +0800
+Received: from [10.67.109.184] (10.67.109.184) by
+ dggpemm500019.china.huawei.com (7.185.36.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 15 Jun 2021 10:10:56 +0800
+Subject: Re: [PATCH -next] drm/hyperv: Remove unused variable
+To:     Deepak Rawat <drawat.floss@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>
+CC:     <zhangjinhao2@huawei.com>, <linux-hyperv@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>
+References: <20210609024940.34933-1-pulehui@huawei.com>
+ <078d9bb5-e7af-4961-f4c1-cd3ab415cff4@suse.de>
+ <2bf51ac723cb097685dd4c89926599d939d31765.camel@gmail.com>
+From:   Pu Lehui <pulehui@huawei.com>
+Message-ID: <5944abf7-7535-f425-fdc3-58e6bd032186@huawei.com>
+Date:   Tue, 15 Jun 2021 10:10:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e10c2696-23c3-befe-4f4d-25e18918132f@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <2bf51ac723cb097685dd4c89926599d939d31765.camel@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.109.184]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500019.china.huawei.com (7.185.36.180)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jun 14, 2021 at 10:04:06PM +0800, Tianyu Lan wrote:
-> The pages in the hv_page_buffer array here are in the kernel linear 
-> mapping. The packet sent to host will contain an array which contains 
-> transaction data. In the isolation VM, data in the these pages needs to be 
-> copied to bounce buffer and so call dma_map_single() here to map these data 
-> pages with bounce buffer. The vmbus has ring buffer where the send/receive 
-> packets are copied to/from. The ring buffer has been remapped to the extra 
-> space above shared gpa boundary/vTom during probing Netvsc driver and so 
-> not call dma map function for vmbus ring
-> buffer.
 
-So why do we have all that PFN magic instead of using struct page or
-the usual kernel I/O buffers that contain a page pointer?
+
+On 2021/6/14 22:01, Deepak Rawat wrote:
+> On Wed, 2021-06-09 at 09:46 +0200, Thomas Zimmermann wrote:
+>> Hi
+>>
+>> Am 09.06.21 um 04:49 schrieb Pu Lehui:
+>>> Fixes gcc '-Wunused-const-variable' warning:
+>>>     drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:152:23: warning:
+>>>       'hyperv_modifiers' defined but not used [-Wunused-const-
+>>> variable=]
+>>>
+>>> Signed-off-by: Pu Lehui <pulehui@huawei.com>
+>>> ---
+>>>    drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 5 -----
+>>>    1 file changed, 5 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+>>> b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+>>> index 02718e3e859e..3f83493909e6 100644
+>>> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+>>> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+>>> @@ -149,11 +149,6 @@ static const uint32_t hyperv_formats[] = {
+>>>          DRM_FORMAT_XRGB8888,
+>>>    };
+>>>    
+>>> -static const uint64_t hyperv_modifiers[] = {
+>>> -       DRM_FORMAT_MOD_LINEAR,
+>>> -       DRM_FORMAT_MOD_INVALID
+>>> -};
+>>
+>> This constant should rather be used in the call to
+>> drm_simple_display_pipe_init(). [1]
+>>
+>> Best regards
+>> Thomas
+>>
+>> [1]
+>> https://cgit.freedesktop.org/drm/drm-misc/tree/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c#n161
+>>
+>>
+> 
+> Hi Pu,
+> 
+> Thanks for the patch. Is it possible to send another patch as per
+> suggestion by Thomas. There is a kernel test robot failure as well.
+> 
+> Deepak
+> 
+> .
+> 
+Hi Deepak,
+
+Thanks for your reply, I will send v2 soon.
+
+Best regards
+Lehui
