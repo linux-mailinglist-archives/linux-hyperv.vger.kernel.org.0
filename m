@@ -2,75 +2,174 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5F773A74BF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jun 2021 05:13:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6244A3A7A77
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jun 2021 11:25:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230136AbhFODPX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Jun 2021 23:15:23 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:10066 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230385AbhFODPR (ORCPT
+        id S231152AbhFOJ1d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 15 Jun 2021 05:27:33 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:38992 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231238AbhFOJ1c (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Jun 2021 23:15:17 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4G3tbs6dwmzZdg8;
-        Tue, 15 Jun 2021 11:10:17 +0800 (CST)
-Received: from dggpemm500019.china.huawei.com (7.185.36.180) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 15 Jun 2021 11:13:12 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.98) by
- dggpemm500019.china.huawei.com (7.185.36.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 15 Jun 2021 11:13:12 +0800
-From:   Pu Lehui <pulehui@huawei.com>
-To:     <drawat.floss@gmail.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <tzimmermann@suse.de>
-CC:     <linux-hyperv@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <pulehui@huawei.com>,
-        <zhangjinhao2@huawei.com>
-Subject: [PATCH v2 -next] drm/hyperv: Fix unused const variable 'hyperv_modifiers'
-Date:   Tue, 15 Jun 2021 11:14:01 +0800
-Message-ID: <20210615031401.231751-1-pulehui@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210609024940.34933-1-pulehui@huawei.com>
+        Tue, 15 Jun 2021 05:27:32 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id DA9E5219D9;
+        Tue, 15 Jun 2021 09:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1623749127; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wkrt2I7n4dqe/apiwY6bErCGbPoxzB9wmIHRvqFeTUk=;
+        b=KPw+PR0I7Ui6aI5VMEpGCUYtCc1YQUamG6vEkNWwcTx/HEJqoIvBhR7p6l2aFjr6XpcO92
+        ltwhlIHRvrSjlukY7sxCiDzDZTEbdo2v3qH8d/IDIG76AH9LPhlqCH6AhbeftehFpVOqRY
+        CrLl7nqo4bP2x2A6cEDRl4Kj3Xh4qoo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1623749127;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wkrt2I7n4dqe/apiwY6bErCGbPoxzB9wmIHRvqFeTUk=;
+        b=Cp/UPq4BCBgiwlrvmcPb0HPvrbfK9sLEEPW7dF8RycIh/l8c7iVSZWwaFMPX4uFnNt0Ewg
+        2XZZSS+zDOrZpbAQ==
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id B28A2118DD;
+        Tue, 15 Jun 2021 09:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1623749127; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wkrt2I7n4dqe/apiwY6bErCGbPoxzB9wmIHRvqFeTUk=;
+        b=KPw+PR0I7Ui6aI5VMEpGCUYtCc1YQUamG6vEkNWwcTx/HEJqoIvBhR7p6l2aFjr6XpcO92
+        ltwhlIHRvrSjlukY7sxCiDzDZTEbdo2v3qH8d/IDIG76AH9LPhlqCH6AhbeftehFpVOqRY
+        CrLl7nqo4bP2x2A6cEDRl4Kj3Xh4qoo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1623749127;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wkrt2I7n4dqe/apiwY6bErCGbPoxzB9wmIHRvqFeTUk=;
+        b=Cp/UPq4BCBgiwlrvmcPb0HPvrbfK9sLEEPW7dF8RycIh/l8c7iVSZWwaFMPX4uFnNt0Ewg
+        2XZZSS+zDOrZpbAQ==
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id sPysKgdyyGCzeQAALh3uQQ
+        (envelope-from <tzimmermann@suse.de>); Tue, 15 Jun 2021 09:25:27 +0000
+Subject: Re: [PATCH v2 -next] drm/hyperv: Fix unused const variable
+ 'hyperv_modifiers'
+To:     Pu Lehui <pulehui@huawei.com>, drawat.floss@gmail.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     zhangjinhao2@huawei.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 References: <20210609024940.34933-1-pulehui@huawei.com>
+ <20210615031401.231751-1-pulehui@huawei.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <c1b10848-d2f1-ddd2-8a69-a356f70da089@suse.de>
+Date:   Tue, 15 Jun 2021 11:25:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.98]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500019.china.huawei.com (7.185.36.180)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20210615031401.231751-1-pulehui@huawei.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="ndFCefi0rNgLGvXQF3Uw0UuWJRtVF2RX4"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-There is a gcc '-Wunused-const-variable' warning:
-  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:152:23: warning:
-    'hyperv_modifiers' defined but not used [-Wunused-const-variable=]
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--ndFCefi0rNgLGvXQF3Uw0UuWJRtVF2RX4
+Content-Type: multipart/mixed; boundary="zEJlwBFnUtuFl5yIxH4kjjKDlu3GQO33D";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Pu Lehui <pulehui@huawei.com>, drawat.floss@gmail.com, airlied@linux.ie,
+ daniel@ffwll.ch
+Cc: zhangjinhao2@huawei.com, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Message-ID: <c1b10848-d2f1-ddd2-8a69-a356f70da089@suse.de>
+Subject: Re: [PATCH v2 -next] drm/hyperv: Fix unused const variable
+ 'hyperv_modifiers'
+References: <20210609024940.34933-1-pulehui@huawei.com>
+ <20210615031401.231751-1-pulehui@huawei.com>
+In-Reply-To: <20210615031401.231751-1-pulehui@huawei.com>
 
-while the variable should be used in drm_simple_display_pipe_init()
-as suggested by Thomas, let's fix it.
+--zEJlwBFnUtuFl5yIxH4kjjKDlu3GQO33D
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
-Signed-off-by: Pu Lehui <pulehui@huawei.com>
----
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 02718e3e859e..3aaee4730ec6 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -163,7 +163,7 @@ static inline int hyperv_pipe_init(struct hyperv_drm_device *hv)
- 					   &hyperv_pipe_funcs,
- 					   hyperv_formats,
- 					   ARRAY_SIZE(hyperv_formats),
--					   NULL,
-+					   hyperv_modifiers,
- 					   &hv->connector);
- 	if (ret)
- 		return ret;
--- 
-2.17.1
+Am 15.06.21 um 05:14 schrieb Pu Lehui:
+> There is a gcc '-Wunused-const-variable' warning:
+>    drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:152:23: warning:
+>      'hyperv_modifiers' defined but not used [-Wunused-const-variable=3D=
+]
+>=20
+> while the variable should be used in drm_simple_display_pipe_init()
+> as suggested by Thomas, let's fix it.
 
+Thanks a lot! I added your patch to drm-misc-next-fixes.
+
+Best regards
+Thomas
+
+>=20
+> Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic v=
+ideo device")
+> Signed-off-by: Pu Lehui <pulehui@huawei.com>
+> ---
+>   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/=
+drm/hyperv/hyperv_drm_modeset.c
+> index 02718e3e859e..3aaee4730ec6 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> @@ -163,7 +163,7 @@ static inline int hyperv_pipe_init(struct hyperv_dr=
+m_device *hv)
+>   					   &hyperv_pipe_funcs,
+>   					   hyperv_formats,
+>   					   ARRAY_SIZE(hyperv_formats),
+> -					   NULL,
+> +					   hyperv_modifiers,
+>   					   &hv->connector);
+>   	if (ret)
+>   		return ret;
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--zEJlwBFnUtuFl5yIxH4kjjKDlu3GQO33D--
+
+--ndFCefi0rNgLGvXQF3Uw0UuWJRtVF2RX4
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmDIcgcFAwAAAAAACgkQlh/E3EQov+BD
+Bw//Xqc6PQ7vXQPGpR0cdFSqVsZ/bQtd3M97nBU4bLbHf7pVoq8r6uTaxsO9L2oB8bEuoUdI0uct
+MaccFeHxIKNuOQEKrztR3OhwjRA18HNyEa/BrKyCn3Vl4rySgBdpyxk3Wz4dYrQDGuirAlts3+Sy
+zE/T0FS4OKCeUPZB3CEnmMTPazlUz4mPNTX7BNb0Lu4EN3mFMUlC0olHLzySwuvumNX7dJ1fssww
+2bFQT+a1awY5actNRIJHkROEdt8Ahls41E3ArlZ8lEe74TbIEsYyOvB70IuuLeUQlTRmk/dnbb4G
+N/xln9Jpb+UAOM6oc3D7MbPBqtYWcfSqrhmpL29bybjwumz70awDy1LknbxYrQP1TkMrmgajRrus
+lOJoRri4+iDlPlVA4J4zxJ4Za/Y1n89uivOgHbnZVUJXPbG/Zega7i8nuIoVn76Ts1+y3mpqhhgg
+yWYZ7AhpgNvD47GgAFmYrcPcqrArpo8en5sk6FngOth8DZ/ln1ugd9vIwHpYjs0HwlS8VQzG7SRo
+cCeQxCdvES+5QAhzgNpCab3RbCGstW3BOkFgpeClD1Gjwki6zbfWrfFJEpXaPGnhVJX80APKGi9L
+Hpt+x0cD8uRJnUFdlHT7IHm+YC2FxLWg2shKbQPBDqcl/RWfa+n6towlmJvIThcsg0jJVFzjK4P2
+dfI=
+=zEWF
+-----END PGP SIGNATURE-----
+
+--ndFCefi0rNgLGvXQF3Uw0UuWJRtVF2RX4--
