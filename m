@@ -2,93 +2,114 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF2C43A82B4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jun 2021 16:25:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED7743A82E2
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Jun 2021 16:31:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231381AbhFOO1S (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 15 Jun 2021 10:27:18 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:43360 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231417AbhFOO0W (ORCPT
+        id S230113AbhFOOdv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 15 Jun 2021 10:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230076AbhFOOdu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 15 Jun 2021 10:26:22 -0400
-Received: from [192.168.86.35] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 46E8720B6C50;
-        Tue, 15 Jun 2021 07:24:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 46E8720B6C50
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1623767057;
-        bh=cTHCck5KxKI/CP9LuHPjfsJBbv22Q8bxdprLpu918Iw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gVGORou0bGGK/tDWC+ScR4xEWsbnBBcs7/CdN1MOHGlJIH94UjEqOAvgBSDKHS35O
-         ceRtBHHCZbXj840On4Gh5lNTG9vo8IO0hh39xOjN8gOoSv2dGDgXnASaf84hDDoEPT
-         HtxukizWCqySB5fOlL+ii6Hx3XawlTf52rssJQWI=
-Subject: Re: [PATCH v5 7/7] KVM: SVM: hyper-v: Direct Virtual Flush support
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Lan Tianyu <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-References: <cover.1622730232.git.viremana@linux.microsoft.com>
- <fc8d24d8eb7017266bb961e39a171b0caf298d7f.1622730232.git.viremana@linux.microsoft.com>
- <878s3c65nr.fsf@vitty.brq.redhat.com>
-From:   Vineeth Pillai <viremana@linux.microsoft.com>
-Message-ID: <73508c14-3ca6-1d20-8f9e-14bd966c849a@linux.microsoft.com>
-Date:   Tue, 15 Jun 2021 10:24:14 -0400
+        Tue, 15 Jun 2021 10:33:50 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E0C5C061574;
+        Tue, 15 Jun 2021 07:31:45 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id a127so7581321pfa.10;
+        Tue, 15 Jun 2021 07:31:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=09f7flVgvhf5eQwpZCIbvOGTARFj7yeM2HilMpzlWLk=;
+        b=jk2oxSkqx62fHfzZ2Td3CQMKVDfVLX5soiM/JukpALSNJHJr6bPDtlz3KWKAxXo94O
+         s/hllSh2es9DhRUKAKUitklZDcf/EnVOKXhkOj9PYfOCpVShjA/ALCwL9qmhEU6/Uawa
+         XK557NRD7ifNeZzvRQOvgq1OjZVLzX0tIkT8t770jqHE0cKYFvqhPHbZNRgnhaDUZKFF
+         qX9q9wmOAxzVgsgD1wpLoriKUlqy7RCPkNZ1jG4aLxQucHRt8DEitzL0SOUV96Pc1UDE
+         2mXJY2Jw/0wFzqk5I0o9iVdLMmeZJJ8WeATZpVLS5cPgmlZCB/DeT8DlSYdBw+t/FiNV
+         Ts4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=09f7flVgvhf5eQwpZCIbvOGTARFj7yeM2HilMpzlWLk=;
+        b=LwuxIzy9pg+zHfZXKOoMDDHdPL4iwbga1lkeOmj8z4a79H6tthZ6VmA1omj3bvfPYk
+         5ibSpIwbNCIwENqu+YVo/qllWVn4NhlHHJgYxq4ryoM2eSdwSBjlg1Sx+OrMNq7NdojQ
+         4afvgvbx27WSSvpTJ+o8A4gtoyMR+rBpedb4qNAa62n6I2QLnhisGLW3W3/VB79tpzUM
+         iv8lV/ReZRwuGM31Tkxw04qTCMJM8YgcZIkb0jBA7hc/DKPJXfYEYWTJgkoIMtKbXOr9
+         uHCHHFuYVIXNkskgWrp4D5ACeEyXLXkR1V16t7/ndKa038mxFM4lkuthDRk6g02mid8L
+         gKoQ==
+X-Gm-Message-State: AOAM530h9mUzaqcVFQgJjN/YMhjBL3L9+NqQb84sdq35JVWwm1ozNr4X
+        2qmv7sTBnjoEo9c3hTmoqyY=
+X-Google-Smtp-Source: ABdhPJyHvlYi58GrVtZOOV1UUSDfdDdKTtRA2DlWTeNf7j5KzC+iOROVnZire7W4JyUnDsrG1dvTzA==
+X-Received: by 2002:a65:550e:: with SMTP id f14mr22678348pgr.160.1623767504841;
+        Tue, 15 Jun 2021 07:31:44 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
+        by smtp.gmail.com with ESMTPSA id fy16sm2711030pjb.49.2021.06.15.07.31.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Jun 2021 07:31:44 -0700 (PDT)
+Subject: Re: [RFC PATCH V3 10/11] HV/Netvsc: Add Isolation VM support for
+ netvsc driver
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        arnd@arndb.de, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, rppt@kernel.org,
+        hannes@cmpxchg.org, cai@lca.pw, krish.sadhukhan@oracle.com,
+        saravanand@fb.com, Tianyu.Lan@microsoft.com,
+        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, joro@8bytes.org, will@kernel.org,
+        xen-devel@lists.xenproject.org, davem@davemloft.net,
+        kuba@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, thomas.lendacky@amd.com,
+        brijesh.singh@amd.com, sunilmut@microsoft.com
+References: <20210530150628.2063957-1-ltykernel@gmail.com>
+ <20210530150628.2063957-11-ltykernel@gmail.com>
+ <20210607065007.GE24478@lst.de>
+ <279cb4bf-c5b6-6db9-0f1e-9238e902c8f2@gmail.com>
+ <20210614070903.GA29976@lst.de>
+ <e10c2696-23c3-befe-4f4d-25e18918132f@gmail.com>
+ <20210614153339.GB1741@lst.de>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <7d86307f-83ff-03ad-c6e9-87b455c559b8@gmail.com>
+Date:   Tue, 15 Jun 2021 22:31:31 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <878s3c65nr.fsf@vitty.brq.redhat.com>
+In-Reply-To: <20210614153339.GB1741@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Vitaly,
->> +
->> +static inline void svm_hv_update_vp_id(struct vmcb *vmcb,
->> +		struct kvm_vcpu *vcpu)
->> +{
->> +	struct hv_enlightenments *hve =
->> +		(struct hv_enlightenments *)vmcb->control.reserved_sw;
->> +
->> +	if (hve->hv_vp_id != to_hv_vcpu(vcpu)->vp_index) {
->> +		hve->hv_vp_id = to_hv_vcpu(vcpu)->vp_index;
->> +		vmcb_mark_dirty(vmcb, VMCB_HV_NESTED_ENLIGHTENMENTS);
->> +	}
-> This blows up in testing when no Hyper-V context was created on a vCPU,
-> e.g. when running KVM selftests (to_hv_vcpu(vcpu) is NULL when no
-> Hyper-V emulation features were requested on a vCPU but
-> svm_hv_update_vp_id() is called unconditionally by svm_vcpu_run()).
->
-> I'll be sending a patch to fix the immediate issue but I was wondering
-> why we need to call svm_hv_update_vp_id() from svm_vcpu_run() as VP
-> index is unlikely to change; we can probably just call it from
-> kvm_hv_set_msr() instead.
-Thanks a lot for catching this.
+On 6/14/2021 11:33 PM, Christoph Hellwig wrote:
+> On Mon, Jun 14, 2021 at 10:04:06PM +0800, Tianyu Lan wrote:
+>> The pages in the hv_page_buffer array here are in the kernel linear
+>> mapping. The packet sent to host will contain an array which contains
+>> transaction data. In the isolation VM, data in the these pages needs to be
+>> copied to bounce buffer and so call dma_map_single() here to map these data
+>> pages with bounce buffer. The vmbus has ring buffer where the send/receive
+>> packets are copied to/from. The ring buffer has been remapped to the extra
+>> space above shared gpa boundary/vTom during probing Netvsc driver and so
+>> not call dma map function for vmbus ring
+>> buffer.
+> 
+> So why do we have all that PFN magic instead of using struct page or
+> the usual kernel I/O buffers that contain a page pointer?
+> 
 
-I think you are right, updating at kvm_hv_set_msr() makes sense. I was
-following the vmx logic where it also sets the vp_id in vmx_vcpu_run. But it
-calls a wrapper "kvm_hv_get_vpindex" which actually checks if hv_vcpu is not
-null before the assignment. I should have used that instead, my mistake.
-I will look a bit more into it and send out a patch for vmx and svm 
-after little
-more investigation.
-
-Thanks,
-Vineeth
-
+These PFNs originally is part of Hyper-V protocol data and will be sent
+to host. Host accepts these GFN and copy data from/to guest memory. The 
+translation from va to pa is done by caller that populates the 
+hv_page_buffer array. I will try calling dma map function before 
+populating struct hv_page_buffer and this can avoid redundant 
+translation between PA and VA.
