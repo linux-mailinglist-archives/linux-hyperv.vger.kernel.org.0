@@ -2,132 +2,95 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 433953ADF87
-	for <lists+linux-hyperv@lfdr.de>; Sun, 20 Jun 2021 18:58:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B83603ADFC8
+	for <lists+linux-hyperv@lfdr.de>; Sun, 20 Jun 2021 20:28:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbhFTRAt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 20 Jun 2021 13:00:49 -0400
-Received: from mail-mw2nam12on2097.outbound.protection.outlook.com ([40.107.244.97]:44641
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229605AbhFTRAs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 20 Jun 2021 13:00:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B3T1HwMvd1fb3zytdFZDwhGjyhpjRuWN98OMCodzxxmVCduUwl+Hsu23TU5WJfo5DkWezE3uBla1B6l5XzSFJUHMN5Bes8wP/y4QPn3lkmZDXK+NIupHfO08gCySgdVSGMeTAGISKZI7QieCPkKJeBUGJMrTXI0uY+9czKfYzmVpNKA0v8C0Jc98MOJZwFhA9vQdV13bcTiHPYhYILegZ52V/MafnJgloRJHKSxD46aIC/7tKOhmM1P7lxNgPxSr0NbSxr5hgEUg1GNRD9P/EiTBHp6fjZ2zA5/gs16qkgk1lILPzztNT1WbgqWUzszBGlz1tNL5eq+t1FBLAT0HoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H/eUANXmbBI03iPAFtFMbTXL3Lmsqk9K4ydlQTOgVJQ=;
- b=YPYhJrsxeK1W0xWF7Afas2F50AJEdgAf8M2/rzP5jPC2vZ5AuiaNn0wl17gWq1WPHnWuJbeOOImllmdqPSEEwfz+e6B9xHLBS2jY21KsuWpFLj1zYubWNU3wmUs4/u7upNJyk1h1cljTpHNA+V5XO75TnhAGserlm7HaYw/tWiJZ1j9k0IY2LVrLrz8kHstkFO7TMSluYZ/jlzJlM2qkGWI95zj15QfvwMaJocUN+KJoWaKNCdOwbRgsDIha/4c7dF44mBun6bE5t3+SDnCOY2et5dz91+x08uV3rHtms5lA1iwnTcjg3am9wK7wMMaZ57tnuRV3tScHTQ/dEQMvZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H/eUANXmbBI03iPAFtFMbTXL3Lmsqk9K4ydlQTOgVJQ=;
- b=PolmI/S1uJsVz4CIOQcZAK3XZCULPGTuLj+dLqzXga63Id2xgl/skjBCcvWfoFkkbkSw8BjW2pNrXaUkBQ6iYXPRqzP8uNNfE+Mc66ChhXizee6JGA2RSoG5GUBc5mYGXoL67vCqzmKn6RKguM/boaSdenw8ukQKJBmntjHiNLQ=
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
- by BY5PR21MB1442.namprd21.prod.outlook.com (2603:10b6:a03:236::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.3; Sun, 20 Jun
- 2021 16:58:33 +0000
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::7ded:3b9f:50cf:d38c]) by BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::7ded:3b9f:50cf:d38c%5]) with mapi id 15.20.4264.011; Sun, 20 Jun 2021
- 16:58:33 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        Shachar Raindel <shacharr@microsoft.com>,
-        "gustavoars@kernel.org" <gustavoars@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH] net: mana: Fix a memory leak in an error handling path in
- 'mana_create_txq()'
-Thread-Topic: [PATCH] net: mana: Fix a memory leak in an error handling path
- in 'mana_create_txq()'
-Thread-Index: AQHXZdpHPvfj1IU9lk+ONqlh/jEYFqsdHvpQ
-Date:   Sun, 20 Jun 2021 16:58:32 +0000
-Message-ID: <BYAPR21MB12709AFD3F2B771400667055BF0B9@BYAPR21MB1270.namprd21.prod.outlook.com>
-References: <578bcaa1a9d6916c86aaecf65f205492affb6fc8.1624196430.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <578bcaa1a9d6916c86aaecf65f205492affb6fc8.1624196430.git.christophe.jaillet@wanadoo.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4359f670-00bf-40a7-afe1-5f71514ba75a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-06-20T16:57:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: wanadoo.fr; dkim=none (message not signed)
- header.d=none;wanadoo.fr; dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 075d5b95-82e0-4d81-fae2-08d9340ca36d
-x-ms-traffictypediagnostic: BY5PR21MB1442:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR21MB1442D94CA9DBAFC8A1A1CBABBF0B9@BY5PR21MB1442.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ic0bSVZdPBQ6ZQ/4tkhgDB1aIhVoz2yB6EopYCNCtPQalIHmSJFdeLhmGCl2eXJM74n/rMauWLxJuIex3pmzzt7u+N0Aqm3Ss7H66sYmsFtvNOlgMWJqgGbErvOHlljmeVVkYFcg613rmgGXnttn9/Dw430kM9U4G5FPVUUdN7taWebiPNr7M+WKIACQtEkPTvog92Ix5D9Lff8wGTJW5J8XwnbQ2y/wNTSuI7z2fxn7WZnogDQWWec6i82otqIX+LG3KR7JXdVyTzvpNuq8l2gKSOF7eWPrOQMHQ44qezpIxDMVdufgrG09S5k7bq1PUe9zyexei7RqyOX+Qudgy7f6s6B6FzzXLYB7C/uWh59iNWnjSVTXT8/pV9eCTZA4i/tYWSrGU5v0O5TeMHZFdvWmLvIJQ6Ymuv5/bVdlrUhOyhTEB46qZ7XpUg+Pv6BU76Xven1Qps91Ay5Bnpjr1LUtXgOVACe6FNXKd43GaSnwgM5GcXVW/cbJf0VQfiQAIawGSB7dLLTpRhyQNRqQK1qkraXWTURyTO+x/nFDY2a3CalM80H55aL+kXclx1qktZH8ryEkvi+WRxoN+8sCZFhEN890dckpxgkvJySWeKkO+6exFkgn/qBW3wILm8M3xNVtym9qIIllo80IgW0oXw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(55016002)(86362001)(64756008)(82960400001)(4326008)(66946007)(66446008)(54906003)(2906002)(4744005)(66476007)(122000001)(66556008)(52536014)(110136005)(316002)(8676002)(82950400001)(9686003)(478600001)(76116006)(7696005)(33656002)(186003)(71200400001)(8990500004)(10290500003)(8936002)(6506007)(5660300002)(38100700002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?cU8ZlQKhWgaZl9Paqgbg4L9u4Lf+ZEAIswzufL6+T1NnSMjVnVBkcMgkD9cW?=
- =?us-ascii?Q?f5MbmwHr8KK0YDcxQGTrmmlhJ1hKn/GBHWpdoHq1XlNcJQxwEw7NW+NBEnFX?=
- =?us-ascii?Q?fVzXxcOc2roFqkZtl1NmUVkfGSBGVraxnD6sNa0KPeHdS9SylXCuz3E4gAbS?=
- =?us-ascii?Q?5iVIxdOMr68tkS+Q8nVIShzbeK2qnRIAWIuIam7rUgCJGwGsgOqshoz3CdHy?=
- =?us-ascii?Q?K9sa03RnMqRcWqEKBsiiieem5D/Txuk+kKZyc2mIdx0RtJpxRZeA7PVW7fia?=
- =?us-ascii?Q?kJAJO4EPvcYibxsR+xy/ndHUoEXm9zelvEQUlS8Agjyk990tfcKQrEmjCy17?=
- =?us-ascii?Q?FdSRoHKzL1rYPxy7vtT3Et3Al6Vjc/WJSQqBh1HWgP7yqCNBh6YXDONro/Qj?=
- =?us-ascii?Q?WZMqHXniJM7pUS4A0RhDhv5sdzjw9cg977f7omPbfestV8/hAqtqy8H9gfpv?=
- =?us-ascii?Q?7S23LDIf9kORjjRl/beQXaVv38Y9YYwq4l8x4+Py+Aqf67z/xWNofzPII1yz?=
- =?us-ascii?Q?Uqyz3CqkUOaD+GqBxRRCPM/hDKD371aaxXAaCR2WJJYSBzLo4KnmwtV2lZqp?=
- =?us-ascii?Q?1avgGvzsbl1tzF1lJmOHHkYZuCIrZpMxFdcxDTkdNp92Hbqgxa0/NRbbP9+9?=
- =?us-ascii?Q?s4nnAVSaHt/fF8QMM9x2PWDigxXAUOjJu7/q4JcK25aJOKzPMNXw6YrMZ3fY?=
- =?us-ascii?Q?PYWVt91ql+gB5mgYph+/I2Kn2DLN8FHInijapsQ1exiQuET2nZBivDn6Fnvw?=
- =?us-ascii?Q?M5+AIoS0OU4fkkVQKsrX1v/AbhgIbuFxts2fNDLKprSLjcw5l4mpxhkXdwgU?=
- =?us-ascii?Q?krewsbqwUkuM5gIu49tijBv/VUkGQ7/sC1pJFJ8y4tsZtlou4aNg+sbooO3a?=
- =?us-ascii?Q?nijSiK/wY02MZcheVio3c5wjfRpCGU/XKLkW4kU6iIk8CRS5GhoW/E8tTrgZ?=
- =?us-ascii?Q?83DTEQxQOPwdWqxixxEau9GhOWzKJJJoMerhRxlh+4gtyjco3QS8yvgpWlkF?=
- =?us-ascii?Q?hSoRFzxi4Tv9hAHXz4mOu9sdixRfH38cZpYm/9cV/fPmHp++9cYdC+B8zSvf?=
- =?us-ascii?Q?6I4At2QtPyQrx36Jl/60bo9ouTTEAkk5YGcukTjDslqzGYX/26L6/Nz29HMJ?=
- =?us-ascii?Q?J5NRYeBW4agYeY8T47mqbkKqFAtK9LF3WyB9Ku72PeXn58IdEamq7SBcFNCx?=
- =?us-ascii?Q?AaNi5udeAAE3oQyPpAHKJ5OUE+42Zl80QWKKeRv3o574diYVzMKLrisBE0gi?=
- =?us-ascii?Q?wPPXSEtpA8jfIM8q02yhOxwaIPfYd3gyRpKtvzAhLKkuYpWRsazI4tQCAazN?=
- =?us-ascii?Q?bly2k1JUqMwHwshYLHxKBtXqbG4h8zKbcJtNX61krpi9KTS/jgedBCHUwsvh?=
- =?us-ascii?Q?YRzgCupFQiYF9/kNCdDREg+Ve6Kx?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S229887AbhFTSa7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 20 Jun 2021 14:30:59 -0400
+Received: from bosmailout01.eigbox.net ([66.96.190.1]:55789 "EHLO
+        bosmailout01.eigbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229877AbhFTSa7 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 20 Jun 2021 14:30:59 -0400
+X-Greylist: delayed 1848 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Jun 2021 14:30:58 EDT
+Received: from bosmailscan08.eigbox.net ([10.20.15.8])
+        by bosmailout01.eigbox.net with esmtp (Exim)
+        id 1lv1hl-0007jw-6l; Sun, 20 Jun 2021 13:57:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=one2up.com;
+         s=dkim; h=Sender:Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:
+        Subject:To:From:Date:MIME-Version:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=jmE1AiZh2hRjSAJKb374hqGQMjwd8yzDFHujSXNaAio=; b=hxL3a5JGZVrPsT4BZ3INgHtj0v
+        4wUp30P0xcLgyNocGAHJRhT8ME1gOBcvfE6BCIsbYAt18Fxe3Anrfj2iIG00ahdGc73mmaxdlWC2S
+        jETsEgPwOCSD2tWvr1oijrQKGYQIeIZXWL8hTrB1bmxBD8sf1S/vtU7EF1J7ysPushR8V77AB0TqW
+        YbqLRsU8Y6Raui0EqyPsbNZGtXlExuUEWOjGYrvWVwVLapuL7PbuABRdFTCX0QsiuIVU4bBsQKvb8
+        w3/INrqEJ46I/qW4kQr8e2fAo5irLC3YfeJmeyEfKkkr/rWx5mY7Yb2tGPggC12Z6pk9vkg4OUF8K
+        7sv5LZrw==;
+Received: from [10.115.3.32] (helo=bosimpout12)
+        by bosmailscan08.eigbox.net with esmtp (Exim)
+        id 1lv1hk-0007S7-Tk; Sun, 20 Jun 2021 13:57:56 -0400
+Received: from boswebmail06.eigbox.net ([10.20.16.6])
+        by bosimpout12 with 
+        id KVxb2500207qujN01VxvKG; Sun, 20 Jun 2021 13:57:56 -0400
+X-Authority-Analysis: v=2.3 cv=d4VuNSrE c=1 sm=1 tr=0
+ a=6UvTeE69TtFSa5QzM5i0cA==:117 a=s85fwUeWJGXiUVIlSDeGBw==:17
+ a=SvjdIzx6mOYA:10 a=IkcTkHD0fZMA:10 a=r6YtysWOX24A:10 a=x7bEGLp0ZPQA:10
+ a=pGLkceISAAAA:8 a=vXFT2s5udkHzzsxN6-UA:9 a=QEXdDO2ut3YA:10 a=cW4oh5Qe6X0A:10
+ a=GXyWIPpY65UA:10 a=Twul1aCTu4YpY56LwQMJ:22 a=20QYsiCpIQ5eNXUT7wNh:22
+Received: from [127.0.0.1] (helo=homestead)
+        by boswebmail06.eigbox.net with esmtp (Exim)
+        id 1lv1hi-00057R-DZ; Sun, 20 Jun 2021 13:57:54 -0400
+Received: from [197.239.81.59]
+ by emailmg.homestead.com
+ with HTTP (HTTP/1.1 POST); Sun, 20 Jun 2021 13:57:54 -0400
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 075d5b95-82e0-4d81-fae2-08d9340ca36d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2021 16:58:33.0714
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hI30++tNeWlFaexNMBsWiiZZuQbI9tzOac0KKWW8dzC2hQXxiTLkSo0n1kTNWXv1ysimiDvWzjS3uhu8YVfweA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1442
+Date:   Sun, 20 Jun 2021 18:57:54 +0100
+From:   "Mr. Ibrahim Abdoul" <responds@one2up.com>
+To:     undisclosed-recipients:;
+Subject: URGENT RESPONDS NEEDED
+Reply-To: mr.ibrahimabdoul2020@gmail.com
+Mail-Reply-To: mr.ibrahimabdoul2020@gmail.com
+Message-ID: <b1a675ad0dd9a766c804a0e94b00900f@one2up.com>
+X-Sender: responds@one2up.com
+User-Agent: Roundcube Webmail/1.3.14
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-EN-AuthUser: responds@one2up.com
+Sender:  "Mr. Ibrahim Abdoul" <responds@one2up.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Sent: Sunday, June 20, 2021 6:43 AM
->=20
-> If this test fails we must free some resources as in all the other error
-> handling paths of this function.
->=20
-> Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network
-> Adapter (MANA)")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+
+Dear Friend,
+
+My name is Mr. Ibrahim Abdoul. If the content of this message is 
+contrary to your moral ethics, please accept my apology. But, please 
+treat with absolute secrecy. I am working with one of the prime banks in 
+Burkina Faso. Here in this bank existed a dormant account for many 
+years, which belong to one of our late foreign customer. The amount in 
+this account stands at $13,300,000.00 (Thirteen Million Three Hundred 
+Thousand US Dollars).
+
+I was very fortunate to come across the deceased customer's security 
+file during documentation of old and abandoned customer’s files for an 
+official documentation and audit of the year 2020.
+
+I want a foreign account where the bank will transfer this fund. I know 
+you would be surprised to read this message, especially from someone 
+relatively unknown to you. But, do not worry yourself so much. This is a 
+genuine, risk free and legal business transaction. All details shall be 
+sent to you once I hear from you.
+
+If you are really sure of your sincerity, trustworthiness, 
+accountability and confidentiality over this transaction, reply back to 
+me urgently. cantact me on (mr.ibrahimabdoul2020@gmail.com)
+
+Best regards,
+
+Mr. Ibrahim Abdoul
+cantact me on (mr.ibrahimabdoul2020@gmail.com)
