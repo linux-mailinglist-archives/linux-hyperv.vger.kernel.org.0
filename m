@@ -2,44 +2,46 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED21F3AF5F4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 21 Jun 2021 21:20:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ED383AF802
+	for <lists+linux-hyperv@lfdr.de>; Mon, 21 Jun 2021 23:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231134AbhFUTWS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 21 Jun 2021 15:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50208 "EHLO mail.kernel.org"
+        id S231797AbhFUVwV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 21 Jun 2021 17:52:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230170AbhFUTWS (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 21 Jun 2021 15:22:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id E0A2A6124B;
-        Mon, 21 Jun 2021 19:20:03 +0000 (UTC)
+        id S231460AbhFUVwT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 21 Jun 2021 17:52:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 7C33961289;
+        Mon, 21 Jun 2021 21:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624303203;
-        bh=rbIAIkh5Z2rgwm5eiA/O4v7S9czd026nZP+YQn3l7do=;
+        s=k20201202; t=1624312204;
+        bh=nSY1EDhSqPYXZn65k5TZP64JbbnKiLYup0swSnr5/xQ=;
         h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=Y7eT8lcTkf3giSoLd2tNH+wLQ8GrUxXGnTpftHgOrLKHlKMIn7wHAiVC5dERwzUoI
-         kdUjNe0z/3srBT5dioex2rMSmgJQKt3VnvfwL6undypJyoYKG7CkRLw+VIjbjeUgd5
-         az/jukbDdlpk6tYWWPgW/I8bCUQ33akOKIeE49xN2EKoaIn0Ayv+0f4cTMrvdbqybl
-         LT2S+YZ4+9LqDpkP+l/BlbwSXXr+Auv/s7XXJOii5a844IdBC0/MOz9md4gejpkj2P
-         Pc+9B4KcCJtyu+TCCWAcMNFeSh5FjIgl9n2JthGZUTA5PvHC0ykPD+yiHehoh8/evc
-         emfWPI9a0l/Ow==
+        b=kEeYRGs74SmGqXDReWcvSrI1oxNhDAHC7Hj8JWVAT4n0JknECTY8JyBYcQS9LqtXE
+         e4aw9eAjuBeiset6QAE1rH2AaP6iP9GupIkNDkywiT0Q8cd6MikMsVAvpd2yxZcEPd
+         6LcVOd+lH/bJCaYOdT6jp+YKTPEdgMAxXxTtqL/KT4I0r5vYHt7JRTHcE9hC83GbXV
+         B9Upv9zaVBRpHHNIV+9q1a35nvsRP1Pd2QlePD/iTLp2eTUi4E3yCKyD26ZpPVG+md
+         Xoy2j/vPenTUvknXbSpr4JJap5TWVXoBSdPutD5IgXwHnAYqFiZf/bndRs6aa9Ls98
+         bWxn/l/E+D9rw==
 Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id D47166094F;
-        Mon, 21 Jun 2021 19:20:03 +0000 (UTC)
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 6EABE60A6C;
+        Mon, 21 Jun 2021 21:50:04 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] hv_netvsc: Set needed_headroom according to VF
+Subject: Re: [PATCH] net: mana: Fix a memory leak in an error handling path in
+ 'mana_create_txq()'
 From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <162430320386.6988.2279267883191096562.git-patchwork-notify@kernel.org>
-Date:   Mon, 21 Jun 2021 19:20:03 +0000
-References: <1624044939-10310-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1624044939-10310-1-git-send-email-haiyangz@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        kys@microsoft.com, sthemmin@microsoft.com, olaf@aepfle.de,
-        vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
+Message-Id: <162431220444.17422.9240732393045987278.git-patchwork-notify@kernel.org>
+Date:   Mon, 21 Jun 2021 21:50:04 +0000
+References: <578bcaa1a9d6916c86aaecf65f205492affb6fc8.1624196430.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <578bcaa1a9d6916c86aaecf65f205492affb6fc8.1624196430.git.christophe.jaillet@wanadoo.fr>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
+        kuba@kernel.org, shacharr@microsoft.com, gustavoars@kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -48,18 +50,19 @@ Hello:
 
 This patch was applied to netdev/net.git (refs/heads/master):
 
-On Fri, 18 Jun 2021 12:35:39 -0700 you wrote:
-> Set needed_headroom according to VF if VF needs a bigger
-> headroom.
+On Sun, 20 Jun 2021 15:43:28 +0200 you wrote:
+> If this test fails we must free some resources as in all the other error
+> handling paths of this function.
 > 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
->  drivers/net/hyperv/netvsc_drv.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
 Here is the summary with links:
-  - [net-next] hv_netvsc: Set needed_headroom according to VF
-    https://git.kernel.org/netdev/net/c/536ba2e06d1a
+  - net: mana: Fix a memory leak in an error handling path in 'mana_create_txq()'
+    https://git.kernel.org/netdev/net/c/b90788459cd6
 
 You are awesome, thank you!
 --
