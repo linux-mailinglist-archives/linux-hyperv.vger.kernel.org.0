@@ -2,114 +2,164 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD5C23AF860
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Jun 2021 00:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8838B3B00CD
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Jun 2021 11:54:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231381AbhFUWXb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 21 Jun 2021 18:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbhFUWXb (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 21 Jun 2021 18:23:31 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D402FC06175F
-        for <linux-hyperv@vger.kernel.org>; Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id h16so10821136pjv.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k4IdIX/nvtQeyieT57jvq6pJDqXEf5OX6FjN268bVeg=;
-        b=nkVTSIbARbqWX9bwAlW18qOcFR8S/hkqL5a1OVaKjTFtwfRmIlcf1FB8IBt7484nNv
-         B/iwvYo5pXp4OAPYa9GF5uI+2nWwc25NjLHtB0z99es5AL03f+esGPsU08SB4Cb9Y+1W
-         vtykXOIbgR7n7kvpkf3/Wv4O7FOsStJDEaoIc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k4IdIX/nvtQeyieT57jvq6pJDqXEf5OX6FjN268bVeg=;
-        b=A1QO090reUhUyZUwVsm7iJYdo5hJVQhL/yq/W/cOb8Brlr2ob2ov3hIgmKv8MOJngg
-         UZZFdbB8ybDA9c4P4Dc6RJkh6kGsnXKnddvZLnhKF4knOi23w3NCc177zddIL/ULPa0e
-         D5YAcTN+tS6n5mUNOc2cDQW6Vp6Fs1DMMEAwt9N8YkOgRDAaiXUTU+316WYt2iLulQb9
-         w9qEdJr6A3PNrIq6CEY8VhGWrAaPxySwNBKqub1M32+QofnfzIsVqnHp9k0VLVLSLFZa
-         W2bAwV8fhotXHOzuwivG3avBQfneYyF9FKChpeqBVwH8xlw64eY7CINf/EN9bzLiO0Lf
-         c8+A==
-X-Gm-Message-State: AOAM5311CmPS9KK2JBfObLdjyR2bRoSmO3l5N4HMIvAEFTMnl/IWlEUf
-        /9FizmZVwOxKMKhZs2jeLVWCRw==
-X-Google-Smtp-Source: ABdhPJy0UEQTxmiMj8p2NA6jXxmy5M54nD943ClM6WPkwJ+CKmoQhJbhjtM8O2hcOqIBwKLJXKwQiw==
-X-Received: by 2002:a17:90a:dac1:: with SMTP id g1mr427917pjx.199.1624314074326;
-        Mon, 21 Jun 2021 15:21:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 73sm4536385pfy.83.2021.06.21.15.21.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jun 2021 15:21:13 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] hv_netvsc: Avoid field-overflowing memcpy()
-Date:   Mon, 21 Jun 2021 15:21:12 -0700
-Message-Id: <20210621222112.1749650-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        id S229800AbhFVJ4f (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 22 Jun 2021 05:56:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:45716 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229490AbhFVJ4e (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 22 Jun 2021 05:56:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A91E1FB;
+        Tue, 22 Jun 2021 02:54:19 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.10.229])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 807EA3F694;
+        Tue, 22 Jun 2021 02:54:15 -0700 (PDT)
+Date:   Tue, 22 Jun 2021 10:54:12 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     "will@kernel.org" <will@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: Re: [PATCH v10 3/7] arm64: hyperv: Add Hyper-V
+ clocksource/clockevent support
+Message-ID: <20210622095412.GC67232@C02TD0UTHF1T.local>
+References: <1620841067-46606-1-git-send-email-mikelley@microsoft.com>
+ <1620841067-46606-4-git-send-email-mikelley@microsoft.com>
+ <20210514123711.GB30645@C02TD0UTHF1T.local>
+ <MWHPR21MB15932B44EC1E55614B219F5ED7509@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <20210517130815.GC62656@C02TD0UTHF1T.local>
+ <MWHPR21MB15930A4EE785984292B1D72BD72D9@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <20210518170016.GP82842@C02TD0UTHF1T.local>
+ <MWHPR21MB1593800A20B55626ACE6A844D7379@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <20210610164519.GB63335@C02TD0UTHF1T.local>
+ <MWHPR21MB1593095A9B8B61B14D7DF08DD7319@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=52ca9d3ef6fdb378f4fb4390eb0f8bf4545fb2f0; i=KB/gBOM4hXq43bzNgE68y/CtxkQywhn1/IWky57D5OI=; m=5mFF/t04SK2neGS9/cim9EhIl8hHaSNFLWMm4iAy2p8=; p=viZ5h7L2XoQprZaaybqKRBXaA6Do0vJQSm4gKjZyktE=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmDRENcACgkQiXL039xtwCYneg/+O3l CHaMID0zQGdHzOpjdP/XRCBkbVhaJywyHQ8z6b7qmEv3f20zSEpANEIFxybZanrdt/CdTEEfq3rfp MnxIdOpQzllckLVio4CTSZVeSkhV5fW6cGgy6cGBfmmwo5L7lZPsQT99c7qkBCTuz/yX8s+yrRj5J JPoUt6IMHmYzT8V9qhdFBrY4Mj1yOWqTjTf5vrKQXkzRVEAIrAnmw6vQQqaNOQj8casITz+Bas2r9 1BnbHRha8kDtuvxErUrhSvElGt1QJBLTEbNJFaseHV1+hk/wYjf+IEDa7cTWDJv/MEzw14vLQ5lJ7 TpdODkKAEPK+ifpliTgNz5o0Z3WZvDkiS4mSCPmLfBxnZ4F2ckzR42tFpFT/6XUNWaba/O3Rdf96d YUzWdRdWnqrxJrZGAu1dgk/U76yd2ydcikd/yky9RmLEFMvosTJ2UUh344i3i6Jo3KrpJjLgYEmll N0SJ5HiAxLF8j052YiXUO/MNSDP8XVIScErnxTg/ah6x7Yq8PD5SPxkt1pGjJtC1MkMIcIw+XKK4H Prj0rfPvjCUvMXkjq82cEBgAMFwaMqO2wu0jaXbv6fZ+Ynxo3TZoYw53z2Eam0ohGAsszkNbZUdi6 4MvZ8f4iLqqz3cs5bnyFAomq2bEcQ2qM9HAd8Hk8LHIXIiQPe56MYO+diaNYmMDg=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB1593095A9B8B61B14D7DF08DD7319@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing compile-time and run-time
-field bounds checking for memcpy(), memmove(), and memset(), avoid
-intentionally writing across neighboring fields.
+Hi Michael,
 
-Add flexible array to represent start of buf_info, improving readability
-and avoid future warning where memcpy() thinks it is writing past the
-end of the structure.
+Thanks for all this; comments inline below. I've added Marc Zyngier, who
+co-maintains the architected timer code.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/hyperv/hyperv_net.h   | 1 +
- drivers/net/hyperv/rndis_filter.c | 6 ++----
- 2 files changed, 3 insertions(+), 4 deletions(-)
+On Mon, Jun 14, 2021 at 02:42:23AM +0000, Michael Kelley wrote:
+> From: Mark Rutland <mark.rutland@arm.com> Sent: Thursday, June 10, 2021 9:45 AM
+> > On Tue, Jun 08, 2021 at 03:36:06PM +0000, Michael Kelley wrote:
+> > > I've had a couple rounds of discussions with the Hyper-V team.   For
+> > > the clocksource we've agreed to table the live migration discussion, and
+> > > I'll resubmit the code so that arm_arch_timer.c provides the
+> > > standard arch_sys_counter clocksource.  As noted previously, this just
+> > > works for a Hyper-V guest.  The live migration discussion may come
+> > > back later after a deeper investigation by Hyper-V.
+> > 
+> > Great; thanks for this!
+> > 
+> > > For clockevents, there's not a near term fix.  It's more than just plumbing
+> > > an interrupt for Hyper-V to virtualize the ARM64 arch timer in a guest VM.
+> > > From their perspective there's also benefit in having a timer abstraction
+> > > that's independent of the architecture, and in the Linux guest, the STIMER
+> > > code is common across x86/x64 and ARM64.  It follows the standard Linux
+> > > clockevents model, as it should. The code is already in use in out-of-tree
+> > > builds in the Linux VMs included in Windows 10 on ARM64 as part of the
+> > > so-called "Windows Subsystem for Linux".
+> > >
+> > > So I'm hoping we can get this core support for ARM64 guests on Hyper-V
+> > > into upstream using the existing STIMER support.  At some point, Hyper-V
+> > > will do the virtualization of the ARM64 arch timer, but we don't want to
+> > > have to stay out-of-tree until after that happens.
+> > 
+> > My main concern here is making sure that we can rely on architected
+> > properties, and don't have to special-case architected bits for hyperv
+> > (or any other hypervisor), since that inevitably causes longer-term
+> > pain.
+> > 
+> > While in abstract I'm not as worried about using the timer
+> > clock_event_device specifically, that same driver provides the
+> > clocksource and the event stream, and I want those to work as usual,
+> > without being tied into the hyperv code. IIUC that will require some
+> > work, since the driver won't register if the GTDT is missing timer
+> > interrupts (or if there is no GTDT).
+> > 
+> > I think it really depends on what that looks like.
+> 
+> Mark,
+> 
+> Here are the details:
+> 
+> The existing initialization and registration code in arm_arch_timer.c
+> works in a Hyper-V guest with no changes.  As previously mentioned,
+> the GTDT exists and is correctly populated.  Even though it isn't used,
+> there's a PPI INTID specified for the virtual timer, just so
+> the "arm_sys_timer" clockevent can be initialized and registered.
+> The IRQ shows up in the output of "cat /proc/interrupts" with zero counts
+> for all CPUs since no interrupts are ever generated. The EL1 virtual
+> timer registers (CNTV_CVAL_EL0, CNTV_TVAL_EL0, and CNTV_CTL_EL0)
+> are accessible in the VM.  The "arm_sys_timer" clockevent is left in
+> a shutdown state with CNTV_CTL_EL0.ENABLE set to zero when the
+> Hyper-V STIMER clockevent is registered with a higher rating.
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index b11aa68b44ec..bc48855dff10 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -1170,6 +1170,7 @@ struct rndis_set_request {
- 	u32 info_buflen;
- 	u32 info_buf_offset;
- 	u32 dev_vc_handle;
-+	u8  info_buf[];
- };
- 
- /* Response to NdisSetRequest */
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index 983bf362466a..f6c9c2a670f9 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1051,10 +1051,8 @@ static int rndis_filter_set_packet_filter(struct rndis_device *dev,
- 	set = &request->request_msg.msg.set_req;
- 	set->oid = RNDIS_OID_GEN_CURRENT_PACKET_FILTER;
- 	set->info_buflen = sizeof(u32);
--	set->info_buf_offset = sizeof(struct rndis_set_request);
--
--	memcpy((void *)(unsigned long)set + sizeof(struct rndis_set_request),
--	       &new_filter, sizeof(u32));
-+	set->info_buf_offset = offsetof(typeof(*set), info_buf);
-+	memcpy(set->info_buf, &new_filter, sizeof(u32));
- 
- 	ret = rndis_filter_send_request(dev, request);
- 	if (ret == 0) {
--- 
-2.30.2
+This concerns me, since we're lying to the kernel, and assuming that it
+will never try to use this timer. I appreciate that evidently we don't
+happen to rely on that today if you register a higher priority timer,
+but that does open us up to future fragility (e.g. if we added sanity
+checks when registering timers), and IIRC there are ways for userspace
+to change the clockevent device today.
 
+> Event streams are initialized and the __delay() implementation
+> for ARM64 inside the kernel works.  However, on the Ampere
+> eMAG hardware I'm using for testing, the WFE instruction returns
+> more quickly than it should even though the event stream fields in
+> CNTKCTL_EL1 are correct.  I have a query in to the Hyper-V team 
+> to see if they are trapping WFE and just returning, vs. perhaps the
+> eMAG processor takes the easy way out and has WFE just return
+> immediately.  I'm not knowledgeable about other uses of timer
+> event streams, so let me know if there are other usage scenarios
+> I should check.
+
+I saw your reply confirming that this is gnerally working as expected
+(and that Hyper-V is not trapping WFE) so this sounds fine to me.
+
+> Finally, the "arch_sys_counter" clocksource gets initialized and
+> setup correctly.  If the Hyper-V clocksource is also initialized,
+> you can flip between the two clocksources at runtime as expected.
+> If the Hyper-V clocksource is not setup, then Linux in the VM runs
+> fine with the "arch_sys_counter" clocksource.
+
+Great!
+
+As above, my remaining concern here is fragility around the
+clockevent_device; I'm not keen that we're lying (in the GTDT) that
+interrupts are wired up when they not functional, and while you can get
+away with that today, that relies on kernel implementation details that
+could change.
+
+Ideally, Hyper-V would provide the architectural timer (as it's already
+claiming to in the GTDT), things would "just work", and the Hyper-V
+timer would be an optimization rather than a functional necessity.
+
+You mentioned above that Hyper-V will virtualize the timer "at some
+point" -- is that already planned, and when is that likely to be?
+
+Marc, do you have any thoughts on this?
+
+Thanks,
+Mark.
