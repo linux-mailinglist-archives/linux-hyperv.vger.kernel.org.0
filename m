@@ -2,50 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C664F3B2377
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Jun 2021 00:15:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB45F3B2380
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Jun 2021 00:18:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbhFWWRz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 23 Jun 2021 18:17:55 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:60830 "EHLO
+        id S229774AbhFWWUb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 23 Jun 2021 18:20:31 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:32940 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229996AbhFWWRp (ORCPT
+        with ESMTP id S229688AbhFWWUa (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 23 Jun 2021 18:17:45 -0400
+        Wed, 23 Jun 2021 18:20:30 -0400
 Received: from [10.0.0.178] (c-67-168-106-253.hsd1.wa.comcast.net [67.168.106.253])
-        by linux.microsoft.com (Postfix) with ESMTPSA id F296220B7188;
-        Wed, 23 Jun 2021 15:15:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F296220B7188
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5291820B7188;
+        Wed, 23 Jun 2021 15:18:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5291820B7188
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1624486527;
-        bh=fcz0zmv3fb9TLhXJgjPYUIlkJMTZb0BSgbSLG1PJe/c=;
+        s=default; t=1624486692;
+        bh=QJRsqVQodqC2XLeNiwxcQB17F9aTuiBRP/T+vIefllI=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=K/zy6V8tjn5/uf1v4mmYfqxhlY3QHJBwxGON+7R1mbtv2BoFN0Dno4newrA6ewY09
-         vhZBpeyipeDNpQPrzfkHW24O8R3Z9cflAZ3HHGx+UJb+NqVE4VwU5JCwo4BSQUwErM
-         uvmHUnYIvJgOW2BC/ocUtfEEaj7lfOgsj24ZaMgM=
-Subject: Re: [PATCH 02/19] asm-generic/hyperv: convert hyperv statuses to
- strings
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        vkuznets <vkuznets@redhat.com>,
-        Lillian Grassin-Drake <Lillian.GrassinDrake@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>
+        b=s8CQjC3mf4cteJ+bYbmXlp8NkRSiNRHs3L00eMp7DRlwSOSpOcguv+LtOsz2jvIOT
+         x0TVVde6JJ0hZuFH76f21bYZ8ev5V5JBiAuVQaaDB9mu/J0yogajjk1lSlPGOf13pj
+         A5fex4loPUoHY4U4V1ToiUz0dV2dNKM9CPzUIrDw=
+Subject: Re: [PATCH 00/19] Microsoft Hypervisor root partition ioctl interface
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
+        viremana@linux.microsoft.com, sunilmut@microsoft.com,
+        wei.liu@kernel.org, ligrassi@microsoft.com, kys@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
 References: <1622241819-21155-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1622241819-21155-3-git-send-email-nunodasneves@linux.microsoft.com>
- <MW4PR21MB200490109062F93EDCBB3DE7C0359@MW4PR21MB2004.namprd21.prod.outlook.com>
+ <87bl8eyszj.fsf@vitty.brq.redhat.com>
 From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Message-ID: <0c8d9808-3bde-da95-a7fb-cd294b77b6f3@linux.microsoft.com>
-Date:   Wed, 23 Jun 2021 15:15:26 -0700
+Message-ID: <81498149-f47a-fb27-827d-a9510ffee373@linux.microsoft.com>
+Date:   Wed, 23 Jun 2021 15:18:11 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <MW4PR21MB200490109062F93EDCBB3DE7C0359@MW4PR21MB2004.namprd21.prod.outlook.com>
+In-Reply-To: <87bl8eyszj.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -55,160 +47,308 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
 
-On 6/10/2021 11:42 AM, Sunil Muthuswamy wrote:
+On 6/10/2021 2:22 AM, Vitaly Kuznetsov wrote:
+> Nuno Das Neves <nunodasneves@linux.microsoft.com> writes:
 > 
+>> This patch series provides a userspace interface for creating and running guest
+>> virtual machines while running on the Microsoft Hypervisor [0].
+>>
+>> Since managing guest machines can only be done when Linux is the root partition,
+>> this series depends on Wei Liu's patch series merged in 5.12:
+>> https://lore.kernel.org/linux-hyperv/20210203150435.27941-1-wei.liu@kernel.org/
+>>
+>> The first two patches provide some helpers for converting hypervisor status
+>> codes to linux error codes, and printing hypervisor status codes to dmesg for
+>> debugging.
+>>
+>> Hyper-V related headers asm-generic/hyperv-tlfs.h and x86/asm/hyperv-tlfs.h are
+>> split into uapi and non-uapi. The uapi versions contain structures used in both
+>> the ioctl interface and the kernel.
+>>
+>> The mshv API is introduced in drivers/hv/mshv_main.c. As each interface is
+>> introduced, documentation is added in Documentation/virt/mshv/api.rst.
+>> The API is file-desciptor based, like KVM. The entry point is /dev/mshv.
+>>
+>> /dev/mshv ioctls:
+>> MSHV_CHECK_EXTENSION
+>> MSHV_CREATE_PARTITION
+>>
+>> Partition (vm) ioctls:
+>> MSHV_MAP_GUEST_MEMORY, MSHV_UNMAP_GUEST_MEMORY
+>> MSHV_INSTALL_INTERCEPT
+>> MSHV_ASSERT_INTERRUPT
+>> MSHV_GET_PARTITION_PROPERTY, MSHV_SET_PARTITION_PROPERTY
+>> MSHV_CREATE_VP
+>>
+>> Vp (vcpu) ioctls:
+>> MSHV_GET_VP_REGISTERS, MSHV_SET_VP_REGISTERS
+>> MSHV_RUN_VP
+>> MSHV_GET_VP_STATE, MSHV_SET_VP_STATE
+>> MSHV_TRANSLATE_GVA
+>> mmap() (register page)
+>>
+>> [0] Hyper-V is more well-known, but it really refers to the whole stack
+>>     including the hypervisor and other components that run in Windows kernel
+>>     and userspace.
+>>
+>> Changes since RFC:
+>> 1. Moved code from virt/mshv to drivers/hv
+>> 2. Split hypercall helper functions and synic code to hv_call.c and hv_synic.c
+>> 3. MSHV_REQUEST_VERSION ioctl replaced with MSHV_CHECK_EXTENSION
+>> 3. Numerous suggestions, fixes, style changes, etc from Michael Kelley, Vitaly
+>>    Kuznetsov, Wei Liu, and Vineeth Pillai
+>> 4. Added patch to enable hypervisor enlightenments on partition creation
+>> 5. Added Wei Liu's patch for GVA to GPA translation
+>>
 > 
->> -----Original Message-----
->> From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> Sent: Friday, May 28, 2021 3:43 PM
->> To: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
->> Cc: virtualization@lists.linux-foundation.org; Michael Kelley <mikelley@microsoft.com>; viremana@linux.microsoft.com; Sunil
->> Muthuswamy <sunilmut@microsoft.com>; wei.liu@kernel.org; vkuznets <vkuznets@redhat.com>; Lillian Grassin-Drake
->> <Lillian.GrassinDrake@microsoft.com>; KY Srinivasan <kys@microsoft.com>
->> Subject: [PATCH 02/19] asm-generic/hyperv: convert hyperv statuses to strings
->>
->> Allow hyperv hypercall failures to be debugged more easily with dmesg.
->> This will be used in the mshv module.
->>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> ---
->>  arch/x86/hyperv/hv_init.c         |  2 +-
->>  arch/x86/hyperv/hv_proc.c         | 10 +++---
->>  include/asm-generic/hyperv-tlfs.h | 52 ++++++++++++++++++-------------
->>  include/asm-generic/mshyperv.h    |  8 +++++
->>  4 files changed, 44 insertions(+), 28 deletions(-)
->>
->> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
->> index bb0ae4b5c00f..722bafdb2225 100644
->> --- a/arch/x86/hyperv/hv_init.c
->> +++ b/arch/x86/hyperv/hv_init.c
->> @@ -349,7 +349,7 @@ static void __init hv_get_partition_id(void)
->>  	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page);
->>  	if (!hv_result_success(status)) {
->>  		/* No point in proceeding if this failed */
->> -		pr_err("Failed to get partition ID: %lld\n", status);
->> +		pr_err("Failed to get partition ID: %s\n", hv_status_to_string(status));
->>  		BUG();
->>  	}
->>  	hv_current_partition_id = output_page->partition_id;
->> diff --git a/arch/x86/hyperv/hv_proc.c b/arch/x86/hyperv/hv_proc.c
->> index 59cf9a9e0975..30951e778577 100644
->> --- a/arch/x86/hyperv/hv_proc.c
->> +++ b/arch/x86/hyperv/hv_proc.c
->> @@ -117,7 +117,7 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
->>  				     page_count, 0, input_page, NULL);
->>  	local_irq_restore(flags);
->>  	if (!hv_result_success(status)) {
->> -		pr_err("Failed to deposit pages: %lld\n", status);
->> +		pr_err("Failed to deposit pages: %s\n", hv_status_to_string(status));
->>  		ret = hv_status_to_errno(status);
->>  		goto err_free_allocations;
->>  	}
->> @@ -172,8 +172,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
->>
->>  		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
->>  			if (!hv_result_success(status)) {
->> -				pr_err("%s: cpu %u apic ID %u, %lld\n", __func__,
->> -				       lp_index, apic_id, status);
->> +				pr_err("%s: cpu %u apic ID %u, %s\n", __func__,
->> +				       lp_index, apic_id, hv_status_to_string(status));
->>  				ret = hv_status_to_errno(status);
->>  			}
->>  			break;
->> @@ -222,8 +222,8 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
->>
->>  		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
->>  			if (!hv_result_success(status)) {
->> -				pr_err("%s: vcpu %u, lp %u, %lld\n", __func__,
->> -				       vp_index, flags, status);
->> +				pr_err("%s: vcpu %u, lp %u, %s\n", __func__,
->> +				       vp_index, flags, hv_status_to_string(status));
->>  				ret = hv_status_to_errno(status);
->>  			}
->>  			break;
->> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
->> index fe6d41d0b114..40ff7cdd4a2b 100644
->> --- a/include/asm-generic/hyperv-tlfs.h
->> +++ b/include/asm-generic/hyperv-tlfs.h
->> @@ -189,28 +189,36 @@ enum HV_GENERIC_SET_FORMAT {
->>  #define HV_HYPERCALL_REP_START_MASK	GENMASK_ULL(59, 48)
->>
->>  /* hypercall status code */
->> -#define HV_STATUS_SUCCESS			0x0
->> -#define HV_STATUS_INVALID_HYPERCALL_CODE	0x2
->> -#define HV_STATUS_INVALID_HYPERCALL_INPUT	0x3
->> -#define HV_STATUS_INVALID_ALIGNMENT		0x4
->> -#define HV_STATUS_INVALID_PARAMETER		0x5
->> -#define HV_STATUS_ACCESS_DENIED			0x6
->> -#define HV_STATUS_INVALID_PARTITION_STATE	0x7
->> -#define HV_STATUS_OPERATION_DENIED		0x8
->> -#define HV_STATUS_UNKNOWN_PROPERTY		0x9
->> -#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	0xA
->> -#define HV_STATUS_INSUFFICIENT_MEMORY		0xB
->> -#define HV_STATUS_INVALID_PARTITION_ID		0xD
->> -#define HV_STATUS_INVALID_VP_INDEX		0xE
->> -#define HV_STATUS_NOT_FOUND			0x10
->> -#define HV_STATUS_INVALID_PORT_ID		0x11
->> -#define HV_STATUS_INVALID_CONNECTION_ID		0x12
->> -#define HV_STATUS_INSUFFICIENT_BUFFERS		0x13
->> -#define HV_STATUS_NOT_ACKNOWLEDGED		0x14
->> -#define HV_STATUS_INVALID_VP_STATE		0x15
->> -#define HV_STATUS_NO_RESOURCES			0x1D
->> -#define HV_STATUS_INVALID_LP_INDEX		0x41
->> -#define HV_STATUS_INVALID_REGISTER_VALUE	0x50
->> +#define __HV_STATUS_DEF(OP) \
->> +	OP(HV_STATUS_SUCCESS,				0x0) \
->> +	OP(HV_STATUS_INVALID_HYPERCALL_CODE,		0x2) \
->> +	OP(HV_STATUS_INVALID_HYPERCALL_INPUT,		0x3) \
->> +	OP(HV_STATUS_INVALID_ALIGNMENT,			0x4) \
->> +	OP(HV_STATUS_INVALID_PARAMETER,			0x5) \
->> +	OP(HV_STATUS_ACCESS_DENIED,			0x6) \
->> +	OP(HV_STATUS_INVALID_PARTITION_STATE,		0x7) \
->> +	OP(HV_STATUS_OPERATION_DENIED,			0x8) \
->> +	OP(HV_STATUS_UNKNOWN_PROPERTY,			0x9) \
->> +	OP(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	0xA) \
->> +	OP(HV_STATUS_INSUFFICIENT_MEMORY,		0xB) \
->> +	OP(HV_STATUS_INVALID_PARTITION_ID,		0xD) \
->> +	OP(HV_STATUS_INVALID_VP_INDEX,			0xE) \
->> +	OP(HV_STATUS_NOT_FOUND,				0x10) \
->> +	OP(HV_STATUS_INVALID_PORT_ID,			0x11) \
->> +	OP(HV_STATUS_INVALID_CONNECTION_ID,		0x12) \
->> +	OP(HV_STATUS_INSUFFICIENT_BUFFERS,		0x13) \
->> +	OP(HV_STATUS_NOT_ACKNOWLEDGED,			0x14) \
->> +	OP(HV_STATUS_INVALID_VP_STATE,			0x15) \
->> +	OP(HV_STATUS_NO_RESOURCES,			0x1D) \
->> +	OP(HV_STATUS_INVALID_LP_INDEX,			0x41) \
->> +	OP(HV_STATUS_INVALID_REGISTER_VALUE,		0x50)
->> +
->> +#define __HV_MAKE_HV_STATUS_ENUM(NAME, VAL) NAME = (VAL),
->> +#define __HV_MAKE_HV_STATUS_CASE(NAME, VAL) case (NAME): return (#NAME);
->> +
->> +enum hv_status {
->> +	__HV_STATUS_DEF(__HV_MAKE_HV_STATUS_ENUM)
->> +};
->>
->>  /*
->>   * The Hyper-V TimeRefCount register and the TSC
->> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
->> index 9a000ba2bb75..21fb71ca1ba9 100644
->> --- a/include/asm-generic/mshyperv.h
->> +++ b/include/asm-generic/mshyperv.h
->> @@ -59,6 +59,14 @@ static inline unsigned int hv_repcomp(u64 status)
->>  			 HV_HYPERCALL_REP_COMP_OFFSET;
->>  }
->>
->> +static inline const char *hv_status_to_string(u64 hv_status)
->> +{
->> +	switch (hv_result(hv_status)) {
->> +	__HV_STATUS_DEF(__HV_MAKE_HV_STATUS_CASE)
->> +	default : return "Unknown";
->> +	}
->> +}
-> Wouldn't this be a big switch statement that will get duplicated all over the place
-> in the code because of the inline (and also the strings within)?
+> Thank you for addressing these!
+> 
+> One nitpick though: could you please run your next submission through
+> 'scripts/checkpatch.pl'? It reports a number of issues here, mostly
+> minor but still worth addressing, i.e.:
 > 
 
-I'm not totally sure. If so, I guess it should not be inline!
+Whoops! Yes, I will fix these. Thank you
 
-> - Sunil
+> $ scripts/checkpatch.pl *.patch
+> ...
+> ---------------------------------------------------------------
+> 0002-asm-generic-hyperv-convert-hyperv-statuses-to-string.patch
+> ---------------------------------------------------------------
+> ERROR: Macros with complex values should be enclosed in parentheses
+> #95: FILE: include/asm-generic/hyperv-tlfs.h:192:
+> +#define __HV_STATUS_DEF(OP) \
+> +	OP(HV_STATUS_SUCCESS,				0x0) \
+> ...
+> 
+> ERROR: Macros with complex values should be enclosed in parentheses
+> #119: FILE: include/asm-generic/hyperv-tlfs.h:216:
+> +#define __HV_MAKE_HV_STATUS_ENUM(NAME, VAL) NAME = (VAL),
+> 
+> ERROR: Macros with multiple statements should be enclosed in a do - while loop
+> #120: FILE: include/asm-generic/hyperv-tlfs.h:217:
+> +#define __HV_MAKE_HV_STATUS_CASE(NAME, VAL) case (NAME): return (#NAME);
+> 
+> WARNING: Macros with flow control statements should be avoided
+> #120: FILE: include/asm-generic/hyperv-tlfs.h:217:
+> +#define __HV_MAKE_HV_STATUS_CASE(NAME, VAL) case (NAME): return (#NAME);
+> 
+> WARNING: macros should not use a trailing semicolon
+> #120: FILE: include/asm-generic/hyperv-tlfs.h:217:
+> +#define __HV_MAKE_HV_STATUS_CASE(NAME, VAL) case (NAME): return (#NAME);
+> 
+> total: 3 errors, 2 warnings, 108 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> 0002-asm-generic-hyperv-convert-hyperv-statuses-to-string.patch has
+> style problems, please review.
+> ...
+> -------------------------------------------
+> 0004-drivers-hv-check-extension-ioctl.patch
+> -------------------------------------------
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #36: 
+> new file mode 100644
+> 
+> WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
+> #131: FILE: drivers/hv/mshv_main.c:52:
+> +	return -ENOTSUPP;
+> 
+> total: 0 errors, 2 warnings, 137 lines checked
+> 
+> ...
+> 
+> WARNING: Improper SPDX comment style for 'drivers/hv/hv_call.c', please use '//' instead
+> #94: FILE: drivers/hv/hv_call.c:1:
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> 
+> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+> #94: FILE: drivers/hv/hv_call.c:1:
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> 
+> ERROR: "(foo*)" should be "(foo *)"
+> #178: FILE: drivers/hv/hv_call.c:85:
+> +				*(u64*)&input);
+> 
+> ERROR: "(foo*)" should be "(foo *)"
+> #201: FILE: drivers/hv/hv_call.c:108:
+> +			*(u64*)&input);
+> 
+> ERROR: "(foo*)" should be "(foo *)"
+> #215: FILE: drivers/hv/hv_call.c:122:
+> +	status = hv_do_fast_hypercall8(HVCALL_DELETE_PARTITION, *(u64*)&input);
+> 
+> total: 3 errors, 3 warnings, 330 lines checked
+> 
+> ...
+> ------------------------------------------------
+> 0008-drivers-hv-map-and-unmap-guest-memory.patch
+> ------------------------------------------------
+> ERROR: code indent should use tabs where possible
+> #101: FILE: drivers/hv/hv_call.c:222:
+> +                                                    HV_MAP_GPA_DEPOSIT_PAGES);$
+> 
+> WARNING: please, no spaces at the start of a line
+> #101: FILE: drivers/hv/hv_call.c:222:
+> +                                                    HV_MAP_GPA_DEPOSIT_PAGES);$
+> 
+> ERROR: code indent should use tabs where possible
+> #469: FILE: include/asm-generic/hyperv-tlfs.h:895:
+> +        u32 padding;$
+> 
+> WARNING: please, no spaces at the start of a line
+> #469: FILE: include/asm-generic/hyperv-tlfs.h:895:
+> +        u32 padding;$
+> 
+> ERROR: code indent should use tabs where possible
+> #477: FILE: include/asm-generic/hyperv-tlfs.h:903:
+> +        u32 padding;$
+> 
+> WARNING: please, no spaces at the start of a line
+> #477: FILE: include/asm-generic/hyperv-tlfs.h:903:
+> +        u32 padding;$
+> 
+> total: 3 errors, 3 warnings, 487 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> NOTE: Whitespace errors detected.
+>       You may wish to use scripts/cleanpatch or scripts/cleanfile
+> 
+> 0008-drivers-hv-map-and-unmap-guest-memory.patch has style problems, please review.
+> ---------------------------------------
+> 0009-drivers-hv-create-vcpu-ioctl.patch
+> ---------------------------------------
+> WARNING: Missing a blank line after declarations
+> #76: FILE: drivers/hv/mshv_main.c:75:
+> +	struct mshv_vp *vp = filp->private_data;
+> +	mshv_partition_put(vp->partition);
+> 
+> ERROR: trailing whitespace
+> #180: FILE: drivers/hv/mshv_main.c:376:
+> +^I$
+> 
+> total: 1 errors, 1 warnings, 210 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> NOTE: Whitespace errors detected.
+>       You may wish to use scripts/cleanpatch or scripts/cleanfile
+> 
+> 0009-drivers-hv-create-vcpu-ioctl.patch has style problems, please review.
+> -------------------------------------------------------
+> 0010-drivers-hv-get-and-set-vcpu-registers-ioctls.patch
+> -------------------------------------------------------
+> WARNING: braces {} are not necessary for single statement blocks
+> #690: FILE: drivers/hv/hv_call.c:326:
+> +		for (i = 0; i < rep_count; ++i) {
+> +			input_page->names[i] = registers[i].name;
+> +		}
+> 
+> WARNING: braces {} are not necessary for single statement blocks
+> #704: FILE: drivers/hv/hv_call.c:340:
+> +		for (i = 0; i < completed; ++i) {
+> +			registers[i].value = output_page[i];
+> +		}
+> 
+> WARNING: braces {} are not necessary for single statement blocks
+> #859: FILE: drivers/hv/mshv_main.c:121:
+> +	if (!registers) {
+> +		return -ENOMEM;
+> +	}
+> 
+> total: 0 errors, 3 warnings, 965 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> 0010-drivers-hv-get-and-set-vcpu-registers-ioctls.patch has style problems, please review.
+> ---------------------------------------------------------------
+> 0011-drivers-hv-set-up-synic-pages-for-intercept-messages.patch
+> ---------------------------------------------------------------
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #274: 
+> new file mode 100644
+> 
+> ERROR: code indent should use tabs where possible
+> #310: FILE: drivers/hv/hv_synic.c:32:
+> +                             MEMREMAP_WB);$
+> 
+> WARNING: please, no spaces at the start of a line
+> #310: FILE: drivers/hv/hv_synic.c:32:
+> +                             MEMREMAP_WB);$
+> 
+> total: 1 errors, 2 warnings, 574 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> NOTE: Whitespace errors detected.
+>       You may wish to use scripts/cleanpatch or scripts/cleanfile
+> 
+> 0011-drivers-hv-set-up-synic-pages-for-intercept-messages.patch has style problems, please review.
+> ------------------------------------------
+> 0012-drivers-hv-run-vp-ioctl-and-isr.patch
+> ------------------------------------------
+> WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
+> #86: FILE: arch/x86/kernel/cpu/mshyperv.c:77:
+> +EXPORT_SYMBOL_GPL(hv_remove_mshv_irq);
+> 
+> WARNING: consider using a completion
+> #410: FILE: drivers/hv/mshv_main.c:344:
+> +	sema_init(&vp->run.sem, 0);
+> 
+> total: 0 errors, 2 warnings, 435 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> 0012-drivers-hv-run-vp-ioctl-and-isr.patch has style problems, please review.
+> ---------------------------------------------
+> ...
+> -------------------------------------------
+> 0016-drivers-hv-mmap-vp-register-page.patch
+> -------------------------------------------
+> WARNING: Missing a blank line after declarations
+> #222: FILE: drivers/hv/mshv_main.c:441:
+> +	struct mshv_vp *vp = vmf->vma->vm_file->private_data;
+> +	vmf->page = vp->register_page;
+> 
+> total: 0 errors, 1 warnings, 257 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> 0016-drivers-hv-mmap-vp-register-page.patch has style problems, please review.
+> -----------------------------------------------------------
+> 0017-drivers-hv-get-and-set-partition-property-ioctls.patch
+> -----------------------------------------------------------
+> ERROR: code indent should use tabs where possible
+> #205: FILE: include/asm-generic/hyperv-tlfs.h:890:
+> +        u32 padding;$
+> 
+> WARNING: please, no spaces at the start of a line
+> #205: FILE: include/asm-generic/hyperv-tlfs.h:890:
+> +        u32 padding;$
+> 
+> ERROR: code indent should use tabs where possible
+> #215: FILE: include/asm-generic/hyperv-tlfs.h:900:
+> +        u32 padding;$
+> 
+> WARNING: please, no spaces at the start of a line
+> #215: FILE: include/asm-generic/hyperv-tlfs.h:900:
+> +        u32 padding;$
+> 
+> total: 2 errors, 2 warnings, 258 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or --fix-inplace.
+> 
+> NOTE: Whitespace errors detected.
+>       You may wish to use scripts/cleanpatch or scripts/cleanfile
+> 
 > 
