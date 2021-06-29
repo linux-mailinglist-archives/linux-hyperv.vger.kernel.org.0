@@ -2,99 +2,121 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 362D03B70E0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jun 2021 12:42:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB2FA3B7110
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jun 2021 13:02:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233216AbhF2Kou (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 29 Jun 2021 06:44:50 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:51069 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232410AbhF2Kor (ORCPT
+        id S233096AbhF2LE0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 29 Jun 2021 07:04:26 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:53871 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233225AbhF2LEY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 29 Jun 2021 06:44:47 -0400
-Received: from [192.168.1.155] ([95.114.16.105]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1McY4R-1lO11G3vW1-00cvib; Tue, 29 Jun 2021 12:41:52 +0200
-Subject: Re: [Patch v2 2/3] Drivers: hv: add Azure Blob driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        longli@linuxonhyperv.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Long Li <longli@microsoft.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Andra Paraschiv <andraprs@amazon.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        Hannes Reinecke <hare@suse.de>, linux-doc@vger.kernel.org
-References: <1624689020-9589-1-git-send-email-longli@linuxonhyperv.com>
- <1624689020-9589-3-git-send-email-longli@linuxonhyperv.com>
- <YNq8p1320VkH2T/c@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <0391b223-5f8e-42c0-35f2-a7ec337c55ac@metux.net>
-Date:   Tue, 29 Jun 2021 12:41:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Tue, 29 Jun 2021 07:04:24 -0400
+Received: by mail-wm1-f53.google.com with SMTP id w13so13545572wmc.3;
+        Tue, 29 Jun 2021 04:01:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=UxbYdjRBdJm5/fTVehzUZ/ohEPLj6Stc/4/xbrS9z3s=;
+        b=PDCbCtUDgim4NBXGWnoyNqtELgSpFNPDCwCXNUKgDpVBV/a8F85YgMqehtdnYdTP+C
+         QP9b1wgmMWCL/kDbCVtvPHkogzz/hW6dORa6evoQ+PSwrmK8rvJfn0Tv/KHGTpamzQVR
+         ySIfhtKJ/0WC7jpdYMKIjzMTWkklTf3gLxswhRpqrxuytz0UbO/8z0daADyFOPJMbAS+
+         TdOUVUqnMjvG53ufaOcQQKVX/ISWshzJgTfpxv7My2oTqJ00rooBjQCWh6R7PIEmPETo
+         XZxy5Tn5IL9Ot5804JEyUtQMPjcmnzH/KHjuqoyzNcAbBU+b9cCPFompDeC/wc1jpKmE
+         7W2w==
+X-Gm-Message-State: AOAM533oukckfk0RwTE6pww1FnVqxQ/mQbbiJW79iJDT1Co+M6l+9PO2
+        uMy91YqOX4yUAiBTIRdinEU=
+X-Google-Smtp-Source: ABdhPJzfycVhMQwwXApDKWDgCAK3OwMR2lbsi++KFT1QOTNDWHRKC7mmpuNn4lmvCkCJYGXpnbVdzA==
+X-Received: by 2002:a05:600c:4f53:: with SMTP id m19mr32065101wmq.36.1624964516674;
+        Tue, 29 Jun 2021 04:01:56 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id u10sm16609971wmm.21.2021.06.29.04.01.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Jun 2021 04:01:56 -0700 (PDT)
+Date:   Tue, 29 Jun 2021 11:01:54 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+Subject: [GIT PULL] Hyper-V commits for 5.14
+Message-ID: <20210629110154.y7hegtxwjbo55kue@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-In-Reply-To: <YNq8p1320VkH2T/c@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:OSO02HYPMM+5Jqyg47RIhNF3Zn3nmEOfvvMXGJA3mWbUTDMKie8
- cc7U9UfweWNq0MHlXks+LPpmkk5Lf0xVzdcbxuM3WgjPWRljYNow1TvEOKp1WOpw8kCefWM
- hkas3XnsjcgVsqIaa/VxyFAopsMKFA6cTU3K3iLViyFYdghlU326FpzPYRwCeZWCDA8cbfN
- bUinZ1aMa3Yoe4ijsVCpQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xpO6/AKkyxs=:fGpAGXbAKUYd6WDlpMOSS0
- uT3+xR6ozpDuhMGPEe1KNXqxiLMzJmHFLPLHcXFMQ9NFyyXuKk83nfGH4GzHQDXsxmaM4G5qb
- nDZIaC6MF/tvkmNJETh2zrSGbMiwH5MZQnjo9kVArIk71mdXigWLgXf5MXWgSxX+WJ09h4f2W
- Q7mZJHTKibesVyihMoEKLuIWg+bMGEExjMBr3GIhHiRh9Qy0Q8Izb2Y/j/6CEj0M2UYpSbfhK
- Y9Jj+Uv9UotFFS0wfCbBsrV0qOH8TUQdiOkJJN9Vt+Xiss1lcduJgk5fe+9sMDCTShUX6D6bf
- KVgTEbgtpkYtmosn8p+lGDQTshjtrlaFFBXbbrKLsK+bbOIEYNazmbt2ikngqu/V7iSn8HsXe
- 7tEh/ao6DmU9412pVRZN0F5sK9GToSi/m7bXWMEwrpcmy3S5tXBP7dUbgzCYu5q83t7M4letS
- 0eqim23FJW9lXZ858PXzG5eBmLJ21uKXrUO6We5aCqqs1pX+QaFyGpPmbYrOW8W6GaYuIt34z
- gHPcfkm0epjbbY3jd4A4c0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 29.06.21 08:24, Greg Kroah-Hartman wrote:
+Hi Linus,
 
-Hi folks,
+The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
 
-> Again, no.
-> 
-> Just use dev_dbg(), dev_warn(), and dev_err() and there is no need for
-> anything "special".  This is just one tiny driver, do not rewrite logic
-> like this for no reason.
+  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
 
-Maybe worth mentioning that we have the pr_fmt macro that can be
-defined if some wants to do things like adding some prefix.
+are available in the Git repository at:
 
-> No need to ever check any debugfs calls, please just make them and move
-> on.
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20210629
 
-In this case a failed attempt to create debugfs files/dirs should not be
-treated as some actual error, but a normal situation, therefore there
-shouldn't be an error message.  (see debugfs.h)
+for you to fetch changes up to 7d815f4afa87f2032b650ae1bba7534b550a6b8b:
 
+  PCI: hv: Add check for hyperv_initialized in init_hv_pci_drv() (2021-06-20 23:08:56 +0000)
 
---mtx
+Note that there may be a merge conflict with x86 tip tree due to a
+comment movement. The correct resolution patch can be found at:
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+  https://lore.kernel.org/linux-next/20210621200125.46d66127@canb.auug.org.au/
+
+Wei.
+
+----------------------------------------------------------------
+hyperv-next for 5.14
+ - Just a few minor enhancement patches and bug fixes.
+----------------------------------------------------------------
+Andrea Parri (Microsoft) (1):
+      scsi: storvsc: Use blk_mq_unique_tag() to generate requestIDs
+
+Andres Beltran (1):
+      Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer
+
+Haiyang Zhang (1):
+      PCI: hv: Add check for hyperv_initialized in init_hv_pci_drv()
+
+Jiapeng Chong (2):
+      hv_balloon: Remove redundant assignment to region_start
+      drivers: hv: Fix missing error code in vmbus_connect()
+
+Michael Kelley (1):
+      Drivers: hv: Move Hyper-V extended capability check to arch neutral code
+
+Praveen Kumar (1):
+      x86/hyperv: fix logical processor creation
+
+YueHaibing (1):
+      hv_utils: Fix passing zero to 'PTR_ERR' warning
+
+ arch/x86/hyperv/hv_init.c           |  47 ----------------
+ arch/x86/kernel/cpu/mshyperv.c      |   2 +-
+ drivers/Makefile                    |   2 +-
+ drivers/hv/Makefile                 |   3 ++
+ drivers/hv/channel.c                |  23 ++++----
+ drivers/hv/connection.c             |   4 +-
+ drivers/hv/hv_balloon.c             |   1 -
+ drivers/hv/hv_common.c              |  66 +++++++++++++++++++++++
+ drivers/hv/hv_fcopy.c               |   1 +
+ drivers/hv/hv_kvp.c                 |   1 +
+ drivers/hv/hv_util.c                |   4 +-
+ drivers/hv/hyperv_vmbus.h           |   2 +-
+ drivers/hv/ring_buffer.c            |  95 ++++++++++++++++++++++++++------
+ drivers/net/hyperv/hyperv_net.h     |   7 +++
+ drivers/net/hyperv/netvsc.c         |  10 ++--
+ drivers/net/hyperv/rndis_filter.c   |   4 ++
+ drivers/pci/controller/pci-hyperv.c |   3 ++
+ drivers/scsi/storvsc_drv.c          | 104 +++++++++++++++++++++++++-----------
+ include/linux/hyperv.h              |  61 +++++++++++++++++----
+ net/vmw_vsock/hyperv_transport.c    |   4 +-
+ 20 files changed, 317 insertions(+), 127 deletions(-)
+ create mode 100644 drivers/hv/hv_common.c
