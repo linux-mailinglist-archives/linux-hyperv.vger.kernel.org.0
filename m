@@ -2,114 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9277A3B76DB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jun 2021 19:03:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E2F33B78EF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Jun 2021 21:57:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232322AbhF2RGM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 29 Jun 2021 13:06:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232209AbhF2RGL (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 29 Jun 2021 13:06:11 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C16AC061766
-        for <linux-hyperv@vger.kernel.org>; Tue, 29 Jun 2021 10:03:44 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id a13so23128wrf.10
-        for <linux-hyperv@vger.kernel.org>; Tue, 29 Jun 2021 10:03:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1mzwo7wjAUa0IJEbXNRwxkpgdnTr5r+kaQt26hfpS9Q=;
-        b=QmmxT28DkHNzpao9vOpgiqd/+dJLsDibGQbrStNZ7JbAn0dorBqHkDj0WWKEfZk7OQ
-         FNxBzNYYbYzgKsCZ0j18iEU1KtSxaIL4Fyk8uM4HCQ67154O4rhEmH9kLiuRXoOrC5q7
-         S624F07BLgYEYsvGXAHARz0QA4dg1CTiaNym2G/4ZRiWeANMPe2N15L3MveDp/WgRSYk
-         IJA2nKKslgAsYg8dbGq8sMAXlDTQQYlDUbjGPAMWzEYVYvDRIOTDYXncAhpesbhqxL40
-         4Pb94hp2YdPRJ2JAMke+tMLiLTqa8JIZadNCDJ75yRoh9swK/MMMGXHQQBoAwR42SkSD
-         djPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1mzwo7wjAUa0IJEbXNRwxkpgdnTr5r+kaQt26hfpS9Q=;
-        b=gw7bVXjfs6aa5UROB4ms/CyZ/BEU62XWTbj3ik4nXamADYQzemrukQa+Hy6KTPeoln
-         9n51bfJSj2FTh7Hq1DiEtb89sutOU/+r7JpvmuonMYKxvqjJwhpbW2DRSvHn6v8L7Z9z
-         Lw19JXUDvUmTTFK9nrwHBvaqegULU300NjzQMkDlxp/oe4Uj+peqvG87YSMbsXo0WNQY
-         sgq2fqvnbW0K/T4IQ/A83arJleBL8rDZFo4qstSQPb7MENPT1uX7V1Y+XFI/LZo1omqr
-         UpjEKtjgfChH10NS4E8bAltjUw6K3WzAx5f2w+FJHrJ1pFSsqqPIJUg5BtJj5vwIbwYc
-         f/Mg==
-X-Gm-Message-State: AOAM531uEEU+9OBaZ6c1gJXwpayii4BElwBp16BeG7MIt/GmAMvyYlQ+
-        W0i579qrTBAv95rqzYjFyPJ8aw==
-X-Google-Smtp-Source: ABdhPJw9BHdV2PhR+4EY9fQcITZ83GZhxsD5N3hVP1Z53THaNgNupwsLwr8mtFaReraEAQtYUI3qaQ==
-X-Received: by 2002:adf:ff8e:: with SMTP id j14mr34485328wrr.374.1624986222594;
-        Tue, 29 Jun 2021 10:03:42 -0700 (PDT)
-Received: from ?IPv6:2001:861:44c0:66c0:9ed5:b63d:622c:fb4e? ([2001:861:44c0:66c0:9ed5:b63d:622c:fb4e])
-        by smtp.gmail.com with ESMTPSA id h10sm3399285wmb.40.2021.06.29.10.03.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Jun 2021 10:03:37 -0700 (PDT)
-Subject: Re: [PATCH] drm/aperture: Pass DRM driver structure instead of driver
- name
-To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
-        airlied@redhat.com
-Cc:     linux-hyperv@vger.kernel.org, nouveau@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org, amd-gfx@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        spice-devel@lists.freedesktop.org,
-        linux-amlogic@lists.infradead.org, freedreno@lists.freedesktop.org,
-        linux-sunxi@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20210629135833.22679-1-tzimmermann@suse.de>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Organization: Baylibre
-Message-ID: <32c2b8f1-e8e5-c161-ed87-f80190173552@baylibre.com>
-Date:   Tue, 29 Jun 2021 19:03:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <20210629135833.22679-1-tzimmermann@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S234785AbhF2UAD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 29 Jun 2021 16:00:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232315AbhF2UAC (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 29 Jun 2021 16:00:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 17A4F61D9A;
+        Tue, 29 Jun 2021 19:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624996655;
+        bh=19i31BQ1eXD9q2J1sX8GQunX6PxvfYuWxVptVFULJ3g=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=jpvsIO8v4ZdmEG4mw4Zh69fVGmZ4oipz0Gl0Nl9ePyaTx7oZHyERhNUuOWPQizvcl
+         UbPTutKE8R9nwhupN1TJ9qmRN5KHCN38sMSoGguDlqULUC7sBI912pVstPCJA5fRpU
+         IIX5q4xBO6OuHPcRYKWG+Ni81HsVotUzbGAK2nRCaeX25qgxbshmk1NOMalvgqbfid
+         ukpXZpthY++gnWqeAFvmFDznYJWnEj1UIx6N6cVUoHh+/Z2H9Ehh1iUU3204ZIMWY3
+         tEsclyKKmaqz6P9GEUZ9x6qTFcNPlvGzH7Bf5X7Xguffy/+XJ5FkmWe0TGjlX/0E3p
+         FzadPK9Vt9aXg==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 10F1A609EA;
+        Tue, 29 Jun 2021 19:57:35 +0000 (UTC)
+Subject: Re: [GIT PULL] Hyper-V commits for 5.14
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210629110154.y7hegtxwjbo55kue@liuwe-devbox-debian-v2>
+References: <20210629110154.y7hegtxwjbo55kue@liuwe-devbox-debian-v2>
+X-PR-Tracked-List-Id: <linux-hyperv.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210629110154.y7hegtxwjbo55kue@liuwe-devbox-debian-v2>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20210629
+X-PR-Tracked-Commit-Id: 7d815f4afa87f2032b650ae1bba7534b550a6b8b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b694011a4aec3e8df98bc59fdb78e018b09de79d
+Message-Id: <162499665505.30376.13738829394335710206.pr-tracker-bot@kernel.org>
+Date:   Tue, 29 Jun 2021 19:57:35 +0000
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
+        sthemmin@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
+The pull request you sent on Tue, 29 Jun 2021 11:01:54 +0000:
 
-On 29/06/2021 15:58, Thomas Zimmermann wrote:
-> Print the name of the DRM driver when taking over fbdev devices. Makes
-> the output to dmesg more consistent. Note that the driver name is only
-> used for printing a string to the kernel log. No UAPI is affected by this
-> change.
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20210629
 
-...
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b694011a4aec3e8df98bc59fdb78e018b09de79d
 
->  drivers/gpu/drm/meson/meson_drv.c             |  2 +-
+Thank you!
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-
-...
-
->  
-> diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
-> index a7388bf7c838..3d0ccc7eef1b 100644
-> --- a/drivers/gpu/drm/meson/meson_drv.c
-> +++ b/drivers/gpu/drm/meson/meson_drv.c
-> @@ -285,7 +285,7 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
->  	 * Remove early framebuffers (ie. simplefb). The framebuffer can be
->  	 * located anywhere in RAM
->  	 */
-> -	ret = drm_aperture_remove_framebuffers(false, "meson-drm-fb");
-> +	ret = drm_aperture_remove_framebuffers(false, &meson_driver);
->  	if (ret)
->  		goto free_drm;
->  
-
-...
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
