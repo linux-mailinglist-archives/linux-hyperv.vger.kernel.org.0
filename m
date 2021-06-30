@@ -2,107 +2,126 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 315C53B8181
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Jun 2021 13:56:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D46C03B85B7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Jun 2021 17:03:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234342AbhF3L6v (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 30 Jun 2021 07:58:51 -0400
-Received: from smtp-fw-9103.amazon.com ([207.171.188.200]:1600 "EHLO
-        smtp-fw-9103.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234148AbhF3L6v (ORCPT
+        id S235817AbhF3PFd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 30 Jun 2021 11:05:33 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:45646 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235534AbhF3PFc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 30 Jun 2021 07:58:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1625054182; x=1656590182;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ASayfU0iOY/GQix80CamBpd9iL3PrqqC262D7i55c6Y=;
-  b=lNP9rbhC8M0pzf+fap3Tjo9Hqfqf9SPaUxocOYlN3MF6p5tOtmft/HxV
-   P8NHRw9+vITEUsBf84APtTk6JY/fHe9/kooidldwztOAe1Nc+KZ39Recq
-   CcIwTP5IN0+ZQHf+DwIVrcLAwt4nLHqLSdRVKOiEHqhHQS9SOnILOePlj
-   o=;
-X-IronPort-AV: E=Sophos;i="5.83,311,1616457600"; 
-   d="scan'208";a="941049953"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 30 Jun 2021 11:56:14 +0000
-Received: from EX13D28EUC003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id 0DBACA1F4C;
-        Wed, 30 Jun 2021 11:56:13 +0000 (UTC)
-Received: from u366d62d47e3651.ant.amazon.com (10.43.162.164) by
- EX13D28EUC003.ant.amazon.com (10.43.164.43) with Microsoft SMTP Server (TLS)
- id 15.0.1497.18; Wed, 30 Jun 2021 11:56:04 +0000
-Date:   Wed, 30 Jun 2021 13:56:00 +0200
-From:   Siddharth Chandrasekaran <sidcha@amazon.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
+        Wed, 30 Jun 2021 11:05:32 -0400
+Received: from [192.168.86.23] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 17B5220B7188;
+        Wed, 30 Jun 2021 08:03:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17B5220B7188
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1625065383;
+        bh=1A02Vb1b0hWl2fsJJswCKDtOOcqlivyCit8PUhlwAU4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Go8xRQTHsSWhZIKZ1FtjNlG7k3rULbb589ryayPmFbnQFelG5VYc86izQWQaCd1+N
+         z7o7C3aV9S1sKGMFeVAewa9ntrbeX+SfuoeeB5xM+Y4Y+OMI3pyqHy8VeIO3vYih6G
+         FszfrRg+vL0jjL/nzoJipPaRcQ1zx0Ardlhn2Jdc=
+Subject: Re: [PATCH 06/17] mshv: SynIC port and connection hypercalls
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-CC:     Siddharth Chandrasekaran <sidcha.dev@gmail.com>,
-        Alexander Graf <graf@amazon.com>,
-        Evgeny Iakovlev <eyakovl@amazon.de>,
-        Liran Alon <liran@amazon.com>,
-        Ioannis Aslanidis <iaslan@amazon.de>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 0/4] Add support for XMM fast hypercalls
-Message-ID: <20210630115559.GA32360@u366d62d47e3651.ant.amazon.com>
-References: <cover.1622019133.git.sidcha@amazon.de>
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+References: <cover.1622654100.git.viremana@linux.microsoft.com>
+ <3125953aae8e7950a6da4c311ef163b79d6fb6b3.1622654100.git.viremana@linux.microsoft.com>
+ <20210630111048.xn3gbht33inx2luh@liuwe-devbox-debian-v2>
+From:   Vineeth Pillai <viremana@linux.microsoft.com>
+Message-ID: <50df2b12-18a6-8a11-f57a-d1e4bc04e9cd@linux.microsoft.com>
+Date:   Wed, 30 Jun 2021 11:03:05 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1622019133.git.sidcha@amazon.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.43.162.164]
-X-ClientProxiedBy: EX13D19UWA004.ant.amazon.com (10.43.160.102) To
- EX13D28EUC003.ant.amazon.com (10.43.164.43)
+In-Reply-To: <20210630111048.xn3gbht33inx2luh@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, May 26, 2021 at 10:56:07AM +0200, Siddharth Chandrasekaran wrote:
-> Hyper-V supports the use of XMM registers to perform fast hypercalls.
-> This allows guests to take advantage of the improved performance of the
-> fast hypercall interface even though a hypercall may require more than
-> (the current maximum of) two general purpose registers.
-> 
-> The XMM fast hypercall interface uses an additional six XMM registers
-> (XMM0 to XMM5) to allow the caller to pass an input parameter block of
-> up to 112 bytes. Hyper-V can also return data back to the guest in the
-> remaining XMM registers that are not used by the current hypercall.
-> 
-> Although the Hyper-v TLFS mentions that a guest cannot use this feature
-> unless the hypervisor advertises support for it, some hypercalls which
-> we plan on upstreaming in future uses them anyway. This patchset adds
-> necessary infrastructure for handling input/output via XMM registers and
-> patches kvm_hv_flush_tlb() to use xmm input arguments.
 
-Hi Paolo,
+>> +
+>> +int
+>> +hv_call_create_port(u64 port_partition_id, union hv_port_id port_id,
+>> +		    u64 connection_partition_id,
+>> +		    struct hv_port_info *port_info,
+>> +		    u8 port_vtl, u8 min_connection_vtl, int node)
+>> +{
+>> +	struct hv_create_port *input;
+>> +	unsigned long flags;
+>> +	int ret = 0;
+>> +	int status;
+>> +
+>> +	do {
+>> +		local_irq_save(flags);
+>> +		input = (struct hv_create_port *)(*this_cpu_ptr(
+>> +				hyperv_pcpu_input_arg));
+>> +		memset(input, 0, sizeof(*input));
+>> +
+>> +		input->port_partition_id = port_partition_id;
+>> +		input->port_id = port_id;
+>> +		input->connection_partition_id = connection_partition_id;
+>> +		input->port_info = *port_info;
+>> +		input->port_vtl = port_vtl;
+>> +		input->min_connection_vtl = min_connection_vtl;
+>> +		input->proximity_domain_info =
+>> +			numa_node_to_proximity_domain_info(node);
+> This misses the check for NUMA_NO_NODE, so does the function for port
+> connection (see below).
+>
+> I think it would actually be better to leave the check in
+> numa_node_to_proximity_domain_info to avoid problems like this.
+>
+> Of course, adapting this approach means some call sites for that
+> function will need to be changed too.
+Thanks for catching this and fixing Wei, will roll it into my branch.
 
-Are you expecting more reviews on these patches? 
-
-Thanks. 
-
-~ Sid
+~Vineeth
 
 
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+>
+> ---8<---
+> >From 8705857c62b3e5f13d415736ca8b508c22e3f5ba Mon Sep 17 00:00:00 2001
+> From: Wei Liu <wei.liu@kernel.org>
+> Date: Wed, 30 Jun 2021 11:08:31 +0000
+> Subject: [PATCH] numa_node_to_proximity_domain_info should cope with
+>   NUMA_NO_NODE
+>
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+>   include/asm-generic/mshyperv.h | 12 ++++++++----
+>   1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index d9b91b8f63c8..44552b7a02ef 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -31,10 +31,14 @@ numa_node_to_proximity_domain_info(int node)
+>   {
+>   	union hv_proximity_domain_info proximity_domain_info;
+>   
+> -	proximity_domain_info.domain_id = node_to_pxm(node);
+> -	proximity_domain_info.flags.reserved = 0;
+> -	proximity_domain_info.flags.proximity_info_valid = 1;
+> -	proximity_domain_info.flags.proximity_preferred = 1;
+> +	proximity_domain_info.as_uint64 = 0;
+> +
+> +	if (node != NUMA_NO_NODE) {
+> +		proximity_domain_info.domain_id = node_to_pxm(node);
+> +		proximity_domain_info.flags.reserved = 0;
+> +		proximity_domain_info.flags.proximity_info_valid = 1;
+> +		proximity_domain_info.flags.proximity_preferred = 1;
+> +	}
+>   
+>   	return proximity_domain_info;
+>   }
