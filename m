@@ -2,34 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3673E3BBEEC
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jul 2021 17:28:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E03773BBF15
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jul 2021 17:29:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231872AbhGEPbE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jul 2021 11:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55362 "EHLO mail.kernel.org"
+        id S232001AbhGEPbW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jul 2021 11:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231846AbhGEPbB (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jul 2021 11:31:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7C5E161973;
-        Mon,  5 Jul 2021 15:28:23 +0000 (UTC)
+        id S232016AbhGEPbV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 5 Jul 2021 11:31:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2D03B61986;
+        Mon,  5 Jul 2021 15:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625498904;
-        bh=ArBWbt/aB51lICRBdHOOvY4kaHHCe9ja5MmH8SJrW5U=;
+        s=k20201202; t=1625498924;
+        bh=LSg+7uqgLmXmAyAAsiTLfdHSDeUD1WeA8ubJ5SDsZL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ijzj2CWmV8GXcwRW1XYaQWAEx/iUN6zOqI20ZYNuJil2C4A02zlV4F7wZ3jK2xe0P
-         9t012TyxJEi8VG408CvdZp9dLhUmz9jNwj9Ti0euMJNwTv9g23+oKYaayNjz4hhVS/
-         sdoLzYq8/jlcrdbnXhEW/Nkyiu4OP31lLBbXy/UqUvmKAcY63r2dq6SJRTtcKHML2M
-         FWP6HznclA3m4Pyv8rQVWLBI0BzHqcCOTlg5OKkd5pLQxovpVZxX6fWKvCZqAx3EoI
-         2vuixJEthTVFfgz7Dv2sYAAhkCqgf1UII7Df+uFLRpCFf9pXE/88Ngmpz21aqTZMgH
-         QiaLck9/UfThw==
+        b=S+KGxEbPR9sYSnAzAoAZIfhgZTrAGI/dDGW5qXDBzbniINMb3gPP8spHspIVE47jt
+         8YC0guH/hyGJdtlFtmXzADq5jkIY/84qdiAARATBCcUAQme+vo5jaUIVJGA1Hj1TtP
+         hRkaz40WTWcmy7cdnw5g1Qr2sJpEotZEGMGk2ySXHvDRTf7trPr+M1uCmry3fVbkO8
+         2q0WJbvrv7XEVsAiAz5L4+V8WCkOkn8LMRtymmnjYmwp5hMXV1Jw0cA8ZvoDESqVfL
+         ZySthH/0B0K4ecvd9tLJT5qwuBvzG/TS4eI2YP3mnC9go9pMPtLzdd9G0U//X0xzky
+         krtwi6J/OGhKw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Wei Liu <wei.liu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 06/59] hv_utils: Fix passing zero to 'PTR_ERR' warning
-Date:   Mon,  5 Jul 2021 11:27:22 -0400
-Message-Id: <20210705152815.1520546-6-sashal@kernel.org>
+Cc:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.13 21/59] drivers: hv: Fix missing error code in vmbus_connect()
+Date:   Mon,  5 Jul 2021 11:27:37 -0400
+Message-Id: <20210705152815.1520546-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210705152815.1520546-1-sashal@kernel.org>
 References: <20210705152815.1520546-1-sashal@kernel.org>
@@ -41,41 +44,41 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-[ Upstream commit c6a8625fa4c6b0a97860d053271660ccedc3d1b3 ]
+[ Upstream commit 9de6655cc5a6a1febc514465c87c24a0e96d8dba ]
 
-Sparse warn this:
+Eliminate the follow smatch warning:
 
-drivers/hv/hv_util.c:753 hv_timesync_init() warn:
- passing zero to 'PTR_ERR'
+drivers/hv/connection.c:236 vmbus_connect() warn: missing error code
+'ret'.
 
-Use PTR_ERR_OR_ZERO instead of PTR_ERR to fix this.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20210514070116.16800-1-yuehaibing@huawei.com
-[ wei: change %ld to %d ]
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Link: https://lore.kernel.org/r/1621940321-72353-1-git-send-email-jiapeng.chong@linux.alibaba.com
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/hv_util.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hv/connection.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index e4aefeb330da..136576cba26f 100644
---- a/drivers/hv/hv_util.c
-+++ b/drivers/hv/hv_util.c
-@@ -750,8 +750,8 @@ static int hv_timesync_init(struct hv_util_service *srv)
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 311cd005b3be..5e479d54918c 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -232,8 +232,10 @@ int vmbus_connect(void)
  	 */
- 	hv_ptp_clock = ptp_clock_register(&ptp_hyperv_info, NULL);
- 	if (IS_ERR_OR_NULL(hv_ptp_clock)) {
--		pr_err("cannot register PTP clock: %ld\n",
--		       PTR_ERR(hv_ptp_clock));
-+		pr_err("cannot register PTP clock: %d\n",
-+		       PTR_ERR_OR_ZERO(hv_ptp_clock));
- 		hv_ptp_clock = NULL;
- 	}
  
+ 	for (i = 0; ; i++) {
+-		if (i == ARRAY_SIZE(vmbus_versions))
++		if (i == ARRAY_SIZE(vmbus_versions)) {
++			ret = -EDOM;
+ 			goto cleanup;
++		}
+ 
+ 		version = vmbus_versions[i];
+ 		if (version > max_version)
 -- 
 2.30.2
 
