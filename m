@@ -2,39 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5C513BC001
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jul 2021 17:33:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8512A3BC012
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jul 2021 17:33:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232974AbhGEPeG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jul 2021 11:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
+        id S232624AbhGEPeQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jul 2021 11:34:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231902AbhGEPdV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jul 2021 11:33:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 13B10619CE;
-        Mon,  5 Jul 2021 15:30:35 +0000 (UTC)
+        id S232354AbhGEPda (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 5 Jul 2021 11:33:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B93FD619A2;
+        Mon,  5 Jul 2021 15:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625499036;
-        bh=GUW79aP2PvGnzJTv2//4THrimRDUW5SMUdWtG7K274E=;
+        s=k20201202; t=1625499045;
+        bh=LqpN0VER40y/UmN+zSWgGA2PWKnR8rCjiWmFowHDx2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePNEmaTAg0VXLr/qPJht67mewrZhV+I/X/kN2I3unPWLL7Shx7RtHzgQc+auUHguc
-         up0C8ik5BqNX3cj8qLwYAYuGvyD8R0D9tnjZdvBHFq4QURhH3o63f5B5jZvCUrasVz
-         GMMQksxLzKqYfYksvsbwghJQmkiEq5UyubVwEyY60RWksB0QgYPYLXY0qZipT3Woqv
-         YM4FE4rN7rYKeddoLsGO2kg8N3wHvNNhMNSOPG5yJXfihzl6hec0IrMEvuszpfKIrV
-         w+ifkCc4WimeatLYCkA64H+F0AoF0Gwtw84rW7Jox+eZTbwNcY+a6CJrGU2qB/Shem
-         0wU4ZFRfZTBGA==
+        b=Qq3QV/rQcMuQpCLk6HPoam4RP/ROEzwWFy1zJHlxAPxMaxjDABAQ0JSnm6DAh+v+N
+         mPqXwfs8Yl2Jb8UbwhNDLU4FLXETnfJQB1WsrqN0iZDIQD7q3GclvGAeKeO9ij0phy
+         vG13CYfuOt5QrJ3tKDyDyFSuBEFNo6+RHwLNrNqe6UUM+PDhuAA/1dyrqgKFwz5IZG
+         YP5xpTJC6T+V1G58E8badWAtsF7Bk8dBrv9v9+3RyyGzMeVrV5zSMEbjWPxX/BqLd9
+         uA1mB/3pl8VkvhSnTg9/13Bdjn1VdMzmGh4MaIo+SzEsvxHpx8uMeURG9OA5H5HzP1
+         S28GRLWSUs1Bw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Mohammad Alqayeem <mohammad.alqyeem@nutanix.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 28/41] PCI: hv: Add check for hyperv_initialized in init_hv_pci_drv()
-Date:   Mon,  5 Jul 2021 11:29:48 -0400
-Message-Id: <20210705153001.1521447-28-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Wei Liu <wei.liu@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 04/26] hv_utils: Fix passing zero to 'PTR_ERR' warning
+Date:   Mon,  5 Jul 2021 11:30:17 -0400
+Message-Id: <20210705153039.1521781-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210705153001.1521447-1-sashal@kernel.org>
-References: <20210705153001.1521447-1-sashal@kernel.org>
+In-Reply-To: <20210705153039.1521781-1-sashal@kernel.org>
+References: <20210705153039.1521781-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,38 +41,40 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 7d815f4afa87f2032b650ae1bba7534b550a6b8b ]
+[ Upstream commit c6a8625fa4c6b0a97860d053271660ccedc3d1b3 ]
 
-Add check for hv_is_hyperv_initialized() at the top of
-init_hv_pci_drv(), so if the pci-hyperv driver is force-loaded on non
-Hyper-V platforms, the init_hv_pci_drv() will exit immediately, without
-any side effects, like assignments to hvpci_block_ops, etc.
+Sparse warn this:
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reported-and-tested-by: Mohammad Alqayeem <mohammad.alqyeem@nutanix.com>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Link: https://lore.kernel.org/r/1621984653-1210-1-git-send-email-haiyangz@microsoft.com
+drivers/hv/hv_util.c:753 hv_timesync_init() warn:
+ passing zero to 'PTR_ERR'
+
+Use PTR_ERR_OR_ZERO instead of PTR_ERR to fix this.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20210514070116.16800-1-yuehaibing@huawei.com
+[ wei: change %ld to %d ]
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-hyperv.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hv/hv_util.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 03ed5cb1c4b2..d57c538bbb2d 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -3480,6 +3480,9 @@ static void __exit exit_hv_pci_drv(void)
- 
- static int __init init_hv_pci_drv(void)
- {
-+	if (!hv_is_hyperv_initialized())
-+		return -ENODEV;
-+
- 	/* Set the invalid domain number's bit, so it will not be used */
- 	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+index e32681ee7b9f..1671f6f9ea80 100644
+--- a/drivers/hv/hv_util.c
++++ b/drivers/hv/hv_util.c
+@@ -537,8 +537,8 @@ static int hv_timesync_init(struct hv_util_service *srv)
+ 	 */
+ 	hv_ptp_clock = ptp_clock_register(&ptp_hyperv_info, NULL);
+ 	if (IS_ERR_OR_NULL(hv_ptp_clock)) {
+-		pr_err("cannot register PTP clock: %ld\n",
+-		       PTR_ERR(hv_ptp_clock));
++		pr_err("cannot register PTP clock: %d\n",
++		       PTR_ERR_OR_ZERO(hv_ptp_clock));
+ 		hv_ptp_clock = NULL;
+ 	}
  
 -- 
 2.30.2
