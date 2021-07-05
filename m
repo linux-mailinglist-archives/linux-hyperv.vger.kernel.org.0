@@ -2,37 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D5203BC06A
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jul 2021 17:34:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B4693BC08D
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jul 2021 17:34:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232050AbhGEPf4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jul 2021 11:35:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56364 "EHLO mail.kernel.org"
+        id S233516AbhGEPgY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jul 2021 11:36:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232549AbhGEPeo (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jul 2021 11:34:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2B016619D0;
-        Mon,  5 Jul 2021 15:31:19 +0000 (UTC)
+        id S233253AbhGEPfV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 5 Jul 2021 11:35:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 56D2961C1A;
+        Mon,  5 Jul 2021 15:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625499079;
-        bh=MvOkoWy2Sbthu5qIj/8nrRpF4nmx6fLTa22fyvfyVGc=;
+        s=k20201202; t=1625499100;
+        bh=79PfZEMp6iK7zDjAPJE5rtxXNapRfnInHGG/50Fo/bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JL9aYaWKvRPIu2e6yRubuddE9rLQC7QlDox8z2Dgk/FWPIRiA00tSt5tAwyQBmLPr
-         kWL6Ugj1ccgNrsX75bwGKjMlfxGCGl7Zwnw7NU8GezPRYAmF/JZQS0fvgygh9R1S8G
-         04NfkRUk/iR4VySYWo4fUOTL4YaLNcDZKf7FRCMFm6vQ8u4Fv8jtJW3xUP6X/KMRJW
-         F9WFQfWeTbGpa0ZSTRliiNv1nbKhMHzMKIb5Uxxtu+10/uhF90d+uUJoHdyAw7qTHD
-         6DKv3/oqjS0xLx5N6IZnPmIz2gt79VdrDZGIuXNi1K4LbXvugS5Xcxfp5Q1fA9t6kq
-         MmPnS3lJ6FrKg==
+        b=WUF6AIfEtkYCiMVdQsMzx737E4OiODemCUPc7EkwnKclgSMoYlTk7urzJLFLh6GmD
+         S/kVq5EZVr1VSNJlHQGnLpfsKU0RNXkDwB2AYhNZGknFw+6yAbcPErYPkkEma/vxpl
+         PUdTHmGwVJ+5JwpAhy1tmh+E+jwtdxdFIblfJafTFHZBe968Vi7f2XtWjO2Dg4xbjh
+         jq9uw5mjJVsfL/a3mRnTdGJViYoFm+pEpBMvbnsRbsqTwg5fbfk1X8hmrV8+Fma8oe
+         MhQCbKvt0GloDMfPawiHeE9CgtGD+gVh+PZquhsTsKdLodAqEroXJBZ2vavICsscZI
+         7Kp7LNb+rw29w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     YueHaibing <yuehaibing@huawei.com>, Wei Liu <wei.liu@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/17] hv_utils: Fix passing zero to 'PTR_ERR' warning
-Date:   Mon,  5 Jul 2021 11:31:00 -0400
-Message-Id: <20210705153114.1522046-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 03/15] hv_utils: Fix passing zero to 'PTR_ERR' warning
+Date:   Mon,  5 Jul 2021 11:31:24 -0400
+Message-Id: <20210705153136.1522245-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210705153114.1522046-1-sashal@kernel.org>
-References: <20210705153114.1522046-1-sashal@kernel.org>
+In-Reply-To: <20210705153136.1522245-1-sashal@kernel.org>
+References: <20210705153136.1522245-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,10 +62,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index 423205077bf6..2003314dcfbe 100644
+index 14dce25c104f..8b2ebcab1518 100644
 --- a/drivers/hv/hv_util.c
 +++ b/drivers/hv/hv_util.c
-@@ -548,8 +548,8 @@ static int hv_timesync_init(struct hv_util_service *srv)
+@@ -545,8 +545,8 @@ static int hv_timesync_init(struct hv_util_service *srv)
  	 */
  	hv_ptp_clock = ptp_clock_register(&ptp_hyperv_info, NULL);
  	if (IS_ERR_OR_NULL(hv_ptp_clock)) {
