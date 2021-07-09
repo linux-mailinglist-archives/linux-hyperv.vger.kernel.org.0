@@ -2,160 +2,130 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 588643C222B
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jul 2021 12:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 007AA3C230C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jul 2021 13:43:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232032AbhGIK1V (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Jul 2021 06:27:21 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:53950 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232006AbhGIK1V (ORCPT
+        id S230508AbhGILq3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Jul 2021 07:46:29 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:40908 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230209AbhGILq3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Jul 2021 06:27:21 -0400
-Received: by mail-wm1-f46.google.com with SMTP id w13so6010400wmc.3;
-        Fri, 09 Jul 2021 03:24:37 -0700 (PDT)
+        Fri, 9 Jul 2021 07:46:29 -0400
+Received: by mail-wm1-f41.google.com with SMTP id h18-20020a05600c3512b029020e4ceb9588so8906493wmq.5;
+        Fri, 09 Jul 2021 04:43:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cAfemKVKaAPq40ft5rYBbrNJJ0FxZzS3NBhkFBnKSzI=;
-        b=YAW3U4TOhh9jayB20oqIkMIbn+6IlNyrt+m2wQxcJG+1ope3QDQS/7WtJ2qyEdcAij
-         nXCyzZKfc+AKkbCp5bv3Yjcgh7ZTClRW3LkkSEw619K1hchuypXujudHmFJgvXxkTaJo
-         XFgFNgr8P8vr99RzkiTqpoU2crGGqHcu1/GAfCFhEph4C3H51XdXOmr2OsVQrrwTg5Qq
-         CJYdnLOFbjEaQ5+zykCHG9c+aU+f2odg4DQfOQJP6CMbVaXWEg3swaWWdyyRmOUZ9PRD
-         25UvOunY5Asg1XBjfOmRKMIrgef9FygU1izOS9xTevHyEN/MLIoTt1c6OhbvaDk/c8g2
-         wZpQ==
-X-Gm-Message-State: AOAM531IIt2ZSzlc1hyEz6ZbSXVdtTkvxWhvrTnITClw+GcSYULIdLFK
-        2Lgg8pVXdSPtA+vQkgKDZaU=
-X-Google-Smtp-Source: ABdhPJz7KdWD9EJLU17W1kLv6XakRSsjJEumz5JxJkpi9BFIWNd/m8DAe9BoZPX7TXQA5ORW8lv8ug==
-X-Received: by 2002:a1c:e90d:: with SMTP id q13mr38611656wmc.163.1625826276878;
-        Fri, 09 Jul 2021 03:24:36 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id j1sm11370711wms.7.2021.07.09.03.24.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TUZPMZ4hjZI406B6oLsgIr41PzVsb92Ly0yg+RmaVNw=;
+        b=VreKst34LPa2TDS/74gPgnQutozHz2tnLuaYz6IvnDN9fzM/A2ZbjIel/P0Z8sX2ql
+         0jDTuYNiA8vVDhud4BI4FwaRqeWCHDO5inHAqpFMlOI2xyDBAMDkvLmRZopMiexRo7/V
+         DH3FOvZF8Q3aTgKO9KOn5e3hOR1rkiIjW9F3pwHWuQWyoMHc9OM1lZ8IGMtL9DRuDigR
+         r3Lb0M6cS2oS26ey+rj+1sGJ7Z81WJ7BPtEQ7HPXe8yL3xdL1MX4foU8KVVTxHadz1CK
+         2w2lKt5sk0tbEjWac/Cuhc7sUPxK145lr8aH1ELbiksoifH1xtmB/G1wacYPIVFB0QAy
+         01Dw==
+X-Gm-Message-State: AOAM530n50DIzDPLLVma0zmigxl0knmAOXCz8jCojwsVgQnNWcZbPJjH
+        fFx0mAxgdchLWWZCJTpishhGoEnBbLw=
+X-Google-Smtp-Source: ABdhPJwYe0JLlVWlLExBQqOITL6nm2S+sUw2zS7k+ZGTUIWG/WwdI+MpUrsQiHAZOz9sUQGzfZ+UpQ==
+X-Received: by 2002:a1c:3505:: with SMTP id c5mr11135674wma.53.1625831023671;
+        Fri, 09 Jul 2021 04:43:43 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id z12sm4896849wrs.39.2021.07.09.04.43.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jul 2021 03:24:36 -0700 (PDT)
-Date:   Fri, 9 Jul 2021 10:24:34 +0000
+        Fri, 09 Jul 2021 04:43:42 -0700 (PDT)
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
+To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        kumarpraveen@linux.microsoft.com, pasha.tatashin@soleen.com,
         Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH 1/1] PCI: hv: Support for create interrupt v3
-Message-ID: <20210709102434.c4hj4iehumf7qbj7@liuwe-devbox-debian-v2>
-References: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
+Subject: [RFC v1 0/8] MSHV: add PV-IOMMU driver
+Date:   Fri,  9 Jul 2021 11:43:31 +0000
+Message-Id: <20210709114339.3467637-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW4PR21MB20025B945D77BBFDF61C6DA8C0199@MW4PR21MB2002.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jul 08, 2021 at 11:04:49PM +0000, Sunil Muthuswamy wrote:
-> Hyper-V vPCI protocol version 1_4 adds support for create interrupt
-> v3. Create interrupt v3 essentially makes the size of the vector
-> field bigger in the message, thereby allowing bigger vector values.
-> For example, that will come into play for supporting LPI vectors
-> on ARM, which start at 8192.
-> 
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 74 ++++++++++++++++++++++++++---
->  1 file changed, 68 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index bebe3eeebc4e..de61b20f9604 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -64,6 +64,7 @@ enum pci_protocol_version_t {
->  	PCI_PROTOCOL_VERSION_1_1 = PCI_MAKE_VERSION(1, 1),	/* Win10 */
->  	PCI_PROTOCOL_VERSION_1_2 = PCI_MAKE_VERSION(1, 2),	/* RS1 */
->  	PCI_PROTOCOL_VERSION_1_3 = PCI_MAKE_VERSION(1, 3),	/* Vibranium */
-> +	PCI_PROTOCOL_VERSION_1_4 = PCI_MAKE_VERSION(1, 4),      /* Fe */
->  };
->  
->  #define CPU_AFFINITY_ALL	-1ULL
-> @@ -73,6 +74,7 @@ enum pci_protocol_version_t {
->   * first.
->   */
->  static enum pci_protocol_version_t pci_protocol_versions[] = {
-> +	PCI_PROTOCOL_VERSION_1_4,
->  	PCI_PROTOCOL_VERSION_1_3,
->  	PCI_PROTOCOL_VERSION_1_2,
->  	PCI_PROTOCOL_VERSION_1_1,
-> @@ -122,6 +124,8 @@ enum pci_message_type {
->  	PCI_CREATE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x17,
->  	PCI_DELETE_INTERRUPT_MESSAGE2	= PCI_MESSAGE_BASE + 0x18, /* unused */
->  	PCI_BUS_RELATIONS2		= PCI_MESSAGE_BASE + 0x19,
-> +	PCI_RESOURCES_ASSIGNED3         = PCI_MESSAGE_BASE + 0x1A,
-> +	PCI_CREATE_INTERRUPT_MESSAGE3   = PCI_MESSAGE_BASE + 0x1B,
->  	PCI_MESSAGE_MAXIMUM
->  };
->  
-> @@ -235,6 +239,21 @@ struct hv_msi_desc2 {
->  	u16	processor_array[32];
->  } __packed;
->  
-> +/*
-> + * struct hv_msi_desc3 - 1.3 version of hv_msi_desc
-> + *	Everything is the same as in 'hv_msi_desc2' except that the size
-> + *	of the 'vector_count' field is larger to support bigger vector
-> + *	values. For ex: LPI vectors on ARM.
-> + */
-> +struct hv_msi_desc3 {
-> +	u32	vector;
-> +	u8	delivery_mode;
-> +	u8	reserved;
-> +	u16	vector_count;
-> +	u16	processor_count;
-> +	u16	processor_array[32];
-> +} __packed;
-> +
->  /**
->   * struct tran_int_desc
->   * @reserved:		unused, padding
-> @@ -383,6 +402,12 @@ struct pci_create_interrupt2 {
->  	struct hv_msi_desc2 int_desc;
->  } __packed;
->  
-> +struct pci_create_interrupt3 {
-> +	struct pci_message message_type;
-> +	union win_slot_encoding wslot;
-> +	struct hv_msi_desc3 int_desc;
-> +} __packed;
-> +
->  struct pci_delete_interrupt {
->  	struct pci_message message_type;
->  	union win_slot_encoding wslot;
-> @@ -1334,26 +1359,55 @@ static u32 hv_compose_msi_req_v1(
->  	return sizeof(*int_pkt);
->  }
->  
-> +static void hv_compose_msi_req_get_cpu(struct cpumask *affinity, int *cpu,
-> +				       u16 *count)
+Hi all
 
-Isn't count redundant here? I don't see how this can be used safely for
-passing back more than 1 cpu, since if cpu is pointing to an array, its
-size is not specified.
+Device passthrough is a critial feature for a virtualization stack. When
+designing this feature for MSHV support on Linux, one important
+considration is to not deviate from Linux's default VFIO stack. VFIO
+relies on an IOMMU or IOMMUs in the system to manipulate DMA mappings.
 
+In this series an IOMMU driver is implemented using a set of hypercall
+interfaces provided by the Microsoft Hypervisor. At this stage only DMA
+remapping is implemented. Interrupt remapping will come later.
+
+With this series I'm able to passthrough an NVMe drive to a guest with VFIO on
+a modified version of Cloud Hypervisor. From users' point of view, nothing
+needs changing. Cloud Hypervisor and Rust-VMM changes, which depend on the new
+kernel UAPIs from this series, will be upstreamed too.
+
+This series is built on top of Nuno and Vineeth's patches [0][1].
+
+The meat is in the patch named "mshv: add paravirtualized IOMMU
+support".
+
+The in-kernel device framework and the VFIO bridge device are heavily
+inspired by KVM's code. I pondered whether it would be worth refactoring
+the code in KVM but decided against that route for two reasons: 1. it
+allowed faster prototyping and 2. I was not sure if that's something KVM
+community would agree to.
+
+For the VT-D changes, what we're after is to build the RMRR regions list
+so that reserved regions are respected. Instead of doing a bad job
+myself, I decided to piggy-back on Intel's own code. AMD support is to
+be added until we have an AMD system.
+
+Comments are welcome.
+
+Thanks,
 Wei.
 
-> +{
-> +	/*
-> +	 * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
-> +	 * by subsequent retarget in hv_irq_unmask().
-> +	 */
-> +	*cpu = cpumask_first_and(affinity, cpu_online_mask);
-> +	*count = 1;
-> +}
-> +
+[0] https://lore.kernel.org/linux-hyperv/1622241819-21155-1-git-send-email-nunodasneves@linux.microsoft.com/
+[1] https://lore.kernel.org/linux-hyperv/cover.1622654100.git.viremana@linux.microsoft.com/
+
+Wei Liu (8):
+  x86/hyperv: export hv_build_pci_dev_id
+  asm-generic/hyperv: add device domain definitions
+  intel/vt-d: make DMAR table parsing code more flexible
+  intel/vt-d: export intel_iommu_get_resv_regions
+  mshv: add paravirtualized IOMMU support
+  mshv: command line option to skip devices in PV-IOMMU
+  mshv: implement in-kernel device framework
+  mshv: add vfio bridge device
+
+ Documentation/virt/mshv/api.rst     |  12 +
+ arch/x86/hyperv/irqdomain.c         |   3 +-
+ arch/x86/include/asm/mshyperv.h     |   1 +
+ drivers/hv/Kconfig                  |   4 +
+ drivers/hv/Makefile                 |   2 +-
+ drivers/hv/mshv_main.c              | 186 ++++++++
+ drivers/hv/vfio.c                   | 244 ++++++++++
+ drivers/hv/vfio.h                   |  18 +
+ drivers/iommu/Kconfig               |  14 +
+ drivers/iommu/hyperv-iommu.c        | 673 ++++++++++++++++++++++++++++
+ drivers/iommu/intel/dmar.c          |  38 +-
+ drivers/iommu/intel/iommu.c         |   7 +-
+ drivers/iommu/intel/irq_remapping.c |   2 +-
+ include/asm-generic/hyperv-tlfs.h   | 144 ++++++
+ include/linux/dmar.h                |   2 +-
+ include/linux/intel-iommu.h         |   4 +
+ include/linux/mshv.h                |  57 +++
+ include/uapi/linux/mshv.h           |  36 ++
+ 18 files changed, 1429 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/hv/vfio.c
+ create mode 100644 drivers/hv/vfio.h
+
+-- 
+2.30.2
+
