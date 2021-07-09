@@ -2,43 +2,35 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15A343C25CD
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jul 2021 16:21:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15D2F3C26DC
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jul 2021 17:33:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231797AbhGIOYB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Jul 2021 10:24:01 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:37488 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231775AbhGIOYB (ORCPT
+        id S232053AbhGIPfn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Jul 2021 11:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231976AbhGIPfn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Jul 2021 10:24:01 -0400
-Received: by mail-wr1-f48.google.com with SMTP id i94so12368862wri.4;
-        Fri, 09 Jul 2021 07:21:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=27l4Uz/+uYVwD8O7yGXhjHeXe9a3hQtGW17m68tCa8g=;
-        b=HHaluyR3FMRCnOnsksChXewoFrOZ/5bsOjX7CrHr3OyFiFhCfispg64twcZEhsAbB7
-         bsfiFdLODv9Nh7Yek8NpJtOnr2kWsp9JMiKK6cy7o641+ooY7Prlp+Fihf787d/13f0M
-         qE4O4hsVAriJk6DyHrQERVf6UMnR+sQGn0H2q0A1Kd/v5jPVHQGSzAE9U00pSYFBj8rG
-         +k0fS0hjTyQaQ3vRasl+WT7cV/Jp2w/lWS8W7p5JbgMws8Fbyezbg5MRklAG1ZaTf4Ib
-         eWGZkE42dmzKc5QVtlPCaXvpRMmeWnoinjsiDpmjm0xoNBxj0hy6A3mhrDLvO7SNJ1l3
-         0kAQ==
-X-Gm-Message-State: AOAM532bc7VTY3Y5R0IdokYppyvIkijy3DvLwXp6AUV+JHJ2yHhiBCkM
-        EvhKdl3bDDV/rk8XFq2Hc5bpj3zFLZA=
-X-Google-Smtp-Source: ABdhPJwU8kQSV9vDkCxcapU34T3qNg4eLb3XB3zA3/6ahpSdfxcMnEegnlP/Bp0xLs8nfBCCunDgOA==
-X-Received: by 2002:adf:facf:: with SMTP id a15mr20539330wrs.39.1625840476073;
-        Fri, 09 Jul 2021 07:21:16 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id i12sm5625277wrp.57.2021.07.09.07.21.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jul 2021 07:21:15 -0700 (PDT)
-Date:   Fri, 9 Jul 2021 14:21:14 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Fri, 9 Jul 2021 11:35:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23C6C0613DD;
+        Fri,  9 Jul 2021 08:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=y7YLHiF0t+l7CAiXRoEvkaZFeIRtHz06yPRep3Kg/LM=; b=cBaSGviwrp/QKpIQbEzA+mZFQt
+        gwNGWcl04gu8kPnL199xu/bBhXuhbNZRbCFyLnnY6WTYlGlXWVhJu0+MXdkdYFiI/6yYbV3bl32s0
+        JWG9A0CdPvNcpYS1YUnAv8QgA/UymEqfFn8bzWbKCHXwaWKUDNvPXQ16pM55my0DJt0ntdPFILt4E
+        uN2RM+XpsviEXdDjdC1SiPe1jN9t9R/U9mYpIViX4Ug97nhwdepiGqHj5+kYfhd7C7tMCdpr1/Ae2
+        JmCWzLhVPcTns+75Q1+sGe6vZFgLsSZR8BPvVXWz3N6IghXCyUFWCizmSgFMHhPnolCcE43NaSgk5
+        Rn3Q10SQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m1sUi-00EdZV-PT; Fri, 09 Jul 2021 15:32:50 +0000
+Date:   Fri, 9 Jul 2021 16:32:48 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
         virtualization@lists.linux-foundation.org,
         Linux Kernel List <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
@@ -46,34 +38,61 @@ Cc:     Wei Liu <wei.liu@kernel.org>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
         kumarpraveen@linux.microsoft.com, pasha.tatashin@soleen.com,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux-foundation.org>
-Subject: Re: [RFC v1 4/8] intel/vt-d: export intel_iommu_get_resv_regions
-Message-ID: <20210709142114.r5vhxmmp6mzq3vjl@liuwe-devbox-debian-v2>
+        Jonathan Corbet <corbet@lwn.net>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Lillian Grassin-Drake <ligrassi@microsoft.com>,
+        Muminul Islam <muislam@microsoft.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [RFC v1 7/8] mshv: implement in-kernel device framework
+Message-ID: <YOhsIDccgbUCzwqt@casper.infradead.org>
 References: <20210709114339.3467637-1-wei.liu@kernel.org>
- <20210709114339.3467637-5-wei.liu@kernel.org>
- <f32e17d4-e435-cd50-8afc-68f6133fd1a0@linux.intel.com>
+ <20210709114339.3467637-8-wei.liu@kernel.org>
+ <YOhIzJVPN9SwoRK0@casper.infradead.org>
+ <20210709135013.t5axinjmufotpylf@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f32e17d4-e435-cd50-8afc-68f6133fd1a0@linux.intel.com>
+In-Reply-To: <20210709135013.t5axinjmufotpylf@liuwe-devbox-debian-v2>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jul 09, 2021 at 10:17:25PM +0800, Lu Baolu wrote:
-> On 2021/7/9 19:43, Wei Liu wrote:
-> > When Microsoft Hypervisor runs on Intel platforms it needs to know the
-> > reserved regions to program devices correctly. There is no reason to
-> > duplicate intel_iommu_get_resv_regions. Export it.
+On Fri, Jul 09, 2021 at 01:50:13PM +0000, Wei Liu wrote:
+> On Fri, Jul 09, 2021 at 02:02:04PM +0100, Matthew Wilcox wrote:
+> > On Fri, Jul 09, 2021 at 11:43:38AM +0000, Wei Liu wrote:
+> > > +static long
+> > > +mshv_partition_ioctl_create_device(struct mshv_partition *partition,
+> > > +	void __user *user_args)
+> > > +{
+> > [...]
+> > > +	mshv_partition_get(partition);
+> > > +	r = anon_inode_getfd(ops->name, &mshv_device_fops, dev, O_RDWR | O_CLOEXEC);
+> > > +	if (r < 0) {
+> > > +		mshv_partition_put_no_destroy(partition);
+> > > +		list_del(&dev->partition_node);
+> > > +		ops->destroy(dev);
+> > > +		goto out;
+> > > +	}
+> > > +
+> > > +	cd->fd = r;
+> > > +	r = 0;
+> > 
+> > Why return the fd in memory instead of returning the fd as the return
+> > value from the ioctl?
+> > 
+> > > +	if (copy_to_user(user_args, &tmp, sizeof(tmp))) {
+> > > +		r = -EFAULT;
+> > > +		goto out;
+> > > +	}
+> > 
+> > ... this could then disappear.
 > 
-> Why not using iommu_get_resv_regions()?
+> Thanks for your comment, Matthew.
+> 
+> This is intentionally because I didn't want to deviate from KVM's API.
+> The fewer differences the better.
 
-That calls into ops->get_resv_regions.
-
-In this patch series, get_resv_regions is hv_iommu_resv_regions, which
-wants to use intel_iommu_get_resv_regions when it detects the underlying
-hardware platform is from Intel.
-
-Wei.
+Then don't define your own structure.  Use theirs.
