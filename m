@@ -2,94 +2,159 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ACDD3C2A2C
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jul 2021 22:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2A843C2D66
+	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jul 2021 04:20:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbhGIUNx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Jul 2021 16:13:53 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:39449 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbhGIUNx (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Jul 2021 16:13:53 -0400
-Received: by mail-wm1-f47.google.com with SMTP id l18-20020a1ced120000b029014c1adff1edso9766952wmh.4;
-        Fri, 09 Jul 2021 13:11:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=X5Kq+LYu7shcjvHnUUvfPDCy6+d+q+ktHQddeACxeJY=;
-        b=cB9v0+tCbjAry9D7qLZnq3Z8cCIFAyJAz6pJdqT7qa54p0E42Z7WOzf8DHlZIiQNfh
-         1QN0ynynhwzkScReyqqRkuykz74uwyYolMK08mj1NF9+vis3DCXB9FSqcxUAFNvpYcTO
-         /G/2u2qtZkynPqnNjNTQRgtt70F/3dthUcYQ+XiqB5nw91HtGAMPVScH0EnIOGHXsLT3
-         Vs5vIUlZj86NYbTl3gwazxGJ2Ho2I6390MG9OOebM/PXuNgsRx3t14wX4AobJJ3UZp5B
-         tF/aQgjbfxFnWwXMIIQgfv8ys6aedSSNaq0xNocLRaE3R/gqz4vDISyfkJXv0C74HHKb
-         aPvQ==
-X-Gm-Message-State: AOAM530eIW2uMW4D/3PWEDYKADbr9/zHNCVTyEDejFIJjA42Rs37r9Cy
-        04Txw03ai2axlKiMq/fVc1FdluwlvU0=
-X-Google-Smtp-Source: ABdhPJw/wn/J8DBGkyIr19UCGDIC81xoa3fStxjKPsKCEvKchvST+uJVXawhHHCvajPXeaXEnV/DnA==
-X-Received: by 2002:a1c:cc02:: with SMTP id h2mr40744025wmb.39.1625861467372;
-        Fri, 09 Jul 2021 13:11:07 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id w22sm13034405wmc.4.2021.07.09.13.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jul 2021 13:11:06 -0700 (PDT)
-Date:   Fri, 9 Jul 2021 20:11:05 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        kumarpraveen@linux.microsoft.com, pasha.tatashin@soleen.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Lillian Grassin-Drake <ligrassi@microsoft.com>,
-        Muminul Islam <muislam@microsoft.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [RFC v1 7/8] mshv: implement in-kernel device framework
-Message-ID: <20210709201105.qvl7bbal7iugtynd@liuwe-devbox-debian-v2>
-References: <20210709114339.3467637-1-wei.liu@kernel.org>
- <20210709114339.3467637-8-wei.liu@kernel.org>
- <YOhIzJVPN9SwoRK0@casper.infradead.org>
- <20210709135013.t5axinjmufotpylf@liuwe-devbox-debian-v2>
- <YOhsIDccgbUCzwqt@casper.infradead.org>
- <20210709162732.hnyzpf3uofzc7xqs@liuwe-devbox-debian-v2>
- <YOh7gO3MIDv5Eo8q@casper.infradead.org>
- <20210709191405.t3vno3zw7kdlo4ps@liuwe-devbox-debian-v2>
- <YOioFOT5WgkUB+dY@casper.infradead.org>
+        id S233018AbhGJCWl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Jul 2021 22:22:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232876AbhGJCWT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 9 Jul 2021 22:22:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D2FE60BD3;
+        Sat, 10 Jul 2021 02:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625883568;
+        bh=2PZ0lzObAQRnJF57W3GYqnaYB/bfZfQaQjuMHASKseE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lKi4YEPkVQyi21Mpv7GAZoEW4OeWp7Oh05C9omxhyxKgMFn/KvUj9XGsCuO7XJwPW
+         vCVRrniomo+9x3GVXy/5YYUpwTTWT1E6q2lqc3V+wPLTkpPbks8CeJJl6wpFEVOZiC
+         gtK7UU9+b8Bwbjwsv/T8HsyXc2EvqMZaMQScyQT1d2UGCFoSjVWaxOumpeSn+Ijpvn
+         5eWK9ke+OXXYHCzwmvJQ+MohLui5pyxWcctWURKnCCnLAzfgwBguvK+0ambQb6wZSj
+         7K+c5kCMWzqG5L9x2wm+LBwSgTsRQVW90X2RHzwqGuP/p1Hh2viGtQXcbxcCnNNYf+
+         rEGtR5WFULdng==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.13 074/114] scsi: storvsc: Correctly handle multiple flags in srb_status
+Date:   Fri,  9 Jul 2021 22:17:08 -0400
+Message-Id: <20210710021748.3167666-74-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210710021748.3167666-1-sashal@kernel.org>
+References: <20210710021748.3167666-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YOioFOT5WgkUB+dY@casper.infradead.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jul 09, 2021 at 08:48:36PM +0100, Matthew Wilcox wrote:
-> On Fri, Jul 09, 2021 at 07:14:05PM +0000, Wei Liu wrote:
-> > You were not CC'ed on this patch, so presumably you got it via one of
-> > the mailing lists. I'm not sure why you only got this one patch. Perhaps
-> > if you wait a bit you will get the rest.
-> 
-> No, I won't.  You only cc'd linux-doc on this one patch and not on any
-> of the others.
+From: Michael Kelley <mikelley@microsoft.com>
 
-I see. That's because get_maintainers.pl only detected changes to the
-doc in this file.
+[ Upstream commit 52e1b3b3daa9d53f0204bf474ee1d4b1beb38234 ]
 
-If you're interested in having a look at the other patches, they can
-be fetched via at the following url. 
+Hyper-V is observed to sometimes set multiple flags in the srb_status, such
+as ABORTED and ERROR. Current code in storvsc_handle_error() handles only a
+single flag being set, and does nothing when multiple flags are set.  Fix
+this by changing the case statement into a series of "if" statements
+testing individual flags. The functionality for handling each flag is
+unchanged.
 
-https://lore.kernel.org/linux-hyperv/20210709114339.3467637-1-wei.liu@kernel.org/
+Link: https://lore.kernel.org/r/1622827263-12516-3-git-send-email-mikelley@microsoft.com
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/storvsc_drv.c | 61 +++++++++++++++++++++-----------------
+ 1 file changed, 33 insertions(+), 28 deletions(-)
 
-Thanks for your attention.
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index e6718a74e5da..b2e28197a086 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1009,17 +1009,40 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
+ 	struct storvsc_scan_work *wrk;
+ 	void (*process_err_fn)(struct work_struct *work);
+ 	struct hv_host_device *host_dev = shost_priv(host);
+-	bool do_work = false;
+ 
+-	switch (SRB_STATUS(vm_srb->srb_status)) {
+-	case SRB_STATUS_ERROR:
++	/*
++	 * In some situations, Hyper-V sets multiple bits in the
++	 * srb_status, such as ABORTED and ERROR. So process them
++	 * individually, with the most specific bits first.
++	 */
++
++	if (vm_srb->srb_status & SRB_STATUS_INVALID_LUN) {
++		set_host_byte(scmnd, DID_NO_CONNECT);
++		process_err_fn = storvsc_remove_lun;
++		goto do_work;
++	}
++
++	if (vm_srb->srb_status & SRB_STATUS_ABORTED) {
++		if (vm_srb->srb_status & SRB_STATUS_AUTOSENSE_VALID &&
++		    /* Capacity data has changed */
++		    (asc == 0x2a) && (ascq == 0x9)) {
++			process_err_fn = storvsc_device_scan;
++			/*
++			 * Retry the I/O that triggered this.
++			 */
++			set_host_byte(scmnd, DID_REQUEUE);
++			goto do_work;
++		}
++	}
++
++	if (vm_srb->srb_status & SRB_STATUS_ERROR) {
+ 		/*
+ 		 * Let upper layer deal with error when
+ 		 * sense message is present.
+ 		 */
+-
+ 		if (vm_srb->srb_status & SRB_STATUS_AUTOSENSE_VALID)
+-			break;
++			return;
++
+ 		/*
+ 		 * If there is an error; offline the device since all
+ 		 * error recovery strategies would have already been
+@@ -1032,37 +1055,19 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
+ 			set_host_byte(scmnd, DID_PASSTHROUGH);
+ 			break;
+ 		/*
+-		 * On Some Windows hosts TEST_UNIT_READY command can return
+-		 * SRB_STATUS_ERROR, let the upper level code deal with it
+-		 * based on the sense information.
++		 * On some Hyper-V hosts TEST_UNIT_READY command can
++		 * return SRB_STATUS_ERROR. Let the upper level code
++		 * deal with it based on the sense information.
+ 		 */
+ 		case TEST_UNIT_READY:
+ 			break;
+ 		default:
+ 			set_host_byte(scmnd, DID_ERROR);
+ 		}
+-		break;
+-	case SRB_STATUS_INVALID_LUN:
+-		set_host_byte(scmnd, DID_NO_CONNECT);
+-		do_work = true;
+-		process_err_fn = storvsc_remove_lun;
+-		break;
+-	case SRB_STATUS_ABORTED:
+-		if (vm_srb->srb_status & SRB_STATUS_AUTOSENSE_VALID &&
+-		    (asc == 0x2a) && (ascq == 0x9)) {
+-			do_work = true;
+-			process_err_fn = storvsc_device_scan;
+-			/*
+-			 * Retry the I/O that triggered this.
+-			 */
+-			set_host_byte(scmnd, DID_REQUEUE);
+-		}
+-		break;
+ 	}
++	return;
+ 
+-	if (!do_work)
+-		return;
+-
++do_work:
+ 	/*
+ 	 * We need to schedule work to process this error; schedule it.
+ 	 */
+-- 
+2.30.2
 
-Wei.
