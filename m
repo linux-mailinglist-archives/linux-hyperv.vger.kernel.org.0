@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7944C3C3782
-	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jul 2021 01:49:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD0323C380E
+	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jul 2021 01:51:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232223AbhGJXwW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 10 Jul 2021 19:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
+        id S232972AbhGJXxu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 10 Jul 2021 19:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232168AbhGJXwO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:52:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A1355610D2;
-        Sat, 10 Jul 2021 23:49:27 +0000 (UTC)
+        id S233182AbhGJXxM (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:53:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3532A6135F;
+        Sat, 10 Jul 2021 23:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625960968;
-        bh=o3QZXxVhxZeYBKkHIcEnwADUskqo2AUKgGixgFjWpJc=;
+        s=k20201202; t=1625961026;
+        bh=ZKkm3ed5F/+6ULuJXKWRc77JtNczmJ7XfH84J09nG/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WYJFwUQHtpyuC6XcI8h5vCsLrBgedqoqfyL5kWotnB6DK2LuBPsjtR+AvDGveZ/hJ
-         lTKCFERWy6x/S7G7mojCL7IrsHgcwv28I08WG8lY4wOpi5xKMHihjtU0tgDx5jGzXx
-         m9iMj8F56yISdArIG71w2fll09RCqonflJb581LXmLKJGrm26H0XuobP29g6rXVeM8
-         UyIRvdbf+iu8jeXNlEQ8DPe6z+wovxYBtD4xyGnmxtZC/vqaVzVIc9z0yYUy3VtUW9
-         PyzmYSgKJZjc+ua5e/heon74rKwLd5g/9pPF6joVIF+vxxe30sYXavjdJJi2LUooz8
-         ikRozDECw0sdA==
+        b=T0iXjEG2pLF2G4Cmd52JvlJ2eUYE/E4nj7wN8IBUYe2XoW2P7VGK0vt3yPLSWOETW
+         KpYWwUgSqjZ3qD4cWtPzyaadWl9tvEth0cBSVBb8hNgMltGA9xnQHGeJv1dK5cMDiZ
+         ojYTIVLaHJRlPdKTyUxNFz3ATnhl18DmrOZjLoH6QB4B/p2MQKlYzgIjiPzeqZO8Dz
+         pGwvq7sQPNiFTZ2bgTk5u+WFEsEbASYlpH44stLnfUNheJtLYmRm1DmpSX99rogQ2W
+         C9+oPcDtGKurRVyTHlp/dnyTnHBDK9gOMm7uTRC3P2Hy70NbPj2qVm8VtH/XrJqTDo
+         R52FFSuP+1GaA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Long Li <longli@microsoft.com>,
@@ -30,12 +30,12 @@ Cc:     Long Li <longli@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 07/43] PCI: hv: Fix a race condition when removing the device
-Date:   Sat, 10 Jul 2021 19:48:39 -0400
-Message-Id: <20210710234915.3220342-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 07/37] PCI: hv: Fix a race condition when removing the device
+Date:   Sat, 10 Jul 2021 19:49:45 -0400
+Message-Id: <20210710235016.3221124-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710234915.3220342-1-sashal@kernel.org>
-References: <20210710234915.3220342-1-sashal@kernel.org>
+In-Reply-To: <20210710235016.3221124-1-sashal@kernel.org>
+References: <20210710235016.3221124-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -67,7 +67,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 23 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 27a17a1e4a7c..c6122a1b0c46 100644
+index 03ed5cb1c4b2..4932d7677be2 100644
 --- a/drivers/pci/controller/pci-hyperv.c
 +++ b/drivers/pci/controller/pci-hyperv.c
 @@ -444,7 +444,6 @@ enum hv_pcibus_state {
