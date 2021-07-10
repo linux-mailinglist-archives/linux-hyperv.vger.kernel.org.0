@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D872B3C376C
-	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jul 2021 01:49:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7944C3C3782
+	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jul 2021 01:49:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232102AbhGJXwK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 10 Jul 2021 19:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38692 "EHLO mail.kernel.org"
+        id S232223AbhGJXwW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 10 Jul 2021 19:52:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231700AbhGJXv4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:51:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1FBC0610A2;
-        Sat, 10 Jul 2021 23:49:10 +0000 (UTC)
+        id S232168AbhGJXwO (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sat, 10 Jul 2021 19:52:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A1355610D2;
+        Sat, 10 Jul 2021 23:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625960951;
-        bh=4oAfBoO66gRViOqfr4yZvmU0zqqB7YWxOx5hWP9iqKg=;
+        s=k20201202; t=1625960968;
+        bh=o3QZXxVhxZeYBKkHIcEnwADUskqo2AUKgGixgFjWpJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GX2oF/ezN6MqtGI5nLjnrhTQ7NAp3m/1/Oyxh5BffdrrLGTPXolw1UDQJyOhpzgze
-         1dUwS7GbZnjWS3gXd/0g6rSo8SxlginJeQeW6VV8FsgYHazXxndp5mt9U/mdjBtM8M
-         leAZ2f6RaCoNnQXpegKge8MBeIfWSe6UQIl0R9z820EpS14v+yF2A+NrX6PhvoqAEZ
-         8446z4TdKhR9Olk87rmMovuxfrhOubU3dFJhOTn7QMeolS1Mwn7BWsr8oGSJvWfLoz
-         rY1ewauJUQNSJp84t1D+r+a7bBsH/fiZZIWVepV27krijtyey6U3bd4+U6e/8Gh6nv
-         UNDjL9WPrXH+Q==
+        b=WYJFwUQHtpyuC6XcI8h5vCsLrBgedqoqfyL5kWotnB6DK2LuBPsjtR+AvDGveZ/hJ
+         lTKCFERWy6x/S7G7mojCL7IrsHgcwv28I08WG8lY4wOpi5xKMHihjtU0tgDx5jGzXx
+         m9iMj8F56yISdArIG71w2fll09RCqonflJb581LXmLKJGrm26H0XuobP29g6rXVeM8
+         UyIRvdbf+iu8jeXNlEQ8DPe6z+wovxYBtD4xyGnmxtZC/vqaVzVIc9z0yYUy3VtUW9
+         PyzmYSgKJZjc+ua5e/heon74rKwLd5g/9pPF6joVIF+vxxe30sYXavjdJJi2LUooz8
+         ikRozDECw0sdA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Long Li <longli@microsoft.com>,
@@ -30,12 +30,12 @@ Cc:     Long Li <longli@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 09/53] PCI: hv: Fix a race condition when removing the device
-Date:   Sat, 10 Jul 2021 19:48:13 -0400
-Message-Id: <20210710234857.3220040-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.12 07/43] PCI: hv: Fix a race condition when removing the device
+Date:   Sat, 10 Jul 2021 19:48:39 -0400
+Message-Id: <20210710234915.3220342-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710234857.3220040-1-sashal@kernel.org>
-References: <20210710234857.3220040-1-sashal@kernel.org>
+In-Reply-To: <20210710234915.3220342-1-sashal@kernel.org>
+References: <20210710234915.3220342-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -67,7 +67,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 23 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 6511648271b2..272c63ac49f9 100644
+index 27a17a1e4a7c..c6122a1b0c46 100644
 --- a/drivers/pci/controller/pci-hyperv.c
 +++ b/drivers/pci/controller/pci-hyperv.c
 @@ -444,7 +444,6 @@ enum hv_pcibus_state {
@@ -78,7 +78,7 @@ index 6511648271b2..272c63ac49f9 100644
  	hv_pcibus_maximum
  };
  
-@@ -3243,8 +3242,9 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+@@ -3247,8 +3246,9 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
  		struct pci_packet teardown_packet;
  		u8 buffer[sizeof(struct pci_message)];
  	} pkt;
@@ -89,7 +89,7 @@ index 6511648271b2..272c63ac49f9 100644
  	int ret;
  
  	/*
-@@ -3256,9 +3256,16 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+@@ -3260,9 +3260,16 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
  
  	if (!keep_devs) {
  		/* Delete any children which might still exist. */
@@ -109,7 +109,7 @@ index 6511648271b2..272c63ac49f9 100644
  	}
  
  	ret = hv_send_resources_released(hdev);
-@@ -3301,13 +3308,23 @@ static int hv_pci_remove(struct hv_device *hdev)
+@@ -3305,13 +3312,23 @@ static int hv_pci_remove(struct hv_device *hdev)
  
  	hbus = hv_get_drvdata(hdev);
  	if (hbus->state == hv_pcibus_installed) {
@@ -134,7 +134,7 @@ index 6511648271b2..272c63ac49f9 100644
  	}
  
  	ret = hv_pci_bus_exit(hdev, false);
-@@ -3322,7 +3339,6 @@ static int hv_pci_remove(struct hv_device *hdev)
+@@ -3326,7 +3343,6 @@ static int hv_pci_remove(struct hv_device *hdev)
  	irq_domain_free_fwnode(hbus->sysdata.fwnode);
  	put_hvpcibus(hbus);
  	wait_for_completion(&hbus->remove_event);
