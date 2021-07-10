@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2A843C2D66
-	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jul 2021 04:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5CA53C2E52
+	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Jul 2021 04:27:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233018AbhGJCWl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Jul 2021 22:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38204 "EHLO mail.kernel.org"
+        id S233491AbhGJC0u (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Jul 2021 22:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232876AbhGJCWT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Jul 2021 22:22:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D2FE60BD3;
-        Sat, 10 Jul 2021 02:19:27 +0000 (UTC)
+        id S233482AbhGJC0O (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 9 Jul 2021 22:26:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C25AD613E6;
+        Sat, 10 Jul 2021 02:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625883568;
-        bh=2PZ0lzObAQRnJF57W3GYqnaYB/bfZfQaQjuMHASKseE=;
+        s=k20201202; t=1625883803;
+        bh=C/OoGrByiwoGUX9qlIPjEx89gIEtY0WGeJ0OV3W5X04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKi4YEPkVQyi21Mpv7GAZoEW4OeWp7Oh05C9omxhyxKgMFn/KvUj9XGsCuO7XJwPW
-         vCVRrniomo+9x3GVXy/5YYUpwTTWT1E6q2lqc3V+wPLTkpPbks8CeJJl6wpFEVOZiC
-         gtK7UU9+b8Bwbjwsv/T8HsyXc2EvqMZaMQScyQT1d2UGCFoSjVWaxOumpeSn+Ijpvn
-         5eWK9ke+OXXYHCzwmvJQ+MohLui5pyxWcctWURKnCCnLAzfgwBguvK+0ambQb6wZSj
-         7K+c5kCMWzqG5L9x2wm+LBwSgTsRQVW90X2RHzwqGuP/p1Hh2viGtQXcbxcCnNNYf+
-         rEGtR5WFULdng==
+        b=r+IhGHG/0sAgU3m5pQWBNVIPWSMePOaJrht9XTV143qwSHq2Ixd4EuV3/j/3kN5TG
+         KjQ0z2qX9tl4VLizZ9JsyE9m04afSYg64gvk1YZBL2TVSIQRA9cSWSECyuZynQU+96
+         O1lctQyJ2/lAC9KgDagwuwfGHSOq+gUrPbn8leEmfC6c200wbtINUQ/81pYwZ3zlU4
+         sJbnJ7Cji8PPdllE9CIpUKqGBjQPLhi1wb3XKoc9GeKiVtDQzkJ58gABfpFplnegAj
+         +tKDVfkC+7O9UKd8qbgsTnq213682yYUvvEpFWEZHSBRBeCjj5JlV3REKz2lNNHQVL
+         mW8LStJRww6Gg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Michael Kelley <mikelley@microsoft.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
         linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 074/114] scsi: storvsc: Correctly handle multiple flags in srb_status
-Date:   Fri,  9 Jul 2021 22:17:08 -0400
-Message-Id: <20210710021748.3167666-74-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.12 066/104] scsi: storvsc: Correctly handle multiple flags in srb_status
+Date:   Fri,  9 Jul 2021 22:21:18 -0400
+Message-Id: <20210710022156.3168825-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710021748.3167666-1-sashal@kernel.org>
-References: <20210710021748.3167666-1-sashal@kernel.org>
+In-Reply-To: <20210710022156.3168825-1-sashal@kernel.org>
+References: <20210710022156.3168825-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,10 +63,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 33 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index e6718a74e5da..b2e28197a086 100644
+index 6bc5453cea8a..181d7b372fd0 100644
 --- a/drivers/scsi/storvsc_drv.c
 +++ b/drivers/scsi/storvsc_drv.c
-@@ -1009,17 +1009,40 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
+@@ -1005,17 +1005,40 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
  	struct storvsc_scan_work *wrk;
  	void (*process_err_fn)(struct work_struct *work);
  	struct hv_host_device *host_dev = shost_priv(host);
@@ -112,7 +112,7 @@ index e6718a74e5da..b2e28197a086 100644
  		/*
  		 * If there is an error; offline the device since all
  		 * error recovery strategies would have already been
-@@ -1032,37 +1055,19 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
+@@ -1028,37 +1051,19 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
  			set_host_byte(scmnd, DID_PASSTHROUGH);
  			break;
  		/*
