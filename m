@@ -2,146 +2,68 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD0323C380E
-	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jul 2021 01:51:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73B083C40D7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jul 2021 03:16:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232972AbhGJXxu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 10 Jul 2021 19:53:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233182AbhGJXxM (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 10 Jul 2021 19:53:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3532A6135F;
-        Sat, 10 Jul 2021 23:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625961026;
-        bh=ZKkm3ed5F/+6ULuJXKWRc77JtNczmJ7XfH84J09nG/Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0iXjEG2pLF2G4Cmd52JvlJ2eUYE/E4nj7wN8IBUYe2XoW2P7VGK0vt3yPLSWOETW
-         KpYWwUgSqjZ3qD4cWtPzyaadWl9tvEth0cBSVBb8hNgMltGA9xnQHGeJv1dK5cMDiZ
-         ojYTIVLaHJRlPdKTyUxNFz3ATnhl18DmrOZjLoH6QB4B/p2MQKlYzgIjiPzeqZO8Dz
-         pGwvq7sQPNiFTZ2bgTk5u+WFEsEbASYlpH44stLnfUNheJtLYmRm1DmpSX99rogQ2W
-         C9+oPcDtGKurRVyTHlp/dnyTnHBDK9gOMm7uTRC3P2Hy70NbPj2qVm8VtH/XrJqTDo
-         R52FFSuP+1GaA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 07/37] PCI: hv: Fix a race condition when removing the device
-Date:   Sat, 10 Jul 2021 19:49:45 -0400
-Message-Id: <20210710235016.3221124-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710235016.3221124-1-sashal@kernel.org>
-References: <20210710235016.3221124-1-sashal@kernel.org>
+        id S229812AbhGLBTp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 11 Jul 2021 21:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229598AbhGLBTo (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 11 Jul 2021 21:19:44 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30822C0613E5
+        for <linux-hyperv@vger.kernel.org>; Sun, 11 Jul 2021 18:16:57 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id r20so21038321ljd.10
+        for <linux-hyperv@vger.kernel.org>; Sun, 11 Jul 2021 18:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=T9UuQwjHWzWGcYyCteF5pj3ITs8iH+zIJu2j9F2CpBc=;
+        b=TP32vzT4IS1OnS2ZfbYKezsMPwoKrgM58jlkcAxY+VOeaW6vMfA95BXnqB0qziZLZI
+         t9yON7TLKZOX74HwXr2EqXW0wkYitwq8whrP7niWPMM8z6IqgTDEmqGBdZReIkQft89j
+         RBpQeB+r65OJhUj1r3vblvJdg3yjvJpDnZpbBYKjJJbE87qljjHHYbg/tQyS8fuS5U+1
+         igYayd1A59LnbWftmr7WFXES21qox+7+q99+QcOVt9H6sQolG6HbEaT52UQJWBzsUZU5
+         KlmKGhXbU+G6pALktd+5UAuqzyWlFj0jQwbWYImaCKM4h4ZdxjgXVaydWv2Wi2yJTh7l
+         BfUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=T9UuQwjHWzWGcYyCteF5pj3ITs8iH+zIJu2j9F2CpBc=;
+        b=rL4/iCAg1Rw9M1KCxM6GC5MfkDKkoQcRgRONrIiOV7Th0uJV8L7dWsqWO0jM031/Ea
+         GBKKA7e8I8Nuv6Ga3iy6u+fsw697prLXaM28Jno8076oQC5ERBobC0rgV8YIon6ykEua
+         hxt2eHMpXXwtWDbCGtiMuhUAVYZqP/TXDPLE3cwlK4NXw/eKDy58NiNFC1bjEM04Pra7
+         SlZ2bMkZDMpayPLR46pP56ieT3qKOaypOE9qguU184mTZAbR7pSyooEz6LLrUiLjeLX8
+         FPlG2pfRayr8a2XwBMQDdhWwYzQ/a1qcKNXaLz9x5b0O+MiR7vSn2/5xkDnY2bHW81/Z
+         Cxgw==
+X-Gm-Message-State: AOAM533TegLP+uk49MHbXTx3h6VwUjxi/z4TuP8rPnQFGNvuclG6sNA2
+        fLaWV1pCL2mMlPCtmVCM/xIYWtUAjxtMXFo67Hg=
+X-Google-Smtp-Source: ABdhPJyhJD8ikHqNtwJ8Uy/ntEh4BEo0YolzPfZNOLFFb1zlGn7Q9MioUaiR5ScrqfI31VWXAwevuVoocoPvbeRrEsg=
+X-Received: by 2002:a2e:bc21:: with SMTP id b33mr5320039ljf.188.1626052615101;
+ Sun, 11 Jul 2021 18:16:55 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6520:330:b029:112:7754:7197 with HTTP; Sun, 11 Jul 2021
+ 18:16:54 -0700 (PDT)
+Reply-To: mrs.bill_chantal66@europe.com
+From:   "Mrs.Bill.Chantal" <morayodoncazzy@gmail.com>
+Date:   Mon, 12 Jul 2021 03:16:54 +0200
+Message-ID: <CAPOpEHs5+UVjfCDu9_np+HUYsd7dHKvV=40Qs5LXfDw=BLqc-g@mail.gmail.com>
+Subject: Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+Dear Friend
 
-[ Upstream commit 94d22763207ac6633612b8d8e0ca4fba0f7aa139 ]
+You have been compensated with the sum of 4 million dollars in this
+united nation the payment will be Issue into atm visa card and send to
 
-On removing the device, any work item (hv_pci_devices_present() or
-hv_pci_eject_device()) scheduled on workqueue hbus->wq may still be running
-and race with hv_pci_remove().
+you from the Santander bank we need your address passport and
+yourwhatsapp number.
 
-This can happen because the host may send PCI_EJECT or PCI_BUS_RELATIONS(2)
-and decide to rescind the channel immediately after that.
-
-Fix this by flushing/destroying the workqueue of hbus before doing hbus remove.
-
-Link: https://lore.kernel.org/r/1620806800-30983-1-git-send-email-longli@linuxonhyperv.com
-Signed-off-by: Long Li <longli@microsoft.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pci-hyperv.c | 30 ++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 03ed5cb1c4b2..4932d7677be2 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -444,7 +444,6 @@ enum hv_pcibus_state {
- 	hv_pcibus_probed,
- 	hv_pcibus_installed,
- 	hv_pcibus_removing,
--	hv_pcibus_removed,
- 	hv_pcibus_maximum
- };
- 
-@@ -3247,8 +3246,9 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- 		struct pci_packet teardown_packet;
- 		u8 buffer[sizeof(struct pci_message)];
- 	} pkt;
--	struct hv_dr_state *dr;
- 	struct hv_pci_compl comp_pkt;
-+	struct hv_pci_dev *hpdev, *tmp;
-+	unsigned long flags;
- 	int ret;
- 
- 	/*
-@@ -3260,9 +3260,16 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- 
- 	if (!keep_devs) {
- 		/* Delete any children which might still exist. */
--		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
--		if (dr && hv_pci_start_relations_work(hbus, dr))
--			kfree(dr);
-+		spin_lock_irqsave(&hbus->device_list_lock, flags);
-+		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry) {
-+			list_del(&hpdev->list_entry);
-+			if (hpdev->pci_slot)
-+				pci_destroy_slot(hpdev->pci_slot);
-+			/* For the two refs got in new_pcichild_device() */
-+			put_pcichild(hpdev);
-+			put_pcichild(hpdev);
-+		}
-+		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
- 	}
- 
- 	ret = hv_send_resources_released(hdev);
-@@ -3305,13 +3312,23 @@ static int hv_pci_remove(struct hv_device *hdev)
- 
- 	hbus = hv_get_drvdata(hdev);
- 	if (hbus->state == hv_pcibus_installed) {
-+		tasklet_disable(&hdev->channel->callback_event);
-+		hbus->state = hv_pcibus_removing;
-+		tasklet_enable(&hdev->channel->callback_event);
-+		destroy_workqueue(hbus->wq);
-+		hbus->wq = NULL;
-+		/*
-+		 * At this point, no work is running or can be scheduled
-+		 * on hbus-wq. We can't race with hv_pci_devices_present()
-+		 * or hv_pci_eject_device(), it's safe to proceed.
-+		 */
-+
- 		/* Remove the bus from PCI's point of view. */
- 		pci_lock_rescan_remove();
- 		pci_stop_root_bus(hbus->pci_bus);
- 		hv_pci_remove_slots(hbus);
- 		pci_remove_root_bus(hbus->pci_bus);
- 		pci_unlock_rescan_remove();
--		hbus->state = hv_pcibus_removed;
- 	}
- 
- 	ret = hv_pci_bus_exit(hdev, false);
-@@ -3326,7 +3343,6 @@ static int hv_pci_remove(struct hv_device *hdev)
- 	irq_domain_free_fwnode(hbus->sysdata.fwnode);
- 	put_hvpcibus(hbus);
- 	wait_for_completion(&hbus->remove_event);
--	destroy_workqueue(hbus->wq);
- 
- 	hv_put_dom_num(hbus->sysdata.domain);
- 
--- 
-2.30.2
-
+Thanks
+Mrs. bill Chantal
