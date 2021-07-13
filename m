@@ -2,212 +2,330 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BD5F3C7678
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jul 2021 20:30:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F14B13C7720
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jul 2021 21:36:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229697AbhGMSdU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Jul 2021 14:33:20 -0400
-Received: from mail-dm3nam07on2127.outbound.protection.outlook.com ([40.107.95.127]:46113
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229478AbhGMSdU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Jul 2021 14:33:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XmWtYReBWe2TF/G/07DnRkzOxOazaViyG9lZ4uXtTnJky/XiN0tXeg5ylDXkytCrrjF9Y5a4MFNZ/2Sff/+Y+pkyWZLjBsRBdpdv1L+L0ccFsYisgLEyKB4jI0udwEogSNB2gEby2oi1qdWu6Fj4+XJrMZWKJ7hs3LP1VWAboDIxNkOqp/SqZ5kckRsJ+kF7QTqpCOpM/U7dcqNWhQ1wGZgYnfOw9RofwxmzWvFO9hFVcODUJANwHF5548pEGBaET01GQx5N0ahCTJd92Jdl1xWAvc5/YgO75iiRkitm6OKMVqGSzClx98YWMROaDWlhG9WqY2qfKjJtb5HwEQliEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/rfGdeW+jLuJ1F5BTTkzvLbwYz2UUQ+0osR9wpNiD9k=;
- b=gvW7MxLRZDk3mdo8UA1mmgDJI2JHhUW4UudH53wV1avhGsKnH8OTnjLaWY7+iDw8pA3NTSVdCPt8lupC7qcYZb6FMUsIB+cVgDjdDEJwRQUbmkDtcQmcUDwK7tr2WMgKdAeEt3sEjp9jGPDGBnlW0bTMCc08TBkK/7VSsKKZGQb7Vx3uO92xS8+U8sSpNoDCarC71SWMMm9xz3QoWCvM8j7oBbcRzSFrBzpDpjE0nUhe1MFLxorPAMOK+4qKoQam+r/FU5yLlRgHyvyDrkVwPFqaSFMy2eWgGGVluX0z8hu+78O1hUBc53AuUqM7L/Jtz6PpODFE808vbN/cKbK8Gg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/rfGdeW+jLuJ1F5BTTkzvLbwYz2UUQ+0osR9wpNiD9k=;
- b=Q388I4lHb2hV+JvLCQVL2SyNCAzlO/zuiqXdpPYOzB9nzvC7KvE+83h6GyLXSoGtOd3sXcdfecU3pEI2EYec0e8IW6S2KY1QQ7cUBnb9AMa6ZSMos2cwgi9fsOC8kT0L2+SAcpl7myOWH6GCSuENhdSA4WQ6L495QOdF+hDxeP4=
-Received: from CY4PR21MB1586.namprd21.prod.outlook.com (2603:10b6:910:90::10)
- by CY4PR2101MB0801.namprd21.prod.outlook.com (2603:10b6:910:8d::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.4; Tue, 13 Jul
- 2021 18:30:27 +0000
-Received: from CY4PR21MB1586.namprd21.prod.outlook.com
- ([fe80::3583:7ddf:dc7c:b25f]) by CY4PR21MB1586.namprd21.prod.outlook.com
- ([fe80::3583:7ddf:dc7c:b25f%4]) with mapi id 15.20.4352.008; Tue, 13 Jul 2021
- 18:30:27 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Ani Sinha <ani@anisinha.ca>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "anirban.sinha@nokia.com" <anirban.sinha@nokia.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S234677AbhGMTj0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Jul 2021 15:39:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234540AbhGMTjZ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 13 Jul 2021 15:39:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41A0C0613E9
+        for <linux-hyperv@vger.kernel.org>; Tue, 13 Jul 2021 12:36:34 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3OBr-0001GT-RJ; Tue, 13 Jul 2021 21:35:35 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3OBi-0006p7-4I; Tue, 13 Jul 2021 21:35:26 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m3OBh-0002bU-W6; Tue, 13 Jul 2021 21:35:25 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kernel@pengutronix.de,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>, Alex Elder <elder@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Andy Gross <agross@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Dexuan Cui <decui@microsoft.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Eric Farman <farman@linux.ibm.com>,
+        Finn Thain <fthain@linux-m68k.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geoff Levand <geoff@infradead.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>, Ira Weiny <ira.weiny@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Wang <jasowang@redhat.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Juergen Gross <jgross@suse.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lee Jones <lee.jones@linaro.org>, Len Brown <lenb@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Michael Buesch <m@bues.ch>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Rich Felker <dalias@libc.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Samuel Holland <samuel@sholland.org>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Stephen Boyd <sboyd@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH] Hyper-V: fix for unwanted manipulation of sched_clock
- when TSC marked unstable
-Thread-Topic: [PATCH] Hyper-V: fix for unwanted manipulation of sched_clock
- when TSC marked unstable
-Thread-Index: AQHXd5QA/Pf4lQTVX0uoJvEieLSplatBKDfAgAAHSQCAAAruoA==
-Date:   Tue, 13 Jul 2021 18:30:27 +0000
-Message-ID: <CY4PR21MB1586E7C0820C257A1D57B462D7149@CY4PR21MB1586.namprd21.prod.outlook.com>
-References: <20210713030522.1714803-1-ani@anisinha.ca>
- <CY4PR21MB15866351E83212975EA02C34D7149@CY4PR21MB1586.namprd21.prod.outlook.com>
- <alpine.DEB.2.22.394.2107132306310.2140183@anisinha-lenovo>
-In-Reply-To: <alpine.DEB.2.22.394.2107132306310.2140183@anisinha-lenovo>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b1ae3566-bc58-4a99-aa38-5a1575615069;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-07-13T18:27:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8b3a6ba7-6bb6-4395-878b-08d9462c4954
-x-ms-traffictypediagnostic: CY4PR2101MB0801:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR2101MB0801ECFB329AA90782D4CE87D7149@CY4PR2101MB0801.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2oOgKGaFFmGH3JTsXRCI2B+pKE+ZVd7ES0H01hfrdLZZOSiCZCy9JgLcHBCqtHSBikJ4z0py4HP+9zG3/yybjiePPooe+lACRsVzo8eE6WydCInzFbGXS0j2xzH2m21PFSumPmk18koDg1e86H9Vp997njIOHmcsKUZJX2M8UepbUQjcIFFQtSWHJNu+L6jpuZlHXfa1vEusVzYj44Wb26ff4NDNKq0TR+WbZf0dHTxg5JoqFIALVb8828HckP9UActBBQnKij5nH6nK6V6S/ympjJ6I5pIVqAKRYIt3ZTp6txktyKNWpu6EAJCXq5fbXphsz4y7hjKKAmFQvXVpL/tBdwZxP9n9/fGOpow9xcydVxaPYv7ituBHmeswuRzvSYegq5CNlk6vnhogFNyFoBfBGmdGmq5wlp6c5Ds5E6lU+AeE5C/2Q+3Hssq3Mj962SDiwcxCxa4ZJWkjhEJmQYpkrGzibe7PKPmf5AFxHPwA3yidad7Fd+PkFbGf5RcF/ta+JIleyLfd3tvkFbFLJ5cvEUeRyyN3mhGWCkjYZ6JGlptzUuutKBoo7EEMQBQCSHDWf+8eMDdINEdb9zn0CEfHgfFVOMLg7MxPG7YW9bvhFw9eGoYVmSC6ao8zW7tLKZSS2HSuehSt8x05NCAjPG+aSXbEQueJ/t/MD5e1BujABZVfIXYwqhWy4OdjEIGwgW7CGdzB+1UXjyItQmnwsQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR21MB1586.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(316002)(8676002)(66446008)(55016002)(9686003)(64756008)(4326008)(7696005)(8936002)(54906003)(66946007)(33656002)(2906002)(66556008)(66476007)(7416002)(8990500004)(86362001)(52536014)(122000001)(76116006)(38100700002)(71200400001)(10290500003)(82950400001)(26005)(6506007)(83380400001)(186003)(6916009)(82960400001)(5660300002)(478600001)(26123001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Jolhc5Y4PylUlzi+qfI25t6/BryVm/8bcNSiRKpZ8jxypPazc2wuOcjGjr0H?=
- =?us-ascii?Q?5Scsb61m9mbdwOqxC8hEA4b+g/MII4RNRY74Muc8sazV7sQqV5bKLqF1dua+?=
- =?us-ascii?Q?sARYlbCRj/dFd/3EQRzNpVcKjg5q2IsA9KqvY6ZLSVy+lvJHfOxHs+66LjGu?=
- =?us-ascii?Q?9d+pNZxy7OSGQvajME127uTfgLo3diSX9F6GZ8ktDrfo8LdLO+BPcY+fbfrI?=
- =?us-ascii?Q?bN41GeGXk7iMceQlQC6fk8xKc+nxth9JyfYmJKuLbpRwmibM1xIJzd14Svtm?=
- =?us-ascii?Q?oOBQ8uAEb5B7FJFsiU4dTll2iwOp027MAXW9UGC2aqEdR1FhDHY3+TRfCPfY?=
- =?us-ascii?Q?zhMNAVA/Sn02F6Jn3Pwu3rmr+FK0zVkWQv7EKe/1kTEM01zbkNe5FUL15Dp7?=
- =?us-ascii?Q?UpvvhYxGLNJS4r/H0HEHmp8O2kxgdizYNmMAhVuEIQwVE1sT90+Tjf6SOCCv?=
- =?us-ascii?Q?0ifioQJpGys1E9ugvmRdWxjHLhuw2yoVysGi2R1mrQDDU2qHy3l91zaq7cRX?=
- =?us-ascii?Q?l3XKAvMReRvu6zqTuCgQ0wk1GCqJfq+YKxWtXGxCs1BnwYyzaFP33ZGH2FyP?=
- =?us-ascii?Q?Vd1OwGArmL8NRUQPDfhnUeKJVwK0clkCnWRR1fQ8ZXgKtqMOhBhseUd0ZH4y?=
- =?us-ascii?Q?H7pQ+0gKffvRjrsZW65Q9fm7nH8y96yu71q9lqkrRk0/1njHiqkN4E4av5t1?=
- =?us-ascii?Q?7DP98uHUpa8HjkOnuJM3EXYwK0WZd1d9yL96AzjsYJ7deMf5lyzEIS4ZIfTk?=
- =?us-ascii?Q?at3sXtGXANXqdhke1TTS8dBj0rK9Yf43MohloJfXXVtG+b8OX8GLaQAZ4mbU?=
- =?us-ascii?Q?PmqjCmgYwAOzTPHP4yfwIuFSn8rTny/O2ialyMkv2qxXpxGgrAmq8XG83Ir/?=
- =?us-ascii?Q?EUvRD4GBw6vjqhe5R1diKDmtlN2xkBJXrkwuFQxP8WUp5xmd85kvZmxXKLJR?=
- =?us-ascii?Q?X0vCsa0FF0ipxdQbAdKwlvTqbYjwsNqOrGVYvvXjG4Af73nlC3Lm/lRpBJ9L?=
- =?us-ascii?Q?dppOxkucgBaHa2MVAR/ejETJSuEDOM/vwKe6wIjy2vpo0tgr9wrdPCgZrjrD?=
- =?us-ascii?Q?cEf6kQOjo77lwQONNCnE6bdiadxoHiITIiNcH9AG1abreWW6e3JzK/QJUWXc?=
- =?us-ascii?Q?J8SEjeUWxeaBC63Jwo/QIST/qutp6Dml2WXye/FPBIGA7kADhs14hujp881X?=
- =?us-ascii?Q?9Ok/7N0D+QlPk8nmBOuIMr9SdjKp4oIz5UXCoPewmwI5vFfuw8y6PR7Uevh9?=
- =?us-ascii?Q?ApCgi4uWtwZPKMCVL0o2kj3ZqQtat6VuI++0RGvPZ+dSPfrMsfDm6lanp2b4?=
- =?us-ascii?Q?R6ou4gx7fNuIbaw8jGSVcfCO?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Tom Rix <trix@redhat.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>, Wu Hao <hao.wu@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Yufen Yu <yuyufen@huawei.com>, alsa-devel@alsa-project.org,
+        dmaengine@vger.kernel.org, greybus-dev@lists.linaro.org,
+        industrypack-devel@lists.sourceforge.net, kvm@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-media@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-parisc@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-sunxi@lists.linux.dev,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, nvdimm@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org, sparclinux@vger.kernel.org,
+        target-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v4 0/5] bus: Make remove callback return void
+Date:   Tue, 13 Jul 2021 21:35:17 +0200
+Message-Id: <20210713193522.1770306-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR21MB1586.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b3a6ba7-6bb6-4395-878b-08d9462c4954
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2021 18:30:27.1728
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OKhvcAxdnKBTYMKFYfs4K9zT3Xt7idB7XXbLwQEfM3W1E2WyRPwPYhcGuvCPsFz4MtSbGcunTk5vp8kvqLnwFRH3Uh1bph9l24fjv+Gs02Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2101MB0801
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hyperv@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Ani Sinha <ani@anisinha.ca> Sent: Tuesday, July 13, 2021 10:49 AM
->=20
-> On Tue, 13 Jul 2021, Michael Kelley wrote:
->=20
-> > From: Ani Sinha <ani@anisinha.ca> Sent: Monday, July 12, 2021 8:05 PM
-> > >
-> > > Marking TSC as unstable has a side effect of marking sched_clock as
-> > > unstable when TSC is still being used as the sched_clock. This is not
-> > > desirable. Hyper-V ultimately uses a paravirtualized clock source tha=
-t
-> > > provides a stable scheduler clock even on systems without TscInvarian=
-t
-> > > CPU capability. Hence, mark_tsc_unstable() call should be called _aft=
-er_
-> > > scheduler clock has been changed to the paravirtualized clocksource. =
-This
-> > > will prevent any unwanted manipulation of the sched_clock. Only TSC w=
-ill
-> > > be correctly marked as unstable.
-> > >
-> > > Signed-off-by: Ani Sinha <ani@anisinha.ca>
-> > > ---
-> > >  arch/x86/kernel/cpu/mshyperv.c | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/msh=
-yperv.c
-> > > index 22f13343b5da..715458b7729a 100644
-> > > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > > @@ -370,8 +370,6 @@ static void __init ms_hyperv_init_platform(void)
-> > >  	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
-> > >  		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x1);
-> > >  		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
-> > > -	} else {
-> > > -		mark_tsc_unstable("running on Hyper-V");
-> > >  	}
-> > >
-> > >  	/*
-> > > @@ -432,6 +430,12 @@ static void __init ms_hyperv_init_platform(void)
-> > >  	/* Register Hyper-V specific clocksource */
-> > >  	hv_init_clocksource();
-> > >  #endif
-> > > +	/* TSC should be marked as unstable only after Hyper-V
-> > > +	 * clocksource has been initialized. This ensures that the
-> > > +	 * stability of the sched_clock is not altered.
-> > > +	 */
-> >
-> > For multi-line comments like the above, the first comment line
-> > should just be "/*".  So:
->=20
-> Hmm, checkpatch.pl in kernel tree did not complain :
->=20
-> total: 0 errors, 0 warnings, 20 lines checked
->=20
-> 0001-Hyper-V-fix-for-unwanted-manipulation-of-sched_clock.patch has no
-> obvious style problems and is ready for submission.
->=20
-> However, I do know from my experience of submitting Qemu patches last
-> year that this is a requirement imposed by the Qemu community as
-> checkpatch.pl in qemu tree would complain otherwise. I also took a peek a=
-t
-> the Qemu git history. It seems they imported this check from the kernel's
-> checkpatch.pl with this commit in Qemu tree:
->=20
-> commit 8c06fbdf36bf4d4d486116200248730887a4d7d6
-> Author: Peter Maydell <peter.maydell@linaro.org>
-> Date:   Fri Dec 14 13:30:48 2018 +0000
->=20
->     scripts/checkpatch.pl: Enforce multiline comment syntax
->=20
-> Which adds this rule:
->=20
-> +               # Block comments use /* on a line of its own
-> +               if ($rawline !~ m@^\+.*/\*.*\*/[ \t]*$@ &&      #inline /=
-*...*/
-> +                   $rawline =3D~ m@^\+.*/\*\*?[ \t]*.+[ \t]*$@) { # /* o=
-r /** non-blank
-> +                       WARN("Block comments use a leading /* on a separa=
-te line\n" . $herecurr);
-> +               }
->=20
->=20
-> But in kernel there is no such rule. Hmm. strange!
->=20
->=20
+Hello,
 
-See section 8 of "Documentation/process/coding-style.rst" in a Linux kernel
-source code tree. :-)
+this is v4 of the final patch set for my effort to make struct
+bus_type::remove return void.
 
-Michael=20
+The first four patches contain cleanups that make some of these
+callbacks (more obviously) always return 0. They are acked by the
+respective maintainers. Bjorn Helgaas explicitly asked to include the
+pci patch (#1) into this series, so Greg taking this is fine. I assume
+the s390 people are fine with Greg taking patches #2 to #4, too, they
+didn't explicitly said so though.
+
+The last patch actually changes the prototype and so touches quite some
+drivers and has the potential to conflict with future developments, so I
+consider it beneficial to put these patches into next soon. I expect
+that it will be Greg who takes the complete series, he already confirmed
+via irc (for v2) to look into this series.
+
+The only change compared to v3 is in the fourth patch where I modified a
+few more drivers to fix build failures. Some of them were found by build
+bots (thanks!), some of them I found myself using a regular expression
+search. The newly modified files are:
+
+ arch/sparc/kernel/vio.c
+ drivers/nubus/bus.c
+ drivers/sh/superhyway/superhyway.c
+ drivers/vlynq/vlynq.c
+ drivers/zorro/zorro-driver.c
+ sound/ac97/bus.c
+
+Best regards
+Uwe
+
+Uwe Kleine-König (5):
+  PCI: endpoint: Make struct pci_epf_driver::remove return void
+  s390/cio: Make struct css_driver::remove return void
+  s390/ccwgroup: Drop if with an always false condition
+  s390/scm: Make struct scm_driver::remove return void
+  bus: Make remove callback return void
+
+ arch/arm/common/locomo.c                  | 3 +--
+ arch/arm/common/sa1111.c                  | 4 +---
+ arch/arm/mach-rpc/ecard.c                 | 4 +---
+ arch/mips/sgi-ip22/ip22-gio.c             | 3 +--
+ arch/parisc/kernel/drivers.c              | 5 ++---
+ arch/powerpc/platforms/ps3/system-bus.c   | 3 +--
+ arch/powerpc/platforms/pseries/ibmebus.c  | 3 +--
+ arch/powerpc/platforms/pseries/vio.c      | 3 +--
+ arch/s390/include/asm/eadm.h              | 2 +-
+ arch/sparc/kernel/vio.c                   | 4 +---
+ drivers/acpi/bus.c                        | 3 +--
+ drivers/amba/bus.c                        | 4 +---
+ drivers/base/auxiliary.c                  | 4 +---
+ drivers/base/isa.c                        | 4 +---
+ drivers/base/platform.c                   | 4 +---
+ drivers/bcma/main.c                       | 6 ++----
+ drivers/bus/sunxi-rsb.c                   | 4 +---
+ drivers/cxl/core.c                        | 3 +--
+ drivers/dax/bus.c                         | 4 +---
+ drivers/dma/idxd/sysfs.c                  | 4 +---
+ drivers/firewire/core-device.c            | 4 +---
+ drivers/firmware/arm_scmi/bus.c           | 4 +---
+ drivers/firmware/google/coreboot_table.c  | 4 +---
+ drivers/fpga/dfl.c                        | 4 +---
+ drivers/hid/hid-core.c                    | 4 +---
+ drivers/hid/intel-ish-hid/ishtp/bus.c     | 4 +---
+ drivers/hv/vmbus_drv.c                    | 5 +----
+ drivers/hwtracing/intel_th/core.c         | 4 +---
+ drivers/i2c/i2c-core-base.c               | 5 +----
+ drivers/i3c/master.c                      | 4 +---
+ drivers/input/gameport/gameport.c         | 3 +--
+ drivers/input/serio/serio.c               | 3 +--
+ drivers/ipack/ipack.c                     | 4 +---
+ drivers/macintosh/macio_asic.c            | 4 +---
+ drivers/mcb/mcb-core.c                    | 4 +---
+ drivers/media/pci/bt8xx/bttv-gpio.c       | 3 +--
+ drivers/memstick/core/memstick.c          | 3 +--
+ drivers/mfd/mcp-core.c                    | 3 +--
+ drivers/misc/mei/bus.c                    | 4 +---
+ drivers/misc/tifm_core.c                  | 3 +--
+ drivers/mmc/core/bus.c                    | 4 +---
+ drivers/mmc/core/sdio_bus.c               | 4 +---
+ drivers/net/netdevsim/bus.c               | 3 +--
+ drivers/ntb/core.c                        | 4 +---
+ drivers/ntb/ntb_transport.c               | 4 +---
+ drivers/nubus/bus.c                       | 6 ++----
+ drivers/nvdimm/bus.c                      | 3 +--
+ drivers/pci/endpoint/pci-epf-core.c       | 7 ++-----
+ drivers/pci/pci-driver.c                  | 3 +--
+ drivers/pcmcia/ds.c                       | 4 +---
+ drivers/platform/surface/aggregator/bus.c | 4 +---
+ drivers/platform/x86/wmi.c                | 4 +---
+ drivers/pnp/driver.c                      | 3 +--
+ drivers/rapidio/rio-driver.c              | 4 +---
+ drivers/rpmsg/rpmsg_core.c                | 7 ++-----
+ drivers/s390/block/scm_drv.c              | 4 +---
+ drivers/s390/cio/ccwgroup.c               | 6 +-----
+ drivers/s390/cio/chsc_sch.c               | 3 +--
+ drivers/s390/cio/css.c                    | 7 +++----
+ drivers/s390/cio/css.h                    | 2 +-
+ drivers/s390/cio/device.c                 | 9 +++------
+ drivers/s390/cio/eadm_sch.c               | 4 +---
+ drivers/s390/cio/scm.c                    | 5 +++--
+ drivers/s390/cio/vfio_ccw_drv.c           | 3 +--
+ drivers/s390/crypto/ap_bus.c              | 4 +---
+ drivers/scsi/scsi_debug.c                 | 3 +--
+ drivers/sh/superhyway/superhyway.c        | 8 ++------
+ drivers/siox/siox-core.c                  | 4 +---
+ drivers/slimbus/core.c                    | 4 +---
+ drivers/soc/qcom/apr.c                    | 4 +---
+ drivers/spi/spi.c                         | 4 +---
+ drivers/spmi/spmi.c                       | 3 +--
+ drivers/ssb/main.c                        | 4 +---
+ drivers/staging/fieldbus/anybuss/host.c   | 4 +---
+ drivers/staging/greybus/gbphy.c           | 4 +---
+ drivers/target/loopback/tcm_loop.c        | 5 ++---
+ drivers/thunderbolt/domain.c              | 4 +---
+ drivers/tty/serdev/core.c                 | 4 +---
+ drivers/usb/common/ulpi.c                 | 4 +---
+ drivers/usb/serial/bus.c                  | 4 +---
+ drivers/usb/typec/bus.c                   | 4 +---
+ drivers/vdpa/vdpa.c                       | 4 +---
+ drivers/vfio/mdev/mdev_driver.c           | 4 +---
+ drivers/virtio/virtio.c                   | 3 +--
+ drivers/vlynq/vlynq.c                     | 4 +---
+ drivers/vme/vme.c                         | 4 +---
+ drivers/xen/xenbus/xenbus.h               | 2 +-
+ drivers/xen/xenbus/xenbus_probe.c         | 4 +---
+ drivers/zorro/zorro-driver.c              | 3 +--
+ include/linux/device/bus.h                | 2 +-
+ include/linux/pci-epf.h                   | 2 +-
+ sound/ac97/bus.c                          | 6 ++----
+ sound/aoa/soundbus/core.c                 | 4 +---
+ 93 files changed, 107 insertions(+), 263 deletions(-)
+
+
+base-commit: e73f0f0ee7541171d89f2e2491130c7771ba58d3
+-- 
+2.30.2
+
