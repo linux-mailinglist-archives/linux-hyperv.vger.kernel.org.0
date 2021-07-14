@@ -2,61 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F6B53C82E4
+	by mail.lfdr.de (Postfix) with ESMTP id DD4113C82E6
 	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jul 2021 12:29:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239144AbhGNKcb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S239130AbhGNKcb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Wed, 14 Jul 2021 06:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34488 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238728AbhGNKc3 (ORCPT
+        with ESMTP id S239137AbhGNKc3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Wed, 14 Jul 2021 06:32:29 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377E1C061766;
-        Wed, 14 Jul 2021 03:29:37 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id g8so1463935qth.10;
-        Wed, 14 Jul 2021 03:29:37 -0700 (PDT)
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656C7C061767;
+        Wed, 14 Jul 2021 03:29:38 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id e14so1037342qkl.9;
+        Wed, 14 Jul 2021 03:29:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=whrqx7S/6ArEqBZa1UoQwNLZIIZFAIXLGfuEnNJo6+E=;
-        b=GWCio3dmCWMxhi0Hlb6ME6Vnx1TNNM4BffNZVN464KPAkLW7GVAOqEdHG1qhct5fbE
-         cF2LiZQf0bIoQ56Zd0ut46zjF2jvEnJAAhwV0SjVVmZHc/pxhoMO7uXSOAj+ltoK32uw
-         bZq85a4CCnOuKRbq2QZRIk0rrvF+Ah7mLRgdx5GPz8FFkbMBPJ9o6Mabe/dsN36hhxGG
-         QmjuwWIzMKdMcAPXumFv6a0XI5mv28W9W+Tu+HXJxeaW3zXXyrFHip/lGJ6cdGvtiTv1
-         sREOPUCxdyL/uY7hVEgMxKzN73+UQ12XwAwXddTY04BYgsZ2e3vq33iZiswYsmZkwa1o
-         jcgg==
+        bh=5lYVAl5pvq321nWlC1xJtj8cB/i93LY8ECKiLgnJmb4=;
+        b=s8JxMXmb/W9eRMVaIAJ9wNgmb/nC+3S3ecleRWZgrGL+r5XajGrzo5CLpSu9H6wDDm
+         AZFxknJ67wYkeI4qDWwld0xIOq1td/eiditnYv1hXSG+WgVmZJCJ57Ccj356jsiKA86s
+         DL6FNaUGD5rBs7FXa3ODgkXzGijtd9O0bZRieOsdlai6vhxHCkmCPFd1Q0pXFeo0XyUa
+         67zCOug4sx7ac3XNOXupx4Pmqodslj2MftWmJrXaLPNdQBt9KXJV4Ibr1YhE6Wzkj8dN
+         pV4MC2M0hw00Jhs2NBbsNXNaxzXuEp4T2hjcImyoeUC5pKg2BQ42ZTcUoD0zf9HG5ul7
+         vbfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=whrqx7S/6ArEqBZa1UoQwNLZIIZFAIXLGfuEnNJo6+E=;
-        b=pNNzxfufvUN0r2SC21NcE0e1ERP8sIvDKkLpOuy4r18IDarW+wXyqEs5FshDTbVAtH
-         E/Uv+RHVjKMFYFLPAaGxD5vXjsWfF/sc1GxehODNU1dx7p9WY0IoGjWjIlVIGetW9idq
-         Equj4NC8n0SLDHPuJ+N8VO/3a0zDEQGsk99crTIL3m/hePmSdPVWjGZsk8M3q5h1gXo5
-         yaIcRMAltmH6z7dxxIDmmYbp7XdaRoTUfKoskN2trFSMCyHGGuM6qRuM2TOc172q6Sjn
-         bRqNPcv7qzds76kBXaa7oFdrjKbH/VImbOKglHxssZfGDumxRxQ640Sele0xW5NDzV4C
-         hLig==
-X-Gm-Message-State: AOAM530QLtyFpc2GY+uGMNAYM1zaLcKT6fOXJRMnB7Oy18tiMN9oxde5
-        as+sFb0HSjDYoDa60yU0T/s=
-X-Google-Smtp-Source: ABdhPJwlf04xGZajypUy8gTnChPsSNYLZwPxkvXTnSa2OFm2z8oRT063aRVBIcD6a3Tmd47utX/qkA==
-X-Received: by 2002:ac8:7d04:: with SMTP id g4mr8855257qtb.384.1626258576433;
-        Wed, 14 Jul 2021 03:29:36 -0700 (PDT)
+        bh=5lYVAl5pvq321nWlC1xJtj8cB/i93LY8ECKiLgnJmb4=;
+        b=fLpM9rEdyNul7xXawOOc9Uq2I0YHQtd8MevCqeqsFs92Loiohy3T9FV4NN6PvpHVCO
+         8vfzqUbXUk17s7lx/mWtWtGd5ABVtMNv8hJqdtN7fxXych0e7qOoUseFEtn8IAR6Xpk6
+         weMCVKWglj1zJVaTQ6xYaWMWY6Hm+lQgarFc+XMIWtd7FbV35BJyp96PyFgNMkJBWr97
+         FNWZpr9m4qVnNh6cT+1ARJFvaRkAj/xko2PKrR/L2vYjBPemLuX5LxdDvUd0WvemLUvW
+         RwmL+Qzb78DCh4fYTVou4QZTTOH0q3Z0+6aHvayl53CzhJq31LaH1QdiQyT89LLeUCcv
+         nksw==
+X-Gm-Message-State: AOAM532BTofRrGQjNtle1wErN59KleD4aA18c8B0dd7V6oJbfq9prabv
+        ceEiVToRkL3ixZvtou8ZxkI=
+X-Google-Smtp-Source: ABdhPJyYvT4ycgzf/g3XR+yoby5oMMU39KT+li/UNG+QT7wrtx7qA1oPBJ2qkMEUv5eS3TcngvjFiw==
+X-Received: by 2002:a37:4685:: with SMTP id t127mr9210826qka.384.1626258577660;
+        Wed, 14 Jul 2021 03:29:37 -0700 (PDT)
 Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id h10sm822245qka.83.2021.07.14.03.29.35
+        by smtp.gmail.com with ESMTPSA id m187sm791699qkd.131.2021.07.14.03.29.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 03:29:35 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 1D69327C005B;
-        Wed, 14 Jul 2021 06:29:35 -0400 (EDT)
+        Wed, 14 Jul 2021 03:29:37 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 4999327C0054;
+        Wed, 14 Jul 2021 06:29:36 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 14 Jul 2021 06:29:35 -0400
-X-ME-Sender: <xms:j7zuYGWQpKAeQgtJxrbwRENJa8bbmOzqRoBuPO6yDJ0IyEvjV3qcYg>
-    <xme:j7zuYClV3jrrzBtrlCvZ1_REhIsvgONLBg4slOJ0zfXkLU1G_cTzvn-6OuZXL2zk5
-    noYtJV3w5GwB9NrGQ>
-X-ME-Received: <xmr:j7zuYKZwWdivIoAryQnhq2MRQmFlO776R4jMMiDVeI2wodylCaS3nOrkQoNdTQ>
+  by compute6.internal (MEProxy); Wed, 14 Jul 2021 06:29:36 -0400
+X-ME-Sender: <xms:kLzuYBmZvB0YqGEU-HLoWqExntX_qsvqmr5_x0Y_9ZjPikRiZbGEBw>
+    <xme:kLzuYM3B2zNTc1BNE49-Jy0rJ16APwVisSuj6UO6BsDsxnTPcnQza_8t9AqlCOsMK
+    A-0_ZQG44IIJnLSYg>
+X-ME-Received: <xmr:kLzuYHoKDOvivYBRElpGVgkBBIUptVg6CZPVn2nyLJx1X0zdcJIvuW22AkXgKg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekgddvkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -67,12 +67,12 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekgddvkecutefuodetggdote
     hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
     udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
     gvrdhnrghmvg
-X-ME-Proxy: <xmx:j7zuYNWGNYttQkg3hnbuIpOYFx5U1foG08mp2D9OHKyiNwz6-y2WzQ>
-    <xmx:j7zuYAmLjZsuTkTMEtVl-qiIneBDrNRJ_gJN0ElKVMWkMpStZlIe9Q>
-    <xmx:j7zuYCflYOGc8X8wtW2X34bCmqadLXVcwWUxTrc-aWbmTbfbhKvOEg>
-    <xmx:j7zuYPfeQwVyCITC-raX9qlJpaJvCQ5XIL57PFhzRBJK2kGPR0_o9Oug8Ng>
+X-ME-Proxy: <xmx:kLzuYBl-5Z5ehzV3u2WAB-Z_GZzHsEPwwsYTo3fqRUWUFZFJvZiWHQ>
+    <xmx:kLzuYP3qUADxDeVDHJt7nQZq63TNT2tx6o_AphBuOZXf8V2HURlysw>
+    <xmx:kLzuYAv4tV0c4XPUpKTBBHawwVaNCi73E8XGjMGGeUU5uMdvqPe5kw>
+    <xmx:kLzuYGtOr5xcD4_1mCNA6stDELhR3l4Grns9qNpOoUuH8x-_ReHedaoZMc4>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 14 Jul 2021 06:29:34 -0400 (EDT)
+ 14 Jul 2021 06:29:35 -0400 (EDT)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
         Marc Zyngier <maz@kernel.org>
@@ -90,9 +90,9 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Mike Rapoport <rppt@kernel.org>
-Subject: [RFC v4 5/7] PCI: hv: Use pci_host_bridge::domain_nr for PCI domain
-Date:   Wed, 14 Jul 2021 18:27:35 +0800
-Message-Id: <20210714102737.198432-6-boqun.feng@gmail.com>
+Subject: [RFC v4 6/7] PCI: hv: Set up msi domain at bridge probing time
+Date:   Wed, 14 Jul 2021 18:27:36 +0800
+Message-Id: <20210714102737.198432-7-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210714102737.198432-1-boqun.feng@gmail.com>
 References: <20210714102737.198432-1-boqun.feng@gmail.com>
@@ -102,62 +102,80 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-No functional change, just store and maintain the PCI domain number in
-the generic pci_host_bridge instead of x86 specific pci_sysdata.
+Since PCI_HYPERV depends on PCI_MSI_IRQ_DOMAIN which selects
+GENERIC_MSI_IRQ_DOMAIN, we can use dev_set_msi_domain() to set up the
+msi irq domain at probing time, and this works for both x86 and ARM64.
+
+Therefore use it as the preparation for ARM64 Hyper-V PCI support.
+
+As a result, no longer need to maintain ->fwnode in x86 specific
+pci_sysdata, and make hv_pcibus_device own it instead.
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pci-hyperv.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 8d42da5dd1d4..5741b1dd3c14 100644
+index 5741b1dd3c14..e6276aaa4659 100644
 --- a/drivers/pci/controller/pci-hyperv.c
 +++ b/drivers/pci/controller/pci-hyperv.c
-@@ -2299,7 +2299,7 @@ static void hv_eject_device_work(struct work_struct *work)
- 	 * because hbus->bridge->bus may not exist yet.
- 	 */
- 	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
--	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
-+	pdev = pci_get_domain_bus_and_slot(hbus->bridge->domain_nr, 0, wslot);
- 	if (pdev) {
- 		pci_lock_rescan_remove();
- 		pci_stop_and_remove_bus_device(pdev);
-@@ -3071,6 +3071,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 			 "PCI dom# 0x%hx has collision, using 0x%hx",
- 			 dom_req, dom);
+@@ -450,6 +450,7 @@ enum hv_pcibus_state {
+ struct hv_pcibus_device {
+ 	struct pci_sysdata sysdata;
+ 	struct pci_host_bridge *bridge;
++	struct fwnode_handle *fwnode;
+ 	/* Protocol version negotiated with the host */
+ 	enum pci_protocol_version_t protocol_version;
+ 	enum hv_pcibus_state state;
+@@ -1565,7 +1566,7 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+ 	hbus->msi_info.handler = handle_edge_irq;
+ 	hbus->msi_info.handler_name = "edge";
+ 	hbus->msi_info.data = hbus;
+-	hbus->irq_domain = pci_msi_create_irq_domain(hbus->sysdata.fwnode,
++	hbus->irq_domain = pci_msi_create_irq_domain(hbus->fwnode,
+ 						     &hbus->msi_info,
+ 						     x86_vector_domain);
+ 	if (!hbus->irq_domain) {
+@@ -1574,6 +1575,8 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+ 		return -ENODEV;
+ 	}
  
-+	hbus->bridge->domain_nr = dom;
- 	hbus->sysdata.domain = dom;
++	dev_set_msi_domain(&hbus->bridge->dev, hbus->irq_domain);
++
+ 	return 0;
+ }
  
- 	hbus->hdev = hdev;
-@@ -3080,7 +3081,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	spin_lock_init(&hbus->device_list_lock);
- 	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
- 	hbus->wq = alloc_ordered_workqueue("hv_pci_%x", 0,
--					   hbus->sysdata.domain);
-+					   hbus->bridge->domain_nr);
- 	if (!hbus->wq) {
+@@ -3118,9 +3121,9 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 		goto unmap;
+ 	}
+ 
+-	hbus->sysdata.fwnode = irq_domain_alloc_named_fwnode(name);
++	hbus->fwnode = irq_domain_alloc_named_fwnode(name);
+ 	kfree(name);
+-	if (!hbus->sysdata.fwnode) {
++	if (!hbus->fwnode) {
  		ret = -ENOMEM;
- 		goto free_dom;
-@@ -3207,7 +3208,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- destroy_wq:
- 	destroy_workqueue(hbus->wq);
- free_dom:
--	hv_put_dom_num(hbus->sysdata.domain);
-+	hv_put_dom_num(hbus->bridge->domain_nr);
- free_bus:
- 	kfree(hbus);
- 	return ret;
-@@ -3315,7 +3316,7 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 		goto unmap;
+ 	}
+@@ -3198,7 +3201,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ free_irq_domain:
  	irq_domain_remove(hbus->irq_domain);
- 	irq_domain_free_fwnode(hbus->sysdata.fwnode);
+ free_fwnode:
+-	irq_domain_free_fwnode(hbus->sysdata.fwnode);
++	irq_domain_free_fwnode(hbus->fwnode);
+ unmap:
+ 	iounmap(hbus->cfg_addr);
+ free_config:
+@@ -3314,7 +3317,7 @@ static int hv_pci_remove(struct hv_device *hdev)
+ 	hv_free_config_window(hbus);
+ 	hv_pci_free_bridge_windows(hbus);
+ 	irq_domain_remove(hbus->irq_domain);
+-	irq_domain_free_fwnode(hbus->sysdata.fwnode);
++	irq_domain_free_fwnode(hbus->fwnode);
  
--	hv_put_dom_num(hbus->sysdata.domain);
-+	hv_put_dom_num(hbus->bridge->domain_nr);
+ 	hv_put_dom_num(hbus->bridge->domain_nr);
  
- 	kfree(hbus);
- 	return ret;
 -- 
 2.30.2
 
