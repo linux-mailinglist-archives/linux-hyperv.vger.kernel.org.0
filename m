@@ -2,25 +2,25 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 608563C89C0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jul 2021 19:26:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BCAB3C89C4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jul 2021 19:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbhGNR3q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 14 Jul 2021 13:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58132 "EHLO mail.kernel.org"
+        id S229756AbhGNRaO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 14 Jul 2021 13:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229592AbhGNR3q (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 14 Jul 2021 13:29:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D38EA613BE;
-        Wed, 14 Jul 2021 17:26:52 +0000 (UTC)
+        id S229600AbhGNRaN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 14 Jul 2021 13:30:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EC161613BE;
+        Wed, 14 Jul 2021 17:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1626283613;
-        bh=sOy4cSiHFkDFSpegtUnQPJIOAJT/XgUnqunfTIjGQz8=;
+        s=korg; t=1626283641;
+        bh=RQHO6DIs5uGncRboQ2yR83gOYkw1pt+W3tetAN9kcsk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=av703ACT68Kjwrq55XbCZTUvYgLH5HXUhcQJ62rd1y+Pf7PukrCeVl4J4Jz2OIuGU
-         x2WFzojLx6ocvJsUXB39jZCNacFBKPxVUIO+Y1dv8/f8+ezkaXTy/p/s+LKA9MUIbD
-         DikTNWZvc+CHIP3Rpdhv77YMcKuOIL0ninNIOGrM=
-Date:   Wed, 14 Jul 2021 19:26:50 +0200
+        b=mptOodHIDmcFzM2ytGCPwTES7Zq4iBoAk+ky2t0TvVg0itYuM7sJ7hGhPIdrbcMb7
+         bpF+3/D1rlZ0wGj02/kVWVEjAJg9R6EnLbnbPm/2YhNjrnLoYMJBQ3iYq5cePlnaBG
+         eFNNMMt5WIXBiBg95eK0/d349cYOXl1RYXqOvRcY=
+Date:   Wed, 14 Jul 2021 19:27:18 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     longli@linuxonhyperv.com
 Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -41,7 +41,7 @@ Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         Siddharth Gupta <sidgup@codeaurora.org>,
         Hannes Reinecke <hare@suse.de>, linux-doc@vger.kernel.org
 Subject: Re: [Patch v3 2/3] Drivers: hv: add Azure Blob driver
-Message-ID: <YO8eWsvgA5j3PLhd@kroah.com>
+Message-ID: <YO8edjd9/2bDz3sO@kroah.com>
 References: <1626230722-1971-1-git-send-email-longli@linuxonhyperv.com>
  <1626230722-1971-3-git-send-email-longli@linuxonhyperv.com>
 MIME-Version: 1.0
@@ -53,10 +53,18 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Tue, Jul 13, 2021 at 07:45:21PM -0700, longli@linuxonhyperv.com wrote:
-> +static struct miscdevice az_blob_misc_device = {
-> +	MISC_DYNAMIC_MINOR,
-> +	"azure_blob",
-> +	&az_blob_client_fops,
-> +};
+> From: Long Li <longli@microsoft.com>
+> 
+> Azure Blob storage provides scalable and durable data storage for Azure.
+> (https://azure.microsoft.com/en-us/services/storage/blobs/)
+> 
+> This driver adds support for accelerated access to Azure Blob storage. As an
+> alternative to REST APIs, it provides a fast data path that uses host native
+> network stack and secure direct data link for storage server access.
 
-Named initializers please.
+Where is the userspace code that interacts with this driver through your
+custom ioctl interface?
+
+thanks,
+
+greg k-h
