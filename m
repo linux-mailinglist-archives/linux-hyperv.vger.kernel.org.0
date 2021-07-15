@@ -2,74 +2,87 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BFBD3C9A6D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jul 2021 10:21:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB05C3C9ED8
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jul 2021 14:41:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232068AbhGOIX7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 15 Jul 2021 04:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231991AbhGOIX7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 15 Jul 2021 04:23:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B7F761183;
-        Thu, 15 Jul 2021 08:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1626337265;
-        bh=/W+ULFbU/BGI8YXIYShenS1pmj1qoEaLlFWsmFLl7Bw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZZyI55QaKobP2Xyj54SFFbu1ZordCei/pAfFDfdV9DFAg72303w4mnR1RSwNlV4/B
-         kRNVEx1xnA8lMBAm06hJUjAAZr8EYGYKw9Q/SvSLjX0F+1iBCMpJfaI3ZL/WBFLfK4
-         LRB1Myd7JB25qoaC79Elc+njHBkF7XRRSpfNR8no=
-Date:   Thu, 15 Jul 2021 10:21:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     longli@linuxonhyperv.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Long Li <longli@microsoft.com>,
+        id S234549AbhGOMoq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 15 Jul 2021 08:44:46 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:38682 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237422AbhGOMoq (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 15 Jul 2021 08:44:46 -0400
+Received: by mail-wm1-f46.google.com with SMTP id b14-20020a1c1b0e0000b02901fc3a62af78so5959417wmb.3;
+        Thu, 15 Jul 2021 05:41:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=O+M79BeIDhVxQMgy3sWJEueXStEdWGM0NwaNbUc7J0U=;
+        b=TvjY9mxKzzY5f+viYkVwvLEyysfn//OyXoqnJK1HOw4Bf6LRhjiOqITAFuiM0WTcUQ
+         Jo/Sx13E6NWbgTFyjSpOfv5SvRC4xQvZGtWaHcxbBRCA39KHeljU95UogRsnQzabCSh0
+         2mD1Uv1dyYiD9D1sKzbPOiAg94orIUznKPtYF6weKy34ieE36l4fnT2SgT9rWNjaobGG
+         dtzXkWLcUxIZE5UOsYJmDxhmJQrsfxIF7ORZer5aqKAJkRBmKo3baclIpyif+KUspSvn
+         /MNWtyN+0FXtf8Y9R9HyNg5t5ikuAzgn9uv+SFDCFVoTzVFtijtrBmEnMGiI1AvHMw3k
+         gvVQ==
+X-Gm-Message-State: AOAM533H+rG4CzViu07zoWKOyVlv8rVuTBmdkdX7K0gmndR8tjuFYzdD
+        HMDfo7PbKXqXNCNhmhKxQvs=
+X-Google-Smtp-Source: ABdhPJw4oTEykLpOhMa5XYDn+I227/hwlyerTSfZaX8R1JcoHZ5I/ELuigkif0DBqS58jDM/hImNJA==
+X-Received: by 2002:a05:600c:8a9:: with SMTP id l41mr10569478wmp.152.1626352912160;
+        Thu, 15 Jul 2021 05:41:52 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id r16sm8148995wmg.11.2021.07.15.05.41.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jul 2021 05:41:51 -0700 (PDT)
+Date:   Thu, 15 Jul 2021 12:41:50 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Subject: Re: [Patch v3 3/3] Drivers: hv: Add to maintainer for Azure Blob
- driver
-Message-ID: <YO/v7mGn8ZWiqd7g@kroah.com>
-References: <1626230722-1971-1-git-send-email-longli@linuxonhyperv.com>
- <1626230722-1971-4-git-send-email-longli@linuxonhyperv.com>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
+Message-ID: <20210715123636.ychn4zea2dltnwxg@liuwe-devbox-debian-v2>
+References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+ <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1626230722-1971-4-git-send-email-longli@linuxonhyperv.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 07:45:22PM -0700, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
-> 
-> Add longli@microsoft.com to maintainer list for Azure Blob driver.
-> 
-> Cc: K. Y. Srinivasan <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9487061..b547eb9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8440,6 +8440,7 @@ M:	Haiyang Zhang <haiyangz@microsoft.com>
->  M:	Stephen Hemminger <sthemmin@microsoft.com>
->  M:	Wei Liu <wei.liu@kernel.org>
->  M:	Dexuan Cui <decui@microsoft.com>
-> +M:	Long Li <longli@microsoft.com>
+(Drop irrelevant CCs to avoid spamming people)
 
-You just added yourself to the maintainer of _all_ of the hyperv
-drivers, was that intentional?
+On Tue, Jul 06, 2021 at 05:48:03PM +0200, Uwe Kleine-König wrote:
+>  drivers/hv/vmbus_drv.c                    | 5 +----
 
-thanks,
+Acked-by: Wei Liu <wei.liu@kernel.org>
 
-greg k-h
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 57bbbaa4e8f7..392c1ac4f819 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -922,7 +922,7 @@ static int vmbus_probe(struct device *child_device)
+>  /*
+>   * vmbus_remove - Remove a vmbus device
+>   */
+> -static int vmbus_remove(struct device *child_device)
+> +static void vmbus_remove(struct device *child_device)
+>  {
+>  	struct hv_driver *drv;
+>  	struct hv_device *dev = device_to_hv_device(child_device);
+> @@ -932,11 +932,8 @@ static int vmbus_remove(struct device *child_device)
+>  		if (drv->remove)
+>  			drv->remove(dev);
+>  	}
+> -
+> -	return 0;
+>  }
+>  
