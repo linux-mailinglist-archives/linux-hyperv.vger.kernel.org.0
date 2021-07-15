@@ -2,207 +2,302 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B35C23CA0A3
-	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jul 2021 16:28:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 745BE3CA203
+	for <lists+linux-hyperv@lfdr.de>; Thu, 15 Jul 2021 18:11:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232054AbhGOObq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 15 Jul 2021 10:31:46 -0400
-Received: from elvis.franken.de ([193.175.24.41]:59759 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229624AbhGOObo (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 15 Jul 2021 10:31:44 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1m42Ly-0004w9-02; Thu, 15 Jul 2021 16:28:42 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id AC72DC099E; Thu, 15 Jul 2021 15:02:21 +0200 (CEST)
-Date:   Thu, 15 Jul 2021 15:02:21 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel@pengutronix.de, Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Johannes Thumshirn <morbidrsa@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Martyn Welch <martyn@welchs.me.uk>,
-        Manohar Vanga <manohar.vanga@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joey Pabalan <jpabalanb@gmail.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Frank Li <lznuaa@gmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bostroesser@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        SeongJae Park <sjpark@amazon.de>,
-        Julien Grall <jgrall@amazon.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Johannes Thumshirn <jth@kernel.org>
-Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
-Message-ID: <20210715130221.GA10298@alpha.franken.de>
-References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
- <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+        id S229535AbhGOQOH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 15 Jul 2021 12:14:07 -0400
+Received: from mail-bn8nam08on2123.outbound.protection.outlook.com ([40.107.100.123]:49568
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229516AbhGOQOH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 15 Jul 2021 12:14:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QUdg5MtUehNkdWKO/4R6p1PhScWEK+oD+jFa0VT5b5NzqQ03fvew26pAi6pIeq+5FYItaU3tmDBWxyhbPCF6xbE6ziBgHr5azU1/TlpEEKsl29z0OopcadBcyzh/vXiStN6poHVHshOTTl5IJAAYf3Otv0pPt++HddFVw/uPlbGCmjOe18/8xjKpVDPbnxdfdZFvGbShwCpHs2zD6elrd675s1kfOA2XoLKACXvaLl3fXFy7Hv94E92zISow3KDm7jARji5CRMH1MhroMRK/47krG3+KP8zdwa/fxb4OvWQCyJQPflYaBKcFHgBDUlmVdC+C1yUzf6mH6iVMNN1+Ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r+gERb1rI1vVCDfgcls/bdODMTqJ8io0gTsoyrGl7Os=;
+ b=GRpsb91GfX1ZzNohRWYRZ1SUWoWx7XF25On24RxNWeYHnLeaD0CzDS4zrrD8lgP4w6M2Xpbebn39ewoIf2yeCB2QC45GrvUiok6jGGdBqDX/hGRJCnAdhnLKK+mjtv2Rikp+Ubaih6l91Z7qZmQlGW5d9vovLVL38YhCtJcqnk3Bet0ZevjK9NeJZFfDJCK3ymGNa0LPjrwxA8kJr5HDOdXUCL6CShSoywu1Vb/wt5ZDc7DgqCBQzqCQ+AqZE7faGvHevY+e16xiE/i4NT9mrZhZsTvv1QeuQ2sjpiJdF3GPFwhVBbJysX6QGdCS1fC8leY3dimlD9ctuNVj9gIuag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r+gERb1rI1vVCDfgcls/bdODMTqJ8io0gTsoyrGl7Os=;
+ b=hEUgEWlo0BJKbXm1d6h7DR54ArHcXHSlmEmtOmgrrm/IS1WkSBR4Q8ptggoVfd7xSbNEiHD/8XRIGGRdbWNr0tNbbghCUB+T29iNHMH3NlAhL23A3tANWrPEq1eF3gwe33T6rV1HrquCQ6vElAxhg1/jf1uzRIKIaxwPUIgUR+s=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1340.namprd21.prod.outlook.com (2603:10b6:5:175::19)
+ by DM5PR2101MB1029.namprd21.prod.outlook.com (2603:10b6:4:9e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.8; Thu, 15 Jul
+ 2021 16:11:11 +0000
+Received: from DM6PR21MB1340.namprd21.prod.outlook.com
+ ([fe80::7840:718a:c75:9760]) by DM6PR21MB1340.namprd21.prod.outlook.com
+ ([fe80::7840:718a:c75:9760%8]) with mapi id 15.20.4352.012; Thu, 15 Jul 2021
+ 16:11:11 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH hyperv-fixes] Drivers: hv: vmbus: Fix duplicate CPU assignments within a device
+Date:   Thu, 15 Jul 2021 09:10:42 -0700
+Message-Id: <1626365442-28869-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR22CA0007.namprd22.prod.outlook.com
+ (2603:10b6:300:ef::17) To DM6PR21MB1340.namprd21.prod.outlook.com
+ (2603:10b6:5:175::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR22CA0007.namprd22.prod.outlook.com (2603:10b6:300:ef::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend Transport; Thu, 15 Jul 2021 16:11:10 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 87d7bd80-4c2c-4cd3-e67d-08d947ab2959
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB1029:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB10290398890A76C43C6850EFAC129@DM5PR2101MB1029.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0xjrtoV9OV7VuSdal20sO48uXbKMFEhDbhaEfMLqbFtXtRgemPkYYVeS6EAoVInCWvmy1lLmhKHB78l4+tzbEn94FUqFEwx8WzUAaVwtwXNQs2wjPDGnbVD3wLkzvuRUPoSmFuDYZcOpXcs7ctmNBG8GxGI0Q988BUsyw6+c4tmhyhVocEuSZk3KbX9ifYjlGHEfhU8ldjVOx31iUZbhyr3WCyVn6qxnOQqH6pwVFUzsr9DUV6h4uW5gsMku1jyC3Oy59d3wpyi5JjFuwIubm4EAEvECKIhY4Ja5RGSP128z/J9CueGM28XEE1xZG2meP0J27ajjcJF8MqteIIDNg4+LQ2J3OypGByoDlh4fjVIGmgrLYwLqHqrJ3oJ0BqrrhLW4CQFraIemkKuuKwhd7ZPrh7dQiqHB8Xn0/GaJSTEM6NCMfgMC7xDOg5cJdGhu1qA5LFCdI77ZtXbXRpe9mSwIEMQJ8CQNeINPjj97OYx1+kwhdTlb2fkoosUNFHnJmpJZuIvnm/+bIzU1E9Q44aYS8aspqT0cbB2flWJ+bPtS2ReWVs4zNFkTKTnQIY0ZyDmWwmJKQQFfxvBSQq127I4Uzp8GaX/CHJ6ek92W5outaQ609CB6Y0QI3GaCxBrWU5oFTo99szDGKhWfK6XaMW836WJc4dM/sb2OewopG48ebW2yf6rqSAtzWGb300UVWQkcE/1Rhv4J/RPKxT5Lmw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1340.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6666004)(478600001)(82950400001)(316002)(10290500003)(82960400001)(36756003)(83380400001)(6916009)(8676002)(5660300002)(26005)(186003)(38350700002)(7846003)(6506007)(38100700002)(8936002)(450100002)(52116002)(4326008)(66946007)(6486002)(2616005)(66476007)(66556008)(6512007)(2906002)(956004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?CXL2lAGcddE53MrkY8R79RWjKySR+RxufiWWo9qQh0fpbYe3n/gbQstrIlhB?=
+ =?us-ascii?Q?5ADA3Aqx1G7KDlOXZS60ZvmQsAT0KNRJw8relr2cRJ4lJpLCV98EqzigWf5t?=
+ =?us-ascii?Q?2AuqLJBx1VyWMMZPP2d5oDHS2H7I38NnrhDefcTz5QuR6p4IysgAysKrRI43?=
+ =?us-ascii?Q?e5GDWBVntXj+ZKLA2q0+E/udQNiin/4RATQs1jCJheQUDv2IKUJzilk+IXF3?=
+ =?us-ascii?Q?9m0zFWq219Kd37hSKHNdBKl8p/ZieK9mFXBqHP7B4DqRCXkeHEym7uiX7fOC?=
+ =?us-ascii?Q?/VvjuQtcqCWJqmZNd+gnVlNUIBzCSsKSDVxhC99FBVOlRpsrZrnMChiD6u5p?=
+ =?us-ascii?Q?SWgeWEUrQd3G6jnuTuDZcEyrbS5eK0Lk6CRJaBJcQS9YMIJA5mWxaUKoCEiD?=
+ =?us-ascii?Q?cef9ly/3bMTIkNcly0TYkkMRrNX487ek9OJHThJrlJc/L9FWzHy194Ui2qXJ?=
+ =?us-ascii?Q?OzHJwLAahLujH7Uvn41mTCj7FmNZEOTGOAwSQ7sAJGIG9kpIU/Mmx1Q/NLzW?=
+ =?us-ascii?Q?gUvByd8OsM6RdNfMDe4xsT+srK5CJ9NGKdPNfyYIZYE0d9QB7CQ3lq4tWMly?=
+ =?us-ascii?Q?4vvFmof3ZY93qG1MSbY8igjccRY3nrHTD6pJldD3eMcE7o53piVLNoJtFHLW?=
+ =?us-ascii?Q?M+xw7IRsT02YFfuwPF+3TJxJWFW4eVYGAT13BVlIkfnI1ym2oDeOJP6VYweR?=
+ =?us-ascii?Q?1eRmhnvBb0N//A/tpk/2vPhcpH6x3OJuwFE++rvpaZduf8bZ1rv71i+p2t4u?=
+ =?us-ascii?Q?RRYA63hkY17DuXcnGvpNo57nNbpKzjZQPdXo8IeHCLrf3PCB2QMGuuGtAdvZ?=
+ =?us-ascii?Q?P+rQ6s2jY/B0mz3XRMXj5yGA8seWmO8lx4dzSAfgMwvwQH26uTtCRAUKzH+9?=
+ =?us-ascii?Q?e8LVTdMkQWys3c2Eo5YJ0qxj1N18YyE21k/GEV2LuMgkAsEU7HCKEnmfjF1Z?=
+ =?us-ascii?Q?gIvjQRrlB3KYy8mXyI2ChQ4wh/rR6jNkrdzQ6vdi/aKhLyVAb4OKwx/X4V9C?=
+ =?us-ascii?Q?IRoTVdVnEAWotx4dWaV/8ax/+4pbkTfD5NddPfRB0bsXvAkCHXY7iV2W0yFa?=
+ =?us-ascii?Q?wuqDZdmbLjw+Ht7B1emLWZy+0+CbaSC8wVMdMEkCr+6OssB9P4PAKclVJeko?=
+ =?us-ascii?Q?cELvWn562W/5BcZMO8cG/3bVUjg3RSuqBbTgWECx9NtEsZ11yEqa7zQTjFJw?=
+ =?us-ascii?Q?VrWmjZKwbwSz535nXsd5nDGqf6FeooUzREhMkluTEXqacseME0aIVGI6na7o?=
+ =?us-ascii?Q?xh/6xmlkNW50aChrIpunNST7mcvbjkAo1zMr5CvyR31944g87p+1U/kBFdOL?=
+ =?us-ascii?Q?fkJg3I6wY8JNJZjcsJnhBS8c?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87d7bd80-4c2c-4cd3-e67d-08d947ab2959
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1340.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2021 16:11:11.3878
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ax+LREacQ3LGG7OVcwvMd3N1LJy8r/hrg6v/nbt7c3h/33LoOmCe6CCp0W5PRBDKzEgQ3Rsa5pqViMrMKfjd0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1029
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 05:48:03PM +0200, Uwe Kleine-König wrote:
-> The driver core ignores the return value of this callback because there
-> is only little it can do when a device disappears.
-> 
-> This is the final bit of a long lasting cleanup quest where several
-> buses were converted to also return void from their remove callback.
-> Additionally some resource leaks were fixed that were caused by drivers
-> returning an error code in the expectation that the driver won't go
-> away.
-> 
-> With struct bus_type::remove returning void it's prevented that newly
-> implemented buses return an ignored error code and so don't anticipate
-> wrong expectations for driver authors.
-> 
-> Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk> (For ARM, Amba and related parts)
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Acked-by: Chen-Yu Tsai <wens@csie.org> (for drivers/bus/sunxi-rsb.c)
-> Acked-by: Pali Rohár <pali@kernel.org>
-> Acked-by: Mauro Carvalho Chehab <mchehab@kernel.org> (for drivers/media)
-> Acked-by: Hans de Goede <hdegoede@redhat.com> (For drivers/platform)
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Acked-By: Vinod Koul <vkoul@kernel.org>
-> Acked-by: Juergen Gross <jgross@suse.com> (For Xen)
-> Acked-by: Lee Jones <lee.jones@linaro.org> (For drivers/mfd)
-> Acked-by: Johannes Thumshirn <jth@kernel.org> (For drivers/mcb)
-> Acked-by: Johan Hovold <johan@kernel.org>
-> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> (For drivers/slimbus)
-> Acked-by: Kirti Wankhede <kwankhede@nvidia.com> (For drivers/vfio)
-> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
-> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com> (For ulpi and typec)
-> Acked-by: Samuel Iglesias Gonsálvez <siglesias@igalia.com> (For ipack)
-> Reviewed-by: Tom Rix <trix@redhat.com> (For fpga)
-> Acked-by: Geoff Levand <geoff@infradead.org> (For ps3)
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
-> [...] 
->  arch/mips/sgi-ip22/ip22-gio.c             | 3 +--
+The vmbus module uses a rotational algorithm to assign target CPUs to
+device's channels. Depends on the timing of different device's channel
+offers, different channels of a device may be assigned to the same CPU.
 
-Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+For example on a VM with 2 CPUs, if the NIC A and B's channels offered
+in the following order, the NIC A will have both channels on CPU0, and
+NIC B will have both channels on CPU1 -- see below. This kind of
+assignments cause RSS spreading loads among different channels ends up
+on the same CPU.
 
+Timing of channel offers:
+NIC A channel 0
+NIC B channel 0
+NIC A channel 1
+NIC B channel 1
+
+VMBUS ID 14: Class_ID = {f8615163-df3e-46c5-913f-f2d2f965ed0e} - Synthetic network adapter
+        Device_ID = {cab064cd-1f31-47d5-a8b4-9d57e320cccd}
+        Sysfs path: /sys/bus/vmbus/devices/cab064cd-1f31-47d5-a8b4-9d57e320cccd
+        Rel_ID=14, target_cpu=0
+        Rel_ID=17, target_cpu=0
+
+VMBUS ID 16: Class_ID = {f8615163-df3e-46c5-913f-f2d2f965ed0e} - Synthetic network adapter
+        Device_ID = {244225ca-743e-4020-a17d-d7baa13d6cea}
+        Sysfs path: /sys/bus/vmbus/devices/244225ca-743e-4020-a17d-d7baa13d6cea
+        Rel_ID=16, target_cpu=1
+        Rel_ID=18, target_cpu=1
+
+
+Update the vmbus' CPU assignment algorithm to avoid duplicate CPU
+assignments within a device.
+
+The new algorithm iterates 2 * #NUMA_Node + 1 times. In the first
+round of checking all NUMA nodes, it tries to find previously unassigned
+CPUs by this and other devices. If not available, it clears the
+allocated CPU mask.
+In the second round, it tries to find unassigned CPUs by the same
+device.
+In the last iteration, it assigns the channel to the first available CPU.
+This is not normally expected, because during device probe, we limit the
+number of channels of a device to be <= number of online CPUs.
+
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+
+---
+ drivers/hv/channel_mgmt.c | 95 ++++++++++++++++++++++++++-------------
+ 1 file changed, 65 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index caf6d0c4bc1b..fbddc4954f57 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -605,6 +605,17 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
+ 	 */
+ 	mutex_lock(&vmbus_connection.channel_mutex);
+ 
++	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
++		if (guid_equal(&channel->offermsg.offer.if_type,
++			       &newchannel->offermsg.offer.if_type) &&
++		    guid_equal(&channel->offermsg.offer.if_instance,
++			       &newchannel->offermsg.offer.if_instance)) {
++			fnew = false;
++			newchannel->primary_channel = channel;
++			break;
++		}
++	}
++
+ 	init_vp_index(newchannel);
+ 
+ 	/* Remember the channels that should be cleaned up upon suspend. */
+@@ -617,16 +628,6 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
+ 	 */
+ 	atomic_dec(&vmbus_connection.offer_in_progress);
+ 
+-	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
+-		if (guid_equal(&channel->offermsg.offer.if_type,
+-			       &newchannel->offermsg.offer.if_type) &&
+-		    guid_equal(&channel->offermsg.offer.if_instance,
+-			       &newchannel->offermsg.offer.if_instance)) {
+-			fnew = false;
+-			break;
+-		}
+-	}
+-
+ 	if (fnew) {
+ 		list_add_tail(&newchannel->listentry,
+ 			      &vmbus_connection.chn_list);
+@@ -647,7 +648,6 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
+ 		/*
+ 		 * Process the sub-channel.
+ 		 */
+-		newchannel->primary_channel = channel;
+ 		list_add_tail(&newchannel->sc_list, &channel->sc_list);
+ 	}
+ 
+@@ -683,6 +683,29 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
+ 	queue_work(wq, &newchannel->add_channel_work);
+ }
+ 
++/*
++ * Clear CPUs used by other channels of the same device.
++ * It's should only be called by init_vp_index().
++ */
++static bool hv_clear_usedcpu(struct cpumask *cmask, struct vmbus_channel *chn)
++{
++	struct vmbus_channel *primary = chn->primary_channel;
++	struct vmbus_channel *sc;
++
++	lockdep_assert_held(&vmbus_connection.channel_mutex);
++
++	if (!primary)
++		return !cpumask_empty(cmask);
++
++	cpumask_clear_cpu(primary->target_cpu, cmask);
++
++	list_for_each_entry(sc, &primary->sc_list, sc_list)
++		if (sc != chn)
++			cpumask_clear_cpu(sc->target_cpu, cmask);
++
++	return !cpumask_empty(cmask);
++}
++
+ /*
+  * We use this state to statically distribute the channel interrupt load.
+  */
+@@ -705,7 +728,7 @@ static void init_vp_index(struct vmbus_channel *channel)
+ 	cpumask_var_t available_mask;
+ 	struct cpumask *alloced_mask;
+ 	u32 target_cpu;
+-	int numa_node;
++	int numa_node, i;
+ 
+ 	if ((vmbus_proto_version == VERSION_WS2008) ||
+ 	    (vmbus_proto_version == VERSION_WIN7) || (!perf_chn) ||
+@@ -724,29 +747,41 @@ static void init_vp_index(struct vmbus_channel *channel)
+ 		return;
+ 	}
+ 
+-	while (true) {
+-		numa_node = next_numa_node_id++;
+-		if (numa_node == nr_node_ids) {
+-			next_numa_node_id = 0;
+-			continue;
++	for (i = 1; i <= nr_node_ids * 2 + 1; i++) {
++		while (true) {
++			numa_node = next_numa_node_id++;
++			if (numa_node == nr_node_ids) {
++				next_numa_node_id = 0;
++				continue;
++			}
++			if (cpumask_empty(cpumask_of_node(numa_node)))
++				continue;
++			break;
+ 		}
+-		if (cpumask_empty(cpumask_of_node(numa_node)))
+-			continue;
+-		break;
+-	}
+-	alloced_mask = &hv_context.hv_numa_map[numa_node];
++		alloced_mask = &hv_context.hv_numa_map[numa_node];
++
++		if (cpumask_weight(alloced_mask) ==
++		    cpumask_weight(cpumask_of_node(numa_node))) {
++			/*
++			 * We have cycled through all the CPUs in the node;
++			 * reset the alloced map.
++			 */
++			cpumask_clear(alloced_mask);
++		}
++
++		cpumask_xor(available_mask, alloced_mask,
++			    cpumask_of_node(numa_node));
++
++		/* Try to avoid duplicate cpus within a device */
++		if (channel->offermsg.offer.sub_channel_index >=
++		    num_online_cpus() ||
++		    i > nr_node_ids * 2 ||
++		    hv_clear_usedcpu(available_mask, channel))
++			break;
+ 
+-	if (cpumask_weight(alloced_mask) ==
+-	    cpumask_weight(cpumask_of_node(numa_node))) {
+-		/*
+-		 * We have cycled through all the CPUs in the node;
+-		 * reset the alloced map.
+-		 */
+ 		cpumask_clear(alloced_mask);
+ 	}
+ 
+-	cpumask_xor(available_mask, alloced_mask, cpumask_of_node(numa_node));
+-
+ 	target_cpu = cpumask_first(available_mask);
+ 	cpumask_set_cpu(target_cpu, alloced_mask);
+ 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.25.1
+
