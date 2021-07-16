@@ -2,338 +2,359 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBE453CBB58
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jul 2021 19:45:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E751A3CBB60
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jul 2021 19:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbhGPRsS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Jul 2021 13:48:18 -0400
-Received: from mail-dm6nam11on2090.outbound.protection.outlook.com ([40.107.223.90]:26688
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        id S231266AbhGPRu5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Jul 2021 13:50:57 -0400
+Received: from mail-co1nam11on2137.outbound.protection.outlook.com ([40.107.220.137]:48320
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229462AbhGPRsR (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Jul 2021 13:48:17 -0400
+        id S230476AbhGPRu5 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 16 Jul 2021 13:50:57 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H/w0xIDtDH3+8Mhn/Wj+zWPDqyA/yIsoojYP6LWCxukIJa7G0OhlwYjnBhwKDw4qZgp2eb+PFOvNkaTf90+jEtK3YlZE4OGd9qoXod05D4VJQI/MV40ePi9bs3dxyEgcl/9LomaFBjT6cdhkZKP+NSwVQfCpduTioWblzvUBqW0NIPwuGFFUdwhbDy7BxEfGCYrD1Zayqj9Gixey4ivFIBkEnv8FLt4vql7pVRbuvh2c13egvqXh3zjjUclwaIz7VgVnxJ6LyHuAzOkyA4YDh5Q9dkuxNt2EFdSkdHNFTTw6tXFVSfbCsyMkqZmnTdBBk8uQeYdbHiLAdlBtvlPBdg==
+ b=Xk+HJpkY4ot9DDP3Ka6psdw4BHr6l75zcxH4DChcY+8+3LcXywXB6Ydl/eNBH8X1KLAFgVKzTfV1cxFtLB8wgkrs4tUaEi7plpng5v+3UuZCn64xcuX1MReksMK7+34YOcF6o3fHV8rVEojhHDD4zlRUfFcGxPA/blbejnrR2Erfxq62war2CQ9jKsubhOH9h44ydmCuLIsMTz7AnWQOTBr3W6iESqZQNscIPTtfYGeOhaGcKAYbvwVGDi6HcoN/leMx02SfB/XJHtZ/6qO22VTPJVeOWgR9l19HJOl9LgjljlGv4PWfKzyxdtjFZZparnJiBNiYX+Mozd2/63r0Bw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eq0UFFk/S4Dz2IMeTyyfNi+DMAqP3EmqZUDf/kdJvrI=;
- b=iIK9O+y5HRGRR4hmA0dUUD5wZTcGt67l48dfbGEx8Ixcb2vPZ5DR7GVNcyjBpd2r0PBZBz/R02eLqRIThV5hIn/VpODuFEy6d5tsxdwQq6HjrCsGQe618HCqLsHIi+EW/vkuFH5mZbJToXS1B0MzKr0kY18GKRhih91YhbA9yihF7/w3bj47ulqj5YloqgumYUEPgT/n6DEFnhPw8zTYuVleWDWV9QgWMYjVY5HmwcKy6BdavRp+s4wgzmeYz6apJGF1xppbbMawSR0YDUJ7XEM57vy8ECB4sdIvy1vgummRwoJYqQs/TQ4YcpHWZGv5Q/1TvyhTY3aHpzRMgx5izA==
+ bh=/IwzyCkcsKg4+wunNh9E1hstBDMeqrH0rN+K33lCleg=;
+ b=jbaQzPwXKYt5unQSIvS4MLf/HzpsIMzQ4A5IkeB6k7oTg0P7Na39f1MNM9UtBNIyCNMlITqLU/+GVlu/eU/48Il5jLWAndlPaExzYdMKqB6+euDJZeklyRnDtXXqbDZB1sJYrmaafDSIeXGcJPUlAC6xUfG6Js88BdAjAczaaWrSlLgptQabmdIBIDNpCEUOfx+xMlVQDBpna0Sc6x2tWZ0WNsEWNRQzgVv+MVLOZ9WfyJLJAAlBUXiBQ13chJ7yj8Bc1yMIL6hah7T25t9LowUUA6kpgwULMr/kvBsCxnYjmpOSKFm9hkMD+IWlAYrMDKGOEcwZKNtWCEfRkbAhQA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eq0UFFk/S4Dz2IMeTyyfNi+DMAqP3EmqZUDf/kdJvrI=;
- b=BDvG2UuBcaOHWi5AUOXdrJ3zLt7RIHkN5sjx7b3wEgpnquXDXPs81VeZEXJ036DSXyXfY0C+lIeMFSXflBpcZDWuxRnyJJnwbXmyzxmt1HpE8D4PX9vY8pzPGe1mDOUeEW6zMeCsWeUSm40ZAJz3ox7BPXc+CJBvudLDJ3tJo10=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW4PR21MB2057.namprd21.prod.outlook.com (2603:10b6:303:11c::22) with
+ bh=/IwzyCkcsKg4+wunNh9E1hstBDMeqrH0rN+K33lCleg=;
+ b=ablNSAx+aaXbxI+4sw7zoVk16/K4klxbL02fDRViC7MQcsBlo1w/9dSgEQR0dNEmIRJdihHq8f8olqbMlDJAqcvwVtJ9Y0JjuIRdeSSNs3tq+zoVXhO1PaBYVxA2AYlKi0hhNFJSnkHjzoe+Az8L0wyjQhg1qjwH9+/zhFlk10k=
+Received: from MN2PR21MB1295.namprd21.prod.outlook.com (2603:10b6:208:3e::25)
+ by MN2PR21MB1408.namprd21.prod.outlook.com (2603:10b6:208:202::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.7; Fri, 16 Jul
- 2021 17:45:15 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::cdf4:efd:7237:3c19]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::cdf4:efd:7237:3c19%7]) with mapi id 15.20.4331.021; Fri, 16 Jul 2021
- 17:45:15 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.4; Fri, 16 Jul
+ 2021 17:47:59 +0000
+Received: from MN2PR21MB1295.namprd21.prod.outlook.com
+ ([fe80::d830:2bfc:3f18:2056]) by MN2PR21MB1295.namprd21.prod.outlook.com
+ ([fe80::d830:2bfc:3f18:2056%7]) with mapi id 15.20.4331.014; Fri, 16 Jul 2021
+ 17:47:59 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+CC:     KY Srinivasan <kys@microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: RE: [PATCH v2,hyperv-fixes] Drivers: hv: vmbus: Fix duplicate CPU
  assignments within a device
 Thread-Topic: [PATCH v2,hyperv-fixes] Drivers: hv: vmbus: Fix duplicate CPU
  assignments within a device
-Thread-Index: AQHXeeMz61DGX0LK7kKUYpdpjyKtsqtFzALg
-Date:   Fri, 16 Jul 2021 17:45:15 +0000
-Message-ID: <MWHPR21MB1593ED77DF2C9528269228D9D7119@MWHPR21MB1593.namprd21.prod.outlook.com>
+Thread-Index: AQHXeeMv5XS3+YJk/Eq4N2cAv7ki46tF4OSAgAAAY3A=
+Date:   Fri, 16 Jul 2021 17:47:58 +0000
+Message-ID: <MN2PR21MB1295D09F6384167C2D063557CA119@MN2PR21MB1295.namprd21.prod.outlook.com>
 References: <1626399458-23990-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1626399458-23990-1-git-send-email-haiyangz@microsoft.com>
+ <MWHPR21MB1593ED77DF2C9528269228D9D7119@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB1593ED77DF2C9528269228D9D7119@MWHPR21MB1593.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7f75105a-0676-4b04-8008-3d2731d1a81d;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-07-16T16:30:30Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0c25251a-f529-44cc-b2fe-08d948817848
-x-ms-traffictypediagnostic: MW4PR21MB2057:
+x-ms-office365-filtering-correlation-id: 583a9908-6a71-404f-5f99-08d94881d9f8
+x-ms-traffictypediagnostic: MN2PR21MB1408:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW4PR21MB20578CC7711E68E98FC72040D7119@MW4PR21MB2057.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-microsoft-antispam-prvs: <MN2PR21MB1408275274E8FCB81AFFDF13CA119@MN2PR21MB1408.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pVzlwN+kbGMzo5Zhbxkga37J8ctWBGh63PL5RWsljq+iDGq7ay++6NgHRLmJoXp9QL3d7RkYjofl9iaVT5+XfQrgWTJAnKuaJt5ye9jlNbIOYEsrGZWDJ+8/SX+aFh+XNa1IFt66cQPx35UbK5e5QXgF6tmKXIi/cvNscxsL+2nt61z4FNc9xxGG/PCLLW/KYkfHEFpTfSziyQ2B9Yk0tZi7IfOadFatrDZAdTmRBJyWO6K6sbEw07g9GMkiaExUxKymUyovuC2GIAdTBz+yPGkZqtiCS7Tfb+sjWAYp+n3dF9jLfTrw5NksRVMsetpwXDT7jBhYrLcXznDbz+rSk38VYeUavAJvshnGMLZBSnMURmukdGBADSyWxiPWyphDYcVsWDRnPeoCPJq0Sv0ruFjgUVlK9Njrhsm4W2zQ2R0CYE40t0d5Y9pwgWxakQZCap/i7IYWQCoYGk5jRqx1rR0OqUHt1CesAp8UvfXVfpjmNGTdIZ9RDXyNAo5+pCaT34JTLS8LozcLMI34bjfZieXFW/2KO0rUZzmK0lH0cMF7VYm1K5LQd/1X+SzJnSOeTYRvPk9EvFolVUbE7zILmRmcmJndCrkbwJfm+qgq/LCCbYeUVWbJZrgEZn1x6rqV5BIsGCUiH6CQQ3xe/IVTbxG7YzNdYkIN7yrgcMBXct9TYByLoGjYFxE6cLeqWQ/gbILRMHtiKs0IuCi1Nh12JQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(54906003)(2906002)(10290500003)(9686003)(122000001)(55016002)(8936002)(8676002)(76116006)(26005)(4326008)(450100002)(186003)(110136005)(38100700002)(316002)(71200400001)(66946007)(66556008)(86362001)(83380400001)(66476007)(66446008)(6506007)(82950400001)(82960400001)(508600001)(8990500004)(52536014)(7696005)(5660300002)(33656002)(64756008)(38070700004);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: 3I4+0PYaczmMmvFBleSxuWLIUVqA2aQj4yjEKabxeCpNC/Q2P9/xdUf1ynkOtaU0wm0hod3+TYsFfGoYzhR5BFbdgro+rHjCCNneExLSmIfVgQMsANHdGaW18XLTAQqtdTBDCu+etXz/RQuyRIp6aB0OYJALuyqGSS7J5ofC0pgJ7fv06c+hjBV8gng4ZMMbPOzG0yFLYOsBfei/Or0hWh/IE/k35Bq7/gIAtd3ymTvpSUh1oL/gZ9+qxJXKP+EGvxE0bG5IyrfZFfzrys0Eq5XQiA9eX2V+n0zKs5g9HFkTs+odA2dcgQeCOUytsEt9Ureqh7/sMeAjeZgxJAAk89BKHOyAO98IrV2UGzvHlXeaxfadn2X8NXAk0KdTJdTiLnjUaaq18nMkF3E+TbWvH6GApi2P8Y6dBj4mO80ho2w1qlr1Vey5IZ2Ea9FjHHCLjLfGVuOVlxi+3xdY2lASA5Htre2fNemza1CmIdVQBTXzzfooEsYXiUWk1I9mfwD2qwXAnSxNd2lj1Trcv9/nLfaLhU9NIYJS+fk+O8FSeFJw99pPeQxj6wRTTWP7IlTLxH9jp3QkRi12hs3KSnSENHbCE+4zoLAERlULloVnSVirHKXrgbBYUMU4svJihFLQKRDbhQ9+NishMjrPOkGhXuPR2KHgJK7NmgZrg1kcKsAXKilGYkg3Xeyyf47y1tb/Fw2dH9ub2EMYlb4elrmTKw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR21MB1295.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(122000001)(508600001)(7696005)(52536014)(83380400001)(10290500003)(110136005)(82950400001)(8990500004)(8676002)(53546011)(76116006)(6506007)(66946007)(82960400001)(316002)(66446008)(8936002)(66476007)(66556008)(64756008)(54906003)(55016002)(4326008)(186003)(450100002)(9686003)(71200400001)(33656002)(86362001)(2906002)(5660300002)(26005)(38100700002)(38070700004);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?HGgKnGwa6RYHX2elOXzRC3ueytbZakpUTN4GKSHePupfngpC7wDKpAosauDI?=
- =?us-ascii?Q?sJ7o8cfDEnPAW9Og+bBFFimPsBAQWS37Ieqtk2PkbYcSEHZjtblacIeY1wEC?=
- =?us-ascii?Q?Ssn4DspfIPBLj4y/ssA934G38MwqXNGLwvN34tWIQYoS/P13AuXhzqtNUVzd?=
- =?us-ascii?Q?SNfjuigp3RfRUxz1qZKleKNM9wW3qIjyVwEV0P8ePNe0W7RxODNLA7Y493dt?=
- =?us-ascii?Q?G1/rOhMkxgypmmX1kTrDWmGKrzyiIyBNAsk3h6XAmU1fUc/u4XhFqc9QIE0S?=
- =?us-ascii?Q?uYod6TQLI2eO32U46tdxtMzVV3wMM8kdJbQ12RjaHRtjpsnXnfortqgPH5em?=
- =?us-ascii?Q?Lz+ugUbVzUSb2ezjOFcizlpe7h9373tstl2kHCyp8caDG2TKD0lQh3kx4PnA?=
- =?us-ascii?Q?TZAG0kLglgA5V04h8BvvCd1ELTkxeSylErUFOiDJgY2ZGG2SABJmoCIg4pB7?=
- =?us-ascii?Q?N4AObge7PIVdvWAzA6tQqjYbIYr2XGLMC7OfBU64xJJLtFAFeBFIVtMY6fMb?=
- =?us-ascii?Q?xijEnaSgvWWMQhLgfNRzL+imzhC/kX5+WRLW8vghF4D1eUzNSLIWuIrkyHqU?=
- =?us-ascii?Q?LxCe2b2fdwhZ8WHn4JdsHLUAtFN3CjgP9Og2XmiqVwxSPaddEygQTOdivPA/?=
- =?us-ascii?Q?0LfUKJkO2eH5QbTrV59Ce13XV8tpvE0bTmz+MlqEUc3z8mvozZdjhv1L/l11?=
- =?us-ascii?Q?nMxSgCUU2gFoDjCXsIkoBaQHgZ+zkKIKrGPQNOL6HK8dJAn0IIa4Gji0TJML?=
- =?us-ascii?Q?W0MHQ9o86Ym+IPTVOBIgbAS632AO44woCYIp08pVQuULRuDtTjFQ89TnsImw?=
- =?us-ascii?Q?itQUViUX7stNP/hdRh5r1J+98yLHZ9sasXzQSWrNlayuTTy60Aa27I3pbEjd?=
- =?us-ascii?Q?iXxFJskJwAg/ujdfUBxwj6VV0LBnCd7OXpdm4aNnp6yuO/NYxb4gvc6ExELd?=
- =?us-ascii?Q?kfqMbEpMqwu+hUnljO2R2JGhiNpyiw+zWCSabAQj09hdvgf/IwSAe/Cdugyr?=
- =?us-ascii?Q?6SFx5Fw/61iFml8NWQpfbWdzaqdnOWNa14cCKXJrcwR5nAd8Yj/u1I4PMqJ2?=
- =?us-ascii?Q?H9reFBieoWgT52pQIouZGLE4AAIgJNX4PvLJNvOUkYRZFPGGFwmDmwYpBgHn?=
- =?us-ascii?Q?lFPZxLeqaXjxpxMTGW++SslkiHSe/NFy7RHVdlfTKzH5g5bm5Si7ML63DAK8?=
- =?us-ascii?Q?ywH20V7Tzfh2pcr3qS6/WOa2OoNo6MR/z3gH+1JSiik1g800MX3uAW+zKuaf?=
- =?us-ascii?Q?3EXp8TngqJyUqM1SkL9PUDOqYe3MLmxvdfOR7T79bXUkmOBIJ0Yy4mN/Yf3W?=
- =?us-ascii?Q?E4/T/uanDnD6Q3FwfajT3aQF?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?dprELvV/tm6sePac8tlhJrTOeBu+skqHXflc2btN97rLHO+FEnMjh+kgnvMQ?=
+ =?us-ascii?Q?VDuCoY7B2pi84WD72SOrSlhBSvia+z+9HzqoqK1nlWZ3UyX8g0WYunbrLBzo?=
+ =?us-ascii?Q?6YhBtHf+j19WzmbYr6unD5cuPeiuMitu1r7d2WNNh6ZQ6508TKTkI11lvY62?=
+ =?us-ascii?Q?T9T/0uPNn/uPJ49fNkM1tEyV2i1P+i/499uU/dasNBGsdRuqg+NZAPsMhDXd?=
+ =?us-ascii?Q?lQDD/7v4ADkrjrF1pyWBAdRkcB3/KEDelxF1KfTOiCJBdzRTwYcV2RQoFk92?=
+ =?us-ascii?Q?h7VfaGZGmcHJvc/9I5SeFXx8auyy4fXJr3yg1HPRVLGkz+VODFm7wCMarPhJ?=
+ =?us-ascii?Q?tn5hh/6vliLuqTkVOLxs9F48kDEhxVJ++J2YhsSD8Rf8JPqoS5NLbVEkXe+w?=
+ =?us-ascii?Q?nvvk+Wv8NP0+extsRTkOgLdaZYUGBCgN1bcWZglGeP2MoDrDVIhVPpg1T40d?=
+ =?us-ascii?Q?irGwPdW6+HHiB9o6WDWOp79Mw+EBSWEu3p/x3tdetkQek8pwr+MelFyFRy4Z?=
+ =?us-ascii?Q?9OKf/3DV7jMxFewmg0O2PQWp5zEedlkwt3WuGSUN/e7Z7LshgZQUaMNQvRf/?=
+ =?us-ascii?Q?mCh0hY9HqnylNY+K7PwSbICjo8JkxnYbnAYHNIcMVhU/r366pxMAdAK8VDHQ?=
+ =?us-ascii?Q?+51SEYSMwNSBU+ECgA1e9B1uCaCfCSb5BIgq+4UEqqrLcl3CoJnl87iDACMv?=
+ =?us-ascii?Q?UdYCXjJQRO6m4Pl8qH1k29EH26LVxCR78wgLTKfy1CgzJH0TGeHk+tEIpk1I?=
+ =?us-ascii?Q?TAM/FJneo+IUoCWlBaOgQM2eODNoSWBVXBANYMoD/+bHfph0/bVN//scOfVB?=
+ =?us-ascii?Q?oL70gJYMfct3avwLfgPBQ73Ip2EcQ1p8m04+ARATTfvlbcRfYvD5BaW/HDcL?=
+ =?us-ascii?Q?muQPZiVKKs76dETq8P9DE9/zpMFFUI+pBYgllNYcNaZJ0WsU4t1Kisj18SBe?=
+ =?us-ascii?Q?1v4/LqCtOlXqwUUo74wzugHtzIE1AExS7bSRMv2KB5KgBd75pt34XrFLk6Cf?=
+ =?us-ascii?Q?JGf8FpZMkHZCURluG/uyOJxwYYtRd1bSEbW1XEcp14qXfzsLcoC1i4YOYgYl?=
+ =?us-ascii?Q?nXGtikNk6hgVciKc24FLADroRv4aV7EMUOc82zlcXckuhw3DLgF2BTtZmO9h?=
+ =?us-ascii?Q?y7Cf23biITFBA4MXHHHapGuzKqlsMzav4ZS2Nb2wqq3O2kBTHjcEo7tcj5Ia?=
+ =?us-ascii?Q?fe7lKyat6X45AiPedK3L8HNUYey9cRWDEzFNtDjjqBZXc7kyMFYnEWCbAIHC?=
+ =?us-ascii?Q?IkuGSX7IVmMZ6KoDDA/voeAMLwkQNRzxa1CiBsOma/ZDFmx36j3/O4eGgdk5?=
+ =?us-ascii?Q?CUL4k2abqdM9amuRqIabKGmo?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c25251a-f529-44cc-b2fe-08d948817848
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2021 17:45:15.3928
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR21MB1295.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 583a9908-6a71-404f-5f99-08d94881d9f8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2021 17:47:59.1491
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VArFSmdfpLUejHqRENhFFXGIc780AjQSmdxcZFJY74rNM2CRJ9wO0m+bb+gWeKND0JWZXfXUdH7wTm0equ6SZcg7fm28AZtO++E8L2g1RPo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB2057
+X-MS-Exchange-CrossTenant-userprincipalname: LQjmxQ4vAPJL/jpghQUgBnM/pPfxsU6pXvVF+68dabQfjJmWLp7yGv4OilIiVPuT4CtxjVroTuW/vslrmt4xJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1408
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: LKML haiyangz <lkmlhyz@microsoft.com> On Behalf Of Haiyang Zhang Sent=
-: Thursday, July 15, 2021 6:38 PM
->=20
-> The vmbus module uses a rotational algorithm to assign target CPUs to
-> device's channels. Depends on the timing of different device's channel
 
-s/device's/a device's/
-s/Depends/Depending/
 
-> offers, different channels of a device may be assigned to the same CPU.
+> -----Original Message-----
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Friday, July 16, 2021 1:45 PM
+> To: Haiyang Zhang <haiyangz@microsoft.com>; linux-
+> hyperv@vger.kernel.org
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>; KY Srinivasan
+> <kys@microsoft.com>; linux-kernel@vger.kernel.org
+> Subject: RE: [PATCH v2,hyperv-fixes] Drivers: hv: vmbus: Fix duplicate CP=
+U
+> assignments within a device
 >=20
-> For example on a VM with 2 CPUs, if NIC A and B's channels are offered
-> in the following order, NIC A will have both channels on CPU0, and
-> NIC B will have both channels on CPU1 -- see below. This kind of
-> assignment causes RSS load that is spreading across different channels
-> to end up on the same CPU.
+> From: LKML haiyangz <lkmlhyz@microsoft.com> On Behalf Of Haiyang Zhang
+> Sent: Thursday, July 15, 2021 6:38 PM
+> >
+> > The vmbus module uses a rotational algorithm to assign target CPUs to
+> > device's channels. Depends on the timing of different device's channel
 >=20
-> Timing of channel offers:
-> NIC A channel 0
-> NIC B channel 0
-> NIC A channel 1
-> NIC B channel 1
+> s/device's/a device's/
+> s/Depends/Depending/
 >=20
-> VMBUS ID 14: Class_ID =3D {f8615163-df3e-46c5-913f-f2d2f965ed0e} - Synthe=
-tic network adapter
->         Device_ID =3D {cab064cd-1f31-47d5-a8b4-9d57e320cccd}
->         Sysfs path: /sys/bus/vmbus/devices/cab064cd-1f31-47d5-a8b4-9d57e3=
-20cccd
->         Rel_ID=3D14, target_cpu=3D0
->         Rel_ID=3D17, target_cpu=3D0
+> > offers, different channels of a device may be assigned to the same CPU.
+> >
+> > For example on a VM with 2 CPUs, if NIC A and B's channels are offered
+> > in the following order, NIC A will have both channels on CPU0, and NIC
+> > B will have both channels on CPU1 -- see below. This kind of
+> > assignment causes RSS load that is spreading across different channels
+> > to end up on the same CPU.
+> >
+> > Timing of channel offers:
+> > NIC A channel 0
+> > NIC B channel 0
+> > NIC A channel 1
+> > NIC B channel 1
+> >
+> > VMBUS ID 14: Class_ID =3D {f8615163-df3e-46c5-913f-f2d2f965ed0e} -
+> Synthetic network adapter
+> >         Device_ID =3D {cab064cd-1f31-47d5-a8b4-9d57e320cccd}
+> >         Sysfs path: /sys/bus/vmbus/devices/cab064cd-1f31-47d5-a8b4-
+> 9d57e320cccd
+> >         Rel_ID=3D14, target_cpu=3D0
+> >         Rel_ID=3D17, target_cpu=3D0
+> >
+> > VMBUS ID 16: Class_ID =3D {f8615163-df3e-46c5-913f-f2d2f965ed0e} -
+> Synthetic network adapter
+> >         Device_ID =3D {244225ca-743e-4020-a17d-d7baa13d6cea}
+> >         Sysfs path: /sys/bus/vmbus/devices/244225ca-743e-4020-a17d-
+> d7baa13d6cea
+> >         Rel_ID=3D16, target_cpu=3D1
+> >         Rel_ID=3D18, target_cpu=3D1
+> >
+> > Update the vmbus CPU assignment algorithm to avoid duplicate CPU
+> > assignments within a device.
+> >
+> > The new algorithm iterates num_online_cpus + 1 times.
+> > The existing rotational algorithm to find "next NUMA & CPU" is still he=
+re.
+> > But if the resulting CPU is already used by the same device, it will
+> > try the next CPU.
+> > In the last iteration, it assigns the channel to the next available
+> > CPU like the existing algorithm. This is not normally expected,
+> > because during device probe, we limit the number of channels of a
+> > device to be <=3D number of online CPUs.
+> >
+> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > ---
+> >  drivers/hv/channel_mgmt.c | 96
+> > ++++++++++++++++++++++++++-------------
+> >  1 file changed, 64 insertions(+), 32 deletions(-)
+> >
+> > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> > index caf6d0c4bc1b..8584914291e7 100644
+> > --- a/drivers/hv/channel_mgmt.c
+> > +++ b/drivers/hv/channel_mgmt.c
+> > @@ -605,6 +605,17 @@ static void vmbus_process_offer(struct
+> vmbus_channel *newchannel)
+> >  	 */
+> >  	mutex_lock(&vmbus_connection.channel_mutex);
+> >
+> > +	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry)
+> {
+> > +		if (guid_equal(&channel->offermsg.offer.if_type,
+> > +			       &newchannel->offermsg.offer.if_type) &&
+> > +		    guid_equal(&channel->offermsg.offer.if_instance,
+> > +			       &newchannel->offermsg.offer.if_instance)) {
+> > +			fnew =3D false;
+> > +			newchannel->primary_channel =3D channel;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> >  	init_vp_index(newchannel);
+> >
+> >  	/* Remember the channels that should be cleaned up upon suspend.
+> */
+> > @@ -617,16 +628,6 @@ static void vmbus_process_offer(struct
+> vmbus_channel *newchannel)
+> >  	 */
+> >  	atomic_dec(&vmbus_connection.offer_in_progress);
+> >
+> > -	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry)
+> {
+> > -		if (guid_equal(&channel->offermsg.offer.if_type,
+> > -			       &newchannel->offermsg.offer.if_type) &&
+> > -		    guid_equal(&channel->offermsg.offer.if_instance,
+> > -			       &newchannel->offermsg.offer.if_instance)) {
+> > -			fnew =3D false;
+> > -			break;
+> > -		}
+> > -	}
+> > -
+> >  	if (fnew) {
+> >  		list_add_tail(&newchannel->listentry,
+> >  			      &vmbus_connection.chn_list); @@ -647,7 +648,6
+> @@ static void
+> > vmbus_process_offer(struct vmbus_channel *newchannel)
+> >  		/*
+> >  		 * Process the sub-channel.
+> >  		 */
+> > -		newchannel->primary_channel =3D channel;
+> >  		list_add_tail(&newchannel->sc_list, &channel->sc_list);
+> >  	}
+> >
+> > @@ -683,6 +683,30 @@ static void vmbus_process_offer(struct
+> vmbus_channel *newchannel)
+> >  	queue_work(wq, &newchannel->add_channel_work);  }
+> >
+> > +/*
+> > + * Check if CPUs used by other channels of the same device.
+> > + * It's should only be called by init_vp_index().
 >=20
-> VMBUS ID 16: Class_ID =3D {f8615163-df3e-46c5-913f-f2d2f965ed0e} - Synthe=
-tic network adapter
->         Device_ID =3D {244225ca-743e-4020-a17d-d7baa13d6cea}
->         Sysfs path: /sys/bus/vmbus/devices/244225ca-743e-4020-a17d-d7baa1=
-3d6cea
->         Rel_ID=3D16, target_cpu=3D1
->         Rel_ID=3D18, target_cpu=3D1
+> s/It's/It/
 >=20
-> Update the vmbus CPU assignment algorithm to avoid duplicate CPU
-> assignments within a device.
+> > + */
+> > +static bool hv_cpuself_used(u32 cpu, struct vmbus_channel *chn) {
+> > +	struct vmbus_channel *primary =3D chn->primary_channel;
+> > +	struct vmbus_channel *sc;
+> > +
+> > +	lockdep_assert_held(&vmbus_connection.channel_mutex);
+> > +
+> > +	if (!primary)
+> > +		return false;
+> > +
+> > +	if (primary->target_cpu =3D=3D cpu)
+> > +		return true;
+> > +
+> > +	list_for_each_entry(sc, &primary->sc_list, sc_list)
+> > +		if (sc !=3D chn && sc->target_cpu =3D=3D cpu)
+> > +			return true;
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  /*
+> >   * We use this state to statically distribute the channel interrupt lo=
+ad.
+> >   */
+> > @@ -702,6 +726,7 @@ static int next_numa_node_id;  static void
+> > init_vp_index(struct vmbus_channel *channel)  {
+> >  	bool perf_chn =3D hv_is_perf_channel(channel);
+> > +	u32 i, ncpu =3D num_online_cpus();
+> >  	cpumask_var_t available_mask;
+> >  	struct cpumask *alloced_mask;
+> >  	u32 target_cpu;
+> > @@ -724,31 +749,38 @@ static void init_vp_index(struct vmbus_channel
+> *channel)
+> >  		return;
+> >  	}
+> >
+> > -	while (true) {
+> > -		numa_node =3D next_numa_node_id++;
+> > -		if (numa_node =3D=3D nr_node_ids) {
+> > -			next_numa_node_id =3D 0;
+> > -			continue;
+> > +	for (i =3D 1; i <=3D ncpu + 1; i++) {
+> > +		while (true) {
+> > +			numa_node =3D next_numa_node_id++;
+> > +			if (numa_node =3D=3D nr_node_ids) {
+> > +				next_numa_node_id =3D 0;
+> > +				continue;
+> > +			}
+> > +			if
+> (cpumask_empty(cpumask_of_node(numa_node)))
+> > +				continue;
+> > +			break;
+> > +		}
+> > +		alloced_mask =3D &hv_context.hv_numa_map[numa_node];
+> > +
+> > +		if (cpumask_weight(alloced_mask) =3D=3D
+> > +		    cpumask_weight(cpumask_of_node(numa_node))) {
+> > +			/*
+> > +			 * We have cycled through all the CPUs in the node;
+> > +			 * reset the alloced map.
+> > +			 */
+> > +			cpumask_clear(alloced_mask);
+> >  		}
+> > -		if (cpumask_empty(cpumask_of_node(numa_node)))
+> > -			continue;
+> > -		break;
+> > -	}
+> > -	alloced_mask =3D &hv_context.hv_numa_map[numa_node];
+> >
+> > -	if (cpumask_weight(alloced_mask) =3D=3D
+> > -	    cpumask_weight(cpumask_of_node(numa_node))) {
+> > -		/*
+> > -		 * We have cycled through all the CPUs in the node;
+> > -		 * reset the alloced map.
+> > -		 */
+> > -		cpumask_clear(alloced_mask);
+> > -	}
+> > +		cpumask_xor(available_mask, alloced_mask,
+> > +			    cpumask_of_node(numa_node));
+> >
+> > -	cpumask_xor(available_mask, alloced_mask,
+> cpumask_of_node(numa_node));
+> > +		target_cpu =3D cpumask_first(available_mask);
+> > +		cpumask_set_cpu(target_cpu, alloced_mask);
+> >
+> > -	target_cpu =3D cpumask_first(available_mask);
+> > -	cpumask_set_cpu(target_cpu, alloced_mask);
+> > +		if (channel->offermsg.offer.sub_channel_index >=3D ncpu ||
+> > +		    i > ncpu || !hv_cpuself_used(target_cpu, channel))
+> > +			break;
+> > +	}
+> >
+> >  	channel->target_cpu =3D target_cpu;
+> >
+> > --
+> > 2.25.1
 >=20
-> The new algorithm iterates num_online_cpus + 1 times.
-> The existing rotational algorithm to find "next NUMA & CPU" is still here=
-.
-> But if the resulting CPU is already used by the same device, it will try
-> the next CPU.
-> In the last iteration, it assigns the channel to the next available CPU
-> like the existing algorithm. This is not normally expected, because
-> during device probe, we limit the number of channels of a device to
-> be <=3D number of online CPUs.
+> I like this approach much better.  I did some testing with a variety of C=
+PU
+> counts (1, 2, 3, 4, 8, and 32), NUMA nodes (1, 3, and 4) and with
+> 4 SCSI controllers and 4 NICs.  Everything worked as expected, and it's
+> definitely an improvement.
 >=20
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  drivers/hv/channel_mgmt.c | 96 ++++++++++++++++++++++++++-------------
->  1 file changed, 64 insertions(+), 32 deletions(-)
+> I flagged a couple of typos/wording errors, but maybe they can be fixed
+> when the patch is pulled into hyperv-fixes.
 >=20
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index caf6d0c4bc1b..8584914291e7 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -605,6 +605,17 @@ static void vmbus_process_offer(struct vmbus_channel=
- *newchannel)
->  	 */
->  	mutex_lock(&vmbus_connection.channel_mutex);
->=20
-> +	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-> +		if (guid_equal(&channel->offermsg.offer.if_type,
-> +			       &newchannel->offermsg.offer.if_type) &&
-> +		    guid_equal(&channel->offermsg.offer.if_instance,
-> +			       &newchannel->offermsg.offer.if_instance)) {
-> +			fnew =3D false;
-> +			newchannel->primary_channel =3D channel;
-> +			break;
-> +		}
-> +	}
-> +
->  	init_vp_index(newchannel);
->=20
->  	/* Remember the channels that should be cleaned up upon suspend. */
-> @@ -617,16 +628,6 @@ static void vmbus_process_offer(struct vmbus_channel=
- *newchannel)
->  	 */
->  	atomic_dec(&vmbus_connection.offer_in_progress);
->=20
-> -	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-> -		if (guid_equal(&channel->offermsg.offer.if_type,
-> -			       &newchannel->offermsg.offer.if_type) &&
-> -		    guid_equal(&channel->offermsg.offer.if_instance,
-> -			       &newchannel->offermsg.offer.if_instance)) {
-> -			fnew =3D false;
-> -			break;
-> -		}
-> -	}
-> -
->  	if (fnew) {
->  		list_add_tail(&newchannel->listentry,
->  			      &vmbus_connection.chn_list);
-> @@ -647,7 +648,6 @@ static void vmbus_process_offer(struct vmbus_channel =
-*newchannel)
->  		/*
->  		 * Process the sub-channel.
->  		 */
-> -		newchannel->primary_channel =3D channel;
->  		list_add_tail(&newchannel->sc_list, &channel->sc_list);
->  	}
->=20
-> @@ -683,6 +683,30 @@ static void vmbus_process_offer(struct vmbus_channel=
- *newchannel)
->  	queue_work(wq, &newchannel->add_channel_work);
->  }
->=20
-> +/*
-> + * Check if CPUs used by other channels of the same device.
-> + * It's should only be called by init_vp_index().
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Tested-by: Michael Kelley <mikelley@microsoft.com>
 
-s/It's/It/
+Thank you for the review and test! I will just correct the comments and
+submit a v3.
 
-> + */
-> +static bool hv_cpuself_used(u32 cpu, struct vmbus_channel *chn)
-> +{
-> +	struct vmbus_channel *primary =3D chn->primary_channel;
-> +	struct vmbus_channel *sc;
-> +
-> +	lockdep_assert_held(&vmbus_connection.channel_mutex);
-> +
-> +	if (!primary)
-> +		return false;
-> +
-> +	if (primary->target_cpu =3D=3D cpu)
-> +		return true;
-> +
-> +	list_for_each_entry(sc, &primary->sc_list, sc_list)
-> +		if (sc !=3D chn && sc->target_cpu =3D=3D cpu)
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
->  /*
->   * We use this state to statically distribute the channel interrupt load=
-.
->   */
-> @@ -702,6 +726,7 @@ static int next_numa_node_id;
->  static void init_vp_index(struct vmbus_channel *channel)
->  {
->  	bool perf_chn =3D hv_is_perf_channel(channel);
-> +	u32 i, ncpu =3D num_online_cpus();
->  	cpumask_var_t available_mask;
->  	struct cpumask *alloced_mask;
->  	u32 target_cpu;
-> @@ -724,31 +749,38 @@ static void init_vp_index(struct vmbus_channel *cha=
-nnel)
->  		return;
->  	}
->=20
-> -	while (true) {
-> -		numa_node =3D next_numa_node_id++;
-> -		if (numa_node =3D=3D nr_node_ids) {
-> -			next_numa_node_id =3D 0;
-> -			continue;
-> +	for (i =3D 1; i <=3D ncpu + 1; i++) {
-> +		while (true) {
-> +			numa_node =3D next_numa_node_id++;
-> +			if (numa_node =3D=3D nr_node_ids) {
-> +				next_numa_node_id =3D 0;
-> +				continue;
-> +			}
-> +			if (cpumask_empty(cpumask_of_node(numa_node)))
-> +				continue;
-> +			break;
-> +		}
-> +		alloced_mask =3D &hv_context.hv_numa_map[numa_node];
-> +
-> +		if (cpumask_weight(alloced_mask) =3D=3D
-> +		    cpumask_weight(cpumask_of_node(numa_node))) {
-> +			/*
-> +			 * We have cycled through all the CPUs in the node;
-> +			 * reset the alloced map.
-> +			 */
-> +			cpumask_clear(alloced_mask);
->  		}
-> -		if (cpumask_empty(cpumask_of_node(numa_node)))
-> -			continue;
-> -		break;
-> -	}
-> -	alloced_mask =3D &hv_context.hv_numa_map[numa_node];
->=20
-> -	if (cpumask_weight(alloced_mask) =3D=3D
-> -	    cpumask_weight(cpumask_of_node(numa_node))) {
-> -		/*
-> -		 * We have cycled through all the CPUs in the node;
-> -		 * reset the alloced map.
-> -		 */
-> -		cpumask_clear(alloced_mask);
-> -	}
-> +		cpumask_xor(available_mask, alloced_mask,
-> +			    cpumask_of_node(numa_node));
->=20
-> -	cpumask_xor(available_mask, alloced_mask, cpumask_of_node(numa_node));
-> +		target_cpu =3D cpumask_first(available_mask);
-> +		cpumask_set_cpu(target_cpu, alloced_mask);
->=20
-> -	target_cpu =3D cpumask_first(available_mask);
-> -	cpumask_set_cpu(target_cpu, alloced_mask);
-> +		if (channel->offermsg.offer.sub_channel_index >=3D ncpu ||
-> +		    i > ncpu || !hv_cpuself_used(target_cpu, channel))
-> +			break;
-> +	}
->=20
->  	channel->target_cpu =3D target_cpu;
->=20
-> --
-> 2.25.1
-
-I like this approach much better.  I did some testing with a variety of
-CPU counts (1, 2, 3, 4, 8, and 32), NUMA nodes (1, 3, and 4) and with
-4 SCSI controllers and 4 NICs.  Everything worked as expected, and it's
-definitely an improvement.
-
-I flagged a couple of typos/wording errors, but maybe they can be
-fixed when the patch is pulled into hyperv-fixes.
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Tested-by: Michael Kelley <mikelley@microsoft.com>
+- Haiyang
