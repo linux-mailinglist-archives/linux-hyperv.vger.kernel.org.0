@@ -2,59 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 918113CB7E4
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jul 2021 15:33:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D682C3CB806
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jul 2021 15:42:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239945AbhGPNgw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Jul 2021 09:36:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239904AbhGPNgv (ORCPT
+        id S232849AbhGPNpg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Jul 2021 09:45:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51023 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232837AbhGPNpf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Jul 2021 09:36:51 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2BBC061760
-        for <linux-hyperv@vger.kernel.org>; Fri, 16 Jul 2021 06:33:57 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id x16so5331585plg.3
-        for <linux-hyperv@vger.kernel.org>; Fri, 16 Jul 2021 06:33:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anisinha-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=fGgLXOAW+XYOflDoI9DlmXYjo7kRzoGFVJ7ubU3NwUg=;
-        b=TIaYvYMfXmpt6sdGaeC2ECGubiFR1yIRQAkBP05fGdqPLzBTnKZ7QyyclaS/vleLyA
-         O9jQgOsXQJF82T4AQvc77k6cXSMeyiTkCz6F+MnuQEb0FZXAb9myL9EAXxw6Q4fz+Rci
-         MN4Oi2hPy4BJ8EkbCoU9iTR3H3ihrRcJ/jm8csy5X6xdoiFLGufnFsUYpbGU1caNr8U/
-         aYh+LFjgw/t4dxhmqF290smTsSzhVYAt0n6h/PTHKynuJKxiQCnpBzYZJh9MOQUI+h60
-         Xwibii1BPudU5EYmX1vKI40/AHhuDjX+0van4WdA7pR3KYe3tu1MtazEDdp3cirurq33
-         BRyw==
+        Fri, 16 Jul 2021 09:45:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626442960;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0SM1J4AxB0WAO/+RGPDlAQy4v0R4uwCprlL41GZQ+WY=;
+        b=MiZxtuSSOL4KBWfChl8soWRMzLtACSkXdviJqH/Ft+EB6Sfp4k3uG++vN/z9AB71opsI23
+        fP2CFdaZQZXcI0cj/TO1GfD2OU3kZV0rDGnju1b2DwsimXJxlGVdwzEKXEhNKs13XhtvU8
+        0rjjaFbJ5pEmcFBrOiXak2SkzAIQetg=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-127-T-5DlqLXMTOxkanD2JQ0Vw-1; Fri, 16 Jul 2021 09:42:38 -0400
+X-MC-Unique: T-5DlqLXMTOxkanD2JQ0Vw-1
+Received: by mail-ed1-f70.google.com with SMTP id i19-20020a05640200d3b02903948b71f25cso4846944edu.4
+        for <linux-hyperv@vger.kernel.org>; Fri, 16 Jul 2021 06:42:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=fGgLXOAW+XYOflDoI9DlmXYjo7kRzoGFVJ7ubU3NwUg=;
-        b=kcGqqsx+BwSi1u12roKz5ZkJFzUlSH+dMR1YunYAzwFqUznkiWjTD+tOYFlZZ35MCt
-         44SwwwCQIrPIz/qyAcryPzBPO5GhcvIPuGwxWk1EvXEtZN+jNpNl0kyV73exEOGYej+M
-         LqcVsDEU6aYUdoG8jch5n48jdKhSuBtVrtT/icTp3iplTFq7bDgKqMVpVKXSA+zcaKBQ
-         ZRerfaf05fW9lzTaWT6CxYNHz26ZKIvccsBUjL9NEdif05uu+5Yk6t7mu4aVNDcMLoGd
-         bXRaQZDWo+C4PbUzPRAo1sqigVG4l2HZMISduSVCsCLyNfBqPHImasPVowcQKOJKy5Pb
-         zW5g==
-X-Gm-Message-State: AOAM533MzoFEZPxvsjv6ye3eL3WtrfZV8f4AbZkmF4y6tn13ABUkcmfA
-        DPQIlTbbYIrdYlj/yYOS6uSb1A==
-X-Google-Smtp-Source: ABdhPJymxQhxYFuwTkarDwkdq6Mk7dMTn3IkQ/R1rFwSW0w9q5dpyMCbTJriVn5YK9OlhKsK6oBcUQ==
-X-Received: by 2002:a17:902:da83:b029:129:9f09:bedb with SMTP id j3-20020a170902da83b02901299f09bedbmr8010088plx.56.1626442436610;
-        Fri, 16 Jul 2021 06:33:56 -0700 (PDT)
-Received: from anisinha-lenovo ([115.96.126.211])
-        by smtp.googlemail.com with ESMTPSA id 73sm8800400pjz.24.2021.07.16.06.33.51
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=0SM1J4AxB0WAO/+RGPDlAQy4v0R4uwCprlL41GZQ+WY=;
+        b=qM3+ZXvqYBMh5rZ04S5PIejekj3a/TsWziwmsmZrtp7+gvTX6ZCC4Aqpsfzm+XdEMC
+         rvNI2rC7z/JncN+wtt54Znxbx1gPH7VVBE4BEtbGb/JAZiVfb7csWdW/lMvg3/QURN3o
+         NWqryS+xWDb0KqtJnnLToCjcl3iSxzLLiX30s7e6sUsvIzu3eshUgefU6E8vFUYukf85
+         ocH1corsr6RLQ4MZkXFEjgaaA0gy+xnv9yrYNQQ0NqwuxzYFrPzQE3OzhZGhT9IFr05u
+         x4BqxEK0cJUuNgVkEJ3uXEARCiJEI9TmUGk6mEpZmOdOH1/5KX9z6jsHsE90fJwjSL2F
+         yyFQ==
+X-Gm-Message-State: AOAM531Wjui/C0DnAKXF5Al8MJo09+ZPbyME83B0L4k3NLyjkeTOTfs+
+        +M/uwaMMSbhMZeghU1LTT4iHm6Zt/1KcQMnqtY5+R3KvrJ5JYVMe5jA9WDbwQEdAXtf6wY+QL+c
+        V8vY/gpV9XJADWcIWLCYdXnw1qvpXDHKjfsykF01DBf3EeF/yJ/jcbuWPOWoQQJwVLM3COTwi1B
+        bA
+X-Received: by 2002:a17:906:b794:: with SMTP id dt20mr11912093ejb.431.1626442957581;
+        Fri, 16 Jul 2021 06:42:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyrGDt56e+ukOx0foKDrNDsirm0LRscu/xWkEFRRC3tUqzl+4xaINTt86OJ9yTpyo3ARlh0ag==
+X-Received: by 2002:a17:906:b794:: with SMTP id dt20mr11912037ejb.431.1626442957116;
+        Fri, 16 Jul 2021 06:42:37 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id dn23sm3777705edb.56.2021.07.16.06.42.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 06:33:56 -0700 (PDT)
-From:   Ani Sinha <ani@anisinha.ca>
-X-Google-Original-From: Ani Sinha <anisinha@anisinha.ca>
-Date:   Fri, 16 Jul 2021 19:03:48 +0530 (IST)
-X-X-Sender: anisinha@anisinha-lenovo
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-cc:     Ani Sinha <ani@anisinha.ca>, linux-kernel@vger.kernel.org,
-        anirban.sinha@nokia.com, mikelley@microsoft.com,
+        Fri, 16 Jul 2021 06:42:36 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Ani Sinha <ani@anisinha.ca>, linux-kernel@vger.kernel.org
+Cc:     anirban.sinha@nokia.com, mikelley@microsoft.com,
+        Ani Sinha <ani@anisinha.ca>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -63,57 +63,64 @@ cc:     Ani Sinha <ani@anisinha.ca>, linux-kernel@vger.kernel.org,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH] x86/hyperv: add comment describing TSC_INVARIANT_CONTROL
- MSR setting bit 0
-In-Reply-To: <8735se1jbw.fsf@vitty.brq.redhat.com>
-Message-ID: <alpine.DEB.2.22.394.2107161903220.3272758@anisinha-lenovo>
-References: <20210716063341.2865562-1-ani@anisinha.ca> <8735se1jbw.fsf@vitty.brq.redhat.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Subject: Re: [PATCH v2] x86/hyperv: add comment describing
+ TSC_INVARIANT_CONTROL MSR setting bit 0
+In-Reply-To: <20210716133245.3272672-1-ani@anisinha.ca>
+References: <20210716133245.3272672-1-ani@anisinha.ca>
+Date:   Fri, 16 Jul 2021 15:42:35 +0200
+Message-ID: <87zgumz86s.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Ani Sinha <ani@anisinha.ca> writes:
 
-
-On Fri, 16 Jul 2021, Vitaly Kuznetsov wrote:
-
-> Ani Sinha <ani@anisinha.ca> writes:
+> Commit dce7cd62754b5 ("x86/hyperv: Allow guests to enable InvariantTSC")
+> added the support for HV_X64_MSR_TSC_INVARIANT_CONTROL. Setting bit 0
+> of this synthetic MSR will allow hyper-v guests to report invariant TSC
+> CPU feature through CPUID. This comment adds this explanation to the code
+> and mentions where the Intel's generic platform init code reads this
+> feature bit from CPUID. The comment will help developers understand how
+> the two parts of the initialization (hyperV specific and non-hyperV
+> specific generic hw init) are related.
 >
-> > Commit dce7cd62754b5 ("x86/hyperv: Allow guests to enable InvariantTSC")
-> > added the support for HV_X64_MSR_TSC_INVARIANT_CONTROL. Setting bit 0
-> > of this synthetic MSR will allow hyper-v guests to report invariant TSC
-> > CPU feature through CPUID. This comment adds this explanation to the code
-> > and mentions where the Intel's generic platform init code reads this
-> > feature bit from CPUID. The comment will help developers understand how
-> > the two parts of the initialization (hyperV specific and non-hyperV
-> > specific generic hw init) are related.
-> >
-> > Signed-off-by: Ani Sinha <ani@anisinha.ca>
-> > ---
-> >  arch/x86/kernel/cpu/mshyperv.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> > index 715458b7729a..d2429748170d 100644
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -368,6 +368,14 @@ static void __init ms_hyperv_init_platform(void)
-> >  	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
-> >  #endif
-> >  	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
-> > +		/*
-> > +		 * Setting bit 0 of the synthetic MSR 0x40000118 enables
-> > +		 * guests to report invariant TSC feature through CPUID
-> > +		 * instruction, CPUID 0x800000007/EDX, bit 8. See code in
-> > +		 * early_init_intel() where this bit is examined. The
-> > +		 * setting of this MSR bit should happen before init_intel()
-> > +		 * is called.
+> Signed-off-by: Ani Sinha <ani@anisinha.ca>
+> ---
+>  arch/x86/kernel/cpu/mshyperv.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
-> It should probably be emphasized, that write to 0x40000118
-> updates/changes guest visible CPUIDs. This may not be clear as CPUIDs
-> are generally considered 'static'.
+> changelog:
+> v1: initial patch
+> v2: slight comment update based on received feedback.
+>
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 715458b7729a..3b05dab3086e 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -368,6 +368,15 @@ static void __init ms_hyperv_init_platform(void)
+>  	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
+>  #endif
+>  	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
+> +		/*
+> +		 * Writing to synthetic MSR 0x40000118 updates/changes the
+> +		 * guest visible CPUIDs. Setting bit 0 of this MSR  enables
+> +		 * guests to report invariant TSC feature through CPUID
+> +		 * instruction, CPUID 0x800000007/EDX, bit 8. See code in
+> +		 * early_init_intel() where this bit is examined. The
+> +		 * setting of this MSR bit should happen before init_intel()
+> +		 * is called.
+> +		 */
 
-Patch v2 sent.
+This should be very clear now, thanks!
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+>  		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x1);
+>  		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+>  	}
+
+-- 
+Vitaly
 
