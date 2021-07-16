@@ -2,301 +2,1081 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A123F3CBBC5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jul 2021 20:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 109353CBC7B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jul 2021 21:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229534AbhGPSYU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Jul 2021 14:24:20 -0400
-Received: from mail-dm6nam11on2102.outbound.protection.outlook.com ([40.107.223.102]:53797
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        id S232644AbhGPT3q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 16 Jul 2021 15:29:46 -0400
+Received: from mail-mw2nam08on2117.outbound.protection.outlook.com ([40.107.101.117]:61057
+        "EHLO NAM04-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229462AbhGPSYU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Jul 2021 14:24:20 -0400
+        id S232146AbhGPT3o (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 16 Jul 2021 15:29:44 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UCscsAWq7vIh+GDVVEYW2a3DVaSycZW7iOce3p25uwiQNMx3D4cm9jO8DXO4HKI9b6ZlkEIuv2IU5bixsYj2Lp31nKQWljXpntUuTYpCtAPIJOJ3IqT+cP7mXtnJPPVuWN4deA9AA0FpxJVKu3q31jUwhUCiwes3hVsHgDzIn74InfIfSqgjGFu2dbmIqR4qlgGi0zJ2Kw2GIyEYRYYdH+y877hmsE62VCeARwUPsLzQpyBHvPMnVk5lRk1AnvvqCkX8avYwkDhOz/x2czLO85zN5aQ5m7xHsHTrLZ2kizQflIUnfhrVYN8eV3grWQgu8ZkLStrN7LCWDUAjgdvwBA==
+ b=aJxnw740pSLMKIK1adFyFdTICZnxaBYBlKXtFozzU3jbE7cwMn+grm2IWDrhciugs+M4mxEKtBnDBQC+cK8YeNAO1OrbExluCSwZetq/4sc3yowyvV2r1Gyc8T2tUbJ7mf6G30KhKbZRSnbeL63h/QM8FwtDXBILXx99bvfGf0O7BBPrYs7Z4pUF0J/Gt9eS9qL4ubErocHFB/GEfO2sTJi678A9XjRoIT3aWeoOx3jg2D34l3ldIHwoUwFHx5Epi2XnymEl3l5yPTQiLFlJhF9cbg8IIKoF7ebJe0hvheFAvLLGRO6T9be1i4/NI0Gtz145IzRnxLsody7w1F8rRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pZ5crf5P4jHlhd3NScKScdEVdn0M7HoOnA8qVRDIE1Y=;
- b=CYxLRVjVdA9ItppWUeoxprkpq1HYYIKKKU/1An6pKIybralcGfZhoxonf5sP/aQKjwa9hVyujtKoC3LxVJO7Oh0/mZctIOg7LmQ1DpWd52bCimKQlitcJFn5Ai3dFVFSjjQfKU8xBpVihS1QME/tbGV9Ll7B/Po1gsjq2TXxDIhYwmvSKcXAOGRPjEmxXxMYnptX/c+8qyU//1fS6B2OwLYnk2mRcLubseKp7f9bwUZiaIghwPEagUjRNsfTeP2MsED6IfzK3BRWO+w+w11D84+HamNO4wWUaDRU8C2G3/sxt6vMpObuVDmpUA3qwRray+V/V+xBn32N+eDaPOTcgw==
+ bh=nc79xr+TKmmUURBI7YIrsU5SzJsUJHBjVxGOO+kFOWs=;
+ b=IQvLwN7Nh0I+CNX3V0MnpWoYqQ5XvpCEPSaSPXcF54FXTBDqOzuoxV3kgbRwdsYsqpVVwhmwXvjybJmSzcSJ9qT2A87C9m+Rd5Gv5GuSQb7OozthJzeJ4lWKogMZAAWz8MtS2nJROFYowoW4VRIu67U8ZRWazjnY9MpOu9p7Xamd4+HiJ1RaR76seTv5fdIZvXl7v5Axlt+iAT5LN1hFqFo26T8d2SEhBXbtJ6nnPWLCSC6KfUI2XptxFUzwbUUTYFpi6SNoIpuUqvfreagCc0PrfDG2PBgKctV3DREdBsIhuwSJeCQ8Nss2BQlsnvRVgV4nV0+/xWPhQG1JSaf2/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pZ5crf5P4jHlhd3NScKScdEVdn0M7HoOnA8qVRDIE1Y=;
- b=RwQ8nNZAD3YZPZKph4o+LxZJ96/7kN1ItX/Bdmr6SXsugYIMxDshS1cbOOcS0+bYh5NAsc0HGcniSH/o0g9uHFVJSy2ZCk8im52yBkf3MdbB86n5HlBZ4jVxSuzLB2m5RkamL9bwUUd8HE5LlBKXCozkKhMI/DsJEA8vTfmcFeU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1340.namprd21.prod.outlook.com (2603:10b6:5:175::19)
- by DM5PR21MB0828.namprd21.prod.outlook.com (2603:10b6:3:a3::10) with
+ bh=nc79xr+TKmmUURBI7YIrsU5SzJsUJHBjVxGOO+kFOWs=;
+ b=HxcpgEkp09ZlKu3328u2HH/WIjwdReFGnW8zVFQljLC+zlPzfY9KAj2Jl/eCMxM6rUyl9iMHAEd/h+wmd5sVRMd8SD99leC4oPjjBf8gVUAC+eXsZeervjnlWlP1Pk/wZR7cWs0S+XFM9oZrvFtAvm3fUeKn7Cg9QJ3xqOxtC/8=
+Received: from BY5PR21MB1506.namprd21.prod.outlook.com (2603:10b6:a03:23d::12)
+ by SJ0PR21MB1311.namprd21.prod.outlook.com (2603:10b6:a03:3fa::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.6; Fri, 16 Jul
- 2021 18:21:22 +0000
-Received: from DM6PR21MB1340.namprd21.prod.outlook.com
- ([fe80::7840:718a:c75:9760]) by DM6PR21MB1340.namprd21.prod.outlook.com
- ([fe80::7840:718a:c75:9760%8]) with mapi id 15.20.4352.015; Fri, 16 Jul 2021
- 18:21:22 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3,hyperv-fixes] Drivers: hv: vmbus: Fix duplicate CPU assignments within a device
-Date:   Fri, 16 Jul 2021 11:21:13 -0700
-Message-Id: <1626459673-17420-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR11CA0028.namprd11.prod.outlook.com
- (2603:10b6:300:115::14) To DM6PR21MB1340.namprd21.prod.outlook.com
- (2603:10b6:5:175::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.14; Fri, 16 Jul
+ 2021 19:26:42 +0000
+Received: from BY5PR21MB1506.namprd21.prod.outlook.com
+ ([fe80::ec21:a9f8:7e74:5e1b]) by BY5PR21MB1506.namprd21.prod.outlook.com
+ ([fe80::ec21:a9f8:7e74:5e1b%8]) with mapi id 15.20.4352.011; Fri, 16 Jul 2021
+ 19:26:42 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Andra Paraschiv <andraprs@amazon.com>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        Hannes Reinecke <hare@suse.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: RE: [Patch v3 2/3] Drivers: hv: add Azure Blob driver
+Thread-Topic: [Patch v3 2/3] Drivers: hv: add Azure Blob driver
+Thread-Index: AQHXeFpU0avVPr6X1EyU3ZDtwXfEcKtFxYAAgAAlVyA=
+Date:   Fri, 16 Jul 2021 19:26:42 +0000
+Message-ID: <BY5PR21MB15062B99587CDDCC126DDD87CE119@BY5PR21MB1506.namprd21.prod.outlook.com>
+References: <1626230722-1971-1-git-send-email-longli@linuxonhyperv.com>
+ <1626230722-1971-3-git-send-email-longli@linuxonhyperv.com>
+ <MWHPR21MB15937DF3FB30DDA65EF58EE1D7119@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB15937DF3FB30DDA65EF58EE1D7119@MWHPR21MB1593.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=637f0e51-bd6a-4fba-b81c-288709d0b198;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-07-16T14:43:26Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ec874dfa-bb6c-4a29-d2bf-08d9488fa49d
+x-ms-traffictypediagnostic: SJ0PR21MB1311:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SJ0PR21MB131169541D9F1F3152C8C123CE119@SJ0PR21MB1311.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vKr50xTFmsP6pcSKjUwtOsjnHgRN4h55hRrVIg1+VSSGsjNNnfkKRpH1XrLinbSpgDqq69+vl6MvZSjvrN6kanjYBq3njI/zwav6+QVepaRxXTn+wFXHDAvTjxPGbmcVENAxIJYMwOT6jaajv/e/STxnyIccq/0LOpJvd/FO3x/pjBr59Woyvr4ateSWTEvgLP/uW2DctndLXm2M+Lwn+5ra8MD0NrAruPHN7qPe9tYnfXOqZc5hwaj5aISRxxrlGQXlkJxmwX0UWdFFQ0DZGxjbop8yCGxM6CauSfZNFqdL5h3GkSnHQ1bpXtGmr2BkUGlevuDbbzYhgCpHTJftH2SgO9VdNUe8ftSQ20BR6sZLqFo73xP061pnyIZoO5n23hCOyTlRmsGG7u277MENJfo8T3+Gsr6Y1iov8BC8+FXiClT2s3h6ab/OK6PG8YBjM39HHzjHLJLxFLcd7sYc+KoGslHnVEiqUNDCNQTadouSpbAaVBHIFxQUoqP4kdBxgEzF/JCfskNbeJzYLjPz/UOqpIFjoupTXf2cDTMqs8LYSgJ/LgzU/kWgSuGc7gsa7k4xBbGL1xQuAhwJdeCxxcVj48iti8UT/fek+RZyyYMoaUDD2br2zrBMuhegsdIaDE6vj+wtpjyzVqwxUcC3i0ypJcoPVNM9TKk3Tn+VWbM/fb23gRjFu3RT1WkVMYcEhaJgFTp37RCT1TBYqHy//j48eENTAX7EKKh6NwaKmKWmc/apznjb1S91V8qEPE7ZnmrXHs5qn/Y7wafxDk5iWj7NNUOsuOfO95HtfhqZxwE=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1506.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6506007)(55016002)(26005)(66476007)(76116006)(5660300002)(7416002)(186003)(2906002)(4326008)(86362001)(8990500004)(66556008)(71200400001)(66946007)(83380400001)(9686003)(52536014)(8936002)(110136005)(54906003)(508600001)(122000001)(8676002)(10290500003)(64756008)(316002)(30864003)(7696005)(82950400001)(66446008)(82960400001)(33656002)(38100700002)(38070700004)(579004)(559001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?bFagfd9W/cowMvI0iVwpho3c5IkxrkHRCegp8V8gU+o9920fHzxNWOaYKAwr?=
+ =?us-ascii?Q?Tom5C2qC7BgeKMmWagBtQCj64qfJ3G/73uMCFw7VKUvGNEt02mf2MDPwBw/I?=
+ =?us-ascii?Q?nIKp3Uv2cm9PqvRJLO8JBar+ZitdMIpS6fNbYoBufiDyiAJp4sKfIhFH6DBl?=
+ =?us-ascii?Q?9VJ+mDfE+0Ve2MfVL24K69EHT9o2zqCh+IAzaeXyIInAMMEUAzP4lT/c5/x0?=
+ =?us-ascii?Q?YEU9G9XORRQ20seuT0Wgz3LnjYKAD0IP61NPqeLweTn8Zt1PsrbdV7kaLL4j?=
+ =?us-ascii?Q?cBJHSMxol4T8X1Ioy/ibM+mbGIyrYiGIQpChd7QQAJEdIAtf/6UDRF4TYbNp?=
+ =?us-ascii?Q?bdeyMHs1gMBCxVdUYfLP6HPQUgkf6FpENk20Cm6Y2azOl5yiYR614qD8k5B9?=
+ =?us-ascii?Q?gBRivBdncfnDTQONRuLun3OooF5amlNNTpBaHEFgWuKYzcf0MMRaFMic+iyG?=
+ =?us-ascii?Q?ntABoDs9B3pm3QJSFX4qvA2swhPRwzYQnFIAuxhufNhb5gPoegSlLoA+Fx16?=
+ =?us-ascii?Q?fMEHCLjMJFdyEev3ye55sNT6czigRU9sB3xjBb2BscHArkXJePHMQ8C+Ffee?=
+ =?us-ascii?Q?699fssvOdmDamgqdNq12R3ude2Z54osNER58rca9cV63l93bVRvuWJM6BofN?=
+ =?us-ascii?Q?bn+PvNaxyZR5SJyucGynppNaAlCYDQDsDJqQXda2Z7rQx1STTXHb5iH7vWSS?=
+ =?us-ascii?Q?UCcpQOUXziXbCFMTQ0lZ9WISNIi9AJHNPwsAuZEK7Tr+UMoRQquPE9BoK44D?=
+ =?us-ascii?Q?MBaCDMqESnZDmN1vgroWxJw/LvMTaumEKOyxljJL4Q4MkgYS3QlIhJ8i0eDt?=
+ =?us-ascii?Q?zuw21liYXot6vZZvdAstOh6DRFUMgIcmtWkc67Lful8pf17NQwF9vlJOUlEj?=
+ =?us-ascii?Q?j7QsIDjyZvmCC4lDImMdWY/9RMXtNjCdmv7EoO6vzEXChiQx+AdsYw3Xf4gs?=
+ =?us-ascii?Q?a1UeHuWfocDjcNPZnspGt7jaLju+jjd/kwtpbxRrIfSMU7l6FpIwY76WZR3g?=
+ =?us-ascii?Q?lv5QKj771RaG9BvgMDSLwNPOYB7PVgyBb6TI9tlOOeS2qqdo5GyzJDWCAKmZ?=
+ =?us-ascii?Q?eVeyfWqLosdUTKO1q77MHG9KW54aNHPGsOhzWMwWEXBPMP/GA9sMXc+WAJvD?=
+ =?us-ascii?Q?yY+xG/q5A3bKu/NhcJEoxV0anK5MXtBTbo1sDIvqnZYP6FUwtynP5HdmDJ/J?=
+ =?us-ascii?Q?z/xeEm1r2BP77L+HP7PKeB33xl3RDmkG+ZkuOUQnenjifYQc+JXgmXJ04Zx2?=
+ =?us-ascii?Q?g1qSYefNse7k6fMeC+2ZnnI1iqK6aIf8xc1M+hQtlGOyg+VGJqiic18Be7cp?=
+ =?us-ascii?Q?TL0=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR11CA0028.namprd11.prod.outlook.com (2603:10b6:300:115::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend Transport; Fri, 16 Jul 2021 18:21:21 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d137ceeb-0138-4d52-e46d-08d948868381
-X-MS-TrafficTypeDiagnostic: DM5PR21MB0828:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR21MB0828FEB049F48B1D48741DDFAC119@DM5PR21MB0828.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uJYley8IL12JYaRPtSpuTKtwjnz8JC+Oz0FTpCYsIalWyzmeLlERhW7Rytp2CgKPYLT+rn/y7Yeyh7M0uMEWDBhAAf45FdETI9VuzU4gwzezoLb8+MxkREwEKCV1x8AW5T3ngOiSBnPdZ5UjxvdhRydlexx4kQPv8mlcdW9S1K6ebV42lDeF6BZdq5QiufLjUfubKy4r7xECdUqX7pTJpUWog7jtcIBU60/I3Iai0cuDragwLPCeRMrNd5A0UZn86TcLM/unr7LPl2RwWcJf31PL7Viifw00pAT5URgSEcD6sywWJYAgpYTx7T3R7khpwgyIQhINECsruZn1vJ1KivKLp/cE0JgwG+TCPNl3wPUJwr3Ojky8OKP7b+Jnj/Dm6JO4kbbxSvkUTfPRWeMW9dCPZ9zmOXgX35GUj5qiCGRdR1GVFXLfqnAtbbX/w6sY+2ID3RSCCjiR2fWg4R2eKzDJtvMhx+Hr6fvACtc8LD6lhblP+0WbJEVO7BjkPh+Amq2uUPg2Yp7VsOT0ojV1lopHTWUeEYbzGdOXK7LVE5EjBzhum0dIUJQF8Q5DdNZ2IQHPyfKEiYc38wLjQu5n44lJ5stXlZQMch2Z6jRAnc87DyJRuTJw0HJDYBTY5gzh/Y3gSqqU1f4rJFBhybPCqcZ+XnOpAn84yLV1decYUWxaeByzNzypSn/eH2JqveHuFRwyWBqBEn5K8M1X7Vir9g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1340.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(2906002)(6486002)(36756003)(7846003)(8676002)(508600001)(82960400001)(956004)(4326008)(450100002)(82950400001)(6512007)(8936002)(6506007)(10290500003)(38350700002)(186003)(66476007)(66946007)(2616005)(52116002)(66556008)(316002)(26005)(38100700002)(5660300002)(6666004)(83380400001)(6916009);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?G0wMVOy3uy6xCIH23gxWwEXwIUymmhSqSzSMgFQeybuwJzujwGmCoE1iug3I?=
- =?us-ascii?Q?tQ6V66NyA9hpTaTBweMwAQ0OfiGhnVRifedMOulJP52aB37B88A36UySNjHz?=
- =?us-ascii?Q?5ThHdne7VccuqYsBcO0N0bASDcvdEAc4UE1IAnXOWvQBF4qAXNAqymx4w0jN?=
- =?us-ascii?Q?tabb9xLVUz3W9Ec7lJ9NANYvrhcazW2oIwQok09ptpup71V0gt7aInueJjmp?=
- =?us-ascii?Q?6mdJgiv1sczJhxvJfb/x93c1y7ZAfKiJ4E91OFKy0lAgMh3Rtz/7mA6VmXNU?=
- =?us-ascii?Q?8jl3G9wtOymS0BDxaLhV8MwIZb0rMRQE6AJNyJDN73rso8kQ217UaRFoVaGG?=
- =?us-ascii?Q?6lsQwCKj7ZWK5g9bVWOeH2rRZMWh4wDRqZDE5b+1dnLkn6tSZpWIhsaaqXc2?=
- =?us-ascii?Q?YZgy19baBlfcAWs5WJ/1YgGbVLDvuu5UG3VI6G2k9o/CkMAfRWQEiizqkUt2?=
- =?us-ascii?Q?ZwL5VdwuE6WRMaM1hEA/OxTQhwWQ2xs5WAORqtl05S3qWpJNbAwb8h4sYRg+?=
- =?us-ascii?Q?pCwZcmMdrejNQVORxfN+186PyOYsNU7m6R+ELDuUp/K1qERO/B2MYc+EqSRw?=
- =?us-ascii?Q?yU0N0rfgdCAbiDqRC3BZPP0xH4jyJzbUDy6Q/RfIjQeFbEOkKvj+/Rj77aXm?=
- =?us-ascii?Q?FSbI7H/99YA/xnhP4BNwXwJSbh28DFabvMeDglo7rd7jPb6/P+oqB75mPvKQ?=
- =?us-ascii?Q?qu4tfVRgDDK46RPN7Zj+DZTqLWZB7jNbifrfWLV83MXI2jrUCT311G1J3qXE?=
- =?us-ascii?Q?6D2jTEuL2HUwk69adwoE+UYi02NUhnWi5qkuo8F8EP3e5bDDNshvovWWr/Px?=
- =?us-ascii?Q?pz2i75YOucyLwtR4ILB28+cDjBfzMAHY32jCdhWW6kCFuXhrRIGHd2scLja7?=
- =?us-ascii?Q?P2vyLp80juoC30o7Fzx0ARgu+wwPCxwjy43DreAEgXa9JdKD/qtFRSw9GtIw?=
- =?us-ascii?Q?eRji02ER1xcgStkSQnkidv6Qqnrp43oRNIAMXokfjwKFAKCcgN1WzHAKH6Mw?=
- =?us-ascii?Q?g19xOIDCYEWCtZKH9s3nYVFva+V7StWrXM+2ywx5cdhsVsLRZpy3NeSCKFJ2?=
- =?us-ascii?Q?9t1koqIY84Wg3pnL509z7SzjW0KmWmTdh48GCxDsZh31rSnPsVEjJlXlkm67?=
- =?us-ascii?Q?K43uac5c8OSecYE9GYVsSpS7qgtg0ynrOztWW6hz7c9AHASRbNaD5IcKQa+4?=
- =?us-ascii?Q?L713rbbLbza4i9+3Yf/tynvtiqlIvBwaCAJ33tzfNSNrn2J7zOKRQDUSCXww?=
- =?us-ascii?Q?Oh8qIJkoyhRvjsYGSb6/8G4tEYxFbuzmSm/82i2gfm8QMJ1v8mOSoVLRr5sX?=
- =?us-ascii?Q?2gNjzRCo//ssKusyS1vIMtJ1?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d137ceeb-0138-4d52-e46d-08d948868381
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1340.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2021 18:21:22.1559
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1506.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec874dfa-bb6c-4a29-d2bf-08d9488fa49d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2021 19:26:42.6755
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yJNFgNVhN7rI0O5jqH2ZAHKr0+9R55Kda0mpb1EVNINbQAPhneNidpSIupY/Y/ufiZoVkmVSk59ff2zjccVNKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0828
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W2czVJO1zzcpJHJ0J+ISmMZQKI7IqUcLENYtwPa+tI0py1n9ggw4CWDWuNeYZFs0+QXAcBvlsmRWMrsdsfeE+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1311
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The vmbus module uses a rotational algorithm to assign target CPUs to
-a device's channels. Depending on the timing of different device's channel
-offers, different channels of a device may be assigned to the same CPU.
+> Subject: RE: [Patch v3 2/3] Drivers: hv: add Azure Blob driver
+>=20
+> From: longli@linuxonhyperv.com <longli@linuxonhyperv.com> Sent:
+> Tuesday, July 13, 2021 7:45 PM
+> >
+> > Azure Blob storage provides scalable and durable data storage for Azure=
+.
+> >
+> (https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fazu
+> > re.microsoft.com%2Fen-
+> us%2Fservices%2Fstorage%2Fblobs%2F&amp;data=3D04%7
+> >
+> C01%7Clongli%40microsoft.com%7C852590ffe972466d24b308d948723d8c%7C
+> 72f9
+> >
+> 88bf86f141af91ab2d7cd011db47%7C1%7C0%7C637620477769866945%7CUnk
+> nown%7C
+> >
+> TWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiL
+> CJXVC
+> >
+> I6Mn0%3D%7C1000&amp;sdata=3DPZYfSVoLanlTv%2Fi%2Bks4a1IMM0cMiRxP2
+> poypgs20
+> > S7c%3D&amp;reserved=3D0)
+> >
+> > This driver adds support for accelerated access to Azure Blob storage.
+> > As an alternative to REST APIs, it provides a fast data path that uses
+> > host native network stack and secure direct data link for storage serve=
+r
+> access.
+> >
+> > This driver will be ported to FreeBSD. It's dual licensed for BSD and G=
+PL.
+> >
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> > Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> > Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> > Cc: Wei Liu <wei.liu@kernel.org>
+> > Cc: Dexuan Cui <decui@microsoft.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Maximilian Luz <luzmaximilian@gmail.com>
+> > Cc: Mike Rapoport <rppt@kernel.org>
+> > Cc: Ben Widawsky <ben.widawsky@intel.com>
+> > Cc: Jiri Slaby <jirislaby@kernel.org>
+> > Cc: Andra Paraschiv <andraprs@amazon.com>
+> > Cc: Siddharth Gupta <sidgup@codeaurora.org>
+> > Cc: Hannes Reinecke <hare@suse.de>
+> > Cc: linux-doc@vger.kernel.org
+> > Signed-off-by: Long Li <longli@microsoft.com>
+> > ---
+> >  Documentation/userspace-api/ioctl/ioctl-number.rst |   2 +
+> >  drivers/hv/Kconfig                                 |  10 +
+> >  drivers/hv/Makefile                                |   1 +
+> >  drivers/hv/azure_blob.c                            | 625 +++++++++++++=
+++++++++
+> >  drivers/hv/channel_mgmt.c                          |   7 +
+> >  include/linux/hyperv.h                             |   9 +
+> >  include/uapi/misc/azure_blob.h                     |  34 ++
+> >  7 files changed, 688 insertions(+)
+> >  create mode 100644 drivers/hv/azure_blob.c  create mode 100644
+> > include/uapi/misc/azure_blob.h
+> >
+> > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > index 9bfc2b5..d3c2a90 100644
+> > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > @@ -180,6 +180,8 @@ Code  Seq#    Include File
+> Comments
+> >  'R'   01     linux/rfkill.h                                          c=
+onflict!
+> >  'R'   C0-DF  net/bluetooth/rfcomm.h
+> >  'R'   E0     uapi/linux/fsl_mc.h
+> > +'R'   F0-FF  uapi/misc/azure_blob.h                                  M=
+icrosoft Azure Blob
+> driver
+> > +
+> > +<mailto:longli@microsoft.com>
+> >  'S'   all    linux/cdrom.h                                           c=
+onflict!
+> >  'S'   80-81  scsi/scsi_ioctl.h                                       c=
+onflict!
+> >  'S'   82-FF  scsi/scsi.h                                             c=
+onflict!
+> > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig index
+> > 66c794d..e08b8d3 100644
+> > --- a/drivers/hv/Kconfig
+> > +++ b/drivers/hv/Kconfig
+> > @@ -27,4 +27,14 @@ config HYPERV_BALLOON
+> >  	help
+> >  	  Select this option to enable Hyper-V Balloon driver.
+> >
+> > +config HYPERV_AZURE_BLOB
+> > +	tristate "Microsoft Azure Blob driver"
+> > +	depends on HYPERV && X86_64
+> > +	help
+> > +	  Select this option to enable Microsoft Azure Blob driver.
+> > +
+> > +	  This driver supports accelerated Microsoft Azure Blob access.
+> > +	  To compile this driver as a module, choose M here. The module will
+> be
+> > +	  called azure_blob.
+> > +
+> >  endmenu
+> > diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile index
+> > 94daf82..a322575 100644
+> > --- a/drivers/hv/Makefile
+> > +++ b/drivers/hv/Makefile
+> > @@ -2,6 +2,7 @@
+> >  obj-$(CONFIG_HYPERV)		+=3D hv_vmbus.o
+> >  obj-$(CONFIG_HYPERV_UTILS)	+=3D hv_utils.o
+> >  obj-$(CONFIG_HYPERV_BALLOON)	+=3D hv_balloon.o
+> > +obj-$(CONFIG_HYPERV_AZURE_BLOB)	+=3D azure_blob.o
+> >
+> >  CFLAGS_hv_trace.o =3D -I$(src)
+> >  CFLAGS_hv_balloon.o =3D -I$(src)
+> > diff --git a/drivers/hv/azure_blob.c b/drivers/hv/azure_blob.c new
+> > file mode 100644 index 0000000..5367d5e
+> > --- /dev/null
+> > +++ b/drivers/hv/azure_blob.c
+> > @@ -0,0 +1,625 @@
+> > +// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0-only WITH
+> > +Linux-syscall-note
+> > +/* Copyright (c) Microsoft Corporation. */
+> > +
+> > +#include <uapi/misc/azure_blob.h>
+> > +#include <linux/module.h>
+> > +#include <linux/device.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/cred.h>
+> > +#include <linux/debugfs.h>
+> > +#include <linux/pagemap.h>
+> > +#include <linux/hyperv.h>
+> > +#include <linux/miscdevice.h>
+> > +#include <linux/uio.h>
+> > +
+> > +struct az_blob_device {
+> > +	struct hv_device *device;
+> > +
+> > +	/* Opened files maintained by this device */
+> > +	struct list_head file_list;
+> > +	/* Lock for protecting file_list */
+> > +	spinlock_t file_lock;
+> > +	wait_queue_head_t file_wait;
+> > +
+> > +	bool removing;
+> > +};
+> > +
+> > +/* VSP messages */
+> > +enum az_blob_vsp_request_type {
+> > +	AZ_BLOB_DRIVER_REQUEST_FIRST     =3D 0x100,
+> > +	AZ_BLOB_DRIVER_USER_REQUEST      =3D 0x100,
+> > +	AZ_BLOB_DRIVER_REGISTER_BUFFER   =3D 0x101,
+> > +	AZ_BLOB_DRIVER_DEREGISTER_BUFFER =3D 0x102, };
+> > +
+> > +/* VSC->VSP request */
+> > +struct az_blob_vsp_request {
+> > +	u32 version;
+> > +	u32 timeout_ms;
+> > +	u32 data_buffer_offset;
+> > +	u32 data_buffer_length;
+> > +	u32 data_buffer_valid;
+> > +	u32 operation_type;
+> > +	u32 request_buffer_offset;
+> > +	u32 request_buffer_length;
+> > +	u32 response_buffer_offset;
+> > +	u32 response_buffer_length;
+> > +	guid_t transaction_id;
+> > +} __packed;
+> > +
+> > +/* VSP->VSC response */
+> > +struct az_blob_vsp_response {
+> > +	u32 length;
+> > +	u32 error;
+> > +	u32 response_len;
+> > +} __packed;
+> > +
+> > +struct az_blob_vsp_request_ctx {
+> > +	struct list_head list;
+> > +	struct completion wait_vsp;
+> > +	struct az_blob_request_sync *request; };
+> > +
+> > +struct az_blob_file_ctx {
+> > +	struct list_head list;
+> > +
+> > +	/* List of pending requests to VSP */
+> > +	struct list_head vsp_pending_requests;
+> > +	/* Lock for protecting vsp_pending_requests */
+> > +	spinlock_t vsp_pending_lock;
+> > +	wait_queue_head_t wait_vsp_pending;
+> > +};
+> > +
+> > +/* The maximum number of pages we can pass to VSP in a single packet
+> > +*/ #define AZ_BLOB_MAX_PAGES 8192
+> > +
+> > +/* The one and only one */
+> > +static struct az_blob_device az_blob_dev;
+> > +
+> > +/* Ring buffer size in bytes */
+> > +#define AZ_BLOB_RING_SIZE (128 * 1024)
+> > +
+> > +/* System wide device queue depth */
+> > +#define AZ_BLOB_QUEUE_DEPTH 1024
+> > +
+> > +static const struct hv_vmbus_device_id id_table[] =3D {
+> > +	{ HV_AZURE_BLOB_GUID,
+> > +	  .driver_data =3D 0
+> > +	},
+> > +	{ },
+> > +};
+> > +
+> > +#define az_blob_dbg(fmt, args...)
+> > +dev_dbg(&az_blob_dev.device->device, fmt, ##args) #define
+> > +az_blob_info(fmt, args...) dev_info(&az_blob_dev.device->device, fmt,
+> > +##args) #define az_blob_warn(fmt, args...)
+> > +dev_warn(&az_blob_dev.device->device, fmt, ##args) #define
+> > +az_blob_err(fmt, args...) dev_err(&az_blob_dev.device->device, fmt,
+> > +##args)
+> > +
+> > +static void az_blob_on_channel_callback(void *context) {
+> > +	struct vmbus_channel *channel =3D (struct vmbus_channel *)context;
+> > +	const struct vmpacket_descriptor *desc;
+> > +
+> > +	az_blob_dbg("entering interrupt from vmbus\n");
+> > +	foreach_vmbus_pkt(desc, channel) {
+> > +		struct az_blob_vsp_request_ctx *request_ctx;
+> > +		struct az_blob_vsp_response *response;
+> > +		u64 cmd_rqst =3D vmbus_request_addr(&channel->requestor,
+> > +						  desc->trans_id);
+> > +		if (cmd_rqst =3D=3D VMBUS_RQST_ERROR) {
+> > +			az_blob_err("incorrect transaction id %llu\n",
+> > +				    desc->trans_id);
+> > +			continue;
+> > +		}
+> > +		request_ctx =3D (struct az_blob_vsp_request_ctx *)cmd_rqst;
+> > +		response =3D hv_pkt_data(desc);
+> > +
+> > +		az_blob_dbg("got response for request %pUb status %u "
+> > +			    "response_len %u\n",
+> > +			    &request_ctx->request->guid, response->error,
+> > +			    response->response_len);
+> > +		request_ctx->request->response.status =3D response->error;
+> > +		request_ctx->request->response.response_len =3D
+> > +			response->response_len;
+> > +		complete(&request_ctx->wait_vsp);
+> > +	}
+> > +}
+> > +
+> > +static int az_blob_fop_open(struct inode *inode, struct file *file) {
+> > +	struct az_blob_file_ctx *file_ctx;
+> > +	unsigned long flags;
+> > +
+> > +	file_ctx =3D kzalloc(sizeof(*file_ctx), GFP_KERNEL);
+> > +	if (!file_ctx)
+> > +		return -ENOMEM;
+> > +
+> > +	rcu_read_lock();
+> > +
+> > +	if (az_blob_dev.removing) {
+> > +		rcu_read_unlock();
+> > +		kfree(file_ctx);
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	INIT_LIST_HEAD(&file_ctx->vsp_pending_requests);
+> > +	init_waitqueue_head(&file_ctx->wait_vsp_pending);
+> > +	spin_lock_init(&file_ctx->vsp_pending_lock);
+> > +	file->private_data =3D file_ctx;
+> > +
+> > +	spin_lock_irqsave(&az_blob_dev.file_lock, flags);
+> > +	list_add_tail(&file_ctx->list, &az_blob_dev.file_list);
+> > +	spin_unlock_irqrestore(&az_blob_dev.file_lock, flags);
+>=20
+> I would think that this function is never called with interrupts disabled=
+, so the
+> simpler spin_lock()/spin_unlock() functions could be used.
+>=20
+> > +
+> > +	rcu_read_unlock();
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int az_blob_fop_release(struct inode *inode, struct file
+> > +*file) {
+> > +	struct az_blob_file_ctx *file_ctx =3D file->private_data;
+> > +	unsigned long flags;
+> > +
+> > +	wait_event(file_ctx->wait_vsp_pending,
+> > +		   list_empty(&file_ctx->vsp_pending_requests));
+> > +
+> > +	spin_lock_irqsave(&az_blob_dev.file_lock, flags);
+> > +	list_del(&file_ctx->list);
+> > +	if (list_empty(&az_blob_dev.file_list))
+> > +		wake_up(&az_blob_dev.file_wait);
+> > +	spin_unlock_irqrestore(&az_blob_dev.file_lock, flags);
+>=20
+> I would think that this function is never called with interrupts disabled=
+, so the
+> simpler spin_lock()/spin_unlock() functions could be used.
+>=20
+> > +
+> > +	kfree(file_ctx);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static inline bool az_blob_safe_file_access(struct file *file) {
+> > +	return file->f_cred =3D=3D current_cred() && !uaccess_kernel(); }
+> > +
+> > +static int get_buffer_pages(int rw, void __user *buffer, u32 buffer_le=
+n,
+> > +			    struct page ***ppages, size_t *start,
+> > +			    size_t *num_pages)
+> > +{
+> > +	struct iovec iov;
+> > +	struct iov_iter iter;
+> > +	int ret;
+> > +	ssize_t result;
+> > +	struct page **pages;
+> > +
+> > +	ret =3D import_single_range(rw, buffer, buffer_len, &iov, &iter);
+> > +	if (ret) {
+> > +		az_blob_dbg("request buffer access error %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +	az_blob_dbg("iov_iter type %d offset %lu count %lu nr_segs %lu\n",
+> > +		    iter.type, iter.iov_offset, iter.count, iter.nr_segs);
+> > +
+> > +	result =3D iov_iter_get_pages_alloc(&iter, &pages, buffer_len, start)=
+;
+> > +	if (result < 0) {
+> > +		az_blob_dbg("failed to pin user pages result=3D%ld\n", result);
+> > +		return result;
+> > +	}
+> > +	if (result !=3D buffer_len) {
+> > +		az_blob_dbg("can't pin user pages requested %d got %ld\n",
+> > +			    buffer_len, result);
+> > +		return -EFAULT;
+> > +	}
+> > +
+> > +	*ppages =3D pages;
+> > +	*num_pages =3D (result + *start + PAGE_SIZE - 1) / PAGE_SIZE;
+> > +	return 0;
+> > +}
+> > +
+> > +static void fill_in_page_buffer(u64 *pfn_array, int *index,
+> > +				struct page **pages, unsigned long
+> num_pages) {
+> > +	int i, page_idx =3D *index;
+> > +
+> > +	for (i =3D 0; i < num_pages; i++)
+> > +		pfn_array[page_idx++] =3D page_to_pfn(pages[i]);
+> > +	*index =3D page_idx;
+> > +}
+> > +
+> > +static void free_buffer_pages(size_t num_pages, struct page **pages)
+> > +{
+> > +	unsigned long i;
+> > +
+> > +	for (i =3D 0; i < num_pages; i++)
+> > +		if (pages[i])
+> > +			put_page(pages[i]);
+> > +	kvfree(pages);
+> > +}
+> > +
+> > +static long az_blob_ioctl_user_request(struct file *filp, unsigned
+> > +long arg) {
+> > +	struct az_blob_device *dev =3D &az_blob_dev;
+> > +	struct az_blob_file_ctx *file_ctx =3D filp->private_data;
+> > +	struct az_blob_request_sync __user *request_user =3D
+> > +		(struct az_blob_request_sync __user *)arg;
+> > +	struct az_blob_request_sync request;
+> > +	struct az_blob_vsp_request_ctx request_ctx;
+> > +	unsigned long flags;
+> > +	int ret;
+> > +	size_t request_start, request_num_pages =3D 0;
+> > +	size_t response_start, response_num_pages =3D 0;
+> > +	size_t data_start, data_num_pages =3D 0, total_num_pages;
+> > +	struct page **request_pages =3D NULL, **response_pages =3D NULL;
+> > +	struct page **data_pages =3D NULL;
+> > +	struct vmbus_packet_mpb_array *desc;
+> > +	u64 *pfn_array;
+> > +	int desc_size;
+> > +	int page_idx;
+> > +	struct az_blob_vsp_request *vsp_request;
+> > +
+> > +	/* Fast fail if device is being removed */
+> > +	if (dev->removing)
+> > +		return -ENODEV;
+> > +
+> > +	if (!az_blob_safe_file_access(filp)) {
+> > +		az_blob_dbg("process %d(%s) changed security contexts
+> after"
+> > +			    " opening file descriptor\n",
+> > +			    task_tgid_vnr(current), current->comm);
+> > +		return -EACCES;
+> > +	}
+> > +
+> > +	if (copy_from_user(&request, request_user, sizeof(request))) {
+> > +		az_blob_dbg("don't have permission to user provided
+> buffer\n");
+> > +		return -EFAULT;
+> > +	}
+> > +
+> > +	az_blob_dbg("az_blob ioctl request guid %pUb timeout %u
+> request_len %u"
+> > +		    " response_len %u data_len %u request_buffer %llx "
+> > +		    "response_buffer %llx data_buffer %llx\n",
+> > +		    &request.guid, request.timeout, request.request_len,
+> > +		    request.response_len, request.data_len,
+> request.request_buffer,
+> > +		    request.response_buffer, request.data_buffer);
+> > +
+> > +	if (!request.request_len || !request.response_len)
+> > +		return -EINVAL;
+> > +
+> > +	if (request.data_len && request.data_len < request.data_valid)
+> > +		return -EINVAL;
+> > +
+> > +	if (request.data_len > PAGE_SIZE * AZ_BLOB_MAX_PAGES ||
+> > +	    request.request_len > PAGE_SIZE * AZ_BLOB_MAX_PAGES ||
+> > +	    request.response_len > PAGE_SIZE * AZ_BLOB_MAX_PAGES)
+> > +		return -EINVAL;
+> > +
+> > +	init_completion(&request_ctx.wait_vsp);
+> > +	request_ctx.request =3D &request;
+> > +
+> > +	/*
+> > +	 * Need to set rw to READ to have page table set up for passing to
+> VSP.
+> > +	 * Setting it to WRITE will cause the page table entry not allocated
+> > +	 * as it's waiting on Copy-On-Write on next page fault. This doesn't
+> > +	 * work in this scenario because VSP wants all the pages to be
+> present.
+> > +	 */
+> > +	ret =3D get_buffer_pages(READ, (void __user
+> *)request.request_buffer,
+> > +			       request.request_len, &request_pages,
+> > +			       &request_start, &request_num_pages);
+> > +	if (ret)
+> > +		goto get_user_page_failed;
+> > +
+> > +	ret =3D get_buffer_pages(READ, (void __user
+> *)request.response_buffer,
+> > +			       request.response_len, &response_pages,
+> > +			       &response_start, &response_num_pages);
+> > +	if (ret)
+> > +		goto get_user_page_failed;
+> > +
+> > +	if (request.data_len) {
+> > +		ret =3D get_buffer_pages(READ,
+> > +				       (void __user *)request.data_buffer,
+> > +				       request.data_len, &data_pages,
+> > +				       &data_start, &data_num_pages);
+> > +		if (ret)
+> > +			goto get_user_page_failed;
+> > +	}
+> > +
+> > +	total_num_pages =3D request_num_pages + response_num_pages +
+> > +				data_num_pages;
+> > +	if (total_num_pages > AZ_BLOB_MAX_PAGES) {
+> > +		az_blob_dbg("number of DMA pages %lu buffer
+> exceeding %u\n",
+> > +			    total_num_pages, AZ_BLOB_MAX_PAGES);
+> > +		ret =3D -EINVAL;
+> > +		goto get_user_page_failed;
+> > +	}
+> > +
+> > +	/* Construct a VMBUS packet and send it over to VSP */
+> > +	desc_size =3D struct_size(desc, range.pfn_array, total_num_pages);
+> > +	desc =3D kzalloc(desc_size, GFP_KERNEL);
+> > +	vsp_request =3D kzalloc(sizeof(*vsp_request), GFP_KERNEL);
+> > +	if (!desc || !vsp_request) {
+> > +		kfree(desc);
+> > +		kfree(vsp_request);
+> > +		ret =3D -ENOMEM;
+> > +		goto get_user_page_failed;
+> > +	}
+> > +
+> > +	desc->range.offset =3D 0;
+> > +	desc->range.len =3D total_num_pages * PAGE_SIZE;
+> > +	pfn_array =3D desc->range.pfn_array;
+> > +	page_idx =3D 0;
+> > +
+> > +	if (request.data_len) {
+> > +		fill_in_page_buffer(pfn_array, &page_idx, data_pages,
+> > +				    data_num_pages);
+> > +		vsp_request->data_buffer_offset =3D data_start;
+> > +		vsp_request->data_buffer_length =3D request.data_len;
+> > +		vsp_request->data_buffer_valid =3D request.data_valid;
+> > +	}
+> > +
+> > +	fill_in_page_buffer(pfn_array, &page_idx, request_pages,
+> > +			    request_num_pages);
+> > +	vsp_request->request_buffer_offset =3D request_start +
+> > +						data_num_pages *
+> PAGE_SIZE;
+> > +	vsp_request->request_buffer_length =3D request.request_len;
+> > +
+> > +	fill_in_page_buffer(pfn_array, &page_idx, response_pages,
+> > +			    response_num_pages);
+> > +	vsp_request->response_buffer_offset =3D response_start +
+> > +		(data_num_pages + request_num_pages) * PAGE_SIZE;
+> > +	vsp_request->response_buffer_length =3D request.response_len;
+> > +
+> > +	vsp_request->version =3D 0;
+> > +	vsp_request->timeout_ms =3D request.timeout;
+> > +	vsp_request->operation_type =3D AZ_BLOB_DRIVER_USER_REQUEST;
+> > +	guid_copy(&vsp_request->transaction_id, &request.guid);
+> > +
+> > +	spin_lock_irqsave(&file_ctx->vsp_pending_lock, flags);
+> > +	list_add_tail(&request_ctx.list, &file_ctx->vsp_pending_requests);
+> > +	spin_unlock_irqrestore(&file_ctx->vsp_pending_lock, flags);
+>=20
+> I would think that this function is never called with interrupts disabled=
+, so the
+> simpler spin_lock()/spin_unlock() functions could be used.
+>=20
+> > +
+> > +	az_blob_dbg("sending request to VSP\n");
+> > +	az_blob_dbg("desc_size %u desc->range.len %u desc-
+> >range.offset %u\n",
+> > +		    desc_size, desc->range.len, desc->range.offset);
+> > +	az_blob_dbg("vsp_request data_buffer_offset %u
+> data_buffer_length %u "
+> > +		    "data_buffer_valid %u request_buffer_offset %u "
+> > +		    "request_buffer_length %u response_buffer_offset %u "
+> > +		    "response_buffer_length %u\n",
+> > +		    vsp_request->data_buffer_offset,
+> > +		    vsp_request->data_buffer_length,
+> > +		    vsp_request->data_buffer_valid,
+> > +		    vsp_request->request_buffer_offset,
+> > +		    vsp_request->request_buffer_length,
+> > +		    vsp_request->response_buffer_offset,
+> > +		    vsp_request->response_buffer_length);
+> > +
+> > +	ret =3D vmbus_sendpacket_mpb_desc(dev->device->channel, desc,
+> desc_size,
+> > +					vsp_request, sizeof(*vsp_request),
+> > +					(u64)&request_ctx);
+> > +
+> > +	kfree(desc);
+> > +	kfree(vsp_request);
+> > +	if (ret)
+> > +		goto vmbus_send_failed;
+> > +
+> > +	wait_for_completion(&request_ctx.wait_vsp);
+> > +
+> > +	/*
+> > +	 * At this point, the response is already written to request
+> > +	 * by VMBUS completion handler, copy them to user-mode buffers
+> > +	 * and return to user-mode
+> > +	 */
+> > +	if (copy_to_user(&request_user->response, &request.response,
+> > +			 sizeof(request.response)))
+> > +		ret =3D -EFAULT;
+> > +
+> > +vmbus_send_failed:
+> > +	spin_lock_irqsave(&file_ctx->vsp_pending_lock, flags);
+> > +	list_del(&request_ctx.list);
+> > +	if (list_empty(&file_ctx->vsp_pending_requests))
+> > +		wake_up(&file_ctx->wait_vsp_pending);
+> > +	spin_unlock_irqrestore(&file_ctx->vsp_pending_lock, flags);
+>=20
+> I would think that this function is never called with interrupts disabled=
+, so the
+> simpler spin_lock()/spin_unlock() functions could be used.
+>=20
+> > +
+> > +get_user_page_failed:
+> > +	free_buffer_pages(request_num_pages, request_pages);
+> > +	free_buffer_pages(response_num_pages, response_pages);
+> > +	free_buffer_pages(data_num_pages, data_pages);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static long az_blob_fop_ioctl(struct file *filp, unsigned int cmd,
+> > +			      unsigned long arg)
+> > +{
+> > +	switch (cmd) {
+> > +	case IOCTL_AZ_BLOB_DRIVER_USER_REQUEST:
+> > +		return az_blob_ioctl_user_request(filp, arg);
+> > +
+> > +	default:
+> > +		az_blob_dbg("unrecognized IOCTL code %u\n", cmd);
+> > +	}
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static const struct file_operations az_blob_client_fops =3D {
+> > +	.owner	=3D THIS_MODULE,
+> > +	.open	=3D az_blob_fop_open,
+> > +	.unlocked_ioctl =3D az_blob_fop_ioctl,
+> > +	.release =3D az_blob_fop_release,
+> > +};
+> > +
+> > +static struct miscdevice az_blob_misc_device =3D {
+> > +	MISC_DYNAMIC_MINOR,
+> > +	"azure_blob",
+> > +	&az_blob_client_fops,
+> > +};
+> > +
+> > +static int az_blob_show_pending_requests(struct seq_file *m, void *v)
+> > +{
+> > +	unsigned long flags, flags2;
+> > +	struct az_blob_vsp_request_ctx *request_ctx;
+> > +	struct az_blob_file_ctx *file_ctx;
+> > +
+> > +	seq_puts(m, "List of pending requests\n");
+> > +	seq_puts(m, "UUID request_len response_len data_len "
+> > +		"request_buffer response_buffer data_buffer\n");
+> > +	spin_lock_irqsave(&az_blob_dev.file_lock, flags);
+> > +	list_for_each_entry(file_ctx, &az_blob_dev.file_list, list) {
+> > +		spin_lock_irqsave(&file_ctx->vsp_pending_lock, flags2);
+> > +		list_for_each_entry(request_ctx,
+> > +				    &file_ctx->vsp_pending_requests, list) {
+> > +			seq_printf(m, "%pUb ", &request_ctx->request-
+> >guid);
+> > +			seq_printf(m, "%u ", request_ctx->request-
+> >request_len);
+> > +			seq_printf(m, "%u ",
+> > +				   request_ctx->request->response_len);
+> > +			seq_printf(m, "%u ", request_ctx->request-
+> >data_len);
+> > +			seq_printf(m, "%llx ",
+> > +				   request_ctx->request->request_buffer);
+> > +			seq_printf(m, "%llx ",
+> > +				   request_ctx->request->response_buffer);
+> > +			seq_printf(m, "%llx\n",
+> > +				   request_ctx->request->data_buffer);
+> > +		}
+> > +		spin_unlock_irqrestore(&file_ctx->vsp_pending_lock, flags2);
+> > +	}
+> > +	spin_unlock_irqrestore(&az_blob_dev.file_lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int az_blob_debugfs_open(struct inode *inode, struct file
+> > +*file) {
+> > +	return single_open(file, az_blob_show_pending_requests, NULL); }
+> > +
+> > +static const struct file_operations az_blob_debugfs_fops =3D {
+> > +	.open		=3D az_blob_debugfs_open,
+> > +	.read		=3D seq_read,
+> > +	.llseek		=3D seq_lseek,
+> > +	.release	=3D seq_release
+> > +};
+> > +
+> > +static void az_blob_remove_device(void) {
+> > +	struct dentry *debugfs_root =3D debugfs_lookup("az_blob", NULL);
+> > +
+> > +	misc_deregister(&az_blob_misc_device);
+> > +	debugfs_remove_recursive(debugfs_lookup("pending_requests",
+> > +						debugfs_root));
+> > +	debugfs_remove_recursive(debugfs_root);
+> > +	/* At this point, we won't get any requests from user-mode */ }
+> > +
+> > +static int az_blob_create_device(struct az_blob_device *dev) {
+> > +	int ret;
+> > +	struct dentry *debugfs_root;
+> > +
+> > +	ret =3D misc_register(&az_blob_misc_device);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	debugfs_root =3D debugfs_create_dir("az_blob", NULL);
+> > +	debugfs_create_file("pending_requests", 0400, debugfs_root, NULL,
+> > +			    &az_blob_debugfs_fops);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int az_blob_connect_to_vsp(struct hv_device *device, u32
+> > +ring_size) {
+> > +	int ret;
+> > +
+> > +	spin_lock_init(&az_blob_dev.file_lock);
+> > +	INIT_LIST_HEAD(&az_blob_dev.file_list);
+> > +	init_waitqueue_head(&az_blob_dev.file_wait);
+> > +
+> > +	az_blob_dev.device =3D device;
+> > +	device->channel->rqstor_size =3D AZ_BLOB_QUEUE_DEPTH;
+> > +
+> > +	ret =3D vmbus_open(device->channel, ring_size, ring_size, NULL, 0,
+> > +			 az_blob_on_channel_callback, device->channel);
+> > +
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	hv_set_drvdata(device, &az_blob_dev);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void az_blob_remove_vmbus(struct hv_device *device) {
+> > +	/* At this point, no VSC/VSP traffic is possible over vmbus */
+> > +	hv_set_drvdata(device, NULL);
+> > +	vmbus_close(device->channel);
+> > +}
+> > +
+> > +static int az_blob_probe(struct hv_device *device,
+> > +			 const struct hv_vmbus_device_id *dev_id) {
+> > +	int ret;
+> > +
+> > +	ret =3D az_blob_connect_to_vsp(device, AZ_BLOB_RING_SIZE);
+> > +	if (ret) {
+> > +		az_blob_err("error connecting to VSP ret=3D%d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	// create user-mode client library facing device
+> > +	ret =3D az_blob_create_device(&az_blob_dev);
+> > +	if (ret) {
+> > +		az_blob_err("failed to create device ret=3D%d\n", ret);
+> > +		az_blob_remove_vmbus(device);
+> > +		return ret;
+> > +	}
+> > +
+> > +	az_blob_dev.removing =3D false;
+>=20
+> This line seems misplaced.  As soon as az_blob_create_device() returns,
+> some other thread could find the device and open it.  You don't want the
+> az_blob_fop_open() function to find the "removing"
+> flag set to true.  So I think this line should go *before* the call to
+> az_blob_create_device().
+>=20
+> > +	az_blob_info("successfully probed device\n");
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int az_blob_remove(struct hv_device *dev) {
+> > +	az_blob_dev.removing =3D true;
+> > +	/*
+> > +	 * RCU lock guarantees that any future calls to az_blob_fop_open()
+> > +	 * can not use device resources while the inode reference of
+> > +	 * /dev/azure_blob is being held for that open, and device file is
+> > +	 * being removed from /dev.
+> > +	 */
+> > +	synchronize_rcu();
+>=20
+> I don't think this works as you have described.  While it will ensure tha=
+t any
+> in-progress RCU read-side critical sections have completed (i.e., in
+> az_blob_fop_open() ), it does not prevent new read-side critical sections
+> from being started.  So as soon as synchronize_rcu() is finished, another
+> thread could find and open the device, and be executing in
+> az_blob_fop_open().
+>=20
+> But it's not clear to me that this (and the rcu_read_locks in
+> az_blob_fop_open) are really needed anyway.  If az_blob_remove_device()
+> is called while one or more threads have it open, I think that's OK.  Or =
+is there
+> a scenario that I'm missing?
 
-For example on a VM with 2 CPUs, if NIC A and B's channels are offered
-in the following order, NIC A will have both channels on CPU0, and
-NIC B will have both channels on CPU1 -- see below. This kind of
-assignment causes RSS load that is spreading across different channels
-to end up on the same CPU.
+I was trying to address your comment earlier. Here were your comments (1 - =
+7):
 
-Timing of channel offers:
-NIC A channel 0
-NIC B channel 0
-NIC A channel 1
-NIC B channel 1
+1) The driver is unbound, so az_blob_remove() is called.
+2) az_blob_remove() sets the "removing" flag to true, and calls az_blob_rem=
+ove_device().
+3) az_blob_remove_device() waits for the file_list to become empty.
+4) After the file_list becomes empty, but before misc_deregister() is calle=
+d, a separate thread opens the device again.
+5) In the separate thread, az_blob_fop_open() obtains the file_lock spin lo=
+ck.
+6) Before az_blob_fop_open() releases the spin lock, az
+block_remove_device() completes, along with az_blob_remove().
+7) Then the device gets rebound, and az_blob_connect_to_vsp() gets called, =
+all while az_blob_fop_open() still holds the spin lock.  So the spin lock g=
+et re-initialized while it is held.
 
-VMBUS ID 14: Class_ID = {f8615163-df3e-46c5-913f-f2d2f965ed0e} - Synthetic network adapter
-        Device_ID = {cab064cd-1f31-47d5-a8b4-9d57e320cccd}
-        Sysfs path: /sys/bus/vmbus/devices/cab064cd-1f31-47d5-a8b4-9d57e320cccd
-        Rel_ID=14, target_cpu=0
-        Rel_ID=17, target_cpu=0
+Between step 4 and step 5, I don't see any guarantee that az_blob_fop_open(=
+) can't run concurrently on another CPU after misc_deregister() finishes. m=
+isc_deregister() calls devtmpfs_delete_node() to remove the device file fro=
+m /dev/*, but it doesn't check the return value, so the inode reference num=
+ber can be non-zero after it returns, somebody may still try to open it. Th=
+is check guarantees that the code can't reference any driver's internal dat=
+a structures. az_blob_dev.removing is set so this code can't be entered. Re=
+setting it after az_blob_create_device() is also for this purpose.
 
-VMBUS ID 16: Class_ID = {f8615163-df3e-46c5-913f-f2d2f965ed0e} - Synthetic network adapter
-        Device_ID = {244225ca-743e-4020-a17d-d7baa13d6cea}
-        Sysfs path: /sys/bus/vmbus/devices/244225ca-743e-4020-a17d-d7baa13d6cea
-        Rel_ID=16, target_cpu=1
-        Rel_ID=18, target_cpu=1
+>=20
+> > +
+> > +	az_blob_info("removing device\n");
+> > +	az_blob_remove_device();
+> > +
+> > +	/*
+> > +	 * At this point, it's not possible to open more files.
+> > +	 * Wait for all the opened files to be released.
+> > +	 */
+> > +	wait_event(az_blob_dev.file_wait,
+> > +list_empty(&az_blob_dev.file_list));
+>=20
+> As mentioned in my most recent comments on the previous version of the
+> code, I'm concerned about waiting for all open files to be released in th=
+e case
+> of a VMbus rescind.  We definitely have to wait for all VSP operations to
+> complete, but that's different from waiting for the files to be closed.  =
+The
+> former depends on Hyper-V being well-behaved and will presumably
+> happen quickly in the case of a rescind.  But the latter depends entirely=
+ on
+> user space code that is out of the kernel's control.  The user space proc=
+ess
+> could hang around for hours or days with the file still open, which would
+> block this function from completing, and hence block the global work queu=
+e.
+>=20
+> Thinking about this, the core issue may be that having a single static in=
+stance
+> of az_blob_device is problematic if we allow the device to be removed
+> (either explicitly with an unbind, or implicitly with a VMbus
+> rescind) and then re-added.  Perhaps what needs to happen is that the
+> removed device is allowed to continue to exist as long as user space
+> processes have an open file handle, but they can't perform any operations
+> because the "removing" flag is set (and stays set).
+> If the device is re-added, then a new instance of az_blob_device should b=
+e
+> created, and whether or not the old instance is still hanging around is
+> irrelevant.
 
-Update the vmbus CPU assignment algorithm to avoid duplicate CPU
-assignments within a device.
+I agree dynamic device objects is the way to go. Will implement this.
 
-The new algorithm iterates num_online_cpus + 1 times.
-The existing rotational algorithm to find "next NUMA & CPU" is still here.
-But if the resulting CPU is already used by the same device, it will try
-the next CPU.
-In the last iteration, it assigns the channel to the next available CPU
-like the existing algorithm. This is not normally expected, because
-during device probe, we limit the number of channels of a device to
-be <= number of online CPUs.
-
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Tested-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/hv/channel_mgmt.c | 96 ++++++++++++++++++++++++++-------------
- 1 file changed, 64 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index caf6d0c4bc1b..142308526ec6 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -605,6 +605,17 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
- 	 */
- 	mutex_lock(&vmbus_connection.channel_mutex);
- 
-+	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-+		if (guid_equal(&channel->offermsg.offer.if_type,
-+			       &newchannel->offermsg.offer.if_type) &&
-+		    guid_equal(&channel->offermsg.offer.if_instance,
-+			       &newchannel->offermsg.offer.if_instance)) {
-+			fnew = false;
-+			newchannel->primary_channel = channel;
-+			break;
-+		}
-+	}
-+
- 	init_vp_index(newchannel);
- 
- 	/* Remember the channels that should be cleaned up upon suspend. */
-@@ -617,16 +628,6 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
- 	 */
- 	atomic_dec(&vmbus_connection.offer_in_progress);
- 
--	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
--		if (guid_equal(&channel->offermsg.offer.if_type,
--			       &newchannel->offermsg.offer.if_type) &&
--		    guid_equal(&channel->offermsg.offer.if_instance,
--			       &newchannel->offermsg.offer.if_instance)) {
--			fnew = false;
--			break;
--		}
--	}
--
- 	if (fnew) {
- 		list_add_tail(&newchannel->listentry,
- 			      &vmbus_connection.chn_list);
-@@ -647,7 +648,6 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
- 		/*
- 		 * Process the sub-channel.
- 		 */
--		newchannel->primary_channel = channel;
- 		list_add_tail(&newchannel->sc_list, &channel->sc_list);
- 	}
- 
-@@ -683,6 +683,30 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
- 	queue_work(wq, &newchannel->add_channel_work);
- }
- 
-+/*
-+ * Check if CPUs used by other channels of the same device.
-+ * It should only be called by init_vp_index().
-+ */
-+static bool hv_cpuself_used(u32 cpu, struct vmbus_channel *chn)
-+{
-+	struct vmbus_channel *primary = chn->primary_channel;
-+	struct vmbus_channel *sc;
-+
-+	lockdep_assert_held(&vmbus_connection.channel_mutex);
-+
-+	if (!primary)
-+		return false;
-+
-+	if (primary->target_cpu == cpu)
-+		return true;
-+
-+	list_for_each_entry(sc, &primary->sc_list, sc_list)
-+		if (sc != chn && sc->target_cpu == cpu)
-+			return true;
-+
-+	return false;
-+}
-+
- /*
-  * We use this state to statically distribute the channel interrupt load.
-  */
-@@ -702,6 +726,7 @@ static int next_numa_node_id;
- static void init_vp_index(struct vmbus_channel *channel)
- {
- 	bool perf_chn = hv_is_perf_channel(channel);
-+	u32 i, ncpu = num_online_cpus();
- 	cpumask_var_t available_mask;
- 	struct cpumask *alloced_mask;
- 	u32 target_cpu;
-@@ -724,31 +749,38 @@ static void init_vp_index(struct vmbus_channel *channel)
- 		return;
- 	}
- 
--	while (true) {
--		numa_node = next_numa_node_id++;
--		if (numa_node == nr_node_ids) {
--			next_numa_node_id = 0;
--			continue;
-+	for (i = 1; i <= ncpu + 1; i++) {
-+		while (true) {
-+			numa_node = next_numa_node_id++;
-+			if (numa_node == nr_node_ids) {
-+				next_numa_node_id = 0;
-+				continue;
-+			}
-+			if (cpumask_empty(cpumask_of_node(numa_node)))
-+				continue;
-+			break;
-+		}
-+		alloced_mask = &hv_context.hv_numa_map[numa_node];
-+
-+		if (cpumask_weight(alloced_mask) ==
-+		    cpumask_weight(cpumask_of_node(numa_node))) {
-+			/*
-+			 * We have cycled through all the CPUs in the node;
-+			 * reset the alloced map.
-+			 */
-+			cpumask_clear(alloced_mask);
- 		}
--		if (cpumask_empty(cpumask_of_node(numa_node)))
--			continue;
--		break;
--	}
--	alloced_mask = &hv_context.hv_numa_map[numa_node];
- 
--	if (cpumask_weight(alloced_mask) ==
--	    cpumask_weight(cpumask_of_node(numa_node))) {
--		/*
--		 * We have cycled through all the CPUs in the node;
--		 * reset the alloced map.
--		 */
--		cpumask_clear(alloced_mask);
--	}
-+		cpumask_xor(available_mask, alloced_mask,
-+			    cpumask_of_node(numa_node));
- 
--	cpumask_xor(available_mask, alloced_mask, cpumask_of_node(numa_node));
-+		target_cpu = cpumask_first(available_mask);
-+		cpumask_set_cpu(target_cpu, alloced_mask);
- 
--	target_cpu = cpumask_first(available_mask);
--	cpumask_set_cpu(target_cpu, alloced_mask);
-+		if (channel->offermsg.offer.sub_channel_index >= ncpu ||
-+		    i > ncpu || !hv_cpuself_used(target_cpu, channel))
-+			break;
-+	}
- 
- 	channel->target_cpu = target_cpu;
- 
--- 
-2.25.1
+>=20
+> > +
+> > +	az_blob_remove_vmbus(dev);
+> > +	return 0;
+> > +}
+> > +
+> > +static struct hv_driver az_blob_drv =3D {
+> > +	.name =3D KBUILD_MODNAME,
+> > +	.id_table =3D id_table,
+> > +	.probe =3D az_blob_probe,
+> > +	.remove =3D az_blob_remove,
+> > +	.driver =3D {
+> > +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> > +	},
+> > +};
+> > +
+> > +static int __init az_blob_drv_init(void) {
+> > +	return vmbus_driver_register(&az_blob_drv);
+> > +}
+> > +
+> > +static void __exit az_blob_drv_exit(void) {
+> > +	vmbus_driver_unregister(&az_blob_drv);
+> > +}
+> > +
+> > +MODULE_LICENSE("Dual BSD/GPL");
+> > +MODULE_DESCRIPTION("Microsoft Azure Blob driver");
+> > +module_init(az_blob_drv_init); module_exit(az_blob_drv_exit);
+> > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> > index 705e95d..3095611 100644
+> > --- a/drivers/hv/channel_mgmt.c
+> > +++ b/drivers/hv/channel_mgmt.c
+> > @@ -154,6 +154,13 @@
+> >  	  .allowed_in_isolated =3D false,
+> >  	},
+> >
+> > +	/* Azure Blob */
+> > +	{ .dev_type =3D HV_AZURE_BLOB,
+> > +	  HV_AZURE_BLOB_GUID,
+> > +	  .perf_device =3D false,
+> > +	  .allowed_in_isolated =3D false,
+> > +	},
+> > +
+> >  	/* Unknown GUID */
+> >  	{ .dev_type =3D HV_UNKNOWN,
+> >  	  .perf_device =3D false,
+> > diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h index
+> > d1e59db..ac31362 100644
+> > --- a/include/linux/hyperv.h
+> > +++ b/include/linux/hyperv.h
+> > @@ -772,6 +772,7 @@ enum vmbus_device_type {
+> >  	HV_FCOPY,
+> >  	HV_BACKUP,
+> >  	HV_DM,
+> > +	HV_AZURE_BLOB,
+> >  	HV_UNKNOWN,
+> >  };
+> >
+> > @@ -1350,6 +1351,14 @@ int vmbus_allocate_mmio(struct resource
+> **new, struct hv_device *device_obj,
+> >  			  0x72, 0xe2, 0xff, 0xb1, 0xdc, 0x7f)
+> >
+> >  /*
+> > + * Azure Blob GUID
+> > + * {0590b792-db64-45cc-81db-b8d70c577c9e}
+> > + */
+> > +#define HV_AZURE_BLOB_GUID \
+> > +	.guid =3D GUID_INIT(0x0590b792, 0xdb64, 0x45cc, 0x81, 0xdb, \
+> > +			  0xb8, 0xd7, 0x0c, 0x57, 0x7c, 0x9e)
+> > +
+> > +/*
+> >   * Shutdown GUID
+> >   * {0e0b6031-5213-4934-818b-38d90ced39db}
+> >   */
+> > diff --git a/include/uapi/misc/azure_blob.h
+> > b/include/uapi/misc/azure_blob.h new file mode 100644 index
+> > 0000000..f4168679
+> > --- /dev/null
+> > +++ b/include/uapi/misc/azure_blob.h
+> > @@ -0,0 +1,34 @@
+> > +/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0-only WITH
+> > +Linux-syscall-note */
+> > +/* Copyright (c) Microsoft Corporation. */
+> > +
+> > +#ifndef _AZ_BLOB_H
+> > +#define _AZ_BLOB_H
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/uuid.h>
+> > +
+> > +/* user-mode sync request sent through ioctl */ struct
+> > +az_blob_request_sync_response {
+> > +	__u32 status;
+> > +	__u32 response_len;
+> > +};
+> > +
+> > +struct az_blob_request_sync {
+> > +	guid_t guid;
+> > +	__u32 timeout;
+> > +	__u32 request_len;
+> > +	__u32 response_len;
+> > +	__u32 data_len;
+> > +	__u32 data_valid;
+> > +	__aligned_u64 request_buffer;
+>=20
+> Is there an implied 32-bit padding field before "request_buffer"?
+> It seems like "yes", since there are five 32-bit field preceding.
+> Would it be better to explicitly list that padding field?
+>=20
+> > +	__aligned_u64 response_buffer;
+> > +	__aligned_u64 data_buffer;
+> > +	struct az_blob_request_sync_response response; };
+> > +
+> > +#define AZ_BLOB_MAGIC_NUMBER	'R'
+> > +#define IOCTL_AZ_BLOB_DRIVER_USER_REQUEST \
+> > +		_IOWR(AZ_BLOB_MAGIC_NUMBER, 0xf0, \
+> > +			struct az_blob_request_sync)
+> > +
+> > +#endif /* define _AZ_BLOB_H */
+> > --
+> > 1.8.3.1
 
