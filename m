@@ -2,81 +2,72 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49F763CC72B
-	for <lists+linux-hyperv@lfdr.de>; Sun, 18 Jul 2021 03:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F0C03CD09F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Jul 2021 11:26:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232685AbhGRBtH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 17 Jul 2021 21:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbhGRBtG (ORCPT
+        id S235207AbhGSInj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Jul 2021 04:43:39 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:46063 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235172AbhGSIni (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 17 Jul 2021 21:49:06 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E51C061762
-        for <linux-hyperv@vger.kernel.org>; Sat, 17 Jul 2021 18:46:09 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id oz7so17797277ejc.2
-        for <linux-hyperv@vger.kernel.org>; Sat, 17 Jul 2021 18:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=zhc4sNO4YwZX3YH/Z2Pm1GDok8umxrWhReSIgmRsWUw=;
-        b=kvQrbRItYsv8h3rZ9kcy04lU9XZCNO5LzH+hrLe7Qdbm340DhSng2QGoo2PE55xYh1
-         pRx5mIl7KGEgioO356zgGjcmzGXzbyZWacbUusr1q0sr2PlNq0JmHioYYiRMESMR2L9g
-         ZUPKAHAj3/uPavVYxudomRNmTdrNotOmuRugvauKJshYZRxffSV7hR3zuWeJ5zLMs8wJ
-         J+A7PDb5IkejDZgeeEWRsTyNjY3YG7PEA4to+3wmZmOU2IVQDTvPQsivmJNDg/0dvlvW
-         SilscyWon8E4gGWxc0o6zV8O5divFP/oplqsUnfwEd4h5Hf8Tt6axRcx2nEb2daedvQg
-         Rnxg==
+        Mon, 19 Jul 2021 04:43:38 -0400
+Received: by mail-wr1-f42.google.com with SMTP id t5so21109300wrw.12;
+        Mon, 19 Jul 2021 02:24:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=zhc4sNO4YwZX3YH/Z2Pm1GDok8umxrWhReSIgmRsWUw=;
-        b=F66Ke9f0383lVmTRr3r6sgfFoumeSt/kHieldR7foXLj4S3ZAryGkJdxNjTlJZFjT9
-         5GkupMwy9iWJ4bgXcEsO5Ajrp3ugq2+1eaBXvSlqW+1KGdTuAMKlXPVBovH9cs9ow3rV
-         6qWPyhZqunUMaLNxbSopwkmcyroK6yj96demtWZ7iAW4V4Dus9yJ61mOyJRwdmPD25FB
-         tEvo7Hsm4wQchSkQwUL+EJJtjr2b4pUeRzy0AslKyNWcEF6TecYqVJVXJ9ef0KuU/0ZB
-         wmoEkpE63ovle0/uW1ULZ+TT0HY4C4FlK44iPVpA7zAdysNTz4C5M0RkaRMadepgMHrj
-         pkMw==
-X-Gm-Message-State: AOAM530EVgFC7xKh/rm/HdGuj0mOoWhEtkNJMnkLfAVBJT9EVVowiJ6/
-        HVuR0h4Okm3ALmIVD51g+F5A4bBMkGwEwFKx2jw=
-X-Google-Smtp-Source: ABdhPJyhEgZsYm/iTwWfvq+lyuX7Xb54AugLZLXJ0g/NfjDjSDBTPQ2Qci3k+t5OtAcydudtPcgQu1tt3L+pzCn/Igw=
-X-Received: by 2002:a17:906:a2c4:: with SMTP id by4mr1389343ejb.521.1626572767738;
- Sat, 17 Jul 2021 18:46:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=D3+c2ib1Q+/SzUS6dxaIqKRFtrtYa6zrwTRQZyhXL/s=;
+        b=SNErU1uzo5XPbbJ379D2iIP2IgpV1Yr60F21uMAoadqgEt5kT49PxRRIW2cw5NBJFm
+         x3HaBAsy4KahAWOhJ60bXU69DEpeRjfJp7Dqok7gbctXDyi4Ws/lWKtNKgC08ElRw+3K
+         +ie++AjoEJiDVpC+VlnkCdV/hdSiF5XDZZOGTEQWhibFB8ZEAemVTVbW4LhWPMBiEL5C
+         dHHMcKY1RYy1+lop4yOTP/9VqsEaJkEhLHpQY26CGlhId8qnboqMNYKt4n2AN8nUKUFf
+         CER2lBS+6aDnEWmgnTjvzijLoPzLcdKI6kOTpz/+jkp3ZhKHXGmMsg1xor2/hvK6bsjw
+         4EIA==
+X-Gm-Message-State: AOAM533zb3HRPnaGU9L4FSG0W0d8lnLEXcwMQsLg7H6ELy9oOOK5et8Q
+        etgpQ55EVn9k1GXsczyhTBg=
+X-Google-Smtp-Source: ABdhPJxoEfX4pJX2uzno93/+e0vFnAvCo8Sa4iB6M7aAQK75IwQ7dbGyawzTWC3D0m9Is/TMX0yCew==
+X-Received: by 2002:a5d:53c5:: with SMTP id a5mr28942225wrw.15.1626686657747;
+        Mon, 19 Jul 2021 02:24:17 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id z7sm15190274wmp.34.2021.07.19.02.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jul 2021 02:24:17 -0700 (PDT)
+Date:   Mon, 19 Jul 2021 09:24:15 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     sthemmin@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 1/1] drivers: hv: Decouple Hyper-V clock/timer code from
+ VMbus drivers
+Message-ID: <20210719092415.vgx2xsk2vsppojzp@liuwe-devbox-debian-v2>
+References: <1626220906-22629-1-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-Sender: sdavid46620@gmail.com
-Received: by 2002:a17:907:76b7:0:0:0:0 with HTTP; Sat, 17 Jul 2021 18:46:07
- -0700 (PDT)
-From:   "Mr. Mustafa Ali." <mustafaliali85@gmail.com>
-Date:   Sun, 18 Jul 2021 02:46:07 +0100
-X-Google-Sender-Auth: fe82BAxaDwNkqwDYRdTYY6Q_wtQ
-Message-ID: <CAE1Pi3oejOdZR0Kfpm9boZhnskMUu8fNF6kFDs2odOkbmvJKGA@mail.gmail.com>
-Subject: Greetings Dear Friend.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1626220906-22629-1-git-send-email-mikelley@microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello Friend,
+On Tue, Jul 13, 2021 at 05:01:46PM -0700, Michael Kelley wrote:
+> Hyper-V clock/timer code in hyperv_timer.c is mostly independent from
+> other VMbus drivers, but building for ARM64 without hyperv_timer.c
+> shows some remaining entanglements.  A default implementation of
+> hv_read_reference_counter can just read a Hyper-V synthetic register
+> and be independent of hyperv_timer.c, so move this code out and into
+> hv_common.c. Then it can be used by the timesync driver even if
+> hyperv_timer.c isn't built on a particular architecture.  If
+> hyperv_timer.c *is* built, it can override with a faster implementation.
+> 
+> Also provide stubs for stimer functions called by the VMbus driver when
+> hyperv_timer.c isn't built.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 
-This message might meet you in utmost surprise. However, It's just my
-urgent needed for a foreign partner that made me contact you for this
-transaction. I assured you of honesty and reliability to champion this
-business opportunity. I am a banker by profession in Turkey, and
-currently holding the post of Auditor in Standard Chartered Bank.
-
-
-I have the opportunity of transferring the leftover funds ($15 Million
-Dollars) of one of my clients who died along with his entire family in
-crisis in Myanmar Asia. I am inviting you for a business deal where
-this money can be shared between us if you agree to my business
-proposal.
-
-
-Further details of the transfer will be forwarded to you immediately
-after I receive your return letter.
-
-
-Best Regards,
-Mr. Mustafa Ali.
+Applied to hyperv-next. Thanks.
