@@ -2,165 +2,158 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A6993CEF4F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jul 2021 00:31:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69C6C3CF2AD
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jul 2021 05:34:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239522AbhGSVnG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Jul 2021 17:43:06 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:57766 "EHLO
+        id S239263AbhGTCxG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Jul 2021 22:53:06 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:40618 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383782AbhGSSKz (ORCPT
+        with ESMTP id S240515AbhGTCut (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Jul 2021 14:10:55 -0400
-Received: from localhost.localdomain (unknown [223.226.82.147])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8199320B7188;
-        Mon, 19 Jul 2021 11:51:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8199320B7188
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1626720694;
-        bh=HgD0g6vZbqzb4PGD2nsdwqgVmIn9EK94eSJ5FBcHXH8=;
+        Mon, 19 Jul 2021 22:50:49 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id D1E5020B7178; Mon, 19 Jul 2021 20:31:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D1E5020B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1626751883;
+        bh=+yPMJaQtcLTsFBtRILqc6LXrWgm8NmSEzBdhbuZktUA=;
         h=From:To:Cc:Subject:Date:From;
-        b=JVmY2yqj2yRaueG3odGAAPDRttMwVMt070CtWJ4PhRjlilpkiBuXKVdSDSpcr0D6E
-         dEOjH5pCg+nfyRJJYZG0tqFf2La+a6ivgMBmilI63vdFGN5XPwOCRiM92I2XYS/xYW
-         2CvSarath8dixb9DGIWzQSJpSmX6l3tGgNO1oegQ=
-From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
-To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        viremana@linux.microsoft.com, sunilmut@microsoft.com,
-        nunodasneves@linux.microsoft.com
-Subject: [PATCH] hyperv: root partition faults writing to VP ASSIST MSR PAGE
-Date:   Tue, 20 Jul 2021 00:21:26 +0530
-Message-Id: <20210719185126.3740-1-kumarpraveen@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
+        b=LFmorg5sZOIHyaC+PyRq9EbTsBjTNI7X10BXa7e9FoOQ3px+NYgeLeNUMhbWznrES
+         xlfh83t1UJU7oecoorR87Mg5lLBsmXPoOFtBIoCalbAatJYGTR8ICpfMgKohjfb5Dh
+         uiS17hOFRh0nmsBNcNIEvsjTGpQaHZqGGpF4k6ow=
+From:   longli@linuxonhyperv.com
+To:     linux-fs@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v4 0/3] Introduce a driver to support host accelerated access to Microsoft Azure Blob
+Date:   Mon, 19 Jul 2021 20:31:03 -0700
+Message-Id: <1626751866-15765-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The root partition is not supposed to write to VP ASSIST PAGE as this MSR
-is specific to Guest VP, and thus below stack is observed.
+From: Long Li <longli@microsoft.com>
 
-[    2.778197] unchecked MSR access error: WRMSR to 0x40000073 (tried to write 0x0000000145ac5001) at rIP: 0xffffffff810c1084 (native_write_msr+0x4/0x30)
-[    2.784867] Call Trace:
-[    2.791507]  hv_cpu_init+0xf1/0x1c0
-[    2.798144]  ? hyperv_report_panic+0xd0/0xd0
-[    2.804806]  cpuhp_invoke_callback+0x11a/0x440
-[    2.811465]  ? hv_resume+0x90/0x90
-[    2.818137]  cpuhp_issue_call+0x126/0x130
-[    2.824782]  __cpuhp_setup_state_cpuslocked+0x102/0x2b0
-[    2.831427]  ? hyperv_report_panic+0xd0/0xd0
-[    2.838075]  ? hyperv_report_panic+0xd0/0xd0
-[    2.844723]  ? hv_resume+0x90/0x90
-[    2.851375]  __cpuhp_setup_state+0x3d/0x90
-[    2.858030]  hyperv_init+0x14e/0x410
-[    2.864689]  ? enable_IR_x2apic+0x190/0x1a0
-[    2.871349]  apic_intr_mode_init+0x8b/0x100
-[    2.878017]  x86_late_time_init+0x20/0x30
-[    2.884675]  start_kernel+0x459/0x4fb
-[    2.891329]  secondary_startup_64_no_verify+0xb0/0xbb
+Microsoft Azure Blob storage service exposes a REST API to applications
+for data access.
+(https://docs.microsoft.com/en-us/rest/api/storageservices/blob-service-rest-api)
 
-Root partition actually shares the VP ASSIST page with hypervisor, and
-thus as a solution, this patch memremaps the memory from hypervisor
-during hv_cpu_init and unmaps during hv_cpu_die calls.
+This patchset implements a VSC (Virtualization Service Consumer) that
+communicates with a VSP (Virtualization Service Provider) on the Hyper-V
+host to execute Blob storage access via native network stack on the host.
+This VSC doesn't implement the semantics of REST API. Those are implemented
+in user-space. The VSC provides a fast data path to VSP.
 
-Further, this patch also resolve some error handling and checkpatch
-errors
+Answers to some previous questions discussing the driver:
 
-Signed-off-by: Praveen Kumar <kumarpraveen@linux.microsoft.com>
----
- arch/x86/hyperv/hv_init.c | 57 +++++++++++++++++++++++++++------------
- 1 file changed, 40 insertions(+), 17 deletions(-)
+Q: Why this driver doesn't use the block layer
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 6f247e7e07eb..292b17e0b173 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -44,7 +44,7 @@ EXPORT_SYMBOL_GPL(hv_vp_assist_page);
- 
- static int hv_cpu_init(unsigned int cpu)
- {
--	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
-+	struct hv_vp_assist_page **hvp = NULL;
- 	int ret;
- 
- 	ret = hv_common_cpu_init(cpu);
-@@ -54,25 +54,43 @@ static int hv_cpu_init(unsigned int cpu)
- 	if (!hv_vp_assist_page)
- 		return 0;
- 
-+	hvp = &hv_vp_assist_page[smp_processor_id()];
-+
- 	/*
--	 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
--	 * 5.2.1 "GPA Overlay Pages"). Here it must be zeroed out to make sure
--	 * we always write the EOI MSR in hv_apic_eoi_write() *after* the
--	 * EOI optimization is disabled in hv_cpu_die(), otherwise a CPU may
--	 * not be stopped in the case of CPU offlining and the VM will hang.
-+	 * For Root partition we need to map the hypervisor VP ASSIST PAGE
-+	 * instead of allocating a new page.
- 	 */
--	if (!*hvp) {
--		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
--	}
-+	if (hv_root_partition &&
-+	    ms_hyperv.features & HV_MSR_APIC_ACCESS_AVAILABLE) {
-+		union hv_x64_msr_hypercall_contents hypercall_msr;
-+
-+		rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, hypercall_msr.as_uint64);
-+		/* remapping to root partition address space */
-+		*hvp = memremap(hypercall_msr.guest_physical_address <<
-+					HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
-+				PAGE_SIZE, MEMREMAP_WB);
-+		WARN_ON(!(*hvp));
-+	} else {
-+		/*
-+		 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's
-+		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
-+		 * out to make sure we always write the EOI MSR in
-+		 * hv_apic_eoi_write() *after* the EOI optimization is disabled
-+		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
-+		 * case of CPU offlining and the VM will hang.
-+		 */
-+		if (!*hvp)
-+			*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
- 
--	if (*hvp) {
--		u64 val;
-+		if (*hvp) {
-+			u64 val;
- 
--		val = vmalloc_to_pfn(*hvp);
--		val = (val << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) |
--			HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
-+			val = vmalloc_to_pfn(*hvp);
-+			val = (val << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) |
-+				HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
- 
--		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, val);
-+			wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, val);
-+		}
- 	}
- 
- 	return 0;
-@@ -170,8 +188,13 @@ static int hv_cpu_die(unsigned int cpu)
- 
- 	hv_common_cpu_die(cpu);
- 
--	if (hv_vp_assist_page && hv_vp_assist_page[cpu])
--		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
-+	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
-+		if (hv_root_partition &&
-+		    ms_hyperv.features & HV_MSR_APIC_ACCESS_AVAILABLE)
-+			memunmap(hv_vp_assist_page[cpu]);
-+		else
-+			wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
-+	}
- 
- 	if (hv_reenlightenment_cb == NULL)
- 		return 0;
+A: The Azure Blob is based on a model of object oriented storage. The
+storage object is not modeled in block sectors. While it's possible to
+present the storage object as a block device (assuming it makes sense to
+fake all the block device attributes), we lose the ability to express
+functionality that are defined in the REST API. 
+
+Q: You just lost all use of caching and io_uring and loads of other kernel
+infrastructure that has been developed and relied on for decades?
+
+A: The REST API is not designed to have caching at system level. This
+driver doesn't attempt to improve on this. There are discussions on
+supporting ioctl() on io_uring (https://lwn.net/Articles/844875/), that
+will benefit this driver. The block I/O scheduling is not helpful in this
+case, as the Blob application and Blob storage server have complete
+knowledge on the I/O pattern based on storage object type. This knowledge
+doesn't get easily consumed by the block layer.
+
+Q: You also just abandoned the POSIX model and forced people to use a
+random-custom-library just to access their storage devices, breaking all
+existing programs in the world?
+
+A: The existing Blob applications access storage via HTTP (REST API). They
+don't use POSIX interface. The interface for Azure Blob is not designed
+on POSIX.
+
+Q: What programs today use this new API?
+
+A: Currently none is released. But per above, there are also none using
+POSIX.
+
+Q: Where is the API published and what ensures that it will remain stable?
+
+A: Cloud based REST protocols have similar considerations to the kernel in
+terms of interface stability. Applications depend on cloud services via
+REST in much the same way as they depend on kernel services. Because
+applications can consume cloud APIs over the Internet, there is no
+opportunity to recompile applications to ensure compatibility. This causes
+the underlying APIs to be exceptionally stable, and Azure Blob has not
+removed support for an exposed API to date. This driver is supporting a
+pass-through model where requests in a guest process can be reflected to a
+VM host environment. Like the current REST interface, the goal is to ensure
+that each host provide a high degree of compatibility with each guest, but
+that task is largely outside the scope of this driver, which exists to
+communicate requests in the same way an HTTP stack would. Just like an HTTP
+stack does not require updates to add a new custom header or receive one
+from a server, this driver does not require updates for new functionality
+so long as the high level request/response model is retained.
+
+Q: What happens when it changes over time, do we have to rebuild all
+userspace applications?
+
+A: No. We don’t rebuild them all to talk HTTP either. In the current HTTP
+scheme, applications specify the version of the protocol they talk, and the
+storage backend responds with that version.
+
+Q: What happens to the kernel code over time, how do you handle changes to
+the API there?
+
+A: The goal of this driver is to get requests to the Hyper-V host, so the
+kernel isn’t involved in API changes, in the same way that HTTP
+implementations are robust to extra functionality being added to HTTP.
+
+Long Li (3):
+  Drivers: hv: vmbus: add support to ignore certain PCIE devices
+  Drivers: hv: add Azure Blob driver
+  Drivers: hv: Add to maintainer for Azure Blob driver
+
+Changes:
+
+v2:
+Refactored the code in vmbus to scan devices
+Reworked Azure Blob driver and moved user-mode interfaces to uapi
+
+v3:
+Changed licensing language
+Patch format passed "checkpatch --strict"
+debugfs and logging, module parameter cleanup
+General code clean up
+Fix device removal race conditions
+
+v4:
+addressed licencing issues
+changed to dynamic device model
+
+Long Li (3):
+  Drivers: hv: vmbus: add support to ignore certain PCIE devices
+  Drivers: hv: add Azure Blob driver
+  Drivers: hv: Add to maintainer for Hyper-V/Azure drivers
+
+ .../userspace-api/ioctl/ioctl-number.rst      |   2 +
+ MAINTAINERS                                   |   2 +
+ drivers/hv/Kconfig                            |  11 +
+ drivers/hv/Makefile                           |   1 +
+ drivers/hv/channel_mgmt.c                     |  55 +-
+ drivers/hv/hv_azure_blob.c                    | 628 ++++++++++++++++++
+ include/linux/hyperv.h                        |   9 +
+ include/uapi/misc/hv_azure_blob.h             |  34 +
+ 8 files changed, 736 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/hv/hv_azure_blob.c
+ create mode 100644 include/uapi/misc/hv_azure_blob.h
+
 -- 
-2.23.4
+2.25.1
 
