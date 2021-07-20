@@ -2,135 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A2563CFB9D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jul 2021 16:11:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE0273CFCCB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jul 2021 16:59:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232253AbhGTNWJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Jul 2021 09:22:09 -0400
-Received: from verein.lst.de ([213.95.11.211]:55312 "EHLO verein.lst.de"
+        id S232284AbhGTOS0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Jul 2021 10:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239348AbhGTNOG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Jul 2021 09:14:06 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C76616736F; Tue, 20 Jul 2021 15:54:37 +0200 (CEST)
-Date:   Tue, 20 Jul 2021 15:54:37 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, joro@8bytes.org,
-        will@kernel.org, davem@davemloft.net, kuba@kernel.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
-        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        kirill.shutemov@linux.intel.com, akpm@linux-foundation.org,
-        rppt@kernel.org, Tianyu.Lan@microsoft.com, thomas.lendacky@amd.com,
-        ardb@kernel.org, robh@kernel.org, nramas@linux.microsoft.com,
-        pgonda@google.com, martin.b.radev@gmail.com, david@redhat.com,
-        krish.sadhukhan@oracle.com, saravanand@fb.com,
-        xen-devel@lists.xenproject.org, keescook@chromium.org,
-        rientjes@google.com, hannes@cmpxchg.org,
-        michael.h.kelley@microsoft.com, iommu@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, vkuznets@redhat.com, brijesh.singh@amd.com,
-        anparri@microsoft.com
-Subject: Re: [Resend RFC PATCH V4 09/13] x86/Swiotlb/HV: Add Swiotlb bounce
- buffer remap function for HV IVM
-Message-ID: <20210720135437.GA13554@lst.de>
-References: <20210707154629.3977369-1-ltykernel@gmail.com> <20210707154629.3977369-10-ltykernel@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210707154629.3977369-10-ltykernel@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S235601AbhGTN5u (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 20 Jul 2021 09:57:50 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B901A6101E;
+        Tue, 20 Jul 2021 14:38:28 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1m5qt8-00EWxu-LT; Tue, 20 Jul 2021 15:38:26 +0100
+Date:   Tue, 20 Jul 2021 15:38:26 +0100
+Message-ID: <87v95582zh.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC v5 8/8] PCI: hv: Turn on the host bridge probing on ARM64
+In-Reply-To: <20210720134429.511541-9-boqun.feng@gmail.com>
+References: <20210720134429.511541-1-boqun.feng@gmail.com>
+        <20210720134429.511541-9-boqun.feng@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: boqun.feng@gmail.com, bhelgaas@google.com, arnd@arndb.de, catalin.marinas@arm.com, will@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, sunilmut@microsoft.com, rppt@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Tue, 20 Jul 2021 14:44:29 +0100,
+Boqun Feng <boqun.feng@gmail.com> wrote:
+> 
+> Now we have everything we need, just provide a proper sysdata type for
+> the bus to use on ARM64 and everything else works.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e6276aaa4659..62dbe98d1fe1 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -40,6 +40,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-ecam.h>
+>  #include <linux/delay.h>
+>  #include <linux/semaphore.h>
+>  #include <linux/irqdomain.h>
+> @@ -448,7 +449,11 @@ enum hv_pcibus_state {
+>  };
+>  
+>  struct hv_pcibus_device {
+> +#ifdef CONFIG_X86
+>  	struct pci_sysdata sysdata;
+> +#elif defined(CONFIG_ARM64)
+> +	struct pci_config_window sysdata;
+> +#endif
 
-Please split the swiotlb changes into a separate patch from the
-consumer.
+Am I the only one who find this rather odd? Nothing ever populates
+this data structure on arm64, and its only purpose seems to serve as
+an anchor to retrieve the hbus via container_of().
 
->  }
-> +
-> +/*
-> + * hv_map_memory - map memory to extra space in the AMD SEV-SNP Isolation VM.
-> + */
-> +unsigned long hv_map_memory(unsigned long addr, unsigned long size)
-> +{
-> +	unsigned long *pfns = kcalloc(size / HV_HYP_PAGE_SIZE,
-> +				      sizeof(unsigned long),
-> +		       GFP_KERNEL);
-> +	unsigned long vaddr;
-> +	int i;
-> +
-> +	if (!pfns)
-> +		return (unsigned long)NULL;
-> +
-> +	for (i = 0; i < size / HV_HYP_PAGE_SIZE; i++)
-> +		pfns[i] = virt_to_hvpfn((void *)addr + i * HV_HYP_PAGE_SIZE) +
-> +			(ms_hyperv.shared_gpa_boundary >> HV_HYP_PAGE_SHIFT);
-> +
-> +	vaddr = (unsigned long)vmap_pfn(pfns, size / HV_HYP_PAGE_SIZE,
-> +					PAGE_KERNEL_IO);
-> +	kfree(pfns);
-> +
-> +	return vaddr;
+If that's indeed the case, I'd rather see an arch-specific to_hbus()
+helper that uses another (preexisting) field as the anchor for arm64.
 
-This seems to miss a 'select VMAP_PFN'.  But more importantly I don't
-think this actually works.  Various DMA APIs do expect a struct page
-backing, so how is this going to work with say dma_mmap_attrs or
-dma_get_sgtable_attrs?
+Thanks,
 
-> +static unsigned long __map_memory(unsigned long addr, unsigned long size)
-> +{
-> +	if (hv_is_isolation_supported())
-> +		return hv_map_memory(addr, size);
-> +
-> +	return addr;
-> +}
-> +
-> +static void __unmap_memory(unsigned long addr)
-> +{
-> +	if (hv_is_isolation_supported())
-> +		hv_unmap_memory(addr);
-> +}
-> +
-> +unsigned long set_memory_decrypted_map(unsigned long addr, unsigned long size)
-> +{
-> +	if (__set_memory_enc_dec(addr, size / PAGE_SIZE, false))
-> +		return (unsigned long)NULL;
-> +
-> +	return __map_memory(addr, size);
-> +}
-> +
-> +int set_memory_encrypted_unmap(unsigned long addr, unsigned long size)
-> +{
-> +	__unmap_memory(addr);
-> +	return __set_memory_enc_dec(addr, size / PAGE_SIZE, true);
-> +}
+	M.
 
-Why this obsfucation into all kinds of strange helpers?  Also I think
-we want an ops vectors (or alternative calls) instead of the random
-if checks here.
-
-> + * @vstart:	The virtual start address of the swiotlb memory pool. The swiotlb
-> + *		memory pool may be remapped in the memory encrypted case and store
-
-Normall we'd call this vaddr or cpu_addr.
-
-> -	set_memory_decrypted((unsigned long)vaddr, bytes >> PAGE_SHIFT);
-> -	memset(vaddr, 0, bytes);
-> +	mem->vstart = (void *)set_memory_decrypted_map((unsigned long)vaddr, bytes);
-
-Please always pass kernel virtual addresses as pointers.
-
-And I think these APIs might need better names, e.g.
-
-arch_dma_map_decrypted and arch_dma_unmap_decrypted.
-
-Also these will need fallback versions for non-x86 architectures that
-currently use memory encryption.
+-- 
+Without deviation from the norm, progress is not possible.
