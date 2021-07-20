@@ -2,145 +2,165 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BDDA3CFD91
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jul 2021 17:32:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D051A3CFD94
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jul 2021 17:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232542AbhGTOsW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Jul 2021 10:48:22 -0400
-Received: from mail-dm3nam07on2104.outbound.protection.outlook.com ([40.107.95.104]:14017
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238580AbhGTOSt (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Jul 2021 10:18:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cH//PYv3dTGZF+X5zwME+EnYdT+n6iNNK20913hIIebTuOPRCpDVu49KKhLmybuFf//hrr9qWDAy194v6gAK/syjdmLFFIbAtdyR8NZgYrQm+5hNNLwBaHCyJ5KSUrWfoyneVMZ46cJqKqq2+gJeHxT4z/QZ5JS2xv0IuM+XJ1+pC20KSSZCsGnIAxr0q1MTDXvj1zdefFUod9KpcAwr9PTwV9t42jB9mh9GxPC8BilV4QtG7DKkvJo4RnjtpNfvxTik9YTKQJqve6x7BvpZMRVTnlrLxLZyfaJwZ/wZR4iwSOwQnPoXmgMbAPqMdhVlgtswQ/y1Zci1Sm0rvNCSkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8xnCcy767WKevDP5UhHtnUI+xPQRl1REcs1nGDGtkcM=;
- b=VRP7phQvJOlDO8r+aU4/jOfao0fvJjP56nZak1H6hiQdGJGL2nI1A/vH9l/DXMdqPcl8XHleos67QPTHpl+9bYCaBlVFNbAptYB5MbMOdp7vOZWRGjaJqgQbecTU2R1NcQi4UUbsNMoPGiNn9ltdAw7bq0/bNaufn465RMe5WF8GxzI/OLdfozOjyYrkw1sgiltiAsujmL+QdGoxNyJ6fpSH4ANAW0W4DR99sDtYm557aw2pxZHYXjXLEXnzytIqPaNbaJxKX+4YAQXkzfcioDH7L5BCqJqDbdoXvH8QW31nhguT6sucZIY0SKE+1OvXcabI9Ht69jUwBSxMP6XT7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8xnCcy767WKevDP5UhHtnUI+xPQRl1REcs1nGDGtkcM=;
- b=a5Bl+gQGxqTGc3OsPvwVxdgpF4L+RAhPmeI3C9yKDSlQpzKYesknhCv727W1A4nhHAyLDyIpchHVjANA+CmBd03NtU+Gdfqr4nLTy2H1jVooVmZkpr5MCTK5IhfGGFXWWEorEA8MdL9d7n6+qhlc+KInF3yX35H0WiRcmMSdkSU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
- by DM5PR2101MB0981.namprd21.prod.outlook.com (2603:10b6:4:a8::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.4; Tue, 20 Jul
- 2021 14:57:27 +0000
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::3505:fa47:39d0:6dc5]) by DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::3505:fa47:39d0:6dc5%9]) with mapi id 15.20.4373.005; Tue, 20 Jul 2021
- 14:57:27 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        id S240053AbhGTOs4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Jul 2021 10:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240142AbhGTOXk (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 20 Jul 2021 10:23:40 -0400
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFBAC0613E6;
+        Tue, 20 Jul 2021 08:01:41 -0700 (PDT)
+Received: by mail-io1-xd2e.google.com with SMTP id k16so24267080ios.10;
+        Tue, 20 Jul 2021 08:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rqh2j+Ayr+W6oCbgsaoRs3C9KQ2NwKX2qzDHqghJU8A=;
+        b=QDQ2StR3eOJ9DSz/XEED4UdJYEaTc9e1ntF49N/yJK/ddvSKNU+F+Q/k4RimnL0U1l
+         Q1mch4xfPqaMnUMOZvar0GwkHY9vwD3hYFeVqaJuP8jq+Bq1WkPSbOmzNBs7W0vWalxc
+         Vv4AM9PWqWTsh6JyiCBv4ecyhoxJZ1qPj4gm8hck7zzXH6kDaNaLVya9a4sKurqkSr4j
+         fLzdskYvexAWDxhR2pKql2nV4QmlfPVr3C/xlxL+12XbFPoi6vCtXd7nFDGXlhDwwHn/
+         ILS+gupaAGCD4w08yIG/0DM6LaCHTISgy0w5alqcqYjdZQ8jx2m1YLIHeRxT47MTN80W
+         Z/iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rqh2j+Ayr+W6oCbgsaoRs3C9KQ2NwKX2qzDHqghJU8A=;
+        b=SnHwr4Rk3MVTDSX7ZX6o4n6MfXj05pamSchIY2qfimGWKF6tMdQuK043j3SsbsrtRw
+         k1qlRcySpShk2G2tWE8/1geKsxjqIHiSaUDklXDOPfSREOp1barPVNYmnrB+FFnoabrX
+         P2j7wyh9CMqxRgu+wTPMZm60j/GBGbKnMV6+AH28MTZxI89AMAFEjma8JllBhRFD7HKf
+         UuNxiVW8J828uYHLjP40byIkJbYd8gebEz6FuECecBuDCnd7crJAbBlOHECBXrmlOw6A
+         MqZ1Z43b6EMMZ67QkpjgEEavD0oxBK5B0hpyBJOXV4e+Ar/3nonNQAtQ2Vo07yRODSbG
+         VkbA==
+X-Gm-Message-State: AOAM533YD38GSM+InLJcyrJnGKw8xQHHnXVqqSFPExGUvvvDDC+K2Wi2
+        qN8E/o1X8D3evVtHDcz79Ok=
+X-Google-Smtp-Source: ABdhPJxhaXBgFSmd11R8aI9lQGwxuq4ljnVnDeDK96jRlx+t6kKHRJJPyC9TcQlbTm8vyuUHIKj8PQ==
+X-Received: by 2002:a05:6602:2155:: with SMTP id y21mr7441790ioy.16.1626793301015;
+        Tue, 20 Jul 2021 08:01:41 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id h1sm6841841ioz.22.2021.07.20.08.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jul 2021 08:01:40 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 4359027C005C;
+        Tue, 20 Jul 2021 11:01:38 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 20 Jul 2021 11:01:39 -0400
+X-ME-Sender: <xms:UeX2YL210GXluwnwjWxyN1URnUhIoBRa9nL1ZSvueBHWGDP0dUl5Kg>
+    <xme:UeX2YKFLV5U95Zngy1Gcx58XVyFlrXRgqkpUH2K07BZfcp34fHeiwjeO3TQSdnmLi
+    yQZseu4zJNJQXtAbw>
+X-ME-Received: <xmr:UeX2YL4x6lHIgddQmRoruVSoYxirVAdI2kR1SuXbuN5X1xy0M8fFHVNYttV1RQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfedvgdekudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpedvleeigedugfegveejhfejveeuveeiteejieekvdfgjeefudehfefhgfegvdeg
+    jeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvg
+X-ME-Proxy: <xmx:UeX2YA1Ocy0Bof4rI44E2fc_HJiPFyebZ97JqpQY9cY-8tdQrmzEXA>
+    <xmx:UeX2YOGtd2iHuGCRHtqi3IhWb46duvKVwcY-591lg0bfafzNVY4G1A>
+    <xmx:UeX2YB_Lf-sCsx_ymDrbnbseN5VadIpcqCjlxKDcC3RkVqB0-HuhOA>
+    <xmx:UuX2YM-qIwq60VaD_Rj1CskuEiIDqGt5oGN4oRKKBZfyRSn2DboQfa8CfZs>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 20 Jul 2021 11:01:37 -0400 (EDT)
+Date:   Tue, 20 Jul 2021 22:59:41 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
-        wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
-        ardb@kernel.org
-Cc:     mikelley@microsoft.com
-Subject: [PATCH v11 5/5] Drivers: hv: Enable Hyper-V code to be built on ARM64
-Date:   Tue, 20 Jul 2021 07:57:03 -0700
-Message-Id: <1626793023-13830-6-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1626793023-13830-1-git-send-email-mikelley@microsoft.com>
-References: <1626793023-13830-1-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR07CA0023.namprd07.prod.outlook.com
- (2603:10b6:300:116::33) To DM6PR21MB1514.namprd21.prod.outlook.com
- (2603:10b6:5:22d::11)
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC v5 8/8] PCI: hv: Turn on the host bridge probing on ARM64
+Message-ID: <YPbk3Ya20z1PDn2H@boqun-archlinux>
+References: <20210720134429.511541-1-boqun.feng@gmail.com>
+ <20210720134429.511541-9-boqun.feng@gmail.com>
+ <87v95582zh.wl-maz@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkdev.corp.microsoft.com (167.220.2.16) by MWHPR07CA0023.namprd07.prod.outlook.com (2603:10b6:300:116::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend Transport; Tue, 20 Jul 2021 14:57:26 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 65c35511-5203-4c63-e5ba-08d94b8eb0b6
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB0981:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB09819FCF0802BE2901B2C318D7E29@DM5PR2101MB0981.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8WYNnTay10XxhQFaZJtKJDA/saIZGPWRlXz+sZxz++bOpf5IBlSPN3/wK26CAlGPn16jH5Mi+/2fjk761I6uffH4hHnFKHzWOhBPD8PvQTC/+qzxsgK9Bjd9FU0rPjlf8413UQmk/wQRPg9EJFO56YnBZ4aCcp5yJqtNK4egESZZw9a6zg3XzDrKwlp5J60YmpJPdOdvZO+GDmrx8HiKfPsd/0hMfc+xOrzoEv8gjrYhWm9+15y+VcvfYdP0NlVNtV+c8DB5p6gDqL9yvn9ssuGSJaPhhtkubXztLI+K7Is/rygpHKHJ2LFB/mYgJeMGR/Mix3fqnxqFO3fb/in2sVbodK+tvn9jtBZWR6lwlp8r6y8UNeztq8Wn4xwW7hgsFpLhS84VqIMrCG0V+8QXEzP/oDXjL1l+Em0I+mTB0v0T1CFIpCB9yXaVjMMB6wIRYn6hu3fraecl4MTjpHzL4x+h/fhgf9uwD1eEYvG54Cg/sXCrMg1z6Su49SJhw1NS9NrU8pWote6khHpQ2w5PN3EJqL0uQfGxHicO72TFqWOOtU+7NYVNvmJDSIP/+zXW5czO0AACskV/JW3MSys9bEbdcbBoFf5hX7KWe1oFO/ydBuaeGZerv33WlWwW6DJguv1W5EVOM50ucP+GUhVK3hkcieiB4bp94VKxln36IyjJruiQflsm1L8f54ly7G/aUYjBdVyOJ0qd6lfsz/P2P30VrzR6rAKvwsPyakiJ2x8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(83380400001)(26005)(6666004)(36756003)(508600001)(956004)(10290500003)(66476007)(5660300002)(38350700002)(4326008)(8676002)(38100700002)(66946007)(2616005)(82950400001)(186003)(52116002)(7696005)(107886003)(6486002)(8936002)(82960400001)(4744005)(316002)(921005)(66556008)(86362001)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EgWdLkqOs3gYep9WaAJK2KKde+oRAxsntMiDp0bDcK0KnI+e1liy88xDSnS1?=
- =?us-ascii?Q?l6iI6jdHiZfJiY7LZhDCPybNfnTMR3Q82goclyi435sACmOxVQqjSfrPx7ED?=
- =?us-ascii?Q?jA8XjedDBnNi9AL8DEnVvbmn9NLri+pWXe7XRztoRRQhsaXENKw0fXt96YB0?=
- =?us-ascii?Q?zRwkCVHqC7k+7/UKyNPQqN6kD+q5k9yitJlpLKEbeWvSd3t+E9o6HWAtFjwO?=
- =?us-ascii?Q?dw/jWaZL7tmDJUHqh44mFksVN8QN0UPTOH+ioeZDn2xo76ENQak5z+LfcQ6q?=
- =?us-ascii?Q?8rcOpJX6weo1CjvU43e+eXHM4AYhApYslif9SiGN3vRUnjEBbWj6bI2ExSCq?=
- =?us-ascii?Q?eIqMhEy71h8iufzDMVPIoGoiAkBnPjUs4qMl4mpZJREHyzpDzTNyPbP3nFc7?=
- =?us-ascii?Q?Ad9E0DHzRHSX8B0tR+yPImxUMS9wA/pan2oDX75W40D8Py/zKikXPyMf7Gtb?=
- =?us-ascii?Q?Eh4iEuZCnCqNcQ0bTCn5LhYVO4UWraACpW7lT23UAEpqhGWS6izkRfWNM7ty?=
- =?us-ascii?Q?IfQrNNtKRWio8KVy8iUV/pTzdQkplbhweaHZL9RDz7AuldCepfbrFo1ghr1t?=
- =?us-ascii?Q?DI69ePtM/ZQqm6E+3g+qSOUQvuEWTyU9K7hM+YfuXSqihr319KKVPDvTiLOq?=
- =?us-ascii?Q?SFKCdGJbSoZxSX3jyucg/bBh7AP1sMT2aPfuZ9Mg0BDu5K66JSSDaLMJB7XU?=
- =?us-ascii?Q?8Z/Y4cmE8FXEGMXtp9oPKR1rzW5HiNmFNj7NksNwK4+CQLtACUIWjlv0BYn0?=
- =?us-ascii?Q?Kl25MIiCUMNq1DIj6svH2kJ9ww6G4X4fo0IzijJ4KGpNbzz1RnjjjQoT2oG9?=
- =?us-ascii?Q?iAkEejr5Sf+StpmgpSCKTH7o2EkG42dNdLgH4OVGS+tp8cOc8M8b2Y8adfNj?=
- =?us-ascii?Q?yFsVKpvrQKtMgUVUVkyAvoXz2t6be+GMy9Fz5odGdN82fSKJd9bY7Zlsm+LA?=
- =?us-ascii?Q?akY0IlBG+Uz3cdjLA7n4Gc2RnYzEbyHjm36GSAzPJarXraWjkWgBU2B+vCgD?=
- =?us-ascii?Q?hZl5sFG6lLNX1+e6SR4rOK4gw/PtC+pKHgFy89+bc0l7dS550x9iWgzFZ7SJ?=
- =?us-ascii?Q?EJDeD8h/9qq39EfGGLCazvedOWN8TXE0g79mUDS1MLa4RYTfyKLGKEpCnIf5?=
- =?us-ascii?Q?jVEL+SBGTmC4Xe7Fchf1VEnBxXAhMsvpl6B1U0t79/e4miS6YUgvTGLuKv2w?=
- =?us-ascii?Q?8EqxTcs4RRP3cA2lPjZCbD3Q/ZaI55OesOrEv5sGRsLCJwJdX22huFvKI2GE?=
- =?us-ascii?Q?L9mbuj4JFF2wpGBF0/FKUWp3m1DfXYfMTMTkEWAFqpXdwg80MCRH5OnMdro9?=
- =?us-ascii?Q?cB6yPErabwJzMhb0PkQY68aQ?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65c35511-5203-4c63-e5ba-08d94b8eb0b6
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2021 14:57:27.3225
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ibMGh1hKM6nsGlMLWGvV3ZC2XBPNPJ9Ko7jO5xocHUwiO7lekaSQAqoHDKH2YfCBCxTQRXsPYGmrBlfzt2XotA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0981
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v95582zh.wl-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Update drivers/hv/Kconfig so CONFIG_HYPERV can be selected on
-ARM64, causing the Hyper-V specific code to be built. Exclude the
-Hyper-V enlightened clocks/timers code from being built for ARM64.
+On Tue, Jul 20, 2021 at 03:38:26PM +0100, Marc Zyngier wrote:
+> On Tue, 20 Jul 2021 14:44:29 +0100,
+> Boqun Feng <boqun.feng@gmail.com> wrote:
+> > 
+> > Now we have everything we need, just provide a proper sysdata type for
+> > the bus to use on ARM64 and everything else works.
+> > 
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> >  drivers/pci/controller/pci-hyperv.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > index e6276aaa4659..62dbe98d1fe1 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -40,6 +40,7 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> >  #include <linux/pci.h>
+> > +#include <linux/pci-ecam.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/semaphore.h>
+> >  #include <linux/irqdomain.h>
+> > @@ -448,7 +449,11 @@ enum hv_pcibus_state {
+> >  };
+> >  
+> >  struct hv_pcibus_device {
+> > +#ifdef CONFIG_X86
+> >  	struct pci_sysdata sysdata;
+> > +#elif defined(CONFIG_ARM64)
+> > +	struct pci_config_window sysdata;
+> > +#endif
+> 
+> Am I the only one who find this rather odd? Nothing ever populates
+> this data structure on arm64, and its only purpose seems to serve as
+> an anchor to retrieve the hbus via container_of().
+> 
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/hv/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This field will also be used as the ->sysdata of pci_bus and
+pci_host_bridge, and some of the PCI core code touches. Although I made
+this field as all zeroed and make sure PCI core can handle (patch #4).
 
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 66c794d..e509d5d 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -4,7 +4,8 @@ menu "Microsoft Hyper-V guest support"
- 
- config HYPERV
- 	tristate "Microsoft Hyper-V client drivers"
--	depends on X86 && ACPI && X86_LOCAL_APIC && HYPERVISOR_GUEST
-+	depends on ACPI && ((X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
-+		|| (ARM64 && !CPU_BIG_ENDIAN))
- 	select PARAVIRT
- 	select X86_HV_CALLBACK_VECTOR
- 	help
-@@ -12,7 +13,7 @@ config HYPERV
- 	  system.
- 
- config HYPERV_TIMER
--	def_bool HYPERV
-+	def_bool HYPERV && X86
- 
- config HYPERV_UTILS
- 	tristate "Microsoft Hyper-V Utilities driver"
--- 
-1.8.3.1
+> If that's indeed the case, I'd rather see an arch-specific to_hbus()
+> helper that uses another (preexisting) field as the anchor for arm64.
+> 
 
+I did a quick look, but I didn't find another field works: the field
+needs to be placed inside hv_pcibus_device and the address can be
+retrieved via pci_bus. I'm open to any suggestion in case that I missed
+something.
+
+Regards,
+Boqun
+
+> Thanks,
+> 
+> 	M.
+> 
+> -- 
+> Without deviation from the norm, progress is not possible.
