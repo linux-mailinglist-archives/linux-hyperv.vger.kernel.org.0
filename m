@@ -2,165 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D051A3CFD94
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jul 2021 17:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 253D23CFD95
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jul 2021 17:32:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240053AbhGTOs4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Jul 2021 10:48:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240142AbhGTOXk (ORCPT
+        id S240790AbhGTOtL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Jul 2021 10:49:11 -0400
+Received: from mail-pf1-f171.google.com ([209.85.210.171]:35341 "EHLO
+        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240016AbhGTOgO (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Jul 2021 10:23:40 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFBAC0613E6;
-        Tue, 20 Jul 2021 08:01:41 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id k16so24267080ios.10;
-        Tue, 20 Jul 2021 08:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rqh2j+Ayr+W6oCbgsaoRs3C9KQ2NwKX2qzDHqghJU8A=;
-        b=QDQ2StR3eOJ9DSz/XEED4UdJYEaTc9e1ntF49N/yJK/ddvSKNU+F+Q/k4RimnL0U1l
-         Q1mch4xfPqaMnUMOZvar0GwkHY9vwD3hYFeVqaJuP8jq+Bq1WkPSbOmzNBs7W0vWalxc
-         Vv4AM9PWqWTsh6JyiCBv4ecyhoxJZ1qPj4gm8hck7zzXH6kDaNaLVya9a4sKurqkSr4j
-         fLzdskYvexAWDxhR2pKql2nV4QmlfPVr3C/xlxL+12XbFPoi6vCtXd7nFDGXlhDwwHn/
-         ILS+gupaAGCD4w08yIG/0DM6LaCHTISgy0w5alqcqYjdZQ8jx2m1YLIHeRxT47MTN80W
-         Z/iw==
+        Tue, 20 Jul 2021 10:36:14 -0400
+Received: by mail-pf1-f171.google.com with SMTP id d12so19855359pfj.2;
+        Tue, 20 Jul 2021 08:15:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rqh2j+Ayr+W6oCbgsaoRs3C9KQ2NwKX2qzDHqghJU8A=;
-        b=SnHwr4Rk3MVTDSX7ZX6o4n6MfXj05pamSchIY2qfimGWKF6tMdQuK043j3SsbsrtRw
-         k1qlRcySpShk2G2tWE8/1geKsxjqIHiSaUDklXDOPfSREOp1barPVNYmnrB+FFnoabrX
-         P2j7wyh9CMqxRgu+wTPMZm60j/GBGbKnMV6+AH28MTZxI89AMAFEjma8JllBhRFD7HKf
-         UuNxiVW8J828uYHLjP40byIkJbYd8gebEz6FuECecBuDCnd7crJAbBlOHECBXrmlOw6A
-         MqZ1Z43b6EMMZ67QkpjgEEavD0oxBK5B0hpyBJOXV4e+Ar/3nonNQAtQ2Vo07yRODSbG
-         VkbA==
-X-Gm-Message-State: AOAM533YD38GSM+InLJcyrJnGKw8xQHHnXVqqSFPExGUvvvDDC+K2Wi2
-        qN8E/o1X8D3evVtHDcz79Ok=
-X-Google-Smtp-Source: ABdhPJxhaXBgFSmd11R8aI9lQGwxuq4ljnVnDeDK96jRlx+t6kKHRJJPyC9TcQlbTm8vyuUHIKj8PQ==
-X-Received: by 2002:a05:6602:2155:: with SMTP id y21mr7441790ioy.16.1626793301015;
-        Tue, 20 Jul 2021 08:01:41 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id h1sm6841841ioz.22.2021.07.20.08.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jul 2021 08:01:40 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 4359027C005C;
-        Tue, 20 Jul 2021 11:01:38 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Tue, 20 Jul 2021 11:01:39 -0400
-X-ME-Sender: <xms:UeX2YL210GXluwnwjWxyN1URnUhIoBRa9nL1ZSvueBHWGDP0dUl5Kg>
-    <xme:UeX2YKFLV5U95Zngy1Gcx58XVyFlrXRgqkpUH2K07BZfcp34fHeiwjeO3TQSdnmLi
-    yQZseu4zJNJQXtAbw>
-X-ME-Received: <xmr:UeX2YL4x6lHIgddQmRoruVSoYxirVAdI2kR1SuXbuN5X1xy0M8fFHVNYttV1RQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfedvgdekudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpedvleeigedugfegveejhfejveeuveeiteejieekvdfgjeefudehfefhgfegvdeg
-    jeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:UeX2YA1Ocy0Bof4rI44E2fc_HJiPFyebZ97JqpQY9cY-8tdQrmzEXA>
-    <xmx:UeX2YOGtd2iHuGCRHtqi3IhWb46duvKVwcY-591lg0bfafzNVY4G1A>
-    <xmx:UeX2YB_Lf-sCsx_ymDrbnbseN5VadIpcqCjlxKDcC3RkVqB0-HuhOA>
-    <xmx:UuX2YM-qIwq60VaD_Rj1CskuEiIDqGt5oGN4oRKKBZfyRSn2DboQfa8CfZs>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 20 Jul 2021 11:01:37 -0400 (EDT)
-Date:   Tue, 20 Jul 2021 22:59:41 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [RFC v5 8/8] PCI: hv: Turn on the host bridge probing on ARM64
-Message-ID: <YPbk3Ya20z1PDn2H@boqun-archlinux>
-References: <20210720134429.511541-1-boqun.feng@gmail.com>
- <20210720134429.511541-9-boqun.feng@gmail.com>
- <87v95582zh.wl-maz@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FxHKIA6d476YSwGem4oYqSqtuJwfzxZyIwIAv3Y/bLc=;
+        b=cNWLJLJguton8860X+8Yfy8TPhGNLPdE+Ur2H/KNUTa0G/4TOgtQE5adQ9T1jxiONA
+         O+/XAiOGuUCWqPcFXr330V8B8BXsnEui5hFfPId9sRkCYBt1ng+u7ccIlvrky4nf83Ot
+         z/U32vnwus+Vb8Gh7SOoKPiLLD4kPxqF/eRkMNFyK0QMe7MAEWCAyG1wP6MnKz5g6+dd
+         qD6CW8XO1dGtTT2v3E+O685Xx04rvZjeXTaP9e2JYTqX20HaBEpcrO2L4l8Y+3Kr2JjW
+         5YyjDYPo4gMI1OFq+XRFHuy8G+3NHx7SiBg7oY/mwZP4rpBBK75FdJNaafH5KQh80BwJ
+         PGJA==
+X-Gm-Message-State: AOAM533h/TRUindxCnjylgoLD32VB01eWWfnLznrfyx/Y2ShXQAjJhAB
+        Hko/w99dJxZcJCeO3MzsiMQ=
+X-Google-Smtp-Source: ABdhPJy9ELkMjd5dPxR/F99Bfm30AEv+7kHZdDzhtxub0LmnQYuoV9ZE9dN82yJxawaDDQZBuJfcsA==
+X-Received: by 2002:a63:3dcb:: with SMTP id k194mr31004732pga.202.1626794133080;
+        Tue, 20 Jul 2021 08:15:33 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:9fa9:39d2:8b59:76ce? ([2601:647:4000:d7:9fa9:39d2:8b59:76ce])
+        by smtp.gmail.com with ESMTPSA id n12sm25307625pgr.2.2021.07.20.08.15.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Jul 2021 08:15:32 -0700 (PDT)
+Subject: Re: [Patch v4 0/3] Introduce a driver to support host accelerated
+ access to Microsoft Azure Blob
+To:     Long Li <longli@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        "linux-fs@vger.kernel.org" <linux-fs@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+References: <1626751866-15765-1-git-send-email-longli@linuxonhyperv.com>
+ <82e8bec6-4f6f-08d7-90db-9661f675749d@acm.org>
+ <YPZmtOmpK6+znL0I@infradead.org>
+ <DM6PR21MB15138B5D5C8647C92EA6AB99CEE29@DM6PR21MB1513.namprd21.prod.outlook.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <115d864c-46c2-2bc8-c392-fd63d34c9ed0@acm.org>
+Date:   Tue, 20 Jul 2021 08:15:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v95582zh.wl-maz@kernel.org>
+In-Reply-To: <DM6PR21MB15138B5D5C8647C92EA6AB99CEE29@DM6PR21MB1513.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jul 20, 2021 at 03:38:26PM +0100, Marc Zyngier wrote:
-> On Tue, 20 Jul 2021 14:44:29 +0100,
-> Boqun Feng <boqun.feng@gmail.com> wrote:
-> > 
-> > Now we have everything we need, just provide a proper sysdata type for
-> > the bus to use on ARM64 and everything else works.
-> > 
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > index e6276aaa4659..62dbe98d1fe1 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -40,6 +40,7 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/pci-ecam.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/semaphore.h>
-> >  #include <linux/irqdomain.h>
-> > @@ -448,7 +449,11 @@ enum hv_pcibus_state {
-> >  };
-> >  
-> >  struct hv_pcibus_device {
-> > +#ifdef CONFIG_X86
-> >  	struct pci_sysdata sysdata;
-> > +#elif defined(CONFIG_ARM64)
-> > +	struct pci_config_window sysdata;
-> > +#endif
+On 7/20/21 12:05 AM, Long Li wrote:
+>> Subject: Re: [Patch v4 0/3] Introduce a driver to support host accelerated
+>> access to Microsoft Azure Blob
+>>
+>> On Mon, Jul 19, 2021 at 09:37:56PM -0700, Bart Van Assche wrote:
+>>> such that this object storage driver can be implemented as a
+>>> user-space library instead of as a kernel driver? As you may know vfio
+>>> users can either use eventfds for completion notifications or polling.
+>>> An interface like io_uring can be built easily on top of vfio.
+>>
+>> Yes.  Similar to say the NVMe K/V command set this does not look like a
+>> candidate for a kernel driver.
 > 
-> Am I the only one who find this rather odd? Nothing ever populates
-> this data structure on arm64, and its only purpose seems to serve as
-> an anchor to retrieve the hbus via container_of().
+> The driver is modeled to support multiple processes/users over a VMBUS
+> channel. I don't see a way that this can be implemented through VFIO? 
 > 
+> Even if it can be done, this exposes a security risk as the same VMBUS
+> channel is shared by multiple processes in user-mode.
 
-This field will also be used as the ->sysdata of pci_bus and
-pci_host_bridge, and some of the PCI core code touches. Although I made
-this field as all zeroed and make sure PCI core can handle (patch #4).
+Sharing a VMBUS channel among processes is not necessary. I propose to
+assign one VMBUS channel to each process and to multiplex I/O submitted
+to channels associated with the same blob storage object inside e.g. the
+hypervisor. This is not a new idea. In the NVMe specification there is a
+diagram that shows that multiple NVMe controllers can provide access to
+the same NVMe namespace. See also diagram "Figure 416: NVM Subsystem
+with Three I/O Controllers" in version 1.4 of the NVMe specification.
 
-> If that's indeed the case, I'd rather see an arch-specific to_hbus()
-> helper that uses another (preexisting) field as the anchor for arm64.
-> 
+Bart.
 
-I did a quick look, but I didn't find another field works: the field
-needs to be placed inside hv_pcibus_device and the address can be
-retrieved via pci_bus. I'm open to any suggestion in case that I missed
-something.
 
-Regards,
-Boqun
-
-> Thanks,
-> 
-> 	M.
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
