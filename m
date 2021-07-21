@@ -2,248 +2,262 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A2953D0813
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jul 2021 07:09:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 366583D082B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jul 2021 07:18:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbhGUE2V (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Jul 2021 00:28:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231706AbhGUE2S (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Jul 2021 00:28:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BC94F60FED;
-        Wed, 21 Jul 2021 05:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1626844134;
-        bh=8xr7SyJ/SR+q3zattaqRhO8P9X6cQlSVhvKXj24mG14=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=glJ5go50QoloMAjuogRswx0DYYhRGv87+a6Spv0UB5uTfI2h/tHCRC4ufEPmotwkF
-         htVW/51PPjwaj3G4bOeMIrCxdQpXl0Xi9KJ2NxNV54M5WQHNiuoeqVCXeNsBMKMv6I
-         5/NeHcjzJlZqglMsYQ3sJgh7q6Tz4Q/UR7rwbD7Y=
-Date:   Wed, 21 Jul 2021 07:08:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        id S232710AbhGUEiN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Jul 2021 00:38:13 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:44289 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232512AbhGUEiM (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 21 Jul 2021 00:38:12 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2B8DA581865;
+        Wed, 21 Jul 2021 01:18:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 21 Jul 2021 01:18:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=WhrD41ffNVn/36YzYIxJtzJhx5w
+        mUJTqLi2n9GMPzkE=; b=FSjejb7MRbDSICcqsuMdzuSjh8rWEsLU9Kgilxvohks
+        znnl/nHLkx95D1OxXrxCzWWnBwSKOL00DWCeLhQxQUVdn2LcIP5FkqHPUgj1CIPk
+        F/hnSZxroLlJZ2UgHmQc5HY3Sj2cCVm/6enlWnRNXpEJS0To3Zic+1vs1qZZ7nKP
+        FySFnJC22EsyxkXZdg1klXyu7pmbxXbE+l00Lit6EVZodvvAvgKVBjwCi3bGddJq
+        NyNub+jSgwoDJAxq3n/5qHnAsW9slaD/eeln91su7j3yt5xi+jstE9gzF3SkjTIn
+        4ZDsxN4EZ1wZiokYet+oGQIPsR14NemFf7FbY2qwloA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WhrD41
+        ffNVn/36YzYIxJtzJhx5wmUJTqLi2n9GMPzkE=; b=iEq4rN4hH1UwfZIBRhx3d/
+        wQ2bwgGx+RWD+hZ+Ch3WoAX/BiRnOhlyOPD0mivDIwfneNS2M4K62sdNDmO2dAS3
+        mJTuHaYT2tAPZZIHluKqAqpbe2iDr8AOIQR3J9kW+9lQoMdGEOI5PCtJ9ZIOW5XN
+        2ipoi+A4a5s7ABbZonGV0HOjw214l9dIRizIhyiqxZzgt26eFPlaQRbedvj2CqDG
+        qCdywM1C3lsghLp1D5nzKx8R+IOk/KRj+D3Ucwxw+VKFSoDkf5TKlqk/V6eCiei9
+        FXn2i3Ak0WziAFs09RwYA7FkduqY5sVGMxLuzq/mJXFVmCpgUXxQDt5/AOhLaxOg
+        ==
+X-ME-Sender: <xms:OK73YLI83JT2i4oP18auMfPE2dYb9yi6kg8ofSRyPrjBqhm2ckWD2g>
+    <xme:OK73YPLfW9iRtx2ISV33U0g3WPIA-uWk-Ma4lkVE-C-vuM92NLewiu51WLhdE1Fo1
+    y7iYGhZWQ_5-g>
+X-ME-Received: <xmr:OK73YDseyvCUciRO3cljxFI6IzrD-T5Pvl4llG4JKaXOzwxcKxPD19UrKXcJX3Y4y3VnE7UWFiYYusIk_ng9Ntaha7oDfgSU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeefgdekgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhephfelffejgf
+    eludeljeeivdegleekveeffeeigeduheffteegveelteeuleffveeknecuffhomhgrihhn
+    pehouhhtlhhoohhkrdgtohhmpdhhthhtphdrihhnpdhgihhthhhusgdrtghomhdpmhhitg
+    hrohhsohhfthdrtghomhdphhhtthhprdhithenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:OK73YEZNf2qMmzVMsCojj13dOT5Q4wL8zY2fLhZLeB-hivP7CfNBlw>
+    <xmx:OK73YCaPbORg9Eb2UaQPfLF6JuoZiqymgIAMpVtvIR1-PV29JLBmtg>
+    <xmx:OK73YICzwzbYTpYql64YWp94GGPQ8Uozc014PU7IcOEPeeu0glTnqg>
+    <xmx:Oa73YPQ2TYbANtu5X6RkYhbk47SEfJw_MJrEohZJeYViD5CK5Exd0g>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 21 Jul 2021 01:18:48 -0400 (EDT)
+Date:   Wed, 21 Jul 2021 07:18:44 +0200
+From:   Greg KH <greg@kroah.com>
 To:     Long Li <longli@microsoft.com>
 Cc:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
         "linux-fs@vger.kernel.org" <linux-fs@vger.kernel.org>,
         "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Andra Paraschiv <andraprs@amazon.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        Hannes Reinecke <hare@suse.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [Patch v4 2/3] Drivers: hv: add Azure Blob driver
-Message-ID: <YPer41ckT5njYW4G@kroah.com>
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [Patch v4 0/3] Introduce a driver to support host accelerated
+ access to Microsoft Azure Blob
+Message-ID: <YPeuND2rmiLnbJig@kroah.com>
 References: <1626751866-15765-1-git-send-email-longli@linuxonhyperv.com>
- <1626751866-15765-3-git-send-email-longli@linuxonhyperv.com>
- <YPZ8hX7sx1RFL0c5@kroah.com>
- <BY5PR21MB1506A52AD22240E22A0D6DE5CEE29@BY5PR21MB1506.namprd21.prod.outlook.com>
+ <YPbxr8XbK0IbD02r@kroah.com>
+ <BY5PR21MB1506D5D10F15E291BB553B50CEE29@BY5PR21MB1506.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BY5PR21MB1506A52AD22240E22A0D6DE5CEE29@BY5PR21MB1506.namprd21.prod.outlook.com>
+In-Reply-To: <BY5PR21MB1506D5D10F15E291BB553B50CEE29@BY5PR21MB1506.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jul 20, 2021 at 07:57:56PM +0000, Long Li wrote:
-> > Subject: Re: [Patch v4 2/3] Drivers: hv: add Azure Blob driver
+On Tue, Jul 20, 2021 at 06:37:38PM +0000, Long Li wrote:
+> > Subject: Re: [Patch v4 0/3] Introduce a driver to support host accelerated
+> > access to Microsoft Azure Blob
 > > 
-> > On Mon, Jul 19, 2021 at 08:31:05PM -0700, longli@linuxonhyperv.com wrote:
-> > > +struct az_blob_device {
-> > > +	struct hv_device *device;
-> > > +
-> > > +	/* Opened files maintained by this device */
-> > > +	struct list_head file_list;
-> > > +	/* Lock for protecting file_list */
-> > > +	spinlock_t file_lock;
-> > > +
-> > > +	/* The refcount for this device */
-> > > +	refcount_t count;
+> > On Mon, Jul 19, 2021 at 08:31:03PM -0700, longli@linuxonhyperv.com wrote:
+> > > From: Long Li <longli@microsoft.com>
+> > >
+> > > Microsoft Azure Blob storage service exposes a REST API to
+> > > applications for data access.
+> > >
+> > (https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdoc
+> > > s.microsoft.com%2Fen-us%2Frest%2Fapi%2Fstorageservices%2Fblob-
+> > service-
+> > > rest-
+> > api&amp;data=04%7C01%7Clongli%40microsoft.com%7Ce499fbe161554232e
+> > >
+> > b1608d94b96a772%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C637
+> > 623932
+> > >
+> > 843247787%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIj
+> > oiV2luMzIi
+> > >
+> > LCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C2000&amp;sdata=9CKNHAmurdBWp
+> > ZeLfkiC18
+> > > CXNg66UhKsSZzzHZkzf0Y%3D&amp;reserved=0)
+> > >
+> > > This patchset implements a VSC (Virtualization Service Consumer) that
+> > > communicates with a VSP (Virtualization Service Provider) on the
+> > > Hyper-V host to execute Blob storage access via native network stack on
+> > the host.
+> > > This VSC doesn't implement the semantics of REST API. Those are
+> > > implemented in user-space. The VSC provides a fast data path to VSP.
+> > >
+> > > Answers to some previous questions discussing the driver:
+> > >
+> > > Q: Why this driver doesn't use the block layer
+> > >
+> > > A: The Azure Blob is based on a model of object oriented storage. The
+> > > storage object is not modeled in block sectors. While it's possible to
+> > > present the storage object as a block device (assuming it makes sense
+> > > to fake all the block device attributes), we lose the ability to
+> > > express functionality that are defined in the REST API.
 > > 
-> > Just use a kref please if you really need this.  Are you sure you do?
-> > You already have 2 other reference counted objects being used here, why make
-> > it 3?
-> 
-> The "count" is to keep track how many user-mode instances and vmbus instance
-> are opened on this device.
-
-That will not work at all, sorry.  Please NEVER try to count "open"
-calls to a driver, as the driver will never be told how many userspace
-programs are accessing it at any time, nor should it even ever care.
-
-Use the existing apis, there is no need to attempt to count this as you
-will always get it wrong (hint, what happens when processes share file
-descriptors...)
-
-> Being a VMBUS device, this device can be removed 
-> at any time (host servicing etc). We must remove the device when this happens
-> even if the device is still opened by some user-mode program. The "count" will
-> guarantee the lifecycle of the device object after all user-mode has released the device.
-
-No it will not, just use the existing apis and all will be fine.
-
-> I looked at using "file_list" (it's used for tracking opened files by user-mode) for this purpose, 
-> but I found out I still need to manage the device count at the vmbus side. 
-
-Again, you should not need this.  As proof, no other driver needs
-this...
-
-> > > +	/* Pending requests to VSP */
-> > > +	atomic_t pending;
+> > What "REST API"?
 > > 
-> > Why does this need to be atomic?
-> 
-> "pending' is per-device maintained that could change when multiple-user access
-> the device at the same time.
-
-How do you know this, and why does it matter?
-
-> > > +	wait_queue_head_t waiting_to_drain;
-> > > +
-> > > +	bool removing;
+> > Why doesn't object oriented storage map to a file handle to read from?
+> > No need to mess with "blocks", why would you care about them?
 > > 
-> > Are you sure this actually works properly?  Why is it needed vs. any other misc
-> > device?
+> > And again, you loose all caching, this thing has got to be really slow, why add
+> > a slow storage interface?  What workload requires this type of slow block
+> > storage?
 > 
-> When removing this device from vmbus, we need to guarantee there is no possible packets to
-> vmbus.
+> "Blob REST API" expresses storage request semantics through HTTP. In Blob
+> REST API, each request is associated with a context meta data expressed in
+> HTTP headers. The ability to express those semantics is rich, it's only limited
+> by HTTP protocol.
 
-Why?  Shouldn't the vmbus api handle this for you automatically?  Why is
-this driver unique here?
+HTTP has nothing to do with the kernel, so I do not understand what you
+are talking about here.
 
-> This is a requirement before calling vmbus_close(). Other drivers of vmbus follows
-> the same procedure.
+> There are attempts to implement the Blob as a file system.
+> Here is an example filesystem (BlobFuse) implemented for Blob:
+> (https://github.com/Azure/azure-storage-fuse).
+> 
+> It's doable, but at the same time you lose all the performance and
+> shareable/security features presented in the REST API for Blob.
 
-Ah.  Why not fix this in the vmbus core?  That sounds like extra logic
-that everyone would have to duplicate for no good reason.
+What sharable/security features are in this driver instead?  I saw none.
 
-> The reason why this driver needs this is that the device removal can happen in the middle of
-> az_blob_ioctl_user_request(), which can send packet over vmbus.
+> A POSIX
+> interface cannot express same functionality as the REST API for Blob.
 
-Sure, but the bus should handle that for you.
+But you are not putting a REST api into this kernel driver, so I fail to
+understand this.
 
-> > > +/* VSC->VSP request */
-> > > +struct az_blob_vsp_request {
-> > > +	u32 version;
-> > > +	u32 timeout_ms;
-> > > +	u32 data_buffer_offset;
-> > > +	u32 data_buffer_length;
-> > > +	u32 data_buffer_valid;
-> > > +	u32 operation_type;
-> > > +	u32 request_buffer_offset;
-> > > +	u32 request_buffer_length;
-> > > +	u32 response_buffer_offset;
-> > > +	u32 response_buffer_length;
-> > > +	guid_t transaction_id;
-> > > +} __packed;
+> For example, The Blob API for read (Get Blob, 
+> https://docs.microsoft.com/en-us/rest/api/storageservices/get-blob)
+> has rich meta data context that cannot easily be mapped to POSIX. The same
+> goes to other Blob API to manage security tokens and the life cycle of shareable
+> objects.
+
+How can you have sharable objects in this ioctl interface instead?
+
+> BlobFuse (above) filesystem demonstrated why Blob should not be implemented
+> on a filesystem. It's useable for data management purposes. It's not usable for an I/O
+> intensive workload. It's not usable for managing sharable objects and security tokens.
+
+What is the bottleneck for the throughput/performance issues involved?
+
+> Blob is designed not to use file system caching and block layer I/O scheduling.
+> There are many solutions existing today, that access raw disk for I/O, bypassing
+> filesystem and block layer. For example, many database applications access raw
+> disks for I/O. When the application knows the I/O pattern and its intended behavior,
+> it doesn't get much benefit from filesystem or block.
+
+Databases that use raw i/o "know what they are doing" and are constantly
+fighting with the kernel.  Don't expect kernel developers to just think
+that this is ok.
+
+But this is not what you are doing here at all, this is an object
+storage, you are still being forced to open/ioctl/close to get an object
+instead of just doing open/read/close, so I fail to understand where the
+performance issues are.
+
+And if they are in the FUSE layer, why not just write a filesystem layer
+in the kernel instead to resolve that?  Who is insisting that you do
+this through a character device driver to get filesystem data?
+
+> > > Q: You also just abandoned the POSIX model and forced people to use a
+> > > random-custom-library just to access their storage devices, breaking
+> > > all existing programs in the world?
+> > >
+> > > A: The existing Blob applications access storage via HTTP (REST API).
+> > > They don't use POSIX interface. The interface for Azure Blob is not
+> > > designed on POSIX.
 > > 
-> > Why packed?  If this is going across the wire somewhere, you need to specify
-> > the endian-ness of these values, right?  If this is not going across the wire, no
-> > need for it to be packed.
-> 
-> Those data go through the wire.
-> 
-> All data structures specified in the Hyper-V and guest VM use Little Endian byte
-> ordering.  All HV core drivers have a dependence on X86, that guarantees this
-> ordering.
-
-Then specify little endian please.
-
-> > > +	struct completion wait_vsp;
-> > > +	struct az_blob_request_sync *request; };
-> > > +
-> > > +struct az_blob_file_ctx {
-> > > +	struct list_head list;
-> > > +
-> > > +	/* List of pending requests to VSP */
-> > > +	struct list_head vsp_pending_requests;
-> > > +	/* Lock for protecting vsp_pending_requests */
-> > > +	spinlock_t vsp_pending_lock;
-> > > +	wait_queue_head_t wait_vsp_pending;
-> > > +
-> > > +	pid_t pid;
+> > I do not see a HTTP interface here, what does that have to do with the kernel?
 > > 
-> > Why do you need a pid?  What namespace is this pid in?
+> > I see a single ioctl interface, that's all.
 > 
-> It's a request from user library team for production troubleshooting
-> purposes. It's exposed as informal in debugfs.
+> The driver doesn't attempt to implement Blob API or HTTP. It presents a fast data
+> path to pass Blob requests to hosts, so the guest VM doesn't need to assemble
+> a HTTP packet for each Blob REST requests. This also eliminates additional
+> overhead in guest network stack to send the HTTP packets over TCP/IP.
 
-Then it will be wrong.  Put all of your "debugging" stuff into one place
-so it is obvious what it is for, and so that people can ignore it.
+Again, I fail to understand how http or tcp/ip comes into play here at
+all, that's not what this driver does.
 
-> > > +static int az_blob_probe(struct hv_device *device,
-> > > +			 const struct hv_vmbus_device_id *dev_id) {
-> > > +	int ret;
-> > > +	struct az_blob_device *dev;
-> > > +
-> > > +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-> > > +	if (!dev)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	spin_lock_init(&dev->file_lock);
-> > > +	INIT_LIST_HEAD(&dev->file_list);
-> > > +	atomic_set(&dev->pending, 0);
-> > > +	init_waitqueue_head(&dev->waiting_to_drain);
-> > > +
-> > > +	ret = az_blob_connect_to_vsp(device, dev, AZ_BLOB_RING_SIZE);
-> > > +	if (ret)
-> > > +		goto fail;
-> > > +
-> > > +	refcount_set(&dev->count, 1);
-> > > +	az_blob_dev = dev;
-> > > +
-> > > +	// create user-mode client library facing device
-> > > +	ret = az_blob_create_device(dev);
-> > > +	if (ret) {
-> > > +		dev_err(AZ_DEV, "failed to create device ret=%d\n", ret);
-> > > +		az_blob_remove_vmbus(device);
-> > > +		goto fail;
-> > > +	}
-> > > +
-> > > +	dev_info(AZ_DEV, "successfully probed device\n");
+> Once the request reaches the Azure host, it knows the best way to reach to the 
+> backend storage and serving the Blob request, while at the same time all the 
+> security and integrity features are preserved.
+
+I do not understand this statement at all.
+
+> > > Q: What programs today use this new API?
+> > >
+> > > A: Currently none is released. But per above, there are also none
+> > > using POSIX.
 > > 
-> > When drivers are working properly, they should be quiet.
+> > Great, so no one uses this, so who is asking for and requiring this thing?
+> > 
+> > What about just doing it all from userspace using FUSE?  Why does this HAVE
+> > to be a kernel driver?
 > 
-> The reason is that in production environment when dealing with custom support
-> cases, there is no good way to check if the channel is opened on the device. Having
-> this message will greatly clear confusions on possible mis-configurations.
+> We have a major workload nearing the end of development. Compared with
+> REST over HTTP, this device model presented faster data access and CPU savings
+> in that there is no overhead of sending HTTP over network.
 
-Again, no, the driver should be quiet.  If you REALLY need this type of
-thing, the bus should be the one doing that type of notification for all
-devices on the bus.  Do not make this a per-driver choice.
+Your development cycle means nothing to us, sorry.  Please realize that
+if you submit something that is not acceptable to us, there is no
+requirement that we take it just because we feel this is implemented in
+totally the wrong way.
 
-> > And what is with the AZ_DEV macro mess?
-> 
-> It's not required, it's just for saving code length. I can put "&az_blob_dev->device->device"
-> in every dev_err(), but it makes the code look a lot longer.
+And you have not, again, proven that there is any performance
+improvement anywhere due to lack of numbers and data.   And again, what
+does HTTP have to do with this driver.
 
-Then perhaps your structures are not correct?  Please spell it out so
-that we can see that your implementation needs fixing.
+> Eventually, all the existing Blob REST API applications can use this new API, once
+> it gets to their Blob transport libraries.
 
-> > And can you handle more than one device in the system at one time?  I think
-> > your debugfs logic will get really confused.
-> 
-> There can be one device object active in the system at any given time. The debugfs grabs
-> the current active device object. If the device is being removed, removed or added, 
-> the current active device object is updated accordingly.
+What applications?  What libraries?  Who is using any of this?
 
-If I remember, your debugfs initialization seems to not use the device
-name, but rather a "driver" name, which implies that this is not going
-to work well with multiple devices.  But I could be wrong.
+> I have explained why BlobFuse is not suitable for production workloads. There
+> are people using BlobFuse but mostly for management purposes.
 
-thanks,
+I fail to see why it is not usable as you have not provided any real
+information, sorry.
+
+Please step back and write up a document that explains the problem you
+are trying to solve and then we can go from there.  Right now you are
+throwing a driver at us and expecting us to just accept it, despite it
+looking like it is completly wrong for the problem space it is
+attempting to interact with.
+
+Please work with some experienced Linux kernel developers on your team
+to do all of this _BEFORE_ submitting it to the community again.  Based
+on the mistakes made so far, it looks like you could use some guidance
+in turning this into something that might be acceptable.  As it is, you
+are a long way off.
+
+good luck!
 
 greg k-h
