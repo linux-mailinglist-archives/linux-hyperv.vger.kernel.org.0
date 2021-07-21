@@ -2,205 +2,152 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEE1B3D0642
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jul 2021 02:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFE9B3D068E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jul 2021 03:56:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbhGUASq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Jul 2021 20:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbhGUASl (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Jul 2021 20:18:41 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61C2C061574;
-        Tue, 20 Jul 2021 17:59:17 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id u7so565454ion.3;
-        Tue, 20 Jul 2021 17:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=N8UGTVobv7pdWmQ2vwYet8vbuI3Cy9tksvCSmZaqifE=;
-        b=SQulmDYHjdtCCYxwxLBmOOS/5aZ4SgPfHeYZAeD6ovEI5hYETGcopo4Al9+PNg+VPF
-         YjQu0w7tm7bB7hZ4fRXBr+q4up9Ls9lX+Uofp15fOIlyZJQ6Ysv0Ulu4ZKl5LYk42bS7
-         W6ulR3pSmXnc4BjNTTdFpfb/omG4u/h5BrK3SeZTPISQYIz2Se3pmZjBGCphC7D8VTY/
-         Wggbdy7pjFhXPCSW/ELnHQgaUfRmYMzDwiQqYGUb2jDdWR08u8EPLjw/8z8fcS4Xcox+
-         rEqvpcGg7xH8iRcHevxvh4W1pOFIyekg/IDu+PoUdCWGUK383a5yT+m0Y1SKGTABmrzW
-         Z45w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N8UGTVobv7pdWmQ2vwYet8vbuI3Cy9tksvCSmZaqifE=;
-        b=rsT5t3qI4TsqbifWzlTrKt0aiCAkW+3h+N+Bgz8jdDF3Z2KW+9ijFmo0XZ817/Yrq5
-         zPCzdt2o7T8oc2wMRY94j4/LsA9dWKUTMDunHoTdr5MHdgU7jCk5KQw2S5xPmVKHRfDM
-         CpVouKyvA2r9x5nIS7KBEtXeD589GO0sc3xeiTSrUFPi6fYIOKeiitMlHUuolJP1Hfti
-         otrcIk88Da9I+v18MC+7A2DWzbRFVDCM1HXKX6oXbDbDGAkuVJbOgu27QwMG/tpupel3
-         YObTZGql05SiiuF5B2pVXlmJTWK8OhuRI5m2ntBzDWaJKoOkIoyupGdJF8sc88+Xpjda
-         Kdiw==
-X-Gm-Message-State: AOAM532TyI8aFWfNffxBsbglck/Lx4oB/2vKeL8LY4AdNSWhwH7f8+Uq
-        L9Y9kaSOcBRKPrr5tFnsTwQ=
-X-Google-Smtp-Source: ABdhPJxwSPLKP/YJWc05noTHMfDpJLfw8xDeBwQLUjT3KLB7v054Yh+y2m4rr/uLeeTYnjLeRp8Usg==
-X-Received: by 2002:a6b:e207:: with SMTP id z7mr19528253ioc.111.1626829157144;
-        Tue, 20 Jul 2021 17:59:17 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id k4sm933090ilu.67.2021.07.20.17.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jul 2021 17:59:16 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 9F28E27C005A;
-        Tue, 20 Jul 2021 20:59:15 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 20 Jul 2021 20:59:15 -0400
-X-ME-Sender: <xms:YnH3YNNNm04uxJ2PPmQUV1itjUEnLMacYQu5MSLSB1sqvPFC6Shjfg>
-    <xme:YnH3YP_QhQDtn4n0WcI9d7i11z-amPhN57WpavUpnpe6GzgZY5DFCY9hqH-sPi7E3
-    8Oqv0lnZVAimEBCcw>
-X-ME-Received: <xmr:YnH3YMRuMzdIwtP8hRJ4oaTDRySyniqjEemd39BrpYtRv5QcHbs24YBNeMSUwQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrfeefgdefvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpedvleeigedugfegveejhfejveeuveeiteejieekvdfgjeefudehfefhgfegvdeg
-    jeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:YnH3YJut_Q-oIbvHXidl1mwBdN6p_HagK2gnDBKWvOd464jCwtVaoQ>
-    <xmx:YnH3YFfxI2rcgl_8fHiwjZj9gwNuIrsNz0rfSKksKZfx81jr-pkSTw>
-    <xmx:YnH3YF2IPOtyzbJT-T4d-JbKPgsdeGw6YjM-Vkw72Q9V5T1RMuhwiA>
-    <xmx:Y3H3YGCMbtdmD4ccr9tQKuAs_j_iPFWxTQictWJ2vT_JQjWZS8diF44UyE4>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 20 Jul 2021 20:59:14 -0400 (EDT)
-Date:   Wed, 21 Jul 2021 08:57:17 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        id S230185AbhGUBPT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Jul 2021 21:15:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230015AbhGUBPH (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 20 Jul 2021 21:15:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BC5AC6044F;
+        Wed, 21 Jul 2021 01:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626832545;
+        bh=udoAwfxkz2c3+6bRQCgcDtKski/cNMY8ohh4yK73Tso=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AOUtAI/4UX6ZSX/WqH40ms5XuNKclmxsf9ByxBxR1YeMHhmuGjX5cW0REJZj+1QCJ
+         MVt10zmqJAZD+Si81q49Vi2ijLgikeMBrym0jqg/OoggGtTRPm+OMY4hBs5/vy5IEz
+         0kvms9zOVERaw2CP0vXGzUvHTM0PIzrjt+KjFH7k/fNYmk0hwIJXFKwutqgOvM9vYY
+         IFzz43q9q16ohDtTRHSpLRZneMNNzsSMBH24dEOGpCVuEYIWj58oIQ8YrfeO1/mJ5O
+         Htc66L8MBi4h8wwwhNyo/PIr9gfbcWdQvt8PBZzh9krjCpNlbaYnvN8KXhtwAH9t2/
+         e3x6Z5frbSgqg==
+Date:   Tue, 20 Jul 2021 18:55:42 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [RFC v5 1/8] PCI: Introduce domain_nr in pci_host_bridge
-Message-ID: <YPdw7YMXyFoHDhq4@boqun-archlinux>
-References: <20210720134429.511541-2-boqun.feng@gmail.com>
- <20210720224925.GA137627@bjorn-Precision-5520>
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH] Input: serio - make write method mandatory
+Message-ID: <YPd+nl30LwKWpEZa@Ryzen-9-3900X.localdomain>
+References: <YFgUxG/TljMuVeQ3@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210720224925.GA137627@bjorn-Precision-5520>
+In-Reply-To: <YFgUxG/TljMuVeQ3@google.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jul 20, 2021 at 05:49:25PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 20, 2021 at 09:44:22PM +0800, Boqun Feng wrote:
-> > Currently we retrieve the PCI domain number of the host bridge from the
-> > bus sysdata (or pci_config_window if PCI_DOMAINS_GENERIC=y). Actually
-> > we have the information at PCI host bridge probing time, and it makes
-> > sense that we store it into pci_host_bridge. One benefit of doing so is
-> > the requirement for supporting PCI on Hyper-V for ARM64, because the
-> > host bridge of Hyper-V doesn't have pci_config_window, whereas ARM64 is
-> > a PCI_DOMAINS_GENERIC=y arch, so we cannot retrieve the PCI domain
-> > number from pci_config_window on ARM64 Hyper-V guest.
-> > 
-> > As the preparation for ARM64 Hyper-V PCI support, we introduce the
-> > domain_nr in pci_host_bridge and a sentinel value to allow drivers to
-> > set domain numbers properly at probing time. Currently
-> > CONFIG_PCI_DOMAINS_GENERIC=y archs are only users of this
-> > newly-introduced field.
-> > 
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+On Sun, Mar 21, 2021 at 08:53:40PM -0700, Dmitry Torokhov wrote:
+> Given that all serio drivers except one implement write() method
+> let's make it mandatory to avoid testing for its presence whenever
+> we attempt to use it.
 > 
-> Once all the issues are ironed out, Lorenzo should probably merge this
-> since it's primarily Hyper-V stuff, but I'm OK with this part:
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/input/serio/ams_delta_serio.c | 6 ++++++
+>  drivers/input/serio/serio.c           | 5 +++++
+>  include/linux/serio.h                 | 5 +----
+>  3 files changed, 12 insertions(+), 4 deletions(-)
 > 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> diff --git a/drivers/input/serio/ams_delta_serio.c b/drivers/input/serio/ams_delta_serio.c
+> index 1c0be299f179..a1c314897951 100644
+> --- a/drivers/input/serio/ams_delta_serio.c
+> +++ b/drivers/input/serio/ams_delta_serio.c
+> @@ -89,6 +89,11 @@ static irqreturn_t ams_delta_serio_interrupt(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static int ams_delta_serio_write(struct serio *serio, u8 data)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+>  static int ams_delta_serio_open(struct serio *serio)
+>  {
+>  	struct ams_delta_serio *priv = serio->port_data;
+> @@ -157,6 +162,7 @@ static int ams_delta_serio_init(struct platform_device *pdev)
+>  	priv->serio = serio;
+>  
+>  	serio->id.type = SERIO_8042;
+> +	serio->write = ams_delta_serio_write;
+>  	serio->open = ams_delta_serio_open;
+>  	serio->close = ams_delta_serio_close;
+>  	strlcpy(serio->name, "AMS DELTA keyboard adapter", sizeof(serio->name));
+> diff --git a/drivers/input/serio/serio.c b/drivers/input/serio/serio.c
+> index 29f491082926..8d229a11bb6b 100644
+> --- a/drivers/input/serio/serio.c
+> +++ b/drivers/input/serio/serio.c
+> @@ -694,6 +694,11 @@ EXPORT_SYMBOL(serio_reconnect);
+>   */
+>  void __serio_register_port(struct serio *serio, struct module *owner)
+>  {
+> +	if (!serio->write) {
+> +		pr_err("%s: refusing to register %s without write method\n",
+> +		       __func__, serio->name);
+> +		return;
+> +	}
+>  	serio_init_port(serio);
+>  	serio_queue_event(serio, owner, SERIO_REGISTER_PORT);
+>  }
+> diff --git a/include/linux/serio.h b/include/linux/serio.h
+> index 6c27d413da92..075f1b8d76fa 100644
+> --- a/include/linux/serio.h
+> +++ b/include/linux/serio.h
+> @@ -121,10 +121,7 @@ void serio_unregister_driver(struct serio_driver *drv);
+>  
+>  static inline int serio_write(struct serio *serio, unsigned char data)
+>  {
+> -	if (serio->write)
+> -		return serio->write(serio, data);
+> -	else
+> -		return -1;
+> +	return serio->write(serio, data);
+>  }
+>  
+>  static inline void serio_drv_write_wakeup(struct serio *serio)
+> -- 
+> 2.31.0.rc2.261.g7f71774620-goog
 > 
+> 
+> -- 
+> Dmitry
 
-Thanks!
+This patch as commit 81c7c0a350bf ("Input: serio - make write method
+mandatory") in -next breaks input for my Hyper-V VM, which prevents me
+from logging in. I attempted to do something like the following (-1 or
+-EINVAL) which should be equivalent but it does not resolve the issue.
 
-> But fix the comment issue below.
-> 
+Cheers,
+Nathan
 
-Just send a v5.1 for this patch with the comment fixed and your
-Acked-by.
+diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
+index 1a7b72a9016d..d3eee2d4c327 100644
+--- a/drivers/input/serio/hyperv-keyboard.c
++++ b/drivers/input/serio/hyperv-keyboard.c
+@@ -311,6 +311,11 @@ static void hv_kbd_stop(struct serio *serio)
+        spin_unlock_irqrestore(&kbd_dev->lock, flags);
+ }
 
-Regards,
-Boqun
++static int hv_kbd_write(struct serio *serio, u8 data)
++{
++       return -1;
++}
++
+ static int hv_kbd_probe(struct hv_device *hv_dev,
+                        const struct hv_vmbus_device_id *dev_id)
+ {
+@@ -341,6 +346,7 @@ static int hv_kbd_probe(struct hv_device *hv_dev,
 
-> > ---
-> >  drivers/pci/probe.c |  6 +++++-
-> >  include/linux/pci.h | 10 ++++++++++
-> >  2 files changed, 15 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 79177ac37880..60c50d4f156f 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -594,6 +594,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
-> >  	bridge->native_pme = 1;
-> >  	bridge->native_ltr = 1;
-> >  	bridge->native_dpc = 1;
-> > +	bridge->domain_nr = PCI_DOMAIN_NR_NOT_SET;
-> >  
-> >  	device_initialize(&bridge->dev);
-> >  }
-> > @@ -898,7 +899,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
-> >  	bus->ops = bridge->ops;
-> >  	bus->number = bus->busn_res.start = bridge->busnr;
-> >  #ifdef CONFIG_PCI_DOMAINS_GENERIC
-> > -	bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
-> > +	if (bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
-> > +		bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
-> > +	else
-> > +		bus->domain_nr = bridge->domain_nr;
-> >  #endif
-> >  
-> >  	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 540b377ca8f6..2c413a64d168 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -526,6 +526,15 @@ static inline int pci_channel_offline(struct pci_dev *pdev)
-> >  	return (pdev->error_state != pci_channel_io_normal);
-> >  }
-> >  
-> > +/*
-> > +* Currently in ACPI spec, for each PCI host bridge, PCI Segment Group number is
-> > +* limited to a 16-bit value, therefore (int)-1 is not a valid PCI domain number,
-> > +* and can be used as a sentinel value indicating >domain_nr is not set by the
-> > +* driver (and CONFIG_PCI_DOMAINS_GENERIC=y archs will set it with
-> > +* pci_bus_find_domain_nr()).
-> > +*/
-> 
-> Fix comment indentation (follow style of other comments in this file).
-> 
-> s/>domain_nr/->domain_nr/
-> 
-> > +#define PCI_DOMAIN_NR_NOT_SET (-1)
-> > +
-> >  struct pci_host_bridge {
-> >  	struct device	dev;
-> >  	struct pci_bus	*bus;		/* Root bus */
-> > @@ -533,6 +542,7 @@ struct pci_host_bridge {
-> >  	struct pci_ops	*child_ops;
-> >  	void		*sysdata;
-> >  	int		busnr;
-> > +	int		domain_nr;
-> >  	struct list_head windows;	/* resource_entry */
-> >  	struct list_head dma_ranges;	/* dma ranges resource list */
-> >  	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
-> > -- 
-> > 2.30.2
-> > 
+        hv_serio->start = hv_kbd_start;
+        hv_serio->stop = hv_kbd_stop;
++       hv_serio->write = hv_kbd_write;
+
+        error = vmbus_open(hv_dev->channel,
+                           KBD_VSC_SEND_RING_BUFFER_SIZE,
+
