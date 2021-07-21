@@ -2,207 +2,162 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C83323D0D6B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jul 2021 13:24:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E25E3D0E3B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jul 2021 13:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239214AbhGUKmY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Jul 2021 06:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238399AbhGUJtQ (ORCPT
+        id S238765AbhGULP4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Jul 2021 07:15:56 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:46502 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237241AbhGUKvz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Jul 2021 05:49:16 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7E0C0613DE;
-        Wed, 21 Jul 2021 03:29:05 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id y4so1876672pfi.9;
-        Wed, 21 Jul 2021 03:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=crPkDkWQEoNERdMjzIoNvDVdZYJX2jUbiteH/e0Of1o=;
-        b=dpQF0qK/cZ1PBWjC1lNEtBNPQIY0ndTZOqudg/5nG+laJtg1EvtFbUy2df++wHmiLi
-         c6BCC2uROfhvdYwDWYWD1jecOacp6hyTQ93iH+xQCYDh0nO8befGldO1/+g9lnr74Jsv
-         CmOUB7aNlqIYBSVTdBy1KAz3fTJhPWw+/jwvvEOOadVZwZ+pWi0tv3SIK/XfCdM4Yw0C
-         CMWaIHisnetIQUkh+1i2GqoZdEdpLDithfUWVY4II/1DHvEJRJ2d7y6Gld4xfxrZsKbY
-         6Msig5LVrt5yFu08e+wuLM0X3juclFNnUEU2LztUJ2yenbExU+zvtkxD1pUa0R4LM97z
-         RFOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=crPkDkWQEoNERdMjzIoNvDVdZYJX2jUbiteH/e0Of1o=;
-        b=BGoM8rWEoFRz3ZFStBFzvULs6PV+o0kMohNo8Q/+wbZxq/+Iqn0SLdGDUEqFXz66mw
-         vn29lhlCQYArzWBu/CcKbQ049PV5TJka1Oi7qdjh4D6BAJl334EzbW78ivZIRz03CoUg
-         xZSfAwMCkgkKt0nI4ywk7xoFRtusPyf2+6ZtFaldppntdmr6Eh0LNBlK6lPXfa2fkK93
-         m28UOubUIa6tzvnhIfYPr4ZQTmjRdZaeOjmzz7E3i1xQQ193DkJ/EEcMjlQanc6lTtaZ
-         OPfLwEwK4m9zriep0PHsf6AFLKIiqdfeAIilHguwCzg5dYhY/Q5qD/LfpqbXJP+VXyva
-         dzPQ==
-X-Gm-Message-State: AOAM532DS6SvJ2XDxwRhiIR1Mu+lFnJE0dO86GxK8lbh5LD2kxGXTUGZ
-        ckgTnEP8QFEAvL4uepBJ57s=
-X-Google-Smtp-Source: ABdhPJwGK1w7GFZui+UX4nxgbHVeI56Iu2D5hjeSldD82+ip3NkTL1jWcNoRnxoO7LnJTjwfoGvugw==
-X-Received: by 2002:a65:6187:: with SMTP id c7mr35068030pgv.349.1626863345481;
-        Wed, 21 Jul 2021 03:29:05 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:18:efec::4b1])
-        by smtp.gmail.com with ESMTPSA id t37sm26803912pfg.14.2021.07.21.03.28.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Jul 2021 03:29:05 -0700 (PDT)
-From:   Tianyu Lan <ltykernel@gmail.com>
-Subject: Re: [Resend RFC PATCH V4 09/13] x86/Swiotlb/HV: Add Swiotlb bounce
- buffer remap function for HV IVM
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, joro@8bytes.org,
-        will@kernel.org, davem@davemloft.net, kuba@kernel.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com,
-        kirill.shutemov@linux.intel.com, akpm@linux-foundation.org,
-        rppt@kernel.org, Tianyu.Lan@microsoft.com, thomas.lendacky@amd.com,
-        ardb@kernel.org, robh@kernel.org, nramas@linux.microsoft.com,
-        pgonda@google.com, martin.b.radev@gmail.com, david@redhat.com,
-        krish.sadhukhan@oracle.com, saravanand@fb.com,
-        xen-devel@lists.xenproject.org, keescook@chromium.org,
-        rientjes@google.com, hannes@cmpxchg.org,
-        michael.h.kelley@microsoft.com, iommu@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, vkuznets@redhat.com, brijesh.singh@amd.com,
-        anparri@microsoft.com
-References: <20210707154629.3977369-1-ltykernel@gmail.com>
- <20210707154629.3977369-10-ltykernel@gmail.com>
- <20210720135437.GA13554@lst.de>
-Message-ID: <8f1a285d-4b67-8041-d326-af565b2756c0@gmail.com>
-Date:   Wed, 21 Jul 2021 18:28:48 +0800
+        Wed, 21 Jul 2021 06:51:55 -0400
+Received: from [192.168.1.96] (unknown [223.226.82.147])
+        by linux.microsoft.com (Postfix) with ESMTPSA id F1C3A20B7178;
+        Wed, 21 Jul 2021 04:32:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F1C3A20B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1626867152;
+        bh=0pXJNvxqroUIPcxzfR8QdEhfbKvPSRmc9RoEfu1edYU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=E3+eNc3WBIjxux+ZWF/OdBlYR8wZb7K6M4mixCY5k8va+Gz6alqh6JNUBQwDRsCMY
+         Cbgv75IY+hp1hSkIyx0KD3rjfZt3tCJ/SdRHCGkvhwcdNFW0eqM2IdGFWQzDPSYUsE
+         EaJP6x1yyVBxv5fG6fzzPq4acCi8gKmHnyVTK15U=
+Subject: Re: [PATCH] hyperv: root partition faults writing to VP ASSIST MSR
+ PAGE
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>
+References: <20210719185126.3740-1-kumarpraveen@linux.microsoft.com>
+ <20210720112011.7nxhiy6iyz4gz3j5@liuwe-devbox-debian-v2>
+ <fd70c8e5-f58c-640b-30b7-70c4e4a4861a@linux.microsoft.com>
+ <20210720133514.lurmus2lgffcldnq@liuwe-devbox-debian-v2>
+ <MWHPR21MB15938E4E72E1A3EB3744AD53D7E29@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <20210720162923.rsbl24v5lujbiddj@liuwe-devbox-debian-v2>
+ <MWHPR21MB159302588AD32CA605192398D7E39@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <d8bd9c00-4eb5-187f-e31b-cba2ecec565b@linux.microsoft.com>
+ <20210721101026.3tujagjag5umqejh@liuwe-devbox-debian-v2>
+From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
+Message-ID: <497414c3-3782-26ad-3b41-105ee12098d4@linux.microsoft.com>
+Date:   Wed, 21 Jul 2021 17:02:25 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20210720135437.GA13554@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20210721101026.3tujagjag5umqejh@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thanks for review.
-
-On 7/20/2021 9:54 PM, Christoph Hellwig wrote:
+On 21-07-2021 15:40, Wei Liu wrote:
+> On Wed, Jul 21, 2021 at 12:42:52PM +0530, Praveen Kumar wrote:
+>> On 21-07-2021 09:40, Michael Kelley wrote:
+>>> From: Wei Liu <wei.liu@kernel.org> Sent: Tuesday, July 20, 2021 9:29 AM
+>>>>
+>>>> On Tue, Jul 20, 2021 at 04:20:44PM +0000, Michael Kelley wrote:
+>>>>> From: Wei Liu <wei.liu@kernel.org> Sent: Tuesday, July 20, 2021 6:35 AM
+>>>>>>
+>>>>>> On Tue, Jul 20, 2021 at 06:55:56PM +0530, Praveen Kumar wrote:
+>>>>>> [...]
+>>>>>>>>
+>>>>>>>>> +	if (hv_root_partition &&
+>>>>>>>>> +	    ms_hyperv.features & HV_MSR_APIC_ACCESS_AVAILABLE) {
+>>>>>>>>
+>>>>>>>> Is HV_MSR_APIC_ACCESS_AVAILABLE a root only flag? Shouldn't non-root
+>>>>>>>> kernel check this too?
+>>>>>>>
+>>>>>>> Yes, you are right. Will update this in v2. thanks.
+>>>>>>
+>>>>>> Please split adding this check to its own patch.
+>>>>>>
+>>>>>> Ideally one patch only does one thing.
+>>>>>>
+>>>>>> Wei.
+>>>>>>
+>>>>>
+>>>>> I was just looking around in the Hyper-V TLFS, and I didn't see
+>>>>> anywhere that the ability to set up a VP Assist page is dependent
+>>>>> on HV_MSR_APIC_ACCESS_AVAILABLE.  Or did I just miss it?
+>>>>
+>>>> The feature bit Praveen used is wrong and should be fixed.
+>>>>
+>>>> Per internal discussion this is gated by the AccessIntrCtrlRegs bit.
+>>>>
+>>>> Wei.
+>>>>
+>>>
+>>> The AccessIntrCtrlRegs bit *is* HV_MSR_APIC_ACCESS_AVAILABLE.
+>>> Both are defined as bit 4 of the Partition Privilege flags.  :-)   I don't
+>>> know why the names don't line up.   Even so, it's not clear to me that
+>>> AccessIntrCtrlRegs has any bearing on the VP Assist page.  I see this
+>>> description of AccessIntrCtrlRegs:
+>>>
+>>
+>> Yup, what I understood as well, this is the one required one for Partition Privilege Flags (4th bit), however, cannot comment on the naming convention.
+>>
+>>      5 /* Virtual APIC assist and VP assist page registers available */
+>>      4 #define HV_MSR_APIC_ACCESS_AVAILABLE            BIT(4)
+>>
 > 
-> Please split the swiotlb changes into a separate patch from the
-> consumer.
-
-OK. Will update.
-
+> Urgh, okay. It is my fault for not reading the code closely. Sorry for
+> the confusion.
 > 
->>   }
->> +
->> +/*
->> + * hv_map_memory - map memory to extra space in the AMD SEV-SNP Isolation VM.
->> + */
->> +unsigned long hv_map_memory(unsigned long addr, unsigned long size)
->> +{
->> +	unsigned long *pfns = kcalloc(size / HV_HYP_PAGE_SIZE,
->> +				      sizeof(unsigned long),
->> +		       GFP_KERNEL);
->> +	unsigned long vaddr;
->> +	int i;
->> +
->> +	if (!pfns)
->> +		return (unsigned long)NULL;
->> +
->> +	for (i = 0; i < size / HV_HYP_PAGE_SIZE; i++)
->> +		pfns[i] = virt_to_hvpfn((void *)addr + i * HV_HYP_PAGE_SIZE) +
->> +			(ms_hyperv.shared_gpa_boundary >> HV_HYP_PAGE_SHIFT);
->> +
->> +	vaddr = (unsigned long)vmap_pfn(pfns, size / HV_HYP_PAGE_SIZE,
->> +					PAGE_KERNEL_IO);
->> +	kfree(pfns);
->> +
->> +	return vaddr;
+>>> The partition has access to the synthetic MSRs associated with the
+>>> APIC (HV_X64_MSR_EOI, HV_X64_MSR_ICR and HV_X64_MSR_TPR).
+>>> If this flag is cleared, accesses to these MSRs results in a #GP fault if
+>>> the MSR intercept is not installed.
+>>>
+>>
+>> As per what I also understood from the TLFS doc,that we let partition
+>> access the MSR and do a fault.  However, the point is, does it make
+>> sense to allocate page for vp assist and perform action which is meant
+>> to fail when the flag is cleared ?
 > 
-> This seems to miss a 'select VMAP_PFN'. 
-
-VMAP_PFN has been selected in the previous patch "RFC PATCH V4 08/13]
-HV/Vmbus: Initialize VMbus ring buffer for Isolation VM"
-
-> But more importantly I don't
-> think this actually works.  Various DMA APIs do expect a struct page
-> backing, so how is this going to work with say dma_mmap_attrs or
-> dma_get_sgtable_attrs?
-
-dma_mmap_attrs() and dma_get_sgtable_attrs() get input virtual address
-belonging to backing memory with struct page and returns bounce buffer
-dma physical address which is below shared_gpa_boundary(vTOM) and passed
-to Hyper-V via vmbus protocol.
-
-The new map virtual address is only to access bounce buffer in swiotlb
-code and will not be used other places. It's stored in the mem->vstart.
-So the new API set_memory_decrypted_map() in this series is only called
-in the swiotlb code. Other platforms may replace set_memory_decrypted()
-with set_memory_decrypted_map() as requested.
-
+> Like Michael said, there are some other things that are not tied to that
+> particular bit. We should get more clarity on what gates what.  Perhaps
+> that privilege bit only controls access to the EOI assist bit and the
+> other things in the VP assist page are gated by other privilege bits.
+> This basically means we should setup the page when there is at least one
+> thing in that page can be used.
 > 
->> +static unsigned long __map_memory(unsigned long addr, unsigned long size)
->> +{
->> +	if (hv_is_isolation_supported())
->> +		return hv_map_memory(addr, size);
->> +
->> +	return addr;
->> +}
->> +
->> +static void __unmap_memory(unsigned long addr)
->> +{
->> +	if (hv_is_isolation_supported())
->> +		hv_unmap_memory(addr);
->> +}
->> +
->> +unsigned long set_memory_decrypted_map(unsigned long addr, unsigned long size)
->> +{
->> +	if (__set_memory_enc_dec(addr, size / PAGE_SIZE, false))
->> +		return (unsigned long)NULL;
->> +
->> +	return __map_memory(addr, size);
->> +}
->> +
->> +int set_memory_encrypted_unmap(unsigned long addr, unsigned long size)
->> +{
->> +	__unmap_memory(addr);
->> +	return __set_memory_enc_dec(addr, size / PAGE_SIZE, true);
->> +}
+> This is mostly an orthogonal issue from the one we want to fix. In
+> the interest of making progress we can drop the new check for now and
+> just add a root specific path for setting up and tearing down the VP
+> assist pages.
 > 
-> Why this obsfucation into all kinds of strange helpers?  Also I think
-> we want an ops vectors (or alternative calls) instead of the random
-> if checks here.
+> How does that sound?
+> 
 
-Yes, agree and will add ops for different platforms to map/unmap memory.
+Sounds good to me. Thanks Wei.
 
+> Wei.
 > 
->> + * @vstart:	The virtual start address of the swiotlb memory pool. The swiotlb
->> + *		memory pool may be remapped in the memory encrypted case and store
-> 
-> Normall we'd call this vaddr or cpu_addr.
+>>
+>>> But maybe you have additional info that applies to the root
+>>> partition that is not in the TLFS.
+>>>
+>>
+>> As per what discussed internally and I understood, the root partition
+>> shares the vp assist page provided by hypervisor and its read only for
+>> Root kernel.
+>>
+>>> Michael
 
-OK. Will update.
+Regards,
 
-> 
->> -	set_memory_decrypted((unsigned long)vaddr, bytes >> PAGE_SHIFT);
->> -	memset(vaddr, 0, bytes);
->> +	mem->vstart = (void *)set_memory_decrypted_map((unsigned long)vaddr, bytes);
-> 
-> Please always pass kernel virtual addresses as pointers.
-> 
-> And I think these APIs might need better names, e.g.
-> 
-> arch_dma_map_decrypted and arch_dma_unmap_decrypted.
-> 
-> Also these will need fallback versions for non-x86 architectures that
-> currently use memory encryption.
-
-Sure. Will update in the next version.
+~Praveen.
 
