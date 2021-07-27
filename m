@@ -2,269 +2,239 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 664613D7B76
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jul 2021 18:58:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3DCE3D7B8E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jul 2021 19:05:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbhG0Q6g (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 27 Jul 2021 12:58:36 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:34944 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbhG0Q6g (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 27 Jul 2021 12:58:36 -0400
-Received: from [192.168.1.87] (unknown [223.178.63.20])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D8C6C20B36E0;
-        Tue, 27 Jul 2021 09:58:31 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D8C6C20B36E0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1627405115;
-        bh=hTo/XNh70TkhVEAJl3b1NTmwpe76n016drWCbwuCd5s=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QPgA1Gccjwj8+go5MSvzJWAReY7TiVuQPVz+YCFVAlP+WnvkuXWI31D4a7qvmlE3d
-         1z2lJALu6r/MvifUKEhREMHzjF6CIE217enRJqBoFOXmdtqOmVtd/1pD8xsU58Y78E
-         3K31SFFJr69Hg9Vwh1Kw710hyQl3H5Djn/KOP2kE=
-Subject: Re: [PATCH v3] hyperv: root partition faults writing to VP ASSIST MSR
- PAGE
+        id S229497AbhG0RFg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 27 Jul 2021 13:05:36 -0400
+Received: from mail-dm6nam10on2119.outbound.protection.outlook.com ([40.107.93.119]:5569
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229453AbhG0RFg (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 27 Jul 2021 13:05:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cyvDOCw0mMFgMWKczBOUSQSopHrs7AnbWOok3BbpBVnrXYmzTPgtXmjanbGc3+RQq98437QkM8YXk7aC5QP1gPaKutv7KMoEfgdkeTQeSyNRht/ntLf+ZICG2pHLFFOvuyI1uygkat5hlAojj1MWKVz0w1+J3QUoGIDN4nTcl7rBkfwrNLbNzRnLiZaogk9wYCKCStDbCymckTuKctiX6C1TETH7r+CGdivXD4d1RxVrFIDiAxQ7T2OeYjaL9YCECfC39uAOluslrmt2+m89bzeMCQgV7QafRaVnmyeBP7bIzPm6yfWpY2gbXa5DismrzlB92eXEqMuJqxclwVRplw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MWXYPqFgwmwaGrEQoOJWbKhP7Wp+P2g7mLzfa8p1Gbc=;
+ b=iGE9LtmT+DiSlaUSQHC16U3ocv0E+YrnoqHqeWD402vdRZUX5wsJxd9CoLwS/dwQQ3Q/YcH00kTK98oyK69MkQHOel2cthSaV1YULnvLq4IOH5zZpNBGQu9+BRgVBPyXPQZ+mwLE123zXtWyWbN8lpQsKixzJoJ/f5QdxJiwrGuwCOgHc1AjPpbz9wvdsEiud7EcmhLO5aR591NFDY5anKhqCnptjmWRjlZCloc1NDAneZ3rS/TsSPB3p11ophLa7neUNV+R+ilmLe+97vweWKHKgV2//v1rniTG4RYiqOOnbPGYmVY4MsiyuRwmcXOA4ThrO295FBJxk63VM3n46Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MWXYPqFgwmwaGrEQoOJWbKhP7Wp+P2g7mLzfa8p1Gbc=;
+ b=Uelzy5VMzIwIm2OdxNiO8tJaL7yHtbRNNhxj2Y522z0OLhx1aJsPF3ziNKnQnBk9M41Vv7NgF8fbTdRmJu8WJbZD8mWPcx5/Mux6k2+TEkn8NbxBa8z1kEbqymzBz8FsWsi5EE9j0m7brQgzYO2UV8Gir5DONk+bLY25VfKoJfY=
+Received: from MW4PR21MB2002.namprd21.prod.outlook.com (2603:10b6:303:68::18)
+ by MWHPR21MB0639.namprd21.prod.outlook.com (2603:10b6:300:127::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.3; Tue, 27 Jul
+ 2021 17:05:33 +0000
+Received: from MW4PR21MB2002.namprd21.prod.outlook.com
+ ([fe80::292a:eeea:ee64:3f51]) by MW4PR21MB2002.namprd21.prod.outlook.com
+ ([fe80::292a:eeea:ee64:3f51%4]) with mapi id 15.20.4394.005; Tue, 27 Jul 2021
+ 17:05:33 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
 To:     Michael Kelley <mikelley@microsoft.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "viremana@linux.microsoft.com" <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>
-References: <20210727104044.28078-1-kumarpraveen@linux.microsoft.com>
- <MWHPR21MB1593C1A51C6E812B0DA82ED5D7E99@MWHPR21MB1593.namprd21.prod.outlook.com>
-From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Message-ID: <87c3c57c-9ce7-f0f6-f698-23c823e3f817@linux.microsoft.com>
-Date:   Tue, 27 Jul 2021 22:28:29 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
-MIME-Version: 1.0
-In-Reply-To: <MWHPR21MB1593C1A51C6E812B0DA82ED5D7E99@MWHPR21MB1593.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "ardb@kernel.org" <ardb@kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH v11 3/5] arm64: hyperv: Initialize hypervisor on boot
+Thread-Topic: [PATCH v11 3/5] arm64: hyperv: Initialize hypervisor on boot
+Thread-Index: AQHXfXk3HZzHZE4RbUysV6rBbtdFDqtXF4yw
+Date:   Tue, 27 Jul 2021 17:05:33 +0000
+Message-ID: <MW4PR21MB200240F67E9572EA5C4F986CC0E99@MW4PR21MB2002.namprd21.prod.outlook.com>
+References: <1626793023-13830-1-git-send-email-mikelley@microsoft.com>
+ <1626793023-13830-4-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1626793023-13830-4-git-send-email-mikelley@microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7ff97e1b-9a34-4f7d-3dab-08d95120bed8
+x-ms-traffictypediagnostic: MWHPR21MB0639:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MWHPR21MB06390283E0E73C7F850858D9C0E99@MWHPR21MB0639.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iKmDh/diiFis1evQWufKiyeiwDO1m+pH1HqMSNr4Inw5eiS8GB2W35IZu/LgdPnnR2c/vsAFg0GNmfyOEpSp02uOlSafKyILeeMEVpQeugdiGjyE4oa4byvGitH0low2IYNnG9q9Vzstes4qcgpr5KzoPETip4jv6nSU4Ls2+1j1qOMJODJDaa4qRcdJmVGRDjsmNEgHm68nIZxx/bVF4397fxsA6S2F+14n2Cu/CZOIRJS4FdOHylChlSqFavyF4PjxiI5mfMjQvYsjjgj1nvHFU1v1FfUQO04QYNq1MfXLUNnvlKx3Jj2vTJKchOIVOIdvjtVOaqylj783yveLi1wj8M21xYwcc4wzokw14T5cMCO+S9gCIviRNyJ3GAo3ArAeffCGA5XN/1Glzx4NicQNdgtCMG+3d3MrSHVex6gUc5rR2aPaQ4mNCsm75V5PUUG0mhm1RQxD/Kh4w1q5vPt5kXxbi+x08msFuRwjumIkXm7y4HpOD2vpdAS3b5W5Vd/Qt5gKzmuuaGXyG6N9vjLjPp7zqBUTUjUksNppH3mXTCzm2CBM5n4kro0QLMFSjXRw45+vGY+fTOlqj57weDYfzmi0IHTzwIo4RqgsZKtZsTCe+1pKWfxc63uVQh0P6ytbst27s0//Qr4wcvt9NEbcxrSdUqWt8CWoULEASMTJnN78lpgr/w+VX38U0bno3jn0PH9/youCEX0puZ1bujY/WDNLuAcbKk1ONL2Jl18=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR21MB2002.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(76116006)(6506007)(64756008)(107886003)(71200400001)(66556008)(52536014)(508600001)(66476007)(66446008)(66946007)(10290500003)(7696005)(186003)(8676002)(8936002)(83380400001)(33656002)(110136005)(82950400001)(82960400001)(921005)(2906002)(55016002)(316002)(38100700002)(122000001)(9686003)(86362001)(4326008)(5660300002)(8990500004)(38070700004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?PR0TopoNaKuYz/zFtYv5yqfu0vfrIzTwqZ9dU2OPIfvFISEkA4XcXY6FRxha?=
+ =?us-ascii?Q?sc6QhawPVkXO95iwllP3NBrBYqdSp8xPkArxiHerIJvvLapkvpYJOmUtWlJ1?=
+ =?us-ascii?Q?g0m4uz424Cc2VAnZu03S6jCv6gjCQxQEwm7qB0rnpaANiv6jKGGD6SlyHcxu?=
+ =?us-ascii?Q?yioklINdVKhm+ZAmaJHoF7IhS7Zfz0n/OvUaasitT/8SWIAB2//iWNKc59O9?=
+ =?us-ascii?Q?gmKOAQZl8XuZOYQY0cboFltZ5KATy6Z3d5y6m2r1r50wtfT5fZ4vcGlhFRXM?=
+ =?us-ascii?Q?MHEsVcWh66tcmDsaVj2qK3LC216nWXE+i2vk/PZHexC+UoLv/bUvkQNQ7Uj/?=
+ =?us-ascii?Q?aSeVrqhRg36544kyD0ZeHQgWTkkOC6QzOWfjJvH58f3y9IaavsH6F66ge3sc?=
+ =?us-ascii?Q?wv2A11upa5q5Wr4XgtUSqu4Iuom1kFqvtavFGemRoReNT7UUBqaq9PsAz0gU?=
+ =?us-ascii?Q?VFRTsGeg48TOh2kqofkztuPFk18izrxlgDLLQrb5rz7vViF/60yLq7sBRCFd?=
+ =?us-ascii?Q?YCTlrbB1bm6oscQ6UYM3dT7fgh/h/9TMRgqmrYY4CwKYPDAV66eAbTb4RVle?=
+ =?us-ascii?Q?ve41p4XmzxcOEvSA4LY4AAtZXrfGARqNqQBCVPt7khylVLyjkpPKg25VHZOB?=
+ =?us-ascii?Q?CU26XhDwitQO6dLHHc02HB+UdbNpTvGpTSY71wcgys5ZSrH6kb/RTK0DHJFp?=
+ =?us-ascii?Q?x9JXrgBzm8049bYvjhVP+R4jc1fxyUuBUYvU/yrx4U4eazvqcifzm4OIUK/Y?=
+ =?us-ascii?Q?Z+RZjYZl1c+ZIP4r5A02vfrOeMbKm+q88vA487VmtLV2akTn9AH0CjzB9cJY?=
+ =?us-ascii?Q?5RtW15xS26IyOnj/+9K87cmK/sX6DzCh6ORLdaCxe/TdBd80KIpG2YviRIQr?=
+ =?us-ascii?Q?WcQ2KkG0tuPTMyHiXQejFMYsaxYhpzZb/Qx+QJdtTP3RePISYuPr7Vlvtg8P?=
+ =?us-ascii?Q?628eWn0YxLztT2+Dohx1nXZCPI7XCDQoh4GaRB+xNdHt5NCv4Bg8IpuyUu6W?=
+ =?us-ascii?Q?XEIu7kZjP73rznMSynSxJplE3JEFEyDDAKlYJdO48cD0jTN6MuU/y7Whiud4?=
+ =?us-ascii?Q?SCRY7x2O47OPKtU8KxfOQtE9fpXRN6ymovX1VtUuJlF8808eU/Urp+GDYISh?=
+ =?us-ascii?Q?xqUKD1vqUWKzzWCSIZm7ovp5zh8Dqo7Jlvl9RCCNO8X9x53DKOsuNqGQN4Vi?=
+ =?us-ascii?Q?puiUShdZdc8VhlQuQQ9UWDwjdVOAz6Iyf3TeNp8l26E7XSuyy6r2nox0dNX1?=
+ =?us-ascii?Q?dySX2Ehfv7hgzNOXDsNCCmxMpSyXl3KfJVbWyHlO1AT6CDuBrYXYUOj0FOO7?=
+ =?us-ascii?Q?pr2ksZNnfSzzUo6iw5WzE55uH1AwrNdm+TZa4P1APL+VADq/PTtsrN5nu4EO?=
+ =?us-ascii?Q?JW3Te+DVPg7VLy355y8Z/2OhVjmB?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR21MB2002.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ff97e1b-9a34-4f7d-3dab-08d95120bed8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2021 17:05:33.1505
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3bLXKeOElv4Z4kXEKLY14KADamXT+9XHlUDkVfayk4FAkrcnf462MWOeo6tEYkYgq5pdQSXfeqf8ChgY8635zPrzhVrAiniQ0OS6zIlYJoE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0639
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 27-07-2021 22:05, Michael Kelley wrote:
-> From: Praveen Kumar <kumarpraveen@linux.microsoft.com> Sent: Tuesday, July 27, 2021 3:41 AM
->>
->> For Root partition the VP assist pages are pre-determined by the
->> hypervisor. The Root kernel is not allowed to change them to
->> different locations. And thus, we are getting below stack as in
->> current implementation Root is trying to perform write to specific
->> MSR.
->>
->> [ 2.778197] unchecked MSR access error: WRMSR to 0x40000073 (tried to
->> write 0x0000000145ac5001) at rIP: 0xffffffff810c1084
->> (native_write_msr+0x4/0x30)
->> [ 2.784867] Call Trace:
->> [ 2.791507] hv_cpu_init+0xf1/0x1c0
->> [ 2.798144] ? hyperv_report_panic+0xd0/0xd0
->> [ 2.804806] cpuhp_invoke_callback+0x11a/0x440
->> [ 2.811465] ? hv_resume+0x90/0x90
->> [ 2.818137] cpuhp_issue_call+0x126/0x130
->> [ 2.824782] __cpuhp_setup_state_cpuslocked+0x102/0x2b0
->> [ 2.831427] ? hyperv_report_panic+0xd0/0xd0
->> [ 2.838075] ? hyperv_report_panic+0xd0/0xd0
->> [ 2.844723] ? hv_resume+0x90/0x90
->> [ 2.851375] __cpuhp_setup_state+0x3d/0x90
->> [ 2.858030] hyperv_init+0x14e/0x410
->> [ 2.864689] ? enable_IR_x2apic+0x190/0x1a0
->> [ 2.871349] apic_intr_mode_init+0x8b/0x100
->> [ 2.878017] x86_late_time_init+0x20/0x30
->> [ 2.884675] start_kernel+0x459/0x4fb
->> [ 2.891329] secondary_startup_64_no_verify+0xb0/0xbb
->>
->> Since, the hypervisor already provides the VP assist page for root
->> partition, we need to memremap the memory from hypervisor for root
->> kernel to use. The mapping is done in hv_cpu_init during bringup and
->> is unmaped in hv_cpu_die during teardown.
->>
->> Signed-off-by: Praveen Kumar <kumarpraveen@linux.microsoft.com>
->> ---
->>  arch/x86/hyperv/hv_init.c          | 61 +++++++++++++++++++++---------
->>  arch/x86/include/asm/hyperv-tlfs.h |  9 +++++
->>  2 files changed, 53 insertions(+), 17 deletions(-)
->>
->> changelog:
->> v1: initial patch
->> v2: commit message changes, removal of HV_MSR_APIC_ACCESS_AVAILABLE
->>     check and addition of null check before reading the VP assist MSR
->>     for root partition
->> v3: added new data structure to handle VP ASSIST MSR page and done
->>     handling in hv_cpu_init and hv_cpu_die
->>
->> ---
->> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
->> index 6f247e7e07eb..b859e42b4943 100644
->> --- a/arch/x86/hyperv/hv_init.c
->> +++ b/arch/x86/hyperv/hv_init.c
->> @@ -44,6 +44,7 @@ EXPORT_SYMBOL_GPL(hv_vp_assist_page);
->>
->>  static int hv_cpu_init(unsigned int cpu)
->>  {
->> +	union hv_vp_assist_msr_contents msr;
->>  	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
->>  	int ret;
->>
->> @@ -54,27 +55,41 @@ static int hv_cpu_init(unsigned int cpu)
->>  	if (!hv_vp_assist_page)
->>  		return 0;
->>
->> -	/*
->> -	 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
->> -	 * 5.2.1 "GPA Overlay Pages"). Here it must be zeroed out to make sure
->> -	 * we always write the EOI MSR in hv_apic_eoi_write() *after* the
->> -	 * EOI optimization is disabled in hv_cpu_die(), otherwise a CPU may
->> -	 * not be stopped in the case of CPU offlining and the VM will hang.
->> -	 */
->> -	if (!*hvp) {
->> -		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
->> +	if (hv_root_partition) {
->> +		/*
->> +		 * For Root partition we get the hypervisor provided VP ASSIST
->> +		 * PAGE, instead of allocating a new page.
->> +		 */
->> +		rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
->> +
->> +		/* remapping to root partition address space */
->> +		if (!*hvp)
->> +			*hvp = memremap(msr.guest_physical_address <<
->> +					HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
->> +					PAGE_SIZE, MEMREMAP_WB);
->> +	} else {
->> +		/*
->> +		 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's
->> +		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
->> +		 * out to make sure we always write the EOI MSR in
->> +		 * hv_apic_eoi_write() *after* theEOI optimization is disabled
->> +		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
->> +		 * case of CPU offlining and the VM will hang.
->> +		 */
->> +		if (!*hvp)
->> +			*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
->> +
->>  	}
-> 
-> The tests here could be reversed to eliminate some duplication.  For example:
-> 
-> 	if(!*hvp) {
-> 		if (hv_root_partition) {
-> 			rdmsrl(....);
-> 			*hvp = memremap( .....);
-> 		} else {
-> 			*hvp = __vmalloc(....);
-> 		}
-> 	}
-> 
-> 
-Sure. Thanks.
+> Subject: [PATCH v11 3/5] arm64: hyperv: Initialize hypervisor on boot
+>=20
+> Add ARM64-specific code to initialize the Hyper-V
+> hypervisor when booting as a guest VM.
+>=20
+> This code is built only when CONFIG_HYPERV is enabled.
+>=20
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  arch/arm64/hyperv/Makefile   |  2 +-
+>  arch/arm64/hyperv/mshyperv.c | 83 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 84 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/hyperv/mshyperv.c
+>=20
+> diff --git a/arch/arm64/hyperv/Makefile b/arch/arm64/hyperv/Makefile
+> index 1697d30..87c31c0 100644
+> --- a/arch/arm64/hyperv/Makefile
+> +++ b/arch/arm64/hyperv/Makefile
+> @@ -1,2 +1,2 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-y		:=3D hv_core.o
+> +obj-y		:=3D hv_core.o mshyperv.o
+> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+> new file mode 100644
+> index 0000000..2811fd0
+> --- /dev/null
+> +++ b/arch/arm64/hyperv/mshyperv.c
+> @@ -0,0 +1,83 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Core routines for interacting with Microsoft's Hyper-V hypervisor,
+> + * including hypervisor initialization.
+> + *
+> + * Copyright (C) 2021, Microsoft, Inc.
+> + *
+> + * Author : Michael Kelley <mikelley@microsoft.com>
+> + */
+> +
+> +#include <linux/types.h>
+> +#include <linux/acpi.h>
+> +#include <linux/export.h>
+> +#include <linux/errno.h>
+> +#include <linux/version.h>
+> +#include <linux/cpuhotplug.h>
+> +#include <asm/mshyperv.h>
+> +
+> +static bool hyperv_initialized;
+> +
+> +static int __init hyperv_init(void)
+> +{
+> +	struct hv_get_vp_registers_output	result;
+> +	u32	a, b, c, d;
+> +	u64	guest_id;
+> +	int	ret;
+> +
+> +	/*
+> +	 * If we're in a VM on Hyper-V, the ACPI hypervisor_id field will
+> +	 * have the string "MsHyperV".
+> +	 */
+> +	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
+> +		return -EINVAL;
+> +
+> +	/* Setup the guest ID */
+> +	guest_id =3D generate_guest_id(0, LINUX_VERSION_CODE, 0);
+> +	hv_set_vpreg(HV_REGISTER_GUEST_OSID, guest_id);
+> +
+> +	/* Get the features and hints from Hyper-V */
+> +	hv_get_vpreg_128(HV_REGISTER_FEATURES, &result);
+> +	ms_hyperv.features =3D result.as32.a;
+> +	ms_hyperv.priv_high =3D result.as32.b;
+> +	ms_hyperv.misc_features =3D result.as32.c;
+> +
+> +	hv_get_vpreg_128(HV_REGISTER_ENLIGHTENMENTS, &result);
+> +	ms_hyperv.hints =3D result.as32.a;
+> +
+> +	pr_info("Hyper-V: privilege flags low 0x%x, high 0x%x, hints 0x%x, misc=
+ 0x%x\n",
+> +		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
+> +		ms_hyperv.misc_features);
+> +
+> +	/* Get information about the Hyper-V host version */
+> +	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION, &result);
+> +	a =3D result.as32.a;
+> +	b =3D result.as32.b;
+> +	c =3D result.as32.c;
+> +	d =3D result.as32.d;
+> +	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
+> +		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
+> +
+> +	ret =3D hv_common_init();
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "arm64/hyperv_init:onlin=
+e",
+> +				hv_common_cpu_init, hv_common_cpu_die);
+> +	if (ret < 0) {
+> +		hv_common_free();
+> +		return ret;
+> +	}
+> +
+> +	hyperv_initialized =3D true;
+> +	return 0;
+> +}
+> +
+> +early_initcall(hyperv_init);
+> +
+> +bool hv_is_hyperv_initialized(void)
+> +{
+> +	return hyperv_initialized;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
+> --
+> 1.8.3.1
 
->>
->> -	if (*hvp) {
->> -		u64 val;
->> +	WARN_ON(!(*hvp));
->>
->> -		val = vmalloc_to_pfn(*hvp);
->> -		val = (val << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) |
->> -			HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
->> +	if (*hvp) {
->> +		if (!hv_root_partition)
->> +			msr.guest_physical_address = vmalloc_to_pfn(*hvp);
->>
->> -		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, val);
->> +		msr.enable = 1;
->> +		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
-> 
-> This version has a substantive difference compared with previous versions
-> in that the "enable" bit is being set and written back to the MSR even when
-> running in the root partition.  Is that intentional?
-> 
-Yes, we need to enable the same for root partition as well.
-
->>  	}
->> -
->>  	return 0;
->>  }
->>
->> @@ -170,9 +185,21 @@ static int hv_cpu_die(unsigned int cpu)
->>
->>  	hv_common_cpu_die(cpu);
->>
->> -	if (hv_vp_assist_page && hv_vp_assist_page[cpu])
->> +	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
->>  		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
-> 
-> This will set the guest_physical_address in the MSR to zero,
-> even in the root partition case.  Is that OK?  It seems inconsistent
-> with hv_cpu_init() where the existing guest_physical_address
-> in the MSR is carefully preserved for the root partition case.
-> Or is the intent here simply to clear the "enable" flag?
-> 
->>
->> +		if (hv_root_partition) {
->> +			/*
->> +			 * For Root partition the VP ASSIST page is mapped to
->> +			 * hypervisor provided page, and thus, we unmap the
->> +			 * page here and nullify it, so that in future we have
->> +			 * correct page address mapped in hv_cpu_init
->> +			 */
->> +			memunmap(hv_vp_assist_page[cpu]);
->> +			hv_vp_assist_page[cpu] = NULL;
->> +		}
->> +	}
->> +
->>  	if (hv_reenlightenment_cb == NULL)
->>  		return 0;
->>
->> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
->> index f1366ce609e3..2e4e87046aa7 100644
->> --- a/arch/x86/include/asm/hyperv-tlfs.h
->> +++ b/arch/x86/include/asm/hyperv-tlfs.h
->> @@ -288,6 +288,15 @@ union hv_x64_msr_hypercall_contents {
->>  	} __packed;
->>  };
->>
->> +union hv_vp_assist_msr_contents {
->> +	u64 as_uint64;
->> +	struct {
->> +		u64 enable:1;
->> +		u64 reserved:11;
->> +		u64 guest_physical_address:52;
-> 
-> This field really should be named "guest_physical_page", as
-> it is a page number, not an address.  You've matched the
-> field names used in hv_x64_msr_hypercall_contents, which
-> is good for consistency, except that the field name is
-> wrong in hv_x64_msr_hypercall_contents. :-(   I think
-> the Hyper-V TLFS originally called it a "physical address", but
-> the TLFS has since been fixed to described it as a page number.
-> I'd suggest getting this one named correctly; fixing the field
-> name in hv_x64_msr_hypercall_contents is a separate cleanup
-> that doesn't need to be done now.
-> 
-Sure. Will do it for this new data structure.
-
->> +	} __packed;
->> +};
->> +
->>  struct hv_reenlightenment_control {
->>  	__u64 vector:8;
->>  	__u64 reserved1:8;
->> --
->> 2.25.1
-
-Regards,
-
-~Praveen.
+Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
