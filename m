@@ -2,148 +2,204 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8699D3D6674
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Jul 2021 20:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 277DE3D7374
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jul 2021 12:41:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233333AbhGZR1M (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 26 Jul 2021 13:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233213AbhGZR1J (ORCPT
+        id S236127AbhG0KlV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 27 Jul 2021 06:41:21 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:41666 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236104AbhG0KlV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 26 Jul 2021 13:27:09 -0400
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40016C061798;
-        Mon, 26 Jul 2021 11:07:33 -0700 (PDT)
-Received: by mail-il1-x129.google.com with SMTP id k3so9836602ilu.2;
-        Mon, 26 Jul 2021 11:07:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1ExxtPk3m7cD/MyVHcJHisgBq5NdaixHar/yvts63oY=;
-        b=lu6ztsDonsig5sCIETowNoTKgft3OXEsGkWrfkw8He3KqD/0JU/DK9nSpf258sg0Bz
-         i9CfwO0MFWfyclZTqiF/nY+UPtRMwrN26ANS2zqMruPGcvbZGskxaB+8QglMK2oq2+E9
-         d+gHrJ+HZLU7yMxzU9WjOL7oluVtm0ZLGtISL9vMNMWIySFEh9LzdRBDSNoFmKc5qEx/
-         Tq9YpvdpkkpR5WucSZPhHUJog0DGKCcL9OnvqS94uUV0cEaCaUkNOBtC11zkbFVWFVO1
-         s3aeZ7oHB/DX7pFnT9+WCcvGTsySvYYyGQnt4YkvAkLqd8pSSGQ8qgFJXetJNYCsaDIW
-         iLRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1ExxtPk3m7cD/MyVHcJHisgBq5NdaixHar/yvts63oY=;
-        b=nyiQedo3i04eUelhplaVnwX+E7u+prCppBubf4n3VK2nKqiybdY8BhgKGvzE2teRBE
-         8R74wXxk2GI9Di5BpSGo4wLET35pcra6E+UvRb5RzkJgy3uxfOXyfmS8YG0KT/3rf/1y
-         ceMaslPT6Xx3lL9yHx7oIY1djhGM4ADhr0L9pVj+hwy7E/qS47HJHuzbZYcPUrbuqInR
-         Ymnuom6nVK768Od0rtZYt+173kffzWeTlre+INip9dO4vMOTYsNSSO5o8xwbYH5pzghI
-         AKcV8QaGO74hp3ji65Jf5HzeiQ+7ZIC3ko1MNDN/89sOAzDQdHiNBdNftqoVvWvZ6GKX
-         q12Q==
-X-Gm-Message-State: AOAM532nswhd555C/viGp7VWu9vzNEeGWiLlcgFLLxhsfXnV6b9tJYYK
-        FJUdEJbs61mWZRAlhYYHtHg=
-X-Google-Smtp-Source: ABdhPJwjo+fF9BZyZ1BakHMFl5O/MdShV0ZbSl+l/TnHSzCFG+swYnuCtJh3DE0ifq0bZhyUxaJHcg==
-X-Received: by 2002:a92:260f:: with SMTP id n15mr13843918ile.143.1627322852708;
-        Mon, 26 Jul 2021 11:07:32 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id t2sm269781ilq.27.2021.07.26.11.07.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 11:07:32 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailauth.nyi.internal (Postfix) with ESMTP id E2BD227C0068;
-        Mon, 26 Jul 2021 14:07:30 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 26 Jul 2021 14:07:30 -0400
-X-ME-Sender: <xms:4vn-YFIjPVrX3C1_ocxwjJBa5NCRtSAeoVxZyiJujjVVcEeeGU3F8Q>
-    <xme:4vn-YBLSUU37kuuJ-iDMn6qQzoW5wzFHR2zjYiEtEYJ2k83VXWbNqTkynKZXjpFoo
-    9QCFQpoUA6jwKKt1Q>
-X-ME-Received: <xmr:4vn-YNv1iqoyaUa3OFLUBcm_wwh3f6DnxU4EzZZoyGnFDtqaKNvGLNt7AiI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrgeehgdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhephedvveetfefgiedutedtfeevvddvleekjeeuffffleeguefhhfejteekieeu
-    ueelnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepsg
-    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
-    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
-    hmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:4vn-YGbc1Ep22IZL8CsUSBhg_Af3l62yNyF-DbwFcMwCv4PImNwnag>
-    <xmx:4vn-YMY_8fiC7FduD1Et-GTeQVwNDd9RcQ3oVSWT1RYdQ5O6IGjPrw>
-    <xmx:4vn-YKCncr3lz1IAqs31OS6Buzei8GE770tmVaDMvEDQBWi_SEHHHQ>
-    <xmx:4vn-YJQfXwm48OQQq4BKhbqTHblNgvIWQ4YJOWhhchE-RKEJyvnjKCa6vtQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 26 Jul 2021 14:07:30 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v6 8/8] PCI: hv: Turn on the host bridge probing on ARM64
-Date:   Tue, 27 Jul 2021 02:06:57 +0800
-Message-Id: <20210726180657.142727-9-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210726180657.142727-1-boqun.feng@gmail.com>
-References: <20210726180657.142727-1-boqun.feng@gmail.com>
+        Tue, 27 Jul 2021 06:41:21 -0400
+Received: from localhost.localdomain (unknown [223.178.63.20])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E3A19203F736;
+        Tue, 27 Jul 2021 03:41:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3A19203F736
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1627382481;
+        bh=blgG5ZQertzB80NxUoxAYt3za0qaegyKHtCgIEBljl8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pAJuapn3h29JMCDay09ek0xzpPAcI5dm2eNP5PKKRskU9GfrNhnvMV+ZSCZ3uDH9N
+         92sg/IXsVT/W82bp+SK5XmpwxI2+EIwuJZxB1Ug1iZC/gsNt+xAtWjihdAz2GaIb9S
+         2d2kYy78FnrQ1WojbjgJQgX7PWh19WcLi1GBThC8=
+From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
+To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        viremana@linux.microsoft.com, sunilmut@microsoft.com,
+        nunodasneves@linux.microsoft.com
+Subject: [PATCH v3] hyperv: root partition faults writing to VP ASSIST MSR PAGE
+Date:   Tue, 27 Jul 2021 16:10:44 +0530
+Message-Id: <20210727104044.28078-1-kumarpraveen@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Now we have everything we need, just provide a proper sysdata type for
-the bus to use on ARM64 and everything else works.
+For Root partition the VP assist pages are pre-determined by the
+hypervisor. The Root kernel is not allowed to change them to
+different locations. And thus, we are getting below stack as in
+current implementation Root is trying to perform write to specific
+MSR.
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+[ 2.778197] unchecked MSR access error: WRMSR to 0x40000073 (tried to
+write 0x0000000145ac5001) at rIP: 0xffffffff810c1084
+(native_write_msr+0x4/0x30)
+[ 2.784867] Call Trace:
+[ 2.791507] hv_cpu_init+0xf1/0x1c0
+[ 2.798144] ? hyperv_report_panic+0xd0/0xd0
+[ 2.804806] cpuhp_invoke_callback+0x11a/0x440
+[ 2.811465] ? hv_resume+0x90/0x90
+[ 2.818137] cpuhp_issue_call+0x126/0x130
+[ 2.824782] __cpuhp_setup_state_cpuslocked+0x102/0x2b0
+[ 2.831427] ? hyperv_report_panic+0xd0/0xd0
+[ 2.838075] ? hyperv_report_panic+0xd0/0xd0
+[ 2.844723] ? hv_resume+0x90/0x90
+[ 2.851375] __cpuhp_setup_state+0x3d/0x90
+[ 2.858030] hyperv_init+0x14e/0x410
+[ 2.864689] ? enable_IR_x2apic+0x190/0x1a0
+[ 2.871349] apic_intr_mode_init+0x8b/0x100
+[ 2.878017] x86_late_time_init+0x20/0x30
+[ 2.884675] start_kernel+0x459/0x4fb
+[ 2.891329] secondary_startup_64_no_verify+0xb0/0xbb
+
+Since, the hypervisor already provides the VP assist page for root
+partition, we need to memremap the memory from hypervisor for root
+kernel to use. The mapping is done in hv_cpu_init during bringup and
+is unmaped in hv_cpu_die during teardown.
+
+Signed-off-by: Praveen Kumar <kumarpraveen@linux.microsoft.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/hyperv/hv_init.c          | 61 +++++++++++++++++++++---------
+ arch/x86/include/asm/hyperv-tlfs.h |  9 +++++
+ 2 files changed, 53 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index e6276aaa4659..62dbe98d1fe1 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -40,6 +40,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/pci-ecam.h>
- #include <linux/delay.h>
- #include <linux/semaphore.h>
- #include <linux/irqdomain.h>
-@@ -448,7 +449,11 @@ enum hv_pcibus_state {
+changelog:
+v1: initial patch
+v2: commit message changes, removal of HV_MSR_APIC_ACCESS_AVAILABLE
+    check and addition of null check before reading the VP assist MSR
+    for root partition
+v3: added new data structure to handle VP ASSIST MSR page and done
+    handling in hv_cpu_init and hv_cpu_die
+
+---
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 6f247e7e07eb..b859e42b4943 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -44,6 +44,7 @@ EXPORT_SYMBOL_GPL(hv_vp_assist_page);
+ 
+ static int hv_cpu_init(unsigned int cpu)
+ {
++	union hv_vp_assist_msr_contents msr;
+ 	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+ 	int ret;
+ 
+@@ -54,27 +55,41 @@ static int hv_cpu_init(unsigned int cpu)
+ 	if (!hv_vp_assist_page)
+ 		return 0;
+ 
+-	/*
+-	 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
+-	 * 5.2.1 "GPA Overlay Pages"). Here it must be zeroed out to make sure
+-	 * we always write the EOI MSR in hv_apic_eoi_write() *after* the
+-	 * EOI optimization is disabled in hv_cpu_die(), otherwise a CPU may
+-	 * not be stopped in the case of CPU offlining and the VM will hang.
+-	 */
+-	if (!*hvp) {
+-		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
++	if (hv_root_partition) {
++		/*
++		 * For Root partition we get the hypervisor provided VP ASSIST
++		 * PAGE, instead of allocating a new page.
++		 */
++		rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
++
++		/* remapping to root partition address space */
++		if (!*hvp)
++			*hvp = memremap(msr.guest_physical_address <<
++					HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
++					PAGE_SIZE, MEMREMAP_WB);
++	} else {
++		/*
++		 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's
++		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
++		 * out to make sure we always write the EOI MSR in
++		 * hv_apic_eoi_write() *after* theEOI optimization is disabled
++		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
++		 * case of CPU offlining and the VM will hang.
++		 */
++		if (!*hvp)
++			*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
++
+ 	}
+ 
+-	if (*hvp) {
+-		u64 val;
++	WARN_ON(!(*hvp));
+ 
+-		val = vmalloc_to_pfn(*hvp);
+-		val = (val << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) |
+-			HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
++	if (*hvp) {
++		if (!hv_root_partition)
++			msr.guest_physical_address = vmalloc_to_pfn(*hvp);
+ 
+-		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, val);
++		msr.enable = 1;
++		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+ 	}
+-
+ 	return 0;
+ }
+ 
+@@ -170,9 +185,21 @@ static int hv_cpu_die(unsigned int cpu)
+ 
+ 	hv_common_cpu_die(cpu);
+ 
+-	if (hv_vp_assist_page && hv_vp_assist_page[cpu])
++	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
+ 		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
+ 
++		if (hv_root_partition) {
++			/*
++			 * For Root partition the VP ASSIST page is mapped to
++			 * hypervisor provided page, and thus, we unmap the
++			 * page here and nullify it, so that in future we have
++			 * correct page address mapped in hv_cpu_init
++			 */
++			memunmap(hv_vp_assist_page[cpu]);
++			hv_vp_assist_page[cpu] = NULL;
++		}
++	}
++
+ 	if (hv_reenlightenment_cb == NULL)
+ 		return 0;
+ 
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index f1366ce609e3..2e4e87046aa7 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -288,6 +288,15 @@ union hv_x64_msr_hypercall_contents {
+ 	} __packed;
  };
  
- struct hv_pcibus_device {
-+#ifdef CONFIG_X86
- 	struct pci_sysdata sysdata;
-+#elif defined(CONFIG_ARM64)
-+	struct pci_config_window sysdata;
-+#endif
- 	struct pci_host_bridge *bridge;
- 	struct fwnode_handle *fwnode;
- 	/* Protocol version negotiated with the host */
-@@ -3075,7 +3080,9 @@ static int hv_pci_probe(struct hv_device *hdev,
- 			 dom_req, dom);
- 
- 	hbus->bridge->domain_nr = dom;
-+#ifdef CONFIG_X86
- 	hbus->sysdata.domain = dom;
-+#endif
- 
- 	hbus->hdev = hdev;
- 	INIT_LIST_HEAD(&hbus->children);
++union hv_vp_assist_msr_contents {
++	u64 as_uint64;
++	struct {
++		u64 enable:1;
++		u64 reserved:11;
++		u64 guest_physical_address:52;
++	} __packed;
++};
++
+ struct hv_reenlightenment_control {
+ 	__u64 vector:8;
+ 	__u64 reserved1:8;
 -- 
-2.32.0
+2.25.1
 
