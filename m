@@ -2,56 +2,30 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79CE73D914C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jul 2021 16:54:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AABB03D91EB
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jul 2021 17:29:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237463AbhG1Oye (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 28 Jul 2021 10:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237321AbhG1OyO (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 28 Jul 2021 10:54:14 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E4BC061384;
-        Wed, 28 Jul 2021 07:53:39 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id c16so2995303plh.7;
-        Wed, 28 Jul 2021 07:53:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=29igml5xJQT7NZ/zHELD608zwBtMw+CBZNUu6aD3TXw=;
-        b=SU5+MP1dlZCdXiG26CqRqBNmqpOnXlHHd6+fcRsxbvw2EKuyqOU5Mopp7bVlS/zejO
-         csfVLQRSDXU/7dyozcqNTbp4P2dmnl8BvfUDZ1Gqg7dgoQW5/yF5uiTbfYAy+VmENB1e
-         ZbRjIv/17kq9qz1Iwt0YvmWCsP015hBjqyx7Z42jWLt2YBzb/erhrTjXS+igHusqWvTV
-         bsLn/A16PIaeWfmCBYPCwhZk+c/L4TU0ebGyf7PLH2QjuceGtPagZYnSsDqBPkotX/hN
-         i7oMHXglQkgWHkJisLKxQxmwRHNVomuhibIwUMR5k1D0bq2YE4VhqLodvPvuOU9g6oxL
-         pZ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=29igml5xJQT7NZ/zHELD608zwBtMw+CBZNUu6aD3TXw=;
-        b=X0xdCflInmCmjLypMQvFsmT7kBfEJMEmyGxSUIUs2E322O3PQflDjnKgCJAYTV6SyG
-         BRh+6D/Z6l8c2830nEEhPQgK09tzucC5wJDSnkrZoraeFQLG2TXhMOEGKsEAV1OqUMyx
-         GIuwsMiM5SGxmKfA+nPrAZnE+YvAyBcytIRifSniHn/+dZXMGg9r+gsAcRVfKr8xPqJv
-         unt+sv/3yzMV5v7sM1q2OzxHtcMGhbXfYY/hTUbcVSd0GQsZWitk2iwTiFfawrLk8Tp8
-         ZGokTdB+IUruhqGMkaatmt6YM5drTYzs2mpX/QbLjc2RLx3PourpHVgsSXoHbrBxYtew
-         2Dig==
-X-Gm-Message-State: AOAM531uZb2OIlRrFGhcBhGo/jvYPk23HP/p79PgRkMVfFYWLrQzDh1D
-        VnKdUHoX5giV9E/NqQGD7JY=
-X-Google-Smtp-Source: ABdhPJzheaAoRTrkFU3jE3YHYpkFIR7nUHQbhRWDG+7XrGIy9dCpNUWuhIUXvdG5v42plPOPnYbJQA==
-X-Received: by 2002:a63:84:: with SMTP id 126mr169114pga.221.1627484019244;
-        Wed, 28 Jul 2021 07:53:39 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:0:3823:141e:6d51:f0ad])
-        by smtp.gmail.com with ESMTPSA id n134sm277558pfd.89.2021.07.28.07.53.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jul 2021 07:53:38 -0700 (PDT)
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        id S237287AbhG1P3w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 28 Jul 2021 11:29:52 -0400
+Received: from mga07.intel.com ([134.134.136.100]:19023 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237292AbhG1P3v (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 28 Jul 2021 11:29:51 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="276471631"
+X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
+   d="scan'208";a="276471631"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 08:29:46 -0700
+X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
+   d="scan'208";a="517575500"
+Received: from sobsiex-desk2.amr.corp.intel.com (HELO [10.212.198.197]) ([10.212.198.197])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 08:29:43 -0700
+Subject: Re: [PATCH 03/13] x86/HV: Add new hvcall guest address host
+ visibility support
+To:     Tianyu Lan <ltykernel@gmail.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
         dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
         konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
         jgross@suse.com, sstabellini@kernel.org, joro@8bytes.org,
@@ -71,174 +45,118 @@ Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
         vkuznets@redhat.com, anparri@microsoft.com
-Subject: [PATCH 13/13] HV/Storvsc: Add Isolation VM support for storvsc driver
-Date:   Wed, 28 Jul 2021 10:52:28 -0400
-Message-Id: <20210728145232.285861-14-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210728145232.285861-1-ltykernel@gmail.com>
 References: <20210728145232.285861-1-ltykernel@gmail.com>
+ <20210728145232.285861-4-ltykernel@gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
+ CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
+ 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
+ K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
+ VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
+ e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
+ ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
+ kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
+ rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
+ f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
+ mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
+ UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
+ sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
+ 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
+ cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
+ UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
+ db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
+ lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
+ kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
+ gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
+ AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
+ XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
+ e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
+ pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
+ YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
+ lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
+ M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
+ 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
+ 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
+ OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
+ ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
+ z5cecg==
+Message-ID: <c00e269c-da4c-c703-0182-0221c73a76cc@intel.com>
+Date:   Wed, 28 Jul 2021 08:29:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20210728145232.285861-4-ltykernel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On 7/28/21 7:52 AM, Tianyu Lan wrote:
+> @@ -1986,7 +1988,9 @@ static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+>  	int ret;
+>  
+>  	/* Nothing to do if memory encryption is not active */
+> -	if (!mem_encrypt_active())
+> +	if (hv_is_isolation_supported())
+> +		return hv_set_mem_enc(addr, numpages, enc);
+> +	else if (!mem_encrypt_active())
+>  		return 0;
 
-In Isolation VM, all shared memory with host needs to mark visible
-to host via hvcall. vmbus_establish_gpadl() has already done it for
-storvsc rx/tx ring buffer. The page buffer used by vmbus_sendpacket_
-mpb_desc() still need to handle. Use DMA API to map/umap these
-memory during sending/receiving packet and Hyper-V DMA ops callback
-will use swiotlb function to allocate bounce buffer and copy data
-from/to bounce buffer.
+__set_memory_enc_dec() is turning into a real mess.  SEV, TDX and now
+Hyper-V are messing around in here.
 
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- drivers/scsi/storvsc_drv.c | 68 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 63 insertions(+), 5 deletions(-)
+It doesn't help that these additions are totally uncommented.  Even
+worse is that hv_set_mem_enc() was intentionally named "enc" when it
+presumably has nothing to do with encryption.
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 328bb961c281..78320719bdd8 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -21,6 +21,8 @@
- #include <linux/device.h>
- #include <linux/hyperv.h>
- #include <linux/blkdev.h>
-+#include <linux/io.h>
-+#include <linux/dma-mapping.h>
- #include <scsi/scsi.h>
- #include <scsi/scsi_cmnd.h>
- #include <scsi/scsi_host.h>
-@@ -427,6 +429,8 @@ struct storvsc_cmd_request {
- 	u32 payload_sz;
- 
- 	struct vstor_packet vstor_packet;
-+	u32 hvpg_count;
-+	struct hv_dma_range *dma_range;
- };
- 
- 
-@@ -509,6 +513,14 @@ struct storvsc_scan_work {
- 	u8 tgt_id;
- };
- 
-+#define storvsc_dma_map(dev, page, offset, size, dir) \
-+	dma_map_page(dev, page, offset, size, dir)
-+
-+#define storvsc_dma_unmap(dev, dma_range, dir)		\
-+		dma_unmap_page(dev, dma_range.dma,	\
-+			       dma_range.mapping_size,	\
-+			       dir ? DMA_FROM_DEVICE : DMA_TO_DEVICE)
-+
- static void storvsc_device_scan(struct work_struct *work)
- {
- 	struct storvsc_scan_work *wrk;
-@@ -1260,6 +1272,7 @@ static void storvsc_on_channel_callback(void *context)
- 	struct hv_device *device;
- 	struct storvsc_device *stor_device;
- 	struct Scsi_Host *shost;
-+	int i;
- 
- 	if (channel->primary_channel != NULL)
- 		device = channel->primary_channel->device_obj;
-@@ -1314,6 +1327,15 @@ static void storvsc_on_channel_callback(void *context)
- 				request = (struct storvsc_cmd_request *)scsi_cmd_priv(scmnd);
- 			}
- 
-+			if (request->dma_range) {
-+				for (i = 0; i < request->hvpg_count; i++)
-+					storvsc_dma_unmap(&device->device,
-+						request->dma_range[i],
-+						request->vstor_packet.vm_srb.data_in == READ_TYPE);
-+
-+				kfree(request->dma_range);
-+			}
-+
- 			storvsc_on_receive(stor_device, packet, request);
- 			continue;
- 		}
-@@ -1810,7 +1832,9 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 		unsigned int hvpgoff, hvpfns_to_add;
- 		unsigned long offset_in_hvpg = offset_in_hvpage(sgl->offset);
- 		unsigned int hvpg_count = HVPFN_UP(offset_in_hvpg + length);
-+		dma_addr_t dma;
- 		u64 hvpfn;
-+		u32 size;
- 
- 		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
- 
-@@ -1824,6 +1848,13 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 		payload->range.len = length;
- 		payload->range.offset = offset_in_hvpg;
- 
-+		cmd_request->dma_range = kcalloc(hvpg_count,
-+				 sizeof(*cmd_request->dma_range),
-+				 GFP_ATOMIC);
-+		if (!cmd_request->dma_range) {
-+			ret = -ENOMEM;
-+			goto free_payload;
-+		}
- 
- 		for (i = 0; sgl != NULL; sgl = sg_next(sgl)) {
- 			/*
-@@ -1847,9 +1878,29 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 			 * last sgl should be reached at the same time that
- 			 * the PFN array is filled.
- 			 */
--			while (hvpfns_to_add--)
--				payload->range.pfn_array[i++] =	hvpfn++;
-+			while (hvpfns_to_add--) {
-+				size = min(HV_HYP_PAGE_SIZE - offset_in_hvpg,
-+					   (unsigned long)length);
-+				dma = storvsc_dma_map(&dev->device, pfn_to_page(hvpfn++),
-+						      offset_in_hvpg, size,
-+						      scmnd->sc_data_direction);
-+				if (dma_mapping_error(&dev->device, dma)) {
-+					ret = -ENOMEM;
-+					goto free_dma_range;
-+				}
-+
-+				if (offset_in_hvpg) {
-+					payload->range.offset = dma & ~HV_HYP_PAGE_MASK;
-+					offset_in_hvpg = 0;
-+				}
-+
-+				cmd_request->dma_range[i].dma = dma;
-+				cmd_request->dma_range[i].mapping_size = size;
-+				payload->range.pfn_array[i++] = dma >> HV_HYP_PAGE_SHIFT;
-+				length -= size;
-+			}
- 		}
-+		cmd_request->hvpg_count = hvpg_count;
- 	}
- 
- 	cmd_request->payload = payload;
-@@ -1860,13 +1911,20 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	put_cpu();
- 
- 	if (ret == -EAGAIN) {
--		if (payload_sz > sizeof(cmd_request->mpb))
--			kfree(payload);
- 		/* no more space */
--		return SCSI_MLQUEUE_DEVICE_BUSY;
-+		ret = SCSI_MLQUEUE_DEVICE_BUSY;
-+		goto free_dma_range;
- 	}
- 
- 	return 0;
-+
-+free_dma_range:
-+	kfree(cmd_request->dma_range);
-+
-+free_payload:
-+	if (payload_sz > sizeof(cmd_request->mpb))
-+		kfree(payload);
-+	return ret;
- }
- 
- static struct scsi_host_template scsi_driver = {
--- 
-2.25.1
+This needs to be refactored.  The current __set_memory_enc_dec() can
+become __set_memory_enc_pgtable().  It gets used for the hypervisors
+that get informed about "encryption" status via page tables: SEV and TDX.
 
+Then, rename hv_set_mem_enc() to hv_set_visible_hcall().  You'll end up
+with:
+
+int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+{
+	if (hv_is_isolation_supported())
+		return hv_set_visible_hcall(...);
+
+	if (mem_encrypt_active() || ...)
+		return __set_memory_enc_pgtable();
+
+	/* Nothing to do */
+	return 0;
+}
+
+That tells the story pretty effectively, in code.
+
+> +int hv_set_mem_enc(unsigned long addr, int numpages, bool enc)
+> +{
+> +	return hv_set_mem_host_visibility((void *)addr,
+> +			numpages * HV_HYP_PAGE_SIZE,
+> +			enc ? VMBUS_PAGE_NOT_VISIBLE
+> +			: VMBUS_PAGE_VISIBLE_READ_WRITE);
+> +}
+
+I know this is off in Hyper-V code, but this just makes my eyes bleed.
+I'd much rather see something which is less compact but readable.
+
+> +/* Hyper-V GPA map flags */
+> +#define	VMBUS_PAGE_NOT_VISIBLE		0
+> +#define	VMBUS_PAGE_VISIBLE_READ_ONLY	1
+> +#define	VMBUS_PAGE_VISIBLE_READ_WRITE	3
+
+That looks suspiciously like an enum.
