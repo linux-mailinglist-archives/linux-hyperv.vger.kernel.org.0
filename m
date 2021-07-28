@@ -2,24 +2,24 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AABB03D91EB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jul 2021 17:29:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 267D43D93F3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jul 2021 19:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237287AbhG1P3w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 28 Jul 2021 11:29:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:19023 "EHLO mga07.intel.com"
+        id S230201AbhG1RHQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 28 Jul 2021 13:07:16 -0400
+Received: from mga17.intel.com ([192.55.52.151]:32424 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237292AbhG1P3v (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 28 Jul 2021 11:29:51 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="276471631"
+        id S229567AbhG1RHQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 28 Jul 2021 13:07:16 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="192989419"
 X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="276471631"
+   d="scan'208";a="192989419"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 08:29:46 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 10:06:51 -0700
 X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="517575500"
+   d="scan'208";a="517613242"
 Received: from sobsiex-desk2.amr.corp.intel.com (HELO [10.212.198.197]) ([10.212.198.197])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 08:29:43 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 10:06:46 -0700
 Subject: Re: [PATCH 03/13] x86/HV: Add new hvcall guest address host
  visibility support
 To:     Tianyu Lan <ltykernel@gmail.com>, kys@microsoft.com,
@@ -91,8 +91,8 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
  ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
  z5cecg==
-Message-ID: <c00e269c-da4c-c703-0182-0221c73a76cc@intel.com>
-Date:   Wed, 28 Jul 2021 08:29:41 -0700
+Message-ID: <a2444c36-0103-8e1c-7005-d97f77f90e85@intel.com>
+Date:   Wed, 28 Jul 2021 10:06:45 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
@@ -115,48 +115,23 @@ On 7/28/21 7:52 AM, Tianyu Lan wrote:
 > +	else if (!mem_encrypt_active())
 >  		return 0;
 
-__set_memory_enc_dec() is turning into a real mess.  SEV, TDX and now
-Hyper-V are messing around in here.
+One more thing.  If you're going to be patching generic code, please
+start using feature checks that can get optimized away at runtime.
+hv_is_isolation_supported() doesn't look like the world's cheapest
+check.  It can't be inlined and costs at least a function call.
 
-It doesn't help that these additions are totally uncommented.  Even
-worse is that hv_set_mem_enc() was intentionally named "enc" when it
-presumably has nothing to do with encryption.
+These checks could, with basically no effort be wrapped in a header like
+this:
 
-This needs to be refactored.  The current __set_memory_enc_dec() can
-become __set_memory_enc_pgtable().  It gets used for the hypervisors
-that get informed about "encryption" status via page tables: SEV and TDX.
-
-Then, rename hv_set_mem_enc() to hv_set_visible_hcall().  You'll end up
-with:
-
-int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+static inline bool hv_is_isolation_supported(void)
 {
-	if (hv_is_isolation_supported())
-		return hv_set_visible_hcall(...);
+	if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+		return 0;
 
-	if (mem_encrypt_active() || ...)
-		return __set_memory_enc_pgtable();
+	// out of line function call:
+	return __hv_is_isolation_supported();
+}	
 
-	/* Nothing to do */
-	return 0;
-}
-
-That tells the story pretty effectively, in code.
-
-> +int hv_set_mem_enc(unsigned long addr, int numpages, bool enc)
-> +{
-> +	return hv_set_mem_host_visibility((void *)addr,
-> +			numpages * HV_HYP_PAGE_SIZE,
-> +			enc ? VMBUS_PAGE_NOT_VISIBLE
-> +			: VMBUS_PAGE_VISIBLE_READ_WRITE);
-> +}
-
-I know this is off in Hyper-V code, but this just makes my eyes bleed.
-I'd much rather see something which is less compact but readable.
-
-> +/* Hyper-V GPA map flags */
-> +#define	VMBUS_PAGE_NOT_VISIBLE		0
-> +#define	VMBUS_PAGE_VISIBLE_READ_ONLY	1
-> +#define	VMBUS_PAGE_VISIBLE_READ_WRITE	3
-
-That looks suspiciously like an enum.
+I don't think it would be the end of the world to add an
+X86_FEATURE_HYPERV_GUEST, either.  There are plenty of bits allocated
+for Xen and VMWare.
