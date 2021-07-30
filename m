@@ -2,130 +2,202 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D86723DB61B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jul 2021 11:36:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40BCD3DBD80
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jul 2021 19:11:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238208AbhG3JgU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 30 Jul 2021 05:36:20 -0400
-Received: from smtp-fw-80006.amazon.com ([99.78.197.217]:1163 "EHLO
-        smtp-fw-80006.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238200AbhG3JgT (ORCPT
+        id S229773AbhG3RLK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 30 Jul 2021 13:11:10 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:45352 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229738AbhG3RLJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 30 Jul 2021 05:36:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1627637775; x=1659173775;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=cP+JhXq5Nalma4gVWY0bx4G6vVp3XZYSMJqhpGkBToc=;
-  b=K4gWx3xuRC3u6e1IWMd6ov2gCBbM/JIXwaZWvjVbQTQHkJonXCWpZrP+
-   m/bZod786THzGvnNdTguEd7hfePQhHrmIp10CA5T9xS374lPb+YQllFN7
-   tlbqDf3iWxROXLmJbdto07yNgS+u4wQ8g20duNVwUqIQQ16TAWQJRr09k
-   E=;
-X-IronPort-AV: E=Sophos;i="5.84,281,1620691200"; 
-   d="scan'208";a="15928374"
-Subject: Re: [PATCH] asm-generic/hyperv: Fix struct hv_message_header ordering
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP; 30 Jul 2021 09:36:07 +0000
-Received: from EX13D28EUC003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id D6F42A2241;
-        Fri, 30 Jul 2021 09:36:06 +0000 (UTC)
-Received: from u366d62d47e3651.ant.amazon.com (10.43.160.85) by
- EX13D28EUC003.ant.amazon.com (10.43.164.43) with Microsoft SMTP Server (TLS)
- id 15.0.1497.23; Fri, 30 Jul 2021 09:36:01 +0000
-Date:   Fri, 30 Jul 2021 11:35:57 +0200
-From:   Siddharth Chandrasekaran <sidcha@amazon.de>
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Siddharth Chandrasekaran <sidcha.dev@gmail.com>,
-        Liran Alon <liran@amazon.com>,
-        Ioannis Aslanidis <iaslan@amazon.de>,
-        <linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, Arnd Bergmann <arnd@arndb.de>
-Message-ID: <20210730091649.GA13442@u366d62d47e3651.ant.amazon.com>
-References: <20210729133702.11383-1-sidcha@amazon.de>
- <87eebh9qhd.fsf@vitty.brq.redhat.com>
- <20210729140705.wj5tokeq6lkxm2yy@liuwe-devbox-debian-v2>
- <20210729142652.GA25242@uc8bbc9586ea454.ant.amazon.com>
- <20210729165638.f5idr2ag3pdbpd6u@liuwe-devbox-debian-v2>
+        Fri, 30 Jul 2021 13:11:09 -0400
+Received: from localhost.localdomain (unknown [223.178.63.20])
+        by linux.microsoft.com (Postfix) with ESMTPSA id CAF7E205CFA8;
+        Fri, 30 Jul 2021 10:11:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CAF7E205CFA8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1627665064;
+        bh=loHt2GULj8ZdlkayrHjIIFAEp8B/fCNQFqOnpFghIf4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eAo2b7K6+W2EGt/aUB4xADlkAzWWCp1+ahUVZeezo2CtHhoPYtqR/8z4eHIK9VNW6
+         ZfTrjFO/5lJGsdVNszLsk+IvRWD+8Gn7NKLFqkS6LYpcoIFYWP92UhGZLV6CjDSDuZ
+         Pp5mtQ0uIUKHBs8ff1E8CKIxlxBI1nzm0x2bLtmk=
+From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
+To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        viremana@linux.microsoft.com, sunilmut@microsoft.com,
+        nunodasneves@linux.microsoft.com
+Subject: [PATCH v4] hyperv: root partition faults writing to VP ASSIST MSR PAGE
+Date:   Fri, 30 Jul 2021 22:40:56 +0530
+Message-Id: <20210730171056.2820-1-kumarpraveen@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20210729165638.f5idr2ag3pdbpd6u@liuwe-devbox-debian-v2>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.43.160.85]
-X-ClientProxiedBy: EX13D38UWC001.ant.amazon.com (10.43.162.170) To
- EX13D28EUC003.ant.amazon.com (10.43.164.43)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 04:56:38PM +0000, Wei Liu wrote:
-> On Thu, Jul 29, 2021 at 04:26:54PM +0200, Siddharth Chandrasekaran wrote:
-> > On Thu, Jul 29, 2021 at 02:07:05PM +0000, Wei Liu wrote:
-> > > On Thu, Jul 29, 2021 at 03:52:46PM +0200, Vitaly Kuznetsov wrote:
-> > > > Siddharth Chandrasekaran <sidcha@amazon.de> writes:
-> > > >
-> > > > > According to Hyper-V TLFS Version 6.0b, struct hv_message_header members
-> > > > > should be defined in the order:
-> > > > >
-> > > > >     message_type, reserved, message_flags, payload_size
-> > > > >
-> > > > > but we have it defined in the order:
-> > > > >
-> > > > >     message_type, payload_size, message_flags, reserved
-> > > > >
-> > > > > that is, the payload_size and reserved members swapped.
-> > > >
-> > > > Indeed,
-> > > >
-> > > > typedef struct
-> > > > {
-> > > >       HV_MESSAGE_TYPE MessageType;
-> > > >       UINT16 Reserved;
-> > > >       HV_MESSAGE_FLAGS MessageFlags;
-> > > >       UINT8 PayloadSize;
-> > > >       union
-> > > >       {
-> > > >               UINT64 OriginationId;
-> > > >               HV_PARTITION_ID Sender;
-> > > >               HV_PORT_ID Port;
-> > > >       };
-> > > > } HV_MESSAGE_HEADER;
-> > >
-> > > Well. I think TLFS is wrong. Let me ask around.
-> >
-> > TBH, I hadn't considered that possibility :). I assumed it was a
-> > regression on our side. But I spent some time tracing the history of that
-> > struct all the way back to when it was in staging (in 2009) and now I'm
-> > inclined to believe a later version of TLFS is at fault here.
-> >
-> > Based on what we decide in this thread, I will open an issue on the TLFS
-> > GitHub repository.
-> >
-> 
-> I have confirmation TLFS is wrong and shall be fixed. Feel free to open
-> an issue on GitHub too.
+For Root partition the VP assist pages are pre-determined by the
+hypervisor. The Root kernel is not allowed to change them to
+different locations. And thus, we are getting below stack as in
+current implementation Root is trying to perform write to specific
+MSR.
 
-Thanks for the confirmation, I created an issue [1] to track this.
+[ 2.778197] unchecked MSR access error: WRMSR to 0x40000073 (tried to
+write 0x0000000145ac5001) at rIP: 0xffffffff810c1084
+(native_write_msr+0x4/0x30)
+[ 2.784867] Call Trace:
+[ 2.791507] hv_cpu_init+0xf1/0x1c0
+[ 2.798144] ? hyperv_report_panic+0xd0/0xd0
+[ 2.804806] cpuhp_invoke_callback+0x11a/0x440
+[ 2.811465] ? hv_resume+0x90/0x90
+[ 2.818137] cpuhp_issue_call+0x126/0x130
+[ 2.824782] __cpuhp_setup_state_cpuslocked+0x102/0x2b0
+[ 2.831427] ? hyperv_report_panic+0xd0/0xd0
+[ 2.838075] ? hyperv_report_panic+0xd0/0xd0
+[ 2.844723] ? hv_resume+0x90/0x90
+[ 2.851375] __cpuhp_setup_state+0x3d/0x90
+[ 2.858030] hyperv_init+0x14e/0x410
+[ 2.864689] ? enable_IR_x2apic+0x190/0x1a0
+[ 2.871349] apic_intr_mode_init+0x8b/0x100
+[ 2.878017] x86_late_time_init+0x20/0x30
+[ 2.884675] start_kernel+0x459/0x4fb
+[ 2.891329] secondary_startup_64_no_verify+0xb0/0xbb
 
-~ Sid.
+Since, the hypervisor already provides the VP assist page for root
+partition, we need to memremap the memory from hypervisor for root
+kernel to use. The mapping is done in hv_cpu_init during bringup and
+is unmaped in hv_cpu_die during teardown.
 
-[1]: https://github.com/MicrosoftDocs/Virtualization-Documentation/issues/1624
+Signed-off-by: Praveen Kumar <kumarpraveen@linux.microsoft.com>
+---
+ arch/x86/hyperv/hv_init.c          | 63 ++++++++++++++++++++----------
+ arch/x86/include/asm/hyperv-tlfs.h |  9 +++++
+ 2 files changed, 52 insertions(+), 20 deletions(-)
 
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+changelog:
+v1: initial patch
+v2: commit message changes, removal of HV_MSR_APIC_ACCESS_AVAILABLE
+    check and addition of null check before reading the VP assist MSR
+    for root partition
+v3: added new data structure to handle VP ASSIST MSR page and done
+    handling in hv_cpu_init and hv_cpu_die
+v4: better code alignment, VP ASSIST handling correction for root
+    partition in hv_cpu_die and renaming of hv_vp_assist_msr_contents
+    attribute
+---
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 6f247e7e07eb..70263f6330d9 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -44,6 +44,7 @@ EXPORT_SYMBOL_GPL(hv_vp_assist_page);
+ 
+ static int hv_cpu_init(unsigned int cpu)
+ {
++	union hv_vp_assist_msr_contents msr = {0};
+ 	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+ 	int ret;
+ 
+@@ -54,25 +55,34 @@ static int hv_cpu_init(unsigned int cpu)
+ 	if (!hv_vp_assist_page)
+ 		return 0;
+ 
+-	/*
+-	 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
+-	 * 5.2.1 "GPA Overlay Pages"). Here it must be zeroed out to make sure
+-	 * we always write the EOI MSR in hv_apic_eoi_write() *after* the
+-	 * EOI optimization is disabled in hv_cpu_die(), otherwise a CPU may
+-	 * not be stopped in the case of CPU offlining and the VM will hang.
+-	 */
+ 	if (!*hvp) {
+-		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
+-	}
+-
+-	if (*hvp) {
+-		u64 val;
+-
+-		val = vmalloc_to_pfn(*hvp);
+-		val = (val << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) |
+-			HV_X64_MSR_VP_ASSIST_PAGE_ENABLE;
+-
+-		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, val);
++		if (hv_root_partition) {
++			/*
++			 * For Root partition we get the hypervisor provided VP ASSIST
++			 * PAGE, instead of allocating a new page.
++			 */
++			rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
++			*hvp = memremap(msr.pfn <<
++					HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
++					PAGE_SIZE, MEMREMAP_WB);
++		} else {
++			/*
++			 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's
++			 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
++			 * out to make sure we always write the EOI MSR in
++			 * hv_apic_eoi_write() *after* theEOI optimization is disabled
++			 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
++			 * case of CPU offlining and the VM will hang.
++			 */
++			*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
++			if (*hvp)
++				msr.pfn = vmalloc_to_pfn(*hvp);
++		}
++		WARN_ON(!(*hvp));
++		if (*hvp) {
++			msr.enable = 1;
++			wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
++		}
+ 	}
+ 
+ 	return 0;
+@@ -170,8 +180,21 @@ static int hv_cpu_die(unsigned int cpu)
+ 
+ 	hv_common_cpu_die(cpu);
+ 
+-	if (hv_vp_assist_page && hv_vp_assist_page[cpu])
+-		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
++	if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
++		union hv_vp_assist_msr_contents msr = {0};
++		if (hv_root_partition) {
++			/*
++			 * For Root partition the VP ASSIST page is mapped to
++			 * hypervisor provided page, and thus, we unmap the
++			 * page here and nullify it, so that in future we have
++			 * correct page address mapped in hv_cpu_init.
++			 */
++			memunmap(hv_vp_assist_page[cpu]);
++			hv_vp_assist_page[cpu] = NULL;
++			rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
++		}
++		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
++	}
+ 
+ 	if (hv_reenlightenment_cb == NULL)
+ 		return 0;
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index f1366ce609e3..2322d6bd5883 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -288,6 +288,15 @@ union hv_x64_msr_hypercall_contents {
+ 	} __packed;
+ };
+ 
++union hv_vp_assist_msr_contents {
++	u64 as_uint64;
++	struct {
++		u64 enable:1;
++		u64 reserved:11;
++		u64 pfn:52;
++	} __packed;
++};
++
+ struct hv_reenlightenment_control {
+ 	__u64 vector:8;
+ 	__u64 reserved1:8;
+-- 
+2.25.1
 
