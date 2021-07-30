@@ -2,110 +2,124 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 637123DA980
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jul 2021 18:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 465263DB154
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jul 2021 04:53:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbhG2Q4r (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Jul 2021 12:56:47 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:44613 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbhG2Q4q (ORCPT
+        id S229749AbhG3CxE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Jul 2021 22:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229542AbhG3CxE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Jul 2021 12:56:46 -0400
-Received: by mail-wm1-f46.google.com with SMTP id d131-20020a1c1d890000b02902516717f562so4502160wmd.3;
-        Thu, 29 Jul 2021 09:56:41 -0700 (PDT)
+        Thu, 29 Jul 2021 22:53:04 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909F3C061765;
+        Thu, 29 Jul 2021 19:52:59 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id l19so13123269pjz.0;
+        Thu, 29 Jul 2021 19:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bmL4SQ8GAZJWK3xApvq+PZaab/7COKw/aR8FnJTkZ8A=;
+        b=NAhocIP4f3vAt+HHEuF7oFkro+lh/6vEAuGcefhg6XueHZFW/VgAw1rUNxuPFA9NmR
+         cmXx+ceLZex9nGJ0OyzZaxsYsT8tiRb1jRyPL71vgLtSWLPo0cCqvQ2qriDvy8CpQssj
+         viNqrboexe+B/LVVnnduOrHj946GTrR2N6htuF3Da/GGsbOKkj/XSoD3hUHgJvjwaB5p
+         T3Mh0d9xRtStBYG2xEqHf2hhw7W3QR/YGkGCbpjg9hYVaJSISM4slgqWraPF6pZEHZNm
+         jukHYbtabQpZEinKjbGFHZgXMHh/LOo9XYtuFBdeFaYM0POV1AQF6Po3lzHo4DXqdZqC
+         RNSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iAOr1eTi2QbZFnOFfALjz4TbmFhPPA7Bn3lPJeG08eE=;
-        b=GgwafQx4+gpsLxU4D8qPW85iEahhD+KpsZPorEOogzi3tiBGJ0WZ0FuSY38Gx5Vls+
-         qXdveLl4FvUSPyNnb6j56g6wAhEpLHPcvzNyr/nA5X93jrSIys4aQeh3m18REcJE1gEh
-         1/qddAObi+E+XhWHxB6LojxG8rMFx9ZWbqjYlWxVl0rGT0IipI8XA3W0rEswTXhl5hX/
-         9iLRQu6FjmjyDcyq408KKkNOcbthwjp1AKAwyuRYK0WU1OkHdWfKlQiztSeZm440oCpk
-         tdCNtBgMhlbxcBxXUBD2EcsElNzmSIcPJyGDg7f4z1aPvxMI4hTWalKqJ8suqdwFdoq8
-         59CA==
-X-Gm-Message-State: AOAM532ZWU1Kz7CNsBfiMs4c8WeTDGh+M8kOQPU+YLr53oEAtkkmiwsr
-        csksqtsbVQHLBHi5qbDbdy0=
-X-Google-Smtp-Source: ABdhPJyfCfq044i2vz5ul0cBAcnLD2W5dYBIRUnQdt4zr5u4bLe7WSQpPLQIvGhwXP2+rJ3hRrPI9Q==
-X-Received: by 2002:a1c:7419:: with SMTP id p25mr15030397wmc.160.1627577800978;
-        Thu, 29 Jul 2021 09:56:40 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id p22sm8806377wmq.44.2021.07.29.09.56.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jul 2021 09:56:40 -0700 (PDT)
-Date:   Thu, 29 Jul 2021 16:56:38 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Siddharth Chandrasekaran <sidcha@amazon.de>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Siddharth Chandrasekaran <sidcha.dev@gmail.com>,
-        Liran Alon <liran@amazon.com>,
-        Ioannis Aslanidis <iaslan@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] asm-generic/hyperv: Fix struct hv_message_header ordering
-Message-ID: <20210729165638.f5idr2ag3pdbpd6u@liuwe-devbox-debian-v2>
-References: <20210729133702.11383-1-sidcha@amazon.de>
- <87eebh9qhd.fsf@vitty.brq.redhat.com>
- <20210729140705.wj5tokeq6lkxm2yy@liuwe-devbox-debian-v2>
- <20210729142652.GA25242@uc8bbc9586ea454.ant.amazon.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bmL4SQ8GAZJWK3xApvq+PZaab/7COKw/aR8FnJTkZ8A=;
+        b=BxY6GLIvDAhhB/d/w4O2cgNVXG2HwWRr2NHWKwirZGPj082T0m9rr9Cw0oqEe01K7q
+         //x2eiRzICqr6cY/7fXbSeNQCHcxih5NOpbv09scgntHcXJ9KDvrl7flac5sXdS7siVF
+         x2iFbgeXqMNl9Pqnr5s/P8hXvJYrXfpAuVVzjYuaFdNLQOUPokUzXRbu2KTnMU/1PtYV
+         5Gjpgd16tTiBGx8rzin0JG6RckukwGHZNNrcLabWIiUnxcz+xh3E2BtbJE4cEevPiD0g
+         06SS3MZS4WO5dBLV4+jh78JL8HqAKndrC2RI0OFFBL5F8B8cZPryty0nS3o7BBPAaggH
+         1NUw==
+X-Gm-Message-State: AOAM533Xw4nqIh5Vka3CyyZu1b970O1aJyBqslC//jI7RIBqeEVvJiF8
+        cFOCzMCF9fpnazIxMh+t6tU=
+X-Google-Smtp-Source: ABdhPJyyZoBDWV7ZCj8Ji9VpActKffc9EXcufc2IzXROiuNMi/ja4nm1BshkPIm0WrFthtY+V0e3wQ==
+X-Received: by 2002:a17:90a:1109:: with SMTP id d9mr575516pja.183.1627613579170;
+        Thu, 29 Jul 2021 19:52:59 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:18:efec::4b1])
+        by smtp.gmail.com with ESMTPSA id l10sm154977pjg.11.2021.07.29.19.52.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Jul 2021 19:52:58 -0700 (PDT)
+Subject: Re: [PATCH 03/13] x86/HV: Add new hvcall guest address host
+ visibility support
+To:     Dave Hansen <dave.hansen@intel.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, joro@8bytes.org,
+        will@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
+        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, ardb@kernel.org,
+        Tianyu.Lan@microsoft.com, rientjes@google.com,
+        martin.b.radev@gmail.com, akpm@linux-foundation.org,
+        rppt@kernel.org, kirill.shutemov@linux.intel.com,
+        aneesh.kumar@linux.ibm.com, krish.sadhukhan@oracle.com,
+        saravanand@fb.com, xen-devel@lists.xenproject.org,
+        pgonda@google.com, david@redhat.com, keescook@chromium.org,
+        hannes@cmpxchg.org, sfr@canb.auug.org.au,
+        michael.h.kelley@microsoft.com
+Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, anparri@microsoft.com
+References: <20210728145232.285861-1-ltykernel@gmail.com>
+ <20210728145232.285861-4-ltykernel@gmail.com>
+ <a2444c36-0103-8e1c-7005-d97f77f90e85@intel.com>
+ <0d956a05-7d24-57a0-f4a9-dccc849b52fc@gmail.com>
+ <ec1d4cfd-bbbc-e27a-7589-e85d9f0438f4@intel.com>
+ <8df2845d-ee90-56d0-1228-adebb103ec37@gmail.com>
+ <7a2ddcca-e249-ba63-8709-e355fcef2d41@intel.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <fa6cf8b6-7da0-dadf-b137-d90ce3513d5e@gmail.com>
+Date:   Fri, 30 Jul 2021 10:52:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210729142652.GA25242@uc8bbc9586ea454.ant.amazon.com>
+In-Reply-To: <7a2ddcca-e249-ba63-8709-e355fcef2d41@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 04:26:54PM +0200, Siddharth Chandrasekaran wrote:
-> On Thu, Jul 29, 2021 at 02:07:05PM +0000, Wei Liu wrote:
-> > On Thu, Jul 29, 2021 at 03:52:46PM +0200, Vitaly Kuznetsov wrote:
-> > > Siddharth Chandrasekaran <sidcha@amazon.de> writes:
-> > >
-> > > > According to Hyper-V TLFS Version 6.0b, struct hv_message_header members
-> > > > should be defined in the order:
-> > > >
-> > > >     message_type, reserved, message_flags, payload_size
-> > > >
-> > > > but we have it defined in the order:
-> > > >
-> > > >     message_type, payload_size, message_flags, reserved
-> > > >
-> > > > that is, the payload_size and reserved members swapped.
-> > >
-> > > Indeed,
-> > >
-> > > typedef struct
-> > > {
-> > >       HV_MESSAGE_TYPE MessageType;
-> > >       UINT16 Reserved;
-> > >       HV_MESSAGE_FLAGS MessageFlags;
-> > >       UINT8 PayloadSize;
-> > >       union
-> > >       {
-> > >               UINT64 OriginationId;
-> > >               HV_PARTITION_ID Sender;
-> > >               HV_PORT_ID Port;
-> > >       };
-> > > } HV_MESSAGE_HEADER;
-> > 
-> > Well. I think TLFS is wrong. Let me ask around.
+On 7/30/2021 12:05 AM, Dave Hansen wrote:
+> On 7/29/21 8:02 AM, Tianyu Lan wrote:
+>>>
+>>
+>> There is x86_hyper_type to identify hypervisor type and we may check
+>> this variable after checking X86_FEATURE_HYPERVISOR.
+>>
+>> static inline bool hv_is_isolation_supported(void)
+>> {
+>>      if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+>>          return 0;
+>>
+>>          if (x86_hyper_type != X86_HYPER_MS_HYPERV)
+>>                  return 0;
+>>
+>>      // out of line function call:
+>>      return __hv_is_isolation_supported();
+>> }
 > 
-> TBH, I hadn't considered that possibility :). I assumed it was a
-> regression on our side. But I spent some time tracing the history of that
-> struct all the way back to when it was in staging (in 2009) and now I'm
-> inclined to believe a later version of TLFS is at fault here.
+> Looks fine.  You just might want to use this existing helper:
 > 
-> Based on what we decide in this thread, I will open an issue on the TLFS
-> GitHub repository.
+> static inline bool hypervisor_is_type(enum x86_hypervisor_type type)
+> {
+>          return x86_hyper_type == type;
+> }
 > 
 
-I have confirmation TLFS is wrong and shall be fixed. Feel free to open
-an issue on GitHub too.
-
-Wei.
+Yes,thanks for suggestion and will update in the next version.
