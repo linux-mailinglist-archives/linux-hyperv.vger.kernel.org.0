@@ -2,95 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D91DB3DD602
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Aug 2021 14:51:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2907E3DD618
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Aug 2021 14:56:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233722AbhHBMvq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 2 Aug 2021 08:51:46 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:40589 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232842AbhHBMvq (ORCPT
+        id S233806AbhHBM44 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 2 Aug 2021 08:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233703AbhHBM4z (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 2 Aug 2021 08:51:46 -0400
-Received: by mail-wr1-f45.google.com with SMTP id p5so21378697wro.7;
-        Mon, 02 Aug 2021 05:51:36 -0700 (PDT)
+        Mon, 2 Aug 2021 08:56:55 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D4BC061760;
+        Mon,  2 Aug 2021 05:56:46 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id pj14-20020a17090b4f4eb029017786cf98f9so13938206pjb.2;
+        Mon, 02 Aug 2021 05:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/GYPS7X+85wR6YC8425aJSok3ZXyi4U2bTyYNUsfO5w=;
+        b=pyQkhPeDqOZN1lKQvpgjaZhDuqcfBH++qI9Yz80iquDkO6oGt+tBuSPtyV0nMGVBJ1
+         M2E5aA/XAnoteOyDQT8M+x5AliZKopkoGnInKwL3m2QqBiWDu36W26gL/YPC8K/KeYlr
+         lKiZUAf6XKEOBg70NsE3K9fU4mOPUUIoCYKqtgQQ2HjvRH1Q+CjUYFOowxeVCbfkbnu7
+         GXswmjuYPprsxcXIE4NienyvsAMjibDdMeps+gxmOrpMJQUHeDF7e/9b+DgNRmsrf0dj
+         R82WDqtlRqQuveuh5cTGWXuurfZKwGo+CrnXy7KJkYXeft1AWFi82RFU5cJODZER7tHh
+         HwOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ln/22gR449DmeS8tOKA79D6nZ+VWBZEOwVh5p0o76H0=;
-        b=D9vt68gY8VjQzZGEiZPAkYQLWNanLArUIu+zYG+5/j9A04mhWF74oXjNE6wXJodK/u
-         A3A2wrShFxnf3ULZT1FOIKKMF8y9GTaHJOoJX9yK43/ALqCviFW1DU9Qca9axEKKxfzN
-         6tg5sTeplUtr/yNwEk4QnJxMhafjlqyPgQzU0Qs8SzvgDxijlAI5wBSJ0iJTzEmcRkje
-         aUHcLN9jTlSu6JnKX8gYIJfE3wifPxJQi7u8tEjJWWSZUtDiFqcK6SiXsERAlvJTNkbI
-         G6LsOKnOSrOI1AAdMTZgIn2CG2MBtvTdGzB2vueYrC5zAGZ5xzlZiv5AteUXZEcuS0UI
-         Q9iQ==
-X-Gm-Message-State: AOAM530QAaUJUVLjnKUjLdJFHJJCWpoNCm9l5HcGhemASEIYz9bS8JsY
-        SvPa9LSSKeepeeSVFguiEck=
-X-Google-Smtp-Source: ABdhPJyNS+4/t2DKARRNJrSlQ5J2nJHe2AuwGN68ZGGBSmDdTA8yO8H7ZgrE00WYaC+rP4pzIB7Gig==
-X-Received: by 2002:adf:e101:: with SMTP id t1mr17476003wrz.215.1627908695958;
-        Mon, 02 Aug 2021 05:51:35 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id x9sm10345292wmj.41.2021.08.02.05.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Aug 2021 05:51:35 -0700 (PDT)
-Date:   Mon, 2 Aug 2021 12:51:33 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/GYPS7X+85wR6YC8425aJSok3ZXyi4U2bTyYNUsfO5w=;
+        b=rrQnvroREh2lzghJkvH2U/ojYO3L0NmRV7JJFuYQUXDTIqPGYR6Rcij7ihjFmzgNJQ
+         mkdaOkLN1jYbe5o32gpwVSeeujdufvy3hKZaUXkRTqNpIskdgh5zN/Ndwyay3hZvIyrL
+         n+Dn7iGXruIGy5LNhbFluSoNHOfha6Oj+Mw0pYbERbZ5Mcoo8rza+5NER0XsnryI+w40
+         C7g+fONcn788RhZd0MEVV4pHdjPTzWDrGP83kg6BsdzLptgypFvOG/dmNOyDR0l/vUWu
+         HZhI+snNNzdulBGXoHqTsp1ZGxsVowjZ2IlTPvalbDHT7/XJRUnncPksy0YflbysJYI5
+         TU7Q==
+X-Gm-Message-State: AOAM533ThRRBnRAPRb96QhFcxQ0mzS4Ya2ROpZpS1VCxA/Mpof/3bP/V
+        qap4wV5zVSIH2t8/CssSYe0=
+X-Google-Smtp-Source: ABdhPJyLDEEPYFYa8bCYhczgLUorbl2lwmF46SVfXQIXh/rESGtdQ+84YDRl3Rg46/KGbl2xu2SCOw==
+X-Received: by 2002:a17:902:b48b:b029:12c:59b:dc44 with SMTP id y11-20020a170902b48bb029012c059bdc44mr14086944plr.47.1627909005643;
+        Mon, 02 Aug 2021 05:56:45 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::4b1? ([2404:f801:9000:1a:efea::4b1])
+        by smtp.gmail.com with ESMTPSA id g7sm6679837pfv.66.2021.08.02.05.56.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Aug 2021 05:56:45 -0700 (PDT)
+Subject: Re: [PATCH 04/13] HV: Mark vmbus ring buffer visible to host in
+ Isolation VM
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        viremana@linux.microsoft.com, sunilmut@microsoft.com,
-        nunodasneves@linux.microsoft.com
-Subject: Re: [PATCH v5] hyperv: root partition faults writing to VP ASSIST
- MSR PAGE
-Message-ID: <20210802125133.ci2jlg32mdfd5xds@liuwe-devbox-debian-v2>
-References: <20210731120519.17154-1-kumarpraveen@linux.microsoft.com>
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, will@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, arnd@arndb.de, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, ardb@kernel.org,
+        Tianyu.Lan@microsoft.com, rientjes@google.com,
+        martin.b.radev@gmail.com, akpm@linux-foundation.org,
+        rppt@kernel.org, kirill.shutemov@linux.intel.com,
+        aneesh.kumar@linux.ibm.com, krish.sadhukhan@oracle.com,
+        saravanand@fb.com, xen-devel@lists.xenproject.org,
+        pgonda@google.com, david@redhat.com, keescook@chromium.org,
+        hannes@cmpxchg.org, sfr@canb.auug.org.au,
+        michael.h.kelley@microsoft.com, iommu@lists.linux-foundation.org,
+        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org, vkuznets@redhat.com, anparri@microsoft.com
+References: <20210728145232.285861-1-ltykernel@gmail.com>
+ <20210728145232.285861-5-ltykernel@gmail.com> <YQfgH04t2SqacnHn@8bytes.org>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <173823d1-280c-d34e-be2c-157b55bb6bc3@gmail.com>
+Date:   Mon, 2 Aug 2021 20:56:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210731120519.17154-1-kumarpraveen@linux.microsoft.com>
+In-Reply-To: <YQfgH04t2SqacnHn@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Jul 31, 2021 at 05:35:19PM +0530, Praveen Kumar wrote:
-> For Root partition the VP assist pages are pre-determined by the
-> hypervisor. The Root kernel is not allowed to change them to
-> different locations. And thus, we are getting below stack as in
-> current implementation Root is trying to perform write to specific
-> MSR.
-> 
-> [ 2.778197] unchecked MSR access error: WRMSR to 0x40000073 (tried to
-> write 0x0000000145ac5001) at rIP: 0xffffffff810c1084
-> (native_write_msr+0x4/0x30)
-> [ 2.784867] Call Trace:
-> [ 2.791507] hv_cpu_init+0xf1/0x1c0
-> [ 2.798144] ? hyperv_report_panic+0xd0/0xd0
-> [ 2.804806] cpuhp_invoke_callback+0x11a/0x440
-> [ 2.811465] ? hv_resume+0x90/0x90
-> [ 2.818137] cpuhp_issue_call+0x126/0x130
-> [ 2.824782] __cpuhp_setup_state_cpuslocked+0x102/0x2b0
-> [ 2.831427] ? hyperv_report_panic+0xd0/0xd0
-> [ 2.838075] ? hyperv_report_panic+0xd0/0xd0
-> [ 2.844723] ? hv_resume+0x90/0x90
-> [ 2.851375] __cpuhp_setup_state+0x3d/0x90
-> [ 2.858030] hyperv_init+0x14e/0x410
-> [ 2.864689] ? enable_IR_x2apic+0x190/0x1a0
-> [ 2.871349] apic_intr_mode_init+0x8b/0x100
-> [ 2.878017] x86_late_time_init+0x20/0x30
-> [ 2.884675] start_kernel+0x459/0x4fb
-> [ 2.891329] secondary_startup_64_no_verify+0xb0/0xbb
-> 
-> Since, the hypervisor already provides the VP assist page for root
-> partition, we need to memremap the memory from hypervisor for root
-> kernel to use. The mapping is done in hv_cpu_init during bringup and
-> is unmaped in hv_cpu_die during teardown.
-> 
-> Signed-off-by: Praveen Kumar <kumarpraveen@linux.microsoft.com>
 
-Looks good. I can fix a few styling issues in code and comments when I
-commit this patch.
 
-Wei.
+On 8/2/2021 8:07 PM, Joerg Roedel wrote:
+> On Wed, Jul 28, 2021 at 10:52:19AM -0400, Tianyu Lan wrote:
+>> +	if (type == HV_GPADL_BUFFER)
+>> +		index = 0;
+>> +	else
+>> +		index = channel->gpadl_range[1].gpadlhandle ? 2 : 1;
+> 
+> Hmm... This doesn't look very robust. Can you set fixed indexes for
+> different buffer types? HV_GPADL_BUFFER already has fixed index 0. But
+> as it is implemented here you risk that index 2 gets overwritten by
+> subsequent calls.
+
+Both second and third are HV_GPADL_RING type. One is send ring and the
+other is receive ring. The driver keeps the order to allocate rx and
+tx buffer. You are right this is not robust and will add a mutex to keep
+the order.
