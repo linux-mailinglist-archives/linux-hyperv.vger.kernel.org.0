@@ -2,50 +2,50 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E5CF3DEE7A
+	by mail.lfdr.de (Postfix) with ESMTP id F3A553DEE7B
 	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Aug 2021 14:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236074AbhHCM7p (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 Aug 2021 08:59:45 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:38728 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236136AbhHCM7p (ORCPT
+        id S236142AbhHCM7q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 Aug 2021 08:59:46 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:36576 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236129AbhHCM7p (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Tue, 3 Aug 2021 08:59:45 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 76B6E200CB;
+        by smtp-out1.suse.de (Postfix) with ESMTPS id F252F22011;
         Tue,  3 Aug 2021 12:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
         t=1627995573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9QPs+cU2ZGWZbuOTh+h4AsI971+Z+102tN5zRb+VoGc=;
-        b=vaEhDgsZN4ercqzarSKgkxlhKq84cFuK8QDW4MLVA3nxoocpHHUvKQPgye648IZADVsOag
-        MVmheGMCqxndgHRaf2XDxUWqgsbl91W/rtOWW7qwcpEooitKjCwvPHZ3jSQptvY2V0Au/t
-        ZrdtxE9z8nWomhA4/BaysCUcnaMoKfI=
+        bh=yFiY4u32arT7OgiUEedPHigxtJQfjbOaGbE/92GSMWQ=;
+        b=orCpdJ0/3vL9Ex6+RdKGkjGNuBKTD6gOW9JlXMLsjHsEv17BZNm/pmeoKrMY+u7fZWIvLO
+        ShXHi95p66lIpU19nlUQnyK676wcP3rTMG5SKPcUEXS1N8QyMF86QxMVhM8LlGgmALuTzN
+        FPiHiW1fuLH9MDlo6+BMMqf1RRzMQv4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
         s=susede2_ed25519; t=1627995573;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9QPs+cU2ZGWZbuOTh+h4AsI971+Z+102tN5zRb+VoGc=;
-        b=F2wsvLOOLOs04M7+ojOYTgaMcmHjZ9bdvykBV8dqYNkgZj3hNKieU770K0+zqN2fyrWdSQ
-        XH5TehGkmxC/fkAA==
+        bh=yFiY4u32arT7OgiUEedPHigxtJQfjbOaGbE/92GSMWQ=;
+        b=dLKeWZnh0CYi9UOjMc3KZuEZ+svm+hmXVHwy2WlSUZ2KOZzmHvOPr/OsMWxkL9w4fln5u1
+        uRThSSOGVpHHNBAw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F3BAA13CD6;
-        Tue,  3 Aug 2021 12:59:32 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7CB5413CEF;
+        Tue,  3 Aug 2021 12:59:33 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id IL4yOrQ9CWExZwAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Tue, 03 Aug 2021 12:59:32 +0000
+        id iIYkHbU9CWExZwAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Tue, 03 Aug 2021 12:59:33 +0000
 From:   Thomas Zimmermann <tzimmermann@suse.de>
 To:     airlied@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
         maarten.lankhorst@linux.intel.com, mripard@kernel.org,
@@ -56,9 +56,9 @@ To:     airlied@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
 Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 05/11] drm/mgag200: Use offset-adjusted shadow-plane mappings
-Date:   Tue,  3 Aug 2021 14:59:22 +0200
-Message-Id: <20210803125928.27780-6-tzimmermann@suse.de>
+Subject: [PATCH 06/11] drm/cirrus: Use offset-adjusted shadow-plane mappings
+Date:   Tue,  3 Aug 2021 14:59:23 +0200
+Message-Id: <20210803125928.27780-7-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210803125928.27780-1-tzimmermann@suse.de>
 References: <20210803125928.27780-1-tzimmermann@suse.de>
@@ -70,35 +70,35 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 For framebuffers with non-zero offset fields, shadow-plane helpers
 provide a pointer to the first byte of the contained data. Use it in
-mgag200.
+cirrus.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- drivers/gpu/drm/mgag200/mgag200_mode.c | 4 ++--
+ drivers/gpu/drm/tiny/cirrus.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mgag200/mgag200_mode.c b/drivers/gpu/drm/mgag200/mgag200_mode.c
-index 3b3059f471c2..6e2db8cfe3b7 100644
---- a/drivers/gpu/drm/mgag200/mgag200_mode.c
-+++ b/drivers/gpu/drm/mgag200/mgag200_mode.c
-@@ -1601,7 +1601,7 @@ mgag200_simple_display_pipe_enable(struct drm_simple_display_pipe *pipe,
- 	mga_crtc_load_lut(crtc);
- 	mgag200_enable_display(mdev);
+diff --git a/drivers/gpu/drm/tiny/cirrus.c b/drivers/gpu/drm/tiny/cirrus.c
+index a8b476a59c0d..4611ec408506 100644
+--- a/drivers/gpu/drm/tiny/cirrus.c
++++ b/drivers/gpu/drm/tiny/cirrus.c
+@@ -435,7 +435,7 @@ static void cirrus_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
  
--	mgag200_handle_damage(mdev, fb, &fullscreen, &shadow_plane_state->map[0]);
-+	mgag200_handle_damage(mdev, fb, &fullscreen, &shadow_plane_state->data[0]);
+ 	cirrus_mode_set(cirrus, &crtc_state->mode, plane_state->fb);
+-	cirrus_fb_blit_fullscreen(plane_state->fb, &shadow_plane_state->map[0]);
++	cirrus_fb_blit_fullscreen(plane_state->fb, &shadow_plane_state->data[0]);
  }
  
- static void
-@@ -1650,7 +1650,7 @@ mgag200_simple_display_pipe_update(struct drm_simple_display_pipe *pipe,
- 		return;
+ static void cirrus_pipe_update(struct drm_simple_display_pipe *pipe,
+@@ -451,7 +451,7 @@ static void cirrus_pipe_update(struct drm_simple_display_pipe *pipe,
+ 		cirrus_mode_set(cirrus, &crtc->mode, state->fb);
  
- 	if (drm_atomic_helper_damage_merged(old_state, state, &damage))
--		mgag200_handle_damage(mdev, fb, &damage, &shadow_plane_state->map[0]);
-+		mgag200_handle_damage(mdev, fb, &damage, &shadow_plane_state->data[0]);
+ 	if (drm_atomic_helper_damage_merged(old_state, state, &rect))
+-		cirrus_fb_blit_rect(state->fb, &shadow_plane_state->map[0], &rect);
++		cirrus_fb_blit_rect(state->fb, &shadow_plane_state->data[0], &rect);
  }
  
- static const struct drm_simple_display_pipe_funcs
+ static const struct drm_simple_display_pipe_funcs cirrus_pipe_funcs = {
 -- 
 2.32.0
 
