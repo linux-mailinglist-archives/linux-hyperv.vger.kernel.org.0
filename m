@@ -2,202 +2,174 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54B663DF596
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Aug 2021 21:27:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 247C43DF70F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Aug 2021 23:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239584AbhHCT1X (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 Aug 2021 15:27:23 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40726 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239877AbhHCT1X (ORCPT
+        id S229918AbhHCVrd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 Aug 2021 17:47:33 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:52083 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229577AbhHCVrd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 Aug 2021 15:27:23 -0400
-Received: from [192.168.1.115] (unknown [223.178.56.171])
-        by linux.microsoft.com (Postfix) with ESMTPSA id EDFA320B36E0;
-        Tue,  3 Aug 2021 12:27:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EDFA320B36E0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1628018831;
-        bh=ufOXnrjNoj2jj0kO6jzQg5CG4x+xLFn4fbpBWTIdmX0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OX10tiq7r0BPbyCoVbcJjWb/k50fZHx/RdYxNchK4NRW4Su3VSgQRuV8t9tBkqyWo
-         ojLU/CFXlv8LLCa1um144zvr3MDdxV6ay00ss+I1+mUrApYEZDVHoBZLFQMQqnMU5p
-         jHL1/2iAHRnNbksIWXb73QDhByRCjDGY0yxgBAv4=
-Subject: Re: [RFC v1 8/8] mshv: add vfio bridge device
-To:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc:     virtualization@lists.linux-foundation.org,
+        Tue, 3 Aug 2021 17:47:33 -0400
+Received: by mail-wm1-f47.google.com with SMTP id u15so33109wmj.1;
+        Tue, 03 Aug 2021 14:47:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NO+JU9UzRMwitUxOBD7sMCGKQLIhbf2Foco5VWOK1Z4=;
+        b=nebyBEwPY6bSnXiWGg2AqdRRvbZmwJMuM9Z80WWMpt57dXybTxNdcKmgv9KrcSmO7t
+         PH9T5yAHC2ajMSniVCIUJFWpaq+IkVZ8DSozjK7vxpC+RlonTIf/6pxuCkvcaJaTP/Nr
+         EHxR5d19gYazWbaLowlIPMpyfjXc9UVNPjZD/NSvmmIXZ4FKEcSCrySfkO8PAWeetHZk
+         3E5r1hFR9wwroQpVzsKczJ3wd/4JytpARMuQ1aSqZKB6JaxPehfDI+JjG05vpxc57y9H
+         wYM6y06coENOulTowW59Km8V8cXT33zmfuon6/vcBflYrVKTB5DWPGBCQhPNHyDfQTjB
+         /hkg==
+X-Gm-Message-State: AOAM530+y5HIl/EMuhAkjrAzjT2mPRAA/wlSrkKCUec5VFLA+THNlzgI
+        tkBpQFpIPWMX50oA8ZdLjG4=
+X-Google-Smtp-Source: ABdhPJxKVZaGEKq0W06B3ndgni2gnDr15UMxeozYYtoe6oJ0dR7qwn8iMp7dsEVgP13d0k8hAPltQQ==
+X-Received: by 2002:a05:600c:4f42:: with SMTP id m2mr6587287wmq.47.1628027240884;
+        Tue, 03 Aug 2021 14:47:20 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id t8sm240744wmj.5.2021.08.03.14.47.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Aug 2021 14:47:20 -0700 (PDT)
+Date:   Tue, 3 Aug 2021 21:47:18 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Praveen Kumar <kumarpraveen@linux.microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
         Linux Kernel List <linux-kernel@vger.kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
         Vineeth Pillai <viremana@linux.microsoft.com>,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        pasha.tatashin@soleen.com, "K. Y. Srinivasan" <kys@microsoft.com>,
+        pasha.tatashin@soleen.com, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
+        Dexuan Cui <decui@microsoft.com>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>
+Subject: Re: [RFC v1 5/8] mshv: add paravirtualized IOMMU support
+Message-ID: <20210803214718.hnp3ejs35lh455fw@liuwe-devbox-debian-v2>
 References: <20210709114339.3467637-1-wei.liu@kernel.org>
- <20210709114339.3467637-9-wei.liu@kernel.org>
-From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Message-ID: <b400d536-632e-9212-a06d-6e41af8a6fe5@linux.microsoft.com>
-Date:   Wed, 4 Aug 2021 00:57:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+ <20210709114339.3467637-6-wei.liu@kernel.org>
+ <77670985-2a1b-7bbd-2ede-4b7810c3e220@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20210709114339.3467637-9-wei.liu@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77670985-2a1b-7bbd-2ede-4b7810c3e220@linux.microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 09-07-2021 17:13, Wei Liu wrote:
-> +
-> +static int mshv_vfio_set_group(struct mshv_device *dev, long attr, u64 arg)
-> +{
-> +	struct mshv_vfio *mv = dev->private;
-> +	struct vfio_group *vfio_group;
-> +	struct mshv_vfio_group *mvg;
-> +	int32_t __user *argp = (int32_t __user *)(unsigned long)arg;
-> +	struct fd f;
-> +	int32_t fd;
-> +	int ret;
-> +
-> +	switch (attr) {
-> +	case MSHV_DEV_VFIO_GROUP_ADD:
-> +		if (get_user(fd, argp))
-> +			return -EFAULT;
-> +
-> +		f = fdget(fd);
-> +		if (!f.file)
-> +			return -EBADF;
-> +
-> +		vfio_group = mshv_vfio_group_get_external_user(f.file);
-> +		fdput(f);
-> +
-> +		if (IS_ERR(vfio_group))
-> +			return PTR_ERR(vfio_group);
-> +
-> +		mutex_lock(&mv->lock);
-> +
-> +		list_for_each_entry(mvg, &mv->group_list, node) {
-> +			if (mvg->vfio_group == vfio_group) {
-> +				mutex_unlock(&mv->lock);
-> +				mshv_vfio_group_put_external_user(vfio_group);
-> +				return -EEXIST;
-> +			}
-> +		}
-> +
-> +		mvg = kzalloc(sizeof(*mvg), GFP_KERNEL_ACCOUNT);
-> +		if (!mvg) {
-> +			mutex_unlock(&mv->lock);
-> +			mshv_vfio_group_put_external_user(vfio_group);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		list_add_tail(&mvg->node, &mv->group_list);
-> +		mvg->vfio_group = vfio_group;
-> +
-> +		mutex_unlock(&mv->lock);
-> +
-> +		return 0;
-> +
-> +	case MSHV_DEV_VFIO_GROUP_DEL:
-> +		if (get_user(fd, argp))
-> +			return -EFAULT;
-> +
-> +		f = fdget(fd);
-> +		if (!f.file)
-> +			return -EBADF;
+On Wed, Aug 04, 2021 at 12:10:45AM +0530, Praveen Kumar wrote:
+> On 09-07-2021 17:13, Wei Liu wrote:
+> > +static void hv_iommu_domain_free(struct iommu_domain *d)
+> > +{
+> > +	struct hv_iommu_domain *domain = to_hv_iommu_domain(d);
+> > +	unsigned long flags;
+> > +	u64 status;
+> > +	struct hv_input_delete_device_domain *input;
+> > +
+> > +	if (is_identity_domain(domain) || is_null_domain(domain))
+> > +		return;
+> > +
+> > +	local_irq_save(flags);
+> > +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	memset(input, 0, sizeof(*input));
+> > +
+> > +	input->device_domain= domain->device_domain;
+> > +
+> > +	status = hv_do_hypercall(HVCALL_DELETE_DEVICE_DOMAIN, input, NULL);
+> > +
+> > +	local_irq_restore(flags);
+> > +
+> > +	if (!hv_result_success(status))
+> > +		pr_err("%s: hypercall failed, status %lld\n", __func__, status);
+> 
+> Is it OK to deallocate the resources, if hypercall has failed ?
 
-Can we move these both checks above switch statement and do fdput accordingly under both case statement accordingly?
+It should be fine. We leak some resources in the hypervisor, but Linux
+is in a rather wedged state anyway. Refusing to free up resources in
+Linux does not much good.
 
-> +
-> +		ret = -ENOENT;
-> +
-> +		mutex_lock(&mv->lock);
-> +
-> +		list_for_each_entry(mvg, &mv->group_list, node) {
-> +			if (!mshv_vfio_external_group_match_file(mvg->vfio_group,
-> +								 f.file))
-> +				continue;
-> +
-> +			list_del(&mvg->node);
-> +			mshv_vfio_group_put_external_user(mvg->vfio_group);
-> +			kfree(mvg);
-> +			ret = 0;
-> +			break;
-> +		}
-> +
-> +		mutex_unlock(&mv->lock);
-> +
-> +		fdput(f);
-> +
-> +		return ret;
-> +	}
-> +
-> +	return -ENXIO;
-> +}
-> +
-> +static int mshv_vfio_set_attr(struct mshv_device *dev,
-> +			      struct mshv_device_attr *attr)
-> +{
-> +	switch (attr->group) {
-> +	case MSHV_DEV_VFIO_GROUP:
-> +		return mshv_vfio_set_group(dev, attr->attr, attr->addr);
-> +	}
-> +
-> +	return -ENXIO;
-> +}
-> +
-> +static int mshv_vfio_has_attr(struct mshv_device *dev,
-> +			      struct mshv_device_attr *attr)
-> +{
-> +	switch (attr->group) {
-> +	case MSHV_DEV_VFIO_GROUP:
-> +		switch (attr->attr) {
-> +		case MSHV_DEV_VFIO_GROUP_ADD:
-> +		case MSHV_DEV_VFIO_GROUP_DEL:
-> +			return 0;
-> +		}
-> +
-> +		break;
+> Do we have any specific error code EBUSY (kind of) which we need to wait upon ?
+> 
 
-do we need this break statement ? If not, lets remove it.
-> +	}
-> +
-> +	return -ENXIO;
-> +}
-> +
-> +static void mshv_vfio_destroy(struct mshv_device *dev)
-> +{
-> +	struct mshv_vfio *mv = dev->private;
-> +	struct mshv_vfio_group *mvg, *tmp;
-> +
-> +	list_for_each_entry_safe(mvg, tmp, &mv->group_list, node) {
-> +		mshv_vfio_group_put_external_user(mvg->vfio_group);
-> +		list_del(&mvg->node);
-> +		kfree(mvg);
-> +	}
-> +
-> +	kfree(mv);
-> +	kfree(dev);
+I have not found a circumstance that can happen.
 
-We are freeing up dev. Please ignore my comment in caller patch. Thanks.
+> > +
+> > +	ida_free(&domain->hv_iommu->domain_ids, domain->device_domain.domain_id.id);
+> > +
+> > +	iommu_put_dma_cookie(d);
+> > +
+> > +	kfree(domain);
+> > +}
+> > +
+> > +static int hv_iommu_attach_dev(struct iommu_domain *d, struct device *dev)
+> > +{
+> > +	struct hv_iommu_domain *domain = to_hv_iommu_domain(d);
+> > +	u64 status;
+> > +	unsigned long flags;
+> > +	struct hv_input_attach_device_domain *input;
+> > +	struct pci_dev *pdev;
+> > +	struct hv_iommu_endpoint *vdev = dev_iommu_priv_get(dev);
+> > +
+> > +	/* Only allow PCI devices for now */
+> > +	if (!dev_is_pci(dev))
+> > +		return -EINVAL;
+> > +
+> > +	pdev = to_pci_dev(dev);
+> > +
+> > +	dev_dbg(dev, "Attaching (%strusted) to %d\n", pdev->untrusted ? "un" : "",
+> > +		domain->device_domain.domain_id.id);
+> > +
+> > +	local_irq_save(flags);
+> > +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > +	memset(input, 0, sizeof(*input));
+> > +
+> > +	input->device_domain = domain->device_domain;
+> > +	input->device_id = hv_build_pci_dev_id(pdev);
+> > +
+> > +	status = hv_do_hypercall(HVCALL_ATTACH_DEVICE_DOMAIN, input, NULL);
+> > +	local_irq_restore(flags);
+> > +
+> > +	if (!hv_result_success(status))
+> > +		pr_err("%s: hypercall failed, status %lld\n", __func__, status);
+> 
+> Does it make sense to vdev->domain = NULL ?
+>
 
-> +}
-> +
-> +static int mshv_vfio_create(struct mshv_device *dev, u32 type);
-> +
-> +static struct mshv_device_ops mshv_vfio_ops = {
-> +	.name = "mshv-vfio",
-> +	.create = mshv_vfio_create,
-> +	.destroy = mshv_vfio_destroy,
-> +	.set_attr = mshv_vfio_set_attr,
-> +	.has_attr = mshv_vfio_has_attr,
-> +};
+It is already NULL -- there is no other code path that sets it and the
+detach path always sets the field to NULL.
 
-Regards,
+> > +	else
+> > +		vdev->domain = domain;
+> > +
+> > +	return hv_status_to_errno(status);
+> > +}
+> > +
+[...]
+> > +static size_t hv_iommu_unmap(struct iommu_domain *d, unsigned long iova,
+> > +			   size_t size, struct iommu_iotlb_gather *gather)
+> > +{
+> > +	size_t unmapped;
+> > +	struct hv_iommu_domain *domain = to_hv_iommu_domain(d);
+> > +	unsigned long flags, npages;
+> > +	struct hv_input_unmap_device_gpa_pages *input;
+> > +	u64 status;
+> > +
+> > +	unmapped = hv_iommu_del_mappings(domain, iova, size);
+> > +	if (unmapped < size)
+> > +		return 0;
+> 
+> Is there a case where unmapped > 0 && unmapped < size ?
+> 
 
-~Praveen.
+There could be such a case -- hv_iommu_del_mappings' return value is >= 0.
+Is there a problem with this predicate?
+
+Wei.
