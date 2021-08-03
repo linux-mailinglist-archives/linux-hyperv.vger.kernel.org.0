@@ -2,139 +2,112 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED7723DEE82
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Aug 2021 14:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D4833DF3AC
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Aug 2021 19:15:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236138AbhHCM7t (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 Aug 2021 08:59:49 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:38792 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236150AbhHCM7s (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 Aug 2021 08:59:48 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 91337200CF;
-        Tue,  3 Aug 2021 12:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1627995576; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W7ylt/LkXCFDYa0trOnuiQMZfBkOMCMsvTE5vWeTxxo=;
-        b=03nHvHKcmElHbm95QNo2MKi4qepvs2P2xu9gsNwgST1B8H8y5nhu/OJPvkABzNbq2kYt0q
-        OSVSf6jBKduaNFLtfhSe9+yNqZrqloTQ7VjI7xOasOrxJollu2r4AJuwiGnPy0MM8OGi7Y
-        iG/+kAmtLPsmCXcCG8lA0q8ko+mDaeo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1627995576;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W7ylt/LkXCFDYa0trOnuiQMZfBkOMCMsvTE5vWeTxxo=;
-        b=+sLddtzuh2lb/DJOhOg7H28j5jphT87tEFrrijEV4Z6O6Cd5eIJ1bWiB67MhmrbM+4Uona
-        a0JI8LUeE2xPswCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 19A2E13CD6;
-        Tue,  3 Aug 2021 12:59:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id ELDgBLg9CWExZwAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Tue, 03 Aug 2021 12:59:36 +0000
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     airlied@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        noralf@tronnes.org, drawat.floss@gmail.com, kraxel@redhat.com,
-        hdegoede@redhat.com, sean@poorly.run,
-        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-        sam@ravnborg.org
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 11/11] drm/vkms: Use offset-adjusted shadow-plane mappings and output
-Date:   Tue,  3 Aug 2021 14:59:28 +0200
-Message-Id: <20210803125928.27780-12-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210803125928.27780-1-tzimmermann@suse.de>
-References: <20210803125928.27780-1-tzimmermann@suse.de>
+        id S237798AbhHCRPM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 Aug 2021 13:15:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:52528 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237775AbhHCRPL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 3 Aug 2021 13:15:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8181B139F;
+        Tue,  3 Aug 2021 10:14:59 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34F2A3F40C;
+        Tue,  3 Aug 2021 10:14:57 -0700 (PDT)
+Date:   Tue, 3 Aug 2021 18:14:51 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v6 8/8] PCI: hv: Turn on the host bridge probing on ARM64
+Message-ID: <20210803171451.GA15466@lpieralisi>
+References: <20210726180657.142727-1-boqun.feng@gmail.com>
+ <20210726180657.142727-9-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210726180657.142727-9-boqun.feng@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-For framebuffers with non-zero offset fields, shadow-plane helpers
-provide a pointer to the first byte of the contained data. Use it in
-vkms.
+On Tue, Jul 27, 2021 at 02:06:57AM +0800, Boqun Feng wrote:
+> Now we have everything we need, just provide a proper sysdata type for
+> the bus to use on ARM64 and everything else works.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index e6276aaa4659..62dbe98d1fe1 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -40,6 +40,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-ecam.h>
+>  #include <linux/delay.h>
+>  #include <linux/semaphore.h>
+>  #include <linux/irqdomain.h>
+> @@ -448,7 +449,11 @@ enum hv_pcibus_state {
+>  };
+>  
+>  struct hv_pcibus_device {
+> +#ifdef CONFIG_X86
+>  	struct pci_sysdata sysdata;
+> +#elif defined(CONFIG_ARM64)
+> +	struct pci_config_window sysdata;
 
-Also provide use the offset-adjusted data address for the writeback
-job's output buffers. Output framebuffers with non-zero offsets now
-have their content written to the correct location.
+This is ugly. HV does not need pci_config_window at all right
+(other than arm64 pcibios_root_bridge_prepare()) ?
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/gpu/drm/vkms/vkms_composer.c  | 2 +-
- drivers/gpu/drm/vkms/vkms_drv.h       | 1 +
- drivers/gpu/drm/vkms/vkms_plane.c     | 2 +-
- drivers/gpu/drm/vkms/vkms_writeback.c | 2 +-
- 4 files changed, 4 insertions(+), 3 deletions(-)
+The issue is that in HV you have to have *some* sysdata != NULL, it is
+just some data to retrieve the hv_pcibus_device.
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 49f109c3a2b3..9e8204be9a14 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -257,7 +257,7 @@ void vkms_composer_worker(struct work_struct *work)
- 		return;
- 
- 	if (wb_pending)
--		vaddr_out = crtc_state->active_writeback->map[0].vaddr;
-+		vaddr_out = crtc_state->active_writeback->data[0].vaddr;
- 
- 	ret = compose_active_planes(&vaddr_out, primary_composer,
- 				    crtc_state);
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index 8bc9e3f52e1f..d48c23d40ce5 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -22,6 +22,7 @@
- 
- struct vkms_writeback_job {
- 	struct dma_buf_map map[DRM_FORMAT_MAX_PLANES];
-+	struct dma_buf_map data[DRM_FORMAT_MAX_PLANES];
- };
- 
- struct vkms_composer {
-diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index 8a56fbf572b0..32409e15244b 100644
---- a/drivers/gpu/drm/vkms/vkms_plane.c
-+++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -111,7 +111,7 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
- 	memcpy(&composer->src, &new_state->src, sizeof(struct drm_rect));
- 	memcpy(&composer->dst, &new_state->dst, sizeof(struct drm_rect));
- 	memcpy(&composer->fb, fb, sizeof(struct drm_framebuffer));
--	memcpy(&composer->map, &shadow_plane_state->map, sizeof(composer->map));
-+	memcpy(&composer->map, &shadow_plane_state->data, sizeof(composer->map));
- 	drm_framebuffer_get(&composer->fb);
- 	composer->offset = fb->offsets[0];
- 	composer->pitch = fb->pitches[0];
-diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-index 3a8e2ed93e7c..8694227f555f 100644
---- a/drivers/gpu/drm/vkms/vkms_writeback.c
-+++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-@@ -75,7 +75,7 @@ static int vkms_wb_prepare_job(struct drm_writeback_connector *wb_connector,
- 	if (!vkmsjob)
- 		return -ENOMEM;
- 
--	ret = drm_gem_fb_vmap(job->fb, vkmsjob->map, NULL);
-+	ret = drm_gem_fb_vmap(job->fb, vkmsjob->map, vkmsjob->data);
- 	if (ret) {
- 		DRM_ERROR("vmap failed: %d\n", ret);
- 		goto err_kfree;
--- 
-2.32.0
+Mmaybe we can rework ARM64 ACPI code to store the acpi_device in struct
+pci_host_bridge->private instead of retrieving it from pci_config_window
+so that we decouple HV from the ARM64 back-end.
 
+HV would just set struct pci_host_bridge->private == NULL.
+
+I need to think about this a bit, I don't think it should block
+this series though but it would be nicer.
+
+Lorenzo
+
+> +#endif
+>  	struct pci_host_bridge *bridge;
+>  	struct fwnode_handle *fwnode;
+>  	/* Protocol version negotiated with the host */
+> @@ -3075,7 +3080,9 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  			 dom_req, dom);
+>  
+>  	hbus->bridge->domain_nr = dom;
+> +#ifdef CONFIG_X86
+>  	hbus->sysdata.domain = dom;
+> +#endif
+>  
+>  	hbus->hdev = hdev;
+>  	INIT_LIST_HEAD(&hbus->children);
+> -- 
+> 2.32.0
+> 
