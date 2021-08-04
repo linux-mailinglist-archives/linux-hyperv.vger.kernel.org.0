@@ -2,135 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29B903DFBB0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Aug 2021 09:04:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2468E3E0104
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Aug 2021 14:20:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235723AbhHDHEQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 Aug 2021 03:04:16 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:39738 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235487AbhHDHEN (ORCPT
+        id S236659AbhHDMVK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 Aug 2021 08:21:10 -0400
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:45634 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236370AbhHDMVK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 Aug 2021 03:04:13 -0400
-Received: from [192.168.1.87] (unknown [223.178.56.171])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2C02F20B36E0;
-        Wed,  4 Aug 2021 00:03:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2C02F20B36E0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1628060640;
-        bh=9ZaqFTUSUabTOCq0gU0pkK9jc2pEBX00jmp+GcZOv0g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JHIEvDfmp/H7TPFi3UdGVZV5txesuMGg+GjVhE4Jx7Xljpo0hIVLuneKK/qsbLfLm
-         zs5+T6qQbrLgMqQSh9cbdsu1Bb5/KjbY6RPzr4A4WlW4CuC9bLlCVUIE1HuFqgG3r0
-         Ors/l3/xf672Y0iQsGVu3qb7pyPhE38/p4VW+cOs=
-Subject: Re: [RFC v1 6/8] mshv: command line option to skip devices in
- PV-IOMMU
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        pasha.tatashin@soleen.com, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>
-References: <20210709114339.3467637-1-wei.liu@kernel.org>
- <20210709114339.3467637-7-wei.liu@kernel.org>
- <4a6918ea-e3e5-55c9-a12d-bee7261301fd@linux.microsoft.com>
- <20210803215617.fzx2vrzhsabrrolc@liuwe-devbox-debian-v2>
-From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Message-ID: <8d9b6b9a-62b1-95ea-1bb6-258e72c1800d@linux.microsoft.com>
-Date:   Wed, 4 Aug 2021 12:33:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Wed, 4 Aug 2021 08:21:10 -0400
+Received: by mail-wm1-f51.google.com with SMTP id l11-20020a7bcf0b0000b0290253545c2997so1330702wmg.4;
+        Wed, 04 Aug 2021 05:20:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A3YHHdNQhQUPqpOyWucLW8OhP5ZvpbmVO6o/+w7Bn+c=;
+        b=Rc+bYEA5OGyBlpKPYJaLaXQqxcwcgjBdpImuyuJtmzILo3wWb4sDDOB18JR3sLaZ9C
+         R6780TiqBjVWXJVmm4ecOXgY7AKkyM54X3cb2CgeuSqF6ekc0R47XYcLS7HvM3wI3XRf
+         +0TiJFls4UPGPgsN3uo+JW6ZfZJxpinb9ApDyEt+XVpvgkaLx1mUgLhslSfMfQEIWJQ9
+         vVD5371078JWqiUKdkcWH1IwM1AdjqA1/jpkrvNMpGsMtWr2AChLy1S/mgMQWfB2FBCo
+         1W5RfjEnK9dgj7Ed+An08NPh+6SroFPH4KxQTxYYBd+c0NlFLTL5nNDac2r+42yoMT7Z
+         D4kQ==
+X-Gm-Message-State: AOAM530l27GogIOsvtTiIeMmoRskjbkxhRZbG/aJcmMPEIJyQ/K+2uCn
+        IQD0wEzKEUB831IrKtwM/g8=
+X-Google-Smtp-Source: ABdhPJwh3Tcjxxk0Mbg8rzgTpAGMkjevBEK6fsJzBKd6twg603sG5kquxgYAABLzo2dw3hzs+xEZ9A==
+X-Received: by 2002:a1c:c91a:: with SMTP id f26mr27416713wmb.162.1628079656210;
+        Wed, 04 Aug 2021 05:20:56 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id j36sm5385370wms.16.2021.08.04.05.20.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Aug 2021 05:20:55 -0700 (PDT)
+Date:   Wed, 4 Aug 2021 12:20:54 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Praveen Kumar <kumarpraveen@linux.microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        viremana@linux.microsoft.com, sunilmut@microsoft.com,
+        nunodasneves@linux.microsoft.com
+Subject: Re: [PATCH v5] hyperv: root partition faults writing to VP ASSIST
+ MSR PAGE
+Message-ID: <20210804122054.2iqcdukdx6a3x54t@liuwe-devbox-debian-v2>
+References: <20210731120519.17154-1-kumarpraveen@linux.microsoft.com>
+ <20210802125133.ci2jlg32mdfd5xds@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-In-Reply-To: <20210803215617.fzx2vrzhsabrrolc@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210802125133.ci2jlg32mdfd5xds@liuwe-devbox-debian-v2>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 04-08-2021 03:26, Wei Liu wrote:
->>>  	struct iommu_domain domain;
->>> @@ -774,6 +784,41 @@ static struct iommu_device *hv_iommu_probe_device(struct device *dev)
->>>  	if (!dev_is_pci(dev))
->>>  		return ERR_PTR(-ENODEV);
->>>  
->>> +	/*
->>> +	 * Skip the PCI device specified in `pci_devs_to_skip`. This is a
->>> +	 * temporary solution until we figure out a way to extract information
->>> +	 * from the hypervisor what devices it is already using.
->>> +	 */
->>> +	if (pci_devs_to_skip && *pci_devs_to_skip) {
->>> +		int pos = 0;
->>> +		int parsed;
->>> +		int segment, bus, slot, func;
->>> +		struct pci_dev *pdev = to_pci_dev(dev);
->>> +
->>> +		do {
->>> +			parsed = 0;
->>> +
->>> +			sscanf(pci_devs_to_skip + pos,
->>> +				" (%x:%x:%x.%x) %n",
->>> +				&segment, &bus, &slot, &func, &parsed);
->>> +
->>> +			if (parsed <= 0)
->>> +				break;
->>> +
->>> +			if (pci_domain_nr(pdev->bus) == segment &&
->>> +				pdev->bus->number == bus &&
->>> +				PCI_SLOT(pdev->devfn) == slot &&
->>> +				PCI_FUNC(pdev->devfn) == func)
->>> +			{
->>> +				dev_info(dev, "skipped by MSHV IOMMU\n");
->>> +				return ERR_PTR(-ENODEV);
->>> +			}
->>> +
->>> +			pos += parsed;
->>> +
->>> +		} while (pci_devs_to_skip[pos]);
->>
->> Is there a possibility of pci_devs_to_skip + pos > sizeof(pci_devs_to_skip)
->> and also a valid memory ?
+On Mon, Aug 02, 2021 at 12:51:33PM +0000, Wei Liu wrote:
+> On Sat, Jul 31, 2021 at 05:35:19PM +0530, Praveen Kumar wrote:
+> > For Root partition the VP assist pages are pre-determined by the
+> > hypervisor. The Root kernel is not allowed to change them to
+> > different locations. And thus, we are getting below stack as in
+> > current implementation Root is trying to perform write to specific
+> > MSR.
+> > 
+> > [ 2.778197] unchecked MSR access error: WRMSR to 0x40000073 (tried to
+> > write 0x0000000145ac5001) at rIP: 0xffffffff810c1084
+> > (native_write_msr+0x4/0x30)
+> > [ 2.784867] Call Trace:
+> > [ 2.791507] hv_cpu_init+0xf1/0x1c0
+> > [ 2.798144] ? hyperv_report_panic+0xd0/0xd0
+> > [ 2.804806] cpuhp_invoke_callback+0x11a/0x440
+> > [ 2.811465] ? hv_resume+0x90/0x90
+> > [ 2.818137] cpuhp_issue_call+0x126/0x130
+> > [ 2.824782] __cpuhp_setup_state_cpuslocked+0x102/0x2b0
+> > [ 2.831427] ? hyperv_report_panic+0xd0/0xd0
+> > [ 2.838075] ? hyperv_report_panic+0xd0/0xd0
+> > [ 2.844723] ? hv_resume+0x90/0x90
+> > [ 2.851375] __cpuhp_setup_state+0x3d/0x90
+> > [ 2.858030] hyperv_init+0x14e/0x410
+> > [ 2.864689] ? enable_IR_x2apic+0x190/0x1a0
+> > [ 2.871349] apic_intr_mode_init+0x8b/0x100
+> > [ 2.878017] x86_late_time_init+0x20/0x30
+> > [ 2.884675] start_kernel+0x459/0x4fb
+> > [ 2.891329] secondary_startup_64_no_verify+0xb0/0xbb
+> > 
+> > Since, the hypervisor already provides the VP assist page for root
+> > partition, we need to memremap the memory from hypervisor for root
+> > kernel to use. The mapping is done in hv_cpu_init during bringup and
+> > is unmaped in hv_cpu_die during teardown.
+> > 
+> > Signed-off-by: Praveen Kumar <kumarpraveen@linux.microsoft.com>
 > 
-> pos should point to the last parsed position. If parsing fails pos does
-> not get updated and the code breaks out of the loop. If parsing is
-> success pos should point to either the start of next element of '\0'
-> (end of string). To me this is good enough.
+> Looks good. I can fix a few styling issues in code and comments when I
+> commit this patch.
 
-The point is, hypothetically the address to pci_devs_to_skip + pos can be valid address (later to '\0'), and thus there is a possibility, that parsing may not fail.
-Another, there is also a possibility of sscanf faulting accessing the illegal address, if pci_devs_to_skip[pos] turns out to be not NULL or valid address.
+Applied to hyperv-next. Thanks.
+
+Wei.
 
 > 
->> I would recommend to have a check of size as well before accessing the
->> array content, just to be safer accessing any memory.
->>
-> 
-> What check do you have in mind?
-
-Something like,
-size_t len = strlen(pci_devs_to_skip);
-do {
-
-	len -= parsed;
-} while (len);
-
-OR
-
-do {
-...
-	pos += parsed;
-} while (pos < len);
-
-Further, I'm also fine with the existing code, if you think this won't break and already been taken care. Thanks.
-
-Regards,
-
-~Praveen.
+> Wei.
