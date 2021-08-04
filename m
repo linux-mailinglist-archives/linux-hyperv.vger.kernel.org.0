@@ -2,66 +2,191 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF1DE3E0637
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Aug 2021 18:58:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDDEB3E0781
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Aug 2021 20:22:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239692AbhHDQ7C (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 Aug 2021 12:59:02 -0400
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:39639 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239555AbhHDQ7C (ORCPT
+        id S238022AbhHDSWd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 Aug 2021 14:22:33 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:36440 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236916AbhHDSWd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 Aug 2021 12:59:02 -0400
-Received: by mail-wm1-f52.google.com with SMTP id f9-20020a05600c1549b029025b0f5d8c6cso4373374wmg.4;
-        Wed, 04 Aug 2021 09:58:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MQVMEe9oIkhK6OANCKQ+gXkHOtTHQidfijcaEuYUq7U=;
-        b=kEQkmmUvAFj455uPURlB8TRsLLO/oQB+Bb3sySe2SRHyS0hwaXdBxfzTCKgVSTLiw5
-         Jcac4B74KeyM9EYHvMBHudW7oWBKbAiA7OLxiLLd9ptrkpb7r5cRuESDPsEpYnDohxY3
-         jEDXy2td6sj8COcereVyJ7GMew8RTTvI9Zjn1+ezdbvLHHKnui/p8KbstbKBEytQfvOm
-         omibbuZ152vBxVwe2MKm0/uRowh5Q48M6RIhK4sGTJhtoc6cwtGKVJ8IrN//ug5tjDaF
-         s6bU46ifn/5jQSRuj1kH9S+YUdCqQrX/8la7Px2pJmF73Oh99TlrtB4/fGlEiGAozPjS
-         77vg==
-X-Gm-Message-State: AOAM533/i6QW+aI/dbhA4z8e3Xa1lEM2e9rHayDQLImViAATr2EtXKsE
-        YpexzYQUqU7lo56YHFhKrbk=
-X-Google-Smtp-Source: ABdhPJxmsJQvAgB4BRIkvxBIEYz4/5vgT4b7/6NjZ22Tz+pBcKtC/Aisqcj/0STGxrqz3Z28mYPv2A==
-X-Received: by 2002:a1c:7402:: with SMTP id p2mr10761098wmc.111.1628096327388;
-        Wed, 04 Aug 2021 09:58:47 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u11sm3190643wrp.26.2021.08.04.09.58.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 09:58:46 -0700 (PDT)
-Date:   Wed, 4 Aug 2021 16:58:44 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
-        wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
-        ardb@kernel.org
-Subject: Re: [PATCH v12 0/5] Enable Linux guests on Hyper-V on ARM64
-Message-ID: <20210804165844.5ocbkmr64gzxkqdp@liuwe-devbox-debian-v2>
-References: <1628092359-61351-1-git-send-email-mikelley@microsoft.com>
+        Wed, 4 Aug 2021 14:22:33 -0400
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 2CB2522234;
+        Wed,  4 Aug 2021 18:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1628101339; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9jDiedw+rhSv4P352qoVoLjia/fj5ASAwBaVCXTCBLw=;
+        b=N1LxScWXW3V8lDVQjD1RVfpBuqODiwOoYvR6oBRgqYJMaEgAy7vi2RgECieKdCZoMV6Ktq
+        rZh15npJjdAciB8Qz56TLCNN5asLqq2Ddkj9612yBN/Pt3SMhAvttCblOnfDXRJKz3Oii6
+        gJncyPUvgoazbA8MHAaJT+FNs8VhqE0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1628101339;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9jDiedw+rhSv4P352qoVoLjia/fj5ASAwBaVCXTCBLw=;
+        b=KmkLhj4zXeXWnvs21gfa9La4p40/Us9+J9iwic7OnKjgCIkQSjrEXW/58Gl3Lk6E+xnvL4
+        V/tZpkG3dOwx3LBA==
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id B6411139B5;
+        Wed,  4 Aug 2021 18:22:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap1.suse-dmz.suse.de with ESMTPSA
+        id nAmeKtraCmEmEgAAGKfGzw
+        (envelope-from <tzimmermann@suse.de>); Wed, 04 Aug 2021 18:22:18 +0000
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     airlied@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        noralf@tronnes.org, drawat.floss@gmail.com, kraxel@redhat.com,
+        hdegoede@redhat.com, sean@poorly.run,
+        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <20210803125928.27780-1-tzimmermann@suse.de>
+ <YQls/oxklkZWqEnD@ravnborg.org>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH 00/11] Provide offset-adjusted framebuffer mappings
+Message-ID: <d7b8b30c-8b14-b7a4-ab95-e3540da7ad3a@suse.de>
+Date:   Wed, 4 Aug 2021 20:22:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1628092359-61351-1-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <YQls/oxklkZWqEnD@ravnborg.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="hMa9McatD2SOtJAoFSGNBpookPaXNVbbw"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 04, 2021 at 08:52:34AM -0700, Michael Kelley wrote:
-> 
-> Michael Kelley (5):
->   arm64: hyperv: Add Hyper-V hypercall and register access utilities
->   arm64: hyperv: Add panic handler
->   arm64: hyperv: Initialize hypervisor on boot
->   arm64: efi: Export screen_info
->   Drivers: hv: Enable Hyper-V code to be built on ARM64
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--hMa9McatD2SOtJAoFSGNBpookPaXNVbbw
+Content-Type: multipart/mixed; boundary="swZwCKEjaaVmZFU89z5nUly1HAOaK3Wu4";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: airlied@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, noralf@tronnes.org,
+ drawat.floss@gmail.com, kraxel@redhat.com, hdegoede@redhat.com,
+ sean@poorly.run, rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux-foundation.org
+Message-ID: <d7b8b30c-8b14-b7a4-ab95-e3540da7ad3a@suse.de>
+Subject: Re: [PATCH 00/11] Provide offset-adjusted framebuffer mappings
+References: <20210803125928.27780-1-tzimmermann@suse.de>
+ <YQls/oxklkZWqEnD@ravnborg.org>
+In-Reply-To: <YQls/oxklkZWqEnD@ravnborg.org>
 
-Applied to hyperv-next. Thanks.
+--swZwCKEjaaVmZFU89z5nUly1HAOaK3Wu4
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Wei.
+Hi Sam
+
+Am 03.08.21 um 18:21 schrieb Sam Ravnborg:
+> Hi Thomas,
+>=20
+> On Tue, Aug 03, 2021 at 02:59:17PM +0200, Thomas Zimmermann wrote:
+>> A framebuffer's offsets field might be non-zero to make the BO data
+>> start at the specified offset within the BO's memory. Handle this
+>> case in drm_gem_fb_vmap() and update all callers. So far, many drivers=
+
+>> ignore the offsets, which can lead to visual artifacts.
+>>
+>> Patch 1 adds an optional argument to drm_gem_fb_vmap() to return the
+>> offset-adjusted data address for use with shadow-buffered planes.
+>>
+>> Patches 3 and 11 convert gud and vkms, which are the other callers of
+>> drm_gem_fb_vmap(). For gud, it's just a cleanup. Vkms will handle the
+>> framebuffer offsets correctly for its input and output framebuffers.
+>>
+>> The other patches convert users of shadow-buffered planes to use the
+>> data address. After conversion, each driver will use the correct data
+>> for non-zero offsets.
+>>
+>=20
+>>    drm/ast: Use offset-adjusted shadow-plane mappings
+>>    drm/gud: Get offset-adjusted mapping from drm_gem_fb_vmap()
+>>    drm/hyperv: Use offset-adjusted shadow-plane mappings
+>>    drm/mgag200: Use offset-adjusted shadow-plane mappings
+>>    drm/cirrus: Use offset-adjusted shadow-plane mappings
+>>    drm/gm12u320: Use offset-adjusted shadow-plane mappings
+>>    drm/simpledrm: Use offset-adjusted shadow-plane mapping
+>>    drm/udl: Use offset-adjusted shadow-plane mapping
+>>    drm/vbox: Use offset-adjusted shadow-plane mappings
+>>    drm/vkms: Use offset-adjusted shadow-plane mappings and output
+> Everything looked good while reading through the patches.
+> I cannot say if everything was properly converted but the patches looke=
+d
+> good.
+>=20
+> So they are all:
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+Thanks!
+
+>=20
+> There was a few TODO comments visible aboput using the mapping api
+> properly. I assume this is coming in a later patch set..
+
+There are indeed quite a few such comments. When we introduced the=20
+dma_buf_map type to solve the fbdev issue on sparc64, in many places I=20
+simply put the existing vaddr pointers into the map structure, and vice=20
+versa.
+
+The code works as expected, but in the future we may want to use=20
+dma_buf_map for all framebuffer pointers. This would, for example,=20
+require format conversion helpers that operate on these structures.=20
+Adding that will require a number of changes throughout these helpers.
+
+Best regards
+Thomas
+
+>=20
+> 	Sam
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--swZwCKEjaaVmZFU89z5nUly1HAOaK3Wu4--
+
+--hMa9McatD2SOtJAoFSGNBpookPaXNVbbw
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmEK2toFAwAAAAAACgkQlh/E3EQov+AC
+3A/+NeTwv+p4m1iYfCA1BWox0XAFfhmcIZgkCCVSM1UXHKUJ3He/+m2vjUXjCcNN2hgBdUfwuSxD
+mNt9/t6slQy1Vl6pI01SCPfFdLn6ERjUPprQ3l9GvJdNuwRm0vHNomONgqqEV0pcO2lu8ZmQLe45
+3QcrWYbHY5ZHWG7x1mPazmxvdKIY4YzWn3RAv6CG6bofiQ9wUpu0ei+hHj35HdlpF1uVCZv3nq2H
+g3uj+BaLtaXEmnvm/T+GSIVFxPCUlB7Vi7HRL30G85A605GDb8Z8JuOw82hr6/8x9/wZR4QOh4VQ
+kYnzY33YYuCFDWJSjnKkWGm/mzrSc/r6aQaTMNYBu5ZAMuLfd2AGjO1pgU/ArN9xF5MHDEkRLhRF
+wBE0uFHGMLIJPuyT0oT4c9H+823R94z3TpjewT293fPyqmGIjhozV4OcWw53qNliTbG8Rcvgr/Cg
+fKwPpBIlDzJ+06EhAZkrPgF1Itcq9O1SdbTmxHfcdhsYro6ZB0LK8S2iLCfzuTopYSsqT3wTwpno
+VMQXed01ItJduRCpIN4f5UrqYyVSwpPS5JihWaZdmwFRp521C84KyEFn4zq61lgoPn0j+w7cjN3Z
+MvEb3AbG+rDqjPzQjf2VzFl2tvqRp8sT8uTikqPpZh8m1tWiDgW/GHfMTRZ9Luej3ubuZtXSUmt7
+O+Y=
+=aiSS
+-----END PGP SIGNATURE-----
+
+--hMa9McatD2SOtJAoFSGNBpookPaXNVbbw--
