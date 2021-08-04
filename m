@@ -2,80 +2,64 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70DAB3E0826
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Aug 2021 20:48:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 209E83E0836
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Aug 2021 20:49:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240650AbhHDSrd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 Aug 2021 14:47:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57970 "EHLO
+        id S237601AbhHDStC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 Aug 2021 14:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240658AbhHDSqd (ORCPT
+        with ESMTP id S231349AbhHDStC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 Aug 2021 14:46:33 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 859FAC06179B;
-        Wed,  4 Aug 2021 11:45:58 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id u2so3981808plg.10;
-        Wed, 04 Aug 2021 11:45:58 -0700 (PDT)
+        Wed, 4 Aug 2021 14:49:02 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F89FC061799;
+        Wed,  4 Aug 2021 11:48:49 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id e5so4016036pld.6;
+        Wed, 04 Aug 2021 11:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=29igml5xJQT7NZ/zHELD608zwBtMw+CBZNUu6aD3TXw=;
-        b=YYV/m/LMm9LueSaFvS1QqjEzusaN78zRUrtnhZOuMU1heWUA9GqVjn0EIfdioy78dO
-         pqyQr1mh3jD0fZRJ227Vtm1Yr/MBIZJfqPV9t2r5oVj/djtM4H34a0d2hv9nWJlmMMMc
-         C0ZzKol4Vgsz/Q9xqcn/U6GmtuToaeHJ1NsP9ZfEz7Fm5ahWkDMW7GGoANygL8DZ1y+9
-         uQ94GlUlEs4n5qTeavI4gSb/EIbS1zykqnrzZoZRj6oHARuYcWdHel7RiRpwWfqTur7t
-         +RFWBknyfar4zEtojp765cEWGfOex77YKgaagkx/IKKYP556Mlmva4L/VpYkV17KUMj1
-         QvGg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S4a7Bei7o1KC7VPD+FPgXj8rKANsZk7Dtmy+dqLdqQ0=;
+        b=Na8zJeTGmfyPfIl5yXh/YhNP81bw+jRCfXL/tqIhwoa2Imxmtx7IlQGUl2xONijLvg
+         Qqlq9tZrw+CAYpQLh2nD0cb1vNe4ohM1yF/A15EyyTnm+yywBvmWbyvypxlj3kB8COv+
+         FcZvEl459iDM41LJfG2H5RJ5LuazCDCQpUde6BqVaQuUw6m0Ws0XUjmwtoYdxioTs2MU
+         vzVKia2gyJ8ZbMYCHIWMDQDb6XSgL8ZfT1LX5pZW3ZOQiRUarMynP2YEQ2F24C/9So36
+         XA3jbvIEF4BYgwcqEnCi9RaF0I9CrvFwgFz3tdqh94eJPUSUPEOYpSgV+jNd3k+5XuEq
+         gW/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=29igml5xJQT7NZ/zHELD608zwBtMw+CBZNUu6aD3TXw=;
-        b=RY72IIN/jNHVZqxyjSQE6SLq1g5uAJz5zxeiJGYSVk1YyMz63kveKErWjxGC1Ar8gd
-         5N6GORQE2v4k3vpgiKHEoeMJ3/KwnoIPElZgArFJWAt03ifQhRtXO1JaYDwQXp0dbfRf
-         iBAObfqWtby7pEz6AwksAie2ePQhukOOO8tWyOmWh83DB6r1vaCWPO2TJ/9bKvvuf4Al
-         IlW0vlM8RmHavs1mWfb87odvdAc9yoOcD+HfFN5SlQFsN842DYUf9rWfFryKV7vbH56f
-         pYTyFXbWyPjk5TnMfKqE2aCWimHOZenlTzSno+CzALn1YEzROkN391LV/zoW6dQFEfhn
-         LgzQ==
-X-Gm-Message-State: AOAM530Sid2JUNvCQ1PUtR2sFJ5EmeU7piJiqXwJYmxFNV+B42Kms5fc
-        J1hJ/LB8gVqovEaQctG6Ebg=
-X-Google-Smtp-Source: ABdhPJys+uUC+8R4d08qbIFnIv7LBHGpTM/c9FmBOlVHRSO99KZWQKeZJC0uWF82I4cQhSNYNbC05Q==
-X-Received: by 2002:a17:902:8b83:b029:12c:cbce:a52f with SMTP id ay3-20020a1709028b83b029012ccbcea52fmr546876plb.9.1628102758109;
-        Wed, 04 Aug 2021 11:45:58 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:f:1947:6842:b8a8:6f83])
-        by smtp.gmail.com with ESMTPSA id f5sm3325647pjo.23.2021.08.04.11.45.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S4a7Bei7o1KC7VPD+FPgXj8rKANsZk7Dtmy+dqLdqQ0=;
+        b=GSrOr/PDYCRkT84sar8rIVXKB3ex0HevRmKD3iGn7S4ItCNpapTPfx/RMTut9/3QsP
+         6IZ/kp7xlMS9Trtkkomi1e+8pErIeJAgy5TPTFhXb6JfeS/+vlE7TRgXEtSKCCqPMqjN
+         f7zPxUg7bVd8T3btNGJQRxwINHiLCAUTWOR8K/Xmxfqo7PrEVrowa9ZFInm2zmSS+Yck
+         avyg9uzamw9kpl7L5Zw/MtN+RV7A90pDBXYcQJYYMS+iBcqzP5FRNnzL9ZMB/ay2gL0Z
+         4FI8w59fkbOA/QQApMDuLICG+sed52TwhTRK2oMLUx8JECmgSd99C/Qi6xzm+AQ1uG+n
+         ZySg==
+X-Gm-Message-State: AOAM5328FLNM2QHktAQyAly7GzRMs3WaxJAkNX6wyF6t02D3h8TyAuYW
+        bblv+dCNIBejS28KQ7LiQEw=
+X-Google-Smtp-Source: ABdhPJz6VHK4a/cMxFqm9pe6FoV3BLeCK1H/pOxFm7ctorQ8X3eRKxzjPcE3vctLy4+qTFtLj1HovA==
+X-Received: by 2002:a17:90a:e647:: with SMTP id ep7mr11175384pjb.145.1628102928959;
+        Wed, 04 Aug 2021 11:48:48 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:a:194c:6842:b8a8:6f83])
+        by smtp.gmail.com with ESMTPSA id a22sm3739411pfa.137.2021.08.04.11.48.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 11:45:57 -0700 (PDT)
+        Wed, 04 Aug 2021 11:48:48 -0700 (PDT)
 From:   Tianyu Lan <ltykernel@gmail.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, joro@8bytes.org,
-        will@kernel.org, davem@davemloft.net, kuba@kernel.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
-        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        Tianyu.Lan@microsoft.com, rppt@kernel.org,
-        kirill.shutemov@linux.intel.com, akpm@linux-foundation.org,
-        brijesh.singh@amd.com, thomas.lendacky@amd.com, pgonda@google.com,
-        david@redhat.com, krish.sadhukhan@oracle.com, saravanand@fb.com,
-        aneesh.kumar@linux.ibm.com, xen-devel@lists.xenproject.org,
-        martin.b.radev@gmail.com, ardb@kernel.org, rientjes@google.com,
-        tj@kernel.org, keescook@chromium.org,
         michael.h.kelley@microsoft.com
-Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        vkuznets@redhat.com, parri.andrea@gmail.com
-Subject: [PATCH V2 14/14] HV/Storvsc: Add Isolation VM support for storvsc driver
-Date:   Wed,  4 Aug 2021 14:45:10 -0400
-Message-Id: <20210804184513.512888-15-ltykernel@gmail.com>
+        vkuznets@redhat.com
+Subject: [PATCH] x86/Hyper-V: Initialize Hyper-V stimer after enabling lapic
+Date:   Wed,  4 Aug 2021 14:48:43 -0400
+Message-Id: <20210804184843.513524-1-ltykernel@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210804184513.512888-1-ltykernel@gmail.com>
-References: <20210804184513.512888-1-ltykernel@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -84,160 +68,111 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-In Isolation VM, all shared memory with host needs to mark visible
-to host via hvcall. vmbus_establish_gpadl() has already done it for
-storvsc rx/tx ring buffer. The page buffer used by vmbus_sendpacket_
-mpb_desc() still need to handle. Use DMA API to map/umap these
-memory during sending/receiving packet and Hyper-V DMA ops callback
-will use swiotlb function to allocate bounce buffer and copy data
-from/to bounce buffer.
+Hyper-V Isolation VM doesn't have PIT/HPET legacy timer and only
+provide stimer. Initialize Hyper-v stimer just after enabling
+lapic to avoid kernel stuck during calibrating TSC due to no
+available timer.
 
 Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 ---
- drivers/scsi/storvsc_drv.c | 68 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 63 insertions(+), 5 deletions(-)
+ arch/x86/hyperv/hv_init.c      | 29 -----------------------------
+ arch/x86/kernel/cpu/mshyperv.c | 22 ++++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 328bb961c281..78320719bdd8 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -21,6 +21,8 @@
- #include <linux/device.h>
- #include <linux/hyperv.h>
- #include <linux/blkdev.h>
-+#include <linux/io.h>
-+#include <linux/dma-mapping.h>
- #include <scsi/scsi.h>
- #include <scsi/scsi_cmnd.h>
- #include <scsi/scsi_host.h>
-@@ -427,6 +429,8 @@ struct storvsc_cmd_request {
- 	u32 payload_sz;
- 
- 	struct vstor_packet vstor_packet;
-+	u32 hvpg_count;
-+	struct hv_dma_range *dma_range;
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 6f247e7e07eb..4a643a85d570 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -271,25 +271,6 @@ static struct syscore_ops hv_syscore_ops = {
+ 	.resume		= hv_resume,
  };
  
- 
-@@ -509,6 +513,14 @@ struct storvsc_scan_work {
- 	u8 tgt_id;
- };
- 
-+#define storvsc_dma_map(dev, page, offset, size, dir) \
-+	dma_map_page(dev, page, offset, size, dir)
-+
-+#define storvsc_dma_unmap(dev, dma_range, dir)		\
-+		dma_unmap_page(dev, dma_range.dma,	\
-+			       dma_range.mapping_size,	\
-+			       dir ? DMA_FROM_DEVICE : DMA_TO_DEVICE)
-+
- static void storvsc_device_scan(struct work_struct *work)
+-static void (* __initdata old_setup_percpu_clockev)(void);
+-
+-static void __init hv_stimer_setup_percpu_clockev(void)
+-{
+-	/*
+-	 * Ignore any errors in setting up stimer clockevents
+-	 * as we can run with the LAPIC timer as a fallback.
+-	 */
+-	(void)hv_stimer_alloc(false);
+-
+-	/*
+-	 * Still register the LAPIC timer, because the direct-mode STIMER is
+-	 * not supported by old versions of Hyper-V. This also allows users
+-	 * to switch to LAPIC timer via /sys, if they want to.
+-	 */
+-	if (old_setup_percpu_clockev)
+-		old_setup_percpu_clockev();
+-}
+-
+ static void __init hv_get_partition_id(void)
  {
- 	struct storvsc_scan_work *wrk;
-@@ -1260,6 +1272,7 @@ static void storvsc_on_channel_callback(void *context)
- 	struct hv_device *device;
- 	struct storvsc_device *stor_device;
- 	struct Scsi_Host *shost;
-+	int i;
- 
- 	if (channel->primary_channel != NULL)
- 		device = channel->primary_channel->device_obj;
-@@ -1314,6 +1327,15 @@ static void storvsc_on_channel_callback(void *context)
- 				request = (struct storvsc_cmd_request *)scsi_cmd_priv(scmnd);
- 			}
- 
-+			if (request->dma_range) {
-+				for (i = 0; i < request->hvpg_count; i++)
-+					storvsc_dma_unmap(&device->device,
-+						request->dma_range[i],
-+						request->vstor_packet.vm_srb.data_in == READ_TYPE);
-+
-+				kfree(request->dma_range);
-+			}
-+
- 			storvsc_on_receive(stor_device, packet, request);
- 			continue;
- 		}
-@@ -1810,7 +1832,9 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 		unsigned int hvpgoff, hvpfns_to_add;
- 		unsigned long offset_in_hvpg = offset_in_hvpage(sgl->offset);
- 		unsigned int hvpg_count = HVPFN_UP(offset_in_hvpg + length);
-+		dma_addr_t dma;
- 		u64 hvpfn;
-+		u32 size;
- 
- 		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
- 
-@@ -1824,6 +1848,13 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 		payload->range.len = length;
- 		payload->range.offset = offset_in_hvpg;
- 
-+		cmd_request->dma_range = kcalloc(hvpg_count,
-+				 sizeof(*cmd_request->dma_range),
-+				 GFP_ATOMIC);
-+		if (!cmd_request->dma_range) {
-+			ret = -ENOMEM;
-+			goto free_payload;
-+		}
- 
- 		for (i = 0; sgl != NULL; sgl = sg_next(sgl)) {
- 			/*
-@@ -1847,9 +1878,29 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 			 * last sgl should be reached at the same time that
- 			 * the PFN array is filled.
- 			 */
--			while (hvpfns_to_add--)
--				payload->range.pfn_array[i++] =	hvpfn++;
-+			while (hvpfns_to_add--) {
-+				size = min(HV_HYP_PAGE_SIZE - offset_in_hvpg,
-+					   (unsigned long)length);
-+				dma = storvsc_dma_map(&dev->device, pfn_to_page(hvpfn++),
-+						      offset_in_hvpg, size,
-+						      scmnd->sc_data_direction);
-+				if (dma_mapping_error(&dev->device, dma)) {
-+					ret = -ENOMEM;
-+					goto free_dma_range;
-+				}
-+
-+				if (offset_in_hvpg) {
-+					payload->range.offset = dma & ~HV_HYP_PAGE_MASK;
-+					offset_in_hvpg = 0;
-+				}
-+
-+				cmd_request->dma_range[i].dma = dma;
-+				cmd_request->dma_range[i].mapping_size = size;
-+				payload->range.pfn_array[i++] = dma >> HV_HYP_PAGE_SHIFT;
-+				length -= size;
-+			}
- 		}
-+		cmd_request->hvpg_count = hvpg_count;
+ 	struct hv_get_partition_id *output_page;
+@@ -396,16 +377,6 @@ void __init hyperv_init(void)
+ 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
  	}
  
- 	cmd_request->payload = payload;
-@@ -1860,13 +1911,20 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	put_cpu();
+-	/*
+-	 * hyperv_init() is called before LAPIC is initialized: see
+-	 * apic_intr_mode_init() -> x86_platform.apic_post_init() and
+-	 * apic_bsp_setup() -> setup_local_APIC(). The direct-mode STIMER
+-	 * depends on LAPIC, so hv_stimer_alloc() should be called from
+-	 * x86_init.timers.setup_percpu_clockev.
+-	 */
+-	old_setup_percpu_clockev = x86_init.timers.setup_percpu_clockev;
+-	x86_init.timers.setup_percpu_clockev = hv_stimer_setup_percpu_clockev;
+-
+ 	hv_apic_init();
  
- 	if (ret == -EAGAIN) {
--		if (payload_sz > sizeof(cmd_request->mpb))
--			kfree(payload);
- 		/* no more space */
--		return SCSI_MLQUEUE_DEVICE_BUSY;
-+		ret = SCSI_MLQUEUE_DEVICE_BUSY;
-+		goto free_dma_range;
- 	}
- 
- 	return 0;
-+
-+free_dma_range:
-+	kfree(cmd_request->dma_range);
-+
-+free_payload:
-+	if (payload_sz > sizeof(cmd_request->mpb))
-+		kfree(payload);
-+	return ret;
+ 	x86_init.pci.arch_init = hv_pci_init;
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 6b5835a087a3..dcfbd2770d7f 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -214,6 +214,20 @@ static void __init hv_smp_prepare_boot_cpu(void)
+ #endif
  }
  
- static struct scsi_host_template scsi_driver = {
++static void (* __initdata old_setup_initr_mode)(void);
++
++static void __init hv_setup_initr_mode(void)
++{
++	if (old_setup_initr_mode)
++		old_setup_initr_mode();
++
++	/*
++	 * The direct-mode STIMER depends on LAPIC and so allocate
++	 * STIMER after calling initr node callback.
++	 */
++	(void)hv_stimer_alloc(false);
++}
++
+ static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
+ {
+ #ifdef CONFIG_X86_64
+@@ -424,6 +438,7 @@ static void __init ms_hyperv_init_platform(void)
+ 	/* Register Hyper-V specific clocksource */
+ 	hv_init_clocksource();
+ #endif
++
+ 	/*
+ 	 * TSC should be marked as unstable only after Hyper-V
+ 	 * clocksource has been initialized. This ensures that the
+@@ -431,6 +446,13 @@ static void __init ms_hyperv_init_platform(void)
+ 	 */
+ 	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
+ 		mark_tsc_unstable("running on Hyper-V");
++
++	/*
++	 * Override initr mode callback in order to allocate STIMER
++	 * after initalizing LAPIC.
++	 */
++	old_setup_initr_mode = x86_init.irqs.intr_mode_init;
++	x86_init.irqs.intr_mode_init = hv_setup_initr_mode;
+ }
+ 
+ static bool __init ms_hyperv_x2apic_available(void)
 -- 
 2.25.1
 
