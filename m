@@ -2,191 +2,193 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDDEB3E0781
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Aug 2021 20:22:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B644E3E07C7
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Aug 2021 20:45:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238022AbhHDSWd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 Aug 2021 14:22:33 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:36440 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236916AbhHDSWd (ORCPT
+        id S238008AbhHDSpe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 Aug 2021 14:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232690AbhHDSpd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 Aug 2021 14:22:33 -0400
-Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 2CB2522234;
-        Wed,  4 Aug 2021 18:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1628101339; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9jDiedw+rhSv4P352qoVoLjia/fj5ASAwBaVCXTCBLw=;
-        b=N1LxScWXW3V8lDVQjD1RVfpBuqODiwOoYvR6oBRgqYJMaEgAy7vi2RgECieKdCZoMV6Ktq
-        rZh15npJjdAciB8Qz56TLCNN5asLqq2Ddkj9612yBN/Pt3SMhAvttCblOnfDXRJKz3Oii6
-        gJncyPUvgoazbA8MHAaJT+FNs8VhqE0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1628101339;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9jDiedw+rhSv4P352qoVoLjia/fj5ASAwBaVCXTCBLw=;
-        b=KmkLhj4zXeXWnvs21gfa9La4p40/Us9+J9iwic7OnKjgCIkQSjrEXW/58Gl3Lk6E+xnvL4
-        V/tZpkG3dOwx3LBA==
-Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id B6411139B5;
-        Wed,  4 Aug 2021 18:22:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap1.suse-dmz.suse.de with ESMTPSA
-        id nAmeKtraCmEmEgAAGKfGzw
-        (envelope-from <tzimmermann@suse.de>); Wed, 04 Aug 2021 18:22:18 +0000
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     airlied@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        noralf@tronnes.org, drawat.floss@gmail.com, kraxel@redhat.com,
-        hdegoede@redhat.com, sean@poorly.run,
-        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20210803125928.27780-1-tzimmermann@suse.de>
- <YQls/oxklkZWqEnD@ravnborg.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH 00/11] Provide offset-adjusted framebuffer mappings
-Message-ID: <d7b8b30c-8b14-b7a4-ab95-e3540da7ad3a@suse.de>
-Date:   Wed, 4 Aug 2021 20:22:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Wed, 4 Aug 2021 14:45:33 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4ED6C0613D5;
+        Wed,  4 Aug 2021 11:45:20 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id e2-20020a17090a4a02b029016f3020d867so4844728pjh.3;
+        Wed, 04 Aug 2021 11:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tCOWlCVzJ/vNFZC4gC6K6prPZvwl0XzQwKDBWhCLMn0=;
+        b=GXASiyKYtq8/Bgud0lyPhD9m2ZDbNZQsl56/ePhMGS1TUFwoLCBtYcq5+x2lER0t5P
+         zcAgBay5Ynx3pJcDNg6HgAPwVWnPb1WjynAgeOlq6o+HPrYeul551WPl0dXGfyM0ajX8
+         jH0apncFN0/At3TGXp4jU/C4OwrIJv+8wNN3sWUAqeC7MHXsyyjXFfnz2UECVXha/sNg
+         I4rXqNSGRrTjXeX4B4SqLwmVkt5MXsIki9IyXAqcp40eSo3Xmlo+5hvBkcN4/dglOMtl
+         Uzx+H5I5QJtxLDwE7y830ynuCOHiHuBna3Uv61+yodcsxnzGd1B/HyOEOE7mW/IjsgMc
+         wBwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tCOWlCVzJ/vNFZC4gC6K6prPZvwl0XzQwKDBWhCLMn0=;
+        b=IERuGndZdQmSpBNpb/csa+LE7VLzMItdec54jRxMQALq+KyLf/n3Cay5gYTXVbQ/61
+         sZOE52oGSMtt2JJLwxajagm5QSr2I0XRypLNTrpEWSqcFjIy+rz4FjSP9c7FxKuEkj92
+         9KV5L3oVRjMqXu3lNFQVSutvUErfWLALmNbID4rELhg54KfWlDimbVphI1uSVZeWlUa1
+         tn6CaoFbcPrfPqkZuMR3Nq4XjxfNT/v+YXvnGguWxXaNqICwJcLiSJsiQGlm2MaJ6Dkt
+         E9/LDbdBqKD2Z3i9D3+PxkNqYdK/lMAPc/+gNS+Y3gDwc4D5kK6geGRaGuTFk+bnQ7Um
+         /vgw==
+X-Gm-Message-State: AOAM532rk/HrjkRQhv6vgAODaYAEF8spLkPW+eGFecOE6UuCi/+oQalf
+        X3yqKKkAmQdTnTC2m4DX/S0=
+X-Google-Smtp-Source: ABdhPJwrmdKQ47neq1EMdpZ0UbHKJYCgTGPCSMaTpgTirMsAABPF9yn55RB8QxFUVni1AjDdexBDuw==
+X-Received: by 2002:aa7:9537:0:b029:3b6:d6f0:6328 with SMTP id c23-20020aa795370000b02903b6d6f06328mr1090266pfp.38.1628102720172;
+        Wed, 04 Aug 2021 11:45:20 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:f:1947:6842:b8a8:6f83])
+        by smtp.gmail.com with ESMTPSA id f5sm3325647pjo.23.2021.08.04.11.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Aug 2021 11:45:19 -0700 (PDT)
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, joro@8bytes.org,
+        will@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
+        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        Tianyu.Lan@microsoft.com, rppt@kernel.org,
+        kirill.shutemov@linux.intel.com, akpm@linux-foundation.org,
+        brijesh.singh@amd.com, thomas.lendacky@amd.com, pgonda@google.com,
+        david@redhat.com, krish.sadhukhan@oracle.com, saravanand@fb.com,
+        aneesh.kumar@linux.ibm.com, xen-devel@lists.xenproject.org,
+        martin.b.radev@gmail.com, ardb@kernel.org, rientjes@google.com,
+        tj@kernel.org, keescook@chromium.org,
+        michael.h.kelley@microsoft.com
+Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, parri.andrea@gmail.com
+Subject: [PATCH V2 00/14] x86/Hyper-V: Add Hyper-V Isolation VM support
+Date:   Wed,  4 Aug 2021 14:44:56 -0400
+Message-Id: <20210804184513.512888-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <YQls/oxklkZWqEnD@ravnborg.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="hMa9McatD2SOtJAoFSGNBpookPaXNVbbw"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---hMa9McatD2SOtJAoFSGNBpookPaXNVbbw
-Content-Type: multipart/mixed; boundary="swZwCKEjaaVmZFU89z5nUly1HAOaK3Wu4";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: airlied@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, noralf@tronnes.org,
- drawat.floss@gmail.com, kraxel@redhat.com, hdegoede@redhat.com,
- sean@poorly.run, rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux-foundation.org
-Message-ID: <d7b8b30c-8b14-b7a4-ab95-e3540da7ad3a@suse.de>
-Subject: Re: [PATCH 00/11] Provide offset-adjusted framebuffer mappings
-References: <20210803125928.27780-1-tzimmermann@suse.de>
- <YQls/oxklkZWqEnD@ravnborg.org>
-In-Reply-To: <YQls/oxklkZWqEnD@ravnborg.org>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
---swZwCKEjaaVmZFU89z5nUly1HAOaK3Wu4
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Hyper-V provides two kinds of Isolation VMs. VBS(Virtualization-based
+security) and AMD SEV-SNP unenlightened Isolation VMs. This patchset
+is to add support for these Isolation VM support in Linux.
 
-Hi Sam
+The memory of these vms are encrypted and host can't access guest
+memory directly. Hyper-V provides new host visibility hvcall and
+the guest needs to call new hvcall to mark memory visible to host
+before sharing memory with host. For security, all network/storage
+stack memory should not be shared with host and so there is bounce
+buffer requests.
 
-Am 03.08.21 um 18:21 schrieb Sam Ravnborg:
-> Hi Thomas,
->=20
-> On Tue, Aug 03, 2021 at 02:59:17PM +0200, Thomas Zimmermann wrote:
->> A framebuffer's offsets field might be non-zero to make the BO data
->> start at the specified offset within the BO's memory. Handle this
->> case in drm_gem_fb_vmap() and update all callers. So far, many drivers=
+Vmbus channel ring buffer already plays bounce buffer role because
+all data from/to host needs to copy from/to between the ring buffer
+and IO stack memory. So mark vmbus channel ring buffer visible.
 
->> ignore the offsets, which can lead to visual artifacts.
->>
->> Patch 1 adds an optional argument to drm_gem_fb_vmap() to return the
->> offset-adjusted data address for use with shadow-buffered planes.
->>
->> Patches 3 and 11 convert gud and vkms, which are the other callers of
->> drm_gem_fb_vmap(). For gud, it's just a cleanup. Vkms will handle the
->> framebuffer offsets correctly for its input and output framebuffers.
->>
->> The other patches convert users of shadow-buffered planes to use the
->> data address. After conversion, each driver will use the correct data
->> for non-zero offsets.
->>
->=20
->>    drm/ast: Use offset-adjusted shadow-plane mappings
->>    drm/gud: Get offset-adjusted mapping from drm_gem_fb_vmap()
->>    drm/hyperv: Use offset-adjusted shadow-plane mappings
->>    drm/mgag200: Use offset-adjusted shadow-plane mappings
->>    drm/cirrus: Use offset-adjusted shadow-plane mappings
->>    drm/gm12u320: Use offset-adjusted shadow-plane mappings
->>    drm/simpledrm: Use offset-adjusted shadow-plane mapping
->>    drm/udl: Use offset-adjusted shadow-plane mapping
->>    drm/vbox: Use offset-adjusted shadow-plane mappings
->>    drm/vkms: Use offset-adjusted shadow-plane mappings and output
-> Everything looked good while reading through the patches.
-> I cannot say if everything was properly converted but the patches looke=
-d
-> good.
->=20
-> So they are all:
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+There are two exceptions - packets sent by vmbus_sendpacket_
+pagebuffer() and vmbus_sendpacket_mpb_desc(). These packets
+contains IO stack memory address and host will access these memory.
+So add allocation bounce buffer support in vmbus for these packets.
 
-Thanks!
+For SNP isolation VM, guest needs to access the shared memory via
+extra address space which is specified by Hyper-V CPUID HYPERV_CPUID_
+ISOLATION_CONFIG. The access physical address of the shared memory
+should be bounce buffer memory GPA plus with shared_gpa_boundary
+reported by CPUID.
 
->=20
-> There was a few TODO comments visible aboput using the mapping api
-> properly. I assume this is coming in a later patch set..
+Change since V1:
+       - Introduce x86_set_memory_enc static call and so platforms can
+         override __set_memory_enc_dec() with their implementation
+       - Introduce sev_es_ghcb_hv_call_simple() and share code
+         between SEV and Hyper-V code.
+       - Not remap monitor pages in the non-SNP isolation VM
+       - Make swiotlb_init_io_tlb_mem() return error code and return
+         error when dma_map_decrypted() fails.
 
-There are indeed quite a few such comments. When we introduced the=20
-dma_buf_map type to solve the fbdev issue on sparc64, in many places I=20
-simply put the existing vaddr pointers into the map structure, and vice=20
-versa.
+Change since RFC V4:
+       - Introduce dma map decrypted function to remap bounce buffer
+          and provide dma map decrypted ops for platform to hook callback.        
+       - Split swiotlb and dma map decrypted change into two patches
+       - Replace vstart with vaddr in swiotlb changes.
 
-The code works as expected, but in the future we may want to use=20
-dma_buf_map for all framebuffer pointers. This would, for example,=20
-require format conversion helpers that operate on these structures.=20
-Adding that will require a number of changes throughout these helpers.
+Change since RFC v3:
+       - Add interface set_memory_decrypted_map() to decrypt memory and
+         map bounce buffer in extra address space
+       - Remove swiotlb remap function and store the remap address
+         returned by set_memory_decrypted_map() in swiotlb mem data structure.
+       - Introduce hv_set_mem_enc() to make code more readable in the __set_memory_enc_dec().
 
-Best regards
-Thomas
-
->=20
-> 	Sam
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+Change since RFC v2:
+       - Remove not UIO driver in Isolation VM patch
+       - Use vmap_pfn() to replace ioremap_page_range function in
+       order to avoid exposing symbol ioremap_page_range() and
+       ioremap_page_range()
+       - Call hv set mem host visibility hvcall in set_memory_encrypted/decrypted()
+       - Enable swiotlb force mode instead of adding Hyper-V dma map/unmap hook
+       - Fix code style
 
 
---swZwCKEjaaVmZFU89z5nUly1HAOaK3Wu4--
+Tianyu Lan (14):
+  x86/HV: Initialize GHCB page in Isolation VM
+  x86/HV: Initialize shared memory boundary in the Isolation VM.
+  x86/set_memory: Add x86_set_memory_enc static call support
+  x86/HV: Add new hvcall guest address host visibility support
+  HV: Mark vmbus ring buffer visible to host in Isolation VM
+  HV: Add Write/Read MSR registers via ghcb page
+  HV: Add ghcb hvcall support for SNP VM
+  HV/Vmbus: Add SNP support for VMbus channel initiate message
+  HV/Vmbus: Initialize VMbus ring buffer for Isolation VM
+  DMA: Add dma_map_decrypted/dma_unmap_encrypted() function
+  x86/Swiotlb: Add Swiotlb bounce buffer remap function for HV IVM
+  HV/IOMMU: Enable swiotlb bounce buffer for Isolation VM
+  HV/Netvsc: Add Isolation VM support for netvsc driver
+  HV/Storvsc: Add Isolation VM support for storvsc driver
 
---hMa9McatD2SOtJAoFSGNBpookPaXNVbbw
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+ arch/x86/hyperv/Makefile           |   2 +-
+ arch/x86/hyperv/hv_init.c          |  81 ++++++--
+ arch/x86/hyperv/ivm.c              | 295 +++++++++++++++++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h |  20 ++
+ arch/x86/include/asm/mshyperv.h    |  87 ++++++++-
+ arch/x86/include/asm/set_memory.h  |   4 +
+ arch/x86/include/asm/sev.h         |   3 +
+ arch/x86/kernel/cpu/mshyperv.c     |   5 +
+ arch/x86/kernel/sev-shared.c       |  63 +++---
+ arch/x86/mm/pat/set_memory.c       |   9 +
+ arch/x86/xen/pci-swiotlb-xen.c     |   3 +-
+ drivers/hv/Kconfig                 |   1 +
+ drivers/hv/channel.c               |  54 +++++-
+ drivers/hv/connection.c            |  71 ++++++-
+ drivers/hv/hv.c                    | 129 +++++++++----
+ drivers/hv/hyperv_vmbus.h          |   3 +
+ drivers/hv/ring_buffer.c           |  84 ++++++--
+ drivers/hv/vmbus_drv.c             |   3 +
+ drivers/iommu/hyperv-iommu.c       |  65 +++++++
+ drivers/net/hyperv/hyperv_net.h    |   6 +
+ drivers/net/hyperv/netvsc.c        | 144 +++++++++++++-
+ drivers/net/hyperv/rndis_filter.c  |   2 +
+ drivers/scsi/storvsc_drv.c         |  68 ++++++-
+ include/asm-generic/hyperv-tlfs.h  |   1 +
+ include/asm-generic/mshyperv.h     |  53 +++++-
+ include/linux/dma-map-ops.h        |   9 +
+ include/linux/hyperv.h             |  17 ++
+ include/linux/swiotlb.h            |   4 +
+ kernel/dma/mapping.c               |  22 +++
+ kernel/dma/swiotlb.c               |  32 +++-
+ 30 files changed, 1216 insertions(+), 124 deletions(-)
+ create mode 100644 arch/x86/hyperv/ivm.c
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.25.1
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmEK2toFAwAAAAAACgkQlh/E3EQov+AC
-3A/+NeTwv+p4m1iYfCA1BWox0XAFfhmcIZgkCCVSM1UXHKUJ3He/+m2vjUXjCcNN2hgBdUfwuSxD
-mNt9/t6slQy1Vl6pI01SCPfFdLn6ERjUPprQ3l9GvJdNuwRm0vHNomONgqqEV0pcO2lu8ZmQLe45
-3QcrWYbHY5ZHWG7x1mPazmxvdKIY4YzWn3RAv6CG6bofiQ9wUpu0ei+hHj35HdlpF1uVCZv3nq2H
-g3uj+BaLtaXEmnvm/T+GSIVFxPCUlB7Vi7HRL30G85A605GDb8Z8JuOw82hr6/8x9/wZR4QOh4VQ
-kYnzY33YYuCFDWJSjnKkWGm/mzrSc/r6aQaTMNYBu5ZAMuLfd2AGjO1pgU/ArN9xF5MHDEkRLhRF
-wBE0uFHGMLIJPuyT0oT4c9H+823R94z3TpjewT293fPyqmGIjhozV4OcWw53qNliTbG8Rcvgr/Cg
-fKwPpBIlDzJ+06EhAZkrPgF1Itcq9O1SdbTmxHfcdhsYro6ZB0LK8S2iLCfzuTopYSsqT3wTwpno
-VMQXed01ItJduRCpIN4f5UrqYyVSwpPS5JihWaZdmwFRp521C84KyEFn4zq61lgoPn0j+w7cjN3Z
-MvEb3AbG+rDqjPzQjf2VzFl2tvqRp8sT8uTikqPpZh8m1tWiDgW/GHfMTRZ9Luej3ubuZtXSUmt7
-O+Y=
-=aiSS
------END PGP SIGNATURE-----
-
---hMa9McatD2SOtJAoFSGNBpookPaXNVbbw--
