@@ -2,78 +2,64 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B2743E0EEC
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Aug 2021 09:11:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15BF93E11F9
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Aug 2021 12:06:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236499AbhHEHLu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 Aug 2021 03:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230037AbhHEHLu (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 Aug 2021 03:11:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1573C60F41;
-        Thu,  5 Aug 2021 07:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1628147495;
-        bh=O9a3HRs73pQwCyxWN42LGJZX4aJ9FyFEg8Z3U4/fTgA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZfpnjYf8skjAt9pwnu7FHoGa5dMwu/nYzyOjxpzFInxHKUbssI/eXFFe6e6oaYWgH
-         pLlf+qR5fT8ASoRhTjeohzR6aZjPHprE86aqSmmGG5NQpUfhKAEMYvz7CQHwguiaKQ
-         n+yhFChuHRf5QMQfpe7eyHLuK/hbgNTjjiGa5Q2o=
-Date:   Thu, 5 Aug 2021 09:11:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     longli@linuxonhyperv.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, Long Li <longli@microsoft.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Andra Paraschiv <andraprs@amazon.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        Hannes Reinecke <hare@suse.de>, linux-doc@vger.kernel.org
-Subject: Re: [Patch v5 2/3] Drivers: hv: add Azure Blob driver
-Message-ID: <YQuPJUX4+HZ3FeKC@kroah.com>
-References: <1628146812-29798-1-git-send-email-longli@linuxonhyperv.com>
- <1628146812-29798-3-git-send-email-longli@linuxonhyperv.com>
+        id S240012AbhHEKG4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Aug 2021 06:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240174AbhHEKGu (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 5 Aug 2021 06:06:50 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3489C061765
+        for <linux-hyperv@vger.kernel.org>; Thu,  5 Aug 2021 03:06:35 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id c137so7805771ybf.5
+        for <linux-hyperv@vger.kernel.org>; Thu, 05 Aug 2021 03:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=IXiF0cE8iLdsKXBHXuqgd6kWlwigyuOCyyGf/zSHAKo=;
+        b=gVRICvgNVgrQ3cJyQMwTU0g/wTlVu51qYspoR9eYhaaxpyJpM6ZXNDbrq8iU5sNOAw
+         WCNcZj5wj8T+nFqESzzWGRlrla2k/I3JWSMYTLrjL1hpiD1z9GF3PGwJCk7mXUdbyBav
+         lwX1JOcUQoCno7ldIGljfep94wMuKVOSTdewlx7F7mOmxLPDSS6S2snzzzAFXm1DSXof
+         RoPVdXCKfw1cNqZrc5tlx5mFbmoWjSxbJGPLTmSjyegFAixheRQuNqHe6bsXyw76zwZ6
+         PXjm8MdDepD5gPfPScHBxJrmAZ/qTiyjDo0ptVk42bRwbYu8iToSty/dfI9CQu/RZ5IP
+         NIpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=IXiF0cE8iLdsKXBHXuqgd6kWlwigyuOCyyGf/zSHAKo=;
+        b=cESlfnFcujGE1wMn1bfRGMeGl0odb2QRRgepgfcaITS+UJ6Ga/higkBKv5oS2CCI2U
+         b+KABXNtzizJj5HxqadRsBjQITw1dbnTt12wDNC4wNvG77mb8I6SCnBH+0RLZm6K3L+9
+         3Wry0iwxLHylvVIAcV+lLejlcDWGol/TqEx2fFL7YUVlngV6YgRxut5J8vrSBk9FdMvo
+         WrJ7IRatxD6SIz4J07A178H1/oyPeXfFv7YTt+M3E5HRQL2WeDbA/N1nUMnOLnnAnqGg
+         yzJkkJ/q/tusKht9JCHB9RQKMueZyNaKQwlr5AQ89C8w7ejH60laDe6oN6RzLe/sK/hW
+         wLXg==
+X-Gm-Message-State: AOAM531aNCaBZgBmuo6h0HHK8zOs4vpfdBc4rFuaaWJy7/QPZ+lAfN5W
+        DE3osc0NMDx8PbktXXgXH2G1s3000VJpQCNcrK4=
+X-Google-Smtp-Source: ABdhPJx+VQH0dDppGOgYikN+SwcT8tFSms9EM7r/kU/6MVigam8NL0DznwU4oB6xwW3gJM8xFfkLpcefYv/9NslpXa8=
+X-Received: by 2002:a25:c2c3:: with SMTP id s186mr1803812ybf.401.1628157995126;
+ Thu, 05 Aug 2021 03:06:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1628146812-29798-3-git-send-email-longli@linuxonhyperv.com>
+Received: by 2002:a05:7010:330b:b029:db:4f3a:6691 with HTTP; Thu, 5 Aug 2021
+ 03:06:34 -0700 (PDT)
+Reply-To: rihabmanyang07@yahoo.com
+From:   Rihab Manyang <diamakaire48@gmail.com>
+Date:   Thu, 5 Aug 2021 11:06:34 +0100
+Message-ID: <CAJq20Omah3dpE2ziJavGMsDNwAqbpU-LzxNZ6dz2+Hx3s2fjtQ@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Aug 05, 2021 at 12:00:11AM -0700, longli@linuxonhyperv.com wrote:
-> +static int az_blob_create_device(struct az_blob_device *dev)
-> +{
-> +	int ret;
-> +	struct dentry *debugfs_root;
-> +
-> +	dev->misc.minor	= MISC_DYNAMIC_MINOR,
-> +	dev->misc.name	= "azure_blob",
-> +	dev->misc.fops	= &az_blob_client_fops,
-> +
-> +	ret = misc_register(&dev->misc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	debugfs_root = debugfs_create_dir("az_blob", NULL);
+-- 
 
-So you try to create a directory in the root of debugfs called "az_blob"
-for every device in the system of this one type?
+Hello,
 
-That will blow up when you have multiple devices of the same type,
-please fix.
-
-thanks,
-
-greg k-h
+i am trying to reach you hope this message get to
+you.from Rihab Manyang
