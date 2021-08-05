@@ -2,149 +2,517 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B07523E1B64
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Aug 2021 20:34:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 432673E1D64
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Aug 2021 22:37:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241310AbhHESek (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 Aug 2021 14:34:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241264AbhHESek (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 Aug 2021 14:34:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 54E5360F22;
-        Thu,  5 Aug 2021 18:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1628188466;
-        bh=UtExKdknJwWELP42Tar44N0iPU1hu7Jrdi3rzGZLrrc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZAfG2mch9mi5g4KuL8Ia+7debgTpvSZerbxw7ILeONpZ5TbMAHzGYfZMrRlVu44ia
-         pfZUbZwaVbvtzzIabtos6dA0pC3wpowLzlc3bv0o6iFDPX3xhA7Xiybhwa/6573Oax
-         TcWGVSkv3nELwIW6KfKIvKr5cGq9dculb4Mb8Fqg=
-Date:   Thu, 5 Aug 2021 20:34:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Long Li <longli@microsoft.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Andra Paraschiv <andraprs@amazon.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [Patch v5 0/3] Introduce a driver to support host accelerated
- access to Microsoft Azure Blob for Azure VM
-Message-ID: <YQwvL2N6JpzI+hc8@kroah.com>
-References: <1628146812-29798-1-git-send-email-longli@linuxonhyperv.com>
- <e249d88b-6ca2-623f-6f6e-9547e2b36f1f@acm.org>
- <BY5PR21MB15060F1B9CDB078189B76404CEF29@BY5PR21MB1506.namprd21.prod.outlook.com>
+        id S240998AbhHEUhz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 Aug 2021 16:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240925AbhHEUhy (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 5 Aug 2021 16:37:54 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF87C061765
+        for <linux-hyperv@vger.kernel.org>; Thu,  5 Aug 2021 13:37:35 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id n6so8791074ljp.9
+        for <linux-hyperv@vger.kernel.org>; Thu, 05 Aug 2021 13:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PCb9Vg4MNIfx8MIl3EhLdxWgZVaYvDp4QlXHnDYweSM=;
+        b=tQmVbTGrDgseUjOuhUpIYNpimj6wcV2Vq0Kb0Wc6BstUtDzG+/1xhTafWKhC0DglsI
+         z/dJdpxxaQoGg8VHB41YpVNWY4ahIGQewaFM+X3M02qdYW2a1vAPQK6012TLFmpWGbPL
+         wMyMGVYwXlXdvFc5mIwzkVLotbPufmDGrwEiu7F6GuneoqNrLa57ts0CcLPsGG2uR3Iq
+         rKzl8EfIFUt8K/x8Rkz5JmY6l1RSXwBGlhS6MOb0A/5UfYuzvxtnyqyJRwuwK//L6cG8
+         kSdyiN66qxjHPegov9rWzlwSWCMSB2sNir8Q6gTJymKDwmTYn+QJZLQUVkUaMS5XBlXl
+         gq4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PCb9Vg4MNIfx8MIl3EhLdxWgZVaYvDp4QlXHnDYweSM=;
+        b=gQ8lfBf8xdBbDp03fkkM9cavfJSB13dB6ZOvhO9aSAkiZdvtr7Z6lk9fUPYfGoGxSD
+         G5EnIQ6DXQ+2B2yAjO2F5AxY10KSS02zsG8BnnX/mUR0R4Z6wRbX41ACW4sx+bzmJur4
+         KbwwzyPw+QaDHkAz2jeqwrUlG7kk/UCPjSWSB+Hy/jHu1kYspPHDbQTbluA305sWerTU
+         QDFW1jM7zHZDSMlBWag92wM59gwVukO7qqNe0CAI25NluIC3aTna4w2PWnT+gms/ffi+
+         ZZXodo62we4u3NdfbcpoDoKsAlDEw15rdvEl08eqZpTDFbxromOickurKBoQSVpCmLsg
+         yCqA==
+X-Gm-Message-State: AOAM530bTKxIYMh0+Z/gXTN4MxQh8D7ZZbYdbYcn2owlmQrNJvOA44di
+        GVuJle+1ITu00mkrWSoljYjQrA==
+X-Google-Smtp-Source: ABdhPJxFiXjhta4Jq9uuEp6GCTVIh+qj58FU/VuJ36KUv+PjNPN9FiopMbZltk87/KNmzaxNXkhmOg==
+X-Received: by 2002:a2e:a906:: with SMTP id j6mr4329253ljq.292.1628195853878;
+        Thu, 05 Aug 2021 13:37:33 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id j16sm282693ljc.71.2021.08.05.13.37.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Aug 2021 13:37:33 -0700 (PDT)
+Subject: Re: [PATCH] drm/aperture: Pass DRM driver structure instead of driver
+ name
+To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
+        airlied@redhat.com
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-rockchip@lists.infradead.org,
+        spice-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, intel-gfx@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-hyperv@vger.kernel.org, amd-gfx@lists.freedesktop.org
+References: <20210629135833.22679-1-tzimmermann@suse.de>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <ba6a19fb-2d52-340a-649f-211e4cf7c8fb@linaro.org>
+Date:   Thu, 5 Aug 2021 23:37:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BY5PR21MB15060F1B9CDB078189B76404CEF29@BY5PR21MB1506.namprd21.prod.outlook.com>
+In-Reply-To: <20210629135833.22679-1-tzimmermann@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Aug 05, 2021 at 06:24:57PM +0000, Long Li wrote:
-> > Subject: Re: [Patch v5 0/3] Introduce a driver to support host accelerated
-> > access to Microsoft Azure Blob for Azure VM
-> > 
-> > On 8/5/21 12:00 AM, longli@linuxonhyperv.com wrote:
-> > > From: Long Li <longli@microsoft.com>
-> > >
-> > > Azure Blob storage [1] is Microsoft's object storage solution for the
-> > > cloud. Users or client applications can access objects in Blob storage
-> > > via HTTP, from anywhere in the world. Objects in Blob storage are
-> > > accessible via the Azure Storage REST API, Azure PowerShell, Azure
-> > > CLI, or an Azure Storage client library. The Blob storage interface is
-> > > not designed to be a POSIX compliant interface.
-> > >
-> > > Problem: When a client accesses Blob storage via HTTP, it must go
-> > > through the Blob storage boundary of Azure and get to the storage
-> > > server through multiple servers. This is also true for an Azure VM.
-> > >
-> > > Solution: For an Azure VM, the Blob storage access can be accelerated
-> > > by having Azure host execute the Blob storage requests to the backend
-> > > storage server directly.
-> > >
-> > > This driver implements a VSC (Virtual Service Client) for accelerating
-> > > Blob storage access for an Azure VM by communicating with a VSP
-> > > (Virtual Service
-> > > Provider) on the Azure host. Instead of using HTTP to access the Blob
-> > > storage, an Azure VM passes the Blob storage request to the VSP on the
-> > > Azure host. The Azure host uses its native network to perform Blob
-> > > storage requests to the backend server directly.
-> > >
-> > > This driver doesn't implement Blob storage APIs. It acts as a fast
-> > > channel to pass user-mode Blob storage requests to the Azure host. The
-> > > user-mode program using this driver implements Blob storage APIs and
-> > > packages the Blob storage request as structured data to VSC. The
-> > > request data is modeled as three user provided buffers (request,
-> > > response and data buffers), that are patterned on the HTTP model used
-> > > by existing Azure Blob clients. The VSC passes those buffers to VSP for Blob
-> > storage requests.
-> > >
-> > > The driver optimizes Blob storage access for an Azure VM in two ways:
-> > >
-> > > 1. The Blob storage requests are performed by the Azure host to the
-> > > Azure Blob backend storage server directly.
-> > >
-> > > 2. It allows the Azure host to use transport technologies (e.g. RDMA)
-> > > available to the Azure host but not available to the VM, to reach to
-> > > Azure Blob backend servers.
-> > >
-> > > Test results using this driver for an Azure VM:
-> > > 100 Blob clients running on an Azure VM, each reading 100GB Block Blobs.
-> > > (10 TB total read data)
-> > > With REST API over HTTP: 94.4 mins
-> > > Using this driver: 72.5 mins
-> > > Performance (measured in throughput) gain: 30%.
-> > >
-> > > [1]
-> > >
-> > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs
-> > > .microsoft.com%2Fen-us%2Fazure%2Fstorage%2Fblobs%2Fstorage-blobs-
-> > intro
-> > >
-> > duction&amp;data=04%7C01%7Clongli%40microsoft.com%7C6ba60a78f4e74
-> > aeb0b
-> > >
-> > b108d95833bf53%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C6376
-> > 378015
-> > >
-> > 92577579%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi
-> > V2luMzIiL
-> > >
-> > CJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=ab5Zl2cQdmUhdT3l
-> > SotDwMl
-> > > DQuE0JaY%2B1REPQ0%2FjXa4%3D&amp;reserved=0
-> > 
-> > Is the ioctl interface the only user space interface provided by this kernel
-> > driver? If so, why has this code been implemented as a kernel driver instead
-> > of e.g. a user space library that uses vfio to interact with a PCIe device? As an
-> > example, Qemu supports many different virtio device types.
+On 29/06/2021 16:58, Thomas Zimmermann wrote:
+> Print the name of the DRM driver when taking over fbdev devices. Makes
+> the output to dmesg more consistent. Note that the driver name is only
+> used for printing a string to the kernel log. No UAPI is affected by this
+> change.
 > 
-> The Hyper-V presents one such device for the whole VM. This device is used by all processes on the VM. (The test benchmark used 100 processes)
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+
+[...]
+
+>   drivers/gpu/drm/msm/msm_fbdev.c               |  2 +-
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
+>   drivers/gpu/drm/nouveau/nouveau_drm.c         |  2 +-
+>   drivers/gpu/drm/qxl/qxl_drv.c                 |  2 +-
+>   drivers/gpu/drm/radeon/radeon_drv.c           |  2 +-
+>   drivers/gpu/drm/rockchip/rockchip_drm_drv.c   |  2 +-
+>   drivers/gpu/drm/sun4i/sun4i_drv.c             |  2 +-
+>   drivers/gpu/drm/tegra/drm.c                   |  2 +-
+>   drivers/gpu/drm/tiny/cirrus.c                 |  2 +-
+>   drivers/gpu/drm/vboxvideo/vbox_drv.c          |  2 +-
+>   drivers/gpu/drm/vc4/vc4_drv.c                 |  2 +-
+>   drivers/gpu/drm/virtio/virtgpu_drv.c          |  2 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c           |  2 +-
+>   include/drm/drm_aperture.h                    | 14 +++++++++-----
+>   23 files changed, 43 insertions(+), 34 deletions(-)
 > 
-> Hyper-V doesn't support creating one device for each process. We cannot use VFIO in this model.
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> index 6f30c525caac..accf9c1b967a 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> @@ -1278,7 +1278,7 @@ static int amdgpu_pci_probe(struct pci_dev *pdev,
+>   #endif
+>   
+>   	/* Get rid of things like offb */
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "amdgpudrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &amdgpu_kms_driver);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/armada/armada_drv.c b/drivers/gpu/drm/armada/armada_drv.c
+> index dab0a1f0983b..31925ae3ab72 100644
+> --- a/drivers/gpu/drm/armada/armada_drv.c
+> +++ b/drivers/gpu/drm/armada/armada_drv.c
+> @@ -95,7 +95,7 @@ static int armada_drm_bind(struct device *dev)
+>   	}
+>   
+>   	/* Remove early framebuffers */
+> -	ret = drm_aperture_remove_framebuffers(false, "armada-drm-fb");
+> +	ret = drm_aperture_remove_framebuffers(false, &armada_drm_driver);
+>   	if (ret) {
+>   		dev_err(dev, "[" DRM_NAME ":%s] can't kick out simple-fb: %d\n",
+>   			__func__, ret);
+> diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
+> index 5aa452b4efe6..86d5cd7b6318 100644
+> --- a/drivers/gpu/drm/ast/ast_drv.c
+> +++ b/drivers/gpu/drm/ast/ast_drv.c
+> @@ -100,7 +100,7 @@ static int ast_remove_conflicting_framebuffers(struct pci_dev *pdev)
+>   	primary = pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
+>   #endif
+>   
+> -	return drm_aperture_remove_conflicting_framebuffers(base, size, primary, "astdrmfb");
+> +	return drm_aperture_remove_conflicting_framebuffers(base, size, primary, &ast_driver);
+>   }
+>   
+>   static int ast_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+> diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
+> index c828cadbabff..0d232b44ecd7 100644
+> --- a/drivers/gpu/drm/bochs/bochs_drv.c
+> +++ b/drivers/gpu/drm/bochs/bochs_drv.c
+> @@ -110,7 +110,7 @@ static int bochs_pci_probe(struct pci_dev *pdev,
+>   		return -ENOMEM;
+>   	}
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "bochsdrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &bochs_driver);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/drm_aperture.c b/drivers/gpu/drm/drm_aperture.c
+> index 9335d9d6cf9a..9ac39cf11694 100644
+> --- a/drivers/gpu/drm/drm_aperture.c
+> +++ b/drivers/gpu/drm/drm_aperture.c
+> @@ -33,6 +33,10 @@
+>    *
+>    * .. code-block:: c
+>    *
+> + *	static const struct drm_driver example_driver = {
+> + *		...
+> + *	};
+> + *
+>    *	static int remove_conflicting_framebuffers(struct pci_dev *pdev)
+>    *	{
+>    *		bool primary = false;
+> @@ -46,7 +50,7 @@
+>    *	#endif
+>    *
+>    *		return drm_aperture_remove_conflicting_framebuffers(base, size, primary,
+> - *		                                                    "example driver");
+> + *		                                                    &example_driver);
+>    *	}
+>    *
+>    *	static int probe(struct pci_dev *pdev)
+> @@ -274,7 +278,7 @@ static void drm_aperture_detach_drivers(resource_size_t base, resource_size_t si
+>    * @base: the aperture's base address in physical memory
+>    * @size: aperture size in bytes
+>    * @primary: also kick vga16fb if present
+> - * @name: requesting driver name
+> + * @req_driver: requesting DRM driver
+>    *
+>    * This function removes graphics device drivers which use memory range described by
+>    * @base and @size.
+> @@ -283,7 +287,7 @@ static void drm_aperture_detach_drivers(resource_size_t base, resource_size_t si
+>    * 0 on success, or a negative errno code otherwise
+>    */
+>   int drm_aperture_remove_conflicting_framebuffers(resource_size_t base, resource_size_t size,
+> -						 bool primary, const char *name)
+> +						 bool primary, const struct drm_driver *req_driver)
+>   {
+>   #if IS_REACHABLE(CONFIG_FB)
+>   	struct apertures_struct *a;
+> @@ -296,7 +300,7 @@ int drm_aperture_remove_conflicting_framebuffers(resource_size_t base, resource_
+>   	a->ranges[0].base = base;
+>   	a->ranges[0].size = size;
+>   
+> -	ret = remove_conflicting_framebuffers(a, name, primary);
+> +	ret = remove_conflicting_framebuffers(a, req_driver->name, primary);
+>   	kfree(a);
+>   
+>   	if (ret)
+> @@ -312,7 +316,7 @@ EXPORT_SYMBOL(drm_aperture_remove_conflicting_framebuffers);
+>   /**
+>    * drm_aperture_remove_conflicting_pci_framebuffers - remove existing framebuffers for PCI devices
+>    * @pdev: PCI device
+> - * @name: requesting driver name
+> + * @req_driver: requesting DRM driver
+>    *
+>    * This function removes graphics device drivers using memory range configured
+>    * for any of @pdev's memory bars. The function assumes that PCI device with
+> @@ -321,7 +325,8 @@ EXPORT_SYMBOL(drm_aperture_remove_conflicting_framebuffers);
+>    * Returns:
+>    * 0 on success, or a negative errno code otherwise
+>    */
+> -int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev, const char *name)
+> +int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev,
+> +						     const struct drm_driver *req_driver)
+>   {
+>   	resource_size_t base, size;
+>   	int bar, ret = 0;
+> @@ -339,7 +344,7 @@ int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev, const
+>   	 * otherwise the vga fbdev driver falls over.
+>   	 */
+>   #if IS_REACHABLE(CONFIG_FB)
+> -	ret = remove_conflicting_pci_framebuffers(pdev, name);
+> +	ret = remove_conflicting_pci_framebuffers(pdev, req_driver->name);
+>   #endif
+>   	if (ret == 0)
+>   		ret = vga_remove_vgacon(pdev);
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> index f4bc5386574a..6f0297b854f2 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> @@ -314,7 +314,7 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+>   	struct drm_device *dev;
+>   	int ret;
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "hibmcdrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &hibmc_driver);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> index eb06c92c4bfd..cd818a629183 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> @@ -82,7 +82,7 @@ static int hyperv_setup_gen1(struct hyperv_drm_device *hv)
+>   		return -ENODEV;
+>   	}
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "hypervdrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &hyperv_driver);
+>   	if (ret) {
+>   		drm_err(dev, "Not able to remove boot fb\n");
+>   		return ret;
+> @@ -127,7 +127,7 @@ static int hyperv_setup_gen2(struct hyperv_drm_device *hv,
+>   	drm_aperture_remove_conflicting_framebuffers(screen_info.lfb_base,
+>   						     screen_info.lfb_size,
+>   						     false,
+> -						     "hypervdrmfb");
+> +						     &hyperv_driver);
+>   
+>   	hv->fb_size = (unsigned long)hv->mmio_megabytes * 1024 * 1024;
+>   
+> diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
+> index 850b499c71c8..62327c15f457 100644
+> --- a/drivers/gpu/drm/i915/i915_drv.c
+> +++ b/drivers/gpu/drm/i915/i915_drv.c
+> @@ -562,7 +562,7 @@ static int i915_driver_hw_probe(struct drm_i915_private *dev_priv)
+>   	if (ret)
+>   		goto err_perf;
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "inteldrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, dev_priv->drm.driver);
+>   	if (ret)
+>   		goto err_ggtt;
+>   
+> diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+> index a7388bf7c838..3d0ccc7eef1b 100644
+> --- a/drivers/gpu/drm/meson/meson_drv.c
+> +++ b/drivers/gpu/drm/meson/meson_drv.c
+> @@ -285,7 +285,7 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
+>   	 * Remove early framebuffers (ie. simplefb). The framebuffer can be
+>   	 * located anywhere in RAM
+>   	 */
+> -	ret = drm_aperture_remove_framebuffers(false, "meson-drm-fb");
+> +	ret = drm_aperture_remove_framebuffers(false, &meson_driver);
+>   	if (ret)
+>   		goto free_drm;
+>   
+> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/mgag200/mgag200_drv.c
+> index a701d9563257..36d1bfb3213f 100644
+> --- a/drivers/gpu/drm/mgag200/mgag200_drv.c
+> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
+> @@ -342,7 +342,7 @@ mgag200_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>   	struct drm_device *dev;
+>   	int ret;
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "mgag200drmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &mgag200_driver);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/msm/msm_fbdev.c b/drivers/gpu/drm/msm/msm_fbdev.c
+> index 227404077e39..67fae60f2fa5 100644
+> --- a/drivers/gpu/drm/msm/msm_fbdev.c
+> +++ b/drivers/gpu/drm/msm/msm_fbdev.c
+> @@ -169,7 +169,7 @@ struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev)
+>   	}
+>   
+>   	/* the fw fb could be anywhere in memory */
+> -	ret = drm_aperture_remove_framebuffers(false, "msm");
+> +	ret = drm_aperture_remove_framebuffers(false, dev->driver);
+>   	if (ret)
+>   		goto fini;
+>   
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> index a616cf4573b8..df8a2d92f473 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> @@ -738,7 +738,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+>   	nvkm_device_del(&device);
+>   
+>   	/* Remove conflicting drivers (vesafb, efifb etc). */
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "nouveaufb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &driver_pci);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+> index 854e6c5a563f..31f4c86ceb99 100644
+> --- a/drivers/gpu/drm/qxl/qxl_drv.c
+> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
+> @@ -95,7 +95,7 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>   	if (ret)
+>   		return ret;
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "qxl");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &qxl_driver);
+>   	if (ret)
+>   		goto disable_pci;
+>   
+> diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+> index 8cd135fa6dcd..82ee8244c9b3 100644
+> --- a/drivers/gpu/drm/radeon/radeon_drv.c
+> +++ b/drivers/gpu/drm/radeon/radeon_drv.c
+> @@ -330,7 +330,7 @@ static int radeon_pci_probe(struct pci_dev *pdev,
+>   		return -EPROBE_DEFER;
+>   
+>   	/* Get rid of things like offb */
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "radeondrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &kms_driver);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> index b730b8d5d949..17a189bb6bbc 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> @@ -116,7 +116,7 @@ static int rockchip_drm_bind(struct device *dev)
+>   	int ret;
+>   
+>   	/* Remove existing drivers that may own the framebuffer memory. */
+> -	ret = drm_aperture_remove_framebuffers(false, "rockchip-drm-fb");
+> +	ret = drm_aperture_remove_framebuffers(false, &rockchip_drm_driver);
+>   	if (ret) {
+>   		DRM_DEV_ERROR(dev,
+>   			      "Failed to remove existing framebuffers - %d.\n",
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> index af335f58bdfc..6bc1c8d6d43b 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> @@ -100,7 +100,7 @@ static int sun4i_drv_bind(struct device *dev)
+>   	drm->irq_enabled = true;
+>   
+>   	/* Remove early framebuffers (ie. simplefb) */
+> -	ret = drm_aperture_remove_framebuffers(false, "sun4i-drm-fb");
+> +	ret = drm_aperture_remove_framebuffers(false, &sun4i_drv_driver);
+>   	if (ret)
+>   		goto cleanup_mode_config;
+>   
+> diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
+> index f96c237b2242..2c8fc14bba1f 100644
+> --- a/drivers/gpu/drm/tegra/drm.c
+> +++ b/drivers/gpu/drm/tegra/drm.c
+> @@ -1204,7 +1204,7 @@ static int host1x_drm_probe(struct host1x_device *dev)
+>   
+>   	drm_mode_config_reset(drm);
+>   
+> -	err = drm_aperture_remove_framebuffers(false, "tegradrmfb");
+> +	err = drm_aperture_remove_framebuffers(false, &tegra_drm_driver);
+>   	if (err < 0)
+>   		goto hub;
+>   
+> diff --git a/drivers/gpu/drm/tiny/cirrus.c b/drivers/gpu/drm/tiny/cirrus.c
+> index 42611dacde88..a8b476a59c0d 100644
+> --- a/drivers/gpu/drm/tiny/cirrus.c
+> +++ b/drivers/gpu/drm/tiny/cirrus.c
+> @@ -550,7 +550,7 @@ static int cirrus_pci_probe(struct pci_dev *pdev,
+>   	struct cirrus_device *cirrus;
+>   	int ret;
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "cirrusdrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &cirrus_driver);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/vboxvideo/vbox_drv.c b/drivers/gpu/drm/vboxvideo/vbox_drv.c
+> index 6d4b32da9866..879a2445cc44 100644
+> --- a/drivers/gpu/drm/vboxvideo/vbox_drv.c
+> +++ b/drivers/gpu/drm/vboxvideo/vbox_drv.c
+> @@ -43,7 +43,7 @@ static int vbox_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>   	if (!vbox_check_supported(VBE_DISPI_ID_HGSMI))
+>   		return -ENODEV;
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "vboxvideodrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &driver);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
+> index 8a60fb8ad370..73335feb712f 100644
+> --- a/drivers/gpu/drm/vc4/vc4_drv.c
+> +++ b/drivers/gpu/drm/vc4/vc4_drv.c
+> @@ -265,7 +265,7 @@ static int vc4_drm_bind(struct device *dev)
+>   	if (ret)
+>   		goto unbind_all;
+>   
+> -	ret = drm_aperture_remove_framebuffers(false, "vc4drmfb");
+> +	ret = drm_aperture_remove_framebuffers(false, &vc4_drm_driver);
+>   	if (ret)
+>   		goto unbind_all;
+>   
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> index ca77edbc5ea0..ed85a7863256 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> @@ -57,7 +57,7 @@ static int virtio_gpu_pci_quirk(struct drm_device *dev, struct virtio_device *vd
+>   		 vga ? "virtio-vga" : "virtio-gpu-pci",
+>   		 pname);
+>   	if (vga) {
+> -		ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "virtiodrmfb");
+> +		ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &driver);
+>   		if (ret)
+>   			return ret;
+>   	}
+> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+> index 086dc75e7b42..40864ce19ae1 100644
+> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+> @@ -1574,7 +1574,7 @@ static int vmw_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>   	struct vmw_private *vmw;
+>   	int ret;
+>   
+> -	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "svgadrmfb");
+> +	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &driver);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/include/drm/drm_aperture.h b/include/drm/drm_aperture.h
+> index 6c148078780c..7096703c3949 100644
+> --- a/include/drm/drm_aperture.h
+> +++ b/include/drm/drm_aperture.h
+> @@ -6,20 +6,22 @@
+>   #include <linux/types.h>
+>   
+>   struct drm_device;
+> +struct drm_driver;
+>   struct pci_dev;
+>   
+>   int devm_aperture_acquire_from_firmware(struct drm_device *dev, resource_size_t base,
+>   					resource_size_t size);
+>   
+>   int drm_aperture_remove_conflicting_framebuffers(resource_size_t base, resource_size_t size,
+> -						 bool primary, const char *name);
+> +						 bool primary, const struct drm_driver *req_driver);
+>   
+> -int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev, const char *name);
+> +int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev,
+> +						     const struct drm_driver *req_driver);
+>   
+>   /**
+>    * drm_aperture_remove_framebuffers - remove all existing framebuffers
+>    * @primary: also kick vga16fb if present
+> - * @name: requesting driver name
+> + * @req_driver: requesting DRM driver
+>    *
+>    * This function removes all graphics device drivers. Use this function on systems
+>    * that can have their framebuffer located anywhere in memory.
+> @@ -27,9 +29,11 @@ int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev, const
+>    * Returns:
+>    * 0 on success, or a negative errno code otherwise
+>    */
+> -static inline int drm_aperture_remove_framebuffers(bool primary, const char *name)
+> +static inline int
+> +drm_aperture_remove_framebuffers(bool primary, const struct drm_driver *req_driver)
+>   {
+> -	return drm_aperture_remove_conflicting_framebuffers(0, (resource_size_t)-1, primary, name);
+> +	return drm_aperture_remove_conflicting_framebuffers(0, (resource_size_t)-1, primary,
+> +							    req_driver);
+>   }
+>   
+>   #endif
+> 
 
-I still think this "model" is totally broken and wrong overall.  Again,
-you are creating a custom "block" layer with a character device, forcing
-all userspace programs to use a custom library (where is it at?) just to
-get their data.
 
-There's a reason the POSIX model is there, why are you all ignoring it?
-
-greg k-h
+-- 
+With best wishes
+Dmitry
