@@ -2,156 +2,292 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCFD83E2EC4
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Aug 2021 19:13:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CE583E2EE8
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Aug 2021 19:35:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240291AbhHFRN5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 6 Aug 2021 13:13:57 -0400
-Received: from mail-mw2nam12on2120.outbound.protection.outlook.com ([40.107.244.120]:25761
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        id S241285AbhHFRf3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 6 Aug 2021 13:35:29 -0400
+Received: from mail-eopbgr130128.outbound.protection.outlook.com ([40.107.13.128]:65108
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240060AbhHFRN4 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 6 Aug 2021 13:13:56 -0400
+        id S241257AbhHFRf2 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 6 Aug 2021 13:35:28 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HIpICOrnPxU+R5Yz+rmiQwELvRYxxgQWbqxiZBWIOADwXzRwGLI9Mvv14Hu4YcZiE9Xah/BddHXn3b9gXfBo61ROx4QY/amtCkksANESu16sXh8BLstR58QS3njKaGVpFazIrbnApb145S6bT8mYql2hyM9yeOf0wFJ3/HX6QovDKo61gE1KqSYijtyir/Rr71+zFk3xiBKJ8N+bO98exTWe9oCL6T4YmS55/zjyeefTjoVOnaTYwQo95QZe45CeXetovzMvW7JDMOBiCagevDmpp8zA8vrRF3AZgE7EVwfpG0Kt5SdxU7Na4LMF7cns8p4qt0ALO/7L3ti6UEi6Og==
+ b=P2H7UTYehcAmBux9IDnmKShJnwQGlsuelQSJKtcxrgLquyY/gnSh2Yhw4MEQrgEXbtg0S9vdP59bQ8TVJ+vjzFxJuvCya+/adEZQPWKAWxBfC6cY/eD3r51OFADMjCGQnsK/NeSwdcG190rfHtAHn/CMkCI2HGx5JWUyl6+/GSAM7ivKwHv2qnfz6TyTTYuFz6WFGzpyUKQOYtN2PNCpfcduAhbK/yAL8UEfleR3yVxEmygyhDwPeak58Znln/OB4mnzA8AGAKB6D1iNGdxHgt3jem92LmEMoGxILf4U6SKTc+gXst8ikz+bo6GaEZN7C4zKU56+Z6avSaUejTuM+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iMg/Ex1knzITTGLOlsQMCcuBLJO9tqAq8WapbMwJLcA=;
- b=IX8VpcW9AB1L//Sjqhe5kK8TV3GTGCUIEYyv+WZ6TBtxaJmHC/iBbjOXSC9XL6SXUqnV2butXzYVJLtVoIHPujdLuvu+CNn/wpA186kxqMsdPh59MLHIq1NtfDH2EvkLXeew6DyQ8D9NFnMJNlvaloLDT49f6+a70pdAmp/bwTaRwxU9bKxhpJRw9J3JopOLEdIyjNAe84iWF0arChARb3B2WUMForO137KkO9PVMMy24AW86ezKhKqlkJLsU9JdThe9trdYc7s/I21n9LMpzbzj9eu/uCnV7Z0FVvugh6ceFLTjMlOnFgWS2VJwe6AnzY4hO7Bx04mv2PKApzUcNg==
+ bh=cOPzH2NVjkg3T+Sr0gMcgMf54zvUZAz67jzeXNlBLko=;
+ b=aa6uJRGLGn5dDWOKwj2RSc6fhNbhzgkoOpY0WfOQbTlAgUdFQFgvm1rUZgLsVZsWeuhMqfvQK9efl4Bs13TIrXSJgL9zZShObtRRsbD5ZhOlSuPrYvGc2Cf4nMjjHIHSiIwDg2xP9LDg0G7WQLP6Yz1gnLzwvt1vALU8O6JHarqu0ULX15sNHXvVdob+v9NhnHVJdag/5g49OWdm5LH5gN1IzIJxloqbzfyE4ZTwka2+YqA6LuRUA2j26hEeD4M8HyIucFLYH2Fy0aowB25dMY2pyI12BWbLhA0FQK/2ITZOkiDWdykVQMz3eB32VGadIfyGD5CzR1/ii2bcJk4h3w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=silk.us; dmarc=pass action=none header.from=silk.us; dkim=pass
+ header.d=silk.us; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=KAMINARIO.onmicrosoft.com; s=selector2-KAMINARIO-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iMg/Ex1knzITTGLOlsQMCcuBLJO9tqAq8WapbMwJLcA=;
- b=Vj6vt9yOeaAx2P0OWb31Q/Jh0MdjY9tH+fVqERSN5o+LDMIm0Kfdmc2MmepiYHUE0okxD6wJJmJSnPVlMOVKpSk4hHFevoN9S9xVMiu6cwQg9r9eSp6b/InfKbufTQ+1dEUk96XwykETuwQuf0jmq+OkURhpYpFANsyUO0iIsSw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
- by DM6PR21MB1273.namprd21.prod.outlook.com (2603:10b6:5:16c::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.0; Fri, 6 Aug
- 2021 17:13:28 +0000
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::b170:236f:1f2:5670]) by DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::b170:236f:1f2:5670%9]) with mapi id 15.20.4415.009; Fri, 6 Aug 2021
- 17:13:27 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, martin.petersen@oracle.com,
-        longli@microsoft.com, wei.liu@kernel.org, jejb@linux.ibm.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Cc:     mikelley@microsoft.com
-Subject: [PATCH 1/1] scsi: storvsc: Log TEST_UNIT_READY errors as warnings
-Date:   Fri,  6 Aug 2021 10:12:50 -0700
-Message-Id: <1628269970-87876-1-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0207.namprd03.prod.outlook.com
- (2603:10b6:303:b8::32) To DM6PR21MB1514.namprd21.prod.outlook.com
- (2603:10b6:5:22d::11)
+ bh=cOPzH2NVjkg3T+Sr0gMcgMf54zvUZAz67jzeXNlBLko=;
+ b=mwnB1VQCfmsgwZkeplW4Gi8kMG4uYP65IpwDU/G+p0JyMt0LB28mJfR9GUB/WiUDJ+WAOo6Iol0TmMBuWX2T5D6LoSI7fvSGghu9GL9qx/3RNorLKFRTgVOwVu8LA8bfYyQrHQOwe9FSdNc5ZZsD+3tjLyUrw4NVsxSQ2Mh1v5I=
+Received: from VI1PR0401MB2415.eurprd04.prod.outlook.com
+ (2603:10a6:800:2b::12) by VI1PR04MB5246.eurprd04.prod.outlook.com
+ (2603:10a6:803:54::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.17; Fri, 6 Aug
+ 2021 17:35:08 +0000
+Received: from VI1PR0401MB2415.eurprd04.prod.outlook.com
+ ([fe80::dd8e:4155:4fa4:605f]) by VI1PR0401MB2415.eurprd04.prod.outlook.com
+ ([fe80::dd8e:4155:4fa4:605f%11]) with mapi id 15.20.4394.017; Fri, 6 Aug 2021
+ 17:35:07 +0000
+From:   David Mozes <david.mozes@silk.us>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        David Moses <mosesster@gmail.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Mozes <david.mozes@silk.us>,
+        =?windows-1255?B?+uXu+CDg4eXo4eXs?= <tomer432100@gmail.com>
+Subject: RE: [PATCH] x86/hyper-v: guard against cpu mask changes in
+ hyperv_flush_tlb_others()
+Thread-Topic: [PATCH] x86/hyper-v: guard against cpu mask changes in
+ hyperv_flush_tlb_others()
+Thread-Index: AQHXiqRBXwjgsSgsKkyKw+PnE9iSIKtmSmoAgABuwJA=
+Date:   Fri, 6 Aug 2021 17:35:07 +0000
+Message-ID: <VI1PR0401MB2415830F31160F734300C576F1F39@VI1PR0401MB2415.eurprd04.prod.outlook.com>
+References: <CA+qYZY3a-FHfWNL2=na6O8TRJYu9kaeyp80VNDxaDTi2EBGoog@mail.gmail.com>
+ <MWHPR21MB1593A75E765DBFFE2B12C627D7F39@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB1593A75E765DBFFE2B12C627D7F39@MWHPR21MB1593.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=64228e1a-dcd2-4ad1-b408-a76637d82554;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-08-06T10:14:05Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none header.from=silk.us;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ebe82c7-50ec-4d71-076b-08d9590088a6
+x-ms-traffictypediagnostic: VI1PR04MB5246:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB524648C10521298EDA03C94BF1F39@VI1PR04MB5246.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4eklEVcsooo/vpAi6rmGO7iYTPVEWLCZhwSGONJ2pUem22PSEV9pyKQI7wOVzIVzBS3ifrvS7Bwmr3XTKxaVK7JiaOgsVXMJVaYgY/fYcNgRyPusRTOjs3YOsVQSThDVLrW7yCgCigvCRHLgxUE0m7EzBYTNzmIMs4D6JcO8P/gbFOk3MGeRIpRDEL1mmJElnUqalGFUkYvutXCF9Cpxbsl/TGcYGM96pwEwbkATljSFFsuhfg7m5z6gXxGqp4zzdox1wH85oe8/rM0g6sDt3RWXAUQiwnGQ/jAKH5/YCTHqCpas6oWjeMTeNvpWknoqWcTkQb0R+LAIlMuBKhgMZ25df5woOeJqtx3nWRzeUmndf5q5Wk0IfHATefJceN+DohV+cC/w7k2QIKWQp8BIgJ28K4ZjaUx52l0fMs2zgDyQ2I2uOCr7i0RFjTM0544K9COAU3IH/MeoSdYGVcu5NHYHkcdhVSueE8Xo/HQwhWvOzDLIwjMbEJXYkYMcNolKhjPUrLnDjLEXKPEhTQfqfG9tW/XZN/E6Ajn6CSryYgKjFek8ZxBpI3SJ/s9nh3ptJ8rt0tfHF4haLw7Ks+v6G/S2reHzsrEBYOvpFU7cdXTYs1yeS6Pj7P0qLkAbTVb3/SmOI3MLWzVwcOKRU7Q7tcG40ZJpSC6JU2RyQHWPLIypxD9l51QYF/hd3AoJDymbdYwVWIeK9sfVoj0cjVVIYh0whn4bzd/AwTdZorvTMmE=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2415.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(396003)(39850400004)(376002)(346002)(136003)(478600001)(8936002)(110136005)(9686003)(8676002)(316002)(55016002)(54906003)(71200400001)(6506007)(38100700002)(4326008)(44832011)(7696005)(53546011)(86362001)(38070700005)(26005)(2906002)(83380400001)(5660300002)(52536014)(122000001)(33656002)(66446008)(66946007)(66476007)(76116006)(66556008)(186003)(64756008)(80162008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?windows-1255?Q?q9mExL94raJHznoFlkG+U0wXYbYtQYb/J5//00VrD84BPO1ZVkgxXDHP?=
+ =?windows-1255?Q?KDYbfYGKMermD+eib+YxBR4JRzhjxXLQBxTOWry8z2033o8YP19cSRUm?=
+ =?windows-1255?Q?ERIR4W2RCW+y4I9EXxn9m4ya+uSrbvbUbyaKbKDkdHxcIqEYozA0GTgs?=
+ =?windows-1255?Q?zlcIHqK6xqiOpuaTW/W8F1OCdEHJaWTO/EonLl7Jk/cl196Wv/xQOJI4?=
+ =?windows-1255?Q?J1aR7oQ0LIt04s89ubkE4hwog/GrO4CX0/I5ErU/2tu9m2sUbeH9qc3m?=
+ =?windows-1255?Q?gmqvMpgZ6RkBhVVsRiJfG5hUd4bfps9W5ssLW8wlxeXnxomEL1ZpAXtE?=
+ =?windows-1255?Q?urMkNoymLY7Czmlo/QT/qGBHEfn/zPoVDLeJt6PfzYs73ymFY11/fGwb?=
+ =?windows-1255?Q?0BB4V9upQ2ee4VSrl3EcqUMJIdqyYAwKjwXF8nSl0fjXTlmaozXDY4hb?=
+ =?windows-1255?Q?LSwC/QYjcS14SXnDUWzfEyxQwzZalzthPNFEcu9C3M2kFct76+2u7pjl?=
+ =?windows-1255?Q?orUK5ar1rrLTs+eSDx2lqZqDRzAxAYhsbWjo7eUyVaG1bOMudlBpMkUV?=
+ =?windows-1255?Q?55tQHYIkUhiJlweVJq+sTZKyyR87G/x9O28it5j9w/DrPnuabMtFLgAy?=
+ =?windows-1255?Q?EMOL65qNFC5j/13cmATefd41xagGSjIhG4WYqqXm0at/8LSjsP71nh08?=
+ =?windows-1255?Q?79yKJOKRVX7AYBxwOUg1gItxzNsgjT5rCJYvOyCEsupThDhbR05Z6Wsr?=
+ =?windows-1255?Q?Us3mhXArDSr7tDvAfw9CoxKNpkIGzfoPrjrDCu9sY1jjHn23OtgaFa44?=
+ =?windows-1255?Q?+0Sordk3qKgi+DXDENovc2NcmHkT9F5BHPiw9B/K3q096x32xPzhs+Ct?=
+ =?windows-1255?Q?V9NiLIeDmQaMmTNQ6edKiX1lyOrPrmOgJrZpn26qm+t608sYe9kXHr8g?=
+ =?windows-1255?Q?kqcKsmhSxwv2eatoxZUvDOWId0wgrh3J0ou0eZYSGcgB8WrBK7yqHkx+?=
+ =?windows-1255?Q?sO8NHf2O3ED4gAL7ILlsec4d5BQiqCTcqz7VFn0qDfacCmz3R9sLDi/D?=
+ =?windows-1255?Q?ynyTwn/S4SMQe0JEmrTkBU0kAdBdqYyDUkYynXkJXqUKoab5GIhTJuPJ?=
+ =?windows-1255?Q?nZpowqBNjxM1DVWpP/YnV4OvK+kpzrkP5RrwAETJVSoIwr99tH9AaI8k?=
+ =?windows-1255?Q?TKAe8TXFzQ9ygPUYq/ku4mgsGJ2NqQZi57O1t/K476aDdS1YFElHuQSG?=
+ =?windows-1255?Q?fRSQTT2C3MyIV70BCeZpIOz4I1aZmuylkpkx/OVRbtr0h67EnyJP7FFT?=
+ =?windows-1255?Q?S2ADzzkGRixHAuMrpCARS127T8XMDt6E1e1QO/SIFgI7PCgNEWIS5zZ8?=
+ =?windows-1255?Q?o9mvHsdsSiOxy+gz+h3uHjkK11A+heLtWKs=3D?=
+Content-Type: text/plain; charset="windows-1255"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mhkdev.corp.microsoft.com (131.107.159.16) by MW4PR03CA0207.namprd03.prod.outlook.com (2603:10b6:303:b8::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.15 via Frontend Transport; Fri, 6 Aug 2021 17:13:27 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7b1407a4-6d10-4a7f-b46c-08d958fd81c0
-X-MS-TrafficTypeDiagnostic: DM6PR21MB1273:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR21MB1273A961557B5E37BCC9526ED7F39@DM6PR21MB1273.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0s/24IxxNRm50mYwt9B4Tfg07S/qS/hV0ybb809upfU+TnOOGeK7JSO8u/uW+r9H9XyBiMoV6GUH2YhTXW0GtbKs1QuIxWnbnIfShTN4SCy31Onjs91OEyXfkC38Jlk8cgTNVG/eg74UDHYfeBjDNFyBHKIVth9w2mycqGc0yZhudiDoZ5uQW0l3Hm0o6V8kQuYuwL4VENwkRsaS7quRBMmjkMH/oMujz33UkIO/AtsGZlQhO5+4VW38OZHnuumnbJpBwBIWdFA+92Snm+tsDOy7zstNG161OV2Tb5eu8q8Uy3hhrHZuaDcvONTeHK6Byy84sQI5XoH8+W5UqTB3tQqOhpCZHqeBzVONFoHiZGTfvf0tOTZ2ANSnqA6xHMMlJ4/JG0LebhsrotMpmeT4bgvJmSKe/aD28ZCrlD30GEtyi4pxdDYrsY7Gfjk5tzPdrCTclObTfA0Yw3/R6w6N1svnSVttFUqDkzWMyPaDMjGgXfhb89Y9JRQsKBliyLXAY+RTMXpIdkfOG+zmx4KvEngsZyRbrRY1UofwffyLCrqWcg6ZD+f/RqIUtg8YBCkRdR5rIMBoD3Ca0NK1pXXNaJNIPQ4x1lO4caBm5Ohboopm5YvaTv8T+O0rc7YYJpjmK5cden8bHPaysqiWm48Y4ctAVFY9W/4F585cbsT8A1Xog7WIu+08LZiXK1Tush/JWO2evarI8J9f3AM4kyl3Sg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38350700002)(10290500003)(107886003)(508600001)(6666004)(36756003)(38100700002)(8936002)(2906002)(8676002)(4326008)(5660300002)(316002)(6486002)(52116002)(82950400001)(7696005)(956004)(66556008)(66946007)(66476007)(2616005)(83380400001)(186003)(82960400001)(86362001)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hMznagI/wECcailEZUZENYiMOURE09F+j838oaPX9Pyc8JIo11FZNA/5KIkd?=
- =?us-ascii?Q?+bWEYyv2zuAa7QHZfYQgxGUW9JtvWNIz+TlFXuANNQqVElaa+ocXrUYnzOmt?=
- =?us-ascii?Q?w4ba42k+FoEdK7hFvES1jwtLPNCpFUlx8V6z/GMyVXqR8Bf9lBBb0rckW6ve?=
- =?us-ascii?Q?heRTE9pm0+4pmGM/YZPPe4UwsRAYZI6tO/YyIONaeBfk0yD3O4vJiG4oQSLs?=
- =?us-ascii?Q?oatcp/8SF6Hfh1ILaaWoYL0V9fTM9irxT7SCUUjnhoEcFPnT8rOCmmcpKomM?=
- =?us-ascii?Q?74JZsuAct8rE8PB9+gEW8h73pxjbNgo+QGS4r3/UYhA1XIf/HL7UZOdczWFi?=
- =?us-ascii?Q?NceIAjsABUtPHtj42lqRqi2u864oowfcK2ZIRXgTfpM6s8i4fxPMWHDvsqf7?=
- =?us-ascii?Q?9HuQia+arVbVk0W4QiGmwip5P+m2rFTEiSCqFF+NkDM02IPsrFmOZNR/ggnZ?=
- =?us-ascii?Q?AlI3Qn9as67NKK4MrMnhrb7MKvibfi8SxtS5zNfd0WyZjIIinzb4Z93Qqeox?=
- =?us-ascii?Q?dD7Q34XAd44GIfJLtrGNn1g39jXpGmPaIgQ0gUitsYpYiB8oAgsTpgnwOfNM?=
- =?us-ascii?Q?yTMTNMzEgjlTx12xFEVVvYuXAkMqwzahOSh59b7ClaLt9LIi9pbE6ryD5BCF?=
- =?us-ascii?Q?JuNMg7rTYPzxCEJpPmlubcphPV3rRspiAwmuSw2gKFotoeiI6LqqcBeqDHcq?=
- =?us-ascii?Q?3K2Ws2cy5pxfGS/cKvUPe6TZA3RMvUtX9Y9WRWW7bBeOFVAXXK4tQgiZxRfY?=
- =?us-ascii?Q?/yG173oLgfk11S2rFCRhHHf8q7t6uaNa+OB99IdExySUg4PcaOqOTOxVtvzp?=
- =?us-ascii?Q?VG4plXCC6PUxbzzS7vN0NuNSvDKm/OUNUlv+Dr+X6GeI1FhtPgCJmzR9sEB1?=
- =?us-ascii?Q?vbtnn7aTrSg9Mu4ij74rNxvbI+wvZLv0fqOey2l05a1nbYpbLFMWiS2K4KJL?=
- =?us-ascii?Q?A9VgiBflMGOUZpthoAFpeilgcfkiElZbTvIYkn1gAOcwvgNPn4L1Np0xdLPR?=
- =?us-ascii?Q?6pbK6rgFFGwCBK1EypBmt4wntOEy3TFuxl+07/CD76IeY2crZ+406xtpg4+q?=
- =?us-ascii?Q?WYm7aXkvOhdlIOBDSbvXV4vU6Cvd0SJ4i9Y9WeniATGMop59zZ1CwPPxWDzn?=
- =?us-ascii?Q?xhH29P9u5gwVQdT7Ll3ZoR5ciCIMKhh+J6KYgveG4SJok1baJMSx7c37AkaU?=
- =?us-ascii?Q?Gjt8FTLM7SEX3+igRJzsJuLceez1RqiIj5rnC1TJypkkV+NKtNnWeHOEIMPT?=
- =?us-ascii?Q?8yzY7HZ52rCiQT6E7vifZ16Ct7V3iG7K9Ai7Ts0fA0Rz+2gK8RbCTT12db5T?=
- =?us-ascii?Q?SQ4NSLw/hfivkkfgksge6DkQ?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b1407a4-6d10-4a7f-b46c-08d958fd81c0
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
+X-OriginatorOrg: silk.us
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2021 17:13:27.7611
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0401MB2415.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ebe82c7-50ec-4d71-076b-08d9590088a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2021 17:35:07.4701
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nz1xTaqyY/jMXfWJq7KD4yiPZcGL1smXHQ6zSqXLkk0MEsouGtRjl1f5lYo1FufdOSSPwxEPUnRgRpZ6rPvn0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1273
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4a3c5477-cb0e-470b-aba6-13bd9debb76b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TEwNumI+tJwFA3046vli4LQSk6zzbvo+O7GNCZH8pkrFX34E+cPpiduyBWmnH0ngCOJTEa+Iw3wNadNqO86NiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5246
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Commit 08f76547f08d ("scsi: storvsc: Update error logging")
-added more robust logging of errors, particularly those reported
-as Hyper-V errors. But this change produces extra logging noise
-in that TEST_UNIT_READY may report errors during the normal
-course of detecting device adds and removes.
 
-Fix this by logging TEST_UNIT_READY errors as warnings, so that
-log lines are produced only if the storvsc log level is changed
-to WARN level on the kernel boot line.
+Yes ,please provide the diff.=20
+Unfortunately  we saw the problem on every 4.19.x version we tested, starte=
+d from 149 we saw the issue as we as in 5.4.80
+I believe you are right and it is general kernel issue and not hyper-v spec=
+ific.=20
+Look that the code I added eliminate the Panic we got but the kernel "doesn=
+'t like it"
+Any suggestions how we can let the kernel continue working while we do our =
+experiment?=20
 
-Fixes: 08f76547f08d ("scsi: storvsc: Update error logging")
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/scsi/storvsc_drv.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Thx
+David=20
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 328bb96..37506b3 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1199,14 +1199,24 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
- 		vstor_packet->vm_srb.sense_info_length);
- 
- 	if (vstor_packet->vm_srb.scsi_status != 0 ||
--	    vstor_packet->vm_srb.srb_status != SRB_STATUS_SUCCESS)
--		storvsc_log(device, STORVSC_LOGGING_ERROR,
-+	    vstor_packet->vm_srb.srb_status != SRB_STATUS_SUCCESS) {
-+
-+		/*
-+		 * Log TEST_UNIT_READY errors only as warnings. Hyper-V can
-+		 * return errors when detecting devices using TEST_UNIT_READY,
-+		 * and logging these as errors produces unhelpful noise.
-+		 */
-+		int loglevel = (stor_pkt->vm_srb.cdb[0] == TEST_UNIT_READY) ?
-+			STORVSC_LOGGING_WARN : STORVSC_LOGGING_ERROR;
-+
-+		storvsc_log(device, loglevel,
- 			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x hv 0x%x\n",
- 			request->cmd->request->tag,
- 			stor_pkt->vm_srb.cdb[0],
- 			vstor_packet->vm_srb.scsi_status,
- 			vstor_packet->vm_srb.srb_status,
- 			vstor_packet->status);
-+	}
- 
- 	if (vstor_packet->vm_srb.scsi_status == SAM_STAT_CHECK_CONDITION &&
- 	    (vstor_packet->vm_srb.srb_status & SRB_STATUS_AUTOSENSE_VALID))
--- 
-1.8.3.1
 
+-----Original Message-----
+From: Michael Kelley <mikelley@microsoft.com>=20
+Sent: Friday, August 6, 2021 1:43 PM
+To: David Moses <mosesster@gmail.com>
+Cc: David Mozes <david.mozes@silk.us>; linux-hyperv@vger.kernel.org; linux-=
+kernel@vger.kernel.org
+Subject: RE: [PATCH] x86/hyper-v: guard against cpu mask changes in hyperv_=
+flush_tlb_others()
+
+From: David Moses <mosesster@gmail.com> Sent: Friday, August 6, 2021 2:20 A=
+M
+
+> Hi Michael ,=20
+> We are=A0=A0running kernel 4.19.195 (The fix=A0Wei Liu suggested of movin=
+g the
+> cpumask_empty check after disabling interrupts is included in this versio=
+n).
+> with the default hyper-v version=A0
+> I'm getting the 4 bytes garbage read (trace included) once almost every n=
+ight
+> We running=A0on Azure vm=A0Standard=A0 D64s_v4 with 64 cores (Our system =
+include
+> three of such Vms) the application=A0is very high=A0io traffic involving=
+=A0iscsi=A0
+> We believe=A0this issue casus us to stack corruption on the rt scheduler =
+as I forward
+> in the previous=A0mail.
+>
+> Let us know what is more needed=A0to clarify=A0the problem.
+> Is it just Hyper-v related?=A0 =A0or could=A0be a general kernel issue.=
+=A0
+>
+> Thx David=A0
+>
+> even more that that while i add the below patch/fix=A0
+>=20
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyp=
+erv.h
+> index 5b58a6c..165727a 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -298,6 +298,9 @@ static inline struct hv_vp_assist_page *hv_get_vp_ass=
+ist_page(unsigned int cpu)
+=A0> */
+> static inline int hv_cpu_number_to_vp_number(int cpu_number)
+> {
+> +=A0=A0=A0=A0=A0=A0 if (WARN_ON_ONCE(cpu_number < 0 || cpu_number >=3D nu=
+m_possible_cpus()))
+> +=A0=A0=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0=A0=A0return VP_INVAL;
+> +
+> =A0=A0=A0=A0=A0=A0=A0 return hv_vp_index[cpu_number];
+> }
+>
+> we have evidence=A0that we reach this point=A0
+>=20
+> see below:
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089261] WARNING: CPU: 15 PID: 8=
+973 at arch/x86/include/asm/mshyperv.h:301 hyperv_flush_tlb_others+0x1f7/0x=
+760
+>=A0Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] RIP: 0010:hyperv_flus=
+h_tlb_others+0x1f7/0x760
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] Code: ff ff be 40 00 00=
+ 00 48 89 df e8 c4 ff 3a 00
+> 85 c0 48 89 c2 78 14 48 8b 3d be 52 32 01 f3 48 0f b8 c7 39 c2 0f 82 7e 0=
+1 00 00 <0f> 0b ba ff ff ff ff
+> 89 d7 48 89 de e8 68 87 7d 00 3b 05 66 54 32
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] RSP: 0018:ffff8c536bcaf=
+a38 EFLAGS: 00010046
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] RAX: 0000000000000040 R=
+BX: ffff8c339542ea00 RCX: ffffffffffffffff
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] RDX: 0000000000000040 R=
+SI: ffffffffffffffff RDI: ffffffffffffffff
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] RBP: ffff8c339878b000 R=
+08: ffffffffffffffff R09: ffffe93ecbcaa0e8
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] R10: 00000000020e0000 R=
+11: 0000000000000000 R12: ffff8c536bcafa88
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] R13: ffffe93efe1ef980 R=
+14: ffff8c339542e600 R15: 00007ffcbc390000
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] FS:=A0 00007fcb8eae37a0=
+(0000) GS:ffff8c339f7c0000(0000) knlGS:0000000000000000
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] CS:=A0 0010 DS: 0000 ES=
+: 0000 CR0: 0000000080050033
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] CR2: 000000000135d1d8 C=
+R3: 0000004037137005 CR4: 00000000003606e0
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] DR0: 0000000000000000 D=
+R1: 0000000000000000 DR2: 0000000000000000
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] DR3: 0000000000000000 D=
+R6: 00000000fffe0ff0 DR7: 0000000000000400
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275] Call Trace:
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 flush_tlb_mm_range+0=
+xc3/0x120
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 ptep_clear_flush+0x3=
+a/0x40
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 wp_page_copy+0x2e6/0=
+x8f0
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 ? reuse_swap_page+0x=
+13d/0x390
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 do_wp_page+0x99/0x4c=
+0
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 __handle_mm_fault+0x=
+b4e/0x12c0
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 ? memcg_kmem_get_cac=
+he+0x76/0x1a0
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 handle_mm_fault+0xd6=
+/0x200
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 __get_user_pages+0x2=
+9e/0x780
+> Aug=A0 5 21:03:01 c-node11 kernel: [17147.089275]=A0 get_user_pages_remot=
+e+0x12c/0x1b0
+
+
+(FYI -- email to the Linux kernel mailing lists should be in plaintext form=
+at, and
+not use HTML or other formatting.)
+
+This is an excellent experiment.  It certainly suggests that the cpumask th=
+at is
+passed to hyperv_flush_tlb_others() has bits set for CPUs above 64 that don=
+'t exist.
+f that's the case, it would seem to be a general kernel issue rather than s=
+omething
+specific to Hyper-V.
+
+Since it looks like you can  to add debugging code to the kernel, here are =
+a couple
+of thoughts:
+
+1) In hyperv_flush_tlb_others() after the call to disable interrupts, check=
+ the value
+of cpulast(cpus), and if it is greater than num_possible_cpus(), execute a =
+printk()
+statement that outputs the entire contents of the cpumask that is passed in=
+.  There's
+a special printk format string for printing out bitmaps like cpumasks.   Le=
+t me know
+if you would like some help on this code -- I can provide a diff later toda=
+y.  Seeing
+what the "bad" cpumask looks like might give some clues as to the problem.
+
+2) As a different experiment, you can disable the Hyper-V specific flush ro=
+utines
+entirely.  At the end of the mmu.c source file, have hyperv_setup_mmu_ops()
+always return immediately.  In this case, the generic Linux kernel flush ro=
+utines
+will be used instead of the Hyper-V ones.   The code may be marginally slow=
+er,
+but it will then be interesting to see if a problem shows up elsewhere.
+
+But based on your experiment, I'm guessing that there's a general kernel is=
+sue
+rather than something specific to Hyper-V.=20
+
+Have you run 4.19 kernels previous to 4.19.195 that didn't have this proble=
+m?  If
+you have a kernel version that is good, the ultimate step would be to do=20
+a bisect and find out where the problem was introduced in the 4.19-series. =
+ That
+could take a while, but it would almost certainly identify the problematic
+code change and would be beneficial to the Linux kernel community in
+general.
+
+Michael
