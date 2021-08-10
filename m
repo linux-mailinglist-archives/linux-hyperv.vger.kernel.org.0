@@ -2,307 +2,177 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70B1C3E513E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Aug 2021 05:01:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 342543E52AB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Aug 2021 07:17:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235816AbhHJDBf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 9 Aug 2021 23:01:35 -0400
-Received: from mail-dm6nam11on2110.outbound.protection.outlook.com ([40.107.223.110]:23520
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233477AbhHJDBf (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 9 Aug 2021 23:01:35 -0400
+        id S237584AbhHJFRg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 10 Aug 2021 01:17:36 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:50070 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236743AbhHJFRc (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 10 Aug 2021 01:17:32 -0400
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 17A5B2gv010428;
+        Tue, 10 Aug 2021 05:17:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=xfgOR5yL2sI5t3iKqaEn5g06OJKt2mQNNnrhKPh9XSQ=;
+ b=VKeFKoi2MVEhvkYDlL/gMkKHSBSHnaXyLxsfPJI5Qm5SJIICbIOpm5tvGkAxQu/c2TnH
+ M4brTZQufbXX1Y9ZfpZ6a1NVFlCdK9HS/jYNa4OAzh3wsen25t5/7TefxP26kjFY0mNf
+ 1TzoTSzrd0/9z2jSeoWTqKQOI4J+lvizPh9CsYsPGlkLpjxbH9UyOmLaDcPseiRQvv03
+ QZQ27c0ndp0DzlaEk4ZL+l+o6I5xGY9ogdO0l0/nnWJOGVKttCGeLuvIlUhpLCLU4VrX
+ zcTeMPnB9LCCCEKrryuNzOpxJ0aa8K0inbX66w6T6lkeI6g1arewcjmfNU/f/WQQimb8 HA== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=xfgOR5yL2sI5t3iKqaEn5g06OJKt2mQNNnrhKPh9XSQ=;
+ b=wV4mtLzLr5uEZTWWj3AeYHdRIrUEYc36EbFn+1SswoRuqzgRT6RIGS/FM3Wxj7rFjdOV
+ 85k9ZFju40hINtBV9sm9abOLQhyKBk3YPsAPU0wMR1AnwYvmQ7krfjzxU3ROb4wTIDlQ
+ liynia4+WfoQYgxoMOjHYQyYt3ZZOvzYCxNigBUVMM8UzBEq6SVc8DlX7Alsz+/ImtA1
+ encDiWwNYj/Ej9OELsn1Wtjn+rVOerZGRfZMSQvfHwi3lsvruhMxbHrZbp3EctmDg2UN
+ QG2D12eScxnrGvTTs6SbrRN9LfGK6ZomDqwljqIY5qws1w/cDzjXHdIrqzCy3lbGY3Z8 3w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3aaqmuu042-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Aug 2021 05:17:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 17A5ALhW101125;
+        Tue, 10 Aug 2021 05:17:07 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2102.outbound.protection.outlook.com [104.47.70.102])
+        by aserp3020.oracle.com with ESMTP id 3a9vv42xmf-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Aug 2021 05:17:07 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PpH8i+cSDYrKapLsOqwTosKgodGBHGhDngV+NNhw8gmkNe4CI5Y+CRU3LxNZkJWAot6LqfPVjGaow7tyo78/dlDpuLyW90efpYgJep2hCQmp8egvGl/ZJSRJK1/xQyFSeF9Y249+Hqee1QgDKJrIpBfwbBmI+cY/pyGp7u3sLFG36pjHRroXrjnze/4N9Bc+qyb24BPIgXstYIgwroJqlVn8VCMPgUxg/rLht/dKhA3DjSukTTjkuZgmPqTW6bFwSFKFmI5hh7Y9ssebmQKm8wcB0QirZUEoOj49sPHwE8cEyp0QjFQuC6pQiYY84HAncxuOaIltplAxIW0QuNkmZQ==
+ b=Mhu1vJYgZ8MVF54z0Cmg64mJYWjRTZqNqquWPSMvLDgN6I7l5qT3EMsjoH2hXMkVRRXKoHB+OpTU7yV2TtgUVSn1Cl5eqkIDKeLSnphz4MiLX+3B+P1IfWCkWSuNwSpmto2OcKz2I+HOw6XZl6Kap5X50v8I8fl+DA4PloGrxWpfbtC2AGmVjdqMW2mSjJiWGznOvhyx17hYj015ekfD6hQyLNGLxVp22NG5T9YfcQB485j7VsnqERF25p+XTl7EOzbxbBykYQPtLvi6jWBYpg0hPfzxLhPPGjkOb67kWsXm9beLRZ8aTrR+DRhAzTlyyldwQAYq/548bstcN/qxeQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YEQfyXsp1XyEAFWSV2/NrzXd/4RkIxmxtni10k+uhiM=;
- b=DREnpTbjG/30kP+rsuX65oVMt0K1XOVaTvusXqi0bosTDIG5NZ45of6L2BeP4t5DC1VCFVyR7GFW5dClZ+Yl9fERfaSTDQb4JPa1W8Fac1DrzC/ecJ585b+IiMuOAphYdMlEbURRZ76dAfCoxhTRGcPiMvmB91rhnVTlEexn3A+96Sc2D71Yu3GLrO1VAYA4NM9cbk64FxtuFgEfxL6dkeRcx7py3fnpdwEVRtfstopZq+4jcCNJqwbZgJcowcZ+eUAZsLUnZC2iwsKq172+I0dMO51xE85/lRjiQt9trqRxVcvp8xM74e7EV0IXYAlPoJo2fkgDWTExvWIw+LLJOw==
+ bh=xfgOR5yL2sI5t3iKqaEn5g06OJKt2mQNNnrhKPh9XSQ=;
+ b=SXh1z9GLDes3Dt9N3h/rOQX7sfdV+oNOhAC9DOs8aNPVIX/+OecBmlvD4eDysDRmTRCOvaPgOuqlbZ8mjf9nI/siJsfOFcPuSzjv/Yc3gR2Y9FBPs6/8qaY0FVeClSy6bOg3+eaXh+vrVniSdyUceMKAaIcBC7ABf58psk7zLknuBNPe9oy702m4Hw3GMiGLAGAmZqXB1UTrwov7k040ZCjyx2FivlubX0RTdusRPQL1fpcuZAvEGVKCY1f+FXdxmrY+4SLhef9K57agoS7lH0dx9+h9FxGG4D/3pM0nf6j6MQhlYejl5A9soqcVR6XklWb2F9JebIiu4c5QJgVz+A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YEQfyXsp1XyEAFWSV2/NrzXd/4RkIxmxtni10k+uhiM=;
- b=S8aLiziuPzvBCq9W8gdY8CrY7L3SUDc99jWYj+DGbPydtZ5pG3lqjIj2Krgld84s3JPAN65UkhkvnH63TvtbA6RDZWPKx4F0jwKH6scgIff4dwGKMAVELR2AiikWbOZe5WK5qhWk1L5q8Xg079ggd3JkpXAnw1vJeucLgXOgo+Q=
-Received: from BY5PR21MB1506.namprd21.prod.outlook.com (2603:10b6:a03:23d::12)
- by BY5PR21MB1411.namprd21.prod.outlook.com (2603:10b6:a03:238::23) with
+ bh=xfgOR5yL2sI5t3iKqaEn5g06OJKt2mQNNnrhKPh9XSQ=;
+ b=UZxXeG5vn71v9E+9rCxNMSJlUECvm5JtwEUNNbVGR3NuMRsX65zzjiQRVwU2AOHXBEXWy7OGiZUCfwtZMg7dz5dFV5LGibDCgO7s5AnNQ5t9EW9ugvGq393UWbgu9ap+dapDgjufqnG4Ls3aM9rOsed1tLSlr9BVCDBeg9z89z8=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oracle.com;
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by PH0PR10MB5580.namprd10.prod.outlook.com (2603:10b6:510:f4::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.2; Tue, 10 Aug
- 2021 03:01:11 +0000
-Received: from BY5PR21MB1506.namprd21.prod.outlook.com
- ([fe80::75cf:f11d:d80d:dfd4]) by BY5PR21MB1506.namprd21.prod.outlook.com
- ([fe80::75cf:f11d:d80d:dfd4%2]) with mapi id 15.20.4436.006; Tue, 10 Aug 2021
- 03:01:11 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Bart Van Assche <bvanassche@acm.org>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Andra Paraschiv <andraprs@amazon.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        Hannes Reinecke <hare@suse.de>
-Subject: RE: [Patch v5 0/3] Introduce a driver to support host accelerated
- access to Microsoft Azure Blob for Azure VM
-Thread-Topic: [Patch v5 0/3] Introduce a driver to support host accelerated
- access to Microsoft Azure Blob for Azure VM
-Thread-Index: AQHXiceSNIn8c8rqq0aMs/Uc2xnVEKtlJaUAgAARXqCAAAZzgIADIFJggAC3SwCAAv3hYA==
-Date:   Tue, 10 Aug 2021 03:01:11 +0000
-Message-ID: <BY5PR21MB15065658FA902CC0BC162956CEF79@BY5PR21MB1506.namprd21.prod.outlook.com>
-References: <1628146812-29798-1-git-send-email-longli@linuxonhyperv.com>
- <e249d88b-6ca2-623f-6f6e-9547e2b36f1f@acm.org>
- <BY5PR21MB15060F1B9CDB078189B76404CEF29@BY5PR21MB1506.namprd21.prod.outlook.com>
- <YQwvL2N6JpzI+hc8@kroah.com>
- <BY5PR21MB1506A93E865A8D6972DD0AAECEF49@BY5PR21MB1506.namprd21.prod.outlook.com>
- <YQ9oTBSRyHCffC2k@kroah.com>
-In-Reply-To: <YQ9oTBSRyHCffC2k@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3083f4e9-5ea4-47c9-aab1-5be6659653ec;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-08-10T02:56:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 88530125-5f99-4394-66f7-08d95bab1bd6
-x-ms-traffictypediagnostic: BY5PR21MB1411:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <BY5PR21MB141150B5E0EED58DB74E8918CEF79@BY5PR21MB1411.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: boWGMCc169pwOQlyO/DggMCfgB13uYAcPcFVr2nCs6HOQz32wkPt6oy6sR2hRNbomRrFjmrPdHdNNDHaZN0ALMc39Fr2WzVE/1TUrrj9RIxdx+RvrWfmZHzo0iIuQxi/fBx1O4hRpswybsdzYLSThI+WlF4+oGlYSvB79Rdkjx4Z+eszZUDTn2LEtApGDwtW+UGoATbX0DsqDRi3/adIH3HedD8NqRvTzfoQHUpRufkzUOjTOv0bbF9WthOmrruO2AZ8d/lR5sSnons+cvz9LrdKIsjAUWlAPDFZXOkxLouAdtaEFELvi44xS8HsgwAaIMA/Oip5dei1a3ovrPWqMir0CuMcr8KqWiYgHnusD7uq2j/q7OI8/LJc3rj2pnYmT7rQnhRIpvbQbNMDyPml5ryVN9u/Wx2LuxF/PvdjKheQMaPc15eqSTY4JUeItRK+dF51EEYAhUib7xituvTv4vgitu2d5sR7aawfGXBnlsT6DjbCHcB+PjFlqQB4OJs86G8yN+w5p25oNpkg7463EaHb7PhPOR2o/GRwJ09aX3XDtVDAQ5UXSvKnAo3j72fucjS890o+PsfbFfGTfRwd92BLm/voigX9TV58OixpaksXIeTsZdvVZ35YYqqPN2/x4KLk2UlvTNcrMro0+MCiqFGai/kj1jdTTUXLrBUwXTDO2rp3p5Sz4ivzG9e9qpO6UrnCFbTv3h7JlR4OnEyOrWJAlvsl9gUFVEXKoiLqdcDmFNu2zLSTg/fsIyfUaTe5QQXJYw3haR4aLGuFsHrBPET+Hu3g9hzjYHnhVyEAPOLfX26GNY4WBWXQiARuiCW+s768oPaorDoDkoxmibVYCQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1506.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(47530400004)(64756008)(52536014)(2906002)(186003)(76116006)(66946007)(66556008)(66476007)(5660300002)(55016002)(66446008)(966005)(26005)(83380400001)(9686003)(122000001)(10290500003)(6506007)(7416002)(54906003)(4326008)(8990500004)(7696005)(38100700002)(71200400001)(508600001)(6916009)(8936002)(8676002)(86362001)(82960400001)(316002)(38070700005)(82950400001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?e+ZRPPzjmEc0NFBYzOvVTpKKuazIVfDyaMTEs3OMtOnp1ii5rPa9UfUHWL8V?=
- =?us-ascii?Q?d2dTpli+zONxDA3OIFoiOwR8jQAwvLjIpgiA3Y6Td7A9/jphbOZs+S9gVwrc?=
- =?us-ascii?Q?OR3V34bMvL7u5AgV/lxYaYb+C0FVRXTR5bL/fzcaflk6EgWPo2XXJdCpprIK?=
- =?us-ascii?Q?6gL8Qf2CV8kkGOwoiclE6CrM0asfC54vO0bmYVfmbGqXSKH3w34r1JKC9Rhb?=
- =?us-ascii?Q?Ma/6il00UxIsl8MprxlOFeShM9Ml6YNXQNXeoocUDI5Bc2UGewKwNShRrMeF?=
- =?us-ascii?Q?2hkyWt84Jlm628L9pcs/0SQGGQw5juMX7dwWTrBbPf5owq9FXgaPJ98bQ5k8?=
- =?us-ascii?Q?i8ny1n9t4QQMvozbAfDJ8RNjRSDnF3yUXagU4fhy2YY00i/3BEUfEqJ7HTFD?=
- =?us-ascii?Q?J/32Oe2s/y2N419lua7+G/fQZVABrv6yCaYmhh2AuzCFFeWrqMGJ4J6jFWO+?=
- =?us-ascii?Q?MeQlXIAUATTBjf2g2YVc51nyhMyd9JGCanu3tbMmJWTwiY9f8Jci/n0phzgJ?=
- =?us-ascii?Q?SFAYs/qZD5yHV0nYdmFqHoDhyAX5EtIijdDpuyuHXKJQpk3FW5MkiHXnzGXI?=
- =?us-ascii?Q?6MamzHCT+hB8Ph2NUN3fLa2wLmYOsPeSAph7qBEaMML5CNdDfy0wvDS55EIG?=
- =?us-ascii?Q?H7pOX5IxVKdnqMuOdCP2k4Wcp17MES7ta/Rw6mRTG5nTfvMLp6MKQTGJft41?=
- =?us-ascii?Q?xjb/F/WNUrtfk9qF9ppx1j/s7iolYE3zS9zD+bs/K4l3NiLfA1qlLqidtYzz?=
- =?us-ascii?Q?Z5OwOPyAnlXzNc8Xpd8nmkgCSQGn/mITNJKi4ZKoBmGSnHKSKUrZTY46OJjA?=
- =?us-ascii?Q?yinbXbjXrvgJywI5nV9qCZ/TPk3Ebs9+92KDYLh9O0ugXBk6DHROXQUcdFP0?=
- =?us-ascii?Q?nJvksJ/i9vxKQdJM9mYH0p29rA4GIz1zzzL9xGU9Rq+aYA7YT7f+MAhPvIxV?=
- =?us-ascii?Q?zxpwvyozioBtd+7ePujwmtHWeyMhrz9PV4EXHyMUxQo3ODfgYjwyu5vQMDmk?=
- =?us-ascii?Q?8SgLGLoHgDr5kFyJDZp7igezSB82WOwEiRY+XLoaQh9TW3JQ8zAwuSNf1Q+o?=
- =?us-ascii?Q?D8WEnf+x6vD0P0b2VIDjfclKHWv8KaY8XD1AnL0LvN18+BBDhOjeOAYl61J4?=
- =?us-ascii?Q?T5pIdEHAwofpG+57I62KGsT3pyGN9frkHXk6LELbbwD/XDdGnSKCdAMfMybS?=
- =?us-ascii?Q?yNbJcMRxRk+VJ9wb0MuLB9lKLPiTXzq7rUKe4jgWygNk9BBdLz5p+I8qFA1k?=
- =?us-ascii?Q?20RywR3iaZV2VYd2BT8afGjqMKUx4tX6D6Iigch6YlYya22sa/ClG5NFYSIn?=
- =?us-ascii?Q?iDCnkPghjPFXoNwkhmg6v1nh?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.15; Tue, 10 Aug
+ 2021 05:17:06 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::c0ed:36a0:7bc8:f2dc]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::c0ed:36a0:7bc8:f2dc%6]) with mapi id 15.20.4394.023; Tue, 10 Aug 2021
+ 05:17:06 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     wei.liu@kernel.org, kys@microsoft.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-hyperv@vger.kernel.org, longli@microsoft.com,
+        jejb@linux.ibm.com
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH 1/1] scsi: storvsc: Log TEST_UNIT_READY errors as warnings
+Date:   Tue, 10 Aug 2021 01:17:00 -0400
+Message-Id: <162857260239.5447.5380384072400440347.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <1628269970-87876-1-git-send-email-mikelley@microsoft.com>
+References: <1628269970-87876-1-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA0PR11CA0112.namprd11.prod.outlook.com
+ (2603:10b6:806:d1::27) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ca-mkp.mkp.ca.oracle.com (138.3.201.9) by SA0PR11CA0112.namprd11.prod.outlook.com (2603:10b6:806:d1::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.13 via Frontend Transport; Tue, 10 Aug 2021 05:17:05 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 864462df-c40e-408b-b7ca-08d95bbe1855
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5580:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <PH0PR10MB5580B1FB1D627ED7D4A311A28EF79@PH0PR10MB5580.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 10W0V1xDpXmpUOzEiC3ATrqACpZ4g1BxMD3zOWa5VR69oMUWtGbC6yC6b0+qF5zYxZftPS2DtD2E6uTCRnIRvZ1SK8VYb4f6J1bJbAPg9/2w5dOTwdpA0OokmF4FqW5zk1xpGgoWa8WTFC05XcP0bvW2FT+rCuYgVGfW1anzqP4qcU7CFqCakD0rktotP5IAlo6RdYOy/ZByslB/Mf12xUeopvaEHbaAMmhQUTcFafWjbBQw9LVsaQ801JxM9LY/tstocv3DwgRT9hN8UYOgVhjosCKZawW5uK7w1FR+ZK1ksPm8Lbrq8GM6OLXIMWq9EN0Z2Eb57leOwDWmF3wvo6fMKTz9/gGcKfimF8W8w9Qk7FgwYDSqphQY4XPpLY5ysn6KDO1hlPEe5Q+SDHuwXC40YNf6f4h3KYAyAQd5Rod70rS6lsUo9IVlHx9bzkAaK/t1FsB+S1HDNeILIlSxb48yK4XWK4StKG6stj4a82BgunLOyDQVuT5tQH40CPPmnZ3M1LNg6rtaPNFzt/3sUnTzwH1tAg7V9D3vC/RCVCXbT3uECSXnJ+4FxAibO2QwvOpNsi+AmErsioJ84Gn4yzdMSKQZZxgA7kg22YElVPgKMJNZLBxYUjENyBEXDhiFKWs+O/oo7zzIbN/K+QkCAAp8uAu/7/zWm7wlcVnUT17pyEGqZB5+BrPbK8Oj0/nPSre2qjs3oHRPqYfudAEVTMVhKtlLltcPmAKExaTztvD01WTyLGusOr/Z//DF/FEQwRqRut/lXSveuRjZtHJrSg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(396003)(39860400002)(376002)(346002)(4744005)(38100700002)(83380400001)(8676002)(316002)(6486002)(36756003)(38350700002)(103116003)(2906002)(956004)(2616005)(8936002)(4326008)(966005)(66946007)(478600001)(186003)(52116002)(6666004)(7696005)(66556008)(107886003)(86362001)(5660300002)(66476007)(26005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?emlQd3gwaUlRL1drbk9UQng4NFJFSndZVUlzVGE1VFBiWXdkRDJ5d0t0RlFr?=
+ =?utf-8?B?dkcvSTVyTUlaZW1YdlJiWEdkRnc3aTQxbXovTXpJc2kyWVozeldhdS8zRWVS?=
+ =?utf-8?B?UmFDbVJ4dHJhU0x4ZnFhUlNyQmpZckE2TmFOWXhRVzNWTHk1VkhmMk5pWjR5?=
+ =?utf-8?B?YnZEK2xLUUx4ckliKy9rU2U2UnU3ai9wRitsbjd2WlliMnZSUHBndXR0cGcr?=
+ =?utf-8?B?OFFTbW5xaWpmMDhzU0x1Z2ZXVHAydHNDSldoRjNLakpHbzl0U3ozMGsrMjRw?=
+ =?utf-8?B?aDZkSFNYSURINy9IV2dRdk1lV3JTZS8zTVZINWVIV3lCeUJMNlY3eFdlK1NY?=
+ =?utf-8?B?V1krYTBteGsrWlBwOHZhSzFwQ09nMGZCVHZkclc3NWlqckdxZ3hJSjZwWldO?=
+ =?utf-8?B?bTI3REdPakRnZ04zRTc0YTRLTGQzZEJybzhQenE5Ylk1VE53Q1JrNDhaLzAr?=
+ =?utf-8?B?Mk5uQ2V1WkQ2UDIzMEpFcXRhcDJ3Y2lybVlidFdVU29tQTM0T3VCWmU3RDRC?=
+ =?utf-8?B?U3VqelJnNlk3L1llOW0rVk1JclFjWlNaMld3MFBiY1lkVkJpbTRCaTFIMk1u?=
+ =?utf-8?B?UFh3SStRTVN6U0FJRzc4Q0hjYi9XeVRSdWdXZElvZEk1eVdMNjQvTjg1STBN?=
+ =?utf-8?B?RGFsV2ZpRDVZOHNXb3RESXUyNFlqL3hvNnM3MTlqNThBMTV6VFVIbk5xRit6?=
+ =?utf-8?B?aG1sd2dVOTlVOVQxZ3IwRE92Q2krRXBKdW8rVklFUndNcmpHTVlIbzFTQ216?=
+ =?utf-8?B?bUgvUks1clR3WWtnd1lyRElrUUtCMkRRbXhoVHE3ZVV0QmdFdlhnTnkxc2Ju?=
+ =?utf-8?B?b3RERksvazBwUStWMTVwWVdNeEc4NlNZN3FaRElrNzIxaTJwazdQdkR0cnRB?=
+ =?utf-8?B?M3V2UXlxbzgrdGFabVBtS3VqQWVjNzUxNzk1Umlqb3hoT3dzK0ZVdjd1Z0Jw?=
+ =?utf-8?B?UzlpZEhxbW50WVhINngxdlpSV3ZDSXVBQkZXbGtKVkNZckhiM2pJM002TThS?=
+ =?utf-8?B?YVA3SWhremZwcWxGZklsWTZhR0liOFBDdzVtdk9VT2RVbCszc3YxSEs0SktH?=
+ =?utf-8?B?UDQ2RmNXZnV6RklSN2ZlT1p2THMvSkJZRFlqQzYxcGFGMjV1QVlZd2Vkems0?=
+ =?utf-8?B?UWRoaUZ5SDRHRlhidUE4Wi9NTXhMSjZCZkdnRnJLRUFLMU1ibVlYdkRCVW5G?=
+ =?utf-8?B?cFRaUGQ4aFVwWWxwdDlPcHpCZzhrVE43Q0dFWjB4Zm5Jd2I4aDVjWFNQTFAz?=
+ =?utf-8?B?RFVDSzE0c0laSUNwWEZqdnp6clNuMGZDdkY2Ri85T2preFlxbFBRcDd2YzN3?=
+ =?utf-8?B?WkMzRmdva1JQbzVFQ2NXVDdPWXRXLy9LTEhkbGNHK1F0T0VsVFk0b0NaWVUv?=
+ =?utf-8?B?NjlveEhjRTA5bS9tRkx2Y2tudTh1VTlZRW8zODFWUlh2WXZsWGxnMkhiV0Fu?=
+ =?utf-8?B?NkdaNGtVRm4rbXlTR0xlRTBsdjhXV1hXZzFRaEpLWmgrRHNvYUN1ZkNJNE9U?=
+ =?utf-8?B?UU5NMGRkeTBjN2R5czNmV3l6UFgwUUY2L1Q5L0Mvcmd5K1BIbEFPYStRVkxH?=
+ =?utf-8?B?R1FKNmU0cnpDN2JYWitYMUFwNVA2Unl0U0J3YVhqVFNoQ0JKSUdtZUNYNjNX?=
+ =?utf-8?B?ck5JRENvWk9rUkljZzlKVTdhTTVlaTErTDRSM3krZTZmL2RydzA5dHhmOGpx?=
+ =?utf-8?B?V3pwWWpCTHJvYmw2dFQxTzBmbnZjMUYvZ3ovRjdNR0k0Wk0ySEFZT0k5L2F5?=
+ =?utf-8?Q?heP5N0w/ubQPhUX5ENTmjje6utx4zI8aJk17lJm?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 864462df-c40e-408b-b7ca-08d95bbe1855
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1506.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88530125-5f99-4394-66f7-08d95bab1bd6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Aug 2021 03:01:11.1737
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2021 05:17:06.1712
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hU9NeEcUwQXLc5cMSFkAye7MQZII9jGhQAGapFw6tXlniLQ3AHD/x56fa3Nxh+C8C6gI7ysgb7Z1J3Tr2Pn55g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1411
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LKT9Cvp1wnGzaQVjzw2NMeX+fv3csxlCf2KX3rPdVxCmgXzYwSF9mlzaYX07NCeunXbN/qXkllFVC1cy8v1KVSa8hGzUkMP1w9OwIqNNGsg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5580
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10071 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
+ definitions=main-2108100033
+X-Proofpoint-GUID: dgwxDvhJsIZd0KTrAMziFv27YnsrE_gd
+X-Proofpoint-ORIG-GUID: dgwxDvhJsIZd0KTrAMziFv27YnsrE_gd
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> Subject: Re: [Patch v5 0/3] Introduce a driver to support host accelerate=
-d
-> access to Microsoft Azure Blob for Azure VM
->=20
-> On Sat, Aug 07, 2021 at 06:29:06PM +0000, Long Li wrote:
-> > > I still think this "model" is totally broken and wrong overall.
-> > > Again, you are creating a custom "block" layer with a character
-> > > device, forcing all userspace programs to use a custom library (where=
- is it
-> at?) just to get their data.
-> >
-> > The Azure Blob library (with source code) is available in the following
-> languages:
-> > Java:
-> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> > ub.com%2FAzure%2Fazure-sdk-for-
-> java%2Ftree%2Fmain%2Fsdk%2Fstorage%2Faz
-> > ure-storage-
-> blob&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C778083147
-> >
-> 8ed49b16e6308d95a2b7ae8%7C72f988bf86f141af91ab2d7cd011db47%7C1
-> %7C0%7C6
-> >
-> 37639965101378114%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwM
-> DAiLCJQIjoi
-> >
-> V2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DwcNhsEoH
-> LV0VBc
-> > uDf0CVXl7W0Ug9Cj7Q92%2Bw6qizroU%3D&amp;reserved=3D0
-> > JavaScript:
-> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> > ub.com%2FAzure%2Fazure-sdk-for-
-> js%2Ftree%2Fmain%2Fsdk%2Fstorage%2Fstor
-> > age-
-> blob&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C7780831478ed49b
-> 16
-> >
-> e6308d95a2b7ae8%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C
-> 637639965
-> >
-> 101378114%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjo
-> iV2luMzIi
-> >
-> LCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DI%2FfhdPX3Unz6S3
-> eBPcpl
-> > %2Bh55nKoV0u%2FO0%2BYgjLy4grQ%3D&amp;reserved=3D0
-> > Python:
-> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> > ub.com%2FAzure%2Fazure-sdk-for-
-> python%2Ftree%2Fmain%2Fsdk%2Fstorage%2F
-> > azure-storage-
-> blob&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C7780831
-> >
-> 478ed49b16e6308d95a2b7ae8%7C72f988bf86f141af91ab2d7cd011db47%7
-> C1%7C0%7
-> >
-> C637639965101378114%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAw
-> MDAiLCJQIj
-> >
-> oiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DaAwsi%2
-> BPVsN
-> > tsDMJ7rKnRDigNc41fIao031lde247Nc0%3D&amp;reserved=3D0
-> > Go:
-> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> > ub.com%2FAzure%2Fazure-storage-blob-
-> go&amp;data=3D04%7C01%7Clongli%40mic
-> >
-> rosoft.com%7C7780831478ed49b16e6308d95a2b7ae8%7C72f988bf86f141a
-> f91ab2d
-> >
-> 7cd011db47%7C1%7C0%7C637639965101378114%7CUnknown%7CTWFpbG
-> Zsb3d8eyJWIj
-> >
-> oiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C10
-> 00&am
-> >
-> p;sdata=3D43JhbGsYQxA%2FoivNd7C3z7DSYO%2FPONCoaW2v7TN6xEU%3D&a
-> mp;reserve
-> > d=3D0
-> > .NET:
-> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> > ub.com%2FAzure%2Fazure-sdk-for-
-> net%2Ftree%2Fmain%2Fsdk%2Fstorage%2FAzu
-> >
-> re.Storage.Blobs&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C77808
-> 3147
-> >
-> 8ed49b16e6308d95a2b7ae8%7C72f988bf86f141af91ab2d7cd011db47%7C1
-> %7C0%7C6
-> >
-> 37639965101378114%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwM
-> DAiLCJQIjoi
-> >
-> V2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3D6ClMeURlt
-> cBv1q
-> > 7l7PGGrxXVJbVDt9uMBlwoIVh7Wpw%3D&amp;reserved=3D0
-> > PHP:
-> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> > ub.com%2FAzure%2Fazure-storage-php%2Ftree%2Fmaster%2Fazure-
-> storage-blo
-> >
-> b&amp;data=3D04%7C01%7Clongli%40microsoft.com%7C7780831478ed49b16
-> e6308d9
-> >
-> 5a2b7ae8%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C6376399
-> 651013781
-> >
-> 14%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIi
-> LCJBTiI
-> >
-> 6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3DDuZO539vd76c%2Byaqjn
-> hetp%2B3T
-> > i0b74601ZkNe39SNK4%3D&amp;reserved=3D0
-> > Ruby:
-> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> > ub.com%2Fazure%2Fazure-storage-
-> ruby%2Ftree%2Fmaster%2Fblob&amp;data=3D04
-> > %7C01%7Clongli%40microsoft.com%7C7780831478ed49b16e6308d95a2b
-> 7ae8%7C72
-> >
-> f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C637639965101378114%7
-> CUnknown%
-> >
-> 7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwi
-> LCJX
-> >
-> VCI6Mn0%3D%7C1000&amp;sdata=3D6Zviu1IuRQE2do9bDCae2iJv0W2KOJu90t
-> XSR6kDAR
-> > 4%3D&amp;reserved=3D0
-> > C++:
-> >
-> C++https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fg
-> > C++ithub.com%2FAzure%2Fazure-sdk-for-
-> cpp%2Ftree%2Fmain%2Fsdk%2Fstorage
-> > C++%23azure-storage-client-library-for-
-> c&amp;data=3D04%7C01%7Clongli%40m
-> >
-> C++icrosoft.com%7C7780831478ed49b16e6308d95a2b7ae8%7C72f988bf86
-> f141af9
-> >
-> C++1ab2d7cd011db47%7C1%7C0%7C637639965101388074%7CUnknown%
-> 7CTWFpbGZsb3
-> >
-> C++d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn
-> 0%3
-> >
-> C++D%7C1000&amp;sdata=3DHH6jrqREWQ%2BkoRR%2Fsb02wRXnuLU5il4Erzm
-> rBvUZu5w%
-> > C++3D&amp;reserved=3D0
->=20
-> And why wasn't this linked to in the changelog here?
->=20
-> In looking at the C code above, where is the interaction with this Linux =
-driver?
-> I can't seem to find it...
+On Fri, 6 Aug 2021 10:12:50 -0700, Michael Kelley wrote:
 
-Those are existing Blob client libraries. The new code using this driver is=
- being
-tested and has not been released to github.
+> Commit 08f76547f08d ("scsi: storvsc: Update error logging")
+> added more robust logging of errors, particularly those reported
+> as Hyper-V errors. But this change produces extra logging noise
+> in that TEST_UNIT_READY may report errors during the normal
+> course of detecting device adds and removes.
+> 
+> Fix this by logging TEST_UNIT_READY errors as warnings, so that
+> log lines are produced only if the storvsc log level is changed
+> to WARN level on the kernel boot line.
+> 
+> [...]
 
-I'm sorry I misunderstood your request. I'm asking the team to share the ne=
-w
-code for review. I will send the code location for review soon.
+Applied to 5.14/scsi-fixes, thanks!
 
-Thanks,
-Long
+[1/1] scsi: storvsc: Log TEST_UNIT_READY errors as warnings
+      https://git.kernel.org/mkp/scsi/c/dbe7633c394b
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
