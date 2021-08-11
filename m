@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 523F03E94A5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Aug 2021 17:36:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63C1D3E94A8
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Aug 2021 17:36:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233258AbhHKPhE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 11 Aug 2021 11:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45848 "EHLO
+        id S233309AbhHKPhG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 Aug 2021 11:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232624AbhHKPhC (ORCPT
+        with ESMTP id S233248AbhHKPhE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 11 Aug 2021 11:37:02 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0CCC061765;
-        Wed, 11 Aug 2021 08:36:38 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id s184so4229577ios.2;
-        Wed, 11 Aug 2021 08:36:38 -0700 (PDT)
+        Wed, 11 Aug 2021 11:37:04 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845F7C0613D5;
+        Wed, 11 Aug 2021 08:36:40 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id c3so3315023ilh.3;
+        Wed, 11 Aug 2021 08:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H0aePHbvBlMQFFOlxS/RlBo9IjhQNt3o+m5ARm3Lb0E=;
-        b=KSxqYJ+KWw7Gg3DhQLJkgDY1JuTJXIjrCvPJgn3MOCKyuVYdmdz68zetkXAXt3bu4x
-         ES6AUIJPnki5DiPDmJ8aDEAo+XTY5BJ7Kg1rKv0gTRR+0i2E6TJO6igmNq15J3L5y3kv
-         x+7brmJEjp2AiWLmaoPuAXa/PABSGWuETv74xIQmjrTlKl40vcEthWTA1Gr/CWv2lLQN
-         khucthDm/e6F/W6tTJb9zWZ+/5HTQrjlwe94h4NDZ+/5C7i4lyeaPA2J2CXH2JitEFDw
-         fNVbFqtmVgDS4r35EnL6xOX8mTE93LdZ61zLRoZiGGDhJUDGXWYWD3kKsMFiIdcR/DQd
-         gonA==
+        bh=m+WerKLNTuUcJjz5ppPIhMIuAZu9yrWomJykGHOMdQE=;
+        b=Xw6bPBKjGySndzPoxC/HBXcfij6Ej8gsr8XCwc/zUlawabtn9idGbjPtC5CiRKkBTI
+         IA8wyHhBi1Eb/DNR66nHkc+bGlSqJ1oMU4yomnzFoL0dLvsgp9EijGkpycy+ME8ywYAU
+         9miztcb3otIBCm1rnSjISWjbUkHjtO5Zh2zXHk64EhOOR4+ZoIniFCi6Vzp+VeQwPEFF
+         0swypePmtrL4wWMaRNBmi/e63ZXF5YQpxE0eYKmevPTTY0pWT9oCPylMLKRBiOT3TNq1
+         9Jbxxt1ehFQEq3YrJUL7/RrF9dIgres10UXUChxe2NvXIyryaSik9xOkU7x4vyd0R6Yz
+         cr1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H0aePHbvBlMQFFOlxS/RlBo9IjhQNt3o+m5ARm3Lb0E=;
-        b=TSw1kqU0t7mDMW5wtuEOVV0/Uz6XjrB43Pi8XeqKjo3tW/N6fxHBiDT5c6bmVeFapn
-         brCvnCmlx4uP92zJwyEh+7MoU2SuKbaNtusm3j7xsxDQXmgxPz82FisqcmlvLaBFJVbH
-         vmdTKtC1iv1o08D4d2uf+5lwmtnUoBKuj4heRC5TFCTaKvzP7FP/CXDmQvyVbCKyUS+G
-         pxwNKfSio0Vf1SDk9VjrttzVTus3/Z70rfIUz9+kPkUGSG5col+Jz3a+jE3zDUhNvVVq
-         2ocdEkmu/A/zOnBY+Qg6slLMqA6tZsViyq9rJQ3hURnYUXc+LT0IkHevyiY1+H0/TC6m
-         /2pw==
-X-Gm-Message-State: AOAM532vWDdFMK3eyanaqVjNuAmK5Kr4JTkAdoyOvBGqeuoZCDK+l2Fm
-        p2YbOC4yZwlX2WWUDn4/f9E=
-X-Google-Smtp-Source: ABdhPJw4swY5OoR9NWjAtDhIiSaQ+1h4/lWhktDxZBX90x+/YF3KS5bdFjgKxgydOLGMjvvdPVEdyA==
-X-Received: by 2002:a6b:b502:: with SMTP id e2mr256604iof.152.1628696198048;
-        Wed, 11 Aug 2021 08:36:38 -0700 (PDT)
+        bh=m+WerKLNTuUcJjz5ppPIhMIuAZu9yrWomJykGHOMdQE=;
+        b=PJ6KQ1a8g1oDOyv6OHsFsUocjdzpWKt+2QUVpYBsgGOaAva71E+z67DdBzuhAEFp01
+         C2GKXz3Kxdw8Khh905spuORcWhQtMTaLZGjbLZ9ovu/tszK44gSbJm7VbtAGRwoYWk86
+         tSbci4C9Fh8wTZAUZj+rGP5ZntM/hy4+BPpc4ajVnjlffC3J18+ixXdqClLYL3zBJalv
+         0AAYf+9pqTUaIEALh+8/h8r8sleI+/DYVnSZl4baROLP85WZJ9Gugd8tbRXICTYq+ukE
+         4hwpAc9KNZ7qHth2lMPC4d9qMUTCo94jDf2fzCTZjgRvlqpwn2OkhJLt7v5fnpSN2OAd
+         3SOA==
+X-Gm-Message-State: AOAM531hMIF0XEONkVXJORK03mf59s6CKCxnM3knUhe5wj/Uj9aVvY5R
+        59Tijx9xErqmiONQ3Kxy1jA=
+X-Google-Smtp-Source: ABdhPJwG2Q43Tufl+2zOtEvKna7XTvih3Y7p27iDvAbAfAT9elYx46qIz2mqI+h/bG7cZprSEiAaxg==
+X-Received: by 2002:a05:6e02:13f0:: with SMTP id w16mr276304ilj.268.1628696200058;
+        Wed, 11 Aug 2021 08:36:40 -0700 (PDT)
 Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id x11sm14111871ilu.3.2021.08.11.08.36.36
+        by smtp.gmail.com with ESMTPSA id t15sm12914887iln.77.2021.08.11.08.36.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Aug 2021 08:36:37 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 7433527C0054;
-        Wed, 11 Aug 2021 11:36:36 -0400 (EDT)
+        Wed, 11 Aug 2021 08:36:39 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailauth.nyi.internal (Postfix) with ESMTP id BCAAA27C0054;
+        Wed, 11 Aug 2021 11:36:38 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 11 Aug 2021 11:36:36 -0400
-X-ME-Sender: <xms:hO4TYbcSvMjpM1tgcNbpy7qUhra4u1o9fBhA8dv0IzJj5Kt06dPoMA>
-    <xme:hO4TYRN-jqsnnep_xFgLuq_BY3aM7M_yypzuarvrqlxZYwegG00WfEnNLHaNmLWp_
-    9qPSlVAQsleXvfH_w>
-X-ME-Received: <xmr:hO4TYUgY1btGJMOlUKpzZI2_ofu5U2fVjB5e1Cw1ouitT3Ld30xuMwt5rhc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkedugdeltdcutefuodetggdotefrodftvf
+  by compute5.internal (MEProxy); Wed, 11 Aug 2021 11:36:38 -0400
+X-ME-Sender: <xms:he4TYYu_fkfWkZ1sy9OtFgmUVMfiW-OJ3rytMff_hgLViVA7TCIKTA>
+    <xme:he4TYVeMKLd8PPat7GNzlZpuax9FMGeC7P1D9M4qfkvgdwPMakM9qFl6WaGhwnqg0
+    Wb1hYMxBVOX8X0TPg>
+X-ME-Received: <xmr:he4TYTxD7jOVcdCQ_gZ1YkGpXN0MK4S-b-qsR5AFUk0LY8g-35lS5bp4l7A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkedugdeklecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcu
@@ -67,12 +67,12 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkedugdeltdcutefuodetggdote
     hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
     udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
     gvrdhnrghmvg
-X-ME-Proxy: <xmx:hO4TYc9yz4TsXCXf5UdxdbonZj894YFEIk0XIFIU1a34ecBubWrE7w>
-    <xmx:hO4TYXugkYKQDjTUI-Tw44PIL-EN8C0cI9lUUIR2rbdaAiXNZqMwzg>
-    <xmx:hO4TYbFyeoo6NSM8caQmPZVUH974BMrgNr79JRQl0wPyfQGA-HaKbQ>
-    <xmx:hO4TYQMeNHif_jNNpfSo3NPiKPai0NvNkj7Zgb-YaPVV1_XtMbXaSl0bJp4>
+X-ME-Proxy: <xmx:he4TYbP0DXUPZ2rLB-eC_riltFQkOP6AaPMFqVsvSNH4FIYA7UxeOw>
+    <xmx:he4TYY_GEWxUvhvq8zDauKaLZNJRSSOZVAYpzlPlpk6Akx5ndco20g>
+    <xmx:he4TYTWhsIp172WT4bdecVCNZicWTcCMFhk2fE6z2YAMPC2Tg2PVSw>
+    <xmx:hu4TYbcrq1OJ_K9ttEqRoQgIOJRIjiWEK81s8nvd0tIsx9d0ne2TkkR3GkQ>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 11 Aug 2021 11:36:36 -0400 (EDT)
+ 11 Aug 2021 11:36:37 -0400 (EDT)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
@@ -92,9 +92,9 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         linux-hyperv@vger.kernel.org,
         Sunil Muthuswamy <sunilmut@microsoft.com>,
         Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: [RFC 2/5] PCI/ACPI: Store ACPI device information in the host bridge structure
-Date:   Wed, 11 Aug 2021 23:36:16 +0800
-Message-Id: <20210811153619.88922-3-boqun.feng@gmail.com>
+Subject: [RFC 3/5] PCI: hv: Set NULL as the ACPI device for the PCI host bridge
+Date:   Wed, 11 Aug 2021 23:36:17 +0800
+Message-Id: <20210811153619.88922-4-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210811153619.88922-1-boqun.feng@gmail.com>
 References: <20210811153619.88922-1-boqun.feng@gmail.com>
@@ -104,51 +104,38 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In order to decouple the ACPI device information of a PCI host bridge
-from the sysdata, ->private of pci_host_bridge is used to store the ACPI
-device, and it's done by the new pci_create_root_bus_priv().
+A PCI host bridge of Hyper-V doesn't have the corresponding ACPI device,
+therefore a NULL pointer needs to be set as the ->private of
+pci_host_bridge since for platforms with ACPI ->private is used to store
+the ACPI device information for the host bridges.
 
-A reader function is also added, to retrieve the ACPI device information
-in pci_host_bridge.
+And since kzalloc() is used to allocate pci_host_bridge, as a result,
+what is needed is just setting the correct size of ->private, kzalloc()
+will zero the field as if set a NULL pointer to it.
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- drivers/acpi/pci_root.c  | 5 +++--
- include/linux/pci-acpi.h | 5 +++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pci-hyperv.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index d7deedf3548e..82824841cbda 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -894,8 +894,9 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 62dbe98d1fe1..fd3792b5edcc 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3021,7 +3021,12 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	 */
+ 	BUILD_BUG_ON(sizeof(*hbus) > HV_HYP_PAGE_SIZE);
  
- 	pci_acpi_root_add_resources(info);
- 	pci_add_resource(&info->resources, &root->secondary);
--	bus = pci_create_root_bus(NULL, busnum, ops->pci_ops,
--				  sysdata, &info->resources);
-+	bus = pci_create_root_bus_priv(NULL, busnum, ops->pci_ops, sysdata,
-+				       &info->resources, &root->device,
-+				       sizeof(struct acpi_device *));
- 	if (!bus)
- 		goto out_release_info;
+-	bridge = devm_pci_alloc_host_bridge(&hdev->device, 0);
++	/*
++	 * devm_pci_alloc_host_bridge() use kzalloc(), and we want to set
++	 * ->private as a NULL pointer, therefore no need to set ->private after
++	 * allocation.
++	 */
++	bridge = devm_pci_alloc_host_bridge(&hdev->device, sizeof(struct acpi_device *));
+ 	if (!bridge)
+ 		return -ENOMEM;
  
-diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-index 5ba475ca9078..21d4cc80aa55 100644
---- a/include/linux/pci-acpi.h
-+++ b/include/linux/pci-acpi.h
-@@ -80,6 +80,11 @@ extern struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 					    struct acpi_pci_root_ops *ops,
- 					    struct acpi_pci_root_info *info,
- 					    void *sd);
-+static inline struct acpi_device *
-+acpi_pci_root_device(struct pci_host_bridge *bridge)
-+{
-+	return *((struct acpi_device **)bridge->private);
-+}
- 
- void acpi_pci_add_bus(struct pci_bus *bus);
- void acpi_pci_remove_bus(struct pci_bus *bus);
 -- 
 2.32.0
 
