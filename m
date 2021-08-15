@@ -2,55 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68E423EC2DA
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Aug 2021 15:33:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBB7D3EC9E4
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Aug 2021 17:21:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238427AbhHNNdo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 14 Aug 2021 09:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36152 "EHLO
+        id S235738AbhHOPWA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 15 Aug 2021 11:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231601AbhHNNdo (ORCPT
+        with ESMTP id S232412AbhHOPV7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 14 Aug 2021 09:33:44 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF92FC061764;
-        Sat, 14 Aug 2021 06:33:15 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id e19so15540331pla.10;
-        Sat, 14 Aug 2021 06:33:15 -0700 (PDT)
+        Sun, 15 Aug 2021 11:21:59 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02C0C061764;
+        Sun, 15 Aug 2021 08:21:29 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id om1-20020a17090b3a8100b0017941c44ce4so10162032pjb.3;
+        Sun, 15 Aug 2021 08:21:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=from:subject:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=E3l49fTTRVE56Vn9goxprKRxj2T85G+ePpi3voIcgqM=;
-        b=UOFvhoKWqadKBxrSEwyDxHW1dWTJrafMlGKdpwz34n27UmdJ5/7Kx0SVLSJnJnFQc0
-         nBK93oRsNiOTXjOfX8P7bs71iCBHOyCMi130oWpbhdiSiTZv1X/wd8e1Dj3KcUJudx+R
-         IiqXfbcAXEMH0PHFY4CPHcc6MLxtKitkrnXiZwk/JUIU/s315UCEdfhd1VSWcmQTQ7bc
-         88Mt4SuCTPB8JkUJy7jP8ClgGplB8Sp8dTkRZqlPwgTonhZ6vEZD5ZWAEDT99qVSUv5r
-         jvnFloTwcCW37+swxtjfc/+FSQfYl++e87I3fcJuYu/lMrJjsO1ALvs02uq1jjhNUXax
-         DYCg==
+        bh=lqJuD6ruM5b7S82+pL+Pgu4dT3Aqj2AS9hae1tFkdRo=;
+        b=UDo6cP9FMCJZ7xCJSIXhjRcP0ErAenE3P03nucshW6LzGwza1JB05cdoyvyJEbpJya
+         8aLc4Djx0DAWFPSijwKCksggpzGOsA8NJq7xgbAAE0ffHXqq0QXSiy6tfbcSn5jEQof6
+         2ma3PA51qPRAxAYmuW2j7KtkKsDVNuEpegmAaBxh1f/jI4N5cAWqPcx4oFXN2pO1Ashc
+         87gLBUkKiBVoGeCUHLrBIQIIXvlCZHYUAOsOdCOfo4PAkq83QiSfgI8TAI23zhfr8YUr
+         vMCV/udIh/MHgkHngzhYrcPnpUZMQSk6GK/ENzO0mZC8nGBR7d73iCxBtmg3WUTr+cQr
+         /F0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=E3l49fTTRVE56Vn9goxprKRxj2T85G+ePpi3voIcgqM=;
-        b=gevwnShCNIx6nwrjcetkWdRVNlkziKTD5/GKOsqJ9YrWgHKGrRVrmnbsFGBpfRKqa0
-         W8IzTptfO61zzzIpIp7YJKMGUiY0mymdqY+VS9HxNzb98CUdnVnHi+UU3hldUFo90phM
-         lmMD7NUrrOu9eB13EN0cf/eiB53mTmnTYvCEJbLRwnzWGF9tA+iegYh8GzorP054qkLx
-         beU6jHDyaBIbk8FTt2tZ6/R8mn/v+OwN/jf2nxapBQ5S8JL3fB7Kx6KQEElQ05OqdxZg
-         Gn9Pn6dHmqDZ6WygdQakb2Hd+Z/V7XG5H9UqvNTVtmami/cmfvEHYi0f5lLqwQfGy68f
-         VHOA==
-X-Gm-Message-State: AOAM532u/DVpiRxUtuvSuLRga04kk+NeNLpi52yPh88z7n0BTowMCcdh
-        2Oc9oH39twURJf9mpKvSoqY=
-X-Google-Smtp-Source: ABdhPJxx4GFAlWpOOAKq3xGwVTJFNnwgLV853vArASgiLYYXySIM5R+pCZYOCQaXwPK3prs4ee+uNQ==
-X-Received: by 2002:a17:90a:ad07:: with SMTP id r7mr7575975pjq.110.1628947995429;
-        Sat, 14 Aug 2021 06:33:15 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
-        by smtp.gmail.com with ESMTPSA id n31sm2319766pfv.22.2021.08.14.06.33.01
+        bh=lqJuD6ruM5b7S82+pL+Pgu4dT3Aqj2AS9hae1tFkdRo=;
+        b=ZVdCSxt5oTv6CnY39LlyLRn847IwRlpBN5V0/Bq5k/X8IoaLwPgwqCkfeuU1sJh4n7
+         gWRcKDAwDDSNxZIrKXCf+TGZGvyDEM1KrVvThAK1uP/q8txmxR3l5gduHLLPlqPPTqk+
+         CxmGo6iyQinvrONetSSbt9IyI88waMKbQxY9gyRiN7gU+behL3EYcd79CqBEh/XMqNYI
+         4zGH8CJ0bmmNbV7a7wQSPtW7/Q5wlKpNVFYPFGAZ322UN0o5l94v20AHwvCUaoHOPGt9
+         THWwsTYvsEncli1xKl7+grfXEvtzqG0tzyPTDLU0pMc4N3kKmx+5jJFau8UaFxj26FJg
+         M/nA==
+X-Gm-Message-State: AOAM532Gsw0iF7YuEWzOrcrK4Trtn/ga8ERe7NJRWZJX+4AJXbjfSaAf
+        uzYA9Mw0O9MJkABbTZshFu0=
+X-Google-Smtp-Source: ABdhPJxpcs+C9yGRhB/oJwUav2sPEXUGNBEjk6Xqpn3/4lgsrB3QPLQ97I5YOwA+8w9+RuIKBCv5Rw==
+X-Received: by 2002:a63:770f:: with SMTP id s15mr11711033pgc.137.1629040889118;
+        Sun, 15 Aug 2021 08:21:29 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
+        by smtp.gmail.com with ESMTPSA id nn18sm6289319pjb.21.2021.08.15.08.21.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Aug 2021 06:33:15 -0700 (PDT)
-Subject: Re: [PATCH V3 02/13] x86/HV: Initialize shared memory boundary in the
- Isolation VM.
+        Sun, 15 Aug 2021 08:21:28 -0700 (PDT)
+From:   Tianyu Lan <ltykernel@gmail.com>
+Subject: Re: [PATCH V3 04/13] HV: Mark vmbus ring buffer visible to host in
+ Isolation VM
 To:     Michael Kelley <mikelley@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -104,15 +105,14 @@ Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
         "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
         "dave.hansen@intel.com" <dave.hansen@intel.com>
 References: <20210809175620.720923-1-ltykernel@gmail.com>
- <20210809175620.720923-3-ltykernel@gmail.com>
- <MWHPR21MB159376E024639D8F0465BCA2D7F99@MWHPR21MB1593.namprd21.prod.outlook.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <03fea66e-b2b4-af9c-5e06-2de63960a8b4@gmail.com>
-Date:   Sat, 14 Aug 2021 21:32:59 +0800
+ <20210809175620.720923-5-ltykernel@gmail.com>
+ <MWHPR21MB1593CCBBBB83E721F8FDACD3D7F99@MWHPR21MB1593.namprd21.prod.outlook.com>
+Message-ID: <43d4cb59-5ddd-516d-1f5c-4a1a799a9f2d@gmail.com>
+Date:   Sun, 15 Aug 2021 23:21:14 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <MWHPR21MB159376E024639D8F0465BCA2D7F99@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB1593CCBBBB83E721F8FDACD3D7F99@MWHPR21MB1593.namprd21.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -121,77 +121,65 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
-On 8/13/2021 3:18 AM, Michael Kelley wrote:
-> From: Tianyu Lan <ltykernel@gmail.com> Sent: Monday, August 9, 2021 10:56 AM
->> Subject: [PATCH V3 02/13] x86/HV: Initialize shared memory boundary in the Isolation VM.
-> 
-> As with Patch 1, use the "x86/hyperv:" tag in the Subject line.
-> 
->>
->> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->>
->> Hyper-V exposes shared memory boundary via cpuid
->> HYPERV_CPUID_ISOLATION_CONFIG and store it in the
->> shared_gpa_boundary of ms_hyperv struct. This prepares
->> to share memory with host for SNP guest.
->>
->> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
->> ---
->>   arch/x86/kernel/cpu/mshyperv.c |  2 ++
->>   include/asm-generic/mshyperv.h | 12 +++++++++++-
->>   2 files changed, 13 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
->> index 6b5835a087a3..2b7f396ef1a5 100644
->> --- a/arch/x86/kernel/cpu/mshyperv.c
->> +++ b/arch/x86/kernel/cpu/mshyperv.c
->> @@ -313,6 +313,8 @@ static void __init ms_hyperv_init_platform(void)
->>   	if (ms_hyperv.priv_high & HV_ISOLATION) {
->>   		ms_hyperv.isolation_config_a = cpuid_eax(HYPERV_CPUID_ISOLATION_CONFIG);
->>   		ms_hyperv.isolation_config_b = cpuid_ebx(HYPERV_CPUID_ISOLATION_CONFIG);
->> +		ms_hyperv.shared_gpa_boundary =
->> +			(u64)1 << ms_hyperv.shared_gpa_boundary_bits;
-> 
-> You could use BIT_ULL() here, but it's kind of a shrug.
 
+On 8/13/2021 6:20 AM, Michael Kelley wrote:
+>> @@ -474,6 +482,13 @@ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
+>>   	if (ret)
+>>   		return ret;
+>>
+>> +	ret = set_memory_decrypted((unsigned long)kbuffer,
+>> +				   HVPFN_UP(size));
+>> +	if (ret) {
+>> +		pr_warn("Failed to set host visibility.\n");
+> Enhance this message a bit.  "Failed to set host visibility for new GPADL\n"
+> and also output the value of ret.
 
-Good suggestion. Thanks.
+OK. This looks better. Thanks.
 
 > 
+>> @@ -539,6 +554,10 @@ static int __vmbus_establish_gpadl(struct vmbus_channel *channel,
+>>   	/* At this point, we received the gpadl created msg */
+>>   	*gpadl_handle = gpadlmsg->gpadl;
 >>
->>   		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
->>   			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
->> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
->> index 4269f3174e58..aa26d24a5ca9 100644
->> --- a/include/asm-generic/mshyperv.h
->> +++ b/include/asm-generic/mshyperv.h
->> @@ -35,8 +35,18 @@ struct ms_hyperv_info {
->>   	u32 max_vp_index;
->>   	u32 max_lp_index;
->>   	u32 isolation_config_a;
->> -	u32 isolation_config_b;
->> +	union {
->> +		u32 isolation_config_b;
->> +		struct {
->> +			u32 cvm_type : 4;
->> +			u32 Reserved11 : 1;
->> +			u32 shared_gpa_boundary_active : 1;
->> +			u32 shared_gpa_boundary_bits : 6;
->> +			u32 Reserved12 : 20;
+>> +	channel->gpadl_array[index].size = size;
+>> +	channel->gpadl_array[index].buffer = kbuffer;
+>> +	channel->gpadl_array[index].gpadlhandle = *gpadl_handle;
+>> +
+> I can see the merits of transparently stashing the memory address and size
+> that will be needed by vmbus_teardown_gpadl(), so that the callers of
+> __vmbus_establish_gpadl() don't have to worry about it.  But doing the
+> stashing transparently is somewhat messy.
 > 
-> Any reason to name the reserved fields as "11" and "12"?  It
-> just looks a bit unusual.  And I'd suggest lowercase "r".
+> Given that the callers are already have memory allocated to save the
+> GPADL handle, a little refactoring would make for a much cleaner solution.
+> Instead of having memory allocated for the 32-bit GPADL handle, callers
+> should allocate the slightly larger struct vmbus_gpadl that you've
+> defined below.  The calling interfaces can be updated to take a pointer
+> to this structure instead of a pointer to the 32-bit GPADL handle, and
+> you can save the memory address and size right along with the GPADL
+> handle.  This approach touches a few more files, but I think there are
+> only two callers outside of the channel management code -- netvsc
+> and hv_uio -- so it's not a big change.
+
+Yes, this is a good suggestion and Will update in the next version.
+
 > 
-
-Yes, will update in the next version.
-
->> +		};
->> +	};
->>   	void  __percpu **ghcb_base;
->> +	u64 shared_gpa_boundary;
->>   };
->>   extern struct ms_hyperv_info ms_hyperv;
+>> @@ -859,6 +886,19 @@ int vmbus_teardown_gpadl(struct vmbus_channel *channel, u32 gpadl_handle)
+>>   	spin_unlock_irqrestore(&vmbus_connection.channelmsg_lock, flags);
 >>
->> --
->> 2.25.1
-> 
+>>   	kfree(info);
+>> +
+>> +	/* Find gpadl buffer virtual address and size. */
+>> +	for (i = 0; i < VMBUS_GPADL_RANGE_COUNT; i++)
+>> +		if (channel->gpadl_array[i].gpadlhandle == gpadl_handle)
+>> +			break;
+>> +
+>> +	if (set_memory_encrypted((unsigned long)channel->gpadl_array[i].buffer,
+>> +			HVPFN_UP(channel->gpadl_array[i].size)))
+>> +		pr_warn("Fail to set mem host visibility.\n");
+> Enhance this message a bit: "Failed to set host visibility in GPADL teardown\n".
+> Also output the returned error code to help in debugging any occurrences of
+> a failure
+Yes, agree. Will update.
+
+Thanks.
