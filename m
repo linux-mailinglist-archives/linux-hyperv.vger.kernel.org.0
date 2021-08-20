@@ -2,54 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E37B03F32B1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Aug 2021 20:04:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1473F33A7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Aug 2021 20:25:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbhHTSFG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 20 Aug 2021 14:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57344 "EHLO
+        id S235809AbhHTS0J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 20 Aug 2021 14:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230007AbhHTSFF (ORCPT
+        with ESMTP id S237222AbhHTSX4 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 20 Aug 2021 14:05:05 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8BAC061575;
-        Fri, 20 Aug 2021 11:04:27 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id gz13-20020a17090b0ecdb0290178c0e0ce8bso9688600pjb.1;
-        Fri, 20 Aug 2021 11:04:27 -0700 (PDT)
+        Fri, 20 Aug 2021 14:23:56 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CD8C0611C2;
+        Fri, 20 Aug 2021 11:21:13 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id x4so9986632pgh.1;
+        Fri, 20 Aug 2021 11:21:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QqX9IQo8g7WhG7Y3/RlQFVFx2KCstQLv7H4OsFNThv0=;
-        b=QGQqGFLjVXsqVhcZsfR9+tjVsH1D3pSrX1tMNmqU0GIyCghQ/ePeqEBsaqliat+lBk
-         sWM1blpaQD4n8UpkoQGp3GvRWRD5hog7rntjqP/tLitl0UO8N+cmjlpSE6BuDGlg1mOb
-         ftTvn2OIVzMZD9A7EbVTeoquvRVhZ0TurG6rgOA49IykfcmSDWD+7KL1XF1ICKaePoh7
-         eovukTIu5///DrcvTy6y4fU2ec67g3e7kh09QvOizKu6BPyJpz+gWDr2a4pZbE6eJ3jC
-         tPpnVVUWuDkSNMXnx1AP93T+ZlOwsUj1K/EjlhTs/8P1XObwmDCUhDI36MeSDeyv+Lyx
-         4pUA==
+        bh=FnnZUNvhPvIx/VcFIRs7Mx/cKrQt7VgripjVwaHxsaI=;
+        b=nOkgFzUUeuE2uOq6KpBWbmk2uCSVbcFBzkWKWriACYTXwD2Dfd42Y/PQxXFWgP/UQB
+         TogIgojLtlyPz9QZAvWYG7x2Pth4sWyW9aCIzNRMkahsKt7LnIP0hQceLcgKHpy70hBM
+         tN3pbDH8t4qDq8nt48kTuMyGdfR+karexcyZbSVJGxqKp8Xjr7WSOFalJR4zWRTyN9eU
+         cS/bv7TIGxxMVY+JEwNGmD+vn6WhpJX2S3CF5XZsTbPF9biARKkYXKoQGAuaOxtAT4R5
+         vG04+TCNyrhDuU8ZUFurYQVnP2CxwvKxr71yt2ETcHsuHN50myIZUfVBAsyoQwK7oxl8
+         TKsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=QqX9IQo8g7WhG7Y3/RlQFVFx2KCstQLv7H4OsFNThv0=;
-        b=gr21mCjSC7WDpFIE9nA/cmpxhpQK+nV8yu5tWKASVMUZQlYN+XEae5hgyvoeT78Fln
-         19BVm2vCvEQOgf/PfIkTNHohlWp/nSM6bd9IaeDB29+3fWpnwlaezI/Nw6LWj5ytrASw
-         cowu4q60UeSuVKiuvYmUBqtujttiiadUzTuEbUq5Hf2NdRnRfA75cPm3NAHmSIPaYYUV
-         9h2Q7eOeg8rZzhD4fVjZBrN55k2pzcbXkNywf3oGhfWvKMANTkkMErdqu+9XBDDwTj0S
-         p7LJWwjphzpu3RgtwwR3fr9JqqzDcmno+8q03ZcDlP1Oseki2+9SRBE3koM05HIcbLBx
-         KuiQ==
-X-Gm-Message-State: AOAM533vvLQCgNOEUTaJjcE6K9opzszyPoI78l+wASpDVfaBxfzAf+zz
-        QCJ8RIG+CZtYNpX6KY1zg4w=
-X-Google-Smtp-Source: ABdhPJyVf/JDbkxrxYIOEx8LcPerWBJMz+suKjnjDiwPFUPj971OZDtTnjV4pO5ZrAubU2bKD5IcXw==
-X-Received: by 2002:a17:902:be0d:b0:12d:cb3c:3e7f with SMTP id r13-20020a170902be0d00b0012dcb3c3e7fmr17262258pls.0.1629482667216;
-        Fri, 20 Aug 2021 11:04:27 -0700 (PDT)
+        bh=FnnZUNvhPvIx/VcFIRs7Mx/cKrQt7VgripjVwaHxsaI=;
+        b=lT24w5jkNezfMbpXVvKatR1Q2ooiBJKVbkGOWLAUWqUqPK1fChPlRGutWHnMcKli4B
+         +I5gwSGOsG9xZfjHafYNuDsXrD88yeMQaG+yZz5iHVSAihq6pgfY4WQSlpgB37utNHKv
+         Y9gycczLVkgtIJR90y1hTOYMerkkJZypgo06fzPj1QBLlcGGCeBNcuBZ4VoHT25GskBm
+         OR10/MPvGqbq49X5IvX0EoDrAz+MYQzkXn9566ut2+enWpO7NSIEACs2uQxOftFGk0Rd
+         w5+3linZdJm0FQhAkSuhMYQWFXUzgsTmI+6v0aFMsaXWrlDkzRG8a1Tp/e9b4bp7o3S7
+         N7Ig==
+X-Gm-Message-State: AOAM5325vx1yIGrnTs7qAVEevL3yG+xkDjscNbOhTTMalBdkHpHrcb01
+        eQpU/sfM5KP0Ff9HR53q/r8=
+X-Google-Smtp-Source: ABdhPJxzsYelAgPwIrLwHXwqEGliJ5vS+we4MW2tj375Z/nX9HFwmx8yp+6BPHWxDivdPsW7WY4m1A==
+X-Received: by 2002:a62:78c1:0:b0:3e2:bdc:6952 with SMTP id t184-20020a6278c1000000b003e20bdc6952mr20448852pfc.45.1629483673512;
+        Fri, 20 Aug 2021 11:21:13 -0700 (PDT)
 Received: from ?IPv6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
-        by smtp.gmail.com with ESMTPSA id w14sm7846700pfn.91.2021.08.20.11.04.13
+        by smtp.gmail.com with ESMTPSA id n12sm9253074pgr.2.2021.08.20.11.20.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Aug 2021 11:04:26 -0700 (PDT)
-Subject: Re: [PATCH V3 13/13] HV/Storvsc: Add Isolation VM support for storvsc
+        Fri, 20 Aug 2021 11:21:13 -0700 (PDT)
+Subject: Re: [PATCH V3 12/13] HV/Netvsc: Add Isolation VM support for netvsc
  driver
 To:     Michael Kelley <mikelley@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
@@ -104,17 +104,15 @@ Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
         "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
         "dave.hansen@intel.com" <dave.hansen@intel.com>
 References: <20210809175620.720923-1-ltykernel@gmail.com>
- <20210809175620.720923-14-ltykernel@gmail.com>
- <MWHPR21MB1593EEF30FFD5C60ED744985D7C09@MWHPR21MB1593.namprd21.prod.outlook.com>
- <a96626db-4ac9-3ce4-64e9-92568e4f827a@gmail.com>
- <CY4PR21MB158664748760672446BFA075D7C19@CY4PR21MB1586.namprd21.prod.outlook.com>
+ <20210809175620.720923-13-ltykernel@gmail.com>
+ <MWHPR21MB15936FE72E65A62FBA3EF4F2D7C09@MWHPR21MB1593.namprd21.prod.outlook.com>
 From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <939aa552-5c24-65ee-518d-1cf72867c15d@gmail.com>
-Date:   Sat, 21 Aug 2021 02:04:11 +0800
+Message-ID: <713480b3-f924-60dd-96a4-b6318930383f@gmail.com>
+Date:   Sat, 21 Aug 2021 02:20:58 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <CY4PR21MB158664748760672446BFA075D7C19@CY4PR21MB1586.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB15936FE72E65A62FBA3EF4F2D7C09@MWHPR21MB1593.namprd21.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -122,34 +120,20 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-On 8/21/2021 12:08 AM, Michael Kelley wrote:
->>>>    	}
->>> The whole approach here is to do dma remapping on each individual page
->>> of the I/O buffer.  But wouldn't it be possible to use dma_map_sg() to map
->>> each scatterlist entry as a unit?  Each scatterlist entry describes a range of
->>> physically contiguous memory.  After dma_map_sg(), the resulting dma
->>> address must also refer to a physically contiguous range in the swiotlb
->>> bounce buffer memory.   So at the top of the "for" loop over the scatterlist
->>> entries, do dma_map_sg() if we're in an isolated VM.  Then compute the
->>> hvpfn value based on the dma address instead of sg_page().  But everything
->>> else is the same, and the inner loop for populating the pfn_arry is unmodified.
->>> Furthermore, the dma_range array that you've added is not needed, since
->>> scatterlist entries already have a dma_address field for saving the mapped
->>> address, and dma_unmap_sg() uses that field.
->> I don't use dma_map_sg() here in order to avoid introducing one more
->> loop(e,g dma_map_sg()). We already have a loop to populate
->> cmd_request->dma_range[] and so do the dma map in the same loop.
+On 8/20/2021 2:14 AM, Michael Kelley wrote:
+>> @@ -477,6 +521,15 @@ static int netvsc_init_buf(struct hv_device *device,
+>>   		goto cleanup;
+>>   	}
 >>
-> I'm not seeing where the additional loop comes from.  Storvsc
-> already has a loop through the sgl entries.  Retain that loop and call
-> dma_map_sg() with nents set to 1.  Then the sequence is
-> dma_map_sg() --> dma_map_sg_attrs() --> dma_direct_map_sg() ->
-> dma_direct_map_page().  The latter function will call swiotlb_map()
-> to map all pages of the sgl entry as a single operation.
+>> +	if (hv_isolation_type_snp()) {
+>> +		vaddr = netvsc_remap_buf(net_device->send_buf, buf_size);
+>> +		if (!vaddr)
+>> +			goto cleanup;
+> I don't think this error case is handled correctly.  Doesn't the remapping
+> of the recv buf need to be undone?
+>
 
-After dma_map_sg(), we still need to go through scatter list again to 
-populate payload->rrange.pfn_array. We may just go through the scatter 
-list just once if dma_map_sg() accepts a callback and run it during go
-through scatter list.
+Yes, actually I thought to return error here and free_netvsc_device() 
+will help to unmap recv_buffer finally. But I forget to set ret = 
+-ENOMEM when add netvsc_remap_buf() helper.
+
