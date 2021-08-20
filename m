@@ -2,189 +2,70 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48A733F25E3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Aug 2021 06:32:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E8EF3F28E7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Aug 2021 11:09:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231148AbhHTEdV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 20 Aug 2021 00:33:21 -0400
-Received: from verein.lst.de ([213.95.11.211]:39666 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229457AbhHTEdU (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 20 Aug 2021 00:33:20 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0B8C66736F; Fri, 20 Aug 2021 06:32:38 +0200 (CEST)
-Date:   Fri, 20 Aug 2021 06:32:37 +0200
-From:   "hch@lst.de" <hch@lst.de>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Tianyu Lan <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "pgonda@google.com" <pgonda@google.com>,
-        "martin.b.radev@gmail.com" <martin.b.radev@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "rppt@kernel.org" <rppt@kernel.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "saravanand@fb.com" <saravanand@fb.com>,
-        "krish.sadhukhan@oracle.com" <krish.sadhukhan@oracle.com>,
-        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "tj@kernel.org" <tj@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Subject: Re: [PATCH V3 13/13] HV/Storvsc: Add Isolation VM support for
- storvsc driver
-Message-ID: <20210820043237.GC26450@lst.de>
-References: <20210809175620.720923-1-ltykernel@gmail.com> <20210809175620.720923-14-ltykernel@gmail.com> <MWHPR21MB1593EEF30FFD5C60ED744985D7C09@MWHPR21MB1593.namprd21.prod.outlook.com>
+        id S235426AbhHTJKZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 20 Aug 2021 05:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234622AbhHTJKU (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 20 Aug 2021 05:10:20 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F728C06179A
+        for <linux-hyperv@vger.kernel.org>; Fri, 20 Aug 2021 02:09:42 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id t190so10176113qke.7
+        for <linux-hyperv@vger.kernel.org>; Fri, 20 Aug 2021 02:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=WuDQPRa1pRZEmgy3rMsrN6WxMhN/6RZwdTFnT+vP0Q4=;
+        b=hFJnYYN6W4CsDcIVyUx2ldgP3beMW4jLNH/SGyYzXZ7BCc0KGd1k2ND/ddXkVyFBzR
+         guIjkcbm1NmdCLbZe8HMFSijx65jRHp/SdEKwlTl1Wrrm5GfFB+4ZVS5sv8x1a29xP5U
+         THsPNWQYsSJ5yPuhXe5CCySbf3d8KHk4ieqNWU1QRBTQFpIYNevU0ISY6bHFs3nh/n2S
+         aeYB/F9nFQwaieLCZI54fOmj0REUKAHwNOHq6pxHqVkFNAYAR1ZrLiFgkhfJD1EtDH4X
+         GpetBqXCAI10TRHamsMBRTUQpFk6zzmcbkWEi4ufFi/59ztBcLqf45Sb9NTW5DLLfDf/
+         UjVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=WuDQPRa1pRZEmgy3rMsrN6WxMhN/6RZwdTFnT+vP0Q4=;
+        b=K6DpbyzKtrKYy7+e0Fv0Lce2DS9uMECM6e7qm0UQzkuC5c85BzW1XBBWHD8EDa5n/a
+         sraoC0rXhq0pUmDBRyXZHZgh4gGh91XffrfJqqz+vmkr7ThlEEpJRVRSeHST4roIjK1H
+         cV/CcBFvjMvSNZPicUCqoxmUtLPcgQko5iQX3ZKfnbKmLSZED/DSI+2DfN3NTmZU8fQF
+         zCKJfB9ZYyC1uM+VMESuCiUPBS5FB55WVpkFN3tEIdhtYRBYIH+wGenolL1WHibBNSDb
+         ZQZiuQot5v+xVaVGzuUhciw8S5pxcjW8qxrW+6XuhgunmGQOIHMZzjSdrTYC6DlnzkE5
+         /2qQ==
+X-Gm-Message-State: AOAM5336CWEobtTDCuZmTCMuZadsDBslynw0VrWRbiWu56II83b1XRMw
+        vm5t4puZW8VNih5K+kaT2UiALQW2bUM6C5wa8UQ=
+X-Google-Smtp-Source: ABdhPJyG2xEmxAYbVbw0iUlOEmdXfXcy24m7DXEexS/mITfNOxQp5Wtr3TQ/AKKjTgQq+sXNyeHYc24WCQSN0Ret/HU=
+X-Received: by 2002:a37:846:: with SMTP id 67mr7997191qki.167.1629450581284;
+ Fri, 20 Aug 2021 02:09:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR21MB1593EEF30FFD5C60ED744985D7C09@MWHPR21MB1593.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Received: by 2002:ac8:5184:0:0:0:0:0 with HTTP; Fri, 20 Aug 2021 02:09:40
+ -0700 (PDT)
+Reply-To: geomic123@yahoo.com
+From:   George Micheal <philipowiredu77@gmail.com>
+Date:   Fri, 20 Aug 2021 10:09:40 +0100
+Message-ID: <CAGkcCGHZMGrNP48LcZn4sRuaLsMHSeJnxJjFCOZvC71-qdJ4xg@mail.gmail.com>
+Subject: Waiting for response
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 06:17:40PM +0000, Michael Kelley wrote:
-> > +#define storvsc_dma_map(dev, page, offset, size, dir) \
-> > +	dma_map_page(dev, page, offset, size, dir)
-> > +
-> > +#define storvsc_dma_unmap(dev, dma_range, dir)		\
-> > +		dma_unmap_page(dev, dma_range.dma,	\
-> > +			       dma_range.mapping_size,	\
-> > +			       dir ? DMA_FROM_DEVICE : DMA_TO_DEVICE)
-> > +
-> 
-> Each of these macros is used only once.  IMHO, they don't
-> add a lot of value.  Just coding dma_map/unmap_page()
-> inline would be fine and eliminate these lines of code.
+-- 
+Dear Sir/Madam
 
-Yes, I had the same thought when looking over the code.  Especially
-as macros tend to further obsfucate the code (compared to actual helper
-functions).
+My name is Mr George Michael,i am the Personal Aid to former
+President Baba Yahya Abdul-Aziz Jemus Jammeh the Republic of Gambia in
+west Africa, who is currently in exile with his farmily. I have been
+trying on how to get in touch with you over an important issue
+concerning a project that will be profitable. I anticipate hearing
+from you for more details.
 
-> > +				for (i = 0; i < request->hvpg_count; i++)
-> > +					storvsc_dma_unmap(&device->device,
-> > +						request->dma_range[i],
-> > +						request->vstor_packet.vm_srb.data_in == READ_TYPE);
-> 
-> I think you can directly get the DMA direction as request->cmd->sc_data_direction.
-
-Yes.
-
-> > 
-> > @@ -1824,6 +1848,13 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
-> >  		payload->range.len = length;
-> >  		payload->range.offset = offset_in_hvpg;
-> > 
-> > +		cmd_request->dma_range = kcalloc(hvpg_count,
-> > +				 sizeof(*cmd_request->dma_range),
-> > +				 GFP_ATOMIC);
-> 
-> With this patch, it appears that storvsc_queuecommand() is always
-> doing bounce buffering, even when running in a non-isolated VM.
-> The dma_range is always allocated, and the inner loop below does
-> the dma mapping for every I/O page.  The corresponding code in
-> storvsc_on_channel_callback() that does the dma unmap allows for
-> the dma_range to be NULL, but that never happens.
-
-Maybe I'm missing something in the hyperv code, but I don't think
-dma_map_page would bounce buffer for the non-isolated case.  It
-will just return the physical address.
-
-> > +		if (!cmd_request->dma_range) {
-> > +			ret = -ENOMEM;
-> 
-> The other memory allocation failure in this function returns
-> SCSI_MLQUEUE_DEVICE_BUSY.   It may be debatable as to whether
-> that's the best approach, but that's a topic for a different patch.  I
-> would suggest being consistent and using the same return code
-> here.
-
-Independent of if SCSI_MLQUEUE_DEVICE_BUSY is good (it it a common
-pattern in SCSI drivers), ->queuecommand can't return normal
-negative errnos.  It must return the SCSI_MLQUEUE_* codes or 0.
-We should probably change the return type of the method definition
-to a suitable enum to make this more clear.
-
-> > +				if (offset_in_hvpg) {
-> > +					payload->range.offset = dma & ~HV_HYP_PAGE_MASK;
-> > +					offset_in_hvpg = 0;
-> > +				}
-> 
-> I'm not clear on why payload->range.offset needs to be set again.
-> Even after the dma mapping is done, doesn't the offset in the first
-> page have to be the same?  If it wasn't the same, Hyper-V wouldn't
-> be able to process the PFN list correctly.  In fact, couldn't the above
-> code just always set offset_in_hvpg = 0?
-
-Careful.  DMA mapping is supposed to keep the offset in the page, but
-for that the DMA mapping code needs to know what the device considers a
-"page".  For that the driver needs to set the min_align_mask field in
-struct device_dma_parameters.
-
-> 
-> The whole approach here is to do dma remapping on each individual page
-> of the I/O buffer.  But wouldn't it be possible to use dma_map_sg() to map
-> each scatterlist entry as a unit?  Each scatterlist entry describes a range of
-> physically contiguous memory.  After dma_map_sg(), the resulting dma
-> address must also refer to a physically contiguous range in the swiotlb
-> bounce buffer memory.   So at the top of the "for" loop over the scatterlist
-> entries, do dma_map_sg() if we're in an isolated VM.  Then compute the
-> hvpfn value based on the dma address instead of sg_page().  But everything
-> else is the same, and the inner loop for populating the pfn_arry is unmodified.
-> Furthermore, the dma_range array that you've added is not needed, since
-> scatterlist entries already have a dma_address field for saving the mapped
-> address, and dma_unmap_sg() uses that field.
-
-Yes, I think dma_map_sg is the right thing to use here, probably even
-for the non-isolated case so that we can get the hv drivers out of their
-little corner and into being more like a normal kernel driver.  That
-is, use the scsi_dma_map/scsi_dma_unmap helpers, and then iterate over
-the dma addresses one page at a time using for_each_sg_dma_page.
-
-> 
-> One thing:  There's a maximum swiotlb mapping size, which I think works
-> out to be 256 Kbytes.  See swiotlb_max_mapping_size().  We need to make
-> sure that we don't get a scatterlist entry bigger than this size.  But I think
-> this already happens because you set the device->dma_mask field in
-> Patch 11 of this series.  __scsi_init_queue checks for this setting and
-> sets max_sectors to limits transfers to the max mapping size.
-
-Indeed.
+Yours faithfully
+Mr George Michael
