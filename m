@@ -2,106 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CFF63F40AF
-	for <lists+linux-hyperv@lfdr.de>; Sun, 22 Aug 2021 19:32:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C82E53F4727
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Aug 2021 11:12:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229999AbhHVRdL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 22 Aug 2021 13:33:11 -0400
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:44849 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbhHVRdK (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 22 Aug 2021 13:33:10 -0400
-Received: by mail-wr1-f52.google.com with SMTP id x12so22509007wrr.11;
-        Sun, 22 Aug 2021 10:32:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=U2ZYkA40pDQvD6v7BP8S/vsuoCt3e+GjmDpibd/R/f8=;
-        b=ThgeZafg6mNcqu03QFrCL01Qler5MUTKEMlTpmZbJ3Z97UJlNa0X5bUvJVr00m+hXe
-         nmqrwLSVDlzr8BQ4/hPKHMgnJrg90WrhJ5y93IF+HQ2kPEiNNds6vYQZ9U2QQ8JLCrPV
-         kbx/Y77aMwW7Wikbmv0PI66wpjpppSv2hjbO7zoGkCAt0WER0XP8pxuQDI45I7kHlijg
-         ifFv5rj0aG+mfr05YHX6t3GJk32nJ/+ECCf94gE049PYx6gx4ZygbT6yTIQ/HKbspAqM
-         xC92sUYnizuLJaUPborDwCFS/ZkLPgoNp1yv6QTJq/SbXQsKARffpbOIaXD2hshFL+ws
-         BMHQ==
-X-Gm-Message-State: AOAM531ms/QOHRU75zo0gKQOQd51qlxm9hKK4OvlOhQkNQTcAGxPUvs5
-        zWMAnTqxKry+T0TmOnWi4G4=
-X-Google-Smtp-Source: ABdhPJzlGK6Y3owIPvbStEKoAfSEQVttekbv7KJXierO5W07/bXgh7iA6GkXZ+rRuDftdpDpZKGtiA==
-X-Received: by 2002:adf:cd91:: with SMTP id q17mr9671938wrj.122.1629653548502;
-        Sun, 22 Aug 2021 10:32:28 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id n14sm2252576wrx.10.2021.08.22.10.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Aug 2021 10:32:28 -0700 (PDT)
-Date:   Sun, 22 Aug 2021 17:32:26 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     David Mozes <david.mozes@silk.us>
-Cc:     Wei Liu <wei.liu@kernel.org>, David Moses <mosesster@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        =?utf-8?B?16rXldee16gg15DXkdeV15jXkdeV15w=?= 
-        <tomer432100@gmail.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/hyper-v: guard against cpu mask changes in
- hyperv_flush_tlb_others()
-Message-ID: <20210822173226.ddekpq7jrjwhsguj@liuwe-devbox-debian-v2>
-References: <MWHPR21MB15935468547C25294A253E0AD7F39@MWHPR21MB1593.namprd21.prod.outlook.com>
- <FD8265E6-895E-45CF-9AE3-787FAD669FC8@gmail.com>
- <VI1PR0401MB2415E89B6E3D01B446FD1DACF1FE9@VI1PR0401MB2415.eurprd04.prod.outlook.com>
- <20210817112954.ufjd77ujq5nhmmew@liuwe-devbox-debian-v2>
- <CA+qYZY1U04SkyHo7X+rDeE=nUy_X5nxLfShyuLJFzXnFp2A6uw@mail.gmail.com>
- <VI1PR0401MB24153DEC767B0126B1030E07F1C09@VI1PR0401MB2415.eurprd04.prod.outlook.com>
- <20210822152436.mqfwv3xbqfxy33os@liuwe-devbox-debian-v2>
- <VI1PR0401MB2415F41E0D6B43411779911AF1C39@VI1PR0401MB2415.eurprd04.prod.outlook.com>
+        id S231551AbhHWJNF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 Aug 2021 05:13:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:50178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229726AbhHWJNF (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 23 Aug 2021 05:13:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9987C1FB;
+        Mon, 23 Aug 2021 02:12:22 -0700 (PDT)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C95B3F66F;
+        Mon, 23 Aug 2021 02:12:20 -0700 (PDT)
+Date:   Mon, 23 Aug 2021 10:12:14 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v6 4/8] arm64: PCI: Support root bridge preparation for
+ Hyper-V
+Message-ID: <20210823091214.GA1193@lpieralisi>
+References: <20210726180657.142727-1-boqun.feng@gmail.com>
+ <20210726180657.142727-5-boqun.feng@gmail.com>
+ <YR6DIkdkblL8NUP2@boqun-archlinux>
+ <20210820174947.GB23080@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR0401MB2415F41E0D6B43411779911AF1C39@VI1PR0401MB2415.eurprd04.prod.outlook.com>
+In-Reply-To: <20210820174947.GB23080@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Aug 22, 2021 at 04:25:19PM +0000, David Mozes wrote:
-> This is not visible since we need a very high load to reproduce. 
-> We have tried a lot but can't achieve the desired load 
-> On our kernel with less load, it is not reproducible as well.
+On Fri, Aug 20, 2021 at 06:49:47PM +0100, Catalin Marinas wrote:
+> Hi Boqun,
+> 
+> Sorry, I just got back from holiday and I'm still in the deleting emails
+> mode.
+> 
+> On Fri, Aug 20, 2021 at 12:13:22AM +0800, Boqun Feng wrote:
+> > Appreciate it that you can have a look at this one and patch #4, note
+> > that there exists an alternative solution at[1].
+> > 
+> > The difference is the way used to pass the corresponding ACPI device
+> > pointers for PCI host bridges: currently pci_config_window->parent is
+> > used, and this patch and patch #4 allow the field to be NULL, because
+> > Hyper-V's PCI host bridges don't have ACPI devices, while [1] changes to
+> > use pci_host_bridge->private. And I'm OK with either way, I don't have a
+> > strong opinion here ;-)
+> [...]
+> > [1]: https://lore.kernel.org/lkml/20210811153619.88922-1-boqun.feng@gmail.com/
+> 
+> I'm ok with the arm64 bits in this series and the one you linked above.
+> It's up to Lorenzo if he's happy with how pci-hyperv.c ends up looking,
+> I'm not a PCIe expert. My preference would be for a combined series
+> (this and [1] above).
+> 
+> Happy to ack the arm64 patches in a combined series (if you are going to
+> post one), the changes would look even simpler.
 
-There isn't much upstream can do if there is no way to reproduce the
-issue with an upstream kernel.
+I believe [1] above is an experiment - therefore it is best to stick to
+this series as it is for the time being, pending refactoring that
+requires more time, I would not rush it.
 
-You can check all the code paths which may modify cpumask and analyze
-them. KCSAN may be useful too, but that's only available in 5.8 and
-later.
+If you can ACK the arm64 patches (3,4) please I will pull the series
+into the PCI tree asap.
 
 Thanks,
-Wei.
-
-> 
-> -----Original Message-----
-> From: Wei Liu <wei.liu@kernel.org> 
-> Sent: Sunday, August 22, 2021 6:25 PM
-> To: David Mozes <david.mozes@silk.us>
-> Cc: David Moses <mosesster@gmail.com>; Wei Liu <wei.liu@kernel.org>; Michael Kelley <mikelley@microsoft.com>; תומר אבוטבול <tomer432100@gmail.com>; linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] x86/hyper-v: guard against cpu mask changes in hyperv_flush_tlb_others()
-> 
-> On Thu, Aug 19, 2021 at 07:55:06AM +0000, David Mozes wrote:
-> > Hi Wei ,
-> > I move the print cpumask to other two places after the treatment on the empty mask see below
-> > And I got the folwing:
-> > 
-> > 
-> > Aug 19 02:01:51 c-node05 kernel: [25936.562674] Hyper-V: ERROR_HYPERV2: cpu_last=
-> > Aug 19 02:01:51 c-node05 kernel: [25936.562686] WARNING: CPU: 11 PID: 56432 at arch/x86/include/asm/mshyperv.h:301 hyperv_flush_tlb_others+0x23f/0x7b0
-> > 
-> > So we got empty on different place on the code .
-> > Let me know if you need further information from us.
-> > How you sagest to handle this situation?
-> > 
-> 
-> Please find a way to reproduce this issue with upstream kernels.
-> 
-> Thanks,
-> Wei.
+Lorenzo
