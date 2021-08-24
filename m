@@ -2,133 +2,127 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E27AC3F5DF0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Aug 2021 14:25:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1F823F634F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Aug 2021 18:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237257AbhHXMZv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 24 Aug 2021 08:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230132AbhHXMZv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 24 Aug 2021 08:25:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B73016127B;
-        Tue, 24 Aug 2021 12:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629807907;
-        bh=Edj68RKjcXX2r4keA5K6DEuxfBNmsQDCDQXdGfLJ09I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eKhRQQn91hAhG6loFGwgvUTfuk90J2t693MaoSzkx7rKuyyuInsQaMgZU5awAgMiz
-         yFcJR6cf0jhhpE3vB4dGD9mLksEZzdr9I43oJSix1x0HOnWbmOZno+jd5ADXAhOGGw
-         7VBsLN+b3JDEPIAjmTsNi7pKwnFm4uEa/5d+I/GkW3Y2DHZWzSNnsAGKr2+6tje504
-         gdzarHSnOqsLqPhNt7yJfwf9JTDdZiL33VNsYfFYESXJXz9WctTg+j1c1a6yEUbDsV
-         61jwiPYWc7G6JK/UAycvuK3BgJF/MSVl2HltSH/g+u4GP57GgpVtVUtg+V/PoVe45Y
-         CkH0VXc58XDaQ==
-Date:   Tue, 24 Aug 2021 07:25:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     longli@linuxonhyperv.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, Long Li <longli@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] PCI: hv: Fix a bug on removing child devices on the bus
-Message-ID: <20210824122504.GA3452187@bjorn-Precision-5520>
+        id S233225AbhHXQwB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 24 Aug 2021 12:52:01 -0400
+Received: from mail-centralus01namln1000.outbound.protection.outlook.com ([40.93.8.0]:23291
+        "EHLO outbound.mail.eo.outlook.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232910AbhHXQwA (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 24 Aug 2021 12:52:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AD1B8JAFPNOSvFAPj8izUjDWqk1AmmMnak1G/MhwUXsz58Wawj4Wcf6/pNEUW5fOoM7+gm1txElDGR0VapvOVXNqrk8U/CCFEqVe3qW7f4AI13vQu0JifB+bXmuRizSDkYU4kprVC78cGGneZCH1XUbJbBULW+k5w0GUUSxlqxGqgvkOUrtr1UEKMEvQj+cmB8o6sUbHQZ41ulC053BTgi18c8Gw5985w7A5Hgr6Z46ev9djQkcLzHhNetBD9Yl/1jjkpvgZ7LynyWBfp4oS1soSBXuG4oweKsrPN63UmHQeOJA0wqylSmg7dCAE7tA2XiVd0j5ByWhXOc7yZE7cHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=oeOIVxNDZ3b7MUedfkTeXsYZabkilixzBOjhDqjyki4=;
+ b=RYBocYk2G8t43mSI+3DcLTkwc+zQJYLGeaihtzduv6CFgyXd3GYEDRxIVJBIMZk6AERgWLQOvjL1h+IDpuP7FQBuS4ItjnCSYAB2GsyuWIxZMq06yxSVAO2RB2CKOfPK8rzyZRjq05vl1Pygh1UfXVrOAPrCYLX8P81dU9Fk0IVWxLqlArRKM4GR0H8pL9G+Y+zxvpu32gJprxo82mQyMH09kZACuf1NT80LfFc6ReidH0ZXPNdpNVp5EURrRb1sqIp2uOvBDwb63xTHp6uFSu+fibJXl2JX5TNI+wL1NHcH7+lZR4cMbdMEWPQ46tfF0M9xMoz6rlUOdqT42dfPoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oeOIVxNDZ3b7MUedfkTeXsYZabkilixzBOjhDqjyki4=;
+ b=LIB+ZyILYauh6zVipr6+kdKRjIVnK+spFSk4QWKAUDF56JDRVbRurjaxyqN6WyjPx6nIOvRXj4eEatZ81L0q6iXvAdFaAkf9CvcVAoXw+BHaPFbyf7jdwk2OCX5hBiQtyND4RJ7t+TFNljWoI/CK5wSSISRA1GQ/HzJAT/jSOu4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1340.namprd21.prod.outlook.com (2603:10b6:5:175::19)
+ by DM5PR21MB1765.namprd21.prod.outlook.com (2603:10b6:4:a4::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.2; Tue, 24 Aug
+ 2021 16:46:32 +0000
+Received: from DM6PR21MB1340.namprd21.prod.outlook.com
+ ([fe80::a09a:c9ba:8030:2247]) by DM6PR21MB1340.namprd21.prod.outlook.com
+ ([fe80::a09a:c9ba:8030:2247%9]) with mapi id 15.20.4478.005; Tue, 24 Aug 2021
+ 16:46:32 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        paulros@microsoft.com, shacharr@microsoft.com, olaf@aepfle.de,
+        vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2,net-next, 0/3] net: mana: Add support for EQ sharing
+Date:   Tue, 24 Aug 2021 09:45:58 -0700
+Message-Id: <1629823561-2261-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: CO2PR04CA0133.namprd04.prod.outlook.com (2603:10b6:104::11)
+ To DM6PR21MB1340.namprd21.prod.outlook.com (2603:10b6:5:175::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1629789620-11049-1-git-send-email-longli@linuxonhyperv.com>
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR04CA0133.namprd04.prod.outlook.com (2603:10b6:104::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend Transport; Tue, 24 Aug 2021 16:46:31 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2370bb58-e2e5-4b00-5f21-08d9671eba5e
+X-MS-TrafficTypeDiagnostic: DM5PR21MB1765:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR21MB1765F4F583E2EE41B97A92B0ACC59@DM5PR21MB1765.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GNmg4Ky4IRovxHLS38Eq7rZYFOO1gRGJ8nrP930i8SKupjH21ABSqTK42/efpk9PF3MUgguHeq+FuadPI5bS5jrcK1/ll2WxDPs5CUjYSzCv22/Z0VWAAwV9KE55k8Si/BuGGBq24BbC8EqbWaKkT69x+9JozFm2skSc0ZU/VUPAy8lj38Beqwhr0LE/L2/AFNvn+9nF9i1zgfjkbC0wXVUEKZyLZmhzxx1nbjqEQEy0r4e3mHFM1tD/hVxAoHaY/QgT4MLxa1g8+H05eKRtpOOb3N63fio2nhkr9hn3Vonhz3KMXPVn3awELNPwfJmSetLzh80EzFXTspYTVhkf2BBZc112eZ1P3gPZNyGqShNKUF8PnwmpFQGuPLxPFyK3NsJ05A3OAkTkjwVyiA8d/O4KtPyYAAK+mKjUnyPaHyLL6xdFiIoGXD5z9QfM4JkBkpQpd0dK6ps1tegkA7VoKIMgCgXOkl/zsI6s6vAt7WvkgNIfOItN81M/2UXMQXihNaqA6aHPiiDX+E3jxRcPP876WmnNVkSSKgKSXprNro2uGDYifzrUiSGaoCpuI5/AUZdV4UoBR6t9D2eaIXN5S/aj/N2FX4Hbw82+U+Vmz1MLfejQJloa7+d4ZNEt4+Rd7V66c0JG0/YC6ior87KLlOfALkppTqGxJdh7/o688+oEHMMHCUYU7o3w/FbnsHW3
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1340.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(82950400001)(5660300002)(4744005)(6486002)(316002)(10290500003)(82960400001)(956004)(6512007)(7846003)(36756003)(2616005)(38100700002)(66946007)(38350700002)(66556008)(66476007)(186003)(2906002)(26005)(6666004)(8676002)(83380400001)(4326008)(52116002)(6506007)(8936002)(508600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ADmherk0H3CJOCsLX/kYUfUS9A7Hv1v2ZmLdM9gJR7zG7xKAquHr10IfMB1G?=
+ =?us-ascii?Q?tk2a616mxolnT0M39cUu4ywB9Xtcyv9rSHdELWE7Yb2GYVjaXe3kqltJefR8?=
+ =?us-ascii?Q?7Cg6DY8eiMWWnkzKDjfFOpAlIA8Qw7LFx1ymYHuuI7AlZGORnd1EBzaFfgSH?=
+ =?us-ascii?Q?GTWO4nI4YtJjuGYZOw/ZJ1xCwqA8BLxFctMr4FO3KhiUb4xm4/Lm3UTqsOK5?=
+ =?us-ascii?Q?GbjqZfOWMqNpwtGPYy7LwgzZ69O94qp5A3NYmnCcgkgo32UNpzD2yAPwOmr3?=
+ =?us-ascii?Q?8xDJ8EW7XDG/0AiVDraBJPp1OtwMWEaC9/M5iNZGLULVxVWdlt/PyDRu9sf2?=
+ =?us-ascii?Q?7GkwlMxLFi8WFYvWWe1Z4IYE8PQDs1gUqiQP++861trsv1CaM1ZEMC0UpXuI?=
+ =?us-ascii?Q?TwGPt0QJ5c20aViTNmxySUtRp9UL3i3DfodAE1WKjQX6C07az7dNWwp2/wAR?=
+ =?us-ascii?Q?7xIyNgmznMRh4+03JGpZ93obyRFiBt+7ofV+H5Apzn6WJc6Mk9pghZH51B1x?=
+ =?us-ascii?Q?I4ILRaIRdzoiGRcl0fTPyWLu29EWCxbZcJZ6pBISeE0q6neLxpdYpaFlz5MS?=
+ =?us-ascii?Q?OiHvNAON5nXG7pXVDe+U8Llzt81F7iLKpuacEilIy90wCJQf5nz+AjzYI/dj?=
+ =?us-ascii?Q?so+j14c1Wn7SivkUdSSqHkR5SUhkfE0QMJI2Tm9AFfKQ1aIostmjaySEepa+?=
+ =?us-ascii?Q?vKUlTTC4FPyrbmpdm4JgxOl8YAtgSi5brnoIjqBsqYbb3+vdZCZ/LFeCUIwM?=
+ =?us-ascii?Q?HSSwCEazigDmQKf4OXmsjO8agXC5FiINzNUad9Nxp/3cFhTCC+MGy498zALI?=
+ =?us-ascii?Q?JJPXdw+s10Ze7sSyC6EhNlsPJIzjULaNRT8cw55ThyxS7P1cCCA14RLYv4AC?=
+ =?us-ascii?Q?pptd4aCzFcfLreYd+U/cJ0Wl4KdQKaBHKLHuNVLeJVGYwV61aFrsFxw1NlSd?=
+ =?us-ascii?Q?HWCRZTMKevN45j7ohXhqmMkxOxurUmKB3ZgxcA3KL5kA/BqxUbcwQxhAml1g?=
+ =?us-ascii?Q?hN5spmSH69Lb63poerBwjXgdNxVFxh1argOf2wZI1cQJhStJv7jNax1VkO7U?=
+ =?us-ascii?Q?x1aIsfbjkK6YUrfE29AqPiKGgmxkIOEumU4Jycc+32IPPIuNM9bF5iWuabpY?=
+ =?us-ascii?Q?XdGBry1bKL0VxtZlzXEOIXgLgKbOguk7WXrq1yGuxlGgk2b6xBF5aLLpSQuL?=
+ =?us-ascii?Q?Km4CzVxSrJmXdmBX2rdr7goab99CV2H5qZbFtXpBbspFxFdcnuF3mePLLNEe?=
+ =?us-ascii?Q?Jpoouai/wR3lrz+XQUEBDTCyr6bRpqXM0pVXv3YgWHfncbixEfMchjnQ7Qsk?=
+ =?us-ascii?Q?J7QNchCYgBAbwYUWhulxXSVJ?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2370bb58-e2e5-4b00-5f21-08d9671eba5e
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1340.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2021 16:46:32.6178
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OBmPcYCyxk124nfw63t/JMVfJ7yf/8x9rl+uP0s3Nr1teGwNGjm4L8tsUMyTcwkefEtSa0AfC9xVj7NI5wZseg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB1765
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-"Fix a bug ..." is not a very useful subject line.  It doesn't say
-anything about what the patch *does*.  It doesn't hint at a locking
-change.
+The existing code uses (1 + #vPorts * #Queues) MSIXs, which may exceed
+the device limit.
 
-On Tue, Aug 24, 2021 at 12:20:20AM -0700, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
-> 
-> In hv_pci_bus_exit, the code is holding a spinlock while calling
-> pci_destroy_slot(), which takes a mutex.
+Support EQ sharing, so that multiple vPorts can share the same set of
+MSIXs.
 
-It's unfortunate that slots are not better integrated into the PCI
-core.  I'm sorry your driver even has to worry about this.
-> 
-> This is not safe for spinlock. Fix this by moving the children to be
-> deleted to a list on the stack, and removing them after spinlock is
-> released.
-> 
-> Fixes: 94d22763207a ("PCI: hv: Fix a race condition when removing the device")
-> 
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Krzysztof Wilczyński" <kw@linux.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Michael Kelley <mikelley@microsoft.com>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Haiyang Zhang (3):
+  net: mana: Move NAPI from EQ to CQ
+  net: mana: Add support for EQ sharing
+  net: mana: Add WARN_ON_ONCE in case of CQE read overflow
 
-A lore link to Dan's report would be useful here.
+ drivers/net/ethernet/microsoft/mana/gdma.h    |  32 ++--
+ .../net/ethernet/microsoft/mana/gdma_main.c   |  88 +++-------
+ .../net/ethernet/microsoft/mana/hw_channel.c  |   2 +-
+ drivers/net/ethernet/microsoft/mana/mana.h    |  29 ++--
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 162 ++++++++++--------
+ 5 files changed, 153 insertions(+), 160 deletions(-)
 
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index a53bd8728d0d..d4f3cce18957 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -3220,6 +3220,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
->  	struct hv_pci_dev *hpdev, *tmp;
->  	unsigned long flags;
->  	int ret;
-> +	struct list_head removed;
->  
->  	/*
->  	 * After the host sends the RESCIND_CHANNEL message, it doesn't
-> @@ -3229,9 +3230,18 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
->  		return 0;
->  
->  	if (!keep_devs) {
-> -		/* Delete any children which might still exist. */
-> +		INIT_LIST_HEAD(&removed);
-> +
-> +		/* Move all present children to the list on stack */
->  		spin_lock_irqsave(&hbus->device_list_lock, flags);
-> -		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry) {
-> +		list_for_each_entry_safe(hpdev, tmp, &hbus->children, list_entry)
-> +			list_move_tail(&hpdev->list_entry, &removed);
-> +		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
-> +
-> +		/* Remove all children in the list */
-> +		while (!list_empty(&removed)) {
-> +			hpdev = list_first_entry(&removed, struct hv_pci_dev,
-> +						 list_entry);
->  			list_del(&hpdev->list_entry);
->  			if (hpdev->pci_slot)
->  				pci_destroy_slot(hpdev->pci_slot);
-> @@ -3239,7 +3249,6 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
->  			put_pcichild(hpdev);
->  			put_pcichild(hpdev);
->  		}
-> -		spin_unlock_irqrestore(&hbus->device_list_lock, flags);
->  	}
->  
->  	ret = hv_send_resources_released(hdev);
-> -- 
-> 2.25.1
-> 
+-- 
+2.25.1
+
