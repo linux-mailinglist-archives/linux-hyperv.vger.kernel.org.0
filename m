@@ -2,41 +2,29 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D977E3F5CAD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Aug 2021 13:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E27AC3F5DF0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 Aug 2021 14:25:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236403AbhHXLC6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 24 Aug 2021 07:02:58 -0400
-Received: from mail-wm1-f44.google.com ([209.85.128.44]:42937 "EHLO
-        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236377AbhHXLC4 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 24 Aug 2021 07:02:56 -0400
-Received: by mail-wm1-f44.google.com with SMTP id k20-20020a05600c0b5400b002e87ad6956eso348296wmr.1;
-        Tue, 24 Aug 2021 04:02:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=usZCgUnmy/C/PHJqn4fGun/TO/sNvOWBArrpSOrh8r4=;
-        b=WteQERNJxIOAhkfrOpXlAu5/upcAvdfs6iBWklsaqBSgx6MMOrcOIXfHNWHwFXy1qF
-         mTwoWJPccYlWLP6reEuy0SuZtQmqzERAN3V8jCBxgiFhwjkurjjNlDpQFEJ0WJkBK5Ay
-         HAuwar4yKqletRe028hOXky00suoQtHlXhO/QAAPSAndHFKwt1n4DqpBL3dWob+2K7+U
-         2mC+pH0BgpBIQRVCacI0ny5+97Uj9ocUKC8bMbsGVk8NEd6Hh1JyHJQi4mB17dLI5cN+
-         hACGQTTCBLqnVHTuGaEtrJkcs+mBZRJMxLAjWQq9vcF3mOfQqfcBEtNlFPJl5BLWeZOv
-         QwxA==
-X-Gm-Message-State: AOAM532vD7dvF2Tr8mIEz3dcz1O7VPn0OIha8TegLjx7ouALbF4zmOD9
-        8VM3Z52k7ay1bRgl1CQwUkU=
-X-Google-Smtp-Source: ABdhPJxakZtWQlD5SBo/2sMDWicjLfQc70XCGpLnsqirbb8TG3DtMOAcieJ1RRSC2CuHadbexjsXUA==
-X-Received: by 2002:a1c:f002:: with SMTP id a2mr3564259wmb.79.1629802931140;
-        Tue, 24 Aug 2021 04:02:11 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id z19sm2416079wma.0.2021.08.24.04.02.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 04:02:10 -0700 (PDT)
-Date:   Tue, 24 Aug 2021 11:02:08 +0000
-From:   Wei Liu <wei.liu@kernel.org>
+        id S237257AbhHXMZv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 24 Aug 2021 08:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230132AbhHXMZv (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 24 Aug 2021 08:25:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B73016127B;
+        Tue, 24 Aug 2021 12:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629807907;
+        bh=Edj68RKjcXX2r4keA5K6DEuxfBNmsQDCDQXdGfLJ09I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eKhRQQn91hAhG6loFGwgvUTfuk90J2t693MaoSzkx7rKuyyuInsQaMgZU5awAgMiz
+         yFcJR6cf0jhhpE3vB4dGD9mLksEZzdr9I43oJSix1x0HOnWbmOZno+jd5ADXAhOGGw
+         7VBsLN+b3JDEPIAjmTsNi7pKwnFm4uEa/5d+I/GkW3Y2DHZWzSNnsAGKr2+6tje504
+         gdzarHSnOqsLqPhNt7yJfwf9JTDdZiL33VNsYfFYESXJXz9WctTg+j1c1a6yEUbDsV
+         61jwiPYWc7G6JK/UAycvuK3BgJF/MSVl2HltSH/g+u4GP57GgpVtVUtg+V/PoVe45Y
+         CkH0VXc58XDaQ==
+Date:   Tue, 24 Aug 2021 07:25:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     longli@linuxonhyperv.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org, Long Li <longli@microsoft.com>,
@@ -51,8 +39,7 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Michael Kelley <mikelley@microsoft.com>,
         Dan Carpenter <dan.carpenter@oracle.com>
 Subject: Re: [PATCH] PCI: hv: Fix a bug on removing child devices on the bus
-Message-ID: <20210824110208.xd57oqm5rii4rr4n@liuwe-devbox-debian-v2>
-References: <1629789620-11049-1-git-send-email-longli@linuxonhyperv.com>
+Message-ID: <20210824122504.GA3452187@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -62,11 +49,18 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+"Fix a bug ..." is not a very useful subject line.  It doesn't say
+anything about what the patch *does*.  It doesn't hint at a locking
+change.
+
 On Tue, Aug 24, 2021 at 12:20:20AM -0700, longli@linuxonhyperv.com wrote:
 > From: Long Li <longli@microsoft.com>
 > 
 > In hv_pci_bus_exit, the code is holding a spinlock while calling
 > pci_destroy_slot(), which takes a mutex.
+
+It's unfortunate that slots are not better integrated into the PCI
+core.  I'm sorry your driver even has to worry about this.
 > 
 > This is not safe for spinlock. Fix this by moving the children to be
 > deleted to a list on the stack, and removing them after spinlock is
@@ -86,6 +80,9 @@ On Tue, Aug 24, 2021 at 12:20:20AM -0700, longli@linuxonhyperv.com wrote:
 > Cc: Michael Kelley <mikelley@microsoft.com>
 > Cc: Dan Carpenter <dan.carpenter@oracle.com>
 > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+A lore link to Dan's report would be useful here.
+
 > Signed-off-by: Long Li <longli@microsoft.com>
 > ---
 >  drivers/pci/controller/pci-hyperv.c | 15 ++++++++++++---
@@ -100,10 +97,6 @@ On Tue, Aug 24, 2021 at 12:20:20AM -0700, longli@linuxonhyperv.com wrote:
 >  	unsigned long flags;
 >  	int ret;
 > +	struct list_head removed;
-
-This can be moved to where it is needed -- the if(!keep_dev) branch --
-to limit its scope.
-
 >  
 >  	/*
 >  	 * After the host sends the RESCIND_CHANNEL message, it doesn't
@@ -125,11 +118,6 @@ to limit its scope.
 > +		while (!list_empty(&removed)) {
 > +			hpdev = list_first_entry(&removed, struct hv_pci_dev,
 > +						 list_entry);
-
-list_for_each_entry_safe can also be used here, right?
-
-Wei.
-
 >  			list_del(&hpdev->list_entry);
 >  			if (hpdev->pci_slot)
 >  				pci_destroy_slot(hpdev->pci_slot);
