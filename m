@@ -2,77 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 080023F72D2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Aug 2021 12:20:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42DEB3F7603
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Aug 2021 15:39:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239015AbhHYKVB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Aug 2021 06:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238799AbhHYKUy (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Aug 2021 06:20:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id F228E611EF;
-        Wed, 25 Aug 2021 10:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629886809;
-        bh=ubKSMLaf0Bu90+7mm5SA839aehOR3fneQebmdHeiZc4=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=sW2Y8nLjLCoOUEPK7yBabGXTBeh/WWF+hR42IBcrL6CPlxG9QWuOnvRruwHflg8OT
-         V2L991cNlRJh7pnqg7WWMeJGPaYnHSnH6qWG5QUCh1elAcOriOxYEv8ThwJmCKWOED
-         eQuRnUbXFrObPHf+jD6ANXmIgeQO1XAkwP7J72++Qrjx/nxK/d93g3mzI3/KR/4vfH
-         pNO/AkAprRkcJw/QIWiLy4IFejUiJLcuL74aX7sXfqFxJPAWs1ODUYk1scF6AwPHA9
-         Eca3y0BHWEiFC5qqEyWZK3J7HCqM+EwbpxmD1XIFQIWK3PqLlfTiKt62SCjiTs8ge2
-         RZkzg7HcGCJbw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id E417360A02;
-        Wed, 25 Aug 2021 10:20:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S240225AbhHYNjx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Aug 2021 09:39:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30665 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240182AbhHYNjw (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 25 Aug 2021 09:39:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629898746;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=A/htP7MQwE1WocRnDXZywGTa4cGcMJaiiSpZCc7Gsg0=;
+        b=IJpcVZi/zn0O3biHCD/tJD0H1GPoqOCTbZIJFSXWfaIomV+Gn9u6TzYqTMtdNHkjGrWhmc
+        U/o8QaInD1UJkQ9QlLLDIRWitUZMnyFKcu1dWsveRiqcYRvI7DloarwqJr1EuAzOp0lvMQ
+        UwGJHTRiHj8kyRGkCiuy+Urc1s+95JE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-171-Grq60voaP_KvWG_1_PFfog-1; Wed, 25 Aug 2021 09:39:02 -0400
+X-MC-Unique: Grq60voaP_KvWG_1_PFfog-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F71F1082921;
+        Wed, 25 Aug 2021 13:39:01 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.193.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 84CE51970F;
+        Wed, 25 Aug 2021 13:38:58 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     Andres Beltran <lkmlabelt@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] hv_utils: Set the maximum packet size for VSS driver to the length of the receive buffer
+Date:   Wed, 25 Aug 2021 15:38:57 +0200
+Message-Id: <20210825133857.847866-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH V2,net-next, 0/3] net: mana: Add support for EQ sharing
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <162988680892.8958.11271831152775576933.git-patchwork-notify@kernel.org>
-Date:   Wed, 25 Aug 2021 10:20:08 +0000
-References: <1629823561-2261-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1629823561-2261-1-git-send-email-haiyangz@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        kys@microsoft.com, sthemmin@microsoft.com, paulros@microsoft.com,
-        shacharr@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-        davem@davemloft.net, linux-kernel@vger.kernel.org
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+Commit adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-V out
+of the ring buffer") introduced a notion of maximum packet size and for
+KVM and FCOPY drivers set it to the length of the receive buffer. VSS
+driver wasn't updated, this means that the maximum packet size is now
+VMBUS_DEFAULT_MAX_PKT_SIZE (4k). Apparently, this is not enough. I'm
+observing a packet of 6304 bytes which is being truncated to 4096. When
+VSS driver tries to read next packet from ring buffer it starts from the
+wrong offset and receives garbage.
 
-This series was applied to netdev/net-next.git (refs/heads/master):
+Set the maximum packet size to 'HV_HYP_PAGE_SIZE * 2' in VSS driver. This
+matches the length of the receive buffer and is in line with other utils
+drivers.
 
-On Tue, 24 Aug 2021 09:45:58 -0700 you wrote:
-> The existing code uses (1 + #vPorts * #Queues) MSIXs, which may exceed
-> the device limit.
-> 
-> Support EQ sharing, so that multiple vPorts can share the same set of
-> MSIXs.
-> 
-> Haiyang Zhang (3):
->   net: mana: Move NAPI from EQ to CQ
->   net: mana: Add support for EQ sharing
->   net: mana: Add WARN_ON_ONCE in case of CQE read overflow
-> 
-> [...]
+Fixes: adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ drivers/hv/hv_snapshot.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Here is the summary with links:
-  - [V2,net-next,1/3] net: mana: Move NAPI from EQ to CQ
-    https://git.kernel.org/netdev/net-next/c/e1b5683ff62e
-  - [V2,net-next,2/3] net: mana: Add support for EQ sharing
-    https://git.kernel.org/netdev/net-next/c/1e2d0824a9c3
-  - [V2,net-next,3/3] net: mana: Add WARN_ON_ONCE in case of CQE read overflow
-    https://git.kernel.org/netdev/net-next/c/c1a3e9f98dde
-
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
+index 2267bd4c3472..6018b9d1b1fb 100644
+--- a/drivers/hv/hv_snapshot.c
++++ b/drivers/hv/hv_snapshot.c
+@@ -375,6 +375,7 @@ hv_vss_init(struct hv_util_service *srv)
+ 	}
+ 	recv_buffer = srv->recv_buffer;
+ 	vss_transaction.recv_channel = srv->channel;
++	vss_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
+ 
+ 	/*
+ 	 * When this driver loads, the user level daemon that
+-- 
+2.31.1
 
