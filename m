@@ -2,112 +2,167 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 166153FC9EF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Aug 2021 16:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DEC83FCAAA
+	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Aug 2021 17:20:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237694AbhHaOkV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 31 Aug 2021 10:40:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41885 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236942AbhHaOkV (ORCPT
+        id S238993AbhHaPVT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 31 Aug 2021 11:21:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232559AbhHaPVS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 31 Aug 2021 10:40:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1630420765;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bfeMT4q3hgyi5YOGkW7eJihxmb4hf3hntPENAmZwmcE=;
-        b=D5An7x/bUkIzgh1xWT1tr4FRc6x8/woDsake5KPPBfv7yPh4goMEvfWf1twjOX5gm6Uks7
-        fIcYngFVsfBKS7SmTX0rwjJCSgRsoRtARJegEeG2OZaterJDrgWwBcQB3Bh4UtsITSBAxH
-        oHFYEmC9eXYRdlYmikRvIZMB+r49P7o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-T406k6JaPSuOPpwtun3Xuw-1; Tue, 31 Aug 2021 10:39:22 -0400
-X-MC-Unique: T406k6JaPSuOPpwtun3Xuw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A652C7440;
-        Tue, 31 Aug 2021 14:39:20 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.192.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ACB8C1017E27;
-        Tue, 31 Aug 2021 14:39:17 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     Andres Beltran <lkmlabelt@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Drivers: hv: vmbus: Fix kernel crash upon unbinding a device from uio_hv_generic driver
-Date:   Tue, 31 Aug 2021 16:39:16 +0200
-Message-Id: <20210831143916.144983-1-vkuznets@redhat.com>
+        Tue, 31 Aug 2021 11:21:18 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC794C061575;
+        Tue, 31 Aug 2021 08:20:21 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id q68so17026835pga.9;
+        Tue, 31 Aug 2021 08:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bHjdW+TFSdvqPfi7vbsYmlySYD0qeWma8ZlepyZ1pyA=;
+        b=vKMmKg2JfTEH2r2TLKjdeGLs50EV+1jZUgn5bOxg36v536g3yxVJyUm07AJrRe5zpl
+         tBmmevtBUhZm2otLHjO+t6XZXSqKFmlgJCMuDJmWa/GXj0SoH6IO4AASbNQrCa0nh7qM
+         B7KI7XsRMY0RH1QUZ2VUGE8whdNH2gKq9Z8kV8Ym5rAqaokVsDSlFZJi22dmYwhDgQhT
+         USid/NU4WRGPSTarkDcXxdUTAx9LYuGrR6Nv4PIqqo7PphtFsJN7VG6hLWhI5/qBs3Di
+         +x+drrXZWdPlOXc87KdUarIUyVQNpVlgBbEDUDQ2DCD3gwGIwD/mm2RVJSZt7qbmg0qd
+         mMeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bHjdW+TFSdvqPfi7vbsYmlySYD0qeWma8ZlepyZ1pyA=;
+        b=MzsKrVPlwt7/4rfDPG6EyYEhnRwxeDRkJgwSp9OjclkbRb+2tmxN2Bzw5c53nNNOCv
+         i18wRUyZ1rkGyLOyTbikbWtAwsJAIQCNxgd3tut+0m63FZaiyoCk4SYB7uP3iDs3eVuJ
+         J25jWwQX7SC0zH4cRaf2soACqnB32P33CVFFkCu9++dBszr6lCnlP1wJfMDAvEPa8JRd
+         OZbdd4rQ1fkDlN+2pfjhNoCLwdTXBxEnv9s7aHPZlNxBl67IlEjUU+nH/HQZV3DJIGO6
+         qVIZ7tLQx3cU591mBn2wUaPQ8vfQKfjMl52mryq/+sJb5qRiAz3CF476fPVMAHJ1wS6u
+         XadA==
+X-Gm-Message-State: AOAM531vYGOXn0ln21AVI5BUsNkXL+oUcaCp6/HtEfhg/vvx0B+PCR1O
+        y8lwPBajPooYgQ9g0A0gFf4=
+X-Google-Smtp-Source: ABdhPJzSdF8ZTtYVUbdAWtHig1Ob457a20faxiqqeItSlT8AzOFj7ZlOHpfBE0oc7/WJzromHshTYw==
+X-Received: by 2002:a62:8144:0:b0:3af:7e99:f48f with SMTP id t65-20020a628144000000b003af7e99f48fmr28970407pfd.2.1630423221259;
+        Tue, 31 Aug 2021 08:20:21 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
+        by smtp.gmail.com with ESMTPSA id x8sm7986672pfj.128.2021.08.31.08.20.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Aug 2021 08:20:20 -0700 (PDT)
+Subject: Re: [PATCH V4 00/13] x86/Hyper-V: Add Hyper-V Isolation VM support
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, catalin.marinas@arm.com,
+        will@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, joro@8bytes.org,
+        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, gregkh@linuxfoundation.org,
+        arnd@arndb.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        brijesh.singh@amd.com, thomas.lendacky@amd.com,
+        Tianyu.Lan@microsoft.com, pgonda@google.com,
+        martin.b.radev@gmail.com, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, rppt@kernel.org,
+        hannes@cmpxchg.org, aneesh.kumar@linux.ibm.com,
+        krish.sadhukhan@oracle.com, saravanand@fb.com,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, rientjes@google.com,
+        ardb@kernel.org, michael.h.kelley@microsoft.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, parri.andrea@gmail.com, dave.hansen@intel.com
+References: <20210827172114.414281-1-ltykernel@gmail.com>
+ <20210830120036.GA22005@lst.de>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <91b5e997-8d44-77f0-6519-f574b541ba9f@gmail.com>
+Date:   Tue, 31 Aug 2021 23:20:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20210830120036.GA22005@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The following crash happens when a never-used device is unbound from
-uio_hv_generic driver:
+Hi Christoph:
 
- kernel BUG at mm/slub.c:321!
- invalid opcode: 0000 [#1] SMP PTI
- CPU: 0 PID: 4001 Comm: bash Kdump: loaded Tainted: G               X --------- ---  5.14.0-0.rc2.23.el9.x86_64 #1
- Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
- RIP: 0010:__slab_free+0x1d5/0x3d0
-...
- Call Trace:
-  ? pick_next_task_fair+0x18e/0x3b0
-  ? __cond_resched+0x16/0x40
-  ? vunmap_pmd_range.isra.0+0x154/0x1c0
-  ? __vunmap+0x22d/0x290
-  ? hv_ringbuffer_cleanup+0x36/0x40 [hv_vmbus]
-  kfree+0x331/0x380
-  ? hv_uio_remove+0x43/0x60 [uio_hv_generic]
-  hv_ringbuffer_cleanup+0x36/0x40 [hv_vmbus]
-  vmbus_free_ring+0x21/0x60 [hv_vmbus]
-  hv_uio_remove+0x4f/0x60 [uio_hv_generic]
-  vmbus_remove+0x23/0x30 [hv_vmbus]
-  __device_release_driver+0x17a/0x230
-  device_driver_detach+0x3c/0xa0
-  unbind_store+0x113/0x130
-...
+On 8/30/2021 8:00 PM, Christoph Hellwig wrote:
+> Sorry for the delayed answer, but I look at the vmap_pfn usage in the
+> previous version and tried to come up with a better version.  This
+> mostly untested branch:
+> 
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hyperv-vmap
 
-The problem appears to be that we free 'ring_info->pkt_buffer' twice:
-first, when the device is unbound from in-kernel driver (netvsc in this
-case) and second from hv_uio_remove(). Normally, ring buffer is supposed
-to be re-initialized from hv_uio_open() but this happens when UIO device
-is being opened and this is not guaranteed to happen.
+No problem. Thank you very much for your suggestion patches and they are 
+very helpful.
 
-Generally, it is OK to call hv_ringbuffer_cleanup() twice for the same
-channel (which is being handed over between in-kernel drivers and UIO) even
-if we didn't call hv_ringbuffer_init() in between. We, however, need to
-avoid kfree() call for an already freed pointer.
 
-Fixes: adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- drivers/hv/ring_buffer.c | 1 +
- 1 file changed, 1 insertion(+)
+> 
+> get us there for swiotlb and the channel infrastructure  I've started
+> looking at the network driver and didn't get anywhere due to other work.
+> 
+> As far as I can tell the network driver does gigantic multi-megabyte
+> vmalloc allocation for the send and receive buffers, which are then
+> passed to the hardware, but always copied to/from when interacting
+> with the networking stack.  Did I see that right?  Are these big
+> buffers actually required unlike the normal buffer management schemes
+> in other Linux network drivers?
 
-diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-index 2aee356840a2..314015d9e912 100644
---- a/drivers/hv/ring_buffer.c
-+++ b/drivers/hv/ring_buffer.c
-@@ -245,6 +245,7 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info *ring_info)
- 	mutex_unlock(&ring_info->ring_buffer_mutex);
- 
- 	kfree(ring_info->pkt_buffer);
-+	ring_info->pkt_buffer = NULL;
- 	ring_info->pkt_buffer_size = 0;
- }
- 
--- 
-2.31.1
 
+For send packet, netvsc tries batching packet in send buffer if 
+possible. It passes the original skb pages directly to
+hypervisor when send buffer is not enough or packet length is larger 
+than section size. These packets are sent via 
+vmbus_sendpacket_pagebuffer() finally. Please see netvsc_send() for 
+detail. The following code is to check whether the packet could be 
+copied into send buffer. If not, the packet will be sent with original 
+skb pages.
+
+1239        /* batch packets in send buffer if possible */
+1240        msdp = &nvchan->msd;
+1241        if (msdp->pkt)
+1242                msd_len = msdp->pkt->total_data_buflen;
+1243
+1244        try_batch =  msd_len > 0 && msdp->count < net_device->max_pkt;
+1245        if (try_batch && msd_len + pktlen + net_device->pkt_align <
+1246            net_device->send_section_size) {
+1247                section_index = msdp->pkt->send_buf_index;
+1248
+1249        } else if (try_batch && msd_len + packet->rmsg_size <
+1250                   net_device->send_section_size) {
+1251                section_index = msdp->pkt->send_buf_index;
+1252                packet->cp_partial = true;
+1253
+1254        } else if (pktlen + net_device->pkt_align <
+1255                   net_device->send_section_size) {
+1256                section_index = 
+netvsc_get_next_send_section(net_device);
+1257                if (unlikely(section_index == NETVSC_INVALID_INDEX)) {
+1258                        ++ndev_ctx->eth_stats.tx_send_full;
+1259                } else {
+1260                        move_pkt_msd(&msd_send, &msd_skb, msdp);
+1261                        msd_len = 0;
+1262                }
+1263        }
+1264
+
+
+
+For receive packet, the data is always copied from recv buffer.
+
+> 
+> If so I suspect the best way to allocate them is by not using vmalloc
+> but just discontiguous pages, and then use kmap_local_pfn where the
+> PFN includes the share_gpa offset when actually copying from/to the
+> skbs.
+> 
+When netvsc needs to copy packet data to send buffer, it needs to 
+caculate position with section_index and send_section_size.
+Please seee netvsc_copy_to_send_buf() detail. So the contiguous virtual 
+address of send buffer is necessary to copy data and batch packets.
