@@ -2,141 +2,92 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A9FB3FDE96
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Sep 2021 17:25:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC6E23FE212
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Sep 2021 20:11:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343713AbhIAP0K (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 1 Sep 2021 11:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42274 "EHLO
+        id S1345023AbhIASMg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 1 Sep 2021 14:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343726AbhIAP0J (ORCPT
+        with ESMTP id S1346649AbhIASMU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 1 Sep 2021 11:26:09 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861D5C061575;
-        Wed,  1 Sep 2021 08:25:12 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id q17so4400163edv.2;
-        Wed, 01 Sep 2021 08:25:12 -0700 (PDT)
+        Wed, 1 Sep 2021 14:12:20 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47C21C0612A9
+        for <linux-hyperv@vger.kernel.org>; Wed,  1 Sep 2021 11:11:21 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id z24-20020a17090acb1800b0018e87a24300so364181pjt.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 01 Sep 2021 11:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=b8PqCqBTpRcV16xsLLDnhr5LuVBDAMakK1uy+SsVjMM=;
-        b=FOQzkMv5slkXaelBQlgnyGuCYkgbB2QLK2471cEIXDAHGND9IRukuMHgsbTp0cNNWw
-         8D4kBijOvqPBF+plun9g6qP6ZSfGRxiNvY7kU9Y86wABVJ/P8b0ZvjJH/OO3zwvAnLDk
-         mTluMHYEe6nRyfxjoqLEm8Y2AbXakmiaFDXWM/5Lpnl87ko+czwPM7dw/QhpHYs9ErcA
-         bxzy7QYMRwvbqYgCeWdkBm3InMz/vFSurqF3Rtjao/00nIwiUp3TtERTHMaGOYCf2kl3
-         oWPtPaSwr3jjF33GcL1YSM82Y9t+wstiS848oHkv/f/GKL/Jr6oW8Pp33F/5UPFhYp00
-         1zNA==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=LD3mpzy1s09M3e/Eheelu/QMtbN6lrYJQ+S1BsYhmG4zP9OQuKOeD1zHV2lZaK7Hdt
+         vXoBMumPRACuZhnwd8TYAFIvdImPe0Zn4DA41GnzHGsnpDZPE0wUFWVFNzgpxF6bh6D8
+         CVxTiiIN7w8BVpPirFLytZKK2cFqqV6q9qR8cw4XmdYYgGZs+MdnDeP+neEr/SbnLI2h
+         mwT6gqJ8+HvNCQei5Zu6b3U+/YcUOepEDfVn6t0IkNG5YzxTV8mH8IqZ4zEsqBchdgxI
+         E/zGH3KCiuS7UdfEMBVKPbpzhhPyh4quLRALvE4iCHtswqSZDgWUuzksodIw8OWwGR1Z
+         0RlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=b8PqCqBTpRcV16xsLLDnhr5LuVBDAMakK1uy+SsVjMM=;
-        b=Mvw06/21g8eDPBBZZvAjpFhUt5eJa79vTbGcDpp+wstRgVnvUUPmd44+Zhmx9zCs0G
-         5ifHgz6GsKewCfio5LNcJszi6gV+4G36YuqAX4bYOA6W3KqY4mJh+lAOSP7O3VIxYJdN
-         iRXYqwmFYOzzpi1iIOcZ1OhwxnwUTiJbmcJdlcxYFbR2oIFIGT87nWa8caD3Wmz5LHW/
-         DBWJgI3otMyoiNVSbsqgObqBjYBBygGRzmtn6faKGUeA00jDfLn/dtcGdo9f9pw6LdsO
-         uAK4+CxeGnVUdiO/yqUsLoTg7nZNvuU+dbm2kF7+ehBuImbVdH/WewEGkeEiP0GgAu0p
-         slpg==
-X-Gm-Message-State: AOAM5314iBlxvHPRZaHgXOgW0W2makS3ufheyTJsE/j5I4SwlZFP/Gal
-        N0rmSFrjgelayL7VurzoQTS9Bir2dHHvGyJG
-X-Google-Smtp-Source: ABdhPJxWOum36f060/87nuVq8ONvaORBy5QFGXZod7eQu7pkvd1J1WQkC/4bV4H+8/c0e5PofSm1Cw==
-X-Received: by 2002:a05:6402:cab:: with SMTP id cn11mr113964edb.293.1630509910872;
-        Wed, 01 Sep 2021 08:25:10 -0700 (PDT)
-Received: from anparri (host-79-24-20-93.retail.telecomitalia.it. [79.24.20.93])
-        by smtp.gmail.com with ESMTPSA id x9sm95851edj.95.2021.09.01.08.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Sep 2021 08:25:10 -0700 (PDT)
-Date:   Wed, 1 Sep 2021 17:25:02 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, Andres Beltran <lkmlabelt@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Fix kernel crash upon unbinding a
- device from uio_hv_generic driver
-Message-ID: <20210901152502.GA4349@anparri>
-References: <20210831143916.144983-1-vkuznets@redhat.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=hAYVR8h8Azdn4TP9RjzsVm9vY1NLDHjMZDzjt41qQy20sFiOOKmwVSjbfFcZy3PqJN
+         jWTgX6wXhFCK23E2xN0yOQYJsgWJb/o3Kiz8GT3V0Yu4sAjqH2vUAVQhrmBQVnijgZQE
+         eVQ3RvnMwWg35xwupW3GftZxS2NrJ9mciFlm6VFAFSWuDGmRtNR1srtp70PvwT1+dDR2
+         P84WcyVdNQKRmWdzeU2LU3pD56z7gJFSw0XAb2ugIqIBthRfextPNh9NQmJ+4LVttRBA
+         XLpDopI4pNpCrrRshHpMJMBIUGnmXNhghk2D3Wc1/2nLgtaLdQwkMG88XD9mrA2cX/BF
+         x4qw==
+X-Gm-Message-State: AOAM532PuM8KczikugA5UzbklvEQX9YDrYbTUdFIGoQTzVIS4NECkGrl
+        aIOuRmL6qV+XeOoGDxSe3arvz2Z1i5XNEItTjZqtmWyIztonWQ==
+X-Google-Smtp-Source: ABdhPJwbbBYGjUEQSS3Bb7EfYk34O3AVuG22pVIF78fkATQG8c+PQmeHgcc35+YrriS74Wl5STB8JbzOasp+8kCVBlk=
+X-Received: by 2002:a67:8c5:: with SMTP id 188mr1017695vsi.4.1630519870726;
+ Wed, 01 Sep 2021 11:11:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210831143916.144983-1-vkuznets@redhat.com>
+Received: by 2002:ab0:740d:0:0:0:0:0 with HTTP; Wed, 1 Sep 2021 11:11:10 -0700 (PDT)
+From:   CorisBank International <corisbankintlbf@gmail.com>
+Date:   Wed, 1 Sep 2021 11:11:10 -0700
+Message-ID: <CA+25hwzjLgVdtDXYWeuqFBTvAbpc4oxK0dW54s7tjGNyU_m0ow@mail.gmail.com>
+Subject: CORISBANK INTERNATIONAL OFFICIAL NOTIFICATION
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 31, 2021 at 04:39:16PM +0200, Vitaly Kuznetsov wrote:
-> The following crash happens when a never-used device is unbound from
-> uio_hv_generic driver:
-> 
->  kernel BUG at mm/slub.c:321!
->  invalid opcode: 0000 [#1] SMP PTI
->  CPU: 0 PID: 4001 Comm: bash Kdump: loaded Tainted: G               X --------- ---  5.14.0-0.rc2.23.el9.x86_64 #1
->  Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
->  RIP: 0010:__slab_free+0x1d5/0x3d0
-> ...
->  Call Trace:
->   ? pick_next_task_fair+0x18e/0x3b0
->   ? __cond_resched+0x16/0x40
->   ? vunmap_pmd_range.isra.0+0x154/0x1c0
->   ? __vunmap+0x22d/0x290
->   ? hv_ringbuffer_cleanup+0x36/0x40 [hv_vmbus]
->   kfree+0x331/0x380
->   ? hv_uio_remove+0x43/0x60 [uio_hv_generic]
->   hv_ringbuffer_cleanup+0x36/0x40 [hv_vmbus]
->   vmbus_free_ring+0x21/0x60 [hv_vmbus]
->   hv_uio_remove+0x4f/0x60 [uio_hv_generic]
->   vmbus_remove+0x23/0x30 [hv_vmbus]
->   __device_release_driver+0x17a/0x230
->   device_driver_detach+0x3c/0xa0
->   unbind_store+0x113/0x130
-> ...
-> 
-> The problem appears to be that we free 'ring_info->pkt_buffer' twice:
-> first, when the device is unbound from in-kernel driver (netvsc in this
-> case) and second from hv_uio_remove(). Normally, ring buffer is supposed
-> to be re-initialized from hv_uio_open() but this happens when UIO device
-> is being opened and this is not guaranteed to happen.
-> 
-> Generally, it is OK to call hv_ringbuffer_cleanup() twice for the same
-> channel (which is being handed over between in-kernel drivers and UIO) even
-> if we didn't call hv_ringbuffer_init() in between. We, however, need to
-> avoid kfree() call for an already freed pointer.
-> 
-> Fixes: adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer")
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
-LGTM.
-
-Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
-
-ae6935ed7d424f appears to have anticipated this problem on ->ring_buffer
-and adopted the solution proposed here by Vitaly.
-
-  Andrea
+Att: Client
 
 
-> ---
->  drivers/hv/ring_buffer.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 2aee356840a2..314015d9e912 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -245,6 +245,7 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info *ring_info)
->  	mutex_unlock(&ring_info->ring_buffer_mutex);
->  
->  	kfree(ring_info->pkt_buffer);
-> +	ring_info->pkt_buffer = NULL;
->  	ring_info->pkt_buffer_size = 0;
->  }
->  
-> -- 
-> 2.31.1
-> 
+CORISBANK INTERNATIONAL URGENT NOTIFICATION
+
+Notification / Notification/ Notification
+
+Note, We are writing to inform you officially that Finally the Central
+Bank Financial Authority have approved to transfer your $8.2Million
+which was signed by late Mrs Rose Banneth the COVID.19 victim to
+transfer to you, Late Mrs Rose Banneth the France Lady contacted us to
+transfer her fund in our bank to you for Orphanage work before she
+died by the COVID.19
+and as it is now, you will receive your fund through our corresponding
+bank in Dubai [Emirate Investment Bank ] for security reason. Please
+you should reconfirm your details to receive the $8.2Million.
+
+Name, Country, Address, occupations, Age, Telephone number, account
+Details so that we can immediately forward to the World Bank to
+transfer the fund.
+You are advised to comply on timely manner to permit this esteem bank
+transfer your fund as scheduled.
+
+We look forward to serving you better
+Your Financial Comfort Is A Priority
+Thank you for choosing Corisbank International.
+
+Sincerely,
+
+----
+
+Mr Diakarya Ouattara
+Managing Director
+Bank Coris
+Burkina Faso
++226 556 163 37
+financial_bf_info@accountant.com
