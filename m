@@ -2,180 +2,155 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 353BB403FF6
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Sep 2021 21:42:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B854404519
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Sep 2021 07:39:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352081AbhIHTn6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Sep 2021 15:43:58 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:42526 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235043AbhIHTn6 (ORCPT
+        id S1350827AbhIIFjs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Sep 2021 01:39:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31555 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1350785AbhIIFjr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Sep 2021 15:43:58 -0400
-Received: by mail-wm1-f42.google.com with SMTP id u19-20020a7bc053000000b002f8d045b2caso2386846wmc.1;
-        Wed, 08 Sep 2021 12:42:49 -0700 (PDT)
+        Thu, 9 Sep 2021 01:39:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631165918;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BfCn6Kdj9U6+wyRq6rGqDZVU0uEjDmVJjKfyDttwqj4=;
+        b=VmTMOcDnTb7EW0iAI6E5i+0DLaA5qrr/M1gBc+zIpHxt19SCB6PsWUBolj/vVy5GQfMPfr
+        dhdU0pcSZx34o7N8Tr9yElBssgcZjtpKF9rDZYQsnH1wEzf5vMutz0c2WKmPNeyzpWuq5m
+        UbTuQ38rihJJjP6bOtjoEYOxrucOvwg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334-7Mo476ICP46ZckbDU05fNA-1; Thu, 09 Sep 2021 01:38:37 -0400
+X-MC-Unique: 7Mo476ICP46ZckbDU05fNA-1
+Received: by mail-wm1-f70.google.com with SMTP id r126-20020a1c4484000000b002e8858850abso338826wma.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 08 Sep 2021 22:38:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=72cbIXiARmC/LGx5R5SCOiunP5Yq1knueIiyFbv2M/I=;
-        b=QL4bhE574NieBqz8VqeiI8SZZDOKBs87b8oi3Pc7ORMI5XPQwjIOLUolH2H1srY0F3
-         h2Qk0vfYm5kf6+5GJXGPSppXjFNNUlAT7pz2mkNoscon+2DgT9jDz+XvIYXmIp3RfkST
-         sk8rSCFZB4qb53vDBw7H1dADeNPgHDeVcBgDfPC12WHF0d97yZQEY9XSXnLKSq2SgAGa
-         +fo4je1zFa6XiN5aCHHTal20T/zudg0bz35wfuBUf5D08E2Omy6kdzjMOpd7sULIlGrh
-         2rC8CI9N345XauKvdNFHScHcaJWAdrH4PsHjMR06HMlS9tkGT6PiXrXhVtq72ToqeP1y
-         29IA==
-X-Gm-Message-State: AOAM533NUk7xlxXFqXF398DX94yLbIDhZlFx0gaZvCxsj/TYdOMMo/Nn
-        oiIbJAzq4zxlHpNJTzB3pcy/T21JsQA=
-X-Google-Smtp-Source: ABdhPJxORa+Gk9DViep67me9GiWA6c7ti4fTvWUPE9sIi9wdgWUz4rjQyofoOTC+3IpIj2dtwDVh3A==
-X-Received: by 2002:a1c:f314:: with SMTP id q20mr5095687wmq.154.1631130168786;
-        Wed, 08 Sep 2021 12:42:48 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id p5sm72852wrd.25.2021.09.08.12.42.47
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=BfCn6Kdj9U6+wyRq6rGqDZVU0uEjDmVJjKfyDttwqj4=;
+        b=1ObPvMiBGs9LkVTMd+1c+TloStvTb21KNw3WjDXU0MrBw6DwMyIdu2eA9CmZBZhYr2
+         2w2HMR2gtUAErMx/+1zYTCfYeR0E+dr8tRcwwmFKkcJMm59THZv81ONk/yDpoJf6VCho
+         O+ZMYLppwHLNNvKf5QE21qcKsQwRN0KSOTG2FXipOMDdM+2Xnu5iy1IwYej6tAnYL4dg
+         22k0K4k+8WUcBrTgJzCk1qYX2JN0nUB6VzmKPYacnrLDP//vMeEiQ8ZkkCfBVux+On9k
+         yO4D1emApAeCCqCz6z51TuvhAILiajfh3bDTKemKpTsPQd4po3RPg5eMdcN6Owod76rP
+         lMhQ==
+X-Gm-Message-State: AOAM530bqMI5L5K13KBuM48AFrAsUws6h8BcZYGiQJ3ZvcPmmws4RuKp
+        GXPEp9jKf1rv0X2OSdeaYLQSl0NiJz/DX8OnbrFlpK4px9QWFpwfm3y5PTtEQa+Zn0q7XIS30NO
+        9OkGMizf1uGQXxm/L4todS3mO
+X-Received: by 2002:a05:600c:4ece:: with SMTP id g14mr949964wmq.6.1631165915883;
+        Wed, 08 Sep 2021 22:38:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxiQhiOIlpAuX8rpt3T7XtP8J6o3lWikUicYoSmXpx5dZWBi4uCbKfDGS7P3ZII3II9uJU7Ig==
+X-Received: by 2002:a05:600c:4ece:: with SMTP id g14mr949943wmq.6.1631165915665;
+        Wed, 08 Sep 2021 22:38:35 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id t14sm650634wrw.59.2021.09.08.22.38.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Sep 2021 12:42:48 -0700 (PDT)
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+        Wed, 08 Sep 2021 22:38:35 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
 Cc:     Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
         haiyangz@microsoft.com, decui@microsoft.com,
         sthemmin@microsoft.com, Wei Liu <wei.liu@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
-        64-BIT))
-Subject: [PATCH 2/2] x86/hyperv: remove on-stack cpumask from hv_send_ipi_mask_allbutself
-Date:   Wed,  8 Sep 2021 19:42:43 +0000
-Message-Id: <20210908194243.238523-3-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210908194243.238523-1-wei.liu@kernel.org>
+        Arnd Bergmann <arnd@arndb.de>,
+        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
+        <linux-arch@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] asm-generic/hyperv: provide cpumask_to_vpset_noself
+In-Reply-To: <20210908194243.238523-2-wei.liu@kernel.org>
 References: <20210908194243.238523-1-wei.liu@kernel.org>
+ <20210908194243.238523-2-wei.liu@kernel.org>
+Date:   Thu, 09 Sep 2021 07:38:28 +0200
+Message-ID: <871r5y48bv.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-It is not a good practice to allocate a cpumask on stack, given it may
-consume up to 1 kilobytes of stack space if the kernel is configured to
-have 8192 cpus.
+Wei Liu <wei.liu@kernel.org> writes:
 
-The internal helper functions __send_ipi_mask{,_ex} need to loop over
-the provided mask anyway, so it is not too difficult to skip `self'
-there. We can thus do away with the on-stack cpumask in
-hv_send_ipi_mask_allbutself.
+> This is a new variant which removes `self' cpu from the vpset. It will
+> be used in Hyper-V enlightened IPI code.
+>
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+> Provide a new variant instead of adding a new parameter because it makes
+> it easier to backport -- we don't need to fix the users of
+> cpumask_to_vpset.
+> ---
+>  include/asm-generic/mshyperv.h | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 9a000ba2bb75..d89690ee95aa 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -184,10 +184,12 @@ static inline int hv_cpu_number_to_vp_number(int cpu_number)
+>  	return hv_vp_index[cpu_number];
+>  }
+>  
+> -static inline int cpumask_to_vpset(struct hv_vpset *vpset,
+> -				    const struct cpumask *cpus)
+> +static inline int cpumask_to_vpset_ex(struct hv_vpset *vpset,
 
-Adjust call sites of __send_ipi_mask as needed.
+I'd suggest to avoid '_ex' suffix as we use it for 'extended hypercalls'
+(e.g. __send_ipi_mask_ex). Assuming nobody needs to call
+cpumask_to_vpset_ex() directly, should we just go with
+__cpumask_to_vpset() instead?
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Fixes: 68bb7bfb7985d ("X86/Hyper-V: Enable IPI enlightenments")
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
----
- arch/x86/hyperv/hv_apic.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+> +				    const struct cpumask *cpus,
+> +				    bool exclude_self)
+>  {
+>  	int cpu, vcpu, vcpu_bank, vcpu_offset, nr_bank = 1;
+> +	int this_cpu = smp_processor_id();
+>  
+>  	/* valid_bank_mask can represent up to 64 banks */
+>  	if (hv_max_vp_index / 64 >= 64)
+> @@ -205,6 +207,8 @@ static inline int cpumask_to_vpset(struct hv_vpset *vpset,
+>  	 * Some banks may end up being empty but this is acceptable.
+>  	 */
+>  	for_each_cpu(cpu, cpus) {
+> +		if (exclude_self && cpu == this_cpu)
+> +			continue;
+>  		vcpu = hv_cpu_number_to_vp_number(cpu);
+>  		if (vcpu == VP_INVAL)
+>  			return -1;
+> @@ -219,6 +223,18 @@ static inline int cpumask_to_vpset(struct hv_vpset *vpset,
+>  	return nr_bank;
+>  }
+>  
+> +static inline int cpumask_to_vpset(struct hv_vpset *vpset,
+> +				    const struct cpumask *cpus)
+> +{
+> +	return cpumask_to_vpset_ex(vpset, cpus, false);
+> +}
+> +
+> +static inline int cpumask_to_vpset_noself(struct hv_vpset *vpset,
+> +				    const struct cpumask *cpus)
+> +{
+> +	return cpumask_to_vpset_ex(vpset, cpus, true);
 
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index 90e682a92820..911cd41d931c 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -99,7 +99,8 @@ static void hv_apic_eoi_write(u32 reg, u32 val)
- /*
-  * IPI implementation on Hyper-V.
-  */
--static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
-+static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
-+		bool exclude_self)
- {
- 	struct hv_send_ipi_ex **arg;
- 	struct hv_send_ipi_ex *ipi_arg;
-@@ -123,7 +124,10 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
- 
- 	if (!cpumask_equal(mask, cpu_present_mask)) {
- 		ipi_arg->vp_set.format = HV_GENERIC_SET_SPARSE_4K;
--		nr_bank = cpumask_to_vpset(&(ipi_arg->vp_set), mask);
-+		if (exclude_self)
-+			nr_bank = cpumask_to_vpset_noself(&(ipi_arg->vp_set), mask);
-+		else
-+			nr_bank = cpumask_to_vpset(&(ipi_arg->vp_set), mask);
- 	}
- 	if (nr_bank < 0)
- 		goto ipi_mask_ex_done;
-@@ -138,9 +142,10 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
- 	return hv_result_success(status);
- }
- 
--static bool __send_ipi_mask(const struct cpumask *mask, int vector)
-+static bool __send_ipi_mask(const struct cpumask *mask, int vector,
-+		bool exclude_self)
- {
--	int cur_cpu, vcpu;
-+	int cur_cpu, vcpu, this_cpu = smp_processor_id();
- 	struct hv_send_ipi ipi_arg;
- 	u64 status;
- 
-@@ -172,6 +177,8 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
- 	ipi_arg.cpu_mask = 0;
- 
- 	for_each_cpu(cur_cpu, mask) {
-+		if (exclude_self && cur_cpu == this_cpu)
-+			continue;
- 		vcpu = hv_cpu_number_to_vp_number(cur_cpu);
- 		if (vcpu == VP_INVAL)
- 			return false;
-@@ -191,7 +198,7 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
- 	return hv_result_success(status);
- 
- do_ex_hypercall:
--	return __send_ipi_mask_ex(mask, vector);
-+	return __send_ipi_mask_ex(mask, vector, exclude_self);
- }
- 
- static bool __send_ipi_one(int cpu, int vector)
-@@ -208,7 +215,7 @@ static bool __send_ipi_one(int cpu, int vector)
- 		return false;
- 
- 	if (vp >= 64)
--		return __send_ipi_mask_ex(cpumask_of(cpu), vector);
-+		return __send_ipi_mask_ex(cpumask_of(cpu), vector, false);
- 
- 	status = hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
- 	return hv_result_success(status);
-@@ -222,20 +229,13 @@ static void hv_send_ipi(int cpu, int vector)
- 
- static void hv_send_ipi_mask(const struct cpumask *mask, int vector)
- {
--	if (!__send_ipi_mask(mask, vector))
-+	if (!__send_ipi_mask(mask, vector, false))
- 		orig_apic.send_IPI_mask(mask, vector);
- }
- 
- static void hv_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
- {
--	unsigned int this_cpu = smp_processor_id();
--	struct cpumask new_mask;
--	const struct cpumask *local_mask;
--
--	cpumask_copy(&new_mask, mask);
--	cpumask_clear_cpu(this_cpu, &new_mask);
--	local_mask = &new_mask;
--	if (!__send_ipi_mask(local_mask, vector))
-+	if (!__send_ipi_mask(mask, vector, true))
- 		orig_apic.send_IPI_mask_allbutself(mask, vector);
- }
- 
-@@ -246,7 +246,7 @@ static void hv_send_ipi_allbutself(int vector)
- 
- static void hv_send_ipi_all(int vector)
- {
--	if (!__send_ipi_mask(cpu_online_mask, vector))
-+	if (!__send_ipi_mask(cpu_online_mask, vector, false))
- 		orig_apic.send_IPI_all(vector);
- }
- 
+
+We need to make sure this is called with preemption disabled. We
+could've just swapped smp_processor_id() for get_cpu() in
+cpumask_to_vpset_ex() but this is hardly a solution: we can get
+preempted right after put_cpu() so it's really the caller of this
+function which needs to be protected.
+
+TL;DR: I suggest we add 'WARN_ON_ONCE(preemptible());' or something like
+this here to catch wrong usage.
+
+> +}
+> +
+>  void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
+>  bool hv_is_hyperv_initialized(void);
+>  bool hv_is_hibernation_supported(void);
+
 -- 
-2.30.2
+Vitaly
 
