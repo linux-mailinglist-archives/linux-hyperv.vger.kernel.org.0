@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 088C14049A6
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Sep 2021 13:42:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4955404E13
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Sep 2021 14:16:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236126AbhIILm7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 9 Sep 2021 07:42:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46150 "EHLO mail.kernel.org"
+        id S1345707AbhIIMII (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Sep 2021 08:08:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236388AbhIILml (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 9 Sep 2021 07:42:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3030C61131;
-        Thu,  9 Sep 2021 11:41:31 +0000 (UTC)
+        id S1346564AbhIIMDW (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 9 Sep 2021 08:03:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D47C61179;
+        Thu,  9 Sep 2021 11:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631187692;
-        bh=50YXhMmBJBhR55rbNXd7AEWdWQP1PFZ8gTBGr6jGd08=;
+        s=k20201202; t=1631188013;
+        bh=oTepdI6ryG6UI04Rity1xJVC6Jkt6F1a8CWCPuDrM8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHfVjze/iFTwc0PJRkAt7f1hNn+uAPj/ZAVhQH+2Xtbd/4bZhL6S2qnY6nAMN0mfW
-         qcdhtXwpWzlVPz3lskThVV/3QyqVxmx4B3ANELaPO4i7486U1xEuZZdFPipnUbSvx9
-         yMpCvryycTVZIeFS2JCchvZCuX5xUIPTA/wuPomgrjNDs0Va+97e3wb+tDP0kWwi4g
-         GdhKk46e2LdVSxUqvWqrbYwLM/F03SZ8zLb6dTl779gNVRIMEDEKdW6b6zfMmt7fmn
-         DJwkfipWBFeUwwWdk93O3p2CyNm7aebPPkK7/azZxrQLCObpKiFjzlEKY+PCMI4hl0
-         4Cc0sOxrwbyPA==
+        b=gJUi0MddRm3BHMtBGOKxS5Q9h2A8RsxOEm0oEEYJRfojzJhkyJXKuVk8zvxUgpR6G
+         I3MYKezLXgiVbSdZ5VC2/FDdl3N4tJzWI6RZjXXSfZvXR+aop2esR1NYP0szes6fBp
+         4IzhwIRgqyZIuNfcR6ltvVkTyCyYqS7UNndnQRMdXLShOAtZCT0ItREqKnSmaRaI0z
+         Z0jXCg8jQOJFXSgtg/8FW//8wVnCAql/SMtGPOgHiBjEPBSjl06TOAhabCBvirlqL4
+         meFcdch+ArMo8ocWG6o8UBFklwISyvFE210CwknsDq+uaex+nauXhoopAX3vTPFp1M
+         NZCye98+Vwv8g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ani Sinha <ani@anisinha.ca>,
         Michael Kelley <mikelley@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
         linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.14 019/252] x86/hyperv: fix for unwanted manipulation of sched_clock when TSC marked unstable
-Date:   Thu,  9 Sep 2021 07:37:13 -0400
-Message-Id: <20210909114106.141462-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 013/219] x86/hyperv: fix for unwanted manipulation of sched_clock when TSC marked unstable
+Date:   Thu,  9 Sep 2021 07:43:09 -0400
+Message-Id: <20210909114635.143983-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909114106.141462-1-sashal@kernel.org>
-References: <20210909114106.141462-1-sashal@kernel.org>
+In-Reply-To: <20210909114635.143983-1-sashal@kernel.org>
+References: <20210909114635.143983-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -67,10 +67,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index c890d67a64ad..ba54c44a64e2 100644
+index 4fa0a4280895..ea87d9ed77e9 100644
 --- a/arch/x86/kernel/cpu/mshyperv.c
 +++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -375,8 +375,6 @@ static void __init ms_hyperv_init_platform(void)
+@@ -370,8 +370,6 @@ static void __init ms_hyperv_init_platform(void)
  	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
  		wrmsrl(HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x1);
  		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
@@ -79,7 +79,7 @@ index c890d67a64ad..ba54c44a64e2 100644
  	}
  
  	/*
-@@ -437,6 +435,13 @@ static void __init ms_hyperv_init_platform(void)
+@@ -432,6 +430,13 @@ static void __init ms_hyperv_init_platform(void)
  	/* Register Hyper-V specific clocksource */
  	hv_init_clocksource();
  #endif
