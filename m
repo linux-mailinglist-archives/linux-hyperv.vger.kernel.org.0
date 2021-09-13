@@ -2,210 +2,497 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D80A409C31
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Sep 2021 20:27:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6A39409CA3
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Sep 2021 21:02:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236340AbhIMS2w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Sep 2021 14:28:52 -0400
-Received: from mail-eastus2namln2015.outbound.protection.outlook.com ([40.93.3.15]:46616
-        "EHLO na01-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240167AbhIMS2p (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Sep 2021 14:28:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dmK+JWPO0dnZVTC5qcNiGi4Ayu6RyU+8ki7aQNCOnsfJzMBK6E7VOyGizQgffwyRsbHArg2AqJHeCccsUBpvAJN3XgxU6NWQyMFrLToRKW2cWrVNl5/bEvdR33+JOn4idvBJ8mI+iYOBwkYKZ50mb4DAKVOwWIPKzqRK4KITbQjrOExMWjXssQAgO4Lba/KUh054ZLnHrS5Mm10LYSOb+0Jskt0iHg7nBWrCaYTGH3WoXcgLEtnaxw7X0jnd8mXH1jGH0tu2xMK3a1wfr+e5mWnTKtz6L8w45HeImFsrCGQtLx7AIr1xS+av3z8MBmOR7vOYdaO16kBOeErVwDqvQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=TM5leLNmnmw/Hp8H9EfabCaP0N4tM62Zh7h84dlHb6g=;
- b=Av9hhaet32SGq6REpGbygwAbKCa3x6C2GNGftkhy2yPgrySgcQex4lmv9onEsxEmYRF4yrWdoHVix9jxyQewM4GKVB0HRNJPWpkOkCBs8mcss1WQ5Q5ZSHIa7Sb4wkp3SnFxeBnt0Mev4FrbZFZpuzjCYoq61eXnVqUoO7WyWBXJViuAaOeoib7i7rND4LrdnU1h0nffpNTzSpzgJZyLPOf27NoIZOKWsJtkzfQKq3YJ24GqVQsrsU7nAHqcZ64pQzgk5wad4KX/Oc+OyI1ETjDQeNmhphIfDT63/EF5ziakNmG8mcch2NpHvEord9uLRbnL3VvSVBGVheF+gmITYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TM5leLNmnmw/Hp8H9EfabCaP0N4tM62Zh7h84dlHb6g=;
- b=eGP7tIU0Bi7r+jdD015dNZopdZ4z8qcM2CizQYLyFnYeZJvJk/LVxiGOtLK+Z3oriuUeaGAm7deSV2/g6QEeioi6FvOVZZEPyOoyiPI0dE2BBS6YcD/PXflQdi12V/AhzXzTD5DtTjHL9pIvsd74LrkDkAgBkcMDHFMKPcqQDcY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:37::26) by MN2PR21MB1501.namprd21.prod.outlook.com
- (2603:10b6:208:1f6::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.2; Mon, 13 Sep
- 2021 18:27:27 +0000
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::35fa:e8c:d9:39c3]) by BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::35fa:e8c:d9:39c3%7]) with mapi id 15.20.4544.004; Mon, 13 Sep 2021
- 18:27:27 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     drawat.floss@gmail.com, haiyangz@microsoft.com, airlied@linux.ie,
-        daniel@ffwll.ch, tzimmermann@suse.de,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] drm/hyperv: Fix double mouse pointers
-Date:   Mon, 13 Sep 2021 11:26:45 -0700
-Message-Id: <20210913182645.17075-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR1401CA0010.namprd14.prod.outlook.com
- (2603:10b6:301:4b::20) To BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:37::26)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:9:822d:5dff:feb8:fa01) by MWHPR1401CA0010.namprd14.prod.outlook.com (2603:10b6:301:4b::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14 via Frontend Transport; Mon, 13 Sep 2021 18:27:26 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 920b8603-62b2-4992-c149-08d976e4237d
-X-MS-TrafficTypeDiagnostic: MN2PR21MB1501:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR21MB1501BA82CE26A6FF30ADDBE3BFD99@MN2PR21MB1501.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 80hNAOIZPL94KAkU6OwyoyWXUmtAkkyExonloV9DnyZVNFD4s0Ho/VMO8Wa1e8F12PoX/NZHxdBAhvFQPd5O27+Yb7WR3KmKe7Iambeqofez5M1nBxs17xcE2IjNWmqXGpvzDOX+J80MrZlhtzue6loYJ3OiBJBAxuOBgJG72jDIYH2xhwxXUskxb6z6wqUIEoGfJsLFqgXIDeETtq/0GL/MVmvhrgWO+QnHEbKazPAN0dfwMafwXQHuwGHRuzZVnS8hOYtz9XozBPaaDW4aBIyB7S4z/vaGl0HsmtnYTwR7UW4JCxzL/twjFJucJMPIHTKbQFwK1HgE0XvPcQdA/t/yhYInXf3ihH5F9wnIEnhsTBWqz8cQyHabGe+pRjEp48PtBY5QnNnuO3MTHCV7EIsH+XmKmRj6Vo3AYHwxt5hCI4v2ql6ebhj4fm4EXS8urOYgpCKTkyhPjpFTb2DBdJEQh89TDmv2C3LI0OF49rHxT/odKARHX1/GVFP875ldVljZhKWFY028smlDKbhSLU013+amLx/hhb6Coiwh/it8ULtbpr9z7M3L5Pc2H293EHpuRyFfRPOvfcVVXW5NI067CFnTwkUY5BJxPDuP+rMwOa/GS2VRb39gJomqcoHaXtzqAMQu9Z6Hb6rbZuCpgg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(83380400001)(8676002)(6486002)(2616005)(107886003)(66556008)(5660300002)(186003)(508600001)(66946007)(6666004)(316002)(10290500003)(82960400001)(38100700002)(36756003)(52116002)(86362001)(2906002)(7696005)(66476007)(8936002)(82950400001)(1076003)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?84tk34Xp1xxlO76GAgd9e8cA2Wp3n/F+US1RuwX4YBHmT3CeTaVYMO/jlcLG?=
- =?us-ascii?Q?by3ncTmklVviUMPBfKO4FCVkrDz8DU4iMGYdvJ435PztVKGqQallhJuPyJL+?=
- =?us-ascii?Q?I82FTdfAhaRugrKY/INQvVAjjIysLvM6DkiA3KV1Ct5y7pG5jaRQ2GFwfd0i?=
- =?us-ascii?Q?Le6lZpS0csl9K1G7RU3xWcIHmpb8S7pDMStvguY32Mpv0UxMfoGqomBSBkc5?=
- =?us-ascii?Q?mjoBtVK3bpMmdEkW81vCul6cViYRkxVOdahhoMnm4HLDgMlnoHm3kaRiz1cF?=
- =?us-ascii?Q?xUao3PunCgIJPMZiWIE+giGAUYfgmO00jXGN3MwSomElKA158aZArlQ+qmTs?=
- =?us-ascii?Q?K7mYImVxlrlN82Hia3qdDfptDfxY0cESvcbzQa0qE1BV7Zz8Y0ztPwWm2b2C?=
- =?us-ascii?Q?6PkE/8Dq+E0+Oeltjn2u+eZuxrxbScmzMB6qRuIg5iIO7dA7eAOV69t8m5jL?=
- =?us-ascii?Q?i53XimzSZxUDMDnVlMrpU6Fv+Ck9jBTPWEiB4BdjlTUq1BIWGjA3lRnfoSc+?=
- =?us-ascii?Q?SQvMi8AjhQTOSdXTF7SJuHNaFI0ArHNq7Wi9eZKOJ358aRp+LL8GEmh7ZeFk?=
- =?us-ascii?Q?0XFk2FUr2kOjdmMgtuZcGcBnJDoMUtzeA7Bi9XaUVB/mB7ZRZ25PHj/8+/rs?=
- =?us-ascii?Q?IRPbc0LBC6jqBRyBcG80mLMarjiuu3fyW5Ws2Ps+uSh813X7UFE19HFrxfBn?=
- =?us-ascii?Q?5qPTPy7e9RBhYjWbWO76FYOsAYdXHwSKe8V0ZmVpXo4jCirOVslXkjfRz8xL?=
- =?us-ascii?Q?G3muk5MEjuvEd07AK4hoZ+UY3U9fhGSleLes0ERAL0HfdOR85w2e1fTL0jM2?=
- =?us-ascii?Q?TsmFG6LplY1eZ60qlr89TIhURD3tEXQHY5y0emClbbAYrWlFlXGCZy3s84Na?=
- =?us-ascii?Q?4r4H5SK8f9S0leXmzoNCts1SbDWZ5QcaNzlETont3HsJgJee5HIcASpc6g8Q?=
- =?us-ascii?Q?sjBxj8qKYs4jtltUoUMQqBgKEa53QGzSF06yTubQZrok4e90YvPbUrD2WGgY?=
- =?us-ascii?Q?TZuMMrP6YdXdiO4mJoMWAczj9m67870n7tHjq0oF1a28jhpSqqB5CP3gtGon?=
- =?us-ascii?Q?tZcrUv9dA6gy2Te713R3TxD4fQ+qFv9UhBoqDBf4x65FTKfdgJWDlC7f15G/?=
- =?us-ascii?Q?+TWZKgHERoru8sj0BBtqNVzV7sVRtOyrIa/78nrXZvA3LNhMXhrq2s0Kq8Ih?=
- =?us-ascii?Q?hPMce27mP5+Jny+Tnof7BG5d2C8WGbKZ4ZllpbitEUFQn+DvqE72Blu167Qy?=
- =?us-ascii?Q?oeCmmdzds2CWi0dCAymZ/kDctR/tnfjj2qWg2ahjM1imiMR9mNO6z+dbdkrU?=
- =?us-ascii?Q?0h2gJjyOtpt5sGtUd+N9NMs7n9NGGC/kwWSR4zCa3J+5ttdjmkRsuru/Vool?=
- =?us-ascii?Q?OBSVzVuNtrEDV/z7L6lmpkK0FX4q?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 920b8603-62b2-4992-c149-08d976e4237d
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2021 18:27:27.4957
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hCuXEs4duunh695PcMCaDVAFhHBgHK+8SyxL2O825Xx5VFvSKAnef648VBj+a1tmJSZKWZVX8957Gu+Bb5FoWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1501
+        id S240060AbhIMTED (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Sep 2021 15:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238493AbhIMTED (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 13 Sep 2021 15:04:03 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FBFE60F24;
+        Mon, 13 Sep 2021 19:02:47 +0000 (UTC)
+Received: from [198.52.44.129] (helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mPrE5-00AYoU-4W; Mon, 13 Sep 2021 20:02:45 +0100
+Date:   Mon, 13 Sep 2021 20:02:44 +0100
+Message-ID: <87zgsgb8ob.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?B?IktyenlzenRvZiBXaWxjennFhHNraSI=?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] PCI: hv: Support for Hyper-V vPCI for ARM64
+In-Reply-To: <MW4PR21MB2002654EE498023C6F2E40B5C0D99@MW4PR21MB2002.namprd21.prod.outlook.com>
+References: <MW4PR21MB2002654EE498023C6F2E40B5C0D99@MW4PR21MB2002.namprd21.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 198.52.44.129
+X-SA-Exim-Rcpt-To: sunilmut@microsoft.com, mikelley@microsoft.com, Boqun.Feng@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, decui@microsoft.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, wei.liu@kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-It looks like Hyper-V supports a hardware cursor feature. It is not used
-by Linux VM, but the Hyper-V host still draws a point as an extra mouse
-pointer, which is unwanted, especially when Xorg is running.
+Sunil,
 
-The hyperv_fb driver uses synthvid_send_ptr() to hide the unwanted pointer.
-When the hyperv_drm driver was developed, the function synthvid_send_ptr()
-was not copied from the hyperv_fb driver. Fix the issue by adding the
-function into hyperv_drm.
+On Mon, 13 Sep 2021 18:37:22 +0100,
+Sunil Muthuswamy <sunilmut@microsoft.com> wrote:
+> 
+> This patch adds support for Hyper-V vPCI by adding a PCI MSI
+> IRQ domain specific to Hyper-V that is based on SPIs. The IRQ
+> domain parents itself to the arch GIC IRQ domain for basic
+> vector management.
 
-Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Cc: Deepak Rawat <drawat.floss@gmail.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/gpu/drm/hyperv/hyperv_drm.h         |  1 +
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |  1 +
- drivers/gpu/drm/hyperv/hyperv_drm_proto.c   | 39 ++++++++++++++++++++-
- 3 files changed, 40 insertions(+), 1 deletion(-)
+Given that we literally spent *weeks* discussing this, I would have
+appreciated if you had Cc'd me directly instead as a basic courtesy
+rather than me spotting it on the list.
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm.h b/drivers/gpu/drm/hyperv/hyperv_drm.h
-index 886add4f9cd0..27bfd27c05be 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm.h
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
-@@ -46,6 +46,7 @@ int hyperv_mode_config_init(struct hyperv_drm_device *hv);
- int hyperv_update_vram_location(struct hv_device *hdev, phys_addr_t vram_pp);
- int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
- 			    u32 w, u32 h, u32 pitch);
-+int hyperv_send_ptr(struct hv_device *hdev);
- int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect *rect);
- int hyperv_connect_vsp(struct hv_device *hdev);
- 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 3aaee4730ec6..e21c82cf3326 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -101,6 +101,7 @@ static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
- 	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
- 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
- 
-+	hyperv_send_ptr(hv->hdev);
- 	hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
- 				crtc_state->mode.hdisplay,
- 				crtc_state->mode.vdisplay,
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-index 6d4bdccfbd1a..1ea7a0432320 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-@@ -299,6 +299,40 @@ int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
- 	return 0;
- }
- 
-+/* Send mouse pointer info to host */
-+int hyperv_send_ptr(struct hv_device *hdev)
-+{
-+	struct synthvid_msg msg;
-+
-+	memset(&msg, 0, sizeof(struct synthvid_msg));
-+	msg.vid_hdr.type = SYNTHVID_POINTER_POSITION;
-+	msg.vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
-+		sizeof(struct synthvid_pointer_position);
-+	msg.ptr_pos.is_visible = 1;
-+	msg.ptr_pos.video_output = 0;
-+	msg.ptr_pos.image_x = 0;
-+	msg.ptr_pos.image_y = 0;
-+	hyperv_sendpacket(hdev, &msg);
-+
-+	memset(&msg, 0, sizeof(struct synthvid_msg));
-+	msg.vid_hdr.type = SYNTHVID_POINTER_SHAPE;
-+	msg.vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
-+		sizeof(struct synthvid_pointer_shape);
-+	msg.ptr_shape.part_idx = SYNTHVID_CURSOR_COMPLETE;
-+	msg.ptr_shape.is_argb = 1;
-+	msg.ptr_shape.width = 1;
-+	msg.ptr_shape.height = 1;
-+	msg.ptr_shape.hot_x = 0;
-+	msg.ptr_shape.hot_y = 0;
-+	msg.ptr_shape.data[0] = 0;
-+	msg.ptr_shape.data[1] = 1;
-+	msg.ptr_shape.data[2] = 1;
-+	msg.ptr_shape.data[3] = 1;
-+	hyperv_sendpacket(hdev, &msg);
-+
-+	return 0;
-+}
-+
- int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect *rect)
- {
- 	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
-@@ -392,8 +426,11 @@ static void hyperv_receive_sub(struct hv_device *hdev)
- 		return;
- 	}
- 
--	if (msg->vid_hdr.type == SYNTHVID_FEATURE_CHANGE)
-+	if (msg->vid_hdr.type == SYNTHVID_FEATURE_CHANGE) {
- 		hv->dirt_needed = msg->feature_chg.is_dirt_needed;
-+		if (hv->dirt_needed)
-+			hyperv_send_ptr(hv->hdev);
-+	}
- }
- 
- static void hyperv_receive(void *ctx)
+> 
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+>  arch/arm64/hyperv/Makefile           |   2 +-
+>  arch/arm64/hyperv/hv_pci.c           | 275 +++++++++++++++++++++++++++
+>  arch/arm64/include/asm/hyperv-tlfs.h |   9 +
+>  arch/arm64/include/asm/mshyperv.h    |  26 +++
+>  drivers/pci/Kconfig                  |   2 +-
+>  drivers/pci/controller/Kconfig       |   2 +-
+>  drivers/pci/controller/pci-hyperv.c  |   5 +
+>  7 files changed, 318 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/arm64/hyperv/hv_pci.c
+> 
+> diff --git a/arch/arm64/hyperv/Makefile b/arch/arm64/hyperv/Makefile
+> index 87c31c001da9..af7a66e43ef4 100644
+> --- a/arch/arm64/hyperv/Makefile
+> +++ b/arch/arm64/hyperv/Makefile
+> @@ -1,2 +1,2 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-y		:= hv_core.o mshyperv.o
+> +obj-y		:= hv_core.o mshyperv.o hv_pci.o
+> diff --git a/arch/arm64/hyperv/hv_pci.c b/arch/arm64/hyperv/hv_pci.c
+> new file mode 100644
+> index 000000000000..06179e4a6a2d
+> --- /dev/null
+> +++ b/arch/arm64/hyperv/hv_pci.c
+
+Nit: this is definitely the wrong location. There isn't anything arm64
+specific here that warrants hiding it away. Like most other bizarre
+MSI implementation, it should either live in drivers/pci or in
+drivers/irqchip.
+
+> @@ -0,0 +1,275 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Architecture specific vector management for the Hyper-V vPCI.
+> + *
+> + * Copyright (C) 2018, Microsoft, Inc.
+> + *
+> + * Author : Sunil Muthuswamy <sunilmut@microsoft.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published
+> + * by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
+> + * NON INFRINGEMENT. See the GNU General Public License for more
+> + * details.
+
+What is the point of this if you have the SPDX tag?
+
+> + */
+> +
+> +#include <asm/mshyperv.h>
+> +#include <linux/acpi.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irq.h>
+> +#include <acpi/acpi_bus.h>
+> +
+> +/*
+> + * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leaving a bit
+> + * of room at the start to allow for SPIs to be specified through ACPI.
+> + */
+> +#define HV_PCI_MSI_SPI_START	50
+
+If that's the start, it has a good chance of being the wrong
+start. Given that the HyperV PCI controller advertises Multi-MSI
+support, INTID 50 cannot be used for any device that requires more
+than 2 vectors.
+
+> +#define HV_PCI_MSI_SPI_NR	(1020 - HV_PCI_MSI_SPI_START)
+> +
+> +struct hv_pci_chip_data {
+> +	spinlock_t lock;
+
+Why a spinlock? Either this can be used in interrupt context, and we
+require a raw_spinlock_t instead, or it never is used in interrupt
+context and should be a good old mutex.
+
+> +	DECLARE_BITMAP(bm, HV_PCI_MSI_SPI_NR);
+> +};
+> +
+> +/* Hyper-V vPCI MSI GIC IRQ domain */
+> +static struct irq_domain *hv_msi_gic_irq_domain;
+> +
+> +static struct irq_chip hv_msi_irq_chip = {
+> +	.name = "Hyper-V ARM64 PCI MSI",
+
+That's a mouthful! How about "MSI" instead?
+
+> +	.irq_set_affinity = irq_chip_set_affinity_parent,
+> +	.irq_eoi = irq_chip_eoi_parent,
+> +	.irq_mask = irq_chip_mask_parent,
+> +	.irq_unmask = irq_chip_unmask_parent
+> +};
+> +
+> +/**
+> + * Frees the specified number of interrupts.
+> + * @domain: The IRQ domain
+> + * @virq: The virtual IRQ number.
+> + * @nr_irqs: Number of IRQ's to free.
+> + */
+> +static void hv_pci_vec_irq_domain_free(struct irq_domain *domain,
+> +				       unsigned int virq, unsigned int nr_irqs)
+> +{
+> +	struct hv_pci_chip_data *chip_data = domain->host_data;
+> +	unsigned long flags;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		struct irq_data *irqd = irq_domain_get_irq_data(domain,
+> +								virq + i);
+> +
+> +		spin_lock_irqsave(&chip_data->lock, flags);
+> +		clear_bit(irqd->hwirq - HV_PCI_MSI_SPI_START, chip_data->bm);
+> +		spin_unlock_irqrestore(&chip_data->lock, flags);
+
+Really? Why should you disable interrupts here? Why do you need to
+lock/unlock on each iteration of this loop?
+
+> +		irq_domain_reset_irq_data(irqd);
+> +	}
+> +
+> +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
+> +}
+> +
+> +/**
+> + * Allocate an interrupt from the domain.
+> + * @hwirq: Will be set to the allocated H/W IRQ.
+> + *
+> + * Return: 0 on success and error value on failure.
+> + */
+> +static int hv_pci_vec_alloc_device_irq(struct irq_domain *domain,
+> +				unsigned int virq, irq_hw_number_t *hwirq)
+> +{
+> +	struct hv_pci_chip_data *chip_data = domain->host_data;
+> +	unsigned long flags;
+> +	unsigned int index;
+> +
+> +	spin_lock_irqsave(&chip_data->lock, flags);
+> +	index = find_first_zero_bit(chip_data->bm, HV_PCI_MSI_SPI_NR);
+> +	if (index == HV_PCI_MSI_SPI_NR) {
+> +		spin_unlock_irqrestore(&chip_data->lock, flags);
+> +		pr_err("No more free IRQ vector available\n");
+
+No, we don't shout because we're out of MSIs. It happens, and drivers
+can nicely use less vectors if needed.
+
+But more importantly, this is totally breaks MultiMSI, see below.
+
+> +		return -ENOSPC;
+> +	}
+> +
+> +	set_bit(index, chip_data->bm);
+> +	spin_unlock_irqrestore(&chip_data->lock, flags);
+> +	*hwirq = index + HV_PCI_MSI_SPI_START;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * Allocate an interrupt from the parent GIC domain.
+> + * @domain: The IRQ domain.
+> + * @virq: The virtual IRQ number.
+> + * @hwirq: The H/W IRQ number that needs to be allocated.
+> + *
+> + * Return: 0 on success and error value on failure.
+> + */
+> +static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
+> +					   unsigned int virq,
+> +					   irq_hw_number_t hwirq)
+> +{
+> +	struct irq_fwspec fwspec;
+> +
+> +	fwspec.fwnode = domain->parent->fwnode;
+> +	fwspec.param_count = 2;
+> +	fwspec.param[0] = hwirq;
+> +	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+> +
+> +	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
+> +}
+> +
+> +/**
+> + * Allocate specified number of interrupts from the domain.
+> + * @domain: The IRQ domain.
+> + * @virq: The starting virtual IRQ number.
+> + * @nr_irqs: Number of IRQ's to allocate.
+> + * @args: The MSI alloc information.
+> + *
+> + * Return: 0 on success and error value on failure.
+> + */
+> +static int hv_pci_vec_irq_domain_alloc(struct irq_domain *domain,
+> +				       unsigned int virq, unsigned int nr_irqs,
+> +				       void *args)
+> +{
+> +	irq_hw_number_t hwirq;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		ret = hv_pci_vec_alloc_device_irq(domain, virq, &hwirq);
+> +		if (ret)
+> +			goto free_irq;
+> +
+> +		ret = hv_pci_vec_irq_gic_domain_alloc(domain, virq + i, hwirq);
+
+Please read the specification for PCI MultiMSI. You offer none of the
+alignment and contiguity guarantees that are required.
+
+> +		if (ret)
+> +			goto free_irq;
+> +
+> +		ret = irq_domain_set_hwirq_and_chip(domain, virq + i,
+> +				hwirq, &hv_msi_irq_chip,
+> +				domain->host_data);
+> +		if (ret)
+> +			goto free_irq;
+> +
+> +		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(virq + i)));
+
+Why? The GIC is responsible for the distribution, not the MSI layer.
+This looks completely bogus.
+
+> +		pr_debug("pID:%d vID:%u\n", (int)hwirq, virq + i);
+> +	}
+> +
+> +	return 0;
+> +
+> +free_irq:
+> +	if (i > 0)
+> +		hv_pci_vec_irq_domain_free(domain, virq, i - 1);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * Activate the interrupt.
+> + * @domain: The IRQ domain.
+> + * @irqd: IRQ data.
+> + * @reserve: Indicates whether the IRQ's can be reserved.
+> + *
+> + * Return: 0 on success and error value on failure.
+> + */
+> +static int hv_pci_vec_irq_domain_activate(struct irq_domain *domain,
+> +					  struct irq_data *irqd, bool reserve)
+> +{
+> +	/* All available online CPUs are available for targeting */
+> +	irq_data_update_effective_affinity(irqd, cpu_online_mask);
+
+Which completely contradicts what you have written above, and doesn't
+match what the GIC does either.
+
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops hv_pci_domain_ops = {
+> +	.alloc	= hv_pci_vec_irq_domain_alloc,
+> +	.free	= hv_pci_vec_irq_domain_free,
+> +	.activate = hv_pci_vec_irq_domain_activate,
+> +};
+> +
+> +
+> +/**
+> + * This routine performs the architecture specific initialization for vector
+> + * domain to operate. It allocates an IRQ domain tree as a child of the GIC
+> + * IRQ domain.
+> + *
+> + * Return: 0 on success and error value on failure.
+> + */
+> +int hv_pci_vector_init(void)
+
+Why isn't this static?
+
+> +{
+> +	static struct hv_pci_chip_data *chip_data;
+> +	struct fwnode_handle *fn = NULL;
+> +	int ret = -ENOMEM;
+> +
+> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> +	if (!chip_data)
+> +		return ret;
+> +
+> +	spin_lock_init(&chip_data->lock);
+> +	fn = irq_domain_alloc_named_fwnode("Hyper-V ARM64 vPCI");
+> +	if (!fn)
+> +		goto free_chip;
+> +
+> +	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+> +					fn, &hv_pci_domain_ops, chip_data);
+> +
+> +	if (!hv_msi_gic_irq_domain) {
+> +		pr_err("Failed to create Hyper-V ARMV vPCI MSI IRQ domain\n");
+> +		goto free_chip;
+> +	}
+> +
+> +	return 0;
+> +
+> +free_chip:
+> +	kfree(chip_data);
+> +	if (fn)
+> +		irq_domain_free_fwnode(fn);
+> +
+> +	return ret;
+> +}
+> +
+> +/* This routine performs the cleanup for the IRQ domain. */
+> +void hv_pci_vector_free(void)
+
+Why isn't this static?
+
+> +{
+> +	static struct hv_pci_chip_data *chip_data;
+> +
+> +	if (!hv_msi_gic_irq_domain)
+> +		return;
+> +
+> +	/* Host data cannot be null if the domain was created successfully */
+> +	chip_data = hv_msi_gic_irq_domain->host_data;
+> +	irq_domain_remove(hv_msi_gic_irq_domain);
+> +	hv_msi_gic_irq_domain = NULL;
+> +	kfree(chip_data);
+> +}
+> +
+> +/* Performs the architecture specific initialization for Hyper-V vPCI. */
+> +int hv_pci_arch_init(void)
+> +{
+> +	return hv_pci_vector_init();
+> +}
+> +EXPORT_SYMBOL_GPL(hv_pci_arch_init);
+> +
+> +/* Architecture specific cleanup for Hyper-V vPCI. */
+> +void hv_pci_arch_free(void)
+> +{
+> +	hv_pci_vector_free();
+> +}
+> +EXPORT_SYMBOL_GPL(hv_pci_arch_free);
+> +
+> +struct irq_domain *hv_msi_parent_vector_domain(void)
+> +{
+> +	return hv_msi_gic_irq_domain;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_msi_parent_vector_domain);
+> +
+> +unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
+> +{
+> +	irqd = irq_domain_get_irq_data(hv_msi_gic_irq_domain, irqd->irq);
+> +
+> +	return irqd->hwirq;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_msi_get_int_vector);
+
+I fail to understand why this is all exported instead of being part of
+the HyperV PCI module.
+
+> diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
+> index 4d964a7f02ee..bc6c7ac934a1 100644
+> --- a/arch/arm64/include/asm/hyperv-tlfs.h
+> +++ b/arch/arm64/include/asm/hyperv-tlfs.h
+> @@ -64,6 +64,15 @@
+>  #define HV_REGISTER_STIMER0_CONFIG	0x000B0000
+>  #define HV_REGISTER_STIMER0_COUNT	0x000B0001
+>  
+> +union hv_msi_entry {
+> +	u64 as_uint64[2];
+> +	struct {
+> +		u64 address;
+> +		u32 data;
+> +		u32 reserved;
+> +	} __packed;
+> +};
+> +
+>  #include <asm-generic/hyperv-tlfs.h>
+>  
+>  #endif
+> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
+> index 20070a847304..68bc1617707b 100644
+> --- a/arch/arm64/include/asm/mshyperv.h
+> +++ b/arch/arm64/include/asm/mshyperv.h
+> @@ -20,6 +20,8 @@
+>  
+>  #include <linux/types.h>
+>  #include <linux/arm-smccc.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/msi.h>
+>  #include <asm/hyperv-tlfs.h>
+>  
+>  /*
+> @@ -49,6 +51,30 @@ static inline u64 hv_get_register(unsigned int reg)
+>  				ARM_SMCCC_OWNER_VENDOR_HYP,	\
+>  				HV_SMCCC_FUNC_NUMBER)
+>  
+> +#define hv_msi_handler			NULL
+> +#define hv_msi_handler_name		NULL
+> +#define hv_msi_irq_delivery_mode	0
+> +#define hv_msi_prepare NULL
+> +
+> +int hv_pci_arch_init(void);
+> +void hv_pci_arch_free(void);
+> +struct irq_domain *hv_msi_parent_vector_domain(void);
+> +unsigned int hv_msi_get_int_vector(struct irq_data *data);
+> +static inline irq_hw_number_t
+> +hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+> +			    msi_alloc_info_t *arg)
+> +{
+> +	return arg->hwirq;
+> +}
+> +
+> +static inline void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> +					      struct msi_desc *msi_desc)
+> +{
+> +	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
+> +			      msi_desc->msg.address_lo;
+> +	msi_entry->data = msi_desc->msg.data;
+> +}
+
+Why do we need any of this? Why inline? Please explain what you are
+trying to achieve here.
+
+Thanks,
+
+	M.
+
 -- 
-2.25.1
-
+Without deviation from the norm, progress is not possible.
