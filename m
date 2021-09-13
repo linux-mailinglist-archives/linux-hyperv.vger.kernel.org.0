@@ -2,30 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6A39409CA3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Sep 2021 21:02:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73505409CC7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Sep 2021 21:17:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240060AbhIMTED (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Sep 2021 15:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238493AbhIMTED (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Sep 2021 15:04:03 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FBFE60F24;
-        Mon, 13 Sep 2021 19:02:47 +0000 (UTC)
-Received: from [198.52.44.129] (helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mPrE5-00AYoU-4W; Mon, 13 Sep 2021 20:02:45 +0100
-Date:   Mon, 13 Sep 2021 20:02:44 +0100
-Message-ID: <87zgsgb8ob.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
+        id S241691AbhIMTSD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Sep 2021 15:18:03 -0400
+Received: from mail-oln040093003001.outbound.protection.outlook.com ([40.93.3.1]:65387
+        "EHLO na01-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S241279AbhIMTSB (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 13 Sep 2021 15:18:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WET3TtL54wFjgcykQAvuAOqyllOQoeDt81yy5r1a7G3BLMaTh+rMAkJkVKC75sG+wTawIJefwdF9V0Cevcuo/IZ5tPPLmFxBUCRCTFNsdKr42ck0M/eQNvnPpwAd2VUMMjvZ+RaxBO9ki8IPZcmk9JXscU/gD+LLOn3K08H4iHH3k8GGYzx2niRTrei45F80kqN3k9VXQkLO4pf1cLxv8N9J49KX3AI6sUU4oGBxUOBdJVehnnXjotZ/tbJyrqQ83jOW1VZ9FtfopQvAmRGDGjLG4DcdGb81eLWOaoUwPbaHlDA6NOD69boJ3sRi+iM845/JjnUlxmqlreQJxsEhkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=bQ3RvS2aQN4nDp80tUtUVkIgDLLScePWzhACAybFYqU=;
+ b=A2QPLDQ9wh620CUrR0RZsZRqEw25637xO7P093zEQ7JtVyP8G7Z0YIbKCF4z37SAozKcvMrWXq5cQ4zi4Pxe0e4uCwFe8EoTfcEkjYKJtMm0Y2wco/iQV7XPcs3Ss186Pe5zaxecNIG7P6HBjCYm3Rs+u49jgLeYNTJnPDrzgfwkEi6b7zleS6C/2OkNiSgX3Y34gDkEKh3OFjQZfmdsIstdLeYrCwbos3N+sovCtTbgH4VbeI/d6/1VDXZ51Y5pYTt3fMK8KP6MY6HJ4wrAFXjoptajTEyMZ7vZl7J6z0t0u6My+nSYu6nUWrqQAnzRC+lZXhVb3q2FTDUePfw5Yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bQ3RvS2aQN4nDp80tUtUVkIgDLLScePWzhACAybFYqU=;
+ b=JhVlXrhjesNc4qmqbNdnbYQbB6Sa6J7dybZf4lM0q7eep9tvpqiY9mwXS8dOdiw71yjdP0ZcXqLrsDZMik9p35U/c4XkcSsm+cdxfsUjMjG5ev146dEebkTcxL6vDQgzisOt4NL2bWRRJSc0QoATrLDxkoxhFeea+F7jynz9lPs=
+Received: from MW4PR21MB2002.namprd21.prod.outlook.com (2603:10b6:303:68::18)
+ by MW2PR2101MB0972.namprd21.prod.outlook.com (2603:10b6:302:4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.6; Mon, 13 Sep
+ 2021 19:16:43 +0000
+Received: from MW4PR21MB2002.namprd21.prod.outlook.com
+ ([fe80::b134:7809:fcff:8c8b]) by MW4PR21MB2002.namprd21.prod.outlook.com
+ ([fe80::b134:7809:fcff:8c8b%4]) with mapi id 15.20.4523.011; Mon, 13 Sep 2021
+ 19:16:42 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>,
         Boqun Feng <Boqun.Feng@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -33,466 +45,102 @@ Cc:     Michael Kelley <mikelley@microsoft.com>,
         Dexuan Cui <decui@microsoft.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?B?IktyenlzenRvZiBXaWxjennFhHNraSI=?= <kw@linux.com>,
+        =?iso-8859-2?Q?=22Krzysztof_Wilczy=F1ski=22?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Wei Liu <wei.liu@kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] PCI: hv: Support for Hyper-V vPCI for ARM64
-In-Reply-To: <MW4PR21MB2002654EE498023C6F2E40B5C0D99@MW4PR21MB2002.namprd21.prod.outlook.com>
+Subject: RE: [EXTERNAL] Re: [PATCH 2/2] PCI: hv: Support for Hyper-V vPCI for
+ ARM64
+Thread-Topic: [EXTERNAL] Re: [PATCH 2/2] PCI: hv: Support for Hyper-V vPCI for
+ ARM64
+Thread-Index: AdeoxTZsllWVtNf9RIGrn88zMhJayQADLhwAAABIXAA=
+Date:   Mon, 13 Sep 2021 19:16:42 +0000
+Message-ID: <MW4PR21MB20020111382C98ADACFF4F36C0D99@MW4PR21MB2002.namprd21.prod.outlook.com>
 References: <MW4PR21MB2002654EE498023C6F2E40B5C0D99@MW4PR21MB2002.namprd21.prod.outlook.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 198.52.44.129
-X-SA-Exim-Rcpt-To: sunilmut@microsoft.com, mikelley@microsoft.com, Boqun.Feng@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, decui@microsoft.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, wei.liu@kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+ <87zgsgb8ob.wl-maz@kernel.org>
+In-Reply-To: <87zgsgb8ob.wl-maz@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6aa91127-eb24-4935-61af-08d976eb056b
+x-ms-traffictypediagnostic: MW2PR2101MB0972:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB09729A1B7F45E7310128CE15C0D99@MW2PR2101MB0972.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3EVUQEGiUWkp/ksKtxxZIOIThjAIjnJElvq0MmihH3gDokzrjMYmq+y2l9kgmkpcGn4hYoObrelXEk9ZfPTp0JsEgMwhD0YuQ0A0zy6XIVK81UvT9QROmUzTo55DoJXiRcXJ+jDGo0gyGUP/I5TG5G2J30somrR1ZQ1kIG/PgSwBPWv9PbloKM2Q+6qIrloALYQNhoB/Pj13cTFbCcniLshL0leSsgKZvpo8A8i44qR77/Z5RoftdjDVT9WMj0pYcuic/KOBhPOMUy/WWu4hmwDS5y5tHwQCpzBNfTMbPcZKos3y+Y1Hl78z4s8cGttbVqr4oriOhbpwmf5ZRBSDuKzydu8WTlhHp0RUwYc7mrWXdguKK8Teg137v3vIW4LoNxABqJPk4R9XGaGWZp/Q/6zlixxNiwKB6pc/ADjCPEqWts2XvYwK2VAsA2zlDXoHILxXvhET5dZ6Pbz8GzDH8mXSvmP55WCNsK5mDCUF8DjnUQehvgYvWL8MSpxxg+Ct37zYfp7VEIA8BPaKn4lTTFexINrBzvecEkcJYzxbePHDPEVLATMI8QvcRfMwAmIg7msXs3TDDNaWYS4hK47j2adcrY483RlF+ziix9zpXey2ATlNcS/cPaPltuoptk5KJV/XAYZwdJxImT9DhmvnIX0C9CNKr0Rd7xcOW30GPFUS/wX077ioy/qmmde/cusrh7eF6Qc+LhPFvMwL/NRUvg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR21MB2002.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8936002)(38100700002)(4744005)(2906002)(55016002)(71200400001)(33656002)(76116006)(53546011)(66556008)(8990500004)(54906003)(5660300002)(316002)(6916009)(7696005)(10290500003)(38070700005)(86362001)(508600001)(66446008)(82950400001)(8676002)(6506007)(186003)(82960400001)(64756008)(52536014)(66946007)(9686003)(4326008)(122000001)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?tvgAB27Xqin/TIjOhvs7BkOps4rQePJZAnWH2le8kBzfMEkYjxx4zSLcKX?=
+ =?iso-8859-2?Q?+YXbEs4mAo5PE6FelK5k3b1rGvDg2Xty1ztOFknGXsHhvPvOrCrz8U/5gi?=
+ =?iso-8859-2?Q?sZvd1VutU7xMa8kpZm33fcgSBAfETbglVuQq/xkic+l/Q9fh+jJ/FBoIdh?=
+ =?iso-8859-2?Q?CbNc16CNfdFTD7qh7dBi1KCHN+mSv2HVa41WWP4+yw4yPtnT4H8C2t4IXx?=
+ =?iso-8859-2?Q?mY2F0mQyGRPG2c/eWXWCNl/7F7aE+6CpzbmpCM7XOxQGvqsgBzN6m90xhb?=
+ =?iso-8859-2?Q?RhD0Bri68aUujA0dv6WQu6Ee4PH7c3EGMAKwj2CPY31Y/M8bsLnmeFKb32?=
+ =?iso-8859-2?Q?aW7/hT7o+l4PwFcyt0dG7v7LjHWRMXVtHT5wRmLq48v8Hk4w1wqT0jilSf?=
+ =?iso-8859-2?Q?oqa0Zmkbuo3az9Knatl81ZYRXa9ayctdBeQk/5Lot36UaML/jYBlAo3Pyi?=
+ =?iso-8859-2?Q?emfDrqMjZbtdbx4sQk4gjPlKJNYISSqVogK3C3yJCk7Eg62KH2wRtuOLL6?=
+ =?iso-8859-2?Q?IFD8djrIlFQPFHrSCuImTPR0+DWp+P5wJjfb+1a5TbfZlEhdbfmgQorth/?=
+ =?iso-8859-2?Q?h9dsZR8Z/VzAy5hTHKpfLdGuz2u7vQC4cIBBDH9/Myhe3Kn8Lf9PkHbgwg?=
+ =?iso-8859-2?Q?gtsuGJdCdHSRvwfUDt284uVo+VbYWfQRJdbbMdFl5EWtGh1GCJ0MgOA8QL?=
+ =?iso-8859-2?Q?CMyQ3vwVEeawFSVUeim6oLwyiYBOpZUXXdvijuHWzyjgrduD2dZT3Qwvhl?=
+ =?iso-8859-2?Q?ZMM7QYIyB3tsa7Yu9fn5K4nxyxyDg9osaDu4Z7zeTLF+rxxL1zHZZQEhTi?=
+ =?iso-8859-2?Q?wL6DoO3s1u9dPPRlqoROnk+z+unQWDpENIg8i0bw5EPzXwxo2sOn6mzR1N?=
+ =?iso-8859-2?Q?aQaGp6pADZV8TXmVdTqzTvImaqlih8Ol4Y4a/Z4e+feIkXhCL6k8HQBJ/1?=
+ =?iso-8859-2?Q?qPpndZjahhd5uq/4dNiM09wfnDRWUmyNukT88whbbfUccJg+uvCykhrlEw?=
+ =?iso-8859-2?Q?gIUDan4az6M0OBVuHK+wqT9CZyGSn5zgvUKPJCg92OOJvazDMPT/1+KQHD?=
+ =?iso-8859-2?Q?2bEU1RqkcB7mvOr6lD7UB0jCl5hYUw+kiNl1YI6U74GLf2yO3PKAuoh8N5?=
+ =?iso-8859-2?Q?KHnxHX/dVuneQSxpOY/v47/kQiFC8okwvZpdfMsbl8+IySZv2dfTUEoiJw?=
+ =?iso-8859-2?Q?9TrnjlcSnNl95cUXdTmYCCFg+izWT5onx8NoH35dFl1DHyhiEImBkbARTz?=
+ =?iso-8859-2?Q?Un9KPYVRB8wG0cIYRJ5fi3Lomh4cWC3cVGby7uHxPw7FJtgknENJVQ6rD7?=
+ =?iso-8859-2?Q?fMGaYGR1T+EwF+gnxSpD4jq7qCaBgxp2TbzdU+CP7ut3Xsr33T/cHtYa5j?=
+ =?iso-8859-2?Q?i5Rz9a/TxRhCxoVe4sN8BXO4QkwQ2h/HlAsXCjiAWu4cf/xAac1h/tzFko?=
+ =?iso-8859-2?Q?+VvfVeIIE8Mf8mZf?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR21MB2002.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6aa91127-eb24-4935-61af-08d976eb056b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2021 19:16:42.8617
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g7mXhI5Xny2eIL96Zx9D7yq2yM0PEWWuK8lyWJlOgLXgxN4ptm8X9K2ogV7CeoF2qe5Q62RLcxALDBqpaYxkr6VJUFFkE+WDwX5NlwaC1kc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0972
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sunil,
+On Monday, September 13, 2021 12:03 PM,
+Marc Zyngier <maz@kernel.org> wrote:
 
-On Mon, 13 Sep 2021 18:37:22 +0100,
-Sunil Muthuswamy <sunilmut@microsoft.com> wrote:
-> 
-> This patch adds support for Hyper-V vPCI by adding a PCI MSI
-> IRQ domain specific to Hyper-V that is based on SPIs. The IRQ
-> domain parents itself to the arch GIC IRQ domain for basic
-> vector management.
+> > This patch adds support for Hyper-V vPCI by adding a PCI MSI
+> > IRQ domain specific to Hyper-V that is based on SPIs. The IRQ
+> > domain parents itself to the arch GIC IRQ domain for basic
+> > vector management.
+>=20
+> Given that we literally spent *weeks* discussing this, I would have
+> appreciated if you had Cc'd me directly instead as a basic courtesy
+> rather than me spotting it on the list.
+>
+I agree and please accept my sincere apologies. It was not intentional (
+I just grabbed the list from get_maintainers and didn't pay further
+attention to it). I definitely appreciated all of your comments and feedbac=
+k
+on the other discussion.
 
-Given that we literally spent *weeks* discussing this, I would have
-appreciated if you had Cc'd me directly instead as a basic courtesy
-rather than me spotting it on the list.
+Thanks for your feedback. I will respond back to you, but I did wanted to
+get this one out.
 
-> 
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-> ---
->  arch/arm64/hyperv/Makefile           |   2 +-
->  arch/arm64/hyperv/hv_pci.c           | 275 +++++++++++++++++++++++++++
->  arch/arm64/include/asm/hyperv-tlfs.h |   9 +
->  arch/arm64/include/asm/mshyperv.h    |  26 +++
->  drivers/pci/Kconfig                  |   2 +-
->  drivers/pci/controller/Kconfig       |   2 +-
->  drivers/pci/controller/pci-hyperv.c  |   5 +
->  7 files changed, 318 insertions(+), 3 deletions(-)
->  create mode 100644 arch/arm64/hyperv/hv_pci.c
-> 
-> diff --git a/arch/arm64/hyperv/Makefile b/arch/arm64/hyperv/Makefile
-> index 87c31c001da9..af7a66e43ef4 100644
-> --- a/arch/arm64/hyperv/Makefile
-> +++ b/arch/arm64/hyperv/Makefile
-> @@ -1,2 +1,2 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-y		:= hv_core.o mshyperv.o
-> +obj-y		:= hv_core.o mshyperv.o hv_pci.o
-> diff --git a/arch/arm64/hyperv/hv_pci.c b/arch/arm64/hyperv/hv_pci.c
-> new file mode 100644
-> index 000000000000..06179e4a6a2d
-> --- /dev/null
-> +++ b/arch/arm64/hyperv/hv_pci.c
-
-Nit: this is definitely the wrong location. There isn't anything arm64
-specific here that warrants hiding it away. Like most other bizarre
-MSI implementation, it should either live in drivers/pci or in
-drivers/irqchip.
-
-> @@ -0,0 +1,275 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Architecture specific vector management for the Hyper-V vPCI.
-> + *
-> + * Copyright (C) 2018, Microsoft, Inc.
-> + *
-> + * Author : Sunil Muthuswamy <sunilmut@microsoft.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published
-> + * by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
-> + * NON INFRINGEMENT. See the GNU General Public License for more
-> + * details.
-
-What is the point of this if you have the SPDX tag?
-
-> + */
-> +
-> +#include <asm/mshyperv.h>
-> +#include <linux/acpi.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/irq.h>
-> +#include <acpi/acpi_bus.h>
-> +
-> +/*
-> + * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leaving a bit
-> + * of room at the start to allow for SPIs to be specified through ACPI.
-> + */
-> +#define HV_PCI_MSI_SPI_START	50
-
-If that's the start, it has a good chance of being the wrong
-start. Given that the HyperV PCI controller advertises Multi-MSI
-support, INTID 50 cannot be used for any device that requires more
-than 2 vectors.
-
-> +#define HV_PCI_MSI_SPI_NR	(1020 - HV_PCI_MSI_SPI_START)
-> +
-> +struct hv_pci_chip_data {
-> +	spinlock_t lock;
-
-Why a spinlock? Either this can be used in interrupt context, and we
-require a raw_spinlock_t instead, or it never is used in interrupt
-context and should be a good old mutex.
-
-> +	DECLARE_BITMAP(bm, HV_PCI_MSI_SPI_NR);
-> +};
-> +
-> +/* Hyper-V vPCI MSI GIC IRQ domain */
-> +static struct irq_domain *hv_msi_gic_irq_domain;
-> +
-> +static struct irq_chip hv_msi_irq_chip = {
-> +	.name = "Hyper-V ARM64 PCI MSI",
-
-That's a mouthful! How about "MSI" instead?
-
-> +	.irq_set_affinity = irq_chip_set_affinity_parent,
-> +	.irq_eoi = irq_chip_eoi_parent,
-> +	.irq_mask = irq_chip_mask_parent,
-> +	.irq_unmask = irq_chip_unmask_parent
-> +};
-> +
-> +/**
-> + * Frees the specified number of interrupts.
-> + * @domain: The IRQ domain
-> + * @virq: The virtual IRQ number.
-> + * @nr_irqs: Number of IRQ's to free.
-> + */
-> +static void hv_pci_vec_irq_domain_free(struct irq_domain *domain,
-> +				       unsigned int virq, unsigned int nr_irqs)
-> +{
-> +	struct hv_pci_chip_data *chip_data = domain->host_data;
-> +	unsigned long flags;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < nr_irqs; i++) {
-> +		struct irq_data *irqd = irq_domain_get_irq_data(domain,
-> +								virq + i);
-> +
-> +		spin_lock_irqsave(&chip_data->lock, flags);
-> +		clear_bit(irqd->hwirq - HV_PCI_MSI_SPI_START, chip_data->bm);
-> +		spin_unlock_irqrestore(&chip_data->lock, flags);
-
-Really? Why should you disable interrupts here? Why do you need to
-lock/unlock on each iteration of this loop?
-
-> +		irq_domain_reset_irq_data(irqd);
-> +	}
-> +
-> +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-> +}
-> +
-> +/**
-> + * Allocate an interrupt from the domain.
-> + * @hwirq: Will be set to the allocated H/W IRQ.
-> + *
-> + * Return: 0 on success and error value on failure.
-> + */
-> +static int hv_pci_vec_alloc_device_irq(struct irq_domain *domain,
-> +				unsigned int virq, irq_hw_number_t *hwirq)
-> +{
-> +	struct hv_pci_chip_data *chip_data = domain->host_data;
-> +	unsigned long flags;
-> +	unsigned int index;
-> +
-> +	spin_lock_irqsave(&chip_data->lock, flags);
-> +	index = find_first_zero_bit(chip_data->bm, HV_PCI_MSI_SPI_NR);
-> +	if (index == HV_PCI_MSI_SPI_NR) {
-> +		spin_unlock_irqrestore(&chip_data->lock, flags);
-> +		pr_err("No more free IRQ vector available\n");
-
-No, we don't shout because we're out of MSIs. It happens, and drivers
-can nicely use less vectors if needed.
-
-But more importantly, this is totally breaks MultiMSI, see below.
-
-> +		return -ENOSPC;
-> +	}
-> +
-> +	set_bit(index, chip_data->bm);
-> +	spin_unlock_irqrestore(&chip_data->lock, flags);
-> +	*hwirq = index + HV_PCI_MSI_SPI_START;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * Allocate an interrupt from the parent GIC domain.
-> + * @domain: The IRQ domain.
-> + * @virq: The virtual IRQ number.
-> + * @hwirq: The H/W IRQ number that needs to be allocated.
-> + *
-> + * Return: 0 on success and error value on failure.
-> + */
-> +static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
-> +					   unsigned int virq,
-> +					   irq_hw_number_t hwirq)
-> +{
-> +	struct irq_fwspec fwspec;
-> +
-> +	fwspec.fwnode = domain->parent->fwnode;
-> +	fwspec.param_count = 2;
-> +	fwspec.param[0] = hwirq;
-> +	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-> +
-> +	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-> +}
-> +
-> +/**
-> + * Allocate specified number of interrupts from the domain.
-> + * @domain: The IRQ domain.
-> + * @virq: The starting virtual IRQ number.
-> + * @nr_irqs: Number of IRQ's to allocate.
-> + * @args: The MSI alloc information.
-> + *
-> + * Return: 0 on success and error value on failure.
-> + */
-> +static int hv_pci_vec_irq_domain_alloc(struct irq_domain *domain,
-> +				       unsigned int virq, unsigned int nr_irqs,
-> +				       void *args)
-> +{
-> +	irq_hw_number_t hwirq;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	for (i = 0; i < nr_irqs; i++) {
-> +		ret = hv_pci_vec_alloc_device_irq(domain, virq, &hwirq);
-> +		if (ret)
-> +			goto free_irq;
-> +
-> +		ret = hv_pci_vec_irq_gic_domain_alloc(domain, virq + i, hwirq);
-
-Please read the specification for PCI MultiMSI. You offer none of the
-alignment and contiguity guarantees that are required.
-
-> +		if (ret)
-> +			goto free_irq;
-> +
-> +		ret = irq_domain_set_hwirq_and_chip(domain, virq + i,
-> +				hwirq, &hv_msi_irq_chip,
-> +				domain->host_data);
-> +		if (ret)
-> +			goto free_irq;
-> +
-> +		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(virq + i)));
-
-Why? The GIC is responsible for the distribution, not the MSI layer.
-This looks completely bogus.
-
-> +		pr_debug("pID:%d vID:%u\n", (int)hwirq, virq + i);
-> +	}
-> +
-> +	return 0;
-> +
-> +free_irq:
-> +	if (i > 0)
-> +		hv_pci_vec_irq_domain_free(domain, virq, i - 1);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * Activate the interrupt.
-> + * @domain: The IRQ domain.
-> + * @irqd: IRQ data.
-> + * @reserve: Indicates whether the IRQ's can be reserved.
-> + *
-> + * Return: 0 on success and error value on failure.
-> + */
-> +static int hv_pci_vec_irq_domain_activate(struct irq_domain *domain,
-> +					  struct irq_data *irqd, bool reserve)
-> +{
-> +	/* All available online CPUs are available for targeting */
-> +	irq_data_update_effective_affinity(irqd, cpu_online_mask);
-
-Which completely contradicts what you have written above, and doesn't
-match what the GIC does either.
-
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops hv_pci_domain_ops = {
-> +	.alloc	= hv_pci_vec_irq_domain_alloc,
-> +	.free	= hv_pci_vec_irq_domain_free,
-> +	.activate = hv_pci_vec_irq_domain_activate,
-> +};
-> +
-> +
-> +/**
-> + * This routine performs the architecture specific initialization for vector
-> + * domain to operate. It allocates an IRQ domain tree as a child of the GIC
-> + * IRQ domain.
-> + *
-> + * Return: 0 on success and error value on failure.
-> + */
-> +int hv_pci_vector_init(void)
-
-Why isn't this static?
-
-> +{
-> +	static struct hv_pci_chip_data *chip_data;
-> +	struct fwnode_handle *fn = NULL;
-> +	int ret = -ENOMEM;
-> +
-> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-> +	if (!chip_data)
-> +		return ret;
-> +
-> +	spin_lock_init(&chip_data->lock);
-> +	fn = irq_domain_alloc_named_fwnode("Hyper-V ARM64 vPCI");
-> +	if (!fn)
-> +		goto free_chip;
-> +
-> +	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
-> +					fn, &hv_pci_domain_ops, chip_data);
-> +
-> +	if (!hv_msi_gic_irq_domain) {
-> +		pr_err("Failed to create Hyper-V ARMV vPCI MSI IRQ domain\n");
-> +		goto free_chip;
-> +	}
-> +
-> +	return 0;
-> +
-> +free_chip:
-> +	kfree(chip_data);
-> +	if (fn)
-> +		irq_domain_free_fwnode(fn);
-> +
-> +	return ret;
-> +}
-> +
-> +/* This routine performs the cleanup for the IRQ domain. */
-> +void hv_pci_vector_free(void)
-
-Why isn't this static?
-
-> +{
-> +	static struct hv_pci_chip_data *chip_data;
-> +
-> +	if (!hv_msi_gic_irq_domain)
-> +		return;
-> +
-> +	/* Host data cannot be null if the domain was created successfully */
-> +	chip_data = hv_msi_gic_irq_domain->host_data;
-> +	irq_domain_remove(hv_msi_gic_irq_domain);
-> +	hv_msi_gic_irq_domain = NULL;
-> +	kfree(chip_data);
-> +}
-> +
-> +/* Performs the architecture specific initialization for Hyper-V vPCI. */
-> +int hv_pci_arch_init(void)
-> +{
-> +	return hv_pci_vector_init();
-> +}
-> +EXPORT_SYMBOL_GPL(hv_pci_arch_init);
-> +
-> +/* Architecture specific cleanup for Hyper-V vPCI. */
-> +void hv_pci_arch_free(void)
-> +{
-> +	hv_pci_vector_free();
-> +}
-> +EXPORT_SYMBOL_GPL(hv_pci_arch_free);
-> +
-> +struct irq_domain *hv_msi_parent_vector_domain(void)
-> +{
-> +	return hv_msi_gic_irq_domain;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_msi_parent_vector_domain);
-> +
-> +unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
-> +{
-> +	irqd = irq_domain_get_irq_data(hv_msi_gic_irq_domain, irqd->irq);
-> +
-> +	return irqd->hwirq;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_msi_get_int_vector);
-
-I fail to understand why this is all exported instead of being part of
-the HyperV PCI module.
-
-> diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
-> index 4d964a7f02ee..bc6c7ac934a1 100644
-> --- a/arch/arm64/include/asm/hyperv-tlfs.h
-> +++ b/arch/arm64/include/asm/hyperv-tlfs.h
-> @@ -64,6 +64,15 @@
->  #define HV_REGISTER_STIMER0_CONFIG	0x000B0000
->  #define HV_REGISTER_STIMER0_COUNT	0x000B0001
->  
-> +union hv_msi_entry {
-> +	u64 as_uint64[2];
-> +	struct {
-> +		u64 address;
-> +		u32 data;
-> +		u32 reserved;
-> +	} __packed;
-> +};
-> +
->  #include <asm-generic/hyperv-tlfs.h>
->  
->  #endif
-> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-> index 20070a847304..68bc1617707b 100644
-> --- a/arch/arm64/include/asm/mshyperv.h
-> +++ b/arch/arm64/include/asm/mshyperv.h
-> @@ -20,6 +20,8 @@
->  
->  #include <linux/types.h>
->  #include <linux/arm-smccc.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/msi.h>
->  #include <asm/hyperv-tlfs.h>
->  
->  /*
-> @@ -49,6 +51,30 @@ static inline u64 hv_get_register(unsigned int reg)
->  				ARM_SMCCC_OWNER_VENDOR_HYP,	\
->  				HV_SMCCC_FUNC_NUMBER)
->  
-> +#define hv_msi_handler			NULL
-> +#define hv_msi_handler_name		NULL
-> +#define hv_msi_irq_delivery_mode	0
-> +#define hv_msi_prepare NULL
-> +
-> +int hv_pci_arch_init(void);
-> +void hv_pci_arch_free(void);
-> +struct irq_domain *hv_msi_parent_vector_domain(void);
-> +unsigned int hv_msi_get_int_vector(struct irq_data *data);
-> +static inline irq_hw_number_t
-> +hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
-> +			    msi_alloc_info_t *arg)
-> +{
-> +	return arg->hwirq;
-> +}
-> +
-> +static inline void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
-> +					      struct msi_desc *msi_desc)
-> +{
-> +	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
-> +			      msi_desc->msg.address_lo;
-> +	msi_entry->data = msi_desc->msg.data;
-> +}
-
-Why do we need any of this? Why inline? Please explain what you are
-trying to achieve here.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+- Sunil
