@@ -2,148 +2,220 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73720409D4F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Sep 2021 21:40:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D254440AF10
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Sep 2021 15:39:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346342AbhIMTlE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Sep 2021 15:41:04 -0400
-Received: from mail-oln040093003007.outbound.protection.outlook.com ([40.93.3.7]:60754
-        "EHLO na01-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1347536AbhIMTlA (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Sep 2021 15:41:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f5LYNfbllHAfGecyONJWtBUX3l33CLvrhWsRQveBSkFrw4Gl/KIPK6kT9CasmBTPG39L0QaAmtbU7ANgn93GwHXeyz7ZLEN77HvJbXDJVYO7Xy46SRlOms8pjUc6ajJ2+hCytnUYdbE7bsBYRBfOZsg8IoflIfGJzHS+rs4GCoW3rl1WRnyUZ1Ge05uSuZCkZhDX38hZc58wmnQl0029UqlVjG7HIO93hPOrYmdjGsLMNxo6/f5z8XRmbFWrC0yW1/+KFWE3w8LTJuo4QxdLAtlDedGR6DwInVgNJIRLNOj1bqRlwKb/fClHOtC24fsbi2jlvSwBtHvzRvtzwXXLsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=Y8iJfgoD3pcJaCiYTag9exf/ZrobisCzoKEgAvUYl5I=;
- b=Aicn/V6pCKW7pTP5+H8oMR1JMBPe/lBIeoZ9Cl3BqGlOZ5Fv49iqLJSCJE47sV61bu6jjx7XMHLRs1olMbGByU6lTr0JOek6H3ZsGEPjCZTRZN+vMe7sA0tEEiFNs6fb6HJBZK0xZiU0ZLFPEjlUdhGd0roBoz7Ngh0fXXIyxp2kYrvCTqQfRNELn2KIGnbVXBqTh78OtCVnyPPldvKa2Ix6lunT8j6uPIm84LQu/HtzSVEvb9Cj/Fgxn1QdBaEaN8qITZHRl5/0Tz/V/eg73cdN08eU8NeFuZhxfs0OCNUWzP5Cyb+CZbWu+4hMYmOMXOy1lO9/4WhHp3MUZe3lEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y8iJfgoD3pcJaCiYTag9exf/ZrobisCzoKEgAvUYl5I=;
- b=JImaigRgYCcwnxdco5S3YqTi/3KHT2+KiCYItz8jbfJ3Xx0rfV73JeZotlCtHJCUX2kXRwE/i0YX+5x2HzN1qGDtg7bmq8ETJUWpo+ehcJksScUJmwcgh/uV7jgLp2ywB+CgnkEcakbcQGKbLJa6w8rWIWy96dGsk8hO4cEhBVI=
-Received: from MN2PR21MB1295.namprd21.prod.outlook.com (2603:10b6:208:3e::25)
- by MN2PR21MB1535.namprd21.prod.outlook.com (2603:10b6:208:20c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.3; Mon, 13 Sep
- 2021 19:39:43 +0000
-Received: from MN2PR21MB1295.namprd21.prod.outlook.com
- ([fe80::d804:7493:8e3d:68d3]) by MN2PR21MB1295.namprd21.prod.outlook.com
- ([fe80::d804:7493:8e3d:68d3%9]) with mapi id 15.20.4478.015; Mon, 13 Sep 2021
- 19:39:42 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "tzimmermann@suse.de" <tzimmermann@suse.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] drm/hyperv: Fix double mouse pointers
-Thread-Topic: [PATCH] drm/hyperv: Fix double mouse pointers
-Thread-Index: AQHXqM0C9sVFExQjI06yoxOltM89b6uiXCLA
-Date:   Mon, 13 Sep 2021 19:39:42 +0000
-Message-ID: <MN2PR21MB12954E9D3C7F7BDF9B737214CAD99@MN2PR21MB1295.namprd21.prod.outlook.com>
-References: <20210913182645.17075-1-decui@microsoft.com>
-In-Reply-To: <20210913182645.17075-1-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=dbbe75b4-87e4-4c1a-a3bd-b59ab2982ea1;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-09-13T19:38:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 35313155-3b14-4b2e-db49-08d976ee3bec
-x-ms-traffictypediagnostic: MN2PR21MB1535:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR21MB1535F9CF011F3DC57F3D57ADCAD99@MN2PR21MB1535.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QECnRerTCfd7ugO9x+ZeIwy4CLmz0sT0ZHGtEAN+PUmwOmeaeqFMe2g0j1J56oiPirMnAt9OHa7b9KVPc1ePAb46bkY362IoFUJv48p2/+DlUTjOVsuqsPXrMfrfamp5X4JeBOphBY+vzfsbxnkFmpzRi7QPfx3Mhb5mP8P3qPu91lBVv96oonS/HWVHh4+O3UpFr49RDtnxcHBfIfVU3Hh9Cg4TRYDzzEEmFQLtZJVtGnB8uQzWv3SdAqRZEGDDn1YDAs0USMerjcFfddMRgHLTuQ9iCYgniblh6UIPfMdoEJaA6qXjRy7EYMdf+SnosRuxWIP1Af/7mU7qcaLVvlGUwwcXbuBr4450/YyGTuKM/01lN059oYZs1kjcpjHgavn0UqFv0P1ocNwSD7asVdWSEyaNE1nZ60evN3o9i3T63bWoROEZQSgnAxcFI9sDpxhcCaccdMXpiEJXHy9XlBpeHia4Zn/VRfiJxqAZvl856+HFsmPRgAr6YwhTiAA1DWQGgqbNTyCQwHjkEMXoY9zul/IpE9UM0LnAxwTzRAh/TYJzddQNJcf+NF6nrZJ6gEpVF2GCavkNkPCE7Q6OtAXrzG4Qk6h/bvZeT2woD2edYz2y8cuTXwVJNfkY1Fz9bR79qQqZzBaIkNlGDNaMNYNsxhzFXOkeTpwwS9KsWZdCh1Pde90IyfU3yPOz8m8dGapPkN0/WnsrbIMD6dsJsA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR21MB1295.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66446008)(82950400001)(83380400001)(4326008)(10290500003)(54906003)(8676002)(2906002)(66556008)(53546011)(316002)(38070700005)(66946007)(9686003)(26005)(64756008)(71200400001)(38100700002)(76116006)(7696005)(110136005)(8990500004)(8936002)(52536014)(55016002)(33656002)(5660300002)(508600001)(86362001)(6506007)(122000001)(66476007)(186003)(82960400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?W0qH2dgneHatLdtEN2FAEqaWyiOeAV4k+RInRgVsTTUA64wmr+RNUgYreUYC?=
- =?us-ascii?Q?uImUowyhTrGDLP3kWDmcODkcEP5KyK7U+wKO4ndLZe108JhXyBcyJmhIeYVl?=
- =?us-ascii?Q?CMMPVM50QmgUHZdakd2K2edDRw7/wNQa6i139uDtgeXwnj3pbype2KdZHHHD?=
- =?us-ascii?Q?gDLi28yWcByPwb+qsXs8caTFXNssPsySY06EBv3K1vDhLgQgi9sZYN6aIngp?=
- =?us-ascii?Q?I6lQ57v0ioEephRscvXpBgD5NcppHd8hqqASCFicuExlmOq+vfN1/4w6ChvJ?=
- =?us-ascii?Q?0db9zrO5mY36vDidZ14IlP6UTPq22ONcsu4p6at6NTdcLjjJ65DIVvT8T8uT?=
- =?us-ascii?Q?Kauhs8r/aweXkqHtA2ZeoK4E+zns/KD5BGniNUFIWPBvRX0qQO64uUF4arb7?=
- =?us-ascii?Q?9fidUTzLOwy3yfGNPU/soQwEneXLj+0kbp3MP25YH8O+DfN+Ld+UcT/rvT5T?=
- =?us-ascii?Q?4FXvl1SF24bzPpLawhDSKnTj3VXIWzaRd23/iEpZUGjV33pKTnK5HcAAm+t8?=
- =?us-ascii?Q?bt0aSvQrOEZkO+5JkX84GEDyTiyE90/5EeMLERm/65fXC0s+CZNutqg57eoi?=
- =?us-ascii?Q?6tMJc1KWW4c1mih2ydRntvn0LfZIzw4qXEo5O8HLRXmyeZoO27P39imRQmFX?=
- =?us-ascii?Q?KVzFEERwWbSA+SPfiB4zsA8eoUFTz1oO15u7qUeVl2TserkzeIs/cpO4zZmU?=
- =?us-ascii?Q?Y5AdkmH5EY9NAfJnGKrx5Mk+5gH8oERcVx/Gj3y+WdGrJzFyO/eXUOjxFBCG?=
- =?us-ascii?Q?rs1suaW4vtiBmayaiugmqz38JO+YAeH0EPFg5dOHxKzdsjrzykSTnPleBYcD?=
- =?us-ascii?Q?+w1mY4aTseC5MkswSzfUr/Dl26mgcrFC9QiRfApYMw7fjsGB+mwbet3opg6Z?=
- =?us-ascii?Q?3UYItRjsC095fLeYELb1d0T6LQ1bWaaB+kN6iTmQlTM8lcgCWHlOBwPAKXnZ?=
- =?us-ascii?Q?OwvFY/SSm3Q0LHuYGCphaHDe2kTaRFOAKPukVlZJIqp9u5tU0N5R9r6KHAi0?=
- =?us-ascii?Q?Ae2E0yxy7gmXlYRTuJCaHrc1UI7+9lQ2gEp07N/hG4PZgnbUBEURAnHD2tXA?=
- =?us-ascii?Q?6DB4fbfGTJ0p3J0ZudHN0LuFbIGMxQSjLdyT4wCmme9YIgFzuAi6bljFpj47?=
- =?us-ascii?Q?Pl7+g9N5O+QVcWm1Ap/RBemOx+muxQWdS96puPXdbi+Akc0kCnULbd4iQ8WI?=
- =?us-ascii?Q?qCUf8cU/HR5YjV3Ho06jiWkKeHprDzVjTbnfl/RwXTVPsU0T0W5ivVRlhc6x?=
- =?us-ascii?Q?hP/xFf3WbgYBWkVE9iiFZF6/lwgl7gnWXQtZI0rkvWqGzJ0RBPKMH6pe4u9/?=
- =?us-ascii?Q?Z/0zls3uir3HPGANGh8XWQEx?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S233258AbhINNkl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Sep 2021 09:40:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232420AbhINNkk (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 14 Sep 2021 09:40:40 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4194FC061574;
+        Tue, 14 Sep 2021 06:39:23 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 17so12756397pgp.4;
+        Tue, 14 Sep 2021 06:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BHnwRGLPqH2A09ZXeDyMyxAcljYFX6n5VugCn85EoaM=;
+        b=pjWLs+F/UNZaQ69Ds31Zi6HGFXPIFegbFqnIPgAg/e7eumR7muKpnjQsK4h4ATjgb2
+         by7YiKtMcGNpi+ZXill2CZ9odlQEVqCHILMVlph6YQFKC8hHwp1QpE3r+RuSLxydvPYZ
+         eGAqVhTH+xBk/V/LWNCB2iXK6oGjpeCm6U1nP3C+AFVZg+TFR+itqQRDs0wgk7bN3jJj
+         IMVP9rnCIplN4weSfeBPFdD9eNEmq4L1JXa8SxhKOq/LaXmZsBWdbgaymudmjb7zfL2E
+         DKrQ17H/rltwz4VcgDwdq+noncaSP4fVO9efd8m4H7efVZrJSaN580PDrm6EaBFxrg5t
+         ohzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BHnwRGLPqH2A09ZXeDyMyxAcljYFX6n5VugCn85EoaM=;
+        b=3gSnxo2ywCJ9jmEjDd0490TDd9ZqWUV+vFcBXeWQVBu1rntGP1jByHGh545hcnXHQ6
+         EjFIAycaecmdXw3EKfMthZqC3vaNeuywYTr9sqavGLUkOPnT4jVyUlSXi+t+rwclm0Wy
+         3ErhNkGFnFuX8O4eTv4kVBjJHvpqMmz56rgoBVDlb8eneIo/+QswljwYKvUvk8sht7F9
+         KDqE8vyRRVxS+hA3JHQuM5WEM/S8SKZwTHX72ZXtEU4ByWHX8zSI4AI4oCQgqL5bMxc1
+         sKZpIir7LkigGrfA7Tm2rzJhl4L7RjIX9RVAGWcMF6ImFrLFnAUIE1xuf5LmgXhN/4Hg
+         rm1g==
+X-Gm-Message-State: AOAM530HU1uO3emh1ae48BrHvATo95aEjRhFhtD52nYvCMFfByZKRS+O
+        F/VtfPfnCCg8Vakw/2BLU1k=
+X-Google-Smtp-Source: ABdhPJysSi/ePEIpmop1TOOZL/EDUeVswpP9kBW06aQK1cw/R5aOGjFREOrMllhH8ENnzQcpU6ys4A==
+X-Received: by 2002:a63:3d4a:: with SMTP id k71mr15619461pga.276.1631626762730;
+        Tue, 14 Sep 2021 06:39:22 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:7:6ea2:a529:4af3:5057])
+        by smtp.gmail.com with ESMTPSA id v13sm10461234pfm.16.2021.09.14.06.39.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Sep 2021 06:39:22 -0700 (PDT)
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, joro@8bytes.org,
+        will@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        brijesh.singh@amd.com, Tianyu.Lan@microsoft.com,
+        thomas.lendacky@amd.com, pgonda@google.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        rppt@kernel.org, sfr@canb.auug.org.au, aneesh.kumar@linux.ibm.com,
+        saravanand@fb.com, krish.sadhukhan@oracle.com,
+        xen-devel@lists.xenproject.org, tj@kernel.org, rientjes@google.com,
+        michael.h.kelley@microsoft.com
+Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, parri.andrea@gmail.com, dave.hansen@intel.com
+Subject: [PATCH V5 00/12] x86/Hyper-V: Add Hyper-V Isolation VM support
+Date:   Tue, 14 Sep 2021 09:39:01 -0400
+Message-Id: <20210914133916.1440931-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR21MB1295.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35313155-3b14-4b2e-db49-08d976ee3bec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2021 19:39:42.8538
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WFVdUQkLL35pEazSxi5h1y0ZYFZR5I3EYZaF4EieorBLa7cN+3W/OyPb2u45mCIDC+J1+8T495heQUwIPO5G5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1535
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
+Hyper-V provides two kinds of Isolation VMs. VBS(Virtualization-based
+security) and AMD SEV-SNP unenlightened Isolation VMs. This patchset
+is to add support for these Isolation VM support in Linux.
 
-> -----Original Message-----
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Monday, September 13, 2021 2:27 PM
-> To: drawat.floss@gmail.com; Haiyang Zhang <haiyangz@microsoft.com>;
-> airlied@linux.ie; daniel@ffwll.ch; tzimmermann@suse.de; dri-
-> devel@lists.freedesktop.org
-> Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; Dexuan
-> Cui <decui@microsoft.com>
-> Subject: [PATCH] drm/hyperv: Fix double mouse pointers
->=20
-> It looks like Hyper-V supports a hardware cursor feature. It is not used
-> by Linux VM, but the Hyper-V host still draws a point as an extra mouse
-> pointer, which is unwanted, especially when Xorg is running.
->=20
-> The hyperv_fb driver uses synthvid_send_ptr() to hide the unwanted
-> pointer.
-> When the hyperv_drm driver was developed, the function
-> synthvid_send_ptr()
-> was not copied from the hyperv_fb driver. Fix the issue by adding the
-> function into hyperv_drm.
->=20
-> Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic
-> video device")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Cc: Deepak Rawat <drawat.floss@gmail.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  drivers/gpu/drm/hyperv/hyperv_drm.h         |  1 +
->  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |  1 +
->  drivers/gpu/drm/hyperv/hyperv_drm_proto.c   | 39 ++++++++++++++++++++-
->  3 files changed, 40 insertions(+), 1 deletion(-)
+The memory of these vms are encrypted and host can't access guest
+memory directly. Hyper-V provides new host visibility hvcall and
+the guest needs to call new hvcall to mark memory visible to host
+before sharing memory with host. For security, all network/storage
+stack memory should not be shared with host and so there is bounce
+buffer requests.
 
-Thank you!
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Vmbus channel ring buffer already plays bounce buffer role because
+all data from/to host needs to copy from/to between the ring buffer
+and IO stack memory. So mark vmbus channel ring buffer visible.
+
+There are two exceptions - packets sent by vmbus_sendpacket_
+pagebuffer() and vmbus_sendpacket_mpb_desc(). These packets
+contains IO stack memory address and host will access these memory.
+So add allocation bounce buffer support in vmbus for these packets.
+
+For SNP isolation VM, guest needs to access the shared memory via
+extra address space which is specified by Hyper-V CPUID HYPERV_CPUID_
+ISOLATION_CONFIG. The access physical address of the shared memory
+should be bounce buffer memory GPA plus with shared_gpa_boundary
+reported by CPUID.
+
+This patchset is based on the 5.15-rc1.
+
+Change since v4:
+	- Hide hv_mark_gpa_visibility() and set memory visibility via
+	  set_memory_encrypted/decrypted() 
+	- Change gpadl handle in netvsc and uio driver from u32 to
+	  struct vmbus_gpadl.
+	- Change vmbus_establish_gpadl()'s gpadl_handle parameter
+	  to vmbus_gpadl data structure.
+	- Remove hv_get_simp(), hv_get_siefp()  hv_get_synint_*()
+	  helper function. Move the logic into hv_get/set_register().
+	- Use scsi_dma_map/unmap() instead of dma_map/unmap_sg() in storvsc driver.
+	- Allocate rx/tx ring buffer via alloc_pages() in Isolation VM  
+
+Change since V3:
+	- Initalize GHCB page in the cpu init callbac.
+	- Change vmbus_teardown_gpadl() parameter in order to
+	  mask the memory back to non-visible to host.
+	- Merge hv_ringbuffer_post_init() into hv_ringbuffer_init().
+	- Keep Hyper-V bounce buffer size as same as AMD SEV VM
+	- Use dma_map_sg() instead of dm_map_page() in the storvsc driver.
+
+Change since V2:
+       - Drop x86_set_memory_enc static call and use platform check
+         in the __set_memory_enc_dec() to run platform callback of
+	 set memory encrypted or decrypted.
+
+Change since V1:
+       - Introduce x86_set_memory_enc static call and so platforms can
+         override __set_memory_enc_dec() with their implementation
+       - Introduce sev_es_ghcb_hv_call_simple() and share code
+         between SEV and Hyper-V code.
+       - Not remap monitor pages in the non-SNP isolation VM
+       - Make swiotlb_init_io_tlb_mem() return error code and return
+         error when dma_map_decrypted() fails.
+
+Change since RFC V4:
+       - Introduce dma map decrypted function to remap bounce buffer
+          and provide dma map decrypted ops for platform to hook callback.        
+       - Split swiotlb and dma map decrypted change into two patches
+       - Replace vstart with vaddr in swiotlb changes.
+
+Change since RFC v3:
+       - Add interface set_memory_decrypted_map() to decrypt memory and
+         map bounce buffer in extra address space
+       - Remove swiotlb remap function and store the remap address
+         returned by set_memory_decrypted_map() in swiotlb mem data structure.
+       - Introduce hv_set_mem_enc() to make code more readable in the __set_memory_enc_dec().
+
+Change since RFC v2:
+       - Remove not UIO driver in Isolation VM patch
+       - Use vmap_pfn() to replace ioremap_page_range function in
+       order to avoid exposing symbol ioremap_page_range() and
+       ioremap_page_range()
+       - Call hv set mem host visibility hvcall in set_memory_encrypted/decrypted()
+       - Enable swiotlb force mode instead of adding Hyper-V dma map/unmap hook
+       - Fix code style
+
+Tianyu Lan (12):
+  x86/hyperv: Initialize GHCB page in Isolation VM
+  x86/hyperv: Initialize shared memory boundary in the Isolation VM.
+  x86/hyperv: Add new hvcall guest address host visibility  support
+  Drivers: hv: vmbus: Mark vmbus ring buffer visible to host in
+    Isolation VM
+  x86/hyperv: Add Write/Read MSR registers via ghcb page
+  x86/hyperv: Add ghcb hvcall support for SNP VM
+  Drivers: hv: vmbus: Add SNP support for VMbus channel initiate 
+    message
+  Drivers: hv : vmbus: Initialize VMbus ring buffer for Isolation VM
+  x86/Swiotlb: Add Swiotlb bounce buffer remap function for HV IVM
+  hyperv/IOMMU: Enable swiotlb bounce buffer for Isolation VM
+  scsi: storvsc: Add Isolation VM support for storvsc driver
+  net: netvsc: Add Isolation VM support for netvsc driver
+
+ arch/x86/hyperv/Makefile           |   2 +-
+ arch/x86/hyperv/hv_init.c          |  78 ++++++--
+ arch/x86/hyperv/ivm.c              | 282 ++++++++++++++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h |  17 ++
+ arch/x86/include/asm/mshyperv.h    |  62 ++++--
+ arch/x86/include/asm/sev.h         |   6 +
+ arch/x86/kernel/cpu/mshyperv.c     |   5 +
+ arch/x86/kernel/sev-shared.c       |  63 +++---
+ arch/x86/mm/mem_encrypt.c          |   3 +-
+ arch/x86/mm/pat/set_memory.c       |  19 +-
+ arch/x86/xen/pci-swiotlb-xen.c     |   3 +-
+ drivers/hv/Kconfig                 |   1 +
+ drivers/hv/channel.c               |  73 ++++---
+ drivers/hv/connection.c            |  96 ++++++++-
+ drivers/hv/hv.c                    |  85 ++++++--
+ drivers/hv/hv_common.c             |  12 ++
+ drivers/hv/hyperv_vmbus.h          |   2 +
+ drivers/hv/ring_buffer.c           |  55 ++++--
+ drivers/hv/vmbus_drv.c             |   4 +
+ drivers/iommu/hyperv-iommu.c       |  60 ++++++
+ drivers/net/hyperv/hyperv_net.h    |  12 +-
+ drivers/net/hyperv/netvsc.c        | 304 +++++++++++++++++++++++++++--
+ drivers/net/hyperv/netvsc_drv.c    |   1 +
+ drivers/net/hyperv/rndis_filter.c  |   2 +
+ drivers/scsi/storvsc_drv.c         |  24 ++-
+ drivers/uio/uio_hv_generic.c       |  20 +-
+ include/asm-generic/hyperv-tlfs.h  |   1 +
+ include/asm-generic/mshyperv.h     |  17 +-
+ include/linux/hyperv.h             |  19 +-
+ include/linux/swiotlb.h            |   6 +
+ kernel/dma/swiotlb.c               |  41 +++-
+ 31 files changed, 1204 insertions(+), 171 deletions(-)
+ create mode 100644 arch/x86/hyperv/ivm.c
+
+-- 
+2.25.1
+
