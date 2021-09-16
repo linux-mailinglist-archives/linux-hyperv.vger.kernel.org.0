@@ -2,158 +2,135 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B56E640DD16
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Sep 2021 16:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C921C40E490
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Sep 2021 19:24:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238723AbhIPOpc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Sep 2021 10:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51906 "EHLO
+        id S244497AbhIPREn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Sep 2021 13:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237526AbhIPOpb (ORCPT
+        with ESMTP id S1347849AbhIPRAo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Sep 2021 10:45:31 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A595C061574;
-        Thu, 16 Sep 2021 07:44:11 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id t4so4052644plo.0;
-        Thu, 16 Sep 2021 07:44:11 -0700 (PDT)
+        Thu, 16 Sep 2021 13:00:44 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533D3C0363CE;
+        Thu, 16 Sep 2021 09:17:24 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id ay33so8045326qkb.10;
+        Thu, 16 Sep 2021 09:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=daOJCQ5ZGPvwc1951n97peFQn5CdNcYRqjhdeKz1vfU=;
-        b=kFhwzpK+Y6fzZ8X7nPLZDzATwjammU+fVatUdP6GQmmOa4cwb7pps1Nw0JafcdN05c
-         us+rB0fvubZS9oiEAFzEFlFf312AuI1o1bEmAQE4QmcO1zjNKu1RZh97KgxL0BNdbt63
-         0Jr+VY4PzihMoQPiBbmbSubnZSyQYJcQQgB+obVuZmtoGKsNqbBtlR5Gbo8zv710wZ9R
-         a8mRhJlIllHxWHu31340de111QSrO67EpQHGFhSYs/S/jlv0B8eWaFAGTKy4KKxxqu/i
-         pxm1iG7a99zgqWZv5DChQlteGUPk7MFUk4oD2MTOCUtVe1ZR4X5ZKY5Ua3wnolLudPA4
-         hmZA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9bNXzT+QjdczaR0NrtTvu7baFnr9KybQD65y/vUcaD8=;
+        b=WbzRt/2SFYXzgn8/y8QfQ7UAZErvt4gH4M35TM24D3BawYcEwMA3SqYkqrE29LEaqB
+         y+7curn9JBBi0dUk1oPYcmuY/tq/H2nwVga8lOkUd9zozL8Y0Fumyr+l90XPU3v6eQXr
+         H1yqBJhL0rWzBNYYc3PiABr9Ri4F476YWnXZNs49aQ7CCaQ9Xh/pSheeRXe68aSb+MLI
+         f8X6zLQI3vVDCVYPMZuJWuFpzPHXZj0HdOyrGj/9Pi2xDG9daQgWLSdKpgu/I8YjYqsP
+         YwIkwhYuTPa1DSZ/pHeU8qws7sEIej9K8FAUl+759UG41h24FR1RuOCaFmPmmrtdLgfI
+         jUzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=daOJCQ5ZGPvwc1951n97peFQn5CdNcYRqjhdeKz1vfU=;
-        b=hQFiDPa/zWuqOizk67ZxzUc/hig4SPZafaAyO5E1dGfBxJKQOUxHbSnsVmhtgnazOz
-         0mNpptgOPSTFDgRjZwvct8aZlnijU8GfqocN8AyrQdtCUKhVAL6l/O8vAtNn++TEkfVf
-         4w6GXcLVqYDrWSn+uVokCiN9X7lv7LviqHVfELqTCnLfpMSCvHV5IN7VhnPgcKiqDKtx
-         +9mqeHPB/RCmPq34PovdkN+qnj4jqHR2h0nRgs9IVefnqtzyuDO+KEPnNIFYlVQejqMb
-         D766ZqcBfZ9WA19uYN5evwGaTisga2pH9vG64+wBDB8Kuynxb1rUtf323GT3l3hZx7Lq
-         kV7g==
-X-Gm-Message-State: AOAM531zvE2MeOfwfjXIsALjVkoGZcNhA4ZmShZeM8zTjXOtZnVJZOuZ
-        /EN93lFv7gzOPZWg2MZ0cE4=
-X-Google-Smtp-Source: ABdhPJy1NmsnM3CBTxeh4uCd/At4jyjgdaLl8A9jDJfcHgoAtY82XgoTk9uMDIbNLVKuF0mho51VHA==
-X-Received: by 2002:a17:903:248f:b029:128:d5ea:18a7 with SMTP id p15-20020a170903248fb0290128d5ea18a7mr5070119plw.83.1631803450601;
-        Thu, 16 Sep 2021 07:44:10 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
-        by smtp.gmail.com with ESMTPSA id d3sm3759819pga.7.2021.09.16.07.43.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Sep 2021 07:44:10 -0700 (PDT)
-Subject: Re: [PATCH V5 12/12] net: netvsc: Add Isolation VM support for netvsc
- driver
-To:     Michael Kelley <mikelley@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "pgonda@google.com" <pgonda@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "rppt@kernel.org" <rppt@kernel.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-        "saravanand@fb.com" <saravanand@fb.com>,
-        "krish.sadhukhan@oracle.com" <krish.sadhukhan@oracle.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "tj@kernel.org" <tj@kernel.org>,
-        "rientjes@google.com" <rientjes@google.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-References: <20210914133916.1440931-1-ltykernel@gmail.com>
- <20210914133916.1440931-13-ltykernel@gmail.com>
- <MWHPR21MB15939A5D74CA1DF25EE816ADD7DB9@MWHPR21MB1593.namprd21.prod.outlook.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <850a0129-ef82-67e9-165f-8503da6889dd@gmail.com>
-Date:   Thu, 16 Sep 2021 22:43:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9bNXzT+QjdczaR0NrtTvu7baFnr9KybQD65y/vUcaD8=;
+        b=OlZmHOX2q7EmiYBj1ocr6JKe8n4GHZsuT27rjAM7Y9i2OEzqMMnxHEmkgs7tm0J27S
+         TIe1XcfiSkETqDo9jIkmwkOaHhoI0CqxAZ8pHqYyaieoNE444uz4xhOutxGaWQq3MPxY
+         i1TGFILH4y+JjU2hDsJLfIJ3tGeuKchX0YbFcev4n3lBDesi6cDk6inc7ylXILw7Ycpo
+         kajwuHGvOQmEbY0a79qGDbrdZBHBhEo24XtcE42UC0mH+9tYsnpb/kMP7gmX41WNuvw3
+         4n6l5i7ZmfWbrKqK8wA0Mznm7dCXosF03Mo1jKZ3uB/k3ACKOypnmLzPiOyJDjk6M9I7
+         K4fw==
+X-Gm-Message-State: AOAM530pUwvsCySkpaouUR9SUMEwRf/FHUyqsgfQqViYCi5NjwiiG/A8
+        uPcAOW6Bu9lvlzOOrJJdQBL5jbuTV+LcBiVZAgM+scYadUwlZw==
+X-Google-Smtp-Source: ABdhPJwuTIIoaeKG5dah6ds3dwC87mVmoHxHQgUXPL/pWtyxLdI8wqN2wE6Jbq5pE2WGwUWTwVCGFex7KyziEFRAG4w=
+X-Received: by 2002:a25:9906:: with SMTP id z6mr7954873ybn.373.1631809043295;
+ Thu, 16 Sep 2021 09:17:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <MWHPR21MB15939A5D74CA1DF25EE816ADD7DB9@MWHPR21MB1593.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210913182645.17075-1-decui@microsoft.com> <CAHFnvW0iX1FMTcJzQQtjHGosavSJ6-9wkRb7C0Ljv3c+BBUEXQ@mail.gmail.com>
+ <BYAPR21MB1270C4427C264D14F151A0CCBFDB9@BYAPR21MB1270.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB1270C4427C264D14F151A0CCBFDB9@BYAPR21MB1270.namprd21.prod.outlook.com>
+From:   Deepak Rawat <drawat.floss@gmail.com>
+Date:   Thu, 16 Sep 2021 09:17:12 -0700
+Message-ID: <CAHFnvW3J-9LGCUSP_5mvYFyiUMCy63=egu1X3Uv9GrecfOJvRQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/hyperv: Fix double mouse pointers
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 9/16/2021 12:21 AM, Michael Kelley wrote:
-> I think you are proposing this approach to allocating memory for the send
-> and receive buffers so that you can avoid having two virtual mappings for
-> the memory, per comments from Christop Hellwig.  But overall, the approach
-> seems a bit complex and I wonder if it is worth it.  If allocating large contiguous
-> chunks of physical memory is successful, then there is some memory savings
-> in that the data structures needed to keep track of the physical pages is
-> smaller than the equivalent page tables might be.  But if you have to revert
-> to allocating individual pages, then the memory savings is reduced.
-> 
+HI Dexuan, thanks for confirming. Could you please add this as a
+comment to the function.
 
-Yes, this version follows idea from Christop in the previous 
-discussion.(https://lkml.org/lkml/2021/9/2/112)
-This patch shows the implementation and check whether this is a right 
-direction.
+Reviewed-by: Deepak Rawat <drawat.floss@gmail.com>
 
-> Ultimately, the list of actual PFNs has to be kept somewhere.  Another approach
-> would be to do the reverse of what hv_map_memory() from the v4 patch
-> series does.  I.e., you could do virt_to_phys() on each virtual address that
-> maps above VTOM, and subtract out the shared_gpa_boundary to get the
-> list of actual PFNs that need to be freed.
-
-virt_to_phys() doesn't work for virtual address returned by 
-vmap/vmap_pfn() (just like it doesn't work for va returned by 
-vmalloc()). The pfn above vTom doesn't have struct page backing and
-vmap_pfn() populates the pfn directly in the pte.(Please see the
-vmap_pfn_apply()). So it's not easy to convert the va to pa.
-
->   This way you don't have two copies
-> of the list of PFNs -- one with and one without the shared_gpa_boundary added.
-> But it comes at the cost of additional code so that may not be a great idea.
-> 
-> I think what you have here works, and I don't have a clearly better solution
-> at the moment except perhaps to revert to the v4 solution and just have two
-> virtual mappings.  I'll keep thinking about it.  Maybe Christop has other
-> thoughts.
-
-
-
+On Tue, Sep 14, 2021 at 11:59 PM Dexuan Cui <decui@microsoft.com> wrote:
+>
+> > From: Deepak Rawat <drawat.floss@gmail.com>
+> > Sent: Tuesday, September 14, 2021 8:59 AM
+> > ...
+> > > +/* Send mouse pointer info to host */
+> > > +int hyperv_send_ptr(struct hv_device *hdev)
+> > > +{
+> > > +       struct synthvid_msg msg;
+> > > +
+> > > +       memset(&msg, 0, sizeof(struct synthvid_msg));
+> > > +       msg.vid_hdr.type = SYNTHVID_POINTER_POSITION;
+> > > +       msg.vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
+> > > +               sizeof(struct synthvid_pointer_position);
+> > > +       msg.ptr_pos.is_visible = 1;
+> >
+> > "is_visible" should be 0 since you want to hide the pointer. Maybe
+> > better, accept these from the caller.
+>
+> According to my test, "is_visible = 0" doesn't work, i.e. can't hide the
+> unwanted HW mouse poiner. It looks like the field is for some very old
+> legacy Windows VMs like Windows Vista.
+>
+> Haiyang also replied in another email, saying "is_visible = 0" doesn't
+> work.
+>
+> > > +       msg.ptr_pos.video_output = 0;
+> > > +       msg.ptr_pos.image_x = 0;
+> > > +       msg.ptr_pos.image_y = 0;
+> > > +       hyperv_sendpacket(hdev, &msg);
+> > > +
+> > > +       memset(&msg, 0, sizeof(struct synthvid_msg));
+> > > +       msg.vid_hdr.type = SYNTHVID_POINTER_SHAPE;
+> > > +       msg.vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
+> > > +               sizeof(struct synthvid_pointer_shape);
+> > > +       msg.ptr_shape.part_idx = SYNTHVID_CURSOR_COMPLETE;
+> > > +       msg.ptr_shape.is_argb = 1;
+> > > +       msg.ptr_shape.width = 1;
+> > > +       msg.ptr_shape.height = 1;
+> > > +       msg.ptr_shape.hot_x = 0;
+> > > +       msg.ptr_shape.hot_y = 0;
+> > > +       msg.ptr_shape.data[0] = 0;
+> > > +       msg.ptr_shape.data[1] = 1;
+> > > +       msg.ptr_shape.data[2] = 1;
+> > > +       msg.ptr_shape.data[3] = 1;
+> > > +       hyperv_sendpacket(hdev, &msg);
+> > > +
+> >
+> > Is it necessary to send SYNTHVID_POINTER_SHAPE here? Perhaps we should
+>
+> According to my test, yes. If I don't send a SYNTHVID_POINTER_SHAPE message,
+> the unwanted mouse pointer can't be hidden. As we know, the protocol between
+> the VSC and the VSP is not well documented to us. I can ask Hyper-V
+> team for some clarification on this, but it's probably we can just use the current
+> version of hiding the mouse pointer as-is -- this has been used for 10+ years
+> in the hyperv_fb driver without any issue. :-)
+>
+> > separate SYNTHVID_POINTER_POSITION and SYNTHVID_POINTER_SHAPE into
+> > different functions.
+>
+> Since the 2 messages are only used here, I suggest we keep it as-is.
+>
+> Thanks,
+> -- Dexuan
