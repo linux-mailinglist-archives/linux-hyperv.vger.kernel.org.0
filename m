@@ -2,135 +2,230 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8BC140E626
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Sep 2021 19:29:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 166F340EAE8
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Sep 2021 21:37:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346528AbhIPRS1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Sep 2021 13:18:27 -0400
-Received: from mail-oln040093003012.outbound.protection.outlook.com ([40.93.3.12]:58429
+        id S233584AbhIPTij (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Sep 2021 15:38:39 -0400
+Received: from mail-oln040093003003.outbound.protection.outlook.com ([40.93.3.3]:24549
         "EHLO na01-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S244078AbhIPRQ0 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Sep 2021 13:16:26 -0400
+        id S232543AbhIPTij (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 16 Sep 2021 15:38:39 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mAbDFyUdvlGPu2qOy0nCRtAZWWkUejAlUUjgFcI9CBfZO1nzS/wWo0B+ouJHfyGsNsmLNf1vovztch9lIRYavjSV5+zk5VRVpuIn4obo3e4ZSpcm2aGQb4jgyJqmPNISNKXuTh/RbcFjIE97vn3kU61Ke6wlTzByQe7fK481CJoS5JCemUcmh0w6eXz6jWxtGN3woao6Lh10SFxQNw2H6lhb8y+LtPlc47pq0tKBPS622umuHxp4cf9TTMsYXkW5NLX/ryR7x9NtNBJt8NWEg2/TCgpr6JgWlJUPSrmTOSmITSez1/OF/OwwUVaxDdWLgEAsRxf8GeU7SLDkAVw0PQ==
+ b=JkpWkIuqyQKMj2p89O684hLbzftY6xXDpAV5308Shb3jUaVzQoJmNv+7jn7gvBthrtFb7m6rpWag0+5dBbIsvkZTeAkierSf2081rZbtgymgL31SpItuN26ia2Vn22/+60mtMzPS7nWHoH9OSzM5/6aDZmfYhfKVBv32VMJKRrYkrjQSYZMIPhLLDLwUxfWmskWY1a8RjOOnGDbTrNEGuFmV0y3XLTyt+yyHDEfEC9eIV4013P3+O0XGZVzaN12DDPShqzP74AmWqjB70V4TOSGQIqmUvaidqVDecjcSRYG+sW84E3gtoBpyugrkzV8aaD6fQjIzz3oCBfNi8HfvpA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=V9/0ht69rSgHA4RWeq8iM0wgw9sbIqL8c7I7quy/ZzU=;
- b=PijiFFcB/rarZfDponz+pWsdx45fBuc18u5mtcPix+f4+6MEDamu0+D9P4jLP3tvAxsR+iEqN4aBDGEkeAR6c3WJISnIFmEYvRrRnMyAjLcIAg1DCrUuWxuBd2bv+5NNFyKZ+Lw7lXVwVjfpCJFtZi/Uh7U8sS7Suxr7zhygyqQX8ZX6xnM9Q91XaIdzjdHrecgAiYfuhfF7ttqiDIpU7nyvdDECfLxa5FUTYjHKJwoOZP+0Jjp7UqIEm5WsSKdA5X+YKan19OMpccr6vJDVIAThzZZA7uMF1ZAyR2LXvrhVFF5DOVDR41cBhPdkXied0xbpJm3zM/KjFNytWTt4MQ==
+ bh=7AtpEKd6Wt6LO0XHPGBYnRut3zHKZHOuJonBbax0oEY=;
+ b=Myigs3Mey+0hMjtHZo4zLfEqwvW6f/uw8CjqzR9XXiKDTMXUr//QqGhI3PZ3bfYF56uhcKSpLAEmlWODj2OKd3UvtoP0HyOorCoXu2r7q1mNyxZoR1L/onZ7nbgy9emV8BMllJCPsdeyrGau72QbOiwWERGX8QiAEnjTkW20D2weXXwsO9AgSzCVPMOP2edIaK5si0AsodopntH26Al2iBMi7PEGjncYU1t3PDt/e4QlwLrwHWnDnswLtHXqX7hcs0Xe5YuKS6JFYHRerUHpN20suZLVCOopORWPiSA3xHD/7r/IH5VIwdsMWuZPiF037etAkGonRfvrqj8JxfkudQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V9/0ht69rSgHA4RWeq8iM0wgw9sbIqL8c7I7quy/ZzU=;
- b=RxOjrZREf6ZDnd9jLH/TxCt+FK6RZgpXnTeHfHmYEeYrKEhNK6wzMNR3Pd95e9yorFl6GvPcSnzv9s/zZPbJhMrzViG35oHBrmlKTgpOxSORTnp5NUebcbBrEIP794jaiX2JqT4AJINfcczyLxKH+MzngOqNSlwJZJKJQEMhpGw=
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
- by BYAPR21MB1176.namprd21.prod.outlook.com (2603:10b6:a03:104::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.3; Thu, 16 Sep
- 2021 17:15:02 +0000
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::e56b:9b01:9633:78c0]) by BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::e56b:9b01:9633:78c0%7]) with mapi id 15.20.4544.002; Thu, 16 Sep 2021
- 17:15:02 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Deepak Rawat <drawat.floss@gmail.com>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] drm/hyperv: Fix double mouse pointers
-Thread-Topic: [PATCH] drm/hyperv: Fix double mouse pointers
-Thread-Index: AQHXqYGDSoFNik8c8kWZU0a77zui5aukpo7QgAIzCwCAAA9bQA==
-Date:   Thu, 16 Sep 2021 17:15:02 +0000
-Message-ID: <BYAPR21MB1270E92AFA833942EB6B75C8BFDC9@BYAPR21MB1270.namprd21.prod.outlook.com>
-References: <20210913182645.17075-1-decui@microsoft.com>
- <CAHFnvW0iX1FMTcJzQQtjHGosavSJ6-9wkRb7C0Ljv3c+BBUEXQ@mail.gmail.com>
- <BYAPR21MB1270C4427C264D14F151A0CCBFDB9@BYAPR21MB1270.namprd21.prod.outlook.com>
- <CAHFnvW3J-9LGCUSP_5mvYFyiUMCy63=egu1X3Uv9GrecfOJvRQ@mail.gmail.com>
-In-Reply-To: <CAHFnvW3J-9LGCUSP_5mvYFyiUMCy63=egu1X3Uv9GrecfOJvRQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=20d8c9ba-e140-4051-a0c6-422e94604b97;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-09-16T17:12:09Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
+ bh=7AtpEKd6Wt6LO0XHPGBYnRut3zHKZHOuJonBbax0oEY=;
+ b=F8tYuhKajRmQa/kHo9+F8mqOepVjpHuIUaeNZ5EdWPdGwIcq7qtoam8SR5OfRDXYPqUm9Tl6L/pT60JMzTmeAFfGUmG9I45xY1YFUeHrf+BAHzUMA52y6W8EQqztC5Lh9EOKYetmOkbBQk9/UOZJxfNm+Bq/7eTu3O25w4urmQI=
+Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fa0bef30-1f83-4c5f-60ea-08d97935852d
-x-ms-traffictypediagnostic: BYAPR21MB1176:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR21MB11762F484EC1C5F3F795F64ABFDC9@BYAPR21MB1176.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9WZgm6BFrf4Z0l6nqrLgNR7LJ8mpycC4NKtrLKuA3wR6bkocptv1vxLvJB0sQzVjIjAuxfk18NeljXKCIk95ucTQJLvfSWlyl42AB76ycVH1N01yetBmvKl0PUifKO9VolZkCcbGp2vmmcj29pOxg/2PYuMsbj/+wAU43qhVzzNL+qRzIdOeDF04RbTG7jpIILpM6iZ9PRwio3LFluco6enFzNhkvcGINgNVKnDSxA6DB3jeDvzvU8gNfmPbhsKzTLjlDHsZFfl99UbokrtFca9ZlA7Y3YiLNJwnhHfisZ1cXMFtLmFElHk9FniTHnvLkL0jp3CbIcmzojA2EUiMrATjHCVJNyUBGF79eZgtQ2JJxK+Zvws2d0nlSaj/kJHyKDu7oyjX+v8Nl9m88VSSAw284iXqkck8xtk+O4K4IFISfMGZqpqHoi0rZpcQmINxXmvkou7n5uRvRtcMHITN1q22J7Vu/YK8rDdwosOkD1Oafk0tbZkp4W+p1JHfaMFZyLwh7tk69X0teeYJyRi7wJXKmnsUdmtw5SMLdF9Ljr4ON3X8eclF9pcx8UeepIbn1q4RLiQjOVSxeKl4heSSFglCzmGH+xGjVyY4yR8TWsHBCK72Z7CBj/arwgMQIiw5Z4M3to+V+fUIIF2BVsqTyBA0qgsOEW6gc/bT/tq0OMQ8MTPWpx7bKVfW+DHhibC6d/7aYYhyqNM0cvSGiQmdGw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(7696005)(52536014)(82960400001)(82950400001)(38070700005)(4744005)(4326008)(38100700002)(186003)(8676002)(8990500004)(122000001)(33656002)(9686003)(54906003)(55016002)(2906002)(10290500003)(66446008)(64756008)(53546011)(66556008)(316002)(6916009)(26005)(86362001)(71200400001)(76116006)(83380400001)(5660300002)(66946007)(6506007)(66476007)(8936002)(508600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ekV5NmFzQWRNUld2SWEydGpURk5QVWNudzcxZ3JpMmJDa0RodkhnbnFkWEpR?=
- =?utf-8?B?d1hhV1cvKy96ajVYVk9vbVhZZDQ0Z1VUUllnUTBpWHE1cG4ra1c5Q09DZTNU?=
- =?utf-8?B?VThhYTd5b3NDazR1TGMwS2ttd2kyQkE2bFkvUHk2Sy9hVWw5Z0JlNDJCZFlF?=
- =?utf-8?B?V2tKcVVBMys2OTkrclZoVkgwSE5QeTRrdGk4Ry9wak1ndDNEZy9JM3Faa0Ns?=
- =?utf-8?B?MDNPR05ZR2FCNTV3cUw0OFBtYTQxWWRhUDMyWFBWYVJVd0I0ZjFLNTNLam9G?=
- =?utf-8?B?ZEZ0R2c0b0NwMzYxNGlMRFdiSUZXK00yYmE3RzZJWTBIbVNoMldwWmZ6Y05W?=
- =?utf-8?B?TUpDVjQxdVpUaXQxQ2I3SnRHa0Jnd056Wm1OcjkyaGlwR2tvYWhKeFJ4ZDBn?=
- =?utf-8?B?dXJ3L0JxNUltbXhQMFFjMjhkSTMrTjhQY2tsQjNPRHJBbWVXUHV1YjZSOWNT?=
- =?utf-8?B?WkZXUDN4VVE3Snl6Qks0Z0NzQ0tZblA3K29QQmMxUnE3cXN5M1BKVHpXN3FB?=
- =?utf-8?B?cjdYblZwd1NWbWVicU1iYTZsWkJmNkJ2dU5xM0xWb0FRWE5uWTNNZTVpblRa?=
- =?utf-8?B?blBSZEFiUmhzMDJYRmZSZmh0VDhnT25jMDd5Q05NUGlLNW5LM1dMaTkvb3Ru?=
- =?utf-8?B?Q2VEZjcrV2tIalFyWGpJN3dROUJiaTlnQnBhMTNoV0M3eHhHb1psZFZIRVdh?=
- =?utf-8?B?R2hkOGxDeXUzK1FlQThzSGV2TGxaQ3lvQnNaa29EbFQ1VFdtb1NpbkxnbFhD?=
- =?utf-8?B?SVVnM0Y4d2ZLNlRkV2RkT2toNnp0RFpMVHVCMVBVN3RTWlpLT1F1S2JXT3V4?=
- =?utf-8?B?K0Z6MzBFOUdJYlNMcjVkZVJ5ZUFVSkdHekNGZXZwSnZkS25NR0ZBeS9KSkpX?=
- =?utf-8?B?Z0pIeWYxemV3UjNOU3c1QlBiY1BFQlJYL2NvcFE3SlNrVGo1Y3NwejBmSS9H?=
- =?utf-8?B?alpvaUtCdjdjV0NYM0dVUWwrdHBuUCtia0Fkdnc4Tk9UUGFBU3FPZWJ1K3hW?=
- =?utf-8?B?ZlFYL2pTM2tpaGlVZERQNlZiRGp3dnJIU05rY0dldytSN2FNMzREVmdyY2hO?=
- =?utf-8?B?L3E1bS84bHVLSDZkYUNzRzVjeG1FdkkwZURvTXFINUhWK0pCcUo1QlNsUUlu?=
- =?utf-8?B?M2xLd2hoTUh2Mi9OdUVmNkhDMndpc3lqSUlFTEhKT0w5UWpuZ3lyd1RRUDQ0?=
- =?utf-8?B?M2x0YUEyWFVvTDZUQUtyWE1NTHpyNkNyZjgwRnB6TFUyYkFPazhvSUc3K0t2?=
- =?utf-8?B?WFBVcVdJV3NKWit6OGlQeS8wb1VubG40Tk5Td0V6K2hkb2RHREQ3MFJyTTc2?=
- =?utf-8?B?bWRCNFNRYyt1bHErK3Bmd3JlcEFJbnp0SzNCS3ZUWGpUbGVCNUszd3ZSZm9m?=
- =?utf-8?B?L2hZWjBhd2trR2F5LzZEL1VlZXdaT1M1UHhEaU5vcnp3WXhGeU82b0dqdWFF?=
- =?utf-8?B?NEpsQzVHMUQ3Sm1UbzNuc3RBSjkyc1F5SGhpVThEdUp5VEdkVVJ3c3VHYzhU?=
- =?utf-8?B?aG5abndHSjh1RTF3Vjlla3RjNndkSTl4b096cDkrTEFsTTJEOXp3c1h6cnZy?=
- =?utf-8?B?alRDVlk5N04yaGVYajJNL002VDAzNDBpU1BBVHR5MWJrejA3K1hpbkVvOThj?=
- =?utf-8?B?Qm0yRHhPaVVOMTRWZUFJcmtkSmZkaysrMndaR2YzZkFLd3B2Vys3Wk83NDhO?=
- =?utf-8?B?QlJIUi94TUxtZFNuNU4rWTdIbi80Wk5JM3I4eFpCRzB2R29YM1h1WVBTSlZz?=
- =?utf-8?Q?KCwZ8tI1rK8VQcsPq6jl4BBvZoroGoZCT7k6b7g?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26) by BL0PR2101MB0883.namprd21.prod.outlook.com
+ (2603:10b6:207:36::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.7; Thu, 16 Sep
+ 2021 19:37:16 +0000
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::35fa:e8c:d9:39c3]) by BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::35fa:e8c:d9:39c3%7]) with mapi id 15.20.4544.004; Thu, 16 Sep 2021
+ 19:37:15 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     drawat.floss@gmail.com, haiyangz@microsoft.com, airlied@linux.ie,
+        daniel@ffwll.ch, tzimmermann@suse.de,
+        dri-devel@lists.freedesktop.org
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2] drm/hyperv: Fix double mouse pointers
+Date:   Thu, 16 Sep 2021 12:36:44 -0700
+Message-Id: <20210916193644.45650-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: CO2PR07CA0071.namprd07.prod.outlook.com (2603:10b6:100::39)
+ To BL0PR2101MB1092.namprd21.prod.outlook.com (2603:10b6:207:37::26)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:a:822c:5dff:feb8:fa01) by CO2PR07CA0071.namprd07.prod.outlook.com (2603:10b6:100::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.14 via Frontend Transport; Thu, 16 Sep 2021 19:37:14 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 13798837-c475-4fea-9757-08d9794962f4
+X-MS-TrafficTypeDiagnostic: BL0PR2101MB0883:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL0PR2101MB088356953D431A128CE04E60BFDC9@BL0PR2101MB0883.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sAV7nKpQRJGBetKCMOx/5pTDxS1IplCLqK3tjkErejBHuRSQILuH+m48SX9hNi1rAPhUa9rgGyE2EajvuMWreSTTQaLARUOEf4nd4SXWTLBj8teu1bSzdZjOcm4uMg/SEGYmLCaDqCXtgQ2Lzz0On4SN0L9LNr9R6fkc6ycjyk19M2vWqzT8TDW1LM9k3HWHWEg1yQqHKdGkB61wT7UEvndTHKgTlYylRy/3SHQIV576z7BBN+yGDls2qnsDM5ZLPz1nUwBpMhvhquZxqVUeTZYupAGWQ6xAUQhPe7Scw8cbpovzke/jH9ZnRRKIWPKvxkjBbaY+FhPfACr0LDNDSV6jx+gCat+McJLMJemb4C77YZ9RryflgyASFJ03v5FklRbg8mjwvdrFhD3nl4qbk/V3ViLfYFMUWK43aL9SUtuFuim/GhkR+SVBOMzkVT3ER22VQWEX90RsNcE+BDV5kcoNPdi58/S32WFazJP2CglCtu57JNq9xggFah6eSaqRu/F0uYlrdyP6WNbK4ZCvLe83f7hLO3NHcUEexe7F1MCx896/52SdMVBAqmaaNR17UJViMFEskRpHVhrlmeH1xo/hRGisWjoVHd1W0ylq/BGwLvX0RmcdRLcCRBDXHEXO7GMqq+77zHBDWnl/+uexkw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6486002)(10290500003)(8676002)(66476007)(8936002)(66946007)(508600001)(316002)(5660300002)(186003)(2906002)(6666004)(7696005)(52116002)(36756003)(86362001)(1076003)(83380400001)(66556008)(82960400001)(2616005)(107886003)(82950400001)(4326008)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+8X1pvVxOn7RYbuua96ijJY3UA8AFcu5R2K70QG4CJLwiwuoYk5LOYfwwdRH?=
+ =?us-ascii?Q?YXpAE6QLl1IEzS83CWbWYZP3Tnzeg0NAU91qK16v6f/qCVoWlPpdEwzazC/f?=
+ =?us-ascii?Q?/fiFqAGg0FoI6/s0CjprmyTnEg4BGY21/22ELWEjinnjJr3Qvb5abO1jkKmN?=
+ =?us-ascii?Q?taLBkKewuPBezwjEz5zSMgt2oyHE5kKQiBIdpInMMZPmo0WCwHtNYT1ogvkQ?=
+ =?us-ascii?Q?kdRjtPrmW4iRBUplxOm8MTX3RvxuLZpnKzU4sOrCJT4/eldhFWpR3yhwm3C9?=
+ =?us-ascii?Q?5TdSuo71waK+QKyWoRMDRkDb88hFPWPCnFYSE0KRPhoc348F0sdAw8KhmUaq?=
+ =?us-ascii?Q?KVpIRVXzt+RNjmcIsVAupaFx8lS858IENxPPqb/YkRCYj6UvsuDv5jZslQDY?=
+ =?us-ascii?Q?BxXAzkh2Vaz13Q2dc/iEYDd5U37TJLRyAd7+BBHL9cOTY4wZrbOPnlEwyR4r?=
+ =?us-ascii?Q?vvAgJO3G1Jnyax99+MzR6vV2STprPzIUCFGnIyZKZN3OgdVVisIRQFAZDMcL?=
+ =?us-ascii?Q?O3VjF1qgXvvvwT9gdpzBhXuNegVbTVZyaqZl/aBh8AIj2aZFPk99XW0dI/+Q?=
+ =?us-ascii?Q?IQqb7ZULKPxgRMTl6lK3anYtXBLpIRCYxdQdi9yxPFYJQl9VW2d4cK5cP5W3?=
+ =?us-ascii?Q?g3Y5JJ8bcwMKqmwF6wRxgmWwt6GehIES2+mqJtL2wsRdEIPgn60B5SP1mBSP?=
+ =?us-ascii?Q?sPF1Fk1fsJSWEeJjLbFcc4Fzs+wDirFPeMzURwOQgEYVcXmiYcg92W2b8qsc?=
+ =?us-ascii?Q?la5ztJ9bGoHwcWLsu5GEicMvPpBRDS5Bmctfwkn84OrbGe914FaLXNe5RvKF?=
+ =?us-ascii?Q?TC2j67WRyiTBjS5GUfJlvADVr5MTND5d5muelKIxRYnSSSg8f+ZbPg8qAUgK?=
+ =?us-ascii?Q?1OKDlZzC2OsFNEzWXS7b18zWB8W1ryP0BkbF8HHraLA4EklXJQQzhGRhc+7Y?=
+ =?us-ascii?Q?4K58NviAz6D57WJQOAfq8ygSBb9DAgjn0AEvs5a+liX9CP3DftZgd++uqTbk?=
+ =?us-ascii?Q?V1JO2fmZRBnmJDvROZg5mRxiwlhRjySAnMabp2YMOQJM7I8znpZHBjFW3Z4x?=
+ =?us-ascii?Q?0kJA5wvz/St7+psNy/wRn9wiiI8UZEHOLqXDbUdVjR7JoHe1uEYEzp5fNKNh?=
+ =?us-ascii?Q?/0BfXKrBf2DiTmPRYeN28nU1G4Q+pbiIhuWEJC2lAP3ng8CedkY5hky0uJ/r?=
+ =?us-ascii?Q?69OgqmoUcMNBvC8dNEdm5PBWT4SjIq8OttLbVaAItaw3RzH68hVEBcHSdwaq?=
+ =?us-ascii?Q?RBwwtZJDJvlW1uK1olrR82EVQkrtO9QkodSnSeRg8xvPSTqABwKhza3BJB40?=
+ =?us-ascii?Q?+1nVniyb8bV9JRK/+QPec/42GVOz977/FGL+pRJWTajoWDU+NQ3Su5iFyjsn?=
+ =?us-ascii?Q?5LkxEC2JZupTobUqe3KC4FPbJMxS?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13798837-c475-4fea-9757-08d9794962f4
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa0bef30-1f83-4c5f-60ea-08d97935852d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2021 17:15:02.2797
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2021 19:37:15.8510
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hkAl/BJqc35HMaiTKcktJFlmLOyq5ds47c14SmpzR6+5et//QVRdh8v1G0gIslxJ6fNJWfhmzMAH6pAhgHcorg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1176
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m8WShlWogxliSfGQxAElW8bLC3Rm05EEcfjv/G5ge7GgIRtDjmF1etBiLwakfNKsvx8ERnvvcSQNgc2TxO7w/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0883
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-PiBGcm9tOiBEZWVwYWsgUmF3YXQgPGRyYXdhdC5mbG9zc0BnbWFpbC5jb20+DQo+IFNlbnQ6IFRo
-dXJzZGF5LCBTZXB0ZW1iZXIgMTYsIDIwMjEgOToxNyBBTQ0KPiBUbzogRGV4dWFuIEN1aSA8ZGVj
-dWlAbWljcm9zb2Z0LmNvbT4NCj4gQ2M6IEhhaXlhbmcgWmhhbmcgPGhhaXlhbmd6QG1pY3Jvc29m
-dC5jb20+OyBEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+Ow0KPiBEYW5pZWwgVmV0dGVy
-IDxkYW5pZWxAZmZ3bGwuY2g+OyBUaG9tYXMgWmltbWVybWFubg0KPiA8dHppbW1lcm1hbm5Ac3Vz
-ZS5kZT47IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7DQo+IGxpbnV4LWh5cGVydkB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDog
-UmU6IFtQQVRDSF0gZHJtL2h5cGVydjogRml4IGRvdWJsZSBtb3VzZSBwb2ludGVycw0KPiANCj4g
-SEkgRGV4dWFuLCB0aGFua3MgZm9yIGNvbmZpcm1pbmcuIENvdWxkIHlvdSBwbGVhc2UgYWRkIHRo
-aXMgYXMgYQ0KPiBjb21tZW50IHRvIHRoZSBmdW5jdGlvbi4NCj4gDQo+IFJldmlld2VkLWJ5OiBE
-ZWVwYWsgUmF3YXQgPGRyYXdhdC5mbG9zc0BnbWFpbC5jb20+DQoNClRoYW5rcywgRGVlcGFrISAN
-CldpbGwgZG8sIGFuZCBJJ2xsIHJlbmFtZSB0aGUgZnVuY3Rpb24gdG8gaHlwZXJ2X2hpZGVfaHdf
-cHRyKCkgdG8NCmJldHRlciBleHByZXNzIHRoZSBpbnRlbnQgb2YgdGhlIGZ1bmN0aW9uLg0K
+Hyper-V supports a hardware cursor feature. It is not used by Linux VM,
+but the Hyper-V host still draws a point as an extra mouse pointer,
+which is unwanted, especially when Xorg is running.
+
+The hyperv_fb driver uses synthvid_send_ptr() to hide the unwanted pointer.
+When the hyperv_drm driver was developed, the function synthvid_send_ptr()
+was not copied from the hyperv_fb driver. Fix the issue by adding the
+function into hyperv_drm.
+
+Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Deepak Rawat <drawat.floss@gmail.com>
+---
+
+Changes in v2:
+	Renamed hyperv_send_ptr() to hyperv_hide_hw_ptr().
+	Improved the comments and the git commit message.
+	Added Reviewed-by's from Haiyang and Deepak.
+
+ drivers/gpu/drm/hyperv/hyperv_drm.h         |  1 +
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |  1 +
+ drivers/gpu/drm/hyperv/hyperv_drm_proto.c   | 54 ++++++++++++++++++++-
+ 3 files changed, 55 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm.h b/drivers/gpu/drm/hyperv/hyperv_drm.h
+index 886add4f9cd0..d2d8582b36df 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm.h
++++ b/drivers/gpu/drm/hyperv/hyperv_drm.h
+@@ -46,6 +46,7 @@ int hyperv_mode_config_init(struct hyperv_drm_device *hv);
+ int hyperv_update_vram_location(struct hv_device *hdev, phys_addr_t vram_pp);
+ int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
+ 			    u32 w, u32 h, u32 pitch);
++int hyperv_hide_hw_ptr(struct hv_device *hdev);
+ int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect *rect);
+ int hyperv_connect_vsp(struct hv_device *hdev);
+ 
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+index 3aaee4730ec6..5f01ca817517 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+@@ -101,6 +101,7 @@ static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
+ 	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
+ 
++	hyperv_hide_hw_ptr(hv->hdev);
+ 	hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
+ 				crtc_state->mode.hdisplay,
+ 				crtc_state->mode.vdisplay,
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+index 6d4bdccfbd1a..c0155c6271bf 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+@@ -299,6 +299,55 @@ int hyperv_update_situation(struct hv_device *hdev, u8 active, u32 bpp,
+ 	return 0;
+ }
+ 
++/*
++ * Hyper-V supports a hardware cursor feature. It's not used by Linux VM,
++ * but the Hyper-V host still draws a point as an extra mouse pointer,
++ * which is unwanted, especially when Xorg is running.
++ *
++ * The hyperv_fb driver uses synthvid_send_ptr() to hide the unwanted
++ * pointer, by setting msg.ptr_pos.is_visible = 1 and setting the
++ * msg.ptr_shape.data. Note: setting msg.ptr_pos.is_visible to 0 doesn't
++ * work in tests.
++ *
++ * Copy synthvid_send_ptr() to hyperv_drm and rename it to
++ * hyperv_hide_hw_ptr(). Note: hyperv_hide_hw_ptr() is also called in the
++ * handler of the SYNTHVID_FEATURE_CHANGE event, otherwise the host still
++ * draws an extra unwanted mouse pointer after the VM Connection window is
++ * closed and reopened.
++ */
++int hyperv_hide_hw_ptr(struct hv_device *hdev)
++{
++	struct synthvid_msg msg;
++
++	memset(&msg, 0, sizeof(struct synthvid_msg));
++	msg.vid_hdr.type = SYNTHVID_POINTER_POSITION;
++	msg.vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
++		sizeof(struct synthvid_pointer_position);
++	msg.ptr_pos.is_visible = 1;
++	msg.ptr_pos.video_output = 0;
++	msg.ptr_pos.image_x = 0;
++	msg.ptr_pos.image_y = 0;
++	hyperv_sendpacket(hdev, &msg);
++
++	memset(&msg, 0, sizeof(struct synthvid_msg));
++	msg.vid_hdr.type = SYNTHVID_POINTER_SHAPE;
++	msg.vid_hdr.size = sizeof(struct synthvid_msg_hdr) +
++		sizeof(struct synthvid_pointer_shape);
++	msg.ptr_shape.part_idx = SYNTHVID_CURSOR_COMPLETE;
++	msg.ptr_shape.is_argb = 1;
++	msg.ptr_shape.width = 1;
++	msg.ptr_shape.height = 1;
++	msg.ptr_shape.hot_x = 0;
++	msg.ptr_shape.hot_y = 0;
++	msg.ptr_shape.data[0] = 0;
++	msg.ptr_shape.data[1] = 1;
++	msg.ptr_shape.data[2] = 1;
++	msg.ptr_shape.data[3] = 1;
++	hyperv_sendpacket(hdev, &msg);
++
++	return 0;
++}
++
+ int hyperv_update_dirt(struct hv_device *hdev, struct drm_rect *rect)
+ {
+ 	struct hyperv_drm_device *hv = hv_get_drvdata(hdev);
+@@ -392,8 +441,11 @@ static void hyperv_receive_sub(struct hv_device *hdev)
+ 		return;
+ 	}
+ 
+-	if (msg->vid_hdr.type == SYNTHVID_FEATURE_CHANGE)
++	if (msg->vid_hdr.type == SYNTHVID_FEATURE_CHANGE) {
+ 		hv->dirt_needed = msg->feature_chg.is_dirt_needed;
++		if (hv->dirt_needed)
++			hyperv_hide_hw_ptr(hv->hdev);
++	}
+ }
+ 
+ static void hyperv_receive(void *ctx)
+-- 
+2.25.1
+
