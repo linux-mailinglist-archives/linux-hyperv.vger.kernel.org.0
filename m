@@ -2,94 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DCE4416F09
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Sep 2021 11:35:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E215F418B5C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Sep 2021 00:03:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245221AbhIXJhT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 24 Sep 2021 05:37:19 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:37793 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237056AbhIXJhS (ORCPT
+        id S230362AbhIZWEt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 26 Sep 2021 18:04:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53244 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230075AbhIZWEt (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 24 Sep 2021 05:37:18 -0400
-Received: by mail-wr1-f54.google.com with SMTP id t8so25513133wrq.4;
-        Fri, 24 Sep 2021 02:35:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=KRYfypNkuIY9emLZqiqldN/0eSszJL/L7hkS9k8gfkA=;
-        b=m5D0Vh0cSXUgya5uLyJUhldGjVydqzfU3oy3qz7rf+XJnpR7JiA9dEWUESA6BXNVJE
-         2UpENO7SBZnyDHF8+W+I2i2iiZxzhrw5c+tEjSZri+gk5i52myIffmCc6KSGCPxiXn4u
-         v+WF0H4BYk8lAPNgCfnyPP1NdI5iJXLgdueS3MVNX89OANwge56ixJiLvXRQGw9I5Yxj
-         nw+dOfBRPR19Gn0fMZ/HuU9c1QT1RYRumJxoXMgvizzBpeTg11d0jGQpiVfcr/Yckr6t
-         0gYmCqc0jqcF0LXyug1beOzx9dpIzjtbK4Erlp0eeEKQIdqivRrfCZZc4O7vt7ezKvLR
-         oNQA==
-X-Gm-Message-State: AOAM530IzVGQ3xjtA6qr4xPQsPQJlqI4oZswI4r8Qh1ABSd3M1SNRPri
-        +EbCIyRkM2IW5KXqTZbgA28=
-X-Google-Smtp-Source: ABdhPJxZFbl9E73RZActKtG/s6A/AvgOlwsJt9fpLYANe1VVnKWPpjD/wU6IN4dT5t+LO4BrDjlYjA==
-X-Received: by 2002:a1c:4b15:: with SMTP id y21mr1002172wma.183.1632476144529;
-        Fri, 24 Sep 2021 02:35:44 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id j21sm7505008wrd.48.2021.09.24.02.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Sep 2021 02:35:44 -0700 (PDT)
-Date:   Fri, 24 Sep 2021 09:35:42 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     longli@linuxonhyperv.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, Long Li <longli@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [Patch v2] PCI: hv: Fix sleep while in non-sleep context when
- removing child devices from the bus
-Message-ID: <20210924093542.dac76ugni4cqtsum@liuwe-devbox-debian-v2>
-References: <1630365207-20616-1-git-send-email-longli@linuxonhyperv.com>
- <20210831131607.vsjvmr43eei4dsie@liuwe-devbox-debian-v2>
+        Sun, 26 Sep 2021 18:04:49 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1632693791;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gqxOiBdeytJus8bgCkvYKAJdNenVvStYS90LIV9ToYo=;
+        b=mHbgZaHCFWguQUU2p3BhLzogeqBKGmGRJzL5LVzhKotqeX8nCOftDep14zyQ+435VDspQr
+        48GpqkVqZbL45MgkbEPv/f+/7ez57UX2t09qxikdPrSCzHeYBvXMJ7g7jmDAiy03AkV9tk
+        eWyAOapaqDi6OI1LDI5NVI73QhbcLjMZlcVmgmsH1dWW/2lEEpS1kijSd2SGbkMyCnanIn
+        aVyPq93oWGl7mgk0Xgk/IyIy1qWKk+DW4G+klYdjtYEoQDZYhNVxco4N1qNgjvsCRX0Uyi
+        LGHm6jBXpIfVYmLjzbMl9b2HHwqQhTZ3dvheeIKyrhT64t7fhT/Zrq+nPD6kQQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1632693791;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gqxOiBdeytJus8bgCkvYKAJdNenVvStYS90LIV9ToYo=;
+        b=VTzuQu3ZVYeFvsvV5Qn+Ze7rFe6iRArxJQtvvVM6OsFvgBucarYK1V3EeRSmq1/XfKE5TL
+        NvzIOerREB5D9jCg==
+To:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        sthemmin@microsoft.com, Wei Liu <wei.liu@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] x86/hyperv: remove on-stack cpumask from
+ hv_send_ipi_mask_allbutself
+In-Reply-To: <20210910185714.299411-3-wei.liu@kernel.org>
+References: <20210910185714.299411-1-wei.liu@kernel.org>
+ <20210910185714.299411-3-wei.liu@kernel.org>
+Date:   Mon, 27 Sep 2021 00:03:10 +0200
+Message-ID: <87ee9batb5.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210831131607.vsjvmr43eei4dsie@liuwe-devbox-debian-v2>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 31, 2021 at 01:16:07PM +0000, Wei Liu wrote:
-> On Mon, Aug 30, 2021 at 04:13:27PM -0700, longli@linuxonhyperv.com wrote:
-> > From: Long Li <longli@microsoft.com>
-> > 
-> > In hv_pci_bus_exit, the code is holding a spinlock while calling
-> > pci_destroy_slot(), which takes a mutex.
-> > 
-> > This is not safe for spinlock. Fix this by moving the children to be
-> > deleted to a list on the stack, and removing them after spinlock is
-> > released.
-> > 
-> > Fixes: 94d22763207a ("PCI: hv: Fix a race condition when removing the device")
-> > 
-> > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> > Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> > Cc: Wei Liu <wei.liu@kernel.org>
-> > Cc: Dexuan Cui <decui@microsoft.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: "Krzysztof Wilczyński" <kw@linux.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Michael Kelley <mikelley@microsoft.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Link: https://lore.kernel.org/linux-hyperv/20210823152130.GA21501@kili/
-> > Signed-off-by: Long Li <longli@microsoft.com>
-> 
-> Reviewed-by: Wei Liu <wei.liu@kernel.org>
+Wei!
 
-Applied to hyperv-fixes.
+On Fri, Sep 10 2021 at 18:57, Wei Liu wrote:
+> -static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
+> +static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
+> +		bool exclude_self)
+>  {
+>  	struct hv_send_ipi_ex **arg;
+>  	struct hv_send_ipi_ex *ipi_arg;
+> @@ -123,7 +124,10 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
+>  
+>  	if (!cpumask_equal(mask, cpu_present_mask)) {
+
+Not part of that patch, but is checking cpu_present_mask correct here?
+If so then this really lacks a comment for the casual reader.
+
+>  		ipi_arg->vp_set.format = HV_GENERIC_SET_SPARSE_4K;
+> -		nr_bank = cpumask_to_vpset(&(ipi_arg->vp_set), mask);
+> +		if (exclude_self)
+> +			nr_bank = cpumask_to_vpset_noself(&(ipi_arg->vp_set), mask);
+> +		else
+> +			nr_bank = cpumask_to_vpset(&(ipi_arg->vp_set), mask);
+>  	}
+
+But, what happens in the case that mask == cpu_present_mask and
+exclude_self == true?
+
+AFAICT it ends up sending the IPI to all CPUs including self:
+
+	if (!nr_bank)
+		ipi_arg->vp_set.format = HV_GENERIC_SET_ALL;
+
+Not entirely correct, right?
+
+Thanks,
+
+        tglx
