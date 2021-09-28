@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C832941B635
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Sep 2021 20:31:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC36941B638
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Sep 2021 20:31:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242190AbhI1SdB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S242219AbhI1SdB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Tue, 28 Sep 2021 14:33:01 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50844 "EHLO
+Received: from linux.microsoft.com ([13.77.154.182]:50850 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242150AbhI1SdA (ORCPT
+        with ESMTP id S242153AbhI1SdA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Tue, 28 Sep 2021 14:33:00 -0400
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CCA1520B85E6;
+        by linux.microsoft.com (Postfix) with ESMTPSA id E3BB220B85FC;
         Tue, 28 Sep 2021 11:31:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CCA1520B85E6
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3BB220B85FC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1632853880;
-        bh=Jb/4EJOHHKdh6FAdUgdy6VAxKnd2ITp389c0XjRnl9Q=;
+        bh=q7WlIM5PWIF4fFrMf7eK/pN7DPHidfjW9JHWjSKdGeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lBpeA7POt8S8mR1ybeuWFZ1tURLBEnH7RKJh3/EBkjqfStXtuXLpc3bRxGGdLCg63
-         lMY5uMpEOyS82O3E7wefcH4XTE6xM3t9HhfQjmqm6KZ5EC5dSJk5yCMqIvIHlbmne/
-         XnVksUa1eq2uaGnYNK5yLXhVD+1GgBJm432E9y+4=
+        b=ayhm3thHh0q7ZR13Z8X2owKqJnCgDoclVLEYCitwzzVx3QXxFTE9Lr4aSDQCXdbiz
+         hKbAwgeC9N72T4Wfh4iTBF7hTNO/fUgICgbbCSkWVT7CimJ8XdwKA0WT01EyFskIyF
+         qFSSCWezxUakjGANALxuJ2Byb5qJXjCz2wdcDgdo=
 From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
@@ -30,9 +30,9 @@ Cc:     virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
         wei.liu@kernel.org, vkuznets@redhat.com, ligrassi@microsoft.com,
         kys@microsoft.com, sthemmin@microsoft.com,
         anbelski@linux.microsoft.com
-Subject: [PATCH v3 01/19] x86/hyperv: convert hyperv statuses to linux error codes
-Date:   Tue, 28 Sep 2021 11:30:57 -0700
-Message-Id: <1632853875-20261-2-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v3 02/19] x86/hyperv: convert hyperv statuses to strings
+Date:   Tue, 28 Sep 2021 11:30:58 -0700
+Message-Id: <1632853875-20261-3-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1632853875-20261-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1632853875-20261-1-git-send-email-nunodasneves@linux.microsoft.com>
@@ -40,134 +40,156 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Return linux-friendly error codes from hypercall wrapper functions.
-This will be needed in the mshv module.
+Allow hyperv hypercall failures to be debugged more easily with dmesg.
+This will be used in the mshv module.
 
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
 ---
- arch/x86/hyperv/hv_proc.c         | 30 ++++++++++++++++++++++++++---
- arch/x86/include/asm/mshyperv.h   |  1 +
- include/asm-generic/hyperv-tlfs.h | 32 +++++++++++++++++++++----------
- 3 files changed, 50 insertions(+), 13 deletions(-)
+ arch/x86/hyperv/hv_init.c         |  2 +-
+ arch/x86/hyperv/hv_proc.c         | 19 ++++++++---
+ include/asm-generic/hyperv-tlfs.h | 52 ++++++++++++++++++-------------
+ include/asm-generic/mshyperv.h    |  1 +
+ 4 files changed, 46 insertions(+), 28 deletions(-)
 
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index bb0ae4b5c00f..722bafdb2225 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -349,7 +349,7 @@ static void __init hv_get_partition_id(void)
+ 	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output_page);
+ 	if (!hv_result_success(status)) {
+ 		/* No point in proceeding if this failed */
+-		pr_err("Failed to get partition ID: %lld\n", status);
++		pr_err("Failed to get partition ID: %s\n", hv_status_to_string(status));
+ 		BUG();
+ 	}
+ 	hv_current_partition_id = output_page->partition_id;
 diff --git a/arch/x86/hyperv/hv_proc.c b/arch/x86/hyperv/hv_proc.c
-index 68a0843d4750..59cf9a9e0975 100644
+index 59cf9a9e0975..e75c78a243e7 100644
 --- a/arch/x86/hyperv/hv_proc.c
 +++ b/arch/x86/hyperv/hv_proc.c
-@@ -14,6 +14,30 @@
+@@ -38,6 +38,15 @@ int hv_status_to_errno(u64 hv_status)
+ }
+ EXPORT_SYMBOL_GPL(hv_status_to_errno);
  
- #include <asm/trace/hyperv.h>
- 
-+int hv_status_to_errno(u64 hv_status)
++const char *hv_status_to_string(u64 hv_status)
 +{
 +	switch (hv_result(hv_status)) {
-+	case HV_STATUS_SUCCESS:
-+		return 0;
-+	case HV_STATUS_INVALID_PARAMETER:
-+	case HV_STATUS_UNKNOWN_PROPERTY:
-+	case HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE:
-+	case HV_STATUS_INVALID_VP_INDEX:
-+	case HV_STATUS_INVALID_REGISTER_VALUE:
-+	case HV_STATUS_INVALID_LP_INDEX:
-+		return -EINVAL;
-+	case HV_STATUS_ACCESS_DENIED:
-+	case HV_STATUS_OPERATION_DENIED:
-+		return -EACCES;
-+	case HV_STATUS_NOT_ACKNOWLEDGED:
-+	case HV_STATUS_INVALID_VP_STATE:
-+	case HV_STATUS_INVALID_PARTITION_STATE:
-+		return -EBADFD;
++	__HV_STATUS_DEF(__HV_MAKE_HV_STATUS_CASE)
++	default : return "Unknown";
 +	}
-+	return -ENOTRECOVERABLE;
 +}
-+EXPORT_SYMBOL_GPL(hv_status_to_errno);
++EXPORT_SYMBOL_GPL(hv_status_to_string);
 +
  /*
   * See struct hv_deposit_memory. The first u64 is partition ID, the rest
   * are GPAs.
-@@ -94,7 +118,7 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+@@ -117,7 +126,7 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ 				     page_count, 0, input_page, NULL);
  	local_irq_restore(flags);
  	if (!hv_result_success(status)) {
- 		pr_err("Failed to deposit pages: %lld\n", status);
--		ret = hv_result(status);
-+		ret = hv_status_to_errno(status);
+-		pr_err("Failed to deposit pages: %lld\n", status);
++		pr_err("Failed to deposit pages: %s\n", hv_status_to_string(status));
+ 		ret = hv_status_to_errno(status);
  		goto err_free_allocations;
  	}
+@@ -172,8 +181,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
  
-@@ -150,7 +174,7 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
+ 		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
  			if (!hv_result_success(status)) {
- 				pr_err("%s: cpu %u apic ID %u, %lld\n", __func__,
- 				       lp_index, apic_id, status);
--				ret = hv_result(status);
-+				ret = hv_status_to_errno(status);
+-				pr_err("%s: cpu %u apic ID %u, %lld\n", __func__,
+-				       lp_index, apic_id, status);
++				pr_err("%s: cpu %u apic ID %u, %s\n", __func__,
++				       lp_index, apic_id, hv_status_to_string(status));
+ 				ret = hv_status_to_errno(status);
  			}
  			break;
- 		}
-@@ -200,7 +224,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+@@ -222,8 +231,8 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+ 
+ 		if (hv_result(status) != HV_STATUS_INSUFFICIENT_MEMORY) {
  			if (!hv_result_success(status)) {
- 				pr_err("%s: vcpu %u, lp %u, %lld\n", __func__,
- 				       vp_index, flags, status);
--				ret = hv_result(status);
-+				ret = hv_status_to_errno(status);
+-				pr_err("%s: vcpu %u, lp %u, %lld\n", __func__,
+-				       vp_index, flags, status);
++				pr_err("%s: vcpu %u, lp %u, %s\n", __func__,
++				       vp_index, flags, hv_status_to_string(status));
+ 				ret = hv_status_to_errno(status);
  			}
  			break;
- 		}
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 67ff0d637e55..c6eb01f3864d 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -169,6 +169,7 @@ int hyperv_flush_guest_mapping_range(u64 as,
- int hyperv_fill_flush_guest_mapping_list(
- 		struct hv_guest_mapping_flush_list *flush,
- 		u64 start_gfn, u64 end_gfn);
-+int hv_status_to_errno(u64 hv_status);
- 
- extern bool hv_root_partition;
- 
 diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 515c3fb06ab3..fe6d41d0b114 100644
+index fe6d41d0b114..40ff7cdd4a2b 100644
 --- a/include/asm-generic/hyperv-tlfs.h
 +++ b/include/asm-generic/hyperv-tlfs.h
-@@ -189,16 +189,28 @@ enum HV_GENERIC_SET_FORMAT {
+@@ -189,28 +189,36 @@ enum HV_GENERIC_SET_FORMAT {
  #define HV_HYPERCALL_REP_START_MASK	GENMASK_ULL(59, 48)
  
  /* hypercall status code */
--#define HV_STATUS_SUCCESS			0
--#define HV_STATUS_INVALID_HYPERCALL_CODE	2
--#define HV_STATUS_INVALID_HYPERCALL_INPUT	3
--#define HV_STATUS_INVALID_ALIGNMENT		4
--#define HV_STATUS_INVALID_PARAMETER		5
--#define HV_STATUS_OPERATION_DENIED		8
--#define HV_STATUS_INSUFFICIENT_MEMORY		11
--#define HV_STATUS_INVALID_PORT_ID		17
--#define HV_STATUS_INVALID_CONNECTION_ID		18
--#define HV_STATUS_INSUFFICIENT_BUFFERS		19
-+#define HV_STATUS_SUCCESS			0x0
-+#define HV_STATUS_INVALID_HYPERCALL_CODE	0x2
-+#define HV_STATUS_INVALID_HYPERCALL_INPUT	0x3
-+#define HV_STATUS_INVALID_ALIGNMENT		0x4
-+#define HV_STATUS_INVALID_PARAMETER		0x5
-+#define HV_STATUS_ACCESS_DENIED			0x6
-+#define HV_STATUS_INVALID_PARTITION_STATE	0x7
-+#define HV_STATUS_OPERATION_DENIED		0x8
-+#define HV_STATUS_UNKNOWN_PROPERTY		0x9
-+#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	0xA
-+#define HV_STATUS_INSUFFICIENT_MEMORY		0xB
-+#define HV_STATUS_INVALID_PARTITION_ID		0xD
-+#define HV_STATUS_INVALID_VP_INDEX		0xE
-+#define HV_STATUS_NOT_FOUND			0x10
-+#define HV_STATUS_INVALID_PORT_ID		0x11
-+#define HV_STATUS_INVALID_CONNECTION_ID		0x12
-+#define HV_STATUS_INSUFFICIENT_BUFFERS		0x13
-+#define HV_STATUS_NOT_ACKNOWLEDGED		0x14
-+#define HV_STATUS_INVALID_VP_STATE		0x15
-+#define HV_STATUS_NO_RESOURCES			0x1D
-+#define HV_STATUS_INVALID_LP_INDEX		0x41
-+#define HV_STATUS_INVALID_REGISTER_VALUE	0x50
+-#define HV_STATUS_SUCCESS			0x0
+-#define HV_STATUS_INVALID_HYPERCALL_CODE	0x2
+-#define HV_STATUS_INVALID_HYPERCALL_INPUT	0x3
+-#define HV_STATUS_INVALID_ALIGNMENT		0x4
+-#define HV_STATUS_INVALID_PARAMETER		0x5
+-#define HV_STATUS_ACCESS_DENIED			0x6
+-#define HV_STATUS_INVALID_PARTITION_STATE	0x7
+-#define HV_STATUS_OPERATION_DENIED		0x8
+-#define HV_STATUS_UNKNOWN_PROPERTY		0x9
+-#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	0xA
+-#define HV_STATUS_INSUFFICIENT_MEMORY		0xB
+-#define HV_STATUS_INVALID_PARTITION_ID		0xD
+-#define HV_STATUS_INVALID_VP_INDEX		0xE
+-#define HV_STATUS_NOT_FOUND			0x10
+-#define HV_STATUS_INVALID_PORT_ID		0x11
+-#define HV_STATUS_INVALID_CONNECTION_ID		0x12
+-#define HV_STATUS_INSUFFICIENT_BUFFERS		0x13
+-#define HV_STATUS_NOT_ACKNOWLEDGED		0x14
+-#define HV_STATUS_INVALID_VP_STATE		0x15
+-#define HV_STATUS_NO_RESOURCES			0x1D
+-#define HV_STATUS_INVALID_LP_INDEX		0x41
+-#define HV_STATUS_INVALID_REGISTER_VALUE	0x50
++#define __HV_STATUS_DEF(OP) \
++	OP(HV_STATUS_SUCCESS,				0x0) \
++	OP(HV_STATUS_INVALID_HYPERCALL_CODE,		0x2) \
++	OP(HV_STATUS_INVALID_HYPERCALL_INPUT,		0x3) \
++	OP(HV_STATUS_INVALID_ALIGNMENT,			0x4) \
++	OP(HV_STATUS_INVALID_PARAMETER,			0x5) \
++	OP(HV_STATUS_ACCESS_DENIED,			0x6) \
++	OP(HV_STATUS_INVALID_PARTITION_STATE,		0x7) \
++	OP(HV_STATUS_OPERATION_DENIED,			0x8) \
++	OP(HV_STATUS_UNKNOWN_PROPERTY,			0x9) \
++	OP(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	0xA) \
++	OP(HV_STATUS_INSUFFICIENT_MEMORY,		0xB) \
++	OP(HV_STATUS_INVALID_PARTITION_ID,		0xD) \
++	OP(HV_STATUS_INVALID_VP_INDEX,			0xE) \
++	OP(HV_STATUS_NOT_FOUND,				0x10) \
++	OP(HV_STATUS_INVALID_PORT_ID,			0x11) \
++	OP(HV_STATUS_INVALID_CONNECTION_ID,		0x12) \
++	OP(HV_STATUS_INSUFFICIENT_BUFFERS,		0x13) \
++	OP(HV_STATUS_NOT_ACKNOWLEDGED,			0x14) \
++	OP(HV_STATUS_INVALID_VP_STATE,			0x15) \
++	OP(HV_STATUS_NO_RESOURCES,			0x1D) \
++	OP(HV_STATUS_INVALID_LP_INDEX,			0x41) \
++	OP(HV_STATUS_INVALID_REGISTER_VALUE,		0x50)
++
++#define __HV_MAKE_HV_STATUS_ENUM(NAME, VAL) NAME = (VAL),
++#define __HV_MAKE_HV_STATUS_CASE(NAME, VAL) case (NAME): return (#NAME);
++
++enum hv_status {
++	__HV_STATUS_DEF(__HV_MAKE_HV_STATUS_ENUM)
++};
  
  /*
   * The Hyper-V TimeRefCount register and the TSC
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index 9a000ba2bb75..672b08f79dae 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -219,6 +219,7 @@ static inline int cpumask_to_vpset(struct hv_vpset *vpset,
+ 	return nr_bank;
+ }
+ 
++const char *hv_status_to_string(u64 hv_status);
+ void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
+ bool hv_is_hyperv_initialized(void);
+ bool hv_is_hibernation_supported(void);
 -- 
 2.23.4
 
