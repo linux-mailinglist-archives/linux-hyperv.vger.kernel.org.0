@@ -2,136 +2,156 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E4F641B3FE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Sep 2021 18:37:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C6EF41B634
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Sep 2021 20:31:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241769AbhI1Qj2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 28 Sep 2021 12:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230251AbhI1Qj1 (ORCPT
+        id S242176AbhI1SdB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 28 Sep 2021 14:33:01 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:50840 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241724AbhI1SdA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 28 Sep 2021 12:39:27 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0279CC06161C;
-        Tue, 28 Sep 2021 09:37:48 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id s17so66732543edd.8;
-        Tue, 28 Sep 2021 09:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jrcpzz4dtYaFlPbqYodpFsWNyFSc5+StVlE5y5OqwxM=;
-        b=k5ebFqrnBLaLFSno78OpVJG5cLS0Jevk+XVX+K57MW1HGDkaNy0LzwbRiUatPwHPIC
-         nqafbskkxODgUlEJSTNq+ZChz2FITbXr1JMVk00bczeaXwafIyrrmLwFTmyq+RYXiKF8
-         7nAJEYU8CL135keNqGc7C22BfSkAdVjT5xNHIifeSFteOkGNcTvsIZdEaBMg7+C1bW1N
-         LyW1YyjAw6/6FEnlMs1tceIJvtYz5pzTuzlx8F1yHUsudRA6Kj36UEkAigN/6RAjvEnB
-         fczwwPjw+OVtyYfQri0TkusvY12RU5oZP+Zs23nVW2n1eV96z5XBECMdk0/DY487o1MC
-         W58Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jrcpzz4dtYaFlPbqYodpFsWNyFSc5+StVlE5y5OqwxM=;
-        b=4uG9bNCh2oLiEJ2BMUhJP6820kszRR0a8eEjyM6If2R37EuR4wpMYfcBNrjstzix75
-         8pEVY7+mf1eJ/b8ojyNzGNDx8sQdlI4E7tsj5RfpgriEqtiyfACEPKf1ObC6GfeeVGFI
-         LXED14Q5/PgWZkU5gHUvN1ulg2IKKZLyXDxovAxzORbhDTVcHxwBQ6ht7lLdw/2bSTpe
-         EG8cHsUoLfUsBpyDqCKi6bk4hwVjGitLpg9iP8NYD/Tt6z2mEVC8eJavcUHQn+yh5Z3H
-         hpCJbURJYkwKsqRB5ezZaAMgOT/yeBHU+GsZ4BsbmqGFZ3VNpWHoqQqtFB/o5N6AP01P
-         ypiw==
-X-Gm-Message-State: AOAM531LEGvDxptjBh8k+j+JVPkbvKPKSx4yQe4xhtoOHBsD9azqWR52
-        uS2tleCU1G9wlNUmK9IUeSvuNRw6FzSgSg==
-X-Google-Smtp-Source: ABdhPJx0IjUpgp+y/ta+eDfb+DgVaWhzMy0duDs4Sk4ZhwrKZ3FpocIZVGLBHxbFgQDHdt2M1yrubQ==
-X-Received: by 2002:a17:906:7053:: with SMTP id r19mr7672281ejj.476.1632847065213;
-        Tue, 28 Sep 2021 09:37:45 -0700 (PDT)
-Received: from anparri.mshome.net (host-79-49-65-228.retail.telecomitalia.it. [79.49.65.228])
-        by smtp.gmail.com with ESMTPSA id u4sm10737848ejc.19.2021.09.28.09.37.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 09:37:44 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [RFC PATCH] scsi: storvsc: Fix validation for unsolicited incoming packets
-Date:   Tue, 28 Sep 2021 18:37:32 +0200
-Message-Id: <20210928163732.5908-1-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 28 Sep 2021 14:33:00 -0400
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B53B720B8008;
+        Tue, 28 Sep 2021 11:31:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B53B720B8008
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1632853880;
+        bh=i+KeqlIfct1LzvCFtI2ZObmOtDqCo4ZA/x0Y5+bwmP8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dlP+jG2jDrJ94ZD1sOWln2wid9wPkAAEySXx0rb+kuO9TtSf0TQgnM3PxIBo8IeFQ
+         TlBkykpb97F9CgRp/w6KNlHckjR1uFuHylMt1ezCwGACfFoh+RGLSPiTi7DKy3e8Uc
+         W5zxqT/VtIh/3ZSmCgY85Gb1pZ1DbLC0rGJClWHg=
+From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
+        viremana@linux.microsoft.com, sunilmut@microsoft.com,
+        wei.liu@kernel.org, vkuznets@redhat.com, ligrassi@microsoft.com,
+        kys@microsoft.com, sthemmin@microsoft.com,
+        anbelski@linux.microsoft.com
+Subject: [PATCH v3 00/19] Microsoft Hypervisor root partition ioctl interface
+Date:   Tue, 28 Sep 2021 11:30:56 -0700
+Message-Id: <1632853875-20261-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The validation on the length of incoming packets performed in
-storvsc_on_channel_callback() does not apply to "unsolicited"
-packets with ID of 0 sent by Hyper-V.  Adjust the validation
-by handling such unsolicited packets separately.
+This patch series provides a userspace interface for creating and running guest
+virtual machines while running on the Microsoft Hypervisor [0].
 
-Fixes: 91b1b640b834b2 ("scsi: storvsc: Validate length of incoming packet in storvsc_on_channel_callback()")
-Reported-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
----
-The (new) bound, VSTOR_MIN_UNSOL_PKT_SIZE, was "empirically
-derived" based on testing and code auditing.  This explains
-the RFC tag...
+Since managing guest machines can only be done when Linux is the root partition,
+this series depends on Wei Liu's patch series merged in 5.12:
+https://lore.kernel.org/linux-hyperv/20210203150435.27941-1-wei.liu@kernel.org/
 
- drivers/scsi/storvsc_drv.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+The first two patches provide some helpers for converting hypervisor status
+codes to linux error codes, and printing hypervisor status codes to dmesg for
+debugging.
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index ebbbc1299c625..a9bbcbbfb54ee 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -292,6 +292,9 @@ struct vmstorage_protocol_version {
- #define STORAGE_CHANNEL_REMOVABLE_FLAG		0x1
- #define STORAGE_CHANNEL_EMULATED_IDE_FLAG	0x2
- 
-+/* Lower bound on the size of unsolicited packets with ID of 0 */
-+#define VSTOR_MIN_UNSOL_PKT_SIZE		48
-+
- struct vstor_packet {
- 	/* Requested operation type */
- 	enum vstor_packet_operation operation;
-@@ -1285,11 +1288,13 @@ static void storvsc_on_channel_callback(void *context)
- 	foreach_vmbus_pkt(desc, channel) {
- 		struct vstor_packet *packet = hv_pkt_data(desc);
- 		struct storvsc_cmd_request *request = NULL;
-+		u32 pktlen = hv_pkt_datalen(desc);
- 		u64 rqst_id = desc->trans_id;
- 
--		if (hv_pkt_datalen(desc) < sizeof(struct vstor_packet) -
-+		/* Unsolicited packets with ID of 0 are validated separately below */
-+		if (rqst_id != 0 && pktlen < sizeof(struct vstor_packet) -
- 				stor_device->vmscsi_size_delta) {
--			dev_err(&device->device, "Invalid packet len\n");
-+			dev_err(&device->device, "Invalid packet: length=%u\n", pktlen);
- 			continue;
- 		}
- 
-@@ -1298,8 +1303,14 @@ static void storvsc_on_channel_callback(void *context)
- 		} else if (rqst_id == VMBUS_RQST_RESET) {
- 			request = &stor_device->reset_request;
- 		} else {
--			/* Hyper-V can send an unsolicited message with ID of 0 */
- 			if (rqst_id == 0) {
-+				if (pktlen < VSTOR_MIN_UNSOL_PKT_SIZE) {
-+					dev_err(&device->device,
-+						"Invalid packet with ID of 0: length=%u\n",
-+						pktlen);
-+					continue;
-+				}
-+
- 				/*
- 				 * storvsc_on_receive() looks at the vstor_packet in the message
- 				 * from the ring buffer.  If the operation in the vstor_packet is
+Hyper-V related headers asm-generic/hyperv-tlfs.h and x86/asm/hyperv-tlfs.h are
+split into uapi and non-uapi. The uapi versions contain structures used in both
+the ioctl interface and the kernel.
+
+The mshv API is introduced in drivers/hv/mshv_main.c. As each interface is
+introduced, documentation is added in Documentation/virt/mshv/api.rst.
+The API is file-desciptor based, like KVM. The entry point is /dev/mshv.
+
+/dev/mshv ioctls:
+MSHV_CHECK_EXTENSION
+MSHV_CREATE_PARTITION
+
+Partition (vm) ioctls:
+MSHV_MAP_GUEST_MEMORY, MSHV_UNMAP_GUEST_MEMORY
+MSHV_INSTALL_INTERCEPT
+MSHV_ASSERT_INTERRUPT
+MSHV_GET_PARTITION_PROPERTY, MSHV_SET_PARTITION_PROPERTY
+MSHV_CREATE_VP
+
+Vp (vcpu) ioctls:
+MSHV_GET_VP_REGISTERS, MSHV_SET_VP_REGISTERS
+MSHV_RUN_VP
+MSHV_GET_VP_STATE, MSHV_SET_VP_STATE
+MSHV_VP_TRANSLATE_GVA
+mmap() (register page)
+
+[0] Hyper-V is more well-known, but it really refers to the whole stack
+    including the hypervisor and other components that run in Windows kernel
+    and userspace.
+
+Changes since v2:
+1. Fix kernel test robot issues
+2. Bugfix in GVA to GPA patch provided by Anatol Belski
+
+Changes since v1:
+1. Correct mshv_dev mode to octal 0600
+2. Fix bug in mshv_vp_iotcl_run - correctly set suspend registers on early exit
+3. Address comments from Wei Liu, Sunil Muthuswamy, and Vitaly Kuznetsov
+4. Run checkpatch.pl - fix whitespace and other style issues
+
+Changes since RFC:
+1. Moved code from virt/mshv to drivers/hv
+2. Split hypercall helper functions and synic code to hv_call.c and hv_synic.c
+3. MSHV_REQUEST_VERSION ioctl replaced with MSHV_CHECK_EXTENSION
+3. Numerous suggestions, fixes, style changes, etc from Michael Kelley, Vitaly
+   Kuznetsov, Wei Liu, and Vineeth Pillai
+4. Added patch to enable hypervisor enlightenments on partition creation
+5. Added Wei Liu's patch for GVA to GPA translation
+
+Nuno Das Neves (18):
+  x86/hyperv: convert hyperv statuses to linux error codes
+  x86/hyperv: convert hyperv statuses to strings
+  drivers/hv: minimal mshv module (/dev/mshv/)
+  drivers/hv: check extension ioctl
+  drivers/hv: create partition ioctl
+  drivers/hv: create, initialize, finalize, delete partition hypercalls
+  drivers/hv: withdraw memory hypercall
+  drivers/hv: map and unmap guest memory
+  drivers/hv: create vcpu ioctl
+  drivers/hv: get and set vcpu registers ioctls
+  drivers/hv: set up synic pages for intercept messages
+  drivers/hv: run vp ioctl and isr
+  drivers/hv: install intercept ioctl
+  drivers/hv: assert interrupt ioctl
+  drivers/hv: get and set vp state ioctls
+  drivers/hv: mmap vp register page
+  drivers/hv: get and set partition property ioctls
+  drivers/hv: Add enlightenment bits to create partition ioctl
+
+Wei Liu (1):
+  drivers/hv: Translate GVA to GPA
+
+ .../userspace-api/ioctl/ioctl-number.rst      |    2 +
+ Documentation/virt/mshv/api.rst               |  173 +++
+ arch/x86/hyperv/Makefile                      |    1 +
+ arch/x86/hyperv/hv_init.c                     |    2 +-
+ arch/x86/hyperv/hv_proc.c                     |   51 +-
+ arch/x86/include/asm/hyperv-tlfs.h            |   15 +-
+ arch/x86/include/asm/mshyperv.h               |    1 +
+ arch/x86/include/uapi/asm/hyperv-tlfs.h       | 1274 +++++++++++++++++
+ arch/x86/kernel/cpu/mshyperv.c                |   16 +
+ drivers/hv/Kconfig                            |   18 +
+ drivers/hv/Makefile                           |    4 +
+ drivers/hv/hv_call.c                          |  742 ++++++++++
+ drivers/hv/hv_synic.c                         |  181 +++
+ drivers/hv/mshv.h                             |  120 ++
+ drivers/hv/mshv_main.c                        | 1166 +++++++++++++++
+ include/asm-generic/hyperv-tlfs.h             |  354 +++--
+ include/asm-generic/mshyperv.h                |    4 +
+ include/linux/mshv.h                          |   61 +
+ include/uapi/asm-generic/hyperv-tlfs.h        |  242 ++++
+ include/uapi/linux/mshv.h                     |  117 ++
+ 20 files changed, 4399 insertions(+), 145 deletions(-)
+ create mode 100644 Documentation/virt/mshv/api.rst
+ create mode 100644 arch/x86/include/uapi/asm/hyperv-tlfs.h
+ create mode 100644 drivers/hv/hv_call.c
+ create mode 100644 drivers/hv/hv_synic.c
+ create mode 100644 drivers/hv/mshv.h
+ create mode 100644 drivers/hv/mshv_main.c
+ create mode 100644 include/linux/mshv.h
+ create mode 100644 include/uapi/asm-generic/hyperv-tlfs.h
+ create mode 100644 include/uapi/linux/mshv.h
+
 -- 
-2.25.1
+2.23.4
 
