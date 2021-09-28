@@ -2,27 +2,27 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C6EF41B634
+	by mail.lfdr.de (Postfix) with ESMTP id C832941B635
 	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Sep 2021 20:31:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242176AbhI1SdB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S242190AbhI1SdB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Tue, 28 Sep 2021 14:33:01 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50840 "EHLO
+Received: from linux.microsoft.com ([13.77.154.182]:50844 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241724AbhI1SdA (ORCPT
+        with ESMTP id S242150AbhI1SdA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Tue, 28 Sep 2021 14:33:00 -0400
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B53B720B8008;
+        by linux.microsoft.com (Postfix) with ESMTPSA id CCA1520B85E6;
         Tue, 28 Sep 2021 11:31:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B53B720B8008
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CCA1520B85E6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1632853880;
-        bh=i+KeqlIfct1LzvCFtI2ZObmOtDqCo4ZA/x0Y5+bwmP8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dlP+jG2jDrJ94ZD1sOWln2wid9wPkAAEySXx0rb+kuO9TtSf0TQgnM3PxIBo8IeFQ
-         TlBkykpb97F9CgRp/w6KNlHckjR1uFuHylMt1ezCwGACfFoh+RGLSPiTi7DKy3e8Uc
-         W5zxqT/VtIh/3ZSmCgY85Gb1pZ1DbLC0rGJClWHg=
+        bh=Jb/4EJOHHKdh6FAdUgdy6VAxKnd2ITp389c0XjRnl9Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lBpeA7POt8S8mR1ybeuWFZ1tURLBEnH7RKJh3/EBkjqfStXtuXLpc3bRxGGdLCg63
+         lMY5uMpEOyS82O3E7wefcH4XTE6xM3t9HhfQjmqm6KZ5EC5dSJk5yCMqIvIHlbmne/
+         XnVksUa1eq2uaGnYNK5yLXhVD+1GgBJm432E9y+4=
 From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
@@ -30,128 +30,144 @@ Cc:     virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
         wei.liu@kernel.org, vkuznets@redhat.com, ligrassi@microsoft.com,
         kys@microsoft.com, sthemmin@microsoft.com,
         anbelski@linux.microsoft.com
-Subject: [PATCH v3 00/19] Microsoft Hypervisor root partition ioctl interface
-Date:   Tue, 28 Sep 2021 11:30:56 -0700
-Message-Id: <1632853875-20261-1-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v3 01/19] x86/hyperv: convert hyperv statuses to linux error codes
+Date:   Tue, 28 Sep 2021 11:30:57 -0700
+Message-Id: <1632853875-20261-2-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1632853875-20261-1-git-send-email-nunodasneves@linux.microsoft.com>
+References: <1632853875-20261-1-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This patch series provides a userspace interface for creating and running guest
-virtual machines while running on the Microsoft Hypervisor [0].
+Return linux-friendly error codes from hypercall wrapper functions.
+This will be needed in the mshv module.
 
-Since managing guest machines can only be done when Linux is the root partition,
-this series depends on Wei Liu's patch series merged in 5.12:
-https://lore.kernel.org/linux-hyperv/20210203150435.27941-1-wei.liu@kernel.org/
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+---
+ arch/x86/hyperv/hv_proc.c         | 30 ++++++++++++++++++++++++++---
+ arch/x86/include/asm/mshyperv.h   |  1 +
+ include/asm-generic/hyperv-tlfs.h | 32 +++++++++++++++++++++----------
+ 3 files changed, 50 insertions(+), 13 deletions(-)
 
-The first two patches provide some helpers for converting hypervisor status
-codes to linux error codes, and printing hypervisor status codes to dmesg for
-debugging.
-
-Hyper-V related headers asm-generic/hyperv-tlfs.h and x86/asm/hyperv-tlfs.h are
-split into uapi and non-uapi. The uapi versions contain structures used in both
-the ioctl interface and the kernel.
-
-The mshv API is introduced in drivers/hv/mshv_main.c. As each interface is
-introduced, documentation is added in Documentation/virt/mshv/api.rst.
-The API is file-desciptor based, like KVM. The entry point is /dev/mshv.
-
-/dev/mshv ioctls:
-MSHV_CHECK_EXTENSION
-MSHV_CREATE_PARTITION
-
-Partition (vm) ioctls:
-MSHV_MAP_GUEST_MEMORY, MSHV_UNMAP_GUEST_MEMORY
-MSHV_INSTALL_INTERCEPT
-MSHV_ASSERT_INTERRUPT
-MSHV_GET_PARTITION_PROPERTY, MSHV_SET_PARTITION_PROPERTY
-MSHV_CREATE_VP
-
-Vp (vcpu) ioctls:
-MSHV_GET_VP_REGISTERS, MSHV_SET_VP_REGISTERS
-MSHV_RUN_VP
-MSHV_GET_VP_STATE, MSHV_SET_VP_STATE
-MSHV_VP_TRANSLATE_GVA
-mmap() (register page)
-
-[0] Hyper-V is more well-known, but it really refers to the whole stack
-    including the hypervisor and other components that run in Windows kernel
-    and userspace.
-
-Changes since v2:
-1. Fix kernel test robot issues
-2. Bugfix in GVA to GPA patch provided by Anatol Belski
-
-Changes since v1:
-1. Correct mshv_dev mode to octal 0600
-2. Fix bug in mshv_vp_iotcl_run - correctly set suspend registers on early exit
-3. Address comments from Wei Liu, Sunil Muthuswamy, and Vitaly Kuznetsov
-4. Run checkpatch.pl - fix whitespace and other style issues
-
-Changes since RFC:
-1. Moved code from virt/mshv to drivers/hv
-2. Split hypercall helper functions and synic code to hv_call.c and hv_synic.c
-3. MSHV_REQUEST_VERSION ioctl replaced with MSHV_CHECK_EXTENSION
-3. Numerous suggestions, fixes, style changes, etc from Michael Kelley, Vitaly
-   Kuznetsov, Wei Liu, and Vineeth Pillai
-4. Added patch to enable hypervisor enlightenments on partition creation
-5. Added Wei Liu's patch for GVA to GPA translation
-
-Nuno Das Neves (18):
-  x86/hyperv: convert hyperv statuses to linux error codes
-  x86/hyperv: convert hyperv statuses to strings
-  drivers/hv: minimal mshv module (/dev/mshv/)
-  drivers/hv: check extension ioctl
-  drivers/hv: create partition ioctl
-  drivers/hv: create, initialize, finalize, delete partition hypercalls
-  drivers/hv: withdraw memory hypercall
-  drivers/hv: map and unmap guest memory
-  drivers/hv: create vcpu ioctl
-  drivers/hv: get and set vcpu registers ioctls
-  drivers/hv: set up synic pages for intercept messages
-  drivers/hv: run vp ioctl and isr
-  drivers/hv: install intercept ioctl
-  drivers/hv: assert interrupt ioctl
-  drivers/hv: get and set vp state ioctls
-  drivers/hv: mmap vp register page
-  drivers/hv: get and set partition property ioctls
-  drivers/hv: Add enlightenment bits to create partition ioctl
-
-Wei Liu (1):
-  drivers/hv: Translate GVA to GPA
-
- .../userspace-api/ioctl/ioctl-number.rst      |    2 +
- Documentation/virt/mshv/api.rst               |  173 +++
- arch/x86/hyperv/Makefile                      |    1 +
- arch/x86/hyperv/hv_init.c                     |    2 +-
- arch/x86/hyperv/hv_proc.c                     |   51 +-
- arch/x86/include/asm/hyperv-tlfs.h            |   15 +-
- arch/x86/include/asm/mshyperv.h               |    1 +
- arch/x86/include/uapi/asm/hyperv-tlfs.h       | 1274 +++++++++++++++++
- arch/x86/kernel/cpu/mshyperv.c                |   16 +
- drivers/hv/Kconfig                            |   18 +
- drivers/hv/Makefile                           |    4 +
- drivers/hv/hv_call.c                          |  742 ++++++++++
- drivers/hv/hv_synic.c                         |  181 +++
- drivers/hv/mshv.h                             |  120 ++
- drivers/hv/mshv_main.c                        | 1166 +++++++++++++++
- include/asm-generic/hyperv-tlfs.h             |  354 +++--
- include/asm-generic/mshyperv.h                |    4 +
- include/linux/mshv.h                          |   61 +
- include/uapi/asm-generic/hyperv-tlfs.h        |  242 ++++
- include/uapi/linux/mshv.h                     |  117 ++
- 20 files changed, 4399 insertions(+), 145 deletions(-)
- create mode 100644 Documentation/virt/mshv/api.rst
- create mode 100644 arch/x86/include/uapi/asm/hyperv-tlfs.h
- create mode 100644 drivers/hv/hv_call.c
- create mode 100644 drivers/hv/hv_synic.c
- create mode 100644 drivers/hv/mshv.h
- create mode 100644 drivers/hv/mshv_main.c
- create mode 100644 include/linux/mshv.h
- create mode 100644 include/uapi/asm-generic/hyperv-tlfs.h
- create mode 100644 include/uapi/linux/mshv.h
-
+diff --git a/arch/x86/hyperv/hv_proc.c b/arch/x86/hyperv/hv_proc.c
+index 68a0843d4750..59cf9a9e0975 100644
+--- a/arch/x86/hyperv/hv_proc.c
++++ b/arch/x86/hyperv/hv_proc.c
+@@ -14,6 +14,30 @@
+ 
+ #include <asm/trace/hyperv.h>
+ 
++int hv_status_to_errno(u64 hv_status)
++{
++	switch (hv_result(hv_status)) {
++	case HV_STATUS_SUCCESS:
++		return 0;
++	case HV_STATUS_INVALID_PARAMETER:
++	case HV_STATUS_UNKNOWN_PROPERTY:
++	case HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE:
++	case HV_STATUS_INVALID_VP_INDEX:
++	case HV_STATUS_INVALID_REGISTER_VALUE:
++	case HV_STATUS_INVALID_LP_INDEX:
++		return -EINVAL;
++	case HV_STATUS_ACCESS_DENIED:
++	case HV_STATUS_OPERATION_DENIED:
++		return -EACCES;
++	case HV_STATUS_NOT_ACKNOWLEDGED:
++	case HV_STATUS_INVALID_VP_STATE:
++	case HV_STATUS_INVALID_PARTITION_STATE:
++		return -EBADFD;
++	}
++	return -ENOTRECOVERABLE;
++}
++EXPORT_SYMBOL_GPL(hv_status_to_errno);
++
+ /*
+  * See struct hv_deposit_memory. The first u64 is partition ID, the rest
+  * are GPAs.
+@@ -94,7 +118,7 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ 	local_irq_restore(flags);
+ 	if (!hv_result_success(status)) {
+ 		pr_err("Failed to deposit pages: %lld\n", status);
+-		ret = hv_result(status);
++		ret = hv_status_to_errno(status);
+ 		goto err_free_allocations;
+ 	}
+ 
+@@ -150,7 +174,7 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
+ 			if (!hv_result_success(status)) {
+ 				pr_err("%s: cpu %u apic ID %u, %lld\n", __func__,
+ 				       lp_index, apic_id, status);
+-				ret = hv_result(status);
++				ret = hv_status_to_errno(status);
+ 			}
+ 			break;
+ 		}
+@@ -200,7 +224,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+ 			if (!hv_result_success(status)) {
+ 				pr_err("%s: vcpu %u, lp %u, %lld\n", __func__,
+ 				       vp_index, flags, status);
+-				ret = hv_result(status);
++				ret = hv_status_to_errno(status);
+ 			}
+ 			break;
+ 		}
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index 67ff0d637e55..c6eb01f3864d 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -169,6 +169,7 @@ int hyperv_flush_guest_mapping_range(u64 as,
+ int hyperv_fill_flush_guest_mapping_list(
+ 		struct hv_guest_mapping_flush_list *flush,
+ 		u64 start_gfn, u64 end_gfn);
++int hv_status_to_errno(u64 hv_status);
+ 
+ extern bool hv_root_partition;
+ 
+diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+index 515c3fb06ab3..fe6d41d0b114 100644
+--- a/include/asm-generic/hyperv-tlfs.h
++++ b/include/asm-generic/hyperv-tlfs.h
+@@ -189,16 +189,28 @@ enum HV_GENERIC_SET_FORMAT {
+ #define HV_HYPERCALL_REP_START_MASK	GENMASK_ULL(59, 48)
+ 
+ /* hypercall status code */
+-#define HV_STATUS_SUCCESS			0
+-#define HV_STATUS_INVALID_HYPERCALL_CODE	2
+-#define HV_STATUS_INVALID_HYPERCALL_INPUT	3
+-#define HV_STATUS_INVALID_ALIGNMENT		4
+-#define HV_STATUS_INVALID_PARAMETER		5
+-#define HV_STATUS_OPERATION_DENIED		8
+-#define HV_STATUS_INSUFFICIENT_MEMORY		11
+-#define HV_STATUS_INVALID_PORT_ID		17
+-#define HV_STATUS_INVALID_CONNECTION_ID		18
+-#define HV_STATUS_INSUFFICIENT_BUFFERS		19
++#define HV_STATUS_SUCCESS			0x0
++#define HV_STATUS_INVALID_HYPERCALL_CODE	0x2
++#define HV_STATUS_INVALID_HYPERCALL_INPUT	0x3
++#define HV_STATUS_INVALID_ALIGNMENT		0x4
++#define HV_STATUS_INVALID_PARAMETER		0x5
++#define HV_STATUS_ACCESS_DENIED			0x6
++#define HV_STATUS_INVALID_PARTITION_STATE	0x7
++#define HV_STATUS_OPERATION_DENIED		0x8
++#define HV_STATUS_UNKNOWN_PROPERTY		0x9
++#define HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE	0xA
++#define HV_STATUS_INSUFFICIENT_MEMORY		0xB
++#define HV_STATUS_INVALID_PARTITION_ID		0xD
++#define HV_STATUS_INVALID_VP_INDEX		0xE
++#define HV_STATUS_NOT_FOUND			0x10
++#define HV_STATUS_INVALID_PORT_ID		0x11
++#define HV_STATUS_INVALID_CONNECTION_ID		0x12
++#define HV_STATUS_INSUFFICIENT_BUFFERS		0x13
++#define HV_STATUS_NOT_ACKNOWLEDGED		0x14
++#define HV_STATUS_INVALID_VP_STATE		0x15
++#define HV_STATUS_NO_RESOURCES			0x1D
++#define HV_STATUS_INVALID_LP_INDEX		0x41
++#define HV_STATUS_INVALID_REGISTER_VALUE	0x50
+ 
+ /*
+  * The Hyper-V TimeRefCount register and the TSC
 -- 
 2.23.4
 
