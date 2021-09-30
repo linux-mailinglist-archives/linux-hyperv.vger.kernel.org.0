@@ -2,98 +2,92 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B70EC41C625
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Sep 2021 15:56:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1D2741D2DC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Sep 2021 07:48:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344360AbhI2N5x (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Sep 2021 09:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244589AbhI2N5t (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Sep 2021 09:57:49 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5152AC061768;
-        Wed, 29 Sep 2021 06:56:03 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id bd28so8968561edb.9;
-        Wed, 29 Sep 2021 06:56:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Sxcdm4+gr+uFVFw9+vfSgdTzx/pDv0j7O/Mzf1AStEw=;
-        b=FvFox01IyLQ/CP6zWAocb6ZVnsjejgL4SFAuP7CM4+SDbFKJJF9t6Tzg8A3I7FVnF7
-         Qb1MlTfkqOAw+JWVTXXGruMbbTZ3o3YYuIFwQ5UdTrh8yRXGBQKP16evuCLti6ibW6+t
-         XDuA0evO7X7Eh9VZ6D6oADz41SYEjEtNJtHssROd4ZWYkGqI95Zqb6YrXGe1P26s6PXn
-         WH4R1y8MD7Onj2njbhnvstgJbGfEGo5jj0Vt8lw3SHevvgnI/EWf/jmdHULAhXYiE1ad
-         CxwUqtjwCaOR+Dk7tFbjP6T9PYeHdUyhhlNsIX3laMQ9tSp8zH8QxeKLeGoKuFmABijF
-         XMqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Sxcdm4+gr+uFVFw9+vfSgdTzx/pDv0j7O/Mzf1AStEw=;
-        b=DoqDzBzs4CJYtTn2F4IOuXhZDDOLhmIZ+Tt3N+jHt7Z7IGtef37DrR3FN0ZIrJ4HJ+
-         OLDaXy2vlLagsQWqI9HReGEPZjwEmOk68HwTVW5LzD+KDyDW1yDOj+RSeJ9N3pWJ+gBg
-         p/f3tEkVVWcBGYyHLiSktE0FQpLCH1nVauryyNE26QkhAgNNkdEM3qwJQd2nAinVKR1O
-         szWcw1DS//A/iNcpoIW/EChcUoxCdahTsQMikejGoN/WWI0/2mtjBUF7sV/YCfVePt+i
-         XNqErfpn/1D+NqO+5JhMB66sjUHxmzYLIKTgt3KXcZjiLEqFFyhX1gETxEyfKoIM83Rc
-         YAkA==
-X-Gm-Message-State: AOAM53004p0V2/h9trl5G7PJBzlojjHfv3syQ8R/KrHRCVLUZI3AMOVv
-        Dx1R78pQ8ZfYSf9Bx/TfHex/ZhmSbk2EMg==
-X-Google-Smtp-Source: ABdhPJyHRpbjQJBh+TdNwmm7dPCq8vMsaSopyGbXuk9BvP4vT/SsUAOKXoKX0BMTjADKl88UvVo+Og==
-X-Received: by 2002:a17:906:4310:: with SMTP id j16mr13967048ejm.48.1632923756586;
-        Wed, 29 Sep 2021 06:55:56 -0700 (PDT)
-Received: from anparri (host-79-49-65-228.retail.telecomitalia.it. [79.49.65.228])
-        by smtp.gmail.com with ESMTPSA id l10sm1618024edr.14.2021.09.29.06.55.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Sep 2021 06:55:56 -0700 (PDT)
-Date:   Wed, 29 Sep 2021 15:55:48 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        id S1348119AbhI3FuK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 30 Sep 2021 01:50:10 -0400
+Received: from verein.lst.de ([213.95.11.211]:58257 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1348054AbhI3FuJ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 30 Sep 2021 01:50:09 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 272C868AFE; Thu, 30 Sep 2021 07:48:22 +0200 (CEST)
+Date:   Thu, 30 Sep 2021 07:48:21 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
         Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [RFC PATCH] scsi: storvsc: Fix validation for unsolicited
- incoming packets
-Message-ID: <20210929135508.GA3258@anparri>
-References: <20210928163732.5908-1-parri.andrea@gmail.com>
- <BN8PR21MB128430486E2F07EA71A7FCBDCAA89@BN8PR21MB1284.namprd21.prod.outlook.com>
- <BN8PR21MB1284DC9279AC61FE0C267C5ACAA99@BN8PR21MB1284.namprd21.prod.outlook.com>
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "pgonda@google.com" <pgonda@google.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "rppt@kernel.org" <rppt@kernel.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
+        "saravanand@fb.com" <saravanand@fb.com>,
+        "krish.sadhukhan@oracle.com" <krish.sadhukhan@oracle.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "rientjes@google.com" <rientjes@google.com>
+Subject: Re: [PATCH V5 12/12] net: netvsc: Add Isolation VM support for
+ netvsc driver
+Message-ID: <20210930054821.GA22332@lst.de>
+References: <20210914133916.1440931-1-ltykernel@gmail.com> <20210914133916.1440931-13-ltykernel@gmail.com> <MWHPR21MB15939A5D74CA1DF25EE816ADD7DB9@MWHPR21MB1593.namprd21.prod.outlook.com> <43e22b84-7273-4099-42ea-54b06f398650@gmail.com> <e379a60b-4d74-9167-983f-f70c96bb279e@gmail.com> <20210928053911.GA29208@lst.de> <de18b708-7252-642b-c60f-59e12ac27421@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN8PR21MB1284DC9279AC61FE0C267C5ACAA99@BN8PR21MB1284.namprd21.prod.outlook.com>
+In-Reply-To: <de18b708-7252-642b-c60f-59e12ac27421@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> > The patch looks good. But for readability, I'd suggested put the length
-> > checks together like this:
-> > 
-> > 	u32 minlen = rqst_id ? sizeof(struct vstor_packet) -
-> > 		stor_device->vmscsi_size_delta : VSTOR_MIN_UNSOL_PKT_SIZE;
-> > 
-> > 	if (pktlen < minlen) {
-> > 		dev_err(&device->device,
-> > 			   "Invalid pkt: id=%llu, len=%u, minlen=%u\n",
-> > 			   rqst_id, pktlen, minlen);
-> > 		continue;
-> > 	}
-> > 
-> > Thanks.
-> > 
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> The tag was meant to be:
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+On Tue, Sep 28, 2021 at 05:23:31PM +0800, Tianyu Lan wrote:
+>>
+>>   - the bare memremap usage in swiotlb looks strange and I'd
+>>     definitively expect a well documented wrapper.
+>
+> OK. Should the wrapper in the DMA code? How about dma_map_decrypted() 
+> introduced in the V4?
 
-Thank you, Haiyang.  I'll update as suggested.
-
-  Andrea
+A mentioned then the name is a pretty bad choice as it touches the dma_map*
+namespace that it is not related to.  I suspect just a little helper
+in the swiotlb code that explains how it is used might be enogh for now.
