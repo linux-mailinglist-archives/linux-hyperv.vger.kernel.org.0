@@ -2,74 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00B6A4214D9
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Oct 2021 19:08:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4362422577
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Oct 2021 13:41:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238157AbhJDRKY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 4 Oct 2021 13:10:24 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:48224 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238154AbhJDRKX (ORCPT
+        id S234394AbhJELnG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 5 Oct 2021 07:43:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234385AbhJELnF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 4 Oct 2021 13:10:23 -0400
-Received: from [10.0.0.179] (c-67-168-106-253.hsd1.wa.comcast.net [67.168.106.253])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 64D1520B861E;
-        Mon,  4 Oct 2021 10:08:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 64D1520B861E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1633367314;
-        bh=Rbd9RF6P4cr+/hPmLdlhjReNaN0Mq2ubykM7bwNnxjg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VNDG4z85s0SO5J2nfFk9q0DaWAtEL4AxxV2m2vOgCLHGRJFCrZrYzyg1eiLrLFLF+
-         KrbwsZDGnTOS0IpBNPJKgDJUkUDllJz+3aLK8dRC+tkRTH31GpcH5NZ3itB3JDzVGq
-         ZsLGeAd2/K9+5ng/TaHF54sLsQ1b3tpTVlB1AiYI=
-Subject: Re: [PATCH v3 08/19] drivers/hv: map and unmap guest memory
-To:     Wei Liu <wei.liu@kernel.org>, Olaf Hering <olaf@aepfle.de>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, mikelley@microsoft.com,
-        viremana@linux.microsoft.com, sunilmut@microsoft.com,
-        vkuznets@redhat.com, ligrassi@microsoft.com, kys@microsoft.com,
-        sthemmin@microsoft.com, anbelski@linux.microsoft.com
-References: <1632853875-20261-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1632853875-20261-9-git-send-email-nunodasneves@linux.microsoft.com>
- <20210928232702.700ef605.olaf@aepfle.de>
- <20210930141734.gx2th6sz6dbnyr6m@liuwe-devbox-debian-v2>
-From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Message-ID: <e39a2b44-ea1a-8cb0-8b71-64137a2dd1a3@linux.microsoft.com>
-Date:   Mon, 4 Oct 2021 10:08:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Tue, 5 Oct 2021 07:43:05 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12658C061749;
+        Tue,  5 Oct 2021 04:41:15 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id v18so76164030edc.11;
+        Tue, 05 Oct 2021 04:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5dP0dp6S1K23nYcgVnLdQY9FQ0JJKDn9S4Adpna91Wk=;
+        b=WuwAODlVsQO/YxDLaxPa+fWnErWGZeTG+jj5QbR2XlvUba/OpSvWuhqVBT9LviGd0i
+         5KR6JqxQMRvLMTgsPLJ2EEZK05TeiX6cy99IZG4ZIp/iMJwmg/2pSsqgGBsknUMQYHLc
+         h8IsQEMpgK+GLg+bYkbgvMWt9twc1AOTiYO3GDIIoRhWxNCGs87/+kMXaFMzWxCubb78
+         2OOqw38URj+MPn4B491mDXCuYdmqx6RWlZFlr008vFw8jZU2CjY6SVl7Ix7WSeAKTNZ7
+         mkFLM/GFfR6A4ODMRH6i7EWE/jYxfbkiP3kCqtHIeX9NOz5DR4ESv43cesKAC89xH4Za
+         oI+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5dP0dp6S1K23nYcgVnLdQY9FQ0JJKDn9S4Adpna91Wk=;
+        b=ly5/zS0I/XeNuSlSBZbItPZuHWSt+PKfhyJIwPOs3UW91wm5rdZhoeNmCXya4F5/UL
+         p+k2Q1yqW4jAbFzE035jWjOkBK0gVwAMD2wGy+SRveicQEnuimp1tlRPkmyV7iEJa94o
+         2I3AB9JkHpRbiiH6Xks6GCUHzvDqns2K0uQ2aXmH2T1xCUhJq8ZFh2oaYZwiSi24AmFe
+         WcTRjQ1KkGH6ftm7rVH04FkVCscK48c4OzP0Q1rqBQUOnsH1YCy+QIGVHUt3IZAA42zl
+         SyuBuuQa3zeY02F5sPV7cqiYAkdg19mCZVOdWR3V/HkTQpv+piAOjmNP8hc1MR6kyu8E
+         2yzQ==
+X-Gm-Message-State: AOAM531HuPkYN9IAbLWx6ywp/szqOyeUL4W0o+LoB8tYrLuF0pkr6BJH
+        j0KUD+Tt2zqNm/cbB71JkuCdUQpKuKTDskv/
+X-Google-Smtp-Source: ABdhPJz/vMjY2GearIQuKYktdUaC4sF5V50euf6kfHdhrC6kN3OF9pBiHIHR39NJT563C+NfsWtkcQ==
+X-Received: by 2002:aa7:ccd8:: with SMTP id y24mr15268314edt.358.1633434073274;
+        Tue, 05 Oct 2021 04:41:13 -0700 (PDT)
+Received: from anparri.mshome.net (host-79-49-65-228.retail.telecomitalia.it. [79.49.65.228])
+        by smtp.gmail.com with ESMTPSA id l19sm2437168edb.65.2021.10.05.04.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Oct 2021 04:41:12 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] scsi: storvsc: Fix validation for unsolicited incoming packets
+Date:   Tue,  5 Oct 2021 13:41:03 +0200
+Message-Id: <20211005114103.3411-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210930141734.gx2th6sz6dbnyr6m@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+The validation on the length of incoming packets performed in
+storvsc_on_channel_callback() does not apply to unsolicited
+packets with ID of 0 sent by Hyper-V.  Adjust the validation
+for such unsolicited packets.
 
+Fixes: 91b1b640b834b2 ("scsi: storvsc: Validate length of incoming packet in storvsc_on_channel_callback()")
+Reported-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+Changes since RFC[1]:
+  - Merge length checks (Haiyang Zhang)
 
-On 9/30/2021 7:17 AM, Wei Liu wrote:
-> On Tue, Sep 28, 2021 at 11:27:02PM +0200, Olaf Hering wrote:
->> Am Tue, 28 Sep 2021 11:31:04 -0700
->> schrieb Nuno Das Neves <nunodasneves@linux.microsoft.com>:
->>
->>> +++ b/include/asm-generic/hyperv-tlfs.h
->>> -#define HV_HYP_PAGE_SHIFT      12
->>> +#define HV_HYP_PAGE_SHIFT		12
->>
->> I think in case this change is really required, it should be in a separate patch.
-> 
-> I don't think this hunk should be in this patch. It is just changing
-> whitespaces.
-> 
+[1] https://lkml.kernel.org/r/20210928163732.5908-1-parri.andrea@gmail.com
 
-Thanks, good point. I think I'll remove this hunk from the series altogether.
+ drivers/scsi/storvsc_drv.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-> Wei.
-> 
->>
->>
->> Olaf
-> 
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index ebbbc1299c625..349c1071a98d4 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -292,6 +292,9 @@ struct vmstorage_protocol_version {
+ #define STORAGE_CHANNEL_REMOVABLE_FLAG		0x1
+ #define STORAGE_CHANNEL_EMULATED_IDE_FLAG	0x2
+ 
++/* Lower bound on the size of unsolicited packets with ID of 0 */
++#define VSTOR_MIN_UNSOL_PKT_SIZE		48
++
+ struct vstor_packet {
+ 	/* Requested operation type */
+ 	enum vstor_packet_operation operation;
+@@ -1285,11 +1288,15 @@ static void storvsc_on_channel_callback(void *context)
+ 	foreach_vmbus_pkt(desc, channel) {
+ 		struct vstor_packet *packet = hv_pkt_data(desc);
+ 		struct storvsc_cmd_request *request = NULL;
++		u32 pktlen = hv_pkt_datalen(desc);
+ 		u64 rqst_id = desc->trans_id;
++		u32 minlen = rqst_id ? sizeof(struct vstor_packet) -
++			stor_device->vmscsi_size_delta : VSTOR_MIN_UNSOL_PKT_SIZE;
+ 
+-		if (hv_pkt_datalen(desc) < sizeof(struct vstor_packet) -
+-				stor_device->vmscsi_size_delta) {
+-			dev_err(&device->device, "Invalid packet len\n");
++		if (pktlen < minlen) {
++			dev_err(&device->device,
++				"Invalid pkt: id=%llu, len=%u, minlen=%u\n",
++				rqst_id, pktlen, minlen);
+ 			continue;
+ 		}
+ 
+-- 
+2.25.1
+
