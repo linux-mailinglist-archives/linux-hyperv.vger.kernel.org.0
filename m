@@ -2,240 +2,153 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68873423843
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Oct 2021 08:38:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A9F0423879
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Oct 2021 09:04:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237741AbhJFGjp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Oct 2021 02:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237443AbhJFGjP (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Oct 2021 02:39:15 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF081C06178C;
-        Tue,  5 Oct 2021 23:37:08 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id y5so1041612pll.3;
-        Tue, 05 Oct 2021 23:37:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cUs+nJBemKyqHW1/+tBNnIBzfXId6r+3EciJyXUHzJs=;
-        b=deTC7Rn0DcsjYYoiRTspqzgwi6qRvMUyQ7vSXGCFfsa5xOad3Gdn8ljNTkYggYUB9M
-         Wh54qfIM5W1Y8TsctnlhmnbtFhrNYJ2+ZTro+t6KMkIvD8O85+Rdwpnvlo5kwHeXVcu5
-         NizfNtc56ygl73gOCxTLx9/P+KRIjVluMvecfcdL/zXZsCORSKluiRe8eSvs8tVVfdeW
-         g2T1xPemJDMJ3eUNAjHKR7YTRbm7UjH1UISQ5DcUn449tkIhamOtMwdvtYgyAxCVen12
-         VCt1M1thqP1DgyxyVwTvGfYaadDjgRppBbD2GrkbPMC6YYTAtAJhM10QLs2lO8ZY+/ap
-         7aGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cUs+nJBemKyqHW1/+tBNnIBzfXId6r+3EciJyXUHzJs=;
-        b=3XBszEZpxjFKPcVQqISU+5BnvtNSYVCFZuL0SmzwazC2PMqdv1TXhXz1u3TZRY559p
-         O9KWg9of7M9MLKaG/NfXxt1edF8YZBov4E5oH6tNFiP8HraEjYpQzto31ftJR3YdXZZ9
-         2JyMagpSVhgNpeKiKfnp09R3ZM6eRwgD272p1kT5SAuG6p8c073SPE2g8OLYJ24rlrdS
-         dXIhilLFuOsmCxrY2K5FamWTLmoHvIAy9sn1XR5UTSlAqpzRNYkcu5AoPM9s1u0YOyra
-         zOdSbfPBCM/NjRjLzUwprdBDY4DN6WHbzJW1ew7FiEUcUj0ZscR16a2FS910n6sMKWls
-         lKEg==
-X-Gm-Message-State: AOAM531p8mKZU+h94gvlAtVOIojJFDWmnfB0QA/b125MwBCEnWZ70jRz
-        RI9NhHPM26f3mIRbVYbFSAE=
-X-Google-Smtp-Source: ABdhPJzeVApnzhQbAoaxrNRKX1UnEUGI+xcGgAtFDKobBiFveN6zuJKOkPB2FG743LxWJ1lp7WtAhQ==
-X-Received: by 2002:a17:902:6b01:b0:13e:50bb:790f with SMTP id o1-20020a1709026b0100b0013e50bb790fmr9298533plk.42.1633502228179;
-        Tue, 05 Oct 2021 23:37:08 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:37:357b:c418:cfef:30b1])
-        by smtp.gmail.com with ESMTPSA id l185sm19886413pfd.29.2021.10.05.23.37.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Oct 2021 23:37:07 -0700 (PDT)
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        davem@davemloft.net, kuba@kernel.org, gregkh@linuxfoundation.org,
-        arnd@arndb.de, jroedel@suse.de, brijesh.singh@amd.com,
-        Tianyu.Lan@microsoft.com, thomas.lendacky@amd.com,
-        pgonda@google.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, rppt@kernel.org, tj@kernel.org,
-        aneesh.kumar@linux.ibm.com, saravanand@fb.com, hannes@cmpxchg.org,
-        rientjes@google.com, michael.h.kelley@microsoft.com
-Cc:     linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        vkuznets@redhat.com, konrad.wilk@oracle.com, hch@lst.de,
-        robin.murphy@arm.com, joro@8bytes.org, parri.andrea@gmail.com,
-        dave.hansen@intel.com
-Subject: [PATCH V7 9/9] Drivers: hv : vmbus: Initialize VMbus ring buffer for Isolation VM
-Date:   Wed,  6 Oct 2021 02:36:49 -0400
-Message-Id: <20211006063651.1124737-10-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211006063651.1124737-1-ltykernel@gmail.com>
-References: <20211006063651.1124737-1-ltykernel@gmail.com>
+        id S231281AbhJFHGc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Oct 2021 03:06:32 -0400
+Received: from mail-dm6nam12on2115.outbound.protection.outlook.com ([40.107.243.115]:34433
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230227AbhJFHGb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 6 Oct 2021 03:06:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b0VXOXEX5nm1c4KF93eJNpD0B4HqW0a0qgc0OnBhDGr6y2E3nWjvRg0+kPTQt1Pv+e0KFKWIubVKyrV7VriWrli7Ph06ST2zHQ2wIduzc8IQawyi5ZOWQOM+Smzy0kgOLnTf88L/hYf9mkFSdAgFSr5dH+6TTIVdygYbvxy4jrJ6zYnImhg0RbytaxrkKVXGuBKpCiLhxv+zNNEK6uguKrHTrEGY490cpROYNm4Q/XksC9vG5D9IdzV8UFY9fg+zzOHtqUrWxs+73WsEj15+H1p9sjlpCwfp2oTP15e/jaqJZ628SLnXqst2qMKvcjyYP9svQqY+uZHHKVp+dyqCFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wNgkG0Owpmzxi+ZwZD16lLHp+miIjC0VpSKHOiw4HmM=;
+ b=PJwhmf3i8pBCKyRwGX0PCybz1LBjn9QQ7lc8Dc6E1nm+K6AAwu8EMBbsit6oxZ3u3kDqkohNMd0HX/Z6M+4n9NcuavRLBA+/0I4C3OBxzf37KG0Ms8LpcH7qBpvWlWO2j4Y1zdeIZQ78ICeELMrsP75RDMGP+ZBPpc0kERH9rtpqLf7f7ly0ehz4keSoWcR2bY7SFU/kEVX8s1KSET1mmGsx7WlX7M0UQ59gZFeYLUX7870xL3Pw5U/l/2ms0JFub+IzU9bRM7xSp5bahRetJQmvsjm9hi/EFJzOeXMjrB5oNbFkDoMEbeYwpTtLvT5dC691PyPHPH52Ge6v0VLeyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wNgkG0Owpmzxi+ZwZD16lLHp+miIjC0VpSKHOiw4HmM=;
+ b=DdWUBk+3hXs2x1k1k9FVf4YvANT2ngfIfCmaWrnuW7UQ48TyjQA17CxV584BRd8KnaO/o3ZOXTDYNzxzWahydclK3s1WdqnHeOcRWoXLe1yRxdp3UZvc9J28VWgwz8KDBQex2yWZn+FIQJstpM2ibPCfVqFJwuUuw3DfxcSsa+U=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26) by BL0PR2101MB1747.namprd21.prod.outlook.com
+ (2603:10b6:207:35::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.2; Wed, 6 Oct
+ 2021 07:04:36 +0000
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::a5a1:1ba3:ae97:a567]) by BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::a5a1:1ba3:ae97:a567%7]) with mapi id 15.20.4608.003; Wed, 6 Oct 2021
+ 07:04:36 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        haiyangz@microsoft.com, ming.lei@redhat.com, bvanassche@acm.org,
+        john.garry@huawei.com, linux-scsi@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] scsi: storvsc: Cap scsi_driver.can_queue to fix a hang issue during boot
+Date:   Wed,  6 Oct 2021 00:03:45 -0700
+Message-Id: <20211006070345.51713-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MW4P223CA0012.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:303:80::17) To BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:b:822b:5dff:feb8:fa01) by MW4P223CA0012.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.17 via Frontend Transport; Wed, 6 Oct 2021 07:04:34 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d21c8a49-26fe-4e43-5c84-08d988978e29
+X-MS-TrafficTypeDiagnostic: BL0PR2101MB1747:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL0PR2101MB174733EC14FD4E1B11552096BFB09@BL0PR2101MB1747.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1060;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sMsVgZyouo/Yt/Fru9+rLOizx3WBB52BJguwfz7+2VhYSvNDxIsymiFwyHLOPh2z8d69ga34xDVrUHWDWXhxqsdToDNrpol7jEA150ORNiBZZudfC46pfmTs5AhNs0prrYfNSoob6DzEWbqrr0/lx7b3nBqzJ4pJCLg7Vs4LqjFUGMzXH3vzU0EQNLWb6a/447GKRrQB912JDF4sRSZYYfJoPW3OHXX+REi5m0EQblZVHu+yjUdzV9vpJB6+GCJ9vNFehoQgzDHMewFVgFmDn9R+InwBVZ2gw85phGiipzCK0MSK0WXt47IvmZneHcpJrzYXX+YZ4zPsEavXcRHHB9z+HahXOQYVh0VARfb3Ko2wAfBPAb/xs7uDKRCadRzWcu9Xg6IcYtyfxwDSLj94Nc/5o3kEtv9pMPLgsdcP2K/WmvJ7n/1EfBqWtJhGjTM2FjDpP1InXHxHbHBBPRkfZ49EOpUsIlhm2777R5q6P8+hrIq3qFq9EasRWY3t0ArjDBhaByML6tgT2IcaykqE7RF7w+Dn++VN21BDwIgvn5NuXSGqknxCOeRPxA9ojWuZOP46yXo7HuVUNvyHlr1C7fRUpZyGrvgGQk94B7MxVsv6q6LLnQ1OyE/ULjIJ8GeTIPtNKeNXq5sjfHf3qfyYBok9A6tYE4FhfouGaSkHzRgGmumtdqyqqVS096Fbw3pI
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(8676002)(66556008)(10290500003)(66476007)(66946007)(3450700001)(2616005)(4326008)(316002)(1076003)(38100700002)(7416002)(6666004)(186003)(36756003)(2906002)(8936002)(508600001)(82960400001)(6486002)(52116002)(86362001)(921005)(7696005)(83380400001)(82950400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?iglu+84bRQT6U/V6LrxkVwhOCKthgFsWyIj59e1/zek7GjDHcXTVyUZ6MuBM?=
+ =?us-ascii?Q?5N0pqyfO4Sm5ZKAaHngpu5FWScfWG9qpqaJbJSZzMfGG05pcDcND+rQTaJtY?=
+ =?us-ascii?Q?hSP4Y5Nvw3p5t6XfcwjeSF/H0YOP+CTEIRCFMTDVdgvBiqZ3/S9cA5TluRIS?=
+ =?us-ascii?Q?KftS2Oaq3tdmjfx19eUoEU/+DtLyIQ1OQPV6uH3Qgaei/QosMnq2iidrSKTl?=
+ =?us-ascii?Q?f1dK30RZTysaSCoM8lWFg5k5pys4dQvOrjD0QxhavpCR/jTRdues5kt7GgnJ?=
+ =?us-ascii?Q?pofjcryCSyfQIW3FBTnZLGW4rP6J6gqz9f3K022dbfPwTGtbMesA77pxPct9?=
+ =?us-ascii?Q?XdpE50+BfFDz5RCD9VsEPphIqd9fNwtpwbyALkXYBUX3L3vVNlDCPDyP9CIZ?=
+ =?us-ascii?Q?1YOGyI3VX5y1tx2PoXZZBTfwHjDQBZz73GMNPIDPo7O+9zLaAiazFOEoCbpj?=
+ =?us-ascii?Q?ll6QTcNmm7SGvhduUcQx0PokrqvXi/bp/fSYa8b7NA2OCedodcWC+zhFPUav?=
+ =?us-ascii?Q?BKV5r+wlAdFWr8GbRZAoC70pbgiSpErjCYnHu6zRu6l/RPVWU7VbeJaMLyrF?=
+ =?us-ascii?Q?yy0z5xptjyZN6ImlcrhsCCvcEJpcRZxhgDUBw6NOPWR1jrMVDOXMoXjufwfe?=
+ =?us-ascii?Q?/eItT93cbXKnRuhluI2oW6v4qBp5vWrJgk/9S0uR8pTuYEYlKnnrjHFv6xhK?=
+ =?us-ascii?Q?eVJcid70F2N+iEZ8VPh5I8iJWhXLoWTEqNYGpDGXuz+4iNqH4qAY1kVXzb7x?=
+ =?us-ascii?Q?obEhz2FmFOok08JDvOWTZJmTJ0TohLhGSuDRxJadnrwpWQL6EkmHvVhgAOep?=
+ =?us-ascii?Q?fR4JgGPyoQzo2b86ovIIee0cN0kt+ULIK2/2kNVhDc2GpP2SPkMoX76hyvhc?=
+ =?us-ascii?Q?cxk+0Hht6bBd7XIj4BpAV7tjSUeztgHfO6LY9dS0td0l/biUpYV74Y0vo3+a?=
+ =?us-ascii?Q?EJyqEtsKCRiBKK5dLdDFy+aPmIPQDQgZxPtXudDyy6H+8sXjvvr+jps050Ts?=
+ =?us-ascii?Q?n4sHAJ4SS0xa2Vn465wnA+AtcKtiW4uMim+Yl/XH7BuUMw15wnsRa6XhEYBo?=
+ =?us-ascii?Q?mKKUD+3q9B/oAY5KOKvx47SkvdO3XVinwTxfoSdHeWC6kdXIi/1XuXQUJ4LM?=
+ =?us-ascii?Q?wdL1lD5kwMI9Eh7+VWLstSmqRgUh/NRLhNcwOE0ZZHfLTj8Z4O9QmIhhr2A6?=
+ =?us-ascii?Q?v6NAH3gASzUDWeJnma5lGfepVQybkFLJFhmQX0s27fbq2hkGdoVQ4aBTQjhu?=
+ =?us-ascii?Q?WMb8AHhMU6HFYQtNPYf8hDhXWGImmdx2mQkkOUDvE/cIZmobw05kXeZlp5CV?=
+ =?us-ascii?Q?HPQ66dm/CoB0EZpCoofL/23VUbBJNSsjHtessIPpH1/dhp7f+H+X+rn4W6+g?=
+ =?us-ascii?Q?xtxYgg3k25pkeGz6Sx2ihr6iF3eP?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d21c8a49-26fe-4e43-5c84-08d988978e29
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2021 07:04:36.2366
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kpBuQAXiBUvIyPk+V7cRPqGiY8sy/5OGRngOvDuXTB3mG3O6yVcYd+mj1RtxmQla2b4x2Tl9v+B7wQGj6sHFeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1747
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+After commit ea2f0f77538c, a 416-CPU VM running on Hyper-V hangs during
+boot because scsi_add_host_with_dma() sets shost->cmd_per_lun to a
+negative number:
+	'max_outstanding_req_per_channel' is 352,
+	'max_sub_channels' is (416 - 1) / 4 = 103, so in storvsc_probe(),
+scsi_driver.can_queue = 352 * (103 + 1) * (100 - 10) / 100 = 32947, which
+is bigger than SHRT_MAX (i.e. 32767).
 
-VMbus ring buffer are shared with host and it's need to
-be accessed via extra address space of Isolation VM with
-AMD SNP support. This patch is to map the ring buffer
-address in extra address space via vmap_pfn(). Hyperv set
-memory host visibility hvcall smears data in the ring buffer
-and so reset the ring buffer memory to zero after mapping.
+Fix the hang issue by capping scsi_driver.can_queue.
 
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Add the below Fixed tag though ea2f0f77538c itself is good.
+
+Fixes: ea2f0f77538c ("scsi: core: Cap scsi_host cmd_per_lun at can_queue")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
 ---
-Change since v4:
-	* Use PFN_DOWN instead of HVPFN_DOWN in the hv_ringbuffer_init()
+ drivers/scsi/storvsc_drv.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Change since v3:
-	* Remove hv_ringbuffer_post_init(), merge map
-	operation for Isolation VM into hv_ringbuffer_init()
-	* Call hv_ringbuffer_init() after __vmbus_establish_gpadl().
----
- drivers/hv/Kconfig       |  1 +
- drivers/hv/channel.c     | 19 +++++++-------
- drivers/hv/ring_buffer.c | 55 ++++++++++++++++++++++++++++++----------
- 3 files changed, 53 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index d1123ceb38f3..dd12af20e467 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -8,6 +8,7 @@ config HYPERV
- 		|| (ARM64 && !CPU_BIG_ENDIAN))
- 	select PARAVIRT
- 	select X86_HV_CALLBACK_VECTOR if X86
-+	select VMAP_PFN
- 	help
- 	  Select this option to run Linux as a Hyper-V client operating
- 	  system.
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index b37ff4a39224..dc5c35210c16 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -683,15 +683,6 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
- 	if (!newchannel->max_pkt_size)
- 		newchannel->max_pkt_size = VMBUS_DEFAULT_MAX_PKT_SIZE;
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index ebbbc1299c62..ba374908aec2 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1976,6 +1976,16 @@ static int storvsc_probe(struct hv_device *device,
+ 				(max_sub_channels + 1) *
+ 				(100 - ring_avail_percent_lowater) / 100;
  
--	err = hv_ringbuffer_init(&newchannel->outbound, page, send_pages, 0);
--	if (err)
--		goto error_clean_ring;
--
--	err = hv_ringbuffer_init(&newchannel->inbound, &page[send_pages],
--				 recv_pages, newchannel->max_pkt_size);
--	if (err)
--		goto error_clean_ring;
--
- 	/* Establish the gpadl for the ring buffer */
- 	newchannel->ringbuffer_gpadlhandle.gpadl_handle = 0;
- 
-@@ -703,6 +694,16 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
- 	if (err)
- 		goto error_clean_ring;
- 
-+	err = hv_ringbuffer_init(&newchannel->outbound,
-+				 page, send_pages, 0);
-+	if (err)
-+		goto error_free_gpadl;
++	/*
++	 * v5.14 (see commit ea2f0f77538c) implicitly requires that
++	 * scsi_driver.can_queue should not exceed SHRT_MAX, otherwise
++	 * scsi_add_host_with_dma() sets shost->cmd_per_lun to a negative
++	 * number (note: the type of the "cmd_per_lun" field is "short"), and
++	 * the system may hang during early boot.
++	 */
++	if (scsi_driver.can_queue > SHRT_MAX)
++		scsi_driver.can_queue = SHRT_MAX;
 +
-+	err = hv_ringbuffer_init(&newchannel->inbound, &page[send_pages],
-+				 recv_pages, newchannel->max_pkt_size);
-+	if (err)
-+		goto error_free_gpadl;
-+
- 	/* Create and init the channel open message */
- 	open_info = kzalloc(sizeof(*open_info) +
- 			   sizeof(struct vmbus_channel_open_channel),
-diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-index 314015d9e912..931802ae985c 100644
---- a/drivers/hv/ring_buffer.c
-+++ b/drivers/hv/ring_buffer.c
-@@ -17,6 +17,8 @@
- #include <linux/vmalloc.h>
- #include <linux/slab.h>
- #include <linux/prefetch.h>
-+#include <linux/io.h>
-+#include <asm/mshyperv.h>
- 
- #include "hyperv_vmbus.h"
- 
-@@ -183,8 +185,10 @@ void hv_ringbuffer_pre_init(struct vmbus_channel *channel)
- int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
- 		       struct page *pages, u32 page_cnt, u32 max_pkt_size)
- {
--	int i;
- 	struct page **pages_wraparound;
-+	unsigned long *pfns_wraparound;
-+	u64 pfn;
-+	int i;
- 
- 	BUILD_BUG_ON((sizeof(struct hv_ring_buffer) != PAGE_SIZE));
- 
-@@ -192,23 +196,48 @@ int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
- 	 * First page holds struct hv_ring_buffer, do wraparound mapping for
- 	 * the rest.
- 	 */
--	pages_wraparound = kcalloc(page_cnt * 2 - 1, sizeof(struct page *),
--				   GFP_KERNEL);
--	if (!pages_wraparound)
--		return -ENOMEM;
-+	if (hv_isolation_type_snp()) {
-+		pfn = page_to_pfn(pages) +
-+			PFN_DOWN(ms_hyperv.shared_gpa_boundary);
-+
-+		pfns_wraparound = kcalloc(page_cnt * 2 - 1,
-+			sizeof(unsigned long), GFP_KERNEL);
-+		if (!pfns_wraparound)
-+			return -ENOMEM;
-+
-+		pfns_wraparound[0] = pfn;
-+		for (i = 0; i < 2 * (page_cnt - 1); i++)
-+			pfns_wraparound[i + 1] = pfn + i % (page_cnt - 1) + 1;
- 
--	pages_wraparound[0] = pages;
--	for (i = 0; i < 2 * (page_cnt - 1); i++)
--		pages_wraparound[i + 1] = &pages[i % (page_cnt - 1) + 1];
-+		ring_info->ring_buffer = (struct hv_ring_buffer *)
-+			vmap_pfn(pfns_wraparound, page_cnt * 2 - 1,
-+				 PAGE_KERNEL);
-+		kfree(pfns_wraparound);
- 
--	ring_info->ring_buffer = (struct hv_ring_buffer *)
--		vmap(pages_wraparound, page_cnt * 2 - 1, VM_MAP, PAGE_KERNEL);
-+		if (!ring_info->ring_buffer)
-+			return -ENOMEM;
-+
-+		/* Zero ring buffer after setting memory host visibility. */
-+		memset(ring_info->ring_buffer, 0x00, PAGE_SIZE * page_cnt);
-+	} else {
-+		pages_wraparound = kcalloc(page_cnt * 2 - 1,
-+					   sizeof(struct page *),
-+					   GFP_KERNEL);
-+
-+		pages_wraparound[0] = pages;
-+		for (i = 0; i < 2 * (page_cnt - 1); i++)
-+			pages_wraparound[i + 1] =
-+				&pages[i % (page_cnt - 1) + 1];
- 
--	kfree(pages_wraparound);
-+		ring_info->ring_buffer = (struct hv_ring_buffer *)
-+			vmap(pages_wraparound, page_cnt * 2 - 1, VM_MAP,
-+				PAGE_KERNEL);
- 
-+		kfree(pages_wraparound);
-+		if (!ring_info->ring_buffer)
-+			return -ENOMEM;
-+	}
- 
--	if (!ring_info->ring_buffer)
--		return -ENOMEM;
- 
- 	ring_info->ring_buffer->read_index =
- 		ring_info->ring_buffer->write_index = 0;
+ 	host = scsi_host_alloc(&scsi_driver,
+ 			       sizeof(struct hv_host_device));
+ 	if (!host)
 -- 
-2.25.1
+2.17.1
 
