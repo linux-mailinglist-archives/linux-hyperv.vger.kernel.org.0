@@ -2,111 +2,162 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31741423985
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Oct 2021 10:14:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B99B5423CF0
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Oct 2021 13:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237594AbhJFIQ3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Oct 2021 04:16:29 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3936 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237638AbhJFIQ3 (ORCPT
+        id S238526AbhJFLlJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Oct 2021 07:41:09 -0400
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:41498 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238337AbhJFLlJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Oct 2021 04:16:29 -0400
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HPRx70hmjz67WRt;
-        Wed,  6 Oct 2021 16:11:23 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Wed, 6 Oct 2021 10:14:33 +0200
-Received: from [10.47.95.252] (10.47.95.252) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.8; Wed, 6 Oct 2021
- 09:14:32 +0100
-Subject: Re: [PATCH] scsi: storvsc: Cap scsi_driver.can_queue to fix a hang
- issue during boot
-To:     <decui@microsoft.com>, <kys@microsoft.com>,
-        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <haiyangz@microsoft.com>, <ming.lei@redhat.com>,
-        <bvanassche@acm.org>, <linux-scsi@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20211006070345.51713-1-decui@microsoft.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <e36619df-652d-3550-cb4d-9b65b2f5faee@huawei.com>
-Date:   Wed, 6 Oct 2021 09:17:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Wed, 6 Oct 2021 07:41:09 -0400
+Received: by mail-wr1-f47.google.com with SMTP id t2so7887407wrb.8;
+        Wed, 06 Oct 2021 04:39:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gfOhYK3sa4RchPYXkwWmSCEiGsGoKelUYKBquQ6G06A=;
+        b=NH0yXv2Rl0Z2FhdxEDyCUiCPZMbPrK/naoEIs5cP8xNXedAdUdHJ40wnMik62dVMle
+         6D0Zdgh5cAaRFWbksfKDqOugr/7tAjDWL94B+EKyMUGsNCoRRKHgMGu/wVCt8m2+xr34
+         BmtAlJd8an2pAhhyclk6jhk0LAs3E5ERv4p5eQ+ctiDu6W3up7r7DDM+glRLZYTzo1MQ
+         fenc57t8z1Su1FAVQw4ZQNLOI11IbQ4+UV29Dv3ujdE9BNXrGPDO7zOUhahkYBMcjVKA
+         8HX7MzjhgxMujyJxEFOVdJZRZz1+PMo+iWt9HAy59kTSwSynV+eWSm9q4hgEz54jasLX
+         xzww==
+X-Gm-Message-State: AOAM531pb/rtpgymZ4I53uiYAwNUKAdwfUGJ+I2xXzH+qgh23qqf69sQ
+        F9iqQxduExVw8THtVRGibIM=
+X-Google-Smtp-Source: ABdhPJxyTT8QreVfiYs68z5J08WXAdEFMUL8t2ElBIrrRmHfND9oaFGN/B9YobgKZIsoXstcTuoiKQ==
+X-Received: by 2002:adf:8b84:: with SMTP id o4mr23975028wra.108.1633520356102;
+        Wed, 06 Oct 2021 04:39:16 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id w5sm20427595wrq.86.2021.10.06.04.39.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Oct 2021 04:39:15 -0700 (PDT)
+Date:   Wed, 6 Oct 2021 11:39:13 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        sthemmin@microsoft.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] x86/hyperv: remove on-stack cpumask from
+ hv_send_ipi_mask_allbutself
+Message-ID: <20211006113913.c2ubc7bokgokoc6q@liuwe-devbox-debian-v2>
+References: <20210910185714.299411-1-wei.liu@kernel.org>
+ <20210910185714.299411-3-wei.liu@kernel.org>
+ <87ee9batb5.ffs@tglx>
+ <87k0ir63au.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20211006070345.51713-1-decui@microsoft.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.252]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k0ir63au.fsf@vitty.brq.redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 06/10/2021 08:03, Dexuan Cui wrote:
-> After commit ea2f0f77538c, a 416-CPU VM running on Hyper-V hangs during
-> boot because scsi_add_host_with_dma() sets shost->cmd_per_lun to a
-> negative number:
-> 	'max_outstanding_req_per_channel' is 352,
-> 	'max_sub_channels' is (416 - 1) / 4 = 103, so in storvsc_probe(),
-> scsi_driver.can_queue = 352 * (103 + 1) * (100 - 10) / 100 = 32947, which
-> is bigger than SHRT_MAX (i.e. 32767).
+Hi Thomas and Vitaly
 
-Out of curiosity, are these values realistic? You're capping can_queue 
-just because of a data size issue, so, if these values are realistic, 
-seems a weak reason.
+Sorry for the late reply. I was buried in my other work.
+
+On Tue, Oct 05, 2021 at 02:53:29PM +0200, Vitaly Kuznetsov wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+> 
+> > Wei!
+> >
+> 
+> Not Wei here but I don't see the question answered on the mailing list
+> so let me give my thoughts.
+> 
+> > On Fri, Sep 10 2021 at 18:57, Wei Liu wrote:
+> >> -static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
+> >> +static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
+> >> +		bool exclude_self)
+> >>  {
+> >>  	struct hv_send_ipi_ex **arg;
+> >>  	struct hv_send_ipi_ex *ipi_arg;
+> >> @@ -123,7 +124,10 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
+> >>  
+> >>  	if (!cpumask_equal(mask, cpu_present_mask)) {
+> >
+> > Not part of that patch, but is checking cpu_present_mask correct here?
+> > If so then this really lacks a comment for the casual reader.
+> 
+> It seems it *was* correct prior to 'exclude_self': the idea is that for
+> everything but 'cpu_present_mask' we use HV_GENERIC_SET_SPARSE_4K
+> format, for 'cpu_present_mask' we just use 'all' (HV_GENERIC_SET_ALL)
+> to avoid specifying individual CPUs. 
+
+Yes, that's the intent.
+
+It was correct before because cpumask would have been filtered to
+exclude "self" when it came to this function.
 
 > 
-> Fix the hang issue by capping scsi_driver.can_queue.
+> >
+> >>  		ipi_arg->vp_set.format = HV_GENERIC_SET_SPARSE_4K;
+> >> -		nr_bank = cpumask_to_vpset(&(ipi_arg->vp_set), mask);
+> >> +		if (exclude_self)
+> >> +			nr_bank = cpumask_to_vpset_noself(&(ipi_arg->vp_set), mask);
+> >> +		else
+> >> +			nr_bank = cpumask_to_vpset(&(ipi_arg->vp_set), mask);
+> >>  	}
+> >
+> > But, what happens in the case that mask == cpu_present_mask and
+> > exclude_self == true?
+> >
+> > AFAICT it ends up sending the IPI to all CPUs including self:
+> >
+> > 	if (!nr_bank)
+> > 		ipi_arg->vp_set.format = HV_GENERIC_SET_ALL;
+> >
+> > Not entirely correct, right?
 > 
-> Add the below Fixed tag though ea2f0f77538c itself is good.
+> It's not, I think we need something like (completely untested) 
 > 
-> Fixes: ea2f0f77538c ("scsi: core: Cap scsi_host cmd_per_lun at can_queue")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->   drivers/scsi/storvsc_drv.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index 32a1ad356c18..80b7660208e4 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -122,17 +122,17 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
+>         ipi_arg->reserved = 0;
+>         ipi_arg->vp_set.valid_bank_mask = 0;
+>  
+> -       if (!cpumask_equal(mask, cpu_present_mask)) {
+> +       if (!cpumask_equal(mask, cpu_present_mask) || exclude_self) {
+>                 ipi_arg->vp_set.format = HV_GENERIC_SET_SPARSE_4K;
+>                 if (exclude_self)
+>                         nr_bank = cpumask_to_vpset_noself(&(ipi_arg->vp_set), mask);
+>                 else
+>                         nr_bank = cpumask_to_vpset(&(ipi_arg->vp_set), mask);
+> -       }
+> -       if (nr_bank < 0)
+> -               goto ipi_mask_ex_done;
+> -       if (!nr_bank)
+> +               if (nr_bank =< 0)
+> +                       goto ipi_mask_ex_done;
+> +       } else {
+>                 ipi_arg->vp_set.format = HV_GENERIC_SET_ALL;
+> +       }
+>  
+>         status = hv_do_rep_hypercall(HVCALL_SEND_IPI_EX, 0, nr_bank,
+>                               ipi_arg, NULL);
 > 
-> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> index ebbbc1299c62..ba374908aec2 100644
-> --- a/drivers/scsi/storvsc_drv.c
-> +++ b/drivers/scsi/storvsc_drv.c
-> @@ -1976,6 +1976,16 @@ static int storvsc_probe(struct hv_device *device,
->   				(max_sub_channels + 1) *
->   				(100 - ring_avail_percent_lowater) / 100;
->   
-> +	/*
-> +	 * v5.14 (see commit ea2f0f77538c) implicitly requires that
-> +	 * scsi_driver.can_queue should not exceed SHRT_MAX, otherwise
-> +	 * scsi_add_host_with_dma() sets shost->cmd_per_lun to a negative
-> +	 * number (note: the type of the "cmd_per_lun" field is "short"), and
-> +	 * the system may hang during early boot.
-> +	 */
-
-The different data sizes for cmd_per_lun and can_queue are problematic here.
-
-I'd be more inclined to set cmd_per_lun to the same data size as 
-can_queue. We did discuss this when ea2f0f77538c was upstreamed 
-(actually it was the other way around - setting can_queue to 16b).
-
-Thanks,
-John
-
-
-> +	if (scsi_driver.can_queue > SHRT_MAX)
-> +		scsi_driver.can_queue = SHRT_MAX;
-> +
->   	host = scsi_host_alloc(&scsi_driver,
->   			       sizeof(struct hv_host_device));
->   	if (!host)
+> here. Wei, I can test and send this out if you're not on it already.
 > 
 
+Please turn this into a patch and send it out. Thank you so much for
+looking into it.
+
+Wei.
+
+> -- 
+> Vitaly
+> 
