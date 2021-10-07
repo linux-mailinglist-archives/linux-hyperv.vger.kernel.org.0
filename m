@@ -2,86 +2,154 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C201B42511A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Oct 2021 12:32:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21D7B425300
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Oct 2021 14:28:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240868AbhJGKeu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Oct 2021 06:34:50 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:35651 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240726AbhJGKet (ORCPT
+        id S241313AbhJGMag (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Oct 2021 08:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241167AbhJGMaf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Oct 2021 06:34:49 -0400
-Received: by mail-wr1-f45.google.com with SMTP id v25so17530521wra.2;
-        Thu, 07 Oct 2021 03:32:55 -0700 (PDT)
+        Thu, 7 Oct 2021 08:30:35 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0E7C061746;
+        Thu,  7 Oct 2021 05:28:42 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id b8so22535598edk.2;
+        Thu, 07 Oct 2021 05:28:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0gW5u4BhwhxG/oEIcngyv5/5SCvI3u+z/IqA8blrDDU=;
+        b=VkDn2D93CoawI9XWWfHasf5S3RWzT/k7uvP19/IBwH0XAdrAo5zRZiZ8jK4xksx0xp
+         jihJDyxYBHRfmjP9KFK//j7RJYSlGfG7pvEROd8nOAfkCE9gSr3n0S/gVzADJedwlv/R
+         dUa3lirdU94qEfOXMStWaxH1fZ9oWllmvuYPNz5G0YDcVRD/gqmDvQzhktHkCmyNr3Wd
+         aDusuaQCAHyRGrc19KG01HsCNxcjIE2QwxZSHeu/IwmyLmzQeglxg+mQXYwEgOhgSmuX
+         RXWIxkYyEpQbv5vWGyhMQPKVmI/+cMSabVP4yo1Z4eF9Z5pfLi6rp5b4d4iL6GqvNRpx
+         HAjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=7Xmki6fF5vViToxMGr5FsbK+wRiXFgs+grhsOFW8tw8=;
-        b=a28XSEkKiz4p86tIVi7YKyczw/bYhQiaegN3iF/G3lG9K6RsEMxSl4i6sSqdJXwACA
-         SqJrRt23Mx/T838GyTAVcaSpViUWCxxPp87KUVVOXnRmQW1Qgxx0Jn8NUhc4I+flAm5u
-         xlJXuYjxU5uA/xjMCGAGleIkCKmHF7lAQduxUqUob8nPLKMc3t0/9iuhEclMQzgytHBG
-         IrbT1r3xCUa7/ZEKYhWnQ6VoPRXiCXmUC+ru7A7gwMuAlI6KDtykIrt7TsexrtezT1iH
-         Sc5BvjvcqSO7xKPn1Z2u8lFgVccvfqrr3D8dBZeKnzJv9MEfHZHS011Hkju2u6vGizAw
-         Dr9w==
-X-Gm-Message-State: AOAM531DSIXW8QsmCN7c8ZZEOaG9xhB+fP53wcWrIkdFGG10/JbUthw7
-        nEmmKnUpxJlel+OKnSo09onRrJpSmHY=
-X-Google-Smtp-Source: ABdhPJwLMoMHFNctErtMFmGemYZdEZ8XXA36zgtdDZN5fAfcY7qMGN/l5Vyo5LLTXaQCpJe5+VwrIw==
-X-Received: by 2002:a5d:64e9:: with SMTP id g9mr4364354wri.99.1633602774988;
-        Thu, 07 Oct 2021 03:32:54 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id d7sm24080006wrh.13.2021.10.07.03.32.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0gW5u4BhwhxG/oEIcngyv5/5SCvI3u+z/IqA8blrDDU=;
+        b=ktziQ+O4rEjpwYTm1M9LnYEYKXUa8N3amw5N4/Lr7do6Eztb+3Qg9ufO+iUyIy31Co
+         TIICUYGE/19firhrUfMFuY+nU3w2iD0Iu9an3hCaH0Go9i64SXlxk+dxT2FcXIQn8wfY
+         u+CsHUwC4LNzrbUvrtf9rdHzFL0vMP+qnMgYWwT+5TKtyJyL0+MfDKo9Wg9maLLHZpvh
+         mLJHutw9cffJnw5RJqFwp4qtl8wD/6bVl4s25jg1U7ci5MXLu+XshTzVLpxavKGxphU5
+         Yfhmmi0u8aosuMikZPSpKVAlNzYUPIewXfCz5K0TBa76jNo2/IebklfNXfxSdZmepx6B
+         INSg==
+X-Gm-Message-State: AOAM5337JUim52o+j2kikREe8PsdpTpSvrPKgwwF/37qfmPx8T3rRUMv
+        lVJzfUfWMGJ8+WIjL64uh6FI/NqQOjm09gvmN1E=
+X-Google-Smtp-Source: ABdhPJz4FI7itBtEDRp3CzwWLpZdPRV57fg4dHaHnuD2URnnOUp9n3b/yi2ojIx0rXn+YPlCKqV5UQ==
+X-Received: by 2002:a17:906:3cb:: with SMTP id c11mr5446794eja.404.1633609720213;
+        Thu, 07 Oct 2021 05:28:40 -0700 (PDT)
+Received: from anparri.mshome.net (host-79-49-65-228.retail.telecomitalia.it. [79.49.65.228])
+        by smtp.gmail.com with ESMTPSA id d17sm7124216edv.58.2021.10.07.05.28.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Oct 2021 03:32:54 -0700 (PDT)
-Date:   Thu, 7 Oct 2021 10:32:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com, sthemmin@microsoft.com
-Subject: [GIT PULL] Hyper-V fixes for 5.15-rc8
-Message-ID: <20211007103253.t5w5pgpmzvkffvwp@liuwe-devbox-debian-v2>
+        Thu, 07 Oct 2021 05:28:39 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v3] scsi: storvsc: Fix validation for unsolicited incoming packets
+Date:   Thu,  7 Oct 2021 14:28:28 +0200
+Message-Id: <20211007122828.469289-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus,
+The validation on the length of incoming packets performed in
+storvsc_on_channel_callback() does not apply to unsolicited
+packets with ID of 0 sent by Hyper-V.  Adjust the validation
+for such unsolicited packets.
 
-The following changes since commit dfb5c1e12c28e35e4d4e5bc8022b0e9d585b89a7:
+Fixes: 91b1b640b834b2 ("scsi: storvsc: Validate length of incoming packet in storvsc_on_channel_callback()")
+Reported-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
+Changes since v2[1]:
+  - Adjust inline comments (Michael Kelley)
 
-  x86/hyperv: remove on-stack cpumask from hv_send_ipi_mask_allbutself (2021-09-11 15:41:00 +0000)
+Changes since v1[2]:
+  - Use sizeof(enum vstor_packet_operation) instead of 48 (Michael Kelley)
+  - Filter out FCHBA_DATA packets (Michael Kelley)
 
-are available in the Git repository at:
+Changes since RFC[3]:
+  - Merge length checks (Haiyang Zhang)
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20211007
+[1] https://lkml.kernel.org/r/20211006132026.4089-1-parri.andrea@gmail.com
+[2] https://lkml.kernel.org/r/20211005114103.3411-1-parri.andrea@gmail.com
+[3] https://lkml.kernel.org/r/20210928163732.5908-1-parri.andrea@gmail.com
 
-for you to fetch changes up to f5c20e4a5f18677e22d8dd2846066251b006a62d:
+ drivers/scsi/storvsc_drv.c | 32 +++++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
 
-  x86/hyperv: Avoid erroneously sending IPI to 'self' (2021-10-06 15:56:45 +0000)
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index ebbbc1299c625..9eb1b88a29dde 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1285,11 +1285,15 @@ static void storvsc_on_channel_callback(void *context)
+ 	foreach_vmbus_pkt(desc, channel) {
+ 		struct vstor_packet *packet = hv_pkt_data(desc);
+ 		struct storvsc_cmd_request *request = NULL;
++		u32 pktlen = hv_pkt_datalen(desc);
+ 		u64 rqst_id = desc->trans_id;
++		u32 minlen = rqst_id ? sizeof(struct vstor_packet) -
++			stor_device->vmscsi_size_delta : sizeof(enum vstor_packet_operation);
+ 
+-		if (hv_pkt_datalen(desc) < sizeof(struct vstor_packet) -
+-				stor_device->vmscsi_size_delta) {
+-			dev_err(&device->device, "Invalid packet len\n");
++		if (pktlen < minlen) {
++			dev_err(&device->device,
++				"Invalid pkt: id=%llu, len=%u, minlen=%u\n",
++				rqst_id, pktlen, minlen);
+ 			continue;
+ 		}
+ 
+@@ -1302,13 +1306,23 @@ static void storvsc_on_channel_callback(void *context)
+ 			if (rqst_id == 0) {
+ 				/*
+ 				 * storvsc_on_receive() looks at the vstor_packet in the message
+-				 * from the ring buffer.  If the operation in the vstor_packet is
+-				 * COMPLETE_IO, then we call storvsc_on_io_completion(), and
+-				 * dereference the guest memory address.  Make sure we don't call
+-				 * storvsc_on_io_completion() with a guest memory address that is
+-				 * zero if Hyper-V were to construct and send such a bogus packet.
++				 * from the ring buffer.
++				 *
++				 * - If the operation in the vstor_packet is COMPLETE_IO, then
++				 *   we call storvsc_on_io_completion(), and dereference the
++				 *   guest memory address.  Make sure we don't call
++				 *   storvsc_on_io_completion() with a guest memory address
++				 *   that is zero if Hyper-V were to construct and send such
++				 *   a bogus packet.
++				 *
++				 * - If the operation in the vstor_packet is FCHBA_DATA, then
++				 *   we call cache_wwn(), and access the data payload area of
++				 *   the packet (wwn_packet); however, there is no guarantee
++				 *   that the packet is big enough to contain such area.
++				 *   Future-proof the code by rejecting such a bogus packet.
+ 				 */
+-				if (packet->operation == VSTOR_OPERATION_COMPLETE_IO) {
++				if (packet->operation == VSTOR_OPERATION_COMPLETE_IO ||
++				    packet->operation == VSTOR_OPERATION_FCHBA_DATA) {
+ 					dev_err(&device->device, "Invalid packet with ID of 0\n");
+ 					continue;
+ 				}
+-- 
+2.25.1
 
-----------------------------------------------------------------
-hyperv-fixes for 5.15
-  - Replace uuid.h with types.h in a header (Andy Shevchenko)
-  - Avoid sleeping in atomic context in PCI driver (Long Li)
-  - Avoid sending IPI to self when it shouldn't (Vitaly Kuznetsov)
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      hyper-v: Replace uuid.h with types.h
-
-Long Li (1):
-      PCI: hv: Fix sleep while in non-sleep context when removing child devices from the bus
-
-Vitaly Kuznetsov (1):
-      x86/hyperv: Avoid erroneously sending IPI to 'self'
-
- arch/x86/hyperv/hv_apic.c           | 20 +++++++++++++++-----
- drivers/pci/controller/pci-hyperv.c | 13 ++++++++++---
- include/uapi/linux/hyperv.h         |  2 +-
- 3 files changed, 26 insertions(+), 9 deletions(-)
