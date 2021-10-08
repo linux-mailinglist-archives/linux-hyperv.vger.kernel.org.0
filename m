@@ -2,153 +2,278 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB1854263D9
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Oct 2021 06:36:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A076B42644E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Oct 2021 07:55:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbhJHEiM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 8 Oct 2021 00:38:12 -0400
-Received: from mail-oln040093003001.outbound.protection.outlook.com ([40.93.3.1]:2467
-        "EHLO na01-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229606AbhJHEiK (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 8 Oct 2021 00:38:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fCxgKcNq8wH9SFmNVVEKwEjLwEzTeQNBuEZHZtymcq5qfYU+w3RPwcS2BzeiaYxPtDUeNdSS6eL40AUn8JAl+LINyUPaoGXx9UPTNU++TCWNr2Cq6rkee9G0L+YQK9iD9XGSE9tjEAif3iqNYbmmi++JGTZ459t/IUhjA5OYAuZ44DoXVF1DJzMK0iAROm2og2R506C3ZUJ3e5Qb8iADzbDci2KqqAqwsk5J4+hIx+7IJRN8Tztt/ktOqXQ7dsQY5XN1QqI7JsgM4SGQv3acs+YAwMAbPkPnYEntBFP9YGXc5xNNV7CRvQr2Ao/okw7JgC5TiBeCYYDjNXNqt78czw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VTfSVJuHxsRQEg7350bkqzb3HrUIqKLF+hgcQcElCJY=;
- b=eoiOrxG5krnZ9On0qKa8S3PPWQGiWVPxq2DRNFog6XKYi7BgZOqctz0MYMsmpjCynEIokAaOfcIQadPAeViiJgYp0/AXJ46pvgkZAZ8171y46cVoXoUt8nUnbBtpVBZ37XaDBD1AyPQyJMijBN3S9B9+EXnqBckAXU4nnQddI/EWpYplX29bkfiItOwWgyOjZNp4TxRUQcyb5Et6lGYMRyE7TQ3h0gm1OvFJxr8obLfUBDkOvxzNk3a6rWAHv0PgpJcB6dRjHHJh1GXpWsalNzBHiHmpUtnbTUkfzaIexos79F2ks4hFkFRdCzUl21jT7H8bIlX53FVDM6dhyJyjZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VTfSVJuHxsRQEg7350bkqzb3HrUIqKLF+hgcQcElCJY=;
- b=MGBmguUpSinfGN18A7qiCbiROM/WBmaQUZV3G/dPK+nzQzA/BdH9X0jvPvEUXsPuaLkv29oSR4bcD9tC+hgOwtZcrNHuSe8Y0fwzX6PTkEPzKM7yNJ7n8MjQZFr6O75VnRFDpKxBgdmnfeX3bvkpMjs+gXWOOS0wdhGEOQGKBok=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:37::26) by BL0PR2101MB1747.namprd21.prod.outlook.com
- (2603:10b6:207:35::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.2; Fri, 8 Oct
- 2021 04:36:12 +0000
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::a5a1:1ba3:ae97:a567]) by BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::a5a1:1ba3:ae97:a567%7]) with mapi id 15.20.4608.003; Fri, 8 Oct 2021
- 04:36:12 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        haiyangz@microsoft.com, ming.lei@redhat.com, bvanassche@acm.org,
-        john.garry@huawei.com, linux-scsi@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, longli@microsoft.com,
-        mikelley@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v3] scsi: core: Fix shost->cmd_per_lun calculation in scsi_add_host_with_dma()
-Date:   Thu,  7 Oct 2021 21:35:46 -0700
-Message-Id: <20211008043546.6006-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR08CA0047.namprd08.prod.outlook.com
- (2603:10b6:300:c0::21) To BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:37::26)
+        id S229773AbhJHF44 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 8 Oct 2021 01:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229654AbhJHF4z (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 8 Oct 2021 01:56:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1951C60F46;
+        Fri,  8 Oct 2021 05:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1633672501;
+        bh=tVO3GMXQe9fBMBvY0KOxHGoMswwjOELDXXkn1OVMUdM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KOAPlaOM9w+nd7eg6MKY3FcyWmZz9CduIXG3aatOqTR3zw4JUBRrD+IKDhsbh17jR
+         lPVYbZbOWO8YTEy1aIIJlZHq+8WPHWHYRtFYamT+o3FKCgzXqZ1cd2mOwe+3T95pim
+         cj4Vw7psfhbRs70QCy2mDaevbyySLVZSPHIoH2FQ=
+Date:   Fri, 8 Oct 2021 07:54:57 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Long Li <longli@microsoft.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Andra Paraschiv <andraprs@amazon.com>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [Patch v5 0/3] Introduce a driver to support host accelerated
+ access to Microsoft Azure Blob for Azure VM
+Message-ID: <YV/dMdcmADXH/+k2@kroah.com>
+References: <e249d88b-6ca2-623f-6f6e-9547e2b36f1f@acm.org>
+ <BY5PR21MB15060F1B9CDB078189B76404CEF29@BY5PR21MB1506.namprd21.prod.outlook.com>
+ <YQwvL2N6JpzI+hc8@kroah.com>
+ <BY5PR21MB1506A93E865A8D6972DD0AAECEF49@BY5PR21MB1506.namprd21.prod.outlook.com>
+ <YQ9oTBSRyHCffC2k@kroah.com>
+ <BY5PR21MB15065658FA902CC0BC162956CEF79@BY5PR21MB1506.namprd21.prod.outlook.com>
+ <BY5PR21MB1506091AFED0EB62F081313ECEA29@BY5PR21MB1506.namprd21.prod.outlook.com>
+ <DM6PR21MB15135923A4CB0E61786ABC22CEAA9@DM6PR21MB1513.namprd21.prod.outlook.com>
+ <YVa6dtvt/BaajmmK@kroah.com>
+ <BY5PR21MB15060E0A4AC1F6335A08EAB4CEB19@BY5PR21MB1506.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:2:8234:5dff:feb8:fa01) by MWHPR08CA0047.namprd08.prod.outlook.com (2603:10b6:300:c0::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.18 via Frontend Transport; Fri, 8 Oct 2021 04:36:10 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 10ad3d59-ccb9-4041-36e7-08d98a1527e0
-X-MS-TrafficTypeDiagnostic: BL0PR2101MB1747:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BL0PR2101MB17476A3E951A00BFC5A9A4B0BFB29@BL0PR2101MB1747.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:843;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: J+CTcYOnZJT10MtFVxOLFuvwEgzwe804e8M83ux7NzNv3QQ2yzpHNF7WU+1u7zmPx9Y17UBjP64Wm4Lar/kyAiE7gWE1PN4TatAYLfShAH4y2fXhvWgO6uw2PgqaPTrECDi1pMNYN4MpxewDvOFOiiAWc3kJQzf9TxZyqGy6yjC+jK/hcc7iYA6Koiv4M58NdTfF5TAPlepcILZy+i50oBvsTsKN3ltZRIKfW0B/vYHzikwcRpuPmLsp1yc5zF83ctoCQPoO+T7o6VfePd+DxEsvR0SiU0VUZX5G+JM4eyHwITJPpFob6rSclLS/s0+aY7AfFqokBMIpXfuHGRCpk7xMugjp2E/NnaHJhfXM2P9EwJbPPTJCS9K4WwWyt/mVnFAUpdEcwnGmNoJaMDWeNZbIFqzjyTUis/Gl6PO/4GvjNTp1df4eHFoU+T5Bb4a7C+tTzFCqRa3XgLCzMaaRLZOCormsAyEj3i/ZS3fj5ZSADEcYZj2G9n534GpJvPmK6ugIhtEu1qRZUb3MrmGuGWzjJ1n0GNkcAgyZFpOPLvIaLYMIaJ6TXQ+RZ9sbkwbsU++w/fW9uKtHb57AyP7AZd8QUxCU/3EB6jwxClvcZ8J/vRZLAeMyJiyodq56VjD4w1UUfO3URYxQLt9p6wMxc0n4LzAdsNgdyWFU4v/bpAHCP/tcHEvNSqvqn9MmIxIpQSYp+z2DwnbH9LRmNS4cV3/xtu95kGqb0s2WMp45t1D8MYZYL3Ebyvg7lRQiPvVYs9/eZy0ViOdfY/y4U8UBWg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6486002)(83380400001)(66476007)(5660300002)(2906002)(38100700002)(6666004)(186003)(1076003)(86362001)(10290500003)(8676002)(966005)(921005)(52116002)(7416002)(6636002)(508600001)(36756003)(82950400001)(66556008)(316002)(4326008)(8936002)(2616005)(82960400001)(66946007)(7696005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?r/nZBmZXm2HtRhBXTv6ugEp/w4uGo/jGN9okU/wmzLhuipnX6CAq3LFciK2u?=
- =?us-ascii?Q?kQja5Hf6bRGWM7RZktH+641hzzyWRR+xBlyk8xh+JOjc/A4HKBCLga/dm4m2?=
- =?us-ascii?Q?tXoPmovpVC3/dLpaF4M+in9yjCkxIOGnWIdX0X6HO+hiJuhAoqrWLJVlATC/?=
- =?us-ascii?Q?DsXj/tSx9T+UBJCQ4htIoeaYDqvTOdni25eVWrB0rpLTyx2QDH9F6CIH9wPv?=
- =?us-ascii?Q?UhSpiOAXvYh9p5yqGHX2PJHPVCcLftHolI3rY9zjd2uHcRifnXP91plhU+79?=
- =?us-ascii?Q?GKfVkJRh6hzbfMCHRZoC6qa/vUwaPT014cZ5fCMGIwZuxUUOgWoGhmnFOnkb?=
- =?us-ascii?Q?VZm2pJygizjrPsIhIjxWX8lVtOWAkwgG4AiBJCfvIFLt17z54MohaGZwTd1h?=
- =?us-ascii?Q?1M5PcCKz+7YeHN6m2ZjrLMOIDyashIIYvUhg/Y2gV5qhWt5SPB8cOwUWRVzo?=
- =?us-ascii?Q?A5A1ty/GNhz/34olV5HQeDV4bGhR3XxFJ6ytW9irLJ80HibSqGbJXE5VslzW?=
- =?us-ascii?Q?/06u/Uvqx+J3gd+WtQGbLNyABkjC1zmwzWry9H5CZTBt23Tm0h+9EXacpzXq?=
- =?us-ascii?Q?NJ9JXC/UH5PSf0YP7vdMnxYFbU5fWEfjDyx5/O1cQVEzIrXGnTfI5wh5TYcn?=
- =?us-ascii?Q?N2Z3TXvUNgOWuLc8TmFp2NwbAZlDWmmnyCGam++s8hQtBlLHgDXCGbJRLcOt?=
- =?us-ascii?Q?NodBiS06brmLUaICaM6xUB42u5MPJ+T6OjkrdpD1yffqo5mdEIe3HWu9iYn8?=
- =?us-ascii?Q?WjDg25v9LkvgTly/SB0jUUkQZddO8bSu2a52DiNExwU9cpNGtWtsySJZF8Y3?=
- =?us-ascii?Q?5dHEuAHD70EBKTmXdfhqz0zgyk3Q3xIP0WtrB+Jz+TZ8+51ENuv353MJAki6?=
- =?us-ascii?Q?udOAzbxaHRwNoISzzjlf044it2qvBH/bZ1Gn0dFwE8kaHny2HbtntoecLbpI?=
- =?us-ascii?Q?19b0gDaEMVOVwwRCHmj4gLoc489FDmZ9ak6r7fOPJdsOktyIOD7erOG/kAi7?=
- =?us-ascii?Q?cvnk42KDaiZhehyXzzzUzTG+Jwv1qWQCMU2Vt7lF2Od48y3Rm2WB8VnTQOVN?=
- =?us-ascii?Q?l6YS6OX6/SikS+Y2BtN4JLuJBODtROvsJqVfB4qnjkV30ZjeAhjb1lgepp6p?=
- =?us-ascii?Q?dDuR4ZgHh5byw24LYHMNSIoMcjvK4ijlYVQL4Cu1N+zxMRETmjkVVn/M1mJF?=
- =?us-ascii?Q?W65uKD1FOlfBtzCN74vgpoq8KmnMIzLmcDRZG5ULzKVvLVGNIRX1r+22vQCN?=
- =?us-ascii?Q?TtParlKRc6SHz2B34VhQ8Tpddn7BPWBb3YZaCR8RFqivdHLN1i730pPFsh/A?=
- =?us-ascii?Q?7gIqXuV7HeRAGV0LWEzPhUBkaxt+Jpksoa2Yy9Vg/p8rryhGWXWz9iXGvMGv?=
- =?us-ascii?Q?48/+RCCdZiOQJnAPbTZnExUQmqDq?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10ad3d59-ccb9-4041-36e7-08d98a1527e0
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2021 04:36:12.5802
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2sKBdRJhRLqY1jwj/PG1CSXUgjjlUD6uemtSUslsl0SlNWa4FrrfVXuobfDp1VCwqaGF9aFTR/bN5wdGpabd3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1747
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BY5PR21MB15060E0A4AC1F6335A08EAB4CEB19@BY5PR21MB1506.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-After commit ea2f0f77538c, a 416-CPU VM running on Hyper-V hangs during
-boot because the hv_storvsc driver sets scsi_driver.can_queue to an "int"
-value that exceeds SHRT_MAX, and hence scsi_add_host_with_dma() sets
-shost->cmd_per_lun to a negative "short" value.
+On Thu, Oct 07, 2021 at 06:15:25PM +0000, Long Li wrote:
+> > Subject: Re: [Patch v5 0/3] Introduce a driver to support host accelerated
+> > access to Microsoft Azure Blob for Azure VM
+> > 
+> > On Thu, Sep 30, 2021 at 10:25:12PM +0000, Long Li wrote:
+> > > > Greg,
+> > > >
+> > > > I apologize for the delay. I have attached the Java transport
+> > > > library (a tgz file) in the email. The file is released for review under "The
+> > MIT License (MIT)".
+> > > >
+> > > > The transport library implemented functions needed for reading from
+> > > > a Block Blob using this driver. The function for transporting I/O is
+> > > > Java_com_azure_storage_fastpath_driver_FastpathDriver_read(),
+> > > > defined in "./src/fastpath/jni/fpjar_endpoint.cpp".
+> > > >
+> > > > In particular, requestParams is in JSON format (REST) that is passed
+> > > > from a Blob application using Blob API for reading from a Block Blob.
+> > > >
+> > > > For an example of how a Blob application using the transport
+> > > > library, please see Blob support for Hadoop ABFS:
+> > > >
+> > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgi
+> > > > th
+> > > >
+> > ub.com%2Fapache%2Fhadoop%2Fpull%2F3309%2Fcommits%2Fbe7d12662e2
+> > > >
+> > 3a13e6cf10cf1fa5e7eb109738e7d&amp;data=04%7C01%7Clongli%40microsof
+> > > >
+> > t.com%7C3acb68c5fd6144a1857908d97e247376%7C72f988bf86f141af91ab2d7
+> > > >
+> > cd011db47%7C1%7C0%7C637679518802561720%7CUnknown%7CTWFpbGZsb
+> > > >
+> > 3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0
+> > > > %3D%7C1000&amp;sdata=6z3ZXPtMC5OvF%2FgrtbcRdFlqzzR1xJNRxE2v2
+> > Qrx
+> > > > FL8%3D&amp;reserved=0
+> > 
+> > Odd url :(
+> > 
+> > > > In ABFS, the entry point for using Blob I/O is at AbfsRestOperation
+> > > > executeRead() in hadoop-tools/hadoop-
+> > > >
+> > azure/src/main/java/org/apache/hadoop/fs/azurebfs/services/AbfsInput
+> > > > Str eam.java, from line 553 to 564, this function eventually calls
+> > > > into
+> > > > executeFastpathRead() in hadoop-tools/hadoop-
+> > > > azure/src/main/java/org/apache/hadoop/fs/azurebfs/services/AbfsClien
+> > > > t.ja
+> > > > va.
+> > > >
+> > > > ReadRequestParameters is the data that is passed to requestParams
+> > > > (described above) in the transport library. In this Blob application
+> > > > use-case, ReadRequestParameters has eTag and sessionInfo
+> > > > (sessionToken). They are both defined in this commit, and are
+> > > > treated as strings passed in JSON format to I/O issuing function
+> > > > Java_com_azure_storage_fastpath_driver_FastpathDriver_read() in the
+> > > > transport library using this driver.
+> > > >
+> > > > Thanks,
+> > > > Long
+> > >
+> > > Hello Greg,
+> > >
+> > > I have shared the source code of the Blob client using this driver, and the
+> > reason why the Azure Blob driver is not implemented through POSIX with file
+> > system and Block layer.
+> > 
+> > Please wrap your text lines...
+> > 
+> > Anyway, no, you showed a client for this interface, but you did not explain
+> > why this could not be implemented using a filesystem and block layer.  Only
+> > that it is not what you did.
+> > 
+> > > Blob APIs are specified in this doc:
+> > >
+> > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs
+> > > .microsoft.com%2Fen-us%2Frest%2Fapi%2Fstorageservices%2Fblob-
+> > service-r
+> > > est-
+> > api&amp;data=04%7C01%7Clongli%40microsoft.com%7C6a51f21c78a3413e63
+> > >
+> > 9d08d984ae2c58%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C6376
+> > 867059
+> > >
+> > 24012728%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi
+> > V2luMzIiL
+> > >
+> > CJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=ZiWmZ%2FpuQHNn
+> > dHNmnIWHO
+> > > yrXPSscNBbR6RvSr%2FCBuEY%3D&amp;reserved=0
+> > >
+> > > The semantic of reading data from Blob is specified in this doc:
+> > >
+> > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs
+> > > .microsoft.com%2Fen-us%2Frest%2Fapi%2Fstorageservices%2Fget-
+> > blob&amp;d
+> > >
+> > ata=04%7C01%7Clongli%40microsoft.com%7C6a51f21c78a3413e639d08d984a
+> > e2c5
+> > >
+> > 8%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63768670592401272
+> > 8%7CUn
+> > >
+> > known%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6
+> > Ik1haW
+> > >
+> > wiLCJXVCI6Mn0%3D%7C1000&amp;sdata=xqUObAdYkFf8efSRuK%2FOXm%2
+> > BRd%2FCiBI
+> > > 0BjNfx9YpkGN0%3D&amp;reserved=0
+> > >
+> > > The source code I shared demonstrated how a Blob is read to Hadoop
+> > through ABFS. In general, A Blob client can use any optional request headers
+> > specified in the API suitable for its specific application. The Azure Blob service
+> > is not designed to be POSIX compliant. I hope this answers your question on
+> > why this driver is not implemented at file system or block layer.
+> > 
+> > 
+> > Again, you are saying "it is this way because we created it this way", which
+> > does not answer the question of "why were you required to do it this way",
+> > right?
+> > 
+> > > Do you have more comments on this driver?
+> > 
+> > Again, please answer _why_ you are going around the block layer and
+> > creating a new api that circumvents all of the interfaces and protections that
+> > the normal file system layer provides.  What is lacking in the existing apis that
+> > has required you to create a new one that is incompatible with everything
+> > that has ever existed so far?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Hello Greg,
+> 
+> Azure Blob is massively scalable and secure object storage designed for cloud native 
+> workloads. Many of its features are not possible to implement through POSIX file 
+> system. Please find some of them below:
+>  
+> For read and write API calls (for both data and metadata) Conditional Support 
+> (https://docs.microsoft.com/en-us/rest/api/storageservices/specifying-conditional-headers-for-blob-service-operations) 
+> is supported by Azure Blob. Every change will result in an update to the Last Modified 
+> Time (== ETag) of the changed file and customers can use If-Modified-Since, If-Unmodified-Since, 
+> If-Match, and If-None-Match conditions. Furthermore, almost all APIs support this 
+> since customers require fine-grained and complete control via these conditions. It 
+> is not possible/practical to implement Conditional Support in POSIX filesystem.
+>  
+> The Blob API supports multiple write-modes of files with three different blob types: 
+> Block Blobs (https://docs.microsoft.com/en-us/rest/api/storageservices/operations-on-block-blobs), 
+> Append Blobs, and Page Blobs. Block Blobs support very large file sizes (hundreds 
+> of TBs in a single file) and are more optimal for larger blocks, have two-phased 
+> commit protocol, block sharing, and application control over block identifiers. Block 
+> blobs support both uncommitted and committed data. Block blobs allow the user to 
+> stage a series of modifications, then atomically update the block list to incorporate 
+> multiple disjoint updates in one operation. This is not possible in POSIX filesystem.
+>  
+> Azure Blob supports Blob Tiers (https://docs.microsoft.com/en-us/azure/storage/blobs/access-tiers-overview). 
+> The "Archive" tier is not possible to implement in POSIX file system. To access data 
+> from an "Archive" tier, it needs to go through rehydration (https://docs.microsoft.com/en-us/azure/storage/blobs/archive-rehydrate-overview) 
+> to become "Cool" or "Hot" tier. Note that the customer requirement for tiers is that 
+> they do not change what URI, endpoint, or file/folder they access at all - same endpoint, 
+> same file path is a must requirement. There is no POSIX semantics to describe Archive 
+> and Rehydration, while maintaining the same path for the data.
+>  
+> The Azure Blob feature Customer Provided Keys (https://docs.microsoft.com/en-us/azure/storage/blobs/encryption-customer-provided-keys) 
+> provides different encryption key for data at a per-request level. It's not possible 
+> to inject this into POSIX filesystem and it is a critical security feature for customers 
+> requiring higher level of security such as the Finance industry customers. There 
+> exists file-level metadata implementation that indicates info about the encryption 
+> as well. Note that encryption at file/folder level or higher granularity does not 
+> meet such customers' needs - not just on individual customer requirements but also 
+> related financial regulations.
+>  
+> The Immutable Storage (https://docs.microsoft.com/en-us/azure/storage/blobs/immutable-storage-overview) 
+> feature is not possible with POSIX filesystem. This provides WORM (Write-Once Read-Many) 
+> guarantees on data where it is impossible (regardless of access control, i.e. even 
+> the highest level administrator/root) to modify/delete data until a certain interval 
+> has passed; it also includes features such as Legal Hold. Note that per the industry 
+> and security requirements, the store must enforce these WORM and Legal Hold aspects 
+> directly, it cannot be done with access control mechanisms or enforcing this at the 
+> various endpoints that access the data.
+>   
+> Blob Index (https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-find-blobs) 
+> which provides multi-dimensions secondary indexing on user-settable blob tags (metadata) 
+> is not possible to accomplish in POSIX filesystem. The indexing engine needs to incorporate 
+> with Storage access control integration, Lifecycle retention integration, runtime 
+> API call conditions, it's not possible to support in the filesystem itself; in other 
+> words, it cannot be done as a side-car or higher level service without compromising 
+> on the customer requirements for Blob Index. Related Blob APIs for this are Set Blob 
+> Tags (https://docs.microsoft.com/en-us/rest/api/storageservices/set-blob-tags) and 
+> Find Blob by Tags (https://docs.microsoft.com/en-us/rest/api/storageservices/find-blobs-by-tags).
 
-Use min_t(int, ...) to fix the issue.
+You are mixing up a lot of different things here all at once.
 
-Fixes: ea2f0f77538c ("scsi: core: Cap scsi_host cmd_per_lun at can_queue")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
----
+You are confusing the actions that a file server must implement with how
+a userspace interface should look like for an in-kernel functionality.
 
-v1 tried to fix the issue by changing the storvsc driver:
-https://lwn.net/ml/linux-kernel/BYAPR21MB1270BBC14D5F1AE69FC31A16BFB09@BYAPR21MB1270.namprd21.prod.outlook.com/
+Not to mention the whole crazy idea of "let's implement our REST api
+that used to go over a network connection over an ioctl instead!"
+That's the main problem that you need to push back on here.
 
-v2 directly fixed the scsi core change instead as Michael Kelley suggested
-(refer to the above link).
+What is forcing you to put all of this into the kernel in the first
+place?  What's wrong with the userspace network connection/protocol that
+you have today?
 
-v3 simplified the commit log, as John Garry suggested.
-   Added Haiyang's and Ming's Reviewed-by.
+Does this mean that we now have to implement all REST apis that people
+dream up as ioctl interfaces over a hyperv transport?  That would be
+insane.
 
- drivers/scsi/hosts.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
-index 3f6f14f0cafb..24b72ee4246f 100644
---- a/drivers/scsi/hosts.c
-+++ b/drivers/scsi/hosts.c
-@@ -220,7 +220,8 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
- 		goto fail;
- 	}
- 
--	shost->cmd_per_lun = min_t(short, shost->cmd_per_lun,
-+	/* Use min_t(int, ...) in case shost->can_queue exceeds SHRT_MAX */
-+	shost->cmd_per_lun = min_t(int, shost->cmd_per_lun,
- 				   shost->can_queue);
- 
- 	error = scsi_init_sense_cache(shost);
--- 
-2.25.1
-
+greg k-h
