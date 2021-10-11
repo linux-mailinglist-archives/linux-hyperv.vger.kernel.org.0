@@ -2,86 +2,204 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CABDE427A40
-	for <lists+linux-hyperv@lfdr.de>; Sat,  9 Oct 2021 14:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3040429267
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Oct 2021 16:43:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232925AbhJIMtr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 9 Oct 2021 08:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36846 "EHLO
+        id S244231AbhJKOpg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 Oct 2021 10:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232889AbhJIMtq (ORCPT
+        with ESMTP id S244204AbhJKOp2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 9 Oct 2021 08:49:46 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0165C061762
-        for <linux-hyperv@vger.kernel.org>; Sat,  9 Oct 2021 05:47:49 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id k3so4410720ilu.2
-        for <linux-hyperv@vger.kernel.org>; Sat, 09 Oct 2021 05:47:49 -0700 (PDT)
+        Mon, 11 Oct 2021 10:45:28 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103AAC0617A4;
+        Mon, 11 Oct 2021 07:42:32 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id o133so8755146pfg.7;
+        Mon, 11 Oct 2021 07:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=HyPtrL2w4PPVR77WWPpT1zwZjnW0FEDbjF24lIQScJg=;
-        b=hRK5TbQtg8zT+sazs2yMe3ab0J1fjMcFDubEOMoBeawBuVH5Kyw7/Z6eTl5HKzkRtU
-         YHsM/W7KuskPissCfnaXg7YXcTddp9t63zLOKZqyO1S5FiM5Xm65oQ/zjKjGod/egk7z
-         CVNnnJ4Gn6QO9CTSKzkGcmJdOYw9oYiKsWOYBtF1WK74kr6kwVHpqfoLN6c/+qeDyhXS
-         dKtpT0YYD506yQuEA2Te26AHQDVETF6IMu3i0+4rdBDDFAxYUHzMbLAPwMti4ukIoR6c
-         9ue1S1ptc6Q557Hpf4ZCkgwe1tvAQT1bkPXaSKhhVaBS70FlNreYMpgmQgVWWLu+cJL/
-         3yPA==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EZOY/BC1v6Dt0Z6NPA0+TD7j4V5L5DCZxaSPpWP5wwg=;
+        b=Id7ba24U8hFZSQi2CM2A0JyKZ06Iu5JLB3WXdMApz4nBesMd0FXqcTCKE/eiLE12ui
+         ePe8DyIThlZUXn+gDMawmrpvThOjWYQ1U2m6+5tERvoMrRLL83UkoxqJ36qZ+zJ+WIqT
+         gXSeskAzTaMp1m9XFEKm4kQRwiwcOZrqAkbU1onSU6Y7qVtn7COyj0jXVf9CY8p3IWes
+         aHspCiT6xu5hYTylbxojBYhJ2+UA0/ozef/FD0opCkxZ8+Gg46E0NGyF+n/mnB27ZTMA
+         TKW8/ottV1wRFwRE1cHt/rXrmIUSZs0IwTaCTkC/B1Vf8FLkS7DjeXwnBcHaYC/+PZ5t
+         E/Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=HyPtrL2w4PPVR77WWPpT1zwZjnW0FEDbjF24lIQScJg=;
-        b=DJByH5QPBFpgICq0vnsJbKMS5f2tnSVPG6M04DeiDuKycjQC9xJJnI+GyR775ac3Be
-         qnos7RXD6EzDXrXTbJydlLB5E1yBDE0UH5LGyl1JfyTA8a31p/AnTvDX2CFaCqBv4xiB
-         v4RfWqlZElRU6swDxmJwL6mZPFAfenR61TPk6ivpjvUPougkzZYPOMC2GcpEvcblbOKz
-         y2mIzOpMQ07MLAQMqL7fkUX3EyLd3DCokCevS26x/fkmoQaAO/lm+RqHEwIgQ013cLm9
-         8Agkoix6DSgYuk5yU8lA8JO9zice7lLgbY0ukUu/msUfXSTaRtCpMwkqBR0iWO+OhOFN
-         Pq7w==
-X-Gm-Message-State: AOAM532j2hzGR4wn3ZGpHIYjm8rnUtsD1Fh4Mf0gNQSvBHY8tVr86+3C
-        gwRrs539jFfjVDRp1RgdMP0kb4/dU97xAfXgteg=
-X-Google-Smtp-Source: ABdhPJxX6PQMkrSZpXLyghOE8lIXGw59tC91FSVNOT1ZoPUzqNekwX29JQiOFOpr+6OL2CALBG8Ei9gkNFSGYvdeDoA=
-X-Received: by 2002:a05:6e02:1b06:: with SMTP id i6mr11710046ilv.86.1633783669163;
- Sat, 09 Oct 2021 05:47:49 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EZOY/BC1v6Dt0Z6NPA0+TD7j4V5L5DCZxaSPpWP5wwg=;
+        b=NgCGA9NHbISHpfXKsx0TYO4jx2WtL12WyyfcH48XcQOelUqWQn00B7DC5x2HEvNUUP
+         AJ1IjhAmtlkrYlhlioGmV2p2esOSBFgElY2xQMxgGKEA7ZqsZWDiNvtGVwBw92SbeTTk
+         40vy0wjP0Iqah652dWQIFz0M7F8qISzkdglP7KZa1huqsRtMcXdGtBptZ/ayeNAPb66n
+         jIb+gvMUU5z+9M4OHXgd6JsywlmvYMr2Ty9l1AUsaR33qM8spwEI6bTY8Aau5AdDgJae
+         lW9DNH1kpWor+GoEHxtvNt4gBJbf7t94YisZj75kg/iYUBLcL5nIWLZAzgaTX90StzTr
+         wvEg==
+X-Gm-Message-State: AOAM533IxsVmlWXrgDs9VEhh3jH/z3QS8BWDa4DnYMS7Wo8q9snFqQz+
+        RMegNRMr6RFVJnuUwIHQBm0=
+X-Google-Smtp-Source: ABdhPJxrez/BpFr4T3w6q022Crus2C8dDApA6evVbcqw0YxCa4eWR6mXUuYpV8PQV1+0R//jk0V/Vg==
+X-Received: by 2002:a63:2acc:: with SMTP id q195mr17777585pgq.45.1633963351452;
+        Mon, 11 Oct 2021 07:42:31 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
+        by smtp.gmail.com with ESMTPSA id o72sm7769517pjo.50.2021.10.11.07.42.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Oct 2021 07:42:30 -0700 (PDT)
+Subject: Re: [PATCH V7 5/9] x86/sev-es: Expose __sev_es_ghcb_hv_call() to call
+ ghcb hv call out of sev code
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        "bp@alien8.de" <bp@alien8.de>
+Cc:     linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, konrad.wilk@oracle.com, hch@lst.de,
+        robin.murphy@arm.com, joro@8bytes.org, parri.andrea@gmail.com,
+        dave.hansen@intel.com, Hikys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, kuba@kernel.org,
+        gregkh@linuxfoundation.org, arnd@arndb.de, jroedel@suse.de,
+        brijesh.singh@amd.com, Tianyu.Lan@microsoft.com,
+        thomas.lendacky@amd.com, pgonda@google.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        rppt@kernel.org, tj@kernel.org, aneesh.kumar@linux.ibm.com,
+        saravanand@fb.com, hannes@cmpxchg.org, rientjes@google.com,
+        michael.h.kelley@microsoft.com
+References: <20211006063651.1124737-1-ltykernel@gmail.com>
+ <20211006063651.1124737-6-ltykernel@gmail.com>
+Message-ID: <9b5fc629-9f88-039c-7d5d-27cbdf6b00fd@gmail.com>
+Date:   Mon, 11 Oct 2021 22:42:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:1aad:0:0:0:0 with HTTP; Sat, 9 Oct 2021 05:47:48
- -0700 (PDT)
-Reply-To: wu7790636@gmail.com
-From:   Western Union <helen.william070@gmail.com>
-Date:   Sat, 9 Oct 2021 05:47:48 -0700
-Message-ID: <CALP0ub+jXiXwaaUPMP_QuZ5khVihAnFPgFeH=SSGdtdZU9me+g@mail.gmail.com>
-Subject: Attention
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211006063651.1124737-6-ltykernel@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Attention
+Hi @Tom and Borislav:
+      Please have a look at this patch. If it's ok, could you give your ack.
 
-We have deposited the check of your fund $800,000.00 through western
-union department Togo after our final meeting regarding your fund,
+Thanks.
 
-All you will do is to contact western union director Mrs. Rebecca
-William via Whites- app +22893853364
-Or email (wu7790636@gmail.com) she will give you direction on how you
-will be receiving your fund daily, remember to send her your full
-information to avoid wrong transfer
-
-Information such as
-
-Receiver name-------------------
-Home address--------------------
-Your country-----------------------
-Your gender------------------------
-Your copy of passport-----------
-Your phone number------------
-
-Though Mr. Tony has sent $5000 through western union in your name
-today so contact Mrs. Rebecca William as soon as you receive this
-email and tell her to give you  the MTCN code, Sender name
-question/answer to pick the $5000, please let us to know as soon as
-you received all your fund
-
-Best regards
-WESTERN UNION AGENT.
+On 10/6/2021 2:36 PM, Tianyu Lan wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> Hyper-V also needs to call ghcb hv call to write/read MSR in Isolation VM.
+> So expose __sev_es_ghcb_hv_call() to call it in the Hyper-V code.
+> 
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>   arch/x86/include/asm/sev.h   | 10 +++++++++
+>   arch/x86/kernel/sev-shared.c | 43 +++++++++++++++++++++++++-----------
+>   2 files changed, 40 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+> index fa5cd05d3b5b..2e96869f3e9b 100644
+> --- a/arch/x86/include/asm/sev.h
+> +++ b/arch/x86/include/asm/sev.h
+> @@ -81,12 +81,22 @@ static __always_inline void sev_es_nmi_complete(void)
+>   		__sev_es_nmi_complete();
+>   }
+>   extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
+> +extern enum es_result __sev_es_ghcb_hv_call(struct ghcb *ghcb,
+> +					    u64 exit_code, u64 exit_info_1,
+> +					    u64 exit_info_2);
+>   #else
+>   static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+>   static inline void sev_es_ist_exit(void) { }
+>   static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
+>   static inline void sev_es_nmi_complete(void) { }
+>   static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
+> +static inline enum es_result
+> +__sev_es_ghcb_hv_call(struct ghcb *ghcb,
+> +		      u64 exit_code, u64 exit_info_1,
+> +		      u64 exit_info_2)
+> +{
+> +	return ES_VMM_ERROR;
+> +}
+>   #endif
+>   
+>   #endif
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index 9f90f460a28c..946c203be08c 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
+> @@ -94,10 +94,13 @@ static void vc_finish_insn(struct es_em_ctxt *ctxt)
+>   	ctxt->regs->ip += ctxt->insn.length;
+>   }
+>   
+> -static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+> -					  struct es_em_ctxt *ctxt,
+> -					  u64 exit_code, u64 exit_info_1,
+> -					  u64 exit_info_2)
+> +/*
+> + * __sev_es_ghcb_hv_call() is also used in the other platform code(e.g
+> + * Hyper-V).
+> + */
+> +enum es_result __sev_es_ghcb_hv_call(struct ghcb *ghcb,
+> +				     u64 exit_code, u64 exit_info_1,
+> +				     u64 exit_info_2)
+>   {
+>   	enum es_result ret;
+>   
+> @@ -109,15 +112,33 @@ static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+>   	ghcb_set_sw_exit_info_1(ghcb, exit_info_1);
+>   	ghcb_set_sw_exit_info_2(ghcb, exit_info_2);
+>   
+> -	sev_es_wr_ghcb_msr(__pa(ghcb));
+>   	VMGEXIT();
+>   
+> +	if (ghcb->save.sw_exit_info_1 & 0xffffffff)
+> +		ret = ES_VMM_ERROR;
+> +	else
+> +		ret = ES_OK;
+> +
+> +	return ret;
+> +}
+> +
+> +static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+> +					  struct es_em_ctxt *ctxt,
+> +					  u64 exit_code, u64 exit_info_1,
+> +					  u64 exit_info_2)
+> +{
+> +	enum es_result ret;
+> +
+> +	sev_es_wr_ghcb_msr(__pa(ghcb));
+> +
+> +	ret = __sev_es_ghcb_hv_call(ghcb, exit_code, exit_info_1,
+> +					 exit_info_2);
+> +	if (ret == ES_OK)
+> +		return ret;
+> +
+>   	if ((ghcb->save.sw_exit_info_1 & 0xffffffff) == 1) {
+>   		u64 info = ghcb->save.sw_exit_info_2;
+> -		unsigned long v;
+> -
+> -		info = ghcb->save.sw_exit_info_2;
+> -		v = info & SVM_EVTINJ_VEC_MASK;
+> +		unsigned long v = info & SVM_EVTINJ_VEC_MASK;
+>   
+>   		/* Check if exception information from hypervisor is sane. */
+>   		if ((info & SVM_EVTINJ_VALID) &&
+> @@ -127,11 +148,7 @@ static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+>   			if (info & SVM_EVTINJ_VALID_ERR)
+>   				ctxt->fi.error_code = info >> 32;
+>   			ret = ES_EXCEPTION;
+> -		} else {
+> -			ret = ES_VMM_ERROR;
+>   		}
+> -	} else {
+> -		ret = ES_OK;
+>   	}
+>   
+>   	return ret;
+> 
