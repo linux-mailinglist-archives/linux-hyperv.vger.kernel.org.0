@@ -2,103 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C85D429633
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Oct 2021 19:58:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D927429693
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Oct 2021 20:12:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231784AbhJKSAo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Oct 2021 14:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231771AbhJKSAn (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Oct 2021 14:00:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CF7F760C49;
-        Mon, 11 Oct 2021 17:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1633975123;
-        bh=rs3EhQu/IN/0OssK+/JCwtTgQL5fH+Kl8haINYwQDm0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j5TndyVcgOQ3ztEg3QFjvkUdC78SxenUDcwWYQu995ccPf0Y1IES0pSMXmbAv++Sd
-         a+EZ2ZvyJ5/mijMxHsI2vYL5cKMZ2C1sUIm76VYMoufWrPRX8ewcjYzcA854zrxNnk
-         +0Th0v195jkgt3H4eBkAv/5T0QO8IOwjmHYncfoQ=
-Date:   Mon, 11 Oct 2021 19:58:38 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Long Li <longli@microsoft.com>
-Cc:     vkuznets <vkuznets@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        KY Srinivasan <kys@microsoft.com>,
+        id S234137AbhJKSOz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 Oct 2021 14:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233422AbhJKSOz (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 11 Oct 2021 14:14:55 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BC7C061570;
+        Mon, 11 Oct 2021 11:12:55 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id g13-20020a17090a3c8d00b00196286963b9so51569pjc.3;
+        Mon, 11 Oct 2021 11:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8H47ocDcATCEcdvQX+LbcVgPZyzX/fIx4WAwDOmGCq4=;
+        b=TBkCc9pHdBDkJzoQ0FC/yWxYnR4OikqY+eKeU53n7352DiHr0vwmSh/vKXoS1wPZvR
+         8bRamtKpp38BYASttA4n588uD8rIpkW+vekDneKTcyMAaTThsAWBndxbrWF3gbd+LQCe
+         GFxJUpYWf9Yh67jy7WL2zHsYn5BIXyOxE1lRQo1TqAygdVW1CT0Lz1tzzmTNkRTiYeLX
+         3s6ZfhpmvaYmnUQbCrZOcYVSduI7BqrlKiFVQc6LZy+6zVTaLIzlC0lNGlf9u8Pku5pB
+         NwY6cYTdl0rzY+HGy+ZNdvAPPi3TAQ5RJiLYhyAP4isYIsMlZUReN/xHu/z9SlLN3TpC
+         qwng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8H47ocDcATCEcdvQX+LbcVgPZyzX/fIx4WAwDOmGCq4=;
+        b=qCZgYWVEl0MScxn2fGRh3Xziz9qMj/FTVWJ/IQZ8XHuBsb63yQBvNjnbSnVvzjmGB5
+         6JtDnxR0YocxKWodOIhLlOi8l8Bkr5g4B2kb0rLU/7hYe2wTI/NbQKqXkZuIrAMzQ0/f
+         66wGK7E86FBZUZ6Pt9qfQe07or2rQE26nHOwPAjXF0kkvAHsxdHOJGlKhyYWqarvjX9E
+         HW1YHKOW3DEtmk6JDtDGzLrsqTPItBC/2FOL1NGt+Nh4g8tRDhQz3rwDdQpxcq4spABI
+         AHOmfEmmOiysw35T3vH2/fIFkwcxrIACsru/rPkVEY3dLUcKmFUQn46L98AeCDg0j/tH
+         DHWA==
+X-Gm-Message-State: AOAM533SYrfvpmp28/YIoaq7znBMvSTm9fxUoGWL+cJD8RvagmONOcei
+        7QStIifgGg45X7fmadg8VyohisunvveZ+tNF
+X-Google-Smtp-Source: ABdhPJywxR2ieilLzVjEYhfnEdYP1CaWQqyEumTzsDZxlruca0FAiHVzU/6Na+NTe1aNaWscFhqH9A==
+X-Received: by 2002:a17:90a:b288:: with SMTP id c8mr538215pjr.67.1633975974593;
+        Mon, 11 Oct 2021 11:12:54 -0700 (PDT)
+Received: from localhost.localdomain ([2406:7400:63:9f95:848b:7cc8:d852:ad42])
+        by smtp.gmail.com with ESMTPSA id h12sm392554pja.1.2021.10.11.11.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Oct 2021 11:12:54 -0700 (PDT)
+From:   Naveen Naidu <naveennaidu479@gmail.com>
+To:     bhelgaas@google.com
+Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Andra Paraschiv <andraprs@amazon.com>,
-        Siddharth Gupta <sidgup@codeaurora.org>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [Patch v5 0/3] Introduce a driver to support host accelerated
- access to Microsoft Azure Blob for Azure VM
-Message-ID: <YWR7TuGNaMJLXdVr@kroah.com>
-References: <BY5PR21MB1506A93E865A8D6972DD0AAECEF49@BY5PR21MB1506.namprd21.prod.outlook.com>
- <YQ9oTBSRyHCffC2k@kroah.com>
- <BY5PR21MB15065658FA902CC0BC162956CEF79@BY5PR21MB1506.namprd21.prod.outlook.com>
- <BY5PR21MB1506091AFED0EB62F081313ECEA29@BY5PR21MB1506.namprd21.prod.outlook.com>
- <DM6PR21MB15135923A4CB0E61786ABC22CEAA9@DM6PR21MB1513.namprd21.prod.outlook.com>
- <YVa6dtvt/BaajmmK@kroah.com>
- <BY5PR21MB15060E0A4AC1F6335A08EAB4CEB19@BY5PR21MB1506.namprd21.prod.outlook.com>
- <YV/dMdcmADXH/+k2@kroah.com>
- <87fstb3h6h.fsf@vitty.brq.redhat.com>
- <BY5PR21MB150612332F31358E4031A080CEB59@BY5PR21MB1506.namprd21.prod.outlook.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-hyperv@vger.kernel.org (open list:Hyper-V/Azure CORE AND DRIVERS)
+Subject: [PATCH 21/22] PCI: hv: Use PCI_ERROR_RESPONSE to specify hardware read error
+Date:   Mon, 11 Oct 2021 23:42:39 +0530
+Message-Id: <04f4c0ad634eb304b31bbbb8eed8a257712dc0f2.1633972263.git.naveennaidu479@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1633972263.git.naveennaidu479@gmail.com>
+References: <cover.1633972263.git.naveennaidu479@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BY5PR21MB150612332F31358E4031A080CEB59@BY5PR21MB1506.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Oct 11, 2021 at 05:46:48PM +0000, Long Li wrote:
-> > Subject: Re: [Patch v5 0/3] Introduce a driver to support host accelerated access
-> > to Microsoft Azure Blob for Azure VM
-> > 
-> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > 
-> > ...
-> > >
-> > > Not to mention the whole crazy idea of "let's implement our REST api
-> > > that used to go over a network connection over an ioctl instead!"
-> > > That's the main problem that you need to push back on here.
-> > >
-> > > What is forcing you to put all of this into the kernel in the first
-> > > place?  What's wrong with the userspace network connection/protocol
-> > > that you have today?
-> > >
-> > > Does this mean that we now have to implement all REST apis that people
-> > > dream up as ioctl interfaces over a hyperv transport?  That would be
-> > > insane.
-> > 
-> > As far as I understand, the purpose of the driver is to replace a "slow"
-> > network connection to API endpoint with a "fast" transport over Vmbus. So
-> > what if instead of implementing this new driver we just use Hyper-V Vsock and
-> > move API endpoint to the host?
-> 
-> Hi Vitaly,
-> 
-> We looked at Hyper-V Vsock when designing this driver. The problem is that the Hyper-V device model of Vsock can't support the data throughput and scale needed for Blobs. Vsock is mostly used for management tasks.
-> 
-> The usage of Blob in Azure justifies an dedicated VMBUS channel (and sub-channels) for a new VSP/VSC driver.
+Include PCI_ERROR_RESPONSE along with 0xFFFFFFFF in the comment to
+specify a hardware error. This helps finding where MMIO read error
+occurs easier to find.
 
-Why not just fix the vsock code to handle data better?  That way all
-users of it would benefit.
+Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 67c46e52c0dc..7e1102e3d7c6 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1774,7 +1774,7 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
+ 	 * If the memory enable bit is already set, Hyper-V silently ignores
+ 	 * the below BAR updates, and the related PCI device driver can not
+ 	 * work, because reading from the device register(s) always returns
+-	 * 0xFFFFFFFF.
++	 * 0xFFFFFFFF (PCI_ERROR_RESPONSE).
+ 	 */
+ 	list_for_each_entry(hpdev, &hbus->children, list_entry) {
+ 		_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2, &command);
+-- 
+2.25.1
 
-greg k-h
