@@ -2,102 +2,112 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 362EC42A6E9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Oct 2021 16:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7623E42A8C6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Oct 2021 17:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236953AbhJLOP5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 12 Oct 2021 10:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236943AbhJLOP5 (ORCPT
+        id S237449AbhJLPwP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 12 Oct 2021 11:52:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27403 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237427AbhJLPwP (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 12 Oct 2021 10:15:57 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC45FC061570;
-        Tue, 12 Oct 2021 07:13:55 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id y1so13581025plk.10;
-        Tue, 12 Oct 2021 07:13:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NnwqvTRj0woh3E8EshCqUWUgR2UVN04yKDTc5wj96cI=;
-        b=GI9XXj/5uxLbMyp8Z4wuPimGYeSjPoyFsqA33pX229q4NEccEYmPA6gFvQecPx7q+Q
-         0XPLaV2/clb8higyTzATpmmijhDbfDQm4SHSRgETl0tg2MuXImkxL86x3mZ6e2kfbeu/
-         zhSQim6hIpTEv/3i4UzQ7JhMu0N7pBTZ1vG00dymbZxzHAz7oJ3Ph9mTQ0ONYJweoO3V
-         fkwhHPCvL0+xm+XZdrQxTh/9qJt0CW5Q+JyufvRsSG08Ql+IxZAbcU/zgHwgwZGFMq1S
-         GgIjGapdd7tvC81KRCOWnIee3+Y2+vTxe5wt8h+NxgiZAVNaJj+Ees1TDR63qealCEkU
-         ag0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NnwqvTRj0woh3E8EshCqUWUgR2UVN04yKDTc5wj96cI=;
-        b=6pxVpte/XaycQXRL0EYUedG9/enf5kScALIEnF8SaoZnDO5qxuNhxf0gFr1WkyAMmU
-         Xww2Uufwvuy0OxqDr2ZoXGvFJq+SzmsjeBmJevFahGCxOqT4LfXE6BSAIBE1madwtDw3
-         XxwA29SlJXjthybm8cRL3be58bzVsVa8aMGKPK0WSNuE2J7txtR55QvRPB4DRW8MAsvI
-         Em4yk7cxKXqRSFtJhjcaLt3mtTafrhTKaesm+URT1SjuQkFCwz3gp9IfE+ogvyVqc76I
-         QYYHzBcElJ9eM7w18tWqbM7VoGCPfdobvJc7p2JrTJ5BJKoddNG4TWHHyRcLrqVujwg4
-         yUCw==
-X-Gm-Message-State: AOAM531T+jeQsP36xezO6Sc+87ffiUlZGUYjFNUJKbwqtC2Og/u0v29Q
-        M+xEqvpjGlR6x0Yv9MB/b6o=
-X-Google-Smtp-Source: ABdhPJwJvdOQ0jPl3L9eYjYXV/rgGLEfs79cpa7JfWJIAUgeaN6stVSAdOP2EQqyAjt0k+CMZ/SJVg==
-X-Received: by 2002:a17:903:1c6:b0:13f:2b8:afe8 with SMTP id e6-20020a17090301c600b0013f02b8afe8mr30748592plh.81.1634048035338;
-        Tue, 12 Oct 2021 07:13:55 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
-        by smtp.gmail.com with ESMTPSA id n202sm11477588pfd.160.2021.10.12.07.13.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Oct 2021 07:13:54 -0700 (PDT)
-Subject: Re: [PATCH V7 5/9] x86/sev-es: Expose __sev_es_ghcb_hv_call() to call
- ghcb hv call out of sev code
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, vkuznets@redhat.com,
-        konrad.wilk@oracle.com, hch@lst.de, robin.murphy@arm.com,
-        joro@8bytes.org, parri.andrea@gmail.com, dave.hansen@intel.com,
-        Hikys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, x86@kernel.org,
-        hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, davem@davemloft.net, kuba@kernel.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, jroedel@suse.de,
-        brijesh.singh@amd.com, Tianyu.Lan@microsoft.com, pgonda@google.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        rppt@kernel.org, tj@kernel.org, aneesh.kumar@linux.ibm.com,
-        saravanand@fb.com, hannes@cmpxchg.org, rientjes@google.com,
-        michael.h.kelley@microsoft.com
-References: <20211006063651.1124737-1-ltykernel@gmail.com>
- <20211006063651.1124737-6-ltykernel@gmail.com>
- <9b5fc629-9f88-039c-7d5d-27cbdf6b00fd@gmail.com> <YWRyvD413h+PwU9B@zn.tnic>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <92cff62b-806d-2762-7a5d-922843cff3f2@gmail.com>
-Date:   Tue, 12 Oct 2021 22:13:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Tue, 12 Oct 2021 11:52:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634053813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=OM6B3jqNboU2Hh/f2/hFxqXgrecxQ65nrQV6OMB0FCQ=;
+        b=IKcMn2vVbKGx1fKoyodZ4axKVttH63vofgLV6H09GVD7nTzY7t6m0gwfuSvC6iqKkdBv7c
+        7yYfgzZE7UdA2y+fXPmtvZaDQ7kTKdxAFrx/D1Q3XdpJ6a9d5GRJl7CHXHJ+I14TV6e+3s
+        bJByet8suo/x4Eu+Sn/7Oolq4f5dGyQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-120-UbqnepxiPXOWbjzgLEmkiQ-1; Tue, 12 Oct 2021 11:50:10 -0400
+X-MC-Unique: UbqnepxiPXOWbjzgLEmkiQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC82F91271;
+        Tue, 12 Oct 2021 15:50:08 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BCD1C5F4EA;
+        Tue, 12 Oct 2021 15:50:06 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] x86/hyperv: Protect set_hv_tscchange_cb() against getting preempted
+Date:   Tue, 12 Oct 2021 17:50:05 +0200
+Message-Id: <20211012155005.1613352-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <YWRyvD413h+PwU9B@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sure. Will do that. Thanks.
+The following issue is observed with CONFIG_DEBUG_PREEMPT when KVM loads:
 
-On 10/12/2021 1:22 AM, Borislav Petkov wrote:
-> On Mon, Oct 11, 2021 at 10:42:18PM +0800, Tianyu Lan wrote:
->> Hi @Tom and Borislav:
->>       Please have a look at this patch. If it's ok, could you give your ack.
-> 
-> I needed to do some cleanups in that area first:
-> 
-> https://lore.kernel.org/r/YWRwxImd9Qcls/Yy@zn.tnic
-> 
-> Can you redo yours ontop so that you can show what exactly you need
-> exported for HyperV?
-> 
-> Thx.
-> 
+ KVM: vmx: using Hyper-V Enlightened VMCS
+ BUG: using smp_processor_id() in preemptible [00000000] code: systemd-udevd/488
+ caller is set_hv_tscchange_cb+0x16/0x80
+ CPU: 1 PID: 488 Comm: systemd-udevd Not tainted 5.15.0-rc5+ #396
+ Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.0 12/17/2019
+ Call Trace:
+  dump_stack_lvl+0x6a/0x9a
+  check_preemption_disabled+0xde/0xe0
+  ? kvm_gen_update_masterclock+0xd0/0xd0 [kvm]
+  set_hv_tscchange_cb+0x16/0x80
+  kvm_arch_init+0x23f/0x290 [kvm]
+  kvm_init+0x30/0x310 [kvm]
+  vmx_init+0xaf/0x134 [kvm_intel]
+  ...
+
+set_hv_tscchange_cb() can get preempted in between acquiring
+smp_processor_id() and writing to HV_X64_MSR_REENLIGHTENMENT_CONTROL. This
+is not an issue by itself: HV_X64_MSR_REENLIGHTENMENT_CONTROL is a
+partition-wide MSR and it doesn't matter which particular CPU will be
+used to receive reenlightenment notifications. The only real problem can
+(in theory) be observed if the CPU whose id was acquired with
+smp_processor_id() goes offline before we manage to write to the MSR,
+the logic in hv_cpu_die() won't be able to reassign it correctly.
+
+Reported-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/hyperv/hv_init.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 708a2712a516..179fc173104d 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -139,7 +139,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	struct hv_reenlightenment_control re_ctrl = {
+ 		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+ 		.enabled = 1,
+-		.target_vp = hv_vp_index[smp_processor_id()]
+ 	};
+ 	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+ 
+@@ -153,8 +152,12 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	/* Make sure callback is registered before we write to MSRs */
+ 	wmb();
+ 
++	re_ctrl.target_vp = hv_vp_index[get_cpu()];
++
+ 	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+ 	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
++
++	put_cpu();
+ }
+ EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
+ 
+-- 
+2.31.1
+
