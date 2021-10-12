@@ -2,104 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D5204298B2
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Oct 2021 23:13:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 362EC42A6E9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Oct 2021 16:13:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235193AbhJKVP6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Oct 2021 17:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231994AbhJKVP6 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Oct 2021 17:15:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A875360E78;
-        Mon, 11 Oct 2021 21:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633986838;
-        bh=blg+VYtvSu5Pr5+yOmFCnDpo/ep2Cm5P4E/L6neXHzw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=W9odjvXGmU08ITxGsuD5h6w+0VRUMh5sMkxWkHsHH6VAfJHBYoxDy23okIGvbg7/S
-         rreUvfFTkgrGH4HbrjdHeQu20tjE1iGNsuFAN48MvN3g0NlKhBkGCmPmlU8+6HXIZc
-         kfeqymosmvouNEwyejfU6pktJEysFR8OnFERr0EaQpnJED0JSAphXPwS0DLx4UK6xY
-         EfK5NJbA8W4qg+ToFHJIE8J0tGG4HXH3OSbCO/nLFkpkPxmZPA/TIEhaf1saly3gfw
-         9FaASI5Ij6O3QuqR8ls+9Xr8E7XPPTcg5+Rz3DAPR5uTPrOL5EF9gJ3im/VZ3rBQrn
-         fwuVR3C1OS4Zg==
-Date:   Mon, 11 Oct 2021 16:13:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Long Li <longli@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCI: iov: Update format string type to match
- variable type
-Message-ID: <20211011211356.GA1692323@bhelgaas>
+        id S236953AbhJLOP5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 12 Oct 2021 10:15:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236943AbhJLOP5 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 12 Oct 2021 10:15:57 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC45FC061570;
+        Tue, 12 Oct 2021 07:13:55 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id y1so13581025plk.10;
+        Tue, 12 Oct 2021 07:13:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NnwqvTRj0woh3E8EshCqUWUgR2UVN04yKDTc5wj96cI=;
+        b=GI9XXj/5uxLbMyp8Z4wuPimGYeSjPoyFsqA33pX229q4NEccEYmPA6gFvQecPx7q+Q
+         0XPLaV2/clb8higyTzATpmmijhDbfDQm4SHSRgETl0tg2MuXImkxL86x3mZ6e2kfbeu/
+         zhSQim6hIpTEv/3i4UzQ7JhMu0N7pBTZ1vG00dymbZxzHAz7oJ3Ph9mTQ0ONYJweoO3V
+         fkwhHPCvL0+xm+XZdrQxTh/9qJt0CW5Q+JyufvRsSG08Ql+IxZAbcU/zgHwgwZGFMq1S
+         GgIjGapdd7tvC81KRCOWnIee3+Y2+vTxe5wt8h+NxgiZAVNaJj+Ees1TDR63qealCEkU
+         ag0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NnwqvTRj0woh3E8EshCqUWUgR2UVN04yKDTc5wj96cI=;
+        b=6pxVpte/XaycQXRL0EYUedG9/enf5kScALIEnF8SaoZnDO5qxuNhxf0gFr1WkyAMmU
+         Xww2Uufwvuy0OxqDr2ZoXGvFJq+SzmsjeBmJevFahGCxOqT4LfXE6BSAIBE1madwtDw3
+         XxwA29SlJXjthybm8cRL3be58bzVsVa8aMGKPK0WSNuE2J7txtR55QvRPB4DRW8MAsvI
+         Em4yk7cxKXqRSFtJhjcaLt3mtTafrhTKaesm+URT1SjuQkFCwz3gp9IfE+ogvyVqc76I
+         QYYHzBcElJ9eM7w18tWqbM7VoGCPfdobvJc7p2JrTJ5BJKoddNG4TWHHyRcLrqVujwg4
+         yUCw==
+X-Gm-Message-State: AOAM531T+jeQsP36xezO6Sc+87ffiUlZGUYjFNUJKbwqtC2Og/u0v29Q
+        M+xEqvpjGlR6x0Yv9MB/b6o=
+X-Google-Smtp-Source: ABdhPJwJvdOQ0jPl3L9eYjYXV/rgGLEfs79cpa7JfWJIAUgeaN6stVSAdOP2EQqyAjt0k+CMZ/SJVg==
+X-Received: by 2002:a17:903:1c6:b0:13f:2b8:afe8 with SMTP id e6-20020a17090301c600b0013f02b8afe8mr30748592plh.81.1634048035338;
+        Tue, 12 Oct 2021 07:13:55 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
+        by smtp.gmail.com with ESMTPSA id n202sm11477588pfd.160.2021.10.12.07.13.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Oct 2021 07:13:54 -0700 (PDT)
+Subject: Re: [PATCH V7 5/9] x86/sev-es: Expose __sev_es_ghcb_hv_call() to call
+ ghcb hv call out of sev code
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, vkuznets@redhat.com,
+        konrad.wilk@oracle.com, hch@lst.de, robin.murphy@arm.com,
+        joro@8bytes.org, parri.andrea@gmail.com, dave.hansen@intel.com,
+        Hikys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, x86@kernel.org,
+        hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, kuba@kernel.org,
+        gregkh@linuxfoundation.org, arnd@arndb.de, jroedel@suse.de,
+        brijesh.singh@amd.com, Tianyu.Lan@microsoft.com, pgonda@google.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        rppt@kernel.org, tj@kernel.org, aneesh.kumar@linux.ibm.com,
+        saravanand@fb.com, hannes@cmpxchg.org, rientjes@google.com,
+        michael.h.kelley@microsoft.com
+References: <20211006063651.1124737-1-ltykernel@gmail.com>
+ <20211006063651.1124737-6-ltykernel@gmail.com>
+ <9b5fc629-9f88-039c-7d5d-27cbdf6b00fd@gmail.com> <YWRyvD413h+PwU9B@zn.tnic>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <92cff62b-806d-2762-7a5d-922843cff3f2@gmail.com>
+Date:   Tue, 12 Oct 2021 22:13:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211008222732.2868493-2-kw@linux.com>
+In-Reply-To: <YWRyvD413h+PwU9B@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 10:27:31PM +0000, Krzysztof Wilczyński wrote:
-> Functions pci_iov_sysfs_link() and pci_iov_remove_virtfn() take
-> a Virtual Function (VF) ID as an integer value and then use it to
-> assemble the desired name for the corresponding sysfs attribute (a
-> symbolic link in this case).
+Sure. Will do that. Thanks.
 
-It's not really clear to me that "int" is the correct type for the VF
-ID.  pci_iov_add_virtfn() is declared to take an int, but
-sriov_add_vfs() passes as unsigned int, which I think probably makes
-more sense unless there's some interface that may return either a VF
-ID or an error.
-
-NumVFs in the SR-IOV Capability is only 16 bits wide, so I guess
-either mostly works...
-
-> Internally, both functions use sprintf() to create the desired attribute
-> name, and leverage the "%u" modifier as part of the format string used
-> to do so.  However, the VF ID is passed to both functions as a signed
-> integer type variable, which makes the variable type and format string
-> modifier somewhat incompatible.
+On 10/12/2021 1:22 AM, Borislav Petkov wrote:
+> On Mon, Oct 11, 2021 at 10:42:18PM +0800, Tianyu Lan wrote:
+>> Hi @Tom and Borislav:
+>>       Please have a look at this patch. If it's ok, could you give your ack.
 > 
-> Thus, change the modifier used in the format string to "%d" to better
-> match the variable type.
+> I needed to do some cleanups in that area first:
 > 
-> No change to functionality intended.
+> https://lore.kernel.org/r/YWRwxImd9Qcls/Yy@zn.tnic
 > 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-> ---
->  drivers/pci/iov.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Can you redo yours ontop so that you can show what exactly you need
+> exported for HyperV?
 > 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index dafdc652fcd0..056bba3b4236 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -140,7 +140,7 @@ int pci_iov_sysfs_link(struct pci_dev *dev,
->  	char buf[VIRTFN_ID_LEN];
->  	int rc;
->  
-> -	sprintf(buf, "virtfn%u", id);
-> +	sprintf(buf, "virtfn%d", id);
->  	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
->  	if (rc)
->  		goto failed;
-> @@ -322,7 +322,7 @@ void pci_iov_remove_virtfn(struct pci_dev *dev, int id)
->  	if (!virtfn)
->  		return;
->  
-> -	sprintf(buf, "virtfn%u", id);
-> +	sprintf(buf, "virtfn%d", id);
->  	sysfs_remove_link(&dev->dev.kobj, buf);
->  	/*
->  	 * pci_stop_dev() could have been called for this virtfn already,
-> -- 
-> 2.33.0
+> Thx.
 > 
