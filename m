@@ -2,97 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B13C543379F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Oct 2021 15:47:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3C144337DB
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Oct 2021 15:58:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230487AbhJSNtP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 19 Oct 2021 09:49:15 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:46754 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbhJSNtP (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 19 Oct 2021 09:49:15 -0400
-Received: by mail-wr1-f43.google.com with SMTP id k7so47669968wrd.13;
-        Tue, 19 Oct 2021 06:47:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=parC8PxzpOXH/U754F84t/+ZClKXFQWU08kBmp0MqI0=;
-        b=2Cr1AsSJqH6TM+9+80gjU7Qdf79GMHlbd7xZkMZ2pKZ49Rv6zCDBqzbC238/qppP2A
-         eIcFb0Ec5B6TUs3WoBu8FA365l6Y82tpaKQjekMOPddiAVFd+YY9x6J+FCDy0fc809Pz
-         Fgzm+5lTSD75G2UZSBsAlbv3Gt5BE8xzwA5eTxH897mvFGVGF4Vn82WZYfILZNngsQG3
-         cIoD+oz3hKg8vWZs5fzjImZyIKnUSKVHKeWzP0KxNaqspKQMrJ6hd7PC1SSn7X1nfcMm
-         f2T565IbZmoHlX7AbtNW7WZUHmdCq1wZnA9Q0vQaZz8D2ZVBJDDjNnGvM3Kg+46CaQZg
-         FT7A==
-X-Gm-Message-State: AOAM532RI7nQDI9kBNHsc3TBc4a0N0VtHj9qpbX7pfDj9E1Osy8r6NAF
-        7cg+ClQWKkYU1/kwZIfqwFA=
-X-Google-Smtp-Source: ABdhPJxd3Z7z4Vf3M93WATsWNR1wZ4XGNiitz2hn96kapMHc+TYmILk5/JmED/rU+kOEQkehq8GjbA==
-X-Received: by 2002:adf:9bc4:: with SMTP id e4mr43491190wrc.257.1634651221243;
-        Tue, 19 Oct 2021 06:47:01 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u2sm14757178wrr.35.2021.10.19.06.47.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 06:47:00 -0700 (PDT)
-Date:   Tue, 19 Oct 2021 13:46:59 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hypverv/vmbus: include linux/bitops.h
-Message-ID: <20211019134659.awxirloepa2d7c32@liuwe-devbox-debian-v2>
-References: <20211018131929.2260087-1-arnd@kernel.org>
+        id S232726AbhJSOAN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 19 Oct 2021 10:00:13 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57182 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230487AbhJSOAN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 19 Oct 2021 10:00:13 -0400
+Received: from zn.tnic (p200300ec2f12f600999171228a6b1e18.dip0.t-ipconnect.de [IPv6:2003:ec:2f12:f600:9991:7122:8a6b:1e18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B5CE91EC0531;
+        Tue, 19 Oct 2021 15:57:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1634651878;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Eyr0BrQZjw5sA8H+/VXcyKJdpJUglZVq/GeFUKleCV4=;
+        b=QF8gs6XkuuDcKOT13EUBQzf9lyHTxW5lV7gAtEvIN8wrhfvvKsrtdW0u3OyzuQl9o9oPC9
+        g6vLJPblxsuxMCz5FAqebChv09tHnR9hf/faZRWncEBjRgHesQYF137zk7h9agm8Axz1eA
+        gVKxa+XbD67lOoBLWeuCURojCdedmy4=
+Date:   Tue, 19 Oct 2021 15:57:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, vkuznets@redhat.com,
+        konrad.wilk@oracle.com, hch@lst.de, robin.murphy@arm.com,
+        joro@8bytes.org, parri.andrea@gmail.com, dave.hansen@intel.com,
+        Hikys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, x86@kernel.org,
+        hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, kuba@kernel.org,
+        gregkh@linuxfoundation.org, arnd@arndb.de, jroedel@suse.de,
+        brijesh.singh@amd.com, Tianyu.Lan@microsoft.com, pgonda@google.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        rppt@kernel.org, tj@kernel.org, aneesh.kumar@linux.ibm.com,
+        saravanand@fb.com, hannes@cmpxchg.org, rientjes@google.com,
+        michael.h.kelley@microsoft.com
+Subject: Re: [PATCH V7 5/9] x86/sev-es: Expose __sev_es_ghcb_hv_call() to
+ call ghcb hv call out of sev code
+Message-ID: <YW7O5HmcD/JK0Twr@zn.tnic>
+References: <20211006063651.1124737-1-ltykernel@gmail.com>
+ <20211006063651.1124737-6-ltykernel@gmail.com>
+ <9b5fc629-9f88-039c-7d5d-27cbdf6b00fd@gmail.com>
+ <YWRyvD413h+PwU9B@zn.tnic>
+ <5a0b9de8-e133-c17b-bc0d-93bfb593c48f@gmail.com>
+ <2772390d-09c1-80c1-082f-225f32eae4aa@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20211018131929.2260087-1-arnd@kernel.org>
+In-Reply-To: <2772390d-09c1-80c1-082f-225f32eae4aa@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 03:19:08PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> On arm64 randconfig builds, hyperv sometimes fails with this
-> error:
-> 
-> In file included from drivers/hv/hv_trace.c:3:
-> In file included from drivers/hv/hyperv_vmbus.h:16:
-> In file included from arch/arm64/include/asm/sync_bitops.h:5:
-> arch/arm64/include/asm/bitops.h:11:2: error: only <linux/bitops.h> can be included directly
-> In file included from include/asm-generic/bitops/hweight.h:5:
-> include/asm-generic/bitops/arch_hweight.h:9:9: error: implicit declaration of function '__sw_hweight32' [-Werror,-Wimplicit-function-declaration]
-> include/asm-generic/bitops/atomic.h:17:7: error: implicit declaration of function 'BIT_WORD' [-Werror,-Wimplicit-function-declaration]
-> 
-> Include the correct header first.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Mon, Oct 18, 2021 at 08:19:30PM +0800, Tianyu Lan wrote:
+> Gentle Ping.
 
-Applied to hyperv-fixes. Thanks.
+$ patch -p1 --dry-run -i /tmp/ltykernel.01
+checking file arch/x86/include/asm/sev.h
+patch: **** malformed patch at line 128: return 0; }
 
-> ---
-> Not sure what started this, I first saw it on linux-next-20211015
-> ---
->  drivers/hv/hyperv_vmbus.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 42f3d9d123a1..d030577ad6a2 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -13,6 +13,7 @@
->  #define _HYPERV_VMBUS_H
->  
->  #include <linux/list.h>
-> +#include <linux/bitops.h>
->  #include <asm/sync_bitops.h>
->  #include <asm/hyperv-tlfs.h>
->  #include <linux/atomic.h>
-> -- 
-> 2.29.2
-> 
+Can you pls send a patch which is not mangled and I can apply?
+
+Also, this might have some info on the matter:
+
+Documentation/process/email-clients.rst
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
