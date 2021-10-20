@@ -2,159 +2,169 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41B75434EAF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Oct 2021 17:10:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5787434EF0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Oct 2021 17:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230264AbhJTPMx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Oct 2021 11:12:53 -0400
-Received: from woodpecker.gentoo.org ([140.211.166.183]:59994 "EHLO
-        smtp.gentoo.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbhJTPMw (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Oct 2021 11:12:52 -0400
-Message-ID: <4d9979cd-f2fb-bf65-883a-258a656c08e1@gentoo.org>
-Date:   Wed, 20 Oct 2021 17:10:29 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
-To:     linux-hyperv@vger.kernel.org
+        id S229952AbhJTPYm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Oct 2021 11:24:42 -0400
+Received: from mail-bn8nam11on2139.outbound.protection.outlook.com ([40.107.236.139]:53089
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229941AbhJTPYm (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 20 Oct 2021 11:24:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cJ/GZ6/DrhAuBwRhjLDfvMYW0cv40vW/2Z+J56dPm7BKGDQ/1M6iApU8yAGniP3teIIZ/01LQ6FUYuIDJhFmLgouijx/y/CUXjA3tRT9CTrhDz679y8vz/mVv76F+NTBdiaVkZAD76aF/DhSQ0B8CLbNOs1xeQQb2mw+DK0LSyKcGSDUW6aSrg84g82T0ip4HvMSYzU0AQh0QEhfqoUvL+I7mMFN32RpL9qzu0pSh76x8K7X8pqibg4PNEHUTbdSZ+btE/Ws/cEkcsMMTAlXoU1IkDNF1SLMzRi+e4RJIWq1TgEiro7dnG2JehrNkSLHjpMykF685BqLFdxG2ZMjCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n7AqvPUE5cHJt+XhtWqVHQhVenl1AUs8vF+5i8zG/ho=;
+ b=h3BCGlhFwO6pwnNV70kbkGXpuOUuNqszFHJEcKxlr9FZDcj9OUU3UkJK3Z6EZvgLv/Lxfu/EeTHoGY/pUBmu3VSR8+o5NcjS+s1X/16QuTk+8VkwoxQNl0knmS3sSYwb/Qazdh/Z5GBxDGth3pXf3s9oTdBBARTsa7lKQ+1z6NdPPfx8rNFgVLcFB5uJNzCdRWzsh/OtlGWyTDIu9UmBskCodL5ZwsoBXcFZtGtMsx6jwngAcxdJgAfXs/4+oV32SvZ0zEs0YTqil5G0txrJEyJXmk+5Dvb4lTDXd15PzQcXnjcKt7OcS9OahkZBOXdQNo6BmEJkiZOKxH4Orlk/RA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n7AqvPUE5cHJt+XhtWqVHQhVenl1AUs8vF+5i8zG/ho=;
+ b=YtR2dqEif7DtNauCmmvVS62s8iYzS+Zk7hi1Dc21mFRbfmhrGCPP3Zg1sg8jrPwX82dRXLs6U2UOoE4UduSm7UjzLWVJmOIhHwWoHHQsvD2Vn9L/68FFkwXbe6RKnDfxLxGtVZjQq4BWkvI7ZwrFzsZyi6n1oISPGkPKtj2YgPA=
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
+ by MWHPR21MB0863.namprd21.prod.outlook.com (2603:10b6:300:77::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.4; Wed, 20 Oct
+ 2021 15:22:19 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::240b:d555:8c74:205c]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::240b:d555:8c74:205c%4]) with mapi id 15.20.4649.004; Wed, 20 Oct 2021
+ 15:22:19 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: RE: [PATCH v3 1/2] PCI: hv: Make the code arch neutral by adding arch
+ specific interfaces
+Thread-Topic: [PATCH v3 1/2] PCI: hv: Make the code arch neutral by adding
+ arch specific interfaces
+Thread-Index: AQHXwRPKcbHndDKDX0Oue2oQSrZra6vcCg3g
+Date:   Wed, 20 Oct 2021 15:22:19 +0000
+Message-ID: <MWHPR21MB1593BFB8A2A1E5C0DDB5DBF1D7BE9@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <1634226794-9540-1-git-send-email-sunilmut@linux.microsoft.com>
+ <1634226794-9540-2-git-send-email-sunilmut@linux.microsoft.com>
+In-Reply-To: <1634226794-9540-2-git-send-email-sunilmut@linux.microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-From:   Thomas Deutschmann <whissi@gentoo.org>
-Organization: Gentoo Linux
-Subject: hv_balloon: kmsg about unhandled message is killing the system
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=436550c2-fe4d-46c9-a4c2-7df8893d2529;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-10-20T15:21:07Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6e04ef6d-0db8-44dc-787e-08d993dd6879
+x-ms-traffictypediagnostic: MWHPR21MB0863:
+x-microsoft-antispam-prvs: <MWHPR21MB086302B8A59C2F3BF67C5902D7BE9@MWHPR21MB0863.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2043;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ssP5i6gAXsBgCl4tU4zcbaFpxd9ka5X8PvoFnWAmnDE7OlDkFgYhJ5HhOu4THgOyfLA2fVhYHxojgioleeNviV7ttXscnAMW4b0u4iPXHUlrQ2ofm9Gie9jcwsGo6pkNmDa7yzU2sadH/AXH0YhSIk45HF8ELwGSUAKfndRkUldtXd0pXXxgc0qZcL/ryiiPvayEps0YIcJPhQPWx+4hvTNvL4LpcM4Q8iMSjTRh2ziNlMJrBC9SwwIfx+9SCKP1E5r9w/owwn8kqdh2pDE2g8p1x2I/XBQW/GYv+AyypNngMqXVz01Dan+hQ4lS0J9xmv4xHGU+2x6ZROoz0tsqa1Uz4C8tRowwI7eh7qyereynvqPbg3sQBb3Re/q70zPmTUYOAb9eSQCkVh2/Q2DCSBGCudjfi8NHaLV1Wcu/5GxC9nyXbRhhi1iE3EtbVAUmfHm68Je+sCmGmmhdsrLvbVrR0tCEtfhyjaPSGAa9CNcNHUvUWj/Egayquf2mhxODmEz9Mn9MP5H8AFYkBTEBJAFvBkuJPlLhm8r6OdAxcf2bsCqhbApRfZvbJmk2RHcbEAuvv/OO4bpjocu0uKmUc4ISyaBAUz2kRLTfAUravW1qkbjYXOg8kFs6v5hDHMjIictswnb6Dny74ZZvoGAyjgzxe3ecSUKg9tTQYPqMRGyu5iUTe9EvQvDmcR9NAEb1ocy+gNh4qBaujjwggGqPywXRGZDi3WZG0JyYwpr3aCM=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(26005)(508600001)(10290500003)(66446008)(8936002)(38100700002)(66556008)(66476007)(33656002)(7416002)(64756008)(186003)(107886003)(7696005)(6506007)(52536014)(71200400001)(2906002)(83380400001)(921005)(8676002)(110136005)(122000001)(55016002)(54906003)(8990500004)(82960400001)(86362001)(4326008)(82950400001)(76116006)(66946007)(316002)(9686003)(38070700005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xrMSzq/aQjITM+YTrImbVfG4at/Xar0PSvSvGLjQceO3n8Ly8w65KPZ1gxQ4?=
+ =?us-ascii?Q?2pWxeuQGrCjqk9iJK8gaUdOck+cOUAB3UFY9nzhdUJPBMMWeACX5+SymHjgE?=
+ =?us-ascii?Q?ANvGiLa9qni2CxJPUl2f2GTOVypO0SfJXeP4y+CsK+S+s5LZ5nQDAfNnp5o3?=
+ =?us-ascii?Q?MJhVRRo++EVNGrCCYELz+9DGazC0fMA6HVcmbeAHHGuajTj8zAh1OvCGugNC?=
+ =?us-ascii?Q?B3tb+e5xnUlNxMexvyLQBGHrmCEIH1co7U64L5V9Ml5EUI4P6+vVcrZpRyIJ?=
+ =?us-ascii?Q?TtSGH+s9iwU8enOeN5eCKGIYiWlE6w3/ZRGGFM7R8XmwKp2XP6YgimANLFmQ?=
+ =?us-ascii?Q?tEkAJxMFSmXhJ1vgcIOmB1/WF0WvBVC5SG+MQ2WQe3HA0Lw0m7UKIJINTi1G?=
+ =?us-ascii?Q?fuPVSH/FhJieBnAVM4b398vwj+SrJnfn5R+LT/tZ1D3TkG7fZa6cTC35D141?=
+ =?us-ascii?Q?OoFemJ62I+YFGvGUBgsb0GpxBFMzEswbRvoQ4Lj2gCYzE7rJIDgBqm5HAwI0?=
+ =?us-ascii?Q?kPEP4t13e5a61KzRpEOBm30axlXy+bNRACbep7qF39n4zLOKl/Yc/ycLWDlg?=
+ =?us-ascii?Q?fkEPkOWB/8pLzQLqicY3DrwAi7jc96ruELP9xcpv6IHMqbfI/HFjs9D1Yv/5?=
+ =?us-ascii?Q?vmd7RW8FU6n9oVaTNxSrUcEm04SagYDP/GmOuIb1WjDvpRTiWjwFkHPg+Bva?=
+ =?us-ascii?Q?IF7tN74mz4dEjknpoAPETgwSh6F7gkRzNdIor0te0KwjYUKALBQLZ/IKOypx?=
+ =?us-ascii?Q?0gZYbaXZST6mDznkbUjcIFLX3Fz+7/ZpLx8/ZjTLXdS6J2oqbdnMbirDVQLE?=
+ =?us-ascii?Q?P2YyjfZ9zXGLb8MnfTrqAYDeFytt+IZrNni0A3fXqTAz5j4I746SGU+W2oMq?=
+ =?us-ascii?Q?kUvC0pRDLf6SqOlSy7obfOetnoOwi9J5JGd3E4nlkwm0Yj41hGrvdyrd8jIF?=
+ =?us-ascii?Q?IlneAV19PePpEmuQaj75Tk7c9R9t+98336pd648VNMvLfkt/z5jfDxSvYEJz?=
+ =?us-ascii?Q?DMKcgSa5QgC/RGoOWC4rGZPp88Fg8NS/uz6+6ZVG7yvmnvnZeIT18UidWn4O?=
+ =?us-ascii?Q?XxzeVRengrjU7FB47wHpwMuFGVpMLrg+nVr9a00rnRqjQC1qt1Q7paoCftaO?=
+ =?us-ascii?Q?YpZQnmOowfUwt4DIejwrw9Fzf5DlkM6U1CxnVIrWOCE1THxIyzo6aIh82XEm?=
+ =?us-ascii?Q?leORpu8PPAABR1/oqTpUjHFogemSDRUZtPr2dCfO7uYBKvIVChZLTLfOhUbi?=
+ =?us-ascii?Q?2xP+BqXufK5S81Y4SVJqYXjv51mYqcw4UL9z5MHK4JlO8OlRpS/npPjDoAIq?=
+ =?us-ascii?Q?vvXuViCxyQaIUREEqXk/mUyQcMUBaXPJgFmzQukt5PICCfJhlEosCL5rLp00?=
+ =?us-ascii?Q?giCLSQ0ImoxssDsYkGz699wTO9B0IAJCSAELoxI5+TihdVzZ3NbslXS31Tl+?=
+ =?us-ascii?Q?VJw3IyME7HNz+usEmBPGbOtJV+IdCcbt?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e04ef6d-0db8-44dc-787e-08d993dd6879
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2021 15:22:19.8872
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0863
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
+From: Sunil Muthuswamy <sunilmut@linux.microsoft.com> Sent: Thursday, Octob=
+er 14, 2021 8:53 AM
+>=20
+> Encapsulate arch dependencies in Hyper-V vPCI through a set of interfaces=
+,
+> listed below. Adding these arch specific interfaces will allow for an
+> implementation for other arch, such as ARM64.
+>=20
+> Implement the interfaces for X64, which is essentially just moving over t=
+he
+> current implementation.
+>=20
+> List of added interfaces:
+>  - hv_pci_irqchip_init()
+>  - hv_pci_irqchip_free()
+>  - hv_msi_get_int_vector()
+>  - hv_set_msi_entry_from_desc()
+>  - hv_msi_prepare()
+>=20
+> There are no functional changes expected from this patch.
+>=20
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+> In v2 & v3:
+>  Changes are described in the cover letter.
+>=20
+>  MAINTAINERS                                 |  2 +
+>  arch/x86/include/asm/hyperv-tlfs.h          | 33 ++++++++++++
+>  arch/x86/include/asm/mshyperv.h             |  7 ---
+>  drivers/pci/controller/Makefile             |  2 +-
+>  drivers/pci/controller/pci-hyperv-irqchip.c | 57 +++++++++++++++++++++
+>  drivers/pci/controller/pci-hyperv-irqchip.h | 20 ++++++++
+>  drivers/pci/controller/pci-hyperv.c         | 52 ++++++++++++-------
+>  include/asm-generic/hyperv-tlfs.h           | 33 ------------
+>  8 files changed, 146 insertions(+), 60 deletions(-)
+>  create mode 100644 drivers/pci/controller/pci-hyperv-irqchip.c
+>  create mode 100644 drivers/pci/controller/pci-hyperv-irqchip.h
+>=20
 
-I am running a Hyper-V Gen2 VM with Gentoo Linux where I make use of the
-memory ballooning feature (8192MB RAM Minimum; 61440MB RAM Maximum; 20%
-memory buffer) for almost 2 years. Since kernel 5.14, the virtual
-machine will sometimes log _a lot_ of
-
-> kernel: [ 1022.277623] hv_balloon: Unhandled message: type: 0
-> kernel: [ 1022.277624] hv_balloon: Unhandled message: type: 32768
-> kernel: [ 1022.277625] hv_balloon: Unhandled message: type: 51200
-> kernel: [ 1022.277625] hv_balloon: Unhandled message: type: 59392
-> kernel: [ 1022.277689] hv_balloon: Ballooned pages: 1519104
-
-messages, causing log mountpoint (in in my case root mountpoint) to run 
-out of disk space which will kill the system in the end.
-
-I have never seen this before with any <5.14 kernel.
-
-Of course, I tried to bisect the kernel multiple times, but I never was
-successful because it is not easy to trigger the problem. What seems to
-work best:
-
-1) After start, wait ~60 seconds for
-
-> hv_balloon: Max. dynamic memory size: 61440 MB
-
-message.
-
-2) Now allocate some memory causing the VM to request more memory from 
-the host system:
-
-   $ </dev/zero head -c 22G | pv -L 256M | tail
-
-   (Note: You have to do that slowly because host will only grant
-          more memory when memory pressure is constantly high
-          but when you are requesting memory too fast you will
-          run out of memory)
-
-3) Now end the process (CTRL+C) and wait until the VM has returned 
-memory back to host system.
-
-4) Now I start to compile chromium and firefox with 20 threads each in
-parallel.
-
-If the kernel is faulty, in most cases I'll see the kmsgs about
-unhandled message types within 10 minutes. If I'll get the message
-
-> hv_balloon: Balloon request will be partially fulfilled. Balloon floor reached
-
-it's usually a sign for working kernel.
-
-But as said at the beginning, this is not 100% reliable. I already ended
-up with a kernel where I thought "This revision is fine" and suddenly 
-the system died because millions of those messages were outputted. Or 
-sometimes I am unable to trigger the failure again for a bad revision. 
-See my last bisect attempt:
-
-> git bisect start
-> # good: [62fb9874f5da54fdb243003b386128037319b219] Linux 5.13
-> git bisect good 62fb9874f5da54fdb243003b386128037319b219
-> # bad: [7d2a07b769330c34b4deabeed939325c77a7ec2f] Linux 5.14
-> git bisect bad 7d2a07b769330c34b4deabeed939325c77a7ec2f
-> # bad: [406254918b232db198ed60f5bf1f8b84d96bca00] Merge tag 'perf-tools-for-v5.14-2021-07-01' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
-> git bisect bad 406254918b232db198ed60f5bf1f8b84d96bca00
-> # bad: [a6eaf3850cb171c328a8b0db6d3c79286a1eba9d] Merge tag 'sched-urgent-2021-06-30' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect bad a6eaf3850cb171c328a8b0db6d3c79286a1eba9d
-> # skip: [31e798fd6f0ff0acdc49c1a358b581730936a09a] Merge tag 'media/v5.14-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-> git bisect skip 31e798fd6f0ff0acdc49c1a358b581730936a09a
-> # good: [b981f7990e1ae61d9a48d717868df8f00f52bc08] crypto: hisilicon/hpre - register ecdh NIST P384
-> git bisect good b981f7990e1ae61d9a48d717868df8f00f52bc08
-> # good: [2b2142f247ebeef74aaadc1a646261c19627fd7e] spi: hisi-kunpeng: Add debugfs support
-> git bisect good 2b2142f247ebeef74aaadc1a646261c19627fd7e
-> # good: [72d4512e9cb14d790e361c0e085186a7ef2d2431] writeback, cgroup: split out the functional part of inode_switch_wbs_work_fn()
-> git bisect good 72d4512e9cb14d790e361c0e085186a7ef2d2431
-> # good: [902499937e3a82156dcb5069b6df27640480e204] mm/page_alloc: update PGFREE outside the zone lock in __free_pages_ok
-> git bisect good 902499937e3a82156dcb5069b6df27640480e204
-> # good: [f9ef9b82ea18e78d4cf614875a130f1a0316e645] Merge branch 'acpica'
-> git bisect good f9ef9b82ea18e78d4cf614875a130f1a0316e645
-> # good: [3fdc0cb59d97f87e2cc708d424f1538e31744286] arm64: smccc: Add support for SMCCCv1.2 extended input/output registers
-> git bisect good 3fdc0cb59d97f87e2cc708d424f1538e31744286
-> # good: [cb1b10e7ac6c1438247ee3c7e4a2f2332a77ba07] nvme-pci: remove trailing lines for helpers
-> git bisect good cb1b10e7ac6c1438247ee3c7e4a2f2332a77ba07
-> # good: [4b898fedeb26c4d09b83a2c5a3246a34ab99e216] media: hantro: reorder variants
-> git bisect good 4b898fedeb26c4d09b83a2c5a3246a34ab99e216
-> # skip: [9cd19f02c46a2dfaf70b8d450fb16f9eb246dfa4] Merge tag 'tomoyo-pr-20210628' of git://git.osdn.net/gitroot/tomoyo/tomoyo-test1
-> git bisect skip 9cd19f02c46a2dfaf70b8d450fb16f9eb246dfa4
-> # good: [914cde58a03cc5eef858db34687433e17d0e44be] KVM: arm64: Remove list_head from hyp_page
-> git bisect good 914cde58a03cc5eef858db34687433e17d0e44be
-> # good: [b4128000e2c9b176a449d748dcb083c61d61cc6e] KVM: x86: hyper-v: Prepare to check access to Hyper-V MSRs
-> git bisect good b4128000e2c9b176a449d748dcb083c61d61cc6e
-> # good: [a60c538ed2ff9d084544a894219eed9c5ab980e5] Merge tag 'integrity-v5.14' of git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity
-> git bisect good a60c538ed2ff9d084544a894219eed9c5ab980e5
-> # bad: [5e6928249b81b4d8727ab6a4037a171d15455cb0] Merge tag 'acpi-5.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-> git bisect bad 5e6928249b81b4d8727ab6a4037a171d15455cb0
-> # good: [e17c120f48f7d86ed9fd6e44e9436d32997fd9ec] Merge tag 'array-bounds-fixes-5.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux
-> git bisect good e17c120f48f7d86ed9fd6e44e9436d32997fd9ec
-> # good: [1dfb0f47aca11350f45f8c04c3b83f0e829adfa9] Merge tag 'x86-entry-2021-06-29' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect good 1dfb0f47aca11350f45f8c04c3b83f0e829adfa9
-> # good: [8b457d60608aa76d7ce9c04a312669761025ba42] Merge branches 'acpi-dptf' and 'acpi-messages'
-> git bisect good 8b457d60608aa76d7ce9c04a312669761025ba42
-> # good: [ed562d280cb775ae4ba940bb4b81a1fbcfb303cb] Merge branches 'pm-cpufreq' and 'pm-cpuidle'
-> git bisect good ed562d280cb775ae4ba940bb4b81a1fbcfb303cb
-> # good: [3563f55ce65462063543dfa6a8d8c7fbfb9d7772] Merge tag 'pm-5.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-> git bisect good 3563f55ce65462063543dfa6a8d8c7fbfb9d7772
-> # good: [237a47ebc39de7f3763e2fd11e88774239a88b77] ACPI: NUMA: fix typo in a comment
-> git bisect good 237a47ebc39de7f3763e2fd11e88774239a88b77
-> # good: [4370cbf350dbaca984dbda9f9ce3fac45d6949d5] ACPI: EC: trust DSDT GPE for certain HP laptop
-> git bisect good 4370cbf350dbaca984dbda9f9ce3fac45d6949d5
-> # good: [ccb5ecdc2ddeaff744ee075b54cdff8a689e8fa7] ACPI: APEI: fix synchronous external aborts in user-mode
-> git bisect good ccb5ecdc2ddeaff744ee075b54cdff8a689e8fa7
-> # good: [120f4aa80b4cac2ae082666114a36c6c363b9df2] ACPI: NVS: fix doc warnings in nvs.c
-> git bisect good 120f4aa80b4cac2ae082666114a36c6c363b9df2
-> # good: [64f9111dd6225a50b8fdd365dfdda275c2a708c0] Merge branches 'acpi-ec', 'acpi-apei', 'acpi-soc' and 'acpi-misc'
-> git bisect good 64f9111dd6225a50b8fdd365dfdda275c2a708c0
-> # first bad commit: [5e6928249b81b4d8727ab6a4037a171d15455cb0] Merge tag 'acpi-5.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-
-For example, I booted into the bad commit 
-5e6928249b81b4d8727ab6a4037a171d15455cb0 but
-I am currently unable to trigger the problem again. However, 11 kernels
-before I was able to trigger the problem in that revision. And I believe 
-it is very unlikely that all 10 revisions between the previous failure 
-are really good. So likely a problem with my testing...
-
-Last upstream kernel I tried where I hit this was 5.14.13.
-
-
--- 
-Regards,
-Thomas Deutschmann / Gentoo Linux Developer
-fpr: C4DD 695F A713 8F24 2AA1 5638 5849 7EE5 1D5D 74A5
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
