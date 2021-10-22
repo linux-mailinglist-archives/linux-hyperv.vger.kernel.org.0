@@ -2,102 +2,122 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5817E436786
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Oct 2021 18:22:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8C004377DE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Oct 2021 15:28:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230441AbhJUQYr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 21 Oct 2021 12:24:47 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45878 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230072AbhJUQYq (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 21 Oct 2021 12:24:46 -0400
-Received: from zn.tnic (p200300ec2f191200ee5ad10a1c627015.dip0.t-ipconnect.de [IPv6:2003:ec:2f19:1200:ee5a:d10a:1c62:7015])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S231537AbhJVNau (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 22 Oct 2021 09:30:50 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:55254 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230342AbhJVNat (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 22 Oct 2021 09:30:49 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 229661EC011B;
-        Thu, 21 Oct 2021 18:22:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1634833349;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=s9B7TcJbpJamc03KXDCXQuXf1+/ogvmvN6UH47r0t44=;
-        b=ViCKbfkrxBNFBw9sV4dQEIRuYioGwgmaVA8GvvP+1GAYxiIAzKzmb9Rie6jAt9cV5OrGsU
-        HtSbyZJdONQ2tN3ELB2DRGPD/mr3vaOmS5XQoSlGJkpzXo49ujTlMTwkbgprJPAkI1yxSN
-        2b1jb3B/MwUtUKcSij1cujLYU/sAmlE=
-Date:   Thu, 21 Oct 2021 18:22:26 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        davem@davemloft.net, kuba@kernel.org, gregkh@linuxfoundation.org,
-        arnd@arndb.de, brijesh.singh@amd.com, jroedel@suse.de,
-        Tianyu.Lan@microsoft.com, thomas.lendacky@amd.com,
-        rientjes@google.com, pgonda@google.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, rppt@kernel.org,
-        saravanand@fb.com, aneesh.kumar@linux.ibm.com, hannes@cmpxchg.org,
-        tj@kernel.org, michael.h.kelley@microsoft.com,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        vkuznets@redhat.com, konrad.wilk@oracle.com, hch@lst.de,
-        robin.murphy@arm.com, joro@8bytes.org, parri.andrea@gmail.com,
-        dave.hansen@intel.com
-Subject: Re: [PATCH V8 5/9] x86/sev-es: Expose sev_es_ghcb_hv_call() to call
- ghcb hv call out of sev code
-Message-ID: <YXGTwppQ8syUyJ72@zn.tnic>
-References: <20211021154110.3734294-1-ltykernel@gmail.com>
- <20211021154110.3734294-6-ltykernel@gmail.com>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id E639B212C2;
+        Fri, 22 Oct 2021 13:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1634909310; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=8PF+NmcBhYV+PDWBiDl9gHTMkST01e3jTJPJz8m7QFU=;
+        b=OJLC+/bGT5ZFnKA8A4XtcxruHktUxXzm90cdtR1k3LcWI5EG/pLWD/a1zyY9IFkE1PfgCm
+        KVdDVamYQEnBv5QvQ6GctbV1zJusw6I6TqxiVZ4qvkyAk8FQCgg+ctvOwSXhGNL9keMzWf
+        K3fC686CfXHRWVW+y/SqOnvwWHvy75A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1634909310;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=8PF+NmcBhYV+PDWBiDl9gHTMkST01e3jTJPJz8m7QFU=;
+        b=md0VLayZrw4DfHfc0aBZk5FdWDVsSFBdmUqihqqM8Ps808umtpsC6UgVHfisqCmJ19szmr
+        Xw9bnWZcGxa39DDw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 78E4913CDA;
+        Fri, 22 Oct 2021 13:28:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id dtKHHH68cmEwXgAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Fri, 22 Oct 2021 13:28:30 +0000
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+To:     daniel@ffwll.ch, airlied@linux.ie, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com, noralf@tronnes.org,
+        drawat.floss@gmail.com, airlied@redhat.com, kraxel@redhat.com,
+        david@lechnology.com, sam@ravnborg.org, javierm@redhat.com,
+        kernel@amanoeldawod.com, dirty.ice.hu@gmail.com,
+        michael+lkml@stapelberg.ch, aros@gmx.com,
+        joshua@stroblindustries.com, arnd@arndb.de
+Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 0/9] drm/simpledrm: Enable damage clips and virtual screens
+Date:   Fri, 22 Oct 2021 15:28:20 +0200
+Message-Id: <20211022132829.7697-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211021154110.3734294-6-ltykernel@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 11:41:05AM -0400, Tianyu Lan wrote:
-> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-> index ea9abd69237e..368ed36971e3 100644
-> --- a/arch/x86/kernel/sev-shared.c
-> +++ b/arch/x86/kernel/sev-shared.c
-> @@ -124,10 +124,9 @@ static enum es_result verify_exception_info(struct ghcb *ghcb, struct es_em_ctxt
->  	return ES_VMM_ERROR;
->  }
->  
-> -static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
-> -					  struct es_em_ctxt *ctxt,
-> -					  u64 exit_code, u64 exit_info_1,
-> -					  u64 exit_info_2)
-> +enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb, bool set_ghcb_msr,
-> +				   struct es_em_ctxt *ctxt, u64 exit_code,
-> +				   u64 exit_info_1, u64 exit_info_2)
->  {
->  	/* Fill in protocol and format specifiers */
->  	ghcb->protocol_version = GHCB_PROTOCOL_MAX;
-> @@ -137,7 +136,15 @@ static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
->  	ghcb_set_sw_exit_info_1(ghcb, exit_info_1);
->  	ghcb_set_sw_exit_info_2(ghcb, exit_info_2);
->  
-> -	sev_es_wr_ghcb_msr(__pa(ghcb));
-> +	/*
-> +	 * Hyper-V unenlightened guests use a paravisor for communicating and
-> +	 * GHCB pages are being allocated and set up by that paravisor. Linux
-> +	 * should not change ghcb page pa in such case and so add set_ghcb_msr
+Enable FB_DAMAGE_CLIPS with simpledrm for improved performance and/or
+less overhead. With this in place, add support for virtual screens
+(i.e., framebuffers that are larger than the display resolution). This
+also enables fbdev panning and page flipping.
 
-"... not change the GHCB page's physical address."
+After the discussion and bug fixing wrt to fbdev overallocation, I
+decided to add full support for this to simpledrm. Patches #1 to #5
+change the format-helper functions accordingly. Destination buffers
+are now clipped by the caller and all functions support a similar
+feature set. This has some fallout in various drivers.
 
-Remove the "so add... " rest.
+Patch #6 change fbdev emulation to support overallocation with
+shadow buffers, even if the hardware buffer would be too small.
 
-Otherwise, LGTM.
+Patch #7 and #8 update simpledrm to enable damage clipping and virtual
+screen sizes. Both feature go hand in hand, sort of. For shadow-
+buffered planes, the DRM framebuffer lives in system memory. So the
+maximum size of the virtual screen is somewhat arbitrary. We add two
+constants for resonable maximum width and height of 4096 each.
 
-Do you want me to take it through the tip tree?
+Patch #9 adds documentation and a TODO item.
 
-Thx.
+Tested with simpledrm. I also ran the recently posted fbdev panning
+tests to make sure that the fbdev overallocation works correctly. [1]
 
--- 
-Regards/Gruss,
-    Boris.
+[1] https://lists.freedesktop.org/archives/igt-dev/2021-October/036642.html
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Thomas Zimmermann (9):
+  drm/format-helper: Export drm_fb_clip_offset()
+  drm/format-helper: Rework format-helper memcpy functions
+  drm/format-helper: Add destination-buffer pitch to drm_fb_swab()
+  drm/format-helper: Rework format-helper conversion functions
+  drm/format-helper: Streamline blit-helper interface
+  drm/fb-helper: Allocate shadow buffer of surface height
+  drm/simpledrm: Enable FB_DAMAGE_CLIPS property
+  drm/simpledrm: Support virtual screen sizes
+  drm: Clarify semantics of struct
+    drm_mode_config.{min,max}_{width,height}
+
+ Documentation/gpu/todo.rst                  |  15 ++
+ drivers/gpu/drm/drm_fb_helper.c             |   2 +-
+ drivers/gpu/drm/drm_format_helper.c         | 236 ++++++++++----------
+ drivers/gpu/drm/drm_mipi_dbi.c              |   6 +-
+ drivers/gpu/drm/gud/gud_pipe.c              |  14 +-
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c |   5 +-
+ drivers/gpu/drm/mgag200/mgag200_mode.c      |   4 +-
+ drivers/gpu/drm/tiny/cirrus.c               |  24 +-
+ drivers/gpu/drm/tiny/repaper.c              |   2 +-
+ drivers/gpu/drm/tiny/simpledrm.c            |  41 +++-
+ drivers/gpu/drm/tiny/st7586.c               |   2 +-
+ include/drm/drm_format_helper.h             |  58 ++---
+ include/drm/drm_gem_atomic_helper.h         |  18 ++
+ include/drm/drm_mode_config.h               |  13 ++
+ 14 files changed, 254 insertions(+), 186 deletions(-)
+
+--
+2.33.0
+
