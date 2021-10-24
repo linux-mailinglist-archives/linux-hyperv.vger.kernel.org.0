@@ -2,152 +2,564 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A801D43889E
-	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Oct 2021 13:32:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7356D4388D1
+	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Oct 2021 14:17:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230227AbhJXLeh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 24 Oct 2021 07:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbhJXLeg (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 24 Oct 2021 07:34:36 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BEFDC061764
-        for <linux-hyperv@vger.kernel.org>; Sun, 24 Oct 2021 04:32:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds202012; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4UjwHqhlZinB2vUUN1dbRV9mgrL0gkzMPLMVhpVUDqI=; b=OyDlWLdV8slnS+VFpMcCWmTn+k
-        iHAjSeNYvIc1ugrRhWGds1Bu/vn0DNurwMr0j6anwvr/XkkooSz7lQl7pIAdhRv150fSfKowt1B2P
-        OzZOwZ1FCQJBCR6TTiZLZvVCRbRVj7IX9oBbXZ55/AqoC6M+XOYsFYTnm+iInUSqa+LYxUntCEd24
-        bWpw/itsxfzp1MkOqZUwQXDWZMLyNKuuRjwnpBsXC++cCYfLKHITOoQpD31na7p0gjG5W/H22CgS0
-        k8pGHlfwNM6ppqn2hwNXDpKPBMZsWsaaioATZHqW0/WIXv2gJvkiD9DEbLXPtmcCSOe1Di5NyeDMT
-        +d0BT+Xw==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:52392 helo=[192.168.10.61])
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1mebjY-0007RS-4M; Sun, 24 Oct 2021 13:32:12 +0200
-Subject: Re: [PATCH 4/9] drm/format-helper: Rework format-helper conversion
- functions
-To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
-        airlied@linux.ie, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, drawat.floss@gmail.com,
-        airlied@redhat.com, kraxel@redhat.com, david@lechnology.com,
-        sam@ravnborg.org, javierm@redhat.com, kernel@amanoeldawod.com,
-        dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
-        joshua@stroblindustries.com, arnd@arndb.de
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20211022132829.7697-1-tzimmermann@suse.de>
- <20211022132829.7697-5-tzimmermann@suse.de>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <34b8daf3-b6b4-02fb-9e10-ef11c0848572@tronnes.org>
-Date:   Sun, 24 Oct 2021 13:32:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <20211022132829.7697-5-tzimmermann@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+        id S231453AbhJXMTV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 24 Oct 2021 08:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229867AbhJXMTV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Sun, 24 Oct 2021 08:19:21 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D81A60174;
+        Sun, 24 Oct 2021 12:17:00 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mecQs-001Bn6-7B; Sun, 24 Oct 2021 13:16:58 +0100
+Date:   Sun, 24 Oct 2021 13:16:57 +0100
+Message-ID: <87mtmyty6e.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: Re: [PATCH v3 1/2] PCI: hv: Make the code arch neutral by adding arch specific interfaces
+In-Reply-To: <1634226794-9540-2-git-send-email-sunilmut@linux.microsoft.com>
+References: <1634226794-9540-1-git-send-email-sunilmut@linux.microsoft.com>
+        <1634226794-9540-2-git-send-email-sunilmut@linux.microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sunilmut@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, x86@kernel.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-Den 22.10.2021 15.28, skrev Thomas Zimmermann:
-> Move destination-buffer clipping from all format-helper conversion
-> functions into callers. Support destination-buffer pitch. Only
-> distinguish between system and I/O memory, but use same logic
-> everywhere.
+On Thu, 14 Oct 2021 16:53:13 +0100,
+Sunil Muthuswamy <sunilmut@linux.microsoft.com> wrote:
 > 
-> Simply harmonize the interface and semantics of the existing code.
-> Not all conversion helpers support all combinations of parameters.
-> We have to add additional features when we need them.
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
 > 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Encapsulate arch dependencies in Hyper-V vPCI through a set of interfaces,
+> listed below. Adding these arch specific interfaces will allow for an
+> implementation for other arch, such as ARM64.
+> 
+> Implement the interfaces for X64, which is essentially just moving over the
+> current implementation.
+
+Nit: use architecture names and capitalisation that match their use in
+the kernel (arm64, x86) instead of the MS-specific lingo.
+
+> 
+> List of added interfaces:
+>  - hv_pci_irqchip_init()
+>  - hv_pci_irqchip_free()
+>  - hv_msi_get_int_vector()
+>  - hv_set_msi_entry_from_desc()
+>  - hv_msi_prepare()
+> 
+> There are no functional changes expected from this patch.
+> 
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
 > ---
+> In v2 & v3:
+>  Changes are described in the cover letter.
+> 
+>  MAINTAINERS                                 |  2 +
+>  arch/x86/include/asm/hyperv-tlfs.h          | 33 ++++++++++++
+>  arch/x86/include/asm/mshyperv.h             |  7 ---
+>  drivers/pci/controller/Makefile             |  2 +-
+>  drivers/pci/controller/pci-hyperv-irqchip.c | 57 +++++++++++++++++++++
+>  drivers/pci/controller/pci-hyperv-irqchip.h | 20 ++++++++
+>  drivers/pci/controller/pci-hyperv.c         | 52 ++++++++++++-------
+>  include/asm-generic/hyperv-tlfs.h           | 33 ------------
+>  8 files changed, 146 insertions(+), 60 deletions(-)
+>  create mode 100644 drivers/pci/controller/pci-hyperv-irqchip.c
+>  create mode 100644 drivers/pci/controller/pci-hyperv-irqchip.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ca6d6fde85cf..ba8c979c17b2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8688,6 +8688,8 @@ F:	drivers/iommu/hyperv-iommu.c
+>  F:	drivers/net/ethernet/microsoft/
+>  F:	drivers/net/hyperv/
+>  F:	drivers/pci/controller/pci-hyperv-intf.c
+> +F:	drivers/pci/controller/pci-hyperv-irqchip.c
+> +F:	drivers/pci/controller/pci-hyperv-irqchip.h
+>  F:	drivers/pci/controller/pci-hyperv.c
+>  F:	drivers/scsi/storvsc_drv.c
+>  F:	drivers/uio/uio_hv_generic.c
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 2322d6bd5883..fdf3d28fbdd5 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -585,6 +585,39 @@ enum hv_interrupt_type {
+>  	HV_X64_INTERRUPT_TYPE_MAXIMUM           = 0x000A,
+>  };
+>  
+> +union hv_msi_address_register {
+> +	u32 as_uint32;
+> +	struct {
+> +		u32 reserved1:2;
+> +		u32 destination_mode:1;
+> +		u32 redirection_hint:1;
+> +		u32 reserved2:8;
+> +		u32 destination_id:8;
+> +		u32 msi_base:12;
+> +	};
+> +} __packed;
+> +
+> +union hv_msi_data_register {
+> +	u32 as_uint32;
+> +	struct {
+> +		u32 vector:8;
+> +		u32 delivery_mode:3;
+> +		u32 reserved1:3;
+> +		u32 level_assert:1;
+> +		u32 trigger_mode:1;
+> +		u32 reserved2:16;
+> +	};
+> +} __packed;
+> +
+> +/* HvRetargetDeviceInterrupt hypercall */
+> +union hv_msi_entry {
+> +	u64 as_uint64;
+> +	struct {
+> +		union hv_msi_address_register address;
+> +		union hv_msi_data_register data;
+> +	} __packed;
+> +};
+> +
+>  #include <asm-generic/hyperv-tlfs.h>
+>  
+>  #endif
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index adccbc209169..c2b9ab94408e 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -176,13 +176,6 @@ bool hv_vcpu_is_preempted(int vcpu);
+>  static inline void hv_apic_init(void) {}
+>  #endif
+>  
+> -static inline void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> -					      struct msi_desc *msi_desc)
+> -{
+> -	msi_entry->address.as_uint32 = msi_desc->msg.address_lo;
+> -	msi_entry->data.as_uint32 = msi_desc->msg.data;
+> -}
+> -
+>  struct irq_domain *hv_create_pci_msi_domain(void);
+>  
+>  int hv_map_ioapic_interrupt(int ioapic_id, bool level, int vcpu, int vector,
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index aaf30b3dcc14..2c301d0fc23b 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -2,7 +2,7 @@
+>  obj-$(CONFIG_PCIE_CADENCE) += cadence/
+>  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
+>  obj-$(CONFIG_PCI_IXP4XX) += pci-ixp4xx.o
+> -obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+> +obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o pci-hyperv-irqchip.o
+>  obj-$(CONFIG_PCI_HYPERV_INTERFACE) += pci-hyperv-intf.o
+>  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+>  obj-$(CONFIG_PCI_AARDVARK) += pci-aardvark.o
+> diff --git a/drivers/pci/controller/pci-hyperv-irqchip.c b/drivers/pci/controller/pci-hyperv-irqchip.c
+> new file mode 100644
+> index 000000000000..36fa862f8bc5
+> --- /dev/null
+> +++ b/drivers/pci/controller/pci-hyperv-irqchip.c
+> @@ -0,0 +1,57 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Hyper-V vPCI irqchip.
+> + *
+> + * Copyright (C) 2021, Microsoft, Inc.
+> + *
+> + * Author : Sunil Muthuswamy <sunilmut@microsoft.com>
+> + */
+> +
+> +#include <asm/mshyperv.h>
+> +#include <linux/acpi.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irq.h>
+> +#include <linux/msi.h>
+> +
+> +#ifdef CONFIG_X86_64
+> +int hv_pci_irqchip_init(struct irq_domain **parent_domain,
+> +			bool *fasteoi_handler,
+> +			u8 *delivery_mode)
+> +{
+> +	*parent_domain = x86_vector_domain;
+> +	*fasteoi_handler = false;
+> +	*delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(hv_pci_irqchip_init);
 
->  /**
->   * drm_fb_xrgb8888_to_gray8 - Convert XRGB8888 to grayscale
->   * @dst: 8-bit grayscale destination buffer
-> + * @dst_pitch: Number of bytes between two consecutive scanlines within dst
->   * @vaddr: XRGB8888 source buffer
->   * @fb: DRM framebuffer
->   * @clip: Clip rectangle area to copy
-> @@ -415,16 +417,21 @@ EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb888_dstclip);
->   *
->   * ITU BT.601 is used for the RGB -> luma (brightness) conversion.
->   */
-> -void drm_fb_xrgb8888_to_gray8(u8 *dst, void *vaddr, struct drm_framebuffer *fb,
-> -			       struct drm_rect *clip)
-> +void drm_fb_xrgb8888_to_gray8(void *dst, unsigned int dst_pitch, const void *vaddr,
-> +			      const struct drm_framebuffer *fb, const struct drm_rect *clip)
+Why do you need to export any of these symbols? Even if the two
+objects are compiled separately, there is absolutely no need to make
+them two separate modules.
+
+Also, returning 3 values like this makes little sense. Pass a pointer
+to the structure that requires them and populate it as required. Or
+simply #define those that are constants.
+
+> +
+> +void hv_pci_irqchip_free(void) {}
+> +EXPORT_SYMBOL(hv_pci_irqchip_free);
+> +
+> +unsigned int hv_msi_get_int_vector(struct irq_data *data)
+> +{
+> +	struct irq_cfg *cfg = irqd_cfg(data);
+> +
+> +	return cfg->vector;
+> +}
+> +EXPORT_SYMBOL(hv_msi_get_int_vector);
+> +
+> +void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> +				struct msi_desc *msi_desc)
+> +{
+> +	msi_entry->address.as_uint32 = msi_desc->msg.address_lo;
+> +	msi_entry->data.as_uint32 = msi_desc->msg.data;
+> +}
+> +EXPORT_SYMBOL(hv_set_msi_entry_from_desc);
+> +
+> +int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +		   int nvec, msi_alloc_info_t *info)
+> +{
+> +	return pci_msi_prepare(domain, dev, nvec, info);
+> +}
+> +EXPORT_SYMBOL(hv_msi_prepare);
+
+This looks like a very unnecessary level of indirection, given that
+you end-up with an empty callback in the arm64 code. The following
+works just as well and avoids useless callbacks:
+
+#ifdef CONFIG_ARM64
+#define pci_msi_prepare	NULL
+#endif
+
+I also wish that pci_msi_prepare was called x86_pci_msi_prepare, but
+that's another debate...
+
+> +
+> +#endif
+> +
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/pci/controller/pci-hyperv-irqchip.h b/drivers/pci/controller/pci-hyperv-irqchip.h
+> new file mode 100644
+> index 000000000000..00549809e6c4
+> --- /dev/null
+> +++ b/drivers/pci/controller/pci-hyperv-irqchip.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Architecture specific vector management for the Hyper-V vPCI.
+> + *
+> + * Copyright (C) 2021, Microsoft, Inc.
+> + *
+> + * Author : Sunil Muthuswamy <sunilmut@microsoft.com>
+> + */
+> +
+> +int hv_pci_irqchip_init(struct irq_domain **parent_domain,
+> +			bool *fasteoi_handler,
+> +			u8 *delivery_mode);
+> +
+> +void hv_pci_irqchip_free(void);
+> +unsigned int hv_msi_get_int_vector(struct irq_data *data);
+> +void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> +				struct msi_desc *msi_desc);
+> +
+> +int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +		   int nvec, msi_alloc_info_t *info);
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index eaec915ffe62..2d3916206986 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -43,14 +43,12 @@
+>  #include <linux/pci-ecam.h>
+>  #include <linux/delay.h>
+>  #include <linux/semaphore.h>
+> -#include <linux/irqdomain.h>
+> -#include <asm/irqdomain.h>
+> -#include <asm/apic.h>
+>  #include <linux/irq.h>
+>  #include <linux/msi.h>
+>  #include <linux/hyperv.h>
+>  #include <linux/refcount.h>
+>  #include <asm/mshyperv.h>
+> +#include "pci-hyperv-irqchip.h"
+>  
+>  /*
+>   * Protocol versions. The low word is the minor version, the high word the
+> @@ -81,6 +79,10 @@ static enum pci_protocol_version_t pci_protocol_versions[] = {
+>  	PCI_PROTOCOL_VERSION_1_1,
+>  };
+>  
+> +static struct irq_domain *parent_domain;
+> +static bool fasteoi;
+> +static u8 delivery_mode;
+
+See my earlier comment about how clumsy this is.
+
+> +
+>  #define PCI_CONFIG_MMIO_LENGTH	0x2000
+>  #define CFG_PAGE_OFFSET 0x1000
+>  #define CFG_PAGE_SIZE (PCI_CONFIG_MMIO_LENGTH - CFG_PAGE_OFFSET)
+> @@ -1217,7 +1219,6 @@ static void hv_irq_mask(struct irq_data *data)
+>  static void hv_irq_unmask(struct irq_data *data)
 >  {
->  	unsigned int len = (clip->x2 - clip->x1) * sizeof(u32);
->  	unsigned int x, y;
->  	void *buf;
-> -	u32 *src;
-> +	u8 *dst8;
-> +	u32 *src32;
+>  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+> -	struct irq_cfg *cfg = irqd_cfg(data);
+>  	struct hv_retarget_device_interrupt *params;
+>  	struct hv_pcibus_device *hbus;
+>  	struct cpumask *dest;
+> @@ -1246,11 +1247,12 @@ static void hv_irq_unmask(struct irq_data *data)
+>  			   (hbus->hdev->dev_instance.b[7] << 8) |
+>  			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
+>  			   PCI_FUNC(pdev->devfn);
+> -	params->int_target.vector = cfg->vector;
+> +	params->int_target.vector = hv_msi_get_int_vector(data);
 >  
->  	if (WARN_ON(fb->format->format != DRM_FORMAT_XRGB8888))
->  		return;
-> +
-> +	if (!dst_pitch)
-
-len is source length (should really have been named src_len) which
-results in a kernel crash:
-
-> +		dst_pitch = len;
-
-This works:
-
-		dst_pitch = drm_rect_width(clip);
-
-With that fixed:
-
-Tested-by: Noralf Trønnes <noralf@tronnes.org>
-Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
-
-> +
 >  	/*
->  	 * The cma memory is write-combined so reads are uncached.
->  	 * Speed up by fetching one line at a time.
-> @@ -433,20 +440,22 @@ void drm_fb_xrgb8888_to_gray8(u8 *dst, void *vaddr, struct drm_framebuffer *fb,
->  	if (!buf)
->  		return;
+> -	 * Honoring apic->delivery_mode set to APIC_DELIVERY_MODE_FIXED by
+> -	 * setting the HV_DEVICE_INTERRUPT_TARGET_MULTICAST flag results in a
+> +	 * For x64, honoring apic->delivery_mode set to
+> +	 * APIC_DELIVERY_MODE_FIXED by setting the
+> +	 * HV_DEVICE_INTERRUPT_TARGET_MULTICAST flag results in a
+>  	 * spurious interrupt storm. Not doing so does not seem to have a
+>  	 * negative effect (yet?).
+
+And what does it mean on other architectures?
+
+>  	 */
+> @@ -1347,7 +1349,7 @@ static u32 hv_compose_msi_req_v1(
+>  	int_pkt->wslot.slot = slot;
+>  	int_pkt->int_desc.vector = vector;
+>  	int_pkt->int_desc.vector_count = 1;
+> -	int_pkt->int_desc.delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +	int_pkt->int_desc.delivery_mode = delivery_mode;
 >  
-> +	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
->  	for (y = clip->y1; y < clip->y2; y++) {
-> -		src = vaddr + (y * fb->pitches[0]);
-> -		src += clip->x1;
-> -		memcpy(buf, src, len);
-> -		src = buf;
-> +		dst8 = dst;
-> +		src32 = memcpy(buf, vaddr, len);
->  		for (x = clip->x1; x < clip->x2; x++) {
-> -			u8 r = (*src & 0x00ff0000) >> 16;
-> -			u8 g = (*src & 0x0000ff00) >> 8;
-> -			u8 b =  *src & 0x000000ff;
-> +			u8 r = (*src32 & 0x00ff0000) >> 16;
-> +			u8 g = (*src32 & 0x0000ff00) >> 8;
-> +			u8 b =  *src32 & 0x000000ff;
+>  	/*
+>  	 * Create MSI w/ dummy vCPU set, overwritten by subsequent retarget in
+> @@ -1377,7 +1379,7 @@ static u32 hv_compose_msi_req_v2(
+>  	int_pkt->wslot.slot = slot;
+>  	int_pkt->int_desc.vector = vector;
+>  	int_pkt->int_desc.vector_count = 1;
+> -	int_pkt->int_desc.delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +	int_pkt->int_desc.delivery_mode = delivery_mode;
+>  	cpu = hv_compose_msi_req_get_cpu(affinity);
+>  	int_pkt->int_desc.processor_array[0] =
+>  		hv_cpu_number_to_vp_number(cpu);
+> @@ -1397,7 +1399,7 @@ static u32 hv_compose_msi_req_v3(
+>  	int_pkt->int_desc.vector = vector;
+>  	int_pkt->int_desc.reserved = 0;
+>  	int_pkt->int_desc.vector_count = 1;
+> -	int_pkt->int_desc.delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +	int_pkt->int_desc.delivery_mode = delivery_mode;
+>  	cpu = hv_compose_msi_req_get_cpu(affinity);
+>  	int_pkt->int_desc.processor_array[0] =
+>  		hv_cpu_number_to_vp_number(cpu);
+> @@ -1419,7 +1421,6 @@ static u32 hv_compose_msi_req_v3(
+>   */
+>  static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+> -	struct irq_cfg *cfg = irqd_cfg(data);
+>  	struct hv_pcibus_device *hbus;
+>  	struct vmbus_channel *channel;
+>  	struct hv_pci_dev *hpdev;
+> @@ -1470,7 +1471,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
+>  					dest,
+>  					hpdev->desc.win_slot.slot,
+> -					cfg->vector);
+> +					hv_msi_get_int_vector(data));
+>  		break;
 >  
->  			/* ITU BT.601: Y = 0.299 R + 0.587 G + 0.114 B */
-> -			*dst++ = (3 * r + 6 * g + b) / 10;
-> -			src++;
-> +			*dst8++ = (3 * r + 6 * g + b) / 10;
-> +			src32++;
->  		}
+>  	case PCI_PROTOCOL_VERSION_1_2:
+> @@ -1478,14 +1479,14 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
+>  					dest,
+>  					hpdev->desc.win_slot.slot,
+> -					cfg->vector);
+> +					hv_msi_get_int_vector(data));
+>  		break;
+>  
+>  	case PCI_PROTOCOL_VERSION_1_4:
+>  		size = hv_compose_msi_req_v3(&ctxt.int_pkts.v3,
+>  					dest,
+>  					hpdev->desc.win_slot.slot,
+> -					cfg->vector);
+> +					hv_msi_get_int_vector(data));
+>  		break;
+>  
+>  	default:
+> @@ -1601,7 +1602,7 @@ static struct irq_chip hv_msi_irq_chip = {
+>  };
+>  
+>  static struct msi_domain_ops hv_msi_ops = {
+> -	.msi_prepare	= pci_msi_prepare,
+> +	.msi_prepare	= hv_msi_prepare,
+>  	.msi_free	= hv_msi_free,
+>  };
+>  
+> @@ -1625,12 +1626,13 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+>  	hbus->msi_info.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>  		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
+>  		MSI_FLAG_PCI_MSIX);
+> -	hbus->msi_info.handler = handle_edge_irq;
+> -	hbus->msi_info.handler_name = "edge";
+> +	hbus->msi_info.handler =
+> +		fasteoi ? handle_fasteoi_irq : handle_edge_irq;
+> +	hbus->msi_info.handler_name = fasteoi ? "fasteoi" : "edge";
+
+The fact that you somehow need to know what the GIC is using as a flow
+handler is a sure sign that you are doing something wrong. In a
+hierarchical setup, only the root of the hierarchy should ever know
+about that. Having anything there is actively wrong.
+
+>  	hbus->msi_info.data = hbus;
+>  	hbus->irq_domain = pci_msi_create_irq_domain(hbus->fwnode,
+>  						     &hbus->msi_info,
+> -						     x86_vector_domain);
+> +						     parent_domain);
+>  	if (!hbus->irq_domain) {
+>  		dev_err(&hbus->hdev->device,
+>  			"Failed to build an MSI IRQ domain\n");
+> @@ -3531,13 +3533,21 @@ static void __exit exit_hv_pci_drv(void)
+>  	hvpci_block_ops.read_block = NULL;
+>  	hvpci_block_ops.write_block = NULL;
+>  	hvpci_block_ops.reg_blk_invalidate = NULL;
 > +
-> +		vaddr += fb->pitches[0];
-> +		dst += dst_pitch;
->  	}
+> +	hv_pci_irqchip_free();
+>  }
 >  
->  	kfree(buf);
+>  static int __init init_hv_pci_drv(void)
+>  {
+> +	int ret;
+> +
+>  	if (!hv_is_hyperv_initialized())
+>  		return -ENODEV;
+>  
+> +	ret = hv_pci_irqchip_init(&parent_domain, &fasteoi, &delivery_mode);
+> +	if (ret)
+> +		return ret;
+
+Having established that the fasteoi thing is nothing but a bug, that
+the delivery_mode is a constant, and that all that matters is actually
+the parent domain which is a global pointer on x86, and something that
+gets allocated on arm64, you can greatly simplify the whole thing:
+
+#ifdef CONFIG_X86
+#define DELIVERY_MODE	APIC_DELIVERY_MODE_FIXED
+#define FLOW_HANDLER	handle_edge_irq
+#define FLOW_NAME	"edge"
+
+static struct irq_domain *hv_pci_get_root_domain(void)
+{
+	return x86_vector_domain;
+}
+#endif
+
+#ifdef CONFIG_ARM64
+#define DELIVERY_MODE	0
+#define FLOW_HANDLER	NULL
+#define FLOW_NAME	NULL
+#define pci_msi_prepare	NULL
+
+static struct irq_domain *hv_pci_get_root_domain(void)
+{
+	[...]
+}
+#endif
+
+as once you look at it seriously, the whole "separate file for the IRQ
+code" is totally unnecessary (as Michael pointed out earlier), because
+the abstractions you are adding are for most of them unnecessary.
+
+> +
+>  	/* Set the invalid domain number's bit, so it will not be used */
+>  	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
+>  
+> @@ -3546,7 +3556,11 @@ static int __init init_hv_pci_drv(void)
+>  	hvpci_block_ops.write_block = hv_write_config_block;
+>  	hvpci_block_ops.reg_blk_invalidate = hv_register_block_invalidate;
+>  
+> -	return vmbus_driver_register(&hv_pci_drv);
+> +	ret = vmbus_driver_register(&hv_pci_drv);
+> +	if (ret)
+> +		hv_pci_irqchip_free();
+> +
+> +	return ret;
+>  }
+>  
+>  module_init(init_hv_pci_drv);
+> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+> index 56348a541c50..45cc0c3b8ed7 100644
+> --- a/include/asm-generic/hyperv-tlfs.h
+> +++ b/include/asm-generic/hyperv-tlfs.h
+> @@ -539,39 +539,6 @@ enum hv_interrupt_source {
+>  	HV_INTERRUPT_SOURCE_IOAPIC,
+>  };
+>  
+> -union hv_msi_address_register {
+> -	u32 as_uint32;
+> -	struct {
+> -		u32 reserved1:2;
+> -		u32 destination_mode:1;
+> -		u32 redirection_hint:1;
+> -		u32 reserved2:8;
+> -		u32 destination_id:8;
+> -		u32 msi_base:12;
+> -	};
+> -} __packed;
+> -
+> -union hv_msi_data_register {
+> -	u32 as_uint32;
+> -	struct {
+> -		u32 vector:8;
+> -		u32 delivery_mode:3;
+> -		u32 reserved1:3;
+> -		u32 level_assert:1;
+> -		u32 trigger_mode:1;
+> -		u32 reserved2:16;
+> -	};
+> -} __packed;
+> -
+> -/* HvRetargetDeviceInterrupt hypercall */
+> -union hv_msi_entry {
+> -	u64 as_uint64;
+> -	struct {
+> -		union hv_msi_address_register address;
+> -		union hv_msi_data_register data;
+> -	} __packed;
+> -};
+> -
+>  union hv_ioapic_rte {
+>  	u64 as_uint64;
+>  
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
