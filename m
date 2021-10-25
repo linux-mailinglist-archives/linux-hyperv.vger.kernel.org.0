@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4B7D439CD0
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Oct 2021 19:04:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58D1B439CDB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Oct 2021 19:04:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234521AbhJYRGu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 25 Oct 2021 13:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        id S234777AbhJYRG6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 25 Oct 2021 13:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234752AbhJYREP (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 25 Oct 2021 13:04:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC965610F8;
-        Mon, 25 Oct 2021 17:01:30 +0000 (UTC)
+        id S234889AbhJYREs (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 25 Oct 2021 13:04:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A071861040;
+        Mon, 25 Oct 2021 17:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635181291;
-        bh=pRLxevLNK+VLccwFTxdV5IN3i4Qvy57n1CoEynGu42o=;
+        s=k20201202; t=1635181299;
+        bh=dRE1Ae5TjGlhI3JBvWk4OgBBdahe2+wjWm5DJyegv1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sDYihPe9Y6tESQ7//sWMvDB8W/IdOhbgq1oJlEjnn3R5J6j4UlZYPcUalvZHaWpD1
-         W1jXjisNuXp/JWfHYlsMj8dl2IY6ayz1uutkVHpUPDBEYL9OP+WudS1BKdrM1AHDk9
-         IpgEareKtpjXq1lzRXvJrG+JRCugI+BAsWOaGN41hypdrIfIWox2/woP3wrvzP6Zks
-         X+4l5ce1aCVHHav6ifgW3O25lUj3yewCSVy0PkOEIYdjA01mLACqj69rEh1SFZM5KO
-         Aju6QBmpXFAL4x4xR+N3jY9pKMPjJ2WuEgz+mS6OOtxWu9sIcxHkPdzq9L9ROlfQtX
-         tfJOZJvY4W1Ww==
+        b=Twn5kqjFeJVwe96C+dFnRrQkgZ3mReXNI1urVWowByxkbqe5Q4uK0BZoygXi8cSze
+         kOHsKARfWaC57Fi6jHvjco2NM6roA8+0kwoiOE0YSgxeL+EjcWfpQHOvIFUIbaDvd0
+         W28WTYzTc82bJ9gERNwSk/sF5bPt4/W7gKTq0HLrMFTuc89SQnfvqNeLg0RoI5sw64
+         hD/MX4BaY7BM03S5LVyTmi7XLHl9cLz8OZF+k4Gg7G4mKtwTQKfgDk7FYnmOgzbclw
+         ON4gs203dlOm+zAXzWbZPI17VcAv1Y5RLw69DLsEv+H4rCay11Hy+6dhfjHlxo3eon
+         QHgdd9N0xjbQQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>, Wei Liu <wei.liu@kernel.org>,
         Sasha Levin <sashal@kernel.org>, kys@microsoft.com,
         haiyangz@microsoft.com, sthemmin@microsoft.com,
         decui@microsoft.com, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 7/7] hyperv/vmbus: include linux/bitops.h
-Date:   Mon, 25 Oct 2021 13:01:20 -0400
-Message-Id: <20211025170120.1394792-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 4/4] hyperv/vmbus: include linux/bitops.h
+Date:   Mon, 25 Oct 2021 13:01:32 -0400
+Message-Id: <20211025170132.1394887-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211025170120.1394792-1-sashal@kernel.org>
-References: <20211025170120.1394792-1-sashal@kernel.org>
+In-Reply-To: <20211025170132.1394887-1-sashal@kernel.org>
+References: <20211025170132.1394887-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index a166de6efd99..0996a246c80b 100644
+index 8d7f865c1133..9d3605df1f48 100644
 --- a/drivers/hv/hyperv_vmbus.h
 +++ b/drivers/hv/hyperv_vmbus.h
 @@ -26,6 +26,7 @@
