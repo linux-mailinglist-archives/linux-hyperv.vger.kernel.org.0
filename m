@@ -2,101 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C99FB43A517
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Oct 2021 22:54:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F51643A526
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Oct 2021 22:56:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234371AbhJYU5K (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 25 Oct 2021 16:57:10 -0400
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:45772 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233842AbhJYU5C (ORCPT
+        id S233842AbhJYU61 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 25 Oct 2021 16:58:27 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:51873 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232690AbhJYU6Z (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 25 Oct 2021 16:57:02 -0400
-Received: by mail-wr1-f46.google.com with SMTP id a16so13883330wrh.12;
-        Mon, 25 Oct 2021 13:54:39 -0700 (PDT)
+        Mon, 25 Oct 2021 16:58:25 -0400
+Received: by mail-wm1-f47.google.com with SMTP id 5so2192525wmb.1;
+        Mon, 25 Oct 2021 13:56:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Fljl4WgLX/RcDUKivgrEUuWkkPxadHqWT4JD6/OvqJY=;
-        b=sFqn0yL7Mayf0ddqrpsW8P+8nWh9qqGkoorufwgMJ/8xxQ6Bnv09iREaIE5S5FWCl4
-         InMDinUBf3eg15K5JjfSJvPnhazovpIlIASorlsdhdg8wwkxsos+waGiC/vG0AAd4TF9
-         Y5sFFdwb5DoiquhPd0BNr5Ks36BTKgWApXpcEge1pWSiCIjLH4bfVfwuHHwC81EyMu08
-         w2BJLszalEKeMtbNWVkRSawMgESPEKPyN/abFJ8XCbU+PTGCpAQM4fXXvHoyWb6R8VCX
-         IOhkzyIh0s+NaJnUoCRWm3h01xh6xMyyLMO1JMhmFf2Mb2v6IcYArXO/3V3gkNw8zxJy
-         f9EA==
-X-Gm-Message-State: AOAM531RJNxTveVtG/utVIG0/XSh/GI6mf8aLyn1mMigx1GVQiois3ME
-        Gex6pybJV5c9jfgvX2FIl2k=
-X-Google-Smtp-Source: ABdhPJwJqAHyUNYlwokS65gx98+Xc0CWlqIMhvB9ZZLYxbfducvvrDped5qEYEt67ILVs8SMgZqnhA==
-X-Received: by 2002:a05:6000:1b90:: with SMTP id r16mr25878748wru.153.1635195278570;
-        Mon, 25 Oct 2021 13:54:38 -0700 (PDT)
+        bh=q+yfKmb+onnS482Y6u9v2lkAP9a5r5WCNti0ot9YfMg=;
+        b=xUQTw3gvr5nrkxlziOUeMn9HfUMvaQL0F4JcaLJAgjzeVs0W0mOa0m7PSt93PQb83q
+         gRiekuo5cNPMtA6qRKzD1WipURbGmCZUKl2LAN5Egzp/k/bf3/wWkx/5s0qDb7sYEZG9
+         ifVYrat4wIIRGHCtTqy84F+tUcTKAl6eCVzyzmEJtirXi69lIo1HprJGxT0uRTqBWkS3
+         rxWj6ncPlD01FoBsXjFVSxWV1r5pxZyyxgwG2tabXdb+H7k9ss1P63Hyt3kmHRz6XtCT
+         NwDiobnFeTqNs1a2vYoLc9hY3gTbRXNBaLNmwhME66ZYPFnecdyXw/O2zbebEbUxWaJ8
+         /9qw==
+X-Gm-Message-State: AOAM530OSOJXyIEJboGJlhBYLnyQnkW4VLRm2bsNqe84GUVtWOvDE25X
+        yzqKuzYEBMdq8g3LHU8F1n4=
+X-Google-Smtp-Source: ABdhPJy41VdkQyppTBh4meZBX/lXaHxLgbKOGQTqOHHeONNOEpR5bufaWYH/gDxFiXuknpfmkXcMPg==
+X-Received: by 2002:a05:600c:3546:: with SMTP id i6mr51776416wmq.146.1635195361619;
+        Mon, 25 Oct 2021 13:56:01 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id m9sm441723wrx.39.2021.10.25.13.54.37
+        by smtp.gmail.com with ESMTPSA id m15sm17916917wmq.0.2021.10.25.13.56.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Oct 2021 13:54:38 -0700 (PDT)
-Date:   Mon, 25 Oct 2021 20:54:36 +0000
+        Mon, 25 Oct 2021 13:56:00 -0700 (PDT)
+Date:   Mon, 25 Oct 2021 20:55:59 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tianyu Lan <ltykernel@gmail.com>, Wei Liu <wei.liu@kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, davem@davemloft.net,
-        kuba@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de,
-        brijesh.singh@amd.com, jroedel@suse.de, Tianyu.Lan@microsoft.com,
-        thomas.lendacky@amd.com, rientjes@google.com, pgonda@google.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        rppt@kernel.org, saravanand@fb.com, aneesh.kumar@linux.ibm.com,
-        hannes@cmpxchg.org, tj@kernel.org, michael.h.kelley@microsoft.com,
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        davem@davemloft.net, kuba@kernel.org, gregkh@linuxfoundation.org,
+        arnd@arndb.de, brijesh.singh@amd.com, jroedel@suse.de,
+        Tianyu.Lan@microsoft.com, thomas.lendacky@amd.com,
+        pgonda@google.com, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, rppt@kernel.org, tj@kernel.org,
+        aneesh.kumar@linux.ibm.com, saravanand@fb.com,
+        sfr@canb.auug.org.au, michael.h.kelley@microsoft.com,
         linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         vkuznets@redhat.com, konrad.wilk@oracle.com, hch@lst.de,
         robin.murphy@arm.com, joro@8bytes.org, parri.andrea@gmail.com,
         dave.hansen@intel.com
-Subject: Re: [PATCH V8 5/9] x86/sev-es: Expose sev_es_ghcb_hv_call() to call
- ghcb hv call out of sev code
-Message-ID: <20211025205436.febcnpnky3xybojz@liuwe-devbox-debian-v2>
-References: <20211021154110.3734294-1-ltykernel@gmail.com>
- <20211021154110.3734294-6-ltykernel@gmail.com>
- <YXGTwppQ8syUyJ72@zn.tnic>
- <00946764-7fe0-675f-7b3e-9fb3b8e3eb89@gmail.com>
- <20211025112033.eqelx54p2dmlhykw@liuwe-devbox-debian-v2>
- <YXaT5HcLoX59jZH2@zn.tnic>
- <f5b6f9e8-5888-bd5f-143f-a7b12ec17bbb@gmail.com>
- <YXbdV8N51hMMsP6X@zn.tnic>
+Subject: Re: [PATCH V9 0/9] x86/Hyper-V: Add Hyper-V Isolation VM
+ support(First part)
+Message-ID: <20211025205559.5wge6ohiktif5hwt@liuwe-devbox-debian-v2>
+References: <20211025122116.264793-1-ltykernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YXbdV8N51hMMsP6X@zn.tnic>
+In-Reply-To: <20211025122116.264793-1-ltykernel@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 06:37:43PM +0200, Borislav Petkov wrote:
-> On Mon, Oct 25, 2021 at 08:27:39PM +0800, Tianyu Lan wrote:
-> >       I just sent out v9 version and compile hv ghcb related functions
-> > when CONFIG_AMD_MEM_ENCRYPT is selected. The sev_es_ghcb_hv_call()
-> > stub is not necessary in the series and remove it. Please have a look
-> > and give your ack if it's ok. Then Wei can merge it through Hyper-V
-> > next branch.
+On Mon, Oct 25, 2021 at 08:21:05AM -0400, Tianyu Lan wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > 
-> I have merged it after running a bunch of randbuild tests and had to fix
-> one or two:
+> Hyper-V provides two kinds of Isolation VMs. VBS(Virtualization-based
+> security) and AMD SEV-SNP unenlightened Isolation VMs. This patchset
+> is to add support for these Isolation VM support in Linux.
 > 
-> https://git.kernel.org/tip/007faec014cb5d26983c1f86fd08c6539b41392e
+> The memory of these vms are encrypted and host can't access guest
+> memory directly. Hyper-V provides new host visibility hvcall and
+> the guest needs to call new hvcall to mark memory visible to host
+> before sharing memory with host. For security, all network/storage
+> stack memory should not be shared with host and so there is bounce
+> buffer requests.
 > 
-> From my POV that branch is not going to change anymore so Wei can now
-> merge this tip branch - tip:x86/sev - and write a proper merge commit
-> message explaining why he's merging a tip branch and then apply the rest
-> of the HyperV stuff ontop.
+> Vmbus channel ring buffer already plays bounce buffer role because
+> all data from/to host needs to copy from/to between the ring buffer
+> and IO stack memory. So mark vmbus channel ring buffer visible.
+> 
+> For SNP isolation VM, guest needs to access the shared memory via
+> extra address space which is specified by Hyper-V CPUID HYPERV_CPUID_
+> ISOLATION_CONFIG. The access physical address of the shared memory
+> should be bounce buffer memory GPA plus with shared_gpa_boundary
+> reported by CPUID.
+> 
+> This patchset is rebased on the commit d9abdee of Linux mainline tree
+> and plus clean up patch from Borislav Petkov(https://lore.kernel.org/r/
+> YWRwxImd9Qcls/Yy@zn.tnic)
+> 
+> 
 
-Thanks Borislav.
+Applied to hyperv-next. Thanks.
 
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+Wei.
