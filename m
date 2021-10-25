@@ -2,155 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8DAA4389C4
-	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Oct 2021 17:20:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D97584394AA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Oct 2021 13:21:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230301AbhJXPXJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 24 Oct 2021 11:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231290AbhJXPXI (ORCPT
+        id S232011AbhJYLYD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 25 Oct 2021 07:24:03 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:35623 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230126AbhJYLW7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 24 Oct 2021 11:23:08 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC955C061745
-        for <linux-hyperv@vger.kernel.org>; Sun, 24 Oct 2021 08:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds202012; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9Z+JCqRsIAZ4rGW6LUUM6/W+OopfRqSRXjgw2egWOJo=; b=wJYe6FTwloWwN01yrvYl1lf3Kl
-        STs5TC9+qdg7ZlrstbwCK8RDMZvjyU8y9XmGh5IaK/u9PrQyi6hdVm6bVC6ooN851XN/5p7+caiIN
-        0JFN1wKyd5xhltDeTBtGkuK5zoC7ciBxPmvR6QzlU/3hXAP3GKBL2AlNU8ocS8ZwWDNn3iKpEmUoB
-        eXnsD5Pjn68AfOBmj3kT9u8GcamFlHU688Hi8njP2W3GB3eIO3ivqG3p+JdzQNXo/iOXxGXmPbMqJ
-        /AeZHNg6hf8Vw6QkobkPwLj2962B51R96/NhENJ8JShgX2w0wAjDnjl1mYVDOfQ4air9/JVfcYEsC
-        49FFYwpw==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:49254 helo=[192.168.10.61])
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1mefIj-00075m-IR; Sun, 24 Oct 2021 17:20:45 +0200
-Subject: Re: [PATCH 7/9] drm/simpledrm: Enable FB_DAMAGE_CLIPS property
-To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
-        airlied@linux.ie, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, drawat.floss@gmail.com,
-        airlied@redhat.com, kraxel@redhat.com, david@lechnology.com,
-        sam@ravnborg.org, javierm@redhat.com, kernel@amanoeldawod.com,
-        dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
-        joshua@stroblindustries.com, arnd@arndb.de
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20211022132829.7697-1-tzimmermann@suse.de>
- <20211022132829.7697-8-tzimmermann@suse.de>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <14b1c21f-25e5-d862-40ea-dda1e076ef63@tronnes.org>
-Date:   Sun, 24 Oct 2021 17:20:42 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Mon, 25 Oct 2021 07:22:59 -0400
+Received: by mail-wm1-f47.google.com with SMTP id 84-20020a1c0457000000b003232b0f78f8so12778652wme.0;
+        Mon, 25 Oct 2021 04:20:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jlGpSAspkabd1CBRf3wOMeuw9ekgHDwWbfgDd4L4Pmo=;
+        b=cJFGCF6wChm1PKA9EqaVvm62HO9Fg3zkPHTg43sLaqZ2FxKDLrSZkQyHZQa6TMX5mF
+         TXmhbB3POOqCdW8w4JBPSuQAelkDTfKqG5H5eQc6XSklPC7u3xYzWRk+/mxs6XexsxAM
+         HsY/T2hexvsjyFRUm4CWg0qelWrLh1XviqekPShWp97iF3yKNNK/OKmMaFlFJiBCbHa2
+         gJcYF3AeAlDCHN700iUlig2Ag+qx4ypW4gD0RmF/kPxlGKgVwCZYBRVGBN9SFwvfw4fv
+         p9o3Z8tHepf9UKm7PEAKD1WA5t01kC62yVkeEEBhw8+qcoLfGXJqI3iGuP88e//swxrG
+         lmsA==
+X-Gm-Message-State: AOAM530ZsWeR4rsSMIf5v7L1ByhFTO99lmhbX3QiDCGwSFwGfuATmVk+
+        hulbWBS8+SAmUEXXajGQ/eI=
+X-Google-Smtp-Source: ABdhPJxOD8l7t1pxirZMFfL27LzJZ/aVBiiSMiOCWM0OpPk22nL9FXAMtDtAGlRR7nqZiUAy7ovAzQ==
+X-Received: by 2002:a05:600c:3b82:: with SMTP id n2mr14465885wms.50.1635160835970;
+        Mon, 25 Oct 2021 04:20:35 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id o40sm10381489wms.10.2021.10.25.04.20.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Oct 2021 04:20:35 -0700 (PDT)
+Date:   Mon, 25 Oct 2021 11:20:33 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, davem@davemloft.net,
+        kuba@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de,
+        brijesh.singh@amd.com, jroedel@suse.de, Tianyu.Lan@microsoft.com,
+        thomas.lendacky@amd.com, rientjes@google.com, pgonda@google.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        rppt@kernel.org, saravanand@fb.com, aneesh.kumar@linux.ibm.com,
+        hannes@cmpxchg.org, tj@kernel.org, michael.h.kelley@microsoft.com,
+        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, konrad.wilk@oracle.com, hch@lst.de,
+        robin.murphy@arm.com, joro@8bytes.org, parri.andrea@gmail.com,
+        dave.hansen@intel.com
+Subject: Re: [PATCH V8 5/9] x86/sev-es: Expose sev_es_ghcb_hv_call() to call
+ ghcb hv call out of sev code
+Message-ID: <20211025112033.eqelx54p2dmlhykw@liuwe-devbox-debian-v2>
+References: <20211021154110.3734294-1-ltykernel@gmail.com>
+ <20211021154110.3734294-6-ltykernel@gmail.com>
+ <YXGTwppQ8syUyJ72@zn.tnic>
+ <00946764-7fe0-675f-7b3e-9fb3b8e3eb89@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20211022132829.7697-8-tzimmermann@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00946764-7fe0-675f-7b3e-9fb3b8e3eb89@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-Den 22.10.2021 15.28, skrev Thomas Zimmermann:
-> Enable the FB_DAMAGE_CLIPS property to reduce display-update
-> overhead. Also fixes a warning in the kernel log.
+On Fri, Oct 22, 2021 at 09:39:48PM +0800, Tianyu Lan wrote:
+> On 10/22/2021 12:22 AM, Borislav Petkov wrote:
+> > On Thu, Oct 21, 2021 at 11:41:05AM -0400, Tianyu Lan wrote:
+> > > diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> > > index ea9abd69237e..368ed36971e3 100644
+> > > --- a/arch/x86/kernel/sev-shared.c
+> > > +++ b/arch/x86/kernel/sev-shared.c
+> > > @@ -124,10 +124,9 @@ static enum es_result verify_exception_info(struct ghcb *ghcb, struct es_em_ctxt
+> > >   	return ES_VMM_ERROR;
+> > >   }
+> > > -static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+> > > -					  struct es_em_ctxt *ctxt,
+> > > -					  u64 exit_code, u64 exit_info_1,
+> > > -					  u64 exit_info_2)
+> > > +enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb, bool set_ghcb_msr,
+> > > +				   struct es_em_ctxt *ctxt, u64 exit_code,
+> > > +				   u64 exit_info_1, u64 exit_info_2)
+> > >   {
+> > >   	/* Fill in protocol and format specifiers */
+> > >   	ghcb->protocol_version = GHCB_PROTOCOL_MAX;
+> > > @@ -137,7 +136,15 @@ static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+> > >   	ghcb_set_sw_exit_info_1(ghcb, exit_info_1);
+> > >   	ghcb_set_sw_exit_info_2(ghcb, exit_info_2);
+> > > -	sev_es_wr_ghcb_msr(__pa(ghcb));
+> > > +	/*
+> > > +	 * Hyper-V unenlightened guests use a paravisor for communicating and
+> > > +	 * GHCB pages are being allocated and set up by that paravisor. Linux
+> > > +	 * should not change ghcb page pa in such case and so add set_ghcb_msr
+> > 
+> > "... not change the GHCB page's physical address."
+> > 
+> > Remove the "so add... " rest.
+> > 
+> > Otherwise, LGTM.
+> > 
+> > Do you want me to take it through the tip tree?
 > 
->   simple-framebuffer simple-framebuffer.0: [drm] drm_plane_enable_fb_damage_clips() not called
-> 
-> Fix the computation of the blit rectangle. This wasn't an issue so
-> far, as simpledrm always blitted the full framebuffer. The code now
-> supports damage clipping and virtual screen sizes.
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
->  drivers/gpu/drm/tiny/simpledrm.c | 30 ++++++++++++++++++++++--------
->  1 file changed, 22 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tiny/simpledrm.c b/drivers/gpu/drm/tiny/simpledrm.c
-> index 571f716ff427..e872121e9fb0 100644
-> --- a/drivers/gpu/drm/tiny/simpledrm.c
-> +++ b/drivers/gpu/drm/tiny/simpledrm.c
-> @@ -642,7 +642,7 @@ simpledrm_simple_display_pipe_enable(struct drm_simple_display_pipe *pipe,
->  	void *vmap = shadow_plane_state->data[0].vaddr; /* TODO: Use mapping abstraction */
->  	struct drm_device *dev = &sdev->dev;
->  	void __iomem *dst = sdev->screen_base;
-> -	struct drm_rect clip;
-> +	struct drm_rect src_clip, dst_clip;
->  	int idx;
->  
->  	if (!fb)
-> @@ -651,10 +651,14 @@ simpledrm_simple_display_pipe_enable(struct drm_simple_display_pipe *pipe,
->  	if (!drm_dev_enter(dev, &idx))
->  		return;
->  
-> -	drm_rect_init(&clip, 0, 0, fb->width, fb->height);
-> +	drm_rect_fp_to_int(&src_clip, &plane_state->src);
->  
-> -	dst += drm_fb_clip_offset(sdev->pitch, sdev->format, &clip);
-> -	drm_fb_blit_toio(dst, sdev->pitch, sdev->format->format, vmap, fb, &clip);
-> +	dst_clip = plane_state->dst;
-> +	if (!drm_rect_intersect(&dst_clip, &src_clip))
-> +		return;
-> +
-> +	dst += drm_fb_clip_offset(sdev->pitch, sdev->format, &dst_clip);
-> +	drm_fb_blit_toio(dst, sdev->pitch, sdev->format->format, vmap, fb, &src_clip);
->  
->  	drm_dev_exit(idx);
->  }
-> @@ -686,20 +690,28 @@ simpledrm_simple_display_pipe_update(struct drm_simple_display_pipe *pipe,
->  	struct drm_framebuffer *fb = plane_state->fb;
->  	struct drm_device *dev = &sdev->dev;
->  	void __iomem *dst = sdev->screen_base;
-> -	struct drm_rect clip;
-> +	struct drm_rect damage_clip, src_clip, dst_clip;
->  	int idx;
->  
->  	if (!fb)
->  		return;
->  
-> -	if (!drm_atomic_helper_damage_merged(old_plane_state, plane_state, &clip))
-> +	if (!drm_atomic_helper_damage_merged(old_plane_state, plane_state, &damage_clip))
-> +		return;
-> +
+> Yes, please and this patch is based on the your clean up patch which is
+> already in the tip sev branch.
 
-I'm afraid I don't understand what's going on here, but isn't it
-possible to put this logic into drm_atomic_helper_damage_merged()?
+Borislav, please take the whole series via the tip tree if possible.
+That's perhaps the easiest thing for both of us because the rest of the
+series depends on this patch. Or else I will have to base hyperv-next on
+the tip tree once you merge this patch.
 
-Noralf.
+Let me know what you think.
 
-> +	drm_rect_fp_to_int(&src_clip, &plane_state->src);
-> +	if (!drm_rect_intersect(&src_clip, &damage_clip))
-> +		return;
-> +
-> +	dst_clip = plane_state->dst;
-> +	if (!drm_rect_intersect(&dst_clip, &src_clip))
->  		return;
->  
->  	if (!drm_dev_enter(dev, &idx))
->  		return;
->  
-> -	dst += drm_fb_clip_offset(sdev->pitch, sdev->format, &clip);
-> -	drm_fb_blit_toio(dst, sdev->pitch, sdev->format->format, vmap, fb, &clip);
-> +	dst += drm_fb_clip_offset(sdev->pitch, sdev->format, &dst_clip);
-> +	drm_fb_blit_toio(dst, sdev->pitch, sdev->format->format, vmap, fb, &src_clip);
->  
->  	drm_dev_exit(idx);
->  }
-> @@ -794,6 +806,8 @@ static int simpledrm_device_init_modeset(struct simpledrm_device *sdev)
->  	if (ret)
->  		return ret;
->  
-> +	drm_plane_enable_fb_damage_clips(&pipe->plane);
-> +
->  	drm_mode_config_reset(dev);
->  
->  	return 0;
-> 
+Thanks,
+Wei.
