@@ -2,39 +2,39 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14707439D16
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Oct 2021 19:08:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4B7D439CD0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Oct 2021 19:04:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234596AbhJYRLL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 25 Oct 2021 13:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
+        id S234521AbhJYRGu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 25 Oct 2021 13:06:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234659AbhJYRD5 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 25 Oct 2021 13:03:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 105CA61039;
-        Mon, 25 Oct 2021 17:01:18 +0000 (UTC)
+        id S234752AbhJYREP (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 25 Oct 2021 13:04:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CC965610F8;
+        Mon, 25 Oct 2021 17:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635181279;
-        bh=grpr2WWhS9qo0WyghtIQhX8ibOuVGV15fdhKO+vgyc4=;
+        s=k20201202; t=1635181291;
+        bh=pRLxevLNK+VLccwFTxdV5IN3i4Qvy57n1CoEynGu42o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l9cHKknLDUcROliw4zSj8FHLgXS1e9dmzsJ/2rdjyWkyJ2WXiIAYfG6Xtnak2RndG
-         dx/mV30+J3GpekxOk0bXwMxX5UqXX7b0HAlR7i6f5y/Ec7RTrXWJoB8HxDzPB9NXu+
-         geImUn77zvTV4XsYL3dknmKe2ww+YMgUJDvDmxcQnzeQK525mmFpO1JEPWSLLZTDAJ
-         r0aJok8jAKMbZ6P72zEdJwhZr8oJfFOpipUVVHt3KgpiKMSGAapBdfDtsT5vuaWMPt
-         ROyXRl5eIbQ356tgBnkilVBA5NP9JOfq9iXZRmk7uojxTHtyjoPQzrupvFPXoRJY3X
-         dE5CqfL04Bnvw==
+        b=sDYihPe9Y6tESQ7//sWMvDB8W/IdOhbgq1oJlEjnn3R5J6j4UlZYPcUalvZHaWpD1
+         W1jXjisNuXp/JWfHYlsMj8dl2IY6ayz1uutkVHpUPDBEYL9OP+WudS1BKdrM1AHDk9
+         IpgEareKtpjXq1lzRXvJrG+JRCugI+BAsWOaGN41hypdrIfIWox2/woP3wrvzP6Zks
+         X+4l5ce1aCVHHav6ifgW3O25lUj3yewCSVy0PkOEIYdjA01mLACqj69rEh1SFZM5KO
+         Aju6QBmpXFAL4x4xR+N3jY9pKMPjJ2WuEgz+mS6OOtxWu9sIcxHkPdzq9L9ROlfQtX
+         tfJOZJvY4W1Ww==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>, Wei Liu <wei.liu@kernel.org>,
         Sasha Levin <sashal@kernel.org>, kys@microsoft.com,
         haiyangz@microsoft.com, sthemmin@microsoft.com,
         decui@microsoft.com, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 7/7] hyperv/vmbus: include linux/bitops.h
-Date:   Mon, 25 Oct 2021 13:01:02 -0400
-Message-Id: <20211025170103.1394651-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 7/7] hyperv/vmbus: include linux/bitops.h
+Date:   Mon, 25 Oct 2021 13:01:20 -0400
+Message-Id: <20211025170120.1394792-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211025170103.1394651-1-sashal@kernel.org>
-References: <20211025170103.1394651-1-sashal@kernel.org>
+In-Reply-To: <20211025170120.1394792-1-sashal@kernel.org>
+References: <20211025170120.1394792-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 87d3d7da78f8..7e7c8debbd28 100644
+index a166de6efd99..0996a246c80b 100644
 --- a/drivers/hv/hyperv_vmbus.h
 +++ b/drivers/hv/hyperv_vmbus.h
 @@ -26,6 +26,7 @@
@@ -78,8 +78,8 @@ index 87d3d7da78f8..7e7c8debbd28 100644
  #include <linux/list.h>
 +#include <linux/bitops.h>
  #include <asm/sync_bitops.h>
- #include <asm/hyperv-tlfs.h>
  #include <linux/atomic.h>
+ #include <linux/hyperv.h>
 -- 
 2.33.0
 
