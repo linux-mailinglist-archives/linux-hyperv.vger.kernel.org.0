@@ -2,54 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1E6743F2A6
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Oct 2021 00:21:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 679B143F2A8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Oct 2021 00:22:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231418AbhJ1WY0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 28 Oct 2021 18:24:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55182 "EHLO
+        id S231508AbhJ1WY1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 28 Oct 2021 18:24:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231298AbhJ1WYZ (ORCPT
+        with ESMTP id S231393AbhJ1WY1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 28 Oct 2021 18:24:25 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1783CC061745
-        for <linux-hyperv@vger.kernel.org>; Thu, 28 Oct 2021 15:21:58 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id w199-20020a25c7d0000000b005bea7566924so10837485ybe.20
-        for <linux-hyperv@vger.kernel.org>; Thu, 28 Oct 2021 15:21:58 -0700 (PDT)
+        Thu, 28 Oct 2021 18:24:27 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C222C061570
+        for <linux-hyperv@vger.kernel.org>; Thu, 28 Oct 2021 15:22:00 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id x16-20020a25b910000000b005b6b7f2f91cso10968944ybj.1
+        for <linux-hyperv@vger.kernel.org>; Thu, 28 Oct 2021 15:22:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=reply-to:date:message-id:mime-version:subject:from:to:cc;
-        bh=PqjjRvX15zED8OdTh3J1r3VA59T74vznUoYXXlWKQUc=;
-        b=e+hAzVuvA6pZEdq7ha9j/xZ/wi+tB54o3Cg4uhZp8Vrfl4yCNs96yhs/i/fR6/f7+U
-         M8pGUHDA7w0nSKXzjtwPSgHXl1e4uKsHZw5dXrMqSLxGCVNB8JNbE+auE4zRqRqpS88X
-         I3Vtg1f6Hw3cKHJNXydZ+toZKxwe1Zag1CPyoCJh/V0c3i402VDdoTx9FSLEV+tNM6Uc
-         0r5t6mv3cYXMd+aHHrNqM3CUYWlFINfbohoBc3XYUGsIqlrk/ZScAUrlPyA4Pe+aeBsB
-         zhJi3oPs9R54W8Y485icAVY8fB8lfn0P49ayeDPuEGU6kRdI8zSzhyP7uz2ocGwItbwl
-         a0JA==
+        h=reply-to:date:in-reply-to:message-id:mime-version:references
+         :subject:from:to:cc;
+        bh=8CcTf3pQkseQsKnmfaBBHuXTwJk1xIeHhVdYMof8Tdc=;
+        b=QTDTiv9Wm1gqOM2tHZvaWkNUm13AJ8nTO+UYBHPctKi9zAmXMLcDqiB4qAUC+axZFV
+         uOW+uK/vZHHJBOtET2aAK72Zd2NWS/AjicBIxZUo7WReE9LVhNRHsBsYjG6rEInWBGve
+         cFnY9uf8Px1t65rAMgQp6BAw1wDZegIA5gU5j8Bhq8KJmLnGThha/MzAbYaEvYJ0dvBY
+         eMmL2siGJGPHXYXlHYoe43GkwY5NRypz3GBas3HSuV+nFfygs449UXCu0/ZXarzVHi0t
+         ori799z4VpWDth8OrvGBT+LxEsm9grRuwzfYROAK+dQBT23Y0aLuhDUeeCfqXRatKuMZ
+         fyow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:reply-to:date:message-id:mime-version:subject
-         :from:to:cc;
-        bh=PqjjRvX15zED8OdTh3J1r3VA59T74vznUoYXXlWKQUc=;
-        b=TPjMtfKQzm6hebK/wbGW6yjyRWA1tw6844O2WXltPDQ07gHxgTEObMuIH5aSFyE0Vo
-         6lppN4+cSNHlqAXVRNPCbJRjfGPBfN09tSD7DHcRy7tE3srwA+BGl1YiIZ6QZ4EKI3rl
-         1cnT9g72ut9GJ1zRVQBYkS3tcnv6/yabXltexkI4m8+2e24CP8K74RKi9wG7cAsGKRxR
-         YtxqqtrDmiEAt4Yve361xEfbFwi3pV03rQdhTeblTA7Q2I/g+OAn6lwG5P2WxU5GBYzo
-         /NhBRxjelcuWJESMvMirbhJVpcwvm6tBSJQnokqTjqowdoTK1i82wYXwfEHeMa7TCUuD
-         C12A==
-X-Gm-Message-State: AOAM533rer6etT2wpC6xmYm/O1PvYafcvb1oioa2opRdipmJ47yAhem+
-        PWDk4mQZOV6eTXN/SpTmwhBf3JY4sQs=
-X-Google-Smtp-Source: ABdhPJx5X6GZdx3nKSM3DFNGC4xUMnmjf5Z6+uBL2u8x5+06D3F+RbR57apuMl+589B0v/rWWayC5rs4Kyw=
+        h=x-gm-message-state:reply-to:date:in-reply-to:message-id
+         :mime-version:references:subject:from:to:cc;
+        bh=8CcTf3pQkseQsKnmfaBBHuXTwJk1xIeHhVdYMof8Tdc=;
+        b=W8JwBk+B9Wby4lU1HuNYYv1OZiB6VdcMrZoLRMhnBIhBUI8Xptm1YNZonr7cO23wOO
+         yehKCG5dUsRgY+v5bPNON4lTZTBzkZCioWoWxEyvd6bgQjpSboycqh/+Z9b/Mi5868av
+         NfAWIx6gglFNBlsm3fa4C9/ACWzey+n84fyCLb4Yhp1N4yBSnn8R0J2EKbBw2SJSXVxw
+         CDS+9QboZUhXHm+nCial/fFOmuqxLgUIWe7TP+XpkG6aTkAImRrS00vsjp+GJx0W6TvV
+         v9EGRcvpJrU5evNGHFzsv1a0e4r/4t/c/WLXWrvfboPItRYKZxf5gjfwlOEDbDrDY4DO
+         ipbw==
+X-Gm-Message-State: AOAM533amoT23C5PY2nCxXVr1SqRKqwk2BuvqPXvTOTAAchrlQW4+pvm
+        XYtQHucAbP6ewCAfz95FAb48hChtaro=
+X-Google-Smtp-Source: ABdhPJx23cCFNn1aEDHYrI6T+1I8tWVsIZJYfGDo3WJTG7PHPHY5C9iPiQPZsBpNJvmSfblhkH+6fZCbxFI=
 X-Received: from seanjc798194.pdx.corp.google.com ([2620:15c:90:200:cbc8:1a0d:eab9:2274])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1029:: with SMTP id
- x9mr8512263ybt.67.1635459717288; Thu, 28 Oct 2021 15:21:57 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a5b:886:: with SMTP id e6mr7160533ybq.198.1635459719316;
+ Thu, 28 Oct 2021 15:21:59 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Thu, 28 Oct 2021 15:21:46 -0700
-Message-Id: <20211028222148.2924457-1-seanjc@google.com>
+Date:   Thu, 28 Oct 2021 15:21:47 -0700
+In-Reply-To: <20211028222148.2924457-1-seanjc@google.com>
+Message-Id: <20211028222148.2924457-2-seanjc@google.com>
 Mime-Version: 1.0
+References: <20211028222148.2924457-1-seanjc@google.com>
 X-Mailer: git-send-email 2.33.0.1079.g6e70778dc9-goog
-Subject: [PATCH 0/2] x86/hyperv: Bug fix and what I hope is an enhancement
+Subject: [PATCH 1/2] x86/hyperv: Fix NULL deref in set_hv_tscchange_cb() if
+ Hyper-V setup fails
 From:   Sean Christopherson <seanjc@google.com>
 To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -67,35 +71,65 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Patch 01 is a fix for a NULL pointer deref that I ran into with a bad VMM
-configuration.
+Check for re-enlightenment support and for a valid hv_vp_index array
+prior to derefencing hv_vp_index when setting Hyper-V's TSC change
+callback.  If Hyper-V setup failed in hyperv_init(), e.g. because of a
+bad VMM config that doesn't advertise the HYPERCALL MSR, the kernel will
+still report that it's running under Hyper-V, but will have silently
+disabled nearly all functionality.
 
-Patch 02 effectively makes the required MSRs mandatory for recognizing
-Hyper-V at all.  I'm not confident this is truly desirable, e.g. there
-might be some features that are still kinda sorta usable, but on the other
-hand there's a large pile of features that end up being a waste of cycles
-to worm their way back to the native ops.
+  BUG: kernel NULL pointer dereference, address: 0000000000000010
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP
+  CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.15.0-rc2+ #75
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0010:set_hv_tscchange_cb+0x15/0xa0
+  Code: <8b> 04 82 8b 15 12 17 85 01 48 c1 e0 20 48 0d ee 00 01 00 f6 c6 08
+  ...
+  Call Trace:
+   kvm_arch_init+0x17c/0x280
+   kvm_init+0x31/0x330
+   vmx_init+0xba/0x13a
+   do_one_initcall+0x41/0x1c0
+   kernel_init_freeable+0x1f2/0x23b
+   kernel_init+0x16/0x120
+   ret_from_fork+0x22/0x30
 
-QEMU 5.1 (and other versions) makes it all too easy to advertise Hyper-V
-and a slew of features without advertising the Hyper-V HYPERCALL MSR, e.g.
-forcing QEMU features +hv-ipi,+hv-tlbflush,+hv-vpindex,+hv-reenlightenment
-advertises a bunch of things, but not the HYPERCALL MSR.
+Fixes: 93286261de1b ("x86/hyperv: Reenlightenment notifications support")
+Cc: stable@vger.kernel.org
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/hyperv/hv_init.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-That results in the guest identifying Hyper-V and setting a variety of PV
-ops that then get ignored because hyperv_init() silently disables Hyper-V
-for all intents and purposes.  The VMM (or its controller) is obviously
-off in the weeds, but ideally the guest kernel would acknowledge the bad
-setup in some way.
-
-Sean Christopherson (2):
-  x86/hyperv: Fix NULL deref in set_hv_tscchange_cb() if Hyper-V setup
-    fails
-  x86/hyperv: Move required MSRs check to initial platform probing
-
- arch/x86/hyperv/hv_init.c      | 16 +++++++---------
- arch/x86/kernel/cpu/mshyperv.c | 20 +++++++++++++++-----
- 2 files changed, 22 insertions(+), 14 deletions(-)
-
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 708a2712a516..6cc845c026d4 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -139,7 +139,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 	struct hv_reenlightenment_control re_ctrl = {
+ 		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+ 		.enabled = 1,
+-		.target_vp = hv_vp_index[smp_processor_id()]
++		.target_vp = -1,
+ 	};
+ 	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+ 
+@@ -148,6 +148,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
+ 		return;
+ 	}
+ 
++	if (!hv_vp_index)
++		return;
++
++	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
++
+ 	hv_reenlightenment_cb = cb;
+ 
+ 	/* Make sure callback is registered before we write to MSRs */
 -- 
 2.33.0.1079.g6e70778dc9-goog
 
