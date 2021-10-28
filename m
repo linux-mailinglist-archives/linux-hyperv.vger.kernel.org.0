@@ -2,106 +2,93 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C06443DA7B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Oct 2021 06:43:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2674C43DF1B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Oct 2021 12:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229694AbhJ1Ept (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 28 Oct 2021 00:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39570 "EHLO
+        id S229835AbhJ1KoL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 28 Oct 2021 06:44:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229651AbhJ1Ept (ORCPT
+        with ESMTP id S230178AbhJ1KoL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 28 Oct 2021 00:45:49 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8EACC061745
-        for <linux-hyperv@vger.kernel.org>; Wed, 27 Oct 2021 21:43:22 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id t17-20020a056830083100b00553ced10177so6694579ots.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 27 Oct 2021 21:43:22 -0700 (PDT)
+        Thu, 28 Oct 2021 06:44:11 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B175C061570;
+        Thu, 28 Oct 2021 03:41:44 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id r5so4159124pls.1;
+        Thu, 28 Oct 2021 03:41:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=F4452zDoP4/1fvNCdwJY4dACFAB87XDdgQ4Cf7UChIo=;
-        b=VogNHxqn77lj6ONh1KsAuQrf6NjeWEYilHkULeAOTQG8jihOayiK49VBGcaxwS4q5i
-         /8MHpYqc53Iiz6swmN5+rgVqb1SxUE/QoqI9g+koNUvWDJbBnTIRPgeIOPa9l+p+xMmm
-         zueNjbWjoVKFjpTHdJKUMEugTX61mpEsTfzllhf5U+oDuemwBJPci+gUM4YKZhJHl/bC
-         48zXMUynoZXd1NzWzhrzKbXmQPJHYf37qqznUR2dzYlLB0WiHdazdn4kmxfrma9BEqlR
-         HMGM6z9X1ZxJceyVr+F9UtES9sPMZsesSbQ2gareud2jOpjnfA7FVolzZOwn42at1b82
-         w3lA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w6k9H+1esaoJxBW+jGH+iFBTYa8xXJVNGvttUpb0vAA=;
+        b=p/MMYZS0qb/MTwTrJCxDlKpcr0zH2nLUjiN9uBzJBhL528nG7w22f6msCb2cDXrhvZ
+         8uLOy9KPfe+3a8Hc5FWanAaal+6QebSzmN9yw0T8GyswDtstcQVxdMfVRJOV/4B4dS8m
+         JrGViro03YC7AbS3SwmMIQ7V+8iT/qd8tBe/JG2JgZu8OsekRpZMDzQm2a0hK7+jmDRN
+         ozMNQFxez27lWKEkn3hwjX1C1dOb5AcEa2veunmuTx/yDx5ZyC59syKyJ0UXZC9YYWJY
+         jFJ9HrWx9HTnrereqo6UzdUrh8XcNV+f0WplbdZtuO3zVKcbHUF/AUCvwl13k1Z4aPiy
+         foKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=F4452zDoP4/1fvNCdwJY4dACFAB87XDdgQ4Cf7UChIo=;
-        b=qXDE5cNTTQMb+fi609vTokWAdmGRXzCCOt9St3XQSoRCd7XsKtnT+Dpl8O4VGBVAd/
-         S/9aVgYsqFjxAKDY3lsP00o1+WuwaHFhXy0zWL2yDYZQmJpTx9e2mFLuYAIIIInfxlIK
-         VeUpJSBmdcVgmCahaAAmIxjZoT4v95I1u2ozgNH78+zEFXIw/BTNbKB3o5bfjZDCHaNV
-         QJmQTWdtgvHeeEkvag9NLNrWnlpx6cUqNTiTWufdCqxoAZ6bOFmK9HLDd1B8tGuyNcGn
-         IBdAxdkoy0ytMsc18vmz0eK7ztb4eOhIsYI7WvWKGhZ5LpQNDS8BwJ8AF1MzKdyiLjRP
-         A2hA==
-X-Gm-Message-State: AOAM533lR5mD0p5Ein037YmIxQcCOhhEkWkzMmhnCvdi2vNetf6k2kGn
-        n7zsNA4y++1x4WWP5B3DqSvdHVLkFhvR1TXPtjM=
-X-Google-Smtp-Source: ABdhPJwKPNZ2L4StsouIFL+VSrku6m0rnfCbT+AyXuYLxm909IBI971qqK0aBLisYlp1S/e7YhdAgjo8IVnf35k51Og=
-X-Received: by 2002:a05:6830:1af0:: with SMTP id c16mr1588790otd.16.1635396201916;
- Wed, 27 Oct 2021 21:43:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w6k9H+1esaoJxBW+jGH+iFBTYa8xXJVNGvttUpb0vAA=;
+        b=myPVmdLvX841My1b4dzn8MXWs9e40L2nVnAlBioPmGXK/LVbM0GG6E2ZNw7t0NhZsT
+         gMb37WHd46cirS3mz0+UAipKFQHbeNTOMxrWN3y6k/y+imJJwbZFOmS/lBBhkhpw6pHB
+         wwOvhCwtMCSA3+LDcJuVUeBZj6Rm1QQrcm1bbomh8w3o5kKezjp3GG+7yRx10u5Di/Nj
+         07XFDtFHX26LUbkxbUO6JRXM7KWKdqHk0S5dWi0fP6N0SN4bGkmBZ7iqk//O8RaByahr
+         DYtNVBhRN40lyfR1kfNNPH7uR/TuZ7pscuaKUqk94V5YKAj1Unsmwz51+aoj8r68paLt
+         CnTA==
+X-Gm-Message-State: AOAM5315kDooLcCk8h0hfE/672tYgOTwoqRnecdzGvJT9K+WiTgu8D4h
+        GYOjTalsplP7uTg9x7NqEHM=
+X-Google-Smtp-Source: ABdhPJxsMdagnYkbRdTL2wc2y+3Wv16EBbaG5YyXFaVi+jC7TREqmiezh1mOd4j44a918ipYRJc7Ug==
+X-Received: by 2002:a17:90a:4d44:: with SMTP id l4mr3665230pjh.58.1635417703907;
+        Thu, 28 Oct 2021 03:41:43 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id h2sm2519462pjk.44.2021.10.28.03.41.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Oct 2021 03:41:43 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: lv.ruyi@zte.com.cn
+To:     kys@microsoft.com
+Cc:     haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lv Ruyi <lv.ruyi@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH] Drivers: hv : vmbus: Adding NULL pointer check
+Date:   Thu, 28 Oct 2021 10:41:38 +0000
+Message-Id: <20211028104138.14576-1-lv.ruyi@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Reply-To: bouchetb@yandex.com
-Sender: corisbankofafricabf@gmail.com
-Received: by 2002:a05:6839:fc1:0:0:0:0 with HTTP; Wed, 27 Oct 2021 21:43:21
- -0700 (PDT)
-From:   Dr Bryan Bouchet <drbryanbouchet52@gmail.com>
-Date:   Thu, 28 Oct 2021 05:43:21 +0100
-X-Google-Sender-Auth: 8nmIp-O4MNBr_Ql3eeSKksvOPe0
-Message-ID: <CAJmM+qzJ-o6Vmxe3a10fvOYeO7X+iU5b9xaXKgs3kTBce-LwUA@mail.gmail.com>
-Subject: PLEASE RESPOND VERY URGENTLY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dear Good Friend,
+From: Lv Ruyi <lv.ruyi@zte.com.cn>
 
-  How are you doing today, I hope you haven't forgotten me?  I am Dr
-Bryan Bouchet  the former manager at the Bank of Africa (B.O.A)
-  Bank in Ouagadougou Burkina Faso over there in West Africa, who has
-contacted you some time ago to assist me in order to secure the
-  release fund of a deceased customer into your bank account. Though
-you weren't able to assist me up to the conclusion stage in that
-  transaction by then, I am very much happy to inform you about my
-success in getting the fund transferred under the assistance and
-  co-operation of a new partner from Paraguay. Presently, I am in
-Paraguay for investment projects with my share of the total sum.
+This patch fixes the following Coccinelle warning:
+drivers/hv/ring_buffer.c:223: alloc with no test
 
-  Mean while, I didn't forget your past efforts, and attempted to
-assist me on the transferring of the fund, and I made sure that
-  you aren't left behind or out of the benefits of the transaction.
-Hence, I have kept aside for you the total sum of: $ 675,000.00
-  (Six Hundred Thousand Seventy Five dollars) in the 'ATM VISA CARD'.
-My new partner and I have agreed to compensate you with that
-  above said amount for all your past efforts and attempt to assist me
-in that past  successful matter.  I have appreciated your kind
-  efforts at that time very much, so feel very free to contact the
-bank's secretary via her below email address, and the name of the
-  secretary is MRS.SUZARA MALING WAN secretary of  (B.O.A) bank. And
-make sure that you instruct her on how to send an 'ATM VISA CARD
-  to you and please let me know immediately so that we can share the
-joy together after all the stress of the past times.
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Lv Ruyi <lv.ruyi@zte.com.cn>
+---
+ drivers/hv/ring_buffer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-  At the moment, I am very busy here in Paraguay because of the
-investment projects of which my partner and I were having at hand
-  presently, and finally remember that I had left an instruction to
-the secretary of the (B.O.A) MRS.  SUZARA MALING WAN.Therefore,
- as soon as you contact her for thesaid 'ATM VISA CARD' to be sent to
-you, she will surely send an 'ATM VISA CARD' to you.
-  Below is the contact of the secretary of the (B.O.A) Ouagadougou,
-Burkina Faso over there in West Africa.
+diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
+index 931802ae985c..4ef5c3771079 100644
+--- a/drivers/hv/ring_buffer.c
++++ b/drivers/hv/ring_buffer.c
+@@ -223,6 +223,8 @@ int hv_ringbuffer_init(struct hv_ring_buffer_info *ring_info,
+ 		pages_wraparound = kcalloc(page_cnt * 2 - 1,
+ 					   sizeof(struct page *),
+ 					   GFP_KERNEL);
++		if (!pages_wraparound)
++			return -ENOMEM;
+ 
+ 		pages_wraparound[0] = pages;
+ 		for (i = 0; i < 2 * (page_cnt - 1); i++)
+-- 
+2.25.1
 
-  Contact this below person immediately for your check: -
-
-  MRS.  SUZARA MALING WAN.
-  Secretary of the (B.I.B),
-  Ouagadougou, Burkina Faso.
-  Email Address: (suzaramalinwan@gmail.com)
-
-  Yours good friend,
-   Dr.Bryan Bouchet
