@@ -2,98 +2,106 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CF4143C613
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Oct 2021 11:05:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C06443DA7B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Oct 2021 06:43:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232420AbhJ0JIT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 27 Oct 2021 05:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54242 "EHLO
+        id S229694AbhJ1Ept (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 28 Oct 2021 00:45:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232132AbhJ0JIT (ORCPT
+        with ESMTP id S229651AbhJ1Ept (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 27 Oct 2021 05:08:19 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D629C061570;
-        Wed, 27 Oct 2021 02:05:54 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id m21so2243599pgu.13;
-        Wed, 27 Oct 2021 02:05:54 -0700 (PDT)
+        Thu, 28 Oct 2021 00:45:49 -0400
+Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8EACC061745
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 Oct 2021 21:43:22 -0700 (PDT)
+Received: by mail-ot1-x336.google.com with SMTP id t17-20020a056830083100b00553ced10177so6694579ots.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 Oct 2021 21:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MqVpo2UqAbSygTHypSN0KNUq0+j4kDd6u6NCg3V4iYg=;
-        b=dAtSaXD5wh/RyLLKB2ZeCxosDgq0VzzMbGS8qHTDkvQrf8UMKpmDt3CPngb8bd7V9o
-         Z/yUaRIWdncbJj8oAGNMtflBEwFFbVARk4tgZZNZ6W5CrkuOsdtPdjll0JAKo4MBPOz0
-         EwsSNoj9tSqOKGaTyI1XHF8YpoT8DXFHjld4ad/5VkyCerQhLzYW92VIkpjTU0Q+/iLj
-         drbyH9MdGjSLqzNdHRkQGN9YmqCSBI67CFSI5Qvq0v/Wk8M1gDUxhZfDvZgWFS3JfQzK
-         ivm0iI4jW2JjDRTPsrbt+3znb3J+IXjXB+GgiujgqnTeo8BgO9HUpFBcz5pFpxxEU0Gx
-         ZNcA==
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=F4452zDoP4/1fvNCdwJY4dACFAB87XDdgQ4Cf7UChIo=;
+        b=VogNHxqn77lj6ONh1KsAuQrf6NjeWEYilHkULeAOTQG8jihOayiK49VBGcaxwS4q5i
+         /8MHpYqc53Iiz6swmN5+rgVqb1SxUE/QoqI9g+koNUvWDJbBnTIRPgeIOPa9l+p+xMmm
+         zueNjbWjoVKFjpTHdJKUMEugTX61mpEsTfzllhf5U+oDuemwBJPci+gUM4YKZhJHl/bC
+         48zXMUynoZXd1NzWzhrzKbXmQPJHYf37qqznUR2dzYlLB0WiHdazdn4kmxfrma9BEqlR
+         HMGM6z9X1ZxJceyVr+F9UtES9sPMZsesSbQ2gareud2jOpjnfA7FVolzZOwn42at1b82
+         w3lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MqVpo2UqAbSygTHypSN0KNUq0+j4kDd6u6NCg3V4iYg=;
-        b=3ObqFS1b1tHt8wpTR83NGQHxQV/0m7BDUk97Q+KTOvc3qYE5gQ9y0tT3FqZ8vxYKjV
-         0zBdJNCBuWBImqGOo4YlBceVitvEJUaOq9Tbybbq/ruie8Lzq5Jgbnx5fAH2W909n+5O
-         RTuKFsof0Cjxgpiox3U4wheVSlju4+sRu+dVzp31TrTu/TjjvmvnoaSP3yCj/fHQtKvU
-         aqyBS2KgDUgjWKLUDE04CmtosYTPUH6hXc7o/uKGopCSvyZkCk3OZzqYSht4zhr1sjEe
-         merAb3dcAMFXGTeDVxyjlD0S3taBC8RLaW8YzJfijesUnO1clfisfd0XN1hkHOoXY7WV
-         /NYw==
-X-Gm-Message-State: AOAM5325PzG5ehSyDADnMv6T3L47nEbjX6O32ISjISvXrUL0XNgniy8C
-        MDSLVa1klCc0sdlLtoUDB0M=
-X-Google-Smtp-Source: ABdhPJwnUpgqIvUcI5M6UTN6L8zovE2ZtBhR6BKxEGcxu0V6i/hmnjtzKZD0mPRvkBbZhEVo3IDbig==
-X-Received: by 2002:a05:6a00:21c6:b0:44c:937:fbf3 with SMTP id t6-20020a056a0021c600b0044c0937fbf3mr31598999pfj.2.1635325554176;
-        Wed, 27 Oct 2021 02:05:54 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id k13sm29030348pfc.197.2021.10.27.02.05.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 02:05:53 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: ran.jianping@zte.com.cn
-To:     kys@microsoft.com
-Cc:     haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ran jianping <ran.jianping@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH] x86/hyperv: remove duplicate include in ivm.c
-Date:   Wed, 27 Oct 2021 09:05:44 +0000
-Message-Id: <20211027090544.2383-1-ran.jianping@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=F4452zDoP4/1fvNCdwJY4dACFAB87XDdgQ4Cf7UChIo=;
+        b=qXDE5cNTTQMb+fi609vTokWAdmGRXzCCOt9St3XQSoRCd7XsKtnT+Dpl8O4VGBVAd/
+         S/9aVgYsqFjxAKDY3lsP00o1+WuwaHFhXy0zWL2yDYZQmJpTx9e2mFLuYAIIIInfxlIK
+         VeUpJSBmdcVgmCahaAAmIxjZoT4v95I1u2ozgNH78+zEFXIw/BTNbKB3o5bfjZDCHaNV
+         QJmQTWdtgvHeeEkvag9NLNrWnlpx6cUqNTiTWufdCqxoAZ6bOFmK9HLDd1B8tGuyNcGn
+         IBdAxdkoy0ytMsc18vmz0eK7ztb4eOhIsYI7WvWKGhZ5LpQNDS8BwJ8AF1MzKdyiLjRP
+         A2hA==
+X-Gm-Message-State: AOAM533lR5mD0p5Ein037YmIxQcCOhhEkWkzMmhnCvdi2vNetf6k2kGn
+        n7zsNA4y++1x4WWP5B3DqSvdHVLkFhvR1TXPtjM=
+X-Google-Smtp-Source: ABdhPJwKPNZ2L4StsouIFL+VSrku6m0rnfCbT+AyXuYLxm909IBI971qqK0aBLisYlp1S/e7YhdAgjo8IVnf35k51Og=
+X-Received: by 2002:a05:6830:1af0:: with SMTP id c16mr1588790otd.16.1635396201916;
+ Wed, 27 Oct 2021 21:43:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Reply-To: bouchetb@yandex.com
+Sender: corisbankofafricabf@gmail.com
+Received: by 2002:a05:6839:fc1:0:0:0:0 with HTTP; Wed, 27 Oct 2021 21:43:21
+ -0700 (PDT)
+From:   Dr Bryan Bouchet <drbryanbouchet52@gmail.com>
+Date:   Thu, 28 Oct 2021 05:43:21 +0100
+X-Google-Sender-Auth: 8nmIp-O4MNBr_Ql3eeSKksvOPe0
+Message-ID: <CAJmM+qzJ-o6Vmxe3a10fvOYeO7X+iU5b9xaXKgs3kTBce-LwUA@mail.gmail.com>
+Subject: PLEASE RESPOND VERY URGENTLY
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: ran jianping <ran.jianping@zte.com.cn>
+Dear Good Friend,
 
-'linux/types.h' included in 'arch/x86/hyperv/ivm.c'
- is duplicated.It is also included on the 12 line.
-'linux/bitfield.h'included in 'arch/x86/hyperv/ivm.c'
-is duplicated.It is also included on the 13 line.
+  How are you doing today, I hope you haven't forgotten me?  I am Dr
+Bryan Bouchet  the former manager at the Bank of Africa (B.O.A)
+  Bank in Ouagadougou Burkina Faso over there in West Africa, who has
+contacted you some time ago to assist me in order to secure the
+  release fund of a deceased customer into your bank account. Though
+you weren't able to assist me up to the conclusion stage in that
+  transaction by then, I am very much happy to inform you about my
+success in getting the fund transferred under the assistance and
+  co-operation of a new partner from Paraguay. Presently, I am in
+Paraguay for investment projects with my share of the total sum.
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: ran jianping <ran.jianping@zte.com.cn>
----
- arch/x86/hyperv/ivm.c | 2 --
- 1 file changed, 2 deletions(-)
+  Mean while, I didn't forget your past efforts, and attempted to
+assist me on the transferring of the fund, and I made sure that
+  you aren't left behind or out of the benefits of the transaction.
+Hence, I have kept aside for you the total sum of: $ 675,000.00
+  (Six Hundred Thousand Seventy Five dollars) in the 'ATM VISA CARD'.
+My new partner and I have agreed to compensate you with that
+  above said amount for all your past efforts and attempt to assist me
+in that past  successful matter.  I have appreciated your kind
+  efforts at that time very much, so feel very free to contact the
+bank's secretary via her below email address, and the name of the
+  secretary is MRS.SUZARA MALING WAN secretary of  (B.O.A) bank. And
+make sure that you instruct her on how to send an 'ATM VISA CARD
+  to you and please let me know immediately so that we can share the
+joy together after all the stress of the past times.
 
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 4d012fd9d95d..479201ceae8e 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -9,8 +9,6 @@
- #include <linux/types.h>
- #include <linux/bitfield.h>
- #include <linux/hyperv.h>
--#include <linux/types.h>
--#include <linux/bitfield.h>
- #include <linux/slab.h>
- #include <asm/svm.h>
- #include <asm/sev.h>
--- 
-2.25.1
+  At the moment, I am very busy here in Paraguay because of the
+investment projects of which my partner and I were having at hand
+  presently, and finally remember that I had left an instruction to
+the secretary of the (B.O.A) MRS.  SUZARA MALING WAN.Therefore,
+ as soon as you contact her for thesaid 'ATM VISA CARD' to be sent to
+you, she will surely send an 'ATM VISA CARD' to you.
+  Below is the contact of the secretary of the (B.O.A) Ouagadougou,
+Burkina Faso over there in West Africa.
 
+  Contact this below person immediately for your check: -
+
+  MRS.  SUZARA MALING WAN.
+  Secretary of the (B.I.B),
+  Ouagadougou, Burkina Faso.
+  Email Address: (suzaramalinwan@gmail.com)
+
+  Yours good friend,
+   Dr.Bryan Bouchet
