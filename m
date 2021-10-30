@@ -2,54 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BACD3440631
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Oct 2021 02:08:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89412440634
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Oct 2021 02:08:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231717AbhJ3AKo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 Oct 2021 20:10:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35334 "EHLO
+        id S231748AbhJ3AKp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 29 Oct 2021 20:10:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231700AbhJ3AKk (ORCPT
+        with ESMTP id S229546AbhJ3AKo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 Oct 2021 20:10:40 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C4BC061766
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:11 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id q7-20020a25b007000000b005c1d1377abdso14097709ybf.23
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:11 -0700 (PDT)
+        Fri, 29 Oct 2021 20:10:44 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1AFC0613B9
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:13 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id x16-20020a25b910000000b005b6b7f2f91cso16647518ybj.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=reply-to:date:message-id:mime-version:subject:from:to:cc;
-        bh=MitYekao9rqnFTXUAu9e8R+/MKTk3btas9HJLycPsWc=;
-        b=my9LTkQDSabE3uNrKhMOQ2hYTIoQgwsz/LmNZkzGOHCRzyJkKca1ngJ6utKC9iC1/t
-         QhlZalPYJZ3tgsKfRNlq+6LD1g/RkJRw3mpUHu57gpL3p8H4xmmgccC2UXx7yejWm9fR
-         rSItlwVGidUiWjDE0OGLnmeeJOFw37ispjN9W2SB+/QIv5hkcfQ4EqQjaYp3VHyHuvqH
-         HhZBOmCTkaaUXbGgfSaD/fhTUC4E/H6VJtf1MuAyHpTJpB19zZeudVRj7NzZWeZqDyz0
-         KVjRq/ta9HEWXn0OELRkX+g6dFHCrO4QRSGfGSbBT9TEVl8SHHR4+O3IK4ZCX22eO0z/
-         12vA==
+        h=reply-to:date:in-reply-to:message-id:mime-version:references
+         :subject:from:to:cc;
+        bh=ptn47+BKhy/SHg2Js9P1mPtZhgiXFDoRDpv5JEfjKjI=;
+        b=NP+uIOddDk7SXyU+14tEFMuNbjQwPVQ5Pr596q3FRiq51u5lJ+RDvB9opzu7QTp3Om
+         wTjLdk7znQDz5Sp2LNB+T5IYunFmqFj9yKlCfOTK3RLN+npuhKoCKnWjumz2oZJ/ld9g
+         LliXUJqHWO2O34npQmegkWMajRobeZai2Mah1qkJBKP/3XfndODMZ1DlSnoC8C5uN95L
+         KANTB09+Vi1KpdIjM+nLC4ZHuvWnSRuIgo3xsTvBeen7ez6Li7GlNSS9moadXxthRwVI
+         8YMrrUVNe68t7nOG4wGKE5YNDp5Ljt3Jqy6c9M6+rwnDZ6Vkw7MoXh9a+abHETvfN+7M
+         3z2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:reply-to:date:message-id:mime-version:subject
-         :from:to:cc;
-        bh=MitYekao9rqnFTXUAu9e8R+/MKTk3btas9HJLycPsWc=;
-        b=OxlxYNFNRKdAuEHZ5azLeEr86ZulzyfvrwDQOU4R3w6bZft6k4yGvbS/MVjpiH6XEP
-         cuwmcKSGGF9POi/8YD8Sl8AMsqG0BiW5N/GBGsh8cLKs6Waq7Q/KUUALL3CkubbrYFy0
-         tJKsS2H8cLeWEKLrU7spMr+uB3u9lBY2jo3ZW3ACuI2j1816I9jFMUIwSgwtnCTCm1qp
-         BBEKwyevOVVCOm28OYXtmgXgBj+e1NKY8TC/A5dklt6YLljskkVBz0tpLT2P8rSJt9w3
-         hC2988DWntjrxjMdWee0TKZ5z/xhUZSfeyXMKoM4c4xqEEs47vxrC6btnlQbREqN49Wb
-         Is1g==
-X-Gm-Message-State: AOAM531Ua/YsUi3SojYXRYakf0yaEtdS1xt8vIj4Ra7WNg1HEd1G/6bV
-        uGp4JCoYUob2cbzL8P72OSA9W/MjxsI=
-X-Google-Smtp-Source: ABdhPJwZ2XQbbdMh4Oubf+Z+oTyEdeydN5FjqJXnMZxUNKnOYppZlMFuqVxKis25KfxbME9PXm4evnP2z0A=
+        h=x-gm-message-state:reply-to:date:in-reply-to:message-id
+         :mime-version:references:subject:from:to:cc;
+        bh=ptn47+BKhy/SHg2Js9P1mPtZhgiXFDoRDpv5JEfjKjI=;
+        b=Qln+EfScw3/inTETBOJtIFU88+MLRB/4LZBY6BbiFYpyxdKm2I45/Od3SabRsXCKTW
+         VIciSdv05jj0MCPDnN8y3j6Zpsv4llXQoUfmVQrMD7O9wuzi1KGpNaoWMXd5965yV4To
+         xmKmdoTWj0YUoj3PabuzNaVto7g1dk23pUKuokeCMyyn1HotWbPIkovKAblRRThKtvmi
+         wDFIysoMi8wx+wCu7c/1X69z6nDTDG4nh5l2H29vnLMhStF0iXcRizG2o8LZbXQW4xar
+         +qkxWNIaTn9Qr9hx6hmYutidNXvNCrw/KpfhhLaM7UghkFlM8GcUTM20pKPAcCpBd3+M
+         q2dg==
+X-Gm-Message-State: AOAM530jOnkzlbArTTOyk79M/Cd31g58lW7twEun0y8OZUs2lVvLt177
+        Bi2NQf0D2ISNZnrY46S6/oBqlTf8myo=
+X-Google-Smtp-Source: ABdhPJyoPtboi3LyMIegedX4hbA+ehba21GlEj/X02Y8Bdv7WtzqQvjjlfpfSGQoKTlbR1d51HcRp9vr9Mk=
 X-Received: from seanjc798194.pdx.corp.google.com ([2620:15c:90:200:ce6:9e5f:4ab5:a0d2])
- (user=seanjc job=sendgmr) by 2002:a25:3082:: with SMTP id w124mr15887159ybw.6.1635552490730;
- Fri, 29 Oct 2021 17:08:10 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a25:2e0a:: with SMTP id u10mr14167844ybu.484.1635552492806;
+ Fri, 29 Oct 2021 17:08:12 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 29 Oct 2021 17:07:52 -0700
-Message-Id: <20211030000800.3065132-1-seanjc@google.com>
+Date:   Fri, 29 Oct 2021 17:07:53 -0700
+In-Reply-To: <20211030000800.3065132-1-seanjc@google.com>
+Message-Id: <20211030000800.3065132-2-seanjc@google.com>
 Mime-Version: 1.0
+References: <20211030000800.3065132-1-seanjc@google.com>
 X-Mailer: git-send-email 2.33.1.1089.g2158813163f-goog
-Subject: [PATCH v2 0/8] KVM: x86: Hyper-V hypercall fix and cleanups
+Subject: [PATCH v2 1/8] KVM: x86: Ignore sparse banks size for an "all CPUs",
+ non-sparse IPI req
 From:   Sean Christopherson <seanjc@google.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -69,32 +73,55 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Fix a bug where KVM incorrectly skips an "all_cpus" IPI request, and misc
-cleanups and enhancements for KVM handling of Hyper-V hypercalls.
+Do not bail early if there are no bits set in the sparse banks for a
+non-sparse, a.k.a. "all CPUs", IPI request.  Per the Hyper-V spec, it is
+legal to have a variable length of '0', e.g. VP_SET's BankContents in
+this case, if the request can be serviced without the extra info.
 
-Note, I couldn't find any documentation on the DEBUG hypercalls, I'm
-basically just guessing that they don't have a variable sized header
-and thus should reject hypercalls with a non-zero VARHEAD field.
+  It is possible that for a given invocation of a hypercall that does
+  accept variable sized input headers that all the header input fits
+  entirely within the fixed size header. In such cases the variable sized
+  input header is zero-sized and the corresponding bits in the hypercall
+  input should be set to zero.
 
-Sean Christopherson (8):
-  KVM: x86: Ignore sparse banks size for an "all CPUs", non-sparse IPI
-    req
-  KVM: x86: Get the number of Hyper-V sparse banks from the VARHEAD
-    field
-  KVM: x86: Refactor kvm_hv_flush_tlb() to reduce indentation
-  KVM: x86: Add a helper to get the sparse VP_SET for IPIs and TLB
-    flushes
-  KVM: x86: Don't bother reading sparse banks that end up being ignored
-  KVM: x86: Shove vp_bitmap handling down into sparse_set_to_vcpu_mask()
-  KVM: x86: Reject fixeds-size Hyper-V hypercalls with non-zero
-    "var_cnt"
-  KVM: x86: Add checks for reserved-to-zero Hyper-V hypercall fields
+Bailing early results in KVM failing to send IPIs to all CPUs as expected
+by the guest.
 
- arch/x86/kvm/hyperv.c             | 172 ++++++++++++++++++------------
- arch/x86/kvm/trace.h              |  14 +--
- include/asm-generic/hyperv-tlfs.h |   7 ++
- 3 files changed, 120 insertions(+), 73 deletions(-)
+Fixes: 214ff83d4473 ("KVM: x86: hyperv: implement PV IPI send hypercalls")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/hyperv.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 4f15c0165c05..814d1a1f2cb8 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1922,11 +1922,13 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc, bool
+ 
+ 		all_cpus = send_ipi_ex.vp_set.format == HV_GENERIC_SET_ALL;
+ 
++		if (all_cpus)
++			goto check_and_send_ipi;
++
+ 		if (!sparse_banks_len)
+ 			goto ret_success;
+ 
+-		if (!all_cpus &&
+-		    kvm_read_guest(kvm,
++		if (kvm_read_guest(kvm,
+ 				   hc->ingpa + offsetof(struct hv_send_ipi_ex,
+ 							vp_set.bank_contents),
+ 				   sparse_banks,
+@@ -1934,6 +1936,7 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc, bool
+ 			return HV_STATUS_INVALID_HYPERCALL_INPUT;
+ 	}
+ 
++check_and_send_ipi:
+ 	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
+ 		return HV_STATUS_INVALID_HYPERCALL_INPUT;
+ 
 -- 
 2.33.1.1089.g2158813163f-goog
 
