@@ -2,129 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 780D4440651
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Oct 2021 02:09:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43A3B440680
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Oct 2021 02:54:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232176AbhJ3ALk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 Oct 2021 20:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232020AbhJ3ALA (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 Oct 2021 20:11:00 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CD1C06120C
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:29 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id w14-20020ac87e8e000000b002ac1791f633so4455783qtj.21
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=reply-to:date:in-reply-to:message-id:mime-version:references
-         :subject:from:to:cc;
-        bh=w8+VuMJWV7fnXYQnAR/imW2dw4pBJQeF54VXUV6T0ak=;
-        b=jZ/TG0DzTsxGEQDaaW10aSLugJ9r7BLSrb2cjlCT0Fjzmx2Js1P0RaP2VeEiqVIeLk
-         fWkONscVCDVZyhiV8Y44SIzNTIidQZWJCNVlUjVK/vEI1L3TKVByUUvUbuKAKS2Q8DU9
-         bzQQFdNSviP7KT5a4EvT5+PuY4yS7J25eWs1d0sveB58xugu2vdgAroxrKs4dwx3Cgvn
-         ben2KBlIV122IPNQtU4jHuQ/VrrO7vLZSiQz46TJbDRq3vAjm5lA3/7fYuwP9wUjscBG
-         R1CgMHBO0dSHm2SEq6nTdDXeVj0RxObKAH7Be/QBn1J9kSnVH50K0c0tSRJXNYVbirXe
-         gCQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:reply-to:date:in-reply-to:message-id
-         :mime-version:references:subject:from:to:cc;
-        bh=w8+VuMJWV7fnXYQnAR/imW2dw4pBJQeF54VXUV6T0ak=;
-        b=L7u/yOQCz/3misz97jFjv4L8RrNZDiouAbBFLC3aCN6Z2gZgzV07QsuHu5P6oBDJQ8
-         1fuuAalPCpSA5jMjmSfaoAQUbkqvBTLLMqDJhpUK8brxNyw+mUxRgU24Taku8JUIv9Rz
-         zh7DTNGnij290beyzThNVrwrTNlpQlV3olUBRS4f9FZkUeOctL4ePV2XscqT9lUN+h2B
-         5bUU/1Ci/DcnPWh80F77rz86Q/Ck4oKNs1hhUt3m9FIfRCdzjd/TZQf1D5sb6Np9yeVw
-         ULsG11y3bcYKxuiRmD/l7Xdl9TloyXtautC+Jo1lx1x+nzDy5Cp2oe9aKnz7rQ6ddSM4
-         FaTw==
-X-Gm-Message-State: AOAM531sDcW8h0QKBVfQ4NMPcE3bhfTyJe13LTZf86eHfFxsDGZe0Hr7
-        jiYdKpruOQdqdADo3Zg36hslaqZPJ1U=
-X-Google-Smtp-Source: ABdhPJxmgHNZ6JEXOBjMrTnWpIj+y1lncc+aqrq0evtEVSX15K53EUAMrwqzyfCT7pCOYVxqIeXox3TdFUk=
-X-Received: from seanjc798194.pdx.corp.google.com ([2620:15c:90:200:ce6:9e5f:4ab5:a0d2])
- (user=seanjc job=sendgmr) by 2002:ac8:5711:: with SMTP id 17mr13304311qtw.58.1635552508765;
- Fri, 29 Oct 2021 17:08:28 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 29 Oct 2021 17:08:00 -0700
-In-Reply-To: <20211030000800.3065132-1-seanjc@google.com>
-Message-Id: <20211030000800.3065132-9-seanjc@google.com>
-Mime-Version: 1.0
-References: <20211030000800.3065132-1-seanjc@google.com>
-X-Mailer: git-send-email 2.33.1.1089.g2158813163f-goog
-Subject: [PATCH v2 8/8] KVM: x86: Add checks for reserved-to-zero Hyper-V
- hypercall fields
-From:   Sean Christopherson <seanjc@google.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ajay Garg <ajaygargnsit@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S230506AbhJ3A5B (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 29 Oct 2021 20:57:01 -0400
+Received: from mail-cusazon11021018.outbound.protection.outlook.com ([52.101.62.18]:30959
+        "EHLO na01-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229734AbhJ3A5B (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 29 Oct 2021 20:57:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NXIN153+CnetazxE3MYhUxlOxuzC4eJwoo+e6ZuJjOHCPeDFO0drY//B0VmKJlb/Mh/zA8bPToxgDXg22lnkrHIjBkl0wMn/szPZV8r2UxxuLqMntUGEZpjGeSYXGVO1TH8yQ2DBGhJqiODAg5UmDOModRCdQPpOUERDSrO/P3XiLqq3R1FZeuEmV+RKfOUHKgTvPJDOnZdEgo56tepinY1NlZqLEwd94TRw43KTvFVsFBmeay3wSGjUZyFuiGQ0X6R5k/2lSBnjd4Q6LGCUPmyY9SJULijTsWj56OJMKOFqBoXpZ9KPi6rk5ablKdqbD2e7hrsSQ6WhixRtcP0SjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zBJB/6xYDlvQ86fms88Rp07Y5azxTXlT9qLIn9pzu/4=;
+ b=Z1y13ktTgsbgsHhgFTHgYkpL2hB/ynLBLFc4Wxd7Jpanm0nKvSRzQxgnRRjyOxCjUXt1UlSFfijTs//fDk9vEMQxdfm5ighpc3J6nvRB0QQ1qdg/fu7CEdyE/osuu5ZBQ+M+3XM9XHakrqQA9Z5/HuOtUfoTkJngPdnH46KaSiIrb3jho3iQFAiVy8j4TLWQy8TeokYA/fyme5Lcwk0OjNfpn3IXsW+QEQpc0gmMDw+NKQEb4AChBiTAtWeS3S/bXatzq/OuAQ6lU8r15+VgF4Sm+Q9WLuohIEIa6xLMjCl59HqEUoRh662VGiSkU6zS8JwTYL1Wba6mXcWs+aMrRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zBJB/6xYDlvQ86fms88Rp07Y5azxTXlT9qLIn9pzu/4=;
+ b=MB10VZaKXcaDzlrZ7sLwbjEaIkd5gRjfvYqZqDsdYz4/i6Lo2MKn9bwhF/yhTk0qdZt+9OHt+KSEZiNswMPjXxKGtmGGc0v0ReyRH3ozG5+/dW0gRD7376FW5/Lt67cHbbEEOsYNCEr+J3vepEbhjPxvt6uE1R3opG1ARzVHHpA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM5PR2101MB1095.namprd21.prod.outlook.com (2603:10b6:4:a2::17)
+ by DM6PR21MB1180.namprd21.prod.outlook.com (2603:10b6:5:161::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.3; Sat, 30 Oct
+ 2021 00:54:27 +0000
+Received: from DM5PR2101MB1095.namprd21.prod.outlook.com
+ ([fe80::c0b9:3e28:af1e:a828]) by DM5PR2101MB1095.namprd21.prod.outlook.com
+ ([fe80::c0b9:3e28:af1e:a828%4]) with mapi id 15.20.4649.010; Sat, 30 Oct 2021
+ 00:54:27 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     davem@davemloft.net, kuba@kernel.org, gustavoars@kernel.org,
+        haiyangz@microsoft.com, netdev@vger.kernel.org
+Cc:     kys@microsoft.com, stephen@networkplumber.org, wei.liu@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        shacharr@microsoft.com, paulros@microsoft.com, olaf@aepfle.de,
+        vkuznets@redhat.com, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH net-next 0/4] net: mana: some misc patches
+Date:   Fri, 29 Oct 2021 17:54:04 -0700
+Message-Id: <20211030005408.13932-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR22CA0002.namprd22.prod.outlook.com
+ (2603:10b6:300:ef::12) To DM5PR2101MB1095.namprd21.prod.outlook.com
+ (2603:10b6:4:a2::17)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:f:7661:5dff:fe6a:8a2b) by MWHPR22CA0002.namprd22.prod.outlook.com (2603:10b6:300:ef::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14 via Frontend Transport; Sat, 30 Oct 2021 00:54:26 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1b4e42be-9408-49b8-fa49-08d99b3fd2c3
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1180:
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM6PR21MB118064A05725A3D8F8B87CD3BF889@DM6PR21MB1180.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: akwLW677y0tlnfelxHmK3ln1s7iXrER7XJP8aEqQDbvlC3d4v8o190Wt6x/YflTjcAhIsNZY3YeT60vC3MSDKuCozR4FS+WijuuigKTamaHMHin2Ix3exLxmeii/9UgZbExM/B3nfmL9vnO40wBE0klAKRIlMB2aWyK8zjSKZP+ywUel6S88UZ6Y6ixqfu/jMrsgNOWdqSqNCjer3X0yvmDaxRYCGMXlzK/ck5fjHnwA6/bgJleNt3yW1Q8FsG9IgO9KmldWhzJJiuU7ITecRvbpz6q1dFIxfhAi49HE6hEDmZnS7VjfG1dQ9aisknrW1oIf4MgakQZ4urY6e7yPNe8X/fO6mPtPqtacCOTMsIeOO5onB1XmtWV9kJrRQNxofsf1wJs9HNL2z5QaiQMNW45MslofL7CEMqkwzSu8M0eElkT/4cVVcpt3Ovkl7f9XNw+5ap+x75OMJ+M7V6ocC0HGzuHqMCYx89jUU8ogD/KG5A0kx56FTNwUpBavqezURooltY3w4lOYZ7yvqsLufxmuHyUIlhnsoPwAxwFrgKUZmZ+iAGVQAKHS6arkAksy1JkO9XyGpMlgohrjK4/hPvBxWAQ28s9ir9KQ04Ef2uGjQ6fh6o6Mw0WEFXia4DqZ/UpGVK2foscNyo0zoGRIsw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB1095.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(4326008)(2906002)(1076003)(107886003)(508600001)(10290500003)(66946007)(316002)(186003)(4744005)(86362001)(7696005)(52116002)(8676002)(6486002)(7416002)(36756003)(82950400001)(66556008)(82960400001)(5660300002)(66476007)(38100700002)(8936002)(2616005)(83380400001)(6666004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/3W4us5lLDdHyzCz9wZXnUzy3UwH2ccrNgcYiieNMLgEKzugMIu28v8cLfpr?=
+ =?us-ascii?Q?jp3s5BqQrhfjIHujk3aa/cvWKcoUd7jQ1J5GPLrdRBUMPv/Cw+xHeXNZttxx?=
+ =?us-ascii?Q?S475zwp9qyA8sBlDCEHn56kZafT8xZirZhs7sYmNGpYkwDFZ5auIMNsyRmb9?=
+ =?us-ascii?Q?c2HDOEnwWNIfMAsW3pZJ2MDZhyOo71xbX8aMe/ybvDHXFTF58oFLlaxDBy3b?=
+ =?us-ascii?Q?xnlO6fnaDhrzm0CHcNdAHXIfkoQTirVIVShnWCaM58eDjJ6kJzTVh7yj5Eiw?=
+ =?us-ascii?Q?Z61S18eS3j488ECSq9xikz/OUNn3Ej2MooSH42teOTV+YP/M2JlnYVkvHppf?=
+ =?us-ascii?Q?/I5TtTJfiMIvL1tjlY1RiLAK/2NdddHJq/9gg8Ww7qUNxFBxQDY0Q5ohnVs/?=
+ =?us-ascii?Q?Ejk0Qg+PsEuYyE620ML5ctCwMhppnA3z+NFWeDquiDWZ77TXEQ9Dlm3p8QfB?=
+ =?us-ascii?Q?VhS0qVA90LbPP/fFNL+WKtBF+K5GnaeoaYsA+ECkmm5KjqSlq6JttSLfIspK?=
+ =?us-ascii?Q?kUvJD/rwNULj7mXRXKKqhPYitNdNtiSSbbZ/22XlcmGB4sCx2DriEmyinlTh?=
+ =?us-ascii?Q?gm8orPhS9RMc4vtX+//PPKqdilKRUkSOpEKD6F2ehEWRla/DlcSpcCVektPi?=
+ =?us-ascii?Q?1Eo/IpanRAni9oFtlP+IPM2QzZM0cbgRDS2kCvaCRMRDbWw9QNqgYjmbVLDi?=
+ =?us-ascii?Q?ksPfWzwzsbOZ3WS0KYtyqalgGH3xm6PH982yQmk9V84mxfa0KAeWHQazuVz+?=
+ =?us-ascii?Q?VCyR7ZGIJofPzDQOcdLzf3XIS4Hef5+eiZkVIAyqcdBcIdfsyT2T8fDE/oEA?=
+ =?us-ascii?Q?GZf38aVU/i0rCWhDBc1m8jPK6lKnYYA1Jv0TXKzNNtb4KVREj+p8QG5g51NC?=
+ =?us-ascii?Q?eFWW3E+/zlX1Qix031kmeKIVKmKcCKTTp1lS/TXZ+ZWdeJICR3BaTrWoieas?=
+ =?us-ascii?Q?8OXMpYSO3+jIHY87BGiBclLAShUuBIsdRMfa++Egx/wIzWy6uuK6Ua2yV6jp?=
+ =?us-ascii?Q?2tlgBGOcBWLoN72i1gb7HpxTHZAQ7V3QLcimsMQ8ha+FeZWCszBe2qpFJTLp?=
+ =?us-ascii?Q?3yC7Hp0unuC3iVLG0l6/5EOhvu3n9R9fJTfsnijKdxKrgDBl7Qa8HnugrgYc?=
+ =?us-ascii?Q?7AJ9ZW2Y9ARyjjgoqAz5xu0OahOGsVelrU6ywrcB/nNA3TBgeZkoTu2q9fNp?=
+ =?us-ascii?Q?3HLWfllHPurXyjecm4r5eHjIpsl8M9HbSw3Lou7+0F6OI9hem9e2Pxgiyu4k?=
+ =?us-ascii?Q?dR3LwVZu+BVVJnqU+l2qcq3A3XTg4sp3cHiax6ZQv3xsJ+pv7dB5zfXv+IxW?=
+ =?us-ascii?Q?LDZ1VZrppEoey04ib2hQ3vJnLI8yHwhQz/BrOfTPCVpDCqQoIAmqXRiYHGAh?=
+ =?us-ascii?Q?Wg/5nOlD5XHPg2NhoPlm56YNB6OZD++9/3X44BysZL9PsS/0V5nHqUE/1rJf?=
+ =?us-ascii?Q?4wH0DbiXm4HePKZtr4KKBOKOBWXg/JboKtMj48txPLCa9gWI6JQTNLeEcjCS?=
+ =?us-ascii?Q?JauFHQ82SyKeSixJc8x9ImJc3IG0HBI/aFAAr+KQh+SOfMGcCsjGXXmvNOJB?=
+ =?us-ascii?Q?t2uZ/4fD4edMMzZYR3SDgYmB/W/uXJRXJn+Hu7svqSxyCdZz5+Rv4MMZRTmO?=
+ =?us-ascii?Q?MjL9gU0lGpqStlAKCLxMRXPZTK9LVsrQpCEjEt2WNGClLqRDsOxdqMPH0cSb?=
+ =?us-ascii?Q?Jh2IBCBIgRtUhwB9FjLwgBGx9sI=3D?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b4e42be-9408-49b8-fa49-08d99b3fd2c3
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB1095.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2021 00:54:27.4197
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JuZpz3HeqdA2U3edaJWPb1TM4PGic2AGADdqeG5kzhaIuDYveKws0jALsHR+S74l338kz+gPibr47Ze/OkWlrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1180
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add checks for the three fields in Hyper-V's hypercall params that must
-be zero.  Per the TLFS, HV_STATUS_INVALID_HYPERCALL_INPUT is returned if
-"A reserved bit in the specified hypercall input value is non-zero."
+Hi all,
 
-Note, the TLFS has an off-by-one bug for the last reserved field, which
-it defines as being bits 64:60.  The same section states "The input field
-64-bit value called a hypercall input value.", i.e. bit 64 doesn't exist.
+Patch 1 is a small fix.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/hyperv.c             | 5 +++++
- include/asm-generic/hyperv-tlfs.h | 6 ++++++
- 2 files changed, 11 insertions(+)
+Patch 2 reports OS info to the PF driver.
+Before the patch, the req fields were all zeros.
 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index ad455df850c9..1cdcf3ad5684 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -2228,6 +2228,11 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 		goto hypercall_complete;
- 	}
- 
-+	if (unlikely(hc.param & HV_HYPERCALL_RSVD_MASK)) {
-+		ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
-+		goto hypercall_complete;
-+	}
-+
- 	if (hc.fast && is_xmm_fast_hypercall(&hc)) {
- 		if (unlikely(hv_vcpu->enforce_cpuid &&
- 			     !(hv_vcpu->cpuid_cache.features_edx &
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 1ba8e6da4427..92b9ce5882f8 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -183,11 +183,17 @@ enum HV_GENERIC_SET_FORMAT {
- #define HV_HYPERCALL_FAST_BIT		BIT(16)
- #define HV_HYPERCALL_VARHEAD_OFFSET	17
- #define HV_HYPERCALL_VARHEAD_MASK	GENMASK_ULL(26, 17)
-+#define HV_HYPERCALL_RSVD0_MASK		GENMASK_ULL(31, 27)
- #define HV_HYPERCALL_REP_COMP_OFFSET	32
- #define HV_HYPERCALL_REP_COMP_1		BIT_ULL(32)
- #define HV_HYPERCALL_REP_COMP_MASK	GENMASK_ULL(43, 32)
-+#define HV_HYPERCALL_RSVD1_MASK		GENMASK_ULL(47, 44)
- #define HV_HYPERCALL_REP_START_OFFSET	48
- #define HV_HYPERCALL_REP_START_MASK	GENMASK_ULL(59, 48)
-+#define HV_HYPERCALL_RSVD2_MASK		GENMASK_ULL(63, 60)
-+#define HV_HYPERCALL_RSVD_MASK		(HV_HYPERCALL_RSVD0_MASK | \
-+					 HV_HYPERCALL_RSVD1_MASK | \
-+					 HV_HYPERCALL_RSVD2_MASK)
- 
- /* hypercall status code */
- #define HV_STATUS_SUCCESS			0
+Patch 3 fixes and cleans up the error handling of HWC creation failure.
+
+Patch 4 adds the callbacks for hibernation/kexec. It's based on patch 3.
+
+Please review. Thanks!
+
+Thanks,
+Dexuan
+
+Dexuan Cui (4):
+  net: mana: Fix the netdev_err()'s vPort argument in mana_init_port()
+  net: mana: Report OS info to the PF driver
+  net: mana: Improve the HWC error handling
+  net: mana: Support hibernation and kexec
+
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 155 +++++++++++++-----
+ .../net/ethernet/microsoft/mana/hw_channel.c  |  71 ++++----
+ drivers/net/ethernet/microsoft/mana/mana.h    |   4 +-
+ drivers/net/ethernet/microsoft/mana/mana_en.c |  75 +++++++--
+ 4 files changed, 208 insertions(+), 97 deletions(-)
+
 -- 
-2.33.1.1089.g2158813163f-goog
+2.17.1
 
