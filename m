@@ -2,98 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA51143FE77
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Oct 2021 16:32:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BACD3440631
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Oct 2021 02:08:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbhJ2Oem (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 Oct 2021 10:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46218 "EHLO
+        id S231717AbhJ3AKo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 29 Oct 2021 20:10:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbhJ2Oel (ORCPT
+        with ESMTP id S231700AbhJ3AKk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 Oct 2021 10:34:41 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C7CC061714
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 07:32:13 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id w12-20020a056830410c00b0054e7ceecd88so13890896ott.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 07:32:13 -0700 (PDT)
+        Fri, 29 Oct 2021 20:10:40 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C4BC061766
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:11 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id q7-20020a25b007000000b005c1d1377abdso14097709ybf.23
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=NWKMZ//AyFWFbpFk6FF66OtPadVuan7a1ybZS8hGNR8=;
-        b=OdUZHnMAp5Q+kGlvjlOgqkFh5pQga8dAN3BIgtSKZecQ7Ew0vqNwVZZGjlrJDRQL3b
-         aQshkLytCL/ghDKv0hfUScfZ4ndg/5F3fGfJzpCz6V41t/Ng+oxomBp0oTY1Mo+biY7t
-         9+rdjhPkzzTTBYr1b8tK0XBHZwiP6EpMS7JHILVtN4/dE8drKiHcvqyNwr48II7cbj5Z
-         HGYoor0KvKkLupUjdpUHZck62OZDC01yg3GDvfxrjPqFsPqPCJfxE8xjwWi2/OfKxAKf
-         B36gqoyfVnjrktDRwBaEktqGftpnTrubhMM5GKcZBZmt8fIv5mT989TAEvMKmHqEH4yQ
-         XVlw==
+        d=google.com; s=20210112;
+        h=reply-to:date:message-id:mime-version:subject:from:to:cc;
+        bh=MitYekao9rqnFTXUAu9e8R+/MKTk3btas9HJLycPsWc=;
+        b=my9LTkQDSabE3uNrKhMOQ2hYTIoQgwsz/LmNZkzGOHCRzyJkKca1ngJ6utKC9iC1/t
+         QhlZalPYJZ3tgsKfRNlq+6LD1g/RkJRw3mpUHu57gpL3p8H4xmmgccC2UXx7yejWm9fR
+         rSItlwVGidUiWjDE0OGLnmeeJOFw37ispjN9W2SB+/QIv5hkcfQ4EqQjaYp3VHyHuvqH
+         HhZBOmCTkaaUXbGgfSaD/fhTUC4E/H6VJtf1MuAyHpTJpB19zZeudVRj7NzZWeZqDyz0
+         KVjRq/ta9HEWXn0OELRkX+g6dFHCrO4QRSGfGSbBT9TEVl8SHHR4+O3IK4ZCX22eO0z/
+         12vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=NWKMZ//AyFWFbpFk6FF66OtPadVuan7a1ybZS8hGNR8=;
-        b=VDsaIR0t0edo+Lx/E7kKDBlBQpRkTwhswW7QK98p5vKZ5mnEpCykCxUOLLU2/HEuH1
-         xZfWt39Welq5t5mdqOhpFCp6VLUpLfmYZWOxPGFj4oZ72Rfoi76tj+i/+NzlgjUxcMQN
-         4O8728rAVaqjrt+tW8uwSk3NukHQDhy5f8yq3ku32Ke45w5/GcQPelP9rsN8oe/8Q9xP
-         H+lkMr4BlO2Zj9K0COg7vPfsCe9UliqwYO5NQQiFS2bHV0IHELCGWO16btL0MnnMOKX1
-         Rp60xsQZ2QX4n+P1ol4mO4f+nC2EiwzhpXhmVgVEyfwolEb3GTLFstrzKolAXaXvLPTp
-         tYKw==
-X-Gm-Message-State: AOAM532l9oBEL5Y5MFGXIP76OVmevf112LtA5w/LtPBfAhgc5HAKO0ob
-        I74mHCejxwptpU5wt6a8WuSlI4bUNzs1qQqFV4/cVOKVt2xXhw==
-X-Google-Smtp-Source: ABdhPJzJrEp2X4WT9fZxnNaiG4GmPknEy0WIykVQ4B98W4j1hLxbMXIsFwnyCtmTV4DzpLu8sff+f49a5bEy5zz9M/A=
-X-Received: by 2002:a25:b84f:: with SMTP id b15mr12167652ybm.428.1635517922051;
- Fri, 29 Oct 2021 07:32:02 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a05:7110:700c:b0:fa:6b8d:fe70 with HTTP; Fri, 29 Oct 2021
- 07:31:59 -0700 (PDT)
-Reply-To: uchennailobitenone@gmail.com
-From:   uhenna <tochiuju11@gmail.com>
-Date:   Fri, 29 Oct 2021 07:31:59 -0700
-Message-ID: <CA+6axKtvCoFG+_Jsf5uV+741-9XVTiNrPEhyKswvwXSOEvYzFA@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
+        h=x-gm-message-state:reply-to:date:message-id:mime-version:subject
+         :from:to:cc;
+        bh=MitYekao9rqnFTXUAu9e8R+/MKTk3btas9HJLycPsWc=;
+        b=OxlxYNFNRKdAuEHZ5azLeEr86ZulzyfvrwDQOU4R3w6bZft6k4yGvbS/MVjpiH6XEP
+         cuwmcKSGGF9POi/8YD8Sl8AMsqG0BiW5N/GBGsh8cLKs6Waq7Q/KUUALL3CkubbrYFy0
+         tJKsS2H8cLeWEKLrU7spMr+uB3u9lBY2jo3ZW3ACuI2j1816I9jFMUIwSgwtnCTCm1qp
+         BBEKwyevOVVCOm28OYXtmgXgBj+e1NKY8TC/A5dklt6YLljskkVBz0tpLT2P8rSJt9w3
+         hC2988DWntjrxjMdWee0TKZ5z/xhUZSfeyXMKoM4c4xqEEs47vxrC6btnlQbREqN49Wb
+         Is1g==
+X-Gm-Message-State: AOAM531Ua/YsUi3SojYXRYakf0yaEtdS1xt8vIj4Ra7WNg1HEd1G/6bV
+        uGp4JCoYUob2cbzL8P72OSA9W/MjxsI=
+X-Google-Smtp-Source: ABdhPJwZ2XQbbdMh4Oubf+Z+oTyEdeydN5FjqJXnMZxUNKnOYppZlMFuqVxKis25KfxbME9PXm4evnP2z0A=
+X-Received: from seanjc798194.pdx.corp.google.com ([2620:15c:90:200:ce6:9e5f:4ab5:a0d2])
+ (user=seanjc job=sendgmr) by 2002:a25:3082:: with SMTP id w124mr15887159ybw.6.1635552490730;
+ Fri, 29 Oct 2021 17:08:10 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date:   Fri, 29 Oct 2021 17:07:52 -0700
+Message-Id: <20211030000800.3065132-1-seanjc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.33.1.1089.g2158813163f-goog
+Subject: [PATCH v2 0/8] KVM: x86: Hyper-V hypercall fix and cleanups
+From:   Sean Christopherson <seanjc@google.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ajay Garg <ajaygargnsit@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Attention Please,
+Fix a bug where KVM incorrectly skips an "all_cpus" IPI request, and misc
+cleanups and enhancements for KVM handling of Hyper-V hypercalls.
 
-I am Bar. uchenna ilobi ,  How are you, I hope you are fine and
-healthy? This is to inform you that i have concluded the transaction
-successfully with the help of a new partner from Venezuela and now the
-fund has been transferred to Venezuela into the bank account of the
-new partner.
+Note, I couldn't find any documentation on the DEBUG hypercalls, I'm
+basically just guessing that they don't have a variable sized header
+and thus should reject hypercalls with a non-zero VARHEAD field.
 
-Meanwhile, I have decided to compensate you with the sum of
-US$350,000.00 (thiree Hundred and Fifty Thousand United States
-Dollars) due to your past effort, though you disappointed me along the
-line. But nevertheless I am very happy for the successful ending of
-the transaction without any problem and that is the reason why i have
-decided to compensate you with the sum of US$350,000.00 so that you
-will share the joy with me.
+Sean Christopherson (8):
+  KVM: x86: Ignore sparse banks size for an "all CPUs", non-sparse IPI
+    req
+  KVM: x86: Get the number of Hyper-V sparse banks from the VARHEAD
+    field
+  KVM: x86: Refactor kvm_hv_flush_tlb() to reduce indentation
+  KVM: x86: Add a helper to get the sparse VP_SET for IPIs and TLB
+    flushes
+  KVM: x86: Don't bother reading sparse banks that end up being ignored
+  KVM: x86: Shove vp_bitmap handling down into sparse_set_to_vcpu_mask()
+  KVM: x86: Reject fixeds-size Hyper-V hypercalls with non-zero
+    "var_cnt"
+  KVM: x86: Add checks for reserved-to-zero Hyper-V hypercall fields
 
-I advise you to contact my secretary for Atm Card of US$350.000.00,
-which I kept for you. Contact him now without any delay.
+ arch/x86/kvm/hyperv.c             | 172 ++++++++++++++++++------------
+ arch/x86/kvm/trace.h              |  14 +--
+ include/asm-generic/hyperv-tlfs.h |   7 ++
+ 3 files changed, 120 insertions(+), 73 deletions(-)
 
-Name: solomon brandy
+-- 
+2.33.1.1089.g2158813163f-goog
 
-Email:solomonbrandyfiveone@gmail.com
-
-Kindly reconfirm to him the following below information:
-
-Your full name_________________________
-Your address__________________________
-Your country___________________________
-Your age______________________________
-Your occupation________________________
-Your cell Phone number______________________
-
-Note that if you did not send him the above information complete, he
-will not release the Atm card to you because he has to be sure that it
-is you. Ask him to send you the total sum of ($350.000.00 ) Atm card,
-which I kept for you.
-
-Best regards,
-
-Mr. uchenna ilobi
