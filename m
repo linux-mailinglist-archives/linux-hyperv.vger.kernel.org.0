@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0012344064F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Oct 2021 02:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 780D4440651
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Oct 2021 02:09:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231932AbhJ3ALV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 Oct 2021 20:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35446 "EHLO
+        id S232176AbhJ3ALk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 29 Oct 2021 20:11:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231995AbhJ3AK5 (ORCPT
+        with ESMTP id S232020AbhJ3ALA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 Oct 2021 20:10:57 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3E1C061226
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:27 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id v20-20020a25fc14000000b005c2109e5ad1so2521835ybd.9
-        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:27 -0700 (PDT)
+        Fri, 29 Oct 2021 20:11:00 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CD1C06120C
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:29 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id w14-20020ac87e8e000000b002ac1791f633so4455783qtj.21
+        for <linux-hyperv@vger.kernel.org>; Fri, 29 Oct 2021 17:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=reply-to:date:in-reply-to:message-id:mime-version:references
          :subject:from:to:cc;
-        bh=7YTOHGbXRx0pd53EDlA19/QLrIOrDD/OrONYgkhDNaY=;
-        b=mJIRSnmWMZ3K5bJb2gYumed0yA8AwHNuP1wn9fwKVtmf73DoT4rBb3mK7Nuuo8b5dt
-         4UD1yRhEBvJBzLlBS0caGMxENHeQlMZiPVT9Ynrn56n2+c4uLYa6VVp7yA/bkouRIiMf
-         DdbJ7JNykV5fZ4efNbCw4VXcIqboOCbHBdHcPoCw7M50vJdw20kq3KGvBycY4+WIdFaU
-         lpZfKf3rB9qj3klLdWNaql1M5yHLWQsDQ7XyaLZvbqM3h6rIc9Q/hcJmOllXKAm2QMbf
-         l6YXu2FCJkUqGM/ASlp1JizyPSQAyMv1P2FWXEPC7vDsLaESucFmXnh7SPENssI8I15l
-         CqRQ==
+        bh=w8+VuMJWV7fnXYQnAR/imW2dw4pBJQeF54VXUV6T0ak=;
+        b=jZ/TG0DzTsxGEQDaaW10aSLugJ9r7BLSrb2cjlCT0Fjzmx2Js1P0RaP2VeEiqVIeLk
+         fWkONscVCDVZyhiV8Y44SIzNTIidQZWJCNVlUjVK/vEI1L3TKVByUUvUbuKAKS2Q8DU9
+         bzQQFdNSviP7KT5a4EvT5+PuY4yS7J25eWs1d0sveB58xugu2vdgAroxrKs4dwx3Cgvn
+         ben2KBlIV122IPNQtU4jHuQ/VrrO7vLZSiQz46TJbDRq3vAjm5lA3/7fYuwP9wUjscBG
+         R1CgMHBO0dSHm2SEq6nTdDXeVj0RxObKAH7Be/QBn1J9kSnVH50K0c0tSRJXNYVbirXe
+         gCQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:reply-to:date:in-reply-to:message-id
          :mime-version:references:subject:from:to:cc;
-        bh=7YTOHGbXRx0pd53EDlA19/QLrIOrDD/OrONYgkhDNaY=;
-        b=7oIliBQdkiokiNypudhpoaAooBIc1nRFO8XLaYKsqqwdbRlRi0PcwPUSfwlqxmrPjl
-         wRaH4xw0qaYQTIfRLIBomynQ46LaZvKYlvZ5jV2K4M0eB06+WsX1J3/t3g15itZlrjc5
-         7tO2zm/ooBn+tGake7+BI/iaSGpI8iMaC4o8EAcQzwpfFIim5s/xrK7lbUTOMT88uYp3
-         ezkwtE75V+V5Rt6/BH2yiTYpMlFcuE5tLXa5/+bxVO5UQoeQKXtKWpm6FuOQdUP8EpEy
-         bUo+3yTv7oCIkzSo6+LpKVreAjvyES2rnHxfDCXIZCiYfIGn5mXN2QunvvbKUpEAAU7L
-         IrEw==
-X-Gm-Message-State: AOAM533ou2vQs/sjUo+P5eSlw7XnxpQJbsMuXwLSouAuAN8X+u/KF5Rv
-        kfeJkR8Yj7DKF11RnNfvnDI5cHOItb0=
-X-Google-Smtp-Source: ABdhPJwOge/x4WwUAfBe4uN0yFwOjxJZLofxDVUmWKRExOA5YnXto3HDG50mi7m3czLysSnezaPvfu89U6I=
+        bh=w8+VuMJWV7fnXYQnAR/imW2dw4pBJQeF54VXUV6T0ak=;
+        b=L7u/yOQCz/3misz97jFjv4L8RrNZDiouAbBFLC3aCN6Z2gZgzV07QsuHu5P6oBDJQ8
+         1fuuAalPCpSA5jMjmSfaoAQUbkqvBTLLMqDJhpUK8brxNyw+mUxRgU24Taku8JUIv9Rz
+         zh7DTNGnij290beyzThNVrwrTNlpQlV3olUBRS4f9FZkUeOctL4ePV2XscqT9lUN+h2B
+         5bUU/1Ci/DcnPWh80F77rz86Q/Ck4oKNs1hhUt3m9FIfRCdzjd/TZQf1D5sb6Np9yeVw
+         ULsG11y3bcYKxuiRmD/l7Xdl9TloyXtautC+Jo1lx1x+nzDy5Cp2oe9aKnz7rQ6ddSM4
+         FaTw==
+X-Gm-Message-State: AOAM531sDcW8h0QKBVfQ4NMPcE3bhfTyJe13LTZf86eHfFxsDGZe0Hr7
+        jiYdKpruOQdqdADo3Zg36hslaqZPJ1U=
+X-Google-Smtp-Source: ABdhPJxmgHNZ6JEXOBjMrTnWpIj+y1lncc+aqrq0evtEVSX15K53EUAMrwqzyfCT7pCOYVxqIeXox3TdFUk=
 X-Received: from seanjc798194.pdx.corp.google.com ([2620:15c:90:200:ce6:9e5f:4ab5:a0d2])
- (user=seanjc job=sendgmr) by 2002:a25:abe3:: with SMTP id v90mr2400647ybi.315.1635552506473;
- Fri, 29 Oct 2021 17:08:26 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:ac8:5711:: with SMTP id 17mr13304311qtw.58.1635552508765;
+ Fri, 29 Oct 2021 17:08:28 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 29 Oct 2021 17:07:59 -0700
+Date:   Fri, 29 Oct 2021 17:08:00 -0700
 In-Reply-To: <20211030000800.3065132-1-seanjc@google.com>
-Message-Id: <20211030000800.3065132-8-seanjc@google.com>
+Message-Id: <20211030000800.3065132-9-seanjc@google.com>
 Mime-Version: 1.0
 References: <20211030000800.3065132-1-seanjc@google.com>
 X-Mailer: git-send-email 2.33.1.1089.g2158813163f-goog
-Subject: [PATCH v2 7/8] KVM: x86: Reject fixeds-size Hyper-V hypercalls with
- non-zero "var_cnt"
+Subject: [PATCH v2 8/8] KVM: x86: Add checks for reserved-to-zero Hyper-V
+ hypercall fields
 From:   Sean Christopherson <seanjc@google.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -73,88 +73,58 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Reject Hyper-V hypercalls if the guest specifies a non-zero variable size
-header (var_cnt in KVM) for a hypercall that has a fixed header size.
-Per the TLFS:
+Add checks for the three fields in Hyper-V's hypercall params that must
+be zero.  Per the TLFS, HV_STATUS_INVALID_HYPERCALL_INPUT is returned if
+"A reserved bit in the specified hypercall input value is non-zero."
 
-  It is illegal to specify a non-zero variable header size for a
-  hypercall that is not explicitly documented as accepting variable sized
-  input headers. In such a case the hypercall will result in a return
-  code of HV_STATUS_INVALID_HYPERCALL_INPUT.
+Note, the TLFS has an off-by-one bug for the last reserved field, which
+it defines as being bits 64:60.  The same section states "The input field
+64-bit value called a hypercall input value.", i.e. bit 64 doesn't exist.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/hyperv.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ arch/x86/kvm/hyperv.c             | 5 +++++
+ include/asm-generic/hyperv-tlfs.h | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
 diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 3d83d6a5d337..ad455df850c9 100644
+index ad455df850c9..1cdcf3ad5684 100644
 --- a/arch/x86/kvm/hyperv.c
 +++ b/arch/x86/kvm/hyperv.c
-@@ -2241,14 +2241,14 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+@@ -2228,6 +2228,11 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+ 		goto hypercall_complete;
+ 	}
  
- 	switch (hc.code) {
- 	case HVCALL_NOTIFY_LONG_SPIN_WAIT:
--		if (unlikely(hc.rep)) {
-+		if (unlikely(hc.rep || hc.var_cnt)) {
- 			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
- 			break;
- 		}
- 		kvm_vcpu_on_spin(vcpu, true);
- 		break;
- 	case HVCALL_SIGNAL_EVENT:
--		if (unlikely(hc.rep)) {
-+		if (unlikely(hc.rep || hc.var_cnt)) {
- 			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
- 			break;
- 		}
-@@ -2258,7 +2258,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 		fallthrough;	/* maybe userspace knows this conn_id */
- 	case HVCALL_POST_MESSAGE:
- 		/* don't bother userspace if it has no way to handle it */
--		if (unlikely(hc.rep || !to_hv_synic(vcpu)->active)) {
-+		if (unlikely(hc.rep || hc.var_cnt || !to_hv_synic(vcpu)->active)) {
- 			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
- 			break;
- 		}
-@@ -2271,14 +2271,14 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 				kvm_hv_hypercall_complete_userspace;
- 		return 0;
- 	case HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST:
--		if (unlikely(!hc.rep_cnt || hc.rep_idx)) {
-+		if (unlikely(!hc.rep_cnt || hc.rep_idx || hc.var_cnt)) {
- 			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
- 			break;
- 		}
- 		ret = kvm_hv_flush_tlb(vcpu, &hc, false);
- 		break;
- 	case HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE:
--		if (unlikely(hc.rep)) {
-+		if (unlikely(hc.rep || hc.var_cnt)) {
- 			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
- 			break;
- 		}
-@@ -2299,7 +2299,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 		ret = kvm_hv_flush_tlb(vcpu, &hc, true);
- 		break;
- 	case HVCALL_SEND_IPI:
--		if (unlikely(hc.rep)) {
-+		if (unlikely(hc.rep || hc.var_cnt)) {
- 			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
- 			break;
- 		}
-@@ -2331,6 +2331,11 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 			ret = HV_STATUS_OPERATION_DENIED;
- 			break;
- 		}
-+		if (unlikely(hc.var_cnt)) {
-+			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
-+			break;
-+		}
++	if (unlikely(hc.param & HV_HYPERCALL_RSVD_MASK)) {
++		ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
++		goto hypercall_complete;
++	}
 +
- 		vcpu->run->exit_reason = KVM_EXIT_HYPERV;
- 		vcpu->run->hyperv.type = KVM_EXIT_HYPERV_HCALL;
- 		vcpu->run->hyperv.u.hcall.input = hc.param;
+ 	if (hc.fast && is_xmm_fast_hypercall(&hc)) {
+ 		if (unlikely(hv_vcpu->enforce_cpuid &&
+ 			     !(hv_vcpu->cpuid_cache.features_edx &
+diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+index 1ba8e6da4427..92b9ce5882f8 100644
+--- a/include/asm-generic/hyperv-tlfs.h
++++ b/include/asm-generic/hyperv-tlfs.h
+@@ -183,11 +183,17 @@ enum HV_GENERIC_SET_FORMAT {
+ #define HV_HYPERCALL_FAST_BIT		BIT(16)
+ #define HV_HYPERCALL_VARHEAD_OFFSET	17
+ #define HV_HYPERCALL_VARHEAD_MASK	GENMASK_ULL(26, 17)
++#define HV_HYPERCALL_RSVD0_MASK		GENMASK_ULL(31, 27)
+ #define HV_HYPERCALL_REP_COMP_OFFSET	32
+ #define HV_HYPERCALL_REP_COMP_1		BIT_ULL(32)
+ #define HV_HYPERCALL_REP_COMP_MASK	GENMASK_ULL(43, 32)
++#define HV_HYPERCALL_RSVD1_MASK		GENMASK_ULL(47, 44)
+ #define HV_HYPERCALL_REP_START_OFFSET	48
+ #define HV_HYPERCALL_REP_START_MASK	GENMASK_ULL(59, 48)
++#define HV_HYPERCALL_RSVD2_MASK		GENMASK_ULL(63, 60)
++#define HV_HYPERCALL_RSVD_MASK		(HV_HYPERCALL_RSVD0_MASK | \
++					 HV_HYPERCALL_RSVD1_MASK | \
++					 HV_HYPERCALL_RSVD2_MASK)
+ 
+ /* hypercall status code */
+ #define HV_STATUS_SUCCESS			0
 -- 
 2.33.1.1089.g2158813163f-goog
 
