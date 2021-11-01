@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9855441397
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Nov 2021 07:07:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C029F4413F4
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Nov 2021 08:03:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbhKAGKG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 Nov 2021 02:10:06 -0400
-Received: from mail-cusazon11020018.outbound.protection.outlook.com ([52.101.61.18]:18215
+        id S230097AbhKAHGA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 1 Nov 2021 03:06:00 -0400
+Received: from mail-cusazon11020015.outbound.protection.outlook.com ([52.101.61.15]:7442
         "EHLO na01-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230333AbhKAGKB (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 Nov 2021 02:10:01 -0400
+        id S230407AbhKAHF5 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 1 Nov 2021 03:05:57 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cpcj0/rIRMGJu5W/+b2V0oMoDlZUkl/qwVYQ2cN4OUg9plqlptOYNlI6Y1TpSyuPSd+deTro4gsu4G63hdqCw/tWXP2WOPaIzKJcpLfQ4pZni3KTJswwCBh7DATcIMfBFGM0U/9HHRZxznKHLrbzoVpG0f8ppvSvdZkEpuGcvtuMHaZClQhHuts/W2bfzu4AGQpIOz1FxOcZniJt4GZb8GNkcAUXibqd/+qmjI4y4bfbGxw24rGd1SGAxeGzVL+2wXmSulq+RNJQvpxZqsrelxCxxiDAezq72zzLSm2hrEmBmjJmlPLpiBRYkwBKHswLqi6FsRRvbBzyRl330XSmWg==
+ b=UMOAdLBNBUEMFN+rcpz/ts2kDt7Vhu4WcQfCKut+dx4BGOVk3sNdpQADZ6VBfgSPGuDULiCVh8mv9h3ntsRvNr+p38QwjO7zOaByNzYwfh/GQdrUcNaxEp8A8D+huQYfmBD/4wGOql4iaDg4GVyRIM7PFQl9TwJodnp7jzvoY8TmhtHmNUdE6cuuaoDcO0+lF/U2rmgvFqt2X8tvKraoVmMeVZ/7sZejZzZ8xok+ARwArJewmzyhU+vLExZt8AvwxSh29Vdk4kiS5LWRgEZSfxSp9XGrVjv9Fc+W2aYTlQ+W/SqOR+h/yMy+0O8Z3VdHZUcl8ghEDoVxaox2/ErwAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PgdmJYeDQDjA5yqfoByc/fCDup9IiM6eonumG3X3Mpo=;
- b=RAeJQSPgW2hz+6Eo/QImQniHibYuuoxLJsOoilCTi8QbN4nc6QFrCzGKRVoihhsVAXAb6Gapt/dg7V3XI9ssBwELaVi489JWl5j3IaKu1Vl8zkv2fu4uCcXAsSyrcqMzezuI/klFeo5Bzm3ihkjHbh0agGw0z7yFSgHgW8Qvv/v66vknOQnGSeY0XjvBOpgXLXVVLR7ly12E9zhJ++RR7XD5KvlvHLc2BBDWFCWyu+3cMMFRq5hbDItgcYkS2ZbAuZ7wVJw99onarwAoEm/O70QcFMMD4V9BRdEifoZDWk3t4tooYEbTJHFj8DVcMB6+lN8eJEQNPdIjSVCCLVsw1A==
+ bh=r8qxLUd7RbAVe40XXDRRU8O8s2yS3szkxoGHCBcM5ng=;
+ b=TQeeORRKiKsoZdfqRHfEdc4V2EeSwBMbsQJ0PqXGy/jhmqFyBIUNTC+iZzCZK4xNq1OoUZDtZ5Qy0gOVpUYmDY54INDEVZ6Sp1gvse+O8AgcDUWXgavx4J1WlbWcKnvK27EUnm7IP2ls9hb/IBGXgRpDXq9QjuTYoJJACHnb2HaKQzuY7J3pVHWLh/UZsLl1/fCl0zC50C9x/pUcBLf6WKGSoTEqoBKajUIRke7826+lS3WI1S17sRse9UvgOTHYsX9hVfffCbO8nL1aOgJgG3arxyPyk3slOsMxuraRrrkKvnFDBRjxk9Sgsz7GaRpzvD3Ds0R2NX17ayi4AxzMHw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PgdmJYeDQDjA5yqfoByc/fCDup9IiM6eonumG3X3Mpo=;
- b=T3pwtcHMwDo3UiA23tUl1Zxs9g0NPKxxmbdF/geTra9G2MBpien1IjjNUE1zJePdSgO6pMnk5c+wPOjxIkP8ZkZrPLsQRsrz+586O6atcudQ1wvbCYqgGr6W30mOyuDTTMh5VTeJjNCpiRkKZQjcxIrFIAg0HwZT2SQEbswnaUc=
+ bh=r8qxLUd7RbAVe40XXDRRU8O8s2yS3szkxoGHCBcM5ng=;
+ b=QPWIqu6AQdX5BpmFEdS7s8tmJbwJTyk9YkvNf/Bz1Q6H11X0Y12T1E2+aIJNFbqYhQUxstt5roq4KGpbTYsgqUcOB9aW7i8egiE7HIPdao9cRKV+QT5EgEhcwoqIU15BCKzjgTn9wIG886EJFwoqcZhRA1vx1i5aMMv5JFWHBuk=
 Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
- by BYAPR21MB1623.namprd21.prod.outlook.com (2603:10b6:a02:c7::11) with
+ by SJ0PR21MB1869.namprd21.prod.outlook.com (2603:10b6:a03:2a2::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.1; Mon, 1 Nov
- 2021 06:07:22 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.3; Mon, 1 Nov
+ 2021 07:03:19 +0000
 Received: from BYAPR21MB1270.namprd21.prod.outlook.com
  ([fe80::9c8a:6cab:68a6:ceb1]) by BYAPR21MB1270.namprd21.prod.outlook.com
  ([fe80::9c8a:6cab:68a6:ceb1%6]) with mapi id 15.20.4690.002; Mon, 1 Nov 2021
- 06:07:22 +0000
+ 07:03:19 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     Haiyang Zhang <haiyangz@microsoft.com>,
         "davem@davemloft.net" <davem@davemloft.net>,
@@ -50,117 +50,341 @@ CC:     KY Srinivasan <kys@microsoft.com>,
         Shachar Raindel <shacharr@microsoft.com>,
         Paul Rosswurm <paulros@microsoft.com>,
         "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH net-next 2/4] net: mana: Report OS info to the PF driver
-Thread-Topic: [PATCH net-next 2/4] net: mana: Report OS info to the PF driver
-Thread-Index: AQHXzSi7j12SBr54K0+FgVaU2HF9LKvrq/WwgAKGocA=
-Date:   Mon, 1 Nov 2021 06:07:22 +0000
-Message-ID: <BYAPR21MB127031948D2C6E22F8EC805ABF8A9@BYAPR21MB1270.namprd21.prod.outlook.com>
+Subject: RE: [PATCH net-next 4/4] net: mana: Support hibernation and kexec
+Thread-Topic: [PATCH net-next 4/4] net: mana: Support hibernation and kexec
+Thread-Index: AQHXzSi5FL+xs47DTkemjnXcBfjf5qvrr5YAgAKLS0A=
+Date:   Mon, 1 Nov 2021 07:03:19 +0000
+Message-ID: <BYAPR21MB1270A16AA0BF1A302BABCB3FBF8A9@BYAPR21MB1270.namprd21.prod.outlook.com>
 References: <20211030005408.13932-1-decui@microsoft.com>
- <20211030005408.13932-3-decui@microsoft.com>
- <BN8PR21MB128404C264B2E9081C97CF19CA889@BN8PR21MB1284.namprd21.prod.outlook.com>
-In-Reply-To: <BN8PR21MB128404C264B2E9081C97CF19CA889@BN8PR21MB1284.namprd21.prod.outlook.com>
+ <20211030005408.13932-5-decui@microsoft.com>
+ <BN8PR21MB1284785C320EFE09C75286B6CA889@BN8PR21MB1284.namprd21.prod.outlook.com>
+In-Reply-To: <BN8PR21MB1284785C320EFE09C75286B6CA889@BN8PR21MB1284.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=92854149-9044-49ec-a825-aa3732946519;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-10-30T15:30:59Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=38d1b54a-de51-47ac-a27e-8db573cfb9ed;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-10-30T15:43:58Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 10d23757-37dd-4eb9-8a35-08d99cfdde7d
-x-ms-traffictypediagnostic: BYAPR21MB1623:
+x-ms-office365-filtering-correlation-id: cc9771ea-1db3-4528-28ec-08d99d05af60
+x-ms-traffictypediagnostic: SJ0PR21MB1869:
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR21MB162319FE4DC46680F2449610BF8A9@BYAPR21MB1623.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-microsoft-antispam-prvs: <SJ0PR21MB18697A9BB9DC1A21664762FDBF8A9@SJ0PR21MB1869.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PhyWixYxeNXJsG01oyJrgoK0l/XgLvqJw5KfN3AviM5Br/x/FndooWnibmJoTQwzyGhxq+4D4EXt/9vOnQc8E8BekqMhbk26DCrPqo1zZLQr0UNFHQ6L2ACOsFS/CfOXrGDlGRmvVh5FVa71xeq+3i9d/t6zguR/akJ/WjhWw31QuzOURg+m00rKzBLOYvB6jIALmNzzB4AuIpXydXgE0EXmVClFDIf5bjXMo3T7FL3gOReAkpcNoXscGAmgvvLPrce0cC6ugT2k7FTT5xYBL9yjfDBXAWWx+WOWjFHQooe9Wqp7rxcQUAomqNOJWcSEECY7gbbKwQ+99HcxLUPIEZK2fBhVMOZ+Nca+1L8Zj53tzy+xR0dDf8Ps7O/I3ifH1f21oeIN1Vg3d2r00MSmlk0iDtcNf29v/35yg30mrKzTqfclwRqAtL0mGJnbTckAE7uxcsCv8p413I1lUxnjQge8CmnxJ0Xa6FjAsecdM2FstrKc0qSIb4Hl/utF20bLfW1LMV0ppVWIgbvS02tj9mMJzTkWiizXJQV5HZP0YyeIsPaieRlJinMrknqTsCoT9BOYNmd1yajLoV9oYUbktIaiAMDjB5Jzk+CssREPUgrvIX8IEVH8/l+Fr2fcWGpK9hhNSBUxRW+mhjAlwvz8AHG7RqbOgXw+fEr1cprRtFRw0iUeRRdEkZCTLvz4ScJd5DxL940J3vAVxdwvJhyx+A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(26005)(9686003)(66556008)(86362001)(54906003)(2906002)(76116006)(7416002)(55016002)(38100700002)(66946007)(66446008)(186003)(83380400001)(122000001)(64756008)(4326008)(66476007)(52536014)(71200400001)(110136005)(82960400001)(33656002)(7696005)(82950400001)(8936002)(6506007)(8990500004)(8676002)(38070700005)(5660300002)(508600001)(10290500003)(316002);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: IunYoaSnBRwH0ArwqmY+WZri0oULEqrlK9zqM+zfNl4ezN4cnizirpOAFlfhsutyLqWx4GMZUZPGXmYqCMUPp+ji3NAdFsYzV2t1Hsn+gtyCYDZyct9KSXW/ne0XCFHrMhu8o/vKhB+37Mo9AZgUMjvunelGt9HPseCZ0Ai407DVCVUNVoE2kZBVFG/1qP36iD3wIut4iHYrVndEbF3IzGYfdfEahlPoLOBZT9/KEj74+dC6cFcOPcJUrzYHiEJkiUN+c0TbHJxxNhvGJN29ay6IKldJJLnTjQXzZVLiyKZ+6IGxIGBG7FAShoMiJJKxS0OY3Lub60Z6gmzPVrf9CLyeL4cqLjnIWOgQdPTxkz/FNFbHVOCFjGjhgcxpgXEjA/cxoAiS/J3NCKELJFPSLBbItrqfEBulPdCRe4H/dJiY8lmfUrQEsNU0NtQeDQe8o9JoQ8ppEDRuj7kj/NN4xAwpcGOwC34jRg7g/YurPaRBJBTeN7w1ESksWNgAAwcWBMJd+wx/nCDNhCwrixTeJXWtFRSVXubBf7gV6f+6SeHjopOxIC9ODUkBELESTyaK064+eGr3fckW2ZD8mppgCs9dD3da+nAboQTio3st6ZULl/PRIhHjfhrmoQEzZq6MllMiYUO8UzKA20F5eGgI6ZTqNjici/SAM9+J4FtDZL5vu1A4LR47pU47BB8UOgK5oJyN4flV3B9PGa1OkCn3YQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(54906003)(33656002)(38070700005)(71200400001)(66446008)(64756008)(66556008)(55016002)(9686003)(6506007)(66476007)(76116006)(66946007)(4326008)(86362001)(10290500003)(38100700002)(122000001)(508600001)(8936002)(26005)(186003)(8676002)(83380400001)(52536014)(5660300002)(7696005)(2906002)(8990500004)(82950400001)(82960400001)(110136005)(7416002)(316002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?BqHyG8hEXKt5qaHssZIXKCgdObwm2zmcQmbYfpmWNxSllu1YqcMllpljSC1e?=
- =?us-ascii?Q?Slytrt5htEofmr5q3AhC7k3hVhGKc/w4mHtiih2BucnmwuzHmUn2mRZSrAmf?=
- =?us-ascii?Q?7WpiNvwILSqIUhGn06IYRi0zPh6pXjQq5qbTlLMsx3bTxEYRfCT5wxAkz2A+?=
- =?us-ascii?Q?zQWrzPNfl+kxVaqnCNV1lheNkvZw/X9jZ7Pfp5w1l2L0Sdi/WwhdgqP447eA?=
- =?us-ascii?Q?ZOCHjm8B/EQFf97yopvRrBgxaJ6iOuZ13oNjZYb+8FeRkGk/aken/z9u4Bwn?=
- =?us-ascii?Q?nVkzQ5e+wdUp/3v8x5XYbbnW1rw6drlQ+V74ZymDw+nCEgBNN/3zRVxleomO?=
- =?us-ascii?Q?sIH8h1EJRKUkdgisyF4jfRhElHksbEPnz+nohuXriCHlacEW6vx8JBqf6Dtc?=
- =?us-ascii?Q?fcN8Fv2Sx7y0eCpC57lBjMV/tGaZbB1+YvhDarEnXoHZYhWfsAl3zgnIV6mp?=
- =?us-ascii?Q?4QjxIySG1Sabj4cZoPp62wbSfgDRH8I3kxOA+Ig7CZRxTB9kJ9fXPtl2igpu?=
- =?us-ascii?Q?FGMFE94t2k0f+Kx1+iKAsz1dMOaUAy1Oba7xP7Aew3hISw4WlaVjLpnNPsf1?=
- =?us-ascii?Q?/6I3v/58fkFQy9LGiCdD58PaFqzNRIKU8Pm6pV/RSBWb3Gwuh/Mn/Dr3QtZs?=
- =?us-ascii?Q?UshRNHSMWlajRazlftjcCBdbij+614ZEakTLX/k6VVnv13hK4oWl+SadcmKE?=
- =?us-ascii?Q?gSO0za8ySIfBiNP+1Avgfjn6RpIySBC8k0vY/xqkho/70Kd8acEWp+tVv3Lq?=
- =?us-ascii?Q?1H9RkDmYxlrmdBO6MAvqYJ+QYJijRRY2/t/YEcgOqiDuJaPzUxJ4p8DbTFfQ?=
- =?us-ascii?Q?/PjhBApXsIa/tCfjPZhGrhuSYTiHRAkbN/Z7X1/30jdMbMJWN7Xd5DjziyOQ?=
- =?us-ascii?Q?8DFACaLuVePc1nhf2KVVZyflv3DAEgtrkc7plJQBiS/KRI48q/kHnFIIbSAL?=
- =?us-ascii?Q?2dSXjQYBN6FBO2mmFcsIVvfm+fxiC63TklySVXvZt20bxXK9YriIulwMX4AW?=
- =?us-ascii?Q?vuG+Abq0OA8OHm8y4DkuakLI22VKn0VuiK8tTGVOF40S27J0IzFYczTq5zDc?=
- =?us-ascii?Q?lVIz9wNQcp00E3q573+ZOKxHfVooNRWlKe/HV5avf2PT64ZYfRvl3OIesdxk?=
- =?us-ascii?Q?sCpFXBusa18Yk2LIQUFvznLHDizYNeU/KchLm46Ag/KBbjxKOZK0uPdiNxcC?=
- =?us-ascii?Q?ffhHT8yR1vln2LkUBZwqMZou+9eJMTvxnPQiwXoOjzcXP56jJ5HIvbKJNuri?=
- =?us-ascii?Q?eMPHUoAx5OMd+LT9soroBgein71pNCVBwpuwMhKBPOVwSRXhAqB8yk5wdfvJ?=
- =?us-ascii?Q?5HU3lq+2huUN8TxymyFEi8FX+iy65ESZ9QkzV1M3Xo3iHwDW8hswe5fKOPIu?=
- =?us-ascii?Q?Jrer6JqpsX87VBpGVIHLT7tvmzy8dL7p8wg3Eeaojbhf4Hfm2iIS9I9cFZKu?=
- =?us-ascii?Q?JVAoYrtkVxURkia65pTxg1SsIV/bfcJFjq7OD8unepnHN6M0OOF1198Z59iR?=
- =?us-ascii?Q?EynT9uRDLoXnuAn9xwjRoB2s1KLEBbm61qgPZfUXZDXu25YqYD0sulNXknbZ?=
- =?us-ascii?Q?TvvLiWwbLQFh8pjGmoF4SB8f1BYbwL0KrdJhI+WkMwKVmih1EBAOvvt9ICJ2?=
- =?us-ascii?Q?wyGtcLeejPI27YJ0PuqNWno=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?K3oPhdhlPaZ5sIoMWQH8vqCeEsNAP0tCQ/Qs07TiuK/BAh1UlpLGGUDBS4rw?=
+ =?us-ascii?Q?46rhsZdNuI52Pu/PRG/bfpHJhH2SynHuyuifBcE4TQnqYe9bjm3/jtNGzclv?=
+ =?us-ascii?Q?whZlW9H6D6K8qbzhSJH1q4ln8eBi+RKuFjqN1LzBftP/4EdbzHJKSMFjVFT8?=
+ =?us-ascii?Q?B7tTy0pW2hlQWNF/AZdM5JzZjaZm54fZw0H3EWmdzHXsr92U99zv112o9yDU?=
+ =?us-ascii?Q?VjxdyUHzBGqS5aB5NcfWjPcAbdlTtHYTgUcw1TeKxtrj3wTTNK0BIHuQalAB?=
+ =?us-ascii?Q?cUKeR4hsAVtUMkSbEzP+qsUs7uITNKamzX1O/R++yzotj+FA7LLLHW8MMeoU?=
+ =?us-ascii?Q?upii39+pPmqvD77s7hFelnp7BTkCIM96LoESEkFBbAopa7P3CSH3axTwXBaP?=
+ =?us-ascii?Q?gjIHD04iWDVPsLlDSeTzg0DECTxEBCiWnmA3I6+XfFaAbk2Y+hQC7QC8IC5B?=
+ =?us-ascii?Q?8d2irJnwWfpigNUPJ4yg6FhSXszTHC7mcS4sv+2Quuni+KkKcYFP2BZZ+0YY?=
+ =?us-ascii?Q?qA8VJgXd7DaN+tDXD6DLpzOSUXwRDd8tkVF+W/fo9WGXGorLYd958Mvofysn?=
+ =?us-ascii?Q?PzcpBkMccnNvPStpRLGq+Abkq05BshII6dvvDzKTXNlNQaU+cOgZBus22V7I?=
+ =?us-ascii?Q?fMtdjtEz60ANeFs8ELdkRRKH2MDm32R1G4XYoQ3/FVGfxdyI2b/tziGJn7+N?=
+ =?us-ascii?Q?Q8Fau2Xxhm1ue39wikNGIao5RI00PUs1qqSufDH28OgiSkyIekC5GvxY/Sx7?=
+ =?us-ascii?Q?n7b+rcBPgSAEMRnvXmch39ICchU4M3EAKzcxLq0Y6Kn10yTDm1NJy3MzfIEs?=
+ =?us-ascii?Q?0Np1VTfKI6R+De7K8zHH04FC4KdVUemn1Hgd8q/YNobOj6FnusuCn4aUeR5o?=
+ =?us-ascii?Q?TV925f2fziI34Yl4LCF2iHfyizV0PzgAh+JrwfVZ4X62H7ltOxx8BokvNK6O?=
+ =?us-ascii?Q?ALI7fN9T56nDDH/O2evEYbGCZoVb3hCOHfyRqXgusezMlwCqyz5oLj+5XBwl?=
+ =?us-ascii?Q?VE8DDh0A2jCHP9jYOIcaUL2RoeY8YdqQcJ0eGsR7J/dvHMkBMtyA1Vbc6eAI?=
+ =?us-ascii?Q?IlngvWjZNCeqjYOWC462HnGwCjW2zjIJYzeVRIRZeqO07BSMSc3Y1PWwP2aw?=
+ =?us-ascii?Q?oJ0AR3QqG7PYpCsfACrtZvXIM5BZ9e35nMENdUxZfgSM6OmTRw/jPyAqJb4D?=
+ =?us-ascii?Q?yhILaafXJyCmjM7PSGUOwaQ/vDRX4XkGrE705IrzfUQJDGWB9MJt62tf+jAm?=
+ =?us-ascii?Q?o9YhkG9+2SWzZKEMxwpxR2OI8Dfpx3GgtxcSLZeZaQ2BdoLjVUL0Hn1WzPGH?=
+ =?us-ascii?Q?0D5rzczN8pbuN7iDk7Klllxw01Rn1+fdMo3M1nIDvQWwEO0TaO0uzFGVmULI?=
+ =?us-ascii?Q?L5/LvDguNvjA2bt5lnqWVn2+tDHtJicG7SN0peC2zbVsshY4Lt1kUNNn/4sW?=
+ =?us-ascii?Q?ONIUwcOGBO3UQfWtxqdI5F/Oao5dzqbSc/xAn4n+O4th7MBtkPVVGWRd5hKi?=
+ =?us-ascii?Q?llOY+Hlkajw8cIy/Az66wmv84FumqBOUGFdq7nUyDfxsuwI9+yhuZG9xx/PF?=
+ =?us-ascii?Q?kDBYS7J0Zr3CvneiAVU2AGn+0YXiktoFBTH8/ShZivxc0AjyAjC3bWS4Ljfu?=
+ =?us-ascii?Q?bE2TqJ/CocQDM7VuIgclDos=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10d23757-37dd-4eb9-8a35-08d99cfdde7d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2021 06:07:22.1844
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc9771ea-1db3-4528-28ec-08d99d05af60
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2021 07:03:19.1318
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: glYaDUL87KhkxAHLcgivvpGLB36xW07rZMWK5hLXhMR3BKMQHayKz0kvOgLNC9wKOYFuJS+6QCZdzAA4hr1YxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1623
+X-MS-Exchange-CrossTenant-userprincipalname: sc/faO3at4wjEx6UN/05BtJj7wwgTa/ggeYGkOfcBpH+EeOpThv1jih5Na9G1ow2pjyY1lEwyHZU05dRMV3xFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1869
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 > From: Haiyang Zhang <haiyangz@microsoft.com>
-> Sent: Saturday, October 30, 2021 8:36 AM
-> > @@ -848,6 +850,15 @@ int mana_gd_verify_vf_version(struct pci_dev
-> *pdev)
-> >  	req.gd_drv_cap_flags3 =3D GDMA_DRV_CAP_FLAGS3;
-> >  	req.gd_drv_cap_flags4 =3D GDMA_DRV_CAP_FLAGS4;
+> Sent: Saturday, October 30, 2021 8:55 AM
 > >
-> > +	req.drv_ver =3D 0;	/* Unused*/
-> > +	req.os_type =3D 0x10;	/* Linux */
+> > @@ -1844,44 +1845,70 @@ int mana_probe(struct gdma_dev *gd)
+> >  	if (err)
+> >  		return err;
+> >
+> > -	ac =3D kzalloc(sizeof(*ac), GFP_KERNEL);
+> > -	if (!ac)
+> > -		return -ENOMEM;
+> > +	if (!resuming) {
+> > +		ac =3D kzalloc(sizeof(*ac), GFP_KERNEL);
+> > +		if (!ac)
+> > +			return -ENOMEM;
+> >
+> > -	ac->gdma_dev =3D gd;
+> > -	ac->num_ports =3D 1;
+> > -	gd->driver_data =3D ac;
+> > +		ac->gdma_dev =3D gd;
+> > +		gd->driver_data =3D ac;
+> > +	}
+> >
+> >  	err =3D mana_create_eq(ac);
+> >  	if (err)
+> >  		goto out;
+> >
+> >  	err =3D mana_query_device_cfg(ac, MANA_MAJOR_VERSION,
+> > MANA_MINOR_VERSION,
+> > -				    MANA_MICRO_VERSION, &ac->num_ports);
+> > +				    MANA_MICRO_VERSION, &num_ports);
+> >  	if (err)
+> >  		goto out;
+> >
+> > +	if (!resuming) {
+> > +		ac->num_ports =3D num_ports;
+> > +	} else {
+> > +		if (ac->num_ports !=3D num_ports) {
+> > +			dev_err(dev, "The number of vPorts changed: %d->%d\n",
+> > +				ac->num_ports, num_ports);
+> > +			err =3D -EPROTO;
+> > +			goto out;
+> > +		}
+> > +	}
+> > +
+> > +	if (ac->num_ports =3D=3D 0)
+> > +		dev_err(dev, "Failed to detect any vPort\n");
+> > +
+> >  	if (ac->num_ports > MAX_PORTS_IN_MANA_DEV)
+> >  		ac->num_ports =3D MAX_PORTS_IN_MANA_DEV;
+> >
+> > -	for (i =3D 0; i < ac->num_ports; i++) {
+> > -		err =3D mana_probe_port(ac, i, &ac->ports[i]);
+> > -		if (err)
+> > -			break;
+> > +	if (!resuming) {
+> > +		for (i =3D 0; i < ac->num_ports; i++) {
+> > +			err =3D mana_probe_port(ac, i, &ac->ports[i]);
+> > +			if (err)
+> > +				break;
+> > +		}
+> > +	} else {
+> > +		for (i =3D 0; i < ac->num_ports; i++) {
+> > +			rtnl_lock();
+> > +			err =3D mana_attach(ac->ports[i]);
+> > +			rtnl_unlock();
+> > +			if (err)
+> > +				break;
+> > +		}
+> >  	}
+> >  out:
+> >  	if (err)
+> > -		mana_remove(gd);
+> > +		mana_remove(gd, false);
 >=20
-> Instead of a magic number, could you define it as a macro?
->=20
-> Other parts look fine.
->=20
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> The "goto out" can happen in both resuming true/false cases,
+> should the error handling path deal with the two cases
+> differently?
 
-Ok, I'll apply the below change in v2.
+Let me make the below change in v2. Please let me know
+if any further change is needed:
 
-@@ -497,6 +497,7 @@ enum {
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1850,8 +1850,10 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
 
- #define GDMA_DRV_CAP_FLAGS4 0
+        if (!resuming) {
+                ac =3D kzalloc(sizeof(*ac), GFP_KERNEL);
+-               if (!ac)
+-                       return -ENOMEM;
++               if (!ac) {
++                       err =3D -ENOMEM;
++                       goto out;
++               }
 
-+#define GDMA_OS_TYPE_LINUX      0x10
- struct gdma_verify_ver_req {
-        struct gdma_req_hdr hdr;
+                ac->gdma_dev =3D gd;
+                gd->driver_data =3D ac;
+@@ -1872,8 +1874,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+                if (ac->num_ports !=3D num_ports) {
+                        dev_err(dev, "The number of vPorts changed: %d->%d\=
+n",
+                                ac->num_ports, num_ports);
+-                       err =3D -EPROTO;
+-                       goto out;
++                       /* It's unsafe to proceed. */
++                       return -EPROTO;
+                }
+        }
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/=
-ethernet/microsoft/mana/gdma_main.c
-index c96ac81212f7..bea218c5c043 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -851,7 +851,7 @@ int mana_gd_verify_vf_version(struct pci_dev *pdev)
-        req.gd_drv_cap_flags4 =3D GDMA_DRV_CAP_FLAGS4;
+@@ -1886,22 +1888,36 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
+        if (!resuming) {
+                for (i =3D 0; i < ac->num_ports; i++) {
+                        err =3D mana_probe_port(ac, i, &ac->ports[i]);
+-                       if (err)
+-                               break;
++                       if (err) {
++                               dev_err(dev, "Failed to probe vPort %u: %d\=
+n",
++                                          i, err);
++                               goto out;
++                       }
+                }
+        } else {
+                for (i =3D 0; i < ac->num_ports; i++) {
+                        rtnl_lock();
+                        err =3D mana_attach(ac->ports[i]);
+                        rtnl_unlock();
+-                       if (err)
+-                               break;
++
++                       if (err) {
++                               netdev_err(ac->ports[i],
++                                          "Failed to resume vPort %u: %d\n=
+",
++                                          i, err);
++                               return err;
++                       }
+                }
+        }
++
++       return 0;
+ out:
+-       if (err)
+-               mana_remove(gd, false);
++       /* In the resuming path, it's safer to leave the device in the fail=
+ed
++        * state than try to invoke mana_detach().
++        */
++       if (resuming)
++               return err;
 
-        req.drv_ver =3D 0;        /* Unused*/
--       req.os_type =3D 0x10;     /* Linux */
-+       req.os_type =3D GDMA_OS_TYPE_LINUX;
-        req.os_ver_major =3D LINUX_VERSION_MAJOR;
-        req.os_ver_minor =3D LINUX_VERSION_PATCHLEVEL;
-        req.os_ver_build =3D LINUX_VERSION_SUBLEVEL;
++       mana_remove(gd, false);
+        return err;
+ }
+
+@@ -1919,7 +1935,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending=
+)
+                if (!ndev) {
+                        if (i =3D=3D 0)
+                                dev_err(dev, "No net device to remove\n");
+-                       goto out;
++                       break;
+                }
+
+                /* All cleanup actions should stay after rtnl_lock(), other=
+wise
+
+For your easy reviewing, the new code of the function in v2 will be:
+
+int mana_probe(struct gdma_dev *gd, bool resuming)
+{
+        struct gdma_context *gc =3D gd->gdma_context;
+        struct mana_context *ac =3D gd->driver_data;
+        struct device *dev =3D gc->dev;
+        u16 num_ports =3D 0;
+        int err;
+        int i;
+
+        dev_info(dev,
+                 "Microsoft Azure Network Adapter protocol version: %d.%d.%=
+d\n",
+                 MANA_MAJOR_VERSION, MANA_MINOR_VERSION, MANA_MICRO_VERSION=
+);
+
+        err =3D mana_gd_register_device(gd);
+        if (err)
+                return err;
+
+        if (!resuming) {
+                ac =3D kzalloc(sizeof(*ac), GFP_KERNEL);
+                if (!ac) {
+                        err =3D -ENOMEM;
+                        goto out;
+                }
+
+                ac->gdma_dev =3D gd;
+                gd->driver_data =3D ac;
+        }
+
+        err =3D mana_create_eq(ac);
+        if (err)
+                goto out;
+
+        err =3D mana_query_device_cfg(ac, MANA_MAJOR_VERSION, MANA_MINOR_VE=
+RSION,
+                                    MANA_MICRO_VERSION, &num_ports);
+        if (err)
+                goto out;
+
+        if (!resuming) {
+                ac->num_ports =3D num_ports;
+        } else {
+                if (ac->num_ports !=3D num_ports) {
+                        dev_err(dev, "The number of vPorts changed: %d->%d\=
+n",
+                                ac->num_ports, num_ports);
+                        /* It's unsafe to proceed. */
+                        return -EPROTO;
+                }
+        }
+
+        if (ac->num_ports =3D=3D 0)
+                dev_err(dev, "Failed to detect any vPort\n");
+
+        if (ac->num_ports > MAX_PORTS_IN_MANA_DEV)
+                ac->num_ports =3D MAX_PORTS_IN_MANA_DEV;
+
+        if (!resuming) {
+                for (i =3D 0; i < ac->num_ports; i++) {
+                        err =3D mana_probe_port(ac, i, &ac->ports[i]);
+                        if (err) {
+                                dev_err(dev, "Failed to probe vPort %u: %d\=
+n",
+                                           i, err);
+                                goto out;
+                        }
+                }
+        } else {
+                for (i =3D 0; i < ac->num_ports; i++) {
+                        rtnl_lock();
+                        err =3D mana_attach(ac->ports[i]);
+                        rtnl_unlock();
+
+                        if (err) {
+                                netdev_err(ac->ports[i],
+                                           "Failed to resume vPort %u: %d\n=
+",
+                                           i, err);
+                                return err;
+                        }
+                }
+        }
+
+        return 0;
+out:
+        /* In the resuming path, it's safer to leave the device in the fail=
+ed
+         * state than try to invoke mana_detach().
+         */
+        if (resuming)
+                return err;
+
+        mana_remove(gd, false);
+        return err;
+}
