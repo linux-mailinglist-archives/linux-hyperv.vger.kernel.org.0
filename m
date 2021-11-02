@@ -2,116 +2,179 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19C5A442EC1
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Nov 2021 14:04:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16915442EE9
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Nov 2021 14:13:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231176AbhKBNGh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 2 Nov 2021 09:06:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26631 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230282AbhKBNGg (ORCPT
+        id S231314AbhKBNPs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 Nov 2021 09:15:48 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:40743 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230518AbhKBNPs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 2 Nov 2021 09:06:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635858241;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=F5yWkmOg5/0evPimUvtS3b9rTndZ2SZlpCnwbNELc7c=;
-        b=PMSbfmEWo7tP53+HkkNAuX2kzBCQLd/667tNRIE/HL+q+fVQFXb2X4BTy2sn7F514JJpxR
-        4Ws0cPJelUd5VNuEYJdTB9Ma9zT+msZDxJz/qtxlIw/oy9K3bG0i8jky/EvnpvD6g5A7RY
-        dIurL4+UDJdhQXe+Qkf//U8AC5A+EuA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-526-dc1ejtd5M0OPGSzQ8xstUg-1; Tue, 02 Nov 2021 09:04:00 -0400
-X-MC-Unique: dc1ejtd5M0OPGSzQ8xstUg-1
-Received: by mail-wm1-f72.google.com with SMTP id u14-20020a05600c19ce00b0030d8549d49aso682414wmq.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 02 Nov 2021 06:04:00 -0700 (PDT)
+        Tue, 2 Nov 2021 09:15:48 -0400
+Received: by mail-wm1-f53.google.com with SMTP id j128-20020a1c2386000000b003301a98dd62so1872537wmj.5;
+        Tue, 02 Nov 2021 06:13:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=F5yWkmOg5/0evPimUvtS3b9rTndZ2SZlpCnwbNELc7c=;
-        b=NDhKzdMYBV2YDog5w3+5lw39mCj6SX5KGYOFnHxSiyfrM4cFb+zBZmwSo/P7m/rQ/H
-         HEOOGETniRYBIKhxrdvsP1Js/Xw+jg5t3RfrtXGReGjYxCFWN+q5tZ5mVI4MTR8ehB4i
-         Bc7GgqYB7nm/TYCG+bIhbeVxZ4jBIev9v1Q18xyelUr+yWjGhx/Vc3EvyBtPBCyGZukL
-         a10cYDHI7j6pBWnVvTn4a4xr3fYTt3e6SB4045WMLaOKtESN0m8nMSrq84n+DqM7/W4F
-         9U0VR3mp0BYJ0NXOXYJZS/QI6kktZnaWahIcGlT7Wb8cDNbwcAkYYSrVx3dS8YeeX1/p
-         Igbg==
-X-Gm-Message-State: AOAM5335PFD4kw5YraZA/CP5Ee9pqs+6YcJ3GwgGsLkQj6gYoThy+Qy6
-        XhVIaSqs7twuWNVCcbnj7+uIHLu/ApipI4sOnp/JiDVsUsqvAvT++q5ieiTHKEnU4C0rXzw2j0w
-        KynNrV2i4YB4pMqX/+EVJTutq
-X-Received: by 2002:adf:d1e3:: with SMTP id g3mr46970725wrd.63.1635858238979;
-        Tue, 02 Nov 2021 06:03:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzuDILBX8p9T4euEWEY2xWP7A4Nb7oizJIhNiY6eGE/hNzVLg2a0xhHfdf5bmVh6MTgKK0GBQ==
-X-Received: by 2002:adf:d1e3:: with SMTP id g3mr46970686wrd.63.1635858238747;
-        Tue, 02 Nov 2021 06:03:58 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id k37sm2389496wms.21.2021.11.02.06.03.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=FEG94uCi+qFoEnBjX5NCLN8clEw8Q6AaBcymoPqaSdI=;
+        b=Th2STZAmIloDNceUGh8c1zoNVDp4zEF0aJeizpaJTATTtcIdDm3GjHtUpra6cwdbJm
+         m49+E2vjaLELBkPQmzmi17+/o3LLmK/kVMEJRXTj8BWO7DE0cwzsgMpjYr4hdusjnobK
+         VFQ6cjuVwO2pPDAMTKg+g6Pi8lQfg4z7bayCadRnYxN348XbdUQA2qYGBDnCyu/d+X0u
+         uj0rrmdXFqf3p5xHRI0EeaZUDUHVrLXHcCs3plvocuJN4Ek1Pp9q6+OIy7RsnHdMB2Cc
+         Pjsp8+/WaBGM3v2orn1gIFF7QOSbKnDYtIerXuk7oENWfeHZ1Agor/dkdLIMpnW0hVfI
+         d4IA==
+X-Gm-Message-State: AOAM533jBwi1/xjMB2H+gd2vXdLfoMYeZh5Cpi4RTPbXEYvt4oIw6ya3
+        z9ikpBuKuXOdRgPRx78WbR603NfZPqk=
+X-Google-Smtp-Source: ABdhPJyU84qNM4egSKJgXMWg8Z+C/hWBfE7Z01V1hIhfKCeVeZNDtmUsyFSBkG4gl8MXnD4/au7gFQ==
+X-Received: by 2002:a05:600c:1990:: with SMTP id t16mr7353649wmq.124.1635858792274;
+        Tue, 02 Nov 2021 06:13:12 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id c1sm14161503wrt.14.2021.11.02.06.13.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 06:03:58 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Boqun Feng <boqun.feng@gmail.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>, stable@vger.kernel.org,
-        Baihua Lu <baihua.lu@microsoft.com>
-Subject: Re: [PATCH] Drivers: hv: balloon: Use VMBUS_RING_SIZE() wrapper for
- dm_ring_size
-In-Reply-To: <20211101150026.736124-1-boqun.feng@gmail.com>
-References: <20211101150026.736124-1-boqun.feng@gmail.com>
-Date:   Tue, 02 Nov 2021 14:03:57 +0100
-Message-ID: <87h7cuk8ua.fsf@vitty.brq.redhat.com>
+        Tue, 02 Nov 2021 06:13:11 -0700 (PDT)
+Date:   Tue, 2 Nov 2021 13:13:09 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        sthemmin@microsoft.com, Michael Kelley <mikelley@microsoft.com>
+Subject: [GIT PULL] Hyper-V commits for 5.16
+Message-ID: <20211102131309.3hknsf66swvkv6hm@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Boqun Feng <boqun.feng@gmail.com> writes:
+Hi Linus,
 
-> Baihua reported an error when boot an ARM64 guest with PAGE_SIZE=64k and
-> BALLOON is enabled:
->
-> 	hv_vmbus: registering driver hv_balloon
-> 	hv_vmbus: probe failed for device 1eccfd72-4b41-45ef-b73a-4a6e44c12924 (-22)
->
-> The cause of this is that the ringbuffer size for hv_balloon is not
-> adjusted with VMBUS_RING_SIZE(), which makes the size not large enough
-> for ringbuffers on guest with PAGE_SIZE=64k. Therefore use
-> VMBUS_RING_SIZE() to calculate the ringbuffer size. Note that the old
-> size (20 * 1024) counts a 4k header in the total size, while
-> VMBUS_RING_SIZE() expects the parameter as the payload size, so use
-> 16 * 1024.
->
-> Cc: <stable@vger.kernel.org> # 5.15.x
-> Reported-by: Baihua Lu <baihua.lu@microsoft.com>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  drivers/hv/hv_balloon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 7f11ea07d698..ca873a3b98db 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -480,7 +480,7 @@ module_param(pressure_report_delay, uint, (S_IRUGO | S_IWUSR));
->  MODULE_PARM_DESC(pressure_report_delay, "Delay in secs in reporting pressure");
->  static atomic_t trans_id = ATOMIC_INIT(0);
->  
-> -static int dm_ring_size = 20 * 1024;
-> +static int dm_ring_size = VMBUS_RING_SIZE(16 * 1024);
->  
->  /*
->   * Driver specific state.
+The following changes since commit 64570fbc14f8d7cb3fe3995f20e26bc25ce4b2cc:
 
-Tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+  Linux 5.15-rc5 (2021-10-10 17:01:59 -0700)
 
-Thanks!
+are available in the Git repository at:
 
--- 
-Vitaly
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20211102
 
+for you to fetch changes up to 285f68afa8b20f752b0b7194d54980b5e0e27b75:
+
+  x86/hyperv: Protect set_hv_tscchange_cb() against getting preempted (2021-10-28 11:59:13 +0000)
+
+There are two merges from the tip tree: one is because of Tianyu's
+patches went in via tip/x86/sev, the other is because a tree-wide
+cleanup in tip/x86/cc conflicted with Tianyu's patch.
+
+Instead of requiring you to fix up I thought I'd just do it myself.
+
+Thanks,
+Wei.
+
+----------------------------------------------------------------
+hyperv-next for 5.16
+  - Initial patch set for Hyper-V isolation VM support (Tianyu Lan)
+  - Fix a warning on preemption (Vitaly Kuznetsov)
+  - A bunch of misc cleanup patches.
+----------------------------------------------------------------
+Jiapeng Chong (1):
+      x86/hyperv: Remove duplicate include
+
+Lv Ruyi (1):
+      Drivers: hv : vmbus: Adding NULL pointer check
+
+Michael Kelley (1):
+      Drivers: hv: vmbus: Remove unused code to check for subchannels
+
+Tianyu Lan (9):
+      x86/sev: Expose sev_es_ghcb_hv_call() for use by HyperV
+      x86/hyperv: Initialize GHCB page in Isolation VM
+      x86/hyperv: Initialize shared memory boundary in the Isolation VM.
+      x86/hyperv: Add new hvcall guest address host visibility support
+      Drivers: hv: vmbus: Mark vmbus ring buffer visible to host in Isolation VM
+      x86/hyperv: Add Write/Read MSR registers via ghcb page
+      x86/hyperv: Add ghcb hvcall support for SNP VM
+      Drivers: hv: vmbus: Add SNP support for VMbus channel initiate message
+      Drivers: hv: vmbus: Initialize VMbus ring buffer for Isolation VM
+
+Vitaly Kuznetsov (1):
+      x86/hyperv: Protect set_hv_tscchange_cb() against getting preempted
+
+Wan Jiabing (1):
+      x86/hyperv: Remove duplicated include in hv_init
+
+Wei Liu (2):
+      Merge remote-tracking branch 'tip/x86/sev' into hyperv-next
+      Merge remote-tracking branch 'tip/x86/cc' into hyperv-next
+
+ arch/Kconfig                                 |   3 +
+ arch/powerpc/include/asm/mem_encrypt.h       |   5 -
+ arch/powerpc/platforms/pseries/Kconfig       |   1 +
+ arch/powerpc/platforms/pseries/Makefile      |   2 +
+ arch/powerpc/platforms/pseries/cc_platform.c |  26 +++
+ arch/powerpc/platforms/pseries/svm.c         |   5 +-
+ arch/s390/include/asm/mem_encrypt.h          |   2 -
+ arch/x86/Kconfig                             |   1 +
+ arch/x86/hyperv/Makefile                     |   2 +-
+ arch/x86/hyperv/hv_init.c                    |  82 ++++++--
+ arch/x86/hyperv/ivm.c                        | 289 +++++++++++++++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h           |  17 ++
+ arch/x86/include/asm/io.h                    |   8 +
+ arch/x86/include/asm/kexec.h                 |   2 +-
+ arch/x86/include/asm/mem_encrypt.h           |  12 +-
+ arch/x86/include/asm/mshyperv.h              |  70 +++++--
+ arch/x86/include/asm/sev.h                   |   6 +
+ arch/x86/kernel/Makefile                     |   6 +
+ arch/x86/kernel/cc_platform.c                |  69 +++++++
+ arch/x86/kernel/cpu/mshyperv.c               |   5 +
+ arch/x86/kernel/crash_dump_64.c              |   4 +-
+ arch/x86/kernel/head64.c                     |   9 +-
+ arch/x86/kernel/kvm.c                        |   3 +-
+ arch/x86/kernel/kvmclock.c                   |   4 +-
+ arch/x86/kernel/machine_kexec_64.c           |  19 +-
+ arch/x86/kernel/pci-swiotlb.c                |   9 +-
+ arch/x86/kernel/relocate_kernel_64.S         |   2 +-
+ arch/x86/kernel/sev-shared.c                 |  68 ++++---
+ arch/x86/kernel/sev.c                        |  40 ++--
+ arch/x86/kernel/traps.c                      |   2 +-
+ arch/x86/kvm/svm/svm.c                       |   3 +-
+ arch/x86/mm/ioremap.c                        |  18 +-
+ arch/x86/mm/mem_encrypt.c                    |  55 ++---
+ arch/x86/mm/mem_encrypt_identity.c           |  18 +-
+ arch/x86/mm/pat/set_memory.c                 |  24 ++-
+ arch/x86/platform/efi/efi_64.c               |   9 +-
+ arch/x86/realmode/init.c                     |   8 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c      |   4 +-
+ drivers/gpu/drm/drm_cache.c                  |   4 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c          |   4 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c          |   6 +-
+ drivers/hv/Kconfig                           |   1 +
+ drivers/hv/channel.c                         |  72 ++++---
+ drivers/hv/channel_mgmt.c                    |  34 ----
+ drivers/hv/connection.c                      | 101 +++++++++-
+ drivers/hv/hv.c                              |  82 ++++++--
+ drivers/hv/hv_common.c                       |  12 ++
+ drivers/hv/hyperv_vmbus.h                    |   2 +
+ drivers/hv/ring_buffer.c                     |  57 ++++--
+ drivers/iommu/amd/init.c                     |   7 +-
+ drivers/iommu/amd/iommu.c                    |   3 +-
+ drivers/iommu/amd/iommu_v2.c                 |   3 +-
+ drivers/iommu/iommu.c                        |   3 +-
+ drivers/net/hyperv/hyperv_net.h              |   5 +-
+ drivers/net/hyperv/netvsc.c                  |  15 +-
+ drivers/uio/uio_hv_generic.c                 |  18 +-
+ fs/proc/vmcore.c                             |   6 +-
+ include/asm-generic/hyperv-tlfs.h            |   1 +
+ include/asm-generic/mshyperv.h               |  20 +-
+ include/linux/cc_platform.h                  |  88 ++++++++
+ include/linux/hyperv.h                       |  25 +--
+ include/linux/mem_encrypt.h                  |   4 -
+ kernel/dma/swiotlb.c                         |   4 +-
+ 63 files changed, 1150 insertions(+), 339 deletions(-)
+ create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
+ create mode 100644 arch/x86/hyperv/ivm.c
+ create mode 100644 arch/x86/kernel/cc_platform.c
+ create mode 100644 include/linux/cc_platform.h
