@@ -2,133 +2,116 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5107C442DAB
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Nov 2021 13:17:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19C5A442EC1
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Nov 2021 14:04:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbhKBMUK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 2 Nov 2021 08:20:10 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:39462 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbhKBMUK (ORCPT
+        id S231176AbhKBNGh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 Nov 2021 09:06:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26631 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230282AbhKBNGg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 2 Nov 2021 08:20:10 -0400
-Received: by mail-wm1-f48.google.com with SMTP id b2-20020a1c8002000000b0032fb900951eso1721969wmd.4;
-        Tue, 02 Nov 2021 05:17:35 -0700 (PDT)
+        Tue, 2 Nov 2021 09:06:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635858241;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=F5yWkmOg5/0evPimUvtS3b9rTndZ2SZlpCnwbNELc7c=;
+        b=PMSbfmEWo7tP53+HkkNAuX2kzBCQLd/667tNRIE/HL+q+fVQFXb2X4BTy2sn7F514JJpxR
+        4Ws0cPJelUd5VNuEYJdTB9Ma9zT+msZDxJz/qtxlIw/oy9K3bG0i8jky/EvnpvD6g5A7RY
+        dIurL4+UDJdhQXe+Qkf//U8AC5A+EuA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-526-dc1ejtd5M0OPGSzQ8xstUg-1; Tue, 02 Nov 2021 09:04:00 -0400
+X-MC-Unique: dc1ejtd5M0OPGSzQ8xstUg-1
+Received: by mail-wm1-f72.google.com with SMTP id u14-20020a05600c19ce00b0030d8549d49aso682414wmq.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 02 Nov 2021 06:04:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v2ExKLs7LL5vmwi/PSEE89GN4aKAGPsL1abfgbW1qDI=;
-        b=kRkpZ+LhtIuJU4VyKXFTtIgm7uroUw/Mw36vG8n5VTXSUeNy4VrbzvUUhfc0Uge1SV
-         KkSU2C28I/fRXt8GKG2taOK9E1zFKCuY9QvQb4EuqTldVJQLXQn6EtWa+HEFiAITv1ho
-         hL5WUk7lCpsW8dDupcQczCuAtks5qFMzDhm0LnHFArg3ys+xAINnUfhv0w21exHquKoX
-         tLSffF+nvZgln7M9KBpfYWqsQ5IqYnFQy/VjChJn/GOnPW2Wiu0rZWA88FQGIfbXeEN8
-         cLaYAE1Qq7/CLpc+GkrDXZ8VyX9adAy1+q3vTHCo3fLqoxmEOCLZ1BcWaC2z/hPAlCs9
-         RWpQ==
-X-Gm-Message-State: AOAM532/2I/mYVDuMaknO+fLKivUG9z3hGxG7Hjyn/jDH6rNaT5vlcmO
-        aFGmYE/J9v0jg/WYO+bVCok=
-X-Google-Smtp-Source: ABdhPJzttPxWDXUxB5q6BFsHOqq9wuhFmwVAokl4CTZ6U46+Kv0ziTEfSgOx3r4jSKWrsLNwf60rOQ==
-X-Received: by 2002:a05:600c:1:: with SMTP id g1mr6470167wmc.19.1635855454583;
-        Tue, 02 Nov 2021 05:17:34 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id z135sm2947017wmc.45.2021.11.02.05.17.33
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=F5yWkmOg5/0evPimUvtS3b9rTndZ2SZlpCnwbNELc7c=;
+        b=NDhKzdMYBV2YDog5w3+5lw39mCj6SX5KGYOFnHxSiyfrM4cFb+zBZmwSo/P7m/rQ/H
+         HEOOGETniRYBIKhxrdvsP1Js/Xw+jg5t3RfrtXGReGjYxCFWN+q5tZ5mVI4MTR8ehB4i
+         Bc7GgqYB7nm/TYCG+bIhbeVxZ4jBIev9v1Q18xyelUr+yWjGhx/Vc3EvyBtPBCyGZukL
+         a10cYDHI7j6pBWnVvTn4a4xr3fYTt3e6SB4045WMLaOKtESN0m8nMSrq84n+DqM7/W4F
+         9U0VR3mp0BYJ0NXOXYJZS/QI6kktZnaWahIcGlT7Wb8cDNbwcAkYYSrVx3dS8YeeX1/p
+         Igbg==
+X-Gm-Message-State: AOAM5335PFD4kw5YraZA/CP5Ee9pqs+6YcJ3GwgGsLkQj6gYoThy+Qy6
+        XhVIaSqs7twuWNVCcbnj7+uIHLu/ApipI4sOnp/JiDVsUsqvAvT++q5ieiTHKEnU4C0rXzw2j0w
+        KynNrV2i4YB4pMqX/+EVJTutq
+X-Received: by 2002:adf:d1e3:: with SMTP id g3mr46970725wrd.63.1635858238979;
+        Tue, 02 Nov 2021 06:03:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzuDILBX8p9T4euEWEY2xWP7A4Nb7oizJIhNiY6eGE/hNzVLg2a0xhHfdf5bmVh6MTgKK0GBQ==
+X-Received: by 2002:adf:d1e3:: with SMTP id g3mr46970686wrd.63.1635858238747;
+        Tue, 02 Nov 2021 06:03:58 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id k37sm2389496wms.21.2021.11.02.06.03.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 05:17:33 -0700 (PDT)
-Date:   Tue, 2 Nov 2021 12:17:31 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Sean Christopherson <seanjc@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Tue, 02 Nov 2021 06:03:58 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Boqun Feng <boqun.feng@gmail.com>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Subject: Re: [PATCH 1/2] x86/hyperv: Fix NULL deref in set_hv_tscchange_cb()
- if Hyper-V setup fails
-Message-ID: <20211102121731.rveppetxyzttd26c@liuwe-devbox-debian-v2>
-References: <20211028222148.2924457-1-seanjc@google.com>
- <20211028222148.2924457-2-seanjc@google.com>
- <87tuh0ry3w.fsf@vitty.brq.redhat.com>
+        Boqun Feng <boqun.feng@gmail.com>, stable@vger.kernel.org,
+        Baihua Lu <baihua.lu@microsoft.com>
+Subject: Re: [PATCH] Drivers: hv: balloon: Use VMBUS_RING_SIZE() wrapper for
+ dm_ring_size
+In-Reply-To: <20211101150026.736124-1-boqun.feng@gmail.com>
+References: <20211101150026.736124-1-boqun.feng@gmail.com>
+Date:   Tue, 02 Nov 2021 14:03:57 +0100
+Message-ID: <87h7cuk8ua.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tuh0ry3w.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 11:14:59AM +0200, Vitaly Kuznetsov wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > Check for re-enlightenment support and for a valid hv_vp_index array
-> > prior to derefencing hv_vp_index when setting Hyper-V's TSC change
-> > callback.  If Hyper-V setup failed in hyperv_init(), e.g. because of a
-> > bad VMM config that doesn't advertise the HYPERCALL MSR, the kernel will
-> > still report that it's running under Hyper-V, but will have silently
-> > disabled nearly all functionality.
-> >
-> >   BUG: kernel NULL pointer dereference, address: 0000000000000010
-> >   #PF: supervisor read access in kernel mode
-> >   #PF: error_code(0x0000) - not-present page
-> >   PGD 0 P4D 0
-> >   Oops: 0000 [#1] SMP
-> >   CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.15.0-rc2+ #75
-> >   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-> >   RIP: 0010:set_hv_tscchange_cb+0x15/0xa0
-> >   Code: <8b> 04 82 8b 15 12 17 85 01 48 c1 e0 20 48 0d ee 00 01 00 f6 c6 08
-> >   ...
-> >   Call Trace:
-> >    kvm_arch_init+0x17c/0x280
-> >    kvm_init+0x31/0x330
-> >    vmx_init+0xba/0x13a
-> >    do_one_initcall+0x41/0x1c0
-> >    kernel_init_freeable+0x1f2/0x23b
-> >    kernel_init+0x16/0x120
-> >    ret_from_fork+0x22/0x30
-> >
-> > Fixes: 93286261de1b ("x86/hyperv: Reenlightenment notifications support")
-> > Cc: stable@vger.kernel.org
-> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/x86/hyperv/hv_init.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > index 708a2712a516..6cc845c026d4 100644
-> > --- a/arch/x86/hyperv/hv_init.c
-> > +++ b/arch/x86/hyperv/hv_init.c
-> > @@ -139,7 +139,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
-> >  	struct hv_reenlightenment_control re_ctrl = {
-> >  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
-> >  		.enabled = 1,
-> > -		.target_vp = hv_vp_index[smp_processor_id()]
-> > +		.target_vp = -1,
-> >  	};
-> >  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
-> >  
-> > @@ -148,6 +148,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
-> >  		return;
-> >  	}
-> >  
-> > +	if (!hv_vp_index)
-> > +		return;
-> > +
-> > +	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
-> > +
-> >  	hv_reenlightenment_cb = cb;
-> >  
-> >  	/* Make sure callback is registered before we write to MSRs */
-> 
-> The patch looks good, however, it needs to be applied on top of the
-> already merged:
-> 
-> https://lore.kernel.org/linux-hyperv/20211012155005.1613352-1-vkuznets@redhat.com/
+Boqun Feng <boqun.feng@gmail.com> writes:
 
-Sean, are you going to rebase?
+> Baihua reported an error when boot an ARM64 guest with PAGE_SIZE=64k and
+> BALLOON is enabled:
+>
+> 	hv_vmbus: registering driver hv_balloon
+> 	hv_vmbus: probe failed for device 1eccfd72-4b41-45ef-b73a-4a6e44c12924 (-22)
+>
+> The cause of this is that the ringbuffer size for hv_balloon is not
+> adjusted with VMBUS_RING_SIZE(), which makes the size not large enough
+> for ringbuffers on guest with PAGE_SIZE=64k. Therefore use
+> VMBUS_RING_SIZE() to calculate the ringbuffer size. Note that the old
+> size (20 * 1024) counts a 4k header in the total size, while
+> VMBUS_RING_SIZE() expects the parameter as the payload size, so use
+> 16 * 1024.
+>
+> Cc: <stable@vger.kernel.org> # 5.15.x
+> Reported-by: Baihua Lu <baihua.lu@microsoft.com>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  drivers/hv/hv_balloon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 7f11ea07d698..ca873a3b98db 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -480,7 +480,7 @@ module_param(pressure_report_delay, uint, (S_IRUGO | S_IWUSR));
+>  MODULE_PARM_DESC(pressure_report_delay, "Delay in secs in reporting pressure");
+>  static atomic_t trans_id = ATOMIC_INIT(0);
+>  
+> -static int dm_ring_size = 20 * 1024;
+> +static int dm_ring_size = VMBUS_RING_SIZE(16 * 1024);
+>  
+>  /*
+>   * Driver specific state.
 
-Wei.
+Tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+Thanks!
+
+-- 
+Vitaly
+
