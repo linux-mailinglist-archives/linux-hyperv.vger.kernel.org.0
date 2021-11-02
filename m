@@ -2,142 +2,133 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4E21441EBC
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 Nov 2021 17:42:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5107C442DAB
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Nov 2021 13:17:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231303AbhKAQoM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 Nov 2021 12:44:12 -0400
-Received: from mail-cusazon11021017.outbound.protection.outlook.com ([52.101.62.17]:26430
-        "EHLO na01-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231361AbhKAQoL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 Nov 2021 12:44:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=inQ226WynPVQagIoI/GyIDQiIQBM05A1JloS6PpmyEqA46285r5vbsKmtr5ltDVbOpXtiNk6SJ9+AfXM7ysfMjr9nWbX9FMLA44Azov9PaAHPotEBivQ3pDjriAGCCA8UemX03/8pmbnRycjTGpQk+Yjq7usQJHi3c/feH910ca0L3IPDx7wlcdhBXUbGI5xycFDdpOP3wC2Q3eCg57SAgvbHBd0a2Z+AgT0X7r6su4HWyA5favgfDhXNwbFGrj45r17DEl27uOkPCK9bxK25pZyZxjUaD8VQSi5/+P+YbmIo71KkOMzDi2Pypj8iqHJHbykCYVSTRJr5sJgny5ERA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ViRg+AuPreaDug9P84ezo/9gi0sLh004V8HSPeHCTwo=;
- b=hWj02S+3T2C3U/0I7AOl3Rfjd1ssI1W4SYDoM5cKeKqcz5bMlsHjkm9JT++HJocN9nCUwKNw9hFxdPSTlb0OaoWTeHYS0GD1tebCADYIy2UYmaWjX8s9ntFNjz1wZjseOhPLLyidzfL32cWmaKNG+OtgYR7a1T47P1SyETV/TUJ0d9LSGIGW+Bqxf4ZztZ5+YYQPTNXnevzM3PUVucz5+gnBP7M8rFQTAzcPpd1aH8t5M+Mq/T2AQTRk4aBNt+QmHE4eTUKjE4jMqUbTTgFZJPmoQi1dBYHssQmKCx+j63YQmISsvygYSQaolOGTIJcKsAaWvrGTMVpRnFGh9RO7+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ViRg+AuPreaDug9P84ezo/9gi0sLh004V8HSPeHCTwo=;
- b=e/7skE6RoxDQ5oItImg8BAEAu9PS2CxXyCrwvtbdZvqvsJaskCn9gSOskFDXD0w6feYLcDOsG6jZHjRf/P3g8hbHyhF2oHZzw2WrvG+8zu/LQ3mEWtYzSQmleMR5vMODpTUHOX7+s61JcczVnIaFnhEbPV4Bk79VSIH5XEYXqx0=
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
- by BYAPR21MB1174.namprd21.prod.outlook.com (2603:10b6:a03:104::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.10; Mon, 1 Nov
- 2021 16:41:33 +0000
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::9c8a:6cab:68a6:ceb1]) by BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::9c8a:6cab:68a6:ceb1%6]) with mapi id 15.20.4690.002; Mon, 1 Nov 2021
- 16:41:33 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "gustavoars@kernel.org" <gustavoars@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Shachar Raindel <shacharr@microsoft.com>,
-        Paul Rosswurm <paulros@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH net-next 4/4] net: mana: Support hibernation and kexec
-Thread-Topic: [PATCH net-next 4/4] net: mana: Support hibernation and kexec
-Thread-Index: AQHXzSi5FL+xs47DTkemjnXcBfjf5qvrr5YAgAKLS0CAAJBXoIAAF54A
-Date:   Mon, 1 Nov 2021 16:41:33 +0000
-Message-ID: <BYAPR21MB127004E34EBA263FB4D0B1C2BF8A9@BYAPR21MB1270.namprd21.prod.outlook.com>
-References: <20211030005408.13932-1-decui@microsoft.com>
- <20211030005408.13932-5-decui@microsoft.com>
- <BN8PR21MB1284785C320EFE09C75286B6CA889@BN8PR21MB1284.namprd21.prod.outlook.com>
- <BYAPR21MB1270A16AA0BF1A302BABCB3FBF8A9@BYAPR21MB1270.namprd21.prod.outlook.com>
- <BN8PR21MB128460B5BE376A9E05D43418CA8A9@BN8PR21MB1284.namprd21.prod.outlook.com>
-In-Reply-To: <BN8PR21MB128460B5BE376A9E05D43418CA8A9@BN8PR21MB1284.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=38d1b54a-de51-47ac-a27e-8db573cfb9ed;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-10-30T15:43:58Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6c04ff64-ab08-4010-b348-08d99d5676a8
-x-ms-traffictypediagnostic: BYAPR21MB1174:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR21MB11746110E318EE3167E91099BF8A9@BYAPR21MB1174.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1122;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oJ7s+O8NG+gY/rUh1n3xzR0gFOlemFfIPgYaTVFngvKM8TPGNL114LDyQAmFk4yOY6YyBMJEW/G5iXLeqf+pBqBBLBAo3V2tx6uozXCu4+wehh3IDuP4Zyx1WsF9gdaYq+es8EevtHSkqDro7f50zH3mv80ppyOG15FpOnAHl/0vKPxCRRYEI1SHIzWxJoUZ1Ve5qkbC9ZPrsNesNDVEyQ/scyh1hUayX7kC5I18Isr2+Qp8ODfu+01W8IMh12n512PlgB/uOaob3yiATKgzKtrqoB9zBZehKNRkS61oxyGh7poBpdG+WiPWYwKTZ8MhRWdGvXmCbCBcqVjcTQT+VGU+iXvlb8sZhI6l/fC8z5oGYo2i6ZmxASfu5/QhqF/O2ZAjiH6SnOPfwzhzZ2djZgmk8lamg8QI2hBAHsWtfnQYqTs5SoadHzdKOV4Ke14MrH0MTta54dXAbk3mSHVwZ0ztwmVutUwO4jY11VSdZ8qySKtYS97EPb87Y4WSHbkwqV8duSFdKjQJh52U3EQyHoUD5l1dUNB4+baJiJGgK5p+aZzhCow6yV3lJhtvBvK3r7aw1J8usSMPN1TSPwmnb0Ma1qwwj/URNWGKgBoC+m/h/Erve2zQF+ZBsKBZOR8XovgelZoIH24Gd2S8H0nXiuILkXHtzd4Gwkf+4KR8g3HvUng4hQgw799IW/VMX9JPCmwJ3KBbkFmGTFqE5zkgVA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(4326008)(508600001)(122000001)(5660300002)(71200400001)(82950400001)(10290500003)(26005)(558084003)(86362001)(7696005)(7416002)(8936002)(8676002)(8990500004)(316002)(9686003)(76116006)(54906003)(66556008)(52536014)(33656002)(66946007)(66476007)(186003)(2906002)(6506007)(38070700005)(64756008)(55016002)(38100700002)(66446008)(110136005)(82960400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xLuDQ/wrzGmREbYhuVTby6+yvU5HMobmkxgdXPJKiwPtYhE+i2ajWcOokhRs?=
- =?us-ascii?Q?sh+UjxYN2JBcLRMEHpAGFOQ8Bulo28G2ct6SQ/23ypLWliki8mYb/Sj6Fjen?=
- =?us-ascii?Q?TcP9HXUR+imf3vT79suxlyAHapM+i0fTgC5Uko8UQPP8VBIdVUf620ChH+RA?=
- =?us-ascii?Q?1Jc+TiNk6AmMXpRDDGwGNpv/vu6gYBkKbYcR2oecJAYcTAUzNKHEkTuZX2yK?=
- =?us-ascii?Q?Pazw4ol7oxE6xuDWXwb6+tOJPwy869ZZ8lhvGvih8ctVGLNrcZLM9j2TYt97?=
- =?us-ascii?Q?UXpuFQtNQO+ilWfb8xu03RW8arYQNEfmcvSB7zuiVtSNBG/YVrzES1C/ktAk?=
- =?us-ascii?Q?UA/+SwXumLAmbPUEG1KgrH33TISjUtHmvjAPq61TyhRsP+2Jf9hNciGN3sqo?=
- =?us-ascii?Q?zaf3BUj1Nh4YFiAn/v8CmCN8n1TzrD3utVh7hrUxe25l+U9/AcWZZImfF0qE?=
- =?us-ascii?Q?pDM5bUUGuH11ATgDlpMOiULRdc3+u1I0g8xILs23OAiZ+HGppA/befHz3ZIB?=
- =?us-ascii?Q?ox0GCDxWZr6eSDLbSXlYEUS39I0aqRfOLi5NofWW1TXaIwSXl4cGVLOvuWO0?=
- =?us-ascii?Q?279K2flU/JZPbtdMCO6a+fluds4PA5Lu+yYi5l2ktq2Aa1QFPgLiNpPc073w?=
- =?us-ascii?Q?wHKwl0eWFE5RB1FAkzyvID4ZZnNYoHkq9YOBrSbipqPxEZIFMTg1DYx7EuCY?=
- =?us-ascii?Q?a2h7pU2MOx/vIB7l+i8yJtiPsc36pNm0W0f3RWxdWYyTqAM1X0RVahWbDuRa?=
- =?us-ascii?Q?WmorRDXzBOpX4AJVRfPrAbQ+TETOB/croGMahofi1/z/h0IqAplczyZUa2K0?=
- =?us-ascii?Q?8oYTz39SSPXHyaF6eR1l86TTlAQdI6qHvDCpccrXeKgHJiyHZxpC+NRevdrY?=
- =?us-ascii?Q?YhyLza9keYJ76mEGPWQ5js695VnHxxKJzyDQzHjxurO7SX8wZiUjX/0SnPO4?=
- =?us-ascii?Q?9Pgs250WOkK2nenNnDXv+DAUZ8w+Yk5rK2b4klJhMGQDvj6jZdBABscjkTIm?=
- =?us-ascii?Q?XJ+IcCLClwgW+ylPtzyl7UjKbQXpTCdqQE7iVBlc3y8bWpL4sTw9Cn5AxqQ2?=
- =?us-ascii?Q?HgNY7kAJcqpoIegbK8y65G+MTf6MlHC5gFo+t8KbLGW1GPqbQyjDyV2QJxL/?=
- =?us-ascii?Q?wrw31LM0aq8K9Vpwjaqhqo8jFO9yikrh+ciMuwLimZqYrgWK8Vqx8HmSEiqu?=
- =?us-ascii?Q?bJUkKGOOlVY1shLeOtv+Sr274Cnf7oNMObNYTfmRggJmpDZlfcAQjwk64jaE?=
- =?us-ascii?Q?ynVQRV8Q/F1svLZGHnzFw+p4c8buf1nXpuVcxhHPQLi8iiei21E1H8UHrSOA?=
- =?us-ascii?Q?7o4hV/K+GgDLMpuJx8b0p+LkHhX+KleeXwPpJN01frybq4hs05k9yXV7lYL8?=
- =?us-ascii?Q?dkcIBZ+SPcFmfyEK7sCDZOHthz8t7efu1iC6TCJq52lj06C5lCRJg6CAj72I?=
- =?us-ascii?Q?1yjH3R2o3hj1YzgWIMhvfl2EYYB+47nlmRvsCnXtbVVRsoi2uA2s0HRmzJwX?=
- =?us-ascii?Q?2qKXXz1sSf/GwfsyaV9w/U+cAjDvYu3ng0y3JDr++iIPQHW8SH51ciEmqm7o?=
- =?us-ascii?Q?l4Drv+kYet27q9pch/LQj35G2ycxcJJeJC3YfVGildVVWHdxQnTbHTQAX6nS?=
- =?us-ascii?Q?ecnRd5dhqAEvWXN0dy+e2mE=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S229538AbhKBMUK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 Nov 2021 08:20:10 -0400
+Received: from mail-wm1-f48.google.com ([209.85.128.48]:39462 "EHLO
+        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229530AbhKBMUK (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 2 Nov 2021 08:20:10 -0400
+Received: by mail-wm1-f48.google.com with SMTP id b2-20020a1c8002000000b0032fb900951eso1721969wmd.4;
+        Tue, 02 Nov 2021 05:17:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v2ExKLs7LL5vmwi/PSEE89GN4aKAGPsL1abfgbW1qDI=;
+        b=kRkpZ+LhtIuJU4VyKXFTtIgm7uroUw/Mw36vG8n5VTXSUeNy4VrbzvUUhfc0Uge1SV
+         KkSU2C28I/fRXt8GKG2taOK9E1zFKCuY9QvQb4EuqTldVJQLXQn6EtWa+HEFiAITv1ho
+         hL5WUk7lCpsW8dDupcQczCuAtks5qFMzDhm0LnHFArg3ys+xAINnUfhv0w21exHquKoX
+         tLSffF+nvZgln7M9KBpfYWqsQ5IqYnFQy/VjChJn/GOnPW2Wiu0rZWA88FQGIfbXeEN8
+         cLaYAE1Qq7/CLpc+GkrDXZ8VyX9adAy1+q3vTHCo3fLqoxmEOCLZ1BcWaC2z/hPAlCs9
+         RWpQ==
+X-Gm-Message-State: AOAM532/2I/mYVDuMaknO+fLKivUG9z3hGxG7Hjyn/jDH6rNaT5vlcmO
+        aFGmYE/J9v0jg/WYO+bVCok=
+X-Google-Smtp-Source: ABdhPJzttPxWDXUxB5q6BFsHOqq9wuhFmwVAokl4CTZ6U46+Kv0ziTEfSgOx3r4jSKWrsLNwf60rOQ==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr6470167wmc.19.1635855454583;
+        Tue, 02 Nov 2021 05:17:34 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id z135sm2947017wmc.45.2021.11.02.05.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Nov 2021 05:17:33 -0700 (PDT)
+Date:   Tue, 2 Nov 2021 12:17:31 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Subject: Re: [PATCH 1/2] x86/hyperv: Fix NULL deref in set_hv_tscchange_cb()
+ if Hyper-V setup fails
+Message-ID: <20211102121731.rveppetxyzttd26c@liuwe-devbox-debian-v2>
+References: <20211028222148.2924457-1-seanjc@google.com>
+ <20211028222148.2924457-2-seanjc@google.com>
+ <87tuh0ry3w.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c04ff64-ab08-4010-b348-08d99d5676a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2021 16:41:33.1822
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D5gYIo6Vt3j+naB6sLxy9nJYCCKdhKRjzGqKBfpm/tp++dXWwC0VjW0lQarmROAk/E4uCs0F1LPUXNJEuEBl/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1174
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tuh0ry3w.fsf@vitty.brq.redhat.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Haiyang Zhang <haiyangz@microsoft.com>
-> Sent: Monday, November 1, 2021 8:12 AM
->  ...
-> The new code looks good!
->=20
-> Thanks,
-> - Haiyang
+On Fri, Oct 29, 2021 at 11:14:59AM +0200, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> 
+> > Check for re-enlightenment support and for a valid hv_vp_index array
+> > prior to derefencing hv_vp_index when setting Hyper-V's TSC change
+> > callback.  If Hyper-V setup failed in hyperv_init(), e.g. because of a
+> > bad VMM config that doesn't advertise the HYPERCALL MSR, the kernel will
+> > still report that it's running under Hyper-V, but will have silently
+> > disabled nearly all functionality.
+> >
+> >   BUG: kernel NULL pointer dereference, address: 0000000000000010
+> >   #PF: supervisor read access in kernel mode
+> >   #PF: error_code(0x0000) - not-present page
+> >   PGD 0 P4D 0
+> >   Oops: 0000 [#1] SMP
+> >   CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.15.0-rc2+ #75
+> >   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+> >   RIP: 0010:set_hv_tscchange_cb+0x15/0xa0
+> >   Code: <8b> 04 82 8b 15 12 17 85 01 48 c1 e0 20 48 0d ee 00 01 00 f6 c6 08
+> >   ...
+> >   Call Trace:
+> >    kvm_arch_init+0x17c/0x280
+> >    kvm_init+0x31/0x330
+> >    vmx_init+0xba/0x13a
+> >    do_one_initcall+0x41/0x1c0
+> >    kernel_init_freeable+0x1f2/0x23b
+> >    kernel_init+0x16/0x120
+> >    ret_from_fork+0x22/0x30
+> >
+> > Fixes: 93286261de1b ("x86/hyperv: Reenlightenment notifications support")
+> > Cc: stable@vger.kernel.org
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/hyperv/hv_init.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > index 708a2712a516..6cc845c026d4 100644
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -139,7 +139,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
+> >  	struct hv_reenlightenment_control re_ctrl = {
+> >  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+> >  		.enabled = 1,
+> > -		.target_vp = hv_vp_index[smp_processor_id()]
+> > +		.target_vp = -1,
+> >  	};
+> >  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+> >  
+> > @@ -148,6 +148,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
+> >  		return;
+> >  	}
+> >  
+> > +	if (!hv_vp_index)
+> > +		return;
+> > +
+> > +	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
+> > +
+> >  	hv_reenlightenment_cb = cb;
+> >  
+> >  	/* Make sure callback is registered before we write to MSRs */
+> 
+> The patch looks good, however, it needs to be applied on top of the
+> already merged:
+> 
+> https://lore.kernel.org/linux-hyperv/20211012155005.1613352-1-vkuznets@redhat.com/
 
-The v1 patchset has been merged into net-next.git by=20
-patchwork-bot+netdevbpf@kernel.org ...=20
+Sean, are you going to rebase?
 
-I'll post an incremental patchset.
-
-Thanks,
-Dexuan
+Wei.
