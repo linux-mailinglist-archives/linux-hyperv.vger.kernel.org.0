@@ -2,92 +2,105 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 443CA4452F7
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Nov 2021 13:24:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CFA744599E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Nov 2021 19:22:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231561AbhKDM1b (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 4 Nov 2021 08:27:31 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:51797 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231137AbhKDM12 (ORCPT
+        id S234074AbhKDSZW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 4 Nov 2021 14:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233924AbhKDSZW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 4 Nov 2021 08:27:28 -0400
-Received: by mail-wm1-f53.google.com with SMTP id z200so4375723wmc.1;
-        Thu, 04 Nov 2021 05:24:50 -0700 (PDT)
+        Thu, 4 Nov 2021 14:25:22 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42AB3C061203
+        for <linux-hyperv@vger.kernel.org>; Thu,  4 Nov 2021 11:22:44 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id s15-20020a170902b18f00b0013fb4449cecso3733267plr.19
+        for <linux-hyperv@vger.kernel.org>; Thu, 04 Nov 2021 11:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=reply-to:date:message-id:mime-version:subject:from:to:cc;
+        bh=kM0B8bXmtxJQyDrtFwNtoT3h6fl0Y/6oxzC/Fn7ZhOo=;
+        b=oxOoTaeZ27CNUJC7/Bj3SmlT5emnVn3TwyMsGoaZIa1fgN08rv18BEATOv4chhfsIN
+         /Als1rGQozi08Osb9IjdH8STnf07RO4ST0ekFMZnX1Wi1pDM9Il1XhHo6THs0BWVbTCT
+         9aruOX29XhGCGGAyqWYeIrTvWl9p5KhO3xfYVBbWT+S4az5kV6ntH6LDoIvJH+oQzQwx
+         WjZUdyO//XsYd/6bDrxrZtQjLqXHFSzERLXlNei0tKUYOWVukgSEMrmNCg4Ts1v4WTXn
+         WmyjJmLExyAGGt2PrpxswhwCBULAXsSzh9CIg2W/gEBgrYV5SLhvSFsfRlXZOiQfXTPl
+         xUww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UKlTQegofiRIXde3I+n3/kYwmsLXXUXy5fuu78XfdFI=;
-        b=pw+RBR7dYljLmulDrBk/DEJHf4AdkbLah5jQmYUUWlhUhRDk091nncQx7VLyBKx50W
-         OUd96pXohMjpFJ/5Lwgzkc6r79ZBUZRNrnD4Dh215eTaAUzzKGwqFDpFXUR3OBWxF436
-         hqTIXSCMW/kpdwFNGS7FfAjM48r4rVP8rn0tkE5/XqpDjOweHGlUPdz1Ter5lYE8yP2O
-         wN5kKSyg/0V8xE5dRoK/adgvQQpqlvREt4f0y6vnKO4gdD4eqJsgtoF1jNhyd94iPjjO
-         j7xGMwNc9RsV8evWIJ5RYOWMUmMyzphVJ3WttXSQAVQOHBSvjQl5q7kYWwgRH6HmftZO
-         uwyg==
-X-Gm-Message-State: AOAM531QDrV6a7u5mygTbrdTlEeYL3Szbw15IGAuFu6tGjZ3BWyync+c
-        eYrlIkjJya5tzLAugfb/Xh4=
-X-Google-Smtp-Source: ABdhPJytqW8mp8sofqo3RsrlVEU6eDTBNT7gv0jXtAPrvKOhdDG/CKvaQ/mGTzSRrbeQfSXnknRfBA==
-X-Received: by 2002:a1c:7201:: with SMTP id n1mr22946882wmc.176.1636028689497;
-        Thu, 04 Nov 2021 05:24:49 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id l2sm4632303wmq.42.2021.11.04.05.24.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Nov 2021 05:24:49 -0700 (PDT)
-Date:   Thu, 4 Nov 2021 12:24:47 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        h=x-gm-message-state:reply-to:date:message-id:mime-version:subject
+         :from:to:cc;
+        bh=kM0B8bXmtxJQyDrtFwNtoT3h6fl0Y/6oxzC/Fn7ZhOo=;
+        b=CsZL7kF1gj/QLDDPJGhxFzf7x8wYYDK+Yhs9O/NfZ2fHiLPqwutF9bPU1YuenuyMQk
+         OkGHb6IKo5x82ZU2xaSu5kHA7PX5wKgv11vdOs/TytthaCjpAUPo0YeTLk2QM9/WAbFN
+         8txeBMNyF4r7mamlvLbuGaP6K6aDzuSDAE0rEBV5FuZSe69A5lHy6H2G0s7NBzDhmUu4
+         7kzRRV3fyy9RP17VnzGhiRhIkOhhGuaSqFDl8jIPbmOC6PBe+AT1JSs1JLIGzk9ZFVgP
+         wbnRVke1G8FwQTiXoo4tmvWWCnThiVCcLQ7xYvrWEXMaFMjWP3xgVhk4r5+f/3RvsViK
+         kfAw==
+X-Gm-Message-State: AOAM530JAm/3uRnJzLkYtd6MMlxScPwHKOdhbnIwfjZdkkaVyCOsCal7
+        IDxW7kBr/Uj0ZH8EAHfPfgK46gTr7zY=
+X-Google-Smtp-Source: ABdhPJwW98i7fCH9z5DYCWE+KzE7VMkZqiDtI4CnSgysEEolyyB/s5b7dgte2fV+3lBbfutac5GlPO5Ss6g=
+X-Received: from seanjc.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:3e5])
+ (user=seanjc job=sendgmr) by 2002:a17:902:ea10:b0:142:112d:c0b9 with SMTP id
+ s16-20020a170902ea1000b00142112dc0b9mr16685279plg.35.1636050163603; Thu, 04
+ Nov 2021 11:22:43 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date:   Thu,  4 Nov 2021 18:22:37 +0000
+Message-Id: <20211104182239.1302956-1-seanjc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.0.rc0.344.g81b53c2807-goog
+Subject: [PATCH v2 0/2] x86/hyperv: Bug fix and enhancement
+From:   Sean Christopherson <seanjc@google.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Subject: Re: [PATCH 1/2] x86/hyperv: Fix NULL deref in set_hv_tscchange_cb()
- if Hyper-V setup fails
-Message-ID: <20211104122447.tfeyzlu5oyv6fzpc@liuwe-devbox-debian-v2>
-References: <20211028222148.2924457-1-seanjc@google.com>
- <20211028222148.2924457-2-seanjc@google.com>
- <87tuh0ry3w.fsf@vitty.brq.redhat.com>
- <20211102121731.rveppetxyzttd26c@liuwe-devbox-debian-v2>
- <YYFL3ZElxEBDMudH@google.com>
- <20211104121030.sfmmmum3ljant3wg@liuwe-devbox-debian-v2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211104121030.sfmmmum3ljant3wg@liuwe-devbox-debian-v2>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Nov 04, 2021 at 12:10:30PM +0000, Wei Liu wrote:
-> On Tue, Nov 02, 2021 at 02:31:57PM +0000, Sean Christopherson wrote:
-> > On Tue, Nov 02, 2021, Wei Liu wrote:
-> > > On Fri, Oct 29, 2021 at 11:14:59AM +0200, Vitaly Kuznetsov wrote:
-> > > > Sean Christopherson <seanjc@google.com> writes:
-> > > > The patch looks good, however, it needs to be applied on top of the
-> > > > already merged:
-> > > > 
-> > > > https://lore.kernel.org/linux-hyperv/20211012155005.1613352-1-vkuznets@redhat.com/
-> > > 
-> > > Sean, are you going to rebase?
-> > 
-> > Yep, I'll rebase.
-> 
-> Thank you!
+Patch 01 is a fix for a NULL pointer deref that I ran into with a bad VMM
+configuration.  That specific error path is remedied by patch 02, but
+Hyper-V can still end up in an inactive state if a memory allocation fails.
 
-One further note: Vitaly's patch just hit mainline two days ago, but
-v5.16-rc1 is not tagged yet. Feel free to base you new patches on
-hyperv-next or linux-next. I will handle the rest.  Or you can wait
-until v5.16-rc1 is tagged and base your patches on that. Your call.
+Patch 02 effectively makes the required MSRs mandatory for recognizing
+Hyper-V at all.
 
-Thanks,
-Wei.
+Some versions of QEMU prior to ~6.0 make it all too easy to advertise
+Hyper-V and a slew of features without advertising the Hyper-V HYPERCALL
+MSR, e.g. +hv-ipi,+hv-tlbflush,+hv-vpindex,+hv-reenlightenment advertises
+a bunch of things, but not the HYPERCALL MSR.
 
-> 
-> Wei.
+That results in the guest identifying Hyper-V and setting a variety of PV
+ops that then get ignored because hyperv_init() silently disables Hyper-V
+for all intents and purposes.  The VMM (or its controller) is obviously
+off in the weeds, but ideally the guest kernel would acknowledge the bad
+setup in some way.
+
+v2:
+  - Add Vitaly's review.
+  - Rebase to hyperv-next, commit 285f68afa8b2 ("x86/hyperv: Protect
+    set_hv_tscchange_cb() against getting preempted"). [Vitaly]
+  - Tweak the changelog in patch 01 to omit the example about a bad VM
+    config since the NULL check is needed even if that specific issue is
+    resolved.
+
+v1: https://lore.kernel.org/all/20211028222148.2924457-1-seanjc@google.com/t/#u
+
+Sean Christopherson (2):
+  x86/hyperv: Fix NULL deref in set_hv_tscchange_cb() if Hyper-V setup
+    fails
+  x86/hyperv: Move required MSRs check to initial platform probing
+
+ arch/x86/hyperv/hv_init.c      | 12 ++++--------
+ arch/x86/kernel/cpu/mshyperv.c | 20 +++++++++++++++-----
+ 2 files changed, 19 insertions(+), 13 deletions(-)
+
+-- 
+2.34.0.rc0.344.g81b53c2807-goog
+
